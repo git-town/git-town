@@ -5,25 +5,30 @@ type mockConfig struct {
 	codeHostingDriverName string
 	giteaToken            string
 	gitHubToken           string
+	mainBranch            string
 	remoteOriginURL       string
 }
 
-func (mgc mockConfig) GetCodeHostingOriginHostname() string {
-	return mgc.configuredHostName
+func (mc mockConfig) GetCodeHostingOriginHostname() string {
+	return mc.configuredHostName
 }
 
-func (mgc mockConfig) GetCodeHostingDriverName() string {
-	return mgc.codeHostingDriverName
+func (mc mockConfig) GetCodeHostingDriverName() string {
+	return mc.codeHostingDriverName
 }
 
-func (mgc mockConfig) GetGitHubToken() string {
-	return mgc.gitHubToken
+func (mc mockConfig) GetGitHubToken() string {
+	return mc.gitHubToken
 }
 
-func (mgc mockConfig) GetGiteaToken() string {
-	return mgc.giteaToken
+func (mc mockConfig) GetGiteaToken() string {
+	return mc.giteaToken
 }
 
-func (mgc mockConfig) GetRemoteOriginURL() string {
-	return mgc.remoteOriginURL
+func (mc mockConfig) GetMainBranch() string {
+	return mc.mainBranch
+}
+
+func (mc mockConfig) GetRemoteOriginURL() string {
+	return mc.remoteOriginURL
 }

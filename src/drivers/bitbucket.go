@@ -11,15 +11,15 @@ import (
 
 // bitbucketCodeHostingDriver provides access to the API of Bitbucket installations.
 type bitbucketCodeHostingDriver struct {
-	originURL  string
+	git        gitRunner
 	hostname   string
+	originURL  string
 	repository string
-	git        runner
 }
 
 // LoadBitbucket provides a Bitbucket driver instance if the given repo configuration is for a Bitbucket repo,
 // otherwise nil.
-func LoadBitbucket(config config, git runner) CodeHostingDriver {
+func LoadBitbucket(config config, git gitRunner) CodeHostingDriver {
 	driverType := config.GetCodeHostingDriverName()
 	originURL := config.GetRemoteOriginURL()
 	hostname := helpers.GetURLHostname(originURL)
@@ -31,10 +31,10 @@ func LoadBitbucket(config config, git runner) CodeHostingDriver {
 		return nil
 	}
 	return &bitbucketCodeHostingDriver{
-		originURL:  originURL,
-		hostname:   hostname,
-		repository: helpers.GetURLRepositoryName(originURL),
 		git:        git,
+		hostname:   hostname,
+		originURL:  originURL,
+		repository: helpers.GetURLRepositoryName(originURL),
 	}
 }
 

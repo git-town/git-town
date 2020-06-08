@@ -7,17 +7,17 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/src/drivers/helpers"
-	"github.com/git-town/git-town/src/git"
 	"github.com/google/go-github/github"
 	"golang.org/x/oauth2"
 )
 
 // githubCodeHostingDriver provides access to the API of GitHub installations.
 type githubCodeHostingDriver struct {
-	originURL  string
-	hostname   string
 	apiToken   string
 	client     *github.Client
+	config     config
+	hostname   string
+	originURL  string
 	owner      string
 	repository string
 }
@@ -42,9 +42,10 @@ func LoadGithub(config config) CodeHostingDriver {
 	owner := repositoryParts[0]
 	repository := repositoryParts[1]
 	return &githubCodeHostingDriver{
-		originURL:  originURL,
-		hostname:   hostname,
 		apiToken:   config.GetGitHubToken(),
+		config:     config,
+		hostname:   hostname,
+		originURL:  originURL,
 		owner:      owner,
 		repository: repository,
 	}
@@ -70,7 +71,7 @@ func (d *githubCodeHostingDriver) LoadPullRequestInfo(branch, parentBranch strin
 
 func (d *githubCodeHostingDriver) NewPullRequestURL(branch string, parentBranch string) (string, error) {
 	toCompare := branch
-	if parentBranch != git.Config().GetMainBranch() {
+	if parentBranch != d.config.GetMainBranch() {
 		toCompare = parentBranch + "..." + branch
 	}
 	return fmt.Sprintf("%s/compare/%s?expand=1", d.RepositoryURL(), url.PathEscape(toCompare)), nil

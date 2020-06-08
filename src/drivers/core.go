@@ -31,11 +31,12 @@ type config interface {
 	GetCodeHostingDriverName() string
 	GetGiteaToken() string
 	GetGitHubToken() string
+	GetMainBranch() string
 	GetRemoteOriginURL() string
 }
 
 // runner defines the runner methods used by the driver package.
-type runner interface {
+type gitRunner interface {
 	ShaForBranch(string) (string, error)
 }
 
@@ -57,7 +58,7 @@ type MergePullRequestOptions struct {
 
 // Load returns the code hosting driver to use based on the git config.
 // nolint:interfacer  // for Gitea support later
-func Load(config config, git runner) CodeHostingDriver {
+func Load(config config, git gitRunner) CodeHostingDriver {
 	driver := LoadGithub(config)
 	if driver != nil {
 		return driver
