@@ -8,13 +8,6 @@ import (
 	"github.com/git-town/git-town/src/drivers/helpers"
 )
 
-// gitlabConfig defines the configuration data needed by the GitLab driver.
-type gitlabConfig interface {
-	GetCodeHostingDriverName() string
-	GetRemoteOriginURL() string
-	GetCodeHostingOriginHostname() string
-}
-
 // gitlabCodeHostingDriver provides access to the API of GitLab installations.
 type gitlabCodeHostingDriver struct {
 	originURL  string
@@ -24,7 +17,7 @@ type gitlabCodeHostingDriver struct {
 
 // LoadGitlab provides a GitLab driver instance if the given repo configuration is for a GitLab repo,
 // otherwise nil.
-func LoadGitlab(config gitlabConfig) CodeHostingDriver {
+func LoadGitlab(config config) CodeHostingDriver {
 	driverType := config.GetCodeHostingDriverName()
 	originURL := config.GetRemoteOriginURL()
 	hostname := helpers.GetURLHostname(originURL)

@@ -7,24 +7,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type mockGitlabConfig struct {
-	codeHostingDriverName string
-	remoteOriginURL       string
-	configuredHostName    string
-}
-
-func (mgc mockGitlabConfig) GetCodeHostingDriverName() string {
-	return mgc.codeHostingDriverName
-}
-func (mgc mockGitlabConfig) GetRemoteOriginURL() string {
-	return mgc.remoteOriginURL
-}
-func (mgc mockGitlabConfig) GetCodeHostingOriginHostname() string {
-	return mgc.configuredHostName
-}
-
 func TestLoadGitLab(t *testing.T) {
-	driver := drivers.LoadGitlab(mockGitlabConfig{
+	driver := drivers.LoadGitlab(mockConfig{
 		codeHostingDriverName: "gitlab",
 		remoteOriginURL:       "git@self-hosted-gitlab.com:git-town/git-town.git",
 	})
@@ -34,7 +18,7 @@ func TestLoadGitLab(t *testing.T) {
 }
 
 func TestLoadGitLab_customHostName(t *testing.T) {
-	driver := drivers.LoadGitlab(mockGitlabConfig{
+	driver := drivers.LoadGitlab(mockConfig{
 		remoteOriginURL:    "git@my-ssh-identity.com:git-town/git-town.git",
 		configuredHostName: "gitlab.com",
 	})
