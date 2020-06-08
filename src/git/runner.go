@@ -726,25 +726,6 @@ func (r *Runner) LocalBranchesWithDeletedTrackingBranches() (result []string, er
 	return result, nil
 }
 
-// LocalBranchesWithMainBranchFirst returns the names of all branches
-// that exist in the local repository,
-// ordered to have the name of the main branch first,
-// then the names of the branches, ordered alphabetically.
-func (r *Runner) LocalBranchesWithMainBranchFirst() (result []string, err error) {
-	mainBranch := r.Configuration.GetMainBranch()
-	result = append(result, mainBranch)
-	localBranches, err := r.LocalBranchesMainFirst()
-	if err != nil {
-		return result, err
-	}
-	for _, branch := range localBranches {
-		if branch != mainBranch {
-			result = append(result, branch)
-		}
-	}
-	return result, nil
-}
-
 // LocalBranchesWithoutMain returns the names of all branches in the local repository,
 // ordered alphabetically without the main branch.
 func (r *Runner) LocalBranchesWithoutMain() (result []string, err error) {

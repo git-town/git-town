@@ -25,7 +25,7 @@ var setParentBranchCommand = &cobra.Command{
 			defaultParentBranch = git.Config().GetMainBranch()
 		}
 		git.Config().DeleteParentBranch(branchName)
-		err := prompt.AskForBranchAncestry(branchName, defaultParentBranch, repo())
+		err := prompt.AskForBranchAncestry(branchName, defaultParentBranch, prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}
@@ -35,7 +35,7 @@ var setParentBranchCommand = &cobra.Command{
 		if err := git.ValidateIsRepository(); err != nil {
 			return err
 		}
-		return validateIsConfigured(repo())
+		return validateIsConfigured(prodRepo)
 	},
 }
 

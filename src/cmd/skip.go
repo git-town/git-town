@@ -27,7 +27,7 @@ var skipCmd = &cobra.Command{
 			cli.Exit("Cannot skip branch that resulted in conflicts")
 		}
 		skipRunState := runState.CreateSkipRunState()
-		err = steps.Run(&skipRunState, repo(), nil)
+		err = steps.Run(&skipRunState, prodRepo, nil)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -38,7 +38,7 @@ var skipCmd = &cobra.Command{
 		if err := git.ValidateIsRepository(); err != nil {
 			return err
 		}
-		return validateIsConfigured(repo())
+		return validateIsConfigured(prodRepo)
 	},
 }
 

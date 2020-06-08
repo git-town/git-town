@@ -24,17 +24,17 @@ var pruneBranchesCommand = &cobra.Command{
 Deletes branches whose tracking branch no longer exists from the local repository.
 This usually means the branch was shipped or killed on another machine.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config, err := getPruneBranchesConfig(repo())
+		config, err := getPruneBranchesConfig(prodRepo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		stepList, err := getPruneBranchesStepList(config, repo())
+		stepList, err := getPruneBranchesStepList(config, prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}
 		runState := steps.NewRunState("prune-branches", stepList)
-		err = steps.Run(runState, repo(), nil)
+		err = steps.Run(runState, prodRepo, nil)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -45,7 +45,7 @@ This usually means the branch was shipped or killed on another machine.`,
 		if err := git.ValidateIsRepository(); err != nil {
 			return err
 		}
-		if err := validateIsConfigured(repo()); err != nil {
+		if err := validateIsConfigured(prodRepo); err != nil {
 			return err
 		}
 		return git.Config().ValidateIsOnline()

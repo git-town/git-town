@@ -41,18 +41,18 @@ If the repository contains an "upstream" remote,
 syncs the main branch with its upstream counterpart.
 You can disable this by running "git config git-town.sync-upstream false".`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config, err := getSyncConfig(repo())
+		config, err := getSyncConfig(prodRepo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		stepList, err := getSyncStepList(config, repo())
+		stepList, err := getSyncStepList(config, prodRepo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
 		runState := steps.NewRunState("sync", stepList)
-		err = steps.Run(runState, repo(), nil)
+		err = steps.Run(runState, prodRepo, nil)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -64,16 +64,16 @@ You can disable this by running "git config git-town.sync-upstream false".`,
 			return err
 		}
 		if dryRunFlag {
-			currentBranch, err := repo().Silent.CurrentBranch()
+			currentBranch, err := prodRepo.Silent.CurrentBranch()
 			if err != nil {
 				return err
 			}
 			dryrun.Activate(currentBranch)
 		}
-		if err := validateIsConfigured(repo()); err != nil {
+		if err := validateIsConfigured(prodRepo); err != nil {
 			return err
 		}
-		return ensureIsNotInUnfinishedState(repo(), nil)
+		return ensureIsNotInUnfinishedState(prodRepo, nil)
 	},
 }
 
@@ -88,7 +88,7 @@ func getSyncConfig(repo *git.ProdRepo) (result syncConfig, err error) {
 	}
 	result.initialBranch = git.GetCurrentBranchName()
 	if allFlag {
-		branches, err := repo.Silent.LocalBranchesWithMainBranchFirst()
+		branches, err := repo.Silent.LocalBranchesMainFirst()
 		if err != nil {
 			return result, err
 		}

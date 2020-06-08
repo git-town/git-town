@@ -40,9 +40,9 @@ This can conflict with other tools that also define Git aliases.`,
 		}
 		for _, command := range commandsToAlias {
 			if toggle {
-				addAlias(command, repo())
+				addAlias(command, prodRepo)
 			} else {
-				removeAlias(command, repo())
+				removeAlias(command, prodRepo)
 			}
 		}
 	},

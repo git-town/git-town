@@ -19,7 +19,7 @@ The main branch is the Git branch from which new feature branches are cut.`,
 		if len(args) == 0 {
 			printMainBranch()
 		} else {
-			err := setMainBranch(args[0], repo())
+			err := setMainBranch(args[0], prodRepo)
 			if err != nil {
 				fmt.Println(err)
 				os.Exit(1)

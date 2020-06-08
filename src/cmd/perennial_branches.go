@@ -28,7 +28,7 @@ var updatePrennialBranchesCommand = &cobra.Command{
 	Short: "Prompts to update your perennial branches",
 	Long:  `Prompts to update your perennial branches`,
 	Run: func(cmd *cobra.Command, args []string) {
-		err := prompt.ConfigurePerennialBranches(repo())
+		err := prompt.ConfigurePerennialBranches(prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}

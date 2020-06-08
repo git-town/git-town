@@ -26,18 +26,18 @@ and brings over all uncommitted changes to the new feature branch.
 
 See "sync" for information regarding remote upstream.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config, err := getHackConfig(args, repo())
+		config, err := getHackConfig(args, prodRepo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		stepList, err := getAppendStepList(config, repo())
+		stepList, err := getAppendStepList(config, prodRepo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
 		runState := steps.NewRunState("hack", stepList)
-		err = steps.Run(runState, repo(), nil)
+		err = steps.Run(runState, prodRepo, nil)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -48,7 +48,7 @@ See "sync" for information regarding remote upstream.`,
 		if err := git.ValidateIsRepository(); err != nil {
 			return err
 		}
-		return validateIsConfigured(repo())
+		return validateIsConfigured(prodRepo)
 	},
 }
 

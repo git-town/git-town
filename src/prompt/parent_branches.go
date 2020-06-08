@@ -53,7 +53,7 @@ func AskForBranchAncestry(branchName, defaultBranchName string, repo *git.ProdRe
 
 // AskForBranchParent prompts the user for the parent of the given branch.
 func AskForBranchParent(branchName, defaultBranchName string, repo *git.ProdRepo) (string, error) {
-	choices, err := repo.Silent.LocalBranchesWithMainBranchFirst()
+	choices, err := repo.Silent.LocalBranchesMainFirst()
 	if err != nil {
 		return "", err
 	}

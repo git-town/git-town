@@ -25,7 +25,7 @@ var discardCmd = &cobra.Command{
 		if err := git.ValidateIsRepository(); err != nil {
 			return err
 		}
-		return validateIsConfigured(repo())
+		return validateIsConfigured(prodRepo)
 	},
 }
 

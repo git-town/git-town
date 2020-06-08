@@ -36,23 +36,23 @@ When using SSH identities, this command needs to be configured with
 "git config git-town.code-hosting-origin-hostname <hostname>"
 where hostname matches what is in your ssh config file.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config, err := getNewPullRequestConfig(repo())
+		config, err := getNewPullRequestConfig(prodRepo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		driver := drivers.Load(repo().Configuration)
+		driver := drivers.Load(prodRepo.Configuration)
 		if driver == nil {
 			fmt.Println(drivers.UnsupportedHostingError())
 			os.Exit(1)
 		}
-		stepList, err := getNewPullRequestStepList(config, repo())
+		stepList, err := getNewPullRequestStepList(config, prodRepo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
 		runState := steps.NewRunState("new-pull-request", stepList)
-		err = steps.Run(runState, repo(), driver)
+		err = steps.Run(runState, prodRepo, driver)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -63,7 +63,7 @@ where hostname matches what is in your ssh config file.`,
 		if err := git.ValidateIsRepository(); err != nil {
 			return err
 		}
-		if err := validateIsConfigured(repo()); err != nil {
+		if err := validateIsConfigured(prodRepo); err != nil {
 			return err
 		}
 		if err := git.Config().ValidateIsOnline(); err != nil {

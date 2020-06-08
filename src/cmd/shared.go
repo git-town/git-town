@@ -16,7 +16,7 @@ var (
 	debugFlag,
 	dryRunFlag,
 	globalFlag bool
-	repoCache *git.ProdRepo
+	prodRepo = git.NewProdRepo()
 )
 
 // These variables are set at build time.
@@ -88,12 +88,4 @@ func getAppendStepList(config appendConfig, repo *git.ProdRepo) (result steps.St
 	}
 	err = result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
 	return result, err
-}
-
-// repo provides the git.ProdRepo instance to use in commands.
-func repo() *git.ProdRepo {
-	if repoCache == nil {
-		repoCache = git.NewProdRepo()
-	}
-	return repoCache
 }

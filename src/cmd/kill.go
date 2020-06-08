@@ -31,17 +31,17 @@ var killCommand = &cobra.Command{
 Deletes the current or provided branch from the local and remote repositories.
 Does not delete perennial branches nor the main branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config, err := getKillConfig(args, repo())
+		config, err := getKillConfig(args, prodRepo)
 		if err != nil {
 			fmt.Println("Error:", err)
 			os.Exit(1)
 		}
-		stepList, err := getKillStepList(config, repo())
+		stepList, err := getKillStepList(config, prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}
 		runState := steps.NewRunState("kill", stepList)
-		err = steps.Run(runState, repo(), nil)
+		err = steps.Run(runState, prodRepo, nil)
 		if err != nil {
 			fmt.Println("Error:", err)
 			os.Exit(1)
@@ -52,7 +52,7 @@ Does not delete perennial branches nor the main branch.`,
 		if err := git.ValidateIsRepository(); err != nil {
 			return err
 		}
-		return validateIsConfigured(repo())
+		return validateIsConfigured(prodRepo)
 	},
 }
 

@@ -44,17 +44,17 @@ When run on a perennial branch
 - confirm with the "-f" option
 - registers the new perennial branch name in the local Git Town configuration`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config, err := getRenameBranchConfig(args, repo())
+		config, err := getRenameBranchConfig(args, prodRepo)
 		if err != nil {
 			fmt.Println("Error:", err)
 			os.Exit(1)
 		}
-		stepList, err := getRenameBranchStepList(config, repo())
+		stepList, err := getRenameBranchStepList(config, prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}
 		runState := steps.NewRunState("rename-branch", stepList)
-		err = steps.Run(runState, repo(), nil)
+		err = steps.Run(runState, prodRepo, nil)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -65,7 +65,7 @@ When run on a perennial branch
 		if err := git.ValidateIsRepository(); err != nil {
 			return err
 		}
-		return validateIsConfigured(repo())
+		return validateIsConfigured(prodRepo)
 	},
 }
 
