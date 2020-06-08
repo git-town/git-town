@@ -14,11 +14,11 @@ type DeleteParentBranchStep struct {
 }
 
 // CreateUndoStep returns the undo step for this step.
-func (step *DeleteParentBranchStep) CreateUndoStep() Step {
+func (step *DeleteParentBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
 	if step.previousParent == "" {
-		return &NoOpStep{}
+		return &NoOpStep{}, nil
 	}
-	return &SetParentBranchStep{BranchName: step.BranchName, ParentBranchName: step.previousParent}
+	return &SetParentBranchStep{BranchName: step.BranchName, ParentBranchName: step.previousParent}, nil
 }
 
 // Run executes this step.

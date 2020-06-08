@@ -9,26 +9,6 @@ import (
 	httpmock "gopkg.in/jarcoal/httpmock.v1"
 )
 
-type mockGiteaConfig struct {
-	codeHostingDriverName string
-	remoteOriginURL       string
-	giteaToken            string
-	configuredHostName    string
-}
-
-func (mgc mockGiteaConfig) GetCodeHostingDriverName() string {
-	return mgc.codeHostingDriverName
-}
-func (mgc mockGiteaConfig) GetRemoteOriginURL() string {
-	return mgc.remoteOriginURL
-}
-func (mgc mockGiteaConfig) GetGiteaToken() string {
-	return mgc.giteaToken
-}
-func (mgc mockGiteaConfig) GetCodeHostingOriginHostname() string {
-	return mgc.configuredHostName
-}
-
 const giteaRoot = "https://gitea.com/api/v1"
 const giteaVersion = giteaRoot + "/version"
 const giteaCurrOpen = giteaRoot + "/repos/git-town/git-town/pulls?limit=50&page=0&state=open"
@@ -37,7 +17,7 @@ const giteaPR1Merge = giteaRoot + "/repos/git-town/git-town/pulls/1/merge"
 
 func setupGiteaDriver(t *testing.T, token string) (drivers.CodeHostingDriver, func()) {
 	httpmock.Activate()
-	driver := drivers.LoadGitea(mockGiteaConfig{
+	driver := drivers.LoadGitea(mockConfig{
 		remoteOriginURL: "git@gitea.com:git-town/git-town.git",
 		giteaToken:      token,
 	})
@@ -48,7 +28,7 @@ func setupGiteaDriver(t *testing.T, token string) (drivers.CodeHostingDriver, fu
 }
 
 func TestLoadGitea(t *testing.T) {
-	driver := drivers.LoadGitea(mockGiteaConfig{
+	driver := drivers.LoadGitea(mockConfig{
 		codeHostingDriverName: "gitea",
 		remoteOriginURL:       "git@self-hosted-gitea.com:git-town/git-town.git",
 	})
@@ -58,7 +38,7 @@ func TestLoadGitea(t *testing.T) {
 }
 
 func TestLoadGitea_customHostName(t *testing.T) {
-	driver := drivers.LoadGitea(mockGiteaConfig{
+	driver := drivers.LoadGitea(mockConfig{
 		remoteOriginURL:    "git@my-ssh-identity.com:git-town/git-town.git",
 		configuredHostName: "gitea.com",
 	})

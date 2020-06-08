@@ -8,12 +8,7 @@ import (
 	"github.com/git-town/git-town/src/drivers/helpers"
 )
 
-type gitlabConfig interface {
-	GetCodeHostingDriverName() string
-	GetRemoteOriginURL() string
-	GetCodeHostingOriginHostname() string
-}
-
+// gitlabCodeHostingDriver provides access to the API of GitLab installations.
 type gitlabCodeHostingDriver struct {
 	originURL  string
 	hostname   string
@@ -22,7 +17,7 @@ type gitlabCodeHostingDriver struct {
 
 // LoadGitlab provides a GitLab driver instance if the given repo configuration is for a GitLab repo,
 // otherwise nil.
-func LoadGitlab(config gitlabConfig) CodeHostingDriver {
+func LoadGitlab(config config) CodeHostingDriver {
 	driverType := config.GetCodeHostingDriverName()
 	originURL := config.GetRemoteOriginURL()
 	hostname := helpers.GetURLHostname(originURL)
@@ -44,11 +39,11 @@ func (d *gitlabCodeHostingDriver) LoadPullRequestInfo(branch, parentBranch strin
 	return result, nil
 }
 
-func (d *gitlabCodeHostingDriver) NewPullRequestURL(branch, parentBranch string) string {
+func (d *gitlabCodeHostingDriver) NewPullRequestURL(branch, parentBranch string) (string, error) {
 	query := url.Values{}
 	query.Add("merge_request[source_branch]", branch)
 	query.Add("merge_request[target_branch]", parentBranch)
-	return fmt.Sprintf("%s/merge_requests/new?%s", d.RepositoryURL(), query.Encode())
+	return fmt.Sprintf("%s/merge_requests/new?%s", d.RepositoryURL(), query.Encode()), nil
 }
 
 func (d *gitlabCodeHostingDriver) RepositoryURL() string {

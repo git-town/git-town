@@ -1,7 +1,5 @@
 package drivers
 
-import "github.com/git-town/git-town/src/git"
-
 // Core provides the public API for the drivers subsystem.
 
 // CodeHostingDriver defines the structure of drivers
@@ -14,7 +12,7 @@ type CodeHostingDriver interface {
 
 	// NewPullRequestURL returns the URL of the page
 	// to create a new pull request online.
-	NewPullRequestURL(branch, parentBranch string) string
+	NewPullRequestURL(branch, parentBranch string) (string, error)
 
 	// MergePullRequest merges the pull request through the hosting service API.
 	MergePullRequest(MergePullRequestOptions) (mergeSha string, err error)
@@ -25,6 +23,21 @@ type CodeHostingDriver interface {
 
 	// HostingServiceName returns the name of the code hosting service.
 	HostingServiceName() string
+}
+
+// config defines the configuration data needed by the driver package.
+type config interface {
+	GetCodeHostingOriginHostname() string
+	GetCodeHostingDriverName() string
+	GetGiteaToken() string
+	GetGitHubToken() string
+	GetMainBranch() string
+	GetRemoteOriginURL() string
+}
+
+// runner defines the runner methods used by the driver package.
+type gitRunner interface {
+	ShaForBranch(string) (string, error)
 }
 
 // PullRequestInfo contains information about a pull request.
@@ -45,7 +58,7 @@ type MergePullRequestOptions struct {
 
 // Load returns the code hosting driver to use based on the git config.
 // nolint:interfacer  // for Gitea support later
-func Load(config *git.Configuration) CodeHostingDriver {
+func Load(config config, git gitRunner) CodeHostingDriver {
 	driver := LoadGithub(config)
 	if driver != nil {
 		return driver
@@ -54,7 +67,7 @@ func Load(config *git.Configuration) CodeHostingDriver {
 	if driver != nil {
 		return driver
 	}
-	driver = LoadBitbucket(config)
+	driver = LoadBitbucket(config, git)
 	if driver != nil {
 		return driver
 	}

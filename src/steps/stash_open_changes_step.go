@@ -11,8 +11,8 @@ type StashOpenChangesStep struct {
 }
 
 // CreateUndoStep returns the undo step for this step.
-func (step *StashOpenChangesStep) CreateUndoStep() Step {
-	return &RestoreOpenChangesStep{}
+func (step *StashOpenChangesStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+	return &RestoreOpenChangesStep{}, nil
 }
 
 // Run executes this step.

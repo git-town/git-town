@@ -7,32 +7,24 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/src/drivers/helpers"
-	"github.com/git-town/git-town/src/git"
 	"github.com/google/go-github/github"
 	"golang.org/x/oauth2"
 )
 
-// GithubConfig defines the data that the githubCodeHostingDriver needs from the Git configuration.
-type GithubConfig interface {
-	GetCodeHostingDriverName() string
-	GetRemoteOriginURL() string
-	GetGitHubToken() string
-	GetCodeHostingOriginHostname() string
-}
-
-// githubCodeHostingDriver makes the GitHub API accessible.
+// githubCodeHostingDriver provides access to the API of GitHub installations.
 type githubCodeHostingDriver struct {
-	originURL  string
-	hostname   string
 	apiToken   string
 	client     *github.Client
+	config     config
+	hostname   string
+	originURL  string
 	owner      string
 	repository string
 }
 
 // LoadGithub provides a GitHub driver instance if the given repo configuration is for a Github repo,
 // otherwise nil.
-func LoadGithub(config GithubConfig) CodeHostingDriver {
+func LoadGithub(config config) CodeHostingDriver {
 	driverType := config.GetCodeHostingDriverName()
 	originURL := config.GetRemoteOriginURL()
 	hostname := helpers.GetURLHostname(originURL)
@@ -50,9 +42,10 @@ func LoadGithub(config GithubConfig) CodeHostingDriver {
 	owner := repositoryParts[0]
 	repository := repositoryParts[1]
 	return &githubCodeHostingDriver{
-		originURL:  originURL,
-		hostname:   hostname,
 		apiToken:   config.GetGitHubToken(),
+		config:     config,
+		hostname:   hostname,
+		originURL:  originURL,
 		owner:      owner,
 		repository: repository,
 	}
@@ -76,12 +69,12 @@ func (d *githubCodeHostingDriver) LoadPullRequestInfo(branch, parentBranch strin
 	return result, nil
 }
 
-func (d *githubCodeHostingDriver) NewPullRequestURL(branch string, parentBranch string) string {
+func (d *githubCodeHostingDriver) NewPullRequestURL(branch string, parentBranch string) (string, error) {
 	toCompare := branch
-	if parentBranch != git.Config().GetMainBranch() {
+	if parentBranch != d.config.GetMainBranch() {
 		toCompare = parentBranch + "..." + branch
 	}
-	return fmt.Sprintf("%s/compare/%s?expand=1", d.RepositoryURL(), url.PathEscape(toCompare))
+	return fmt.Sprintf("%s/compare/%s?expand=1", d.RepositoryURL(), url.PathEscape(toCompare)), nil
 }
 
 func (d *githubCodeHostingDriver) RepositoryURL() string {

@@ -10,7 +10,7 @@ import (
 type Step interface {
 	CreateAbortStep() Step
 	CreateContinueStep() Step
-	CreateUndoStep() Step
+	CreateUndoStep(*git.ProdRepo) (Step, error)
 	GetAutomaticAbortErrorMessage() string
 	Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error
 	ShouldAutomaticallyAbortOnError() bool

@@ -7,24 +7,19 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/src/drivers/helpers"
-	"github.com/git-town/git-town/src/git"
 )
 
-type bitbucketConfig interface {
-	GetCodeHostingDriverName() string
-	GetRemoteOriginURL() string
-	GetCodeHostingOriginHostname() string
-}
-
+// bitbucketCodeHostingDriver provides access to the API of Bitbucket installations.
 type bitbucketCodeHostingDriver struct {
-	originURL  string
+	git        gitRunner
 	hostname   string
+	originURL  string
 	repository string
 }
 
 // LoadBitbucket provides a Bitbucket driver instance if the given repo configuration is for a Bitbucket repo,
 // otherwise nil.
-func LoadBitbucket(config bitbucketConfig) CodeHostingDriver {
+func LoadBitbucket(config config, git gitRunner) CodeHostingDriver {
 	driverType := config.GetCodeHostingDriverName()
 	originURL := config.GetRemoteOriginURL()
 	hostname := helpers.GetURLHostname(originURL)
@@ -36,8 +31,9 @@ func LoadBitbucket(config bitbucketConfig) CodeHostingDriver {
 		return nil
 	}
 	return &bitbucketCodeHostingDriver{
-		originURL:  originURL,
+		git:        git,
 		hostname:   hostname,
+		originURL:  originURL,
 		repository: helpers.GetURLRepositoryName(originURL),
 	}
 }
@@ -46,11 +42,15 @@ func (d *bitbucketCodeHostingDriver) LoadPullRequestInfo(branch, parentBranch st
 	return result, nil
 }
 
-func (d *bitbucketCodeHostingDriver) NewPullRequestURL(branch, parentBranch string) string {
+func (d *bitbucketCodeHostingDriver) NewPullRequestURL(branch, parentBranch string) (string, error) {
 	query := url.Values{}
-	query.Add("source", strings.Join([]string{d.repository, git.GetBranchSha(branch)[0:12], branch}, ":"))
+	branchSha, err := d.git.ShaForBranch(branch)
+	if err != nil {
+		return "", fmt.Errorf("cannot determine pull request URL from %q to %q: %w", branch, parentBranch, err)
+	}
+	query.Add("source", strings.Join([]string{d.repository, branchSha[0:12], branch}, ":"))
 	query.Add("dest", strings.Join([]string{d.repository, "", parentBranch}, ":"))
-	return fmt.Sprintf("%s/pull-request/new?%s", d.RepositoryURL(), query.Encode())
+	return fmt.Sprintf("%s/pull-request/new?%s", d.RepositoryURL(), query.Encode()), nil
 }
 
 func (d *bitbucketCodeHostingDriver) RepositoryURL() string {

@@ -16,14 +16,17 @@ type CommitOpenChangesStep struct {
 }
 
 // CreateUndoStep returns the undo step for this step.
-func (step *CommitOpenChangesStep) CreateUndoStep() Step {
-	return &ResetToShaStep{Sha: step.previousSha}
+func (step *CommitOpenChangesStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+	return &ResetToShaStep{Sha: step.previousSha}, nil
 }
 
 // Run executes this step.
-func (step *CommitOpenChangesStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
-	step.previousSha = git.GetCurrentSha()
-	err := repo.Logging.StageFiles("-A")
+func (step *CommitOpenChangesStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) (err error) {
+	step.previousSha, err = repo.Silent.CurrentSha()
+	if err != nil {
+		return err
+	}
+	err = repo.Logging.StageFiles("-A")
 	if err != nil {
 		return err
 	}

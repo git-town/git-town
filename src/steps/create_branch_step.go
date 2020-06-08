@@ -14,8 +14,8 @@ type CreateBranchStep struct {
 }
 
 // CreateUndoStep returns the undo step for this step.
-func (step *CreateBranchStep) CreateUndoStep() Step {
-	return &DeleteLocalBranchStep{BranchName: step.BranchName}
+func (step *CreateBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+	return &DeleteLocalBranchStep{BranchName: step.BranchName}, nil
 }
 
 // Run executes this step.

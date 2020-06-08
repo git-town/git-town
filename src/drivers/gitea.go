@@ -12,14 +12,7 @@ import (
 	"code.gitea.io/sdk/gitea"
 )
 
-// GiteaConfig defines the data that the giteaCodeHostingDriver needs from the Git configuration.
-type GiteaConfig interface {
-	GetCodeHostingDriverName() string
-	GetRemoteOriginURL() string
-	GetGiteaToken() string
-	GetCodeHostingOriginHostname() string
-}
-
+// giteaCodeHostingDriver provides access to the API of Gitea installations.
 type giteaCodeHostingDriver struct {
 	originURL  string
 	hostname   string
@@ -31,7 +24,7 @@ type giteaCodeHostingDriver struct {
 
 // LoadGitea provides a Gitea driver instance if the given repo configuration is for a Gitea repo,
 // otherwise nil.
-func LoadGitea(config GiteaConfig) CodeHostingDriver {
+func LoadGitea(config config) CodeHostingDriver {
 	driverType := config.GetCodeHostingDriverName()
 	originURL := config.GetRemoteOriginURL()
 	hostname := helpers.GetURLHostname(originURL)
@@ -87,9 +80,9 @@ func (d *giteaCodeHostingDriver) LoadPullRequestInfo(branch, parentBranch string
 	return result, nil
 }
 
-func (d *giteaCodeHostingDriver) NewPullRequestURL(branch string, parentBranch string) string {
+func (d *giteaCodeHostingDriver) NewPullRequestURL(branch string, parentBranch string) (string, error) {
 	toCompare := parentBranch + "..." + branch
-	return fmt.Sprintf("%s/compare/%s", d.RepositoryURL(), url.PathEscape(toCompare))
+	return fmt.Sprintf("%s/compare/%s", d.RepositoryURL(), url.PathEscape(toCompare)), nil
 }
 
 func (d *giteaCodeHostingDriver) RepositoryURL() string {

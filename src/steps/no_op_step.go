@@ -20,8 +20,8 @@ func (step *NoOpStep) CreateContinueStep() Step {
 }
 
 // CreateUndoStep returns the undo step for this step.
-func (step *NoOpStep) CreateUndoStep() Step {
-	return &NoOpStep{}
+func (step *NoOpStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+	return &NoOpStep{}, nil
 }
 
 // GetAutomaticAbortErrorMessage returns the error message to display when this step
