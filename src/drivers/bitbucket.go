@@ -14,12 +14,12 @@ type bitbucketCodeHostingDriver struct {
 	originURL  string
 	hostname   string
 	repository string
-	shell      shell
+	git        runner
 }
 
 // LoadBitbucket provides a Bitbucket driver instance if the given repo configuration is for a Bitbucket repo,
 // otherwise nil.
-func LoadBitbucket(config config, shell shell) CodeHostingDriver {
+func LoadBitbucket(config config, git runner) CodeHostingDriver {
 	driverType := config.GetCodeHostingDriverName()
 	originURL := config.GetRemoteOriginURL()
 	hostname := helpers.GetURLHostname(originURL)
@@ -34,7 +34,7 @@ func LoadBitbucket(config config, shell shell) CodeHostingDriver {
 		originURL:  originURL,
 		hostname:   hostname,
 		repository: helpers.GetURLRepositoryName(originURL),
-		shell:      shell,
+		git:        git,
 	}
 }
 
@@ -44,7 +44,7 @@ func (d *bitbucketCodeHostingDriver) LoadPullRequestInfo(branch, parentBranch st
 
 func (d *bitbucketCodeHostingDriver) NewPullRequestURL(branch, parentBranch string) (string, error) {
 	query := url.Values{}
-	branchSha, err := d.shell.ShaForBranch(branch)
+	branchSha, err := d.git.ShaForBranch(branch)
 	if err != nil {
 		return "", fmt.Errorf("cannot determine pull request URL from %q to %q: %w", branch, parentBranch, err)
 	}

@@ -34,8 +34,8 @@ type config interface {
 	GetRemoteOriginURL() string
 }
 
-// shell defines the shell methods used by the driver package.
-type shell interface {
+// runner defines the runner methods used by the driver package.
+type runner interface {
 	ShaForBranch(string) (string, error)
 }
 
@@ -57,7 +57,7 @@ type MergePullRequestOptions struct {
 
 // Load returns the code hosting driver to use based on the git config.
 // nolint:interfacer  // for Gitea support later
-func Load(config config, shell shell) CodeHostingDriver {
+func Load(config config, git runner) CodeHostingDriver {
 	driver := LoadGithub(config)
 	if driver != nil {
 		return driver
@@ -66,7 +66,7 @@ func Load(config config, shell shell) CodeHostingDriver {
 	if driver != nil {
 		return driver
 	}
-	driver = LoadBitbucket(config, shell)
+	driver = LoadBitbucket(config, git)
 	if driver != nil {
 		return driver
 	}
