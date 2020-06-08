@@ -15,10 +15,10 @@ var configCommand = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println()
 		cli.PrintLabelAndValue("Main branch", git.GetPrintableMainBranch())
-		cli.PrintLabelAndValue("Perennial branches", git.GetPrintablePerennialBranchTrees())
+		cli.PrintLabelAndValue("Perennial branches", git.GetPrintablePerennialBranches())
 		mainBranch := git.Config().GetMainBranch()
 		if mainBranch != "" {
-			cli.PrintLabelAndValue("Branch Ancestry", git.GetPrintableBranchTree(mainBranch))
+			cli.PrintLabelAndValue("Branch Ancestry", git.GetPrintableBranchAncestry())
 		}
 		cli.PrintLabelAndValue("Pull branch strategy", git.Config().GetPullBranchStrategy())
 		cli.PrintLabelAndValue("New Branch Push Flag", git.GetPrintableNewBranchPushFlag())

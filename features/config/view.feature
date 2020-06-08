@@ -34,7 +34,6 @@ Feature: listing the configuration
 
       Perennial branches:
         qa
-          qa-hotfix
         staging
 
       Branch Ancestry:
@@ -42,6 +41,9 @@ Feature: listing the configuration
           parent-feature
             child-feature
           stand-alone-feature
+        
+        qa
+          qa-hotfix
       """
 
 
@@ -84,4 +86,22 @@ Feature: listing the configuration
 
       Perennial branches:
         [none]
+      """
+
+  Scenario: disconnected branches
+    Given the main branch is configured as "main"
+    And my repo has a branch "parent-feature"
+    And my repo has a feature branch named "child-feature" as a child of "parent-feature"
+    When I run "git-town config"
+    Then it prints:
+      """
+      Main branch:
+        main
+
+      Perennial branches:
+        [none]
+
+      Branch Ancestry:
+        parent-feature
+          child-feature
       """
