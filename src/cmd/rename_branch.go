@@ -44,15 +44,17 @@ When run on a perennial branch
 - confirm with the "-f" option
 - registers the new perennial branch name in the local Git Town configuration`,
 	Run: func(cmd *cobra.Command, args []string) {
-		repo := git.NewProdRepo()
-		config, err := getRenameBranchConfig(args, repo)
+		config, err := getRenameBranchConfig(args, prodRepo)
 		if err != nil {
 			fmt.Println("Error:", err)
 			os.Exit(1)
 		}
-		stepList := getRenameBranchStepList(config)
+		stepList, err := getRenameBranchStepList(config, prodRepo)
+		if err != nil {
+			cli.Exit(err)
+		}
 		runState := steps.NewRunState("rename-branch", stepList)
-		err = steps.Run(runState, repo, nil)
+		err = steps.Run(runState, prodRepo, nil)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -63,7 +65,7 @@ When run on a perennial branch
 		if err := git.ValidateIsRepository(); err != nil {
 			return err
 		}
-		return validateIsConfigured()
+		return validateIsConfigured(prodRepo)
 	},
 }
 
@@ -95,21 +97,33 @@ func getRenameBranchConfig(args []string, repo *git.ProdRepo) (result renameBran
 			return result, err
 		}
 	}
-	if !git.HasBranch(result.oldBranchName) {
+	hasOldBranch, err := repo.Silent.HasLocalBranch(result.oldBranchName)
+	if err != nil {
+		return result, err
+	}
+	if !hasOldBranch {
 		return result, fmt.Errorf("there is no branch named %q", result.oldBranchName)
 	}
-	if !git.IsBranchInSync(result.oldBranchName) {
+	isBranchInSync, err := repo.Silent.IsBranchInSync(result.oldBranchName)
+	if err != nil {
+		return result, err
+	}
+	if !isBranchInSync {
 		return result, fmt.Errorf("%q is not in sync with its tracking branch, please sync the branches before renaming", result.oldBranchName)
 	}
-	if git.HasBranch(result.newBranchName) {
+	hasNewBranch, err := repo.Silent.HasLocalOrRemoteBranch(result.newBranchName)
+	if err != nil {
+		return result, err
+	}
+	if hasNewBranch {
 		return result, fmt.Errorf("a branch named %q already exists", result.newBranchName)
 	}
 	result.oldBranchChildren = git.Config().GetChildBranches(result.oldBranchName)
-	result.oldBranchHasTrackingBranch = git.HasTrackingBranch(result.oldBranchName)
-	return result, nil
+	result.oldBranchHasTrackingBranch, err = repo.Silent.HasTrackingBranch(result.oldBranchName)
+	return result, err
 }
 
-func getRenameBranchStepList(config renameBranchConfig) (result steps.StepList) {
+func getRenameBranchStepList(config renameBranchConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
 	result.Append(&steps.CreateBranchStep{BranchName: config.newBranchName, StartingPoint: config.oldBranchName})
 	if config.initialBranch == config.oldBranchName {
 		result.Append(&steps.CheckoutBranchStep{BranchName: config.newBranchName})
@@ -129,8 +143,8 @@ func getRenameBranchStepList(config renameBranchConfig) (result steps.StepList) 
 		result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.oldBranchName, IsTracking: true})
 	}
 	result.Append(&steps.DeleteLocalBranchStep{BranchName: config.oldBranchName})
-	result.Wrap(steps.WrapOptions{RunInGitRoot: false, StashOpenChanges: false})
-	return
+	err = result.Wrap(steps.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, repo)
+	return result, err
 }
 
 func init() {

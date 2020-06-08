@@ -67,7 +67,7 @@ func (repo *Repo) Clone(targetDir string) (Repo, error) {
 // FilesInBranches provides a data table of files and their content in all branches.
 func (repo *Repo) FilesInBranches() (result DataTable, err error) {
 	result.AddRow("BRANCH", "NAME", "CONTENT")
-	branches, err := repo.LocalBranches()
+	branches, err := repo.LocalBranchesMainFirst()
 	if err != nil {
 		return result, err
 	}

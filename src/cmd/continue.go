@@ -21,7 +21,6 @@ var continueCmd = &cobra.Command{
 			fmt.Printf("cannot load previous run state: %v\n", err)
 			os.Exit(1)
 		}
-		repo := git.NewProdRepo()
 		if runState == nil || !runState.IsUnfinished() {
 			cli.Exit("Nothing to continue")
 		}
@@ -29,7 +28,7 @@ var continueCmd = &cobra.Command{
 			fmt.Println("Error: you must resolve the conflicts before continuing")
 			os.Exit(1)
 		}
-		err = steps.Run(runState, repo, drivers.Load(repo.Configuration))
+		err = steps.Run(runState, prodRepo, drivers.Load(prodRepo.Configuration))
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -40,7 +39,7 @@ var continueCmd = &cobra.Command{
 		if err := git.ValidateIsRepository(); err != nil {
 			return err
 		}
-		return validateIsConfigured()
+		return validateIsConfigured(prodRepo)
 	},
 }
 

@@ -123,7 +123,7 @@ func (r *Runner) CommitNoEdit() error {
 
 // Commits provides a list of the commits in this Git repository with the given fields.
 func (r *Runner) Commits(fields []string) (result []Commit, err error) {
-	branches, err := r.LocalBranches()
+	branches, err := r.LocalBranchesMainFirst()
 	if err != nil {
 		return result, fmt.Errorf("cannot determine the Git branches: %w", err)
 	}
@@ -550,7 +550,7 @@ func (r *Runner) HasGitTownConfigNow() (result bool, err error) {
 
 // HasLocalBranch indicates whether this repo has a local branch with the given name.
 func (r *Runner) HasLocalBranch(name string) (bool, error) {
-	branches, err := r.LocalBranches()
+	branches, err := r.LocalBranchesMainFirst()
 	if err != nil {
 		return false, fmt.Errorf("cannot determine whether the local branch %q exists: %w", name, err)
 	}
@@ -631,6 +631,20 @@ func (r *Runner) HasTrackingBranch(name string) (result bool, err error) {
 	return false, nil
 }
 
+// IsBranchInSync returns whether the branch with the given name is in sync with its tracking branch.
+func (r *Runner) IsBranchInSync(branchName string) (bool, error) {
+	hasTrackingBranch, err := r.HasTrackingBranch(branchName)
+	if err != nil {
+		return false, err
+	}
+	if hasTrackingBranch {
+		localSha := GetBranchSha(branchName)
+		remoteSha := GetBranchSha(r.TrackingBranchName(branchName))
+		return localSha == remoteSha, nil
+	}
+	return true, nil
+}
+
 // LastActiveDir provides the directory that was last used in this repo.
 func (r *Runner) LastActiveDir() (string, error) {
 	res, err := r.Run("git", "rev-parse", "--show-toplevel")
@@ -644,19 +658,6 @@ func (r *Runner) LastCommitMessage() (string, error) {
 		return "", fmt.Errorf("cannot determine last commit message: %w\n%s", err, out.Output())
 	}
 	return out.OutputSanitized(), nil
-}
-
-// LocalBranches provides the names of all local branches in this repo.
-func (r *Runner) LocalBranches() (result []string, err error) {
-	outcome, err := r.Run("git", "branch")
-	if err != nil {
-		return result, fmt.Errorf("cannot determine the local branches")
-	}
-	lines := outcome.OutputLines()
-	for l := range lines {
-		result = append(result, strings.TrimSpace(strings.Trim(lines[l], "* ")))
-	}
-	return MainFirst(sort.StringSlice(result)), nil
 }
 
 // LocalAndRemoteBranches provides the names of all local branches in this repo.
@@ -680,6 +681,65 @@ func (r *Runner) LocalAndRemoteBranches() ([]string, error) {
 	}
 	sort.Strings(result)
 	return MainFirst(result), nil
+}
+
+// LocalBranches returns the names of all branches in the local repository,
+// ordered alphabetically.
+func (r *Runner) LocalBranches() (result []string, err error) {
+	res, err := r.Run("git", "branch")
+	if err != nil {
+		return result, err
+	}
+	for _, line := range res.OutputLines() {
+		line = strings.Trim(line, "* ")
+		line = strings.TrimSpace(line)
+		result = append(result, line)
+	}
+	return
+}
+
+// LocalBranchesMainFirst provides the names of all local branches in this repo.
+func (r *Runner) LocalBranchesMainFirst() (result []string, err error) {
+	branches, err := r.LocalBranches()
+	if err != nil {
+		return result, err
+	}
+	return MainFirst(sort.StringSlice(branches)), nil
+}
+
+// LocalBranchesWithDeletedTrackingBranches returns the names of all branches
+// whose remote tracking branches have been deleted.
+func (r *Runner) LocalBranchesWithDeletedTrackingBranches() (result []string, err error) {
+	res, err := r.Run("git", "branch", "-vv")
+	if err != nil {
+		return result, err
+	}
+	for _, line := range res.OutputLines() {
+		line = strings.Trim(line, "* ")
+		parts := strings.SplitN(line, " ", 2)
+		branchName := parts[0]
+		deleteTrackingBranchStatus := fmt.Sprintf("[%s: gone]", r.TrackingBranchName(branchName))
+		if strings.Contains(parts[1], deleteTrackingBranchStatus) {
+			result = append(result, branchName)
+		}
+	}
+	return result, nil
+}
+
+// LocalBranchesWithoutMain returns the names of all branches in the local repository,
+// ordered alphabetically without the main branch.
+func (r *Runner) LocalBranchesWithoutMain() (result []string, err error) {
+	mainBranch := r.Configuration.GetMainBranch()
+	branches, err := r.LocalBranches()
+	if err != nil {
+		return result, err
+	}
+	for _, branch := range branches {
+		if branch != mainBranch {
+			result = append(result, branch)
+		}
+	}
+	return
 }
 
 // MergeBranchNoEdit merges the given branch into the current branch,

@@ -20,12 +20,11 @@ var abortCmd = &cobra.Command{
 		if err != nil {
 			cli.Exit("cannot load previous run state: %v\n", err)
 		}
-		repo := git.NewProdRepo()
 		if runState == nil || !runState.IsUnfinished() {
 			cli.Exit("Nothing to abort")
 		}
 		abortRunState := runState.CreateAbortRunState()
-		err = steps.Run(&abortRunState, repo, drivers.Load(repo.Configuration))
+		err = steps.Run(&abortRunState, prodRepo, drivers.Load(prodRepo.Configuration))
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -36,7 +35,7 @@ var abortCmd = &cobra.Command{
 		if err := git.ValidateIsRepository(); err != nil {
 			return err
 		}
-		return validateIsConfigured()
+		return validateIsConfigured(prodRepo)
 	},
 }
 

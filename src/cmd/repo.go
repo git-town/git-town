@@ -25,20 +25,19 @@ When using SSH identities, run
 "git config git-town.code-hosting-origin-hostname <HOSTNAME>"
 where HOSTNAME matches what is in your ssh config file.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		repo := git.NewProdRepo()
-		driver := drivers.Load(repo.Configuration)
+		driver := drivers.Load(prodRepo.Configuration)
 		if driver == nil {
 			fmt.Println(drivers.UnsupportedHostingError())
 			os.Exit(1)
 		}
-		browsers.Open(driver.RepositoryURL(), repo.LoggingShell)
+		browsers.Open(driver.RepositoryURL(), prodRepo.LoggingShell)
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if err := git.ValidateIsRepository(); err != nil {
 			return err
 		}
-		if err := validateIsConfigured(); err != nil {
+		if err := validateIsConfigured(prodRepo); err != nil {
 			return err
 		}
 		if err := git.Config().ValidateIsOnline(); err != nil {

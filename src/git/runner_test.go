@@ -98,7 +98,7 @@ func TestRunner_CreateBranch(t *testing.T) {
 	currentBranch, err := runner.CurrentBranch()
 	assert.NoError(t, err)
 	assert.Equal(t, "master", currentBranch)
-	branches, err := runner.LocalBranches()
+	branches, err := runner.LocalBranchesMainFirst()
 	assert.NoError(t, err)
 	assert.Equal(t, []string{"branch1", "master"}, branches)
 }
@@ -193,7 +193,7 @@ func TestRunner_CreatePerennialBranches(t *testing.T) {
 	runner := CreateTestGitTownRepo(t).Runner
 	err := runner.CreatePerennialBranches("p1", "p2")
 	assert.NoError(t, err)
-	branches, err := runner.LocalBranches()
+	branches, err := runner.LocalBranchesMainFirst()
 	assert.NoError(t, err)
 	assert.Equal(t, []string{"main", "master", "p1", "p2"}, branches)
 	runner.Configuration.Reload()
@@ -448,7 +448,7 @@ func TestRunner_LocalBranches(t *testing.T) {
 	assert.NoError(t, err)
 	err = repo.Fetch()
 	assert.NoError(t, err)
-	branches, err := repo.Runner.LocalBranches()
+	branches, err := repo.Runner.LocalBranchesMainFirst()
 	assert.NoError(t, err)
 	assert.Equal(t, []string{"b1", "b2", "master"}, branches)
 }
@@ -495,7 +495,7 @@ func TestRunner_PushBranch(t *testing.T) {
 	assert.NoError(t, err)
 	err = runner.PushBranchSetUpstream("b1")
 	assert.NoError(t, err)
-	branches, err := origin.LocalBranches()
+	branches, err := origin.LocalBranchesMainFirst()
 	assert.NoError(t, err)
 	assert.Equal(t, []string{"b1", "master"}, branches)
 }
@@ -532,12 +532,12 @@ func TestRunner_RemoveBranch(t *testing.T) {
 	runner := test.CreateRepo(t).Runner
 	err := runner.CreateBranch("b1", "master")
 	assert.NoError(t, err)
-	branches, err := runner.LocalBranches()
+	branches, err := runner.LocalBranchesMainFirst()
 	assert.NoError(t, err)
 	assert.Equal(t, []string{"b1", "master"}, branches)
 	err = runner.RemoveBranch("b1")
 	assert.NoError(t, err)
-	branches, err = runner.LocalBranches()
+	branches, err = runner.LocalBranchesMainFirst()
 	assert.NoError(t, err)
 	assert.Equal(t, []string{"master"}, branches)
 }

@@ -20,9 +20,6 @@ type syncConfig struct {
 	isOffline      bool
 }
 
-// the git.ProdRepo instance to use for sync commands.
-var syncProdRepo *git.ProdRepo
-
 var syncCmd = &cobra.Command{
 	Use:   "sync",
 	Short: "Updates the current branch with all relevant changes",
@@ -44,18 +41,18 @@ If the repository contains an "upstream" remote,
 syncs the main branch with its upstream counterpart.
 You can disable this by running "git config git-town.sync-upstream false".`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config, err := getSyncConfig(syncProdRepo)
+		config, err := getSyncConfig(prodRepo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		stepList, err := getSyncStepList(config, syncProdRepo)
+		stepList, err := getSyncStepList(config, prodRepo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
 		runState := steps.NewRunState("sync", stepList)
-		err = steps.Run(runState, syncProdRepo, nil)
+		err = steps.Run(runState, prodRepo, nil)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -63,21 +60,20 @@ You can disable this by running "git config git-town.sync-upstream false".`,
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		syncProdRepo = git.NewProdRepo()
 		if err := git.ValidateIsRepository(); err != nil {
 			return err
 		}
 		if dryRunFlag {
-			currentBranch, err := syncProdRepo.Silent.CurrentBranch()
+			currentBranch, err := prodRepo.Silent.CurrentBranch()
 			if err != nil {
 				return err
 			}
 			dryrun.Activate(currentBranch)
 		}
-		if err := validateIsConfigured(); err != nil {
+		if err := validateIsConfigured(prodRepo); err != nil {
 			return err
 		}
-		return ensureIsNotInUnfinishedState(syncProdRepo, nil)
+		return ensureIsNotInUnfinishedState(prodRepo, nil)
 	},
 }
 
@@ -92,12 +88,21 @@ func getSyncConfig(repo *git.ProdRepo) (result syncConfig, err error) {
 	}
 	result.initialBranch = git.GetCurrentBranchName()
 	if allFlag {
-		branches := git.GetLocalBranchesWithMainBranchFirst()
-		prompt.EnsureKnowsParentBranches(branches)
+		branches, err := repo.Silent.LocalBranchesMainFirst()
+		if err != nil {
+			return result, err
+		}
+		err = prompt.EnsureKnowsParentBranches(branches, repo)
+		if err != nil {
+			return result, err
+		}
 		result.branchesToSync = branches
 		result.shouldPushTags = true
 	} else {
-		prompt.EnsureKnowsParentBranches([]string{result.initialBranch})
+		err = prompt.EnsureKnowsParentBranches([]string{result.initialBranch}, repo)
+		if err != nil {
+			return result, err
+		}
 		result.branchesToSync = append(git.Config().GetAncestorBranches(result.initialBranch), result.initialBranch)
 		result.shouldPushTags = !git.Config().IsFeatureBranch(result.initialBranch)
 	}
@@ -116,8 +121,8 @@ func getSyncStepList(config syncConfig, repo *git.ProdRepo) (result steps.StepLi
 	if config.hasOrigin && config.shouldPushTags && !config.isOffline {
 		result.Append(&steps.PushTagsStep{})
 	}
-	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
-	return result, nil
+	err = result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
+	return result, err
 }
 
 func init() {

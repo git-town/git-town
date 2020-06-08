@@ -9,30 +9,42 @@ import (
 )
 
 // EnsureIsConfigured has the user to confgure the main branch and perennial branches if needed.
-func EnsureIsConfigured() {
+func EnsureIsConfigured(repo *git.ProdRepo) error {
 	if git.Config().GetMainBranch() == "" {
 		fmt.Println("Git Town needs to be configured")
 		fmt.Println()
-		ConfigureMainBranch()
-		ConfigurePerennialBranches()
+		err := ConfigureMainBranch(repo)
+		if err != nil {
+			return err
+		}
+		return ConfigurePerennialBranches(repo)
 	}
+	return nil
 }
 
 // ConfigureMainBranch has the user to confgure the main branch.
-func ConfigureMainBranch() {
+func ConfigureMainBranch(repo *git.ProdRepo) error {
+	localBranches, err := repo.Silent.LocalBranches()
+	if err != nil {
+		return err
+	}
 	newMainBranch := askForBranch(askForBranchOptions{
-		branchNames:       git.GetLocalBranches(),
+		branchNames:       localBranches,
 		prompt:            getMainBranchPrompt(),
 		defaultBranchName: git.Config().GetMainBranch(),
 	})
 	git.Config().SetMainBranch(newMainBranch)
+	return nil
 }
 
 // ConfigurePerennialBranches has the user to confgure the perennial branches.
-func ConfigurePerennialBranches() {
-	branchNames := git.GetLocalBranchesWithoutMain()
+func ConfigurePerennialBranches(repo *git.ProdRepo) error {
+	branchNames, err := repo.Silent.LocalBranchesWithoutMain()
+	if err != nil {
+		return err
+	}
 	if len(branchNames) == 0 {
-		return
+		return nil
 	}
 	newPerennialBranches := askForBranches(askForBranchesOptions{
 		branchNames:        branchNames,
@@ -40,6 +52,7 @@ func ConfigurePerennialBranches() {
 		defaultBranchNames: git.Config().GetPerennialBranches(),
 	})
 	git.Config().SetPerennialBranches(newPerennialBranches)
+	return nil
 }
 
 // Helpers

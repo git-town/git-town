@@ -16,6 +16,7 @@ var (
 	debugFlag,
 	dryRunFlag,
 	globalFlag bool
+	prodRepo = git.NewProdRepo()
 )
 
 // These variables are set at build time.
@@ -26,10 +27,12 @@ var (
 
 const dryRunFlagDescription = "Print the commands but don't run them"
 
-func validateIsConfigured() error {
-	prompt.EnsureIsConfigured()
-	git.Config().RemoveOutdatedConfiguration()
-	return nil
+func validateIsConfigured(repo *git.ProdRepo) error {
+	err := prompt.EnsureIsConfigured(repo)
+	if err != nil {
+		return err
+	}
+	return repo.RemoveOutdatedConfiguration()
 }
 
 func ensureIsNotInUnfinishedState(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
@@ -83,6 +86,6 @@ func getAppendStepList(config appendConfig, repo *git.ProdRepo) (result steps.St
 	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
 		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.targetBranch})
 	}
-	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
-	return result, nil
+	err = result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
+	return result, err
 }

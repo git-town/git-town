@@ -36,19 +36,18 @@ and brings over all uncommitted changes to the new feature branch.
 See "sync" for remote upstream options.
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		repo := git.NewProdRepo()
-		config, err := getPrependConfig(args, repo)
+		config, err := getPrependConfig(args, prodRepo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		stepList, err := getPrependStepList(config, repo)
+		stepList, err := getPrependStepList(config, prodRepo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
 		runState := steps.NewRunState("prepend", stepList)
-		err = steps.Run(runState, repo, nil)
+		err = steps.Run(runState, prodRepo, nil)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -59,7 +58,7 @@ See "sync" for remote upstream options.
 		if err := git.ValidateIsRepository(); err != nil {
 			return err
 		}
-		return validateIsConfigured()
+		return validateIsConfigured(prodRepo)
 	},
 }
 
@@ -75,13 +74,20 @@ func getPrependConfig(args []string, repo *git.ProdRepo) (result prependConfig, 
 			return result, err
 		}
 	}
-	if git.HasBranch(result.targetBranch) {
+	hasBranch, err := repo.Silent.HasLocalOrRemoteBranch(result.targetBranch)
+	if err != nil {
+		return result, err
+	}
+	if hasBranch {
 		return result, fmt.Errorf("a branch named %q already exists", result.targetBranch)
 	}
 	if !git.Config().IsFeatureBranch(result.initialBranch) {
 		return result, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can have parent branches", result.initialBranch)
 	}
-	prompt.EnsureKnowsParentBranches([]string{result.initialBranch})
+	err = prompt.EnsureKnowsParentBranches([]string{result.initialBranch}, repo)
+	if err != nil {
+		return result, err
+	}
 	result.parentBranch = git.Config().GetParentBranch(result.initialBranch)
 	result.ancestorBranches = git.Config().GetAncestorBranches(result.initialBranch)
 	return
@@ -102,8 +108,8 @@ func getPrependStepList(config prependConfig, repo *git.ProdRepo) (result steps.
 	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
 		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.targetBranch})
 	}
-	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
-	return result, nil
+	err = result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
+	return result, err
 }
 
 func init() {

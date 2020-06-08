@@ -34,19 +34,18 @@ and brings over all uncommitted changes to the new feature branch.
 
 See "sync" for information regarding remote upstream.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		repo := git.NewProdRepo()
-		config, err := getAppendConfig(args, repo)
+		config, err := getAppendConfig(args, prodRepo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		stepList, err := getAppendStepList(config, repo)
+		stepList, err := getAppendStepList(config, prodRepo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
 		runState := steps.NewRunState("append", stepList)
-		err = steps.Run(runState, repo, nil)
+		err = steps.Run(runState, prodRepo, nil)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -57,7 +56,7 @@ See "sync" for information regarding remote upstream.`,
 		if err := git.ValidateIsRepository(); err != nil {
 			return err
 		}
-		return validateIsConfigured()
+		return validateIsConfigured(prodRepo)
 	},
 }
 
@@ -70,10 +69,17 @@ func getAppendConfig(args []string, repo *git.ProdRepo) (result appendConfig, er
 			return result, err
 		}
 	}
-	if git.HasBranch(result.targetBranch) {
+	hasBranch, err := repo.Silent.HasLocalOrRemoteBranch(result.targetBranch)
+	if err != nil {
+		return result, err
+	}
+	if hasBranch {
 		return result, fmt.Errorf("a branch named %q already exists", result.targetBranch)
 	}
-	prompt.EnsureKnowsParentBranches([]string{result.parentBranch})
+	err = prompt.EnsureKnowsParentBranches([]string{result.parentBranch}, repo)
+	if err != nil {
+		return result, err
+	}
 	result.ancestorBranches = git.Config().GetAncestorBranches(result.parentBranch)
 	result.hasOrigin = git.HasRemote("origin")
 	result.shouldNewBranchPush = git.Config().ShouldNewBranchPush()

@@ -134,11 +134,11 @@ func TestGitEnvironment_CreateRemoteBranch(t *testing.T) {
 	err = cloned.CreateRemoteBranch("b1", "main")
 	assert.NoError(t, err)
 	// verify it is in the remote branches
-	branches, err := cloned.OriginRepo.LocalBranches()
+	branches, err := cloned.OriginRepo.LocalBranchesMainFirst()
 	assert.NoError(t, err)
 	assert.Contains(t, branches, "b1")
 	// verify it isn't in the local branches
-	branches, err = cloned.DevRepo.LocalBranches()
+	branches, err = cloned.DevRepo.LocalBranchesMainFirst()
 	assert.NoError(t, err)
 	assert.NotContains(t, branches, "b1")
 }

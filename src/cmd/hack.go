@@ -26,19 +26,18 @@ and brings over all uncommitted changes to the new feature branch.
 
 See "sync" for information regarding remote upstream.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		repo := git.NewProdRepo()
-		config, err := getHackConfig(args, repo)
+		config, err := getHackConfig(args, prodRepo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		stepList, err := getAppendStepList(config, repo)
+		stepList, err := getAppendStepList(config, prodRepo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
 		runState := steps.NewRunState("hack", stepList)
-		err = steps.Run(runState, repo, nil)
+		err = steps.Run(runState, prodRepo, nil)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -49,22 +48,31 @@ See "sync" for information regarding remote upstream.`,
 		if err := git.ValidateIsRepository(); err != nil {
 			return err
 		}
-		return validateIsConfigured()
+		return validateIsConfigured(prodRepo)
 	},
 }
 
-func getParentBranch(targetBranch string) string {
+func getParentBranch(targetBranch string, repo *git.ProdRepo) (string, error) {
 	if promptForParent {
-		parentBranch := prompt.AskForBranchParent(targetBranch, git.Config().GetMainBranch())
-		prompt.EnsureKnowsParentBranches([]string{parentBranch})
-		return parentBranch
+		parentBranch, err := prompt.AskForBranchParent(targetBranch, git.Config().GetMainBranch(), repo)
+		if err != nil {
+			return "", err
+		}
+		err = prompt.EnsureKnowsParentBranches([]string{parentBranch}, repo)
+		if err != nil {
+			return "", err
+		}
+		return parentBranch, nil
 	}
-	return git.Config().GetMainBranch()
+	return git.Config().GetMainBranch(), nil
 }
 
 func getHackConfig(args []string, repo *git.ProdRepo) (result appendConfig, err error) {
 	result.targetBranch = args[0]
-	result.parentBranch = getParentBranch(result.targetBranch)
+	result.parentBranch, err = getParentBranch(result.targetBranch, repo)
+	if err != nil {
+		return result, err
+	}
 	result.hasOrigin = git.HasRemote("origin")
 	result.shouldNewBranchPush = git.Config().ShouldNewBranchPush()
 	result.isOffline = git.Config().IsOffline()
@@ -74,7 +82,11 @@ func getHackConfig(args []string, repo *git.ProdRepo) (result appendConfig, err 
 			return result, err
 		}
 	}
-	if git.HasBranch(result.targetBranch) {
+	hasBranch, err := repo.Silent.HasLocalOrRemoteBranch(result.targetBranch)
+	if err != nil {
+		return result, err
+	}
+	if hasBranch {
 		return result, fmt.Errorf("a branch named %q already exists", result.targetBranch)
 	}
 	return

@@ -36,24 +36,23 @@ When using SSH identities, this command needs to be configured with
 "git config git-town.code-hosting-origin-hostname <hostname>"
 where hostname matches what is in your ssh config file.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		repo := git.NewProdRepo()
-		config, err := getNewPullRequestConfig(repo)
+		config, err := getNewPullRequestConfig(prodRepo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		driver := drivers.Load(repo.Configuration)
+		driver := drivers.Load(prodRepo.Configuration)
 		if driver == nil {
 			fmt.Println(drivers.UnsupportedHostingError())
 			os.Exit(1)
 		}
-		stepList, err := getNewPullRequestStepList(config, repo)
+		stepList, err := getNewPullRequestStepList(config, prodRepo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
 		runState := steps.NewRunState("new-pull-request", stepList)
-		err = steps.Run(runState, repo, driver)
+		err = steps.Run(runState, prodRepo, driver)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -64,7 +63,7 @@ where hostname matches what is in your ssh config file.`,
 		if err := git.ValidateIsRepository(); err != nil {
 			return err
 		}
-		if err := validateIsConfigured(); err != nil {
+		if err := validateIsConfigured(prodRepo); err != nil {
 			return err
 		}
 		if err := git.Config().ValidateIsOnline(); err != nil {
@@ -82,7 +81,10 @@ func getNewPullRequestConfig(repo *git.ProdRepo) (result newPullRequestConfig, e
 		}
 	}
 	result.InitialBranch = git.GetCurrentBranchName()
-	prompt.EnsureKnowsParentBranches([]string{result.InitialBranch})
+	err = prompt.EnsureKnowsParentBranches([]string{result.InitialBranch}, repo)
+	if err != nil {
+		return result, err
+	}
 	result.BranchesToSync = append(git.Config().GetAncestorBranches(result.InitialBranch), result.InitialBranch)
 	return
 }
@@ -95,7 +97,10 @@ func getNewPullRequestStepList(config newPullRequestConfig, repo *git.ProdRepo) 
 		}
 		result.AppendList(steps)
 	}
-	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
+	err = result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
+	if err != nil {
+		return result, err
+	}
 	result.Append(&steps.CreatePullRequestStep{BranchName: config.InitialBranch})
 	return result, nil
 }
