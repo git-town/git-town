@@ -14,6 +14,7 @@ func SetDebug(value bool) {
 	debug = value
 }
 
+// LogRun debugs the given executed command on the command line.
 func LogRun(cmd string, args ...string) {
 	if debug {
 		count++

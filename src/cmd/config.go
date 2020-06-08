@@ -14,14 +14,14 @@ var configCommand = &cobra.Command{
 	Short: "Displays your Git Town configuration",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println()
-		cli.PrintLabelAndValue("Main branch", git.GetPrintableMainBranch())
-		cli.PrintLabelAndValue("Perennial branches", git.GetPrintablePerennialBranches())
+		cli.PrintLabelAndValue("Main branch", cli.PrintableMainBranch(prodRepo.GetMainBranch()))
+		cli.PrintLabelAndValue("Perennial branches", cli.PrintablePerennialBranches(prodRepo.GetPerennialBranches()))
 		mainBranch := git.Config().GetMainBranch()
 		if mainBranch != "" {
-			cli.PrintLabelAndValue("Branch Ancestry", git.GetPrintableBranchAncestry())
+			cli.PrintLabelAndValue("Branch Ancestry", cli.PrintableBranchAncestry(prodRepo.Configuration))
 		}
 		cli.PrintLabelAndValue("Pull branch strategy", git.Config().GetPullBranchStrategy())
-		cli.PrintLabelAndValue("New Branch Push Flag", git.GetPrintableNewBranchPushFlag())
+		cli.PrintLabelAndValue("New Branch Push Flag", cli.PrintableNewBranchPushFlag(prodRepo.ShouldNewBranchPush()))
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
