@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"strings"
-
 	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/prompt"
@@ -17,7 +15,7 @@ var perennialBranchesCommand = &cobra.Command{
 Perennial branches are long-lived branches.
 They cannot be shipped.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		cli.Println(printablePerennialBranches(prodRepo.GetPerennialBranches()))
+		cli.Println(cli.PrintablePerennialBranches(prodRepo.GetPerennialBranches()))
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -39,14 +37,6 @@ var updatePrennialBranchesCommand = &cobra.Command{
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return git.ValidateIsRepository()
 	},
-}
-
-// printablePerennialBranches returns a user printable list of perennial branches.
-func printablePerennialBranches(perennialBranches []string) string {
-	if len(perennialBranches) == 0 {
-		return "[none]"
-	}
-	return strings.Join(perennialBranches, "\n")
 }
 
 func init() {

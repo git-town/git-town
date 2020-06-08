@@ -11,6 +11,7 @@ import (
 	"os"
 	"os/exec"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -128,6 +129,19 @@ func (c *Configuration) GetAncestorBranches(branchName string) (result []string)
 		result = append([]string{parent}, result...)
 		current = parent
 	}
+}
+
+// GetBranchAncestryRoots returns the branches with children and no parents.
+func (c *Configuration) GetBranchAncestryRoots() []string {
+	parentMap := c.GetParentBranchMap()
+	roots := []string{}
+	for _, parent := range parentMap {
+		if _, ok := parentMap[parent]; !ok && !util.DoesStringArrayContain(roots, parent) {
+			roots = append(roots, parent)
+		}
+	}
+	sort.Strings(roots)
+	return roots
 }
 
 // GetChildBranches returns the names of all branches for which the given branch

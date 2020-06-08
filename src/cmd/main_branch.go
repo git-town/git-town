@@ -33,7 +33,7 @@ The main branch is the Git branch from which new feature branches are cut.`,
 }
 
 func printMainBranch() {
-	cli.Println(printableMainBranch(prodRepo.GetMainBranch()))
+	cli.Println(cli.PrintableMainBranch(prodRepo.GetMainBranch()))
 }
 
 func setMainBranch(branchName string, repo *git.ProdRepo) error {
@@ -46,14 +46,6 @@ func setMainBranch(branchName string, repo *git.ProdRepo) error {
 	}
 	git.Config().SetMainBranch(branchName)
 	return nil
-}
-
-// printableMainBranch returns a user printable main branch.
-func printableMainBranch(mainBranch string) string {
-	if mainBranch == "" {
-		return "[none]"
-	}
-	return mainBranch
 }
 
 func init() {
