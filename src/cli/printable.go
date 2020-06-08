@@ -8,8 +8,14 @@ import (
 	"github.com/git-town/git-town/src/util"
 )
 
+// BranchAncestryConfig defines the configuration values needed by the `cli` package.
+type BranchAncestryConfig interface {
+	GetBranchAncestryRoots() []string
+	GetChildBranches(string) []string
+}
+
 // PrintableBranchAncestry provides the branch ancestry in CLI printable format.
-func PrintableBranchAncestry(config Config) string {
+func PrintableBranchAncestry(config BranchAncestryConfig) string {
 	roots := config.GetBranchAncestryRoots()
 	trees := make([]string, len(roots))
 	for r := range roots {
@@ -19,7 +25,7 @@ func PrintableBranchAncestry(config Config) string {
 }
 
 // PrintableBranchTree returns a user printable branch tree.
-func PrintableBranchTree(branchName string, config Config) (result string) {
+func PrintableBranchTree(branchName string, config BranchAncestryConfig) (result string) {
 	result += branchName
 	childBranches := config.GetChildBranches(branchName)
 	sort.Strings(childBranches)
