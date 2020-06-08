@@ -11,7 +11,6 @@ import (
 	"os"
 	"os/exec"
 	"regexp"
-	"sort"
 	"strconv"
 	"strings"
 
@@ -303,27 +302,6 @@ func (c *Configuration) localConfigKeysMatching(toMatch string) (result []string
 		}
 	}
 	return result
-}
-
-// PrintableBranchAncestry provides the branch ancestry in CLI printable format.
-func (c *Configuration) PrintableBranchAncestry() string {
-	roots := getBranchAncestryRoots()
-	trees := make([]string, len(roots))
-	for r := range roots {
-		trees[r] = c.printableBranchTree(roots[r])
-	}
-	return strings.Join(trees, "\n\n")
-}
-
-// printableBranchTree returns a user printable branch tree.
-func (c *Configuration) printableBranchTree(branchName string) (result string) {
-	result += branchName
-	childBranches := c.GetChildBranches(branchName)
-	sort.Strings(childBranches)
-	for _, childBranch := range childBranches {
-		result += "\n" + util.Indent(c.printableBranchTree(childBranch))
-	}
-	return
 }
 
 // PrintableMainBranch returns a user printable main branch.

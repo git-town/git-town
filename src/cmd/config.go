@@ -2,10 +2,13 @@ package cmd
 
 import (
 	"fmt"
+	"sort"
+	"strings"
 
 	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/prompt"
+	"github.com/git-town/git-town/src/util"
 	"github.com/spf13/cobra"
 )
 
@@ -18,7 +21,7 @@ var configCommand = &cobra.Command{
 		cli.PrintLabelAndValue("Perennial branches", prodRepo.Configuration.PrintablePerennialBranches())
 		mainBranch := git.Config().GetMainBranch()
 		if mainBranch != "" {
-			cli.PrintLabelAndValue("Branch Ancestry", prodRepo.Configuration.PrintableBranchAncestry())
+			cli.PrintLabelAndValue("Branch Ancestry", printableBranchAncestry(prodRepo))
 		}
 		cli.PrintLabelAndValue("Pull branch strategy", git.Config().GetPullBranchStrategy())
 		cli.PrintLabelAndValue("New Branch Push Flag", prodRepo.Configuration.PrintableNewBranchPushFlag())
@@ -58,6 +61,40 @@ var setupConfigCommand = &cobra.Command{
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return git.ValidateIsRepository()
 	},
+}
+
+// printableBranchAncestry provides the branch ancestry in CLI printable format.
+func printableBranchAncestry(repo *git.ProdRepo) string {
+	roots := getBranchAncestryRoots(repo.Configuration)
+	trees := make([]string, len(roots))
+	for r := range roots {
+		trees[r] = printableBranchTree(roots[r], repo.Configuration)
+	}
+	return strings.Join(trees, "\n\n")
+}
+
+// getBranchAncestryRoots returns the branches with children and no parents.
+func getBranchAncestryRoots(config *git.Configuration) []string {
+	parentMap := config.GetParentBranchMap()
+	roots := []string{}
+	for _, parent := range parentMap {
+		if _, ok := parentMap[parent]; !ok && !util.DoesStringArrayContain(roots, parent) {
+			roots = append(roots, parent)
+		}
+	}
+	sort.Strings(roots)
+	return roots
+}
+
+// printableBranchTree returns a user printable branch tree.
+func printableBranchTree(branchName string, config *git.Configuration) (result string) {
+	result += branchName
+	childBranches := config.GetChildBranches(branchName)
+	sort.Strings(childBranches)
+	for _, childBranch := range childBranches {
+		result += "\n" + util.Indent(printableBranchTree(childBranch, config))
+	}
+	return
 }
 
 func init() {
