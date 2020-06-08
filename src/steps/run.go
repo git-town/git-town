@@ -63,11 +63,11 @@ func Run(runState *RunState, repo *git.ProdRepo, driver drivers.CodeHostingDrive
 				exitWithMessages(runState.UnfinishedDetails.CanSkip)
 			}
 		}
-		undoSteps, err := step.CreateUndoStep(repo)
+		undoStep, err := step.CreateUndoStep(repo)
 		if err != nil {
 			return fmt.Errorf("cannot create undo step for %q: %w", step, err)
 		}
-		runState.UndoStepList.Prepend(undoSteps)
+		runState.UndoStepList.Prepend(undoStep)
 	}
 }
 
