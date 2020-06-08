@@ -25,8 +25,8 @@ func (step *RebaseBranchStep) CreateContinueStep() Step {
 }
 
 // CreateUndoStep returns the undo step for this step.
-func (step *RebaseBranchStep) CreateUndoStep() Step {
-	return &ResetToShaStep{Hard: true, Sha: step.previousSha}
+func (step *RebaseBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+	return &ResetToShaStep{Hard: true, Sha: step.previousSha}, nil
 }
 
 // Run executes this step.

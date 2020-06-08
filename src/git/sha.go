@@ -7,8 +7,3 @@ import "github.com/git-town/git-town/src/command"
 func GetBranchSha(branchName string) string {
 	return command.MustRun("git", "rev-parse", branchName).OutputSanitized()
 }
-
-// GetCurrentSha returns the SHA of the currently checked out commit.
-func GetCurrentSha() string {
-	return GetBranchSha("HEAD")
-}

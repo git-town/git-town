@@ -28,8 +28,8 @@ func (step *DriverMergePullRequestStep) CreateAbortStep() Step {
 }
 
 // CreateUndoStep returns the undo step for this step.
-func (step *DriverMergePullRequestStep) CreateUndoStep() Step {
-	return &RevertCommitStep{Sha: step.mergeSha}
+func (step *DriverMergePullRequestStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+	return &RevertCommitStep{Sha: step.mergeSha}, nil
 }
 
 // GetAutomaticAbortErrorMessage returns the error message to display when this step

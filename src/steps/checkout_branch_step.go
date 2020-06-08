@@ -14,8 +14,8 @@ type CheckoutBranchStep struct {
 }
 
 // CreateUndoStep returns the undo step for this step.
-func (step *CheckoutBranchStep) CreateUndoStep() Step {
-	return &CheckoutBranchStep{BranchName: step.previousBranchName}
+func (step *CheckoutBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+	return &CheckoutBranchStep{BranchName: step.previousBranchName}, nil
 }
 
 // Run executes this step.

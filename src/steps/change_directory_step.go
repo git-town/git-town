@@ -16,8 +16,8 @@ type ChangeDirectoryStep struct {
 }
 
 // CreateUndoStep returns the undo step for this step.
-func (step *ChangeDirectoryStep) CreateUndoStep() Step {
-	return &ChangeDirectoryStep{Directory: step.previousDirectory}
+func (step *ChangeDirectoryStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+	return &ChangeDirectoryStep{Directory: step.previousDirectory}, nil
 }
 
 // Run executes this step.

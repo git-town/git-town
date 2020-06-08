@@ -77,15 +77,6 @@ func (r *Runner) BranchHasUnmergedCommits(branch string) (bool, error) {
 	return out.OutputSanitized() != "", nil
 }
 
-// BranchSha provides the SHA for the local branch with the given name.
-func (r *Runner) BranchSha(name string) (sha string, err error) {
-	outcome, err := r.Run("git", "rev-parse", name)
-	if err != nil {
-		return "", fmt.Errorf("cannot determine SHA of local branch %q: %w\n%s", name, err, outcome.Output())
-	}
-	return outcome.OutputSanitized(), nil
-}
-
 // CheckoutBranch checks out the Git branch with the given name in this repo.
 func (r *Runner) CheckoutBranch(name string) error {
 	outcome, err := r.Run("git", "checkout", name)
@@ -369,7 +360,7 @@ func (r *Runner) CurrentBranch() (result string, err error) {
 
 // CurrentSha provides the SHA of the currently checked out branch/commit.
 func (r *Runner) CurrentSha() (string, error) {
-	return r.BranchSha("HEAD")
+	return r.ShaForBranch("HEAD")
 }
 
 // DeleteLastCommit resets HEAD to the previous commit.
@@ -899,6 +890,33 @@ func (r *Runner) RevertCommit(sha string) error {
 	return nil
 }
 
+// ShaForBranch provides the SHA for the local branch with the given name.
+func (r *Runner) ShaForBranch(name string) (sha string, err error) {
+	outcome, err := r.Run("git", "rev-parse", name)
+	if err != nil {
+		return "", fmt.Errorf("cannot determine SHA of local branch %q: %w\n%s", name, err, outcome.Output())
+	}
+	return outcome.OutputSanitized(), nil
+}
+
+// ShaForCommit provides the SHA for the commit with the given name.
+func (r *Runner) ShaForCommit(name string) (result string, err error) {
+	var args []string
+	if name == "Initial commit" {
+		args = []string{"reflog", "--grep=" + name, "--format=%H", "--max-count=1"}
+	} else {
+		args = []string{"reflog", "--grep-reflog=commit: " + name, "--format=%H"}
+	}
+	res, err := r.Run("git", args...)
+	if err != nil {
+		return result, fmt.Errorf("cannot determine SHA of commit %q: %w\n%s", name, err, res.Output())
+	}
+	if res.OutputSanitized() == "" {
+		return result, fmt.Errorf("cannot find the SHA of commit %q", name)
+	}
+	return res.OutputSanitized(), nil
+}
+
 // ShouldPushBranch returns whether the local branch with the given name
 // contains commits that have not been pushed to the remote.
 func (r *Runner) ShouldPushBranch(branch string) (bool, error) {
@@ -975,24 +993,6 @@ func (r *Runner) UncommittedFiles() (result []string, err error) {
 		result = append(result, parts[1])
 	}
 	return result, nil
-}
-
-// ShaForCommit provides the SHA for the commit with the given name.
-func (r *Runner) ShaForCommit(name string) (result string, err error) {
-	var args []string
-	if name == "Initial commit" {
-		args = []string{"reflog", "--grep=" + name, "--format=%H", "--max-count=1"}
-	} else {
-		args = []string{"reflog", "--grep-reflog=commit: " + name, "--format=%H"}
-	}
-	res, err := r.Run("git", args...)
-	if err != nil {
-		return result, fmt.Errorf("cannot determine SHA of commit %q: %w\n%s", name, err, res.Output())
-	}
-	if res.OutputSanitized() == "" {
-		return result, fmt.Errorf("cannot find the SHA of commit %q", name)
-	}
-	return res.OutputSanitized(), nil
 }
 
 // StageFiles adds the file with the given name to the Git index.

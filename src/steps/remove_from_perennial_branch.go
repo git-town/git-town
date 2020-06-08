@@ -12,8 +12,8 @@ type RemoveFromPerennialBranches struct {
 }
 
 // CreateUndoStep returns the undo step for this step.
-func (step *RemoveFromPerennialBranches) CreateUndoStep() Step {
-	return &AddToPerennialBranches{BranchName: step.BranchName}
+func (step *RemoveFromPerennialBranches) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+	return &AddToPerennialBranches{BranchName: step.BranchName}, nil
 }
 
 // Run executes this step.

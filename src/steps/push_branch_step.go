@@ -16,11 +16,11 @@ type PushBranchStep struct {
 }
 
 // CreateUndoStep returns the undo step for this step.
-func (step *PushBranchStep) CreateUndoStep() Step {
+func (step *PushBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
 	if step.Undoable {
-		return &PushBranchAfterCurrentBranchSteps{}
+		return &PushBranchAfterCurrentBranchSteps{}, nil
 	}
-	return &SkipCurrentBranchSteps{}
+	return &SkipCurrentBranchSteps{}, nil
 }
 
 // Run executes this step.

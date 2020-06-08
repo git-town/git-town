@@ -21,8 +21,12 @@ func (step *SquashMergeBranchStep) CreateAbortStep() Step {
 }
 
 // CreateUndoStep returns the undo step for this step.
-func (step *SquashMergeBranchStep) CreateUndoStep() Step {
-	return &RevertCommitStep{Sha: git.GetCurrentSha()}
+func (step *SquashMergeBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+	currentSHA, err := repo.Silent.CurrentSha()
+	if err != nil {
+		return nil, err
+	}
+	return &RevertCommitStep{Sha: currentSHA}, nil
 }
 
 // GetAutomaticAbortErrorMessage returns the error message to display when this step
