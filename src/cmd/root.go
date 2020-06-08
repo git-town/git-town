@@ -30,7 +30,7 @@ func Execute() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	if !IsAcceptableVersion(majorVersion, minorVersion) {
+	if !IsAcceptableGitVersion(majorVersion, minorVersion) {
 		fmt.Println("Git Town requires Git 2.7.0 or higher")
 		os.Exit(1)
 	}
@@ -41,8 +41,8 @@ func Execute() {
 	}
 }
 
-// IsAcceptableVersion indicates whether the given Git version works for Git Town.
-func IsAcceptableVersion(major, minor int) bool {
+// IsAcceptableGitVersion indicates whether the given Git version works for Git Town.
+func IsAcceptableGitVersion(major, minor int) bool {
 	return major > 2 || (major == 2 && minor >= 7)
 }
 
