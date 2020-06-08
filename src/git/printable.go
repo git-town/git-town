@@ -20,14 +20,3 @@ func getBranchAncestryRoots() []string {
 	sort.Strings(roots)
 	return roots
 }
-
-// getPrintableBranchTree returns a user printable branch tree.
-func getPrintableBranchTree(branchName string) (result string) {
-	result += branchName
-	childBranches := Config().GetChildBranches(branchName)
-	sort.Strings(childBranches)
-	for _, childBranch := range childBranches {
-		result += "\n" + util.Indent(getPrintableBranchTree(childBranch))
-	}
-	return
-}
