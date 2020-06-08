@@ -314,9 +314,9 @@ func (c *Configuration) PrintableBranchAncestry() string {
 	return strings.Join(trees, "\n\n")
 }
 
-// GetPrintableOfflineFlag returns a user printable offline flag.
-func GetPrintableOfflineFlag() string {
-	return strconv.FormatBool(Config().IsOffline())
+// PrintableOfflineFlag returns a user printable offline flag.
+func (c *Configuration) PrintableOfflineFlag() string {
+	return strconv.FormatBool(c.IsOffline())
 }
 
 // Reload refreshes the cached configuration information.
