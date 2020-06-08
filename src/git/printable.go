@@ -56,18 +56,3 @@ func getPrintableBranchTree(branchName string) (result string) {
 	}
 	return
 }
-
-// GetPrintableBranchAncestry returns a user printable branch ancestry.
-func GetPrintableBranchAncestry() string {
-	roots := getBranchAncestryRoots()
-	trees := make([]string, len(roots))
-	for i, root := range roots {
-		trees[i] = getPrintableBranchTree(root)
-	}
-	return strings.Join(trees, "\n\n")
-}
-
-// GetPrintableOfflineFlag returns a user printable offline flag.
-func GetPrintableOfflineFlag() string {
-	return strconv.FormatBool(Config().IsOffline())
-}

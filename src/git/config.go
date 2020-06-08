@@ -304,6 +304,21 @@ func (c *Configuration) localConfigKeysMatching(toMatch string) (result []string
 	return result
 }
 
+// PrintableBranchAncestry provides the branch ancestry in CLI printable format.
+func (c *Configuration) PrintableBranchAncestry() string {
+	roots := getBranchAncestryRoots()
+	trees := make([]string, len(roots))
+	for r := range roots {
+		trees[r] = getPrintableBranchTree(roots[r])
+	}
+	return strings.Join(trees, "\n\n")
+}
+
+// GetPrintableOfflineFlag returns a user printable offline flag.
+func GetPrintableOfflineFlag() string {
+	return strconv.FormatBool(Config().IsOffline())
+}
+
 // Reload refreshes the cached configuration information.
 func (c *Configuration) Reload() {
 	c.localConfigCache = loadGitConfig(c.shell, false)
