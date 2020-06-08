@@ -52,7 +52,7 @@ func (d *bitbucketCodeHostingDriver) NewPullRequestURL(branch, parentBranch stri
 	query := url.Values{}
 	branchSha, err := d.repo.Silent.ShaForBranch(branch)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("cannot determine pull request URL from %q to %q: %w", branch, parentBranch, err)
 	}
 	query.Add("source", strings.Join([]string{d.repository, branchSha[0:12], branch}, ":"))
 	query.Add("dest", strings.Join([]string{d.repository, "", parentBranch}, ":"))
