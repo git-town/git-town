@@ -42,8 +42,12 @@ ensure your Git version is 2.7.0 or higher._
 - Install / Update:
   - Download the 32-bit or 64-bit executable for Windows from the latest release
     [here](https://github.com/git-town/git-town/releases).
-  - rename the file to `git-town.exe`
-  - Put the file into the path and then Git will run it.
+  - Rename the file to `git-town`
+  - Put the file into a folder included in the `%PATH%` variable.
+  - Then, Git will run it.
+  - You can check the path in a git-for-windows shell with: `echo %PATH%`.
+  - Typically, `C:\Program Files\Git\cmd` would be part of `%PATH%` and an
+    apropriate location to put the file.
 
 ---
 
