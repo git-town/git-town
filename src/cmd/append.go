@@ -63,7 +63,11 @@ See "sync" for information regarding remote upstream.`,
 func getAppendConfig(args []string, repo *git.ProdRepo) (result appendConfig, err error) {
 	result.parentBranch = git.GetCurrentBranchName()
 	result.targetBranch = args[0]
-	if git.HasRemote("origin") && !git.Config().IsOffline() {
+	hasRemote, err := repo.Silent.HasRemote("origin")
+	if err != nil {
+		return result, err
+	}
+	if hasRemote && !git.Config().IsOffline() {
 		err := repo.Logging.Fetch()
 		if err != nil {
 			return result, err
@@ -81,10 +85,13 @@ func getAppendConfig(args []string, repo *git.ProdRepo) (result appendConfig, er
 		return result, err
 	}
 	result.ancestorBranches = git.Config().GetAncestorBranches(result.parentBranch)
-	result.hasOrigin = git.HasRemote("origin")
+	result.hasOrigin, err = repo.Silent.HasRemote("origin")
+	if err != nil {
+		return result, err
+	}
 	result.shouldNewBranchPush = git.Config().ShouldNewBranchPush()
 	result.isOffline = git.Config().IsOffline()
-	return
+	return result, err
 }
 
 func init() {

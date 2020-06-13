@@ -10,8 +10,8 @@ type CachedRunner struct {
 }
 
 // NewCachedRunner provides CachedRunner instances.
-func NewCachedRunner(shell command.Shell, config *Configuration, remoteBranchCache *RemoteBranchCache) CachedRunner {
-	return CachedRunner{NewRunner(shell, config), remoteBranchCache}
+func NewCachedRunner(shell command.Shell, config *Configuration, remotesCache *RemotesCache, remoteBranchCache *RemoteBranchCache) CachedRunner {
+	return CachedRunner{NewRunner(shell, config, remotesCache), remoteBranchCache}
 }
 
 // RemoteBranches provides the names of the remote branches in this repo.

@@ -65,7 +65,10 @@ See "sync" for remote upstream options.
 func getPrependConfig(args []string, repo *git.ProdRepo) (result prependConfig, err error) {
 	result.initialBranch = git.GetCurrentBranchName()
 	result.targetBranch = args[0]
-	result.hasOrigin = git.HasRemote("origin")
+	result.hasOrigin, err = repo.Silent.HasRemote("origin")
+	if err != nil {
+		return result, err
+	}
 	result.shouldNewBranchPush = git.Config().ShouldNewBranchPush()
 	result.isOffline = git.Config().IsOffline()
 	if result.hasOrigin && !result.isOffline {
@@ -90,7 +93,7 @@ func getPrependConfig(args []string, repo *git.ProdRepo) (result prependConfig, 
 	}
 	result.parentBranch = git.Config().GetParentBranch(result.initialBranch)
 	result.ancestorBranches = git.Config().GetAncestorBranches(result.initialBranch)
-	return
+	return result, nil
 }
 
 func getPrependStepList(config prependConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
