@@ -70,11 +70,14 @@ When run on a perennial branch
 }
 
 func getRenameBranchConfig(args []string, repo *git.ProdRepo) (result renameBranchConfig, err error) {
-	result.initialBranch = git.GetCurrentBranchName()
+	result.initialBranch, err = repo.Silent.CurrentBranch()
+	if err != nil {
+		return result, err
+	}
 	result.isInitialBranchPerennial = git.Config().IsPerennialBranch(result.initialBranch)
 	result.isOffline = git.Config().IsOffline()
 	if len(args) == 1 {
-		result.oldBranchName = git.GetCurrentBranchName()
+		result.oldBranchName = result.initialBranch
 		result.newBranchName = args[0]
 	} else {
 		result.oldBranchName = args[0]

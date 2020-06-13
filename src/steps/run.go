@@ -12,7 +12,7 @@ import (
 )
 
 // Run runs the Git Town command described by the given state.
-// nolint: gocyclo, gocognit, nestif
+// nolint: gocyclo, gocognit, nestif, funlen
 func Run(runState *RunState, repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	for {
 		step := runState.RunStepList.Pop()
@@ -37,7 +37,10 @@ func Run(runState *RunState, repo *git.ProdRepo, driver drivers.CodeHostingDrive
 			continue
 		}
 		if getTypeName(step) == "*PushBranchAfterCurrentBranchSteps" {
-			runState.AddPushBranchStepAfterCurrentBranchSteps()
+			err := runState.AddPushBranchStepAfterCurrentBranchSteps(repo)
+			if err != nil {
+				return err
+			}
 			continue
 		}
 		err := step.Run(repo, driver)
@@ -52,11 +55,18 @@ func Run(runState *RunState, repo *git.ProdRepo, driver drivers.CodeHostingDrive
 				cli.Exit(step.GetAutomaticAbortErrorMessage())
 			} else {
 				runState.RunStepList.Prepend(step.CreateContinueStep())
-				runState.MarkAsUnfinished()
-				if runState.Command == "sync" && !(git.IsRebaseInProgress() && git.Config().IsMainBranch(git.GetCurrentBranchName())) {
+				err = runState.MarkAsUnfinished(repo)
+				if err != nil {
+					return err
+				}
+				currentBranch, err := repo.Silent.CurrentBranch()
+				if err != nil {
+					return err
+				}
+				if runState.Command == "sync" && !(git.IsRebaseInProgress() && git.Config().IsMainBranch(currentBranch)) {
 					runState.UnfinishedDetails.CanSkip = true
 				}
-				err := SaveRunState(runState)
+				err = SaveRunState(runState)
 				if err != nil {
 					return fmt.Errorf("cannot save run state: %w", err)
 				}

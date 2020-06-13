@@ -63,7 +63,10 @@ See "sync" for remote upstream options.
 }
 
 func getPrependConfig(args []string, repo *git.ProdRepo) (result prependConfig, err error) {
-	result.initialBranch = git.GetCurrentBranchName()
+	result.initialBranch, err = repo.Silent.CurrentBranch()
+	if err != nil {
+		return result, err
+	}
 	result.targetBranch = args[0]
 	result.hasOrigin, err = repo.Silent.HasRemote("origin")
 	if err != nil {

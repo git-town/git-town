@@ -6,8 +6,8 @@ type CurrentBranchTracker struct {
 	value string
 }
 
-// Changed allows collaborators to signal when the current branch has changed.
-func (cbt *CurrentBranchTracker) Changed(newBranch string) {
+// Set allows collaborators to signal when the current branch has changed.
+func (cbt *CurrentBranchTracker) Set(newBranch string) {
 	cbt.value = newBranch
 }
 
@@ -17,4 +17,14 @@ func (cbt *CurrentBranchTracker) Current() string {
 		panic("using current branch before initialization")
 	}
 	return cbt.value
+}
+
+// Initialized indicates if we have a current branch.
+func (cbt *CurrentBranchTracker) Initialized() bool {
+	return cbt.value != ""
+}
+
+// Reset invalidates the cached value.
+func (cbt *CurrentBranchTracker) Reset() {
+	cbt.value = ""
 }

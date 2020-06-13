@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/src/command"
+	"github.com/git-town/git-town/src/dryrun"
 	"github.com/git-town/git-town/src/util"
 )
 
@@ -19,7 +20,7 @@ import (
 type Runner struct {
 	command.Shell                              // for running console commands
 	*Configuration                             // caches Git configuration settings
-	currentBranchTracker *CurrentBranchTracker // caches the currently checked out Git branch
+	CurrentBranchTracker *CurrentBranchTracker // caches the currently checked out Git branch
 	remoteBranchCache    *RemoteBranchCache    // caches the remote branches of this Git repo
 	remotes              *RemotesCache         // caches Git remotes
 }
@@ -88,7 +89,11 @@ func (r *Runner) CheckoutBranch(name string) error {
 	if err != nil {
 		return fmt.Errorf("cannot check out branch %q in repo %q: %w\n%v", name, r.WorkingDir(), err, outcome)
 	}
-	currentBranchCache = name
+	if name != "-" {
+		r.CurrentBranchTracker.Set(name)
+	} else {
+		r.CurrentBranchTracker.Reset()
+	}
 	return nil
 }
 
@@ -356,11 +361,21 @@ func (r *Runner) CreateTrackingBranch(branch string) error {
 
 // CurrentBranch provides the currently checked out branch for this repo.
 func (r *Runner) CurrentBranch() (result string, err error) {
-	outcome, err := r.Run("git", "rev-parse", "--abbrev-ref", "HEAD")
-	if err != nil {
-		return result, fmt.Errorf("cannot determine the current branch: %w\n%s", err, outcome.Output())
+	if dryrun.IsActive() {
+		return dryrun.GetCurrentBranchName(), nil
 	}
-	return outcome.OutputSanitized(), nil
+	if !r.CurrentBranchTracker.Initialized() {
+		if IsRebaseInProgress() {
+			r.CurrentBranchTracker.Set(getCurrentBranchNameDuringRebase())
+		} else {
+			outcome, err := r.Run("git", "rev-parse", "--abbrev-ref", "HEAD")
+			if err != nil {
+				return "", fmt.Errorf("cannot determine the current branch: %w\n%s", err, outcome.Output())
+			}
+			r.CurrentBranchTracker.Set(outcome.OutputSanitized())
+		}
+	}
+	return r.CurrentBranchTracker.Current(), nil
 }
 
 // CurrentSha provides the SHA of the currently checked out branch/commit.

@@ -35,7 +35,11 @@ func (step *PushBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDr
 	if step.Force {
 		return repo.Logging.PushBranchForce(step.BranchName)
 	}
-	if git.GetCurrentBranchName() == step.BranchName {
+	currentBranch, err := repo.Silent.CurrentBranch()
+	if err != nil {
+		return err
+	}
+	if currentBranch == step.BranchName {
 		return repo.Logging.PushBranch()
 	}
 	return repo.Logging.PushBranchSetUpstream(step.BranchName)

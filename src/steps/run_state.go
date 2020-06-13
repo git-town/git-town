@@ -36,18 +36,23 @@ func NewRunState(command string, stepList StepList) *RunState {
 
 // AddPushBranchStepAfterCurrentBranchSteps inserts a PushBranchStep
 // after all the steps for the current branch.
-func (runState *RunState) AddPushBranchStepAfterCurrentBranchSteps() {
+func (runState *RunState) AddPushBranchStepAfterCurrentBranchSteps(repo *git.ProdRepo) error {
 	popped := StepList{}
 	for {
 		step := runState.RunStepList.Peek()
 		if !isCheckoutBranchStep(step) {
 			popped.Append(runState.RunStepList.Pop())
 		} else {
-			runState.RunStepList.Prepend(&PushBranchStep{BranchName: git.GetCurrentBranchName()})
+			currentBranch, err := repo.Silent.CurrentBranch()
+			if err != nil {
+				return err
+			}
+			runState.RunStepList.Prepend(&PushBranchStep{BranchName: currentBranch})
 			runState.RunStepList.PrependList(popped)
 			break
 		}
 	}
+	return nil
 }
 
 // CreateAbortRunState returns a new runstate
@@ -105,12 +110,17 @@ func (runState *RunState) MarkAsFinished() {
 }
 
 // MarkAsUnfinished updates the run state to be marked as unfinished and populates informational fields.
-func (runState *RunState) MarkAsUnfinished() {
+func (runState *RunState) MarkAsUnfinished(repo *git.ProdRepo) error {
+	currentBranch, err := repo.Silent.CurrentBranch()
+	if err != nil {
+		return err
+	}
 	runState.UnfinishedDetails = &UnfinishedRunStateDetails{
 		CanSkip:   false,
-		EndBranch: git.GetCurrentBranchName(),
+		EndBranch: currentBranch,
 		EndTime:   time.Now(),
 	}
+	return nil
 }
 
 // SkipCurrentBranchSteps removes the steps for the current branch
