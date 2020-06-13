@@ -19,12 +19,12 @@ func Run(runState *RunState, repo *git.ProdRepo, driver drivers.CodeHostingDrive
 		if step == nil {
 			runState.MarkAsFinished()
 			if runState.IsAbort || runState.isUndo {
-				err := DeletePreviousRunState()
+				err := DeletePreviousRunState(repo)
 				if err != nil {
 					return fmt.Errorf("cannot delete previous run state: %w", err)
 				}
 			} else {
-				err := SaveRunState(runState)
+				err := SaveRunState(runState, repo)
 				if err != nil {
 					return fmt.Errorf("cannot save run state: %w", err)
 				}
@@ -70,7 +70,7 @@ func Run(runState *RunState, repo *git.ProdRepo, driver drivers.CodeHostingDrive
 				if runState.Command == "sync" && !(rebasing && git.Config().IsMainBranch(currentBranch)) {
 					runState.UnfinishedDetails.CanSkip = true
 				}
-				err = SaveRunState(runState)
+				err = SaveRunState(runState, repo)
 				if err != nil {
 					return fmt.Errorf("cannot save run state: %w", err)
 				}

@@ -36,7 +36,7 @@ func validateIsConfigured(repo *git.ProdRepo) error {
 }
 
 func ensureIsNotInUnfinishedState(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
-	runState, err := steps.LoadPreviousRunState()
+	runState, err := steps.LoadPreviousRunState(repo)
 	if err != nil {
 		fmt.Printf("cannot load previous run state: %v\n", err)
 		os.Exit(1)
@@ -50,7 +50,7 @@ func ensureIsNotInUnfinishedState(repo *git.ProdRepo, driver drivers.CodeHosting
 		)
 		switch response {
 		case prompt.ResponseTypeDiscard:
-			return steps.DeletePreviousRunState()
+			return steps.DeletePreviousRunState(repo)
 		case prompt.ResponseTypeContinue:
 			hasConflicts, err := repo.Silent.HasConflicts()
 			if err != nil {
