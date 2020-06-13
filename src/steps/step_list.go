@@ -74,7 +74,11 @@ func (stepList *StepList) Wrap(options WrapOptions, repo *git.ProdRepo) error {
 		InitialBranch:                     git.GetCurrentBranchName(),
 		InitialPreviouslyCheckedOutBranch: previousBranch,
 	})
-	if options.StashOpenChanges && git.HasOpenChanges() {
+	hasOpenChanges, err := repo.Silent.HasOpenChanges()
+	if err != nil {
+		return err
+	}
+	if options.StashOpenChanges && hasOpenChanges {
 		stepList.Prepend(&StashOpenChangesStep{})
 		stepList.Append(&RestoreOpenChangesStep{})
 	}

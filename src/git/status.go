@@ -21,11 +21,6 @@ func HasConflicts() bool {
 	return command.MustRun("git", "status").OutputContainsText("Unmerged paths")
 }
 
-// HasOpenChanges returns whether the local repository contains uncommitted changes.
-func HasOpenChanges() bool {
-	return command.MustRun("git", "status", "--porcelain").OutputSanitized() != ""
-}
-
 // IsRebaseInProgress returns whether the local repository is in the middle of
 // an unfinished rebase process.
 func IsRebaseInProgress() bool {
