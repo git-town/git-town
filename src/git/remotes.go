@@ -9,16 +9,12 @@ import (
 var remotes []string
 var remotesInitialized bool
 
-func getRemotes() []string {
+// HasRemote returns whether the current repository contains a Git remote
+// with the given name.
+func HasRemote(name string) bool {
 	if !remotesInitialized {
 		remotes = command.MustRun("git", "remote").OutputLines()
 		remotesInitialized = true
 	}
-	return remotes
-}
-
-// HasRemote returns whether the current repository contains a Git remote
-// with the given name.
-func HasRemote(name string) bool {
-	return util.DoesStringArrayContain(getRemotes(), name)
+	return util.DoesStringArrayContain(remotes, name)
 }
