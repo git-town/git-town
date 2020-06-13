@@ -6,7 +6,6 @@ import (
 
 	"github.com/fatih/color"
 	"github.com/git-town/git-town/src/cli"
-	"github.com/git-town/git-town/src/git"
 	"github.com/spf13/cobra"
 )
 
@@ -25,7 +24,7 @@ and it allows you to perform many common Git operations faster and easier.`,
 
 // Execute runs the Cobra stack.
 func Execute() {
-	majorVersion, minorVersion, err := git.Version()
+	majorVersion, minorVersion, err := prodRepo.Silent.Version()
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
