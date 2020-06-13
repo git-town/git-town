@@ -73,10 +73,13 @@ func getHackConfig(args []string, repo *git.ProdRepo) (result appendConfig, err 
 	if err != nil {
 		return result, err
 	}
-	result.hasOrigin = git.HasRemote("origin")
+	result.hasOrigin, err = repo.Silent.HasRemote("origin")
+	if err != nil {
+		return result, err
+	}
 	result.shouldNewBranchPush = git.Config().ShouldNewBranchPush()
 	result.isOffline = git.Config().IsOffline()
-	if git.HasRemote("origin") && !git.Config().IsOffline() {
+	if result.hasOrigin && !git.Config().IsOffline() {
 		err := repo.Logging.Fetch()
 		if err != nil {
 			return result, err

@@ -53,7 +53,11 @@ This usually means the branch was shipped or killed on another machine.`,
 }
 
 func getPruneBranchesConfig(repo *git.ProdRepo) (result pruneBranchesConfig, err error) {
-	if git.HasRemote("origin") {
+	hasOrigin, err := repo.Silent.HasRemote("origin")
+	if err != nil {
+		return result, err
+	}
+	if hasOrigin {
 		err = repo.Logging.Fetch()
 		if err != nil {
 			return result, err

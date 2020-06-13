@@ -17,13 +17,14 @@ import (
 
 // Runner executes Git commands.
 type Runner struct {
-	command.Shell  // for running console commands
-	*Configuration // caches Git configuration settings
+	command.Shell                // for running console commands
+	*Configuration               // caches Git configuration settings
+	remotes        *RemotesCache // caches Git remotes
 }
 
 // NewRunner provides Runner instances.
-func NewRunner(shell command.Shell, config *Configuration) Runner {
-	return Runner{shell, config}
+func NewRunner(shell command.Shell, config *Configuration, remotes *RemotesCache) Runner {
+	return Runner{shell, config, remotes}
 }
 
 // AbortMerge cancels a currently ongoing Git merge operation.
@@ -50,6 +51,7 @@ func (r *Runner) AddRemote(name, value string) error {
 	if err != nil {
 		return fmt.Errorf("cannot add remote %q --> %q: %w\n%s", name, value, err, res.Output())
 	}
+	r.remotes.Reset()
 	return nil
 }
 
@@ -833,15 +835,19 @@ func (r *Runner) RemoteBranches() ([]string, error) {
 }
 
 // Remotes provides the names of all Git remotes in this repository.
-func (r *Runner) Remotes() (names []string, err error) {
-	out, err := r.Run("git", "remote")
-	if err != nil {
-		return names, err
+func (r *Runner) Remotes() (result []string, err error) {
+	if !r.remotes.initialized {
+		out, err := r.Run("git", "remote")
+		if err != nil {
+			return result, fmt.Errorf("cannot determine remotes: %w", err)
+		}
+		if out.OutputSanitized() == "" {
+			r.remotes.Set([]string{})
+		} else {
+			r.remotes.Set(out.OutputLines())
+		}
 	}
-	if out.OutputSanitized() == "" {
-		return []string{}, nil
-	}
-	return out.OutputLines(), nil
+	return r.remotes.Get()
 }
 
 // RemoveBranch deletes the branch with the given name from this repo.
@@ -855,6 +861,7 @@ func (r *Runner) RemoveBranch(name string) error {
 
 // RemoveRemote deletes the Git remote with the given name.
 func (r *Runner) RemoveRemote(name string) error {
+	r.remotes.Reset()
 	_, err := r.Run("git", "remote", "rm", name)
 	return err
 }
