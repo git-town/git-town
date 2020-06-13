@@ -89,6 +89,7 @@ and Git Town will leave it up to your origin server to delete the remote branch.
 	},
 }
 
+// nolint:funlen
 func gitShipConfig(args []string, driver drivers.CodeHostingDriver, repo *git.ProdRepo) (result shipConfig, err error) {
 	result.initialBranch = git.GetCurrentBranchName()
 	if len(args) == 0 {
@@ -101,7 +102,11 @@ func gitShipConfig(args []string, driver drivers.CodeHostingDriver, repo *git.Pr
 			return result, fmt.Errorf("you have uncommitted changes. Did you mean to commit them before shipping?")
 		}
 	}
-	if git.HasRemote("origin") && !git.Config().IsOffline() {
+	hasOrigin, err := repo.Silent.HasRemote("origin")
+	if err != nil {
+		return result, err
+	}
+	if hasOrigin && !git.Config().IsOffline() {
 		err := repo.Logging.Fetch()
 		if err != nil {
 			return result, err
@@ -128,7 +133,10 @@ func gitShipConfig(args []string, driver drivers.CodeHostingDriver, repo *git.Pr
 	if err != nil {
 		return result, err
 	}
-	result.hasOrigin = git.HasRemote("origin")
+	result.hasOrigin, err = repo.Silent.HasRemote("origin")
+	if err != nil {
+		return result, err
+	}
 	result.isOffline = git.Config().IsOffline()
 	result.isShippingInitialBranch = result.branchToShip == result.initialBranch
 	result.branchToMergeInto = git.Config().GetParentBranch(result.branchToShip)
@@ -204,7 +212,11 @@ func getShipStepList(config shipConfig, repo *git.ProdRepo) (result steps.StepLi
 }
 
 func getCanShipWithDriver(branch, parentBranch string, driver drivers.CodeHostingDriver) (result drivers.PullRequestInfo, err error) {
-	if !git.HasRemote("origin") {
+	hasOrigin, err := prodRepo.Silent.HasRemote("origin")
+	if err != nil {
+		return result, err
+	}
+	if !hasOrigin {
 		return result, nil
 	}
 	if git.Config().IsOffline() {
