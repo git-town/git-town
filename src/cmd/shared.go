@@ -52,10 +52,17 @@ func ensureIsNotInUnfinishedState(repo *git.ProdRepo, driver drivers.CodeHosting
 		case prompt.ResponseTypeDiscard:
 			return steps.DeletePreviousRunState()
 		case prompt.ResponseTypeContinue:
-			if git.HasConflicts() {
+			hasConflicts, err := repo.Silent.HasConflicts()
+			if err != nil {
+				return err
+			}
+			if hasConflicts {
 				return fmt.Errorf("you must resolve the conflicts before continuing")
 			}
 			err = steps.Run(runState, repo, driver)
+			if err != nil {
+				return err
+			}
 		case prompt.ResponseTypeAbort:
 			abortRunState := runState.CreateAbortRunState()
 			err = steps.Run(&abortRunState, repo, driver)

@@ -16,11 +16,6 @@ func GetRootDirectory() string {
 	return rootDirectory
 }
 
-// HasConflicts returns whether the local repository currently has unresolved merge conflicts.
-func HasConflicts() bool {
-	return command.MustRun("git", "status").OutputContainsText("Unmerged paths")
-}
-
 // IsRebaseInProgress returns whether the local repository is in the middle of
 // an unfinished rebase process.
 func IsRebaseInProgress() bool {

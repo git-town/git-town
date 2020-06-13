@@ -518,6 +518,15 @@ func (r *Runner) HasBranchesOutOfSync() (bool, error) {
 	return strings.Contains(res.Output(), "["), nil
 }
 
+// HasConflicts returns whether the local repository currently has unresolved merge conflicts.
+func (r *Runner) HasConflicts() (bool, error) {
+	res, err := r.Run("git", "status")
+	if err != nil {
+		return false, fmt.Errorf("cannot determine conflicts: %w", err)
+	}
+	return res.OutputContainsText("Unmerged paths"), nil
+}
+
 // HasFile indicates whether this repository contains a file with the given name and content.
 func (r *Runner) HasFile(name, content string) (result bool, err error) {
 	rawContent, err := ioutil.ReadFile(filepath.Join(r.WorkingDir(), name))

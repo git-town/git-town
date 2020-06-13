@@ -24,7 +24,11 @@ var continueCmd = &cobra.Command{
 		if runState == nil || !runState.IsUnfinished() {
 			cli.Exit("Nothing to continue")
 		}
-		if git.HasConflicts() {
+		hasConflicts, err := prodRepo.Silent.HasConflicts()
+		if err != nil {
+			cli.Exit(err)
+		}
+		if hasConflicts {
 			fmt.Println("Error: you must resolve the conflicts before continuing")
 			os.Exit(1)
 		}
