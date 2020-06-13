@@ -8,7 +8,7 @@ import (
 )
 
 func TestCurrentBranchTracker(t *testing.T) {
-	cbt := git.CurrentBranchTracker{}
+	cbt := git.CurrentBranchCache{}
 	cbt.Set("foo")
 	assert.Equal(t, "foo", cbt.Current())
 }

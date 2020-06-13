@@ -18,15 +18,15 @@ import (
 
 // Runner executes Git commands.
 type Runner struct {
-	command.Shell                              // for running console commands
-	*Configuration                             // caches Git configuration settings
-	CurrentBranchTracker *CurrentBranchTracker // caches the currently checked out Git branch
-	remoteBranchCache    *RemoteBranchCache    // caches the remote branches of this Git repo
-	remotes              *RemotesCache         // caches Git remotes
+	command.Shell                            // for running console commands
+	*Configuration                           // caches Git configuration settings
+	CurrentBranchTracker *CurrentBranchCache // caches the currently checked out Git branch
+	remoteBranchCache    *RemoteBranchCache  // caches the remote branches of this Git repo
+	remotes              *RemotesCache       // caches Git remotes
 }
 
 // NewRunner provides Runner instances.
-func NewRunner(shell command.Shell, config *Configuration, currentBranchTracker *CurrentBranchTracker, remotes *RemotesCache, remoteBranchCache *RemoteBranchCache) Runner {
+func NewRunner(shell command.Shell, config *Configuration, currentBranchTracker *CurrentBranchCache, remotes *RemotesCache, remoteBranchCache *RemoteBranchCache) Runner {
 	return Runner{shell, config, currentBranchTracker, remoteBranchCache, remotes}
 }
 
