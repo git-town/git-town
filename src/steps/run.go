@@ -63,7 +63,7 @@ func Run(runState *RunState, repo *git.ProdRepo, driver drivers.CodeHostingDrive
 				if err != nil {
 					return err
 				}
-				rebasing, err := repo.Silent.IsRebaseInProgress()
+				rebasing, err := repo.Silent.HasRebaseInProgress()
 				if err != nil {
 					return err
 				}
