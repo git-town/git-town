@@ -12,5 +12,7 @@ func TestRemoteBranchTracker(t *testing.T) {
 	assert.False(t, rbt.Initialized())
 	rbt.Set([]string{"one", "two"})
 	assert.True(t, rbt.Initialized())
-	assert.Equal(t, []string{"one", "two"}, rbt.Get())
+	remoteBranches, err := rbt.Get()
+	assert.NoError(t, err)
+	assert.Equal(t, []string{"one", "two"}, remoteBranches)
 }
