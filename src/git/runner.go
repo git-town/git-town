@@ -17,13 +17,14 @@ import (
 
 // Runner executes Git commands.
 type Runner struct {
-	command.Shell  // for running console commands
-	*Configuration // caches Git configuration settings
+	command.Shell                        // for running console commands
+	*Configuration                       // caches Git configuration settings
+	remoteBranchCache *RemoteBranchCache // caches the remote branches of this Git repo
 }
 
 // NewRunner provides Runner instances.
-func NewRunner(shell command.Shell, config *Configuration) Runner {
-	return Runner{shell, config}
+func NewRunner(shell command.Shell, config *Configuration, remoteBranchCache *RemoteBranchCache) Runner {
+	return Runner{shell, config, remoteBranchCache}
 }
 
 // AbortMerge cancels a currently ongoing Git merge operation.
@@ -818,18 +819,21 @@ func (r *Runner) Rebase(target string) error {
 
 // RemoteBranches provides the names of the remote branches in this repo.
 func (r *Runner) RemoteBranches() ([]string, error) {
-	outcome, err := r.Run("git", "branch", "-r")
-	if err != nil {
-		return []string{}, fmt.Errorf("cannot determine remote branches")
-	}
-	lines := outcome.OutputLines()
-	result := make([]string, 0, len(lines)-1)
-	for l := range lines {
-		if !strings.Contains(lines[l], " -> ") {
-			result = append(result, strings.TrimSpace(lines[l]))
+	if !r.remoteBranchCache.Initialized() {
+		outcome, err := r.Run("git", "branch", "-r")
+		if err != nil {
+			return []string{}, fmt.Errorf("cannot determine remote branches: %w", err)
 		}
+		lines := outcome.OutputLines()
+		branches := make([]string, 0, len(lines)-1)
+		for l := range lines {
+			if !strings.Contains(lines[l], " -> ") {
+				branches = append(branches, strings.TrimSpace(lines[l]))
+			}
+		}
+		r.remoteBranchCache.Set(branches)
 	}
-	return result, nil
+	return r.remoteBranchCache.Get()
 }
 
 // Remotes provides the names of all Git remotes in this repository.
