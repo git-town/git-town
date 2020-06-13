@@ -13,9 +13,3 @@ func GetRootDirectory() string {
 	}
 	return rootDirectory
 }
-
-// IsRebaseInProgress returns whether the local repository is in the middle of
-// an unfinished rebase process.
-func IsRebaseInProgress() bool {
-	return command.MustRun("git", "status").OutputContainsText("rebase in progress")
-}

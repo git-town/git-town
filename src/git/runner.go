@@ -367,7 +367,11 @@ func (r *Runner) CurrentBranch() (result string, err error) {
 	if r.CurrentBranchTracker.Initialized() {
 		return r.CurrentBranchTracker.Current(), nil
 	}
-	if IsRebaseInProgress() {
+	rebasing, err := r.IsRebaseInProgress()
+	if err != nil {
+		return "", fmt.Errorf("cannot determine current branch: %w", err)
+	}
+	if rebasing {
 		currentBranch, err := r.currentBranchDuringRebase()
 		if err != nil {
 			return "", err
@@ -684,6 +688,16 @@ func (r *Runner) IsBranchInSync(branchName string) (bool, error) {
 		return localSha == remoteSha, err
 	}
 	return true, nil
+}
+
+// IsRebaseInProgress returns whether the local repository is in the middle of
+// an unfinished rebase process.
+func (r *Runner) IsRebaseInProgress() (bool, error) {
+	out, err := r.Run("git", "status")
+	if err != nil {
+		return false, fmt.Errorf("cannot determine rebase in progress: %w", err)
+	}
+	return out.OutputContainsText("rebase in progress"), nil
 }
 
 // LastActiveDir provides the directory that was last used in this repo.
