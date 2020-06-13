@@ -17,9 +17,9 @@ func NewProdRepo() *ProdRepo {
 	currentBranchTracker := CurrentBranchTracker{}
 	remoteBranchCache := RemoteBranchCache{}
 	remotesCache := RemotesCache{}
-	silentRunner := NewRunner(silentShell, config, &remotesCache, &remoteBranchCache)
-	loggingShell := NewLoggingShell(&currentBranchTracker)
-	loggingRunner := NewRunner(loggingShell, config, &remotesCache, &remoteBranchCache)
+	silentRunner := NewRunner(silentShell, config, &currentBranchTracker, &remotesCache, &remoteBranchCache)
+	loggingShell := NewLoggingShell()
+	loggingRunner := NewRunner(loggingShell, config, &currentBranchTracker, &remotesCache, &remoteBranchCache)
 	return &ProdRepo{
 		Silent:        silentRunner,
 		Logging:       loggingRunner,

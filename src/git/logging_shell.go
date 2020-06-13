@@ -18,12 +18,11 @@ import (
 // and streams the command output to the application output.
 // It is used by Git Town commands to run Git commands that show up in their output.
 type LoggingShell struct {
-	currentBranchTracker *CurrentBranchTracker
 }
 
 // NewLoggingShell provides StreamingShell instances.
-func NewLoggingShell(branchTracker *CurrentBranchTracker) *LoggingShell {
-	return &LoggingShell{branchTracker}
+func NewLoggingShell() *LoggingShell {
+	return &LoggingShell{}
 }
 
 // WorkingDir provides the directory that this Shell operates in.

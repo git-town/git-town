@@ -17,15 +17,16 @@ import (
 
 // Runner executes Git commands.
 type Runner struct {
-	command.Shell                        // for running console commands
-	*Configuration                       // caches Git configuration settings
-	remoteBranchCache *RemoteBranchCache // caches the remote branches of this Git repo
-	remotes           *RemotesCache      // caches Git remotes
+	command.Shell                              // for running console commands
+	*Configuration                             // caches Git configuration settings
+	currentBranchTracker *CurrentBranchTracker // caches the currently checked out Git branch
+	remoteBranchCache    *RemoteBranchCache    // caches the remote branches of this Git repo
+	remotes              *RemotesCache         // caches Git remotes
 }
 
 // NewRunner provides Runner instances.
-func NewRunner(shell command.Shell, config *Configuration, remotes *RemotesCache, remoteBranchCache *RemoteBranchCache) Runner {
-	return Runner{shell, config, remoteBranchCache, remotes}
+func NewRunner(shell command.Shell, config *Configuration, currentBranchTracker *CurrentBranchTracker, remotes *RemotesCache, remoteBranchCache *RemoteBranchCache) Runner {
+	return Runner{shell, config, currentBranchTracker, remoteBranchCache, remotes}
 }
 
 // AbortMerge cancels a currently ongoing Git merge operation.
