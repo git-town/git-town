@@ -364,18 +364,36 @@ func (r *Runner) CurrentBranch() (result string, err error) {
 	if dryrun.IsActive() {
 		return dryrun.GetCurrentBranchName(), nil
 	}
-	if !r.CurrentBranchTracker.Initialized() {
-		if IsRebaseInProgress() {
-			r.CurrentBranchTracker.Set(getCurrentBranchNameDuringRebase())
-		} else {
-			outcome, err := r.Run("git", "rev-parse", "--abbrev-ref", "HEAD")
-			if err != nil {
-				return "", fmt.Errorf("cannot determine the current branch: %w\n%s", err, outcome.Output())
-			}
-			r.CurrentBranchTracker.Set(outcome.OutputSanitized())
+	if r.CurrentBranchTracker.Initialized() {
+		return r.CurrentBranchTracker.Current(), nil
+	}
+	if IsRebaseInProgress() {
+		currentBranch, err := r.currentBranchDuringRebase()
+		if err != nil {
+			return "", err
+		}
+		r.CurrentBranchTracker.Set(currentBranch)
+		return currentBranch, nil
+	}
+	outcome, err := r.Run("git", "rev-parse", "--abbrev-ref", "HEAD")
+	if err != nil {
+		return "", fmt.Errorf("cannot determine the current branch: %w\n%s", err, outcome.Output())
+	}
+	r.CurrentBranchTracker.Set(outcome.OutputSanitized())
+	return r.CurrentBranchTracker.Current(), nil
+}
+
+func (r *Runner) currentBranchDuringRebase() (string, error) {
+	rawContent, err := ioutil.ReadFile(fmt.Sprintf("%s/.git/rebase-apply/head-name", GetRootDirectory()))
+	if err != nil {
+		// Git 2.26 introduces a new rebase backend, see https://github.com/git/git/blob/master/Documentation/RelNotes/2.26.0.txt
+		rawContent, err = ioutil.ReadFile(fmt.Sprintf("%s/.git/rebase-merge/head-name", GetRootDirectory()))
+		if err != nil {
+			return "", err
 		}
 	}
-	return r.CurrentBranchTracker.Current(), nil
+	content := strings.TrimSpace(string(rawContent))
+	return strings.Replace(content, "refs/heads/", "", -1), nil
 }
 
 // CurrentSha provides the SHA of the currently checked out branch/commit.
