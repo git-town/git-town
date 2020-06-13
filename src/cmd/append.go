@@ -61,7 +61,10 @@ See "sync" for information regarding remote upstream.`,
 }
 
 func getAppendConfig(args []string, repo *git.ProdRepo) (result appendConfig, err error) {
-	result.parentBranch = git.GetCurrentBranchName()
+	result.parentBranch, err = repo.Silent.CurrentBranch()
+	if err != nil {
+		return result, err
+	}
 	result.targetBranch = args[0]
 	hasRemote, err := repo.Silent.HasRemote("origin")
 	if err != nil {

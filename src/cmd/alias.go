@@ -5,6 +5,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/git"
 	"github.com/spf13/cobra"
 )
@@ -40,26 +41,33 @@ This can conflict with other tools that also define Git aliases.`,
 		}
 		for _, command := range commandsToAlias {
 			if toggle {
-				addAlias(command, prodRepo)
+				err := addAlias(command, prodRepo)
+				if err != nil {
+					cli.Exit(err)
+				}
 			} else {
-				removeAlias(command, prodRepo)
+				err := removeAlias(command, prodRepo)
+				if err != nil {
+					cli.Exit(err)
+				}
 			}
 		}
 	},
 	Args: cobra.ExactArgs(1),
 }
 
-func addAlias(command string, repo *git.ProdRepo) {
+func addAlias(command string, repo *git.ProdRepo) error {
 	result := repo.AddGitAlias(command)
-	repo.LoggingShell.PrintCommand(result.Command(), result.Args()...)
+	return repo.LoggingShell.PrintCommand(result.Command(), result.Args()...)
 }
 
-func removeAlias(command string, repo *git.ProdRepo) {
+func removeAlias(command string, repo *git.ProdRepo) error {
 	existingAlias := repo.GetGitAlias(command)
 	if existingAlias == "town "+command {
 		result := repo.RemoveGitAlias(command)
-		repo.LoggingShell.PrintCommand(result.Command(), result.Args()...)
+		return repo.LoggingShell.PrintCommand(result.Command(), result.Args()...)
 	}
+	return nil
 }
 
 func init() {

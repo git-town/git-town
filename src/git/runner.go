@@ -12,20 +12,22 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/src/command"
+	"github.com/git-town/git-town/src/dryrun"
 	"github.com/git-town/git-town/src/util"
 )
 
 // Runner executes Git commands.
 type Runner struct {
-	command.Shell                        // for running console commands
-	*Configuration                       // caches Git configuration settings
-	remoteBranchCache *RemoteBranchCache // caches the remote branches of this Git repo
-	remotes           *RemotesCache      // caches Git remotes
+	command.Shell                              // for running console commands
+	*Configuration                             // caches Git configuration settings
+	CurrentBranchTracker *CurrentBranchTracker // caches the currently checked out Git branch
+	remoteBranchCache    *RemoteBranchCache    // caches the remote branches of this Git repo
+	remotes              *RemotesCache         // caches Git remotes
 }
 
 // NewRunner provides Runner instances.
-func NewRunner(shell command.Shell, config *Configuration, remotes *RemotesCache, remoteBranchCache *RemoteBranchCache) Runner {
-	return Runner{shell, config, remoteBranchCache, remotes}
+func NewRunner(shell command.Shell, config *Configuration, currentBranchTracker *CurrentBranchTracker, remotes *RemotesCache, remoteBranchCache *RemoteBranchCache) Runner {
+	return Runner{shell, config, currentBranchTracker, remoteBranchCache, remotes}
 }
 
 // AbortMerge cancels a currently ongoing Git merge operation.
@@ -87,7 +89,11 @@ func (r *Runner) CheckoutBranch(name string) error {
 	if err != nil {
 		return fmt.Errorf("cannot check out branch %q in repo %q: %w\n%v", name, r.WorkingDir(), err, outcome)
 	}
-	currentBranchCache = name
+	if name != "-" {
+		r.CurrentBranchTracker.Set(name)
+	} else {
+		r.CurrentBranchTracker.Reset()
+	}
 	return nil
 }
 
@@ -355,11 +361,39 @@ func (r *Runner) CreateTrackingBranch(branch string) error {
 
 // CurrentBranch provides the currently checked out branch for this repo.
 func (r *Runner) CurrentBranch() (result string, err error) {
+	if dryrun.IsActive() {
+		return dryrun.GetCurrentBranchName(), nil
+	}
+	if r.CurrentBranchTracker.Initialized() {
+		return r.CurrentBranchTracker.Current(), nil
+	}
+	if IsRebaseInProgress() {
+		currentBranch, err := r.currentBranchDuringRebase()
+		if err != nil {
+			return "", err
+		}
+		r.CurrentBranchTracker.Set(currentBranch)
+		return currentBranch, nil
+	}
 	outcome, err := r.Run("git", "rev-parse", "--abbrev-ref", "HEAD")
 	if err != nil {
-		return result, fmt.Errorf("cannot determine the current branch: %w\n%s", err, outcome.Output())
+		return "", fmt.Errorf("cannot determine the current branch: %w\n%s", err, outcome.Output())
 	}
-	return outcome.OutputSanitized(), nil
+	r.CurrentBranchTracker.Set(outcome.OutputSanitized())
+	return r.CurrentBranchTracker.Current(), nil
+}
+
+func (r *Runner) currentBranchDuringRebase() (string, error) {
+	rawContent, err := ioutil.ReadFile(fmt.Sprintf("%s/.git/rebase-apply/head-name", GetRootDirectory()))
+	if err != nil {
+		// Git 2.26 introduces a new rebase backend, see https://github.com/git/git/blob/master/Documentation/RelNotes/2.26.0.txt
+		rawContent, err = ioutil.ReadFile(fmt.Sprintf("%s/.git/rebase-merge/head-name", GetRootDirectory()))
+		if err != nil {
+			return "", err
+		}
+	}
+	content := strings.TrimSpace(string(rawContent))
+	return strings.Replace(content, "refs/heads/", "", -1), nil
 }
 
 // CurrentSha provides the SHA of the currently checked out branch/commit.

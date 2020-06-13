@@ -15,7 +15,10 @@ var setParentBranchCommand = &cobra.Command{
 	Short: "Prompts to set the parent branch for the current branch",
 	Long:  `Prompts to set the parent branch for the current branch`,
 	Run: func(cmd *cobra.Command, args []string) {
-		branchName := git.GetCurrentBranchName()
+		branchName, err := prodRepo.Silent.CurrentBranch()
+		if err != nil {
+			cli.Exit(err)
+		}
 		if !git.Config().IsFeatureBranch(branchName) {
 			fmt.Println("Error: only feature branches can have parent branches")
 			os.Exit(1)
@@ -25,7 +28,7 @@ var setParentBranchCommand = &cobra.Command{
 			defaultParentBranch = git.Config().GetMainBranch()
 		}
 		git.Config().DeleteParentBranch(branchName)
-		err := prompt.AskForBranchAncestry(branchName, defaultParentBranch, prodRepo)
+		err = prompt.AskForBranchAncestry(branchName, defaultParentBranch, prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}
