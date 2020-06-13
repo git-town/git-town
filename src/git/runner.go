@@ -861,11 +861,8 @@ func (r *Runner) RemoveBranch(name string) error {
 
 // RemoveRemote deletes the Git remote with the given name.
 func (r *Runner) RemoveRemote(name string) error {
-	_, err := r.Run("git", "remote", "rm", name)
-	if err != nil {
-		return err
-	}
 	r.remotes.Reset()
+	_, err := r.Run("git", "remote", "rm", name)
 	return err
 }
 
