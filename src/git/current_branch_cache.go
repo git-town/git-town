@@ -7,24 +7,24 @@ type CurrentBranchCache struct {
 }
 
 // Set allows collaborators to signal when the current branch has changed.
-func (cbt *CurrentBranchCache) Set(newBranch string) {
-	cbt.value = newBranch
+func (c *CurrentBranchCache) Set(newBranch string) {
+	c.value = newBranch
 }
 
 // Current provides the currently checked out branch.
-func (cbt *CurrentBranchCache) Current() string {
-	if cbt.value == "" {
+func (c *CurrentBranchCache) Current() string {
+	if c.value == "" {
 		panic("using current branch before initialization")
 	}
-	return cbt.value
+	return c.value
 }
 
 // Initialized indicates if we have a current branch.
-func (cbt *CurrentBranchCache) Initialized() bool {
-	return cbt.value != ""
+func (c *CurrentBranchCache) Initialized() bool {
+	return c.value != ""
 }
 
 // Reset invalidates the cached value.
-func (cbt *CurrentBranchCache) Reset() {
-	cbt.value = ""
+func (c *CurrentBranchCache) Reset() {
+	c.value = ""
 }
