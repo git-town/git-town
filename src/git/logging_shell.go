@@ -18,12 +18,12 @@ import (
 // and streams the command output to the application output.
 // It is used by Git Town commands to run Git commands that show up in their output.
 type LoggingShell struct {
-	currentBranchTracker *CurrentBranchTracker
+	silentRunner *Runner
 }
 
 // NewLoggingShell provides StreamingShell instances.
-func NewLoggingShell(branchTracker *CurrentBranchTracker) *LoggingShell {
-	return &LoggingShell{branchTracker}
+func NewLoggingShell(silent *Runner) *LoggingShell {
+	return &LoggingShell{silent}
 }
 
 // WorkingDir provides the directory that this Shell operates in.
@@ -38,7 +38,10 @@ func (shell LoggingShell) MustRun(cmd string, args ...string) *command.Result {
 
 // Run runs the given command in this ShellRunner's directory.
 func (shell LoggingShell) Run(cmd string, args ...string) (*command.Result, error) {
-	shell.PrintCommand(cmd, args...)
+	err := shell.PrintCommand(cmd, args...)
+	if err != nil {
+		return nil, err
+	}
 	if dryrun.IsActive() {
 		if len(args) == 2 && cmd == "git" && args[0] == "checkout" {
 			dryrun.SetCurrentBranchName(args[1])
@@ -87,7 +90,7 @@ func (shell LoggingShell) RunStringWith(fullCmd string, options command.Options)
 }
 
 // PrintCommand prints the given command-line operation on the console.
-func (shell LoggingShell) PrintCommand(cmd string, args ...string) {
+func (shell LoggingShell) PrintCommand(cmd string, args ...string) error {
 	header := cmd + " "
 	for index, part := range args {
 		if strings.Contains(part, " ") {
@@ -99,11 +102,16 @@ func (shell LoggingShell) PrintCommand(cmd string, args ...string) {
 		header += part
 	}
 	if cmd == "git" && IsRepository() {
-		header = fmt.Sprintf("[%s] %s", GetCurrentBranchName(), header)
+		currentBranch, err := shell.silentRunner.CurrentBranch()
+		if err != nil {
+			return err
+		}
+		header = fmt.Sprintf("[%s] %s", currentBranch, header)
 	}
 	fmt.Println()
 	_, err := color.New(color.Bold).Println(header)
 	if err != nil {
 		panic(err)
 	}
+	return nil
 }

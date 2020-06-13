@@ -84,7 +84,10 @@ func getNewPullRequestConfig(repo *git.ProdRepo) (result newPullRequestConfig, e
 			return result, err
 		}
 	}
-	result.InitialBranch = git.GetCurrentBranchName()
+	result.InitialBranch, err = repo.Silent.CurrentBranch()
+	if err != nil {
+		return result, err
+	}
 	err = prompt.EnsureKnowsParentBranches([]string{result.InitialBranch}, repo)
 	if err != nil {
 		return result, err

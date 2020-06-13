@@ -64,7 +64,10 @@ func getPruneBranchesConfig(repo *git.ProdRepo) (result pruneBranchesConfig, err
 		}
 	}
 	result.mainBranch = git.Config().GetMainBranch()
-	result.initialBranchName = git.GetCurrentBranchName()
+	result.initialBranchName, err = repo.Silent.CurrentBranch()
+	if err != nil {
+		return result, err
+	}
 	result.localBranchesWithDeletedTrackingBranches, err = repo.Silent.LocalBranchesWithDeletedTrackingBranches()
 	return result, err
 }

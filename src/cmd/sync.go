@@ -89,7 +89,10 @@ func getSyncConfig(repo *git.ProdRepo) (result syncConfig, err error) {
 			return result, err
 		}
 	}
-	result.initialBranch = git.GetCurrentBranchName()
+	result.initialBranch, err = repo.Silent.CurrentBranch()
+	if err != nil {
+		return result, err
+	}
 	if allFlag {
 		branches, err := repo.Silent.LocalBranchesMainFirst()
 		if err != nil {

@@ -70,8 +70,12 @@ func (stepList *StepList) Wrap(options WrapOptions, repo *git.ProdRepo) error {
 	if err != nil {
 		return err
 	}
+	currentBranch, err := repo.Silent.CurrentBranch()
+	if err != nil {
+		return err
+	}
 	stepList.Append(&PreserveCheckoutHistoryStep{
-		InitialBranch:                     git.GetCurrentBranchName(),
+		InitialBranch:                     currentBranch,
 		InitialPreviouslyCheckedOutBranch: previousBranch,
 	})
 	hasOpenChanges, err := repo.Silent.HasOpenChanges()

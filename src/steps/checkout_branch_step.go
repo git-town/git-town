@@ -19,13 +19,13 @@ func (step *CheckoutBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error)
 }
 
 // Run executes this step.
-func (step *CheckoutBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
-	step.previousBranchName = git.GetCurrentBranchName()
+func (step *CheckoutBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) (err error) {
+	step.previousBranchName, err = repo.Silent.CurrentBranch()
+	if err != nil {
+		return err
+	}
 	if step.previousBranchName != step.BranchName {
 		err := repo.Logging.CheckoutBranch(step.BranchName)
-		if err == nil {
-			git.UpdateCurrentBranchCache(step.BranchName)
-		}
 		return err
 	}
 	return nil

@@ -29,7 +29,10 @@ func (step *ChangeDirectoryStep) Run(repo *git.ProdRepo, driver drivers.CodeHost
 	}
 	_, err = os.Stat(step.Directory)
 	if err == nil {
-		repo.LoggingShell.PrintCommand("cd", step.Directory)
+		err = repo.LoggingShell.PrintCommand("cd", step.Directory)
+		if err != nil {
+			return err
+		}
 		return os.Chdir(step.Directory)
 	}
 	return nil
