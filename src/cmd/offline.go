@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 	"strconv"
 
 	"github.com/git-town/git-town/src/cli"
@@ -22,8 +21,7 @@ Git Town avoids network operations in offline mode.`,
 		} else {
 			value, err := strconv.ParseBool(args[0])
 			if err != nil {
-				fmt.Printf(`Error: invalid argument: %q. Please provide either "true" or "false".\n`, args[0])
-				os.Exit(1)
+				cli.Exit(fmt.Errorf(`invalid argument: %q. Please provide either "true" or "false".\n`, args[0]))
 			}
 			err = setOfflineFlag(value)
 			if err != nil {

@@ -1,6 +1,6 @@
 Feature: enabling offline mode
 
-  When developing on an airplane
+    When developing on an airplane
   I want to be able to use Git Town without interactions with remote origins
   So that I can work on my code even without internet connection.
 
@@ -18,9 +18,9 @@ Feature: enabling offline mode
 
   Scenario: invalid value
     When I run "git-town offline zonk"
-    Then it prints:
+    Then it prints the error:
       """
-      Error: invalid argument: "zonk". Please provide either "true" or "false".
+      invalid argument: "zonk". Please provide either "true" or "false"
       """
 
 
