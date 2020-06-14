@@ -1,12 +1,12 @@
 # Architecture of the Git Town code base
 
-All Git Town code is stored as a mono-repo. The [Go](https://golang.org) source
-code is located in the [src](../../src) folder. It contains these packages:
+This mono-repo contains all Git Town related code. The source code is located in
+the [src](../../src) folder. It contains these packages:
 
 - [src/browsers](../../src/browsers) interacts with the local browser
 - [src/cli](../../src/cli) reads and writes data from and to Git Town's CLI
 - [src/cmd](../../src/cmd) defines Git Town's
-  [Cobra](https://github.com/spf13/cobra)-based subcommands
+  [Cobra](https://github.com/spf13/cobra) subcommands
 - [src/command](../../src/command) runs commands in subshells
 - [src/config](../../src/config) accesses the Git Town configuration
 - [src/drivers](../../src/drivers) interacts with external Git hosting providers
