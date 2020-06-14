@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 
+	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/prompt"
 	"github.com/git-town/git-town/src/steps"
@@ -28,19 +28,16 @@ See "sync" for information regarding remote upstream.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		config, err := getHackConfig(args, prodRepo)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			cli.Exit(err)
 		}
 		stepList, err := getAppendStepList(config, prodRepo)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			cli.Exit(err)
 		}
 		runState := steps.NewRunState("hack", stepList)
 		err = steps.Run(runState, prodRepo, nil)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			cli.Exit(err)
 		}
 	},
 	Args: cobra.ExactArgs(1),
