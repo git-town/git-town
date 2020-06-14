@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/git-town/git-town/src/cli"
@@ -65,19 +64,16 @@ and Git Town will leave it up to your origin server to delete the remote branch.
 		driver := drivers.Load(prodRepo.Configuration, &prodRepo.Silent)
 		config, err := gitShipConfig(args, driver, prodRepo)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			cli.Exit(err)
 		}
 		stepList, err := getShipStepList(config, prodRepo)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			cli.Exit(err)
 		}
 		runState := steps.NewRunState("ship", stepList)
 		err = steps.Run(runState, prodRepo, driver)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			cli.Exit(err)
 		}
 	},
 	Args: cobra.MaximumNArgs(1),
