@@ -1,7 +1,7 @@
 # Architecture of the Git Town code base
 
-This mono-repo contains all Git Town related code. The source code is located in
-the [src](../../src) folder. It contains these packages:
+This mono-repo contains all Git Town related code. The [src](../../src) folder
+contains these packages:
 
 - [src/browsers](../../src/browsers) interacts with the local browser
 - [src/cli](../../src/cli) reads and writes data from and to Git Town's CLI
@@ -19,12 +19,10 @@ the [src](../../src) folder. It contains these packages:
 
 ## State files
 
-When a Git Town command finishes, a list of the steps to undo the command as
-well as optionally any remaining steps to be run (in case the command
-encountered conflicts) are stored in a state files in a temp folder on the
-machine. The struct that holds the state is in
-[src/steps/run_state.go](../../src/steps/run_state.go).
+When a Git Town command finishes, it stores the steps to undo or continue itself
+in a _state file_ located in the temp folder of the machine. The struct that
+holds the state is in [src/steps/run_state.go](../../src/steps/run_state.go).
 
 ## Tests
 
-The test architecture is described [separately](testing.md).
+See [testing.md](testing.md).
