@@ -163,16 +163,13 @@ func handleUnfinishedState(repo *git.ProdRepo, driver drivers.CodeHostingDriver)
 		if hasConflicts {
 			return false, fmt.Errorf("you must resolve the conflicts before continuing")
 		}
-		err = steps.Run(runState, repo, driver)
-		return true, err
+		return true, steps.Run(runState, repo, driver)
 	case prompt.ResponseTypeAbort:
 		abortRunState := runState.CreateAbortRunState()
-		err = steps.Run(&abortRunState, repo, driver)
-		return true, err
+		return true, steps.Run(&abortRunState, repo, driver)
 	case prompt.ResponseTypeSkip:
 		skipRunState := runState.CreateSkipRunState()
-		err = steps.Run(&skipRunState, repo, driver)
-		return true, err
+		return true, steps.Run(&skipRunState, repo, driver)
 	default:
 		return false, fmt.Errorf("unknown response: %s", response)
 	}
