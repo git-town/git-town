@@ -34,7 +34,7 @@ where HOSTNAME matches what is in your ssh config file.`,
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		if err := git.ValidateIsRepository(); err != nil {
+		if err := ValidateIsRepository(prodRepo); err != nil {
 			return err
 		}
 		if err := validateIsConfigured(prodRepo); err != nil {

@@ -60,7 +60,7 @@ You can disable this by running "git config git-town.sync-upstream false".`,
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		if err := git.ValidateIsRepository(); err != nil {
+		if err := ValidateIsRepository(prodRepo); err != nil {
 			return err
 		}
 		if dryRunFlag {

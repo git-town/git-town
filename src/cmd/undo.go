@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/src/cli"
-	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/steps"
 
 	"github.com/spf13/cobra"
@@ -32,7 +31,7 @@ var undoCmd = &cobra.Command{
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		if err := git.ValidateIsRepository(); err != nil {
+		if err := ValidateIsRepository(prodRepo); err != nil {
 			return err
 		}
 		return validateIsConfigured(prodRepo)
