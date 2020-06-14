@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/drivers"
@@ -17,8 +16,7 @@ var continueCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		runState, err := steps.LoadPreviousRunState(prodRepo)
 		if err != nil {
-			fmt.Printf("cannot load previous run state: %v\n", err)
-			os.Exit(1)
+			cli.Exit(fmt.Errorf("cannot load previous run state: %v", err))
 		}
 		if runState == nil || !runState.IsUnfinished() {
 			cli.Exit("Nothing to continue")
@@ -28,13 +26,11 @@ var continueCmd = &cobra.Command{
 			cli.Exit(err)
 		}
 		if hasConflicts {
-			fmt.Println("Error: you must resolve the conflicts before continuing")
-			os.Exit(1)
+			cli.Exit(fmt.Errorf("you must resolve the conflicts before continuing"))
 		}
 		err = steps.Run(runState, prodRepo, drivers.Load(prodRepo.Configuration, &prodRepo.Silent))
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			cli.Exit(err)
 		}
 	},
 	Args: cobra.NoArgs,
