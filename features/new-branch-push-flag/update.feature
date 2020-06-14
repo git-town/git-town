@@ -21,9 +21,9 @@ Feature: set the new-branch-push-flag
 
   Scenario: invalid value
     When I run "git-town new-branch-push-flag zonk"
-    Then it prints:
+    Then it prints the error:
       """
-      Error: invalid argument: "zonk". Please provide either "true" or "false".
+      invalid argument: "zonk". Please provide either "true" or "false"
       """
 
   Scenario: multiple arguments
