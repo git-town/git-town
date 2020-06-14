@@ -109,11 +109,11 @@ func gitShipConfig(args []string, driver drivers.CodeHostingDriver, repo *git.Pr
 			return result, fmt.Errorf("you have uncommitted changes. Did you mean to commit them before shipping?")
 		}
 	}
-	hasOrigin, err := repo.Silent.HasRemote("origin")
+	result.hasOrigin, err = repo.Silent.HasRemote("origin")
 	if err != nil {
 		return result, err
 	}
-	if hasOrigin && !git.Config().IsOffline() {
+	if result.hasOrigin && !git.Config().IsOffline() {
 		err := repo.Logging.Fetch()
 		if err != nil {
 			return result, err
@@ -137,10 +137,6 @@ func gitShipConfig(args []string, driver drivers.CodeHostingDriver, repo *git.Pr
 	}
 	ensureParentBranchIsMainOrPerennialBranch(result.branchToShip)
 	result.hasTrackingBranch, err = repo.Silent.HasTrackingBranch(result.branchToShip)
-	if err != nil {
-		return result, err
-	}
-	result.hasOrigin, err = repo.Silent.HasRemote("origin")
 	if err != nil {
 		return result, err
 	}
