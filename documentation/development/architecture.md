@@ -8,6 +8,7 @@ code is located in the [src](../../src) folder. It contains these packages:
 - [src/cmd](../../src/cmd) defines Git Town's
   [Cobra](https://github.com/spf13/cobra)-based subcommands
 - [src/command](../../src/command) runs commands in subshells
+- [src/config](../../src/config) accesses the Git Town configuration
 - [src/drivers](../../src/drivers) interacts with external Git hosting providers
 - [src/dryrun](../../src/dryrun) manages dry-runs
 - [src/git](../../src/git) accesses the Git binary on the user's computer
