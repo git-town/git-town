@@ -8,10 +8,12 @@ import (
 
 func TestRunner_SetOffline(t *testing.T) {
 	repo := CreateTestGitTownRepo(t)
-	_ = repo.SetOffline(true)
+	err := repo.SetOffline(true)
+	assert.NoError(t, err)
 	offline := repo.IsOffline()
 	assert.True(t, offline)
-	_ = repo.SetOffline(false)
+	err = repo.SetOffline(false)
+	assert.NoError(t, err)
 	offline = repo.IsOffline()
 	assert.False(t, offline)
 }

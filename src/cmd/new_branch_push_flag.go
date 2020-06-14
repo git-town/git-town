@@ -26,7 +26,10 @@ hack / append / prepend on creation. Defaults to false.`,
 				fmt.Printf(`Error: invalid argument: %q. Please provide either "true" or "false".\n`, args[0])
 				os.Exit(1)
 			}
-			setNewBranchPushFlag(value)
+			err = setNewBranchPushFlag(value)
+			if err != nil {
+				cli.Exit(err)
+			}
 		}
 	},
 	Args: cobra.MaximumNArgs(1),
@@ -43,8 +46,8 @@ func printNewBranchPushFlag() {
 	}
 }
 
-func setNewBranchPushFlag(value bool) {
-	git.Config().SetNewBranchPush(value, globalFlag)
+func setNewBranchPushFlag(value bool) error {
+	return git.Config().SetNewBranchPush(value, globalFlag)
 }
 
 func init() {

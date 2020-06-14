@@ -57,7 +57,10 @@ This can conflict with other tools that also define Git aliases.`,
 }
 
 func addAlias(command string, repo *git.ProdRepo) error {
-	result := repo.AddGitAlias(command)
+	result, err := repo.AddGitAlias(command)
+	if err != nil {
+		return fmt.Errorf("cannot create alias for %q: %w", command, err)
+	}
 	return repo.LoggingShell.PrintCommand(result.Command(), result.Args()...)
 }
 

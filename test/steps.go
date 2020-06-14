@@ -82,8 +82,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^Git Town is in offline mode$`, func() error {
-		state.gitEnv.DevRepo.SetOffline(true)
-		return nil
+		return state.gitEnv.DevRepo.SetOffline(true)
 	})
 
 	suite.Step(`^Git Town is no longer configured for this repo$`, func() error {
@@ -759,8 +758,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return err
 		}
-		state.gitEnv.DevRepo.SetNewBranchPush(b, false)
-		return nil
+		return state.gitEnv.DevRepo.SetNewBranchPush(b, false)
 	})
 
 	suite.Step(`^the new-branch-push-flag configuration is "([^"]*)"$`, func(value string) error {
@@ -782,8 +780,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the offline configuration is accidentally set to "([^"]*)"$`, func(value string) error {
-		_ = state.gitEnv.DevRepo.Configuration.SetGlobalConfigValue("git-town.offline", value)
-		return nil
+		_, err := state.gitEnv.DevRepo.Configuration.SetGlobalConfigValue("git-town.offline", value)
+		return err
 	})
 
 	suite.Step(`^the perennial branches are configured as "([^"]+)"$`, func(name string) error {

@@ -92,7 +92,7 @@ func (c *Configuration) AddToPerennialBranches(branchNames ...string) *command.R
 }
 
 // AddGitAlias sets the given Git alias.
-func (c *Configuration) AddGitAlias(command string) *command.Result {
+func (c *Configuration) AddGitAlias(command string) (*command.Result, error) {
 	return c.SetGlobalConfigValue("alias."+command, "town "+command)
 }
 
@@ -384,9 +384,9 @@ func (c *Configuration) SetColorUI(value string) error {
 }
 
 // SetGlobalConfigValue sets the given configuration setting in the global Git configuration.
-func (c *Configuration) SetGlobalConfigValue(key, value string) *command.Result {
+func (c *Configuration) SetGlobalConfigValue(key, value string) (*command.Result, error) {
 	c.globalConfigCache[key] = value
-	return c.shell.MustRun("git", "config", "--global", key, value)
+	return c.shell.Run("git", "config", "--global", key, value)
 }
 
 // SetLocalConfigValue sets the local configuration with the given key to the given value.
@@ -403,16 +403,19 @@ func (c *Configuration) SetMainBranch(branchName string) *command.Result {
 
 // SetNewBranchPush updates whether the current repository is configured to push
 // freshly created branches up to the origin remote.
-func (c *Configuration) SetNewBranchPush(value bool, global bool) *command.Result {
+func (c *Configuration) SetNewBranchPush(value bool, global bool) error {
 	if global {
-		return c.SetGlobalConfigValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
+		_, err := c.SetGlobalConfigValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
+		return err
 	}
-	return c.SetLocalConfigValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
+	c.SetLocalConfigValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
+	return nil
 }
 
 // SetOffline updates whether Git Town is in offline mode.
-func (c *Configuration) SetOffline(value bool) *command.Result {
-	return c.SetGlobalConfigValue("git-town.offline", strconv.FormatBool(value))
+func (c *Configuration) SetOffline(value bool) error {
+	_, err := c.SetGlobalConfigValue("git-town.offline", strconv.FormatBool(value))
+	return err
 }
 
 // SetTestOrigin sets the origin to be used for testing.
