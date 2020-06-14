@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/acarl005/stripansi"
-	"github.com/git-town/git-town/src/util"
+	"github.com/git-town/git-town/src/stringslice"
 )
 
 // Result contains the results of a command run in a subshell.
@@ -50,7 +50,7 @@ func (c *Result) OutputSanitized() string {
 // OutputContainsLine returns whether the output of this command
 // contains the given line.
 func (c *Result) OutputContainsLine(line string) bool {
-	return util.DoesStringArrayContain(c.OutputLines(), line)
+	return stringslice.Contains(c.OutputLines(), line)
 }
 
 // OutputContainsText returns whether the output of this command

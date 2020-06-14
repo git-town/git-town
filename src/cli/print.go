@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/fatih/color"
-	"github.com/git-town/git-town/src/util"
 )
 
 // Printf prints the given text using fmt.Printf
@@ -52,6 +51,6 @@ func PrintError(messages ...interface{}) {
 func PrintLabelAndValue(label, value string) {
 	labelFmt := color.New(color.Bold).Add(color.Underline)
 	PrintlnColor(labelFmt, label+":")
-	Println(util.Indent(value))
+	Println(Indent(value))
 	fmt.Println()
 }
