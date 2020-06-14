@@ -71,8 +71,8 @@ func getRenameBranchConfig(args []string, repo *git.ProdRepo) (result renameBran
 	if err != nil {
 		return result, err
 	}
-	result.isInitialBranchPerennial = repo.IsPerennialBranch(result.initialBranch)
-	result.isOffline = repo.IsOffline()
+	result.isInitialBranchPerennial = repo.Config.IsPerennialBranch(result.initialBranch)
+	result.isOffline = repo.Config.IsOffline()
 	if len(args) == 1 {
 		result.oldBranchName = result.initialBranch
 		result.newBranchName = args[0]
@@ -80,11 +80,11 @@ func getRenameBranchConfig(args []string, repo *git.ProdRepo) (result renameBran
 		result.oldBranchName = args[0]
 		result.newBranchName = args[1]
 	}
-	if repo.IsMainBranch(result.oldBranchName) {
+	if repo.Config.IsMainBranch(result.oldBranchName) {
 		return result, fmt.Errorf("the main branch cannot be renamed")
 	}
 	if !forceFlag {
-		if repo.IsPerennialBranch(result.oldBranchName) {
+		if repo.Config.IsPerennialBranch(result.oldBranchName) {
 			return result, fmt.Errorf("%q is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'", result.oldBranchName)
 		}
 	}
@@ -118,7 +118,7 @@ func getRenameBranchConfig(args []string, repo *git.ProdRepo) (result renameBran
 	if hasNewBranch {
 		return result, fmt.Errorf("a branch named %q already exists", result.newBranchName)
 	}
-	result.oldBranchChildren = repo.GetChildBranches(result.oldBranchName)
+	result.oldBranchChildren = repo.Config.GetChildBranches(result.oldBranchName)
 	result.oldBranchHasTrackingBranch, err = repo.Silent.HasTrackingBranch(result.oldBranchName)
 	return result, err
 }
@@ -133,7 +133,7 @@ func getRenameBranchStepList(config renameBranchConfig, repo *git.ProdRepo) (res
 		result.Append(&steps.AddToPerennialBranches{BranchName: config.newBranchName})
 	} else {
 		result.Append(&steps.DeleteParentBranchStep{BranchName: config.oldBranchName})
-		result.Append(&steps.SetParentBranchStep{BranchName: config.newBranchName, ParentBranchName: repo.GetParentBranch(config.oldBranchName)})
+		result.Append(&steps.SetParentBranchStep{BranchName: config.newBranchName, ParentBranchName: repo.Config.GetParentBranch(config.oldBranchName)})
 	}
 	for _, child := range config.oldBranchChildren {
 		result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: config.newBranchName})

@@ -61,14 +61,14 @@ func getDiffParentConfig(args []string, repo *git.ProdRepo) (config diffParentCo
 			return config, fmt.Errorf("there is no local branch named %q", config.branch)
 		}
 	}
-	if !prodRepo.IsFeatureBranch(config.branch) {
+	if !prodRepo.Config.IsFeatureBranch(config.branch) {
 		return config, fmt.Errorf("you can only diff-parent feature branches")
 	}
 	err = prompt.EnsureKnowsParentBranches([]string{config.branch}, repo)
 	if err != nil {
 		return config, err
 	}
-	config.parentBranch = repo.GetParentBranch(config.branch)
+	config.parentBranch = repo.Config.GetParentBranch(config.branch)
 	return config, nil
 }
 

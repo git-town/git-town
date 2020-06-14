@@ -67,7 +67,7 @@ func getAppendConfig(args []string, repo *git.ProdRepo) (result appendConfig, er
 	if err != nil {
 		return result, err
 	}
-	if result.hasOrigin && !repo.IsOffline() {
+	if result.hasOrigin && !repo.Config.IsOffline() {
 		err := repo.Logging.Fetch()
 		if err != nil {
 			return result, err
@@ -84,9 +84,9 @@ func getAppendConfig(args []string, repo *git.ProdRepo) (result appendConfig, er
 	if err != nil {
 		return result, err
 	}
-	result.ancestorBranches = repo.GetAncestorBranches(result.parentBranch)
-	result.shouldNewBranchPush = repo.ShouldNewBranchPush()
-	result.isOffline = repo.IsOffline()
+	result.ancestorBranches = repo.Config.GetAncestorBranches(result.parentBranch)
+	result.shouldNewBranchPush = repo.Config.ShouldNewBranchPush()
+	result.isOffline = repo.Config.IsOffline()
 	return result, err
 }
 

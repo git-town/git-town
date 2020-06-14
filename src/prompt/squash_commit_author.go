@@ -44,7 +44,7 @@ func askForAuthor(authors []string) string {
 
 func getBranchAuthors(branchName string, repo *git.ProdRepo) (result []string, err error) {
 	// Returns lines of "<number of commits>\t<name and email>"
-	lines, err := command.Run("git", "shortlog", "-s", "-n", "-e", repo.GetMainBranch()+".."+branchName)
+	lines, err := command.Run("git", "shortlog", "-s", "-n", "-e", repo.Config.GetMainBranch()+".."+branchName)
 	if err != nil {
 		return result, err
 	}

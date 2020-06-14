@@ -109,7 +109,7 @@ func gitShipConfig(args []string, driver drivers.CodeHostingDriver, repo *git.Pr
 	if err != nil {
 		return result, err
 	}
-	if result.hasOrigin && !repo.IsOffline() {
+	if result.hasOrigin && !repo.Config.IsOffline() {
 		err := repo.Logging.Fetch()
 		if err != nil {
 			return result, err
@@ -124,7 +124,7 @@ func gitShipConfig(args []string, driver drivers.CodeHostingDriver, repo *git.Pr
 			return result, fmt.Errorf("there is no branch named %q", result.branchToShip)
 		}
 	}
-	if !repo.IsFeatureBranch(result.branchToShip) {
+	if !repo.Config.IsFeatureBranch(result.branchToShip) {
 		return result, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can be shipped", result.branchToShip)
 	}
 	err = prompt.EnsureKnowsParentBranches([]string{result.branchToShip}, repo)
@@ -136,22 +136,22 @@ func gitShipConfig(args []string, driver drivers.CodeHostingDriver, repo *git.Pr
 	if err != nil {
 		return result, err
 	}
-	result.isOffline = repo.IsOffline()
+	result.isOffline = repo.Config.IsOffline()
 	result.isShippingInitialBranch = result.branchToShip == result.initialBranch
-	result.branchToMergeInto = repo.GetParentBranch(result.branchToShip)
+	result.branchToMergeInto = repo.Config.GetParentBranch(result.branchToShip)
 	prInfo, err := getCanShipWithDriver(result.branchToShip, result.branchToMergeInto, driver)
 	result.canShipWithDriver = prInfo.CanMergeWithAPI
 	result.defaultCommitMessage = prInfo.DefaultCommitMessage
 	result.pullRequestNumber = prInfo.PullRequestNumber
-	result.childBranches = repo.GetChildBranches(result.branchToShip)
-	result.shouldShipDeleteRemoteBranch = prodRepo.ShouldShipDeleteRemoteBranch()
+	result.childBranches = repo.Config.GetChildBranches(result.branchToShip)
+	result.shouldShipDeleteRemoteBranch = prodRepo.Config.ShouldShipDeleteRemoteBranch()
 	return result, err
 }
 
 func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
-	parentBranch := prodRepo.GetParentBranch(branchName)
-	if !prodRepo.IsMainBranch(parentBranch) && !prodRepo.IsPerennialBranch(parentBranch) {
-		ancestors := prodRepo.GetAncestorBranches(branchName)
+	parentBranch := prodRepo.Config.GetParentBranch(branchName)
+	if !prodRepo.Config.IsMainBranch(parentBranch) && !prodRepo.Config.IsPerennialBranch(parentBranch) {
+		ancestors := prodRepo.Config.GetAncestorBranches(branchName)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
 		oldestAncestor := ancestorsWithoutMainOrPerennial[0]
 		cli.Exit(
@@ -218,7 +218,7 @@ func getCanShipWithDriver(branch, parentBranch string, driver drivers.CodeHostin
 	if !hasOrigin {
 		return result, nil
 	}
-	if prodRepo.IsOffline() {
+	if prodRepo.Config.IsOffline() {
 		return result, nil
 	}
 	if driver == nil {

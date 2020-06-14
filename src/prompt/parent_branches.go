@@ -12,10 +12,10 @@ import (
 // Missing ancestry information is queried from the user.
 func EnsureKnowsParentBranches(branchNames []string, repo *git.ProdRepo) error {
 	for _, branchName := range branchNames {
-		if repo.IsMainBranch(branchName) || repo.IsPerennialBranch(branchName) || repo.HasParentBranch(branchName) {
+		if repo.Config.IsMainBranch(branchName) || repo.Config.IsPerennialBranch(branchName) || repo.Config.HasParentBranch(branchName) {
 			continue
 		}
-		err := AskForBranchAncestry(branchName, repo.GetMainBranch(), repo)
+		err := AskForBranchAncestry(branchName, repo.Config.GetMainBranch(), repo)
 		if err != nil {
 			return err
 		}
@@ -30,7 +30,7 @@ func EnsureKnowsParentBranches(branchNames []string, repo *git.ProdRepo) error {
 func AskForBranchAncestry(branchName, defaultBranchName string, repo *git.ProdRepo) (err error) {
 	current := branchName
 	for {
-		parent := repo.GetParentBranch(current)
+		parent := repo.Config.GetParentBranch(current)
 		if parent == "" { // nolint: nestif
 			printParentBranchHeader(repo)
 			parent, err = AskForBranchParent(current, defaultBranchName, repo)
@@ -38,18 +38,18 @@ func AskForBranchAncestry(branchName, defaultBranchName string, repo *git.ProdRe
 				return err
 			}
 			if parent == perennialBranchOption {
-				err = repo.AddToPerennialBranches(current)
+				err = repo.Config.AddToPerennialBranches(current)
 				if err != nil {
 					return err
 				}
 				break
 			}
-			err = repo.SetParentBranch(current, parent)
+			err = repo.Config.SetParentBranch(current, parent)
 			if err != nil {
 				return err
 			}
 		}
-		if parent == repo.GetMainBranch() || repo.IsPerennialBranch(parent) {
+		if parent == repo.Config.GetMainBranch() || repo.Config.IsPerennialBranch(parent) {
 			break
 		}
 		current = parent
@@ -87,7 +87,7 @@ var perennialBranchOption = "<none> (perennial branch)"
 
 func filterOutSelfAndDescendants(branchName string, choices []string, repo *git.ProdRepo) (filteredChoices []string) {
 	for _, choice := range choices {
-		if choice == branchName || repo.IsAncestorBranch(choice, branchName) {
+		if choice == branchName || repo.Config.IsAncestorBranch(choice, branchName) {
 			continue
 		}
 		filteredChoices = append(filteredChoices, choice)
@@ -98,6 +98,6 @@ func filterOutSelfAndDescendants(branchName string, choices []string, repo *git.
 func printParentBranchHeader(repo *git.ProdRepo) {
 	if !parentBranchHeaderShown {
 		parentBranchHeaderShown = true
-		cli.Printf(parentBranchHeaderTemplate, repo.GetMainBranch())
+		cli.Printf(parentBranchHeaderTemplate, repo.Config.GetMainBranch())
 	}
 }

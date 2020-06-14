@@ -55,7 +55,7 @@ This can conflict with other tools that also define Git aliases.`,
 }
 
 func addAlias(command string, repo *git.ProdRepo) error {
-	result, err := repo.AddGitAlias(command)
+	result, err := repo.Config.AddGitAlias(command)
 	if err != nil {
 		return fmt.Errorf("cannot create alias for %q: %w", command, err)
 	}
@@ -63,9 +63,9 @@ func addAlias(command string, repo *git.ProdRepo) error {
 }
 
 func removeAlias(command string, repo *git.ProdRepo) error {
-	existingAlias := repo.GetGitAlias(command)
+	existingAlias := repo.Config.GetGitAlias(command)
 	if existingAlias == "town "+command {
-		result, err := repo.RemoveGitAlias(command)
+		result, err := repo.Config.RemoveGitAlias(command)
 		if err != nil {
 			return fmt.Errorf("cannot remove alias for %q: %w", command, err)
 		}

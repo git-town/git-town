@@ -16,13 +16,13 @@ var offlineCommand = &cobra.Command{
 Git Town avoids network operations in offline mode.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			cli.Println(cli.PrintableOfflineFlag(prodRepo.IsOffline()))
+			cli.Println(cli.PrintableOfflineFlag(prodRepo.Config.IsOffline()))
 		} else {
 			value, err := strconv.ParseBool(args[0])
 			if err != nil {
 				cli.Exit(fmt.Errorf(`invalid argument: %q. Please provide either "true" or "false".\n`, args[0]))
 			}
-			err = prodRepo.SetOffline(value)
+			err = prodRepo.Config.SetOffline(value)
 			if err != nil {
 				cli.Exit(err)
 			}

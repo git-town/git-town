@@ -70,8 +70,8 @@ func getPrependConfig(args []string, repo *git.ProdRepo) (result prependConfig, 
 	if err != nil {
 		return result, err
 	}
-	result.shouldNewBranchPush = repo.ShouldNewBranchPush()
-	result.isOffline = repo.IsOffline()
+	result.shouldNewBranchPush = repo.Config.ShouldNewBranchPush()
+	result.isOffline = repo.Config.IsOffline()
 	if result.hasOrigin && !result.isOffline {
 		err := repo.Logging.Fetch()
 		if err != nil {
@@ -85,15 +85,15 @@ func getPrependConfig(args []string, repo *git.ProdRepo) (result prependConfig, 
 	if hasBranch {
 		return result, fmt.Errorf("a branch named %q already exists", result.targetBranch)
 	}
-	if !repo.IsFeatureBranch(result.initialBranch) {
+	if !repo.Config.IsFeatureBranch(result.initialBranch) {
 		return result, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can have parent branches", result.initialBranch)
 	}
 	err = prompt.EnsureKnowsParentBranches([]string{result.initialBranch}, repo)
 	if err != nil {
 		return result, err
 	}
-	result.parentBranch = repo.GetParentBranch(result.initialBranch)
-	result.ancestorBranches = repo.GetAncestorBranches(result.initialBranch)
+	result.parentBranch = repo.Config.GetParentBranch(result.initialBranch)
+	result.ancestorBranches = repo.Config.GetAncestorBranches(result.initialBranch)
 	return result, nil
 }
 

@@ -8,7 +8,7 @@ import (
 
 // GetSyncBranchSteps returns the steps to sync the branch with the given name.
 func GetSyncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (result StepList, err error) {
-	isFeature := repo.IsFeatureBranch(branchName)
+	isFeature := repo.Config.IsFeatureBranch(branchName)
 	hasRemoteOrigin, err := repo.Silent.HasRemote("origin")
 	if err != nil {
 		return result, err
@@ -30,7 +30,7 @@ func GetSyncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) 
 		}
 		result.AppendList(steps)
 	}
-	if pushBranch && hasRemoteOrigin && !repo.IsOffline() {
+	if pushBranch && hasRemoteOrigin && !repo.Config.IsOffline() {
 		hasTrackingBranch, err := repo.Silent.HasTrackingBranch(branchName)
 		if err != nil {
 			return result, err
@@ -54,7 +54,7 @@ func getSyncFeatureBranchSteps(branchName string, repo *git.ProdRepo) (result St
 	if hasTrackingBranch {
 		result.Append(&MergeBranchStep{BranchName: repo.Silent.TrackingBranchName(branchName)})
 	}
-	result.Append(&MergeBranchStep{BranchName: repo.GetParentBranch(branchName)})
+	result.Append(&MergeBranchStep{BranchName: repo.Config.GetParentBranch(branchName)})
 	return
 }
 
@@ -64,19 +64,19 @@ func getSyncNonFeatureBranchSteps(branchName string, repo *git.ProdRepo) (result
 		return result, err
 	}
 	if hasTrackingBranch {
-		if repo.GetPullBranchStrategy() == "rebase" {
+		if repo.Config.GetPullBranchStrategy() == "rebase" {
 			result.Append(&RebaseBranchStep{BranchName: repo.Silent.TrackingBranchName(branchName)})
 		} else {
 			result.Append(&MergeBranchStep{BranchName: repo.Silent.TrackingBranchName(branchName)})
 		}
 	}
 
-	mainBranchName := repo.GetMainBranch()
+	mainBranchName := repo.Config.GetMainBranch()
 	hasUpstream, err := repo.Silent.HasRemote("upstream")
 	if err != nil {
 		return result, err
 	}
-	if mainBranchName == branchName && hasUpstream && repo.ShouldSyncUpstream() {
+	if mainBranchName == branchName && hasUpstream && repo.Config.ShouldSyncUpstream() {
 		result.Append(&FetchUpstreamStep{BranchName: mainBranchName})
 		result.Append(&RebaseBranchStep{BranchName: fmt.Sprintf("upstream/%s", mainBranchName)})
 	}

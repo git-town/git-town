@@ -18,5 +18,5 @@ func (step *RemoveFromPerennialBranches) CreateUndoStep(repo *git.ProdRepo) (Ste
 
 // Run executes this step.
 func (step *RemoveFromPerennialBranches) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
-	return repo.RemoveFromPerennialBranches(step.BranchName)
+	return repo.Config.RemoveFromPerennialBranches(step.BranchName)
 }

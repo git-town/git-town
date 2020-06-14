@@ -38,14 +38,14 @@ hack / append / prepend on creation. Defaults to false.`,
 
 func printNewBranchPushFlag(repo *git.ProdRepo) {
 	if globalFlag {
-		cli.Println(strconv.FormatBool(repo.ShouldNewBranchPushGlobal()))
+		cli.Println(strconv.FormatBool(repo.Config.ShouldNewBranchPushGlobal()))
 	} else {
-		cli.Println(cli.PrintableNewBranchPushFlag(prodRepo.ShouldNewBranchPush()))
+		cli.Println(cli.PrintableNewBranchPushFlag(prodRepo.Config.ShouldNewBranchPush()))
 	}
 }
 
 func setNewBranchPushFlag(value bool, repo *git.ProdRepo) error {
-	return repo.SetNewBranchPush(value, globalFlag)
+	return repo.Config.SetNewBranchPush(value, globalFlag)
 }
 
 func init() {
