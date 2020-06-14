@@ -32,7 +32,7 @@ func TestRun_Exec_ExitCode(t *testing.T) {
 	assert.Equal(t, 2, execError.ExitCode())
 }
 
-func TestRun_RunInDir(t *testing.T) {
+func TestRun_InDir(t *testing.T) {
 	dir, err := ioutil.TempDir("", "")
 	assert.NoError(t, err)
 	dirPath := filepath.Join(dir, "mydir")
