@@ -73,6 +73,9 @@ You can disable this by running "git config git-town.sync-upstream false".`,
 			return err
 		}
 		exit, err := handleUnfinishedState(prodRepo, nil)
+		if err != nil {
+			return err
+		}
 		if exit {
 			os.Exit(0)
 		}
