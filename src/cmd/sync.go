@@ -1,11 +1,9 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/git-town/git-town/src/cli"
-	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/dryrun"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/prompt"
@@ -135,45 +133,6 @@ func getSyncStepList(config syncConfig, repo *git.ProdRepo) (result steps.StepLi
 	}
 	err = result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
 	return result, err
-}
-
-// handleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
-func handleUnfinishedState(repo *git.ProdRepo, driver drivers.CodeHostingDriver) (quit bool, err error) {
-	runState, err := steps.LoadPreviousRunState(repo)
-	if err != nil {
-		return false, fmt.Errorf("cannot load previous run state: %w", err)
-	}
-	if runState == nil || !runState.IsUnfinished() {
-		return false, nil
-	}
-	response := prompt.AskHowToHandleUnfinishedRunState(
-		runState.Command,
-		runState.UnfinishedDetails.EndBranch,
-		runState.UnfinishedDetails.EndTime,
-		runState.UnfinishedDetails.CanSkip,
-	)
-	switch response {
-	case prompt.ResponseTypeDiscard:
-		err = steps.DeletePreviousRunState(repo)
-		return false, err
-	case prompt.ResponseTypeContinue:
-		hasConflicts, err := repo.Silent.HasConflicts()
-		if err != nil {
-			return false, err
-		}
-		if hasConflicts {
-			return false, fmt.Errorf("you must resolve the conflicts before continuing")
-		}
-		return true, steps.Run(runState, repo, driver)
-	case prompt.ResponseTypeAbort:
-		abortRunState := runState.CreateAbortRunState()
-		return true, steps.Run(&abortRunState, repo, driver)
-	case prompt.ResponseTypeSkip:
-		skipRunState := runState.CreateSkipRunState()
-		return true, steps.Run(&skipRunState, repo, driver)
-	default:
-		return false, fmt.Errorf("unknown response: %s", response)
-	}
 }
 
 func init() {
