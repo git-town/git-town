@@ -33,7 +33,10 @@ var resetConfigCommand = &cobra.Command{
 	Use:   "reset",
 	Short: "Resets your Git Town configuration",
 	Run: func(cmd *cobra.Command, args []string) {
-		git.Config().RemoveLocalGitConfiguration()
+		err := git.Config().RemoveLocalGitConfiguration()
+		if err != nil {
+			cli.Exit(err)
+		}
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
