@@ -7,6 +7,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestBoolCache(t *testing.T) {
+	sc := git.BoolCache{}
+	assert.False(t, sc.Initialized())
+	sc.Set(true)
+	assert.True(t, sc.Initialized())
+	assert.True(t, sc.Value())
+}
+
 func TestStringCache(t *testing.T) {
 	sc := git.StringCache{}
 	assert.False(t, sc.Initialized())
