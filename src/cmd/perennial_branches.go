@@ -14,7 +14,7 @@ var perennialBranchesCommand = &cobra.Command{
 Perennial branches are long-lived branches.
 They cannot be shipped.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		cli.Println(cli.PrintablePerennialBranches(prodRepo.GetPerennialBranches()))
+		cli.Println(cli.PrintablePerennialBranches(prodRepo.Config.GetPerennialBranches()))
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {

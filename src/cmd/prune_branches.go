@@ -43,7 +43,7 @@ This usually means the branch was shipped or killed on another machine.`,
 		if err := validateIsConfigured(prodRepo); err != nil {
 			return err
 		}
-		return git.Config().ValidateIsOnline()
+		return prodRepo.Config.ValidateIsOnline()
 	},
 }
 
@@ -58,7 +58,7 @@ func getPruneBranchesConfig(repo *git.ProdRepo) (result pruneBranchesConfig, err
 			return result, err
 		}
 	}
-	result.mainBranch = git.Config().GetMainBranch()
+	result.mainBranch = repo.Config.GetMainBranch()
 	result.initialBranchName, err = repo.Silent.CurrentBranch()
 	if err != nil {
 		return result, err
@@ -73,14 +73,14 @@ func getPruneBranchesStepList(config pruneBranchesConfig, repo *git.ProdRepo) (r
 		if initialBranchName == branchName {
 			result.Append(&steps.CheckoutBranchStep{BranchName: config.mainBranch})
 		}
-		parent := git.Config().GetParentBranch(branchName)
+		parent := repo.Config.GetParentBranch(branchName)
 		if parent != "" {
-			for _, child := range git.Config().GetChildBranches(branchName) {
+			for _, child := range repo.Config.GetChildBranches(branchName) {
 				result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: parent})
 			}
 			result.Append(&steps.DeleteParentBranchStep{BranchName: branchName})
 		}
-		if git.Config().IsPerennialBranch(branchName) {
+		if repo.Config.IsPerennialBranch(branchName) {
 			result.Append(&steps.RemoveFromPerennialBranches{BranchName: branchName})
 		}
 		result.Append(&steps.DeleteLocalBranchStep{BranchName: branchName})

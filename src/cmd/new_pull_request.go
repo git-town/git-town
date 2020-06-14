@@ -38,7 +38,7 @@ where hostname matches what is in your ssh config file.`,
 		if err != nil {
 			cli.Exit(err)
 		}
-		driver := drivers.Load(prodRepo.Configuration, &prodRepo.Silent)
+		driver := drivers.Load(prodRepo.Config, &prodRepo.Silent)
 		if driver == nil {
 			cli.Exit(drivers.UnsupportedHostingError())
 		}
@@ -60,7 +60,7 @@ where hostname matches what is in your ssh config file.`,
 		if err := validateIsConfigured(prodRepo); err != nil {
 			return err
 		}
-		if err := git.Config().ValidateIsOnline(); err != nil {
+		if err := prodRepo.Config.ValidateIsOnline(); err != nil {
 			return err
 		}
 		return nil
@@ -86,7 +86,7 @@ func getNewPullRequestConfig(repo *git.ProdRepo) (result newPullRequestConfig, e
 	if err != nil {
 		return result, err
 	}
-	result.BranchesToSync = append(git.Config().GetAncestorBranches(result.InitialBranch), result.InitialBranch)
+	result.BranchesToSync = append(repo.Config.GetAncestorBranches(result.InitialBranch), result.InitialBranch)
 	return
 }
 

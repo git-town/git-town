@@ -64,7 +64,7 @@ func Run(runState *RunState, repo *git.ProdRepo, driver drivers.CodeHostingDrive
 				if err != nil {
 					return err
 				}
-				if runState.Command == "sync" && !(rebasing && git.Config().IsMainBranch(currentBranch)) {
+				if runState.Command == "sync" && !(rebasing && repo.Config.IsMainBranch(currentBranch)) {
 					runState.UnfinishedDetails.CanSkip = true
 				}
 				err = SaveRunState(runState, repo)

@@ -61,7 +61,7 @@ GitHub's feature to automatically delete head branches,
 run "git config git-town.ship-delete-remote-branch false"
 and Git Town will leave it up to your origin server to delete the remote branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		driver := drivers.Load(prodRepo.Configuration, &prodRepo.Silent)
+		driver := drivers.Load(prodRepo.Config, &prodRepo.Silent)
 		config, err := gitShipConfig(args, driver, prodRepo)
 		if err != nil {
 			cli.Exit(err)
@@ -109,7 +109,7 @@ func gitShipConfig(args []string, driver drivers.CodeHostingDriver, repo *git.Pr
 	if err != nil {
 		return result, err
 	}
-	if result.hasOrigin && !git.Config().IsOffline() {
+	if result.hasOrigin && !repo.Config.IsOffline() {
 		err := repo.Logging.Fetch()
 		if err != nil {
 			return result, err
@@ -124,7 +124,7 @@ func gitShipConfig(args []string, driver drivers.CodeHostingDriver, repo *git.Pr
 			return result, fmt.Errorf("there is no branch named %q", result.branchToShip)
 		}
 	}
-	if !git.Config().IsFeatureBranch(result.branchToShip) {
+	if !repo.Config.IsFeatureBranch(result.branchToShip) {
 		return result, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can be shipped", result.branchToShip)
 	}
 	err = prompt.EnsureKnowsParentBranches([]string{result.branchToShip}, repo)
@@ -136,22 +136,22 @@ func gitShipConfig(args []string, driver drivers.CodeHostingDriver, repo *git.Pr
 	if err != nil {
 		return result, err
 	}
-	result.isOffline = git.Config().IsOffline()
+	result.isOffline = repo.Config.IsOffline()
 	result.isShippingInitialBranch = result.branchToShip == result.initialBranch
-	result.branchToMergeInto = git.Config().GetParentBranch(result.branchToShip)
+	result.branchToMergeInto = repo.Config.GetParentBranch(result.branchToShip)
 	prInfo, err := getCanShipWithDriver(result.branchToShip, result.branchToMergeInto, driver)
 	result.canShipWithDriver = prInfo.CanMergeWithAPI
 	result.defaultCommitMessage = prInfo.DefaultCommitMessage
 	result.pullRequestNumber = prInfo.PullRequestNumber
-	result.childBranches = git.Config().GetChildBranches(result.branchToShip)
-	result.shouldShipDeleteRemoteBranch = git.Config().ShouldShipDeleteRemoteBranch()
+	result.childBranches = repo.Config.GetChildBranches(result.branchToShip)
+	result.shouldShipDeleteRemoteBranch = prodRepo.Config.ShouldShipDeleteRemoteBranch()
 	return result, err
 }
 
 func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
-	parentBranch := git.Config().GetParentBranch(branchName)
-	if !git.Config().IsMainBranch(parentBranch) && !git.Config().IsPerennialBranch(parentBranch) {
-		ancestors := git.Config().GetAncestorBranches(branchName)
+	parentBranch := prodRepo.Config.GetParentBranch(branchName)
+	if !prodRepo.Config.IsMainBranch(parentBranch) && !prodRepo.Config.IsPerennialBranch(parentBranch) {
+		ancestors := prodRepo.Config.GetAncestorBranches(branchName)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
 		oldestAncestor := ancestorsWithoutMainOrPerennial[0]
 		cli.Exit(
@@ -218,7 +218,7 @@ func getCanShipWithDriver(branch, parentBranch string, driver drivers.CodeHostin
 	if !hasOrigin {
 		return result, nil
 	}
-	if git.Config().IsOffline() {
+	if prodRepo.Config.IsOffline() {
 		return result, nil
 	}
 	if driver == nil {

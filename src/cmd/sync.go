@@ -86,7 +86,7 @@ func getSyncConfig(repo *git.ProdRepo) (result syncConfig, err error) {
 	if err != nil {
 		return result, err
 	}
-	result.isOffline = git.Config().IsOffline()
+	result.isOffline = prodRepo.Config.IsOffline()
 	if result.hasOrigin && !result.isOffline {
 		err := repo.Logging.Fetch()
 		if err != nil {
@@ -113,8 +113,8 @@ func getSyncConfig(repo *git.ProdRepo) (result syncConfig, err error) {
 		if err != nil {
 			return result, err
 		}
-		result.branchesToSync = append(git.Config().GetAncestorBranches(result.initialBranch), result.initialBranch)
-		result.shouldPushTags = !git.Config().IsFeatureBranch(result.initialBranch)
+		result.branchesToSync = append(prodRepo.Config.GetAncestorBranches(result.initialBranch), result.initialBranch)
+		result.shouldPushTags = !prodRepo.Config.IsFeatureBranch(result.initialBranch)
 	}
 	return result, nil
 }

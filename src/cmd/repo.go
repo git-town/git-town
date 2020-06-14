@@ -4,7 +4,6 @@ import (
 	"github.com/git-town/git-town/src/browsers"
 	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/drivers"
-	"github.com/git-town/git-town/src/git"
 	"github.com/spf13/cobra"
 )
 
@@ -23,7 +22,7 @@ When using SSH identities, run
 "git config git-town.code-hosting-origin-hostname <HOSTNAME>"
 where HOSTNAME matches what is in your ssh config file.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		driver := drivers.Load(prodRepo.Configuration, &prodRepo.Silent)
+		driver := drivers.Load(prodRepo.Config, &prodRepo.Silent)
 		if driver == nil {
 			cli.Exit(drivers.UnsupportedHostingError())
 		}
@@ -37,7 +36,7 @@ where HOSTNAME matches what is in your ssh config file.`,
 		if err := validateIsConfigured(prodRepo); err != nil {
 			return err
 		}
-		if err := git.Config().ValidateIsOnline(); err != nil {
+		if err := prodRepo.Config.ValidateIsOnline(); err != nil {
 			return err
 		}
 		return nil

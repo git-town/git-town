@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/src/cli"
-	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/prompt"
 	"github.com/spf13/cobra"
 )
@@ -14,14 +13,14 @@ var configCommand = &cobra.Command{
 	Short: "Displays your Git Town configuration",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println()
-		cli.PrintLabelAndValue("Main branch", cli.PrintableMainBranch(prodRepo.GetMainBranch()))
-		cli.PrintLabelAndValue("Perennial branches", cli.PrintablePerennialBranches(prodRepo.GetPerennialBranches()))
-		mainBranch := git.Config().GetMainBranch()
+		cli.PrintLabelAndValue("Main branch", cli.PrintableMainBranch(prodRepo.Config.GetMainBranch()))
+		cli.PrintLabelAndValue("Perennial branches", cli.PrintablePerennialBranches(prodRepo.Config.GetPerennialBranches()))
+		mainBranch := prodRepo.Config.GetMainBranch()
 		if mainBranch != "" {
-			cli.PrintLabelAndValue("Branch Ancestry", cli.PrintableBranchAncestry(prodRepo.Configuration))
+			cli.PrintLabelAndValue("Branch Ancestry", cli.PrintableBranchAncestry(prodRepo.Config))
 		}
-		cli.PrintLabelAndValue("Pull branch strategy", git.Config().GetPullBranchStrategy())
-		cli.PrintLabelAndValue("New Branch Push Flag", cli.PrintableNewBranchPushFlag(prodRepo.ShouldNewBranchPush()))
+		cli.PrintLabelAndValue("Pull branch strategy", prodRepo.Config.GetPullBranchStrategy())
+		cli.PrintLabelAndValue("New Branch Push Flag", cli.PrintableNewBranchPushFlag(prodRepo.Config.ShouldNewBranchPush()))
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -33,7 +32,7 @@ var resetConfigCommand = &cobra.Command{
 	Use:   "reset",
 	Short: "Resets your Git Town configuration",
 	Run: func(cmd *cobra.Command, args []string) {
-		err := git.Config().RemoveLocalGitConfiguration()
+		err := prodRepo.Config.RemoveLocalGitConfiguration()
 		if err != nil {
 			cli.Exit(err)
 		}

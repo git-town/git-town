@@ -18,13 +18,13 @@ If "new-branch-push-flag" is true, Git Town pushes branches created with
 hack / append / prepend on creation. Defaults to false.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			printNewBranchPushFlag()
+			printNewBranchPushFlag(prodRepo)
 		} else {
 			value, err := strconv.ParseBool(args[0])
 			if err != nil {
 				cli.Exit(fmt.Errorf(`invalid argument: %q. Please provide either "true" or "false"`, args[0]))
 			}
-			err = setNewBranchPushFlag(value)
+			err = setNewBranchPushFlag(value, prodRepo)
 			if err != nil {
 				cli.Exit(err)
 			}
@@ -36,16 +36,16 @@ hack / append / prepend on creation. Defaults to false.`,
 	},
 }
 
-func printNewBranchPushFlag() {
+func printNewBranchPushFlag(repo *git.ProdRepo) {
 	if globalFlag {
-		cli.Println(strconv.FormatBool(git.Config().ShouldNewBranchPushGlobal()))
+		cli.Println(strconv.FormatBool(repo.Config.ShouldNewBranchPushGlobal()))
 	} else {
-		cli.Println(cli.PrintableNewBranchPushFlag(prodRepo.ShouldNewBranchPush()))
+		cli.Println(cli.PrintableNewBranchPushFlag(prodRepo.Config.ShouldNewBranchPush()))
 	}
 }
 
-func setNewBranchPushFlag(value bool) error {
-	return git.Config().SetNewBranchPush(value, globalFlag)
+func setNewBranchPushFlag(value bool, repo *git.ProdRepo) error {
+	return repo.Config.SetNewBranchPush(value, globalFlag)
 }
 
 func init() {
