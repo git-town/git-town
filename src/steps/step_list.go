@@ -88,8 +88,7 @@ func (stepList *StepList) Wrap(options WrapOptions, repo *git.ProdRepo) error {
 	}
 	initialDirectory, err := os.Getwd()
 	if err != nil {
-		fmt.Printf("cannot get current working directory: %v", err)
-		os.Exit(1)
+		return fmt.Errorf("cannot get current working directory: %v", err)
 	}
 	gitRootDirectory, err := repo.Silent.RootDirectory()
 	if err != nil {
