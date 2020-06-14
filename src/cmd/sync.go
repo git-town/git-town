@@ -137,6 +137,7 @@ func getSyncStepList(config syncConfig, repo *git.ProdRepo) (result steps.StepLi
 	return result, err
 }
 
+// handleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
 func handleUnfinishedState(repo *git.ProdRepo, driver drivers.CodeHostingDriver) (quit bool, err error) {
 	runState, err := steps.LoadPreviousRunState(repo)
 	if err != nil {
