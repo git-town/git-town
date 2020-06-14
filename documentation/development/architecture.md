@@ -14,7 +14,8 @@ code is located in the [src](../../src) folder. It contains these packages:
 - [src/git](../../src/git) accesses the Git binary on the user's computer
 - [src/prompt](../../src/prompt) implements interactive wizards
 - [src/steps](../../src/steps) contains the building blocks of Git Town commands
-- [src/util](../../src/util) string helper functions
+- [src/stringslice](../../src/stringslice) functions for working with string
+  slices
 
 ## State files
 
