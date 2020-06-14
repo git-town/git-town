@@ -50,7 +50,7 @@ func (c *Result) OutputSanitized() string {
 // OutputContainsLine returns whether the output of this command
 // contains the given line.
 func (c *Result) OutputContainsLine(line string) bool {
-	return stringslice.DoesStringArrayContain(c.OutputLines(), line)
+	return stringslice.Contains(c.OutputLines(), line)
 }
 
 // OutputContainsText returns whether the output of this command

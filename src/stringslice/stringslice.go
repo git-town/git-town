@@ -1,8 +1,8 @@
 package stringslice
 
-// DoesStringArrayContain returns whether the given string slice
+// Contains returns whether the given string slice
 // contains the given string.
-func DoesStringArrayContain(list []string, value string) bool {
+func Contains(list []string, value string) bool {
 	for _, element := range list {
 		if element == value {
 			return true
@@ -11,9 +11,9 @@ func DoesStringArrayContain(list []string, value string) bool {
 	return false
 }
 
-// RemoveStringFromSlice returns a new string slice which is the given string slice
+// Remove returns a new string slice which is the given string slice
 // with the given string removed.
-func RemoveStringFromSlice(list []string, value string) (result []string) {
+func Remove(list []string, value string) (result []string) {
 	for _, element := range list {
 		if element != value {
 			result = append(result, element)

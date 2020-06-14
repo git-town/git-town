@@ -117,7 +117,7 @@ func (c *Config) GetBranchAncestryRoots() []string {
 	parentMap := c.GetParentBranchMap()
 	roots := []string{}
 	for _, parent := range parentMap {
-		if _, ok := parentMap[parent]; !ok && !stringslice.DoesStringArrayContain(roots, parent) {
+		if _, ok := parentMap[parent]; !ok && !stringslice.Contains(roots, parent) {
 			roots = append(roots, parent)
 		}
 	}
@@ -251,7 +251,7 @@ func (c *Config) HasParentBranch(branchName string) bool {
 // IsAncestorBranch indicates whether the given branch is an ancestor of the other given branch.
 func (c *Config) IsAncestorBranch(branchName, ancestorBranchName string) bool {
 	ancestorBranches := c.GetAncestorBranches(branchName)
-	return stringslice.DoesStringArrayContain(ancestorBranches, ancestorBranchName)
+	return stringslice.Contains(ancestorBranches, ancestorBranchName)
 }
 
 // IsFeatureBranch indicates whether the branch with the given name is
@@ -285,7 +285,7 @@ func (c *Config) IsOffline() bool {
 // a perennial branch.
 func (c *Config) IsPerennialBranch(branchName string) bool {
 	perennialBranches := c.GetPerennialBranches()
-	return stringslice.DoesStringArrayContain(perennialBranches, branchName)
+	return stringslice.Contains(perennialBranches, branchName)
 }
 
 // localConfigKeysMatching provides the names of the Git Town configuration keys matching the given RegExp string.
@@ -307,7 +307,7 @@ func (c *Config) Reload() {
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
 func (c *Config) RemoveFromPerennialBranches(branchName string) error {
-	return c.SetPerennialBranches(stringslice.RemoveStringFromSlice(c.GetPerennialBranches(), branchName))
+	return c.SetPerennialBranches(stringslice.Remove(c.GetPerennialBranches(), branchName))
 }
 
 // RemoveGitAlias removes the given Git alias.
