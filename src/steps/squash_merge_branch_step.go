@@ -41,7 +41,10 @@ func (step *SquashMergeBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHo
 	if err != nil {
 		return err
 	}
-	author := prompt.GetSquashCommitAuthor(step.BranchName)
+	author, err := prompt.GetSquashCommitAuthor(step.BranchName)
+	if err != nil {
+		return err
+	}
 	repoAuthor, err := repo.Silent.Author()
 	if err != nil {
 		return err
