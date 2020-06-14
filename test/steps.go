@@ -164,7 +164,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I (?:end up|am still) on the "([^"]*)" branch$`, func(expected string) error {
-		state.gitEnv.DevRepo.CurrentBranchTracker.Invalidate()
+		state.gitEnv.DevRepo.CurrentBranchCache.Invalidate()
 		actual, err := state.gitEnv.DevRepo.CurrentBranch()
 		if err != nil {
 			return fmt.Errorf("cannot determine current branch of developer repo: %w", err)

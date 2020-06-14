@@ -18,24 +18,12 @@ import (
 
 // Runner executes Git commands.
 type Runner struct {
-	command.Shell                          // for running console commands
-	*Configuration                         // caches Git configuration settings
-	CurrentBranchTracker *StringCache      // caches the currently checked out Git branch
-	remoteBranchCache    *StringSliceCache // caches the remote branches of this Git repo
-	remotes              *StringSliceCache // caches Git remotes
-	rootDirCache         *StringCache      // caches the base of the Git directory
-}
-
-// NewRunner provides Runner instances.
-func NewRunner(shell command.Shell, config *Configuration, currentBranchTracker *StringCache, remotes *StringSliceCache, remoteBranchCache *StringSliceCache) Runner {
-	return Runner{
-		Shell:                shell,
-		Configuration:        config,
-		CurrentBranchTracker: currentBranchTracker,
-		remoteBranchCache:    remoteBranchCache,
-		remotes:              remotes,
-		rootDirCache:         &StringCache{},
-	}
+	command.Shell                        // for running console commands
+	*Configuration                       // caches Git configuration settings
+	CurrentBranchCache *StringCache      // caches the currently checked out Git branch
+	RemoteBranchCache  *StringSliceCache // caches the remote branches of this Git repo
+	RemotesCache       *StringSliceCache // caches Git remotes
+	RootDirCache       *StringCache      // caches the base of the Git directory
 }
 
 // AbortMerge cancels a currently ongoing Git merge operation.
@@ -62,7 +50,7 @@ func (r *Runner) AddRemote(name, value string) error {
 	if err != nil {
 		return fmt.Errorf("cannot add remote %q --> %q: %w\n%s", name, value, err, res.Output())
 	}
-	r.remotes.Invalidate()
+	r.RemotesCache.Invalidate()
 	return nil
 }
 
@@ -98,9 +86,9 @@ func (r *Runner) CheckoutBranch(name string) error {
 		return fmt.Errorf("cannot check out branch %q in repo %q: %w\n%v", name, r.WorkingDir(), err, outcome)
 	}
 	if name != "-" {
-		r.CurrentBranchTracker.Set(name)
+		r.CurrentBranchCache.Set(name)
 	} else {
-		r.CurrentBranchTracker.Invalidate()
+		r.CurrentBranchCache.Invalidate()
 	}
 	return nil
 }
@@ -372,8 +360,8 @@ func (r *Runner) CurrentBranch() (result string, err error) {
 	if dryrun.IsActive() {
 		return dryrun.GetCurrentBranchName(), nil
 	}
-	if r.CurrentBranchTracker.Initialized() {
-		return r.CurrentBranchTracker.Value(), nil
+	if r.CurrentBranchCache.Initialized() {
+		return r.CurrentBranchCache.Value(), nil
 	}
 	rebasing, err := r.HasRebaseInProgress()
 	if err != nil {
@@ -384,15 +372,15 @@ func (r *Runner) CurrentBranch() (result string, err error) {
 		if err != nil {
 			return "", err
 		}
-		r.CurrentBranchTracker.Set(currentBranch)
+		r.CurrentBranchCache.Set(currentBranch)
 		return currentBranch, nil
 	}
 	outcome, err := r.Run("git", "rev-parse", "--abbrev-ref", "HEAD")
 	if err != nil {
 		return "", fmt.Errorf("cannot determine the current branch: %w\n%s", err, outcome.Output())
 	}
-	r.CurrentBranchTracker.Set(outcome.OutputSanitized())
-	return r.CurrentBranchTracker.Value(), nil
+	r.CurrentBranchCache.Set(outcome.OutputSanitized())
+	return r.CurrentBranchCache.Value(), nil
 }
 
 func (r *Runner) currentBranchDuringRebase() (string, error) {
@@ -880,7 +868,7 @@ func (r *Runner) Rebase(target string) error {
 
 // RemoteBranches provides the names of the remote branches in this repo.
 func (r *Runner) RemoteBranches() ([]string, error) {
-	if !r.remoteBranchCache.Initialized() {
+	if !r.RemoteBranchCache.Initialized() {
 		outcome, err := r.Run("git", "branch", "-r")
 		if err != nil {
 			return []string{}, fmt.Errorf("cannot determine remote branches: %w", err)
@@ -892,25 +880,25 @@ func (r *Runner) RemoteBranches() ([]string, error) {
 				branches = append(branches, strings.TrimSpace(lines[l]))
 			}
 		}
-		r.remoteBranchCache.Set(branches)
+		r.RemoteBranchCache.Set(branches)
 	}
-	return r.remoteBranchCache.Value(), nil
+	return r.RemoteBranchCache.Value(), nil
 }
 
 // Remotes provides the names of all Git remotes in this repository.
 func (r *Runner) Remotes() (result []string, err error) {
-	if !r.remotes.initialized {
+	if !r.RemotesCache.initialized {
 		out, err := r.Run("git", "remote")
 		if err != nil {
 			return result, fmt.Errorf("cannot determine remotes: %w", err)
 		}
 		if out.OutputSanitized() == "" {
-			r.remotes.Set([]string{})
+			r.RemotesCache.Set([]string{})
 		} else {
-			r.remotes.Set(out.OutputLines())
+			r.RemotesCache.Set(out.OutputLines())
 		}
 	}
-	return r.remotes.Value(), nil
+	return r.RemotesCache.Value(), nil
 }
 
 // RemoveBranch deletes the branch with the given name from this repo.
@@ -924,7 +912,7 @@ func (r *Runner) RemoveBranch(name string) error {
 
 // RemoveRemote deletes the Git remote with the given name.
 func (r *Runner) RemoveRemote(name string) error {
-	r.remotes.Invalidate()
+	r.RemotesCache.Invalidate()
 	_, err := r.Run("git", "remote", "rm", name)
 	return err
 }
@@ -967,14 +955,14 @@ func (r *Runner) RevertCommit(sha string) error {
 // RootDirectory returns the path of the rood directory of the current repository,
 // i.e. the directory that contains the ".git" folder.
 func (r *Runner) RootDirectory() (string, error) {
-	if !r.rootDirCache.Initialized() {
+	if !r.RootDirCache.Initialized() {
 		res, err := r.Run("git", "rev-parse", "--show-toplevel")
 		if err != nil {
 			return "", fmt.Errorf("cannot determine root directory: %w", err)
 		}
-		r.rootDirCache.Set(res.OutputSanitized())
+		r.RootDirCache.Set(res.OutputSanitized())
 	}
-	return r.rootDirCache.Value(), nil
+	return r.RootDirCache.Value(), nil
 }
 
 // ShaForBranch provides the SHA for the local branch with the given name.
