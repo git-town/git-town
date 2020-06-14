@@ -438,8 +438,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^my repo has "git-town.code-hosting-origin-hostname" set to "([^"]*)"$`, func(value string) error {
-		_ = state.gitEnv.DevRepo.SetCodeHostingOriginHostname(value)
-		return nil
+		return state.gitEnv.DevRepo.SetCodeHostingOriginHostname(value)
 	})
 
 	suite.Step(`^my repo has "git-town.ship-delete-remote-branch" set to "(true|false)"$`, func(value string) error {

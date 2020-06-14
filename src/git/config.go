@@ -370,10 +370,11 @@ func (c *Configuration) SetCodeHostingDriver(value string) error {
 }
 
 // SetCodeHostingOriginHostname sets the "github.code-hosting-driver" setting.
-func (c *Configuration) SetCodeHostingOriginHostname(value string) *command.Result {
+func (c *Configuration) SetCodeHostingOriginHostname(value string) error {
 	const key = "git-town.code-hosting-origin-hostname"
 	c.localConfigCache[key] = value
-	return c.shell.MustRun("git", "config", key, value)
+	_, err := c.shell.Run("git", "config", key, value)
+	return err
 }
 
 // SetColorUI configures whether Git output contains color codes.
