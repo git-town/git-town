@@ -72,7 +72,8 @@ You can disable this by running "git config git-town.sync-upstream false".`,
 		if err := validateIsConfigured(prodRepo); err != nil {
 			return err
 		}
-		return ensureIsNotInUnfinishedState(prodRepo, nil)
+		_, err := isInUnfinishedState(prodRepo, nil)
+		return err
 	},
 }
 
@@ -130,13 +131,13 @@ func getSyncStepList(config syncConfig, repo *git.ProdRepo) (result steps.StepLi
 	return result, err
 }
 
-func ensureIsNotInUnfinishedState(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
+func isInUnfinishedState(repo *git.ProdRepo, driver drivers.CodeHostingDriver) (quit bool, err error) {
 	runState, err := steps.LoadPreviousRunState(repo)
 	if err != nil {
-		return fmt.Errorf("cannot load previous run state: %w", err)
+		return false, fmt.Errorf("cannot load previous run state: %w", err)
 	}
 	if runState == nil || !runState.IsUnfinished() {
-		return nil
+		return false, nil
 	}
 	response := prompt.AskHowToHandleUnfinishedRunState(
 		runState.Command,
@@ -146,33 +147,39 @@ func ensureIsNotInUnfinishedState(repo *git.ProdRepo, driver drivers.CodeHosting
 	)
 	switch response {
 	case prompt.ResponseTypeDiscard:
-		return steps.DeletePreviousRunState(repo)
+		err = steps.DeletePreviousRunState(repo)
+		return false, err
 	case prompt.ResponseTypeContinue:
 		hasConflicts, err := repo.Silent.HasConflicts()
 		if err != nil {
-			return err
+			return false, err
 		}
 		if hasConflicts {
-			return fmt.Errorf("you must resolve the conflicts before continuing")
+			return false, fmt.Errorf("you must resolve the conflicts before continuing")
 		}
 		err = steps.Run(runState, repo, driver)
 		if err != nil {
-			return err
+			return false, err
 		}
+		os.Exit(0)
 	case prompt.ResponseTypeAbort:
 		abortRunState := runState.CreateAbortRunState()
 		err = steps.Run(&abortRunState, repo, driver)
+		if err != nil {
+			return false, err
+		}
+		os.Exit(0)
 	case prompt.ResponseTypeSkip:
 		skipRunState := runState.CreateSkipRunState()
 		err = steps.Run(&skipRunState, repo, driver)
+		if err != nil {
+			return false, err
+		}
+		os.Exit(0)
 	default:
-		return fmt.Errorf("unknown response: %s", response)
+		return true, fmt.Errorf("unknown response: %s", response)
 	}
-	if err != nil {
-		return err
-	}
-	os.Exit(0)
-	return nil
+	return false, nil
 }
 
 func init() {
