@@ -330,13 +330,13 @@ func (c *Configuration) RemoveFromPerennialBranches(branchName string) {
 }
 
 // RemoveGitAlias removes the given Git alias.
-func (c *Configuration) RemoveGitAlias(command string) *command.Result {
+func (c *Configuration) RemoveGitAlias(command string) (*command.Result, error) {
 	return c.removeGlobalConfigValue("alias." + command)
 }
 
-func (c *Configuration) removeGlobalConfigValue(key string) *command.Result {
+func (c *Configuration) removeGlobalConfigValue(key string) (*command.Result, error) {
 	delete(c.globalConfigCache, key)
-	return c.shell.MustRun("git", "config", "--global", "--unset", key)
+	return c.shell.Run("git", "config", "--global", "--unset", key)
 }
 
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.

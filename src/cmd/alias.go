@@ -64,7 +64,10 @@ func addAlias(command string, repo *git.ProdRepo) error {
 func removeAlias(command string, repo *git.ProdRepo) error {
 	existingAlias := repo.GetGitAlias(command)
 	if existingAlias == "town "+command {
-		result := repo.RemoveGitAlias(command)
+		result, err := repo.RemoveGitAlias(command)
+		if err != nil {
+			return fmt.Errorf("cannot remove alias for %q: %w", command, err)
+		}
 		return repo.LoggingShell.PrintCommand(result.Command(), result.Args()...)
 	}
 	return nil
