@@ -20,7 +20,10 @@ for the main branch and perennial branches.`,
 		if len(args) == 0 {
 			printPullBranchStrategy()
 		} else {
-			setPullBranchStrategy(args[0])
+			err := setPullBranchStrategy(args[0])
+			if err != nil {
+				cli.Exit(err)
+			}
 		}
 	},
 	Args: func(cmd *cobra.Command, args []string) error {
@@ -38,8 +41,8 @@ func printPullBranchStrategy() {
 	cli.Println(git.Config().GetPullBranchStrategy())
 }
 
-func setPullBranchStrategy(value string) {
-	git.Config().SetPullBranchStrategy(value)
+func setPullBranchStrategy(value string) error {
+	return git.Config().SetPullBranchStrategy(value)
 }
 
 func init() {

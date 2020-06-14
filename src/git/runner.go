@@ -315,8 +315,7 @@ func (r *Runner) CreatePerennialBranches(names ...string) error {
 			return fmt.Errorf("cannot create perennial branch %q in repo %q: %w", name, r.WorkingDir(), err)
 		}
 	}
-	r.AddToPerennialBranches(names...)
-	return nil
+	return r.AddToPerennialBranches(names...)
 }
 
 // CreateRemoteBranch creates a remote branch from the given local SHA.

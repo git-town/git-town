@@ -15,11 +15,6 @@ func (shell SilentShell) WorkingDir() string {
 	return "."
 }
 
-// MustRun runs the given command and returns the result. Panics on error.
-func (shell SilentShell) MustRun(cmd string, args ...string) *Result {
-	return MustRun(cmd, args...)
-}
-
 // Run runs the given command in this ShellRunner's directory.
 func (shell SilentShell) Run(cmd string, args ...string) (*Result, error) {
 	return Run(cmd, args...)

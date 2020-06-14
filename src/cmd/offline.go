@@ -25,7 +25,10 @@ Git Town avoids network operations in offline mode.`,
 				fmt.Printf(`Error: invalid argument: %q. Please provide either "true" or "false".\n`, args[0])
 				os.Exit(1)
 			}
-			setOfflineFlag(value)
+			err = setOfflineFlag(value)
+			if err != nil {
+				cli.Exit(err)
+			}
 		}
 	},
 	Args: cobra.MaximumNArgs(1),
@@ -35,8 +38,8 @@ func printOfflineFlag() {
 	cli.Println(cli.PrintableOfflineFlag(prodRepo.IsOffline()))
 }
 
-func setOfflineFlag(value bool) {
-	git.Config().SetOffline(value)
+func setOfflineFlag(value bool) error {
+	return git.Config().SetOffline(value)
 }
 
 func init() {

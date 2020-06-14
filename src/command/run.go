@@ -34,22 +34,6 @@ type Options struct {
 // InputDelay defines how long to wait before writing the next input string into the subprocess.
 const InputDelay = 500 * time.Millisecond
 
-// MustRun executes an essential subshell command given in argv notation.
-// Essential subshell commands are essential for the functioning of Git Town.
-// If they fail, Git Town ends right there.
-func MustRun(cmd string, args ...string) *Result {
-	result, _ := RunWith(Options{Essential: true}, cmd, args...)
-	return result
-}
-
-// MustRunInDir executes an essential subshell command given in argv notation.
-// Essential subshell commands are essential for the functioning of Git Town.
-// If they fail, Git Town ends right there.
-func MustRunInDir(dir string, cmd string, args ...string) *Result {
-	result, _ := RunWith(Options{Dir: dir, Essential: true}, cmd, args...)
-	return result
-}
-
 // Run executes the command given in argv notation.
 func Run(cmd string, args ...string) (*Result, error) {
 	return RunWith(Options{}, cmd, args...)

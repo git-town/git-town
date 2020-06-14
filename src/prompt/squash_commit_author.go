@@ -12,14 +12,17 @@ import (
 
 // GetSquashCommitAuthor gets the author of the supplied branch.
 // If the branch has more than one author, the author is queried from the user.
-func GetSquashCommitAuthor(branchName string) string {
-	authors := getBranchAuthors(branchName)
+func GetSquashCommitAuthor(branchName string) (string, error) {
+	authors, err := getBranchAuthors(branchName)
+	if err != nil {
+		return "", err
+	}
 	if len(authors) == 1 {
-		return authors[0]
+		return authors[0], nil
 	}
 	cli.Printf(squashCommitAuthorHeaderTemplate, branchName)
 	fmt.Println()
-	return askForAuthor(authors)
+	return askForAuthor(authors), nil
 }
 
 // Helpers
@@ -39,12 +42,16 @@ func askForAuthor(authors []string) string {
 	return result
 }
 
-func getBranchAuthors(branchName string) (result []string) {
+func getBranchAuthors(branchName string) (result []string, err error) {
 	// Returns lines of "<number of commits>\t<name and email>"
-	for _, line := range command.MustRun("git", "shortlog", "-s", "-n", "-e", git.Config().GetMainBranch()+".."+branchName).OutputLines() {
+	lines, err := command.Run("git", "shortlog", "-s", "-n", "-e", git.Config().GetMainBranch()+".."+branchName)
+	if err != nil {
+		return result, err
+	}
+	for _, line := range lines.OutputLines() {
 		line = strings.TrimSpace(line)
 		parts := strings.Split(line, "\t")
 		result = append(result, parts[1])
 	}
-	return
+	return result, nil
 }

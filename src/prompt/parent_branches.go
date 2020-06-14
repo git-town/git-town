@@ -31,17 +31,23 @@ func AskForBranchAncestry(branchName, defaultBranchName string, repo *git.ProdRe
 	current := branchName
 	for {
 		parent := git.Config().GetParentBranch(current)
-		if parent == "" {
+		if parent == "" { // nolint: nestif
 			printParentBranchHeader()
 			parent, err = AskForBranchParent(current, defaultBranchName, repo)
 			if err != nil {
 				return err
 			}
 			if parent == perennialBranchOption {
-				git.Config().AddToPerennialBranches(current)
+				err = git.Config().AddToPerennialBranches(current)
+				if err != nil {
+					return err
+				}
 				break
 			}
-			git.Config().SetParentBranch(current, parent)
+			err = git.Config().SetParentBranch(current, parent)
+			if err != nil {
+				return err
+			}
 		}
 		if parent == git.Config().GetMainBranch() || git.Config().IsPerennialBranch(parent) {
 			break
