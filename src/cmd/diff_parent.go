@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 
+	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/prompt"
 	"github.com/spf13/cobra"
@@ -25,13 +25,11 @@ Exits with error code 1 if the given branch is a perennial branch or the main br
 	Run: func(cmd *cobra.Command, args []string) {
 		config, err := getDiffParentConfig(args, prodRepo)
 		if err != nil {
-			fmt.Println("Error:", err)
-			os.Exit(1)
+			cli.Exit(err)
 		}
 		err = prodRepo.Logging.DiffParent(config.branch, config.parentBranch)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			cli.Exit(err)
 		}
 	},
 	Args: cobra.MaximumNArgs(1),
