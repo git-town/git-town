@@ -114,15 +114,6 @@ func (ms *MockingShell) MockNoCommandsInstalled() error {
 	return nil
 }
 
-// MustRun runs the given command and returns the result. Panics on error.
-func (ms *MockingShell) MustRun(cmd string, args ...string) *command.Result {
-	res, err := ms.RunWith(command.Options{Essential: true}, cmd, args...)
-	if err != nil {
-		panic(err)
-	}
-	return res
-}
-
 // Run runs the given command with the given arguments
 // in this ShellRunner's directory.
 // Shell overrides will be used and removed when done.

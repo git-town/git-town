@@ -31,11 +31,6 @@ func (shell LoggingShell) WorkingDir() string {
 	return "."
 }
 
-// MustRun runs the given command and returns the result. Panics on error.
-func (shell LoggingShell) MustRun(cmd string, args ...string) *command.Result {
-	return command.MustRun(cmd, args...)
-}
-
 // Run runs the given command in this ShellRunner's directory.
 func (shell LoggingShell) Run(cmd string, args ...string) (*command.Result, error) {
 	err := shell.PrintCommand(cmd, args...)

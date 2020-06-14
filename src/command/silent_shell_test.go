@@ -9,12 +9,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestSilentShell_MustRun(t *testing.T) {
-	shell := command.SilentShell{}
-	res := shell.MustRun("echo", "hello", "world")
-	assert.Equal(t, "hello world", res.OutputSanitized())
-}
-
 func TestSilentShell_Run_arguments(t *testing.T) {
 	shell := command.SilentShell{}
 	res, err := shell.Run("echo", "hello", "world")
