@@ -1,4 +1,4 @@
-package command
+package run
 
 // Shell allows running commands in a subshell.
 type Shell interface {

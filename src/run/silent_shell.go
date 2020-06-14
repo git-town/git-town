@@ -1,4 +1,4 @@
-package command
+package run
 
 import (
 	"fmt"
@@ -17,7 +17,7 @@ func (shell SilentShell) WorkingDir() string {
 
 // Run runs the given command in this ShellRunner's directory.
 func (shell SilentShell) Run(cmd string, args ...string) (*Result, error) {
-	return Run(cmd, args...)
+	return Exec(cmd, args...)
 }
 
 // RunMany runs all given commands in current directory.
@@ -25,7 +25,7 @@ func (shell SilentShell) Run(cmd string, args ...string) (*Result, error) {
 // Failed commands abort immediately with the encountered error.
 func (shell SilentShell) RunMany(commands [][]string) error {
 	for _, argv := range commands {
-		outcome, err := Run(argv[0], argv[1:]...)
+		outcome, err := Exec(argv[0], argv[1:]...)
 		if err != nil {
 			return fmt.Errorf("error running command %q: %w\n%v", argv, err, outcome)
 		}
@@ -40,7 +40,7 @@ func (shell SilentShell) RunString(fullCmd string) (*Result, error) {
 		return nil, fmt.Errorf("cannot split command %q: %w", fullCmd, err)
 	}
 	cmd, args := parts[0], parts[1:]
-	return Run(cmd, args...)
+	return Exec(cmd, args...)
 }
 
 // RunStringWith runs the given command (including possible arguments) in this ShellInDir's directory.
@@ -50,5 +50,5 @@ func (shell SilentShell) RunStringWith(fullCmd string, options Options) (*Result
 		return nil, fmt.Errorf("cannot split command %q: %w", fullCmd, err)
 	}
 	cmd, args := parts[0], parts[1:]
-	return RunWith(options, cmd, args...)
+	return WithOptions(options, cmd, args...)
 }

@@ -2,7 +2,7 @@ package test
 
 import (
 	"github.com/cucumber/messages-go/v10"
-	"github.com/git-town/git-town/src/command"
+	"github.com/git-town/git-town/src/run"
 )
 
 // ScenarioState constains the state that is shared by all steps within a scenario.
@@ -14,7 +14,7 @@ type ScenarioState struct {
 	runErr error
 
 	// the outcome of the last run of Git Town
-	runRes *command.Result
+	runRes *run.Result
 
 	// initialCommits describes the commits in this Git environment before the WHEN steps ran.
 	initialCommits *messages.PickleStepArgument_PickleTable

@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/src/command"
+	"github.com/git-town/git-town/src/run"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -66,7 +66,7 @@ func TestShellRunner_RunStringWith_Dir(t *testing.T) {
 	toolPath := filepath.Join(dir2, "list-dir")
 	err = CreateLsTool(toolPath)
 	assert.NoError(t, err)
-	res, err := runner.RunWith(command.Options{Dir: "subdir"}, toolPath)
+	res, err := runner.RunWith(run.Options{Dir: "subdir"}, toolPath)
 	assert.NoError(t, err)
 	assert.Equal(t, ScriptName("list-dir"), res.OutputSanitized())
 }
@@ -81,7 +81,7 @@ func TestShellRunner_RunStringWith_Input(t *testing.T) {
 	err = CreateInputTool(toolPath)
 	assert.NoError(t, err)
 	cmd, args := CallScriptArgs(toolPath)
-	res, err := runner.RunWith(command.Options{Input: []string{"one\n", "two\n"}}, cmd, args...)
+	res, err := runner.RunWith(run.Options{Input: []string{"one\n", "two\n"}}, cmd, args...)
 	assert.NoError(t, err)
 	assert.Contains(t, res.OutputSanitized(), "You entered one and two")
 }

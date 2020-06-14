@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/src/cli"
-	"github.com/git-town/git-town/src/command"
 	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/src/run"
 	survey "gopkg.in/AlecAivazis/survey.v1"
 )
 
@@ -44,7 +44,7 @@ func askForAuthor(authors []string) string {
 
 func getBranchAuthors(branchName string, repo *git.ProdRepo) (result []string, err error) {
 	// Returns lines of "<number of commits>\t<name and email>"
-	lines, err := command.Run("git", "shortlog", "-s", "-n", "-e", repo.Config.GetMainBranch()+".."+branchName)
+	lines, err := run.Exec("git", "shortlog", "-s", "-n", "-e", repo.Config.GetMainBranch()+".."+branchName)
 	if err != nil {
 		return result, err
 	}

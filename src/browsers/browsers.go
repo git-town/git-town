@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"runtime"
 
-	"github.com/git-town/git-town/src/command"
+	"github.com/git-town/git-town/src/run"
 )
 
 // OpenBrowserCommand returns the command to run on the console
@@ -30,7 +30,7 @@ func OpenBrowserCommand() string {
 		"netscape",
 	}
 	for _, browserCommand := range openBrowserCommands {
-		res, err := command.Run("which", browserCommand)
+		res, err := run.Exec("which", browserCommand)
 		if err == nil && res.OutputSanitized() != "" {
 			return browserCommand
 		}
@@ -40,7 +40,7 @@ func OpenBrowserCommand() string {
 
 // Open opens the default browser with the given URL.
 // If no browser is found, prints the URL.
-func Open(url string, shell command.Shell) {
+func Open(url string, shell run.Shell) {
 	command := OpenBrowserCommand()
 	if command == "" {
 		fmt.Println("Please open in a browser: " + url)

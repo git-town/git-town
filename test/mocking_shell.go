@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/git-town/git-town/src/command"
+	"github.com/git-town/git-town/src/run"
 	"github.com/kballard/go-shellquote"
 )
 
@@ -117,8 +117,8 @@ func (ms *MockingShell) MockNoCommandsInstalled() error {
 // Run runs the given command with the given arguments
 // in this ShellRunner's directory.
 // Shell overrides will be used and removed when done.
-func (ms *MockingShell) Run(name string, arguments ...string) (*command.Result, error) {
-	return ms.RunWith(command.Options{}, name, arguments...)
+func (ms *MockingShell) Run(name string, arguments ...string) (*run.Result, error) {
+	return ms.RunWith(run.Options{}, name, arguments...)
 }
 
 // RunMany runs all given commands in current directory.
@@ -139,15 +139,15 @@ func (ms *MockingShell) RunMany(commands [][]string) error {
 // RunString runs the given command (including possible arguments)
 // in this ShellRunner's directory.
 // Shell overrides will be used and removed when done.
-func (ms *MockingShell) RunString(fullCmd string) (*command.Result, error) {
-	return ms.RunStringWith(fullCmd, command.Options{})
+func (ms *MockingShell) RunString(fullCmd string) (*run.Result, error) {
+	return ms.RunStringWith(fullCmd, run.Options{})
 }
 
 // RunStringWith runs the given command (including possible arguments)
 // in this ShellRunner's directory using the given options.
 // opts.Dir is a relative path inside the working directory of this ShellRunner.
 // Shell overrides will be used and removed when done.
-func (ms *MockingShell) RunStringWith(fullCmd string, opts command.Options) (result *command.Result, err error) {
+func (ms *MockingShell) RunStringWith(fullCmd string, opts run.Options) (result *run.Result, err error) {
 	parts, err := shellquote.Split(fullCmd)
 	if err != nil {
 		return result, fmt.Errorf("cannot split command %q: %w", fullCmd, err)
@@ -157,7 +157,7 @@ func (ms *MockingShell) RunStringWith(fullCmd string, opts command.Options) (res
 }
 
 // RunWith runs the given command with the given options in this ShellRunner's directory.
-func (ms *MockingShell) RunWith(opts command.Options, cmd string, args ...string) (result *command.Result, err error) {
+func (ms *MockingShell) RunWith(opts run.Options, cmd string, args ...string) (result *run.Result, err error) {
 	// create an environment with the temp shell overrides directory added to the PATH
 	if opts.Env == nil {
 		opts.Env = os.Environ()
@@ -186,7 +186,7 @@ func (ms *MockingShell) RunWith(opts command.Options, cmd string, args ...string
 	// set the working dir
 	opts.Dir = filepath.Join(ms.workingDir, opts.Dir)
 	// run the command inside the custom environment
-	result, err = command.RunWith(opts, cmd, args...)
+	result, err = run.WithOptions(opts, cmd, args...)
 	if Debug {
 		fmt.Println(filepath.Base(ms.workingDir), ">", cmd, strings.Join(args, " "))
 		fmt.Println(result.Output())

@@ -8,8 +8,8 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
-	"github.com/git-town/git-town/src/command"
 	"github.com/git-town/git-town/src/dryrun"
+	"github.com/git-town/git-town/src/run"
 	"github.com/kballard/go-shellquote"
 )
 
@@ -32,7 +32,7 @@ func (shell LoggingShell) WorkingDir() string {
 }
 
 // Run runs the given command in this ShellRunner's directory.
-func (shell LoggingShell) Run(cmd string, args ...string) (*command.Result, error) {
+func (shell LoggingShell) Run(cmd string, args ...string) (*run.Result, error) {
 	err := shell.PrintCommand(cmd, args...)
 	if err != nil {
 		return nil, err
@@ -70,7 +70,7 @@ func (shell LoggingShell) RunMany(commands [][]string) error {
 }
 
 // RunString runs the given command (including possible arguments) in this ShellInDir's directory.
-func (shell LoggingShell) RunString(fullCmd string) (*command.Result, error) {
+func (shell LoggingShell) RunString(fullCmd string) (*run.Result, error) {
 	parts, err := shellquote.Split(fullCmd)
 	if err != nil {
 		return nil, fmt.Errorf("cannot split command %q: %w", fullCmd, err)
@@ -80,7 +80,7 @@ func (shell LoggingShell) RunString(fullCmd string) (*command.Result, error) {
 }
 
 // RunStringWith runs the given command (including possible arguments) in this ShellInDir's directory.
-func (shell LoggingShell) RunStringWith(fullCmd string, options command.Options) (*command.Result, error) {
+func (shell LoggingShell) RunStringWith(fullCmd string, options run.Options) (*run.Result, error) {
 	panic("this isn't used")
 }
 

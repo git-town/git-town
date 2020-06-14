@@ -1,4 +1,4 @@
-package command
+package run
 
 import (
 	"bytes"
@@ -29,18 +29,18 @@ type Options struct {
 // InputDelay defines how long to wait before writing the next input string into the subprocess.
 const InputDelay = 500 * time.Millisecond
 
-// Run executes the command given in argv notation.
-func Run(cmd string, args ...string) (*Result, error) {
-	return RunWith(Options{}, cmd, args...)
+// Exec executes the command given in argv notation.
+func Exec(cmd string, args ...string) (*Result, error) {
+	return WithOptions(Options{}, cmd, args...)
 }
 
-// RunInDir executes the given command in the given directory.
-func RunInDir(dir string, cmd string, args ...string) (*Result, error) {
-	return RunWith(Options{Dir: dir}, cmd, args...)
+// InDir executes the given command in the given directory.
+func InDir(dir string, cmd string, args ...string) (*Result, error) {
+	return WithOptions(Options{Dir: dir}, cmd, args...)
 }
 
-// RunWith runs the command with the given RunOptions.
-func RunWith(opts Options, cmd string, args ...string) (*Result, error) {
+// WithOptions runs the command with the given RunOptions.
+func WithOptions(opts Options, cmd string, args ...string) (*Result, error) {
 	cli.LogRun(cmd, args...)
 	subProcess := exec.Command(cmd, args...) // #nosec
 	if opts.Dir != "" {
