@@ -47,8 +47,7 @@ func ValidateIsRepository(repo *git.ProdRepo) error {
 func ensureIsNotInUnfinishedState(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	runState, err := steps.LoadPreviousRunState(repo)
 	if err != nil {
-		fmt.Printf("cannot load previous run state: %v\n", err)
-		os.Exit(1)
+		return fmt.Errorf("cannot load previous run state: %w", err)
 	}
 	if runState != nil && runState.IsUnfinished() {
 		response := prompt.AskHowToHandleUnfinishedRunState(
