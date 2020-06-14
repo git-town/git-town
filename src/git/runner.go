@@ -21,6 +21,7 @@ type Runner struct {
 	command.Shell                        // for running console commands
 	*Configuration                       // caches Git configuration settings
 	CurrentBranchCache *StringCache      // caches the currently checked out Git branch
+	IsRepoCache        *BoolCache        // caches whether the current directory is a Git repo
 	RemoteBranchCache  *StringSliceCache // caches the remote branches of this Git repo
 	RemotesCache       *StringSliceCache // caches Git remotes
 	RootDirCache       *StringCache      // caches the base of the Git directory
@@ -688,6 +689,15 @@ func (r *Runner) IsBranchInSync(branchName string) (bool, error) {
 		return localSha == remoteSha, err
 	}
 	return true, nil
+}
+
+// IsRepository returns whether or not the current directory is in a repository.
+func (r *Runner) IsRepository() bool {
+	if !r.IsRepoCache.Initialized() {
+		_, err := command.Run("git", "rev-parse")
+		r.IsRepoCache.Set(err == nil)
+	}
+	return r.IsRepoCache.Value()
 }
 
 // LastActiveDir provides the directory that was last used in this repo.

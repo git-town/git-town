@@ -25,7 +25,7 @@ var configCommand = &cobra.Command{
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return git.ValidateIsRepository()
+		return ValidateIsRepository(prodRepo)
 	},
 }
 
@@ -37,7 +37,7 @@ var resetConfigCommand = &cobra.Command{
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return git.ValidateIsRepository()
+		return ValidateIsRepository(prodRepo)
 	},
 }
 
@@ -56,7 +56,7 @@ var setupConfigCommand = &cobra.Command{
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return git.ValidateIsRepository()
+		return ValidateIsRepository(prodRepo)
 	},
 }
 

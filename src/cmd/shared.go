@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -33,6 +34,14 @@ func validateIsConfigured(repo *git.ProdRepo) error {
 		return err
 	}
 	return repo.RemoveOutdatedConfiguration()
+}
+
+// ValidateIsRepository asserts that the current directory is in a Git repository.
+func ValidateIsRepository(repo *git.ProdRepo) error {
+	if repo.Silent.IsRepository() {
+		return nil
+	}
+	return errors.New("this is not a Git repository")
 }
 
 func ensureIsNotInUnfinishedState(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {

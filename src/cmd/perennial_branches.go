@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"github.com/git-town/git-town/src/cli"
-	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/prompt"
 	"github.com/spf13/cobra"
 )
@@ -19,7 +18,7 @@ They cannot be shipped.`,
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return git.ValidateIsRepository()
+		return ValidateIsRepository(prodRepo)
 	},
 }
 
@@ -35,7 +34,7 @@ var updatePrennialBranchesCommand = &cobra.Command{
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return git.ValidateIsRepository()
+		return ValidateIsRepository(prodRepo)
 	},
 }
 

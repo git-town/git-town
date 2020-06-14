@@ -30,7 +30,7 @@ for the main branch and perennial branches.`,
 		return cobra.MaximumNArgs(1)(cmd, args)
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return git.ValidateIsRepository()
+		return ValidateIsRepository(prodRepo)
 	},
 }
 

@@ -101,7 +101,7 @@ func (shell LoggingShell) PrintCommand(cmd string, args ...string) error {
 		}
 		header += part
 	}
-	if cmd == "git" && IsRepository() {
+	if cmd == "git" && shell.silentRunner.IsRepository() {
 		currentBranch, err := shell.silentRunner.CurrentBranch()
 		if err != nil {
 			return err

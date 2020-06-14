@@ -36,7 +36,7 @@ Exits with error code 1 if the given branch is a perennial branch or the main br
 	},
 	Args: cobra.MaximumNArgs(1),
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		if err := git.ValidateIsRepository(); err != nil {
+		if err := ValidateIsRepository(prodRepo); err != nil {
 			return err
 		}
 		return validateIsConfigured(prodRepo)
