@@ -1,6 +1,6 @@
 Feature: enabling offline mode
 
-    When developing on an airplane
+  When developing on an airplane
   I want to be able to use Git Town without interactions with remote origins
   So that I can work on my code even without internet connection.
 
