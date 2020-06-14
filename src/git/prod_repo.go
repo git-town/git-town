@@ -7,10 +7,10 @@ import (
 
 // ProdRepo is a Git Repo in production code.
 type ProdRepo struct {
-	Silent                Runner        // the Runner instance for silent Git operations
-	Logging               Runner        // the Runner instance to Git operations that show up in the output
-	LoggingShell          *LoggingShell // the LoggingShell instance used
-	*config.Configuration               // the git.Configuration instance for this repo
+	Silent         Runner        // the Runner instance for silent Git operations
+	Logging        Runner        // the Runner instance to Git operations that show up in the output
+	LoggingShell   *LoggingShell // the LoggingShell instance used
+	*config.Config               // the git.Configuration instance for this repo
 }
 
 // NewProdRepo provides a Repo instance in the current working directory.
@@ -23,7 +23,7 @@ func NewProdRepo() *ProdRepo {
 	remotesCache := StringSliceCache{}
 	silentRunner := Runner{
 		Shell:              silentShell,
-		Configuration:      config,
+		Config:             config,
 		CurrentBranchCache: &currentBranchTracker,
 		IsRepoCache:        &isRepoCache,
 		RemotesCache:       &remotesCache,
@@ -33,7 +33,7 @@ func NewProdRepo() *ProdRepo {
 	loggingShell := NewLoggingShell(&silentRunner)
 	loggingRunner := Runner{
 		Shell:              loggingShell,
-		Configuration:      config,
+		Config:             config,
 		CurrentBranchCache: &currentBranchTracker,
 		IsRepoCache:        &isRepoCache,
 		RemotesCache:       &remotesCache,
@@ -41,10 +41,10 @@ func NewProdRepo() *ProdRepo {
 		RootDirCache:       &StringCache{},
 	}
 	return &ProdRepo{
-		Silent:        silentRunner,
-		Logging:       loggingRunner,
-		LoggingShell:  loggingShell,
-		Configuration: config,
+		Silent:       silentRunner,
+		Logging:      loggingRunner,
+		LoggingShell: loggingShell,
+		Config:       config,
 	}
 }
 
@@ -60,7 +60,7 @@ func (r *ProdRepo) RemoveOutdatedConfiguration() error {
 			return err
 		}
 		if !hasChildBranch || !hasParentBranch {
-			return r.Configuration.DeleteParentBranch(child)
+			return r.DeleteParentBranch(child)
 		}
 	}
 	return nil

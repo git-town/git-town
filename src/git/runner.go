@@ -19,13 +19,13 @@ import (
 
 // Runner executes Git commands.
 type Runner struct {
-	command.Shell                           // for running console commands
-	*config.Configuration                   // caches Git configuration settings
-	CurrentBranchCache    *StringCache      // caches the currently checked out Git branch
-	IsRepoCache           *BoolCache        // caches whether the current directory is a Git repo
-	RemoteBranchCache     *StringSliceCache // caches the remote branches of this Git repo
-	RemotesCache          *StringSliceCache // caches Git remotes
-	RootDirCache          *StringCache      // caches the base of the Git directory
+	command.Shell                        // for running console commands
+	Config             *config.Config    // caches Git configuration settings
+	CurrentBranchCache *StringCache      // caches the currently checked out Git branch
+	IsRepoCache        *BoolCache        // caches whether the current directory is a Git repo
+	RemoteBranchCache  *StringSliceCache // caches the remote branches of this Git repo
+	RemotesCache       *StringSliceCache // caches Git remotes
+	RootDirCache       *StringCache      // caches the base of the Git directory
 }
 
 // AbortMerge cancels a currently ongoing Git merge operation.
@@ -74,7 +74,7 @@ func (r *Runner) Author() (author string, err error) {
 // BranchHasUnmergedCommits indicates whether the branch with the given name
 // contains commits that are not merged into the main branch.
 func (r *Runner) BranchHasUnmergedCommits(branch string) (bool, error) {
-	out, err := r.Run("git", "log", r.GetMainBranch()+".."+branch)
+	out, err := r.Run("git", "log", r.Config.GetMainBranch()+".."+branch)
 	if err != nil {
 		return false, fmt.Errorf("cannot determine if branch %q has unmerged commits: %w\n%s", branch, err, out.Output())
 	}
@@ -243,7 +243,7 @@ func (r *Runner) CreateChildFeatureBranch(name string, parent string) error {
 	if err != nil {
 		return fmt.Errorf("cannot create child branch %q: %w", name, err)
 	}
-	_ = r.Configuration.SetParentBranch(name, parent)
+	_ = r.Config.SetParentBranch(name, parent)
 	return nil
 }
 
@@ -316,7 +316,7 @@ func (r *Runner) CreatePerennialBranches(names ...string) error {
 			return fmt.Errorf("cannot create perennial branch %q in repo %q: %w", name, r.WorkingDir(), err)
 		}
 	}
-	return r.AddToPerennialBranches(names...)
+	return r.Config.AddToPerennialBranches(names...)
 }
 
 // CreateRemoteBranch creates a remote branch from the given local SHA.
@@ -485,7 +485,7 @@ func (r *Runner) ExpectedPreviouslyCheckedOutBranch(initialPreviouslyCheckedOutB
 		}
 		return initialBranch, nil
 	}
-	return r.GetMainBranch(), nil
+	return r.Config.GetMainBranch(), nil
 }
 
 // Fetch retrieves the updates from the remote repo.
@@ -652,7 +652,7 @@ func (r *Runner) HasRemote(name string) (result bool, err error) {
 // HasShippableChanges indicates whether the given branch has changes
 // not currently in the main branch.
 func (r *Runner) HasShippableChanges(branch string) (bool, error) {
-	out, err := r.Run("git", "diff", r.GetMainBranch()+".."+branch)
+	out, err := r.Run("git", "diff", r.Config.GetMainBranch()+".."+branch)
 	if err != nil {
 		return false, fmt.Errorf("cannot determine whether branch %q has shippable changes: %w\n%s", branch, err, out.Output())
 	}
@@ -784,7 +784,7 @@ func (r *Runner) LocalBranchesWithDeletedTrackingBranches() (result []string, er
 // LocalBranchesWithoutMain returns the names of all branches in the local repository,
 // ordered alphabetically without the main branch.
 func (r *Runner) LocalBranchesWithoutMain() (result []string, err error) {
-	mainBranch := r.Configuration.GetMainBranch()
+	mainBranch := r.Config.GetMainBranch()
 	branches, err := r.LocalBranches()
 	if err != nil {
 		return result, err

@@ -53,7 +53,7 @@ func NewRepo(workingDir, homeDir, binDir string) Repo {
 	shell := NewMockingShell(workingDir, homeDir, binDir)
 	runner := git.Runner{
 		Shell:              shell,
-		Configuration:      config.NewConfiguration(shell),
+		Config:             config.NewConfiguration(shell),
 		IsRepoCache:        &git.BoolCache{},
 		RemoteBranchCache:  &git.StringSliceCache{},
 		RemotesCache:       &git.StringSliceCache{},

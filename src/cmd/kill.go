@@ -76,7 +76,7 @@ func getKillConfig(args []string, repo *git.ProdRepo) (result killConfig, err er
 		if err != nil {
 			return result, err
 		}
-		repo.Configuration.Reload()
+		repo.Config.Reload()
 	}
 	hasOrigin, err := repo.Silent.HasRemote("origin")
 	if err != nil {
