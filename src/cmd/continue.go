@@ -16,7 +16,7 @@ var continueCmd = &cobra.Command{
 	Use:   "continue",
 	Short: "Restarts the last run git-town command after having resolved conflicts",
 	Run: func(cmd *cobra.Command, args []string) {
-		runState, err := steps.LoadPreviousRunState()
+		runState, err := steps.LoadPreviousRunState(prodRepo)
 		if err != nil {
 			fmt.Printf("cannot load previous run state: %v\n", err)
 			os.Exit(1)
@@ -24,7 +24,11 @@ var continueCmd = &cobra.Command{
 		if runState == nil || !runState.IsUnfinished() {
 			cli.Exit("Nothing to continue")
 		}
-		if git.HasConflicts() {
+		hasConflicts, err := prodRepo.Silent.HasConflicts()
+		if err != nil {
+			cli.Exit(err)
+		}
+		if hasConflicts {
 			fmt.Println("Error: you must resolve the conflicts before continuing")
 			os.Exit(1)
 		}

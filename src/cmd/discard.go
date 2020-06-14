@@ -14,7 +14,7 @@ var discardCmd = &cobra.Command{
 	Use:   "discard",
 	Short: "Discards the saved state of the previous git-town command",
 	Run: func(cmd *cobra.Command, args []string) {
-		err := steps.DeletePreviousRunState()
+		err := steps.DeletePreviousRunState(prodRepo)
 		if err != nil {
 			fmt.Printf("cannot delete previous run state: %v", err)
 			os.Exit(1)

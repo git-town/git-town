@@ -18,16 +18,17 @@ import (
 
 // Runner executes Git commands.
 type Runner struct {
-	command.Shell                              // for running console commands
-	*Configuration                             // caches Git configuration settings
-	CurrentBranchTracker *CurrentBranchTracker // caches the currently checked out Git branch
-	remoteBranchCache    *RemoteBranchCache    // caches the remote branches of this Git repo
-	remotes              *RemotesCache         // caches Git remotes
+	command.Shell                            // for running console commands
+	*Configuration                           // caches Git configuration settings
+	CurrentBranchTracker *CurrentBranchCache // caches the currently checked out Git branch
+	remoteBranchCache    *RemoteBranchCache  // caches the remote branches of this Git repo
+	remotes              *RemotesCache       // caches Git remotes
+	rootDirCache         *rootDirectoryCache // caches the base of the Git directory
 }
 
 // NewRunner provides Runner instances.
-func NewRunner(shell command.Shell, config *Configuration, currentBranchTracker *CurrentBranchTracker, remotes *RemotesCache, remoteBranchCache *RemoteBranchCache) Runner {
-	return Runner{shell, config, currentBranchTracker, remoteBranchCache, remotes}
+func NewRunner(shell command.Shell, config *Configuration, currentBranchTracker *CurrentBranchCache, remotes *RemotesCache, remoteBranchCache *RemoteBranchCache) Runner {
+	return Runner{shell, config, currentBranchTracker, remoteBranchCache, remotes, &rootDirectoryCache{}}
 }
 
 // AbortMerge cancels a currently ongoing Git merge operation.
@@ -367,7 +368,11 @@ func (r *Runner) CurrentBranch() (result string, err error) {
 	if r.CurrentBranchTracker.Initialized() {
 		return r.CurrentBranchTracker.Current(), nil
 	}
-	if IsRebaseInProgress() {
+	rebasing, err := r.HasRebaseInProgress()
+	if err != nil {
+		return "", fmt.Errorf("cannot determine current branch: %w", err)
+	}
+	if rebasing {
 		currentBranch, err := r.currentBranchDuringRebase()
 		if err != nil {
 			return "", err
@@ -384,10 +389,14 @@ func (r *Runner) CurrentBranch() (result string, err error) {
 }
 
 func (r *Runner) currentBranchDuringRebase() (string, error) {
-	rawContent, err := ioutil.ReadFile(fmt.Sprintf("%s/.git/rebase-apply/head-name", GetRootDirectory()))
+	rootDir, err := r.RootDirectory()
+	if err != nil {
+		return "", err
+	}
+	rawContent, err := ioutil.ReadFile(fmt.Sprintf("%s/.git/rebase-apply/head-name", rootDir))
 	if err != nil {
 		// Git 2.26 introduces a new rebase backend, see https://github.com/git/git/blob/master/Documentation/RelNotes/2.26.0.txt
-		rawContent, err = ioutil.ReadFile(fmt.Sprintf("%s/.git/rebase-merge/head-name", GetRootDirectory()))
+		rawContent, err = ioutil.ReadFile(fmt.Sprintf("%s/.git/rebase-merge/head-name", rootDir))
 		if err != nil {
 			return "", err
 		}
@@ -550,6 +559,15 @@ func (r *Runner) HasBranchesOutOfSync() (bool, error) {
 		return false, fmt.Errorf("cannot determine if branches are out of sync in %q: %w %q", r.WorkingDir(), err, res.Output())
 	}
 	return strings.Contains(res.Output(), "["), nil
+}
+
+// HasConflicts returns whether the local repository currently has unresolved merge conflicts.
+func (r *Runner) HasConflicts() (bool, error) {
+	res, err := r.Run("git", "status")
+	if err != nil {
+		return false, fmt.Errorf("cannot determine conflicts: %w", err)
+	}
+	return res.OutputContainsText("Unmerged paths"), nil
 }
 
 // HasFile indicates whether this repository contains a file with the given name and content.
@@ -937,6 +955,19 @@ func (r *Runner) RevertCommit(sha string) error {
 		return fmt.Errorf("cannot revert commit %q: %w\n%s", sha, err, res.Output())
 	}
 	return nil
+}
+
+// RootDirectory returns the path of the rood directory of the current repository,
+// i.e. the directory that contains the ".git" folder.
+func (r *Runner) RootDirectory() (string, error) {
+	if !r.rootDirCache.Initialized() {
+		res, err := r.Run("git", "rev-parse", "--show-toplevel")
+		if err != nil {
+			return "", fmt.Errorf("cannot determine root directory: %w", err)
+		}
+		r.rootDirCache.Set(res.OutputSanitized())
+	}
+	return r.rootDirCache.Current(), nil
 }
 
 // ShaForBranch provides the SHA for the local branch with the given name.

@@ -12,8 +12,11 @@ import (
 )
 
 // LoadPreviousRunState loads the run state from disk if it exists or creates a new run state.
-func LoadPreviousRunState() (result *RunState, err error) {
-	filename := getRunResultFilename()
+func LoadPreviousRunState(repo *git.ProdRepo) (result *RunState, err error) {
+	filename, err := getRunResultFilename(repo)
+	if err != nil {
+		return nil, err
+	}
 	_, err = os.Stat(filename)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -34,9 +37,12 @@ func LoadPreviousRunState() (result *RunState, err error) {
 }
 
 // DeletePreviousRunState deletes the previous run state from disk.
-func DeletePreviousRunState() error {
-	filename := getRunResultFilename()
-	_, err := os.Stat(filename)
+func DeletePreviousRunState(repo *git.ProdRepo) error {
+	filename, err := getRunResultFilename(repo)
+	if err != nil {
+		return err
+	}
+	_, err = os.Stat(filename)
 	if err != nil {
 		if os.IsNotExist(err) {
 			return nil
@@ -51,12 +57,15 @@ func DeletePreviousRunState() error {
 }
 
 // SaveRunState saves the run state to disk.
-func SaveRunState(runState *RunState) error {
+func SaveRunState(runState *RunState, repo *git.ProdRepo) error {
 	content, err := json.MarshalIndent(runState, "", "  ")
 	if err != nil {
 		return fmt.Errorf("cannot encode run-state: %w", err)
 	}
-	filename := getRunResultFilename()
+	filename, err := getRunResultFilename(repo)
+	if err != nil {
+		return err
+	}
 	err = ioutil.WriteFile(filename, content, 0600)
 	if err != nil {
 		return fmt.Errorf("cannot write file %q: %w", filename, err)
@@ -64,8 +73,12 @@ func SaveRunState(runState *RunState) error {
 	return nil
 }
 
-func getRunResultFilename() string {
+func getRunResultFilename(repo *git.ProdRepo) (string, error) {
 	replaceCharacterRegexp := regexp.MustCompile("[[:^alnum:]]")
-	directory := replaceCharacterRegexp.ReplaceAllString(git.GetRootDirectory(), "-")
-	return filepath.Join(os.TempDir(), directory)
+	rootDir, err := repo.Silent.RootDirectory()
+	if err != nil {
+		return "", err
+	}
+	directory := replaceCharacterRegexp.ReplaceAllString(rootDir, "-")
+	return filepath.Join(os.TempDir(), directory), nil
 }

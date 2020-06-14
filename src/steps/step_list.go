@@ -78,7 +78,11 @@ func (stepList *StepList) Wrap(options WrapOptions, repo *git.ProdRepo) error {
 		InitialBranch:                     currentBranch,
 		InitialPreviouslyCheckedOutBranch: previousBranch,
 	})
-	if options.StashOpenChanges && git.HasOpenChanges() {
+	hasOpenChanges, err := repo.Silent.HasOpenChanges()
+	if err != nil {
+		return err
+	}
+	if options.StashOpenChanges && hasOpenChanges {
 		stepList.Prepend(&StashOpenChangesStep{})
 		stepList.Append(&RestoreOpenChangesStep{})
 	}
@@ -87,7 +91,10 @@ func (stepList *StepList) Wrap(options WrapOptions, repo *git.ProdRepo) error {
 		fmt.Printf("cannot get current working directory: %v", err)
 		os.Exit(1)
 	}
-	gitRootDirectory := git.GetRootDirectory()
+	gitRootDirectory, err := repo.Silent.RootDirectory()
+	if err != nil {
+		return err
+	}
 	if options.RunInGitRoot && initialDirectory != gitRootDirectory {
 		stepList.Prepend(&ChangeDirectoryStep{Directory: gitRootDirectory})
 		stepList.Append(&ChangeDirectoryStep{Directory: initialDirectory})

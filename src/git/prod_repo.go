@@ -14,7 +14,7 @@ type ProdRepo struct {
 func NewProdRepo() *ProdRepo {
 	silentShell := command.SilentShell{}
 	config := Config()
-	currentBranchTracker := CurrentBranchTracker{}
+	currentBranchTracker := CurrentBranchCache{}
 	remoteBranchCache := RemoteBranchCache{}
 	remotesCache := RemotesCache{}
 	silentRunner := NewRunner(silentShell, config, &currentBranchTracker, &remotesCache, &remoteBranchCache)
