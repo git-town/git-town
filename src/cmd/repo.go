@@ -4,7 +4,6 @@ import (
 	"github.com/git-town/git-town/src/browsers"
 	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/drivers"
-	"github.com/git-town/git-town/src/git"
 	"github.com/spf13/cobra"
 )
 
@@ -37,7 +36,7 @@ where HOSTNAME matches what is in your ssh config file.`,
 		if err := validateIsConfigured(prodRepo); err != nil {
 			return err
 		}
-		if err := git.Config().ValidateIsOnline(); err != nil {
+		if err := prodRepo.ValidateIsOnline(); err != nil {
 			return err
 		}
 		return nil

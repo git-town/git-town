@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/src/command"
+	"github.com/git-town/git-town/src/config"
 	"github.com/git-town/git-town/src/git"
 	"github.com/stretchr/testify/assert"
 )
@@ -52,7 +53,7 @@ func NewRepo(workingDir, homeDir, binDir string) Repo {
 	shell := NewMockingShell(workingDir, homeDir, binDir)
 	runner := git.Runner{
 		Shell:              shell,
-		Configuration:      git.NewConfiguration(shell),
+		Configuration:      config.NewConfiguration(shell),
 		IsRepoCache:        &git.BoolCache{},
 		RemoteBranchCache:  &git.StringSliceCache{},
 		RemotesCache:       &git.StringSliceCache{},
@@ -93,4 +94,18 @@ func (repo *Repo) FilesInBranches() (result DataTable, err error) {
 		}
 	}
 	return result, err
+}
+
+// CreateTestGitTownRepo creates a GitRepo for use in tests, with a main branch and
+// initial git town configuration.
+func CreateTestGitTownRepo(t *testing.T) Repo {
+	repo := CreateRepo(t)
+	err := repo.CreateBranch("main", "master")
+	assert.NoError(t, err)
+	err = repo.RunMany([][]string{
+		{"git", "config", "git-town.main-branch-name", "main"},
+		{"git", "config", "git-town.perennial-branch-names", ""},
+	})
+	assert.NoError(t, err)
+	return repo
 }

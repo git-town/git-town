@@ -1,9 +1,4 @@
-/*
-This file contains functionality around storing configuration settings
-inside Git's metadata storage for the repository.
-*/
-
-package git
+package config
 
 import (
 	"errors"
@@ -33,20 +28,6 @@ type Configuration struct {
 	// for running shell commands
 	shell command.Shell
 }
-
-// Config provides the current configuration.
-// This is used in the Git Town business logic, which runs in the current directory.
-// The configuration is lazy-loaded this way to allow using some Git Town commands outside of Git repositories.
-func Config() *Configuration {
-	if currentDirConfig == nil {
-		shell := command.SilentShell{}
-		currentDirConfig = NewConfiguration(&shell)
-	}
-	return currentDirConfig
-}
-
-// currentDirConfig contains the Git Town configuration in the current working directory.
-var currentDirConfig *Configuration
 
 // NewConfiguration provides a Configuration instance reflecting the configuration values in the given directory.
 func NewConfiguration(shell command.Shell) *Configuration {

@@ -12,19 +12,20 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/src/command"
+	"github.com/git-town/git-town/src/config"
 	"github.com/git-town/git-town/src/dryrun"
 	"github.com/git-town/git-town/src/util"
 )
 
 // Runner executes Git commands.
 type Runner struct {
-	command.Shell                        // for running console commands
-	*Configuration                       // caches Git configuration settings
-	CurrentBranchCache *StringCache      // caches the currently checked out Git branch
-	IsRepoCache        *BoolCache        // caches whether the current directory is a Git repo
-	RemoteBranchCache  *StringSliceCache // caches the remote branches of this Git repo
-	RemotesCache       *StringSliceCache // caches Git remotes
-	RootDirCache       *StringCache      // caches the base of the Git directory
+	command.Shell                           // for running console commands
+	*config.Configuration                   // caches Git configuration settings
+	CurrentBranchCache    *StringCache      // caches the currently checked out Git branch
+	IsRepoCache           *BoolCache        // caches whether the current directory is a Git repo
+	RemoteBranchCache     *StringSliceCache // caches the remote branches of this Git repo
+	RemotesCache          *StringSliceCache // caches Git remotes
+	RootDirCache          *StringCache      // caches the base of the Git directory
 }
 
 // AbortMerge cancels a currently ongoing Git merge operation.
@@ -484,7 +485,7 @@ func (r *Runner) ExpectedPreviouslyCheckedOutBranch(initialPreviouslyCheckedOutB
 		}
 		return initialBranch, nil
 	}
-	return Config().GetMainBranch(), nil
+	return r.GetMainBranch(), nil
 }
 
 // Fetch retrieves the updates from the remote repo.

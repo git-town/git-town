@@ -1,19 +1,22 @@
 package git
 
-import "github.com/git-town/git-town/src/command"
+import (
+	"github.com/git-town/git-town/src/command"
+	"github.com/git-town/git-town/src/config"
+)
 
 // ProdRepo is a Git Repo in production code.
 type ProdRepo struct {
-	Silent         Runner        // the Runner instance for silent Git operations
-	Logging        Runner        // the Runner instance to Git operations that show up in the output
-	LoggingShell   *LoggingShell // the LoggingShell instance used
-	*Configuration               // the git.Configuration instance for this repo
+	Silent                Runner        // the Runner instance for silent Git operations
+	Logging               Runner        // the Runner instance to Git operations that show up in the output
+	LoggingShell          *LoggingShell // the LoggingShell instance used
+	*config.Configuration               // the git.Configuration instance for this repo
 }
 
 // NewProdRepo provides a Repo instance in the current working directory.
 func NewProdRepo() *ProdRepo {
 	silentShell := command.SilentShell{}
-	config := Config()
+	config := config.NewConfiguration(silentShell)
 	currentBranchTracker := StringCache{}
 	isRepoCache := BoolCache{}
 	remoteBranchCache := StringSliceCache{}

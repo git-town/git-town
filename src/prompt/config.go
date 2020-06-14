@@ -10,7 +10,7 @@ import (
 
 // EnsureIsConfigured has the user to confgure the main branch and perennial branches if needed.
 func EnsureIsConfigured(repo *git.ProdRepo) error {
-	if git.Config().GetMainBranch() == "" {
+	if repo.GetMainBranch() == "" {
 		fmt.Println("Git Town needs to be configured")
 		fmt.Println()
 		err := ConfigureMainBranch(repo)
@@ -30,10 +30,10 @@ func ConfigureMainBranch(repo *git.ProdRepo) error {
 	}
 	newMainBranch := askForBranch(askForBranchOptions{
 		branchNames:       localBranches,
-		prompt:            getMainBranchPrompt(),
-		defaultBranchName: git.Config().GetMainBranch(),
+		prompt:            getMainBranchPrompt(repo),
+		defaultBranchName: repo.GetMainBranch(),
 	})
-	return git.Config().SetMainBranch(newMainBranch)
+	return repo.SetMainBranch(newMainBranch)
 }
 
 // ConfigurePerennialBranches has the user to confgure the perennial branches.
@@ -47,17 +47,17 @@ func ConfigurePerennialBranches(repo *git.ProdRepo) error {
 	}
 	newPerennialBranches := askForBranches(askForBranchesOptions{
 		branchNames:        branchNames,
-		prompt:             getPerennialBranchesPrompt(),
-		defaultBranchNames: git.Config().GetPerennialBranches(),
+		prompt:             getPerennialBranchesPrompt(repo),
+		defaultBranchNames: repo.GetPerennialBranches(),
 	})
-	return git.Config().SetPerennialBranches(newPerennialBranches)
+	return repo.SetPerennialBranches(newPerennialBranches)
 }
 
 // Helpers
 
-func getMainBranchPrompt() (result string) {
+func getMainBranchPrompt(repo *git.ProdRepo) (result string) {
 	result += "Please specify the main development branch:"
-	currentMainBranch := git.Config().GetMainBranch()
+	currentMainBranch := repo.GetMainBranch()
 	if currentMainBranch != "" {
 		coloredBranchName := color.New(color.Bold).Add(color.FgCyan).Sprintf(currentMainBranch)
 		result += fmt.Sprintf(" (current value: %s)", coloredBranchName)
@@ -65,9 +65,9 @@ func getMainBranchPrompt() (result string) {
 	return
 }
 
-func getPerennialBranchesPrompt() (result string) {
+func getPerennialBranchesPrompt(repo *git.ProdRepo) (result string) {
 	result += "Please specify perennial branches:"
-	currentPerennialBranches := git.Config().GetPerennialBranches()
+	currentPerennialBranches := repo.GetPerennialBranches()
 	if len(currentPerennialBranches) > 0 {
 		coloredBranchNames := color.New(color.Bold).Add(color.FgCyan).Sprintf(strings.Join(currentPerennialBranches, ", "))
 		result += fmt.Sprintf(" (current value: %s)", coloredBranchNames)

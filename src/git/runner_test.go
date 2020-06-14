@@ -12,7 +12,7 @@ import (
 )
 
 func TestRunner_AddRemote(t *testing.T) {
-	runner := CreateTestGitTownRepo(t).Runner
+	runner := test.CreateTestGitTownRepo(t).Runner
 	err := runner.AddRemote("foo", "bar")
 	assert.NoError(t, err)
 	remotes, err := runner.Remotes()
@@ -104,7 +104,7 @@ func TestRunner_CreateBranch(t *testing.T) {
 }
 
 func TestRunner_CreateChildFeatureBranch(t *testing.T) {
-	runner := CreateTestGitTownRepo(t).Runner
+	runner := test.CreateTestGitTownRepo(t).Runner
 	err := runner.CreateFeatureBranch("f1")
 	assert.NoError(t, err)
 	err = runner.CreateChildFeatureBranch("f1a", "f1")
@@ -154,7 +154,7 @@ func TestRunner_CreateCommit_Author(t *testing.T) {
 }
 
 func TestRunner_CreateFeatureBranch(t *testing.T) {
-	runner := CreateTestGitTownRepo(t).Runner
+	runner := test.CreateTestGitTownRepo(t).Runner
 	err := runner.CreateFeatureBranch("f1")
 	assert.NoError(t, err)
 	runner.Configuration.Reload()
@@ -163,7 +163,7 @@ func TestRunner_CreateFeatureBranch(t *testing.T) {
 }
 
 func TestRunner_CreateFeatureBranchNoParent(t *testing.T) {
-	runner := CreateTestGitTownRepo(t).Runner
+	runner := test.CreateTestGitTownRepo(t).Runner
 	err := runner.CreateFeatureBranchNoParent("f1")
 	assert.NoError(t, err)
 	runner.Configuration.Reload()
@@ -190,7 +190,7 @@ func TestRunner_CreateFile_InSubFolder(t *testing.T) {
 }
 
 func TestRunner_CreatePerennialBranches(t *testing.T) {
-	runner := CreateTestGitTownRepo(t).Runner
+	runner := test.CreateTestGitTownRepo(t).Runner
 	err := runner.CreatePerennialBranches("p1", "p2")
 	assert.NoError(t, err)
 	branches, err := runner.LocalBranchesMainFirst()
@@ -605,18 +605,4 @@ func TestRunner_UncommittedFiles(t *testing.T) {
 	files, err := runner.UncommittedFiles()
 	assert.NoError(t, err)
 	assert.Equal(t, []string{"f1.txt", "f2.txt"}, files)
-}
-
-// CreateTestGitTownRepo creates a GitRepo for use in tests, with a main branch and
-// initial git town configuration.
-func CreateTestGitTownRepo(t *testing.T) test.Repo {
-	repo := test.CreateRepo(t)
-	err := repo.CreateBranch("main", "master")
-	assert.NoError(t, err)
-	err = repo.RunMany([][]string{
-		{"git", "config", "git-town.main-branch-name", "main"},
-		{"git", "config", "git-town.perennial-branch-names", ""},
-	})
-	assert.NoError(t, err)
-	return repo
 }

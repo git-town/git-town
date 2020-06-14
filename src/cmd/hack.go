@@ -51,7 +51,7 @@ See "sync" for information regarding remote upstream.`,
 
 func getParentBranch(targetBranch string, repo *git.ProdRepo) (string, error) {
 	if promptForParent {
-		parentBranch, err := prompt.AskForBranchParent(targetBranch, git.Config().GetMainBranch(), repo)
+		parentBranch, err := prompt.AskForBranchParent(targetBranch, repo.GetMainBranch(), repo)
 		if err != nil {
 			return "", err
 		}
@@ -61,7 +61,7 @@ func getParentBranch(targetBranch string, repo *git.ProdRepo) (string, error) {
 		}
 		return parentBranch, nil
 	}
-	return git.Config().GetMainBranch(), nil
+	return repo.GetMainBranch(), nil
 }
 
 func getHackConfig(args []string, repo *git.ProdRepo) (result appendConfig, err error) {
@@ -74,9 +74,9 @@ func getHackConfig(args []string, repo *git.ProdRepo) (result appendConfig, err 
 	if err != nil {
 		return result, err
 	}
-	result.shouldNewBranchPush = git.Config().ShouldNewBranchPush()
-	result.isOffline = git.Config().IsOffline()
-	if result.hasOrigin && !git.Config().IsOffline() {
+	result.shouldNewBranchPush = repo.ShouldNewBranchPush()
+	result.isOffline = repo.IsOffline()
+	if result.hasOrigin && !repo.IsOffline() {
 		err := repo.Logging.Fetch()
 		if err != nil {
 			return result, err

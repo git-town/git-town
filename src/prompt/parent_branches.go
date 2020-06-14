@@ -12,10 +12,10 @@ import (
 // Missing ancestry information is queried from the user.
 func EnsureKnowsParentBranches(branchNames []string, repo *git.ProdRepo) error {
 	for _, branchName := range branchNames {
-		if git.Config().IsMainBranch(branchName) || git.Config().IsPerennialBranch(branchName) || git.Config().HasParentBranch(branchName) {
+		if repo.IsMainBranch(branchName) || repo.IsPerennialBranch(branchName) || repo.HasParentBranch(branchName) {
 			continue
 		}
-		err := AskForBranchAncestry(branchName, git.Config().GetMainBranch(), repo)
+		err := AskForBranchAncestry(branchName, repo.GetMainBranch(), repo)
 		if err != nil {
 			return err
 		}
@@ -30,26 +30,26 @@ func EnsureKnowsParentBranches(branchNames []string, repo *git.ProdRepo) error {
 func AskForBranchAncestry(branchName, defaultBranchName string, repo *git.ProdRepo) (err error) {
 	current := branchName
 	for {
-		parent := git.Config().GetParentBranch(current)
+		parent := repo.GetParentBranch(current)
 		if parent == "" { // nolint: nestif
-			printParentBranchHeader()
+			printParentBranchHeader(repo)
 			parent, err = AskForBranchParent(current, defaultBranchName, repo)
 			if err != nil {
 				return err
 			}
 			if parent == perennialBranchOption {
-				err = git.Config().AddToPerennialBranches(current)
+				err = repo.AddToPerennialBranches(current)
 				if err != nil {
 					return err
 				}
 				break
 			}
-			err = git.Config().SetParentBranch(current, parent)
+			err = repo.SetParentBranch(current, parent)
 			if err != nil {
 				return err
 			}
 		}
-		if parent == git.Config().GetMainBranch() || git.Config().IsPerennialBranch(parent) {
+		if parent == repo.GetMainBranch() || repo.IsPerennialBranch(parent) {
 			break
 		}
 		current = parent
@@ -63,7 +63,7 @@ func AskForBranchParent(branchName, defaultBranchName string, repo *git.ProdRepo
 	if err != nil {
 		return "", err
 	}
-	filteredChoices := filterOutSelfAndDescendants(branchName, choices)
+	filteredChoices := filterOutSelfAndDescendants(branchName, choices, repo)
 	return askForBranch(askForBranchOptions{
 		branchNames:       append([]string{perennialBranchOption}, filteredChoices...),
 		prompt:            fmt.Sprintf(parentBranchPromptTemplate, branchName),
@@ -85,9 +85,9 @@ The latter allows to build on top of currently unshipped features.
 var parentBranchPromptTemplate = "Please specify the parent branch of %q:"
 var perennialBranchOption = "<none> (perennial branch)"
 
-func filterOutSelfAndDescendants(branchName string, choices []string) (filteredChoices []string) {
+func filterOutSelfAndDescendants(branchName string, choices []string, repo *git.ProdRepo) (filteredChoices []string) {
 	for _, choice := range choices {
-		if choice == branchName || git.Config().IsAncestorBranch(choice, branchName) {
+		if choice == branchName || repo.IsAncestorBranch(choice, branchName) {
 			continue
 		}
 		filteredChoices = append(filteredChoices, choice)
@@ -95,9 +95,9 @@ func filterOutSelfAndDescendants(branchName string, choices []string) (filteredC
 	return filteredChoices
 }
 
-func printParentBranchHeader() {
+func printParentBranchHeader(repo *git.ProdRepo) {
 	if !parentBranchHeaderShown {
 		parentBranchHeaderShown = true
-		cli.Printf(parentBranchHeaderTemplate, git.Config().GetMainBranch())
+		cli.Printf(parentBranchHeaderTemplate, repo.GetMainBranch())
 	}
 }
