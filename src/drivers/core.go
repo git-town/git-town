@@ -1,5 +1,7 @@
 package drivers
 
+import "errors"
+
 // Core provides the public API for the drivers subsystem.
 
 // CodeHostingDriver defines the structure of drivers
@@ -79,12 +81,12 @@ func Load(config config, git gitRunner) CodeHostingDriver {
 }
 
 // UnsupportedHostingError provides an error message.
-func UnsupportedHostingError() string {
-	return `Unsupported hosting service
+func UnsupportedHostingError() error {
+	return errors.New(`Unsupported hosting service
 
 This command requires hosting on one of these services:
 * Bitbucket
 * GitHub
 * GitLab
-* Gitea`
+* Gitea`)
 }
