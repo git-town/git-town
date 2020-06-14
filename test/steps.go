@@ -176,7 +176,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I haven't configured Git Town yet$`, func() error {
-		state.gitEnv.DevRepo.DeletePerennialBranchConfiguration()
+		err := state.gitEnv.DevRepo.DeletePerennialBranchConfiguration()
+		if err != nil {
+			return err
+		}
 		return state.gitEnv.DevRepo.DeleteMainBranchConfiguration()
 	})
 
@@ -821,8 +824,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the perennial branches are not configured$`, func() error {
-		state.gitEnv.DevRepo.DeletePerennialBranchConfiguration()
-		return nil
+		return state.gitEnv.DevRepo.DeletePerennialBranchConfiguration()
 	})
 
 	suite.Step(`^the previous Git branch is (?:now|still) "([^"]*)"$`, func(want string) error {
