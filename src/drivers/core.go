@@ -82,7 +82,7 @@ func Load(config config, git gitRunner) CodeHostingDriver {
 
 // UnsupportedHostingError provides an error message.
 func UnsupportedHostingError() error {
-	return errors.New(`Unsupported hosting service
+	return errors.New(`unsupported hosting service
 
 This command requires hosting on one of these services:
 * Bitbucket
