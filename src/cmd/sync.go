@@ -72,7 +72,10 @@ You can disable this by running "git config git-town.sync-upstream false".`,
 		if err := validateIsConfigured(prodRepo); err != nil {
 			return err
 		}
-		_, err := isInUnfinishedState(prodRepo, nil)
+		exit, err := isInUnfinishedState(prodRepo, nil)
+		if exit {
+			os.Exit(0)
+		}
 		return err
 	},
 }
@@ -161,25 +164,24 @@ func isInUnfinishedState(repo *git.ProdRepo, driver drivers.CodeHostingDriver) (
 		if err != nil {
 			return false, err
 		}
-		os.Exit(0)
+		return true, nil
 	case prompt.ResponseTypeAbort:
 		abortRunState := runState.CreateAbortRunState()
 		err = steps.Run(&abortRunState, repo, driver)
 		if err != nil {
 			return false, err
 		}
-		os.Exit(0)
+		return true, nil
 	case prompt.ResponseTypeSkip:
 		skipRunState := runState.CreateSkipRunState()
 		err = steps.Run(&skipRunState, repo, driver)
 		if err != nil {
 			return false, err
 		}
-		os.Exit(0)
+		return true, nil
 	default:
-		return true, fmt.Errorf("unknown response: %s", response)
+		return false, fmt.Errorf("unknown response: %s", response)
 	}
-	return false, nil
 }
 
 func init() {
