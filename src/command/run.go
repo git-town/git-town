@@ -3,7 +3,6 @@ package command
 import (
 	"bytes"
 	"fmt"
-	"os"
 	"os/exec"
 	"strings"
 	"time"
@@ -80,10 +79,6 @@ func RunWith(opts Options, cmd string, args ...string) (*Result, error) {
 		}
 	}
 	err = subProcess.Wait()
-	if opts.Essential && err != nil {
-		fmt.Printf("\n\nError running '%s %s' in %q: %s", cmd, strings.Join(args, " "), subProcess.Dir, err)
-		os.Exit(1)
-	}
 	result.output = output.String()
 	return &result, err
 }
