@@ -1,7 +1,11 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/git-town/git-town/src/cli"
+	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/dryrun"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/prompt"
@@ -124,6 +128,51 @@ func getSyncStepList(config syncConfig, repo *git.ProdRepo) (result steps.StepLi
 	}
 	err = result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
 	return result, err
+}
+
+func ensureIsNotInUnfinishedState(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
+	runState, err := steps.LoadPreviousRunState(repo)
+	if err != nil {
+		return fmt.Errorf("cannot load previous run state: %w", err)
+	}
+	if runState == nil || !runState.IsUnfinished() {
+		return nil
+	}
+	response := prompt.AskHowToHandleUnfinishedRunState(
+		runState.Command,
+		runState.UnfinishedDetails.EndBranch,
+		runState.UnfinishedDetails.EndTime,
+		runState.UnfinishedDetails.CanSkip,
+	)
+	switch response {
+	case prompt.ResponseTypeDiscard:
+		return steps.DeletePreviousRunState(repo)
+	case prompt.ResponseTypeContinue:
+		hasConflicts, err := repo.Silent.HasConflicts()
+		if err != nil {
+			return err
+		}
+		if hasConflicts {
+			return fmt.Errorf("you must resolve the conflicts before continuing")
+		}
+		err = steps.Run(runState, repo, driver)
+		if err != nil {
+			return err
+		}
+	case prompt.ResponseTypeAbort:
+		abortRunState := runState.CreateAbortRunState()
+		err = steps.Run(&abortRunState, repo, driver)
+	case prompt.ResponseTypeSkip:
+		skipRunState := runState.CreateSkipRunState()
+		err = steps.Run(&skipRunState, repo, driver)
+	default:
+		return fmt.Errorf("unknown response: %s", response)
+	}
+	if err != nil {
+		return err
+	}
+	os.Exit(0)
+	return nil
 }
 
 func init() {
