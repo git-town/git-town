@@ -72,7 +72,7 @@ You can disable this by running "git config git-town.sync-upstream false".`,
 		if err := validateIsConfigured(prodRepo); err != nil {
 			return err
 		}
-		exit, err := isInUnfinishedState(prodRepo, nil)
+		exit, err := handleUnfinishedState(prodRepo, nil)
 		if exit {
 			os.Exit(0)
 		}
@@ -134,7 +134,7 @@ func getSyncStepList(config syncConfig, repo *git.ProdRepo) (result steps.StepLi
 	return result, err
 }
 
-func isInUnfinishedState(repo *git.ProdRepo, driver drivers.CodeHostingDriver) (quit bool, err error) {
+func handleUnfinishedState(repo *git.ProdRepo, driver drivers.CodeHostingDriver) (quit bool, err error) {
 	runState, err := steps.LoadPreviousRunState(repo)
 	if err != nil {
 		return false, fmt.Errorf("cannot load previous run state: %w", err)
