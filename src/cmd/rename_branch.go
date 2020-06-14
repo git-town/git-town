@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/git"
@@ -46,8 +45,7 @@ When run on a perennial branch
 	Run: func(cmd *cobra.Command, args []string) {
 		config, err := getRenameBranchConfig(args, prodRepo)
 		if err != nil {
-			fmt.Println("Error:", err)
-			os.Exit(1)
+			cli.Exit(err)
 		}
 		stepList, err := getRenameBranchStepList(config, prodRepo)
 		if err != nil {
@@ -56,8 +54,7 @@ When run on a perennial branch
 		runState := steps.NewRunState("rename-branch", stepList)
 		err = steps.Run(runState, prodRepo, nil)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			cli.Exit(err)
 		}
 	},
 	Args: cobra.RangeArgs(1, 2),
