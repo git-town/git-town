@@ -168,17 +168,11 @@ func handleUnfinishedState(repo *git.ProdRepo, driver drivers.CodeHostingDriver)
 	case prompt.ResponseTypeAbort:
 		abortRunState := runState.CreateAbortRunState()
 		err = steps.Run(&abortRunState, repo, driver)
-		if err != nil {
-			return false, err
-		}
-		return true, nil
+		return true, err
 	case prompt.ResponseTypeSkip:
 		skipRunState := runState.CreateSkipRunState()
 		err = steps.Run(&skipRunState, repo, driver)
-		if err != nil {
-			return false, err
-		}
-		return true, nil
+		return true, err
 	default:
 		return false, fmt.Errorf("unknown response: %s", response)
 	}
