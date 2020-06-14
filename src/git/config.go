@@ -362,10 +362,11 @@ func (c *Configuration) RemoveLocalGitConfiguration() {
 }
 
 // SetCodeHostingDriver sets the "github.code-hosting-driver" setting.
-func (c *Configuration) SetCodeHostingDriver(value string) *command.Result {
+func (c *Configuration) SetCodeHostingDriver(value string) error {
 	const key = "git-town.code-hosting-driver"
 	c.localConfigCache[key] = value
-	return c.shell.MustRun("git", "config", key, value)
+	_, err := c.shell.Run("git", "config", key, value)
+	return err
 }
 
 // SetCodeHostingOriginHostname sets the "github.code-hosting-driver" setting.

@@ -434,8 +434,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^my repo has "git-town.code-hosting-driver" set to "([^"]*)"$`, func(value string) error {
-		_ = state.gitEnv.DevRepo.SetCodeHostingDriver(value)
-		return nil
+		return state.gitEnv.DevRepo.SetCodeHostingDriver(value)
 	})
 
 	suite.Step(`^my repo has "git-town.code-hosting-origin-hostname" set to "([^"]*)"$`, func(value string) error {
