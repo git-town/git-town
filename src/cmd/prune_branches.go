@@ -1,9 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/steps"
@@ -26,8 +23,7 @@ This usually means the branch was shipped or killed on another machine.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		config, err := getPruneBranchesConfig(prodRepo)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			cli.Exit(err)
 		}
 		stepList, err := getPruneBranchesStepList(config, prodRepo)
 		if err != nil {
@@ -36,8 +32,7 @@ This usually means the branch was shipped or killed on another machine.`,
 		runState := steps.NewRunState("prune-branches", stepList)
 		err = steps.Run(runState, prodRepo, nil)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			cli.Exit(err)
 		}
 	},
 	Args: cobra.NoArgs,
