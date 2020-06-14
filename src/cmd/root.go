@@ -1,8 +1,7 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
+	"errors"
 
 	"github.com/fatih/color"
 	"github.com/git-town/git-town/src/cli"
@@ -26,17 +25,14 @@ and it allows you to perform many common Git operations faster and easier.`,
 func Execute() {
 	majorVersion, minorVersion, err := prodRepo.Silent.Version()
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		cli.Exit(err)
 	}
 	if !IsAcceptableGitVersion(majorVersion, minorVersion) {
-		fmt.Println("Git Town requires Git 2.7.0 or higher")
-		os.Exit(1)
+		cli.Exit(errors.New("Git Town requires Git 2.7.0 or higher")) // nolint:stylecheck // proper noun
 	}
 	color.NoColor = false // Prevent color from auto disable
 	if err := RootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(-1)
+		cli.Exit(err)
 	}
 }
 

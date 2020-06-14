@@ -1,9 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/steps"
@@ -25,8 +22,7 @@ var abortCmd = &cobra.Command{
 		abortRunState := runState.CreateAbortRunState()
 		err = steps.Run(&abortRunState, prodRepo, drivers.Load(prodRepo.Configuration, &prodRepo.Silent))
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			cli.Exit(err)
 		}
 	},
 	Args: cobra.NoArgs,

@@ -1,9 +1,7 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
-
+	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/prompt"
@@ -38,24 +36,20 @@ where hostname matches what is in your ssh config file.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		config, err := getNewPullRequestConfig(prodRepo)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			cli.Exit(err)
 		}
 		driver := drivers.Load(prodRepo.Configuration, &prodRepo.Silent)
 		if driver == nil {
-			fmt.Println(drivers.UnsupportedHostingError())
-			os.Exit(1)
+			cli.Exit(drivers.UnsupportedHostingError())
 		}
 		stepList, err := getNewPullRequestStepList(config, prodRepo)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			cli.Exit(err)
 		}
 		runState := steps.NewRunState("new-pull-request", stepList)
 		err = steps.Run(runState, prodRepo, driver)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			cli.Exit(err)
 		}
 	},
 	Args: cobra.NoArgs,

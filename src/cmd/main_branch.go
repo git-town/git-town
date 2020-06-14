@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/git"
@@ -21,8 +20,7 @@ The main branch is the Git branch from which new feature branches are cut.`,
 		} else {
 			err := setMainBranch(args[0], prodRepo)
 			if err != nil {
-				fmt.Println(err)
-				os.Exit(1)
+				cli.Exit(err)
 			}
 		}
 	},

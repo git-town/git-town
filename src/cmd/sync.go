@@ -1,9 +1,9 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 
+	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/dryrun"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/prompt"
@@ -43,19 +43,16 @@ You can disable this by running "git config git-town.sync-upstream false".`,
 	Run: func(cmd *cobra.Command, args []string) {
 		config, err := getSyncConfig(prodRepo)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			cli.Exit(err)
 		}
 		stepList, err := getSyncStepList(config, prodRepo)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			cli.Exit(err)
 		}
 		runState := steps.NewRunState("sync", stepList)
 		err = steps.Run(runState, prodRepo, nil)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			cli.Exit(err)
 		}
 	},
 	Args: cobra.NoArgs,
@@ -73,7 +70,14 @@ You can disable this by running "git config git-town.sync-upstream false".`,
 		if err := validateIsConfigured(prodRepo); err != nil {
 			return err
 		}
-		return ensureIsNotInUnfinishedState(prodRepo, nil)
+		exit, err := handleUnfinishedState(prodRepo, nil)
+		if err != nil {
+			return err
+		}
+		if exit {
+			os.Exit(0)
+		}
+		return nil
 	},
 }
 

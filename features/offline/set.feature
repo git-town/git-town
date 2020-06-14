@@ -18,9 +18,9 @@ Feature: enabling offline mode
 
   Scenario: invalid value
     When I run "git-town offline zonk"
-    Then it prints:
+    Then it prints the error:
       """
-      Error: invalid argument: "zonk". Please provide either "true" or "false".
+      invalid argument: "zonk". Please provide either "true" or "false"
       """
 
 

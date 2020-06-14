@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/git"
@@ -33,8 +32,7 @@ Does not delete perennial branches nor the main branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		config, err := getKillConfig(args, prodRepo)
 		if err != nil {
-			fmt.Println("Error:", err)
-			os.Exit(1)
+			cli.Exit(err)
 		}
 		stepList, err := getKillStepList(config, prodRepo)
 		if err != nil {
@@ -43,8 +41,7 @@ Does not delete perennial branches nor the main branch.`,
 		runState := steps.NewRunState("kill", stepList)
 		err = steps.Run(runState, prodRepo, nil)
 		if err != nil {
-			fmt.Println("Error:", err)
-			os.Exit(1)
+			cli.Exit(err)
 		}
 	},
 	Args: cobra.MaximumNArgs(1),
@@ -138,8 +135,7 @@ func getKillStepList(config killConfig, repo *git.ProdRepo) (result steps.StepLi
 	case !repo.IsOffline():
 		result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.targetBranch, IsTracking: false})
 	default:
-		fmt.Printf("Cannot delete remote branch %q in offline mode", config.targetBranch)
-		os.Exit(1)
+		return result, fmt.Errorf("cannot delete remote branch %q in offline mode", config.targetBranch)
 	}
 	err = result.Wrap(steps.WrapOptions{
 		RunInGitRoot:     true,

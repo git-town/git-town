@@ -3,7 +3,6 @@ package command
 import (
 	"bytes"
 	"fmt"
-	"os"
 	"os/exec"
 	"strings"
 	"time"
@@ -21,10 +20,6 @@ type Options struct {
 	// Env allows to override the environment variables to use in the subshell, in the format provided by os.Environ()
 	// If empty, uses the environment variables of this process.
 	Env []string
-
-	// Essential indicates whether this is an essential command.
-	// Essential commands are critically important for Git Town to function. If they fail Git Town ends right there.
-	Essential bool
 
 	// Input contains the user input to enter into the running command.
 	// It is written to the subprocess one element at a time, with a delay defined by command.InputDelay in between.
@@ -80,10 +75,6 @@ func RunWith(opts Options, cmd string, args ...string) (*Result, error) {
 		}
 	}
 	err = subProcess.Wait()
-	if opts.Essential && err != nil {
-		fmt.Printf("\n\nError running '%s %s' in %q: %s", cmd, strings.Join(args, " "), subProcess.Dir, err)
-		os.Exit(1)
-	}
 	result.output = output.String()
 	return &result, err
 }

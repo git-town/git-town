@@ -2,13 +2,10 @@ package steps
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
-
-	"github.com/fatih/color"
 )
 
 // Run runs the Git Town command described by the given state.
@@ -74,7 +71,15 @@ func Run(runState *RunState, repo *git.ProdRepo, driver drivers.CodeHostingDrive
 				if err != nil {
 					return fmt.Errorf("cannot save run state: %w", err)
 				}
-				exitWithMessages(runState.UnfinishedDetails.CanSkip)
+				message := `
+To abort, run "git-town abort".
+To continue after having resolved conflicts, run "git-town continue".
+`
+				if runState.UnfinishedDetails.CanSkip {
+					message += `To continue by skipping the current branch, run "git-town skip".`
+				}
+				message += "\n"
+				return fmt.Errorf(message)
 			}
 		}
 		undoStep, err := step.CreateUndoStep(repo)
@@ -83,18 +88,4 @@ func Run(runState *RunState, repo *git.ProdRepo, driver drivers.CodeHostingDrive
 		}
 		runState.UndoStepList.Prepend(undoStep)
 	}
-}
-
-// Helpers
-
-func exitWithMessages(canSkip bool) {
-	messageFmt := color.New(color.FgRed)
-	fmt.Println()
-	cli.PrintlnColor(messageFmt, "To abort, run \"git-town abort\".")
-	cli.PrintlnColor(messageFmt, "To continue after having resolved conflicts, run \"git-town continue\".")
-	if canSkip {
-		cli.PrintlnColor(messageFmt, "To continue by skipping the current branch, run \"git-town skip\".")
-	}
-	fmt.Println()
-	os.Exit(1)
 }
