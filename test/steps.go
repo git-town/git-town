@@ -429,8 +429,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^my repo has "color\.ui" set to "([^"]*)"$`, func(value string) error {
-		_ = state.gitEnv.DevRepo.SetColorUI(value)
-		return nil
+		return state.gitEnv.DevRepo.SetColorUI(value)
 	})
 
 	suite.Step(`^my repo has "git-town.code-hosting-driver" set to "([^"]*)"$`, func(value string) error {

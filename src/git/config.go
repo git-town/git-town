@@ -378,8 +378,9 @@ func (c *Configuration) SetCodeHostingOriginHostname(value string) error {
 }
 
 // SetColorUI configures whether Git output contains color codes.
-func (c *Configuration) SetColorUI(value string) *command.Result {
-	return c.shell.MustRun("git", "config", "color.ui", value)
+func (c *Configuration) SetColorUI(value string) error {
+	_, err := c.shell.Run("git", "config", "color.ui", value)
+	return err
 }
 
 // SetGlobalConfigValue sets the given configuration setting in the global Git configuration.
