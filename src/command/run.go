@@ -21,10 +21,6 @@ type Options struct {
 	// If empty, uses the environment variables of this process.
 	Env []string
 
-	// Essential indicates whether this is an essential command.
-	// Essential commands are critically important for Git Town to function. If they fail Git Town ends right there.
-	Essential bool
-
 	// Input contains the user input to enter into the running command.
 	// It is written to the subprocess one element at a time, with a delay defined by command.InputDelay in between.
 	Input []string // input into the subprocess
