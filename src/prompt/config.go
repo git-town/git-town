@@ -33,8 +33,7 @@ func ConfigureMainBranch(repo *git.ProdRepo) error {
 		prompt:            getMainBranchPrompt(),
 		defaultBranchName: git.Config().GetMainBranch(),
 	})
-	git.Config().SetMainBranch(newMainBranch)
-	return nil
+	return git.Config().SetMainBranch(newMainBranch)
 }
 
 // ConfigurePerennialBranches has the user to confgure the perennial branches.
@@ -51,8 +50,7 @@ func ConfigurePerennialBranches(repo *git.ProdRepo) error {
 		prompt:             getPerennialBranchesPrompt(),
 		defaultBranchNames: git.Config().GetPerennialBranches(),
 	})
-	git.Config().SetPerennialBranches(newPerennialBranches)
-	return nil
+	return git.Config().SetPerennialBranches(newPerennialBranches)
 }
 
 // Helpers

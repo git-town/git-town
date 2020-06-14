@@ -44,8 +44,7 @@ func setMainBranch(branchName string, repo *git.ProdRepo) error {
 	if !hasBranch {
 		return fmt.Errorf("there is no branch named %q", branchName)
 	}
-	git.Config().SetMainBranch(branchName)
-	return nil
+	return git.Config().SetMainBranch(branchName)
 }
 
 func init() {

@@ -736,8 +736,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the main branch is configured as "([^"]+)"$`, func(name string) error {
-		state.gitEnv.DevRepo.SetMainBranch(name)
-		return nil
+		return state.gitEnv.DevRepo.SetMainBranch(name)
 	})
 
 	suite.Step(`^the main branch name is not configured$`, func() error {
@@ -762,8 +761,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the new-branch-push-flag configuration is "([^"]*)"$`, func(value string) error {
-		_ = state.gitEnv.DevRepo.Configuration.SetLocalConfigValue("git-town.new-branch-push-flag", value)
-		return nil
+		_, err := state.gitEnv.DevRepo.Configuration.SetLocalConfigValue("git-town.new-branch-push-flag", value)
+		return err
 	})
 
 	suite.Step(`^the new-branch-push-flag configuration is now (true|false)$`, func(text string) error {
@@ -785,13 +784,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the perennial branches are configured as "([^"]+)"$`, func(name string) error {
-		state.gitEnv.DevRepo.AddToPerennialBranches(name)
-		return nil
+		return state.gitEnv.DevRepo.AddToPerennialBranches(name)
 	})
 
 	suite.Step(`^the perennial branches are configured as "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
-		state.gitEnv.DevRepo.AddToPerennialBranches(branch1, branch2)
-		return nil
+		return state.gitEnv.DevRepo.AddToPerennialBranches(branch1, branch2)
 	})
 
 	suite.Step(`^the perennial branches are now configured as "([^"]+)"$`, func(name string) error {
@@ -838,8 +835,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the pull-branch-strategy configuration is "(merge|rebase)"$`, func(value string) error {
-		state.gitEnv.DevRepo.SetPullBranchStrategy(value)
-		return nil
+		return state.gitEnv.DevRepo.SetPullBranchStrategy(value)
 	})
 
 	suite.Step(`^the pull-branch-strategy configuration is now "(merge|rebase)"$`, func(want string) error {
