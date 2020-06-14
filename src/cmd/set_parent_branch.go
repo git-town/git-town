@@ -1,8 +1,7 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
+	"errors"
 
 	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/git"
@@ -20,8 +19,7 @@ var setParentBranchCommand = &cobra.Command{
 			cli.Exit(err)
 		}
 		if !git.Config().IsFeatureBranch(branchName) {
-			fmt.Println("Error: only feature branches can have parent branches")
-			os.Exit(1)
+			cli.Exit(errors.New("only feature branches can have parent branches"))
 		}
 		defaultParentBranch := git.Config().GetParentBranch(branchName)
 		if defaultParentBranch == "" {
