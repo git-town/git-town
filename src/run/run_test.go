@@ -18,14 +18,14 @@ func TestRun_Exec(t *testing.T) {
 	assert.Equal(t, "foo\n", res.Output())
 }
 
-func TestRun_Run_UnknownExecutable(t *testing.T) {
+func TestRun_Exec_UnknownExecutable(t *testing.T) {
 	_, err := run.Exec("zonk")
 	assert.Error(t, err)
 	var execError *exec.Error
 	assert.True(t, errors.As(err, &execError))
 }
 
-func TestRun_Run_ExitCode(t *testing.T) {
+func TestRun_Exec_ExitCode(t *testing.T) {
 	_, err := run.Exec("bash", "-c", "exit 2")
 	var execError *exec.ExitError
 	assert.True(t, errors.As(err, &execError))
