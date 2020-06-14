@@ -16,7 +16,7 @@ func (sc *StringCache) Set(newValue string) {
 // Value provides the current value.
 func (sc *StringCache) Value() string {
 	if !sc.initialized {
-		panic("using current branch before initialization")
+		panic("cannot access unitialized cached value")
 	}
 	return sc.value
 }
@@ -47,7 +47,7 @@ func (ssc *StringSliceCache) Set(newValue []string) {
 // Value provides the current value.
 func (ssc *StringSliceCache) Value() []string {
 	if !ssc.Initialized() {
-		panic("using current branch before initialization")
+		panic("cannot access unitialized cached value")
 	}
 	return ssc.value
 }
