@@ -49,41 +49,43 @@ func ensureIsNotInUnfinishedState(repo *git.ProdRepo, driver drivers.CodeHosting
 	if err != nil {
 		return fmt.Errorf("cannot load previous run state: %w", err)
 	}
-	if runState != nil && runState.IsUnfinished() {
-		response := prompt.AskHowToHandleUnfinishedRunState(
-			runState.Command,
-			runState.UnfinishedDetails.EndBranch,
-			runState.UnfinishedDetails.EndTime,
-			runState.UnfinishedDetails.CanSkip,
-		)
-		switch response {
-		case prompt.ResponseTypeDiscard:
-			return steps.DeletePreviousRunState(repo)
-		case prompt.ResponseTypeContinue:
-			hasConflicts, err := repo.Silent.HasConflicts()
-			if err != nil {
-				return err
-			}
-			if hasConflicts {
-				return fmt.Errorf("you must resolve the conflicts before continuing")
-			}
-			err = steps.Run(runState, repo, driver)
-			if err != nil {
-				return err
-			}
-		case prompt.ResponseTypeAbort:
-			abortRunState := runState.CreateAbortRunState()
-			err = steps.Run(&abortRunState, repo, driver)
-		case prompt.ResponseTypeSkip:
-			skipRunState := runState.CreateSkipRunState()
-			err = steps.Run(&skipRunState, repo, driver)
-		}
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
-		os.Exit(0)
+	if runState == nil || !runState.IsUnfinished() {
+		return nil
 	}
+	response := prompt.AskHowToHandleUnfinishedRunState(
+		runState.Command,
+		runState.UnfinishedDetails.EndBranch,
+		runState.UnfinishedDetails.EndTime,
+		runState.UnfinishedDetails.CanSkip,
+	)
+	switch response {
+	case prompt.ResponseTypeDiscard:
+		return steps.DeletePreviousRunState(repo)
+	case prompt.ResponseTypeContinue:
+		hasConflicts, err := repo.Silent.HasConflicts()
+		if err != nil {
+			return err
+		}
+		if hasConflicts {
+			return fmt.Errorf("you must resolve the conflicts before continuing")
+		}
+		err = steps.Run(runState, repo, driver)
+		if err != nil {
+			return err
+		}
+	case prompt.ResponseTypeAbort:
+		abortRunState := runState.CreateAbortRunState()
+		err = steps.Run(&abortRunState, repo, driver)
+	case prompt.ResponseTypeSkip:
+		skipRunState := runState.CreateSkipRunState()
+		err = steps.Run(&skipRunState, repo, driver)
+	default:
+		return fmt.Errorf("unknown response: %s", response)
+	}
+	if err != nil {
+		return err
+	}
+	os.Exit(0)
 	return nil
 }
 
