@@ -18,17 +18,24 @@ import (
 
 // Runner executes Git commands.
 type Runner struct {
-	command.Shell                            // for running console commands
-	*Configuration                           // caches Git configuration settings
-	CurrentBranchTracker *CurrentBranchCache // caches the currently checked out Git branch
-	remoteBranchCache    *RemoteBranchCache  // caches the remote branches of this Git repo
-	remotes              *RemotesCache       // caches Git remotes
-	rootDirCache         *rootDirectoryCache // caches the base of the Git directory
+	command.Shell                          // for running console commands
+	*Configuration                         // caches Git configuration settings
+	CurrentBranchTracker *StringCache      // caches the currently checked out Git branch
+	remoteBranchCache    *StringSliceCache // caches the remote branches of this Git repo
+	remotes              *StringSliceCache // caches Git remotes
+	rootDirCache         *StringCache      // caches the base of the Git directory
 }
 
 // NewRunner provides Runner instances.
-func NewRunner(shell command.Shell, config *Configuration, currentBranchTracker *CurrentBranchCache, remotes *RemotesCache, remoteBranchCache *RemoteBranchCache) Runner {
-	return Runner{shell, config, currentBranchTracker, remoteBranchCache, remotes, &rootDirectoryCache{}}
+func NewRunner(shell command.Shell, config *Configuration, currentBranchTracker *StringCache, remotes *StringSliceCache, remoteBranchCache *StringSliceCache) Runner {
+	return Runner{
+		Shell:                shell,
+		Configuration:        config,
+		CurrentBranchTracker: currentBranchTracker,
+		remoteBranchCache:    remoteBranchCache,
+		remotes:              remotes,
+		rootDirCache:         &StringCache{},
+	}
 }
 
 // AbortMerge cancels a currently ongoing Git merge operation.
@@ -55,7 +62,7 @@ func (r *Runner) AddRemote(name, value string) error {
 	if err != nil {
 		return fmt.Errorf("cannot add remote %q --> %q: %w\n%s", name, value, err, res.Output())
 	}
-	r.remotes.Reset()
+	r.remotes.Invalidate()
 	return nil
 }
 
@@ -93,7 +100,7 @@ func (r *Runner) CheckoutBranch(name string) error {
 	if name != "-" {
 		r.CurrentBranchTracker.Set(name)
 	} else {
-		r.CurrentBranchTracker.Reset()
+		r.CurrentBranchTracker.Invalidate()
 	}
 	return nil
 }
@@ -366,7 +373,7 @@ func (r *Runner) CurrentBranch() (result string, err error) {
 		return dryrun.GetCurrentBranchName(), nil
 	}
 	if r.CurrentBranchTracker.Initialized() {
-		return r.CurrentBranchTracker.Current(), nil
+		return r.CurrentBranchTracker.Value(), nil
 	}
 	rebasing, err := r.HasRebaseInProgress()
 	if err != nil {
@@ -385,7 +392,7 @@ func (r *Runner) CurrentBranch() (result string, err error) {
 		return "", fmt.Errorf("cannot determine the current branch: %w\n%s", err, outcome.Output())
 	}
 	r.CurrentBranchTracker.Set(outcome.OutputSanitized())
-	return r.CurrentBranchTracker.Current(), nil
+	return r.CurrentBranchTracker.Value(), nil
 }
 
 func (r *Runner) currentBranchDuringRebase() (string, error) {
@@ -887,7 +894,7 @@ func (r *Runner) RemoteBranches() ([]string, error) {
 		}
 		r.remoteBranchCache.Set(branches)
 	}
-	return r.remoteBranchCache.Get()
+	return r.remoteBranchCache.Value(), nil
 }
 
 // Remotes provides the names of all Git remotes in this repository.
@@ -903,7 +910,7 @@ func (r *Runner) Remotes() (result []string, err error) {
 			r.remotes.Set(out.OutputLines())
 		}
 	}
-	return r.remotes.Get()
+	return r.remotes.Value(), nil
 }
 
 // RemoveBranch deletes the branch with the given name from this repo.
@@ -917,7 +924,7 @@ func (r *Runner) RemoveBranch(name string) error {
 
 // RemoveRemote deletes the Git remote with the given name.
 func (r *Runner) RemoveRemote(name string) error {
-	r.remotes.Reset()
+	r.remotes.Invalidate()
 	_, err := r.Run("git", "remote", "rm", name)
 	return err
 }
@@ -967,7 +974,7 @@ func (r *Runner) RootDirectory() (string, error) {
 		}
 		r.rootDirCache.Set(res.OutputSanitized())
 	}
-	return r.rootDirCache.Current(), nil
+	return r.rootDirCache.Value(), nil
 }
 
 // ShaForBranch provides the SHA for the local branch with the given name.

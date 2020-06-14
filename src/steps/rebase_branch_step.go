@@ -37,7 +37,7 @@ func (step *RebaseBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHosting
 	}
 	err = repo.Logging.Rebase(step.BranchName)
 	if err != nil {
-		repo.Silent.CurrentBranchTracker.Reset()
+		repo.Silent.CurrentBranchTracker.Invalidate()
 	}
 	return err
 }
