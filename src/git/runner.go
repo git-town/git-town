@@ -14,7 +14,7 @@ import (
 	"github.com/git-town/git-town/src/command"
 	"github.com/git-town/git-town/src/config"
 	"github.com/git-town/git-town/src/dryrun"
-	"github.com/git-town/git-town/src/util"
+	"github.com/git-town/git-town/src/stringslice"
 )
 
 // Runner executes Git commands.
@@ -148,14 +148,14 @@ func (r *Runner) CommitsInBranch(branch string, fields []string) (result []Commi
 		if strings.EqualFold(commit.Message, "initial commit") {
 			continue
 		}
-		if util.DoesStringArrayContain(fields, "FILE NAME") {
+		if stringslice.DoesStringArrayContain(fields, "FILE NAME") {
 			filenames, err := r.FilesInCommit(commit.SHA)
 			if err != nil {
 				return result, fmt.Errorf("cannot determine file name for commit %q in branch %q: %w", commit.SHA, branch, err)
 			}
 			commit.FileName = strings.Join(filenames, ", ")
 		}
-		if util.DoesStringArrayContain(fields, "FILE CONTENT") {
+		if stringslice.DoesStringArrayContain(fields, "FILE CONTENT") {
 			filecontent, err := r.FileContentInCommit(commit.SHA, commit.FileName)
 			if err != nil {
 				return result, fmt.Errorf("cannot determine file content for commit %q in branch %q: %w", commit.SHA, branch, err)
@@ -597,7 +597,7 @@ func (r *Runner) HasLocalBranch(name string) (bool, error) {
 	if err != nil {
 		return false, fmt.Errorf("cannot determine whether the local branch %q exists: %w", name, err)
 	}
-	return util.DoesStringArrayContain(branches, name), nil
+	return stringslice.DoesStringArrayContain(branches, name), nil
 }
 
 // HasLocalOrRemoteBranch indicates whether this repo has a local or remote branch with the given name.
@@ -606,7 +606,7 @@ func (r *Runner) HasLocalOrRemoteBranch(name string) (bool, error) {
 	if err != nil {
 		return false, fmt.Errorf("cannot determine whether the local or remote branch %q exists: %w", name, err)
 	}
-	return util.DoesStringArrayContain(branches, name), nil
+	return stringslice.DoesStringArrayContain(branches, name), nil
 }
 
 // HasMergeInProgress indicates whether this Git repository currently has a merge in progress.
@@ -646,7 +646,7 @@ func (r *Runner) HasRemote(name string) (result bool, err error) {
 	if err != nil {
 		return false, fmt.Errorf("cannot determine if remote %q exists: %w", name, err)
 	}
-	return util.DoesStringArrayContain(remotes, name), nil
+	return stringslice.DoesStringArrayContain(remotes, name), nil
 }
 
 // HasShippableChanges indicates whether the given branch has changes

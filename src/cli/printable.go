@@ -4,8 +4,6 @@ import (
 	"sort"
 	"strconv"
 	"strings"
-
-	"github.com/git-town/git-town/src/util"
 )
 
 // BranchAncestryConfig defines the configuration values needed by the `cli` package.
@@ -30,7 +28,7 @@ func PrintableBranchTree(branchName string, config BranchAncestryConfig) (result
 	childBranches := config.GetChildBranches(branchName)
 	sort.Strings(childBranches)
 	for _, childBranch := range childBranches {
-		result += "\n" + util.Indent(PrintableBranchTree(childBranch, config))
+		result += "\n" + Indent(PrintableBranchTree(childBranch, config))
 	}
 	return
 }
