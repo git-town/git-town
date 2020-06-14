@@ -1,6 +1,6 @@
 Feature: git town-kill: killing a remote branch in offline mode
 
-  When offline and trying to kill a remote branch
+    When offline and trying to kill a remote branch
   I want to be notified that this operation is not possible
   So that I know about my mistake and can do more appropriate actions instead.
 
@@ -21,6 +21,6 @@ Feature: git town-kill: killing a remote branch in offline mode
       | BRANCH | COMMAND |
     And it prints the error:
       """
-      Cannot delete remote branch "feature" in offline mode
+      cannot delete remote branch "feature" in offline mode
       """
     And I am still on the "main" branch
