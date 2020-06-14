@@ -79,7 +79,7 @@ You can disable this by running "git config git-town.sync-upstream false".`,
 		if exit {
 			os.Exit(0)
 		}
-		return err
+		return nil
 	},
 }
 
