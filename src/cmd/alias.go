@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 	"strconv"
 
 	"github.com/git-town/git-town/src/cli"
@@ -24,8 +23,7 @@ This can conflict with other tools that also define Git aliases.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		toggle, err := strconv.ParseBool(args[0])
 		if err != nil {
-			fmt.Printf(`Error: invalid argument: %q. Please provide either "true" or "false".\n`, args[0])
-			os.Exit(1)
+			cli.Exit(fmt.Errorf(`invalid argument %q. Please provide either "true" or "false"`, args[0]))
 		}
 		var commandsToAlias = []string{
 			"append",

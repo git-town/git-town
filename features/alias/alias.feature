@@ -54,9 +54,9 @@ Feature: git town: alias
 
   Scenario: non-boolean argument
     When I run "git-town alias zonk"
-    Then it prints:
+    Then it prints the error:
       """
-      Error: invalid argument: "zonk". Please provide either "true" or "false".
+      invalid argument "zonk". Please provide either "true" or "false"
       """
     And it runs no commands
 
