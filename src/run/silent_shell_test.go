@@ -1,23 +1,23 @@
-package command_test
+package run_test
 
 import (
 	"io/ioutil"
 	"os"
 	"testing"
 
-	"github.com/git-town/git-town/src/command"
+	"github.com/git-town/git-town/src/run"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestSilentShell_Run_arguments(t *testing.T) {
-	shell := command.SilentShell{}
+	shell := run.SilentShell{}
 	res, err := shell.Run("echo", "hello", "world")
 	assert.NoError(t, err)
 	assert.Equal(t, "hello world", res.OutputSanitized())
 }
 
 func TestSilentShell_RunMany(t *testing.T) {
-	shell := command.SilentShell{}
+	shell := run.SilentShell{}
 	err := shell.RunMany([][]string{
 		{"mkdir", "tmp"},
 		{"touch", "tmp/first"},
@@ -32,7 +32,7 @@ func TestSilentShell_RunMany(t *testing.T) {
 }
 
 func TestSilentShell_RunString(t *testing.T) {
-	shell := command.SilentShell{}
+	shell := run.SilentShell{}
 	_, err := shell.RunString("touch first")
 	defer os.Remove("first")
 	assert.NoError(t, err)
@@ -41,8 +41,8 @@ func TestSilentShell_RunString(t *testing.T) {
 }
 
 func TestSilentShell_RunStringWith(t *testing.T) {
-	shell := command.SilentShell{}
-	res, err := shell.RunStringWith("ls -1", command.Options{Dir: ".."})
+	shell := run.SilentShell{}
+	res, err := shell.RunStringWith("ls -1", run.Options{Dir: ".."})
 	assert.NoError(t, err)
 	assert.Contains(t, res.OutputSanitized(), "cmd")
 }

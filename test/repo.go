@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/src/command"
 	"github.com/git-town/git-town/src/config"
 	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/src/run"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -66,7 +66,7 @@ func NewRepo(workingDir, homeDir, binDir string) Repo {
 // Clone creates a clone of this Repo into the given directory.
 // The cloned repo uses the same homeDir and binDir as its origin.
 func (repo *Repo) Clone(targetDir string) (Repo, error) {
-	res, err := command.Run("git", "clone", repo.shell.workingDir, targetDir)
+	res, err := run.Exec("git", "clone", repo.shell.workingDir, targetDir)
 	if err != nil {
 		return Repo{}, fmt.Errorf("cannot clone repo %q: %w\n%s", repo.shell.workingDir, err, res.Output())
 	}

@@ -7,12 +7,12 @@ contains these packages:
 - [src/cli](../../src/cli) reads and writes data from and to Git Town's CLI
 - [src/cmd](../../src/cmd) defines Git Town's
   [Cobra](https://github.com/spf13/cobra) subcommands
-- [src/command](../../src/command) runs commands in subshells
 - [src/config](../../src/config) accesses the Git Town configuration
 - [src/drivers](../../src/drivers) interacts with external Git hosting providers
 - [src/dryrun](../../src/dryrun) manages dry-runs
 - [src/git](../../src/git) accesses the Git binary on the user's computer
 - [src/prompt](../../src/prompt) implements interactive wizards
+- [src/run](../../src/run) runs commands in subshells
 - [src/steps](../../src/steps) contains the building blocks of Git Town commands
 - [src/stringslice](../../src/stringslice) functions for working with string
   slices

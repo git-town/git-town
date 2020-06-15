@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/git-town/git-town/src/command"
+	"github.com/git-town/git-town/src/run"
 	"github.com/git-town/git-town/src/stringslice"
 )
 
@@ -26,11 +26,11 @@ type Config struct {
 	globalConfigCache map[string]string
 
 	// for running shell commands
-	shell command.Shell
+	shell run.Shell
 }
 
 // NewConfiguration provides a Configuration instance reflecting the configuration values in the given directory.
-func NewConfiguration(shell command.Shell) *Config {
+func NewConfiguration(shell run.Shell) *Config {
 	return &Config{
 		shell:             shell,
 		localConfigCache:  loadGitConfig(shell, false),
@@ -39,7 +39,7 @@ func NewConfiguration(shell command.Shell) *Config {
 }
 
 // loadGitConfig provides the Git configuration from the given directory or the global one if the global flag is set.
-func loadGitConfig(shell command.Shell, global bool) map[string]string {
+func loadGitConfig(shell run.Shell, global bool) map[string]string {
 	result := map[string]string{}
 	cmdArgs := []string{"config", "-lz"}
 	if global {
@@ -73,7 +73,7 @@ func (c *Config) AddToPerennialBranches(branchNames ...string) error {
 }
 
 // AddGitAlias sets the given Git alias.
-func (c *Config) AddGitAlias(command string) (*command.Result, error) {
+func (c *Config) AddGitAlias(command string) (*run.Result, error) {
 	return c.SetGlobalConfigValue("alias."+command, "town "+command)
 }
 
@@ -311,11 +311,11 @@ func (c *Config) RemoveFromPerennialBranches(branchName string) error {
 }
 
 // RemoveGitAlias removes the given Git alias.
-func (c *Config) RemoveGitAlias(command string) (*command.Result, error) {
+func (c *Config) RemoveGitAlias(command string) (*run.Result, error) {
 	return c.removeGlobalConfigValue("alias." + command)
 }
 
-func (c *Config) removeGlobalConfigValue(key string) (*command.Result, error) {
+func (c *Config) removeGlobalConfigValue(key string) (*run.Result, error) {
 	delete(c.globalConfigCache, key)
 	return c.shell.Run("git", "config", "--global", "--unset", key)
 }
@@ -365,13 +365,13 @@ func (c *Config) SetColorUI(value string) error {
 }
 
 // SetGlobalConfigValue sets the given configuration setting in the global Git configuration.
-func (c *Config) SetGlobalConfigValue(key, value string) (*command.Result, error) {
+func (c *Config) SetGlobalConfigValue(key, value string) (*run.Result, error) {
 	c.globalConfigCache[key] = value
 	return c.shell.Run("git", "config", "--global", key, value)
 }
 
 // SetLocalConfigValue sets the local configuration with the given key to the given value.
-func (c *Config) SetLocalConfigValue(key, value string) (*command.Result, error) {
+func (c *Config) SetLocalConfigValue(key, value string) (*run.Result, error) {
 	c.localConfigCache[key] = value
 	return c.shell.Run("git", "config", key, value)
 }

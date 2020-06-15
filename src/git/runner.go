@@ -11,15 +11,15 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/git-town/git-town/src/command"
 	"github.com/git-town/git-town/src/config"
 	"github.com/git-town/git-town/src/dryrun"
+	"github.com/git-town/git-town/src/run"
 	"github.com/git-town/git-town/src/stringslice"
 )
 
 // Runner executes Git commands.
 type Runner struct {
-	command.Shell                        // for running console commands
+	run.Shell                            // for running console commands
 	Config             *config.Config    // caches Git configuration settings
 	CurrentBranchCache *StringCache      // caches the currently checked out Git branch
 	IsRepoCache        *BoolCache        // caches whether the current directory is a Git repo
@@ -169,7 +169,7 @@ func (r *Runner) CommitsInBranch(branch string, fields []string) (result []Commi
 
 // CommitStagedChanges commits the currently staged changes.
 func (r *Runner) CommitStagedChanges(message string) error {
-	var out *command.Result
+	var out *run.Result
 	var err error
 	if message != "" {
 		out, err = r.Run("git", "commit", "-m", message)
@@ -694,7 +694,7 @@ func (r *Runner) IsBranchInSync(branchName string) (bool, error) {
 // IsRepository returns whether or not the current directory is in a repository.
 func (r *Runner) IsRepository() bool {
 	if !r.IsRepoCache.Initialized() {
-		_, err := command.Run("git", "rev-parse")
+		_, err := run.Exec("git", "rev-parse")
 		r.IsRepoCache.Set(err == nil)
 	}
 	return r.IsRepoCache.Value()

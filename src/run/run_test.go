@@ -1,4 +1,4 @@
-package command_test
+package run_test
 
 import (
 	"errors"
@@ -8,31 +8,31 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/src/command"
+	"github.com/git-town/git-town/src/run"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCommand_Run(t *testing.T) {
-	res, err := command.Run("echo", "foo")
+func TestRun_Exec(t *testing.T) {
+	res, err := run.Exec("echo", "foo")
 	assert.NoError(t, err)
 	assert.Equal(t, "foo\n", res.Output())
 }
 
-func TestCommand_Run_UnknownExecutable(t *testing.T) {
-	_, err := command.Run("zonk")
+func TestRun_Exec_UnknownExecutable(t *testing.T) {
+	_, err := run.Exec("zonk")
 	assert.Error(t, err)
 	var execError *exec.Error
 	assert.True(t, errors.As(err, &execError))
 }
 
-func TestCommand_Run_ExitCode(t *testing.T) {
-	_, err := command.Run("bash", "-c", "exit 2")
+func TestRun_Exec_ExitCode(t *testing.T) {
+	_, err := run.Exec("bash", "-c", "exit 2")
 	var execError *exec.ExitError
 	assert.True(t, errors.As(err, &execError))
 	assert.Equal(t, 2, execError.ExitCode())
 }
 
-func TestCommand_RunInDir(t *testing.T) {
+func TestRun_InDir(t *testing.T) {
 	dir, err := ioutil.TempDir("", "")
 	assert.NoError(t, err)
 	dirPath := filepath.Join(dir, "mydir")
@@ -40,20 +40,20 @@ func TestCommand_RunInDir(t *testing.T) {
 	assert.NoError(t, err)
 	err = ioutil.WriteFile(filepath.Join(dirPath, "one"), []byte{}, 0500)
 	assert.NoError(t, err)
-	res, err := command.RunInDir(dirPath, "ls", "-1")
+	res, err := run.InDir(dirPath, "ls", "-1")
 	assert.NoError(t, err)
 	assert.Equal(t, "one", res.OutputSanitized())
 }
 
-func TestCommand_Result_OutputContainsText(t *testing.T) {
-	res, err := command.Run("echo", "hello world how are you?")
+func TestRun_Result_OutputContainsText(t *testing.T) {
+	res, err := run.Exec("echo", "hello world how are you?")
 	assert.NoError(t, err)
 	assert.True(t, res.OutputContainsText("world"), "should contain 'world'")
 	assert.False(t, res.OutputContainsText("zonk"), "should not contain 'zonk'")
 }
 
-func TestCommand_Result_OutputContainsLine(t *testing.T) {
-	res, err := command.Run("echo", "hello world")
+func TestRun_Result_OutputContainsLine(t *testing.T) {
+	res, err := run.Exec("echo", "hello world")
 	assert.NoError(t, err)
 	assert.True(t, res.OutputContainsLine("hello world"), `should contain "hello world"`)
 	assert.False(t, res.OutputContainsLine("hello"), `partial match should return false`)

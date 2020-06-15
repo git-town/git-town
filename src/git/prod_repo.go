@@ -1,8 +1,8 @@
 package git
 
 import (
-	"github.com/git-town/git-town/src/command"
 	"github.com/git-town/git-town/src/config"
+	"github.com/git-town/git-town/src/run"
 )
 
 // ProdRepo is a Git Repo in production code.
@@ -15,7 +15,7 @@ type ProdRepo struct {
 
 // NewProdRepo provides a Repo instance in the current working directory.
 func NewProdRepo() *ProdRepo {
-	silentShell := command.SilentShell{}
+	silentShell := run.SilentShell{}
 	config := config.NewConfiguration(silentShell)
 	currentBranchTracker := StringCache{}
 	isRepoCache := BoolCache{}

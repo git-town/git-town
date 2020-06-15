@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/src/command"
+	"github.com/git-town/git-town/src/run"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -32,7 +32,7 @@ func assertFolderExists(t *testing.T, dir string) {
 }
 
 func assertHasGitBranch(t *testing.T, dir, expectedBranch string) {
-	outcome, err := command.RunInDir(dir, "git", "branch")
+	outcome, err := run.InDir(dir, "git", "branch")
 	assert.Nilf(t, err, "cannot run 'git status' in %q", dir)
 	assert.Contains(t, outcome.OutputSanitized(), expectedBranch, "doesn't have Git branch")
 }
