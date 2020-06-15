@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
-	"github.com/git-town/git-town/src/dryrun"
 	"github.com/git-town/git-town/src/run"
 	"github.com/kballard/go-shellquote"
 )
@@ -37,9 +36,9 @@ func (shell LoggingShell) Run(cmd string, args ...string) (*run.Result, error) {
 	if err != nil {
 		return nil, err
 	}
-	if dryrun.IsActive() {
+	if shell.silentRunner.DryRun.IsActive() {
 		if len(args) == 2 && cmd == "git" && args[0] == "checkout" {
-			dryrun.SetCurrentBranchName(args[1])
+			shell.silentRunner.DryRun.ChangeBranch(args[1])
 		}
 		return nil, nil
 	}

@@ -2,7 +2,6 @@ package steps
 
 import (
 	"github.com/git-town/git-town/src/drivers"
-	"github.com/git-town/git-town/src/dryrun"
 	"github.com/git-town/git-town/src/git"
 )
 
@@ -29,7 +28,7 @@ func (step *PushBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDr
 	if err != nil {
 		return err
 	}
-	if !shouldPush && !dryrun.IsActive() {
+	if !shouldPush && !repo.DryRun.IsActive() {
 		return nil
 	}
 	if step.Force {
