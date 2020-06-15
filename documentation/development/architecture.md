@@ -9,7 +9,6 @@ contains these packages:
   [Cobra](https://github.com/spf13/cobra) subcommands
 - [src/config](../../src/config) accesses the Git Town configuration
 - [src/drivers](../../src/drivers) interacts with external Git hosting providers
-- [src/dryrun](../../src/dryrun) manages dry-runs
 - [src/git](../../src/git) accesses the Git binary on the user's computer
 - [src/prompt](../../src/prompt) implements interactive wizards
 - [src/run](../../src/run) runs commands in subshells
