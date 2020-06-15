@@ -33,7 +33,7 @@ func NewProdRepo() *ProdRepo {
 		RemoteBranchCache:  &remoteBranchCache,
 		RootDirCache:       &StringCache{},
 	}
-	loggingShell := NewLoggingShell(&silentRunner)
+	loggingShell := NewLoggingShell(&silentRunner, &dryRun)
 	loggingRunner := Runner{
 		Shell:              loggingShell,
 		Config:             config,
