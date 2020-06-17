@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
-	"github.com/git-town/git-town/src/dryrun"
 	"github.com/git-town/git-town/src/run"
 	"github.com/kballard/go-shellquote"
 )
@@ -19,11 +18,12 @@ import (
 // It is used by Git Town commands to run Git commands that show up in their output.
 type LoggingShell struct {
 	silentRunner *Runner
+	dryRun       *DryRun
 }
 
 // NewLoggingShell provides StreamingShell instances.
-func NewLoggingShell(silent *Runner) *LoggingShell {
-	return &LoggingShell{silent}
+func NewLoggingShell(silent *Runner, dryRun *DryRun) *LoggingShell {
+	return &LoggingShell{silent, dryRun}
 }
 
 // WorkingDir provides the directory that this Shell operates in.
@@ -37,9 +37,9 @@ func (shell LoggingShell) Run(cmd string, args ...string) (*run.Result, error) {
 	if err != nil {
 		return nil, err
 	}
-	if dryrun.IsActive() {
+	if shell.dryRun.IsActive() {
 		if len(args) == 2 && cmd == "git" && args[0] == "checkout" {
-			dryrun.SetCurrentBranchName(args[1])
+			shell.dryRun.ChangeBranch(args[1])
 		}
 		return nil, nil
 	}

@@ -12,7 +12,6 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/src/config"
-	"github.com/git-town/git-town/src/dryrun"
 	"github.com/git-town/git-town/src/run"
 	"github.com/git-town/git-town/src/stringslice"
 )
@@ -22,6 +21,7 @@ type Runner struct {
 	run.Shell                            // for running console commands
 	Config             *config.Config    // caches Git configuration settings
 	CurrentBranchCache *StringCache      // caches the currently checked out Git branch
+	DryRun             *DryRun           // tracks dry-run information
 	IsRepoCache        *BoolCache        // caches whether the current directory is a Git repo
 	RemoteBranchCache  *StringSliceCache // caches the remote branches of this Git repo
 	RemotesCache       *StringSliceCache // caches Git remotes
@@ -358,8 +358,8 @@ func (r *Runner) CreateTrackingBranch(branch string) error {
 
 // CurrentBranch provides the currently checked out branch for this repo.
 func (r *Runner) CurrentBranch() (result string, err error) {
-	if dryrun.IsActive() {
-		return dryrun.GetCurrentBranchName(), nil
+	if r.DryRun.IsActive() {
+		return r.DryRun.CurrentBranch(), nil
 	}
 	if r.CurrentBranchCache.Initialized() {
 		return r.CurrentBranchCache.Value(), nil
