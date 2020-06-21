@@ -23,10 +23,6 @@ Feature: git town-hack: resolving conflicts between uncommitted changes and the 
       | new-feature      | git stash pop               |
     And it prints the error:
       """
-      The stash entry is kept in case you need it again.
-      """
-    And it prints the error:
-      """
       To abort, run "git-town abort".
       To continue after having resolved conflicts, run "git-town continue".
       """
