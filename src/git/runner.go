@@ -507,8 +507,8 @@ func (r *Runner) FetchUpstream(branch string) error {
 }
 
 // FileContent provides the current content of a file.
-// TODO: replace with reading file content from Go
 func (r *Runner) FileContent(filename string) (result string, err error) {
+	// TODO: replace with reading file content from Go
 	outcome, err := r.Run("cat", filename)
 	if err != nil {
 		return result, err
