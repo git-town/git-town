@@ -11,7 +11,7 @@ import (
 func Printf(format string, a ...interface{}) {
 	_, err := fmt.Fprintf(color.Output, format, a...)
 	if err != nil {
-		panic(err)
+		fmt.Printf(format, a...)
 	}
 }
 
