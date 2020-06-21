@@ -508,11 +508,8 @@ func (r *Runner) FetchUpstream(branch string) error {
 
 // FileContent provides the current content of a file.
 func (r *Runner) FileContent(filename string) (result string, err error) {
-	outcome, err := r.Run("cat", filename)
-	if err != nil {
-		return result, err
-	}
-	return outcome.Output(), nil
+	content, err := ioutil.ReadFile(filepath.Join(r.WorkingDir(), filename))
+	return string(content), err
 }
 
 // FileContentInCommit provides the content of the file with the given name in the commit with the given SHA.
