@@ -72,7 +72,7 @@ var templateRE *regexp.Regexp
 var templateOnce sync.Once
 
 // Expand returns a new DataTable instance with the placeholders in this datatable replaced with the given values.
-func (table *DataTable) Expand(rootDir string, localRepo *Repo, remoteRepo *Repo) (result DataTable) {
+func (table *DataTable) Expand(rootDir string, localRepo *Repo, remoteRepo *Repo) (result DataTable, err error) {
 	for row := range table.Cells {
 		cells := []string{}
 		for col := range table.Cells[row] {
@@ -89,25 +89,25 @@ func (table *DataTable) Expand(rootDir string, localRepo *Repo, remoteRepo *Repo
 					commitName := match[8 : len(match)-4]
 					sha, err := localRepo.ShaForCommit(commitName)
 					if err != nil {
-						panic(fmt.Errorf("cannot determine SHA: %v", err))
+						return result, fmt.Errorf("cannot determine SHA: %v", err)
 					}
 					cell = strings.Replace(cell, match, sha, 1)
 				case strings.HasPrefix(match, "{{ sha-in-remote "):
 					commitName := match[18 : len(match)-4]
 					sha, err := remoteRepo.ShaForCommit(commitName)
 					if err != nil {
-						panic(fmt.Errorf("cannot determine SHA in remote: %v", err))
+						return result, fmt.Errorf("cannot determine SHA in remote: %v", err)
 					}
 					cell = strings.Replace(cell, match, sha, 1)
 				default:
-					panic("DataTable.Expand: unknown template expression: " + cell)
+					return result, fmt.Errorf("DataTable.Expand: unknown template expression %q", cell)
 				}
 			}
 			cells = append(cells, cell)
 		}
 		result.AddRow(cells...)
 	}
-	return result
+	return result, nil
 }
 
 // RemoveText deletes the given text from each cell.
