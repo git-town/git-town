@@ -106,7 +106,7 @@ func (shell LoggingShell) PrintCommand(cmd string, args ...string) error {
 	fmt.Println()
 	_, err := color.New(color.Bold).Println(header)
 	if err != nil {
-		panic(err)
+		fmt.Println(header)
 	}
 	return nil
 }
