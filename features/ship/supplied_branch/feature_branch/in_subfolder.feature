@@ -9,7 +9,7 @@ Feature: git town-ship: shipping the supplied feature branch from a subfolder
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | feature | remote   | feature commit | feature_file | feature content |
     And I am on the "other-feature" branch
-    And my workspace has an uncommitted file with name: "new_folder/other_feature_file" and content: "other feature content"
+    And my workspace has an uncommitted file with name "new_folder/other_feature_file" and content "other feature content"
     When I run "git-town ship feature -m 'feature done'" in the "new_folder" folder
 
 
