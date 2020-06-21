@@ -803,9 +803,9 @@ func (r *Runner) MergeBranchNoEdit(branch string) error {
 
 // PopStash restores stashed-away changes into the workspace.
 func (r *Runner) PopStash() error {
-	outcome, err := r.Run("git", "stash", "pop")
+	_, err := r.Run("git", "stash", "pop")
 	if err != nil {
-		return fmt.Errorf("cannot pop the stash: %w\n%s", err, outcome.Output())
+		return fmt.Errorf("cannot pop the stash: %w", err)
 	}
 	return nil
 }
