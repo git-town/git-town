@@ -32,7 +32,7 @@ Feature: git town-ship: trying the ship of the current feature branch without ed
       | main    | git checkout feature               |
     And it prints the error:
       """
-      Aborted because commit exited with error
+      aborted because commit exited with error
       """
     And I am still on the "feature" branch
     And my repo is left with my original commits

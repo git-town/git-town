@@ -1,6 +1,8 @@
 package steps
 
 import (
+	"errors"
+
 	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
 )
@@ -24,10 +26,10 @@ func (step *NoOpStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
 	return &NoOpStep{}, nil
 }
 
-// GetAutomaticAbortErrorMessage returns the error message to display when this step
+// GetAutomaticAbortError returns the error message to display when this step
 // cause the command to automatically abort.
-func (step *NoOpStep) GetAutomaticAbortErrorMessage() string {
-	return ""
+func (step *NoOpStep) GetAutomaticAbortError() error {
+	return errors.New("")
 }
 
 // Run executes this step.
