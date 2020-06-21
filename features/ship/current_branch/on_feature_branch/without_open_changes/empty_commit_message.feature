@@ -32,7 +32,7 @@ Feature: git town-ship: aborting the ship of the current feature branch by enter
       | main    | git checkout feature               |
     And it prints the error:
       """
-      Aborted because commit exited with error
+      aborted because commit exited with error
       """
     And I am still on the "feature" branch
     And my repo is left with my original commits
@@ -42,7 +42,7 @@ Feature: git town-ship: aborting the ship of the current feature branch by enter
     When I run "git-town undo"
     Then it prints the error:
       """
-      Nothing to undo
+      nothing to undo
       """
     And I am still on the "feature" branch
     And my repo is left with my original commits

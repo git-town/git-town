@@ -18,7 +18,7 @@ var undoCmd = &cobra.Command{
 			cli.Exit(fmt.Errorf("cannot load previous run state: %v", err))
 		}
 		if runState == nil || runState.IsUnfinished() {
-			cli.Exit("Nothing to undo")
+			cli.Exit(fmt.Errorf("nothing to undo"))
 		}
 		undoRunState := runState.CreateUndoRunState()
 		err = steps.Run(&undoRunState, prodRepo, nil)
