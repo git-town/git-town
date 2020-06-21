@@ -28,11 +28,14 @@ func ConfigureMainBranch(repo *git.ProdRepo) error {
 	if err != nil {
 		return err
 	}
-	newMainBranch := askForBranch(askForBranchOptions{
+	newMainBranch, err := askForBranch(askForBranchOptions{
 		branchNames:       localBranches,
 		prompt:            getMainBranchPrompt(repo),
 		defaultBranchName: repo.Config.GetMainBranch(),
 	})
+	if err != nil {
+		return err
+	}
 	return repo.Config.SetMainBranch(newMainBranch)
 }
 
@@ -45,11 +48,14 @@ func ConfigurePerennialBranches(repo *git.ProdRepo) error {
 	if len(branchNames) == 0 {
 		return nil
 	}
-	newPerennialBranches := askForBranches(askForBranchesOptions{
+	newPerennialBranches, err := askForBranches(askForBranchesOptions{
 		branchNames:        branchNames,
 		prompt:             getPerennialBranchesPrompt(repo),
 		defaultBranchNames: repo.Config.GetPerennialBranches(),
 	})
+	if err != nil {
+		return err
+	}
 	return repo.Config.SetPerennialBranches(newPerennialBranches)
 }
 

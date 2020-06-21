@@ -68,7 +68,7 @@ func AskForBranchParent(branchName, defaultBranchName string, repo *git.ProdRepo
 		branchNames:       append([]string{perennialBranchOption}, filteredChoices...),
 		prompt:            fmt.Sprintf(parentBranchPromptTemplate, branchName),
 		defaultBranchName: defaultBranchName,
-	}), nil
+	})
 }
 
 // Helpers
