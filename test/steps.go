@@ -703,7 +703,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^the file "([^"]+)" contains unresolved conflicts$`, func(name string) error {
 		content, err := state.gitEnv.DevRepo.FileContent(name)
 		if err != nil {
-			return err
+			return fmt.Errorf("cannot read file %q: %w", name, err)
 		}
 		if !strings.Contains(content, "<<<<<<<") {
 			return fmt.Errorf("file %q does not contain unresolved conflicts", name)
