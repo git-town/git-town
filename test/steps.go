@@ -630,7 +630,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		)
 	})
 
-	suite.Step(`^my workspace has an uncommitted file with name: "([^"]+)" and content: "([^"]+)"$`, func(name, content string) error {
+	suite.Step(`^my workspace has an uncommitted file with name "([^"]+)" and content "([^"]+)"$`, func(name, content string) error {
 		state.uncommittedFileName = name
 		state.uncommittedContent = content
 		return state.gitEnv.DevRepo.CreateFile(name, content)

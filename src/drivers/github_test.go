@@ -23,7 +23,7 @@ func setupGithubDriver(t *testing.T, token string) (drivers.CodeHostingDriver, f
 	driver := drivers.LoadGithub(mockConfig{
 		remoteOriginURL: "git@github.com:git-town/git-town.git",
 		gitHubToken:     token,
-	})
+	}, log)
 	assert.NotNil(t, driver)
 	return driver, func() {
 		httpmock.DeactivateAndReset()
@@ -34,7 +34,7 @@ func TestLoadGithub(t *testing.T) {
 	driver := drivers.LoadGithub(mockConfig{
 		codeHostingDriverName: "github",
 		remoteOriginURL:       "git@self-hosted-github.com:git-town/git-town.git",
-	})
+	}, log)
 	assert.NotNil(t, driver)
 	assert.Equal(t, "GitHub", driver.HostingServiceName())
 	assert.Equal(t, "https://self-hosted-github.com/git-town/git-town", driver.RepositoryURL())
@@ -44,7 +44,7 @@ func TestLoadGithub_customHostName(t *testing.T) {
 	driver := drivers.LoadGithub(mockConfig{
 		remoteOriginURL:    "git@my-ssh-identity.com:git-town/git-town.git",
 		configuredHostName: "github.com",
-	})
+	}, log)
 	assert.NotNil(t, driver)
 	assert.Equal(t, "GitHub", driver.HostingServiceName())
 	assert.Equal(t, "https://github.com/git-town/git-town", driver.RepositoryURL())
