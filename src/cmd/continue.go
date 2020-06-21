@@ -28,7 +28,7 @@ var continueCmd = &cobra.Command{
 		if hasConflicts {
 			cli.Exit(fmt.Errorf("you must resolve the conflicts before continuing"))
 		}
-		err = steps.Run(runState, prodRepo, drivers.Load(prodRepo.Config, &prodRepo.Silent, cli.PrintLog))
+		err = steps.Run(runState, prodRepo, drivers.Load(prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction))
 		if err != nil {
 			cli.Exit(err)
 		}

@@ -22,7 +22,7 @@ When using SSH identities, run
 "git config git-town.code-hosting-origin-hostname <HOSTNAME>"
 where HOSTNAME matches what is in your ssh config file.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		driver := drivers.Load(prodRepo.Config, &prodRepo.Silent, cli.PrintLog)
+		driver := drivers.Load(prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction)
 		if driver == nil {
 			cli.Exit(drivers.UnsupportedHostingError())
 		}

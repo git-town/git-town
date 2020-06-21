@@ -55,8 +55,8 @@ func PrintLabelAndValue(label, value string) {
 	fmt.Println()
 }
 
-// PrintLog prints the given log message in bold.
-func PrintLog(messages ...interface{}) {
+// PrintDriverAction prints the given log message in bold.
+func PrintDriverAction(messages ...interface{}) {
 	fmt.Println()
 	_, err := color.New(color.Bold).Println(messages...)
 	if err != nil {
