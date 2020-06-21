@@ -20,7 +20,7 @@ func Printf(format string, a ...interface{}) {
 func Println(a ...interface{}) {
 	_, err := fmt.Fprintln(color.Output, a...)
 	if err != nil {
-		panic(err)
+		fmt.Println(a...)
 	}
 }
 
