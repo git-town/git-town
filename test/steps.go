@@ -291,11 +291,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		commands := GitCommandsInGitTownOutput(state.runRes.Output())
 		table := RenderExecutedGitCommands(commands, input)
 		dataTable := FromGherkin(input)
-		expanded := dataTable.Expand(
+		expanded, err := dataTable.Expand(
 			state.gitEnv.DevRepo.WorkingDir(),
 			&state.gitEnv.DevRepo,
 			state.gitEnv.OriginRepo,
 		)
+		if err != nil {
+			return err
+		}
 		diff, errorCount := table.EqualDataTable(expanded)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the commands run\n\n", errorCount)

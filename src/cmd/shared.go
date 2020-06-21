@@ -70,12 +70,15 @@ func handleUnfinishedState(repo *git.ProdRepo, driver drivers.CodeHostingDriver)
 	if runState == nil || !runState.IsUnfinished() {
 		return false, nil
 	}
-	response := prompt.AskHowToHandleUnfinishedRunState(
+	response, err := prompt.AskHowToHandleUnfinishedRunState(
 		runState.Command,
 		runState.UnfinishedDetails.EndBranch,
 		runState.UnfinishedDetails.EndTime,
 		runState.UnfinishedDetails.CanSkip,
 	)
+	if err != nil {
+		return quit, err
+	}
 	switch response {
 	case prompt.ResponseTypeDiscard:
 		err = steps.DeletePreviousRunState(repo)

@@ -1,6 +1,8 @@
 package prompt
 
 import (
+	"fmt"
+
 	survey "gopkg.in/AlecAivazis/survey.v1"
 )
 
@@ -16,7 +18,7 @@ type askForBranchesOptions struct {
 	defaultBranchNames []string
 }
 
-func askForBranch(opts askForBranchOptions) string {
+func askForBranch(opts askForBranchOptions) (string, error) {
 	result := ""
 	prompt := &survey.Select{
 		Message: opts.prompt,
@@ -25,12 +27,12 @@ func askForBranch(opts askForBranchOptions) string {
 	}
 	err := survey.AskOne(prompt, &result, nil)
 	if err != nil {
-		panic(err)
+		return result, fmt.Errorf("cannot read branch from CLI: %w", err)
 	}
-	return result
+	return result, nil
 }
 
-func askForBranches(opts askForBranchesOptions) []string {
+func askForBranches(opts askForBranchesOptions) ([]string, error) {
 	result := []string{}
 	prompt := &survey.MultiSelect{
 		Message: opts.prompt,
@@ -39,7 +41,7 @@ func askForBranches(opts askForBranchesOptions) []string {
 	}
 	err := survey.AskOne(prompt, &result, nil)
 	if err != nil {
-		panic(err)
+		return result, fmt.Errorf("cannot read branches from CLI: %w", err)
 	}
-	return result
+	return result, err
 }

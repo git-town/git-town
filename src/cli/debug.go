@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/fatih/color"
@@ -20,7 +21,7 @@ func LogRun(cmd string, args ...string) {
 		count++
 		_, err := color.New(color.FgBlue).Printf("DEBUG (%d): %s %s\n", count, cmd, strings.Join(args, " "))
 		if err != nil {
-			panic(err)
+			fmt.Printf("DEBUG (%d): %s %s\n", count, cmd, strings.Join(args, " "))
 		}
 	}
 }

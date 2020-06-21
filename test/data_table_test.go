@@ -29,7 +29,8 @@ func TestDataTable(t *testing.T) {
 func TestDataTable_Expand(t *testing.T) {
 	r := test.DataTable{}
 	r.AddRow("one", "cd {{ root folder }}")
-	actual := r.Expand("/foo/bar", nil, nil)
+	actual, err := r.Expand("/foo/bar", nil, nil)
+	assert.NoError(t, err)
 	assert.Equal(t, actual.Cells[0][0], "one")
 	assert.Equal(t, actual.Cells[0][1], "cd /foo/bar")
 }
