@@ -2,7 +2,6 @@ package prompt
 
 import (
 	"fmt"
-	"log"
 	"time"
 
 	humanize "github.com/dustin/go-humanize"
@@ -23,7 +22,7 @@ var (
 )
 
 // AskHowToHandleUnfinishedRunState prompts the user for how to handle the unfinished run state.
-func AskHowToHandleUnfinishedRunState(command, endBranch string, endTime time.Time, canSkip bool) (responseType string) {
+func AskHowToHandleUnfinishedRunState(command, endBranch string, endTime time.Time, canSkip bool) (responseType string, err error) {
 	formattedOptions := map[string]string{
 		ResponseTypeAbort:    fmt.Sprintf("Abort the `%s` command", command),
 		ResponseTypeContinue: fmt.Sprintf("Restart the `%s` command after having resolved conflicts", command),
@@ -45,15 +44,14 @@ func AskHowToHandleUnfinishedRunState(command, endBranch string, endTime time.Ti
 		Default: formattedOptions[ResponseTypeQuit],
 	}
 	result := ""
-	err := survey.AskOne(prompt, &result, nil)
+	err = survey.AskOne(prompt, &result, nil)
 	if err != nil {
-		panic(err)
+		return responseType, fmt.Errorf("cannot read user answer from CLI: %w", err)
 	}
 	for responseType, formattedResponseType := range formattedOptions {
 		if formattedResponseType == result {
-			return responseType
+			return responseType, nil
 		}
 	}
-	log.Fatalf("Unexpected response: %s", result)
-	return ""
+	return "", fmt.Errorf("unexpected response: %s", result)
 }

@@ -22,14 +22,14 @@ func GetSquashCommitAuthor(branchName string, repo *git.ProdRepo) (string, error
 	}
 	cli.Printf(squashCommitAuthorHeaderTemplate, branchName)
 	fmt.Println()
-	return askForAuthor(authors), nil
+	return askForAuthor(authors)
 }
 
 // Helpers
 
 var squashCommitAuthorHeaderTemplate = "Multiple people authored the %q branch."
 
-func askForAuthor(authors []string) string {
+func askForAuthor(authors []string) (string, error) {
 	result := ""
 	prompt := &survey.Select{
 		Message: "Please choose an author for the squash commit:",
@@ -37,9 +37,9 @@ func askForAuthor(authors []string) string {
 	}
 	err := survey.AskOne(prompt, &result, nil)
 	if err != nil {
-		panic(err)
+		return result, fmt.Errorf("cannot read author from CLI: %w", err)
 	}
-	return result
+	return result, nil
 }
 
 func getBranchAuthors(branchName string, repo *git.ProdRepo) (result []string, err error) {
