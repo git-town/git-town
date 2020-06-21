@@ -33,17 +33,6 @@ Feature: git town-hack: resolving conflicts between uncommitted changes and the 
     And the file "conflicting_file" contains unresolved conflicts
 
 
-  Scenario: aborting
-    When I run "git-town abort"
-  # TODO: make this work
-  # Then it runs the commands
-  # | BRANCH      | COMMAND           |
-  # | new-feature | git checkout main |
-  # And I end up on the "existing-feature" branch
-  # And my workspace has the uncommitted file again
-  # And my repo is left with my original commits
-
-
   Scenario: continuing without resolving the conflicts
     When I run "git-town continue"
     Then it prints the error:
