@@ -15,12 +15,14 @@ const giteaCurrOpen = giteaRoot + "/repos/git-town/git-town/pulls?limit=50&page=
 const giteaPR1 = giteaRoot + "/repos/git-town/git-town/pulls/1"
 const giteaPR1Merge = giteaRoot + "/repos/git-town/git-town/pulls/1/merge"
 
+func log(messages ...interface{}) {}
+
 func setupGiteaDriver(t *testing.T, token string) (drivers.CodeHostingDriver, func()) {
 	httpmock.Activate()
 	driver := drivers.LoadGitea(mockConfig{
 		remoteOriginURL: "git@gitea.com:git-town/git-town.git",
 		giteaToken:      token,
-	})
+	}, log)
 	assert.NotNil(t, driver)
 	return driver, func() {
 		httpmock.DeactivateAndReset()
@@ -31,7 +33,7 @@ func TestLoadGitea(t *testing.T) {
 	driver := drivers.LoadGitea(mockConfig{
 		codeHostingDriverName: "gitea",
 		remoteOriginURL:       "git@self-hosted-gitea.com:git-town/git-town.git",
-	})
+	}, log)
 	assert.NotNil(t, driver)
 	assert.Equal(t, "Gitea", driver.HostingServiceName())
 	assert.Equal(t, "https://self-hosted-gitea.com/git-town/git-town", driver.RepositoryURL())
@@ -41,7 +43,7 @@ func TestLoadGitea_customHostName(t *testing.T) {
 	driver := drivers.LoadGitea(mockConfig{
 		remoteOriginURL:    "git@my-ssh-identity.com:git-town/git-town.git",
 		configuredHostName: "gitea.com",
-	})
+	}, log)
 	assert.NotNil(t, driver)
 	assert.Equal(t, "Gitea", driver.HostingServiceName())
 	assert.Equal(t, "https://gitea.com/git-town/git-town", driver.RepositoryURL())

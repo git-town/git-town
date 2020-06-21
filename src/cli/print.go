@@ -54,3 +54,12 @@ func PrintLabelAndValue(label, value string) {
 	Println(Indent(value))
 	fmt.Println()
 }
+
+// PrintLog prints the given log message in bold.
+func PrintLog(messages ...interface{}) {
+	fmt.Println()
+	_, err := color.New(color.Bold).Println(messages...)
+	if err != nil {
+		fmt.Println(messages...)
+	}
+}

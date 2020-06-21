@@ -58,14 +58,17 @@ type MergePullRequestOptions struct {
 	ParentBranch      string
 }
 
+// logFn defines a function with fmt.Printf API that CodeHostingDriver instances can use to give updates on activities they do.
+type logFn func(...interface{})
+
 // Load returns the code hosting driver to use based on the git config.
 // nolint:interfacer  // for Gitea support later
-func Load(config config, git gitRunner) CodeHostingDriver {
-	driver := LoadGithub(config)
+func Load(config config, git gitRunner, log logFn) CodeHostingDriver {
+	driver := LoadGithub(config, log)
 	if driver != nil {
 		return driver
 	}
-	driver = LoadGitea(config)
+	driver = LoadGitea(config, log)
 	if driver != nil {
 		return driver
 	}
