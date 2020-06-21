@@ -18,10 +18,10 @@ var skipCmd = &cobra.Command{
 			cli.Exit(fmt.Errorf("cannot load previous run state: %v", err))
 		}
 		if runState == nil || !runState.IsUnfinished() {
-			cli.Exit("Nothing to skip")
+			cli.Exit(fmt.Errorf("nothing to skip"))
 		}
 		if !runState.UnfinishedDetails.CanSkip {
-			cli.Exit("Cannot skip branch that resulted in conflicts")
+			cli.Exit(fmt.Errorf("cannot skip branch that resulted in conflicts"))
 		}
 		skipRunState := runState.CreateSkipRunState()
 		err = steps.Run(&skipRunState, prodRepo, nil)

@@ -29,7 +29,7 @@ Feature: git town-ship: errors if there are open changes
     Then it runs no commands
     And it prints the error:
       """
-      Nothing to undo
+      nothing to undo
       """
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file

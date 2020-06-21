@@ -89,7 +89,7 @@ func getRenameBranchConfig(args []string, repo *git.ProdRepo) (result renameBran
 		}
 	}
 	if result.oldBranchName == result.newBranchName {
-		cli.Exit("Cannot rename branch to current name.")
+		cli.Exit(fmt.Errorf("cannot rename branch to current name"))
 	}
 	if !result.isOffline {
 		err := repo.Logging.Fetch()

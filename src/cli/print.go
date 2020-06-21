@@ -34,14 +34,10 @@ func PrintlnColor(color *color.Color, messages ...interface{}) {
 }
 
 // PrintError prints the given error message to the console.
-func PrintError(messages ...interface{}) {
+func PrintError(mainMessage error) {
 	errHeaderFmt := color.New(color.Bold).Add(color.FgRed)
-	errMessageFmt := color.New(color.FgRed)
 	fmt.Println()
-	PrintlnColor(errHeaderFmt, "  Error")
-	for _, message := range messages {
-		PrintlnColor(errMessageFmt, "  ", message)
-	}
+	PrintlnColor(errHeaderFmt, "Error:", mainMessage.Error())
 	fmt.Println()
 }
 

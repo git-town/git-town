@@ -49,7 +49,7 @@ func Run(runState *RunState, repo *git.ProdRepo, driver drivers.CodeHostingDrive
 				if err != nil {
 					return fmt.Errorf("cannot run the abort steps: %w", err)
 				}
-				cli.Exit(step.GetAutomaticAbortErrorMessage())
+				cli.Exit(fmt.Errorf(step.GetAutomaticAbortErrorMessage()))
 			} else {
 				runState.RunStepList.Prepend(step.CreateContinueStep())
 				err := runState.MarkAsUnfinished(repo)

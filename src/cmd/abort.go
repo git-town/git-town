@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/steps"
@@ -14,10 +16,10 @@ var abortCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		runState, err := steps.LoadPreviousRunState(prodRepo)
 		if err != nil {
-			cli.Exit("cannot load previous run state: %v\n", err)
+			cli.Exit(fmt.Errorf("cannot load previous run state: %w", err))
 		}
 		if runState == nil || !runState.IsUnfinished() {
-			cli.Exit("Nothing to abort")
+			cli.Exit(fmt.Errorf("nothing to abort"))
 		}
 		abortRunState := runState.CreateAbortRunState()
 		err = steps.Run(&abortRunState, prodRepo, drivers.Load(prodRepo.Config, &prodRepo.Silent))

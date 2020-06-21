@@ -19,7 +19,7 @@ var continueCmd = &cobra.Command{
 			cli.Exit(fmt.Errorf("cannot load previous run state: %v", err))
 		}
 		if runState == nil || !runState.IsUnfinished() {
-			cli.Exit("Nothing to continue")
+			cli.Exit(fmt.Errorf("nothing to continue"))
 		}
 		hasConflicts, err := prodRepo.Silent.HasConflicts()
 		if err != nil {

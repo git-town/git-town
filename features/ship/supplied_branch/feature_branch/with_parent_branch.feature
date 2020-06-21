@@ -22,11 +22,8 @@ Feature: git town-ship: shipping a child branch
       | feature-1 | git fetch --prune --tags |
     And it prints the error:
       """
-      Shipping this branch would ship feature-1, feature-2 as well.
-      """
-    And it prints the error:
-      """
-      Please ship "feature-1" first.
+      shipping this branch would ship "feature-1, feature-2" as well,
+      please ship "feature-1" first
       """
     And I end up on the "feature-1" branch
     And my repo is left with my original commits
