@@ -154,10 +154,8 @@ func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
 		ancestors := prodRepo.Config.GetAncestorBranches(branchName)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
 		oldestAncestor := ancestorsWithoutMainOrPerennial[0]
-		cli.Exit(
-			"Shipping this branch would ship "+strings.Join(ancestorsWithoutMainOrPerennial, ", ")+" as well.",
-			"Please ship \""+oldestAncestor+"\" first.",
-		)
+		cli.Exit(fmt.Errorf(`shipping this branch would ship %q as well,
+please ship %q first`, strings.Join(ancestorsWithoutMainOrPerennial, ", "), oldestAncestor))
 	}
 }
 

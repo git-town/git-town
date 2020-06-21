@@ -11,7 +11,7 @@ type Step interface {
 	CreateAbortStep() Step
 	CreateContinueStep() Step
 	CreateUndoStep(*git.ProdRepo) (Step, error)
-	GetAutomaticAbortErrorMessage() string
+	GetAutomaticAbortError() error
 	Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error
 	ShouldAutomaticallyAbortOnError() bool
 }

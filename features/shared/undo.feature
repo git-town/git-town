@@ -18,5 +18,5 @@ Feature: cannot double undo
     When I run "git-town undo"
     Then it prints the error:
       """
-      Nothing to undo
+      nothing to undo
       """

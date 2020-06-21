@@ -29,7 +29,7 @@ Feature: git town-ship: errors when trying to ship the current feature branch th
       | main          | git checkout empty-feature                  |
     And it prints the error:
       """
-      The branch "empty-feature" has no shippable changes
+      the branch "empty-feature" has no shippable changes
       """
     And I am still on the "empty-feature" branch
 
@@ -39,7 +39,7 @@ Feature: git town-ship: errors when trying to ship the current feature branch th
     Then it runs no commands
     And it prints the error:
       """
-      Nothing to undo
+      nothing to undo
       """
     And I am still on the "empty-feature" branch
     And my repo now has the following commits

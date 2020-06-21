@@ -10,7 +10,7 @@ Feature: Show clear error if trying to continue after executing a successful com
     When I run "git-town continue"
     Then it prints the error:
       """
-      Nothing to continue
+      nothing to continue
       """
 
 
@@ -24,7 +24,7 @@ Feature: Show clear error if trying to continue after executing a successful com
     When I run "git-town continue"
     Then it prints the error:
       """
-      Nothing to continue
+      nothing to continue
       """
 
 
@@ -38,5 +38,5 @@ Feature: Show clear error if trying to continue after executing a successful com
     When I run "git-town continue"
     Then it prints the error:
       """
-      Nothing to continue
+      nothing to continue
       """
