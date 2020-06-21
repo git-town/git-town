@@ -6,7 +6,7 @@ Feature: git town-hack: resolving conflicts between uncommitted changes and the 
       | BRANCH | LOCATION      | MESSAGE            | FILE NAME        | FILE CONTENT |
       | main   | local, remote | conflicting commit | conflicting_file | main content |
     And I am on the "existing-feature" branch
-    And my workspace has an uncommitted file with name: "conflicting_file" and content: "conflicting content"
+    And my workspace has an uncommitted file with name "conflicting_file" and content "conflicting content"
     When I run "git-town hack new-feature"
 
 
@@ -39,8 +39,7 @@ Feature: git town-hack: resolving conflicts between uncommitted changes and the 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run "git-town continue" and close the editor
-    Then it runs the commands
-      | BRANCH | COMMAND |
+    Then it runs no commands
     And I end up on the "new-feature" branch
     And my workspace now contains the file "conflicting_file" with content "resolved content"
     And my repo now has the following commits
