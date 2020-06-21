@@ -20,11 +20,12 @@ type githubCodeHostingDriver struct {
 	originURL  string
 	owner      string
 	repository string
+	log        logFn
 }
 
 // LoadGithub provides a GitHub driver instance if the given repo configuration is for a Github repo,
 // otherwise nil.
-func LoadGithub(config config) CodeHostingDriver {
+func LoadGithub(config config, log logFn) CodeHostingDriver {
 	driverType := config.GetCodeHostingDriverName()
 	originURL := config.GetRemoteOriginURL()
 	hostname := helpers.GetURLHostname(originURL)
@@ -45,6 +46,7 @@ func LoadGithub(config config) CodeHostingDriver {
 		apiToken:   config.GetGitHubToken(),
 		config:     config,
 		hostname:   hostname,
+		log:        log,
 		originURL:  originURL,
 		owner:      owner,
 		repository: repository,
@@ -124,7 +126,7 @@ func (d *githubCodeHostingDriver) mergePullRequest(options MergePullRequestOptio
 		return "", fmt.Errorf("cannot merge via Github since there is no pull request")
 	}
 	if options.LogRequests {
-		helpers.PrintLog(fmt.Sprintf("GitHub API: Merging PR #%d", options.PullRequestNumber))
+		d.log("GitHub API: Merging PR #%d", options.PullRequestNumber)
 	}
 	commitMessageParts := strings.SplitN(options.CommitMessage, "\n", 2)
 	githubCommitTitle := commitMessageParts[0]
@@ -152,7 +154,7 @@ func (d *githubCodeHostingDriver) updatePullRequestsAgainst(options MergePullReq
 	}
 	for _, pullRequest := range pullRequests {
 		if options.LogRequests {
-			helpers.PrintLog(fmt.Sprintf("GitHub API: Updating base branch for PR #%d", *pullRequest.Number))
+			d.log("GitHub API: Updating base branch for PR #%d", *pullRequest.Number)
 		}
 		_, _, err = d.client.PullRequests.Edit(context.Background(), d.owner, d.repository, *pullRequest.Number, &github.PullRequest{
 			Base: &github.PullRequestBranch{
