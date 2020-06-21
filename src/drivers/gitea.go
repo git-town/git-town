@@ -180,8 +180,8 @@ func (d *giteaCodeHostingDriver) apiRetargetPullRequests(pullRequests []*gitea.P
 		// if options.LogRequests {
 		// 	helpers.PrintLog(fmt.Sprintf("Gitea API: Updating base branch for PR #%d to #%s", *pullRequest.Index, newBaseName))
 		// }
-		d.log(fmt.Sprintf("Gitea API: Updating base branch for PR #%d to #%s", 1, newBaseName))
-		d.log(fmt.Sprintf("The Gitea API currently does not support retargeting, please restarget #%d manually, see https://github.com/go-gitea/gitea/issues/11552", pullRequest.Index))
+		d.log("Gitea API: Updating base branch for PR #%d to #%s", 1, newBaseName)
+		d.log("The Gitea API currently does not support retargeting, please restarget #%d manually, see https://github.com/go-gitea/gitea/issues/11552", pullRequest.Index)
 		// _, err = d.client.EditPullRequest(d.owner, d.repository, *pullRequest.Index, &gitea.EditPullRequestOption{
 		// 	Base: newBaseName
 		// })
