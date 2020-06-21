@@ -1,7 +1,7 @@
 package steps
 
 import (
-	"fmt"
+	"errors"
 
 	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
@@ -21,7 +21,7 @@ func (step *RestoreOpenChangesStep) CreateUndoStep(repo *git.ProdRepo) (Step, er
 func (step *RestoreOpenChangesStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	err := repo.Logging.PopStash()
 	if err != nil {
-		return fmt.Errorf("conflicts between your uncommmitted changes and the main branch")
+		return errors.New("conflicts between your uncommmitted changes and the main branch")
 	}
 	return nil
 }
