@@ -13,7 +13,7 @@ Feature: git town-kill: killing the given feature branch
       | dead-feature | local, remote | dead-end commit                      | unfortunate_file |
       | good-feature | local, remote | good commit                          | good_file        |
     And I am on the "good-feature" branch
-    And my workspace has an uncommitted file with name: "conflicting_file" and content: "conflicting content"
+    And my workspace has an uncommitted file with name "conflicting_file" and content "conflicting content"
     When I run "git-town kill dead-feature"
 
 
