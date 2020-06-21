@@ -38,7 +38,7 @@ where hostname matches what is in your ssh config file.`,
 		if err != nil {
 			cli.Exit(err)
 		}
-		driver := drivers.Load(prodRepo.Config, &prodRepo.Silent)
+		driver := drivers.Load(prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction)
 		if driver == nil {
 			cli.Exit(drivers.UnsupportedHostingError())
 		}

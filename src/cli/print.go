@@ -54,3 +54,12 @@ func PrintLabelAndValue(label, value string) {
 	Println(Indent(value))
 	fmt.Println()
 }
+
+// PrintDriverAction logs activities from a code hosting driver on the CLI.
+func PrintDriverAction(messages ...interface{}) {
+	fmt.Println()
+	_, err := color.New(color.Bold).Println(messages...)
+	if err != nil {
+		fmt.Println(messages...)
+	}
+}

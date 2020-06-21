@@ -20,11 +20,12 @@ type giteaCodeHostingDriver struct {
 	client     *gitea.Client
 	owner      string
 	repository string
+	log        logFn
 }
 
 // LoadGitea provides a Gitea driver instance if the given repo configuration is for a Gitea repo,
 // otherwise nil.
-func LoadGitea(config config) CodeHostingDriver {
+func LoadGitea(config config, log logFn) CodeHostingDriver {
 	driverType := config.GetCodeHostingDriverName()
 	originURL := config.GetRemoteOriginURL()
 	hostname := helpers.GetURLHostname(originURL)
@@ -45,6 +46,7 @@ func LoadGitea(config config) CodeHostingDriver {
 		originURL:  originURL,
 		hostname:   hostname,
 		apiToken:   config.GetGiteaToken(),
+		log:        log,
 		owner:      owner,
 		repository: repository,
 	}
@@ -178,8 +180,8 @@ func (d *giteaCodeHostingDriver) apiRetargetPullRequests(pullRequests []*gitea.P
 		// if options.LogRequests {
 		// 	helpers.PrintLog(fmt.Sprintf("Gitea API: Updating base branch for PR #%d to #%s", *pullRequest.Index, newBaseName))
 		// }
-		helpers.PrintLog(fmt.Sprintf("Gitea API: Updating base branch for PR #%d to #%s", 1, newBaseName))
-		helpers.PrintLog(fmt.Sprintf("The Gitea API currently does not support retargeting, please restarget #%d manually, see https://github.com/go-gitea/gitea/issues/11552", pullRequest.Index))
+		d.log("Gitea API: Updating base branch for PR #%d to #%s", 1, newBaseName)
+		d.log("The Gitea API currently does not support retargeting, please restarget #%d manually, see https://github.com/go-gitea/gitea/issues/11552", pullRequest.Index)
 		// _, err = d.client.EditPullRequest(d.owner, d.repository, *pullRequest.Index, &gitea.EditPullRequestOption{
 		// 	Base: newBaseName
 		// })
