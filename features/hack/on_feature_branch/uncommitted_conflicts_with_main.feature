@@ -23,8 +23,7 @@ Feature: git town-hack: resolving conflicts between uncommitted changes and the 
       | new-feature      | git stash pop               |
     And it prints the error:
       """
-      To abort, run "git-town abort".
-      To continue after having resolved conflicts, run "git-town continue".
+      conflicts between your uncommmitted changes and the main branch
       """
     And the file "conflicting_file" contains unresolved conflicts
 
