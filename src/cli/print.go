@@ -55,7 +55,7 @@ func PrintLabelAndValue(label, value string) {
 	fmt.Println()
 }
 
-// PrintDriverAction prints the given log message in bold.
+// PrintDriverAction logs activities from a code hosting driver on the CLI.
 func PrintDriverAction(messages ...interface{}) {
 	fmt.Println()
 	_, err := color.New(color.Bold).Println(messages...)
