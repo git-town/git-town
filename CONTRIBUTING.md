@@ -3,7 +3,7 @@
 We are a welcoming community and invite everybody to help make Git Town better.
 No matter how big or small your contribution, thank you!
 
-### I want to report a bug or need a feature
+#### I want to report a bug or need a feature
 
 please [open an issue](https://github.com/git-town/git-town/issues/new)
 
@@ -16,6 +16,6 @@ please [open an issue](https://github.com/git-town/git-town/issues/new)
 - otherwise, hack away and
   [send a pull request](https://help.github.com/articles/using-pull-requests)
 
-### I want to praise Git Town
+#### I want to praise Git Town
 
 Please star this repo on GitHub and tweet or blog about us!
