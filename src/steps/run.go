@@ -40,8 +40,8 @@ func Run(runState *RunState, repo *git.ProdRepo, driver drivers.CodeHostingDrive
 			}
 			continue
 		}
-		err := step.Run(repo, driver)
-		if err != nil {
+		runErr := step.Run(repo, driver)
+		if runErr != nil {
 			runState.AbortStepList.Append(step.CreateAbortStep())
 			if step.ShouldAutomaticallyAbortOnError() {
 				abortRunState := runState.CreateAbortRunState()
@@ -52,7 +52,7 @@ func Run(runState *RunState, repo *git.ProdRepo, driver drivers.CodeHostingDrive
 				cli.Exit(step.GetAutomaticAbortErrorMessage())
 			} else {
 				runState.RunStepList.Prepend(step.CreateContinueStep())
-				err = runState.MarkAsUnfinished(repo)
+				err := runState.MarkAsUnfinished(repo)
 				if err != nil {
 					return err
 				}
@@ -71,7 +71,8 @@ func Run(runState *RunState, repo *git.ProdRepo, driver drivers.CodeHostingDrive
 				if err != nil {
 					return fmt.Errorf("cannot save run state: %w", err)
 				}
-				message := `
+				message := runErr.Error() + `
+
 To abort, run "git-town abort".
 To continue after having resolved conflicts, run "git-town continue".
 `
