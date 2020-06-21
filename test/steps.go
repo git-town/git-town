@@ -669,7 +669,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my workspace still contains the file "([^"]*)" with content "([^"]*)"$`, func(file, expectedContent string) error {
+	suite.Step(`^my workspace (?:still|now) contains the file "([^"]*)" with content "([^"]*)"$`, func(file, expectedContent string) error {
 		actualContent, err := state.gitEnv.DevRepo.FileContent(file)
 		if err != nil {
 			return err
@@ -698,6 +698,17 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the "([^"]*)" branch gets deleted on the remote$`, func(name string) error {
 		return state.gitEnv.OriginRepo.RemoveBranch(name)
+	})
+
+	suite.Step(`^the file "([^"]+)" contains unresolved conflicts$`, func(name string) error {
+		content, err := state.gitEnv.DevRepo.FileContent(name)
+		if err != nil {
+			return err
+		}
+		if !strings.Contains(content, "<<<<<<<") {
+			return fmt.Errorf("file %q does not contain unresolved conflicts", name)
+		}
+		return nil
 	})
 
 	suite.Step(`^the following commits exist in my repo$`, func(table *messages.PickleStepArgument_PickleTable) error {
