@@ -265,6 +265,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if state.runErr == nil {
 			return fmt.Errorf("expected error")
 		}
+		state.runErrChecked = true
 		return nil
 	})
 
