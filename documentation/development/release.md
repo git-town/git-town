@@ -9,7 +9,7 @@ This guide is for maintainers only.
 - create and push a new Git Tag for the release
   - `git tag -m release -a v4.0`
   - `git push --tags`
-- run `env GITHUB_TOKEN=XXX goreleaser --rm-dist`
+- run `env GITHUB_TOKEN=XXX goreleaser`
 - review the release and publish it
 
 ### create a Homebrew release
