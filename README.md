@@ -412,8 +412,6 @@ Kudos to our contributors!
         <sup><b>@hmbrg</b></sup>
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="60">
       <a href="https://github.com/qrevel">
         <img src="https://avatars2.githubusercontent.com/u/11804101?s=60" width="60px">
@@ -432,6 +430,8 @@ Kudos to our contributors!
         <sup><b>@martinjaime</b></sup>
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="60">
       <a href="https://github.com/alexw10">
         <img src="https://avatars1.githubusercontent.com/u/9453636?s=60" width="60px">
