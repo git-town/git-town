@@ -28,7 +28,7 @@ Feature: set the new-branch-push-flag
 
   Scenario: multiple arguments
     When I run "git-town new-branch-push-flag true false"
-    Then it prints:
+    Then it prints the error:
       """
       accepts at most 1 arg(s), received 2
       """
