@@ -10,7 +10,8 @@ This guide is for maintainers only.
   - `git tag -m release -a v4.0`
   - `git push --tags`
 - run `env GITHUB_TOKEN=XXX goreleaser`
-- review the release and publish it
+- review the release on [GitHub](https://github.com/git-town/git-town/releases)
+  and publish it
 
 ### create a Homebrew release
 
