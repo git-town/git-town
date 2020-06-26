@@ -377,6 +377,7 @@ Kudos to our contributors!
     <td align="center" width="60">
       <a href="https://github.com/Iron-Ham">
         <img src="https://avatars1.githubusercontent.com/u/3388381?s=60" width="60px">
+        <br>
         <sup><b>@Iron-Ham</b></sup>
       </a>
     </td>
