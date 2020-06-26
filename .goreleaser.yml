@@ -54,7 +54,6 @@ nfpms:
       - rpm
     dependencies:
       - git
-    release: 7.3.0
 
 release:
   github:
