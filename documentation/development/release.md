@@ -24,11 +24,15 @@ This guide is for maintainers who make releases of Git Town.
 
 ### Arch Linux
 
-The package will need to be flagged out of date on the right hand side menu
-[here](https://aur.archlinux.org/packages/git-town/). This will tell
-[allonsy](https://github.com/allonsy) to update the package (most likely minimal
-intervention necessary).
+Flag the package out of date on the right hand side menu of
+[Git Town's AUR page](https://aur.archlinux.org/packages/git-town/).
+[allonsy](https://github.com/allonsy) will update the package, most likely with
+some interaction.
 
 ### debugging
 
-- test the goreleaser setup: `goreleaser --snapshot --skip-publish --rm-dist`
+To test the goreleaser setup:
+
+```
+goreleaser --snapshot --skip-publish --rm-dist
+```
