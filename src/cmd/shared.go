@@ -21,7 +21,7 @@ var (
 
 // These variables are set at build time.
 var (
-	version,
+	version   string
 	buildDate string
 )
 

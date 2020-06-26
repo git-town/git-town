@@ -1,0 +1,66 @@
+archives:
+  - builds:
+    replacements:
+      darwin: macOS
+      386: 32-bit
+      amd64: 64-bit
+    format_overrides:
+      - goos: windows
+        format: zip
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+    ldflags:
+      - -s -w -X github.com/git-town/git-town/src/cmd.version={{.Tag}} -X
+        github.com/git-town/git-town/src/cmd.buildDate={{.Date}}
+    goarch:
+      - amd64
+      - 386
+      - arm
+      - arm64
+    goarm:
+      - 5
+      - 6
+      - 7
+    goos:
+      - darwin
+      - freebsd
+      - linux
+      - netbsd
+      - openbsd
+      - windows
+
+changelog:
+  skip: true
+
+checksum:
+  name_template: "checksums.txt"
+
+nfpms:
+  - id: git-town
+    package_name: git-town
+    replacements:
+      amd64: 64-bit
+      386: 32-bit
+      darwin: macOS
+    vendor: the Git Town authors
+    maintainer: the Git Town authors
+    homepage: https://www.git-town.com
+    description: High-level command-line interface for Git
+    license: MIT
+    formats:
+      - deb
+      - rpm
+    dependencies:
+      - git
+
+release:
+  github:
+    owner: git-town
+    name: git-town
+  draft: true
+  prerelease: false
+
+snapshot:
+  name_template: "{{ .Tag }}"
