@@ -61,6 +61,7 @@ nfpms:
       386: 32-bit
       darwin: macOS
     vendor: the Git Town authors
+    maintainer: the Git Town authors
     homepage: https://www.git-town.com
     description: High-level command-line interface for Git
     license: MIT
