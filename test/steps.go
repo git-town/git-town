@@ -250,7 +250,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^it exits with an error$`, func() error {
 		if state.runErr == nil {
-			return fmt.Errorf("Expected error but previous command finished successfully")
+			return fmt.Errorf("expected error but previous command finished successfully")
 		}
 		state.runErrChecked = true
 		return nil
