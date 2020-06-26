@@ -19,3 +19,7 @@ This guide is for maintainers only.
     `shasum -a 256 /path/to/file`
   - ignore the `bottle` block. It is updated by the homebrew maintainers
 - create a pull request and get it merged
+
+### manual releases
+
+- test the goreleaser setup: `goreleaser --snapshot --skip-publish --rm-dist`
