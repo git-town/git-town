@@ -1,4 +1,4 @@
-Feature: Ask for configuration
+Feature: Ask for missing configuration
 
   As a user having forgotten to configure Git Town
   I want to be prompted to configure it when I use it the first time
