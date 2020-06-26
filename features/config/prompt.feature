@@ -10,17 +10,11 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
     When I run "<COMMAND>" and answer the prompts:
       | PROMPT                                     | ANSWER  |
       | Please specify the main development branch | [ENTER] |
-      | Please specify perennial branches          | [ENTER] |
     Then it prints the initial configuration prompt
     And the main branch is now configured as "main"
     And my repo is now configured with no perennial branches
 
     Examples:
-      | COMMAND                   |
-      | git-town hack feature     |
-      | git-town kill             |
-      | git-town new-pull-request |
-      | git-town prune-branches   |
-      | git-town repo             |
-      | git-town ship             |
-      | git-town sync             |
+      | COMMAND       |
+      | git-town ship |
+      | git-town sync |

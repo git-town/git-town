@@ -46,7 +46,7 @@ Feature: git town: alias
 
   Scenario: no argument
     When I run "git-town alias"
-    Then it prints:
+    Then it prints the error:
       """
       accepts 1 arg(s), received 0
       """
@@ -62,7 +62,7 @@ Feature: git town: alias
 
   Scenario: too many arguments
     When I run "git-town alias true false"
-    Then it prints:
+    Then it prints the error:
       """
       accepts 1 arg(s), received 2
       """
