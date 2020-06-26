@@ -1,3 +1,13 @@
+archives:
+  - builds:
+    replacements:
+      darwin: macOS
+      386: 32-bit
+      amd64: 64-bit
+    format_overrides:
+      - goos: windows
+        format: zip
+
 builds:
   - env:
       - CGO_ENABLED=0
@@ -20,17 +30,13 @@ builds:
       - netbsd
       - openbsd
       - windows
-archives:
-  - builds:
-    replacements:
-      darwin: macOS
-      386: 32-bit
-      amd64: 64-bit
-    format_overrides:
-      - goos: windows
-        format: zip
+
+changelog:
+  skip: true
+
 checksum:
   name_template: "checksums.txt"
+
 nfpms:
   - id: git-town
     package_name: git-town
@@ -54,7 +60,6 @@ nfpms:
       amd64: 64-bit
       386: 32-bit
       darwin: macOS
-
     vendor: the Git Town authors
     homepage: https://www.git-town.com
     description: High-level command-line interface for Git
@@ -66,23 +71,6 @@ nfpms:
       - git
     # Package release.
     release: 7.3.0
-
-    # Files to add to your package (beyond the binary).
-    # Keys are source paths/globs to get the files from.
-    # Values are the destination locations of the files in the package.
-    # Use globs to add all contents of a folder.
-    # files:
-    #   "scripts/etc/init.d/**": "/etc/init.d"
-    #   "path/**/glob": "/var/foo/glob"
-
-    # Scripts to execute during the installation of the package.
-    # Keys are the possible targets during the installation process
-    # Values are the paths to the scripts which will be executed
-    # scripts:
-    #   preinstall: "scripts/preinstall.sh"
-    #   postinstall: "scripts/postinstall.sh"
-    #   preremove: "scripts/preremove.sh"
-    #   postremove: "scripts/postremove.sh"
 
 release:
   github:
