@@ -60,24 +60,8 @@ release:
   github:
     owner: git-town
     name: git-town
-
-  # If set to true, will not auto-publish the release.
-  # Default is false.
   draft: true
-
-  # If set to auto, will mark the release as not ready for production
-  # in case there is an indicator for this in the tag e.g. v1.0.0-rc1
-  # If set to true, will mark the release as not ready for production.
-  # Default is false.
-  # prerelease: auto
-  prerelease: true
-
-  # name_template: "v{{.Tag}}"
-  # disable: true
-  # extra_files:
-  #   - glob: ./path/to/file.txt
-  #   - glob: ./glob/**/to/**/file/**/*
-  #   - glob: ./glob/foo/to/bar/file/foobar/override_from_previous
+  prerelease: false
 
 snapshot:
   name_template: "{{ .Tag }}"
