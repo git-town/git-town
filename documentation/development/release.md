@@ -22,6 +22,13 @@ This guide is for maintainers who make releases of Git Town.
   - ignore the `bottle` block, the homebrew maintainers update it
 - create a pull request and get it merged
 
+### Arch Linux
+
+The package will need to be flagged out of date on the right hand side menu
+[here](https://aur.archlinux.org/packages/git-town/). This will tell
+[allonsy](https://github.com/allonsy) to update the package (most likely minimal
+intervention necessary).
+
 ### debugging
 
 - test the goreleaser setup: `goreleaser --snapshot --skip-publish --rm-dist`
