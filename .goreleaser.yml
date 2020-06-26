@@ -18,11 +18,18 @@ builds:
       - openbsd
       - windows
 archives:
-  - format: binary
+  - builds:
+    replacements:
+      darwin: macOS
+      386: 32-bit
+      amd64: 64-bit
+    format_overrides:
+      - goos: windows
+        format: zip
 checksum:
   name_template: "checksums.txt"
 snapshot:
-  name_template: "{{ .Tag }}-next"
+  name_template: "{{ .Tag }}"
 # changelog:
 #   sort: asc
 #   filters:
