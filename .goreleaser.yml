@@ -40,22 +40,6 @@ checksum:
 nfpms:
   - id: git-town
     package_name: git-town
-
-    # You can change the file name of the package.
-    # Default: `{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}`
-    # file_name_template:
-    #   "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
-
-    # Build IDs for the builds you want to create NFPM packages for.
-    # Defaults to all builds.
-    # builds:
-    #   - foo
-    #   - bar
-
-    # Replacements for GOOS and GOARCH in the package name.
-    # Keys should be valid GOOSs or GOARCHs.
-    # Values are the respective replacements.
-    # Default is empty.
     replacements:
       amd64: 64-bit
       386: 32-bit
@@ -70,7 +54,6 @@ nfpms:
       - rpm
     dependencies:
       - git
-    # Package release.
     release: 7.3.0
 
 release:
