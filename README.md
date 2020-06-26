@@ -210,14 +210,14 @@ Kudos to our contributors!
         <sup><b>@blaggacao</b></sup>
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="60">
       <a href="https://github.com/aricahunter">
         <img src="https://avatars2.githubusercontent.com/u/5395515?s=60" width="60px">
         <sup><b>@aricahunter</b></sup>
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="60">
       <a href="https://github.com/jiexi">
         <img src="https://avatars2.githubusercontent.com/u/918701?s=60" width="60px">
@@ -254,6 +254,8 @@ Kudos to our contributors!
         <sup><b>@seanstrom</b></sup>
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="60">
       <a href="https://github.com/schneems">
         <img src="https://avatars2.githubusercontent.com/u/59744?s=60" width="60px">
@@ -266,8 +268,6 @@ Kudos to our contributors!
         <sup><b>@morrme</b></sup>
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="60">
       <a href="https://github.com/mjhm">
         <img src="https://avatars0.githubusercontent.com/u/431925?s=60" width="60px">
@@ -298,6 +298,8 @@ Kudos to our contributors!
         <sup><b>@dgjnpr</b></sup>
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="60">
       <a href="https://github.com/atilacamurca">
         <img src="https://avatars1.githubusercontent.com/u/508624?s=60" width="60px">
@@ -316,8 +318,6 @@ Kudos to our contributors!
         <sup><b>@TKAB</b></sup>
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="60">
       <a href="https://github.com/Siilwyn">
         <img src="https://avatars2.githubusercontent.com/u/5701149?s=60" width="60px">
@@ -342,6 +342,8 @@ Kudos to our contributors!
         <sup><b>@cirego</b></sup>
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="60">
       <a href="https://github.com/sheldonhull">
         <img src="https://avatars3.githubusercontent.com/u/3526320?s=60" width="60px">
@@ -366,8 +368,6 @@ Kudos to our contributors!
         <sup><b>@pattiereaves</b></sup>
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="60">
       <a href="https://github.com/zenspider">
         <img src="https://avatars0.githubusercontent.com/u/9832?s=60" width="60px">
@@ -377,6 +377,7 @@ Kudos to our contributors!
     <td align="center" width="60">
       <a href="https://github.com/Iron-Ham">
         <img src="https://avatars1.githubusercontent.com/u/3388381?s=60" width="60px">
+        <br>
         <sup><b>@Iron-Ham</b></sup>
       </a>
     </td>
@@ -386,6 +387,8 @@ Kudos to our contributors!
         <sup><b>@grignaak</b></sup>
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="60">
       <a href="https://github.com/ericyliu">
         <img src="https://avatars2.githubusercontent.com/u/8580080?s=60" width="60px">
@@ -416,8 +419,6 @@ Kudos to our contributors!
         <sup><b>@qrevel</b></sup>
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="60">
       <a href="https://github.com/aeneasr">
         <img src="https://avatars1.githubusercontent.com/u/3372410?s=60" width="60px">
@@ -430,6 +431,8 @@ Kudos to our contributors!
         <sup><b>@martinjaime</b></sup>
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="60">
       <a href="https://github.com/alexw10">
         <img src="https://avatars1.githubusercontent.com/u/9453636?s=60" width="60px">
