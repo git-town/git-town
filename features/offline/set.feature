@@ -1,6 +1,6 @@
 Feature: enabling offline mode
 
-  When developing on an airplane
+    When developing on an airplane
   I want to be able to use Git Town without interactions with remote origins
   So that I can work on my code even without internet connection.
 
@@ -26,7 +26,7 @@ Feature: enabling offline mode
 
   Scenario: multiple values
     When I run "git-town offline true false"
-    Then it prints:
+    Then it prints the error:
       """
       accepts at most 1 arg(s), received 2
       """

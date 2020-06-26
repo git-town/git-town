@@ -12,7 +12,6 @@ Feature: Strip colors
     When I run "git-town hack new-feature" and answer the prompts:
       | PROMPT                                     | ANSWER  |
       | Please specify the main development branch | [ENTER] |
-      | Please specify perennial branches          | [ENTER] |
     And Git Town is now aware of this branch hierarchy
       | BRANCH      | PARENT |
       | new-feature | main   |
