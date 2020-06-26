@@ -1,12 +1,12 @@
-Feature: Ask for configuration
+Feature: Ask for missing configuration information
 
   As a user having forgotten to configure Git Town
   I want to be prompted to configure it when I use it the first time
   So that I use a properly configured tool at all times.
 
-  Scenario: running unconfigured
+  Scenario: run unconfigured
     Given I haven't configured Git Town yet
-    When I run "git-town hack foo" and answer the prompts:
+    When I run "git-town sync" and answer the prompts:
       | PROMPT                                     | ANSWER  |
       | Please specify the main development branch | [ENTER] |
     Then it prints the initial configuration prompt
