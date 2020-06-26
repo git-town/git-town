@@ -1,6 +1,6 @@
 # Releasing new versions of Git Town
 
-This guide is for maintainers only.
+This guide is for maintainers who make releases of Git Town.
 
 ### create a GitHub release
 
@@ -19,7 +19,7 @@ This guide is for maintainers only.
 - update `Library/Formula/git-town.rb`
   - get the sha256 by downloading the release (`.tar.gz`) and using
     `shasum -a 256 /path/to/file`
-  - ignore the `bottle` block. It is updated by the homebrew maintainers
+  - ignore the `bottle` block, the homebrew maintainers update it
 - create a pull request and get it merged
 
 ### debugging
