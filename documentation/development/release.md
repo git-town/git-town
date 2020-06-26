@@ -9,7 +9,8 @@ This guide is for maintainers only.
 - create and push a new Git Tag for the release
   - `git tag -m release -a v4.0`
   - `git push --tags`
-- Travis-CI creates a new release on GitHub and attaches the GT binaries to it
+- run `goreleaser`
+- review the release and publish it
 
 ### create a Homebrew release
 
@@ -20,6 +21,6 @@ This guide is for maintainers only.
   - ignore the `bottle` block. It is updated by the homebrew maintainers
 - create a pull request and get it merged
 
-### manual releases
+### debugging
 
 - test the goreleaser setup: `goreleaser --snapshot --skip-publish --rm-dist`
