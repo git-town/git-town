@@ -1,5 +1,29 @@
 # Git Town Release Notes
 
+## 7.4.0 (2020-06-26)
+
+Version 7.4.0 sports a vastly overhauled internal architecture that provides
+more robust error handling, improved error messages, and a much better developer
+experience. Ruby has been dropped as a development dependency.
+
+#### New Features
+
+- list parent configurations for branches that are children of a branch that
+  does not have its parent configured
+  ([#1436](https://github.com/git-town/git-town/pull/1436))
+- autocompletion for bash, zsh, fish, powershell
+  ([#1492](https://github.com/git-town/git-town/pull/1492))
+- support Gitea hosting service
+  ([#1518](https://github.com/git-town/git-town/pull/1518))
+- add "diff-parent" command
+  ([#1385](https://github.com/git-town/git-town/pull/1518))
+- print URLs to open when browser is not available
+  ([#1318](https://github.com/git-town/git-town/pull/1318))
+
+#### Bug Fixes
+
+- lots of improved error messages
+
 ## 7.3.0 (2019-11-05)
 
 #### New Features
