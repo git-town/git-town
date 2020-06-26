@@ -21,8 +21,8 @@ var (
 
 // These variables are set at build time.
 var (
-	version,
-	buildDate string
+	Version   string
+	BuildDate string
 )
 
 const dryRunFlagDescription = "Print the commands but don't run them"
