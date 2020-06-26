@@ -88,18 +88,8 @@ release:
   # prerelease: auto
   prerelease: true
 
-  # You can change the name of the GitHub release.
-  # Default is `{{.Tag}}`
-  name_template: "v{{.Tag}}"
-
-  # You can disable this pipe in order to not upload any artifacts to
-  # GitHub.
-  # Defaults to false.
+  # name_template: "v{{.Tag}}"
   # disable: true
-  # You can add extra pre-existing files to the release.
-  # The filename on the release will be the last part of the path (base). If
-  # another file with the same name exists, the latest one found will be used.
-  # Defaults to empty.
   # extra_files:
   #   - glob: ./path/to/file.txt
   #   - glob: ./glob/**/to/**/file/**/*
