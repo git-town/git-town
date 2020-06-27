@@ -52,11 +52,12 @@ jobs:
     steps:
       - attach_workspace:
           at: /home/circleci
-      # move the binary into the PATH
+      # move the binaries into the PATH
       - run: mkdir /home/circleci/bin
       - run: mv ./git-town /home/circleci/bin/
       - run: mv ./godog /home/circleci/bin/
       - run: mv ./golangci-lint /home/circleci/bin/
+      - run: cd tools/prettier && yarn
       - run: cd tools/text-runner && yarn
       - run: make test-md
 workflows:

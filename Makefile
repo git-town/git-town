@@ -1,3 +1,10 @@
+# platform-specificity
+ifdef COMSPEC
+	/ := $(strip \)
+else
+	/ := /
+endif
+
 .DEFAULT_GOAL := spec
 
 build:  # builds for the current platform
@@ -34,7 +41,7 @@ fix-go:  # auto-fixes all Go lint issues
 	gofmt -s -w ./src ./test
 
 fix-md:  # auto-fixes all Markdown lint issues
-	tools/prettier/node_modules/.bin/prettier --write .
+	tools$/prettier$/node_modules$/.bin$/prettier --write .
 
 help:  # prints all make targets
 	@cat Makefile | grep '^[^ ]*:' | grep -v '.PHONY' | grep -v help | sed 's/:.*#/#/' | column -s "#" -t
@@ -45,11 +52,12 @@ lint-go:  # lints the Go files
 	golangci-lint run src/... test/...
 
 lint-md:   # lints the Markdown files
-	tools/prettier/node_modules/.bin/prettier -l .
-	tools/text-runner/node_modules/.bin/text-run --offline
+	tools$/prettier$/node_modules$/.bin$/prettier -l .
+	tools$/text-runner$/node_modules$/.bin$/text-run --offline
 
 setup: setup-go  # the setup steps necessary on developer machines
 	cd tools/harp && yarn install
+	cd tools/prettier && yarn install
 	cd tools/text-runner && yarn install
 
 setup-go:
