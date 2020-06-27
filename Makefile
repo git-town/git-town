@@ -1,16 +1,10 @@
 .DEFAULT_GOAL := spec
-date := $(shell TZ=UTC date -u '+%Y-%m-%d')
 
 build:  # builds for the current platform
 	go install -ldflags "-X github.com/git-town/git-town/src/cmd.version=v0.0.0-test -X github.com/git-town/git-town/src/cmd.buildDate=today"
 
 build-release: cross-compile  # builds the artifacts for a new release
 	package/debian/make_deb.sh
-
-cross-compile:  # builds the binary for all platforms
-	go get github.com/mitchellh/gox
-	gox -ldflags "-X github.com/git-town/git-town/src/cmd.version=${TRAVIS_TAG} -X github.com/git-town/git-town/src/cmd.buildDate=${date}" \
-			-output "dist/{{.Dir}}-${TRAVIS_TAG}-{{.OS}}-{{.Arch}}"
 
 cuke: build   # runs the new Godog-based feature tests
 	@env GOGC=off go test . -v -count=1
