@@ -1,39 +1,47 @@
 # Developing the Git Town source code
 
+This page gets you started hacking on the Git Town codebase.
+
 ## setup
 
-You need to have these things running on your computer:
+1. install [Go](https://golang.org) version 1.12 or higher
+2. install [Make](https://www.gnu.org/software/make)
+   - Mac and Linux users should be okay out of the box
+   - Windows users can install
+     [Make for Windows](http://gnuwin32.sourceforge.net/packages/make.htm). If
+     you use [Chocolatey](https://chocolatey.org), run `choco install make`.
+3. create a fork of the
+   [Git Town repository on GitHub](https://github.com/git-town/git-town) by
+   clicking on `Fork` there
+4. clone your fork into a directory outside your GOPATH. Git Town uses Go
+   modules and doesn't work properly inside the GOPATH. If you don't know what a
+   GOPATH is, just clone into a directory other than `c:\go` and `~/go`.
+5. open a terminal and cd into the directory you just cloned
+6. run <code textrun="verify-make-command">make setup</code> to download the
+   dependencies
+7. make sure everything works:
+   - build the tool: <code textrun="verify-make-command">make build</code>
+   - run the tests: <code textrun="verify-make-command">make test</code>
 
-- [Go](https://golang.org) version 1.9 or higher
-- [Make](https://www.gnu.org/software/make)
-  - Mac and Linux users should be okay out of the box
-  - Windows users should install
-    [Make for Windows](http://gnuwin32.sourceforge.net/packages/make.htm)
+Optional dependencies:
 
-Optional:
+- [Node.JS](https://nodejs.org)
 - [Yarn](https://yarnpkg.com/)
 - [scc](https://github.com/boyter/scc)
 
-Fork Git Town and clone your fork into a directory outside your GOPATH. Git Town
-uses Go modules and doesn't work properly inside the GOPATH.
+## add a new Go dependency
 
-Cd into the directory you just cloned and run
-<code textrun="verify-make-command">make setup</code> to download the dependencies.
-
-To make sure everything works:
-
-- build the tool: <code textrun="verify-make-command">make build</code>
-  - now you have `$GOPATH/bin/git-town` compiled from your local source code
-- run the tests: <code textrun="verify-make-command">make test</code>
-
-## add a new Go library
-
+- run `go get [dependency]` inside the Git Town folder to register the
+  dependency
 - start using the new dependency in the code
 - run `go mod vendor` to vendor it
+- run `go mod tidy` to clean things up
 
 ## update a dependency
 
-- `go get <path>`
+```
+go get <path>
+```
 
 ## update all dependencies
 
@@ -41,9 +49,9 @@ To make sure everything works:
 
 ## auto-fix linter errors
 
-```bash
+<pre textrun="verify-make-command">
 make fix
-```
+</pre>
 
 ## run tests
 
@@ -77,8 +85,8 @@ See the [test architecture](test-architecture.md) document for more details.
 
 ### debug
 
-To see the CLI output of the shell commands in a Cucumber test,
-add a tag `@debug` above the feature or scenario you want to debug:
+To see the CLI output of the shell commands in a Cucumber test, add a tag
+`@debug` above the feature or scenario you want to debug:
 
 ```cucumber
 @debug
