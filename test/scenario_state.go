@@ -13,6 +13,9 @@ type ScenarioState struct {
 	// the error of the last run of Git Town
 	runErr error
 
+	// indicates whether the scenario has verified the error
+	runErrChecked bool
+
 	// the outcome of the last run of Git Town
 	runRes *run.Result
 
@@ -32,6 +35,7 @@ func (state *ScenarioState) Reset(gitEnv *GitEnvironment) {
 	state.initialCommits = nil
 	state.runRes = nil
 	state.runErr = nil
+	state.runErrChecked = false
 	state.uncommittedFileName = ""
 	state.uncommittedContent = ""
 }

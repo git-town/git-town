@@ -14,6 +14,7 @@ import (
 
 	"github.com/cucumber/godog"
 	"github.com/cucumber/messages-go/v10"
+	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/run"
 )
 
@@ -68,6 +69,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.AfterScenario(func(scenario *messages.Pickle, e error) {
 		if e != nil {
 			fmt.Printf("failed scenario, investigate state in %q\n", state.gitEnv.Dir)
+		}
+		if state.runErr != nil && !state.runErrChecked {
+			cli.PrintError(fmt.Errorf("%s - scenario %q doesn't document error %v", scenario.GetUri(), scenario.GetName(), state.runErr))
+			os.Exit(1)
 		}
 	})
 	suite.Step(`^all branches are now synchronized$`, func() error {
@@ -265,6 +270,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if state.runErr == nil {
 			return fmt.Errorf("expected error")
 		}
+		state.runErrChecked = true
 		return nil
 	})
 
