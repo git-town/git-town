@@ -89,11 +89,12 @@ func (ms *MockingShell) MockGit(version string) error {
 		return fmt.Errorf("cannot create mock bin dir %q: %w", ms.binDir, err)
 	}
 	// write custom Git command
-	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" = \"version\" ]; then\n  echo git version %s\nfi\n", version)
-	err = ioutil.WriteFile(filepath.Join(ms.binDir, "git"), []byte(content), 0500)
 	if runtime.GOOS == "windows" {
 		content := fmt.Sprintf("echo git version %s\n", version)
 		err = ioutil.WriteFile(filepath.Join(ms.binDir, "git.cmd"), []byte(content), 0500)
+	} else {
+		content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" = \"version\" ]; then\n  echo git version %s\nfi\n", version)
+		err = ioutil.WriteFile(filepath.Join(ms.binDir, "git"), []byte(content), 0500)
 	}
 	if err != nil {
 		return fmt.Errorf("cannot create custom Git binary: %w", err)
