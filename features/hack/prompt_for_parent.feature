@@ -5,6 +5,7 @@ Feature: git town-hack: prompt for parent branch
   So that I have a unified way for creating new branches
 
 
+  @skipWindows
   Scenario: selecting the default branch (the main development branch)
     Given the following commits exist in my repo
       | BRANCH | LOCATION | MESSAGE     |
@@ -31,6 +32,7 @@ Feature: git town-hack: prompt for parent branch
       | new-feature | local         | main_commit |
 
 
+  @skipWindows
   Scenario: selecting another branch
     Given my repo has the perennial branch "production"
     And the following commits exist in my repo

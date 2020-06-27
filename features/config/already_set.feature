@@ -1,3 +1,4 @@
+@debug
 Feature: listing the configuration
 
   As a user running the Git Town configuration wizard,
@@ -5,6 +6,7 @@ Feature: listing the configuration
   So that I can change it more effectively
 
 
+  @skipWindows
   Scenario: everything is configured
     Given my repo has the feature branches "production" and "qa"
     And the main branch is configured as "main"

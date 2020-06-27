@@ -7,6 +7,7 @@ Feature: git town-parent-diff: diffing the current feature branch
   So that the command can work as I expect
 
 
+  @skipWindows
   Scenario: result
     Given my repo has a feature branch named "feature" with no parent
     And I am on the "feature" branch

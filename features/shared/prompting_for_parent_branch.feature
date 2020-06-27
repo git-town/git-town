@@ -1,3 +1,4 @@
+@skipWindows
 Feature: Prompt for parent branch when unknown
 
   As a developer running a command on a branch without a parent branch

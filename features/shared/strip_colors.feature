@@ -1,3 +1,4 @@
+@skipWindows
 Feature: Strip colors
 
   As a developer with Git configured so colors are always on

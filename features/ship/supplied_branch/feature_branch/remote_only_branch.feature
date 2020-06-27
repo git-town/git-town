@@ -1,3 +1,4 @@
+@skipWindows
 Feature: git town-ship: shipping the supplied feature branch with a tracking branch
 
   As a developer having finished a feature on another machine

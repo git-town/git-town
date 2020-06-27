@@ -1,3 +1,4 @@
+@skipWindows
 Feature: update the parent of a nested feature branch
 
   As a user with a nested feature branch whose parent was shipped from another machine

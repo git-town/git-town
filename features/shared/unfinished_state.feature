@@ -1,3 +1,4 @@
+@skipWindows
 Feature: warn about unfinished prompt asking the user how to proceed
 
   As a developer running a command after not finishing the last one
