@@ -15,8 +15,8 @@ This page gets you started hacking on the Git Town codebase.
    clicking on `Fork` there
 4. clone your fork into a directory outside your GOPATH. Git Town uses Go
    modules and doesn't work properly inside the GOPATH. If you don't know what a
-   GOPATH is, just clone into a directory other than `c:\go` and `~/go`.
-5. open a terminal and cd into the directory you just cloned
+   GOPATH is, clone into a directory other than `c:\go` and `~/go`.
+5. open a terminal and cd into the directory you cloned
 6. run <code textrun="verify-make-command">make setup</code> to download the
    dependencies
 7. make sure everything works:
@@ -35,7 +35,7 @@ Optional dependencies:
   dependency
 - start using the new dependency in the code
 - run `go mod vendor` to vendor it
-- run `go mod tidy` to clean things up
+- run `go mod tidy` to clean up
 
 ## update a dependency
 
