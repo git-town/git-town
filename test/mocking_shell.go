@@ -177,7 +177,7 @@ func (ms *MockingShell) RunWith(opts run.Options, cmd string, args ...string) (r
 		for i := range opts.Env {
 			if strings.HasPrefix(opts.Env[i], "PATH=") {
 				parts := strings.SplitN(opts.Env[i], "=", 2)
-				parts[1] = ms.binDir + ":" + parts[1]
+				parts[1] = ms.binDir + string(os.PathListSeparator) + parts[1]
 				opts.Env[i] = strings.Join(parts, "=")
 				break
 			}
