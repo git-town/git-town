@@ -11,6 +11,7 @@ You need to have these things running on your computer:
     [Make for Windows](http://gnuwin32.sourceforge.net/packages/make.htm)
 
 Optional:
+
 - [Yarn](https://yarnpkg.com/)
 - [scc](https://github.com/boyter/scc)
 
@@ -18,7 +19,8 @@ Fork Git Town and clone your fork into a directory outside your GOPATH. Git Town
 uses Go modules and doesn't work properly inside the GOPATH.
 
 Cd into the directory you just cloned and run
-<code textrun="verify-make-command">make setup</code> to download the dependencies.
+<code textrun="verify-make-command">make setup</code> to download the
+dependencies.
 
 To make sure everything works:
 
@@ -77,8 +79,8 @@ See the [test architecture](test-architecture.md) document for more details.
 
 ### debug
 
-To see the CLI output of the shell commands in a Cucumber test,
-add a tag `@debug` above the feature or scenario you want to debug:
+To see the CLI output of the shell commands in a Cucumber test, add a tag
+`@debug` above the feature or scenario you want to debug:
 
 ```cucumber
 @debug
