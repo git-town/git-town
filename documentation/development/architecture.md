@@ -24,4 +24,4 @@ holds the state is in [src/steps/run_state.go](../../src/steps/run_state.go).
 
 ## Tests
 
-See [testing.md](testing.md).
+See [test-architecture.md](test-architecture.md).
