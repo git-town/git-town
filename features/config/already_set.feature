@@ -1,4 +1,3 @@
-@debug
 Feature: listing the configuration
 
   As a user running the Git Town configuration wizard,
