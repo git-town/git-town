@@ -1,3 +1,10 @@
+# platform-specificity
+ifdef COMSPEC
+	/ := $(strip \)
+else
+	/ := /
+endif
+
 .DEFAULT_GOAL := spec
 
 build:  # builds for the current platform
@@ -28,29 +35,32 @@ deploy:  # deploys the website
 	git push
 	git checkout master
 
+docs:  # tests the documentation
+	tools$/text-runner$/node_modules$/.bin$/text-run --offline
+
 fix: fix-go fix-md  # auto-fixes lint issues in all languages
 
 fix-go:  # auto-fixes all Go lint issues
 	gofmt -s -w ./src ./test
 
 fix-md:  # auto-fixes all Markdown lint issues
-	tools/prettier/node_modules/.bin/prettier --write .
+	tools$/prettier$/node_modules$/.bin$/prettier --write .
 
 help:  # prints all make targets
 	@cat Makefile | grep '^[^ ]*:' | grep -v '.PHONY' | grep -v help | sed 's/:.*#/#/' | column -s "#" -t
 
-lint: lint-go lint-md   # lints all the source code
+lint: lint-go lint-md  # lints all the source code
 
 lint-go:  # lints the Go files
 	golangci-lint run src/... test/...
 
 lint-md:   # lints the Markdown files
-	tools/prettier/node_modules/.bin/prettier -l .
-	tools/text-runner/node_modules/.bin/text-run --offline
+	tools$/prettier$/node_modules$/.bin$/prettier -l .
 
 setup: setup-go  # the setup steps necessary on developer machines
-	cd tools/harp && yarn install
+	cd tools/prettier && yarn install
 	cd tools/text-runner && yarn install
+	cd tools/harp && yarn install
 
 setup-go:
 	@(cd .. && GO111MODULE=on go get github.com/cucumber/godog/cmd/godog@v0.9.0)
@@ -59,7 +69,7 @@ setup-go:
 stats:  # shows code statistics
 	@find . -type f | grep -v '\./node_modules/' | grep -v '\./vendor/' | grep -v '\./.git/' | xargs scc
 
-test: lint unit cuke  # runs all the tests
+test: lint docs unit cuke  # runs all the tests
 .PHONY: test
 
 test-go: build u lint-go cuke  # runs all tests for Golang
