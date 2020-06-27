@@ -967,7 +967,7 @@ func (r *Runner) RootDirectory() (string, error) {
 		if err != nil {
 			return "", fmt.Errorf("cannot determine root directory: %w", err)
 		}
-		r.RootDirCache.Set(res.OutputSanitized())
+		r.RootDirCache.Set(filepath.Clean(res.OutputSanitized()))
 	}
 	return r.RootDirCache.Value(), nil
 }
