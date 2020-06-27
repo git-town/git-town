@@ -26,6 +26,7 @@ func TestGodog(t *testing.T) {
 		Format:      "progress",
 		Concurrency: runtime.NumCPU(),
 		Strict:      true,
+		NoColors:    runtime.GOOS == "windows",
 		Paths:       []string{"features/"},
 	})
 	if status > 0 {
