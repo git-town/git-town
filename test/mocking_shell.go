@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 
 	"github.com/git-town/git-town/src/run"
@@ -90,6 +91,10 @@ func (ms *MockingShell) MockGit(version string) error {
 	// write custom Git command
 	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" = \"version\" ]; then\n  echo git version %s\nfi\n", version)
 	err = ioutil.WriteFile(filepath.Join(ms.binDir, "git"), []byte(content), 0500)
+	if runtime.GOOS == "windows" {
+		content := fmt.Sprintf("echo git version %s\n", version)
+		err = ioutil.WriteFile(filepath.Join(ms.binDir, "git.cmd"), []byte(content), 0500)
+	}
 	if err != nil {
 		return fmt.Errorf("cannot create custom Git binary: %w", err)
 	}
@@ -177,7 +182,7 @@ func (ms *MockingShell) RunWith(opts run.Options, cmd string, args ...string) (r
 		for i := range opts.Env {
 			if strings.HasPrefix(opts.Env[i], "PATH=") {
 				parts := strings.SplitN(opts.Env[i], "=", 2)
-				parts[1] = ms.binDir + ":" + parts[1]
+				parts[1] = ms.binDir + string(os.PathListSeparator) + parts[1]
 				opts.Env[i] = strings.Join(parts, "=")
 				break
 			}
