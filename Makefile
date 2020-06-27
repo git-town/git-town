@@ -56,6 +56,7 @@ lint-md:   # lints the Markdown files
 
 setup: setup-go  # the setup steps necessary on developer machines
 	cd tools/harp && yarn install
+	cd tools/prettier && yarn install
 	cd tools/text-runner && yarn install
 
 setup-go:
