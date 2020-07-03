@@ -1,15 +1,12 @@
 linters:
   enable-all: true
   disable:
-    - dogsled # The rationale for disabling dogsled is that all the cases it flags have been false positives in test code that intentionally ignores many return values because they test only one thing.
-    - dupl # I think that one creates too many false positives as well. Our tests are kind of repetitive, which is intentional. They are supposed to be simple, straightforward scripts.
-    # - exhaustive        TODO: enable after next release; current release at time of writing is v1.27
-    - gochecknoglobals # We are currently using some globals. It's a lot more forgivable in a CLI tool than in a library.
-    - gochecknoinits # I think the CLI framework we use requires them.
-    - goconst # Our tests contain a ton of hard-coded test strings, for example branch names.
-    - gomnd # Our tests contain hard-coded test data that wouldn't make sense to extract into constants
-    - lll # Following gofmt principles, we aren't enforcing a line length at this point.
-    - wsl # This linter creates too many false positives. Our policy is to not have any empty lines in code blocks anyways.
+    - gochecknoglobals # Cobra requires globals
+    - gochecknoinits # Cobra requires init blocks
+    - goconst # tests contain a ton of hard-coded test strings, for example branch names
+    - gomnd # tests contain hard-coded test data that wouldn't make sense to extract into constants
+    - lll # we aren't enforcing a line length at this point
+    - wsl # this linter creates too many false positives, our policy is to not have any empty lines in code blocks
 
 issues:
   # List of regexps of issue texts to exclude, empty list by default.
