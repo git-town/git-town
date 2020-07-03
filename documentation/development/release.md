@@ -22,6 +22,16 @@ This guide is for maintainers who make releases of Git Town.
   - ignore the `bottle` block, the homebrew maintainers update it
 - create a pull request and get it merged
 
+### create the Windows installer
+
+On a Windows machine:
+
+```
+make installer
+```
+
+Add the installer to the GitHub release.
+
 ### Arch Linux
 
 Flag the package out of date on the right hand side menu of
