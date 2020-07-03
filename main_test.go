@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/test"
 )
 
-// nolint:deadcode,unused
 func FeatureContext(suite *godog.Suite) {
 	// The current Godog implementation only provides a FeatureContext,
 	// no SuiteContext nor ScenarioContext.
