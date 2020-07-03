@@ -1,0 +1,43 @@
+{
+  "product": "git-town",
+  "company": "git-town",
+  "license": "MIT",
+  "upgrade-code": "",
+  "files": {
+    "guid": "",
+    "items": ["build/amd64/hello.exe"]
+  },
+  "directories": ["assets"],
+  "env": {
+    "guid": "",
+    "vars": [
+      {
+        "name": "some",
+        "value": "value",
+        "permanent": "no",
+        "system": "no",
+        "action": "set",
+        "part": "last"
+      }
+    ]
+  },
+  "shortcuts": {
+    "guid": "",
+    "items": [
+      {
+        "name": "hello",
+        "description": "hello web server",
+        "target": "[INSTALLDIR]\\hello.exe",
+        "wdir": "INSTALLDIR",
+        "icon": "ico.ico"
+      }
+    ]
+  },
+  "hooks": [],
+  "choco": {
+    "description": "Git Town",
+    "project-url": "https://github.com/git-town/git-town",
+    "tags": "git",
+    "license-url": "https://github.com/git-town/git-town/blob/master/LICENSE"
+  }
+}
