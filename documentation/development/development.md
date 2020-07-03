@@ -83,6 +83,10 @@ will use that value instead of what is in the repo.
 
 See the [test architecture](test-architecture.md) document for more details.
 
+If Cucumber tests produce garbled output on Windows, please try running them
+inside Git Bash. See [this issue](https://github.com/cucumber/godog/issues/129)
+for details.
+
 ### debug
 
 To see the CLI output of the shell commands in a Cucumber test, add a tag
