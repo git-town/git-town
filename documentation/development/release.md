@@ -22,7 +22,7 @@ This guide is for maintainers who make releases of Git Town.
   - ignore the `bottle` block, the homebrew maintainers update it
 - create a pull request and get it merged
 
-### create an MSI installer
+### create the Windows installer
 
 On a Windows machine:
 
