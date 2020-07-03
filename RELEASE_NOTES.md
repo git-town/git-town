@@ -8,21 +8,24 @@ experience. Ruby has been dropped as a development dependency.
 
 #### New Features
 
+- improved installation experience: MSI installer for Windows, `.deb` and `.rpm`
+  packages for Linux, archives with properly named binaries for all other use
+  cases ([#1589](https://github.com/git-town/git-town/pull/1589))
+- "diff-parent" command
+  ([#1385](https://github.com/git-town/git-town/pull/1518))
+- support for Gitea hosting service
+  ([#1518](https://github.com/git-town/git-town/pull/1518))
+- print URLs to open when browser is not available
+  ([#1318](https://github.com/git-town/git-town/pull/1318))
+- autocompletion for bash, zsh, fish, powershell
+  ([#1492](https://github.com/git-town/git-town/pull/1492))
 - list parent configurations for branches that are children of a branch that
   does not have its parent configured
   ([#1436](https://github.com/git-town/git-town/pull/1436))
-- autocompletion for bash, zsh, fish, powershell
-  ([#1492](https://github.com/git-town/git-town/pull/1492))
-- support Gitea hosting service
-  ([#1518](https://github.com/git-town/git-town/pull/1518))
-- add "diff-parent" command
-  ([#1385](https://github.com/git-town/git-town/pull/1518))
-- print URLs to open when browser is not available
-  ([#1318](https://github.com/git-town/git-town/pull/1318))
 
 #### Bug Fixes
 
-- lots of improved error messages
+- many improved error messages
 
 ## 7.3.0 (2019-11-05)
 
