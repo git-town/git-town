@@ -126,7 +126,7 @@ func (d *githubCodeHostingDriver) mergePullRequest(options MergePullRequestOptio
 		return "", fmt.Errorf("cannot merge via Github since there is no pull request")
 	}
 	if options.LogRequests {
-		d.log("GitHub API: Merging PR #%d", options.PullRequestNumber)
+		d.log("GitHub API: Merging PR", options.PullRequestNumber)
 	}
 	commitMessageParts := strings.SplitN(options.CommitMessage, "\n", 2)
 	githubCommitTitle := commitMessageParts[0]
