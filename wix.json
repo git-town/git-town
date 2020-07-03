@@ -1,13 +1,12 @@
 {
-  "product": "git-town",
+  "product": "Git Town",
   "company": "git-town",
   "license": "MIT",
-  "upgrade-code": "",
   "files": {
     "guid": "",
     "items": ["build/amd64/hello.exe"]
   },
-  "directories": ["assets"],
+  "directories": [],
   "env": {
     "guid": "",
     "vars": [
@@ -21,18 +20,7 @@
       }
     ]
   },
-  "shortcuts": {
-    "guid": "",
-    "items": [
-      {
-        "name": "hello",
-        "description": "hello web server",
-        "target": "[INSTALLDIR]\\hello.exe",
-        "wdir": "INSTALLDIR",
-        "icon": "ico.ico"
-      }
-    ]
-  },
+  "shortcuts": {},
   "hooks": [],
   "choco": {
     "description": "Git Town",
