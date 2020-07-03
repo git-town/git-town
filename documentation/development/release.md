@@ -27,7 +27,7 @@ This guide is for maintainers who make releases of Git Town.
 Build the binary:
 
 ```
-go build -ldflags "-X github.com/git-town/git-town/src/cmd.version=v7.3.0 -X github.com/git-town/git-town/src/cmd.buildDate=2020-07-02"`
+go build -ldflags "-X github.com/git-town/git-town/src/cmd.version=v7.3.0 -X github.com/git-town/git-town/src/cmd.buildDate=2020-07-02"
 ```
 
 Run the installer:
