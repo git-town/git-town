@@ -22,6 +22,22 @@ This guide is for maintainers who make releases of Git Town.
   - ignore the `bottle` block, the homebrew maintainers update it
 - create a pull request and get it merged
 
+### create an MSI installer
+
+Build the binary:
+
+```
+go build -ldflags "-X github.com/git-town/git-town/src/cmd.version=v7.3.0 -X github.com/git-town/git-town/src/cmd.buildDate=2020-07-02"`
+```
+
+Run the installer:
+
+```
+go-msi make --msi git-town.msi --version 7.3.0 --src installer/templates/ --path installer/wix.json
+```
+
+Add the installer to the GitHub release.
+
 ### Arch Linux
 
 Flag the package out of date on the right hand side menu of
