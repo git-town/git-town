@@ -11,7 +11,7 @@ endif
 .DEFAULT_GOAL := spec
 
 build:  # builds for the current platform
-	go install -ldflags "-X github.com/git-town/git-town/src/cmd.version=v${VERSION}-test -X github.com/git-town/git-town/src/cmd.buildDate=${TODAY}"
+	go install -ldflags "-X github.com/git-town/git-town/src/cmd.version=v${VERSION}-dev -X github.com/git-town/git-town/src/cmd.buildDate=${TODAY}"
 
 cuke: build   # runs the new Godog-based feature tests
 	@env GOGC=off go test . -v -count=1
