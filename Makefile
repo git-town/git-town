@@ -1,3 +1,6 @@
+VERSION=7.4.0
+TODAY=$(shell date +'%Y/%m/%d')
+
 # platform-specificity
 ifdef COMSPEC
 	/ := $(strip \)
@@ -8,7 +11,7 @@ endif
 .DEFAULT_GOAL := spec
 
 build:  # builds for the current platform
-	go install -ldflags "-X github.com/git-town/git-town/src/cmd.version=v0.0.0-test -X github.com/git-town/git-town/src/cmd.buildDate=today"
+	go install -ldflags "-X github.com/git-town/git-town/src/cmd.version=v${VERSION}-test -X github.com/git-town/git-town/src/cmd.buildDate=${TODAY}"
 
 cuke: build   # runs the new Godog-based feature tests
 	@env GOGC=off go test . -v -count=1
@@ -49,8 +52,8 @@ help:  # prints all make targets
 .PHONY: installer
 installer:  # compiles the MSI installer for Windows
 	rm -f git-town.msi
-	go build -ldflags "-X github.com/git-town/git-town/src/cmd.version=v7.3.0 -X github.com/git-town/git-town/src/cmd.buildDate=2020-07-02"
-	go-msi make --msi git-town.msi --version 7.3.0 --src installer/templates/ --path installer/wix.json
+	go build -ldflags "-X github.com/git-town/git-town/src/cmd.version=v${VERSION} -X github.com/git-town/git-town/src/cmd.buildDate=${TODAY}"
+	go-msi make --msi git-town.msi --version ${VERSION} --src installer/templates/ --path installer/wix.json
 	@rm git-town.exe
 
 lint: lint-go lint-md  # lints all the source code

@@ -24,13 +24,13 @@ This guide is for maintainers who make releases of Git Town.
 
 ### create the Windows installer
 
-On a Windows machine:
+On a Windows machine, in Git Bash:
 
 ```
 make installer
 ```
 
-Add the installer to the GitHub release.
+Manually add the generated `.msi` file to the GitHub release.
 
 ### Arch Linux
 
