@@ -1,5 +1,6 @@
 Feature: git-repo when origin is on Bitbucket
 
+  @skipWindows
   Scenario Outline: result
     Given my repo's origin is "<ORIGIN>"
     And my computer has the "open" tool installed

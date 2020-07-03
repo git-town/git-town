@@ -1,3 +1,4 @@
+@skipWindows
 Feature: Ask for missing configuration information
 
   As a user having forgotten to configure Git Town

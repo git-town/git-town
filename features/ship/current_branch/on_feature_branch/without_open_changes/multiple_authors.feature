@@ -1,3 +1,4 @@
+@skipWindows
 Feature: git town-ship: shipping a coworker's feature branch
 
   As a developer shipping a coworker's feature branch

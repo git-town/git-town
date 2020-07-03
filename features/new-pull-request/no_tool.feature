@@ -11,6 +11,7 @@ Feature: print URL when unable to open browser
     And I am on the "feature" branch
     When I run "git-town new-pull-request"
 
+  @skipWindows
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                            |
@@ -25,6 +26,7 @@ Feature: print URL when unable to open browser
       Please open in a browser: https://github.com/git-town/git-town/compare/feature?expand=1
       """
 
+  @skipWindows
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands

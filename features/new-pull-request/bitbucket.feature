@@ -5,6 +5,7 @@ Feature: git-new-pull-request when origin is on Bitbucket
   So that I have more time for coding the next feature instead of wasting it with process boilerplate.
 
 
+  @skipWindows
   Scenario Outline: normal origin
     Given my repo has a feature branch named "feature"
     And my repo's origin is "<ORIGIN>"
@@ -26,6 +27,7 @@ Feature: git-new-pull-request when origin is on Bitbucket
       | git@bitbucket.org/git-town/git-town                  |
 
 
+  @skipWindows
   Scenario Outline: origin includes path that looks like a URL
     Given my repo has a feature branch named "feature"
     And my repo's origin is "<ORIGIN>"
@@ -47,6 +49,7 @@ Feature: git-new-pull-request when origin is on Bitbucket
       | git@bitbucket.org/git-town/git-town.github.com                  |
 
 
+  @skipWindows
   Scenario Outline: SSH style origin
     Given my repo has a feature branch named "feature"
     And my repo's origin is "<ORIGIN>"

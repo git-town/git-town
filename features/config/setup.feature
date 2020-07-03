@@ -1,3 +1,4 @@
+@skipWindows
 Feature: Initial configuration
 
   As a user who hasn't configured Git Town yet

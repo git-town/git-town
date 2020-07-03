@@ -20,6 +20,10 @@ func FeatureContext(suite *godog.Suite) {
 }
 
 func TestGodog(t *testing.T) {
+	tags := ""
+	if runtime.GOOS == "windows" {
+		tags = "~@skipWindows"
+	}
 	status := godog.RunWithOptions("godog", func(s *godog.Suite) {
 		FeatureContext(s)
 	}, godog.Options{
@@ -27,6 +31,7 @@ func TestGodog(t *testing.T) {
 		Concurrency: runtime.NumCPU(),
 		Strict:      true,
 		Paths:       []string{"features/"},
+		Tags:        tags,
 	})
 	if status > 0 {
 		t.FailNow()

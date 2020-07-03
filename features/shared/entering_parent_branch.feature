@@ -1,3 +1,4 @@
+@skipWindows
 Feature: Entering a parent branch name when prompted
 
   As a developer syncing a feature branch without information about its place in the branch hierarchy

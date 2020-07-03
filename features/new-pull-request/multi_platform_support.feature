@@ -1,5 +1,6 @@
 Feature: git-new-pull-request: multi-platform support
 
+  @skipWindows
   Scenario Outline: supported tool installed
     Given my repo has a feature branch named "feature"
     And my repo's origin is "https://github.com/git-town/git-town.git"
@@ -23,6 +24,7 @@ Feature: git-new-pull-request: multi-platform support
       | netscape      |
 
 
+  @skipWindows
   Scenario: no supported tool installed
     Given my repo has a feature branch named "feature"
     And my repo's origin is "https://github.com/git-town/git-town.git"

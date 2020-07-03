@@ -1,5 +1,6 @@
 Feature: git-town repo: when origin is a self hosted servie
 
+  @skipWindows
   Scenario Outline: self hosted
     Given my computer has the "open" tool installed
     And my repo's origin is "git@self-hosted:git-town/git-town.git"
