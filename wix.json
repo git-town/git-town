@@ -5,9 +5,7 @@
   "upgrade-code": "06cab029-601a-4ac9-a5eb-72a2dca06e84",
   "files": {
     "guid": "5123f4a5-94a1-4597-b117-354c8a45b316",
-    "items": [
-      "build/amd64/hello.exe"
-    ]
+    "items": ["git-town.exe"]
   },
   "env": {
     "guid": "7bb89853-9a93-4a06-a93b-0968555b8afd",
