@@ -49,8 +49,7 @@ fix-md:  # auto-fixes all Markdown lint issues
 help:  # prints all make targets
 	@cat Makefile | grep '^[^ ]*:' | grep -v '.PHONY' | grep -v help | sed 's/:.*#/#/' | column -s "#" -t
 
-.PHONY: installer
-installer:  # compiles the MSI installer for Windows
+msi:  # compiles the MSI installer for Windows
 	rm -f git-town.msi
 	go build -ldflags "-X github.com/git-town/git-town/src/cmd.version=v${VERSION} -X github.com/git-town/git-town/src/cmd.buildDate=${TODAY}"
 	go-msi make --msi git-town.msi --version ${VERSION} --src installer/templates/ --path installer/wix.json
