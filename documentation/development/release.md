@@ -24,16 +24,10 @@ This guide is for maintainers who make releases of Git Town.
 
 ### create an MSI installer
 
-Build the binary:
+On a Windows machine:
 
 ```
-go build -ldflags "-X github.com/git-town/git-town/src/cmd.version=v7.3.0 -X github.com/git-town/git-town/src/cmd.buildDate=2020-07-02"
-```
-
-Run the installer:
-
-```
-go-msi make --msi git-town.msi --version 7.3.0 --src installer/templates/ --path installer/wix.json
+make installer
 ```
 
 Add the installer to the GitHub release.
