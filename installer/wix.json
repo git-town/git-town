@@ -11,8 +11,8 @@
     "guid": "7bb89853-9a93-4a06-a93b-0968555b8afd",
     "vars": [
       {
-        "name": "some",
-        "value": "value",
+        "name": "PATH",
+        "value": "[INSTALLDIR]",
         "permanent": "no",
         "system": "no",
         "action": "set",
