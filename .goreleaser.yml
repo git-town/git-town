@@ -25,10 +25,7 @@ builds:
       - 7
     goos:
       - darwin
-      - freebsd
       - linux
-      - netbsd
-      - openbsd
       - windows
 
 changelog:
