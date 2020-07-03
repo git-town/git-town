@@ -26,9 +26,9 @@ This guide is for maintainers who make releases of Git Town.
 
 On a Windows machine, in Git Bash:
 
-```
-make installer
-```
+<pre textrun="verify-make-command">
+make msi
+</pre>
 
 Manually add the generated `.msi` file to the GitHub release.
 
