@@ -9,6 +9,7 @@ Feature: git-new-pull-request when origin is on Gitea
     Given my computer has the "open" tool installed
 
 
+  @skipWindows
   Scenario Outline: normal origin
     Given my repo has a feature branch named "feature"
     And my repo's origin is "<ORIGIN>"
@@ -29,6 +30,7 @@ Feature: git-new-pull-request when origin is on Gitea
       | git@gitea.com:git-town/git-town         |
 
 
+  @skipWindows
   Scenario Outline: origin contains path that looks like a URL
     Given my repo has a feature branch named "feature"
     And my repo's origin is "<ORIGIN>"
@@ -49,6 +51,7 @@ Feature: git-new-pull-request when origin is on Gitea
       | git@gitea.com:git-town/git-town.gitea.com         |
 
 
+  @skipWindows
   Scenario Outline: proper URL encoding
     Given my repo has a feature branch named "<BRANCH_NAME>"
     And my repo's origin is "https://gitea.com/git-town/git-town"
@@ -67,6 +70,7 @@ Feature: git-new-pull-request when origin is on Gitea
       | test/feature   | https://gitea.com/git-town/git-town/compare/main...test%2Ffeature |
 
 
+  @skipWindows
   Scenario Outline: SSH style origin
     Given my repo has a feature branch named "feature"
     And my repo's origin is "<ORIGIN>"
@@ -83,6 +87,7 @@ Feature: git-new-pull-request when origin is on Gitea
       | ssh://git@gitea.com/git-town/git-town     |
 
 
+  @skipWindows
   Scenario: nested feature branch with known parent
     Given my repo has a feature branch named "parent-feature"
     And my repo has a feature branch named "child-feature" as a child of "parent-feature"

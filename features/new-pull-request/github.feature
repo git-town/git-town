@@ -9,6 +9,7 @@ Feature: git-new-pull-request when origin is on GitHub
     Given my computer has the "open" tool installed
 
 
+  @skipWindows
   Scenario Outline: normal origin
     Given my repo has a feature branch named "feature"
     And my repo's origin is "<ORIGIN>"
@@ -29,6 +30,7 @@ Feature: git-new-pull-request when origin is on GitHub
       | git@github.com:git-town/git-town         |
 
 
+  @skipWindows
   Scenario Outline: origin contains path that looks like a URL
     Given my repo has a feature branch named "feature"
     And my repo's origin is "<ORIGIN>"
@@ -49,6 +51,7 @@ Feature: git-new-pull-request when origin is on GitHub
       | git@github.com:git-town/git-town.github.com         |
 
 
+  @skipWindows
   Scenario Outline: proper URL encoding
     Given my repo has a feature branch named "<BRANCH_NAME>"
     And my repo's origin is "https://github.com/git-town/git-town"
@@ -67,6 +70,7 @@ Feature: git-new-pull-request when origin is on GitHub
       | test/feature   | https://github.com/git-town/git-town/compare/test%2Ffeature?expand=1 |
 
 
+  @skipWindows
   Scenario Outline: SSH style origin
     Given my repo has a feature branch named "feature"
     And my repo's origin is "<ORIGIN>"
@@ -83,6 +87,7 @@ Feature: git-new-pull-request when origin is on GitHub
       | ssh://git@github.com/git-town/git-town     |
 
 
+  @skipWindows
   Scenario: nested feature branch with known parent
     Given my repo has a feature branch named "parent-feature"
     And my repo has a feature branch named "child-feature" as a child of "parent-feature"

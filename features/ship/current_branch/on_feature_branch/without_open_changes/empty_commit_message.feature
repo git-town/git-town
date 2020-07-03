@@ -14,6 +14,7 @@ Feature: git town-ship: aborting the ship of the current feature branch by enter
     When I run "git-town ship" and enter an empty commit message
 
 
+  @skipWindows
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                            |
@@ -38,6 +39,7 @@ Feature: git town-ship: aborting the ship of the current feature branch by enter
     And my repo is left with my original commits
 
 
+  @skipWindows
   Scenario: undo
     When I run "git-town undo"
     Then it prints the error:

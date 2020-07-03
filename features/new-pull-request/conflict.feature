@@ -64,6 +64,7 @@ Feature: Syncing before creating the pull request
     And my repo still has a merge in progress
 
 
+  @skipWindows
   Scenario: continuing after resolving conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run "git-town continue"
@@ -87,6 +88,7 @@ Feature: Syncing before creating the pull request
       |         |               | Merge branch 'main' into feature |                  |
 
 
+  @skipWindows
   Scenario: continuing after resolving conflicts and committing
     Given I resolve the conflict in "conflicting_file"
     When I run "git commit --no-edit"

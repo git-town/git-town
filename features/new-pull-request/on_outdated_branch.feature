@@ -23,6 +23,7 @@ Feature: Syncing before creating the pull request
     When I run "git-town new-pull-request"
 
 
+  @skipWindows
   Scenario: result
     Then it runs the commands
       | BRANCH         | COMMAND                                                                                   |

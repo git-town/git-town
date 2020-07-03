@@ -1,5 +1,6 @@
 Feature: git-repo: multi-platform support
 
+  @skipWindows
   Scenario Outline: supported tool installed
     Given my repo's origin is "https://github.com/git-town/git-town.git"
     And my computer has the "<TOOL>" tool installed
@@ -15,6 +16,7 @@ Feature: git-repo: multi-platform support
       | xdg-open |
 
 
+  @skipWindows
   Scenario: no supported tool installed
     Given my repo's origin is "https://github.com/git-town/git-town.git"
     And my computer has no tool to open browsers installed

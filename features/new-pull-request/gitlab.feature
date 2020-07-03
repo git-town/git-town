@@ -9,6 +9,7 @@ Feature: git-new-pull-request when origin is on GitLab
     Given my computer has the "open" tool installed
 
 
+  @skipWindows
   Scenario Outline: creating pull-requests
     Given my repo has a feature branch named "feature"
     And my repo's origin is "<ORIGIN>"
@@ -25,6 +26,7 @@ Feature: git-new-pull-request when origin is on GitLab
       | git@gitlab.com:kadu/kadu.git     |
 
 
+  @skipWindows
   Scenario: nested feature branch with known parent
     Given my repo has a feature branch named "parent-feature"
     And my repo has a feature branch named "child-feature" as a child of "parent-feature"

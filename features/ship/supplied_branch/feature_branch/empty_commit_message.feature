@@ -14,6 +14,7 @@ Feature: git town-ship: aborting the ship of the supplied feature branch by ente
     When I run "git-town ship feature" and enter an empty commit message
 
 
+  @skipWindows
   Scenario: result
     Then it runs the commands
       | BRANCH        | COMMAND                                     |

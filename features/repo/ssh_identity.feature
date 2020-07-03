@@ -1,5 +1,6 @@
 Feature: git-town repo: when origin is an ssh identity
 
+  @skipWindows
   Scenario Outline: ssh identity
     Given my computer has the "open" tool installed
     And my repo's origin is "git@my-ssh-identity:git-town/git-town.git"
