@@ -2,13 +2,15 @@
   "product": "Git Town",
   "company": "git-town",
   "license": "MIT",
+  "upgrade-code": "06cab029-601a-4ac9-a5eb-72a2dca06e84",
   "files": {
-    "guid": "",
-    "items": ["build/amd64/hello.exe"]
+    "guid": "5123f4a5-94a1-4597-b117-354c8a45b316",
+    "items": [
+      "build/amd64/hello.exe"
+    ]
   },
-  "directories": [],
   "env": {
-    "guid": "",
+    "guid": "7bb89853-9a93-4a06-a93b-0968555b8afd",
     "vars": [
       {
         "name": "some",
@@ -21,7 +23,6 @@
     ]
   },
   "shortcuts": {},
-  "hooks": [],
   "choco": {
     "description": "Git Town",
     "project-url": "https://github.com/git-town/git-town",
