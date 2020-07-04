@@ -63,7 +63,7 @@ release:
 scoop:
   bucket:
     owner: git-town
-    name: git-town
+    name: scoop
   commit_author:
     name: kevgo
     email: kevin.goslar@gmail.com
