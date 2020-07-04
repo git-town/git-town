@@ -39,6 +39,13 @@ ensure your Git version is 2.7.0 or higher._
 
 # Windows
 
+Using scoop:
+
+```
+scoop bucket add org https://github.com/git-town/scoop.git
+scoop install git-town
+```
+
 - Install / Update:
   - Download the 32-bit or 64-bit executable for Windows from the latest release
     [here](https://github.com/git-town/git-town/releases).
