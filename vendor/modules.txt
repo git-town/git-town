@@ -1,8 +1,6 @@
 # code.gitea.io/sdk/gitea v0.12.0
 ## explicit
 code.gitea.io/sdk/gitea
-# github.com/Masterminds/semver v1.5.0
-## explicit
 # github.com/acarl005/stripansi v0.0.0-20180116102854-5a71ef0e047d
 ## explicit
 github.com/acarl005/stripansi
@@ -49,18 +47,10 @@ github.com/kballard/go-shellquote
 github.com/mattn/go-colorable
 # github.com/mattn/go-isatty v0.0.12
 github.com/mattn/go-isatty
-# github.com/mattn/go-zglob v0.0.2
-## explicit
 # github.com/mgutz/ansi v0.0.0-20170206155736-9520e82c474b
 github.com/mgutz/ansi
-# github.com/mh-cbon/go-msi v0.0.0-20170907180328-7f05345d485b
-## explicit
-# github.com/mh-cbon/stringexec v0.0.0-20160727103857-5a080a1a4118
-## explicit
 # github.com/pmezard/go-difflib v1.0.0
 github.com/pmezard/go-difflib/difflib
-# github.com/satori/go.uuid v1.2.0
-## explicit
 # github.com/sergi/go-diff v1.0.0
 ## explicit
 github.com/sergi/go-diff/diffmatchpatch
@@ -73,8 +63,6 @@ github.com/spf13/pflag
 # github.com/stretchr/testify v1.5.1
 ## explicit
 github.com/stretchr/testify/assert
-# github.com/urfave/cli v1.22.4
-## explicit
 # golang.org/x/net v0.0.0-20200425230154-ff2c4b7c35a0
 ## explicit
 golang.org/x/net/context
