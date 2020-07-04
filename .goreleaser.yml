@@ -63,9 +63,6 @@ scoop:
   bucket:
     owner: git-town
     name: git-town
-  commit_author:
-    name: goreleaserbot
-    email: goreleaser@git-town.com
   homepage: "https://git-town.com"
   description: "High-level CLI for Git"
   license: MIT
