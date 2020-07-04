@@ -4,14 +4,15 @@ This guide is for maintainers who make releases of Git Town.
 
 ### create a GitHub release
 
+On a Windows machine, in Git Bash:
+
+- install [hub](https://github.com/github/hub#installation)
 - create a feature branch which updates `RELEASE_NOTES.md`
 - get the feature branch reviewed and merged
-- create and push a new Git Tag for the release
-  - `git tag -m release -a v4.0`
-  - `git push --tags`
-- run `env GITHUB_TOKEN=XXX goreleaser`
-- review the release on [GitHub](https://github.com/git-town/git-town/releases)
-  and publish it
+- create and push a new Git Tag for the release: `git tag -a v4.0 -m v4.0`
+- `env GITHUB_TOKEN=<your Github token> make release`
+  - or omit the Github token and enter your credentials when asked
+- this opens a release in the browser - review and publish it
 
 ### create a Homebrew release
 
@@ -21,16 +22,6 @@ This guide is for maintainers who make releases of Git Town.
     `shasum -a 256 /path/to/file`
   - ignore the `bottle` block, the homebrew maintainers update it
 - create a pull request and get it merged
-
-### create the Windows installer
-
-On a Windows machine, in Git Bash:
-
-<pre textrun="verify-make-command">
-make msi
-</pre>
-
-Manually add the generated `.msi` file to the GitHub release.
 
 ### Arch Linux
 

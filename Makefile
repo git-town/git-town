@@ -50,9 +50,9 @@ help:  # prints all make targets
 	@cat Makefile | grep '^[^ ]*:' | grep -v '.PHONY' | grep -v help | sed 's/:.*#/#/' | column -s "#" -t
 
 msi:  # compiles the MSI installer for Windows
-	rm -f git-town.msi
+	rm -f git-town*.msi
 	go build -ldflags "-X github.com/git-town/git-town/src/cmd.version=v${VERSION} -X github.com/git-town/git-town/src/cmd.buildDate=${TODAY}"
-	go-msi make --msi git-town.msi --version ${VERSION} --src installer/templates/ --path installer/wix.json
+	go-msi make --msi dist/git-town_${VERSION}_windows_intel_64.msi --version ${VERSION} --src installer/templates/ --path installer/wix.json
 	@rm git-town.exe
 
 lint: lint-go lint-md  # lints all the source code
@@ -62,6 +62,26 @@ lint-go:  # lints the Go files
 
 lint-md:   # lints the Markdown files
 	tools$/prettier$/node_modules$/.bin$/prettier -l .
+
+release:   # creates a new release
+	# cross-compile the binaries
+	goreleaser --rm-dist
+
+	# make Windows installer
+	make --no-print-directory msi
+
+	# create GitHub release with files in alphabetical order
+	hub release create --draft --browse --message v7.4.0 \
+		-a dist/git-town_7.4.0_linux_intel_64.deb \
+		-a dist/git-town_7.4.0_linux_intel_64.rpm \
+		-a dist/git-town_7.4.0_linux_intel_64.tar.gz \
+		-a dist/git-town_7.4.0_linux_arm_64.deb \
+		-a dist/git-town_7.4.0_linux_arm_64.rpm \
+		-a dist/git-town_7.4.0_linux_arm_64.tar.gz \
+		-a dist/git-town_7.4.0_macOS_intel_64.tar.gz \
+		-a dist/git-town_7.4.0_windows_intel_64.msi \
+		-a dist/git-town_7.4.0_windows_intel_64.zip \
+		v${VERSION}
 
 setup: setup-go  # the setup steps necessary on developer machines
 	cd tools/prettier && yarn install
