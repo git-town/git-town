@@ -4,15 +4,12 @@ This guide is for maintainers who make releases of Git Town.
 
 ### create a GitHub release
 
-On a Windows machine:
+On a Windows machine, in Git Bash:
 
 - install [hub](https://github.com/github/hub#installation)
-
-In Git Bash:
-
 - create a feature branch which updates `RELEASE_NOTES.md`
 - get the feature branch reviewed and merged
-- create and push a new Git Tag for the release: `git tag -m release -a v4.0`
+- create and push a new Git Tag for the release: `git tag -a v4.0 -m v4.0`
 - `env GITHUB_TOKEN=<your Github token> make release`
   - or omit the Github token and enter your credentials when asked
 - this opens a release in the browser - review and publish it
