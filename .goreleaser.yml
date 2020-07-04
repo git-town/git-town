@@ -67,6 +67,7 @@ scoop:
     name: kevgo
     email: kevin.goslar@gmail.com
   description: "High-level CLI for Git"
+  homepage: https://www.git-town.com
   license: MIT
 
 snapshot:
