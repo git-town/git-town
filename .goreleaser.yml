@@ -63,6 +63,9 @@ scoop:
   bucket:
     owner: git-town
     name: git-town
+  commit_author:
+    name: kevgo
+    email: kevin.goslar@gmail.com
   description: "High-level CLI for Git"
   license: MIT
 
