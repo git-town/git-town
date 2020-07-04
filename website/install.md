@@ -42,8 +42,8 @@ ensure your Git version is 2.7.0 or higher._
 Using scoop:
 
 ```
-scoop bucket add org https://github.com/git-town/git-town.git
-scoop install git-town/git-town
+scoop bucket add org https://github.com/git-town/scoop.git
+scoop install git-town
 ```
 
 - Install / Update:
