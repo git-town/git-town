@@ -70,7 +70,7 @@ release:   # creates a new release
 	# make Windows installer
 	make --no-print-directory msi
 
-  # create GitHub release with files in alphabetical order
+	# create GitHub release with files in alphabetical order
 	hub release create --draft --browse --message v7.4.0 \
 		-a dist/git-town_7.4.0_linux_intel_64.deb \
 		-a dist/git-town_7.4.0_linux_intel_64.rpm \
