@@ -63,35 +63,8 @@ scoop:
   bucket:
     owner: git-town
     name: git-town
-  homepage: "https://git-town.com"
   description: "High-level CLI for Git"
   license: MIT
-
-  # Git author used to commit to the repository.
-  # Defaults are shown.
-  commit_author:
-    name: goreleaserbot
-    email: goreleaser@carlosbecker.com
-
-  # The project name and current git tag are used in the format string.
-  commit_msg_template: "Scoop update for {{ .ProjectName }} version {{ .Tag }}"
-
-  # Your app's homepage.
-  # Default is empty.
-  homepage: "https://example.com/"
-
-  # Your app's description.
-  # Default is empty.
-  description: "Software to create fast and easy drum rolls."
-
-  # Your app's license
-  # Default is empty.
-  license: MIT
-
-  # Persist data between application updates
-  persist:
-    - "data"
-    - "config.toml"
 
 snapshot:
   name_template: "{{ .Tag }}"
