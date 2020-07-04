@@ -13,6 +13,7 @@ On a Windows machine, in Git Bash:
 - `env GITHUB_TOKEN=<your Github token> make release`
   - or omit the Github token and enter your credentials when asked
 - this opens a release in the browser - review and publish it
+- it creates two releases right now, delete the one without attached files
 
 ### create a Homebrew release
 
