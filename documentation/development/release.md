@@ -4,7 +4,11 @@ This guide is for maintainers who make releases of Git Town.
 
 ### create a GitHub release
 
-On a Windows machine, in Git Bash:
+On a Windows machine:
+
+- install [hub](https://github.com/github/hub#installation)
+
+In Git Bash:
 
 - create a feature branch which updates `RELEASE_NOTES.md`
 - get the feature branch reviewed and merged

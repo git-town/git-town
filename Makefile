@@ -68,7 +68,7 @@ release:   # creates a new release
 	goreleaser --rm-dist
 
 	# make Windows installer
-	$(MAKE) msi
+	make --no-print-directory msi
 
   # create GitHub release with files in alphabetical order
 	hub release create --draft --browse --message v7.4.0 \
