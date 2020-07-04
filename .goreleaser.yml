@@ -53,11 +53,7 @@ nfpms:
       - git
 
 release:
-  github:
-    owner: git-town
-    name: git-town
-  draft: true
-  prerelease: false
+  disable: true
 
 snapshot:
   name_template: "{{ .Tag }}"
