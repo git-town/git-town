@@ -57,7 +57,8 @@ nfpms:
       - git
 
 release:
-  disable: true
+  ids:
+    - scoop
 
 scoop:
   bucket:
