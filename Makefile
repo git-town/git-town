@@ -65,7 +65,7 @@ lint-md:   # lints the Markdown files
 
 release:   # creates a new release
 	# cross-compile the binaries
-	goreleaser --rm-dist --parallelism 8
+	goreleaser --rm-dist
 
 	# make Windows installer
 	make --no-print-directory msi
