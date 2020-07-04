@@ -65,7 +65,7 @@ lint-md:   # lints the Markdown files
 
 release: msi  # creates a new release
 	# cross-compile the binaries
-	gorelease
+	goreleaser --rm-dist
 
   # create GitHub release with files in alphabetical order
 	hub release create --draft --browse --message v7.4.0 \
