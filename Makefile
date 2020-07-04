@@ -64,7 +64,6 @@ lint-md:   # lints the Markdown files
 	tools$/prettier$/node_modules$/.bin$/prettier -l .
 
 release:  # creates a new release
-
   # this ensures that assets are uploaded in alphabetical order
 	hub release create --draft --browse --message v7.4.0 \
 		-a dist/git-town_7.4.0_macOS_intel_64.tar.gz \
