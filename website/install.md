@@ -29,6 +29,19 @@ There are several options to install Git Town on Windows:
 
 ---
 
+# Debian/Ubuntu
+
+There are several options to install Git Town on Debian-based Linux
+distributions:
+
+1. download the [.deb]() installer and run `sudo apt-get install git-town*.deb`
+
+2. download an [archive containing the binary](), extract via
+   `tar -xzf [filename]`, and move the `git-town` binary into a directory listed
+   in your `$PATH`.
+
+---
+
 # Arch Linux
 
 - Install / Update: install
@@ -40,16 +53,6 @@ There are several options to install Git Town on Windows:
     - unpacking the tarball
     - `cd` into the newly unpacked directory, and running `makepkg -si`
 - Uninstall: run `pacman -R git-town`
-
----
-
-# Debian/Ubuntu based distros
-
-- Install / Update:
-  - Download the deb file from the latest release
-    [here](https://github.com/git-town/git-town/releases).
-  - Run `dpkg -i /path/to/debfile`
-- Uninstall: run `apt-get remove gittown`
 
 ---
 
