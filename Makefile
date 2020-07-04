@@ -55,7 +55,6 @@ msi:  # compiles the MSI installer for Windows
 	go-msi make --msi git-town_${VERSION}_windows_intel_64.msi --version ${VERSION} --src installer/templates/ --path installer/wix.json
 	@rm git-town.exe
 
-
 lint: lint-go lint-md  # lints all the source code
 
 lint-go:  # lints the Go files
