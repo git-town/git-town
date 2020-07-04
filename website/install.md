@@ -83,7 +83,3 @@ scoop install git-town
   release feed <i class="ion-social-rss accent-color"></i></a> to never miss a
   new release! If you prefer email notifications, please try
   [sibbell.com](https://sibbell.com).
-
-```
-
-```
