@@ -15,7 +15,7 @@ const giteaCurrOpen = giteaRoot + "/repos/git-town/git-town/pulls?limit=50&page=
 const giteaPR1 = giteaRoot + "/repos/git-town/git-town/pulls/1"
 const giteaPR1Merge = giteaRoot + "/repos/git-town/git-town/pulls/1/merge"
 
-func log(messages ...interface{}) {}
+func log(template string, messages ...interface{}) {}
 
 func setupGiteaDriver(t *testing.T, token string) (drivers.CodeHostingDriver, func()) {
 	httpmock.Activate()
