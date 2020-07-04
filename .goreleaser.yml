@@ -2,8 +2,10 @@ archives:
   - builds:
     replacements:
       darwin: macOS
-      386: 32-bit
-      amd64: 64-bit
+      386: intel_32
+      amd64: intel_64
+      arm: arm_
+      arm64: arm_64
     format_overrides:
       - goos: windows
         format: zip
@@ -38,9 +40,11 @@ nfpms:
   - id: git-town
     package_name: git-town
     replacements:
-      amd64: 64-bit
-      386: 32-bit
+      amd64: intel_64
+      386: intel_32
       darwin: macOS
+      arm: arm_
+      arm64: arm_64
     vendor: the Git Town authors
     maintainer: the Git Town authors
     homepage: https://www.git-town.com
