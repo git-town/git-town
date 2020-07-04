@@ -9,7 +9,8 @@ On a Windows machine, in Git Bash:
 - create a feature branch which updates `RELEASE_NOTES.md`
 - get the feature branch reviewed and merged
 - create and push a new Git Tag for the release: `git tag -m release -a v4.0`
-- `env GITHUB_TOKEN=XXX make release`
+- `env GITHUB_TOKEN=<your Github token> make release`
+  - or omit the Github token and enter your credentials when asked
 - this opens a release in the browser - review and publish it
 
 ### create a Homebrew release
