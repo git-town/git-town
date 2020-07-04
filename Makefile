@@ -67,26 +67,14 @@ release:  # creates a new release
   # this ensures that assets are uploaded in alphabetical order
 	hub release create --draft --browse --message v7.4.0 \
 		-a dist/git-town_7.4.0_macOS_intel_64.tar.gz \
-		-a dist/git-town_7.4.0_windows_intel_32.zip \
+		-a dist/git-town_7.4.0_windows_intel_64.msi \
 		-a dist/git-town_7.4.0_windows_intel_64.zip \
-		-a dist/git-town_7.4.0_linux_intel_32.deb \
-		-a dist/git-town_7.4.0_linux_intel_32.rpm \
-		-a dist/git-town_7.4.0_linux_intel_32.tar.gz \
 		-a dist/git-town_7.4.0_linux_intel_64.deb \
 		-a dist/git-town_7.4.0_linux_intel_64.rpm \
 		-a dist/git-town_7.4.0_linux_intel_64.tar.gz \
 		-a dist/git-town_7.4.0_linux_arm_64.deb \
 		-a dist/git-town_7.4.0_linux_arm_64.rpm \
 		-a dist/git-town_7.4.0_linux_arm_64.tar.gz \
-		-a dist/git-town_7.4.0_linux_arm_v5.deb \
-		-a dist/git-town_7.4.0_linux_arm_v5.rpm \
-		-a dist/git-town_7.4.0_linux_arm_v5.tar.gz \
-		-a dist/git-town_7.4.0_linux_arm_v6.deb \
-		-a dist/git-town_7.4.0_linux_arm_v6.rpm \
-		-a dist/git-town_7.4.0_linux_arm_v6.tar.gz \
-		-a dist/git-town_7.4.0_linux_arm_v7.deb \
-		-a dist/git-town_7.4.0_linux_arm_v7.rpm \
-		-a dist/git-town_7.4.0_linux_arm_v7.tar.gz \
 		v${VERSION}
 
 setup: setup-go  # the setup steps necessary on developer machines
