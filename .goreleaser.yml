@@ -2,7 +2,6 @@ archives:
   - builds:
     replacements:
       darwin: macOS
-      386: intel_32
       amd64: intel_64
       arm: arm_
       arm64: arm_64
@@ -18,7 +17,6 @@ builds:
         github.com/git-town/git-town/src/cmd.buildDate={{.Date}}
     goarch:
       - amd64
-      - 386
       - arm
       - arm64
     goarm:
@@ -41,7 +39,6 @@ nfpms:
     package_name: git-town
     replacements:
       amd64: intel_64
-      386: intel_32
       darwin: macOS
       arm: arm_
       arm64: arm_64
