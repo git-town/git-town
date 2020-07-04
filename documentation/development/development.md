@@ -86,7 +86,10 @@ See the [test architecture](test-architecture.md) document for more details.
 If Cucumber tests produce garbled output on Windows, please try running them
 inside Git Bash. See [this issue](https://github.com/cucumber/godog/issues/129)
 for details. The test suite doesn't run browser tests because the Windows
-`start` CLI command is a built-in shell command and cannot be mocked.
+`start` CLI command is a built-in shell command and cannot be mocked. Tests
+asking for user input are disabled as well because of problems piping input into
+subshells on Windows. The business logic for these features are covered on
+non-Windows machines.
 
 ### debug
 

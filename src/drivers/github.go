@@ -126,7 +126,7 @@ func (d *githubCodeHostingDriver) mergePullRequest(options MergePullRequestOptio
 		return "", fmt.Errorf("cannot merge via Github since there is no pull request")
 	}
 	if options.LogRequests {
-		d.log("GitHub API: Merging PR", options.PullRequestNumber)
+		d.log("GitHub API: Merging PR #%d\n", options.PullRequestNumber)
 	}
 	commitMessageParts := strings.SplitN(options.CommitMessage, "\n", 2)
 	githubCommitTitle := commitMessageParts[0]
@@ -154,7 +154,7 @@ func (d *githubCodeHostingDriver) updatePullRequestsAgainst(options MergePullReq
 	}
 	for _, pullRequest := range pullRequests {
 		if options.LogRequests {
-			d.log("GitHub API: Updating base branch for PR #%d", *pullRequest.Number)
+			d.log("GitHub API: Updating base branch for PR #%d\n", *pullRequest.Number)
 		}
 		_, _, err = d.client.PullRequests.Edit(context.Background(), d.owner, d.repository, *pullRequest.Number, &github.PullRequest{
 			Base: &github.PullRequestBranch{
