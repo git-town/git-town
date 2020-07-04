@@ -1,15 +1,31 @@
 Git Town runs anywhere Git runs.
 
-# Mac (using [Homebrew](http://brew.sh))
+# macOS
 
-- Install: run `brew install git-town`
-- Update: run `brew update` and then run `brew upgrade git-town`
-- Uninstall: run `brew uninstall git-town`
+There are several options to install Git Town on macOS:
 
-_Note: `4.0.0` dropped support for Yosemite because we now specify a minimum Git
-version of 2.7.0, which is higher than the default version installed on that OS.
-If you would like to use Git Town on Yosemite, please use the manual install and
-ensure your Git version is 2.7.0 or higher._
+1. using [Homebrew](https://brew.sh):
+   - Install: run `brew install git-town`
+   - Update: run `brew update` and then run `brew upgrade git-town`
+   - Uninstall: run `brew uninstall git-town`
+
+---
+
+# Windows
+
+There are several options to install Git Town on Windows:
+
+1. download and run the [Windows installer]()
+
+2. install using [scoop](https://scoop.sh):
+
+   ```
+   scoop bucket add org https://github.com/git-town/scoop.git
+   scoop install git-town
+   ```
+
+3. install manually: download the latest binary and put it somewhere into your
+   `%PATH%`.
 
 ---
 
@@ -34,27 +50,6 @@ ensure your Git version is 2.7.0 or higher._
     [here](https://github.com/git-town/git-town/releases).
   - Run `dpkg -i /path/to/debfile`
 - Uninstall: run `apt-get remove gittown`
-
----
-
-# Windows
-
-Using scoop:
-
-```
-scoop bucket add org https://github.com/git-town/scoop.git
-scoop install git-town
-```
-
-- Install / Update:
-  - Download the 32-bit or 64-bit executable for Windows from the latest release
-    [here](https://github.com/git-town/git-town/releases).
-  - Rename the file to `git-town`
-  - Put the file into a folder included in the `%PATH%` variable.
-  - Then, Git will run it.
-  - You can check the path in a git-for-windows shell with: `echo %PATH%`.
-  - Typically, `C:\Program Files\Git\cmd` would be part of `%PATH%` and an
-    apropriate location to put the file.
 
 ---
 
