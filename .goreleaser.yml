@@ -48,7 +48,8 @@ nfpms:
 
 release:
   draft: true
-  ids: []
+  ids:
+    - nothing
 
 scoop:
   bucket:
