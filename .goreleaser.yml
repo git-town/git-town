@@ -2,9 +2,7 @@ archives:
   - builds:
     replacements:
       darwin: macOS
-      386: intel_32
       amd64: intel_64
-      arm: arm_
       arm64: arm_64
     format_overrides:
       - goos: windows
@@ -18,13 +16,7 @@ builds:
         github.com/git-town/git-town/src/cmd.buildDate={{.Date}}
     goarch:
       - amd64
-      - 386
-      - arm
       - arm64
-    goarm:
-      - 5
-      - 6
-      - 7
     goos:
       - darwin
       - linux
@@ -41,9 +33,7 @@ nfpms:
     package_name: git-town
     replacements:
       amd64: intel_64
-      386: intel_32
       darwin: macOS
-      arm: arm_
       arm64: arm_64
     vendor: the Git Town authors
     maintainer: the Git Town authors
@@ -57,8 +47,9 @@ nfpms:
       - git
 
 release:
+  draft: true
   ids:
-    - scoop
+    - nothing
 
 scoop:
   bucket:

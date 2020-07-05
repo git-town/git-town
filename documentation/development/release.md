@@ -12,11 +12,16 @@ On a Windows machine, in Git Bash:
 - create and push a new Git Tag for the release: `git tag -a v4.0 -m v4.0`
 - `env GITHUB_TOKEN=<your Github token> make release`
   - or omit the Github token and enter your credentials when asked
-- this opens a release in the browser - review and publish it
+- this opens a release in the browser
+- copy the release notes into it
+- publish it
+- delete the other invalid release that the script has created
 
 ### create a Homebrew release
 
-- fork [Homebrew](https://github.com/Homebrew/homebrew)
+TODO: try the new `brew bump-formula-pr` command next time.
+
+- fork [Homebrew](https://github.com/Homebrew/homebrew-core)
 - update `Library/Formula/git-town.rb`
   - get the sha256 by downloading the release (`.tar.gz`) and using
     `shasum -a 256 /path/to/file`
