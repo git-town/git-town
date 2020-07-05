@@ -15,7 +15,7 @@ On a Windows machine, in Git Bash:
 - this opens a release in the browser
 - copy the release notes into it
 - publish it
-- delete the invalid created release
+- delete the other invalid release that the script has created
 
 ### create a Homebrew release
 
