@@ -5,9 +5,17 @@ Git Town runs anywhere Git runs.
 There are several options to install Git Town on macOS:
 
 1. using [Homebrew](https://brew.sh):
+
    - Install: run `brew install git-town`
    - Update: run `brew update` and then run `brew upgrade git-town`
    - Uninstall: run `brew uninstall git-town`
+
+2. manually:
+   - download an
+     [archive containing the binary](https://github.com/git-town/git-town/releases/download/v7.4.0/git-town_7.4.0_macOS_intel_64.tar.gz)
+   - extract with `tar -xzf git-town_7.4.0_macOS_intel_64.tar.gz`
+   - move the `git-town` binary into a directory listed in your `$PATH`, for
+     example `/usr/local/bin`
 
 ---
 
