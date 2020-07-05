@@ -21,20 +21,6 @@ cuke-prof: build  # creates a flamegraph
 	@rm git-town.test
 	@echo Please open https://www.speedscope.app and load the file godog.out
 
-deploy:  # deploys the website
-	git checkout gh-pages
-	git pull
-	git checkout master
-	git pull --rebase
-	tools/harp/node_modules/.bin/harp compile website/ _www
-	git checkout gh-pages
-	cp -r _www/* .
-	rm -rf _www
-	git add -A
-	git commit
-	git push
-	git checkout master
-
 docs:  # tests the documentation
 	tools$/text-runner$/node_modules$/.bin$/text-run --offline
 
@@ -112,3 +98,17 @@ update:  # updates all dependencies
 	go get -u ./...
 	go mod tidy
 	go mod vendor
+
+website:  # deploys the website
+	git checkout gh-pages
+	git pull
+	git checkout master
+	git pull --rebase
+	tools/harp/node_modules/.bin/harp compile website/ _www
+	git checkout gh-pages
+	cp -r _www/* .
+	rm -rf _www
+	git add -A
+	git commit
+	git push
+	git checkout master
