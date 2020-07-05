@@ -4,11 +4,7 @@ Git Town runs anywhere Git runs.
 
 There are several options to install Git Town on macOS:
 
-1. using [Homebrew](https://brew.sh):
-
-   - Install: run `brew install git-town`
-   - Update: run `brew update` and then run `brew upgrade git-town`
-   - Uninstall: run `brew uninstall git-town`
+1. using [Homebrew](https://brew.sh): `brew install git-town`
 
 2. manually:
    - download an
@@ -23,8 +19,8 @@ There are several options to install Git Town on macOS:
 
 There are several options to install Git Town on Windows:
 
-1. Windows installer: download and run the
-   [installer](https://github.com/git-town/git-town/releases/download/v7.4.0/git-town_7.4.0_windows_intel_64.msi)
+1. Windows installer:
+   [download](https://github.com/git-town/git-town/releases/download/v7.4.0/git-town_7.4.0_windows_intel_64.msi)
 
 2. [scoop](https://scoop.sh):
 
@@ -33,9 +29,9 @@ There are several options to install Git Town on Windows:
    scoop install git-town
    ```
 
-3. manually: download a ZIP file containing the
-   [binary](https://github.com/git-town/git-town/releases/download/v7.4.0/git-town_7.4.0_windows_intel_64.zip),
-   extract, and put the binary somewhere into your `%PATH%`.
+3. manually: download the
+   [ZIP file](https://github.com/git-town/git-town/releases/download/v7.4.0/git-town_7.4.0_windows_intel_64.zip),
+   and put the binary inside it somewhere into your `%PATH%`.
 
 ---
 
@@ -56,7 +52,8 @@ There are several options to install Git Town on Linux distributions:
 
 3. manually
    - download an
-     [archive containing the binary](https://github.com/git-town/git-town/releases/download/v7.4.0/git-town_7.4.0_linux_intel_64.tar.gz)
+     [archive](https://github.com/git-town/git-town/releases/download/v7.4.0/git-town_7.4.0_linux_intel_64.tar.gz)
+     containing the binary
    - extract with `tar -xzf git-town_7.4.0_linux_intel_64.tar.gz`
    - move the `git-town` binary into a directory listed in your `$PATH`, for
      example `/usr/local/bin`
@@ -89,9 +86,9 @@ There are several options to install Git Town on Linux distributions:
 
 # Uninstall
 
-To uninstall Git Town:
+When uninstalling Git Town:
 
 - remove Git Town's aliases: `git town alias false`
 - remove the Git Town configuration from your repositories: in each repo, run
   `git town config reset`
-- delete the `git-town` binary from your hard drive
+- eelete the `git-town` binary from your hard drive
