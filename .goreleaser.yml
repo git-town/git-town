@@ -47,8 +47,9 @@ nfpms:
       - git
 
 release:
+  draft: true
   ids:
-    - scoop
+    - nothing
 
 scoop:
   bucket:
