@@ -12,8 +12,10 @@ On a Windows machine, in Git Bash:
 - create and push a new Git Tag for the release: `git tag -a v4.0 -m v4.0`
 - `env GITHUB_TOKEN=<your Github token> make release`
   - or omit the Github token and enter your credentials when asked
-- this opens a release in the browser - review and publish it
-- it creates two releases right now, delete the one without attached files
+- this opens a release in the browser
+- copy the release notes into it
+- publish it
+- delete the invalid created release
 
 ### create a Homebrew release
 
