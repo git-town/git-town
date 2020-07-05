@@ -1,6 +1,6 @@
 # Git Town Release Notes
 
-## 7.4.0 (2020-06-26)
+## 7.4.0 (2020-07-05)
 
 Version 7.4.0 sports a vastly overhauled internal architecture that provides
 more robust error handling, improved error messages, and a much better developer
