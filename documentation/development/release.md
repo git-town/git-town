@@ -17,7 +17,9 @@ On a Windows machine, in Git Bash:
 
 ### create a Homebrew release
 
-- fork [Homebrew](https://github.com/Homebrew/homebrew)
+TODO: try the new `brew bump-formula-pr` command next time.
+
+- fork [Homebrew](https://github.com/Homebrew/homebrew-core)
 - update `Library/Formula/git-town.rb`
   - get the sha256 by downloading the release (`.tar.gz`) and using
     `shasum -a 256 /path/to/file`
