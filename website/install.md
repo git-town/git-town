@@ -29,16 +29,27 @@ There are several options to install Git Town on Windows:
 
 ---
 
-# Debian/Ubuntu
+# Linux
 
-There are several options to install Git Town on Debian-based Linux
-distributions:
+There are several options to install Git Town on Linux distributions:
 
-1. download the [.deb]() installer and run `sudo apt-get install git-town*.deb`
+1. [Homebrew](https://brew.sh): `brew install git-town`
 
-2. download an [archive containing the binary](), extract via
-   `tar -xzf [filename]`, and move the `git-town` binary into a directory listed
-   in your `$PATH`.
+2. using your package manager:
+
+   - on Debian-based systems, download the
+     [.deb](https://github.com/git-town/git-town/releases/download/v7.4.0/git-town_7.4.0_linux_intel_64.deb)
+     file and run `sudo apt-get install git-town_7.4.0_linux_intel_64.deb`
+   - on RedHat-based systems download the
+     [.rpm](https://github.com/git-town/git-town/releases/download/v7.4.0/git-town_7.4.0_linux_intel_64.rpm)
+     file and run `rpm -i git-town_7.4.0_linux_intel_64.rpm`
+
+3. manually
+   - download an
+     [archive containing the binary](https://github.com/git-town/git-town/releases/download/v7.4.0/git-town_7.4.0_linux_intel_64.tar.gz)
+   - extract with `tar -xzf git-town_7.4.0_linux_intel_64.tar.gz`
+   - move the `git-town` binary into a directory listed in your `$PATH`, for
+     example `/usr/local/bin`
 
 ---
 
