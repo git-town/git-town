@@ -71,6 +71,8 @@ func getStep(stepType string) Step {
 		return &DriverMergePullRequestStep{}
 	case "*EnsureHasShippableChangesStep":
 		return &EnsureHasShippableChangesStep{}
+	case "*FetchUpstreamStep":
+		return &FetchUpstreamStep{}
 	case "*MergeBranchStep":
 		return &MergeBranchStep{}
 	case "*NoOpStep":
