@@ -61,9 +61,9 @@ func (shell LoggingShell) Run(cmd string, args ...string) (*run.Result, error) {
 // Failed commands abort immediately with the encountered error.
 func (shell LoggingShell) RunMany(commands [][]string) error {
 	for _, argv := range commands {
-		outcome, err := shell.Run(argv[0], argv[1:]...)
+		_, err := shell.Run(argv[0], argv[1:]...)
 		if err != nil {
-			return fmt.Errorf("error running command %q: %w\n%v", argv, err, outcome)
+			return fmt.Errorf("error running command %q: %w", argv, err)
 		}
 	}
 	return nil
