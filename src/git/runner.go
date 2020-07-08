@@ -218,9 +218,9 @@ func (r *Runner) ConnectTrackingBranch(name string) error {
 
 // ContinueRebase continues the currently ongoing rebase.
 func (r *Runner) ContinueRebase() error {
-	outcome, err := r.Run("git", "rebase", "--continue")
+	_, err := r.Run("git", "rebase", "--continue")
 	if err != nil {
-		return fmt.Errorf("cannot continue rebase: %w\n%s", err, outcome.Output())
+		return fmt.Errorf("cannot continue rebase: %w", err)
 	}
 	return nil
 }
