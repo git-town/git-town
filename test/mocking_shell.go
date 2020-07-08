@@ -134,9 +134,9 @@ func (ms *MockingShell) Run(name string, arguments ...string) (*run.Result, erro
 func (ms *MockingShell) RunMany(commands [][]string) error {
 	for _, argv := range commands {
 		command, args := argv[0], argv[1:]
-		outcome, err := ms.Run(command, args...)
+		_, err := ms.Run(command, args...)
 		if err != nil {
-			return fmt.Errorf("error running command %q: %w\n%v", argv, err, outcome)
+			return fmt.Errorf("error running command %q: %w", argv, err)
 		}
 	}
 	return nil

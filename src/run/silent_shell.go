@@ -25,9 +25,9 @@ func (shell SilentShell) Run(cmd string, args ...string) (*Result, error) {
 // Failed commands abort immediately with the encountered error.
 func (shell SilentShell) RunMany(commands [][]string) error {
 	for _, argv := range commands {
-		outcome, err := Exec(argv[0], argv[1:]...)
+		_, err := Exec(argv[0], argv[1:]...)
 		if err != nil {
-			return fmt.Errorf("error running command %q: %w\n%v", argv, err, outcome)
+			return fmt.Errorf("error running command %q: %w", argv, err)
 		}
 	}
 	return nil

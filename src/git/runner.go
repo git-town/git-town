@@ -83,9 +83,9 @@ func (r *Runner) BranchHasUnmergedCommits(branch string) (bool, error) {
 
 // CheckoutBranch checks out the Git branch with the given name in this repo.
 func (r *Runner) CheckoutBranch(name string) error {
-	outcome, err := r.Run("git", "checkout", name)
+	_, err := r.Run("git", "checkout", name)
 	if err != nil {
-		return fmt.Errorf("cannot check out branch %q in repo %q: %w\n%v", name, r.WorkingDir(), err, outcome)
+		return fmt.Errorf("cannot check out branch %q in repo %q: %w", name, r.WorkingDir(), err)
 	}
 	if name != "-" {
 		r.CurrentBranchCache.Set(name)
@@ -229,9 +229,9 @@ func (r *Runner) ContinueRebase() error {
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
 func (r *Runner) CreateBranch(name, parent string) error {
-	outcome, err := r.Run("git", "branch", name, parent)
+	_, err := r.Run("git", "branch", name, parent)
 	if err != nil {
-		return fmt.Errorf("cannot create branch %q: %w\n%v", name, err, outcome)
+		return fmt.Errorf("cannot create branch %q: %w", name, err)
 	}
 	return nil
 }
@@ -257,17 +257,17 @@ func (r *Runner) CreateCommit(commit Commit) error {
 	if err != nil {
 		return fmt.Errorf("cannot create file %q needed for commit: %w", commit.FileName, err)
 	}
-	outcome, err := r.Run("git", "add", commit.FileName)
+	_, err = r.Run("git", "add", commit.FileName)
 	if err != nil {
-		return fmt.Errorf("cannot add file to commit: %w\n%v", err, outcome)
+		return fmt.Errorf("cannot add file to commit: %w", err)
 	}
 	commands := []string{"commit", "-m", commit.Message}
 	if commit.Author != "" {
 		commands = append(commands, "--author="+commit.Author)
 	}
-	outcome, err = r.Run("git", commands...)
+	_, err = r.Run("git", commands...)
 	if err != nil {
-		return fmt.Errorf("cannot commit: %w\n%v", err, outcome)
+		return fmt.Errorf("cannot commit: %w", err)
 	}
 	return nil
 }
@@ -830,45 +830,45 @@ func (r *Runner) Pull() error {
 
 // PushBranch pushes the branch with the given name to the remote.
 func (r *Runner) PushBranch() error {
-	outcome, err := r.Run("git", "push")
+	_, err := r.Run("git", "push")
 	if err != nil {
-		return fmt.Errorf("cannot push branch in repo %q to origin: %w\n%v", r.WorkingDir(), err, outcome)
+		return fmt.Errorf("cannot push branch in repo %q to origin: %w", r.WorkingDir(), err)
 	}
 	return nil
 }
 
 // PushBranchForce pushes the branch with the given name to the remote.
 func (r *Runner) PushBranchForce(name string) error {
-	outcome, err := r.Run("git", "push", "-f", "origin", name)
+	_, err := r.Run("git", "push", "-f", "origin", name)
 	if err != nil {
-		return fmt.Errorf("cannot force-push branch %q in repo %q to origin: %w\n%v", name, r.WorkingDir(), err, outcome)
+		return fmt.Errorf("cannot force-push branch %q in repo %q to origin: %w", name, r.WorkingDir(), err)
 	}
 	return nil
 }
 
 // PushBranchSetUpstream pushes the branch with the given name to the remote.
 func (r *Runner) PushBranchSetUpstream(name string) error {
-	outcome, err := r.Run("git", "push", "-u", "origin", name)
+	_, err := r.Run("git", "push", "-u", "origin", name)
 	if err != nil {
-		return fmt.Errorf("cannot push branch %q in repo %q to origin: %w\n%v", name, r.WorkingDir(), err, outcome)
+		return fmt.Errorf("cannot push branch %q in repo %q to origin: %w", name, r.WorkingDir(), err)
 	}
 	return nil
 }
 
 // PushTags pushes new the Git tags to origin.
 func (r *Runner) PushTags() error {
-	outcome, err := r.Run("git", "push", "--tags")
+	_, err := r.Run("git", "push", "--tags")
 	if err != nil {
-		return fmt.Errorf("cannot push branch in repo %q: %w\n%v", r.WorkingDir(), err, outcome)
+		return fmt.Errorf("cannot push branch in repo %q: %w", r.WorkingDir(), err)
 	}
 	return nil
 }
 
 // Rebase initiates a Git rebase of the current branch against the given branch.
 func (r *Runner) Rebase(target string) error {
-	outcome, err := r.Run("git", "rebase", target)
+	_, err := r.Run("git", "rebase", target)
 	if err != nil {
-		return fmt.Errorf("cannot rebase against branch %q: %w\n%v", target, err, outcome)
+		return fmt.Errorf("cannot rebase against branch %q: %w", target, err)
 	}
 	return nil
 }
@@ -943,9 +943,9 @@ func (r *Runner) ResetToSha(sha string, hard bool) error {
 		args = append(args, "--hard")
 	}
 	args = append(args, sha)
-	outcome, err := r.Run("git", args...)
+	_, err := r.Run("git", args...)
 	if err != nil {
-		return fmt.Errorf("cannot reset to SHA %q: %w\n%v", sha, err, outcome)
+		return fmt.Errorf("cannot reset to SHA %q: %w", sha, err)
 	}
 	return nil
 }
