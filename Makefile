@@ -22,7 +22,7 @@ cuke-prof: build  # creates a flamegraph
 	@echo Please open https://www.speedscope.app and load the file godog.out
 
 docs:  # tests the documentation
-	tools$/text-runner$/node_modules$/.bin$/text-run --offline
+	cd text-run && node_modules$/.bin$/text-run --offline
 
 fix: fix-go fix-md  # auto-fixes lint issues in all languages
 
