@@ -104,11 +104,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^Git Town is (?:now|still) aware of this branch hierarchy$`, func(input *messages.PickleStepArgument_PickleTable) error {
 		table := DataTable{}
 		table.AddRow("BRANCH", "PARENT")
-		for _, row := range input.Rows[1:] {
-			branch := row.Cells[0].Value
-			state.gitEnv.DevRepo.Config.Reload()
-			parentBranch := state.gitEnv.DevRepo.Config.GetParentBranch(branch)
-			table.AddRow(branch, parentBranch)
+		state.gitEnv.DevRepo.Config.Reload()
+		for child, parent := range state.gitEnv.DevRepo.Config.GetParentBranchMap() {
+			table.AddRow(child, parent)
 		}
 		diff, errCount := table.EqualGherkin(input)
 		if errCount > 0 {
