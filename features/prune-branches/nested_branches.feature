@@ -50,5 +50,5 @@ Feature: git town-prune-branches: delete branches that were shipped or removed o
       | remote     | main, feature-child          |
     And Git Town is now aware of this branch hierarchy
       | BRANCH        | PARENT  |
-      | feature-child | feature |
       | feature       | main    |
+      | feature-child | feature |

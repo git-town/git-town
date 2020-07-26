@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -105,8 +106,15 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		table := DataTable{}
 		table.AddRow("BRANCH", "PARENT")
 		state.gitEnv.DevRepo.Config.Reload()
-		for child, parent := range state.gitEnv.DevRepo.Config.GetParentBranchMap() {
-			table.AddRow(child, parent)
+		// Table sorted by child branch name
+		parentBranchMap := state.gitEnv.DevRepo.Config.GetParentBranchMap() 
+		childBranches := make([]string, 0, len(parentBranchMap))
+		for child := range parentBranchMap {
+			childBranches = append(childBranches, child)
+		}
+		sort.Strings(childBranches)
+		for _, child := range childBranches {
+			table.AddRow(child, parentBranchMap[child])
 		}
 		diff, errCount := table.EqualGherkin(input)
 		if errCount > 0 {
