@@ -22,7 +22,7 @@ cuke-prof: build  # creates a flamegraph
 	@echo Please open https://www.speedscope.app and load the file godog.out
 
 docs:  # tests the documentation
-	tools$/text-runner$/node_modules$/.bin$/text-run --offline
+	text-run$/node_modules$/.bin$/text-run --offline
 
 fix: fix-go fix-md  # auto-fixes lint issues in all languages
 
@@ -71,7 +71,7 @@ release:   # creates a new release
 
 setup: setup-go  # the setup steps necessary on developer machines
 	cd tools/prettier && yarn install
-	cd tools/text-runner && yarn install
+	cd tools/text-run && yarn install
 	cd tools/harp && yarn install
 
 setup-go:

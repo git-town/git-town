@@ -58,7 +58,7 @@ jobs:
       - run: mv ./godog /home/circleci/bin/
       - run: mv ./golangci-lint /home/circleci/bin/
       - run: cd tools/prettier && yarn
-      - run: cd tools/text-runner && yarn
+      - run: cd text-run && yarn
       - run: make test-md
 workflows:
   version: 2

@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "assert-no-diff": "3.0.4"
+    "assert-no-diff": "3.0.4",
+    "text-runner": "4.0.3"
   }
 }
