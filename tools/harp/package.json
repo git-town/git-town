@@ -1,4 +1,6 @@
 {
+  "name": "harp-tool",
+  "version": "0.0.0",
   "dependencies": {
     "harp": "^0.32.0"
   }

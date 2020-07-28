@@ -1,4 +1,6 @@
 {
+  "name": "prettier-tool",
+  "version": "0.0.0",
   "dependencies": {
     "prettier": "2.0.5"
   }

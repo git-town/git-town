@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "workspaces": [
+    "text-run",
+    "tools/harp",
+    "tools/prettier"
+  ]
+}
