@@ -71,7 +71,7 @@ release:   # creates a new release
 
 setup: setup-go  # the setup steps necessary on developer machines
 	cd tools/prettier && yarn install
-	cd tools/text-runner && yarn install
+	cd tools/text-run && yarn install
 	cd tools/harp && yarn install
 
 setup-go:
