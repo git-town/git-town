@@ -49,24 +49,25 @@ lint-go:  # lints the Go files
 lint-md:   # lints the Markdown files
 	tools$/prettier$/node_modules$/.bin$/prettier -l .
 
-release:   # creates a new release
+release-linux:   # creates a new release
 	# cross-compile the binaries
 	goreleaser --rm-dist
 
-	# make Windows installer
-	make --no-print-directory msi
-
 	# create GitHub release with files in alphabetical order
-	hub release create --draft --browse --message v7.4.0 \
-		-a dist/git-town_7.4.0_linux_intel_64.deb \
-		-a dist/git-town_7.4.0_linux_intel_64.rpm \
-		-a dist/git-town_7.4.0_linux_intel_64.tar.gz \
-		-a dist/git-town_7.4.0_linux_arm_64.deb \
-		-a dist/git-town_7.4.0_linux_arm_64.rpm \
-		-a dist/git-town_7.4.0_linux_arm_64.tar.gz \
-		-a dist/git-town_7.4.0_macOS_intel_64.tar.gz \
-		-a dist/git-town_7.4.0_windows_intel_64.msi \
-		-a dist/git-town_7.4.0_windows_intel_64.zip \
+	hub release create --draft --browse --message v${VERSION} \
+		-a dist/git-town_${VERSION}_linux_intel_64.deb \
+		-a dist/git-town_${VERSION}_linux_intel_64.rpm \
+		-a dist/git-town_${VERSION}_linux_intel_64.tar.gz \
+		-a dist/git-town_${VERSION}_linux_arm_64.deb \
+		-a dist/git-town_${VERSION}_linux_arm_64.rpm \
+		-a dist/git-town_${VERSION}_linux_arm_64.tar.gz \
+		-a dist/git-town_${VERSION}_macOS_intel_64.tar.gz \
+		-a dist/git-town_${VERSION}_windows_intel_64.zip \
+		v${VERSION}
+
+release-win: msi  # adds the Windows installer to the release
+	hub release edit --browse --message v${VERSION} \
+		-a dist/git-town_${VERSION}_windows_intel_64.msi
 		v${VERSION}
 
 setup: setup-go  # the setup steps necessary on developer machines
