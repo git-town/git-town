@@ -67,6 +67,8 @@ func getStep(stepType string) Step {
 		return &DeleteParentBranchStep{}
 	case "*DeleteRemoteBranchStep":
 		return &DeleteRemoteBranchStep{}
+	case "*DiscardOpenChangesStep":
+		return &DiscardOpenChangesStep{}
 	case "*DriverMergePullRequestStep":
 		return &DriverMergePullRequestStep{}
 	case "*EnsureHasShippableChangesStep":
