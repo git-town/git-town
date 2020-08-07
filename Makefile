@@ -1,13 +1,6 @@
 VERSION=7.4.0
 TODAY=$(shell date +'%Y/%m/%d')
 
-# platform-specificity
-ifdef COMSPEC
-	/ := $(strip \)
-else
-	/ := /
-endif
-
 .DEFAULT_GOAL := spec
 
 build:  # builds for the current platform
@@ -22,7 +15,7 @@ cuke-prof: build  # creates a flamegraph
 	@echo Please open https://www.speedscope.app and load the file godog.out
 
 docs:  # tests the documentation
-	text-run$/node_modules$/.bin$/text-run --offline
+	${CURDIR}/text-run/node_modules/.bin/text-run --offline
 
 fix: fix-go fix-md  # auto-fixes lint issues in all languages
 
@@ -30,7 +23,7 @@ fix-go:  # auto-fixes all Go lint issues
 	gofmt -s -w ./src ./test
 
 fix-md:  # auto-fixes all Markdown lint issues
-	tools$/prettier$/node_modules$/.bin$/prettier --write .
+	${CURDIR}/tools/prettier/node_modules/.bin/prettier --write .
 
 help:  # prints all make targets
 	@cat Makefile | grep '^[^ ]*:' | grep -v '.PHONY' | grep -v help | sed 's/:.*#/#/' | column -s "#" -t
@@ -47,7 +40,7 @@ lint-go:  # lints the Go files
 	golangci-lint run src/... test/...
 
 lint-md:   # lints the Markdown files
-	tools$/prettier$/node_modules$/.bin$/prettier -l .
+	${CURDIR}/tools/prettier/node_modules/.bin/prettier -l .
 
 release-linux:   # creates a new release
 	# cross-compile the binaries
