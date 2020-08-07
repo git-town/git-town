@@ -65,7 +65,7 @@ release-win: msi  # adds the Windows installer to the release
 
 setup: setup-go  # the setup steps necessary on developer machines
 	cd tools/prettier && yarn install
-	cd tools/text-run && yarn install
+	cd text-run && yarn install
 	cd tools/harp && yarn install
 
 setup-go:
