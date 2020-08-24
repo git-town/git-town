@@ -43,11 +43,11 @@ func (step *SquashMergeBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHo
 	}
 	author, err := prompt.GetSquashCommitAuthor(step.BranchName, repo)
 	if err != nil {
-		return err
+		return fmt.Errorf("error getting squash commit author: %w", err)
 	}
 	repoAuthor, err := repo.Silent.Author()
 	if err != nil {
-		return err
+		return fmt.Errorf("cannot determine repo author: %w", err)
 	}
 	if err = repo.Silent.CommentOutSquashCommitMessage(""); err != nil {
 		return fmt.Errorf("cannot comment out the squash commit message: %w", err)
