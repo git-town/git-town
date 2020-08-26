@@ -44,6 +44,7 @@ func Run(runState *RunState, repo *git.ProdRepo, driver drivers.CodeHostingDrive
 		if runErr != nil {
 			runState.AbortStepList.Append(step.CreateAbortStep())
 			if step.ShouldAutomaticallyAbortOnError() {
+				cli.PrintError(fmt.Errorf(runErr.Error() + "\nAuto-aborting..."))
 				abortRunState := runState.CreateAbortRunState()
 				err := Run(&abortRunState, repo, driver)
 				if err != nil {
