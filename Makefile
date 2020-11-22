@@ -93,16 +93,8 @@ update:  # updates all dependencies
 	go mod tidy
 	go mod vendor
 
-website:  # deploys the website
-	git checkout gh-pages
-	git pull
-	git checkout master
-	git pull --rebase
-	tools/harp/node_modules/.bin/harp compile website/ _www
-	git checkout gh-pages
-	cp -r _www/* .
-	rm -rf _www
-	git add -A
-	git commit
-	git push
-	git checkout master
+website-build:  # compiles the website (used during deployment)
+	tools/harp/node_modules/.bin/harp compile website/ www
+
+website-dev:  # runs a local development server of the website
+	(cd website && ../tools/harp/node_modules/.bin/harp server)
