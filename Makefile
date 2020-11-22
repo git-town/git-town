@@ -66,7 +66,6 @@ release-win: msi  # adds the Windows installer to the release
 setup: setup-go  # the setup steps necessary on developer machines
 	cd tools/prettier && yarn install
 	cd text-run && yarn install
-	cd tools/harp && yarn install
 
 setup-go:
 	@(cd .. && GO111MODULE=on go get github.com/cucumber/godog/cmd/godog@v0.9.0)
@@ -94,6 +93,7 @@ update:  # updates all dependencies
 	go mod vendor
 
 website-build:  # compiles the website (used during deployment)
+	(cd tools/harp && yarn install)
 	tools/harp/node_modules/.bin/harp compile website/ www
 
 website-dev:  # runs a local development server of the website
