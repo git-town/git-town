@@ -480,7 +480,7 @@ experience. Ruby has been dropped as a development dependency.
     ([#228](https://github.com/git-town/git-town/issues/228))
 - **git town**: view and change Git Town configuration and easily view help page
   ([#98](https://github.com/git-town/git-town/issues/98))
-- auto-completion for [Fish shell](http://fishshell.com)
+- auto-completion for [Fish shell](https://fishshell.com)
   ([#177](https://github.com/git-town/git-town/issues/177))
 
 ## 0.4.1 (2014-12-02)
@@ -573,7 +573,7 @@ experience. Ruby has been dropped as a development dependency.
 - always cleans up abort and continue scripts after using one of them
   ([3be4c0](https://github.com/git-town/git-town/commit/3be4c06635a943f378287963ba30e4306fcd9802))
 - simpler readme, dedicated RDD document
-- **<a href="http://cukes.info" target="_blank">Cucumber</a>** feature specs
+- **<a href="https://cukes.info" target="_blank">Cucumber</a>** feature specs
   (you need Ruby 2.x)
   ([c9d175](https://github.com/git-town/git-town/commit/c9d175fe2f28fbda3f662454f54ed80306ce2f46))
 - much faster testing thanks to completely local test Git repos

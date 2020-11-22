@@ -8,7 +8,7 @@ This page gets you started hacking on the Git Town codebase.
 2. install [Make](https://www.gnu.org/software/make)
    - Mac and Linux users should be okay out of the box
    - Windows users can install
-     [Make for Windows](http://gnuwin32.sourceforge.net/packages/make.htm). If
+     [Make for Windows](https://gnuwin32.sourceforge.net/packages/make.htm). If
      you use [Chocolatey](https://chocolatey.org), run `choco install make`.
 3. create a fork of the
    [Git Town repository on GitHub](https://github.com/git-town/git-town) by

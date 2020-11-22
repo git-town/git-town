@@ -68,7 +68,7 @@ Git Town provides these additional Git commands:
 
 ## Installation
 
-See the [installation instructions](http://www.git-town.com/install.html) for
+See the [installation instructions](https://www.git-town.com/install.html) for
 more details.
 
 #### Aliasing
@@ -125,7 +125,7 @@ Run `git town` for an overview of the Git Town commands and `git help <command>`
 ## Q&A
 
 - **Is this compatible with my workflow?** <br> Yes. Git Town is compatible with
-  [GitHub Flow](http://scottchacon.com/2011/08/31/github-flow.html),
+  [GitHub Flow](https://scottchacon.com/2011/08/31/github-flow.html),
   [Git Flow](https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow),
   the [Nvie model](https://nvie.com/posts/a-successful-git-branching-model),
   [GitLab Flow](https://about.gitlab.com/2014/09/29/gitlab-flow/), and most
