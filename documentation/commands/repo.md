@@ -6,8 +6,8 @@ Opens the repository homepage
 
 <a textrun="command-description">
 
-Supported for repositories hosted on [GitHub](http://github.com/),
-[GitLab](http://gitlab.com/), [Gitea](http://gitea.com/), and
+Supported for repositories hosted on [GitHub](https://github.com/),
+[GitLab](https://gitlab.com/), [Gitea](https://gitea.com/), and
 [Bitbucket](https://bitbucket.org/). Derives the Git provider from the `origin`
 remote. You can override this detection with
 `git config git-town.code-hosting-driver <DRIVER>` where DRIVER is "github",
