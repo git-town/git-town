@@ -9,9 +9,8 @@ Install [Node.js](https://nodejs.org) and [Yarn](https://yarnpkg.com), then run
 
 ## local development
 
-- `cd website`
-- `../tools/harp/node_modules/.bin/harp server`
-- go to [localhost:9000](http://localhost:9000)
+- run a local dev server: `make website-dev`
+- test that the website compiles: `make website-build`
 
 ## deployment
 
