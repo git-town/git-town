@@ -1,5 +1,5 @@
 [build]
-  command = "make website-build"
+  command = "npm i -g yarn && make website-build"
   publish = "www/"
 
 [build.environment]
