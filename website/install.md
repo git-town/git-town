@@ -33,6 +33,10 @@ There are several options to install Git Town on Windows:
    [ZIP file](https://github.com/git-town/git-town/releases/download/v7.4.0/git-town_7.4.0_windows_intel_64.zip),
    and put the binary inside it somewhere into your `%PATH%`.
 
+If you use the Windows Subsystem for Linux, install
+[wsl-open](https://www.npmjs.com/package/wsl-open) to make `get repo` work
+better.
+
 ---
 
 # Linux
