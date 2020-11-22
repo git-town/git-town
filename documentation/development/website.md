@@ -13,4 +13,4 @@ The Git Town website is at https://www.git-town.com.
 
 ## deployment
 
-The website runs on Netlify. It auto-updates on changes to the master branch.
+The website hoster is Netlify. It auto-updates on changes to the master branch.
