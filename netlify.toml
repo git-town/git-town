@@ -3,4 +3,4 @@
   publish = "www/"
 
 [build.environment]
-  NETLIFY_USE_YARN = true
+  NETLIFY_USE_YARN = "true"
