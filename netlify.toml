@@ -1,0 +1,8 @@
+[build]
+  # HACK: Netlify doesn't seem to install Yarn even though NETLIFY_USE_YARN is set below
+  command = "npm i -g yarn && make website-build"
+  publish = "www/"
+
+[build.environment]
+  # HACK: have to provide this value as a string here because a bool crashes the Netlify installer
+  NETLIFY_USE_YARN = "true"
