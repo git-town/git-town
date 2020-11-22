@@ -1,11 +1,10 @@
 # Website Development Guide
 
-The Git Town website can be found at <https://www.git-town.com>.
+The Git Town website is at https://www.git-town.com.
 
 ## setup
 
-Install [Node.js](https://nodejs.org) and [Yarn](https://yarnpkg.com), then run
-`make setup` to install the needed dependencies.
+- install [Node.js](https://nodejs.org) and [Yarn](https://yarnpkg.com)
 
 ## local development
 
@@ -14,4 +13,4 @@ Install [Node.js](https://nodejs.org) and [Yarn](https://yarnpkg.com), then run
 
 ## deployment
 
-The website auto-updates when changes to the master branch are made.
+The website runs on Netlify. It auto-updates on changes to the master branch.
