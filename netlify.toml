@@ -1,6 +1,6 @@
 [build]
-command = "make website-build"
-publish = "www/"
+  command = "make website-build"
+  publish = "www/"
 
 [build.environment]
-NETLIFY_USE_YARN = true
+  NETLIFY_USE_YARN = true
