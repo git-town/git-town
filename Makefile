@@ -93,6 +93,7 @@ update:  # updates all dependencies
 	go mod vendor
 
 website-build:  # compiles the website (used during deployment)
+	which yarn
 	(cd tools/harp && yarn install)
 	tools/harp/node_modules/.bin/harp compile website/ www
 
