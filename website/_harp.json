@@ -2,16 +2,16 @@
   "globals": {
     "site_name": "Git Town",
     "site_description": "Git Town.",
-    "site_keywords": "git, gittown, town",
+    "site_keywords": "git, git-town, town",
     "facebook_meta": {
       "type": "",
       "image": ""
     },
     "page_titles": {
-      "index": "Welcome to GitTown",
-      "install": "Install GitTown",
+      "index": "Welcome to Git Town",
+      "install": "Install Git Town",
       "the-big-picture": "The Big Picture",
-      "tutorial": "GitTown Tutorial"
+      "tutorial": "Git Town Tutorial"
     }
   }
 }
