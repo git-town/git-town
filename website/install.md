@@ -34,8 +34,11 @@ There are several options to install Git Town on Windows:
    and put the binary inside it somewhere into your `%PATH%`.
 
 If you use the Windows Subsystem for Linux, install
-[wsl-open](https://www.npmjs.com/package/wsl-open) to make `get repo` work
-better.
+[wsl-open](https://www.npmjs.com/package/wsl-open) to make the commands
+[git town repo](https://github.com/git-town/git-town/blob/master/documentation/commands/repo.md)
+and
+[git town new-pull-request](https://github.com/git-town/git-town/blob/master/documentation/commands/new-pull-request.md)
+work.
 
 ---
 
