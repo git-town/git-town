@@ -98,4 +98,4 @@ When uninstalling Git Town:
 - remove Git Town's aliases: `git town alias false`
 - remove the Git Town configuration from your repositories: in each repo, run
   `git town config reset`
-- eelete the `git-town` binary from your hard drive
+- delete the `git-town` binary from your hard drive
