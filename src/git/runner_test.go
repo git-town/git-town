@@ -428,13 +428,6 @@ func TestRunner_HasTrackingBranch(t *testing.T) {
 	assert.False(t, has)
 }
 
-func TestRunner_LastActiveDir(t *testing.T) {
-	runner := test.CreateRepo(t).Runner
-	dir, err := runner.LastActiveDir()
-	assert.NoError(t, err)
-	assert.Equal(t, runner.WorkingDir(), dir)
-}
-
 func TestRunner_LocalBranches(t *testing.T) {
 	origin := test.CreateRepo(t)
 	repoDir := test.CreateTempDir(t)

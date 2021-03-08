@@ -20,15 +20,13 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
     Then it runs the commands
       | BRANCH          | COMMAND                                    |
       | current-feature | git fetch --prune --tags                   |
-      | <none>          | cd {{ root folder }}                       |
-      | current-feature | git add -A                                 |
+      |                 | git add -A                                 |
       |                 | git stash                                  |
       |                 | git checkout main                          |
       | main            | git rebase origin/main                     |
       |                 | git checkout current-feature               |
       | current-feature | git merge --no-edit origin/current-feature |
       |                 | git merge --no-edit main                   |
-    And I am in the project root folder
     And I am still on the "current-feature" branch
     And my uncommitted file is stashed
     And my repo now has a merge in progress
@@ -39,14 +37,13 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
 
 
   Scenario: aborting
-    When I run "git-town abort"
+    When I run "git-town abort" in the "new_folder" folder
     Then it runs the commands
       | BRANCH          | COMMAND                      |
       | current-feature | git merge --abort            |
       |                 | git checkout main            |
       | main            | git checkout current-feature |
       | current-feature | git stash pop                |
-      | <none>          | cd {{ folder "new_folder" }} |
     And I am still on the "current-feature" branch
     And my workspace has the uncommitted file again
     And there is no merge in progress
@@ -54,7 +51,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
 
 
   Scenario: continuing without resolving the conflicts
-    When I run "git-town continue"
+    When I run "git-town continue" in the "new_folder" folder
     Then it runs no commands
     And it prints the error:
       """
@@ -67,7 +64,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run "git-town continue"
+    When I run "git-town continue" in the "new_folder" folder
     Then it runs the commands
       | BRANCH          | COMMAND                                  |
       | current-feature | git commit --no-edit                     |
@@ -79,7 +76,6 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
       |                 | git checkout current-feature             |
       | current-feature | git push --tags                          |
       |                 | git stash pop                            |
-      | <none>          | cd {{ folder "new_folder" }}             |
     And I am still on the "current-feature" branch
     And my workspace has the uncommitted file again
     And there is no merge in progress

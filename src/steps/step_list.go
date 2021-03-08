@@ -2,8 +2,6 @@ package steps
 
 import (
 	"encoding/json"
-	"fmt"
-	"os"
 
 	"github.com/git-town/git-town/src/git"
 )
@@ -84,18 +82,6 @@ func (stepList *StepList) Wrap(options WrapOptions, repo *git.ProdRepo) error {
 	if options.StashOpenChanges && hasOpenChanges {
 		stepList.Prepend(&StashOpenChangesStep{})
 		stepList.Append(&RestoreOpenChangesStep{})
-	}
-	initialDirectory, err := os.Getwd()
-	if err != nil {
-		return fmt.Errorf("cannot get current working directory: %v", err)
-	}
-	gitRootDirectory, err := repo.Silent.RootDirectory()
-	if err != nil {
-		return err
-	}
-	if options.RunInGitRoot && initialDirectory != gitRootDirectory {
-		stepList.Prepend(&ChangeDirectoryStep{Directory: gitRootDirectory})
-		stepList.Append(&ChangeDirectoryStep{Directory: initialDirectory})
 	}
 	return nil
 }

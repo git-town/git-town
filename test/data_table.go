@@ -2,7 +2,6 @@ package test
 
 import (
 	"fmt"
-	"path/filepath"
 	"regexp"
 	"strings"
 	"sync"
@@ -81,10 +80,6 @@ func (table *DataTable) Expand(rootDir string, localRepo *Repo, remoteRepo *Repo
 				templateOnce.Do(func() { templateRE = regexp.MustCompile(`\{\{.*?\}\}`) })
 				match := templateRE.FindString(cell)
 				switch {
-				case match == "{{ root folder }}":
-					cell = strings.Replace(cell, "{{ root folder }}", rootDir, 1)
-				case match == `{{ folder "new_folder" }}`:
-					cell = strings.Replace(cell, `{{ folder "new_folder" }}`, filepath.Join(rootDir, "new_folder"), 1)
 				case strings.HasPrefix(match, "{{ sha "):
 					commitName := match[8 : len(match)-4]
 					sha, err := localRepo.ShaForCommit(commitName)
