@@ -71,7 +71,7 @@ var templateRE *regexp.Regexp
 var templateOnce sync.Once
 
 // Expand returns a new DataTable instance with the placeholders in this datatable replaced with the given values.
-func (table *DataTable) Expand(rootDir string, localRepo *Repo, remoteRepo *Repo) (result DataTable, err error) {
+func (table *DataTable) Expand(localRepo *Repo, remoteRepo *Repo) (result DataTable, err error) {
 	for row := range table.Cells {
 		cells := []string{}
 		for col := range table.Cells[row] {

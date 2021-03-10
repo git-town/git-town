@@ -292,7 +292,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		table := RenderExecutedGitCommands(commands, input)
 		dataTable := FromGherkin(input)
 		expanded, err := dataTable.Expand(
-			state.gitEnv.DevRepo.WorkingDir(),
 			&state.gitEnv.DevRepo,
 			state.gitEnv.OriginRepo,
 		)
