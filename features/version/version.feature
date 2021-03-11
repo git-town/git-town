@@ -9,7 +9,7 @@ Feature: git town: show the current Git Town version
     When I run "git-town version"
     Then it prints:
       """
-      Git Town v7.4.0-dev
+      Git Town v0.0.0-dev
       """
 
 
@@ -18,5 +18,5 @@ Feature: git town: show the current Git Town version
     When I run "git-town version"
     Then it prints:
       """
-      Git Town v7.4.0-dev
+      Git Town v0.0.0-dev
       """
