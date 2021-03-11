@@ -1,4 +1,4 @@
-VERSION=DEV
+VERSION ?= DEV
 TODAY=$(shell date +'%Y/%m/%d')
 
 .DEFAULT_GOAL := spec
