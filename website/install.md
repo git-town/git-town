@@ -8,8 +8,8 @@ There are several options to install Git Town on macOS:
 
 2. manually:
    - download an
-     [archive containing the binary](https://github.com/git-town/git-town/releases/download/v7.4.0/git-town_7.4.0_macOS_intel_64.tar.gz)
-   - extract with `tar -xzf git-town_7.4.0_macOS_intel_64.tar.gz`
+     [archive containing the binary](https://github.com/git-town/git-town/releases/download/v7.5.0/git-town_7.5.0_macOS_intel_64.tar.gz)
+   - extract with `tar -xzf git-town_7.5.0_macOS_intel_64.tar.gz`
    - move the `git-town` binary into a directory listed in your `$PATH`, for
      example `/usr/local/bin`
 
@@ -20,7 +20,7 @@ There are several options to install Git Town on macOS:
 There are several options to install Git Town on Windows:
 
 1. Windows installer:
-   [download](https://github.com/git-town/git-town/releases/download/v7.4.0/git-town_7.4.0_windows_intel_64.msi)
+   [download](https://github.com/git-town/git-town/releases/download/v7.5.0/git-town_7.5.0_windows_intel_64.msi)
 
 2. [scoop](https://scoop.sh):
 
@@ -30,7 +30,7 @@ There are several options to install Git Town on Windows:
    ```
 
 3. manually: download the
-   [ZIP file](https://github.com/git-town/git-town/releases/download/v7.4.0/git-town_7.4.0_windows_intel_64.zip),
+   [ZIP file](https://github.com/git-town/git-town/releases/download/v7.5.0/git-town_7.5.0_windows_intel_64.zip),
    and put the binary inside it somewhere into your `%PATH%`.
 
 If you use the Windows Subsystem for Linux, install
@@ -51,17 +51,17 @@ There are several options to install Git Town on Linux distributions:
 2. using your package manager:
 
    - on Debian-based systems, download the
-     [.deb](https://github.com/git-town/git-town/releases/download/v7.4.0/git-town_7.4.0_linux_intel_64.deb)
-     file and run `sudo apt-get install git-town_7.4.0_linux_intel_64.deb`
+     [.deb](https://github.com/git-town/git-town/releases/download/v7.5.0/git-town_7.5.0_linux_intel_64.deb)
+     file and run `sudo apt-get install git-town_7.5.0_linux_intel_64.deb`
    - on RedHat-based systems download the
-     [.rpm](https://github.com/git-town/git-town/releases/download/v7.4.0/git-town_7.4.0_linux_intel_64.rpm)
-     file and run `rpm -i git-town_7.4.0_linux_intel_64.rpm`
+     [.rpm](https://github.com/git-town/git-town/releases/download/v7.5.0/git-town_7.5.0_linux_intel_64.rpm)
+     file and run `rpm -i git-town_7.5.0_linux_intel_64.rpm`
 
 3. manually
    - download an
-     [archive](https://github.com/git-town/git-town/releases/download/v7.4.0/git-town_7.4.0_linux_intel_64.tar.gz)
+     [archive](https://github.com/git-town/git-town/releases/download/v7.5.0/git-town_7.5.0_linux_intel_64.tar.gz)
      containing the binary
-   - extract with `tar -xzf git-town_7.4.0_linux_intel_64.tar.gz`
+   - extract with `tar -xzf git-town_7.5.0_linux_intel_64.tar.gz`
    - move the `git-town` binary into a directory listed in your `$PATH`, for
      example `/usr/local/bin`
 
