@@ -20,8 +20,7 @@ Feature: git town-hack: starting a new feature from a new subfolder on the main 
     Then it runs the commands
       | BRANCH      | COMMAND                     |
       | feature     | git fetch --prune --tags    |
-      | <none>      | cd {{ root folder }}        |
-      | feature     | git add -A                  |
+      |             | git add -A                  |
       |             | git stash                   |
       |             | git checkout main           |
       | main        | git rebase origin/main      |
@@ -29,7 +28,6 @@ Feature: git town-hack: starting a new feature from a new subfolder on the main 
       |             | git checkout new-feature    |
       | new-feature | git stash pop               |
     And I end up on the "new-feature" branch
-    And I am in the project root folder
     And my workspace still contains my uncommitted file
     And my repo now has the following commits
       | BRANCH      | LOCATION      | MESSAGE       |

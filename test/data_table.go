@@ -2,7 +2,6 @@ package test
 
 import (
 	"fmt"
-	"path/filepath"
 	"regexp"
 	"strings"
 	"sync"
@@ -72,7 +71,7 @@ var templateRE *regexp.Regexp
 var templateOnce sync.Once
 
 // Expand returns a new DataTable instance with the placeholders in this datatable replaced with the given values.
-func (table *DataTable) Expand(rootDir string, localRepo *Repo, remoteRepo *Repo) (result DataTable, err error) {
+func (table *DataTable) Expand(localRepo *Repo, remoteRepo *Repo) (result DataTable, err error) {
 	for row := range table.Cells {
 		cells := []string{}
 		for col := range table.Cells[row] {
@@ -81,10 +80,6 @@ func (table *DataTable) Expand(rootDir string, localRepo *Repo, remoteRepo *Repo
 				templateOnce.Do(func() { templateRE = regexp.MustCompile(`\{\{.*?\}\}`) })
 				match := templateRE.FindString(cell)
 				switch {
-				case match == "{{ root folder }}":
-					cell = strings.Replace(cell, "{{ root folder }}", rootDir, 1)
-				case match == `{{ folder "new_folder" }}`:
-					cell = strings.Replace(cell, `{{ folder "new_folder" }}`, filepath.Join(rootDir, "new_folder"), 1)
 				case strings.HasPrefix(match, "{{ sha "):
 					commitName := match[8 : len(match)-4]
 					sha, err := localRepo.ShaForCommit(commitName)

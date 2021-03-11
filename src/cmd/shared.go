@@ -36,9 +36,10 @@ func validateIsConfigured(repo *git.ProdRepo) error {
 }
 
 // ValidateIsRepository asserts that the current directory is in a Git repository.
+// If so, it also navigates to the root directory.
 func ValidateIsRepository(repo *git.ProdRepo) error {
 	if repo.Silent.IsRepository() {
-		return nil
+		return repo.NavigateToRootIfNecessary()
 	}
 	return errors.New("this is not a Git repository")
 }

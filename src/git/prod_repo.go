@@ -1,6 +1,9 @@
 package git
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/git-town/git-town/src/config"
 	"github.com/git-town/git-town/src/run"
 )
@@ -67,6 +70,21 @@ func (r *ProdRepo) RemoveOutdatedConfiguration() error {
 		if !hasChildBranch || !hasParentBranch {
 			return r.Config.DeleteParentBranch(child)
 		}
+	}
+	return nil
+}
+
+func (r *ProdRepo) NavigateToRootIfNecessary() error {
+	currentDirectory, err := os.Getwd()
+	if err != nil {
+		return fmt.Errorf("cannot get current working directory: %w", err)
+	}
+	gitRootDirectory, err := r.Silent.RootDirectory()
+	if err != nil {
+		return err
+	}
+	if currentDirectory != gitRootDirectory {
+		return os.Chdir(gitRootDirectory)
 	}
 	return nil
 }

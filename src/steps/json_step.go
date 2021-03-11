@@ -45,8 +45,6 @@ func getStep(stepType string) Step {
 		return &AbortRebaseBranchStep{}
 	case "*AddToPerennialBranches":
 		return &AddToPerennialBranches{}
-	case "*ChangeDirectoryStep":
-		return &ChangeDirectoryStep{}
 	case "*CheckoutBranchStep":
 		return &CheckoutBranchStep{}
 	case "*ContinueMergeBranchStep":

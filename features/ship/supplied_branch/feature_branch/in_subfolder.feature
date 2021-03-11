@@ -17,8 +17,7 @@ Feature: git town-ship: shipping the supplied feature branch from a subfolder
     Then it runs the commands
       | BRANCH        | COMMAND                            |
       | other-feature | git fetch --prune --tags           |
-      | <none>        | cd {{ root folder }}               |
-      | other-feature | git add -A                         |
+      |               | git add -A                         |
       |               | git stash                          |
       |               | git checkout main                  |
       | main          | git rebase origin/main             |
@@ -33,7 +32,6 @@ Feature: git town-ship: shipping the supplied feature branch from a subfolder
       |               | git branch -D feature              |
       |               | git checkout other-feature         |
       | other-feature | git stash pop                      |
-      | <none>        | cd {{ folder "new_folder" }}       |
     And I end up on the "other-feature" branch
     And my workspace still contains my uncommitted file
     And the existing branches are

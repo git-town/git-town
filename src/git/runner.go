@@ -696,12 +696,6 @@ func (r *Runner) IsRepository() bool {
 	return r.IsRepoCache.Value()
 }
 
-// LastActiveDir provides the directory that was last used in this repo.
-func (r *Runner) LastActiveDir() (string, error) {
-	res, err := r.Run("git", "rev-parse", "--show-toplevel")
-	return filepath.FromSlash(res.OutputSanitized()), err
-}
-
 // LastCommitMessage returns the commit message for the last commit.
 func (r *Runner) LastCommitMessage() (string, error) {
 	out, err := r.Run("git", "log", "-1", "--format=%B")

@@ -18,8 +18,7 @@ Feature: git town-ship: shipping the current feature branch from a subfolder
     Then it runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune --tags           |
-      | <none>  | cd {{ root folder }}               |
-      | feature | git checkout main                  |
+      |         | git checkout main                  |
       | main    | git rebase origin/main             |
       |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
@@ -30,7 +29,6 @@ Feature: git town-ship: shipping the current feature branch from a subfolder
       |         | git push                           |
       |         | git push origin :feature           |
       |         | git branch -D feature              |
-      | <none>  | cd {{ folder "new_folder" }}       |
     And I end up on the "main" branch
     And the existing branches are
       | REPOSITORY | BRANCHES |
@@ -45,7 +43,6 @@ Feature: git town-ship: shipping the current feature branch from a subfolder
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH  | COMMAND                                       |
-      |         | cd {{ root folder }}                          |
       | main    | git branch feature {{ sha 'feature commit' }} |
       |         | git push -u origin feature                    |
       |         | git revert {{ sha 'feature done' }}           |
@@ -53,7 +50,6 @@ Feature: git town-ship: shipping the current feature branch from a subfolder
       |         | git checkout feature                          |
       | feature | git checkout main                             |
       | main    | git checkout feature                          |
-      | <none>  | cd {{ folder "new_folder" }}                  |
     And I end up on the "feature" branch
     And my repo now has the following commits
       | BRANCH  | LOCATION      | MESSAGE               | FILE NAME               |

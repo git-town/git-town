@@ -137,18 +137,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.AddCoworkerRepo()
 	})
 
-	suite.Step(`^I am in the project root folder$`, func() error {
-		actual, err := state.gitEnv.DevRepo.LastActiveDir()
-		if err != nil {
-			return fmt.Errorf("cannot determine the current working directory: %w", err)
-		}
-		expected := state.gitEnv.DevRepo.WorkingDir()
-		if actual != expected {
-			return fmt.Errorf("expected to be in %q but am in %q", expected, actual)
-		}
-		return nil
-	})
-
 	suite.Step(`^I am not prompted for any parent branches$`, func() error {
 		notExpected := "Please specify the parent branch of"
 		if state.runRes.OutputContainsText(notExpected) {
@@ -304,7 +292,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		table := RenderExecutedGitCommands(commands, input)
 		dataTable := FromGherkin(input)
 		expanded, err := dataTable.Expand(
-			state.gitEnv.DevRepo.WorkingDir(),
 			&state.gitEnv.DevRepo,
 			state.gitEnv.OriginRepo,
 		)
