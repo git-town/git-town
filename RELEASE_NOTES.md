@@ -1,5 +1,25 @@
 # Git Town Release Notes
 
+## 7.5.0 (2021-03-10)
+
+#### New Features
+
+- add log after command that causes auto abort
+  ([#1635](https://github.com/git-town/git-town/pull/1635))
+
+#### Bug Fixes
+
+- fix panic when continuing rebase
+  ([#1615](https://github.com/git-town/git-town/pull/1615))
+- fix panic when continuing a command that includes the fetch upstream step
+  ([#1617](https://github.com/git-town/git-town/pull/1617))
+- fix GitHub API log when shipping with the GitHub driver
+  ([#1622](https://github.com/git-town/git-town/pull/1622))
+- fix panic when aborting a command that includes discard open changes step
+  ([#1631](https://github.com/git-town/git-town/pull/1631))
+- fix continuing sync from subfolder
+  ([#1637](https://github.com/git-town/git-town/pull/1637))
+
 ## 7.4.0 (2020-07-05)
 
 Version 7.4.0 sports a vastly overhauled internal architecture that provides
