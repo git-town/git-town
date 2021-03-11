@@ -1,10 +1,10 @@
-VERSION=7.4.0
+VERSION=DEV
 TODAY=$(shell date +'%Y/%m/%d')
 
 .DEFAULT_GOAL := spec
 
 build:  # builds for the current platform
-	go install -ldflags "-X github.com/git-town/git-town/src/cmd.version=v${VERSION}-dev -X github.com/git-town/git-town/src/cmd.buildDate=${TODAY}"
+	go install -ldflags "-X github.com/git-town/git-town/src/cmd.version=v${VERSION} -X github.com/git-town/git-town/src/cmd.buildDate=${TODAY}"
 
 cuke: build   # runs the new Godog-based feature tests
 	@env GOGC=off go test . -v -count=1
