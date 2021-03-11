@@ -77,7 +77,7 @@ func (r *ProdRepo) RemoveOutdatedConfiguration() error {
 func (r *ProdRepo) NavigateToRootIfNecessary() error {
 	currentDirectory, err := os.Getwd()
 	if err != nil {
-		return fmt.Errorf("cannot get current working directory: %v", err)
+		return fmt.Errorf("cannot get current working directory: %w", err)
 	}
 	gitRootDirectory, err := r.Silent.RootDirectory()
 	if err != nil {
