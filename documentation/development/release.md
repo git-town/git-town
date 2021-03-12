@@ -21,7 +21,7 @@ On a Windows machine, in Git Bash:
 - install [hub](https://github.com/github/hub#installation)
 - install [go-msi](https://github.com/mh-cbon/go-msi#install)
 - install [wix](https://wixtoolset.org/releases)
-- optionlly install
+- optionally install
   [.NET 3.5](https://dotnet.microsoft.com/download/dotnet-framework)
 - `env VERSION=7.5.0 make msi` to create the Windows installer
 - test the created Windows installer in the `dist` directory
