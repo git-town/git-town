@@ -20,7 +20,9 @@ On a Windows machine, in Git Bash:
 
 - install [hub](https://github.com/github/hub#installation)
 - install [go-msi](https://github.com/mh-cbon/go-msi#install)
-- `env GITHUB_TOKEN=<your Github token> VERSION=7.4.0 make release-win`
+- install [wix](https://wixtoolset.org/releases)
+- optionlly install
+  [.NET 3.5](https://dotnet.microsoft.com/download/dotnet-framework)
 - this opens the release in the browser
 - verify that it added the `.msi` file
 - publish the release
