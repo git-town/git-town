@@ -86,8 +86,7 @@ Command: %s %s
 Error: %w
 Output:
 %s
-----------------------------------------
-`, cmd, strings.Join(args, " "), err, result.output)
+----------------------------------------`, cmd, strings.Join(args, " "), err, result.output)
 	}
 	return &result, err
 }
