@@ -26,10 +26,16 @@ func TestRun_Exec_UnknownExecutable(t *testing.T) {
 }
 
 func TestRun_Exec_ExitCode(t *testing.T) {
-	_, err := run.Exec("bash", "-c", "exit 2")
-	var execError *exec.ExitError
-	assert.True(t, errors.As(err, &execError))
-	assert.Equal(t, 2, execError.ExitCode())
+	result, err := run.Exec("bash", "-c", "echo 'hi' && exit 2")
+	assert.Equal(t, 2, result.ExitCode())
+	expectedError := `Command failed.
+
+Command: bash -c echo 'hi' && exit 2
+Error: exit status 2
+Output:
+hi
+`
+	assert.Equal(t, expectedError, err.Error())
 }
 
 func TestRun_InDir(t *testing.T) {
