@@ -74,6 +74,7 @@ func (r *ProdRepo) RemoveOutdatedConfiguration() error {
 	return nil
 }
 
+// Changes into the root directory
 func (r *ProdRepo) NavigateToRootIfNecessary() error {
 	currentDirectory, err := os.Getwd()
 	if err != nil {
@@ -83,8 +84,8 @@ func (r *ProdRepo) NavigateToRootIfNecessary() error {
 	if err != nil {
 		return err
 	}
-	if currentDirectory != gitRootDirectory {
-		return os.Chdir(gitRootDirectory)
+	if currentDirectory == gitRootDirectory {
+		return nil
 	}
-	return nil
+	return os.Chdir(gitRootDirectory)
 }
