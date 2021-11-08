@@ -85,7 +85,7 @@ func (r *ProdRepo) NavigateToRootIfNecessary() error {
 		return err
 	}
 	if currentDirectory == gitRootDirectory {
-		return nil
+		return os.Chdir(gitRootDirectory)
 	}
-	return os.Chdir(gitRootDirectory)
+	return nil
 }
