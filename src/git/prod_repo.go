@@ -74,6 +74,7 @@ func (r *ProdRepo) RemoveOutdatedConfiguration() error {
 	return nil
 }
 
+// Changes into the root directory
 func (r *ProdRepo) NavigateToRootIfNecessary() error {
 	currentDirectory, err := os.Getwd()
 	if err != nil {
