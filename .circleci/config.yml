@@ -3,7 +3,7 @@ version: 2
 jobs:
   clone:
     docker:
-      - image: circleci/golang:1.14.2
+      - image: circleci/golang:1.16.8
     steps:
       - checkout
       # build the binaries and store them in the workspace
