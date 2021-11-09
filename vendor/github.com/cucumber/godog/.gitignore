@@ -6,3 +6,5 @@ Gopkg.toml
 
 .DS_Store
 .idea
+
+_artifacts

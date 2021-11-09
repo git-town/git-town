@@ -4,15 +4,26 @@ code.gitea.io/sdk/gitea
 # github.com/acarl005/stripansi v0.0.0-20180116102854-5a71ef0e047d
 ## explicit
 github.com/acarl005/stripansi
-# github.com/cucumber/gherkin-go/v11 v11.0.0
-github.com/cucumber/gherkin-go/v11
-# github.com/cucumber/godog v0.9.0
+# github.com/cucumber/gherkin-go/v19 v19.0.3
+github.com/cucumber/gherkin-go/v19
+# github.com/cucumber/godog v0.12.2
 ## explicit
 github.com/cucumber/godog
 github.com/cucumber/godog/colors
+github.com/cucumber/godog/formatters
+github.com/cucumber/godog/internal/builder
+github.com/cucumber/godog/internal/flags
+github.com/cucumber/godog/internal/formatters
+github.com/cucumber/godog/internal/models
+github.com/cucumber/godog/internal/parser
+github.com/cucumber/godog/internal/storage
+github.com/cucumber/godog/internal/tags
+github.com/cucumber/godog/internal/utils
 # github.com/cucumber/messages-go/v10 v10.0.3
 ## explicit
 github.com/cucumber/messages-go/v10
+# github.com/cucumber/messages-go/v16 v16.0.1
+github.com/cucumber/messages-go/v16
 # github.com/davecgh/go-spew v1.1.1
 github.com/davecgh/go-spew/spew
 # github.com/dustin/go-humanize v1.0.0
@@ -21,10 +32,10 @@ github.com/dustin/go-humanize
 # github.com/fatih/color v1.9.0
 ## explicit
 github.com/fatih/color
-# github.com/gofrs/uuid v3.2.0+incompatible
+# github.com/gofrs/uuid v4.1.0+incompatible
+## explicit
 github.com/gofrs/uuid
 # github.com/gogo/protobuf v1.3.1
-github.com/gogo/protobuf/io
 github.com/gogo/protobuf/proto
 # github.com/golang/protobuf v1.4.0
 ## explicit
@@ -35,8 +46,16 @@ github.com/google/go-github/github
 # github.com/google/go-querystring v1.0.0
 ## explicit
 github.com/google/go-querystring/query
+# github.com/hashicorp/go-immutable-radix v1.3.1
+## explicit
+github.com/hashicorp/go-immutable-radix
+# github.com/hashicorp/go-memdb v1.3.2
+## explicit
+github.com/hashicorp/go-memdb
 # github.com/hashicorp/go-version v1.2.0
 github.com/hashicorp/go-version
+# github.com/hashicorp/golang-lru v0.5.4
+github.com/hashicorp/golang-lru/simplelru
 # github.com/inconshreveable/mousetrap v1.0.0
 github.com/inconshreveable/mousetrap
 # github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
@@ -54,13 +73,12 @@ github.com/pmezard/go-difflib/difflib
 # github.com/sergi/go-diff v1.0.0
 ## explicit
 github.com/sergi/go-diff/diffmatchpatch
-# github.com/spf13/cobra v1.0.0
+# github.com/spf13/cobra v1.1.1
 ## explicit
 github.com/spf13/cobra
 # github.com/spf13/pflag v1.0.5
-## explicit
 github.com/spf13/pflag
-# github.com/stretchr/testify v1.5.1
+# github.com/stretchr/testify v1.7.0
 ## explicit
 github.com/stretchr/testify/assert
 # golang.org/x/net v0.0.0-20200425230154-ff2c4b7c35a0
@@ -119,5 +137,5 @@ gopkg.in/AlecAivazis/survey.v1/terminal
 # gopkg.in/jarcoal/httpmock.v1 v1.0.0-20180304133419-61bcb58a0752
 ## explicit
 gopkg.in/jarcoal/httpmock.v1
-# gopkg.in/yaml.v2 v2.2.8
-gopkg.in/yaml.v2
+# gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776
+gopkg.in/yaml.v3

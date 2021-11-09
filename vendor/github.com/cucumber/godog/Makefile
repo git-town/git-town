@@ -30,3 +30,31 @@ cover:
 	go test -race -coverprofile=coverage.txt
 	go tool cover -html=coverage.txt
 	rm coverage.txt
+
+ARTIFACT_DIR := _artifacts
+
+# To upload artifacts for the current version;
+# execute: make upload
+#
+# Check https://github.com/tcnksm/ghr for usage of ghr
+upload: artifacts
+	ghr -replace $(VERS) $(ARTIFACT_DIR)
+
+# To build artifacts for the current version;
+# execute: make artifacts
+artifacts: 
+	rm -rf $(ARTIFACT_DIR)
+	mkdir $(ARTIFACT_DIR)
+
+	$(call _build,darwin,amd64)
+	$(call _build,linux,amd64)
+	$(call _build,linux,arm64)
+
+define _build
+	mkdir $(ARTIFACT_DIR)/godog-$(VERS)-$1-$2
+	env GOOS=$1 GOARCH=$2 go build -o $(ARTIFACT_DIR)/godog-$(VERS)-$1-$2/godog ./cmd/godog
+	cp README.md $(ARTIFACT_DIR)/godog-$(VERS)-$1-$2/README.md
+	cp LICENSE $(ARTIFACT_DIR)/godog-$(VERS)-$1-$2/LICENSE
+	cd $(ARTIFACT_DIR) && tar -c --use-compress-program="pigz --fast" -f godog-$(VERS)-$1-$2.tar.gz godog-$(VERS)-$1-$2 && cd ..
+	rm -rf $(ARTIFACT_DIR)/godog-$(VERS)-$1-$2
+endef
