@@ -26,7 +26,7 @@ func (c *Result) Command() string {
 	return c.command
 }
 
-// ExitCode returns the exit code of the command
+// ExitCode returns the exit code of the command.
 func (c *Result) ExitCode() int {
 	return c.exitCode
 }
