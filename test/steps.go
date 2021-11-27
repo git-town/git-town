@@ -26,9 +26,6 @@ var beforeSuiteMux sync.Mutex
 // the global GitManager instance.
 var gitManager *GitManager
 
-// Key for a particular context value type
-type cntCtxKey struct{}
-
 func InitializeTestSuite(sc *godog.TestSuiteContext) {
 	sc.BeforeSuite(func() {
 		// NOTE: we want to create only one global GitManager instance with one global memoized environment.
