@@ -26,6 +26,17 @@ var beforeSuiteMux sync.Mutex
 // the global GitManager instance.
 var gitManager *GitManager
 
+// unexported type for context keys defined in this package
+type key int
+
+// key for accessing the current gitEnvironment in the context
+type gitEnvKey key
+
+// helpers for accessing context
+func storeGitEnv(ctx context.Context, gitEnv *GitEnvironment) context.Context {
+	return context.WithValue(ctx, gitEnvKey, gitEnv)
+}
+
 func InitializeTestSuite(sc *godog.TestSuiteContext) {
 	sc.BeforeSuite(func() {
 		// NOTE: we want to create only one global GitManager instance with one global memoized environment.
@@ -53,12 +64,15 @@ func InitializeTestSuite(sc *godog.TestSuiteContext) {
 // InitializeScenario defines Cucumber step implementations around Git workspace management.
 // nolint: gocyclo,gocognit,funlen
 func InitializeScenario(sc *godog.ScenarioContext) {
+
+	// called before each scenario
 	sc.Before(func(ctx context.Context, scenario *godog.Scenario) (context.Context, error) {
 		// create a GitEnvironment for the scenario
 		gitEnvironment, err := gitManager.CreateScenarioEnvironment(scenario.Name)
 		if err != nil {
 			log.Fatalf("cannot create environment for scenario %q: %s", scenario.Name, err)
 		}
+		ctx = context.WithValue(ctx, gitEnvKey, gitEnvironment)
 		// Godog only provides state for the entire feature.
 		// We want state to be scenario-specific, hence we reset the shared state before each scenario.
 		// This is a limitation of the current Godog implementation, which doesn't have a `ScenarioContext` method,
