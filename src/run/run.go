@@ -76,5 +76,17 @@ func WithOptions(opts Options, cmd string, args ...string) (*Result, error) {
 	}
 	err = subProcess.Wait()
 	result.output = output.String()
+	result.exitCode = subProcess.ProcessState.ExitCode()
+	if err != nil {
+		err = fmt.Errorf(`
+----------------------------------------
+Diagnostic information of failed command
+
+Command: %s %s
+Error: %w
+Output:
+%s
+----------------------------------------`, cmd, strings.Join(args, " "), err, result.output)
+	}
 	return &result, err
 }

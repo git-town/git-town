@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"regexp"
 	"sort"
@@ -578,11 +577,8 @@ func (r *Runner) HasFile(name, content string) (result bool, err error) {
 // HasGitTownConfigNow indicates whether this repository contain Git Town specific configuration.
 func (r *Runner) HasGitTownConfigNow() (result bool, err error) {
 	outcome, err := r.Run("git", "config", "--local", "--get-regex", "git-town")
-	if err != nil {
-		exitError := err.(*exec.ExitError)
-		if exitError.ExitCode() == 1 {
-			return false, nil
-		}
+	if outcome.ExitCode() == 1 {
+		return false, nil
 	}
 	return outcome.OutputSanitized() != "", err
 }
