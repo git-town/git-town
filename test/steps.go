@@ -32,7 +32,7 @@ type key int
 // key for accessing the current gitEnvironment in the context
 type gitEnvKey key
 
-// helpers for accessing context
+// type-safe access to the shared GitEnvironment in the Cucumber context
 func storeGitEnv(ctx context.Context, gitEnv *GitEnvironment) context.Context {
 	return context.WithValue(ctx, gitEnvKey, gitEnv)
 }
