@@ -39,11 +39,11 @@ Feature: git-sync: on a feature branch with merge pull branch strategy
       | BRANCH  | LOCATION      | MESSAGE                                                    | FILE NAME           |
       | main    | local, remote | local main commit                                          | local_main_file     |
       |         |               | remote main commit                                         | remote_main_file    |
-      |         |               | Merge remote-tracking branch 'origin/main' into main       |                     |
+      |         |               | Merge remote-tracking branch 'origin/main'                 |                     |
       | feature | local, remote | local feature commit                                       | local_feature_file  |
       |         |               | remote feature commit                                      | remote_feature_file |
       |         |               | Merge remote-tracking branch 'origin/feature' into feature |                     |
       |         |               | local main commit                                          | local_main_file     |
       |         |               | remote main commit                                         | remote_main_file    |
-      |         |               | Merge remote-tracking branch 'origin/main' into main       |                     |
+      |         |               | Merge remote-tracking branch 'origin/main'                 |                     |
       |         |               | Merge branch 'main' into feature                           |                     |

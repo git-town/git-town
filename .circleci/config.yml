@@ -21,7 +21,7 @@ jobs:
   # which the "go-s" job tests in parallel
   go:
     docker:
-      - image: circleci/golang:1.14.2
+      - image: circleci/golang:1.16.8
     steps:
       - attach_workspace:
           at: /home/circleci
@@ -36,7 +36,7 @@ jobs:
   # runs the Cucumber tests for ship and sync in parallel to the other ones
   go-s:
     docker:
-      - image: circleci/golang:1.14.2
+      - image: circleci/golang:1.16.8
     steps:
       - attach_workspace:
           at: /home/circleci
