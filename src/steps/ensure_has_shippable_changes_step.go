@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/git-town/git-town/src/drivers"
-	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/v7/src/drivers"
+	"github.com/git-town/git-town/v7/src/git"
 )
 
 // EnsureHasShippableChangesStep asserts that the branch has unique changes not on the main branch.

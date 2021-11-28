@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"runtime"
 
-	"github.com/git-town/git-town/src/run"
+	"github.com/git-town/git-town/v7/src/run"
 )
 
 // OpenBrowserCommand returns the command to run on the console

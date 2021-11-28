@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/git-town/git-town/src/cli"
-	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/run"
+	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/run"
 	survey "gopkg.in/AlecAivazis/survey.v1"
 )
 

@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/git-town/git-town/src/cli"
+	"github.com/git-town/git-town/v7/src/cli"
 )
 
 // Options defines optional arguments for ShellRunner.RunWith().

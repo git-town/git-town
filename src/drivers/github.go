@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/git-town/git-town/src/drivers/helpers"
+	"github.com/git-town/git-town/v7/src/drivers/helpers"
 	"github.com/google/go-github/github"
 	"golang.org/x/oauth2"
 )

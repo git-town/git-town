@@ -1,8 +1,8 @@
 package steps
 
 import (
-	"github.com/git-town/git-town/src/drivers"
-	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/v7/src/drivers"
+	"github.com/git-town/git-town/v7/src/git"
 )
 
 // DeleteRemoteBranchStep deletes the current branch from the origin remote.

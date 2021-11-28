@@ -4,7 +4,7 @@
 // More information at https://github.com/git-town/git-town.
 package main
 
-import "github.com/git-town/git-town/src/cmd"
+import "github.com/git-town/git-town/v7/src/cmd"
 
 func main() {
 	cmd.Execute()
