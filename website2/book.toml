@@ -1,0 +1,6 @@
+[book]
+authors = ["Kevin Goslar"]
+language = "en"
+multilingual = false
+src = "src"
+title = "Git Town"
