@@ -1,3 +1,6 @@
 # Summary
 
-- [Chapter 1](./chapter_1.md)
+- [Introduction](./introduction.md)
+- [Install](./install.md)
+- [Tutorial](./tutorial.md)
+- [Q & A](questions.md)

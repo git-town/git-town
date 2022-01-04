@@ -1,0 +1,67 @@
+# Install
+
+Git Town runs anywhere Git runs.
+
+### macOS
+
+There are several options to install Git Town on macOS. The easiest way is via Homebrew: brew install git-town
+
+    manually:
+        download an archive containing the binary
+        extract with tar -xzf git-town_7.5.0_macOS_intel_64.tar.gz
+        move the git-town binary into a directory listed in your $PATH, for example /usr/local/bin
+
+Windows
+
+There are several options to install Git Town on Windows:
+
+    Windows installer: download
+
+    scoop:
+
+    scoop bucket add org https://github.com/git-town/scoop.git
+    scoop install git-town
+
+    manually: download the ZIP file, and put the binary inside it somewhere into your %PATH%.
+
+If you use the Windows Subsystem for Linux, install wsl-open to make the commands git town repo and git town new-pull-request work.
+Linux
+
+There are several options to install Git Town on Linux distributions:
+
+    Homebrew: brew install git-town
+
+    using your package manager:
+        on Debian-based systems, download the .deb file and run sudo apt-get install git-town_7.5.0_linux_intel_64.deb
+        on RedHat-based systems download the .rpm file and run rpm -i git-town_7.5.0_linux_intel_64.rpm
+
+    manually
+        download an archive containing the binary
+        extract with tar -xzf git-town_7.5.0_linux_intel_64.tar.gz
+        move the git-town binary into a directory listed in your $PATH, for example /usr/local/bin
+
+Arch Linux
+
+    Install / Update: install git-town from the AUR
+        You may use your favorite AUR helper
+        Alternatively, you can install manually from the AUR by:
+            downloading the latest tarball from this page
+            unpacking the tarball
+            cd into the newly unpacked directory, and running makepkg -si
+    Uninstall: run pacman -R git-town
+
+Install autocompletion
+
+    follow instructions given by git-town help completions
+
+Notifications about new releases
+
+    Subscribe to our release feed to never miss a new release!
+
+Uninstall
+
+When uninstalling Git Town:
+
+    remove Git Town's aliases: git town alias false
+    remove the Git Town configuration from your repositories: in each repo, run git town config reset
+    delete the git-town binary from your hard drive
