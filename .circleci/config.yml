@@ -63,6 +63,8 @@ jobs:
       - run: ls -la ~
       - run: ls -la ~/.dprint
       - run: ls -la ~/.dprint/bin
+      - run: echo $PATH
+      - run: ~/.dprint/bin/dprint --version
       # run the linters
       - run: cd text-run && yarn
       - run: make test-md
