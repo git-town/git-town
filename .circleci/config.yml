@@ -60,7 +60,9 @@ jobs:
       # install dprint
       - run: curl -fsSL https://dprint.dev/install.sh | sh
       - run: echo 'export PATH=~/.dprint/bin/dprint:$PATH' >> $BASH_ENV
-      - run: which dprint
+      - run: ls -la ~
+      - run: ls -la ~/.dprint
+      - run: ls -la ~/.dprint/bin
       # run the linters
       - run: cd text-run && yarn
       - run: make test-md
