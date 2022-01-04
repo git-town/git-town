@@ -32,18 +32,29 @@ If you use the Windows Subsystem for Linux, install [wsl-open](https://www.npmjs
 
 ### Linux
 
-There are several options to install Git Town on Linux distributions. If you use
+There are several options to install Git Town on Linux distributions. On Debian-based systems, [download](https://github.com/git-town/git-town/releases/latest) the `.deb` file matching your CPU architecture and run:
 
-    Homebrew: brew install git-town
+```
+sudo apt-get install git-town_7.6.0_linux_intel_64.deb
+```
 
-    using your package manager:
-        on Debian-based systems, download the .deb file and run sudo apt-get install git-town_7.5.0_linux_intel_64.deb
-        on RedHat-based systems download the .rpm file and run rpm -i git-town_7.5.0_linux_intel_64.rpm
+On RedHat-based systems [download](https://github.com/git-town/git-town/releases/latest) the `.rpm` file matching your CPU architecture and run
 
-    manually
-        download an archive containing the binary
-        extract with tar -xzf git-town_7.5.0_linux_intel_64.tar.gz
-        move the git-town binary into a directory listed in your $PATH, for example /usr/local/bin
+```
+rpm -i git-town_7.6.0_linux_intel_64.rpm
+```
+
+You can install Git Town via [Homebrew for Linux](https://docs.brew.sh/Homebrew-on-Linux):
+
+```
+brew install git-town
+```
+
+Or install it manually:
+
+- [download](https://github.com/git-town/git-town/releases/latest) the archive containing the Linux binary
+- extract: `tar -xzf git-town_7.6.0_linux_intel_64.tar.gz`
+- move the git-town binary into a directory listed in your `$PATH`, for example `/usr/local/bin`
 
 Arch Linux
 
