@@ -59,6 +59,7 @@ jobs:
       - run: mv ./golangci-lint /home/circleci/bin/
       # install dprint
       - run: curl -fsSL https://dprint.dev/install.sh | sh
+      - run: which dprint
       # run the linters
       - run: cd text-run && yarn
       - run: make test-md
