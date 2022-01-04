@@ -48,7 +48,7 @@ jobs:
           godog --concurrency=$(nproc --all) --format=progress --strict
   markdown:
     docker:
-      - image: circleci/golang:1.16.8
+      - image: circleci/node:12
     steps:
       - attach_workspace:
           at: /home/circleci
