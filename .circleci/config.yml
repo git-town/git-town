@@ -59,7 +59,7 @@ jobs:
       - run: mv ./golangci-lint /home/circleci/bin/
       # install dprint
       - run: curl -fsSL https://dprint.dev/install.sh | sh
-      - run: echo 'export PATH=$HOME/.dprint/bin/dprint:$PATH' >> $BASH_ENV
+      - run: echo 'export PATH=$HOME/.dprint/bin:$PATH' >> $BASH_ENV
       - run: ls -la ~
       - run: ls -la ~/.dprint
       - run: ls -la ~/.dprint/bin
