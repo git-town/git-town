@@ -9,8 +9,9 @@ You are in the middle of the sprint and have just finished a feature. You take t
     update your master branch to the latest version on GitHub
     cut a new feature branch from the master branch
 
-Running git town hack reset-passwords achieves all this in a single command. This gives you the best possible start for building the new feature, on top of the latest version of the code base.
-Synchronizing the branch
+Running git town hack reset-passwords achieves all this in a single command. This gives you the best possible start for building the new feature, avoiding unnecessary merge conflicts because you build on top of the latest version of the code base.
+
+### Synchronizing the branch
 
 After coding for a while you hear that Bob shipped a number of important bug fixes, and that Carol shipped some UI design updates. Both changes affect your work, so you want them in your feature branch before you continue. On a high level, you need to
 
