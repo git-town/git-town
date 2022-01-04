@@ -18,15 +18,15 @@ You can also install Git Town manually:
 
 ### Windows
 
-There are several options to install Git Town on Windows. The easiest way is via the Windows installer: [download](https://github.com/git-town/git-town/releases/download/v7.6.0/git-town_7.6.0_windows_intel_64.msi)
+There are several options to install Git Town on Windows. The easiest way is to [download the Windows installer](https://github.com/git-town/git-town/releases/download/v7.6.0/git-town_7.6.0_windows_intel_64.msi) and run it.
+You can also install Git Town via scoop:
 
+```
+scoop bucket add org https://github.com/git-town/scoop.git
+scoop install git-town
+```
 
-    scoop:
-
-    scoop bucket add org https://github.com/git-town/scoop.git
-    scoop install git-town
-
-    manually: download the ZIP file, and put the binary inside it somewhere into your %PATH%.
+As usual, you can manually download the ZIP file, and put the binary inside it somewhere into your %PATH%.
 
 If you use the Windows Subsystem for Linux, install wsl-open to make the commands git town repo and git town new-pull-request work.
 Linux
