@@ -13,14 +13,13 @@ brew install git-town
 You can also install Git Town manually:
 
 - download an archive containing the binary
-- extract with `tar -xzf git-town_7.5.0_macOS_intel_64.tar.gz`
+- extract with `tar -xzf git-town_7.6.0_macOS_intel_64.tar.gz`
 - move the git-town binary into a directory listed in your `$PATH`, for example `/usr/local/bin`
 
 ### Windows
 
-There are several options to install Git Town on Windows. The easiest way is via the
+There are several options to install Git Town on Windows. The easiest way is via the Windows installer: [download](https://github.com/git-town/git-town/releases/download/v7.6.0/git-town_7.6.0_windows_intel_64.msi)
 
-    Windows installer: download
 
     scoop:
 
