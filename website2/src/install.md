@@ -26,12 +26,13 @@ scoop bucket add org https://github.com/git-town/scoop.git
 scoop install git-town
 ```
 
-As usual, you can manually download the ZIP file, and put the binary inside it somewhere into your %PATH%.
+As usual, you can manually [download the Windows binary](https://github.com/git-town/git-town/releases/download/v7.6.0/git-town_7.6.0_windows_intel_64.zip) and put it somewhere into your `%PATH%`.
 
-If you use the Windows Subsystem for Linux, install wsl-open to make the commands git town repo and git town new-pull-request work.
-Linux
+If you use the Windows Subsystem for Linux, install [wsl-open](https://www.npmjs.com/package/wsl-open) to make the commands [git town repo](https://github.com/git-town/git-town/blob/master/documentation/commands/repo.md) and [git town new-pull-request](https://github.com/git-town/git-town/blob/master/documentation/commands/new-pull-request.md) work.
 
-There are several options to install Git Town on Linux distributions:
+### Linux
+
+There are several options to install Git Town on Linux distributions. If you use
 
     Homebrew: brew install git-town
 
