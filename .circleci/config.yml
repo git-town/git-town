@@ -48,7 +48,7 @@ jobs:
           godog --concurrency=$(nproc --all) --format=progress --strict
   markdown:
     docker:
-      - image: circleci/node:12
+      - image: circleci/golang:1.16.8
     steps:
       - attach_workspace:
           at: /home/circleci
@@ -57,7 +57,9 @@ jobs:
       - run: mv ./git-town /home/circleci/bin/
       - run: mv ./godog /home/circleci/bin/
       - run: mv ./golangci-lint /home/circleci/bin/
-      - run: cd tools/prettier && yarn
+      - name: install dprint
+        run: curl -fsSL https://dprint.dev/install.sh | sh
+      # run the linters
       - run: cd text-run && yarn
       - run: make test-md
 workflows:
