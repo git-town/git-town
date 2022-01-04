@@ -4,16 +4,21 @@ Git Town runs anywhere Git runs.
 
 ### macOS
 
-There are several options to install Git Town on macOS. The easiest way is via Homebrew: brew install git-town
+There are several options to install Git Town on macOS. The easiest way is via Homebrew:
 
-    manually:
-        download an archive containing the binary
-        extract with tar -xzf git-town_7.5.0_macOS_intel_64.tar.gz
-        move the git-town binary into a directory listed in your $PATH, for example /usr/local/bin
+```
+brew install git-town
+```
 
-Windows
+You can also install Git Town manually:
 
-There are several options to install Git Town on Windows:
+- download an archive containing the binary
+- extract with `tar -xzf git-town_7.5.0_macOS_intel_64.tar.gz`
+- move the git-town binary into a directory listed in your `$PATH`, for example `/usr/local/bin`
+
+### Windows
+
+There are several options to install Git Town on Windows. The easiest way is via the
 
     Windows installer: download
 
