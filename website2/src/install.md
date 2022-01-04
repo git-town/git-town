@@ -56,28 +56,34 @@ Or install it manually:
 - extract: `tar -xzf git-town_7.6.0_linux_intel_64.tar.gz`
 - move the git-town binary into a directory listed in your `$PATH`, for example `/usr/local/bin`
 
-Arch Linux
+### Arch Linux
 
-    Install / Update: install git-town from the AUR
-        You may use your favorite AUR helper
-        Alternatively, you can install manually from the AUR by:
-            downloading the latest tarball from this page
-            unpacking the tarball
-            cd into the newly unpacked directory, and running makepkg -si
-    Uninstall: run pacman -R git-town
+On Arch Linux, install or update [git-town](https://aur.archlinux.org/packages/git-town) from the AUR.
+You may use your favorite AUR helper.
+Alternatively, you can install manually from the AUR:
 
-Install autocompletion
+- download the latest tarball from [this page](https://aur.archlinux.org/packages/git-town)
+- unpack the tarball
+- `cd` into the newly unpacked directory, and run `makepkg -si`
 
-    follow instructions given by git-town help completions
+To uninstall Git Town from Arch linux:
 
-Notifications about new releases
+```
+pacman -R git-town
+```
 
-    Subscribe to our release feed to never miss a new release!
+### Install autocompletion
 
-Uninstall
+Follow the instructions given by `git-town help completions` to install the autocompletions for your shell.
 
-When uninstalling Git Town:
+### New releases
 
-    remove Git Town's aliases: git town alias false
-    remove the Git Town configuration from your repositories: in each repo, run git town config reset
-    delete the git-town binary from your hard drive
+Subscribe to our release feed to never miss a new release!
+
+# Uninstall
+
+To completely remove Git Town from your system:
+
+- remove Git Town's aliases: `git town alias false`
+- remove the Git Town configuration from your repositories: in each repo, run `git town config reset`
+- uninstall the binary from your system
