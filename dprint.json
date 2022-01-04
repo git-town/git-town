@@ -1,7 +1,8 @@
 {
   "incremental": true,
-  "json": {},
-  "markdown": {},
+  "markdown": {
+    "textWrap": "always"
+  },
   "includes": ["**/*.{json,md}"],
   "excludes": ["**/vendor/"],
   "plugins": [
