@@ -34,16 +34,15 @@ As usual, you can manually
 and put it somewhere into your `%PATH%`.
 
 If you use the Windows Subsystem for Linux, install
-[wsl-open](https://www.npmjs.com/package/wsl-open) to make the commands
+[wsl-open](https://www.npmjs.com/package/wsl-open) to allow the commands
 [git town repo](https://github.com/git-town/git-town/blob/master/documentation/commands/repo.md)
 and
 [git town new-pull-request](https://github.com/git-town/git-town/blob/master/documentation/commands/new-pull-request.md)
-work.
+to open your browser for you.
 
 ### Linux
 
-There are several options to install Git Town on Linux distributions. On
-Debian-based systems,
+On Debian-based systems,
 [download](https://github.com/git-town/git-town/releases/latest) the `.deb` file
 matching your CPU architecture and run:
 
@@ -59,22 +58,12 @@ matching your CPU architecture and run
 rpm -i git-town_7.6.0_linux_intel_64.rpm
 ```
 
-You can install Git Town via
+You can also install Git Town via
 [Homebrew for Linux](https://docs.brew.sh/Homebrew-on-Linux):
 
 ```
 brew install git-town
 ```
-
-Or install it manually:
-
-- [download](https://github.com/git-town/git-town/releases/latest) the archive
-  containing the Linux binary
-- extract: `tar -xzf git-town_7.6.0_linux_intel_64.tar.gz`
-- move the git-town binary into a directory listed in your `$PATH`, for example
-  `/usr/local/bin`
-
-### Arch Linux
 
 On Arch Linux, install or update
 [git-town](https://aur.archlinux.org/packages/git-town) from the AUR. You may
@@ -92,20 +81,25 @@ To uninstall Git Town from Arch linux:
 pacman -R git-town
 ```
 
-### Install autocompletion
+To install it manually:
 
-Follow the instructions given by `git-town help completions` to install the
-autocompletions for your shell.
+- [download](https://github.com/git-town/git-town/releases/latest) the archive
+  containing the Linux binary
+- extract: `tar -xzf git-town_7.6.0_linux_intel_64.tar.gz`
+- move the git-town binary into a directory listed in your `$PATH`, for example
+  `/usr/local/bin`
 
 ### New releases
 
-Subscribe to our release feed to never miss a new release!
+Subscribe to our
+[release feed](https://github.com/git-town/git-town/releases.atom) to never miss
+a new release!
 
-# Uninstall
+### Uninstall
 
 To completely remove Git Town from your system:
 
 - remove Git Town's aliases: `git town alias false`
 - remove the Git Town configuration from your repositories: in each repo, run
   `git town config reset`
-- uninstall the binary from your system
+- uninstall the program or manually delete the binary
