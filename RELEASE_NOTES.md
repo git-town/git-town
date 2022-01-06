@@ -201,7 +201,7 @@ experience. Ruby is no longer a development dependency.
 - `git ship`
   - add ability to ship hotfixes to perennial branches
   - add ability to merge via GitHub API when applicable. See
-    [documentation](documentation/commands/ship.md) for more info.
+    [documentation](website2/src/commands/ship.md) for more info.
 
 ## 4.1.2 (2017-06-08)
 
