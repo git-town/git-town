@@ -1,10 +1,8 @@
-<p align="center">
-  <img src="https://raw.githubusercontent.com/git-town/git-town/master/website/img/git-town-horizontal.svg">
-</p>
+# High-level CLI for Git
 
-Git Town is a high-level command-line interface for Git. It adds Git commands
-that make writing software in a team more efficient. This screencast shows it in
-action:
+Git Town adds Git commands that make software development in a team environment
+more efficient by keeping the various branches in everybody's copy of the
+repository better in sync with each other. This prevents many merge conflicts.
 
 <br>
 <p align="center">
@@ -14,14 +12,15 @@ action:
 </p>
 <br>
 
-Git is an amazing source code management system. It's CLI is (rightfully)
-generic and basic. This allows it to support all the different ways of using Git
-equally well. This can, however, make using the vanilla Git CLI cumbersome and
-repetitive in real life. As the screencast above shows, merging a feature branch
-into the main development branch can require up to 15 individual Git commands.
+Git is a flexible source code management system. It can be used in many
+different ways. The Git CLI (correctly) supports all possible ways of using Git
+equally well. It provides basic, generic commands out of which Git users can
+implement their particular Git workflows. This generic design can make using
+only the Git CLI cumbersome and repetitive in real life. As the screencast above
+shows, high-level source control activities like creating, synchronizing, or
+shipping a feature branch require running multiple, sometimes dozens of Git
+commands.
 
-Git Town adds a layer of high-level commands to Git. They perform typical
-development workflow operations like creating, synchronizing, or shipping
-feature branches. Git Town helps you use Git similar to how an expert user
-would, all while remaining as generic and unopinionated as Git itself is. Git
-Town is compatible with most common branching models.
+Git Town adds a high-level layer of Git commands for typical development
+operations like creating, synchronizing, or shipping feature branches. Git Town
+is compatible with most common branching models like Git Flow or GitHub Flow.

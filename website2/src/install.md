@@ -1,11 +1,11 @@
-# Install
+# Installation
 
-Git Town runs anywhere Git runs.
+Git Town is distributed as a single self-contained binary. It doesn't bundle a
+Git client but uses the Git installation that you also use on your terminal.
 
 ### macOS
 
-There are several options to install Git Town on macOS. The easiest way is via
-Homebrew:
+The easiest way to install Git Town on macOS is via Homebrew:
 
 ```
 brew install git-town
@@ -20,25 +20,25 @@ You can also install Git Town manually:
 
 ### Windows
 
-There are several options to install Git Town on Windows. The easiest way is to
+The easiest way to install Git Town on Windows is to
 [download the Windows installer](https://github.com/git-town/git-town/releases/download/v7.6.0/git-town_7.6.0_windows_intel_64.msi)
-and run it. You can also install Git Town via scoop:
+and run it. You can also install Git Town via [scoop](https://scoop.sh):
 
 ```
 scoop bucket add org https://github.com/git-town/scoop.git
 scoop install git-town
 ```
 
-As usual, you can manually
+You can manually
 [download the Windows binary](https://github.com/git-town/git-town/releases/download/v7.6.0/git-town_7.6.0_windows_intel_64.zip)
 and put it somewhere into your `%PATH%`.
 
-If you use the Windows Subsystem for Linux, install
+If you use the Windows Subsystem for Linux, please install
 [wsl-open](https://www.npmjs.com/package/wsl-open) to allow the commands
 [git town repo](https://github.com/git-town/git-town/blob/master/documentation/commands/repo.md)
 and
 [git town new-pull-request](https://github.com/git-town/git-town/blob/master/documentation/commands/new-pull-request.md)
-to open your browser for you.
+to open a browser window for you.
 
 ### Linux
 
@@ -66,20 +66,13 @@ brew install git-town
 ```
 
 On Arch Linux, install or update
-[git-town](https://aur.archlinux.org/packages/git-town) from the AUR. You may
-use your favorite AUR helper. Alternatively, you can install manually from the
-AUR:
+[git-town](https://aur.archlinux.org/packages/git-town) from the AUR.
+Alternatively, you can install manually from the AUR:
 
 - download the latest tarball from
   [this page](https://aur.archlinux.org/packages/git-town)
 - unpack the tarball
 - `cd` into the newly unpacked directory, and run `makepkg -si`
-
-To uninstall Git Town from Arch linux:
-
-```
-pacman -R git-town
-```
 
 To install it manually:
 
