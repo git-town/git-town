@@ -1,7 +1,7 @@
 # Summary
 
 - [Introduction](introduction.md)
-- [Install](nstall.md)
+- [Install](install.md)
 - [Configure](configure.md)
 - [Q & A](questions.md)
 - [Commands](commands.md)
