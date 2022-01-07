@@ -1,22 +1,19 @@
-<h1 textrun="command-heading">Hack command</h1>
+# Hack command
 
-<blockquote textrun="command-summary">
-Creates a new feature branch off the main development branch
-</blockquote>
+```
+git hack <branch name>
+```
 
-<a textrun="command-description">
+The hack command ("start hacking") creates a new feature branch with the given
+name off the main branch and brings all uncommitted changes over to it. Before
+it does that, it syncs the main branch to ensure the changes in the feature
+branch are on top of the latest code version.
 
-Syncs the main branch, forks a new feature branch with the given name off the
-main branch, pushes the new feature branch to the remote repository (if and only
-if [new-branch-push-flag](./new-branch-push-flag.md) is true), and brings over
-all uncommitted changes to the new feature branch.
+If the repository contains a remote called `upstream`, it also syncs the main
+branch with its upstream counterpart. You can control this behavior with the
+[sync-upstream](../configurations/sync-upstream.md) flag.
 
-See [sync](./sync.md) for information regarding remote upstream.
-
-</a>
-
-#### Usage
-
-<pre textrun="command-usage">
-git town hack &lt;branch&gt;
-</pre>
+If [new-branch-push-flag](.new-branch-push-flag.md) is set, `git hack` creates a
+remote tracking branch for the new feature branch. This behavior is disabled by
+default to make `git hack` fast. The first run of `git sync` will then create
+the remote tracking branch.

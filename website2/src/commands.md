@@ -1,12 +1,10 @@
 # Commands
 
-Git Town adds the following commands to Git. Each command can be called as
-`git town <command>`. This page displays the commands as they would be called
-after running [git town alias](commands/alias.md), some commands can be
+Each Git Town command can be called like `git town <command>`. This page
+displays the commands in the shorter form available after running
+[git town alias](commands/alias.md).
 
-Commands are provided in the short form, similar to how creates them.
-
-### Development Workflow
+### Development
 
 - [git hack](commands/hack.md) - create a new feature branch
 - [git sync](commands/sync.md) - update the current branch with all ongoing
@@ -16,6 +14,8 @@ Commands are provided in the short form, similar to how creates them.
 - [git ship](commands/ship.md) - deliver a completed feature branch
 
 ### Repository Maintenance
+
+_Git Town commands to _
 
 - [git kill](commands/kill.md) - delete a feature branch
 - [git prune-branches](commands/prune-branches.md) - remove all merged branches

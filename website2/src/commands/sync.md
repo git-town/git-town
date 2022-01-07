@@ -1,39 +1,19 @@
-<h1 textrun="command-heading">Sync command</h1>
+# Sync command
 
-<blockquote textrun="command-summary">
-Updates the current branch with all relevant changes
-</blockquote>
+```
+git sync [--all]
+```
 
-<a textrun="command-description">
-Synchronizes the current branch with the rest of the world.
+The sync command ("synchronize this branch") updates the current branch and its
+remote and parent branches with each other. When run on the main or a perennial
+branch, it pulls and pushes updates and tags to the tracking branch. When run on
+a feature branch, it additionally updates all parent branches and merges the
+direct parent into the current branch.
 
-When run on a feature branch:
+If the repository contains a remote called `upstream`, it also syncs the main
+branch with its upstream counterpart. You can control this behavior with the
+[sync-upstream](../configurations/sync-upstream.md) flag.
 
-- syncs all ancestor branches
-- pulls updates for the current branch
-- merges the parent branch into the current branch
-- pushes the current branch
-
-When run on the main branch or a perennial branch:
-
-- pulls and pushes updates for the current branch
-- pushes tags
-
-If the repository contains an "upstream" remote, syncs the main branch with its
-upstream counterpart. You can disable this by running
-`git config git-town.sync-upstream false`.
-
-</a>
-
-#### Usage
-
-<pre textrun="command-usage">
-git town sync
-</pre>
-
-#### Flags
-
-<pre textrun="command-flags">
---all       Sync all local branches
---dry-run   Print the commands but don't run them
-</pre>
+The `--all` parameter makes this command sync all local branches and not just
+the currently checked out branch. Running with the `--dry-run` parameter prints
+the commands but doesn't execute them.

@@ -1,29 +1,22 @@
-<h1 textrun="command-heading">New-pull-request command</h1>
+# New-pull-request command
 
-<blockquote textrun="command-summary">
-Creates a new pull request
-</blockquote>
+```
+git new-pull-request
+```
 
-<a textrun="command-description">
+The new-pull-request command allows the user to create a new pull request for
+the current branch. It does that by opening a browser window showing the new
+pull request page of your repository. The form is pre-populated with the current
+branch and it's parent branch. This command syncs the current branch before
+opening the pull request.
 
-Syncs the current branch and opens a browser window to the new pull request page
-of your repository. The form is pre-populated for the current branch so that the
-pull request only shows the changes made against the immediate parent branch.
+You can create new pull requests for repositories hosted on
+[GitHub](https://github.com/), [GitLab](https://gitlab.com/),
+[Gitea](https://gitea.com/) and [Bitbucket](https://bitbucket.org/). When using
+self-hosted versions of these services, you can configure the hosting service
+type with the [code-hosting-driver](../configurations/code-hosting-driver.md)
+setting.
 
-Supported only for repositories hosted on [GitHub](https://github.com/),
-[GitLab](https://gitlab.com/), [Gitea](https://gitea.com/) and
-[Bitbucket](https://bitbucket.org/). When using self-hosted versions this
-command needs to be configured with
-`git config git-town.code-hosting-driver <driver>` where driver is "github",
-"gitlab", "gitea", or "bitbucket". When using SSH identities, this command needs
-to be configured with
-`git config git-town.code-hosting-origin-hostname <hostname>` where hostname
-matches what is in your ssh config file.
-
-</a>
-
-#### Usage
-
-<pre textrun="command-usage">
-git town new-pull-request
-</pre>
+When using SSH identities, this command uses the hostname in the
+[code-hosting-origin-hostname](../configurations/code-hosting-origin-hostname.md)
+setting.
