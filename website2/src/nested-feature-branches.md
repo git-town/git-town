@@ -40,115 +40,104 @@ chain of feature branches.
 ## branch 1: fix typos
 
 First, let’s fix the typos because there is no reason to keep looking at them.
-We create a feature branch named `1-fix-typos` to contain the typo fixes:
+We create a feature branch named `1-fix-typos` to contain the typo fixes using
+the [git hack](commands/hack.md) command we already know:
 
 ```
 git hack 1-fix-typos
 ```
 
-This runs these commands:
+We fix the typos and submit a pull request via
+[git new-pull-request](commands/new-pull-request.md).
+
+This took under a minute. While these changes get reviewed, we move on to fixing
+the technical drift.
+
+## branch 2: rename foo
+
+We don’t want to look at the typos that we just fixed again, so let’s perform
+any further changes on top of branch `1-fix-typos`:
 
 ```
-git checkout master
-git pull
-git checkout -b 1-fix-typos
-```
-
-We fix the typos and submit a pull request:
-
-```
-git new-pull-request
-```
-
-All of this only took us under a minute. While the code review for those change
-happens, we move on to fix the technical drift. rename foo
-
-We don’t want to look at the typos we just fixed again, so let’s perform any
-further changes on top of branch 1-fix-typos:
-
 git append 2-rename-foo
+```
 
-git append creates a new feature branch by cutting it from the current branch,
-resulting in this branch hierarchy:
+[git append](commands/append.md) creates a new feature branch on top of the
+current branch (which is `1-fix-typos`). We now have this branch hierarchy:
 
-master\
+```
+main\
 1-fix-typos\
 2-rename-foo
-
-The corresponding vanilla Git commands are:
-
-git checkout -b 2-rename-foo
+```
 
 Now we commit the changes that rename the foo variable and start the next pull
-request:
+request.
 
-git new-pull-request
+Because we used `git append` to create the new branch, Git Town knows about the
+branch hierarchy and creates a pull request from branch `2-rename-foo` against
+branch `1-fix-typos`. This guarantees that the pull request for branch 2 shows
+only the changes made in that branch (renaming the variable) and not the syntax
+fixes made in branch 1.
 
-Because we used git append to create the new branch, Git Town knows about the
-branch hierarchy and creates a pull request from branch 2-rename-foo against
-branch 1-fix-typos. This guarantees that the pull request for branch 2 only
-shows changes made in that branch (renaming the variable), but not the syntax
-fixes made in branch 1. rename bar
+## branch 3: rename bar
 
-This is a different change than renaming foo, so let's do it in a different
-branch. Some of these changes might happen in the same places where we just
-renamed foo. We don't want to have to deal with merge conflicts later. Those are
-boring and risky. So let's make these changes on top of the changes we made in
-step 2:
+This is a different change from renaming `foo` and have different reviewers.
+Let's do it in a different branch. Some of these changes might happen on the
+same lines where we also renamed `foo` earlier. We don't want to have to deal
+with merge conflicts coming from that. So let's make this change on top of the
+change we made in step 2:
 
+```
 git append 3-rename-bar
+```
 
 We end up with this branch hierarchy:
 
-master\
-1-fix-typos\
-2-rename-foo\
-3-rename-bar
+```
+master
+  \
+   1-fix-typos
+     \
+      2-rename-foo
+        \
+         3-rename-bar
+```
 
-The corresponding vanilla Git command is
+## fixing more typos
 
-git checkout -b 3-rename-bar
-
-fixing more typos
-
-While renaming bar, we stumbled on a few more typos. Let's add them to the first
+While renaming `bar`, we discovered more typos. Let's add them to the first
 branch.
 
+```
 git checkout 1-fix-typos
-
-# make the changes and commit them here
-
+# make the changes and commit them
 git checkout 3-rename-bar
+```
 
-Back on branch 3-rename-bar, the freshly fixed typos are visible again because
-the commit to fix them only exists in branch 1-fix-typos right now. Luckily, Git
-Town can propagate these changes through all other branches automatically:
+Back on branch `3-rename-bar`, the freshly fixed typos are visible again because
+the commit to fix them exists only in branch `1-fix-typos` right now. Let's
+propagate these changes through the entire branch chain so that they become
+visible in branches 2 and 3 as well:
 
+```
 git sync
+```
 
-The corresponding vanilla Git commands are:
+## branch 4: generalize the infrastructure
 
-git checkout -b 2-rename-foo git merge 1-fix-typos git push git checkout
-3-rename-bar git merge 2-rename-foo git push
+With everything appropriately named we can make larger changes. We cut branch
+`4-generalize-infrastructure` and perform the refactor in it. It has to be a
+child branch of `3-rename-bar`, since the improved variable names done in the
+latter branch will help make the larger changes we are about to do now.
 
-generalize the infrastructure
-
-Okay, where were we? Right! With things properly named it is now easier to make
-sense of larger changes. We cut branch 4-generalize-infrastructure and perform
-the refactor in it. It has to be a child branch of 3-rename-bar, since the
-improved variable naming done before will make the larger changes we are about
-to do now more intuitive.
-
+```
 git append 4-generalize-infrastructure
+```
 
-Again, in vanilla Git:
-
-git checkout -b 4-generalize-infrastructure
-
-Lots of coding and committing into this branch to generalize things. Since
-that’s all we do here and nothing else, it’s pretty straightforward to get
-through it, though. Off goes the code review for those changes. Shipping the
-typo fixes
+This refactoring touches a lot of files. Since that’s all we do in this branch,
+it’s pretty straightforward to do and review. Off goes the code review for those
+changes. Shipping the typo fixes
 
 In the meantime, we got the approval for the typo fixes in step 1. Let’s ship
 them!
@@ -269,6 +258,33 @@ The new large refactor is at the front of the line, can be shipped right when it
 is reviewed, and our other changes are now built on top of it.
 
 Happy hacking!
+
+```
+```
+
+```
+```
+
+```
+```
+
+```
+```
+
+```
+```
+
+```
+```
+
+```
+```
+
+```
+```
+
+```
+```
 
 ```
 ```
