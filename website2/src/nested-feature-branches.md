@@ -202,18 +202,14 @@ Let’s stop here and review what we have done.
 
 ## Advantages
 
-There are many advantages of implementing a large code change as a chain of
-feature branches:
-
-- Each branch makes a single change and is easier to reason about and quicker to
-  implement, debug, review, and ship than branches performing multiple changes.
-- Branches containing focused changes cause fewer and smaller merge conflicts
-  than are easier to resolve than branches that implement many different
-  changes.
-- You can start the review/ship process for parts of your changes sooner than if
-  you implement all in one branch.
-- You can still work on multiple changes in parallel, just make sure to commit
-  them into the correct branch.
+Implementing a large code change as a chain of feature branches has many
+advantages. Each branch makes a single change and is easier to reason about and
+quicker to implement, debug, review, and ship than branches performing multiple
+changes. Branches containing focused changes cause fewer and smaller merge
+conflicts than are easier to resolve than branches that implement many different
+changes. You can start the review/ship process for parts of your changes sooner
+than if you implement all in one branch. You can still work on multiple changes
+in parallel, just make sure to commit them into the correct branch.
 
 ## Best Practices
 
