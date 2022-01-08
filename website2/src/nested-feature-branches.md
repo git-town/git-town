@@ -205,58 +205,63 @@ Let’s stop here and review what we have done.
 There are many advantages of implementing a large code change as a chain of
 feature branches:
 
-- Changes are more focused: each branch makes a single change which is easier to
-  reason about and quicker to implement, debug, review, and ship than a more
-  complex change.
-- Branches containing focused changes cause less and smaller merge conflicts
-  that are easier to resolve than branches that contain many different changes.
-- You can start the review/ship reviewing parts of your changes sooner because
-  you start submitting pull requests earlier.
+- Each branch makes a single change and is easier to reason about and quicker to
+  implement, debug, review, and ship than branches performing multiple changes.
+- Branches containing focused changes cause fewer and smaller merge conflicts
+  than are easier to resolve than branches that implement many different
+  changes.
+- You can start the review/ship process for parts of your changes sooner than if
+  you implement all in one branch.
+- You can still work on multiple changes in parallel, just make sure to commit
+  them into the correct branch.
 
-Ultimately, using this technique you will get more work done faster. You have
-more fun because there is a lot less getting stuck, spinning wheels, and
-starting over. Working this way requires running a lot more Git commands, but
-with Git Town this is a complete non-issue since it automates this repetition
-for you. Best Practices
+## Best Practices
 
-To fully leverage this technique, all you have to do is follow a few simple
-rules:
+**postpone ideas:** when you have an idea that is different from what you
+currently work on, resist the urge to implement it right away in the current
+feature branch. Finish the change you are working on right now, and then perform
+the new change in a new branch. If you can’t resist the Dopamine hit, commit
+your open changes into the current branch, create a child or parent branch,
+perform the new changes there, then return to the previous branch and finish the
+work there.
 
-postpone ideas: when you work on something and run across an idea for another
-change, resist the urge to do it right away. Instead, write down the change you
-want to do (on a sheet of paper or a simple text file), finish the change you
-are working on right now, and then perform the new change in a new branch a few
-minutes later. If you can’t wait at all, commit your open changes into the
-current branch, create the next branch, perform the new changes there, then
-return to the previous branch and finish the work there.
+**one chain of branches**: When unsure whether other changes depend on changes
+in your current branch, make them in a child branch. Working with child branches
+has almost no side effects except that you have to remember to ship the oldest
+ancestor branch first.
 
-go with one chain of branches: When in doubt whether changes depend on previous
-changes and might or might not cause merge conflicts later, just work in child
-branches. It has almost no side effects, except that you have to ship the
-ancestor branches first. If your branches are focused, you will get very fast
-reviews, be able to ship them quickly, and they won’t accumulate.
+**do large refactorings first:**
 
-do large refactorings first: In our example, we did the refactor relatively late
-in the chain because it wasn’t that substantial. Large refactorings that touch a
-lot of files have the biggest potential for merge conflicts with changes from
-other people, though. You don’t want them hanging around for too long, but get
-them shipped as quickly as you can. You can use git prepend to insert feature
-branches before the currently checked out feature branch. If you already have a
+Large refactorings that touch a lot of files have the biggest potential for
+merge conflicts with changes from other people. You don’t want to ship them as
+fast as you can. You can use [git prepend](commands/prepend.md) to insert a
+feature branch as a parent of the current feature branch. If you already have a
 long chain of unreviewed feature branches, try to insert the large refactor into
-the beginning of your chain, so that it can be reviewed and shipped as quickly
-as possible:
+the beginning of your chain.
 
-git checkout 2-rename-foo git prepend 1-other-large-refactor
+In our example:
+
+```
+git checkout 2-rename-foo
+git prepend 1-other-large-refactor
+```
 
 This leads to the following branch hierarchy:
 
-master\
-1-other-large-refactor\
-2-rename-foo\
-3-rename-bar\
-4-generalize-infrastructure
+```
+main
+  \
+   1-other-large-refactor
+     \
+      2-rename-foo
+        \
+         3-rename-bar
+           \
+            4-generalize-infrastructure
+```
 
-The new large refactor is at the front of the line, can be shipped right when it
-is reviewed, and our other changes are now built on top of it.
+Being in the front of the line, you can ship the new refactor right upon
+approval. You can also integrate it into your other changes before it gets
+shipped.
 
 Happy hacking!
