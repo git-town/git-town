@@ -6,5 +6,6 @@ tracking branch is out of sync.
 
 ### Customization
 
-Provide the `old_name` argument to rename a branch that is not currently checked
-out. Confirm renaming perennial branches with the `-f` option.
+Provide the additional `old_name` argument to rename the branch with the given
+name instead of the currently checked out branch. Renaming perennial branches
+requires confirmation with the `-f` option.

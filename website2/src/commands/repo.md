@@ -1,26 +1,16 @@
-<h1 textrun="command-heading">Repo command</h1>
+# git repo
 
-<blockquote textrun="command-summary">
-Opens the repository homepage
-</blockquote>
+The repo command ("show the repository") opens the repository homepage in your
+default browser. Git Town can display repositories hosted on
+[GitHub](https://github.com), [GitLab](https://gitlab.com),
+[Gitea](https://gitea.com), and [Bitbucket](https://bitbucket.org).
 
-<a textrun="command-description">
+### Customization
 
-Supported for repositories hosted on [GitHub](https://github.com/),
-[GitLab](https://gitlab.com/), [Gitea](https://gitea.com/), and
-[Bitbucket](https://bitbucket.org/). Derives the Git provider from the `origin`
-remote. You can override this detection with
-`git config git-town.code-hosting-driver <DRIVER>` where DRIVER is "github",
-"gitlab", "gitea", or "bitbucket".
+Git Town identifies the hosting service type by looking at the `origin` remote.
+You can override this detection with the
+[code-hosting-driver](../preferences/code-hosting-driver.md) setting.
 
-When using SSH identities, run
-`git config git-town.code-hosting-origin-hostname <HOSTNAME>` where HOSTNAME
-matches what is in your ssh config file.
-
-</a>
-
-#### Usage
-
-<pre textrun="command-usage">
-git town repo
-</pre>
+Set the
+[code-hosting-origin-hostname](../preferences/code-hosting-origin-hostname.md)
+setting to tell Git Town about the hostname when using ssh identities.
