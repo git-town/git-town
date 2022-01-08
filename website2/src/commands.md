@@ -39,7 +39,7 @@ displays the commands in the shorter form available after running
 - [git town perennial-branches](commands/perennial-branches.md) - display or
   update the perennial branches for the current repo
 - [git town pull-branch-strategy](commands/pull-branch-strategy.md) - display or
-  set the strategy with which perennial branches are updated
+  set the strategy to update perennial branches
 - [git town set-parent-branch](commands/set-parent-branch.md) - change the
   parent of a feature branch
 

@@ -1,55 +1,64 @@
-# Nested feature branches
+# Feature branch chains
 
 The
 [single responsibility principle](https://en.wikipedia.org/wiki/Single-responsibility_principle)
-applies to feature branches as well. Implementing several different unrelated
-code changes at the same time in the same feature branch is like trying to have
-a conversation about several different topics at the same time with the same
-person. It is never productive. We end up mixing issues or forgetting to think
-about important edge cases of one topic because we are distracted with the other
-topics. We only have parts of our brain available to think about each topic.
-Dealing with several issues at the same time might create the illusion of
-productivity, but in the end, it is faster, easier, safer, cleaner, and less
-error-prone to take on each topic separately.
+applies to feature branches the same way it applies to code architecture.
+Implementing, refactoring, reviewing, and resolving merge conflicts are much
+more straightforward on a branch that implements a single change than on a
+branch that contains several unrelated changes.
 
-This blog post describes a technique for highly focused development by
-implementing code changes using a series of nested Git branches. We use
-specialized tooling (Git Town, an open-source plugin for Git) to make this type
-of working easy and efficient. example
+Git Town's _branch chain_ feature supports working with single-responsibility
+feature branches. You implement each logical code change in a separate feature
+branch organize all branches in a chain that makes changes made in parent
+branches visible to their child branches.
 
-As an example, let’s say we want to implement a new feature for an existing
-product. But to make such a complex change, we have to get the code base ready
-for it first:
+As an example, let's say we want to add a feature to an existing codebase.
+Before can do that cleanly, we need to get the code base ready. In particular,
+we need to:
 
-    clean up some technical drift by improving the names of classes and functions that don’t make sense anymore
-    add some flexibility to the architecture so that the new feature can be built with less hackery
-    while looking through the code base, we also found a few typos we want to fix
+1. Clean up some technical drift: improve the names of variables, functions,
+   classes, and files whose meaning has changed over time as the application has
+   evolved. Cleaning this up now allows us to use more accurate names for our
+   new feature.
+2. Make the architecture more flexible so that we can add the new feature in a
+   clean way.
+3. Build the feature on top of the new architecture made in (1) and (2).
+4. While looking through the code we also found some typos that we want to fix.
 
-Let’s implement these things as a chain of independent but connected feature
-branches! I provide the Git Town commands as well as the individual Git commands
-you would have to run without Git Town for those unfamiliar with that tool.
-First, let’s fix those typos because that’s the easiest change and there is no
-reason to keep looking at them. fix typos
+Implementing all these changes in a single feature branch is a big and risky
+change that will take a long time. That's problematic in several ways. Touching
+so many files in the codebase and on a branch that exists until we have finished
+all these features will cause substantial merge conflicts with changes made by
+other team members in that time. If we mess up one of the changes and want to
+start over, we would have to throw away all the other changes as well. If the
+code review for any of the four features takes longer, it will hold back
+shipping the other features. Hence, let's implement these changes in separate
+branches. But since feature (3) depends on the changes in (1) and (2), and
+drives the changes in (2), we want to develop them together. The solution is a
+chain of feature branches.
 
-We create a feature branch named 1-fix-typos to contain the typo fixes from the
-master branch:
+## branch 1: fix typos
 
+First, let’s fix the typos because there is no reason to keep looking at them.
+We create a feature branch named `1-fix-typos` to contain the typo fixes:
+
+```
 git hack 1-fix-typos
+```
 
-git hack is a Git command added by Git Town. The corresponding vanilla Git
-commands are:
+This runs these commands:
 
-git checkout master git pull git checkout -b 1-fix-typos
+```
+git checkout master
+git pull
+git checkout -b 1-fix-typos
+```
 
-We always want to build new changes on top of the latest version of the master
-branch.
+We fix the typos and submit a pull request:
 
-We do a few commits fixing typos and submit a pull request:
-
+```
 git new-pull-request
-
-This Git Town command opens a browser window to create the pull request on your
-code hosting service.
+```
 
 All of this only took us under a minute. While the code review for those change
 happens, we move on to fix the technical drift. rename foo
@@ -260,3 +269,12 @@ The new large refactor is at the front of the line, can be shipped right when it
 is reviewed, and our other changes are now built on top of it.
 
 Happy hacking!
+
+```
+```
+
+```
+```
+
+```
+```
