@@ -37,7 +37,7 @@ branches. But since feature (3) depends on the changes in (1) and (2), and
 drives the changes in (2), we want to develop them together. The solution is a
 chain of feature branches.
 
-## branch 1: fix typos
+## Branch 1: fix typos
 
 First, let’s fix the typos because there is no reason to keep looking at them.
 We create a feature branch named `1-fix-typos` to contain the typo fixes using
@@ -53,7 +53,7 @@ We fix the typos and submit a pull request via
 This took under a minute. While these changes get reviewed, we move on to fixing
 the technical drift.
 
-## branch 2: rename foo
+## Branch 2: rename foo
 
 We don’t want to look at the typos that we just fixed again, so let’s perform
 any further changes on top of branch `1-fix-typos`:
@@ -66,9 +66,11 @@ git append 2-rename-foo
 current branch (which is `1-fix-typos`). We now have this branch hierarchy:
 
 ```
-main\
-1-fix-typos\
-2-rename-foo
+main
+  \
+   1-fix-typos
+     \
+      2-rename-foo
 ```
 
 Now we commit the changes that rename the foo variable and start the next pull
@@ -80,7 +82,7 @@ branch `1-fix-typos`. This guarantees that the pull request for branch 2 shows
 only the changes made in that branch (renaming the variable) and not the syntax
 fixes made in branch 1.
 
-## branch 3: rename bar
+## Branch 3: rename bar
 
 This is a different change from renaming `foo` and have different reviewers.
 Let's do it in a different branch. Some of these changes might happen on the
@@ -95,7 +97,7 @@ git append 3-rename-bar
 We end up with this branch hierarchy:
 
 ```
-master
+main
   \
    1-fix-typos
      \
@@ -104,7 +106,7 @@ master
          3-rename-bar
 ```
 
-## fixing more typos
+## Fixing more typos
 
 While renaming `bar`, we discovered more typos. Let's add them to the first
 branch.
@@ -124,7 +126,7 @@ visible in branches 2 and 3 as well:
 git sync
 ```
 
-## branch 4: generalize the infrastructure
+## Branch 4: generalize the infrastructure
 
 With everything appropriately named we can make larger changes. We cut branch
 `4-generalize-infrastructure` and perform the refactor in it. It has to be a
@@ -135,81 +137,81 @@ latter branch will help make the larger changes we are about to do now.
 git append 4-generalize-infrastructure
 ```
 
-This refactoring touches a lot of files. Since that’s all we do in this branch,
-it’s pretty straightforward to do and review. Off goes the code review for those
-changes. Shipping the typo fixes
+This refactoring touches a lot of files so we want to get this done and shipped
+as fast as possible. Since that’s all we do in this branch, it’s pretty
+straightforward to do and review. Off goes the code review for those changes.
+
+## Shipping the typo fixes
 
 In the meantime, we got the approval for the typo fixes in step 1. Let’s ship
 them!
 
+```
 git ship 1-fix-typos
+```
 
-The vanilla Git commands:
+You have to use the [git ship](commands/ship.md) command here because it updates
+the branch hierarchy that Git Town keeps track of.
 
-git stash -u # move open changes out of the way git checkout master # update
-master so that we ship our changes # on top of the most current changes git pull
-git checkout 1-fix-typos # make sure the local machine # has all the changes
-made in the # 1-fix-typos branch git pull git merge master # resolve any merge
-conflicts # between our feature and the latest master now, # on the feature
-branch git checkout master git merge — squash 1-fix-typos # use a squash merge #
-to remove all temporary commits # on the branch git push # make our shipped
-feature visible to # all other developers git branch -d 1-fix-typo # delete the
-shipped branch # from the local machine git push origin :1-fix-typo # delete the
-shipped branch # from the remote repository git checkout
-4-generalize-infrastructure # return to the branch # we were working on git
-stash pop # restore open changes we were working on
+With branch `1-fix-typos` shipped, our branch hierarchy now looks like this:
 
-With branch 1-fix-typos shipped, our branch hierarchy now looks like this:
+```
+main
+  \
+   2-rename-foo
+    \
+     3-rename-bar
+       \
+        4-generalize-infrastructure
+```
 
-master\
-2-rename-foo\
-3-rename-bar\
-4-generalize-infrastructure
+## Synchronizing our work with the rest of the world
 
-synchronizing our work with the rest of the world
+We have been at it for a while. Other developers on the team have shipped
+branches too. We don't want our branches to deviate too much from what’s
+happening on the `main` branch since that can lead to more severe merge
+conflicts later. Let's get everything in sync!
 
-We have been at it for a while. Other developers on the team have shipped things
-too, and technically the branch 2-rename-foo still points to the previous commit
-on master. We don't want our branches to deviate too much from what’s happening
-on the master branch since that can lead to more severe merge conflicts later.
-Let's get everything in sync!
-
+```
 git sync
+```
 
-The corresponding vanilla Git commands are:
+This merges `main` into `2-rename-foo`, then `2-rename-foo` into `3-rename-bar`,
+then `3-rename-bar` into `4-generalize-infrastructure`.
 
-git stash -u # move open changes out of the way git checkout master git pull git
-checkout 2-rename-foo git merge master git push git checkout 3-rename-bar git
-merge 2-rename-foo git push git checkout 4-generalize-infrastructure git merge
-3-rename-bar git push git stash pop # restore what we were working on
+## Branch 5: building the new feature
 
-Because we used git append to create the new branches, Git Town knows which
-branch is a child of which other branch, and can do the merges in the right
-order. building the new feature
+With the new generalized code architecture in place, we can now add the new
+feature.
 
-Back to business. With the new generalized code architecture in place, we can
-now add the new feature in a clean way. To build the new feature on top of the
-new infrastructure:
-
+```
 git append 5-add-feature
+```
 
-Let’s stop here. Hopefully, it is clear how Git Town allows to work in several
-Git branches in parallel. Let’s review:
+Let’s stop here and review what we have done.
 
-    each change happens in its own feature branch
-    git append creates a new feature branch on top of your existing work
-    git sync keeps all feature branches in sync with the rest of the world - do this several times a day
-    git ship ships a feature branch
+- Each change happens in its own feature branch.
+- All feature branches form a chain that makes changes made in earlier branches
+  visible in ones later in the chain
+- Each feature branch in the chain gets reviewed and shipped in isolation.
+- `git hack` creates a feature branch as a child of the main branch.
+- `git append` creates a new feature branch as a child of the current feature
+  branch. This starts a feature branch chain.
+- `git sync` keeps all feature branches in sync with the rest of the world.
+- `git ship` ships the oldest feature branch in a branch chain.
 
-advantages
+## Advantages
 
-Working this way has a number of important advantages:
+There are many advantages of implementing a large code change as a chain of
+feature branches:
 
-    Focused changes are easier and faster to create: if you change just one thing, you can do it quickly, make sure it makes sense, and move on to the next issue in another branch. No more getting stuck unsure which of the many changes you did in the last 10 minutes broke the build, and no need to fire up the debugger to resolve this mess.
-    They are easier and faster to review: The pull request can have a simple description to summarize it. Reviewers can easily wrap their heads around what changes they are looking at, and make sure they are correct and complete. This is also true if you write code just by yourself.
-    Branches containing focused changes cause less merge conflicts than branches with many changes in them. This gives Git more opportunity to resolve merge issues automatically.
-    In case you have to resolve merge conflicts manually, they are also easier and safer to resolve because the changes in each branch are more obvious.
-    Others can start reviewing parts of your changes sooner because you start submitting pull requests earlier.
+- Changes are more focused: each branch makes a single change which is easier to
+  reason about and quicker to implement, debug, review, and ship than a more
+  complex change.
+- Branches containing focused changes cause less and smaller merge conflicts
+  that are easier to resolve than branches that contain many different changes.
+- You can start the review/ship reviewing parts of your changes sooner because
+  you start submitting pull requests earlier.
 
 Ultimately, using this technique you will get more work done faster. You have
 more fun because there is a lot less getting stuck, spinning wheels, and
@@ -258,39 +260,3 @@ The new large refactor is at the front of the line, can be shipped right when it
 is reviewed, and our other changes are now built on top of it.
 
 Happy hacking!
-
-```
-```
-
-```
-```
-
-```
-```
-
-```
-```
-
-```
-```
-
-```
-```
-
-```
-```
-
-```
-```
-
-```
-```
-
-```
-```
-
-```
-```
-
-```
-```
