@@ -1,14 +1,12 @@
-# New-pull-request command
+# git new-pull-request
 
-```
-git new-pull-request
-```
+The new-pull-request command helps create a new pull request for the current
+feature branch. It does that by opening a browser window showing the new pull
+request page for your repository. The form is prepopulated with the current
+branch and it's parent branch. This command [syncs](sync.md) the current branch
+before opening the pull request.
 
-The new-pull-request command allows the user to create a new pull request for
-the current branch. It does that by opening a browser window showing the new
-pull request page of your repository. The form is pre-populated with the current
-branch and it's parent branch. This command syncs the current branch before
-opening the pull request.
+### Customization
 
 You can create new pull requests for repositories hosted on
 [GitHub](https://github.com/), [GitLab](https://gitlab.com/),

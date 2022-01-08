@@ -1,20 +1,22 @@
-# Ship command
+# git ship [branch name] [-m &lt;message&gt;]
 
-```
-git ship [branch name] [-m|--message <message>]
-```
-
-The ship command ("let's ship these features") merge a completed feature branch
-into the main branch and then removes the feature branch. Before the merge it
+The ship command ("let's ship this feature") merges a completed feature branch
+into the main branch and removes the feature branch. Before the merge it
 [syncs](sync.md) the branch to be shipped. After the merge it pushes the main
-branch.
+branch to share the commit on it with the rest of the world.
 
-Opens the default Git editor with a pre-populated commit message that the user
-can modify unless the `--message` parameter specifies it. To abort the ship,
-submit an empty commit message.
+Git ship opens the default editor with a prepopulated commit message that you
+can modify. You can submit an empty commit message to abort the shipping
+process.
+
+### Customization
+
+Similar to `git commit`, the `-m` parameter allows specifying the commit message
+via the CLI.
 
 This command ships only direct children of the main branch. To ship a nested
-feature branch, you need to ship or kill all its ancestor branches first.
+feature branch, you need to first ship or [kill](kill.md) all older ancestor
+branches.
 
 If you use GitHub or Gitea, have enabled
 [API access to your hosting provider](../configure.md#enable-api-access-to-your-hosting-provider),

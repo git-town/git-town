@@ -1,17 +1,10 @@
-<h1 textrun="command-heading">Kill command</h1>
+# git kill [&lt;branch&gt;]
 
-<blockquote textrun="command-summary">
-Removes an obsolete feature branch
-</blockquote>
+The kill command deletes the currently active feature branch including all
+uncommitted changes from the local and remote repository. It does not delete the
+main or perennial branches.
 
-<a textrun="command-description">
-Deletes the current or provided branch from the local and remote repositories.
-Does not delete perennial branches nor the main branch.
+### Customization
 
-</a>
-
-#### Usage
-
-<pre textrun="command-usage">
-git town kill [&lt;branch&gt;]
-</pre>
+If you provide a branch name, `git kill` removes it instead of the currently
+checked branch.

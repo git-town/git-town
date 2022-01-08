@@ -1,3 +1,5 @@
+# git town prepend &lt;branch&gt;
+
 <h1 textrun="command-heading">Prepend command</h1>
 
 <blockquote textrun="command-summary">
@@ -19,7 +21,6 @@ See [sync](./sync.md) for remote upstream options.
 #### Usage
 
 <pre textrun="command-usage">
-git town prepend &lt;branch&gt;
 </pre>
 
 #### SEE ALSO

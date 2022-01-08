@@ -1,23 +1,13 @@
-<h1 textrun="command-heading">Append command</h1>
+# git town append &lt;branch&gt;
 
-<blockquote textrun="command-summary">
-Creates a new feature branch as a direct child of the current branch.
-</blockquote>
+The append command creates a new feature branch with the given name as a direct
+child of the current branch and brings over all uncommitted changes to the new
+feature branch. Before it does that, it [syncs](sync.md) the current branch to
+ensure the changes in the feature branch are on top of the latest code version.
 
-<a textrun="command-description">
+### Customization
 
-Syncs the current branch, forks a new feature branch with the given name off the
-current branch, makes the new branch a child of the current branch, pushes the
-new feature branch to the remote repository (if and only if
-[new-branch-push-flag](./new-branch-push-flag.md) is true), and brings over all
-uncommitted changes to the new feature branch.
-
-See [sync](./sync.md) for information regarding remote upstream.
-
-</a>
-
-#### Usage
-
-<pre textrun="command-usage">
-git town append &lt;branch&gt;
-</pre>
+If [new-branch-push-flag](.new-branch-push-flag.md) is set, `git append` creates
+a remote tracking branch for the new feature branch. This behavior is disabled
+by default to make `git append` run fast. The first run of `git sync` will then
+create the remote tracking branch.

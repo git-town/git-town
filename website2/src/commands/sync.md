@@ -1,8 +1,4 @@
-# Sync command
-
-```
-git sync [--all]
-```
+# git sync [--all]
 
 The sync command ("synchronize this branch") updates the current branch and its
 remote and parent branches with each other. When run on the main or a perennial
@@ -14,6 +10,10 @@ If the repository contains a remote called `upstream`, it also syncs the main
 branch with its upstream counterpart. You can control this behavior with the
 [sync-upstream](../configurations/sync-upstream.md) flag.
 
-The `--all` parameter makes this command sync all local branches and not just
-the currently checked out branch. Running with the `--dry-run` parameter prints
-the commands but doesn't execute them.
+### Customization
+
+With the `--all` parameter this command syncs all local branches and not just
+the branch you are currently on. This is more comprehensive but takes longer.
+
+The `--dry-run` parameter allows to test-drive this command. It prints the Git
+commands that would be run but doesn't execute them.

@@ -4,7 +4,7 @@ Each Git Town command can be called like `git town <command>`. This page
 displays the commands in the shorter form available after running
 [git town alias](commands/alias.md).
 
-### Development
+### Typical development commands
 
 - [git hack](commands/hack.md) - create a new feature branch
 - [git sync](commands/sync.md) - update the current branch with all ongoing
@@ -13,20 +13,21 @@ displays the commands in the shorter form available after running
   request
 - [git ship](commands/ship.md) - deliver a completed feature branch
 
-### Repository Maintenance
-
-_Git Town commands to _
+### Advanced development commands
 
 - [git kill](commands/kill.md) - delete a feature branch
 - [git prune-branches](commands/prune-branches.md) - remove all merged branches
 - [git rename-branch](commands/rename-branch.md) - rename a branch
+- [git repo](commands/repo.md) - view the Git repository in the browser
+
+### Nested feature branches
+
 - [git append](commands/append.md) - create a new feature branch as a child of
   the current branch
 - [git prepend](commands/prepend.md) - create a new feature branch between the
   current branch and its parent
-- [git repo](commands/repo.md) - view the Git repository in the browser
 
-### Git Town Configuration
+### Git Town configuration
 
 - [git town config](commands/config.md) - display or update your Git Town
   configuration
@@ -42,7 +43,7 @@ _Git Town commands to _
 - [git town set-parent-branch](commands/set-parent-branch.md) - change the
   parent of a feature branch
 
-### Git Town Installation
+### Git Town installation
 
 - [git town alias](commands/alias.md) - add or remove shorter aliases for Git
   Town commands

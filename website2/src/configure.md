@@ -1,8 +1,9 @@
 # Configuration
 
-You can customize Git Town to your use case.
+Git Town provides a number of configuration options that allow you to customize
+it for your use case.
 
-### Enable shorter commands
+## Shorter commands
 
 Having to type `git town <command>` gets old. Git Town can install aliases for
 its commands that make them feel like native Git commands, i.e. allow you to run
@@ -14,7 +15,7 @@ git town alias true
 
 To remove these aliases, run `git town alias false`.
 
-### Enable API access to your hosting provider
+## API access to your hosting provider
 
 Git Town can ship branches that have an open pull request by merging this pull
 request via your code hosting service's API. This feature is currently
@@ -31,7 +32,7 @@ provide this API token to Git Town.
 git config --add git-town.github-token <your api token>
 ```
 
-### Disable deleting remote branches
+## Delete remote branches
 
 Some code hosting providers
 [automatically delete feature branches](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-the-automatic-deletion-of-branches)
@@ -43,10 +44,7 @@ after shipping it. To make Git Town play along, run:
 git config git-town.ship-delete-remote-branch false
 ```
 
-### Install autocompletion
+## Shell autocompletion
 
 Follow the instructions given by `git-town help completions` to install the
 autocompletions for your shell.
-
-```
-```
