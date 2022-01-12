@@ -1,11 +1,9 @@
-<h1 textrun="command-heading">Main-branch command</h1>
+# git town main-branch [branch]
 
-<blockquote textrun="command-summary">
-Displays or sets your main development branch
-</blockquote>
+The _main-branch_ command displays or sets the main development branch for a
+repository.
 
-#### Usage
+## Variations
 
-<pre textrun="command-usage">
-git town main-branch [&lt;branch&gt;]
-</pre>
+- without an argument, displays the main branch
+- with an argument, sets the main branch to the given value

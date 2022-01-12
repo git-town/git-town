@@ -1,19 +1,11 @@
-<h1 textrun="command-heading">Pull-branch-strategy command</h1>
+# git town pull-branch-strategy [(rebase|merge)]
 
-<blockquote textrun="command-summary">
-Displays or sets your pull branch strategy
-</blockquote>
-
-<a textrun="command-description">
-
+The _pull-branch-strategy_ command displays or sets your pull branch strategy.
 The pull branch strategy specifies what strategy to use when merging remote
 tracking branches into local branches for the main branch and perennial
 branches.
 
-</a>
+## Variations
 
-#### Usage
-
-<pre textrun="command-usage">
-git town pull-branch-strategy [(rebase | merge)]
-</pre>
+- without an argument, displays the currently configured perennial branches
+- the `update` subcommand displays UI to set the perennial branches

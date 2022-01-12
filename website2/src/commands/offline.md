@@ -1,16 +1,9 @@
-<h1 textrun="command-heading">Offline</h1>
+# git town offline [(true|false)]
 
-<blockquote textrun="command-summary">
-Displays or sets offline mode
-</blockquote>
+The _offline_ command displays or changes Git Town's offline mode. Git Town
+avoids network operations in offline mode.
 
-<a textrun="command-description">
-Git Town avoids network operations in offline mode.
+## Variations
 
-</a>
-
-#### Usage
-
-<pre textrun="command-usage">
-git town offline [(true | false)]
-</pre>
+- without an argument, displays the main branch
+- with an argument, sets the main branch to the given value

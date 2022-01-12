@@ -1,4 +1,4 @@
-# Configuration
+# Quick configuration
 
 These are the most important configuration options to customize Git Town for
 your use case. We will cover the full list of options

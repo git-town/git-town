@@ -11,4 +11,4 @@ The typical Git Town workflow looks like this:
 - If your team does pull requests, you can run
   [git new-pull-request](./commands/new-pull-request.md) to create a new pull
   request.
-- Finally, you run [git ship](./commands/ship.md) to deliver the feature branch.
+- You run [git ship](./commands/ship.md) to deliver the feature branch.

@@ -1,24 +1,12 @@
-<h1 textrun="command-heading">New-branch-push-flag command</h1>
+# git town new-branch-push-flag [(true|false)]
 
-<blockquote textrun="command-summary">
-Displays or sets your new branch push flag
-</blockquote>
-
-<a textrun="command-description">
-
-If "new-branch-push-flag" is true, Git Town pushes branches created with hack /
-append / prepend on creation. Defaults to false.
+The _new-branch-push-flag_ command displays or sets the new-branch-push-flag
+configuration setting. If set to `true`, [hack](hack.md), [append](append.md),
+and [prepend](prepend.md) push newly created feature branches to the `origin`
+remote. Defaults to `false`.
 
 </a>
 
-#### Usage
+## Variations
 
-<pre textrun="command-usage">
-git town new-branch-push-flag [(true | false)]
-</pre>
-
-#### Flags
-
-<pre textrun="command-flags">
---global   Displays or sets your global new branch push flag
-</pre>
+- the `--global` flag displays or sets the "new-branch-push-flag" globally

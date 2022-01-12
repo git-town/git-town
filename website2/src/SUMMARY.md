@@ -1,9 +1,9 @@
 # Summary
 
 - [Introduction](introduction.md)
-- [Install](install.md)
-- [Configure](configure.md)
 - [Q & A](questions.md)
+- [Install](install.md)
+- [Quick Configuration](quick-configuration.md)
 - [Commands](all-commands.md)
   - [Typical development workflow](typical-dev-commands.md)
     - [hack](commands/hack.md)

@@ -1,26 +1,11 @@
-<h1 textrun="command-heading">Perennial-branches command</h1>
+# git town perennial-branches [subcommand]
 
-<blockquote textrun="command-summary">
-Displays your perennial branches
-</blockquote>
+The _perennial-branches_ command displays your perennial branches.
 
-<a textrun="command-description">
-Perennial branches are long-lived branches.
-They cannot be shipped.
-</a>
+Perennial branches are long-lived branches. They are never shipped. Examples for
+perennial branches are `master`, `main`, `development`, `production`, `staging`.
 
-#### Usage
+## Variations
 
-<pre textrun="command-usage">
-git town perennial-branches
-git town perennial-branches [command]
-</pre>
-
-Available commands:
-
-<table textrun="command-subcommands">
-  <tr>
-    <th>update</th>
-    <td>Prompts to update your perennial branches</td>
-  </tr>
-</table>
+- without a subcommand, displays the currently configured perennial branches
+- the `update` subcommand displays UI to set the perennial branches

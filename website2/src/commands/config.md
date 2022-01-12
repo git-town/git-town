@@ -1,6 +1,6 @@
 # git town config [subcommand]
 
-The _config_ command displays or writes your Git Town configuration.
+The _config_ command shows and updates your Git Town configuration.
 
 ## Variations
 
