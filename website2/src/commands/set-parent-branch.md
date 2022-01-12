@@ -1,11 +1,6 @@
-<h1 textrun="command-heading">Set-parent-branch command</h1>
+# git set-parent-branch
 
-<blockquote textrun="command-summary">
-Prompts to set the parent branch for the current branch
-</blockquote>
-
-#### Usage
-
-<pre textrun="command-usage">
-git town set-parent-branch
-</pre>
+The _set-parent-branch_ command changes the parent branch for the current
+branch. It prompts the user for the new parent branch. Ideally you run
+[git sync](sync.md) when done updating parent branches to resolve merge
+conflicts between this branch and its new parent before making further changes.

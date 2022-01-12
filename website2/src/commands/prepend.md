@@ -1,30 +1,38 @@
 # git town prepend &lt;branch&gt;
 
-<h1 textrun="command-heading">Prepend command</h1>
+The _prepend_ command creates a new feature branch as the parent of the current
+branch. In particular, it inserts the new feature branch between the current
+feature branch and it's parent. Before it does that, it [syncs](sync.md) the
+current feature branch to ensure commits into the new branch are on top of the
+current state of the repository.
 
-<blockquote textrun="command-summary">
-Creates a new feature branch as the parent of the current branch
-</blockquote>
+### Example
 
-<a textrun="command-description">
+Consider this branch setup:
 
-Syncs the parent branch, cuts a new feature branch with the given name off the
-parent branch, makes the new branch the parent of the current branch, pushes the
-new feature branch to the remote repository (if
-[new-branch-push-flag](./new-branch-push-flag.md) is true), and brings over all
-uncommitted changes to the new feature branch.
+```
+main
+ \
+  feature-2
+```
 
-See [sync](./sync.md) for remote upstream options.
+We are on the `feature-2` branch. After running `git prepend feature-1`, our
+repository has this branch setup:
 
-</a>
+```
+main
+ \
+  feature-1
+   \
+    feature-2
+```
 
-#### Usage
+### Customization
 
-<pre textrun="command-usage">
-</pre>
+If [new-branch-push-flag](.new-branch-push-flag.md) is set, `git hack` creates a
+remote tracking branch for the new feature branch. This behavior is disabled by
+default to make `git hack` run fast. The first run of `git sync` will create the
+remote tracking branch.
 
-#### SEE ALSO
-
-- [git append](append.md) to create a new feature branch as a child of the
-  current branch
-- [git hack](hack.md) to create a new top-level feature branch
+```
+```

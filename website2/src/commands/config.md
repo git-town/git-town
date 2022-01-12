@@ -1,25 +1,10 @@
-<h1 textrun="command-heading">Config command</h1>
+# git town config [subcommand]
 
-<blockquote textrun="command-summary">
-Displays your Git Town configuration
-</blockquote>
+The _config_ command displays or writes your Git Town configuration.
 
-#### Usage
+## Variations
 
-<pre textrun="command-usage">
-git town config
-git town config [command]
-</pre>
-
-Available commands:
-
-<table textrun="command-subcommands">
-  <tr>
-    <th>reset</th>
-    <td>Resets your Git Town configuration</td>
-  </tr>
-  <tr>
-    <th>setup</th>
-    <td>Prompts to setup your Git Town configuration</td>
-  </tr>
-</table>
+- Running without a subcommand displays the current Git Town configuration.
+- The `reset` subcommand deletes all Git Town configuration entries.
+- The `setup` subcommand writes configuration entries after interactively
+  prompting for them.

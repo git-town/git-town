@@ -1,7 +1,8 @@
 # Configuration
 
-Git Town provides a number of configuration options that allow you to customize
-it for your use case.
+These are the most important configuration options to customize Git Town for
+your use case. We will cover the full list of options
+[later](configuration-commands.md).
 
 ## Shorter commands
 
