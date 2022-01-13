@@ -1,8 +1,8 @@
 # git town completion [bash|zsh|fish|powershell]
 
-The _completions_ command generates auto-completion scripts for Bash, zsh, fish,
-and PowerShell. With completions enabled, `git-town <tab key>` will show you all
-possible subcommands, possibly with a short help text.
+The _completion_ command generates auto-completion scripts for Bash, Zsh, Fish,
+and PowerShell. With shell completions set up, `git-town <tab key>` will
+auto-complete subcommands.
 
 ## Bash
 
