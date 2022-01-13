@@ -72,18 +72,6 @@ Git Town provides these additional Git commands:
 See the [installation instructions](https://www.git-town.com/install.html) for
 more details.
 
-#### Aliasing
-
-Git Town commands can be
-[aliased](https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases) to remove the
-`town` prefix:
-
-```
-git town alias true
-```
-
-After executing this, you can run `git hack` instead of `git town hack`.
-
 ## Configuration
 
 Git Town prompts for required configuration information during usage. Use the
