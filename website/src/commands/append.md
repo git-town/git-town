@@ -2,9 +2,9 @@
 
 The _append_ command creates a new feature branch with the given name as a
 direct child of the current branch and brings over all uncommitted changes to
-the new feature branch. Before it does that, it [syncs](sync.md) the current
-branch to ensure commits into the new branch are on top of the current state of
-the repository.
+the new branch. Before it does that, it [syncs](sync.md) the current branch to
+ensure commits into the new branch are on top of the current state of the
+repository.
 
 ### Example
 
@@ -16,8 +16,8 @@ main
   feature-1
 ```
 
-We are on the `feature-1` branch. After running `git prepend feature-2`, our
-repository has this branch setup:
+We are on the `feature-1` branch. After running `git append feature-2`, our
+repository will have this branch setup:
 
 ```
 main
