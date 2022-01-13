@@ -15,7 +15,7 @@ for an independent review.
 
 Git Town provides these additional Git commands:
 
-**Development Workflow**
+#### Typical development commands
 
 - [git town hack](https://www.git-town.com/commands/hack.html) - cuts a new
   up-to-date feature branch off the main branch
@@ -26,7 +26,7 @@ Git Town provides these additional Git commands:
 - [git town ship](https://www.git-town.com//documentation/commands/ship.md) -
   delivers a completed feature branch and removes it
 
-**Repository Maintenance**
+**Advanced development commands**
 
 - [git town kill](https://www.git-town.com//documentation/commands/kill.md) -
   removes a feature branch
@@ -34,12 +34,15 @@ Git Town provides these additional Git commands:
   delete all merged branches
 - [git town rename-branch](https://www.git-town.com//documentation/commands/rename-branch.md) -
   rename a branch
+- [git town repo](https://www.git-town.com//documentation/commands/repo.md) -
+  view the repository homepage
+
+**Nested feature branches**
+
 - [git town append](https://www.git-town.com//documentation/commands/append.md) -
   insert a new branch as a child of the current branch
 - [git town prepend](https://www.git-town.com//documentation/commands/prepend.md) -
   insert a new branch between the current branch and its parent
-- [git town repo](https://www.git-town.com//documentation/commands/repo.md) -
-  view the repository homepage
 
 **Git Town Configuration**
 
