@@ -1,7 +1,7 @@
 # Installation
 
-Git Town is distributed as a single self-contained binary. It doesn't bundle a
-Git client but uses the Git installation that you also use on your terminal.
+Git Town ships as a single self-contained binary. It doesn't bundle a Git client
+but uses the native Git installation on your machine instead.
 
 ## macOS
 
@@ -93,7 +93,7 @@ a new release!
 
 ## Uninstall
 
-To completely remove Git Town from your system:
+To remove Git Town from your system:
 
 - remove Git Town's aliases: `git town alias false`
 - remove the Git Town configuration from your repositories: in each repo, run

@@ -7,5 +7,5 @@ branches.
 
 ## Variations
 
-- without an argument, displays the currently configured perennial branches
+- without an argument, displays the existing perennial branches
 - the `update` subcommand displays UI to set the perennial branches

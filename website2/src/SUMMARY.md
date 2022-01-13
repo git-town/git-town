@@ -28,5 +28,5 @@
     - [pull-branch-strategy](commands/pull-branch-strategy.md)
   - [Installation commands](installation-commands.md)
     - [alias](commands/alias.md)
-    - [completions](commands/completions.md)
+    - [completion](commands/completion.md)
     - [version](commands/version.md)

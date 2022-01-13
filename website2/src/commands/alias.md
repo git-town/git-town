@@ -1,21 +1,13 @@
-<h1 textrun="command-heading">Alias command</h1>
+# git town alias (true|false)
 
-<blockquote textrun="command-summary">
-Adds or removes default global aliases
-</blockquote>
-
-<a textrun="command-description">
-Global aliases make Git Town commands feel like native Git commands.
-When enabled, you can run "git hack" instead of "git town hack".
-
-Does not overwrite existing aliases.
+The _alias_ command adds or removes default global aliases. Global aliases make
+Git Town commands feel like native Git commands. When enabled, you can run
+`git hack` instead of `git town hack`. This command does not overwrite existing
+aliases.
 
 This can conflict with other tools that also define Git aliases.
 
-</a>
+### Variations
 
-#### Usage
-
-<pre textrun="command-usage">
-git town alias (true | false)
-</pre>
+- when given `true`, creates the aliases
+- when given `false`, removes the aliases

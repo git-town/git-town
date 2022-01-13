@@ -1,11 +1,3 @@
-<h1 textrun="command-heading">Version command</h1>
+# git town version
 
-<blockquote textrun="command-summary">
-Displays the version
-</blockquote>
-
-#### Usage
-
-<pre textrun="command-usage">
-git town version
-</pre>
+The _version_ command displays the installed version of Git Town.
