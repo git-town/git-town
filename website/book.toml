@@ -8,6 +8,6 @@ title = "Git Town"
 
 [output.html]
 git-repository-url = "https://github.com/git-town/git-town"
-edit-url-template = "https://github.com/git-town/git-town/edit/main/website2/{path}"
+edit-url-template = "https://github.com/git-town/git-town/edit/main/website/{path}"
 site-url = "/example-book/"
 no-section-label = true

@@ -5,8 +5,6 @@ configuration setting. If set to `true`, [hack](hack.md), [append](append.md),
 and [prepend](prepend.md) push newly created feature branches to the `origin`
 remote. Defaults to `false`.
 
-</a>
-
 ## Variations
 
 - the `--global` flag displays or sets the "new-branch-push-flag" globally
