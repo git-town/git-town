@@ -6,7 +6,7 @@ request page for your repository. The form is prepopulated with the current
 branch and it's parent branch. This command [syncs](sync.md) the current branch
 before opening the pull request.
 
-### Customization
+### Variations
 
 You can create new pull requests for repositories hosted on
 [GitHub](https://github.com/), [GitLab](https://gitlab.com/),

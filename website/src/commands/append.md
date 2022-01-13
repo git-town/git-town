@@ -27,7 +27,7 @@ main
     feature-2
 ```
 
-### Customization
+### Variations
 
 If [new-branch-push-flag](new-branch-push-flag.md) is set, `git append` creates
 a remote tracking branch for the new feature branch. This behavior is disabled

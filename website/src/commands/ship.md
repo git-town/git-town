@@ -9,7 +9,7 @@ Git ship opens the default editor with a prepopulated commit message that you
 can modify. You can submit an empty commit message to abort the shipping
 process.
 
-### Customization
+### Variations
 
 Similar to `git commit`, the `-m` parameter allows specifying the commit message
 via the CLI.

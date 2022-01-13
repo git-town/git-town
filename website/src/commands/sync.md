@@ -10,7 +10,7 @@ If the repository contains a remote called `upstream`, it also syncs the main
 branch with its upstream counterpart. You can control this behavior with the
 [sync-upstream](../preferences/sync-upstream.md) flag.
 
-### Customization
+### Variations
 
 With the `--all` parameter this command syncs all local branches and not just
 the branch you are currently on. This is more comprehensive but takes longer.
