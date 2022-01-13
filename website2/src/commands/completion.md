@@ -1,4 +1,4 @@
-# git town completions [bash|zsh|fish|powershell]
+# git town completion [bash|zsh|fish|powershell]
 
 The _completions_ command generates auto-completion scripts for Bash, zsh, fish,
 and PowerShell. With completions enabled, `git-town <tab key>` will show you all
@@ -6,24 +6,32 @@ possible subcommands, possibly with a short help text.
 
 ## Bash
 
-To install autocompletion in Bash, run this command:
+To install autocompletion for Bash, run this command:
 
 ```
-source <(git-town completions bash)
+source <(git-town completion bash)
 ```
 
 ## Zsh
 
-To install autocompletions in Zsh, run this command:
+To install autocompletions for Zsh, run this command:
 
 ```
-source <(git-town completions zsh)
+source <(git-town completion zsh)
 ```
 
 ## Fish
 
-To install autocompletions in Fish, run this command:
+To install autocompletions for Fish, run this command:
 
 ```
-git-town completions fish | source
+git-town completion fish | source
+```
+
+## Powershell
+
+To install autocompletions for Powershell, run this command:
+
+```
+git-town completion powershell | source
 ```
