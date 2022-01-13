@@ -71,7 +71,7 @@ setup-go:
 	@(cd .. && GO111MODULE=on go get github.com/golangci/golangci-lint/cmd/golangci-lint@v1.27.0)
 
 stats:  # shows code statistics
-	@find . -type f | grep -v '\./node_modules/' | grep -v '\./vendor/' | grep -v '\./.git/' | xargs scc
+	@find . -type f | grep -v './text-run/node_modules' | grep -v '\./vendor/' | grep -v '\./.git/' | grep -v './website/book' | xargs scc
 
 test: lint docs unit cuke  # runs all the tests
 .PHONY: test
