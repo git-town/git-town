@@ -31,3 +31,11 @@ It is possible to use the two tools together.
 
 Yes, we try to be good citizens in the Git ecosystem. If you run into any issues
 with your setup, please let us know!
+
+### Does my whole team have to use Git Town?
+
+No. But please make sure that all feature branches get squash-merged, for
+example by running `git merge --squash` or requiring this in your
+[GitHub settings](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/configuring-commit-squashing-for-pull-requests).
+If you don't know what squash-merges are, you probably want to learn about and
+use them.
