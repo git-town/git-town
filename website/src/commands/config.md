@@ -2,7 +2,7 @@
 
 The _config_ command displays and updates the local Git Town configuration.
 
-## Variations
+### Variations
 
 - Running without a subcommand shows the current Git Town configuration.
 - The `reset` subcommand deletes all Git Town configuration entries.

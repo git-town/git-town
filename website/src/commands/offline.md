@@ -3,7 +3,7 @@
 The _offline_ command displays or changes Git Town's offline mode. Git Town
 avoids network operations in offline mode.
 
-## Variations
+### Variations
 
 - without an argument, displays the main branch
 - with an argument, sets the main branch to the given value
