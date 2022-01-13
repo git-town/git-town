@@ -5,7 +5,12 @@ Git Town commands feel like native Git commands. When enabled, you can run
 `git hack` instead of `git town hack`. This command does not overwrite existing
 aliases.
 
-This can conflict with other tools that also define Git aliases.
+This can conflict with other tools that also define Git aliases. You can also
+set this manually for individual commands:
+
+```
+git config --global alias.hack 'town hack'
+```
 
 ### Variations
 

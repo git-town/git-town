@@ -12,6 +12,9 @@ repository better in sync with each other. This prevents many merge conflicts.
 </p>
 <br>
 
+See also this
+[external review](https://www.softpedia.com/get/Programming/Other-Programming-Files/Git-Town.shtml).
+
 Git is a flexible source code management system. It can be used in many
 different ways. The Git CLI (correctly) supports all possible ways of using Git
 equally well. It provides basic, generic commands out of which Git users can
