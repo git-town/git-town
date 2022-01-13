@@ -29,7 +29,7 @@ main
 
 ### Customization
 
-If [new-branch-push-flag](.new-branch-push-flag.md) is set, `git append` creates
+If [new-branch-push-flag](new-branch-push-flag.md) is set, `git append` creates
 a remote tracking branch for the new feature branch. This behavior is disabled
 by default to make `git append` run fast. The first run of `git sync` will
 create the remote tracking branch.

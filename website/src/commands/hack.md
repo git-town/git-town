@@ -7,11 +7,11 @@ branch are on top of the current state of the repository.
 
 If the repository contains a remote called `upstream`, it also syncs the main
 branch with its upstream counterpart. You can control this behavior with the
-[sync-upstream](../configurations/sync-upstream.md) flag.
+[sync-upstream](../preferences/sync-upstream.md) flag.
 
 ### Customization
 
-If [new-branch-push-flag](.new-branch-push-flag.md) is set, `git hack` creates a
+If [new-branch-push-flag](new-branch-push-flag.md) is set, `git hack` creates a
 remote tracking branch for the new feature branch. This behavior is disabled by
 default to make `git hack` run fast. The first run of `git sync` will create the
 remote tracking branch.

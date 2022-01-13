@@ -8,7 +8,7 @@ direct parent into the current branch.
 
 If the repository contains a remote called `upstream`, it also syncs the main
 branch with its upstream counterpart. You can control this behavior with the
-[sync-upstream](../configurations/sync-upstream.md) flag.
+[sync-upstream](../preferences/sync-upstream.md) flag.
 
 ### Customization
 
