@@ -88,8 +88,6 @@ Found a bug or have an idea for a new feature?
 our [contributing](/CONTRIBUTING.md) and
 [developer](documentation/development/README.md) guides to get started.
 
-### Contributors
-
 Kudos to our contributors!
 
 <table>
