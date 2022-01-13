@@ -76,6 +76,15 @@ Manual installation:
 - move the git-town binary into a directory listed in your `$PATH`, for example
   `/usr/local/bin`
 
+## compile from source
+
+If you have the [Go compiler](https://go.dev) installed, you can compile the
+latest version of Git Town from source by running:
+
+```
+go get github.com/git-town/git-town
+```
+
 ## New releases
 
 Subscribe to our
