@@ -1,6 +1,6 @@
 [book]
-authors = ["Kevin Goslar"]
-description = "Source code for the Git Town website"
+authors = ["The Git Town authors"]
+description = "Git Town user manual"
 language = "en"
 multilingual = false
 src = "src"
@@ -9,5 +9,5 @@ title = "Git Town"
 [output.html]
 git-repository-url = "https://github.com/git-town/git-town"
 edit-url-template = "https://github.com/git-town/git-town/edit/main/website/{path}"
-site-url = "/example-book/"
+site-url = "https://www.git-town.com/"
 no-section-label = true
