@@ -25,7 +25,7 @@ fix-go:  # auto-fixes all Go lint issues
 fix-md:  # auto-fixes all Markdown lint issues
 	dprint fmt
 
-help:  # prints available targets
+help:  # prints all available targets
 	@cat Makefile | grep '^[^ ]*:' | grep -v '.PHONY' | grep -v help | sed 's/:.*#/#/' | column -s "#" -t
 
 msi:  # compiles the MSI installer for Windows
