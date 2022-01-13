@@ -77,8 +77,8 @@ for more details.
 
 Documentation for all commands exists at the
 [Git Town website](https://www.git-town.com). At runtime, call `git town` for an
-overview of the Git Town commands and `git help <command>` (e.g.
-`git help sync`) for help with individual commands.
+overview of the Git Town commands and `git help <command>` for help with
+individual commands.
 
 ## Q&A
 
