@@ -80,22 +80,6 @@ Documentation for all commands exists at the
 overview of the Git Town commands and `git help <command>` for help with
 individual commands.
 
-## Q&A
-
-- **Is this compatible with my workflow?** <br> Yes. Git Town is compatible with
-  [GitHub Flow](https://scottchacon.com/2011/08/31/github-flow.html),
-  [Git Flow](https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow),
-  the [Nvie model](https://nvie.com/posts/a-successful-git-branching-model),
-  [GitLab Flow](https://about.gitlab.com/2014/09/29/gitlab-flow/), and most
-  others workflows.
-
-- **Does my whole team have to use Git Town?** <br> No. Just make sure that all
-  feature branches get
-  [squash-merged](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-request-merges#squash-and-merge-your-pull-request-commits),
-  for example by requiring this in your
-  [GitHub settings](https://help.github.com/en/github/administering-a-repository/configuring-commit-squashing-for-pull-requests).
-  If you don't know what squash-merges are, you probably want to enable them.
-
 ## Contributing
 
 Found a bug or have an idea for a new feature?
