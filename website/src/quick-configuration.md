@@ -1,8 +1,8 @@
 # Quick configuration
 
-These are the most important configuration options to customize Git Town for
-your use case. We will cover the full list of options
-[later](configuration-commands.md).
+Git Town prompts for all the configuration information it needs. The commands
+below set additional configuration options that might be helpful in your use
+case. We will cover the full list of options [later](configuration-commands.md).
 
 ## Shorter commands
 

@@ -1,6 +1,7 @@
 # Configuration commands
 
-Git Town stores its configuration data inside
+Git Town prompts for required configuration information during usage. Git Town
+stores its configuration data inside
 [Git configuration data](https://git-scm.com/docs/git-config). You can store
 configuration values in the local or global Git configuration depending on
 whether you want to share config settings between repositories. To see your

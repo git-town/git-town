@@ -69,37 +69,9 @@ Git Town provides these additional Git commands:
 
 ## Installation
 
-See the [installation instructions](https://www.git-town.com/install.html) for
-more details.
-
-## Configuration
-
-Git Town prompts for required configuration information during usage. Use the
-[git town config](/documentation/commands/config.md) command to manage the
-stored configuration.
-
-#### Required configuration
-
-- the main development branch
-- the
-  [perennial branches](/documentation/development/branch_hierarchy.md#perennial-branches)
-
-#### Optional Configuration
-
-These configuration options have defaults, so the configuration wizard does not
-ask about them.
-
-- pull branch strategy
-
-  - how to sync the main branch / perennial branches with their upstream
-  - default: `rebase`
-  - possible values: `merge`, `rebase`
-
-- new branch push flag
-  - whether or not branches created by hack / append / prepend should be pushed
-    to remote repo
-  - default: `false`
-  - possible values: `true`, `false`
+See the [installation](https://www.git-town.com/install.html) and
+[configuration](https://www.git-town.com/quick-configuration.html) instructions
+for more details.
 
 ## Documentation
 
