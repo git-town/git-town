@@ -88,20 +88,6 @@ Found a bug or have an idea for a new feature?
 our [contributing](/CONTRIBUTING.md) and
 [developer](documentation/development/README.md) guides to get started.
 
-### Sponsors
-
-Thanks to our sponsors for their continued support!
-
-<table>
-  <tr>
-    <td>
-      <a href="https://www.originate.com">
-        <img src="documentation/originate.png" width="146" height="33">
-      </a>
-    </td>
-  </tr>
-</table>
-
 ### Contributors
 
 Kudos to our contributors!
