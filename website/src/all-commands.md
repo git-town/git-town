@@ -2,8 +2,9 @@
 
 Run `git town` for an overview of all Git Town commands and
 `git town help <command>` for help with individual commands. Each Git Town
-command can be called like `git town <command>`. This page displays the commands
-in the shorter form available after running [git town alias](commands/alias.md).
+command can be called like `git town <command>`. This user manual displays the
+commands in the shorter form available after running
+[git town alias](commands/alias.md).
 
 ### Typical development commands
 
