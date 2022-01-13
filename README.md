@@ -26,7 +26,7 @@ Git Town provides these additional Git commands:
 - [git town ship](https://www.git-town.com//documentation/commands/ship.md) -
   delivers a completed feature branch and removes it
 
-**Advanced development commands**
+#### Advanced development commands
 
 - [git town kill](https://www.git-town.com//documentation/commands/kill.md) -
   removes a feature branch
@@ -37,14 +37,16 @@ Git Town provides these additional Git commands:
 - [git town repo](https://www.git-town.com//documentation/commands/repo.md) -
   view the repository homepage
 
-**Nested feature branches**
+#### Nested feature branches
 
 - [git town append](https://www.git-town.com//documentation/commands/append.md) -
   insert a new branch as a child of the current branch
 - [git town prepend](https://www.git-town.com//documentation/commands/prepend.md) -
   insert a new branch between the current branch and its parent
+- [git town set-parent-branch](https://www.git-town.com//documentation/commands/set-parent-branch.md) -
+  updates a branch's parent
 
-**Git Town Configuration**
+#### Git Town Configuration
 
 - [git town config](https://www.git-town.com//documentation/commands/config.md) -
   displays or updates your Git Town configuration
@@ -58,10 +60,8 @@ Git Town provides these additional Git commands:
   displays or updates the perennial branches for the current repo
 - [git town pull-branch-strategy](https://www.git-town.com//documentation/commands/pull-branch-strategy.md) -
   displays or sets the strategy with which perennial branches are updated
-- [git town set-parent-branch](https://www.git-town.com//documentation/commands/set-parent-branch.md) -
-  updates a branch's parent
 
-**Git Town Installation**
+#### Git Town Installation
 
 - [git town alias](https://www.git-town.com//documentation/commands/alias.md) -
   adds or removes shorter aliases for Git Town commands
