@@ -1,6 +1,6 @@
 # git ship [branch name] [-m &lt;message&gt;]
 
-The ship command ("let's ship this feature") merges a completed feature branch
+The _ship_ command ("let's ship this feature") merges a completed feature branch
 into the main branch and removes the feature branch. Before the merge it
 [syncs](sync.md) the branch to be shipped. After the merge it pushes the main
 branch to share the commit on it with the rest of the world.

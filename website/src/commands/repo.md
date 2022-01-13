@@ -1,6 +1,6 @@
 # git repo
 
-The repo command ("show the repository") opens the repository homepage in your
+The _repo_ command ("show the repository") opens the repository homepage in your
 default browser. Git Town can display repositories hosted on
 [GitHub](https://github.com), [GitLab](https://gitlab.com),
 [Gitea](https://gitea.com), and [Bitbucket](https://bitbucket.org).

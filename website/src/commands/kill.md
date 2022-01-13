@@ -1,8 +1,8 @@
 # git kill [branch]
 
-The kill command deletes the feature branch you are on including all uncommitted
-changes from the local and remote repository. It does not delete the main or
-perennial branches.
+The _kill_ command deletes the feature branch you are on including all
+uncommitted changes from the local and remote repository. It does not delete the
+main or perennial branches.
 
 ### Variations
 
