@@ -1,4 +1,4 @@
-# git ship [branch name] [-m &lt;message&gt;]
+# git ship [branch name] [-m message]
 
 The _ship_ command ("let's ship this feature") merges a completed feature branch
 into the main branch and removes the feature branch. Before the merge it
