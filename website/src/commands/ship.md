@@ -10,7 +10,7 @@ can modify. You can submit an empty commit message to abort the shipping
 process.
 
 This command ships only direct children of the main branch. To ship a nested
-feature branch, you need to first ship or [kill](kill.md) all older ancestor
+feature branch, you need to first ship or [kill](kill.md) all its ancestor
 branches.
 
 ### Variations
@@ -26,4 +26,4 @@ requests via the API of the hosting service.
 If your origin server deletes shipped branches, for example
 [GitHub's feature to automatically delete head branches](https://help.github.com/en/github/administering-a-repository/managing-the-automatic-deletion-of-branches),
 you can
-[disable deleting remote branches](../quick-configuration.md#delete-remote-branches).
+[disable deleting remote branches](../preferences/ship-delete-remote-branch.md).
