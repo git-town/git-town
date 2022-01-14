@@ -69,12 +69,9 @@ brew install git-town
 ```
 
 Manual installation:
-
-- [download](https://github.com/git-town/git-town/releases/latest) the archive
-  containing the Linux binary
-- extract: `tar -xzf git-town_7.6.0_linux_intel_64.tar.gz`
-- move the git-town binary into a directory listed in your `$PATH`, for example
-  `/usr/local/bin`
+[download](https://github.com/git-town/git-town/releases/latest) the archive
+containing the Linux binary, extract it, and move the `git-town` binary into a
+directory listed in your`$PATH`.
 
 ## compile from source
 
