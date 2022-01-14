@@ -3,8 +3,8 @@ package steps
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/src/drivers"
-	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/v7/src/drivers"
+	"github.com/git-town/git-town/v7/src/git"
 )
 
 // DriverMergePullRequestStep squash merges the branch with the given name into the current branch.

@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/cucumber/messages-go/v10"
-	"github.com/git-town/git-town/test/helpers"
+	"github.com/git-town/git-town/v7/test/helpers"
 )
 
 // compareExistingCommits compares the commits in the Git environment of the given FeatureState

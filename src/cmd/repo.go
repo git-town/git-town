@@ -1,9 +1,9 @@
 package cmd
 
 import (
-	"github.com/git-town/git-town/src/browsers"
-	"github.com/git-town/git-town/src/cli"
-	"github.com/git-town/git-town/src/drivers"
+	"github.com/git-town/git-town/v7/src/browsers"
+	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/drivers"
 	"github.com/spf13/cobra"
 )
 

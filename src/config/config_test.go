@@ -3,7 +3,7 @@ package config_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/test"
+	"github.com/git-town/git-town/v7/test"
 	"github.com/stretchr/testify/assert"
 )
 

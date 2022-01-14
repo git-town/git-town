@@ -4,10 +4,10 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/git-town/git-town/src/drivers"
-	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/prompt"
-	"github.com/git-town/git-town/src/steps"
+	"github.com/git-town/git-town/v7/src/drivers"
+	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/prompt"
+	"github.com/git-town/git-town/v7/src/steps"
 )
 
 // These variables represent command-line flags.
