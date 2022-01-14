@@ -29,10 +29,7 @@ main
 
 ### Variations
 
-If [new-branch-push-flag](new-branch-push-flag.md) is set, `git hack` creates a
-remote tracking branch for the new feature branch. This behavior is disabled by
-default to make `git hack` run fast. The first run of `git sync` will create the
-remote tracking branch.
-
-```
-```
+If the [new-branch-push-flag](new-branch-push-flag.md) is set, `git hack`
+creates a remote tracking branch for the new feature branch. This behavior is
+disabled by default to make `git hack` run fast. The first run of `git sync`
+will create the remote tracking branch.
