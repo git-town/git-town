@@ -13,16 +13,15 @@ conflicts and the number of Git commands you need to run.
 <br>
 
 Git is a flexible source code management system. The Git CLI (correctly)
-supports all possible ways of using Git equally well. It provides basic, generic
-commands out of which Git users can implement their particular Git workflows.
-This generic design can make using the Git CLI repetitive in real life. As the
-screencast above shows, high-level source control activities like creating,
+supports all possible ways of using Git equally well. It provides basic commands
+out of which Git users can implement their particular Git workflows. This
+generic design can make using the Git CLI repetitive in real life. As the
+screencast above demonstrates, typical development activities like creating,
 synchronizing, or shipping a feature branch require running multiple, sometimes
 dozens of Git commands.
 
-Git Town adds a high-level layer of Git commands for typical development
-operations like creating, synchronizing, or shipping feature branches. is
-compatible with most common branching models like
+Git Town adds a high-level layer of Git commands for these activities. These
+commands are compatible with most common branching models like
 [GitHub Flow](https://docs.github.com/en/get-started/quickstart/github-flow),
 [Git Flow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow),
 [GitLab Flow](https://docs.gitlab.com/ee/topics/gitlab_flow.html),
