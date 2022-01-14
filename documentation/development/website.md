@@ -1,4 +1,4 @@
-# Website Development Guide
+# Website Development
 
 The Git Town website is at [git-town.com](https://www.git-town.com). The website
 runs on [Netlify](https://www.netlify.com). It auto-updates on changes to the
