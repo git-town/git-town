@@ -1,4 +1,4 @@
-# git town append &lt;branch&gt;
+# git append &lt;branch&gt;
 
 The _append_ command creates a new feature branch with the given name as a
 direct child of the current branch and brings over all uncommitted changes to

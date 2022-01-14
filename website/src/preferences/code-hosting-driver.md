@@ -1,5 +1,9 @@
 # code-hosting-driver
 
+```
+git-town.code-hosting-driver=<github|gitlab|bitbucket|gitea>
+```
+
 To talk to the API of your code hosting service, Git Town needs to know which
 code hosting service (GitHub, Gitlab, Bitbucket, etc) you use. Git Town can
 automatically figure out the code hosting driver by looking at the URL of the
