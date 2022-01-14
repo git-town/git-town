@@ -4,6 +4,9 @@ The Git Town website is at https://www.git-town.com.
 
 ## setup
 
+Install [mdBook](https://github.com/rust-lang/mdBook) to transpile the website
+CMS. Install
+
 - install [Node.js](https://nodejs.org) and [Yarn](https://yarnpkg.com)
 
 ## local development
@@ -13,4 +16,5 @@ The Git Town website is at https://www.git-town.com.
 
 ## deployment
 
-The website hoster is Netlify. It auto-updates on changes to the master branch.
+The website runs on [Netlify](https://www.netlify.com). It auto-updates on
+changes to the `main` branch.

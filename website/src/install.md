@@ -11,6 +11,9 @@ The easiest way to install Git Town on macOS is via Homebrew:
 brew install git-town
 ```
 
+Git Town is also available via MacPorts:
+https://ports.macports.org/port/git-town
+
 You can also install Git Town manually:
 
 - download an archive containing the binary
