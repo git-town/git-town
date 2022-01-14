@@ -23,7 +23,7 @@ fix-go:  # auto-fixes all Go lint issues
 	gofmt -s -w ./src ./test
 
 fix-md:  # auto-fixes all Markdown lint issues
-	${CURDIR}/tools/prettier/node_modules/.bin/prettier --write .
+	dprint fmt
 
 help:  # prints all make targets
 	@cat Makefile | grep '^[^ ]*:' | grep -v '.PHONY' | grep -v help | sed 's/:.*#/#/' | column -s "#" -t
@@ -40,7 +40,7 @@ lint-go:  # lints the Go files
 	golangci-lint run src/... test/...
 
 lint-md:   # lints the Markdown files
-	${CURDIR}/tools/prettier/node_modules/.bin/prettier -l .
+	dprint check
 
 release-linux:   # creates a new release
 	# cross-compile the binaries
