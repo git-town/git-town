@@ -9,7 +9,7 @@ Git Town has these configuration settings:
 - [new-branch-push-flag](preferences/new-branch-push-flag.md)
 - [offline](preferences/offline.md)
 - [parent](preferences/parent.md)
-- [pull-branch-strategy](preferences/pull-branch-strategy.md)
 - [pererennial-branch-names](preferences/perennial-branch-names.md)
+- [pull-branch-strategy](preferences/pull-branch-strategy.md)
 - [ship-delete-remote-branch](preferences/ship-delete-remote-branch.md)
 - [sync-upstream](preferences/sync-upstream.md)
