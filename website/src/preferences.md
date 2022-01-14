@@ -1,6 +1,6 @@
 # Preferences
 
-Git Town has these configuration settings:
+Git Town uses these configuration settings:
 
 - [code-hosting-driver](preferences/code-hosting-driver.md)
 - [code-hosting-origin-hostname](preferences/code-hosting-origin-hostname.md)
