@@ -1,7 +1,7 @@
 # pull-branch-strategy
 
 ```
-git-town.pull-branch-strategy [(rebase|merge)]
+git-town.pull-branch-strategy <rebase|merge>
 ```
 
 The pull-branch-strategy setting specifies which strategy to use when merging

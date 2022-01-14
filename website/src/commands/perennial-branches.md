@@ -3,7 +3,8 @@
 The _perennial-branches_ command displays your perennial branches.
 
 Perennial branches are long-lived branches. They are never shipped. Examples for
-perennial branches are `master`, `main`, `development`, `production`, `staging`.
+perennial branches are `master`, `main`, `development`, `production`, or
+`staging`.
 
 ### Variations
 
