@@ -5,5 +5,6 @@ skips network operations in offline mode.
 
 ### Variations
 
-- without an argument, displays the main branch
-- with an argument, sets the main branch to the given value
+- without an argument, displays the current offline status
+- when given `true`, enables offline mode
+- when given `false`, disables offline mode
