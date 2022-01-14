@@ -9,7 +9,6 @@ To run the website locally, install
 [Node.js](https://nodejs.org) and [Yarn](https://yarnpkg.com), then run
 <code textrun="verify-make-command">make setup</code>.
 
-The source code is in the [website](../../website/) folder.
-
-- run a local dev server: `make website-dev`
-- test that the website compiles: `make website-build`
+The source code is in the [website](../../website/) folder. This folder contains
+its own [Makefile](../../website/Makefile). To run a local dev server:
+`make serve`.
