@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/git-town/git-town/src/drivers/helpers"
+	"github.com/git-town/git-town/v7/src/drivers/helpers"
 	"golang.org/x/oauth2"
 
 	"code.gitea.io/sdk/gitea"

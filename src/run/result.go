@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/acarl005/stripansi"
-	"github.com/git-town/git-town/src/stringslice"
+	"github.com/git-town/git-town/v7/src/stringslice"
 )
 
 // Result contains the results of a command run in a subshell.

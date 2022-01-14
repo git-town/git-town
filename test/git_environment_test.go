@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/v7/src/git"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/git-town/git-town/src/cmd"
+	"github.com/git-town/git-town/v7/src/cmd"
 	"github.com/stretchr/testify/assert"
 )
 

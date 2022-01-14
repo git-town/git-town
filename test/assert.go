@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/src/run"
+	"github.com/git-town/git-town/v7/src/run"
 	"github.com/stretchr/testify/assert"
 )
 

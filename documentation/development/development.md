@@ -25,7 +25,8 @@ This page helps you get started hacking on the Git Town codebase.
 
 Optional dependencies:
 
-- [Node.JS](https://nodejs.org)
+- [dprint](https://dprint.dev)
+- [Node.js](https://nodejs.org)
 - [Yarn](https://yarnpkg.com/)
 - [dprint](https://dprint.dev)
 - [scc](https://github.com/boyter/scc)

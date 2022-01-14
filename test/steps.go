@@ -15,8 +15,8 @@ import (
 
 	"github.com/cucumber/godog"
 	"github.com/cucumber/messages-go/v10"
-	"github.com/git-town/git-town/src/cli"
-	"github.com/git-town/git-town/src/run"
+	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/run"
 )
 
 // beforeSuiteMux ensures that we run BeforeSuite only once globally.

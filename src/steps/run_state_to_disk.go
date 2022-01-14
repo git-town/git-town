@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"regexp"
 
-	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/v7/src/git"
 )
 
 // LoadPreviousRunState loads the run state from disk if it exists or creates a new run state.
