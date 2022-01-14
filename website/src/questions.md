@@ -20,12 +20,10 @@ straight into the main branch!
 
 git-flow is a Git extension that provides specific and opinionated support for
 the powerful Git branching model with the same name. It doesn’t care too much
-about how you keep your work in sync with the rest of the team.
-
-Git Town doesn’t care which branching model you use. It focusses on keeping your
-team synchronized and your code repository clean.
-
-It is possible to use the two tools together.
+about how you keep your work in sync with the rest of the team. Git Town doesn’t
+care which branching model you use. It focusses on keeping your team
+synchronized and your code repository clean. It is possible to use the two tools
+together.
 
 ### Is Git Town compatible with my other Git tools?
 
@@ -37,5 +35,5 @@ with your setup, please let us know!
 No. But please make sure that all feature branches get squash-merged, for
 example by running `git merge --squash` or enabling them in your
 [GitHub settings](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/configuring-commit-squashing-for-pull-requests).
-If you don't know what squash-merges are, you probably want to learn about and
-use them.
+If you don't know what squash-merges are, you probably want to learn about them
+and use them.
