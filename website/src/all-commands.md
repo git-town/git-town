@@ -49,7 +49,7 @@ commands in the shorter form available after running
 
 - [git town alias](commands/alias.md) - add or remove shorter aliases for Git
   Town commands
-- [git town completions](commands/completions.md) - generate completion scripts
+- [git town completion](commands/completion.md) - generate completion scripts
   for Bash, zsh, fish & PowerShell.
 - [git town version](commands/version.md) - display the installed version of Git
   Town

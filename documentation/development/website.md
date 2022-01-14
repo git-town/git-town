@@ -4,10 +4,9 @@ The Git Town website is at https://www.git-town.com.
 
 ## setup
 
-Install [mdBook](https://github.com/rust-lang/mdBook) to transpile the website
-CMS. Install
-
-- install [Node.js](https://nodejs.org) and [Yarn](https://yarnpkg.com)
+To run the website locally, install
+[mdBook](https://github.com/rust-lang/mdBook). To test the website, install
+[Node.js](https://nodejs.org) and [Yarn](https://yarnpkg.com),
 
 ## local development
 
