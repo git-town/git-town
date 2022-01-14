@@ -180,27 +180,16 @@ func (r *Runner) CommitStagedChanges(message string) error {
 	return nil
 }
 
-// CommitWithMessageAndAuthor .
-func (r *Runner) CommitWithMessageAndAuthor(message, author string) error {
-	_, err := r.Run("git", "commit", "-m", message, "--author", author)
-	if err != nil {
-		return fmt.Errorf("cannot commit with message %q and author %q: %w", message, author, err)
+// Commit commits staged changes with an optional message and author .
+func (r *Runner) Commit(message, author string) error {
+	commitArgs := []string{"commit"}
+	if message != "" {
+		commitArgs = append(commitArgs, "-m", message)
 	}
-	return nil
-}
-
-// CommitWithMessage commits the staged changes with the given commit message.
-func (r *Runner) CommitWithMessage(message string) error {
-	_, err := r.Run("git", "commit", "-m", message)
-	if err != nil {
-		return fmt.Errorf("cannot commit with message %q: %w", message, err)
+	if author != "" {
+		commitArgs = append(commitArgs, "--author", author)
 	}
-	return nil
-}
-
-// Commit .
-func (r *Runner) Commit() error {
-	_, err := r.Run("git", "commit")
+	_, err := r.Run("git", commitArgs...)
 	return err
 }
 
