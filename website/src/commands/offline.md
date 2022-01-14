@@ -1,4 +1,4 @@
-# git town offline [(true|false)]
+# git town offline <true|false>
 
 The _offline_ command displays or changes Git Town's offline mode. Git Town
 skips network operations in offline mode.
