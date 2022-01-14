@@ -1,7 +1,7 @@
 # Installation
 
 Git Town ships as a single self-contained binary. It doesn't bundle a Git client
-but uses the native Git installation on your machine instead.
+but uses the native Git installation on your machine.
 
 ## macOS
 
