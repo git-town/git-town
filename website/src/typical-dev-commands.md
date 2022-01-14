@@ -1,6 +1,6 @@
 # Typical development workflow
 
-The typical Git Town workflow looks like this:
+The typical Git Town workflow contains these four commands:
 
 - You start hacking by running [git hack](./commands/hack.md) to create a
   feature branch.
