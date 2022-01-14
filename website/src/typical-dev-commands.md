@@ -1,7 +1,6 @@
 # Typical development workflow
 
-The following four Git Town commands automate the steps in the typical
-development workflow:
+The following four Git Town commands automate the typical development workflow:
 
 - You start hacking by running [git hack](./commands/hack.md) to create a
   feature branch.
