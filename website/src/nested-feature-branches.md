@@ -21,10 +21,10 @@ get the code base ready:
 3. Build the feature on top of this modernized codebase
 
 Implementing all these changes in a single feature branch is risky. Some changes
-like the refactor in (1) touch a lot of files that other people might make
-changes to as well. We want to review and merge them as fast as possible to
-minimize merge conflicts. Other changes like building the actual feature in (3)
-will take a while to build. We should make both changes in separate branches. At
+like the refactor in (1) touch a lot of files that other people might change as
+well. We want to review and merge them as fast as possible to minimize merge
+conflicts. Other changes like building the actual feature in (3) will take a
+while to build. We should therefore make both changes in separate branches. At
 the same time, the feature (3) depends on the changes in (1) and (2) and drives
 the changes in (2). We want to develop these changes together. The solution is a
 chain of connected feature branches.
@@ -38,8 +38,8 @@ The first feature branch contains the refactor. We create a feature branch named
 git hack 1-refactor
 ```
 
-[git hack](commands/hack.md) creates the feature branch off the main branch. We
-perform the refactor and commit it.
+[git hack](commands/hack.md) creates a new feature branch off the main branch.
+We perform the refactor and commit it.
 
 ## Branch 2: rename foo
 
@@ -64,7 +64,7 @@ main
     2-rename-foo
 ```
 
-Branch `2-rename-foo` builds on top of `1-refactor` and thereby "sees" all the
+Branch `2-rename-foo` builds on top of `1-refactor` and thereby contains all the
 changes made there. We commit the changes that rename the `foo` variable.
 Because we used `git append` to create the new branch, Git Town knows about the
 branch hierarchy and creates the pull request for branch `2-rename-foo` against
