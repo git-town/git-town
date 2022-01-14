@@ -1,9 +1,8 @@
 # High-level CLI for Git
 
-Git Town adds Git commands that make software development in a team environment
-more efficient by keeping the branches in everybody's copy of the repository
-better in sync with each other. This reduces merge conflicts and typing in the
-terminal.
+Git Town adds Git commands that make software development more efficient by
+keeping Git branches better in sync with each other. This reduces merge
+conflicts and the number of Git commands you need to run.
 
 <br>
 <p align="center">
