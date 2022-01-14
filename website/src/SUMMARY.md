@@ -26,7 +26,7 @@
     - [offline](commands/offline.md)
     - [perennial-branches](commands/perennial-branches.md)
     - [pull-branch-strategy](commands/pull-branch-strategy.md)
-  - [Installation commands](installation-commands.md)
+  - [Setup commands](setup-commands.md)
     - [alias](commands/alias.md)
     - [completion](commands/completion.md)
     - [version](commands/version.md)

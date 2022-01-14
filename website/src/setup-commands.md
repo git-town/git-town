@@ -1,4 +1,4 @@
-# Installation commands
+# Setup commands
 
 These commands help install parts of Git Town.
 

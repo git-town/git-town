@@ -46,7 +46,7 @@ Git Town provides these additional Git commands:
 - [git town set-parent-branch](https://www.git-town.com//documentation/commands/set-parent-branch.md) -
   updates a branch's parent
 
-#### Git Town Configuration
+#### Git Town configuration
 
 - [git town config](https://www.git-town.com//documentation/commands/config.md) -
   displays or updates your Git Town configuration
@@ -61,7 +61,7 @@ Git Town provides these additional Git commands:
 - [git town pull-branch-strategy](https://www.git-town.com//documentation/commands/pull-branch-strategy.md) -
   displays or sets the strategy with which perennial branches are updated
 
-#### Git Town Installation
+#### Git Town setup
 
 - [git town alias](https://www.git-town.com//documentation/commands/alias.md) -
   adds or removes shorter aliases for Git Town commands

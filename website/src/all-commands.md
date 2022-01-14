@@ -45,7 +45,7 @@ commands in the shorter form available after running
 - [git town pull-branch-strategy](commands/pull-branch-strategy.md) - display or
   set the strategy to update perennial branches
 
-### Git Town installation
+### Git Town setup
 
 - [git town alias](commands/alias.md) - add or remove shorter aliases for Git
   Town commands
