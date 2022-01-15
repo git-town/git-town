@@ -31,6 +31,7 @@ func setupGithubDriver(t *testing.T, token string) (drivers.CodeHostingDriver, f
 	}
 }
 
+// nolint:paralleltest
 func TestLoadGithub(t *testing.T) {
 	driver := drivers.LoadGithub(mockConfig{
 		codeHostingDriverName: "github",
@@ -41,6 +42,7 @@ func TestLoadGithub(t *testing.T) {
 	assert.Equal(t, "https://self-hosted-github.com/git-town/git-town", driver.RepositoryURL())
 }
 
+// nolint:paralleltest
 func TestLoadGithub_customHostName(t *testing.T) {
 	driver := drivers.LoadGithub(mockConfig{
 		remoteOriginURL:    "git@my-ssh-identity.com:git-town/git-town.git",
@@ -51,6 +53,7 @@ func TestLoadGithub_customHostName(t *testing.T) {
 	assert.Equal(t, "https://github.com/git-town/git-town", driver.RepositoryURL())
 }
 
+// nolint:paralleltest
 func TestGitHubDriver_LoadPullRequestInfo(t *testing.T) {
 	driver, teardown := setupGithubDriver(t, "TOKEN")
 	defer teardown()
@@ -62,6 +65,7 @@ func TestGitHubDriver_LoadPullRequestInfo(t *testing.T) {
 	assert.Equal(t, int64(1), prInfo.PullRequestNumber)
 }
 
+// nolint:paralleltest
 func TestGitHubDriver_LoadPullRequestInfo_EmptyGithubToken(t *testing.T) {
 	driver, teardown := setupGithubDriver(t, "")
 	defer teardown()
@@ -70,6 +74,7 @@ func TestGitHubDriver_LoadPullRequestInfo_EmptyGithubToken(t *testing.T) {
 	assert.False(t, prInfo.CanMergeWithAPI)
 }
 
+// nolint:paralleltest
 func TestGitHubDriver_LoadPullRequestInfo_GetPullRequestNumberFails(t *testing.T) {
 	driver, teardown := setupGithubDriver(t, "TOKEN")
 	defer teardown()
@@ -78,6 +83,7 @@ func TestGitHubDriver_LoadPullRequestInfo_GetPullRequestNumberFails(t *testing.T
 	assert.Error(t, err)
 }
 
+// nolint:paralleltest
 func TestGitHubDriver_LoadPullRequestInfo_NoPullRequestForBranch(t *testing.T) {
 	driver, teardown := setupGithubDriver(t, "TOKEN")
 	defer teardown()
@@ -87,6 +93,7 @@ func TestGitHubDriver_LoadPullRequestInfo_NoPullRequestForBranch(t *testing.T) {
 	assert.False(t, prInfo.CanMergeWithAPI)
 }
 
+// nolint:paralleltest
 func TestGitHubDriver_LoadPullRequestInfo_MultiplePullRequestsForBranch(t *testing.T) {
 	driver, teardown := setupGithubDriver(t, "TOKEN")
 	defer teardown()
@@ -96,6 +103,7 @@ func TestGitHubDriver_LoadPullRequestInfo_MultiplePullRequestsForBranch(t *testi
 	assert.False(t, prInfo.CanMergeWithAPI)
 }
 
+// nolint:paralleltest
 func TestGitHubDriver_MergePullRequest_GetPullRequestIdsFails(t *testing.T) {
 	driver, teardown := setupGithubDriver(t, "TOKEN")
 	defer teardown()
@@ -109,6 +117,7 @@ func TestGitHubDriver_MergePullRequest_GetPullRequestIdsFails(t *testing.T) {
 	assert.Error(t, err)
 }
 
+// nolint:paralleltest
 func TestGitHubDriver_MergePullRequest_GetPullRequestToMergeFails(t *testing.T) {
 	driver, teardown := setupGithubDriver(t, "TOKEN")
 	defer teardown()
@@ -123,6 +132,7 @@ func TestGitHubDriver_MergePullRequest_GetPullRequestToMergeFails(t *testing.T) 
 	assert.Error(t, err)
 }
 
+// nolint:paralleltest
 func TestGitHubDriver_MergePullRequest_PullRequestNotFound(t *testing.T) {
 	driver, teardown := setupGithubDriver(t, "TOKEN")
 	defer teardown()
@@ -138,6 +148,7 @@ func TestGitHubDriver_MergePullRequest_PullRequestNotFound(t *testing.T) {
 	assert.Equal(t, "cannot merge via Github since there is no pull request", err.Error())
 }
 
+// nolint:paralleltest
 func TestGitHubDriver_MergePullRequest(t *testing.T) {
 	driver, teardown := setupGithubDriver(t, "TOKEN")
 	defer teardown()
@@ -163,6 +174,7 @@ func TestGitHubDriver_MergePullRequest(t *testing.T) {
 	assert.Equal(t, "squash", mergeParameters["merge_method"])
 }
 
+// nolint:paralleltest
 func TestGitHubDriver_MergePullRequest_MergeFails(t *testing.T) {
 	driver, teardown := setupGithubDriver(t, "TOKEN")
 	defer teardown()
@@ -178,6 +190,7 @@ func TestGitHubDriver_MergePullRequest_MergeFails(t *testing.T) {
 	assert.Error(t, err)
 }
 
+// nolint:paralleltest
 func TestGitHubDriver_MergePullRequest_UpdateChildPRs(t *testing.T) {
 	driver, teardown := setupGithubDriver(t, "TOKEN")
 	defer teardown()

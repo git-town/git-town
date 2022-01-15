@@ -25,7 +25,7 @@ type githubCodeHostingDriver struct {
 
 // LoadGithub provides a GitHub driver instance if the given repo configuration is for a Github repo,
 // otherwise nil.
-func LoadGithub(config config, log logFn) CodeHostingDriver {
+func LoadGithub(config config, log logFn) *githubCodeHostingDriver {
 	driverType := config.GetCodeHostingDriverName()
 	originURL := config.GetRemoteOriginURL()
 	hostname := helpers.GetURLHostname(originURL)

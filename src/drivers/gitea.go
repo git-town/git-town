@@ -25,7 +25,7 @@ type giteaCodeHostingDriver struct {
 
 // LoadGitea provides a Gitea driver instance if the given repo configuration is for a Gitea repo,
 // otherwise nil.
-func LoadGitea(config config, log logFn) CodeHostingDriver {
+func LoadGitea(config config, log logFn) *giteaCodeHostingDriver {
 	driverType := config.GetCodeHostingDriverName()
 	originURL := config.GetRemoteOriginURL()
 	hostname := helpers.GetURLHostname(originURL)
