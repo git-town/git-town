@@ -37,7 +37,7 @@ Feature: git town-ship: aborting the ship of the supplied feature branch by ente
       | other-feature | git stash pop                               |
     And it prints the error:
       """
-      aborted because commit exited with error
+      Aborting commit due to empty commit message.
       """
     And I am still on the "other-feature" branch
     And my workspace still contains my uncommitted file

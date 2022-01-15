@@ -33,7 +33,7 @@ Feature: git town-ship: aborting the ship of the current feature branch by enter
       | main    | git checkout feature               |
     And it prints the error:
       """
-      aborted because commit exited with error
+      Aborting commit due to empty commit message.
       """
     And I am still on the "feature" branch
     And my repo is left with my original commits
