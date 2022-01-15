@@ -16,6 +16,7 @@ linters:
     - scopelint  # deprecated
     - wrapcheck
     - wsl # this linter creates too many false positives, our policy is to not have any empty lines in code blocks
+    - exhaustivestruct  # TODO: activate
 
 issues:
   # List of regexps of issue texts to exclude, empty list by default.

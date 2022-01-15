@@ -11,16 +11,16 @@ import (
 
 func TestDataTable(t *testing.T) {
 	t.Parallel()
-	r := test.DataTable{}
-	r.AddRow("ALPHA", "BETA")
-	r.AddRow("1", "2")
-	r.AddRow("longer text", "even longer text")
+	table := test.DataTable{}
+	table.AddRow("ALPHA", "BETA")
+	table.AddRow("1", "2")
+	table.AddRow("longer text", "even longer text")
 	expected := `| ALPHA       | BETA             |
 | 1           | 2                |
 | longer text | even longer text |
 `
 	dmp := diffmatchpatch.New()
-	diffs := dmp.DiffMain(expected, r.String(), false)
+	diffs := dmp.DiffMain(expected, table.String(), false)
 	if !(len(diffs) == 1 && diffs[0].Type == 0) {
 		fmt.Println(dmp.DiffPrettyText(diffs))
 		t.Fail()
