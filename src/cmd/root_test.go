@@ -9,6 +9,7 @@ import (
 )
 
 func TestIsAcceptableGitVersion(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		major int
 		minor int

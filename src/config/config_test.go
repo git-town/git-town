@@ -8,6 +8,7 @@ import (
 )
 
 func TestRunner_SetOffline(t *testing.T) {
+	t.Parallel()
 	repo := test.CreateTestGitTownRepo(t)
 	err := repo.Config.SetOffline(true)
 	assert.NoError(t, err)

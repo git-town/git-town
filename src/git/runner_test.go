@@ -377,6 +377,7 @@ func TestRunner_HasFile(t *testing.T) {
 	assert.Error(t, err)
 }
 func TestRunner_HasLocalBranch(t *testing.T) {
+	t.Parallel()
 	origin := test.CreateRepo(t)
 	repoDir := test.CreateTempDir(t)
 	repo, err := origin.Clone(repoDir)

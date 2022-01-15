@@ -8,6 +8,7 @@ import (
 )
 
 func TestGitCommandsInGitTownOutput(t *testing.T) {
+	t.Parallel()
 	tests := map[string][]ExecutedGitCommand{
 		// simple
 		"\x1b[1m[mybranch] foo bar": {
@@ -22,6 +23,7 @@ func TestGitCommandsInGitTownOutput(t *testing.T) {
 	}
 	for input, expected := range tests {
 		t.Run(input, func(t *testing.T) {
+			t.Parallel()
 			assert.Equal(t, expected, GitCommandsInGitTownOutput(input))
 		})
 	}

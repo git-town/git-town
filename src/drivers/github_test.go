@@ -18,6 +18,7 @@ const githubPR2 = githubRoot + "/repos/git-town/git-town/pulls/2"
 const githubPR3 = githubRoot + "/repos/git-town/git-town/pulls/3"
 const githubPR1Merge = githubRoot + "/repos/git-town/git-town/pulls/1/merge"
 
+// nolint: paralleltest
 func setupGithubDriver(t *testing.T, token string) (drivers.CodeHostingDriver, func()) {
 	t.Helper()
 	httpmock.Activate()
