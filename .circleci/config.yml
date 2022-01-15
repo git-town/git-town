@@ -43,6 +43,7 @@ jobs:
       - run: mv ./git-town /go/bin/
       - run: mv ./godog /go/bin/
       - run: mv ./golangci-lint /go/bin/
+      - run: env
       - run:
           find features -type f -name '*.feature' | grep features/s | xargs
           godog --concurrency=$(nproc --all) --format=progress --strict
