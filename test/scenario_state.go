@@ -2,7 +2,7 @@ package test
 
 import (
 	"github.com/cucumber/messages-go/v10"
-	"github.com/git-town/git-town/src/run"
+	"github.com/git-town/git-town/v7/src/run"
 )
 
 // ScenarioState constains the state that is shared by all steps within a scenario.

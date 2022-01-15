@@ -4,7 +4,7 @@ TODAY=$(shell date +'%Y/%m/%d')
 .DEFAULT_GOAL := help
 
 build:  # builds for the current platform
-	go install -ldflags "-X github.com/git-town/git-town/src/cmd.version=v${VERSION}-dev -X github.com/git-town/git-town/src/cmd.buildDate=${TODAY}"
+	go install -ldflags "-X github.com/git-town/git-town/v7/src/cmd.version=v${VERSION}-dev -X github.com/git-town/git-town/v7/src/cmd.buildDate=${TODAY}"
 
 cuke: build   # runs the new Godog-based feature tests
 	@env GOGC=off go test . -v -count=1
@@ -23,7 +23,7 @@ fix-go:  # auto-fixes all Go lint issues
 	gofmt -s -w ./src ./test
 
 fix-md:  # auto-fixes all Markdown lint issues
-	${CURDIR}/tools/prettier/node_modules/.bin/prettier --write .
+	dprint fmt
 
 help:  # prints all make targets
 	@cat Makefile | grep '^[^ ]*:' | grep -v '.PHONY' | grep -v help | sed 's/:.*#/#/' | column -s "#" -t
@@ -40,7 +40,7 @@ lint-go:  # lints the Go files
 	golangci-lint run src/... test/...
 
 lint-md:   # lints the Markdown files
-	${CURDIR}/tools/prettier/node_modules/.bin/prettier -l .
+	dprint check
 
 release-linux:   # creates a new release
 	# cross-compile the binaries

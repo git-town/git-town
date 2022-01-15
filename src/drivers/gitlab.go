@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/git-town/git-town/src/drivers/helpers"
+	"github.com/git-town/git-town/v7/src/drivers/helpers"
 )
 
 // gitlabCodeHostingDriver provides access to the API of GitLab installations.

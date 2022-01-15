@@ -59,7 +59,10 @@ jobs:
       - run: mv ./git-town /home/circleci/bin/
       - run: mv ./godog /home/circleci/bin/
       - run: mv ./golangci-lint /home/circleci/bin/
-      - run: cd tools/prettier && yarn
+      # install dprint
+      - run: curl -fsSL https://dprint.dev/install.sh | sh
+      - run: echo 'export PATH=$HOME/.dprint/bin:$PATH' >> $BASH_ENV
+      # run the linters
       - run: cd text-run && yarn
       - run: make test-md
 workflows:

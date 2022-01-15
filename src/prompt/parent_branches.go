@@ -3,8 +3,8 @@ package prompt
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/src/cli"
-	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/git"
 )
 
 // EnsureKnowsParentBranches asserts that the entire ancestry for all given branches

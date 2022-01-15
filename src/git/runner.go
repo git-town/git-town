@@ -10,9 +10,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/git-town/git-town/src/config"
-	"github.com/git-town/git-town/src/run"
-	"github.com/git-town/git-town/src/stringslice"
+	"github.com/git-town/git-town/v7/src/config"
+	"github.com/git-town/git-town/v7/src/run"
+	"github.com/git-town/git-town/v7/src/stringslice"
 )
 
 // Runner executes Git commands.
