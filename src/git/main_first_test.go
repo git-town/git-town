@@ -8,6 +8,7 @@ import (
 )
 
 func TestMainFirst(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		give []string
 		want []string
