@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := help
 
-build:  # compiles the website
+build:  # transpiles the website to HTML
 	mdbook build
 
 clean:  # removes all build artifacts
