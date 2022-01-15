@@ -6,10 +6,9 @@ import (
 	"net/url"
 	"strings"
 
+	"code.gitea.io/sdk/gitea"
 	"github.com/git-town/git-town/v7/src/drivers/helpers"
 	"golang.org/x/oauth2"
-
-	"code.gitea.io/sdk/gitea"
 )
 
 // giteaCodeHostingDriver provides access to the API of Gitea installations.

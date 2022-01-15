@@ -9,7 +9,6 @@ import (
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/prompt"
 	"github.com/git-town/git-town/v7/src/steps"
-
 	"github.com/spf13/cobra"
 )
 
