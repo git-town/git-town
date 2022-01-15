@@ -2,9 +2,14 @@ linters:
   enable-all: true
   disable:
     - cyclop
+    - exhaustivestruct  # TODO: activate
+    - forbidigo
     - gochecknoglobals # Cobra requires globals
     - gochecknoinits # Cobra requires init blocks
     - goconst # tests contain a ton of hard-coded test strings, for example branch names
+    - gofmt   # TODO: activate
+    - gofumpt   # TODO: activate
+    - goimports  # TODO: activate
     - golint
     - gomnd # tests contain hard-coded test data that wouldn't make sense to extract into constants
     - ifshort
@@ -16,7 +21,6 @@ linters:
     - scopelint  # deprecated
     - wrapcheck
     - wsl # this linter creates too many false positives, our policy is to not have any empty lines in code blocks
-    - exhaustivestruct  # TODO: activate
 
 issues:
   # List of regexps of issue texts to exclude, empty list by default.
