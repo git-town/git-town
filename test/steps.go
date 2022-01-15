@@ -72,7 +72,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			fmt.Printf("failed scenario, investigate state in %q\n", state.gitEnv.Dir)
 		}
 		if state.runErr != nil && !state.runErrChecked {
-			cli.PrintError(fmt.Errorf("%s - scenario %q doesn't document error %v", scenario.GetUri(), scenario.GetName(), state.runErr))
+			cli.PrintError(fmt.Errorf("%s - scenario %q doesn't document error %w", scenario.GetUri(), scenario.GetName(), state.runErr))
 			os.Exit(1)
 		}
 	})
