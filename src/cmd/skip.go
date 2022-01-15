@@ -14,7 +14,7 @@ var skipCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		runState, err := steps.LoadPreviousRunState(prodRepo)
 		if err != nil {
-			cli.Exit(fmt.Errorf("cannot load previous run state: %v", err))
+			cli.Exit(fmt.Errorf("cannot load previous run state: %w", err))
 		}
 		if runState == nil || !runState.IsUnfinished() {
 			cli.Exit(fmt.Errorf("nothing to skip"))

@@ -297,7 +297,7 @@ func (r *Runner) CreateFile(name, content string) error {
 	folderPath := filepath.Dir(filePath)
 	err := os.MkdirAll(folderPath, os.ModePerm)
 	if err != nil {
-		return fmt.Errorf("cannot create folder %q: %v", folderPath, err)
+		return fmt.Errorf("cannot create folder %q: %w", folderPath, err)
 	}
 	err = ioutil.WriteFile(filePath, []byte(content), 0500)
 	if err != nil {

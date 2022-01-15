@@ -14,7 +14,7 @@ var discardCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		err := steps.DeletePreviousRunState(prodRepo)
 		if err != nil {
-			cli.Exit(fmt.Errorf("cannot delete previous run state: %v", err))
+			cli.Exit(fmt.Errorf("cannot delete previous run state: %w", err))
 		}
 	},
 	Args: cobra.NoArgs,
