@@ -12,6 +12,7 @@ import (
 )
 
 func TestRunner_AddRemote(t *testing.T) {
+	t.Parallel()
 	runner := test.CreateTestGitTownRepo(t).Runner
 	err := runner.AddRemote("foo", "bar")
 	assert.NoError(t, err)
@@ -21,6 +22,7 @@ func TestRunner_AddRemote(t *testing.T) {
 }
 
 func TestRunner_CheckoutBranch(t *testing.T) {
+	t.Parallel()
 	runner := test.CreateRepo(t).Runner
 	err := runner.CreateBranch("branch1", "master")
 	assert.NoError(t, err)
@@ -37,6 +39,7 @@ func TestRunner_CheckoutBranch(t *testing.T) {
 }
 
 func TestRunner_Commits(t *testing.T) {
+	t.Parallel()
 	runner := test.CreateRepo(t).Runner
 	err := runner.CreateCommit(git.Commit{
 		Branch:      "master",
@@ -66,6 +69,7 @@ func TestRunner_Commits(t *testing.T) {
 }
 
 func TestRunner_Configuration(t *testing.T) {
+	t.Parallel()
 	runner := test.CreateRepo(t).Runner
 	config := runner.Config
 	assert.NotNil(t, config, "first path: new config")
@@ -74,6 +78,7 @@ func TestRunner_Configuration(t *testing.T) {
 }
 
 func TestRunner_ConnectTrackingBranch(t *testing.T) {
+	t.Parallel()
 	// replicating the situation this is used in,
 	// connecting branches of repos with the same commits in them
 	origin := test.CreateRepo(t)
@@ -92,6 +97,7 @@ func TestRunner_ConnectTrackingBranch(t *testing.T) {
 }
 
 func TestRunner_CreateBranch(t *testing.T) {
+	t.Parallel()
 	runner := test.CreateRepo(t).Runner
 	err := runner.CreateBranch("branch1", "master")
 	assert.NoError(t, err)
@@ -104,6 +110,7 @@ func TestRunner_CreateBranch(t *testing.T) {
 }
 
 func TestRunner_CreateChildFeatureBranch(t *testing.T) {
+	t.Parallel()
 	runner := test.CreateTestGitTownRepo(t).Runner
 	err := runner.CreateFeatureBranch("f1")
 	assert.NoError(t, err)
@@ -116,6 +123,7 @@ func TestRunner_CreateChildFeatureBranch(t *testing.T) {
 }
 
 func TestRunner_CreateCommit(t *testing.T) {
+	t.Parallel()
 	runner := test.CreateRepo(t).Runner
 	err := runner.CreateCommit(git.Commit{
 		Branch:      "master",
@@ -134,6 +142,7 @@ func TestRunner_CreateCommit(t *testing.T) {
 }
 
 func TestRunner_CreateCommit_Author(t *testing.T) {
+	t.Parallel()
 	runner := test.CreateRepo(t).Runner
 	err := runner.CreateCommit(git.Commit{
 		Branch:      "master",
@@ -154,6 +163,7 @@ func TestRunner_CreateCommit_Author(t *testing.T) {
 }
 
 func TestRunner_CreateFeatureBranch(t *testing.T) {
+	t.Parallel()
 	runner := test.CreateTestGitTownRepo(t).Runner
 	err := runner.CreateFeatureBranch("f1")
 	assert.NoError(t, err)
@@ -163,6 +173,7 @@ func TestRunner_CreateFeatureBranch(t *testing.T) {
 }
 
 func TestRunner_CreateFeatureBranchNoParent(t *testing.T) {
+	t.Parallel()
 	runner := test.CreateTestGitTownRepo(t).Runner
 	err := runner.CreateFeatureBranchNoParent("f1")
 	assert.NoError(t, err)
@@ -172,6 +183,7 @@ func TestRunner_CreateFeatureBranchNoParent(t *testing.T) {
 }
 
 func TestRunner_CreateFile(t *testing.T) {
+	t.Parallel()
 	runner := test.CreateRepo(t).Runner
 	err := runner.CreateFile("filename", "content")
 	assert.Nil(t, err, "cannot create file in repo")
@@ -181,6 +193,7 @@ func TestRunner_CreateFile(t *testing.T) {
 }
 
 func TestRunner_CreateFile_InSubFolder(t *testing.T) {
+	t.Parallel()
 	runner := test.CreateRepo(t).Runner
 	err := runner.CreateFile("folder/filename", "content")
 	assert.Nil(t, err, "cannot create file in repo")
@@ -190,6 +203,7 @@ func TestRunner_CreateFile_InSubFolder(t *testing.T) {
 }
 
 func TestRunner_CreatePerennialBranches(t *testing.T) {
+	t.Parallel()
 	runner := test.CreateTestGitTownRepo(t).Runner
 	err := runner.CreatePerennialBranches("p1", "p2")
 	assert.NoError(t, err)
@@ -202,6 +216,7 @@ func TestRunner_CreatePerennialBranches(t *testing.T) {
 }
 
 func TestRunner_CurrentBranch(t *testing.T) {
+	t.Parallel()
 	runner := test.CreateRepo(t).Runner
 	err := runner.CheckoutBranch("master")
 	assert.NoError(t, err)
@@ -220,6 +235,7 @@ func TestRunner_CurrentBranch(t *testing.T) {
 }
 
 func TestRunner_Fetch(t *testing.T) {
+	t.Parallel()
 	runner := test.CreateRepo(t).Runner
 	origin := test.CreateRepo(t)
 	err := runner.AddRemote("origin", origin.WorkingDir())
@@ -229,6 +245,7 @@ func TestRunner_Fetch(t *testing.T) {
 }
 
 func TestRunner_FileContentInCommit(t *testing.T) {
+	t.Parallel()
 	runner := test.CreateRepo(t).Runner
 	err := runner.CreateCommit(git.Commit{
 		Branch:      "master",

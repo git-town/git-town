@@ -62,7 +62,6 @@ type MergePullRequestOptions struct {
 type logFn func(string, ...interface{})
 
 // Load returns the code hosting driver to use based on the git config.
-// nolint:interfacer  // for Gitea support later
 func Load(config config, git gitRunner, log logFn) CodeHostingDriver {
 	driver := LoadGithub(config, log)
 	if driver != nil {
