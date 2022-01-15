@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// nolint:paralleltest
+//nolint:paralleltest
 func TestLoadBitbucket(t *testing.T) {
 	driver := drivers.LoadBitbucket(mockConfig{
 		codeHostingDriverName: "bitbucket",
@@ -18,7 +18,7 @@ func TestLoadBitbucket(t *testing.T) {
 	assert.Equal(t, "https://self-hosted-bitbucket.com/git-town/git-town", driver.RepositoryURL())
 }
 
-// nolint:paralleltest
+//nolint:paralleltest
 func TestLoadBitbucket_customHostName(t *testing.T) {
 	driver := drivers.LoadBitbucket(mockConfig{
 		remoteOriginURL:    "git@my-ssh-identity.com:git-town/git-town.git",
