@@ -396,7 +396,7 @@ func (r *Runner) currentBranchDuringRebase() (string, error) {
 		}
 	}
 	content := strings.TrimSpace(string(rawContent))
-	return strings.Replace(content, "refs/heads/", "", -1), nil
+	return strings.ReplaceAll(content, "refs/heads/", ""), nil
 }
 
 // CurrentSha provides the SHA of the currently checked out branch/commit.
