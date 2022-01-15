@@ -11,6 +11,8 @@ and this
 [Softpedia article](https://www.softpedia.com/get/Programming/Other-Programming-Files/Git-Town.shtml)
 for an independent review.
 
+Why do paths on CircleCI work but not when SSHing into the box?
+
 ## Commands
 
 Git Town provides these additional Git commands:
