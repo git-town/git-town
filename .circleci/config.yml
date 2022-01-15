@@ -33,7 +33,6 @@ jobs:
       - run: echo 'export PATH=$PATH:/go/bin:/usr/local/go/bin' >> $BASH_ENV
       - run: make unit
       - run: make lint-go
-      - run: echo $PATH
       - run:
           find features -type f -name '*.feature' | grep -v features/s | xargs
           godog --concurrency=$(nproc --all) --format=progress --strict
@@ -49,9 +48,8 @@ jobs:
       - run: mv ./git-town /go/bin/
       - run: mv ./godog /go/bin/
       - run: mv ./golangci-lint /go/bin/
-      - run: godog features/ship/current_branch/on_feature_branch/without_open_changes/empty_commit_message.feature
+      - run: bash -c "godog features/ship/current_branch/on_feature_branch/without_open_changes/empty_commit_message.feature"
       - run: echo 'export PATH=$PATH:/go/bin:/usr/local/go/bin' >> $BASH_ENV
-      - run: echo $PATH
       - run:
           find features -type f -name '*.feature' | grep features/s | xargs
           godog --concurrency=$(nproc --all) --format=progress --strict
