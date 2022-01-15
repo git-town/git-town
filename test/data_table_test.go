@@ -10,6 +10,7 @@ import (
 )
 
 func TestDataTable(t *testing.T) {
+	t.Parallel()
 	r := test.DataTable{}
 	r.AddRow("ALPHA", "BETA")
 	r.AddRow("1", "2")
@@ -27,6 +28,7 @@ func TestDataTable(t *testing.T) {
 }
 
 func TestDataTable_Remove(t *testing.T) {
+	t.Parallel()
 	r := test.DataTable{}
 	r.AddRow("local", "main, master, foo")
 	r.AddRow("remote", "master, bar")
