@@ -49,6 +49,7 @@ jobs:
       - run: mv ./git-town /go/bin/
       - run: mv ./godog /go/bin/
       - run: mv ./golangci-lint /go/bin/
+      - run: godog features/ship/current_branch/on_feature_branch/without_open_changes/empty_commit_message.feature
       - run: echo 'export PATH=$PATH:/go/bin:/usr/local/go/bin' >> $BASH_ENV
       - run: echo $PATH
       - run:
