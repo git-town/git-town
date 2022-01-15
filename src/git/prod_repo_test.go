@@ -8,6 +8,7 @@ import (
 )
 
 func TestNewProdRepo(t *testing.T) {
+	t.Parallel()
 	repo := git.NewProdRepo()
 	assert.Equal(t, repo.Config, repo.Silent.Config)
 }
