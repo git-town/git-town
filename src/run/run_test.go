@@ -13,12 +13,14 @@ import (
 )
 
 func TestRun_Exec(t *testing.T) {
+	t.Parallel()
 	res, err := run.Exec("echo", "foo")
 	assert.NoError(t, err)
 	assert.Equal(t, "foo\n", res.Output())
 }
 
 func TestRun_Exec_UnknownExecutable(t *testing.T) {
+	t.Parallel()
 	_, err := run.Exec("zonk")
 	assert.Error(t, err)
 	var execError *exec.Error
@@ -26,6 +28,7 @@ func TestRun_Exec_UnknownExecutable(t *testing.T) {
 }
 
 func TestRun_Exec_ExitCode(t *testing.T) {
+	t.Parallel()
 	result, err := run.Exec("bash", "-c", "echo hi && exit 2")
 	assert.Equal(t, 2, result.ExitCode())
 	expectedError := `
@@ -42,6 +45,7 @@ hi
 }
 
 func TestRun_InDir(t *testing.T) {
+	t.Parallel()
 	dir, err := ioutil.TempDir("", "")
 	assert.NoError(t, err)
 	dirPath := filepath.Join(dir, "mydir")
@@ -55,6 +59,7 @@ func TestRun_InDir(t *testing.T) {
 }
 
 func TestRun_Result_OutputContainsText(t *testing.T) {
+	t.Parallel()
 	res, err := run.Exec("echo", "hello world how are you?")
 	assert.NoError(t, err)
 	assert.True(t, res.OutputContainsText("world"), "should contain 'world'")
@@ -62,6 +67,7 @@ func TestRun_Result_OutputContainsText(t *testing.T) {
 }
 
 func TestRun_Result_OutputContainsLine(t *testing.T) {
+	t.Parallel()
 	res, err := run.Exec("echo", "hello world")
 	assert.NoError(t, err)
 	assert.True(t, res.OutputContainsLine("hello world"), `should contain "hello world"`)
