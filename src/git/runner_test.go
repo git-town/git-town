@@ -263,6 +263,7 @@ func TestRunner_FileContentInCommit(t *testing.T) {
 }
 
 func TestRunner_FilesInCommit(t *testing.T) {
+	t.Parallel()
 	runner := test.CreateRepo(t).Runner
 	err := runner.CreateFile("f1.txt", "one")
 	assert.NoError(t, err)
@@ -281,6 +282,7 @@ func TestRunner_FilesInCommit(t *testing.T) {
 }
 
 func TestRunner_HasBranchesOutOfSync_synced(t *testing.T) {
+	t.Parallel()
 	env, err := test.NewStandardGitEnvironment(test.CreateTempDir(t))
 	assert.NoError(t, err)
 	runner := env.DevRepo.Runner
@@ -302,6 +304,7 @@ func TestRunner_HasBranchesOutOfSync_synced(t *testing.T) {
 }
 
 func TestRunner_HasBranchesOutOfSync_branchAhead(t *testing.T) {
+	t.Parallel()
 	env, err := test.NewStandardGitEnvironment(test.CreateTempDir(t))
 	assert.NoError(t, err)
 	runner := env.DevRepo.Runner
@@ -321,6 +324,7 @@ func TestRunner_HasBranchesOutOfSync_branchAhead(t *testing.T) {
 }
 
 func TestRunner_HasBranchesOutOfSync_branchBehind(t *testing.T) {
+	t.Parallel()
 	env, err := test.NewStandardGitEnvironment(test.CreateTempDir(t))
 	assert.NoError(t, err)
 	err = env.DevRepo.CreateBranch("branch1", "main")
@@ -345,6 +349,7 @@ func TestRunner_HasBranchesOutOfSync_branchBehind(t *testing.T) {
 }
 
 func TestRunner_HasGitTownConfigNow(t *testing.T) {
+	t.Parallel()
 	runner := test.CreateRepo(t).Runner
 	res, err := runner.HasGitTownConfigNow()
 	assert.NoError(t, err)
@@ -359,6 +364,7 @@ func TestRunner_HasGitTownConfigNow(t *testing.T) {
 }
 
 func TestRunner_HasFile(t *testing.T) {
+	t.Parallel()
 	runner := test.CreateRepo(t).Runner
 	err := runner.CreateFile("f1.txt", "one")
 	assert.NoError(t, err)
@@ -391,6 +397,7 @@ func TestRunner_HasLocalBranch(t *testing.T) {
 }
 
 func TestRunner_HasOpenChanges(t *testing.T) {
+	t.Parallel()
 	runner := test.CreateRepo(t).Runner
 	has, err := runner.HasOpenChanges()
 	assert.NoError(t, err)
@@ -403,6 +410,7 @@ func TestRunner_HasOpenChanges(t *testing.T) {
 }
 
 func TestRunner_HasRebaseInProgress(t *testing.T) {
+	t.Parallel()
 	runner := test.CreateRepo(t).Runner
 	has, err := runner.HasRebaseInProgress()
 	assert.NoError(t, err)
@@ -410,6 +418,7 @@ func TestRunner_HasRebaseInProgress(t *testing.T) {
 }
 
 func TestRunner_HasRemote(t *testing.T) {
+	t.Parallel()
 	origin := test.CreateRepo(t)
 	repoDir := test.CreateTempDir(t)
 	repo, err := origin.Clone(repoDir)
@@ -423,6 +432,7 @@ func TestRunner_HasRemote(t *testing.T) {
 }
 
 func TestRunner_HasTrackingBranch(t *testing.T) {
+	t.Parallel()
 	origin := test.CreateRepo(t)
 	err := origin.CreateBranch("b1", "master")
 	assert.NoError(t, err)
@@ -446,6 +456,7 @@ func TestRunner_HasTrackingBranch(t *testing.T) {
 }
 
 func TestRunner_LocalBranches(t *testing.T) {
+	t.Parallel()
 	origin := test.CreateRepo(t)
 	repoDir := test.CreateTempDir(t)
 	repo, err := origin.Clone(repoDir)
@@ -464,6 +475,7 @@ func TestRunner_LocalBranches(t *testing.T) {
 }
 
 func TestRunner_LocalAndRemoteBranches(t *testing.T) {
+	t.Parallel()
 	origin := test.CreateRepo(t)
 	repoDir := test.CreateTempDir(t)
 	repo, err := origin.Clone(repoDir)
@@ -482,6 +494,7 @@ func TestRunner_LocalAndRemoteBranches(t *testing.T) {
 }
 
 func TestRunner_PreviouslyCheckedOutBranch(t *testing.T) {
+	t.Parallel()
 	runner := test.CreateRepo(t).Runner
 	err := runner.CreateBranch("feature1", "master")
 	assert.NoError(t, err)
@@ -497,6 +510,7 @@ func TestRunner_PreviouslyCheckedOutBranch(t *testing.T) {
 }
 
 func TestRunner_PushBranch(t *testing.T) {
+	t.Parallel()
 	runner := test.CreateRepo(t).Runner
 	origin := test.CreateRepo(t)
 	err := runner.AddRemote("origin", origin.WorkingDir())
@@ -511,6 +525,7 @@ func TestRunner_PushBranch(t *testing.T) {
 }
 
 func TestRunner_RemoteBranches(t *testing.T) {
+	t.Parallel()
 	origin := test.CreateRepo(t)
 	repoDir := test.CreateTempDir(t)
 	repo, err := origin.Clone(repoDir)
@@ -529,6 +544,7 @@ func TestRunner_RemoteBranches(t *testing.T) {
 }
 
 func TestRunner_Remotes(t *testing.T) {
+	t.Parallel()
 	runner := test.CreateRepo(t).Runner
 	origin := test.CreateRepo(t)
 	err := runner.AddRemote("origin", origin.WorkingDir())
@@ -539,6 +555,7 @@ func TestRunner_Remotes(t *testing.T) {
 }
 
 func TestRunner_RemoveBranch(t *testing.T) {
+	t.Parallel()
 	runner := test.CreateRepo(t).Runner
 	err := runner.CreateBranch("b1", "master")
 	assert.NoError(t, err)
@@ -553,6 +570,7 @@ func TestRunner_RemoveBranch(t *testing.T) {
 }
 
 func TestRunner_RemoveRemote(t *testing.T) {
+	t.Parallel()
 	runner := test.CreateRepo(t).Runner
 	origin := test.CreateRepo(t)
 	err := runner.AddRemote("origin", origin.WorkingDir())
@@ -565,6 +583,7 @@ func TestRunner_RemoveRemote(t *testing.T) {
 }
 
 func TestRunner_SetRemote(t *testing.T) {
+	t.Parallel()
 	runner := test.CreateRepo(t).Runner
 	remotes, err := runner.Remotes()
 	assert.NoError(t, err)
@@ -578,6 +597,7 @@ func TestRunner_SetRemote(t *testing.T) {
 }
 
 func TestRunner_ShaForCommit(t *testing.T) {
+	t.Parallel()
 	runner := test.CreateRepo(t).Runner
 	err := runner.CreateCommit(git.Commit{Branch: "master", FileName: "foo", FileContent: "bar", Message: "commit"})
 	assert.NoError(t, err)
@@ -587,12 +607,14 @@ func TestRunner_ShaForCommit(t *testing.T) {
 }
 
 func TestRunner_StageFile(t *testing.T) {
+	t.Parallel()
 	runner := test.CreateRepo(t).Runner
 	err := runner.CreateFile("f1.txt", "one")
 	assert.NoError(t, err)
 }
 
 func TestRunner_Stash(t *testing.T) {
+	t.Parallel()
 	runner := test.CreateRepo(t).Runner
 	stashSize, err := runner.StashSize()
 	assert.NoError(t, err)
@@ -607,6 +629,7 @@ func TestRunner_Stash(t *testing.T) {
 }
 
 func TestRunner_UncommittedFiles(t *testing.T) {
+	t.Parallel()
 	runner := test.CreateRepo(t).Runner
 	err := runner.CreateFile("f1.txt", "one")
 	assert.NoError(t, err)

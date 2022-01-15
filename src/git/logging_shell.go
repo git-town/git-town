@@ -41,7 +41,7 @@ func (shell LoggingShell) Run(cmd string, args ...string) (*run.Result, error) {
 		if len(args) == 2 && cmd == "git" && args[0] == "checkout" {
 			shell.dryRun.ChangeBranch(args[1])
 		}
-		return nil, nil
+		return nil, nil // nolint:nilnil  Can return nil result if dryRun is enabled
 	}
 	// Windows commands run inside CMD
 	// because opening browsers is done via "start"

@@ -19,6 +19,7 @@ const githubPR3 = githubRoot + "/repos/git-town/git-town/pulls/3"
 const githubPR1Merge = githubRoot + "/repos/git-town/git-town/pulls/1/merge"
 
 func setupGithubDriver(t *testing.T, token string) (drivers.CodeHostingDriver, func()) {
+	t.Helper()
 	httpmock.Activate()
 	driver := drivers.LoadGithub(mockConfig{
 		remoteOriginURL: "git@github.com:git-town/git-town.git",
