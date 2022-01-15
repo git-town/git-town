@@ -21,7 +21,7 @@ func TestGitCommandsInGitTownOutput(t *testing.T) {
 		"\x1b[1mcommand one": {
 			{Command: "command one", Branch: ""}},
 	}
-	for input, expected := range tests {
+	for input, expected := range tests { //nolint:paralleltest
 		t.Run(input, func(t *testing.T) {
 			t.Parallel()
 			assert.Equal(t, expected, GitCommandsInGitTownOutput(input))

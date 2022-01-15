@@ -9,15 +9,15 @@ import (
 )
 
 var (
-	// ResponseTypeAbort stands for the user choosing to abort the unfinished run state
+	// ResponseTypeAbort stands for the user choosing to abort the unfinished run state.
 	ResponseTypeAbort = "abort"
-	// ResponseTypeContinue stands for the user choosing to continue the unfinished run state
+	// ResponseTypeContinue stands for the user choosing to continue the unfinished run state.
 	ResponseTypeContinue = "continue"
-	// ResponseTypeDiscard stands for the user choosing to discard the unfinished run state
+	// ResponseTypeDiscard stands for the user choosing to discard the unfinished run state.
 	ResponseTypeDiscard = "discard"
-	// ResponseTypeQuit stands for the user choosing to quit the program
+	// ResponseTypeQuit stands for the user choosing to quit the program.
 	ResponseTypeQuit = "quit"
-	// ResponseTypeSkip stands for the user choosing to continue the unfinished run state by skipping the current branch
+	// ResponseTypeSkip stands for the user choosing to continue the unfinished run state by skipping the current branch.
 	ResponseTypeSkip = "skip"
 )
 

@@ -13,7 +13,7 @@ func TestFolderName(t *testing.T) {
 		"foo":                                 "foo",
 		`globally set to "true", local unset`: "globally_set_to_true_local_unset",
 	}
-	for give, want := range tests {
+	for give, want := range tests { //nolint:paralleltest
 		t.Run(want, func(t *testing.T) {
 			t.Parallel()
 			have := helpers.FolderName(give)

@@ -9,6 +9,7 @@ linters:
     - gomnd # tests contain hard-coded test data that wouldn't make sense to extract into constants
     - ifshort
     - interfacer
+    - ireturn
     - lll # we aren't enforcing a line length at this point
     - maligned  # deprecated
     - nlreturn
