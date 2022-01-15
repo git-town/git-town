@@ -30,8 +30,10 @@ jobs:
       - run: mv ./git-town /go/bin/
       - run: mv ./godog /go/bin/
       - run: mv ./golangci-lint /go/bin/
+      - run: echo 'export PATH=$PATH:/go/bin:/usr/local/go/bin' >> $BASH_ENV
       - run: make unit
       - run: make lint-go
+      - run: echo $PATH
       - run:
           find features -type f -name '*.feature' | grep -v features/s | xargs
           godog --concurrency=$(nproc --all) --format=progress --strict
@@ -47,6 +49,8 @@ jobs:
       - run: mv ./git-town /go/bin/
       - run: mv ./godog /go/bin/
       - run: mv ./golangci-lint /go/bin/
+      - run: echo 'export PATH=$PATH:/go/bin:/usr/local/go/bin' >> $BASH_ENV
+      - run: echo $PATH
       - run:
           find features -type f -name '*.feature' | grep features/s | xargs
           godog --concurrency=$(nproc --all) --format=progress --strict
