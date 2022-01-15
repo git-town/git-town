@@ -85,7 +85,7 @@ and Git Town will leave it up to your origin server to delete the remote branch.
 	},
 }
 
-// nolint:funlen
+//nolint:funlen
 func gitShipConfig(args []string, driver drivers.CodeHostingDriver, repo *git.ProdRepo) (result shipConfig, err error) {
 	result.initialBranch, err = repo.Silent.CurrentBranch()
 	if err != nil {

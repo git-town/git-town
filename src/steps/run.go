@@ -9,7 +9,7 @@ import (
 )
 
 // Run runs the Git Town command described by the given state.
-// nolint: gocognit, nestif, funlen
+//nolint:gocognit,nestif,funlen
 func Run(runState *RunState, repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	for {
 		step := runState.RunStepList.Pop()

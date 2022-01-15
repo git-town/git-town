@@ -9,7 +9,6 @@ import (
 
 // nolint:paralleltest
 func TestLoadGitLab(t *testing.T) {
-	t.Parallel()
 	driver := drivers.LoadGitlab(mockConfig{
 		codeHostingDriverName: "gitlab",
 		remoteOriginURL:       "git@self-hosted-gitlab.com:git-town/git-town.git",
@@ -21,7 +20,6 @@ func TestLoadGitLab(t *testing.T) {
 
 // nolint:paralleltest
 func TestLoadGitLab_customHostName(t *testing.T) {
-	t.Parallel()
 	driver := drivers.LoadGitlab(mockConfig{
 		remoteOriginURL:    "git@my-ssh-identity.com:git-town/git-town.git",
 		configuredHostName: "gitlab.com",

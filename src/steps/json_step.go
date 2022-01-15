@@ -35,7 +35,7 @@ func (j *JSONStep) UnmarshalJSON(b []byte) error {
 	return json.Unmarshal(*mapping["data"], &j.Step)
 }
 
-// nolint:gocyclo,funlen
+//nolint:gocyclo,funlen
 func getStep(stepType string) Step {
 	switch stepType {
 	case "*AbortMergeBranchStep":
