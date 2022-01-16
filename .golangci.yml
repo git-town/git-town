@@ -1,7 +1,7 @@
 linters:
   enable-all: true
   disable:
-    - cyclop
+    - cyclop  # we keep a tab on function length ourselves
     - exhaustivestruct  # not applicable at the moment
     - forbidigo  # Git Town prints a lot to the CLI
     - gochecknoglobals # Cobra requires globals
