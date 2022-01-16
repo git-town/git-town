@@ -108,11 +108,7 @@ func (ms *MockingShell) MockNoCommandsInstalled() error {
 	}
 	// write custom "which" command
 	content := "#!/usr/bin/env bash\n\nexit 1\n"
-	err := ioutil.WriteFile(filepath.Join(ms.binDir, "which"), []byte(content), 0o500)
-	if err != nil {
-		return fmt.Errorf("cannot write custom which command: %w", err)
-	}
-	return nil
+	return ms.createMockBinary("which", content)
 }
 
 // Run runs the given command with the given arguments
