@@ -18,8 +18,8 @@ func TestMainFirst(t *testing.T) {
 		{give: []string{"main"}, want: []string{"main"}},
 		{give: []string{}, want: []string{}},
 	}
-	for _, tt := range tests {
-		have := git.MainFirst(tt.give)
-		assert.Equal(t, tt.want, have)
+	for _, test := range tests {
+		have := git.MainFirst(test.give)
+		assert.Equal(t, test.want, have)
 	}
 }
