@@ -19,11 +19,11 @@ import (
 // - Temporarily override certain shell commands with mock implementations.
 //   Temporary mocks are only valid for the next command being run.
 type MockingShell struct {
-	workingDir     string // the directory in which this runner runs
-	homeDir        string // the directory that contains the global Git configuration
-	binDir         string // the directory that stores the mock shell command implementations, ignored if empty
-	testOrigin     string // optional content of the GIT_TOWN_REMOTE environment variable
-	hasMockCommand bool   // indicates whether the current test has mocked a command
+	workingDir string // the directory in which this runner runs
+	homeDir    string // the directory that contains the global Git configuration
+	binDir     string // the directory that stores the mock shell command implementations, ignored if empty
+	testOrigin string // optional content of the GIT_TOWN_REMOTE environment variable
+	usesBinDir bool   // indicates whether the current test uses the binDir
 }
 
 // NewMockingShell provides a new MockingShell instance that executes in the given directory.
@@ -37,7 +37,12 @@ func (ms *MockingShell) createBinDir() error {
 	if err != nil {
 		return fmt.Errorf("cannot create mock bin dir: %w", err)
 	}
+	ms.usesBinDir = true
 	return nil
+}
+
+// createMockBinary creates an executable with the given name and content in ms.binDir.
+func (ms *MockingShell) createMockBinary(name string, content string) error {
 }
 
 // WorkingDir provides the directory this MockingShell operates in.
