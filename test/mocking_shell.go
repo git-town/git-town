@@ -62,7 +62,7 @@ func (ms *MockingShell) MockBrokenCommand(name string) error {
 // MockCommand adds a mock for the command with the given name.
 func (ms *MockingShell) MockCommand(name string) error {
 	// create "bin" dir
-	err := os.Mkdir(ms.binDir, 0o744)
+	err := os.Mkdir(ms.binDir, 0o700)
 	if err != nil {
 		return fmt.Errorf("cannot create mock bin dir: %w", err)
 	}
@@ -85,7 +85,7 @@ func (ms *MockingShell) MockCommand(name string) error {
 // MockGit pretends that this repo has Git in the given version installed.
 func (ms *MockingShell) MockGit(version string) error {
 	// create "bin" dir
-	err := os.Mkdir(ms.binDir, 0o744)
+	err := os.Mkdir(ms.binDir, 0o700)
 	if err != nil {
 		return fmt.Errorf("cannot create mock bin dir %q: %w", ms.binDir, err)
 	}
@@ -107,7 +107,7 @@ func (ms *MockingShell) MockGit(version string) error {
 // MockNoCommandsInstalled pretends that no commands are installed.
 func (ms *MockingShell) MockNoCommandsInstalled() error {
 	// create "bin" dir
-	err := os.Mkdir(ms.binDir, 0o744)
+	err := os.Mkdir(ms.binDir, 0o700)
 	if err != nil {
 		return fmt.Errorf("cannot create mock bin dir: %w", err)
 	}
