@@ -9,11 +9,13 @@ import (
 	httpmock "gopkg.in/jarcoal/httpmock.v1"
 )
 
-const giteaRoot = "https://gitea.com/api/v1"
-const giteaVersion = giteaRoot + "/version"
-const giteaCurrOpen = giteaRoot + "/repos/git-town/git-town/pulls?limit=50&page=0&state=open"
-const giteaPR1 = giteaRoot + "/repos/git-town/git-town/pulls/1"
-const giteaPR1Merge = giteaRoot + "/repos/git-town/git-town/pulls/1/merge"
+const (
+	giteaRoot     = "https://gitea.com/api/v1"
+	giteaVersion  = giteaRoot + "/version"
+	giteaCurrOpen = giteaRoot + "/repos/git-town/git-town/pulls?limit=50&page=0&state=open"
+	giteaPR1      = giteaRoot + "/repos/git-town/git-town/pulls/1"
+	giteaPR1Merge = giteaRoot + "/repos/git-town/git-town/pulls/1/merge"
+)
 
 func log(template string, messages ...interface{}) {}
 

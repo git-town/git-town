@@ -7,8 +7,10 @@ import (
 	"github.com/fatih/color"
 )
 
-var debug bool
-var count int
+var (
+	debug bool
+	count int
+)
 
 // SetDebug sets whether or not we are in debug mode.
 func SetDebug(value bool) {

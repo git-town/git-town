@@ -66,7 +66,7 @@ func SaveRunState(runState *RunState, repo *git.ProdRepo) error {
 	if err != nil {
 		return err
 	}
-	err = ioutil.WriteFile(filename, content, 0600)
+	err = ioutil.WriteFile(filename, content, 0o600)
 	if err != nil {
 		return fmt.Errorf("cannot write file %q: %w", filename, err)
 	}

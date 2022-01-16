@@ -7,7 +7,6 @@ import "errors"
 // CodeHostingDriver defines the structure of drivers
 // for the different code hosting services.
 type CodeHostingDriver interface {
-
 	// LoadPullRequestInfo loads information about the pull request of the given branch into the given parent branch
 	// from the code hosting provider.
 	LoadPullRequestInfo(branch, parentBranch string) (PullRequestInfo, error)

@@ -49,9 +49,9 @@ func CopyDirectory(src, dst string) error {
 func createFile(t *testing.T, dir, filename string) {
 	t.Helper()
 	filePath := filepath.Join(dir, filename)
-	err := os.MkdirAll(filepath.Dir(filePath), 0744)
+	err := os.MkdirAll(filepath.Dir(filePath), 0o744)
 	assert.NoError(t, err)
-	err = ioutil.WriteFile(filePath, []byte(filename+" content"), 0500)
+	err = ioutil.WriteFile(filePath, []byte(filename+" content"), 0o500)
 	assert.NoError(t, err)
 }
 

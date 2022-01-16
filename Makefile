@@ -20,7 +20,7 @@ docs:  # tests the documentation
 fix: fix-go fix-md  # auto-fixes lint issues in all languages
 
 fix-go:  # auto-fixes all Go lint issues
-	gofmt -s -w ./src ./test
+	gofumpt -l -w .
 
 fix-md:  # auto-fixes all Markdown lint issues
 	dprint fmt
@@ -69,6 +69,7 @@ setup: setup-go  # the setup steps necessary on developer machines
 setup-go:
 	@(cd .. && GO111MODULE=on go get github.com/cucumber/godog/cmd/godog@v0.9.0)
 	@(cd .. && GO111MODULE=on go get github.com/golangci/golangci-lint/cmd/golangci-lint@v1.43.0)
+	go install mvdan.cc/gofumpt@latest
 
 stats:  # shows code statistics
 	@find . -type f | grep -v '\./node_modules/' | grep -v '\./vendor/' | grep -v '\./.git/' | xargs scc
