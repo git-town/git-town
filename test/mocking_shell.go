@@ -62,7 +62,7 @@ func (ms *MockingShell) MockBrokenCommand(name string) error {
 	}
 	// write custom "which" command
 	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" == %q ]; then\n  echo %q\nelse\n  exit 1\nfi", name, filepath.Join(ms.binDir, name))
-	err := ioutil.WriteFile(filepath.Join(ms.binDir, "which"), []byte(content), 0o500)
+	err := ms.createMockBinary("which", content)
 	if err != nil {
 		return fmt.Errorf("cannot write custom which command: %w", err)
 	}
