@@ -20,12 +20,12 @@ import (
 // - Temporarily override certain shell commands with mock implementations.
 //   Temporary mocks are only valid for the next command being run.
 type MockingShell struct {
-	workingDir         string // the directory in which this runner runs
-	homeDir            string // the directory that contains the global Git configuration
-	binDir             string // the directory that stores the mock shell command implementations, ignored if empty
-	testOrigin         string // optional content of the GIT_TOWN_REMOTE environment variable
-	hasMockCommand     bool   // indicates whether the current test has mocked a command
-	hasCustomGitEditor bool   // indicates whether the current test has a custom GIT_EDITOR set
+	workingDir     string // the directory in which this runner runs
+	homeDir        string // the directory that contains the global Git configuration
+	binDir         string // the directory that stores the mock shell command implementations, ignored if empty
+	testOrigin     string // optional content of the GIT_TOWN_REMOTE environment variable
+	hasMockCommand bool   // indicates whether the current test has mocked a command
+	gitEditor      string // name of the binary to use as the custom editor during "git commit"
 }
 
 // NewMockingShell provides a new MockingShell instance that executes in the given directory.
@@ -106,8 +106,8 @@ func (ms *MockingShell) MockGit(version string) error {
 	return nil
 }
 
-// MockEnterEmptyCommitMessage sets up this shell with a Git editor that enters an empty commit message.
-func (ms *MockingShell) MockEnterEmptyCommitMessage() error {
+// MockCommitMessage sets up this shell with an editor that enters the given commit message.
+func (ms *MockingShell) MockCommitMessage(message string) error {
 	// create "bin" dir
 	err := os.Mkdir(ms.binDir, 0o744)
 	if err != nil {
