@@ -39,7 +39,7 @@ func (ms *MockingShell) WorkingDir() string {
 // MockBrokenCommand adds a mock for the given command that returns an error.
 func (ms *MockingShell) MockBrokenCommand(name string) error {
 	// create "bin" dir
-	err := os.Mkdir(ms.binDir, 0o744)
+	err := os.Mkdir(ms.binDir, 0o700)
 	if err != nil {
 		return fmt.Errorf("cannot create mock bin dir: %w", err)
 	}
