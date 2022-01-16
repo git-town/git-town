@@ -10,11 +10,10 @@ import (
 // PrependPath provides a new envList with the given directory appended to the PATH entry of the given envList.
 // This function assumes there is only one PATH entry.
 func PrependPath(envList []string, directory string) []string {
-	for i := range envList {
-		if strings.HasPrefix(envList[i], "PATH=") {
-			parts := strings.SplitN(envList[i], "=", 2)
-			parts[1] = directory + string(os.PathListSeparator) + parts[1]
-			envList[i] = strings.Join(parts, "=")
+	for i, envVar := range envList {
+		if strings.HasPrefix(envVar, "PATH=") {
+			parts := strings.SplitN(envVar, "=", 2)
+			envList[i] = fmt.Sprintf("PATH=%s%s%s", directory, string(os.PathListSeparator), parts[1])
 			return envList
 		}
 	}
