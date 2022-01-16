@@ -37,7 +37,7 @@ msi:  # compiles the MSI installer for Windows
 lint: lint-go lint-md  # lints all the source code
 
 lint-go:  # lints the Go files
-	golangci-lint run src/... test/...
+	golangci-lint run
 
 lint-md:   # lints the Markdown files
 	dprint check
