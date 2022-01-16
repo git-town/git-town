@@ -9,12 +9,14 @@ import (
 )
 
 func TestLongestStringLength(t *testing.T) {
+	t.Parallel()
 	tests := map[int][]string{
 		5: {"one", "two", "three"},
 		0: {""},
 	}
-	for expected, input := range tests {
+	for expected, input := range tests { //nolint:paralleltest
 		t.Run(strings.Join(input, "-"), func(t *testing.T) {
+			t.Parallel()
 			assert.Equal(t, expected, helpers.LongestStringLength(input))
 		})
 	}

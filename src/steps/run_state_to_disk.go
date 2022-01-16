@@ -11,7 +11,7 @@ import (
 	"github.com/git-town/git-town/v7/src/git"
 )
 
-// LoadPreviousRunState loads the run state from disk if it exists or creates a new run state.
+// LoadPreviousRunState loads the run state from disk if it exists. Can return nil if there is no previous runstate.
 func LoadPreviousRunState(repo *git.ProdRepo) (result *RunState, err error) {
 	filename, err := getRunResultFilename(repo)
 	if err != nil {
@@ -20,7 +20,7 @@ func LoadPreviousRunState(repo *git.ProdRepo) (result *RunState, err error) {
 	_, err = os.Stat(filename)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return nil, nil
+			return nil, nil //nolint:nilnil
 		}
 		return nil, fmt.Errorf("cannot check file %q: %w", filename, err)
 	}

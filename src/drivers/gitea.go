@@ -6,14 +6,13 @@ import (
 	"net/url"
 	"strings"
 
+	"code.gitea.io/sdk/gitea"
 	"github.com/git-town/git-town/v7/src/drivers/helpers"
 	"golang.org/x/oauth2"
-
-	"code.gitea.io/sdk/gitea"
 )
 
-// giteaCodeHostingDriver provides access to the API of Gitea installations.
-type giteaCodeHostingDriver struct {
+// GiteaCodeHostingDriver provides access to the API of Gitea installations.
+type GiteaCodeHostingDriver struct {
 	originURL  string
 	hostname   string
 	apiToken   string
@@ -25,7 +24,7 @@ type giteaCodeHostingDriver struct {
 
 // LoadGitea provides a Gitea driver instance if the given repo configuration is for a Gitea repo,
 // otherwise nil.
-func LoadGitea(config config, log logFn) CodeHostingDriver {
+func LoadGitea(config config, log logFn) *GiteaCodeHostingDriver {
 	driverType := config.GetCodeHostingDriverName()
 	originURL := config.GetRemoteOriginURL()
 	hostname := helpers.GetURLHostname(originURL)
@@ -42,7 +41,7 @@ func LoadGitea(config config, log logFn) CodeHostingDriver {
 	}
 	owner := repositoryParts[0]
 	repository := repositoryParts[1]
-	return &giteaCodeHostingDriver{
+	return &GiteaCodeHostingDriver{
 		originURL:  originURL,
 		hostname:   hostname,
 		apiToken:   config.GetGiteaToken(),
@@ -52,7 +51,7 @@ func LoadGitea(config config, log logFn) CodeHostingDriver {
 	}
 }
 
-func (d *giteaCodeHostingDriver) LoadPullRequestInfo(branch, parentBranch string) (result PullRequestInfo, err error) {
+func (d *GiteaCodeHostingDriver) LoadPullRequestInfo(branch, parentBranch string) (result PullRequestInfo, err error) {
 	if d.apiToken == "" {
 		return result, nil
 	}
@@ -82,20 +81,20 @@ func (d *giteaCodeHostingDriver) LoadPullRequestInfo(branch, parentBranch string
 	return result, nil
 }
 
-func (d *giteaCodeHostingDriver) NewPullRequestURL(branch string, parentBranch string) (string, error) {
+func (d *GiteaCodeHostingDriver) NewPullRequestURL(branch string, parentBranch string) (string, error) {
 	toCompare := parentBranch + "..." + branch
 	return fmt.Sprintf("%s/compare/%s", d.RepositoryURL(), url.PathEscape(toCompare)), nil
 }
 
-func (d *giteaCodeHostingDriver) RepositoryURL() string {
+func (d *GiteaCodeHostingDriver) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", d.hostname, d.owner, d.repository)
 }
 
-func (d *giteaCodeHostingDriver) HostingServiceName() string {
+func (d *GiteaCodeHostingDriver) HostingServiceName() string {
 	return "Gitea"
 }
 
-func (d *giteaCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
+func (d *GiteaCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
 	d.connect()
 	openPullRequests, err := d.client.ListRepoPullRequests(d.owner, d.repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{
@@ -123,7 +122,7 @@ func (d *giteaCodeHostingDriver) MergePullRequest(options MergePullRequestOption
 
 // Helper
 
-func (d *giteaCodeHostingDriver) connect() {
+func (d *GiteaCodeHostingDriver) connect() {
 	if d.client == nil {
 		ts := oauth2.StaticTokenSource(
 			&oauth2.Token{AccessToken: d.apiToken},
@@ -151,7 +150,7 @@ func filterPullRequests(pullRequests []*gitea.PullRequest, baseName, headName st
 	return pullRequestsFiltered
 }
 
-func (d *giteaCodeHostingDriver) apiMergePullRequest(pullRequestNumber int64, commitTitle, commitMessage string) (mergeSha string, err error) {
+func (d *GiteaCodeHostingDriver) apiMergePullRequest(pullRequestNumber int64, commitTitle, commitMessage string) (mergeSha string, err error) {
 	_, err = d.client.MergePullRequest(d.owner, d.repository, pullRequestNumber, gitea.MergePullRequestOption{
 		Style:   gitea.MergeStyleSquash,
 		Title:   commitTitle,
@@ -174,7 +173,7 @@ func (d *giteaCodeHostingDriver) apiMergePullRequest(pullRequestNumber int64, co
 //   children1 -> ancestor  --> master (retargeted to master after merge)
 //   children2 -> ancestor  --> master (retargeted to master after merge)
 //nolint:unparam
-func (d *giteaCodeHostingDriver) apiRetargetPullRequests(pullRequests []*gitea.PullRequest, newBaseName string) error {
+func (d *GiteaCodeHostingDriver) apiRetargetPullRequests(pullRequests []*gitea.PullRequest, newBaseName string) error {
 	for _, pullRequest := range pullRequests {
 		// RE-ENABLE AFTER https://github.com/go-gitea/gitea/issues/11552 and remove the nolint above
 		// if options.LogRequests {

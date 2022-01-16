@@ -1,4 +1,4 @@
-// nolint: testpackage
+//nolint:testpackage
 package test
 
 import (
@@ -9,6 +9,7 @@ import (
 )
 
 func TestCopyDirectory(t *testing.T) {
+	t.Parallel()
 	tmpDir := CreateTempDir(t)
 	srcDir := filepath.Join(tmpDir, "src")
 	dstDir := filepath.Join(tmpDir, "dst")
@@ -23,6 +24,7 @@ func TestCopyDirectory(t *testing.T) {
 }
 
 func TestCopyDirectory_GitRepo(t *testing.T) {
+	t.Parallel()
 	origin := CreateRepo(t)
 	createFile(t, origin.WorkingDir(), "one.txt")
 	dstDir := filepath.Join(CreateTempDir(t), "dest")

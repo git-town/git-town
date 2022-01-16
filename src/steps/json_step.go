@@ -1,3 +1,4 @@
+//nolint:ireturn
 package steps
 
 import (
@@ -20,7 +21,6 @@ func (j *JSONStep) MarshalJSON() (b []byte, e error) {
 }
 
 // UnmarshalJSON unmarshals the step from JSON.
-// nolint: gocyclo
 func (j *JSONStep) UnmarshalJSON(b []byte) error {
 	var mapping map[string]*json.RawMessage
 	err := json.Unmarshal(b, &mapping)
@@ -36,7 +36,7 @@ func (j *JSONStep) UnmarshalJSON(b []byte) error {
 	return json.Unmarshal(*mapping["data"], &j.Step)
 }
 
-// nolint:gocyclo,funlen
+//nolint:gocyclo,funlen
 func getStep(stepType string) Step {
 	switch stepType {
 	case "*AbortMergeBranchStep":

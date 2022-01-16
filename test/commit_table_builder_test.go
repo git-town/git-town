@@ -9,6 +9,7 @@ import (
 )
 
 func TestCommitTableBuilder(t *testing.T) {
+	t.Parallel()
 	builder := test.NewCommitTableBuilder()
 	commit1 := git.Commit{SHA: "sha1", Branch: "branch1", Message: "commit1"}
 	commit2 := git.Commit{SHA: "sha2", Branch: "main", Message: "commit2"}
