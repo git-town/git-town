@@ -67,6 +67,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 	})
 
+
+
+
+
 	suite.AfterScenario(func(scenario *messages.Pickle, e error) {
 		if e != nil {
 			fmt.Printf("failed scenario, investigate state in %q\n", state.gitEnv.Dir)
