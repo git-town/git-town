@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -18,11 +19,12 @@ import (
 // - Temporarily override certain shell commands with mock implementations.
 //   Temporary mocks are only valid for the next command being run.
 type MockingShell struct {
-	workingDir     string // the directory in which this runner runs
-	homeDir        string // the directory that contains the global Git configuration
-	binDir         string // the directory that stores the mock shell command implementations, ignored if empty
-	testOrigin     string // optional content of the GIT_TOWN_REMOTE environment variable
-	hasMockCommand bool   // indicates whether the current test has mocked a command
+	workingDir         string // the directory in which this runner runs
+	homeDir            string // the directory that contains the global Git configuration
+	binDir             string // the directory that stores the mock shell command implementations, ignored if empty
+	testOrigin         string // optional content of the GIT_TOWN_REMOTE environment variable
+	hasMockCommand     bool   // indicates whether the current test has mocked a command
+	hasCustomGitEditor bool   // indicates whether the current test has a custom GIT_EDITOR set
 }
 
 // NewMockingShell provides a new MockingShell instance that executes in the given directory.
@@ -100,6 +102,24 @@ func (ms *MockingShell) MockGit(version string) error {
 		return fmt.Errorf("cannot create custom Git binary: %w", err)
 	}
 	ms.hasMockCommand = true
+	return nil
+}
+
+// MockEnterEmptyCommitMessage sets up this shell with a Git editor that enters an empty commit message.
+func (ms *MockingShell) MockEnterEmptyCommitMessage() error {
+	// create "bin" dir
+	err := os.Mkdir(ms.binDir, 0o744)
+	if err != nil {
+		return fmt.Errorf("cannot create mock bin dir: %w", err)
+	}
+	// write custom git editor command
+	content := "#!/usr/bin/env bash\n\necho '' > $1\n"
+	err = ioutil.WriteFile(filepath.Join(ms.binDir, "git_editor"), []byte(content), 0o500)
+	if err != nil {
+		return fmt.Errorf("cannot write custom empty git editor command: %w", err)
+	}
+	ms.hasMockCommand = true
+	ms.hasCustomGitEditor = true
 	return nil
 }
 
@@ -188,6 +208,10 @@ func (ms *MockingShell) RunWith(opts run.Options, cmd string, args ...string) (r
 				break
 			}
 		}
+	}
+	// add the custom GIT_EDITOR
+	if ms.hasCustomGitEditor {
+		opts.Env = envlist.Replace("GIT_EDITOR", path.Join(ms.binDir, "git_editor"))
 	}
 	// set the working dir
 	opts.Dir = filepath.Join(ms.workingDir, opts.Dir)
