@@ -43,7 +43,7 @@ func (ms *MockingShell) createBinDir() error {
 
 // createMockBinary creates an executable with the given name and content in ms.binDir.
 func (ms *MockingShell) createMockBinary(name string, content string) error {
-	err := ioutil.WriteFile(filepath.Join(ms.binDir, "which"), []byte(content), 0o500)
+	err := ioutil.WriteFile(filepath.Join(ms.binDir, name), []byte(content), 0o500)
 	if err != nil {
 		return fmt.Errorf("cannot write custom %q command: %w", name, err)
 	}
@@ -68,7 +68,7 @@ func (ms *MockingShell) MockBrokenCommand(name string) error {
 	}
 	// write custom command
 	content = "#!/usr/bin/env bash\n\nexit 1"
-	err = ioutil.WriteFile(filepath.Join(ms.binDir, name), []byte(content), 0o500)
+	err = ms.createMockBinary(name, content)
 	if err != nil {
 		return fmt.Errorf("cannot write custom command: %w", err)
 	}
