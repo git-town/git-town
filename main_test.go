@@ -18,6 +18,7 @@ func FeatureContext(suite *godog.Suite) {
 	test.Steps(suite, state)
 }
 
+// nolint:paralleltest
 func TestGodog(t *testing.T) {
 	tags := ""
 	if runtime.GOOS == "windows" {
