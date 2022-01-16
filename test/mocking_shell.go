@@ -78,17 +78,12 @@ func (ms *MockingShell) MockCommand(name string) error {
 	}
 	// write custom "which" command
 	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" == %q ]; then\n  echo %q\nelse\n  exit 1\nfi", name, filepath.Join(ms.binDir, name))
-	err := ioutil.WriteFile(filepath.Join(ms.binDir, "which"), []byte(content), 0o500)
-	if err != nil {
+	if err := ms.createMockBinary("which", content); err != nil {
 		return fmt.Errorf("cannot write custom which command: %w", err)
 	}
 	// write custom command
 	content = fmt.Sprintf("#!/usr/bin/env bash\n\necho %s called with: \"$@\"\n", name)
-	err = ioutil.WriteFile(filepath.Join(ms.binDir, name), []byte(content), 0o500)
-	if err != nil {
-		return fmt.Errorf("cannot write custom command: %w", err)
-	}
-	return nil
+	return ms.createMockBinary(name, content)
 }
 
 // MockGit pretends that this repo has Git in the given version installed.
@@ -97,18 +92,13 @@ func (ms *MockingShell) MockGit(version string) error {
 		return err
 	}
 	// write custom Git command
-	var err error
 	if runtime.GOOS == "windows" {
 		content := fmt.Sprintf("echo git version %s\n", version)
-		err = ioutil.WriteFile(filepath.Join(ms.binDir, "git.cmd"), []byte(content), 0o500)
+		return ms.createMockBinary("git.cmd", content)
 	} else {
 		content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" = \"version\" ]; then\n  echo git version %s\nfi\n", version)
-		err = ioutil.WriteFile(filepath.Join(ms.binDir, "git"), []byte(content), 0o500)
+		return ms.createMockBinary("git", content)
 	}
-	if err != nil {
-		return fmt.Errorf("cannot create custom Git binary: %w", err)
-	}
-	return nil
 }
 
 // MockNoCommandsInstalled pretends that no commands are installed.
