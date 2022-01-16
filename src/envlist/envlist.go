@@ -24,11 +24,12 @@ func PrependPath(envList []string, directory string) []string {
 // If no entry with the given key exists, appends one at the end.
 // This function assumes that keys are unique, i.e. no duplicate keys exist.
 func Replace(envList []string, key string, value string) []string {
+	prefix := key + "="
 	for i := range envList {
-		if strings.HasPrefix((envList)[i], key+"=") {
-			(envList)[i] = fmt.Sprintf("%s=%s", key, value)
+		if strings.HasPrefix((envList)[i], prefix) {
+			(envList)[i] = prefix + value
 			return envList
 		}
 	}
-	return append(envList, fmt.Sprintf("%s=%s", key, value))
+	return append(envList, prefix+value)
 }
