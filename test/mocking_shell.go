@@ -89,7 +89,6 @@ func (ms *MockingShell) MockCommand(name string) error {
 
 // MockGit pretends that this repo has Git in the given version installed.
 func (ms *MockingShell) MockGit(version string) error {
-	// write custom Git command
 	if runtime.GOOS == "windows" {
 		content := fmt.Sprintf("echo git version %s\n", version)
 		return ms.createMockBinary("git.cmd", content)
@@ -101,7 +100,6 @@ func (ms *MockingShell) MockGit(version string) error {
 
 // MockNoCommandsInstalled pretends that no commands are installed.
 func (ms *MockingShell) MockNoCommandsInstalled() error {
-	// write custom "which" command
 	content := "#!/usr/bin/env bash\n\nexit 1\n"
 	return ms.createMockBinary("which", content)
 }
