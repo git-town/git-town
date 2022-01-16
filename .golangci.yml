@@ -2,7 +2,7 @@ linters:
   enable-all: true
   disable:
     - cyclop
-    - exhaustivestruct  # TODO: activate
+    - exhaustivestruct  # not applicable at the moment
     - forbidigo
     - gochecknoglobals # Cobra requires globals
     - gochecknoinits # Cobra requires init blocks
