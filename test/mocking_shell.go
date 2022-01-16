@@ -33,7 +33,7 @@ func NewMockingShell(workingDir string, homeDir string, binDir string) *MockingS
 
 // createBinDir creates the directory that contains mock shell command implementations
 func (ms *MockingShell) createBinDir() error {
-	err := os.Mkdir(ms.binDir, 0o744)
+	err := os.Mkdir(ms.binDir, 0o700)
 	if err != nil {
 		return fmt.Errorf("cannot create mock bin dir: %w", err)
 	}
