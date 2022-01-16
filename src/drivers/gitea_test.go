@@ -30,7 +30,7 @@ func setupGiteaDriver(t *testing.T, token string) (drivers.CodeHostingDriver, fu
 	}
 }
 
-//nolint:paralleltest
+//nolint:paralleltest  // mocks HTTP
 func TestLoadGitea(t *testing.T) {
 	driver := drivers.LoadGitea(mockConfig{
 		codeHostingDriverName: "gitea",
@@ -41,7 +41,7 @@ func TestLoadGitea(t *testing.T) {
 	assert.Equal(t, "https://self-hosted-gitea.com/git-town/git-town", driver.RepositoryURL())
 }
 
-//nolint:paralleltest
+//nolint:paralleltest  // mocks HTTP
 func TestLoadGitea_customHostName(t *testing.T) {
 	driver := drivers.LoadGitea(mockConfig{
 		remoteOriginURL:    "git@my-ssh-identity.com:git-town/git-town.git",
@@ -52,7 +52,7 @@ func TestLoadGitea_customHostName(t *testing.T) {
 	assert.Equal(t, "https://gitea.com/git-town/git-town", driver.RepositoryURL())
 }
 
-//nolint:paralleltest
+//nolint:paralleltest  // mocks HTTP
 func TestGiteaDriver_LoadPullRequestInfo(t *testing.T) {
 	driver, teardown := setupGiteaDriver(t, "TOKEN")
 	defer teardown()
@@ -64,7 +64,7 @@ func TestGiteaDriver_LoadPullRequestInfo(t *testing.T) {
 	assert.Equal(t, int64(1), prInfo.PullRequestNumber)
 }
 
-//nolint:paralleltest
+//nolint:paralleltest  // mocks HTTP
 func TestGiteaDriver_LoadPullRequestInfo_EmptyGiteaToken(t *testing.T) {
 	driver, teardown := setupGiteaDriver(t, "")
 	defer teardown()
@@ -73,7 +73,7 @@ func TestGiteaDriver_LoadPullRequestInfo_EmptyGiteaToken(t *testing.T) {
 	assert.False(t, prInfo.CanMergeWithAPI)
 }
 
-//nolint:paralleltest
+//nolint:paralleltest  // mocks HTTP
 func TestGiteaDriver_LoadPullRequestInfo_GetPullRequestNumberFails(t *testing.T) {
 	driver, teardown := setupGiteaDriver(t, "TOKEN")
 	defer teardown()
@@ -82,7 +82,7 @@ func TestGiteaDriver_LoadPullRequestInfo_GetPullRequestNumberFails(t *testing.T)
 	assert.Error(t, err)
 }
 
-//nolint:paralleltest
+//nolint:paralleltest  // mocks HTTP
 func TestGiteaDriver_LoadPullRequestInfo_NoPullRequestForBranch(t *testing.T) {
 	driver, teardown := setupGiteaDriver(t, "TOKEN")
 	defer teardown()
@@ -92,7 +92,7 @@ func TestGiteaDriver_LoadPullRequestInfo_NoPullRequestForBranch(t *testing.T) {
 	assert.False(t, prInfo.CanMergeWithAPI)
 }
 
-//nolint:paralleltest
+//nolint:paralleltest  // mocks HTTP
 func TestGiteaDriver_LoadPullRequestInfo_MultiplePullRequestsForBranch(t *testing.T) {
 	driver, teardown := setupGiteaDriver(t, "TOKEN")
 	defer teardown()
@@ -102,7 +102,7 @@ func TestGiteaDriver_LoadPullRequestInfo_MultiplePullRequestsForBranch(t *testin
 	assert.False(t, prInfo.CanMergeWithAPI)
 }
 
-//nolint:paralleltest
+//nolint:paralleltest  // mocks HTTP
 func TestGiteaDriver_MergePullRequest_GetPullRequestIdsFails(t *testing.T) {
 	driver, teardown := setupGiteaDriver(t, "TOKEN")
 	defer teardown()
@@ -116,7 +116,7 @@ func TestGiteaDriver_MergePullRequest_GetPullRequestIdsFails(t *testing.T) {
 	assert.Error(t, err)
 }
 
-//nolint:paralleltest
+//nolint:paralleltest  // mocks HTTP
 func TestGiteaDriver_MergePullRequest_GetPullRequestToMergeFails(t *testing.T) {
 	driver, teardown := setupGiteaDriver(t, "TOKEN")
 	defer teardown()
@@ -132,7 +132,7 @@ func TestGiteaDriver_MergePullRequest_GetPullRequestToMergeFails(t *testing.T) {
 	assert.Error(t, err)
 }
 
-//nolint:paralleltest
+//nolint:paralleltest  // mocks HTTP
 func TestGiteaDriver_MergePullRequest_PullRequestNotFound(t *testing.T) {
 	driver, teardown := setupGiteaDriver(t, "TOKEN")
 	defer teardown()
@@ -150,7 +150,7 @@ func TestGiteaDriver_MergePullRequest_PullRequestNotFound(t *testing.T) {
 	assert.Error(t, err)
 }
 
-//nolint:paralleltest
+//nolint:paralleltest  // mocks HTTP
 func TestGiteaDriver_MergePullRequest(t *testing.T) {
 	driver, teardown := setupGiteaDriver(t, "TOKEN")
 	defer teardown()
@@ -177,7 +177,7 @@ func TestGiteaDriver_MergePullRequest(t *testing.T) {
 	assert.Equal(t, "squash", mergeParameters["Do"])
 }
 
-//nolint:paralleltest
+//nolint:paralleltest  // mocks HTTP
 func TestGiteaDriver_MergePullRequest_MergeFails(t *testing.T) {
 	driver, teardown := setupGiteaDriver(t, "TOKEN")
 	defer teardown()
