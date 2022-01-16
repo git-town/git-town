@@ -13,7 +13,7 @@ func PrependPath(envList []string, directory string) []string {
 	for i, envVar := range envList {
 		if strings.HasPrefix(envVar, "PATH=") {
 			parts := strings.SplitN(envVar, "=", 2)
-			envList[i] = fmt.Sprintf("PATH=%s%s%s", directory, string(os.PathListSeparator), parts[1])
+			envList[i] = "PATH=" + directory + string(os.PathListSeparator) + parts[1]
 			return envList
 		}
 	}
