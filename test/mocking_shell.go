@@ -31,8 +31,12 @@ func NewMockingShell(workingDir string, homeDir string, binDir string) *MockingS
 	return &MockingShell{workingDir: workingDir, homeDir: homeDir, binDir: binDir}
 }
 
-// createBinDir creates the directory that contains mock shell command implementations
+// createBinDir creates the directory that contains mock shell command implementations.
+// This method is idempotent.
 func (ms *MockingShell) createBinDir() error {
+	if ms.usesBinDir {
+		return nil
+	}
 	err := os.Mkdir(ms.binDir, 0o700)
 	if err != nil {
 		return fmt.Errorf("cannot create mock bin dir: %w", err)
@@ -43,6 +47,9 @@ func (ms *MockingShell) createBinDir() error {
 
 // createMockBinary creates an executable with the given name and content in ms.binDir.
 func (ms *MockingShell) createMockBinary(name string, content string) error {
+	if err := ms.createBinDir(); err != nil {
+		return err
+	}
 	err := ioutil.WriteFile(filepath.Join(ms.binDir, name), []byte(content), 0o500)
 	if err != nil {
 		return fmt.Errorf("cannot write custom %q command: %w", name, err)
@@ -57,9 +64,6 @@ func (ms *MockingShell) WorkingDir() string {
 
 // MockBrokenCommand adds a mock for the given command that returns an error.
 func (ms *MockingShell) MockBrokenCommand(name string) error {
-	if err := ms.createBinDir(); err != nil {
-		return err
-	}
 	// write custom "which" command
 	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" == %q ]; then\n  echo %q\nelse\n  exit 1\nfi", name, filepath.Join(ms.binDir, name))
 	err := ms.createMockBinary("which", content)
@@ -73,9 +77,6 @@ func (ms *MockingShell) MockBrokenCommand(name string) error {
 
 // MockCommand adds a mock for the command with the given name.
 func (ms *MockingShell) MockCommand(name string) error {
-	if err := ms.createBinDir(); err != nil {
-		return err
-	}
 	// write custom "which" command
 	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" == %q ]; then\n  echo %q\nelse\n  exit 1\nfi", name, filepath.Join(ms.binDir, name))
 	if err := ms.createMockBinary("which", content); err != nil {
@@ -88,9 +89,6 @@ func (ms *MockingShell) MockCommand(name string) error {
 
 // MockGit pretends that this repo has Git in the given version installed.
 func (ms *MockingShell) MockGit(version string) error {
-	if err := ms.createBinDir(); err != nil {
-		return err
-	}
 	// write custom Git command
 	if runtime.GOOS == "windows" {
 		content := fmt.Sprintf("echo git version %s\n", version)
@@ -103,9 +101,6 @@ func (ms *MockingShell) MockGit(version string) error {
 
 // MockNoCommandsInstalled pretends that no commands are installed.
 func (ms *MockingShell) MockNoCommandsInstalled() error {
-	if err := ms.createBinDir(); err != nil {
-		return err
-	}
 	// write custom "which" command
 	content := "#!/usr/bin/env bash\n\nexit 1\n"
 	return ms.createMockBinary("which", content)
