@@ -15,7 +15,7 @@ type DeleteRemoteBranchStep struct {
 }
 
 // CreateUndoStep returns the undo step for this step.
-func (step *DeleteRemoteBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+func (step *DeleteRemoteBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
 	if step.IsTracking {
 		return &CreateTrackingBranchStep{BranchName: step.BranchName}, nil
 	}
