@@ -19,7 +19,7 @@ const (
 
 func log(template string, messages ...interface{}) {}
 
-func setupGiteaDriver(t *testing.T, token string) (*drivers.GiteaCodeHostingDriver, func()) { //nolint:ireturn // apparent bug in ireturn
+func setupGiteaDriver(t *testing.T, token string) (*drivers.GiteaCodeHostingDriver, func()) {
 	t.Helper()
 	httpmock.Activate()
 	driver := drivers.LoadGitea(mockConfig{
