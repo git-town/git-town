@@ -8,6 +8,7 @@ import (
 )
 
 func TestOrderedStringSet(t *testing.T) {
+	t.Parallel()
 	set1 := helpers.NewOrderedStringSet("one")
 	set2 := set1.Add("two")
 	set2 = set2.Add("two")

@@ -31,7 +31,7 @@ func AskForBranchAncestry(branchName, defaultBranchName string, repo *git.ProdRe
 	current := branchName
 	for {
 		parent := repo.Config.GetParentBranch(current)
-		if parent == "" { // nolint: nestif
+		if parent == "" { //nolint:nestif
 			printParentBranchHeader(repo)
 			parent, err = AskForBranchParent(current, defaultBranchName, repo)
 			if err != nil {

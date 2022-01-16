@@ -8,6 +8,7 @@ import (
 )
 
 func TestMainFirst(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		give []string
 		want []string
@@ -17,8 +18,8 @@ func TestMainFirst(t *testing.T) {
 		{give: []string{"main"}, want: []string{"main"}},
 		{give: []string{}, want: []string{}},
 	}
-	for tt := range tests {
-		have := git.MainFirst(tests[tt].give)
-		assert.Equal(t, tests[tt].want, have)
+	for _, test := range tests {
+		have := git.MainFirst(test.give)
+		assert.Equal(t, test.want, have)
 	}
 }

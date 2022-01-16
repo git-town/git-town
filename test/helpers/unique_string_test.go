@@ -8,5 +8,6 @@ import (
 )
 
 func TestUniqueString(t *testing.T) {
+	t.Parallel()
 	assert.NotEqual(t, "", helpers.UniqueString())
 }

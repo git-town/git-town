@@ -8,13 +8,16 @@ import (
 )
 
 func TestFolderName(t *testing.T) {
+	t.Parallel()
 	tests := map[string]string{
 		"foo":                                 "foo",
 		`globally set to "true", local unset`: "globally_set_to_true_local_unset",
 	}
-	for give := range tests {
-		want := tests[give]
-		have := helpers.FolderName(give)
-		assert.Equal(t, want, have)
+	for give, want := range tests { //nolint:paralleltest
+		t.Run(want, func(t *testing.T) {
+			t.Parallel()
+			have := helpers.FolderName(give)
+			assert.Equal(t, want, have)
+		})
 	}
 }
