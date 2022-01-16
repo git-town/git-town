@@ -8,6 +8,7 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/git-town/git-town/v7/src/envlist"
 	"github.com/git-town/git-town/v7/src/run"
 	"github.com/kballard/go-shellquote"
 )
@@ -169,25 +170,14 @@ func (ms *MockingShell) RunWith(opts run.Options, cmd string, args ...string) (r
 		opts.Env = os.Environ()
 	}
 	// set HOME to the given global directory so that Git puts the global configuration there.
-	for i := range opts.Env {
-		if strings.HasPrefix(opts.Env[i], "HOME=") {
-			opts.Env[i] = fmt.Sprintf("HOME=%s", ms.homeDir)
-		}
-	}
+	opts.Env = envlist.Replace(opts.Env, "HOME", ms.homeDir)
 	// add the custom origin
 	if ms.testOrigin != "" {
-		opts.Env = append(opts.Env, fmt.Sprintf("GIT_TOWN_REMOTE=%s", ms.testOrigin))
+		opts.Env = envlist.Replace(opts.Env, "GIT_TOWN_REMOTE", ms.testOrigin)
 	}
 	// add the custom bin dir to the PATH
 	if ms.hasMockCommand {
-		for i := range opts.Env {
-			if strings.HasPrefix(opts.Env[i], "PATH=") {
-				parts := strings.SplitN(opts.Env[i], "=", 2)
-				parts[1] = ms.binDir + string(os.PathListSeparator) + parts[1]
-				opts.Env[i] = strings.Join(parts, "=")
-				break
-			}
-		}
+		opts.Env = envlist.PrependPath(opts.Env, ms.binDir)
 	}
 	// set the working dir
 	opts.Dir = filepath.Join(ms.workingDir, opts.Dir)
