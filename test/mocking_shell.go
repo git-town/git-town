@@ -91,12 +91,13 @@ func (ms *MockingShell) MockCommand(name string) error {
 // MockGit pretends that this repo has Git in the given version installed.
 func (ms *MockingShell) MockGit(version string) error {
 	if runtime.GOOS == "windows" {
+		// create Windows binary
 		content := fmt.Sprintf("echo git version %s\n", version)
 		return ms.createMockBinary("git.cmd", content)
-	} else {
-		content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" = \"version\" ]; then\n  echo git version %s\nfi\n", version)
-		return ms.createMockBinary("git", content)
 	}
+	// create Unix binary
+	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" = \"version\" ]; then\n  echo git version %s\nfi\n", version)
+	return ms.createMockBinary("git", content)
 }
 
 // MockNoCommandsInstalled pretends that no commands are installed.
