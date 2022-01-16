@@ -7,10 +7,10 @@ linters:
     - gochecknoglobals # Cobra requires globals
     - gochecknoinits # Cobra requires init blocks
     - goconst # tests contain a ton of hard-coded test strings, for example branch names
-    - golint
+    - golint  # deprecated
     - gomnd # tests contain hard-coded test data that wouldn't make sense to extract into constants
     - ifshort
-    - interfacer
+    - interfacer  # deprecated
     - ireturn
     - lll # we aren't enforcing a line length at this point
     - maligned  # deprecated
