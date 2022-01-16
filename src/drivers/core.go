@@ -61,7 +61,7 @@ type MergePullRequestOptions struct {
 type logFn func(string, ...interface{})
 
 // Load returns the code hosting driver to use based on the git config.
-func Load(config config, git gitRunner, log logFn) CodeHostingDriver {
+func Load(config config, git gitRunner, log logFn) CodeHostingDriver { //nolint:ireturn
 	githubDriver := LoadGithub(config, log)
 	if githubDriver != nil {
 		return githubDriver
