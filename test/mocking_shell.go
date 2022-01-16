@@ -43,6 +43,11 @@ func (ms *MockingShell) createBinDir() error {
 
 // createMockBinary creates an executable with the given name and content in ms.binDir.
 func (ms *MockingShell) createMockBinary(name string, content string) error {
+	err := ioutil.WriteFile(filepath.Join(ms.binDir, "which"), []byte(content), 0o500)
+	if err != nil {
+		return fmt.Errorf("cannot write custom %q command: %w", name, err)
+	}
+	return nil
 }
 
 // WorkingDir provides the directory this MockingShell operates in.
@@ -67,7 +72,6 @@ func (ms *MockingShell) MockBrokenCommand(name string) error {
 	if err != nil {
 		return fmt.Errorf("cannot write custom command: %w", err)
 	}
-	ms.hasMockCommand = true
 	return nil
 }
 
@@ -88,7 +92,6 @@ func (ms *MockingShell) MockCommand(name string) error {
 	if err != nil {
 		return fmt.Errorf("cannot write custom command: %w", err)
 	}
-	ms.hasMockCommand = true
 	return nil
 }
 
@@ -109,7 +112,6 @@ func (ms *MockingShell) MockGit(version string) error {
 	if err != nil {
 		return fmt.Errorf("cannot create custom Git binary: %w", err)
 	}
-	ms.hasMockCommand = true
 	return nil
 }
 
@@ -124,7 +126,6 @@ func (ms *MockingShell) MockNoCommandsInstalled() error {
 	if err != nil {
 		return fmt.Errorf("cannot write custom which command: %w", err)
 	}
-	ms.hasMockCommand = true
 	return nil
 }
 
@@ -183,7 +184,7 @@ func (ms *MockingShell) RunWith(opts run.Options, cmd string, args ...string) (r
 		opts.Env = envlist.Replace(opts.Env, "GIT_TOWN_REMOTE", ms.testOrigin)
 	}
 	// add the custom bin dir to the PATH
-	if ms.hasMockCommand {
+	if ms.usesBinDir {
 		opts.Env = envlist.PrependPath(opts.Env, ms.binDir)
 	}
 	// set the working dir
