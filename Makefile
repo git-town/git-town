@@ -66,9 +66,11 @@ release-win: msi  # adds the Windows installer to the release
 setup: setup-go  # the setup steps necessary on developer machines
 	cd text-run && yarn install
 
-setup-go:
-	@(cd .. && GO111MODULE=on go get github.com/cucumber/godog/cmd/godog@v0.9.0)
-	@(cd .. && GO111MODULE=on go get github.com/golangci/golangci-lint/cmd/golangci-lint@v1.43.0)
+setup-godog:  # install the godog binary
+	go install github.com/cucumber/godog/cmd/godog@v0.9.0
+
+setup-go: setup-godog
+	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.43.0
 	go install mvdan.cc/gofumpt@latest
 
 stats:  # shows code statistics
