@@ -35,6 +35,7 @@ func NewMockingShell(workingDir string, homeDir string, binDir string) *MockingS
 // This method is idempotent.
 func (ms *MockingShell) createBinDir() error {
 	if ms.usesBinDir {
+		// binDir already created --> nothing to do here
 		return nil
 	}
 	err := os.Mkdir(ms.binDir, 0o700)
