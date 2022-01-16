@@ -1,3 +1,4 @@
+//nolint:ireturn
 package steps
 
 import (
@@ -44,7 +45,7 @@ func (step *DriverMergePullRequestStep) GetAutomaticAbortError() error {
 // Run executes this step.
 func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	commitMessage := step.CommitMessage
-	// nolint:nestif
+	//nolint:nestif
 	if commitMessage == "" {
 		// Allow the user to enter the commit message as if shipping without a driver
 		// then revert the commit since merging via the driver will perform the actual squash merge

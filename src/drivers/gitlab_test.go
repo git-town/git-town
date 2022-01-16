@@ -7,6 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+//nolint:paralleltest  // mocks HTTP
 func TestLoadGitLab(t *testing.T) {
 	driver := drivers.LoadGitlab(mockConfig{
 		codeHostingDriverName: "gitlab",
@@ -17,6 +18,7 @@ func TestLoadGitLab(t *testing.T) {
 	assert.Equal(t, "https://self-hosted-gitlab.com/git-town/git-town", driver.RepositoryURL())
 }
 
+//nolint:paralleltest  // mocks HTTP
 func TestLoadGitLab_customHostName(t *testing.T) {
 	driver := drivers.LoadGitlab(mockConfig{
 		remoteOriginURL:    "git@my-ssh-identity.com:git-town/git-town.git",

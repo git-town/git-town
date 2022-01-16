@@ -20,6 +20,7 @@ type Repo struct {
 
 // CreateRepo creates TestRepo instances.
 func CreateRepo(t *testing.T) Repo {
+	t.Helper()
 	dir := CreateTempDir(t)
 	workingDir := filepath.Join(dir, "repo")
 	err := os.Mkdir(workingDir, 0744)
@@ -100,6 +101,7 @@ func (repo *Repo) FilesInBranches() (result DataTable, err error) {
 // CreateTestGitTownRepo creates a GitRepo for use in tests, with a main branch and
 // initial git town configuration.
 func CreateTestGitTownRepo(t *testing.T) Repo {
+	t.Helper()
 	repo := CreateRepo(t)
 	err := repo.CreateBranch("main", "master")
 	assert.NoError(t, err)

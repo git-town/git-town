@@ -9,6 +9,7 @@ import (
 )
 
 func TestRunState_Marshal(t *testing.T) {
+	t.Parallel()
 	runState := &steps.RunState{
 		AbortStepList: steps.StepList{
 			List: []steps.Step{&steps.ResetToShaStep{Sha: "abc"}},
