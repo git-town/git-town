@@ -68,11 +68,7 @@ func (ms *MockingShell) MockBrokenCommand(name string) error {
 	}
 	// write custom command
 	content = "#!/usr/bin/env bash\n\nexit 1"
-	err = ms.createMockBinary(name, content)
-	if err != nil {
-		return fmt.Errorf("cannot write custom command: %w", err)
-	}
-	return nil
+	return ms.createMockBinary(name, content)
 }
 
 // MockCommand adds a mock for the command with the given name.
