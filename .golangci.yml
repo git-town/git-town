@@ -7,7 +7,6 @@ linters:
     - gochecknoglobals # Cobra requires globals
     - gochecknoinits # Cobra requires init blocks
     - goconst # tests contain a ton of hard-coded test strings, for example branch names
-    - gofmt   # TODO: activate
     - golint
     - gomnd # tests contain hard-coded test data that wouldn't make sense to extract into constants
     - ifshort
