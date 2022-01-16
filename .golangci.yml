@@ -9,12 +9,12 @@ linters:
     - goconst # tests contain a ton of hard-coded test strings, for example branch names
     - golint  # deprecated
     - gomnd # tests contain hard-coded test data that wouldn't make sense to extract into constants
-    - ifshort
+    - ifshort  # this enforces less readable code
     - interfacer  # deprecated
     - ireturn
     - lll # we aren't enforcing a line length at this point
     - maligned  # deprecated
-    - nlreturn
+    - nlreturn  # this forces unnecessary empty lines in function bodies
     - scopelint  # deprecated
     - wrapcheck
     - wsl # this linter creates too many false positives, our policy is to not have any empty lines in code blocks
