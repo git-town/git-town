@@ -1,6 +1,6 @@
 # Developing the Git Town source code
 
-This page gets you started hacking on the Git Town codebase.
+This page helps you get started hacking on the Git Town codebase.
 
 ## setup
 
@@ -28,6 +28,7 @@ Optional dependencies:
 - [dprint](https://dprint.dev)
 - [Node.js](https://nodejs.org)
 - [Yarn](https://yarnpkg.com/)
+- [dprint](https://dprint.dev)
 - [scc](https://github.com/boyter/scc)
 
 ## add a new Go dependency
