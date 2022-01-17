@@ -1,4 +1,4 @@
 [build]
   base = "website/"
   publish = "website/book/"
-  command = "make build"
+  command = "make setup && make build"
