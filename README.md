@@ -1,5 +1,6 @@
 <p align="center">
   <img src="https://raw.githubusercontent.com/git-town/git-town/master/website/src/logo.svg">
+  <br>
   <img src="https://github.com/git-town/git-town/actions/workflows/cuke/badge.svg)" alt="end-to-end test status">
   <img src="https://github.com/git-town/git-town/actions/workflows/lint_unit/badge.svg)" alt="unit test status">
   <a href="https://goreportcard.com/report/github.com/git-town/git-town">
