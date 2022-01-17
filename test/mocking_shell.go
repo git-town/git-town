@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"path"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -174,7 +173,7 @@ func (ms *MockingShell) RunWith(opts run.Options, cmd string, args ...string) (r
 	}
 	// add the custom GIT_EDITOR
 	if ms.gitEditor != "" {
-		opts.Env = envlist.Replace(opts.Env, "GIT_EDITOR", path.Join(ms.binDir, "git_editor"))
+		opts.Env = envlist.Replace(opts.Env, "GIT_EDITOR", filepath.Join(ms.binDir, "git_editor"))
 	}
 	// set the working dir
 	opts.Dir = filepath.Join(ms.workingDir, opts.Dir)
