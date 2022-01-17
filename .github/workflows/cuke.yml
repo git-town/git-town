@@ -1,3 +1,5 @@
+name: cuke
+
 on:
   push:
     branches: [ main ]

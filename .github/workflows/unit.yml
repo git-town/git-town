@@ -1,3 +1,5 @@
+name: unit
+
 on:
   push:
     branches: [ main ]

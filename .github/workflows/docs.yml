@@ -1,3 +1,5 @@
+name: docs
+
 on:
   push:
     branches: [ main ]

@@ -1,3 +1,5 @@
+name: lint
+
 on:
   push:
     branches: [ main ]
