@@ -6,10 +6,10 @@
   <a href="https://goreportcard.com/report/github.com/git-town/git-town">
     <img src="https://goreportcard.com/badge/github.com/git-town/git-town" alt="Go report card status">
   </a>
-  <img src="https://img.shields.io/:license-MIT-blue.svg?style=flat" alt="MIT License">
   <a href="https://www.codetriage.com/originate/git-town">
     <img src="https://www.codetriage.com/originate/git-town/badges/users.svg" alt="Help Contribute to Open Source">
   </a>
+  <img src="https://api.netlify.com/api/v1/badges/c2ea5505-be48-42e5-bb8a-b807d18d99ed/deploy-status" alt="Netlify deploy status">
 </p>
 
 Git Town makes [Git](https://git-scm.com) more efficient, especially for large
