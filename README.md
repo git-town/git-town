@@ -1,4 +1,6 @@
+<p align="center">
 ![Git Town](https://raw.githubusercontent.com/git-town/git-town/master/website/src/logo.svg)
+</p>
 
 [![CircleCI](https://circleci.com/gh/git-town/git-town.svg?style=shield)](https://circleci.com/gh/git-town/git-town)
 [![Go Report Card](https://goreportcard.com/badge/github.com/git-town/git-town)](https://goreportcard.com/report/github.com/git-town/git-town)
