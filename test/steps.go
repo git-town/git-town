@@ -219,7 +219,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I run "([^"]*)" and enter an empty commit message$`, func(cmd string) error {
-		state.runRes, state.runErr = state.gitEnv.DevShell.RunStringWith(cmd, run.Options{Input: []string{"dGZZ"}})
+		if err := state.gitEnv.DevShell.MockCommitMessage(""); err != nil {
+			return err
+		}
+		state.runRes, state.runErr = state.gitEnv.DevShell.RunString(cmd)
 		return nil
 	})
 
