@@ -1,4 +1,4 @@
-name: unit
+name: lint+unit
 
 on:
   push:
@@ -12,8 +12,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/setup-go@v2
+    - uses: dprint/check@v2.0
+    - name: golangci-lint
+      uses: golangci/golangci-lint-action@v2
       with:
-        go-version: 1.16
+        version: v1.43
     - run: make build
     - run: make unit
+    - run: make setup-docs
+    - run: make docs
