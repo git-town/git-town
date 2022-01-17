@@ -35,7 +35,7 @@ Feature: git town-ship: shipping a coworker's feature branch
 
 
   Scenario: result (commit message via editor)
-    When I run "git-town ship" and enter "feature done" for the commit message
+    When I run "git-town ship" and enter "done" for the commit message
     Then it runs the commands
       | BRANCH  | COMMAND                                               |
       | feature | git fetch --prune --tags                              |
