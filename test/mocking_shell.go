@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -24,6 +25,7 @@ type MockingShell struct {
 	binDir     string // the directory that stores the mock shell command implementations, ignored if empty
 	testOrigin string // optional content of the GIT_TOWN_REMOTE environment variable
 	usesBinDir bool   // indicates whether the current test has created the binDir
+	gitEditor  string // name of the binary to use as the custom editor during "git commit"
 }
 
 // NewMockingShell provides a new MockingShell instance that executes in the given directory.
@@ -100,6 +102,12 @@ func (ms *MockingShell) MockGit(version string) error {
 	return ms.createMockBinary("git", content)
 }
 
+// MockCommitMessage sets up this shell with an editor that enters the given commit message.
+func (ms *MockingShell) MockCommitMessage(message string) error {
+	ms.gitEditor = "git_editor"
+	return ms.createMockBinary(ms.gitEditor, fmt.Sprintf("#!/usr/bin/env bash\n\necho %q > $1", message))
+}
+
 // MockNoCommandsInstalled pretends that no commands are installed.
 func (ms *MockingShell) MockNoCommandsInstalled() error {
 	content := "#!/usr/bin/env bash\n\nexit 1\n"
@@ -163,6 +171,10 @@ func (ms *MockingShell) RunWith(opts run.Options, cmd string, args ...string) (r
 	// add the custom bin dir to the PATH
 	if ms.usesBinDir {
 		opts.Env = envlist.PrependPath(opts.Env, ms.binDir)
+	}
+	// add the custom GIT_EDITOR
+	if ms.gitEditor != "" {
+		opts.Env = envlist.Replace(opts.Env, "GIT_EDITOR", path.Join(ms.binDir, "git_editor"))
 	}
 	// set the working dir
 	opts.Dir = filepath.Join(ms.workingDir, opts.Dir)
