@@ -17,3 +17,6 @@ jobs:
       uses: golangci/golangci-lint-action@v2
       with:
         version: v1.43
+    - run: make build
+    - run: make setup-docs
+    - run: make docs
