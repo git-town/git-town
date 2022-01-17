@@ -1,4 +1,4 @@
-name: cucumber
+name: end-to-end tests
 
 on:
   push:
