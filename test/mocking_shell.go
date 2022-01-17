@@ -105,7 +105,7 @@ func (ms *MockingShell) MockGit(version string) error {
 // MockCommitMessage sets up this shell with an editor that enters the given commit message.
 func (ms *MockingShell) MockCommitMessage(message string) error {
 	ms.gitEditor = "git_editor"
-	return ms.createMockBinary(ms.gitEditor, fmt.Sprintf("#!/usr/bin/env bash\n\necho %q > $1\n", message))
+	return ms.createMockBinary(ms.gitEditor, fmt.Sprintf("#!/usr/bin/env bash\n\necho %q > $1", message))
 }
 
 // MockNoCommandsInstalled pretends that no commands are installed.
