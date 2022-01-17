@@ -14,7 +14,7 @@ cuke-prof: build  # creates a flamegraph
 	@rm git-town.test
 	@echo Please open https://www.speedscope.app and load the file godog.out
 
-docs:  # tests the documentation
+docs: build  # tests the documentation
 	${CURDIR}/text-run/node_modules/.bin/text-run --offline
 
 fix: fix-go fix-md  # auto-fixes lint issues in all languages
