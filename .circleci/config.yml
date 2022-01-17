@@ -38,8 +38,6 @@ jobs:
     docker:
       - image: circleci/golang:1.16.8
     steps:
-      # install vim for tests that require entering a commit message with an editor
-      - run: sudo apt-get update && sudo apt-get install vim
       - attach_workspace:
           at: /home/circleci
       - run: mv ./git-town /go/bin/
