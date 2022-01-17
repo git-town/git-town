@@ -1,9 +1,16 @@
-![Git Town](https://raw.githubusercontent.com/git-town/git-town/master/website/img/git-town-horizontal.svg)
-
-[![CircleCI](https://circleci.com/gh/git-town/git-town.svg?style=shield)](https://circleci.com/gh/git-town/git-town)
-[![Go Report Card](https://goreportcard.com/badge/github.com/git-town/git-town)](https://goreportcard.com/report/github.com/git-town/git-town)
-[![License](https://img.shields.io/:license-MIT-blue.svg?style=flat)](LICENSE)
-[![Help Contribute to Open Source](https://www.codetriage.com/originate/git-town/badges/users.svg)](https://www.codetriage.com/originate/git-town)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/git-town/git-town/master/website/src/logo.svg">
+  <br>
+  <img src="https://github.com/git-town/git-town/actions/workflows/cuke.yml/badge.svg" alt="end-to-end test status">
+  <img src="https://github.com/git-town/git-town/actions/workflows/lint_unit.yml/badge.svg" alt="unit test status">
+  <a href="https://goreportcard.com/report/github.com/git-town/git-town">
+    <img src="https://goreportcard.com/badge/github.com/git-town/git-town" alt="Go report card status">
+  </a>
+  <img src="https://img.shields.io/:license-MIT-blue.svg?style=flat" alt="MIT License">
+  <a href="https://www.codetriage.com/originate/git-town">
+    <img src="https://www.codetriage.com/originate/git-town/badges/users.svg" alt="Help Contribute to Open Source">
+  </a>
+</p>
 
 Git Town makes [Git](https://git-scm.com) more efficient, especially for large
 teams. See [this screencast](https://youtu.be/oLaUsUlFfTo) for an introduction
