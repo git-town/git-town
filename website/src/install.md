@@ -14,12 +14,8 @@ brew install git-town
 Git Town is also available via MacPorts:
 https://ports.macports.org/port/git-town
 
-You can also install Git Town manually:
-
-- download an archive containing the binary
-- extract with `tar -xzf git-town_7.6.0_macOS_intel_64.tar.gz`
-- move the git-town binary into a directory listed in your `$PATH`, for example
-  `/usr/local/bin`
+You can also [install Git Town manually](#manual-installation) or
+[compile from source](#compile-from-source).
 
 ## Windows
 
@@ -32,9 +28,8 @@ scoop bucket add org https://github.com/git-town/scoop.git
 scoop install git-town
 ```
 
-You can manually
-[download the Windows binary](https://github.com/git-town/git-town/releases/download/v7.6.0/git-town_7.6.0_windows_intel_64.zip)
-and put it somewhere into your `%PATH%`.
+You can also [install Git Town manually](#manual-installation) or
+[compile from source](#compile-from-source).
 
 If you use the Windows Subsystem for Linux, please install
 [wsl-open](https://www.npmjs.com/package/wsl-open) to allow the commands
@@ -71,10 +66,24 @@ You can also install Git Town via
 brew install git-town
 ```
 
-Manual installation:
-[download](https://github.com/git-town/git-town/releases/latest) the archive
-containing the Linux binary, extract it, and move the `git-town` binary into a
-directory listed in your`$PATH`.
+You can also [install Git Town manually](#manual-installation) or
+[compile from source](#compile-from-source).
+
+## manual installation
+
+To put the Git Town executable into `~/.local/bin`:
+
+```
+curl https://git-town.com/install.sh | bash
+```
+
+Completely custom installation:
+
+- [download](https://github.com/git-town/git-town/releases) the archive matching
+  your CPU architecture
+- extract the archive with `tar -xzf <filename>`
+- move the file called `git-town` into a directory listed in your`$PATH`, for
+  example`/usr/local/bin`
 
 ## compile from source
 
