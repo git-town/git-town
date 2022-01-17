@@ -15,14 +15,5 @@ jobs:
     - uses: actions/setup-go@v2
       with:
         go-version: 1.16
-    - name: golangci-lint
-      uses: golangci/golangci-lint-action@v2
-      with:
-        version: v1.43
-    - uses: dprint/check@v2.0
-    - run: make build
-    - run: make setup-docs
-    - run: make docs
-    - run: make unit
     - run: make setup-godog
     - run: make cuke
