@@ -1,3 +1,4 @@
+//go:build windows
 // +build windows
 
 package test
@@ -17,12 +18,12 @@ func CreateInputTool(toolPath string) error {
 set /p i1=""
 set /p i2=""
 echo You entered %i1% and %i2%
-`), 0744)
+`), 0o744)
 }
 
 // CreateLsTool creates a tool in the given folder that lists all files in its current folder.
 func CreateLsTool(toolPath string) error {
-	return ioutil.WriteFile(ScriptName(toolPath), []byte("@dir /B"), 0744)
+	return ioutil.WriteFile(ScriptName(toolPath), []byte("@dir /B"), 0o744)
 }
 
 // ScriptName provides the name of the given script file on the Windows.

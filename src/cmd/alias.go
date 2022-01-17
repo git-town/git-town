@@ -25,7 +25,7 @@ This can conflict with other tools that also define Git aliases.`,
 		if err != nil {
 			cli.Exit(fmt.Errorf(`invalid argument %q. Please provide either "true" or "false"`, args[0]))
 		}
-		var commandsToAlias = []string{
+		commandsToAlias := []string{
 			"append",
 			"hack",
 			"kill",

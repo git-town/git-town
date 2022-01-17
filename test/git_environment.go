@@ -86,7 +86,7 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 	// create the GitEnvironment
 	gitEnv = &GitEnvironment{Dir: dir}
 	// create the origin repo
-	err = os.MkdirAll(gitEnv.originRepoPath(), 0744)
+	err = os.MkdirAll(gitEnv.originRepoPath(), 0o744)
 	if err != nil {
 		return nil, fmt.Errorf("cannot create directory %q: %w", gitEnv.originRepoPath(), err)
 	}

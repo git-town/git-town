@@ -17,7 +17,7 @@ func OpenBrowserCommand() string {
 		//       So we are using "start" here.
 		return "start"
 	}
-	var openBrowserCommands = []string{
+	openBrowserCommands := []string{
 		"wsl-open",           // for Windows Subsystem for Linux, see https://github.com/git-town/git-town/issues/1344
 		"garcon-url-handler", // opens links in native browser on ChromeOS
 		"xdg-open",

@@ -107,7 +107,7 @@ func (r *Runner) CommentOutSquashCommitMessage(prefix string) error {
 		content = prefix + "\n" + content
 	}
 	content = regexp.MustCompile("(?m)^").ReplaceAllString(content, "# ")
-	return ioutil.WriteFile(squashMessageFile, []byte(content), 0600)
+	return ioutil.WriteFile(squashMessageFile, []byte(content), 0o600)
 }
 
 // CommitNoEdit commits all staged files with the default commit message.
@@ -299,7 +299,7 @@ func (r *Runner) CreateFile(name, content string) error {
 	if err != nil {
 		return fmt.Errorf("cannot create folder %q: %w", folderPath, err)
 	}
-	err = ioutil.WriteFile(filePath, []byte(content), 0500)
+	err = ioutil.WriteFile(filePath, []byte(content), 0o500)
 	if err != nil {
 		return fmt.Errorf("cannot create file %q: %w", name, err)
 	}

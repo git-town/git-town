@@ -11,12 +11,14 @@ import (
 	httpmock "gopkg.in/jarcoal/httpmock.v1"
 )
 
-const githubRoot = "https://api.github.com"
-const githubCurrOpen = githubRoot + "/repos/git-town/git-town/pulls?base=main&head=git-town%3Afeature&state=open"
-const githubChildOpen = githubRoot + "/repos/git-town/git-town/pulls?base=feature&state=open"
-const githubPR2 = githubRoot + "/repos/git-town/git-town/pulls/2"
-const githubPR3 = githubRoot + "/repos/git-town/git-town/pulls/3"
-const githubPR1Merge = githubRoot + "/repos/git-town/git-town/pulls/1/merge"
+const (
+	githubRoot      = "https://api.github.com"
+	githubCurrOpen  = githubRoot + "/repos/git-town/git-town/pulls?base=main&head=git-town%3Afeature&state=open"
+	githubChildOpen = githubRoot + "/repos/git-town/git-town/pulls?base=feature&state=open"
+	githubPR2       = githubRoot + "/repos/git-town/git-town/pulls/2"
+	githubPR3       = githubRoot + "/repos/git-town/git-town/pulls/3"
+	githubPR1Merge  = githubRoot + "/repos/git-town/git-town/pulls/1/merge"
+)
 
 func setupGithubDriver(t *testing.T, token string) (*drivers.GithubCodeHostingDriver, func()) {
 	t.Helper()

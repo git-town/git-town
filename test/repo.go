@@ -23,10 +23,10 @@ func CreateRepo(t *testing.T) Repo {
 	t.Helper()
 	dir := CreateTempDir(t)
 	workingDir := filepath.Join(dir, "repo")
-	err := os.Mkdir(workingDir, 0744)
+	err := os.Mkdir(workingDir, 0o744)
 	assert.NoError(t, err)
 	homeDir := filepath.Join(dir, "home")
-	err = os.Mkdir(homeDir, 0744)
+	err = os.Mkdir(homeDir, 0o744)
 	assert.NoError(t, err)
 	repo, err := InitRepo(workingDir, homeDir, homeDir)
 	assert.NoError(t, err)
@@ -43,7 +43,6 @@ func InitRepo(workingDir, homeDir, binDir string) (Repo, error) {
 		{"git", "init"},
 		{"git", "config", "--global", "user.name", "user"},
 		{"git", "config", "--global", "user.email", "email@example.com"},
-		{"git", "config", "--global", "core.editor", "vim"},
 	})
 	return result, err
 }
