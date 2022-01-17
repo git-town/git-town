@@ -18,5 +18,7 @@ jobs:
     - uses: dprint/check@v2.0
     - run: vim --version
     - run: make setup-godog
+    - run: make setup-docs
+    - run: make docs
     - run: make unit
     - run: make cuke

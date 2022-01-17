@@ -63,7 +63,9 @@ release-win: msi  # adds the Windows installer to the release
 		-a dist/git-town_${VERSION}_windows_intel_64.msi
 		v${VERSION}
 
-setup: setup-go  # the setup steps necessary on developer machines
+setup: setup-go setup-docs  # the setup steps necessary on developer machines
+
+setup-docs:  # the setup steps necessary for document tests
 	cd text-run && yarn install
 
 setup-godog:  # install the godog binary
