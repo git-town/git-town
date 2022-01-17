@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/git-town/git-town/src/config"
-	"github.com/git-town/git-town/src/run"
+	"github.com/git-town/git-town/v7/src/config"
+	"github.com/git-town/git-town/v7/src/run"
 )
 
 // ProdRepo is a Git Repo in production code.

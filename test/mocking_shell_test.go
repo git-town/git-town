@@ -1,4 +1,4 @@
-// nolint: testpackage
+//nolint:testpackage
 package test
 
 import (
@@ -7,14 +7,15 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/src/run"
+	"github.com/git-town/git-town/v7/src/run"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestMockingShell_MockCommand(t *testing.T) {
+	t.Parallel()
 	workDir := CreateTempDir(t)
 	devDir := filepath.Join(workDir, "dev")
-	err := os.Mkdir(devDir, 0744)
+	err := os.Mkdir(devDir, 0o744)
 	assert.NoError(t, err)
 	shell := NewMockingShell(devDir, workDir, filepath.Join(workDir, "bin"))
 	err = shell.MockCommand("foo")
@@ -27,6 +28,7 @@ func TestMockingShell_MockCommand(t *testing.T) {
 }
 
 func TestShellRunner_Run(t *testing.T) {
+	t.Parallel()
 	runner := NewMockingShell(CreateTempDir(t), CreateTempDir(t), "")
 	res, err := runner.Run("echo", "hello", "world")
 	assert.NoError(t, err)
@@ -34,6 +36,7 @@ func TestShellRunner_Run(t *testing.T) {
 }
 
 func TestShellRunner_RunMany(t *testing.T) {
+	t.Parallel()
 	workDir := CreateTempDir(t)
 	runner := NewMockingShell(workDir, CreateTempDir(t), "")
 	err := runner.RunMany([][]string{
@@ -49,6 +52,7 @@ func TestShellRunner_RunMany(t *testing.T) {
 }
 
 func TestShellRunner_RunString(t *testing.T) {
+	t.Parallel()
 	workDir := CreateTempDir(t)
 	runner := NewMockingShell(workDir, CreateTempDir(t), "")
 	_, err := runner.RunString("touch first")
@@ -58,9 +62,10 @@ func TestShellRunner_RunString(t *testing.T) {
 }
 
 func TestShellRunner_RunStringWith_Dir(t *testing.T) {
+	t.Parallel()
 	dir1 := CreateTempDir(t)
 	dir2 := filepath.Join(dir1, "subdir")
-	err := os.Mkdir(dir2, 0744)
+	err := os.Mkdir(dir2, 0o744)
 	assert.NoError(t, err)
 	runner := NewMockingShell(dir1, CreateTempDir(t), "")
 	toolPath := filepath.Join(dir2, "list-dir")
@@ -72,9 +77,10 @@ func TestShellRunner_RunStringWith_Dir(t *testing.T) {
 }
 
 func TestShellRunner_RunStringWith_Input(t *testing.T) {
+	t.Parallel()
 	dir1 := CreateTempDir(t)
 	dir2 := filepath.Join(dir1, "subdir")
-	err := os.Mkdir(dir2, 0744)
+	err := os.Mkdir(dir2, 0o744)
 	assert.NoError(t, err)
 	runner := NewMockingShell(dir1, CreateTempDir(t), "")
 	toolPath := filepath.Join(dir2, "list-dir")

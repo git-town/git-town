@@ -3,12 +3,13 @@ package test_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/test"
+	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/test"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCommitTableBuilder(t *testing.T) {
+	t.Parallel()
 	builder := test.NewCommitTableBuilder()
 	commit1 := git.Commit{SHA: "sha1", Branch: "branch1", Message: "commit1"}
 	commit2 := git.Commit{SHA: "sha2", Branch: "main", Message: "commit2"}

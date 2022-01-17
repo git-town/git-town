@@ -15,8 +15,8 @@ import (
 
 	"github.com/cucumber/godog"
 	"github.com/cucumber/messages-go/v10"
-	"github.com/git-town/git-town/src/cli"
-	"github.com/git-town/git-town/src/run"
+	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/run"
 )
 
 // beforeSuiteMux ensures that we run BeforeSuite only once globally.
@@ -26,7 +26,7 @@ var beforeSuiteMux sync.Mutex
 var gitManager *GitManager
 
 // Steps defines Cucumber step implementations around Git workspace management.
-// nolint: gocyclo,gocognit,funlen
+//nolint:gocyclo,gocognit,funlen
 func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.BeforeScenario(func(scenario *messages.Pickle) {
 		// create a GitEnvironment for the scenario
@@ -72,7 +72,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			fmt.Printf("failed scenario, investigate state in %q\n", state.gitEnv.Dir)
 		}
 		if state.runErr != nil && !state.runErrChecked {
-			cli.PrintError(fmt.Errorf("%s - scenario %q doesn't document error %v", scenario.GetUri(), scenario.GetName(), state.runErr))
+			cli.PrintError(fmt.Errorf("%s - scenario %q doesn't document error %w", scenario.GetUri(), scenario.GetName(), state.runErr))
 			os.Exit(1)
 		}
 	})
@@ -219,7 +219,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I run "([^"]*)" and enter an empty commit message$`, func(cmd string) error {
-		state.runRes, state.runErr = state.gitEnv.DevShell.RunStringWith(cmd, run.Options{Input: []string{"dGZZ"}})
+		if err := state.gitEnv.DevShell.MockCommitMessage(""); err != nil {
+			return err
+		}
+		state.runRes, state.runErr = state.gitEnv.DevShell.RunString(cmd)
 		return nil
 	})
 

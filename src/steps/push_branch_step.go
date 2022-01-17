@@ -1,8 +1,9 @@
+//nolint:ireturn
 package steps
 
 import (
-	"github.com/git-town/git-town/src/drivers"
-	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/v7/src/drivers"
+	"github.com/git-town/git-town/v7/src/git"
 )
 
 // PushBranchStep pushes the branch with the given name to the origin remote.

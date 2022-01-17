@@ -5,11 +5,12 @@ import (
 	"os"
 	"testing"
 
-	"github.com/git-town/git-town/src/run"
+	"github.com/git-town/git-town/v7/src/run"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestSilentShell_Run_arguments(t *testing.T) {
+	t.Parallel()
 	shell := run.SilentShell{}
 	res, err := shell.Run("echo", "hello", "world")
 	assert.NoError(t, err)
@@ -17,6 +18,7 @@ func TestSilentShell_Run_arguments(t *testing.T) {
 }
 
 func TestSilentShell_RunMany(t *testing.T) {
+	t.Parallel()
 	shell := run.SilentShell{}
 	err := shell.RunMany([][]string{
 		{"mkdir", "tmp"},
@@ -32,6 +34,7 @@ func TestSilentShell_RunMany(t *testing.T) {
 }
 
 func TestSilentShell_RunString(t *testing.T) {
+	t.Parallel()
 	shell := run.SilentShell{}
 	_, err := shell.RunString("touch first")
 	defer os.Remove("first")
@@ -41,6 +44,7 @@ func TestSilentShell_RunString(t *testing.T) {
 }
 
 func TestSilentShell_RunStringWith(t *testing.T) {
+	t.Parallel()
 	shell := run.SilentShell{}
 	res, err := shell.RunStringWith("ls -1", run.Options{Dir: ".."})
 	assert.NoError(t, err)

@@ -3,11 +3,12 @@ package git_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/v7/src/git"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestMainFirst(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		give []string
 		want []string
@@ -17,8 +18,8 @@ func TestMainFirst(t *testing.T) {
 		{give: []string{"main"}, want: []string{"main"}},
 		{give: []string{}, want: []string{}},
 	}
-	for tt := range tests {
-		have := git.MainFirst(tests[tt].give)
-		assert.Equal(t, tests[tt].want, have)
+	for _, test := range tests {
+		have := git.MainFirst(test.give)
+		assert.Equal(t, test.want, have)
 	}
 }

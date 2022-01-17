@@ -1,10 +1,11 @@
+//nolint:ireturn
 package steps
 
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/src/drivers"
-	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/v7/src/drivers"
+	"github.com/git-town/git-town/v7/src/git"
 )
 
 // DriverMergePullRequestStep squash merges the branch with the given name into the current branch.
@@ -44,7 +45,7 @@ func (step *DriverMergePullRequestStep) GetAutomaticAbortError() error {
 // Run executes this step.
 func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	commitMessage := step.CommitMessage
-	// nolint:nestif
+	//nolint:nestif
 	if commitMessage == "" {
 		// Allow the user to enter the commit message as if shipping without a driver
 		// then revert the commit since merging via the driver will perform the actual squash merge

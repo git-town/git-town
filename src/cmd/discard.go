@@ -3,9 +3,8 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/src/cli"
-	"github.com/git-town/git-town/src/steps"
-
+	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/steps"
 	"github.com/spf13/cobra"
 )
 
@@ -15,7 +14,7 @@ var discardCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		err := steps.DeletePreviousRunState(prodRepo)
 		if err != nil {
-			cli.Exit(fmt.Errorf("cannot delete previous run state: %v", err))
+			cli.Exit(fmt.Errorf("cannot delete previous run state: %w", err))
 		}
 	},
 	Args: cobra.NoArgs,

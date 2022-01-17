@@ -3,8 +3,8 @@ package prompt
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/src/cli"
-	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/git"
 )
 
 // EnsureKnowsParentBranches asserts that the entire ancestry for all given branches
@@ -31,7 +31,7 @@ func AskForBranchAncestry(branchName, defaultBranchName string, repo *git.ProdRe
 	current := branchName
 	for {
 		parent := repo.Config.GetParentBranch(current)
-		if parent == "" { // nolint: nestif
+		if parent == "" { //nolint:nestif
 			printParentBranchHeader(repo)
 			parent, err = AskForBranchParent(current, defaultBranchName, repo)
 			if err != nil {
@@ -73,8 +73,9 @@ func AskForBranchParent(branchName, defaultBranchName string, repo *git.ProdRepo
 
 // Helpers
 
-var parentBranchHeaderShown = false
-var parentBranchHeaderTemplate = `
+var (
+	parentBranchHeaderShown    = false
+	parentBranchHeaderTemplate = `
 Feature branches can be branched directly off
 %s or from other feature branches.
 
@@ -82,8 +83,12 @@ The former allows to develop and ship features completely independent of each ot
 The latter allows to build on top of currently unshipped features.
 
 `
-var parentBranchPromptTemplate = "Please specify the parent branch of %q:"
-var perennialBranchOption = "<none> (perennial branch)"
+)
+
+var (
+	parentBranchPromptTemplate = "Please specify the parent branch of %q:"
+	perennialBranchOption      = "<none> (perennial branch)"
+)
 
 func filterOutSelfAndDescendants(branchName string, choices []string, repo *git.ProdRepo) (filteredChoices []string) {
 	for _, choice := range choices {

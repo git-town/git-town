@@ -9,8 +9,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/git-town/git-town/src/run"
-	"github.com/git-town/git-town/src/stringslice"
+	"github.com/git-town/git-town/v7/src/run"
+	"github.com/git-town/git-town/v7/src/stringslice"
 )
 
 // Config manages the Git Town configuration
@@ -335,7 +335,7 @@ func (c *Config) RemoveLocalGitConfiguration() error {
 			// This is not an error condition in this workflow so we can ignore it here.
 			return nil
 		}
-		return fmt.Errorf("unexpected error while removing the 'git-town' section from the Git configuration: %v", err)
+		return fmt.Errorf("unexpected error while removing the 'git-town' section from the Git configuration: %w", err)
 	}
 	return nil
 }

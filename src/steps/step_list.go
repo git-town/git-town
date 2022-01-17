@@ -1,9 +1,10 @@
+//nolint:ireturn
 package steps
 
 import (
 	"encoding/json"
 
-	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/v7/src/git"
 )
 
 // StepList is a list of steps

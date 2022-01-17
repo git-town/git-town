@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"runtime"
 
-	"github.com/git-town/git-town/src/run"
+	"github.com/git-town/git-town/v7/src/run"
 )
 
 // OpenBrowserCommand returns the command to run on the console
@@ -17,7 +17,7 @@ func OpenBrowserCommand() string {
 		//       So we are using "start" here.
 		return "start"
 	}
-	var openBrowserCommands = []string{
+	openBrowserCommands := []string{
 		"wsl-open",           // for Windows Subsystem for Linux, see https://github.com/git-town/git-town/issues/1344
 		"garcon-url-handler", // opens links in native browser on ChromeOS
 		"xdg-open",

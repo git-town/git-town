@@ -10,9 +10,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/git-town/git-town/src/config"
-	"github.com/git-town/git-town/src/run"
-	"github.com/git-town/git-town/src/stringslice"
+	"github.com/git-town/git-town/v7/src/config"
+	"github.com/git-town/git-town/v7/src/run"
+	"github.com/git-town/git-town/v7/src/stringslice"
 )
 
 // Runner executes Git commands.
@@ -107,7 +107,7 @@ func (r *Runner) CommentOutSquashCommitMessage(prefix string) error {
 		content = prefix + "\n" + content
 	}
 	content = regexp.MustCompile("(?m)^").ReplaceAllString(content, "# ")
-	return ioutil.WriteFile(squashMessageFile, []byte(content), 0600)
+	return ioutil.WriteFile(squashMessageFile, []byte(content), 0o600)
 }
 
 // CommitNoEdit commits all staged files with the default commit message.
@@ -286,9 +286,9 @@ func (r *Runner) CreateFile(name, content string) error {
 	folderPath := filepath.Dir(filePath)
 	err := os.MkdirAll(folderPath, os.ModePerm)
 	if err != nil {
-		return fmt.Errorf("cannot create folder %q: %v", folderPath, err)
+		return fmt.Errorf("cannot create folder %q: %w", folderPath, err)
 	}
-	err = ioutil.WriteFile(filePath, []byte(content), 0500)
+	err = ioutil.WriteFile(filePath, []byte(content), 0o500)
 	if err != nil {
 		return fmt.Errorf("cannot create file %q: %w", name, err)
 	}
@@ -385,7 +385,7 @@ func (r *Runner) currentBranchDuringRebase() (string, error) {
 		}
 	}
 	content := strings.TrimSpace(string(rawContent))
-	return strings.Replace(content, "refs/heads/", "", -1), nil
+	return strings.ReplaceAll(content, "refs/heads/", ""), nil
 }
 
 // CurrentSha provides the SHA of the currently checked out branch/commit.

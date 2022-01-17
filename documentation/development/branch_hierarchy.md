@@ -16,8 +16,7 @@ merged in. This is stored in the git config under `git-town.main-branch-name`
 > **per·en·ni·al** \pəˈrenēəl\
 > _adjective_
 >
-> - lasting or existing for a long or apparently infinite time; enduring or
->   continually recurring.
+> lasting or existing for a long or apparently infinite time
 
 These are branches that serve some special purpose, such as deployment.
 Perennial branches cannot be killed or shipped, and only rebase with their own
