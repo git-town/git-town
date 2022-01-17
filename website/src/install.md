@@ -11,9 +11,7 @@ The easiest way to install Git Town on macOS is via Homebrew:
 brew install git-town
 ```
 
-Git Town is also available via MacPorts:
-https://ports.macports.org/port/git-town
-
+Git Town is available via [MacPorts](https://ports.macports.org/port/git-town).
 You can also [install Git Town manually](#manual-installation) or
 [compile from source](#compile-from-source).
 
@@ -33,9 +31,8 @@ You can also [install Git Town manually](#manual-installation) or
 
 If you use the Windows Subsystem for Linux, please install
 [wsl-open](https://www.npmjs.com/package/wsl-open) to allow the commands
-[git town repo](https://github.com/git-town/git-town/blob/master/documentation/commands/repo.md)
-and
-[git town new-pull-request](https://github.com/git-town/git-town/blob/master/documentation/commands/new-pull-request.md)
+[git town repo](https://git-town.com/commands/repo.md) and
+[git town new-pull-request](https://git-town.com/commands/new-pull-request.md)
 to open a browser window for you.
 
 ## Linux
@@ -59,7 +56,7 @@ rpm -i git-town_7.6.0_linux_intel_64.rpm
 On Arch Linux, install the
 [git-town](https://aur.archlinux.org/packages/git-town) package from the AUR.
 
-You can also install Git Town via
+You can install Git Town via
 [Homebrew for Linux](https://docs.brew.sh/Homebrew-on-Linux):
 
 ```
@@ -71,13 +68,12 @@ You can also [install Git Town manually](#manual-installation) or
 
 ## manual installation
 
-To put the Git Town executable into `~/.local/bin`:
-
 ```
 curl https://git-town.com/install.sh | bash
 ```
 
-Completely custom installation:
+This puts the Git Town executable into `~/.local/bin`. For a completely custom
+installation:
 
 - [download](https://github.com/git-town/git-town/releases) the archive matching
   your CPU architecture
