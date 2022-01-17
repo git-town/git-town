@@ -4,7 +4,7 @@ TODAY=$(shell date +'%Y/%m/%d')
 .DEFAULT_GOAL := help
 
 build:  # builds for the current platform
-	go install -ldflags "-X github.com/git-town/git-town/src/cmd.version=v${VERSION}-dev -X github.com/git-town/git-town/src/cmd.buildDate=${TODAY}"
+	go install -ldflags "-X github.com/git-town/git-town/v7/src/cmd.version=v${VERSION}-dev -X github.com/git-town/git-town/v7/src/cmd.buildDate=${TODAY}"
 
 cuke: build   # runs the new Godog-based feature tests
 	@env GOGC=off go test . -v -count=1
@@ -20,10 +20,10 @@ docs:  # tests the documentation
 fix: fix-go fix-md  # auto-fixes lint issues in all languages
 
 fix-go:  # auto-fixes all Go lint issues
-	gofmt -s -w ./src ./test
+	gofumpt -l -w .
 
 fix-md:  # auto-fixes all Markdown lint issues
-	${CURDIR}/tools/prettier/node_modules/.bin/prettier --write .
+	dprint fmt
 
 help:  # prints all make targets
 	@cat Makefile | grep '^[^ ]*:' | grep -v '.PHONY' | grep -v help | sed 's/:.*#/#/' | column -s "#" -t
@@ -37,10 +37,10 @@ msi:  # compiles the MSI installer for Windows
 lint: lint-go lint-md  # lints all the source code
 
 lint-go:  # lints the Go files
-	golangci-lint run src/... test/...
+	golangci-lint run
 
 lint-md:   # lints the Markdown files
-	${CURDIR}/tools/prettier/node_modules/.bin/prettier -l .
+	dprint check
 
 release-linux:   # creates a new release
 	# cross-compile the binaries
@@ -64,12 +64,14 @@ release-win: msi  # adds the Windows installer to the release
 		v${VERSION}
 
 setup: setup-go  # the setup steps necessary on developer machines
-	cd tools/prettier && yarn install
 	cd text-run && yarn install
 
-setup-go:
-	@(cd .. && GO111MODULE=on go get github.com/cucumber/godog/cmd/godog@v0.9.0)
-	@(cd .. && GO111MODULE=on go get github.com/golangci/golangci-lint/cmd/golangci-lint@v1.27.0)
+setup-godog:  # install the godog binary
+	go install github.com/cucumber/godog/cmd/godog@v0.9.0
+
+setup-go: setup-godog
+	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.43.0
+	go install mvdan.cc/gofumpt@latest
 
 stats:  # shows code statistics
 	@find . -type f | grep -v '\./node_modules/' | grep -v '\./vendor/' | grep -v '\./.git/' | xargs scc

@@ -1,8 +1,8 @@
 package steps
 
 import (
-	"github.com/git-town/git-town/src/drivers"
-	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/v7/src/drivers"
+	"github.com/git-town/git-town/v7/src/git"
 )
 
 // FetchUpstreamStep brings the Git history of the local repository

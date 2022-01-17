@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/src/config"
-	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/run"
+	"github.com/git-town/git-town/v7/src/config"
+	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/run"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -20,12 +20,13 @@ type Repo struct {
 
 // CreateRepo creates TestRepo instances.
 func CreateRepo(t *testing.T) Repo {
+	t.Helper()
 	dir := CreateTempDir(t)
 	workingDir := filepath.Join(dir, "repo")
-	err := os.Mkdir(workingDir, 0744)
+	err := os.Mkdir(workingDir, 0o744)
 	assert.NoError(t, err)
 	homeDir := filepath.Join(dir, "home")
-	err = os.Mkdir(homeDir, 0744)
+	err = os.Mkdir(homeDir, 0o744)
 	assert.NoError(t, err)
 	repo, err := InitRepo(workingDir, homeDir, homeDir)
 	assert.NoError(t, err)
@@ -42,7 +43,6 @@ func InitRepo(workingDir, homeDir, binDir string) (Repo, error) {
 		{"git", "init"},
 		{"git", "config", "--global", "user.name", "user"},
 		{"git", "config", "--global", "user.email", "email@example.com"},
-		{"git", "config", "--global", "core.editor", "vim"},
 	})
 	return result, err
 }
@@ -100,6 +100,7 @@ func (repo *Repo) FilesInBranches() (result DataTable, err error) {
 // CreateTestGitTownRepo creates a GitRepo for use in tests, with a main branch and
 // initial git town configuration.
 func CreateTestGitTownRepo(t *testing.T) Repo {
+	t.Helper()
 	repo := CreateRepo(t)
 	err := repo.CreateBranch("main", "master")
 	assert.NoError(t, err)

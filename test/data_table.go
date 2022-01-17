@@ -7,7 +7,7 @@ import (
 	"sync"
 
 	"github.com/cucumber/messages-go/v10"
-	"github.com/git-town/git-town/test/helpers"
+	"github.com/git-town/git-town/v7/test/helpers"
 	"github.com/sergi/go-diff/diffmatchpatch"
 )
 
@@ -67,8 +67,10 @@ func (table *DataTable) EqualGherkin(other *messages.PickleStepArgument_PickleTa
 	return table.EqualDataTable(dataTable)
 }
 
-var templateRE *regexp.Regexp
-var templateOnce sync.Once
+var (
+	templateRE   *regexp.Regexp
+	templateOnce sync.Once
+)
 
 // Expand returns a new DataTable instance with the placeholders in this datatable replaced with the given values.
 func (table *DataTable) Expand(localRepo *Repo, remoteRepo *Repo) (result DataTable, err error) {
@@ -84,14 +86,14 @@ func (table *DataTable) Expand(localRepo *Repo, remoteRepo *Repo) (result DataTa
 					commitName := match[8 : len(match)-4]
 					sha, err := localRepo.ShaForCommit(commitName)
 					if err != nil {
-						return result, fmt.Errorf("cannot determine SHA: %v", err)
+						return result, fmt.Errorf("cannot determine SHA: %w", err)
 					}
 					cell = strings.Replace(cell, match, sha, 1)
 				case strings.HasPrefix(match, "{{ sha-in-remote "):
 					commitName := match[18 : len(match)-4]
 					sha, err := remoteRepo.ShaForCommit(commitName)
 					if err != nil {
-						return result, fmt.Errorf("cannot determine SHA in remote: %v", err)
+						return result, fmt.Errorf("cannot determine SHA in remote: %w", err)
 					}
 					cell = strings.Replace(cell, match, sha, 1)
 				default:

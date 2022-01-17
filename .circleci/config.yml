@@ -8,10 +8,9 @@ jobs:
       - checkout
       # build the binaries and store them in the workspace
       - run: make build
-      - run: make setup-go
+      - run: make setup-godog
       - run: cp /go/bin/git-town /home/circleci/project/
       - run: cp /go/bin/godog /home/circleci/project/
-      - run: cp /go/bin/golangci-lint /home/circleci/project/
       - run: ls /go/bin
       - persist_to_workspace:
           root: /home/circleci
@@ -27,9 +26,7 @@ jobs:
           at: /home/circleci
       - run: mv ./git-town /go/bin/
       - run: mv ./godog /go/bin/
-      - run: mv ./golangci-lint /go/bin/
       - run: make unit
-      - run: make lint-go
       - run:
           find features -type f -name '*.feature' | grep -v features/s | xargs
           godog --concurrency=$(nproc --all) --format=progress --strict
@@ -42,7 +39,6 @@ jobs:
           at: /home/circleci
       - run: mv ./git-town /go/bin/
       - run: mv ./godog /go/bin/
-      - run: mv ./golangci-lint /go/bin/
       - run:
           find features -type f -name '*.feature' | grep features/s | xargs
           godog --concurrency=$(nproc --all) --format=progress --strict
@@ -56,8 +52,10 @@ jobs:
       - run: mkdir /home/circleci/bin
       - run: mv ./git-town /home/circleci/bin/
       - run: mv ./godog /home/circleci/bin/
-      - run: mv ./golangci-lint /home/circleci/bin/
-      - run: cd tools/prettier && yarn
+      # install dprint
+      - run: curl -fsSL https://dprint.dev/install.sh | sh
+      - run: echo 'export PATH=$HOME/.dprint/bin:$PATH' >> $BASH_ENV
+      # run the linters
       - run: cd text-run && yarn
       - run: make test-md
 workflows:

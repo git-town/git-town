@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/git-town/git-town/src/cmd"
+	"github.com/git-town/git-town/v7/src/cmd"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestIsAcceptableGitVersion(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		major int
 		minor int

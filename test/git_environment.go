@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	"github.com/cucumber/messages-go/v10"
-	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/test/helpers"
+	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/test/helpers"
 )
 
 // GitEnvironment is the complete Git environment for a test scenario.
@@ -86,7 +86,7 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 	// create the GitEnvironment
 	gitEnv = &GitEnvironment{Dir: dir}
 	// create the origin repo
-	err = os.MkdirAll(gitEnv.originRepoPath(), 0744)
+	err = os.MkdirAll(gitEnv.originRepoPath(), 0o744)
 	if err != nil {
 		return nil, fmt.Errorf("cannot create directory %q: %w", gitEnv.originRepoPath(), err)
 	}

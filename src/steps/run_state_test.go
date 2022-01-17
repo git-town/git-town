@@ -4,11 +4,12 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/git-town/git-town/src/steps"
+	"github.com/git-town/git-town/v7/src/steps"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestRunState_Marshal(t *testing.T) {
+	t.Parallel()
 	runState := &steps.RunState{
 		AbortStepList: steps.StepList{
 			List: []steps.Step{&steps.ResetToShaStep{Sha: "abc"}},

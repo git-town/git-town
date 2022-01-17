@@ -3,10 +3,9 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/src/cli"
-	"github.com/git-town/git-town/src/drivers"
-	"github.com/git-town/git-town/src/steps"
-
+	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/drivers"
+	"github.com/git-town/git-town/v7/src/steps"
 	"github.com/spf13/cobra"
 )
 
@@ -16,7 +15,7 @@ var continueCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		runState, err := steps.LoadPreviousRunState(prodRepo)
 		if err != nil {
-			cli.Exit(fmt.Errorf("cannot load previous run state: %v", err))
+			cli.Exit(fmt.Errorf("cannot load previous run state: %w", err))
 		}
 		if runState == nil || !runState.IsUnfinished() {
 			cli.Exit(fmt.Errorf("nothing to continue"))

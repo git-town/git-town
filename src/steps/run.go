@@ -3,13 +3,13 @@ package steps
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/src/cli"
-	"github.com/git-town/git-town/src/drivers"
-	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/drivers"
+	"github.com/git-town/git-town/v7/src/git"
 )
 
 // Run runs the Git Town command described by the given state.
-// nolint: gocyclo, gocognit, nestif, funlen
+//nolint:gocognit,nestif,funlen
 func Run(runState *RunState, repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	for {
 		step := runState.RunStepList.Pop()

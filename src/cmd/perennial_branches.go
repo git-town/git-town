@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"github.com/git-town/git-town/src/cli"
-	"github.com/git-town/git-town/src/prompt"
+	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/prompt"
 	"github.com/spf13/cobra"
 )
 

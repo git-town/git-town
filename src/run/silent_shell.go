@@ -7,8 +7,7 @@ import (
 )
 
 // SilentShell is an implementation of the Shell interface that runs commands in the current working directory.
-type SilentShell struct {
-}
+type SilentShell struct{}
 
 // WorkingDir provides the directory that this Shell operates in.
 func (shell SilentShell) WorkingDir() string {
