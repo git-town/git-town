@@ -69,7 +69,7 @@ You can also [install Git Town manually](#manual-installation) or
 ## manual installation
 
 ```
-curl https://git-town.com/install.sh | bash
+curl https://git-town.com/install.sh | sh
 ```
 
 This puts the Git Town executable into `~/.local/bin`. For a completely custom
