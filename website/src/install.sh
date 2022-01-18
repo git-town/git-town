@@ -57,7 +57,7 @@ os_name() {
   case "$(uname -s)" in
     Darwin*)  echo "macOS"   ;;
     Linux*)   echo "linux"   ;;
-    msys*)    echo "windows" ;;
+    MSYS*)    echo "windows" ;;
     cygwin*)  echo "windows" ;;
     *)        echo "other"
   esac
@@ -97,7 +97,8 @@ download_and_extract() {
   mkdir -p "$TMP_DIR"
   if [ "$OS" = "windows" ]; then
     need_cmd unzip
-    curl -L "$URL" | unzip --directory "$TMP_DIR"
+    curl -Lo "$TMP_DIR/git-town.zip" "$URL"
+    (cd $TMP_DIR && unzip git-town.zip $FILENAME)
   else
     need_cmd tar
     curl -L "$URL" | tar xz --directory "$TMP_DIR"
