@@ -2,7 +2,6 @@
 set -e
 
 # This script installs the Git Town executable.
-# It is inspired by https://github.com/rust-lang/rustup/blob/master/rustup-init.sh.
 
 VERSION=7.6.0           # the version of Git Town to install
 DEST=$HOME/.local/bin   # the folder into which to install the Git Town executable
@@ -60,7 +59,6 @@ os_name() {
 cpu_name() {
   cpu_name=$(uname -m)
   case $cpu_name in
-    x86_64 | x86-64 | x64 | amd64)  echo "intel_64" ;;
     aarch64 | arm64)                echo "arm_64"   ;;
     *)                              err "unknown cpu type"
   esac
