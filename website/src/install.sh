@@ -128,8 +128,11 @@ err() {
 
 # verifies that Git Town is in the PATH
 check_path() {
+
   if ! check_cmd "git-town"; then
-    say ""
+    say "Please add $DEST to your PATH in order to use Git Town."
+  else
+    say "$DEST is in the PATH, you are ready to use Git Town."
   fi
 }
 
