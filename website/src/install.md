@@ -76,10 +76,8 @@ This puts the Git Town executable into `~/.local/bin`. Please add this directory
 to your PATH. For a completely custom installation:
 
 - [download](https://github.com/git-town/git-town/releases) the archive matching
-  your CPU architecture
-- extract the archive with `tar -xzf <filename>`
-- move the file called `git-town` into a directory listed in your`$PATH`, for
-  example`/usr/local/bin`
+  your CPU architecture, it, and move the executable in it into a directory
+  listed in your`$PATH`, for example`/usr/local/bin`.
 
 ## compile from source
 
