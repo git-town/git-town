@@ -14,7 +14,7 @@ cuke-prof: build  # creates a flamegraph
 	@rm git-town.test
 	@echo Please open https://www.speedscope.app and load the file godog.out
 
-docs:  # tests the documentation
+docs: build  # tests the documentation
 	${CURDIR}/text-run/node_modules/.bin/text-run --offline
 
 fix: fix-go fix-md  # auto-fixes lint issues in all languages
@@ -25,7 +25,7 @@ fix-go:  # auto-fixes all Go lint issues
 fix-md:  # auto-fixes all Markdown lint issues
 	dprint fmt
 
-help:  # prints all make targets
+help:  # prints all available targets
 	@cat Makefile | grep '^[^ ]*:' | grep -v '.PHONY' | grep -v help | sed 's/:.*#/#/' | column -s "#" -t
 
 msi:  # compiles the MSI installer for Windows
@@ -63,7 +63,9 @@ release-win: msi  # adds the Windows installer to the release
 		-a dist/git-town_${VERSION}_windows_intel_64.msi
 		v${VERSION}
 
-setup: setup-go  # the setup steps necessary on developer machines
+setup: setup-go setup-docs  # the setup steps necessary on developer machines
+
+setup-docs:  # the setup steps necessary for document tests
 	cd text-run && yarn install
 
 setup-godog:  # install the godog binary
@@ -74,7 +76,7 @@ setup-go: setup-godog
 	go install mvdan.cc/gofumpt@latest
 
 stats:  # shows code statistics
-	@find . -type f | grep -v '\./node_modules/' | grep -v '\./vendor/' | grep -v '\./.git/' | xargs scc
+	@find . -type f | grep -v './text-run/node_modules' | grep -v '\./vendor/' | grep -v '\./.git/' | grep -v './website/book' | xargs scc
 
 test: lint docs unit cuke  # runs all the tests
 .PHONY: test
@@ -93,10 +95,3 @@ update:  # updates all dependencies
 	go get -u ./...
 	go mod tidy
 	go mod vendor
-
-website-build:  # compiles the website (used during deployment)
-	(cd tools/harp && yarn install)
-	tools/harp/node_modules/.bin/harp compile website/ www
-
-website-dev:  # runs a local development server of the website
-	(cd website && ../tools/harp/node_modules/.bin/harp server)

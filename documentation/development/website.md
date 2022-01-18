@@ -1,16 +1,17 @@
-# Website Development Guide
+# Website Development
 
-The Git Town website is at https://www.git-town.com.
+The Git Town website is at [git-town.com](https://www.git-town.com).
 
-## setup
+### local development
 
-- install [Node.js](https://nodejs.org) and [Yarn](https://yarnpkg.com)
+The source code for the website is in the [website](../../website/) folder. This
+folder contains its own [Makefile](../../website/Makefile) for activities
+related to working on the website. Run `make setup` to download the necessary
+tooling, `make serve` to start a local development server, and `make docs` to
+test the website.
 
-## local development
+### production environment
 
-- run a local dev server: `make website-dev`
-- test that the website compiles: `make website-build`
-
-## deployment
-
-The website hoster is Netlify. It auto-updates on changes to the master branch.
+The website runs on [Netlify](https://www.netlify.com). It auto-updates on
+changes to the `main` branch. The Netlify configuration is in
+[netlify.toml](../../netlify.toml)
