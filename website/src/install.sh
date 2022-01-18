@@ -139,13 +139,20 @@ check_path() {
 # verifies that no existing installation of Git Town outside of the destination exists
 ensure_no_other_git_town() {
   DEST_PATH=$1
-  if ! check_cmd "git-town"; then
-    return
-  fi
+  MOVED=false
   if [ -f "$DEST_PATH" ]; then
-    return
+    mv $DEST_PATH ${DEST_PATH}_old
+    MOVED="1"
   fi
-    err "You already have Git Town installed. Please uninstall it and then run this installer again."
+  OTHER=$(command -v git-town)
+  if [ ! -z "$OTHER" ]; then
+    echo "You already have Git Town installed at $OTHER."
+    echo "Please uninstall this version and then run this installer again."
+    if [ "$MOVED" = "1" ]; then
+      mv $DEST_PATH_old ${DEST_PATH}
+    fi
+    exit 1
+  fi
 }
 
 # verifies that the command with the given name exists on this system
