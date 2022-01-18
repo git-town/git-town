@@ -72,8 +72,8 @@ You can also [install Git Town manually](#manual-installation) or
 curl https://git-town.com/install.sh | sh
 ```
 
-This puts the Git Town executable into `~/.local/bin`. For a completely custom
-installation:
+This puts the Git Town executable into `~/.local/bin`. Please add this directory
+to your PATH. For a completely custom installation:
 
 - [download](https://github.com/git-town/git-town/releases) the archive matching
   your CPU architecture
