@@ -55,7 +55,7 @@ print_welcome() {
 # provides the name of the operating system in the format used by release assets
 os_name() {
   case "$(uname -s)" in
-    darwin*)  echo "macOS"   ;;
+    Darwin*)  echo "macOS"   ;;
     Linux*)   echo "linux"   ;;
     msys*)    echo "windows" ;;
     cygwin*)  echo "windows" ;;
