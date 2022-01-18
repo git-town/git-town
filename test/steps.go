@@ -227,7 +227,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I run "([^"]*)" and enter "([^"]*)" for the commit message$`, func(cmd, message string) error {
-		state.runRes, state.runErr = state.gitEnv.DevShell.RunStringWith(cmd, run.Options{Input: []string{"dGi" + message + "\033ZZ"}})
+		if err := state.gitEnv.DevShell.MockCommitMessage(message); err != nil {
+			return err
+		}
+		state.runRes, state.runErr = state.gitEnv.DevShell.RunString(cmd)
 		return nil
 	})
 
