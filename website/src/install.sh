@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-# This script installs the Git Town executable.
+# This script installs the Git Town executable in the user's HOME directory.
 
 VERSION=7.6.0           # the version of Git Town to install
 DEST=$HOME/.local/bin   # the folder into which to install the Git Town executable
