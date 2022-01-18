@@ -17,21 +17,24 @@ main() {
   need_cmd curl
   OS="$(os_name)"
   CPU="$(cpu_name)"
-  say "you seem to run %s_%s\n" "$OS" "$CPU"
   EXECUTABLE_FILENAME=$(executable_filename "$OS")
   DEST_PATH=$DEST/$EXECUTABLE_FILENAME
+  rm "$DEST_PATH" > /dev/null 2>&1
   ensure_no_other_git_town "$DEST_PATH"
-  say "no other Git Town installation found in the path, proceeding with the installation\n"
+  echo "no other Git Town installation found in the path, proceeding with the installation"
 
   # download the executable
   URL="$(download_url "$OS" "$CPU")"
-  say "downloading %s\n" "$URL"
-  download_and_extract "$URL" "$OS"
+  echo "downloading $URL"
+  tput dim
+  download_and_extract "$URL" "$OS" "$EXECUTABLE_FILENAME"
+  tput sgr0
   echo
+  echo "Git Town installed as $DEST_PATH"
 
   # unpack the archive
   rm -rf "$TMP_DIR"
-  check_path
+  check_path "$EXECUTABLE_FILENAME"
 }
 
 print_welcome() {
@@ -82,21 +85,19 @@ download_url() {
 download_and_extract() {
   URL=$1
   OS=$2
+  FILENAME=$3
   echo "OS: $OS"
   mkdir -p "$TMP_DIR"
   if [ "$OS" = "windows" ]; then
     need_cmd unzip
     curl -L "$URL" | unzip --directory "$TMP_DIR"
-    FILENAME=git-town.exe
   else
     need_cmd tar
-    curl -L "$URL" | tar xvz --directory "$TMP_DIR"
-    FILENAME=git-town
+    curl -L "$URL" | tar xz --directory "$TMP_DIR"
   fi
 
   mkdir -p "$DEST"
   mv "$TMP_DIR/$FILENAME" "$DEST"
-  say "Git Town installed as $DEST/$FILENAME"
 }
 
 executable_filename() {
@@ -113,26 +114,13 @@ executable_in_path() {
   which git-town > /dev/null 2>&1
 }
 
-# prints output of the installer
-say() {
-  printf "installer: "
-  # shellcheck disable=SC2059
-  printf "$@"
-}
-
-# aborts with the given error message
-err() {
-  say "$1" >&2
-  exit 1
-}
-
 # verifies that Git Town is in the PATH
 check_path() {
-
-  if ! check_cmd "git-town"; then
-    say "Please add $DEST to your PATH in order to use Git Town."
+  FILENAME=$1
+  if ! check_cmd "$FILENAME"; then
+    echo "Please add $DEST to your PATH in order to use Git Town."
   else
-    say "$DEST is in the PATH, you are ready to use Git Town."
+    echo "$DEST is in the PATH, you are ready to use Git Town."
   fi
 }
 
@@ -158,6 +146,12 @@ need_cmd() {
 # indicates whether the command with the given name exists
 check_cmd() {
   command -v "$1" > /dev/null 2>&1
+}
+
+# aborts with the given error message
+err() {
+  echo "$@" >&2
+  exit 1
 }
 
 main || exit 1
