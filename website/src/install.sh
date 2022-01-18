@@ -47,7 +47,9 @@ main() {
 
 print_welcome() {
   echo "GIT TOWN INSTALLER SCRIPT"
-  echo "This installer is under development. Please report bugs at https://github.com/git-town/git-town/issues/new."
+  echo
+  echo "This installer is under development. Please report bugs at"
+  echo "https://github.com/git-town/git-town/issues/new."
   echo
 }
 
