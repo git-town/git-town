@@ -14,6 +14,7 @@ main() {
   # verify the environment
   need_cmd uname
   need_cmd curl
+  need_cmd echo
   OS="$(os_name)"
   if [ "$OS" = "other" ]; then
     err "Unsupported operating system, please install from source."
@@ -26,7 +27,7 @@ main() {
   DEST_PATH=$DEST/$EXECUTABLE_FILENAME
   rm "$DEST_PATH" > /dev/null 2>&1
   ensure_no_other_git_town "$DEST_PATH"
-  printf "No other Git Town installation found in the path, proceeding to install Git Town %s for %s_%s.\n" "$VERSION" "$OS" "$CPU"
+  echo "No other Git Town installation found, proceeding to install Git Town $VERSION for ${OS}_${CPU}."
   echo
 
   # download the executable
@@ -36,7 +37,8 @@ main() {
   tput sgr0
   echo
   echo "I have successfully:"
-  echo "- downloaded Git Town $VERSION as $DEST_PATH"
+  echo "- downloaded $URL"
+  echo "- extracted the Git Town $VERSION binary to $DEST_PATH"
 
   # unpack the archive
   rm -rf "$TMP_DIR"
@@ -85,7 +87,7 @@ download_url() {
     # only Intel binaries for macOS right now
     CPU=intel_64
   fi
-  printf "https://github.com/git-town/git-town/releases/download/v%s/git-town_%s_%s_%s.%s" $VERSION $VERSION $OS $CPU $EXT
+  echo "https://github.com/git-town/git-town/releases/download/v$VERSION/git-town_${VERSION}_${OS}_${CPU}.${EXT}"
 }
 
 download_and_extract() {
@@ -128,6 +130,8 @@ check_path() {
     echo "- add $DEST to the PATH"
   else
     echo "- verified that $DEST is in the PATH"
+    echo
+    echo "You can start using Git Town now."
   fi
 }
 
