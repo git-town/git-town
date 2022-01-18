@@ -15,7 +15,13 @@ main() {
   need_cmd uname
   need_cmd curl
   OS="$(os_name)"
+  if [ "$OS" = "other" ]; then
+    err "Unsupported operating system, please install from source."
+  fi
   CPU="$(cpu_name)"
+  if [ "$CPU" = "other" ]; then
+    err "Unsupported CPU architecture, please install from source."
+  fi
   EXECUTABLE_FILENAME=$(executable_filename "$OS")
   DEST_PATH=$DEST/$EXECUTABLE_FILENAME
   rm "$DEST_PATH" > /dev/null 2>&1
@@ -51,7 +57,7 @@ os_name() {
     Linux*)   echo "linux"   ;;
     msys*)    echo "windows" ;;
     cygwin*)  echo "windows" ;;
-    *)        err "unknown operating system"
+    *)        echo "other"
   esac
 }
 
@@ -59,8 +65,9 @@ os_name() {
 cpu_name() {
   cpu_name=$(uname -m)
   case $cpu_name in
+    x86_64 | x86-64 | x64 | amd64)  echo "intel_64" ;;
     aarch64 | arm64)                echo "arm_64"   ;;
-    *)                              err "unknown cpu type"
+    *)                              echo "other"
   esac
 }
 
