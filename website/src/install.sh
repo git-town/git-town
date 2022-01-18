@@ -98,7 +98,7 @@ download_and_extract() {
   if [ "$OS" = "windows" ]; then
     need_cmd unzip
     curl -Lo "$TMP_DIR/git-town.zip" "$URL"
-    (cd $TMP_DIR && unzip git-town.zip $FILENAME)
+    (cd $TMP_DIR && unzip git-town.zip "$FILENAME")
   else
     need_cmd tar
     curl -L "$URL" | tar xz --directory "$TMP_DIR"
