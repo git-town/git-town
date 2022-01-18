@@ -17,6 +17,8 @@ jobs:
       uses: golangci/golangci-lint-action@v2
       with:
         version: v1.43
+    - name: ShellCheck
+      uses: ludeeus/action-shellcheck@1.1.0
     - run: make setup-docs
     - run: make docs
     - run: make unit
