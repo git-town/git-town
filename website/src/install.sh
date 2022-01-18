@@ -21,16 +21,17 @@ main() {
   DEST_PATH=$DEST/$EXECUTABLE_FILENAME
   rm "$DEST_PATH" > /dev/null 2>&1
   ensure_no_other_git_town "$DEST_PATH"
-  echo "no other Git Town installation found in the path, proceeding with the installation"
+  printf "No other Git Town installation found in the path, proceeding to install Git Town %s for %s_%s.\n" "$VERSION" "$OS" "$CPU"
+  echo
 
   # download the executable
   URL="$(download_url "$OS" "$CPU")"
-  echo "downloading $URL"
   tput dim
   download_and_extract "$URL" "$OS" "$EXECUTABLE_FILENAME"
   tput sgr0
   echo
-  echo "Git Town installed as $DEST_PATH"
+  echo "I have successfully:"
+  echo "- downloaded Git Town $VERSION as $DEST_PATH"
 
   # unpack the archive
   rm -rf "$TMP_DIR"
@@ -38,7 +39,7 @@ main() {
 }
 
 print_welcome() {
-  echo "Git Town installer script"
+  echo "GIT TOWN INSTALLER SCRIPT"
   echo "This installer is under development. Please report bugs at https://github.com/git-town/git-town/issues/new."
   echo
 }
@@ -86,7 +87,6 @@ download_and_extract() {
   URL=$1
   OS=$2
   FILENAME=$3
-  echo "OS: $OS"
   mkdir -p "$TMP_DIR"
   if [ "$OS" = "windows" ]; then
     need_cmd unzip
@@ -118,9 +118,11 @@ executable_in_path() {
 check_path() {
   FILENAME=$1
   if ! check_cmd "$FILENAME"; then
-    echo "Please add $DEST to your PATH in order to use Git Town."
+    echo
+    echo "Please perform these steps to finalize the installation:"
+    echo "- add $DEST to the PATH"
   else
-    echo "$DEST is in the PATH, you are ready to use Git Town."
+    echo "- verified that $DEST is in the PATH"
   fi
 }
 
