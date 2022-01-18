@@ -142,13 +142,13 @@ ensure_no_other_git_town() {
   MOVED=false
   if [ -f "$DEST_PATH" ]; then
     mv $DEST_PATH ${DEST_PATH}_old
-    MOVED="1"
+    MOVED=true
   fi
   OTHER=$(command -v git-town)
   if [ ! -z "$OTHER" ]; then
     echo "You already have Git Town installed at $OTHER."
     echo "Please uninstall this version and then run this installer again."
-    if [ "$MOVED" = "1" ]; then
+    if $MOVED; then
       mv $DEST_PATH_old ${DEST_PATH}
     fi
     exit 1
