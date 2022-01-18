@@ -9,7 +9,7 @@ fully automated and robust `--continue`, `--abort`, and `--undo` functionality
 for each command.
 
 To distinguish the command-pattern commands from the Git Town commands in
-[src/cmd](../../src/cmd), we'll call the former `steps` from now on.
+[src/cmd](../src/cmd), we'll call the former `steps` from now on.
 
 ## Running commands
 
@@ -17,10 +17,10 @@ Each Git Town command begins by inspecting the current state of the Git
 repository (which branch you are on, whether you have open changes). If there
 are no errors, it generates a list of steps to run.
 
-Steps, located in [src/steps](../../src/steps), implement the individual steps
-that each Git Town command performs, like for example
-[changing to a different Git branch](../../src/steps/checkout_branch_step.go) or
-[pulling down updates for the current branch](../../src/steps/pull_branch_step.go).
+Steps, located in [src/steps](../src/steps), implement the individual steps that
+each Git Town command performs, like for example
+[changing to a different Git branch](../src/steps/checkout_branch_step.go) or
+[pulling down updates for the current branch](../src/steps/pull_branch_step.go).
 They are Go structs that have a `Run` method which executes the step.
 
 When executing a step, the undo steps for it are determined and appended to the

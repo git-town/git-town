@@ -1,9 +1,9 @@
 # Git Town Test Architecture
 
-In the Go-based Cucumber setup, a [GitManager](../../test/git_manager.go)
-instance manages the various Git repositories needed for tests. For each
-scenario, GitManager provides a standardized
-[GitEnvironment](../../test/git_environment.go) that contains:
+In the Go-based Cucumber setup, a [GitManager](../test/git_manager.go) instance
+manages the various Git repositories needed for tests. For each scenario,
+GitManager provides a standardized [GitEnvironment](../test/git_environment.go)
+that contains:
 
 - a "developer" GitRepository with the local workspace repo. This is where the
   feature specs execute in.
