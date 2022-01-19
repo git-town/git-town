@@ -38,10 +38,10 @@ type GitEnvironment struct {
 
 // CloneGitEnvironment provides a GitEnvironment instance in the given directory,
 // containing a copy of the given GitEnvironment.
-func CloneGitEnvironment(original GitEnvironment, dir string) (*GitEnvironment, error) {
-	err := CopyDirectory(original.Dir, dir)
+func CloneGitEnvironment(original GitEnvironment, dir string) (gitEnv GitEnvironment, err error) {
+	err = CopyDirectory(original.Dir, dir)
 	if err != nil {
-		return nil, fmt.Errorf("cannot clone GitEnvironment %q to folder %q: %w", original.Dir, dir, err)
+		return gitEnv, fmt.Errorf("cannot clone GitEnvironment %q to folder %q: %w", original.Dir, dir, err)
 	}
 	binDir := filepath.Join(dir, "bin")
 	originDir := filepath.Join(dir, "origin")
@@ -58,22 +58,22 @@ func CloneGitEnvironment(original GitEnvironment, dir string) (*GitEnvironment, 
 	// we have to set the "origin" remote to the copied origin repo here.
 	_, err = result.DevShell.Run("git", "remote", "remove", "origin")
 	if err != nil {
-		return nil, fmt.Errorf("cannot remove remote: %w", err)
+		return gitEnv, fmt.Errorf("cannot remove remote: %w", err)
 	}
 	err = result.DevRepo.AddRemote("origin", result.originRepoPath())
 	if err != nil {
-		return nil, fmt.Errorf("cannot set remote: %w", err)
+		return gitEnv, fmt.Errorf("cannot set remote: %w", err)
 	}
 	err = result.DevRepo.Fetch()
 	if err != nil {
-		return nil, fmt.Errorf("cannot fetch: %w", err)
+		return gitEnv, fmt.Errorf("cannot fetch: %w", err)
 	}
 	// and connect the main branches again
 	err = result.DevRepo.ConnectTrackingBranch("main")
 	if err != nil {
-		return nil, fmt.Errorf("cannot connect tracking branch: %w", err)
+		return gitEnv, fmt.Errorf("cannot connect tracking branch: %w", err)
 	}
-	return &result, err
+	return result, err
 }
 
 // NewStandardGitEnvironment provides a GitEnvironment in the given directory,

@@ -34,7 +34,7 @@ func NewGitManager(dir string) (GitManager, error) {
 }
 
 // CreateScenarioEnvironment provides a new GitEnvironment for the scenario with the given name.
-func (manager *GitManager) CreateScenarioEnvironment(scenarioName string) (*GitEnvironment, error) {
+func (manager *GitManager) CreateScenarioEnvironment(scenarioName string) (GitEnvironment, error) {
 	envDirName := helpers.FolderName(scenarioName) + "_" + helpers.UniqueString()
 	envPath := filepath.Join(manager.dir, envDirName)
 	return CloneGitEnvironment(manager.memoized, envPath)
