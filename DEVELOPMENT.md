@@ -50,7 +50,7 @@ make update
 make test
 ```
 
-### run unit tests
+### unit tests
 
 Run all unit tests:
 
@@ -71,7 +71,7 @@ go test src/cmd/root_test.go
 go test src/cmd/root_test.go -v -run TestIsAcceptableGitVersion
 ```
 
-### run end-to-end tests
+### end-to-end tests
 
 Run individual Cucumber tests:
 
