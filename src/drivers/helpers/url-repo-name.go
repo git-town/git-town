@@ -5,8 +5,8 @@ import (
 	"strings"
 )
 
-// GetURLRepositoryName returns the repository name contains within the given Git URL.
-func GetURLRepositoryName(url string) string {
+// URLRepositoryName returns the repository name contains within the given Git URL.
+func URLRepositoryName(url string) string {
 	hostname := URLHostname(url)
 	repositoryNameRegex := regexp.MustCompile(".*" + hostname + "[/:](.+)")
 	matches := repositoryNameRegex.FindStringSubmatch(url)

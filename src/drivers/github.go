@@ -36,7 +36,7 @@ func LoadGithub(config config, log logFn) *GithubCodeHostingDriver {
 	if driverType != "github" && hostname != "github.com" {
 		return nil
 	}
-	repositoryParts := strings.SplitN(helpers.GetURLRepositoryName(originURL), "/", 2)
+	repositoryParts := strings.SplitN(helpers.URLRepositoryName(originURL), "/", 2)
 	if len(repositoryParts) != 2 {
 		return nil
 	}

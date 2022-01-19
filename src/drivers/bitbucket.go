@@ -34,7 +34,7 @@ func LoadBitbucket(config config, git gitRunner) *BitbucketCodeHostingDriver {
 		git:        git,
 		hostname:   hostname,
 		originURL:  originURL,
-		repository: helpers.GetURLRepositoryName(originURL),
+		repository: helpers.URLRepositoryName(originURL),
 	}
 }
 

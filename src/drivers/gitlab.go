@@ -31,7 +31,7 @@ func LoadGitlab(config config) *GitlabCodeHostingDriver {
 	return &GitlabCodeHostingDriver{
 		originURL:  originURL,
 		hostname:   hostname,
-		repository: helpers.GetURLRepositoryName(originURL),
+		repository: helpers.URLRepositoryName(originURL),
 	}
 }
 
