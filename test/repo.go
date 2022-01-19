@@ -14,8 +14,8 @@ import (
 
 // Repo is a Git Repo in test code.
 type Repo struct {
-	git.Runner               // the git.Runner instance to use
-	shell      *MockingShell // a reference to the MockingShell instance used here
+	git.Runner              // the git.Runner instance to use
+	shell      MockingShell // a reference to the MockingShell instance used here
 }
 
 // CreateRepo creates TestRepo instances.
@@ -52,8 +52,8 @@ func InitRepo(workingDir, homeDir, binDir string) (Repo, error) {
 func NewRepo(workingDir, homeDir, binDir string) Repo {
 	shell := NewMockingShell(workingDir, homeDir, binDir)
 	runner := git.Runner{
-		Shell:              shell,
-		Config:             config.NewConfiguration(shell),
+		Shell:              &shell,
+		Config:             config.NewConfiguration(&shell),
 		DryRun:             &git.DryRun{},
 		IsRepoCache:        &git.BoolCache{},
 		RemoteBranchCache:  &git.StringSliceCache{},

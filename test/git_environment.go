@@ -27,7 +27,7 @@ type GitEnvironment struct {
 	DevRepo Repo
 
 	// DevShell provides a reference to the MockingShell instance used in the DeveloperRepo.
-	DevShell *MockingShell
+	DevShell MockingShell
 
 	// CoworkerRepo is the optional Git repository that is locally checked out at the coworker machine.
 	CoworkerRepo *Repo
