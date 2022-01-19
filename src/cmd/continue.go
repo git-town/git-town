@@ -13,7 +13,7 @@ var continueCmd = &cobra.Command{
 	Use:   "continue",
 	Short: "Restarts the last run git-town command after having resolved conflicts",
 	Run: func(cmd *cobra.Command, args []string) {
-		runState, err := runstate.LoadPreviousRunState(prodRepo)
+		runState, err := runstate.Load(prodRepo)
 		if err != nil {
 			cli.Exit(fmt.Errorf("cannot load previous run state: %w", err))
 		}

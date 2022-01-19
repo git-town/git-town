@@ -13,7 +13,7 @@ var abortCmd = &cobra.Command{
 	Use:   "abort",
 	Short: "Aborts the last run git-town command",
 	Run: func(cmd *cobra.Command, args []string) {
-		runState, err := runstate.LoadPreviousRunState(prodRepo)
+		runState, err := runstate.Load(prodRepo)
 		if err != nil {
 			cli.Exit(fmt.Errorf("cannot load previous run state: %w", err))
 		}
