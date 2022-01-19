@@ -33,7 +33,7 @@ and brings over all uncommitted changes to the new feature branch.
 
 See "sync" for information regarding remote upstream.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config, err := getAppendConfig(args, prodRepo)
+		config, err := createAppendConfig(args, prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}
@@ -56,7 +56,7 @@ See "sync" for information regarding remote upstream.`,
 	},
 }
 
-func getAppendConfig(args []string, repo *git.ProdRepo) (result appendConfig, err error) {
+func createAppendConfig(args []string, repo *git.ProdRepo) (result appendConfig, err error) {
 	result.parentBranch, err = repo.Silent.CurrentBranch()
 	if err != nil {
 		return result, err

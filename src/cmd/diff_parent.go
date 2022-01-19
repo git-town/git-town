@@ -23,7 +23,7 @@ Works on either the current branch or the branch name provided.
 
 Exits with error code 1 if the given branch is a perennial branch or the main branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config, err := getDiffParentConfig(args, prodRepo)
+		config, err := createDiffParentConfig(args, prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}
@@ -42,7 +42,7 @@ Exits with error code 1 if the given branch is a perennial branch or the main br
 }
 
 // Does not return error because "Ensure" functions will call exit directly.
-func getDiffParentConfig(args []string, repo *git.ProdRepo) (config diffParentConfig, err error) {
+func createDiffParentConfig(args []string, repo *git.ProdRepo) (config diffParentConfig, err error) {
 	initialBranch, err := repo.Silent.CurrentBranch()
 	if err != nil {
 		return config, err
