@@ -68,7 +68,7 @@ func getDiffParentConfig(args []string, repo *git.ProdRepo) (config diffParentCo
 	if err != nil {
 		return config, err
 	}
-	config.parentBranch = repo.Config.GetParentBranch(config.branch)
+	config.parentBranch = repo.Config.ParentBranch(config.branch)
 	return config, nil
 }
 

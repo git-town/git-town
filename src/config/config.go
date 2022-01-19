@@ -96,7 +96,7 @@ func (c *Config) DeletePerennialBranchConfiguration() error {
 // This information is read from the cache in the Git config,
 // so might be out of date when the branch hierarchy has been modified.
 func (c *Config) AncestorBranches(branchName string) (result []string) {
-	parentBranchMap := c.GetParentBranchMap()
+	parentBranchMap := c.ParentBranchMap()
 	current := branchName
 	for {
 		if c.IsMainBranch(current) || c.IsPerennialBranch(current) {
@@ -113,7 +113,7 @@ func (c *Config) AncestorBranches(branchName string) (result []string) {
 
 // BranchAncestryRoots provides the branches with children and no parents.
 func (c *Config) BranchAncestryRoots() []string {
-	parentMap := c.GetParentBranchMap()
+	parentMap := c.ParentBranchMap()
 	roots := []string{}
 	for _, parent := range parentMap {
 		if _, ok := parentMap[parent]; !ok && !stringslice.Contains(roots, parent) {
@@ -167,8 +167,8 @@ func (c *Config) getLocalOrGlobalConfigValue(key string) string {
 	return c.getGlobalConfigValue(key)
 }
 
-// GetParentBranchMap returns a map from branch name to its parent branch.
-func (c *Config) GetParentBranchMap() map[string]string {
+// ParentBranchMap returns a map from branch name to its parent branch.
+func (c *Config) ParentBranchMap() map[string]string {
 	result := map[string]string{}
 	for _, key := range c.localConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
 		child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
@@ -198,8 +198,8 @@ func (c *Config) MainBranch() string {
 	return c.getLocalOrGlobalConfigValue("git-town.main-branch-name")
 }
 
-// GetParentBranch returns the name of the parent branch of the given branch.
-func (c *Config) GetParentBranch(branchName string) string {
+// ParentBranch returns the name of the parent branch of the given branch.
+func (c *Config) ParentBranch(branchName string) string {
 	return c.getLocalConfigValue("git-town-branch." + branchName + ".parent")
 }
 
@@ -244,7 +244,7 @@ func (c *Config) HasBranchInformation() bool {
 
 // HasParentBranch returns whether or not the given branch has a parent.
 func (c *Config) HasParentBranch(branchName string) bool {
-	return c.GetParentBranch(branchName) != ""
+	return c.ParentBranch(branchName) != ""
 }
 
 // IsAncestorBranch indicates whether the given branch is an ancestor of the other given branch.

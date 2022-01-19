@@ -26,6 +26,6 @@ func (step *SetParentBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error
 
 // Run executes this step.
 func (step *SetParentBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
-	step.previousParent = repo.Config.GetParentBranch(step.BranchName)
+	step.previousParent = repo.Config.ParentBranch(step.BranchName)
 	return repo.Config.SetParentBranch(step.BranchName, step.ParentBranchName)
 }

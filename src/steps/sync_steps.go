@@ -54,7 +54,7 @@ func getSyncFeatureBranchSteps(branchName string, repo *git.ProdRepo) (result St
 	if hasTrackingBranch {
 		result.Append(&MergeBranchStep{BranchName: repo.Silent.TrackingBranchName(branchName)})
 	}
-	result.Append(&MergeBranchStep{BranchName: repo.Config.GetParentBranch(branchName)})
+	result.Append(&MergeBranchStep{BranchName: repo.Config.ParentBranch(branchName)})
 	return
 }
 

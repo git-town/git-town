@@ -107,7 +107,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		table.AddRow("BRANCH", "PARENT")
 		state.gitEnv.DevRepo.Config.Reload()
 		// Table sorted by child branch name
-		parentBranchMap := state.gitEnv.DevRepo.Config.GetParentBranchMap()
+		parentBranchMap := state.gitEnv.DevRepo.Config.ParentBranchMap()
 		childBranches := make([]string, 0, len(parentBranchMap))
 		for child := range parentBranchMap {
 			childBranches = append(childBranches, child)

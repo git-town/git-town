@@ -30,7 +30,7 @@ func EnsureKnowsParentBranches(branchNames []string, repo *git.ProdRepo) error {
 func AskForBranchAncestry(branchName, defaultBranchName string, repo *git.ProdRepo) (err error) {
 	current := branchName
 	for {
-		parent := repo.Config.GetParentBranch(current)
+		parent := repo.Config.ParentBranch(current)
 		if parent == "" { //nolint:nestif
 			printParentBranchHeader(repo)
 			parent, err = AskForBranchParent(current, defaultBranchName, repo)

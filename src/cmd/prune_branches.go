@@ -73,7 +73,7 @@ func getPruneBranchesStepList(config pruneBranchesConfig, repo *git.ProdRepo) (r
 		if initialBranchName == branchName {
 			result.Append(&steps.CheckoutBranchStep{BranchName: config.mainBranch})
 		}
-		parent := repo.Config.GetParentBranch(branchName)
+		parent := repo.Config.ParentBranch(branchName)
 		if parent != "" {
 			for _, child := range repo.Config.ChildBranches(branchName) {
 				result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: parent})

@@ -102,7 +102,7 @@ func getKillConfig(args []string, repo *git.ProdRepo) (result killConfig, err er
 	if err != nil {
 		return result, err
 	}
-	result.targetBranchParent = repo.Config.GetParentBranch(result.targetBranch)
+	result.targetBranchParent = repo.Config.ParentBranch(result.targetBranch)
 	result.previousBranch, err = repo.Silent.PreviouslyCheckedOutBranch()
 	if err != nil {
 		return result, err
