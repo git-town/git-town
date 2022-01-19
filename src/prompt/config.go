@@ -50,7 +50,7 @@ func ConfigurePerennialBranches(repo *git.ProdRepo) error {
 	}
 	newPerennialBranches, err := askForBranches(askForBranchesOptions{
 		branchNames:        branchNames,
-		prompt:             getPerennialBranchesPrompt(repo),
+		prompt:             perennialBranchesPrompt(repo),
 		defaultBranchNames: repo.Config.PerennialBranches(),
 	})
 	if err != nil {
@@ -71,7 +71,7 @@ func mainBranchPrompt(repo *git.ProdRepo) (result string) {
 	return
 }
 
-func getPerennialBranchesPrompt(repo *git.ProdRepo) (result string) {
+func perennialBranchesPrompt(repo *git.ProdRepo) (result string) {
 	result += "Please specify perennial branches:"
 	currentPerennialBranches := repo.Config.PerennialBranches()
 	if len(currentPerennialBranches) > 0 {
