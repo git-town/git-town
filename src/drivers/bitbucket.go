@@ -22,7 +22,7 @@ type BitbucketCodeHostingDriver struct {
 func LoadBitbucket(config config, git gitRunner) *BitbucketCodeHostingDriver {
 	driverType := config.CodeHostingDriverName()
 	originURL := config.RemoteOriginURL()
-	hostname := helpers.GetURLHostname(originURL)
+	hostname := helpers.URLHostname(originURL)
 	manualHostName := config.CodeHostingOriginHostname()
 	if manualHostName != "" {
 		hostname = manualHostName

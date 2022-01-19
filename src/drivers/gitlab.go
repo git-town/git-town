@@ -20,7 +20,7 @@ type GitlabCodeHostingDriver struct {
 func LoadGitlab(config config) *GitlabCodeHostingDriver {
 	driverType := config.CodeHostingDriverName()
 	originURL := config.RemoteOriginURL()
-	hostname := helpers.GetURLHostname(originURL)
+	hostname := helpers.URLHostname(originURL)
 	manualHostName := config.CodeHostingOriginHostname()
 	if manualHostName != "" {
 		hostname = manualHostName
