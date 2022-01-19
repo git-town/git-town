@@ -101,9 +101,16 @@ Debug a Godog Cucumber feature in [VSCode](https://code.visualstudio.com):
 
 ## run linters
 
+Run all linters:
+
 ```bash
-make lint     # run all linters
-make fix      # auto-fix linter errors
+make lint
+```
+
+Auto-fix linter errors:
+
+```
+make fix
 ```
 
 ## learn about the code and test architecture
