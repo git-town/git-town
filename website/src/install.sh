@@ -57,7 +57,7 @@ print_welcome() {
 # provides the name of the operating system in the format used by release assets
 os_name() {
   case "$(uname -s)" in
-    Darwin*)  echo "macOS"   ;;
+    Darwin*)  echo "macos"   ;;
     Linux*)   echo "linux"   ;;
     MSYS*)    echo "windows" ;;
     cygwin*)  echo "windows" ;;
@@ -85,11 +85,11 @@ download_url() {
     CPU=intel_64
     EXT=zip
   fi
-  if [ "$OS" = macOS ]; then
+  if [ "$OS" = macos ]; then
     # only Intel binaries for macOS right now
     CPU=intel_64
   fi
-  echo "https://github.com/git-town/git-town/releases/download/v$VERSION/git-town_${VERSION}_${OS}_${CPU}.${EXT}"
+  echo "https://github.com/git-town/git-town/releases/download/v${VERSION}/git-town_${VERSION}_${OS}_${CPU}.${EXT}"
 }
 
 download_and_extract() {

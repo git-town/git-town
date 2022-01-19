@@ -54,7 +54,7 @@ release-linux:   # creates a new release
 		-a dist/git-town_${VERSION}_linux_arm_64.deb \
 		-a dist/git-town_${VERSION}_linux_arm_64.rpm \
 		-a dist/git-town_${VERSION}_linux_arm_64.tar.gz \
-		-a dist/git-town_${VERSION}_macOS_intel_64.tar.gz \
+		-a dist/git-town_${VERSION}_macos_intel_64.tar.gz \
 		-a dist/git-town_${VERSION}_windows_intel_64.zip \
 		v${VERSION}
 
