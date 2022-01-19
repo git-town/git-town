@@ -144,15 +144,15 @@ ensure_no_other_git_town() {
   DEST_PATH_OLD=${DEST_PATH}_old   # location where the Git Town executable will be backed up for this check
   MOVED=false                      # whether an existing Git Town executable was backed up
   if [ -f "$DEST_PATH" ]; then
-    mv $DEST_PATH $DEST_PATH_OLD
+    mv "$DEST_PATH" "$DEST_PATH_OLD"
     MOVED=true
   fi
   OTHER=$(command -v git-town)
-  if [ ! -z "$OTHER" ]; then
+  if [ -n "$OTHER" ]; then
     echo "You already have Git Town installed at $OTHER."
     echo "Please uninstall this version and then run this installer again."
     if $MOVED; then
-      mv $DEST_PATH_OLD $DEST_PATH
+      mv "$DEST_PATH_OLD" "$DEST_PATH"
     fi
     exit 1
   fi
