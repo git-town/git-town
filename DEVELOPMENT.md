@@ -16,6 +16,7 @@ This page helps you get started hacking on the Git Town codebase.
 4. to make sure everything works:
    - compile the tool: <code textrun="verify-make-command">make build</code>
    - run the tests: <code textrun="verify-make-command">make test</code>
+5. run all tests: `make test`
 
 Optional dependencies:
 
@@ -24,7 +25,7 @@ Optional dependencies:
 - [Yarn](https://yarnpkg.com/)
 - [scc](https://github.com/boyter/scc)
 
-### add a new Go dependency
+### dependencies
 
 - run `go get [dependency]` inside the Git Town folder to register the
   dependency
@@ -32,22 +33,16 @@ Optional dependencies:
 - run `go mod vendor` to vendor it
 - run `go mod tidy` to clean up
 
-### update a Go dependency
+Update a Go dependency:
 
 ```
 go get <path>
 ```
 
-### update all dependencies
+Update all dependencies:
 
 ```bash
 make update
-```
-
-### run all tests
-
-```
-make test
 ```
 
 ### unit tests
