@@ -47,14 +47,10 @@ func (step *SquashMergeBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHo
 	if err = repo.Silent.CommentOutSquashCommitMessage(""); err != nil {
 		return fmt.Errorf("cannot comment out the squash commit message: %w", err)
 	}
-	switch {
-	case author != repoAuthor && step.CommitMessage != "":
-		return repo.Logging.CommitWithMessageAndAuthor(step.CommitMessage, author)
-	case step.CommitMessage != "":
-		return repo.Logging.CommitWithMessage(step.CommitMessage)
-	default:
-		return repo.Logging.Commit()
+	if repoAuthor == author {
+		author = ""
 	}
+	return repo.Logging.Commit(step.CommitMessage, author)
 }
 
 func (step *SquashMergeBranchStep) ShouldAutomaticallyAbortOnError() bool {

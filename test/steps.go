@@ -226,6 +226,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^I run "([^"]*)" and enter "([^"]*)" for the commit message$`, func(cmd, message string) error {
+		if err := state.gitEnv.DevShell.MockCommitMessage(message); err != nil {
+			return err
+		}
+		state.runRes, state.runErr = state.gitEnv.DevShell.RunString(cmd)
+		return nil
+	})
+
 	suite.Step(`^I run "([^"]+)" in the "([^"]+)" folder$`, func(cmd, folderName string) error {
 		state.runRes, state.runErr = state.gitEnv.DevShell.RunStringWith(cmd, run.Options{Dir: folderName})
 		return nil
