@@ -173,7 +173,7 @@ func TestGiteaDriver_MergePullRequest(t *testing.T) {
 	sha, err := driver.MergePullRequest(options)
 	assert.NoError(t, err)
 	assert.Equal(t, "abc123", sha)
-	mergeParameters := getRequestData(mergeRequest)
+	mergeParameters := loadRequestData(mergeRequest)
 	assert.Equal(t, "title", mergeParameters["MergeTitleField"])
 	assert.Equal(t, "extra detail1\nextra detail2", mergeParameters["MergeMessageField"])
 	assert.Equal(t, "squash", mergeParameters["Do"])
