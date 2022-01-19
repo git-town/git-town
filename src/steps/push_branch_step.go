@@ -15,7 +15,6 @@ type PushBranchStep struct {
 	Undoable   bool
 }
 
-// CreateUndoStep returns the undo step for this step.
 func (step *PushBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
 	if step.Undoable {
 		return &PushBranchAfterCurrentBranchSteps{}, nil
@@ -23,7 +22,6 @@ func (step *PushBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
 	return &SkipCurrentBranchSteps{}, nil
 }
 
-// Run executes this step.
 func (step *PushBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	shouldPush, err := repo.Silent.ShouldPushBranch(step.BranchName)
 	if err != nil {

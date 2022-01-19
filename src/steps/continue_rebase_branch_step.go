@@ -12,17 +12,14 @@ type ContinueRebaseBranchStep struct {
 	NoOpStep
 }
 
-// CreateAbortStep returns the abort step for this step.
 func (step *ContinueRebaseBranchStep) CreateAbortStep() Step {
 	return &AbortRebaseBranchStep{}
 }
 
-// CreateContinueStep returns the continue step for this step.
 func (step *ContinueRebaseBranchStep) CreateContinueStep() Step {
 	return step
 }
 
-// Run executes this step.
 func (step *ContinueRebaseBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	hasRebaseInProgress, err := repo.Silent.HasRebaseInProgress()
 	if err != nil {

@@ -12,17 +12,14 @@ type ContinueMergeBranchStep struct {
 	NoOpStep
 }
 
-// CreateAbortStep returns the abort step for this step.
 func (step *ContinueMergeBranchStep) CreateAbortStep() Step {
 	return &NoOpStep{}
 }
 
-// CreateContinueStep returns the continue step for this step.
 func (step *ContinueMergeBranchStep) CreateContinueStep() Step {
 	return step
 }
 
-// Run executes this step.
 func (step *ContinueMergeBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	hasMergeInprogress, err := repo.Silent.HasMergeInProgress()
 	if err != nil {

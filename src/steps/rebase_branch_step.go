@@ -15,22 +15,18 @@ type RebaseBranchStep struct {
 	previousSha string
 }
 
-// CreateAbortStep returns the abort step for this step.
 func (step *RebaseBranchStep) CreateAbortStep() Step {
 	return &AbortRebaseBranchStep{}
 }
 
-// CreateContinueStep returns the continue step for this step.
 func (step *RebaseBranchStep) CreateContinueStep() Step {
 	return &ContinueRebaseBranchStep{}
 }
 
-// CreateUndoStep returns the undo step for this step.
 func (step *RebaseBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
 	return &ResetToShaStep{Hard: true, Sha: step.previousSha}, nil
 }
 
-// Run executes this step.
 func (step *RebaseBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) (err error) {
 	step.previousSha, err = repo.Silent.CurrentSha()
 	if err != nil {

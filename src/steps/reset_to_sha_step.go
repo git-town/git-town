@@ -13,7 +13,6 @@ type ResetToShaStep struct {
 	Sha  string
 }
 
-// Run executes this step.
 func (step *ResetToShaStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) (err error) {
 	currentSha, err := repo.Silent.CurrentSha()
 	if err != nil {
