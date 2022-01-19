@@ -76,7 +76,7 @@ func (d *GiteaCodeHostingDriver) LoadPullRequestInfo(branch, parentBranch string
 		return result, nil
 	}
 	result.CanMergeWithAPI = true
-	result.DefaultCommitMessage = getDefaultCommitMessage(pullRequest)
+	result.DefaultCommitMessage = createDefaultCommitMessage(pullRequest)
 	result.PullRequestNumber = pullRequest.Index
 	return result, nil
 }
@@ -132,7 +132,7 @@ func (d *GiteaCodeHostingDriver) connect() {
 	}
 }
 
-func getDefaultCommitMessage(pullRequest *gitea.PullRequest) string {
+func createDefaultCommitMessage(pullRequest *gitea.PullRequest) string {
 	return fmt.Sprintf("%s (#%d)", pullRequest.Title, pullRequest.Index)
 }
 
