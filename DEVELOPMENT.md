@@ -16,7 +16,6 @@ This page helps you get started hacking on the Git Town codebase.
 4. to make sure everything works:
    - compile the tool: <code textrun="verify-make-command">make build</code>
    - run the tests: <code textrun="verify-make-command">make test</code>
-5. run all tests: `make test`
 
 Optional dependencies:
 
