@@ -159,12 +159,12 @@ please ship %q first`, strings.Join(ancestorsWithoutMainOrPerennial, ", "), olde
 }
 
 func getShipStepList(config shipConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
-	syncSteps, err := steps.GetSyncBranchSteps(config.branchToMergeInto, true, repo)
+	syncSteps, err := steps.SyncBranchSteps(config.branchToMergeInto, true, repo)
 	if err != nil {
 		return result, err
 	}
 	result.AppendList(syncSteps)
-	syncSteps, err = steps.GetSyncBranchSteps(config.branchToShip, false, repo)
+	syncSteps, err = steps.SyncBranchSteps(config.branchToShip, false, repo)
 	if err != nil {
 		return result, err
 	}

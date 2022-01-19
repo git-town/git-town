@@ -6,8 +6,8 @@ import (
 	"github.com/git-town/git-town/v7/src/git"
 )
 
-// GetSyncBranchSteps returns the steps to sync the branch with the given name.
-func GetSyncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (result StepList, err error) {
+// SyncBranchSteps returns the steps to sync the branch with the given name.
+func SyncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (result StepList, err error) {
 	isFeature := repo.Config.IsFeatureBranch(branchName)
 	hasRemoteOrigin, err := repo.Silent.HasRemote("origin")
 	if err != nil {

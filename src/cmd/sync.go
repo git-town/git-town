@@ -119,7 +119,7 @@ func getSyncConfig(repo *git.ProdRepo) (result syncConfig, err error) {
 
 func getSyncStepList(config syncConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
 	for _, branchName := range config.branchesToSync {
-		steps, err := steps.GetSyncBranchSteps(branchName, true, repo)
+		steps, err := steps.SyncBranchSteps(branchName, true, repo)
 		if err != nil {
 			return result, err
 		}

@@ -46,7 +46,7 @@ func ValidateIsRepository(repo *git.ProdRepo) error {
 
 func getAppendStepList(config appendConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
 	for _, branchName := range append(config.ancestorBranches, config.parentBranch) {
-		steps, err := steps.GetSyncBranchSteps(branchName, true, repo)
+		steps, err := steps.SyncBranchSteps(branchName, true, repo)
 		if err != nil {
 			return result, err
 		}

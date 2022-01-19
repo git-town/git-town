@@ -98,7 +98,7 @@ func getPrependConfig(args []string, repo *git.ProdRepo) (result prependConfig, 
 
 func getPrependStepList(config prependConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
 	for _, branchName := range config.ancestorBranches {
-		steps, err := steps.GetSyncBranchSteps(branchName, true, repo)
+		steps, err := steps.SyncBranchSteps(branchName, true, repo)
 		if err != nil {
 			return result, err
 		}
