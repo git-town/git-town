@@ -8,7 +8,7 @@ import (
 // Step represents a dedicated CLI activity.
 // Git Town commands consist of many Step instances.
 // Steps implement the command pattern (https://en.wikipedia.org/wiki/Command_pattern).
-// This means they can execute or provide a Step instance that undoes what they did.
+// This allows fully automated and robust implementations of the "continue", "abort", and "undo" commands.
 type Step interface {
 	// CreateAbortStep provides the abort step for this step.
 	CreateAbortStep() Step
