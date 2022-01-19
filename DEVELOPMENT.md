@@ -2,7 +2,7 @@
 
 This page helps you get started hacking on the Git Town codebase.
 
-### setup
+## setup
 
 1. install [Go](https://golang.org) version 1.16 or higher
 2. install [Make](https://www.gnu.org/software/make)
@@ -25,7 +25,7 @@ Optional dependencies:
 - [Yarn](https://yarnpkg.com/)
 - [scc](https://github.com/boyter/scc)
 
-### dependencies
+## dependencies
 
 - run `go get [dependency]` inside the Git Town folder to register the
   dependency
@@ -45,7 +45,7 @@ Update all dependencies:
 make update
 ```
 
-### unit tests
+## unit tests
 
 Run all unit tests:
 
@@ -66,7 +66,7 @@ go test src/cmd/root_test.go
 go test src/cmd/root_test.go -v -run TestIsAcceptableGitVersion
 ```
 
-### end-to-end tests
+## end-to-end tests
 
 Run individual Cucumber tests:
 
@@ -85,7 +85,7 @@ If Cucumber tests produce garbled output on Windows, try running them inside Git
 Bash. See [this issue](https://github.com/cucumber/godog/issues/129) for
 details.
 
-### debug end-to-end tests
+## debug end-to-end tests
 
 To see the CLI output of the shell commands in a Cucumber test, add a tag
 `@debug` above the feature or scenario you want to debug:
@@ -103,14 +103,14 @@ Debug a Godog Cucumber feature in [VSCode](https://code.visualstudio.com):
 - set a breakpoint in your test code
 - run the `debug a test` configuration in the debugger
 
-### run linters
+## run linters
 
 ```bash
 make lint     # run all linters
 make fix      # auto-fix linter errors
 ```
 
-### learn about the code and test architecture
+## learn about the code and test architecture
 
 The source code contains
 [comments](https://pkg.go.dev/github.com/git-town/git-town) that explain the
