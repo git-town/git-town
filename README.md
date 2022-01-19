@@ -85,18 +85,17 @@ for more details.
 
 ## Documentation
 
-Documentation for all commands exists at the
-[Git Town website](https://www.git-town.com). At runtime, call `git town` for an
-overview of the Git Town commands and `git help <command>` for help with
-individual commands.
+The [Git Town website](https://www.git-town.com) provides documentation for Git
+Town users. You can also call `git town` or `git town help [command]`for help
+via the CLI.
 
 ## Contributing
 
 Found a bug or have an idea for a new feature?
 [Open an issue](https://github.com/git-town/git-town/issues/new) or send a
 [pull request](https://help.github.com/articles/using-pull-requests/)! Check out
-our [contributing](/CONTRIBUTING.md) and [developer](documentation/README.md)
-guides to get started.
+our contributing](/CONTRIBUTING.md) and
+[developer guides](documentation/development.md) to get started.
 
 Kudos to our contributors!
 
