@@ -111,7 +111,7 @@ func getKillConfig(args []string, repo *git.ProdRepo) (result killConfig, err er
 	if err != nil {
 		return result, err
 	}
-	result.childBranches = repo.Config.GetChildBranches(result.targetBranch)
+	result.childBranches = repo.Config.ChildBranches(result.targetBranch)
 	return result, nil
 }
 

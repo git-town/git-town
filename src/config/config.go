@@ -124,9 +124,9 @@ func (c *Config) BranchAncestryRoots() []string {
 	return roots
 }
 
-// GetChildBranches returns the names of all branches for which the given branch
+// ChildBranches returns the names of all branches for which the given branch
 // is a parent.
-func (c *Config) GetChildBranches(branchName string) (result []string) {
+func (c *Config) ChildBranches(branchName string) (result []string) {
 	for _, key := range c.localConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
 		parent := c.getLocalConfigValue(key)
 		if parent == branchName {

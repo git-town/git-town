@@ -118,7 +118,7 @@ func getRenameBranchConfig(args []string, repo *git.ProdRepo) (result renameBran
 	if hasNewBranch {
 		return result, fmt.Errorf("a branch named %q already exists", result.newBranchName)
 	}
-	result.oldBranchChildren = repo.Config.GetChildBranches(result.oldBranchName)
+	result.oldBranchChildren = repo.Config.ChildBranches(result.oldBranchName)
 	result.oldBranchHasTrackingBranch, err = repo.Silent.HasTrackingBranch(result.oldBranchName)
 	return result, err
 }

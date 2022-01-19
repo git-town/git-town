@@ -142,7 +142,7 @@ func gitShipConfig(args []string, driver drivers.CodeHostingDriver, repo *git.Pr
 	result.canShipWithDriver = prInfo.CanMergeWithAPI
 	result.defaultCommitMessage = prInfo.DefaultCommitMessage
 	result.pullRequestNumber = prInfo.PullRequestNumber
-	result.childBranches = repo.Config.GetChildBranches(result.branchToShip)
+	result.childBranches = repo.Config.ChildBranches(result.branchToShip)
 	result.shouldShipDeleteRemoteBranch = prodRepo.Config.ShouldShipDeleteRemoteBranch()
 	return result, err
 }
