@@ -39,7 +39,7 @@ Does not delete perennial branches nor the main branch.`,
 		if err != nil {
 			cli.Exit(err)
 		}
-		runState := runstate.NewRunState("kill", stepList)
+		runState := runstate.New("kill", stepList)
 		err = runstate.Execute(runState, prodRepo, nil)
 		if err != nil {
 			cli.Exit(err)

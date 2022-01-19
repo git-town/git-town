@@ -33,7 +33,7 @@ See "sync" for information regarding remote upstream.`,
 		if err != nil {
 			cli.Exit(err)
 		}
-		runState := runstate.NewRunState("hack", stepList)
+		runState := runstate.New("hack", stepList)
 		err = runstate.Execute(runState, prodRepo, nil)
 		if err != nil {
 			cli.Exit(err)

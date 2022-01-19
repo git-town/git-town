@@ -44,7 +44,7 @@ See "sync" for remote upstream options.
 		if err != nil {
 			cli.Exit(err)
 		}
-		runState := runstate.NewRunState("prepend", stepList)
+		runState := runstate.New("prepend", stepList)
 		err = runstate.Execute(runState, prodRepo, nil)
 		if err != nil {
 			fmt.Println(err)

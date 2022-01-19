@@ -52,7 +52,7 @@ When run on a perennial branch
 		if err != nil {
 			cli.Exit(err)
 		}
-		runState := runstate.NewRunState("rename-branch", stepList)
+		runState := runstate.New("rename-branch", stepList)
 		err = runstate.Execute(runState, prodRepo, nil)
 		if err != nil {
 			cli.Exit(err)

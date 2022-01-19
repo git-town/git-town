@@ -27,8 +27,8 @@ type RunState struct {
 	UndoStepList      StepList
 }
 
-// NewRunState returns a new run state.
-func NewRunState(command string, stepList StepList) *RunState {
+// New constructs a RunState instance with the given values.
+func New(command string, stepList StepList) *RunState {
 	return &RunState{
 		Command:     command,
 		RunStepList: stepList,

@@ -30,7 +30,7 @@ This usually means the branch was shipped or killed on another machine.`,
 		if err != nil {
 			cli.Exit(err)
 		}
-		runState := runstate.NewRunState("prune-branches", stepList)
+		runState := runstate.New("prune-branches", stepList)
 		err = runstate.Execute(runState, prodRepo, nil)
 		if err != nil {
 			cli.Exit(err)

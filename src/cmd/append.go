@@ -41,7 +41,7 @@ See "sync" for information regarding remote upstream.`,
 		if err != nil {
 			cli.Exit(err)
 		}
-		runState := runstate.NewRunState("append", stepList)
+		runState := runstate.New("append", stepList)
 		err = runstate.Execute(runState, prodRepo, nil)
 		if err != nil {
 			cli.Exit(err)
