@@ -8,7 +8,7 @@ import (
 	"github.com/git-town/git-town/v7/src/git"
 )
 
-// Execute runs the Git Town command described by the given state.
+// Execute runs the commands in the given runstate.
 //nolint:gocognit,nestif,funlen
 func Execute(runState *RunState, repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	for {
