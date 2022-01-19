@@ -19,6 +19,8 @@ jobs:
         version: v1.43
     - name: ShellCheck
       uses: ludeeus/action-shellcheck@1.1.0
+      with:
+        ignore_paths: vendor
     - run: make setup-docs
     - run: make docs
     - run: make unit
