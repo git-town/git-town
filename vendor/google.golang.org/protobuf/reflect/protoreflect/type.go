@@ -232,17 +232,41 @@ type MessageDescriptor interface {
 type isMessageDescriptor interface{ ProtoType(MessageDescriptor) }
 
 // MessageType encapsulates a MessageDescriptor with a concrete Go implementation.
+// It is recommended that implementations of this interface also implement the
+// MessageFieldTypes interface.
 type MessageType interface {
 	// New returns a newly allocated empty message.
+	// It may return nil for synthetic messages representing a map entry.
 	New() Message
 
 	// Zero returns an empty, read-only message.
+	// It may return nil for synthetic messages representing a map entry.
 	Zero() Message
 
 	// Descriptor returns the message descriptor.
 	//
 	// Invariant: t.Descriptor() == t.New().Descriptor()
 	Descriptor() MessageDescriptor
+}
+
+// MessageFieldTypes extends a MessageType by providing type information
+// regarding enums and messages referenced by the message fields.
+type MessageFieldTypes interface {
+	MessageType
+
+	// Enum returns the EnumType for the ith field in Descriptor.Fields.
+	// It returns nil if the ith field is not an enum kind.
+	// It panics if out of bounds.
+	//
+	// Invariant: mt.Enum(i).Descriptor() == mt.Descriptor().Fields(i).Enum()
+	Enum(i int) EnumType
+
+	// Message returns the MessageType for the ith field in Descriptor.Fields.
+	// It returns nil if the ith field is not a message or group kind.
+	// It panics if out of bounds.
+	//
+	// Invariant: mt.Message(i).Descriptor() == mt.Descriptor().Fields(i).Message()
+	Message(i int) MessageType
 }
 
 // MessageDescriptors is a list of message declarations.
@@ -279,12 +303,27 @@ type FieldDescriptor interface {
 
 	// JSONName reports the name used for JSON serialization.
 	// It is usually the camel-cased form of the field name.
+	// Extension fields are represented by the full name surrounded by brackets.
 	JSONName() string
+
+	// TextName reports the name used for text serialization.
+	// It is usually the name of the field, except that groups use the name
+	// of the inlined message, and extension fields are represented by the
+	// full name surrounded by brackets.
+	TextName() string
+
+	// HasPresence reports whether the field distinguishes between unpopulated
+	// and default values.
+	HasPresence() bool
 
 	// IsExtension reports whether this is an extension field. If false,
 	// then Parent and ContainingMessage refer to the same message.
 	// Otherwise, ContainingMessage and Parent likely differ.
 	IsExtension() bool
+
+	// HasOptionalKeyword reports whether the "optional" keyword was explicitly
+	// specified in the source .proto file.
+	HasOptionalKeyword() bool
 
 	// IsWeak reports whether this is a weak field, which does not impose a
 	// direct dependency on the target type.
@@ -363,6 +402,9 @@ type FieldDescriptors interface {
 	// ByJSONName returns the FieldDescriptor for a field with s as the JSON name.
 	// It returns nil if not found.
 	ByJSONName(s string) FieldDescriptor
+	// ByTextName returns the FieldDescriptor for a field with s as the text name.
+	// It returns nil if not found.
+	ByTextName(s string) FieldDescriptor
 	// ByNumber returns the FieldDescriptor for a field numbered n.
 	// It returns nil if not found.
 	ByNumber(n FieldNumber) FieldDescriptor
@@ -374,6 +416,11 @@ type FieldDescriptors interface {
 // corresponds with the google.protobuf.OneofDescriptorProto message.
 type OneofDescriptor interface {
 	Descriptor
+
+	// IsSynthetic reports whether this is a synthetic oneof created to support
+	// proto3 optional semantics. If true, Fields contains exactly one field
+	// with HasOptionalKeyword specified.
+	IsSynthetic() bool
 
 	// Fields is a list of fields belonging to this oneof.
 	Fields() FieldDescriptors
