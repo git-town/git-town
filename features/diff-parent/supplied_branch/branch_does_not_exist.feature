@@ -12,4 +12,4 @@ Feature: git town-diff-parent: errors if supplied branch does not exist
       """
       there is no local branch named "non-existing-feature"
       """
-    And I end up on the "main" branch
+    And I am now on the "main" branch

@@ -57,7 +57,7 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
       |         | git push                     |
       |         | git push origin :feature     |
       |         | git branch -D feature        |
-    And I end up on the "main" branch
+    And I am now on the "main" branch
     And the existing branches are
       | REPOSITORY | BRANCHES |
       | local      | main     |
@@ -80,7 +80,7 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
       |         | git push                     |
       |         | git push origin :feature     |
       |         | git branch -D feature        |
-    And I end up on the "main" branch
+    And I am now on the "main" branch
     And the existing branches are
       | REPOSITORY | BRANCHES |
       | local      | main     |

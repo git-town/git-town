@@ -25,7 +25,7 @@ Feature: git town-hack: starting a new feature from a subfolder on the main bran
       |             | git branch new-feature main  |
       |             | git checkout new-feature     |
       | new-feature | git stash pop                |
-    And I end up on the "new-feature" branch
+    And I am now on the "new-feature" branch
     And my workspace still contains my uncommitted file
     And my repo now has the following commits
       | BRANCH      | LOCATION      | MESSAGE       |

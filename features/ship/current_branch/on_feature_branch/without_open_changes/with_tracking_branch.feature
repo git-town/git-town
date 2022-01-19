@@ -29,7 +29,7 @@ Feature: git town-ship: shipping the current feature branch with a tracking bran
       |         | git push                           |
       |         | git push origin :feature           |
       |         | git branch -D feature              |
-    And I end up on the "main" branch
+    And I am now on the "main" branch
     And the existing branches are
       | REPOSITORY | BRANCHES |
       | local      | main     |
@@ -50,7 +50,7 @@ Feature: git town-ship: shipping the current feature branch with a tracking bran
       |         | git checkout feature                          |
       | feature | git checkout main                             |
       | main    | git checkout feature                          |
-    And I end up on the "feature" branch
+    And I am now on the "feature" branch
     And my repo now has the following commits
       | BRANCH  | LOCATION      | MESSAGE               | FILE NAME    |
       | main    | local, remote | feature done          | feature_file |

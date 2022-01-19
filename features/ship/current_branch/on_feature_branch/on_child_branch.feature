@@ -27,7 +27,7 @@ Feature: git town-ship: shipping a child branch
       shipping this branch would ship "feature-1, feature-2" as well,
       please ship "feature-1" first
       """
-    And I end up on the "feature-3" branch
+    And I am now on the "feature-3" branch
     And my repo is left with my original commits
     And Git Town is still aware of this branch hierarchy
       | BRANCH    | PARENT    |

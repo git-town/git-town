@@ -26,7 +26,7 @@ Feature: git prepend: offline mode
       |                  | git branch new-parent main |
       |                  | git checkout new-parent    |
       | new-parent       | git stash pop              |
-    And I end up on the "new-parent" branch
+    And I am now on the "new-parent" branch
     And my workspace still contains my uncommitted file
     And my repo now has the following commits
       | BRANCH           | LOCATION      | MESSAGE                 |
@@ -48,7 +48,7 @@ Feature: git prepend: offline mode
       | main             | git branch -d new-parent      |
       |                  | git checkout existing-feature |
       | existing-feature | git stash pop                 |
-    And I end up on the "existing-feature" branch
+    And I am now on the "existing-feature" branch
     And my workspace still contains my uncommitted file
     And my repo is left with my original commits
     And Git Town is now aware of this branch hierarchy

@@ -23,7 +23,7 @@ Feature: git town-kill: killing the given branch with child branches
       | feature-3 | git fetch --prune --tags   |
       |           | git push origin :feature-2 |
       |           | git branch -D feature-2    |
-    And I end up on the "feature-3" branch
+    And I am now on the "feature-3" branch
     And my workspace still contains my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES                   |
@@ -45,7 +45,7 @@ Feature: git town-kill: killing the given branch with child branches
       | BRANCH    | COMMAND                                           |
       | feature-3 | git branch feature-2 {{ sha 'feature 2 commit' }} |
       |           | git push -u origin feature-2                      |
-    And I end up on the "feature-3" branch
+    And I am now on the "feature-3" branch
     And my workspace has the uncommitted file again
     And the existing branches are
       | REPOSITORY | BRANCHES                              |

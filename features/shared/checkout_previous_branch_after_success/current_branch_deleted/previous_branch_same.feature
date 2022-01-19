@@ -7,7 +7,7 @@ Feature: Git checkout history is preserved when deleting the current branch
     Given my repo has the feature branches "previous" and "current"
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run "git-town kill"
-    Then I end up on the "main" branch
+    Then I am now on the "main" branch
     And the previous Git branch is still "previous"
 
 
@@ -19,7 +19,7 @@ Feature: Git checkout history is preserved when deleting the current branch
       | previous | local    | previous_file | previous content |
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run "git-town prune-branches"
-    Then I end up on the "main" branch
+    Then I am now on the "main" branch
     And the previous Git branch is still "previous"
 
 
@@ -30,5 +30,5 @@ Feature: Git checkout history is preserved when deleting the current branch
       | current | remote   | feature_file | feature content |
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run "git-town ship -m 'feature done'"
-    Then I end up on the "main" branch
+    Then I am now on the "main" branch
     And the previous Git branch is still "previous"

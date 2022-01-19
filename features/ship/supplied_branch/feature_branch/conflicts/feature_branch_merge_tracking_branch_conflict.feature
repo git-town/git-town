@@ -29,7 +29,7 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
       To abort, run "git-town abort".
       To continue after having resolved conflicts, run "git-town continue".
       """
-    And I end up on the "feature" branch
+    And I am now on the "feature" branch
     And my uncommitted file is stashed
     And my repo now has a merge in progress
 
@@ -42,7 +42,7 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
       |               | git checkout main          |
       | main          | git checkout other-feature |
       | other-feature | git stash pop              |
-    And I end up on the "other-feature" branch
+    And I am now on the "other-feature" branch
     And my workspace still contains my uncommitted file
     And there is no merge in progress
     And my repo is left with my original commits
@@ -63,7 +63,7 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
       |               | git branch -D feature        |
       |               | git checkout other-feature   |
       | other-feature | git stash pop                |
-    And I end up on the "other-feature" branch
+    And I am now on the "other-feature" branch
     And my workspace still contains my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES            |
@@ -89,7 +89,7 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
       |               | git branch -D feature        |
       |               | git checkout other-feature   |
       | other-feature | git stash pop                |
-    And I end up on the "other-feature" branch
+    And I am now on the "other-feature" branch
     And my workspace still contains my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES            |

@@ -21,6 +21,6 @@ Feature: git town-rename-branch: does nothing if renaming a perennial branch ont
       """
       cannot rename branch to current name
       """
-    And I end up on the "production" branch
+    And I am now on the "production" branch
     And my workspace still contains my uncommitted file
     And my repo is left with my original commits

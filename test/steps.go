@@ -161,7 +161,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.CheckoutBranch(current)
 	})
 
-	suite.Step(`^I (?:end up|am still) on the "([^"]*)" branch$`, func(expected string) error {
+	suite.Step(`^I am (?:now|still) on the "([^"]*)" branch$`, func(expected string) error {
 		state.gitEnv.DevRepo.CurrentBranchCache.Invalidate()
 		actual, err := state.gitEnv.DevRepo.CurrentBranch()
 		if err != nil {

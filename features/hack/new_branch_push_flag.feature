@@ -22,7 +22,7 @@ Feature: git town-hack: push branch to remote upon creation
       |         | git branch feature main    |
       |         | git checkout feature       |
       | feature | git push -u origin feature |
-    And I end up on the "feature" branch
+    And I am now on the "feature" branch
     And my repo now has the following commits
       | BRANCH  | LOCATION      | MESSAGE       |
       | main    | local, remote | remote commit |
