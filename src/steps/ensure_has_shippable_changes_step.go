@@ -14,9 +14,9 @@ type EnsureHasShippableChangesStep struct {
 	BranchName string
 }
 
-// GetAutomaticAbortError returns the error message to display when this step
+// CreateAutomaticAbortError returns the error message to display when this step
 // cause the command to automatically abort.
-func (step *EnsureHasShippableChangesStep) GetAutomaticAbortError() error {
+func (step *EnsureHasShippableChangesStep) CreateAutomaticAbortError() error {
 	return fmt.Errorf("the branch %q has no shippable changes", step.BranchName)
 }
 

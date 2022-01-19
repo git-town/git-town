@@ -30,9 +30,9 @@ func (step *SquashMergeBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, err
 	return &RevertCommitStep{Sha: currentSHA}, nil
 }
 
-// GetAutomaticAbortError returns the error message to display when this step
+// CreateAutomaticAbortError returns the error message to display when this step
 // cause the command to automatically abort.
-func (step *SquashMergeBranchStep) GetAutomaticAbortError() error {
+func (step *SquashMergeBranchStep) CreateAutomaticAbortError() error {
 	return fmt.Errorf("aborted because commit exited with error")
 }
 

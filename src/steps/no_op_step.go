@@ -27,9 +27,9 @@ func (step *NoOpStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
 	return &NoOpStep{}, nil
 }
 
-// GetAutomaticAbortError returns the error message to display when this step
+// CreateAutomaticAbortError returns the error message to display when this step
 // cause the command to automatically abort.
-func (step *NoOpStep) GetAutomaticAbortError() error {
+func (step *NoOpStep) CreateAutomaticAbortError() error {
 	return errors.New("")
 }
 
