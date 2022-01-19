@@ -116,5 +116,5 @@ make fix
 ## learn about the code and test architecture
 
 The source code contains
-[comments](https://pkg.go.dev/github.com/git-town/git-town) that explain the
-code architecture.
+[Godoc comments](https://pkg.go.dev/github.com/git-town/git-town) that explain
+the code architecture.
