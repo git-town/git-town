@@ -47,7 +47,7 @@ make update
 ### run all tests
 
 ```
-make test # runs all tests
+make test
 ```
 
 ### run unit tests
