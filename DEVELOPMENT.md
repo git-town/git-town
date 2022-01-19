@@ -128,4 +128,4 @@ to start a local development server, and `make docs` to test the website.
 
 The [website](https://www.git-town.com) runs on
 [Netlify](https://www.netlify.com). It auto-updates on changes to the `main`
-branch. The Netlify configuration is in [netlify.toml](netlify.toml)
+branch. The Netlify configuration is in [netlify.toml](netlify.toml).
