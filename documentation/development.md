@@ -28,7 +28,7 @@ Optional dependencies:
 
 - run `go get [dependency]` inside the Git Town folder to register the
   dependency
-- start using the new dependency in the code
+- use the new dependency in the code
 - run `go mod vendor` to vendor it
 - run `go mod tidy` to clean up
 
