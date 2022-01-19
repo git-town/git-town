@@ -28,9 +28,9 @@ func LoadGitea(config config, log logFn) *GiteaCodeHostingDriver {
 	driverType := config.GetCodeHostingDriverName()
 	originURL := config.GetRemoteOriginURL()
 	hostname := helpers.GetURLHostname(originURL)
-	configuredHostName := config.GetCodeHostingOriginHostname()
-	if configuredHostName != "" {
-		hostname = configuredHostName
+	manualHostName := config.GetCodeHostingOriginHostname()
+	if manualHostName != "" {
+		hostname = manualHostName
 	}
 	if driverType != "gitea" && hostname != "gitea.com" {
 		return nil

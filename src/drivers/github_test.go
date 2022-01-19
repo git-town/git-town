@@ -47,8 +47,8 @@ func TestLoadGithub(t *testing.T) {
 //nolint:paralleltest  // mocks HTTP
 func TestLoadGithub_customHostName(t *testing.T) {
 	driver := drivers.LoadGithub(mockConfig{
-		remoteOriginURL:    "git@my-ssh-identity.com:git-town/git-town.git",
-		configuredHostName: "github.com",
+		remoteOriginURL: "git@my-ssh-identity.com:git-town/git-town.git",
+		manualHostName:  "github.com",
 	}, log)
 	assert.NotNil(t, driver)
 	assert.Equal(t, "GitHub", driver.HostingServiceName())
