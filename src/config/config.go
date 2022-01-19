@@ -111,8 +111,8 @@ func (c *Config) GetAncestorBranches(branchName string) (result []string) {
 	}
 }
 
-// GetBranchAncestryRoots provides the branches with children and no parents.
-func (c *Config) GetBranchAncestryRoots() []string {
+// BranchAncestryRoots provides the branches with children and no parents.
+func (c *Config) BranchAncestryRoots() []string {
 	parentMap := c.GetParentBranchMap()
 	roots := []string{}
 	for _, parent := range parentMap {

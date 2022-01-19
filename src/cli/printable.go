@@ -8,13 +8,13 @@ import (
 
 // BranchAncestryConfig defines the configuration values needed by the `cli` package.
 type BranchAncestryConfig interface {
-	GetBranchAncestryRoots() []string
+	BranchAncestryRoots() []string
 	GetChildBranches(string) []string
 }
 
 // PrintableBranchAncestry provides the branch ancestry in CLI printable format.
 func PrintableBranchAncestry(config BranchAncestryConfig) string {
-	roots := config.GetBranchAncestryRoots()
+	roots := config.BranchAncestryRoots()
 	trees := make([]string, len(roots))
 	for r := range roots {
 		trees[r] = PrintableBranchTree(roots[r], config)
