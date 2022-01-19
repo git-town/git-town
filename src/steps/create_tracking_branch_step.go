@@ -1,4 +1,3 @@
-//nolint:ireturn
 package steps
 
 import (
@@ -13,7 +12,7 @@ type CreateTrackingBranchStep struct {
 	BranchName string
 }
 
-func (step *CreateTrackingBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+func (step *CreateTrackingBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
 	return &DeleteRemoteBranchStep{BranchName: step.BranchName}, nil
 }
 

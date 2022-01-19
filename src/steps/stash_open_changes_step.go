@@ -1,4 +1,3 @@
-//nolint:ireturn
 package steps
 
 import (
@@ -10,7 +9,7 @@ type StashOpenChangesStep struct {
 	NoOpStep
 }
 
-func (step *StashOpenChangesStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+func (step *StashOpenChangesStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
 	return &RestoreOpenChangesStep{}, nil
 }
 

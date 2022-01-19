@@ -1,4 +1,3 @@
-//nolint:ireturn
 package steps
 
 import (
@@ -12,11 +11,11 @@ type ContinueRebaseBranchStep struct {
 	NoOpStep
 }
 
-func (step *ContinueRebaseBranchStep) CreateAbortStep() Step {
+func (step *ContinueRebaseBranchStep) CreateAbortStep() Step { //nolint:ireturn
 	return &AbortRebaseBranchStep{}
 }
 
-func (step *ContinueRebaseBranchStep) CreateContinueStep() Step {
+func (step *ContinueRebaseBranchStep) CreateContinueStep() Step { //nolint:ireturn
 	return step
 }
 

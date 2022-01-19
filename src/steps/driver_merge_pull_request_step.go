@@ -1,4 +1,3 @@
-//nolint:ireturn
 package steps
 
 import (
@@ -20,14 +19,14 @@ type DriverMergePullRequestStep struct {
 	mergeSha                  string
 }
 
-func (step *DriverMergePullRequestStep) CreateAbortStep() Step {
+func (step *DriverMergePullRequestStep) CreateAbortStep() Step { //nolint:ireturn
 	if step.enteredEmptyCommitMessage {
 		return &DiscardOpenChangesStep{}
 	}
 	return nil
 }
 
-func (step *DriverMergePullRequestStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+func (step *DriverMergePullRequestStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
 	return &RevertCommitStep{Sha: step.mergeSha}, nil
 }
 

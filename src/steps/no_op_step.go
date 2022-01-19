@@ -1,4 +1,3 @@
-//nolint:ireturn
 package steps
 
 import (
@@ -12,15 +11,15 @@ import (
 // It is used for steps that have no undo or abort steps.
 type NoOpStep struct{}
 
-func (step *NoOpStep) CreateAbortStep() Step {
+func (step *NoOpStep) CreateAbortStep() Step { //nolint:ireturn
 	return &NoOpStep{}
 }
 
-func (step *NoOpStep) CreateContinueStep() Step {
+func (step *NoOpStep) CreateContinueStep() Step { //nolint:ireturn
 	return &NoOpStep{}
 }
 
-func (step *NoOpStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+func (step *NoOpStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
 	return &NoOpStep{}, nil
 }
 

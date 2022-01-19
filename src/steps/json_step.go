@@ -1,4 +1,3 @@
-//nolint:ireturn
 package steps
 
 import (
@@ -37,7 +36,7 @@ func (j *JSONStep) UnmarshalJSON(b []byte) error {
 }
 
 //nolint:gocyclo,funlen
-func determineStep(stepType string) Step {
+func determineStep(stepType string) Step { //nolint:ireturn
 	switch stepType {
 	case "*AbortMergeBranchStep":
 		return &AbortMergeBranchStep{}

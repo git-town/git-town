@@ -1,4 +1,3 @@
-//nolint:ireturn
 package steps
 
 import (
@@ -16,7 +15,7 @@ type CommitOpenChangesStep struct {
 	previousSha string
 }
 
-func (step *CommitOpenChangesStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+func (step *CommitOpenChangesStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
 	return &ResetToShaStep{Sha: step.previousSha}, nil
 }
 

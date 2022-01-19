@@ -1,4 +1,3 @@
-//nolint:ireturn
 package steps
 
 import (
@@ -12,7 +11,7 @@ type RemoveFromPerennialBranches struct {
 	BranchName string
 }
 
-func (step *RemoveFromPerennialBranches) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+func (step *RemoveFromPerennialBranches) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
 	return &AddToPerennialBranches{BranchName: step.BranchName}, nil
 }
 
