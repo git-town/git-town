@@ -9,6 +9,9 @@
   <a href="https://www.codetriage.com/originate/git-town">
     <img src="https://www.codetriage.com/originate/git-town/badges/users.svg" alt="Help Contribute to Open Source">
   </a>
+  <a href="https://pkg.go.dev/github.com/git-town/git-town">
+    <img src="https://pkg.go.dev/badge/github.com/git-town/git-town.svg" alt="Go Reference">
+  </a>
   <img src="https://api.netlify.com/api/v1/badges/c2ea5505-be48-42e5-bb8a-b807d18d99ed/deploy-status" alt="Netlify deploy status">
 </p>
 
