@@ -1,7 +1,7 @@
 archives:
   - builds:
     replacements:
-      darwin: macOS
+      darwin: macos
       amd64: intel_64
       arm64: arm_64
     format_overrides:
@@ -33,7 +33,7 @@ nfpms:
     package_name: git-town
     replacements:
       amd64: intel_64
-      darwin: macOS
+      darwin: macos
       arm64: arm_64
     vendor: the Git Town authors
     maintainer: the Git Town authors
