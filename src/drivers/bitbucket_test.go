@@ -21,8 +21,8 @@ func TestLoadBitbucket(t *testing.T) {
 //nolint:paralleltest  // mocks HTTP
 func TestLoadBitbucket_customHostName(t *testing.T) {
 	driver := drivers.LoadBitbucket(mockConfig{
-		remoteOriginURL:    "git@my-ssh-identity.com:git-town/git-town.git",
-		configuredHostName: "bitbucket.org",
+		remoteOriginURL: "git@my-ssh-identity.com:git-town/git-town.git",
+		manualHostName:  "bitbucket.org",
 	}, nil)
 	assert.NotNil(t, driver)
 	assert.Equal(t, "Bitbucket", driver.HostingServiceName())

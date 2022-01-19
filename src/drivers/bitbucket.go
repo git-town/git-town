@@ -23,9 +23,9 @@ func LoadBitbucket(config config, git gitRunner) *BitbucketCodeHostingDriver {
 	driverType := config.GetCodeHostingDriverName()
 	originURL := config.GetRemoteOriginURL()
 	hostname := helpers.GetURLHostname(originURL)
-	configuredHostName := config.GetCodeHostingOriginHostname()
-	if configuredHostName != "" {
-		hostname = configuredHostName
+	manualHostName := config.GetCodeHostingOriginHostname()
+	if manualHostName != "" {
+		hostname = manualHostName
 	}
 	if driverType != "bitbucket" && hostname != "bitbucket.org" {
 		return nil

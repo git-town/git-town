@@ -1,7 +1,7 @@
 package drivers_test
 
 type mockConfig struct {
-	configuredHostName    string
+	manualHostName        string
 	codeHostingDriverName string
 	giteaToken            string
 	gitHubToken           string
@@ -10,7 +10,7 @@ type mockConfig struct {
 }
 
 func (mc mockConfig) GetCodeHostingOriginHostname() string {
-	return mc.configuredHostName
+	return mc.manualHostName
 }
 
 func (mc mockConfig) GetCodeHostingDriverName() string {

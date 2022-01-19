@@ -29,9 +29,9 @@ func LoadGithub(config config, log logFn) *GithubCodeHostingDriver {
 	driverType := config.GetCodeHostingDriverName()
 	originURL := config.GetRemoteOriginURL()
 	hostname := helpers.GetURLHostname(originURL)
-	configuredHostName := config.GetCodeHostingOriginHostname()
-	if configuredHostName != "" {
-		hostname = configuredHostName
+	manualHostName := config.GetCodeHostingOriginHostname()
+	if manualHostName != "" {
+		hostname = manualHostName
 	}
 	if driverType != "github" && hostname != "github.com" {
 		return nil

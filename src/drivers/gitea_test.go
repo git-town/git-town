@@ -46,8 +46,8 @@ func TestLoadGitea(t *testing.T) {
 //nolint:paralleltest  // mocks HTTP
 func TestLoadGitea_customHostName(t *testing.T) {
 	driver := drivers.LoadGitea(mockConfig{
-		remoteOriginURL:    "git@my-ssh-identity.com:git-town/git-town.git",
-		configuredHostName: "gitea.com",
+		remoteOriginURL: "git@my-ssh-identity.com:git-town/git-town.git",
+		manualHostName:  "gitea.com",
 	}, log)
 	assert.NotNil(t, driver)
 	assert.Equal(t, "Gitea", driver.HostingServiceName())
