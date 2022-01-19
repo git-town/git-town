@@ -1,4 +1,4 @@
-package steps
+package runstate
 
 import (
 	"fmt"
@@ -8,20 +8,20 @@ import (
 	"github.com/git-town/git-town/v7/src/git"
 )
 
-// Run runs the Git Town command described by the given state.
+// Execute runs the commands in the given runstate.
 //nolint:gocognit,nestif,funlen
-func Run(runState *RunState, repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
+func Execute(runState *RunState, repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	for {
 		step := runState.RunStepList.Pop()
 		if step == nil {
 			runState.MarkAsFinished()
 			if runState.IsAbort || runState.isUndo {
-				err := DeletePreviousRunState(repo)
+				err := Delete(repo)
 				if err != nil {
 					return fmt.Errorf("cannot delete previous run state: %w", err)
 				}
 			} else {
-				err := SaveRunState(runState, repo)
+				err := Save(runState, repo)
 				if err != nil {
 					return fmt.Errorf("cannot save run state: %w", err)
 				}
@@ -46,7 +46,7 @@ func Run(runState *RunState, repo *git.ProdRepo, driver drivers.CodeHostingDrive
 			if step.ShouldAutomaticallyAbortOnError() {
 				cli.PrintError(fmt.Errorf(runErr.Error() + "\nAuto-aborting..."))
 				abortRunState := runState.CreateAbortRunState()
-				err := Run(&abortRunState, repo, driver)
+				err := Execute(&abortRunState, repo, driver)
 				if err != nil {
 					return fmt.Errorf("cannot run the abort steps: %w", err)
 				}
@@ -68,7 +68,7 @@ func Run(runState *RunState, repo *git.ProdRepo, driver drivers.CodeHostingDrive
 				if runState.Command == "sync" && !(rebasing && repo.Config.IsMainBranch(currentBranch)) {
 					runState.UnfinishedDetails.CanSkip = true
 				}
-				err = SaveRunState(runState, repo)
+				err = Save(runState, repo)
 				if err != nil {
 					return fmt.Errorf("cannot save run state: %w", err)
 				}

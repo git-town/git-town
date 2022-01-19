@@ -1,9 +1,10 @@
-package steps
+package runstate
 
 import (
 	"fmt"
 
 	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/steps"
 )
 
 // SyncBranchSteps provides the steps to sync the branch with the given name.
@@ -16,7 +17,7 @@ func SyncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (re
 	if !hasRemoteOrigin && !isFeature {
 		return
 	}
-	result.Append(&CheckoutBranchStep{BranchName: branchName})
+	result.Append(&steps.CheckoutBranchStep{BranchName: branchName})
 	if isFeature {
 		steps, err := syncFeatureBranchSteps(branchName, repo)
 		if err != nil {
@@ -36,9 +37,9 @@ func SyncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (re
 			return result, err
 		}
 		if hasTrackingBranch {
-			result.Append(&PushBranchStep{BranchName: branchName})
+			result.Append(&steps.PushBranchStep{BranchName: branchName})
 		} else {
-			result.Append(&CreateTrackingBranchStep{BranchName: branchName})
+			result.Append(&steps.CreateTrackingBranchStep{BranchName: branchName})
 		}
 	}
 	return result, nil
@@ -52,9 +53,9 @@ func syncFeatureBranchSteps(branchName string, repo *git.ProdRepo) (result StepL
 		return result, err
 	}
 	if hasTrackingBranch {
-		result.Append(&MergeBranchStep{BranchName: repo.Silent.TrackingBranchName(branchName)})
+		result.Append(&steps.MergeBranchStep{BranchName: repo.Silent.TrackingBranchName(branchName)})
 	}
-	result.Append(&MergeBranchStep{BranchName: repo.Config.ParentBranch(branchName)})
+	result.Append(&steps.MergeBranchStep{BranchName: repo.Config.ParentBranch(branchName)})
 	return
 }
 
@@ -65,9 +66,9 @@ func syncNonFeatureBranchSteps(branchName string, repo *git.ProdRepo) (result St
 	}
 	if hasTrackingBranch {
 		if repo.Config.PullBranchStrategy() == "rebase" {
-			result.Append(&RebaseBranchStep{BranchName: repo.Silent.TrackingBranchName(branchName)})
+			result.Append(&steps.RebaseBranchStep{BranchName: repo.Silent.TrackingBranchName(branchName)})
 		} else {
-			result.Append(&MergeBranchStep{BranchName: repo.Silent.TrackingBranchName(branchName)})
+			result.Append(&steps.MergeBranchStep{BranchName: repo.Silent.TrackingBranchName(branchName)})
 		}
 	}
 
@@ -77,8 +78,8 @@ func syncNonFeatureBranchSteps(branchName string, repo *git.ProdRepo) (result St
 		return result, err
 	}
 	if mainBranchName == branchName && hasUpstream && repo.Config.ShouldSyncUpstream() {
-		result.Append(&FetchUpstreamStep{BranchName: mainBranchName})
-		result.Append(&RebaseBranchStep{BranchName: fmt.Sprintf("upstream/%s", mainBranchName)})
+		result.Append(&steps.FetchUpstreamStep{BranchName: mainBranchName})
+		result.Append(&steps.RebaseBranchStep{BranchName: fmt.Sprintf("upstream/%s", mainBranchName)})
 	}
 	return
 }

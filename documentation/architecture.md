@@ -19,7 +19,7 @@ contains these packages:
 
 When a Git Town command finishes, it stores the steps to undo or continue itself
 in a _state file_ located in the temp folder of the machine. The struct that
-holds the state is in [src/steps/run_state.go](../src/steps/run_state.go).
+holds the state is in [src/runstate/run_state.go](../src/runstate/run_state.go).
 
 ## Tests
 

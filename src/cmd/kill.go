@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/prompt"
+	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
 	"github.com/spf13/cobra"
 )
@@ -38,8 +39,8 @@ Does not delete perennial branches nor the main branch.`,
 		if err != nil {
 			cli.Exit(err)
 		}
-		runState := steps.NewRunState("kill", stepList)
-		err = steps.Run(runState, prodRepo, nil)
+		runState := runstate.New("kill", stepList)
+		err = runstate.Execute(runState, prodRepo, nil)
 		if err != nil {
 			cli.Exit(err)
 		}
@@ -115,7 +116,7 @@ func createKillConfig(args []string, repo *git.ProdRepo) (result killConfig, err
 	return result, nil
 }
 
-func createKillStepList(config killConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
+func createKillStepList(config killConfig, repo *git.ProdRepo) (result runstate.StepList, err error) {
 	switch {
 	case config.isTargetBranchLocal:
 		if config.hasTrackingBranch && !config.isOffline {
@@ -137,7 +138,7 @@ func createKillStepList(config killConfig, repo *git.ProdRepo) (result steps.Ste
 	default:
 		return result, fmt.Errorf("cannot delete remote branch %q in offline mode", config.targetBranch)
 	}
-	err = result.Wrap(steps.WrapOptions{
+	err = result.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.initialBranch != config.targetBranch && config.targetBranch == config.previousBranch,
 	}, repo)

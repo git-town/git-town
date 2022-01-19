@@ -1,4 +1,4 @@
-package steps
+package runstate
 
 import (
 	"encoding/json"
@@ -11,8 +11,8 @@ import (
 	"github.com/git-town/git-town/v7/src/git"
 )
 
-// LoadPreviousRunState loads the run state from disk if it exists. Can return nil if there is no previous runstate.
-func LoadPreviousRunState(repo *git.ProdRepo) (result *RunState, err error) {
+// Load loads the run state for the given Git repo from disk. Can return nil if there is no saved runstate.
+func Load(repo *git.ProdRepo) (result *RunState, err error) {
 	filename, err := runResultFilename(repo)
 	if err != nil {
 		return nil, err
@@ -36,8 +36,8 @@ func LoadPreviousRunState(repo *git.ProdRepo) (result *RunState, err error) {
 	return &runState, nil
 }
 
-// DeletePreviousRunState deletes the previous run state from disk.
-func DeletePreviousRunState(repo *git.ProdRepo) error {
+// Delete removes the stored run state from disk.
+func Delete(repo *git.ProdRepo) error {
 	filename, err := runResultFilename(repo)
 	if err != nil {
 		return err
@@ -56,8 +56,8 @@ func DeletePreviousRunState(repo *git.ProdRepo) error {
 	return nil
 }
 
-// SaveRunState saves the run state to disk.
-func SaveRunState(runState *RunState, repo *git.ProdRepo) error {
+// Save stores the given run state for the given Git repo to disk.
+func Save(runState *RunState, repo *git.ProdRepo) error {
 	content, err := json.MarshalIndent(runState, "", "  ")
 	if err != nil {
 		return fmt.Errorf("cannot encode run-state: %w", err)

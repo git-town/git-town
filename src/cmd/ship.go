@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v7/src/drivers"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/prompt"
+	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
 	"github.com/spf13/cobra"
 )
@@ -69,8 +70,8 @@ and Git Town will leave it up to your origin server to delete the remote branch.
 		if err != nil {
 			cli.Exit(err)
 		}
-		runState := steps.NewRunState("ship", stepList)
-		err = steps.Run(runState, prodRepo, driver)
+		runState := runstate.New("ship", stepList)
+		err = runstate.Execute(runState, prodRepo, driver)
 		if err != nil {
 			cli.Exit(err)
 		}
@@ -158,13 +159,13 @@ please ship %q first`, strings.Join(ancestorsWithoutMainOrPerennial, ", "), olde
 	}
 }
 
-func createShipStepList(config shipConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
-	syncSteps, err := steps.SyncBranchSteps(config.branchToMergeInto, true, repo)
+func createShipStepList(config shipConfig, repo *git.ProdRepo) (result runstate.StepList, err error) {
+	syncSteps, err := runstate.SyncBranchSteps(config.branchToMergeInto, true, repo)
 	if err != nil {
 		return result, err
 	}
 	result.AppendList(syncSteps)
-	syncSteps, err = steps.SyncBranchSteps(config.branchToShip, false, repo)
+	syncSteps, err = runstate.SyncBranchSteps(config.branchToShip, false, repo)
 	if err != nil {
 		return result, err
 	}
@@ -203,7 +204,7 @@ func createShipStepList(config shipConfig, repo *git.ProdRepo) (result steps.Ste
 	if !config.isShippingInitialBranch {
 		result.Append(&steps.CheckoutBranchStep{BranchName: config.initialBranch})
 	}
-	err = result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: !config.isShippingInitialBranch}, repo)
+	err = result.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: !config.isShippingInitialBranch}, repo)
 	return result, err
 }
 

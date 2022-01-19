@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/prompt"
-	"github.com/git-town/git-town/v7/src/steps"
+	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/spf13/cobra"
 )
 
@@ -41,8 +41,8 @@ See "sync" for information regarding remote upstream.`,
 		if err != nil {
 			cli.Exit(err)
 		}
-		runState := steps.NewRunState("append", stepList)
-		err = steps.Run(runState, prodRepo, nil)
+		runState := runstate.New("append", stepList)
+		err = runstate.Execute(runState, prodRepo, nil)
 		if err != nil {
 			cli.Exit(err)
 		}

@@ -1,9 +1,10 @@
-package steps
+package runstate
 
 import (
 	"time"
 
 	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/steps"
 )
 
 // UnfinishedRunStateDetails has details about an unfinished run state.
@@ -26,8 +27,8 @@ type RunState struct {
 	UndoStepList      StepList
 }
 
-// NewRunState returns a new run state.
-func NewRunState(command string, stepList StepList) *RunState {
+// New constructs a RunState instance with the given values.
+func New(command string, stepList StepList) *RunState {
 	return &RunState{
 		Command:     command,
 		RunStepList: stepList,
@@ -47,7 +48,7 @@ func (runState *RunState) AddPushBranchStepAfterCurrentBranchSteps(repo *git.Pro
 			if err != nil {
 				return err
 			}
-			runState.RunStepList.Prepend(&PushBranchStep{BranchName: currentBranch})
+			runState.RunStepList.Prepend(&steps.PushBranchStep{BranchName: currentBranch})
 			runState.RunStepList.PrependList(popped)
 			break
 		}
@@ -136,6 +137,6 @@ func (runState *RunState) SkipCurrentBranchSteps() {
 	}
 }
 
-func isCheckoutBranchStep(step Step) bool {
+func isCheckoutBranchStep(step steps.Step) bool {
 	return typeName(step) == "*CheckoutBranchStep"
 }

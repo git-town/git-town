@@ -1,19 +1,20 @@
-package steps
+package runstate
 
 import (
 	"encoding/json"
 
 	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/steps"
 )
 
 // StepList is a list of steps
 // with convenience functions for adding and removing steps.
 type StepList struct {
-	List []Step
+	List []steps.Step
 }
 
 // Append adds the given step to the end of this StepList.
-func (stepList *StepList) Append(step Step) {
+func (stepList *StepList) Append(step steps.Step) {
 	stepList.List = append(stepList.List, step)
 }
 
@@ -28,7 +29,7 @@ func (stepList *StepList) isEmpty() bool {
 }
 
 // Peek provides the first element of this StepList.
-func (stepList *StepList) Peek() (result Step) { //nolint:ireturn
+func (stepList *StepList) Peek() (result steps.Step) { //nolint:ireturn
 	if stepList.isEmpty() {
 		return nil
 	}
@@ -36,7 +37,7 @@ func (stepList *StepList) Peek() (result Step) { //nolint:ireturn
 }
 
 // Pop removes and provides the first element of this StepList.
-func (stepList *StepList) Pop() (result Step) { //nolint:ireturn
+func (stepList *StepList) Pop() (result steps.Step) { //nolint:ireturn
 	if stepList.isEmpty() {
 		return nil
 	}
@@ -46,8 +47,8 @@ func (stepList *StepList) Pop() (result Step) { //nolint:ireturn
 }
 
 // Prepend adds the given step to the beginning of this StepList.
-func (stepList *StepList) Prepend(step Step) {
-	stepList.List = append([]Step{step}, stepList.List...)
+func (stepList *StepList) Prepend(step steps.Step) {
+	stepList.List = append([]steps.Step{step}, stepList.List...)
 }
 
 // PrependList adds all elements of the given StepList to the start of this StepList.
@@ -70,7 +71,7 @@ func (stepList *StepList) Wrap(options WrapOptions, repo *git.ProdRepo) error {
 		if err != nil {
 			return err
 		}
-		stepList.Append(&PreserveCheckoutHistoryStep{
+		stepList.Append(&steps.PreserveCheckoutHistoryStep{
 			InitialBranch:                     currentBranch,
 			InitialPreviouslyCheckedOutBranch: previousBranch,
 		})
@@ -80,8 +81,8 @@ func (stepList *StepList) Wrap(options WrapOptions, repo *git.ProdRepo) error {
 		return err
 	}
 	if options.StashOpenChanges && hasOpenChanges {
-		stepList.Prepend(&StashOpenChangesStep{})
-		stepList.Append(&RestoreOpenChangesStep{})
+		stepList.Prepend(&steps.StashOpenChangesStep{})
+		stepList.Append(&steps.RestoreOpenChangesStep{})
 	}
 	return nil
 }
@@ -103,7 +104,7 @@ func (stepList *StepList) UnmarshalJSON(b []byte) error {
 		return err
 	}
 	if len(jsonSteps) > 0 {
-		stepList.List = make([]Step, len(jsonSteps))
+		stepList.List = make([]steps.Step, len(jsonSteps))
 		for i, jsonStep := range jsonSteps {
 			stepList.List[i] = jsonStep.Step
 		}
