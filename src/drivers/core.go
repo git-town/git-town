@@ -28,12 +28,12 @@ type CodeHostingDriver interface {
 
 // config defines the configuration data needed by the driver package.
 type config interface {
-	GetCodeHostingOriginHostname() string
-	GetCodeHostingDriverName() string
-	GetGiteaToken() string
-	GetGitHubToken() string
-	GetMainBranch() string
-	GetRemoteOriginURL() string
+	CodeHostingOriginHostname() string
+	CodeHostingDriverName() string
+	GiteaToken() string
+	GitHubToken() string
+	MainBranch() string
+	RemoteOriginURL() string
 }
 
 // runner defines the runner methods used by the driver package.

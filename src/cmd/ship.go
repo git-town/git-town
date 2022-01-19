@@ -65,7 +65,7 @@ and Git Town will leave it up to your origin server to delete the remote branch.
 		if err != nil {
 			cli.Exit(err)
 		}
-		stepList, err := getShipStepList(config, prodRepo)
+		stepList, err := createShipStepList(config, prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}
@@ -137,20 +137,20 @@ func gitShipConfig(args []string, driver drivers.CodeHostingDriver, repo *git.Pr
 	}
 	result.isOffline = repo.Config.IsOffline()
 	result.isShippingInitialBranch = result.branchToShip == result.initialBranch
-	result.branchToMergeInto = repo.Config.GetParentBranch(result.branchToShip)
-	prInfo, err := getCanShipWithDriver(result.branchToShip, result.branchToMergeInto, driver)
+	result.branchToMergeInto = repo.Config.ParentBranch(result.branchToShip)
+	prInfo, err := createPullRequestInfo(result.branchToShip, result.branchToMergeInto, driver)
 	result.canShipWithDriver = prInfo.CanMergeWithAPI
 	result.defaultCommitMessage = prInfo.DefaultCommitMessage
 	result.pullRequestNumber = prInfo.PullRequestNumber
-	result.childBranches = repo.Config.GetChildBranches(result.branchToShip)
+	result.childBranches = repo.Config.ChildBranches(result.branchToShip)
 	result.shouldShipDeleteRemoteBranch = prodRepo.Config.ShouldShipDeleteRemoteBranch()
 	return result, err
 }
 
 func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
-	parentBranch := prodRepo.Config.GetParentBranch(branchName)
+	parentBranch := prodRepo.Config.ParentBranch(branchName)
 	if !prodRepo.Config.IsMainBranch(parentBranch) && !prodRepo.Config.IsPerennialBranch(parentBranch) {
-		ancestors := prodRepo.Config.GetAncestorBranches(branchName)
+		ancestors := prodRepo.Config.AncestorBranches(branchName)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
 		oldestAncestor := ancestorsWithoutMainOrPerennial[0]
 		cli.Exit(fmt.Errorf(`shipping this branch would ship %q as well,
@@ -158,13 +158,13 @@ please ship %q first`, strings.Join(ancestorsWithoutMainOrPerennial, ", "), olde
 	}
 }
 
-func getShipStepList(config shipConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
-	syncSteps, err := steps.GetSyncBranchSteps(config.branchToMergeInto, true, repo)
+func createShipStepList(config shipConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
+	syncSteps, err := steps.SyncBranchSteps(config.branchToMergeInto, true, repo)
 	if err != nil {
 		return result, err
 	}
 	result.AppendList(syncSteps)
-	syncSteps, err = steps.GetSyncBranchSteps(config.branchToShip, false, repo)
+	syncSteps, err = steps.SyncBranchSteps(config.branchToShip, false, repo)
 	if err != nil {
 		return result, err
 	}
@@ -207,7 +207,7 @@ func getShipStepList(config shipConfig, repo *git.ProdRepo) (result steps.StepLi
 	return result, err
 }
 
-func getCanShipWithDriver(branch, parentBranch string, driver drivers.CodeHostingDriver) (result drivers.PullRequestInfo, err error) {
+func createPullRequestInfo(branch, parentBranch string, driver drivers.CodeHostingDriver) (result drivers.PullRequestInfo, err error) {
 	hasOrigin, err := prodRepo.Silent.HasRemote("origin")
 	if err != nil {
 		return result, err

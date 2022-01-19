@@ -33,9 +33,9 @@ func (step *DriverMergePullRequestStep) CreateUndoStep(repo *git.ProdRepo) (Step
 	return &RevertCommitStep{Sha: step.mergeSha}, nil
 }
 
-// GetAutomaticAbortError returns the error message to display when this step
+// CreateAutomaticAbortError returns the error message to display when this step
 // cause the command to automatically abort.
-func (step *DriverMergePullRequestStep) GetAutomaticAbortError() error {
+func (step *DriverMergePullRequestStep) CreateAutomaticAbortError() error {
 	if step.enteredEmptyCommitMessage {
 		return fmt.Errorf("aborted because commit exited with error")
 	}

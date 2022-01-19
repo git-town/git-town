@@ -10,7 +10,7 @@ import (
 
 // EnsureIsConfigured has the user to confgure the main branch and perennial branches if needed.
 func EnsureIsConfigured(repo *git.ProdRepo) error {
-	if repo.Config.GetMainBranch() == "" {
+	if repo.Config.MainBranch() == "" {
 		fmt.Println("Git Town needs to be configured")
 		fmt.Println()
 		err := ConfigureMainBranch(repo)
@@ -30,8 +30,8 @@ func ConfigureMainBranch(repo *git.ProdRepo) error {
 	}
 	newMainBranch, err := askForBranch(askForBranchOptions{
 		branchNames:       localBranches,
-		prompt:            getMainBranchPrompt(repo),
-		defaultBranchName: repo.Config.GetMainBranch(),
+		prompt:            mainBranchPrompt(repo),
+		defaultBranchName: repo.Config.MainBranch(),
 	})
 	if err != nil {
 		return err
@@ -50,8 +50,8 @@ func ConfigurePerennialBranches(repo *git.ProdRepo) error {
 	}
 	newPerennialBranches, err := askForBranches(askForBranchesOptions{
 		branchNames:        branchNames,
-		prompt:             getPerennialBranchesPrompt(repo),
-		defaultBranchNames: repo.Config.GetPerennialBranches(),
+		prompt:             perennialBranchesPrompt(repo),
+		defaultBranchNames: repo.Config.PerennialBranches(),
 	})
 	if err != nil {
 		return err
@@ -61,9 +61,9 @@ func ConfigurePerennialBranches(repo *git.ProdRepo) error {
 
 // Helpers
 
-func getMainBranchPrompt(repo *git.ProdRepo) (result string) {
+func mainBranchPrompt(repo *git.ProdRepo) (result string) {
 	result += "Please specify the main development branch:"
-	currentMainBranch := repo.Config.GetMainBranch()
+	currentMainBranch := repo.Config.MainBranch()
 	if currentMainBranch != "" {
 		coloredBranchName := color.New(color.Bold).Add(color.FgCyan).Sprintf(currentMainBranch)
 		result += fmt.Sprintf(" (current value: %s)", coloredBranchName)
@@ -71,9 +71,9 @@ func getMainBranchPrompt(repo *git.ProdRepo) (result string) {
 	return
 }
 
-func getPerennialBranchesPrompt(repo *git.ProdRepo) (result string) {
+func perennialBranchesPrompt(repo *git.ProdRepo) (result string) {
 	result += "Please specify perennial branches:"
-	currentPerennialBranches := repo.Config.GetPerennialBranches()
+	currentPerennialBranches := repo.Config.PerennialBranches()
 	if len(currentPerennialBranches) > 0 {
 		coloredBranchNames := color.New(color.Bold).Add(color.FgCyan).Sprintf(strings.Join(currentPerennialBranches, ", "))
 		result += fmt.Sprintf(" (current value: %s)", coloredBranchNames)

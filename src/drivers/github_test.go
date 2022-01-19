@@ -170,7 +170,7 @@ func TestGitHubDriver_MergePullRequest(t *testing.T) {
 	sha, err := driver.MergePullRequest(options)
 	assert.NoError(t, err)
 	assert.Equal(t, "abc123", sha)
-	mergeParameters := getRequestData(mergeRequest)
+	mergeParameters := loadRequestData(mergeRequest)
 	assert.Equal(t, "title", mergeParameters["commit_title"])
 	assert.Equal(t, "extra detail1\nextra detail2", mergeParameters["commit_message"])
 	assert.Equal(t, "squash", mergeParameters["merge_method"])
@@ -216,13 +216,13 @@ func TestGitHubDriver_MergePullRequest_UpdateChildPRs(t *testing.T) {
 	httpmock.RegisterResponder("PUT", githubPR1Merge, httpmock.NewStringResponder(200, `{"sha": "abc123"}`))
 	_, err := driver.MergePullRequest(options)
 	assert.NoError(t, err)
-	updateParameters1 := getRequestData(updateRequest1)
+	updateParameters1 := loadRequestData(updateRequest1)
 	assert.Equal(t, "main", updateParameters1["base"])
-	updateParameters2 := getRequestData(updateRequest2)
+	updateParameters2 := loadRequestData(updateRequest2)
 	assert.Equal(t, "main", updateParameters2["base"])
 }
 
-func getRequestData(request *http.Request) map[string]interface{} {
+func loadRequestData(request *http.Request) map[string]interface{} {
 	dataStr, err := ioutil.ReadAll(request.Body)
 	if err != nil {
 		panic(err)

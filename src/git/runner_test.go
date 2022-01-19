@@ -169,7 +169,7 @@ func TestRunner_CreateFeatureBranch(t *testing.T) {
 	assert.NoError(t, err)
 	runner.Config.Reload()
 	assert.True(t, runner.Config.IsFeatureBranch("f1"))
-	assert.Equal(t, []string{"main"}, runner.Config.GetAncestorBranches("f1"))
+	assert.Equal(t, []string{"main"}, runner.Config.AncestorBranches("f1"))
 }
 
 func TestRunner_CreateFeatureBranchNoParent(t *testing.T) {
@@ -179,7 +179,7 @@ func TestRunner_CreateFeatureBranchNoParent(t *testing.T) {
 	assert.NoError(t, err)
 	runner.Config.Reload()
 	assert.True(t, runner.Config.IsFeatureBranch("f1"))
-	assert.Equal(t, []string(nil), runner.Config.GetAncestorBranches("f1"))
+	assert.Equal(t, []string(nil), runner.Config.AncestorBranches("f1"))
 }
 
 func TestRunner_CreateFile(t *testing.T) {

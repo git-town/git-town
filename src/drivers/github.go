@@ -26,24 +26,24 @@ type GithubCodeHostingDriver struct {
 // LoadGithub provides a GitHub driver instance if the given repo configuration is for a Github repo,
 // otherwise nil.
 func LoadGithub(config config, log logFn) *GithubCodeHostingDriver {
-	driverType := config.GetCodeHostingDriverName()
-	originURL := config.GetRemoteOriginURL()
-	hostname := helpers.GetURLHostname(originURL)
-	manualHostName := config.GetCodeHostingOriginHostname()
+	driverType := config.CodeHostingDriverName()
+	originURL := config.RemoteOriginURL()
+	hostname := helpers.URLHostname(originURL)
+	manualHostName := config.CodeHostingOriginHostname()
 	if manualHostName != "" {
 		hostname = manualHostName
 	}
 	if driverType != "github" && hostname != "github.com" {
 		return nil
 	}
-	repositoryParts := strings.SplitN(helpers.GetURLRepositoryName(originURL), "/", 2)
+	repositoryParts := strings.SplitN(helpers.URLRepositoryName(originURL), "/", 2)
 	if len(repositoryParts) != 2 {
 		return nil
 	}
 	owner := repositoryParts[0]
 	repository := repositoryParts[1]
 	return &GithubCodeHostingDriver{
-		apiToken:   config.GetGitHubToken(),
+		apiToken:   config.GitHubToken(),
 		config:     config,
 		hostname:   hostname,
 		log:        log,
@@ -58,7 +58,7 @@ func (d *GithubCodeHostingDriver) LoadPullRequestInfo(branch, parentBranch strin
 		return result, nil
 	}
 	d.connect()
-	pullRequests, err := d.getPullRequests(branch, parentBranch)
+	pullRequests, err := d.loadPullRequests(branch, parentBranch)
 	if err != nil {
 		return result, err
 	}
@@ -66,14 +66,14 @@ func (d *GithubCodeHostingDriver) LoadPullRequestInfo(branch, parentBranch strin
 		return result, nil
 	}
 	result.CanMergeWithAPI = true
-	result.DefaultCommitMessage = d.getDefaultCommitMessage(pullRequests[0])
+	result.DefaultCommitMessage = d.defaultCommitMessage(pullRequests[0])
 	result.PullRequestNumber = int64(pullRequests[0].GetNumber())
 	return result, nil
 }
 
 func (d *GithubCodeHostingDriver) NewPullRequestURL(branch string, parentBranch string) (string, error) {
 	toCompare := branch
-	if parentBranch != d.config.GetMainBranch() {
+	if parentBranch != d.config.MainBranch() {
 		toCompare = parentBranch + "..." + branch
 	}
 	return fmt.Sprintf("%s/compare/%s?expand=1", d.RepositoryURL(), url.PathEscape(toCompare)), nil
@@ -108,11 +108,11 @@ func (d *GithubCodeHostingDriver) connect() {
 	}
 }
 
-func (d *GithubCodeHostingDriver) getDefaultCommitMessage(pullRequest *github.PullRequest) string {
+func (d *GithubCodeHostingDriver) defaultCommitMessage(pullRequest *github.PullRequest) string {
 	return fmt.Sprintf("%s (#%d)", *pullRequest.Title, *pullRequest.Number)
 }
 
-func (d *GithubCodeHostingDriver) getPullRequests(branch, parentBranch string) ([]*github.PullRequest, error) {
+func (d *GithubCodeHostingDriver) loadPullRequests(branch, parentBranch string) ([]*github.PullRequest, error) {
 	pullRequests, _, err := d.client.PullRequests.List(context.Background(), d.owner, d.repository, &github.PullRequestListOptions{
 		Base:  parentBranch,
 		Head:  d.owner + ":" + branch,
