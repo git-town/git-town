@@ -1,2 +1,2 @@
-// Package Git provides facilities to run Git commands in a controlled and typesafe way.
+// Package Git runs Git commands in a controlled and typesafe way.
 package git
