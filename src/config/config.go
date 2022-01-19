@@ -178,8 +178,8 @@ func (c *Config) ParentBranchMap() map[string]string {
 	return result
 }
 
-// GetGitAlias provides the currently set alias for the given Git Town command.
-func (c *Config) GetGitAlias(command string) string {
+// GitAlias provides the currently set alias for the given Git Town command.
+func (c *Config) GitAlias(command string) string {
 	return c.getGlobalConfigValue("alias." + command)
 }
 

@@ -63,7 +63,7 @@ func addAlias(command string, repo *git.ProdRepo) error {
 }
 
 func removeAlias(command string, repo *git.ProdRepo) error {
-	existingAlias := repo.Config.GetGitAlias(command)
+	existingAlias := repo.Config.GitAlias(command)
 	if existingAlias == "town "+command {
 		result, err := repo.Config.RemoveGitAlias(command)
 		if err != nil {
