@@ -21,19 +21,21 @@ This page helps you get started hacking on the Git Town codebase.
 
 ## dependencies
 
+Add an external Go module:
+
 - run `go get [dependency]` inside the Git Town folder to register the
   dependency
 - use the new dependency in the code
 - run `go mod vendor` to vendor it
 - run `go mod tidy` to clean up
 
-Update a Go dependency:
+Update an external Go module:
 
 ```
 go get <path>
 ```
 
-Update all dependencies:
+Update all external Go modules:
 
 ```bash
 make update
