@@ -58,7 +58,7 @@ func (d *GithubCodeHostingDriver) LoadPullRequestInfo(branch, parentBranch strin
 		return result, nil
 	}
 	d.connect()
-	pullRequests, err := d.getPullRequests(branch, parentBranch)
+	pullRequests, err := d.loadPullRequests(branch, parentBranch)
 	if err != nil {
 		return result, err
 	}
@@ -112,7 +112,7 @@ func (d *GithubCodeHostingDriver) defaultCommitMessage(pullRequest *github.PullR
 	return fmt.Sprintf("%s (#%d)", *pullRequest.Title, *pullRequest.Number)
 }
 
-func (d *GithubCodeHostingDriver) getPullRequests(branch, parentBranch string) ([]*github.PullRequest, error) {
+func (d *GithubCodeHostingDriver) loadPullRequests(branch, parentBranch string) ([]*github.PullRequest, error) {
 	pullRequests, _, err := d.client.PullRequests.List(context.Background(), d.owner, d.repository, &github.PullRequestListOptions{
 		Base:  parentBranch,
 		Head:  d.owner + ":" + branch,
