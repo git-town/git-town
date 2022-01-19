@@ -7,7 +7,7 @@ import (
 	"github.com/git-town/git-town/v7/src/steps"
 )
 
-// StepList is a list of Step instances with convenience functions for adding and removing steps.
+// StepList is a fifo containing Step instances.
 type StepList struct {
 	List []steps.Step
 }
