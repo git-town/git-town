@@ -11,16 +11,12 @@ import (
 	"github.com/git-town/git-town/v7/test/helpers"
 )
 
-// GitEnvironment is the complete Git environment for a test scenario.
-// 1. a "developer" GitRepository with the local workspace repo. This is where the feature specs execute in.
-//
-// 2. an "origin" GitRepository that acts as the remote repo for the "developer" repo. This is where pushes from "developer" go to.
-// - the root directory of the GitEnvironment acts as the HOME directory. It
-//   contains the global Git configuration to use in this test.
-//
+// GitEnvironment is a complete Git environment for a Cucumber scenario.
 type GitEnvironment struct {
 
-	// Dir is the directory that this environment is in.
+	// Dir defines the local folder in which this GitEnvironment is stored.
+	// This folder also acts as the HOME directory for tests using this GitEnvironment.
+	// It contains the global Git configuration to use in this test.
 	Dir string
 
 	// OriginRepo is the Git repository that simulates the remote repo (on GitHub).
