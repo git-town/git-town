@@ -221,9 +221,9 @@ func (c *Config) GetPullBranchStrategy() string {
 	return "rebase"
 }
 
-// GetRemoteOriginURL returns the URL for the "origin" remote.
+// RemoteOriginURL returns the URL for the "origin" remote.
 // In tests this value can be stubbed.
-func (c *Config) GetRemoteOriginURL() string {
+func (c *Config) RemoteOriginURL() string {
 	remote := os.Getenv("GIT_TOWN_REMOTE")
 	if remote != "" {
 		return remote

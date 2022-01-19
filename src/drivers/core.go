@@ -33,7 +33,7 @@ type config interface {
 	GiteaToken() string
 	GitHubToken() string
 	MainBranch() string
-	GetRemoteOriginURL() string
+	RemoteOriginURL() string
 }
 
 // runner defines the runner methods used by the driver package.

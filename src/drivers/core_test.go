@@ -29,6 +29,6 @@ func (mc mockConfig) MainBranch() string {
 	return mc.mainBranch
 }
 
-func (mc mockConfig) GetRemoteOriginURL() string {
+func (mc mockConfig) RemoteOriginURL() string {
 	return mc.remoteOriginURL
 }

@@ -27,7 +27,7 @@ type GithubCodeHostingDriver struct {
 // otherwise nil.
 func LoadGithub(config config, log logFn) *GithubCodeHostingDriver {
 	driverType := config.CodeHostingDriverName()
-	originURL := config.GetRemoteOriginURL()
+	originURL := config.RemoteOriginURL()
 	hostname := helpers.GetURLHostname(originURL)
 	manualHostName := config.CodeHostingOriginHostname()
 	if manualHostName != "" {
