@@ -28,8 +28,8 @@ type CodeHostingDriver interface {
 
 // config defines the configuration data needed by the driver package.
 type config interface {
-	GetCodeHostingOriginHostname() string
-	GetCodeHostingDriverName() string
+	CodeHostingOriginHostname() string
+	CodeHostingDriverName() string
 	GetGiteaToken() string
 	GetGitHubToken() string
 	GetMainBranch() string

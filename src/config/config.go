@@ -137,13 +137,13 @@ func (c *Config) GetChildBranches(branchName string) (result []string) {
 	return
 }
 
-// GetCodeHostingDriverName provides the name of the code hosting driver to use.
-func (c *Config) GetCodeHostingDriverName() string {
+// CodeHostingDriverName provides the name of the code hosting driver to use.
+func (c *Config) CodeHostingDriverName() string {
 	return c.getLocalOrGlobalConfigValue("git-town.code-hosting-driver")
 }
 
-// GetCodeHostingOriginHostname provides the host name of the code hosting server.
-func (c *Config) GetCodeHostingOriginHostname() string {
+// CodeHostingOriginHostname provides the host name of the code hosting server.
+func (c *Config) CodeHostingOriginHostname() string {
 	return c.getLocalConfigValue("git-town.code-hosting-origin-hostname")
 }
 

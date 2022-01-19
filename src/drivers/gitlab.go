@@ -18,10 +18,10 @@ type GitlabCodeHostingDriver struct {
 // LoadGitlab provides a GitLab driver instance if the given repo configuration is for a GitLab repo,
 // otherwise nil.
 func LoadGitlab(config config) *GitlabCodeHostingDriver {
-	driverType := config.GetCodeHostingDriverName()
+	driverType := config.CodeHostingDriverName()
 	originURL := config.GetRemoteOriginURL()
 	hostname := helpers.GetURLHostname(originURL)
-	manualHostName := config.GetCodeHostingOriginHostname()
+	manualHostName := config.CodeHostingOriginHostname()
 	if manualHostName != "" {
 		hostname = manualHostName
 	}

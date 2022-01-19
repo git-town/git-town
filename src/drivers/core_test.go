@@ -9,11 +9,11 @@ type mockConfig struct {
 	remoteOriginURL       string
 }
 
-func (mc mockConfig) GetCodeHostingOriginHostname() string {
+func (mc mockConfig) CodeHostingOriginHostname() string {
 	return mc.manualHostName
 }
 
-func (mc mockConfig) GetCodeHostingDriverName() string {
+func (mc mockConfig) CodeHostingDriverName() string {
 	return mc.codeHostingDriverName
 }
 
