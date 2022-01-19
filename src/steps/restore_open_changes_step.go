@@ -13,12 +13,10 @@ type RestoreOpenChangesStep struct {
 	NoOpStep
 }
 
-// CreateUndoStep returns the undo step for this step.
 func (step *RestoreOpenChangesStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
 	return &StashOpenChangesStep{}, nil
 }
 
-// Run executes this step.
 func (step *RestoreOpenChangesStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	err := repo.Logging.PopStash()
 	if err != nil {

@@ -16,12 +16,10 @@ type SquashMergeBranchStep struct {
 	CommitMessage string
 }
 
-// CreateAbortStep returns the abort step for this step.
 func (step *SquashMergeBranchStep) CreateAbortStep() Step {
 	return &DiscardOpenChangesStep{}
 }
 
-// CreateUndoStep returns the undo step for this step.
 func (step *SquashMergeBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
 	currentSHA, err := repo.Silent.CurrentSha()
 	if err != nil {
@@ -30,13 +28,10 @@ func (step *SquashMergeBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, err
 	return &RevertCommitStep{Sha: currentSHA}, nil
 }
 
-// CreateAutomaticAbortError returns the error message to display when this step
-// cause the command to automatically abort.
 func (step *SquashMergeBranchStep) CreateAutomaticAbortError() error {
 	return fmt.Errorf("aborted because commit exited with error")
 }
 
-// Run executes this step.
 func (step *SquashMergeBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	err := repo.Logging.SquashMerge(step.BranchName)
 	if err != nil {
@@ -63,8 +58,6 @@ func (step *SquashMergeBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHo
 	}
 }
 
-// ShouldAutomaticallyAbortOnError returns whether this step should cause the command to
-// automatically abort if it errors.
 func (step *SquashMergeBranchStep) ShouldAutomaticallyAbortOnError() bool {
 	return true
 }

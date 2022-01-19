@@ -14,7 +14,6 @@ type DeleteParentBranchStep struct {
 	previousParent string
 }
 
-// CreateUndoStep returns the undo step for this step.
 func (step *DeleteParentBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
 	if step.previousParent == "" {
 		return &NoOpStep{}, nil
@@ -22,7 +21,6 @@ func (step *DeleteParentBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, er
 	return &SetParentBranchStep{BranchName: step.BranchName, ParentBranchName: step.previousParent}, nil
 }
 
-// Run executes this step.
 func (step *DeleteParentBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	step.previousParent = repo.Config.ParentBranch(step.BranchName)
 	return repo.Config.DeleteParentBranch(step.BranchName)

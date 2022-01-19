@@ -14,22 +14,18 @@ type MergeBranchStep struct {
 	previousSha string
 }
 
-// CreateAbortStep returns the abort step for this step.
 func (step *MergeBranchStep) CreateAbortStep() Step {
 	return &AbortMergeBranchStep{}
 }
 
-// CreateContinueStep returns the continue step for this step.
 func (step *MergeBranchStep) CreateContinueStep() Step {
 	return &ContinueMergeBranchStep{}
 }
 
-// CreateUndoStep returns the undo step for this step.
 func (step *MergeBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
 	return &ResetToShaStep{Hard: true, Sha: step.previousSha}, nil
 }
 
-// Run executes this step.
 func (step *MergeBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) (err error) {
 	step.previousSha, err = repo.Silent.CurrentSha()
 	if err != nil {

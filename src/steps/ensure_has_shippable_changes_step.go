@@ -14,13 +14,10 @@ type EnsureHasShippableChangesStep struct {
 	BranchName string
 }
 
-// CreateAutomaticAbortError returns the error message to display when this step
-// cause the command to automatically abort.
 func (step *EnsureHasShippableChangesStep) CreateAutomaticAbortError() error {
 	return fmt.Errorf("the branch %q has no shippable changes", step.BranchName)
 }
 
-// Run executes this step.
 func (step *EnsureHasShippableChangesStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	hasShippableChanges, err := repo.Silent.HasShippableChanges(step.BranchName)
 	if err != nil {
@@ -32,8 +29,6 @@ func (step *EnsureHasShippableChangesStep) Run(repo *git.ProdRepo, driver driver
 	return nil
 }
 
-// ShouldAutomaticallyAbortOnError returns whether this step should cause the command to
-// automatically abort if it errors.
 func (step *EnsureHasShippableChangesStep) ShouldAutomaticallyAbortOnError() bool {
 	return true
 }

@@ -20,7 +20,6 @@ type DriverMergePullRequestStep struct {
 	mergeSha                  string
 }
 
-// CreateAbortStep returns the abort step for this step.
 func (step *DriverMergePullRequestStep) CreateAbortStep() Step {
 	if step.enteredEmptyCommitMessage {
 		return &DiscardOpenChangesStep{}
@@ -28,13 +27,10 @@ func (step *DriverMergePullRequestStep) CreateAbortStep() Step {
 	return nil
 }
 
-// CreateUndoStep returns the undo step for this step.
 func (step *DriverMergePullRequestStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
 	return &RevertCommitStep{Sha: step.mergeSha}, nil
 }
 
-// CreateAutomaticAbortError returns the error message to display when this step
-// cause the command to automatically abort.
 func (step *DriverMergePullRequestStep) CreateAutomaticAbortError() error {
 	if step.enteredEmptyCommitMessage {
 		return fmt.Errorf("aborted because commit exited with error")
@@ -42,7 +38,6 @@ func (step *DriverMergePullRequestStep) CreateAutomaticAbortError() error {
 	return step.mergeError
 }
 
-// Run executes this step.
 func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	commitMessage := step.CommitMessage
 	//nolint:nestif

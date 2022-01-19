@@ -12,7 +12,6 @@ type PreserveCheckoutHistoryStep struct {
 	InitialPreviouslyCheckedOutBranch string
 }
 
-// Run executes this step.
 func (step *PreserveCheckoutHistoryStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	expectedPreviouslyCheckedOutBranch, err := repo.Silent.ExpectedPreviouslyCheckedOutBranch(step.InitialPreviouslyCheckedOutBranch, step.InitialBranch)
 	if err != nil {

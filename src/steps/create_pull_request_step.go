@@ -12,7 +12,6 @@ type CreatePullRequestStep struct {
 	BranchName string
 }
 
-// Run executes this step.
 func (step *CreatePullRequestStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	parentBranch := repo.Config.ParentBranch(step.BranchName)
 	prURL, err := driver.NewPullRequestURL(step.BranchName, parentBranch)

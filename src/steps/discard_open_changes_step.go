@@ -10,7 +10,6 @@ type DiscardOpenChangesStep struct {
 	NoOpStep
 }
 
-// Run executes this step.
 func (step *DiscardOpenChangesStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	return repo.Logging.DiscardOpenChanges()
 }
