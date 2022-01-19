@@ -119,7 +119,7 @@ The source code contains
 [Godoc comments](https://pkg.go.dev/github.com/git-town/git-town) that explain
 the code architecture.
 
-# website
+## website
 
 The source code for the website is in the [website](../website/) folder. This
 folder contains its own [Makefile](../website/Makefile) for activities related
