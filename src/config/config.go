@@ -1,3 +1,6 @@
+// Package config provides facilities to read and write the Git Town configuration.
+// Git Town stores its configuration in the Git configuration under the prefix "git-town".
+// You can manually read it by running `git config --get-regexp git-town`.
 package config
 
 import (
