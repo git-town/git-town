@@ -38,7 +38,7 @@ type GitEnvironment struct {
 
 // CloneGitEnvironment provides a GitEnvironment instance in the given directory,
 // containing a copy of the given GitEnvironment.
-func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment, error) {
+func CloneGitEnvironment(original GitEnvironment, dir string) (*GitEnvironment, error) {
 	err := CopyDirectory(original.Dir, dir)
 	if err != nil {
 		return nil, fmt.Errorf("cannot clone GitEnvironment %q to folder %q: %w", original.Dir, dir, err)
@@ -83,19 +83,19 @@ func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment,
 // Git repos cannot receive pushes of the currently checked out branch
 // because that will change files in the current workspace.
 // The tests don't use the master branch.
-func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
+func NewStandardGitEnvironment(dir string) (gitEnv GitEnvironment, err error) {
 	// create the folder
 	// create the GitEnvironment
-	gitEnv = &GitEnvironment{Dir: dir}
+	gitEnv = GitEnvironment{Dir: dir}
 	// create the origin repo
 	err = os.MkdirAll(gitEnv.originRepoPath(), 0o744)
 	if err != nil {
-		return nil, fmt.Errorf("cannot create directory %q: %w", gitEnv.originRepoPath(), err)
+		return gitEnv, fmt.Errorf("cannot create directory %q: %w", gitEnv.originRepoPath(), err)
 	}
 	// initialize the repo in the folder
 	originRepo, err := InitRepo(gitEnv.originRepoPath(), gitEnv.Dir, gitEnv.binPath())
 	if err != nil {
-		return nil, err
+		return gitEnv, err
 	}
 	err = originRepo.RunMany([][]string{
 		{"git", "commit", "--allow-empty", "-m", "Initial commit"},

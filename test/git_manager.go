@@ -21,7 +21,7 @@ type GitManager struct {
 	dir string
 
 	// the memoized environment
-	memoized *GitEnvironment
+	memoized GitEnvironment
 }
 
 // NewGitManager provides a new GitManager instance operating in the given directory.
