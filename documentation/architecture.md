@@ -12,7 +12,8 @@ contains these packages:
 - [src/git](../src/git) accesses the Git binary on the user's computer
 - [src/prompt](../src/prompt) implements interactive wizards
 - [src/run](../src/run) runs commands in subshells
-- [src/runstate](../src/runstate) contains the
+- [src/runstate](../src/runstate) manages the persistent state of partially
+  executed Git Town commands
 - [src/steps](../src/steps) contains the low-level commands that Git Town
   executes
 - [src/stringslice](../src/stringslice) functions for working with string slices
