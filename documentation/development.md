@@ -81,7 +81,7 @@ If Cucumber tests produce garbled output on Windows, try running them inside Git
 Bash. See [this issue](https://github.com/cucumber/godog/issues/129) for
 details.
 
-### debug end-to-end tests
+## debug end-to-end tests
 
 To see the CLI output of the shell commands in a Cucumber test, add a tag
 `@debug` above the feature or scenario you want to debug:
