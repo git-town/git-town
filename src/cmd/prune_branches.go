@@ -21,11 +21,11 @@ var pruneBranchesCommand = &cobra.Command{
 Deletes branches whose tracking branch no longer exists from the local repository.
 This usually means the branch was shipped or killed on another machine.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config, err := getPruneBranchesConfig(prodRepo)
+		config, err := createPruneBranchesConfig(prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}
-		stepList, err := getPruneBranchesStepList(config, prodRepo)
+		stepList, err := createPruneBranchesStepList(config, prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}
@@ -47,7 +47,7 @@ This usually means the branch was shipped or killed on another machine.`,
 	},
 }
 
-func getPruneBranchesConfig(repo *git.ProdRepo) (result pruneBranchesConfig, err error) {
+func createPruneBranchesConfig(repo *git.ProdRepo) (result pruneBranchesConfig, err error) {
 	hasOrigin, err := repo.Silent.HasRemote("origin")
 	if err != nil {
 		return result, err
@@ -67,7 +67,7 @@ func getPruneBranchesConfig(repo *git.ProdRepo) (result pruneBranchesConfig, err
 	return result, err
 }
 
-func getPruneBranchesStepList(config pruneBranchesConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
+func createPruneBranchesStepList(config pruneBranchesConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
 	initialBranchName := config.initialBranchName
 	for _, branchName := range config.localBranchesWithDeletedTrackingBranches {
 		if initialBranchName == branchName {
