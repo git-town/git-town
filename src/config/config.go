@@ -248,7 +248,7 @@ func (c *Config) localOrGlobalConfigValue(key string) string {
 	return c.globalConfigValue(key)
 }
 
-// MainBranch returns the name of the main branch.
+// MainBranch provides the name of the main branch.
 func (c *Config) MainBranch() string {
 	return c.localOrGlobalConfigValue("git-town.main-branch-name")
 }
@@ -264,7 +264,7 @@ func (c *Config) ParentBranchMap() map[string]string {
 	return result
 }
 
-// ParentBranch returns the name of the parent branch of the given branch.
+// ParentBranch provides the name of the parent branch of the given branch.
 func (c *Config) ParentBranch(branchName string) string {
 	return c.localConfigValue("git-town-branch." + branchName + ".parent")
 }
@@ -278,7 +278,7 @@ func (c *Config) PerennialBranches() []string {
 	return strings.Split(result, " ")
 }
 
-// PullBranchStrategy returns the currently configured pull branch strategy.
+// PullBranchStrategy provides the currently configured pull branch strategy.
 func (c *Config) PullBranchStrategy() string {
 	config := c.localOrGlobalConfigValue("git-town.pull-branch-strategy")
 	if config != "" {
@@ -293,7 +293,7 @@ func (c *Config) Reload() {
 	c.globalConfigCache = loadGitConfig(c.shell, true)
 }
 
-// RemoteOriginURL returns the URL for the "origin" remote.
+// RemoteOriginURL provides the URL for the "origin" remote.
 // In tests this value can be stubbed.
 func (c *Config) RemoteOriginURL() string {
 	remote := os.Getenv("GIT_TOWN_REMOTE")
