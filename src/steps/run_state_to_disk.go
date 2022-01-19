@@ -13,7 +13,7 @@ import (
 
 // LoadPreviousRunState loads the run state from disk if it exists. Can return nil if there is no previous runstate.
 func LoadPreviousRunState(repo *git.ProdRepo) (result *RunState, err error) {
-	filename, err := getRunResultFilename(repo)
+	filename, err := runResultFilename(repo)
 	if err != nil {
 		return nil, err
 	}
@@ -38,7 +38,7 @@ func LoadPreviousRunState(repo *git.ProdRepo) (result *RunState, err error) {
 
 // DeletePreviousRunState deletes the previous run state from disk.
 func DeletePreviousRunState(repo *git.ProdRepo) error {
-	filename, err := getRunResultFilename(repo)
+	filename, err := runResultFilename(repo)
 	if err != nil {
 		return err
 	}
@@ -62,7 +62,7 @@ func SaveRunState(runState *RunState, repo *git.ProdRepo) error {
 	if err != nil {
 		return fmt.Errorf("cannot encode run-state: %w", err)
 	}
-	filename, err := getRunResultFilename(repo)
+	filename, err := runResultFilename(repo)
 	if err != nil {
 		return err
 	}
@@ -73,7 +73,7 @@ func SaveRunState(runState *RunState, repo *git.ProdRepo) error {
 	return nil
 }
 
-func getRunResultFilename(repo *git.ProdRepo) (string, error) {
+func runResultFilename(repo *git.ProdRepo) (string, error) {
 	replaceCharacterRegexp := regexp.MustCompile("[[:^alnum:]]")
 	rootDir, err := repo.Silent.RootDirectory()
 	if err != nil {
