@@ -10,9 +10,9 @@ import (
 	survey "gopkg.in/AlecAivazis/survey.v1"
 )
 
-// GetSquashCommitAuthor gets the author of the supplied branch.
+// DetermineSquashCommitAuthor gets the author of the supplied branch.
 // If the branch has more than one author, the author is queried from the user.
-func GetSquashCommitAuthor(branchName string, repo *git.ProdRepo) (string, error) {
+func DetermineSquashCommitAuthor(branchName string, repo *git.ProdRepo) (string, error) {
 	authors, err := getBranchAuthors(branchName, repo)
 	if err != nil {
 		return "", err
