@@ -15,7 +15,7 @@ func EnsureKnowsParentBranches(branchNames []string, repo *git.ProdRepo) error {
 		if repo.Config.IsMainBranch(branchName) || repo.Config.IsPerennialBranch(branchName) || repo.Config.HasParentBranch(branchName) {
 			continue
 		}
-		err := AskForBranchAncestry(branchName, repo.Config.GetMainBranch(), repo)
+		err := AskForBranchAncestry(branchName, repo.Config.MainBranch(), repo)
 		if err != nil {
 			return err
 		}
@@ -49,7 +49,7 @@ func AskForBranchAncestry(branchName, defaultBranchName string, repo *git.ProdRe
 				return err
 			}
 		}
-		if parent == repo.Config.GetMainBranch() || repo.Config.IsPerennialBranch(parent) {
+		if parent == repo.Config.MainBranch() || repo.Config.IsPerennialBranch(parent) {
 			break
 		}
 		current = parent
@@ -103,6 +103,6 @@ func filterOutSelfAndDescendants(branchName string, choices []string, repo *git.
 func printParentBranchHeader(repo *git.ProdRepo) {
 	if !parentBranchHeaderShown {
 		parentBranchHeaderShown = true
-		cli.Printf(parentBranchHeaderTemplate, repo.Config.GetMainBranch())
+		cli.Printf(parentBranchHeaderTemplate, repo.Config.MainBranch())
 	}
 }

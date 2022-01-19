@@ -71,7 +71,7 @@ func getSyncNonFeatureBranchSteps(branchName string, repo *git.ProdRepo) (result
 		}
 	}
 
-	mainBranchName := repo.Config.GetMainBranch()
+	mainBranchName := repo.Config.MainBranch()
 	hasUpstream, err := repo.Silent.HasRemote("upstream")
 	if err != nil {
 		return result, err

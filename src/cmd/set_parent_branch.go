@@ -22,7 +22,7 @@ var setParentBranchCommand = &cobra.Command{
 		}
 		defaultParentBranch := prodRepo.Config.GetParentBranch(branchName)
 		if defaultParentBranch == "" {
-			defaultParentBranch = prodRepo.Config.GetMainBranch()
+			defaultParentBranch = prodRepo.Config.MainBranch()
 		}
 		err = prodRepo.Config.DeleteParentBranch(branchName)
 		if err != nil {

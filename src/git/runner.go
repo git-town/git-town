@@ -73,7 +73,7 @@ func (r *Runner) Author() (author string, err error) {
 // BranchHasUnmergedCommits indicates whether the branch with the given name
 // contains commits that are not merged into the main branch.
 func (r *Runner) BranchHasUnmergedCommits(branch string) (bool, error) {
-	out, err := r.Run("git", "log", r.Config.GetMainBranch()+".."+branch)
+	out, err := r.Run("git", "log", r.Config.MainBranch()+".."+branch)
 	if err != nil {
 		return false, fmt.Errorf("cannot determine if branch %q has unmerged commits: %w", branch, err)
 	}
@@ -483,7 +483,7 @@ func (r *Runner) ExpectedPreviouslyCheckedOutBranch(initialPreviouslyCheckedOutB
 		}
 		return initialBranch, nil
 	}
-	return r.Config.GetMainBranch(), nil
+	return r.Config.MainBranch(), nil
 }
 
 // Fetch retrieves the updates from the remote repo.
@@ -644,7 +644,7 @@ func (r *Runner) HasRemote(name string) (result bool, err error) {
 // HasShippableChanges indicates whether the given branch has changes
 // not currently in the main branch.
 func (r *Runner) HasShippableChanges(branch string) (bool, error) {
-	out, err := r.Run("git", "diff", r.Config.GetMainBranch()+".."+branch)
+	out, err := r.Run("git", "diff", r.Config.MainBranch()+".."+branch)
 	if err != nil {
 		return false, fmt.Errorf("cannot determine whether branch %q has shippable changes: %w", branch, err)
 	}
@@ -770,7 +770,7 @@ func (r *Runner) LocalBranchesWithDeletedTrackingBranches() (result []string, er
 // LocalBranchesWithoutMain returns the names of all branches in the local repository,
 // ordered alphabetically without the main branch.
 func (r *Runner) LocalBranchesWithoutMain() (result []string, err error) {
-	mainBranch := r.Config.GetMainBranch()
+	mainBranch := r.Config.MainBranch()
 	branches, err := r.LocalBranches()
 	if err != nil {
 		return result, err

@@ -193,8 +193,8 @@ func (c *Config) GiteaToken() string {
 	return c.getLocalOrGlobalConfigValue("git-town.gitea-token")
 }
 
-// GetMainBranch returns the name of the main branch.
-func (c *Config) GetMainBranch() string {
+// MainBranch returns the name of the main branch.
+func (c *Config) MainBranch() string {
 	return c.getLocalOrGlobalConfigValue("git-town.main-branch-name")
 }
 
@@ -262,7 +262,7 @@ func (c *Config) IsFeatureBranch(branchName string) bool {
 // IsMainBranch indicates whether the branch with the given name
 // is the main branch of the repository.
 func (c *Config) IsMainBranch(branchName string) bool {
-	return branchName == c.GetMainBranch()
+	return branchName == c.MainBranch()
 }
 
 // IsOffline indicates whether Git Town is currently in offline mode.

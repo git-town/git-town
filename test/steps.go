@@ -761,7 +761,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the main branch is now configured as "([^"]+)"$`, func(name string) error {
 		state.gitEnv.DevRepo.Config.Reload()
-		actual := state.gitEnv.DevRepo.Config.GetMainBranch()
+		actual := state.gitEnv.DevRepo.Config.MainBranch()
 		if actual != name {
 			return fmt.Errorf("expected %q, got %q", name, actual)
 		}

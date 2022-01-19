@@ -10,7 +10,7 @@ import (
 
 // EnsureIsConfigured has the user to confgure the main branch and perennial branches if needed.
 func EnsureIsConfigured(repo *git.ProdRepo) error {
-	if repo.Config.GetMainBranch() == "" {
+	if repo.Config.MainBranch() == "" {
 		fmt.Println("Git Town needs to be configured")
 		fmt.Println()
 		err := ConfigureMainBranch(repo)
@@ -31,7 +31,7 @@ func ConfigureMainBranch(repo *git.ProdRepo) error {
 	newMainBranch, err := askForBranch(askForBranchOptions{
 		branchNames:       localBranches,
 		prompt:            getMainBranchPrompt(repo),
-		defaultBranchName: repo.Config.GetMainBranch(),
+		defaultBranchName: repo.Config.MainBranch(),
 	})
 	if err != nil {
 		return err
@@ -63,7 +63,7 @@ func ConfigurePerennialBranches(repo *git.ProdRepo) error {
 
 func getMainBranchPrompt(repo *git.ProdRepo) (result string) {
 	result += "Please specify the main development branch:"
-	currentMainBranch := repo.Config.GetMainBranch()
+	currentMainBranch := repo.Config.MainBranch()
 	if currentMainBranch != "" {
 		coloredBranchName := color.New(color.Bold).Add(color.FgCyan).Sprintf(currentMainBranch)
 		result += fmt.Sprintf(" (current value: %s)", coloredBranchName)

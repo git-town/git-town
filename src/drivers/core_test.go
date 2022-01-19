@@ -25,7 +25,7 @@ func (mc mockConfig) GiteaToken() string {
 	return mc.giteaToken
 }
 
-func (mc mockConfig) GetMainBranch() string {
+func (mc mockConfig) MainBranch() string {
 	return mc.mainBranch
 }
 

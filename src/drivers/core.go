@@ -32,7 +32,7 @@ type config interface {
 	CodeHostingDriverName() string
 	GiteaToken() string
 	GitHubToken() string
-	GetMainBranch() string
+	MainBranch() string
 	GetRemoteOriginURL() string
 }
 
