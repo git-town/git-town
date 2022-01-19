@@ -12,6 +12,12 @@ import (
 )
 
 // GitEnvironment is the complete Git environment for a test scenario.
+// 1. a "developer" GitRepository with the local workspace repo. This is where the feature specs execute in.
+//
+// 2. an "origin" GitRepository that acts as the remote repo for the "developer" repo. This is where pushes from "developer" go to.
+// - the root directory of the GitEnvironment acts as the HOME directory. It
+//   contains the global Git configuration to use in this test.
+//
 type GitEnvironment struct {
 
 	// Dir is the directory that this environment is in.

@@ -7,8 +7,7 @@ import (
 	"github.com/git-town/git-town/v7/src/steps"
 )
 
-// StepList is a list of steps
-// with convenience functions for adding and removing steps.
+// StepList is a list of steps with convenience functions for adding and removing steps.
 type StepList struct {
 	List []steps.Step
 }
