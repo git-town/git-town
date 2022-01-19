@@ -1,6 +1,6 @@
 package git
 
-// BoolCache caches a string value.
+// BoolCache caches a boolean variable.
 // The zero value is an empty cache.
 type BoolCache struct {
 	value       bool

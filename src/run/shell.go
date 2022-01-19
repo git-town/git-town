@@ -1,6 +1,6 @@
 package run
 
-// Shell allows running commands in a subshell.
+// Shell defines the operations for running commands in a subshell.
 type Shell interface {
 	Run(string, ...string) (*Result, error)
 	RunMany([][]string) error
