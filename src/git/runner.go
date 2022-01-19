@@ -180,16 +180,16 @@ func (r *Runner) CommitStagedChanges(message string) error {
 	return nil
 }
 
-// Commit commits staged changes with an optional message and author .
+// Commit performs a commit of the staged changes with an optional custom message and author.
 func (r *Runner) Commit(message, author string) error {
-	commitArgs := []string{"commit"}
+	gitArgs := []string{"commit"}
 	if message != "" {
-		commitArgs = append(commitArgs, "-m", message)
+		gitArgs = append(gitArgs, "-m", message)
 	}
 	if author != "" {
-		commitArgs = append(commitArgs, "--author", author)
+		gitArgs = append(gitArgs, "--author", author)
 	}
-	_, err := r.Run("git", commitArgs...)
+	_, err := r.Run("git", gitArgs...)
 	return err
 }
 
