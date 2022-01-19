@@ -30,7 +30,7 @@ func ConfigureMainBranch(repo *git.ProdRepo) error {
 	}
 	newMainBranch, err := askForBranch(askForBranchOptions{
 		branchNames:       localBranches,
-		prompt:            getMainBranchPrompt(repo),
+		prompt:            mainBranchPrompt(repo),
 		defaultBranchName: repo.Config.MainBranch(),
 	})
 	if err != nil {
@@ -61,7 +61,7 @@ func ConfigurePerennialBranches(repo *git.ProdRepo) error {
 
 // Helpers
 
-func getMainBranchPrompt(repo *git.ProdRepo) (result string) {
+func mainBranchPrompt(repo *git.ProdRepo) (result string) {
 	result += "Please specify the main development branch:"
 	currentMainBranch := repo.Config.MainBranch()
 	if currentMainBranch != "" {
