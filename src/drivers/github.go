@@ -66,7 +66,7 @@ func (d *GithubCodeHostingDriver) LoadPullRequestInfo(branch, parentBranch strin
 		return result, nil
 	}
 	result.CanMergeWithAPI = true
-	result.DefaultCommitMessage = d.getDefaultCommitMessage(pullRequests[0])
+	result.DefaultCommitMessage = d.defaultCommitMessage(pullRequests[0])
 	result.PullRequestNumber = int64(pullRequests[0].GetNumber())
 	return result, nil
 }
@@ -108,7 +108,7 @@ func (d *GithubCodeHostingDriver) connect() {
 	}
 }
 
-func (d *GithubCodeHostingDriver) getDefaultCommitMessage(pullRequest *github.PullRequest) string {
+func (d *GithubCodeHostingDriver) defaultCommitMessage(pullRequest *github.PullRequest) string {
 	return fmt.Sprintf("%s (#%d)", *pullRequest.Title, *pullRequest.Number)
 }
 
