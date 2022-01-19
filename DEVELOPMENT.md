@@ -121,11 +121,11 @@ the code architecture.
 
 ## website
 
-The source code for the website is in the [website](website) folder. This folder
-contains its own [Makefile](website/Makefile) for activities related to working
-on the website. Run `make setup` to download the necessary tooling, `make serve`
-to start a local development server, and `make docs` to test the website.
-
-The [website](https://www.git-town.com) runs on
-[Netlify](https://www.netlify.com). It auto-updates on changes to the `main`
-branch. The Netlify configuration is in [netlify.toml](netlify.toml).
+The source code for the [website](https://www.git-town.com) is in the
+[website](website) folder. This folder contains its own
+[Makefile](website/Makefile) for activities related to working on the website.
+Run `make setup` to download the necessary tooling, `make serve` to start a
+local development server, and `make docs` to test the website. The production
+site auto-updates on changes to the `main` branch. The site hoster is
+[Netlify](https://www.netlify.com). The Netlify configuration is in
+[netlify.toml](netlify.toml).
