@@ -39,11 +39,11 @@ If the repository contains an "upstream" remote,
 syncs the main branch with its upstream counterpart.
 You can disable this by running "git config git-town.sync-upstream false".`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config, err := getSyncConfig(prodRepo)
+		config, err := createSyncConfig(prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}
-		stepList, err := getSyncStepList(config, prodRepo)
+		stepList, err := createSyncStepList(config, prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}
@@ -79,7 +79,7 @@ You can disable this by running "git config git-town.sync-upstream false".`,
 	},
 }
 
-func getSyncConfig(repo *git.ProdRepo) (result syncConfig, err error) {
+func createSyncConfig(repo *git.ProdRepo) (result syncConfig, err error) {
 	result.hasOrigin, err = repo.Silent.HasRemote("origin")
 	if err != nil {
 		return result, err
@@ -117,7 +117,7 @@ func getSyncConfig(repo *git.ProdRepo) (result syncConfig, err error) {
 	return result, nil
 }
 
-func getSyncStepList(config syncConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
+func createSyncStepList(config syncConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
 	for _, branchName := range config.branchesToSync {
 		steps, err := steps.SyncBranchSteps(branchName, true, repo)
 		if err != nil {
