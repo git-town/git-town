@@ -52,12 +52,19 @@ make test
 
 ### run unit tests
 
+Run all unit tests:
+
 ```bash
-make unit       # runs all unit tests
-make u          # runs unit tests for packages containing changes
+make unit
 ```
 
-Run individual unit tests:
+Run unit tests for packages containing changes:
+
+```
+make u
+```
+
+Run an individual unit test:
 
 ```
 go test src/cmd/root_test.go
