@@ -4,23 +4,17 @@ This page helps you get started hacking on the Git Town codebase.
 
 ## setup
 
-1. install [Go](https://golang.org) version 1.12 or higher
+1. install [Go](https://golang.org) version 1.16 or higher
 2. install [Make](https://www.gnu.org/software/make)
-   - Mac and Linux users should be okay out of the box
+   - Mac and Linux users have this out of the box
    - Windows users can install
-     [Make for Windows](https://gnuwin32.sourceforge.net/packages/make.htm). If
-     you use [Chocolatey](https://chocolatey.org), run `choco install make`.
-3. create a fork of the
-   [Git Town repository on GitHub](https://github.com/git-town/git-town) by
-   clicking on `Fork` there
-4. clone your fork into a directory outside your GOPATH. Git Town uses Go
-   modules and doesn't work properly inside the GOPATH. If you don't know what a
-   GOPATH is, clone into a directory other than `c:\go` and `~/go`.
-5. open a terminal and cd into the directory you cloned
-6. run <code textrun="verify-make-command">make setup</code> to download the
-   dependencies
-7. make sure everything works:
-   - build the tool: <code textrun="verify-make-command">make build</code>
+     [Make for Windows](https://gnuwin32.sourceforge.net/packages/make.htm) or
+     run `choco install make` if [Chocolatey](https://chocolatey.org) is
+     available.
+3. run <code textrun="verify-make-command">make setup</code> to download the
+   tooling needed to hack on this codebase
+4. to make sure everything works:
+   - compile the tool: <code textrun="verify-make-command">make build</code>
    - run the tests: <code textrun="verify-make-command">make test</code>
 
 Optional dependencies:
@@ -28,7 +22,6 @@ Optional dependencies:
 - [dprint](https://dprint.dev)
 - [Node.js](https://nodejs.org)
 - [Yarn](https://yarnpkg.com/)
-- [dprint](https://dprint.dev)
 - [scc](https://github.com/boyter/scc)
 
 ## add a new Go dependency
@@ -39,7 +32,7 @@ Optional dependencies:
 - run `go mod vendor` to vendor it
 - run `go mod tidy` to clean up
 
-## update a dependency
+## update a Go dependency
 
 ```
 go get <path>
@@ -49,25 +42,17 @@ go get <path>
 
 <code textrun="verify-make-command">make update</code>
 
-## auto-fix linter errors
+## run all tests
 
-<pre textrun="verify-make-command">
-make fix
-</pre>
-
-## run tests
-
-```bash
+```
 make test       # runs all tests
-make test-go    # runs the Go tests (faster during development)
-make cuke       # runs the feature tests
-make lint       # runs the linters
 ```
 
-Run individual Cucumber tests:
+## run unit tests
 
 ```bash
-godog [path to file/folder]
+make unit       # runs all unit tests
+make u          # runs unit tests for packages containing changes
 ```
 
 Run individual unit tests:
@@ -77,23 +62,26 @@ go test src/cmd/root_test.go
 go test src/cmd/root_test.go -v -run TestIsAcceptableGitVersion
 ```
 
+## run end-to-end tests
+
+Run individual Cucumber tests:
+
+```bash
+make cuke                       # runs all end-to-end test
+godog [path to file/folder]     # runs the given end-to-end tests
+```
+
 Certain tests require that the Git remote points to an actual GitHub, Gitea,
 GitLab or Bitbucket address. This causes `git push` operations in this test to
 also go to GitHub. To prevent this, set an environment variable
 `GIT_TOWN_REMOTE` with the desired value of the `origin` remote, and Git Town
 will use that value instead of what is in the repo.
 
-See the [test architecture](test-architecture.md) document for more details.
+If Cucumber tests produce garbled output on Windows, try running them inside Git
+Bash. See [this issue](https://github.com/cucumber/godog/issues/129) for
+details.
 
-If Cucumber tests produce garbled output on Windows, please try running them
-inside Git Bash. See [this issue](https://github.com/cucumber/godog/issues/129)
-for details. The test suite doesn't run browser tests because the Windows
-`start` CLI command is a built-in shell command and cannot be mocked. Tests
-asking for user input are disabled as well because of problems piping input into
-subshells on Windows. The business logic for these features are covered on
-non-Windows machines.
-
-### debug
+### debug end-to-end tests
 
 To see the CLI output of the shell commands in a Cucumber test, add a tag
 `@debug` above the feature or scenario you want to debug:
@@ -110,3 +98,16 @@ Debug a Godog Cucumber feature in [VSCode](https://code.visualstudio.com):
 - change the path of the test to execute
 - set a breakpoint in your test code
 - run the `debug a test` configuration in the debugger
+
+## run linters
+
+```bash
+make lint     # run all linters
+make fix      # auto-fix linter errors
+```
+
+## learn about the architecture
+
+The source code contains
+[comments](https://pkg.go.dev/github.com/git-town/git-town) that explain the
+code architecture.
