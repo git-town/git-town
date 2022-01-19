@@ -46,8 +46,8 @@ func TestLoadGitea(t *testing.T) {
 //nolint:paralleltest  // mocks HTTP
 func TestLoadGitea_customHostName(t *testing.T) {
 	driver := drivers.LoadGitea(mockConfig{
-		remoteOriginURL:    "git@my-ssh-identity.com:git-town/git-town.git",
-		configuredHostName: "gitea.com",
+		remoteOriginURL: "git@my-ssh-identity.com:git-town/git-town.git",
+		manualHostName:  "gitea.com",
 	}, log)
 	assert.NotNil(t, driver)
 	assert.Equal(t, "Gitea", driver.HostingServiceName())
@@ -173,7 +173,7 @@ func TestGiteaDriver_MergePullRequest(t *testing.T) {
 	sha, err := driver.MergePullRequest(options)
 	assert.NoError(t, err)
 	assert.Equal(t, "abc123", sha)
-	mergeParameters := getRequestData(mergeRequest)
+	mergeParameters := loadRequestData(mergeRequest)
 	assert.Equal(t, "title", mergeParameters["MergeTitleField"])
 	assert.Equal(t, "extra detail1\nextra detail2", mergeParameters["MergeMessageField"])
 	assert.Equal(t, "squash", mergeParameters["Do"])

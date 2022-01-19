@@ -1,4 +1,3 @@
-//nolint:ireturn
 package steps
 
 import (
@@ -15,22 +14,18 @@ type RebaseBranchStep struct {
 	previousSha string
 }
 
-// CreateAbortStep returns the abort step for this step.
-func (step *RebaseBranchStep) CreateAbortStep() Step {
+func (step *RebaseBranchStep) CreateAbortStep() Step { //nolint:ireturn
 	return &AbortRebaseBranchStep{}
 }
 
-// CreateContinueStep returns the continue step for this step.
-func (step *RebaseBranchStep) CreateContinueStep() Step {
+func (step *RebaseBranchStep) CreateContinueStep() Step { //nolint:ireturn
 	return &ContinueRebaseBranchStep{}
 }
 
-// CreateUndoStep returns the undo step for this step.
-func (step *RebaseBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+func (step *RebaseBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
 	return &ResetToShaStep{Hard: true, Sha: step.previousSha}, nil
 }
 
-// Run executes this step.
 func (step *RebaseBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) (err error) {
 	step.previousSha, err = repo.Silent.CurrentSha()
 	if err != nil {

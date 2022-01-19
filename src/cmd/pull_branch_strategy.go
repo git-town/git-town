@@ -17,7 +17,7 @@ when merging remote tracking branches into local branches
 for the main branch and perennial branches.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			cli.Println(prodRepo.Config.GetPullBranchStrategy())
+			cli.Println(prodRepo.Config.PullBranchStrategy())
 		} else {
 			err := prodRepo.Config.SetPullBranchStrategy(args[0])
 			if err != nil {

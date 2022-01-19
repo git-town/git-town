@@ -12,7 +12,6 @@ type CreateRemoteBranchStep struct {
 	Sha        string
 }
 
-// Run executes this step.
 func (step *CreateRemoteBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	return repo.Logging.CreateRemoteBranch(step.Sha, step.BranchName)
 }

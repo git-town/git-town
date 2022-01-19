@@ -14,7 +14,6 @@ type DeleteRemoteBranchStep struct {
 	branchSha string
 }
 
-// CreateUndoStep returns the undo step for this step.
 func (step *DeleteRemoteBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
 	if step.IsTracking {
 		return &CreateTrackingBranchStep{BranchName: step.BranchName}, nil
@@ -22,7 +21,6 @@ func (step *DeleteRemoteBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, er
 	return &CreateRemoteBranchStep{BranchName: step.BranchName, Sha: step.branchSha}, nil
 }
 
-// Run executes this step.
 func (step *DeleteRemoteBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) (err error) {
 	if !step.IsTracking {
 		trackingBranchName := repo.Silent.TrackingBranchName(step.BranchName)

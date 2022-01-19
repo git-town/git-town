@@ -1,4 +1,3 @@
-//nolint:ireturn
 package steps
 
 import (
@@ -20,29 +19,24 @@ type DriverMergePullRequestStep struct {
 	mergeSha                  string
 }
 
-// CreateAbortStep returns the abort step for this step.
-func (step *DriverMergePullRequestStep) CreateAbortStep() Step {
+func (step *DriverMergePullRequestStep) CreateAbortStep() Step { //nolint:ireturn
 	if step.enteredEmptyCommitMessage {
 		return &DiscardOpenChangesStep{}
 	}
 	return nil
 }
 
-// CreateUndoStep returns the undo step for this step.
-func (step *DriverMergePullRequestStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+func (step *DriverMergePullRequestStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
 	return &RevertCommitStep{Sha: step.mergeSha}, nil
 }
 
-// GetAutomaticAbortError returns the error message to display when this step
-// cause the command to automatically abort.
-func (step *DriverMergePullRequestStep) GetAutomaticAbortError() error {
+func (step *DriverMergePullRequestStep) CreateAutomaticAbortError() error {
 	if step.enteredEmptyCommitMessage {
 		return fmt.Errorf("aborted because commit exited with error")
 	}
 	return step.mergeError
 }
 
-// Run executes this step.
 func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	commitMessage := step.CommitMessage
 	//nolint:nestif

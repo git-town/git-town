@@ -29,11 +29,11 @@ func Run(runState *RunState, repo *git.ProdRepo, driver drivers.CodeHostingDrive
 			fmt.Println()
 			return nil
 		}
-		if getTypeName(step) == "*SkipCurrentBranchSteps" {
+		if typeName(step) == "*SkipCurrentBranchSteps" {
 			runState.SkipCurrentBranchSteps()
 			continue
 		}
-		if getTypeName(step) == "*PushBranchAfterCurrentBranchSteps" {
+		if typeName(step) == "*PushBranchAfterCurrentBranchSteps" {
 			err := runState.AddPushBranchStepAfterCurrentBranchSteps(repo)
 			if err != nil {
 				return err
@@ -50,7 +50,7 @@ func Run(runState *RunState, repo *git.ProdRepo, driver drivers.CodeHostingDrive
 				if err != nil {
 					return fmt.Errorf("cannot run the abort steps: %w", err)
 				}
-				cli.Exit(step.GetAutomaticAbortError())
+				cli.Exit(step.CreateAutomaticAbortError())
 			} else {
 				runState.RunStepList.Prepend(step.CreateContinueStep())
 				err := runState.MarkAsUnfinished(repo)

@@ -26,7 +26,7 @@ func (c *Result) Command() string {
 	return c.command
 }
 
-// ExitCode returns the exit code of the command.
+// ExitCode provides the exit code of the command.
 func (c *Result) ExitCode() int {
 	return c.exitCode
 }
@@ -36,13 +36,13 @@ func (c *Result) FullCmd() string {
 	return fmt.Sprintf("%s %s", c.command, strings.Join(c.args, " "))
 }
 
-// Output returns the output of this command.
+// Output provides the output of this command.
 // Runs if it hasn't so far.
 func (c *Result) Output() string {
 	return c.output
 }
 
-// OutputLines returns the output of this command, split into lines.
+// OutputLines provides the output of this command, split into lines.
 // Runs if it hasn't so far.
 func (c *Result) OutputLines() []string {
 	return strings.Split(c.OutputSanitized(), "\n")

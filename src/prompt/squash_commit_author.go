@@ -10,10 +10,10 @@ import (
 	survey "gopkg.in/AlecAivazis/survey.v1"
 )
 
-// GetSquashCommitAuthor gets the author of the supplied branch.
+// DetermineSquashCommitAuthor gets the author of the supplied branch.
 // If the branch has more than one author, the author is queried from the user.
-func GetSquashCommitAuthor(branchName string, repo *git.ProdRepo) (string, error) {
-	authors, err := getBranchAuthors(branchName, repo)
+func DetermineSquashCommitAuthor(branchName string, repo *git.ProdRepo) (string, error) {
+	authors, err := loadBranchAuthors(branchName, repo)
 	if err != nil {
 		return "", err
 	}
@@ -42,9 +42,9 @@ func askForAuthor(authors []string) (string, error) {
 	return result, nil
 }
 
-func getBranchAuthors(branchName string, repo *git.ProdRepo) (result []string, err error) {
+func loadBranchAuthors(branchName string, repo *git.ProdRepo) (result []string, err error) {
 	// Returns lines of "<number of commits>\t<name and email>"
-	lines, err := run.Exec("git", "shortlog", "-s", "-n", "-e", repo.Config.GetMainBranch()+".."+branchName)
+	lines, err := run.Exec("git", "shortlog", "-s", "-n", "-e", repo.Config.MainBranch()+".."+branchName)
 	if err != nil {
 		return result, err
 	}

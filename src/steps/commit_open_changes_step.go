@@ -1,4 +1,3 @@
-//nolint:ireturn
 package steps
 
 import (
@@ -16,12 +15,10 @@ type CommitOpenChangesStep struct {
 	previousSha string
 }
 
-// CreateUndoStep returns the undo step for this step.
-func (step *CommitOpenChangesStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+func (step *CommitOpenChangesStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
 	return &ResetToShaStep{Sha: step.previousSha}, nil
 }
 
-// Run executes this step.
 func (step *CommitOpenChangesStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) (err error) {
 	step.previousSha, err = repo.Silent.CurrentSha()
 	if err != nil {

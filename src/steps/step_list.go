@@ -1,4 +1,3 @@
-//nolint:ireturn
 package steps
 
 import (
@@ -28,16 +27,16 @@ func (stepList *StepList) isEmpty() bool {
 	return len(stepList.List) == 0
 }
 
-// Peek returns the first element of this StepList.
-func (stepList *StepList) Peek() (result Step) {
+// Peek provides the first element of this StepList.
+func (stepList *StepList) Peek() (result Step) { //nolint:ireturn
 	if stepList.isEmpty() {
 		return nil
 	}
 	return stepList.List[0]
 }
 
-// Pop removes and returns the first element of this StepList.
-func (stepList *StepList) Pop() (result Step) {
+// Pop removes and provides the first element of this StepList.
+func (stepList *StepList) Pop() (result Step) { //nolint:ireturn
 	if stepList.isEmpty() {
 		return nil
 	}

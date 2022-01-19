@@ -1,7 +1,7 @@
 package drivers_test
 
 type mockConfig struct {
-	configuredHostName    string
+	manualHostName        string
 	codeHostingDriverName string
 	giteaToken            string
 	gitHubToken           string
@@ -9,26 +9,26 @@ type mockConfig struct {
 	remoteOriginURL       string
 }
 
-func (mc mockConfig) GetCodeHostingOriginHostname() string {
-	return mc.configuredHostName
-}
-
-func (mc mockConfig) GetCodeHostingDriverName() string {
+func (mc mockConfig) CodeHostingDriverName() string {
 	return mc.codeHostingDriverName
 }
 
-func (mc mockConfig) GetGitHubToken() string {
+func (mc mockConfig) CodeHostingOriginHostname() string {
+	return mc.manualHostName
+}
+
+func (mc mockConfig) GitHubToken() string {
 	return mc.gitHubToken
 }
 
-func (mc mockConfig) GetGiteaToken() string {
+func (mc mockConfig) GiteaToken() string {
 	return mc.giteaToken
 }
 
-func (mc mockConfig) GetMainBranch() string {
+func (mc mockConfig) MainBranch() string {
 	return mc.mainBranch
 }
 
-func (mc mockConfig) GetRemoteOriginURL() string {
+func (mc mockConfig) RemoteOriginURL() string {
 	return mc.remoteOriginURL
 }

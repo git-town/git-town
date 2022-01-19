@@ -30,11 +30,11 @@ var killCommand = &cobra.Command{
 Deletes the current or provided branch from the local and remote repositories.
 Does not delete perennial branches nor the main branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config, err := getKillConfig(args, prodRepo)
+		config, err := createKillConfig(args, prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}
-		stepList, err := getKillStepList(config, prodRepo)
+		stepList, err := createKillStepList(config, prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}
@@ -54,7 +54,7 @@ Does not delete perennial branches nor the main branch.`,
 }
 
 //nolint:funlen
-func getKillConfig(args []string, repo *git.ProdRepo) (result killConfig, err error) {
+func createKillConfig(args []string, repo *git.ProdRepo) (result killConfig, err error) {
 	result.initialBranch, err = repo.Silent.CurrentBranch()
 	if err != nil {
 		return result, err
@@ -102,7 +102,7 @@ func getKillConfig(args []string, repo *git.ProdRepo) (result killConfig, err er
 	if err != nil {
 		return result, err
 	}
-	result.targetBranchParent = repo.Config.GetParentBranch(result.targetBranch)
+	result.targetBranchParent = repo.Config.ParentBranch(result.targetBranch)
 	result.previousBranch, err = repo.Silent.PreviouslyCheckedOutBranch()
 	if err != nil {
 		return result, err
@@ -111,11 +111,11 @@ func getKillConfig(args []string, repo *git.ProdRepo) (result killConfig, err er
 	if err != nil {
 		return result, err
 	}
-	result.childBranches = repo.Config.GetChildBranches(result.targetBranch)
+	result.childBranches = repo.Config.ChildBranches(result.targetBranch)
 	return result, nil
 }
 
-func getKillStepList(config killConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
+func createKillStepList(config killConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
 	switch {
 	case config.isTargetBranchLocal:
 		if config.hasTrackingBranch && !config.isOffline {

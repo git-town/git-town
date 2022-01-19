@@ -1,4 +1,3 @@
-//nolint:ireturn
 package steps
 
 import (
@@ -16,7 +15,7 @@ type JSONStep struct {
 func (j *JSONStep) MarshalJSON() (b []byte, e error) {
 	return json.Marshal(map[string]interface{}{
 		"data": j.Step,
-		"type": getTypeName(j.Step),
+		"type": typeName(j.Step),
 	})
 }
 
@@ -32,12 +31,12 @@ func (j *JSONStep) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
-	j.Step = getStep(stepType)
+	j.Step = determineStep(stepType)
 	return json.Unmarshal(*mapping["data"], &j.Step)
 }
 
 //nolint:gocyclo,funlen
-func getStep(stepType string) Step {
+func determineStep(stepType string) Step { //nolint:ireturn
 	switch stepType {
 	case "*AbortMergeBranchStep":
 		return &AbortMergeBranchStep{}
@@ -111,7 +110,7 @@ func getStep(stepType string) Step {
 	}
 }
 
-func getTypeName(myvar interface{}) string {
+func typeName(myvar interface{}) string {
 	t := reflect.TypeOf(myvar)
 	if t.Kind() == reflect.Ptr {
 		return "*" + t.Elem().Name()

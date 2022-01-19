@@ -25,17 +25,17 @@ type GiteaCodeHostingDriver struct {
 // LoadGitea provides a Gitea driver instance if the given repo configuration is for a Gitea repo,
 // otherwise nil.
 func LoadGitea(config config, log logFn) *GiteaCodeHostingDriver {
-	driverType := config.GetCodeHostingDriverName()
-	originURL := config.GetRemoteOriginURL()
-	hostname := helpers.GetURLHostname(originURL)
-	configuredHostName := config.GetCodeHostingOriginHostname()
-	if configuredHostName != "" {
-		hostname = configuredHostName
+	driverType := config.CodeHostingDriverName()
+	originURL := config.RemoteOriginURL()
+	hostname := helpers.URLHostname(originURL)
+	manualHostName := config.CodeHostingOriginHostname()
+	if manualHostName != "" {
+		hostname = manualHostName
 	}
 	if driverType != "gitea" && hostname != "gitea.com" {
 		return nil
 	}
-	repositoryParts := strings.SplitN(helpers.GetURLRepositoryName(originURL), "/", 2)
+	repositoryParts := strings.SplitN(helpers.URLRepositoryName(originURL), "/", 2)
 	if len(repositoryParts) != 2 {
 		return nil
 	}
@@ -44,7 +44,7 @@ func LoadGitea(config config, log logFn) *GiteaCodeHostingDriver {
 	return &GiteaCodeHostingDriver{
 		originURL:  originURL,
 		hostname:   hostname,
-		apiToken:   config.GetGiteaToken(),
+		apiToken:   config.GiteaToken(),
 		log:        log,
 		owner:      owner,
 		repository: repository,
@@ -76,7 +76,7 @@ func (d *GiteaCodeHostingDriver) LoadPullRequestInfo(branch, parentBranch string
 		return result, nil
 	}
 	result.CanMergeWithAPI = true
-	result.DefaultCommitMessage = getDefaultCommitMessage(pullRequest)
+	result.DefaultCommitMessage = createDefaultCommitMessage(pullRequest)
 	result.PullRequestNumber = pullRequest.Index
 	return result, nil
 }
@@ -132,7 +132,7 @@ func (d *GiteaCodeHostingDriver) connect() {
 	}
 }
 
-func getDefaultCommitMessage(pullRequest *gitea.PullRequest) string {
+func createDefaultCommitMessage(pullRequest *gitea.PullRequest) string {
 	return fmt.Sprintf("%s (#%d)", pullRequest.Title, pullRequest.Index)
 }
 

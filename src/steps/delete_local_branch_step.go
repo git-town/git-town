@@ -1,4 +1,3 @@
-//nolint:ireturn
 package steps
 
 import (
@@ -16,12 +15,10 @@ type DeleteLocalBranchStep struct {
 	branchSha string
 }
 
-// CreateUndoStep returns the undo step for this step.
-func (step *DeleteLocalBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+func (step *DeleteLocalBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
 	return &CreateBranchStep{BranchName: step.BranchName, StartingPoint: step.branchSha}, nil
 }
 
-// Run executes this step.
 func (step *DeleteLocalBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) (err error) {
 	step.branchSha, err = repo.Silent.ShaForBranch(step.BranchName)
 	if err != nil {
