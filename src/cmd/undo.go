@@ -20,7 +20,7 @@ var undoCmd = &cobra.Command{
 			cli.Exit(fmt.Errorf("nothing to undo"))
 		}
 		undoRunState := runState.CreateUndoRunState()
-		err = runstate.Run(&undoRunState, prodRepo, nil)
+		err = runstate.Execute(&undoRunState, prodRepo, nil)
 		if err != nil {
 			cli.Exit(err)
 		}

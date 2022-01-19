@@ -71,7 +71,7 @@ and Git Town will leave it up to your origin server to delete the remote branch.
 			cli.Exit(err)
 		}
 		runState := runstate.NewRunState("ship", stepList)
-		err = runstate.Run(runState, prodRepo, driver)
+		err = runstate.Execute(runState, prodRepo, driver)
 		if err != nil {
 			cli.Exit(err)
 		}

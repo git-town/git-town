@@ -31,7 +31,7 @@ This usually means the branch was shipped or killed on another machine.`,
 			cli.Exit(err)
 		}
 		runState := runstate.NewRunState("prune-branches", stepList)
-		err = runstate.Run(runState, prodRepo, nil)
+		err = runstate.Execute(runState, prodRepo, nil)
 		if err != nil {
 			cli.Exit(err)
 		}

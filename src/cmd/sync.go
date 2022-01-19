@@ -49,7 +49,7 @@ You can disable this by running "git config git-town.sync-upstream false".`,
 			cli.Exit(err)
 		}
 		runState := runstate.NewRunState("sync", stepList)
-		err = runstate.Run(runState, prodRepo, nil)
+		err = runstate.Execute(runState, prodRepo, nil)
 		if err != nil {
 			cli.Exit(err)
 		}

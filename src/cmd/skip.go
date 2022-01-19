@@ -23,7 +23,7 @@ var skipCmd = &cobra.Command{
 			cli.Exit(fmt.Errorf("cannot skip branch that resulted in conflicts"))
 		}
 		skipRunState := runState.CreateSkipRunState()
-		err = runstate.Run(&skipRunState, prodRepo, nil)
+		err = runstate.Execute(&skipRunState, prodRepo, nil)
 		if err != nil {
 			cli.Exit(err)
 		}

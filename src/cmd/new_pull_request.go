@@ -48,7 +48,7 @@ where hostname matches what is in your ssh config file.`,
 			cli.Exit(err)
 		}
 		runState := runstate.NewRunState("new-pull-request", stepList)
-		err = runstate.Run(runState, prodRepo, driver)
+		err = runstate.Execute(runState, prodRepo, driver)
 		if err != nil {
 			cli.Exit(err)
 		}
