@@ -40,7 +40,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       | main             | git rebase --abort            |
       |                  | git checkout existing-feature |
       | existing-feature | git stash pop                 |
-    And I end up on the "existing-feature" branch
+    And I am now on the "existing-feature" branch
     And my workspace has the uncommitted file again
     And there is no rebase in progress
     And my repo is left with my original commits
@@ -66,7 +66,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       |             | git branch new-feature main |
       |             | git checkout new-feature    |
       | new-feature | git stash pop               |
-    And I end up on the "new-feature" branch
+    And I am now on the "new-feature" branch
     And my workspace still contains my uncommitted file
     And my repo now has the following commits
       | BRANCH      | LOCATION      | MESSAGE                   | FILE NAME        |
@@ -86,7 +86,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       |             | git branch new-feature main |
       |             | git checkout new-feature    |
       | new-feature | git stash pop               |
-    And I end up on the "new-feature" branch
+    And I am now on the "new-feature" branch
     And my workspace still contains my uncommitted file
     And my repo now has the following commits
       | BRANCH      | LOCATION      | MESSAGE                   | FILE NAME        |

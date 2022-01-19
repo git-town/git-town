@@ -27,7 +27,7 @@ Feature: git town-ship: offline mode
       | main    | git merge --squash feature         |
       |         | git commit -m "feature done"       |
       |         | git branch -D feature              |
-    And I end up on the "main" branch
+    And I am now on the "main" branch
     And my repo now has the following commits
       | BRANCH  | LOCATION | MESSAGE        |
       | main    | local    | feature done   |
@@ -44,7 +44,7 @@ Feature: git town-ship: offline mode
       | feature | git checkout main                             |
       | main    | git reset --hard {{ sha 'Initial commit' }}   |
       |         | git checkout feature                          |
-    And I end up on the "feature" branch
+    And I am now on the "feature" branch
     And my repo now has the following commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, remote | feature commit |

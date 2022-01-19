@@ -25,7 +25,7 @@ Feature: git town-rename-branch: renaming a feature branch with child branches
       | renamed-parent-feature | git push -u origin renamed-parent-feature        |
       |                        | git push origin :parent-feature                  |
       |                        | git branch -D parent-feature                     |
-    And I end up on the "renamed-parent-feature" branch
+    And I am now on the "renamed-parent-feature" branch
     And my repo now has the following commits
       | BRANCH                 | LOCATION      | MESSAGE               | FILE NAME           | FILE CONTENT           |
       | child-feature          | local, remote | child feature commit  | child_feature_file  | child feature content  |
@@ -45,7 +45,7 @@ Feature: git town-rename-branch: renaming a feature branch with child branches
       |                        | git push origin :renamed-parent-feature                     |
       |                        | git checkout parent-feature                                 |
       | parent-feature         | git branch -D renamed-parent-feature                        |
-    And I end up on the "parent-feature" branch
+    And I am now on the "parent-feature" branch
     And my repo now has the following commits
       | BRANCH         | LOCATION      | MESSAGE               | FILE NAME           | FILE CONTENT           |
       | child-feature  | local, remote | child feature commit  | child_feature_file  | child feature content  |

@@ -32,7 +32,7 @@ Feature: Skip deleting the remote branch when shipping another branch
       |               | git push                           |
       |               | git branch -D feature              |
       |               | git checkout other-feature         |
-    And I end up on the "other-feature" branch
+    And I am now on the "other-feature" branch
     And the existing branches are
       | REPOSITORY | BRANCHES            |
       | local      | main, other-feature |
@@ -54,7 +54,7 @@ Feature: Skip deleting the remote branch when shipping another branch
       |               | git checkout feature                          |
       | feature       | git checkout main                             |
       | main          | git checkout other-feature                    |
-    And I end up on the "other-feature" branch
+    And I am now on the "other-feature" branch
     And my repo now has the following commits
       | BRANCH        | LOCATION      | MESSAGE               | FILE NAME    |
       | main          | local, remote | feature done          | feature_file |

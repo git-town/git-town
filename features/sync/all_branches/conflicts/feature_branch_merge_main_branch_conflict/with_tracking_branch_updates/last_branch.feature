@@ -33,7 +33,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       To continue after having resolved conflicts, run "git-town continue".
       To continue by skipping the current branch, run "git-town skip".
       """
-    And I end up on the "feature-2" branch
+    And I am now on the "feature-2" branch
     And my uncommitted file is stashed
     And my repo now has a merge in progress
 
@@ -47,7 +47,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       |           | git checkout feature-1                              |
       | feature-1 | git checkout main                                   |
       | main      | git stash pop                                       |
-    And I end up on the "main" branch
+    And I am now on the "main" branch
     And my workspace has the uncommitted file again
     And my repo now has the following commits
       | BRANCH    | LOCATION      | MESSAGE                            | FILE NAME            |
@@ -68,7 +68,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       |           | git checkout main                                   |
       | main      | git push --tags                                     |
       |           | git stash pop                                       |
-    And I end up on the "main" branch
+    And I am now on the "main" branch
     And my workspace has the uncommitted file again
     And my repo now has the following commits
       | BRANCH    | LOCATION      | MESSAGE                            | FILE NAME            |
@@ -102,7 +102,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       |           | git checkout main    |
       | main      | git push --tags      |
       |           | git stash pop        |
-    And I end up on the "main" branch
+    And I am now on the "main" branch
     And my workspace has the uncommitted file again
     And my repo now has the following commits
       | BRANCH    | LOCATION      | MESSAGE                                                        | FILE NAME            |
@@ -127,7 +127,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       |           | git checkout main |
       | main      | git push --tags   |
       |           | git stash pop     |
-    And I end up on the "main" branch
+    And I am now on the "main" branch
     And my workspace has the uncommitted file again
     And my repo now has the following commits
       | BRANCH    | LOCATION      | MESSAGE                                                        | FILE NAME            |

@@ -25,7 +25,7 @@ Feature: Appending a branch to a perennial branch
       |            | git branch new-child production |
       |            | git checkout new-child          |
       | new-child  | git stash pop                   |
-    And I end up on the "new-child" branch
+    And I am now on the "new-child" branch
     And my workspace still contains my uncommitted file
     And my repo now has the following commits
       | BRANCH     | LOCATION      | MESSAGE           |
@@ -45,7 +45,7 @@ Feature: Appending a branch to a perennial branch
       |            | git checkout production |
       | production | git branch -D new-child |
       |            | git stash pop           |
-    And I end up on the "production" branch
+    And I am now on the "production" branch
     And my workspace still contains my uncommitted file
     And my repo now has the following commits
       | BRANCH     | LOCATION      | MESSAGE           |
