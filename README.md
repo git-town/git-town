@@ -66,7 +66,7 @@ Git Town provides these additional Git commands:
 - [git town perennial-branches](https://www.git-town.com/documentation/commands/perennial-branches.md) -
   displays or updates the perennial branches for the current repo
 - [git town pull-branch-strategy](https://www.git-town.com/documentation/commands/pull-branch-strategy.md) -
-  displays or sets the strategy with which perennial branches are updated
+  displays or sets the strategy to update perennial branches
 
 #### Git Town setup
 
