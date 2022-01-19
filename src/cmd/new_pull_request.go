@@ -34,7 +34,7 @@ When using SSH identities, this command needs to be configured with
 "git config git-town.code-hosting-origin-hostname <hostname>"
 where hostname matches what is in your ssh config file.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config, err := getNewPullRequestConfig(prodRepo)
+		config, err := createNewPullRequestConfig(prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}
@@ -42,7 +42,7 @@ where hostname matches what is in your ssh config file.`,
 		if driver == nil {
 			cli.Exit(drivers.UnsupportedHostingError())
 		}
-		stepList, err := getNewPullRequestStepList(config, prodRepo)
+		stepList, err := createNewPullRequestStepList(config, prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}
@@ -67,7 +67,7 @@ where hostname matches what is in your ssh config file.`,
 	},
 }
 
-func getNewPullRequestConfig(repo *git.ProdRepo) (result newPullRequestConfig, err error) {
+func createNewPullRequestConfig(repo *git.ProdRepo) (result newPullRequestConfig, err error) {
 	hasOrigin, err := repo.Silent.HasRemote("origin")
 	if err != nil {
 		return result, err
@@ -90,7 +90,7 @@ func getNewPullRequestConfig(repo *git.ProdRepo) (result newPullRequestConfig, e
 	return
 }
 
-func getNewPullRequestStepList(config newPullRequestConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
+func createNewPullRequestStepList(config newPullRequestConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
 	for _, branchName := range config.BranchesToSync {
 		steps, err := steps.SyncBranchSteps(branchName, true, repo)
 		if err != nil {
