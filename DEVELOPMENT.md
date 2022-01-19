@@ -13,7 +13,7 @@ This page helps you get started hacking on the Git Town codebase.
      available.
 3. automatically install Go-based tooling
    <code textrun="verify-make-command">make setup</code>
-4. manually install optional dependencies: [dprint](https://dprint.dev),
+4. manually install optional tooling: [dprint](https://dprint.dev),
    [Node.js](https://nodejs.org), [Yarn](https://yarnpkg.com/),
    [scc](https://github.com/boyter/scc)
 5. run the tests: <code textrun="verify-make-command">make test</code>
