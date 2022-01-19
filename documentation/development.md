@@ -2,7 +2,7 @@
 
 This page helps you get started hacking on the Git Town codebase.
 
-## setup
+### setup
 
 1. install [Go](https://golang.org) version 1.16 or higher
 2. install [Make](https://www.gnu.org/software/make)
@@ -24,7 +24,7 @@ Optional dependencies:
 - [Yarn](https://yarnpkg.com/)
 - [scc](https://github.com/boyter/scc)
 
-## add a new Go dependency
+### add a new Go dependency
 
 - run `go get [dependency]` inside the Git Town folder to register the
   dependency
@@ -32,23 +32,23 @@ Optional dependencies:
 - run `go mod vendor` to vendor it
 - run `go mod tidy` to clean up
 
-## update a Go dependency
+### update a Go dependency
 
 ```
 go get <path>
 ```
 
-## update all dependencies
+### update all dependencies
 
 <code textrun="verify-make-command">make update</code>
 
-## run all tests
+### run all tests
 
 ```
 make test       # runs all tests
 ```
 
-## run unit tests
+### run unit tests
 
 ```bash
 make unit       # runs all unit tests
@@ -62,7 +62,7 @@ go test src/cmd/root_test.go
 go test src/cmd/root_test.go -v -run TestIsAcceptableGitVersion
 ```
 
-## run end-to-end tests
+### run end-to-end tests
 
 Run individual Cucumber tests:
 
@@ -81,7 +81,7 @@ If Cucumber tests produce garbled output on Windows, try running them inside Git
 Bash. See [this issue](https://github.com/cucumber/godog/issues/129) for
 details.
 
-## debug end-to-end tests
+### debug end-to-end tests
 
 To see the CLI output of the shell commands in a Cucumber test, add a tag
 `@debug` above the feature or scenario you want to debug:
@@ -99,14 +99,14 @@ Debug a Godog Cucumber feature in [VSCode](https://code.visualstudio.com):
 - set a breakpoint in your test code
 - run the `debug a test` configuration in the debugger
 
-## run linters
+### run linters
 
 ```bash
 make lint     # run all linters
 make fix      # auto-fix linter errors
 ```
 
-## learn about the architecture
+### learn about the code and test architecture
 
 The source code contains
 [comments](https://pkg.go.dev/github.com/git-town/git-town) that explain the
