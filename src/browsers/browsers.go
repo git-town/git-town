@@ -1,3 +1,4 @@
+// Package browsers allows interacting with the default browser on the user's machine.
 package browsers
 
 import (
@@ -7,8 +8,7 @@ import (
 	"github.com/git-town/git-town/v7/src/run"
 )
 
-// OpenBrowserCommand provides the command to run on the console
-// to open the default browser.
+// OpenBrowserCommand provides the console command to open the default browser.
 func OpenBrowserCommand() string {
 	if runtime.GOOS == "windows" {
 		// NOTE: the "explorer" command cannot handle special characters
@@ -38,8 +38,8 @@ func OpenBrowserCommand() string {
 	return ""
 }
 
-// Open opens the default browser with the given URL.
-// If no browser is found, prints the URL.
+// Open opens a new window/tab in the default browser with the given URL.
+// If no browser is found, it prints the URL.
 func Open(url string, shell run.Shell) {
 	command := OpenBrowserCommand()
 	if command == "" {

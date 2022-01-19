@@ -58,7 +58,7 @@ Git Town provides these additional Git commands:
 - [git town config](https://www.git-town.com/documentation/commands/config.md) -
   displays or updates your Git Town configuration
 - [git town new-branch-push-flag](https://www.git-town.com/documentation/commands/new-branch-push-flag.md) -
-  configures whether new empty branches are pushed to origin
+  configures whether new empty branches get pushed to origin
 - [git town main-branch](https://www.git-town.com/documentation/commands/main-branch.md) -
   displays or sets the main development branch for the current repo
 - [git town offline](https://www.git-town.com/documentation/commands/offline.md) -
@@ -66,7 +66,7 @@ Git Town provides these additional Git commands:
 - [git town perennial-branches](https://www.git-town.com/documentation/commands/perennial-branches.md) -
   displays or updates the perennial branches for the current repo
 - [git town pull-branch-strategy](https://www.git-town.com/documentation/commands/pull-branch-strategy.md) -
-  displays or sets the strategy with which perennial branches are updated
+  displays or sets the strategy to update perennial branches
 
 #### Git Town setup
 
@@ -85,18 +85,15 @@ for more details.
 
 ## Documentation
 
-Documentation for all commands exists at the
-[Git Town website](https://www.git-town.com). At runtime, call `git town` for an
-overview of the Git Town commands and `git help <command>` for help with
-individual commands.
+The [Git Town website](https://www.git-town.com) provides documentation for Git
+Town users. `git town help [command]` shows help on the CLI.
 
 ## Contributing
 
 Found a bug or have an idea for a new feature?
 [Open an issue](https://github.com/git-town/git-town/issues/new) or send a
-[pull request](https://help.github.com/articles/using-pull-requests/)! Check out
-our [contributing](/CONTRIBUTING.md) and [developer](documentation/README.md)
-guides to get started.
+[pull request](https://help.github.com/articles/using-pull-requests)! Our
+[developer documentation](DEVELOPMENT.md) helps you get started.
 
 Kudos to our contributors!
 

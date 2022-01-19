@@ -7,10 +7,14 @@ import (
 	"github.com/git-town/git-town/v7/test/helpers"
 )
 
-/*
-GitManager manages the Git setup for the entire test suite.
-In particular, it creates the Git setup for individual feature specs (GitEnvironment).
-*/
+// GitManager manages the Git setup for the entire test suite.
+// For each scenario, it provides a standardized, empty GitEnvironment consisting of a local and remote Git repository.
+//
+// Setting up a GitEnvironment is an expensive operation and has to be done for every scenario.
+// As a performance optimization, GitManager creates a fully set up GitEnvironment (including the main branch and configuration)
+// (the "memoized" environment) at the beginning of the test suite and makes copies of it for each scenario.
+// Making copies of a fully set up Git repo is much faster than creating it from scratch.
+// End-to-end tests run multi-threaded, all threads share a global GitManager instance.
 type GitManager struct {
 
 	// path of the folder that this class operates in

@@ -2,8 +2,6 @@ package drivers
 
 import "errors"
 
-// Core provides the public API for the drivers subsystem.
-
 // CodeHostingDriver defines the structure of drivers
 // for the different code hosting services.
 type CodeHostingDriver interface {

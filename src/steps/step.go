@@ -5,8 +5,10 @@ import (
 	"github.com/git-town/git-town/v7/src/git"
 )
 
-// Step represents a dedicated activity within a Git Town command.
-// Git Town commands are comprised of a number of steps that need to be executed.
+// Step represents a dedicated CLI activity.
+// Git Town commands consist of many Step instances.
+// Steps implement the command pattern (https://en.wikipedia.org/wiki/Command_pattern)
+// and can provide Steps to continue, abort, and undo them.
 type Step interface {
 	// CreateAbortStep provides the abort step for this step.
 	CreateAbortStep() Step
