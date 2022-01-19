@@ -13,7 +13,7 @@ import (
 // DetermineSquashCommitAuthor gets the author of the supplied branch.
 // If the branch has more than one author, the author is queried from the user.
 func DetermineSquashCommitAuthor(branchName string, repo *git.ProdRepo) (string, error) {
-	authors, err := getBranchAuthors(branchName, repo)
+	authors, err := loadBranchAuthors(branchName, repo)
 	if err != nil {
 		return "", err
 	}
@@ -42,7 +42,7 @@ func askForAuthor(authors []string) (string, error) {
 	return result, nil
 }
 
-func getBranchAuthors(branchName string, repo *git.ProdRepo) (result []string, err error) {
+func loadBranchAuthors(branchName string, repo *git.ProdRepo) (result []string, err error) {
 	// Returns lines of "<number of commits>\t<name and email>"
 	lines, err := run.Exec("git", "shortlog", "-s", "-n", "-e", repo.Config.MainBranch()+".."+branchName)
 	if err != nil {
