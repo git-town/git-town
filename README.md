@@ -86,7 +86,7 @@ for more details.
 ## Documentation
 
 The [Git Town website](https://www.git-town.com) provides documentation for Git
-Town users. `git town help [command]` shows the man pages.
+Town users. `git town help [command]` shows help on the CLI.
 
 ## Contributing
 
