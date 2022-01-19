@@ -183,8 +183,8 @@ func (c *Config) GetGitAlias(command string) string {
 	return c.getGlobalConfigValue("alias." + command)
 }
 
-// GetGitHubToken provides the content of the GitHub API token stored in the local or global Git Town configuration.
-func (c *Config) GetGitHubToken() string {
+// GitHubToken provides the content of the GitHub API token stored in the local or global Git Town configuration.
+func (c *Config) GitHubToken() string {
 	return c.getLocalOrGlobalConfigValue("git-town.github-token")
 }
 

@@ -17,7 +17,7 @@ func (mc mockConfig) CodeHostingDriverName() string {
 	return mc.codeHostingDriverName
 }
 
-func (mc mockConfig) GetGitHubToken() string {
+func (mc mockConfig) GitHubToken() string {
 	return mc.gitHubToken
 }
 

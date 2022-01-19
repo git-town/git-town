@@ -31,7 +31,7 @@ type config interface {
 	CodeHostingOriginHostname() string
 	CodeHostingDriverName() string
 	GetGiteaToken() string
-	GetGitHubToken() string
+	GitHubToken() string
 	GetMainBranch() string
 	GetRemoteOriginURL() string
 }

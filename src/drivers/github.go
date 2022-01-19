@@ -43,7 +43,7 @@ func LoadGithub(config config, log logFn) *GithubCodeHostingDriver {
 	owner := repositoryParts[0]
 	repository := repositoryParts[1]
 	return &GithubCodeHostingDriver{
-		apiToken:   config.GetGitHubToken(),
+		apiToken:   config.GitHubToken(),
 		config:     config,
 		hostname:   hostname,
 		log:        log,
