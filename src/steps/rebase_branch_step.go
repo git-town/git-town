@@ -1,4 +1,3 @@
-//nolint:ireturn
 package steps
 
 import (
@@ -15,15 +14,15 @@ type RebaseBranchStep struct {
 	previousSha string
 }
 
-func (step *RebaseBranchStep) CreateAbortStep() Step {
+func (step *RebaseBranchStep) CreateAbortStep() Step { //nolint:ireturn
 	return &AbortRebaseBranchStep{}
 }
 
-func (step *RebaseBranchStep) CreateContinueStep() Step {
+func (step *RebaseBranchStep) CreateContinueStep() Step { //nolint:ireturn
 	return &ContinueRebaseBranchStep{}
 }
 
-func (step *RebaseBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+func (step *RebaseBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
 	return &ResetToShaStep{Hard: true, Sha: step.previousSha}, nil
 }
 

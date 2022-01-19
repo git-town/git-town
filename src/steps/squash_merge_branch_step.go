@@ -1,4 +1,3 @@
-//nolint:ireturn
 package steps
 
 import (
@@ -16,11 +15,11 @@ type SquashMergeBranchStep struct {
 	CommitMessage string
 }
 
-func (step *SquashMergeBranchStep) CreateAbortStep() Step {
+func (step *SquashMergeBranchStep) CreateAbortStep() Step { //nolint:ireturn
 	return &DiscardOpenChangesStep{}
 }
 
-func (step *SquashMergeBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+func (step *SquashMergeBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
 	currentSHA, err := repo.Silent.CurrentSha()
 	if err != nil {
 		return nil, err

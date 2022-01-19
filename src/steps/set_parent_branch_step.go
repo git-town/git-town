@@ -1,4 +1,3 @@
-//nolint:ireturn
 package steps
 
 import (
@@ -16,7 +15,7 @@ type SetParentBranchStep struct {
 	previousParent string
 }
 
-func (step *SetParentBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+func (step *SetParentBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
 	if step.previousParent == "" {
 		return &DeleteParentBranchStep{BranchName: step.BranchName}, nil
 	}

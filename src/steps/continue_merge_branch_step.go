@@ -1,4 +1,3 @@
-//nolint:ireturn
 package steps
 
 import (
@@ -12,11 +11,11 @@ type ContinueMergeBranchStep struct {
 	NoOpStep
 }
 
-func (step *ContinueMergeBranchStep) CreateAbortStep() Step {
+func (step *ContinueMergeBranchStep) CreateAbortStep() Step { //nolint:ireturn
 	return &NoOpStep{}
 }
 
-func (step *ContinueMergeBranchStep) CreateContinueStep() Step {
+func (step *ContinueMergeBranchStep) CreateContinueStep() Step { //nolint:ireturn
 	return step
 }
 

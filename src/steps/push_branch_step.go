@@ -1,4 +1,3 @@
-//nolint:ireturn
 package steps
 
 import (
@@ -15,7 +14,7 @@ type PushBranchStep struct {
 	Undoable   bool
 }
 
-func (step *PushBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+func (step *PushBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
 	if step.Undoable {
 		return &PushBranchAfterCurrentBranchSteps{}, nil
 	}
