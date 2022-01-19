@@ -9,12 +9,12 @@ type mockConfig struct {
 	remoteOriginURL       string
 }
 
-func (mc mockConfig) CodeHostingOriginHostname() string {
-	return mc.manualHostName
-}
-
 func (mc mockConfig) CodeHostingDriverName() string {
 	return mc.codeHostingDriverName
+}
+
+func (mc mockConfig) CodeHostingOriginHostname() string {
+	return mc.manualHostName
 }
 
 func (mc mockConfig) GitHubToken() string {
