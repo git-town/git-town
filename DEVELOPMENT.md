@@ -40,12 +40,14 @@ go get <path>
 
 ### update all dependencies
 
-<pre textrun="verify-make-command">make update</pre>
+```bash
+make update
+```
 
 ### run all tests
 
 ```
-make test       # runs all tests
+make test # runs all tests
 ```
 
 ### run unit tests
