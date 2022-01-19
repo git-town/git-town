@@ -76,7 +76,7 @@ func (c *Config) AddToPerennialBranches(branchNames ...string) error {
 	return c.SetPerennialBranches(append(c.PerennialBranches(), branchNames...))
 }
 
-// AncestorBranches returns the names of all parent branches for the given branch,
+// AncestorBranches provides the names of all parent branches for the given branch,
 // This information is read from the cache in the Git config,
 // so might be out of date when the branch hierarchy has been modified.
 func (c *Config) AncestorBranches(branchName string) (result []string) {
@@ -108,7 +108,7 @@ func (c *Config) BranchAncestryRoots() []string {
 	return roots
 }
 
-// ChildBranches returns the names of all branches for which the given branch
+// ChildBranches provides the names of all branches for which the given branch
 // is a parent.
 func (c *Config) ChildBranches(branchName string) (result []string) {
 	for _, key := range c.localConfigKeysMatching(`^git-town-branch\..*\.parent$`) {

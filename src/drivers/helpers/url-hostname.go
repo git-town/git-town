@@ -2,7 +2,7 @@ package helpers
 
 import "regexp"
 
-// URLHostname returns the hostname contained within the given Git URL.
+// URLHostname provides the hostname contained within the given Git URL.
 func URLHostname(url string) string {
 	hostnameRegex := regexp.MustCompile("(^[^:]*://([^@]*@)?|git@)([^/:]+).*")
 	matches := hostnameRegex.FindStringSubmatch(url)

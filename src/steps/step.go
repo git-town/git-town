@@ -8,16 +8,16 @@ import (
 // Step represents a dedicated activity within a Git Town command.
 // Git Town commands are comprised of a number of steps that need to be executed.
 type Step interface {
-	// CreateAbortStep returns the abort step for this step.
+	// CreateAbortStep provides the abort step for this step.
 	CreateAbortStep() Step
 
-	// CreateContinueStep returns the continue step for this step.
+	// CreateContinueStep provides the continue step for this step.
 	CreateContinueStep() Step
 
-	// CreateUndoStep returns the undo step for this step.
+	// CreateUndoStep provides the undo step for this step.
 	CreateUndoStep(*git.ProdRepo) (Step, error)
 
-	// CreateAutomaticAbortError returns the error message to display when this step
+	// CreateAutomaticAbortError provides the error message to display when this step
 	// cause the command to automatically abort.
 	CreateAutomaticAbortError() error
 

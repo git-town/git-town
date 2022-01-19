@@ -27,7 +27,7 @@ func (stepList *StepList) isEmpty() bool {
 	return len(stepList.List) == 0
 }
 
-// Peek returns the first element of this StepList.
+// Peek provides the first element of this StepList.
 func (stepList *StepList) Peek() (result Step) { //nolint:ireturn
 	if stepList.isEmpty() {
 		return nil
@@ -35,7 +35,7 @@ func (stepList *StepList) Peek() (result Step) { //nolint:ireturn
 	return stepList.List[0]
 }
 
-// Pop removes and returns the first element of this StepList.
+// Pop removes and provides the first element of this StepList.
 func (stepList *StepList) Pop() (result Step) { //nolint:ireturn
 	if stepList.isEmpty() {
 		return nil
