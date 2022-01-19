@@ -40,7 +40,7 @@ go get <path>
 
 ### update all dependencies
 
-<code textrun="verify-make-command">make update</code>
+<pre textrun="verify-make-command">make update</pre>
 
 ### run all tests
 
