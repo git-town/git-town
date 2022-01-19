@@ -21,27 +21,20 @@ type GitManager struct {
 	dir string
 
 	// the memoized environment
-	memoized *GitEnvironment
+	memoized GitEnvironment
 }
 
 // NewGitManager provides a new GitManager instance operating in the given directory.
-func NewGitManager(baseDir string) *GitManager {
-	return &GitManager{dir: baseDir}
-}
-
-// CreateMemoizedEnvironment creates the Git environment cache
-// that makes cloning new GitEnvironment instances faster.
-func (manager *GitManager) CreateMemoizedEnvironment() error {
-	var err error
-	manager.memoized, err = NewStandardGitEnvironment(filepath.Join(manager.dir, "memoized"))
+func NewGitManager(dir string) (GitManager, error) {
+	memoized, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
 	if err != nil {
-		return fmt.Errorf("cannot create memoized environment: %w", err)
+		return GitManager{}, fmt.Errorf("cannot create memoized environment: %w", err)
 	}
-	return nil
+	return GitManager{dir, memoized}, nil
 }
 
 // CreateScenarioEnvironment provides a new GitEnvironment for the scenario with the given name.
-func (manager *GitManager) CreateScenarioEnvironment(scenarioName string) (*GitEnvironment, error) {
+func (manager *GitManager) CreateScenarioEnvironment(scenarioName string) (GitEnvironment, error) {
 	envDirName := helpers.FolderName(scenarioName) + "_" + helpers.UniqueString()
 	envPath := filepath.Join(manager.dir, envDirName)
 	return CloneGitEnvironment(manager.memoized, envPath)

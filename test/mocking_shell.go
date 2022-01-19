@@ -28,8 +28,8 @@ type MockingShell struct {
 }
 
 // NewMockingShell provides a new MockingShell instance that executes in the given directory.
-func NewMockingShell(workingDir string, homeDir string, binDir string) *MockingShell {
-	return &MockingShell{workingDir: workingDir, homeDir: homeDir, binDir: binDir}
+func NewMockingShell(workingDir string, homeDir string, binDir string) MockingShell {
+	return MockingShell{workingDir: workingDir, homeDir: homeDir, binDir: binDir}
 }
 
 // createBinDir creates the directory that contains mock shell command implementations.

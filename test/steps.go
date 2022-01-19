@@ -59,11 +59,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			if err != nil {
 				log.Fatalf("cannot evaluate symlinks of base directory for feature specs: %s", err)
 			}
-			gitManager = NewGitManager(evalBaseDir)
-			err = gitManager.CreateMemoizedEnvironment()
+			gm, err := NewGitManager(evalBaseDir)
 			if err != nil {
 				log.Fatalf("Cannot create memoized environment: %s", err)
 			}
+			gitManager = &gm
 		}
 	})
 

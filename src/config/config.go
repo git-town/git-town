@@ -452,8 +452,8 @@ func (c *Config) ValidateIsOnline() error {
 }
 
 // NewConfiguration provides a Configuration instance reflecting the configuration values in the given directory.
-func NewConfiguration(shell run.Shell) *Config {
-	return &Config{
+func NewConfiguration(shell run.Shell) Config {
+	return Config{
 		localConfigCache:  loadGitConfig(shell, false),
 		globalConfigCache: loadGitConfig(shell, true),
 		shell:             shell,
