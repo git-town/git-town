@@ -58,7 +58,7 @@ Git Town provides these additional Git commands:
 - [git town config](https://www.git-town.com/documentation/commands/config.md) -
   displays or updates your Git Town configuration
 - [git town new-branch-push-flag](https://www.git-town.com/documentation/commands/new-branch-push-flag.md) -
-  configures whether new empty branches are pushed to origin
+  configures whether new empty branches get pushed to origin
 - [git town main-branch](https://www.git-town.com/documentation/commands/main-branch.md) -
   displays or sets the main development branch for the current repo
 - [git town offline](https://www.git-town.com/documentation/commands/offline.md) -
