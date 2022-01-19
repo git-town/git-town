@@ -11,15 +11,14 @@ This page helps you get started hacking on the Git Town codebase.
      [Make for Windows](https://gnuwin32.sourceforge.net/packages/make.htm) or
      run `choco install make` if [Chocolatey](https://chocolatey.org) is
      available.
-3. run <code textrun="verify-make-command">make setup</code> to download the
-   tooling needed to hack on this codebase
-4. to make sure everything works:
+3. automatically install core dependencies
+   <code textrun="verify-make-command">make setup</code>
+4. manually install optional dependencies: [dprint](https://dprint.dev),
+   [Node.js](https://nodejs.org), [Yarn](https://yarnpkg.com/),
+   [scc](https://github.com/boyter/scc)
+5. to make sure everything works:
    - compile the tool: <code textrun="verify-make-command">make build</code>
    - run the tests: <code textrun="verify-make-command">make test</code>
-
-Optional dependencies: [dprint](https://dprint.dev),
-[Node.js](https://nodejs.org), [Yarn](https://yarnpkg.com/),
-[scc](https://github.com/boyter/scc)
 
 ## dependencies
 
