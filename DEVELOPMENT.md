@@ -17,12 +17,9 @@ This page helps you get started hacking on the Git Town codebase.
    - compile the tool: <code textrun="verify-make-command">make build</code>
    - run the tests: <code textrun="verify-make-command">make test</code>
 
-Optional dependencies:
-
-- [dprint](https://dprint.dev)
-- [Node.js](https://nodejs.org)
-- [Yarn](https://yarnpkg.com/)
-- [scc](https://github.com/boyter/scc)
+Optional dependencies: [dprint](https://dprint.dev),
+[Node.js](https://nodejs.org), [Yarn](https://yarnpkg.com/),
+[scc](https://github.com/boyter/scc)
 
 ## dependencies
 
