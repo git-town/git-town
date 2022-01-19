@@ -18,51 +18,14 @@ import (
 // This class manages which config values are stored in local vs global settings.
 type Config struct {
 
-	// localConfigCache is a cache of the Git configuration in the local Git repo.
-	localConfigCache map[string]string
-
 	// globalConfigCache is a cache of the global Git configuration.
 	globalConfigCache map[string]string
 
+	// localConfigCache is a cache of the Git configuration in the local Git repo.
+	localConfigCache map[string]string
+
 	// for running shell commands
 	shell run.Shell
-}
-
-// NewConfiguration provides a Configuration instance reflecting the configuration values in the given directory.
-func NewConfiguration(shell run.Shell) *Config {
-	return &Config{
-		shell:             shell,
-		localConfigCache:  loadGitConfig(shell, false),
-		globalConfigCache: loadGitConfig(shell, true),
-	}
-}
-
-// loadGitConfig provides the Git configuration from the given directory or the global one if the global flag is set.
-func loadGitConfig(shell run.Shell, global bool) map[string]string {
-	result := map[string]string{}
-	cmdArgs := []string{"config", "-lz"}
-	if global {
-		cmdArgs = append(cmdArgs, "--global")
-	} else {
-		cmdArgs = append(cmdArgs, "--local")
-	}
-	res, err := shell.Run("git", cmdArgs...)
-	if err != nil {
-		return result
-	}
-	output := res.Output()
-	if output == "" {
-		return result
-	}
-	for _, line := range strings.Split(output, "\x00") {
-		if len(line) == 0 {
-			continue
-		}
-		parts := strings.SplitN(line, "\n", 2)
-		key, value := parts[0], parts[1]
-		result[key] = value
-	}
-	return result
 }
 
 // AddGitAlias sets the given Git alias.
@@ -482,4 +445,41 @@ func (c *Config) ValidateIsOnline() error {
 		return errors.New("this command requires an active internet connection")
 	}
 	return nil
+}
+
+// NewConfiguration provides a Configuration instance reflecting the configuration values in the given directory.
+func NewConfiguration(shell run.Shell) *Config {
+	return &Config{
+		localConfigCache:  loadGitConfig(shell, false),
+		globalConfigCache: loadGitConfig(shell, true),
+		shell:             shell,
+	}
+}
+
+// loadGitConfig provides the Git configuration from the given directory or the global one if the global flag is set.
+func loadGitConfig(shell run.Shell, global bool) map[string]string {
+	result := map[string]string{}
+	cmdArgs := []string{"config", "-lz"}
+	if global {
+		cmdArgs = append(cmdArgs, "--global")
+	} else {
+		cmdArgs = append(cmdArgs, "--local")
+	}
+	res, err := shell.Run("git", cmdArgs...)
+	if err != nil {
+		return result
+	}
+	output := res.Output()
+	if output == "" {
+		return result
+	}
+	for _, line := range strings.Split(output, "\x00") {
+		if len(line) == 0 {
+			continue
+		}
+		parts := strings.SplitN(line, "\n", 2)
+		key, value := parts[0], parts[1]
+		result[key] = value
+	}
+	return result
 }
