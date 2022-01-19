@@ -94,8 +94,8 @@ via the CLI.
 Found a bug or have an idea for a new feature?
 [Open an issue](https://github.com/git-town/git-town/issues/new) or send a
 [pull request](https://help.github.com/articles/using-pull-requests/)! Check out
-our contributing](/CONTRIBUTING.md) and
-[developer guides](documentation/development.md) to get started.
+our [contribution](/CONTRIBUTING.md) and
+[developer](documentation/development.md) guides to get started.
 
 Kudos to our contributors!
 
