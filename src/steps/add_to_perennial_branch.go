@@ -1,4 +1,3 @@
-//nolint:ireturn
 package steps
 
 import (
@@ -12,12 +11,10 @@ type AddToPerennialBranches struct {
 	BranchName string
 }
 
-// CreateUndoStep returns the undo step for this step.
-func (step *AddToPerennialBranches) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+func (step *AddToPerennialBranches) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
 	return &RemoveFromPerennialBranches{BranchName: step.BranchName}, nil
 }
 
-// Run executes this step.
 func (step *AddToPerennialBranches) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	return repo.Config.AddToPerennialBranches(step.BranchName)
 }

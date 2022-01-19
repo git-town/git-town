@@ -10,7 +10,6 @@ type AbortMergeBranchStep struct {
 	NoOpStep
 }
 
-// Run executes this step.
 func (step *AbortMergeBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	return repo.Logging.AbortMerge()
 }

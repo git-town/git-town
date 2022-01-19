@@ -10,8 +10,12 @@ import (
 type Step interface {
 	CreateAbortStep() Step
 	CreateContinueStep() Step
+
+	// CreateUndoStep returns the undo step for this step.
 	CreateUndoStep(*git.ProdRepo) (Step, error)
 	CreateAutomaticAbortError() error
+
+	// Run executes this step.
 	Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error
 	ShouldAutomaticallyAbortOnError() bool
 }
