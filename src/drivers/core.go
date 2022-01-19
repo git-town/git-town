@@ -11,18 +11,18 @@ type CodeHostingDriver interface {
 	// from the code hosting provider.
 	LoadPullRequestInfo(branch, parentBranch string) (PullRequestInfo, error)
 
-	// NewPullRequestURL returns the URL of the page
+	// NewPullRequestURL provides the URL of the page
 	// to create a new pull request online.
 	NewPullRequestURL(branch, parentBranch string) (string, error)
 
 	// MergePullRequest merges the pull request through the hosting service API.
 	MergePullRequest(MergePullRequestOptions) (mergeSha string, err error)
 
-	// RepositoryURL returns the URL where the given repository
+	// RepositoryURL provides the URL where the given repository
 	// can be found online.
 	RepositoryURL() string
 
-	// HostingServiceName returns the name of the code hosting service.
+	// HostingServiceName provides the name of the code hosting service.
 	HostingServiceName() string
 }
 
@@ -60,7 +60,7 @@ type MergePullRequestOptions struct {
 // logFn defines a function with fmt.Printf API that CodeHostingDriver instances can use to give updates on activities they do.
 type logFn func(string, ...interface{})
 
-// Load returns the code hosting driver to use based on the git config.
+// Load provides the code hosting driver to use based on the git config.
 func Load(config config, git gitRunner, log logFn) CodeHostingDriver { //nolint:ireturn
 	githubDriver := LoadGithub(config, log)
 	if githubDriver != nil {

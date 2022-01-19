@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-// URLRepositoryName returns the repository name contains within the given Git URL.
+// URLRepositoryName provides the repository name contains within the given Git URL.
 func URLRepositoryName(url string) string {
 	hostname := URLHostname(url)
 	repositoryNameRegex := regexp.MustCompile(".*" + hostname + "[/:](.+)")
