@@ -8,26 +8,26 @@ Feature: Rendering Shell autocomplete definitions
     Given I run "git-town completions fish"
     Then it prints:
       """
-      function __git-town_prepare_completions
+      # fish completion for git-town
       """
 
   Scenario: verifying command output plausibility for Bash autocompletion
     Given I run "git-town completions bash"
     Then it prints:
       """
-      _git-town_completions()
+      # bash completion for git-town
       """
 
   Scenario: verifying command output plausibility for zsh autocompletion
     Given I run "git-town completions zsh"
     Then it prints:
       """
-      Generates auto-completion scripts for Bash, zsh, fish, and PowerShell
+      # zsh completion for git-town
       """
 
   Scenario: verifying command output plausibility for PowerShell autocompletion
     Given I run "git-town completions powershell"
     Then it prints:
       """
-      Generates auto-completion scripts for Bash, zsh, fish, and PowerShell
+      # powershell completion for git-town
       """
