@@ -18,7 +18,7 @@ func SyncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (re
 	}
 	result.Append(&CheckoutBranchStep{BranchName: branchName})
 	if isFeature {
-		steps, err := getSyncFeatureBranchSteps(branchName, repo)
+		steps, err := syncFeatureBranchSteps(branchName, repo)
 		if err != nil {
 			return result, err
 		}
@@ -46,7 +46,7 @@ func SyncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (re
 
 // Helpers
 
-func getSyncFeatureBranchSteps(branchName string, repo *git.ProdRepo) (result StepList, err error) {
+func syncFeatureBranchSteps(branchName string, repo *git.ProdRepo) (result StepList, err error) {
 	hasTrackingBranch, err := repo.Silent.HasTrackingBranch(branchName)
 	if err != nil {
 		return result, err
