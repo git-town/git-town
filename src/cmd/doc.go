@@ -8,11 +8,12 @@
 // each Git Town command performs. Examples are steps to
 // change to a different Git branch or to pull updates for the current branch.
 //
-// When executing a step, Git Town asks the step to provide the undo step for it
-// and appends that undo step to the "undo list" for the current Git Town command.
+// When executing a step, the runstate.Execute function goes through each step in the StepList.
+// It executes the step. If it succeeded, it asks the current step to provide the undo step
+// for what it just did and appends it to the undo StepList.
 // If a Git command fails (for example due to a merge conflict), then the program
-// saves the current runstate (the steps to abort and continue the current command)
-// to disk, informs the user, and exits.
+// asks the step to create it's corresponding abort and continue steps, adds them to the respective StepLists,
+// saves the entire runstate to disk, informs the user, and exits.
 //
 // When running "git town continue", Git Town loads the runstate and executes the list of remaining steps.
 // When running "git town abort", Git Town loads the runstate and executes the list of abort steps.
