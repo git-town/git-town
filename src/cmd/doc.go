@@ -15,7 +15,7 @@
 // asks the step to create it's corresponding abort and continue steps, adds them to the respective StepLists,
 // saves the entire runstate to disk, informs the user, and exits.
 //
-// When running "git town continue", Git Town loads the runstate and executes the list of remaining steps.
-// When running "git town abort", Git Town loads the runstate and executes the list of abort steps.
-// When running "git town undo", Git Town loads the runstate and executes its undo list.
+// When running "git town continue", Git Town loads the runstate and executes the "continue" StepList in it.
+// When running "git town abort", Git Town loads the runstate and executes the "abort" StepList in it.
+// When running "git town undo", Git Town loads the runstate and executes the "undo" StepList in it.
 package cmd
