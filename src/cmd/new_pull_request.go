@@ -86,7 +86,7 @@ func getNewPullRequestConfig(repo *git.ProdRepo) (result newPullRequestConfig, e
 	if err != nil {
 		return result, err
 	}
-	result.BranchesToSync = append(repo.Config.GetAncestorBranches(result.InitialBranch), result.InitialBranch)
+	result.BranchesToSync = append(repo.Config.AncestorBranches(result.InitialBranch), result.InitialBranch)
 	return
 }
 

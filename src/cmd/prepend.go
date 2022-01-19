@@ -92,7 +92,7 @@ func getPrependConfig(args []string, repo *git.ProdRepo) (result prependConfig, 
 		return result, err
 	}
 	result.parentBranch = repo.Config.GetParentBranch(result.initialBranch)
-	result.ancestorBranches = repo.Config.GetAncestorBranches(result.initialBranch)
+	result.ancestorBranches = repo.Config.AncestorBranches(result.initialBranch)
 	return result, nil
 }
 

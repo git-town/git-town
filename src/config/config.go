@@ -92,10 +92,10 @@ func (c *Config) DeletePerennialBranchConfiguration() error {
 	return c.removeLocalConfigValue("git-town.perennial-branch-names")
 }
 
-// GetAncestorBranches returns the names of all parent branches for the given branch,
+// AncestorBranches returns the names of all parent branches for the given branch,
 // This information is read from the cache in the Git config,
 // so might be out of date when the branch hierarchy has been modified.
-func (c *Config) GetAncestorBranches(branchName string) (result []string) {
+func (c *Config) AncestorBranches(branchName string) (result []string) {
 	parentBranchMap := c.GetParentBranchMap()
 	current := branchName
 	for {
@@ -249,7 +249,7 @@ func (c *Config) HasParentBranch(branchName string) bool {
 
 // IsAncestorBranch indicates whether the given branch is an ancestor of the other given branch.
 func (c *Config) IsAncestorBranch(branchName, ancestorBranchName string) bool {
-	ancestorBranches := c.GetAncestorBranches(branchName)
+	ancestorBranches := c.AncestorBranches(branchName)
 	return stringslice.Contains(ancestorBranches, ancestorBranchName)
 }
 
