@@ -1,7 +1,5 @@
 // Package cmd defines the Git Town commands.
 //
-// Running commands
-//
 // Each Git Town command begins by inspecting the current state of the Git
 // repository (which branch you are on, whether you have open changes). If there
 // are no errors, it generates a StepList instance containing the steps to run.
