@@ -37,7 +37,7 @@ See "sync" for information regarding remote upstream.`,
 		if err != nil {
 			cli.Exit(err)
 		}
-		stepList, err := getAppendStepList(config, prodRepo)
+		stepList, err := createAppendStepList(config, prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}
