@@ -5,7 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/drivers"
-	"github.com/git-town/git-town/v7/src/steps"
+	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/spf13/cobra"
 )
 
@@ -13,7 +13,7 @@ var continueCmd = &cobra.Command{
 	Use:   "continue",
 	Short: "Restarts the last run git-town command after having resolved conflicts",
 	Run: func(cmd *cobra.Command, args []string) {
-		runState, err := steps.LoadPreviousRunState(prodRepo)
+		runState, err := runstate.LoadPreviousRunState(prodRepo)
 		if err != nil {
 			cli.Exit(fmt.Errorf("cannot load previous run state: %w", err))
 		}
@@ -27,7 +27,7 @@ var continueCmd = &cobra.Command{
 		if hasConflicts {
 			cli.Exit(fmt.Errorf("you must resolve the conflicts before continuing"))
 		}
-		err = steps.Run(runState, prodRepo, drivers.Load(prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction))
+		err = runstate.Run(runState, prodRepo, drivers.Load(prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction))
 		if err != nil {
 			cli.Exit(err)
 		}

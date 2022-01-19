@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v7/src/drivers"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/prompt"
+	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
 )
 
@@ -44,9 +45,9 @@ func ValidateIsRepository(repo *git.ProdRepo) error {
 	return errors.New("this is not a Git repository")
 }
 
-func createAppendStepList(config appendConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
+func createAppendStepList(config appendConfig, repo *git.ProdRepo) (result runstate.StepList, err error) {
 	for _, branchName := range append(config.ancestorBranches, config.parentBranch) {
-		steps, err := steps.SyncBranchSteps(branchName, true, repo)
+		steps, err := runstate.SyncBranchSteps(branchName, true, repo)
 		if err != nil {
 			return result, err
 		}
@@ -58,13 +59,13 @@ func createAppendStepList(config appendConfig, repo *git.ProdRepo) (result steps
 	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
 		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.targetBranch})
 	}
-	err = result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
+	err = result.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
 	return result, err
 }
 
 // handleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
 func handleUnfinishedState(repo *git.ProdRepo, driver drivers.CodeHostingDriver) (quit bool, err error) {
-	runState, err := steps.LoadPreviousRunState(repo)
+	runState, err := runstate.LoadPreviousRunState(repo)
 	if err != nil {
 		return false, fmt.Errorf("cannot load previous run state: %w", err)
 	}
@@ -82,7 +83,7 @@ func handleUnfinishedState(repo *git.ProdRepo, driver drivers.CodeHostingDriver)
 	}
 	switch response {
 	case prompt.ResponseTypeDiscard:
-		err = steps.DeletePreviousRunState(repo)
+		err = runstate.DeletePreviousRunState(repo)
 		return false, err
 	case prompt.ResponseTypeContinue:
 		hasConflicts, err := repo.Silent.HasConflicts()
@@ -92,13 +93,13 @@ func handleUnfinishedState(repo *git.ProdRepo, driver drivers.CodeHostingDriver)
 		if hasConflicts {
 			return false, fmt.Errorf("you must resolve the conflicts before continuing")
 		}
-		return true, steps.Run(runState, repo, driver)
+		return true, runstate.Run(runState, repo, driver)
 	case prompt.ResponseTypeAbort:
 		abortRunState := runState.CreateAbortRunState()
-		return true, steps.Run(&abortRunState, repo, driver)
+		return true, runstate.Run(&abortRunState, repo, driver)
 	case prompt.ResponseTypeSkip:
 		skipRunState := runState.CreateSkipRunState()
-		return true, steps.Run(&skipRunState, repo, driver)
+		return true, runstate.Run(&skipRunState, repo, driver)
 	default:
 		return false, fmt.Errorf("unknown response: %s", response)
 	}

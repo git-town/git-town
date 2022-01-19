@@ -1,14 +1,16 @@
-package steps
+package runstate
 
 import (
 	"encoding/json"
 	"log"
 	"reflect"
+
+	"github.com/git-town/git-town/v7/src/steps"
 )
 
 // JSONStep is used to store a step in JSON.
 type JSONStep struct {
-	Step Step
+	Step steps.Step
 }
 
 // MarshalJSON marshals the step to JSON.
@@ -36,74 +38,74 @@ func (j *JSONStep) UnmarshalJSON(b []byte) error {
 }
 
 //nolint:gocyclo,funlen
-func determineStep(stepType string) Step { //nolint:ireturn
+func determineStep(stepType string) steps.Step { //nolint:ireturn
 	switch stepType {
 	case "*AbortMergeBranchStep":
-		return &AbortMergeBranchStep{}
+		return &steps.AbortMergeBranchStep{}
 	case "*AbortRebaseBranchStep":
-		return &AbortRebaseBranchStep{}
+		return &steps.AbortRebaseBranchStep{}
 	case "*AddToPerennialBranches":
-		return &AddToPerennialBranches{}
+		return &steps.AddToPerennialBranches{}
 	case "*CheckoutBranchStep":
-		return &CheckoutBranchStep{}
+		return &steps.CheckoutBranchStep{}
 	case "*ContinueMergeBranchStep":
-		return &ContinueMergeBranchStep{}
+		return &steps.ContinueMergeBranchStep{}
 	case "*ContinueRebaseBranchStep":
-		return &ContinueRebaseBranchStep{}
+		return &steps.ContinueRebaseBranchStep{}
 	case "*CreateBranchStep":
-		return &CreateBranchStep{}
+		return &steps.CreateBranchStep{}
 	case "*CreatePullRequestStep":
-		return &CreatePullRequestStep{}
+		return &steps.CreatePullRequestStep{}
 	case "*CreateRemoteBranchStep":
-		return &CreateRemoteBranchStep{}
+		return &steps.CreateRemoteBranchStep{}
 	case "*CreateTrackingBranchStep":
-		return &CreateTrackingBranchStep{}
+		return &steps.CreateTrackingBranchStep{}
 	case "*DeleteLocalBranchStep":
-		return &DeleteLocalBranchStep{}
+		return &steps.DeleteLocalBranchStep{}
 	case "*DeleteParentBranchStep":
-		return &DeleteParentBranchStep{}
+		return &steps.DeleteParentBranchStep{}
 	case "*DeleteRemoteBranchStep":
-		return &DeleteRemoteBranchStep{}
+		return &steps.DeleteRemoteBranchStep{}
 	case "*DiscardOpenChangesStep":
-		return &DiscardOpenChangesStep{}
+		return &steps.DiscardOpenChangesStep{}
 	case "*DriverMergePullRequestStep":
-		return &DriverMergePullRequestStep{}
+		return &steps.DriverMergePullRequestStep{}
 	case "*EnsureHasShippableChangesStep":
-		return &EnsureHasShippableChangesStep{}
+		return &steps.EnsureHasShippableChangesStep{}
 	case "*FetchUpstreamStep":
-		return &FetchUpstreamStep{}
+		return &steps.FetchUpstreamStep{}
 	case "*MergeBranchStep":
-		return &MergeBranchStep{}
+		return &steps.MergeBranchStep{}
 	case "*NoOpStep":
-		return &NoOpStep{}
+		return &steps.NoOpStep{}
 	case "*PreserveCheckoutHistoryStep":
-		return &PreserveCheckoutHistoryStep{}
+		return &steps.PreserveCheckoutHistoryStep{}
 	case "*PullBranchStep":
-		return &PullBranchStep{}
+		return &steps.PullBranchStep{}
 	case "*PushBranchAfterCurrentBranchSteps":
-		return &PushBranchAfterCurrentBranchSteps{}
+		return &steps.PushBranchAfterCurrentBranchSteps{}
 	case "*PushBranchStep":
-		return &PushBranchStep{}
+		return &steps.PushBranchStep{}
 	case "*PushTagsStep":
-		return &PushTagsStep{}
+		return &steps.PushTagsStep{}
 	case "*RebaseBranchStep":
-		return &RebaseBranchStep{}
+		return &steps.RebaseBranchStep{}
 	case "*RemoveFromPerennialBranches":
-		return &RemoveFromPerennialBranches{}
+		return &steps.RemoveFromPerennialBranches{}
 	case "*ResetToShaStep":
-		return &ResetToShaStep{}
+		return &steps.ResetToShaStep{}
 	case "*RestoreOpenChangesStep":
-		return &RestoreOpenChangesStep{}
+		return &steps.RestoreOpenChangesStep{}
 	case "*RevertCommitStep":
-		return &RevertCommitStep{}
+		return &steps.RevertCommitStep{}
 	case "*SetParentBranchStep":
-		return &SetParentBranchStep{}
+		return &steps.SetParentBranchStep{}
 	case "*SquashMergeBranchStep":
-		return &SquashMergeBranchStep{}
+		return &steps.SquashMergeBranchStep{}
 	case "*SkipCurrentBranchSteps":
-		return &SkipCurrentBranchSteps{}
+		return &steps.SkipCurrentBranchSteps{}
 	case "*StashOpenChangesStep":
-		return &StashOpenChangesStep{}
+		return &steps.StashOpenChangesStep{}
 	default:
 		log.Fatalf("Unknown step type: %s", stepType)
 		return nil

@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v7/src/cli"
-	"github.com/git-town/git-town/v7/src/steps"
+	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/spf13/cobra"
 )
 
@@ -12,7 +12,7 @@ var discardCmd = &cobra.Command{
 	Use:   "discard",
 	Short: "Discards the saved state of the previous git-town command",
 	Run: func(cmd *cobra.Command, args []string) {
-		err := steps.DeletePreviousRunState(prodRepo)
+		err := runstate.DeletePreviousRunState(prodRepo)
 		if err != nil {
 			cli.Exit(fmt.Errorf("cannot delete previous run state: %w", err))
 		}

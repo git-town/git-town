@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/prompt"
+	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
 	"github.com/spf13/cobra"
 )
@@ -43,8 +44,8 @@ See "sync" for remote upstream options.
 		if err != nil {
 			cli.Exit(err)
 		}
-		runState := steps.NewRunState("prepend", stepList)
-		err = steps.Run(runState, prodRepo, nil)
+		runState := runstate.NewRunState("prepend", stepList)
+		err = runstate.Run(runState, prodRepo, nil)
 		if err != nil {
 			fmt.Println(err)
 			cli.Exit(err)
@@ -96,9 +97,9 @@ func createPrependConfig(args []string, repo *git.ProdRepo) (result prependConfi
 	return result, nil
 }
 
-func createPrependStepList(config prependConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
+func createPrependStepList(config prependConfig, repo *git.ProdRepo) (result runstate.StepList, err error) {
 	for _, branchName := range config.ancestorBranches {
-		steps, err := steps.SyncBranchSteps(branchName, true, repo)
+		steps, err := runstate.SyncBranchSteps(branchName, true, repo)
 		if err != nil {
 			return result, err
 		}
@@ -111,7 +112,7 @@ func createPrependStepList(config prependConfig, repo *git.ProdRepo) (result ste
 	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
 		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.targetBranch})
 	}
-	err = result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
+	err = result.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
 	return result, err
 }
 

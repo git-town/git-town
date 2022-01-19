@@ -5,6 +5,7 @@ import (
 	"github.com/git-town/git-town/v7/src/drivers"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/prompt"
+	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
 	"github.com/spf13/cobra"
 )
@@ -46,8 +47,8 @@ where hostname matches what is in your ssh config file.`,
 		if err != nil {
 			cli.Exit(err)
 		}
-		runState := steps.NewRunState("new-pull-request", stepList)
-		err = steps.Run(runState, prodRepo, driver)
+		runState := runstate.NewRunState("new-pull-request", stepList)
+		err = runstate.Run(runState, prodRepo, driver)
 		if err != nil {
 			cli.Exit(err)
 		}
@@ -90,15 +91,15 @@ func createNewPullRequestConfig(repo *git.ProdRepo) (result newPullRequestConfig
 	return
 }
 
-func createNewPullRequestStepList(config newPullRequestConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
+func createNewPullRequestStepList(config newPullRequestConfig, repo *git.ProdRepo) (result runstate.StepList, err error) {
 	for _, branchName := range config.BranchesToSync {
-		steps, err := steps.SyncBranchSteps(branchName, true, repo)
+		steps, err := runstate.SyncBranchSteps(branchName, true, repo)
 		if err != nil {
 			return result, err
 		}
 		result.AppendList(steps)
 	}
-	err = result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
+	err = result.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
 	if err != nil {
 		return result, err
 	}

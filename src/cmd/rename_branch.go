@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
 	"github.com/spf13/cobra"
 )
@@ -51,8 +52,8 @@ When run on a perennial branch
 		if err != nil {
 			cli.Exit(err)
 		}
-		runState := steps.NewRunState("rename-branch", stepList)
-		err = steps.Run(runState, prodRepo, nil)
+		runState := runstate.NewRunState("rename-branch", stepList)
+		err = runstate.Run(runState, prodRepo, nil)
 		if err != nil {
 			cli.Exit(err)
 		}
@@ -123,7 +124,7 @@ func createRenameBranchConfig(args []string, repo *git.ProdRepo) (result renameB
 	return result, err
 }
 
-func createRenameBranchStepList(config renameBranchConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
+func createRenameBranchStepList(config renameBranchConfig, repo *git.ProdRepo) (result runstate.StepList, err error) {
 	result.Append(&steps.CreateBranchStep{BranchName: config.newBranchName, StartingPoint: config.oldBranchName})
 	if config.initialBranch == config.oldBranchName {
 		result.Append(&steps.CheckoutBranchStep{BranchName: config.newBranchName})
@@ -143,7 +144,7 @@ func createRenameBranchStepList(config renameBranchConfig, repo *git.ProdRepo) (
 		result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.oldBranchName, IsTracking: true})
 	}
 	result.Append(&steps.DeleteLocalBranchStep{BranchName: config.oldBranchName})
-	err = result.Wrap(steps.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, repo)
+	err = result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, repo)
 	return result, err
 }
 

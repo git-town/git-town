@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/prompt"
+	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
 	"github.com/spf13/cobra"
 )
@@ -47,8 +48,8 @@ You can disable this by running "git config git-town.sync-upstream false".`,
 		if err != nil {
 			cli.Exit(err)
 		}
-		runState := steps.NewRunState("sync", stepList)
-		err = steps.Run(runState, prodRepo, nil)
+		runState := runstate.NewRunState("sync", stepList)
+		err = runstate.Run(runState, prodRepo, nil)
 		if err != nil {
 			cli.Exit(err)
 		}
@@ -117,9 +118,9 @@ func createSyncConfig(repo *git.ProdRepo) (result syncConfig, err error) {
 	return result, nil
 }
 
-func createSyncStepList(config syncConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
+func createSyncStepList(config syncConfig, repo *git.ProdRepo) (result runstate.StepList, err error) {
 	for _, branchName := range config.branchesToSync {
-		steps, err := steps.SyncBranchSteps(branchName, true, repo)
+		steps, err := runstate.SyncBranchSteps(branchName, true, repo)
 		if err != nil {
 			return result, err
 		}
@@ -129,7 +130,7 @@ func createSyncStepList(config syncConfig, repo *git.ProdRepo) (result steps.Ste
 	if config.hasOrigin && config.shouldPushTags && !config.isOffline {
 		result.Append(&steps.PushTagsStep{})
 	}
-	err = result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
+	err = result.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
 	return result, err
 }
 

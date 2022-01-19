@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v7/src/cli"
-	"github.com/git-town/git-town/v7/src/steps"
+	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/spf13/cobra"
 )
 
@@ -12,7 +12,7 @@ var undoCmd = &cobra.Command{
 	Use:   "undo",
 	Short: "Undoes the last run git-town command",
 	Run: func(cmd *cobra.Command, args []string) {
-		runState, err := steps.LoadPreviousRunState(prodRepo)
+		runState, err := runstate.LoadPreviousRunState(prodRepo)
 		if err != nil {
 			cli.Exit(fmt.Errorf("cannot load previous run state: %w", err))
 		}
@@ -20,7 +20,7 @@ var undoCmd = &cobra.Command{
 			cli.Exit(fmt.Errorf("nothing to undo"))
 		}
 		undoRunState := runState.CreateUndoRunState()
-		err = steps.Run(&undoRunState, prodRepo, nil)
+		err = runstate.Run(&undoRunState, prodRepo, nil)
 		if err != nil {
 			cli.Exit(err)
 		}
