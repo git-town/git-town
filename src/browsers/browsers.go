@@ -7,7 +7,7 @@ import (
 	"github.com/git-town/git-town/v7/src/run"
 )
 
-// OpenBrowserCommand returns the command to run on the console
+// OpenBrowserCommand provides the command to run on the console
 // to open the default browser.
 func OpenBrowserCommand() string {
 	if runtime.GOOS == "windows" {

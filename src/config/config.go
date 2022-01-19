@@ -92,7 +92,7 @@ func (c *Config) DeletePerennialBranchConfiguration() error {
 	return c.removeLocalConfigValue("git-town.perennial-branch-names")
 }
 
-// AncestorBranches returns the names of all parent branches for the given branch,
+// AncestorBranches provides the names of all parent branches for the given branch,
 // This information is read from the cache in the Git config,
 // so might be out of date when the branch hierarchy has been modified.
 func (c *Config) AncestorBranches(branchName string) (result []string) {
@@ -124,7 +124,7 @@ func (c *Config) BranchAncestryRoots() []string {
 	return roots
 }
 
-// ChildBranches returns the names of all branches for which the given branch
+// ChildBranches provides the names of all branches for which the given branch
 // is a parent.
 func (c *Config) ChildBranches(branchName string) (result []string) {
 	for _, key := range c.localConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
@@ -193,12 +193,12 @@ func (c *Config) GiteaToken() string {
 	return c.localOrGlobalConfigValue("git-town.gitea-token")
 }
 
-// MainBranch returns the name of the main branch.
+// MainBranch provides the name of the main branch.
 func (c *Config) MainBranch() string {
 	return c.localOrGlobalConfigValue("git-town.main-branch-name")
 }
 
-// ParentBranch returns the name of the parent branch of the given branch.
+// ParentBranch provides the name of the parent branch of the given branch.
 func (c *Config) ParentBranch(branchName string) string {
 	return c.localConfigValue("git-town-branch." + branchName + ".parent")
 }
@@ -212,7 +212,7 @@ func (c *Config) PerennialBranches() []string {
 	return strings.Split(result, " ")
 }
 
-// PullBranchStrategy returns the currently configured pull branch strategy.
+// PullBranchStrategy provides the currently configured pull branch strategy.
 func (c *Config) PullBranchStrategy() string {
 	config := c.localOrGlobalConfigValue("git-town.pull-branch-strategy")
 	if config != "" {
@@ -221,7 +221,7 @@ func (c *Config) PullBranchStrategy() string {
 	return "rebase"
 }
 
-// RemoteOriginURL returns the URL for the "origin" remote.
+// RemoteOriginURL provides the URL for the "origin" remote.
 // In tests this value can be stubbed.
 func (c *Config) RemoteOriginURL() string {
 	remote := os.Getenv("GIT_TOWN_REMOTE")

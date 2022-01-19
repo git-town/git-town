@@ -29,7 +29,7 @@ function lineDefinesMakeCommand(line) {
 }
 const makeCommandRE = /^[^ ]+:/
 
-// returns the defined command name
+// provides the defined command name
 // from a Makefile line that defines a Make command
 function extractMakeCommand(line) {
   return line.split(":")[0]
