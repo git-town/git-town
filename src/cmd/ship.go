@@ -65,7 +65,7 @@ and Git Town will leave it up to your origin server to delete the remote branch.
 		if err != nil {
 			cli.Exit(err)
 		}
-		stepList, err := getShipStepList(config, prodRepo)
+		stepList, err := createShipStepList(config, prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}
@@ -138,7 +138,7 @@ func gitShipConfig(args []string, driver drivers.CodeHostingDriver, repo *git.Pr
 	result.isOffline = repo.Config.IsOffline()
 	result.isShippingInitialBranch = result.branchToShip == result.initialBranch
 	result.branchToMergeInto = repo.Config.ParentBranch(result.branchToShip)
-	prInfo, err := getCanShipWithDriver(result.branchToShip, result.branchToMergeInto, driver)
+	prInfo, err := createPullRequestInfo(result.branchToShip, result.branchToMergeInto, driver)
 	result.canShipWithDriver = prInfo.CanMergeWithAPI
 	result.defaultCommitMessage = prInfo.DefaultCommitMessage
 	result.pullRequestNumber = prInfo.PullRequestNumber
@@ -158,7 +158,7 @@ please ship %q first`, strings.Join(ancestorsWithoutMainOrPerennial, ", "), olde
 	}
 }
 
-func getShipStepList(config shipConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
+func createShipStepList(config shipConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
 	syncSteps, err := steps.SyncBranchSteps(config.branchToMergeInto, true, repo)
 	if err != nil {
 		return result, err
@@ -207,7 +207,7 @@ func getShipStepList(config shipConfig, repo *git.ProdRepo) (result steps.StepLi
 	return result, err
 }
 
-func getCanShipWithDriver(branch, parentBranch string, driver drivers.CodeHostingDriver) (result drivers.PullRequestInfo, err error) {
+func createPullRequestInfo(branch, parentBranch string, driver drivers.CodeHostingDriver) (result drivers.PullRequestInfo, err error) {
 	hasOrigin, err := prodRepo.Silent.HasRemote("origin")
 	if err != nil {
 		return result, err
