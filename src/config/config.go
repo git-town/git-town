@@ -68,7 +68,7 @@ func loadGitConfig(shell run.Shell, global bool) map[string]string {
 // AddToPerennialBranches registers the given branch names as perennial branches.
 // The branches must exist.
 func (c *Config) AddToPerennialBranches(branchNames ...string) error {
-	return c.SetPerennialBranches(append(c.GetPerennialBranches(), branchNames...))
+	return c.SetPerennialBranches(append(c.PerennialBranches(), branchNames...))
 }
 
 // AddGitAlias sets the given Git alias.
@@ -203,8 +203,8 @@ func (c *Config) GetParentBranch(branchName string) string {
 	return c.getLocalConfigValue("git-town-branch." + branchName + ".parent")
 }
 
-// GetPerennialBranches returns all branches that are marked as perennial.
-func (c *Config) GetPerennialBranches() []string {
+// PerennialBranches returns all branches that are marked as perennial.
+func (c *Config) PerennialBranches() []string {
 	result := c.getLocalOrGlobalConfigValue("git-town.perennial-branch-names")
 	if result == "" {
 		return []string{}
@@ -212,8 +212,8 @@ func (c *Config) GetPerennialBranches() []string {
 	return strings.Split(result, " ")
 }
 
-// GetPullBranchStrategy returns the currently configured pull branch strategy.
-func (c *Config) GetPullBranchStrategy() string {
+// PullBranchStrategy returns the currently configured pull branch strategy.
+func (c *Config) PullBranchStrategy() string {
 	config := c.getLocalOrGlobalConfigValue("git-town.pull-branch-strategy")
 	if config != "" {
 		return config
@@ -283,7 +283,7 @@ func (c *Config) IsOffline() bool {
 // IsPerennialBranch indicates whether the branch with the given name is
 // a perennial branch.
 func (c *Config) IsPerennialBranch(branchName string) bool {
-	perennialBranches := c.GetPerennialBranches()
+	perennialBranches := c.PerennialBranches()
 	return stringslice.Contains(perennialBranches, branchName)
 }
 
@@ -306,7 +306,7 @@ func (c *Config) Reload() {
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
 func (c *Config) RemoveFromPerennialBranches(branchName string) error {
-	return c.SetPerennialBranches(stringslice.Remove(c.GetPerennialBranches(), branchName))
+	return c.SetPerennialBranches(stringslice.Remove(c.PerennialBranches(), branchName))
 }
 
 // RemoveGitAlias removes the given Git alias.

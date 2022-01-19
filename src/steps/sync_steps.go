@@ -64,7 +64,7 @@ func getSyncNonFeatureBranchSteps(branchName string, repo *git.ProdRepo) (result
 		return result, err
 	}
 	if hasTrackingBranch {
-		if repo.Config.GetPullBranchStrategy() == "rebase" {
+		if repo.Config.PullBranchStrategy() == "rebase" {
 			result.Append(&RebaseBranchStep{BranchName: repo.Silent.TrackingBranchName(branchName)})
 		} else {
 			result.Append(&MergeBranchStep{BranchName: repo.Silent.TrackingBranchName(branchName)})

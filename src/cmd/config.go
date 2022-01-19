@@ -14,12 +14,12 @@ var configCommand = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println()
 		cli.PrintLabelAndValue("Main branch", cli.PrintableMainBranch(prodRepo.Config.MainBranch()))
-		cli.PrintLabelAndValue("Perennial branches", cli.PrintablePerennialBranches(prodRepo.Config.GetPerennialBranches()))
+		cli.PrintLabelAndValue("Perennial branches", cli.PrintablePerennialBranches(prodRepo.Config.PerennialBranches()))
 		mainBranch := prodRepo.Config.MainBranch()
 		if mainBranch != "" {
 			cli.PrintLabelAndValue("Branch Ancestry", cli.PrintableBranchAncestry(prodRepo.Config))
 		}
-		cli.PrintLabelAndValue("Pull branch strategy", prodRepo.Config.GetPullBranchStrategy())
+		cli.PrintLabelAndValue("Pull branch strategy", prodRepo.Config.PullBranchStrategy())
 		cli.PrintLabelAndValue("New Branch Push Flag", cli.PrintableNewBranchPushFlag(prodRepo.Config.ShouldNewBranchPush()))
 	},
 	Args: cobra.NoArgs,
