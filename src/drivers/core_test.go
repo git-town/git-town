@@ -21,7 +21,7 @@ func (mc mockConfig) GitHubToken() string {
 	return mc.gitHubToken
 }
 
-func (mc mockConfig) GetGiteaToken() string {
+func (mc mockConfig) GiteaToken() string {
 	return mc.giteaToken
 }
 

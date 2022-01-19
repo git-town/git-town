@@ -44,7 +44,7 @@ func LoadGitea(config config, log logFn) *GiteaCodeHostingDriver {
 	return &GiteaCodeHostingDriver{
 		originURL:  originURL,
 		hostname:   hostname,
-		apiToken:   config.GetGiteaToken(),
+		apiToken:   config.GiteaToken(),
 		log:        log,
 		owner:      owner,
 		repository: repository,

@@ -188,8 +188,8 @@ func (c *Config) GitHubToken() string {
 	return c.getLocalOrGlobalConfigValue("git-town.github-token")
 }
 
-// GetGiteaToken provides the content of the Gitea API token stored in the local or global Git Town configuration.
-func (c *Config) GetGiteaToken() string {
+// GiteaToken provides the content of the Gitea API token stored in the local or global Git Town configuration.
+func (c *Config) GiteaToken() string {
 	return c.getLocalOrGlobalConfigValue("git-town.gitea-token")
 }
 

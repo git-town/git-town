@@ -30,7 +30,7 @@ type CodeHostingDriver interface {
 type config interface {
 	CodeHostingOriginHostname() string
 	CodeHostingDriverName() string
-	GetGiteaToken() string
+	GiteaToken() string
 	GitHubToken() string
 	GetMainBranch() string
 	GetRemoteOriginURL() string
