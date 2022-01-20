@@ -41,7 +41,7 @@ where hostname matches what is in your ssh config file.`,
 		}
 		driver := hosting.NewDriver(&prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction)
 		if driver == nil {
-			cli.Exit(hosting.UnsupportedHostingError())
+			cli.Exit(hosting.UnsupportedServiceError())
 		}
 		stepList, err := createNewPullRequestStepList(config, prodRepo)
 		if err != nil {

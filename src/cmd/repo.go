@@ -24,7 +24,7 @@ where HOSTNAME matches what is in your ssh config file.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		driver := hosting.NewDriver(&prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction)
 		if driver == nil {
-			cli.Exit(hosting.UnsupportedHostingError())
+			cli.Exit(hosting.UnsupportedServiceError())
 		}
 		browsers.Open(driver.RepositoryURL(), prodRepo.LoggingShell)
 	},

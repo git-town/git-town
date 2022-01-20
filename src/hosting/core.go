@@ -78,8 +78,8 @@ func NewDriver(config config, git gitRunner, log logFn) Driver { //nolint:iretur
 	return nil
 }
 
-// UnsupportedHostingError provides an error message.
-func UnsupportedHostingError() error {
+// UnsupportedServiceError provides an error message.
+func UnsupportedServiceError() error {
 	return errors.New(`unsupported hosting service
 
 This command requires hosting on one of these services:
