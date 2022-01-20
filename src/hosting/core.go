@@ -71,7 +71,7 @@ func NewDriver(config config, git gitRunner, log logFn) Driver { //nolint:iretur
 	if bitbucketDriver != nil {
 		return bitbucketDriver
 	}
-	gitlabDriver := LoadGitlab(config)
+	gitlabDriver := NewGitlabDriver(config)
 	if gitlabDriver != nil {
 		return gitlabDriver
 	}

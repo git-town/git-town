@@ -9,7 +9,7 @@ import (
 
 //nolint:paralleltest  // mocks HTTP
 func TestLoadGitLab(t *testing.T) {
-	driver := hosting.LoadGitlab(mockConfig{
+	driver := hosting.NewGitlabDriver(mockConfig{
 		driverName:      "gitlab",
 		remoteOriginURL: "git@self-hosted-gitlab.com:git-town/git-town.git",
 	})
@@ -20,7 +20,7 @@ func TestLoadGitLab(t *testing.T) {
 
 //nolint:paralleltest  // mocks HTTP
 func TestLoadGitLab_customHostName(t *testing.T) {
-	driver := hosting.LoadGitlab(mockConfig{
+	driver := hosting.NewGitlabDriver(mockConfig{
 		remoteOriginURL: "git@my-ssh-identity.com:git-town/git-town.git",
 		manualHostName:  "gitlab.com",
 	})
