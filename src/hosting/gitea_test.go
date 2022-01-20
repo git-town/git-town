@@ -22,7 +22,7 @@ func log(template string, messages ...interface{}) {}
 func setupGiteaDriver(t *testing.T, token string) (*hosting.GiteaCodeHostingDriver, func()) {
 	t.Helper()
 	httpmock.Activate()
-	driver := hosting.LoadGitea(mockConfig{
+	driver := hosting.NewGiteaDriver(mockConfig{
 		remoteOriginURL: "git@gitea.com:git-town/git-town.git",
 		giteaToken:      token,
 	}, log)
@@ -34,7 +34,7 @@ func setupGiteaDriver(t *testing.T, token string) (*hosting.GiteaCodeHostingDriv
 
 //nolint:paralleltest  // mocks HTTP
 func TestLoadGitea(t *testing.T) {
-	driver := hosting.LoadGitea(mockConfig{
+	driver := hosting.NewGiteaDriver(mockConfig{
 		driverName:      "gitea",
 		remoteOriginURL: "git@self-hosted-gitea.com:git-town/git-town.git",
 	}, log)
@@ -45,7 +45,7 @@ func TestLoadGitea(t *testing.T) {
 
 //nolint:paralleltest  // mocks HTTP
 func TestLoadGitea_customHostName(t *testing.T) {
-	driver := hosting.LoadGitea(mockConfig{
+	driver := hosting.NewGiteaDriver(mockConfig{
 		remoteOriginURL: "git@my-ssh-identity.com:git-town/git-town.git",
 		manualHostName:  "gitea.com",
 	}, log)

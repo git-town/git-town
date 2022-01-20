@@ -63,7 +63,7 @@ func NewDriver(config config, git gitRunner, log logFn) Driver { //nolint:iretur
 	if githubDriver != nil {
 		return githubDriver
 	}
-	giteaDriver := LoadGitea(config, log)
+	giteaDriver := NewGiteaDriver(config, log)
 	if giteaDriver != nil {
 		return giteaDriver
 	}
