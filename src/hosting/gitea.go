@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	"code.gitea.io/sdk/gitea"
-	"github.com/git-town/git-town/v7/src/hosting/helpers"
 	"golang.org/x/oauth2"
+	"github.com/git-town/git-town/v7/src/giturl"
 )
 
 // GiteaDriver provides access to the API of Gitea installations.
@@ -27,7 +27,7 @@ type GiteaDriver struct {
 func NewGiteaDriver(config config, log logFn) *GiteaDriver {
 	driverType := config.HostingService()
 	originURL := config.OriginURL()
-	hostname := helpers.URLHostname(originURL)
+	hostname := giturl.Host(originURL)
 	manualHostName := config.OriginOverride()
 	if manualHostName != "" {
 		hostname = manualHostName
@@ -35,7 +35,7 @@ func NewGiteaDriver(config config, log logFn) *GiteaDriver {
 	if driverType != "gitea" && hostname != "gitea.com" {
 		return nil
 	}
-	repositoryParts := strings.SplitN(helpers.URLRepositoryName(originURL), "/", 2)
+	repositoryParts := strings.SplitN(giturl.Repo(originURL), "/", 2)
 	if len(repositoryParts) != 2 {
 		return nil
 	}

@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/git-town/git-town/v7/src/hosting/helpers"
+	"github.com/git-town/git-town/v7/src/giturl"
 )
 
 // BitbucketDriver provides access to the API of Bitbucket installations.
@@ -22,7 +22,7 @@ type BitbucketDriver struct {
 func NewBitbucketDriver(config config, git gitRunner) *BitbucketDriver {
 	driverType := config.HostingService()
 	originURL := config.OriginURL()
-	hostname := helpers.URLHostname(originURL)
+	hostname := giturl.Host(originURL)
 	manualOrigin := config.OriginOverride()
 	if manualOrigin != "" {
 		hostname = manualOrigin
@@ -34,7 +34,7 @@ func NewBitbucketDriver(config config, git gitRunner) *BitbucketDriver {
 		git:        git,
 		hostname:   hostname,
 		originURL:  originURL,
-		repository: helpers.URLRepositoryName(originURL),
+		repository: giturl.Repo(originURL),
 	}
 }
 

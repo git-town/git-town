@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/git-town/git-town/v7/src/hosting/helpers"
+	"github.com/git-town/git-town/v7/src/giturl"
 )
 
 // GitlabDriver provides access to the API of GitLab installations.
@@ -20,7 +20,7 @@ type GitlabDriver struct {
 func NewGitlabDriver(config config) *GitlabDriver {
 	driverType := config.HostingService()
 	originURL := config.OriginURL()
-	hostname := helpers.URLHostname(originURL)
+	hostname := giturl.Host(originURL)
 	manualHostName := config.OriginOverride()
 	if manualHostName != "" {
 		hostname = manualHostName
@@ -31,7 +31,7 @@ func NewGitlabDriver(config config) *GitlabDriver {
 	return &GitlabDriver{
 		originURL:  originURL,
 		hostname:   hostname,
-		repository: helpers.URLRepositoryName(originURL),
+		repository: giturl.Repo(originURL),
 	}
 }
 
