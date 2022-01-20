@@ -90,8 +90,8 @@ func determineStep(stepType string) steps.Step { //nolint:ireturn
 		return &steps.PushTagsStep{}
 	case "*RebaseBranchStep":
 		return &steps.RebaseBranchStep{}
-	case "*RemoveFromPerennialBranches":
-		return &steps.RemoveFromPerennialBranches{}
+	case "*RemoveFromPerennialBranchesStep":
+		return &steps.RemoveFromPerennialBranchesStep{}
 	case "*ResetToShaStep":
 		return &steps.ResetToShaStep{}
 	case "*RestoreOpenChangesStep":

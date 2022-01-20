@@ -12,7 +12,7 @@ type AddToPerennialBranches struct {
 }
 
 func (step *AddToPerennialBranches) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
-	return &RemoveFromPerennialBranches{BranchName: step.BranchName}, nil
+	return &RemoveFromPerennialBranchesStep{BranchName: step.BranchName}, nil
 }
 
 func (step *AddToPerennialBranches) Run(repo *git.ProdRepo, driver hosting.Driver) error {
