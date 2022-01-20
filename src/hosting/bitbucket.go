@@ -23,9 +23,9 @@ func NewBitbucketDriver(config config, git gitRunner) *BitbucketCodeHostingDrive
 	driverType := config.HostingService()
 	originURL := config.OriginURL()
 	hostname := helpers.URLHostname(originURL)
-	manualHostName := config.OriginOverride()
-	if manualHostName != "" {
-		hostname = manualHostName
+	manualOrigin := config.OriginOverride()
+	if manualOrigin != "" {
+		hostname = manualOrigin
 	}
 	if driverType != "bitbucket" && hostname != "bitbucket.org" {
 		return nil
