@@ -1,8 +1,8 @@
 package steps
 
 import (
-	"github.com/git-town/git-town/v7/src/drivers"
 	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/hosting"
 )
 
 // ContinueMergeBranchStep finishes an ongoing merge conflict
@@ -19,7 +19,7 @@ func (step *ContinueMergeBranchStep) CreateContinueStep() Step { //nolint:iretur
 	return step
 }
 
-func (step *ContinueMergeBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
+func (step *ContinueMergeBranchStep) Run(repo *git.ProdRepo, driver hosting.CodeHostingDriver) error {
 	hasMergeInprogress, err := repo.Silent.HasMergeInProgress()
 	if err != nil {
 		return err

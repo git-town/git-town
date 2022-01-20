@@ -1,11 +1,11 @@
-package drivers
+package hosting
 
 import (
 	"errors"
 	"fmt"
 	"net/url"
 
-	"github.com/git-town/git-town/v7/src/drivers/helpers"
+	"github.com/git-town/git-town/v7/src/hosting/helpers"
 )
 
 // GitlabCodeHostingDriver provides access to the API of GitLab installations.

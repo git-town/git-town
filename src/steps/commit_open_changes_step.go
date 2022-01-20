@@ -3,8 +3,8 @@ package steps
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v7/src/drivers"
 	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/hosting"
 )
 
 // CommitOpenChangesStep commits all open changes as a new commit.
@@ -19,7 +19,7 @@ func (step *CommitOpenChangesStep) CreateUndoStep(repo *git.ProdRepo) (Step, err
 	return &ResetToShaStep{Sha: step.previousSha}, nil
 }
 
-func (step *CommitOpenChangesStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) (err error) {
+func (step *CommitOpenChangesStep) Run(repo *git.ProdRepo, driver hosting.CodeHostingDriver) (err error) {
 	step.previousSha, err = repo.Silent.CurrentSha()
 	if err != nil {
 		return err

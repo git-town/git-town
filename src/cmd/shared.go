@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/git-town/git-town/v7/src/drivers"
 	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/git-town/git-town/v7/src/prompt"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
@@ -64,7 +64,7 @@ func createAppendStepList(config appendConfig, repo *git.ProdRepo) (result runst
 }
 
 // handleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
-func handleUnfinishedState(repo *git.ProdRepo, driver drivers.CodeHostingDriver) (quit bool, err error) {
+func handleUnfinishedState(repo *git.ProdRepo, driver hosting.CodeHostingDriver) (quit bool, err error) {
 	runState, err := runstate.Load(repo)
 	if err != nil {
 		return false, fmt.Errorf("cannot load previous run state: %w", err)

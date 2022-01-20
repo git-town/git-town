@@ -1,4 +1,4 @@
-package drivers
+package hosting
 
 import (
 	"errors"
@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/git-town/git-town/v7/src/drivers/helpers"
+	"github.com/git-town/git-town/v7/src/hosting/helpers"
 )
 
 // BitbucketCodeHostingDriver provides access to the API of Bitbucket installations.

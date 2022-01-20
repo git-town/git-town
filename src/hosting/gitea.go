@@ -1,4 +1,4 @@
-package drivers
+package hosting
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"code.gitea.io/sdk/gitea"
-	"github.com/git-town/git-town/v7/src/drivers/helpers"
+	"github.com/git-town/git-town/v7/src/hosting/helpers"
 	"golang.org/x/oauth2"
 )
 

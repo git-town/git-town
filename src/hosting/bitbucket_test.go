@@ -1,15 +1,15 @@
-package drivers_test
+package hosting_test
 
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v7/src/drivers"
+	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/stretchr/testify/assert"
 )
 
 //nolint:paralleltest  // mocks HTTP
 func TestLoadBitbucket(t *testing.T) {
-	driver := drivers.LoadBitbucket(mockConfig{
+	driver := hosting.LoadBitbucket(mockConfig{
 		codeHostingDriverName: "bitbucket",
 		remoteOriginURL:       "git@self-hosted-bitbucket.com:git-town/git-town.git",
 	}, nil)
@@ -20,7 +20,7 @@ func TestLoadBitbucket(t *testing.T) {
 
 //nolint:paralleltest  // mocks HTTP
 func TestLoadBitbucket_customHostName(t *testing.T) {
-	driver := drivers.LoadBitbucket(mockConfig{
+	driver := hosting.LoadBitbucket(mockConfig{
 		remoteOriginURL: "git@my-ssh-identity.com:git-town/git-town.git",
 		manualHostName:  "bitbucket.org",
 	}, nil)

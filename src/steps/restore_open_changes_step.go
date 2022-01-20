@@ -3,8 +3,8 @@ package steps
 import (
 	"errors"
 
-	"github.com/git-town/git-town/v7/src/drivers"
 	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/hosting"
 )
 
 // RestoreOpenChangesStep restores stashed away changes into the workspace.
@@ -16,7 +16,7 @@ func (step *RestoreOpenChangesStep) CreateUndoStep(repo *git.ProdRepo) (Step, er
 	return &StashOpenChangesStep{}, nil
 }
 
-func (step *RestoreOpenChangesStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
+func (step *RestoreOpenChangesStep) Run(repo *git.ProdRepo, driver hosting.CodeHostingDriver) error {
 	err := repo.Logging.PopStash()
 	if err != nil {
 		return errors.New("conflicts between your uncommmitted changes and the main branch")

@@ -3,8 +3,8 @@ package steps
 import (
 	"errors"
 
-	"github.com/git-town/git-town/v7/src/drivers"
 	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/hosting"
 )
 
 // NoOpStep does nothing.
@@ -27,7 +27,7 @@ func (step *NoOpStep) CreateAutomaticAbortError() error {
 	return errors.New("")
 }
 
-func (step *NoOpStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
+func (step *NoOpStep) Run(repo *git.ProdRepo, driver hosting.CodeHostingDriver) error {
 	return nil
 }
 

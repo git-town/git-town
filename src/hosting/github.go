@@ -1,4 +1,4 @@
-package drivers
+package hosting
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/git-town/git-town/v7/src/drivers/helpers"
+	"github.com/git-town/git-town/v7/src/hosting/helpers"
 	"github.com/google/go-github/github"
 	"golang.org/x/oauth2"
 )

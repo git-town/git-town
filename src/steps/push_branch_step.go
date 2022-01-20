@@ -1,8 +1,8 @@
 package steps
 
 import (
-	"github.com/git-town/git-town/v7/src/drivers"
 	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/hosting"
 )
 
 // PushBranchStep pushes the branch with the given name to the origin remote.
@@ -21,7 +21,7 @@ func (step *PushBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { /
 	return &SkipCurrentBranchSteps{}, nil
 }
 
-func (step *PushBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
+func (step *PushBranchStep) Run(repo *git.ProdRepo, driver hosting.CodeHostingDriver) error {
 	shouldPush, err := repo.Silent.ShouldPushBranch(step.BranchName)
 	if err != nil {
 		return err

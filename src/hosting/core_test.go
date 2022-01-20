@@ -1,4 +1,4 @@
-package drivers_test
+package hosting_test
 
 type mockConfig struct {
 	manualHostName        string

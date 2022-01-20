@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v7/src/cli"
-	"github.com/git-town/git-town/v7/src/drivers"
 	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/git-town/git-town/v7/src/prompt"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
@@ -61,7 +61,7 @@ GitHub's feature to automatically delete head branches,
 run "git config git-town.ship-delete-remote-branch false"
 and Git Town will leave it up to your origin server to delete the remote branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		driver := drivers.Load(&prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction)
+		driver := hosting.Load(&prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction)
 		config, err := gitShipConfig(args, driver, prodRepo)
 		if err != nil {
 			cli.Exit(err)
@@ -86,7 +86,7 @@ and Git Town will leave it up to your origin server to delete the remote branch.
 }
 
 //nolint:funlen
-func gitShipConfig(args []string, driver drivers.CodeHostingDriver, repo *git.ProdRepo) (result shipConfig, err error) {
+func gitShipConfig(args []string, driver hosting.CodeHostingDriver, repo *git.ProdRepo) (result shipConfig, err error) {
 	result.initialBranch, err = repo.Silent.CurrentBranch()
 	if err != nil {
 		return result, err
@@ -208,7 +208,7 @@ func createShipStepList(config shipConfig, repo *git.ProdRepo) (result runstate.
 	return result, err
 }
 
-func createPullRequestInfo(branch, parentBranch string, driver drivers.CodeHostingDriver) (result drivers.PullRequestInfo, err error) {
+func createPullRequestInfo(branch, parentBranch string, driver hosting.CodeHostingDriver) (result hosting.PullRequestInfo, err error) {
 	hasOrigin, err := prodRepo.Silent.HasRemote("origin")
 	if err != nil {
 		return result, err

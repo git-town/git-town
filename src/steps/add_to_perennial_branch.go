@@ -1,8 +1,8 @@
 package steps
 
 import (
-	"github.com/git-town/git-town/v7/src/drivers"
 	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/hosting"
 )
 
 // AddToPerennialBranches adds the branch with the given name as a perennial branch.
@@ -15,6 +15,6 @@ func (step *AddToPerennialBranches) CreateUndoStep(repo *git.ProdRepo) (Step, er
 	return &RemoveFromPerennialBranches{BranchName: step.BranchName}, nil
 }
 
-func (step *AddToPerennialBranches) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
+func (step *AddToPerennialBranches) Run(repo *git.ProdRepo, driver hosting.CodeHostingDriver) error {
 	return repo.Config.AddToPerennialBranches(step.BranchName)
 }

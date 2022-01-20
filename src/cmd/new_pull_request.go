@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"github.com/git-town/git-town/v7/src/cli"
-	"github.com/git-town/git-town/v7/src/drivers"
 	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/git-town/git-town/v7/src/prompt"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
@@ -39,9 +39,9 @@ where hostname matches what is in your ssh config file.`,
 		if err != nil {
 			cli.Exit(err)
 		}
-		driver := drivers.Load(&prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction)
+		driver := hosting.Load(&prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction)
 		if driver == nil {
-			cli.Exit(drivers.UnsupportedHostingError())
+			cli.Exit(hosting.UnsupportedHostingError())
 		}
 		stepList, err := createNewPullRequestStepList(config, prodRepo)
 		if err != nil {

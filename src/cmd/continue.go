@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v7/src/cli"
-	"github.com/git-town/git-town/v7/src/drivers"
+	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/spf13/cobra"
 )
@@ -27,7 +27,7 @@ var continueCmd = &cobra.Command{
 		if hasConflicts {
 			cli.Exit(fmt.Errorf("you must resolve the conflicts before continuing"))
 		}
-		err = runstate.Execute(runState, prodRepo, drivers.Load(&prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction))
+		err = runstate.Execute(runState, prodRepo, hosting.Load(&prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction))
 		if err != nil {
 			cli.Exit(err)
 		}
