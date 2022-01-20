@@ -11,8 +11,8 @@ import (
 	"golang.org/x/oauth2"
 )
 
-// GiteaCodeHostingDriver provides access to the API of Gitea installations.
-type GiteaCodeHostingDriver struct {
+// GiteaDriver provides access to the API of Gitea installations.
+type GiteaDriver struct {
 	originURL  string
 	hostname   string
 	apiToken   string
@@ -24,7 +24,7 @@ type GiteaCodeHostingDriver struct {
 
 // NewGiteaDriver provides a Gitea driver instance if the given repo configuration is for a Gitea repo,
 // otherwise nil.
-func NewGiteaDriver(config config, log logFn) *GiteaCodeHostingDriver {
+func NewGiteaDriver(config config, log logFn) *GiteaDriver {
 	driverType := config.HostingService()
 	originURL := config.OriginURL()
 	hostname := helpers.URLHostname(originURL)
@@ -41,7 +41,7 @@ func NewGiteaDriver(config config, log logFn) *GiteaCodeHostingDriver {
 	}
 	owner := repositoryParts[0]
 	repository := repositoryParts[1]
-	return &GiteaCodeHostingDriver{
+	return &GiteaDriver{
 		originURL:  originURL,
 		hostname:   hostname,
 		apiToken:   config.GiteaToken(),
@@ -51,7 +51,7 @@ func NewGiteaDriver(config config, log logFn) *GiteaCodeHostingDriver {
 	}
 }
 
-func (d *GiteaCodeHostingDriver) LoadPullRequestInfo(branch, parentBranch string) (result PullRequestInfo, err error) {
+func (d *GiteaDriver) LoadPullRequestInfo(branch, parentBranch string) (result PullRequestInfo, err error) {
 	if d.apiToken == "" {
 		return result, nil
 	}
@@ -81,20 +81,20 @@ func (d *GiteaCodeHostingDriver) LoadPullRequestInfo(branch, parentBranch string
 	return result, nil
 }
 
-func (d *GiteaCodeHostingDriver) NewPullRequestURL(branch string, parentBranch string) (string, error) {
+func (d *GiteaDriver) NewPullRequestURL(branch string, parentBranch string) (string, error) {
 	toCompare := parentBranch + "..." + branch
 	return fmt.Sprintf("%s/compare/%s", d.RepositoryURL(), url.PathEscape(toCompare)), nil
 }
 
-func (d *GiteaCodeHostingDriver) RepositoryURL() string {
+func (d *GiteaDriver) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", d.hostname, d.owner, d.repository)
 }
 
-func (d *GiteaCodeHostingDriver) HostingServiceName() string {
+func (d *GiteaDriver) HostingServiceName() string {
 	return "Gitea"
 }
 
-func (d *GiteaCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
+func (d *GiteaDriver) MergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
 	d.connect()
 	openPullRequests, err := d.client.ListRepoPullRequests(d.owner, d.repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{
@@ -122,7 +122,7 @@ func (d *GiteaCodeHostingDriver) MergePullRequest(options MergePullRequestOption
 
 // Helper
 
-func (d *GiteaCodeHostingDriver) connect() {
+func (d *GiteaDriver) connect() {
 	if d.client == nil {
 		ts := oauth2.StaticTokenSource(
 			&oauth2.Token{AccessToken: d.apiToken},
@@ -150,7 +150,7 @@ func filterPullRequests(pullRequests []*gitea.PullRequest, baseName, headName st
 	return pullRequestsFiltered
 }
 
-func (d *GiteaCodeHostingDriver) apiMergePullRequest(pullRequestNumber int64, commitTitle, commitMessage string) (mergeSha string, err error) {
+func (d *GiteaDriver) apiMergePullRequest(pullRequestNumber int64, commitTitle, commitMessage string) (mergeSha string, err error) {
 	_, err = d.client.MergePullRequest(d.owner, d.repository, pullRequestNumber, gitea.MergePullRequestOption{
 		Style:   gitea.MergeStyleSquash,
 		Title:   commitTitle,
@@ -173,7 +173,7 @@ func (d *GiteaCodeHostingDriver) apiMergePullRequest(pullRequestNumber int64, co
 //   children1 -> ancestor  --> master (retargeted to master after merge)
 //   children2 -> ancestor  --> master (retargeted to master after merge)
 //nolint:unparam
-func (d *GiteaCodeHostingDriver) apiRetargetPullRequests(pullRequests []*gitea.PullRequest, newBaseName string) error {
+func (d *GiteaDriver) apiRetargetPullRequests(pullRequests []*gitea.PullRequest, newBaseName string) error {
 	for _, pullRequest := range pullRequests {
 		// RE-ENABLE AFTER https://github.com/go-gitea/gitea/issues/11552 and remove the nolint above
 		// if options.LogRequests {

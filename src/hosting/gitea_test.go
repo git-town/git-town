@@ -19,7 +19,7 @@ const (
 
 func log(template string, messages ...interface{}) {}
 
-func setupGiteaDriver(t *testing.T, token string) (*hosting.GiteaCodeHostingDriver, func()) {
+func setupGiteaDriver(t *testing.T, token string) (*hosting.GiteaDriver, func()) {
 	t.Helper()
 	httpmock.Activate()
 	driver := hosting.NewGiteaDriver(mockConfig{
