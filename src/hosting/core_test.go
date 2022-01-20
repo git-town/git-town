@@ -9,7 +9,7 @@ type mockConfig struct {
 	remoteOriginURL string
 }
 
-func (mc mockConfig) DriverName() string {
+func (mc mockConfig) HostingService() string {
 	return mc.driverName
 }
 
