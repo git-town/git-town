@@ -17,6 +17,6 @@ func (step *CreateBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
 	return &DeleteLocalBranchStep{BranchName: step.BranchName}, nil
 }
 
-func (step *CreateBranchStep) Run(repo *git.ProdRepo, driver hosting.CodeHostingDriver) error {
+func (step *CreateBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
 	return repo.Logging.CreateBranch(step.BranchName, step.StartingPoint)
 }

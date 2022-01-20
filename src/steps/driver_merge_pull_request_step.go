@@ -37,7 +37,7 @@ func (step *DriverMergePullRequestStep) CreateAutomaticAbortError() error {
 	return step.mergeError
 }
 
-func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo, driver hosting.CodeHostingDriver) error {
+func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
 	commitMessage := step.CommitMessage
 	//nolint:nestif
 	if commitMessage == "" {

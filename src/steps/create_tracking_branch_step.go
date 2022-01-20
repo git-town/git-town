@@ -16,6 +16,6 @@ func (step *CreateTrackingBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, 
 	return &DeleteRemoteBranchStep{BranchName: step.BranchName}, nil
 }
 
-func (step *CreateTrackingBranchStep) Run(repo *git.ProdRepo, driver hosting.CodeHostingDriver) error {
+func (step *CreateTrackingBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
 	return repo.Logging.CreateTrackingBranch(step.BranchName)
 }

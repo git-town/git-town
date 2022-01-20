@@ -12,7 +12,7 @@ type PreserveCheckoutHistoryStep struct {
 	InitialPreviouslyCheckedOutBranch string
 }
 
-func (step *PreserveCheckoutHistoryStep) Run(repo *git.ProdRepo, driver hosting.CodeHostingDriver) error {
+func (step *PreserveCheckoutHistoryStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
 	expectedPreviouslyCheckedOutBranch, err := repo.Silent.ExpectedPreviouslyCheckedOutBranch(step.InitialPreviouslyCheckedOutBranch, step.InitialBranch)
 	if err != nil {
 		return err

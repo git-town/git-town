@@ -86,7 +86,7 @@ and Git Town will leave it up to your origin server to delete the remote branch.
 }
 
 //nolint:funlen
-func gitShipConfig(args []string, driver hosting.CodeHostingDriver, repo *git.ProdRepo) (result shipConfig, err error) {
+func gitShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (result shipConfig, err error) {
 	result.initialBranch, err = repo.Silent.CurrentBranch()
 	if err != nil {
 		return result, err
@@ -208,7 +208,7 @@ func createShipStepList(config shipConfig, repo *git.ProdRepo) (result runstate.
 	return result, err
 }
 
-func createPullRequestInfo(branch, parentBranch string, driver hosting.CodeHostingDriver) (result hosting.PullRequestInfo, err error) {
+func createPullRequestInfo(branch, parentBranch string, driver hosting.Driver) (result hosting.PullRequestInfo, err error) {
 	hasOrigin, err := prodRepo.Silent.HasRemote("origin")
 	if err != nil {
 		return result, err

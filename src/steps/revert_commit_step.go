@@ -11,6 +11,6 @@ type RevertCommitStep struct {
 	Sha string
 }
 
-func (step *RevertCommitStep) Run(repo *git.ProdRepo, driver hosting.CodeHostingDriver) error {
+func (step *RevertCommitStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
 	return repo.Logging.RevertCommit(step.Sha)
 }

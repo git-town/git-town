@@ -21,7 +21,7 @@ func (step *PushBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { /
 	return &SkipCurrentBranchSteps{}, nil
 }
 
-func (step *PushBranchStep) Run(repo *git.ProdRepo, driver hosting.CodeHostingDriver) error {
+func (step *PushBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
 	shouldPush, err := repo.Silent.ShouldPushBranch(step.BranchName)
 	if err != nil {
 		return err

@@ -2,9 +2,8 @@ package hosting
 
 import "errors"
 
-// CodeHostingDriver defines the structure of drivers
-// for the different code hosting services.
-type CodeHostingDriver interface {
+// Driver defines the structure of drivers for the different code hosting services.
+type Driver interface {
 	// LoadPullRequestInfo loads information about the pull request of the given branch into the given parent branch
 	// from the code hosting provider.
 	LoadPullRequestInfo(branch, parentBranch string) (PullRequestInfo, error)
@@ -59,7 +58,7 @@ type MergePullRequestOptions struct {
 type logFn func(string, ...interface{})
 
 // Load provides the code hosting driver to use based on the git config.
-func Load(config config, git gitRunner, log logFn) CodeHostingDriver { //nolint:ireturn
+func Load(config config, git gitRunner, log logFn) Driver { //nolint:ireturn
 	githubDriver := LoadGithub(config, log)
 	if githubDriver != nil {
 		return githubDriver

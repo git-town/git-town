@@ -10,6 +10,6 @@ type PushTagsStep struct {
 	NoOpStep
 }
 
-func (step *PushTagsStep) Run(repo *git.ProdRepo, driver hosting.CodeHostingDriver) error {
+func (step *PushTagsStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
 	return repo.Logging.PushTags()
 }

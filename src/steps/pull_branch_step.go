@@ -11,6 +11,6 @@ type PullBranchStep struct {
 	BranchName string
 }
 
-func (step *PullBranchStep) Run(repo *git.ProdRepo, driver hosting.CodeHostingDriver) error {
+func (step *PullBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
 	return repo.Logging.Pull()
 }

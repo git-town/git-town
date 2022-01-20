@@ -16,7 +16,7 @@ func (step *RestoreOpenChangesStep) CreateUndoStep(repo *git.ProdRepo) (Step, er
 	return &StashOpenChangesStep{}, nil
 }
 
-func (step *RestoreOpenChangesStep) Run(repo *git.ProdRepo, driver hosting.CodeHostingDriver) error {
+func (step *RestoreOpenChangesStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
 	err := repo.Logging.PopStash()
 	if err != nil {
 		return errors.New("conflicts between your uncommmitted changes and the main branch")

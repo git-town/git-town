@@ -18,7 +18,7 @@ func (step *EnsureHasShippableChangesStep) CreateAutomaticAbortError() error {
 	return fmt.Errorf("the branch %q has no shippable changes", step.BranchName)
 }
 
-func (step *EnsureHasShippableChangesStep) Run(repo *git.ProdRepo, driver hosting.CodeHostingDriver) error {
+func (step *EnsureHasShippableChangesStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
 	hasShippableChanges, err := repo.Silent.HasShippableChanges(step.BranchName)
 	if err != nil {
 		return err

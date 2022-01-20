@@ -19,7 +19,7 @@ func (step *ContinueRebaseBranchStep) CreateContinueStep() Step { //nolint:iretu
 	return step
 }
 
-func (step *ContinueRebaseBranchStep) Run(repo *git.ProdRepo, driver hosting.CodeHostingDriver) error {
+func (step *ContinueRebaseBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
 	hasRebaseInProgress, err := repo.Silent.HasRebaseInProgress()
 	if err != nil {
 		return err

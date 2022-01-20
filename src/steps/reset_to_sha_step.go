@@ -13,7 +13,7 @@ type ResetToShaStep struct {
 	Sha  string
 }
 
-func (step *ResetToShaStep) Run(repo *git.ProdRepo, driver hosting.CodeHostingDriver) (err error) {
+func (step *ResetToShaStep) Run(repo *git.ProdRepo, driver hosting.Driver) (err error) {
 	currentSha, err := repo.Silent.CurrentSha()
 	if err != nil {
 		return err
