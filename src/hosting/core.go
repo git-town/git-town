@@ -68,7 +68,7 @@ type MergePullRequestOptions struct {
 // logFn defines a function with fmt.Printf API that CodeHostingDriver instances can use to give updates on activities they do.
 type logFn func(string, ...interface{})
 
-// NewDriver provides the code hosting driver to use based on the git config.
+// NewDriver provides an instance of the code hosting driver to use based on the git config.
 func NewDriver(config config, git gitRunner, log logFn) Driver { //nolint:ireturn
 	githubDriver := NewGithubDriver(config, log)
 	if githubDriver != nil {
