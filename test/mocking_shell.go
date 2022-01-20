@@ -8,7 +8,7 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/git-town/git-town/v7/src/envlist"
+	"github.com/git-town/git-town/v7/src/envvars"
 	"github.com/git-town/git-town/v7/src/run"
 	"github.com/kballard/go-shellquote"
 )
@@ -162,18 +162,18 @@ func (ms *MockingShell) RunWith(opts run.Options, cmd string, args ...string) (r
 		opts.Env = os.Environ()
 	}
 	// set HOME to the given global directory so that Git puts the global configuration there.
-	opts.Env = envlist.Replace(opts.Env, "HOME", ms.homeDir)
+	opts.Env = envvars.Replace(opts.Env, "HOME", ms.homeDir)
 	// add the custom origin
 	if ms.testOrigin != "" {
-		opts.Env = envlist.Replace(opts.Env, "GIT_TOWN_REMOTE", ms.testOrigin)
+		opts.Env = envvars.Replace(opts.Env, "GIT_TOWN_REMOTE", ms.testOrigin)
 	}
 	// add the custom bin dir to the PATH
 	if ms.usesBinDir {
-		opts.Env = envlist.PrependPath(opts.Env, ms.binDir)
+		opts.Env = envvars.PrependPath(opts.Env, ms.binDir)
 	}
 	// add the custom GIT_EDITOR
 	if ms.gitEditor != "" {
-		opts.Env = envlist.Replace(opts.Env, "GIT_EDITOR", filepath.Join(ms.binDir, "git_editor"))
+		opts.Env = envvars.Replace(opts.Env, "GIT_EDITOR", filepath.Join(ms.binDir, "git_editor"))
 	}
 	// set the working dir
 	opts.Dir = filepath.Join(ms.workingDir, opts.Dir)
