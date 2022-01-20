@@ -25,8 +25,8 @@ type Driver interface {
 
 // config defines the configuration data needed by the driver package.
 type config interface {
-	// OriginHost provides the hostname of the origin remote
-	OriginHost() string
+	// OriginHostOverride provides the hostname of the origin remote
+	OriginHostOverride() string
 
 	// HostingService provides the name of the hosting service that runs at the origin remote.
 	HostingService() string

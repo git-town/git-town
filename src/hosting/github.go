@@ -29,7 +29,7 @@ func NewGithubDriver(config config, log logFn) *GithubCodeHostingDriver {
 	driverType := config.HostingService()
 	originURL := config.OriginURL()
 	hostname := helpers.URLHostname(originURL)
-	manualHostName := config.OriginHost()
+	manualHostName := config.OriginHostOverride()
 	if manualHostName != "" {
 		hostname = manualHostName
 	}
