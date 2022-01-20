@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/git-town/git-town/v7/src/hosting/helpers"
+	"github.com/git-town/git-town/v7/src/giturl"
 	"github.com/google/go-github/github"
 	"golang.org/x/oauth2"
 )
@@ -28,7 +28,7 @@ type GithubDriver struct {
 func NewGithubDriver(config config, log logFn) *GithubDriver {
 	driverType := config.HostingService()
 	originURL := config.OriginURL()
-	hostname := helpers.URLHostname(originURL)
+	hostname := giturl.Host(originURL)
 	manualHostName := config.OriginOverride()
 	if manualHostName != "" {
 		hostname = manualHostName
@@ -36,7 +36,7 @@ func NewGithubDriver(config config, log logFn) *GithubDriver {
 	if driverType != "github" && hostname != "github.com" {
 		return nil
 	}
-	repositoryParts := strings.SplitN(helpers.URLRepositoryName(originURL), "/", 2)
+	repositoryParts := strings.SplitN(giturl.Repo(originURL), "/", 2)
 	if len(repositoryParts) != 2 {
 		return nil
 	}
