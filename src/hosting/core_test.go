@@ -13,7 +13,7 @@ func (mc mockConfig) HostingService() string {
 	return mc.driverName
 }
 
-func (mc mockConfig) OriginHostOverride() string {
+func (mc mockConfig) OriginOverride() string {
 	return mc.manualHostName
 }
 

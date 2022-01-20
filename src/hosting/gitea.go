@@ -28,7 +28,7 @@ func NewGiteaDriver(config config, log logFn) *GiteaCodeHostingDriver {
 	driverType := config.HostingService()
 	originURL := config.OriginURL()
 	hostname := helpers.URLHostname(originURL)
-	manualHostName := config.OriginHostOverride()
+	manualHostName := config.OriginOverride()
 	if manualHostName != "" {
 		hostname = manualHostName
 	}

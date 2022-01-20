@@ -21,7 +21,7 @@ func NewGitlabDriver(config config) *GitlabCodeHostingDriver {
 	driverType := config.HostingService()
 	originURL := config.OriginURL()
 	hostname := helpers.URLHostname(originURL)
-	manualHostName := config.OriginHostOverride()
+	manualHostName := config.OriginOverride()
 	if manualHostName != "" {
 		hostname = manualHostName
 	}
