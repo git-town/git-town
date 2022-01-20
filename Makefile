@@ -14,6 +14,9 @@ cuke-prof: build  # creates a flamegraph
 	@rm git-town.test
 	@echo Please open https://www.speedscope.app and load the file godog.out
 
+dependencies:  # prints the dependencies between packages as a tree
+	@depth . | grep git-town
+
 docs: build  # tests the documentation
 	${CURDIR}/text-run/node_modules/.bin/text-run --offline
 
@@ -74,6 +77,7 @@ setup-godog:  # install the godog binary
 setup-go: setup-godog
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.43.0
 	go install mvdan.cc/gofumpt@latest
+	go install github.com/KyleBanks/depth/cmd/depth@latest
 
 stats:  # shows code statistics
 	@find . -type f | grep -v './text-run/node_modules' | grep -v '\./vendor/' | grep -v '\./.git/' | grep -v './website/book' | xargs scc
