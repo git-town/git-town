@@ -21,7 +21,7 @@ func LoadGitlab(config config) *GitlabCodeHostingDriver {
 	driverType := config.DriverName()
 	originURL := config.RemoteOriginURL()
 	hostname := helpers.URLHostname(originURL)
-	manualHostName := config.OriginHostname()
+	manualHostName := config.OriginHost()
 	if manualHostName != "" {
 		hostname = manualHostName
 	}

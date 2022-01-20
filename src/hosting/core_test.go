@@ -13,7 +13,7 @@ func (mc mockConfig) DriverName() string {
 	return mc.driverName
 }
 
-func (mc mockConfig) OriginHostname() string {
+func (mc mockConfig) OriginHost() string {
 	return mc.manualHostName
 }
 

@@ -25,7 +25,7 @@ type Driver interface {
 
 // config defines the configuration data needed by the driver package.
 type config interface {
-	OriginHostname() string
+	OriginHost() string
 	DriverName() string
 	GiteaToken() string
 	GitHubToken() string
