@@ -1,4 +1,4 @@
-package prompt
+package dialog
 
 import (
 	"runtime"

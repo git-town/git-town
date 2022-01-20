@@ -4,9 +4,9 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/hosting"
-	"github.com/git-town/git-town/v7/src/prompt"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
 )
@@ -29,7 +29,7 @@ var (
 const dryRunFlagDescription = "Print the commands but don't run them"
 
 func validateIsConfigured(repo *git.ProdRepo) error {
-	err := prompt.EnsureIsConfigured(repo)
+	err := dialog.EnsureIsConfigured(repo)
 	if err != nil {
 		return err
 	}
@@ -72,7 +72,7 @@ func handleUnfinishedState(repo *git.ProdRepo, driver hosting.Driver) (quit bool
 	if runState == nil || !runState.IsUnfinished() {
 		return false, nil
 	}
-	response, err := prompt.AskHowToHandleUnfinishedRunState(
+	response, err := dialog.AskHowToHandleUnfinishedRunState(
 		runState.Command,
 		runState.UnfinishedDetails.EndBranch,
 		runState.UnfinishedDetails.EndTime,
@@ -82,10 +82,10 @@ func handleUnfinishedState(repo *git.ProdRepo, driver hosting.Driver) (quit bool
 		return quit, err
 	}
 	switch response {
-	case prompt.ResponseTypeDiscard:
+	case dialog.ResponseTypeDiscard:
 		err = runstate.Delete(repo)
 		return false, err
-	case prompt.ResponseTypeContinue:
+	case dialog.ResponseTypeContinue:
 		hasConflicts, err := repo.Silent.HasConflicts()
 		if err != nil {
 			return false, err
@@ -94,10 +94,10 @@ func handleUnfinishedState(repo *git.ProdRepo, driver hosting.Driver) (quit bool
 			return false, fmt.Errorf("you must resolve the conflicts before continuing")
 		}
 		return true, runstate.Execute(runState, repo, driver)
-	case prompt.ResponseTypeAbort:
+	case dialog.ResponseTypeAbort:
 		abortRunState := runState.CreateAbortRunState()
 		return true, runstate.Execute(&abortRunState, repo, driver)
-	case prompt.ResponseTypeSkip:
+	case dialog.ResponseTypeSkip:
 		skipRunState := runState.CreateSkipRunState()
 		return true, runstate.Execute(&skipRunState, repo, driver)
 	default:
