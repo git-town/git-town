@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v7/src/cli"
-	"github.com/git-town/git-town/v7/src/drivers"
+	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/spf13/cobra"
 )
@@ -21,7 +21,7 @@ var abortCmd = &cobra.Command{
 			cli.Exit(fmt.Errorf("nothing to abort"))
 		}
 		abortRunState := runState.CreateAbortRunState()
-		err = runstate.Execute(&abortRunState, prodRepo, drivers.Load(&prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction))
+		err = runstate.Execute(&abortRunState, prodRepo, hosting.NewDriver(&prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction))
 		if err != nil {
 			cli.Exit(err)
 		}

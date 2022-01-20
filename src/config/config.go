@@ -88,13 +88,13 @@ func (c *Config) ChildBranches(branchName string) (result []string) {
 	return
 }
 
-// CodeHostingDriverName provides the name of the code hosting driver to use.
-func (c *Config) CodeHostingDriverName() string {
+// HostingService provides the name of the code hosting driver to use.
+func (c *Config) HostingService() string {
 	return c.localOrGlobalConfigValue("git-town.code-hosting-driver")
 }
 
-// CodeHostingOriginHostname provides the host name of the code hosting server.
-func (c *Config) CodeHostingOriginHostname() string {
+// OriginOverride provides the override for the origin remote from the Git Town configuration.
+func (c *Config) OriginOverride() string {
 	return c.localConfigValue("git-town.code-hosting-origin-hostname")
 }
 
@@ -260,9 +260,9 @@ func (c *Config) Reload() {
 	c.globalConfigCache = loadGitConfig(c.shell, true)
 }
 
-// RemoteOriginURL provides the URL for the "origin" remote.
+// OriginURL provides the URL for the "origin" remote.
 // In tests this value can be stubbed.
-func (c *Config) RemoteOriginURL() string {
+func (c *Config) OriginURL() string {
 	remote := os.Getenv("GIT_TOWN_REMOTE")
 	if remote != "" {
 		return remote

@@ -3,8 +3,8 @@ package steps
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v7/src/drivers"
 	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/git-town/git-town/v7/src/prompt"
 )
 
@@ -31,7 +31,7 @@ func (step *SquashMergeBranchStep) CreateAutomaticAbortError() error {
 	return fmt.Errorf("aborted because commit exited with error")
 }
 
-func (step *SquashMergeBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
+func (step *SquashMergeBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
 	err := repo.Logging.SquashMerge(step.BranchName)
 	if err != nil {
 		return err

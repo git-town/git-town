@@ -1,8 +1,8 @@
 package steps
 
 import (
-	"github.com/git-town/git-town/v7/src/drivers"
 	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/hosting"
 )
 
 // CheckoutBranchStep checks out a new branch.
@@ -17,7 +17,7 @@ func (step *CheckoutBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error)
 	return &CheckoutBranchStep{BranchName: step.previousBranchName}, nil
 }
 
-func (step *CheckoutBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) (err error) {
+func (step *CheckoutBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) (err error) {
 	step.previousBranchName, err = repo.Silent.CurrentBranch()
 	if err != nil {
 		return err

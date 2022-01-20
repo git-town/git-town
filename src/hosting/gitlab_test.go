@@ -1,17 +1,17 @@
-package drivers_test
+package hosting_test
 
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v7/src/drivers"
+	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/stretchr/testify/assert"
 )
 
 //nolint:paralleltest  // mocks HTTP
 func TestLoadGitLab(t *testing.T) {
-	driver := drivers.LoadGitlab(mockConfig{
-		codeHostingDriverName: "gitlab",
-		remoteOriginURL:       "git@self-hosted-gitlab.com:git-town/git-town.git",
+	driver := hosting.NewGitlabDriver(mockConfig{
+		hostingService: "gitlab",
+		originURL:      "git@self-hosted-gitlab.com:git-town/git-town.git",
 	})
 	assert.NotNil(t, driver)
 	assert.Equal(t, "GitLab", driver.HostingServiceName())
@@ -20,9 +20,9 @@ func TestLoadGitLab(t *testing.T) {
 
 //nolint:paralleltest  // mocks HTTP
 func TestLoadGitLab_customHostName(t *testing.T) {
-	driver := drivers.LoadGitlab(mockConfig{
-		remoteOriginURL: "git@my-ssh-identity.com:git-town/git-town.git",
-		manualHostName:  "gitlab.com",
+	driver := hosting.NewGitlabDriver(mockConfig{
+		originURL:      "git@my-ssh-identity.com:git-town/git-town.git",
+		originOverride: "gitlab.com",
 	})
 	assert.NotNil(t, driver)
 	assert.Equal(t, "GitLab", driver.HostingServiceName())

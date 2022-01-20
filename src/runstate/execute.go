@@ -4,13 +4,13 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v7/src/cli"
-	"github.com/git-town/git-town/v7/src/drivers"
 	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/hosting"
 )
 
 // Execute runs the commands in the given runstate.
 //nolint:gocognit,nestif,funlen
-func Execute(runState *RunState, repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
+func Execute(runState *RunState, repo *git.ProdRepo, driver hosting.Driver) error {
 	for {
 		step := runState.RunStepList.Pop()
 		if step == nil {

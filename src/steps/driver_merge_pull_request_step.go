@@ -3,8 +3,8 @@ package steps
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v7/src/drivers"
 	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/hosting"
 )
 
 // DriverMergePullRequestStep squash merges the branch with the given name into the current branch.
@@ -37,7 +37,7 @@ func (step *DriverMergePullRequestStep) CreateAutomaticAbortError() error {
 	return step.mergeError
 }
 
-func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
+func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
 	commitMessage := step.CommitMessage
 	//nolint:nestif
 	if commitMessage == "" {
@@ -70,7 +70,7 @@ func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo, driver drivers.C
 	if err != nil {
 		return err
 	}
-	step.mergeSha, step.mergeError = driver.MergePullRequest(drivers.MergePullRequestOptions{
+	step.mergeSha, step.mergeError = driver.MergePullRequest(hosting.MergePullRequestOptions{
 		Branch:            step.BranchName,
 		PullRequestNumber: step.PullRequestNumber,
 		CommitMessage:     commitMessage,

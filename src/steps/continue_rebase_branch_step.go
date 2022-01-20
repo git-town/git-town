@@ -1,8 +1,8 @@
 package steps
 
 import (
-	"github.com/git-town/git-town/v7/src/drivers"
 	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/hosting"
 )
 
 // ContinueRebaseBranchStep finishes an ongoing rebase operation
@@ -19,7 +19,7 @@ func (step *ContinueRebaseBranchStep) CreateContinueStep() Step { //nolint:iretu
 	return step
 }
 
-func (step *ContinueRebaseBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
+func (step *ContinueRebaseBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
 	hasRebaseInProgress, err := repo.Silent.HasRebaseInProgress()
 	if err != nil {
 		return err

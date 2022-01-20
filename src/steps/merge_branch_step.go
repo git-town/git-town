@@ -1,8 +1,8 @@
 package steps
 
 import (
-	"github.com/git-town/git-town/v7/src/drivers"
 	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/hosting"
 )
 
 // MergeBranchStep merges the branch with the given name into the current branch.
@@ -25,7 +25,7 @@ func (step *MergeBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { 
 	return &ResetToShaStep{Hard: true, Sha: step.previousSha}, nil
 }
 
-func (step *MergeBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) (err error) {
+func (step *MergeBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) (err error) {
 	step.previousSha, err = repo.Silent.CurrentSha()
 	if err != nil {
 		return err

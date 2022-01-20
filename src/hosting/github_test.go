@@ -1,4 +1,4 @@
-package drivers_test
+package hosting_test
 
 import (
 	"encoding/json"
@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/git-town/git-town/v7/src/drivers"
+	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/stretchr/testify/assert"
 	httpmock "gopkg.in/jarcoal/httpmock.v1"
 )
@@ -20,12 +20,12 @@ const (
 	githubPR1Merge  = githubRoot + "/repos/git-town/git-town/pulls/1/merge"
 )
 
-func setupGithubDriver(t *testing.T, token string) (*drivers.GithubCodeHostingDriver, func()) {
+func setupGithubDriver(t *testing.T, token string) (*hosting.GithubDriver, func()) {
 	t.Helper()
 	httpmock.Activate()
-	driver := drivers.LoadGithub(mockConfig{
-		remoteOriginURL: "git@github.com:git-town/git-town.git",
-		gitHubToken:     token,
+	driver := hosting.NewGithubDriver(mockConfig{
+		originURL:   "git@github.com:git-town/git-town.git",
+		gitHubToken: token,
 	}, log)
 	assert.NotNil(t, driver)
 	return driver, func() {
@@ -35,9 +35,9 @@ func setupGithubDriver(t *testing.T, token string) (*drivers.GithubCodeHostingDr
 
 //nolint:paralleltest  // mocks HTTP
 func TestLoadGithub(t *testing.T) {
-	driver := drivers.LoadGithub(mockConfig{
-		codeHostingDriverName: "github",
-		remoteOriginURL:       "git@self-hosted-github.com:git-town/git-town.git",
+	driver := hosting.NewGithubDriver(mockConfig{
+		hostingService: "github",
+		originURL:      "git@self-hosted-github.com:git-town/git-town.git",
 	}, log)
 	assert.NotNil(t, driver)
 	assert.Equal(t, "GitHub", driver.HostingServiceName())
@@ -46,9 +46,9 @@ func TestLoadGithub(t *testing.T) {
 
 //nolint:paralleltest  // mocks HTTP
 func TestLoadGithub_customHostName(t *testing.T) {
-	driver := drivers.LoadGithub(mockConfig{
-		remoteOriginURL: "git@my-ssh-identity.com:git-town/git-town.git",
-		manualHostName:  "github.com",
+	driver := hosting.NewGithubDriver(mockConfig{
+		originURL:      "git@my-ssh-identity.com:git-town/git-town.git",
+		originOverride: "github.com",
 	}, log)
 	assert.NotNil(t, driver)
 	assert.Equal(t, "GitHub", driver.HostingServiceName())
@@ -109,7 +109,7 @@ func TestGitHubDriver_LoadPullRequestInfo_MultiplePullRequestsForBranch(t *testi
 func TestGitHubDriver_MergePullRequest_GetPullRequestIdsFails(t *testing.T) {
 	driver, teardown := setupGithubDriver(t, "TOKEN")
 	defer teardown()
-	options := drivers.MergePullRequestOptions{
+	options := hosting.MergePullRequestOptions{
 		Branch:        "feature",
 		CommitMessage: "title\nextra detail1\nextra detail2",
 		ParentBranch:  "main",
@@ -123,7 +123,7 @@ func TestGitHubDriver_MergePullRequest_GetPullRequestIdsFails(t *testing.T) {
 func TestGitHubDriver_MergePullRequest_GetPullRequestToMergeFails(t *testing.T) {
 	driver, teardown := setupGithubDriver(t, "TOKEN")
 	defer teardown()
-	options := drivers.MergePullRequestOptions{
+	options := hosting.MergePullRequestOptions{
 		Branch:        "feature",
 		CommitMessage: "title\nextra detail1\nextra detail2",
 		ParentBranch:  "main",
@@ -138,7 +138,7 @@ func TestGitHubDriver_MergePullRequest_GetPullRequestToMergeFails(t *testing.T) 
 func TestGitHubDriver_MergePullRequest_PullRequestNotFound(t *testing.T) {
 	driver, teardown := setupGithubDriver(t, "TOKEN")
 	defer teardown()
-	options := drivers.MergePullRequestOptions{
+	options := hosting.MergePullRequestOptions{
 		Branch:        "feature",
 		CommitMessage: "title\nextra detail1\nextra detail2",
 		ParentBranch:  "main",
@@ -154,7 +154,7 @@ func TestGitHubDriver_MergePullRequest_PullRequestNotFound(t *testing.T) {
 func TestGitHubDriver_MergePullRequest(t *testing.T) {
 	driver, teardown := setupGithubDriver(t, "TOKEN")
 	defer teardown()
-	options := drivers.MergePullRequestOptions{
+	options := hosting.MergePullRequestOptions{
 		Branch:            "feature",
 		PullRequestNumber: 1,
 		CommitMessage:     "title\nextra detail1\nextra detail2",
@@ -180,7 +180,7 @@ func TestGitHubDriver_MergePullRequest(t *testing.T) {
 func TestGitHubDriver_MergePullRequest_MergeFails(t *testing.T) {
 	driver, teardown := setupGithubDriver(t, "TOKEN")
 	defer teardown()
-	options := drivers.MergePullRequestOptions{
+	options := hosting.MergePullRequestOptions{
 		Branch:        "feature",
 		CommitMessage: "title\nextra detail1\nextra detail2",
 		ParentBranch:  "main",
@@ -196,7 +196,7 @@ func TestGitHubDriver_MergePullRequest_MergeFails(t *testing.T) {
 func TestGitHubDriver_MergePullRequest_UpdateChildPRs(t *testing.T) {
 	driver, teardown := setupGithubDriver(t, "TOKEN")
 	defer teardown()
-	options := drivers.MergePullRequestOptions{
+	options := hosting.MergePullRequestOptions{
 		Branch:            "feature",
 		PullRequestNumber: 1,
 		CommitMessage:     "title\nextra detail1\nextra detail2",

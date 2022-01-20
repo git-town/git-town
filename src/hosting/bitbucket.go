@@ -1,4 +1,4 @@
-package drivers
+package hosting
 
 import (
 	"errors"
@@ -6,31 +6,31 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/git-town/git-town/v7/src/drivers/helpers"
+	"github.com/git-town/git-town/v7/src/hosting/helpers"
 )
 
-// BitbucketCodeHostingDriver provides access to the API of Bitbucket installations.
-type BitbucketCodeHostingDriver struct {
+// BitbucketDriver provides access to the API of Bitbucket installations.
+type BitbucketDriver struct {
 	git        gitRunner
 	hostname   string
 	originURL  string
 	repository string
 }
 
-// LoadBitbucket provides a Bitbucket driver instance if the given repo configuration is for a Bitbucket repo,
+// NewBitbucketDriver provides a Bitbucket driver instance if the given repo configuration is for a Bitbucket repo,
 // otherwise nil.
-func LoadBitbucket(config config, git gitRunner) *BitbucketCodeHostingDriver {
-	driverType := config.CodeHostingDriverName()
-	originURL := config.RemoteOriginURL()
+func NewBitbucketDriver(config config, git gitRunner) *BitbucketDriver {
+	driverType := config.HostingService()
+	originURL := config.OriginURL()
 	hostname := helpers.URLHostname(originURL)
-	manualHostName := config.CodeHostingOriginHostname()
-	if manualHostName != "" {
-		hostname = manualHostName
+	manualOrigin := config.OriginOverride()
+	if manualOrigin != "" {
+		hostname = manualOrigin
 	}
 	if driverType != "bitbucket" && hostname != "bitbucket.org" {
 		return nil
 	}
-	return &BitbucketCodeHostingDriver{
+	return &BitbucketDriver{
 		git:        git,
 		hostname:   hostname,
 		originURL:  originURL,
@@ -38,11 +38,11 @@ func LoadBitbucket(config config, git gitRunner) *BitbucketCodeHostingDriver {
 	}
 }
 
-func (d *BitbucketCodeHostingDriver) LoadPullRequestInfo(branch, parentBranch string) (result PullRequestInfo, err error) {
+func (d *BitbucketDriver) LoadPullRequestInfo(branch, parentBranch string) (result PullRequestInfo, err error) {
 	return result, nil
 }
 
-func (d *BitbucketCodeHostingDriver) NewPullRequestURL(branch, parentBranch string) (string, error) {
+func (d *BitbucketDriver) NewPullRequestURL(branch, parentBranch string) (string, error) {
 	query := url.Values{}
 	branchSha, err := d.git.ShaForBranch(branch)
 	if err != nil {
@@ -53,14 +53,14 @@ func (d *BitbucketCodeHostingDriver) NewPullRequestURL(branch, parentBranch stri
 	return fmt.Sprintf("%s/pull-request/new?%s", d.RepositoryURL(), query.Encode()), nil
 }
 
-func (d *BitbucketCodeHostingDriver) RepositoryURL() string {
+func (d *BitbucketDriver) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s", d.hostname, d.repository)
 }
 
-func (d *BitbucketCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
+func (d *BitbucketDriver) MergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
 	return "", errors.New("shipping pull requests via the Bitbucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues")
 }
 
-func (d *BitbucketCodeHostingDriver) HostingServiceName() string {
+func (d *BitbucketDriver) HostingServiceName() string {
 	return "Bitbucket"
 }

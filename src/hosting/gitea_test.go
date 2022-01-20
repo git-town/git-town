@@ -1,10 +1,10 @@
-package drivers_test
+package hosting_test
 
 import (
 	"net/http"
 	"testing"
 
-	"github.com/git-town/git-town/v7/src/drivers"
+	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/stretchr/testify/assert"
 	httpmock "gopkg.in/jarcoal/httpmock.v1"
 )
@@ -19,12 +19,12 @@ const (
 
 func log(template string, messages ...interface{}) {}
 
-func setupGiteaDriver(t *testing.T, token string) (*drivers.GiteaCodeHostingDriver, func()) {
+func setupGiteaDriver(t *testing.T, token string) (*hosting.GiteaDriver, func()) {
 	t.Helper()
 	httpmock.Activate()
-	driver := drivers.LoadGitea(mockConfig{
-		remoteOriginURL: "git@gitea.com:git-town/git-town.git",
-		giteaToken:      token,
+	driver := hosting.NewGiteaDriver(mockConfig{
+		originURL:  "git@gitea.com:git-town/git-town.git",
+		giteaToken: token,
 	}, log)
 	assert.NotNil(t, driver)
 	return driver, func() {
@@ -34,9 +34,9 @@ func setupGiteaDriver(t *testing.T, token string) (*drivers.GiteaCodeHostingDriv
 
 //nolint:paralleltest  // mocks HTTP
 func TestLoadGitea(t *testing.T) {
-	driver := drivers.LoadGitea(mockConfig{
-		codeHostingDriverName: "gitea",
-		remoteOriginURL:       "git@self-hosted-gitea.com:git-town/git-town.git",
+	driver := hosting.NewGiteaDriver(mockConfig{
+		hostingService: "gitea",
+		originURL:      "git@self-hosted-gitea.com:git-town/git-town.git",
 	}, log)
 	assert.NotNil(t, driver)
 	assert.Equal(t, "Gitea", driver.HostingServiceName())
@@ -45,9 +45,9 @@ func TestLoadGitea(t *testing.T) {
 
 //nolint:paralleltest  // mocks HTTP
 func TestLoadGitea_customHostName(t *testing.T) {
-	driver := drivers.LoadGitea(mockConfig{
-		remoteOriginURL: "git@my-ssh-identity.com:git-town/git-town.git",
-		manualHostName:  "gitea.com",
+	driver := hosting.NewGiteaDriver(mockConfig{
+		originURL:      "git@my-ssh-identity.com:git-town/git-town.git",
+		originOverride: "gitea.com",
 	}, log)
 	assert.NotNil(t, driver)
 	assert.Equal(t, "Gitea", driver.HostingServiceName())
@@ -108,7 +108,7 @@ func TestGiteaDriver_LoadPullRequestInfo_MultiplePullRequestsForBranch(t *testin
 func TestGiteaDriver_MergePullRequest_GetPullRequestIdsFails(t *testing.T) {
 	driver, teardown := setupGiteaDriver(t, "TOKEN")
 	defer teardown()
-	options := drivers.MergePullRequestOptions{
+	options := hosting.MergePullRequestOptions{
 		Branch:        "feature",
 		CommitMessage: "title\nextra detail1\nextra detail2",
 		ParentBranch:  "main",
@@ -122,7 +122,7 @@ func TestGiteaDriver_MergePullRequest_GetPullRequestIdsFails(t *testing.T) {
 func TestGiteaDriver_MergePullRequest_GetPullRequestToMergeFails(t *testing.T) {
 	driver, teardown := setupGiteaDriver(t, "TOKEN")
 	defer teardown()
-	options := drivers.MergePullRequestOptions{
+	options := hosting.MergePullRequestOptions{
 		Branch:            "feature",
 		PullRequestNumber: 1,
 		CommitMessage:     "title\nextra detail1\nextra detail2",
@@ -138,7 +138,7 @@ func TestGiteaDriver_MergePullRequest_GetPullRequestToMergeFails(t *testing.T) {
 func TestGiteaDriver_MergePullRequest_PullRequestNotFound(t *testing.T) {
 	driver, teardown := setupGiteaDriver(t, "TOKEN")
 	defer teardown()
-	options := drivers.MergePullRequestOptions{
+	options := hosting.MergePullRequestOptions{
 		Branch:            "feature",
 		PullRequestNumber: 1,
 		CommitMessage:     "title\nextra detail1\nextra detail2",
@@ -156,7 +156,7 @@ func TestGiteaDriver_MergePullRequest_PullRequestNotFound(t *testing.T) {
 func TestGiteaDriver_MergePullRequest(t *testing.T) {
 	driver, teardown := setupGiteaDriver(t, "TOKEN")
 	defer teardown()
-	options := drivers.MergePullRequestOptions{
+	options := hosting.MergePullRequestOptions{
 		Branch:            "feature",
 		PullRequestNumber: 1,
 		CommitMessage:     "title\nextra detail1\nextra detail2",
@@ -183,7 +183,7 @@ func TestGiteaDriver_MergePullRequest(t *testing.T) {
 func TestGiteaDriver_MergePullRequest_MergeFails(t *testing.T) {
 	driver, teardown := setupGiteaDriver(t, "TOKEN")
 	defer teardown()
-	options := drivers.MergePullRequestOptions{
+	options := hosting.MergePullRequestOptions{
 		Branch:        "feature",
 		CommitMessage: "title\nextra detail1\nextra detail2",
 		ParentBranch:  "main",

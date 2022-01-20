@@ -1,17 +1,17 @@
-package drivers_test
+package hosting_test
 
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v7/src/drivers"
+	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/stretchr/testify/assert"
 )
 
 //nolint:paralleltest  // mocks HTTP
 func TestLoadBitbucket(t *testing.T) {
-	driver := drivers.LoadBitbucket(mockConfig{
-		codeHostingDriverName: "bitbucket",
-		remoteOriginURL:       "git@self-hosted-bitbucket.com:git-town/git-town.git",
+	driver := hosting.NewBitbucketDriver(mockConfig{
+		hostingService: "bitbucket",
+		originURL:      "git@self-hosted-bitbucket.com:git-town/git-town.git",
 	}, nil)
 	assert.NotNil(t, driver)
 	assert.Equal(t, "Bitbucket", driver.HostingServiceName())
@@ -20,9 +20,9 @@ func TestLoadBitbucket(t *testing.T) {
 
 //nolint:paralleltest  // mocks HTTP
 func TestLoadBitbucket_customHostName(t *testing.T) {
-	driver := drivers.LoadBitbucket(mockConfig{
-		remoteOriginURL: "git@my-ssh-identity.com:git-town/git-town.git",
-		manualHostName:  "bitbucket.org",
+	driver := hosting.NewBitbucketDriver(mockConfig{
+		originURL:      "git@my-ssh-identity.com:git-town/git-town.git",
+		originOverride: "bitbucket.org",
 	}, nil)
 	assert.NotNil(t, driver)
 	assert.Equal(t, "Bitbucket", driver.HostingServiceName())

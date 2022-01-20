@@ -1,8 +1,8 @@
 package steps
 
 import (
-	"github.com/git-town/git-town/v7/src/drivers"
 	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/hosting"
 )
 
 // CreateTrackingBranchStep pushes the current branch up to origin
@@ -16,6 +16,6 @@ func (step *CreateTrackingBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, 
 	return &DeleteRemoteBranchStep{BranchName: step.BranchName}, nil
 }
 
-func (step *CreateTrackingBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
+func (step *CreateTrackingBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
 	return repo.Logging.CreateTrackingBranch(step.BranchName)
 }
