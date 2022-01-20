@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	"code.gitea.io/sdk/gitea"
-	"golang.org/x/oauth2"
 	"github.com/git-town/git-town/v7/src/giturl"
+	"golang.org/x/oauth2"
 )
 
 // GiteaDriver provides access to the API of Gitea installations.

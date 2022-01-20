@@ -3,8 +3,8 @@ package giturl_test
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/git-town/git-town/v7/src/giturl"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestHost(t *testing.T) {
