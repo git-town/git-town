@@ -20,7 +20,7 @@ const (
 	githubPR1Merge  = githubRoot + "/repos/git-town/git-town/pulls/1/merge"
 )
 
-func setupGithubDriver(t *testing.T, token string) (*hosting.GithubCodeHostingDriver, func()) {
+func setupGithubDriver(t *testing.T, token string) (*hosting.GithubDriver, func()) {
 	t.Helper()
 	httpmock.Activate()
 	driver := hosting.NewGithubDriver(mockConfig{
