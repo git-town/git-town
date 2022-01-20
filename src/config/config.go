@@ -260,9 +260,9 @@ func (c *Config) Reload() {
 	c.globalConfigCache = loadGitConfig(c.shell, true)
 }
 
-// RemoteOriginURL provides the URL for the "origin" remote.
+// OriginURL provides the URL for the "origin" remote.
 // In tests this value can be stubbed.
-func (c *Config) RemoteOriginURL() string {
+func (c *Config) OriginURL() string {
 	remote := os.Getenv("GIT_TOWN_REMOTE")
 	if remote != "" {
 		return remote

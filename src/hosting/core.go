@@ -25,12 +25,23 @@ type Driver interface {
 
 // config defines the configuration data needed by the driver package.
 type config interface {
+	// OriginHost provides the hostname of the origin remote
 	OriginHost() string
+
+	// HostingService provides the name of the hosting service that runs at the origin remote.
 	HostingService() string
+
+	// GiteaToken provides the personal access token for Gitea stored in the Git configuration.
 	GiteaToken() string
+
+	// GitHubToken provides the personal access token for GitHub stored in the Git configuration.
 	GitHubToken() string
+
+	// MainBranch provides the name of the main branch.
 	MainBranch() string
-	RemoteOriginURL() string
+
+	// OriginURL provides the URL of the origin remote.
+	OriginURL() string
 }
 
 // runner defines the runner methods used by the driver package.

@@ -26,7 +26,7 @@ type GiteaCodeHostingDriver struct {
 // otherwise nil.
 func NewGiteaDriver(config config, log logFn) *GiteaCodeHostingDriver {
 	driverType := config.HostingService()
-	originURL := config.RemoteOriginURL()
+	originURL := config.OriginURL()
 	hostname := helpers.URLHostname(originURL)
 	manualHostName := config.OriginHost()
 	if manualHostName != "" {

@@ -19,7 +19,7 @@ type GitlabCodeHostingDriver struct {
 // otherwise nil.
 func NewGitlabDriver(config config) *GitlabCodeHostingDriver {
 	driverType := config.HostingService()
-	originURL := config.RemoteOriginURL()
+	originURL := config.OriginURL()
 	hostname := helpers.URLHostname(originURL)
 	manualHostName := config.OriginHost()
 	if manualHostName != "" {
