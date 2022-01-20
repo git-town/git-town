@@ -23,7 +23,7 @@ const (
 func setupGithubDriver(t *testing.T, token string) (*hosting.GithubCodeHostingDriver, func()) {
 	t.Helper()
 	httpmock.Activate()
-	driver := hosting.LoadGithub(mockConfig{
+	driver := hosting.NewGithubDriver(mockConfig{
 		remoteOriginURL: "git@github.com:git-town/git-town.git",
 		gitHubToken:     token,
 	}, log)
@@ -35,7 +35,7 @@ func setupGithubDriver(t *testing.T, token string) (*hosting.GithubCodeHostingDr
 
 //nolint:paralleltest  // mocks HTTP
 func TestLoadGithub(t *testing.T) {
-	driver := hosting.LoadGithub(mockConfig{
+	driver := hosting.NewGithubDriver(mockConfig{
 		driverName:      "github",
 		remoteOriginURL: "git@self-hosted-github.com:git-town/git-town.git",
 	}, log)
@@ -46,7 +46,7 @@ func TestLoadGithub(t *testing.T) {
 
 //nolint:paralleltest  // mocks HTTP
 func TestLoadGithub_customHostName(t *testing.T) {
-	driver := hosting.LoadGithub(mockConfig{
+	driver := hosting.NewGithubDriver(mockConfig{
 		remoteOriginURL: "git@my-ssh-identity.com:git-town/git-town.git",
 		manualHostName:  "github.com",
 	}, log)
