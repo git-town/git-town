@@ -28,3 +28,12 @@ commands are compatible with most common branching models like
 [trunk-based development](https://trunkbaseddevelopment.com) and even committing
 straight into the main branch. See also this
 [external review](https://www.softpedia.com/get/Programming/Other-Programming-Files/Git-Town.shtml).
+
+### Endorsements
+
+> Supercharge your workflow with Git by relying on this surprisingly powerful
+> and quite useful plugin that provides you with a series of extra Git commands.
+> <br><br>
+> **[Softpedia article about Git Town](https://www.softpedia.com/get/Programming/Other-Programming-Files/Git-Town.shtml)**
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">All doable w/ just git, but git-town is a simpler mental-model and way less keystrokes</p>&mdash; Ryan Nystrom (@_ryannystrom) <a href="https://twitter.com/_ryannystrom/status/1155840573653356544?ref_src=twsrc%5Etfw">July 29, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>

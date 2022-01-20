@@ -13,10 +13,7 @@
 </p>
 
 Git Town makes [Git](https://git-scm.com) more efficient, especially for large
-teams. See [this screencast](https://youtu.be/oLaUsUlFfTo) for an introduction
-and this
-[Softpedia article](https://www.softpedia.com/get/Programming/Other-Programming-Files/Git-Town.shtml)
-for an independent review.
+teams. See [this screencast](https://youtu.be/oLaUsUlFfTo) for an introduction.
 
 ## Commands
 
