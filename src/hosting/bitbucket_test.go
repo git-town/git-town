@@ -9,7 +9,7 @@ import (
 
 //nolint:paralleltest  // mocks HTTP
 func TestLoadBitbucket(t *testing.T) {
-	driver := hosting.LoadBitbucket(mockConfig{
+	driver := hosting.NewBitbucketDriver(mockConfig{
 		driverName:      "bitbucket",
 		remoteOriginURL: "git@self-hosted-bitbucket.com:git-town/git-town.git",
 	}, nil)
@@ -20,7 +20,7 @@ func TestLoadBitbucket(t *testing.T) {
 
 //nolint:paralleltest  // mocks HTTP
 func TestLoadBitbucket_customHostName(t *testing.T) {
-	driver := hosting.LoadBitbucket(mockConfig{
+	driver := hosting.NewBitbucketDriver(mockConfig{
 		remoteOriginURL: "git@my-ssh-identity.com:git-town/git-town.git",
 		manualHostName:  "bitbucket.org",
 	}, nil)

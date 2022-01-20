@@ -17,9 +17,9 @@ type BitbucketCodeHostingDriver struct {
 	repository string
 }
 
-// LoadBitbucket provides a Bitbucket driver instance if the given repo configuration is for a Bitbucket repo,
+// NewBitbucketDriver provides a Bitbucket driver instance if the given repo configuration is for a Bitbucket repo,
 // otherwise nil.
-func LoadBitbucket(config config, git gitRunner) *BitbucketCodeHostingDriver {
+func NewBitbucketDriver(config config, git gitRunner) *BitbucketCodeHostingDriver {
 	driverType := config.HostingService()
 	originURL := config.RemoteOriginURL()
 	hostname := helpers.URLHostname(originURL)

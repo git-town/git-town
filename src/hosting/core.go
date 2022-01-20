@@ -67,7 +67,7 @@ func NewDriver(config config, git gitRunner, log logFn) Driver { //nolint:iretur
 	if giteaDriver != nil {
 		return giteaDriver
 	}
-	bitbucketDriver := LoadBitbucket(config, git)
+	bitbucketDriver := NewBitbucketDriver(config, git)
 	if bitbucketDriver != nil {
 		return bitbucketDriver
 	}
