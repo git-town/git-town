@@ -93,7 +93,7 @@ func (c *Config) HostingService() string {
 	return c.localOrGlobalConfigValue("git-town.code-hosting-driver")
 }
 
-// OriginHostOverride provides the host name of the code hosting server.
+// OriginHostOverride provides the host name override from the Git Town configuration.
 func (c *Config) OriginHostOverride() string {
 	return c.localConfigValue("git-town.code-hosting-origin-hostname")
 }
