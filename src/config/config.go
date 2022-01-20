@@ -271,8 +271,8 @@ func (c *Config) OriginURL() string {
 	return res.OutputSanitized()
 }
 
-// RemoveFromPerennialBranchesStep removes the given branch as a perennial branch.
-func (c *Config) RemoveFromPerennialBranchesStep(branchName string) error {
+// RemoveFromPerennialBranches removes the given branch as a perennial branch.
+func (c *Config) RemoveFromPerennialBranches(branchName string) error {
 	return c.SetPerennialBranches(stringslice.Remove(c.PerennialBranches(), branchName))
 }
 
