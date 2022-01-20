@@ -85,7 +85,7 @@ func NewDriver(config config, git gitRunner, log logFn) Driver { //nolint:iretur
 	return NewGitlabDriver(config)
 }
 
-// UnsupportedServiceError provides an error message.
+// UnsupportedServiceError communicates that the origin remote runs an unknown code hosting service.
 func UnsupportedServiceError() error {
 	return errors.New(`unsupported hosting service
 
