@@ -1,5 +1,5 @@
-// Package browsers allows interacting with the default browser on the user's machine.
-package browsers
+// Package browser allows interacting with the default browser on the user's machine.
+package browser
 
 import (
 	"fmt"

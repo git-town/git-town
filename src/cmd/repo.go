@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/git-town/git-town/v7/src/browsers"
+	"github.com/git-town/git-town/v7/src/browser"
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/spf13/cobra"
@@ -26,7 +26,7 @@ where HOSTNAME matches what is in your ssh config file.`,
 		if driver == nil {
 			cli.Exit(hosting.UnsupportedServiceError())
 		}
-		browsers.Open(driver.RepositoryURL(), prodRepo.LoggingShell)
+		browser.Open(driver.RepositoryURL(), prodRepo.LoggingShell)
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
