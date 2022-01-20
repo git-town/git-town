@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v7/src/cli"
-	"github.com/git-town/git-town/v7/src/prompt"
+	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/spf13/cobra"
 )
 
@@ -47,11 +47,11 @@ var setupConfigCommand = &cobra.Command{
 	Use:   "setup",
 	Short: "Prompts to setup your Git Town configuration",
 	Run: func(cmd *cobra.Command, args []string) {
-		err := prompt.ConfigureMainBranch(prodRepo)
+		err := dialog.ConfigureMainBranch(prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}
-		err = prompt.ConfigurePerennialBranches(prodRepo)
+		err = dialog.ConfigurePerennialBranches(prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}

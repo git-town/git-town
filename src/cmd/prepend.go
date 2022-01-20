@@ -5,7 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/git"
-	"github.com/git-town/git-town/v7/src/prompt"
+	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
 	"github.com/spf13/cobra"
@@ -88,7 +88,7 @@ func createPrependConfig(args []string, repo *git.ProdRepo) (result prependConfi
 	if !repo.Config.IsFeatureBranch(result.initialBranch) {
 		return result, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can have parent branches", result.initialBranch)
 	}
-	err = prompt.EnsureKnowsParentBranches([]string{result.initialBranch}, repo)
+	err = dialog.EnsureKnowsParentBranches([]string{result.initialBranch}, repo)
 	if err != nil {
 		return result, err
 	}

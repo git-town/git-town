@@ -4,7 +4,7 @@ import (
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/hosting"
-	"github.com/git-town/git-town/v7/src/prompt"
+	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
 	"github.com/spf13/cobra"
@@ -83,7 +83,7 @@ func createNewPullRequestConfig(repo *git.ProdRepo) (result newPullRequestConfig
 	if err != nil {
 		return result, err
 	}
-	err = prompt.EnsureKnowsParentBranches([]string{result.InitialBranch}, repo)
+	err = dialog.EnsureKnowsParentBranches([]string{result.InitialBranch}, repo)
 	if err != nil {
 		return result, err
 	}

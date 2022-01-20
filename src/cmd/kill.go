@@ -5,7 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/git"
-	"github.com/git-town/git-town/v7/src/prompt"
+	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
 	"github.com/spf13/cobra"
@@ -73,7 +73,7 @@ func createKillConfig(args []string, repo *git.ProdRepo) (result killConfig, err
 		return result, err
 	}
 	if result.isTargetBranchLocal {
-		err = prompt.EnsureKnowsParentBranches([]string{result.targetBranch}, repo)
+		err = dialog.EnsureKnowsParentBranches([]string{result.targetBranch}, repo)
 		if err != nil {
 			return result, err
 		}
