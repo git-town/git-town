@@ -1,19 +1,19 @@
 package hosting_test
 
 type mockConfig struct {
-	manualHostName        string
-	codeHostingDriverName string
-	giteaToken            string
-	gitHubToken           string
-	mainBranch            string
-	remoteOriginURL       string
+	manualHostName  string
+	driverName      string
+	giteaToken      string
+	gitHubToken     string
+	mainBranch      string
+	remoteOriginURL string
 }
 
-func (mc mockConfig) CodeHostingDriverName() string {
-	return mc.codeHostingDriverName
+func (mc mockConfig) DriverName() string {
+	return mc.driverName
 }
 
-func (mc mockConfig) CodeHostingOriginHostname() string {
+func (mc mockConfig) OriginHostname() string {
 	return mc.manualHostName
 }
 

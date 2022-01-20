@@ -20,10 +20,10 @@ type BitbucketCodeHostingDriver struct {
 // LoadBitbucket provides a Bitbucket driver instance if the given repo configuration is for a Bitbucket repo,
 // otherwise nil.
 func LoadBitbucket(config config, git gitRunner) *BitbucketCodeHostingDriver {
-	driverType := config.CodeHostingDriverName()
+	driverType := config.DriverName()
 	originURL := config.RemoteOriginURL()
 	hostname := helpers.URLHostname(originURL)
-	manualHostName := config.CodeHostingOriginHostname()
+	manualHostName := config.OriginHostname()
 	if manualHostName != "" {
 		hostname = manualHostName
 	}

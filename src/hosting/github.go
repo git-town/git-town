@@ -26,10 +26,10 @@ type GithubCodeHostingDriver struct {
 // LoadGithub provides a GitHub driver instance if the given repo configuration is for a Github repo,
 // otherwise nil.
 func LoadGithub(config config, log logFn) *GithubCodeHostingDriver {
-	driverType := config.CodeHostingDriverName()
+	driverType := config.DriverName()
 	originURL := config.RemoteOriginURL()
 	hostname := helpers.URLHostname(originURL)
-	manualHostName := config.CodeHostingOriginHostname()
+	manualHostName := config.OriginHostname()
 	if manualHostName != "" {
 		hostname = manualHostName
 	}

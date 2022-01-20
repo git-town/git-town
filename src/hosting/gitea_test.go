@@ -35,8 +35,8 @@ func setupGiteaDriver(t *testing.T, token string) (*hosting.GiteaCodeHostingDriv
 //nolint:paralleltest  // mocks HTTP
 func TestLoadGitea(t *testing.T) {
 	driver := hosting.LoadGitea(mockConfig{
-		codeHostingDriverName: "gitea",
-		remoteOriginURL:       "git@self-hosted-gitea.com:git-town/git-town.git",
+		driverName:      "gitea",
+		remoteOriginURL: "git@self-hosted-gitea.com:git-town/git-town.git",
 	}, log)
 	assert.NotNil(t, driver)
 	assert.Equal(t, "Gitea", driver.HostingServiceName())
