@@ -82,8 +82,7 @@ func NewDriver(config config, git gitRunner, log logFn) Driver { //nolint:iretur
 	if bitbucketDriver != nil {
 		return bitbucketDriver
 	}
-	gitlabDriver := NewGitlabDriver(config)
-	return gitlabDriver
+	return NewGitlabDriver(config)
 }
 
 // UnsupportedServiceError provides an error message.
