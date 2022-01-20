@@ -8,6 +8,7 @@ import (
 )
 
 func TestContains(t *testing.T) {
+	t.Parallel()
 	give := []string{"one", "two"}
 	assert.True(t, stringslice.Contains(give, "one"))
 	assert.True(t, stringslice.Contains(give, "two"))
@@ -15,6 +16,7 @@ func TestContains(t *testing.T) {
 }
 
 func TestRemove(t *testing.T) {
+	t.Parallel()
 	give := []string{"one", "two", "three"}
 	have := stringslice.Remove(give, "two")
 	want := []string{"one", "three"}
