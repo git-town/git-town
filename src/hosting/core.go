@@ -25,7 +25,7 @@ type Driver interface {
 
 // config defines the configuration data needed by the driver package.
 type config interface {
-	// OriginOverride provides the hostname of the origin remote
+	// OriginOverride provides the override for the orgin URL in the Git Town configuration.
 	OriginOverride() string
 
 	// HostingService provides the name of the hosting service that runs at the origin remote.
