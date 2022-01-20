@@ -44,8 +44,8 @@ func determineStep(stepType string) steps.Step { //nolint:ireturn
 		return &steps.AbortMergeBranchStep{}
 	case "*AbortRebaseBranchStep":
 		return &steps.AbortRebaseBranchStep{}
-	case "*AddToPerennialBranches":
-		return &steps.AddToPerennialBranches{}
+	case "*AddToPerennialBranchesStep":
+		return &steps.AddToPerennialBranchesStep{}
 	case "*CheckoutBranchStep":
 		return &steps.CheckoutBranchStep{}
 	case "*ContinueMergeBranchStep":
