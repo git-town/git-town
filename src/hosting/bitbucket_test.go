@@ -10,8 +10,8 @@ import (
 //nolint:paralleltest  // mocks HTTP
 func TestLoadBitbucket(t *testing.T) {
 	driver := hosting.NewBitbucketDriver(mockConfig{
-		driverName:      "bitbucket",
-		remoteOriginURL: "git@self-hosted-bitbucket.com:git-town/git-town.git",
+		driverName: "bitbucket",
+		originURL:  "git@self-hosted-bitbucket.com:git-town/git-town.git",
 	}, nil)
 	assert.NotNil(t, driver)
 	assert.Equal(t, "Bitbucket", driver.HostingServiceName())
@@ -21,8 +21,8 @@ func TestLoadBitbucket(t *testing.T) {
 //nolint:paralleltest  // mocks HTTP
 func TestLoadBitbucket_customHostName(t *testing.T) {
 	driver := hosting.NewBitbucketDriver(mockConfig{
-		remoteOriginURL: "git@my-ssh-identity.com:git-town/git-town.git",
-		manualHostName:  "bitbucket.org",
+		originURL:      "git@my-ssh-identity.com:git-town/git-town.git",
+		manualHostName: "bitbucket.org",
 	}, nil)
 	assert.NotNil(t, driver)
 	assert.Equal(t, "Bitbucket", driver.HostingServiceName())

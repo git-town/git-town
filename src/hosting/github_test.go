@@ -24,8 +24,8 @@ func setupGithubDriver(t *testing.T, token string) (*hosting.GithubDriver, func(
 	t.Helper()
 	httpmock.Activate()
 	driver := hosting.NewGithubDriver(mockConfig{
-		remoteOriginURL: "git@github.com:git-town/git-town.git",
-		gitHubToken:     token,
+		originURL:   "git@github.com:git-town/git-town.git",
+		gitHubToken: token,
 	}, log)
 	assert.NotNil(t, driver)
 	return driver, func() {
@@ -36,8 +36,8 @@ func setupGithubDriver(t *testing.T, token string) (*hosting.GithubDriver, func(
 //nolint:paralleltest  // mocks HTTP
 func TestLoadGithub(t *testing.T) {
 	driver := hosting.NewGithubDriver(mockConfig{
-		driverName:      "github",
-		remoteOriginURL: "git@self-hosted-github.com:git-town/git-town.git",
+		driverName: "github",
+		originURL:  "git@self-hosted-github.com:git-town/git-town.git",
 	}, log)
 	assert.NotNil(t, driver)
 	assert.Equal(t, "GitHub", driver.HostingServiceName())
@@ -47,8 +47,8 @@ func TestLoadGithub(t *testing.T) {
 //nolint:paralleltest  // mocks HTTP
 func TestLoadGithub_customHostName(t *testing.T) {
 	driver := hosting.NewGithubDriver(mockConfig{
-		remoteOriginURL: "git@my-ssh-identity.com:git-town/git-town.git",
-		manualHostName:  "github.com",
+		originURL:      "git@my-ssh-identity.com:git-town/git-town.git",
+		manualHostName: "github.com",
 	}, log)
 	assert.NotNil(t, driver)
 	assert.Equal(t, "GitHub", driver.HostingServiceName())

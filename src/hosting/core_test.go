@@ -1,12 +1,12 @@
 package hosting_test
 
 type mockConfig struct {
-	manualHostName  string
-	driverName      string
-	giteaToken      string
-	gitHubToken     string
-	mainBranch      string
-	remoteOriginURL string
+	manualHostName string
+	driverName     string
+	giteaToken     string
+	gitHubToken    string
+	mainBranch     string
+	originURL      string
 }
 
 func (mc mockConfig) HostingService() string {
@@ -30,5 +30,5 @@ func (mc mockConfig) MainBranch() string {
 }
 
 func (mc mockConfig) OriginURL() string {
-	return mc.remoteOriginURL
+	return mc.originURL
 }
