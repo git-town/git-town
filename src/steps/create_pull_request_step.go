@@ -1,7 +1,7 @@
 package steps
 
 import (
-	"github.com/git-town/git-town/v7/src/browsers"
+	"github.com/git-town/git-town/v7/src/browser"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/hosting"
 )
@@ -18,6 +18,6 @@ func (step *CreatePullRequestStep) Run(repo *git.ProdRepo, driver hosting.Driver
 	if err != nil {
 		return err
 	}
-	browsers.Open(prURL, repo.LoggingShell)
+	browser.Open(prURL, repo.LoggingShell)
 	return nil
 }
