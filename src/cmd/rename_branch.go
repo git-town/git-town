@@ -130,8 +130,8 @@ func createRenameBranchStepList(config renameBranchConfig, repo *git.ProdRepo) (
 		result.Append(&steps.CheckoutBranchStep{BranchName: config.newBranchName})
 	}
 	if config.isInitialBranchPerennial {
-		result.Append(&steps.RemoveFromPerennialBranches{BranchName: config.oldBranchName})
-		result.Append(&steps.AddToPerennialBranches{BranchName: config.newBranchName})
+		result.Append(&steps.RemoveFromPerennialBranchesStep{BranchName: config.oldBranchName})
+		result.Append(&steps.AddToPerennialBranchesStep{BranchName: config.newBranchName})
 	} else {
 		result.Append(&steps.DeleteParentBranchStep{BranchName: config.oldBranchName})
 		result.Append(&steps.SetParentBranchStep{BranchName: config.newBranchName, ParentBranchName: repo.Config.ParentBranch(config.oldBranchName)})
