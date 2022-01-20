@@ -25,7 +25,7 @@ type Driver interface {
 
 // config defines the configuration data needed by the driver package.
 type config interface {
-	// OriginOverride provides the override for the orgin URL from the Git Town configuration.
+	// OriginOverride provides the override for the origin URL from the Git Town configuration.
 	OriginOverride() string
 
 	// HostingService provides the name of the hosting service that runs at the origin remote.
@@ -82,7 +82,11 @@ func NewDriver(config config, git gitRunner, log logFn) Driver { //nolint:iretur
 	if bitbucketDriver != nil {
 		return bitbucketDriver
 	}
-	return NewGitlabDriver(config)
+	gitlabDriver := NewGitlabDriver(config)
+	if gitlabDriver != nil {
+		return gitlabDriver
+	}
+	return nil
 }
 
 // UnsupportedServiceError communicates that the origin remote runs an unknown code hosting service.
