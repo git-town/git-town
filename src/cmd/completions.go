@@ -61,9 +61,9 @@ the official docs for your shell.
 		case "zsh":
 			_ = RootCmd.GenZshCompletion(os.Stdout)
 			if !completionsNoDesc {
-				RootCmd.GenZshCompletion(os.Stdout)
+				_ = RootCmd.GenZshCompletion(os.Stdout)
 			} else {
-				RootCmd.GenZshCompletionNoDesc(os.Stdout)
+				_ = RootCmd.GenZshCompletionNoDesc(os.Stdout)
 			}
 		case "fish":
 			_ = RootCmd.GenFishCompletion(os.Stdout, !completionsNoDesc)
