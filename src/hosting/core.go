@@ -59,10 +59,10 @@ type PullRequestInfo struct {
 // MergePullRequestOptions defines the options to the MergePullRequest function.
 type MergePullRequestOptions struct {
 	Branch            string
-	PullRequestNumber int64
 	CommitMessage     string
 	LogRequests       bool
 	ParentBranch      string
+	PullRequestNumber int64
 }
 
 // logFn defines a function with fmt.Printf API that CodeHostingDriver instances can use to give updates on activities they do.

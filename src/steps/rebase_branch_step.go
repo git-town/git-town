@@ -9,8 +9,7 @@ import (
 // against the branch with the given name.
 type RebaseBranchStep struct {
 	NoOpStep
-	BranchName string
-
+	BranchName  string
 	previousSha string
 }
 

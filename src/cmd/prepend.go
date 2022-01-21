@@ -12,13 +12,13 @@ import (
 )
 
 type prependConfig struct {
-	initialBranch       string
-	parentBranch        string
-	targetBranch        string
 	ancestorBranches    []string
 	hasOrigin           bool
-	shouldNewBranchPush bool
+	initialBranch       string
 	isOffline           bool
+	parentBranch        string
+	shouldNewBranchPush bool
+	targetBranch        string
 }
 
 var prependCommand = &cobra.Command{

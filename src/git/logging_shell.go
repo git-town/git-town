@@ -17,8 +17,8 @@ import (
 // and streams the command output to the application output.
 // It is used by Git Town commands to run Git commands that show up in their output.
 type LoggingShell struct {
-	silentRunner *Runner
 	dryRun       *DryRun
+	silentRunner *Runner
 }
 
 // NewLoggingShell provides StreamingShell instances.

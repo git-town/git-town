@@ -19,9 +19,8 @@ type GitEnvironment struct {
 	// It contains the global Git configuration to use in this test.
 	Dir string
 
-	// OriginRepo is the Git repository that simulates the remote repo (on GitHub).
-	// If this value is nil, the current test setup has no remote.
-	OriginRepo *Repo
+	// CoworkerRepo is the optional Git repository that is locally checked out at the coworker machine.
+	CoworkerRepo *Repo
 
 	// DevRepo is the Git repository that is locally checked out at the developer machine.
 	DevRepo Repo
@@ -29,8 +28,9 @@ type GitEnvironment struct {
 	// DevShell provides a reference to the MockingShell instance used in the DeveloperRepo.
 	DevShell MockingShell
 
-	// CoworkerRepo is the optional Git repository that is locally checked out at the coworker machine.
-	CoworkerRepo *Repo
+	// OriginRepo is the Git repository that simulates the remote repo (on GitHub).
+	// If this value is nil, the current test setup has no remote.
+	OriginRepo *Repo
 
 	// UpstreamRepo is the optional Git repository that contains the upstream for this environment.
 	UpstreamRepo *Repo
