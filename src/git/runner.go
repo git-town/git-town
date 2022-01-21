@@ -608,8 +608,7 @@ func (r *Runner) HasMergeInProgress() (result bool, err error) {
 
 // HasOpenChanges indicates whether this repo has open changes.
 func (r *Runner) HasOpenChanges() (bool, error) {
-	outcome, err := r.Run("git", "status", "--porcelain")
-	// outcome, err := r.Run("git", "status", "--porcelain", "--ignore-submodules")
+	outcome, err := r.Run("git", "status", "--porcelain", "--ignore-submodules")
 	if err != nil {
 		return false, fmt.Errorf("cannot determine open changes: %w", err)
 	}
