@@ -8,7 +8,7 @@ Feature: git-sync: on a feature branch in a repository with a submodule that has
     Given my repo has a submodule
     And my repo has a feature branch named "feature"
     And I am on the "feature" branch
-    And my workspace has an uncommitted file with name "submodule/changed"
+    And my workspace has an uncommitted file with name "submodule/file" and content "a change in the submodule"
     When I run "git-town sync"
 
 
