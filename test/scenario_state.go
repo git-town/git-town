@@ -10,6 +10,9 @@ type ScenarioState struct {
 	// the GitEnvironment used in the current scenario
 	gitEnv GitEnvironment
 
+	// initialCommits describes the commits in this Git environment before the WHEN steps ran.
+	initialCommits *messages.PickleStepArgument_PickleTable
+
 	// the error of the last run of Git Town
 	runErr error
 
@@ -19,14 +22,11 @@ type ScenarioState struct {
 	// the outcome of the last run of Git Town
 	runRes *run.Result
 
-	// initialCommits describes the commits in this Git environment before the WHEN steps ran.
-	initialCommits *messages.PickleStepArgument_PickleTable
+	// content of the uncommitted file in the workspace
+	uncommittedContent string
 
 	// name of the uncommitted file in the workspace
 	uncommittedFileName string
-
-	// content of the uncommitted file in the workspace
-	uncommittedContent string
 }
 
 // Reset restores the null value of this ScenarioState.

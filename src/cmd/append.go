@@ -12,11 +12,11 @@ import (
 
 type appendConfig struct {
 	ancestorBranches    []string
-	parentBranch        string
-	targetBranch        string
 	hasOrigin           bool
 	isOffline           bool
+	parentBranch        string
 	shouldNewBranchPush bool
+	targetBranch        string
 }
 
 var appendCommand = &cobra.Command{

@@ -12,11 +12,11 @@ import (
 )
 
 type syncConfig struct {
-	initialBranch  string
 	branchesToSync []string
-	shouldPushTags bool
 	hasOrigin      bool
+	initialBranch  string
 	isOffline      bool
+	shouldPushTags bool
 }
 
 var syncCmd = &cobra.Command{

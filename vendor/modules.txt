@@ -28,11 +28,10 @@ github.com/gogo/protobuf/io
 github.com/gogo/protobuf/proto
 # github.com/golang/protobuf v1.5.2
 github.com/golang/protobuf/proto
-# github.com/google/go-github v17.0.0+incompatible
+# github.com/google/go-github/v42 v42.0.0
 ## explicit
-github.com/google/go-github/github
-# github.com/google/go-querystring v1.0.0
-## explicit
+github.com/google/go-github/v42/github
+# github.com/google/go-querystring v1.1.0
 github.com/google/go-querystring/query
 # github.com/hashicorp/go-version v1.2.0
 github.com/hashicorp/go-version
@@ -60,6 +59,14 @@ github.com/spf13/pflag
 # github.com/stretchr/testify v1.7.0
 ## explicit
 github.com/stretchr/testify/assert
+# golang.org/x/crypto v0.0.0-20210817164053-32db794688a5
+golang.org/x/crypto/cast5
+golang.org/x/crypto/openpgp
+golang.org/x/crypto/openpgp/armor
+golang.org/x/crypto/openpgp/elgamal
+golang.org/x/crypto/openpgp/errors
+golang.org/x/crypto/openpgp/packet
+golang.org/x/crypto/openpgp/s2k
 # golang.org/x/net v0.0.0-20210813160813-60bc85c4be6d
 golang.org/x/net/context
 golang.org/x/net/context/ctxhttp
