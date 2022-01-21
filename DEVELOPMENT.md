@@ -37,9 +37,13 @@ go get <path>
 
 Update all external Go modules:
 
-<pre type="make/command">
+<a type="make/command">
+
+```
 make update
-</pre>
+```
+
+</a>
 
 ## unit tests
 
@@ -58,8 +62,8 @@ make u
 Run an individual unit test:
 
 ```
-go test src/cmd/root_test.go
-go test src/cmd/root_test.go -v -run TestIsAcceptableGitVersion
+go test src/cmd/root_test.go go test src/cmd/root_test.go -v -run
+TestIsAcceptableGitVersion
 ```
 
 ## end-to-end tests
