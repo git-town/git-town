@@ -5,10 +5,9 @@ import (
 	"testing"
 
 	"github.com/cucumber/godog"
-	"github.com/git-town/git-town/test"
+	"github.com/git-town/git-town/v7/test"
 )
 
-// nolint:deadcode,unused
 func FeatureContext(suite *godog.Suite) {
 	// The current Godog implementation only provides a FeatureContext,
 	// no SuiteContext nor ScenarioContext.
@@ -19,7 +18,12 @@ func FeatureContext(suite *godog.Suite) {
 	test.Steps(suite, state)
 }
 
+// nolint:paralleltest
 func TestGodog(t *testing.T) {
+	tags := ""
+	if runtime.GOOS == "windows" {
+		tags = "~@skipWindows"
+	}
 	status := godog.RunWithOptions("godog", func(s *godog.Suite) {
 		FeatureContext(s)
 	}, godog.Options{
@@ -27,6 +31,7 @@ func TestGodog(t *testing.T) {
 		Concurrency: runtime.NumCPU(),
 		Strict:      true,
 		Paths:       []string{"features/"},
+		Tags:        tags,
 	})
 	if status > 0 {
 		t.FailNow()

@@ -1,8 +1,8 @@
 package steps
 
 import (
-	"github.com/git-town/git-town/src/drivers"
-	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/hosting"
 )
 
 // SetParentBranchStep registers the branch with the given name as a parent
@@ -15,17 +15,14 @@ type SetParentBranchStep struct {
 	previousParent string
 }
 
-// CreateUndoStep returns the undo step for this step.
-func (step *SetParentBranchStep) CreateUndoStep() Step {
+func (step *SetParentBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
 	if step.previousParent == "" {
-		return &DeleteParentBranchStep{BranchName: step.BranchName}
+		return &DeleteParentBranchStep{BranchName: step.BranchName}, nil
 	}
-	return &SetParentBranchStep{BranchName: step.BranchName, ParentBranchName: step.previousParent}
+	return &SetParentBranchStep{BranchName: step.BranchName, ParentBranchName: step.previousParent}, nil
 }
 
-// Run executes this step.
-func (step *SetParentBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
-	step.previousParent = repo.GetParentBranch(step.BranchName)
-	repo.SetParentBranch(step.BranchName, step.ParentBranchName)
-	return nil
+func (step *SetParentBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
+	step.previousParent = repo.Config.ParentBranch(step.BranchName)
+	return repo.Config.SetParentBranch(step.BranchName, step.ParentBranchName)
 }

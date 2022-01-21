@@ -109,6 +109,7 @@ func (p pointer) String() *string                       { return (*string)(p.p) 
 func (p pointer) StringPtr() **string                   { return (**string)(p.p) }
 func (p pointer) StringSlice() *[]string                { return (*[]string)(p.p) }
 func (p pointer) Bytes() *[]byte                        { return (*[]byte)(p.p) }
+func (p pointer) BytesPtr() **[]byte                    { return (**[]byte)(p.p) }
 func (p pointer) BytesSlice() *[][]byte                 { return (*[][]byte)(p.p) }
 func (p pointer) WeakFields() *weakFields               { return (*weakFields)(p.p) }
 func (p pointer) Extensions() *map[int32]ExtensionField { return (*map[int32]ExtensionField)(p.p) }
@@ -148,7 +149,11 @@ func (ms *messageState) pointer() pointer {
 	return pointer{p: unsafe.Pointer(ms)}
 }
 func (ms *messageState) messageInfo() *MessageInfo {
-	return ms.LoadMessageInfo()
+	mi := ms.LoadMessageInfo()
+	if mi == nil {
+		panic("invalid nil message info; this suggests memory corruption due to a race or shallow copy on the message struct")
+	}
+	return mi
 }
 func (ms *messageState) LoadMessageInfo() *MessageInfo {
 	return (*MessageInfo)(atomic.LoadPointer((*unsafe.Pointer)(unsafe.Pointer(&ms.atomicMessageInfo))))

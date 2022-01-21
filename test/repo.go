@@ -6,25 +6,27 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/src/command"
-	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/v7/src/config"
+	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/run"
 	"github.com/stretchr/testify/assert"
 )
 
 // Repo is a Git Repo in test code.
 type Repo struct {
-	git.CachedRunner               // the git.Runner instance to use
-	shell            *MockingShell // a reference to the MockingShell instance used here
+	git.Runner              // the git.Runner instance to use
+	shell      MockingShell // a reference to the MockingShell instance used here
 }
 
 // CreateRepo creates TestRepo instances.
 func CreateRepo(t *testing.T) Repo {
+	t.Helper()
 	dir := CreateTempDir(t)
 	workingDir := filepath.Join(dir, "repo")
-	err := os.Mkdir(workingDir, 0744)
+	err := os.Mkdir(workingDir, 0o744)
 	assert.NoError(t, err)
 	homeDir := filepath.Join(dir, "home")
-	err = os.Mkdir(homeDir, 0744)
+	err = os.Mkdir(homeDir, 0o744)
 	assert.NoError(t, err)
 	repo, err := InitRepo(workingDir, homeDir, homeDir)
 	assert.NoError(t, err)
@@ -41,7 +43,6 @@ func InitRepo(workingDir, homeDir, binDir string) (Repo, error) {
 		{"git", "init"},
 		{"git", "config", "--global", "user.name", "user"},
 		{"git", "config", "--global", "user.email", "email@example.com"},
-		{"git", "config", "--global", "core.editor", "vim"},
 	})
 	return result, err
 }
@@ -50,16 +51,25 @@ func InitRepo(workingDir, homeDir, binDir string) (Repo, error) {
 // The directory must contain an existing Git repo.
 func NewRepo(workingDir, homeDir, binDir string) Repo {
 	shell := NewMockingShell(workingDir, homeDir, binDir)
-	runner := git.NewCachedRunner(shell, git.NewConfiguration(shell), &git.RemoteBranchCache{})
+	runner := git.Runner{
+		Shell:              &shell,
+		Config:             config.NewConfiguration(&shell),
+		DryRun:             &git.DryRun{},
+		IsRepoCache:        &git.BoolCache{},
+		RemoteBranchCache:  &git.StringSliceCache{},
+		RemotesCache:       &git.StringSliceCache{},
+		RootDirCache:       &git.StringCache{},
+		CurrentBranchCache: &git.StringCache{},
+	}
 	return Repo{runner, shell}
 }
 
 // Clone creates a clone of this Repo into the given directory.
 // The cloned repo uses the same homeDir and binDir as its origin.
 func (repo *Repo) Clone(targetDir string) (Repo, error) {
-	res, err := command.Run("git", "clone", repo.shell.workingDir, targetDir)
+	_, err := run.Exec("git", "clone", repo.shell.workingDir, targetDir)
 	if err != nil {
-		return Repo{}, fmt.Errorf("cannot clone repo %q: %w\n%s", repo.shell.workingDir, err, res.Output())
+		return Repo{}, fmt.Errorf("cannot clone repo %q: %w", repo.shell.workingDir, err)
 	}
 	return NewRepo(targetDir, repo.shell.homeDir, repo.shell.binDir), nil
 }
@@ -67,7 +77,7 @@ func (repo *Repo) Clone(targetDir string) (Repo, error) {
 // FilesInBranches provides a data table of files and their content in all branches.
 func (repo *Repo) FilesInBranches() (result DataTable, err error) {
 	result.AddRow("BRANCH", "NAME", "CONTENT")
-	branches, err := repo.LocalBranches()
+	branches, err := repo.LocalBranchesMainFirst()
 	if err != nil {
 		return result, err
 	}
@@ -85,4 +95,19 @@ func (repo *Repo) FilesInBranches() (result DataTable, err error) {
 		}
 	}
 	return result, err
+}
+
+// CreateTestGitTownRepo creates a GitRepo for use in tests, with a main branch and
+// initial git town configuration.
+func CreateTestGitTownRepo(t *testing.T) Repo {
+	t.Helper()
+	repo := CreateRepo(t)
+	err := repo.CreateBranch("main", "master")
+	assert.NoError(t, err)
+	err = repo.RunMany([][]string{
+		{"git", "config", "git-town.main-branch-name", "main"},
+		{"git", "config", "git-town.perennial-branch-names", ""},
+	})
+	assert.NoError(t, err)
+	return repo
 }

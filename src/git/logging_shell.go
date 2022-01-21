@@ -8,8 +8,7 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
-	"github.com/git-town/git-town/src/command"
-	"github.com/git-town/git-town/src/dryrun"
+	"github.com/git-town/git-town/v7/src/run"
 	"github.com/kballard/go-shellquote"
 )
 
@@ -18,12 +17,13 @@ import (
 // and streams the command output to the application output.
 // It is used by Git Town commands to run Git commands that show up in their output.
 type LoggingShell struct {
-	currentBranchTracker *CurrentBranchTracker
+	silentRunner *Runner
+	dryRun       *DryRun
 }
 
 // NewLoggingShell provides StreamingShell instances.
-func NewLoggingShell(branchTracker *CurrentBranchTracker) *LoggingShell {
-	return &LoggingShell{branchTracker}
+func NewLoggingShell(silent *Runner, dryRun *DryRun) *LoggingShell {
+	return &LoggingShell{silent, dryRun}
 }
 
 // WorkingDir provides the directory that this Shell operates in.
@@ -31,19 +31,17 @@ func (shell LoggingShell) WorkingDir() string {
 	return "."
 }
 
-// MustRun runs the given command and returns the result. Panics on error.
-func (shell LoggingShell) MustRun(cmd string, args ...string) *command.Result {
-	return command.MustRun(cmd, args...)
-}
-
 // Run runs the given command in this ShellRunner's directory.
-func (shell LoggingShell) Run(cmd string, args ...string) (*command.Result, error) {
-	shell.PrintCommand(cmd, args...)
-	if dryrun.IsActive() {
+func (shell LoggingShell) Run(cmd string, args ...string) (*run.Result, error) {
+	err := shell.PrintCommand(cmd, args...)
+	if err != nil {
+		return nil, err
+	}
+	if shell.dryRun.IsActive() {
 		if len(args) == 2 && cmd == "git" && args[0] == "checkout" {
-			dryrun.SetCurrentBranchName(args[1])
+			shell.dryRun.ChangeBranch(args[1])
 		}
-		return nil, nil
+		return nil, nil //nolint:nilnil  // Can return nil result if dryRun is enabled
 	}
 	// Windows commands run inside CMD
 	// because opening browsers is done via "start"
@@ -63,16 +61,16 @@ func (shell LoggingShell) Run(cmd string, args ...string) (*command.Result, erro
 // Failed commands abort immediately with the encountered error.
 func (shell LoggingShell) RunMany(commands [][]string) error {
 	for _, argv := range commands {
-		outcome, err := shell.Run(argv[0], argv[1:]...)
+		_, err := shell.Run(argv[0], argv[1:]...)
 		if err != nil {
-			return fmt.Errorf("error running command %q: %w\n%v", argv, err, outcome)
+			return fmt.Errorf("error running command %q: %w", argv, err)
 		}
 	}
 	return nil
 }
 
 // RunString runs the given command (including possible arguments) in this ShellInDir's directory.
-func (shell LoggingShell) RunString(fullCmd string) (*command.Result, error) {
+func (shell LoggingShell) RunString(fullCmd string) (*run.Result, error) {
 	parts, err := shellquote.Split(fullCmd)
 	if err != nil {
 		return nil, fmt.Errorf("cannot split command %q: %w", fullCmd, err)
@@ -82,12 +80,12 @@ func (shell LoggingShell) RunString(fullCmd string) (*command.Result, error) {
 }
 
 // RunStringWith runs the given command (including possible arguments) in this ShellInDir's directory.
-func (shell LoggingShell) RunStringWith(fullCmd string, options command.Options) (*command.Result, error) {
+func (shell LoggingShell) RunStringWith(fullCmd string, options run.Options) (*run.Result, error) {
 	panic("this isn't used")
 }
 
 // PrintCommand prints the given command-line operation on the console.
-func (shell LoggingShell) PrintCommand(cmd string, args ...string) {
+func (shell LoggingShell) PrintCommand(cmd string, args ...string) error {
 	header := cmd + " "
 	for index, part := range args {
 		if strings.Contains(part, " ") {
@@ -98,12 +96,17 @@ func (shell LoggingShell) PrintCommand(cmd string, args ...string) {
 		}
 		header += part
 	}
-	if cmd == "git" && IsRepository() {
-		header = fmt.Sprintf("[%s] %s", GetCurrentBranchName(), header)
+	if cmd == "git" && shell.silentRunner.IsRepository() {
+		currentBranch, err := shell.silentRunner.CurrentBranch()
+		if err != nil {
+			return err
+		}
+		header = fmt.Sprintf("[%s] %s", currentBranch, header)
 	}
 	fmt.Println()
 	_, err := color.New(color.Bold).Println(header)
 	if err != nil {
-		panic(err)
+		fmt.Println(header)
 	}
+	return nil
 }

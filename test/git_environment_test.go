@@ -1,4 +1,4 @@
-// nolint: testpackage
+//nolint:testpackage
 package test
 
 import (
@@ -6,11 +6,12 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/v7/src/git"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestGitEnvironment_CloneGitEnvironment(t *testing.T) {
+	t.Parallel()
 	dir := CreateTempDir(t)
 	memoizedGitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
 	assert.NoError(t, err)
@@ -25,6 +26,7 @@ func TestGitEnvironment_CloneGitEnvironment(t *testing.T) {
 }
 
 func TestGitEnvironment_NewStandardGitEnvironment(t *testing.T) {
+	t.Parallel()
 	gitEnvRootDir := CreateTempDir(t)
 	result, err := NewStandardGitEnvironment(gitEnvRootDir)
 	assert.NoError(t, err)
@@ -42,6 +44,7 @@ func TestGitEnvironment_NewStandardGitEnvironment(t *testing.T) {
 }
 
 func TestGitEnvironment_Branches(t *testing.T) {
+	t.Parallel()
 	// create GitEnvironment instance
 	dir := CreateTempDir(t)
 	memoizedGitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
@@ -66,6 +69,7 @@ func TestGitEnvironment_Branches(t *testing.T) {
 }
 
 func TestGitEnvironment_CreateCommits(t *testing.T) {
+	t.Parallel()
 	// create GitEnvironment instance
 	dir := CreateTempDir(t)
 	memoizedGitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
@@ -124,6 +128,7 @@ func TestGitEnvironment_CreateCommits(t *testing.T) {
 }
 
 func TestGitEnvironment_CreateRemoteBranch(t *testing.T) {
+	t.Parallel()
 	// create GitEnvironment instance
 	dir := CreateTempDir(t)
 	memoizedGitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
@@ -134,16 +139,17 @@ func TestGitEnvironment_CreateRemoteBranch(t *testing.T) {
 	err = cloned.CreateRemoteBranch("b1", "main")
 	assert.NoError(t, err)
 	// verify it is in the remote branches
-	branches, err := cloned.OriginRepo.LocalBranches()
+	branches, err := cloned.OriginRepo.LocalBranchesMainFirst()
 	assert.NoError(t, err)
 	assert.Contains(t, branches, "b1")
 	// verify it isn't in the local branches
-	branches, err = cloned.DevRepo.LocalBranches()
+	branches, err = cloned.DevRepo.LocalBranchesMainFirst()
 	assert.NoError(t, err)
 	assert.NotContains(t, branches, "b1")
 }
 
 func TestGitEnvironment_CommitTable(t *testing.T) {
+	t.Parallel()
 	// create GitEnvironment instance
 	dir := CreateTempDir(t)
 	memoizedGitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
@@ -180,6 +186,7 @@ func TestGitEnvironment_CommitTable(t *testing.T) {
 }
 
 func TestGitEnvironment_CommitTable_Upstream(t *testing.T) {
+	t.Parallel()
 	// create GitEnvironment instance
 	dir := CreateTempDir(t)
 	memoizedGitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
@@ -216,6 +223,7 @@ func TestGitEnvironment_CommitTable_Upstream(t *testing.T) {
 }
 
 func TestGitEnvironment_Remove(t *testing.T) {
+	t.Parallel()
 	// create GitEnvironment instance
 	dir := CreateTempDir(t)
 	memoizedGitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))

@@ -1,12 +1,10 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
-
-	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/script"
-	"github.com/git-town/git-town/src/steps"
+	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/runstate"
+	"github.com/git-town/git-town/v7/src/steps"
 	"github.com/spf13/cobra"
 )
 
@@ -24,64 +22,72 @@ var pruneBranchesCommand = &cobra.Command{
 Deletes branches whose tracking branch no longer exists from the local repository.
 This usually means the branch was shipped or killed on another machine.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config, err := getPruneBranchesConfig()
+		config, err := createPruneBranchesConfig(prodRepo)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			cli.Exit(err)
 		}
-		stepList := getPruneBranchesStepList(config)
-		runState := steps.NewRunState("prune-branches", stepList)
-		err = steps.Run(runState, git.NewProdRepo(), nil)
+		stepList, err := createPruneBranchesStepList(config, prodRepo)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			cli.Exit(err)
+		}
+		runState := runstate.New("prune-branches", stepList)
+		err = runstate.Execute(runState, prodRepo, nil)
+		if err != nil {
+			cli.Exit(err)
 		}
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		if err := git.ValidateIsRepository(); err != nil {
+		if err := ValidateIsRepository(prodRepo); err != nil {
 			return err
 		}
-		if err := validateIsConfigured(); err != nil {
+		if err := validateIsConfigured(prodRepo); err != nil {
 			return err
 		}
-		return git.Config().ValidateIsOnline()
+		return prodRepo.Config.ValidateIsOnline()
 	},
 }
 
-func getPruneBranchesConfig() (result pruneBranchesConfig, err error) {
-	if git.HasRemote("origin") {
-		err = script.Fetch()
+func createPruneBranchesConfig(repo *git.ProdRepo) (result pruneBranchesConfig, err error) {
+	hasOrigin, err := repo.Silent.HasRemote("origin")
+	if err != nil {
+		return result, err
+	}
+	if hasOrigin {
+		err = repo.Logging.Fetch()
 		if err != nil {
 			return result, err
 		}
 	}
-	result.mainBranch = git.Config().GetMainBranch()
-	result.initialBranchName = git.GetCurrentBranchName()
-	result.localBranchesWithDeletedTrackingBranches = git.GetLocalBranchesWithDeletedTrackingBranches()
-	return result, nil
+	result.mainBranch = repo.Config.MainBranch()
+	result.initialBranchName, err = repo.Silent.CurrentBranch()
+	if err != nil {
+		return result, err
+	}
+	result.localBranchesWithDeletedTrackingBranches, err = repo.Silent.LocalBranchesWithDeletedTrackingBranches()
+	return result, err
 }
 
-func getPruneBranchesStepList(config pruneBranchesConfig) (result steps.StepList) {
+func createPruneBranchesStepList(config pruneBranchesConfig, repo *git.ProdRepo) (result runstate.StepList, err error) {
 	initialBranchName := config.initialBranchName
 	for _, branchName := range config.localBranchesWithDeletedTrackingBranches {
 		if initialBranchName == branchName {
 			result.Append(&steps.CheckoutBranchStep{BranchName: config.mainBranch})
 		}
-		parent := git.Config().GetParentBranch(branchName)
+		parent := repo.Config.ParentBranch(branchName)
 		if parent != "" {
-			for _, child := range git.Config().GetChildBranches(branchName) {
+			for _, child := range repo.Config.ChildBranches(branchName) {
 				result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: parent})
 			}
 			result.Append(&steps.DeleteParentBranchStep{BranchName: branchName})
 		}
-		if git.Config().IsPerennialBranch(branchName) {
-			result.Append(&steps.RemoveFromPerennialBranches{BranchName: branchName})
+		if repo.Config.IsPerennialBranch(branchName) {
+			result.Append(&steps.RemoveFromPerennialBranchesStep{BranchName: branchName})
 		}
 		result.Append(&steps.DeleteLocalBranchStep{BranchName: branchName})
 	}
-	result.Wrap(steps.WrapOptions{RunInGitRoot: false, StashOpenChanges: false})
-	return
+	err = result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, repo)
+	return result, err
 }
 
 func init() {

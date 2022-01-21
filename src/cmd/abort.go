@@ -2,13 +2,10 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 
-	"github.com/git-town/git-town/src/drivers"
-	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/steps"
-	"github.com/git-town/git-town/src/util"
-
+	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/hosting"
+	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/spf13/cobra"
 )
 
@@ -16,28 +13,25 @@ var abortCmd = &cobra.Command{
 	Use:   "abort",
 	Short: "Aborts the last run git-town command",
 	Run: func(cmd *cobra.Command, args []string) {
-		runState, err := steps.LoadPreviousRunState()
+		runState, err := runstate.Load(prodRepo)
 		if err != nil {
-			fmt.Printf("cannot load previous run state: %v\n", err)
-			os.Exit(1)
+			cli.Exit(fmt.Errorf("cannot load previous run state: %w", err))
 		}
-		repo := git.NewProdRepo()
 		if runState == nil || !runState.IsUnfinished() {
-			util.ExitWithErrorMessage("Nothing to abort")
+			cli.Exit(fmt.Errorf("nothing to abort"))
 		}
 		abortRunState := runState.CreateAbortRunState()
-		err = steps.Run(&abortRunState, repo, drivers.Load(repo.Configuration))
+		err = runstate.Execute(&abortRunState, prodRepo, hosting.NewDriver(&prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction))
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			cli.Exit(err)
 		}
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		if err := git.ValidateIsRepository(); err != nil {
+		if err := ValidateIsRepository(prodRepo); err != nil {
 			return err
 		}
-		return validateIsConfigured()
+		return validateIsConfigured(prodRepo)
 	},
 }
 

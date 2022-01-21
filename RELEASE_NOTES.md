@@ -1,5 +1,59 @@
 # Git Town Release Notes
 
+## 7.6.0 (2021-11-23)
+
+#### New Features
+
+- print diagnostic information on command failure
+  ([#1667](https://github.com/git-town/git-town/pull/1667))
+
+## 7.5.0 (2021-03-10)
+
+#### New Features
+
+- add log after command that causes auto abort
+  ([#1635](https://github.com/git-town/git-town/pull/1635))
+
+#### Bug Fixes
+
+- fix panic when continuing rebase
+  ([#1615](https://github.com/git-town/git-town/pull/1615))
+- fix panic when continuing a command that includes the fetch upstream step
+  ([#1617](https://github.com/git-town/git-town/pull/1617))
+- fix GitHub API log when shipping with the GitHub driver
+  ([#1622](https://github.com/git-town/git-town/pull/1622))
+- fix panic when aborting a command that includes discard open changes step
+  ([#1631](https://github.com/git-town/git-town/pull/1631))
+- fix continuing sync from subfolder
+  ([#1637](https://github.com/git-town/git-town/pull/1637))
+
+## 7.4.0 (2020-07-05)
+
+Version 7.4.0 sports a vastly overhauled internal architecture that provides
+more robust error handling, improved error messages, and a much better developer
+experience. Ruby is no longer a development dependency.
+
+#### New Features
+
+- improved installation experience: MSI installer for Windows, `.deb` and `.rpm`
+  packages for Linux, archives with properly named binaries for all other use
+  cases ([#1589](https://github.com/git-town/git-town/pull/1589))
+- "diff-parent" command
+  ([#1385](https://github.com/git-town/git-town/pull/1518))
+- support for Gitea hosting service
+  ([#1518](https://github.com/git-town/git-town/pull/1518))
+- print URLs to open when browser is not available
+  ([#1318](https://github.com/git-town/git-town/pull/1318))
+- autocompletion for bash, zsh, fish, powershell
+  ([#1492](https://github.com/git-town/git-town/pull/1492))
+- list parent configurations for branches that are children of a branch that
+  does not have its parent configured
+  ([#1436](https://github.com/git-town/git-town/pull/1436))
+
+#### Bug Fixes
+
+- many improved error messages
+
 ## 7.3.0 (2019-11-05)
 
 #### New Features
@@ -147,7 +201,7 @@
 - `git ship`
   - add ability to ship hotfixes to perennial branches
   - add ability to merge via GitHub API when applicable. See
-    [documentation](documentation/commands/ship.md) for more info.
+    [documentation](website/src/commands/ship.md) for more info.
 
 ## 4.1.2 (2017-06-08)
 
@@ -453,7 +507,7 @@
     ([#228](https://github.com/git-town/git-town/issues/228))
 - **git town**: view and change Git Town configuration and easily view help page
   ([#98](https://github.com/git-town/git-town/issues/98))
-- auto-completion for [Fish shell](http://fishshell.com)
+- auto-completion for [Fish shell](https://fishshell.com)
   ([#177](https://github.com/git-town/git-town/issues/177))
 
 ## 0.4.1 (2014-12-02)
@@ -546,7 +600,7 @@
 - always cleans up abort and continue scripts after using one of them
   ([3be4c0](https://github.com/git-town/git-town/commit/3be4c06635a943f378287963ba30e4306fcd9802))
 - simpler readme, dedicated RDD document
-- **<a href="http://cukes.info" target="_blank">Cucumber</a>** feature specs
+- **<a href="https://cukes.info" target="_blank">Cucumber</a>** feature specs
   (you need Ruby 2.x)
   ([c9d175](https://github.com/git-town/git-town/commit/c9d175fe2f28fbda3f662454f54ed80306ce2f46))
 - much faster testing thanks to completely local test Git repos

@@ -1,3 +1,4 @@
+@skipWindows
 Feature: warn about unfinished prompt asking the user how to proceed
 
   As a developer running a command after not finishing the last one
@@ -40,7 +41,7 @@ Feature: warn about unfinished prompt asking the user how to proceed
     Then it runs no commands
     And it prints the error:
       """
-      You must resolve the conflicts before continuing
+      you must resolve the conflicts before continuing
       """
     And my uncommitted file is stashed
 

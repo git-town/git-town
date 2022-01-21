@@ -3,9 +3,8 @@ package steps
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/src/drivers"
-	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/script"
+	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/hosting"
 )
 
 // CommitOpenChangesStep commits all open changes as a new commit.
@@ -16,17 +15,22 @@ type CommitOpenChangesStep struct {
 	previousSha string
 }
 
-// CreateUndoStep returns the undo step for this step.
-func (step *CommitOpenChangesStep) CreateUndoStep() Step {
-	return &ResetToShaStep{Sha: step.previousSha}
+func (step *CommitOpenChangesStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
+	return &ResetToShaStep{Sha: step.previousSha}, nil
 }
 
-// Run executes this step.
-func (step *CommitOpenChangesStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
-	step.previousSha = git.GetCurrentSha()
-	err := script.RunCommand("git", "add", "-A")
+func (step *CommitOpenChangesStep) Run(repo *git.ProdRepo, driver hosting.Driver) (err error) {
+	step.previousSha, err = repo.Silent.CurrentSha()
 	if err != nil {
 		return err
 	}
-	return script.RunCommand("git", "commit", "-m", fmt.Sprintf("WIP on %s", git.GetCurrentBranchName()))
+	err = repo.Logging.StageFiles("-A")
+	if err != nil {
+		return err
+	}
+	currentBranch, err := repo.Silent.CurrentBranch()
+	if err != nil {
+		return err
+	}
+	return repo.Logging.CommitStagedChanges(fmt.Sprintf("WIP on %s", currentBranch))
 }

@@ -1,3 +1,4 @@
+@skipWindows
 Feature: Prompt for parent branch when unknown
 
   As a developer running a command on a branch without a parent branch
@@ -11,7 +12,7 @@ Feature: Prompt for parent branch when unknown
     When I run "git-town append feature-2" and answer the prompts:
       | PROMPT                                          | ANSWER  |
       | Please specify the parent branch of 'feature-1' | [ENTER] |
-    Then I end up on the "feature-2" branch
+    Then I am now on the "feature-2" branch
     And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT    |
       | feature-1 | main      |
@@ -25,7 +26,7 @@ Feature: Prompt for parent branch when unknown
       | PROMPT                                          | ANSWER        |
       | Please specify the parent branch of 'feature-2' | [DOWN][ENTER] |
       | Please specify the parent branch of 'feature-1' | [ENTER]       |
-    Then I end up on the "feature-2" branch
+    Then I am now on the "feature-2" branch
     And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT    |
       | feature-1 | main      |
@@ -38,13 +39,14 @@ Feature: Prompt for parent branch when unknown
     When I run "git-town kill" and answer the prompts:
       | PROMPT                                        | ANSWER  |
       | Please specify the parent branch of 'feature' | [ENTER] |
-    Then I end up on the "main" branch
+    Then I am now on the "main" branch
     And the existing branches are
       | REPOSITORY | BRANCHES |
       | local      | main     |
       | remote     | main     |
 
 
+  @skipWindows
   Scenario: prompting for parent branch when running git town-new-pull-request
     And my computer has the "open" tool installed
     And my repo has a branch "feature"

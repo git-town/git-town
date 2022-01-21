@@ -1,8 +1,10 @@
 package cmd
 
 import (
-	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/prompt"
+	"errors"
+
+	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/spf13/cobra"
 )
 
@@ -11,21 +13,32 @@ var setParentBranchCommand = &cobra.Command{
 	Short: "Prompts to set the parent branch for the current branch",
 	Long:  `Prompts to set the parent branch for the current branch`,
 	Run: func(cmd *cobra.Command, args []string) {
-		branchName := git.GetCurrentBranchName()
-		git.Config().EnsureIsFeatureBranch(branchName, "Only feature branches can have parent branches.")
-		defaultParentBranch := git.Config().GetParentBranch(branchName)
-		if defaultParentBranch == "" {
-			defaultParentBranch = git.Config().GetMainBranch()
+		branchName, err := prodRepo.Silent.CurrentBranch()
+		if err != nil {
+			cli.Exit(err)
 		}
-		git.Config().DeleteParentBranch(branchName)
-		prompt.AskForBranchAncestry(branchName, defaultParentBranch)
+		if !prodRepo.Config.IsFeatureBranch(branchName) {
+			cli.Exit(errors.New("only feature branches can have parent branches"))
+		}
+		defaultParentBranch := prodRepo.Config.ParentBranch(branchName)
+		if defaultParentBranch == "" {
+			defaultParentBranch = prodRepo.Config.MainBranch()
+		}
+		err = prodRepo.Config.DeleteParentBranch(branchName)
+		if err != nil {
+			cli.Exit(err)
+		}
+		err = dialog.AskForBranchAncestry(branchName, defaultParentBranch, prodRepo)
+		if err != nil {
+			cli.Exit(err)
+		}
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		if err := git.ValidateIsRepository(); err != nil {
+		if err := ValidateIsRepository(prodRepo); err != nil {
 			return err
 		}
-		return validateIsConfigured()
+		return validateIsConfigured(prodRepo)
 	},
 }
 

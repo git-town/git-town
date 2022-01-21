@@ -2,11 +2,9 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 
-	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/steps"
-
+	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/spf13/cobra"
 )
 
@@ -14,18 +12,17 @@ var discardCmd = &cobra.Command{
 	Use:   "discard",
 	Short: "Discards the saved state of the previous git-town command",
 	Run: func(cmd *cobra.Command, args []string) {
-		err := steps.DeletePreviousRunState()
+		err := runstate.Delete(prodRepo)
 		if err != nil {
-			fmt.Printf("cannot delete previous run state: %v", err)
-			os.Exit(1)
+			cli.Exit(fmt.Errorf("cannot delete previous run state: %w", err))
 		}
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		if err := git.ValidateIsRepository(); err != nil {
+		if err := ValidateIsRepository(prodRepo); err != nil {
 			return err
 		}
-		return validateIsConfigured()
+		return validateIsConfigured(prodRepo)
 	},
 }
 

@@ -1,8 +1,10 @@
 package cmd
 
 import (
-	"github.com/git-town/git-town/src/cfmt"
-	"github.com/git-town/git-town/src/git"
+	"fmt"
+
+	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/git"
 	"github.com/spf13/cobra"
 )
 
@@ -16,22 +18,31 @@ The main branch is the Git branch from which new feature branches are cut.`,
 		if len(args) == 0 {
 			printMainBranch()
 		} else {
-			setMainBranch(args[0])
+			err := setMainBranch(args[0], prodRepo)
+			if err != nil {
+				cli.Exit(err)
+			}
 		}
 	},
 	Args: cobra.MaximumNArgs(1),
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return git.ValidateIsRepository()
+		return ValidateIsRepository(prodRepo)
 	},
 }
 
 func printMainBranch() {
-	cfmt.Println(git.GetPrintableMainBranch())
+	cli.Println(cli.PrintableMainBranch(prodRepo.Config.MainBranch()))
 }
 
-func setMainBranch(branchName string) {
-	git.EnsureHasBranch(branchName)
-	git.Config().SetMainBranch(branchName)
+func setMainBranch(branchName string, repo *git.ProdRepo) error {
+	hasBranch, err := repo.Silent.HasLocalBranch(branchName)
+	if err != nil {
+		return err
+	}
+	if !hasBranch {
+		return fmt.Errorf("there is no branch named %q", branchName)
+	}
+	return repo.Config.SetMainBranch(branchName)
 }
 
 func init() {

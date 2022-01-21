@@ -1,11 +1,11 @@
 package cmd
 
 import (
+	"fmt"
 	"strconv"
 
-	"github.com/git-town/git-town/src/cfmt"
-	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/util"
+	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/git"
 	"github.com/spf13/cobra"
 )
 
@@ -18,32 +18,34 @@ If "new-branch-push-flag" is true, Git Town pushes branches created with
 hack / append / prepend on creation. Defaults to false.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			printNewBranchPushFlag()
+			printNewBranchPushFlag(prodRepo)
 		} else {
-			setNewBranchPushFlag(util.StringToBool(args[0]))
+			value, err := strconv.ParseBool(args[0])
+			if err != nil {
+				cli.Exit(fmt.Errorf(`invalid argument: %q. Please provide either "true" or "false"`, args[0]))
+			}
+			err = setNewBranchPushFlag(value, prodRepo)
+			if err != nil {
+				cli.Exit(err)
+			}
 		}
 	},
-	Args: func(cmd *cobra.Command, args []string) error {
-		if len(args) == 1 {
-			return validateBooleanArgument(args[0])
-		}
-		return cobra.MaximumNArgs(1)(cmd, args)
-	},
+	Args: cobra.MaximumNArgs(1),
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return git.ValidateIsRepository()
+		return ValidateIsRepository(prodRepo)
 	},
 }
 
-func printNewBranchPushFlag() {
+func printNewBranchPushFlag(repo *git.ProdRepo) {
 	if globalFlag {
-		cfmt.Println(strconv.FormatBool(git.Config().ShouldNewBranchPushGlobal()))
+		cli.Println(strconv.FormatBool(repo.Config.ShouldNewBranchPushGlobal()))
 	} else {
-		cfmt.Println(git.GetPrintableNewBranchPushFlag())
+		cli.Println(cli.PrintableNewBranchPushFlag(prodRepo.Config.ShouldNewBranchPush()))
 	}
 }
 
-func setNewBranchPushFlag(value bool) {
-	git.Config().SetNewBranchPush(value, globalFlag)
+func setNewBranchPushFlag(value bool, repo *git.ProdRepo) error {
+	return repo.Config.SetNewBranchPush(value, globalFlag)
 }
 
 func init() {

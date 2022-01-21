@@ -1,18 +1,20 @@
 # How to contribute
 
-We are a welcoming community and invite everybody to help make Git Town better.
-No matter how big or small your contribution, thank you!
+We invite everybody to help make Git Town better. No matter how big or small
+your contribution, thank you!
 
-**I want to fix a bug or add a feature**
+#### I want to report a bug or need a feature
 
-- see our developer guidelines to get started
-- connect with the maintainers by
-  [opening an issue](https://github.com/git-town/git-town/issues/new) if you
-  need guidance
-- [send a pull request](https://help.github.com/articles/using-pull-requests)
-  when you are ready
+please [open an issue](https://github.com/git-town/git-town/issues/new)
 
-**I want to report a bug or need a feature** <br> please
-[open an issue](https://github.com/git-town/git-town/issues/new)
+#### I want to fix a bug or add a feature
 
-**I want to praise Git Town** <br> Please tweet or blog about us!
+- see our [developer guidelines](DEVELOPMENT.md) to get started
+- if you plan a larger change or need guidance, connect with the maintainers by
+  [opening an issue](https://github.com/git-town/git-town/issues/new)
+- otherwise, hack away and
+  [send a pull request](https://help.github.com/articles/using-pull-requests)
+
+#### I want to say thank you
+
+Please star this repo on GitHub and tweet or blog about us!

@@ -1,28 +1,91 @@
 package git
 
-import "github.com/git-town/git-town/src/command"
+import (
+	"fmt"
+	"os"
+
+	"github.com/git-town/git-town/v7/src/config"
+	"github.com/git-town/git-town/v7/src/run"
+)
 
 // ProdRepo is a Git Repo in production code.
 type ProdRepo struct {
-	Silent         CachedRunner  // the Runner instance for silent Git operations
-	Logging        CachedRunner  // the Runner instance to Git operations that show up in the output
-	LoggingShell   *LoggingShell // the LoggingShell instance used
-	*Configuration               // the git.Configuration instance for this repo
+	Silent       Runner        // the Runner instance for silent Git operations
+	Logging      Runner        // the Runner instance to Git operations that show up in the output
+	LoggingShell *LoggingShell // the LoggingShell instance used
+	Config       config.Config // the git.Configuration instance for this repo
+	DryRun       *DryRun
 }
 
 // NewProdRepo provides a Repo instance in the current working directory.
 func NewProdRepo() *ProdRepo {
-	silentShell := command.SilentShell{}
-	config := Config()
-	currentBranchTracker := CurrentBranchTracker{}
-	remoteBranchCache := RemoteBranchCache{}
-	silentRunner := NewCachedRunner(silentShell, config, &remoteBranchCache)
-	loggingShell := NewLoggingShell(&currentBranchTracker)
-	loggingRunner := NewCachedRunner(loggingShell, config, &remoteBranchCache)
-	return &ProdRepo{
-		Silent:        silentRunner,
-		Logging:       loggingRunner,
-		LoggingShell:  loggingShell,
-		Configuration: config,
+	silentShell := run.SilentShell{}
+	config := config.NewConfiguration(silentShell)
+	currentBranchTracker := StringCache{}
+	dryRun := DryRun{}
+	isRepoCache := BoolCache{}
+	remoteBranchCache := StringSliceCache{}
+	remotesCache := StringSliceCache{}
+	silentRunner := Runner{
+		Shell:              silentShell,
+		Config:             config,
+		CurrentBranchCache: &currentBranchTracker,
+		DryRun:             &dryRun,
+		IsRepoCache:        &isRepoCache,
+		RemotesCache:       &remotesCache,
+		RemoteBranchCache:  &remoteBranchCache,
+		RootDirCache:       &StringCache{},
 	}
+	loggingShell := NewLoggingShell(&silentRunner, &dryRun)
+	loggingRunner := Runner{
+		Shell:              loggingShell,
+		Config:             config,
+		CurrentBranchCache: &currentBranchTracker,
+		DryRun:             &dryRun,
+		IsRepoCache:        &isRepoCache,
+		RemotesCache:       &remotesCache,
+		RemoteBranchCache:  &remoteBranchCache,
+		RootDirCache:       &StringCache{},
+	}
+	return &ProdRepo{
+		Silent:       silentRunner,
+		Logging:      loggingRunner,
+		LoggingShell: loggingShell,
+		Config:       config,
+		DryRun:       &dryRun,
+	}
+}
+
+// RemoveOutdatedConfiguration removes outdated Git Town configuration.
+func (r *ProdRepo) RemoveOutdatedConfiguration() error {
+	for child, parent := range r.Config.ParentBranchMap() {
+		hasChildBranch, err := r.Silent.HasLocalOrRemoteBranch(child)
+		if err != nil {
+			return err
+		}
+		hasParentBranch, err := r.Silent.HasLocalOrRemoteBranch(parent)
+		if err != nil {
+			return err
+		}
+		if !hasChildBranch || !hasParentBranch {
+			return r.Config.DeleteParentBranch(child)
+		}
+	}
+	return nil
+}
+
+// NavigateToRootIfNecessary changes into the root directory of the current repository.
+func (r *ProdRepo) NavigateToRootIfNecessary() error {
+	currentDirectory, err := os.Getwd()
+	if err != nil {
+		return fmt.Errorf("cannot get current working directory: %w", err)
+	}
+	gitRootDirectory, err := r.Silent.RootDirectory()
+	if err != nil {
+		return err
+	}
+	if currentDirectory == gitRootDirectory {
+		return nil
+	}
+	return os.Chdir(gitRootDirectory)
 }

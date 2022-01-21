@@ -28,16 +28,49 @@ type fieldInfo struct {
 	newField   func() pref.Value
 }
 
+func fieldInfoForMissing(fd pref.FieldDescriptor) fieldInfo {
+	// This never occurs for generated message types.
+	// It implies that a hand-crafted type has missing Go fields
+	// for specific protobuf message fields.
+	return fieldInfo{
+		fieldDesc: fd,
+		has: func(p pointer) bool {
+			return false
+		},
+		clear: func(p pointer) {
+			panic("missing Go struct field for " + string(fd.FullName()))
+		},
+		get: func(p pointer) pref.Value {
+			return fd.Default()
+		},
+		set: func(p pointer, v pref.Value) {
+			panic("missing Go struct field for " + string(fd.FullName()))
+		},
+		mutable: func(p pointer) pref.Value {
+			panic("missing Go struct field for " + string(fd.FullName()))
+		},
+		newMessage: func() pref.Message {
+			panic("missing Go struct field for " + string(fd.FullName()))
+		},
+		newField: func() pref.Value {
+			if v := fd.Default(); v.IsValid() {
+				return v
+			}
+			panic("missing Go struct field for " + string(fd.FullName()))
+		},
+	}
+}
+
 func fieldInfoForOneof(fd pref.FieldDescriptor, fs reflect.StructField, x exporter, ot reflect.Type) fieldInfo {
 	ft := fs.Type
 	if ft.Kind() != reflect.Interface {
-		panic(fmt.Sprintf("invalid type: got %v, want interface kind", ft))
+		panic(fmt.Sprintf("field %v has invalid type: got %v, want interface kind", fd.FullName(), ft))
 	}
 	if ot.Kind() != reflect.Struct {
-		panic(fmt.Sprintf("invalid type: got %v, want struct kind", ot))
+		panic(fmt.Sprintf("field %v has invalid type: got %v, want struct kind", fd.FullName(), ot))
 	}
 	if !reflect.PtrTo(ot).Implements(ft) {
-		panic(fmt.Sprintf("invalid type: %v does not implement %v", ot, ft))
+		panic(fmt.Sprintf("field %v has invalid type: %v does not implement %v", fd.FullName(), ot, ft))
 	}
 	conv := NewConverter(ot.Field(0).Type, fd)
 	isMessage := fd.Message() != nil
@@ -90,14 +123,14 @@ func fieldInfoForOneof(fd pref.FieldDescriptor, fs reflect.StructField, x export
 		},
 		mutable: func(p pointer) pref.Value {
 			if !isMessage {
-				panic("invalid Mutable on field with non-composite type")
+				panic(fmt.Sprintf("field %v with invalid Mutable call on field with non-composite type", fd.FullName()))
 			}
 			rv := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
 			if rv.IsNil() || rv.Elem().Type().Elem() != ot || rv.Elem().IsNil() {
 				rv.Set(reflect.New(ot))
 			}
 			rv = rv.Elem().Elem().Field(0)
-			if rv.IsNil() {
+			if rv.Kind() == reflect.Ptr && rv.IsNil() {
 				rv.Set(conv.GoValueOf(pref.ValueOfMessage(conv.New().Message())))
 			}
 			return conv.PBValueOf(rv)
@@ -114,7 +147,7 @@ func fieldInfoForOneof(fd pref.FieldDescriptor, fs reflect.StructField, x export
 func fieldInfoForMap(fd pref.FieldDescriptor, fs reflect.StructField, x exporter) fieldInfo {
 	ft := fs.Type
 	if ft.Kind() != reflect.Map {
-		panic(fmt.Sprintf("invalid type: got %v, want map kind", ft))
+		panic(fmt.Sprintf("field %v has invalid type: got %v, want map kind", fd.FullName(), ft))
 	}
 	conv := NewConverter(ft, fd)
 
@@ -147,7 +180,7 @@ func fieldInfoForMap(fd pref.FieldDescriptor, fs reflect.StructField, x exporter
 			rv := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
 			pv := conv.GoValueOf(v)
 			if pv.IsNil() {
-				panic(fmt.Sprintf("invalid value: setting map field to read-only value"))
+				panic(fmt.Sprintf("map field %v cannot be set with read-only value", fd.FullName()))
 			}
 			rv.Set(pv)
 		},
@@ -167,7 +200,7 @@ func fieldInfoForMap(fd pref.FieldDescriptor, fs reflect.StructField, x exporter
 func fieldInfoForList(fd pref.FieldDescriptor, fs reflect.StructField, x exporter) fieldInfo {
 	ft := fs.Type
 	if ft.Kind() != reflect.Slice {
-		panic(fmt.Sprintf("invalid type: got %v, want slice kind", ft))
+		panic(fmt.Sprintf("field %v has invalid type: got %v, want slice kind", fd.FullName(), ft))
 	}
 	conv := NewConverter(reflect.PtrTo(ft), fd)
 
@@ -200,7 +233,7 @@ func fieldInfoForList(fd pref.FieldDescriptor, fs reflect.StructField, x exporte
 			rv := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
 			pv := conv.GoValueOf(v)
 			if pv.IsNil() {
-				panic(fmt.Sprintf("invalid value: setting repeated field to read-only value"))
+				panic(fmt.Sprintf("list field %v cannot be set with read-only value", fd.FullName()))
 			}
 			rv.Set(pv.Elem())
 		},
@@ -221,11 +254,14 @@ var (
 
 func fieldInfoForScalar(fd pref.FieldDescriptor, fs reflect.StructField, x exporter) fieldInfo {
 	ft := fs.Type
-	nullable := fd.Syntax() == pref.Proto2
+	nullable := fd.HasPresence()
 	isBytes := ft.Kind() == reflect.Slice && ft.Elem().Kind() == reflect.Uint8
 	if nullable {
 		if ft.Kind() != reflect.Ptr && ft.Kind() != reflect.Slice {
-			panic(fmt.Sprintf("invalid type: got %v, want pointer", ft))
+			// This never occurs for generated message types.
+			// Despite the protobuf type system specifying presence,
+			// the Go field type cannot represent it.
+			nullable = false
 		}
 		if ft.Kind() == reflect.Ptr {
 			ft = ft.Elem()
@@ -257,7 +293,7 @@ func fieldInfoForScalar(fd pref.FieldDescriptor, fs reflect.StructField, x expor
 			case reflect.String, reflect.Slice:
 				return rv.Len() > 0
 			default:
-				panic(fmt.Sprintf("invalid type: %v", rv.Type())) // should never happen
+				panic(fmt.Sprintf("field %v has invalid type: %v", fd.FullName(), rv.Type())) // should never happen
 			}
 		},
 		clear: func(p pointer) {
@@ -290,9 +326,9 @@ func fieldInfoForScalar(fd pref.FieldDescriptor, fs reflect.StructField, x expor
 			rv.Set(conv.GoValueOf(v))
 			if isBytes && rv.Len() == 0 {
 				if nullable {
-					rv.Set(emptyBytes) // preserve presence in proto2
+					rv.Set(emptyBytes) // preserve presence
 				} else {
-					rv.Set(nilBytes) // do not preserve presence in proto3
+					rv.Set(nilBytes) // do not preserve presence
 				}
 			}
 		},
@@ -314,7 +350,7 @@ func fieldInfoForWeakMessage(fd pref.FieldDescriptor, weakOffset offset) fieldIn
 			messageName := fd.Message().FullName()
 			messageType, _ = preg.GlobalTypes.FindMessageByName(messageName)
 			if messageType == nil {
-				panic(fmt.Sprintf("weak message %v is not linked in", messageName))
+				panic(fmt.Sprintf("weak message %v for field %v is not linked in", messageName, fd.FullName()))
 			}
 		})
 	}
@@ -347,7 +383,10 @@ func fieldInfoForWeakMessage(fd pref.FieldDescriptor, weakOffset offset) fieldIn
 			lazyInit()
 			m := v.Message()
 			if m.Descriptor() != messageType.Descriptor() {
-				panic("mismatching message descriptor")
+				if got, want := m.Descriptor().FullName(), messageType.Descriptor().FullName(); got != want {
+					panic(fmt.Sprintf("field %v has mismatching message descriptor: got %v, want %v", fd.FullName(), got, want))
+				}
+				panic(fmt.Sprintf("field %v has mismatching message descriptor: %v", fd.FullName(), m.Descriptor().FullName()))
 			}
 			p.Apply(weakOffset).WeakFields().set(num, m.Interface())
 		},
@@ -385,6 +424,9 @@ func fieldInfoForMessage(fd pref.FieldDescriptor, fs reflect.StructField, x expo
 				return false
 			}
 			rv := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
+			if fs.Type.Kind() != reflect.Ptr {
+				return !isZero(rv)
+			}
 			return !rv.IsNil()
 		},
 		clear: func(p pointer) {
@@ -401,13 +443,13 @@ func fieldInfoForMessage(fd pref.FieldDescriptor, fs reflect.StructField, x expo
 		set: func(p pointer, v pref.Value) {
 			rv := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
 			rv.Set(conv.GoValueOf(v))
-			if rv.IsNil() {
-				panic("invalid nil pointer")
+			if fs.Type.Kind() == reflect.Ptr && rv.IsNil() {
+				panic(fmt.Sprintf("field %v has invalid nil pointer", fd.FullName()))
 			}
 		},
 		mutable: func(p pointer) pref.Value {
 			rv := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
-			if rv.IsNil() {
+			if fs.Type.Kind() == reflect.Ptr && rv.IsNil() {
 				rv.Set(conv.GoValueOf(conv.New()))
 			}
 			return conv.PBValueOf(rv)
@@ -426,11 +468,25 @@ type oneofInfo struct {
 	which     func(pointer) pref.FieldNumber
 }
 
-func makeOneofInfo(od pref.OneofDescriptor, fs reflect.StructField, x exporter, wrappersByType map[reflect.Type]pref.FieldNumber) *oneofInfo {
-	fieldOffset := offsetOf(fs, x)
-	return &oneofInfo{
-		oneofDesc: od,
-		which: func(p pointer) pref.FieldNumber {
+func makeOneofInfo(od pref.OneofDescriptor, si structInfo, x exporter) *oneofInfo {
+	oi := &oneofInfo{oneofDesc: od}
+	if od.IsSynthetic() {
+		fs := si.fieldsByNumber[od.Fields().Get(0).Number()]
+		fieldOffset := offsetOf(fs, x)
+		oi.which = func(p pointer) pref.FieldNumber {
+			if p.IsNil() {
+				return 0
+			}
+			rv := p.Apply(fieldOffset).AsValueOf(fs.Type).Elem()
+			if rv.IsNil() { // valid on either *T or []byte
+				return 0
+			}
+			return od.Fields().Get(0).Number()
+		}
+	} else {
+		fs := si.oneofsByName[od.Name()]
+		fieldOffset := offsetOf(fs, x)
+		oi.which = func(p pointer) pref.FieldNumber {
 			if p.IsNil() {
 				return 0
 			}
@@ -442,7 +498,46 @@ func makeOneofInfo(od pref.OneofDescriptor, fs reflect.StructField, x exporter, 
 			if rv.IsNil() {
 				return 0
 			}
-			return wrappersByType[rv.Type().Elem()]
-		},
+			return si.oneofWrappersByType[rv.Type().Elem()]
+		}
+	}
+	return oi
+}
+
+// isZero is identical to reflect.Value.IsZero.
+// TODO: Remove this when Go1.13 is the minimally supported Go version.
+func isZero(v reflect.Value) bool {
+	switch v.Kind() {
+	case reflect.Bool:
+		return !v.Bool()
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+		return v.Int() == 0
+	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr:
+		return v.Uint() == 0
+	case reflect.Float32, reflect.Float64:
+		return math.Float64bits(v.Float()) == 0
+	case reflect.Complex64, reflect.Complex128:
+		c := v.Complex()
+		return math.Float64bits(real(c)) == 0 && math.Float64bits(imag(c)) == 0
+	case reflect.Array:
+		for i := 0; i < v.Len(); i++ {
+			if !isZero(v.Index(i)) {
+				return false
+			}
+		}
+		return true
+	case reflect.Chan, reflect.Func, reflect.Interface, reflect.Map, reflect.Ptr, reflect.Slice, reflect.UnsafePointer:
+		return v.IsNil()
+	case reflect.String:
+		return v.Len() == 0
+	case reflect.Struct:
+		for i := 0; i < v.NumField(); i++ {
+			if !isZero(v.Field(i)) {
+				return false
+			}
+		}
+		return true
+	default:
+		panic(&reflect.ValueError{"reflect.Value.IsZero", v.Kind()})
 	}
 }

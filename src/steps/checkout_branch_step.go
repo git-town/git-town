@@ -1,9 +1,8 @@
 package steps
 
 import (
-	"github.com/git-town/git-town/src/drivers"
-	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/script"
+	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/hosting"
 )
 
 // CheckoutBranchStep checks out a new branch.
@@ -14,19 +13,17 @@ type CheckoutBranchStep struct {
 	previousBranchName string
 }
 
-// CreateUndoStep returns the undo step for this step.
-func (step *CheckoutBranchStep) CreateUndoStep() Step {
-	return &CheckoutBranchStep{BranchName: step.previousBranchName}
+func (step *CheckoutBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
+	return &CheckoutBranchStep{BranchName: step.previousBranchName}, nil
 }
 
-// Run executes this step.
-func (step *CheckoutBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
-	step.previousBranchName = git.GetCurrentBranchName()
+func (step *CheckoutBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) (err error) {
+	step.previousBranchName, err = repo.Silent.CurrentBranch()
+	if err != nil {
+		return err
+	}
 	if step.previousBranchName != step.BranchName {
-		err := script.RunCommand("git", "checkout", step.BranchName)
-		if err == nil {
-			git.UpdateCurrentBranchCache(step.BranchName)
-		}
+		err := repo.Logging.CheckoutBranch(step.BranchName)
 		return err
 	}
 	return nil

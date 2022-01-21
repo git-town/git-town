@@ -1,9 +1,10 @@
 package cmd
 
 import (
-	"github.com/git-town/git-town/src/cfmt"
-	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/util"
+	"fmt"
+	"strconv"
+
+	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/spf13/cobra"
 )
 
@@ -15,25 +16,19 @@ var offlineCommand = &cobra.Command{
 Git Town avoids network operations in offline mode.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			printOfflineFlag()
+			cli.Println(cli.PrintableOfflineFlag(prodRepo.Config.IsOffline()))
 		} else {
-			setOfflineFlag(util.StringToBool(args[0]))
+			value, err := strconv.ParseBool(args[0])
+			if err != nil {
+				cli.Exit(fmt.Errorf(`invalid argument: %q. Please provide either "true" or "false".\n`, args[0]))
+			}
+			err = prodRepo.Config.SetOffline(value)
+			if err != nil {
+				cli.Exit(err)
+			}
 		}
 	},
-	Args: func(cmd *cobra.Command, args []string) error {
-		if len(args) == 1 {
-			return validateBooleanArgument(args[0])
-		}
-		return cobra.MaximumNArgs(1)(cmd, args)
-	},
-}
-
-func printOfflineFlag() {
-	cfmt.Println(git.GetPrintableOfflineFlag())
-}
-
-func setOfflineFlag(value bool) {
-	git.Config().SetOffline(value)
+	Args: cobra.MaximumNArgs(1),
 }
 
 func init() {

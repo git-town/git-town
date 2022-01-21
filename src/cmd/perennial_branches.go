@@ -1,9 +1,8 @@
 package cmd
 
 import (
-	"github.com/git-town/git-town/src/cfmt"
-	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/prompt"
+	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/spf13/cobra"
 )
 
@@ -15,11 +14,11 @@ var perennialBranchesCommand = &cobra.Command{
 Perennial branches are long-lived branches.
 They cannot be shipped.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		cfmt.Println(git.GetPrintablePerennialBranches())
+		cli.Println(cli.PrintablePerennialBranches(prodRepo.Config.PerennialBranches()))
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return git.ValidateIsRepository()
+		return ValidateIsRepository(prodRepo)
 	},
 }
 
@@ -28,11 +27,14 @@ var updatePrennialBranchesCommand = &cobra.Command{
 	Short: "Prompts to update your perennial branches",
 	Long:  `Prompts to update your perennial branches`,
 	Run: func(cmd *cobra.Command, args []string) {
-		prompt.ConfigurePerennialBranches()
+		err := dialog.ConfigurePerennialBranches(prodRepo)
+		if err != nil {
+			cli.Exit(err)
+		}
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return git.ValidateIsRepository()
+		return ValidateIsRepository(prodRepo)
 	},
 }
 

@@ -1,0 +1,66 @@
+archives:
+  - builds:
+    replacements:
+      darwin: macos
+      amd64: intel_64
+      arm64: arm_64
+    format_overrides:
+      - goos: windows
+        format: zip
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+    ldflags:
+      - -s -w -X github.com/git-town/git-town/src/cmd.version={{.Tag}} -X
+        github.com/git-town/git-town/src/cmd.buildDate={{.Date}}
+    goarch:
+      - amd64
+      - arm64
+    goos:
+      - darwin
+      - linux
+      - windows
+
+changelog:
+  skip: true
+
+checksum:
+  name_template: "checksums.txt"
+
+nfpms:
+  - id: git-town
+    package_name: git-town
+    replacements:
+      amd64: intel_64
+      darwin: macos
+      arm64: arm_64
+    vendor: the Git Town authors
+    maintainer: the Git Town authors
+    homepage: https://www.git-town.com
+    description: High-level command-line interface for Git
+    license: MIT
+    formats:
+      - deb
+      - rpm
+    dependencies:
+      - git
+
+release:
+  draft: true
+  ids:
+    - nothing
+
+scoop:
+  bucket:
+    owner: git-town
+    name: scoop
+  commit_author:
+    name: kevgo
+    email: kevin.goslar@gmail.com
+  description: "High-level CLI for Git"
+  homepage: https://www.git-town.com
+  license: MIT
+
+snapshot:
+  name_template: "{{ .Tag }}"

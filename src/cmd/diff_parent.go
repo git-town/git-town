@@ -1,9 +1,11 @@
 package cmd
 
 import (
-	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/prompt"
-	"github.com/git-town/git-town/src/script"
+	"fmt"
+
+	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/dialog"
+	"github.com/git-town/git-town/v7/src/git"
 	"github.com/spf13/cobra"
 )
 
@@ -21,33 +23,53 @@ Works on either the current branch or the branch name provided.
 
 Exits with error code 1 if the given branch is a perennial branch or the main branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config := getDiffParentConfig(args)
-		script.RunCommandSafe("git", "diff", config.parentBranch+".."+config.branch)
+		config, err := createDiffParentConfig(args, prodRepo)
+		if err != nil {
+			cli.Exit(err)
+		}
+		err = prodRepo.Logging.DiffParent(config.branch, config.parentBranch)
+		if err != nil {
+			cli.Exit(err)
+		}
 	},
 	Args: cobra.MaximumNArgs(1),
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		if err := git.ValidateIsRepository(); err != nil {
+		if err := ValidateIsRepository(prodRepo); err != nil {
 			return err
 		}
-		return validateIsConfigured()
+		return validateIsConfigured(prodRepo)
 	},
 }
 
 // Does not return error because "Ensure" functions will call exit directly.
-func getDiffParentConfig(args []string) (config diffParentConfig) {
-	initialBranch := git.GetCurrentBranchName()
+func createDiffParentConfig(args []string, repo *git.ProdRepo) (config diffParentConfig, err error) {
+	initialBranch, err := repo.Silent.CurrentBranch()
+	if err != nil {
+		return config, err
+	}
 	if len(args) == 0 {
 		config.branch = initialBranch
 	} else {
 		config.branch = args[0]
 	}
 	if initialBranch != config.branch {
-		git.EnsureHasLocalBranch(config.branch)
+		hasBranch, err := repo.Silent.HasLocalBranch(config.branch)
+		if err != nil {
+			return config, err
+		}
+		if !hasBranch {
+			return config, fmt.Errorf("there is no local branch named %q", config.branch)
+		}
 	}
-	git.Config().EnsureIsFeatureBranch(config.branch, "You can only diff-parent feature branches.")
-	prompt.EnsureKnowsParentBranches([]string{config.branch})
-	config.parentBranch = git.Config().GetParentBranch(config.branch)
-	return
+	if !prodRepo.Config.IsFeatureBranch(config.branch) {
+		return config, fmt.Errorf("you can only diff-parent feature branches")
+	}
+	err = dialog.EnsureKnowsParentBranches([]string{config.branch}, repo)
+	if err != nil {
+		return config, err
+	}
+	config.parentBranch = repo.Config.ParentBranch(config.branch)
+	return config, nil
 }
 
 func init() {

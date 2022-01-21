@@ -1,12 +1,9 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
-
-	"github.com/git-town/git-town/src/drivers"
-	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/script"
+	"github.com/git-town/git-town/v7/src/browser"
+	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/spf13/cobra"
 )
 
@@ -25,23 +22,21 @@ When using SSH identities, run
 "git config git-town.code-hosting-origin-hostname <HOSTNAME>"
 where HOSTNAME matches what is in your ssh config file.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		repo := git.NewProdRepo()
-		driver := drivers.Load(repo.Configuration)
+		driver := hosting.NewDriver(&prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction)
 		if driver == nil {
-			fmt.Println(drivers.UnsupportedHostingError())
-			os.Exit(1)
+			cli.Exit(hosting.UnsupportedServiceError())
 		}
-		script.OpenBrowser(driver.RepositoryURL())
+		browser.Open(driver.RepositoryURL(), prodRepo.LoggingShell)
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		if err := git.ValidateIsRepository(); err != nil {
+		if err := ValidateIsRepository(prodRepo); err != nil {
 			return err
 		}
-		if err := validateIsConfigured(); err != nil {
+		if err := validateIsConfigured(prodRepo); err != nil {
 			return err
 		}
-		if err := git.Config().ValidateIsOnline(); err != nil {
+		if err := prodRepo.Config.ValidateIsOnline(); err != nil {
 			return err
 		}
 		return nil

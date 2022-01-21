@@ -1,8 +1,8 @@
 package steps
 
 import (
-	"github.com/git-town/git-town/src/drivers"
-	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/hosting"
 )
 
 // PreserveCheckoutHistoryStep does stuff.
@@ -12,8 +12,7 @@ type PreserveCheckoutHistoryStep struct {
 	InitialPreviouslyCheckedOutBranch string
 }
 
-// Run executes this step.
-func (step *PreserveCheckoutHistoryStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
+func (step *PreserveCheckoutHistoryStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
 	expectedPreviouslyCheckedOutBranch, err := repo.Silent.ExpectedPreviouslyCheckedOutBranch(step.InitialPreviouslyCheckedOutBranch, step.InitialBranch)
 	if err != nil {
 		return err

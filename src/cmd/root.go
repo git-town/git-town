@@ -1,12 +1,10 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
+	"errors"
 
 	"github.com/fatih/color"
-	"github.com/git-town/git-town/src/command"
-	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/spf13/cobra"
 )
 
@@ -19,18 +17,28 @@ var RootCmd = &cobra.Command{
 It adds Git commands that support GitHub Flow, Git Flow, the Nvie model, GitLab Flow, and other workflows more directly,
 and it allows you to perform many common Git operations faster and easier.`,
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-		command.SetDebug(debugFlag)
+		cli.SetDebug(debugFlag)
 	},
 }
 
 // Execute runs the Cobra stack.
 func Execute() {
-	git.EnsureVersionRequirementSatisfied()
+	majorVersion, minorVersion, err := prodRepo.Silent.Version()
+	if err != nil {
+		cli.Exit(err)
+	}
+	if !IsAcceptableGitVersion(majorVersion, minorVersion) {
+		cli.Exit(errors.New("Git Town requires Git 2.7.0 or higher")) //nolint:stylecheck // proper noun
+	}
 	color.NoColor = false // Prevent color from auto disable
 	if err := RootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(-1)
+		cli.Exit(err)
 	}
+}
+
+// IsAcceptableGitVersion indicates whether the given Git version works for Git Town.
+func IsAcceptableGitVersion(major, minor int) bool {
+	return major > 2 || (major == 2 && minor >= 7)
 }
 
 func init() {

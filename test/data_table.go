@@ -2,13 +2,12 @@ package test
 
 import (
 	"fmt"
-	"path/filepath"
 	"regexp"
 	"strings"
 	"sync"
 
 	"github.com/cucumber/messages-go/v10"
-	"github.com/git-town/git-town/test/helpers"
+	"github.com/git-town/git-town/v7/test/helpers"
 	"github.com/sergi/go-diff/diffmatchpatch"
 )
 
@@ -68,11 +67,13 @@ func (table *DataTable) EqualGherkin(other *messages.PickleStepArgument_PickleTa
 	return table.EqualDataTable(dataTable)
 }
 
-var templateRE *regexp.Regexp
-var templateOnce sync.Once
+var (
+	templateRE   *regexp.Regexp
+	templateOnce sync.Once
+)
 
 // Expand returns a new DataTable instance with the placeholders in this datatable replaced with the given values.
-func (table *DataTable) Expand(rootDir string, localRepo *Repo, remoteRepo *Repo) (result DataTable) {
+func (table *DataTable) Expand(localRepo *Repo, remoteRepo *Repo) (result DataTable, err error) {
 	for row := range table.Cells {
 		cells := []string{}
 		for col := range table.Cells[row] {
@@ -81,33 +82,29 @@ func (table *DataTable) Expand(rootDir string, localRepo *Repo, remoteRepo *Repo
 				templateOnce.Do(func() { templateRE = regexp.MustCompile(`\{\{.*?\}\}`) })
 				match := templateRE.FindString(cell)
 				switch {
-				case match == "{{ root folder }}":
-					cell = strings.Replace(cell, "{{ root folder }}", rootDir, 1)
-				case match == `{{ folder "new_folder" }}`:
-					cell = strings.Replace(cell, `{{ folder "new_folder" }}`, filepath.Join(rootDir, "new_folder"), 1)
 				case strings.HasPrefix(match, "{{ sha "):
 					commitName := match[8 : len(match)-4]
 					sha, err := localRepo.ShaForCommit(commitName)
 					if err != nil {
-						panic(fmt.Errorf("cannot determine SHA: %v", err))
+						return result, fmt.Errorf("cannot determine SHA: %w", err)
 					}
 					cell = strings.Replace(cell, match, sha, 1)
 				case strings.HasPrefix(match, "{{ sha-in-remote "):
 					commitName := match[18 : len(match)-4]
 					sha, err := remoteRepo.ShaForCommit(commitName)
 					if err != nil {
-						panic(fmt.Errorf("cannot determine SHA in remote: %v", err))
+						return result, fmt.Errorf("cannot determine SHA in remote: %w", err)
 					}
 					cell = strings.Replace(cell, match, sha, 1)
 				default:
-					panic("DataTable.Expand: unknown template expression: " + cell)
+					return result, fmt.Errorf("DataTable.Expand: unknown template expression %q", cell)
 				}
 			}
 			cells = append(cells, cell)
 		}
 		result.AddRow(cells...)
 	}
-	return result
+	return result, nil
 }
 
 // RemoveText deletes the given text from each cell.

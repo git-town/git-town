@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "text-runner": "5.0.0",
+    "textrun-make": "0.1.0"
+  }
+}

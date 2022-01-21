@@ -3,11 +3,12 @@ package helpers_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/test/helpers"
+	"github.com/git-town/git-town/v7/test/helpers"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestOrderedStringSet(t *testing.T) {
+	t.Parallel()
 	set1 := helpers.NewOrderedStringSet("one")
 	set2 := set1.Add("two")
 	set2 = set2.Add("two")

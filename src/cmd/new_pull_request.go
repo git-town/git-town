@@ -1,14 +1,12 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
-
-	"github.com/git-town/git-town/src/drivers"
-	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/prompt"
-	"github.com/git-town/git-town/src/script"
-	"github.com/git-town/git-town/src/steps"
+	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/dialog"
+	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/hosting"
+	"github.com/git-town/git-town/v7/src/runstate"
+	"github.com/git-town/git-town/v7/src/steps"
 	"github.com/spf13/cobra"
 )
 
@@ -37,66 +35,74 @@ When using SSH identities, this command needs to be configured with
 "git config git-town.code-hosting-origin-hostname <hostname>"
 where hostname matches what is in your ssh config file.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		repo := git.NewProdRepo()
-		config, err := getNewPullRequestConfig()
+		config, err := createNewPullRequestConfig(prodRepo)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			cli.Exit(err)
 		}
-		driver := drivers.Load(repo.Configuration)
+		driver := hosting.NewDriver(&prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction)
 		if driver == nil {
-			fmt.Println(drivers.UnsupportedHostingError())
-			os.Exit(1)
+			cli.Exit(hosting.UnsupportedServiceError())
 		}
-		stepList, err := getNewPullRequestStepList(config, repo)
+		stepList, err := createNewPullRequestStepList(config, prodRepo)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			cli.Exit(err)
 		}
-		runState := steps.NewRunState("new-pull-request", stepList)
-		err = steps.Run(runState, repo, driver)
+		runState := runstate.New("new-pull-request", stepList)
+		err = runstate.Execute(runState, prodRepo, driver)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			cli.Exit(err)
 		}
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		if err := git.ValidateIsRepository(); err != nil {
+		if err := ValidateIsRepository(prodRepo); err != nil {
 			return err
 		}
-		if err := validateIsConfigured(); err != nil {
+		if err := validateIsConfigured(prodRepo); err != nil {
 			return err
 		}
-		if err := git.Config().ValidateIsOnline(); err != nil {
+		if err := prodRepo.Config.ValidateIsOnline(); err != nil {
 			return err
 		}
 		return nil
 	},
 }
 
-func getNewPullRequestConfig() (result newPullRequestConfig, err error) {
-	if git.HasRemote("origin") {
-		err := script.Fetch()
+func createNewPullRequestConfig(repo *git.ProdRepo) (result newPullRequestConfig, err error) {
+	hasOrigin, err := repo.Silent.HasRemote("origin")
+	if err != nil {
+		return result, err
+	}
+	if hasOrigin {
+		err := repo.Logging.Fetch()
 		if err != nil {
 			return result, err
 		}
 	}
-	result.InitialBranch = git.GetCurrentBranchName()
-	prompt.EnsureKnowsParentBranches([]string{result.InitialBranch})
-	result.BranchesToSync = append(git.Config().GetAncestorBranches(result.InitialBranch), result.InitialBranch)
+	result.InitialBranch, err = repo.Silent.CurrentBranch()
+	if err != nil {
+		return result, err
+	}
+	err = dialog.EnsureKnowsParentBranches([]string{result.InitialBranch}, repo)
+	if err != nil {
+		return result, err
+	}
+	result.BranchesToSync = append(repo.Config.AncestorBranches(result.InitialBranch), result.InitialBranch)
 	return
 }
 
-func getNewPullRequestStepList(config newPullRequestConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
+func createNewPullRequestStepList(config newPullRequestConfig, repo *git.ProdRepo) (result runstate.StepList, err error) {
 	for _, branchName := range config.BranchesToSync {
-		steps, err := steps.GetSyncBranchSteps(branchName, true, repo)
+		steps, err := runstate.SyncBranchSteps(branchName, true, repo)
 		if err != nil {
 			return result, err
 		}
 		result.AppendList(steps)
 	}
-	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
+	err = result.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
+	if err != nil {
+		return result, err
+	}
 	result.Append(&steps.CreatePullRequestStep{BranchName: config.InitialBranch})
 	return result, nil
 }
