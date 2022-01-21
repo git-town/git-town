@@ -61,7 +61,8 @@ func (r *Runner) AddSubmodule(url string) error {
 	if err != nil {
 		return fmt.Errorf("cannot add submodule %q: %w", url, err)
 	}
-	return nil
+	err = r.Commit("added submodule", "")
+	return err
 }
 
 // Author provides the locally Git configured user.
