@@ -82,6 +82,5 @@ straight into the main branch. See also this
     </a>
   </b>
 </blockquote>
-</p>
 
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
