@@ -38,6 +38,7 @@ msi:  # compiles the MSI installer for Windows
 	@rm git-town.exe
 
 lint: lint-go lint-md  # lints all the source code
+	git diff --check
 
 lint-go:  # lints the Go files
 	golangci-lint run
