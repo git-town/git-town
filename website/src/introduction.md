@@ -72,6 +72,16 @@ straight into the main branch. See also this
   &mdash; Gregor (<a href="https://twitter.com/gr2m/status/983913843351957504">@gr2m</a>)
 </blockquote>
 
+<blockquote class="twitter-tweet">
+  <p lang="en" dir="ltr">
+    2) if your project uses squash merges,
+    <a href="https://twitter.com/GitTown">@GitTown</a>
+    is a really great tool to automatically handle all the tedious steps to keep up good git hygiene
+    (and the docs are well-organized, informative, and concise)
+  </p>
+  &mdash; Aaron VonderHaar (<a href="https://twitter.com/avh4/status/1484648192230580225">@avh4</a>)
+</blockquote>
+
 <blockquote>
   Supercharge your workflow with Git by relying on this surprisingly powerful
   and quite useful plugin that provides you with a series of extra Git commands.
