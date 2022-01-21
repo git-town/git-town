@@ -23,7 +23,7 @@ type LoggingShell struct {
 
 // NewLoggingShell provides StreamingShell instances.
 func NewLoggingShell(silent *Runner, dryRun *DryRun) *LoggingShell {
-	return &LoggingShell{dryRun, silent}
+	return &LoggingShell{dryRun: dryRun, silentRunner: silent}
 }
 
 // WorkingDir provides the directory that this Shell operates in.
