@@ -59,10 +59,10 @@ the official docs for your shell.
 		case "bash":
 			_ = RootCmd.GenBashCompletion(os.Stdout)
 		case "zsh":
-			if !completionsNoDesc {
-				_ = RootCmd.GenZshCompletion(os.Stdout)
-			} else {
+			if completionsNoDesc {
 				_ = RootCmd.GenZshCompletionNoDesc(os.Stdout)
+			} else {
+				_ = RootCmd.GenZshCompletion(os.Stdout)
 			}
 		case "fish":
 			_ = RootCmd.GenFishCompletion(os.Stdout, !completionsNoDesc)
