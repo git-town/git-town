@@ -18,7 +18,7 @@ dependencies:  # prints the dependencies between packages as a tree
 	@depth . | grep git-town
 
 docs: build  # tests the documentation
-	${CURDIR}/text-run/node_modules/.bin/text-run --offline
+	${CURDIR}/tools/node_modules/.bin/text-run --offline
 
 fix: fix-go fix-md  # auto-fixes lint issues in all languages
 
@@ -69,7 +69,7 @@ release-win: msi  # adds the Windows installer to the release
 setup: setup-go setup-docs  # the setup steps necessary on developer machines
 
 setup-docs:  # the setup steps necessary for document tests
-	cd text-run && yarn install
+	cd tools && yarn install
 
 setup-godog:  # install the godog binary
 	go install github.com/cucumber/godog/cmd/godog@v0.9.0
@@ -80,7 +80,7 @@ setup-go: setup-godog
 	go install github.com/KyleBanks/depth/cmd/depth@latest
 
 stats:  # shows code statistics
-	@find . -type f | grep -v './text-run/node_modules' | grep -v '\./vendor/' | grep -v '\./.git/' | grep -v './website/book' | xargs scc
+	@find . -type f | grep -v './tools/node_modules' | grep -v '\./vendor/' | grep -v '\./.git/' | grep -v './website/book' | xargs scc
 
 test: lint docs unit cuke  # runs all the tests
 .PHONY: test

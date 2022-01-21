@@ -12,12 +12,12 @@ This page helps you get started hacking on the Git Town codebase.
      run `choco install make` if [Chocolatey](https://chocolatey.org) is
      available.
 3. automatically install Go-based tooling
-   <code textrun="verify-make-command">make setup</code>
+   <code type="make/command">make setup</code>
 4. manually install optional tooling: [dprint](https://dprint.dev),
    [Node.js](https://nodejs.org), [Yarn](https://yarnpkg.com/),
    [scc](https://github.com/boyter/scc)
-5. run the tests: <code textrun="verify-make-command">make test</code>
-6. compile the tool: <code textrun="verify-make-command">make build</code>
+5. run the tests: <code type="make/command">make test</code>
+6. compile the tool: <code type="make/command">make build</code>
 
 ## dependencies
 
@@ -37,23 +37,35 @@ go get <path>
 
 Update all external Go modules:
 
-```bash
+<a type="make/command">
+
+```
 make update
 ```
+
+</a>
 
 ## unit tests
 
 Run all unit tests:
 
-```bash
+<a type="make/command">
+
+```
 make unit
 ```
 
+</a>
+
 Run unit tests for packages containing changes:
+
+<a type="make/command">
 
 ```
 make u
 ```
+
+</a>
 
 Run an individual unit test:
 
@@ -64,10 +76,19 @@ go test src/cmd/root_test.go -v -run TestIsAcceptableGitVersion
 
 ## end-to-end tests
 
+Run all end-to-end tests:
+
+<a type="make/command">
+
+```
+make cuke
+```
+
+</a>
+
 Run individual Cucumber tests:
 
 ```bash
-make cuke                       # runs all end-to-end test
 godog [path to file/folder]     # runs the given end-to-end tests
 ```
 
@@ -89,7 +110,6 @@ To see the CLI output of the shell commands in a Cucumber test, add a tag
 ```cucumber
 @debug
 Scenario: A foo walks into a bar
-  Given ...
 ```
 
 Debug a Godog Cucumber feature in [VSCode](https://code.visualstudio.com):
@@ -103,15 +123,23 @@ Debug a Godog Cucumber feature in [VSCode](https://code.visualstudio.com):
 
 Run all linters:
 
-```bash
+<a type="make/command">
+
+```
 make lint
 ```
 
+</a>
+
 Auto-fix linter errors:
+
+<a type="make/command">
 
 ```
 make fix
 ```
+
+</a>
 
 ## learn about the code and test architecture
 
@@ -124,8 +152,10 @@ the code architecture.
 The source code for the [website](https://www.git-town.com) is in the
 [website](website) folder. This folder contains its own
 [Makefile](website/Makefile) for activities related to working on the website.
-To work on the website, cd into the `website` folder and run `make setup` to
-download the necessary tooling and then `make serve` to start a local
+To work on the website, cd into the `website` folder and run
+<code type="make/command" dir="website">make setup</code> to download the
+necessary tooling and then
+<code type="make/command" dir="website">make serve</code> to start a local
 development server. The production site auto-updates on changes to the `main`
 branch. The site hoster is [Netlify](https://www.netlify.com). Netlify
 configuration is in [netlify.toml](netlify.toml).
