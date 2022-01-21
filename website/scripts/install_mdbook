@@ -16,17 +16,17 @@ function os_name {
 }
 
 function download_linux {
-	curl -L $LINUX_URL | tar xvz --directory bin
+	curl -L $LINUX_URL | tar xz --directory bin
 }
 
 function download_macos {
   echo Note: this is untested, please submit bug reports and fixes if it is broken
-	curl -L $MACOS_URL | tar xvz --directory bin
+	curl -L $MACOS_URL | tar xz --directory bin
 }
 
 function download_win {
   echo Note: this is untested, please submit bug reports and fixes if it is broken
-	curl -L $MSWIN_URL | tar xvz --directory bin
+	curl -L $MSWIN_URL | tar xz --directory bin
 }
 
 function download_unknown {
