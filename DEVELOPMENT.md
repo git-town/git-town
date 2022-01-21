@@ -70,8 +70,8 @@ make u
 Run an individual unit test:
 
 ```
-go test src/cmd/root_test.go go test src/cmd/root_test.go -v -run
-TestIsAcceptableGitVersion
+go test src/cmd/root_test.go
+go test src/cmd/root_test.go -v -run TestIsAcceptableGitVersion
 ```
 
 ## end-to-end tests
