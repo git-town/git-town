@@ -4,16 +4,16 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/git-town/git-town/src/config"
-	"github.com/git-town/git-town/src/run"
+	"github.com/git-town/git-town/v7/src/config"
+	"github.com/git-town/git-town/v7/src/run"
 )
 
 // ProdRepo is a Git Repo in production code.
 type ProdRepo struct {
-	Silent       Runner         // the Runner instance for silent Git operations
-	Logging      Runner         // the Runner instance to Git operations that show up in the output
-	LoggingShell *LoggingShell  // the LoggingShell instance used
-	Config       *config.Config // the git.Configuration instance for this repo
+	Silent       Runner        // the Runner instance for silent Git operations
+	Logging      Runner        // the Runner instance to Git operations that show up in the output
+	LoggingShell *LoggingShell // the LoggingShell instance used
+	Config       config.Config // the git.Configuration instance for this repo
 	DryRun       *DryRun
 }
 
@@ -58,7 +58,7 @@ func NewProdRepo() *ProdRepo {
 
 // RemoveOutdatedConfiguration removes outdated Git Town configuration.
 func (r *ProdRepo) RemoveOutdatedConfiguration() error {
-	for child, parent := range r.Config.GetParentBranchMap() {
+	for child, parent := range r.Config.ParentBranchMap() {
 		hasChildBranch, err := r.Silent.HasLocalOrRemoteBranch(child)
 		if err != nil {
 			return err
@@ -74,6 +74,7 @@ func (r *ProdRepo) RemoveOutdatedConfiguration() error {
 	return nil
 }
 
+// NavigateToRootIfNecessary changes into the root directory of the current repository.
 func (r *ProdRepo) NavigateToRootIfNecessary() error {
 	currentDirectory, err := os.Getwd()
 	if err != nil {
@@ -83,8 +84,8 @@ func (r *ProdRepo) NavigateToRootIfNecessary() error {
 	if err != nil {
 		return err
 	}
-	if currentDirectory != gitRootDirectory {
-		return os.Chdir(gitRootDirectory)
+	if currentDirectory == gitRootDirectory {
+		return nil
 	}
-	return nil
+	return os.Chdir(gitRootDirectory)
 }

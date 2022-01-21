@@ -1,5 +1,12 @@
 # Git Town Release Notes
 
+## 7.6.0 (2021-11-23)
+
+#### New Features
+
+- print diagnostic information on command failure
+  ([#1667](https://github.com/git-town/git-town/pull/1667))
+
 ## 7.5.0 (2021-03-10)
 
 #### New Features
@@ -194,7 +201,7 @@ experience. Ruby is no longer a development dependency.
 - `git ship`
   - add ability to ship hotfixes to perennial branches
   - add ability to merge via GitHub API when applicable. See
-    [documentation](documentation/commands/ship.md) for more info.
+    [documentation](website/src/commands/ship.md) for more info.
 
 ## 4.1.2 (2017-06-08)
 

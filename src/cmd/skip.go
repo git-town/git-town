@@ -3,9 +3,8 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/src/cli"
-	"github.com/git-town/git-town/src/steps"
-
+	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/spf13/cobra"
 )
 
@@ -13,9 +12,9 @@ var skipCmd = &cobra.Command{
 	Use:   "skip",
 	Short: "Restarts the last run git-town command by skipping the current branch",
 	Run: func(cmd *cobra.Command, args []string) {
-		runState, err := steps.LoadPreviousRunState(prodRepo)
+		runState, err := runstate.Load(prodRepo)
 		if err != nil {
-			cli.Exit(fmt.Errorf("cannot load previous run state: %v", err))
+			cli.Exit(fmt.Errorf("cannot load previous run state: %w", err))
 		}
 		if runState == nil || !runState.IsUnfinished() {
 			cli.Exit(fmt.Errorf("nothing to skip"))
@@ -24,7 +23,7 @@ var skipCmd = &cobra.Command{
 			cli.Exit(fmt.Errorf("cannot skip branch that resulted in conflicts"))
 		}
 		skipRunState := runState.CreateSkipRunState()
-		err = steps.Run(&skipRunState, prodRepo, nil)
+		err = runstate.Execute(&skipRunState, prodRepo, nil)
 		if err != nil {
 			cli.Exit(err)
 		}

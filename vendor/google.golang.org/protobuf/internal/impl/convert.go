@@ -162,7 +162,7 @@ func (c *boolConverter) IsValidPB(v pref.Value) bool {
 	return ok
 }
 func (c *boolConverter) IsValidGo(v reflect.Value) bool {
-	return v.Type() == c.goType
+	return v.IsValid() && v.Type() == c.goType
 }
 func (c *boolConverter) New() pref.Value  { return c.def }
 func (c *boolConverter) Zero() pref.Value { return c.def }
@@ -186,7 +186,7 @@ func (c *int32Converter) IsValidPB(v pref.Value) bool {
 	return ok
 }
 func (c *int32Converter) IsValidGo(v reflect.Value) bool {
-	return v.Type() == c.goType
+	return v.IsValid() && v.Type() == c.goType
 }
 func (c *int32Converter) New() pref.Value  { return c.def }
 func (c *int32Converter) Zero() pref.Value { return c.def }
@@ -210,7 +210,7 @@ func (c *int64Converter) IsValidPB(v pref.Value) bool {
 	return ok
 }
 func (c *int64Converter) IsValidGo(v reflect.Value) bool {
-	return v.Type() == c.goType
+	return v.IsValid() && v.Type() == c.goType
 }
 func (c *int64Converter) New() pref.Value  { return c.def }
 func (c *int64Converter) Zero() pref.Value { return c.def }
@@ -234,7 +234,7 @@ func (c *uint32Converter) IsValidPB(v pref.Value) bool {
 	return ok
 }
 func (c *uint32Converter) IsValidGo(v reflect.Value) bool {
-	return v.Type() == c.goType
+	return v.IsValid() && v.Type() == c.goType
 }
 func (c *uint32Converter) New() pref.Value  { return c.def }
 func (c *uint32Converter) Zero() pref.Value { return c.def }
@@ -258,7 +258,7 @@ func (c *uint64Converter) IsValidPB(v pref.Value) bool {
 	return ok
 }
 func (c *uint64Converter) IsValidGo(v reflect.Value) bool {
-	return v.Type() == c.goType
+	return v.IsValid() && v.Type() == c.goType
 }
 func (c *uint64Converter) New() pref.Value  { return c.def }
 func (c *uint64Converter) Zero() pref.Value { return c.def }
@@ -282,7 +282,7 @@ func (c *float32Converter) IsValidPB(v pref.Value) bool {
 	return ok
 }
 func (c *float32Converter) IsValidGo(v reflect.Value) bool {
-	return v.Type() == c.goType
+	return v.IsValid() && v.Type() == c.goType
 }
 func (c *float32Converter) New() pref.Value  { return c.def }
 func (c *float32Converter) Zero() pref.Value { return c.def }
@@ -306,7 +306,7 @@ func (c *float64Converter) IsValidPB(v pref.Value) bool {
 	return ok
 }
 func (c *float64Converter) IsValidGo(v reflect.Value) bool {
-	return v.Type() == c.goType
+	return v.IsValid() && v.Type() == c.goType
 }
 func (c *float64Converter) New() pref.Value  { return c.def }
 func (c *float64Converter) Zero() pref.Value { return c.def }
@@ -336,7 +336,7 @@ func (c *stringConverter) IsValidPB(v pref.Value) bool {
 	return ok
 }
 func (c *stringConverter) IsValidGo(v reflect.Value) bool {
-	return v.Type() == c.goType
+	return v.IsValid() && v.Type() == c.goType
 }
 func (c *stringConverter) New() pref.Value  { return c.def }
 func (c *stringConverter) Zero() pref.Value { return c.def }
@@ -363,7 +363,7 @@ func (c *bytesConverter) IsValidPB(v pref.Value) bool {
 	return ok
 }
 func (c *bytesConverter) IsValidGo(v reflect.Value) bool {
-	return v.Type() == c.goType
+	return v.IsValid() && v.Type() == c.goType
 }
 func (c *bytesConverter) New() pref.Value  { return c.def }
 func (c *bytesConverter) Zero() pref.Value { return c.def }
@@ -400,7 +400,7 @@ func (c *enumConverter) IsValidPB(v pref.Value) bool {
 }
 
 func (c *enumConverter) IsValidGo(v reflect.Value) bool {
-	return v.Type() == c.goType
+	return v.IsValid() && v.Type() == c.goType
 }
 
 func (c *enumConverter) New() pref.Value {
@@ -423,6 +423,13 @@ func (c *messageConverter) PBValueOf(v reflect.Value) pref.Value {
 	if v.Type() != c.goType {
 		panic(fmt.Sprintf("invalid type: got %v, want %v", v.Type(), c.goType))
 	}
+	if c.isNonPointer() {
+		if v.CanAddr() {
+			v = v.Addr() // T => *T
+		} else {
+			v = reflect.Zero(reflect.PtrTo(v.Type()))
+		}
+	}
 	if m, ok := v.Interface().(pref.ProtoMessage); ok {
 		return pref.ValueOfMessage(m.ProtoReflect())
 	}
@@ -436,6 +443,16 @@ func (c *messageConverter) GoValueOf(v pref.Value) reflect.Value {
 		rv = reflect.ValueOf(u.protoUnwrap())
 	} else {
 		rv = reflect.ValueOf(m.Interface())
+	}
+	if c.isNonPointer() {
+		if rv.Type() != reflect.PtrTo(c.goType) {
+			panic(fmt.Sprintf("invalid type: got %v, want %v", rv.Type(), reflect.PtrTo(c.goType)))
+		}
+		if !rv.IsNil() {
+			rv = rv.Elem() // *T => T
+		} else {
+			rv = reflect.Zero(rv.Type().Elem())
+		}
 	}
 	if rv.Type() != c.goType {
 		panic(fmt.Sprintf("invalid type: got %v, want %v", rv.Type(), c.goType))
@@ -451,17 +468,29 @@ func (c *messageConverter) IsValidPB(v pref.Value) bool {
 	} else {
 		rv = reflect.ValueOf(m.Interface())
 	}
+	if c.isNonPointer() {
+		return rv.Type() == reflect.PtrTo(c.goType)
+	}
 	return rv.Type() == c.goType
 }
 
 func (c *messageConverter) IsValidGo(v reflect.Value) bool {
-	return v.Type() == c.goType
+	return v.IsValid() && v.Type() == c.goType
 }
 
 func (c *messageConverter) New() pref.Value {
+	if c.isNonPointer() {
+		return c.PBValueOf(reflect.New(c.goType).Elem())
+	}
 	return c.PBValueOf(reflect.New(c.goType.Elem()))
 }
 
 func (c *messageConverter) Zero() pref.Value {
 	return c.PBValueOf(reflect.Zero(c.goType))
+}
+
+// isNonPointer reports whether the type is a non-pointer type.
+// This never occurs for generated message types.
+func (c *messageConverter) isNonPointer() bool {
+	return c.goType.Kind() != reflect.Ptr
 }

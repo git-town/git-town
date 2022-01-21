@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/git-town/git-town/src/cli"
-	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/git"
 	"github.com/spf13/cobra"
 )
 
@@ -25,7 +25,7 @@ This can conflict with other tools that also define Git aliases.`,
 		if err != nil {
 			cli.Exit(fmt.Errorf(`invalid argument %q. Please provide either "true" or "false"`, args[0]))
 		}
-		var commandsToAlias = []string{
+		commandsToAlias := []string{
 			"append",
 			"hack",
 			"kill",
@@ -63,7 +63,7 @@ func addAlias(command string, repo *git.ProdRepo) error {
 }
 
 func removeAlias(command string, repo *git.ProdRepo) error {
-	existingAlias := repo.Config.GetGitAlias(command)
+	existingAlias := repo.Config.GitAlias(command)
 	if existingAlias == "town "+command {
 		result, err := repo.Config.RemoveGitAlias(command)
 		if err != nil {

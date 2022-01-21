@@ -24,7 +24,7 @@ Feature: git town-hack: prompt for parent branch
       |             | git branch new-feature main |
       |             | git checkout new-feature    |
       | new-feature | git stash pop               |
-    And I end up on the "new-feature" branch
+    And I am now on the "new-feature" branch
     And my workspace still contains my uncommitted file
     And my repo now has the following commits
       | BRANCH      | LOCATION      | MESSAGE     |
@@ -53,7 +53,7 @@ Feature: git town-hack: prompt for parent branch
       |            | git branch hotfix production |
       |            | git checkout hotfix          |
       | hotfix     | git stash pop                |
-    And I end up on the "hotfix" branch
+    And I am now on the "hotfix" branch
     And my workspace still contains my uncommitted file
     And my repo now has the following commits
       | BRANCH     | LOCATION      | MESSAGE           |

@@ -3,8 +3,8 @@ package steps
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/src/drivers"
-	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/hosting"
 )
 
 // DriverMergePullRequestStep squash merges the branch with the given name into the current branch.
@@ -19,32 +19,27 @@ type DriverMergePullRequestStep struct {
 	mergeSha                  string
 }
 
-// CreateAbortStep returns the abort step for this step.
-func (step *DriverMergePullRequestStep) CreateAbortStep() Step {
+func (step *DriverMergePullRequestStep) CreateAbortStep() Step { //nolint:ireturn
 	if step.enteredEmptyCommitMessage {
 		return &DiscardOpenChangesStep{}
 	}
 	return nil
 }
 
-// CreateUndoStep returns the undo step for this step.
-func (step *DriverMergePullRequestStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+func (step *DriverMergePullRequestStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
 	return &RevertCommitStep{Sha: step.mergeSha}, nil
 }
 
-// GetAutomaticAbortError returns the error message to display when this step
-// cause the command to automatically abort.
-func (step *DriverMergePullRequestStep) GetAutomaticAbortError() error {
+func (step *DriverMergePullRequestStep) CreateAutomaticAbortError() error {
 	if step.enteredEmptyCommitMessage {
 		return fmt.Errorf("aborted because commit exited with error")
 	}
 	return step.mergeError
 }
 
-// Run executes this step.
-func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
+func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
 	commitMessage := step.CommitMessage
-	// nolint:nestif
+	//nolint:nestif
 	if commitMessage == "" {
 		// Allow the user to enter the commit message as if shipping without a driver
 		// then revert the commit since merging via the driver will perform the actual squash merge
@@ -75,7 +70,7 @@ func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo, driver drivers.C
 	if err != nil {
 		return err
 	}
-	step.mergeSha, step.mergeError = driver.MergePullRequest(drivers.MergePullRequestOptions{
+	step.mergeSha, step.mergeError = driver.MergePullRequest(hosting.MergePullRequestOptions{
 		Branch:            step.BranchName,
 		PullRequestNumber: step.PullRequestNumber,
 		CommitMessage:     commitMessage,

@@ -3,9 +3,10 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/src/cli"
-	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/steps"
+	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/runstate"
+	"github.com/git-town/git-town/v7/src/steps"
 	"github.com/spf13/cobra"
 )
 
@@ -43,16 +44,16 @@ When run on a perennial branch
 - confirm with the "-f" option
 - registers the new perennial branch name in the local Git Town configuration`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config, err := getRenameBranchConfig(args, prodRepo)
+		config, err := createRenameBranchConfig(args, prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}
-		stepList, err := getRenameBranchStepList(config, prodRepo)
+		stepList, err := createRenameBranchStepList(config, prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}
-		runState := steps.NewRunState("rename-branch", stepList)
-		err = steps.Run(runState, prodRepo, nil)
+		runState := runstate.New("rename-branch", stepList)
+		err = runstate.Execute(runState, prodRepo, nil)
 		if err != nil {
 			cli.Exit(err)
 		}
@@ -66,7 +67,7 @@ When run on a perennial branch
 	},
 }
 
-func getRenameBranchConfig(args []string, repo *git.ProdRepo) (result renameBranchConfig, err error) {
+func createRenameBranchConfig(args []string, repo *git.ProdRepo) (result renameBranchConfig, err error) {
 	result.initialBranch, err = repo.Silent.CurrentBranch()
 	if err != nil {
 		return result, err
@@ -118,22 +119,22 @@ func getRenameBranchConfig(args []string, repo *git.ProdRepo) (result renameBran
 	if hasNewBranch {
 		return result, fmt.Errorf("a branch named %q already exists", result.newBranchName)
 	}
-	result.oldBranchChildren = repo.Config.GetChildBranches(result.oldBranchName)
+	result.oldBranchChildren = repo.Config.ChildBranches(result.oldBranchName)
 	result.oldBranchHasTrackingBranch, err = repo.Silent.HasTrackingBranch(result.oldBranchName)
 	return result, err
 }
 
-func getRenameBranchStepList(config renameBranchConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
+func createRenameBranchStepList(config renameBranchConfig, repo *git.ProdRepo) (result runstate.StepList, err error) {
 	result.Append(&steps.CreateBranchStep{BranchName: config.newBranchName, StartingPoint: config.oldBranchName})
 	if config.initialBranch == config.oldBranchName {
 		result.Append(&steps.CheckoutBranchStep{BranchName: config.newBranchName})
 	}
 	if config.isInitialBranchPerennial {
-		result.Append(&steps.RemoveFromPerennialBranches{BranchName: config.oldBranchName})
-		result.Append(&steps.AddToPerennialBranches{BranchName: config.newBranchName})
+		result.Append(&steps.RemoveFromPerennialBranchesStep{BranchName: config.oldBranchName})
+		result.Append(&steps.AddToPerennialBranchesStep{BranchName: config.newBranchName})
 	} else {
 		result.Append(&steps.DeleteParentBranchStep{BranchName: config.oldBranchName})
-		result.Append(&steps.SetParentBranchStep{BranchName: config.newBranchName, ParentBranchName: repo.Config.GetParentBranch(config.oldBranchName)})
+		result.Append(&steps.SetParentBranchStep{BranchName: config.newBranchName, ParentBranchName: repo.Config.ParentBranch(config.oldBranchName)})
 	}
 	for _, child := range config.oldBranchChildren {
 		result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: config.newBranchName})
@@ -143,7 +144,7 @@ func getRenameBranchStepList(config renameBranchConfig, repo *git.ProdRepo) (res
 		result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.oldBranchName, IsTracking: true})
 	}
 	result.Append(&steps.DeleteLocalBranchStep{BranchName: config.oldBranchName})
-	err = result.Wrap(steps.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, repo)
+	err = result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, repo)
 	return result, err
 }
 

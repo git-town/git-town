@@ -3,9 +3,9 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/src/cli"
-	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/prompt"
+	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/dialog"
+	"github.com/git-town/git-town/v7/src/git"
 	"github.com/spf13/cobra"
 )
 
@@ -23,7 +23,7 @@ Works on either the current branch or the branch name provided.
 
 Exits with error code 1 if the given branch is a perennial branch or the main branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config, err := getDiffParentConfig(args, prodRepo)
+		config, err := createDiffParentConfig(args, prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}
@@ -42,7 +42,7 @@ Exits with error code 1 if the given branch is a perennial branch or the main br
 }
 
 // Does not return error because "Ensure" functions will call exit directly.
-func getDiffParentConfig(args []string, repo *git.ProdRepo) (config diffParentConfig, err error) {
+func createDiffParentConfig(args []string, repo *git.ProdRepo) (config diffParentConfig, err error) {
 	initialBranch, err := repo.Silent.CurrentBranch()
 	if err != nil {
 		return config, err
@@ -64,11 +64,11 @@ func getDiffParentConfig(args []string, repo *git.ProdRepo) (config diffParentCo
 	if !prodRepo.Config.IsFeatureBranch(config.branch) {
 		return config, fmt.Errorf("you can only diff-parent feature branches")
 	}
-	err = prompt.EnsureKnowsParentBranches([]string{config.branch}, repo)
+	err = dialog.EnsureKnowsParentBranches([]string{config.branch}, repo)
 	if err != nil {
 		return config, err
 	}
-	config.parentBranch = repo.Config.GetParentBranch(config.branch)
+	config.parentBranch = repo.Config.ParentBranch(config.branch)
 	return config, nil
 }
 

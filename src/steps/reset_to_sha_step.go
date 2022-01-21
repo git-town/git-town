@@ -1,8 +1,8 @@
 package steps
 
 import (
-	"github.com/git-town/git-town/src/drivers"
-	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/hosting"
 )
 
 // ResetToShaStep undoes all commits on the current branch
@@ -13,8 +13,7 @@ type ResetToShaStep struct {
 	Sha  string
 }
 
-// Run executes this step.
-func (step *ResetToShaStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) (err error) {
+func (step *ResetToShaStep) Run(repo *git.ProdRepo, driver hosting.Driver) (err error) {
 	currentSha, err := repo.Silent.CurrentSha()
 	if err != nil {
 		return err

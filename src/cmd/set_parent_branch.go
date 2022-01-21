@@ -3,8 +3,8 @@ package cmd
 import (
 	"errors"
 
-	"github.com/git-town/git-town/src/cli"
-	"github.com/git-town/git-town/src/prompt"
+	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/spf13/cobra"
 )
 
@@ -20,15 +20,15 @@ var setParentBranchCommand = &cobra.Command{
 		if !prodRepo.Config.IsFeatureBranch(branchName) {
 			cli.Exit(errors.New("only feature branches can have parent branches"))
 		}
-		defaultParentBranch := prodRepo.Config.GetParentBranch(branchName)
+		defaultParentBranch := prodRepo.Config.ParentBranch(branchName)
 		if defaultParentBranch == "" {
-			defaultParentBranch = prodRepo.Config.GetMainBranch()
+			defaultParentBranch = prodRepo.Config.MainBranch()
 		}
 		err = prodRepo.Config.DeleteParentBranch(branchName)
 		if err != nil {
 			cli.Exit(err)
 		}
-		err = prompt.AskForBranchAncestry(branchName, defaultParentBranch, prodRepo)
+		err = dialog.AskForBranchAncestry(branchName, defaultParentBranch, prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}

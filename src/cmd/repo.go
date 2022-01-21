@@ -1,9 +1,9 @@
 package cmd
 
 import (
-	"github.com/git-town/git-town/src/browsers"
-	"github.com/git-town/git-town/src/cli"
-	"github.com/git-town/git-town/src/drivers"
+	"github.com/git-town/git-town/v7/src/browser"
+	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/spf13/cobra"
 )
 
@@ -22,11 +22,11 @@ When using SSH identities, run
 "git config git-town.code-hosting-origin-hostname <HOSTNAME>"
 where HOSTNAME matches what is in your ssh config file.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		driver := drivers.Load(prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction)
+		driver := hosting.NewDriver(&prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction)
 		if driver == nil {
-			cli.Exit(drivers.UnsupportedHostingError())
+			cli.Exit(hosting.UnsupportedServiceError())
 		}
-		browsers.Open(driver.RepositoryURL(), prodRepo.LoggingShell)
+		browser.Open(driver.RepositoryURL(), prodRepo.LoggingShell)
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {

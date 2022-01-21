@@ -1,8 +1,8 @@
 package steps
 
 import (
-	"github.com/git-town/git-town/src/drivers"
-	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/hosting"
 )
 
 // CreateBranchStep creates a new branch
@@ -13,12 +13,10 @@ type CreateBranchStep struct {
 	StartingPoint string
 }
 
-// CreateUndoStep returns the undo step for this step.
-func (step *CreateBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+func (step *CreateBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
 	return &DeleteLocalBranchStep{BranchName: step.BranchName}, nil
 }
 
-// Run executes this step.
-func (step *CreateBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
+func (step *CreateBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
 	return repo.Logging.CreateBranch(step.BranchName, step.StartingPoint)
 }

@@ -1,8 +1,8 @@
 package steps
 
 import (
-	"github.com/git-town/git-town/src/drivers"
-	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/hosting"
 )
 
 // CreateTrackingBranchStep pushes the current branch up to origin
@@ -12,12 +12,10 @@ type CreateTrackingBranchStep struct {
 	BranchName string
 }
 
-// CreateUndoStep returns the undo step for this step.
-func (step *CreateTrackingBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+func (step *CreateTrackingBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
 	return &DeleteRemoteBranchStep{BranchName: step.BranchName}, nil
 }
 
-// Run executes this step.
-func (step *CreateTrackingBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
+func (step *CreateTrackingBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
 	return repo.Logging.CreateTrackingBranch(step.BranchName)
 }

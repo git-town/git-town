@@ -3,11 +3,10 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/src/cli"
-	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/prompt"
-	"github.com/git-town/git-town/src/steps"
-
+	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/dialog"
+	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/spf13/cobra"
 )
 
@@ -26,16 +25,16 @@ and brings over all uncommitted changes to the new feature branch.
 
 See "sync" for information regarding remote upstream.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config, err := getHackConfig(args, prodRepo)
+		config, err := createHackConfig(args, prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}
-		stepList, err := getAppendStepList(config, prodRepo)
+		stepList, err := createAppendStepList(config, prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}
-		runState := steps.NewRunState("hack", stepList)
-		err = steps.Run(runState, prodRepo, nil)
+		runState := runstate.New("hack", stepList)
+		err = runstate.Execute(runState, prodRepo, nil)
 		if err != nil {
 			cli.Exit(err)
 		}
@@ -49,24 +48,24 @@ See "sync" for information regarding remote upstream.`,
 	},
 }
 
-func getParentBranch(targetBranch string, repo *git.ProdRepo) (string, error) {
+func determineParentBranch(targetBranch string, repo *git.ProdRepo) (string, error) {
 	if promptForParent {
-		parentBranch, err := prompt.AskForBranchParent(targetBranch, repo.Config.GetMainBranch(), repo)
+		parentBranch, err := dialog.AskForBranchParent(targetBranch, repo.Config.MainBranch(), repo)
 		if err != nil {
 			return "", err
 		}
-		err = prompt.EnsureKnowsParentBranches([]string{parentBranch}, repo)
+		err = dialog.EnsureKnowsParentBranches([]string{parentBranch}, repo)
 		if err != nil {
 			return "", err
 		}
 		return parentBranch, nil
 	}
-	return repo.Config.GetMainBranch(), nil
+	return repo.Config.MainBranch(), nil
 }
 
-func getHackConfig(args []string, repo *git.ProdRepo) (result appendConfig, err error) {
+func createHackConfig(args []string, repo *git.ProdRepo) (result appendConfig, err error) {
 	result.targetBranch = args[0]
-	result.parentBranch, err = getParentBranch(result.targetBranch, repo)
+	result.parentBranch, err = determineParentBranch(result.targetBranch, repo)
 	if err != nil {
 		return result, err
 	}

@@ -1,3 +1,4 @@
+// Package stringslice provides helper functions for working with slices of strings.
 package stringslice
 
 // Contains returns whether the given string slice

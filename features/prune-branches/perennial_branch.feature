@@ -24,7 +24,7 @@ Feature: git town-prune-branches: remove perennial branch configuration when pru
       | deleted-perennial | git fetch --prune --tags        |
       |                   | git checkout main               |
       | main              | git branch -D deleted-perennial |
-    And I end up on the "main" branch
+    And I am now on the "main" branch
     And my workspace still contains my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES               |
@@ -39,7 +39,7 @@ Feature: git town-prune-branches: remove perennial branch configuration when pru
       | BRANCH | COMMAND                                                           |
       | main   | git branch deleted-perennial {{ sha 'deleted-perennial commit' }} |
       |        | git checkout deleted-perennial                                    |
-    And I end up on the "deleted-perennial" branch
+    And I am now on the "deleted-perennial" branch
     And my workspace still contains my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES                                  |

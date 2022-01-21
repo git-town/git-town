@@ -30,7 +30,7 @@ Feature: git town-ship: shipping hotfixes
       |            | git push                          |
       |            | git push origin :hotfix           |
       |            | git branch -D hotfix              |
-    And I end up on the "production" branch
+    And I am now on the "production" branch
     And the existing branches are
       | REPOSITORY | BRANCHES         |
       | local      | main, production |

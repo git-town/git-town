@@ -1,4 +1,4 @@
-// nolint: testpackage
+//nolint:testpackage
 package test
 
 import (
@@ -8,6 +8,7 @@ import (
 )
 
 func TestTagTableBuilder(t *testing.T) {
+	t.Parallel()
 	builder := NewTagTableBuilder()
 	builder.AddMany([]string{"tagB", "tagC"}, "local")
 	builder.AddMany([]string{"tagA", "tagB"}, "remote")

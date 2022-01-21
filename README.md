@@ -1,166 +1,96 @@
-![Git Town](https://raw.githubusercontent.com/git-town/git-town/master/website/img/git-town-horizontal.svg)
-
-[![CircleCI](https://circleci.com/gh/git-town/git-town.svg?style=shield)](https://circleci.com/gh/git-town/git-town)
-[![Go Report Card](https://goreportcard.com/badge/github.com/git-town/git-town)](https://goreportcard.com/report/github.com/git-town/git-town)
-[![License](https://img.shields.io/:license-MIT-blue.svg?style=flat)](LICENSE)
-[![Help Contribute to Open Source](https://www.codetriage.com/originate/git-town/badges/users.svg)](https://www.codetriage.com/originate/git-town)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/git-town/git-town/master/website/src/logo.svg">
+  <br>
+  <img src="https://github.com/git-town/git-town/actions/workflows/cuke.yml/badge.svg" alt="end-to-end test status">
+  <img src="https://github.com/git-town/git-town/actions/workflows/lint_unit.yml/badge.svg" alt="unit test status">
+  <a href="https://goreportcard.com/report/github.com/git-town/git-town">
+    <img src="https://goreportcard.com/badge/github.com/git-town/git-town" alt="Go report card status">
+  </a>
+  <a href="https://www.codetriage.com/originate/git-town">
+    <img src="https://www.codetriage.com/originate/git-town/badges/users.svg" alt="Help Contribute to Open Source">
+  </a>
+  <img src="https://api.netlify.com/api/v1/badges/c2ea5505-be48-42e5-bb8a-b807d18d99ed/deploy-status" alt="Netlify deploy status">
+</p>
 
 Git Town makes [Git](https://git-scm.com) more efficient, especially for large
-teams. See [this screencast](https://youtu.be/oLaUsUlFfTo) for an introduction
-and this
-[Softpedia article](https://www.softpedia.com/get/Programming/Other-Programming-Files/Git-Town.shtml)
-for an independent review.
+teams. See [this screencast](https://youtu.be/oLaUsUlFfTo) for an introduction.
 
 ## Commands
 
 Git Town provides these additional Git commands:
 
-**Development Workflow**
+#### Typical development commands
 
-- [git town hack](/documentation/commands/hack.md) - cuts a new up-to-date
-  feature branch off the main branch
-- [git town sync](/documentation/commands/sync.md) - updates the current branch
-  with all ongoing changes
-- [git town new-pull-request](/documentation/commands/new-pull-request.md) -
+- [git town hack](https://www.git-town.com/commands/hack.html) - cuts a new
+  up-to-date feature branch off the main branch
+- [git town sync](https://www.git-town.com/documentation/commands/sync.md) -
+  updates the current branch with all ongoing changes
+- [git town new-pull-request](https://www.git-town.com/documentation/commands/new-pull-request.md) -
   create a new pull request
-- [git town ship](/documentation/commands/ship.md) - delivers a completed
-  feature branch and removes it
+- [git town ship](https://www.git-town.com/documentation/commands/ship.md) -
+  delivers a completed feature branch and removes it
 
-**Repository Maintenance**
+#### Advanced development commands
 
-- [git town kill](/documentation/commands/kill.md) - removes a feature branch
-- [git town prune-branches](/documentation/commands/prune-branches.md) - delete
-  all merged branches
-- [git town rename-branch](/documentation/commands/rename-branch.md) - rename a
-  branch
-- [git town append](/documentation/commands/append.md) - insert a new branch as
-  a child of the current branch
-- [git town prepend](/documentation/commands/prepend.md) - insert a new branch
-  between the current branch and its parent
-- [git town repo](/documentation/commands/repo.md) - view the repository
-  homepage
+- [git town kill](https://www.git-town.com/documentation/commands/kill.md) -
+  removes a feature branch
+- [git town prune-branches](https://www.git-town.com/documentation/commands/prune-branches.md) -
+  delete all merged branches
+- [git town rename-branch](https://www.git-town.com/documentation/commands/rename-branch.md) -
+  rename a branch
+- [git town repo](https://www.git-town.com/documentation/commands/repo.md) -
+  view the repository homepage
 
-**Git Town Configuration**
+#### Nested feature branches
 
-- [git town config](/documentation/commands/config.md) - displays or updates
-  your Git Town configuration
-- [git town new-branch-push-flag](/documentation/commands/new-branch-push-flag.md) -
-  configures whether new empty branches are pushed to origin
-- [git town main-branch](/documentation/commands/main-branch.md) - displays or
-  sets the main development branch for the current repo
-- [git town offline](/documentation/commands/offline.md) - enables/disables
-  offline mode
-- [git town perennial-branches](/documentation/commands/perennial-branches.md) -
-  displays or updates the perennial branches for the current repo
-- [git town pull-branch-strategy](/documentation/commands/pull-branch-strategy.md) -
-  displays or sets the strategy with which perennial branches are updated
-- [git town set-parent-branch](/documentation/commands/set-parent-branch.md) -
+- [git town append](https://www.git-town.com/documentation/commands/append.md) -
+  insert a new branch as a child of the current branch
+- [git town prepend](https://www.git-town.com/documentation/commands/prepend.md) -
+  insert a new branch between the current branch and its parent
+- [git town set-parent-branch](https://www.git-town.com/documentation/commands/set-parent-branch.md) -
   updates a branch's parent
 
-**Git Town Installation**
+#### Git Town configuration
 
-- [git town alias](/documentation/commands/alias.md) - adds or removes shorter
-  aliases for Git Town commands
-- [git town completions](/documentation/commands/completions.md) - generates
-  completion scripts for Bash, zsh, fish & PowerShell.
-- [git town version](/documentation/commands/version.md) - displays the
-  installed version of Git Town
+- [git town config](https://www.git-town.com/documentation/commands/config.md) -
+  displays or updates your Git Town configuration
+- [git town new-branch-push-flag](https://www.git-town.com/documentation/commands/new-branch-push-flag.md) -
+  configures whether new empty branches get pushed to origin
+- [git town main-branch](https://www.git-town.com/documentation/commands/main-branch.md) -
+  displays or sets the main development branch for the current repo
+- [git town offline](https://www.git-town.com/documentation/commands/offline.md) -
+  enables/disables offline mode
+- [git town perennial-branches](https://www.git-town.com/documentation/commands/perennial-branches.md) -
+  displays or updates the perennial branches for the current repo
+- [git town pull-branch-strategy](https://www.git-town.com/documentation/commands/pull-branch-strategy.md) -
+  displays or sets the strategy to update perennial branches
+
+#### Git Town setup
+
+- [git town alias](https://www.git-town.com/documentation/commands/alias.md) -
+  adds or removes shorter aliases for Git Town commands
+- [git town completions](https://www.git-town.com/documentation/commands/completions.md) -
+  generates completion scripts for Bash, zsh, fish & PowerShell.
+- [git town version](https://www.git-town.com/documentation/commands/version.md) -
+  displays the installed version of Git Town
 
 ## Installation
 
-See the [installation instructions](https://www.git-town.com/install.html) for
-more details.
-
-#### Aliasing
-
-Git Town commands can be
-[aliased](https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases) to remove the
-`town` prefix:
-
-```
-git town alias true
-```
-
-After executing this, you can run `git hack` instead of `git town hack`. You can
-also set this manually for individual commands:
-
-```
-git config --global alias.hack 'town hack'
-```
-
-## Configuration
-
-Git Town prompts for required configuration information during usage. Use the
-[git town config](/documentation/commands/config.md) command to manage the
-stored configuration.
-
-#### Required configuration
-
-- the main development branch
-- the
-  [perennial branches](/documentation/development/branch_hierarchy.md#perennial-branches)
-
-#### Optional Configuration
-
-These configuration options have defaults, so the configuration wizard does not
-ask about them.
-
-- pull branch strategy
-
-  - how to sync the main branch / perennial branches with their upstream
-  - default: `rebase`
-  - possible values: `merge`, `rebase`
-
-- new branch push flag
-  - whether or not branches created by hack / append / prepend should be pushed
-    to remote repo
-  - default: `false`
-  - possible values: `true`, `false`
+See the [installation](https://www.git-town.com/install.html) and
+[configuration](https://www.git-town.com/quick-configuration.html) instructions
+for more details.
 
 ## Documentation
 
-Run `git town` for an overview of the Git Town commands and `git help <command>`
-(e.g. `git help sync`) for help with individual commands.
-
-## Q&A
-
-- **Is this compatible with my workflow?** <br> Yes. Git Town is compatible with
-  [GitHub Flow](https://scottchacon.com/2011/08/31/github-flow.html),
-  [Git Flow](https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow),
-  the [Nvie model](https://nvie.com/posts/a-successful-git-branching-model),
-  [GitLab Flow](https://about.gitlab.com/2014/09/29/gitlab-flow/), and most
-  others workflows.
-
-- **Does my whole team have to use Git Town?** <br> No. Just make sure that all
-  feature branches get
-  [squash-merged](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-request-merges#squash-and-merge-your-pull-request-commits),
-  for example by requiring this in your
-  [GitHub settings](https://help.github.com/en/github/administering-a-repository/configuring-commit-squashing-for-pull-requests).
-  If you don't know what squash-merges are, you probably want to enable them.
+The [Git Town website](https://www.git-town.com) provides documentation for Git
+Town users. `git town help [command]` shows help on the CLI.
 
 ## Contributing
 
 Found a bug or have an idea for a new feature?
 [Open an issue](https://github.com/git-town/git-town/issues/new) or send a
-[pull request](https://help.github.com/articles/using-pull-requests/)! Check out
-our [contributing](/CONTRIBUTING.md) and
-[developer](documentation/development/README.md) guides to get started.
-
-### Sponsors
-
-Thanks to our sponsors for their continued support!
-
-<table>
-  <tr>
-    <td>
-      <a href="https://www.originate.com">
-        <img src="documentation/originate.png" width="146" height="33">
-      </a>
-    </td>
-  </tr>
-</table>
-
-### Contributors
+[pull request](https://help.github.com/articles/using-pull-requests)! Our
+[developer documentation](DEVELOPMENT.md) helps you get started.
 
 Kudos to our contributors!
 

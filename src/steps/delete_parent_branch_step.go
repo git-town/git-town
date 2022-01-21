@@ -1,8 +1,8 @@
 package steps
 
 import (
-	"github.com/git-town/git-town/src/drivers"
-	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/hosting"
 )
 
 // DeleteParentBranchStep removes the parent branch entry in the Git Town configuration.
@@ -13,16 +13,14 @@ type DeleteParentBranchStep struct {
 	previousParent string
 }
 
-// CreateUndoStep returns the undo step for this step.
-func (step *DeleteParentBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+func (step *DeleteParentBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
 	if step.previousParent == "" {
 		return &NoOpStep{}, nil
 	}
 	return &SetParentBranchStep{BranchName: step.BranchName, ParentBranchName: step.previousParent}, nil
 }
 
-// Run executes this step.
-func (step *DeleteParentBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
-	step.previousParent = repo.Config.GetParentBranch(step.BranchName)
+func (step *DeleteParentBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
+	step.previousParent = repo.Config.ParentBranch(step.BranchName)
 	return repo.Config.DeleteParentBranch(step.BranchName)
 }

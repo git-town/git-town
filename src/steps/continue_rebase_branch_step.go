@@ -1,8 +1,8 @@
 package steps
 
 import (
-	"github.com/git-town/git-town/src/drivers"
-	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/hosting"
 )
 
 // ContinueRebaseBranchStep finishes an ongoing rebase operation
@@ -11,18 +11,15 @@ type ContinueRebaseBranchStep struct {
 	NoOpStep
 }
 
-// CreateAbortStep returns the abort step for this step.
-func (step *ContinueRebaseBranchStep) CreateAbortStep() Step {
+func (step *ContinueRebaseBranchStep) CreateAbortStep() Step { //nolint:ireturn
 	return &AbortRebaseBranchStep{}
 }
 
-// CreateContinueStep returns the continue step for this step.
-func (step *ContinueRebaseBranchStep) CreateContinueStep() Step {
+func (step *ContinueRebaseBranchStep) CreateContinueStep() Step { //nolint:ireturn
 	return step
 }
 
-// Run executes this step.
-func (step *ContinueRebaseBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
+func (step *ContinueRebaseBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
 	hasRebaseInProgress, err := repo.Silent.HasRebaseInProgress()
 	if err != nil {
 		return err

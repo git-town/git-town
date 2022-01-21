@@ -7,14 +7,16 @@ import (
 	"strings"
 
 	"github.com/cucumber/messages-go/v10"
-	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/test/helpers"
+	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/test/helpers"
 )
 
-// GitEnvironment is the complete Git environment for a test scenario.
+// GitEnvironment is a complete Git environment for a Cucumber scenario.
 type GitEnvironment struct {
 
-	// Dir is the directory that this environment is in.
+	// Dir defines the local folder in which this GitEnvironment is stored.
+	// This folder also acts as the HOME directory for tests using this GitEnvironment.
+	// It contains the global Git configuration to use in this test.
 	Dir string
 
 	// OriginRepo is the Git repository that simulates the remote repo (on GitHub).
@@ -25,7 +27,7 @@ type GitEnvironment struct {
 	DevRepo Repo
 
 	// DevShell provides a reference to the MockingShell instance used in the DeveloperRepo.
-	DevShell *MockingShell
+	DevShell MockingShell
 
 	// CoworkerRepo is the optional Git repository that is locally checked out at the coworker machine.
 	CoworkerRepo *Repo
@@ -36,10 +38,10 @@ type GitEnvironment struct {
 
 // CloneGitEnvironment provides a GitEnvironment instance in the given directory,
 // containing a copy of the given GitEnvironment.
-func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment, error) {
-	err := CopyDirectory(original.Dir, dir)
+func CloneGitEnvironment(original GitEnvironment, dir string) (gitEnv GitEnvironment, err error) {
+	err = CopyDirectory(original.Dir, dir)
 	if err != nil {
-		return nil, fmt.Errorf("cannot clone GitEnvironment %q to folder %q: %w", original.Dir, dir, err)
+		return gitEnv, fmt.Errorf("cannot clone GitEnvironment %q to folder %q: %w", original.Dir, dir, err)
 	}
 	binDir := filepath.Join(dir, "bin")
 	originDir := filepath.Join(dir, "origin")
@@ -56,22 +58,22 @@ func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment,
 	// we have to set the "origin" remote to the copied origin repo here.
 	_, err = result.DevShell.Run("git", "remote", "remove", "origin")
 	if err != nil {
-		return nil, fmt.Errorf("cannot remove remote: %w", err)
+		return gitEnv, fmt.Errorf("cannot remove remote: %w", err)
 	}
 	err = result.DevRepo.AddRemote("origin", result.originRepoPath())
 	if err != nil {
-		return nil, fmt.Errorf("cannot set remote: %w", err)
+		return gitEnv, fmt.Errorf("cannot set remote: %w", err)
 	}
 	err = result.DevRepo.Fetch()
 	if err != nil {
-		return nil, fmt.Errorf("cannot fetch: %w", err)
+		return gitEnv, fmt.Errorf("cannot fetch: %w", err)
 	}
 	// and connect the main branches again
 	err = result.DevRepo.ConnectTrackingBranch("main")
 	if err != nil {
-		return nil, fmt.Errorf("cannot connect tracking branch: %w", err)
+		return gitEnv, fmt.Errorf("cannot connect tracking branch: %w", err)
 	}
-	return &result, err
+	return result, err
 }
 
 // NewStandardGitEnvironment provides a GitEnvironment in the given directory,
@@ -81,19 +83,19 @@ func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment,
 // Git repos cannot receive pushes of the currently checked out branch
 // because that will change files in the current workspace.
 // The tests don't use the master branch.
-func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
+func NewStandardGitEnvironment(dir string) (gitEnv GitEnvironment, err error) {
 	// create the folder
 	// create the GitEnvironment
-	gitEnv = &GitEnvironment{Dir: dir}
+	gitEnv = GitEnvironment{Dir: dir}
 	// create the origin repo
-	err = os.MkdirAll(gitEnv.originRepoPath(), 0744)
+	err = os.MkdirAll(gitEnv.originRepoPath(), 0o744)
 	if err != nil {
-		return nil, fmt.Errorf("cannot create directory %q: %w", gitEnv.originRepoPath(), err)
+		return gitEnv, fmt.Errorf("cannot create directory %q: %w", gitEnv.originRepoPath(), err)
 	}
 	// initialize the repo in the folder
 	originRepo, err := InitRepo(gitEnv.originRepoPath(), gitEnv.Dir, gitEnv.binPath())
 	if err != nil {
-		return nil, err
+		return gitEnv, err
 	}
 	err = originRepo.RunMany([][]string{
 		{"git", "commit", "--allow-empty", "-m", "Initial commit"},

@@ -1,8 +1,8 @@
 package steps
 
 import (
-	"github.com/git-town/git-town/src/drivers"
-	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/hosting"
 )
 
 // PushTagsStep pushes newly created Git tags to the remote.
@@ -10,7 +10,6 @@ type PushTagsStep struct {
 	NoOpStep
 }
 
-// Run executes this step.
-func (step *PushTagsStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
+func (step *PushTagsStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
 	return repo.Logging.PushTags()
 }

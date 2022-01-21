@@ -1,4 +1,4 @@
-// nolint: testpackage
+//nolint:testpackage
 package test
 
 import (
@@ -10,9 +10,9 @@ import (
 )
 
 func TestGitManager_CreateMemoizedEnvironment(t *testing.T) {
+	t.Parallel()
 	dir := CreateTempDir(t)
-	gm := NewGitManager(dir)
-	err := gm.CreateMemoizedEnvironment()
+	_, err := NewGitManager(dir)
 	assert.Nil(t, err, "creating memoized environment failed")
 	memoizedPath := filepath.Join(dir, "memoized")
 	_, err = os.Stat(memoizedPath)
@@ -20,9 +20,9 @@ func TestGitManager_CreateMemoizedEnvironment(t *testing.T) {
 }
 
 func TestGitManager_CreateScenarioEnvironment(t *testing.T) {
+	t.Parallel()
 	dir := CreateTempDir(t)
-	gm := NewGitManager(dir)
-	err := gm.CreateMemoizedEnvironment()
+	gm, err := NewGitManager(dir)
 	assert.Nil(t, err, "creating memoized environment failed")
 	result, err := gm.CreateScenarioEnvironment("foo")
 	assert.Nil(t, err, "cannot create scenario environment")

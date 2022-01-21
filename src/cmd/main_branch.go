@@ -3,8 +3,8 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/src/cli"
-	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/git"
 	"github.com/spf13/cobra"
 )
 
@@ -31,7 +31,7 @@ The main branch is the Git branch from which new feature branches are cut.`,
 }
 
 func printMainBranch() {
-	cli.Println(cli.PrintableMainBranch(prodRepo.Config.GetMainBranch()))
+	cli.Println(cli.PrintableMainBranch(prodRepo.Config.MainBranch()))
 }
 
 func setMainBranch(branchName string, repo *git.ProdRepo) error {

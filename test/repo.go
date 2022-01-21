@@ -6,26 +6,27 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/src/config"
-	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/run"
+	"github.com/git-town/git-town/v7/src/config"
+	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/run"
 	"github.com/stretchr/testify/assert"
 )
 
 // Repo is a Git Repo in test code.
 type Repo struct {
-	git.Runner               // the git.Runner instance to use
-	shell      *MockingShell // a reference to the MockingShell instance used here
+	git.Runner              // the git.Runner instance to use
+	shell      MockingShell // a reference to the MockingShell instance used here
 }
 
 // CreateRepo creates TestRepo instances.
 func CreateRepo(t *testing.T) Repo {
+	t.Helper()
 	dir := CreateTempDir(t)
 	workingDir := filepath.Join(dir, "repo")
-	err := os.Mkdir(workingDir, 0744)
+	err := os.Mkdir(workingDir, 0o744)
 	assert.NoError(t, err)
 	homeDir := filepath.Join(dir, "home")
-	err = os.Mkdir(homeDir, 0744)
+	err = os.Mkdir(homeDir, 0o744)
 	assert.NoError(t, err)
 	repo, err := InitRepo(workingDir, homeDir, homeDir)
 	assert.NoError(t, err)
@@ -42,7 +43,6 @@ func InitRepo(workingDir, homeDir, binDir string) (Repo, error) {
 		{"git", "init"},
 		{"git", "config", "--global", "user.name", "user"},
 		{"git", "config", "--global", "user.email", "email@example.com"},
-		{"git", "config", "--global", "core.editor", "vim"},
 	})
 	return result, err
 }
@@ -52,8 +52,8 @@ func InitRepo(workingDir, homeDir, binDir string) (Repo, error) {
 func NewRepo(workingDir, homeDir, binDir string) Repo {
 	shell := NewMockingShell(workingDir, homeDir, binDir)
 	runner := git.Runner{
-		Shell:              shell,
-		Config:             config.NewConfiguration(shell),
+		Shell:              &shell,
+		Config:             config.NewConfiguration(&shell),
 		DryRun:             &git.DryRun{},
 		IsRepoCache:        &git.BoolCache{},
 		RemoteBranchCache:  &git.StringSliceCache{},
@@ -100,6 +100,7 @@ func (repo *Repo) FilesInBranches() (result DataTable, err error) {
 // CreateTestGitTownRepo creates a GitRepo for use in tests, with a main branch and
 // initial git town configuration.
 func CreateTestGitTownRepo(t *testing.T) Repo {
+	t.Helper()
 	repo := CreateRepo(t)
 	err := repo.CreateBranch("main", "master")
 	assert.NoError(t, err)

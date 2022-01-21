@@ -32,7 +32,7 @@ Feature: git town-ship: shipping the supplied feature branch with a tracking bra
       |               | git branch -D feature              |
       |               | git checkout other-feature         |
       | other-feature | git stash pop                      |
-    And I end up on the "other-feature" branch
+    And I am now on the "other-feature" branch
     And my workspace still contains my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES            |

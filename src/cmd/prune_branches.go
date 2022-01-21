@@ -1,9 +1,10 @@
 package cmd
 
 import (
-	"github.com/git-town/git-town/src/cli"
-	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/steps"
+	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/runstate"
+	"github.com/git-town/git-town/v7/src/steps"
 	"github.com/spf13/cobra"
 )
 
@@ -21,16 +22,16 @@ var pruneBranchesCommand = &cobra.Command{
 Deletes branches whose tracking branch no longer exists from the local repository.
 This usually means the branch was shipped or killed on another machine.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config, err := getPruneBranchesConfig(prodRepo)
+		config, err := createPruneBranchesConfig(prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}
-		stepList, err := getPruneBranchesStepList(config, prodRepo)
+		stepList, err := createPruneBranchesStepList(config, prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}
-		runState := steps.NewRunState("prune-branches", stepList)
-		err = steps.Run(runState, prodRepo, nil)
+		runState := runstate.New("prune-branches", stepList)
+		err = runstate.Execute(runState, prodRepo, nil)
 		if err != nil {
 			cli.Exit(err)
 		}
@@ -47,7 +48,7 @@ This usually means the branch was shipped or killed on another machine.`,
 	},
 }
 
-func getPruneBranchesConfig(repo *git.ProdRepo) (result pruneBranchesConfig, err error) {
+func createPruneBranchesConfig(repo *git.ProdRepo) (result pruneBranchesConfig, err error) {
 	hasOrigin, err := repo.Silent.HasRemote("origin")
 	if err != nil {
 		return result, err
@@ -58,7 +59,7 @@ func getPruneBranchesConfig(repo *git.ProdRepo) (result pruneBranchesConfig, err
 			return result, err
 		}
 	}
-	result.mainBranch = repo.Config.GetMainBranch()
+	result.mainBranch = repo.Config.MainBranch()
 	result.initialBranchName, err = repo.Silent.CurrentBranch()
 	if err != nil {
 		return result, err
@@ -67,25 +68,25 @@ func getPruneBranchesConfig(repo *git.ProdRepo) (result pruneBranchesConfig, err
 	return result, err
 }
 
-func getPruneBranchesStepList(config pruneBranchesConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
+func createPruneBranchesStepList(config pruneBranchesConfig, repo *git.ProdRepo) (result runstate.StepList, err error) {
 	initialBranchName := config.initialBranchName
 	for _, branchName := range config.localBranchesWithDeletedTrackingBranches {
 		if initialBranchName == branchName {
 			result.Append(&steps.CheckoutBranchStep{BranchName: config.mainBranch})
 		}
-		parent := repo.Config.GetParentBranch(branchName)
+		parent := repo.Config.ParentBranch(branchName)
 		if parent != "" {
-			for _, child := range repo.Config.GetChildBranches(branchName) {
+			for _, child := range repo.Config.ChildBranches(branchName) {
 				result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: parent})
 			}
 			result.Append(&steps.DeleteParentBranchStep{BranchName: branchName})
 		}
 		if repo.Config.IsPerennialBranch(branchName) {
-			result.Append(&steps.RemoveFromPerennialBranches{BranchName: branchName})
+			result.Append(&steps.RemoveFromPerennialBranchesStep{BranchName: branchName})
 		}
 		result.Append(&steps.DeleteLocalBranchStep{BranchName: branchName})
 	}
-	err = result.Wrap(steps.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, repo)
+	err = result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, repo)
 	return result, err
 }
 

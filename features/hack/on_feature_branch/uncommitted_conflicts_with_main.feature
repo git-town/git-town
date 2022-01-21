@@ -40,7 +40,7 @@ Feature: git town-hack: resolving conflicts between uncommitted changes and the 
     Given I resolve the conflict in "conflicting_file"
     When I run "git-town continue" and close the editor
     Then it runs no commands
-    And I end up on the "new-feature" branch
+    And I am now on the "new-feature" branch
     And my workspace now contains the file "conflicting_file" with content "resolved content"
     And my repo now has the following commits
       | BRANCH      | LOCATION      | MESSAGE            | FILE NAME        |

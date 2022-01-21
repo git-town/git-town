@@ -3,10 +3,9 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/src/cli"
-	"github.com/git-town/git-town/src/drivers"
-	"github.com/git-town/git-town/src/steps"
-
+	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/hosting"
+	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/spf13/cobra"
 )
 
@@ -14,9 +13,9 @@ var continueCmd = &cobra.Command{
 	Use:   "continue",
 	Short: "Restarts the last run git-town command after having resolved conflicts",
 	Run: func(cmd *cobra.Command, args []string) {
-		runState, err := steps.LoadPreviousRunState(prodRepo)
+		runState, err := runstate.Load(prodRepo)
 		if err != nil {
-			cli.Exit(fmt.Errorf("cannot load previous run state: %v", err))
+			cli.Exit(fmt.Errorf("cannot load previous run state: %w", err))
 		}
 		if runState == nil || !runState.IsUnfinished() {
 			cli.Exit(fmt.Errorf("nothing to continue"))
@@ -28,7 +27,7 @@ var continueCmd = &cobra.Command{
 		if hasConflicts {
 			cli.Exit(fmt.Errorf("you must resolve the conflicts before continuing"))
 		}
-		err = steps.Run(runState, prodRepo, drivers.Load(prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction))
+		err = runstate.Execute(runState, prodRepo, hosting.NewDriver(&prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction))
 		if err != nil {
 			cli.Exit(err)
 		}

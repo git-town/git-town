@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"github.com/fatih/color"
-	"github.com/git-town/git-town/src/cli"
+	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/spf13/cobra"
 )
 
@@ -28,7 +28,7 @@ func Execute() {
 		cli.Exit(err)
 	}
 	if !IsAcceptableGitVersion(majorVersion, minorVersion) {
-		cli.Exit(errors.New("Git Town requires Git 2.7.0 or higher")) // nolint:stylecheck // proper noun
+		cli.Exit(errors.New("Git Town requires Git 2.7.0 or higher")) //nolint:stylecheck // proper noun
 	}
 	color.NoColor = false // Prevent color from auto disable
 	if err := RootCmd.Execute(); err != nil {

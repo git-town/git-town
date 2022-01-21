@@ -8,7 +8,8 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/git-town/git-town/src/run"
+	"github.com/git-town/git-town/v7/src/envvars"
+	"github.com/git-town/git-town/v7/src/run"
 	"github.com/kballard/go-shellquote"
 )
 
@@ -18,16 +19,44 @@ import (
 // - Temporarily override certain shell commands with mock implementations.
 //   Temporary mocks are only valid for the next command being run.
 type MockingShell struct {
-	workingDir     string // the directory in which this runner runs
-	homeDir        string // the directory that contains the global Git configuration
-	binDir         string // the directory that stores the mock shell command implementations, ignored if empty
-	testOrigin     string // optional content of the GIT_TOWN_REMOTE environment variable
-	hasMockCommand bool   // indicates whether the current test has mocked a command
+	workingDir string // the directory in which this runner runs
+	homeDir    string // the directory that contains the global Git configuration
+	binDir     string // the directory that stores the mock shell command implementations, ignored if empty
+	testOrigin string // optional content of the GIT_TOWN_REMOTE environment variable
+	usesBinDir bool   // indicates whether the current test has created the binDir
+	gitEditor  string // name of the binary to use as the custom editor during "git commit"
 }
 
 // NewMockingShell provides a new MockingShell instance that executes in the given directory.
-func NewMockingShell(workingDir string, homeDir string, binDir string) *MockingShell {
-	return &MockingShell{workingDir: workingDir, homeDir: homeDir, binDir: binDir}
+func NewMockingShell(workingDir string, homeDir string, binDir string) MockingShell {
+	return MockingShell{workingDir: workingDir, homeDir: homeDir, binDir: binDir}
+}
+
+// createBinDir creates the directory that contains mock shell command implementations.
+// This method is idempotent.
+func (ms *MockingShell) createBinDir() error {
+	if ms.usesBinDir {
+		// binDir already created --> nothing to do here
+		return nil
+	}
+	err := os.Mkdir(ms.binDir, 0o700)
+	if err != nil {
+		return fmt.Errorf("cannot create mock bin dir: %w", err)
+	}
+	ms.usesBinDir = true
+	return nil
+}
+
+// createMockBinary creates an executable with the given name and content in ms.binDir.
+func (ms *MockingShell) createMockBinary(name string, content string) error {
+	if err := ms.createBinDir(); err != nil {
+		return err
+	}
+	err := ioutil.WriteFile(filepath.Join(ms.binDir, name), []byte(content), 0o500)
+	if err != nil {
+		return fmt.Errorf("cannot write custom %q command: %w", name, err)
+	}
+	return nil
 }
 
 // WorkingDir provides the directory this MockingShell operates in.
@@ -37,87 +66,51 @@ func (ms *MockingShell) WorkingDir() string {
 
 // MockBrokenCommand adds a mock for the given command that returns an error.
 func (ms *MockingShell) MockBrokenCommand(name string) error {
-	// create "bin" dir
-	err := os.Mkdir(ms.binDir, 0744)
-	if err != nil {
-		return fmt.Errorf("cannot create mock bin dir: %w", err)
-	}
 	// write custom "which" command
 	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" == %q ]; then\n  echo %q\nelse\n  exit 1\nfi", name, filepath.Join(ms.binDir, name))
-	err = ioutil.WriteFile(filepath.Join(ms.binDir, "which"), []byte(content), 0500)
+	err := ms.createMockBinary("which", content)
 	if err != nil {
-		return fmt.Errorf("cannot write custom which command: %w", err)
+		return err
 	}
 	// write custom command
 	content = "#!/usr/bin/env bash\n\nexit 1"
-	err = ioutil.WriteFile(filepath.Join(ms.binDir, name), []byte(content), 0500)
-	if err != nil {
-		return fmt.Errorf("cannot write custom command: %w", err)
-	}
-	ms.hasMockCommand = true
-	return nil
+	return ms.createMockBinary(name, content)
 }
 
 // MockCommand adds a mock for the command with the given name.
 func (ms *MockingShell) MockCommand(name string) error {
-	// create "bin" dir
-	err := os.Mkdir(ms.binDir, 0744)
-	if err != nil {
-		return fmt.Errorf("cannot create mock bin dir: %w", err)
-	}
 	// write custom "which" command
 	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" == %q ]; then\n  echo %q\nelse\n  exit 1\nfi", name, filepath.Join(ms.binDir, name))
-	err = ioutil.WriteFile(filepath.Join(ms.binDir, "which"), []byte(content), 0500)
-	if err != nil {
+	if err := ms.createMockBinary("which", content); err != nil {
 		return fmt.Errorf("cannot write custom which command: %w", err)
 	}
 	// write custom command
 	content = fmt.Sprintf("#!/usr/bin/env bash\n\necho %s called with: \"$@\"\n", name)
-	err = ioutil.WriteFile(filepath.Join(ms.binDir, name), []byte(content), 0500)
-	if err != nil {
-		return fmt.Errorf("cannot write custom command: %w", err)
-	}
-	ms.hasMockCommand = true
-	return nil
+	return ms.createMockBinary(name, content)
 }
 
 // MockGit pretends that this repo has Git in the given version installed.
 func (ms *MockingShell) MockGit(version string) error {
-	// create "bin" dir
-	err := os.Mkdir(ms.binDir, 0744)
-	if err != nil {
-		return fmt.Errorf("cannot create mock bin dir %q: %w", ms.binDir, err)
-	}
-	// write custom Git command
 	if runtime.GOOS == "windows" {
+		// create Windows binary
 		content := fmt.Sprintf("echo git version %s\n", version)
-		err = ioutil.WriteFile(filepath.Join(ms.binDir, "git.cmd"), []byte(content), 0500)
-	} else {
-		content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" = \"version\" ]; then\n  echo git version %s\nfi\n", version)
-		err = ioutil.WriteFile(filepath.Join(ms.binDir, "git"), []byte(content), 0500)
+		return ms.createMockBinary("git.cmd", content)
 	}
-	if err != nil {
-		return fmt.Errorf("cannot create custom Git binary: %w", err)
-	}
-	ms.hasMockCommand = true
-	return nil
+	// create Unix binary
+	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" = \"version\" ]; then\n  echo git version %s\nfi\n", version)
+	return ms.createMockBinary("git", content)
+}
+
+// MockCommitMessage sets up this shell with an editor that enters the given commit message.
+func (ms *MockingShell) MockCommitMessage(message string) error {
+	ms.gitEditor = "git_editor"
+	return ms.createMockBinary(ms.gitEditor, fmt.Sprintf("#!/usr/bin/env bash\n\necho %q > $1", message))
 }
 
 // MockNoCommandsInstalled pretends that no commands are installed.
 func (ms *MockingShell) MockNoCommandsInstalled() error {
-	// create "bin" dir
-	err := os.Mkdir(ms.binDir, 0744)
-	if err != nil {
-		return fmt.Errorf("cannot create mock bin dir: %w", err)
-	}
-	// write custom "which" command
 	content := "#!/usr/bin/env bash\n\nexit 1\n"
-	err = ioutil.WriteFile(filepath.Join(ms.binDir, "which"), []byte(content), 0500)
-	if err != nil {
-		return fmt.Errorf("cannot write custom which command: %w", err)
-	}
-	ms.hasMockCommand = true
-	return nil
+	return ms.createMockBinary("which", content)
 }
 
 // Run runs the given command with the given arguments
@@ -169,25 +162,18 @@ func (ms *MockingShell) RunWith(opts run.Options, cmd string, args ...string) (r
 		opts.Env = os.Environ()
 	}
 	// set HOME to the given global directory so that Git puts the global configuration there.
-	for i := range opts.Env {
-		if strings.HasPrefix(opts.Env[i], "HOME=") {
-			opts.Env[i] = fmt.Sprintf("HOME=%s", ms.homeDir)
-		}
-	}
+	opts.Env = envvars.Replace(opts.Env, "HOME", ms.homeDir)
 	// add the custom origin
 	if ms.testOrigin != "" {
-		opts.Env = append(opts.Env, fmt.Sprintf("GIT_TOWN_REMOTE=%s", ms.testOrigin))
+		opts.Env = envvars.Replace(opts.Env, "GIT_TOWN_REMOTE", ms.testOrigin)
 	}
 	// add the custom bin dir to the PATH
-	if ms.hasMockCommand {
-		for i := range opts.Env {
-			if strings.HasPrefix(opts.Env[i], "PATH=") {
-				parts := strings.SplitN(opts.Env[i], "=", 2)
-				parts[1] = ms.binDir + string(os.PathListSeparator) + parts[1]
-				opts.Env[i] = strings.Join(parts, "=")
-				break
-			}
-		}
+	if ms.usesBinDir {
+		opts.Env = envvars.PrependPath(opts.Env, ms.binDir)
+	}
+	// add the custom GIT_EDITOR
+	if ms.gitEditor != "" {
+		opts.Env = envvars.Replace(opts.Env, "GIT_EDITOR", filepath.Join(ms.binDir, "git_editor"))
 	}
 	// set the working dir
 	opts.Dir = filepath.Join(ms.workingDir, opts.Dir)

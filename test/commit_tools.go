@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/cucumber/messages-go/v10"
-	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/test/helpers"
+	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/test/helpers"
 )
 
 // DefaultCommit provides a new Commit instance populated with the default values used in the absence of value specified by the test.
@@ -26,8 +26,8 @@ func FromGherkinTable(table *messages.PickleStepArgument_PickleTable) (result []
 	lastLocationName := ""
 	for _, row := range table.Rows[1:] {
 		commit := DefaultCommit()
-		for i, cell := range row.Cells {
-			columnName := columnNames[i]
+		for cellNo, cell := range row.Cells {
+			columnName := columnNames[cellNo]
 			cellValue := cell.Value
 			if columnName == "BRANCH" {
 				if cell.Value == "" {
@@ -45,7 +45,7 @@ func FromGherkinTable(table *messages.PickleStepArgument_PickleTable) (result []
 			}
 			err := commit.Set(columnName, cellValue)
 			if err != nil {
-				return result, fmt.Errorf("cannot set property %q to %q: %w", columnNames[i], cell.Value, err)
+				return result, fmt.Errorf("cannot set property %q to %q: %w", columnNames[cellNo], cell.Value, err)
 			}
 		}
 		result = append(result, commit)

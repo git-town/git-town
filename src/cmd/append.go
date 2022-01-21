@@ -3,11 +3,10 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/src/cli"
-	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/prompt"
-	"github.com/git-town/git-town/src/steps"
-
+	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/dialog"
+	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/spf13/cobra"
 )
 
@@ -34,16 +33,16 @@ and brings over all uncommitted changes to the new feature branch.
 
 See "sync" for information regarding remote upstream.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config, err := getAppendConfig(args, prodRepo)
+		config, err := createAppendConfig(args, prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}
-		stepList, err := getAppendStepList(config, prodRepo)
+		stepList, err := createAppendStepList(config, prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}
-		runState := steps.NewRunState("append", stepList)
-		err = steps.Run(runState, prodRepo, nil)
+		runState := runstate.New("append", stepList)
+		err = runstate.Execute(runState, prodRepo, nil)
 		if err != nil {
 			cli.Exit(err)
 		}
@@ -57,7 +56,7 @@ See "sync" for information regarding remote upstream.`,
 	},
 }
 
-func getAppendConfig(args []string, repo *git.ProdRepo) (result appendConfig, err error) {
+func createAppendConfig(args []string, repo *git.ProdRepo) (result appendConfig, err error) {
 	result.parentBranch, err = repo.Silent.CurrentBranch()
 	if err != nil {
 		return result, err
@@ -80,11 +79,11 @@ func getAppendConfig(args []string, repo *git.ProdRepo) (result appendConfig, er
 	if hasBranch {
 		return result, fmt.Errorf("a branch named %q already exists", result.targetBranch)
 	}
-	err = prompt.EnsureKnowsParentBranches([]string{result.parentBranch}, repo)
+	err = dialog.EnsureKnowsParentBranches([]string{result.parentBranch}, repo)
 	if err != nil {
 		return result, err
 	}
-	result.ancestorBranches = repo.Config.GetAncestorBranches(result.parentBranch)
+	result.ancestorBranches = repo.Config.AncestorBranches(result.parentBranch)
 	result.shouldNewBranchPush = repo.Config.ShouldNewBranchPush()
 	result.isOffline = repo.Config.IsOffline()
 	return result, err

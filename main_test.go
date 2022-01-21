@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/cucumber/godog"
-	"github.com/git-town/git-town/test"
+	"github.com/git-town/git-town/v7/test"
 )
 
 func FeatureContext(suite *godog.Suite) {
@@ -18,6 +18,7 @@ func FeatureContext(suite *godog.Suite) {
 	test.Steps(suite, state)
 }
 
+// nolint:paralleltest
 func TestGodog(t *testing.T) {
 	tags := ""
 	if runtime.GOOS == "windows" {

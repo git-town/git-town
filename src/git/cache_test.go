@@ -3,11 +3,12 @@ package git_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/v7/src/git"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestBoolCache(t *testing.T) {
+	t.Parallel()
 	sc := git.BoolCache{}
 	assert.False(t, sc.Initialized())
 	sc.Set(true)
@@ -16,6 +17,7 @@ func TestBoolCache(t *testing.T) {
 }
 
 func TestStringCache(t *testing.T) {
+	t.Parallel()
 	sc := git.StringCache{}
 	assert.False(t, sc.Initialized())
 	sc.Set("foo")
@@ -24,6 +26,7 @@ func TestStringCache(t *testing.T) {
 }
 
 func TestStringSliceCache(t *testing.T) {
+	t.Parallel()
 	ssc := git.StringSliceCache{}
 	assert.False(t, ssc.Initialized())
 	ssc.Set([]string{"foo"})

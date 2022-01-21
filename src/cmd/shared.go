@@ -4,10 +4,11 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/git-town/git-town/src/drivers"
-	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/prompt"
-	"github.com/git-town/git-town/src/steps"
+	"github.com/git-town/git-town/v7/src/dialog"
+	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/hosting"
+	"github.com/git-town/git-town/v7/src/runstate"
+	"github.com/git-town/git-town/v7/src/steps"
 )
 
 // These variables represent command-line flags.
@@ -28,7 +29,7 @@ var (
 const dryRunFlagDescription = "Print the commands but don't run them"
 
 func validateIsConfigured(repo *git.ProdRepo) error {
-	err := prompt.EnsureIsConfigured(repo)
+	err := dialog.EnsureIsConfigured(repo)
 	if err != nil {
 		return err
 	}
@@ -44,9 +45,9 @@ func ValidateIsRepository(repo *git.ProdRepo) error {
 	return errors.New("this is not a Git repository")
 }
 
-func getAppendStepList(config appendConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
+func createAppendStepList(config appendConfig, repo *git.ProdRepo) (result runstate.StepList, err error) {
 	for _, branchName := range append(config.ancestorBranches, config.parentBranch) {
-		steps, err := steps.GetSyncBranchSteps(branchName, true, repo)
+		steps, err := runstate.SyncBranchSteps(branchName, true, repo)
 		if err != nil {
 			return result, err
 		}
@@ -58,20 +59,20 @@ func getAppendStepList(config appendConfig, repo *git.ProdRepo) (result steps.St
 	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
 		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.targetBranch})
 	}
-	err = result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
+	err = result.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
 	return result, err
 }
 
 // handleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
-func handleUnfinishedState(repo *git.ProdRepo, driver drivers.CodeHostingDriver) (quit bool, err error) {
-	runState, err := steps.LoadPreviousRunState(repo)
+func handleUnfinishedState(repo *git.ProdRepo, driver hosting.Driver) (quit bool, err error) {
+	runState, err := runstate.Load(repo)
 	if err != nil {
 		return false, fmt.Errorf("cannot load previous run state: %w", err)
 	}
 	if runState == nil || !runState.IsUnfinished() {
 		return false, nil
 	}
-	response, err := prompt.AskHowToHandleUnfinishedRunState(
+	response, err := dialog.AskHowToHandleUnfinishedRunState(
 		runState.Command,
 		runState.UnfinishedDetails.EndBranch,
 		runState.UnfinishedDetails.EndTime,
@@ -81,10 +82,10 @@ func handleUnfinishedState(repo *git.ProdRepo, driver drivers.CodeHostingDriver)
 		return quit, err
 	}
 	switch response {
-	case prompt.ResponseTypeDiscard:
-		err = steps.DeletePreviousRunState(repo)
+	case dialog.ResponseTypeDiscard:
+		err = runstate.Delete(repo)
 		return false, err
-	case prompt.ResponseTypeContinue:
+	case dialog.ResponseTypeContinue:
 		hasConflicts, err := repo.Silent.HasConflicts()
 		if err != nil {
 			return false, err
@@ -92,13 +93,13 @@ func handleUnfinishedState(repo *git.ProdRepo, driver drivers.CodeHostingDriver)
 		if hasConflicts {
 			return false, fmt.Errorf("you must resolve the conflicts before continuing")
 		}
-		return true, steps.Run(runState, repo, driver)
-	case prompt.ResponseTypeAbort:
+		return true, runstate.Execute(runState, repo, driver)
+	case dialog.ResponseTypeAbort:
 		abortRunState := runState.CreateAbortRunState()
-		return true, steps.Run(&abortRunState, repo, driver)
-	case prompt.ResponseTypeSkip:
+		return true, runstate.Execute(&abortRunState, repo, driver)
+	case dialog.ResponseTypeSkip:
 		skipRunState := runState.CreateSkipRunState()
-		return true, steps.Run(&skipRunState, repo, driver)
+		return true, runstate.Execute(&skipRunState, repo, driver)
 	default:
 		return false, fmt.Errorf("unknown response: %s", response)
 	}

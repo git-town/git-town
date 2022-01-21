@@ -1,4 +1,4 @@
-// nolint: testpackage
+//nolint:testpackage
 package test
 
 import (
@@ -9,6 +9,7 @@ import (
 )
 
 func TestNewRepo(t *testing.T) {
+	t.Parallel()
 	dir := CreateTempDir(t)
 	workingDir := filepath.Join(dir, "working")
 	homeDir := filepath.Join(dir, "home")
@@ -20,6 +21,7 @@ func TestNewRepo(t *testing.T) {
 }
 
 func TestRepo_Clone(t *testing.T) {
+	t.Parallel()
 	origin := CreateRepo(t)
 	clonedPath := filepath.Join(origin.shell.workingDir, "cloned")
 	cloned, err := origin.Clone(clonedPath)

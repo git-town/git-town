@@ -1,8 +1,8 @@
 package steps
 
 import (
-	"github.com/git-town/git-town/src/drivers"
-	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/hosting"
 )
 
 // MergeBranchStep merges the branch with the given name into the current branch.
@@ -13,23 +13,19 @@ type MergeBranchStep struct {
 	previousSha string
 }
 
-// CreateAbortStep returns the abort step for this step.
-func (step *MergeBranchStep) CreateAbortStep() Step {
+func (step *MergeBranchStep) CreateAbortStep() Step { //nolint:ireturn
 	return &AbortMergeBranchStep{}
 }
 
-// CreateContinueStep returns the continue step for this step.
-func (step *MergeBranchStep) CreateContinueStep() Step {
+func (step *MergeBranchStep) CreateContinueStep() Step { //nolint:ireturn
 	return &ContinueMergeBranchStep{}
 }
 
-// CreateUndoStep returns the undo step for this step.
-func (step *MergeBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+func (step *MergeBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
 	return &ResetToShaStep{Hard: true, Sha: step.previousSha}, nil
 }
 
-// Run executes this step.
-func (step *MergeBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) (err error) {
+func (step *MergeBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) (err error) {
 	step.previousSha, err = repo.Silent.CurrentSha()
 	if err != nil {
 		return err

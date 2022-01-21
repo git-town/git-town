@@ -1,11 +1,12 @@
 package cmd
 
 import (
-	"github.com/git-town/git-town/src/cli"
-	"github.com/git-town/git-town/src/drivers"
-	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/prompt"
-	"github.com/git-town/git-town/src/steps"
+	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/dialog"
+	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/hosting"
+	"github.com/git-town/git-town/v7/src/runstate"
+	"github.com/git-town/git-town/v7/src/steps"
 	"github.com/spf13/cobra"
 )
 
@@ -34,20 +35,20 @@ When using SSH identities, this command needs to be configured with
 "git config git-town.code-hosting-origin-hostname <hostname>"
 where hostname matches what is in your ssh config file.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config, err := getNewPullRequestConfig(prodRepo)
+		config, err := createNewPullRequestConfig(prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}
-		driver := drivers.Load(prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction)
+		driver := hosting.NewDriver(&prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction)
 		if driver == nil {
-			cli.Exit(drivers.UnsupportedHostingError())
+			cli.Exit(hosting.UnsupportedServiceError())
 		}
-		stepList, err := getNewPullRequestStepList(config, prodRepo)
+		stepList, err := createNewPullRequestStepList(config, prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}
-		runState := steps.NewRunState("new-pull-request", stepList)
-		err = steps.Run(runState, prodRepo, driver)
+		runState := runstate.New("new-pull-request", stepList)
+		err = runstate.Execute(runState, prodRepo, driver)
 		if err != nil {
 			cli.Exit(err)
 		}
@@ -67,7 +68,7 @@ where hostname matches what is in your ssh config file.`,
 	},
 }
 
-func getNewPullRequestConfig(repo *git.ProdRepo) (result newPullRequestConfig, err error) {
+func createNewPullRequestConfig(repo *git.ProdRepo) (result newPullRequestConfig, err error) {
 	hasOrigin, err := repo.Silent.HasRemote("origin")
 	if err != nil {
 		return result, err
@@ -82,23 +83,23 @@ func getNewPullRequestConfig(repo *git.ProdRepo) (result newPullRequestConfig, e
 	if err != nil {
 		return result, err
 	}
-	err = prompt.EnsureKnowsParentBranches([]string{result.InitialBranch}, repo)
+	err = dialog.EnsureKnowsParentBranches([]string{result.InitialBranch}, repo)
 	if err != nil {
 		return result, err
 	}
-	result.BranchesToSync = append(repo.Config.GetAncestorBranches(result.InitialBranch), result.InitialBranch)
+	result.BranchesToSync = append(repo.Config.AncestorBranches(result.InitialBranch), result.InitialBranch)
 	return
 }
 
-func getNewPullRequestStepList(config newPullRequestConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
+func createNewPullRequestStepList(config newPullRequestConfig, repo *git.ProdRepo) (result runstate.StepList, err error) {
 	for _, branchName := range config.BranchesToSync {
-		steps, err := steps.GetSyncBranchSteps(branchName, true, repo)
+		steps, err := runstate.SyncBranchSteps(branchName, true, repo)
 		if err != nil {
 			return result, err
 		}
 		result.AppendList(steps)
 	}
-	err = result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
+	err = result.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
 	if err != nil {
 		return result, err
 	}
