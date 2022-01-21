@@ -59,7 +59,6 @@ the official docs for your shell.
 		case "bash":
 			_ = RootCmd.GenBashCompletion(os.Stdout)
 		case "zsh":
-			_ = RootCmd.GenZshCompletion(os.Stdout)
 			if !completionsNoDesc {
 				_ = RootCmd.GenZshCompletion(os.Stdout)
 			} else {
