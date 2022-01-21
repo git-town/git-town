@@ -38,11 +38,9 @@ go get <path>
 Update all external Go modules:
 
 <a type="make/command">
-
 ```
 make update
 ```
-
 </a>
 
 ## unit tests
