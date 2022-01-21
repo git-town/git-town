@@ -38,24 +38,34 @@ go get <path>
 Update all external Go modules:
 
 <a type="make/command">
+
 ```
 make update
 ```
+
 </a>
 
 ## unit tests
 
 Run all unit tests:
 
-<pre type="make/command">
+<a type="make/command">
+
+```
 make unit
-</pre>
+```
+
+</a>
 
 Run unit tests for packages containing changes:
 
-<pre type="make/command">
+<a type="make/command">
+
+```
 make u
-</pre>
+```
+
+</a>
 
 Run an individual unit test:
 
@@ -68,9 +78,13 @@ TestIsAcceptableGitVersion
 
 Run all end-to-end tests:
 
-<pre type="make/command">
+<a type="make/command">
+
+```
 make cuke
-</pre>
+```
+
+</a>
 
 Run individual Cucumber tests:
 
@@ -110,15 +124,23 @@ Debug a Godog Cucumber feature in [VSCode](https://code.visualstudio.com):
 
 Run all linters:
 
-<pre type="make/command">
+<a type="make/command">
+
+```
 make lint
-</pre>
+```
+
+</a>
 
 Auto-fix linter errors:
 
-<pre type="make/command">
+<a type="make/command">
+
+```
 make fix
-</pre>
+```
+
+</a>
 
 ## learn about the code and test architecture
 
