@@ -29,7 +29,7 @@ commands are compatible with most common branching models like
 straight into the main branch. See also this
 [external review](https://www.softpedia.com/get/Programming/Other-Programming-Files/Git-Town.shtml).
 
-## What others say
+## What our users say
 
 <p align="center">
 
