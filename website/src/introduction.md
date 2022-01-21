@@ -29,14 +29,9 @@ commands are compatible with most common branching models like
 straight into the main branch. See also this
 [external review](https://www.softpedia.com/get/Programming/Other-Programming-Files/Git-Town.shtml).
 
-<p align="center">
+## What others say
 
-<blockquote>
-  Supercharge your workflow with Git by relying on this surprisingly powerful
-  and quite useful plugin that provides you with a series of extra Git commands.
-  <br><br>
-  <b><a href="https://www.softpedia.com/get/Programming/Other-Programming-Files/Git-Town.shtml">Softpedia article about Git Town</a></b>
-</blockquote>
+<p align="center">
 
 <blockquote class="twitter-tweet">
   <p lang="en" dir="ltr">
@@ -77,5 +72,12 @@ straight into the main branch. See also this
   &mdash; Gregor (<a href="https://twitter.com/gr2m/status/983913843351957504?ref_src=twsrc%5Etfw">@gr2m</a>)
 </blockquote>
 </p>
+
+<blockquote>
+  Supercharge your workflow with Git by relying on this surprisingly powerful
+  and quite useful plugin that provides you with a series of extra Git commands.
+  <br><br>
+  <b><a href="https://www.softpedia.com/get/Programming/Other-Programming-Files/Git-Town.shtml">Softpedia article about Git Town</a></b>
+</blockquote>
 
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
