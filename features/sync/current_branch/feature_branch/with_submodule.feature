@@ -1,4 +1,4 @@
-Feature: git-sync: on a feature branch in a repository with a submodule
+Feature: git-sync: on a feature branch in a repository with a submodule that has uncommitted changes
 
   As a developer of a repository that uses submodules
   I want that "git sync" ignores uncommitted changes in the submodules
