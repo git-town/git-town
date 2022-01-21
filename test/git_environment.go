@@ -32,7 +32,7 @@ type GitEnvironment struct {
 	// If this value is nil, the current test setup has no remote.
 	OriginRepo *Repo
 
-	// SubmoduleRepo is the Git repository that simulates an extern repo used as a submodule.
+	// SubmoduleRepo is the Git repository that simulates an external repo used as a submodule.
 	// If this value is nil, the current test setup uses no submodules.
 	SubmoduleRepo *Repo
 
