@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "assert-no-diff": "3.0.6",
-    "text-runner": "5.0.0"
+    "text-runner": "5.0.0",
+    "textrun-make": "0.1.0"
   }
 }

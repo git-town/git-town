@@ -12,12 +12,12 @@ This page helps you get started hacking on the Git Town codebase.
      run `choco install make` if [Chocolatey](https://chocolatey.org) is
      available.
 3. automatically install Go-based tooling
-   <code textrun="verify-make-command">make setup</code>
+   <code type="make/command">make setup</code>
 4. manually install optional tooling: [dprint](https://dprint.dev),
    [Node.js](https://nodejs.org), [Yarn](https://yarnpkg.com/),
    [scc](https://github.com/boyter/scc)
-5. run the tests: <code textrun="verify-make-command">make test</code>
-6. compile the tool: <code textrun="verify-make-command">make build</code>
+5. run the tests: <code type="make/command">make test</code>
+6. compile the tool: <code type="make/command">make build</code>
 
 ## dependencies
 
@@ -37,23 +37,23 @@ go get <path>
 
 Update all external Go modules:
 
-```bash
+<pre type="make/command">
 make update
-```
+</pre>
 
 ## unit tests
 
 Run all unit tests:
 
-```bash
+<pre type="make/command">
 make unit
-```
+</pre>
 
 Run unit tests for packages containing changes:
 
-```
+<pre type="make/command">
 make u
-```
+</pre>
 
 Run an individual unit test:
 
@@ -64,10 +64,15 @@ go test src/cmd/root_test.go -v -run TestIsAcceptableGitVersion
 
 ## end-to-end tests
 
+Run all end-to-end tests:
+
+<pre type="make/command">
+make cuke
+</pre>
+
 Run individual Cucumber tests:
 
 ```bash
-make cuke                       # runs all end-to-end test
 godog [path to file/folder]     # runs the given end-to-end tests
 ```
 
@@ -103,15 +108,15 @@ Debug a Godog Cucumber feature in [VSCode](https://code.visualstudio.com):
 
 Run all linters:
 
-```bash
+<pre type="make/command">
 make lint
-```
+</pre>
 
 Auto-fix linter errors:
 
-```
+<pre type="make/command">
 make fix
-```
+</pre>
 
 ## learn about the code and test architecture
 

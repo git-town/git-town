@@ -813,6 +813,13 @@ text-runner@5.0.0:
     text-runner-core "5.0.0"
     yamljs "0.3.0"
 
+textrun-make@0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/textrun-make/-/textrun-make-0.1.0.tgz#c3d1087583b7a6a492a9144753374a29d30f9764"
+  integrity sha512-rclXSIAFCpGVjHFNamVaRywtBBALavvOSz9ruzXh7NddhfCenFI50E41Fu/fUKBTF6lXoqL1mRpShDllZfj2Qw==
+  dependencies:
+    text-runner-core "5.0.0"
+
 through@2, through@~2.3, through@~2.3.1:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
