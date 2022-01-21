@@ -35,25 +35,25 @@ straight into the main branch. See also this
 
 <blockquote class="twitter-tweet">
   <p lang="en" dir="ltr">
-    <a href="https://twitter.com/hashtag/Gittown?src=hash&amp;ref_src=twsrc%5Etfw">#Gittown</a> you sexy beast!
-    <a href="https://twitter.com/GitTown?ref_src=twsrc%5Etfw">@GitTown</a>
+    <a href="https://twitter.com/hashtag/Gittown">#Gittown</a> you sexy beast!
+    <a href="https://twitter.com/GitTown">@GitTown</a>
   </p>
-  &mdash; Elegant Development (<a href="https://twitter.com/elegant_dev/status/935643502754615297?ref_src=twsrc%5Etfw">@elegant_dev</a>)
+  &mdash; Elegant Development (<a href="https://twitter.com/elegant_dev/status/935643502754615297">@elegant_dev</a>)
 </blockquote>
 
 <blockquote class="twitter-tweet">
   <p lang="en" dir="ltr">
-    Amazing <a href="https://twitter.com/GitTown?ref_src=twsrc%5Etfw">@GitTown</a> rocks! 🚀
+    Amazing <a href="https://twitter.com/GitTown">@GitTown</a> rocks! 🚀
     <a href="https://t.co/S5ouIBx2fe">https://t.co/S5ouIBx2fe</a>
   </p>
-  &mdash; Jose Quintana (<a href="https://twitter.com/joseluis_q/status/958632011777957888?ref_src=twsrc%5Etfw">@joseluis_q</a>)
+  &mdash; Jose Quintana (<a href="https://twitter.com/joseluis_q/status/958632011777957888">@joseluis_q</a>)
 </blockquote>
 
 <blockquote class="twitter-tweet">
   <p lang="en" dir="ltr">
     All doable w/ just git, but git-town is a simpler mental-model and way less keystrokes
   </p>
-  &mdash; Ryan Nystrom (<a href="https://twitter.com/_ryannystrom/status/1155840573653356544?ref_src=twsrc%5Etfw">@_ryannystrom</a>)
+  &mdash; Ryan Nystrom (<a href="https://twitter.com/_ryannystrom/status/1155840573653356544">@_ryannystrom</a>)
 </blockquote>
 
 <blockquote class="twitter-tweet">
@@ -61,23 +61,27 @@ straight into the main branch. See also this
     I&#39;ve been using git-town along git-flow for a little while and it&#39;s been really nice
     <a href="https://t.co/E5nwHuXP1C">https://t.co/E5nwHuXP1C</a>
   </p>&mdash;
-  dan reeves 🏳️‍🌈 (<a href="https://twitter.com/dnrvs/status/885081044847915010?ref_src=twsrc%5Etfw">@dnrvs</a>)
+  dan reeves 🏳️‍🌈 (<a href="https://twitter.com/dnrvs/status/885081044847915010">@dnrvs</a>)
 </blockquote>
 
 <blockquote class="twitter-tweet">
   <p lang="en" dir="ltr">
-  Wow <a href="https://twitter.com/GitTown?ref_src=twsrc%5Etfw">@GitTown</a> looks great, type less git commands for common branch/pr workflows.
-  Similar to <a href="https://twitter.com/github?ref_src=twsrc%5Etfw">@github</a>’s “hub” but looks more powerful, and it logs the fit commands it runs under the hood.
+  Wow <a href="https://twitter.com/GitTown">@GitTown</a> looks great, type less git commands for common branch/pr workflows.
+  Similar to <a href="https://twitter.com/github">@github</a>’s “hub” but looks more powerful, and it logs the fit commands it runs under the hood.
   <a href="https://t.co/PxGs76TS5I">pic.twitter.com/PxGs76TS5I</a></p>
-  &mdash; Gregor (<a href="https://twitter.com/gr2m/status/983913843351957504?ref_src=twsrc%5Etfw">@gr2m</a>)
+  &mdash; Gregor (<a href="https://twitter.com/gr2m/status/983913843351957504">@gr2m</a>)
 </blockquote>
-</p>
 
 <blockquote>
   Supercharge your workflow with Git by relying on this surprisingly powerful
   and quite useful plugin that provides you with a series of extra Git commands.
   <br><br>
-  <b><a href="https://www.softpedia.com/get/Programming/Other-Programming-Files/Git-Town.shtml">Softpedia article about Git Town</a></b>
+  <b>
+    <a href="https://www.softpedia.com/get/Programming/Other-Programming-Files/Git-Town.shtml">
+      Softpedia article about Git Town
+    </a>
+  </b>
 </blockquote>
+</p>
 
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
