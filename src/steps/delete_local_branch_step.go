@@ -11,8 +11,7 @@ type DeleteLocalBranchStep struct {
 	NoOpStep
 	BranchName string
 	Force      bool
-
-	branchSha string
+	branchSha  string
 }
 
 func (step *DeleteLocalBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn

@@ -3,14 +3,14 @@ package git
 // BoolCache caches a boolean variable.
 // The zero value is an empty cache.
 type BoolCache struct {
-	value       bool
 	initialized bool
+	value       bool
 }
 
 // Set allows collaborators to signal when the current branch has changed.
 func (sc *BoolCache) Set(newValue bool) {
-	sc.value = newValue
 	sc.initialized = true
+	sc.value = newValue
 }
 
 // Value provides the current value.
@@ -34,14 +34,14 @@ func (sc *BoolCache) Invalidate() {
 // StringCache caches a string value.
 // The zero value is an empty cache.
 type StringCache struct {
-	value       string
 	initialized bool
+	value       string
 }
 
 // Set allows collaborators to signal when the current branch has changed.
 func (sc *StringCache) Set(newValue string) {
-	sc.value = newValue
 	sc.initialized = true
+	sc.value = newValue
 }
 
 // Value provides the current value.
@@ -65,14 +65,14 @@ func (sc *StringCache) Invalidate() {
 // StringSliceCache caches a string slice value.
 // The zero value is an empty cache.
 type StringSliceCache struct {
-	value       []string
 	initialized bool
+	value       []string
 }
 
 // Set allows collaborators to signal when the current branch has changed.
 func (ssc *StringSliceCache) Set(newValue []string) {
-	ssc.value = newValue
 	ssc.initialized = true
+	ssc.value = newValue
 }
 
 // Value provides the current value.

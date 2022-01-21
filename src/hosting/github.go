@@ -17,10 +17,10 @@ type GithubDriver struct {
 	client     *github.Client
 	config     config
 	hostname   string
+	log        logFn
 	originURL  string
 	owner      string
 	repository string
-	log        logFn
 }
 
 // NewGithubDriver provides a GitHub driver instance if the given repo configuration is for a Github repo,

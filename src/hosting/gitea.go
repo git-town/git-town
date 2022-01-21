@@ -13,13 +13,13 @@ import (
 
 // GiteaDriver provides access to the API of Gitea installations.
 type GiteaDriver struct {
-	originURL  string
-	hostname   string
 	apiToken   string
 	client     *gitea.Client
+	hostname   string
+	log        logFn
+	originURL  string
 	owner      string
 	repository string
-	log        logFn
 }
 
 // NewGiteaDriver provides a Gitea driver instance if the given repo configuration is for a Gitea repo,

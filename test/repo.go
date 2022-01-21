@@ -61,7 +61,7 @@ func NewRepo(workingDir, homeDir, binDir string) Repo {
 		RootDirCache:       &git.StringCache{},
 		CurrentBranchCache: &git.StringCache{},
 	}
-	return Repo{runner, shell}
+	return Repo{Runner: runner, shell: shell}
 }
 
 // Clone creates a clone of this Repo into the given directory.

@@ -12,15 +12,15 @@ import (
 )
 
 type killConfig struct {
+	childBranches       []string
+	hasOpenChanges      bool
+	hasTrackingBranch   bool
 	initialBranch       string
+	isOffline           bool
+	isTargetBranchLocal bool
 	previousBranch      string
 	targetBranchParent  string
 	targetBranch        string
-	childBranches       []string
-	isOffline           bool
-	isTargetBranchLocal bool
-	hasOpenChanges      bool
-	hasTrackingBranch   bool
 }
 
 var killCommand = &cobra.Command{

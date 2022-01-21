@@ -11,8 +11,7 @@ type SetParentBranchStep struct {
 	NoOpStep
 	BranchName       string
 	ParentBranchName string
-
-	previousParent string
+	previousParent   string
 }
 
 func (step *SetParentBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
