@@ -25,3 +25,26 @@ Feature: Viewing changes made by the current feature branch
     And Git Town is now aware of this branch hierarchy
       | BRANCH  | PARENT |
       | feature | main   |
+
+  Scenario: on main branch
+    Given my repo has a feature branch named "feature"
+    And I am on the "main" branch
+    When I run "git-town diff-parent"
+    Then it runs no commands
+    And it prints the error:
+      """
+      you can only diff-parent feature branches
+      """
+    And I am still on the "main" branch
+
+
+  Scenario: on perennial branch
+    Given my repo has the perennial branch "qa"
+    And I am on the "qa" branch
+    When I run "git-town diff-parent"
+    Then it runs no commands
+    And it prints the error:
+      """
+      you can only diff-parent feature branches
+      """
+    And I am still on the "qa" branch
