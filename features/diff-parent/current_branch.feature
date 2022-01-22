@@ -4,7 +4,7 @@ Feature: Viewing changes made on the current feature branch
   When working with nested feature branches
   I want to see the changes my current branch makes.
 
-  Scenario: known parent branch
+  Scenario: on a feature branch with known parent
     Given my repo has a feature branch named "feature-1"
     And my repo has a feature branch named "feature-2" as a child of "feature-1"
     And I am on the "feature-2" branch
@@ -13,7 +13,7 @@ Feature: Viewing changes made on the current feature branch
       | BRANCH    | COMMAND                       |
       | feature-2 | git diff feature-1..feature-2 |
 
-  Scenario: unknown parent branch
+  Scenario: on a feature branch with unknown parent
     Given my repo has a feature branch named "feature" with no parent
     And I am on the "feature" branch
     When I run "git-town diff-parent" and answer the prompts:
@@ -26,7 +26,7 @@ Feature: Viewing changes made on the current feature branch
       | BRANCH  | PARENT |
       | feature | main   |
 
-  Scenario: on main branch
+  Scenario: on the main branch
     Given my repo has a feature branch named "feature"
     And I am on the "main" branch
     When I run "git-town diff-parent"
@@ -38,7 +38,7 @@ Feature: Viewing changes made on the current feature branch
     And I am still on the "main" branch
 
 
-  Scenario: on perennial branch
+  Scenario: on a perennial branch
     Given my repo has the perennial branch "qa"
     And I am on the "qa" branch
     When I run "git-town diff-parent"
