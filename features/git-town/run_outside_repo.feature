@@ -1,4 +1,4 @@
-Feature: Git Town performs correctly depending on the environment
+Feature: Require running inside a Git repository
 
   To learn to use Git Town correctly
   When running commands that require a repo outside of a repo

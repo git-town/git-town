@@ -1,4 +1,4 @@
-Feature: Show correct git town usage
+Feature: Help for unknown command
 
   To learn to use Git Town correctly
   When running an unknown command
