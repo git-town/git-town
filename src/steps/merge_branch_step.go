@@ -8,8 +8,7 @@ import (
 // MergeBranchStep merges the branch with the given name into the current branch.
 type MergeBranchStep struct {
 	NoOpStep
-	BranchName string
-
+	BranchName  string
 	previousSha string
 }
 

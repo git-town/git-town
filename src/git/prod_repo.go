@@ -10,11 +10,11 @@ import (
 
 // ProdRepo is a Git Repo in production code.
 type ProdRepo struct {
-	Silent       Runner        // the Runner instance for silent Git operations
-	Logging      Runner        // the Runner instance to Git operations that show up in the output
-	LoggingShell *LoggingShell // the LoggingShell instance used
 	Config       config.Config // the git.Configuration instance for this repo
 	DryRun       *DryRun
+	Logging      Runner        // the Runner instance to Git operations that show up in the output
+	LoggingShell *LoggingShell // the LoggingShell instance used
+	Silent       Runner        // the Runner instance for silent Git operations
 }
 
 // NewProdRepo provides a Repo instance in the current working directory.

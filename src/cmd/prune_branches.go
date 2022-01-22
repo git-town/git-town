@@ -10,8 +10,8 @@ import (
 
 type pruneBranchesConfig struct {
 	initialBranchName                        string
-	mainBranch                               string
 	localBranchesWithDeletedTrackingBranches []string
+	mainBranch                               string
 }
 
 var pruneBranchesCommand = &cobra.Command{

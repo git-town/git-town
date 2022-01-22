@@ -8,8 +8,7 @@ import (
 // DeleteParentBranchStep removes the parent branch entry in the Git Town configuration.
 type DeleteParentBranchStep struct {
 	NoOpStep
-	BranchName string
-
+	BranchName     string
 	previousParent string
 }
 

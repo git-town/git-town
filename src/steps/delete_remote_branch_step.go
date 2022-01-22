@@ -10,8 +10,7 @@ type DeleteRemoteBranchStep struct {
 	NoOpStep
 	BranchName string
 	IsTracking bool
-
-	branchSha string
+	branchSha  string
 }
 
 func (step *DeleteRemoteBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn

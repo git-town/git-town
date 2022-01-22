@@ -11,8 +11,8 @@ import (
 )
 
 type newPullRequestConfig struct {
-	InitialBranch  string
 	BranchesToSync []string
+	InitialBranch  string
 }
 
 var newPullRequestCommand = &cobra.Command{

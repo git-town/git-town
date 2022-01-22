@@ -11,12 +11,12 @@ import (
 type DriverMergePullRequestStep struct {
 	NoOpStep
 	BranchName                string
-	PullRequestNumber         int64
 	CommitMessage             string
 	DefaultCommitMessage      string
 	enteredEmptyCommitMessage bool
 	mergeError                error
 	mergeSha                  string
+	PullRequestNumber         int64
 }
 
 func (step *DriverMergePullRequestStep) CreateAbortStep() Step { //nolint:ireturn

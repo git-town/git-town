@@ -1,5 +1,31 @@
 # Git Town Release Notes
 
+## 7.7.0 (2022-01-22)
+
+#### New Features
+
+- support for Apple Silicon
+  ([#1735](https://github.com/git-town/git-town/pull/1735),
+  [#1736](https://github.com/git-town/git-town/pull/1736))
+- improved CLI interface including better shell autocompletions
+  ([#1722](https://github.com/git-town/git-town/pull/1722))
+- shell-based installer for *nix systems
+  ([#1707](https://github.com/git-town/git-town/pull/1707))
+- new website ([#1684](https://github.com/git-town/git-town/pull/1684))
+- Make command shows dependency tree within the codebase
+  ([#1725](https://github.com/git-town/git-town/pull/1725))
+- Go API now has the same major version number as the binary
+  ([#1677](https://github.com/git-town/git-town/pull/1677))
+
+#### Bug Fixes
+
+- fix author not being set properly
+  ([1686](https://github.com/git-town/git-town/pull/1686))
+- filenames of assets at GitHub releases are all lowercase now
+  ([#1710](https://github.com/git-town/git-town/pull/1710))
+- option for more compatible shell autocompletion without descriptions
+  ([#1493](https://github.com/git-town/git-town/pull/1493))
+
 ## 7.6.0 (2021-11-23)
 
 #### New Features

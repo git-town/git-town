@@ -11,7 +11,6 @@ import (
 // It does not ask the user for a commit message, but chooses one automatically.
 type CommitOpenChangesStep struct {
 	NoOpStep
-
 	previousSha string
 }
 

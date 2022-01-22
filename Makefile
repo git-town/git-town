@@ -31,19 +31,20 @@ fix-md:  # auto-fixes all Markdown lint issues
 help:  # prints all available targets
 	@cat Makefile | grep '^[^ ]*:' | grep -v '.PHONY' | grep -v help | sed 's/:.*#/#/' | column -s "#" -t
 
-msi:  # compiles the MSI installer for Windows
-	rm -f git-town*.msi
-	go build -ldflags "-X github.com/git-town/git-town/src/cmd.version=v${VERSION} -X github.com/git-town/git-town/src/cmd.buildDate=${TODAY}"
-	go-msi make --msi dist/git-town_${VERSION}_windows_intel_64.msi --version ${VERSION} --src installer/templates/ --path installer/wix.json
-	@rm git-town.exe
-
 lint: lint-go lint-md  # lints all the source code
+	git diff --check
 
 lint-go:  # lints the Go files
 	golangci-lint run
 
 lint-md:   # lints the Markdown files
 	dprint check
+
+msi:  # compiles the MSI installer for Windows
+	rm -f git-town*.msi
+	go build -ldflags "-X github.com/git-town/git-town/src/cmd.version=v${VERSION} -X github.com/git-town/git-town/src/cmd.buildDate=${TODAY}"
+	go-msi make --msi dist/git-town_${VERSION}_windows_intel_64.msi --version ${VERSION} --src installer/templates/ --path installer/wix.json
+	@rm git-town.exe
 
 release-linux:   # creates a new release
 	# cross-compile the binaries
@@ -72,13 +73,13 @@ setup: setup-go setup-docs  # the setup steps necessary on developer machines
 setup-docs:  # the setup steps necessary for document tests
 	cd tools && yarn install
 
-setup-godog:  # install the godog binary
-	go install github.com/cucumber/godog/cmd/godog@v0.9.0
-
 setup-go: setup-godog
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.43.0
 	go install mvdan.cc/gofumpt@latest
 	go install github.com/KyleBanks/depth/cmd/depth@latest
+
+setup-godog:  # install the godog binary
+	go install github.com/cucumber/godog/cmd/godog@v0.9.0
 
 stats:  # shows code statistics
 	@find . -type f | grep -v './tools/node_modules' | grep -v '\./vendor/' | grep -v '\./.git/' | grep -v './website/book' | xargs scc

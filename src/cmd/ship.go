@@ -14,18 +14,18 @@ import (
 )
 
 type shipConfig struct {
-	pullRequestNumber            int64
 	branchToShip                 string
 	branchToMergeInto            string
-	initialBranch                string
-	defaultCommitMessage         string
 	canShipWithDriver            bool
+	childBranches                []string
+	defaultCommitMessage         string
 	hasOrigin                    bool
 	hasTrackingBranch            bool
-	isOffline                    bool
+	initialBranch                string
 	isShippingInitialBranch      bool
+	isOffline                    bool
+	pullRequestNumber            int64
 	shouldShipDeleteRemoteBranch bool
-	childBranches                []string
 }
 
 // optional commit message provided via the command line.

@@ -8,8 +8,7 @@ import (
 // CheckoutBranchStep checks out a new branch.
 type CheckoutBranchStep struct {
 	NoOpStep
-	BranchName string
-
+	BranchName         string
 	previousBranchName string
 }
 

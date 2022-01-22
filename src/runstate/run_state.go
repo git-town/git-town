@@ -22,9 +22,9 @@ type RunState struct {
 	Command           string
 	IsAbort           bool
 	isUndo            bool
-	UnfinishedDetails *UnfinishedRunStateDetails
 	RunStepList       StepList
 	UndoStepList      StepList
+	UnfinishedDetails *UnfinishedRunStateDetails
 }
 
 // New constructs a RunState instance with the given values.

@@ -30,7 +30,7 @@ func NewGitManager(dir string) (GitManager, error) {
 	if err != nil {
 		return GitManager{}, fmt.Errorf("cannot create memoized environment: %w", err)
 	}
-	return GitManager{dir, memoized}, nil
+	return GitManager{dir: dir, memoized: memoized}, nil
 }
 
 // CreateScenarioEnvironment provides a new GitEnvironment for the scenario with the given name.

@@ -11,13 +11,13 @@ import (
 )
 
 type renameBranchConfig struct {
-	oldBranchName              string
-	newBranchName              string
 	initialBranch              string
-	oldBranchChildren          []string
 	isInitialBranchPerennial   bool
-	oldBranchHasTrackingBranch bool
 	isOffline                  bool
+	newBranchName              string
+	oldBranchChildren          []string
+	oldBranchHasTrackingBranch bool
+	oldBranchName              string
 }
 
 var forceFlag bool

@@ -8,14 +8,14 @@ import (
 
 type askForBranchOptions struct {
 	branchNames       []string
-	prompt            string
 	defaultBranchName string
+	prompt            string
 }
 
 type askForBranchesOptions struct {
 	branchNames        []string
-	prompt             string
 	defaultBranchNames []string
+	prompt             string
 }
 
 func askForBranch(opts askForBranchOptions) (string, error) {

@@ -10,8 +10,8 @@ import (
 
 // GitlabDriver provides access to the API of GitLab installations.
 type GitlabDriver struct {
-	originURL  string
 	hostname   string
+	originURL  string
 	repository string
 }
 

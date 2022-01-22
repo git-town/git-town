@@ -15,6 +15,8 @@ Feature: invalid invocation
 
     Examples:
       | CMD                            |
+      | alias                          |
+      | alias arg1 arg2                |
       | append                         |
       | append arg1 arg2               |
       | completions arg1               |
@@ -23,7 +25,9 @@ Feature: invalid invocation
       | hack arg1 arg2                 |
       | kill arg1 arg2                 |
       | main-branch arg1 arg2          |
+      | new-branch-push-flag arg1 arg2 |
       | new-pull-request arg1          |
+      | offline arg1 arg2              |
       | perennial-branches arg1        |
       | perennial-branches update arg1 |
       | prune-branches arg1            |
