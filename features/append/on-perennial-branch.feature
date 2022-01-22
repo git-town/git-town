@@ -1,8 +1,7 @@
 Feature: Appending a branch to a perennial branch
 
-  As a developer working on a perennial branch and coming across a number of changes I want to commit independently
-  I want to be able to create a feature branch as the direct child of the perennial branch
-  So that I can review and commit the changes separately without losing access to the other changes in my feature branch.
+  To make hotfixes off perennial branches
+  I want to create feature branches as children of perennial branches.
 
 
   Background:
@@ -36,7 +35,7 @@ Feature: Appending a branch to a perennial branch
       | new-child | production |
 
 
-  Scenario: Undo
+  Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH     | COMMAND                 |

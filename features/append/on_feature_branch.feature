@@ -1,8 +1,8 @@
 Feature: Appending a feature branch to a feature branch
 
-  When working on a feature branch and having multiple changes I want to ship separately
-  I want to create a new feature branch as a child of my current feature branch
-  So that I can commit some changes into the separate branch but with the other changes I made present.
+  To ship independent changes in their own feature branches
+  When these changes depend on each other
+  I want to create new feature branches as a children of existing feature branches.
 
 
   Background:

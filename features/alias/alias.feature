@@ -1,8 +1,7 @@
 Feature: git town: alias
 
-  When using Git Town a lot
-  I want shorter aliases for Git Town commands
-  So that using Git Town is more efficient.
+  To make using Git Town more efficient when using it a lot
+  I want shorter aliases for Git Town commands.
 
   Scenario: add alias
     When I run "git-town alias true"

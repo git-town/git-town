@@ -1,8 +1,8 @@
 Feature: Appending a feature branch to the main branch
 
-  When working on the main branch
-  I want "git append" to work similar to "git hack"
-  So that Git Town behaves consistently.
+  To achieve consistent behavior in all situations
+  When on the main branch
+  I want "git append" to create a new feature branch as a child of the main branch.
 
 
   Background:
