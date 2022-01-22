@@ -112,6 +112,10 @@ To see the CLI output of the shell commands in a Cucumber test, add a tag
 Scenario: A foo walks into a bar
 ```
 
+To inspect the workspace containing the various Git repositories at any step of
+an end-to-end test, insert the step `And inspect the repo`. Cucumber will print
+the path of the workspace and wait until you hit ENTER.
+
 Debug a Godog Cucumber feature in [VSCode](https://code.visualstudio.com):
 
 - open `main_test.go`
