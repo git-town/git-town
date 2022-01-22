@@ -24,3 +24,9 @@ func TestIndent_multiLine(t *testing.T) {
 	have := cli.Indent("hello\nworld")
 	assert.Equal(t, have, "  hello\n  world")
 }
+
+func TestIndent_multipleNewlines(t *testing.T) {
+	t.Parallel()
+	have := cli.Indent("hello\n\nworld")
+	assert.Equal(t, "  hello\n\n  world", have)
+}
