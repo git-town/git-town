@@ -15,8 +15,8 @@ On a Linux machine:
 - install [hub](https://github.com/github/hub#installation)
 - install [goreleaser](https://goreleaser.com/install)
 - update `RELEASE_NOTES.md` on `master`
-- create and push a new Git Tag for the release: `git tag -a v7.5.0 -m v7.5.0`
-- `env GITHUB_TOKEN=<your Github token> VERSION=7.5.0 make release-linux`
+- create and push a new Git Tag for the release: `git tag -a v7.6.0 -m v7.6.0`
+- `env GITHUB_TOKEN=<your Github token> VERSION=7.6.0 make release-linux`
   - or omit the Github token and enter your credentials when asked
 - this opens a release in the browser
 - copy the release notes into it
@@ -29,9 +29,9 @@ On a Windows machine, in Git Bash:
 - install [wix](https://wixtoolset.org/releases)
 - optionally install
   [.NET 3.5](https://dotnet.microsoft.com/download/dotnet-framework)
-- `env VERSION=7.5.0 make msi` to create the Windows installer
+- `env VERSION=7.6.0 make msi` to create the Windows installer
 - test the created Windows installer in the `dist` directory
-- `env GITHUB_TOKEN=<your Github token> VERSION=7.5.0 make release-win`
+- `env GITHUB_TOKEN=<your Github token> VERSION=7.6.0 make release-win`
 - this opens the release in the browser
 - verify that it added the `.msi` file
 - publish the release
