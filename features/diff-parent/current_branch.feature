@@ -36,7 +36,6 @@ Feature: Viewing changes made on the current feature branch
       """
       you can only diff-parent feature branches
       """
-    And I am still on the "main" branch
 
   Scenario: on a perennial branch
     Given my repo has the perennial branch "qa"
@@ -47,4 +46,3 @@ Feature: Viewing changes made on the current feature branch
       """
       you can only diff-parent feature branches
       """
-    And I am still on the "qa" branch
