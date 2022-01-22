@@ -1,11 +1,10 @@
 @skipWindows
-Feature: git town config setup
+Feature: Entering Git Town configuration
 
-  To reliably update the Git Town configuration
-  When Git Town is already configured
-  I want to review and enter all core configuration values again.
+  To reliably configure Git Town
+  I want to review and enter all core configuration values.
 
-  Scenario: everything is already configured
+  Scenario: already configured
     Given my repo has the branches "production" and "qa"
     And the main branch is configured as "main"
     And the perennial branches are configured as "qa"
@@ -16,7 +15,7 @@ Feature: git town config setup
     Then the main branch is now configured as "main"
     And the perennial branches are now configured as "production"
 
-  Scenario: some configuration entries are missing
+  Scenario: unconfigured
     Given my repo has the branches "production" and "dev"
     And I haven't configured Git Town yet
     When I run "git-town config setup" and answer the prompts:
