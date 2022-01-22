@@ -1,15 +1,24 @@
 Feature: Ask for missing configuration
 
-  As a user having forgotten to configure Git Town
-  I want to be prompted to configure it when I use it the first time
-  So that I use a properly configured tool at all times.
+  To ensure the hack command finishes
+  When configuration information is missing
+  I want to have a chance to enter the missing configuration data.
 
   @skipWindows
   Scenario: running unconfigured
     Given I haven't configured Git Town yet
-    When I run "git-town hack foo" and answer the prompts:
+    When I run "git-town hack feature" and answer the prompts:
       | PROMPT                                     | ANSWER  |
       | Please specify the main development branch | [ENTER] |
     Then it prints the initial configuration prompt
+    And it runs the commands
+      | BRANCH  | COMMAND                    |
+      | main    | git fetch --prune --tags   |
+      |         | git rebase origin/main     |
+      |         | git branch feature main    |
+      |         | git checkout feature       |
     And the main branch is now configured as "main"
-    And my repo is now configured with no perennial branches
+    And I am now on the "feature" branch
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH  | PARENT |
+      | feature | main   |
