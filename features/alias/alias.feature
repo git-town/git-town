@@ -52,18 +52,18 @@ Feature: git town: alias
       """
     And it runs no commands
 
-  Scenario: non-boolean argument
-    When I run "git-town alias zonk"
-    Then it prints the error:
-      """
-      invalid argument "zonk". Please provide either "true" or "false"
-      """
-    And it runs no commands
-
   Scenario: too many arguments
     When I run "git-town alias true false"
     Then it prints the error:
       """
       accepts 1 arg(s), received 2
+      """
+    And it runs no commands
+
+  Scenario: non-boolean argument
+    When I run "git-town alias zonk"
+    Then it prints the error:
+      """
+      invalid argument "zonk". Please provide either "true" or "false"
       """
     And it runs no commands
