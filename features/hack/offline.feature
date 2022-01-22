@@ -27,6 +27,9 @@ Feature: git town hack: offline mode
       | BRANCH  | LOCATION      | MESSAGE     |
       | main    | local, remote | main commit |
       | feature | local         | main commit |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH  | PARENT |
+      | feature | main   |
 
   Scenario: undo
     When I run "git-town undo"
@@ -42,3 +45,4 @@ Feature: git town hack: offline mode
     And my repo now has the following commits
       | BRANCH  | LOCATION      | MESSAGE     |
       | main    | local, remote | main commit |
+    And Git Town now has no branch hierarchy information
