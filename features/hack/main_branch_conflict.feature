@@ -41,6 +41,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
     And my workspace has the uncommitted file again
     And there is no rebase in progress
     And my repo is left with my original commits
+    # And Git Town now has no branch hierarchy information TODO
 
   Scenario: continuing without resolving the conflicts
     When I run "git-town continue"
@@ -69,6 +70,9 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       |             |               | conflicting local commit  | conflicting_file |
       | new-feature | local         | conflicting remote commit | conflicting_file |
       |             |               | conflicting local commit  | conflicting_file |
+    # And Git Town is now aware of this branch hierarchy  TODO
+    #   | BRANCH      | PARENT |
+    #   | new-feature | main   |
 
   Scenario: continuing after resolving the conflicts and finishing the rebase
     Given I resolve the conflict in "conflicting_file"
@@ -88,3 +92,6 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       |             |               | conflicting local commit  | conflicting_file |
       | new-feature | local         | conflicting remote commit | conflicting_file |
       |             |               | conflicting local commit  | conflicting_file |
+    # And Git Town is now aware of this branch hierarchy  TODO
+    #   | BRANCH      | PARENT |
+    #   | new-feature | main   |
