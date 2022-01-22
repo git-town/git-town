@@ -35,10 +35,10 @@ Feature: git town hack: customize the parent branch
   Scenario: undo
     When I run "git town undo"
     Then it runs the commands
-      | BRANCH   | COMMAND                |
-      | hotfix   | git checkout production |
-      | production | git branch -D hotfix |
-      |          | git checkout main      |
+      | BRANCH     | COMMAND                 |
+      | hotfix     | git checkout production |
+      | production | git branch -D hotfix    |
+      |            | git checkout main       |
     And I am now on the "main" branch
     And my repo now has the following commits
       | BRANCH     | LOCATION      | MESSAGE           |
