@@ -11,7 +11,7 @@ Feature: Rendering Shell autocomplete definitions
       # fish completion for git-town
       """
 
-  Scenario: Bash autocompletion
+  Scenario: bash autocompletion
     Given I run "git-town completions bash"
     Then it prints:
       """
@@ -25,7 +25,7 @@ Feature: Rendering Shell autocomplete definitions
       # zsh completion for git-town
       """
 
-  Scenario: PowerShell autocompletion
+  Scenario: powershell autocompletion
     Given I run "git-town completions powershell"
     Then it prints:
       """
