@@ -32,6 +32,10 @@ type GitEnvironment struct {
 	// If this value is nil, the current test setup has no remote.
 	OriginRepo *Repo
 
+	// SubmoduleRepo is the Git repository that simulates an external repo used as a submodule.
+	// If this value is nil, the current test setup uses no submodules.
+	SubmoduleRepo *Repo
+
 	// UpstreamRepo is the optional Git repository that contains the upstream for this environment.
 	UpstreamRepo *Repo
 }
@@ -123,6 +127,26 @@ func NewStandardGitEnvironment(dir string) (gitEnv GitEnvironment, err error) {
 		return gitEnv, err
 	}
 	return gitEnv, nil
+}
+
+// AddSubmodule adds a submodule repository.
+func (env *GitEnvironment) AddSubmoduleRepo() (err error) {
+	err = os.MkdirAll(env.submoduleRepoPath(), 0o744)
+	if err != nil {
+		return fmt.Errorf("cannot create directory %q: %w", env.submoduleRepoPath(), err)
+	}
+	submoduleRepo, err := InitRepo(env.submoduleRepoPath(), env.Dir, env.binPath())
+	if err != nil {
+		return err
+	}
+	err = submoduleRepo.RunMany([][]string{
+		{"git", "commit", "--allow-empty", "-m", "Initial commit"},
+	})
+	if err != nil {
+		return fmt.Errorf("cannot initialize submodule directory at %q: %w", env.originRepoPath(), err)
+	}
+	env.SubmoduleRepo = &submoduleRepo
+	return nil
 }
 
 // AddUpstream adds an upstream repository.
@@ -321,6 +345,11 @@ func (env GitEnvironment) developerRepoPath() string {
 // originRepoPath provides the full path to the Git repository with the given name.
 func (env GitEnvironment) originRepoPath() string {
 	return filepath.Join(env.Dir, "origin")
+}
+
+// submoduleRepoPath provides the full path to the Git repository with the given name.
+func (env GitEnvironment) submoduleRepoPath() string {
+	return filepath.Join(env.Dir, "submodule")
 }
 
 // Remove deletes all files used by this GitEnvironment from disk.

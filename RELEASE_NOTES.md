@@ -7,6 +7,8 @@
 - support for Apple Silicon
   ([#1735](https://github.com/git-town/git-town/pull/1735),
   [#1736](https://github.com/git-town/git-town/pull/1736))
+- ignore changes in submodules during sync
+  ([#1744](https://github.com/git-town/git-town/pull/1744))
 - improved CLI interface including better shell autocompletions
   ([#1722](https://github.com/git-town/git-town/pull/1722))
 - shell-based installer for *nix systems

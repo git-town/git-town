@@ -55,6 +55,15 @@ func (r *Runner) AddRemote(name, value string) error {
 	return nil
 }
 
+// AddRemote adds the given Git remote to this repository.
+func (r *Runner) AddSubmodule(url string) error {
+	_, err := r.Run("git", "submodule", "add", url)
+	if err != nil {
+		return fmt.Errorf("cannot add submodule %q: %w", url, err)
+	}
+	return r.Commit("added submodule", "")
+}
+
 // Author provides the locally Git configured user.
 func (r *Runner) Author() (author string, err error) {
 	out, err := r.Run("git", "config", "user.name")
@@ -598,7 +607,7 @@ func (r *Runner) HasMergeInProgress() (result bool, err error) {
 
 // HasOpenChanges indicates whether this repo has open changes.
 func (r *Runner) HasOpenChanges() (bool, error) {
-	outcome, err := r.Run("git", "status", "--porcelain")
+	outcome, err := r.Run("git", "status", "--porcelain", "--ignore-submodules")
 	if err != nil {
 		return false, fmt.Errorf("cannot determine open changes: %w", err)
 	}
