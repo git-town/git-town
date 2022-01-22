@@ -1,8 +1,8 @@
 Feature: git town-diff-parent: errors when trying to diff a perennial branch
 
-  As a developer accidentally trying to diff a perennial branch
-  I should see an error that I cannot diff perennial branches
-  Because perennial branches cannot have parent branches
+  To learn how to use this command correctly
+  When accidentally trying to "diff-parent" on a perennial branch
+  I want to see guidance that this isn't possible.
 
 
   Scenario: result
