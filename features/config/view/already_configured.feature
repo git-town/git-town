@@ -41,10 +41,4 @@ Feature: listing the configuration
 
         qa
           qa-hotfix
-
-      Pull branch strategy:
-        rebase
-
-      New Branch Push Flag:
-        false
       """
