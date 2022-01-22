@@ -4,13 +4,10 @@ Feature: git town-hack: errors when the branch exists remotely
   When trying to create a branch with the name of an existing remote branch
   I want to see guidance.
 
-  Scenario: result
+  Scenario:
     Given my coworker has a feature branch named "existing-feature"
     And I am on the "main" branch
-    And my workspace has an uncommitted file
     When I run "git-town hack existing-feature"
-
-
     Then it runs the commands
       | BRANCH | COMMAND                  |
       | main   | git fetch --prune --tags |
@@ -18,5 +15,3 @@ Feature: git town-hack: errors when the branch exists remotely
       """
       a branch named "existing-feature" already exists
       """
-    And I am still on the "main" branch
-    And my workspace still contains my uncommitted file
