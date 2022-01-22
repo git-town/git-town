@@ -1,6 +1,6 @@
 Feature: Viewing changes made on the current feature branch
 
-  To know whether my local branch is correctly set up
+  To know whether my current branch is correctly set up
   When working with nested feature branches
   I want to see the changes my current branch makes.
 
