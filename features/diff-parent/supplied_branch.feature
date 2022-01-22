@@ -4,7 +4,7 @@ Feature: Viewing changes made on another branch
   When working with nested feature branches
   I want to see the changes that a particular feature branch makes.
 
-  Scenario: known parent
+  Scenario: feature branch with known parent
     Given my repo has a feature branch named "feature-1"
     And my repo has a feature branch named "feature-2" as a child of "feature-1"
     When I run "git-town diff-parent feature-2"
@@ -13,7 +13,7 @@ Feature: Viewing changes made on another branch
       | main   | git diff feature-1..feature-2 |
 
   @skipWindows
-  Scenario: unknown parent
+  Scenario: feature branch with unknown parent
     Given my repo has a feature branch named "feature" with no parent
     And I am on the "main" branch
     When I run "git-town diff-parent feature" and answer the prompts:
@@ -22,7 +22,6 @@ Feature: Viewing changes made on another branch
     Then it runs the commands
       | BRANCH | COMMAND                |
       | main   | git diff main..feature |
-    And I am still on the "main" branch
     And Git Town is now aware of this branch hierarchy
       | BRANCH  | PARENT |
       | feature | main   |
