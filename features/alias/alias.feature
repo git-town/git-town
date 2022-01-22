@@ -3,7 +3,7 @@ Feature: git town: alias
   To make using Git Town more efficient
   I want shorter aliases for Git Town commands.
 
-  Scenario: add alias
+  Scenario: add aliases
     When I run "git-town alias true"
     Then it runs the commands
       | COMMAND                                                            |
@@ -18,7 +18,7 @@ Feature: git town: alias
       | git config --global alias.ship "town ship"                         |
       | git config --global alias.sync "town sync"                         |
 
-  Scenario: remove alias
+  Scenario: remove aliases
     Given I run "git-town alias true"
     When I run "git-town alias false"
     Then it runs the commands
@@ -60,7 +60,7 @@ Feature: git town: alias
       """
     And it runs no commands
 
-  Scenario: non-boolean argument
+  Scenario: wrong argument
     When I run "git-town alias zonk"
     Then it prints the error:
       """
