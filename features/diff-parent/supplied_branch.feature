@@ -1,4 +1,4 @@
-Feature: git town-diff-parent: diffing a given feature branch
+Feature: Viewing changes made on another branch
 
   To know whether my global branch setup is correct
   When working with nested feature branches

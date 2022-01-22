@@ -1,4 +1,4 @@
-Feature: Viewing changes made by the current feature branch
+Feature: Viewing changes made on the current feature branch
 
   To know whether my local branch is correctly set up
   When working with nested feature branches
