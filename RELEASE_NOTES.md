@@ -4,7 +4,7 @@
 
 #### New Features
 
-- support Apple Silicon
+- support for Apple Silicon
   ([#1735](https://github.com/git-town/git-town/pull/1735),
   [#1736](https://github.com/git-town/git-town/pull/1736))
 - improved CLI interface including better shell autocompletions
