@@ -1,11 +1,8 @@
-Feature: git town-parent-diff: diffing the current feature branch
+Feature: git town parent-diff: diffing the current feature branch
 
-  As a user running parent-diff
-  With a supplied branch
-  On the main branch
-  I should see a prompt to identify a parent branch
-  So that the command can work as I expect
-
+  To function as expected
+  When the parent of the requested feature branch is unknown
+  It should ask for the parent branch.
 
   @skipWindows
   Scenario: result

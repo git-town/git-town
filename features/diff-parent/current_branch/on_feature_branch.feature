@@ -1,8 +1,8 @@
 Feature: git town parent-diff on a feature branch
 
-  To know whether my branch setup is correct
+  To know whether my local branch is correctly set up
   When working with nested feature branches
-  I want to see the changes a feature branch makes.
+  I want to see the changes my current branch makes.
 
   Scenario: known parent branch
     Given my repo has a feature branch named "feature-1"

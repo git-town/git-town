@@ -5,11 +5,9 @@ Feature: git town-diff-parent: errors if supplied branch does not exist
   I want to get a descriptive error message.
 
   Scenario:
-    Given I am on the "main" branch
     When I run "git-town diff-parent non-existing"
     Then it runs no commands
     And it prints the error:
       """
       there is no local branch named "non-existing"
       """
-    And I am still on the "main" branch

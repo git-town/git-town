@@ -1,15 +1,13 @@
-Feature: git town-diff-parent: errors when trying to diff the main branch
+Feature: git town diff-parent: errors when trying to diff the main branch
 
-  (see ../current_branch/on_main_branch.feature)
+  To learn how to use this command correctly
+  When trying to see the changes of the main branch
+  I should be given guidance that this isn't possible.
 
-
-  Scenario: result
-    Given my repo has a feature branch named "feature"
-    And I am on the "feature" branch
+  Scenario:
     When I run "git-town diff-parent main"
     Then it runs no commands
     And it prints the error:
       """
       you can only diff-parent feature branches
       """
-    And I am still on the "feature" branch

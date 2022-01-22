@@ -1,16 +1,14 @@
 Feature: git town-diff-parent: errors when trying to diff a perennial branch
 
-  (see ../current_branch/on_perennial_branch.feature)
-
+  To learn how to use this command correctly
+  When trying to see the changes of a perennial branch
+  I should be given guidance that this isn't possible.
 
   Scenario: result
-    Given my repo has a feature branch named "feature"
     And my repo has the perennial branch "qa"
-    And I am on the "feature" branch
     When I run "git-town diff-parent qa"
     Then it runs no commands
     And it prints the error:
       """
       you can only diff-parent feature branches
       """
-    And I am still on the "feature" branch
