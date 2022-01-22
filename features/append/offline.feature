@@ -1,6 +1,6 @@
 Feature: git append: offline mode
 
-  To use Git Town after I lost my internet connection
+  To keep using Git Town after I lost my internet connection
   When enabling offline mode for Git Town
   I want that it creates new branches without network activity.
 

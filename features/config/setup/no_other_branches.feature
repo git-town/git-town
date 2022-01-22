@@ -1,7 +1,7 @@
 @skipWindows
 Feature: "git town config setup" on completely empty repo
 
-  To avoid pointless configuration entries
+  To make the configuration dialog intelligent
   I don't want to be asked for perennial branches if there are no branches that could be perennial.
 
   Background:

@@ -1,8 +1,8 @@
 @skipWindows
 Feature: "git town config setup" without existing configuration and branches
 
-  To reliably configure Git Town
-  I want to be asked to enter all core configuration values.
+  To reliably configure Git Town to work as expected
+  I want to be asked about all core configuration values.
 
   Background:
     Given my repo has the feature branches "production" and "dev"

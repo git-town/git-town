@@ -1,7 +1,6 @@
 Feature: Rendering Shell autocomplete definitions
 
-  To use Git Town efficiently
-  When using the command line
+  To use Git Town efficiently on the command line
   I want to enable shell autocompletion for Git Town commands.
 
   Scenario: verifying command output plausibility for fish autocompletion
