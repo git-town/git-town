@@ -1,6 +1,6 @@
 Feature: Appending a branch to a perennial branch
 
-  To make hotfixes off perennial branches
+  To make hotfixes for perennial branches
   I want to create feature branches as children of perennial branches.
 
   Background:
