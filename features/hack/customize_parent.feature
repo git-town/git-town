@@ -2,7 +2,7 @@
 Feature: git town hack: customize the parent branch
 
   To allow hotfixes for other branches than the main branch
-  When creating a new branch
+  When creating a new feature branch
   I want to be able to customize the parent for the new branch.
 
   Scenario:
