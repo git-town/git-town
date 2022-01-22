@@ -1,6 +1,6 @@
 Feature: push branch to remote upon creation
 
-  (see ../git-town-hack/hack_push_flag.feature)
+  (see ../git-town-hack/new_branch_push_flag.feature)
 
 
   Background:
@@ -13,7 +13,7 @@ Feature: push branch to remote upon creation
     When I run "git-town append new-child"
 
 
-  Scenario: inserting a branch into the branch ancestry
+  Scenario: result
     Then it runs the commands
       | BRANCH    | COMMAND                      |
       | main      | git fetch --prune --tags     |
@@ -35,7 +35,7 @@ Feature: push branch to remote upon creation
       | new-child | main   |
 
 
-  Scenario: Undo
+  Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH    | COMMAND                    |
