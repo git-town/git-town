@@ -13,6 +13,7 @@ Feature: Viewing changes made on the current feature branch
       | BRANCH    | COMMAND                       |
       | feature-2 | git diff feature-1..feature-2 |
 
+  @skipWindows
   Scenario: on a feature branch with unknown parent
     Given my repo has a feature branch named "feature" with no parent
     And I am on the "feature" branch
