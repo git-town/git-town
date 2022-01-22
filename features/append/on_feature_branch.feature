@@ -1,4 +1,4 @@
-Feature: Appending a branch to a feature branch
+Feature: Appending a feature branch to a feature branch
 
   When working on a feature branch and having multiple changes I want to ship separately
   I want to create a new feature branch as a child of my current feature branch
