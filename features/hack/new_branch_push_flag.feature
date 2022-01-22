@@ -1,9 +1,8 @@
-Feature: git town-hack: push branch to remote upon creation
+Feature: git town hack: push branch to remote upon creation
 
-  When creating a new feature branch and having enough CI server bandwidth for an extra CI run
-  I want it to be pushed to the CI server right away
-  So that I can push and pull from the remote branch right away without having to run "git sync" first
-
+  To create fully set up branches without the need to run "git sync" first
+  When the "new-branch-push-flag" is set
+  I want that Git Town pushes the new branch to the CI server.
 
   Background:
     Given the new-branch-push-flag configuration is true
@@ -12,7 +11,6 @@ Feature: git town-hack: push branch to remote upon creation
       | main   | remote   | remote commit |
     And I am on the "main" branch
     When I run "git-town hack feature"
-
 
   Scenario: result
     Then it runs the commands
