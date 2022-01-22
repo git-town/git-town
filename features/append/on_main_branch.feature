@@ -2,8 +2,7 @@ Feature: Appending a feature branch to the main branch
 
   To achieve consistent behavior in all situations
   When on the main branch
-  I want "git append" to create a new feature branch as a child of the main branch.
-
+  I want "git append" to create a new feature branch as a child of the main branch even though "git hack" already does that already.
 
   Background:
     Given the following commits exist in my repo
@@ -12,7 +11,6 @@ Feature: Appending a feature branch to the main branch
     And I am on the "main" branch
     And my workspace has an uncommitted file
     When I run "git-town append new-child"
-
 
   Scenario: result
     Then it runs the commands
@@ -33,7 +31,6 @@ Feature: Appending a feature branch to the main branch
     And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT |
       | new-child | main   |
-
 
   Scenario: undo
     When I run "git-town undo"

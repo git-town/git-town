@@ -3,7 +3,6 @@ Feature: Appending a branch to a perennial branch
   To make hotfixes off perennial branches
   I want to create feature branches as children of perennial branches.
 
-
   Background:
     Given my repo has the perennial branches "qa" and "production"
     And the following commits exist in my repo
@@ -12,7 +11,6 @@ Feature: Appending a branch to a perennial branch
     And I am on the "production" branch
     And my workspace has an uncommitted file
     When I run "git-town append new-child"
-
 
   Scenario: result
     Then it runs the commands
@@ -33,7 +31,6 @@ Feature: Appending a branch to a perennial branch
     And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT     |
       | new-child | production |
-
 
   Scenario: undo
     When I run "git-town undo"

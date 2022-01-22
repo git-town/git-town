@@ -4,7 +4,6 @@ Feature: Appending a feature branch to a feature branch
   When these changes depend on each other
   I want to create new feature branches as a children of existing feature branches.
 
-
   Background:
     Given my repo has a feature branch named "existing-feature"
     And the following commits exist in my repo
@@ -13,7 +12,6 @@ Feature: Appending a feature branch to a feature branch
     And I am on the "existing-feature" branch
     And my workspace has an uncommitted file
     When I run "git-town append new-child"
-
 
   Scenario: result
     Then it runs the commands
@@ -39,7 +37,6 @@ Feature: Appending a feature branch to a feature branch
       | BRANCH           | PARENT           |
       | existing-feature | main             |
       | new-child        | existing-feature |
-
 
   Scenario: undo
     When I run "git-town undo"

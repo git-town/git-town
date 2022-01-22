@@ -1,12 +1,11 @@
-Feature: listing the configuration
+@skipWindows
+Feature: "git town config setup" with existing configuration
 
-  As a user running the Git Town configuration wizard,
-  I want to see the existing configuration values
-  So that I can change it more effectively
+  To reliably update the Git Town configuration
+  When Git Town is already configured
+  I want to review and enter all core configuration values again.
 
-
-  @skipWindows
-  Scenario: everything is configured
+  Background: everything is configured
     Given my repo has the feature branches "production" and "qa"
     And the main branch is configured as "main"
     And the perennial branches are configured as "qa"
@@ -14,5 +13,7 @@ Feature: listing the configuration
       | PROMPT                                     | ANSWER                      |
       | Please specify the main development branch | [ENTER]                     |
       | Please specify perennial branches          | [SPACE][DOWN][SPACE][ENTER] |
+
+  Scenario: result
     Then the main branch is now configured as "main"
     And the perennial branches are now configured as "production"

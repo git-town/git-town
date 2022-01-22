@@ -2,7 +2,6 @@ Feature: push branch to remote upon creation
 
   (see ../git-town-hack/new_branch_push_flag.feature)
 
-
   Background:
     Given the new-branch-push-flag configuration is true
     And the following commits exist in my repo
@@ -11,7 +10,6 @@ Feature: push branch to remote upon creation
     And I am on the "main" branch
     And my workspace has an uncommitted file
     When I run "git-town append new-child"
-
 
   Scenario: result
     Then it runs the commands
@@ -33,7 +31,6 @@ Feature: push branch to remote upon creation
     And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT |
       | new-child | main   |
-
 
   Scenario: undo
     When I run "git-town undo"

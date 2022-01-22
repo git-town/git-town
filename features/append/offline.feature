@@ -4,7 +4,6 @@ Feature: git append: offline mode
   When enabling offline mode for Git Town
   I want that it creates new branches without network activity.
 
-
   Background:
     Given Git Town is in offline mode
     And my repo has a feature branch named "existing-feature"
@@ -13,7 +12,6 @@ Feature: git append: offline mode
       | existing-feature | local, remote | existing feature commit |
     And I am on the "existing-feature" branch
     And my workspace has an uncommitted file
-
 
   Scenario: result
     When I run "git-town append new-feature"
@@ -34,7 +32,6 @@ Feature: git append: offline mode
       | BRANCH           | LOCATION      | MESSAGE                 |
       | existing-feature | local, remote | existing feature commit |
       | new-feature      | local         | existing feature commit |
-
 
   Scenario: undo
     Given I run "git-town append new-feature"
