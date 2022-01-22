@@ -6,8 +6,10 @@ import (
 	"sync"
 )
 
-var indentOnce sync.Once
-var identRE *regexp.Regexp
+var (
+	indentOnce sync.Once
+	identRE    *regexp.Regexp
+)
 
 // Indent outputs the given string with the given level of indentation
 // on each line. Each level of indentation is two spaces.
