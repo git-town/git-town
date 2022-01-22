@@ -37,7 +37,6 @@ Feature: Viewing changes made on the current feature branch
       """
     And I am still on the "main" branch
 
-
   Scenario: on a perennial branch
     Given my repo has the perennial branch "qa"
     And I am on the "qa" branch
