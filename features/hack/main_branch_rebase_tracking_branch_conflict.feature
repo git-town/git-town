@@ -1,9 +1,8 @@
 Feature: git town-hack: resolving conflicts between main branch and its tracking branch
 
-  As a developer creating a new feature branch while there are conflicting updates on the local and remote main branch
-  I want to be given the choice to resolve the conflicts or abort
-  So that I can finish the operation as planned or postpone it to a better time.
-
+  To finish creating a new feature branch or postpone it to a better time
+  When there are conflicting commits on the local and remote main branch
+  I want to be given the choice to resolve the conflicts or abort.
 
   Background:
     Given my repo has a feature branch named "existing-feature"
