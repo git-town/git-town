@@ -38,7 +38,13 @@ Feature: listing the configuration
           parent-feature
             child-feature
           stand-alone-feature
-
+  
         qa
           qa-hotfix
+
+      Pull branch strategy:
+        rebase
+
+      New Branch Push Flag:
+        false
       """

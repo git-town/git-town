@@ -1,11 +1,10 @@
-Feature: git town-diff-parent: errors when trying to diff the main branch
+Feature: git town diff-parent: errors when trying to diff the main branch
 
-  As a developer accidentally trying to diff the main branch
-  I should see an error that I cannot diff the main branch
-  Because the master branch cannot have a parent branch
+  To learn how to use this command correctly
+  When accidentally trying to diff the main branch with itself
+  I want to see an error message.
 
-
-  Scenario: result
+  Scenario:
     Given my repo has a feature branch named "feature"
     And I am on the "main" branch
     When I run "git-town diff-parent"
