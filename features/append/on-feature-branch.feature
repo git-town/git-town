@@ -1,8 +1,8 @@
 Feature: Appending a branch to a feature branch
 
-  As a developer working on a feature branch and coming across a number of changes I want to commit independently
-  I want to be able to create a feature branch as the direct child of my current feature branch
-  So that I can review and commit the changes separately without losing access to the other changes in my feature branch.
+  When working on a feature branch and having multiple changes I want to ship separately
+  I want to create a new feature branch as a child of my current feature branch
+  So that I can commit some changes into the separate branch but with the other changes I made present.
 
 
   Background:
@@ -12,10 +12,10 @@ Feature: Appending a branch to a feature branch
       | existing-feature | local, remote | existing_feature_commit | existing_feature_file | existing feature content |
     And I am on the "existing-feature" branch
     And my workspace has an uncommitted file
-
-
-  Scenario: inserting a branch into the branch ancestry
     When I run "git-town append new-child"
+
+
+  Scenario: result
     Then it runs the commands
       | BRANCH           | COMMAND                                     |
       | existing-feature | git fetch --prune --tags                    |
@@ -41,8 +41,7 @@ Feature: Appending a branch to a feature branch
       | new-child        | existing-feature |
 
 
-  Scenario: Undo
-    Given I run "git-town append new-child"
+  Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH           | COMMAND                       |
