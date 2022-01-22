@@ -12,7 +12,6 @@ Feature: Viewing changes made by the current feature branch
     Then it runs the commands
       | BRANCH    | COMMAND                       |
       | feature-2 | git diff feature-1..feature-2 |
-    And I am still on the "feature-2" branch
 
   Scenario: unknown parent branch
     Given my repo has a feature branch named "feature" with no parent
@@ -23,7 +22,6 @@ Feature: Viewing changes made by the current feature branch
     Then it runs the commands
       | BRANCH  | COMMAND                |
       | feature | git diff main..feature |
-    And I am still on the "feature" branch
     And Git Town is now aware of this branch hierarchy
       | BRANCH  | PARENT |
       | feature | main   |
