@@ -436,6 +436,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^my repo has a submodule$`, func() error {
+		err := state.gitEnv.AddSubmoduleRepo()
+		if err != nil {
+			return err
+		}
+		return state.gitEnv.DevRepo.AddSubmodule(state.gitEnv.SubmoduleRepo.WorkingDir())
+	})
+
 	suite.Step(`^my repo has an upstream repo$`, func() error {
 		return state.gitEnv.AddUpstream()
 	})
