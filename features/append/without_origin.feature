@@ -24,8 +24,7 @@ Feature: git town append: creating a feature branch from an existing feature bra
     And my workspace still contains my uncommitted file
     And my repo now has the following commits
       | BRANCH           | LOCATION | MESSAGE                 |
-      | main             | local    | main commit             |
-      | new-feature      | local    | main commit             |
+      | existing-feature | local    | existing_feature_commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH           | PARENT |
       | existing-feature | main   |
@@ -39,6 +38,7 @@ Feature: git town append: creating a feature branch from an existing feature bra
       |                  | git stash                      |
       |                  | git checkout existing-feature  |
       | existing-feature | git branch -d new-feature      |
+      |                  | git stash pop                  |
     And I am now on the "existing-feature" branch
     # And my repo is left with my original commits  # TODO
     And Git Town is now aware of this branch hierarchy
