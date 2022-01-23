@@ -1,6 +1,6 @@
 Feature: git town-hack: creating a feature branch from a subfolder not on the main branch
 
-  To ensure robustness
+  To ensure correct operation
   When creating a feature branch from a subfolder that doesn't exist on the main branch
   I want that Git Town changes to the root directory before changing branches.
 
