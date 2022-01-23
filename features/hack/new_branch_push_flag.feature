@@ -40,7 +40,4 @@ Feature: git town hack: push branch to remote upon creation
     And my repo now has the following commits
       | BRANCH  | LOCATION      | MESSAGE       |
       | main    | local, remote | remote commit |
-    And Git Town is now aware of this branch hierarchy
-      | BRANCH  | PARENT |
-      | feature | main   |
-    # And Git Town now has no branch hierarchy information TODO
+    And Git Town now has no branch hierarchy information
