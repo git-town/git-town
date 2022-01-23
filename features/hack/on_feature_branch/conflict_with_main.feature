@@ -42,6 +42,6 @@ Feature: git town-hack: resolving conflicts between uncommitted changes and the 
     And I am now on the "feature2" branch
     And my workspace now contains the file "conflicting_file" with content "resolved content"
     And my repo now has the following commits
-      | BRANCH      | LOCATION      | MESSAGE            | FILE NAME        |
-      | main        | local, remote | conflicting commit | conflicting_file |
+      | BRANCH   | LOCATION      | MESSAGE            | FILE NAME        |
+      | main     | local, remote | conflicting commit | conflicting_file |
       | feature2 | local         | conflicting commit | conflicting_file |

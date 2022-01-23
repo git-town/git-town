@@ -1,9 +1,8 @@
 Feature: git town-hack: starting a new feature from a subfolder on the main branch (with remote repo)
 
-  As a developer working in a subfolder on the main branch
-  I want to be able to extract my open changes into a feature branch
-  So that I can get them reviewed.
-
+  To ensure robustness
+  When working in a subfolder on the main branch
+  I want the hack command to work.
 
   Background:
     Given the following commits exist in my repo
@@ -12,7 +11,6 @@ Feature: git town-hack: starting a new feature from a subfolder on the main bran
     And I am on the "main" branch
     And my workspace has an uncommitted file
     When I run "git-town hack new-feature" in the "new_folder" folder
-
 
   Scenario: result
     Then it runs the commands
@@ -31,3 +29,6 @@ Feature: git town-hack: starting a new feature from a subfolder on the main bran
       | BRANCH      | LOCATION      | MESSAGE       |
       | main        | local, remote | folder commit |
       | new-feature | local         | folder commit |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH           | PARENT |
+      | new-feature      | main   |

@@ -1,9 +1,7 @@
 Feature: git town-hack: starting a new feature from the main branch (without remote repo)
 
-  As a developer working on a new feature on the main branch and without a remote repository
-  I want to be able to create a new up-to-date feature branch and continue my work there
-  So that my work can exist on its own branch, code reviews remain effective, and my team productive.
-
+  To review and ship independent changes separately
+  I want to create new up-to-date feature branches and bring over my work to them.
 
   Background:
     Given my repo does not have a remote origin

@@ -1,9 +1,7 @@
 Feature: git town-hack: starting a new feature from the main branch (with remote repo)
 
-  As a developer working on a new feature on the main branch
-  I want to be able to create a new up-to-date feature branch and continue my work there
-  So that my work can exist on its own branch, code reviews remain effective, and my team productive.
-
+  To review and ship independent changes separately
+  I want to create new up-to-date feature branches and bring over my work to them.
 
   Background:
     Given the following commits exist in my repo
@@ -12,7 +10,6 @@ Feature: git town-hack: starting a new feature from the main branch (with remote
     And I am on the "main" branch
     And my workspace has an uncommitted file
     When I run "git-town hack new-feature"
-
 
   Scenario: result
     Then it runs the commands
@@ -30,3 +27,18 @@ Feature: git town-hack: starting a new feature from the main branch (with remote
       | BRANCH      | LOCATION      | MESSAGE     |
       | main        | local, remote | main_commit |
       | new-feature | local         | main_commit |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH           | PARENT |
+      | new-feature      | main   |
+
+  Scenario: undo
+    When I run "git town undo"
+    Then it runs the commands
+      | BRANCH      | COMMAND                   |
+      | new-feature | git add -A                |
+      |             | git stash                 |
+      |             | git checkout main         |
+      | main        | git branch -d new-feature |
+      |             | git stash pop             |
+    And I am now on the "main" branch
+    And Git Town now has no branch hierarchy information

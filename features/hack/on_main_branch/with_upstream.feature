@@ -1,5 +1,8 @@
 Feature: git-hack: on the main branch with a upstream remote
 
+  To review and ship independent changes separately
+  I want to create new up-to-date feature branches and bring over my work to them.
+
   Background:
     Given my repo has an upstream repo
     And the following commits exist in my repo
