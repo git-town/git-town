@@ -43,4 +43,7 @@ Feature: git town-hack: starting a new feature from a subfolder on the main bran
       | main        | git branch -d new-feature |
       |             | git stash pop             |
     And I am now on the "main" branch
+    And my repo now has the following commits
+      | BRANCH      | LOCATION      | MESSAGE       |
+      | main        | local, remote | folder commit |
     And Git Town now has no branch hierarchy information
