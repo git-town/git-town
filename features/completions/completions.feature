@@ -1,27 +1,27 @@
-Feature: Rendering Shell autocomplete definitions
+Feature: shell autocompletion
 
-  Scenario: verifying command output plausibility for fish autocompletion
+  Scenario: fish autocompletion
     Given I run "git-town completions fish"
     Then it prints:
       """
       # fish completion for git-town
       """
 
-  Scenario: verifying command output plausibility for Bash autocompletion
+  Scenario: bash autocompletion
     Given I run "git-town completions bash"
     Then it prints:
       """
       # bash completion for git-town
       """
 
-  Scenario: verifying command output plausibility for zsh autocompletion
+  Scenario: zsh autocompletion
     Given I run "git-town completions zsh"
     Then it prints:
       """
       # zsh completion for git-town
       """
 
-  Scenario: verifying command output plausibility for PowerShell autocompletion
+  Scenario: powershell autocompletion
     Given I run "git-town completions powershell"
     Then it prints:
       """
