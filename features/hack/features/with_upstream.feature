@@ -40,6 +40,6 @@ Feature: on a forked repo
       |             | git stash pop             |
     And I am now on the "main" branch
     And my repo now has the following commits
-      | BRANCH      | LOCATION                | MESSAGE         |
-      | main        | local, remote, upstream | upstream commit |
+      | BRANCH | LOCATION                | MESSAGE         |
+      | main   | local, remote, upstream | upstream commit |
     And Git Town now has no branch hierarchy information

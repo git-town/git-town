@@ -25,8 +25,8 @@ Feature: on a feature branch
       | main        | local, remote | main_commit |
       | new-feature | local         | main_commit |
     And Git Town is now aware of this branch hierarchy
-      | BRANCH           | PARENT |
-      | new-feature      | main   |
+      | BRANCH      | PARENT |
+      | new-feature | main   |
 
   Scenario: undo
     When I run "git town undo"

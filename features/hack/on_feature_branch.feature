@@ -29,25 +29,25 @@ Feature: on the main branch
       | existing-feature | local         | existing feature commit |
       | new-feature      | local         | main commit             |
     And Git Town is now aware of this branch hierarchy
-      | BRANCH   | PARENT |
+      | BRANCH           | PARENT |
       | existing-feature | main   |
       | new-feature      | main   |
 
   Scenario: undo
     When I run "git town undo"
     Then it runs the commands
-      | BRANCH   | COMMAND                |
-      | new-feature | git add -A             |
-      |          | git stash              |
-      |          | git checkout main      |
-      | main     | git branch -d new-feature |
-      |          | git checkout existing-feature  |
-      | existing-feature | git stash pop          |
+      | BRANCH           | COMMAND                       |
+      | new-feature      | git add -A                    |
+      |                  | git stash                     |
+      |                  | git checkout main             |
+      | main             | git branch -d new-feature     |
+      |                  | git checkout existing-feature |
+      | existing-feature | git stash pop                 |
     And I am now on the "existing-feature" branch
     And my repo now has the following commits
       | BRANCH           | LOCATION      | MESSAGE                 |
       | main             | local, remote | main commit             |
       | existing-feature | local         | existing feature commit |
     And Git Town is now aware of this branch hierarchy
-      | BRANCH   | PARENT |
+      | BRANCH           | PARENT |
       | existing-feature | main   |
