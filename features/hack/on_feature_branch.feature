@@ -1,4 +1,4 @@
-Feature: creating a new feature off the main branch
+Feature: on the main branch
 
   Background:
     Given my repo has a feature branch named "existing-feature"

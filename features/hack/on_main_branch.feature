@@ -1,4 +1,4 @@
-Feature: git town-hack: starting a new feature from the main branch (with remote repo)
+Feature: on a feature branch
 
   Background:
     Given the following commits exist in my repo
