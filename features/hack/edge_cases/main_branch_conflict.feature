@@ -67,8 +67,8 @@ Feature: resolve conflicts between the main branch and its tracking branch
       |             |               | conflicting local commit  | conflicting_file |
 
   Scenario: continuing after resolving the conflicts and finishing the rebase
-    Given I resolve the conflict in "conflicting_file"
-    When I run "git rebase --continue" and close the editor
+    When I resolve the conflict in "conflicting_file"
+    And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
     Then it runs the commands
       | BRANCH      | COMMAND                     |
