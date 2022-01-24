@@ -1,4 +1,4 @@
-Feature: git town: show an error message when minimum Git version is not satisfied
+Feature: Enforce minimum Git version
 
   Scenario: using an unsupported Git Version
     Given my computer has Git "2.6.2" installed

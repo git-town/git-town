@@ -1,6 +1,6 @@
-Feature: Git Town performs correctly depending on the environment
+Feature: Require running inside a Git repository
 
-  Scenario Outline: Git Town commands run outside of a Git repository
+  Scenario Outline:
     Given my workspace is currently not a Git repo
     When I run "<COMMAND>"
     Then it prints the error:

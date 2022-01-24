@@ -47,9 +47,9 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
     And my uncommitted file is stashed
     And my repo still has a rebase in progress
 
-  Scenario: continuing after resolving the conflicts
-    Given I resolve the conflict in "conflicting_file"
-    When I run "git-town continue" and close the editor
+  Scenario: continuing after resolving the conflicts but not finishing the rebase
+    When I resolve the conflict in "conflicting_file"
+    And I run "git-town continue" and close the editor
     Then it runs the commands
       | BRANCH      | COMMAND                     |
       | main        | git rebase --continue       |
@@ -66,7 +66,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       | new-feature | local         | conflicting remote commit | conflicting_file |
       |             |               | conflicting local commit  | conflicting_file |
 
-  Scenario: continuing after resolving the conflicts and continuing the rebase
+  Scenario: continuing after resolving the conflicts and finishing the rebase
     Given I resolve the conflict in "conflicting_file"
     When I run "git rebase --continue" and close the editor
     And I run "git-town continue"

@@ -7,9 +7,9 @@ Feature: Prepending a branch to a feature branch
       | existing-feature | local, remote | existing_feature_commit | existing_feature_file | existing feature content |
     And I am on the "existing-feature" branch
     And my workspace has an uncommitted file
+    When I run "git-town prepend new-parent"
 
   Scenario: inserting a branch into the branch ancestry
-    When I run "git-town prepend new-parent"
     Then it runs the commands
       | BRANCH           | COMMAND                    |
       | existing-feature | git fetch --prune --tags   |
@@ -30,8 +30,7 @@ Feature: Prepending a branch to a feature branch
       | existing-feature | new-parent |
       | new-parent       | main       |
 
-  Scenario: Undo
-    Given I run "git-town prepend new-parent"
+  Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH           | COMMAND                       |

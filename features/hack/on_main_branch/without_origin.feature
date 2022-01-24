@@ -1,10 +1,10 @@
-Feature: git-hack: on the main branch with a upstream remote
+Feature: git town-hack: starting a new feature from the main branch (without remote repo)
 
   Background:
-    Given my repo has an upstream repo
+    Given my repo does not have a remote origin
     And the following commits exist in my repo
-      | BRANCH | LOCATION | MESSAGE         |
-      | main   | upstream | upstream commit |
+      | BRANCH | LOCATION | MESSAGE     |
+      | main   | local    | main_commit |
     And I am on the "main" branch
     And my workspace has an uncommitted file
     When I run "git-town hack new-feature"
@@ -12,22 +12,17 @@ Feature: git-hack: on the main branch with a upstream remote
   Scenario: result
     Then it runs the commands
       | BRANCH      | COMMAND                     |
-      | main        | git fetch --prune --tags    |
-      |             | git add -A                  |
+      | main        | git add -A                  |
       |             | git stash                   |
-      |             | git rebase origin/main      |
-      |             | git fetch upstream main     |
-      |             | git rebase upstream/main    |
-      |             | git push                    |
       |             | git branch new-feature main |
       |             | git checkout new-feature    |
       | new-feature | git stash pop               |
     And I am now on the "new-feature" branch
     And my workspace still contains my uncommitted file
     And my repo now has the following commits
-      | BRANCH      | LOCATION                | MESSAGE         |
-      | main        | local, remote, upstream | upstream commit |
-      | new-feature | local                   | upstream commit |
+      | BRANCH      | LOCATION | MESSAGE     |
+      | main        | local    | main_commit |
+      | new-feature | local    | main_commit |
 
   Scenario: undo
     When I run "git town undo"
@@ -40,6 +35,6 @@ Feature: git-hack: on the main branch with a upstream remote
       |             | git stash pop             |
     And I am now on the "main" branch
     And my repo now has the following commits
-      | BRANCH      | LOCATION                | MESSAGE         |
-      | main        | local, remote, upstream | upstream commit |
+      | BRANCH      | LOCATION | MESSAGE     |
+      | main        | local    | main_commit |
     And Git Town now has no branch hierarchy information
