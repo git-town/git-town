@@ -1,18 +1,18 @@
-Feature: Displaying the current offline status
+Feature: display the current offline status
 
-  Scenario: set to "true"
+  Scenario: default value
+    When I run "git-town offline"
+    Then it prints:
+      """
+      false
+      """
+
+  Scenario: offline mode enabled
     Given Git Town is in offline mode
     When I run "git-town offline"
     Then it prints:
       """
       true
-      """
-
-  Scenario: set to "false"
-    When I run "git-town offline"
-    Then it prints:
-      """
-      false
       """
 
   Scenario: invalid value

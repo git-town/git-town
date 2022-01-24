@@ -1,4 +1,4 @@
-Feature: set the new-branch-push-flag
+Feature: update the new-branch-push-flag setting
 
   Scenario Outline: update
     When I run "git-town new-branch-push-flag <GIVE>"
@@ -26,3 +26,16 @@ Feature: set the new-branch-push-flag
       """
       accepts at most 1 arg(s), received 2
       """
+
+  Scenario Outline: global update
+    When I run "git-town new-branch-push-flag --global <GIVE>"
+    Then the new-branch-push-flag configuration is now <WANT>
+
+    Examples:
+      | GIVE  | WANT  |
+      | true  | true  |
+      | t     | true  |
+      | 1     | true  |
+      | false | false |
+      | f     | false |
+      | 0     | false |

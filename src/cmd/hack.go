@@ -4,9 +4,9 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v7/src/cli"
-	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
+	"github.com/git-town/git-town/v7/src/userinput"
 	"github.com/spf13/cobra"
 )
 
@@ -50,11 +50,11 @@ See "sync" for information regarding remote upstream.`,
 
 func determineParentBranch(targetBranch string, repo *git.ProdRepo) (string, error) {
 	if promptForParent {
-		parentBranch, err := dialog.AskForBranchParent(targetBranch, repo.Config.MainBranch(), repo)
+		parentBranch, err := userinput.AskForBranchParent(targetBranch, repo.Config.MainBranch(), repo)
 		if err != nil {
 			return "", err
 		}
-		err = dialog.EnsureKnowsParentBranches([]string{parentBranch}, repo)
+		err = userinput.EnsureKnowsParentBranches([]string{parentBranch}, repo)
 		if err != nil {
 			return "", err
 		}
