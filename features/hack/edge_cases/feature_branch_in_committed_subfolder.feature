@@ -1,4 +1,4 @@
-Feature: running in a subfolder not on the main branch
+Feature: running inside a subfolder only on the current feature branch
 
   Background:
     Given my repo has a feature branch named "existing-feature"
