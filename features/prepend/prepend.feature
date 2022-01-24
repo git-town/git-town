@@ -1,4 +1,4 @@
-Feature: Prepending a branch to a feature branch
+Feature: Prepend a branch to a feature branch
 
   Background:
     Given my repo has a feature branch named "existing-feature"
@@ -9,7 +9,7 @@ Feature: Prepending a branch to a feature branch
     And my workspace has an uncommitted file
     When I run "git-town prepend new-parent"
 
-  Scenario: inserting a branch into the branch ancestry
+  Scenario: result
     Then it runs the commands
       | BRANCH           | COMMAND                    |
       | existing-feature | git fetch --prune --tags   |
@@ -22,7 +22,7 @@ Feature: Prepending a branch to a feature branch
       | new-parent       | git stash pop              |
     And I am now on the "new-parent" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the following commits
+    And my repo still has the following commits
       | BRANCH           | LOCATION      | MESSAGE                 |
       | existing-feature | local, remote | existing_feature_commit |
     And Git Town is now aware of this branch hierarchy
