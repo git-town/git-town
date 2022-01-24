@@ -40,11 +40,6 @@ Feature: on a forked repo
       |             | git stash pop             |
     And I am now on the "main" branch
     And my repo now has the following commits
-<<<<<<< HEAD:features/hack/on_main_branch/with_upstream.feature
-      | BRANCH      | LOCATION                | MESSAGE         |
-      | main        | local, remote, upstream | upstream commit |
-=======
       | BRANCH | LOCATION                | MESSAGE         |
       | main   | local, remote, upstream | upstream commit |
->>>>>>> main:features/hack/features/with_upstream.feature
     And Git Town now has no branch hierarchy information

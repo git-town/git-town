@@ -1,8 +1,4 @@
-<<<<<<< HEAD:features/hack/new_branch_push_flag.feature
-Feature: git town hack: push branch to remote upon creation
-=======
 Feature: auto-push the new branch
->>>>>>> main:features/hack/features/new_branch_push_flag.feature
 
   Background:
     Given the new-branch-push-flag configuration is true
@@ -38,11 +34,6 @@ Feature: auto-push the new branch
       | main    | git branch -d feature    |
     And I am now on the "main" branch
     And my repo now has the following commits
-<<<<<<< HEAD:features/hack/new_branch_push_flag.feature
-      | BRANCH  | LOCATION      | MESSAGE       |
-      | main    | local, remote | remote commit |
-=======
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, remote | remote commit |
->>>>>>> main:features/hack/features/new_branch_push_flag.feature
     And Git Town now has no branch hierarchy information
