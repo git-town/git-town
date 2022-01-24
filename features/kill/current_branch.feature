@@ -1,4 +1,4 @@
-Feature: git town-kill: killing the current feature branch with a tracking branch
+Feature: killing the current feature branch
 
   Background:
     Given my repo has the feature branches "current-feature" and "other-feature"
@@ -29,7 +29,7 @@ Feature: git town-kill: killing the current feature branch with a tracking branc
       | BRANCH        | LOCATION      | MESSAGE              |
       | other-feature | local, remote | other feature commit |
 
-  Scenario: undoing the kill
+  Scenario: undo the kill
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH          | COMMAND                                                       |
