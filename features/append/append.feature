@@ -1,4 +1,4 @@
-Feature: appending a feature branch to a feature branch
+Feature: appending a new feature branch to an existing feature branch
 
   Background:
     Given my repo has a feature branch named "existing-feature"
