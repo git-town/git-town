@@ -1,4 +1,4 @@
-Feature: git town hack: Recognize already existing branches
+Feature: don't create already existing branches
 
   Scenario: branch exists locally
     Given my repo has a feature branch named "existing"
