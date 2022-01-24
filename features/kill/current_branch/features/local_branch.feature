@@ -1,12 +1,12 @@
-Feature: git town-kill: killing the current feature branch without a tracking branch (without remote repo)
+Feature: killing a local branch
 
   Background:
-    Given my repo does not have a remote origin
-    And my repo has the local feature branches "current-feature" and "other-feature"
+    Given my repo has a feature branch named "other-feature"
+    And my repo has a local feature branch named "current-feature"
     And the following commits exist in my repo
-      | BRANCH          | LOCATION | MESSAGE                |
-      | current-feature | local    | current feature commit |
-      | other-feature   | local    | other feature commit   |
+      | BRANCH          | LOCATION      | MESSAGE                |
+      | current-feature | local         | current feature commit |
+      | other-feature   | local, remote | other feature commit   |
     And I am on the "current-feature" branch
     And my workspace has an uncommitted file
     When I run "git-town kill"
@@ -14,7 +14,8 @@ Feature: git town-kill: killing the current feature branch without a tracking br
   Scenario: result
     Then it runs the commands
       | BRANCH          | COMMAND                                |
-      | current-feature | git add -A                             |
+      | current-feature | git fetch --prune --tags               |
+      |                 | git add -A                             |
       |                 | git commit -m "WIP on current-feature" |
       |                 | git checkout main                      |
       | main            | git branch -D current-feature          |
@@ -22,11 +23,15 @@ Feature: git town-kill: killing the current feature branch without a tracking br
     And the existing branches are
       | REPOSITORY | BRANCHES            |
       | local      | main, other-feature |
+      | remote     | main, other-feature |
     And my repo now has the following commits
-      | BRANCH        | LOCATION | MESSAGE              |
-      | other-feature | local    | other feature commit |
+      | BRANCH        | LOCATION      | MESSAGE              |
+      | other-feature | local, remote | other feature commit |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | other-feature | main   |
 
-  Scenario: Undoing a kill of a local feature branch
+  Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH          | COMMAND                                                       |
@@ -38,4 +43,9 @@ Feature: git town-kill: killing the current feature branch without a tracking br
     And the existing branches are
       | REPOSITORY | BRANCHES                             |
       | local      | main, current-feature, other-feature |
+      | remote     | main, other-feature                  |
     And my repo is left with my original commits
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH          | PARENT |
+      | current-feature | main   |
+      | other-feature   | main   |

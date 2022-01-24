@@ -1,4 +1,4 @@
-Feature: git town-kill: killing a remote branch in offline mode
+Feature: cannot kill a remote branch in offline mode
 
   Background:
     Given Git Town is in offline mode
@@ -18,3 +18,4 @@ Feature: git town-kill: killing a remote branch in offline mode
       cannot delete remote branch "feature" in offline mode
       """
     And I am still on the "main" branch
+    And Git Town still has no branch hierarchy information

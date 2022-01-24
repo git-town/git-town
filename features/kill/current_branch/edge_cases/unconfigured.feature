@@ -1,4 +1,4 @@
-Feature: Ask for missing configuration
+Feature: ask for missing configuration
 
   @skipWindows
   Scenario: run unconfigured
@@ -13,3 +13,4 @@ Feature: Ask for missing configuration
       """
       you can only kill feature branches
       """
+    And Git Town still has no branch hierarchy information

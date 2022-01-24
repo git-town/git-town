@@ -1,4 +1,4 @@
-Feature: git town-kill: killing the given feature branch
+Feature: deleting another than the current branch
 
   Background:
     Given my repo has the feature branches "good-feature" and "dead-feature"
@@ -27,8 +27,11 @@ Feature: git town-kill: killing the given feature branch
       | BRANCH       | LOCATION      | MESSAGE                              | FILE NAME        |
       | main         | local, remote | conflicting with uncommitted changes | conflicting_file |
       | good-feature | local, remote | good commit                          | good_file        |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH       | PARENT |
+      | good-feature | main   |
 
-  Scenario: undoing the kill
+  Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH       | COMMAND                                             |
@@ -41,3 +44,7 @@ Feature: git town-kill: killing the given feature branch
       | local      | main, dead-feature, good-feature |
       | remote     | main, dead-feature, good-feature |
     And my repo is left with my original commits
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH       | PARENT |
+      | dead-feature | main   |
+      | good-feature | main   |

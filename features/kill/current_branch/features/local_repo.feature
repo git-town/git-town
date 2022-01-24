@@ -1,4 +1,4 @@
-Feature: git town-kill: killing the given feature branch when on it (without remote repo)
+Feature: in a local repo
 
   Background:
     Given my repo does not have a remote origin
@@ -9,7 +9,7 @@ Feature: git town-kill: killing the given feature branch when on it (without rem
       | other-feature   | local    | other feature commit   |
     And I am on the "current-feature" branch
     And my workspace has an uncommitted file
-    When I run "git-town kill current-feature"
+    When I run "git-town kill"
 
   Scenario: result
     Then it runs the commands
@@ -19,15 +19,17 @@ Feature: git town-kill: killing the given feature branch when on it (without rem
       |                 | git checkout main                      |
       | main            | git branch -D current-feature          |
     And I am now on the "main" branch
-    And my repo doesn't have any uncommitted files
     And the existing branches are
       | REPOSITORY | BRANCHES            |
       | local      | main, other-feature |
     And my repo now has the following commits
       | BRANCH        | LOCATION | MESSAGE              |
       | other-feature | local    | other feature commit |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | other-feature | main   |
 
-  Scenario: undoing the kill
+  Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH          | COMMAND                                                       |
@@ -35,8 +37,12 @@ Feature: git town-kill: killing the given feature branch when on it (without rem
       |                 | git checkout current-feature                                  |
       | current-feature | git reset {{ sha 'current feature commit' }}                  |
     And I am now on the "current-feature" branch
-    And my workspace has the uncommitted file again
+    And my workspace still contains my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES                             |
       | local      | main, current-feature, other-feature |
     And my repo is left with my original commits
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH          | PARENT |
+      | current-feature | main   |
+      | other-feature   | main   |

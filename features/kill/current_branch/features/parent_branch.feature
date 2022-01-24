@@ -1,4 +1,4 @@
-Feature: git town-kill: killing the current feature branch with child branches
+Feature: killing a branch within a branch chain
 
   Background:
     Given my repo has a feature branch named "feature-1"
@@ -37,7 +37,7 @@ Feature: git town-kill: killing the current feature branch with child branches
       | feature-1 | main      |
       | feature-3 | feature-1 |
 
-  Scenario: undoing the kill
+  Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH    | COMMAND                                           |

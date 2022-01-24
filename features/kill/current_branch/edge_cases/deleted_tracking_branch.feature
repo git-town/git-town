@@ -1,4 +1,4 @@
-Feature: git town-kill: killing the current feature branch with a tracking branch
+Feature: the branch to kill has a deleted tracking branch
 
   Background:
     Given my repo has the feature branches "current-feature" and "other-feature"
@@ -6,6 +6,7 @@ Feature: git town-kill: killing the current feature branch with a tracking branc
       | BRANCH          | LOCATION      | MESSAGE                |
       | current-feature | local, remote | current feature commit |
       | other-feature   | local, remote | other feature commit   |
+    And the "current-feature" branch gets deleted on the remote
     And I am on the "current-feature" branch
     And my workspace has an uncommitted file
     When I run "git-town kill"
@@ -14,7 +15,6 @@ Feature: git town-kill: killing the current feature branch with a tracking branc
     Then it runs the commands
       | BRANCH          | COMMAND                                |
       | current-feature | git fetch --prune --tags               |
-      |                 | git push origin :current-feature       |
       |                 | git add -A                             |
       |                 | git commit -m "WIP on current-feature" |
       |                 | git checkout main                      |
@@ -25,22 +25,24 @@ Feature: git town-kill: killing the current feature branch with a tracking branc
       | REPOSITORY | BRANCHES            |
       | local      | main, other-feature |
       | remote     | main, other-feature |
-    And my repo now has the following commits
-      | BRANCH        | LOCATION      | MESSAGE              |
-      | other-feature | local, remote | other feature commit |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | other-feature | main   |
 
-  Scenario: undoing the kill
+  Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH          | COMMAND                                                       |
       | main            | git branch current-feature {{ sha 'WIP on current-feature' }} |
       |                 | git checkout current-feature                                  |
       | current-feature | git reset {{ sha 'current feature commit' }}                  |
-      |                 | git push -u origin current-feature                            |
     And I am now on the "current-feature" branch
     And my workspace has the uncommitted file again
     And the existing branches are
       | REPOSITORY | BRANCHES                             |
       | local      | main, current-feature, other-feature |
-      | remote     | main, current-feature, other-feature |
-    And my repo is left with my original commits
+      | remote     | main, other-feature                  |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH          | PARENT |
+      | current-feature | main   |
+      | other-feature   | main   |
