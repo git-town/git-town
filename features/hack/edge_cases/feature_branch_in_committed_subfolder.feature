@@ -1,4 +1,4 @@
-Feature: inside a subfolder only on the current feature branch
+Feature: inside a committed subfolder only on the current feature branch
 
   Background:
     Given my repo has a feature branch named "existing-feature"
