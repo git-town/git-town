@@ -12,9 +12,9 @@ Feature: Entering Git Town configuration
     Then the main branch is now configured as "main"
     And the perennial branches are now configured as "production"
 
-  @debug
   Scenario: unconfigured
-    Given I haven't configured Git Town yet
+    Given my repo has the branches "dev" and "production"
+    And I haven't configured Git Town yet
     When I run "git-town config setup" and answer the prompts:
       | PROMPT                                     | ANSWER                      |
       | Please specify the main development branch | [DOWN][ENTER]               |
