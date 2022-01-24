@@ -1,4 +1,4 @@
-Feature: offline mode
+Feature: appending in offline mode
 
   Background:
     Given Git Town is in offline mode
