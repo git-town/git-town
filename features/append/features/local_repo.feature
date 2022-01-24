@@ -1,4 +1,4 @@
-Feature: appending a feature branch in a repo without an origin
+Feature: appending a feature branch in a local repo
 
   Background:
     Given my repo has a feature branch named "existing-feature"
