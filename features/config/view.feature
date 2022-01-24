@@ -1,4 +1,4 @@
-Feature: listing the configuration
+Feature: show the configuration
 
   Scenario: all configured, no nested branches
     Given the main branch is configured as "main"

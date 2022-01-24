@@ -1,4 +1,4 @@
-Feature: appending a feature branch to the main branch
+Feature: on the main branch
 
   Background:
     Given the following commits exist in my repo

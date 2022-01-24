@@ -1,4 +1,4 @@
-Feature: running in a subfolder on the main branch
+Feature: in a subfolder on the main branch
 
   Background:
     Given the following commits exist in my repo

@@ -1,4 +1,4 @@
-Feature: running in an uncommitted subfolder
+Feature: in an uncommitted subfolder
 
   Background:
     Given my repo has a feature branch named "existing-feature"

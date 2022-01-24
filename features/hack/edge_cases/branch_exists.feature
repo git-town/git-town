@@ -1,4 +1,4 @@
-Feature: don't create already existing branches
+Feature: already existing branch
 
   Scenario: branch exists locally
     Given my repo has a feature branch named "existing"

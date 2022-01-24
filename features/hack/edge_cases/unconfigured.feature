@@ -1,5 +1,5 @@
 @skipWindows
-Feature: ask for missing configuration
+Feature: missing configuration
 
   Background: running unconfigured
     Given I haven't configured Git Town yet
