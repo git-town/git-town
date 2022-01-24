@@ -1,4 +1,4 @@
-Feature: git town-kill: killing the current feature branch without a tracking branch
+Feature: killing a local branch
 
   Background:
     Given my repo has a feature branch named "other-feature"

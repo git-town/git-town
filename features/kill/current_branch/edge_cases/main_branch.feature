@@ -1,4 +1,4 @@
-Feature: git town-kill: errors when trying to kill the main branch
+Feature: cannot kill the main branch
 
   Background:
     Given my repo has a feature branch named "feature"

@@ -1,4 +1,4 @@
-Feature: git town-kill: killing the current feature branch with child branches
+Feature: killing a branch within a branch chain
 
   Background:
     Given my repo has a feature branch named "feature-1"

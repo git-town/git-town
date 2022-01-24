@@ -1,4 +1,4 @@
-Feature: git town-kill: killing the given feature branch
+Feature: deleting another than the current branch
 
   Background:
     Given my repo has the feature branches "good-feature" and "dead-feature"

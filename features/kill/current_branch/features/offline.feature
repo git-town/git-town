@@ -1,12 +1,12 @@
-Feature: git town-kill: killing the current feature branch with a deleted tracking branch
+Feature: offline mode
 
   Background:
-    Given my repo has the feature branches "current-feature" and "other-feature"
+    Given Git Town is in offline mode
+    And my repo has the feature branches "current-feature" and "other-feature"
     And the following commits exist in my repo
       | BRANCH          | LOCATION      | MESSAGE                |
       | current-feature | local, remote | current feature commit |
       | other-feature   | local, remote | other feature commit   |
-    And the "current-feature" branch gets deleted on the remote
     And I am on the "current-feature" branch
     And my workspace has an uncommitted file
     When I run "git-town kill"
@@ -14,20 +14,20 @@ Feature: git town-kill: killing the current feature branch with a deleted tracki
   Scenario: result
     Then it runs the commands
       | BRANCH          | COMMAND                                |
-      | current-feature | git fetch --prune --tags               |
-      |                 | git add -A                             |
+      | current-feature | git add -A                             |
       |                 | git commit -m "WIP on current-feature" |
       |                 | git checkout main                      |
       | main            | git branch -D current-feature          |
     And I am now on the "main" branch
     And my repo doesn't have any uncommitted files
     And the existing branches are
-      | REPOSITORY | BRANCHES            |
-      | local      | main, other-feature |
-      | remote     | main, other-feature |
+      | REPOSITORY | BRANCHES                             |
+      | local      | main, other-feature                  |
+      | remote     | main, current-feature, other-feature |
     And my repo now has the following commits
-      | BRANCH        | LOCATION      | MESSAGE              |
-      | other-feature | local, remote | other feature commit |
+      | BRANCH          | LOCATION      | MESSAGE                |
+      | current-feature | remote        | current feature commit |
+      | other-feature   | local, remote | other feature commit   |
 
   Scenario: undoing the kill
     When I run "git-town undo"
@@ -41,8 +41,5 @@ Feature: git town-kill: killing the current feature branch with a deleted tracki
     And the existing branches are
       | REPOSITORY | BRANCHES                             |
       | local      | main, current-feature, other-feature |
-      | remote     | main, other-feature                  |
-    And my repo now has the following commits
-      | BRANCH          | LOCATION      | MESSAGE                |
-      | current-feature | local         | current feature commit |
-      | other-feature   | local, remote | other feature commit   |
+      | remote     | main, current-feature, other-feature |
+    And my repo is left with my original commits

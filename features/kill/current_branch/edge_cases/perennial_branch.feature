@@ -1,4 +1,4 @@
-Feature: git town-kill: errors when trying to kill a perennial branch
+Feature: cannot kill perennial branches
 
   Background:
     Given my repo has the perennial branch "qa"
