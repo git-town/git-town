@@ -1,6 +1,6 @@
 Feature: show help screen for commands
 
-  Scenario Outline:
+  Scenario Outline: known commands
     When I run "git-town help <COMMAND>"
     Then it prints:
       """
@@ -32,3 +32,18 @@ Feature: show help screen for commands
       | ship                 |
       | sync                 |
       | version              |
+
+  Scenario Outline: Running outside of a Git repository
+    Given my workspace is currently not a Git repo
+    When I run "<COMMAND>"
+    Then it prints:
+      """
+      Usage:
+        git-town [command]
+      """
+    And it does not print "fatal: Not a Git repository"
+
+    Examples:
+      | COMMAND       |
+      | git-town      |
+      | git-town help |
