@@ -24,3 +24,6 @@ Feature: cannot kill perennial branches
       | local      | main, feature, qa |
       | remote     | main, feature, qa |
     And my repo is left with my original commits
+    And Git Town is still aware of this branch hierarchy
+      | BRANCH  | PARENT |
+      | feature | main   |

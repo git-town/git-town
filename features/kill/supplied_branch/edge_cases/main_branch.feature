@@ -23,3 +23,6 @@ Feature: cannot kill the main branch
       | local      | main, feature |
       | remote     | main, feature |
     And my repo is left with my original commits
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH  | PARENT |
+      | feature | main   |
