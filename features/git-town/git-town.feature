@@ -1,6 +1,6 @@
 Feature: show all available commands
 
-  Scenario: run without a command
+  Scenario: no command given
     When I run "git-town"
     Then it prints:
       """
