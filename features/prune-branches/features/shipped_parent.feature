@@ -1,4 +1,4 @@
-Feature: git town-prune-branches: delete branches that were shipped or removed on another machine
+Feature: a parent branch of a local branch was shipped
 
   Background:
     Given my repo has a feature branch named "feature"
