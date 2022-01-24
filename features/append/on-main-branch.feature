@@ -1,9 +1,5 @@
 Feature: Appending a branch to a feature branch
 
-  As a developer working on a feature branch and coming across a number of changes I want to commit independently
-  I want to be able to create a feature branch as the direct child of my current feature branch
-  So that I can review and commit the changes separately without losing access to the other changes in my feature branch.
-
   Background:
     Given the following commits exist in my repo
       | BRANCH | LOCATION | MESSAGE     |

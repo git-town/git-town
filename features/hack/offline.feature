@@ -1,9 +1,5 @@
 Feature: git town-hack: offline mode
 
-  When having no internet connection
-  I want that new branches are created without attempting network accesses
-  So that I don't see unnecessary errors.
-
   Background:
     Given Git Town is in offline mode
     And the following commits exist in my repo

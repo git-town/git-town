@@ -1,9 +1,5 @@
 Feature: Git checkout history is preserved when the current and previous branch don't change
 
-  As a developer running `git checkout -` after running a Git Town command
-  I want to am now on the expected previous branch
-  So that Git Town supports my productive use of the Git checkout history
-
   Scenario: kill
     Given my repo has the feature branches "previous" and "current"
     And my repo has a feature branch named "victim"

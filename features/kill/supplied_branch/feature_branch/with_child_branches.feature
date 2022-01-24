@@ -1,7 +1,5 @@
 Feature: git town-kill: killing the given branch with child branches
 
-  (see ../../current_branch/on_feature_branch/with_child_branches.feature)
-
   Background:
     Given my repo has a feature branch named "feature-1"
     And my repo has a feature branch named "feature-2" as a child of "feature-1"

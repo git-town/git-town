@@ -1,9 +1,5 @@
 Feature: git town-rename-branch: rename current branch implicitly
 
-  As a developer wishing to rename the current branch
-  I should be able reference the current branch implicitly
-  So that I can perform my rename quickly.
-
   Background:
     Given my repo has a feature branch named "feature"
     And my repo has the perennial branch "production"

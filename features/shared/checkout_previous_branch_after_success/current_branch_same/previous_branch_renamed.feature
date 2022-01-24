@@ -1,7 +1,5 @@
 Feature: renaming the previous branch makes the main branch the new previous branch
 
-  (see ./previous_branch_same.feature)
-
   Scenario: rename-branch
     Given my repo has the feature branches "previous" and "current"
     And I am on the "current" branch with "previous" as the previous Git branch

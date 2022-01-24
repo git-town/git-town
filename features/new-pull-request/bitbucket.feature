@@ -1,9 +1,5 @@
 Feature: git-new-pull-request when origin is on Bitbucket
 
-  As a developer having finished a feature in a repository hosted on Bitbucket
-  I want to be able to quickly create a pull request
-  So that I have more time for coding the next feature instead of wasting it with process boilerplate.
-
   @skipWindows
   Scenario Outline: normal origin
     Given my repo has a feature branch named "feature"

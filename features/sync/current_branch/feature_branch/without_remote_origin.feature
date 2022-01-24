@@ -1,7 +1,5 @@
 Feature: git-town sync: syncing the current feature branch (without a tracking branch or remote repo)
 
-  (see ./with_a_tracking_branch.feature)
-
   Background:
     Given my repo does not have a remote origin
     And my repo has a local feature branch named "feature"

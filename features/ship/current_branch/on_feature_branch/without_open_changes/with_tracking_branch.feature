@@ -1,9 +1,5 @@
 Feature: git town-ship: shipping the current feature branch with a tracking branch
 
-  As a developer having finished a feature
-  I want to be able to ship it safely in one easy step
-  So that I can quickly move on to the next feature and remain productive.
-
   Background:
     Given my repo has a feature branch named "feature"
     And the following commits exist in my repo

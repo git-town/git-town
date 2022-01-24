@@ -1,9 +1,5 @@
 Feature: git-town sync: syncing the main branch (without remote repo)
 
-  As a developer syncing the main branch and without a remote repository
-  I want to be able update my ongoing work to include the latest finished features from the rest of the team
-  So that our collaboration remains effective.
-
   Background:
     Given my repo does not have a remote origin
     And I am on the "main" branch

@@ -1,9 +1,5 @@
 Feature: git town-hack: prompt for parent branch
 
-  As a developer working on a new feature that should be based off another branch
-  I want to be able to create a new up-to-date branch without checking out the parent
-  So that I have a unified way for creating new branches
-
   @skipWindows
   Scenario: selecting the default branch (the main development branch)
     Given the following commits exist in my repo

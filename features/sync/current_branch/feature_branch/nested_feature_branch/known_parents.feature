@@ -1,9 +1,5 @@
 Feature: git-town sync: syncing a nested feature branch (with known parent branches)
 
-  As a developer developing a feature branch that was cut from another feature branch
-  I want my branch to be synced off the updated parent branch
-  So that I get correct updates when I sync my feature branch.
-
   Scenario:
     Given my repo has a feature branch named "parent-feature"
     And my repo has a feature branch named "child-feature" as a child of "parent-feature"

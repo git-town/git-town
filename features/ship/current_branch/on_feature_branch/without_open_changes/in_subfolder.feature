@@ -1,9 +1,5 @@
 Feature: git town-ship: shipping the current feature branch from a subfolder
 
-  As a developer shipping a feature branch from a subfolder
-  I want the command to finish properly
-  So that my repo is left in a consistent state and I don't lose any data
-
   Background:
     Given my repo has a feature branch named "feature"
     And the following commits exist in my repo

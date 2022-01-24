@@ -1,9 +1,5 @@
 Feature: git town-ship: trying the ship of the current feature branch without editing the default commit message
 
-  As a developer shipping a branch
-  I want the ship to abort if I don't edit the default commit message
-  So that I don't have ugly commits merged into my main branch
-
   Background:
     Given my repo has a feature branch named "feature"
     And the following commits exist in my repo

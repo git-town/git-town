@@ -1,9 +1,5 @@
 Feature: listing the configuration
 
-  As a user unsure about how Git Town is currently configured
-  I want to be able to see the complete Git Town configuration with one command
-  So that I can configure Git Town efficiently and have more time for actual work.
-
   Scenario: everything is configured
     Given the main branch is configured as "main"
     And the perennial branches are configured as "qa" and "staging"

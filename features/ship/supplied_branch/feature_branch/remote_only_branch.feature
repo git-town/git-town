@@ -1,10 +1,6 @@
 @skipWindows
 Feature: git town-ship: shipping the supplied feature branch with a tracking branch
 
-  As a developer having finished a feature on another machine
-  I want to be able to ship it without explicity fetching
-  So that I can quickly move on to the next feature and remain productive.
-
   Background:
     Given my repo has a feature branch named "other-feature"
     And my origin has a feature branch named "feature"

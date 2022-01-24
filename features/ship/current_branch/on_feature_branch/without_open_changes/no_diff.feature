@@ -1,9 +1,5 @@
 Feature: git town-ship: errors when trying to ship the current feature branch that has no differences with the main branch
 
-  As a developer shipping a branch that has no differences with the main branch
-  I should see an error telling me about this
-  So that I can investigate this issue, and my users always see meaningful progress.
-
   Background:
     Given my repo has a feature branch named "empty-feature"
     And the following commits exist in my repo

@@ -1,9 +1,5 @@
 Feature: git town-kill: killing the current feature branch with child branches
 
-  As a user killing the current feature branch that has child branches
-  I want that the current branch is cleanly removed from the branch hierarchy metadata
-  So that killing branches is robust and reliable.
-
   Background:
     Given my repo has a feature branch named "feature-1"
     And my repo has a feature branch named "feature-2" as a child of "feature-1"

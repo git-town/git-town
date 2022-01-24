@@ -1,9 +1,5 @@
 Feature: git-town sync: syncing inside a folder that doesn't exist on the main branch
 
-  As a developer syncing inside a committed folder that doesn't exist on the main branch
-  I want the command to finish properly
-  So that my repo is left in a consistent state and I don't lose any data
-
   Background:
     Given my repo has the feature branches "current-feature" and "other-feature"
     And the following commits exist in my repo

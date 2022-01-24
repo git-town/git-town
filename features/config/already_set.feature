@@ -1,9 +1,5 @@
 Feature: listing the configuration
 
-  As a user running the Git Town configuration wizard,
-  I want to see the existing configuration values
-  So that I can change it more effectively
-
   @skipWindows
   Scenario: everything is configured
     Given my repo has the feature branches "production" and "qa"

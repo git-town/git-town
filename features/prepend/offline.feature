@@ -1,9 +1,5 @@
 Feature: git prepend: offline mode
 
-  When having no internet connection
-  I want that new branches are created without attempting network accesses
-  So that I don't see unnecessary errors.
-
   Background:
     Given Git Town is in offline mode
     And my repo has a feature branch named "existing-feature"

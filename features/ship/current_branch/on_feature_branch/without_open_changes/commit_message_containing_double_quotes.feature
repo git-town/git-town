@@ -1,9 +1,5 @@
 Feature: git town-ship: shipping the current feature branch
 
-  As a developer entering a commit message that contains a double quote
-  I want it to still work as expected
-  So shipping is a robust process.
-
   Background:
     Given my repo has a feature branch named "feature"
     And the following commits exist in my repo

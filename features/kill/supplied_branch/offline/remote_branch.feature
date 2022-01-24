@@ -1,9 +1,5 @@
 Feature: git town-kill: killing a remote branch in offline mode
 
-  When offline and trying to kill a remote branch
-  I want to be notified that this operation is not possible
-  So that I know about my mistake and can do more appropriate actions instead.
-
   Background:
     Given Git Town is in offline mode
     And my origin has a feature branch named "feature"

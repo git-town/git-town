@@ -1,9 +1,5 @@
 Feature: Show clear error if trying to continue after executing a successful command
 
-  As a developer accidentally trying to continue a command after it completed successfully
-  I should see a friendly and descriptive message that the command can not be continued
-  So that I don't experience any cryptic errors.
-
   Scenario: continuing after successful git-hack
     Given I run "git-town hack new-feature"
     When I run "git-town continue"

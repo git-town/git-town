@@ -1,9 +1,5 @@
 Feature: Syncing before creating the pull request
 
-  As a developer trying to create a pull request when my feature branch conflicts with the main branch
-  I want to be given the choice to resolve the conflicts or abort
-  So that I can finish the operation as planned or postpone it to a better time.
-
   Background:
     Given my repo has a local feature branch named "feature"
     And the following commits exist in my repo
