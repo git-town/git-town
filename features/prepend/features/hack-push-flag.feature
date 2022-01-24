@@ -1,4 +1,4 @@
-Feature: push branch to remote upon creation
+Feature: auto-push new branch
 
   Background:
     Given the new-branch-push-flag configuration is true
@@ -10,7 +10,7 @@ Feature: push branch to remote upon creation
     And my workspace has an uncommitted file
     When I run "git-town prepend new-parent"
 
-  Scenario: inserting a branch into the branch ancestry
+  Scenario: result
     Then it runs the commands
       | BRANCH           | COMMAND                       |
       | existing-feature | git fetch --prune --tags      |

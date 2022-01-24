@@ -26,7 +26,7 @@ Feature: cannot prepend perennial branches
       | BRANCH  | PARENT |
       | feature | main   |
 
-  Scenario: on perennial branch
+  Scenario: on other perennial branch
     Given my repo has the perennial branches "qa" and "production"
     And I am on the "production" branch
     When I run "git-town prepend new-parent"

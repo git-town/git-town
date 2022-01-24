@@ -10,7 +10,7 @@ Feature: git prepend: offline mode
     And my workspace has an uncommitted file
     When I run "git-town prepend new-parent"
 
-  Scenario: inserting a branch into the branch ancestry
+  Scenario: result
     Then it runs the commands
       | BRANCH           | COMMAND                    |
       | existing-feature | git add -A                 |
