@@ -1,4 +1,4 @@
-Feature: Syncing before creating the pull request
+Feature: merge conflict
 
   Background:
     Given my repo has a local feature branch named "feature"

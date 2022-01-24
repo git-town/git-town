@@ -1,4 +1,4 @@
-Feature: git-new-pull-request when origin is on Bitbucket
+Feature: Bitbucket support
 
   @skipWindows
   Scenario Outline: normal origin

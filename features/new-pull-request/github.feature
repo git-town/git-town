@@ -1,4 +1,4 @@
-Feature: git-new-pull-request when origin is on GitHub
+Feature: GitHub support
 
   Background:
     Given my computer has the "open" tool installed

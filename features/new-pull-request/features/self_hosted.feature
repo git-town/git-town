@@ -1,4 +1,4 @@
-Feature: git-town new-pull-request: when origin is a self hosted servie
+Feature: self-hosted service
 
   @skipWindows
   Scenario Outline: self hosted

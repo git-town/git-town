@@ -1,4 +1,4 @@
-Feature: git-new-pull-request: multi-platform support
+Feature: support many browsers and operating systems
 
   @skipWindows
   Scenario Outline: supported tool installed

@@ -1,4 +1,4 @@
-Feature: git-new-pull-request: when origin is unsupported
+Feature: unsupported hosting service
 
   Background:
     Given my repo has a feature branch named "feature"

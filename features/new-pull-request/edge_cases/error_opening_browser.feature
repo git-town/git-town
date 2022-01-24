@@ -1,4 +1,4 @@
-Feature: Print URL when opening browser fails
+Feature: print the URL when the browser crashes
 
   Background:
     Given my repo has a feature branch named "feature"
