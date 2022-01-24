@@ -1,13 +1,11 @@
-Feature: git town-prepend: errors when trying to prepend something in front of the main branch
+Feature: cannot prepend perennial branches
 
-  Background:
+  Scenario: on main branch
     Given my repo has a feature branch named "feature"
     And the following commits exist in my repo
       | BRANCH  | LOCATION      | MESSAGE     |
       | feature | local, remote | good commit |
     And I am on the "main" branch
-
-  Scenario: result
     Given my workspace has an uncommitted file
     When I run "git-town prepend new-branch"
     Then it runs the commands
@@ -24,3 +22,20 @@ Feature: git town-prepend: errors when trying to prepend something in front of t
       | local      | main, feature |
       | remote     | main, feature |
     And my repo is left with my original commits
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH  | PARENT |
+      | feature | main   |
+
+  Scenario: on other perennial branch
+    Given my repo has the perennial branches "qa" and "production"
+    And I am on the "production" branch
+    When I run "git-town prepend new-parent"
+    Then it runs the commands
+      | BRANCH     | COMMAND                  |
+      | production | git fetch --prune --tags |
+    And it prints the error:
+      """
+      the branch "production" is not a feature branch. Only feature branches can have parent branches
+      """
+    And I am still on the "production" branch
+    And Git Town now has no branch hierarchy information

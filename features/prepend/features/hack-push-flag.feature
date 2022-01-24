@@ -1,25 +1,27 @@
-Feature: Prepending a branch to a feature branch
+Feature: auto-push new branch
 
   Background:
-    Given my repo has a feature branch named "existing-feature"
+    Given the new-branch-push-flag configuration is true
+    And my repo has a feature branch named "existing-feature"
     And the following commits exist in my repo
       | BRANCH           | LOCATION      | MESSAGE                 | FILE NAME             | FILE CONTENT             |
       | existing-feature | local, remote | existing_feature_commit | existing_feature_file | existing feature content |
     And I am on the "existing-feature" branch
     And my workspace has an uncommitted file
-
-  Scenario: inserting a branch into the branch ancestry
     When I run "git-town prepend new-parent"
+
+  Scenario: result
     Then it runs the commands
-      | BRANCH           | COMMAND                    |
-      | existing-feature | git fetch --prune --tags   |
-      |                  | git add -A                 |
-      |                  | git stash                  |
-      |                  | git checkout main          |
-      | main             | git rebase origin/main     |
-      |                  | git branch new-parent main |
-      |                  | git checkout new-parent    |
-      | new-parent       | git stash pop              |
+      | BRANCH           | COMMAND                       |
+      | existing-feature | git fetch --prune --tags      |
+      |                  | git add -A                    |
+      |                  | git stash                     |
+      |                  | git checkout main             |
+      | main             | git rebase origin/main        |
+      |                  | git branch new-parent main    |
+      |                  | git checkout new-parent       |
+      | new-parent       | git push -u origin new-parent |
+      |                  | git stash pop                 |
     And I am now on the "new-parent" branch
     And my workspace still contains my uncommitted file
     And my repo now has the following commits
@@ -30,13 +32,13 @@ Feature: Prepending a branch to a feature branch
       | existing-feature | new-parent |
       | new-parent       | main       |
 
-  Scenario: Undo
-    Given I run "git-town prepend new-parent"
+  Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH           | COMMAND                       |
       | new-parent       | git add -A                    |
       |                  | git stash                     |
+      |                  | git push origin :new-parent   |
       |                  | git checkout main             |
       | main             | git branch -d new-parent      |
       |                  | git checkout existing-feature |
