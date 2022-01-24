@@ -1,6 +1,6 @@
 Feature: Viewing changes made on the current feature branch
 
-  Scenario: on a feature branch with known parent
+  Scenario: on feature branch with parent
     Given my repo has a feature branch named "feature-1"
     And my repo has a feature branch named "feature-2" as a child of "feature-1"
     And I am on the "feature-2" branch
@@ -10,7 +10,7 @@ Feature: Viewing changes made on the current feature branch
       | feature-2 | git diff feature-1..feature-2 |
 
   @skipWindows
-  Scenario: on a feature branch with unknown parent
+  Scenario: on feature branch without parent
     Given my repo has a feature branch named "feature" with no parent
     And I am on the "feature" branch
     When I run "git-town diff-parent" and answer the prompts:
@@ -23,7 +23,7 @@ Feature: Viewing changes made on the current feature branch
       | BRANCH  | PARENT |
       | feature | main   |
 
-  Scenario: on the main branch
+  Scenario: on main branch
     Given my repo has a feature branch named "feature"
     And I am on the "main" branch
     When I run "git-town diff-parent"
@@ -33,7 +33,7 @@ Feature: Viewing changes made on the current feature branch
       you can only diff-parent feature branches
       """
 
-  Scenario: on a perennial branch
+  Scenario: on perennial branch
     Given my repo has the perennial branch "qa"
     And I am on the "qa" branch
     When I run "git-town diff-parent"
