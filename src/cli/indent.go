@@ -15,6 +15,6 @@ var (
 // on each line. Each level of indentation is two spaces.
 func Indent(message string) string {
 	result := "  " + strings.ReplaceAll(message, "\n", "\n  ")
-	indentOnce.Do(func() { identRE = regexp.MustCompile("\n  \n") })
+	indentOnce.Do(func() { identRE = regexp.MustCompile("\n[ ]+\n") })
 	return identRE.ReplaceAllString(result, "\n\n")
 }
