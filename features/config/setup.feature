@@ -12,6 +12,7 @@ Feature: Entering Git Town configuration
     Then the main branch is now configured as "main"
     And the perennial branches are now configured as "production"
 
+  @debug
   Scenario: unconfigured
     And I haven't configured Git Town yet
     When I run "git-town config setup" and answer the prompts:
