@@ -1,6 +1,6 @@
 Feature: Viewing changes made on another branch
 
-  Scenario: feature branch with known parent
+  Scenario: feature branch with parent
     Given my repo has a feature branch named "feature-1"
     And my repo has a feature branch named "feature-2" as a child of "feature-1"
     When I run "git-town diff-parent feature-2"
@@ -9,7 +9,7 @@ Feature: Viewing changes made on another branch
       | main   | git diff feature-1..feature-2 |
 
   @skipWindows
-  Scenario: feature branch with unknown parent
+  Scenario: feature branch without parent
     Given my repo has a feature branch named "feature" with no parent
     And I am on the "main" branch
     When I run "git-town diff-parent feature" and answer the prompts:
