@@ -1,15 +1,6 @@
 package cli
 
-import (
-	"regexp"
-	"strings"
-	"sync"
-)
-
-var (
-	indentOnce sync.Once
-	identRE    *regexp.Regexp
-)
+import "strings"
 
 // Indent outputs the given string with the given level of indentation
 // on each line. Each level of indentation is two spaces.
