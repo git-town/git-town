@@ -1,4 +1,4 @@
-Feature: self-hosted servie
+Feature: self-hosted service
 
   @skipWindows
   Scenario Outline: self hosted
