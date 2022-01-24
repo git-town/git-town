@@ -109,6 +109,19 @@ func TestRunner_CreateBranch(t *testing.T) {
 	assert.Equal(t, []string{"branch1", "master"}, branches)
 }
 
+func TestRunner_CreateBranchContainingSlash(t *testing.T) {
+	t.Parallel()
+	runner := test.CreateRepo(t).Runner
+	err := runner.CreateBranch("my/feature", "master")
+	assert.NoError(t, err)
+	currentBranch, err := runner.CurrentBranch()
+	assert.NoError(t, err)
+	assert.Equal(t, "master", currentBranch)
+	branches, err := runner.LocalBranchesMainFirst()
+	assert.NoError(t, err)
+	assert.Equal(t, []string{"master", "my/feature"}, branches)
+}
+
 func TestRunner_CreateChildFeatureBranch(t *testing.T) {
 	t.Parallel()
 	runner := test.CreateTestGitTownRepo(t).Runner
