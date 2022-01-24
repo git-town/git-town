@@ -128,7 +128,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^Git Town now has no branch hierarchy information$`, func() error {
 		state.gitEnv.DevRepo.Config.Reload()
 		if state.gitEnv.DevRepo.Config.HasBranchInformation() {
-			return fmt.Errorf("unexpected Git Town branch hierarchy information")
+			branchInfo := state.gitEnv.DevRepo.Config.ParentBranchMap()
+			return fmt.Errorf("unexpected Git Town branch hierarchy information: %+v", branchInfo)
 		}
 		return nil
 	})
