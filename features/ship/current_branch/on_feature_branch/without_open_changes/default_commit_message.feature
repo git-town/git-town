@@ -4,7 +4,6 @@ Feature: git town-ship: trying the ship of the current feature branch without ed
   I want the ship to abort if I don't edit the default commit message
   So that I don't have ugly commits merged into my main branch
 
-
   Background:
     Given my repo has a feature branch named "feature"
     And the following commits exist in my repo
@@ -12,7 +11,6 @@ Feature: git town-ship: trying the ship of the current feature branch without ed
       | feature | local    | feature commit | feature_file | feature content |
     And I am on the "feature" branch
     When I run "git-town ship" and close the editor
-
 
   Scenario: result
     Then it runs the commands
@@ -36,7 +34,6 @@ Feature: git town-ship: trying the ship of the current feature branch without ed
       """
     And I am still on the "feature" branch
     And my repo is left with my original commits
-
 
   Scenario: undo
     When I run "git-town undo"

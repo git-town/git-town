@@ -4,7 +4,6 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
   I want to be given the choice to resolve the conflicts or abort
   So that I can finish the operation as planned or postpone it to a better time.
 
-
   Background:
     Given my repo has a feature branch named "existing-feature"
     And the following commits exist in my repo
@@ -14,7 +13,6 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
     And I am on the "existing-feature" branch
     And my workspace has an uncommitted file
     When I run "git-town hack new-feature"
-
 
   Scenario: result
     Then it runs the commands
@@ -32,7 +30,6 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
     And my repo now has a rebase in progress
     And my uncommitted file is stashed
 
-
   Scenario: aborting
     When I run "git-town abort"
     Then it runs the commands
@@ -45,7 +42,6 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
     And there is no rebase in progress
     And my repo is left with my original commits
 
-
   Scenario: continuing without resolving the conflicts
     When I run "git-town continue"
     Then it prints the error:
@@ -54,7 +50,6 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       """
     And my uncommitted file is stashed
     And my repo still has a rebase in progress
-
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
@@ -74,7 +69,6 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       |             |               | conflicting local commit  | conflicting_file |
       | new-feature | local         | conflicting remote commit | conflicting_file |
       |             |               | conflicting local commit  | conflicting_file |
-
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"

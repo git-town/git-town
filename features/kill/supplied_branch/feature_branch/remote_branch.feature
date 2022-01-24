@@ -9,7 +9,6 @@ Feature: git town-kill: killing a remote only branch
     And I run "git-town sync"
     When I run "git-town kill feature"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                  |
@@ -19,7 +18,6 @@ Feature: git town-kill: killing a remote only branch
       | REPOSITORY | BRANCHES |
       | local      | main     |
       | remote     | main     |
-
 
   Scenario: undoing the kill
     When I run "git-town undo"

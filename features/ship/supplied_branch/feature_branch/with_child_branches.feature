@@ -2,7 +2,6 @@ Feature: git town-ship: shipping a parent branch
 
   (see ../../current_branch/on_feature_branch/on_parent_branch.feature)
 
-
   Background:
     Given my repo has a feature branch named "parent-feature"
     And my repo has a feature branch named "child-feature" as a child of "parent-feature"
@@ -12,7 +11,6 @@ Feature: git town-ship: shipping a parent branch
       | child-feature  | local, remote | child feature commit  | child_feature_file  | child feature content  |
     And I am on the "child-feature" branch
     When I run "git-town ship parent-feature -m 'parent feature done'"
-
 
   Scenario: result
     Then it runs the commands

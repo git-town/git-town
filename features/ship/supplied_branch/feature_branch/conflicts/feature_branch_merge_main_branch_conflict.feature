@@ -2,7 +2,6 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
 
   (see ../../../current_branch/on_feature_branch/without_open_changes/feature_branch_merge_main_branch_conflict.feature)
 
-
   Background:
     Given my repo has the feature branches "feature" and "other-feature"
     And the following commits exist in my repo
@@ -12,7 +11,6 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
     And I am on the "other-feature" branch
     And my workspace has an uncommitted file
     And I run "git-town ship feature -m 'feature done'"
-
 
   Scenario: result
     Then it runs the commands
@@ -35,7 +33,6 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
     And my uncommitted file is stashed
     And my repo now has a merge in progress
 
-
   Scenario: aborting
     When I run "git-town abort"
     Then it runs the commands
@@ -51,7 +48,6 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        |
       | main    | local, remote | conflicting main commit    | conflicting_file |
       | feature | local         | conflicting feature commit | conflicting_file |
-
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
@@ -77,7 +73,6 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
       | BRANCH | LOCATION      | MESSAGE                 | FILE NAME        |
       | main   | local, remote | conflicting main commit | conflicting_file |
       |        |               | feature done            | conflicting_file |
-
 
   Scenario: continuing after resolving the conflicts and comitting
     Given I resolve the conflict in "conflicting_file"

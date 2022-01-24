@@ -6,7 +6,6 @@ Feature: syncing with ignored files
 
   - all files ignored by Git survive a "git sync" process unchanged
 
-
   Scenario: running "git sync" with ignored files
     Given my repo has a feature branch named "feature"
     And the following commits exist in my repo

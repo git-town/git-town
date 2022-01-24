@@ -4,7 +4,6 @@ Feature: git town-kill: killing a remote branch in offline mode
   I want to be notified that this operation is not possible
   So that I know about my mistake and can do more appropriate actions instead.
 
-
   Background:
     Given Git Town is in offline mode
     And my origin has a feature branch named "feature"
@@ -14,7 +13,6 @@ Feature: git town-kill: killing a remote branch in offline mode
     And my repo knows about the remote branch
     And I am on the "main" branch
     When I run "git-town kill feature"
-
 
   Scenario: result
     Then it runs the commands

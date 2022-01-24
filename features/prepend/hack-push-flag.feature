@@ -2,7 +2,6 @@ Feature: push branch to remote upon creation
 
   (see ../git-town-hack/hack_push_flag.feature)
 
-
   Background:
     Given the new-branch-push-flag configuration is true
     And my repo has a feature branch named "existing-feature"
@@ -11,7 +10,6 @@ Feature: push branch to remote upon creation
       | existing-feature | local, remote | existing_feature_commit | existing_feature_file | existing feature content |
     And I am on the "existing-feature" branch
     And my workspace has an uncommitted file
-
 
   Scenario: inserting a branch into the branch ancestry
     When I run "git-town prepend new-parent"
@@ -35,7 +33,6 @@ Feature: push branch to remote upon creation
       | BRANCH           | PARENT     |
       | existing-feature | new-parent |
       | new-parent       | main       |
-
 
   Scenario: Undo
     Given I run "git-town prepend new-parent"

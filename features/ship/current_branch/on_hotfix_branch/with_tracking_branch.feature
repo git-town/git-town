@@ -4,7 +4,6 @@ Feature: git town-ship: shipping hotfixes
   I want to ship them similar to feature branches
   So that I can use Git Town to work on hotfixes as well.
 
-
   Background:
     Given my repo has the perennial branch "production"
     And my repo has a feature branch named "hotfix" as a child of "production"
@@ -13,7 +12,6 @@ Feature: git town-ship: shipping hotfixes
       | hotfix | local, remote | hotfix commit | hotfix_file | hotfix content |
     And I am on the "hotfix" branch
     When I run "git-town ship -m 'hotfix done'"
-
 
   Scenario: result
     Then it runs the commands

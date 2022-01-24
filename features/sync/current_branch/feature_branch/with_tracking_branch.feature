@@ -4,7 +4,6 @@ Feature: git-town sync: syncing the current feature branch with a tracking branc
   I want my branch to be updated with changes from the tracking branch and the main branch
   So that my work stays in sync with the main development line, can be merged easily later, and I remain productive.
 
-
   Background:
     Given my repo has a feature branch named "feature"
     And the following commits exist in my repo
@@ -16,7 +15,6 @@ Feature: git-town sync: syncing the current feature branch with a tracking branc
     And I am on the "feature" branch
     And my workspace has an uncommitted file
     When I run "git-town sync"
-
 
   Scenario: result
     Then it runs the commands

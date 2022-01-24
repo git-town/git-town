@@ -4,7 +4,6 @@ Feature: git-town sync: collaborative feature branch syncing
   I want each person to be able to sync their changes with the rest of the team
   So that our collaboration is effective.
 
-
   Background:
     Given I am collaborating with a coworker
     And my repo has a feature branch named "feature"
@@ -14,7 +13,6 @@ Feature: git-town sync: collaborative feature branch syncing
       | BRANCH  | LOCATION | MESSAGE         | FILE NAME     |
       | feature | local    | my commit       | my_file       |
       |         | coworker | coworker commit | coworker_file |
-
 
   Scenario: result
     And I am on the "feature" branch

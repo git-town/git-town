@@ -4,7 +4,6 @@ Feature: git-town sync: offline mode
   I still want to be able to sync my branches locally
   So that I can work despite having no internet connection.
 
-
   Background:
     Given Git Town is in offline mode
     And my repo has a feature branch named "feature"
@@ -17,7 +16,6 @@ Feature: git-town sync: offline mode
     And I am on the "feature" branch
     And my workspace has an uncommitted file
     When I run "git-town sync"
-
 
   Scenario: result
     Then it runs the commands

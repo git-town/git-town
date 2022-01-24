@@ -4,7 +4,6 @@ Feature: git town-rename-branch: errors if the feature branch does not exist
   I should get an error that the given branch does not exist
   So that I can rename the correct branch.
 
-
   Background:
     Given the following commits exist in my repo
       | BRANCH | LOCATION      | MESSAGE     |
@@ -12,7 +11,6 @@ Feature: git town-rename-branch: errors if the feature branch does not exist
     And I am on the "main" branch
     And my workspace has an uncommitted file
     When I run "git-town rename-branch non-existing-feature renamed-feature"
-
 
   Scenario: result
     Then it runs the commands

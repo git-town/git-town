@@ -4,7 +4,6 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
   I want to be given the choice to resolve the conflicts or abort
   So that I can finish the operation as planned or postpone it to a better time.
 
-
   Background:
     Given my repo has a feature branch named "feature"
     And the following commits exist in my repo
@@ -14,7 +13,6 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       | feature | local    | feature commit            | feature_file     | feature content            |
     And I am on the "feature" branch
     When I run "git-town ship -m 'feature done'"
-
 
   Scenario: result
     Then it runs the commands
@@ -29,7 +27,6 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       """
     And my repo now has a rebase in progress
 
-
   Scenario: aborting
     When I run "git-town abort"
     Then it runs the commands
@@ -39,7 +36,6 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
     And I am still on the "feature" branch
     And there is no rebase in progress
     And my repo is left with my original commits
-
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
@@ -67,7 +63,6 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       | main   | local, remote | conflicting remote commit | conflicting_file |
       |        |               | conflicting local commit  | conflicting_file |
       |        |               | feature done              | feature_file     |
-
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"

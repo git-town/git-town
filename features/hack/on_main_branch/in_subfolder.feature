@@ -4,7 +4,6 @@ Feature: git town-hack: starting a new feature from a subfolder on the main bran
   I want to be able to extract my open changes into a feature branch
   So that I can get them reviewed.
 
-
   Background:
     Given the following commits exist in my repo
       | BRANCH | LOCATION | MESSAGE       | FILE NAME        |
@@ -12,7 +11,6 @@ Feature: git town-hack: starting a new feature from a subfolder on the main bran
     And I am on the "main" branch
     And my workspace has an uncommitted file
     When I run "git-town hack new-feature" in the "new_folder" folder
-
 
   Scenario: result
     Then it runs the commands

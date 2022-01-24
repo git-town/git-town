@@ -4,7 +4,6 @@ Feature: set the new-branch-push-flag
   I want an easy way to specifically set the new branch push flag
   So that I can configure Git Town safely, and the tool does exactly what I want.
 
-
   Scenario Outline: update
     When I run "git-town new-branch-push-flag <GIVE>"
     Then the new-branch-push-flag configuration is now <WANT>
@@ -17,7 +16,6 @@ Feature: set the new-branch-push-flag
       | false | false |
       | f     | false |
       | 0     | false |
-
 
   Scenario: invalid value
     When I run "git-town new-branch-push-flag zonk"

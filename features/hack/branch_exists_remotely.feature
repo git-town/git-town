@@ -2,13 +2,11 @@ Feature: git town-hack: errors when the branch exists remotely
 
   (see ./branch_exists_locally.feature)
 
-
   Background:
     Given my coworker has a feature branch named "existing-feature"
     And I am on the "main" branch
     And my workspace has an uncommitted file
     When I run "git-town hack existing-feature"
-
 
   Scenario: result
     Then it runs the commands

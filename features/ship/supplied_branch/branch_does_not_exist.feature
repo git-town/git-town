@@ -4,12 +4,10 @@ Feature: git town-ship: errors when trying to ship a branch that doesn't exist
   I should see an error telling me about this
   So that I can ship the correct branch and remain productive.
 
-
   Background:
     Given I am on the "main" branch
     And my workspace has an uncommitted file
     When I run "git-town ship non-existing-branch"
-
 
   Scenario: result
     Then it runs the commands

@@ -4,7 +4,6 @@ Feature: git town-kill: killing a local branch in offline mode
   I want to be able to still delete the current branch including all open changes
   So that I can work as much as possible despite no internet connection.
 
-
   Background:
     Given Git Town is in offline mode
     And my repo has the feature branches "current-feature" and "other-feature"
@@ -15,7 +14,6 @@ Feature: git town-kill: killing a local branch in offline mode
     And I am on the "current-feature" branch
     And my workspace has an uncommitted file
     When I run "git-town kill"
-
 
   Scenario: result
     Then it runs the commands
@@ -34,7 +32,6 @@ Feature: git town-kill: killing a local branch in offline mode
       | BRANCH          | LOCATION      | MESSAGE                |
       | current-feature | remote        | current feature commit |
       | other-feature   | local, remote | other feature commit   |
-
 
   Scenario: undoing the kill
     When I run "git-town undo"

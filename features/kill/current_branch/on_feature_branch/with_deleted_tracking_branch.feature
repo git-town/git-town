@@ -4,7 +4,6 @@ Feature: git town-kill: killing the current feature branch with a deleted tracki
   I want the command to succeed anyways
   So that killing branches is robust and reliable.
 
-
   Background:
     Given my repo has the feature branches "current-feature" and "other-feature"
     And the following commits exist in my repo
@@ -15,7 +14,6 @@ Feature: git town-kill: killing the current feature branch with a deleted tracki
     And I am on the "current-feature" branch
     And my workspace has an uncommitted file
     When I run "git-town kill"
-
 
   Scenario: result
     Then it runs the commands
@@ -34,7 +32,6 @@ Feature: git town-kill: killing the current feature branch with a deleted tracki
     And my repo now has the following commits
       | BRANCH        | LOCATION      | MESSAGE              |
       | other-feature | local, remote | other feature commit |
-
 
   Scenario: undoing the kill
     When I run "git-town undo"

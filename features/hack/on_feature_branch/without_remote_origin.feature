@@ -4,7 +4,6 @@ Feature: git town-hack: starting a new feature from a feature branch (without re
   I want to be able to create a new up-to-date feature branch and continue my work there
   So that my work can exist on its own branch, code reviews remain effective, and my team productive.
 
-
   Background:
     Given my repo has a feature branch named "existing-feature"
     And my repo does not have a remote origin
@@ -15,7 +14,6 @@ Feature: git town-hack: starting a new feature from a feature branch (without re
     And I am on the "existing-feature" branch
     And my workspace has an uncommitted file
     When I run "git-town hack new-feature"
-
 
   Scenario: result
     Then it runs the commands

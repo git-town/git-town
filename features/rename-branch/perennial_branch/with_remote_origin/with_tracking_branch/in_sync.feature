@@ -4,7 +4,6 @@ Feature: git town-rename-branch: renaming a perennial branch with a tracking bra
   I want to be able to rename it safely in one easy step
   So that the names of my branches match what they implement, and I can manage them effectively.
 
-
   Background:
     Given my repo has the perennial branches "qa" and "production"
     And the following commits exist in my repo
@@ -15,7 +14,6 @@ Feature: git town-rename-branch: renaming a perennial branch with a tracking bra
     And I am on the "production" branch
     And my workspace has an uncommitted file
 
-
   Scenario: error when trying to rename
     When I run "git-town rename-branch production renamed-production"
     Then it runs no commands
@@ -23,7 +21,6 @@ Feature: git town-rename-branch: renaming a perennial branch with a tracking bra
       """
       "production" is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'
       """
-
 
   Scenario: forcing rename
     When I run "git-town rename-branch --force production renamed-production"
@@ -43,7 +40,6 @@ Feature: git town-rename-branch: renaming a perennial branch with a tracking bra
       | main               | local, remote | main commit       |
       | qa                 | local, remote | qa commit         |
       | renamed-production | local, remote | production commit |
-
 
   Scenario: undo
     Given I run "git-town rename-branch --force production renamed-production"

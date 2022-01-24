@@ -4,10 +4,8 @@ Feature: git town-kill: errors if supplied branch does not exist
   I should get an error that the given branch does not exist
   So that I can delete the correct branch
 
-
   Background:
     Given I am on the "main" branch
-
 
   Scenario: result
     When I run "git-town kill non-existing-feature"

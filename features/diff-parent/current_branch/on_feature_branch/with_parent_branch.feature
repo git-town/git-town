@@ -5,7 +5,6 @@ Feature: git town-parent-diff: diffing the current feature branch
     So that I know what work is left to do
     And which work will be merged into the parent branch
 
-
   Scenario: result
     Given my repo has a feature branch named "feature-1"
     And my repo has a feature branch named "feature-2" as a child of "feature-1"

@@ -4,7 +4,6 @@ Feature: Syncing before creating the pull request
   I want my feature branch by synced before creating a pull request for it
   So that my reviewers see the most up-to-date version of my code and their review is accurate.
 
-
   Background:
     Given my code base has a feature branch named "parent-feature"
     And my code base has a feature branch named "child-feature" as a child of "parent-feature"
@@ -21,7 +20,6 @@ Feature: Syncing before creating the pull request
     And I am on the "child-feature" branch
     And my workspace has an uncommitted file
     When I run "git-town new-pull-request"
-
 
   @skipWindows
   Scenario: result

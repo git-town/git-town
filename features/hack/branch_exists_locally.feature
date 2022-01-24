@@ -4,13 +4,11 @@ Feature: git town-hack: errors when the branch exists locally
   I should see an error telling me that a branch with that name already exists
   So that my new feature branch is unique.
 
-
   Background:
     Given my repo has a feature branch named "existing-feature"
     And I am on the "main" branch
     And my workspace has an uncommitted file
     When I run "git-town hack existing-feature"
-
 
   Scenario: result
     Then it runs the commands

@@ -11,7 +11,6 @@ Feature: git-sync: on a feature branch with a upstream remote
     And my workspace has an uncommitted file
     When I run "git-town sync"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                            |
