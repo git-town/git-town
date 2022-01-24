@@ -13,6 +13,7 @@ Feature: Entering Git Town configuration
     And the perennial branches are now configured as "production"
 
   Scenario: unconfigured
+    Given my repo has the branches "dev" and "production"
     And I haven't configured Git Town yet
     When I run "git-town config setup" and answer the prompts:
       | PROMPT                                     | ANSWER                      |
