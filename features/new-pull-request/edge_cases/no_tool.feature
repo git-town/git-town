@@ -1,4 +1,4 @@
-Feature: print URL when unable to open browser
+Feature: print URL when no browser installed
 
   Background:
     Given my repo has a feature branch named "feature"

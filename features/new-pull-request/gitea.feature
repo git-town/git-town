@@ -1,4 +1,4 @@
-Feature: git-new-pull-request when origin is on Gitea
+Feature: Gitea support
 
   Background:
     Given my computer has the "open" tool installed
@@ -55,7 +55,7 @@ Feature: git-new-pull-request when origin is on Gitea
       """
 
     Examples:
-      | BRANCH_NAME    | URL                                                        |
+      | BRANCH_NAME    | URL                                                               |
       | feature-branch | https://gitea.com/git-town/git-town/compare/main...feature-branch |
       | feature_branch | https://gitea.com/git-town/git-town/compare/main...feature_branch |
       | fix-#2         | https://gitea.com/git-town/git-town/compare/main...fix-%232       |

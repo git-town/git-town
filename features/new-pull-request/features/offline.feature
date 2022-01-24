@@ -1,4 +1,4 @@
-Feature: git new-pull-request: offline mode
+Feature: offline mode
 
   Scenario: trying to create a new pull request in offline mode
     Given Git Town is in offline mode

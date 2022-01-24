@@ -1,4 +1,4 @@
-Feature: Syncing before creating the pull request
+Feature: syncing before creating the pull request
 
   Background:
     Given my code base has a feature branch named "parent-feature"

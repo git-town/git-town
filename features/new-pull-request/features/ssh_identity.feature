@@ -1,4 +1,4 @@
-Feature: git-town new-pull-request: when origin is an ssh identity
+Feature: using a SSH identity
 
   @skipWindows
   Scenario Outline: ssh identity
