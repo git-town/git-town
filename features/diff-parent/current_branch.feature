@@ -1,9 +1,5 @@
 Feature: Viewing changes made on the current feature branch
 
-  To know whether my current branch is correctly set up
-  When working with nested feature branches
-  I want to see the changes my current branch makes.
-
   Scenario: on a feature branch with known parent
     Given my repo has a feature branch named "feature-1"
     And my repo has a feature branch named "feature-2" as a child of "feature-1"

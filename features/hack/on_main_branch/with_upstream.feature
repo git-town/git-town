@@ -1,9 +1,5 @@
 Feature: git-hack: on the main branch with a upstream remote
 
-  To minimize merge conflicts with upstream changes
-  When working on a forked repository
-  I want to pull upstream changes before cutting new feature branches.
-
   Background:
     Given my repo has an upstream repo
     And the following commits exist in my repo

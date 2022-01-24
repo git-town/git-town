@@ -1,8 +1,5 @@
 Feature: git town-hack: starting a new feature from the main branch (without remote repo)
 
-  To work with local
-  I want to create new up-to-date feature branches and bring over my work to them.
-
   Background:
     Given my repo does not have a remote origin
     And the following commits exist in my repo

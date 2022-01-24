@@ -1,9 +1,5 @@
 Feature: git town hack: Recognize already existing branches
 
-  To ensure unique feature branches
-  When trying to create a branch that already exists
-  I want to see guidance.
-
   Scenario: branch exists locally
     Given my repo has a feature branch named "existing"
     When I run "git-town hack existing"

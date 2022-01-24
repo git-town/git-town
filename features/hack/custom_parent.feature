@@ -1,10 +1,6 @@
 @skipWindows
 Feature: git town hack: customize the parent branch
 
-  To allow hotfixes for other branches than the main branch
-  When creating a new feature branch
-  I want to be able to customize the parent for the new branch.
-
   Background:
     Given my repo has the perennial branch "production"
     And the following commits exist in my repo

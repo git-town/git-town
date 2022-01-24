@@ -1,9 +1,5 @@
 Feature: Viewing changes made on another branch
 
-  To know whether my global branch setup is correct
-  When working with nested feature branches
-  I want to see the changes that a particular feature branch makes.
-
   Scenario: feature branch with known parent
     Given my repo has a feature branch named "feature-1"
     And my repo has a feature branch named "feature-2" as a child of "feature-1"

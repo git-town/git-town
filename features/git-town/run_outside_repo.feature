@@ -1,9 +1,5 @@
 Feature: Require running inside a Git repository
 
-  To learn to use Git Town correctly
-  When running commands that require a repo outside of a repo
-  I want to see guidance telling me that a repo is required.
-
   Scenario Outline:
     Given my workspace is currently not a Git repo
     When I run "<COMMAND>"
