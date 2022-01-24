@@ -1,4 +1,4 @@
-Feature: push branch to remote upon creation
+Feature: auto-pushing an appended branch to the remote
 
   Background:
     Given the new-branch-push-flag configuration is true
