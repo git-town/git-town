@@ -14,7 +14,7 @@ Feature: Entering Git Town configuration
 
   @debug
   Scenario: unconfigured
-    And I haven't configured Git Town yet
+    Given I haven't configured Git Town yet
     When I run "git-town config setup" and answer the prompts:
       | PROMPT                                     | ANSWER                      |
       | Please specify the main development branch | [DOWN][ENTER]               |
