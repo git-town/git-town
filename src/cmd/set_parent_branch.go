@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"github.com/git-town/git-town/v7/src/cli"
-	"github.com/git-town/git-town/v7/src/dialog"
+	"github.com/git-town/git-town/v7/src/userinput"
 	"github.com/spf13/cobra"
 )
 
@@ -28,7 +28,7 @@ var setParentBranchCommand = &cobra.Command{
 		if err != nil {
 			cli.Exit(err)
 		}
-		err = dialog.AskForBranchAncestry(branchName, defaultParentBranch, prodRepo)
+		err = userinput.AskForBranchAncestry(branchName, defaultParentBranch, prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}
