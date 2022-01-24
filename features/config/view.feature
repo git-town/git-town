@@ -35,7 +35,7 @@ Feature: listing the configuration
           parent-feature
             child-feature
           stand-alone-feature
-        
+
         qa
           qa-hotfix
       """
