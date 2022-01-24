@@ -11,7 +11,6 @@ Feature: git-town sync --all: handling rebase conflicts between main branch and 
     And my workspace has an uncommitted file
     When I run "git-town sync --all"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                  |
@@ -27,7 +26,6 @@ Feature: git-town sync --all: handling rebase conflicts between main branch and 
     And my uncommitted file is stashed
     And my repo now has a rebase in progress
 
-
   Scenario: aborting
     When I run "git-town abort"
     Then it runs the commands
@@ -42,7 +40,6 @@ Feature: git-town sync --all: handling rebase conflicts between main branch and 
       |         | remote   | main remote commit | conflicting_file |
       | feature | local    | feature commit     | feature_file     |
 
-
   Scenario: continuing without resolving the conflicts
     When I run "git-town continue"
     Then it runs no commands
@@ -52,7 +49,6 @@ Feature: git-town sync --all: handling rebase conflicts between main branch and 
       """
     And my uncommitted file is stashed
     And my repo still has a rebase in progress
-
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
@@ -78,7 +74,6 @@ Feature: git-town sync --all: handling rebase conflicts between main branch and 
       |         |               | main remote commit               | conflicting_file |
       |         |               | main local commit                | conflicting_file |
       |         |               | Merge branch 'main' into feature |                  |
-
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"

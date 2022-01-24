@@ -1,10 +1,5 @@
 Feature: git town-ship: errors when trying to ship the current feature branch that has no differences with the main branch
 
-  As a developer shipping a branch that has no differences with the main branch
-  I should see an error telling me about this
-  So that I can investigate this issue, and my users always see meaningful progress.
-
-
   Background:
     Given my repo has a feature branch named "empty-feature"
     And the following commits exist in my repo
@@ -13,7 +8,6 @@ Feature: git town-ship: errors when trying to ship the current feature branch th
       | empty-feature | local    | feature commit | common_file | common content |
     And I am on the "empty-feature" branch
     When I run "git-town ship"
-
 
   Scenario: result
     Then it runs the commands
@@ -32,7 +26,6 @@ Feature: git town-ship: errors when trying to ship the current feature branch th
       the branch "empty-feature" has no shippable changes
       """
     And I am still on the "empty-feature" branch
-
 
   Scenario: undo
     When I run "git-town undo"

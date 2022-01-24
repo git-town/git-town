@@ -1,10 +1,5 @@
 Feature: git town-rename-branch: errors when the destination branch exists locally
 
-  As a developer trying to rename a branch to an already existing branch
-  I want the command to abort with an error message
-  So that I don't lose work by accidentally overwriting existing branches.
-
-
   Background:
     Given my repo has the feature branches "current-feature" and "existing-feature"
     And the following commits exist in my repo
@@ -14,7 +9,6 @@ Feature: git town-rename-branch: errors when the destination branch exists local
     And I am on the "current-feature" branch
     And my workspace has an uncommitted file
     When I run "git-town rename-branch current-feature existing-feature"
-
 
   Scenario: result
     Then it runs the commands

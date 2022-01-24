@@ -1,9 +1,5 @@
 Feature: Appending a feature branch to the main branch
 
-  To achieve consistent behavior in all situations
-  When on the main branch
-  I want "git append" to create a new feature branch as a child of the main branch, even though "git hack" does that too.
-
   Background:
     Given the following commits exist in my repo
       | BRANCH | LOCATION | MESSAGE     |

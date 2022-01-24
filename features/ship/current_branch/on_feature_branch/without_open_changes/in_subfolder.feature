@@ -1,10 +1,5 @@
 Feature: git town-ship: shipping the current feature branch from a subfolder
 
-  As a developer shipping a feature branch from a subfolder
-  I want the command to finish properly
-  So that my repo is left in a consistent state and I don't lose any data
-
-
   Background:
     Given my repo has a feature branch named "feature"
     And the following commits exist in my repo
@@ -12,7 +7,6 @@ Feature: git town-ship: shipping the current feature branch from a subfolder
       | feature | local, remote | feature commit | new_folder/feature_file | feature content |
     And I am on the "feature" branch
     When I run "git-town ship -m 'feature done'" in the "new_folder" folder
-
 
   Scenario: result
     Then it runs the commands
@@ -37,7 +31,6 @@ Feature: git town-ship: shipping the current feature branch from a subfolder
     And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME               |
       | main   | local, remote | feature done | new_folder/feature_file |
-
 
   Scenario: undo
     When I run "git-town undo"

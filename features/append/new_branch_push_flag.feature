@@ -1,7 +1,5 @@
 Feature: push branch to remote upon creation
 
-  (see ../git-town-hack/new_branch_push_flag.feature)
-
   Background:
     Given the new-branch-push-flag configuration is true
     And the following commits exist in my repo

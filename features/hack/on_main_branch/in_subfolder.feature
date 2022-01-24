@@ -1,9 +1,5 @@
 Feature: git town-hack: starting a new feature from a subfolder on the main branch (with remote repo)
 
-  To ensure robustness
-  When working in a subfolder on the main branch
-  I want the hack command to work.
-
   Background:
     Given the following commits exist in my repo
       | BRANCH | LOCATION | MESSAGE       | FILE NAME        |

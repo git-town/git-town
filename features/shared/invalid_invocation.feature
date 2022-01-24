@@ -1,10 +1,5 @@
 Feature: invalid invocation
 
-  As a developer providing the wrong number of arguments or invalid arguments
-  I should be reminded of the usage
-  So that I can use it correctly without having to look at documentation
-
-
   Scenario Outline: <DESCRIPTION>
     When I run "git-town <CMD>"
     Then it runs no commands

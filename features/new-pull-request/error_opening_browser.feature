@@ -1,9 +1,5 @@
 Feature: Print URL when opening browser fails
 
-  When using Git Town on a machine with a broken open browser command
-  I want that it prints the URL of the website
-  So that I can copy-and-paste it into my browser.
-
   Background:
     Given my repo has a feature branch named "feature"
     And my repo's origin is "git@github.com:git-town/git-town"

@@ -11,7 +11,6 @@ Feature: git-town sync --all: syncs all feature branches
     And my workspace has an uncommitted file
     When I run "git-town sync --all"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH    | COMMAND                              |

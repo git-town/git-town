@@ -1,9 +1,5 @@
 Feature: Appending a feature branch to a feature branch
 
-  To ship independent changes in their own feature branches
-  When these changes depend on each other
-  I want to create new feature branches as a children of existing feature branches.
-
   Background:
     Given my repo has a feature branch named "existing-feature"
     And the following commits exist in my repo

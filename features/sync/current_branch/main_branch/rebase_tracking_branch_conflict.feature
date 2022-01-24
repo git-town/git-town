@@ -1,10 +1,5 @@
 Feature: git-town sync: resolving conflicts between the main branch and its tracking branch when syncing the main branch
 
-  As a developer syncing the main branch when it conflicts with its tracking branch
-  I want to be given the choice to resolve the conflicts or abort
-  So that I can finish the operation as planned or postpone it to a better time.
-
-
   Background:
     Given I am on the "main" branch
     And the following commits exist in my repo
@@ -13,7 +8,6 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
       |        | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
     And my workspace has an uncommitted file
     When I run "git-town sync"
-
 
   Scenario: result
     Then it runs the commands
@@ -30,7 +24,6 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
     And my repo now has a rebase in progress
     And my uncommitted file is stashed
 
-
   Scenario: aborting
     When I run "git-town abort"
     Then it runs the commands
@@ -42,7 +35,6 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
     And there is no rebase in progress
     And my repo is left with my original commits
 
-
   Scenario: continuing without resolving the conflicts
     When I run "git-town continue"
     Then it runs no commands
@@ -52,7 +44,6 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
       """
     And my uncommitted file is stashed
     And my repo still has a rebase in progress
-
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
@@ -72,7 +63,6 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
     And my repo now has the following committed files
       | BRANCH | NAME             | CONTENT          |
       | main   | conflicting_file | resolved content |
-
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"

@@ -1,8 +1,5 @@
 Feature: git-town sync: syncing inside a folder that doesn't exist on the main branch
 
-  (see ./no_conflict.feature)
-
-
   Background:
     Given my repo has the feature branches "current-feature" and "other-feature"
     And the following commits exist in my repo
@@ -14,7 +11,6 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
     And I am on the "current-feature" branch
     And my workspace has an uncommitted file
     When I run "git-town sync --all" in the "new_folder" folder
-
 
   Scenario: result
     Then it runs the commands
@@ -35,7 +31,6 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
       exit status 1
       """
 
-
   Scenario: aborting
     When I run "git-town abort" in the "new_folder" folder
     Then it runs the commands
@@ -49,7 +44,6 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
     And there is no merge in progress
     And my repo is left with my original commits
 
-
   Scenario: continuing without resolving the conflicts
     When I run "git-town continue" in the "new_folder" folder
     Then it runs no commands
@@ -60,7 +54,6 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
     And I am still on the "current-feature" branch
     And my uncommitted file is stashed
     And my repo still has a merge in progress
-
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"

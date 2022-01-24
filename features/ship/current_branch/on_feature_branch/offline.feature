@@ -1,10 +1,5 @@
 Feature: git town-ship: offline mode
 
-  When offline
-  I want to be able to ship branches on my local machine
-  So that I can keep working as much as possible despite having no internet connection.
-
-
   Background:
     Given Git Town is in offline mode
     And my repo has a feature branch named "feature"
@@ -13,7 +8,6 @@ Feature: git town-ship: offline mode
       | feature | local, remote | feature commit |
     And I am on the "feature" branch
     When I run "git-town ship -m 'feature done'"
-
 
   Scenario: result
     Then it runs the commands
@@ -32,7 +26,6 @@ Feature: git town-ship: offline mode
       | BRANCH  | LOCATION | MESSAGE        |
       | main    | local    | feature done   |
       | feature | remote   | feature commit |
-
 
   Scenario: undo
     When I run "git-town undo"

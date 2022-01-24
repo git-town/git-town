@@ -1,9 +1,6 @@
 @skipWindows
 Feature: Entering Git Town configuration
 
-  To reliably configure Git Town
-  I want to review and enter all core configuration values.
-
   Scenario: already configured
     Given my repo has the branches "production" and "qa"
     And the main branch is configured as "main"
@@ -16,7 +13,6 @@ Feature: Entering Git Town configuration
     And the perennial branches are now configured as "production"
 
   Scenario: unconfigured
-    Given my repo has the branches "production" and "dev"
     And I haven't configured Git Town yet
     When I run "git-town config setup" and answer the prompts:
       | PROMPT                                     | ANSWER                      |

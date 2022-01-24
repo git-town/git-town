@@ -1,10 +1,5 @@
 Feature: git town-rename-branch: errors if renaming a perennial branch that has unpushed changes
 
-  As a developer renaming a perennial branch that has unpushed changes
-  I should get an error that the given branch is not in sync with its tracking branch
-  So that I know branches must be in sync in order to be renamed.
-
-
   Background:
     Given my repo has the perennial branch "production"
     And the following commits exist in my repo
@@ -15,7 +10,6 @@ Feature: git town-rename-branch: errors if renaming a perennial branch that has 
     And I am on the "production" branch
     And my workspace has an uncommitted file
     When I run "git-town rename-branch --force production renamed-production"
-
 
   Scenario: result
     Then it runs the commands

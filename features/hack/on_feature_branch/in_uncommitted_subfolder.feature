@@ -1,9 +1,5 @@
 Feature: git town-hack: creating a feature branch from an uncommitted subfolder
 
-  To ensure robustness
-  When creating a feature branch from an uncommitted subfolder
-  I want that Git Town changes to the root directory before changing branches.
-
   Background:
     Given my repo has a feature branch named "existing-feature"
     And the following commits exist in my repo

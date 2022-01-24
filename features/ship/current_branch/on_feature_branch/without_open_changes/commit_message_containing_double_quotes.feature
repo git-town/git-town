@@ -1,10 +1,5 @@
 Feature: git town-ship: shipping the current feature branch
 
-  As a developer entering a commit message that contains a double quote
-  I want it to still work as expected
-  So shipping is a robust process.
-
-
   Background:
     Given my repo has a feature branch named "feature"
     And the following commits exist in my repo
@@ -12,7 +7,6 @@ Feature: git town-ship: shipping the current feature branch
       | feature | local, remote | feature commit | feature_file | feature content |
     And I am on the "feature" branch
     When I run "git-town ship -m 'message containing "double quotes"'"
-
 
   Scenario: result
     Then it runs the commands
@@ -38,7 +32,6 @@ Feature: git town-ship: shipping the current feature branch
     And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE                            | FILE NAME    |
       | main   | local, remote | message containing "double quotes" | feature_file |
-
 
   Scenario: undo
     When I run "git-town undo"

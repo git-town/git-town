@@ -1,10 +1,5 @@
 Feature: git-town sync: syncing the current perennial branch (without remote repo)
 
-  As a developer syncing a perennial branch and without a remote repository
-  I want to be able update my ongoing work to include the latest finished features from the rest of the team
-  So that our collaboration remains effective.
-
-
   Background:
     Given my repo does not have a remote origin
     And my repo has the local perennial branches "production" and "qa"
@@ -15,7 +10,6 @@ Feature: git-town sync: syncing the current perennial branch (without remote rep
     And I am on the "qa" branch
     And my workspace has an uncommitted file
     When I run "git-town sync"
-
 
   Scenario: no conflict
     Then it runs the commands

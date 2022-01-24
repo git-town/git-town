@@ -1,10 +1,5 @@
 Feature: git town-kill: killing the given feature branch when on it
 
-  As a developer currently on a feature branch that leads nowhere
-  I want to be able to kill it by name
-  So that cleaning out branches is easy and robust.
-
-
   Background:
     Given my repo has the feature branches "other-feature" and "current-feature"
     And the following commits exist in my repo
@@ -14,7 +9,6 @@ Feature: git town-kill: killing the given feature branch when on it
     And I am on the "current-feature" branch
     And my workspace has an uncommitted file
     When I run "git-town kill current-feature"
-
 
   Scenario: result
     Then it runs the commands
@@ -34,7 +28,6 @@ Feature: git town-kill: killing the given feature branch when on it
     And my repo now has the following commits
       | BRANCH        | LOCATION      | MESSAGE              |
       | other-feature | local, remote | other feature commit |
-
 
   Scenario: undoing the kill
     When I run "git-town undo"

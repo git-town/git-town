@@ -1,10 +1,5 @@
 Feature: git town-rename-branch: does nothing if renaming a perennial branch onto itself
 
-  As a developer renaming a perennial branch onto itself
-  I should get a message saying no action is needed
-  So that I am aware that I just did a no-op.
-
-
   Background:
     Given my repo has the perennial branch "production"
     And the following commits exist in my repo
@@ -13,7 +8,6 @@ Feature: git town-rename-branch: does nothing if renaming a perennial branch ont
     And I am on the "production" branch
     And my workspace has an uncommitted file
     When I run "git-town rename-branch --force production production"
-
 
   Scenario: result
     Then it runs no commands

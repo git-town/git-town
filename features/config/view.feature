@@ -1,8 +1,5 @@
 Feature: listing the configuration
 
-  To manage Git Town's configuration efficiently
-  I want to see the complete Git Town configuration including missing entries.
-
   Scenario: complete without nested branches
     Given the main branch is configured as "main"
     And the perennial branches are configured as "qa" and "staging"

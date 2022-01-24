@@ -1,14 +1,10 @@
 Feature: git town-ship: errors when trying to ship a perennial branch
 
-  (see ../current_branch/on_perennial_branch.feature)
-
-
   Background:
     Given my repo has the perennial branches "qa" and "production"
     And I am on the "main" branch
     And my workspace has an uncommitted file
     When I run "git-town ship production"
-
 
   Scenario: result
     Then it runs the commands

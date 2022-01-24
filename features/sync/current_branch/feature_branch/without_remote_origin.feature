@@ -1,8 +1,5 @@
 Feature: git-town sync: syncing the current feature branch (without a tracking branch or remote repo)
 
-  (see ./with_a_tracking_branch.feature)
-
-
   Background:
     Given my repo does not have a remote origin
     And my repo has a local feature branch named "feature"
@@ -13,7 +10,6 @@ Feature: git-town sync: syncing the current feature branch (without a tracking b
     And I am on the "feature" branch
     And my workspace has an uncommitted file
     When I run "git-town sync"
-
 
   Scenario: result
     Then it runs the commands

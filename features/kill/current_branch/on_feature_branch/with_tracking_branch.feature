@@ -1,10 +1,5 @@
 Feature: git town-kill: killing the current feature branch with a tracking branch
 
-  As a developer currently working on a feature branch that leads nowhere
-  I want to be able to cleanly delete the current branch including all open changes
-  So that my workspace doesn't contain irrelevant branches and my productivity remains high.
-
-
   Background:
     Given my repo has the feature branches "current-feature" and "other-feature"
     And the following commits exist in my repo
@@ -14,7 +9,6 @@ Feature: git town-kill: killing the current feature branch with a tracking branc
     And I am on the "current-feature" branch
     And my workspace has an uncommitted file
     When I run "git-town kill"
-
 
   Scenario: result
     Then it runs the commands
@@ -34,7 +28,6 @@ Feature: git town-kill: killing the current feature branch with a tracking branc
     And my repo now has the following commits
       | BRANCH        | LOCATION      | MESSAGE              |
       | other-feature | local, remote | other feature commit |
-
 
   Scenario: undoing the kill
     When I run "git-town undo"

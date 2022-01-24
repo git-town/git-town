@@ -1,10 +1,6 @@
 @skipWindows
 Feature: Ask for missing configuration
 
-  To ensure the hack command finishes
-  When configuration information is missing
-  I want to have a chance to enter the missing configuration data.
-
   Background: running unconfigured
     Given I haven't configured Git Town yet
     When I run "git-town hack feature" and answer the prompts:

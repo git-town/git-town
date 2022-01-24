@@ -1,8 +1,5 @@
 Feature: Appending a branch to a perennial branch
 
-  To make hotfixes for perennial branches
-  I want to create feature branches as children of perennial branches.
-
   Background:
     Given my repo has the perennial branches "qa" and "production"
     And the following commits exist in my repo

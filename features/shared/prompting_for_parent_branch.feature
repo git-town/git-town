@@ -1,11 +1,6 @@
 @skipWindows
 Feature: Prompt for parent branch when unknown
 
-  As a developer running a command on a branch without a parent branch
-  I should see a prompt asking for the information
-  So the command can work as I expect
-
-
   Scenario: prompting for parent branch when running git town-append
     Given my repo has a branch "feature-1"
     And I am on the "feature-1" branch
@@ -17,7 +12,6 @@ Feature: Prompt for parent branch when unknown
       | BRANCH    | PARENT    |
       | feature-1 | main      |
       | feature-2 | feature-1 |
-
 
   Scenario: prompting for parent branch when running git town-hack -p
     Given my repo has a branch "feature-1"
@@ -32,7 +26,6 @@ Feature: Prompt for parent branch when unknown
       | feature-1 | main      |
       | feature-2 | feature-1 |
 
-
   Scenario: prompting for parent branch when running git town-kill
     Given my repo has a branch "feature"
     And I am on the "feature" branch
@@ -44,7 +37,6 @@ Feature: Prompt for parent branch when unknown
       | REPOSITORY | BRANCHES |
       | local      | main     |
       | remote     | main     |
-
 
   @skipWindows
   Scenario: prompting for parent branch when running git town-new-pull-request
@@ -59,7 +51,6 @@ Feature: Prompt for parent branch when unknown
       """
       https://github.com/git-town/git-town/compare/feature?expand=1
       """
-
 
   Scenario: prompting for parent branch when running git town-sync
     Given my repo has a branch "feature"
@@ -77,7 +68,6 @@ Feature: Prompt for parent branch when unknown
       | feature | local, remote | feature commit                   |
       |         |               | main commit                      |
       |         |               | Merge branch 'main' into feature |
-
 
   Scenario: prompting for parent branch when running git town-sync --all
     Given my repo has a branch "feature-1"

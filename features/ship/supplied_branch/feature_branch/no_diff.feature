@@ -1,8 +1,5 @@
 Feature: git town-ship: errors when trying to ship the supplied feature branch that has no differences with the main branch
 
-  (see ../../current_branch/on_feature_branch/without_open_changes/no_diff.feature)
-
-
   Background:
     Given my repo has the feature branches "empty-feature" and "other-feature"
     And the following commits exist in my repo
@@ -12,7 +9,6 @@ Feature: git town-ship: errors when trying to ship the supplied feature branch t
     And I am on the "other-feature" branch
     And my workspace has an uncommitted file
     When I run "git-town ship empty-feature"
-
 
   Scenario: result
     Then it runs the commands

@@ -1,9 +1,5 @@
 Feature: git town hack: push branch to remote upon creation
 
-  To create fully set up branches without the need to run an additional "git sync"
-  When the "new-branch-push-flag" is set
-  I want that Git Town pushes the new branch to the CI server.
-
   Background:
     Given the new-branch-push-flag configuration is true
     And the following commits exist in my repo

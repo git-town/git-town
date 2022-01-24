@@ -12,7 +12,6 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
     And my workspace has an uncommitted file
     When I run "git-town sync --all"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH    | COMMAND                              |
@@ -33,7 +32,6 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
     And my uncommitted file is stashed
     And my repo now has a merge in progress
 
-
   Scenario: aborting
     When I run "git-town abort"
     Then it runs the commands
@@ -50,7 +48,6 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       | feature-1 | local         | feature-1 local commit  | conflicting_file     |
       |           | remote        | feature-1 remote commit | feature1_remote_file |
       | feature-2 | local, remote | feature-2 commit        | feature2_file        |
-
 
   Scenario: skipping
     When I run "git-town skip"
@@ -76,7 +73,6 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       |           |               | main commit                        | conflicting_file     |
       |           |               | Merge branch 'main' into feature-2 |                      |
 
-
   Scenario: continuing without resolving the conflicts
     When I run "git-town continue"
     Then it runs no commands
@@ -87,7 +83,6 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
     And I am still on the "feature-1" branch
     And my uncommitted file is stashed
     And my repo still has a merge in progress
-
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
@@ -116,7 +111,6 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       | feature-2 | local, remote | feature-2 commit                                               | feature2_file        |
       |           |               | main commit                                                    | conflicting_file     |
       |           |               | Merge branch 'main' into feature-2                             |                      |
-
 
   Scenario: continuing after resolving the conflicts and committing
     Given I resolve the conflict in "conflicting_file"

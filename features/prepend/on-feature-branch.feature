@@ -1,10 +1,5 @@
 Feature: Prepending a branch to a feature branch
 
-  As a developer working on a feature branch and coming across a number of changes I want to commit independently
-  I want to be able to insert a feature branch as the direct parent of my current feature branch
-  So that I can review and commit the changes separately without losing access to them in my current feature branch.
-
-
   Background:
     Given my repo has a feature branch named "existing-feature"
     And the following commits exist in my repo
@@ -13,7 +8,6 @@ Feature: Prepending a branch to a feature branch
     And I am on the "existing-feature" branch
     And my workspace has an uncommitted file
     When I run "git-town prepend new-parent"
-
 
   Scenario: inserting a branch into the branch ancestry
     Then it runs the commands
@@ -35,7 +29,6 @@ Feature: Prepending a branch to a feature branch
       | BRANCH           | PARENT     |
       | existing-feature | new-parent |
       | new-parent       | main       |
-
 
   Scenario: undo
     When I run "git-town undo"

@@ -1,8 +1,5 @@
 Feature: git town-hack: starting a new feature from the main branch (with remote repo)
 
-  To review and ship independent changes separately
-  I want to create new up-to-date feature branches and bring over my work to them.
-
   Background:
     Given the following commits exist in my repo
       | BRANCH | LOCATION | MESSAGE     |

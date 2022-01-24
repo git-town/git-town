@@ -1,8 +1,5 @@
 Feature: git town-kill: killing the current feature branch without a tracking branch (without remote repo)
 
-  (see ../without_tracking_branch/with_open_changes.feature)
-
-
   Background:
     Given my repo does not have a remote origin
     And my repo has the local feature branches "current-feature" and "other-feature"
@@ -13,7 +10,6 @@ Feature: git town-kill: killing the current feature branch without a tracking br
     And I am on the "current-feature" branch
     And my workspace has an uncommitted file
     When I run "git-town kill"
-
 
   Scenario: result
     Then it runs the commands
@@ -29,7 +25,6 @@ Feature: git town-kill: killing the current feature branch without a tracking br
     And my repo now has the following commits
       | BRANCH        | LOCATION | MESSAGE              |
       | other-feature | local    | other feature commit |
-
 
   Scenario: Undoing a kill of a local feature branch
     When I run "git-town undo"

@@ -1,8 +1,5 @@
 Feature: git town-ship: aborting the ship of the supplied feature branch by entering an empty commit message
 
-  (see ../../current_branch/on_feature_branch/without_open_changes/empty_commit_message.feature)
-
-
   Background:
     Given my repo has the feature branches "feature" and "other-feature"
     And the following commits exist in my repo
@@ -12,7 +9,6 @@ Feature: git town-ship: aborting the ship of the supplied feature branch by ente
     And I am on the "other-feature" branch
     And my workspace has an uncommitted file with name "feature_file" and content "conflicting content"
     When I run "git-town ship feature" and enter an empty commit message
-
 
   @skipWindows
   Scenario: result

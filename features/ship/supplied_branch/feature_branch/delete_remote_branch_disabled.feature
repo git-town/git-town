@@ -1,10 +1,5 @@
 Feature: Skip deleting the remote branch when shipping another branch
 
-  When using GitHub's feature to automatically delete head branches of pull requests.
-  I want "git ship" to skip deleting the remote feature branch
-  So that I can keep using Git Town in this situation.
-
-
   Background:
     Given my repo has the feature branches "feature" and "other-feature"
     And the following commits exist in my repo
@@ -15,7 +10,6 @@ Feature: Skip deleting the remote branch when shipping another branch
     And my repo has "git-town.ship-delete-remote-branch" set to "false"
     When I run "git-town ship feature -m 'feature done'"
     And the remote deletes the "feature" branch
-
 
   Scenario: result
     Then it runs the commands
@@ -41,7 +35,6 @@ Feature: Skip deleting the remote branch when shipping another branch
       | BRANCH        | LOCATION      | MESSAGE      | FILE NAME    |
       | main          | local, remote | feature done | feature_file |
       | other-feature | local         | other commit | other_file   |
-
 
   Scenario: undo
     When I run "git-town undo"

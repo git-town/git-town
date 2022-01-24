@@ -1,9 +1,5 @@
 Feature: git town-hack: resolving conflicts between main branch and its tracking branch
 
-  To rely on Git Town to finish the command or cleanly abort
-  When there are conflicting commits on the local and remote main branch
-  I want to be given the choice to resolve the conflicts or abort.
-
   Background:
     Given my repo has a feature branch named "existing-feature"
     And the following commits exist in my repo
@@ -41,7 +37,6 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
     And my workspace has the uncommitted file again
     And there is no rebase in progress
     And my repo is left with my original commits
-    # And Git Town now has no branch hierarchy information TODO
 
   Scenario: continuing without resolving the conflicts
     When I run "git-town continue"
@@ -65,14 +60,11 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
     And I am now on the "new-feature" branch
     And my workspace still contains my uncommitted file
     And my repo now has the following commits
-      | BRANCH   | LOCATION      | MESSAGE                   | FILE NAME        |
-      | main     | local, remote | conflicting remote commit | conflicting_file |
-      |          |               | conflicting local commit  | conflicting_file |
+      | BRANCH      | LOCATION      | MESSAGE                   | FILE NAME        |
+      | main        | local, remote | conflicting remote commit | conflicting_file |
+      |             |               | conflicting local commit  | conflicting_file |
       | new-feature | local         | conflicting remote commit | conflicting_file |
-      |          |               | conflicting local commit  | conflicting_file |
-    # And Git Town is now aware of this branch hierarchy  TODO
-    #   | BRANCH      | PARENT |
-    #   | new-feature | main   |
+      |             |               | conflicting local commit  | conflicting_file |
 
   Scenario: continuing after resolving the conflicts and finishing the rebase
     Given I resolve the conflict in "conflicting_file"
@@ -92,6 +84,3 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       |             |               | conflicting local commit  | conflicting_file |
       | new-feature   | local         | conflicting remote commit | conflicting_file |
       |             |               | conflicting local commit  | conflicting_file |
-    # And Git Town is now aware of this branch hierarchy  TODO
-    #   | BRANCH      | PARENT |
-    #   | new-feature | main   |

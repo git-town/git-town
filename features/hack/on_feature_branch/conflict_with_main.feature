@@ -26,8 +26,6 @@ Feature: git town-hack: resolving conflicts between uncommitted changes and the 
       """
     And the file "conflicting_file" contains unresolved conflicts
 
-  # TODO: abort
-
   Scenario: continuing without resolving the conflicts
     When I run "git-town continue"
     Then it prints the error:

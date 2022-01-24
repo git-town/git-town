@@ -1,14 +1,10 @@
 Feature: git town-ship: errors if on supplied branch and there are open changes
 
-  (see ../../../current_branch/on_feature_branch/with_open_changes.feature)
-
-
   Background:
     Given my repo has a feature branch named "feature"
     And my workspace has an uncommitted file
     And I am on the "feature" branch
     When I run "git-town ship feature"
-
 
   Scenario: result
     Then it runs no commands

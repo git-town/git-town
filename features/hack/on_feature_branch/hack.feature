@@ -1,7 +1,4 @@
-Feature: git town-hack: starting a new feature from a feature branch with remote repo
-
-  To review and ship independent changes separately
-  I want to create new up-to-date feature branches and bring over my work to them.
+Feature: git town hack: starting a new feature from a feature branch with remote repo
 
   Background:
     Given my repo has a feature branch named "existing-feature"

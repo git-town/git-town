@@ -1,10 +1,5 @@
 Feature: git town-prune-branches: remove perennial branch configuration when pruning perennial branches
 
-  As a developer pruning perennial branches
-  I want the configuration to be removed
-  So that my config does not contain outdated information.
-
-
   Background:
     Given my repo has the branches "active-perennial" and "deleted-perennial"
     And the perennial branches are configured as "active-perennial" and "deleted-perennial"
@@ -16,7 +11,6 @@ Feature: git town-prune-branches: remove perennial branch configuration when pru
     And I am on the "deleted-perennial" branch
     And my workspace has an uncommitted file
     When I run "git-town prune-branches"
-
 
   Scenario: result
     Then it runs the commands
@@ -31,7 +25,6 @@ Feature: git town-prune-branches: remove perennial branch configuration when pru
       | local      | main, active-perennial |
       | remote     | main, active-perennial |
     And the perennial branches are now configured as "active-perennial"
-
 
   Scenario: undo
     When I run "git-town undo"

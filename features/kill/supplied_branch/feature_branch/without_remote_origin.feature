@@ -1,8 +1,5 @@
 Feature: git town-kill: killing the given feature branch (without remote repo)
 
-  (see ../with_tracking_branch/with_open_changes.feature)
-
-
   Background:
     Given my repo does not have a remote origin
     And my repo has the local feature branches "current-feature" and "other-feature"
@@ -14,7 +11,6 @@ Feature: git town-kill: killing the given feature branch (without remote repo)
     And I am on the "current-feature" branch
     And my workspace has an uncommitted file with name "conflicting_file" and content "conflicting content"
     When I run "git-town kill other-feature"
-
 
   Scenario: result
     Then it runs the commands
@@ -32,7 +28,6 @@ Feature: git town-kill: killing the given feature branch (without remote repo)
       | BRANCH          | LOCATION | MESSAGE                | FILE NAME            |
       | main            | local    | main commit            | conflicting_file     |
       | current-feature | local    | current feature commit | current_feature_file |
-
 
   Scenario: undoing the kill
     When I run "git-town undo"

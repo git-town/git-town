@@ -1,9 +1,5 @@
 Feature: git append: offline mode
 
-  To keep using Git Town without internet connection
-  When enabling offline mode for Git Town
-  I want that it creates new branches without network activity.
-
   Background:
     Given Git Town is in offline mode
     And my repo has a feature branch named "existing-feature"

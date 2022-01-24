@@ -1,8 +1,5 @@
 Feature: resetting the configuration
 
-  To cleanly uninstall Git Town
-  I want to be able to remove all Git Town configuration entries from a repo.
-
   Scenario: everything is configured
     Given the main branch is configured as "main"
     And the perennial branches are configured as "qa" and "staging"

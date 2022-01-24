@@ -7,7 +7,6 @@ Feature: displaying the global new branch push flag configuration
       false
       """
 
-
   Scenario: set to "true"
     Given the global new-branch-push-flag configuration is true
     When I run "git-town new-branch-push-flag --global"
@@ -15,7 +14,6 @@ Feature: displaying the global new branch push flag configuration
       """
       true
       """
-
 
   Scenario: set to false
     Given the global new-branch-push-flag configuration is false
