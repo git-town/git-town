@@ -11,7 +11,6 @@ Feature: git town-rename-branch: offline mode
     And I am on the "feature" branch
     When I run "git-town rename-branch renamed-feature"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH          | COMMAND                            |
@@ -24,7 +23,6 @@ Feature: git town-rename-branch: offline mode
       | main            | local, remote | main commit |
       | feature         | remote        | feat commit |
       | renamed-feature | local         | feat commit |
-
 
   Scenario: undo rename branch
     When I run "git-town undo"

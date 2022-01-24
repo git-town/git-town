@@ -10,7 +10,6 @@ Feature: git town-hack: offline mode
     And my workspace has an uncommitted file
     When I run "git-town hack feature"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                 |

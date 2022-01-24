@@ -13,7 +13,6 @@ Feature: Syncing before creating the pull request
     And my workspace has an uncommitted file
     When I run "git-town new-pull-request"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                  |
@@ -33,7 +32,6 @@ Feature: Syncing before creating the pull request
     And my uncommitted file is stashed
     And my repo now has a merge in progress
 
-
   Scenario: aborting
     When I run "git-town abort"
     Then it runs the commands
@@ -47,7 +45,6 @@ Feature: Syncing before creating the pull request
     And there is no merge in progress
     And my repo is left with my original commits
 
-
   Scenario: continuing without resolving the conflicts
     When I run "git-town continue"
     Then it runs no commands
@@ -58,7 +55,6 @@ Feature: Syncing before creating the pull request
     And I am still on the "feature" branch
     And my uncommitted file is stashed
     And my repo still has a merge in progress
-
 
   @skipWindows
   Scenario: continuing after resolving conflicts
@@ -82,7 +78,6 @@ Feature: Syncing before creating the pull request
       | feature | local, remote | feature commit                   | conflicting_file |
       |         |               | main commit                      | conflicting_file |
       |         |               | Merge branch 'main' into feature |                  |
-
 
   @skipWindows
   Scenario: continuing after resolving conflicts and committing

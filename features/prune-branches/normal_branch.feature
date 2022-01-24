@@ -12,7 +12,6 @@ Feature: git town-prune-branches: delete branches that were shipped or removed o
     And my workspace has an uncommitted file
     When I run "git-town prune-branches"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH          | COMMAND                       |
@@ -25,7 +24,6 @@ Feature: git town-prune-branches: delete branches that were shipped or removed o
       | REPOSITORY | BRANCHES             |
       | local      | main, active-feature |
       | remote     | main, active-feature |
-
 
   Scenario: undo
     When I run "git-town undo"

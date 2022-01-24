@@ -7,7 +7,6 @@ Feature: update the parent of a nested feature branch
     And my repo has a feature branch named "child-feature" as a child of "parent-feature"
     And I am on the "child-feature" branch
 
-
   Scenario: selecting the default branch (current parent)
     When I run "git-town set-parent-branch" and answer the prompts:
       | PROMPT                                              | ANSWER  |
@@ -17,7 +16,6 @@ Feature: update the parent of a nested feature branch
       | child-feature  | parent-feature |
       | parent-feature | main           |
 
-
   Scenario: selecting another branch
     When I run "git-town set-parent-branch" and answer the prompts:
       | PROMPT                                              | ANSWER      |
@@ -26,7 +24,6 @@ Feature: update the parent of a nested feature branch
       | BRANCH         | PARENT |
       | child-feature  | main   |
       | parent-feature | main   |
-
 
   Scenario: choosing "<none> (make a perennial branch)"
     When I run "git-town set-parent-branch" and answer the prompts:

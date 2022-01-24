@@ -11,7 +11,6 @@ Feature: git town-kill: killing a remote branch in offline mode
     And I am on the "main" branch
     When I run "git-town kill feature"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND |

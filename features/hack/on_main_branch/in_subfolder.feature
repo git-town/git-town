@@ -8,7 +8,6 @@ Feature: git town-hack: starting a new feature from a subfolder on the main bran
     And my workspace has an uncommitted file
     When I run "git-town hack new-feature" in the "new_folder" folder
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH      | COMMAND                      |

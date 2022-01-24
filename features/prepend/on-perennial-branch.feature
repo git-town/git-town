@@ -6,7 +6,6 @@ Feature: git town-prepend: errors when trying to prepend something in front of t
     And I am on the "production" branch
     When I run "git-town prepend new-parent"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH     | COMMAND                  |

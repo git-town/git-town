@@ -6,7 +6,6 @@ Feature: git town-ship: errors when trying to ship a perennial branch
     And I am on the "production" branch
     When I run "git-town ship"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH     | COMMAND                  |

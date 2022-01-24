@@ -9,7 +9,6 @@ Feature: display the perennial branches configuration
       [none]
       """
 
-
   Scenario: perennial branches are configured
     Given the perennial branches are configured as "qa" and "production"
     When I run "git-town perennial-branches"

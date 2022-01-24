@@ -14,7 +14,6 @@ Feature: git town-kill: killing the current feature branch with child branches
     And my workspace has an uncommitted file
     When I run "git-town kill"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH    | COMMAND                          |
@@ -38,7 +37,6 @@ Feature: git town-kill: killing the current feature branch with child branches
       | BRANCH    | PARENT    |
       | feature-1 | main      |
       | feature-3 | feature-1 |
-
 
   Scenario: undoing the kill
     When I run "git-town undo"

@@ -4,7 +4,6 @@ Feature: git-town sync: syncing the current perennial branch
   I want to be able update my ongoing work to include the latest finished features from the rest of the team
   So that our collaboration remains effective.
 
-
   Background:
     Given my repo has the perennial branches "production" and "qa"
     And the following commits exist in my repo
@@ -15,7 +14,6 @@ Feature: git-town sync: syncing the current perennial branch
     And I am on the "qa" branch
     And my workspace has an uncommitted file
     When I run "git-town sync"
-
 
   Scenario: no conflict
     Then it runs the commands

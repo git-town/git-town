@@ -10,7 +10,6 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
     And my workspace has an uncommitted file
     When I run "git-town sync"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                            |
@@ -33,7 +32,6 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
     And my uncommitted file is stashed
     And my repo now has a merge in progress
 
-
   Scenario: aborting
     When I run "git-town abort"
     Then it runs the commands
@@ -50,7 +48,6 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       | main    | local, remote | conflicting main commit    | conflicting_file | main content    |
       | feature | local         | conflicting feature commit | conflicting_file | feature content |
 
-
   Scenario: continuing without resolving the conflicts
     When I run "git-town continue"
     Then it runs no commands
@@ -61,7 +58,6 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
     And I am still on the "feature" branch
     And my uncommitted file is stashed
     And my repo still has a merge in progress
-
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
@@ -84,7 +80,6 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |
 
-
   Scenario: continuing after resolving the conflicts resulting in no changes
     Given I resolve the conflict in "conflicting_file" with "feature content"
     When I run "git-town continue"
@@ -105,7 +100,6 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       | BRANCH  | NAME             | CONTENT         |
       | main    | conflicting_file | main content    |
       | feature | conflicting_file | feature content |
-
 
   Scenario: continuing after resolving the conflicts and comitting
     Given I resolve the conflict in "conflicting_file"

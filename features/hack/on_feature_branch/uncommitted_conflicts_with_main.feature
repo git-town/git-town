@@ -9,7 +9,6 @@ Feature: git town-hack: resolving conflicts between uncommitted changes and the 
     And my workspace has an uncommitted file with name "conflicting_file" and content "conflicting content"
     When I run "git-town hack new-feature"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH           | COMMAND                     |
@@ -27,14 +26,12 @@ Feature: git town-hack: resolving conflicts between uncommitted changes and the 
       """
     And the file "conflicting_file" contains unresolved conflicts
 
-
   Scenario: continuing without resolving the conflicts
     When I run "git-town continue"
     Then it prints the error:
       """
       you must resolve the conflicts before continuing
       """
-
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"

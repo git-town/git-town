@@ -13,7 +13,6 @@ Feature: git town-prune-branches: delete branches that were shipped or removed o
     And my workspace has an uncommitted file
     When I run "git-town prune-branches"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                  |
@@ -28,7 +27,6 @@ Feature: git town-prune-branches: delete branches that were shipped or removed o
     And Git Town is now aware of this branch hierarchy
       | BRANCH        | PARENT |
       | feature-child | main   |
-
 
   Scenario: undo
     When I run "git-town undo"

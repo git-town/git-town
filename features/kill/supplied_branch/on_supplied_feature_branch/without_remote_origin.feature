@@ -12,7 +12,6 @@ Feature: git town-kill: killing the given feature branch when on it (without rem
     And my workspace has an uncommitted file
     When I run "git-town kill current-feature"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH          | COMMAND                                |
@@ -28,7 +27,6 @@ Feature: git town-kill: killing the given feature branch when on it (without rem
     And my repo now has the following commits
       | BRANCH        | LOCATION | MESSAGE              |
       | other-feature | local    | other feature commit |
-
 
   Scenario: undoing the kill
     When I run "git-town undo"

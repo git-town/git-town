@@ -12,7 +12,6 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
     And my workspace has an uncommitted file
     And I run "git-town ship feature -m 'feature done'"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH        | COMMAND                  |
@@ -29,7 +28,6 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
     And my repo now has a rebase in progress
     And my uncommitted file is stashed
 
-
   Scenario: aborting
     When I run "git-town abort"
     Then it runs the commands
@@ -41,7 +39,6 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
     And my workspace still contains my uncommitted file
     And there is no rebase in progress
     And my repo is left with my original commits
-
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
@@ -72,7 +69,6 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       | main   | local, remote | conflicting remote commit | conflicting_file |
       |        |               | conflicting local commit  | conflicting_file |
       |        |               | feature done              | feature_file     |
-
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"

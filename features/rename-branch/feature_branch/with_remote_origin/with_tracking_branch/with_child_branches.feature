@@ -11,7 +11,6 @@ Feature: git town-rename-branch: renaming a feature branch with child branches
     And I am on the "parent-feature" branch
     When I run "git-town rename-branch parent-feature renamed-parent-feature"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH                 | COMMAND                                          |
@@ -30,7 +29,6 @@ Feature: git town-rename-branch: renaming a feature branch with child branches
       | BRANCH                 | PARENT                 |
       | child-feature          | renamed-parent-feature |
       | renamed-parent-feature | main                   |
-
 
   Scenario: undo
     When I run "git-town undo"

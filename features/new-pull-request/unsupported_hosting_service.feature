@@ -6,7 +6,6 @@ Feature: git-new-pull-request: when origin is unsupported
     And I am on the "feature" branch
     When I run "git-town new-pull-request"
 
-
   Scenario: result
     Then it prints the error:
       """

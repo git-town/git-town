@@ -12,7 +12,6 @@ Feature: git town-kill: killing the current feature branch with a deleted tracki
     And my workspace has an uncommitted file
     When I run "git-town kill"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH          | COMMAND                                |
@@ -30,7 +29,6 @@ Feature: git town-kill: killing the current feature branch with a deleted tracki
     And my repo now has the following commits
       | BRANCH        | LOCATION      | MESSAGE              |
       | other-feature | local, remote | other feature commit |
-
 
   Scenario: undoing the kill
     When I run "git-town undo"

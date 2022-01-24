@@ -11,7 +11,6 @@ Feature: Skip deleting the remote branch when shipping the current branch
     When I run "git-town ship -m 'feature done'"
     And the remote deletes the "feature" branch
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                            |
@@ -34,7 +33,6 @@ Feature: Skip deleting the remote branch when shipping the current branch
     And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME    |
       | main   | local, remote | feature done | feature_file |
-
 
   Scenario: undo
     When I run "git-town undo"

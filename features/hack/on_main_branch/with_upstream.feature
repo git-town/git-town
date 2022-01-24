@@ -9,7 +9,6 @@ Feature: git-hack: on the main branch with a upstream remote
     And my workspace has an uncommitted file
     When I run "git-town hack new-feature"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH      | COMMAND                     |

@@ -9,7 +9,6 @@ Feature: display the main branch configuration
       [none]
       """
 
-
   Scenario: main branch is configured
     Given the main branch is configured as "main"
     When I run "git-town main-branch"

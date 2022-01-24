@@ -9,7 +9,6 @@ Feature: git town-ship: trying the ship of the current feature branch without ed
     And I am on the "feature" branch
     When I run "git-town ship" and close the editor
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                            |
@@ -32,7 +31,6 @@ Feature: git town-ship: trying the ship of the current feature branch without ed
       """
     And I am still on the "feature" branch
     And my repo is left with my original commits
-
 
   Scenario: undo
     When I run "git-town undo"

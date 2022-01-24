@@ -17,7 +17,6 @@ Feature: warn about unfinished prompt asking the user how to proceed
       To continue after having resolved conflicts, run "git-town continue".
       """
 
-
   Scenario: attempting to sync again and choosing to quit
     When I run "git-town sync" and answer the prompts:
       | PROMPT                       | ANSWER  |
@@ -29,7 +28,6 @@ Feature: warn about unfinished prompt asking the user how to proceed
       """
     And my uncommitted file is stashed
 
-
   Scenario: attempting to sync again and choosing to continue without resolving conflicts
     When I run "git-town sync" and answer the prompts:
       | PROMPT                       | ANSWER        |
@@ -40,7 +38,6 @@ Feature: warn about unfinished prompt asking the user how to proceed
       you must resolve the conflicts before continuing
       """
     And my uncommitted file is stashed
-
 
   Scenario: attempting to sync again and choosing to continue after resolving conflicts
     Given I resolve the conflict in "conflicting_file"
@@ -57,7 +54,6 @@ Feature: warn about unfinished prompt asking the user how to proceed
       |         | git push                           |
       |         | git stash pop                      |
 
-
   Scenario: attempting to sync again and choosing to abort
     When I run "git-town sync" and answer the prompts:
       | PROMPT                       | ANSWER              |
@@ -67,7 +63,6 @@ Feature: warn about unfinished prompt asking the user how to proceed
       | main    | git rebase --abort   |
       |         | git checkout feature |
       | feature | git stash pop        |
-
 
   Scenario: running another command after manually aborting
     Given I run "git rebase --abort"
@@ -84,7 +79,6 @@ Feature: warn about unfinished prompt asking the user how to proceed
       |         | git commit -m "WIP on feature" |
       |         | git checkout main              |
       | main    | git branch -D feature          |
-
 
   Scenario: does not report unfinished state after abort
     Given I run "git-town abort"

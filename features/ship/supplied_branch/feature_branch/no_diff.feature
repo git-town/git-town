@@ -11,7 +11,6 @@ Feature: git town-ship: errors when trying to ship the supplied feature branch t
     And my workspace has an uncommitted file
     When I run "git-town ship empty-feature"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH        | COMMAND                                     |

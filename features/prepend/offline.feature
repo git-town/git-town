@@ -10,7 +10,6 @@ Feature: git prepend: offline mode
     And I am on the "existing-feature" branch
     And my workspace has an uncommitted file
 
-
   Scenario: inserting a branch into the branch ancestry
     When I run "git-town prepend new-parent"
     Then it runs the commands
@@ -31,7 +30,6 @@ Feature: git prepend: offline mode
       | BRANCH           | PARENT     |
       | existing-feature | new-parent |
       | new-parent       | main       |
-
 
   Scenario: Undo
     Given I run "git-town prepend new-parent"

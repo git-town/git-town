@@ -14,7 +14,6 @@ Feature: git town-ship: shipping the supplied feature branch with a tracking bra
       | PROMPT                                        | ANSWER  |
       | Please specify the parent branch of 'feature' | [ENTER] |
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH        | COMMAND                            |

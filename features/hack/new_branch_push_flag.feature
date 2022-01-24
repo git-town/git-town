@@ -9,7 +9,6 @@ Feature: git town-hack: push branch to remote upon creation
     And I am on the "main" branch
     When I run "git-town hack feature"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                    |

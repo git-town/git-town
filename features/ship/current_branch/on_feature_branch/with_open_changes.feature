@@ -7,7 +7,6 @@ Feature: git town-ship: errors if there are open changes
     And I am on the "feature" branch
     When I run "git-town ship"
 
-
   Scenario: result
     Then it runs no commands
     And it prints the error:
@@ -18,7 +17,6 @@ Feature: git town-ship: errors if there are open changes
     And my workspace still contains my uncommitted file
     And my repo now has the following commits
       | BRANCH | LOCATION |
-
 
   Scenario: undo
     When I run "git-town undo"

@@ -12,7 +12,6 @@ Feature: git town-kill: killing the given feature branch
     And my workspace has an uncommitted file with name "conflicting_file" and content "conflicting content"
     When I run "git-town kill dead-feature"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH       | COMMAND                       |
@@ -29,7 +28,6 @@ Feature: git town-kill: killing the given feature branch
       | BRANCH       | LOCATION      | MESSAGE                              | FILE NAME        |
       | main         | local, remote | conflicting with uncommitted changes | conflicting_file |
       | good-feature | local, remote | good commit                          | good_file        |
-
 
   Scenario: undoing the kill
     When I run "git-town undo"

@@ -9,7 +9,6 @@ Feature: git town-ship: aborting the ship of the current feature branch by enter
     And I am on the "feature" branch
     When I run "git-town ship" and enter an empty commit message
 
-
   @skipWindows
   Scenario: result
     Then it runs the commands
@@ -33,7 +32,6 @@ Feature: git town-ship: aborting the ship of the current feature branch by enter
       """
     And I am still on the "feature" branch
     And my repo is left with my original commits
-
 
   @skipWindows
   Scenario: undo

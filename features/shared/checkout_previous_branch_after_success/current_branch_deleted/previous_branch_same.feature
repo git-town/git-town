@@ -8,7 +8,6 @@ Feature: Git checkout history is preserved when deleting the current branch
     Then I am now on the "main" branch
     And the previous Git branch is still "previous"
 
-
   Scenario: prune-branches
     Given my repo has the feature branches "previous" and "current"
     And the "current" branch gets deleted on the remote
@@ -19,7 +18,6 @@ Feature: Git checkout history is preserved when deleting the current branch
     When I run "git-town prune-branches"
     Then I am now on the "main" branch
     And the previous Git branch is still "previous"
-
 
   Scenario: ship
     Given my repo has the feature branches "previous" and "current"

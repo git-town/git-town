@@ -9,7 +9,6 @@ Feature: Appending a branch to a perennial branch
     And my workspace has an uncommitted file
     When I run "git-town append new-child"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH     | COMMAND                         |
@@ -29,7 +28,6 @@ Feature: Appending a branch to a perennial branch
     And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT     |
       | new-child | production |
-
 
   Scenario: Undo
     When I run "git-town undo"

@@ -8,7 +8,6 @@ Feature: git town-prepend: errors when trying to prepend something in front of t
       | feature | local, remote | good commit |
     And I am on the "main" branch
 
-
   Scenario: result
     Given my workspace has an uncommitted file
     When I run "git-town prepend new-branch"

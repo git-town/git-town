@@ -15,7 +15,6 @@ Feature: git town: alias
       | git config --global alias.ship "town ship"                         |
       | git config --global alias.sync "town sync"                         |
 
-
   Scenario: remove alias
     Given I run "git-town alias true"
     When I run "git-town alias false"
@@ -32,12 +31,10 @@ Feature: git town: alias
       | git config --global --unset alias.ship             |
       | git config --global --unset alias.sync             |
 
-
   Scenario: remove alias does not remove unrelated aliases
     Given I run "git config --global alias.hack checkout"
     When I run "git-town alias false"
     Then it runs no commands
-
 
   Scenario: works outside of a Git repository
     Given my workspace is currently not a Git repo

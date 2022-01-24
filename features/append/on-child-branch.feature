@@ -8,7 +8,6 @@ Feature: Appending a branch to a feature branch
     And I am on the "existing-feature" branch
     And my workspace has an uncommitted file
 
-
   Scenario: inserting a branch into the branch ancestry
     When I run "git-town append new-child"
     Then it runs the commands
@@ -34,7 +33,6 @@ Feature: Appending a branch to a feature branch
       | BRANCH           | PARENT           |
       | existing-feature | main             |
       | new-child        | existing-feature |
-
 
   Scenario: Undo
     Given I run "git-town append new-child"

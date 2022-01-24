@@ -9,7 +9,6 @@ Feature: Show clear error if trying to continue after executing a successful com
       nothing to continue
       """
 
-
   Scenario: continuing after successful git-ship
     Given my repo has a feature branch named "current-feature"
     And the following commits exist in my repo
@@ -22,7 +21,6 @@ Feature: Show clear error if trying to continue after executing a successful com
       """
       nothing to continue
       """
-
 
   Scenario: continuing after successful git-sync
     Given I am on the "main" branch

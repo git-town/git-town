@@ -10,7 +10,6 @@ Feature: git town-ship: errors when trying to ship the current feature branch th
     And I am on the "empty-feature" branch
     When I run "git-town ship"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH        | COMMAND                                     |
@@ -28,7 +27,6 @@ Feature: git town-ship: errors when trying to ship the current feature branch th
       the branch "empty-feature" has no shippable changes
       """
     And I am still on the "empty-feature" branch
-
 
   Scenario: undo
     When I run "git-town undo"

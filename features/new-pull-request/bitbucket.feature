@@ -22,7 +22,6 @@ Feature: git-new-pull-request when origin is on Bitbucket
       | git@bitbucket.org/git-town/git-town.git              |
       | git@bitbucket.org/git-town/git-town                  |
 
-
   @skipWindows
   Scenario Outline: origin includes path that looks like a URL
     Given my repo has a feature branch named "feature"
@@ -43,7 +42,6 @@ Feature: git-new-pull-request when origin is on Bitbucket
       | https://username@bitbucket.org/git-town/git-town.github.com     |
       | git@bitbucket.org/git-town/git-town.github.com.git              |
       | git@bitbucket.org/git-town/git-town.github.com                  |
-
 
   @skipWindows
   Scenario Outline: SSH style origin

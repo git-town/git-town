@@ -9,7 +9,6 @@ Feature: git town-kill: errors when trying to kill the main branch
       | feature | local, remote | good commit |
     And I am on the "feature" branch
 
-
   Scenario: result
     Given my workspace has an uncommitted file
     When I run "git-town kill main"

@@ -13,7 +13,6 @@ Feature: git town-ship: shipping a child branch
     And I am on the "feature-1" branch
     When I run "git-town ship feature-3 -m 'feature 3 done'"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH    | COMMAND                  |

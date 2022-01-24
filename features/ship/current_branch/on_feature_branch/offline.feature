@@ -10,7 +10,6 @@ Feature: git town-ship: offline mode
     And I am on the "feature" branch
     When I run "git-town ship -m 'feature done'"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                            |
@@ -28,7 +27,6 @@ Feature: git town-ship: offline mode
       | BRANCH  | LOCATION | MESSAGE        |
       | main    | local    | feature done   |
       | feature | remote   | feature commit |
-
 
   Scenario: undo
     When I run "git-town undo"

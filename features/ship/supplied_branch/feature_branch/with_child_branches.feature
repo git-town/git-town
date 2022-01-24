@@ -11,7 +11,6 @@ Feature: git town-ship: shipping a parent branch
     And I am on the "child-feature" branch
     When I run "git-town ship parent-feature -m 'parent feature done'"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH         | COMMAND                                   |

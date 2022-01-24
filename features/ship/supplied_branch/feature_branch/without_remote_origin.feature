@@ -11,7 +11,6 @@ Feature: git town-ship: shipping the supplied feature branch without a remote or
     And my workspace has an uncommitted file with name "feature_file" and content "conflicting content"
     When I run "git-town ship feature -m 'feature done'"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH        | COMMAND                      |

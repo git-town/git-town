@@ -4,7 +4,6 @@ Feature: git-sync: on a feature branch with merge pull branch strategy
   I want my branch to merge in the main branch instead of rebasing
   So that I never have to rewrite history.
 
-
   Background:
     Given the pull-branch-strategy configuration is "merge"
     And my repo has a feature branch named "feature"
@@ -17,7 +16,6 @@ Feature: git-sync: on a feature branch with merge pull branch strategy
     And I am on the "feature" branch
     And my workspace has an uncommitted file
     When I run "git-town sync"
-
 
   Scenario: result
     Then it runs the commands

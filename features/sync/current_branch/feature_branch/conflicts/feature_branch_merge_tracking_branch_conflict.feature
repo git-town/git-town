@@ -4,7 +4,6 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
   I want to be given the choice to resolve the conflicts or abort
   So that I can finish the operation as planned or postpone it to a better time.
 
-
   Background:
     Given my repo has a feature branch named "feature"
     And the following commits exist in my repo
@@ -14,7 +13,6 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
     And I am on the "feature" branch
     And my workspace has an uncommitted file
     When I run "git-town sync"
-
 
   Scenario: result
     Then it runs the commands
@@ -36,7 +34,6 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
     And my uncommitted file is stashed
     And my repo now has a merge in progress
 
-
   Scenario: aborting
     When I run "git-town abort"
     Then it runs the commands
@@ -50,7 +47,6 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
     And there is no merge in progress
     And my repo is left with my original commits
 
-
   Scenario: continuing without resolving the conflicts
     When I run "git-town continue"
     Then it runs no commands
@@ -61,7 +57,6 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
     And I am still on the "feature" branch
     And my uncommitted file is stashed
     And my repo still has a merge in progress
-
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
@@ -82,7 +77,6 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
     And my repo now has the following committed files
       | BRANCH  | NAME             | CONTENT          |
       | feature | conflicting_file | resolved content |
-
 
   Scenario: continuing after resolving the conflicts and committing
     Given I resolve the conflict in "conflicting_file"

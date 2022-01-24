@@ -9,7 +9,6 @@ Feature: git append: offline mode
     And I am on the "existing-feature" branch
     And my workspace has an uncommitted file
 
-
   Scenario: appending a branch in offline mode
     When I run "git-town append new-feature"
     Then it runs the commands
@@ -29,7 +28,6 @@ Feature: git append: offline mode
       | BRANCH           | LOCATION      | MESSAGE                 |
       | existing-feature | local, remote | existing feature commit |
       | new-feature      | local         | existing feature commit |
-
 
   Scenario: Undo
     Given I run "git-town append new-feature"

@@ -18,7 +18,6 @@ Feature: Syncing before creating the pull request
     And my workspace has an uncommitted file
     When I run "git-town new-pull-request"
 
-
   @skipWindows
   Scenario: result
     Then it runs the commands

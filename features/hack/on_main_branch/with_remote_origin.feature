@@ -8,7 +8,6 @@ Feature: git town-hack: starting a new feature from the main branch (with remote
     And my workspace has an uncommitted file
     When I run "git-town hack new-feature"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH      | COMMAND                     |

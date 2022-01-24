@@ -27,7 +27,6 @@ Feature: git town-hack: prompt for parent branch
       | main        | local, remote | main_commit |
       | new-feature | local         | main_commit |
 
-
   @skipWindows
   Scenario: selecting another branch
     Given my repo has the perennial branch "production"

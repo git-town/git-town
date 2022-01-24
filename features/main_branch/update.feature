@@ -7,14 +7,12 @@ Feature: set the main branch configuration
     Then it prints no output
     And the main branch is now configured as "main"
 
-
   Scenario: main branch is configured
     Given my repo has the branches "main-old" and "main-new"
     And the main branch is configured as "main-old"
     When I run "git-town main-branch main-new"
     Then it prints no output
     And the main branch is now configured as "main-new"
-
 
   Scenario: invalid branch name
     When I run "git-town main-branch non-existing"

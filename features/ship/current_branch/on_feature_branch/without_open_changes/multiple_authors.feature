@@ -11,7 +11,6 @@ Feature: git town-ship: shipping a coworker's feature branch
       |         |          | feature commit3 | coworker <coworker@example.com>   |
     And I am on the "feature" branch
 
-
   Scenario Outline: prompt for squashed commit author
     When I run "git-town ship -m 'feature done'" and answer the prompts:
       | PROMPT                                        | ANSWER   |

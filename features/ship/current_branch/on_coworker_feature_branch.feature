@@ -8,7 +8,6 @@ Feature: git town-ship: shipping a coworker's feature branch
       | feature | local, remote | coworker commit | coworker_file | coworker <coworker@example.com> |
     And I am on the "feature" branch
 
-
   Scenario: result (commit message via CLI)
     When I run "git-town ship -m 'feature done'"
     Then it runs the commands
@@ -28,7 +27,6 @@ Feature: git town-ship: shipping a coworker's feature branch
     And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME     | AUTHOR                          |
       | main   | local, remote | feature done | coworker_file | coworker <coworker@example.com> |
-
 
   Scenario: result (commit message via editor)
     When I run "git-town ship" and enter "feature done" for the commit message

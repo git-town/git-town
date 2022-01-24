@@ -12,7 +12,6 @@ Feature: git town-kill: killing a local branch in offline mode
     And my workspace has an uncommitted file
     When I run "git-town kill"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH          | COMMAND                                |
@@ -30,7 +29,6 @@ Feature: git town-kill: killing a local branch in offline mode
       | BRANCH          | LOCATION      | MESSAGE                |
       | current-feature | remote        | current feature commit |
       | other-feature   | local, remote | other feature commit   |
-
 
   Scenario: undoing the kill
     When I run "git-town undo"

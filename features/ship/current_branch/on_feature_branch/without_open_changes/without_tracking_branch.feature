@@ -9,7 +9,6 @@ Feature: git town-ship: shipping the current feature branch without a tracking b
     And I am on the "feature" branch
     When I run "git-town ship -m 'feature done'"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                      |
@@ -31,7 +30,6 @@ Feature: git town-ship: shipping the current feature branch without a tracking b
     And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME    |
       | main   | local, remote | feature done | feature_file |
-
 
   Scenario: undo
     When I run "git-town undo"

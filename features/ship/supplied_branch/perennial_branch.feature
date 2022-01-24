@@ -7,7 +7,6 @@ Feature: git town-ship: errors when trying to ship a perennial branch
     And my workspace has an uncommitted file
     When I run "git-town ship production"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                  |

@@ -13,7 +13,6 @@ Feature: git town-prune-branches: remove perennial branch configuration when pru
     And my workspace has an uncommitted file
     When I run "git-town prune-branches"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH            | COMMAND                         |
@@ -27,7 +26,6 @@ Feature: git town-prune-branches: remove perennial branch configuration when pru
       | local      | main, active-perennial |
       | remote     | main, active-perennial |
     And the perennial branches are now configured as "active-perennial"
-
 
   Scenario: undo
     When I run "git-town undo"

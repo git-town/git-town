@@ -7,7 +7,6 @@ Feature: git town-hack: errors when the branch exists remotely
     And my workspace has an uncommitted file
     When I run "git-town hack existing-feature"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                  |

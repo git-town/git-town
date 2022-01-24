@@ -4,7 +4,6 @@ Feature: git town-kill: errors if supplied branch does not exist
   Background:
     Given I am on the "main" branch
 
-
   Scenario: result
     When I run "git-town kill non-existing-feature"
     Given my workspace has an uncommitted file

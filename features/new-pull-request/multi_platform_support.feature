@@ -23,7 +23,6 @@ Feature: git-new-pull-request: multi-platform support
       | mozilla       |
       | netscape      |
 
-
   @skipWindows
   Scenario: no supported tool installed
     Given my repo has a feature branch named "feature"

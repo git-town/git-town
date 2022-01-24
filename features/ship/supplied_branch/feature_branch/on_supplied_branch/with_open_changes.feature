@@ -7,7 +7,6 @@ Feature: git town-ship: errors if on supplied branch and there are open changes
     And I am on the "feature" branch
     When I run "git-town ship feature"
 
-
   Scenario: result
     Then it runs no commands
     And it prints the error:

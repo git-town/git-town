@@ -9,7 +9,6 @@ Feature: cannot double undo
     And I run "git-town undo"
     And I am now on the "feature" branch
 
-
   Scenario:
     When I run "git-town undo"
     Then it prints the error:

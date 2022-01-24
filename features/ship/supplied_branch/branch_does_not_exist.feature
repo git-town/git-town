@@ -6,7 +6,6 @@ Feature: git town-ship: errors when trying to ship a branch that doesn't exist
     And my workspace has an uncommitted file
     When I run "git-town ship non-existing-branch"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                  |

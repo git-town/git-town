@@ -9,7 +9,6 @@ Feature: git town-ship: shipping the current feature branch
     And I am on the "feature" branch
     When I run "git-town ship -m 'message containing "double quotes"'"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                                            |
@@ -34,7 +33,6 @@ Feature: git town-ship: shipping the current feature branch
     And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE                            | FILE NAME    |
       | main   | local, remote | message containing "double quotes" | feature_file |
-
 
   Scenario: undo
     When I run "git-town undo"

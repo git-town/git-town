@@ -10,7 +10,6 @@ Feature: git town-ship: shipping hotfixes
     And I am on the "hotfix" branch
     When I run "git-town ship -m 'hotfix done'"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH     | COMMAND                           |

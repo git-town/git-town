@@ -8,7 +8,6 @@ Feature: git town-kill: errors when trying to kill a perennial branch
       | qa     | local, remote | qa commit |
     And I am on the "qa" branch
 
-
   Scenario: result
     Given my workspace has an uncommitted file
     When I run "git-town kill"

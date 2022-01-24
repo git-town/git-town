@@ -11,7 +11,6 @@ Feature: git town-ship: shipping a parent branch
     And I am on the "parent-feature" branch
     When I run "git-town ship -m 'parent feature done'"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH         | COMMAND                                   |
@@ -35,7 +34,6 @@ Feature: git town-ship: shipping a parent branch
     And Git Town is now aware of this branch hierarchy
       | BRANCH        | PARENT |
       | child-feature | main   |
-
 
   Scenario: undo
     When I run "git-town undo"

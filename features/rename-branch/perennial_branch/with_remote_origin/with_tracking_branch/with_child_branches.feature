@@ -5,7 +5,6 @@ Feature: git town-rename-branch: renaming a feature branch with child branches
   I want that the branch hierarchy information is updated to the new branch name
   So that my workspace is in a consistent and fully functional state after the rename.
 
-
   Background:
     Given my repo has the perennial branch "production"
     And my repo has a feature branch named "child-feature" as a child of "production"
@@ -15,7 +14,6 @@ Feature: git town-rename-branch: renaming a feature branch with child branches
       | production    | local, remote | production commit    | production_file    | production content    |
     And I am on the "production" branch
     When I run "git-town rename-branch --force production renamed-production"
-
 
   Scenario: result
     Then it runs the commands
@@ -35,7 +33,6 @@ Feature: git town-rename-branch: renaming a feature branch with child branches
     And Git Town is now aware of this branch hierarchy
       | BRANCH        | PARENT             |
       | child-feature | renamed-production |
-
 
   Scenario: undo
     When I run "git-town undo"

@@ -14,7 +14,6 @@ Feature: listing the configuration
         staging
       """
 
-
   Scenario: everything is configured and there are nested branches
     Given the main branch is configured as "main"
     And my repo has the perennial branches "qa" and "staging"
@@ -41,7 +40,6 @@ Feature: listing the configuration
           qa-hotfix
       """
 
-
   Scenario: the main branch is configured but the perennial branches are not
     Given the main branch is configured as "main"
     And the perennial branches are not configured
@@ -54,7 +52,6 @@ Feature: listing the configuration
       Perennial branches:
         [none]
       """
-
 
   Scenario: the main branch is not configured but the perennial branches are
     Given the main branch name is not configured
@@ -69,7 +66,6 @@ Feature: listing the configuration
         qa
         staging
       """
-
 
   Scenario: nothing is configured yet
     Given I haven't configured Git Town yet

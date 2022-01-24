@@ -14,7 +14,6 @@ Feature: set the new-branch-push-flag
       | f     | false |
       | 0     | false |
 
-
   Scenario: invalid value
     When I run "git-town new-branch-push-flag zonk"
     Then it prints the error:

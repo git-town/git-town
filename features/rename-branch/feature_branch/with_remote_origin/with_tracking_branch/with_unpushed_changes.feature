@@ -1,7 +1,6 @@
 Feature: git town-rename-branch: errors if renaming a feature branch that has unpushed changes
 
 
-
   Background:
     Given my repo has a feature branch named "current-feature"
     And the following commits exist in my repo
@@ -12,7 +11,6 @@ Feature: git town-rename-branch: errors if renaming a feature branch that has un
     And I am on the "current-feature" branch
     And my workspace has an uncommitted file
     When I run "git-town rename-branch current-feature renamed-feature"
-
 
   Scenario: result
     Then it runs the commands

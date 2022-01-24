@@ -13,7 +13,6 @@ Feature: git town-ship: shipping a child branch
     And I am on the "feature-3" branch
     When I run "git-town ship"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH    | COMMAND                  |
@@ -30,7 +29,6 @@ Feature: git town-ship: shipping a child branch
       | feature-1 | main      |
       | feature-2 | feature-1 |
       | feature-3 | feature-2 |
-
 
   Scenario: undo
     When I run "git-town undo"

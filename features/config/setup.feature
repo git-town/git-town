@@ -11,7 +11,6 @@ Feature: Initial configuration
     Then the main branch is now configured as "main"
     And the perennial branches are now configured as "dev" and "production"
 
-
   Scenario: does not prompt for perennial branches if there is only the main branch
     Given I haven't configured Git Town yet
     When I run "git-town config setup" and answer the prompts:

@@ -5,7 +5,6 @@ Feature: git town-ship: errors when trying to ship the main branch
     Given I am on the "main" branch
     When I run "git-town ship -m 'something done'"
 
-
   Scenario: result
     Then it prints the error:
       """

@@ -11,7 +11,6 @@ Feature: git town-hack: starting a new feature from a feature branch (without re
     And my workspace has an uncommitted file
     When I run "git-town hack new-feature"
 
-
   Scenario: result
     Then it runs the commands
       | BRANCH           | COMMAND                     |
