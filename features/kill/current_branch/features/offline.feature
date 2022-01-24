@@ -28,6 +28,9 @@ Feature: offline mode
       | BRANCH          | LOCATION      | MESSAGE                |
       | current-feature | remote        | current feature commit |
       | other-feature   | local, remote | other feature commit   |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | other-feature | main   |
 
   Scenario: undo
     When I run "git-town undo"
@@ -43,3 +46,7 @@ Feature: offline mode
       | local      | main, current-feature, other-feature |
       | remote     | main, current-feature, other-feature |
     And my repo is left with my original commits
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH          | PARENT |
+      | current-feature | main   |
+      | other-feature   | main   |

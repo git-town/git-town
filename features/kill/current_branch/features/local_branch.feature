@@ -27,6 +27,9 @@ Feature: killing a local branch
     And my repo now has the following commits
       | BRANCH        | LOCATION      | MESSAGE              |
       | other-feature | local, remote | other feature commit |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | other-feature | main   |
 
   Scenario: undo
     When I run "git-town undo"
@@ -42,3 +45,7 @@ Feature: killing a local branch
       | local      | main, current-feature, other-feature |
       | remote     | main, other-feature                  |
     And my repo is left with my original commits
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH          | PARENT |
+      | current-feature | main   |
+      | other-feature   | main   |

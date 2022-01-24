@@ -25,9 +25,9 @@ Feature: the branch to kill has a deleted tracking branch
       | REPOSITORY | BRANCHES            |
       | local      | main, other-feature |
       | remote     | main, other-feature |
-    And my repo now has the following commits
-      | BRANCH        | LOCATION      | MESSAGE              |
-      | other-feature | local, remote | other feature commit |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | other-feature | main   |
 
   Scenario: undo
     When I run "git-town undo"
@@ -42,7 +42,7 @@ Feature: the branch to kill has a deleted tracking branch
       | REPOSITORY | BRANCHES                             |
       | local      | main, current-feature, other-feature |
       | remote     | main, other-feature                  |
-    And my repo now has the following commits
-      | BRANCH          | LOCATION      | MESSAGE                |
-      | current-feature | local         | current feature commit |
-      | other-feature   | local, remote | other feature commit   |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH          | PARENT |
+      | current-feature | main   |
+      | other-feature   | main   |

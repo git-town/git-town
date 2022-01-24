@@ -13,3 +13,4 @@ Feature: ask for missing configuration
       """
       you can only kill feature branches
       """
+    And Git Town still has no branch hierarchy information

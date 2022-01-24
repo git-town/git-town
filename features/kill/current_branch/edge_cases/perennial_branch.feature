@@ -21,4 +21,4 @@ Feature: cannot kill perennial branches
       | REPOSITORY | BRANCHES |
       | local      | main, qa |
       | remote     | main, qa |
-    And my repo is left with my original commits
+    And Git Town still has no branch hierarchy information
