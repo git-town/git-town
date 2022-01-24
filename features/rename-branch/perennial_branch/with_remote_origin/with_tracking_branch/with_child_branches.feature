@@ -1,10 +1,6 @@
 Feature: git town-rename-branch: renaming a feature branch with child branches
 
 
-  As a developer renaming a feature branch that has child branches
-  I want that the branch hierarchy information is updated to the new branch name
-  So that my workspace is in a consistent and fully functional state after the rename.
-
   Background:
     Given my repo has the perennial branch "production"
     And my repo has a feature branch named "child-feature" as a child of "production"
