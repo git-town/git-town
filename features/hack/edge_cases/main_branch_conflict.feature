@@ -1,4 +1,4 @@
-Feature: resolve conflicts between main branch and its tracking branch
+Feature: resolve conflicts between the main branch and its tracking branch
 
   Background:
     Given my repo has a feature branch named "existing-feature"
