@@ -1,4 +1,4 @@
-Feature: Appending a branch to a perennial branch
+Feature: appending a branch to a perennial branch
 
   Background:
     Given my repo has the perennial branches "qa" and "production"
@@ -29,7 +29,7 @@ Feature: Appending a branch to a perennial branch
       | BRANCH    | PARENT     |
       | new-child | production |
 
-  Scenario: Undo
+  Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH     | COMMAND                 |

@@ -1,48 +1,43 @@
-Feature: Appending a branch to a feature branch
+Feature: offline mode
 
   Background:
-    Given my repo has a feature branch named "existing-feature"
+    Given Git Town is in offline mode
+    And my repo has a feature branch named "existing-feature"
     And the following commits exist in my repo
-      | BRANCH           | LOCATION      | MESSAGE                 | FILE NAME             | FILE CONTENT             |
-      | existing-feature | local, remote | existing_feature_commit | existing_feature_file | existing feature content |
+      | BRANCH           | LOCATION      | MESSAGE                 |
+      | existing-feature | local, remote | existing feature commit |
     And I am on the "existing-feature" branch
     And my workspace has an uncommitted file
 
-  Scenario: inserting a branch into the branch ancestry
-    When I run "git-town append new-child"
+  Scenario: result
+    When I run "git-town append new-feature"
     Then it runs the commands
       | BRANCH           | COMMAND                                     |
-      | existing-feature | git fetch --prune --tags                    |
-      |                  | git add -A                                  |
+      | existing-feature | git add -A                                  |
       |                  | git stash                                   |
       |                  | git checkout main                           |
       | main             | git rebase origin/main                      |
       |                  | git checkout existing-feature               |
       | existing-feature | git merge --no-edit origin/existing-feature |
       |                  | git merge --no-edit main                    |
-      |                  | git branch new-child existing-feature       |
-      |                  | git checkout new-child                      |
-      | new-child        | git stash pop                               |
-    And I am now on the "new-child" branch
-    And my workspace still contains my uncommitted file
+      |                  | git branch new-feature existing-feature     |
+      |                  | git checkout new-feature                    |
+      | new-feature      | git stash pop                               |
+    And I am now on the "new-feature" branch
     And my repo now has the following commits
       | BRANCH           | LOCATION      | MESSAGE                 |
-      | existing-feature | local, remote | existing_feature_commit |
-      | new-child        | local         | existing_feature_commit |
-    And Git Town is now aware of this branch hierarchy
-      | BRANCH           | PARENT           |
-      | existing-feature | main             |
-      | new-child        | existing-feature |
+      | existing-feature | local, remote | existing feature commit |
+      | new-feature      | local         | existing feature commit |
 
-  Scenario: Undo
-    Given I run "git-town append new-child"
+  Scenario: undo
+    Given I run "git-town append new-feature"
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH           | COMMAND                       |
-      | new-child        | git add -A                    |
+      | new-feature      | git add -A                    |
       |                  | git stash                     |
       |                  | git checkout existing-feature |
-      | existing-feature | git branch -D new-child       |
+      | existing-feature | git branch -D new-feature     |
       |                  | git checkout main             |
       | main             | git checkout existing-feature |
       | existing-feature | git stash pop                 |

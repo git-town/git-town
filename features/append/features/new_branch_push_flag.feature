@@ -9,7 +9,7 @@ Feature: push branch to remote upon creation
     And my workspace has an uncommitted file
     When I run "git-town append new-child"
 
-  Scenario: inserting a branch into the branch ancestry
+  Scenario: result
     Then it runs the commands
       | BRANCH    | COMMAND                      |
       | main      | git fetch --prune --tags     |
@@ -30,7 +30,7 @@ Feature: push branch to remote upon creation
       | BRANCH    | PARENT |
       | new-child | main   |
 
-  Scenario: Undo
+  Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH    | COMMAND                    |

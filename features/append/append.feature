@@ -1,15 +1,15 @@
-Feature: Appending a branch to a feature branch
+Feature: appending a new feature branch to an existing feature branch
 
   Background:
     Given my repo has a feature branch named "existing-feature"
     And the following commits exist in my repo
-      | BRANCH           | LOCATION      | MESSAGE                 | FILE NAME             | FILE CONTENT             |
-      | existing-feature | local, remote | existing_feature_commit | existing_feature_file | existing feature content |
+      | BRANCH           | LOCATION      | MESSAGE                 |
+      | existing-feature | local, remote | existing_feature_commit |
     And I am on the "existing-feature" branch
     And my workspace has an uncommitted file
-
-  Scenario: inserting a branch into the branch ancestry
     When I run "git-town append new-child"
+
+  Scenario: result
     Then it runs the commands
       | BRANCH           | COMMAND                                     |
       | existing-feature | git fetch --prune --tags                    |
@@ -34,8 +34,7 @@ Feature: Appending a branch to a feature branch
       | existing-feature | main             |
       | new-child        | existing-feature |
 
-  Scenario: Undo
-    Given I run "git-town append new-child"
+  Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH           | COMMAND                       |
