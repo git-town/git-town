@@ -1,6 +1,6 @@
-Feature: Show correct git town usage
+Feature: Help for unknown command
 
-  Scenario: invalid git town command
+  Scenario: unknown Git Town command
     When I run "git-town invalidcommand"
     Then it prints the error:
       """
