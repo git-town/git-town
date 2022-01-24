@@ -1,4 +1,4 @@
-Feature: Rendering Shell autocomplete definitions
+Feature: shell autocompletion
 
   Scenario: verifying command output plausibility for fish autocompletion
     Given I run "git-town completions fish"
