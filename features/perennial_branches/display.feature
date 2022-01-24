@@ -1,6 +1,6 @@
-Feature: display the perennial branches configuration
+Feature: display the perennial branch configuration
 
-  Scenario: perennial branches are not configured
+  Scenario: no perennial branches configured
     Given the perennial branches are not configured
     When I run "git-town perennial-branches"
     Then it prints:
