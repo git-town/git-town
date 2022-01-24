@@ -1,4 +1,4 @@
-Feature: git town: alias
+Feature: shorter Git Town commands
 
   Scenario: add aliases
     When I run "git-town alias true"
