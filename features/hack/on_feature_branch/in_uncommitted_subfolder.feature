@@ -1,10 +1,5 @@
 Feature: git town-hack: starting a new feature from a new subfolder on the main branch
 
-  As a developer working on a feature branch that contains a subfolder that doesn't exist on the main branch
-  I want to be able to extract my open changes into a new feature branch
-  So that I can get them reviewed separately from the changes on this branch.
-
-
   Background:
     Given my repo has a feature branch named "feature"
     And the following commits exist in my repo

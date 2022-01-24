@@ -1,7 +1,5 @@
 Feature: deleting the current branch makes the main branch the new previous branch
 
-  (see ./previous_branch_same.feature)
-
 
   Scenario: kill
     Given my repo has the feature branches "previous" and "current"

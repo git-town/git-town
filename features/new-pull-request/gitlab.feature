@@ -1,9 +1,5 @@
 Feature: git-new-pull-request when origin is on GitLab
 
-  As a developer having finished a feature in a repository hosted on GitLab
-  I want to be able to easily create a pull request
-  So that I have more time for coding the next feature instead of wasting it with process boilerplate.
-
 
   Background:
     Given my computer has the "open" tool installed

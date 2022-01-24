@@ -1,9 +1,5 @@
 Feature: git town-ship: offline mode
 
-  When offline
-  I want to be able to ship branches on my local machine
-  So that I can keep working as much as possible despite having no internet connection.
-
 
   Background:
     Given Git Town is in offline mode

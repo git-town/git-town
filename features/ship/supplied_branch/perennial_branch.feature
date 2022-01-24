@@ -1,7 +1,5 @@
 Feature: git town-ship: errors when trying to ship a perennial branch
 
-  (see ../current_branch/on_perennial_branch.feature)
-
 
   Background:
     Given my repo has the perennial branches "qa" and "production"

@@ -1,7 +1,5 @@
 Feature: git town-ship: resolving conflicts between the main branch and its tracking branch
 
-  (see ../../../current_branch/on_feature_branch/without_open_changes/main_branch_rebase_tracking_branch_conflict.feature)
-
 
   Background:
     Given my repo has the feature branches "feature" and "other-feature"

@@ -1,9 +1,5 @@
 Feature: git town-ship: shipping a parent branch
 
-  As a user shipping a feature branch that is a parent branch to other feature branches
-  I want that the child branches are direct descendents of main after shipping
-  So that my workspace stays in a consistent state at all times.
-
 
   Background:
     Given my repo has a feature branch named "parent-feature"

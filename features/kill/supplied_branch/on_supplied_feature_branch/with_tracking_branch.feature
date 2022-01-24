@@ -1,9 +1,5 @@
 Feature: git town-kill: killing the given feature branch when on it
 
-  As a developer currently on a feature branch that leads nowhere
-  I want to be able to kill it by name
-  So that cleaning out branches is easy and robust.
-
 
   Background:
     Given my repo has the feature branches "other-feature" and "current-feature"

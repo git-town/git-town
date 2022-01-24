@@ -1,7 +1,5 @@
 Feature: git town-ship: shipping a child branch
 
-  (see ../../current_branch/on_feature_branch/on_child_branch.feature)
-
 
   Background:
     Given my repo has a feature branch named "feature-1"

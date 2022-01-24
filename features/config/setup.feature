@@ -1,11 +1,6 @@
 @skipWindows
 Feature: Initial configuration
 
-  As a user who hasn't configured Git Town yet
-  I want to have a simple, dedicated setup command
-  So that I can configure it safely before using any Git Town command
-
-
   Scenario: succeeds on valid main branch and perennial branch names
     Given my repo has the feature branches "production" and "dev"
     And I haven't configured Git Town yet

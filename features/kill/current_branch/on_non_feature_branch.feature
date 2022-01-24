@@ -1,9 +1,5 @@
 Feature: git town-kill: errors when trying to kill a perennial branch
 
-  As a developer accidentally trying to kill a perennial branch
-  I should see an error that I cannot delete perennial branches
-  So that my release infrastructure remains intact and my project stays shippable.
-
 
   Background:
     Given my repo has the perennial branch "qa"

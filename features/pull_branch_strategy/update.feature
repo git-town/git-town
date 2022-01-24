@@ -1,9 +1,5 @@
 Feature: set the pull branch strategy
 
-  As a user or tool configuring Git Town
-  I want an easy way to specifically set the pull branch strategy
-  So that I can configure Git Town safely, and the tool does exactly what I want.
-
 
   Scenario: update to merge
     When I run "git-town pull-branch-strategy merge"

@@ -1,8 +1,5 @@
 Feature: git town-diff-parent: errors when trying to diff a perennial branch
 
-  (see ../current_branch/on_perennial_branch.feature)
-
-
   Scenario: result
     Given my repo has a feature branch named "feature"
     And my repo has the perennial branch "qa"

@@ -1,10 +1,6 @@
 @skipWindows
 Feature: Prompt for parent branch when unknown
 
-  As a developer running a command on a branch without a parent branch
-  I should see a prompt asking for the information
-  So the command can work as I expect
-
 
   Scenario: prompting for parent branch when running git town-append
     Given my repo has a branch "feature-1"

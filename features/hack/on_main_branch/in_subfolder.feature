@@ -1,10 +1,5 @@
 Feature: git town-hack: starting a new feature from a subfolder on the main branch (with remote repo)
 
-  As a developer working in a subfolder on the main branch
-  I want to be able to extract my open changes into a feature branch
-  So that I can get them reviewed.
-
-
   Background:
     Given the following commits exist in my repo
       | BRANCH | LOCATION | MESSAGE       | FILE NAME        |

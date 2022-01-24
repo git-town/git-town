@@ -1,9 +1,5 @@
 Feature: git town-ship: shipping the current feature branch without a remote origin
 
-  As a developer having finished a feature and on repo without a remote origin
-  I want to be able to ship it safely in one easy step
-  So that I can quickly move on to the next feature and remain productive.
-
 
   Background:
     Given my repo has a feature branch named "feature"

@@ -1,9 +1,5 @@
 Feature: Rendering Shell autocomplete definitions
 
-  As a shell user
-  I want to use Git Town with autocompletion
-  So that I can use this tool productively.
-
   Scenario: verifying command output plausibility for fish autocompletion
     Given I run "git-town completions fish"
     Then it prints:

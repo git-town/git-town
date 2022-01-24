@@ -1,9 +1,5 @@
 Feature: add a branch to the perennial branches configuration
 
-  As a user or tool configuring Git Town's perennial branches
-  I want an easy way to add a branch to my set of perennial branches
-  So that I can configure Git Town safely, and the tool does exactly what I want.
-
 
   Background:
     Given my repo has the branches "staging" and "qa"

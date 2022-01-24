@@ -1,7 +1,5 @@
 Feature: git town-kill: killing the given feature branch (without remote repo)
 
-  (see ../with_tracking_branch/with_open_changes.feature)
-
 
   Background:
     Given my repo does not have a remote origin

@@ -1,10 +1,6 @@
 @skipWindows
 Feature: git town-ship: shipping a coworker's feature branch
 
-  As a developer shipping a coworker's feature branch
-  I want my coworker to be the author of the commit added to the main branch
-  So that my coworker is given credit for their work
-
 
   Background:
     Given my repo has a feature branch named "feature"

@@ -1,7 +1,5 @@
 Feature: git town-ship: shipping the current feature branch with a tracking branch
 
-  (see ../../../current_branch/on_feature_branch/without_open_changes/with_tracking_branch.feature)
-
 
   Background:
     Given my repo has a feature branch named "feature"

@@ -1,9 +1,5 @@
 Feature: git town-kill: killing the given feature branch
 
-  As a developer working on something
-  I want to be able to cleanly delete another dead-end feature branch without leaving my ongoing work
-  So that I keep the repository lean and my team's productivity remains high.
-
 
   Background:
     Given my repo has the feature branches "good-feature" and "dead-feature"

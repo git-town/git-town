@@ -1,5 +1,6 @@
 Feature: git town-rename-branch: errors when the destination branch exists remotely
 
+
   (see ./destination_branch_exists_locally.feature)
 
 

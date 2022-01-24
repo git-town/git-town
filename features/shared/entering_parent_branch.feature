@@ -1,10 +1,6 @@
 @skipWindows
 Feature: Entering a parent branch name when prompted
 
-  As a developer syncing a feature branch without information about its place in the branch hierarchy
-  I want to be be able to enter the parent branch efficiently
-  So that I am not slowed down much by the process of entering the parent branch.
-
 
   Background:
     Given my repo has the branches "feature-1" and "feature-2"

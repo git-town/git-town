@@ -1,9 +1,5 @@
 Feature: git-town new-pull-request: when origin is a self hosted servie
 
-  When creating a pull request on a self-hosted repository whose type cannot be derived from its URL
-  I want to specify the type of the hosted repository
-  So that Git Town can support specific features of my repository platform.
-
 
   @skipWindows
   Scenario Outline: self hosted

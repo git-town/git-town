@@ -1,5 +1,6 @@
 Feature: git town-rename-branch: errors if the feature branch does not exist
 
+
   As a developer mistyping the feature branch name to rename
   I should get an error that the given branch does not exist
   So that I can rename the correct branch.

@@ -1,9 +1,5 @@
 Feature: Skip deleting the remote branch when shipping another branch
 
-  When using GitHub's feature to automatically delete head branches of pull requests.
-  I want "git ship" to skip deleting the remote feature branch
-  So that I can keep using Git Town in this situation.
-
 
   Background:
     Given my repo has the feature branches "feature" and "other-feature"

@@ -1,9 +1,5 @@
 Feature: git town-ship: shipping a child branch
 
-  As a user shipping a feature branch that is a child branch of another unshipped feature branch
-  I want to see a warning that this branch has unshipped parents
-  So that I don't accidentally also ship the parent branch.
-
 
   Background:
     Given my repo has a feature branch named "feature-1"

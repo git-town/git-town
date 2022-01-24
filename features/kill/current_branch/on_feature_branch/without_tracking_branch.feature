@@ -1,9 +1,5 @@
 Feature: git town-kill: killing the current feature branch without a tracking branch
 
-  As a developer currently working on a local feature branch that leads nowhere
-  I want to be able to remove the current branch including all open changes
-  So that my workspace doesn't contain irrelevant branches and my productivity remains high.
-
 
   Background:
     Given my repo has a feature branch named "other-feature"

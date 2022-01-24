@@ -1,7 +1,5 @@
 Feature: git town-ship: shipping the supplied feature branch from a subfolder
 
-  (see ../../current_branch/on_feature_branch/without_open_changes/in_subfolder.feature)
-
 
   Background:
     Given my repo has the feature branches "feature" and "other-feature"

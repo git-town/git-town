@@ -1,12 +1,5 @@
 Feature: git town-prune-branches: delete branches that were shipped or removed on another machine
 
-  As a developer pruning branches with child branches
-  I want that the pruned branches get removed from the branch hierarchy metadata
-  So that my workspace is in a consistent state after pruning.
-
-  Rules:
-  - pruned branches are completely removed from the branch hierarchy
-
 
   Background:
     Given my repo has a feature branch named "feature"

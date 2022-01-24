@@ -1,6 +1,5 @@
 Feature: renaming the previous branch makes the main branch the new previous branch
 
-  (see ./previous_branch_same.feature)
 
 
   Scenario: rename-branch

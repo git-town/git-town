@@ -1,9 +1,5 @@
 Feature: git town-ship: aborting the ship of the current feature branch by entering an empty commit message
 
-  As a developer shipping a branch
-  I want to be able to abort by entering an empty commit message
-  So that shipping has the same experience as committing, and Git Town feels like a natural extension to Git.
-
 
   Background:
     Given my repo has a feature branch named "feature"

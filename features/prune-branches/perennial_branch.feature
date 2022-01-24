@@ -1,9 +1,5 @@
 Feature: git town-prune-branches: remove perennial branch configuration when pruning perennial branches
 
-  As a developer pruning perennial branches
-  I want the configuration to be removed
-  So that my config does not contain outdated information.
-
 
   Background:
     Given my repo has the branches "active-perennial" and "deleted-perennial"

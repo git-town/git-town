@@ -1,9 +1,5 @@
 Feature: git-town new-pull-request: when origin is an ssh identity
 
-  When using my Git server via an SSH identity
-  I want to be able to configure git town with the code hosting driver and origin hostname it should use
-  So that new-pull-request works with my ssh identity
-
 
   @skipWindows
   Scenario Outline: ssh identity

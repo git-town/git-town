@@ -1,9 +1,5 @@
 Feature: cannot double undo
 
-  As a developer accidently running undo twice in a row
-  I want to be warned that there is nothing to undo
-  So that it does undo something twice (most likely causing errors) or undo the undo
-
 
   Background:
     Given my repo has a feature branch named "feature"

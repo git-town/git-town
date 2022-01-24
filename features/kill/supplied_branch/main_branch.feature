@@ -1,7 +1,5 @@
 Feature: git town-kill: errors when trying to kill the main branch
 
-  (see ../current_branch/on_main_branch.feature)
-
 
   Background:
     Given my repo has a feature branch named "feature"

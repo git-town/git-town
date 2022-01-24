@@ -1,9 +1,5 @@
 Feature: git town-rename-branch: offline mode
 
-    When offline
-  I still want to be able to rename branches
-  So that I can use Git Town despite no internet connection.
-
 
   Background:
     Given Git Town is in offline mode

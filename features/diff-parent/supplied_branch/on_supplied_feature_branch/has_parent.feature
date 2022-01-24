@@ -1,8 +1,5 @@
 Feature: git town-diff-parent: diffing a given feature branch
 
-  (see ../../current_branch/on_feature_branch/with_parent_branch.feature)
-
-
   Scenario: result
     Given my repo has a feature branch named "feature-1"
     And my repo has a feature branch named "feature-2" as a child of "feature-1"

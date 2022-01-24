@@ -1,9 +1,5 @@
 Feature: Syncing before creating the pull request
 
-  As a developer
-  I want my feature branch by synced before creating a pull request for it
-  So that my reviewers see the most up-to-date version of my code and their review is accurate.
-
 
   Background:
     Given my code base has a feature branch named "parent-feature"

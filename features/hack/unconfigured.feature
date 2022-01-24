@@ -1,9 +1,5 @@
 Feature: Ask for missing configuration
 
-  As a user having forgotten to configure Git Town
-  I want to be prompted to configure it when I use it the first time
-  So that I use a properly configured tool at all times.
-
   @skipWindows
   Scenario: running unconfigured
     Given I haven't configured Git Town yet

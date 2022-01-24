@@ -1,7 +1,5 @@
 Feature: git town-ship: shipping the supplied feature branch without a remote origin
 
-  (see ../../current_branch/on_feature_branch/without_open_changes/without_remote_origin.feature)
-
 
   Background:
     Given my repo has the feature branches "feature" and "other-feature"

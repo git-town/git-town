@@ -1,9 +1,5 @@
 Feature: git town-ship: resolving conflicts between the current feature branch and its tracking branch
 
-  As a developer shipping a feature branch with conflicting remote updates
-  I want to be given the choice to resolve the conflicts or abort
-  So that I can finish the operation as planned or postpone it to a better time.
-
 
   Background:
     Given my repo has a feature branch named "feature"

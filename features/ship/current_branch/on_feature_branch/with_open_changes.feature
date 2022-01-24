@@ -1,9 +1,5 @@
 Feature: git town-ship: errors if there are open changes
 
-  As a developer trying to ship a branch with uncommitted changes
-  I should see an error that my branch is in an unfinished state
-  So that my users don't experience half-baked features.
-
 
   Background:
     Given my repo has a feature branch named "feature"

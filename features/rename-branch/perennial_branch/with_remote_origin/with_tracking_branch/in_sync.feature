@@ -1,5 +1,6 @@
 Feature: git town-rename-branch: renaming a perennial branch with a tracking branch
 
+
   As a developer with a poorly named perennial branch
   I want to be able to rename it safely in one easy step
   So that the names of my branches match what they implement, and I can manage them effectively.
