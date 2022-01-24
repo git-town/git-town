@@ -1,4 +1,4 @@
-Feature: Appending a branch to a perennial branch
+Feature: appending a branch to a perennial branch
 
   Background:
     Given my repo has the perennial branches "qa" and "production"

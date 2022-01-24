@@ -1,4 +1,4 @@
-Feature: git town append: creating a feature branch from an existing feature branch in a repo without origin
+Feature: appending a feature branch in a repo without an origin
 
   Background:
     Given my repo has a feature branch named "existing-feature"
