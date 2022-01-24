@@ -1,4 +1,4 @@
-Feature: git town-hack: starting a new feature from a subfolder on the main branch (with remote repo)
+Feature: running in a subfolder on the main branch
 
   Background:
     Given the following commits exist in my repo

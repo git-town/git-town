@@ -1,5 +1,5 @@
 @skipWindows
-Feature: customize the parent branch for a new feature branch
+Feature: customize the parent for the new feature branch
 
   Background:
     Given my repo has the perennial branch "production"

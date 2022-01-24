@@ -1,4 +1,4 @@
-Feature: git town hack: starting a new feature from a feature branch with remote repo
+Feature: creating a new feature off the main branch
 
   Background:
     Given my repo has a feature branch named "existing-feature"

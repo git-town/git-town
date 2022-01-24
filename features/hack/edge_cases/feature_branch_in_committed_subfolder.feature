@@ -1,31 +1,28 @@
-Feature: git town-hack: creating a feature branch from an uncommitted subfolder
+Feature: running in a subfolder not on the main branch
 
   Background:
     Given my repo has a feature branch named "existing-feature"
     And the following commits exist in my repo
-      | BRANCH | LOCATION      | MESSAGE     | FILE NAME |
-      | main   | local, remote | main commit | main_file |
+      | BRANCH           | LOCATION      | MESSAGE       | FILE NAME        |
+      | existing-feature | local, remote | folder commit | new_folder/file1 |
     And I am on the "existing-feature" branch
-    And my workspace has an uncommitted file in folder "new_folder"
+    And my workspace has an uncommitted file
     When I run "git-town hack new-feature" in the "new_folder" folder
 
   Scenario: result
     Then it runs the commands
-      | BRANCH           | COMMAND                     |
-      | existing-feature | git fetch --prune --tags    |
-      |                  | git add -A                  |
-      |                  | git stash                   |
-      |                  | git checkout main           |
-      | main             | git rebase origin/main      |
-      |                  | git branch new-feature main |
-      |                  | git checkout new-feature    |
-      | new-feature      | git stash pop               |
+      | BRANCH            | COMMAND                     |
+      | existing-feature  | git fetch --prune --tags    |
+      |                   | git add -A                  |
+      |                   | git stash                   |
+      |                   | git checkout main           |
+      | main              | git rebase origin/main      |
+      |                   | git branch new-feature main |
+      |                   | git checkout new-feature    |
+      | new-feature       | git stash pop               |
     And I am now on the "new-feature" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the following commits
-      | BRANCH      | LOCATION      | MESSAGE     |
-      | main        | local, remote | main commit |
-      | new-feature | local         | main commit |
+    And my repo is left with my original commits
     And Git Town is now aware of this branch hierarchy
       | BRANCH           | PARENT |
       | existing-feature | main   |

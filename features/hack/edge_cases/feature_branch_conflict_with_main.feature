@@ -1,4 +1,4 @@
-Feature: git town-hack: resolving conflicts between uncommitted changes and the main branch
+Feature: resolving conflicts between uncommitted changes and the main branch
 
   Background:
     Given my repo has a feature branch named "existing-feature"

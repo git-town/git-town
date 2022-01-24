@@ -1,4 +1,4 @@
-Feature: git-hack: on the main branch with a upstream remote
+Feature: on a forked repo
 
   Background:
     Given my repo has an upstream repo

@@ -1,4 +1,4 @@
-Feature: git town-hack: creating a feature branch from an existing feature branch in a repo without origin
+Feature: local repo
 
   Background:
     Given my repo has a feature branch named "existing-feature"

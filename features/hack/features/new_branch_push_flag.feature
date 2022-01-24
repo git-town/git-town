@@ -1,4 +1,4 @@
-Feature: git town hack: push branch to remote upon creation
+Feature: auto-push the new branch
 
   Background:
     Given the new-branch-push-flag configuration is true
