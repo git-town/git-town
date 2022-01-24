@@ -27,6 +27,9 @@ Feature: deleting another than the current branch
       | BRANCH       | LOCATION      | MESSAGE                              | FILE NAME        |
       | main         | local, remote | conflicting with uncommitted changes | conflicting_file |
       | good-feature | local, remote | good commit                          | good_file        |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH       | PARENT |
+      | good-feature | main   |
 
   Scenario: undo
     When I run "git-town undo"
@@ -41,3 +44,7 @@ Feature: deleting another than the current branch
       | local      | main, dead-feature, good-feature |
       | remote     | main, dead-feature, good-feature |
     And my repo is left with my original commits
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH       | PARENT |
+      | dead-feature | main   |
+      | good-feature | main   |

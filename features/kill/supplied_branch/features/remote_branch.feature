@@ -18,6 +18,7 @@ Feature: git town-kill: killing a remote only branch
       | REPOSITORY | BRANCHES |
       | local      | main     |
       | remote     | main     |
+    And Git Town now has no branch hierarchy information
 
   Scenario: undo
     When I run "git-town undo"
@@ -28,3 +29,4 @@ Feature: git town-kill: killing a remote only branch
       | REPOSITORY | BRANCHES      |
       | local      | main          |
       | remote     | main, feature |
+    And Git Town now has no branch hierarchy information

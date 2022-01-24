@@ -26,6 +26,9 @@ Feature: local branch
     And my repo now has the following commits
       | BRANCH        | LOCATION | MESSAGE              |
       | other-feature | local    | other feature commit |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | other-feature | main   |
 
   Scenario: undo
     When I run "git-town undo"
@@ -40,3 +43,7 @@ Feature: local branch
       | REPOSITORY | BRANCHES                          |
       | local      | main, dead-feature, other-feature |
     And my repo is left with my original commits
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | dead-feature  | main   |
+      | other-feature | main   |
