@@ -5,11 +5,11 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v7/src/cli"
-	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
+	"github.com/git-town/git-town/v7/src/userinput"
 	"github.com/spf13/cobra"
 )
 
@@ -127,7 +127,7 @@ func gitShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (re
 	if !repo.Config.IsFeatureBranch(result.branchToShip) {
 		return result, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can be shipped", result.branchToShip)
 	}
-	err = dialog.EnsureKnowsParentBranches([]string{result.branchToShip}, repo)
+	err = userinput.EnsureKnowsParentBranches([]string{result.branchToShip}, repo)
 	if err != nil {
 		return result, err
 	}

@@ -1,4 +1,4 @@
-package dialog
+package userinput
 
 import (
 	"fmt"
