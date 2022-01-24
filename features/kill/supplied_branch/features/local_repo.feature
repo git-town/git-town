@@ -29,7 +29,7 @@ Feature: local repository
       | main         | local    | main commit         | conflicting_file     |
       | dead-feature | local    | dead feature commit | current_feature_file |
 
-  Scenario: undoing the kill
+  Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH       | COMMAND                                                   |

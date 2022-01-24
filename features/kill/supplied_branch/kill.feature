@@ -28,7 +28,7 @@ Feature: deleting another than the current branch
       | main         | local, remote | conflicting with uncommitted changes | conflicting_file |
       | good-feature | local, remote | good commit                          | good_file        |
 
-  Scenario: undoing the kill
+  Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH       | COMMAND                                             |

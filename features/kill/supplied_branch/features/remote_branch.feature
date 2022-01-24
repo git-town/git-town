@@ -19,7 +19,7 @@ Feature: git town-kill: killing a remote only branch
       | local      | main     |
       | remote     | main     |
 
-  Scenario: undoing the kill
+  Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                                                 |

@@ -28,7 +28,7 @@ Feature: killing a local branch
       | BRANCH        | LOCATION      | MESSAGE              |
       | other-feature | local, remote | other feature commit |
 
-  Scenario: Undoing a kill of a local feature branch
+  Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH          | COMMAND                                                       |

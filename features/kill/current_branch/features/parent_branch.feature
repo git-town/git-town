@@ -37,7 +37,7 @@ Feature: killing a branch within a branch chain
       | feature-1 | main      |
       | feature-3 | feature-1 |
 
-  Scenario: undoing the kill
+  Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH    | COMMAND                                           |

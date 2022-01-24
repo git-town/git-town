@@ -29,7 +29,7 @@ Feature: killing the current feature branch
       | BRANCH        | LOCATION      | MESSAGE              |
       | other-feature | local, remote | other feature commit |
 
-  Scenario: undo the kill
+  Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH          | COMMAND                                                       |
