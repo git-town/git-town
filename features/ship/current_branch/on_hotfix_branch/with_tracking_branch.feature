@@ -1,6 +1,5 @@
 Feature: git town-ship: shipping hotfixes
 
-
   Background:
     Given my repo has the perennial branch "production"
     And my repo has a feature branch named "hotfix" as a child of "production"

@@ -1,6 +1,5 @@
 Feature: git town-kill: killing the current feature branch with a tracking branch
 
-
   Background:
     Given my repo has the feature branches "current-feature" and "other-feature"
     And the following commits exist in my repo

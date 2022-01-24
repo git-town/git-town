@@ -1,6 +1,5 @@
 Feature: Syncing before creating the pull request
 
-
   Background:
     Given my repo has a local feature branch named "feature"
     And the following commits exist in my repo

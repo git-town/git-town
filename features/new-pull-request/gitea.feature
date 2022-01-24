@@ -1,6 +1,5 @@
 Feature: git-new-pull-request when origin is on Gitea
 
-
   Background:
     Given my computer has the "open" tool installed
 

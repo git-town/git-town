@@ -1,6 +1,5 @@
 Feature: Git checkout history is preserved when deleting the current branch
 
-
   Scenario: kill
     Given my repo has the feature branches "previous" and "current"
     And I am on the "current" branch with "previous" as the previous Git branch

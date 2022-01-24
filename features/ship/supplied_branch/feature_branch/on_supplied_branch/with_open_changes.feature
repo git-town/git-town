@@ -1,6 +1,5 @@
 Feature: git town-ship: errors if on supplied branch and there are open changes
 
-
   Background:
     Given my repo has a feature branch named "feature"
     And my workspace has an uncommitted file

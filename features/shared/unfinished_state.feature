@@ -1,7 +1,6 @@
 @skipWindows
 Feature: warn about unfinished prompt asking the user how to proceed
 
-
   Background:
     Given my repo has a feature branch named "feature"
     And the following commits exist in my repo

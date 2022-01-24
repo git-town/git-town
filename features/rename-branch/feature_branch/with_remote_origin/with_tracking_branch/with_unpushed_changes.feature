@@ -1,6 +1,5 @@
 Feature: git town-rename-branch: errors if renaming a feature branch that has unpushed changes
 
-
   Background:
     Given my repo has a feature branch named "current-feature"
     And the following commits exist in my repo

@@ -1,6 +1,5 @@
 Feature: passing an invalid option to the pull strategy configuration
 
-
   Scenario: default setting
     When I run "git-town pull-branch-strategy"
     Then it prints:

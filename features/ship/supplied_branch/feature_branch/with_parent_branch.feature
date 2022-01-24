@@ -1,6 +1,5 @@
 Feature: git town-ship: shipping a child branch
 
-
   Background:
     Given my repo has a feature branch named "feature-1"
     And my repo has a feature branch named "feature-2" as a child of "feature-1"

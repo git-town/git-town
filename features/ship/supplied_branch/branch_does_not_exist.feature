@@ -1,6 +1,5 @@
 Feature: git town-ship: errors when trying to ship a branch that doesn't exist
 
-
   Background:
     Given I am on the "main" branch
     And my workspace has an uncommitted file

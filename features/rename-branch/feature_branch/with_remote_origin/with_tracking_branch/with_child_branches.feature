@@ -1,6 +1,5 @@
 Feature: git town-rename-branch: renaming a feature branch with child branches
 
-
   Background:
     Given my repo has a feature branch named "parent-feature"
     And my repo has a feature branch named "child-feature" as a child of "parent-feature"

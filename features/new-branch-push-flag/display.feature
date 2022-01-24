@@ -1,6 +1,5 @@
 Feature: displaying the new branch push flag configuration
 
-
   Scenario: default setting
     When I run "git-town new-branch-push-flag"
     Then it prints:

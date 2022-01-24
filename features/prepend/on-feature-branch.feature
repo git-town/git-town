@@ -1,6 +1,5 @@
 Feature: Prepending a branch to a feature branch
 
-
   Background:
     Given my repo has a feature branch named "existing-feature"
     And the following commits exist in my repo

@@ -1,7 +1,6 @@
 @skipWindows
 Feature: Prompt for parent branch when unknown
 
-
   Scenario: prompting for parent branch when running git town-append
     Given my repo has a branch "feature-1"
     And I am on the "feature-1" branch

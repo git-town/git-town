@@ -1,6 +1,5 @@
 Feature: git town-hack: offline mode
 
-
   Background:
     Given Git Town is in offline mode
     And the following commits exist in my repo

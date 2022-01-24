@@ -1,6 +1,5 @@
 Feature: Show clear error if trying to continue after executing a successful command
 
-
   Scenario: continuing after successful git-hack
     Given I run "git-town hack new-feature"
     When I run "git-town continue"

@@ -1,6 +1,5 @@
 Feature: display the main branch configuration
 
-
   Scenario: main branch not yet configured
     Given my repo doesn't have a main branch configured
     When I run "git-town main-branch"

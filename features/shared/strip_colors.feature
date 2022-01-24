@@ -1,7 +1,6 @@
 @skipWindows
 Feature: Strip colors
 
-
   Scenario: colors are stripped from the output of git commands run internally
     Given I haven't configured Git Town yet
     And my repo has "color.ui" set to "always"

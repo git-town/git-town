@@ -1,6 +1,5 @@
 Feature: enabling offline mode
 
-
   Scenario: enabling offline mode
     When I run "git-town offline true"
     Then offline mode is enabled

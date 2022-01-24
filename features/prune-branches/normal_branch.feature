@@ -1,6 +1,5 @@
 Feature: git town-prune-branches: delete branches that were shipped or removed on another machine
 
-
   Background:
     Given my repo has the feature branches "active-feature" and "deleted-feature"
     And the following commits exist in my repo

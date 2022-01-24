@@ -1,6 +1,5 @@
 Feature: git-new-pull-request when origin is on GitLab
 
-
   Background:
     Given my computer has the "open" tool installed
 

@@ -1,6 +1,5 @@
 Feature: git town-rename-branch: rename current branch implicitly
 
-
   Background:
     Given my repo has a feature branch named "feature"
     And my repo has the perennial branch "production"

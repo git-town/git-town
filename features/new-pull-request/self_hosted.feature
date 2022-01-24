@@ -1,6 +1,5 @@
 Feature: git-town new-pull-request: when origin is a self hosted servie
 
-
   @skipWindows
   Scenario Outline: self hosted
     And my computer has the "open" tool installed

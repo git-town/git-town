@@ -1,6 +1,5 @@
 Feature: git-town new-pull-request: when origin is an ssh identity
 
-
   @skipWindows
   Scenario Outline: ssh identity
     And my computer has the "open" tool installed

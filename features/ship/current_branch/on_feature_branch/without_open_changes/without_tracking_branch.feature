@@ -1,6 +1,5 @@
 Feature: git town-ship: shipping the current feature branch without a tracking branch
 
-
   Background:
     Given my repo has a local feature branch named "feature"
     And the following commits exist in my repo

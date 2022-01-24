@@ -1,6 +1,5 @@
 Feature: push branch to remote upon creation
 
-
   Background:
     Given the new-branch-push-flag configuration is true
     And my repo has a feature branch named "existing-feature"

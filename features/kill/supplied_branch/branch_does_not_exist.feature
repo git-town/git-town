@@ -1,6 +1,5 @@
 Feature: git town-kill: errors if supplied branch does not exist
 
-
   Background:
     Given I am on the "main" branch
 

@@ -1,6 +1,5 @@
 Feature: display the perennial branches configuration
 
-
   Scenario: perennial branches are not configured
     Given the perennial branches are not configured
     When I run "git-town perennial-branches"

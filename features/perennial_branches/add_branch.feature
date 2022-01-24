@@ -1,6 +1,5 @@
 Feature: add a branch to the perennial branches configuration
 
-
   Background:
     Given my repo has the branches "staging" and "qa"
     And the perennial branches are configured as "qa"

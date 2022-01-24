@@ -1,6 +1,5 @@
 Feature: git town-kill: killing the given feature branch
 
-
   Background:
     Given my repo has the feature branches "good-feature" and "dead-feature"
     And the following commits exist in my repo

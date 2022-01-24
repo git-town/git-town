@@ -1,6 +1,5 @@
 Feature: Syncing before creating the pull request
 
-
   Background:
     Given my code base has a feature branch named "parent-feature"
     And my code base has a feature branch named "child-feature" as a child of "parent-feature"

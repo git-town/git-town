@@ -1,6 +1,5 @@
 Feature: git town-kill: killing a local branch in offline mode
 
-
   Background:
     Given Git Town is in offline mode
     And my repo has the feature branches "current-feature" and "other-feature"

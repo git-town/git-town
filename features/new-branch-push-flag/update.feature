@@ -1,6 +1,5 @@
 Feature: set the new-branch-push-flag
 
-
   Scenario Outline: update
     When I run "git-town new-branch-push-flag <GIVE>"
     Then the new-branch-push-flag configuration is now <WANT>

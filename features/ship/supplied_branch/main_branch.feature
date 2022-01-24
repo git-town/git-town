@@ -1,6 +1,5 @@
 Feature: git town-ship: errors when trying to ship the main branch
 
-
   Background:
     Given my repo has a feature branch named "feature"
     And I am on the "feature" branch

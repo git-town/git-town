@@ -1,6 +1,5 @@
 Feature: git town-hack: prompt for parent branch
 
-
   @skipWindows
   Scenario: selecting the default branch (the main development branch)
     Given the following commits exist in my repo

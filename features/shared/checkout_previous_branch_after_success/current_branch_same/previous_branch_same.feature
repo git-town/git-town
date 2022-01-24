@@ -1,6 +1,5 @@
 Feature: Git checkout history is preserved when the current and previous branch don't change
 
-
   Scenario: kill
     Given my repo has the feature branches "previous" and "current"
     And my repo has a feature branch named "victim"

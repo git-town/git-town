@@ -1,6 +1,5 @@
 Feature: git town-rename-branch: does nothing if renaming a perennial branch onto itself
 
-
   Background:
     Given my repo has the perennial branch "production"
     And the following commits exist in my repo

@@ -1,6 +1,5 @@
 Feature: git prepend: offline mode
 
-
   Background:
     Given Git Town is in offline mode
     And my repo has a feature branch named "existing-feature"

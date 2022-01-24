@@ -1,6 +1,5 @@
 Feature: git-new-pull-request when origin is on Bitbucket
 
-
   @skipWindows
   Scenario Outline: normal origin
     Given my repo has a feature branch named "feature"

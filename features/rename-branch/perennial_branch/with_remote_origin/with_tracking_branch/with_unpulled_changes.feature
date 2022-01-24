@@ -1,6 +1,5 @@
 Feature: git town-rename-branch: errors if renaming a perennial branch that has unpulled changes
 
-
   Background:
     Given my repo has the perennial branch "production"
     And the following commits exist in my repo

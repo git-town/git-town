@@ -1,6 +1,5 @@
 Feature: git town-ship: offline mode
 
-
   Background:
     Given Git Town is in offline mode
     And my repo has a feature branch named "feature"

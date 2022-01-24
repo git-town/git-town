@@ -1,6 +1,5 @@
 Feature: Displaying the current offline status
 
-
   Scenario: set to "true"
     Given Git Town is in offline mode
     When I run "git-town offline"

@@ -1,6 +1,5 @@
 Feature: git town-prepend: errors when trying to prepend something in front of the main branch
 
-
   Background:
     Given my repo has a feature branch named "feature"
     And the following commits exist in my repo

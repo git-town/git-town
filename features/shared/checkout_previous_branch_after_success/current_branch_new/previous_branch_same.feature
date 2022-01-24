@@ -1,6 +1,5 @@
 Feature: creating a new branch makes the current branch the new previous branch
 
-
   Scenario: hack
     Given my repo has the feature branches "previous" and "current"
     And I am on the "current" branch with "previous" as the previous Git branch

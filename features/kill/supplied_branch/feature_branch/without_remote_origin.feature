@@ -1,6 +1,5 @@
 Feature: git town-kill: killing the given feature branch (without remote repo)
 
-
   Background:
     Given my repo does not have a remote origin
     And my repo has the local feature branches "current-feature" and "other-feature"

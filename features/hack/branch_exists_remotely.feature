@@ -1,6 +1,5 @@
 Feature: git town-hack: errors when the branch exists remotely
 
-
   Background:
     Given my coworker has a feature branch named "existing-feature"
     And I am on the "main" branch

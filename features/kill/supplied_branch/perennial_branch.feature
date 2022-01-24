@@ -1,6 +1,5 @@
 Feature: git town-kill: errors when trying to kill a perennial branch
 
-
   Background:
     Given my repo has a feature branch named "feature"
     And my repo has the perennial branch "qa"

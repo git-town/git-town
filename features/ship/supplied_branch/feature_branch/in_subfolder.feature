@@ -1,6 +1,5 @@
 Feature: git town-ship: shipping the supplied feature branch from a subfolder
 
-
   Background:
     Given my repo has the feature branches "feature" and "other-feature"
     And the following commits exist in my repo

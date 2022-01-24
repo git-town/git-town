@@ -1,6 +1,5 @@
 Feature: git-new-pull-request: when origin is unsupported
 
-
   Background:
     Given my repo has a feature branch named "feature"
     And I am on the "feature" branch

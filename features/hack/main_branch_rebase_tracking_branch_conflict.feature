@@ -1,6 +1,5 @@
 Feature: git town-hack: resolving conflicts between main branch and its tracking branch
 
-
   Background:
     Given my repo has a feature branch named "existing-feature"
     And the following commits exist in my repo

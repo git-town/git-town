@@ -1,6 +1,5 @@
 Feature: Skip deleting the remote branch when shipping another branch
 
-
   Background:
     Given my repo has the feature branches "feature" and "other-feature"
     And the following commits exist in my repo
