@@ -1,9 +1,5 @@
 Feature: git-town sync: resolving conflicts between the current perennial branch and its tracking branch
 
-  As a developer syncing a perennial branch that conflicts with its tracking branch
-  I want to be given the choice to resolve the conflicts or abort
-  So that I can finish the operation as planned or postpone it to a better time.
-
   Background:
     Given my repo has the perennial branches "production" and "qa"
     And the following commits exist in my repo

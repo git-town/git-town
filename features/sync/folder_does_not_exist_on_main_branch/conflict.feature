@@ -1,7 +1,5 @@
 Feature: git-town sync: syncing inside a folder that doesn't exist on the main branch
 
-  (see ./no_conflict.feature)
-
   Background:
     Given my repo has the feature branches "current-feature" and "other-feature"
     And the following commits exist in my repo

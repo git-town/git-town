@@ -1,9 +1,5 @@
 Feature: git-sync: on a feature branch in a repository with a submodule that has uncommitted changes
 
-  As a developer of a repository that uses submodules
-  I want that "git sync" ignores uncommitted changes in the submodules
-  So that I can focus on changes in my codebase and I can deal with the submodules separately.
-
   Background:
     Given my repo has a submodule
     And my repo has a feature branch named "feature"
