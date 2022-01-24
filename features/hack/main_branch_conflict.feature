@@ -51,9 +51,9 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then it runs the commands
-      | BRANCH   | COMMAND                  |
-      | main     | git rebase --continue    |
-      |          | git push                 |
+      | BRANCH   | COMMAND                     |
+      | main     | git rebase --continue       |
+      |          | git push                    |
       |          | git branch new-feature main |
       |          | git checkout new-feature    |
       | new-feature | git stash pop            |
@@ -71,8 +71,8 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
     When I run "git rebase --continue" and close the editor
     And I run "git-town continue"
     Then it runs the commands
-      | BRANCH   | COMMAND                  |
-      | main     | git push                 |
+      | BRANCH   | COMMAND                     |
+      | main     | git push                    |
       |          | git branch new-feature main |
       |          | git checkout new-feature    |
       | new-feature | git stash pop            |
@@ -82,5 +82,5 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       | BRANCH      | LOCATION      | MESSAGE                   | FILE NAME        |
       | main        | local, remote | conflicting remote commit | conflicting_file |
       |             |               | conflicting local commit  | conflicting_file |
-      | new-feature   | local         | conflicting remote commit | conflicting_file |
+      | new-feature | local         | conflicting remote commit | conflicting_file |
       |             |               | conflicting local commit  | conflicting_file |
