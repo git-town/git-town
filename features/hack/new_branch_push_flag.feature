@@ -1,4 +1,4 @@
-Feature: git town-hack: push branch to remote upon creation
+Feature: git town hack: push branch to remote upon creation
 
   Background:
     Given the new-branch-push-flag configuration is true
@@ -21,3 +21,19 @@ Feature: git town-hack: push branch to remote upon creation
       | BRANCH  | LOCATION      | MESSAGE       |
       | main    | local, remote | remote commit |
       | feature | local, remote | remote commit |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH  | PARENT |
+      | feature | main   |
+
+  Scenario: undo
+    When I run "git town undo"
+    Then it runs the commands
+      | BRANCH  | COMMAND                  |
+      | feature | git push origin :feature |
+      |         | git checkout main        |
+      | main    | git branch -d feature    |
+    And I am now on the "main" branch
+    And my repo now has the following commits
+      | BRANCH  | LOCATION      | MESSAGE       |
+      | main    | local, remote | remote commit |
+    And Git Town now has no branch hierarchy information
