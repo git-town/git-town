@@ -38,6 +38,4 @@ Feature: cannot prepend perennial branches
       the branch "production" is not a feature branch. Only feature branches can have parent branches
       """
     And I am still on the "production" branch
-    And Git Town is now aware of this branch hierarchy
-      | BRANCH  | PARENT |
-      | feature | main   |
+    And Git Town now has no branch hierarchy information

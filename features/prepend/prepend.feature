@@ -46,6 +46,3 @@ Feature: Prepending a branch to a feature branch
     And Git Town is now aware of this branch hierarchy
       | BRANCH           | PARENT |
       | existing-feature | main   |
-    And Git Town is now aware of this branch hierarchy
-      | BRANCH           | PARENT     |
-      | existing-feature | new-parent |
