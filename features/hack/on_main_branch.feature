@@ -1,4 +1,4 @@
-Feature: git town-hack: starting a new feature from the main branch (with remote repo)
+Feature: on a feature branch
 
   Background:
     Given the following commits exist in my repo
@@ -24,3 +24,18 @@ Feature: git town-hack: starting a new feature from the main branch (with remote
       | BRANCH      | LOCATION      | MESSAGE     |
       | main        | local, remote | main_commit |
       | new-feature | local         | main_commit |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH      | PARENT |
+      | new-feature | main   |
+
+  Scenario: undo
+    When I run "git town undo"
+    Then it runs the commands
+      | BRANCH      | COMMAND                   |
+      | new-feature | git add -A                |
+      |             | git stash                 |
+      |             | git checkout main         |
+      | main        | git branch -d new-feature |
+      |             | git stash pop             |
+    And I am now on the "main" branch
+    And Git Town now has no branch hierarchy information

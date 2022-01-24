@@ -1,4 +1,4 @@
-Feature: git-hack: on the main branch with a upstream remote
+Feature: on a forked repo
 
   Background:
     Given my repo has an upstream repo
@@ -22,9 +22,24 @@ Feature: git-hack: on the main branch with a upstream remote
       |             | git branch new-feature main |
       |             | git checkout new-feature    |
       | new-feature | git stash pop               |
-    And I am still on the "new-feature" branch
+    And I am now on the "new-feature" branch
     And my workspace still contains my uncommitted file
     And my repo now has the following commits
       | BRANCH      | LOCATION                | MESSAGE         |
       | main        | local, remote, upstream | upstream commit |
       | new-feature | local                   | upstream commit |
+
+  Scenario: undo
+    When I run "git town undo"
+    Then it runs the commands
+      | BRANCH      | COMMAND                   |
+      | new-feature | git add -A                |
+      |             | git stash                 |
+      |             | git checkout main         |
+      | main        | git branch -d new-feature |
+      |             | git stash pop             |
+    And I am now on the "main" branch
+    And my repo now has the following commits
+      | BRANCH | LOCATION                | MESSAGE         |
+      | main   | local, remote, upstream | upstream commit |
+    And Git Town now has no branch hierarchy information
