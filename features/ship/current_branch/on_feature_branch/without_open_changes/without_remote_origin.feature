@@ -4,7 +4,6 @@ Feature: git town-ship: shipping the current feature branch without a remote ori
   I want to be able to ship it safely in one easy step
   So that I can quickly move on to the next feature and remain productive.
 
-
   Background:
     Given my repo has a feature branch named "feature"
     And my repo does not have a remote origin
@@ -13,7 +12,6 @@ Feature: git town-ship: shipping the current feature branch without a remote ori
       | feature | local    | feature commit | feature_file | feature content |
     And I am on the "feature" branch
     When I run "git-town ship -m 'feature done'"
-
 
   Scenario: result
     Then it runs the commands
@@ -30,7 +28,6 @@ Feature: git town-ship: shipping the current feature branch without a remote ori
     And my repo now has the following commits
       | BRANCH | LOCATION | MESSAGE      | FILE NAME    |
       | main   | local    | feature done | feature_file |
-
 
   Scenario: undo
     When I run "git-town undo"

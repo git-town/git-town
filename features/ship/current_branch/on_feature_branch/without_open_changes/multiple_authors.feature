@@ -5,7 +5,6 @@ Feature: git town-ship: shipping a coworker's feature branch
   I want my coworker to be the author of the commit added to the main branch
   So that my coworker is given credit for their work
 
-
   Background:
     Given my repo has a feature branch named "feature"
     And the following commits exist in my repo
@@ -14,7 +13,6 @@ Feature: git town-ship: shipping a coworker's feature branch
       |         |          | feature commit2 | developer <developer@example.com> |
       |         |          | feature commit3 | coworker <coworker@example.com>   |
     And I am on the "feature" branch
-
 
   Scenario Outline: prompt for squashed commit author
     When I run "git-town ship -m 'feature done'" and answer the prompts:

@@ -4,7 +4,6 @@ Feature: git town-hack: prompt for parent branch
   I want to be able to create a new up-to-date branch without checking out the parent
   So that I have a unified way for creating new branches
 
-
   @skipWindows
   Scenario: selecting the default branch (the main development branch)
     Given the following commits exist in my repo
@@ -30,7 +29,6 @@ Feature: git town-hack: prompt for parent branch
       | BRANCH      | LOCATION      | MESSAGE     |
       | main        | local, remote | main_commit |
       | new-feature | local         | main_commit |
-
 
   @skipWindows
   Scenario: selecting another branch

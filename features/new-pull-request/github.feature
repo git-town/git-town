@@ -4,10 +4,8 @@ Feature: git-new-pull-request when origin is on GitHub
   I want to be able to easily create a pull request
   So that I have more time for coding the next feature instead of wasting it with process boilerplate.
 
-
   Background:
     Given my computer has the "open" tool installed
-
 
   @skipWindows
   Scenario Outline: normal origin
@@ -29,7 +27,6 @@ Feature: git-new-pull-request when origin is on GitHub
       | git@github.com:git-town/git-town.git     |
       | git@github.com:git-town/git-town         |
 
-
   @skipWindows
   Scenario Outline: origin contains path that looks like a URL
     Given my repo has a feature branch named "feature"
@@ -50,7 +47,6 @@ Feature: git-new-pull-request when origin is on GitHub
       | git@github.com:git-town/git-town.github.com.git     |
       | git@github.com:git-town/git-town.github.com         |
 
-
   @skipWindows
   Scenario Outline: proper URL encoding
     Given my repo has a feature branch named "<BRANCH_NAME>"
@@ -69,7 +65,6 @@ Feature: git-new-pull-request when origin is on GitHub
       | fix-#2         | https://github.com/git-town/git-town/compare/fix-%232?expand=1       |
       | test/feature   | https://github.com/git-town/git-town/compare/test%2Ffeature?expand=1 |
 
-
   @skipWindows
   Scenario Outline: SSH style origin
     Given my repo has a feature branch named "feature"
@@ -85,7 +80,6 @@ Feature: git-new-pull-request when origin is on GitHub
       | ORIGIN                                     |
       | ssh://git@github.com/git-town/git-town.git |
       | ssh://git@github.com/git-town/git-town     |
-
 
   @skipWindows
   Scenario: nested feature branch with known parent

@@ -4,7 +4,6 @@ Feature: git town-kill: killing the given feature branch
   I want to be able to cleanly delete another dead-end feature branch without leaving my ongoing work
   So that I keep the repository lean and my team's productivity remains high.
 
-
   Background:
     Given my repo has the feature branches "good-feature" and "dead-feature"
     And the following commits exist in my repo
@@ -15,7 +14,6 @@ Feature: git town-kill: killing the given feature branch
     And I am on the "good-feature" branch
     And my workspace has an uncommitted file with name "conflicting_file" and content "conflicting content"
     When I run "git-town kill dead-feature"
-
 
   Scenario: result
     Then it runs the commands
@@ -33,7 +31,6 @@ Feature: git town-kill: killing the given feature branch
       | BRANCH       | LOCATION      | MESSAGE                              | FILE NAME        |
       | main         | local, remote | conflicting with uncommitted changes | conflicting_file |
       | good-feature | local, remote | good commit                          | good_file        |
-
 
   Scenario: undoing the kill
     When I run "git-town undo"

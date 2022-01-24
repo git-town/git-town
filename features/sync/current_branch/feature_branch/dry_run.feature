@@ -4,7 +4,6 @@ Feature: git-town sync: syncing the current feature branch with a tracking branc
   I want a dry run flag that doesn't run any commands
   So that I can be confident in what the tool does before I use it
 
-
   Background:
     Given my repo has a feature branch named "feature"
     And the following commits exist in my repo
@@ -16,7 +15,6 @@ Feature: git-town sync: syncing the current feature branch with a tracking branc
     And I am on the "feature" branch
     And my workspace has an uncommitted file
     When I run "git-town sync --dry-run"
-
 
   Scenario: result
     Then it runs the commands

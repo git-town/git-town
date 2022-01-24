@@ -4,13 +4,11 @@ Feature: git town-ship: errors if there are open changes
   I should see an error that my branch is in an unfinished state
   So that my users don't experience half-baked features.
 
-
   Background:
     Given my repo has a feature branch named "feature"
     And my workspace has an uncommitted file
     And I am on the "feature" branch
     When I run "git-town ship"
-
 
   Scenario: result
     Then it runs no commands
@@ -22,7 +20,6 @@ Feature: git town-ship: errors if there are open changes
     And my workspace still contains my uncommitted file
     And my repo now has the following commits
       | BRANCH | LOCATION |
-
 
   Scenario: undo
     When I run "git-town undo"

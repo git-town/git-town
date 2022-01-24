@@ -2,7 +2,6 @@ Feature: git town-rename-branch: errors when the destination branch exists remot
 
   (see ./destination_branch_exists_locally.feature)
 
-
   Background:
     Given my repo has a feature branch named "current-feature"
     And my coworker has a feature branch named "existing-feature"
@@ -13,7 +12,6 @@ Feature: git town-rename-branch: errors when the destination branch exists remot
     And I am on the "current-feature" branch
     And my workspace has an uncommitted file
     When I run "git-town rename-branch current-feature existing-feature"
-
 
   Scenario: result
     Then it runs the commands

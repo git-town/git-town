@@ -4,7 +4,6 @@ Feature: git town-hack: offline mode
   I want that new branches are created without attempting network accesses
   So that I don't see unnecessary errors.
 
-
   Background:
     Given Git Town is in offline mode
     And the following commits exist in my repo
@@ -13,7 +12,6 @@ Feature: git town-hack: offline mode
     And I am on the "main" branch
     And my workspace has an uncommitted file
     When I run "git-town hack feature"
-
 
   Scenario: result
     Then it runs the commands

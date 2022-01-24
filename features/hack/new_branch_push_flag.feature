@@ -4,7 +4,6 @@ Feature: git town-hack: push branch to remote upon creation
   I want it to be pushed to the CI server right away
   So that I can push and pull from the remote branch right away without having to run "git sync" first
 
-
   Background:
     Given the new-branch-push-flag configuration is true
     And the following commits exist in my repo
@@ -12,7 +11,6 @@ Feature: git town-hack: push branch to remote upon creation
       | main   | remote   | remote commit |
     And I am on the "main" branch
     When I run "git-town hack feature"
-
 
   Scenario: result
     Then it runs the commands

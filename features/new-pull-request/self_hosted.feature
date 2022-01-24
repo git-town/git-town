@@ -4,7 +4,6 @@ Feature: git-town new-pull-request: when origin is a self hosted servie
   I want to specify the type of the hosted repository
   So that Git Town can support specific features of my repository platform.
 
-
   @skipWindows
   Scenario Outline: self hosted
     And my computer has the "open" tool installed

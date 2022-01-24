@@ -2,7 +2,6 @@ Feature: git town-ship: shipping the current feature branch with a tracking bran
 
   (see ../../../current_branch/on_feature_branch/without_open_changes/with_tracking_branch.feature)
 
-
   Background:
     Given my repo has a feature branch named "feature"
     And the following commits exist in my repo
@@ -10,7 +9,6 @@ Feature: git town-ship: shipping the current feature branch with a tracking bran
       | feature | local, remote | feature commit | feature_file | feature content |
     And I am on the "feature" branch
     When I run "git-town ship feature -m 'feature done'"
-
 
   Scenario: result
     Then it runs the commands
@@ -35,7 +33,6 @@ Feature: git town-ship: shipping the current feature branch with a tracking bran
     And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME    |
       | main   | local, remote | feature done | feature_file |
-
 
   Scenario: undo
     When I run "git-town undo"

@@ -4,12 +4,10 @@ Feature: git town-prepend: errors when trying to prepend something in front of t
   I should see an error that the main branch has no parents
   So that I know about my mistake and run "git hack" instead.
 
-
   Background:
     Given my repo has the perennial branches "qa" and "production"
     And I am on the "production" branch
     When I run "git-town prepend new-parent"
-
 
   Scenario: result
     Then it runs the commands

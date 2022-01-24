@@ -4,7 +4,6 @@ Feature: listing the configuration
   I want to be able to see the complete Git Town configuration with one command
   So that I can configure Git Town efficiently and have more time for actual work.
 
-
   Scenario: everything is configured
     Given the main branch is configured as "main"
     And the perennial branches are configured as "qa" and "staging"
@@ -18,7 +17,6 @@ Feature: listing the configuration
         qa
         staging
       """
-
 
   Scenario: everything is configured and there are nested branches
     Given the main branch is configured as "main"
@@ -41,11 +39,10 @@ Feature: listing the configuration
           parent-feature
             child-feature
           stand-alone-feature
-        
+
         qa
           qa-hotfix
       """
-
 
   Scenario: the main branch is configured but the perennial branches are not
     Given the main branch is configured as "main"
@@ -60,7 +57,6 @@ Feature: listing the configuration
         [none]
       """
 
-
   Scenario: the main branch is not configured but the perennial branches are
     Given the main branch name is not configured
     And the perennial branches are configured as "qa" and "staging"
@@ -74,7 +70,6 @@ Feature: listing the configuration
         qa
         staging
       """
-
 
   Scenario: nothing is configured yet
     Given I haven't configured Git Town yet

@@ -4,10 +4,8 @@ Feature: git-new-pull-request when origin is on Gitea
   I want to be able to easily create a pull request
   So that I have more time for coding the next feature instead of wasting it with process boilerplate.
 
-
   Background:
     Given my computer has the "open" tool installed
-
 
   @skipWindows
   Scenario Outline: normal origin
@@ -29,7 +27,6 @@ Feature: git-new-pull-request when origin is on Gitea
       | git@gitea.com:git-town/git-town.git     |
       | git@gitea.com:git-town/git-town         |
 
-
   @skipWindows
   Scenario Outline: origin contains path that looks like a URL
     Given my repo has a feature branch named "feature"
@@ -50,7 +47,6 @@ Feature: git-new-pull-request when origin is on Gitea
       | git@gitea.com:git-town/git-town.gitea.com.git     |
       | git@gitea.com:git-town/git-town.gitea.com         |
 
-
   @skipWindows
   Scenario Outline: proper URL encoding
     Given my repo has a feature branch named "<BRANCH_NAME>"
@@ -69,7 +65,6 @@ Feature: git-new-pull-request when origin is on Gitea
       | fix-#2         | https://gitea.com/git-town/git-town/compare/main...fix-%232       |
       | test/feature   | https://gitea.com/git-town/git-town/compare/main...test%2Ffeature |
 
-
   @skipWindows
   Scenario Outline: SSH style origin
     Given my repo has a feature branch named "feature"
@@ -85,7 +80,6 @@ Feature: git-new-pull-request when origin is on Gitea
       | ORIGIN                                    |
       | ssh://git@gitea.com/git-town/git-town.git |
       | ssh://git@gitea.com/git-town/git-town     |
-
 
   @skipWindows
   Scenario: nested feature branch with known parent

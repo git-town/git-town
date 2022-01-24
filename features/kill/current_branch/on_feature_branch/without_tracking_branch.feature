@@ -4,7 +4,6 @@ Feature: git town-kill: killing the current feature branch without a tracking br
   I want to be able to remove the current branch including all open changes
   So that my workspace doesn't contain irrelevant branches and my productivity remains high.
 
-
   Background:
     Given my repo has a feature branch named "other-feature"
     And my repo has a local feature branch named "current-feature"
@@ -15,7 +14,6 @@ Feature: git town-kill: killing the current feature branch without a tracking br
     And I am on the "current-feature" branch
     And my workspace has an uncommitted file
     When I run "git-town kill"
-
 
   Scenario: result
     Then it runs the commands
@@ -33,7 +31,6 @@ Feature: git town-kill: killing the current feature branch without a tracking br
     And my repo now has the following commits
       | BRANCH        | LOCATION      | MESSAGE              |
       | other-feature | local, remote | other feature commit |
-
 
   Scenario: Undoing a kill of a local feature branch
     When I run "git-town undo"

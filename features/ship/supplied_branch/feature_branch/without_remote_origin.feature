@@ -2,7 +2,6 @@ Feature: git town-ship: shipping the supplied feature branch without a remote or
 
   (see ../../current_branch/on_feature_branch/without_open_changes/without_remote_origin.feature)
 
-
   Background:
     Given my repo has the feature branches "feature" and "other-feature"
     And my repo does not have a remote origin
@@ -12,7 +11,6 @@ Feature: git town-ship: shipping the supplied feature branch without a remote or
     And I am on the "other-feature" branch
     And my workspace has an uncommitted file with name "feature_file" and content "conflicting content"
     When I run "git-town ship feature -m 'feature done'"
-
 
   Scenario: result
     Then it runs the commands

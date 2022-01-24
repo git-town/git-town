@@ -2,7 +2,6 @@ Feature: git-town sync: syncing the current feature branch without a tracking br
 
   (see ./with_a_tracking_branch.feature)
 
-
   Background:
     Given my repo has a local feature branch named "feature"
     And the following commits exist in my repo
@@ -13,7 +12,6 @@ Feature: git-town sync: syncing the current feature branch without a tracking br
     And I am on the "feature" branch
     And my workspace has an uncommitted file
     When I run "git-town sync"
-
 
   Scenario: result
     Then it runs the commands

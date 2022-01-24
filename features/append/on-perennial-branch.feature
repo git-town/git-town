@@ -4,7 +4,6 @@ Feature: Appending a branch to a perennial branch
   I want to be able to create a feature branch as the direct child of the perennial branch
   So that I can review and commit the changes separately without losing access to the other changes in my feature branch.
 
-
   Background:
     Given my repo has the perennial branches "qa" and "production"
     And the following commits exist in my repo
@@ -13,7 +12,6 @@ Feature: Appending a branch to a perennial branch
     And I am on the "production" branch
     And my workspace has an uncommitted file
     When I run "git-town append new-child"
-
 
   Scenario: result
     Then it runs the commands
@@ -34,7 +32,6 @@ Feature: Appending a branch to a perennial branch
     And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT     |
       | new-child | production |
-
 
   Scenario: Undo
     When I run "git-town undo"

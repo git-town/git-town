@@ -2,7 +2,6 @@ Feature: git town-kill: errors when trying to kill a perennial branch
 
   (see ../current_branch/on_perennial_branch.feature)
 
-
   Background:
     Given my repo has a feature branch named "feature"
     And my repo has the perennial branch "qa"
@@ -11,7 +10,6 @@ Feature: git town-kill: errors when trying to kill a perennial branch
       | feature | local, remote | good commit |
       | qa      | local, remote | qa commit   |
     And I am on the "feature" branch
-
 
   Scenario: result
     Given my workspace has an uncommitted file

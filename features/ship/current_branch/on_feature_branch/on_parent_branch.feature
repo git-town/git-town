@@ -4,7 +4,6 @@ Feature: git town-ship: shipping a parent branch
   I want that the child branches are direct descendents of main after shipping
   So that my workspace stays in a consistent state at all times.
 
-
   Background:
     Given my repo has a feature branch named "parent-feature"
     And my repo has a feature branch named "child-feature" as a child of "parent-feature"
@@ -14,7 +13,6 @@ Feature: git town-ship: shipping a parent branch
       | child-feature  | local, remote | child feature commit  | child_feature_file  | child feature content  |
     And I am on the "parent-feature" branch
     When I run "git-town ship -m 'parent feature done'"
-
 
   Scenario: result
     Then it runs the commands
@@ -39,7 +37,6 @@ Feature: git town-ship: shipping a parent branch
     And Git Town is now aware of this branch hierarchy
       | BRANCH        | PARENT |
       | child-feature | main   |
-
 
   Scenario: undo
     When I run "git-town undo"

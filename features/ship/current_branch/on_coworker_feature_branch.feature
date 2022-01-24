@@ -4,14 +4,12 @@ Feature: git town-ship: shipping a coworker's feature branch
   I want my coworker to be the author of the commit added to the main branch
   So that my coworker is given credit for their work
 
-
   Background:
     Given my repo has a feature branch named "feature"
     And the following commits exist in my repo
       | BRANCH  | LOCATION      | MESSAGE         | FILE NAME     | AUTHOR                          |
       | feature | local, remote | coworker commit | coworker_file | coworker <coworker@example.com> |
     And I am on the "feature" branch
-
 
   Scenario: result (commit message via CLI)
     When I run "git-town ship -m 'feature done'"
@@ -32,7 +30,6 @@ Feature: git town-ship: shipping a coworker's feature branch
     And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME     | AUTHOR                          |
       | main   | local, remote | feature done | coworker_file | coworker <coworker@example.com> |
-
 
   Scenario: result (commit message via editor)
     When I run "git-town ship" and enter "feature done" for the commit message

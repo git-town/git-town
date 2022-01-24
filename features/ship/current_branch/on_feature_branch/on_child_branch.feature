@@ -4,7 +4,6 @@ Feature: git town-ship: shipping a child branch
   I want to see a warning that this branch has unshipped parents
   So that I don't accidentally also ship the parent branch.
 
-
   Background:
     Given my repo has a feature branch named "feature-1"
     And my repo has a feature branch named "feature-2" as a child of "feature-1"
@@ -16,7 +15,6 @@ Feature: git town-ship: shipping a child branch
       | feature-3 | local, remote | feature 3 commit | feature_3_file | feature 3 content |
     And I am on the "feature-3" branch
     When I run "git-town ship"
-
 
   Scenario: result
     Then it runs the commands
@@ -34,7 +32,6 @@ Feature: git town-ship: shipping a child branch
       | feature-1 | main      |
       | feature-2 | feature-1 |
       | feature-3 | feature-2 |
-
 
   Scenario: undo
     When I run "git-town undo"

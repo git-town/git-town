@@ -4,7 +4,6 @@ Feature: git town-kill: killing the current feature branch with child branches
   I want that the current branch is cleanly removed from the branch hierarchy metadata
   So that killing branches is robust and reliable.
 
-
   Background:
     Given my repo has a feature branch named "feature-1"
     And my repo has a feature branch named "feature-2" as a child of "feature-1"
@@ -17,7 +16,6 @@ Feature: git town-kill: killing the current feature branch with child branches
     And I am on the "feature-2" branch
     And my workspace has an uncommitted file
     When I run "git-town kill"
-
 
   Scenario: result
     Then it runs the commands
@@ -42,7 +40,6 @@ Feature: git town-kill: killing the current feature branch with child branches
       | BRANCH    | PARENT    |
       | feature-1 | main      |
       | feature-3 | feature-1 |
-
 
   Scenario: undoing the kill
     When I run "git-town undo"

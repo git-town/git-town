@@ -4,7 +4,6 @@ Feature: listing the configuration
   I want to see the existing configuration values
   So that I can change it more effectively
 
-
   @skipWindows
   Scenario: everything is configured
     Given my repo has the feature branches "production" and "qa"

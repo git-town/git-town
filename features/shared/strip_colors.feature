@@ -5,7 +5,6 @@ Feature: Strip colors
   I expect the tool to still work
   So that Git Town does not place addititional constraints on my computer setup
 
-
   Scenario: colors are stripped from the output of git commands run internally
     Given I haven't configured Git Town yet
     And my repo has "color.ui" set to "always"

@@ -4,7 +4,6 @@ Feature: git town-rename-branch: rename current branch implicitly
   I should be able reference the current branch implicitly
   So that I can perform my rename quickly.
 
-
   Background:
     Given my repo has a feature branch named "feature"
     And my repo has the perennial branch "production"
@@ -13,7 +12,6 @@ Feature: git town-rename-branch: rename current branch implicitly
       | main       | local, remote | main commit |
       | feature    | local, remote | feat commit |
       | production | local, remote | prod commit |
-
 
   Scenario: rename feature branch
     Given I am on the "feature" branch
@@ -34,7 +32,6 @@ Feature: git town-rename-branch: rename current branch implicitly
       | production      | local, remote | prod commit |
       | renamed-feature | local, remote | feat commit |
 
-
   Scenario: rename branch to itself
     Given I am on the "feature" branch
     When I run "git-town rename-branch feature"
@@ -46,7 +43,6 @@ Feature: git town-rename-branch: rename current branch implicitly
     And I am now on the "feature" branch
     And my repo is left with my original commits
 
-
   Scenario: rename perennial branch
     Given I am on the "production" branch
     When I run "git-town rename-branch renamed-production"
@@ -55,7 +51,6 @@ Feature: git town-rename-branch: rename current branch implicitly
       """
       "production" is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'
       """
-
 
   Scenario: rename perennial branch (forced)
     Given I am on the "production" branch
@@ -75,7 +70,6 @@ Feature: git town-rename-branch: rename current branch implicitly
       | main               | local, remote | main commit |
       | feature            | local, remote | feat commit |
       | renamed-production | local, remote | prod commit |
-
 
   Scenario: undo rename branch
     Given I am on the "feature" branch

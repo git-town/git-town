@@ -15,7 +15,6 @@ Feature: git-repo: multi-platform support
       | open     |
       | xdg-open |
 
-
   @skipWindows
   Scenario: no supported tool installed
     Given my repo's origin is "https://github.com/git-town/git-town.git"

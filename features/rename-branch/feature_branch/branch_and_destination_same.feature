@@ -4,7 +4,6 @@ Feature: git town-rename-branch: does nothing if renaming a feature branch onto 
   I should get a message saying no action is needed
   So that I am aware that I just did a no-op.
 
-
   Background:
     Given my repo has a feature branch named "current-feature"
     And the following commits exist in my repo
@@ -13,7 +12,6 @@ Feature: git town-rename-branch: does nothing if renaming a feature branch onto 
     And I am on the "current-feature" branch
     And my workspace has an uncommitted file
     When I run "git-town rename-branch current-feature current-feature"
-
 
   Scenario: result
     Then it runs no commands

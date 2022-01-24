@@ -12,7 +12,6 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
     And my workspace has an uncommitted file
     When I run "git-town sync --all"
 
-
   Scenario: result
     Then I am not prompted for any parent branches
     And it runs the commands
@@ -32,7 +31,6 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
     And my uncommitted file is stashed
     And my repo now has a rebase in progress
 
-
   Scenario: aborting
     When I run "git-town abort"
     Then it runs the commands
@@ -48,7 +46,6 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
       | production | local         | production local commit  | conflicting_file |
       |            | remote        | production remote commit | conflicting_file |
       | qa         | local, remote | qa commit                | qa_file          |
-
 
   Scenario: skipping
     When I run "git-town skip"
@@ -69,7 +66,6 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
       |            | remote        | production remote commit | conflicting_file |
       | qa         | local, remote | qa commit                | qa_file          |
 
-
   Scenario: continuing without resolving the conflicts
     When I run "git-town continue"
     Then it runs no commands
@@ -79,7 +75,6 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
       """
     And my uncommitted file is stashed
     And my repo still has a rebase in progress
-
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
@@ -101,7 +96,6 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
       | production | local, remote | production remote commit | conflicting_file |
       |            |               | production local commit  | conflicting_file |
       | qa         | local, remote | qa commit                | qa_file          |
-
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"

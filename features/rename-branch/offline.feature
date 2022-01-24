@@ -4,7 +4,6 @@ Feature: git town-rename-branch: offline mode
   I still want to be able to rename branches
   So that I can use Git Town despite no internet connection.
 
-
   Background:
     Given Git Town is in offline mode
     And my repo has a feature branch named "feature"
@@ -14,7 +13,6 @@ Feature: git town-rename-branch: offline mode
       | feature | local, remote | feat commit |
     And I am on the "feature" branch
     When I run "git-town rename-branch renamed-feature"
-
 
   Scenario: result
     Then it runs the commands
@@ -28,7 +26,6 @@ Feature: git town-rename-branch: offline mode
       | main            | local, remote | main commit |
       | feature         | remote        | feat commit |
       | renamed-feature | local         | feat commit |
-
 
   Scenario: undo rename branch
     When I run "git-town undo"

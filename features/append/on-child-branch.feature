@@ -4,7 +4,6 @@ Feature: Appending a branch to a feature branch
   I want to be able to create a feature branch as the direct child of my current feature branch
   So that I can review and commit the changes separately without losing access to the other changes in my feature branch.
 
-
   Background:
     Given my repo has a feature branch named "existing-feature"
     And the following commits exist in my repo
@@ -12,7 +11,6 @@ Feature: Appending a branch to a feature branch
       | existing-feature | local, remote | existing_feature_commit | existing_feature_file | existing feature content |
     And I am on the "existing-feature" branch
     And my workspace has an uncommitted file
-
 
   Scenario: inserting a branch into the branch ancestry
     When I run "git-town append new-child"
@@ -39,7 +37,6 @@ Feature: Appending a branch to a feature branch
       | BRANCH           | PARENT           |
       | existing-feature | main             |
       | new-child        | existing-feature |
-
 
   Scenario: Undo
     Given I run "git-town append new-child"

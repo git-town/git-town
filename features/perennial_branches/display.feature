@@ -4,7 +4,6 @@ Feature: display the perennial branches configuration
   I want to be able to see this information simply and directly
   So that I can use it without furter thinking or processing, and my Git Town workflows are effective.
 
-
   Scenario: perennial branches are not configured
     Given the perennial branches are not configured
     When I run "git-town perennial-branches"
@@ -12,7 +11,6 @@ Feature: display the perennial branches configuration
       """
       [none]
       """
-
 
   Scenario: perennial branches are configured
     Given the perennial branches are configured as "qa" and "production"

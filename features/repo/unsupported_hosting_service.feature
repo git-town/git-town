@@ -3,7 +3,6 @@ Feature: git-repo when origin is unsupported
   Background:
     When I run "git-town repo"
 
-
   Scenario: result
     Then it prints the error:
       """

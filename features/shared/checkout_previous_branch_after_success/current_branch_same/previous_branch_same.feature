@@ -4,7 +4,6 @@ Feature: Git checkout history is preserved when the current and previous branch 
   I want to am now on the expected previous branch
   So that Git Town supports my productive use of the Git checkout history
 
-
   Scenario: kill
     Given my repo has the feature branches "previous" and "current"
     And my repo has a feature branch named "victim"
@@ -12,7 +11,6 @@ Feature: Git checkout history is preserved when the current and previous branch 
     When I run "git-town kill victim"
     Then I am still on the "current" branch
     And the previous Git branch is still "previous"
-
 
   Scenario: new-pull-request
     Given my repo has the feature branches "previous" and "current"
@@ -22,7 +20,6 @@ Feature: Git checkout history is preserved when the current and previous branch 
     When I run "git-town new-pull-request"
     Then I am still on the "current" branch
     And the previous Git branch is still "previous"
-
 
   Scenario: prune-branches
     Given my repo has the feature branches "previous" and "current"
@@ -35,7 +32,6 @@ Feature: Git checkout history is preserved when the current and previous branch 
     Then I am still on the "current" branch
     And the previous Git branch is still "previous"
 
-
   Scenario: repo
     Given my repo has the feature branches "previous" and "current"
     And my computer has the "open" tool installed
@@ -44,7 +40,6 @@ Feature: Git checkout history is preserved when the current and previous branch 
     When I run "git-town repo"
     Then I am still on the "current" branch
     And the previous Git branch is still "previous"
-
 
   Scenario: ship
     Given my repo has the feature branches "previous" and "current"
@@ -56,7 +51,6 @@ Feature: Git checkout history is preserved when the current and previous branch 
     When I run "git-town ship feature -m "feature done""
     Then I am still on the "current" branch
     And the previous Git branch is still "previous"
-
 
   Scenario: sync
     Given my repo has the feature branches "previous" and "current"
