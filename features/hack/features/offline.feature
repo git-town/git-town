@@ -1,4 +1,8 @@
+<<<<<<< HEAD:features/hack/offline.feature
 Feature: git town hack: offline mode
+=======
+Feature: offline mode
+>>>>>>> main:features/hack/features/offline.feature
 
   Background:
     Given Git Town is in offline mode
@@ -39,6 +43,11 @@ Feature: git town hack: offline mode
     And I am now on the "main" branch
     And my workspace still contains my uncommitted file
     And my repo now has the following commits
+<<<<<<< HEAD:features/hack/offline.feature
       | BRANCH  | LOCATION      | MESSAGE     |
       | main    | local, remote | main commit |
+=======
+      | BRANCH | LOCATION      | MESSAGE     |
+      | main   | local, remote | main commit |
+>>>>>>> main:features/hack/features/offline.feature
     And Git Town now has no branch hierarchy information

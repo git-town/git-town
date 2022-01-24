@@ -1,4 +1,4 @@
-Feature: git town-hack: creating a feature branch from a subfolder not on the main branch
+Feature: inside a committed subfolder only on the current feature branch
 
   Background:
     Given my repo has a feature branch named "existing-feature"
@@ -11,15 +11,15 @@ Feature: git town-hack: creating a feature branch from a subfolder not on the ma
 
   Scenario: result
     Then it runs the commands
-      | BRANCH            | COMMAND                     |
-      | existing-feature  | git fetch --prune --tags    |
-      |                   | git add -A                  |
-      |                   | git stash                   |
-      |                   | git checkout main           |
-      | main              | git rebase origin/main      |
-      |                   | git branch new-feature main |
-      |                   | git checkout new-feature    |
-      | new-feature       | git stash pop               |
+      | BRANCH           | COMMAND                     |
+      | existing-feature | git fetch --prune --tags    |
+      |                  | git add -A                  |
+      |                  | git stash                   |
+      |                  | git checkout main           |
+      | main             | git rebase origin/main      |
+      |                  | git branch new-feature main |
+      |                  | git checkout new-feature    |
+      | new-feature      | git stash pop               |
     And I am now on the "new-feature" branch
     And my workspace still contains my uncommitted file
     And my repo is left with my original commits

@@ -1,4 +1,4 @@
-Feature: Enforce minimum Git version
+Feature: minimum Git version
 
   Scenario: using an unsupported Git Version
     Given my computer has Git "2.6.2" installed

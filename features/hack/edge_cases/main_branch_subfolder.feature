@@ -1,4 +1,4 @@
-Feature: git town-hack: starting a new feature from a subfolder on the main branch (with remote repo)
+Feature: in a subfolder on the main branch
 
   Background:
     Given the following commits exist in my repo
@@ -10,15 +10,15 @@ Feature: git town-hack: starting a new feature from a subfolder on the main bran
 
   Scenario: result
     Then it runs the commands
-      | BRANCH      | COMMAND                      |
-      | main        | git fetch --prune --tags     |
-      |             | git add -A                   |
-      |             | git stash                    |
-      |             | git rebase origin/main       |
-      |             | git push                     |
-      |             | git branch new-feature main  |
-      |             | git checkout new-feature     |
-      | new-feature | git stash pop                |
+      | BRANCH      | COMMAND                     |
+      | main        | git fetch --prune --tags    |
+      |             | git add -A                  |
+      |             | git stash                   |
+      |             | git rebase origin/main      |
+      |             | git push                    |
+      |             | git branch new-feature main |
+      |             | git checkout new-feature    |
+      | new-feature | git stash pop               |
     And I am now on the "new-feature" branch
     And my workspace still contains my uncommitted file
     And my repo now has the following commits
@@ -26,8 +26,8 @@ Feature: git town-hack: starting a new feature from a subfolder on the main bran
       | main        | local, remote | folder commit |
       | new-feature | local         | folder commit |
     And Git Town is now aware of this branch hierarchy
-      | BRANCH           | PARENT |
-      | new-feature      | main   |
+      | BRANCH      | PARENT |
+      | new-feature | main   |
 
   Scenario: undo
     When I run "git town undo"
@@ -40,6 +40,6 @@ Feature: git town-hack: starting a new feature from a subfolder on the main bran
       |             | git stash pop             |
     And I am now on the "main" branch
     And my repo now has the following commits
-      | BRANCH      | LOCATION      | MESSAGE       |
-      | main        | local, remote | folder commit |
+      | BRANCH | LOCATION      | MESSAGE       |
+      | main   | local, remote | folder commit |
     And Git Town now has no branch hierarchy information

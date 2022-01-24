@@ -1,4 +1,4 @@
-Feature: Viewing changes made on the current feature branch
+Feature: View changes made on the current feature branch
 
   Scenario: on feature branch with parent
     Given my repo has a feature branch named "feature-1"

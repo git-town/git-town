@@ -1,4 +1,4 @@
-Feature: resetting the configuration
+Feature: reset the configuration
 
   Scenario: everything is configured
     Given the main branch is configured as "main"
