@@ -1,4 +1,4 @@
-Feature: show help screen for commands
+Feature: help for commands
 
   Scenario Outline: known commands
     When I run "git-town help <COMMAND>"
@@ -33,7 +33,7 @@ Feature: show help screen for commands
       | sync                 |
       | version              |
 
-  Scenario Outline: Running outside of a Git repository
+  Scenario Outline: outside a Git repository
     Given my workspace is currently not a Git repo
     When I run "<COMMAND>"
     Then it prints:

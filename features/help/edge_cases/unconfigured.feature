@@ -1,4 +1,4 @@
-Feature: show help screen even if missing configuration
+Feature: show help even if the current repo misses configuration
 
   Scenario Outline:
     Given I haven't configured Git Town yet
