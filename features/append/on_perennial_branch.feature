@@ -29,7 +29,7 @@ Feature: Appending a branch to a perennial branch
       | BRANCH    | PARENT     |
       | new-child | production |
 
-  Scenario: Undo
+  Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH     | COMMAND                 |
