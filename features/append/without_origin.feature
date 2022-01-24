@@ -38,7 +38,6 @@ Feature: git town append: creating a feature branch from an existing feature bra
       | existing-feature | git branch -d new-feature      |
       |                  | git stash pop                  |
     And I am now on the "existing-feature" branch
-    # And my repo is left with my original commits  # TODO
     And Git Town is now aware of this branch hierarchy
       | BRANCH           | PARENT |
       | existing-feature | main   |
