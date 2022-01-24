@@ -1,6 +1,6 @@
 Feature: display the main branch configuration
 
-  Scenario: main branch not yet configured
+  Scenario: not configured
     Given my repo doesn't have a main branch configured
     When I run "git-town main-branch"
     Then it prints:
@@ -8,7 +8,7 @@ Feature: display the main branch configuration
       [none]
       """
 
-  Scenario: main branch is configured
+  Scenario: configured
     Given the main branch is configured as "main"
     When I run "git-town main-branch"
     Then it prints:
