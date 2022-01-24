@@ -10,7 +10,7 @@ Feature: git town-rename-branch: renaming a perennial branch with a tracking bra
     And I am on the "production" branch
     And my workspace has an uncommitted file
 
-  Scenario: error when trying to rename
+  Scenario: normal rename fails
     When I run "git-town rename-branch production renamed-production"
     Then it runs no commands
     And it prints the error:
@@ -18,7 +18,7 @@ Feature: git town-rename-branch: renaming a perennial branch with a tracking bra
       "production" is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'
       """
 
-  Scenario: forcing rename
+  Scenario: forced rename
     When I run "git-town rename-branch --force production renamed-production"
     Then it runs the commands
       | BRANCH             | COMMAND                                  |

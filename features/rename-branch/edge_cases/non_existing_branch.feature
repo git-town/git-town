@@ -1,14 +1,12 @@
-Feature: git town-rename-branch: errors if the feature branch does not exist
+Feature: branch to rename does not exist
 
-  Background:
+  Scenario: unknown branch
     Given the following commits exist in my repo
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, remote | main commit |
     And I am on the "main" branch
     And my workspace has an uncommitted file
     When I run "git-town rename-branch non-existing-feature renamed-feature"
-
-  Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                  |
       | main   | git fetch --prune --tags |
