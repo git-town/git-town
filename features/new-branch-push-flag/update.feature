@@ -1,4 +1,4 @@
-Feature: set the new-branch-push-flag
+Feature: update the new-branch-push-flag setting
 
   Scenario Outline: update
     When I run "git-town new-branch-push-flag <GIVE>"

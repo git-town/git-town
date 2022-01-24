@@ -1,6 +1,6 @@
-Feature: displaying the new branch push flag configuration
+Feature: display the new-branch-push-flag setting
 
-  Scenario: default setting
+  Scenario: default setting is false
     When I run "git-town new-branch-push-flag"
     Then it prints:
       """
@@ -40,7 +40,7 @@ Feature: displaying the new branch push flag configuration
       false
       """
 
-  Scenario: invalid value
+  Scenario: configured to an invalid value
     Given the new-branch-push-flag configuration is "zonk"
     When I run "git-town new-branch-push-flag"
     Then it prints:

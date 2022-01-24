@@ -1,6 +1,6 @@
 Feature: displaying the global new branch push flag configuration
 
-  Scenario: default set
+  Scenario: default value is false
     When I run "git-town new-branch-push-flag --global"
     Then it prints:
       """
