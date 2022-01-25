@@ -1,4 +1,4 @@
-Feature: git town-prune-branches: offline mode
+Feature: offline mode
 
   Scenario: trying to prune branches in offline mode
     Given Git Town is in offline mode
