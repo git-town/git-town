@@ -1,4 +1,4 @@
-Feature: git town-rename-branch: offline mode
+Feature: offline mode
 
   Background:
     Given Git Town is in offline mode
@@ -22,8 +22,11 @@ Feature: git town-rename-branch: offline mode
       | main            | local, remote | main commit |
       | feature         | remote        | feat commit |
       | renamed-feature | local         | feat commit |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH          | PARENT |
+      | renamed-feature | main   |
 
-  Scenario: undo rename branch
+  Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH          | COMMAND                                    |
@@ -35,3 +38,6 @@ Feature: git town-rename-branch: offline mode
       | BRANCH  | LOCATION      | MESSAGE     |
       | main    | local, remote | main commit |
       | feature | local, remote | feat commit |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH  | PARENT |
+      | feature | main   |
