@@ -2,13 +2,12 @@ Feature: git town-rename-branch: renaming a perennial branch with a tracking bra
 
   Background:
     Given my repo has the perennial branches "qa" and "production"
+    And my repo has a feature branch named "child-feature" as a child of "production"
     And the following commits exist in my repo
-      | BRANCH     | LOCATION      | MESSAGE           |
-      | main       | local, remote | main commit       |
-      | production | local, remote | production commit |
-      | qa         | local, remote | qa commit         |
+      | BRANCH        | LOCATION      | MESSAGE              |
+      | production    | local, remote | production commit    |
+      | child-feature | local, remote | child feature commit |
     And I am on the "production" branch
-    And my workspace has an uncommitted file
 
   Scenario: normal rename fails
     When I run "git-town rename-branch production renamed-production"
@@ -18,7 +17,7 @@ Feature: git town-rename-branch: renaming a perennial branch with a tracking bra
       "production" is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'
       """
 
-  Scenario: forced rename
+  Scenario: forced rename works
     When I run "git-town rename-branch --force production renamed-production"
     Then it runs the commands
       | BRANCH             | COMMAND                                  |
@@ -30,12 +29,13 @@ Feature: git town-rename-branch: renaming a perennial branch with a tracking bra
       |                    | git branch -D production                 |
     And I am now on the "renamed-production" branch
     And the perennial branches are now configured as "qa" and "renamed-production"
-    And my workspace still contains my uncommitted file
     And my repo now has the following commits
-      | BRANCH             | LOCATION      | MESSAGE           |
-      | main               | local, remote | main commit       |
-      | qa                 | local, remote | qa commit         |
-      | renamed-production | local, remote | production commit |
+      | BRANCH             | LOCATION      | MESSAGE              |
+      | child-feature      | local, remote | child feature commit |
+      | renamed-production | local, remote | production commit    |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH        | PARENT             |
+      | child-feature | renamed-production |
 
   Scenario: undo
     Given I run "git-town rename-branch --force production renamed-production"
@@ -49,9 +49,7 @@ Feature: git town-rename-branch: renaming a perennial branch with a tracking bra
       | production         | git branch -D renamed-production                    |
     And I am now on the "production" branch
     And the perennial branches are now configured as "qa" and "production"
-    And my workspace still contains my uncommitted file
     And my repo now has the following commits
-      | BRANCH     | LOCATION      | MESSAGE           |
-      | main       | local, remote | main commit       |
-      | production | local, remote | production commit |
-      | qa         | local, remote | qa commit         |
+      | BRANCH        | LOCATION      | MESSAGE              |
+      | production    | local, remote | production commit    |
+      | child-feature | local, remote | child feature commit |
