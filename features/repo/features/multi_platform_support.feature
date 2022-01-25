@@ -1,4 +1,4 @@
-Feature: git-repo: multi-platform support
+Feature: multi-platform support
 
   @skipWindows
   Scenario Outline: supported tool installed

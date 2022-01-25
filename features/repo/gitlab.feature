@@ -1,7 +1,7 @@
-Feature: git-repo when origin is on GitLab
+Feature: GitLab
 
   @skipWindows
-  Scenario Outline: result
+  Scenario Outline:
     Given my repo's origin is "<ORIGIN>"
     And my computer has the "open" tool installed
     When I run "git-town repo"

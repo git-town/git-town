@@ -1,9 +1,7 @@
-Feature: git-repo when origin is unsupported
+Feature: unsupported hosting service
 
-  Background:
+  Scenario:
     When I run "git-town repo"
-
-  Scenario: result
     Then it prints the error:
       """
       unsupported hosting service
