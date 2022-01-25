@@ -51,5 +51,5 @@ Feature: renaming a perennial branch with a tracking branch
     And the perennial branches are now configured as "qa" and "production"
     And my repo now has the following commits
       | BRANCH        | LOCATION      | MESSAGE              |
-      | production    | local, remote | production commit    |
       | child-feature | local, remote | child feature commit |
+      | production    | local, remote | production commit    |
