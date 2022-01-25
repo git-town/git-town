@@ -1,9 +1,10 @@
-Feature: set the pull branch strategy
+Feature: configure the pull_branch_strategy
 
-  Scenario: update to merge
-    When I run "git-town pull-branch-strategy merge"
-    Then the pull-branch-strategy configuration is now "merge"
+  Scenario Outline:
+    When I run "git-town pull-branch-strategy <VALUE>"
+    Then the pull-branch-strategy configuration is now "<VALUE>"
 
-  Scenario: update to rebase
-    When I run "git-town pull-branch-strategy rebase"
-    Then the pull-branch-strategy configuration is now "rebase"
+    Examples:
+      | VALUE  |
+      | rebase |
+      | merge  |

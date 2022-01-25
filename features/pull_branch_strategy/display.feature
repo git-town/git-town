@@ -1,4 +1,4 @@
-Feature: passing an invalid option to the pull strategy configuration
+Feature: display the currently configured pull_branch_strategy
 
   Scenario: default setting
     When I run "git-town pull-branch-strategy"
@@ -7,18 +7,15 @@ Feature: passing an invalid option to the pull strategy configuration
       rebase
       """
 
-  Scenario: explicit rebase
-    Given the pull-branch-strategy configuration is "rebase"
+  Scenario Outline:
+    Given the pull-branch-strategy configuration is "<VALUE>"
     When I run "git-town pull-branch-strategy"
     Then it prints:
       """
-      rebase
+      <VALUE>
       """
 
-  Scenario: explicit merge
-    Given the pull-branch-strategy configuration is "merge"
-    When I run "git-town pull-branch-strategy"
-    Then it prints:
-      """
-      merge
-      """
+    Examples:
+      | VALUE  |
+      | rebase |
+      | merge  |
