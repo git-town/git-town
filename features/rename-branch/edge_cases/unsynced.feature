@@ -1,4 +1,4 @@
-Feature: errors if renaming a feature branch that has unpulled changes
+Feature: rename an unsynced branch
 
   Background:
     Given my repo has a feature branch named "current-feature"
