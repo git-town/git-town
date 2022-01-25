@@ -20,7 +20,23 @@
       "scenario tag": 2
     }
   ],
+  "keywords-in-logical-order": "on",
   "new-line-at-eof": ["on", "yes"],
+  "no-background-only-scenario": "on",
   "no-dupe-scenario-names": ["on", "in-feature"],
-  "no-unnamed-features": "on"
+  "no-duplicate-tags": "on",
+  "no-empty-background": "on",
+  "no-empty-file": "on",
+  "no-examples-in-scenarios": "on",
+  "no-files-without-scenarios": "on",
+  "no-homogenous-tags": "on",
+  "no-multiple-empty-lines": "on",
+  "no-partially-commented-tag-lines": "on",
+  "no-scenario-outlines-without-examples": "on",
+  "no-superfluous-tags": "on",
+  "no-trailing-spaces": "on",
+  "no-unnamed-features": "on",
+  "no-unused-variables": "on",
+  "one-space-between-tags": "on",
+  "use-and": "on"
 }
