@@ -53,3 +53,6 @@ Feature: renaming a perennial branch with a tracking branch
       | BRANCH        | LOCATION      | MESSAGE              |
       | child-feature | local, remote | child feature commit |
       | production    | local, remote | production commit    |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH        | PARENT     |
+      | child-feature | production |
