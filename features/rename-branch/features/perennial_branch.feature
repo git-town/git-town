@@ -1,16 +1,24 @@
-Feature: git town-rename-branch: renaming a feature branch with child branches
+Feature: renaming a perennial branch with a tracking branch
 
   Background:
-    Given my repo has the perennial branch "production"
+    Given my repo has the perennial branches "qa" and "production"
     And my repo has a feature branch named "child-feature" as a child of "production"
     And the following commits exist in my repo
-      | BRANCH        | LOCATION      | MESSAGE              | FILE NAME          | FILE CONTENT          |
-      | child-feature | local, remote | child feature commit | child_feature_file | child feature content |
-      | production    | local, remote | production commit    | production_file    | production content    |
+      | BRANCH        | LOCATION      | MESSAGE              |
+      | production    | local, remote | production commit    |
+      | child-feature | local, remote | child feature commit |
     And I am on the "production" branch
-    When I run "git-town rename-branch --force production renamed-production"
 
-  Scenario: result
+  Scenario: normal rename fails
+    When I run "git-town rename-branch production renamed-production"
+    Then it runs no commands
+    And it prints the error:
+      """
+      "production" is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'
+      """
+
+  Scenario: forced rename works
+    When I run "git-town rename-branch --force production renamed-production"
     Then it runs the commands
       | BRANCH             | COMMAND                                  |
       | production         | git fetch --prune --tags                 |
@@ -20,16 +28,17 @@ Feature: git town-rename-branch: renaming a feature branch with child branches
       |                    | git push origin :production              |
       |                    | git branch -D production                 |
     And I am now on the "renamed-production" branch
-    And the perennial branches are now configured as "renamed-production"
+    And the perennial branches are now configured as "qa" and "renamed-production"
     And my repo now has the following commits
-      | BRANCH             | LOCATION      | MESSAGE              | FILE NAME          | FILE CONTENT          |
-      | child-feature      | local, remote | child feature commit | child_feature_file | child feature content |
-      | renamed-production | local, remote | production commit    | production_file    | production content    |
+      | BRANCH             | LOCATION      | MESSAGE              |
+      | child-feature      | local, remote | child feature commit |
+      | renamed-production | local, remote | production commit    |
     And Git Town is now aware of this branch hierarchy
       | BRANCH        | PARENT             |
       | child-feature | renamed-production |
 
   Scenario: undo
+    Given I run "git-town rename-branch --force production renamed-production"
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH             | COMMAND                                             |
@@ -39,11 +48,11 @@ Feature: git town-rename-branch: renaming a feature branch with child branches
       |                    | git checkout production                             |
       | production         | git branch -D renamed-production                    |
     And I am now on the "production" branch
-    And the perennial branches are now configured as "production"
+    And the perennial branches are now configured as "qa" and "production"
     And my repo now has the following commits
-      | BRANCH        | LOCATION      | MESSAGE              | FILE NAME          | FILE CONTENT          |
-      | child-feature | local, remote | child feature commit | child_feature_file | child feature content |
-      | production    | local, remote | production commit    | production_file    | production content    |
+      | BRANCH        | LOCATION      | MESSAGE              |
+      | child-feature | local, remote | child feature commit |
+      | production    | local, remote | production commit    |
     And Git Town is now aware of this branch hierarchy
       | BRANCH        | PARENT     |
       | child-feature | production |
