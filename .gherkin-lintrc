@@ -3,7 +3,6 @@
     "tags": ["@skipWindows"]
   }],
   "file-name": ["on", {"style": "snake_case"}],
-  "no-unnamed-features": "on",
   "indentation" : [
     "on", {
       "Feature": 0,
@@ -20,5 +19,8 @@
       "feature tag": 0,
       "scenario tag": 2
     }
-  ]
+  ],
+  "new-line-at-eof": ["on", "yes"],
+  "no-dupe-scenario-names": ["on", "in-feature"],
+  "no-unnamed-features": "on"
 }
