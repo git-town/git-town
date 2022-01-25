@@ -1,4 +1,4 @@
-Feature: git town-rename-branch: renaming a perennial branch with a tracking branch
+Feature: renaming a perennial branch with a tracking branch
 
   Background:
     Given my repo has the perennial branches "qa" and "production"
