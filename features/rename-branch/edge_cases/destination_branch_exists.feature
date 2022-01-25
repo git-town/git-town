@@ -7,7 +7,6 @@ Feature: destination branch exists
       | current-feature  | local, remote | current-feature commit  |
       | existing-feature | local, remote | existing-feature commit |
     And I am on the "current-feature" branch
-    And my workspace has an uncommitted file
     When I run "git-town rename-branch current-feature existing-feature"
     Then it runs the commands
       | BRANCH          | COMMAND                  |
@@ -17,9 +16,7 @@ Feature: destination branch exists
       a branch named "existing-feature" already exists
       """
     And I am still on the "current-feature" branch
-    And my workspace still contains my uncommitted file
-    And my repo is left with my original commits
-    And Git Town is now aware of this branch hierarchy
+    And Git Town is still aware of this branch hierarchy
       | BRANCH           | PARENT |
       | current-feature  | main   |
       | existing-feature | main   |
@@ -32,7 +29,6 @@ Feature: destination branch exists
       | current-feature  | local, remote | current-feature commit  |
       | existing-feature | remote        | existing-feature commit |
     And I am on the "current-feature" branch
-    And my workspace has an uncommitted file
     When I run "git-town rename-branch current-feature existing-feature"
     Then it runs the commands
       | BRANCH          | COMMAND                  |
@@ -42,8 +38,6 @@ Feature: destination branch exists
       a branch named "existing-feature" already exists
       """
     And I am still on the "current-feature" branch
-    And my workspace still contains my uncommitted file
-    And my repo is left with my original commits
-    And Git Town is now aware of this branch hierarchy
+    And Git Town is still aware of this branch hierarchy
       | BRANCH          | PARENT |
       | current-feature | main   |
