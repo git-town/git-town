@@ -1,10 +1,5 @@
 Feature: git town-ship: resolving conflicts between the current feature branch and its tracking branch
 
-  As a developer shipping a feature branch with conflicting remote updates
-  I want to be given the choice to resolve the conflicts or abort
-  So that I can finish the operation as planned or postpone it to a better time.
-
-
   Background:
     Given my repo has a feature branch named "feature"
     And the following commits exist in my repo
@@ -13,7 +8,6 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
       |         | remote   | remote conflicting commit | conflicting_file | remote conflicting content |
     And I am on the "feature" branch
     When I run "git-town ship -m 'feature done'"
-
 
   Scenario: result
     Then it runs the commands
@@ -31,7 +25,6 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
     And I am still on the "feature" branch
     And my repo now has a merge in progress
 
-
   Scenario: aborting
     When I run "git-town abort"
     Then it runs the commands
@@ -42,7 +35,6 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
     And I am still on the "feature" branch
     And there is no merge in progress
     And my repo is left with my original commits
-
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
@@ -65,7 +57,6 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
     And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME        |
       | main   | local, remote | feature done | conflicting_file |
-
 
   Scenario: continuing after resolving the conflicts and committing
     Given I resolve the conflict in "conflicting_file"

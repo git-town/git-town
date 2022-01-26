@@ -1,11 +1,6 @@
-Feature: listing the configuration
+Feature: show the configuration
 
-  As a user unsure about how Git Town is currently configured
-  I want to be able to see the complete Git Town configuration with one command
-  So that I can configure Git Town efficiently and have more time for actual work.
-
-
-  Scenario: everything is configured
+  Scenario: all configured, no nested branches
     Given the main branch is configured as "main"
     And the perennial branches are configured as "qa" and "staging"
     When I run "git-town config"
@@ -19,8 +14,7 @@ Feature: listing the configuration
         staging
       """
 
-
-  Scenario: everything is configured and there are nested branches
+  Scenario: all configured, has nested branches
     Given the main branch is configured as "main"
     And my repo has the perennial branches "qa" and "staging"
     And my repo has the feature branches "parent-feature" and "stand-alone-feature"
@@ -41,13 +35,12 @@ Feature: listing the configuration
           parent-feature
             child-feature
           stand-alone-feature
-        
+
         qa
           qa-hotfix
       """
 
-
-  Scenario: the main branch is configured but the perennial branches are not
+  Scenario: main branch is configured, perennial branches are not
     Given the main branch is configured as "main"
     And the perennial branches are not configured
     When I run "git-town config"
@@ -60,8 +53,7 @@ Feature: listing the configuration
         [none]
       """
 
-
-  Scenario: the main branch is not configured but the perennial branches are
+  Scenario: perennial branches are configured, main branch is not
     Given the main branch name is not configured
     And the perennial branches are configured as "qa" and "staging"
     When I run "git-town config"
@@ -75,8 +67,7 @@ Feature: listing the configuration
         staging
       """
 
-
-  Scenario: nothing is configured yet
+  Scenario: no configuration data
     Given I haven't configured Git Town yet
     When I run "git-town config"
     Then it prints:
@@ -86,22 +77,4 @@ Feature: listing the configuration
 
       Perennial branches:
         [none]
-      """
-
-  Scenario: disconnected branches
-    Given the main branch is configured as "main"
-    And my repo has a branch "parent-feature"
-    And my repo has a feature branch named "child-feature" as a child of "parent-feature"
-    When I run "git-town config"
-    Then it prints:
-      """
-      Main branch:
-        main
-
-      Perennial branches:
-        [none]
-
-      Branch Ancestry:
-        parent-feature
-          child-feature
       """

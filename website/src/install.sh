@@ -85,10 +85,6 @@ download_url() {
     CPU=intel_64
     EXT=zip
   fi
-  if [ "$OS" = macos ]; then
-    # only Intel binaries for macOS right now
-    CPU=intel_64
-  fi
   echo "https://github.com/git-town/git-town/releases/download/v${VERSION}/git-town_${VERSION}_${OS}_${CPU}.${EXT}"
 }
 

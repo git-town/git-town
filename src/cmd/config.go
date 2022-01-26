@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v7/src/cli"
-	"github.com/git-town/git-town/v7/src/dialog"
+	"github.com/git-town/git-town/v7/src/userinput"
 	"github.com/spf13/cobra"
 )
 
@@ -15,8 +15,7 @@ var configCommand = &cobra.Command{
 		fmt.Println()
 		cli.PrintLabelAndValue("Main branch", cli.PrintableMainBranch(prodRepo.Config.MainBranch()))
 		cli.PrintLabelAndValue("Perennial branches", cli.PrintablePerennialBranches(prodRepo.Config.PerennialBranches()))
-		mainBranch := prodRepo.Config.MainBranch()
-		if mainBranch != "" {
+		if prodRepo.Config.MainBranch() != "" {
 			cli.PrintLabelAndValue("Branch Ancestry", cli.PrintableBranchAncestry(&prodRepo.Config))
 		}
 		cli.PrintLabelAndValue("Pull branch strategy", prodRepo.Config.PullBranchStrategy())
@@ -47,11 +46,11 @@ var setupConfigCommand = &cobra.Command{
 	Use:   "setup",
 	Short: "Prompts to setup your Git Town configuration",
 	Run: func(cmd *cobra.Command, args []string) {
-		err := dialog.ConfigureMainBranch(prodRepo)
+		err := userinput.ConfigureMainBranch(prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}
-		err = dialog.ConfigurePerennialBranches(prodRepo)
+		err = userinput.ConfigurePerennialBranches(prodRepo)
 		if err != nil {
 			cli.Exit(err)
 		}

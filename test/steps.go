@@ -125,10 +125,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^Git Town now has no branch hierarchy information$`, func() error {
+	suite.Step(`^Git Town (?:now|still) has no branch hierarchy information$`, func() error {
 		state.gitEnv.DevRepo.Config.Reload()
 		if state.gitEnv.DevRepo.Config.HasBranchInformation() {
-			return fmt.Errorf("unexpected Git Town branch hierarchy information")
+			branchInfo := state.gitEnv.DevRepo.Config.ParentBranchMap()
+			return fmt.Errorf("unexpected Git Town branch hierarchy information: %+v", branchInfo)
 		}
 		return nil
 	})
@@ -434,6 +435,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return state.gitEnv.DevRepo.PushBranchSetUpstream(branch)
 		}
 		return nil
+	})
+
+	suite.Step(`^my repo has a submodule$`, func() error {
+		err := state.gitEnv.AddSubmoduleRepo()
+		if err != nil {
+			return err
+		}
+		return state.gitEnv.DevRepo.AddSubmodule(state.gitEnv.SubmoduleRepo.WorkingDir())
 	})
 
 	suite.Step(`^my repo has an upstream repo$`, func() error {

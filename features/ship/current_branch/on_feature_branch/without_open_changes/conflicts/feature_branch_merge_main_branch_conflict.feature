@@ -1,10 +1,5 @@
 Feature: git town-ship: resolving conflicts between the current feature branch and the main branch
 
-  As a developer shipping a branch that conflicts with the main branch
-  I want to be given the choice to resolve the conflicts or abort
-  So that I can finish the operation as planned or postpone it to a better time.
-
-
   Background:
     Given my repo has a feature branch named "feature"
     And the following commits exist in my repo
@@ -13,7 +8,6 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And I am on the "feature" branch
     And I run "git-town ship -m 'feature done'"
-
 
   Scenario: result
     Then it runs the commands
@@ -33,7 +27,6 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
     And I am still on the "feature" branch
     And my repo now has a merge in progress
 
-
   Scenario: aborting
     When I run "git-town abort"
     Then it runs the commands
@@ -47,7 +40,6 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local, remote | conflicting main commit    | conflicting_file | main content    |
       | feature | local         | conflicting feature commit | conflicting_file | feature content |
-
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
@@ -70,7 +62,6 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
       | BRANCH | LOCATION      | MESSAGE                 | FILE NAME        |
       | main   | local, remote | conflicting main commit | conflicting_file |
       |        |               | feature done            | conflicting_file |
-
 
   Scenario: continuing after resolving the conflicts and committing
     Given I resolve the conflict in "conflicting_file"

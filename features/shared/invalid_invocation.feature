@@ -1,10 +1,5 @@
 Feature: invalid invocation
 
-  As a developer providing the wrong number of arguments or invalid arguments
-  I should be reminded of the usage
-  So that I can use it correctly without having to look at documentation
-
-
   Scenario Outline: <DESCRIPTION>
     When I run "git-town <CMD>"
     Then it runs no commands
@@ -30,6 +25,7 @@ Feature: invalid invocation
       | offline arg1 arg2              |
       | perennial-branches arg1        |
       | perennial-branches update arg1 |
+      | prepend                        |
       | prune-branches arg1            |
       | pull-branch-strategy arg1 arg2 |
       | pull-branch-strategy invalid   |

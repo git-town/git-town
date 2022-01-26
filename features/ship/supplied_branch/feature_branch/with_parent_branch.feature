@@ -1,8 +1,5 @@
 Feature: git town-ship: shipping a child branch
 
-  (see ../../current_branch/on_feature_branch/on_child_branch.feature)
-
-
   Background:
     Given my repo has a feature branch named "feature-1"
     And my repo has a feature branch named "feature-2" as a child of "feature-1"
@@ -14,7 +11,6 @@ Feature: git town-ship: shipping a child branch
       | feature-3 | local, remote | feature 3 commit | feature_3_file | feature 3 content |
     And I am on the "feature-1" branch
     When I run "git-town ship feature-3 -m 'feature 3 done'"
-
 
   Scenario: result
     Then it runs the commands
