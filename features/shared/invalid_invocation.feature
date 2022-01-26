@@ -25,6 +25,7 @@ Feature: invalid invocation
       | offline arg1 arg2              |
       | perennial-branches arg1        |
       | perennial-branches update arg1 |
+      | prepend                        |
       | prune-branches arg1            |
       | pull-branch-strategy arg1 arg2 |
       | pull-branch-strategy invalid   |

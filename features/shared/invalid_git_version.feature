@@ -11,6 +11,7 @@ Feature: minimum Git version
     Examples:
       | COMMAND              |
       |                      |
+      | alias true           |
       | append               |
       | config               |
       | diff-parent          |
