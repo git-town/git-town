@@ -1,10 +1,10 @@
-Feature: shipping the current feature branch
+Feature: ship message contains double-quotes
 
   Background:
     Given my repo has a feature branch named "feature"
     And the following commits exist in my repo
-      | BRANCH  | LOCATION      | MESSAGE        | FILE NAME    | FILE CONTENT    |
-      | feature | local, remote | feature commit | feature_file | feature content |
+      | BRANCH  | LOCATION | MESSAGE        |
+      | feature | local    | feature commit |
     And I am on the "feature" branch
     When I run "git-town ship -m 'message containing "double quotes"'"
 
@@ -30,8 +30,9 @@ Feature: shipping the current feature branch
       | remote     | main     |
     And my repo doesn't have any uncommitted files
     And my repo now has the following commits
-      | BRANCH | LOCATION      | MESSAGE                            | FILE NAME    |
-      | main   | local, remote | message containing "double quotes" | feature_file |
+      | BRANCH | LOCATION      | MESSAGE                            |
+      | main   | local, remote | message containing "double quotes" |
+    And Git Town now has no branch hierarchy information
 
   Scenario: undo
     When I run "git-town undo"
@@ -46,7 +47,10 @@ Feature: shipping the current feature branch
       | main    | git checkout feature                                      |
     And I am now on the "feature" branch
     And my repo now has the following commits
-      | BRANCH  | LOCATION      | MESSAGE                                     | FILE NAME    |
-      | main    | local, remote | message containing "double quotes"          | feature_file |
-      |         |               | Revert "message containing "double quotes"" | feature_file |
-      | feature | local, remote | feature commit                              | feature_file |
+      | BRANCH  | LOCATION      | MESSAGE                                     |
+      | main    | local, remote | message containing "double quotes"          |
+      |         |               | Revert "message containing "double quotes"" |
+      | feature | local, remote | feature commit                              |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH  | PARENT |
+      | feature | main   |

@@ -3,8 +3,8 @@ Feature: trying the ship of the current feature branch without editing the defau
   Background:
     Given my repo has a feature branch named "feature"
     And the following commits exist in my repo
-      | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
-      | feature | local    | feature commit | feature_file | feature content |
+      | BRANCH  | LOCATION | MESSAGE        |
+      | feature | local    | feature commit |
     And I am on the "feature" branch
     When I run "git-town ship" and close the editor
 
