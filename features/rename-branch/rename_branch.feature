@@ -1,4 +1,4 @@
-Feature: rename the current branch implicitly
+Feature: rename the current branch
 
   Background:
     Given my repo has a feature branch named "feature"
