@@ -1,4 +1,4 @@
-Feature: git town-ship: shipping the supplied feature branch without a remote origin
+Feature: shipping the supplied feature branch without a remote origin
 
   Background:
     Given my repo has the feature branches "feature" and "other-feature"

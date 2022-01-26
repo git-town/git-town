@@ -1,10 +1,10 @@
-Feature: errors if on supplied branch and there are open changes
+Feature: errors if there are open changes
 
   Background:
     Given my repo has a feature branch named "feature"
     And my workspace has an uncommitted file
     And I am on the "feature" branch
-    When I run "git-town ship feature"
+    When I run "git-town ship"
 
   Scenario: result
     Then it runs no commands
@@ -16,3 +16,13 @@ Feature: errors if on supplied branch and there are open changes
     And my workspace still contains my uncommitted file
     And my repo now has the following commits
       | BRANCH | LOCATION |
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs no commands
+    And it prints the error:
+      """
+      nothing to undo
+      """
+    And I am still on the "feature" branch
+    And my workspace still contains my uncommitted file

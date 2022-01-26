@@ -1,4 +1,4 @@
-Feature: git town-ship: shipping the supplied feature branch without a tracking branch
+Feature: shipping the supplied feature branch without a tracking branch
 
   Background:
     Given my repo has the feature branches "feature" and "other-feature"

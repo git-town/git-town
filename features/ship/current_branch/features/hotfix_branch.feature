@@ -1,4 +1,4 @@
-Feature: git town-ship: shipping hotfixes
+Feature: shipping hotfixes
 
   Background:
     Given my repo has the perennial branch "production"

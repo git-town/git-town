@@ -1,4 +1,4 @@
-Feature: git town-ship: resolving conflicts between the current feature branch and its tracking branch
+Feature: resolving conflicts between the current feature branch and its tracking branch
 
   Background:
     Given my repo has a feature branch named "feature"

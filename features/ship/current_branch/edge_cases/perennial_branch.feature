@@ -1,4 +1,4 @@
-Feature: git town-ship: errors when trying to ship a perennial branch
+Feature: errors when trying to ship a perennial branch
 
   Scenario: on main branch
     Given I am on the "main" branch

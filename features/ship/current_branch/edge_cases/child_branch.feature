@@ -1,4 +1,4 @@
-Feature: git town-ship: shipping a child branch
+Feature: shipping a child branch
 
   Background:
     Given my repo has a feature branch named "feature-1"
@@ -21,7 +21,7 @@ Feature: git town-ship: shipping a child branch
       shipping this branch would ship "feature-1, feature-2" as well,
       please ship "feature-1" first
       """
-    And I am now on the "feature-3" branch
+    And I am still on the "feature-3" branch
     And my repo is left with my original commits
     And Git Town is still aware of this branch hierarchy
       | BRANCH    | PARENT    |
@@ -38,3 +38,8 @@ Feature: git town-ship: shipping a child branch
       """
     And I am still on the "feature-3" branch
     And my repo is left with my original commits
+    And Git Town is still aware of this branch hierarchy
+      | BRANCH    | PARENT    |
+      | feature-1 | main      |
+      | feature-2 | feature-1 |
+      | feature-3 | feature-2 |

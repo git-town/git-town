@@ -1,4 +1,4 @@
-Feature: git town-ship: shipping the current feature branch with a tracking branch
+Feature: shipping the current feature branch with a tracking branch
 
   Background:
     Given my repo has a feature branch named "feature"
