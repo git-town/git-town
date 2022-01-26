@@ -14,7 +14,6 @@ Feature: Prompt for parent branch when unknown
       | diff-parent       |
       | kill feature-1    |
       | prepend feature-2 |
-      | ship -m done      |
       | sync              |
 
   Scenario: prompting for parent branch when running git town-hack -p
