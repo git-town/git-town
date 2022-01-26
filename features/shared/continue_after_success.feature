@@ -1,26 +1,35 @@
 Feature: Show explanation when trying to continue after a successful command
 
-  Scenario: continuing after successful git-hack
-    Given I run "git-town hack new-feature"
+  Scenario Outline:
+    Given my repo has a feature branch named "feature"
+    And I run "git-town <COMMAND>"
     When I run "git-town continue"
     Then it prints the error:
       """
       nothing to continue
       """
 
-  Scenario: continuing after successful git-ship
-    Given my repo has a feature branch named "current-feature"
-    And I run "git-town ship current-feature -m done"
-    When I run "git-town continue"
-    Then it prints the error:
-      """
-      nothing to continue
-      """
-
-  Scenario: continuing after successful git-sync
-    Given I run "git-town sync"
-    When I run "git-town continue"
-    Then it prints the error:
-      """
-      nothing to continue
-      """
+    Examples:
+      | COMMAND              |
+      |                      |
+      | alias true           |
+      | append new-feature   |
+      | completions fish     |
+      | config               |
+      | diff-parent          |
+      | hack new-feature     |
+      | help                 |
+      | kill feature         |
+      | main_branch          |
+      | new-branch-push-flag |
+      | new-pull-request     |
+      | offline              |
+      | perennial-branches   |
+      | prepend new-feature  |
+      | prune-branches       |
+      | pull-branch-strategy |
+      | rename-branch        |
+      | repo                 |
+      | ship feature -m done |
+      | sync                 |
+      | version              |
