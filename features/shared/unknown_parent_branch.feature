@@ -1,17 +1,21 @@
 @skipWindows
 Feature: Prompt for parent branch when unknown
 
-  Scenario: prompting for parent branch when running git town-append
+  Scenario Outline:
     Given my repo has a branch "feature-1"
     And I am on the "feature-1" branch
-    When I run "git-town append feature-2" and answer the prompts:
+    When I run "git-town <COMMAND>" and answer the prompts:
       | PROMPT                                          | ANSWER  |
       | Please specify the parent branch of 'feature-1' | [ENTER] |
-    Then I am now on the "feature-2" branch
-    And Git Town is now aware of this branch hierarchy
-      | BRANCH    | PARENT    |
-      | feature-1 | main      |
-      | feature-2 | feature-1 |
+
+    Examples:
+      | COMMAND           |
+      | append feature-2  |
+      | diff-parent       |
+      | kill feature-1    |
+      | prepend feature-2 |
+      | ship -m done      |
+      | sync              |
 
   Scenario: prompting for parent branch when running git town-hack -p
     Given my repo has a branch "feature-1"
@@ -26,18 +30,6 @@ Feature: Prompt for parent branch when unknown
       | feature-1 | main      |
       | feature-2 | feature-1 |
 
-  Scenario: prompting for parent branch when running git town-kill
-    Given my repo has a branch "feature"
-    And I am on the "feature" branch
-    When I run "git-town kill" and answer the prompts:
-      | PROMPT                                        | ANSWER  |
-      | Please specify the parent branch of 'feature' | [ENTER] |
-    Then I am now on the "main" branch
-    And the existing branches are
-      | REPOSITORY | BRANCHES |
-      | local      | main     |
-      | remote     | main     |
-
   @skipWindows
   Scenario: prompting for parent branch when running git town-new-pull-request
     And my computer has the "open" tool installed
@@ -51,23 +43,6 @@ Feature: Prompt for parent branch when unknown
       """
       https://github.com/git-town/git-town/compare/feature?expand=1
       """
-
-  Scenario: prompting for parent branch when running git town-sync
-    Given my repo has a branch "feature"
-    And the following commits exist in my repo
-      | BRANCH  | LOCATION      | MESSAGE        |
-      | main    | local, remote | main commit    |
-      | feature | local, remote | feature commit |
-    And I am on the "feature" branch
-    When I run "git-town sync" and answer the prompts:
-      | PROMPT                                        | ANSWER  |
-      | Please specify the parent branch of 'feature' | [ENTER] |
-    Then my repo now has the following commits
-      | BRANCH  | LOCATION      | MESSAGE                          |
-      | main    | local, remote | main commit                      |
-      | feature | local, remote | feature commit                   |
-      |         |               | main commit                      |
-      |         |               | Merge branch 'main' into feature |
 
   Scenario: prompting for parent branch when running git town-sync --all
     Given my repo has a branch "feature-1"
