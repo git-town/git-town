@@ -81,6 +81,7 @@ func (repo *Repo) FilesInBranches() (result DataTable, err error) {
 	if err != nil {
 		return result, err
 	}
+	lastBranch := ""
 	for _, branch := range branches {
 		files, err := repo.FilesInBranch(branch)
 		if err != nil {
@@ -91,7 +92,12 @@ func (repo *Repo) FilesInBranches() (result DataTable, err error) {
 			if err != nil {
 				return result, err
 			}
-			result.AddRow(branch, file, content)
+			if branch == lastBranch {
+				result.AddRow("", file, content)
+			} else {
+				result.AddRow(branch, file, content)
+			}
+			lastBranch = branch
 		}
 	}
 	return result, err
