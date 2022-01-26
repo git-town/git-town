@@ -86,6 +86,6 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
       | BRANCH          | NAME             | CONTENT          |
       | main            | conflicting_file | main content     |
       | current-feature | conflicting_file | resolved content |
-      | current-feature | new_folder/file1 |                  |
+      |                 | new_folder/file1 |                  |
       | other-feature   | conflicting_file | main content     |
-      | other-feature   | file2            |                  |
+      |                 | file2            |                  |

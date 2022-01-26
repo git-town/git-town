@@ -84,7 +84,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |
-      | feature | feature_file     | feature content  |
+      |         | feature_file     | feature content  |
 
   Scenario: continuing after resolving the conflicts and comitting
     Given I resolve the conflict in "conflicting_file"
@@ -108,4 +108,4 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |
-      | feature | feature_file     | feature content  |
+      |         | feature_file     | feature content  |

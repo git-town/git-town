@@ -37,6 +37,6 @@ Feature: git-town sync --all: syncs all feature branches (without remote repo)
       | BRANCH    | NAME          | CONTENT           |
       | main      | main_file     | main content      |
       | feature-1 | feature1_file | feature-1 content |
-      | feature-1 | main_file     | main content      |
+      |           | main_file     | main content      |
       | feature-2 | feature2_file | feature-2 content |
-      | feature-2 | main_file     | main content      |
+      |           | main_file     | main content      |
