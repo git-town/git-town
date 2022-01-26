@@ -4,8 +4,8 @@ Feature: shipping the current feature branch without a remote origin
     Given my repo has a feature branch named "feature"
     And my repo does not have a remote origin
     And the following commits exist in my repo
-      | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
-      | feature | local    | feature commit | feature_file | feature content |
+      | BRANCH  | LOCATION | MESSAGE        |
+      | feature | local    | feature commit |
     And I am on the "feature" branch
     When I run "git-town ship -m 'feature done'"
 
@@ -22,8 +22,8 @@ Feature: shipping the current feature branch without a remote origin
       | REPOSITORY | BRANCHES |
       | local      | main     |
     And my repo now has the following commits
-      | BRANCH | LOCATION | MESSAGE      | FILE NAME    |
-      | main   | local    | feature done | feature_file |
+      | BRANCH | LOCATION | MESSAGE      |
+      | main   | local    | feature done |
 
   Scenario: undo
     When I run "git-town undo"
@@ -34,7 +34,7 @@ Feature: shipping the current feature branch without a remote origin
       |        | git checkout feature                          |
     And I am now on the "feature" branch
     And my repo now has the following commits
-      | BRANCH  | LOCATION | MESSAGE               | FILE NAME    |
-      | main    | local    | feature done          | feature_file |
-      |         |          | Revert "feature done" | feature_file |
-      | feature | local    | feature commit        | feature_file |
+      | BRANCH  | LOCATION | MESSAGE               |
+      | main    | local    | feature done          |
+      |         |          | Revert "feature done" |
+      | feature | local    | feature commit        |
