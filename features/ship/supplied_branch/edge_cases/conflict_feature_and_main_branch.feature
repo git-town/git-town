@@ -96,7 +96,7 @@ Feature: handle conflicts between the supplied feature branch and the main branc
     And I am now on the "other-feature" branch
     And my workspace still contains my uncommitted file
 
-  Scenario: undo
+  Scenario: undo after continue
     Given I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
     When I run "git-town undo"
