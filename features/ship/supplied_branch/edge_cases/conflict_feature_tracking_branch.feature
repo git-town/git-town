@@ -42,8 +42,9 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
     And there is no merge in progress
     And my repo is left with my original commits
     And Git Town is still aware of this branch hierarchy
-      | BRANCH  | PARENT |
-      | feature | main   |
+      | BRANCH        | PARENT |
+      | feature       | main   |
+      | other-feature | main   |
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
@@ -69,6 +70,9 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
     And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, remote | feature done |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | other-feature | main   |
 
   Scenario: continuing after resolving the conflicts and comitting
     Given I resolve the conflict in "conflicting_file"
