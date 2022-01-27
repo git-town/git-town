@@ -1,5 +1,5 @@
 @skipWindows
-Feature: a sk for missing configuration information
+Feature: ask for missing configuration information
 
   Scenario: running unconfigured
     Given I haven't configured Git Town yet
