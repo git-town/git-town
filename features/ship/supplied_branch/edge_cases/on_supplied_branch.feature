@@ -1,4 +1,4 @@
-Feature: shipping the current feature branch with a tracking branch
+Feature: shipping the current feature branch
 
   Background:
     Given my repo has a feature branch named "feature"
@@ -31,6 +31,7 @@ Feature: shipping the current feature branch with a tracking branch
     And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, remote | feature done |
+    And Git Town now has no branch hierarchy information
 
   Scenario: undo
     When I run "git-town undo"
