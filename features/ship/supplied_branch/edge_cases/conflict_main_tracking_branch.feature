@@ -38,6 +38,10 @@ Feature: handle conflicts between the main branch and its tracking branch
     And my workspace still contains my uncommitted file
     And there is no rebase in progress
     And my repo is left with my original commits
+    And Git Town is still aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | feature       | main   |
+      | other-feature | main   |
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
@@ -59,15 +63,18 @@ Feature: handle conflicts between the main branch and its tracking branch
       | other-feature | git stash pop                      |
     And I am now on the "other-feature" branch
     And my workspace still contains my uncommitted file
+    And my repo now has the following commits
+      | BRANCH | LOCATION      | MESSAGE                   | FILE NAME        | FILE CONTENT               |
+      | main   | local, remote | conflicting remote commit | conflicting_file | remote conflicting content |
+      |        |               | conflicting local commit  | conflicting_file | resolved content           |
+      |        |               | feature done              | feature_file     | feature content            |
     And the existing branches are
       | REPOSITORY | BRANCHES            |
       | local      | main, other-feature |
       | remote     | main, other-feature |
-    And my repo now has the following commits
-      | BRANCH | LOCATION      | MESSAGE                   |
-      | main   | local, remote | conflicting remote commit |
-      |        |               | conflicting local commit  |
-      |        |               | feature done              |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | other-feature | main   |
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
@@ -88,13 +95,3 @@ Feature: handle conflicts between the main branch and its tracking branch
       |               | git checkout other-feature         |
       | other-feature | git stash pop                      |
     And I am now on the "other-feature" branch
-    And my workspace still contains my uncommitted file
-    And the existing branches are
-      | REPOSITORY | BRANCHES            |
-      | local      | main, other-feature |
-      | remote     | main, other-feature |
-    And my repo now has the following commits
-      | BRANCH | LOCATION      | MESSAGE                   |
-      | main   | local, remote | conflicting remote commit |
-      |        |               | conflicting local commit  |
-      |        |               | feature done              |
