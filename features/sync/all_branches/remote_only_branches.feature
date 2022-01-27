@@ -4,10 +4,10 @@ Feature: git-town sync --all: does not sync remote only branches
     Given my repo has a feature branch named "my-feature"
     And my coworker has a feature branch named "co-feature"
     And the following commits exist in my repo
-      | BRANCH     | LOCATION      | MESSAGE         | FILE NAME     |
-      | main       | remote        | main commit     | main_file     |
-      | my-feature | local, remote | my commit       | my_file       |
-      | co-feature | remote        | coworker commit | coworker_file |
+      | BRANCH     | LOCATION      | MESSAGE         |
+      | main       | remote        | main commit     |
+      | my-feature | local, remote | my commit       |
+      | co-feature | remote        | coworker commit |
     And I am on the "main" branch
     And my workspace has an uncommitted file
     When I run "git-town sync --all"
@@ -30,9 +30,9 @@ Feature: git-town sync --all: does not sync remote only branches
     And my workspace still contains my uncommitted file
     And all branches are now synchronized
     And my repo now has the following commits
-      | BRANCH     | LOCATION      | MESSAGE                             | FILE NAME     |
-      | main       | local, remote | main commit                         | main_file     |
-      | co-feature | remote        | coworker commit                     | coworker_file |
-      | my-feature | local, remote | my commit                           | my_file       |
-      |            |               | main commit                         | main_file     |
-      |            |               | Merge branch 'main' into my-feature |               |
+      | BRANCH     | LOCATION      | MESSAGE                             |
+      | main       | local, remote | main commit                         |
+      | co-feature | remote        | coworker commit                     |
+      | my-feature | local, remote | my commit                           |
+      |            |               | main commit                         |
+      |            |               | Merge branch 'main' into my-feature |

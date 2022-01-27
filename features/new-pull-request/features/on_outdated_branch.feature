@@ -4,13 +4,13 @@ Feature: syncing before creating the pull request
     Given my code base has a feature branch named "parent-feature"
     And my code base has a feature branch named "child-feature" as a child of "parent-feature"
     And the following commits exist in my repo
-      | BRANCH         | LOCATION | MESSAGE              | FILE NAME          |
-      | main           | local    | local main commit    | local_main_file    |
-      |                | remote   | remote main commit   | remote_main_file   |
-      | parent-feature | local    | local parent commit  | local_parent_file  |
-      |                | remote   | remote parent commit | remote_parent_file |
-      | child-feature  | local    | local child commit   | local_child_file   |
-      |                | remote   | remote child commit  | remote_child_file  |
+      | BRANCH         | LOCATION | MESSAGE              |
+      | main           | local    | local main commit    |
+      |                | remote   | remote main commit   |
+      | parent-feature | local    | local parent commit  |
+      |                | remote   | remote parent commit |
+      | child-feature  | local    | local child commit   |
+      |                | remote   | remote child commit  |
     And my computer has the "open" tool installed
     And my repo's origin is "git@github.com:git-town/git-town.git"
     And I am on the "child-feature" branch
@@ -44,22 +44,22 @@ Feature: syncing before creating the pull request
     And I am still on the "child-feature" branch
     And my workspace still contains my uncommitted file
     And my repo now has the following commits
-      | BRANCH         | LOCATION      | MESSAGE                                                                  | FILE NAME          |
-      | main           | local, remote | remote main commit                                                       | remote_main_file   |
-      |                |               | local main commit                                                        | local_main_file    |
-      | child-feature  | local, remote | local child commit                                                       | local_child_file   |
-      |                |               | remote child commit                                                      | remote_child_file  |
-      |                |               | Merge remote-tracking branch 'origin/child-feature' into child-feature   |                    |
-      |                |               | local parent commit                                                      | local_parent_file  |
-      |                |               | remote parent commit                                                     | remote_parent_file |
-      |                |               | Merge remote-tracking branch 'origin/parent-feature' into parent-feature |                    |
-      |                |               | remote main commit                                                       | remote_main_file   |
-      |                |               | local main commit                                                        | local_main_file    |
-      |                |               | Merge branch 'main' into parent-feature                                  |                    |
-      |                |               | Merge branch 'parent-feature' into child-feature                         |                    |
-      | parent-feature | local, remote | local parent commit                                                      | local_parent_file  |
-      |                |               | remote parent commit                                                     | remote_parent_file |
-      |                |               | Merge remote-tracking branch 'origin/parent-feature' into parent-feature |                    |
-      |                |               | remote main commit                                                       | remote_main_file   |
-      |                |               | local main commit                                                        | local_main_file    |
-      |                |               | Merge branch 'main' into parent-feature                                  |                    |
+      | BRANCH         | LOCATION      | MESSAGE                                                                  |
+      | main           | local, remote | remote main commit                                                       |
+      |                |               | local main commit                                                        |
+      | child-feature  | local, remote | local child commit                                                       |
+      |                |               | remote child commit                                                      |
+      |                |               | Merge remote-tracking branch 'origin/child-feature' into child-feature   |
+      |                |               | local parent commit                                                      |
+      |                |               | remote parent commit                                                     |
+      |                |               | Merge remote-tracking branch 'origin/parent-feature' into parent-feature |
+      |                |               | remote main commit                                                       |
+      |                |               | local main commit                                                        |
+      |                |               | Merge branch 'main' into parent-feature                                  |
+      |                |               | Merge branch 'parent-feature' into child-feature                         |
+      | parent-feature | local, remote | local parent commit                                                      |
+      |                |               | remote parent commit                                                     |
+      |                |               | Merge remote-tracking branch 'origin/parent-feature' into parent-feature |
+      |                |               | remote main commit                                                       |
+      |                |               | local main commit                                                        |
+      |                |               | Merge branch 'main' into parent-feature                                  |
