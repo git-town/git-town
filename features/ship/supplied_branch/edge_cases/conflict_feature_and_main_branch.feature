@@ -95,3 +95,29 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       | other-feature | git stash pop                |
     And I am now on the "other-feature" branch
     And my workspace still contains my uncommitted file
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs the commands
+      | BRANCH        | COMMAND                                       |
+      | other-feature | git add -A                                    |
+      |               | git stash                                     |
+      |               | git checkout main                             |
+      | main          | git branch feature {{ sha 'feature commit' }} |
+      |               | git push -u origin feature                    |
+      |               | git revert {{ sha 'feature done' }}           |
+      |               | git push                                      |
+      |               | git checkout feature                          |
+      | feature       | git checkout main                             |
+      | main          | git checkout other-feature                    |
+      | other-feature | git stash pop                                 |
+    And I am now on the "other-feature" branch
+    And my repo now has the following commits
+      | BRANCH  | LOCATION      | MESSAGE               |
+      | main    | local, remote | feature done          |
+      |         |               | Revert "feature done" |
+      | feature | local, remote | feature commit        |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | feature       | main   |
+      | other-feature | main   |
