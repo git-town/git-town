@@ -1,4 +1,4 @@
-Feature: shipping the supplied feature branch with a tracking branch
+Feature: shipping the supplied feature branch
 
   Background:
     Given my repo has the feature branches "feature" and "other-feature"
@@ -7,7 +7,7 @@ Feature: shipping the supplied feature branch with a tracking branch
       | feature | remote   | feature commit | feature_file | feature content |
     And I am on the "other-feature" branch
     And my workspace has an uncommitted file with name "feature_file" and content "conflicting content"
-    When I run "git-town ship feature -m 'feature done'"
+    When I run "git-town ship feature" and enter "feature done" for the commit message
 
   Scenario: result
     Then it runs the commands
@@ -22,7 +22,7 @@ Feature: shipping the supplied feature branch with a tracking branch
       |               | git merge --no-edit main           |
       |               | git checkout main                  |
       | main          | git merge --squash feature         |
-      |               | git commit -m "feature done"       |
+      |               | git commit                         |
       |               | git push                           |
       |               | git push origin :feature           |
       |               | git branch -D feature              |
