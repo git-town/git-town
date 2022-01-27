@@ -976,11 +976,11 @@ func (r *Runner) ShaForBranch(name string) (sha string, err error) {
 // ShaForCommit provides the SHA for the commit with the given name.
 func (r *Runner) ShaForCommit(name string) (result string, err error) {
 	var args []string
-	if name == "Initial commit" || strings.HasPrefix(name, "Merge ") {
-		args = []string{"log", "--reflog", "--format=%H", "--grep=^" + name + "$"}
-	} else {
-		args = []string{"reflog", "--grep-reflog=commit: " + name, "--format=%H"}
-	}
+	args = []string{"log", "--reflog", "--format=%H", "--grep=^" + name + "$"}
+	// if name == "Initial commit" || strings.HasPrefix(name, "Merge ") {
+	// } else {
+	// 	args = []string{"reflog", "--grep-reflog=commit: " + name, "--format=%H"}
+	// }
 	res, err := r.Run("git", args...)
 	if err != nil {
 		return result, fmt.Errorf("cannot run git %+v: %w", args, err)
