@@ -4,7 +4,7 @@ Feature: shipping the supplied feature branch from a subfolder
     Given my repo has the feature branches "feature" and "other-feature"
     And the following commits exist in my repo
       | BRANCH  | LOCATION | MESSAGE        |
-      | feature | local    | feature commit |
+      | feature | remote   | feature commit |
     And I am on the "other-feature" branch
     And my workspace has an uncommitted file with name "new_folder/other_feature_file" and content "other feature content"
     When I run "git-town ship feature -m 'feature done'" in the "new_folder" folder
@@ -53,7 +53,8 @@ Feature: shipping the supplied feature branch from a subfolder
       |               | git revert {{ sha 'feature done' }}           |
       |               | git push                                      |
       |               | git checkout feature                          |
-      | feature       | git checkout main                             |
+      | feature       | git reset --hard {{ sha 'Initial commit' }}   |
+      |               | git checkout main                             |
       | main          | git checkout other-feature                    |
       | other-feature | git stash pop                                 |
     And I am now on the "other-feature" branch
@@ -61,7 +62,7 @@ Feature: shipping the supplied feature branch from a subfolder
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, remote | feature done          |
       |         |               | Revert "feature done" |
-      | feature | local, remote | feature commit        |
+      | feature | remote        | feature commit        |
     And Git Town is now aware of this branch hierarchy
       | BRANCH        | PARENT |
       | feature       | main   |
