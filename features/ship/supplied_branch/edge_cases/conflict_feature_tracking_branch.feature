@@ -41,6 +41,9 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
     And my workspace still contains my uncommitted file
     And there is no merge in progress
     And my repo is left with my original commits
+    And Git Town is still aware of this branch hierarchy
+      | BRANCH  | PARENT |
+      | feature | main   |
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
