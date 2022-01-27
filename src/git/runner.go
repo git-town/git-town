@@ -965,7 +965,7 @@ func (r *Runner) RootDirectory() (string, error) {
 }
 
 // ShaForBranch provides the SHA for the local branch with the given name.
-func (r *Runner) ShaForBranch(name string) (sha string, err error) {
+func (r *Runner) ShaForBranch(name string) (string, error) {
 	outcome, err := r.Run("git", "rev-parse", name)
 	if err != nil {
 		return "", fmt.Errorf("cannot determine SHA of local branch %q: %w", name, err)
@@ -974,15 +974,16 @@ func (r *Runner) ShaForBranch(name string) (sha string, err error) {
 }
 
 // ShaForCommit provides the SHA for the commit with the given name.
-func (r *Runner) ShaForCommit(name string) (result string, err error) {
+func (r *Runner) ShaForCommit(name string) (string, error) {
 	res, err := r.Run("git", "log", "--reflog", "--format=%H", "--grep=^"+name+"$")
 	if err != nil {
-		return result, fmt.Errorf("cannot determine the SHA of commit %q: %w", name, err)
+		return "", fmt.Errorf("cannot determine the SHA of commit %q: %w", name, err)
 	}
-	if res.OutputSanitized() == "" {
-		return result, fmt.Errorf("cannot find the SHA of commit %q", name)
+	result := res.OutputSanitized()
+	if result == "" {
+		return "", fmt.Errorf("cannot find the SHA of commit %q", name)
 	}
-	return res.OutputSanitized(), nil
+	return result, nil
 }
 
 // ShouldPushBranch returns whether the local branch with the given name
@@ -1018,10 +1019,10 @@ func (r *Runner) Stash() error {
 }
 
 // StashSize provides the number of stashes in this repository.
-func (r *Runner) StashSize() (result int, err error) {
+func (r *Runner) StashSize() (int, error) {
 	res, err := r.Run("git", "stash", "list")
 	if err != nil {
-		return result, fmt.Errorf("command %q failed: %w", res.FullCmd(), err)
+		return 0, fmt.Errorf("command %q failed: %w", res.FullCmd(), err)
 	}
 	if res.OutputSanitized() == "" {
 		return 0, nil
