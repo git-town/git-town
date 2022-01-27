@@ -3,8 +3,8 @@ Feature: provide the commit message via a CLI argument
   Background:
     Given my repo has the feature branches "feature" and "other-feature"
     And the following commits exist in my repo
-      | BRANCH  | LOCATION | MESSAGE        |
-      | feature | remote   | feature commit |
+      | BRANCH  | LOCATION      | MESSAGE        |
+      | feature | local, remote | feature commit |
     And I am on the "other-feature" branch
     And my workspace has an uncommitted file with name "feature_file" and content "conflicting content"
     When I run "git-town ship feature -m 'feature done'"
@@ -37,3 +37,29 @@ Feature: provide the commit message via a CLI argument
     And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, remote | feature done |
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs the commands
+      | BRANCH        | COMMAND                                       |
+      | other-feature | git add -A                                    |
+      |               | git stash                                     |
+      |               | git checkout main                             |
+      | main          | git branch feature {{ sha 'feature commit' }} |
+      |               | git push -u origin feature                    |
+      |               | git revert {{ sha 'feature done' }}           |
+      |               | git push                                      |
+      |               | git checkout feature                          |
+      | feature       | git checkout main                             |
+      | main          | git checkout other-feature                    |
+      | other-feature | git stash pop                                 |
+    And I am now on the "other-feature" branch
+    And my repo now has the following commits
+      | BRANCH  | LOCATION      | MESSAGE               |
+      | main    | local, remote | feature done          |
+      |         |               | Revert "feature done" |
+      | feature | local, remote | feature commit        |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | feature       | main   |
+      | other-feature | main   |
