@@ -1,4 +1,4 @@
-Feature: resolving conflicts between the supplied feature branch and the main branch
+Feature: handle conflicts between the supplied feature branch and the main branch
 
   Background:
     Given my repo has the feature branches "feature" and "other-feature"
@@ -43,9 +43,13 @@ Feature: resolving conflicts between the supplied feature branch and the main br
     And my workspace still contains my uncommitted file
     And there is no merge in progress
     And my repo now has the following commits
-      | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        |
-      | main    | local, remote | conflicting main commit    | conflicting_file |
-      | feature | local         | conflicting feature commit | conflicting_file |
+      | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
+      | main    | local, remote | conflicting main commit    | conflicting_file | main content    |
+      | feature | local         | conflicting feature commit | conflicting_file | feature content |
+    And Git Town is still aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | feature       | main   |
+      | other-feature | main   |
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
@@ -68,9 +72,12 @@ Feature: resolving conflicts between the supplied feature branch and the main br
       | local      | main, other-feature |
       | remote     | main, other-feature |
     And my repo now has the following commits
-      | BRANCH | LOCATION      | MESSAGE                 | FILE NAME        |
-      | main   | local, remote | conflicting main commit | conflicting_file |
-      |        |               | feature done            | conflicting_file |
+      | BRANCH | LOCATION      | MESSAGE                 | FILE NAME        | FILE CONTENT     |
+      | main   | local, remote | conflicting main commit | conflicting_file | main content     |
+      |        |               | feature done            | conflicting_file | resolved content |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | other-feature | main   |
 
   Scenario: continuing after resolving the conflicts and comitting
     Given I resolve the conflict in "conflicting_file"
@@ -88,11 +95,35 @@ Feature: resolving conflicts between the supplied feature branch and the main br
       | other-feature | git stash pop                |
     And I am now on the "other-feature" branch
     And my workspace still contains my uncommitted file
-    And the existing branches are
-      | REPOSITORY | BRANCHES            |
-      | local      | main, other-feature |
-      | remote     | main, other-feature |
+
+  Scenario: undo after continue
+    Given I resolve the conflict in "conflicting_file"
+    And I run "git-town continue"
+    When I run "git-town undo"
+    Then it runs the commands
+      | BRANCH        | COMMAND                                                         |
+      | other-feature | git add -A                                                      |
+      |               | git stash                                                       |
+      |               | git checkout main                                               |
+      | main          | git branch feature {{ sha 'Merge branch 'main' into feature' }} |
+      |               | git push -u origin feature                                      |
+      |               | git revert {{ sha 'feature done' }}                             |
+      |               | git push                                                        |
+      |               | git checkout feature                                            |
+      | feature       | git reset --hard {{ sha 'conflicting feature commit' }}         |
+      |               | git checkout main                                               |
+      | main          | git checkout other-feature                                      |
+      | other-feature | git stash pop                                                   |
+    And I am now on the "other-feature" branch
     And my repo now has the following commits
-      | BRANCH | LOCATION      | MESSAGE                 | FILE NAME        |
-      | main   | local, remote | conflicting main commit | conflicting_file |
-      |        |               | feature done            | conflicting_file |
+      | BRANCH  | LOCATION      | MESSAGE                          |
+      | main    | local, remote | conflicting main commit          |
+      |         |               | feature done                     |
+      |         |               | Revert "feature done"            |
+      | feature | local, remote | conflicting feature commit       |
+      |         | remote        | conflicting main commit          |
+      |         |               | Merge branch 'main' into feature |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | feature       | main   |
+      | other-feature | main   |

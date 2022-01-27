@@ -1,4 +1,4 @@
-Feature: resolving conflicts between the supplied feature branch and its tracking branch
+Feature: handle conflicts between the supplied feature branch and its tracking branch
 
   Background:
     Given my repo has the feature branches "feature" and "other-feature"
@@ -41,6 +41,10 @@ Feature: resolving conflicts between the supplied feature branch and its trackin
     And my workspace still contains my uncommitted file
     And there is no merge in progress
     And my repo is left with my original commits
+    And Git Town is still aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | feature       | main   |
+      | other-feature | main   |
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
@@ -64,8 +68,11 @@ Feature: resolving conflicts between the supplied feature branch and its trackin
       | local      | main, other-feature |
       | remote     | main, other-feature |
     And my repo now has the following commits
-      | BRANCH | LOCATION      | MESSAGE      | FILE NAME        |
-      | main   | local, remote | feature done | conflicting_file |
+      | BRANCH | LOCATION      | MESSAGE      |
+      | main   | local, remote | feature done |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | other-feature | main   |
 
   Scenario: continuing after resolving the conflicts and comitting
     Given I resolve the conflict in "conflicting_file"
@@ -89,5 +96,35 @@ Feature: resolving conflicts between the supplied feature branch and its trackin
       | local      | main, other-feature |
       | remote     | main, other-feature |
     And my repo now has the following commits
-      | BRANCH | LOCATION      | MESSAGE      | FILE NAME        |
-      | main   | local, remote | feature done | conflicting_file |
+      | BRANCH | LOCATION      | MESSAGE      |
+      | main   | local, remote | feature done |
+
+  Scenario: undo after continue
+    Given I resolve the conflict in "conflicting_file"
+    And I run "git-town continue"
+    When I run "git-town undo"
+    Then it runs the commands
+      | BRANCH        | COMMAND                                                                                   |
+      | other-feature | git add -A                                                                                |
+      |               | git stash                                                                                 |
+      |               | git checkout main                                                                         |
+      | main          | git branch feature {{ sha 'Merge remote-tracking branch 'origin/feature' into feature' }} |
+      |               | git push -u origin feature                                                                |
+      |               | git revert {{ sha 'feature done' }}                                                       |
+      |               | git push                                                                                  |
+      |               | git checkout feature                                                                      |
+      | feature       | git checkout main                                                                         |
+      | main          | git checkout other-feature                                                                |
+      | other-feature | git stash pop                                                                             |
+    And I am now on the "other-feature" branch
+    And my repo now has the following commits
+      | BRANCH  | LOCATION      | MESSAGE                                                    |
+      | main    | local, remote | feature done                                               |
+      |         |               | Revert "feature done"                                      |
+      | feature | local, remote | local conflicting commit                                   |
+      |         |               | remote conflicting commit                                  |
+      |         |               | Merge remote-tracking branch 'origin/feature' into feature |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | feature       | main   |
+      | other-feature | main   |

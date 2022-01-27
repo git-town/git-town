@@ -1,12 +1,12 @@
 @skipWindows
-Feature: shipping the supplied feature branch with a tracking branch
+Feature: shipping a branch that exists only on the remote
 
   Background:
     Given my repo has a feature branch named "other-feature"
     And my origin has a feature branch named "feature"
     And the following commits exist in my repo
-      | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
-      | feature | remote   | feature commit | feature_file | feature content |
+      | BRANCH  | LOCATION | MESSAGE        | FILE NAME    |
+      | feature | remote   | feature commit | feature_file |
     And I am on the "other-feature" branch
     And my workspace has an uncommitted file with name "feature_file" and content "conflicting content"
     When I run "git-town ship feature -m 'feature done'" and answer the prompts:
@@ -39,5 +39,34 @@ Feature: shipping the supplied feature branch with a tracking branch
       | local      | main, other-feature |
       | remote     | main, other-feature |
     And my repo now has the following commits
-      | BRANCH | LOCATION      | MESSAGE      | FILE NAME    |
-      | main   | local, remote | feature done | feature_file |
+      | BRANCH | LOCATION      | MESSAGE      |
+      | main   | local, remote | feature done |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | other-feature | main   |
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs the commands
+      | BRANCH        | COMMAND                                       |
+      | other-feature | git add -A                                    |
+      |               | git stash                                     |
+      |               | git checkout main                             |
+      | main          | git branch feature {{ sha 'feature commit' }} |
+      |               | git push -u origin feature                    |
+      |               | git revert {{ sha 'feature done' }}           |
+      |               | git push                                      |
+      |               | git checkout feature                          |
+      | feature       | git checkout main                             |
+      | main          | git checkout other-feature                    |
+      | other-feature | git stash pop                                 |
+    And I am now on the "other-feature" branch
+    And my repo now has the following commits
+      | BRANCH  | LOCATION      | MESSAGE               |
+      | main    | local, remote | feature done          |
+      |         |               | Revert "feature done" |
+      | feature | local, remote | feature commit        |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | feature       | main   |
+      | other-feature | main   |

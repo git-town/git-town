@@ -1,10 +1,10 @@
-Feature: shipping the current feature branch with a tracking branch
+Feature: shipping the current feature branch
 
   Background:
     Given my repo has a feature branch named "feature"
     And the following commits exist in my repo
-      | BRANCH  | LOCATION      | MESSAGE        | FILE NAME    | FILE CONTENT    |
-      | feature | local, remote | feature commit | feature_file | feature content |
+      | BRANCH  | LOCATION      | MESSAGE        |
+      | feature | local, remote | feature commit |
     And I am on the "feature" branch
     When I run "git-town ship feature -m 'feature done'"
 
@@ -29,8 +29,9 @@ Feature: shipping the current feature branch with a tracking branch
       | local      | main     |
       | remote     | main     |
     And my repo now has the following commits
-      | BRANCH | LOCATION      | MESSAGE      | FILE NAME    |
-      | main   | local, remote | feature done | feature_file |
+      | BRANCH | LOCATION      | MESSAGE      |
+      | main   | local, remote | feature done |
+    And Git Town now has no branch hierarchy information
 
   Scenario: undo
     When I run "git-town undo"
@@ -45,7 +46,10 @@ Feature: shipping the current feature branch with a tracking branch
       | main    | git checkout feature                          |
     And I am now on the "feature" branch
     And my repo now has the following commits
-      | BRANCH  | LOCATION      | MESSAGE               | FILE NAME    |
-      | main    | local, remote | feature done          | feature_file |
-      |         |               | Revert "feature done" | feature_file |
-      | feature | local, remote | feature commit        | feature_file |
+      | BRANCH  | LOCATION      | MESSAGE               |
+      | main    | local, remote | feature done          |
+      |         |               | Revert "feature done" |
+      | feature | local, remote | feature commit        |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH  | PARENT |
+      | feature | main   |

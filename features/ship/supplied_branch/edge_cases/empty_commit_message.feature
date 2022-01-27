@@ -1,4 +1,4 @@
-Feature: aborting the ship of the supplied feature branch by entering an empty commit message
+Feature: abort the ship via empty commit message
 
   Background:
     Given my repo has the feature branches "feature" and "other-feature"
@@ -38,3 +38,24 @@ Feature: aborting the ship of the supplied feature branch by entering an empty c
     And I am still on the "other-feature" branch
     And my workspace still contains my uncommitted file
     And my repo is left with my original commits
+    And Git Town is still aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | feature       | main   |
+      | other-feature | main   |
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs no commands
+    And it prints the error:
+      """
+      nothing to undo
+      """
+    And I am still on the "other-feature" branch
+    And my repo now has the following commits
+      | BRANCH  | LOCATION      | MESSAGE        |
+      | main    | local, remote | main commit    |
+      | feature | local         | feature commit |
+    And Git Town is still aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | feature       | main   |
+      | other-feature | main   |

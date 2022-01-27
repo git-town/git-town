@@ -44,3 +44,6 @@ Feature: aborting the ship by empty commit message
       """
     And I am still on the "feature" branch
     And my repo is left with my original commits
+    And Git Town is still aware of this branch hierarchy
+      | BRANCH  | PARENT |
+      | feature | main   |

@@ -1,4 +1,4 @@
-Feature: errors when trying to ship the supplied feature branch that has no differences with the main branch
+Feature: does not ship empty feature branches
 
   Background:
     Given my repo has the feature branches "empty-feature" and "other-feature"
@@ -31,3 +31,24 @@ Feature: errors when trying to ship the supplied feature branch that has no diff
       """
     And I am still on the "other-feature" branch
     And my workspace still contains my uncommitted file
+    And Git Town is still aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | empty-feature | main   |
+      | other-feature | main   |
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs no commands
+    And it prints the error:
+      """
+      nothing to undo
+      """
+    And I am still on the "other-feature" branch
+    And my repo now has the following commits
+      | BRANCH        | LOCATION      | MESSAGE        |
+      | main          | local, remote | main commit    |
+      | empty-feature | local         | feature commit |
+    And Git Town is still aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | empty-feature | main   |
+      | other-feature | main   |
