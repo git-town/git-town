@@ -1,4 +1,4 @@
-Feature: aborting the ship of the current feature branch by entering an empty commit message
+Feature: aborting the ship by empty commit message
 
   Background:
     Given my repo has a feature branch named "feature"
@@ -31,6 +31,9 @@ Feature: aborting the ship of the current feature branch by entering an empty co
       """
     And I am still on the "feature" branch
     And my repo is left with my original commits
+    And Git Town is still aware of this branch hierarchy
+      | BRANCH  | PARENT |
+      | feature | main   |
 
   @skipWindows
   Scenario: undo

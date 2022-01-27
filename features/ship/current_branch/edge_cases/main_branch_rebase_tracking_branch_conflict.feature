@@ -1,4 +1,4 @@
-Feature: resolving conflicts between the main branch and its tracking branch
+Feature: handle conflicts between the main branch and its tracking branch
 
   Background:
     Given my repo has a feature branch named "feature"
@@ -32,6 +32,9 @@ Feature: resolving conflicts between the main branch and its tracking branch
     And I am still on the "feature" branch
     And there is no rebase in progress
     And my repo is left with my original commits
+    And Git Town is still aware of this branch hierarchy
+      | BRANCH  | PARENT |
+      | feature | main   |
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
@@ -59,6 +62,7 @@ Feature: resolving conflicts between the main branch and its tracking branch
       | main   | local, remote | conflicting remote commit | conflicting_file |
       |        |               | conflicting local commit  | conflicting_file |
       |        |               | feature done              | feature_file     |
+    And Git Town now has no branch hierarchy information
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
@@ -77,12 +81,3 @@ Feature: resolving conflicts between the main branch and its tracking branch
       |         | git push origin :feature           |
       |         | git branch -D feature              |
     And I am now on the "main" branch
-    And the existing branches are
-      | REPOSITORY | BRANCHES |
-      | local      | main     |
-      | remote     | main     |
-    And my repo now has the following commits
-      | BRANCH | LOCATION      | MESSAGE                   | FILE NAME        |
-      | main   | local, remote | conflicting remote commit | conflicting_file |
-      |        |               | conflicting local commit  | conflicting_file |
-      |        |               | feature done              | feature_file     |

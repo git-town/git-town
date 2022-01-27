@@ -1,4 +1,4 @@
-Feature: shipping the current feature branch from a subfolder
+Feature: ship the current feature branch from a subfolder on the shipped branch
 
   Background:
     Given my repo has a feature branch named "feature"
@@ -31,6 +31,7 @@ Feature: shipping the current feature branch from a subfolder
     And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME               |
       | main   | local, remote | feature done | new_folder/feature_file |
+    And Git Town now has no branch hierarchy information
 
   Scenario: undo
     When I run "git-town undo"
@@ -49,3 +50,6 @@ Feature: shipping the current feature branch from a subfolder
       | main    | local, remote | feature done          | new_folder/feature_file |
       |         |               | Revert "feature done" | new_folder/feature_file |
       | feature | local, remote | feature commit        | new_folder/feature_file |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH  | PARENT |
+      | feature | main   |

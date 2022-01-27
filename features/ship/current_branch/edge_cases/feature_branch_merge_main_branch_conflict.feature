@@ -1,4 +1,4 @@
-Feature: resolving conflicts between the current feature branch and the main branch
+Feature: handle conflicts between the shipped branch and the main branch
 
   Background:
     Given my repo has a feature branch named "feature"
@@ -40,6 +40,9 @@ Feature: resolving conflicts between the current feature branch and the main bra
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local, remote | conflicting main commit    | conflicting_file | main content    |
       | feature | local         | conflicting feature commit | conflicting_file | feature content |
+    And Git Town is still aware of this branch hierarchy
+      | BRANCH  | PARENT |
+      | feature | main   |
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
@@ -59,9 +62,10 @@ Feature: resolving conflicts between the current feature branch and the main bra
       | local      | main     |
       | remote     | main     |
     And my repo now has the following commits
-      | BRANCH | LOCATION      | MESSAGE                 | FILE NAME        |
-      | main   | local, remote | conflicting main commit | conflicting_file |
-      |        |               | feature done            | conflicting_file |
+      | BRANCH | LOCATION      | MESSAGE                 | FILE NAME        | FILE CONTENT     |
+      | main   | local, remote | conflicting main commit | conflicting_file | main content     |
+      |        |               | feature done            | conflicting_file | resolved content |
+    And Git Town now has no branch hierarchy information
 
   Scenario: continuing after resolving the conflicts and committing
     Given I resolve the conflict in "conflicting_file"
@@ -76,11 +80,3 @@ Feature: resolving conflicts between the current feature branch and the main bra
       |         | git push origin :feature     |
       |         | git branch -D feature        |
     And I am now on the "main" branch
-    And the existing branches are
-      | REPOSITORY | BRANCHES |
-      | local      | main     |
-      | remote     | main     |
-    And my repo now has the following commits
-      | BRANCH | LOCATION      | MESSAGE                 | FILE NAME        |
-      | main   | local, remote | conflicting main commit | conflicting_file |
-      |        |               | feature done            | conflicting_file |
