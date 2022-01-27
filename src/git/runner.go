@@ -976,9 +976,7 @@ func (r *Runner) ShaForBranch(name string) (sha string, err error) {
 // ShaForCommit provides the SHA for the commit with the given name.
 func (r *Runner) ShaForCommit(name string) (result string, err error) {
 	var args []string
-	if name == "Initial commit" {
-		args = []string{"reflog", "--grep=" + name, "--format=%H", "--max-count=1"}
-	} else if strings.HasPrefix(name, "Merge ") {
+	if name == "Initial commit" || strings.HasPrefix(name, "Merge ") {
 		args = []string{"log", "--reflog", "--format=%H", "--grep=" + name}
 	} else {
 		args = []string{"reflog", "--grep-reflog=commit: " + name, "--format=%H"}
