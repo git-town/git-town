@@ -1,4 +1,4 @@
-Feature: ship message contains double-quotes
+Feature: commit message can contain double-quotes
 
   Background:
     Given my repo has a feature branch named "feature"

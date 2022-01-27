@@ -1,4 +1,4 @@
-Feature: trying the ship of the current feature branch without editing the default commit message
+Feature: must provide a commit message
 
   Background:
     Given my repo has a feature branch named "feature"
