@@ -1,4 +1,4 @@
-Feature: shipping a child branch
+Feature: cannot ship a child branch
 
   Background:
     Given my repo has a feature branch named "feature-1"
@@ -24,6 +24,21 @@ Feature: shipping a child branch
     And I am now on the "feature-1" branch
     And my repo is left with my original commits
     And Git Town is now aware of this branch hierarchy
+      | BRANCH    | PARENT    |
+      | feature-1 | main      |
+      | feature-2 | feature-1 |
+      | feature-3 | feature-2 |
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs no commands
+    And it prints the error:
+      """
+      nothing to undo
+      """
+    And I am still on the "feature-1" branch
+    And my repo is left with my original commits
+    And Git Town is still aware of this branch hierarchy
       | BRANCH    | PARENT    |
       | feature-1 | main      |
       | feature-2 | feature-1 |
