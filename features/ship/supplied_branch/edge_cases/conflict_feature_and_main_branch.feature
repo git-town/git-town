@@ -46,6 +46,10 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       | BRANCH  | LOCATION      | MESSAGE                    |
       | main    | local, remote | conflicting main commit    |
       | feature | local         | conflicting feature commit |
+    And Git Town is still aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | feature       | main   |
+      | other-feature | main   |
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
@@ -71,6 +75,9 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       | BRANCH | LOCATION      | MESSAGE                 |
       | main   | local, remote | conflicting main commit |
       |        |               | feature done            |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | other-feature | main   |
 
   Scenario: continuing after resolving the conflicts and comitting
     Given I resolve the conflict in "conflicting_file"
@@ -88,11 +95,3 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       | other-feature | git stash pop                |
     And I am now on the "other-feature" branch
     And my workspace still contains my uncommitted file
-    And the existing branches are
-      | REPOSITORY | BRANCHES            |
-      | local      | main, other-feature |
-      | remote     | main, other-feature |
-    And my repo now has the following commits
-      | BRANCH | LOCATION      | MESSAGE                 |
-      | main   | local, remote | conflicting main commit |
-      |        |               | feature done            |
