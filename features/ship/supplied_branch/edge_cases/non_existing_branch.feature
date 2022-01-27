@@ -15,3 +15,12 @@ Feature: cannot ship a non-existing branch
       """
     And I am now on the "main" branch
     And my workspace still contains my uncommitted file
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs no commands
+    And it prints the error:
+      """
+      nothing to undo
+      """
+    And I am still on the "main" branch
