@@ -58,10 +58,10 @@ Feature: handle conflicts between the main branch and its tracking branch
       | local      | main     |
       | remote     | main     |
     And my repo now has the following commits
-      | BRANCH | LOCATION      | MESSAGE                   | FILE NAME        |
-      | main   | local, remote | conflicting remote commit | conflicting_file |
-      |        |               | conflicting local commit  | conflicting_file |
-      |        |               | feature done              | feature_file     |
+      | BRANCH | LOCATION      | MESSAGE                   |
+      | main   | local, remote | conflicting remote commit |
+      |        |               | conflicting local commit  |
+      |        |               | feature done              |
     And Git Town now has no branch hierarchy information
 
   Scenario: continuing after resolving the conflicts and continuing the rebase

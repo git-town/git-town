@@ -39,6 +39,6 @@ Feature: cannot ship an empty branch
       """
     And I am still on the "empty-feature" branch
     And my repo now has the following commits
-      | BRANCH        | LOCATION      | MESSAGE        | FILE NAME   |
-      | main          | local, remote | main commit    | common_file |
-      | empty-feature | local         | feature commit | common_file |
+      | BRANCH        | LOCATION      | MESSAGE        |
+      | main          | local, remote | main commit    |
+      | empty-feature | local         | feature commit |

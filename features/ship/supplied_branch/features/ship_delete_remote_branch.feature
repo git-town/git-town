@@ -3,9 +3,9 @@ Feature: Skip deleting the remote branch when shipping another branch
   Background:
     Given my repo has the feature branches "feature" and "other-feature"
     And the following commits exist in my repo
-      | BRANCH        | LOCATION      | MESSAGE        | FILE NAME    |
-      | feature       | local, remote | feature commit | feature_file |
-      | other-feature | local         | other commit   | other_file   |
+      | BRANCH        | LOCATION      | MESSAGE        |
+      | feature       | local, remote | feature commit |
+      | other-feature | local         | other commit   |
     And I am on the "other-feature" branch
     And my repo has "git-town.ship-delete-remote-branch" set to "false"
     When I run "git-town ship feature -m 'feature done'"
@@ -32,9 +32,9 @@ Feature: Skip deleting the remote branch when shipping another branch
       | local      | main, other-feature |
       | remote     | main, other-feature |
     And my repo now has the following commits
-      | BRANCH        | LOCATION      | MESSAGE      | FILE NAME    |
-      | main          | local, remote | feature done | feature_file |
-      | other-feature | local         | other commit | other_file   |
+      | BRANCH        | LOCATION      | MESSAGE      |
+      | main          | local, remote | feature done |
+      | other-feature | local         | other commit |
 
   Scenario: undo
     When I run "git-town undo"
@@ -49,8 +49,8 @@ Feature: Skip deleting the remote branch when shipping another branch
       | main          | git checkout other-feature                    |
     And I am now on the "other-feature" branch
     And my repo now has the following commits
-      | BRANCH        | LOCATION      | MESSAGE               | FILE NAME    |
-      | main          | local, remote | feature done          | feature_file |
-      |               |               | Revert "feature done" | feature_file |
-      | feature       | local         | feature commit        | feature_file |
-      | other-feature | local         | other commit          | other_file   |
+      | BRANCH        | LOCATION      | MESSAGE               |
+      | main          | local, remote | feature done          |
+      |               |               | Revert "feature done" |
+      | feature       | local         | feature commit        |
+      | other-feature | local         | other commit          |

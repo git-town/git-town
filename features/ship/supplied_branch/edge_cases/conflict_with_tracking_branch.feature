@@ -64,8 +64,8 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
       | local      | main, other-feature |
       | remote     | main, other-feature |
     And my repo now has the following commits
-      | BRANCH | LOCATION      | MESSAGE      | FILE NAME        |
-      | main   | local, remote | feature done | conflicting_file |
+      | BRANCH | LOCATION      | MESSAGE      |
+      | main   | local, remote | feature done |
 
   Scenario: continuing after resolving the conflicts and comitting
     Given I resolve the conflict in "conflicting_file"
@@ -89,5 +89,5 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
       | local      | main, other-feature |
       | remote     | main, other-feature |
     And my repo now has the following commits
-      | BRANCH | LOCATION      | MESSAGE      | FILE NAME        |
-      | main   | local, remote | feature done | conflicting_file |
+      | BRANCH | LOCATION      | MESSAGE      |
+      | main   | local, remote | feature done |

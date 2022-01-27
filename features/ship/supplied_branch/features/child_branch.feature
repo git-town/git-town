@@ -5,10 +5,10 @@ Feature: cannot ship a child branch
     And my repo has a feature branch named "feature-2" as a child of "feature-1"
     And my repo has a feature branch named "feature-3" as a child of "feature-2"
     And the following commits exist in my repo
-      | BRANCH    | LOCATION      | MESSAGE          | FILE NAME      | FILE CONTENT      |
-      | feature-1 | local, remote | feature 1 commit | feature_1_file | feature 1 content |
-      | feature-2 | local, remote | feature 2 commit | feature_2_file | feature 2 content |
-      | feature-3 | local, remote | feature 3 commit | feature_3_file | feature 3 content |
+      | BRANCH    | LOCATION      | MESSAGE          |
+      | feature-1 | local, remote | feature 1 commit |
+      | feature-2 | local, remote | feature 2 commit |
+      | feature-3 | local, remote | feature 3 commit |
     And I am on the "feature-1" branch
     When I run "git-town ship feature-3 -m 'feature 3 done'"
 

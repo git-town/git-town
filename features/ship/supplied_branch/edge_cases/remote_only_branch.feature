@@ -5,8 +5,8 @@ Feature: shipping the supplied feature branch with a tracking branch
     Given my repo has a feature branch named "other-feature"
     And my origin has a feature branch named "feature"
     And the following commits exist in my repo
-      | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
-      | feature | remote   | feature commit | feature_file | feature content |
+      | BRANCH  | LOCATION | MESSAGE        |
+      | feature | remote   | feature commit |
     And I am on the "other-feature" branch
     And my workspace has an uncommitted file with name "feature_file" and content "conflicting content"
     When I run "git-town ship feature -m 'feature done'" and answer the prompts:
@@ -39,5 +39,5 @@ Feature: shipping the supplied feature branch with a tracking branch
       | local      | main, other-feature |
       | remote     | main, other-feature |
     And my repo now has the following commits
-      | BRANCH | LOCATION      | MESSAGE      | FILE NAME    |
-      | main   | local, remote | feature done | feature_file |
+      | BRANCH | LOCATION      | MESSAGE      |
+      | main   | local, remote | feature done |

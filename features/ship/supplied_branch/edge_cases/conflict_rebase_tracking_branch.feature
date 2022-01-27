@@ -64,10 +64,10 @@ Feature: handle conflicts between the main branch and its tracking branch
       | local      | main, other-feature |
       | remote     | main, other-feature |
     And my repo now has the following commits
-      | BRANCH | LOCATION      | MESSAGE                   | FILE NAME        |
-      | main   | local, remote | conflicting remote commit | conflicting_file |
-      |        |               | conflicting local commit  | conflicting_file |
-      |        |               | feature done              | feature_file     |
+      | BRANCH | LOCATION      | MESSAGE                   |
+      | main   | local, remote | conflicting remote commit |
+      |        |               | conflicting local commit  |
+      |        |               | feature done              |
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
@@ -94,7 +94,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | local      | main, other-feature |
       | remote     | main, other-feature |
     And my repo now has the following commits
-      | BRANCH | LOCATION      | MESSAGE                   | FILE NAME        |
-      | main   | local, remote | conflicting remote commit | conflicting_file |
-      |        |               | conflicting local commit  | conflicting_file |
-      |        |               | feature done              | feature_file     |
+      | BRANCH | LOCATION      | MESSAGE                   |
+      | main   | local, remote | conflicting remote commit |
+      |        |               | conflicting local commit  |
+      |        |               | feature done              |

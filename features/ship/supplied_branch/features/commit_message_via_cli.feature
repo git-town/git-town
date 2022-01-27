@@ -1,10 +1,10 @@
-Feature: shipping the supplied feature branch
+Feature: provide the commit message via a CLI argument
 
   Background:
     Given my repo has the feature branches "feature" and "other-feature"
     And the following commits exist in my repo
-      | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
-      | feature | remote   | feature commit | feature_file | feature content |
+      | BRANCH  | LOCATION | MESSAGE        |
+      | feature | remote   | feature commit |
     And I am on the "other-feature" branch
     And my workspace has an uncommitted file with name "feature_file" and content "conflicting content"
     When I run "git-town ship feature -m 'feature done'"
@@ -35,5 +35,5 @@ Feature: shipping the supplied feature branch
       | local      | main, other-feature |
       | remote     | main, other-feature |
     And my repo now has the following commits
-      | BRANCH | LOCATION      | MESSAGE      | FILE NAME    |
-      | main   | local, remote | feature done | feature_file |
+      | BRANCH | LOCATION      | MESSAGE      |
+      | main   | local, remote | feature done |

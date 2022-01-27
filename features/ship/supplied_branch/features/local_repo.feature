@@ -4,8 +4,8 @@ Feature: shipping the supplied feature branch without a remote origin
     Given my repo has the feature branches "feature" and "other-feature"
     And my repo does not have a remote origin
     And the following commits exist in my repo
-      | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
-      | feature | local    | feature commit | feature_file | feature content |
+      | BRANCH  | LOCATION | MESSAGE        |
+      | feature | local    | feature commit |
     And I am on the "other-feature" branch
     And my workspace has an uncommitted file with name "feature_file" and content "conflicting content"
     When I run "git-town ship feature -m 'feature done'"
@@ -29,5 +29,5 @@ Feature: shipping the supplied feature branch without a remote origin
       | REPOSITORY | BRANCHES            |
       | local      | main, other-feature |
     And my repo now has the following commits
-      | BRANCH | LOCATION | MESSAGE      | FILE NAME    |
-      | main   | local    | feature done | feature_file |
+      | BRANCH | LOCATION | MESSAGE      |
+      | main   | local    | feature done |

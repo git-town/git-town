@@ -43,9 +43,9 @@ Feature: handle conflicts between the supplied feature branch and the main branc
     And my workspace still contains my uncommitted file
     And there is no merge in progress
     And my repo now has the following commits
-      | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        |
-      | main    | local, remote | conflicting main commit    | conflicting_file |
-      | feature | local         | conflicting feature commit | conflicting_file |
+      | BRANCH  | LOCATION      | MESSAGE                    |
+      | main    | local, remote | conflicting main commit    |
+      | feature | local         | conflicting feature commit |
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
@@ -68,9 +68,9 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       | local      | main, other-feature |
       | remote     | main, other-feature |
     And my repo now has the following commits
-      | BRANCH | LOCATION      | MESSAGE                 | FILE NAME        |
-      | main   | local, remote | conflicting main commit | conflicting_file |
-      |        |               | feature done            | conflicting_file |
+      | BRANCH | LOCATION      | MESSAGE                 |
+      | main   | local, remote | conflicting main commit |
+      |        |               | feature done            |
 
   Scenario: continuing after resolving the conflicts and comitting
     Given I resolve the conflict in "conflicting_file"
@@ -93,6 +93,6 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       | local      | main, other-feature |
       | remote     | main, other-feature |
     And my repo now has the following commits
-      | BRANCH | LOCATION      | MESSAGE                 | FILE NAME        |
-      | main   | local, remote | conflicting main commit | conflicting_file |
-      |        |               | feature done            | conflicting_file |
+      | BRANCH | LOCATION      | MESSAGE                 |
+      | main   | local, remote | conflicting main commit |
+      |        |               | feature done            |

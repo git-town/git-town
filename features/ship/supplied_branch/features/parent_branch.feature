@@ -4,9 +4,9 @@ Feature: shipping a parent branch
     Given my repo has a feature branch named "parent-feature"
     And my repo has a feature branch named "child-feature" as a child of "parent-feature"
     And the following commits exist in my repo
-      | BRANCH         | LOCATION      | MESSAGE               | FILE NAME           | FILE CONTENT           |
-      | parent-feature | local, remote | parent feature commit | parent_feature_file | parent feature content |
-      | child-feature  | local, remote | child feature commit  | child_feature_file  | child feature content  |
+      | BRANCH         | LOCATION      | MESSAGE               |
+      | parent-feature | local, remote | parent feature commit |
+      | child-feature  | local, remote | child feature commit  |
     And I am on the "child-feature" branch
     When I run "git-town ship parent-feature -m 'parent feature done'"
 
@@ -27,10 +27,10 @@ Feature: shipping a parent branch
       |                | git checkout child-feature                |
     And I am now on the "child-feature" branch
     And my repo now has the following commits
-      | BRANCH         | LOCATION      | MESSAGE               | FILE NAME           | FILE CONTENT           |
-      | main           | local, remote | parent feature done   | parent_feature_file | parent feature content |
-      | child-feature  | local, remote | child feature commit  | child_feature_file  | child feature content  |
-      | parent-feature | remote        | parent feature commit | parent_feature_file | parent feature content |
+      | BRANCH         | LOCATION      | MESSAGE               |
+      | main           | local, remote | parent feature done   |
+      | child-feature  | local, remote | child feature commit  |
+      | parent-feature | remote        | parent feature commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH        | PARENT |
       | child-feature | main   |
