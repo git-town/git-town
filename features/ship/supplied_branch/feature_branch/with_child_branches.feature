@@ -1,4 +1,4 @@
-Feature: git town-ship: shipping a parent branch
+Feature: shipping a parent branch
 
   Background:
     Given my repo has a feature branch named "parent-feature"

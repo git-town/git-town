@@ -1,13 +1,13 @@
-Feature: git town-ship: resolving conflicts between the current feature branch and its tracking branch
+Feature: handle conflicts between the shipped branch and the main branch
 
   Background:
     Given my repo has a feature branch named "feature"
     And the following commits exist in my repo
-      | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
-      | feature | local    | local conflicting commit  | conflicting_file | local conflicting content  |
-      |         | remote   | remote conflicting commit | conflicting_file | remote conflicting content |
+      | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
+      | main    | local    | conflicting main commit    | conflicting_file | main content    |
+      | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And I am on the "feature" branch
-    When I run "git-town ship -m 'feature done'"
+    And I run "git-town ship -m 'feature done'"
 
   Scenario: result
     Then it runs the commands
@@ -15,8 +15,10 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
       | feature | git fetch --prune --tags           |
       |         | git checkout main                  |
       | main    | git rebase origin/main             |
+      |         | git push                           |
       |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
+      |         | git merge --no-edit main           |
     And it prints the error:
       """
       To abort, run "git-town abort".
@@ -34,7 +36,13 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
       | main    | git checkout feature |
     And I am still on the "feature" branch
     And there is no merge in progress
-    And my repo is left with my original commits
+    And my repo now has the following commits
+      | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
+      | main    | local, remote | conflicting main commit    | conflicting_file | main content    |
+      | feature | local         | conflicting feature commit | conflicting_file | feature content |
+    And Git Town is still aware of this branch hierarchy
+      | BRANCH  | PARENT |
+      | feature | main   |
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
@@ -42,7 +50,6 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
     Then it runs the commands
       | BRANCH  | COMMAND                      |
       | feature | git commit --no-edit         |
-      |         | git merge --no-edit main     |
       |         | git checkout main            |
       | main    | git merge --squash feature   |
       |         | git commit -m "feature done" |
@@ -55,8 +62,10 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
       | local      | main     |
       | remote     | main     |
     And my repo now has the following commits
-      | BRANCH | LOCATION      | MESSAGE      | FILE NAME        |
-      | main   | local, remote | feature done | conflicting_file |
+      | BRANCH | LOCATION      | MESSAGE                 | FILE NAME        | FILE CONTENT     |
+      | main   | local, remote | conflicting main commit | conflicting_file | main content     |
+      |        |               | feature done            | conflicting_file | resolved content |
+    And Git Town now has no branch hierarchy information
 
   Scenario: continuing after resolving the conflicts and committing
     Given I resolve the conflict in "conflicting_file"
@@ -64,18 +73,10 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
     And I run "git-town continue"
     Then it runs the commands
       | BRANCH  | COMMAND                      |
-      | feature | git merge --no-edit main     |
-      |         | git checkout main            |
+      | feature | git checkout main            |
       | main    | git merge --squash feature   |
       |         | git commit -m "feature done" |
       |         | git push                     |
       |         | git push origin :feature     |
       |         | git branch -D feature        |
     And I am now on the "main" branch
-    And the existing branches are
-      | REPOSITORY | BRANCHES |
-      | local      | main     |
-      | remote     | main     |
-    And my repo now has the following commits
-      | BRANCH | LOCATION      | MESSAGE      | FILE NAME        |
-      | main   | local, remote | feature done | conflicting_file |

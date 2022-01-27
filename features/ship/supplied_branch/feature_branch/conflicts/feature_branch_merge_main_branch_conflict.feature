@@ -1,4 +1,4 @@
-Feature: git town-ship: resolving conflicts between the supplied feature branch and the main branch
+Feature: resolving conflicts between the supplied feature branch and the main branch
 
   Background:
     Given my repo has the feature branches "feature" and "other-feature"

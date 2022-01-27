@@ -1,4 +1,4 @@
-Feature: git town-ship: errors if on supplied branch and there are open changes
+Feature: errors if on supplied branch and there are open changes
 
   Background:
     Given my repo has a feature branch named "feature"

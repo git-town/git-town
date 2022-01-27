@@ -1,4 +1,4 @@
-Feature: git town-ship: shipping the supplied feature branch from a subfolder
+Feature: shipping the supplied feature branch from a subfolder
 
   Background:
     Given my repo has the feature branches "feature" and "other-feature"

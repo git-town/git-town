@@ -1,4 +1,4 @@
-Feature: git town-ship: errors when trying to ship the supplied feature branch that has no differences with the main branch
+Feature: errors when trying to ship the supplied feature branch that has no differences with the main branch
 
   Background:
     Given my repo has the feature branches "empty-feature" and "other-feature"

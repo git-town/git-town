@@ -1,4 +1,4 @@
-Feature: git town-ship: aborting the ship of the supplied feature branch by entering an empty commit message
+Feature: aborting the ship of the supplied feature branch by entering an empty commit message
 
   Background:
     Given my repo has the feature branches "feature" and "other-feature"

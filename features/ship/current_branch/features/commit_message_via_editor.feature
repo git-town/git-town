@@ -1,12 +1,12 @@
-Feature: git town-ship: shipping the current feature branch from a subfolder
+Feature: enter the commit message interactively via the editor
 
   Background:
     Given my repo has a feature branch named "feature"
     And the following commits exist in my repo
-      | BRANCH  | LOCATION      | MESSAGE        | FILE NAME               | FILE CONTENT    |
-      | feature | local, remote | feature commit | new_folder/feature_file | feature content |
+      | BRANCH  | LOCATION      | MESSAGE        |
+      | feature | local, remote | feature commit |
     And I am on the "feature" branch
-    When I run "git-town ship -m 'feature done'" in the "new_folder" folder
+    When I run "git-town ship" and enter "feature done" for the commit message
 
   Scenario: result
     Then it runs the commands
@@ -19,7 +19,7 @@ Feature: git town-ship: shipping the current feature branch from a subfolder
       |         | git merge --no-edit main           |
       |         | git checkout main                  |
       | main    | git merge --squash feature         |
-      |         | git commit -m "feature done"       |
+      |         | git commit                         |
       |         | git push                           |
       |         | git push origin :feature           |
       |         | git branch -D feature              |
@@ -29,8 +29,9 @@ Feature: git town-ship: shipping the current feature branch from a subfolder
       | local      | main     |
       | remote     | main     |
     And my repo now has the following commits
-      | BRANCH | LOCATION      | MESSAGE      | FILE NAME               |
-      | main   | local, remote | feature done | new_folder/feature_file |
+      | BRANCH | LOCATION      | MESSAGE      |
+      | main   | local, remote | feature done |
+    And Git Town now has no branch hierarchy information
 
   Scenario: undo
     When I run "git-town undo"
@@ -45,7 +46,10 @@ Feature: git town-ship: shipping the current feature branch from a subfolder
       | main    | git checkout feature                          |
     And I am now on the "feature" branch
     And my repo now has the following commits
-      | BRANCH  | LOCATION      | MESSAGE               | FILE NAME               |
-      | main    | local, remote | feature done          | new_folder/feature_file |
-      |         |               | Revert "feature done" | new_folder/feature_file |
-      | feature | local, remote | feature commit        | new_folder/feature_file |
+      | BRANCH  | LOCATION      | MESSAGE               |
+      | main    | local, remote | feature done          |
+      |         |               | Revert "feature done" |
+      | feature | local, remote | feature commit        |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH  | PARENT |
+      | feature | main   |

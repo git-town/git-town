@@ -1,4 +1,4 @@
-Feature: git town-ship: errors when trying to ship the main branch
+Feature: errors when trying to ship the main branch
 
   Background:
     Given my repo has a feature branch named "feature"

@@ -1,4 +1,4 @@
-Feature: git town-ship: errors when trying to ship the current feature branch that has no differences with the main branch
+Feature: cannot ship an empty branch
 
   Background:
     Given my repo has a feature branch named "empty-feature"
@@ -26,6 +26,9 @@ Feature: git town-ship: errors when trying to ship the current feature branch th
       the branch "empty-feature" has no shippable changes
       """
     And I am still on the "empty-feature" branch
+    And Git Town is still aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | empty-feature | main   |
 
   Scenario: undo
     When I run "git-town undo"

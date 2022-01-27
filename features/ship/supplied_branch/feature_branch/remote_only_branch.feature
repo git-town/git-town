@@ -1,5 +1,5 @@
 @skipWindows
-Feature: git town-ship: shipping the supplied feature branch with a tracking branch
+Feature: shipping the supplied feature branch with a tracking branch
 
   Background:
     Given my repo has a feature branch named "other-feature"
