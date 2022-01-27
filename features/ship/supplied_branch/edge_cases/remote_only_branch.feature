@@ -1,12 +1,12 @@
 @skipWindows
-Feature: shipping the supplied feature branch with a tracking branch
+Feature: shipping a branch that exists only on the remote
 
   Background:
     Given my repo has a feature branch named "other-feature"
     And my origin has a feature branch named "feature"
     And the following commits exist in my repo
-      | BRANCH  | LOCATION | MESSAGE        |
-      | feature | remote   | feature commit |
+      | BRANCH  | LOCATION | MESSAGE        | FILE NAME    |
+      | feature | remote   | feature commit | feature_file |
     And I am on the "other-feature" branch
     And my workspace has an uncommitted file with name "feature_file" and content "conflicting content"
     When I run "git-town ship feature -m 'feature done'" and answer the prompts:
@@ -41,3 +41,27 @@ Feature: shipping the supplied feature branch with a tracking branch
     And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, remote | feature done |
+
+# Scenario: undo
+#   When I run "git-town undo"
+#   And inspect the repo
+#   Then it runs the commands
+#     | BRANCH        | COMMAND                                       |
+#     | other-feature | git add -A                                    |
+#     |               | git stash                                     |
+#     |               | git checkout main                             |
+#     | feature       | git branch feature {{ sha 'feature commit' }} |
+#     |               | git merge --no-edit main                      |
+#     |               | git checkout main                             |
+#     | main          | git merge --squash feature                    |
+#     |               | git commit -m "feature done"                  |
+#     |               | git push                                      |
+#     |               | git push origin :feature                      |
+#     |               | git branch -D feature                         |
+#     |               | git checkout other-feature                    |
+#     | other-feature | git stash pop                                 |
+#   And it prints the error:
+#     """
+#     nothing to undo
+#     """
+#   And I am still on the "main" branch
