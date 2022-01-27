@@ -18,8 +18,8 @@ Feature: Git checkout history is preserved when deleting the current branch
   Scenario: ship
     Given my repo has the feature branches "previous" and "current"
     And the following commits exist in my repo
-      | BRANCH  | LOCATION | FILE NAME    |
-      | current | local    | feature_file |
+      | BRANCH  | LOCATION |
+      | current | local    |
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run "git-town ship -m 'feature done'"
     Then I am now on the "main" branch

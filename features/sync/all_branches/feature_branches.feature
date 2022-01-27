@@ -3,10 +3,10 @@ Feature: git-town sync --all: syncs all feature branches
   Background:
     Given my repo has the feature branches "feature-1" and "feature-2"
     And the following commits exist in my repo
-      | BRANCH    | LOCATION      | MESSAGE          | FILE NAME     |
-      | main      | remote        | main commit      | main_file     |
-      | feature-1 | local, remote | feature-1 commit | feature1_file |
-      | feature-2 | local, remote | feature-2 commit | feature2_file |
+      | BRANCH    | LOCATION      | MESSAGE          |
+      | main      | remote        | main commit      |
+      | feature-1 | local, remote | feature-1 commit |
+      | feature-2 | local, remote | feature-2 commit |
     And I am on the "feature-1" branch
     And my workspace has an uncommitted file
     When I run "git-town sync --all"
@@ -34,11 +34,11 @@ Feature: git-town sync --all: syncs all feature branches
     And my workspace still contains my uncommitted file
     And all branches are now synchronized
     And my repo now has the following commits
-      | BRANCH    | LOCATION      | MESSAGE                            | FILE NAME     |
-      | main      | local, remote | main commit                        | main_file     |
-      | feature-1 | local, remote | feature-1 commit                   | feature1_file |
-      |           |               | main commit                        | main_file     |
-      |           |               | Merge branch 'main' into feature-1 |               |
-      | feature-2 | local, remote | feature-2 commit                   | feature2_file |
-      |           |               | main commit                        | main_file     |
-      |           |               | Merge branch 'main' into feature-2 |               |
+      | BRANCH    | LOCATION      | MESSAGE                            |
+      | main      | local, remote | main commit                        |
+      | feature-1 | local, remote | feature-1 commit                   |
+      |           |               | main commit                        |
+      |           |               | Merge branch 'main' into feature-1 |
+      | feature-2 | local, remote | feature-2 commit                   |
+      |           |               | main commit                        |
+      |           |               | Merge branch 'main' into feature-2 |

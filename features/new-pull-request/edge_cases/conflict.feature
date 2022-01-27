@@ -4,7 +4,7 @@ Feature: merge conflict
     Given my repo has a local feature branch named "feature"
     And the following commits exist in my repo
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME        | FILE CONTENT    |
-      | main    | local, remote | main commit    | conflicting_file | main_content    |
+      | main    | local, remote | main commit    | conflicting_file | main content    |
       | feature | local         | feature commit | conflicting_file | feature content |
     And my computer has the "open" tool installed
     And my repo's origin is "git@github.com:git-town/git-town.git"
@@ -72,11 +72,11 @@ Feature: merge conflict
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
     And my repo now has the following commits
-      | BRANCH  | LOCATION      | MESSAGE                          | FILE NAME        |
-      | main    | local, remote | main commit                      | conflicting_file |
-      | feature | local, remote | feature commit                   | conflicting_file |
-      |         |               | main commit                      | conflicting_file |
-      |         |               | Merge branch 'main' into feature |                  |
+      | BRANCH  | LOCATION      | MESSAGE                          | FILE NAME        | FILE CONTENT    |
+      | main    | local, remote | main commit                      | conflicting_file | main content    |
+      | feature | local, remote | feature commit                   | conflicting_file | feature content |
+      |         |               | main commit                      | conflicting_file | main content    |
+      |         |               | Merge branch 'main' into feature |                  |                 |
 
   @skipWindows
   Scenario: continuing after resolving conflicts and committing
@@ -94,9 +94,3 @@ Feature: merge conflict
       """
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the following commits
-      | BRANCH  | LOCATION      | MESSAGE                          | FILE NAME        |
-      | main    | local, remote | main commit                      | conflicting_file |
-      | feature | local, remote | feature commit                   | conflicting_file |
-      |         |               | main commit                      | conflicting_file |
-      |         |               | Merge branch 'main' into feature |                  |

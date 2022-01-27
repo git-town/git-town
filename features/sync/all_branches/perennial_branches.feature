@@ -3,12 +3,12 @@ Feature: git-town sync --all: syncs all perennial branches
   Background:
     Given my repo has the perennial branches "production" and "qa"
     And the following commits exist in my repo
-      | BRANCH     | LOCATION | MESSAGE                  | FILE NAME              |
-      | main       | remote   | main commit              | main_file              |
-      | production | local    | production local commit  | production_local_file  |
-      |            | remote   | production remote commit | production_remote_file |
-      | qa         | local    | qa local commit          | qa_local_file          |
-      |            | remote   | qa remote commit         | qa_remote_file         |
+      | BRANCH     | LOCATION | MESSAGE                  |
+      | main       | remote   | main commit              |
+      | production | local    | production local commit  |
+      |            | remote   | production remote commit |
+      | qa         | local    | qa local commit          |
+      |            | remote   | qa remote commit         |
     And I am on the "main" branch
     And my workspace has an uncommitted file
     When I run "git-town sync --all"
@@ -33,9 +33,9 @@ Feature: git-town sync --all: syncs all perennial branches
     And my workspace still contains my uncommitted file
     And all branches are now synchronized
     And my repo now has the following commits
-      | BRANCH     | LOCATION      | MESSAGE                  | FILE NAME              |
-      | main       | local, remote | main commit              | main_file              |
-      | production | local, remote | production remote commit | production_remote_file |
-      |            |               | production local commit  | production_local_file  |
-      | qa         | local, remote | qa remote commit         | qa_remote_file         |
-      |            |               | qa local commit          | qa_local_file          |
+      | BRANCH     | LOCATION      | MESSAGE                  |
+      | main       | local, remote | main commit              |
+      | production | local, remote | production remote commit |
+      |            |               | production local commit  |
+      | qa         | local, remote | qa remote commit         |
+      |            |               | qa local commit          |

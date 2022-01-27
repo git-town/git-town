@@ -3,8 +3,8 @@ Feature: inside an uncommitted subfolder on a feature branch
   Background:
     Given my repo has a feature branch named "existing-feature"
     And the following commits exist in my repo
-      | BRANCH | LOCATION      | MESSAGE     | FILE NAME |
-      | main   | local, remote | main commit | main_file |
+      | BRANCH | LOCATION      | MESSAGE     |
+      | main   | local, remote | main commit |
     And I am on the "existing-feature" branch
     And my workspace has an uncommitted file in folder "new_folder"
     When I run "git-town hack new-feature" in the "new_folder" folder
