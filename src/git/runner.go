@@ -516,7 +516,7 @@ func (r *Runner) FileContentInCommit(sha string, filename string) (result string
 	}
 	result = outcome.OutputSanitized()
 	if strings.HasPrefix(result, "tree ") {
-		// merge commits get an empty file content
+		// merge commits get an empty file content instead of "tree <SHA>"
 		result = ""
 	}
 	return result, nil
