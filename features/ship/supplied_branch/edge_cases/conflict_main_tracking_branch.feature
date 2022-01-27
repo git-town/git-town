@@ -95,3 +95,37 @@ Feature: handle conflicts between the main branch and its tracking branch
       |               | git checkout other-feature         |
       | other-feature | git stash pop                      |
     And I am now on the "other-feature" branch
+
+  Scenario: undo after continue
+    Given I resolve the conflict in "conflicting_file"
+    And I run "git-town continue" and close the editor
+    When I run "git-town undo"
+    Then it runs the commands
+      | BRANCH        | COMMAND                                                         |
+      | other-feature | git add -A                                                      |
+      |               | git stash                                                       |
+      |               | git checkout main                                               |
+      | main          | git branch feature {{ sha 'Merge branch 'main' into feature' }} |
+      |               | git push -u origin feature                                      |
+      |               | git revert {{ sha 'feature done' }}                             |
+      |               | git push                                                        |
+      |               | git checkout feature                                            |
+      | feature       | git reset --hard {{ sha 'feature commit' }}                     |
+      |               | git checkout main                                               |
+      | main          | git checkout other-feature                                      |
+      | other-feature | git stash pop                                                   |
+    And I am now on the "other-feature" branch
+    And my repo now has the following commits
+      | BRANCH  | LOCATION      | MESSAGE                          |
+      | main    | local, remote | conflicting remote commit        |
+      |         |               | conflicting local commit         |
+      |         |               | feature done                     |
+      |         |               | Revert "feature done"            |
+      | feature | local, remote | feature commit                   |
+      |         | remote        | conflicting remote commit        |
+      |         |               | conflicting local commit         |
+      |         |               | Merge branch 'main' into feature |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | feature       | main   |
+      | other-feature | main   |
