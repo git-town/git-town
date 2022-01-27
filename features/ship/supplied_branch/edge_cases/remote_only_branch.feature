@@ -42,26 +42,28 @@ Feature: shipping a branch that exists only on the remote
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, remote | feature done |
 
-# Scenario: undo
-#   When I run "git-town undo"
-#   And inspect the repo
-#   Then it runs the commands
-#     | BRANCH        | COMMAND                                       |
-#     | other-feature | git add -A                                    |
-#     |               | git stash                                     |
-#     |               | git checkout main                             |
-#     | feature       | git branch feature {{ sha 'feature commit' }} |
-#     |               | git merge --no-edit main                      |
-#     |               | git checkout main                             |
-#     | main          | git merge --squash feature                    |
-#     |               | git commit -m "feature done"                  |
-#     |               | git push                                      |
-#     |               | git push origin :feature                      |
-#     |               | git branch -D feature                         |
-#     |               | git checkout other-feature                    |
-#     | other-feature | git stash pop                                 |
-#   And it prints the error:
-#     """
-#     nothing to undo
-#     """
-#   And I am still on the "main" branch
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs the commands
+      | BRANCH        | COMMAND                                       |
+      | other-feature | git add -A                                    |
+      |               | git stash                                     |
+      |               | git checkout main                             |
+      | main          | git branch feature {{ sha 'feature commit' }} |
+      |               | git push -u origin feature                    |
+      |               | git revert {{ sha 'feature done' }}           |
+      |               | git push                                      |
+      |               | git checkout feature                          |
+      | feature       | git checkout main                             |
+      | main          | git checkout other-feature                    |
+      | other-feature | git stash pop                                 |
+    And I am now on the "other-feature" branch
+    And my repo now has the following commits
+      | BRANCH  | LOCATION      | MESSAGE               |
+      | main    | local, remote | feature done          |
+      |         |               | Revert "feature done" |
+      | feature | local, remote | feature commit        |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | feature       | main   |
+      | other-feature | main   |
