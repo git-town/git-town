@@ -1,4 +1,4 @@
-Feature: errors when trying to ship a branch that doesn't exist
+Feature: cannot ship a non-existing branch
 
   Background:
     Given I am on the "main" branch

@@ -1,4 +1,4 @@
-Feature: resolving conflicts between the supplied feature branch and the main branch
+Feature: handle conflicts between the supplied feature branch and the main branch
 
   Background:
     Given my repo has the feature branches "feature" and "other-feature"
