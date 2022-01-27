@@ -38,3 +38,16 @@ Feature: aborting the ship of the supplied feature branch by entering an empty c
     And I am still on the "other-feature" branch
     And my workspace still contains my uncommitted file
     And my repo is left with my original commits
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs no commands
+    And it prints the error:
+      """
+      nothing to undo
+      """
+    And I am still on the "other-feature" branch
+    And my repo now has the following commits
+      | BRANCH  | LOCATION      | MESSAGE        |
+      | main    | local, remote | main commit    |
+      | feature | local         | feature commit |
