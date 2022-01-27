@@ -514,7 +514,12 @@ func (r *Runner) FileContentInCommit(sha string, filename string) (result string
 	if err != nil {
 		return result, fmt.Errorf("cannot determine the content for file %q in commit %q: %w", filename, sha, err)
 	}
-	return outcome.OutputSanitized(), nil
+	result = outcome.OutputSanitized()
+	if strings.HasPrefix(result, "tree ") {
+		// merge commits get an empty file content instead of "tree <SHA>"
+		result = ""
+	}
+	return result, nil
 }
 
 // FilesInCommit provides the names of the files that the commit with the given SHA changes.
