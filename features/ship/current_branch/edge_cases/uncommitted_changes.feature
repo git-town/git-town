@@ -1,4 +1,4 @@
-Feature: cannot ship with open changes
+Feature: cannot ship with uncommitted changes
 
   Background:
     Given my repo has a feature branch named "feature"
