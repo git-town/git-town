@@ -34,3 +34,26 @@ Feature: shipping a parent branch
     And Git Town is now aware of this branch hierarchy
       | BRANCH        | PARENT |
       | child-feature | main   |
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs the commands
+      | BRANCH        | COMMAND                                       |
+      | other-feature | git add -A                                    |
+      |               | git stash                                     |
+      |               | git checkout main                             |
+      | main          | git branch feature {{ sha 'feature commit' }} |
+      |               | git revert {{ sha 'feature done' }}           |
+      |               | git checkout feature                          |
+      | feature       | git checkout other-feature                    |
+      | other-feature | git stash pop                                 |
+    And I am now on the "other-feature" branch
+    And my repo now has the following commits
+      | BRANCH  | LOCATION | MESSAGE               |
+      | main    | local    | feature done          |
+      |         |          | Revert "feature done" |
+      | feature | local    | feature commit        |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | feature       | main   |
+      | other-feature | main   |
