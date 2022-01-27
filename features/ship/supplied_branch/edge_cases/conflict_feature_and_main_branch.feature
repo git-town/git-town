@@ -97,26 +97,32 @@ Feature: handle conflicts between the supplied feature branch and the main branc
     And my workspace still contains my uncommitted file
 
   Scenario: undo
+    Given I resolve the conflict in "conflicting_file"
+    And I run "git-town continue"
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH        | COMMAND                                       |
-      | other-feature | git add -A                                    |
-      |               | git stash                                     |
-      |               | git checkout main                             |
-      | main          | git branch feature {{ sha 'feature commit' }} |
-      |               | git push -u origin feature                    |
-      |               | git revert {{ sha 'feature done' }}           |
-      |               | git push                                      |
-      |               | git checkout feature                          |
-      | feature       | git checkout main                             |
-      | main          | git checkout other-feature                    |
-      | other-feature | git stash pop                                 |
+      | BRANCH        | COMMAND                                                         |
+      | other-feature | git add -A                                                      |
+      |               | git stash                                                       |
+      |               | git checkout main                                               |
+      | main          | git branch feature {{ sha 'Merge branch 'main' into feature' }} |
+      |               | git push -u origin feature                                      |
+      |               | git revert {{ sha 'feature done' }}                             |
+      |               | git push                                                        |
+      |               | git checkout feature                                            |
+      | feature       | git reset --hard {{ sha 'conflicting feature commit' }}         |
+      |               | git checkout main                                               |
+      | main          | git checkout other-feature                                      |
+      | other-feature | git stash pop                                                   |
     And I am now on the "other-feature" branch
     And my repo now has the following commits
-      | BRANCH  | LOCATION      | MESSAGE               |
-      | main    | local, remote | feature done          |
-      |         |               | Revert "feature done" |
-      | feature | local, remote | feature commit        |
+      | BRANCH  | LOCATION      | MESSAGE                          |
+      | main    | local, remote | conflicting main commit          |
+      |         |               | feature done                     |
+      |         |               | Revert "feature done"            |
+      | feature | local, remote | conflicting feature commit       |
+      |         | remote        | conflicting main commit          |
+      |         |               | Merge branch 'main' into feature |
     And Git Town is now aware of this branch hierarchy
       | BRANCH        | PARENT |
       | feature       | main   |
