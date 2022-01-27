@@ -26,3 +26,4 @@ Feature: does not ship perennial branches
       nothing to undo
       """
     And I am still on the "main" branch
+    And Git Town now has no branch hierarchy information
