@@ -1,4 +1,4 @@
-Feature: errors when trying to ship the main branch
+Feature: does not ship the main branch
 
   Background:
     Given my repo has a feature branch named "feature"
@@ -16,3 +16,12 @@ Feature: errors when trying to ship the main branch
       """
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs no commands
+    And it prints the error:
+      """
+      nothing to undo
+      """
+    And I am still on the "feature" branch
