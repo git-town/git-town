@@ -3,8 +3,8 @@ Feature: shipping a coworker's feature branch
   Background:
     Given my repo has a feature branch named "feature"
     And the following commits exist in my repo
-      | BRANCH  | LOCATION      | MESSAGE         | FILE NAME     | AUTHOR                          |
-      | feature | local, remote | coworker commit | coworker_file | coworker <coworker@example.com> |
+      | BRANCH  | LOCATION      | MESSAGE         | AUTHOR                          |
+      | feature | local, remote | coworker commit | coworker <coworker@example.com> |
     And I am on the "feature" branch
 
   Scenario: result (commit message via CLI)
@@ -24,8 +24,8 @@ Feature: shipping a coworker's feature branch
       |         | git push origin :feature                                                |
       |         | git branch -D feature                                                   |
     And my repo now has the following commits
-      | BRANCH | LOCATION      | MESSAGE      | FILE NAME     | AUTHOR                          |
-      | main   | local, remote | feature done | coworker_file | coworker <coworker@example.com> |
+      | BRANCH | LOCATION      | MESSAGE      | AUTHOR                          |
+      | main   | local, remote | feature done | coworker <coworker@example.com> |
     And Git Town now has no branch hierarchy information
 
   Scenario: result (commit message via editor)
@@ -45,11 +45,11 @@ Feature: shipping a coworker's feature branch
       |         | git push origin :feature                              |
       |         | git branch -D feature                                 |
     And my repo now has the following commits
-      | BRANCH | LOCATION      | MESSAGE      | FILE NAME     | AUTHOR                          |
-      | main   | local, remote | feature done | coworker_file | coworker <coworker@example.com> |
+      | BRANCH | LOCATION      | MESSAGE      | AUTHOR                          |
+      | main   | local, remote | feature done | coworker <coworker@example.com> |
     And Git Town now has no branch hierarchy information
 
-  Scenario: undo
+  Scenario:  undo
     Given I run "git-town ship -m 'feature done'"
     When I run "git-town undo"
     Then it runs the commands
