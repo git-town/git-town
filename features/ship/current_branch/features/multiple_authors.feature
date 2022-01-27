@@ -17,6 +17,7 @@ Feature: shipping a coworker's feature branch
     And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE      | AUTHOR           |
       | main   | local, remote | feature done | <FEATURE_AUTHOR> |
+    And Git Town now has no branch hierarchy information
 
     Examples:
       | ANSWER        | FEATURE_AUTHOR                    |

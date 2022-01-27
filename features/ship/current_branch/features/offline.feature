@@ -26,6 +26,7 @@ Feature: offline mode
       | BRANCH  | LOCATION | MESSAGE        |
       | main    | local    | feature done   |
       | feature | remote   | feature commit |
+    And Git Town now has no branch hierarchy information
 
   Scenario: undo
     When I run "git-town undo"

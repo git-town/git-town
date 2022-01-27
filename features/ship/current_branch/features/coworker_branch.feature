@@ -26,6 +26,7 @@ Feature: shipping a coworker's feature branch
     And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME     | AUTHOR                          |
       | main   | local, remote | feature done | coworker_file | coworker <coworker@example.com> |
+    And Git Town now has no branch hierarchy information
 
   Scenario: result (commit message via editor)
     When I run "git-town ship" and enter "feature done" for the commit message
@@ -46,3 +47,26 @@ Feature: shipping a coworker's feature branch
     And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME     | AUTHOR                          |
       | main   | local, remote | feature done | coworker_file | coworker <coworker@example.com> |
+    And Git Town now has no branch hierarchy information
+
+  Scenario: undo
+    Given I run "git-town ship -m 'feature done'"
+    When I run "git-town undo"
+    Then it runs the commands
+      | BRANCH  | COMMAND                                        |
+      | main    | git branch feature {{ sha 'coworker commit' }} |
+      |         | git push -u origin feature                     |
+      |         | git revert {{ sha 'feature done' }}            |
+      |         | git push                                       |
+      |         | git checkout feature                           |
+      | feature | git checkout main                              |
+      | main    | git checkout feature                           |
+    And I am now on the "feature" branch
+    And my repo now has the following commits
+      | BRANCH  | LOCATION      | MESSAGE               |
+      | main    | local, remote | feature done          |
+      |         |               | Revert "feature done" |
+      | feature | local, remote | coworker commit       |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH  | PARENT |
+      | feature | main   |

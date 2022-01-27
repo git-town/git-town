@@ -1,4 +1,4 @@
-Feature: shipping the current feature branch without a remote origin
+Feature: ship a feature branch in a local repo
 
   Background:
     Given my repo has a feature branch named "feature"
@@ -24,6 +24,7 @@ Feature: shipping the current feature branch without a remote origin
     And my repo now has the following commits
       | BRANCH | LOCATION | MESSAGE      |
       | main   | local    | feature done |
+    And Git Town now has no branch hierarchy information
 
   Scenario: undo
     When I run "git-town undo"
@@ -38,3 +39,6 @@ Feature: shipping the current feature branch without a remote origin
       | main    | local    | feature done          |
       |         |          | Revert "feature done" |
       | feature | local    | feature commit        |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH  | PARENT |
+      | feature | main   |
