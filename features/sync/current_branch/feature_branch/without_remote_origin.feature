@@ -30,4 +30,4 @@ Feature: git-town sync: syncing the current feature branch (without a tracking b
       | BRANCH  | NAME               | CONTENT         |
       | main    | local_main_file    | main content    |
       | feature | local_feature_file | feature content |
-      | feature | local_main_file    | main content    |
+      |         | local_main_file    | main content    |

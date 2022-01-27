@@ -64,7 +64,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       | BRANCH    | NAME             | CONTENT           |
       | main      | conflicting_file | main content      |
       | feature-1 | conflicting_file | main content      |
-      | feature-1 | feature1_file    | feature-1 content |
+      |           | feature1_file    | feature-1 content |
       | feature-2 | conflicting_file | feature-2 content |
 
   Scenario: continuing without resolving the conflicts
@@ -101,7 +101,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       | BRANCH    | NAME             | CONTENT           |
       | main      | conflicting_file | main content      |
       | feature-1 | conflicting_file | main content      |
-      | feature-1 | feature1_file    | feature-1 content |
+      |           | feature1_file    | feature-1 content |
       | feature-2 | conflicting_file | resolved content  |
 
   Scenario: continuing after resolving the conflicts and committing
@@ -127,5 +127,5 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       | BRANCH    | NAME             | CONTENT           |
       | main      | conflicting_file | main content      |
       | feature-1 | conflicting_file | main content      |
-      | feature-1 | feature1_file    | feature-1 content |
+      |           | feature1_file    | feature-1 content |
       | feature-2 | conflicting_file | resolved content  |

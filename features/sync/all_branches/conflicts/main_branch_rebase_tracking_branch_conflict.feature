@@ -5,7 +5,7 @@ Feature: git-town sync --all: handling rebase conflicts between main branch and 
     And the following commits exist in my repo
       | BRANCH  | LOCATION | MESSAGE            | FILE NAME        | FILE CONTENT        |
       | main    | local    | main local commit  | conflicting_file | main local content  |
-      | main    | remote   | main remote commit | conflicting_file | main remote content |
+      |         | remote   | main remote commit | conflicting_file | main remote content |
       | feature | local    | feature commit     | feature_file     | feature content     |
     And I am on the "main" branch
     And my workspace has an uncommitted file
@@ -34,11 +34,7 @@ Feature: git-town sync --all: handling rebase conflicts between main branch and 
       |        | git stash pop      |
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
-    And my repo now has the following commits
-      | BRANCH  | LOCATION | MESSAGE            | FILE NAME        |
-      | main    | local    | main local commit  | conflicting_file |
-      |         | remote   | main remote commit | conflicting_file |
-      | feature | local    | feature commit     | feature_file     |
+    And my repo is left with my original commits
 
   Scenario: continuing without resolving the conflicts
     When I run "git-town continue"
@@ -67,13 +63,18 @@ Feature: git-town sync --all: handling rebase conflicts between main branch and 
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
     And my repo now has the following commits
-      | BRANCH  | LOCATION      | MESSAGE                          | FILE NAME        |
-      | main    | local, remote | main remote commit               | conflicting_file |
-      |         |               | main local commit                | conflicting_file |
-      | feature | local, remote | feature commit                   | feature_file     |
-      |         |               | main remote commit               | conflicting_file |
-      |         |               | main local commit                | conflicting_file |
-      |         |               | Merge branch 'main' into feature |                  |
+      | BRANCH  | LOCATION      | MESSAGE                          | FILE NAME        | FILE CONTENT        |
+      | main    | local, remote | main remote commit               | conflicting_file | main remote content |
+      |         |               | main local commit                | conflicting_file | resolved content    |
+      | feature | local, remote | feature commit                   | feature_file     | feature content     |
+      |         |               | main remote commit               | conflicting_file | main remote content |
+      |         |               | main local commit                | conflicting_file | resolved content    |
+      |         |               | Merge branch 'main' into feature |                  |                     |
+    And my repo now has the following committed files
+      | BRANCH  | NAME             | CONTENT          |
+      | main    | conflicting_file | resolved content |
+      | feature | conflicting_file | resolved content |
+      |         | feature_file     | feature content  |
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
@@ -91,11 +92,3 @@ Feature: git-town sync --all: handling rebase conflicts between main branch and 
       |         | git stash pop                      |
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
-    And my repo now has the following commits
-      | BRANCH  | LOCATION      | MESSAGE                          | FILE NAME        |
-      | main    | local, remote | main remote commit               | conflicting_file |
-      |         |               | main local commit                | conflicting_file |
-      | feature | local, remote | feature commit                   | feature_file     |
-      |         |               | main remote commit               | conflicting_file |
-      |         |               | main local commit                | conflicting_file |
-      |         |               | Merge branch 'main' into feature |                  |

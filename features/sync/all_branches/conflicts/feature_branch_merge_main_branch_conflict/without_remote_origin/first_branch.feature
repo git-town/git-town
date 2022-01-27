@@ -63,7 +63,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       | main      | conflicting_file | main content      |
       | feature-1 | conflicting_file | feature-1 content |
       | feature-2 | conflicting_file | main content      |
-      | feature-2 | feature2_file    | feature-2 content |
+      |           | feature2_file    | feature-2 content |
 
   Scenario: continuing without resolving the conflicts
     When I run "git-town continue"
@@ -107,7 +107,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       | main      | conflicting_file | main content      |
       | feature-1 | conflicting_file | resolved content  |
       | feature-2 | conflicting_file | main content      |
-      | feature-2 | feature2_file    | feature-2 content |
+      |           | feature2_file    | feature-2 content |
 
   Scenario: continuing after resolving the conflicts and committing
     Given I resolve the conflict in "conflicting_file"
@@ -135,4 +135,4 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       | main      | conflicting_file | main content      |
       | feature-1 | conflicting_file | resolved content  |
       | feature-2 | conflicting_file | main content      |
-      | feature-2 | feature2_file    | feature-2 content |
+      |           | feature2_file    | feature-2 content |
