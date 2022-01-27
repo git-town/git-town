@@ -1,4 +1,4 @@
-Feature: shipping hotfixes
+Feature: ship hotfixes
 
   Background:
     Given my repo has the perennial branch "production"
@@ -32,3 +32,25 @@ Feature: shipping hotfixes
     And my repo now has the following commits
       | BRANCH     | LOCATION      | MESSAGE     |
       | production | local, remote | hotfix done |
+    And Git Town now has no branch hierarchy information
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs the commands
+      | BRANCH     | COMMAND                                     |
+      | production | git branch hotfix {{ sha 'hotfix commit' }} |
+      |            | git push -u origin hotfix                   |
+      |            | git revert {{ sha 'hotfix done' }}          |
+      |            | git push                                    |
+      |            | git checkout hotfix                         |
+      | hotfix     | git checkout production                     |
+      | production | git checkout hotfix                         |
+    And I am now on the "hotfix" branch
+    And my repo now has the following commits
+      | BRANCH     | LOCATION      | MESSAGE              |
+      | hotfix     | local, remote | hotfix commit        |
+      | production | local, remote | hotfix done          |
+      |            |               | Revert "hotfix done" |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH | PARENT     |
+      | hotfix | production |
