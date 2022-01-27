@@ -35,6 +35,9 @@ Feature: Skip deleting the remote branch when shipping another branch
       | BRANCH        | LOCATION      | MESSAGE      |
       | main          | local, remote | feature done |
       | other-feature | local         | other commit |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | other-feature | main   |
 
   Scenario: undo
     When I run "git-town undo"
@@ -54,3 +57,7 @@ Feature: Skip deleting the remote branch when shipping another branch
       |               |               | Revert "feature done" |
       | feature       | local         | feature commit        |
       | other-feature | local         | other commit          |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | feature       | main   |
+      | other-feature | main   |

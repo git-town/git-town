@@ -38,22 +38,22 @@ Feature: shipping a parent branch
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH        | COMMAND                                       |
-      | other-feature | git add -A                                    |
-      |               | git stash                                     |
-      |               | git checkout main                             |
-      | main          | git branch feature {{ sha 'feature commit' }} |
-      |               | git revert {{ sha 'feature done' }}           |
-      |               | git checkout feature                          |
-      | feature       | git checkout other-feature                    |
-      | other-feature | git stash pop                                 |
-    And I am now on the "other-feature" branch
+      | BRANCH         | COMMAND                                                     |
+      | child-feature  | git checkout main                                           |
+      | main           | git branch parent-feature {{ sha 'parent feature commit' }} |
+      |                | git revert {{ sha 'parent feature done' }}                  |
+      |                | git push                                                    |
+      |                | git checkout parent-feature                                 |
+      | parent-feature | git checkout main                                           |
+      | main           | git checkout child-feature                                  |
+    And I am now on the "child-feature" branch
     And my repo now has the following commits
-      | BRANCH  | LOCATION | MESSAGE               |
-      | main    | local    | feature done          |
-      |         |          | Revert "feature done" |
-      | feature | local    | feature commit        |
+      | BRANCH         | LOCATION      | MESSAGE                      |
+      | main           | local, remote | parent feature done          |
+      |                |               | Revert "parent feature done" |
+      | child-feature  | local, remote | child feature commit         |
+      | parent-feature | local, remote | parent feature commit        |
     And Git Town is now aware of this branch hierarchy
-      | BRANCH        | PARENT |
-      | feature       | main   |
-      | other-feature | main   |
+      | BRANCH         | PARENT         |
+      | child-feature  | parent-feature |
+      | parent-feature | main           |

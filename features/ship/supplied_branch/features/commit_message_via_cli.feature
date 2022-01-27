@@ -37,6 +37,9 @@ Feature: provide the commit message via a CLI argument
     And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, remote | feature done |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | other-feature | main   |
 
   Scenario: undo
     When I run "git-town undo"

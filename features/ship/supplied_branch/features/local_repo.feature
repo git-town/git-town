@@ -31,6 +31,9 @@ Feature: shipping the supplied feature branch without a remote origin
     And my repo now has the following commits
       | BRANCH | LOCATION | MESSAGE      |
       | main   | local    | feature done |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH        | PARENT |
+      | other-feature | main   |
 
   Scenario: undo
     When I run "git-town undo"
