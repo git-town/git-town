@@ -129,11 +129,10 @@ func (runState *RunState) MarkAsUnfinished(repo *git.ProdRepo) error {
 func (runState *RunState) SkipCurrentBranchSteps() {
 	for {
 		step := runState.RunStepList.Peek()
-		if !isCheckoutBranchStep(step) {
-			runState.RunStepList.Pop()
-		} else {
+		if isCheckoutBranchStep(step) {
 			break
 		}
+		runState.RunStepList.Pop()
 	}
 }
 
