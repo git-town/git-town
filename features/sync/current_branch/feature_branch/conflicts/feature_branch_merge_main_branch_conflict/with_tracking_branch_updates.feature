@@ -1,4 +1,4 @@
-Feature: git-town sync: resolving conflicts between the current feature branch and the main branch (with tracking branch updates)
+Feature: resolving conflicts between the current feature branch and the main branch (with tracking branch updates)
 
   Background:
     Given my repo has a feature branch named "feature"

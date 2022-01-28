@@ -1,4 +1,4 @@
-Feature: git-town sync: offline mode
+Feature: offline mode
 
   Background:
     Given Git Town is in offline mode

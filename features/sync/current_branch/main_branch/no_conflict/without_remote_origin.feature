@@ -1,4 +1,4 @@
-Feature: git-town sync: syncing the main branch (without remote repo)
+Feature: syncing the main branch (without remote repo)
 
   Background:
     Given my repo does not have a remote origin

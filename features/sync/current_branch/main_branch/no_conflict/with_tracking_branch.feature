@@ -1,4 +1,4 @@
-Feature: git-town sync: syncing the main branch
+Feature: syncing the main branch
 
   Background:
     Given I am on the "main" branch

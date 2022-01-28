@@ -1,4 +1,4 @@
-Feature: git-town sync: resolving conflicts between the main branch and its tracking branch when syncing the main branch
+Feature: resolving conflicts between the main branch and its tracking branch when syncing the main branch
 
   Background:
     Given I am on the "main" branch

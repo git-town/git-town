@@ -1,4 +1,4 @@
-Feature: git-town sync: syncing a nested feature branch (with known parent branches)
+Feature: syncing a nested feature branch (with known parent branches)
 
   Scenario:
     Given my repo has a feature branch named "parent-feature"

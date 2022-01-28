@@ -1,4 +1,4 @@
-Feature: git-town sync: resolving conflicts between the current perennial branch and its tracking branch
+Feature: resolving conflicts between the current perennial branch and its tracking branch
 
   Background:
     Given my repo has the perennial branches "production" and "qa"

@@ -1,4 +1,4 @@
-Feature: git-town sync: syncing the current perennial branch
+Feature: syncing the current perennial branch
 
   Background:
     Given my repo has the perennial branches "production" and "qa"

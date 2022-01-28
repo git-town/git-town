@@ -1,4 +1,4 @@
-Feature: git-town sync: syncing the current feature branch without a tracking branch
+Feature: syncing the current feature branch without a tracking branch
 
   Background:
     Given my repo has a local feature branch named "feature"

@@ -1,4 +1,4 @@
-Feature: git-town sync: syncing the current feature branch with a tracking branch with dry run
+Feature: syncing the current feature branch with a tracking branch with dry run
 
   Background:
     Given my repo has a feature branch named "feature"

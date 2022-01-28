@@ -1,4 +1,4 @@
-Feature: git-town sync: syncing a feature branch pulls tags
+Feature: syncing a feature branch pulls tags
 
   Background:
     Given my repo has a feature branch named "feature"

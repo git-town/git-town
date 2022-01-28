@@ -1,4 +1,4 @@
-Feature: git-town sync: syncing the main branch syncs the tags
+Feature: syncing the main branch syncs the tags
 
   Scenario: Pushing tags
     Given my repo has the following tags

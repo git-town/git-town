@@ -1,4 +1,4 @@
-Feature: git-town sync: collaborative feature branch syncing
+Feature: collaborative feature branch syncing
 
   Background:
     Given I am collaborating with a coworker
