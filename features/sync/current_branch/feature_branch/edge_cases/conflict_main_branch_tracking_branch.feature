@@ -1,4 +1,4 @@
-Feature: resolving conflicts between the main branch and its tracking branch when syncing the current feature branch
+Feature: handle conflicts between the main branch and its tracking branch
 
   Background:
     Given my repo has a feature branch named "feature"

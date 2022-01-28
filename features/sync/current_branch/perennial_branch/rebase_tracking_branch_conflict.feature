@@ -1,4 +1,4 @@
-Feature: resolving conflicts between the current perennial branch and its tracking branch
+Feature: handle conflicts between the current perennial branch and its tracking branch
 
   Background:
     Given my repo has the perennial branches "production" and "qa"

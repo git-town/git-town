@@ -1,4 +1,4 @@
-Feature: resolving conflicts between the main branch and its tracking branch when syncing the main branch
+Feature: handle conflicts between the main branch and its tracking branch when syncing the main branch
 
   Background:
     Given I am on the "main" branch
