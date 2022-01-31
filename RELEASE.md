@@ -14,7 +14,7 @@ On a Linux machine:
 - install [hub](https://github.com/github/hub#installation)
 - install [goreleaser](https://goreleaser.com/install)
 - update `RELEASE_NOTES.md` on `master`
-- create and push a new Git Tag for the release: `git tag -a v7.7.0 -m v7.7.0`
+- create and push a new Git Tag for the release: `git tag v7.7.0`
 - `env GITHUB_TOKEN=<your Github token> VERSION=7.7.0 make release-linux`
   - or omit the Github token and enter your credentials when asked
 - this opens a release in the browser
