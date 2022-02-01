@@ -58,12 +58,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       |         | git stash pop        |
     And I am still on the "feature" branch
     And my workspace has the uncommitted file again
-    And my repo now has the following commits
-      | BRANCH  | LOCATION | MESSAGE                          |
-      | main    | local    | conflicting main commit          |
-      | feature | local    | conflicting feature commit       |
-      |         |          | conflicting main commit          |
-      |         |          | Merge branch 'main' into feature |
+    And all branches are now synchronized
     And my repo still has the following committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
@@ -78,12 +73,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       | feature | git stash pop |
     And I am still on the "feature" branch
     And my workspace has the uncommitted file again
-    And my repo now has the following commits
-      | BRANCH  | LOCATION | MESSAGE                          |
-      | main    | local    | conflicting main commit          |
-      | feature | local    | conflicting feature commit       |
-      |         |          | conflicting main commit          |
-      |         |          | Merge branch 'main' into feature |
+    And all branches are now synchronized
     And my repo still has the following committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |

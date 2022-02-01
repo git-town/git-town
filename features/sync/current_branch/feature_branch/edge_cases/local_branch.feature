@@ -26,11 +26,4 @@ Feature: syncing the current feature branch without a tracking branch
       |         | git stash pop              |
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the following commits
-      | BRANCH  | LOCATION      | MESSAGE                          |
-      | main    | local, remote | remote main commit               |
-      |         |               | local main commit                |
-      | feature | local, remote | local feature commit             |
-      |         |               | remote main commit               |
-      |         |               | local main commit                |
-      |         |               | Merge branch 'main' into feature |
+    And all branches are now synchronized

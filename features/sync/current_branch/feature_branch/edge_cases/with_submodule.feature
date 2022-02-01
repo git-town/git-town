@@ -1,4 +1,4 @@
-Feature: git-sync: on a feature branch in a repository with a submodule that has uncommitted changes
+Feature: on a feature branch in a repository with a submodule that has uncommitted changes
 
   Background:
     Given my repo has a submodule

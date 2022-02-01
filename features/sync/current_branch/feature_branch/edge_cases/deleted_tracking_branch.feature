@@ -19,6 +19,7 @@ Feature: restores deleted tracking branch
       | feature | git merge --no-edit main   |
       |         | git push -u origin feature |
     And I am still on the "feature" branch
+    And all branches are now synchronized
     And my repo now has the following commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, remote | feature commit |
