@@ -63,11 +63,11 @@ Feature: handle conflicts between the main branch and its tracking branch
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
     And my repo now has the following commits
-      | BRANCH  | LOCATION      | MESSAGE                   | FILE NAME        |
-      | main    | local, remote | conflicting remote commit | conflicting_file |
-      |         |               | conflicting local commit  | conflicting_file |
-      | feature | local, remote | conflicting remote commit | conflicting_file |
-      |         |               | conflicting local commit  | conflicting_file |
+      | BRANCH  | LOCATION      | MESSAGE                   |
+      | main    | local, remote | conflicting remote commit |
+      |         |               | conflicting local commit  |
+      | feature | local, remote | conflicting remote commit |
+      |         |               | conflicting local commit  |
     And my repo now has the following committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |
@@ -88,11 +88,11 @@ Feature: handle conflicts between the main branch and its tracking branch
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
     And my repo now has the following commits
-      | BRANCH  | LOCATION      | MESSAGE                   | FILE NAME        |
-      | main    | local, remote | conflicting remote commit | conflicting_file |
-      |         |               | conflicting local commit  | conflicting_file |
-      | feature | local, remote | conflicting remote commit | conflicting_file |
-      |         |               | conflicting local commit  | conflicting_file |
+      | BRANCH  | LOCATION      | MESSAGE                   |
+      | main    | local, remote | conflicting remote commit |
+      |         |               | conflicting local commit  |
+      | feature | local, remote | conflicting remote commit |
+      |         |               | conflicting local commit  |
     And my repo now has the following committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |

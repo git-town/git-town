@@ -66,10 +66,10 @@ Feature: handle conflicts between the current feature branch and its tracking br
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
     And my repo now has the following commits
-      | BRANCH  | LOCATION      | MESSAGE                                                    | FILE NAME        |
-      | feature | local, remote | local conflicting commit                                   | conflicting_file |
-      |         |               | remote conflicting commit                                  | conflicting_file |
-      |         |               | Merge remote-tracking branch 'origin/feature' into feature |                  |
+      | BRANCH  | LOCATION      | MESSAGE                                                    |
+      | feature | local, remote | local conflicting commit                                   |
+      |         |               | remote conflicting commit                                  |
+      |         |               | Merge remote-tracking branch 'origin/feature' into feature |
     And my repo now has the following committed files
       | BRANCH  | NAME             | CONTENT          |
       | feature | conflicting_file | resolved content |
@@ -86,10 +86,10 @@ Feature: handle conflicts between the current feature branch and its tracking br
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
     And my repo now has the following commits
-      | BRANCH  | LOCATION      | MESSAGE                                                    | FILE NAME        |
-      | feature | local, remote | local conflicting commit                                   | conflicting_file |
-      |         |               | remote conflicting commit                                  | conflicting_file |
-      |         |               | Merge remote-tracking branch 'origin/feature' into feature |                  |
+      | BRANCH  | LOCATION      | MESSAGE                                                    |
+      | feature | local, remote | local conflicting commit                                   |
+      |         |               | remote conflicting commit                                  |
+      |         |               | Merge remote-tracking branch 'origin/feature' into feature |
     And my repo now has the following committed files
       | BRANCH  | NAME             | CONTENT          |
       | feature | conflicting_file | resolved content |

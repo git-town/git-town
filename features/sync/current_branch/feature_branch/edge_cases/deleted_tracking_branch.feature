@@ -3,8 +3,8 @@ Feature: restores deleted tracking branch
   Background:
     Given my repo has a feature branch named "feature"
     And the following commits exist in my repo
-      | BRANCH  | LOCATION      | MESSAGE        | FILE NAME    |
-      | feature | local, remote | feature commit | feature_file |
+      | BRANCH  | LOCATION      | MESSAGE        |
+      | feature | local, remote | feature commit |
     And the "feature" branch gets deleted on the remote
     And I am on the "feature" branch
     When I run "git-town sync"
@@ -20,5 +20,5 @@ Feature: restores deleted tracking branch
       |         | git push -u origin feature |
     And I am still on the "feature" branch
     And my repo now has the following commits
-      | BRANCH  | LOCATION      | MESSAGE        | FILE NAME    |
-      | feature | local, remote | feature commit | feature_file |
+      | BRANCH  | LOCATION      | MESSAGE        |
+      | feature | local, remote | feature commit |

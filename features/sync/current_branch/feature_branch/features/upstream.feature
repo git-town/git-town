@@ -1,4 +1,4 @@
-Feature: git-sync: on a feature branch with a upstream remote
+Feature: with upstream remote
 
   Background:
     Given my repo has an upstream repo
@@ -8,15 +8,12 @@ Feature: git-sync: on a feature branch with a upstream remote
       | main    | upstream | upstream commit |
       | feature | local    | local commit    |
     And I am on the "feature" branch
-    And my workspace has an uncommitted file
     When I run "git-town sync"
 
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune --tags           |
-      |         | git add -A                         |
-      |         | git stash                          |
       |         | git checkout main                  |
       | main    | git rebase origin/main             |
       |         | git fetch upstream main            |
@@ -26,9 +23,7 @@ Feature: git-sync: on a feature branch with a upstream remote
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
       |         | git push                           |
-      |         | git stash pop                      |
     And I am still on the "feature" branch
-    And my workspace still contains my uncommitted file
     And my repo now has the following commits
       | BRANCH  | LOCATION                | MESSAGE                          |
       | main    | local, remote, upstream | upstream commit                  |

@@ -6,9 +6,9 @@ Feature: collaborative feature branch syncing
     And my coworker fetches updates
     And my coworker sets the parent branch of "feature" as "main"
     And the following commits exist in my repo
-      | BRANCH  | LOCATION | MESSAGE         | FILE NAME     |
-      | feature | local    | my commit       | my_file       |
-      |         | coworker | coworker commit | coworker_file |
+      | BRANCH  | LOCATION | MESSAGE         |
+      | feature | local    | my commit       |
+      |         | coworker | coworker commit |
 
   Scenario: result
     And I am on the "feature" branch
@@ -23,9 +23,9 @@ Feature: collaborative feature branch syncing
       |         | git merge --no-edit main           |
       |         | git push                           |
     And my repo now has the following commits
-      | BRANCH  | LOCATION      | MESSAGE         | FILE NAME     |
-      | feature | local, remote | my commit       | my_file       |
-      |         | coworker      | coworker commit | coworker_file |
+      | BRANCH  | LOCATION      | MESSAGE         |
+      | feature | local, remote | my commit       |
+      |         | coworker      | coworker commit |
 
     Given my coworker is on the "feature" branch
     When my coworker runs "git-town sync"
@@ -39,10 +39,10 @@ Feature: collaborative feature branch syncing
       |         | git merge --no-edit main           |
       |         | git push                           |
     And my repo now has the following commits
-      | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME     |
-      | feature | local, coworker, remote | my commit                                                  | my_file       |
-      |         | coworker, remote        | coworker commit                                            | coworker_file |
-      |         |                         | Merge remote-tracking branch 'origin/feature' into feature |               |
+      | BRANCH  | LOCATION                | MESSAGE                                                    |
+      | feature | local, coworker, remote | my commit                                                  |
+      |         | coworker, remote        | coworker commit                                            |
+      |         |                         | Merge remote-tracking branch 'origin/feature' into feature |
 
     Given I am on the "feature" branch
     When I run "git-town sync"
@@ -55,7 +55,7 @@ Feature: collaborative feature branch syncing
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
     And my repo now has the following commits
-      | BRANCH  | LOCATION                | MESSAGE                                                    | FILE NAME     |
-      | feature | local, coworker, remote | coworker commit                                            | coworker_file |
-      |         |                         | my commit                                                  | my_file       |
-      |         |                         | Merge remote-tracking branch 'origin/feature' into feature |               |
+      | BRANCH  | LOCATION                | MESSAGE                                                    |
+      | feature | local, coworker, remote | coworker commit                                            |
+      |         |                         | my commit                                                  |
+      |         |                         | Merge remote-tracking branch 'origin/feature' into feature |

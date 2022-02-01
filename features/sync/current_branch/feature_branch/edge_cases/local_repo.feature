@@ -4,9 +4,9 @@ Feature: syncing the current feature branch (without a tracking branch or remote
     Given my repo does not have a remote origin
     And my repo has a local feature branch named "feature"
     And the following commits exist in my repo
-      | BRANCH  | LOCATION | MESSAGE              | FILE NAME          | FILE CONTENT    |
-      | main    | local    | local main commit    | local_main_file    | main content    |
-      | feature | local    | local feature commit | local_feature_file | feature content |
+      | BRANCH  | LOCATION | MESSAGE              |
+      | main    | local    | local main commit    |
+      | feature | local    | local feature commit |
     And I am on the "feature" branch
     And my workspace has an uncommitted file
     When I run "git-town sync"
@@ -21,13 +21,8 @@ Feature: syncing the current feature branch (without a tracking branch or remote
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
     And my repo now has the following commits
-      | BRANCH  | LOCATION | MESSAGE                          | FILE NAME          |
-      | main    | local    | local main commit                | local_main_file    |
-      | feature | local    | local feature commit             | local_feature_file |
-      |         |          | local main commit                | local_main_file    |
-      |         |          | Merge branch 'main' into feature |                    |
-    And my repo now has the following committed files
-      | BRANCH  | NAME               | CONTENT         |
-      | main    | local_main_file    | main content    |
-      | feature | local_feature_file | feature content |
-      |         | local_main_file    | main content    |
+      | BRANCH  | LOCATION | MESSAGE                          |
+      | main    | local    | local main commit                |
+      | feature | local    | local feature commit             |
+      |         |          | local main commit                |
+      |         |          | Merge branch 'main' into feature |
