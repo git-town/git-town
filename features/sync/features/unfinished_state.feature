@@ -39,8 +39,8 @@ Feature: warn about unfinished prompt asking the user how to proceed
     And my uncommitted file is stashed
 
   Scenario: attempting to sync again and choosing to continue after resolving conflicts
-    Given I resolve the conflict in "conflicting_file"
-    When I run "git-town sync", answer the prompts, and close the next editor:
+    When I resolve the conflict in "conflicting_file"
+    And I run "git-town sync", answer the prompts, and close the next editor:
       | PROMPT                       | ANSWER        |
       | Please choose how to proceed | [DOWN][ENTER] |
     Then it runs the commands
@@ -64,10 +64,10 @@ Feature: warn about unfinished prompt asking the user how to proceed
       | feature | git stash pop        |
 
   Scenario: running another command after manually aborting
-    Given I run "git rebase --abort"
+    When I run "git rebase --abort"
     And I run "git checkout feature"
     And I run "git stash pop"
-    When I run "git-town kill" and answer the prompts:
+    And I run "git-town kill" and answer the prompts:
       | PROMPT                       | ANSWER                    |
       | Please choose how to proceed | [DOWN][DOWN][DOWN][ENTER] |
     Then it runs the commands
@@ -80,6 +80,6 @@ Feature: warn about unfinished prompt asking the user how to proceed
       | main    | git branch -D feature          |
 
   Scenario: does not report unfinished state after abort
-    Given I run "git-town abort"
-    When I run "git-town kill"
+    When I run "git-town abort"
+    And I run "git-town kill"
     Then it does not print "You have an unfinished `sync` command that ended on the `main` branch now."
