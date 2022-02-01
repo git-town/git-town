@@ -58,10 +58,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       |        | git stash pop         |
     And I am still on the "qa" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the following commits
-      | BRANCH | LOCATION      | MESSAGE                   | FILE NAME        |
-      | qa     | local, remote | conflicting remote commit | conflicting_file |
-      |        |               | conflicting local commit  | conflicting_file |
+    And all branches are now synchronized
     And my repo now has the following committed files
       | BRANCH | NAME             | CONTENT          |
       | qa     | conflicting_file | resolved content |
@@ -77,10 +74,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       |        | git stash pop   |
     And I am still on the "qa" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the following commits
-      | BRANCH | LOCATION      | MESSAGE                   | FILE NAME        |
-      | qa     | local, remote | conflicting remote commit | conflicting_file |
-      |        |               | conflicting local commit  | conflicting_file |
+    And all branches are now synchronized
     And my repo now has the following committed files
       | BRANCH | NAME             | CONTENT          |
       | qa     | conflicting_file | resolved content |
