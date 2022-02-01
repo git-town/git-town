@@ -1,4 +1,4 @@
-Feature: git-sync: on a feature branch with merge pull branch strategy
+Feature: with pull-branch-strategy set to "merge"
 
   Background:
     Given the pull-branch-strategy configuration is "merge"
@@ -41,3 +41,6 @@ Feature: git-sync: on a feature branch with merge pull branch strategy
       |         |               | remote main commit                                         | remote_main_file    |
       |         |               | Merge remote-tracking branch 'origin/main'                 |                     |
       |         |               | Merge branch 'main' into feature                           |                     |
+    And Git Town is still aware of this branch hierarchy
+      | BRANCH  | PARENT |
+      | feature | main   |

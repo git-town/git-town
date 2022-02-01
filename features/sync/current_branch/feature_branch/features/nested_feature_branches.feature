@@ -1,16 +1,16 @@
-Feature: syncing a nested feature branch (with known parent branches)
+Feature: nested feature branches
 
   Scenario:
     Given my repo has a feature branch named "parent-feature"
     And my repo has a feature branch named "child-feature" as a child of "parent-feature"
     And the following commits exist in my repo
-      | BRANCH         | LOCATION | MESSAGE                      | FILE NAME                  |
-      | main           | local    | local main commit            | local_main_file            |
-      |                | remote   | remote main commit           | remote_main_file           |
-      | parent-feature | local    | local parent feature commit  | local_parent_feature_file  |
-      |                | remote   | remote parent feature commit | remote_parent_feature_file |
-      | child-feature  | local    | local child feature commit   | local_child_feature_file   |
-      |                | remote   | remote child feature commit  | remote_child_feature_file  |
+      | BRANCH         | LOCATION | MESSAGE                      |
+      | main           | local    | local main commit            |
+      |                | remote   | remote main commit           |
+      | parent-feature | local    | local parent feature commit  |
+      |                | remote   | remote parent feature commit |
+      | child-feature  | local    | local child feature commit   |
+      |                | remote   | remote child feature commit  |
     And I am on the "child-feature" branch
     And my workspace has an uncommitted file
     When I run "git-town sync"
@@ -34,22 +34,26 @@ Feature: syncing a nested feature branch (with known parent branches)
     And I am still on the "child-feature" branch
     And my workspace still contains my uncommitted file
     And my repo now has the following commits
-      | BRANCH         | LOCATION      | MESSAGE                                                                  | FILE NAME                  |
-      | main           | local, remote | remote main commit                                                       | remote_main_file           |
-      |                |               | local main commit                                                        | local_main_file            |
-      | child-feature  | local, remote | local child feature commit                                               | local_child_feature_file   |
-      |                |               | remote child feature commit                                              | remote_child_feature_file  |
-      |                |               | Merge remote-tracking branch 'origin/child-feature' into child-feature   |                            |
-      |                |               | local parent feature commit                                              | local_parent_feature_file  |
-      |                |               | remote parent feature commit                                             | remote_parent_feature_file |
-      |                |               | Merge remote-tracking branch 'origin/parent-feature' into parent-feature |                            |
-      |                |               | remote main commit                                                       | remote_main_file           |
-      |                |               | local main commit                                                        | local_main_file            |
-      |                |               | Merge branch 'main' into parent-feature                                  |                            |
-      |                |               | Merge branch 'parent-feature' into child-feature                         |                            |
-      | parent-feature | local, remote | local parent feature commit                                              | local_parent_feature_file  |
-      |                |               | remote parent feature commit                                             | remote_parent_feature_file |
-      |                |               | Merge remote-tracking branch 'origin/parent-feature' into parent-feature |                            |
-      |                |               | remote main commit                                                       | remote_main_file           |
-      |                |               | local main commit                                                        | local_main_file            |
-      |                |               | Merge branch 'main' into parent-feature                                  |                            |
+      | BRANCH         | LOCATION      | MESSAGE                                                                  |
+      | main           | local, remote | remote main commit                                                       |
+      |                |               | local main commit                                                        |
+      | child-feature  | local, remote | local child feature commit                                               |
+      |                |               | remote child feature commit                                              |
+      |                |               | Merge remote-tracking branch 'origin/child-feature' into child-feature   |
+      |                |               | local parent feature commit                                              |
+      |                |               | remote parent feature commit                                             |
+      |                |               | Merge remote-tracking branch 'origin/parent-feature' into parent-feature |
+      |                |               | remote main commit                                                       |
+      |                |               | local main commit                                                        |
+      |                |               | Merge branch 'main' into parent-feature                                  |
+      |                |               | Merge branch 'parent-feature' into child-feature                         |
+      | parent-feature | local, remote | local parent feature commit                                              |
+      |                |               | remote parent feature commit                                             |
+      |                |               | Merge remote-tracking branch 'origin/parent-feature' into parent-feature |
+      |                |               | remote main commit                                                       |
+      |                |               | local main commit                                                        |
+      |                |               | Merge branch 'main' into parent-feature                                  |
+    And Git Town is still aware of this branch hierarchy
+      | BRANCH         | PARENT         |
+      | child-feature  | parent-feature |
+      | parent-feature | main           |
