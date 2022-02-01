@@ -1,6 +1,6 @@
 Feature: syncing the main branch syncs the tags
 
-  Scenario: Pushing tags
+  Scenario: local tag gets pushed to the remote
     Given my repo has the following tags
       | NAME      | LOCATION |
       | local-tag | local    |
@@ -10,7 +10,7 @@ Feature: syncing the main branch syncs the tags
       | NAME      | LOCATION      |
       | local-tag | local, remote |
 
-  Scenario: fetching tags on a pulled branch
+  Scenario: tag on the remote branch gets pulled
     Given my repo has the following tags
       | NAME       | LOCATION |
       | remote-tag | remote   |
@@ -20,7 +20,7 @@ Feature: syncing the main branch syncs the tags
       | NAME       | LOCATION      |
       | remote-tag | local, remote |
 
-  Scenario: fetching tags not on a branch
+  Scenario: tag on a different branch gets pulled
     Given my repo has a remote tag "remote-tag" that is not on a branch
     And I am on the "main" branch
     When I run "git-town sync"
