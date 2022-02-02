@@ -3,7 +3,7 @@ Feature: syncs all feature branches (without remote repo)
   Background:
     Given my repo does not have a remote origin
     And my repo has the local feature branches "feature-1" and "feature-2"
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH    | LOCATION | MESSAGE          |
       | main      | local    | main commit      |
       | feature-1 | local    | feature-1 commit |

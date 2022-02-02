@@ -17,7 +17,7 @@ Feature: deleting the current branch makes the main branch the new previous bran
 
   Scenario: ship
     Given my repo has the feature branches "previous" and "current"
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH   | LOCATION |
       | previous | local    |
     And I am on the "current" branch with "previous" as the previous Git branch

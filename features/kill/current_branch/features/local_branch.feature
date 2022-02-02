@@ -3,7 +3,7 @@ Feature: killing a local branch
   Background:
     Given my repo has a feature branch "other-feature"
     And my repo has a local feature branch "current-feature"
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH          | LOCATION      | MESSAGE                |
       | current-feature | local         | current feature commit |
       | other-feature   | local, remote | other feature commit   |

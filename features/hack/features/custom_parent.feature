@@ -3,7 +3,7 @@ Feature: customize the parent for the new feature branch
 
   Background:
     Given my repo has the perennial branch "production"
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH     | LOCATION | MESSAGE           |
       | production | remote   | production_commit |
     And I am on the "main" branch

@@ -2,7 +2,7 @@ Feature: syncing inside a folder that doesn't exist on the main branch
 
   Background:
     Given my repo has the feature branches "current-feature" and "other-feature"
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH          | LOCATION      | MESSAGE              | FILE NAME        |
       | main            | local, remote | main commit          | main_file        |
       | current-feature | local, remote | folder commit        | new_folder/file1 |

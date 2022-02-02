@@ -1,7 +1,7 @@
 Feature: branch to rename does not exist
 
   Scenario: unknown branch
-    Given the following commits exist in my repo
+    Given my repo contains the commits
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, remote | main commit |
     And I am on the "main" branch

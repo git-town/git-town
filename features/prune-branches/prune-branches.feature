@@ -2,7 +2,7 @@ Feature: delete branches that were shipped or removed on another machine
 
   Background:
     Given my repo has the feature branches "active-feature" and "finished-feature"
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH           | LOCATION      | MESSAGE                 |
       | active-feature   | local, remote | active-feature commit   |
       | finished-feature | local, remote | finished-feature commit |

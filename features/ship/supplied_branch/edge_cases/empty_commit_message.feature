@@ -2,7 +2,7 @@ Feature: abort the ship via empty commit message
 
   Background:
     Given my repo has the feature branches "feature" and "other-feature"
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | main    | local, remote | main commit    | main_file    | main content    |
       | feature | local         | feature commit | feature_file | feature content |

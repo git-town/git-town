@@ -3,7 +3,7 @@ Feature: shipping a parent branch
   Background:
     Given my repo has a feature branch "parent-feature"
     And my repo has a feature branch "child-feature" as a child of "parent-feature"
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH         | LOCATION      | MESSAGE               |
       | parent-feature | local, remote | parent feature commit |
       | child-feature  | local, remote | child feature commit  |

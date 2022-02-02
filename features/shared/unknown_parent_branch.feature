@@ -46,7 +46,7 @@ Feature: Prompt for parent branch when unknown
   Scenario: prompting for parent branch when running git town-sync --all
     Given my repo has a branch "feature-1"
     And my repo has a branch "feature-2"
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH    | LOCATION      | MESSAGE          |
       | main      | local, remote | main commit      |
       | feature-1 | local, remote | feature-1 commit |

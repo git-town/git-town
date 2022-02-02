@@ -1,7 +1,7 @@
 Feature: in a subfolder on the main branch
 
   Background:
-    Given the following commits exist in my repo
+    Given my repo contains the commits
       | BRANCH | LOCATION | MESSAGE       | FILE NAME        |
       | main   | local    | folder commit | new_folder/file1 |
     And I am on the "main" branch

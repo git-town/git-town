@@ -2,7 +2,7 @@ Feature: offline mode
 
   Background:
     Given Git Town is in offline mode
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, remote | main commit |
     And my workspace has an uncommitted file

@@ -1,7 +1,7 @@
 Feature: on a feature branch
 
   Background:
-    Given the following commits exist in my repo
+    Given my repo contains the commits
       | BRANCH | LOCATION | MESSAGE     |
       | main   | remote   | main_commit |
     And I am on the "main" branch
