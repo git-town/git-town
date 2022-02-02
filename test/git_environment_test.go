@@ -47,7 +47,7 @@ func TestGitEnvironment_Branches(t *testing.T) {
 	t.Parallel()
 	// create GitEnvironment instance
 	dir := CreateTempDir(t)
-	gitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
+	gitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, ""))
 	assert.NoError(t, err)
 	// create the branches
 	err = gitEnv.DevRepo.CreateBranch("d1", "main")
