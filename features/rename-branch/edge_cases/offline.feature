@@ -34,10 +34,7 @@ Feature: offline mode
       |                 | git checkout feature                       |
       | feature         | git branch -D renamed-feature              |
     And I am now on the "feature" branch
-    And my repo now has the following commits
-      | BRANCH  | LOCATION      | MESSAGE     |
-      | main    | local, remote | main commit |
-      | feature | local, remote | feat commit |
+    And my repo is left with my original commits
     And Git Town is now aware of this branch hierarchy
       | BRANCH  | PARENT |
       | feature | main   |

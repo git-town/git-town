@@ -38,6 +38,7 @@ Feature: in a local repo
       | existing-feature | git branch -d new-feature     |
       |                  | git stash pop                 |
     And I am now on the "existing-feature" branch
+    And my repo is left with my original commits
     And Git Town is now aware of this branch hierarchy
       | BRANCH           | PARENT |
       | existing-feature | main   |

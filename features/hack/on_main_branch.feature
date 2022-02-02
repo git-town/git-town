@@ -38,4 +38,7 @@ Feature: on a feature branch
       | main        | git branch -d new-feature |
       |             | git stash pop             |
     And I am now on the "main" branch
+    And my repo now has the following commits
+      | BRANCH | LOCATION      | MESSAGE     |
+      | main   | local, remote | main_commit |
     And Git Town now has no branch hierarchy information
