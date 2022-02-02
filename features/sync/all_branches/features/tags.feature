@@ -1,4 +1,4 @@
-Feature: git-town sync: syncing all branches syncs the tags
+Feature: syncing all branches syncs the tags
 
   Background:
     Given my repo has the following tags

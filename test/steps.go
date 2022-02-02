@@ -511,6 +511,23 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^my repo has the (local )?feature branches "([^"]+)", "([^"]+)", and "([^"]+)"$`, func(localStr, branch1, branch2, branch3 string) error {
+		isLocal := localStr != ""
+		for _, branch := range []string{branch1, branch2, branch3} {
+			err := state.gitEnv.DevRepo.CreateFeatureBranch(branch)
+			if err != nil {
+				return err
+			}
+			if !isLocal {
+				err = state.gitEnv.DevRepo.PushBranchSetUpstream(branch)
+				if err != nil {
+					return err
+				}
+			}
+		}
+		return nil
+	})
+
 	suite.Step(`^my repo has the (local )?perennial branches "([^"]+)" and "([^"]+)"$`, func(localStr, branch1, branch2 string) error {
 		isLocal := localStr != ""
 		err := state.gitEnv.DevRepo.CreatePerennialBranches(branch1, branch2)
@@ -523,6 +540,23 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 				return err
 			}
 			return state.gitEnv.DevRepo.PushBranchSetUpstream(branch2)
+		}
+		return nil
+	})
+
+	suite.Step(`^my repo has the (local )?perennial branches "([^"]+)", "([^"]+)", and "([^"]+)"$`, func(localStr, branch1, branch2, branch3 string) error {
+		isLocal := localStr != ""
+		for _, branch := range []string{branch1, branch2, branch3} {
+			err := state.gitEnv.DevRepo.CreatePerennialBranches(branch)
+			if err != nil {
+				return fmt.Errorf("cannot create perennial branches: %w", err)
+			}
+			if !isLocal {
+				err = state.gitEnv.DevRepo.PushBranchSetUpstream(branch)
+				if err != nil {
+					return fmt.Errorf("cannot push perennial branch upstream: %w", err)
+				}
+			}
 		}
 		return nil
 	})

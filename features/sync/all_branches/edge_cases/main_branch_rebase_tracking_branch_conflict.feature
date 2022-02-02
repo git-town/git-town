@@ -1,4 +1,4 @@
-Feature: git-town sync --all: handling rebase conflicts between main branch and its tracking branch
+Feature: handling rebase conflicts between main branch and its tracking branch
 
   Background:
     Given my repo has a feature branch named "feature"
@@ -62,14 +62,7 @@ Feature: git-town sync --all: handling rebase conflicts between main branch and 
       |         | git stash pop                      |
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
-    And my repo now has the following commits
-      | BRANCH  | LOCATION      | MESSAGE                          | FILE NAME        | FILE CONTENT        |
-      | main    | local, remote | main remote commit               | conflicting_file | main remote content |
-      |         |               | main local commit                | conflicting_file | resolved content    |
-      | feature | local, remote | feature commit                   | feature_file     | feature content     |
-      |         |               | main remote commit               | conflicting_file | main remote content |
-      |         |               | main local commit                | conflicting_file | resolved content    |
-      |         |               | Merge branch 'main' into feature |                  |                     |
+    And all branches are now synchronized
     And my repo now has the following committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |
@@ -92,3 +85,4 @@ Feature: git-town sync --all: handling rebase conflicts between main branch and 
       |         | git stash pop                      |
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
+    And all branches are now synchronized

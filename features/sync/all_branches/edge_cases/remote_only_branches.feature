@@ -1,4 +1,4 @@
-Feature: git-town sync --all: does not sync remote only branches
+Feature: does not sync remote only branches
 
   Background:
     Given my repo has a feature branch named "my-feature"
@@ -29,10 +29,3 @@ Feature: git-town sync --all: does not sync remote only branches
     And I am still on the "main" branch
     And my workspace still contains my uncommitted file
     And all branches are now synchronized
-    And my repo now has the following commits
-      | BRANCH     | LOCATION      | MESSAGE                             |
-      | main       | local, remote | main commit                         |
-      | co-feature | remote        | coworker commit                     |
-      | my-feature | local, remote | my commit                           |
-      |            |               | main commit                         |
-      |            |               | Merge branch 'main' into my-feature |

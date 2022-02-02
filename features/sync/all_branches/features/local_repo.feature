@@ -1,4 +1,4 @@
-Feature: git-town sync --all: syncs all feature branches (without remote repo)
+Feature: syncs all feature branches (without remote repo)
 
   Background:
     Given my repo does not have a remote origin
@@ -24,12 +24,4 @@ Feature: git-town sync --all: syncs all feature branches (without remote repo)
       | feature-1 | git stash pop            |
     And I am still on the "feature-1" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the following commits
-      | BRANCH    | LOCATION | MESSAGE                            |
-      | main      | local    | main commit                        |
-      | feature-1 | local    | feature-1 commit                   |
-      |           |          | main commit                        |
-      |           |          | Merge branch 'main' into feature-1 |
-      | feature-2 | local    | feature-2 commit                   |
-      |           |          | main commit                        |
-      |           |          | Merge branch 'main' into feature-2 |
+    And all branches are now synchronized
