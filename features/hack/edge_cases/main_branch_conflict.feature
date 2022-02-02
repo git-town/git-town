@@ -37,10 +37,6 @@ Feature: conflicts between the main branch and its tracking branch
     And my workspace has the uncommitted file again
     And there is no rebase in progress anymore
     And my repo is left with my original commits
-    And my repo now has the following commits
-      | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
-      | main   | local    | conflicting local commit  | conflicting_file | local content  |
-      |        | remote   | conflicting remote commit | conflicting_file | remote content |
 
   Scenario: continuing without resolving the conflicts
     When I run "git-town continue"
@@ -64,11 +60,11 @@ Feature: conflicts between the main branch and its tracking branch
     And I am now on the "new-feature" branch
     And my workspace still contains my uncommitted file
     And my repo now has the following commits
-      | BRANCH      | LOCATION      | MESSAGE                   | FILE NAME        | FILE CONTENT     |
-      | main        | local, remote | conflicting remote commit | conflicting_file | remote content   |
-      |             |               | conflicting local commit  | conflicting_file | resolved content |
-      | new-feature | local         | conflicting remote commit | conflicting_file | remote content   |
-      |             |               | conflicting local commit  | conflicting_file | resolved content |
+      | BRANCH      | LOCATION      | MESSAGE                   |
+      | main        | local, remote | conflicting remote commit |
+      |             |               | conflicting local commit  |
+      | new-feature | local         | conflicting remote commit |
+      |             |               | conflicting local commit  |
     And my repo now has the following committed files
       | BRANCH      | NAME             | CONTENT          |
       | main        | conflicting_file | resolved content |
