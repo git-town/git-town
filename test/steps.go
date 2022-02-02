@@ -573,7 +573,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return compareExistingCommits(state, state.initialCommits)
 	})
 
-	suite.Step(`^my repo is now configured with no perennial branches$`, func() error {
+	suite.Step(`^my repo is now has no perennial branches$`, func() error {
 		state.gitEnv.DevRepo.Config.Reload()
 		branches := state.gitEnv.DevRepo.Config.PerennialBranches()
 		if len(branches) > 0 {
@@ -810,7 +810,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.DeleteMainBranchConfiguration()
 	})
 
-	suite.Step(`^the main branch is now configured as "([^"]+)"$`, func(name string) error {
+	suite.Step(`^the main branch is now "([^"]+)"$`, func(name string) error {
 		state.gitEnv.DevRepo.Config.Reload()
 		actual := state.gitEnv.DevRepo.Config.MainBranch()
 		if actual != name {
