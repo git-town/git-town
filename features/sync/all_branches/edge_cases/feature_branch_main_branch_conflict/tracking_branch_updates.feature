@@ -166,17 +166,3 @@ Feature: handling merge conflicts between feature branch and main branch
       |           | git stash pop                        |
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
-    And my repo now has the following commits
-      | BRANCH    | LOCATION      | MESSAGE                                                        | FILE NAME            |
-      | main      | local, remote | main commit                                                    | conflicting_file     |
-      | feature-1 | local, remote | feature-1 commit                                               | feature1_file        |
-      |           |               | main commit                                                    | conflicting_file     |
-      |           |               | Merge branch 'main' into feature-1                             |                      |
-      | feature-2 | local, remote | feature-2 local commit                                         | conflicting_file     |
-      |           |               | feature-2 remote commit                                        | feature2_remote_file |
-      |           |               | Merge remote-tracking branch 'origin/feature-2' into feature-2 |                      |
-      |           |               | main commit                                                    | conflicting_file     |
-      |           |               | Merge branch 'main' into feature-2                             |                      |
-      | feature-3 | local, remote | feature-3 commit                                               | feature3_file        |
-      |           |               | main commit                                                    | conflicting_file     |
-      |           |               | Merge branch 'main' into feature-3                             |                      |

@@ -99,17 +99,17 @@ Feature: handling merge conflicts between feature branch and main branch in a lo
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
     And my repo now has the following commits
-      | BRANCH    | LOCATION | MESSAGE                            | FILE NAME        |
-      | main      | local    | main commit                        | conflicting_file |
-      | feature-1 | local    | feature-1 commit                   | feature1_file    |
-      |           |          | main commit                        | conflicting_file |
-      |           |          | Merge branch 'main' into feature-1 |                  |
-      | feature-2 | local    | feature-2 commit                   | conflicting_file |
-      |           |          | main commit                        | conflicting_file |
-      |           |          | Merge branch 'main' into feature-2 |                  |
-      | feature-3 | local    | feature-3 commit                   | feature3_file    |
-      |           |          | main commit                        | conflicting_file |
-      |           |          | Merge branch 'main' into feature-3 |                  |
+      | BRANCH    | LOCATION | MESSAGE                            |
+      | main      | local    | main commit                        |
+      | feature-1 | local    | feature-1 commit                   |
+      |           |          | main commit                        |
+      |           |          | Merge branch 'main' into feature-1 |
+      | feature-2 | local    | feature-2 commit                   |
+      |           |          | main commit                        |
+      |           |          | Merge branch 'main' into feature-2 |
+      | feature-3 | local    | feature-3 commit                   |
+      |           |          | main commit                        |
+      |           |          | Merge branch 'main' into feature-3 |
     And my repo now has the following committed files
       | BRANCH    | NAME             | CONTENT           |
       | main      | conflicting_file | main content      |
