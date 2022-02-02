@@ -1,7 +1,7 @@
+@skipWindows
 Feature: ask for missing configuration
 
-  @skipWindows
-  Scenario: run unconfigured
+  Scenario:
     Given I haven't configured Git Town yet
     When I run "git-town kill" and answer the prompts:
       | PROMPT                                     | ANSWER  |

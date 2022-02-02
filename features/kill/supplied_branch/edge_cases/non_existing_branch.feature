@@ -1,11 +1,9 @@
 Feature: non-existing branch
 
-  Background:
+  Scenario:
     Given I am on the "main" branch
-
-  Scenario: result
+    And my workspace has an uncommitted file
     When I run "git-town kill non-existing-feature"
-    Given my workspace has an uncommitted file
     Then it runs the commands
       | BRANCH | COMMAND                  |
       | main   | git fetch --prune --tags |

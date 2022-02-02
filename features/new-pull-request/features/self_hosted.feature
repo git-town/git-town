@@ -1,6 +1,6 @@
+@skipWindows
 Feature: self-hosted service
 
-  @skipWindows
   Scenario Outline: self hosted
     And my computer has the "open" tool installed
     And my repo has a feature branch "feature"

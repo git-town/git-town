@@ -68,9 +68,9 @@ release-win: msi  # adds the Windows installer to the release
 		-a dist/git-town_${VERSION}_windows_intel_64.msi
 		v${VERSION}
 
-setup: setup-go setup-docs  # the setup steps necessary on developer machines
+setup: setup-go setup-tools  # the setup steps necessary on developer machines
 
-setup-docs:  # the setup steps necessary for document tests
+setup-tools:  # the setup steps necessary for document tests
 	cd tools && yarn install
 
 setup-go: setup-godog

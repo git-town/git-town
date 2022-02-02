@@ -1,3 +1,4 @@
+@skipWindows
 Feature: print the URL when no browser installed
 
   Background:
@@ -7,7 +8,6 @@ Feature: print the URL when no browser installed
     And I am on the "feature" branch
     When I run "git-town new-pull-request"
 
-  @skipWindows
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                            |
@@ -22,7 +22,6 @@ Feature: print the URL when no browser installed
       Please open in a browser: https://github.com/git-town/git-town/compare/feature?expand=1
       """
 
-  @skipWindows
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands

@@ -1,3 +1,4 @@
+@skipWindows
 Feature: print the URL when the browser crashes
 
   Background:
@@ -7,7 +8,6 @@ Feature: print the URL when the browser crashes
     And I am on the "feature" branch
     When I run "git-town new-pull-request"
 
-  @skipWindows
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                                                            |
@@ -23,7 +23,6 @@ Feature: print the URL when the browser crashes
       Please open in a browser: https://github.com/git-town/git-town/compare/feature?expand=1
       """
 
-  @skipWindows
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands

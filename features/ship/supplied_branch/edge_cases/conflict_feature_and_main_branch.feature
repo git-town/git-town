@@ -52,8 +52,8 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       | other-feature | main   |
 
   Scenario: continuing after resolving the conflicts
-    Given I resolve the conflict in "conflicting_file"
-    When I run "git-town continue"
+    When I resolve the conflict in "conflicting_file"
+    And I run "git-town continue"
     Then it runs the commands
       | BRANCH        | COMMAND                      |
       | feature       | git commit --no-edit         |
@@ -80,8 +80,8 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       | other-feature | main   |
 
   Scenario: continuing after resolving the conflicts and comitting
-    Given I resolve the conflict in "conflicting_file"
-    When I run "git commit --no-edit"
+    When I resolve the conflict in "conflicting_file"
+    And I run "git commit --no-edit"
     And I run "git-town continue"
     Then it runs the commands
       | BRANCH        | COMMAND                      |
@@ -97,9 +97,9 @@ Feature: handle conflicts between the supplied feature branch and the main branc
     And my workspace still contains my uncommitted file
 
   Scenario: undo after continue
-    Given I resolve the conflict in "conflicting_file"
+    When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
-    When I run "git-town undo"
+    And I run "git-town undo"
     Then it runs the commands
       | BRANCH        | COMMAND                                                         |
       | other-feature | git add -A                                                      |
