@@ -21,7 +21,7 @@ Feature: rename the current branch
       |                 | git push origin :feature           |
       |                 | git branch -D feature              |
     And I am now on the "renamed-feature" branch
-    And the perennial branches are now configured as "production"
+    And the perennial branches are now "production"
     And my repo now has the following commits
       | BRANCH          | LOCATION      | MESSAGE     |
       | main            | local, remote | main commit |
@@ -38,7 +38,7 @@ Feature: rename the current branch
       |                 | git checkout feature                       |
       | feature         | git branch -D renamed-feature              |
     And I am now on the "feature" branch
-    And the perennial branches are now configured as "production"
+    And the perennial branches are now "production"
     And my repo now has the following commits
       | BRANCH     | LOCATION      | MESSAGE     |
       | main       | local, remote | main commit |
