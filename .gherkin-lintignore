@@ -1,1 +1,2 @@
 vendor/**
+features/sync/current_branch/feature_branch/features/two_collaborators.feature

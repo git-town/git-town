@@ -22,7 +22,7 @@
   ],
   "keywords-in-logical-order": "on",
   "new-line-at-eof": ["on", "yes"],
-  "no-background-only-scenario": "on",
+  "no-background-only-scenario": "off",
   "no-dupe-scenario-names": ["on", "in-feature"],
   "no-duplicate-tags": "on",
   "no-empty-background": "on",
