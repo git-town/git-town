@@ -21,9 +21,8 @@ Feature: killing a local branch
       | main            | git branch -D current-feature          |
     And I am now on the "main" branch
     And the existing branches are
-      | REPOSITORY | BRANCHES            |
-      | local      | main, other-feature |
-      | remote     | main, other-feature |
+      | REPOSITORY    | BRANCHES            |
+      | local, remote | main, other-feature |
     And my repo now has the following commits
       | BRANCH        | LOCATION      | MESSAGE              |
       | other-feature | local, remote | other feature commit |

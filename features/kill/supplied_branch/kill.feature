@@ -20,9 +20,8 @@ Feature: deleting another than the current branch
     And I am still on the "good-feature" branch
     And my workspace still contains my uncommitted file
     And the existing branches are
-      | REPOSITORY | BRANCHES           |
-      | local      | main, good-feature |
-      | remote     | main, good-feature |
+      | REPOSITORY    | BRANCHES           |
+      | local, remote | main, good-feature |
     And my repo now has the following commits
       | BRANCH       | LOCATION      | MESSAGE                              | FILE NAME        |
       | main         | local, remote | conflicting with uncommitted changes | conflicting_file |
@@ -40,9 +39,8 @@ Feature: deleting another than the current branch
     And I am still on the "good-feature" branch
     And my workspace still contains my uncommitted file
     And the existing branches are
-      | REPOSITORY | BRANCHES                         |
-      | local      | main, dead-feature, good-feature |
-      | remote     | main, dead-feature, good-feature |
+      | REPOSITORY    | BRANCHES                         |
+      | local, remote | main, dead-feature, good-feature |
     And my repo is left with my original commits
     And Git Town is now aware of this branch hierarchy
       | BRANCH       | PARENT |

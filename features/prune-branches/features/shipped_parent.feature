@@ -20,9 +20,8 @@ Feature: a parent branch of a local branch was shipped
     And I am now on the "main" branch
     And my workspace still contains my uncommitted file
     And the existing branches are
-      | REPOSITORY | BRANCHES            |
-      | local      | main, feature-child |
-      | remote     | main, feature-child |
+      | REPOSITORY    | BRANCHES            |
+      | local, remote | main, feature-child |
     And Git Town is now aware of this branch hierarchy
       | BRANCH        | PARENT |
       | feature-child | main   |

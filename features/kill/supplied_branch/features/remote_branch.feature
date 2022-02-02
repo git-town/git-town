@@ -15,9 +15,8 @@ Feature: deleting a remote only branch
       | main   | git fetch --prune --tags |
       |        | git push origin :feature |
     And the existing branches are
-      | REPOSITORY | BRANCHES |
-      | local      | main     |
-      | remote     | main     |
+      | REPOSITORY    | BRANCHES |
+      | local, remote | main     |
     And Git Town now has no branch hierarchy information
 
   Scenario: undo

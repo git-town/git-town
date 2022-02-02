@@ -31,9 +31,8 @@ Feature: provide the commit message via a CLI argument
     And I am now on the "other-feature" branch
     And my workspace still contains my uncommitted file
     And the existing branches are
-      | REPOSITORY | BRANCHES            |
-      | local      | main, other-feature |
-      | remote     | main, other-feature |
+      | REPOSITORY    | BRANCHES            |
+      | local, remote | main, other-feature |
     And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, remote | feature done |
