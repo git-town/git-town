@@ -54,7 +54,7 @@ Feature: show the configuration
       """
 
   Scenario: perennial branches are configured, main branch is not
-    Given the main branch name is not configured
+    Given the main branch is not configured
     And the perennial branches are configured as "qa" and "staging"
     When I run "git-town config"
     Then it prints:

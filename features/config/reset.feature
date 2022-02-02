@@ -18,7 +18,7 @@ Feature: reset the configuration
     Then Git Town is no longer configured for this repo
 
   Scenario: the main branch is not configured but the perennial branches are
-    Given the main branch name is not configured
+    Given the main branch is not configured
     And the perennial branches are configured as "qa"
     When I run "git-town config reset"
     Then Git Town is no longer configured for this repo
