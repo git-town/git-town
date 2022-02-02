@@ -3,7 +3,7 @@ Feature: syncing the main branch in a local repo
   Background:
     Given my repo does not have a remote origin
     And I am on the "main" branch
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH | LOCATION | MESSAGE      | FILE NAME  |
       | main   | local    | local commit | local_file |
     And my workspace has an uncommitted file

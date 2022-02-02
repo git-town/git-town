@@ -2,7 +2,7 @@ Feature: handle conflicts between the current feature branch and the main branch
 
   Background:
     Given my repo has a feature branch "feature"
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
@@ -60,8 +60,8 @@ Feature: handle conflicts between the current feature branch and the main branch
     And my repo still has a merge in progress
 
   Scenario: continuing after resolving the conflicts
-    Given I resolve the conflict in "conflicting_file"
-    When I run "git-town continue"
+    When I resolve the conflict in "conflicting_file"
+    And I run "git-town continue"
     Then it runs the commands
       | BRANCH  | COMMAND              |
       | feature | git commit --no-edit |
@@ -76,8 +76,8 @@ Feature: handle conflicts between the current feature branch and the main branch
       | feature | conflicting_file | resolved content |
 
   Scenario: continuing after resolving the conflicts resulting in no changes
-    Given I resolve the conflict in "conflicting_file" with "feature content"
-    When I run "git-town continue"
+    When I resolve the conflict in "conflicting_file" with "feature content"
+    And I run "git-town continue"
     Then it runs the commands
       | BRANCH  | COMMAND              |
       | feature | git commit --no-edit |
@@ -92,9 +92,9 @@ Feature: handle conflicts between the current feature branch and the main branch
       | feature | conflicting_file | feature content |
 
   Scenario: continuing after resolving the conflicts and comitting
-    Given I resolve the conflict in "conflicting_file"
+    When I resolve the conflict in "conflicting_file"
     And I run "git commit --no-edit"
-    When I run "git-town continue"
+    And I run "git-town continue"
     Then it runs the commands
       | BRANCH  | COMMAND       |
       | feature | git push      |

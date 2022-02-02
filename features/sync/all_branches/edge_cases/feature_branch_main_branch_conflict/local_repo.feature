@@ -3,7 +3,7 @@ Feature: handling merge conflicts between feature branch and main branch in a lo
   Background:
     Given my repo does not have a remote origin
     And my repo has the local feature branches "feature-1", "feature-2", and "feature-3"
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH    | LOCATION | MESSAGE          | FILE NAME        | FILE CONTENT      |
       | main      | local    | main commit      | conflicting_file | main content      |
       | feature-1 | local    | feature-1 commit | feature1_file    | feature-1 content |
@@ -87,7 +87,7 @@ Feature: handling merge conflicts between feature branch and main branch in a lo
     And my repo still has a merge in progress
 
   Scenario: continuing after resolving the conflicts
-    Given I resolve the conflict in "conflicting_file"
+    When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
     Then it runs the commands
       | BRANCH    | COMMAND                  |
@@ -109,9 +109,9 @@ Feature: handling merge conflicts between feature branch and main branch in a lo
       |           | feature3_file    | feature-3 content |
 
   Scenario: continuing after resolving the conflicts and committing
-    Given I resolve the conflict in "conflicting_file"
+    When I resolve the conflict in "conflicting_file"
     And I run "git commit --no-edit"
-    When I run "git-town continue"
+    And I run "git-town continue"
     Then it runs the commands
       | BRANCH    | COMMAND                  |
       | feature-2 | git checkout feature-3   |

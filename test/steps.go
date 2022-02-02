@@ -197,12 +197,12 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^I run "(.+)"$`, func(command string) error {
+	suite.Step(`^I (?:run|ran) "(.+)"$`, func(command string) error {
 		state.runRes, state.runErr = state.gitEnv.DevShell.RunString(command)
 		return nil
 	})
 
-	suite.Step(`^I run "([^"]+)" and answer the prompts:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
+	suite.Step(`^I (?:run|ran) "([^"]+)" and answer(?:ed)? the prompts:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
 		state.runRes, state.runErr = state.gitEnv.DevShell.RunStringWith(cmd, run.Options{Input: tableToInput(input)})
 		return nil
 	})
@@ -767,7 +767,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the following commits exist in my repo$`, func(table *messages.PickleStepArgument_PickleTable) error {
+	suite.Step(`^my repo contains the commits$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		state.initialCommits = table
 		commits, err := FromGherkinTable(table)
 		if err != nil {
@@ -929,7 +929,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^there is no rebase in progress$`, func() error {
+	suite.Step(`^there is no rebase in progress anymore$`, func() error {
 		hasRebase, err := state.gitEnv.DevRepo.HasRebaseInProgress()
 		if err != nil {
 			return err

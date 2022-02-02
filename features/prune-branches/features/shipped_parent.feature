@@ -3,7 +3,7 @@ Feature: a parent branch of a local branch was shipped
   Background:
     Given my repo has a feature branch "feature"
     And my repo has a feature branch "feature-child" as a child of "feature"
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH        | LOCATION      | MESSAGE              |
       | feature       | local, remote | feature commit       |
       | feature-child | local, remote | feature-child commit |

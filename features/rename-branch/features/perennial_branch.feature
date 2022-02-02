@@ -3,7 +3,7 @@ Feature: renaming a perennial branch with a tracking branch
   Background:
     Given my repo has the perennial branches "qa" and "production"
     And my repo has a feature branch "child-feature" as a child of "production"
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH        | LOCATION      | MESSAGE              |
       | production    | local, remote | production commit    |
       | child-feature | local, remote | child feature commit |
@@ -37,8 +37,8 @@ Feature: renaming a perennial branch with a tracking branch
       | BRANCH        | PARENT             |
       | child-feature | renamed-production |
 
-  Scenario: undo
-    Given I run "git-town rename-branch --force production renamed-production"
+  Scenario: undo the forced rename
+    Given I ran "git-town rename-branch --force production renamed-production"
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH             | COMMAND                                             |

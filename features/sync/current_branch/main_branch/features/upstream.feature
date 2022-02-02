@@ -1,8 +1,10 @@
 Feature: on the main branch with a upstream remote
 
-  Scenario: sync-upstream is set to true
+  Background:
     Given my repo has an upstream repo
-    And the following commits exist in my repo
+
+  Scenario: sync-upstream is set to true
+    Given my repo contains the commits
       | BRANCH | LOCATION | MESSAGE         |
       | main   | upstream | upstream commit |
     And I am on the "main" branch
@@ -26,8 +28,7 @@ Feature: on the main branch with a upstream remote
       | main   | local, remote, upstream | upstream commit |
 
   Scenario: sync-upstream is set to false
-    Given my repo has an upstream repo
-    And the following commits exist in my repo
+    Given my repo contains the commits
       | BRANCH | LOCATION | MESSAGE         |
       | main   | local    | local commit    |
       |        | remote   | remote commit   |

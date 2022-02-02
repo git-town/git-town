@@ -2,7 +2,7 @@ Feature: handle merge conflicts between feature branch and main branch
 
   Background:
     Given my repo has the local feature branches "feature-1", "feature-2", and "feature-3"
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH    | LOCATION      | MESSAGE          | FILE NAME        | FILE CONTENT      |
       | main      | remote        | main commit      | conflicting_file | main content      |
       | feature-1 | local, remote | feature-1 commit | feature1_file    | feature-1 content |
@@ -107,7 +107,7 @@ Feature: handle merge conflicts between feature branch and main branch
     And my repo still has a merge in progress
 
   Scenario: continuing after resolving the conflicts
-    Given I resolve the conflict in "conflicting_file"
+    When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
     Then it runs the commands
       | BRANCH    | COMMAND                              |
@@ -133,7 +133,7 @@ Feature: handle merge conflicts between feature branch and main branch
       |           | feature2_file    | feature-3 content |
 
   Scenario: continuing after resolving the conflicts and committing
-    Given I resolve the conflict in "conflicting_file"
+    When I resolve the conflict in "conflicting_file"
     And I run "git commit --no-edit"
     And I run "git-town continue"
     Then it runs the commands

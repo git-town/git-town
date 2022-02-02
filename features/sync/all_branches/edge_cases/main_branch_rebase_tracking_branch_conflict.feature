@@ -2,7 +2,7 @@ Feature: handling rebase conflicts between main branch and its tracking branch
 
   Background:
     Given my repo has a feature branch "feature"
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH  | LOCATION | MESSAGE            | FILE NAME        | FILE CONTENT        |
       | main    | local    | main local commit  | conflicting_file | main local content  |
       |         | remote   | main remote commit | conflicting_file | main remote content |
@@ -47,7 +47,7 @@ Feature: handling rebase conflicts between main branch and its tracking branch
     And my repo still has a rebase in progress
 
   Scenario: continuing after resolving the conflicts
-    Given I resolve the conflict in "conflicting_file"
+    When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then it runs the commands
       | BRANCH  | COMMAND                            |
@@ -70,7 +70,7 @@ Feature: handling rebase conflicts between main branch and its tracking branch
       |         | feature_file     | feature content  |
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
-    Given I resolve the conflict in "conflicting_file"
+    When I resolve the conflict in "conflicting_file"
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
     Then it runs the commands

@@ -2,7 +2,7 @@ Feature: deleting another than the current branch
 
   Background:
     Given my repo has the feature branches "good-feature" and "dead-feature"
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH       | LOCATION      | MESSAGE                              | FILE NAME        |
       | main         | local, remote | conflicting with uncommitted changes | conflicting_file |
       | dead-feature | local, remote | dead-end commit                      | file             |

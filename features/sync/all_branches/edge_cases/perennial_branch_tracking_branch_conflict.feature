@@ -2,7 +2,7 @@ Feature: handling rebase conflicts between perennial branch and its tracking bra
 
   Background:
     Given my repo has the perennial branches "perennial-1", "perennial-2", and "perennial-3"
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH      | LOCATION      | MESSAGE                   | FILE NAME        | FILE CONTENT               |
       | main        | remote        | main commit               | main_file        | main content               |
       | perennial-1 | local, remote | perennial-1 commit        | peren1_file      | perennial-1 content        |
@@ -83,7 +83,7 @@ Feature: handling rebase conflicts between perennial branch and its tracking bra
     And my repo still has a rebase in progress
 
   Scenario: continuing after resolving the conflicts
-    Given I resolve the conflict in "conflicting_file"
+    When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then it runs the commands
       | BRANCH      | COMMAND                       |
@@ -99,7 +99,7 @@ Feature: handling rebase conflicts between perennial branch and its tracking bra
     And all branches are now synchronized
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
-    Given I resolve the conflict in "conflicting_file"
+    When I resolve the conflict in "conflicting_file"
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
     Then it runs the commands

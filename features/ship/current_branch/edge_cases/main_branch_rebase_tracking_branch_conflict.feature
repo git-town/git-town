@@ -2,7 +2,7 @@ Feature: handle conflicts between the main branch and its tracking branch
 
   Background:
     Given my repo has a feature branch "feature"
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
       | main    | local    | conflicting local commit  | conflicting_file | local conflicting content  |
       |         | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
@@ -30,15 +30,15 @@ Feature: handle conflicts between the main branch and its tracking branch
       | main   | git rebase --abort   |
       |        | git checkout feature |
     And I am still on the "feature" branch
-    And there is no rebase in progress
+    And there is no rebase in progress anymore
     And my repo is left with my original commits
     And Git Town is still aware of this branch hierarchy
       | BRANCH  | PARENT |
       | feature | main   |
 
   Scenario: continuing after resolving the conflicts
-    Given I resolve the conflict in "conflicting_file"
-    When I run "git-town continue" and close the editor
+    When I resolve the conflict in "conflicting_file"
+    And I run "git-town continue" and close the editor
     Then it runs the commands
       | BRANCH  | COMMAND                            |
       | main    | git rebase --continue              |
@@ -65,8 +65,8 @@ Feature: handle conflicts between the main branch and its tracking branch
     And Git Town now has no branch hierarchy information
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
-    Given I resolve the conflict in "conflicting_file"
-    When I run "git rebase --continue" and close the editor
+    When I resolve the conflict in "conflicting_file"
+    And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
     Then it runs the commands
       | BRANCH  | COMMAND                            |

@@ -2,7 +2,7 @@ Feature: conflicts between uncommitted changes and the main branch
 
   Background:
     Given my repo has a feature branch "existing-feature"
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH | LOCATION      | MESSAGE            | FILE NAME        | FILE CONTENT |
       | main   | local, remote | conflicting commit | conflicting_file | main content |
     And I am on the "existing-feature" branch
@@ -34,8 +34,8 @@ Feature: conflicts between uncommitted changes and the main branch
       """
 
   Scenario: continuing after resolving the conflicts
-    Given I resolve the conflict in "conflicting_file"
-    When I run "git-town continue" and close the editor
+    When I resolve the conflict in "conflicting_file"
+    And I run "git-town continue" and close the editor
     Then it runs no commands
     And I am now on the "new-feature" branch
     And my workspace now contains the file "conflicting_file" with content "resolved content"

@@ -2,7 +2,7 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
 
   Background:
     Given my repo has the feature branches "feature" and "other-feature"
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
       | feature | local    | local conflicting commit  | conflicting_file | local conflicting content  |
       |         | remote   | remote conflicting commit | conflicting_file | remote conflicting content |
@@ -47,8 +47,8 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
       | other-feature | main   |
 
   Scenario: continuing after resolving the conflicts
-    Given I resolve the conflict in "conflicting_file"
-    When I run "git-town continue"
+    When I resolve the conflict in "conflicting_file"
+    And I run "git-town continue"
     Then it runs the commands
       | BRANCH        | COMMAND                      |
       | feature       | git commit --no-edit         |
@@ -75,8 +75,8 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
       | other-feature | main   |
 
   Scenario: continuing after resolving the conflicts and comitting
-    Given I resolve the conflict in "conflicting_file"
-    When I run "git commit --no-edit"
+    When I resolve the conflict in "conflicting_file"
+    And I run "git commit --no-edit"
     And I run "git-town continue"
     Then it runs the commands
       | BRANCH        | COMMAND                      |
@@ -100,9 +100,9 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
       | main   | local, remote | feature done |
 
   Scenario: undo after continue
-    Given I resolve the conflict in "conflicting_file"
+    When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
-    When I run "git-town undo"
+    And I run "git-town undo"
     Then it runs the commands
       | BRANCH        | COMMAND                                                                                   |
       | other-feature | git add -A                                                                                |

@@ -2,7 +2,7 @@ Feature: handle conflicts between the shipped branch and the main branch
 
   Background:
     Given my repo has a feature branch "feature"
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
@@ -45,8 +45,8 @@ Feature: handle conflicts between the shipped branch and the main branch
       | feature | main   |
 
   Scenario: continuing after resolving the conflicts
-    Given I resolve the conflict in "conflicting_file"
-    When I run "git-town continue"
+    When I resolve the conflict in "conflicting_file"
+    And I run "git-town continue"
     Then it runs the commands
       | BRANCH  | COMMAND                      |
       | feature | git commit --no-edit         |
@@ -68,8 +68,8 @@ Feature: handle conflicts between the shipped branch and the main branch
     And Git Town now has no branch hierarchy information
 
   Scenario: continuing after resolving the conflicts and committing
-    Given I resolve the conflict in "conflicting_file"
-    When I run "git commit --no-edit"
+    When I resolve the conflict in "conflicting_file"
+    And I run "git commit --no-edit"
     And I run "git-town continue"
     Then it runs the commands
       | BRANCH  | COMMAND                      |

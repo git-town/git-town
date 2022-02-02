@@ -2,7 +2,7 @@ Feature: killing the current feature branch
 
   Background:
     Given my repo has the feature branches "current-feature" and "other-feature"
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH          | LOCATION      | MESSAGE                |
       | current-feature | local, remote | current feature commit |
       | other-feature   | local, remote | other feature commit   |

@@ -3,7 +3,7 @@ Feature: remove perennial branch configuration when pruning perennial branches
   Background:
     Given my repo has the branches "active-perennial" and "deleted-perennial"
     And the perennial branches are configured as "active-perennial" and "deleted-perennial"
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH            | LOCATION      | MESSAGE                  |
       | active-perennial  | local, remote | active-perennial commit  |
       | deleted-perennial | local, remote | deleted-perennial commit |

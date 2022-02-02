@@ -3,7 +3,7 @@ Feature: shipping a coworker's feature branch
 
   Background:
     Given my repo has a feature branch "feature"
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH  | LOCATION | MESSAGE         | AUTHOR                            |
       | feature | local    | feature commit1 | developer <developer@example.com> |
       |         |          | feature commit2 | developer <developer@example.com> |
@@ -29,7 +29,7 @@ Feature: shipping a coworker's feature branch
     And Git Town now has no branch hierarchy information
 
   Scenario:  undo
-    Given I run "git-town ship -m 'feature done'" and answer the prompts:
+    Given I ran "git-town ship -m 'feature done'" and answered the prompts:
       | PROMPT                                        | ANSWER  |
       | Please choose an author for the squash commit | [ENTER] |
     When I run "git-town undo"

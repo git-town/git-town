@@ -2,7 +2,7 @@ Feature: inside a committed subfolder only on the current feature branch
 
   Background:
     Given my repo has a feature branch "existing-feature"
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH           | LOCATION      | MESSAGE       | FILE NAME        |
       | existing-feature | local, remote | folder commit | new_folder/file1 |
     And I am on the "existing-feature" branch

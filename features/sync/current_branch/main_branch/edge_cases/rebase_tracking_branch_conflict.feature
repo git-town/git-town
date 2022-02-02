@@ -2,7 +2,7 @@ Feature: handle conflicts between the main branch and its tracking branch when s
 
   Background:
     Given I am on the "main" branch
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
       | main   | local    | conflicting local commit  | conflicting_file | local conflicting content  |
       |        | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
@@ -32,7 +32,7 @@ Feature: handle conflicts between the main branch and its tracking branch when s
       |        | git stash pop      |
     And I am still on the "main" branch
     And my workspace still contains my uncommitted file
-    And there is no rebase in progress
+    And there is no rebase in progress anymore
     And my repo is left with my original commits
 
   Scenario: continuing without resolving the conflicts
@@ -46,8 +46,8 @@ Feature: handle conflicts between the main branch and its tracking branch when s
     And my repo still has a rebase in progress
 
   Scenario: continuing after resolving the conflicts
-    Given I resolve the conflict in "conflicting_file"
-    When I run "git-town continue" and close the editor
+    When I resolve the conflict in "conflicting_file"
+    And I run "git-town continue" and close the editor
     Then it runs the commands
       | BRANCH | COMMAND               |
       | main   | git rebase --continue |
@@ -62,9 +62,9 @@ Feature: handle conflicts between the main branch and its tracking branch when s
       | main   | conflicting_file | resolved content |
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
-    Given I resolve the conflict in "conflicting_file"
+    When I resolve the conflict in "conflicting_file"
     And I run "git rebase --continue" and close the editor
-    When I run "git-town continue"
+    And I run "git-town continue"
     Then it runs the commands
       | BRANCH | COMMAND         |
       | main   | git push        |
