@@ -49,19 +49,17 @@ func TestGitEnvironment_Branches(t *testing.T) {
 	dir := CreateTempDir(t)
 	memoizedGitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
 	assert.NoError(t, err)
-	cloned, err := CloneGitEnvironment(memoizedGitEnv, filepath.Join(dir, "cloned"))
-	assert.NoError(t, err)
 	// create the branches
-	err = cloned.DevRepo.CreateBranch("d1", "main")
+	err = memoizedGitEnv.DevRepo.CreateBranch("d1", "main")
 	assert.NoError(t, err)
-	err = cloned.DevRepo.CreateBranch("d2", "main")
+	err = memoizedGitEnv.DevRepo.CreateBranch("d2", "main")
 	assert.NoError(t, err)
-	err = cloned.OriginRepo.CreateBranch("o1", "master")
+	err = memoizedGitEnv.OriginRepo.CreateBranch("o1", "master")
 	assert.NoError(t, err)
-	err = cloned.OriginRepo.CreateBranch("o2", "master")
+	err = memoizedGitEnv.OriginRepo.CreateBranch("o2", "master")
 	assert.NoError(t, err)
 	// get branches
-	table, err := cloned.Branches()
+	table, err := memoizedGitEnv.Branches()
 	assert.NoError(t, err)
 	// verify
 	expected := "| REPOSITORY | BRANCHES             |\n| local      | main, d1, d2         |\n| remote     | main, master, o1, o2 |\n"
