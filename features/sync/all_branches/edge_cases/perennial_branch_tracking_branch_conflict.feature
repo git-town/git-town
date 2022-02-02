@@ -96,13 +96,7 @@ Feature: handling rebase conflicts between perennial branch and its tracking bra
       |         | git stash pop             |
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
-    And my repo now has the following commits
-      | BRANCH  | LOCATION      | MESSAGE               |
-      | main    | local, remote | main commit           |
-      | peren-1 | local, remote | peren-1 commit        |
-      | peren-2 | local, remote | peren-2 remote commit |
-      |         |               | peren-2 local commit  |
-      | peren-3 | local, remote | peren-3 commit        |
+    And all branches are now synchronized
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
@@ -117,3 +111,4 @@ Feature: handling rebase conflicts between perennial branch and its tracking bra
       | main    | git push --tags           |
       |         | git stash pop             |
     And I am now on the "main" branch
+    And all branches are now synchronized
