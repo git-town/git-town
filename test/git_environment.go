@@ -8,6 +8,7 @@ import (
 
 	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/stringslice"
 	"github.com/git-town/git-town/v7/test/helpers"
 )
 
@@ -181,17 +182,27 @@ func (env *GitEnvironment) binPath() string {
 // Branches provides a tabular list of all branches in this GitEnvironment.
 func (env *GitEnvironment) Branches() (result DataTable, err error) {
 	result.AddRow("REPOSITORY", "BRANCHES")
-	branches, err := env.DevRepo.LocalBranchesMainFirst()
+	localBranches, err := env.DevRepo.LocalBranchesMainFirst()
 	if err != nil {
 		return result, fmt.Errorf("cannot determine the developer repo branches of the GitEnvironment: %w", err)
 	}
-	result.AddRow("local", strings.Join(branches, ", "))
-	if env.OriginRepo != nil {
-		branches, err = env.OriginRepo.LocalBranchesMainFirst()
-		if err != nil {
-			return result, fmt.Errorf("cannot determine the origin repo branches of the GitEnvironment: %w", err)
-		}
-		result.AddRow("remote", strings.Join(branches, ", "))
+	localBranches = stringslice.Remove(localBranches, "master")
+	localBranchesJoined := strings.Join(localBranches, ", ")
+	if env.OriginRepo == nil {
+		result.AddRow("local", localBranchesJoined)
+		return result, nil
+	}
+	remoteBranches, err := env.OriginRepo.LocalBranchesMainFirst()
+	if err != nil {
+		return result, fmt.Errorf("cannot determine the origin repo branches of the GitEnvironment: %w", err)
+	}
+	remoteBranches = stringslice.Remove(remoteBranches, "master")
+	remoteBranchesJoined := strings.Join(remoteBranches, ", ")
+	if localBranchesJoined == remoteBranchesJoined {
+		result.AddRow("local, remote", localBranchesJoined)
+	} else {
+		result.AddRow("local", localBranchesJoined)
+		result.AddRow("remote", remoteBranchesJoined)
 	}
 	return result, nil
 }

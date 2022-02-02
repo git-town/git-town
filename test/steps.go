@@ -782,8 +782,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return err
 		}
 		// remove the master branch from the remote since it exists only as a performance optimization
-		existing.RemoveText("master, ")
-		existing.RemoveText(", master")
 		diff, errCount := existing.EqualGherkin(table)
 		if errCount > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the branches\n\n", errCount)

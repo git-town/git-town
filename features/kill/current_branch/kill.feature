@@ -22,9 +22,8 @@ Feature: killing the current feature branch
     And I am now on the "main" branch
     And my repo doesn't have any uncommitted files
     And the existing branches are
-      | REPOSITORY | BRANCHES            |
-      | local      | main, other-feature |
-      | remote     | main, other-feature |
+      | REPOSITORY    | BRANCHES            |
+      | local, remote | main, other-feature |
     And my repo now has the following commits
       | BRANCH        | LOCATION      | MESSAGE              |
       | other-feature | local, remote | other feature commit |
@@ -43,9 +42,8 @@ Feature: killing the current feature branch
     And I am now on the "current-feature" branch
     And my workspace has the uncommitted file again
     And the existing branches are
-      | REPOSITORY | BRANCHES                             |
-      | local      | main, current-feature, other-feature |
-      | remote     | main, current-feature, other-feature |
+      | REPOSITORY    | BRANCHES                             |
+      | local, remote | main, current-feature, other-feature |
     And my repo is left with my original commits
     And Git Town is now aware of this branch hierarchy
       | BRANCH          | PARENT |

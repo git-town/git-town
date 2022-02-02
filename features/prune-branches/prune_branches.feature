@@ -20,9 +20,8 @@ Feature: delete branches that were shipped or removed on another machine
     And I am now on the "main" branch
     And my workspace still contains my uncommitted file
     And the existing branches are
-      | REPOSITORY | BRANCHES             |
-      | local      | main, active-feature |
-      | remote     | main, active-feature |
+      | REPOSITORY    | BRANCHES             |
+      | local, remote | main, active-feature |
     And Git Town is now aware of this branch hierarchy
       | BRANCH         | PARENT |
       | active-feature | main   |

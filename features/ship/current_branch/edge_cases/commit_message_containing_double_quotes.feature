@@ -25,9 +25,8 @@ Feature: commit message can contain double-quotes
       |         | git branch -D feature                              |
     And I am now on the "main" branch
     And the existing branches are
-      | REPOSITORY | BRANCHES |
-      | local      | main     |
-      | remote     | main     |
+      | REPOSITORY    | BRANCHES |
+      | local, remote | main     |
     And my repo doesn't have any uncommitted files
     And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE                            |

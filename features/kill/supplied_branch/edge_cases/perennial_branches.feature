@@ -17,9 +17,8 @@ Feature: does not kill perennial branches
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
     And the existing branches are
-      | REPOSITORY | BRANCHES      |
-      | local      | main, feature |
-      | remote     | main, feature |
+      | REPOSITORY    | BRANCHES      |
+      | local, remote | main, feature |
     And my repo is left with my original commits
     And Git Town is now aware of this branch hierarchy
       | BRANCH  | PARENT |
@@ -43,9 +42,8 @@ Feature: does not kill perennial branches
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
     And the existing branches are
-      | REPOSITORY | BRANCHES          |
-      | local      | main, feature, qa |
-      | remote     | main, feature, qa |
+      | REPOSITORY    | BRANCHES          |
+      | local, remote | main, feature, qa |
     And my repo is left with my original commits
     And Git Town is still aware of this branch hierarchy
       | BRANCH  | PARENT |

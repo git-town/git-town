@@ -26,9 +26,8 @@ Feature: ship hotfixes
       |            | git branch -D hotfix              |
     And I am now on the "production" branch
     And the existing branches are
-      | REPOSITORY | BRANCHES         |
-      | local      | main, production |
-      | remote     | main, production |
+      | REPOSITORY    | BRANCHES         |
+      | local, remote | main, production |
     And my repo now has the following commits
       | BRANCH     | LOCATION      | MESSAGE     |
       | production | local, remote | hotfix done |

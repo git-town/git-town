@@ -26,9 +26,8 @@ Feature: ship-delete-remote-branch disabled
       |         | git branch -D feature              |
     And I am now on the "main" branch
     And the existing branches are
-      | REPOSITORY | BRANCHES |
-      | local      | main     |
-      | remote     | main     |
+      | REPOSITORY    | BRANCHES |
+      | local, remote | main     |
     And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, remote | feature done |

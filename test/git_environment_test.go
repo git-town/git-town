@@ -43,7 +43,7 @@ func TestGitEnvironment_NewStandardGitEnvironment(t *testing.T) {
 	assert.Equal(t, "main", branch)
 }
 
-func TestGitEnvironment_Branches(t *testing.T) {
+func TestGitEnvironment_Branches_Different(t *testing.T) {
 	t.Parallel()
 	// create GitEnvironment instance
 	dir := CreateTempDir(t)
@@ -62,7 +62,30 @@ func TestGitEnvironment_Branches(t *testing.T) {
 	table, err := gitEnv.Branches()
 	assert.NoError(t, err)
 	// verify
-	expected := "| REPOSITORY | BRANCHES             |\n| local      | main, d1, d2         |\n| remote     | main, master, o1, o2 |\n"
+	expected := "| REPOSITORY | BRANCHES     |\n| local      | main, d1, d2 |\n| remote     | main, o1, o2 |\n"
+	assert.Equal(t, expected, table.String())
+}
+
+func TestGitEnvironment_Branches_Same(t *testing.T) {
+	t.Parallel()
+	// create GitEnvironment instance
+	dir := CreateTempDir(t)
+	gitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, ""))
+	assert.NoError(t, err)
+	// create the branches
+	err = gitEnv.DevRepo.CreateBranch("b1", "main")
+	assert.NoError(t, err)
+	err = gitEnv.DevRepo.CreateBranch("b2", "main")
+	assert.NoError(t, err)
+	err = gitEnv.OriginRepo.CreateBranch("b1", "main")
+	assert.NoError(t, err)
+	err = gitEnv.OriginRepo.CreateBranch("b2", "main")
+	assert.NoError(t, err)
+	// get branches
+	table, err := gitEnv.Branches()
+	assert.NoError(t, err)
+	// verify
+	expected := "| REPOSITORY    | BRANCHES     |\n| local, remote | main, b1, b2 |\n"
 	assert.Equal(t, expected, table.String())
 }
 

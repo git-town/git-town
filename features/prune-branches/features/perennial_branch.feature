@@ -21,9 +21,8 @@ Feature: remove perennial branch configuration when pruning perennial branches
     And I am now on the "main" branch
     And my workspace still contains my uncommitted file
     And the existing branches are
-      | REPOSITORY | BRANCHES               |
-      | local      | main, active-perennial |
-      | remote     | main, active-perennial |
+      | REPOSITORY    | BRANCHES               |
+      | local, remote | main, active-perennial |
     And the perennial branches are now "active-perennial"
 
   Scenario: undo

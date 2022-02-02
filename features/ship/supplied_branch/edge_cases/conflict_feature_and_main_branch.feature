@@ -68,9 +68,8 @@ Feature: handle conflicts between the supplied feature branch and the main branc
     And I am now on the "other-feature" branch
     And my workspace still contains my uncommitted file
     And the existing branches are
-      | REPOSITORY | BRANCHES            |
-      | local      | main, other-feature |
-      | remote     | main, other-feature |
+      | REPOSITORY    | BRANCHES            |
+      | local, remote | main, other-feature |
     And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE                 | FILE NAME        | FILE CONTENT     |
       | main   | local, remote | conflicting main commit | conflicting_file | main content     |
