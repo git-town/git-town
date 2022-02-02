@@ -2,7 +2,7 @@ Feature: with upstream remote
 
   Background:
     Given my repo has an upstream repo
-    And my repo has a feature branch named "feature"
+    And my repo has a feature branch "feature"
     And the following commits exist in my repo
       | BRANCH  | LOCATION | MESSAGE         |
       | main    | upstream | upstream commit |

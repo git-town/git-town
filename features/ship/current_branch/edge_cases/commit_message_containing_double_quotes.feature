@@ -1,7 +1,7 @@
 Feature: commit message can contain double-quotes
 
   Background:
-    Given my repo has a feature branch named "feature"
+    Given my repo has a feature branch "feature"
     And the following commits exist in my repo
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | local    | feature commit |

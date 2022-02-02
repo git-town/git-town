@@ -2,8 +2,8 @@
 Feature: shipping a branch that exists only on the remote
 
   Background:
-    Given my repo has a feature branch named "other-feature"
-    And my origin has a feature branch named "feature"
+    Given my repo has a feature branch "other-feature"
+    And my origin has a feature branch "feature"
     And the following commits exist in my repo
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME    |
       | feature | remote   | feature commit | feature_file |

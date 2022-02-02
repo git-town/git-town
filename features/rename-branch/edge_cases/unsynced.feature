@@ -1,7 +1,7 @@
 Feature: rename an unsynced branch
 
   Background:
-    Given my repo has a feature branch named "current-feature"
+    Given my repo has a feature branch "current-feature"
 
   Scenario: unpulled remote commits
     And the following commits exist in my repo

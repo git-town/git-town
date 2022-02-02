@@ -1,7 +1,7 @@
 Feature: merge conflict
 
   Background:
-    Given my repo has a local feature branch named "feature"
+    Given my repo has a local feature branch "feature"
     And the following commits exist in my repo
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME        | FILE CONTENT    |
       | main    | local, remote | main commit    | conflicting_file | main content    |

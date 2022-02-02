@@ -1,7 +1,7 @@
 Feature: conflicts between uncommitted changes and the main branch
 
   Background:
-    Given my repo has a feature branch named "existing-feature"
+    Given my repo has a feature branch "existing-feature"
     And the following commits exist in my repo
       | BRANCH | LOCATION      | MESSAGE            | FILE NAME        | FILE CONTENT |
       | main   | local, remote | conflicting commit | conflicting_file | main content |

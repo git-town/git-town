@@ -2,7 +2,7 @@ Feature: with pull-branch-strategy set to "merge"
 
   Background:
     Given the pull-branch-strategy configuration is "merge"
-    And my repo has a feature branch named "feature"
+    And my repo has a feature branch "feature"
     And the following commits exist in my repo
       | BRANCH  | LOCATION | MESSAGE               |
       | main    | local    | local main commit     |

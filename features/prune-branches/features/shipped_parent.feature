@@ -1,8 +1,8 @@
 Feature: a parent branch of a local branch was shipped
 
   Background:
-    Given my repo has a feature branch named "feature"
-    And my repo has a feature branch named "feature-child" as a child of "feature"
+    Given my repo has a feature branch "feature"
+    And my repo has a feature branch "feature-child" as a child of "feature"
     And the following commits exist in my repo
       | BRANCH        | LOCATION      | MESSAGE              |
       | feature       | local, remote | feature commit       |

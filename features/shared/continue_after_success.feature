@@ -1,7 +1,7 @@
 Feature: Show explanation when trying to continue after a successful command
 
   Scenario Outline:
-    Given my repo has a feature branch named "feature"
+    Given my repo has a feature branch "feature"
     And I run "git-town <COMMAND>"
     When I run "git-town continue"
     Then it prints the error:

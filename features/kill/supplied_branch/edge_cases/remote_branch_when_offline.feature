@@ -2,7 +2,7 @@ Feature: cannot kill a remote branch in offline mode
 
   Background:
     Given Git Town is in offline mode
-    And my origin has a feature branch named "feature"
+    And my origin has a feature branch "feature"
     And the following commits exist in my repo
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | remote   | feature commit |

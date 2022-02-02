@@ -1,7 +1,7 @@
 Feature: rename the current branch
 
   Background:
-    Given my repo has a feature branch named "feature"
+    Given my repo has a feature branch "feature"
     And my repo has the perennial branch "production"
     And the following commits exist in my repo
       | BRANCH     | LOCATION      | MESSAGE     |

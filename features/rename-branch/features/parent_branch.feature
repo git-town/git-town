@@ -1,8 +1,8 @@
 Feature: rename a parent branch
 
   Background:
-    Given my repo has a feature branch named "parent-feature"
-    And my repo has a feature branch named "child-feature" as a child of "parent-feature"
+    Given my repo has a feature branch "parent-feature"
+    And my repo has a feature branch "child-feature" as a child of "parent-feature"
     And the following commits exist in my repo
       | BRANCH         | LOCATION      | MESSAGE               |
       | child-feature  | local, remote | child feature commit  |

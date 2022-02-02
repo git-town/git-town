@@ -1,7 +1,7 @@
 Feature: already existing branch
 
   Scenario: branch exists locally
-    Given my repo has a feature branch named "existing"
+    Given my repo has a feature branch "existing"
     When I run "git-town hack existing"
     Then it runs the commands
       | BRANCH | COMMAND                  |
@@ -12,7 +12,7 @@ Feature: already existing branch
       """
 
   Scenario: branch exists remotely
-    Given my coworker has a feature branch named "existing-feature"
+    Given my coworker has a feature branch "existing-feature"
     And I am on the "main" branch
     When I run "git-town hack existing-feature"
     Then it runs the commands

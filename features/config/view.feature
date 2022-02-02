@@ -18,8 +18,8 @@ Feature: show the configuration
     Given the main branch is configured as "main"
     And my repo has the perennial branches "qa" and "staging"
     And my repo has the feature branches "parent-feature" and "stand-alone-feature"
-    And my repo has a feature branch named "child-feature" as a child of "parent-feature"
-    And my repo has a feature branch named "qa-hotfix" as a child of "qa"
+    And my repo has a feature branch "child-feature" as a child of "parent-feature"
+    And my repo has a feature branch "qa-hotfix" as a child of "qa"
     When I run "git-town config"
     Then it prints:
       """

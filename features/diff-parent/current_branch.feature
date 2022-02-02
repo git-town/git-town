@@ -1,8 +1,8 @@
 Feature: View changes made on the current feature branch
 
   Scenario: on feature branch with parent
-    Given my repo has a feature branch named "feature-1"
-    And my repo has a feature branch named "feature-2" as a child of "feature-1"
+    Given my repo has a feature branch "feature-1"
+    And my repo has a feature branch "feature-2" as a child of "feature-1"
     And I am on the "feature-2" branch
     When I run "git-town diff-parent"
     Then it runs the commands
@@ -11,7 +11,7 @@ Feature: View changes made on the current feature branch
 
   @skipWindows
   Scenario: on feature branch without parent
-    Given my repo has a feature branch named "feature" with no parent
+    Given my repo has a feature branch "feature" with no parent
     And I am on the "feature" branch
     When I run "git-town diff-parent" and answer the prompts:
       | PROMPT                                        | ANSWER  |
@@ -24,7 +24,7 @@ Feature: View changes made on the current feature branch
       | feature | main   |
 
   Scenario: on main branch
-    Given my repo has a feature branch named "feature"
+    Given my repo has a feature branch "feature"
     And I am on the "main" branch
     When I run "git-town diff-parent"
     Then it runs no commands
