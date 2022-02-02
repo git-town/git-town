@@ -1,3 +1,4 @@
+@skipWindows
 Feature: aborting the ship by empty commit message
 
   Background:
@@ -8,7 +9,6 @@ Feature: aborting the ship by empty commit message
     And I am on the "feature" branch
     When I run "git-town ship" and enter an empty commit message
 
-  @skipWindows
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                            |
@@ -35,7 +35,6 @@ Feature: aborting the ship by empty commit message
       | BRANCH  | PARENT |
       | feature | main   |
 
-  @skipWindows
   Scenario: undo
     When I run "git-town undo"
     Then it prints the error:

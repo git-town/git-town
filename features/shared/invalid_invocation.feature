@@ -1,6 +1,6 @@
 Feature: invalid invocation
 
-  Scenario Outline: <DESCRIPTION>
+  Scenario Outline:
     When I run "git-town <CMD>"
     Then it runs no commands
     And it prints the error:

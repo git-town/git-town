@@ -1,6 +1,6 @@
+@skipWindows
 Feature: GitHub
 
-  @skipWindows
   Scenario Outline:
     Given my repo's origin is "<ORIGIN>"
     And my computer has the "open" tool installed
