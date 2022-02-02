@@ -5,8 +5,8 @@ Feature: renaming a perennial branch with a tracking branch
     And my repo has a feature branch "child-feature" as a child of "production"
     And my repo contains the commits
       | BRANCH        | LOCATION      | MESSAGE              |
-      | production    | local, remote | production commit    |
       | child-feature | local, remote | child feature commit |
+      | production    | local, remote | production commit    |
     And I am on the "production" branch
 
   Scenario: normal rename fails
@@ -49,10 +49,7 @@ Feature: renaming a perennial branch with a tracking branch
       | production         | git branch -D renamed-production                    |
     And I am now on the "production" branch
     And the perennial branches are now "qa" and "production"
-    And my repo now has the following commits
-      | BRANCH        | LOCATION      | MESSAGE              |
-      | child-feature | local, remote | child feature commit |
-      | production    | local, remote | production commit    |
+    And my repo is left with my original commits
     And Git Town is now aware of this branch hierarchy
       | BRANCH        | PARENT     |
       | child-feature | production |

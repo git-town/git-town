@@ -39,8 +39,4 @@ Feature: rename the current branch
       | feature         | git branch -D renamed-feature              |
     And I am now on the "feature" branch
     And the perennial branches are now "production"
-    And my repo now has the following commits
-      | BRANCH     | LOCATION      | MESSAGE     |
-      | main       | local, remote | main commit |
-      | feature    | local, remote | feat commit |
-      | production | local, remote | prod commit |
+    And my repo is left with my original commits
