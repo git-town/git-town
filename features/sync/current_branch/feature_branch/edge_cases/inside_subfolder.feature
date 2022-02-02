@@ -33,11 +33,11 @@ Feature: syncing inside a folder that doesn't exist on the main branch
     And I am still on the "current-feature" branch
     And my workspace still contains my uncommitted file
     And my repo now has the following commits
-      | BRANCH          | LOCATION      | MESSAGE                                  | FILE NAME        |
-      | main            | local, remote | main commit                              | main_file        |
-      | current-feature | local, remote | folder commit                            | new_folder/file1 |
-      |                 |               | main commit                              | main_file        |
-      |                 |               | Merge branch 'main' into current-feature |                  |
-      | other-feature   | local, remote | other feature commit                     | file2            |
-      |                 |               | main commit                              | main_file        |
-      |                 |               | Merge branch 'main' into other-feature   |                  |
+      | BRANCH          | LOCATION      | MESSAGE                                  |
+      | main            | local, remote | main commit                              |
+      | current-feature | local, remote | folder commit                            |
+      |                 |               | main commit                              |
+      |                 |               | Merge branch 'main' into current-feature |
+      | other-feature   | local, remote | other feature commit                     |
+      |                 |               | main commit                              |
+      |                 |               | Merge branch 'main' into other-feature   |

@@ -20,7 +20,7 @@ Feature: syncing the current perennial branch
     And I am still on the "qa" branch
     And all branches are now synchronized
     And my repo now has the following commits
-      | BRANCH | LOCATION      | MESSAGE       | FILE NAME   |
-      | main   | local, remote | main commit   | main_file   |
-      | qa     | local, remote | remote commit | remote_file |
-      |        |               | local commit  | local_file  |
+      | BRANCH | LOCATION      | MESSAGE       |
+      | main   | local, remote | main commit   |
+      | qa     | local, remote | remote commit |
+      |        |               | local commit  |

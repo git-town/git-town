@@ -43,9 +43,9 @@ Feature: handle conflicts between the supplied feature branch and the main branc
     And my workspace still contains my uncommitted file
     And there is no merge in progress
     And my repo now has the following commits
-      | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
-      | main    | local, remote | conflicting main commit    | conflicting_file | main content    |
-      | feature | local         | conflicting feature commit | conflicting_file | feature content |
+      | BRANCH  | LOCATION      | MESSAGE                    |
+      | main    | local, remote | conflicting main commit    |
+      | feature | local         | conflicting feature commit |
     And Git Town is still aware of this branch hierarchy
       | BRANCH        | PARENT |
       | feature       | main   |

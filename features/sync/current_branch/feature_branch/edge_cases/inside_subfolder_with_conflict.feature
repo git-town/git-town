@@ -73,15 +73,15 @@ Feature: syncing inside a folder that doesn't exist on the main branch
     And my workspace has the uncommitted file again
     And there is no merge in progress
     And my repo now has the following commits
-      | BRANCH          | LOCATION      | MESSAGE                                  | FILE NAME        |
-      | main            | local, remote | conflicting main commit                  | conflicting_file |
-      | current-feature | local, remote | conflicting feature commit               | conflicting_file |
-      |                 |               | folder commit                            | new_folder/file1 |
-      |                 |               | conflicting main commit                  | conflicting_file |
-      |                 |               | Merge branch 'main' into current-feature |                  |
-      | other-feature   | local, remote | other feature commit                     | file2            |
-      |                 |               | conflicting main commit                  | conflicting_file |
-      |                 |               | Merge branch 'main' into other-feature   |                  |
+      | BRANCH          | LOCATION      | MESSAGE                                  |
+      | main            | local, remote | conflicting main commit                  |
+      | current-feature | local, remote | conflicting feature commit               |
+      |                 |               | folder commit                            |
+      |                 |               | conflicting main commit                  |
+      |                 |               | Merge branch 'main' into current-feature |
+      | other-feature   | local, remote | other feature commit                     |
+      |                 |               | conflicting main commit                  |
+      |                 |               | Merge branch 'main' into other-feature   |
     And my repo still has the following committed files
       | BRANCH          | NAME             | CONTENT          |
       | main            | conflicting_file | main content     |
