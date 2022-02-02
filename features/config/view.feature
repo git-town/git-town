@@ -1,8 +1,8 @@
 Feature: show the configuration
 
   Scenario: all configured, no nested branches
-    Given the main branch is configured as "main"
-    And the perennial branches are configured as "qa" and "staging"
+    Given the main branch is "main"
+    And the perennial branches are "qa" and "staging"
     When I run "git-town config"
     Then it prints:
       """
@@ -15,7 +15,7 @@ Feature: show the configuration
       """
 
   Scenario: all configured, has nested branches
-    Given the main branch is configured as "main"
+    Given the main branch is "main"
     And my repo has the perennial branches "qa" and "staging"
     And my repo has the feature branches "parent-feature" and "stand-alone-feature"
     And my repo has a feature branch "child-feature" as a child of "parent-feature"
@@ -41,7 +41,7 @@ Feature: show the configuration
       """
 
   Scenario: main branch is configured, perennial branches are not
-    Given the main branch is configured as "main"
+    Given the main branch is "main"
     And the perennial branches are not configured
     When I run "git-town config"
     Then it prints:
@@ -54,8 +54,8 @@ Feature: show the configuration
       """
 
   Scenario: perennial branches are configured, main branch is not
-    Given the main branch name is not configured
-    And the perennial branches are configured as "qa" and "staging"
+    Given the main branch is not configured
+    And the perennial branches are "qa" and "staging"
     When I run "git-town config"
     Then it prints:
       """

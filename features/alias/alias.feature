@@ -16,7 +16,7 @@ Feature: shorter Git Town commands
       | git config --global alias.sync "town sync"                         |
 
   Scenario: remove aliases
-    Given I run "git-town alias true"
+    Given I ran "git-town alias true"
     When I run "git-town alias false"
     Then it runs the commands
       | COMMAND                                            |
@@ -32,7 +32,7 @@ Feature: shorter Git Town commands
       | git config --global --unset alias.sync             |
 
   Scenario: remove alias does not remove unrelated aliases
-    Given I run "git config --global alias.hack checkout"
+    Given I ran "git config --global alias.hack checkout"
     When I run "git-town alias false"
     Then it runs no commands
 

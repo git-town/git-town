@@ -197,12 +197,12 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^I run "(.+)"$`, func(command string) error {
+	suite.Step(`^I (?:run|ran) "(.+)"$`, func(command string) error {
 		state.runRes, state.runErr = state.gitEnv.DevShell.RunString(command)
 		return nil
 	})
 
-	suite.Step(`^I run "([^"]+)" and answer the prompts:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
+	suite.Step(`^I (?:run|ran) "([^"]+)" and answer(?:ed)? the prompts:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
 		state.runRes, state.runErr = state.gitEnv.DevShell.RunStringWith(cmd, run.Options{Input: tableToInput(input)})
 		return nil
 	})
@@ -802,11 +802,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the main branch is configured as "([^"]+)"$`, func(name string) error {
+	suite.Step(`^the main branch is "([^"]+)"$`, func(name string) error {
 		return state.gitEnv.DevRepo.Config.SetMainBranch(name)
 	})
 
-	suite.Step(`^the main branch name is not configured$`, func() error {
+	suite.Step(`^the main branch is not configured$`, func() error {
 		return state.gitEnv.DevRepo.DeleteMainBranchConfiguration()
 	})
 
@@ -850,15 +850,15 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return err
 	})
 
-	suite.Step(`^the perennial branches are configured as "([^"]+)"$`, func(name string) error {
+	suite.Step(`^the perennial branches are "([^"]+)"$`, func(name string) error {
 		return state.gitEnv.DevRepo.Config.AddToPerennialBranches(name)
 	})
 
-	suite.Step(`^the perennial branches are configured as "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
+	suite.Step(`^the perennial branches are "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
 		return state.gitEnv.DevRepo.Config.AddToPerennialBranches(branch1, branch2)
 	})
 
-	suite.Step(`^the perennial branches are now configured as "([^"]+)"$`, func(name string) error {
+	suite.Step(`^the perennial branches are now "([^"]+)"$`, func(name string) error {
 		state.gitEnv.DevRepo.Config.Reload()
 		actual := state.gitEnv.DevRepo.Config.PerennialBranches()
 		if len(actual) != 1 {
@@ -870,7 +870,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the perennial branches are now configured as "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
+	suite.Step(`^the perennial branches are now "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
 		state.gitEnv.DevRepo.Config.Reload()
 		actual := state.gitEnv.DevRepo.Config.PerennialBranches()
 		if len(actual) != 2 {

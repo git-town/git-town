@@ -50,7 +50,7 @@ Feature: shipping a coworker's feature branch
     And Git Town now has no branch hierarchy information
 
   Scenario:  undo
-    Given I run "git-town ship -m 'feature done'"
+    Given I ran "git-town ship -m 'feature done'"
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH  | COMMAND                                        |
