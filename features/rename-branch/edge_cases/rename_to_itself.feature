@@ -1,7 +1,7 @@
 Feature: rename a branch to itself
 
   Background:
-    Given my repo has a feature branch named "feature"
+    Given my repo has a feature branch "feature"
     And I am on the "feature" branch
 
   Scenario: without force

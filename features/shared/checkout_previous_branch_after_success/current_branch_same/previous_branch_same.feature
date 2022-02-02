@@ -2,7 +2,7 @@ Feature: Git checkout history is preserved when the current and previous branch 
 
   Scenario: kill
     Given my repo has the feature branches "previous" and "current"
-    And my repo has a feature branch named "victim"
+    And my repo has a feature branch "victim"
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run "git-town kill victim"
     Then I am still on the "current" branch
@@ -19,10 +19,6 @@ Feature: Git checkout history is preserved when the current and previous branch 
 
   Scenario: prune-branches
     Given my repo has the feature branches "previous" and "current"
-    And the following commits exist in my repo
-      | BRANCH   | LOCATION | FILE NAME     | FILE CONTENT     |
-      | previous | local    | previous_file | previous content |
-      | current  | local    | current_file  | current content  |
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run "git-town prune-branches"
     Then I am still on the "current" branch
@@ -39,10 +35,10 @@ Feature: Git checkout history is preserved when the current and previous branch 
 
   Scenario: ship
     Given my repo has the feature branches "previous" and "current"
-    And my repo has a feature branch named "feature"
+    And my repo has a feature branch "feature"
     And the following commits exist in my repo
-      | BRANCH  | LOCATION | FILE NAME    | FILE CONTENT    |
-      | feature | remote   | feature_file | feature content |
+      | BRANCH  | LOCATION |
+      | feature | remote   |
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run "git-town ship feature -m "feature done""
     Then I am still on the "current" branch

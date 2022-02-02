@@ -2,7 +2,7 @@ Feature: renaming a perennial branch with a tracking branch
 
   Background:
     Given my repo has the perennial branches "qa" and "production"
-    And my repo has a feature branch named "child-feature" as a child of "production"
+    And my repo has a feature branch "child-feature" as a child of "production"
     And the following commits exist in my repo
       | BRANCH        | LOCATION      | MESSAGE              |
       | production    | local, remote | production commit    |

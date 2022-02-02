@@ -330,7 +330,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my code base has a feature branch named "([^"]*)"$`, func(name string) error {
+	suite.Step(`^my code base has a feature branch "([^"]*)"$`, func(name string) error {
 		err := state.gitEnv.DevRepo.CreateFeatureBranch(name)
 		if err != nil {
 			return err
@@ -338,7 +338,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.PushBranchSetUpstream(name)
 	})
 
-	suite.Step(`^my code base has a feature branch named "([^"]*)" as a child of "([^"]*)"$`, func(branch, parent string) error {
+	suite.Step(`^my code base has a feature branch "([^"]*)" as a child of "([^"]*)"$`, func(branch, parent string) error {
 		err := state.gitEnv.DevRepo.CreateChildFeatureBranch(branch, parent)
 		if err != nil {
 			return err
@@ -363,7 +363,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevShell.MockCommand(tool)
 	})
 
-	suite.Step(`^my (?:coworker|origin) has a feature branch named "([^"]*)"$`, func(branch string) error {
+	suite.Step(`^my (?:coworker|origin) has a feature branch "([^"]*)"$`, func(branch string) error {
 		return state.gitEnv.OriginRepo.CreateBranch(branch, "main")
 	})
 
@@ -413,11 +413,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.CreateBranch(branch, "main")
 	})
 
-	suite.Step(`^my repo has a feature branch named "([^"]*)" with no parent$`, func(branch string) error {
+	suite.Step(`^my repo has a feature branch "([^"]*)" with no parent$`, func(branch string) error {
 		return state.gitEnv.DevRepo.CreateFeatureBranchNoParent(branch)
 	})
 
-	suite.Step(`^my repo has a feature branch named "([^"]+)" as a child of "([^"]+)"$`, func(childBranch, parentBranch string) error {
+	suite.Step(`^my repo has a feature branch "([^"]+)" as a child of "([^"]+)"$`, func(childBranch, parentBranch string) error {
 		err := state.gitEnv.DevRepo.CreateChildFeatureBranch(childBranch, parentBranch)
 		if err != nil {
 			return fmt.Errorf("cannot create feature branch %q: %w", childBranch, err)
@@ -425,7 +425,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.PushBranchSetUpstream(childBranch)
 	})
 
-	suite.Step(`^my repo has a (local )?feature branch named "([^"]*)"$`, func(localStr, branch string) error {
+	suite.Step(`^my repo has a (local )?feature branch "([^"]*)"$`, func(localStr, branch string) error {
 		isLocal := localStr != ""
 		err := state.gitEnv.DevRepo.CreateFeatureBranch(branch)
 		if err != nil {
@@ -511,6 +511,23 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^my repo has the (local )?feature branches "([^"]+)", "([^"]+)", and "([^"]+)"$`, func(localStr, branch1, branch2, branch3 string) error {
+		isLocal := localStr != ""
+		for _, branch := range []string{branch1, branch2, branch3} {
+			err := state.gitEnv.DevRepo.CreateFeatureBranch(branch)
+			if err != nil {
+				return err
+			}
+			if !isLocal {
+				err = state.gitEnv.DevRepo.PushBranchSetUpstream(branch)
+				if err != nil {
+					return err
+				}
+			}
+		}
+		return nil
+	})
+
 	suite.Step(`^my repo has the (local )?perennial branches "([^"]+)" and "([^"]+)"$`, func(localStr, branch1, branch2 string) error {
 		isLocal := localStr != ""
 		err := state.gitEnv.DevRepo.CreatePerennialBranches(branch1, branch2)
@@ -523,6 +540,23 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 				return err
 			}
 			return state.gitEnv.DevRepo.PushBranchSetUpstream(branch2)
+		}
+		return nil
+	})
+
+	suite.Step(`^my repo has the (local )?perennial branches "([^"]+)", "([^"]+)", and "([^"]+)"$`, func(localStr, branch1, branch2, branch3 string) error {
+		isLocal := localStr != ""
+		for _, branch := range []string{branch1, branch2, branch3} {
+			err := state.gitEnv.DevRepo.CreatePerennialBranches(branch)
+			if err != nil {
+				return fmt.Errorf("cannot create perennial branches: %w", err)
+			}
+			if !isLocal {
+				err = state.gitEnv.DevRepo.PushBranchSetUpstream(branch)
+				if err != nil {
+					return fmt.Errorf("cannot push perennial branch upstream: %w", err)
+				}
+			}
 		}
 		return nil
 	})

@@ -1,7 +1,7 @@
 Feature: cannot kill perennial branches
 
   Scenario: trying to delete the main branch
-    Given my repo has a feature branch named "feature"
+    Given my repo has a feature branch "feature"
     And the following commits exist in my repo
       | BRANCH  | LOCATION      | MESSAGE     |
       | main    | local, remote | main commit |
@@ -26,7 +26,7 @@ Feature: cannot kill perennial branches
       | feature | main   |
 
   Scenario: trying to delete a perennial branch
-    Given my repo has a feature branch named "feature"
+    Given my repo has a feature branch "feature"
     And my repo has the perennial branch "qa"
     And the following commits exist in my repo
       | BRANCH  | LOCATION      | MESSAGE     |

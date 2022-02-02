@@ -1,11 +1,11 @@
-Feature: git prepend: offline mode
+Feature: offline mode
 
   Background:
     Given Git Town is in offline mode
-    And my repo has a feature branch named "existing-feature"
+    And my repo has a feature branch "existing-feature"
     And the following commits exist in my repo
-      | BRANCH           | LOCATION      | MESSAGE                 | FILE NAME             | FILE CONTENT             |
-      | existing-feature | local, remote | existing_feature_commit | existing_feature_file | existing feature content |
+      | BRANCH           | LOCATION      | MESSAGE                 |
+      | existing-feature | local, remote | existing_feature_commit |
     And I am on the "existing-feature" branch
     And my workspace has an uncommitted file
     When I run "git-town prepend new-parent"

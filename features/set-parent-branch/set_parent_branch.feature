@@ -2,8 +2,8 @@
 Feature: update the parent of a nested feature branch
 
   Background:
-    Given my repo has a feature branch named "parent-feature"
-    And my repo has a feature branch named "child-feature" as a child of "parent-feature"
+    Given my repo has a feature branch "parent-feature"
+    And my repo has a feature branch "child-feature" as a child of "parent-feature"
     And I am on the "child-feature" branch
 
   Scenario: selecting the default branch (current parent)

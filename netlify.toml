@@ -2,3 +2,4 @@
   base = "website/"
   publish = "book/"
   command = "make setup && make build"
+  ignore = "/bin/false"

@@ -1,7 +1,7 @@
-Feature: git town-kill: killing a remote only branch
+Feature: deleting a remote only branch
 
   Background:
-    Given my origin has a feature branch named "feature"
+    Given my origin has a feature branch "feature"
     And the following commits exist in my repo
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | remote   | feature commit |

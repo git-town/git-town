@@ -40,27 +40,3 @@ Feature: shorter Git Town commands
     Given my workspace is currently not a Git repo
     When I run "git-town alias true"
     Then it does not print "Not a git repository"
-
-  Scenario: no argument
-    When I run "git-town alias"
-    Then it prints the error:
-      """
-      accepts 1 arg(s), received 0
-      """
-    And it runs no commands
-
-  Scenario: wrong argument
-    When I run "git-town alias zonk"
-    Then it prints the error:
-      """
-      invalid argument "zonk". Please provide either "true" or "false"
-      """
-    And it runs no commands
-
-  Scenario: too many arguments
-    When I run "git-town alias true false"
-    Then it prints the error:
-      """
-      accepts 1 arg(s), received 2
-      """
-    And it runs no commands
