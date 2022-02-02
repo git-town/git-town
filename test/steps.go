@@ -573,7 +573,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return compareExistingCommits(state, state.initialCommits)
 	})
 
-	suite.Step(`^my repo is now configured with no perennial branches$`, func() error {
+	suite.Step(`^my repo is now has no perennial branches$`, func() error {
 		state.gitEnv.DevRepo.Config.Reload()
 		branches := state.gitEnv.DevRepo.Config.PerennialBranches()
 		if len(branches) > 0 {
@@ -850,15 +850,15 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return err
 	})
 
-	suite.Step(`^the perennial branches are configured as "([^"]+)"$`, func(name string) error {
+	suite.Step(`^the perennial branches are "([^"]+)"$`, func(name string) error {
 		return state.gitEnv.DevRepo.Config.AddToPerennialBranches(name)
 	})
 
-	suite.Step(`^the perennial branches are configured as "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
+	suite.Step(`^the perennial branches are "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
 		return state.gitEnv.DevRepo.Config.AddToPerennialBranches(branch1, branch2)
 	})
 
-	suite.Step(`^the perennial branches are now configured as "([^"]+)"$`, func(name string) error {
+	suite.Step(`^the perennial branches are now "([^"]+)"$`, func(name string) error {
 		state.gitEnv.DevRepo.Config.Reload()
 		actual := state.gitEnv.DevRepo.Config.PerennialBranches()
 		if len(actual) != 1 {
@@ -870,7 +870,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the perennial branches are now configured as "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
+	suite.Step(`^the perennial branches are now "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
 		state.gitEnv.DevRepo.Config.Reload()
 		actual := state.gitEnv.DevRepo.Config.PerennialBranches()
 		if len(actual) != 2 {

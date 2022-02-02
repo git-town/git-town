@@ -9,7 +9,7 @@ Feature: display the perennial branch configuration
       """
 
   Scenario: perennial branches are configured
-    Given the perennial branches are configured as "qa" and "production"
+    Given the perennial branches are "qa" and "production"
     When I run "git-town perennial-branches"
     Then it prints:
       """

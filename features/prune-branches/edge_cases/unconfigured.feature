@@ -8,4 +8,4 @@ Feature: ask for missing configuration
       | Please specify the main development branch | [ENTER] |
     Then it prints the initial configuration prompt
     And the main branch is now "main"
-    And my repo is now configured with no perennial branches
+    And my repo is now has no perennial branches

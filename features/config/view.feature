@@ -2,7 +2,7 @@ Feature: show the configuration
 
   Scenario: all configured, no nested branches
     Given the main branch is "main"
-    And the perennial branches are configured as "qa" and "staging"
+    And the perennial branches are "qa" and "staging"
     When I run "git-town config"
     Then it prints:
       """
@@ -55,7 +55,7 @@ Feature: show the configuration
 
   Scenario: perennial branches are configured, main branch is not
     Given the main branch is not configured
-    And the perennial branches are configured as "qa" and "staging"
+    And the perennial branches are "qa" and "staging"
     When I run "git-town config"
     Then it prints:
       """

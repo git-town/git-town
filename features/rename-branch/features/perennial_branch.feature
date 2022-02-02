@@ -28,7 +28,7 @@ Feature: renaming a perennial branch with a tracking branch
       |                    | git push origin :production              |
       |                    | git branch -D production                 |
     And I am now on the "renamed-production" branch
-    And the perennial branches are now configured as "qa" and "renamed-production"
+    And the perennial branches are now "qa" and "renamed-production"
     And my repo now has the following commits
       | BRANCH             | LOCATION      | MESSAGE              |
       | child-feature      | local, remote | child feature commit |
@@ -48,7 +48,7 @@ Feature: renaming a perennial branch with a tracking branch
       |                    | git checkout production                             |
       | production         | git branch -D renamed-production                    |
     And I am now on the "production" branch
-    And the perennial branches are now configured as "qa" and "production"
+    And the perennial branches are now "qa" and "production"
     And my repo now has the following commits
       | BRANCH        | LOCATION      | MESSAGE              |
       | child-feature | local, remote | child feature commit |
