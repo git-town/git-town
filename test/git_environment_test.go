@@ -70,24 +70,24 @@ func TestGitEnvironment_Branches_Same(t *testing.T) {
 	t.Parallel()
 	// create GitEnvironment instance
 	dir := CreateTempDir(t)
-	memoizedGitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
-	assert.NoError(t, err)
-	cloned, err := CloneGitEnvironment(memoizedGitEnv, filepath.Join(dir, "cloned"))
+	gitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, ""))
 	assert.NoError(t, err)
 	// create the branches
-	err = cloned.DevRepo.CreateBranch("b1", "main")
+	err = gitEnv.DevRepo.CreateBranch("b1", "main")
 	assert.NoError(t, err)
-	err = cloned.DevRepo.CreateBranch("b2", "main")
+	err = gitEnv.DevRepo.CreateBranch("b2", "main")
 	assert.NoError(t, err)
-	err = cloned.OriginRepo.CreateBranch("b1", "master")
+	err = gitEnv.OriginRepo.CreateBranch("b1", "main")
 	assert.NoError(t, err)
-	err = cloned.OriginRepo.CreateBranch("b2", "master")
+	err = gitEnv.OriginRepo.CreateBranch("b2", "main")
+	assert.NoError(t, err)
+	err = gitEnv.DevRepo.CreateBranch("master", "main")
 	assert.NoError(t, err)
 	// get branches
-	table, err := cloned.Branches()
+	table, err := gitEnv.Branches()
 	assert.NoError(t, err)
 	// verify
-	expected := "| REPOSITORY | BRANCHES     |\n| local, remote      | main, b1, b2 |\n"
+	expected := "| REPOSITORY    | BRANCHES             |\n| local, remote | main, b1, b2, master |\n"
 	assert.Equal(t, expected, table.String())
 }
 
