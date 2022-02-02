@@ -56,8 +56,8 @@ Feature: syncing inside a folder that doesn't exist on the main branch
     And my repo still has a merge in progress
 
   Scenario: continuing after resolving the conflicts
-    Given I resolve the conflict in "conflicting_file"
-    When I run "git-town continue" in the "new_folder" folder
+    When I resolve the conflict in "conflicting_file"
+    And I run "git-town continue" in the "new_folder" folder
     Then it runs the commands
       | BRANCH          | COMMAND                                  |
       | current-feature | git commit --no-edit                     |

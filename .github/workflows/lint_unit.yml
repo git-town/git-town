@@ -21,6 +21,6 @@ jobs:
       uses: ludeeus/action-shellcheck@1.1.0
       with:
         ignore: vendor
-    - run: make setup-docs
+    - run: make setup-tools
     - run: make docs
     - run: make unit

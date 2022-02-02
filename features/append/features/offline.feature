@@ -30,7 +30,7 @@ Feature: append in offline mode
       | new-feature      | local         | existing feature commit |
 
   Scenario: undo
-    Given I run "git-town append new-feature"
+    Given I ran "git-town append new-feature"
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH           | COMMAND                       |
