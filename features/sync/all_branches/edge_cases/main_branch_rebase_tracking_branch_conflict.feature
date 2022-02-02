@@ -63,13 +63,13 @@ Feature: handling rebase conflicts between main branch and its tracking branch
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
     And my repo now has the following commits
-      | BRANCH  | LOCATION      | MESSAGE                          | FILE NAME        | FILE CONTENT        |
-      | main    | local, remote | main remote commit               | conflicting_file | main remote content |
-      |         |               | main local commit                | conflicting_file | resolved content    |
-      | feature | local, remote | feature commit                   | feature_file     | feature content     |
-      |         |               | main remote commit               | conflicting_file | main remote content |
-      |         |               | main local commit                | conflicting_file | resolved content    |
-      |         |               | Merge branch 'main' into feature |                  |                     |
+      | BRANCH  | LOCATION      | MESSAGE                          |
+      | main    | local, remote | main remote commit               |
+      |         |               | main local commit                |
+      | feature | local, remote | feature commit                   |
+      |         |               | main remote commit               |
+      |         |               | main local commit                |
+      |         |               | Merge branch 'main' into feature |
     And my repo now has the following committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |
