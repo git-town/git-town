@@ -7,7 +7,7 @@ Feature: cannot kill perennial branches
       | main    | local, remote | main commit |
       | feature | local, remote | good commit |
     And I am on the "feature" branch
-    Given my workspace has an uncommitted file
+    And my workspace has an uncommitted file
     When I run "git-town kill main"
     Then it runs no commands
     And it prints the error:
@@ -33,7 +33,7 @@ Feature: cannot kill perennial branches
       | feature | local, remote | good commit |
       | qa      | local, remote | qa commit   |
     And I am on the "feature" branch
-    Given my workspace has an uncommitted file
+    And my workspace has an uncommitted file
     When I run "git-town kill qa"
     Then it runs no commands
     And it prints the error:
