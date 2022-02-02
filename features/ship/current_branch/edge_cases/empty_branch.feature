@@ -1,4 +1,4 @@
-Feature: cannot ship an empty branch
+Feature: does not ship an empty branch
 
   Background:
     Given my repo has a feature branch "empty-feature"

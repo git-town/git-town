@@ -1,4 +1,4 @@
-Feature: cannot kill perennial branches
+Feature: does not kill perennial branches
 
   Scenario: trying to delete the main branch
     Given my repo has a feature branch "feature"

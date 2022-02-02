@@ -1,4 +1,4 @@
-Feature: cannot prepend perennial branches
+Feature: does not prepend perennial branches
 
   Scenario: on main branch
     Given my repo has a feature branch "feature"
