@@ -39,9 +39,7 @@ Feature: offline mode
       | main    | git reset --hard {{ sha 'Initial commit' }}   |
       |         | git checkout feature                          |
     And I am now on the "feature" branch
-    And my repo now has the following commits
-      | BRANCH  | LOCATION      | MESSAGE        |
-      | feature | local, remote | feature commit |
+    And my repo is left with my original commits
     And Git Town is now aware of this branch hierarchy
       | BRANCH  | PARENT |
       | feature | main   |
