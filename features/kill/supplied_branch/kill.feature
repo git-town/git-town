@@ -23,9 +23,9 @@ Feature: deleting another than the current branch
       | REPOSITORY    | BRANCHES           |
       | local, remote | main, good-feature |
     And my repo now has the following commits
-      | BRANCH       | LOCATION      | MESSAGE                              | FILE NAME        |
-      | main         | local, remote | conflicting with uncommitted changes | conflicting_file |
-      | good-feature | local, remote | good commit                          | file             |
+      | BRANCH       | LOCATION      | MESSAGE                              |
+      | main         | local, remote | conflicting with uncommitted changes |
+      | good-feature | local, remote | good commit                          |
     And Git Town is now aware of this branch hierarchy
       | BRANCH       | PARENT |
       | good-feature | main   |
