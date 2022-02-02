@@ -1,13 +1,6 @@
-Feature: git town: show the current Git Town version
+Feature: show the version of the current Git Town installation
 
-  Scenario: Using "version" flag
-    When I run "git-town version"
-    Then it prints:
-      """
-      Git Town v0.0.0-dev
-      """
-
-  Scenario: Running outside of a Git repository
+  Scenario: outside a Git repository
     Given my workspace is currently not a Git repo
     When I run "git-town version"
     Then it prints:
