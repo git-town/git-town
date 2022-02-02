@@ -182,27 +182,27 @@ func (env *GitEnvironment) binPath() string {
 // Branches provides a tabular list of all branches in this GitEnvironment.
 func (env *GitEnvironment) Branches() (result DataTable, err error) {
 	result.AddRow("REPOSITORY", "BRANCHES")
-	local_branches, err := env.DevRepo.LocalBranchesMainFirst()
+	localBranches, err := env.DevRepo.LocalBranchesMainFirst()
 	if err != nil {
 		return result, fmt.Errorf("cannot determine the developer repo branches of the GitEnvironment: %w", err)
 	}
-	local_branches = stringslice.Remove(local_branches, "master")
-	local_branches_joined := strings.Join(local_branches, ", ")
+	localBranches = stringslice.Remove(localBranches, "master")
+	localBranchesJoined := strings.Join(localBranches, ", ")
 	if env.OriginRepo == nil {
-		result.AddRow("local", local_branches_joined)
+		result.AddRow("local", localBranchesJoined)
 		return result, nil
 	}
-	remote_branches, err := env.OriginRepo.LocalBranchesMainFirst()
+	remoteBranches, err := env.OriginRepo.LocalBranchesMainFirst()
 	if err != nil {
 		return result, fmt.Errorf("cannot determine the origin repo branches of the GitEnvironment: %w", err)
 	}
-	remote_branches = stringslice.Remove(remote_branches, "master")
-	remote_branches_joined := strings.Join(remote_branches, ", ")
-	if local_branches_joined == remote_branches_joined {
-		result.AddRow("local, remote", local_branches_joined)
+	remoteBranches = stringslice.Remove(remoteBranches, "master")
+	remoteBranchesJoined := strings.Join(remoteBranches, ", ")
+	if localBranchesJoined == remoteBranchesJoined {
+		result.AddRow("local, remote", localBranchesJoined)
 	} else {
-		result.AddRow("local", local_branches_joined)
-		result.AddRow("remote", remote_branches_joined)
+		result.AddRow("local", localBranchesJoined)
+		result.AddRow("remote", remoteBranchesJoined)
 	}
 	return result, nil
 }
