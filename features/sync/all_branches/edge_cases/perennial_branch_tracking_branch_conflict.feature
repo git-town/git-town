@@ -1,14 +1,14 @@
 Feature: handling rebase conflicts between perennial branch and its tracking branch
 
   Background:
-    Given my repo has the perennial branches "peren-1", "peren-2", and "peren-3"
+    Given my repo has the perennial branches "perennial-1", "perennial-2", and "perennial-3"
     And the following commits exist in my repo
-      | BRANCH  | LOCATION      | MESSAGE               | FILE NAME        | FILE CONTENT           |
-      | main    | remote        | main commit           | main_file        | main content           |
-      | peren-1 | local, remote | peren-1 commit        | peren1_file      | peren-1 content        |
-      | peren-2 | local         | peren-2 local commit  | conflicting_file | peren-2 local content  |
-      |         | remote        | peren-2 remote commit | conflicting_file | peren-2 remote content |
-      | peren-3 | local, remote | peren-3 commit        | peren3_file      | peren-3 content        |
+      | BRANCH      | LOCATION      | MESSAGE                   | FILE NAME        | FILE CONTENT               |
+      | main        | remote        | main commit               | main_file        | main content               |
+      | perennial-1 | local, remote | perennial-1 commit        | peren1_file      | perennial-1 content        |
+      | perennial-2 | local         | perennial-2 local commit  | conflicting_file | perennial-2 local content  |
+      |             | remote        | perennial-2 remote commit | conflicting_file | perennial-2 remote content |
+      | perennial-3 | local, remote | perennial-3 commit        | peren3_file      | perennial-3 content        |
     And I am on the "main" branch
     And my workspace has an uncommitted file
     When I run "git-town sync --all"
@@ -16,15 +16,15 @@ Feature: handling rebase conflicts between perennial branch and its tracking bra
   Scenario: result
     Then I am not prompted for any parent branches
     And it runs the commands
-      | BRANCH  | COMMAND                   |
-      | main    | git fetch --prune --tags  |
-      |         | git add -A                |
-      |         | git stash                 |
-      |         | git rebase origin/main    |
-      |         | git checkout peren-1      |
-      | peren-1 | git rebase origin/peren-1 |
-      |         | git checkout peren-2      |
-      | peren-2 | git rebase origin/peren-2 |
+      | BRANCH      | COMMAND                       |
+      | main        | git fetch --prune --tags      |
+      |             | git add -A                    |
+      |             | git stash                     |
+      |             | git rebase origin/main        |
+      |             | git checkout perennial-1      |
+      | perennial-1 | git rebase origin/perennial-1 |
+      |             | git checkout perennial-2      |
+      | perennial-2 | git rebase origin/perennial-2 |
     And it prints the error:
       """
       To abort, run "git-town abort".
@@ -37,40 +37,40 @@ Feature: handling rebase conflicts between perennial branch and its tracking bra
   Scenario: aborting
     When I run "git-town abort"
     Then it runs the commands
-      | BRANCH  | COMMAND              |
-      | peren-2 | git rebase --abort   |
-      |         | git checkout peren-1 |
-      | peren-1 | git checkout main    |
-      | main    | git stash pop        |
+      | BRANCH      | COMMAND                  |
+      | perennial-2 | git rebase --abort       |
+      |             | git checkout perennial-1 |
+      | perennial-1 | git checkout main        |
+      | main        | git stash pop            |
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
     And my repo now has the following commits
-      | BRANCH  | LOCATION      | MESSAGE               |
-      | main    | local, remote | main commit           |
-      | peren-1 | local, remote | peren-1 commit        |
-      | peren-2 | local         | peren-2 local commit  |
-      |         | remote        | peren-2 remote commit |
-      | peren-3 | local, remote | peren-3 commit        |
+      | BRANCH      | LOCATION      | MESSAGE                   |
+      | main        | local, remote | main commit               |
+      | perennial-1 | local, remote | perennial-1 commit        |
+      | perennial-2 | local         | perennial-2 local commit  |
+      |             | remote        | perennial-2 remote commit |
+      | perennial-3 | local, remote | perennial-3 commit        |
 
   Scenario: skipping
     When I run "git-town skip"
     Then it runs the commands
-      | BRANCH  | COMMAND                   |
-      | peren-2 | git rebase --abort        |
-      |         | git checkout peren-3      |
-      | peren-3 | git rebase origin/peren-3 |
-      |         | git checkout main         |
-      | main    | git push --tags           |
-      |         | git stash pop             |
+      | BRANCH      | COMMAND                       |
+      | perennial-2 | git rebase --abort            |
+      |             | git checkout perennial-3      |
+      | perennial-3 | git rebase origin/perennial-3 |
+      |             | git checkout main             |
+      | main        | git push --tags               |
+      |             | git stash pop                 |
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
     And my repo now has the following commits
-      | BRANCH  | LOCATION      | MESSAGE               |
-      | main    | local, remote | main commit           |
-      | peren-1 | local, remote | peren-1 commit        |
-      | peren-2 | local         | peren-2 local commit  |
-      |         | remote        | peren-2 remote commit |
-      | peren-3 | local, remote | peren-3 commit        |
+      | BRANCH      | LOCATION      | MESSAGE                   |
+      | main        | local, remote | main commit               |
+      | perennial-1 | local, remote | perennial-1 commit        |
+      | perennial-2 | local         | perennial-2 local commit  |
+      |             | remote        | perennial-2 remote commit |
+      | perennial-3 | local, remote | perennial-3 commit        |
 
   Scenario: continuing without resolving the conflicts
     When I run "git-town continue"
@@ -86,14 +86,14 @@ Feature: handling rebase conflicts between perennial branch and its tracking bra
     Given I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then it runs the commands
-      | BRANCH  | COMMAND                   |
-      | peren-2 | git rebase --continue     |
-      |         | git push                  |
-      |         | git checkout peren-3      |
-      | peren-3 | git rebase origin/peren-3 |
-      |         | git checkout main         |
-      | main    | git push --tags           |
-      |         | git stash pop             |
+      | BRANCH      | COMMAND                       |
+      | perennial-2 | git rebase --continue         |
+      |             | git push                      |
+      |             | git checkout perennial-3      |
+      | perennial-3 | git rebase origin/perennial-3 |
+      |             | git checkout main             |
+      | main        | git push --tags               |
+      |             | git stash pop                 |
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
     And all branches are now synchronized
@@ -103,12 +103,12 @@ Feature: handling rebase conflicts between perennial branch and its tracking bra
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
     Then it runs the commands
-      | BRANCH  | COMMAND                   |
-      | peren-2 | git push                  |
-      |         | git checkout peren-3      |
-      | peren-3 | git rebase origin/peren-3 |
-      |         | git checkout main         |
-      | main    | git push --tags           |
-      |         | git stash pop             |
+      | BRANCH      | COMMAND                       |
+      | perennial-2 | git push                      |
+      |             | git checkout perennial-3      |
+      | perennial-3 | git rebase origin/perennial-3 |
+      |             | git checkout main             |
+      | main        | git push --tags               |
+      |             | git stash pop                 |
     And I am now on the "main" branch
     And all branches are now synchronized
