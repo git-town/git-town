@@ -62,7 +62,7 @@ func TestGitEnvironment_Branches_Different(t *testing.T) {
 	table, err := gitEnv.Branches()
 	assert.NoError(t, err)
 	// verify
-	expected := "| REPOSITORY | BRANCHES             |\n| local      | main, d1, d2         |\n| remote     | main, master, o1, o2 |\n"
+	expected := "| REPOSITORY | BRANCHES     |\n| local      | main, d1, d2 |\n| remote     | main, o1, o2 |\n"
 	assert.Equal(t, expected, table.String())
 }
 
@@ -81,13 +81,11 @@ func TestGitEnvironment_Branches_Same(t *testing.T) {
 	assert.NoError(t, err)
 	err = gitEnv.OriginRepo.CreateBranch("b2", "main")
 	assert.NoError(t, err)
-	err = gitEnv.DevRepo.CreateBranch("master", "main")
-	assert.NoError(t, err)
 	// get branches
 	table, err := gitEnv.Branches()
 	assert.NoError(t, err)
 	// verify
-	expected := "| REPOSITORY    | BRANCHES             |\n| local, remote | main, b1, b2, master |\n"
+	expected := "| REPOSITORY    | BRANCHES     |\n| local, remote | main, b1, b2 |\n"
 	assert.Equal(t, expected, table.String())
 }
 

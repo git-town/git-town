@@ -8,6 +8,7 @@ import (
 
 	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/stringslice"
 	"github.com/git-town/git-town/v7/test/helpers"
 )
 
@@ -185,6 +186,7 @@ func (env *GitEnvironment) Branches() (result DataTable, err error) {
 	if err != nil {
 		return result, fmt.Errorf("cannot determine the developer repo branches of the GitEnvironment: %w", err)
 	}
+	local_branches = stringslice.Remove(local_branches, "master")
 	local_branches_joined := strings.Join(local_branches, ", ")
 	if env.OriginRepo == nil {
 		result.AddRow("local", local_branches_joined)
@@ -194,6 +196,7 @@ func (env *GitEnvironment) Branches() (result DataTable, err error) {
 	if err != nil {
 		return result, fmt.Errorf("cannot determine the origin repo branches of the GitEnvironment: %w", err)
 	}
+	remote_branches = stringslice.Remove(remote_branches, "master")
 	remote_branches_joined := strings.Join(remote_branches, ", ")
 	if local_branches_joined == remote_branches_joined {
 		result.AddRow("local, remote", local_branches_joined)
