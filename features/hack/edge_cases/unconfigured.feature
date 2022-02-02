@@ -15,7 +15,7 @@ Feature: missing configuration
       |        | git rebase origin/main   |
       |        | git branch feature main  |
       |        | git checkout feature     |
-    And the main branch is now configured as "main"
+    And the main branch is now "main"
     And I am now on the "feature" branch
     And Git Town is now aware of this branch hierarchy
       | BRANCH  | PARENT |

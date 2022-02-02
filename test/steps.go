@@ -802,7 +802,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the main branch is configured as "([^"]+)"$`, func(name string) error {
+	suite.Step(`^the main branch is "([^"]+)"$`, func(name string) error {
 		return state.gitEnv.DevRepo.Config.SetMainBranch(name)
 	})
 
@@ -810,7 +810,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.DeleteMainBranchConfiguration()
 	})
 
-	suite.Step(`^the main branch is now configured as "([^"]+)"$`, func(name string) error {
+	suite.Step(`^the main branch is now "([^"]+)"$`, func(name string) error {
 		state.gitEnv.DevRepo.Config.Reload()
 		actual := state.gitEnv.DevRepo.Config.MainBranch()
 		if actual != name {
