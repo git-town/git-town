@@ -107,7 +107,7 @@ Feature: handle merge conflicts between feature branch and main branch
     And my repo still has a merge in progress
 
   Scenario: continuing after resolving the conflicts
-    Given I resolve the conflict in "conflicting_file"
+    When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
     Then it runs the commands
       | BRANCH    | COMMAND                              |
@@ -133,7 +133,7 @@ Feature: handle merge conflicts between feature branch and main branch
       |           | feature2_file    | feature-3 content |
 
   Scenario: continuing after resolving the conflicts and committing
-    Given I resolve the conflict in "conflicting_file"
+    When I resolve the conflict in "conflicting_file"
     And I run "git commit --no-edit"
     And I run "git-town continue"
     Then it runs the commands

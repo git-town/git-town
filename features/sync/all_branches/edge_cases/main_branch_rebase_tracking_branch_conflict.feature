@@ -47,7 +47,7 @@ Feature: handling rebase conflicts between main branch and its tracking branch
     And my repo still has a rebase in progress
 
   Scenario: continuing after resolving the conflicts
-    Given I resolve the conflict in "conflicting_file"
+    When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then it runs the commands
       | BRANCH  | COMMAND                            |
@@ -70,7 +70,7 @@ Feature: handling rebase conflicts between main branch and its tracking branch
       |         | feature_file     | feature content  |
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
-    Given I resolve the conflict in "conflicting_file"
+    When I resolve the conflict in "conflicting_file"
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
     Then it runs the commands

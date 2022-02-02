@@ -34,8 +34,8 @@ Feature: conflicts between uncommitted changes and the main branch
       """
 
   Scenario: continuing after resolving the conflicts
-    Given I resolve the conflict in "conflicting_file"
-    When I run "git-town continue" and close the editor
+    When I resolve the conflict in "conflicting_file"
+    And I run "git-town continue" and close the editor
     Then it runs no commands
     And I am now on the "new-feature" branch
     And my workspace now contains the file "conflicting_file" with content "resolved content"

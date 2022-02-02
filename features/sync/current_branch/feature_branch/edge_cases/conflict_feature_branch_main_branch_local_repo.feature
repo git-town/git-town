@@ -50,8 +50,8 @@ Feature: handle conflicts between the current feature branch and the main branch
     And my repo still has a merge in progress
 
   Scenario: continuing after resolving the conflicts
-    Given I resolve the conflict in "conflicting_file"
-    When I run "git-town continue"
+    When I resolve the conflict in "conflicting_file"
+    And I run "git-town continue"
     Then it runs the commands
       | BRANCH  | COMMAND              |
       | feature | git commit --no-edit |
@@ -65,9 +65,9 @@ Feature: handle conflicts between the current feature branch and the main branch
       | feature | conflicting_file | resolved content |
 
   Scenario: continuing after resolving the conflicts and comitting
-    Given I resolve the conflict in "conflicting_file"
+    When I resolve the conflict in "conflicting_file"
     And I run "git commit --no-edit"
-    When I run "git-town continue"
+    And I run "git-town continue"
     Then it runs the commands
       | BRANCH  | COMMAND       |
       | feature | git stash pop |
