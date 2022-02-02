@@ -22,8 +22,8 @@ Feature: destination branch exists
       | existing-feature | main   |
 
   Scenario: destination branch exists remotely
-    Given my repo has a feature branch named "current-feature"
-    And my coworker has a feature branch named "existing-feature"
+    Given my repo has a feature branch "current-feature"
+    And my coworker has a feature branch "existing-feature"
     And the following commits exist in my repo
       | BRANCH           | LOCATION      | MESSAGE                 |
       | current-feature  | local, remote | current-feature commit  |

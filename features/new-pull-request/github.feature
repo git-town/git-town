@@ -5,7 +5,7 @@ Feature: GitHub support
 
   @skipWindows
   Scenario Outline: normal origin
-    Given my repo has a feature branch named "feature"
+    Given my repo has a feature branch "feature"
     And my repo's origin is "<ORIGIN>"
     And I am on the "feature" branch
     When I run "git-town new-pull-request"
@@ -25,7 +25,7 @@ Feature: GitHub support
 
   @skipWindows
   Scenario Outline: origin contains path that looks like a URL
-    Given my repo has a feature branch named "feature"
+    Given my repo has a feature branch "feature"
     And my repo's origin is "<ORIGIN>"
     And I am on the "feature" branch
     When I run "git-town new-pull-request"
@@ -45,7 +45,7 @@ Feature: GitHub support
 
   @skipWindows
   Scenario Outline: proper URL encoding
-    Given my repo has a feature branch named "<BRANCH_NAME>"
+    Given my repo has a feature branch "<BRANCH_NAME>"
     And my repo's origin is "https://github.com/git-town/git-town"
     And I am on the "<BRANCH_NAME>" branch
     When I run "git-town new-pull-request"
@@ -63,7 +63,7 @@ Feature: GitHub support
 
   @skipWindows
   Scenario Outline: SSH style origin
-    Given my repo has a feature branch named "feature"
+    Given my repo has a feature branch "feature"
     And my repo's origin is "<ORIGIN>"
     And I am on the "feature" branch
     When I run "git-town new-pull-request"
@@ -79,8 +79,8 @@ Feature: GitHub support
 
   @skipWindows
   Scenario: nested feature branch with known parent
-    Given my repo has a feature branch named "parent-feature"
-    And my repo has a feature branch named "child-feature" as a child of "parent-feature"
+    Given my repo has a feature branch "parent-feature"
+    And my repo has a feature branch "child-feature" as a child of "parent-feature"
     And my repo's origin is "git@github.com:git-town/git-town.git"
     And I am on the "child-feature" branch
     When I run "git-town new-pull-request"
