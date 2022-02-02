@@ -8,7 +8,7 @@ Feature: configure the main branch
 
   Scenario: configured
     Given my repo has the branches "main-old" and "main-new"
-    And the main branch is configured as "main-old"
+    And the main branch is "main-old"
     When I run "git-town main-branch main-new"
     Then it prints no output
     And the main branch is now configured as "main-new"

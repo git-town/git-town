@@ -28,7 +28,7 @@ Feature: update the parent of a nested feature branch
     When I run "git-town set-parent-branch" and answer the prompts:
       | PROMPT                                              | ANSWER          |
       | Please specify the parent branch of 'child-feature' | [UP][UP][ENTER] |
-    Then the perennial branches are now configured as "child-feature"
+    Then the perennial branches are now "child-feature"
     And Git Town is now aware of this branch hierarchy
       | BRANCH         | PARENT |
       | parent-feature | main   |
