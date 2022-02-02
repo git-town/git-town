@@ -4,7 +4,7 @@ Feature: cannot ship a child branch
     Given my repo has a feature branch "feature-1"
     And my repo has a feature branch "feature-2" as a child of "feature-1"
     And my repo has a feature branch "feature-3" as a child of "feature-2"
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH    | LOCATION      | MESSAGE          |
       | feature-1 | local, remote | feature 1 commit |
       | feature-2 | local, remote | feature 2 commit |

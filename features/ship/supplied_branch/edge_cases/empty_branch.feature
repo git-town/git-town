@@ -2,7 +2,7 @@ Feature: does not ship empty feature branches
 
   Background:
     Given my repo has the feature branches "empty-feature" and "other-feature"
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH        | LOCATION | MESSAGE        | FILE NAME   | FILE CONTENT   |
       | main          | remote   | main commit    | common_file | common content |
       | empty-feature | local    | feature commit | common_file | common content |

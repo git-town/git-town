@@ -2,7 +2,7 @@ Feature: handling rebase conflicts between perennial branch and its tracking bra
 
   Background:
     Given my repo has the perennial branches "perennial-1", "perennial-2", and "perennial-3"
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH      | LOCATION      | MESSAGE                   | FILE NAME        | FILE CONTENT               |
       | main        | remote        | main commit               | main_file        | main content               |
       | perennial-1 | local, remote | perennial-1 commit        | peren1_file      | perennial-1 content        |

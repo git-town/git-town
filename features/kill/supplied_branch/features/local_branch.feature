@@ -3,7 +3,7 @@ Feature: local branch
   Background:
     Given my repo does not have a remote origin
     And my repo has the local feature branches "dead-feature" and "other-feature"
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH        | LOCATION | MESSAGE              |
       | dead-feature  | local    | dead feature commit  |
       | other-feature | local    | other feature commit |

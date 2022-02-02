@@ -36,7 +36,7 @@ Feature: Git checkout history is preserved when the current and previous branch 
   Scenario: ship
     Given my repo has the feature branches "previous" and "current"
     And my repo has a feature branch "feature"
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH  | LOCATION |
       | feature | remote   |
     And I am on the "current" branch with "previous" as the previous Git branch

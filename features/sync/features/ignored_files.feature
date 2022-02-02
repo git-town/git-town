@@ -2,7 +2,7 @@ Feature: ignoring files
 
   Scenario: running "git sync" with ignored files
     Given my repo has a feature branch "feature"
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH  | LOCATION | MESSAGE   | FILE NAME  | FILE CONTENT |
       | feature | local    | my commit | .gitignore | ignored      |
     And I am on the "feature" branch

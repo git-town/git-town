@@ -2,7 +2,7 @@ Feature: destination branch exists
 
   Scenario: destination branch exists locally
     Given my repo has the feature branches "current-feature" and "existing-feature"
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH           | LOCATION      | MESSAGE                 |
       | current-feature  | local, remote | current-feature commit  |
       | existing-feature | local, remote | existing-feature commit |
@@ -24,7 +24,7 @@ Feature: destination branch exists
   Scenario: destination branch exists remotely
     Given my repo has a feature branch "current-feature"
     And my coworker has a feature branch "existing-feature"
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH           | LOCATION      | MESSAGE                 |
       | current-feature  | local, remote | current-feature commit  |
       | existing-feature | remote        | existing-feature commit |

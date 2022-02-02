@@ -2,7 +2,7 @@ Feature: handling rebase conflicts between main branch and its tracking branch
 
   Background:
     Given my repo has a feature branch "feature"
-    And the following commits exist in my repo
+    And my repo contains the commits
       | BRANCH  | LOCATION | MESSAGE            | FILE NAME        | FILE CONTENT        |
       | main    | local    | main local commit  | conflicting_file | main local content  |
       |         | remote   | main remote commit | conflicting_file | main remote content |
