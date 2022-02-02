@@ -1,4 +1,4 @@
-Feature: git-town sync --all: handling merge conflicts between feature branch and its tracking branch
+Feature: handling merge conflicts between feature branch and its tracking branch
 
   Background:
     Given my repo has the feature branches "feature-1" and "feature-2"

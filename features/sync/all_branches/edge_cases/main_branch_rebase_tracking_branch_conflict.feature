@@ -1,4 +1,4 @@
-Feature: git-town sync --all: handling rebase conflicts between main branch and its tracking branch
+Feature: handling rebase conflicts between main branch and its tracking branch
 
   Background:
     Given my repo has a feature branch named "feature"

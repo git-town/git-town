@@ -1,4 +1,4 @@
-Feature: git-town sync --all: syncs all feature branches (without remote repo)
+Feature: syncs all feature branches (without remote repo)
 
   Background:
     Given my repo does not have a remote origin

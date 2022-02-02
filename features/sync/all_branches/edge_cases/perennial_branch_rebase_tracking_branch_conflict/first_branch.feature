@@ -1,4 +1,4 @@
-Feature: git-town sync --all: handling rebase conflicts between perennial branch and its tracking branch
+Feature: handling rebase conflicts between perennial branch and its tracking branch
 
   Background:
     Given my repo has the perennial branches "production" and "qa"
