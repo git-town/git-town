@@ -77,6 +77,7 @@ setup-go: setup-godog
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.43.0
 	go install mvdan.cc/gofumpt@latest
 	go install github.com/KyleBanks/depth/cmd/depth@latest
+	go install github.com/boyter/scc@latest
 
 setup-godog:  # install the godog binary
 	go install github.com/cucumber/godog/cmd/godog@v0.9.0
