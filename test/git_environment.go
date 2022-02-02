@@ -181,17 +181,25 @@ func (env *GitEnvironment) binPath() string {
 // Branches provides a tabular list of all branches in this GitEnvironment.
 func (env *GitEnvironment) Branches() (result DataTable, err error) {
 	result.AddRow("REPOSITORY", "BRANCHES")
-	branches, err := env.DevRepo.LocalBranchesMainFirst()
+	local_branches, err := env.DevRepo.LocalBranchesMainFirst()
 	if err != nil {
 		return result, fmt.Errorf("cannot determine the developer repo branches of the GitEnvironment: %w", err)
 	}
-	result.AddRow("local", strings.Join(branches, ", "))
-	if env.OriginRepo != nil {
-		branches, err = env.OriginRepo.LocalBranchesMainFirst()
-		if err != nil {
-			return result, fmt.Errorf("cannot determine the origin repo branches of the GitEnvironment: %w", err)
-		}
-		result.AddRow("remote", strings.Join(branches, ", "))
+	local_branches_joined := strings.Join(local_branches, ", ")
+	if env.OriginRepo == nil {
+		result.AddRow("local", local_branches_joined)
+		return result, nil
+	}
+	remote_branches, err := env.OriginRepo.LocalBranchesMainFirst()
+	if err != nil {
+		return result, fmt.Errorf("cannot determine the origin repo branches of the GitEnvironment: %w", err)
+	}
+	remote_branches_joined := strings.Join(remote_branches, ", ")
+	if local_branches_joined == remote_branches_joined {
+		result.AddRow("local, remote", local_branches_joined)
+	} else {
+		result.AddRow("local", local_branches_joined)
+		result.AddRow("remote", remote_branches_joined)
 	}
 	return result, nil
 }
