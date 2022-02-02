@@ -1,4 +1,4 @@
-Feature: git town-kill: killing a remote only branch
+Feature: deleting a remote only branch
 
   Background:
     Given my origin has a feature branch named "feature"

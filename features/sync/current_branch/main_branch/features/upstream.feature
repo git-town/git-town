@@ -1,4 +1,4 @@
-Feature: git-sync: on the main branch with a upstream remote
+Feature: on the main branch with a upstream remote
 
   Scenario: sync-upstream is set to true
     Given my repo has an upstream repo
