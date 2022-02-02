@@ -35,7 +35,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | feature | git stash pop        |
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
-    And there is no rebase in progress
+    And there is no rebase in progress anymore
     And my repo is left with my original commits
 
   Scenario: continuing without resolving the conflicts

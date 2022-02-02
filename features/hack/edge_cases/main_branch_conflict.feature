@@ -35,7 +35,7 @@ Feature: conflicts between the main branch and its tracking branch
       | existing-feature | git stash pop                 |
     And I am now on the "existing-feature" branch
     And my workspace has the uncommitted file again
-    And there is no rebase in progress
+    And there is no rebase in progress anymore
     And my repo is left with my original commits
     And my repo now has the following commits
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |

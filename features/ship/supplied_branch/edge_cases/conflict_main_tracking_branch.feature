@@ -36,7 +36,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | other-feature | git stash pop              |
     And I am still on the "other-feature" branch
     And my workspace still contains my uncommitted file
-    And there is no rebase in progress
+    And there is no rebase in progress anymore
     And my repo is left with my original commits
     And Git Town is still aware of this branch hierarchy
       | BRANCH        | PARENT |
