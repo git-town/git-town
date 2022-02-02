@@ -1,6 +1,6 @@
+@skipWindows
 Feature: ask for missing configuration
 
-  @skipWindows
   Scenario: unconfigured
     Given I haven't configured Git Town yet
     And my repo's origin is "https://github.com/git-town/git-town.git"

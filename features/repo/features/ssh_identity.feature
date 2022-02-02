@@ -1,6 +1,6 @@
+@skipWindows
 Feature: using an SSH identity
 
-  @skipWindows
   Scenario Outline:
     Given my computer has the "open" tool installed
     And my repo's origin is "git@my-ssh-identity:git-town/git-town.git"

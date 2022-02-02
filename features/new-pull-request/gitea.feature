@@ -1,9 +1,9 @@
+@skipWindows
 Feature: Gitea support
 
   Background:
     Given my computer has the "open" tool installed
 
-  @skipWindows
   Scenario Outline: normal origin
     Given my repo has a feature branch "feature"
     And my repo's origin is "<ORIGIN>"
@@ -23,7 +23,6 @@ Feature: Gitea support
       | git@gitea.com:git-town/git-town.git     |
       | git@gitea.com:git-town/git-town         |
 
-  @skipWindows
   Scenario Outline: origin contains path that looks like a URL
     Given my repo has a feature branch "feature"
     And my repo's origin is "<ORIGIN>"
@@ -43,7 +42,6 @@ Feature: Gitea support
       | git@gitea.com:git-town/git-town.gitea.com.git     |
       | git@gitea.com:git-town/git-town.gitea.com         |
 
-  @skipWindows
   Scenario Outline: proper URL encoding
     Given my repo has a feature branch "<BRANCH_NAME>"
     And my repo's origin is "https://gitea.com/git-town/git-town"
@@ -61,7 +59,6 @@ Feature: Gitea support
       | fix-#2         | https://gitea.com/git-town/git-town/compare/main...fix-%232       |
       | test/feature   | https://gitea.com/git-town/git-town/compare/main...test%2Ffeature |
 
-  @skipWindows
   Scenario Outline: SSH style origin
     Given my repo has a feature branch "feature"
     And my repo's origin is "<ORIGIN>"
@@ -77,7 +74,6 @@ Feature: Gitea support
       | ssh://git@gitea.com/git-town/git-town.git |
       | ssh://git@gitea.com/git-town/git-town     |
 
-  @skipWindows
   Scenario: nested feature branch with known parent
     Given my repo has a feature branch "parent-feature"
     And my repo has a feature branch "child-feature" as a child of "parent-feature"

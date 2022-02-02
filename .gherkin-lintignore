@@ -1,0 +1,4 @@
+vendor/**
+
+# this file has an intentionally unusual structure
+features/sync/current_branch/feature_branch/features/two_collaborators.feature
