@@ -1,4 +1,4 @@
-Feature: cannot ship perennial branches
+Feature: does not ship perennial branches
 
   Scenario: trying to ship the main branch
     Given I am on the "main" branch
