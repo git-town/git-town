@@ -1,4 +1,4 @@
-Feature: cannot double undo
+Feature: does not double undo
 
   Scenario: calling undo twice
     Given my repo has a feature branch "feature"

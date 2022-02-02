@@ -1,6 +1,6 @@
+@skipWindows
 Feature: Bitbucket support
 
-  @skipWindows
   Scenario Outline: normal origin
     Given my repo has a feature branch "feature"
     And my repo's origin is "<ORIGIN>"
@@ -21,7 +21,6 @@ Feature: Bitbucket support
       | git@bitbucket.org/git-town/git-town.git              |
       | git@bitbucket.org/git-town/git-town                  |
 
-  @skipWindows
   Scenario Outline: origin includes path that looks like a URL
     Given my repo has a feature branch "feature"
     And my repo's origin is "<ORIGIN>"
@@ -42,7 +41,6 @@ Feature: Bitbucket support
       | git@bitbucket.org/git-town/git-town.github.com.git              |
       | git@bitbucket.org/git-town/git-town.github.com                  |
 
-  @skipWindows
   Scenario Outline: SSH style origin
     Given my repo has a feature branch "feature"
     And my repo's origin is "<ORIGIN>"

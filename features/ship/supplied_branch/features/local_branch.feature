@@ -41,7 +41,6 @@ Feature: shipping the supplied feature branch without a tracking branch
       | BRANCH        | PARENT |
       | other-feature | main   |
 
-
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands

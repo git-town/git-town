@@ -8,10 +8,10 @@ Feature: rename the current branch
       | main       | local, remote | main commit |
       | feature    | local, remote | feat commit |
       | production | local, remote | prod commit |
+    And I am on the "feature" branch
+    When I run "git-town rename-branch renamed-feature"
 
   Scenario: rename feature branch
-    Given I am on the "feature" branch
-    When I run "git-town rename-branch renamed-feature"
     Then it runs the commands
       | BRANCH          | COMMAND                            |
       | feature         | git fetch --prune --tags           |
@@ -29,8 +29,6 @@ Feature: rename the current branch
       | renamed-feature | local, remote | feat commit |
 
   Scenario: undo rename branch
-    Given I am on the "feature" branch
-    And I run "git-town rename-branch renamed-feature"
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH          | COMMAND                                    |

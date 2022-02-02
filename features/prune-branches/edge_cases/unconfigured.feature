@@ -1,6 +1,6 @@
+@skipWindows
 Feature: ask for missing configuration
 
-  @skipWindows
   Scenario: run unconfigured
     Given I haven't configured Git Town yet
     When I run "git-town prune-branches" and answer the prompts:

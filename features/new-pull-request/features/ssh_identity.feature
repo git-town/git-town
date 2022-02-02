@@ -1,6 +1,6 @@
+@skipWindows
 Feature: using a SSH identity
 
-  @skipWindows
   Scenario Outline: ssh identity
     And my computer has the "open" tool installed
     And my repo has a feature branch "feature"

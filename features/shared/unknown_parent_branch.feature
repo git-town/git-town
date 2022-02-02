@@ -29,7 +29,6 @@ Feature: Prompt for parent branch when unknown
       | feature-1 | main      |
       | feature-2 | feature-1 |
 
-  @skipWindows
   Scenario: prompting for parent branch when running git town-new-pull-request
     And my computer has the "open" tool installed
     And my repo has a branch "feature"

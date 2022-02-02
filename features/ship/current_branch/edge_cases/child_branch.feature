@@ -1,4 +1,4 @@
-Feature: cannot ship a child branch
+Feature: does not ship a child branch
 
   Background:
     Given my repo has a feature branch "feature-1"

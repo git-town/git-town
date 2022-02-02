@@ -1,6 +1,6 @@
 Feature: collaborative feature branch syncing
 
-  Background:
+  Scenario:
     Given I am collaborating with a coworker
     And my repo has a feature branch "feature"
     And my coworker fetches updates
@@ -9,8 +9,6 @@ Feature: collaborative feature branch syncing
       | BRANCH  | LOCATION | MESSAGE         |
       | feature | local    | my commit       |
       |         | coworker | coworker commit |
-
-  Scenario: result
     And I am on the "feature" branch
     When I run "git-town sync"
     Then it runs the commands

@@ -21,33 +21,33 @@ Git Town provides these additional Git commands:
 
 #### Typical development commands
 
-- [git town hack](https://www.git-town.com/commands/hack.html) - cuts a new
+- [git hack](https://www.git-town.com/commands/hack.html) - cuts a new
   up-to-date feature branch off the main branch
-- [git town sync](https://www.git-town.com/documentation/commands/sync.md) -
-  updates the current branch with all ongoing changes
-- [git town new-pull-request](https://www.git-town.com/documentation/commands/new-pull-request.md) -
+- [git sync](https://www.git-town.com/documentation/commands/sync.md) - updates
+  the current branch with all ongoing changes
+- [git new-pull-request](https://www.git-town.com/documentation/commands/new-pull-request.md) -
   create a new pull request
-- [git town ship](https://www.git-town.com/documentation/commands/ship.md) -
-  delivers a completed feature branch and removes it
+- [git ship](https://www.git-town.com/documentation/commands/ship.md) - delivers
+  a completed feature branch and removes it
 
 #### Advanced development commands
 
-- [git town kill](https://www.git-town.com/documentation/commands/kill.md) -
-  removes a feature branch
-- [git town prune-branches](https://www.git-town.com/documentation/commands/prune-branches.md) -
+- [git kill](https://www.git-town.com/documentation/commands/kill.md) - removes
+  a feature branch
+- [git prune-branches](https://www.git-town.com/documentation/commands/prune-branches.md) -
   delete all merged branches
-- [git town rename-branch](https://www.git-town.com/documentation/commands/rename-branch.md) -
+- [git rename-branch](https://www.git-town.com/documentation/commands/rename-branch.md) -
   rename a branch
-- [git town repo](https://www.git-town.com/documentation/commands/repo.md) -
-  view the repository homepage
+- [git repo](https://www.git-town.com/documentation/commands/repo.md) - view the
+  repository homepage
 
 #### Nested feature branches
 
-- [git town append](https://www.git-town.com/documentation/commands/append.md) -
+- [git append](https://www.git-town.com/documentation/commands/append.md) -
   insert a new branch as a child of the current branch
-- [git town prepend](https://www.git-town.com/documentation/commands/prepend.md) -
+- [git prepend](https://www.git-town.com/documentation/commands/prepend.md) -
   insert a new branch between the current branch and its parent
-- [git town set-parent-branch](https://www.git-town.com/documentation/commands/set-parent-branch.md) -
+- [git set-parent-branch](https://www.git-town.com/documentation/commands/set-parent-branch.md) -
   updates a branch's parent
 
 #### Git Town configuration

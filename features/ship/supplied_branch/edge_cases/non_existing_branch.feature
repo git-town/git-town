@@ -1,4 +1,4 @@
-Feature: cannot ship a non-existing branch
+Feature: does not ship a non-existing branch
 
   Background:
     Given I am on the "main" branch

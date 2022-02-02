@@ -1,4 +1,4 @@
-Feature: cannot kill a remote branch in offline mode
+Feature: does not kill a remote branch in offline mode
 
   Background:
     Given Git Town is in offline mode

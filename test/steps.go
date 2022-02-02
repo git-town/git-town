@@ -197,12 +197,12 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^I run "(.+)"$`, func(command string) error {
+	suite.Step(`^I (?:run|ran) "(.+)"$`, func(command string) error {
 		state.runRes, state.runErr = state.gitEnv.DevShell.RunString(command)
 		return nil
 	})
 
-	suite.Step(`^I run "([^"]+)" and answer the prompts:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
+	suite.Step(`^I (?:run|ran) "([^"]+)" and answer(?:ed)? the prompts:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
 		state.runRes, state.runErr = state.gitEnv.DevShell.RunStringWith(cmd, run.Options{Input: tableToInput(input)})
 		return nil
 	})
