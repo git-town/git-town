@@ -24,7 +24,7 @@ Feature: with pull-branch-strategy set to "merge"
       |         | git merge --no-edit main           |
       |         | git push                           |
     And I am still on the "feature" branch
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH  | LOCATION      | MESSAGE                                                    |
       | main    | local, remote | local main commit                                          |
       |         |               | remote main commit                                         |

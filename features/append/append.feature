@@ -25,7 +25,7 @@ Feature: appending a new feature branch to an existing feature branch
       | new-child        | git stash pop                               |
     And I am now on the "new-child" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH           | LOCATION      | MESSAGE                 |
       | existing-feature | local, remote | existing_feature_commit |
       | new-child        | local         | existing_feature_commit |

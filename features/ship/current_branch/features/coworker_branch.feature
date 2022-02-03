@@ -23,7 +23,7 @@ Feature: shipping a coworker's feature branch
       |         | git push                                                                |
       |         | git push origin :feature                                                |
       |         | git branch -D feature                                                   |
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE      | AUTHOR                          |
       | main   | local, remote | feature done | coworker <coworker@example.com> |
     And Git Town now has no branch hierarchy information
@@ -44,7 +44,7 @@ Feature: shipping a coworker's feature branch
       |         | git push                                              |
       |         | git push origin :feature                              |
       |         | git branch -D feature                                 |
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE      | AUTHOR                          |
       | main   | local, remote | feature done | coworker <coworker@example.com> |
     And Git Town now has no branch hierarchy information
@@ -62,7 +62,7 @@ Feature: shipping a coworker's feature branch
       | feature | git checkout main                              |
       | main    | git checkout feature                           |
     And I am now on the "feature" branch
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, remote | feature done          |
       |         |               | Revert "feature done" |

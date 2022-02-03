@@ -56,7 +56,7 @@ Feature: handling merge conflicts between feature branch and main branch in a lo
       | main      | git stash pop            |
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH    | LOCATION | MESSAGE                            |
       | main      | local    | main commit                        |
       | feature-1 | local    | feature-1 commit                   |

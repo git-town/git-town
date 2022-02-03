@@ -20,7 +20,7 @@ Feature: in a local repo
       | new-feature      | git stash pop               |
     And I am now on the "new-feature" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH           | LOCATION | MESSAGE                 |
       | existing-feature | local    | existing_feature_commit |
     And Git Town is now aware of this branch hierarchy

@@ -63,7 +63,7 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
     And the existing branches are
       | REPOSITORY    | BRANCHES            |
       | local, remote | main, other-feature |
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, remote | feature done |
     And Git Town is now aware of this branch hierarchy
@@ -106,7 +106,7 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
       | main          | git checkout other-feature                                                                |
       | other-feature | git stash pop                                                                             |
     And I am now on the "other-feature" branch
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH  | LOCATION      | MESSAGE                                                    |
       | main    | local, remote | feature done                                               |
       |         |               | Revert "feature done"                                      |

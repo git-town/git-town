@@ -20,7 +20,7 @@ Feature: rename a parent branch
       |                        | git push origin :parent-feature                  |
       |                        | git branch -D parent-feature                     |
     And I am now on the "renamed-parent-feature" branch
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH                 | LOCATION      | MESSAGE               |
       | child-feature          | local, remote | child feature commit  |
       | renamed-parent-feature | local, remote | parent feature commit |

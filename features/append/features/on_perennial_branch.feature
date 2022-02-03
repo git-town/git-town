@@ -21,7 +21,7 @@ Feature: append to a perennial branch
       | new-child  | git stash pop                   |
     And I am now on the "new-child" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH     | LOCATION      | MESSAGE           |
       | new-child  | local         | production_commit |
       | production | local, remote | production_commit |
@@ -40,7 +40,7 @@ Feature: append to a perennial branch
       |            | git stash pop           |
     And I am now on the "production" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH     | LOCATION      | MESSAGE           |
       | production | local, remote | production_commit |
     And Git Town now has the original branch hierarchy

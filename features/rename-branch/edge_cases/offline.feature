@@ -17,7 +17,7 @@ Feature: offline mode
       |                 | git checkout renamed-feature       |
       | renamed-feature | git branch -D feature              |
     And I am now on the "renamed-feature" branch
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH          | LOCATION      | MESSAGE     |
       | main            | local, remote | main commit |
       | feature         | remote        | feat commit |

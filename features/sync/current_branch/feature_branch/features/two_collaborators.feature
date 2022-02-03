@@ -20,7 +20,7 @@ Feature: collaborative feature branch syncing
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
       |         | git push                           |
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH  | LOCATION      | MESSAGE         |
       | feature | local, remote | my commit       |
       |         | coworker      | coworker commit |
@@ -36,7 +36,7 @@ Feature: collaborative feature branch syncing
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
       |         | git push                           |
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH  | LOCATION                | MESSAGE                                                    |
       | feature | local, coworker, remote | my commit                                                  |
       |         | coworker, remote        | coworker commit                                            |
@@ -52,7 +52,7 @@ Feature: collaborative feature branch syncing
       |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH  | LOCATION                | MESSAGE                                                    |
       | feature | local, coworker, remote | coworker commit                                            |
       |         |                         | my commit                                                  |

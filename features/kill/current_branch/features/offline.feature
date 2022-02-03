@@ -24,7 +24,7 @@ Feature: offline mode
       | REPOSITORY | BRANCHES                             |
       | local      | main, other-feature                  |
       | remote     | main, current-feature, other-feature |
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH          | LOCATION      | MESSAGE                |
       | current-feature | remote        | current feature commit |
       | other-feature   | local, remote | other feature commit   |

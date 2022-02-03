@@ -27,7 +27,7 @@ Feature: enter the commit message interactively via the editor
     And the existing branches are
       | REPOSITORY    | BRANCHES |
       | local, remote | main     |
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, remote | feature done |
     And Git Town now has no branch hierarchy information
@@ -44,7 +44,7 @@ Feature: enter the commit message interactively via the editor
       | feature | git checkout main                             |
       | main    | git checkout feature                          |
     And I am now on the "feature" branch
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, remote | feature done          |
       |         |               | Revert "feature done" |

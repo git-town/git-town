@@ -22,7 +22,7 @@ Feature: in a local repo
     And the existing branches are
       | REPOSITORY | BRANCHES            |
       | local      | main, other-feature |
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH        | LOCATION | MESSAGE              |
       | other-feature | local    | other feature commit |
     And Git Town is now aware of this branch hierarchy
