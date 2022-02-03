@@ -75,6 +75,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			os.Exit(1)
 		}
 	})
+
 	suite.Step(`^all branches are now synchronized$`, func() error {
 		outOfSync, err := state.gitEnv.DevRepo.HasBranchesOutOfSync()
 		if err != nil {
@@ -82,17 +83,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 		if outOfSync {
 			return fmt.Errorf("expected no branches out of sync")
-		}
-		return nil
-	})
-
-	suite.Step(`^Git Town has the original branch hieranchy$`, func() error {
-		have := state.gitEnv.DevRepo.BranchHierarchyTable()
-		diff, errCnt := have.EqualDataTable(state.initialBranchHierarchy)
-		if errCnt > 0 {
-			fmt.Printf("\nERROR! Found %d differences in the branch hierarchy\n\n", errCnt)
-			fmt.Println(diff)
-			return fmt.Errorf("mismatching branches found, see the diff above")
 		}
 		return nil
 	})
