@@ -43,7 +43,7 @@ Feature: conflicts between uncommitted changes and the main branch
     Then it runs the commands
       | BRANCH      | COMMAND                       |
       | new-feature | git checkout main             |
-      | main        | git branch -d new-feature     |
+      | main        | git branch -D new-feature     |
       |             | git checkout existing-feature |
     And it prints the error:
       """
@@ -78,7 +78,7 @@ Feature: conflicts between uncommitted changes and the main branch
     Then it runs the commands
       | BRANCH      | COMMAND                       |
       | new-feature | git checkout main             |
-      | main        | git branch -d new-feature     |
+      | main        | git branch -D new-feature     |
       |             | git checkout existing-feature |
     And it prints the error:
       """
