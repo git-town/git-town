@@ -63,7 +63,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
     And all branches are now synchronized
-    And my repo now has the following committed files
+    And my repo now has these committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |
       | feature | conflicting_file | resolved content |
@@ -83,7 +83,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
     And all branches are now synchronized
-    And my repo now has the following committed files
+    And my repo now has these committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |
       | feature | conflicting_file | resolved content |

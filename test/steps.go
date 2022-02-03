@@ -644,7 +644,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repo (?:now|still) has the following committed files$`, func(table *messages.PickleStepArgument_PickleTable) error {
+	suite.Step(`^my repo (?:now|still) has these committed files$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		fileTable, err := state.gitEnv.DevRepo.FilesInBranches()
 		if err != nil {
 			return fmt.Errorf("cannot determine files in branches in the developer repo: %w", err)

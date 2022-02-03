@@ -77,7 +77,7 @@ Feature: merge conflict
       | feature | local, remote | feature commit                   |
       |         |               | main commit                      |
       |         |               | Merge branch 'main' into feature |
-    And my repo now has the following committed files
+    And my repo now has these committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |

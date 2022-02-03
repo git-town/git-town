@@ -82,7 +82,7 @@ Feature: syncing inside a folder that doesn't exist on the main branch
       | other-feature   | local, remote | other feature commit                     |
       |                 |               | conflicting main commit                  |
       |                 |               | Merge branch 'main' into other-feature   |
-    And my repo still has the following committed files
+    And my repo still has these committed files
       | BRANCH          | NAME             | CONTENT          |
       | main            | conflicting_file | main content     |
       | current-feature | conflicting_file | resolved content |
