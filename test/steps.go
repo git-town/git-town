@@ -496,7 +496,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repo has the following tags$`, func(table *messages.PickleStepArgument_PickleTable) error {
+	suite.Step(`^my repo has the tags$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		return state.gitEnv.CreateTags(table)
 	})
 

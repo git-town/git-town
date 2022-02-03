@@ -1,7 +1,7 @@
 Feature: syncing automatically syncs the tags
 
   Scenario: local tag gets pushed to the remote
-    Given my repo has the following tags
+    Given my repo has the tags
       | NAME      | LOCATION |
       | local-tag | local    |
     When I run "git-town sync"
@@ -10,7 +10,7 @@ Feature: syncing automatically syncs the tags
       | local-tag | local, remote |
 
   Scenario: tag on the remote branch gets pulled
-    Given my repo has the following tags
+    Given my repo has the tags
       | NAME       | LOCATION |
       | remote-tag | remote   |
     When I run "git-town sync"
