@@ -5,10 +5,10 @@ Feature: shipping a branch that exists only on the remote
     Given my repo has a feature branch "other-feature"
     And my origin has a feature branch "feature"
     And my repo contains the commits
-      | BRANCH  | LOCATION | MESSAGE        | FILE NAME    |
-      | feature | remote   | feature commit | feature_file |
+      | BRANCH  | LOCATION | MESSAGE        | FILE NAME        |
+      | feature | remote   | feature commit | conflicting_file |
     And I am on the "other-feature" branch
-    And my workspace has an uncommitted file with name "feature_file" and content "conflicting content"
+    And my workspace has an uncommitted file with name "conflicting_file" and content "conflicting content"
     When I run "git-town ship feature -m 'feature done'" and answer the prompts:
       | PROMPT                                        | ANSWER  |
       | Please specify the parent branch of 'feature' | [ENTER] |
