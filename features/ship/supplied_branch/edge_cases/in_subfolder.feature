@@ -33,7 +33,7 @@ Feature: shipping the supplied feature branch from a subfolder
     And the existing branches are
       | REPOSITORY    | BRANCHES            |
       | local, remote | main, other-feature |
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, remote | feature done |
     And Git Town is now aware of this branch hierarchy
@@ -57,9 +57,9 @@ Feature: shipping the supplied feature branch from a subfolder
       | main          | git checkout other-feature                    |
       | other-feature | git stash pop                                 |
     And I am now on the "other-feature" branch
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, remote | feature done          |
       |         |               | Revert "feature done" |
       | feature | remote        | feature commit        |
-    And Git Town now has the original branch hierarchy
+    And my repo now has its initial branches and branch hierarchy

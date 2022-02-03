@@ -23,7 +23,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       """
     And my repo now has a rebase in progress
 
-  Scenario: aborting
+  Scenario: abort
     When I run "git-town abort"
     Then it runs the commands
       | BRANCH | COMMAND              |
@@ -34,7 +34,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And my repo is left with my original commits
     And Git Town still has the original branch hierarchy
 
-  Scenario: continuing after resolving the conflicts
+  Scenario: continue after resolving the conflicts
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then it runs the commands
@@ -54,14 +54,14 @@ Feature: handle conflicts between the main branch and its tracking branch
     And the existing branches are
       | REPOSITORY    | BRANCHES |
       | local, remote | main     |
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE                   |
       | main   | local, remote | conflicting remote commit |
       |        |               | conflicting local commit  |
       |        |               | feature done              |
     And Git Town now has no branch hierarchy information
 
-  Scenario: continuing after resolving the conflicts and continuing the rebase
+  Scenario: continue after resolving the conflicts and continuing the rebase
     When I resolve the conflict in "conflicting_file"
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"

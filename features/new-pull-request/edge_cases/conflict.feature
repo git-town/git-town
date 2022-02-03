@@ -31,7 +31,7 @@ Feature: merge conflict
     And my uncommitted file is stashed
     And my repo now has a merge in progress
 
-  Scenario: aborting
+  Scenario: abort
     When I run "git-town abort"
     Then it runs the commands
       | BRANCH  | COMMAND              |
@@ -44,7 +44,7 @@ Feature: merge conflict
     And there is no merge in progress
     And my repo is left with my original commits
 
-  Scenario: continuing without resolving the conflicts
+  Scenario: continue without resolving the conflicts
     When I run "git-town continue"
     Then it runs no commands
     And it prints the error:
@@ -56,7 +56,7 @@ Feature: merge conflict
     And my repo still has a merge in progress
 
   @skipWindows
-  Scenario: continuing after resolving conflicts
+  Scenario: continue after resolving conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run "git-town continue"
     Then it runs the commands
@@ -71,19 +71,19 @@ Feature: merge conflict
       """
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, remote | main commit                      |
       | feature | local, remote | feature commit                   |
       |         |               | main commit                      |
       |         |               | Merge branch 'main' into feature |
-    And my repo now has the following committed files
+    And my repo now has these committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |
 
   @skipWindows
-  Scenario: continuing after resolving conflicts and committing
+  Scenario: continue after resolving conflicts and committing
     Given I resolve the conflict in "conflicting_file"
     When I run "git commit --no-edit"
     And I run "git-town continue"

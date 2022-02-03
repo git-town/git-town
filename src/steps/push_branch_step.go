@@ -39,5 +39,5 @@ func (step *PushBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error
 	if currentBranch == step.BranchName {
 		return repo.Logging.PushBranch()
 	}
-	return repo.Logging.PushBranchSetUpstream(step.BranchName)
+	return repo.Logging.PushBranchToOrigin(step.BranchName)
 }

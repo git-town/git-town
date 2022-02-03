@@ -36,7 +36,7 @@ Feature: does not ship an empty branch
       nothing to undo
       """
     And I am still on the "empty-feature" branch
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH        | LOCATION      | MESSAGE        |
       | main          | local, remote | main commit    |
       | empty-feature | local         | feature commit |

@@ -30,7 +30,7 @@ Feature: Skip deleting the remote branch when shipping another branch
     And the existing branches are
       | REPOSITORY    | BRANCHES            |
       | local, remote | main, other-feature |
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH        | LOCATION      | MESSAGE      |
       | main          | local, remote | feature done |
       | other-feature | local         | other commit |
@@ -50,10 +50,14 @@ Feature: Skip deleting the remote branch when shipping another branch
       | feature       | git checkout main                             |
       | main          | git checkout other-feature                    |
     And I am now on the "other-feature" branch
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH        | LOCATION      | MESSAGE               |
       | main          | local, remote | feature done          |
       |               |               | Revert "feature done" |
       | feature       | local         | feature commit        |
       | other-feature | local         | other commit          |
+    And the existing branches are
+      | REPOSITORY | BRANCHES                     |
+      | local      | main, feature, other-feature |
+      | remote     | main, other-feature          |
     And Git Town now has the original branch hierarchy

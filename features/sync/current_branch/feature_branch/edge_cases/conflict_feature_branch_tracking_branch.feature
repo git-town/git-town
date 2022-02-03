@@ -30,7 +30,7 @@ Feature: handle conflicts between the current feature branch and its tracking br
     And my uncommitted file is stashed
     And my repo now has a merge in progress
 
-  Scenario: aborting
+  Scenario: abort
     When I run "git-town abort"
     Then it runs the commands
       | BRANCH  | COMMAND              |
@@ -43,7 +43,7 @@ Feature: handle conflicts between the current feature branch and its tracking br
     And there is no merge in progress
     And my repo is left with my original commits
 
-  Scenario: continuing without resolving the conflicts
+  Scenario: continue without resolving the conflicts
     When I run "git-town continue"
     Then it runs no commands
     And it prints the error:
@@ -54,7 +54,7 @@ Feature: handle conflicts between the current feature branch and its tracking br
     And my uncommitted file is stashed
     And my repo still has a merge in progress
 
-  Scenario: continuing after resolving the conflicts
+  Scenario: continue after resolving the conflicts
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
     Then it runs the commands
@@ -66,11 +66,11 @@ Feature: handle conflicts between the current feature branch and its tracking br
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
     And all branches are now synchronized
-    And my repo now has the following committed files
+    And my repo now has these committed files
       | BRANCH  | NAME             | CONTENT          |
       | feature | conflicting_file | resolved content |
 
-  Scenario: continuing after resolving the conflicts and committing
+  Scenario: continue after resolving the conflicts and committing
     When I resolve the conflict in "conflicting_file"
     And I run "git commit --no-edit"
     And I run "git-town continue"
@@ -82,6 +82,6 @@ Feature: handle conflicts between the current feature branch and its tracking br
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
     And all branches are now synchronized
-    And my repo now has the following committed files
+    And my repo now has these committed files
       | BRANCH  | NAME             | CONTENT          |
       | feature | conflicting_file | resolved content |

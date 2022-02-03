@@ -28,4 +28,4 @@ Feature: Enter Git Town configuration
       | PROMPT                                     | ANSWER        |
       | Please specify the main development branch | [DOWN][ENTER] |
     Then the main branch is now "main"
-    And my repo is now has no perennial branches
+    And my repo now has no perennial branches

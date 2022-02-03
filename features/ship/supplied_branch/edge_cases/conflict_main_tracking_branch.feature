@@ -27,7 +27,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And my repo now has a rebase in progress
     And my uncommitted file is stashed
 
-  Scenario: aborting
+  Scenario: abort
     When I run "git-town abort"
     Then it runs the commands
       | BRANCH        | COMMAND                    |
@@ -40,7 +40,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And my repo is left with my original commits
     And Git Town still has the original branch hierarchy
 
-  Scenario: continuing after resolving the conflicts
+  Scenario: continue after resolving the conflicts
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then it runs the commands
@@ -60,7 +60,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | other-feature | git stash pop                      |
     And I am now on the "other-feature" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE                   | FILE NAME        | FILE CONTENT               |
       | main   | local, remote | conflicting remote commit | conflicting_file | remote conflicting content |
       |        |               | conflicting local commit  | conflicting_file | resolved content           |
@@ -72,7 +72,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | BRANCH        | PARENT |
       | other-feature | main   |
 
-  Scenario: continuing after resolving the conflicts and continuing the rebase
+  Scenario: continue after resolving the conflicts and continuing the rebase
     When I resolve the conflict in "conflicting_file"
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
@@ -111,7 +111,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | main          | git checkout other-feature                                      |
       | other-feature | git stash pop                                                   |
     And I am now on the "other-feature" branch
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, remote | conflicting remote commit        |
       |         |               | conflicting local commit         |
@@ -121,4 +121,4 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | remote        | conflicting remote commit        |
       |         |               | conflicting local commit         |
       |         |               | Merge branch 'main' into feature |
-    And Git Town now has the original branch hierarchy
+    And my repo now has its initial branches and branch hierarchy

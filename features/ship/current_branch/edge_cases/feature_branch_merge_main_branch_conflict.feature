@@ -27,7 +27,7 @@ Feature: handle conflicts between the shipped branch and the main branch
     And I am still on the "feature" branch
     And my repo now has a merge in progress
 
-  Scenario: aborting
+  Scenario: abort
     When I run "git-town abort"
     Then it runs the commands
       | BRANCH  | COMMAND              |
@@ -36,13 +36,13 @@ Feature: handle conflicts between the shipped branch and the main branch
       | main    | git checkout feature |
     And I am still on the "feature" branch
     And there is no merge in progress
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local, remote | conflicting main commit    | conflicting_file | main content    |
       | feature | local         | conflicting feature commit | conflicting_file | feature content |
     And Git Town still has the original branch hierarchy
 
-  Scenario: continuing after resolving the conflicts
+  Scenario: continue after resolving the conflicts
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
     Then it runs the commands
@@ -58,13 +58,13 @@ Feature: handle conflicts between the shipped branch and the main branch
     And the existing branches are
       | REPOSITORY    | BRANCHES |
       | local, remote | main     |
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE                 | FILE NAME        | FILE CONTENT     |
       | main   | local, remote | conflicting main commit | conflicting_file | main content     |
       |        |               | feature done            | conflicting_file | resolved content |
     And Git Town now has no branch hierarchy information
 
-  Scenario: continuing after resolving the conflicts and committing
+  Scenario: continue after resolving the conflicts and committing
     When I resolve the conflict in "conflicting_file"
     And I run "git commit --no-edit"
     And I run "git-town continue"

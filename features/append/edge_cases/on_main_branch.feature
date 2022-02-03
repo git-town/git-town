@@ -20,7 +20,7 @@ Feature: on the main branch
       | new-child | git stash pop             |
     And I am now on the "new-child" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH    | LOCATION      | MESSAGE     |
       | main      | local, remote | main_commit |
       | new-child | local         | main_commit |
@@ -39,7 +39,7 @@ Feature: on the main branch
       |           | git stash pop           |
     And I am now on the "main" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, remote | main_commit |
     And Git Town now has no branch hierarchy information

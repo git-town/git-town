@@ -31,7 +31,7 @@ Feature: syncing inside a folder that doesn't exist on the main branch
       exit status 1
       """
 
-  Scenario: aborting
+  Scenario: abort
     When I run "git-town abort" in the "new_folder" folder
     Then it runs the commands
       | BRANCH          | COMMAND                      |
@@ -44,7 +44,7 @@ Feature: syncing inside a folder that doesn't exist on the main branch
     And there is no merge in progress
     And my repo is left with my original commits
 
-  Scenario: continuing without resolving the conflicts
+  Scenario: continue without resolving the conflicts
     When I run "git-town continue" in the "new_folder" folder
     Then it runs no commands
     And it prints the error:
@@ -55,7 +55,7 @@ Feature: syncing inside a folder that doesn't exist on the main branch
     And my uncommitted file is stashed
     And my repo still has a merge in progress
 
-  Scenario: continuing after resolving the conflicts
+  Scenario: continue after resolving the conflicts
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" in the "new_folder" folder
     Then it runs the commands
@@ -72,7 +72,7 @@ Feature: syncing inside a folder that doesn't exist on the main branch
     And I am still on the "current-feature" branch
     And my workspace has the uncommitted file again
     And there is no merge in progress
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH          | LOCATION      | MESSAGE                                  |
       | main            | local, remote | conflicting main commit                  |
       | current-feature | local, remote | conflicting feature commit               |
@@ -82,7 +82,7 @@ Feature: syncing inside a folder that doesn't exist on the main branch
       | other-feature   | local, remote | other feature commit                     |
       |                 |               | conflicting main commit                  |
       |                 |               | Merge branch 'main' into other-feature   |
-    And my repo still has the following committed files
+    And my repo still has these committed files
       | BRANCH          | NAME             | CONTENT          |
       | main            | conflicting_file | main content     |
       | current-feature | conflicting_file | resolved content |

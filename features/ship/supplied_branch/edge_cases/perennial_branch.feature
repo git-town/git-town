@@ -1,7 +1,7 @@
 Feature: does not ship perennial branches
 
   Background:
-    Given my repo has the perennial branch "production"
+    Given my repo has a perennial branch "production"
     And I am on the "main" branch
     And my workspace has an uncommitted file
     When I run "git-town ship production"

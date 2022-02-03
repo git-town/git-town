@@ -32,7 +32,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     And my uncommitted file is stashed
     And my repo now has a merge in progress
 
-  Scenario: aborting
+  Scenario: abort
     When I run "git-town abort"
     Then it runs the commands
       | BRANCH  | COMMAND              |
@@ -43,12 +43,12 @@ Feature: handle conflicts between the current feature branch and the main branch
     And I am still on the "feature" branch
     And my workspace has the uncommitted file again
     And there is no merge in progress
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local, remote | conflicting main commit    | conflicting_file | main content    |
       | feature | local         | conflicting feature commit | conflicting_file | feature content |
 
-  Scenario: continuing without resolving the conflicts
+  Scenario: continue without resolving the conflicts
     When I run "git-town continue"
     Then it runs no commands
     And it prints the error:
@@ -59,7 +59,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     And my uncommitted file is stashed
     And my repo still has a merge in progress
 
-  Scenario: continuing after resolving the conflicts
+  Scenario: continue after resolving the conflicts
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
     Then it runs the commands
@@ -70,12 +70,12 @@ Feature: handle conflicts between the current feature branch and the main branch
     And I am still on the "feature" branch
     And my workspace has the uncommitted file again
     And all branches are now synchronized
-    And my repo still has the following committed files
+    And my repo still has these committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |
 
-  Scenario: continuing after resolving the conflicts resulting in no changes
+  Scenario: continue after resolving the conflicts resulting in no changes
     When I resolve the conflict in "conflicting_file" with "feature content"
     And I run "git-town continue"
     Then it runs the commands
@@ -86,12 +86,12 @@ Feature: handle conflicts between the current feature branch and the main branch
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
     And all branches are now synchronized
-    And my repo still has the following committed files
+    And my repo still has these committed files
       | BRANCH  | NAME             | CONTENT         |
       | main    | conflicting_file | main content    |
       | feature | conflicting_file | feature content |
 
-  Scenario: continuing after resolving the conflicts and comitting
+  Scenario: continue after resolving the conflicts and comitting
     When I resolve the conflict in "conflicting_file"
     And I run "git commit --no-edit"
     And I run "git-town continue"
@@ -102,7 +102,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     And I am still on the "feature" branch
     And my workspace has the uncommitted file again
     And all branches are now synchronized
-    And my repo still has the following committed files
+    And my repo still has these committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |

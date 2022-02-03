@@ -29,7 +29,7 @@ Feature: renaming a perennial branch with a tracking branch
       |                    | git branch -D production                 |
     And I am now on the "renamed-production" branch
     And the perennial branches are now "qa" and "renamed-production"
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH             | LOCATION      | MESSAGE              |
       | child-feature      | local, remote | child feature commit |
       | renamed-production | local, remote | production commit    |

@@ -31,7 +31,7 @@ Feature: handle conflicts between the supplied feature branch and the main branc
     And my uncommitted file is stashed
     And my repo now has a merge in progress
 
-  Scenario: aborting
+  Scenario: abort
     When I run "git-town abort"
     Then it runs the commands
       | BRANCH        | COMMAND                    |
@@ -42,13 +42,13 @@ Feature: handle conflicts between the supplied feature branch and the main branc
     And I am now on the "other-feature" branch
     And my workspace still contains my uncommitted file
     And there is no merge in progress
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH  | LOCATION      | MESSAGE                    |
       | main    | local, remote | conflicting main commit    |
       | feature | local         | conflicting feature commit |
     And Git Town still has the original branch hierarchy
 
-  Scenario: continuing after resolving the conflicts
+  Scenario: continue after resolving the conflicts
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
     Then it runs the commands
@@ -67,7 +67,7 @@ Feature: handle conflicts between the supplied feature branch and the main branc
     And the existing branches are
       | REPOSITORY    | BRANCHES            |
       | local, remote | main, other-feature |
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE                 | FILE NAME        | FILE CONTENT     |
       | main   | local, remote | conflicting main commit | conflicting_file | main content     |
       |        |               | feature done            | conflicting_file | resolved content |
@@ -75,7 +75,7 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       | BRANCH        | PARENT |
       | other-feature | main   |
 
-  Scenario: continuing after resolving the conflicts and comitting
+  Scenario: continue after resolving the conflicts and comitting
     When I resolve the conflict in "conflicting_file"
     And I run "git commit --no-edit"
     And I run "git-town continue"
@@ -111,7 +111,7 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       | main          | git checkout other-feature                                      |
       | other-feature | git stash pop                                                   |
     And I am now on the "other-feature" branch
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, remote | conflicting main commit          |
       |         |               | feature done                     |
@@ -119,4 +119,4 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       | feature | local, remote | conflicting feature commit       |
       |         | remote        | conflicting main commit          |
       |         |               | Merge branch 'main' into feature |
-    And Git Town now has the original branch hierarchy
+    And my repo now has its initial branches and branch hierarchy

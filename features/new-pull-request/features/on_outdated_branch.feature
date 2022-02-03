@@ -2,8 +2,8 @@
 Feature: syncing before creating the pull request
 
   Background:
-    Given my code base has a feature branch "parent-feature"
-    And my code base has a feature branch "child-feature" as a child of "parent-feature"
+    Given my repo has a feature branch "parent-feature"
+    And my repo has a feature branch "child-feature" as a child of "parent-feature"
     And my repo contains the commits
       | BRANCH         | LOCATION | MESSAGE              |
       | main           | local    | local main commit    |
@@ -43,7 +43,7 @@ Feature: syncing before creating the pull request
       """
     And I am still on the "child-feature" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH         | LOCATION      | MESSAGE                                                                  |
       | main           | local, remote | remote main commit                                                       |
       |                |               | local main commit                                                        |

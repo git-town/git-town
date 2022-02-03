@@ -14,12 +14,12 @@ Feature: show the configuration
         staging
       """
 
-  Scenario: all configured, has nested branches
+  Scenario: all configured, with nested branches
     Given the main branch is "main"
     And my repo has the perennial branches "qa" and "staging"
-    And my repo has the feature branches "parent-feature" and "stand-alone-feature"
-    And my repo has a feature branch "child-feature" as a child of "parent-feature"
-    And my repo has a feature branch "qa-hotfix" as a child of "qa"
+    And my repo has the feature branches "feature-1" and "feature-2"
+    And my repo has a feature branch "feature-1A" as a child of "feature-1"
+    And my repo has a feature branch "hotfix" as a child of "qa"
     When I run "git-town config"
     Then it prints:
       """
@@ -32,39 +32,12 @@ Feature: show the configuration
 
       Branch Ancestry:
         main
-          parent-feature
-            child-feature
-          stand-alone-feature
+          feature-1
+            feature-1A
+          feature-2
 
         qa
-          qa-hotfix
-      """
-
-  Scenario: main branch is configured, perennial branches are not
-    Given the main branch is "main"
-    And the perennial branches are not configured
-    When I run "git-town config"
-    Then it prints:
-      """
-      Main branch:
-        main
-
-      Perennial branches:
-        [none]
-      """
-
-  Scenario: perennial branches are configured, main branch is not
-    Given the main branch is not configured
-    And the perennial branches are "qa" and "staging"
-    When I run "git-town config"
-    Then it prints:
-      """
-      Main branch:
-        [none]
-
-      Perennial branches:
-        qa
-        staging
+          hotfix
       """
 
   Scenario: no configuration data

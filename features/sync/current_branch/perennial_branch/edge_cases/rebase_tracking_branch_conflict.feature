@@ -26,7 +26,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
     And my repo now has a rebase in progress
     And my uncommitted file is stashed
 
-  Scenario: aborting
+  Scenario: abort
     When I run "git-town abort"
     Then it runs the commands
       | BRANCH | COMMAND            |
@@ -37,7 +37,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
     And there is no rebase in progress anymore
     And my repo is left with my original commits
 
-  Scenario: continuing without resolving the conflicts
+  Scenario: continue without resolving the conflicts
     When I run "git-town continue"
     Then it runs no commands
     And it prints the error:
@@ -47,7 +47,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
     And my uncommitted file is stashed
     And my repo still has a rebase in progress
 
-  Scenario: continuing after resolving the conflicts
+  Scenario: continue after resolving the conflicts
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then it runs the commands
@@ -59,11 +59,11 @@ Feature: handle conflicts between the current perennial branch and its tracking 
     And I am still on the "qa" branch
     And my workspace still contains my uncommitted file
     And all branches are now synchronized
-    And my repo now has the following committed files
+    And my repo now has these committed files
       | BRANCH | NAME             | CONTENT          |
       | qa     | conflicting_file | resolved content |
 
-  Scenario: continuing after resolving the conflicts and continuing the rebase
+  Scenario: continue after resolving the conflicts and continuing the rebase
     When I resolve the conflict in "conflicting_file"
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
@@ -75,6 +75,6 @@ Feature: handle conflicts between the current perennial branch and its tracking 
     And I am still on the "qa" branch
     And my workspace still contains my uncommitted file
     And all branches are now synchronized
-    And my repo now has the following committed files
+    And my repo now has these committed files
       | BRANCH | NAME             | CONTENT          |
       | qa     | conflicting_file | resolved content |

@@ -15,6 +15,23 @@ func TestContains(t *testing.T) {
 	assert.False(t, stringslice.Contains(give, "three"))
 }
 
+func TestMainFirst(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		give []string
+		want []string
+	}{
+		{give: []string{"main", "one", "two"}, want: []string{"main", "one", "two"}},
+		{give: []string{"alpha", "main", "omega"}, want: []string{"main", "alpha", "omega"}},
+		{give: []string{"main"}, want: []string{"main"}},
+		{give: []string{}, want: []string{}},
+	}
+	for _, test := range tests {
+		have := stringslice.MainFirst(test.give)
+		assert.Equal(t, test.want, have)
+	}
+}
+
 func TestRemove(t *testing.T) {
 	t.Parallel()
 	give := []string{"one", "two", "three"}

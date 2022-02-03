@@ -22,7 +22,7 @@ Feature: deleting another than the current branch
     And the existing branches are
       | REPOSITORY    | BRANCHES           |
       | local, remote | main, good-feature |
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH       | LOCATION      | MESSAGE                              |
       | main         | local, remote | conflicting with uncommitted changes |
       | good-feature | local, remote | good commit                          |
@@ -38,8 +38,5 @@ Feature: deleting another than the current branch
       |              | git push -u origin dead-feature                     |
     And I am still on the "good-feature" branch
     And my workspace still contains my uncommitted file
-    And the existing branches are
-      | REPOSITORY    | BRANCHES                         |
-      | local, remote | main, dead-feature, good-feature |
     And my repo is left with my original commits
-    And Git Town now has the original branch hierarchy
+    And my repo now has its initial branches and branch hierarchy

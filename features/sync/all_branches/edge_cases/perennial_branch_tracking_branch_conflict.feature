@@ -34,7 +34,7 @@ Feature: handling rebase conflicts between perennial branch and its tracking bra
     And my uncommitted file is stashed
     And my repo now has a rebase in progress
 
-  Scenario: aborting
+  Scenario: abort
     When I run "git-town abort"
     Then it runs the commands
       | BRANCH      | COMMAND                  |
@@ -44,7 +44,7 @@ Feature: handling rebase conflicts between perennial branch and its tracking bra
       | main        | git stash pop            |
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH      | LOCATION      | MESSAGE                   |
       | main        | local, remote | main commit               |
       | perennial-1 | local, remote | perennial-1 commit        |
@@ -52,7 +52,7 @@ Feature: handling rebase conflicts between perennial branch and its tracking bra
       |             | remote        | perennial-2 remote commit |
       | perennial-3 | local, remote | perennial-3 commit        |
 
-  Scenario: skipping
+  Scenario: skip
     When I run "git-town skip"
     Then it runs the commands
       | BRANCH      | COMMAND                       |
@@ -64,7 +64,7 @@ Feature: handling rebase conflicts between perennial branch and its tracking bra
       |             | git stash pop                 |
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH      | LOCATION      | MESSAGE                   |
       | main        | local, remote | main commit               |
       | perennial-1 | local, remote | perennial-1 commit        |
@@ -72,7 +72,7 @@ Feature: handling rebase conflicts between perennial branch and its tracking bra
       |             | remote        | perennial-2 remote commit |
       | perennial-3 | local, remote | perennial-3 commit        |
 
-  Scenario: continuing without resolving the conflicts
+  Scenario: continue without resolving the conflicts
     When I run "git-town continue"
     Then it runs no commands
     And it prints the error:
@@ -82,7 +82,7 @@ Feature: handling rebase conflicts between perennial branch and its tracking bra
     And my uncommitted file is stashed
     And my repo still has a rebase in progress
 
-  Scenario: continuing after resolving the conflicts
+  Scenario: continue after resolving the conflicts
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then it runs the commands
@@ -98,7 +98,7 @@ Feature: handling rebase conflicts between perennial branch and its tracking bra
     And my workspace has the uncommitted file again
     And all branches are now synchronized
 
-  Scenario: continuing after resolving the conflicts and continuing the rebase
+  Scenario: continue after resolving the conflicts and continuing the rebase
     When I resolve the conflict in "conflicting_file"
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"

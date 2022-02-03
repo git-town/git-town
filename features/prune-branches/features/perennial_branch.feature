@@ -1,8 +1,7 @@
 Feature: remove perennial branch configuration when pruning perennial branches
 
   Background:
-    Given my repo has the branches "active-perennial" and "deleted-perennial"
-    And the perennial branches are "active-perennial" and "deleted-perennial"
+    Given my repo has the perennial branches "active-perennial" and "deleted-perennial"
     And my repo contains the commits
       | BRANCH            | LOCATION      | MESSAGE                  |
       | active-perennial  | local, remote | active-perennial commit  |
@@ -33,8 +32,5 @@ Feature: remove perennial branch configuration when pruning perennial branches
       |        | git checkout deleted-perennial                                    |
     And I am now on the "deleted-perennial" branch
     And my workspace still contains my uncommitted file
-    And the existing branches are
-      | REPOSITORY | BRANCHES                                  |
-      | local      | main, active-perennial, deleted-perennial |
-      | remote     | main, active-perennial                    |
+    And my repo now has the initial branches
     And the perennial branches are now "active-perennial" and "deleted-perennial"
