@@ -50,8 +50,4 @@ Feature: killing a branch within a branch chain
       | REPOSITORY    | BRANCHES                              |
       | local, remote | main, feature-1, feature-2, feature-3 |
     And my repo is left with my original commits
-    And Git Town is now aware of this branch hierarchy
-      | BRANCH    | PARENT    |
-      | feature-1 | main      |
-      | feature-2 | feature-1 |
-      | feature-3 | feature-2 |
+    And Git Town now has the original branch hierarchy

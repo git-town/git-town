@@ -38,10 +38,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And my workspace still contains my uncommitted file
     And there is no rebase in progress anymore
     And my repo is left with my original commits
-    And Git Town is still aware of this branch hierarchy
-      | BRANCH        | PARENT |
-      | feature       | main   |
-      | other-feature | main   |
+    And Git Town still has the original branch hierarchy
 
   Scenario: continuing after resolving the conflicts
     When I resolve the conflict in "conflicting_file"
@@ -124,7 +121,4 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | remote        | conflicting remote commit        |
       |         |               | conflicting local commit         |
       |         |               | Merge branch 'main' into feature |
-    And Git Town is now aware of this branch hierarchy
-      | BRANCH        | PARENT |
-      | feature       | main   |
-      | other-feature | main   |
+    And Git Town now has the original branch hierarchy

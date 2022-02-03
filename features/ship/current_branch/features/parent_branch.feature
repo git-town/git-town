@@ -51,7 +51,4 @@ Feature: shipping a parent branch
       |                |               | Revert "parent feature done" |
       | child-feature  | local, remote | child feature commit         |
       | parent-feature | local, remote | parent feature commit        |
-    And Git Town is now aware of this branch hierarchy
-      | BRANCH         | PARENT         |
-      | child-feature  | parent-feature |
-      | parent-feature | main           |
+    And Git Town now has the original branch hierarchy

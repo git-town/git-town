@@ -45,6 +45,4 @@ Feature: does not kill perennial branches
       | REPOSITORY    | BRANCHES          |
       | local, remote | main, feature, qa |
     And my repo is left with my original commits
-    And Git Town is still aware of this branch hierarchy
-      | BRANCH  | PARENT |
-      | feature | main   |
+    And Git Town still has the original branch hierarchy
