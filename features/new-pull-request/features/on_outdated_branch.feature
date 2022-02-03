@@ -1,5 +1,5 @@
 @skipWindows
-Feature: syncing before creating the pull request
+Feature: sync before creating the pull request
 
   Background:
     Given my repo has a feature branch "parent-feature"
