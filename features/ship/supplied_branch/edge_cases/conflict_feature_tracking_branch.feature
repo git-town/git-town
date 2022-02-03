@@ -113,5 +113,5 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
       | feature | local, remote | local conflicting commit                                   |
       |         |               | remote conflicting commit                                  |
       |         |               | Merge remote-tracking branch 'origin/feature' into feature |
-    And my repo now has the original branches
+    And my repo now has the initial branches
     And Git Town now has the original branch hierarchy

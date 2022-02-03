@@ -42,6 +42,6 @@ Feature: local repository
       |              | git stash pop                                             |
     And I am still on the "good-feature" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the original branches
+    And my repo now has the initial branches
     And my repo is left with my original commits
     And Git Town now has the original branch hierarchy

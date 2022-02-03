@@ -34,5 +34,5 @@ Feature: delete branches that were shipped or removed on another machine
       |        | git checkout finished-feature                                   |
     And I am now on the "finished-feature" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the original branches
+    And my repo now has the initial branches
     And Git Town now has the original branch hierarchy

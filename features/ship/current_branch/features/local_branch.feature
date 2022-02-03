@@ -46,5 +46,5 @@ Feature: ship a local feature branch
       | main    | local, remote | feature done          |
       |         |               | Revert "feature done" |
       | feature | local         | feature commit        |
-    And my repo now has the original branches
+    And my repo now has the initial branches
     And Git Town still has the original branch hierarchy

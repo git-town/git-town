@@ -32,5 +32,5 @@ Feature: remove perennial branch configuration when pruning perennial branches
       |        | git checkout deleted-perennial                                    |
     And I am now on the "deleted-perennial" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the original branches
+    And my repo now has the initial branches
     And the perennial branches are now "active-perennial" and "deleted-perennial"
