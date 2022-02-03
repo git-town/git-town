@@ -39,4 +39,4 @@ Feature: in a local repo
       |                  | git stash pop                 |
     And I am now on the "existing-feature" branch
     And my repo is left with my original commits
-    And Git Town still has the original branch hieranchy
+    And Git Town still has the original branch hierarchy

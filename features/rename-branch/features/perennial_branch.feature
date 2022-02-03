@@ -50,4 +50,4 @@ Feature: renaming a perennial branch with a tracking branch
     And I am now on the "production" branch
     And the perennial branches are now "qa" and "production"
     And my repo is left with my original commits
-    And Git Town now has the original branch hieranchy
+    And Git Town now has the original branch hierarchy

@@ -31,7 +31,7 @@ Feature: aborting the ship by empty commit message
       """
     And I am still on the "feature" branch
     And my repo is left with my original commits
-    And Git Town still has the original branch hieranchy
+    And Git Town still has the original branch hierarchy
 
   Scenario: undo
     When I run "git-town undo"
@@ -41,4 +41,4 @@ Feature: aborting the ship by empty commit message
       """
     And I am still on the "feature" branch
     And my repo is left with my original commits
-    And Git Town still has the original branch hieranchy
+    And Git Town still has the original branch hierarchy

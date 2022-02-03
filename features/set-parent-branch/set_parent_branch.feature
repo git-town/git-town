@@ -10,10 +10,7 @@ Feature: update the parent of a nested feature branch
     When I run "git-town set-parent-branch" and answer the prompts:
       | PROMPT                                              | ANSWER  |
       | Please specify the parent branch of 'child-feature' | [ENTER] |
-    Then Git Town is now aware of this branch hierarchy
-      | BRANCH         | PARENT         |
-      | child-feature  | parent-feature |
-      | parent-feature | main           |
+    And Git Town still has the original branch hierarchy
 
   Scenario: selecting another branch
     When I run "git-town set-parent-branch" and answer the prompts:

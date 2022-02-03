@@ -43,4 +43,4 @@ Feature: append to a perennial branch
     And my repo now has the following commits
       | BRANCH     | LOCATION      | MESSAGE           |
       | production | local, remote | production_commit |
-    And Git Town now has the original branch hieranchy
+    And Git Town now has the original branch hierarchy

@@ -41,4 +41,4 @@ Feature: the branch to kill has a deleted tracking branch
       | REPOSITORY | BRANCHES                             |
       | local      | main, current-feature, other-feature |
       | remote     | main, other-feature                  |
-    And Git Town now has the original branch hieranchy
+    And Git Town now has the original branch hierarchy

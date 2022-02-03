@@ -42,4 +42,4 @@ Feature: deleting another than the current branch
       | REPOSITORY    | BRANCHES                         |
       | local, remote | main, dead-feature, good-feature |
     And my repo is left with my original commits
-    And Git Town now has the original branch hieranchy
+    And Git Town now has the original branch hierarchy

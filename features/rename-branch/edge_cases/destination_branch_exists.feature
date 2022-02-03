@@ -16,7 +16,7 @@ Feature: destination branch exists
       a branch named "existing-feature" already exists
       """
     And I am still on the "current-feature" branch
-    And Git Town still has the original branch hieranchy
+    And Git Town still has the original branch hierarchy
 
   Scenario: destination branch exists remotely
     Given my repo has a feature branch "current-feature"
@@ -35,4 +35,4 @@ Feature: destination branch exists
       a branch named "existing-feature" already exists
       """
     And I am still on the "current-feature" branch
-    And Git Town still has the original branch hieranchy
+    And Git Town still has the original branch hierarchy

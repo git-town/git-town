@@ -32,7 +32,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And I am still on the "feature" branch
     And there is no rebase in progress anymore
     And my repo is left with my original commits
-    And Git Town still has the original branch hieranchy
+    And Git Town still has the original branch hierarchy
 
   Scenario: continuing after resolving the conflicts
     When I resolve the conflict in "conflicting_file"

@@ -48,4 +48,4 @@ Feature: on the main branch
       | BRANCH           | LOCATION      | MESSAGE                 |
       | main             | local, remote | main commit             |
       | existing-feature | local         | existing feature commit |
-    And Git Town now has the original branch hieranchy
+    And Git Town now has the original branch hierarchy

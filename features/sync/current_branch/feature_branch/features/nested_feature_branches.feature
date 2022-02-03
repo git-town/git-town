@@ -53,4 +53,4 @@ Feature: nested feature branches
       |                |               | remote main commit                                                       |
       |                |               | local main commit                                                        |
       |                |               | Merge branch 'main' into parent-feature                                  |
-    And Git Town still has the original branch hieranchy
+    And Git Town still has the original branch hierarchy

@@ -46,7 +46,7 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       | BRANCH  | LOCATION      | MESSAGE                    |
       | main    | local, remote | conflicting main commit    |
       | feature | local         | conflicting feature commit |
-    And Git Town still has the original branch hieranchy
+    And Git Town still has the original branch hierarchy
 
   Scenario: continuing after resolving the conflicts
     When I resolve the conflict in "conflicting_file"
@@ -119,4 +119,4 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       | feature | local, remote | conflicting feature commit       |
       |         | remote        | conflicting main commit          |
       |         |               | Merge branch 'main' into feature |
-    And Git Town now has the original branch hieranchy
+    And Git Town now has the original branch hierarchy

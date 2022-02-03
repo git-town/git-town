@@ -40,4 +40,4 @@ Feature: rename a parent branch
       | parent-feature         | git branch -D renamed-parent-feature                        |
     And I am now on the "parent-feature" branch
     And my repo is left with my original commits
-    And Git Town now has the original branch hieranchy
+    And Git Town now has the original branch hierarchy

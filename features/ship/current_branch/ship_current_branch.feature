@@ -49,6 +49,4 @@ Feature: enter the commit message interactively via the editor
       | main    | local, remote | feature done          |
       |         |               | Revert "feature done" |
       | feature | local, remote | feature commit        |
-    And Git Town is now aware of this branch hierarchy
-      | BRANCH  | PARENT |
-      | feature | main   |
+    And Git Town now has the original branch hierarchy

@@ -36,4 +36,4 @@ Feature: with pull-branch-strategy set to "merge"
       |         |               | remote main commit                                         |
       |         |               | Merge remote-tracking branch 'origin/main'                 |
       |         |               | Merge branch 'main' into feature                           |
-    And Git Town still has the original branch hieranchy
+    And Git Town still has the original branch hierarchy

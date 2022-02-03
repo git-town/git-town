@@ -53,7 +53,4 @@ Feature: shipping the supplied feature branch without a remote origin
       | main    | local    | feature done          |
       |         |          | Revert "feature done" |
       | feature | local    | feature commit        |
-    And Git Town is now aware of this branch hierarchy
-      | BRANCH        | PARENT |
-      | feature       | main   |
-      | other-feature | main   |
+    And Git Town now has the original branch hierarchy

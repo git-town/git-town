@@ -45,4 +45,4 @@ Feature: offline mode
       | REPOSITORY    | BRANCHES                             |
       | local, remote | main, current-feature, other-feature |
     And my repo is left with my original commits
-    And Git Town now has the original branch hieranchy
+    And Git Town now has the original branch hierarchy

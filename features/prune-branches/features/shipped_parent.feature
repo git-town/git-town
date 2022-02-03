@@ -37,4 +37,4 @@ Feature: a parent branch of a local branch was shipped
       | REPOSITORY | BRANCHES                     |
       | local      | main, feature, feature-child |
       | remote     | main, feature-child          |
-    And Git Town now has the original branch hieranchy
+    And Git Town now has the original branch hierarchy

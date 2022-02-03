@@ -38,4 +38,4 @@ Feature: delete branches that were shipped or removed on another machine
       | REPOSITORY | BRANCHES                               |
       | local      | main, active-feature, finished-feature |
       | remote     | main, active-feature                   |
-    And Git Town now has the original branch hieranchy
+    And Git Town now has the original branch hierarchy

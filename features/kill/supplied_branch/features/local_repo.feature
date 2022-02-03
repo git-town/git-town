@@ -46,4 +46,4 @@ Feature: local repository
       | REPOSITORY | BRANCHES                          |
       | local      | main, good-feature, other-feature |
     And my repo is left with my original commits
-    And Git Town now has the original branch hieranchy
+    And Git Town now has the original branch hierarchy
