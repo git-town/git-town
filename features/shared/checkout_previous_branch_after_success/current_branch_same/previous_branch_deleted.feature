@@ -1,4 +1,4 @@
-Feature: deleting the current branch makes the main branch the new previous branch
+Feature: delete the current branch makes the main branch the new previous branch
 
   Scenario: kill
     Given my repo has the feature branches "previous" and "current"

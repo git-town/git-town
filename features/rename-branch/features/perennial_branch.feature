@@ -1,4 +1,4 @@
-Feature: renaming a perennial branch with a tracking branch
+Feature: rename a perennial branch with a tracking branch
 
   Background:
     Given my repo has the perennial branches "qa" and "production"

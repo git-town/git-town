@@ -1,4 +1,4 @@
-Feature: ignoring files
+Feature: ignore files
 
   Scenario: with ignored files
     Given my repo has a feature branch "feature"

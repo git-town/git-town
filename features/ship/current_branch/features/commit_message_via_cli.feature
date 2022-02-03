@@ -1,4 +1,4 @@
-Feature: shipping the current feature branch with a tracking branch
+Feature: ship the current feature branch with a tracking branch
 
   Background:
     Given my repo has a feature branch "feature"

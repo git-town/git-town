@@ -1,4 +1,4 @@
-Feature: shipping a parent branch
+Feature: ship a parent branch
 
   Background:
     Given my repo has a feature branch "parent-feature"

@@ -1,4 +1,4 @@
-Feature: deleting another than the current branch
+Feature: delete another than the current branch
 
   Background:
     Given my repo has the feature branches "good-feature" and "dead-feature"

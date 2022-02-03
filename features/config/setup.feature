@@ -1,5 +1,5 @@
 @skipWindows
-Feature: Enter Git Town configuration
+Feature: enter Git Town configuration
 
   Scenario: already configured
     Given my repo has the branches "production" and "qa"

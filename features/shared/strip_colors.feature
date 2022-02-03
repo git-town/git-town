@@ -1,5 +1,5 @@
 @skipWindows
-Feature: Strip colors
+Feature: strip colors
 
   Scenario: colors are stripped from the output of git commands run internally
     Given I haven't configured Git Town yet

@@ -1,4 +1,4 @@
-Feature: Help for unknown command
+Feature: help for unknown command
 
   Scenario: unknown Git Town command
     When I run "git-town invalidcommand"

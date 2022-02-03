@@ -1,4 +1,4 @@
-Feature: changing offline mode
+Feature: change offline mode
 
   Scenario: enable offline mode
     When I run "git-town offline true"

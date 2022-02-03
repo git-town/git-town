@@ -1,4 +1,4 @@
-Feature: creating a new branch makes the current branch the new previous branch
+Feature: create a new branch makes the current branch the new previous branch
 
   Scenario: hack
     Given my repo has the feature branches "previous" and "current"

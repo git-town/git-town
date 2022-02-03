@@ -1,5 +1,5 @@
 @skipWindows
-Feature: aborting the ship by empty commit message
+Feature: abort the ship by empty commit message
 
   Background:
     Given my repo has a feature branch "feature"

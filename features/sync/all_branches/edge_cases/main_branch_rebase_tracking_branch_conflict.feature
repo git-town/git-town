@@ -1,4 +1,4 @@
-Feature: handling rebase conflicts between main branch and its tracking branch
+Feature: handle rebase conflicts between main branch and its tracking branch
 
   Background:
     Given my repo has a feature branch "feature"
