@@ -39,9 +39,6 @@ Feature: killing a local branch
       | current-feature | git reset {{ sha 'current feature commit' }}                  |
     And I am now on the "current-feature" branch
     And my workspace still contains my uncommitted file
-    And the existing branches are
-      | REPOSITORY | BRANCHES                             |
-      | local      | main, current-feature, other-feature |
-      | remote     | main, other-feature                  |
+    And my repo now has the original branches
     And my repo is left with my original commits
     And Git Town now has the original branch hierarchy

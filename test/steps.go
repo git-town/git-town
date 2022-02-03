@@ -18,6 +18,7 @@ import (
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/run"
+	"github.com/git-town/git-town/v7/src/stringslice"
 )
 
 // beforeSuiteMux ensures that we run BeforeSuite only once globally.
@@ -391,6 +392,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return err
 		}
+		state.initialRemoteBranches = []string{}
 		state.gitEnv.OriginRepo = nil
 		return nil
 	})
@@ -439,6 +441,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		state.initialBranchHierarchy.AddRow(branch, "main")
 		if !isLocal {
+			state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 			return state.gitEnv.DevRepo.PushBranchSetUpstream(branch)
 		}
 		return nil
@@ -676,7 +679,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			want.AddRow("local, remote", localBranchesJoined)
 		} else {
 			want.AddRow("local", localBranchesJoined)
-			want.AddRow("remote", remoteBranchesJoined)
+			if remoteBranchesJoined != "" {
+				want.AddRow("remote", remoteBranchesJoined)
+			}
 		}
 		// fmt.Printf("HAVE:\n%s\n", have.String())
 		// fmt.Printf("WANT:\n%s\n", want.String())
@@ -802,6 +807,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the "([^"]*)" branch gets deleted on the remote$`, func(name string) error {
+		state.initialRemoteBranches = stringslice.Remove(state.initialRemoteBranches, name)
 		return state.gitEnv.OriginRepo.RemoveBranch(name)
 	})
 
