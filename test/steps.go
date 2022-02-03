@@ -596,7 +596,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return compareExistingCommits(state, state.initialCommits)
 	})
 
-	suite.Step(`^my repo is now has no perennial branches$`, func() error {
+	suite.Step(`^my repo now has no perennial branches$`, func() error {
 		state.gitEnv.DevRepo.Config.Reload()
 		branches := state.gitEnv.DevRepo.Config.PerennialBranches()
 		if len(branches) > 0 {
