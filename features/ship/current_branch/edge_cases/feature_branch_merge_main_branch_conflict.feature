@@ -27,7 +27,7 @@ Feature: handle conflicts between the shipped branch and the main branch
     And I am still on the "feature" branch
     And my repo now has a merge in progress
 
-  Scenario: aborting
+  Scenario: abort
     When I run "git-town abort"
     Then it runs the commands
       | BRANCH  | COMMAND              |

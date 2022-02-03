@@ -26,7 +26,7 @@ Feature: conflicts between the main branch and its tracking branch
     And my repo now has a rebase in progress
     And my uncommitted file is stashed
 
-  Scenario: aborting
+  Scenario: abort
     When I run "git-town abort"
     Then it runs the commands
       | BRANCH           | COMMAND                       |

@@ -31,7 +31,7 @@ Feature: syncing inside a folder that doesn't exist on the main branch
       exit status 1
       """
 
-  Scenario: aborting
+  Scenario: abort
     When I run "git-town abort" in the "new_folder" folder
     Then it runs the commands
       | BRANCH          | COMMAND                      |

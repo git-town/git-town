@@ -36,7 +36,7 @@ Feature: handle merge conflicts between feature branch and main branch
     And my uncommitted file is stashed
     And my repo now has a merge in progress
 
-  Scenario: aborting
+  Scenario: abort
     When I run "git-town abort"
     Then it runs the commands
       | BRANCH    | COMMAND                |
