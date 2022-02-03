@@ -326,16 +326,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my code base has a feature branch "([^"]*)"$`, func(name string) error {
-		err := state.gitEnv.DevRepo.CreateFeatureBranch(name)
-		if err != nil {
-			return err
-		}
-		state.initialLocalBranches = append(state.initialLocalBranches, name)
-		state.initialBranchHierarchy.AddRow(name, "main")
-		return state.gitEnv.DevRepo.PushBranchToOrigin(name)
-	})
-
 	suite.Step(`^my computer has a broken "([^"]*)" tool installed$`, func(name string) error {
 		return state.gitEnv.DevShell.MockBrokenCommand(name)
 	})

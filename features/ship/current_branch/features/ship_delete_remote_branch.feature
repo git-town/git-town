@@ -1,7 +1,7 @@
 Feature: ship-delete-remote-branch disabled
 
   Background:
-    Given my code base has a feature branch "feature"
+    Given my repo has a local feature branch "feature"
     And my repo contains the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, remote | feature commit |

@@ -2,7 +2,7 @@
 Feature: syncing before creating the pull request
 
   Background:
-    Given my code base has a feature branch "parent-feature"
+    Given my repo has a feature branch "parent-feature"
     And my repo has a feature branch "child-feature" as a child of "parent-feature"
     And my repo contains the commits
       | BRANCH         | LOCATION | MESSAGE              |
