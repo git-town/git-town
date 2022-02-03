@@ -65,6 +65,9 @@ Feature: shipping a branch that exists only on the remote
       | main    | local, remote | feature done          |
       |         |               | Revert "feature done" |
       | feature | local, remote | feature commit        |
+    And the existing branches are
+      | REPOSITORY    | BRANCHES                     |
+      | local, remote | main, feature, other-feature |
     And Git Town is now aware of this branch hierarchy
       | BRANCH        | PARENT |
       | feature       | main   |

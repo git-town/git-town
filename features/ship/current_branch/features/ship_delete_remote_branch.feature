@@ -49,4 +49,5 @@ Feature: ship-delete-remote-branch disabled
       | main    | local, remote | feature done          |
       |         |               | Revert "feature done" |
       | feature | local         | feature commit        |
+    And my repo now has the original branches
     And Git Town now has the original branch hierarchy

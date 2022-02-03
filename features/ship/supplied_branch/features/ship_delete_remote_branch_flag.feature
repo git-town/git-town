@@ -56,4 +56,8 @@ Feature: Skip deleting the remote branch when shipping another branch
       |               |               | Revert "feature done" |
       | feature       | local         | feature commit        |
       | other-feature | local         | other commit          |
+    And the existing branches are
+      | REPOSITORY | BRANCHES                     |
+      | local      | main, feature, other-feature |
+      | remote     | main, other-feature          |
     And Git Town now has the original branch hierarchy

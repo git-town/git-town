@@ -55,9 +55,6 @@ Feature: handle conflicts between the shipped branch and the main branch
       |         | git push origin :feature     |
       |         | git branch -D feature        |
     And I am now on the "main" branch
-    And the existing branches are
-      | REPOSITORY    | BRANCHES |
-      | local, remote | main     |
     And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE                 | FILE NAME        | FILE CONTENT     |
       | main   | local, remote | conflicting main commit | conflicting_file | main content     |

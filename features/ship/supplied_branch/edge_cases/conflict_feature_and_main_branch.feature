@@ -119,4 +119,5 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       | feature | local, remote | conflicting feature commit       |
       |         | remote        | conflicting main commit          |
       |         |               | Merge branch 'main' into feature |
+    And my repo now has the original branches
     And Git Town now has the original branch hierarchy
