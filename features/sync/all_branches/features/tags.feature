@@ -1,7 +1,7 @@
 Feature: syncing all branches syncs the tags
 
   Background:
-    Given my repo has the following tags
+    Given my repo has the tags
       | NAME       | LOCATION |
       | local-tag  | local    |
       | remote-tag | remote   |
