@@ -54,7 +54,7 @@ Feature: handle merge conflicts between feature branch and main branch
       |           |               | Merge branch 'main' into feature-1 |
       | feature-2 | local, remote | feature-2 commit                   |
       | feature-3 | local, remote | feature-3 commit                   |
-    And my repo now has the following committed files
+    And my repo now has these committed files
       | BRANCH    | NAME             | CONTENT           |
       | main      | conflicting_file | main content      |
       | feature-1 | conflicting_file | main content      |
@@ -86,7 +86,7 @@ Feature: handle merge conflicts between feature branch and main branch
       | feature-3 | local, remote | feature-3 commit                   |
       |           |               | main commit                        |
       |           |               | Merge branch 'main' into feature-3 |
-    And my repo now has the following committed files
+    And my repo now has these committed files
       | BRANCH    | NAME             | CONTENT           |
       | main      | conflicting_file | main content      |
       | feature-1 | conflicting_file | main content      |
@@ -123,7 +123,7 @@ Feature: handle merge conflicts between feature branch and main branch
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
     And all branches are now synchronized
-    And my repo now has the following committed files
+    And my repo now has these committed files
       | BRANCH    | NAME             | CONTENT           |
       | main      | conflicting_file | main content      |
       | feature-1 | conflicting_file | main content      |

@@ -65,7 +65,7 @@ Feature: conflicts between the main branch and its tracking branch
       |             |               | conflicting local commit  |
       | new-feature | local         | conflicting remote commit |
       |             |               | conflicting local commit  |
-    And my repo now has the following committed files
+    And my repo now has these committed files
       | BRANCH      | NAME             | CONTENT          |
       | main        | conflicting_file | resolved content |
       | new-feature | conflicting_file | resolved content |
