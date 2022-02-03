@@ -1,12 +1,12 @@
-Feature: inside a committed subfolder only on the current feature branch
+Feature: inside an uncommitted subfolder on the current feature branch
 
   Background:
     Given my repo has a feature branch "existing-feature"
     And my repo contains the commits
-      | BRANCH           | LOCATION      | MESSAGE       | FILE NAME        |
-      | existing-feature | local, remote | folder commit | new_folder/file1 |
+      | BRANCH | LOCATION      | MESSAGE     |
+      | main   | local, remote | main commit |
     And I am on the "existing-feature" branch
-    And my workspace has an uncommitted file
+    And my workspace has an uncommitted file in folder "new_folder"
     When I run "git-town hack new-feature" in the "new_folder" folder
 
   Scenario: result
@@ -22,7 +22,10 @@ Feature: inside a committed subfolder only on the current feature branch
       | new-feature      | git stash pop               |
     And I am now on the "new-feature" branch
     And my workspace still contains my uncommitted file
-    And my repo is left with my original commits
+    And my repo now has the following commits
+      | BRANCH      | LOCATION      | MESSAGE     |
+      | main        | local, remote | main commit |
+      | new-feature | local         | main commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH           | PARENT |
       | existing-feature | main   |
