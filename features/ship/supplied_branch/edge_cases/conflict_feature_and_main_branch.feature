@@ -48,7 +48,7 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       | feature | local         | conflicting feature commit |
     And Git Town still has the original branch hierarchy
 
-  Scenario: continuing after resolving the conflicts
+  Scenario: continue after resolving the conflicts
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
     Then it runs the commands
@@ -75,7 +75,7 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       | BRANCH        | PARENT |
       | other-feature | main   |
 
-  Scenario: continuing after resolving the conflicts and comitting
+  Scenario: continue after resolving the conflicts and comitting
     When I resolve the conflict in "conflicting_file"
     And I run "git commit --no-edit"
     And I run "git-town continue"

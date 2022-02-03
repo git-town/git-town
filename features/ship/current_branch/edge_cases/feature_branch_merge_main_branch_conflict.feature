@@ -42,7 +42,7 @@ Feature: handle conflicts between the shipped branch and the main branch
       | feature | local         | conflicting feature commit | conflicting_file | feature content |
     And Git Town still has the original branch hierarchy
 
-  Scenario: continuing after resolving the conflicts
+  Scenario: continue after resolving the conflicts
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
     Then it runs the commands
@@ -64,7 +64,7 @@ Feature: handle conflicts between the shipped branch and the main branch
       |        |               | feature done            | conflicting_file | resolved content |
     And Git Town now has no branch hierarchy information
 
-  Scenario: continuing after resolving the conflicts and committing
+  Scenario: continue after resolving the conflicts and committing
     When I resolve the conflict in "conflicting_file"
     And I run "git commit --no-edit"
     And I run "git-town continue"

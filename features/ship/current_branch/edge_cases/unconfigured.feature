@@ -1,7 +1,7 @@
 @skipWindows
 Feature: ask for missing configuration information
 
-  Scenario: running unconfigured
+  Scenario: unconfigured
     Given I haven't configured Git Town yet
     When I run "git-town ship" and answer the prompts:
       | PROMPT                                     | ANSWER  |

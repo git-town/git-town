@@ -26,14 +26,14 @@ Feature: conflicts between uncommitted changes and the main branch
       """
     And the file "conflicting_file" contains unresolved conflicts
 
-  Scenario: continuing without resolving the conflicts
+  Scenario: continue without resolving the conflicts
     When I run "git-town continue"
     Then it prints the error:
       """
       you must resolve the conflicts before continuing
       """
 
-  Scenario: continuing after resolving the conflicts
+  Scenario: continue after resolving the conflicts
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then it runs no commands
