@@ -1,7 +1,6 @@
 Feature: on perennial branch
 
   Scenario: on main branch
-    Given my repo has a feature branch "feature"
     And I am on the "main" branch
     When I run "git-town diff-parent"
     Then it runs no commands
