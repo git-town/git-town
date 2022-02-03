@@ -41,6 +41,5 @@ Feature: does not kill perennial branches
       """
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the initial branches
     And my repo is left with my original commits
-    And Git Town still has the original branch hierarchy
+    And my repo now has its original branches and branch hierarchy

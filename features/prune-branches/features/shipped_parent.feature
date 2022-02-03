@@ -33,5 +33,4 @@ Feature: a parent branch of a local branch was shipped
       | main   | git branch feature {{ sha 'feature commit' }} |
     And I am now on the "main" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the initial branches
-    And Git Town now has the original branch hierarchy
+    And my repo now has its original branches and branch hierarchy

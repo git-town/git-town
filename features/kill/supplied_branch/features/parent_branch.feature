@@ -41,6 +41,5 @@ Feature: killing a branch within a branch chain
       |           | git push -u origin feature-2                      |
     And I am now on the "feature-3" branch
     And my workspace has the uncommitted file again
-    And my repo now has the initial branches
     And my repo is left with my original commits
-    And Git Town now has the original branch hierarchy
+    And my repo now has its original branches and branch hierarchy

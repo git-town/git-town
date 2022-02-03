@@ -62,5 +62,4 @@ Feature: shipping the supplied feature branch from a subfolder
       | main    | local, remote | feature done          |
       |         |               | Revert "feature done" |
       | feature | remote        | feature commit        |
-    And my repo now has the initial branches
-    And Git Town now has the original branch hierarchy
+    And my repo now has its original branches and branch hierarchy
