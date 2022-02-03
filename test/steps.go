@@ -16,7 +16,6 @@ import (
 	"github.com/cucumber/godog"
 	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/v7/src/cli"
-	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/run"
 	"github.com/git-town/git-town/v7/src/stringslice"
 )
@@ -672,9 +671,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		want := DataTable{}
 		want.AddRow("REPOSITORY", "BRANCHES")
 		sort.Strings(state.initialLocalBranches)
-		state.initialLocalBranches = git.MainFirst(state.initialLocalBranches)
+		state.initialLocalBranches = stringslice.MainFirst(state.initialLocalBranches)
 		sort.Strings(state.initialRemoteBranches)
-		state.initialRemoteBranches = git.MainFirst(state.initialRemoteBranches)
+		state.initialRemoteBranches = stringslice.MainFirst(state.initialRemoteBranches)
 		localBranchesJoined := strings.Join(state.initialLocalBranches, ", ")
 		remoteBranchesJoined := strings.Join(state.initialRemoteBranches, ", ")
 		if localBranchesJoined == remoteBranchesJoined {
