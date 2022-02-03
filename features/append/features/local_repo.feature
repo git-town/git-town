@@ -40,4 +40,4 @@ Feature: in a local repo
     And I am now on the "existing-feature" branch
     And my repo is left with my original commits
     And my workspace still contains my uncommitted file
-    And Git Town still has the original branch hierarchy
+    And my repo now has its initial branches and branch hierarchy
