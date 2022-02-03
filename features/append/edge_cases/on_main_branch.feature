@@ -42,3 +42,4 @@ Feature: on the main branch
     And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, remote | main_commit |
+    And Git Town now has no branch hierarchy information

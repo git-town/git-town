@@ -35,6 +35,4 @@ Feature: offline mode
       | feature         | git branch -D renamed-feature              |
     And I am now on the "feature" branch
     And my repo is left with my original commits
-    And Git Town is now aware of this branch hierarchy
-      | BRANCH  | PARENT |
-      | feature | main   |
+    And Git Town now has the original branch hieranchy

@@ -44,7 +44,4 @@ Feature: killing a local branch
       | local      | main, current-feature, other-feature |
       | remote     | main, other-feature                  |
     And my repo is left with my original commits
-    And Git Town is now aware of this branch hierarchy
-      | BRANCH          | PARENT |
-      | current-feature | main   |
-      | other-feature   | main   |
+    And Git Town now has the original branch hieranchy
