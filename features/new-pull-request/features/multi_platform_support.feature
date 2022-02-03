@@ -1,7 +1,7 @@
 @skipWindows
 Feature: support many browsers and operating systems
 
-  Scenario Outline: supported tool installed
+  Scenario Outline:
     Given my repo has a feature branch "feature"
     And my repo's origin is "https://github.com/git-town/git-town.git"
     And my computer has the "<TOOL>" tool installed
