@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -329,6 +330,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return err
 		}
+		state.initialLocalBranches = append(state.initialLocalBranches, name)
 		state.initialBranchHierarchy.AddRow(name, "main")
 		return state.gitEnv.DevRepo.PushBranchSetUpstream(name)
 	})
@@ -338,6 +340,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return err
 		}
+		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		state.initialBranchHierarchy.AddRow(branch, parent)
 		return state.gitEnv.DevRepo.PushBranchSetUpstream(branch)
 	})
@@ -360,6 +363,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^my (?:coworker|origin) has a feature branch "([^"]*)"$`, func(branch string) error {
+		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 		return state.gitEnv.OriginRepo.CreateBranch(branch, "main")
 	})
 
@@ -406,10 +410,12 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^my repo has a branch "([^"]*)"$`, func(branch string) error {
+		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		return state.gitEnv.DevRepo.CreateBranch(branch, "main")
 	})
 
 	suite.Step(`^my repo has a feature branch "([^"]*)" with no parent$`, func(branch string) error {
+		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		return state.gitEnv.DevRepo.CreateFeatureBranchNoParent(branch)
 	})
 
@@ -418,6 +424,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return fmt.Errorf("cannot create feature branch %q: %w", childBranch, err)
 		}
+		state.initialLocalBranches = append(state.initialLocalBranches, childBranch)
 		state.initialBranchHierarchy.AddRow(childBranch, parentBranch)
 		return state.gitEnv.DevRepo.PushBranchSetUpstream(childBranch)
 	})
@@ -428,6 +435,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return err
 		}
+		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		state.initialBranchHierarchy.AddRow(branch, "main")
 		if !isLocal {
 			return state.gitEnv.DevRepo.PushBranchSetUpstream(branch)
@@ -478,11 +486,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^my repo has the branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
-		err := state.gitEnv.DevRepo.CreateBranch(branch1, "main")
-		if err != nil {
-			return err
+		for _, branch := range []string{branch1, branch2} {
+			err := state.gitEnv.DevRepo.CreateBranch(branch, "main")
+			if err != nil {
+				return err
+			}
+			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		}
-		return state.gitEnv.DevRepo.CreateBranch(branch2, "main")
+		return nil
 	})
 
 	suite.Step(`^my repo has the following tags$`, func(table *messages.PickleStepArgument_PickleTable) error {
@@ -496,12 +507,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			if err != nil {
 				return err
 			}
+			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			state.initialBranchHierarchy.AddRow(branch, "main")
 			if !isLocal {
 				err = state.gitEnv.DevRepo.PushBranchSetUpstream(branch)
 				if err != nil {
 					return err
 				}
+				state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 			}
 		}
 		return nil
@@ -514,12 +527,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			if err != nil {
 				return err
 			}
+			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			state.initialBranchHierarchy.AddRow(branch, "main")
 			if !isLocal {
 				err = state.gitEnv.DevRepo.PushBranchSetUpstream(branch)
 				if err != nil {
 					return err
 				}
+				state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 			}
 		}
 		return nil
@@ -531,7 +546,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return fmt.Errorf("cannot create perennial branches: %w", err)
 		}
+		state.initialLocalBranches = append(state.initialLocalBranches, branch1, branch2)
 		if !isLocal {
+			state.initialRemoteBranches = append(state.initialRemoteBranches, branch1, branch2)
 			err = state.gitEnv.DevRepo.PushBranchSetUpstream(branch1)
 			if err != nil {
 				return err
@@ -548,22 +565,26 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			if err != nil {
 				return fmt.Errorf("cannot create perennial branches: %w", err)
 			}
+			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			if !isLocal {
 				err = state.gitEnv.DevRepo.PushBranchSetUpstream(branch)
 				if err != nil {
 					return fmt.Errorf("cannot push perennial branch upstream: %w", err)
 				}
+				state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 			}
 		}
 		return nil
 	})
 
-	suite.Step(`^my repo has the perennial branch "([^"]+)"`, func(branch1 string) error {
-		err := state.gitEnv.DevRepo.CreatePerennialBranches(branch1)
+	suite.Step(`^my repo has the perennial branch "([^"]+)"`, func(branch string) error {
+		err := state.gitEnv.DevRepo.CreatePerennialBranches(branch)
 		if err != nil {
 			return fmt.Errorf("cannot create perennial branches: %w", err)
 		}
-		return state.gitEnv.DevRepo.PushBranchSetUpstream(branch1)
+		state.initialLocalBranches = append(state.initialLocalBranches, branch)
+		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
+		return state.gitEnv.DevRepo.PushBranchSetUpstream(branch)
 	})
 
 	suite.Step(`^my repo is left with my original commits$`, func() error {
@@ -633,6 +654,32 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			fmt.Printf("\nERROR! Found %d differences in the existing files\n\n", errorCount)
 			fmt.Println(diff)
 			return fmt.Errorf("mismatching files found, see diff above")
+		}
+		return nil
+	})
+
+	suite.Step(`^my repo now has the original branches$`, func() error {
+		have, err := state.gitEnv.Branches()
+		if err != nil {
+			return err
+		}
+		want := DataTable{}
+		want.AddRow("REPOSITORY", "BRANCHES")
+		sort.Strings(state.initialLocalBranches)
+		sort.Strings(state.initialRemoteBranches)
+		localBranchesJoined := strings.Join(state.initialLocalBranches, ", ")
+		remoteBranchesJoined := strings.Join(state.initialRemoteBranches, ", ")
+		if localBranchesJoined == remoteBranchesJoined {
+			want.AddRow("local, remote", localBranchesJoined)
+		} else {
+			want.AddRow("local", localBranchesJoined)
+			want.AddRow("remote", remoteBranchesJoined)
+		}
+		diff, errorCount := have.EqualDataTable(want)
+		if errorCount != 0 {
+			fmt.Printf("\nERROR! Found %d differences in the existing branches\n\n", errorCount)
+			fmt.Println(diff)
+			return fmt.Errorf("mismatching branches found, see diff above")
 		}
 		return nil
 	})
@@ -778,7 +825,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return err
 		}
-		// remove the master branch from the remote since it exists only as a performance optimization
 		diff, errCount := existing.EqualGherkin(table)
 		if errCount > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the branches\n\n", errCount)
