@@ -41,7 +41,7 @@ type ScenarioState struct {
 // Reset restores the null value of this ScenarioState.
 func (state *ScenarioState) Reset(gitEnv GitEnvironment) {
 	state.gitEnv = gitEnv
-	state.initialLocalBranches = []string{}
+	state.initialLocalBranches = []string{"main"}
 	state.initialRemoteBranches = []string{}
 	state.initialCommits = nil
 	state.initialBranchHierarchy = DataTable{Cells: [][]string{{"BRANCH", "PARENT"}}}
