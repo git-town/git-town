@@ -9,7 +9,7 @@ Feature: ask for missing configuration
       | PROMPT                                     | ANSWER  |
       | Please specify the main development branch | [ENTER] |
     And the main branch is now "main"
-    And my repo is now has no perennial branches
+    And my repo now has no perennial branches
     And "open" launches a new pull request with this url in my browser:
       """
       https://github.com/git-town/git-town.github.com/compare/feature?expand=1 |
