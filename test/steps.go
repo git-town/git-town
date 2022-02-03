@@ -282,14 +282,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^it prints the initial configuration prompt$`, func() error {
-		expected := "Git Town needs to be configured"
-		if !state.runRes.OutputContainsText(expected) {
-			return fmt.Errorf("text not found:\n\nEXPECTED: %q\n\nACTUAL:\n\n%q\n----------------------------", expected, state.runRes.Output())
-		}
-		return nil
-	})
-
 	suite.Step(`^it runs no commands$`, func() error {
 		commands := GitCommandsInGitTownOutput(state.runRes.Output())
 		if len(commands) > 0 {

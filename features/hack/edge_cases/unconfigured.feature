@@ -8,7 +8,6 @@ Feature: missing configuration
       | Please specify the main development branch | [ENTER] |
 
   Scenario: result
-    Then it prints the initial configuration prompt
     And it runs the commands
       | BRANCH | COMMAND                  |
       | main   | git fetch --prune --tags |
