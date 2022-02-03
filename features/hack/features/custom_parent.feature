@@ -2,7 +2,7 @@
 Feature: customize the parent for the new feature branch
 
   Background:
-    Given my repo has the perennial branch "production"
+    Given my repo has a perennial branch "production"
     And my repo contains the commits
       | BRANCH     | LOCATION | MESSAGE           |
       | production | remote   | production_commit |

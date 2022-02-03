@@ -21,7 +21,7 @@ Feature: does not kill perennial branches
     And Git Town still has the original branch hierarchy
 
   Scenario: try to delete a perennial branch
-    Given my repo has the perennial branch "qa"
+    Given my repo has a perennial branch "qa"
     And my repo contains the commits
       | BRANCH | LOCATION      | MESSAGE   |
       | qa     | local, remote | qa commit |

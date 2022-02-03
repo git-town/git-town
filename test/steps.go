@@ -577,7 +577,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repo has the perennial branch "([^"]+)"`, func(branch string) error {
+	suite.Step(`^my repo has a perennial branch "([^"]+)"`, func(branch string) error {
 		err := state.gitEnv.DevRepo.CreatePerennialBranches(branch)
 		if err != nil {
 			return fmt.Errorf("cannot create perennial branches: %w", err)

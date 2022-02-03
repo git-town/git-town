@@ -31,7 +31,7 @@ Feature: View changes made on another branch
       """
 
   Scenario: perennial branch
-    Given my repo has the perennial branch "qa"
+    Given my repo has a perennial branch "qa"
     When I run "git-town diff-parent qa"
     Then it runs no commands
     And it prints the error:
