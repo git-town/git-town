@@ -3,10 +3,10 @@ Feature: provide the commit message via a CLI argument
   Background:
     Given my repo has the feature branches "feature" and "other-feature"
     And my repo contains the commits
-      | BRANCH  | LOCATION      | MESSAGE        |
-      | feature | local, remote | feature commit |
+      | BRANCH  | LOCATION      | MESSAGE        | FILE NAME        |
+      | feature | local, remote | feature commit | conflicting_file |
     And I am on the "other-feature" branch
-    And my workspace has an uncommitted file with name "feature_file" and content "conflicting content"
+    And my workspace has an uncommitted file with name "conflicting_file" and content "conflicting content"
     When I run "git-town ship feature -m 'feature done'"
 
   Scenario: result
