@@ -62,4 +62,4 @@ Feature: shipping the supplied feature branch from a subfolder
       | main    | local, remote | feature done          |
       |         |               | Revert "feature done" |
       | feature | remote        | feature commit        |
-    And my repo now has its original branches and branch hierarchy
+    And my repo now has its initial branches and branch hierarchy

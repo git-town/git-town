@@ -49,4 +49,4 @@ Feature: shipping the current feature branch with a tracking branch
       | main    | local, remote | feature done          |
       |         |               | Revert "feature done" |
       | feature | local, remote | feature commit        |
-    And my repo now has its original branches and branch hierarchy
+    And my repo now has its initial branches and branch hierarchy

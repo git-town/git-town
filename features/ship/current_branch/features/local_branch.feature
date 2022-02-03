@@ -46,4 +46,4 @@ Feature: ship a local feature branch
       | main    | local, remote | feature done          |
       |         |               | Revert "feature done" |
       | feature | local         | feature commit        |
-    And my repo now has its original branches and branch hierarchy
+    And my repo now has its initial branches and branch hierarchy

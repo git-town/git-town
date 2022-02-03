@@ -119,4 +119,4 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       | feature | local, remote | conflicting feature commit       |
       |         | remote        | conflicting main commit          |
       |         |               | Merge branch 'main' into feature |
-    And my repo now has its original branches and branch hierarchy
+    And my repo now has its initial branches and branch hierarchy

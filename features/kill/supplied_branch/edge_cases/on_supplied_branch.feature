@@ -42,4 +42,4 @@ Feature: killing the current branch
     And I am now on the "current-feature" branch
     And my workspace has the uncommitted file again
     And my repo is left with my original commits
-    And my repo now has its original branches and branch hierarchy
+    And my repo now has its initial branches and branch hierarchy

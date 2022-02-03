@@ -40,4 +40,4 @@ Feature: killing a local branch
     And I am now on the "current-feature" branch
     And my workspace still contains my uncommitted file
     And my repo is left with my original commits
-    And my repo now has its original branches and branch hierarchy
+    And my repo now has its initial branches and branch hierarchy

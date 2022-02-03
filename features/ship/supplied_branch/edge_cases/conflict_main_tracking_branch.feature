@@ -121,4 +121,4 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | remote        | conflicting remote commit        |
       |         |               | conflicting local commit         |
       |         |               | Merge branch 'main' into feature |
-    And my repo now has its original branches and branch hierarchy
+    And my repo now has its initial branches and branch hierarchy

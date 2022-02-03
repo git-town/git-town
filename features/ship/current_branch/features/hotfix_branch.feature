@@ -50,4 +50,4 @@ Feature: ship hotfixes
       | hotfix     | local, remote | hotfix commit        |
       | production | local, remote | hotfix done          |
       |            |               | Revert "hotfix done" |
-    And my repo now has its original branches and branch hierarchy
+    And my repo now has its initial branches and branch hierarchy
