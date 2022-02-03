@@ -343,6 +343,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return err
 		}
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
+		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 		state.initialBranchHierarchy.AddRow(branch, parent)
 		return state.gitEnv.DevRepo.PushBranchSetUpstream(branch)
 	})
@@ -428,6 +429,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return fmt.Errorf("cannot create feature branch %q: %w", childBranch, err)
 		}
 		state.initialLocalBranches = append(state.initialLocalBranches, childBranch)
+		state.initialRemoteBranches = append(state.initialRemoteBranches, childBranch)
 		state.initialBranchHierarchy.AddRow(childBranch, parentBranch)
 		return state.gitEnv.DevRepo.PushBranchSetUpstream(childBranch)
 	})
