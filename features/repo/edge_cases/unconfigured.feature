@@ -8,6 +8,5 @@ Feature: ask for missing configuration
     When I run "git-town repo" and answer the prompts:
       | PROMPT                                     | ANSWER  |
       | Please specify the main development branch | [ENTER] |
-    Then it prints the initial configuration prompt
     And the main branch is now "main"
     And my repo is now has no perennial branches
