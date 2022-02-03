@@ -5,7 +5,7 @@ Feature: syncing automatically syncs the tags
       | NAME      | LOCATION |
       | local-tag | local    |
     When I run "git-town sync"
-    Then my repo now has the following tags
+    Then my repo now has these tags
       | NAME      | LOCATION      |
       | local-tag | local, remote |
 
@@ -14,13 +14,13 @@ Feature: syncing automatically syncs the tags
       | NAME       | LOCATION |
       | remote-tag | remote   |
     When I run "git-town sync"
-    Then my repo now has the following tags
+    Then my repo now has these tags
       | NAME       | LOCATION      |
       | remote-tag | local, remote |
 
   Scenario: tag on a different branch gets pulled
     Given my repo has a remote tag "remote-tag" that is not on a branch
     When I run "git-town sync"
-    Then my repo now has the following tags
+    Then my repo now has these tags
       | NAME       | LOCATION      |
       | remote-tag | local, remote |
