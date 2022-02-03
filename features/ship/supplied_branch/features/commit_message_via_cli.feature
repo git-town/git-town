@@ -61,4 +61,5 @@ Feature: provide the commit message via a CLI argument
       | main    | local, remote | feature done          |
       |         |               | Revert "feature done" |
       | feature | local, remote | feature commit        |
+    And my repo now has the initial branches
     And Git Town now has the original branch hierarchy

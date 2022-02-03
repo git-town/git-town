@@ -10,6 +10,12 @@ type ScenarioState struct {
 	// the GitEnvironment used in the current scenario
 	gitEnv GitEnvironment
 
+	// initialLocalBranches contains the local branches before the WHEN steps run
+	initialLocalBranches []string
+
+	// initialRemoteBranches contains the remote branches before the WHEN steps run
+	initialRemoteBranches []string
+
 	// initialCommits describes the commits in this Git environment before the WHEN steps ran.
 	initialCommits *messages.PickleStepArgument_PickleTable
 
@@ -35,6 +41,8 @@ type ScenarioState struct {
 // Reset restores the null value of this ScenarioState.
 func (state *ScenarioState) Reset(gitEnv GitEnvironment) {
 	state.gitEnv = gitEnv
+	state.initialLocalBranches = []string{"main"}
+	state.initialRemoteBranches = []string{"main"}
 	state.initialCommits = nil
 	state.initialBranchHierarchy = DataTable{Cells: [][]string{{"BRANCH", "PARENT"}}}
 	state.runRes = nil

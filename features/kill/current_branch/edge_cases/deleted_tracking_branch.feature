@@ -37,8 +37,5 @@ Feature: the branch to kill has a deleted tracking branch
       | current-feature | git reset {{ sha 'current feature commit' }}                  |
     And I am now on the "current-feature" branch
     And my workspace has the uncommitted file again
-    And the existing branches are
-      | REPOSITORY | BRANCHES                             |
-      | local      | main, current-feature, other-feature |
-      | remote     | main, other-feature                  |
+    And my repo now has the initial branches
     And Git Town now has the original branch hierarchy
