@@ -16,6 +16,7 @@ import (
 	"github.com/cucumber/godog"
 	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/run"
 )
 
@@ -666,7 +667,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		want := DataTable{}
 		want.AddRow("REPOSITORY", "BRANCHES")
 		sort.Strings(state.initialLocalBranches)
+		state.initialLocalBranches = git.MainFirst(state.initialLocalBranches)
 		sort.Strings(state.initialRemoteBranches)
+		state.initialRemoteBranches = git.MainFirst(state.initialRemoteBranches)
 		localBranchesJoined := strings.Join(state.initialLocalBranches, ", ")
 		remoteBranchesJoined := strings.Join(state.initialRemoteBranches, ", ")
 		if localBranchesJoined == remoteBranchesJoined {
@@ -675,6 +678,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			want.AddRow("local", localBranchesJoined)
 			want.AddRow("remote", remoteBranchesJoined)
 		}
+		// fmt.Printf("HAVE:\n%s\n", have.String())
+		// fmt.Printf("WANT:\n%s\n", want.String())
 		diff, errorCount := have.EqualDataTable(want)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing branches\n\n", errorCount)

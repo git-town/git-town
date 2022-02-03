@@ -42,7 +42,5 @@ Feature: killing the current feature branch
     And I am now on the "current-feature" branch
     And my workspace has the uncommitted file again
     And my repo now has the original branches
-      | REPOSITORY    | BRANCHES                             |
-      | local, remote | main, current-feature, other-feature |
     And my repo is left with my original commits
     And Git Town now has the original branch hierarchy
