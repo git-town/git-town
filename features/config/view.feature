@@ -14,7 +14,7 @@ Feature: show the configuration
         staging
       """
 
-  Scenario: all configured, has nested branches
+  Scenario: all configured, with nested branches
     Given the main branch is "main"
     And my repo has the perennial branches "qa" and "staging"
     And my repo has the feature branches "parent-feature" and "stand-alone-feature"
