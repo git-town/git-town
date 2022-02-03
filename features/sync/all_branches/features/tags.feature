@@ -1,4 +1,4 @@
-Feature: syncing all branches syncs the tags
+Feature: sync all branches syncs the tags
 
   Background:
     Given my repo has the tags

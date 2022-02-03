@@ -1,4 +1,4 @@
-Feature: syncing the current perennial branch (without remote repo)
+Feature: sync the current perennial branch (without remote repo)
 
   Background:
     Given my repo does not have a remote origin

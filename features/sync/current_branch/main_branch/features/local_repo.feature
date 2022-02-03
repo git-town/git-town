@@ -1,4 +1,4 @@
-Feature: syncing the main branch in a local repo
+Feature: sync the main branch in a local repo
 
   Background:
     Given my repo does not have a remote origin

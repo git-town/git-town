@@ -1,4 +1,4 @@
-Feature: deleting the current and previous branches makes the main branch the new previous branch
+Feature: delete the current and previous branches makes the main branch the new previous branch
 
   Scenario: prune-branches
     Given my repo has the feature branches "previous" and "current"

@@ -1,5 +1,5 @@
 @skipWindows
-Feature: changing the perennial branches
+Feature: change the perennial branches
 
   Background:
     Given my repo has the branches "staging" and "qa"

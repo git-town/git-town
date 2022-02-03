@@ -1,5 +1,5 @@
 @skipWindows
-Feature: shipping a coworker's feature branch
+Feature: ship a coworker's feature branch
 
   Background:
     Given my repo has a feature branch "feature"

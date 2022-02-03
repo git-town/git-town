@@ -1,5 +1,5 @@
 @skipWindows
-Feature: Prompt for parent branch when unknown
+Feature: prompt for parent branch when unknown
 
   Scenario Outline:
     Given my repo has a branch "feature-1"

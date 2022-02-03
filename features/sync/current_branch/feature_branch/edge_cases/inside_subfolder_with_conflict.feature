@@ -1,4 +1,4 @@
-Feature: syncing inside a folder that doesn't exist on the main branch
+Feature: sync inside a folder that doesn't exist on the main branch
 
   Background:
     Given my repo has the feature branches "current-feature" and "other-feature"

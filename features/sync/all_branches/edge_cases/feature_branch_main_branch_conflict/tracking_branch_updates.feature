@@ -1,4 +1,4 @@
-Feature: handling merge conflicts between feature branch and main branch
+Feature: handle merge conflicts between feature branch and main branch
 
   Background:
     Given my repo has the feature branches "feature-1", "feature-2", and "feature-3"
