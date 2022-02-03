@@ -15,13 +15,15 @@ Feature: GitHub support
       """
 
     Examples:
-      | ORIGIN                                   |
-      | http://github.com/git-town/git-town.git  |
-      | http://github.com/git-town/git-town      |
-      | https://github.com/git-town/git-town.git |
-      | https://github.com/git-town/git-town     |
-      | git@github.com:git-town/git-town.git     |
-      | git@github.com:git-town/git-town         |
+      | ORIGIN                                     |
+      | http://github.com/git-town/git-town.git    |
+      | http://github.com/git-town/git-town        |
+      | https://github.com/git-town/git-town.git   |
+      | https://github.com/git-town/git-town       |
+      | git@github.com:git-town/git-town.git       |
+      | git@github.com:git-town/git-town           |
+      | ssh://git@github.com/git-town/git-town.git |
+      | ssh://git@github.com/git-town/git-town     |
 
   Scenario Outline: origin contains path that looks like a URL
     Given my repo has a feature branch "feature"
@@ -58,21 +60,6 @@ Feature: GitHub support
       | feature_branch | https://github.com/git-town/git-town/compare/feature_branch?expand=1 |
       | fix-#2         | https://github.com/git-town/git-town/compare/fix-%232?expand=1       |
       | test/feature   | https://github.com/git-town/git-town/compare/test%2Ffeature?expand=1 |
-
-  Scenario Outline: SSH style origin
-    Given my repo has a feature branch "feature"
-    And my repo's origin is "<ORIGIN>"
-    And I am on the "feature" branch
-    When I run "git-town new-pull-request"
-    Then "open" launches a new pull request with this url in my browser:
-      """
-      https://github.com/git-town/git-town/compare/feature?expand=1
-      """
-
-    Examples:
-      | ORIGIN                                     |
-      | ssh://git@github.com/git-town/git-town.git |
-      | ssh://git@github.com/git-town/git-town     |
 
   Scenario: nested feature branch with known parent
     Given my repo has a feature branch "parent-feature"
