@@ -128,6 +128,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		diff, errCnt := have.EqualDataTable(state.initialBranchHierarchy)
 		if errCnt > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the branch hierarchy\n\n", errCnt)
+			fmt.Printf("INITIAL BRANCH HIERARCHY:\n%s\n", state.initialBranchHierarchy.String())
+			fmt.Printf("CURRENT BRANCH HIERARCHY:\n%s\n", have.String())
 			fmt.Println(diff)
 			return fmt.Errorf("mismatching branches found, see the diff above")
 		}
