@@ -26,7 +26,7 @@ Feature: does not kill perennial branches
 
   Scenario: try to delete a perennial branch
     Given my repo has a feature branch "feature"
-    And my repo has the perennial branch "qa"
+    And my repo has a perennial branch "qa"
     And my repo contains the commits
       | BRANCH  | LOCATION      | MESSAGE     |
       | feature | local, remote | good commit |
