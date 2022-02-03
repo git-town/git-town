@@ -13,6 +13,9 @@ type ScenarioState struct {
 	// initialCommits describes the commits in this Git environment before the WHEN steps ran.
 	initialCommits *messages.PickleStepArgument_PickleTable
 
+	// initialBranchHierarchy describes the branch hierarchy before the WHEN steps ran.
+	initialBranchHierarchy DataTable
+
 	// the error of the last run of Git Town
 	runErr error
 
@@ -33,6 +36,7 @@ type ScenarioState struct {
 func (state *ScenarioState) Reset(gitEnv GitEnvironment) {
 	state.gitEnv = gitEnv
 	state.initialCommits = nil
+	state.initialBranchHierarchy = DataTable{Cells: [][]string{{"BRANCH", "PARENT"}}}
 	state.runRes = nil
 	state.runErr = nil
 	state.runErrChecked = false

@@ -36,3 +36,17 @@ func TestDataTable_Remove(t *testing.T) {
 	expected := "| local  | main, foo |\n| remote | bar       |\n"
 	assert.Equal(t, expected, table.String())
 }
+
+func TestDataTable_Sort(t *testing.T) {
+	t.Parallel()
+	table := test.DataTable{}
+	table.AddRow("gamma", "3")
+	table.AddRow("beta", "2")
+	table.AddRow("alpha", "1")
+	table.Sort()
+	want := test.DataTable{Cells: [][]string{{"alpha", "1"}, {"beta", "2"}, {"gamma", "3"}}}
+	diff, errCnt := table.EqualDataTable(want)
+	if errCnt > 0 {
+		t.Errorf("\nERROR! Found %d differences\n\n%s", errCnt, diff)
+	}
+}

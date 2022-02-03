@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"sort"
 	"testing"
 
 	"github.com/git-town/git-town/v7/src/config"
@@ -62,6 +63,22 @@ func NewRepo(workingDir, homeDir, binDir string) Repo {
 		CurrentBranchCache: &git.StringCache{},
 	}
 	return Repo{Runner: runner, shell: shell}
+}
+
+// BranchHierarchyTable provides the currently configured branch hierarchy information as a DataTable.
+func (repo *Repo) BranchHierarchyTable() (result DataTable) {
+	repo.Config.Reload()
+	parentBranchMap := repo.Config.ParentBranchMap()
+	result.AddRow("BRANCH", "PARENT")
+	childBranches := make([]string, 0, len(parentBranchMap))
+	for child := range parentBranchMap {
+		childBranches = append(childBranches, child)
+	}
+	sort.Strings(childBranches)
+	for _, child := range childBranches {
+		result.AddRow(child, parentBranchMap[child])
+	}
+	return result
 }
 
 // Clone creates a clone of this Repo into the given directory.

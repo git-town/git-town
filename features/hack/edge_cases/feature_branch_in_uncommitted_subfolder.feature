@@ -43,6 +43,4 @@ Feature: inside an uncommitted subfolder on a feature branch
       | existing-feature | git stash pop                 |
     And I am now on the "existing-feature" branch
     And my repo is left with my original commits
-    And Git Town is now aware of this branch hierarchy
-      | BRANCH           | PARENT |
-      | existing-feature | main   |
+    And Git Town now has the original branch hierarchy
