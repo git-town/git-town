@@ -493,20 +493,17 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^my repo has the (local )?feature branches "([^"]+)" and "([^"]+)"$`, func(localStr, branch1, branch2 string) error {
 		isLocal := localStr != ""
-		err := state.gitEnv.DevRepo.CreateFeatureBranch(branch1)
-		if err != nil {
-			return err
-		}
-		err = state.gitEnv.DevRepo.CreateFeatureBranch(branch2)
-		if err != nil {
-			return err
-		}
-		if !isLocal {
-			err = state.gitEnv.DevRepo.PushBranchSetUpstream(branch1)
+		for _, branch := range []string{branch1, branch2} {
+			err := state.gitEnv.DevRepo.CreateFeatureBranch(branch)
 			if err != nil {
 				return err
 			}
-			return state.gitEnv.DevRepo.PushBranchSetUpstream(branch2)
+			if !isLocal {
+				err = state.gitEnv.DevRepo.PushBranchSetUpstream(branch)
+				if err != nil {
+					return err
+				}
+			}
 		}
 		return nil
 	})
