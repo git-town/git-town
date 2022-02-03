@@ -50,6 +50,4 @@ Feature: ship hotfixes
       | hotfix     | local, remote | hotfix commit        |
       | production | local, remote | hotfix done          |
       |            |               | Revert "hotfix done" |
-    And Git Town is now aware of this branch hierarchy
-      | BRANCH | PARENT     |
-      | hotfix | production |
+    And Git Town now has the original branch hierarchy

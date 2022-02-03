@@ -50,6 +50,4 @@ Feature: shipping a coworker's feature branch
       | feature | local, remote | feature commit1       |
       |         |               | feature commit2       |
       |         |               | feature commit3       |
-    And Git Town is now aware of this branch hierarchy
-      | BRANCH  | PARENT |
-      | feature | main   |
+    And Git Town now has the original branch hierarchy

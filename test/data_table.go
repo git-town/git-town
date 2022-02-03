@@ -3,6 +3,7 @@ package test
 import (
 	"fmt"
 	"regexp"
+	"sort"
 	"strings"
 	"sync"
 
@@ -114,6 +115,13 @@ func (table *DataTable) RemoveText(text string) {
 			table.Cells[row][col] = strings.Replace(table.Cells[row][col], text, "", 1)
 		}
 	}
+}
+
+// Sorted provides a new DataTable that contains the content of this DataTable sorted by the first column.
+func (table *DataTable) Sort() {
+	sort.Slice(table.Cells, func(i, j int) bool {
+		return table.Cells[i][0] < table.Cells[j][0]
+	})
 }
 
 // String provides the data in this DataTable instance formatted in Gherkin table format.
