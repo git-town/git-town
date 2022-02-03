@@ -8,7 +8,6 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
-	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -600,6 +599,32 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^my repo now has its initial branches and branch hierarchy$`, func() error {
+		// verify initial branches
+		have, err := state.gitEnv.Branches()
+		if err != nil {
+			return err
+		}
+		want := state.InitialBranches()
+		diff, errorCount := have.EqualDataTable(want)
+		if errorCount != 0 {
+			fmt.Printf("\nERROR! Found %d differences in the existing branches\n\n", errorCount)
+			fmt.Println(diff)
+			return fmt.Errorf("mismatching branches found, see diff above")
+		}
+
+		// verify initial branch hierarchy
+		state.initialBranchHierarchy.Sort()
+		have = state.gitEnv.DevRepo.BranchHierarchyTable()
+		diff, errCnt := have.EqualDataTable(state.initialBranchHierarchy)
+		if errCnt > 0 {
+			fmt.Printf("\nERROR! Found %d differences in the branch hierarchy\n\n", errCnt)
+			fmt.Println(diff)
+			return fmt.Errorf("mismatching branch hierarchy found, see the diff above")
+		}
+		return nil
+	})
+
 	suite.Step(`^my repo knows about the remote branch$`, func() error {
 		return state.gitEnv.DevRepo.Fetch()
 	})
@@ -663,22 +688,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return err
 		}
-		want := DataTable{}
-		want.AddRow("REPOSITORY", "BRANCHES")
-		sort.Strings(state.initialLocalBranches)
-		state.initialLocalBranches = stringslice.MainFirst(state.initialLocalBranches)
-		sort.Strings(state.initialRemoteBranches)
-		state.initialRemoteBranches = stringslice.MainFirst(state.initialRemoteBranches)
-		localBranchesJoined := strings.Join(state.initialLocalBranches, ", ")
-		remoteBranchesJoined := strings.Join(state.initialRemoteBranches, ", ")
-		if localBranchesJoined == remoteBranchesJoined {
-			want.AddRow("local, remote", localBranchesJoined)
-		} else {
-			want.AddRow("local", localBranchesJoined)
-			if remoteBranchesJoined != "" {
-				want.AddRow("remote", remoteBranchesJoined)
-			}
-		}
+		want := state.InitialBranches()
 		// fmt.Printf("HAVE:\n%s\n", have.String())
 		// fmt.Printf("WANT:\n%s\n", want.String())
 		diff, errorCount := have.EqualDataTable(want)

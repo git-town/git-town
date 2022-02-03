@@ -1,8 +1,12 @@
 package test
 
 import (
+	"sort"
+	"strings"
+
 	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/v7/src/run"
+	"github.com/git-town/git-town/v7/src/stringslice"
 )
 
 // ScenarioState constains the state that is shared by all steps within a scenario.
@@ -50,4 +54,24 @@ func (state *ScenarioState) Reset(gitEnv GitEnvironment) {
 	state.runErrChecked = false
 	state.uncommittedFileName = ""
 	state.uncommittedContent = ""
+}
+
+// InitialBranches provides the branches in this Scenario before the WHEN steps ran.
+func (state *ScenarioState) InitialBranches() (result DataTable) {
+	result.AddRow("REPOSITORY", "BRANCHES")
+	sort.Strings(state.initialLocalBranches)
+	state.initialLocalBranches = stringslice.MainFirst(state.initialLocalBranches)
+	sort.Strings(state.initialRemoteBranches)
+	state.initialRemoteBranches = stringslice.MainFirst(state.initialRemoteBranches)
+	localBranchesJoined := strings.Join(state.initialLocalBranches, ", ")
+	remoteBranchesJoined := strings.Join(state.initialRemoteBranches, ", ")
+	if localBranchesJoined == remoteBranchesJoined {
+		result.AddRow("local, remote", localBranchesJoined)
+	} else {
+		result.AddRow("local", localBranchesJoined)
+		if remoteBranchesJoined != "" {
+			result.AddRow("remote", remoteBranchesJoined)
+		}
+	}
+	return result
 }

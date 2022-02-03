@@ -38,6 +38,5 @@ Feature: deleting another than the current branch
       |              | git push -u origin dead-feature                     |
     And I am still on the "good-feature" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the initial branches
     And my repo is left with my original commits
-    And Git Town now has the original branch hierarchy
+    And my repo now has its initial branches and branch hierarchy

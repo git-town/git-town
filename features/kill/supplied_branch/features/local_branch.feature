@@ -39,6 +39,5 @@ Feature: local branch
       | dead-feature | git reset {{ sha 'dead feature commit' }}               |
     And I am now on the "dead-feature" branch
     And my workspace has the uncommitted file again
-    And my repo now has the initial branches
     And my repo is left with my original commits
-    And Git Town now has the original branch hierarchy
+    And my repo now has its initial branches and branch hierarchy

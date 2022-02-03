@@ -50,5 +50,4 @@ Feature: ship hotfixes
       | hotfix     | local, remote | hotfix commit        |
       | production | local, remote | hotfix done          |
       |            |               | Revert "hotfix done" |
-    And my repo now has the initial branches
-    And Git Town now has the original branch hierarchy
+    And my repo now has its initial branches and branch hierarchy

@@ -41,6 +41,5 @@ Feature: offline mode
       | current-feature | git reset {{ sha 'current feature commit' }}                  |
     And I am now on the "current-feature" branch
     And my workspace has the uncommitted file again
-    And my repo now has the initial branches
     And my repo is left with my original commits
-    And Git Town now has the original branch hierarchy
+    And my repo now has its initial branches and branch hierarchy
