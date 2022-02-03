@@ -9,7 +9,7 @@ Feature: syncing all branches syncs the tags
     When I run "git-town sync --all"
 
   Scenario: result
-    Then my repo now has these tags
+    Then my repo now has the tags
       | NAME       | LOCATION      |
       | local-tag  | local, remote |
       | remote-tag | local, remote |
