@@ -1,4 +1,4 @@
-Feature: shipping the current feature branch
+Feature: ship the current feature branch
 
   Background:
     Given my repo has a feature branch "feature"

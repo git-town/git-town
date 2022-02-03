@@ -1,4 +1,4 @@
-Feature: shipping the supplied feature branch without a tracking branch
+Feature: ship the supplied feature branch without a tracking branch
 
   Background:
     Given my repo has the feature branches "feature" and "other-feature"

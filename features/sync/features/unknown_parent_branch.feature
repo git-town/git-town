@@ -1,5 +1,5 @@
 @skipWindows
-Feature: Entering a parent branch name when prompted
+Feature: enter a parent branch name when prompted
 
   Background:
     Given my repo has the branches "feature-1" and "feature-2"

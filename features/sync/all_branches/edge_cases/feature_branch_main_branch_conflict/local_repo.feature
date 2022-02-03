@@ -1,4 +1,4 @@
-Feature: handling merge conflicts between feature branch and main branch in a local repo
+Feature: handle merge conflicts between feature branch and main branch in a local repo
 
   Background:
     Given my repo does not have a remote origin

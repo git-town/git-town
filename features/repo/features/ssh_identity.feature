@@ -1,5 +1,5 @@
 @skipWindows
-Feature: using an SSH identity
+Feature: use an SSH identity
 
   Scenario Outline:
     Given my computer has the "open" tool installed

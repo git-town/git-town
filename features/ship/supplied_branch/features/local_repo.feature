@@ -1,4 +1,4 @@
-Feature: shipping the supplied feature branch without a remote origin
+Feature: ship the supplied feature branch without a remote origin
 
   Background:
     Given my repo has the feature branches "feature" and "other-feature"

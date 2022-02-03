@@ -1,4 +1,4 @@
-Feature: syncing automatically syncs the tags
+Feature: sync tags
 
   Scenario: local tag gets pushed to the remote
     Given my repo has the tags

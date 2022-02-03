@@ -1,4 +1,4 @@
-Feature: syncing the main branch
+Feature: sync the main branch
 
   Background:
     Given I am on the "main" branch

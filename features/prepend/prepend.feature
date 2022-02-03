@@ -1,4 +1,4 @@
-Feature: Prepend a branch to a feature branch
+Feature: prepend a branch to a feature branch
 
   Background:
     Given my repo has a feature branch "existing-feature"

@@ -1,4 +1,4 @@
-Feature: handling rebase conflicts between perennial branch and its tracking branch
+Feature: handle rebase conflicts between perennial branch and its tracking branch
 
   Background:
     Given my repo has the perennial branches "perennial-1", "perennial-2", and "perennial-3"

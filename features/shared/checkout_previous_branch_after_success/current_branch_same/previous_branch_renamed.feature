@@ -1,4 +1,4 @@
-Feature: renaming the previous branch makes the main branch the new previous branch
+Feature: rename the previous branch makes the main branch the new previous branch
 
   Scenario: rename-branch
     Given my repo has the feature branches "previous" and "current"
