@@ -31,7 +31,7 @@ Feature: syncing inside a folder that doesn't exist on the main branch
       exit status 1
       """
 
-  Scenario: aborting
+  Scenario: abort
     When I run "git-town abort" in the "new_folder" folder
     Then it runs the commands
       | BRANCH          | COMMAND                      |
@@ -44,7 +44,7 @@ Feature: syncing inside a folder that doesn't exist on the main branch
     And there is no merge in progress
     And my repo is left with my original commits
 
-  Scenario: continuing without resolving the conflicts
+  Scenario: continue without resolving the conflicts
     When I run "git-town continue" in the "new_folder" folder
     Then it runs no commands
     And it prints the error:
@@ -55,7 +55,7 @@ Feature: syncing inside a folder that doesn't exist on the main branch
     And my uncommitted file is stashed
     And my repo still has a merge in progress
 
-  Scenario: continuing after resolving the conflicts
+  Scenario: continue after resolving the conflicts
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" in the "new_folder" folder
     Then it runs the commands

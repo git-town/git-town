@@ -5,7 +5,7 @@ Feature: Entering a parent branch name when prompted
     Given my repo has the branches "feature-1" and "feature-2"
     And I am on the "feature-2" branch
 
-  Scenario: choosing the default branch name
+  Scenario: choose the default branch name
     When I run "git-town sync" and answer the prompts:
       | PROMPT                                          | ANSWER  |
       | Please specify the parent branch of 'feature-2' | [ENTER] |
@@ -13,7 +13,7 @@ Feature: Entering a parent branch name when prompted
       | BRANCH    | PARENT |
       | feature-2 | main   |
 
-  Scenario: choosing other branches
+  Scenario: choose other branches
     When I run "git-town sync" and answer the prompts:
       | PROMPT                                          | ANSWER        |
       | Please specify the parent branch of 'feature-2' | [DOWN][ENTER] |
@@ -23,7 +23,7 @@ Feature: Entering a parent branch name when prompted
       | feature-1 | main      |
       | feature-2 | feature-1 |
 
-  Scenario: choosing "<none> (make a perennial branch)"
+  Scenario: choose "<none> (make a perennial branch)"
     When I run "git-town sync" and answer the prompts:
       | PROMPT                                          | ANSWER      |
       | Please specify the parent branch of 'feature-2' | [UP][ENTER] |

@@ -29,7 +29,7 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
     And my uncommitted file is stashed
     And my repo now has a merge in progress
 
-  Scenario: aborting
+  Scenario: abort
     When I run "git-town abort"
     Then it runs the commands
       | BRANCH        | COMMAND                    |
@@ -43,7 +43,7 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
     And my repo is left with my original commits
     And Git Town still has the original branch hierarchy
 
-  Scenario: continuing after resolving the conflicts
+  Scenario: continue after resolving the conflicts
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
     Then it runs the commands
@@ -70,7 +70,7 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
       | BRANCH        | PARENT |
       | other-feature | main   |
 
-  Scenario: continuing after resolving the conflicts and comitting
+  Scenario: continue after resolving the conflicts and comitting
     When I resolve the conflict in "conflicting_file"
     And I run "git commit --no-edit"
     And I run "git-town continue"

@@ -25,7 +25,7 @@ Feature: handle conflicts between the shipped branch and its tracking branch
     And I am still on the "feature" branch
     And my repo now has a merge in progress
 
-  Scenario: aborting
+  Scenario: abort
     When I run "git-town abort"
     Then it runs the commands
       | BRANCH  | COMMAND              |
@@ -37,7 +37,7 @@ Feature: handle conflicts between the shipped branch and its tracking branch
     And my repo is left with my original commits
     And Git Town still has the original branch hierarchy
 
-  Scenario: continuing after resolving the conflicts
+  Scenario: continue after resolving the conflicts
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
     Then it runs the commands
@@ -59,7 +59,7 @@ Feature: handle conflicts between the shipped branch and its tracking branch
       | main   | local, remote | feature done | conflicting_file |
     And Git Town now has no branch hierarchy information
 
-  Scenario: continuing after resolving the conflicts and committing
+  Scenario: continue after resolving the conflicts and committing
     When I resolve the conflict in "conflicting_file"
     And I run "git commit --no-edit"
     And I run "git-town continue"

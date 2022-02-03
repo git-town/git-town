@@ -16,7 +16,7 @@ Feature: Prompt for parent branch when unknown
       | prepend feature-2 |
       | sync              |
 
-  Scenario: prompting for parent branch when running git town-hack -p
+  Scenario: prompt for parent branch when running git town-hack -p
     Given my repo has a branch "feature-1"
     And I am on the "feature-1" branch
     When I run "git-town hack -p feature-2" and answer the prompts:
@@ -29,7 +29,7 @@ Feature: Prompt for parent branch when unknown
       | feature-1 | main      |
       | feature-2 | feature-1 |
 
-  Scenario: prompting for parent branch when running git town-new-pull-request
+  Scenario: prompt for parent branch when running git town-new-pull-request
     And my computer has the "open" tool installed
     And my repo has a branch "feature"
     And my repo's origin is "git@github.com:git-town/git-town.git"
@@ -42,7 +42,7 @@ Feature: Prompt for parent branch when unknown
       https://github.com/git-town/git-town/compare/feature?expand=1
       """
 
-  Scenario: prompting for parent branch when running git town-sync --all
+  Scenario: prompt for parent branch when running git town-sync --all
     Given my repo has a branch "feature-1"
     And my repo has a branch "feature-2"
     And my repo contains the commits

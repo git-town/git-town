@@ -1,6 +1,6 @@
 Feature: does not kill perennial branches
 
-  Scenario: trying to delete the main branch
+  Scenario: try delete the main branch
     Given I am on the "main" branch
     When I run "git-town kill"
     Then it runs no commands
@@ -10,7 +10,7 @@ Feature: does not kill perennial branches
       """
     And I am still on the "main" branch
 
-  Scenario: trying to delete a perennial branch
+  Scenario: try to delete a perennial branch
     Given my repo has the perennial branch "qa"
     And my repo contains the commits
       | BRANCH | LOCATION      | MESSAGE   |

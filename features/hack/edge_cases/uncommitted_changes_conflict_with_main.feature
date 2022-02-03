@@ -53,14 +53,14 @@ Feature: conflicts between uncommitted changes and the main branch
     And my repo is left with my original commits
     And my workspace now contains the file "conflicting_file" with content "resolved content"
 
-  Scenario: continuing without resolving the conflicts
+  Scenario: continue without resolving the conflicts
     When I run "git-town continue"
     Then it prints the error:
       """
       you must resolve the conflicts before continuing
       """
 
-  Scenario: continuing after resolving the conflicts
+  Scenario: continue after resolving the conflicts
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then it runs no commands

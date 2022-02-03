@@ -10,7 +10,7 @@ Feature: shipping a coworker's feature branch
       |         |          | feature commit3 | coworker <coworker@example.com>   |
     And I am on the "feature" branch
 
-  Scenario: choosing myself as the author
+  Scenario: choose myself as the author
     When I run "git-town ship -m 'feature done'" and answer the prompts:
       | PROMPT                                        | ANSWER  |
       | Please choose an author for the squash commit | [ENTER] |
@@ -19,7 +19,7 @@ Feature: shipping a coworker's feature branch
       | main   | local, remote | feature done | developer <developer@example.com> |
     And Git Town now has no branch hierarchy information
 
-  Scenario: choosing my coworker as the author
+  Scenario: choose my coworker as the author
     When I run "git-town ship -m 'feature done'" and answer the prompts:
       | PROMPT                                        | ANSWER        |
       | Please choose an author for the squash commit | [DOWN][ENTER] |
