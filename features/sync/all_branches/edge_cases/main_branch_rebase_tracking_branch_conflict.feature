@@ -26,7 +26,7 @@ Feature: handling rebase conflicts between main branch and its tracking branch
     And my uncommitted file is stashed
     And my repo now has a rebase in progress
 
-  Scenario: aborting
+  Scenario: abort
     When I run "git-town abort"
     Then it runs the commands
       | BRANCH | COMMAND            |
@@ -36,7 +36,7 @@ Feature: handling rebase conflicts between main branch and its tracking branch
     And my workspace has the uncommitted file again
     And my repo is left with my original commits
 
-  Scenario: continuing without resolving the conflicts
+  Scenario: continue without resolving the conflicts
     When I run "git-town continue"
     Then it runs no commands
     And it prints the error:
@@ -46,7 +46,7 @@ Feature: handling rebase conflicts between main branch and its tracking branch
     And my uncommitted file is stashed
     And my repo still has a rebase in progress
 
-  Scenario: continuing after resolving the conflicts
+  Scenario: continue after resolving the conflicts
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then it runs the commands
@@ -69,7 +69,7 @@ Feature: handling rebase conflicts between main branch and its tracking branch
       | feature | conflicting_file | resolved content |
       |         | feature_file     | feature content  |
 
-  Scenario: continuing after resolving the conflicts and continuing the rebase
+  Scenario: continue after resolving the conflicts and continuing the rebase
     When I resolve the conflict in "conflicting_file"
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"

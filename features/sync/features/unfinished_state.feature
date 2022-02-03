@@ -16,7 +16,7 @@ Feature: warn about unfinished prompt asking the user how to proceed
       To continue after having resolved conflicts, run "git-town continue".
       """
 
-  Scenario: attempting to sync again and choosing to quit
+  Scenario: attempt to sync again and choosing to quit
     When I run "git-town sync" and answer the prompts:
       | PROMPT                       | ANSWER  |
       | Please choose how to proceed | [ENTER] |
@@ -27,7 +27,7 @@ Feature: warn about unfinished prompt asking the user how to proceed
       """
     And my uncommitted file is stashed
 
-  Scenario: attempting to sync again and choosing to continue without resolving conflicts
+  Scenario: attempt to sync again and choosing to continue without resolving conflicts
     When I run "git-town sync" and answer the prompts:
       | PROMPT                       | ANSWER        |
       | Please choose how to proceed | [DOWN][ENTER] |
@@ -38,7 +38,7 @@ Feature: warn about unfinished prompt asking the user how to proceed
       """
     And my uncommitted file is stashed
 
-  Scenario: attempting to sync again and choosing to continue after resolving conflicts
+  Scenario: attempt to sync again and choosing to continue after resolving conflicts
     When I resolve the conflict in "conflicting_file"
     And I run "git-town sync", answer the prompts, and close the next editor:
       | PROMPT                       | ANSWER        |
@@ -53,7 +53,7 @@ Feature: warn about unfinished prompt asking the user how to proceed
       |         | git push                           |
       |         | git stash pop                      |
 
-  Scenario: attempting to sync again and choosing to abort
+  Scenario: attempt to sync again and choosing to abort
     When I run "git-town sync" and answer the prompts:
       | PROMPT                       | ANSWER              |
       | Please choose how to proceed | [DOWN][DOWN][ENTER] |
@@ -63,7 +63,7 @@ Feature: warn about unfinished prompt asking the user how to proceed
       |         | git checkout feature |
       | feature | git stash pop        |
 
-  Scenario: running another command after manually aborting
+  Scenario: run another command after manually aborting
     When I run "git rebase --abort"
     And I run "git checkout feature"
     And I run "git stash pop"

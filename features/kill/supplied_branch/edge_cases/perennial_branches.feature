@@ -1,6 +1,6 @@
 Feature: does not kill perennial branches
 
-  Scenario: trying to delete the main branch
+  Scenario: try to delete the main branch
     Given my repo has a feature branch "feature"
     And my repo contains the commits
       | BRANCH  | LOCATION      | MESSAGE     |
@@ -24,7 +24,7 @@ Feature: does not kill perennial branches
       | BRANCH  | PARENT |
       | feature | main   |
 
-  Scenario: trying to delete a perennial branch
+  Scenario: try to delete a perennial branch
     Given my repo has a feature branch "feature"
     And my repo has the perennial branch "qa"
     And my repo contains the commits
