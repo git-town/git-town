@@ -1,4 +1,4 @@
-Feature: killing the current branch
+Feature: delete the current branch
 
   Background:
     Given my repo has the feature branches "other-feature" and "current-feature"

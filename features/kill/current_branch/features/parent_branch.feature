@@ -1,4 +1,4 @@
-Feature: killing a branch within a branch chain
+Feature: delete a branch within a branch chain
 
   Background:
     Given my repo has a feature branch "feature-1"

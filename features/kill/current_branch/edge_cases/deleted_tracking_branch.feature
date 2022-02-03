@@ -1,26 +1,29 @@
 Feature: the branch to kill has a deleted tracking branch
 
   Background:
-    Given my repo has the feature branches "current-feature" and "other-feature"
+    Given my repo has the feature branches "feature" and "other-feature"
     And my repo contains the commits
-      | BRANCH          | LOCATION      | MESSAGE                |
-      | current-feature | local, remote | current feature commit |
-      | other-feature   | local, remote | other feature commit   |
-    And the "current-feature" branch gets deleted on the remote
-    And I am on the "current-feature" branch
+      | BRANCH        | LOCATION      | MESSAGE              |
+      | feature       | local, remote | feature commit       |
+      | other-feature | local, remote | other feature commit |
+    And the "feature" branch gets deleted on the remote
+    And I am on the "feature" branch
     And my workspace has an uncommitted file
     When I run "git-town kill"
 
   Scenario: result
     Then it runs the commands
-      | BRANCH          | COMMAND                                |
-      | current-feature | git fetch --prune --tags               |
-      |                 | git add -A                             |
-      |                 | git commit -m "WIP on current-feature" |
-      |                 | git checkout main                      |
-      | main            | git branch -D current-feature          |
+      | BRANCH  | COMMAND                        |
+      | feature | git fetch --prune --tags       |
+      |         | git add -A                     |
+      |         | git commit -m "WIP on feature" |
+      |         | git checkout main              |
+      | main    | git branch -D feature          |
     And I am now on the "main" branch
     And my repo doesn't have any uncommitted files
+    And my repo now has the commits
+      | BRANCH        | LOCATION      | MESSAGE              |
+      | other-feature | local, remote | other feature commit |
     And the existing branches are
       | REPOSITORY    | BRANCHES            |
       | local, remote | main, other-feature |
@@ -31,10 +34,14 @@ Feature: the branch to kill has a deleted tracking branch
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH          | COMMAND                                                       |
-      | main            | git branch current-feature {{ sha 'WIP on current-feature' }} |
-      |                 | git checkout current-feature                                  |
-      | current-feature | git reset {{ sha 'current feature commit' }}                  |
-    And I am now on the "current-feature" branch
+      | BRANCH  | COMMAND                                       |
+      | main    | git branch feature {{ sha 'WIP on feature' }} |
+      |         | git checkout feature                          |
+      | feature | git reset {{ sha 'feature commit' }}          |
+    And I am now on the "feature" branch
+    And my repo now has the commits
+      | BRANCH        | LOCATION      | MESSAGE              |
+      | feature       | local         | feature commit       |
+      | other-feature | local, remote | other feature commit |
     And my workspace has the uncommitted file again
     And my repo now has its initial branches and branch hierarchy

@@ -1,4 +1,4 @@
-Feature: inside an uncommitted subfolder on a feature branch
+Feature: inside an uncommitted subfolder on the current feature branch
 
   Background:
     Given my repo has a feature branch "existing-feature"
