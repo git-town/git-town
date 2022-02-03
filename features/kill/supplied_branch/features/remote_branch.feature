@@ -1,4 +1,4 @@
-Feature: deleting a remote only branch
+Feature: delete a remote only branch
 
   Background:
     Given my origin has a feature branch "feature"
@@ -25,4 +25,4 @@ Feature: deleting a remote only branch
       | BRANCH | COMMAND                                                                 |
       | main   | git push origin {{ sha-in-remote 'feature commit' }}:refs/heads/feature |
     And my repo now has the initial branches
-    And Git Town now has no branch hierarchy information
+    And Git Town still has no branch hierarchy information

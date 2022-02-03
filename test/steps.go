@@ -599,7 +599,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repo now has its initial branches and branch hierarchy$`, func() error {
+	suite.Step(`^my repo (?:now|still) has its initial branches and branch hierarchy$`, func() error {
 		// verify initial branches
 		have, err := state.gitEnv.Branches()
 		if err != nil {

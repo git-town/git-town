@@ -1,4 +1,4 @@
-Feature: killing a local branch
+Feature: delete a local branch
 
   Background:
     Given my repo has a feature branch "feature"

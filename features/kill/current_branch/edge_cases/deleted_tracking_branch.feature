@@ -21,6 +21,9 @@ Feature: the branch to kill has a deleted tracking branch
       | main    | git branch -D feature          |
     And I am now on the "main" branch
     And my repo doesn't have any uncommitted files
+    And my repo now has the commits
+      | BRANCH        | LOCATION      | MESSAGE              |
+      | other-feature | local, remote | other feature commit |
     And the existing branches are
       | REPOSITORY    | BRANCHES            |
       | local, remote | main, other-feature |
@@ -36,5 +39,9 @@ Feature: the branch to kill has a deleted tracking branch
       |         | git checkout feature                          |
       | feature | git reset {{ sha 'feature commit' }}          |
     And I am now on the "feature" branch
+    And my repo now has the commits
+      | BRANCH        | LOCATION      | MESSAGE              |
+      | feature       | local         | feature commit       |
+      | other-feature | local, remote | other feature commit |
     And my workspace has the uncommitted file again
     And my repo now has its initial branches and branch hierarchy
