@@ -417,11 +417,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.CreateBranch(branch, "main")
 	})
 
-	suite.Step(`^my repo has a feature branch "([^"]*)" with no parent$`, func(branch string) error {
-		state.initialLocalBranches = append(state.initialLocalBranches, branch)
-		return state.gitEnv.DevRepo.CreateFeatureBranchNoParent(branch)
-	})
-
 	suite.Step(`^my repo has a feature branch "([^"]+)" as a child of "([^"]+)"$`, func(childBranch, parentBranch string) error {
 		err := state.gitEnv.DevRepo.CreateChildFeatureBranch(childBranch, parentBranch)
 		if err != nil {
