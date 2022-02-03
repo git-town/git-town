@@ -2,7 +2,7 @@ Feature: ask for missing parent
 
   @skipWindows
   Scenario: on feature branch without parent
-    Given my repo has a feature branch "feature" with no parent
+    Given my repo has a branch "feature"
     And I am on the "feature" branch
     When I run "git-town diff-parent" and answer the prompts:
       | PROMPT                                        | ANSWER  |

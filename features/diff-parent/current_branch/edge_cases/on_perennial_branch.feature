@@ -11,7 +11,7 @@ Feature: on perennial branch
       """
 
   Scenario: on perennial branch
-    Given my repo has the perennial branch "qa"
+    Given my repo has a perennial branch "qa"
     And I am on the "qa" branch
     When I run "git-town diff-parent"
     Then it runs no commands
