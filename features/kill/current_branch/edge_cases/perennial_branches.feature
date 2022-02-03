@@ -18,9 +18,7 @@ Feature: does not kill perennial branches
     And the existing branches are
       | REPOSITORY    | BRANCHES      |
       | local, remote | main, feature |
-    And Git Town is still aware of this branch hierarchy
-      | BRANCH  | PARENT |
-      | feature | main   |
+    And Git Town still has the original branch hieranchy
 
   Scenario: trying to delete a perennial branch
     Given my repo has the perennial branch "qa"

@@ -35,9 +35,7 @@ Feature: handle conflicts between the shipped branch and its tracking branch
     And I am still on the "feature" branch
     And there is no merge in progress
     And my repo is left with my original commits
-    And Git Town is still aware of this branch hierarchy
-      | BRANCH  | PARENT |
-      | feature | main   |
+    And Git Town still has the original branch hieranchy
 
   Scenario: continuing after resolving the conflicts
     When I resolve the conflict in "conflicting_file"

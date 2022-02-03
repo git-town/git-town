@@ -8,7 +8,6 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
-	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -87,6 +86,17 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^Git Town has the original branch hieranchy$`, func() error {
+		have := state.gitEnv.DevRepo.BranchHierarchyTable()
+		diff, errCnt := have.EqualDataTable(state.initialBranchHierarchy)
+		if errCnt > 0 {
+			fmt.Printf("\nERROR! Found %d differences in the branch hierarchy\n\n", errCnt)
+			fmt.Println(diff)
+			return fmt.Errorf("mismatching branches found, see the diff above")
+		}
+		return nil
+	})
+
 	suite.Step(`^Git Town is in offline mode$`, func() error {
 		return state.gitEnv.DevRepo.Config.SetOffline(true)
 	})
@@ -102,20 +112,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^Git Town is (?:now|still) aware of this branch hierarchy$`, func(input *messages.PickleStepArgument_PickleTable) error {
-		table := DataTable{}
-		table.AddRow("BRANCH", "PARENT")
-		state.gitEnv.DevRepo.Config.Reload()
-		// Table sorted by child branch name
-		parentBranchMap := state.gitEnv.DevRepo.Config.ParentBranchMap()
-		childBranches := make([]string, 0, len(parentBranchMap))
-		for child := range parentBranchMap {
-			childBranches = append(childBranches, child)
-		}
-		sort.Strings(childBranches)
-		for _, child := range childBranches {
-			table.AddRow(child, parentBranchMap[child])
-		}
+	suite.Step(`^Git Town is now aware of this branch hierarchy$`, func(input *messages.PickleStepArgument_PickleTable) error {
+		table := state.gitEnv.DevRepo.BranchHierarchyTable()
 		diff, errCount := table.EqualGherkin(input)
 		if errCount > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the branch hierarchy\n\n", errCount)
@@ -130,6 +128,18 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if state.gitEnv.DevRepo.Config.HasBranchInformation() {
 			branchInfo := state.gitEnv.DevRepo.Config.ParentBranchMap()
 			return fmt.Errorf("unexpected Git Town branch hierarchy information: %+v", branchInfo)
+		}
+		return nil
+	})
+
+	suite.Step(`^Git Town (?:now|still) has the original branch hieranchy$`, func() error {
+		have := state.gitEnv.DevRepo.BranchHierarchyTable()
+		state.initialBranchHierarchy.Sort()
+		diff, errCnt := have.EqualDataTable(state.initialBranchHierarchy)
+		if errCnt > 0 {
+			fmt.Printf("\nERROR! Found %d differences in the branch hierarchy\n\n", errCnt)
+			fmt.Println(diff)
+			return fmt.Errorf("mismatching branches found, see the diff above")
 		}
 		return nil
 	})
@@ -335,6 +345,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return err
 		}
+		state.initialBranchHierarchy.AddRow(name, "main")
 		return state.gitEnv.DevRepo.PushBranchSetUpstream(name)
 	})
 
@@ -343,6 +354,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return err
 		}
+		state.initialBranchHierarchy.AddRow(branch, parent)
 		return state.gitEnv.DevRepo.PushBranchSetUpstream(branch)
 	})
 
@@ -422,6 +434,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return fmt.Errorf("cannot create feature branch %q: %w", childBranch, err)
 		}
+		state.initialBranchHierarchy.AddRow(childBranch, parentBranch)
 		return state.gitEnv.DevRepo.PushBranchSetUpstream(childBranch)
 	})
 
@@ -431,6 +444,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return err
 		}
+		state.initialBranchHierarchy.AddRow(branch, "main")
 		if !isLocal {
 			return state.gitEnv.DevRepo.PushBranchSetUpstream(branch)
 		}
@@ -498,6 +512,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			if err != nil {
 				return err
 			}
+			state.initialBranchHierarchy.AddRow(branch, "main")
 			if !isLocal {
 				err = state.gitEnv.DevRepo.PushBranchSetUpstream(branch)
 				if err != nil {
@@ -515,6 +530,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			if err != nil {
 				return err
 			}
+			state.initialBranchHierarchy.AddRow(branch, "main")
 			if !isLocal {
 				err = state.gitEnv.DevRepo.PushBranchSetUpstream(branch)
 				if err != nil {
