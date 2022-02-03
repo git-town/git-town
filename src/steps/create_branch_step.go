@@ -14,7 +14,7 @@ type CreateBranchStep struct {
 }
 
 func (step *CreateBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
-	return &DeleteLocalBranchStep{BranchName: step.BranchName}, nil
+	return &DeleteLocalBranchStep{BranchName: step.BranchName, Force: true}, nil
 }
 
 func (step *CreateBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {

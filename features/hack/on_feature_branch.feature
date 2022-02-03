@@ -40,7 +40,7 @@ Feature: on the main branch
       | new-feature      | git add -A                    |
       |                  | git stash                     |
       |                  | git checkout main             |
-      | main             | git branch -d new-feature     |
+      | main             | git branch -D new-feature     |
       |                  | git checkout existing-feature |
       | existing-feature | git stash pop                 |
     And I am now on the "existing-feature" branch

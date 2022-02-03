@@ -31,7 +31,7 @@ Feature: auto-push the new branch
       | BRANCH  | COMMAND                  |
       | feature | git push origin :feature |
       |         | git checkout main        |
-      | main    | git branch -d feature    |
+      | main    | git branch -D feature    |
     And I am now on the "main" branch
     And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE       |

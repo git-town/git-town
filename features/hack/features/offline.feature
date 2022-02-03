@@ -34,7 +34,7 @@ Feature: offline mode
       | feature | git add -A            |
       |         | git stash             |
       |         | git checkout main     |
-      | main    | git branch -d feature |
+      | main    | git branch -D feature |
       |         | git stash pop         |
     And I am now on the "main" branch
     And my workspace still contains my uncommitted file

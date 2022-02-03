@@ -35,7 +35,7 @@ Feature: in a local repo
       | new-feature      | git add -A                    |
       |                  | git stash                     |
       |                  | git checkout existing-feature |
-      | existing-feature | git branch -d new-feature     |
+      | existing-feature | git branch -D new-feature     |
       |                  | git stash pop                 |
     And I am now on the "existing-feature" branch
     And my repo is left with my original commits

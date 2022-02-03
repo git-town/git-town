@@ -26,6 +26,6 @@ Feature: missing configuration
     Then it runs the commands
       | BRANCH  | COMMAND               |
       | feature | git checkout main     |
-      | main    | git branch -d feature |
+      | main    | git branch -D feature |
     And I am now on the "main" branch
     And Git Town now has no branch hierarchy information

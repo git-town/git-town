@@ -35,7 +35,7 @@ Feature: on the main branch
       | new-child | git add -A              |
       |           | git stash               |
       |           | git checkout main       |
-      | main      | git branch -d new-child |
+      | main      | git branch -D new-child |
       |           | git stash pop           |
     And I am now on the "main" branch
     And my workspace still contains my uncommitted file

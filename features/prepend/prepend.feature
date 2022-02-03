@@ -37,7 +37,7 @@ Feature: Prepend a branch to a feature branch
       | new-parent       | git add -A                    |
       |                  | git stash                     |
       |                  | git checkout main             |
-      | main             | git branch -d new-parent      |
+      | main             | git branch -D new-parent      |
       |                  | git checkout existing-feature |
       | existing-feature | git stash pop                 |
     And I am now on the "existing-feature" branch
