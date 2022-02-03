@@ -41,8 +41,6 @@ Feature: killing the current feature branch
       |                 | git push -u origin current-feature                            |
     And I am now on the "current-feature" branch
     And my workspace has the uncommitted file again
-    And the existing branches are
-      | REPOSITORY    | BRANCHES                             |
-      | local, remote | main, current-feature, other-feature |
+    And my repo now has the initial branches
     And my repo is left with my original commits
     And Git Town now has the original branch hierarchy

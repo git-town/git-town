@@ -121,4 +121,5 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | remote        | conflicting remote commit        |
       |         |               | conflicting local commit         |
       |         |               | Merge branch 'main' into feature |
+    And my repo now has the initial branches
     And Git Town now has the original branch hierarchy

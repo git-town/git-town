@@ -61,4 +61,5 @@ Feature: shipping the supplied feature branch without a tracking branch
       | main    | local, remote | feature done          |
       |         |               | Revert "feature done" |
       | feature | local, remote | feature commit        |
+    And my repo now has the initial branches
     And Git Town now has the original branch hierarchy

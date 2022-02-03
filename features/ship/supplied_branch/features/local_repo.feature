@@ -53,4 +53,5 @@ Feature: shipping the supplied feature branch without a remote origin
       | main    | local    | feature done          |
       |         |          | Revert "feature done" |
       | feature | local    | feature commit        |
+    And my repo now has the initial branches
     And Git Town now has the original branch hierarchy
