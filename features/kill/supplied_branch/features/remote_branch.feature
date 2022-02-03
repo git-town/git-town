@@ -1,7 +1,7 @@
 Feature: delete a remote only branch
 
   Background:
-    Given my origin has a feature branch "feature"
+    Given the origin has a feature branch "feature"
     And my repo contains the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | remote   | feature commit |

@@ -3,8 +3,8 @@ Feature: collaborative feature branch syncing
   Scenario:
     Given I am collaborating with a coworker
     And my repo has a feature branch "feature"
-    And my coworker fetches updates
-    And my coworker sets the parent branch of "feature" as "main"
+    And a coworker fetches updates
+    And a coworker sets the parent branch of "feature" as "main"
     And my repo contains the commits
       | BRANCH  | LOCATION | MESSAGE         |
       | feature | local    | my commit       |
@@ -25,8 +25,8 @@ Feature: collaborative feature branch syncing
       | feature | local, remote | my commit       |
       |         | coworker      | coworker commit |
 
-    Given my coworker is on the "feature" branch
-    When my coworker runs "git-town sync"
+    Given a coworker is on the "feature" branch
+    When a coworker runs "git-town sync"
     Then it runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune --tags           |

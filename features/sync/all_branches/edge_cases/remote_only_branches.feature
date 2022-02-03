@@ -2,7 +2,7 @@ Feature: does not sync remote only branches
 
   Background:
     Given my repo has a feature branch "my-feature"
-    And my coworker has a feature branch "co-feature"
+    And a coworker has a feature branch "co-feature"
     And my repo contains the commits
       | BRANCH     | LOCATION      | MESSAGE         |
       | main       | remote        | main commit     |

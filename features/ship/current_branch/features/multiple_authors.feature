@@ -19,7 +19,7 @@ Feature: shipping a coworker's feature branch
       | main   | local, remote | feature done | developer <developer@example.com> |
     And Git Town now has no branch hierarchy information
 
-  Scenario: choose my coworker as the author
+  Scenario: choose a coworker as the author
     When I run "git-town ship -m 'feature done'" and answer the prompts:
       | PROMPT                                        | ANSWER        |
       | Please choose an author for the squash commit | [DOWN][ENTER] |
