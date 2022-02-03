@@ -336,17 +336,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.PushBranchToOrigin(name)
 	})
 
-	suite.Step(`^my code base has a feature branch "([^"]*)" as a child of "([^"]*)"$`, func(branch, parent string) error {
-		err := state.gitEnv.DevRepo.CreateChildFeatureBranch(branch, parent)
-		if err != nil {
-			return err
-		}
-		state.initialLocalBranches = append(state.initialLocalBranches, branch)
-		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-		state.initialBranchHierarchy.AddRow(branch, parent)
-		return state.gitEnv.DevRepo.PushBranchToOrigin(branch)
-	})
-
 	suite.Step(`^my computer has a broken "([^"]*)" tool installed$`, func(name string) error {
 		return state.gitEnv.DevShell.MockBrokenCommand(name)
 	})
@@ -417,15 +406,15 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.CreateBranch(branch, "main")
 	})
 
-	suite.Step(`^my repo has a feature branch "([^"]+)" as a child of "([^"]+)"$`, func(childBranch, parentBranch string) error {
-		err := state.gitEnv.DevRepo.CreateChildFeatureBranch(childBranch, parentBranch)
+	suite.Step(`^my repo has a feature branch "([^"]+)" as a child of "([^"]+)"$`, func(branch, parentBranch string) error {
+		err := state.gitEnv.DevRepo.CreateChildFeatureBranch(branch, parentBranch)
 		if err != nil {
-			return fmt.Errorf("cannot create feature branch %q: %w", childBranch, err)
+			return fmt.Errorf("cannot create feature branch %q: %w", branch, err)
 		}
-		state.initialLocalBranches = append(state.initialLocalBranches, childBranch)
-		state.initialRemoteBranches = append(state.initialRemoteBranches, childBranch)
-		state.initialBranchHierarchy.AddRow(childBranch, parentBranch)
-		return state.gitEnv.DevRepo.PushBranchToOrigin(childBranch)
+		state.initialLocalBranches = append(state.initialLocalBranches, branch)
+		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
+		state.initialBranchHierarchy.AddRow(branch, parentBranch)
+		return state.gitEnv.DevRepo.PushBranchToOrigin(branch)
 	})
 
 	suite.Step(`^my repo has a (local )?feature branch "([^"]*)"$`, func(localStr, branch string) error {
