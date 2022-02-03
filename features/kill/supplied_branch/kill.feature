@@ -22,7 +22,7 @@ Feature: deleting another than the current branch
     And the existing branches are
       | REPOSITORY    | BRANCHES           |
       | local, remote | main, good-feature |
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH       | LOCATION      | MESSAGE                              |
       | main         | local, remote | conflicting with uncommitted changes |
       | good-feature | local, remote | good commit                          |

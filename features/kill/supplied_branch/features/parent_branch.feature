@@ -24,7 +24,7 @@ Feature: killing a branch within a branch chain
     And the existing branches are
       | REPOSITORY    | BRANCHES                   |
       | local, remote | main, feature-1, feature-3 |
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH    | LOCATION      | MESSAGE          |
       | feature-1 | local, remote | feature 1 commit |
       | feature-3 | local, remote | feature 3 commit |

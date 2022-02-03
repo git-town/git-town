@@ -23,7 +23,7 @@ Feature: on the main branch
       | new-feature      | git stash pop               |
     And I am now on the "new-feature" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH           | LOCATION      | MESSAGE                 |
       | main             | local, remote | main commit             |
       | existing-feature | local         | existing feature commit |
@@ -44,7 +44,7 @@ Feature: on the main branch
       |                  | git checkout existing-feature |
       | existing-feature | git stash pop                 |
     And I am now on the "existing-feature" branch
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH           | LOCATION      | MESSAGE                 |
       | main             | local, remote | main commit             |
       | existing-feature | local         | existing feature commit |

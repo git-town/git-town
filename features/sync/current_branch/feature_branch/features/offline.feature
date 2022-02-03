@@ -21,7 +21,7 @@ Feature: offline mode
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
     And I am still on the "feature" branch
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH  | LOCATION | MESSAGE                          |
       | main    | local    | local main commit                |
       |         | remote   | remote main commit               |

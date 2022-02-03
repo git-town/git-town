@@ -22,7 +22,7 @@ Feature: auto-push the new branch to the remote
       |           | git stash pop                |
     And I am now on the "new-child" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH    | LOCATION      | MESSAGE     |
       | main      | local, remote | main_commit |
       | new-child | local, remote | main_commit |
@@ -42,7 +42,7 @@ Feature: auto-push the new branch to the remote
       |           | git stash pop              |
     And I am now on the "main" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, remote | main_commit |
     And Git Town now has no branch hierarchy information

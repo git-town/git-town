@@ -21,7 +21,7 @@ Feature: ship a feature branch in a local repo
     And the existing branches are
       | REPOSITORY | BRANCHES |
       | local      | main     |
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH | LOCATION | MESSAGE      |
       | main   | local    | feature done |
     And Git Town now has no branch hierarchy information
@@ -34,7 +34,7 @@ Feature: ship a feature branch in a local repo
       |        | git revert {{ sha 'feature done' }}           |
       |        | git checkout feature                          |
     And I am now on the "feature" branch
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH  | LOCATION | MESSAGE               |
       | main    | local    | feature done          |
       |         |          | Revert "feature done" |

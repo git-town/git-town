@@ -24,7 +24,7 @@ Feature: local repository
     And the existing branches are
       | REPOSITORY | BRANCHES           |
       | local      | main, good-feature |
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH       | LOCATION | MESSAGE             |
       | main         | local    | main commit         |
       | good-feature | local    | good feature commit |

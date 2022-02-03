@@ -604,7 +604,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.Fetch()
 	})
 
-	suite.Step(`^my repo now has the following commits$`, func(table *messages.PickleStepArgument_PickleTable) error {
+	suite.Step(`^my repo now has the commits$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		return compareExistingCommits(state, table)
 	})
 

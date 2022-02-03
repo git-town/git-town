@@ -20,7 +20,7 @@ Feature: customize the parent for the new feature branch
       |            | git branch hotfix production |
       |            | git checkout hotfix          |
     And I am now on the "hotfix" branch
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH     | LOCATION      | MESSAGE           |
       | hotfix     | local         | production_commit |
       | production | local, remote | production_commit |
@@ -36,7 +36,7 @@ Feature: customize the parent for the new feature branch
       | production | git branch -D hotfix    |
       |            | git checkout main       |
     And I am now on the "main" branch
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH     | LOCATION      | MESSAGE           |
       | production | local, remote | production_commit |
     And Git Town now has no branch hierarchy information

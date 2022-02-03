@@ -28,7 +28,7 @@ Feature: commit message can contain double-quotes
       | REPOSITORY    | BRANCHES |
       | local, remote | main     |
     And my repo doesn't have any uncommitted files
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE                            |
       | main   | local, remote | message containing "double quotes" |
     And Git Town now has no branch hierarchy information
@@ -45,7 +45,7 @@ Feature: commit message can contain double-quotes
       | feature | git checkout main                                         |
       | main    | git checkout feature                                      |
     And I am now on the "feature" branch
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH  | LOCATION      | MESSAGE                                     |
       | main    | local, remote | message containing "double quotes"          |
       |         |               | Revert "message containing "double quotes"" |

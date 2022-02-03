@@ -60,7 +60,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | other-feature | git stash pop                      |
     And I am now on the "other-feature" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE                   | FILE NAME        | FILE CONTENT               |
       | main   | local, remote | conflicting remote commit | conflicting_file | remote conflicting content |
       |        |               | conflicting local commit  | conflicting_file | resolved content           |
@@ -111,7 +111,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | main          | git checkout other-feature                                      |
       | other-feature | git stash pop                                                   |
     And I am now on the "other-feature" branch
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, remote | conflicting remote commit        |
       |         |               | conflicting local commit         |
