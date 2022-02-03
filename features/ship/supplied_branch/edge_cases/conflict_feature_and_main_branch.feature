@@ -42,7 +42,7 @@ Feature: handle conflicts between the supplied feature branch and the main branc
     And I am now on the "other-feature" branch
     And my workspace still contains my uncommitted file
     And there is no merge in progress
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH  | LOCATION      | MESSAGE                    |
       | main    | local, remote | conflicting main commit    |
       | feature | local         | conflicting feature commit |
@@ -67,7 +67,7 @@ Feature: handle conflicts between the supplied feature branch and the main branc
     And the existing branches are
       | REPOSITORY    | BRANCHES            |
       | local, remote | main, other-feature |
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE                 | FILE NAME        | FILE CONTENT     |
       | main   | local, remote | conflicting main commit | conflicting_file | main content     |
       |        |               | feature done            | conflicting_file | resolved content |
@@ -111,7 +111,7 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       | main          | git checkout other-feature                                      |
       | other-feature | git stash pop                                                   |
     And I am now on the "other-feature" branch
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, remote | conflicting main commit          |
       |         |               | feature done                     |
@@ -119,5 +119,4 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       | feature | local, remote | conflicting feature commit       |
       |         | remote        | conflicting main commit          |
       |         |               | Merge branch 'main' into feature |
-    And my repo now has the initial branches
-    And Git Town now has the original branch hierarchy
+    And my repo now has its initial branches and branch hierarchy

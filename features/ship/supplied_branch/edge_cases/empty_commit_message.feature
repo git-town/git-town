@@ -3,11 +3,11 @@ Feature: abort the ship via empty commit message
   Background:
     Given my repo has the feature branches "feature" and "other-feature"
     And my repo contains the commits
-      | BRANCH  | LOCATION      | MESSAGE        | FILE NAME    | FILE CONTENT    |
-      | main    | local, remote | main commit    | main_file    | main content    |
-      | feature | local         | feature commit | feature_file | feature content |
+      | BRANCH  | LOCATION      | MESSAGE        | FILE NAME        | FILE CONTENT    |
+      | main    | local, remote | main commit    | main_file        | main content    |
+      | feature | local         | feature commit | conflicting_file | feature content |
     And I am on the "other-feature" branch
-    And my workspace has an uncommitted file with name "feature_file" and content "conflicting content"
+    And my workspace has an uncommitted file with name "conflicting_file" and content "conflicting content"
     When I run "git-town ship feature" and enter an empty commit message
 
   @skipWindows
@@ -48,7 +48,7 @@ Feature: abort the ship via empty commit message
       nothing to undo
       """
     And I am still on the "other-feature" branch
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | main    | local, remote | main commit    |
       | feature | local         | feature commit |

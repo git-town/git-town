@@ -43,7 +43,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     And I am still on the "feature" branch
     And my workspace has the uncommitted file again
     And there is no merge in progress
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local, remote | conflicting main commit    | conflicting_file | main content    |
       | feature | local         | conflicting feature commit | conflicting_file | feature content |
@@ -70,7 +70,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     And I am still on the "feature" branch
     And my workspace has the uncommitted file again
     And all branches are now synchronized
-    And my repo still has the following committed files
+    And my repo still has these committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |
@@ -86,7 +86,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
     And all branches are now synchronized
-    And my repo still has the following committed files
+    And my repo still has these committed files
       | BRANCH  | NAME             | CONTENT         |
       | main    | conflicting_file | main content    |
       | feature | conflicting_file | feature content |
@@ -102,7 +102,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     And I am still on the "feature" branch
     And my workspace has the uncommitted file again
     And all branches are now synchronized
-    And my repo still has the following committed files
+    And my repo still has these committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |

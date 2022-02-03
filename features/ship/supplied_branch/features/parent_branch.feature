@@ -26,7 +26,7 @@ Feature: shipping a parent branch
       |                | git branch -D parent-feature              |
       |                | git checkout child-feature                |
     And I am now on the "child-feature" branch
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH         | LOCATION      | MESSAGE               |
       | main           | local, remote | parent feature done   |
       | child-feature  | local, remote | child feature commit  |
@@ -47,7 +47,7 @@ Feature: shipping a parent branch
       | parent-feature | git checkout main                                           |
       | main           | git checkout child-feature                                  |
     And I am now on the "child-feature" branch
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH         | LOCATION      | MESSAGE                      |
       | main           | local, remote | parent feature done          |
       |                |               | Revert "parent feature done" |

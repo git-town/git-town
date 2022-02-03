@@ -24,7 +24,7 @@ Feature: offline mode
       | REPOSITORY | BRANCHES                     |
       | local      | main, other-feature          |
       | remote     | main, feature, other-feature |
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH        | LOCATION      | MESSAGE              |
       | feature       | remote        | feature commit       |
       | other-feature | local, remote | other feature commit |
@@ -41,6 +41,5 @@ Feature: offline mode
       | feature | git reset {{ sha 'feature commit' }}          |
     And I am now on the "feature" branch
     And my workspace has the uncommitted file again
-    And my repo now has the initial branches
     And my repo is left with my original commits
-    And Git Town now has the original branch hierarchy
+    And my repo now has its initial branches and branch hierarchy

@@ -44,7 +44,7 @@ Feature: handling rebase conflicts between perennial branch and its tracking bra
       | main        | git stash pop            |
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH      | LOCATION      | MESSAGE                   |
       | main        | local, remote | main commit               |
       | perennial-1 | local, remote | perennial-1 commit        |
@@ -64,7 +64,7 @@ Feature: handling rebase conflicts between perennial branch and its tracking bra
       |             | git stash pop                 |
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH      | LOCATION      | MESSAGE                   |
       | main        | local, remote | main commit               |
       | perennial-1 | local, remote | perennial-1 commit        |

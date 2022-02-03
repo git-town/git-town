@@ -48,7 +48,7 @@ Feature: handling merge conflicts between feature branch and main branch
       | main      | git stash pop                                       |
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH    | LOCATION      | MESSAGE                            |
       | main      | local, remote | main commit                        |
       | feature-1 | local, remote | feature-1 commit                   |
@@ -57,7 +57,7 @@ Feature: handling merge conflicts between feature branch and main branch
       | feature-2 | local         | feature-2 local commit             |
       |           | remote        | feature-2 remote commit            |
       | feature-3 | remote        | feature-3 commit                   |
-    And my repo still has the following committed files
+    And my repo still has these committed files
       | BRANCH    | NAME             | CONTENT                 |
       | main      | conflicting_file | main content            |
       | feature-1 | conflicting_file | main content            |
@@ -79,7 +79,7 @@ Feature: handling merge conflicts between feature branch and main branch
       |           | git stash pop                                       |
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH    | LOCATION      | MESSAGE                            |
       | main      | local, remote | main commit                        |
       | feature-1 | local, remote | feature-1 commit                   |
@@ -90,7 +90,7 @@ Feature: handling merge conflicts between feature branch and main branch
       | feature-3 | local, remote | feature-3 commit                   |
       |           |               | main commit                        |
       |           |               | Merge branch 'main' into feature-3 |
-    And my repo now has the following committed files
+    And my repo now has these committed files
       | BRANCH    | NAME             | CONTENT                 |
       | main      | conflicting_file | main content            |
       | feature-1 | conflicting_file | main content            |
@@ -127,7 +127,7 @@ Feature: handling merge conflicts between feature branch and main branch
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
     And all branches are now synchronized
-    And my repo now has the following committed files
+    And my repo now has these committed files
       | BRANCH    | NAME                 | CONTENT                  |
       | main      | conflicting_file     | main content             |
       | feature-1 | conflicting_file     | main content             |

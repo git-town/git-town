@@ -23,7 +23,7 @@ Feature: killing a local branch
     And the existing branches are
       | REPOSITORY    | BRANCHES      |
       | local, remote | main, feature |
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, remote | feature commit |
     And Git Town is now aware of this branch hierarchy
@@ -39,6 +39,5 @@ Feature: killing a local branch
       | local-feature | git reset {{ sha 'local feature commit' }}                |
     And I am now on the "local-feature" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the initial branches
     And my repo is left with my original commits
-    And Git Town now has the original branch hierarchy
+    And my repo now has its initial branches and branch hierarchy

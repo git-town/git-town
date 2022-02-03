@@ -65,7 +65,7 @@ Feature: conflicts between uncommitted changes and the main branch
     And I run "git-town continue" and close the editor
     Then it runs no commands
     And I am now on the "new-feature" branch
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH      | LOCATION      | MESSAGE            | FILE NAME        | FILE CONTENT |
       | main        | local, remote | conflicting commit | conflicting_file | main content |
       | new-feature | local         | conflicting commit | conflicting_file | main content |

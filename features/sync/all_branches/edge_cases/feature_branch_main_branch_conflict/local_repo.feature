@@ -56,7 +56,7 @@ Feature: handling merge conflicts between feature branch and main branch in a lo
       | main      | git stash pop            |
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH    | LOCATION | MESSAGE                            |
       | main      | local    | main commit                        |
       | feature-1 | local    | feature-1 commit                   |
@@ -66,7 +66,7 @@ Feature: handling merge conflicts between feature branch and main branch in a lo
       | feature-3 | local    | feature-3 commit                   |
       |           |          | main commit                        |
       |           |          | Merge branch 'main' into feature-3 |
-    And my repo now has the following committed files
+    And my repo now has these committed files
       | BRANCH    | NAME             | CONTENT           |
       | main      | conflicting_file | main content      |
       | feature-1 | conflicting_file | main content      |
@@ -99,7 +99,7 @@ Feature: handling merge conflicts between feature branch and main branch in a lo
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
     And all branches are now synchronized
-    And my repo now has the following committed files
+    And my repo now has these committed files
       | BRANCH    | NAME             | CONTENT           |
       | main      | conflicting_file | main content      |
       | feature-1 | conflicting_file | main content      |

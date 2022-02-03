@@ -27,7 +27,7 @@ Feature: killing a branch within a branch chain
     And the existing branches are
       | REPOSITORY    | BRANCHES                   |
       | local, remote | main, feature-1, feature-3 |
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH    | LOCATION      | MESSAGE          |
       | feature-1 | local, remote | feature 1 commit |
       | feature-3 | local, remote | feature 3 commit |
@@ -46,6 +46,5 @@ Feature: killing a branch within a branch chain
       |           | git push -u origin feature-2                      |
     And I am now on the "feature-2" branch
     And my workspace has the uncommitted file again
-    And my repo now has the initial branches
     And my repo is left with my original commits
-    And Git Town now has the original branch hierarchy
+    And my repo now has its initial branches and branch hierarchy

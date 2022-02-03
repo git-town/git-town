@@ -71,13 +71,13 @@ Feature: merge conflict
       """
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, remote | main commit                      |
       | feature | local, remote | feature commit                   |
       |         |               | main commit                      |
       |         |               | Merge branch 'main' into feature |
-    And my repo now has the following committed files
+    And my repo now has these committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |

@@ -24,7 +24,7 @@ Feature: killing the current branch
     And the existing branches are
       | REPOSITORY    | BRANCHES            |
       | local, remote | main, other-feature |
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH        | LOCATION      | MESSAGE              |
       | other-feature | local, remote | other feature commit |
     And Git Town is now aware of this branch hierarchy
@@ -41,6 +41,5 @@ Feature: killing the current branch
       |                 | git push -u origin current-feature                            |
     And I am now on the "current-feature" branch
     And my workspace has the uncommitted file again
-    And my repo now has the initial branches
     And my repo is left with my original commits
-    And Git Town now has the original branch hierarchy
+    And my repo now has its initial branches and branch hierarchy

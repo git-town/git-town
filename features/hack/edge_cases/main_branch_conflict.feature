@@ -59,13 +59,13 @@ Feature: conflicts between the main branch and its tracking branch
       | new-feature | git stash pop               |
     And I am now on the "new-feature" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH      | LOCATION      | MESSAGE                   |
       | main        | local, remote | conflicting remote commit |
       |             |               | conflicting local commit  |
       | new-feature | local         | conflicting remote commit |
       |             |               | conflicting local commit  |
-    And my repo now has the following committed files
+    And my repo now has these committed files
       | BRANCH      | NAME             | CONTENT          |
       | main        | conflicting_file | resolved content |
       | new-feature | conflicting_file | resolved content |

@@ -21,7 +21,7 @@ func TestGitEnvironment_CloneGitEnvironment(t *testing.T) {
 	assertIsNormalGitRepo(t, filepath.Join(dir, "cloned", "developer"))
 	assertHasGitBranch(t, filepath.Join(dir, "cloned", "developer"), "main")
 	// check pushing
-	err = cloned.DevRepo.PushBranchSetUpstream("main")
+	err = cloned.DevRepo.PushBranchToOrigin("main")
 	assert.NoError(t, err)
 }
 
@@ -185,7 +185,7 @@ func TestGitEnvironment_CommitTable(t *testing.T) {
 		Message:     "local-remote",
 	})
 	assert.NoError(t, err)
-	err = cloned.DevRepo.PushBranchSetUpstream("main")
+	err = cloned.DevRepo.PushBranchToOrigin("main")
 	assert.NoError(t, err)
 	err = cloned.OriginRepo.CreateCommit(git.Commit{
 		Branch:      "main",

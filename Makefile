@@ -85,7 +85,7 @@ setup-godog:  # install the godog binary
 stats:  # shows code statistics
 	@find . -type f | grep -v './tools/node_modules' | grep -v '\./vendor/' | grep -v '\./.git/' | grep -v './website/book' | xargs scc
 
-test: lint docs unit cuke  # runs all the tests
+test: lint docs u cuke  # runs all the tests
 .PHONY: test
 
 test-go: build u lint-go cuke  # runs all tests for Golang

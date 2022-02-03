@@ -59,7 +59,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
     And I am still on the "qa" branch
     And my workspace still contains my uncommitted file
     And all branches are now synchronized
-    And my repo now has the following committed files
+    And my repo now has these committed files
       | BRANCH | NAME             | CONTENT          |
       | qa     | conflicting_file | resolved content |
 
@@ -75,6 +75,6 @@ Feature: handle conflicts between the current perennial branch and its tracking 
     And I am still on the "qa" branch
     And my workspace still contains my uncommitted file
     And all branches are now synchronized
-    And my repo now has the following committed files
+    And my repo now has these committed files
       | BRANCH | NAME             | CONTENT          |
       | qa     | conflicting_file | resolved content |

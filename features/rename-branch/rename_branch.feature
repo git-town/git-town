@@ -2,7 +2,7 @@ Feature: rename the current branch
 
   Background:
     Given my repo has a feature branch "feature"
-    And my repo has the perennial branch "production"
+    And my repo has a perennial branch "production"
     And my repo contains the commits
       | BRANCH     | LOCATION      | MESSAGE     |
       | main       | local, remote | main commit |
@@ -22,7 +22,7 @@ Feature: rename the current branch
       |                 | git branch -D feature              |
     And I am now on the "renamed-feature" branch
     And the perennial branches are now "production"
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH          | LOCATION      | MESSAGE     |
       | main            | local, remote | main commit |
       | production      | local, remote | prod commit |

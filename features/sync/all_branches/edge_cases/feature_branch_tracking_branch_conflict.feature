@@ -46,7 +46,7 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       | main      | git stash pop          |
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH    | LOCATION      | MESSAGE                            |
       | main      | local, remote | main commit                        |
       | feature-1 | local, remote | feature-1 commit                   |
@@ -55,7 +55,7 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       | feature-2 | local         | feature-2 local commit             |
       |           | remote        | feature-2 remote commit            |
       | feature-3 | local, remote | feature-3 commit                   |
-    And my repo still has the following committed files
+    And my repo still has these committed files
       | BRANCH    | NAME             | CONTENT                 |
       | main      | main_file        | main content            |
       | feature-1 | feature1_file    | feature-1 content       |
@@ -77,7 +77,7 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       |           | git stash pop                        |
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH    | LOCATION      | MESSAGE                            |
       | main      | local, remote | main commit                        |
       | feature-1 | local, remote | feature-1 commit                   |
@@ -88,7 +88,7 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       | feature-3 | local, remote | feature-3 commit                   |
       |           |               | main commit                        |
       |           |               | Merge branch 'main' into feature-3 |
-    And my repo still has the following committed files
+    And my repo still has these committed files
       | BRANCH    | NAME             | CONTENT                 |
       | main      | main_file        | main content            |
       | feature-1 | feature1_file    | feature-1 content       |
@@ -126,7 +126,7 @@ Feature: handle merge conflicts between feature branches and their tracking bran
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
     And all branches are now synchronized
-    And my repo still has the following committed files
+    And my repo still has these committed files
       | BRANCH    | NAME             | CONTENT           |
       | main      | main_file        | main content      |
       | feature-1 | feature1_file    | feature-1 content |

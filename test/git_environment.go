@@ -222,7 +222,7 @@ func (env *GitEnvironment) CreateCommits(commits []git.Commit) error {
 				if err != nil {
 					return fmt.Errorf("cannot create local commit: %w", err)
 				}
-				err = env.DevRepo.PushBranchSetUpstream(commit.Branch)
+				err = env.DevRepo.PushBranchToOrigin(commit.Branch)
 				if err != nil {
 					return fmt.Errorf("cannot push branch %q after creating commit: %w", commit.Branch, err)
 				}

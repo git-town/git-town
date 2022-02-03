@@ -32,7 +32,7 @@ Feature: syncing inside a folder that doesn't exist on the main branch
       |                 | git stash pop                              |
     And I am still on the "current-feature" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH          | LOCATION      | MESSAGE                                  |
       | main            | local, remote | main commit                              |
       | current-feature | local, remote | folder commit                            |

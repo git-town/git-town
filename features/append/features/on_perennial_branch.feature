@@ -16,7 +16,7 @@ Feature: append to a perennial branch
       |            | git branch new-child production |
       |            | git checkout new-child          |
     And I am now on the "new-child" branch
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH     | LOCATION      | MESSAGE           |
       | new-child  | local         | production_commit |
       | production | local, remote | production_commit |
@@ -31,7 +31,7 @@ Feature: append to a perennial branch
       | new-child  | git checkout production |
       | production | git branch -D new-child |
     And I am now on the "production" branch
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH     | LOCATION      | MESSAGE           |
       | production | local, remote | production_commit |
     And Git Town now has the original branch hierarchy

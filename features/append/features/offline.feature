@@ -20,7 +20,7 @@ Feature: append in offline mode
       |                  | git branch new-feature existing-feature     |
       |                  | git checkout new-feature                    |
     And I am now on the "new-feature" branch
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH           | LOCATION      | MESSAGE                 |
       | existing-feature | local, remote | existing feature commit |
       | new-feature      | local         | existing feature commit |

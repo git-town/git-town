@@ -1,7 +1,7 @@
 Feature: syncing all branches syncs the tags
 
   Background:
-    Given my repo has the following tags
+    Given my repo has the tags
       | NAME       | LOCATION |
       | local-tag  | local    |
       | remote-tag | remote   |
@@ -9,7 +9,7 @@ Feature: syncing all branches syncs the tags
     When I run "git-town sync --all"
 
   Scenario: result
-    Then my repo now has the following tags
+    Then my repo now has the tags
       | NAME       | LOCATION      |
       | local-tag  | local, remote |
       | remote-tag | local, remote |

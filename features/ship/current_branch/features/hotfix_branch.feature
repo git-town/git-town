@@ -1,7 +1,7 @@
 Feature: ship hotfixes
 
   Background:
-    Given my repo has the perennial branch "production"
+    Given my repo has a perennial branch "production"
     And my repo has a feature branch "hotfix" as a child of "production"
     And my repo contains the commits
       | BRANCH | LOCATION      | MESSAGE       |
@@ -28,7 +28,7 @@ Feature: ship hotfixes
     And the existing branches are
       | REPOSITORY    | BRANCHES         |
       | local, remote | main, production |
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH     | LOCATION      | MESSAGE     |
       | production | local, remote | hotfix done |
     And Git Town now has no branch hierarchy information
@@ -45,10 +45,9 @@ Feature: ship hotfixes
       | hotfix     | git checkout production                     |
       | production | git checkout hotfix                         |
     And I am now on the "hotfix" branch
-    And my repo now has the following commits
+    And my repo now has the commits
       | BRANCH     | LOCATION      | MESSAGE              |
       | hotfix     | local, remote | hotfix commit        |
       | production | local, remote | hotfix done          |
       |            |               | Revert "hotfix done" |
-    And my repo now has the initial branches
-    And Git Town now has the original branch hierarchy
+    And my repo now has its initial branches and branch hierarchy

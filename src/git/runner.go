@@ -724,7 +724,7 @@ func (r *Runner) LocalAndRemoteBranches() ([]string, error) {
 		i++
 	}
 	sort.Strings(result)
-	return MainFirst(result), nil
+	return stringslice.MainFirst(result), nil
 }
 
 // LocalBranches provides the names of all branches in the local repository,
@@ -748,7 +748,7 @@ func (r *Runner) LocalBranchesMainFirst() (result []string, err error) {
 	if err != nil {
 		return result, err
 	}
-	return MainFirst(sort.StringSlice(branches)), nil
+	return stringslice.MainFirst(sort.StringSlice(branches)), nil
 }
 
 // LocalBranchesWithDeletedTrackingBranches provides the names of all branches
@@ -838,8 +838,8 @@ func (r *Runner) PushBranchForce(name string) error {
 	return nil
 }
 
-// PushBranchSetUpstream pushes the branch with the given name to the remote.
-func (r *Runner) PushBranchSetUpstream(name string) error {
+// PushBranchToOrigin pushes the branch with the given name to the remote.
+func (r *Runner) PushBranchToOrigin(name string) error {
 	_, err := r.Run("git", "push", "-u", "origin", name)
 	if err != nil {
 		return fmt.Errorf("cannot push branch %q in repo %q to origin: %w", name, r.WorkingDir(), err)
