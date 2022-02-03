@@ -608,7 +608,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return compareExistingCommits(state, table)
 	})
 
-	suite.Step(`^my repo now has the following tags$`, func(table *messages.PickleStepArgument_PickleTable) error {
+	suite.Step(`^my repo now has the tags$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		tagTable, err := state.gitEnv.TagTable()
 		if err != nil {
 			return err
