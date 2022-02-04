@@ -7,7 +7,7 @@ Feature: display the current offline status
       false
       """
 
-  Scenario: offline mode enabled
+  Scenario: enabled
     Given Git Town is in offline mode
     When I run "git-town offline"
     Then it prints:
