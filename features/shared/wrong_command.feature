@@ -1,6 +1,13 @@
-Feature: unknown command
+Feature: show all available commands
 
-  Scenario:
+  Scenario: no command
+    When I run "git-town"
+    Then it prints:
+      """
+      Available Commands:
+      """
+
+  Scenario: unknown command
     When I run "git-town invalidcommand"
     Then it prints the error:
       """
