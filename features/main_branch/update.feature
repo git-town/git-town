@@ -13,7 +13,7 @@ Feature: configure the main branch
     Then it prints no output
     And the main branch is now "main-new"
 
-  Scenario: invalid branch name
+  Scenario: non-existing branch
     When I run "git-town main-branch non-existing"
     Then it prints the error:
       """

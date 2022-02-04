@@ -1,6 +1,6 @@
-Feature: update the new-branch-push-flag setting
+Feature: set the new-branch-push-flag
 
-  Scenario Outline: update
+  Scenario Outline: local setting
     When I run "git-town new-branch-push-flag <GIVE>"
     Then the new-branch-push-flag configuration is now <WANT>
 
@@ -20,14 +20,7 @@ Feature: update the new-branch-push-flag setting
       invalid argument: "zonk". Please provide either "true" or "false"
       """
 
-  Scenario: multiple arguments
-    When I run "git-town new-branch-push-flag true false"
-    Then it prints the error:
-      """
-      accepts at most 1 arg(s), received 2
-      """
-
-  Scenario Outline: global update
+  Scenario Outline: global setting
     When I run "git-town new-branch-push-flag --global <GIVE>"
     Then the new-branch-push-flag configuration is now <WANT>
 

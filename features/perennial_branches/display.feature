@@ -1,6 +1,6 @@
-Feature: display the perennial branch configuration
+Feature: display the perennial branches
 
-  Scenario: no perennial branches configured
+  Scenario: unconfigured
     Given the perennial branches are not configured
     When I run "git-town perennial-branches"
     Then it prints:
@@ -8,7 +8,7 @@ Feature: display the perennial branch configuration
       [none]
       """
 
-  Scenario: perennial branches are configured
+  Scenario: configured
     Given the perennial branches are "qa" and "production"
     When I run "git-town perennial-branches"
     Then it prints:
