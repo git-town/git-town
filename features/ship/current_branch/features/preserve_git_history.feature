@@ -23,7 +23,7 @@ Feature: preserve the previous Git branch
 
   Scenario: both branches exist
     Given my repo has a feature branch "feature"
-    Given my repo contains the commits
+    And my repo contains the commits
       | BRANCH  | LOCATION |
       | feature | remote   |
     And I am on the "current" branch with "previous" as the previous Git branch

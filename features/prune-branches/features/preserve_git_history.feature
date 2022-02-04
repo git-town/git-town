@@ -2,7 +2,7 @@ Feature: preserve the previous Git branch
 
   Background:
     Given my repo has the feature branches "previous" and "current"
-    Given I am on the "current" branch with "previous" as the previous Git branch
+    And I am on the "current" branch with "previous" as the previous Git branch
 
   Scenario: current branch deleted, previous branch exists
     And the "current" branch gets deleted on the remote
