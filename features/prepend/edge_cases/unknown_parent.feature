@@ -15,5 +15,5 @@ Feature: ask for missing parent information
       |        | git checkout new         |
     And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
-      | old    | new    |
       | new    | main   |
+      | old    | new    |
