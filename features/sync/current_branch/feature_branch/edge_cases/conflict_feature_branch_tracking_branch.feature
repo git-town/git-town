@@ -63,9 +63,9 @@ Feature: handle conflicts between the current feature branch and its tracking br
       |         | git merge --no-edit main |
       |         | git push                 |
       |         | git stash pop            |
+    And all branches are now synchronized
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
-    And all branches are now synchronized
     And my repo now has these committed files
       | BRANCH  | NAME             | CONTENT          |
       | feature | conflicting_file | resolved content |
@@ -79,9 +79,3 @@ Feature: handle conflicts between the current feature branch and its tracking br
       | feature | git merge --no-edit main |
       |         | git push                 |
       |         | git stash pop            |
-    And I am still on the "feature" branch
-    And my workspace still contains my uncommitted file
-    And all branches are now synchronized
-    And my repo now has these committed files
-      | BRANCH  | NAME             | CONTENT          |
-      | feature | conflicting_file | resolved content |

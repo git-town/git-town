@@ -27,8 +27,8 @@ Feature: nested feature branches
       | child-feature  | git merge --no-edit origin/child-feature  |
       |                | git merge --no-edit parent-feature        |
       |                | git push                                  |
-    And I am still on the "child-feature" branch
     And all branches are now synchronized
+    And I am still on the "child-feature" branch
     And my repo now has the commits
       | BRANCH         | LOCATION      | MESSAGE                                                                  |
       | main           | local, remote | remote main commit                                                       |
