@@ -1,49 +1,40 @@
-Feature: auto-push new branch
+Feature: auto-push new branches
 
   Background:
     Given the new-branch-push-flag configuration is true
-    And my repo has a feature branch "existing-feature"
+    And my repo has a feature branch "feature"
     And my repo contains the commits
-      | BRANCH           | LOCATION      | MESSAGE                 |
-      | existing-feature | local, remote | existing_feature_commit |
-    And I am on the "existing-feature" branch
-    And my workspace has an uncommitted file
-    When I run "git-town prepend new-parent"
+      | BRANCH  | LOCATION      | MESSAGE        |
+      | feature | local, remote | feature_commit |
+    And I am on the "feature" branch
+    When I run "git-town prepend parent"
 
   Scenario: result
     Then it runs the commands
-      | BRANCH           | COMMAND                       |
-      | existing-feature | git fetch --prune --tags      |
-      |                  | git add -A                    |
-      |                  | git stash                     |
-      |                  | git checkout main             |
-      | main             | git rebase origin/main        |
-      |                  | git branch new-parent main    |
-      |                  | git checkout new-parent       |
-      | new-parent       | git push -u origin new-parent |
-      |                  | git stash pop                 |
-    And I am now on the "new-parent" branch
-    And my workspace still contains my uncommitted file
+      | BRANCH  | COMMAND                   |
+      | feature | git fetch --prune --tags  |
+      |         | git checkout main         |
+      | main    | git rebase origin/main    |
+      |         | git branch parent main    |
+      |         | git checkout parent       |
+      | parent  | git push -u origin parent |
+    And I am now on the "parent" branch
     And my repo now has the commits
-      | BRANCH           | LOCATION      | MESSAGE                 |
-      | existing-feature | local, remote | existing_feature_commit |
+      | BRANCH  | LOCATION      | MESSAGE        |
+      | feature | local, remote | feature_commit |
     And Git Town is now aware of this branch hierarchy
-      | BRANCH           | PARENT     |
-      | existing-feature | new-parent |
-      | new-parent       | main       |
+      | BRANCH  | PARENT |
+      | feature | parent |
+      | parent  | main   |
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH           | COMMAND                       |
-      | new-parent       | git add -A                    |
-      |                  | git stash                     |
-      |                  | git push origin :new-parent   |
-      |                  | git checkout main             |
-      | main             | git branch -d new-parent      |
-      |                  | git checkout existing-feature |
-      | existing-feature | git stash pop                 |
-    And I am now on the "existing-feature" branch
-    And my workspace still contains my uncommitted file
+      | BRANCH | COMMAND                 |
+      | parent | git push origin :parent |
+      |        | git checkout main       |
+      | main   | git branch -d parent    |
+      |        | git checkout feature    |
+    And I am now on the "feature" branch
     And my repo is left with my original commits
     And Git Town now has the original branch hierarchy
