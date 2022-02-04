@@ -7,11 +7,11 @@ Feature: configure the main branch
     And the main branch is now "main"
 
   Scenario: configured
-    Given my repo has the branches "main-old" and "main-new"
-    And the main branch is "main-old"
-    When I run "git-town main-branch main-new"
+    Given my repo has the branches "old" and "new"
+    And the main branch is "old"
+    When I run "git-town main-branch new"
     Then it prints no output
-    And the main branch is now "main-new"
+    And the main branch is now "new"
 
   Scenario: non-existing branch
     When I run "git-town main-branch non-existing"

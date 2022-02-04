@@ -2,7 +2,7 @@ Feature: does not prepend perennial branches
 
   Scenario: on main branch
     And I am on the "main" branch
-    When I run "git-town prepend feature"
+    When I run "git-town prepend new"
     Then it runs the commands
       | BRANCH | COMMAND                  |
       | main   | git fetch --prune --tags |
@@ -15,7 +15,7 @@ Feature: does not prepend perennial branches
   Scenario: on perennial branch
     Given my repo has a perennial branch "production"
     And I am on the "production" branch
-    When I run "git-town prepend feature"
+    When I run "git-town prepend new"
     Then it runs the commands
       | BRANCH     | COMMAND                  |
       | production | git fetch --prune --tags |

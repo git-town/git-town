@@ -1,24 +1,24 @@
 Feature: handle conflicts between the main branch and its tracking branch
 
   Background:
-    Given my repo has the feature branches "feature" and "other-feature"
+    Given my repo has the feature branches "feature" and "other"
     And my repo contains the commits
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
       | main    | local    | conflicting local commit  | conflicting_file | local conflicting content  |
       |         | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
       | feature | local    | feature commit            | feature_file     | feature content            |
-    And I am on the "other-feature" branch
+    And I am on the "other" branch
     And my workspace has an uncommitted file
     And I run "git-town ship feature -m 'feature done'"
 
   Scenario: result
     Then it runs the commands
-      | BRANCH        | COMMAND                  |
-      | other-feature | git fetch --prune --tags |
-      |               | git add -A               |
-      |               | git stash                |
-      |               | git checkout main        |
-      | main          | git rebase origin/main   |
+      | BRANCH | COMMAND                  |
+      | other  | git fetch --prune --tags |
+      |        | git add -A               |
+      |        | git stash                |
+      |        | git checkout main        |
+      | main   | git rebase origin/main   |
     And it prints the error:
       """
       To abort, run "git-town abort".
@@ -30,11 +30,11 @@ Feature: handle conflicts between the main branch and its tracking branch
   Scenario: abort
     When I run "git-town abort"
     Then it runs the commands
-      | BRANCH        | COMMAND                    |
-      | main          | git rebase --abort         |
-      |               | git checkout other-feature |
-      | other-feature | git stash pop              |
-    And I am still on the "other-feature" branch
+      | BRANCH | COMMAND            |
+      | main   | git rebase --abort |
+      |        | git checkout other |
+      | other  | git stash pop      |
+    And I am still on the "other" branch
     And my workspace still contains my uncommitted file
     And there is no rebase in progress anymore
     And my repo is left with my original commits
@@ -44,21 +44,21 @@ Feature: handle conflicts between the main branch and its tracking branch
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then it runs the commands
-      | BRANCH        | COMMAND                            |
-      | main          | git rebase --continue              |
-      |               | git push                           |
-      |               | git checkout feature               |
-      | feature       | git merge --no-edit origin/feature |
-      |               | git merge --no-edit main           |
-      |               | git checkout main                  |
-      | main          | git merge --squash feature         |
-      |               | git commit -m "feature done"       |
-      |               | git push                           |
-      |               | git push origin :feature           |
-      |               | git branch -D feature              |
-      |               | git checkout other-feature         |
-      | other-feature | git stash pop                      |
-    And I am now on the "other-feature" branch
+      | BRANCH  | COMMAND                            |
+      | main    | git rebase --continue              |
+      |         | git push                           |
+      |         | git checkout feature               |
+      | feature | git merge --no-edit origin/feature |
+      |         | git merge --no-edit main           |
+      |         | git checkout main                  |
+      | main    | git merge --squash feature         |
+      |         | git commit -m "feature done"       |
+      |         | git push                           |
+      |         | git push origin :feature           |
+      |         | git branch -D feature              |
+      |         | git checkout other                 |
+      | other   | git stash pop                      |
+    And I am now on the "other" branch
     And my workspace still contains my uncommitted file
     And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE                   | FILE NAME        | FILE CONTENT               |
@@ -66,51 +66,51 @@ Feature: handle conflicts between the main branch and its tracking branch
       |        |               | conflicting local commit  | conflicting_file | resolved content           |
       |        |               | feature done              | feature_file     | feature content            |
     And the existing branches are
-      | REPOSITORY    | BRANCHES            |
-      | local, remote | main, other-feature |
+      | REPOSITORY    | BRANCHES    |
+      | local, remote | main, other |
     And Git Town is now aware of this branch hierarchy
-      | BRANCH        | PARENT |
-      | other-feature | main   |
+      | BRANCH | PARENT |
+      | other  | main   |
 
   Scenario: continue after resolving the conflicts and continuing the rebase
     When I resolve the conflict in "conflicting_file"
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
     Then it runs the commands
-      | BRANCH        | COMMAND                            |
-      | main          | git push                           |
-      |               | git checkout feature               |
-      | feature       | git merge --no-edit origin/feature |
-      |               | git merge --no-edit main           |
-      |               | git checkout main                  |
-      | main          | git merge --squash feature         |
-      |               | git commit -m "feature done"       |
-      |               | git push                           |
-      |               | git push origin :feature           |
-      |               | git branch -D feature              |
-      |               | git checkout other-feature         |
-      | other-feature | git stash pop                      |
-    And I am now on the "other-feature" branch
+      | BRANCH  | COMMAND                            |
+      | main    | git push                           |
+      |         | git checkout feature               |
+      | feature | git merge --no-edit origin/feature |
+      |         | git merge --no-edit main           |
+      |         | git checkout main                  |
+      | main    | git merge --squash feature         |
+      |         | git commit -m "feature done"       |
+      |         | git push                           |
+      |         | git push origin :feature           |
+      |         | git branch -D feature              |
+      |         | git checkout other                 |
+      | other   | git stash pop                      |
+    And I am now on the "other" branch
 
   Scenario: undo after continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     And I run "git-town undo"
     Then it runs the commands
-      | BRANCH        | COMMAND                                                         |
-      | other-feature | git add -A                                                      |
-      |               | git stash                                                       |
-      |               | git checkout main                                               |
-      | main          | git branch feature {{ sha 'Merge branch 'main' into feature' }} |
-      |               | git push -u origin feature                                      |
-      |               | git revert {{ sha 'feature done' }}                             |
-      |               | git push                                                        |
-      |               | git checkout feature                                            |
-      | feature       | git reset --hard {{ sha 'feature commit' }}                     |
-      |               | git checkout main                                               |
-      | main          | git checkout other-feature                                      |
-      | other-feature | git stash pop                                                   |
-    And I am now on the "other-feature" branch
+      | BRANCH  | COMMAND                                                         |
+      | other   | git add -A                                                      |
+      |         | git stash                                                       |
+      |         | git checkout main                                               |
+      | main    | git branch feature {{ sha 'Merge branch 'main' into feature' }} |
+      |         | git push -u origin feature                                      |
+      |         | git revert {{ sha 'feature done' }}                             |
+      |         | git push                                                        |
+      |         | git checkout feature                                            |
+      | feature | git reset --hard {{ sha 'feature commit' }}                     |
+      |         | git checkout main                                               |
+      | main    | git checkout other                                              |
+      | other   | git stash pop                                                   |
+    And I am now on the "other" branch
     And my repo now has the commits
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, remote | conflicting remote commit        |

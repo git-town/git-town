@@ -2,36 +2,36 @@ Feature: offline mode
 
   Background:
     Given Git Town is in offline mode
-    And my repo has a feature branch "feature"
+    And my repo has a feature branch "old"
     And my repo contains the commits
-      | BRANCH  | LOCATION      | MESSAGE        |
-      | feature | local, remote | feature_commit |
-    And I am on the "feature" branch
-    When I run "git-town prepend parent"
+      | BRANCH | LOCATION      | MESSAGE    |
+      | old    | local, remote | old_commit |
+    And I am on the "old" branch
+    When I run "git-town prepend new"
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                |
-      | feature | git checkout main      |
-      | main    | git rebase origin/main |
-      |         | git branch parent main |
-      |         | git checkout parent    |
-    And I am now on the "parent" branch
+      | BRANCH | COMMAND                |
+      | old    | git checkout main      |
+      | main   | git rebase origin/main |
+      |        | git branch new main    |
+      |        | git checkout new       |
+    And I am now on the "new" branch
     And my repo now has the commits
-      | BRANCH  | LOCATION      | MESSAGE        |
-      | feature | local, remote | feature_commit |
+      | BRANCH | LOCATION      | MESSAGE    |
+      | old    | local, remote | old_commit |
     And Git Town is now aware of this branch hierarchy
-      | BRANCH  | PARENT |
-      | feature | parent |
-      | parent  | main   |
+      | BRANCH | PARENT |
+      | new    | main   |
+      | old    | new    |
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND              |
-      | parent | git checkout main    |
-      | main   | git branch -d parent |
-      |        | git checkout feature |
-    And I am now on the "feature" branch
+      | BRANCH | COMMAND           |
+      | new    | git checkout main |
+      | main   | git branch -d new |
+      |        | git checkout old  |
+    And I am now on the "old" branch
     And my repo is left with my original commits
     And Git Town now has the original branch hierarchy
