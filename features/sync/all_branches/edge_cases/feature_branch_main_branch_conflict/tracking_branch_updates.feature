@@ -48,6 +48,7 @@ Feature: handle merge conflicts between feature branch and main branch
       | main      | git stash pop                                       |
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
+    And there is no merge in progress
     And my repo now has the commits
       | BRANCH    | LOCATION      | MESSAGE                            |
       | main      | local, remote | main commit                        |
@@ -79,6 +80,7 @@ Feature: handle merge conflicts between feature branch and main branch
       |           | git stash pop                                       |
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
+    And there is no merge in progress
     And my repo now has the commits
       | BRANCH    | LOCATION      | MESSAGE                            |
       | main      | local, remote | main commit                        |
@@ -127,6 +129,7 @@ Feature: handle merge conflicts between feature branch and main branch
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
     And all branches are now synchronized
+    And there is no merge in progress
     And my repo now has these committed files
       | BRANCH    | NAME                 | CONTENT                  |
       | main      | conflicting_file     | main content             |
@@ -151,6 +154,3 @@ Feature: handle merge conflicts between feature branch and main branch
       |           | git checkout main                    |
       | main      | git push --tags                      |
       |           | git stash pop                        |
-    And I am now on the "main" branch
-    And all branches are now synchronized
-    And my workspace has the uncommitted file again
