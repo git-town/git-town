@@ -77,6 +77,29 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 	})
 
+	suite.Step(`^a coworker fetches updates$`, func() error {
+		return state.gitEnv.CoworkerRepo.Fetch()
+	})
+
+	suite.Step(`^a coworker is on the "([^"]*)" branch$`, func(branchName string) error {
+		return state.gitEnv.CoworkerRepo.CheckoutBranch(branchName)
+	})
+
+	suite.Step(`^a coworker runs "([^"]+)"$`, func(command string) error {
+		state.runRes, state.runErr = state.gitEnv.CoworkerRepo.RunString(command)
+		return nil
+	})
+
+	suite.Step(`^a coworker sets the parent branch of "([^"]*)" as "([^"]*)"$`, func(childBranch, parentBranch string) error {
+		_ = state.gitEnv.CoworkerRepo.Config.SetParentBranch(childBranch, parentBranch)
+		return nil
+	})
+
+	suite.Step(`^(?:a coworker|the origin) has a feature branch "([^"]*)"$`, func(branch string) error {
+		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
+		return state.gitEnv.OriginRepo.CreateBranch(branch, "main")
+	})
+
 	suite.Step(`^all branches are now synchronized$`, func() error {
 		outOfSync, err := state.gitEnv.DevRepo.HasBranchesOutOfSync()
 		if err != nil {
@@ -340,29 +363,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^my computer has the "([^"]*)" tool installed$`, func(tool string) error {
 		return state.gitEnv.DevShell.MockCommand(tool)
-	})
-
-	suite.Step(`^my (?:coworker|origin) has a feature branch "([^"]*)"$`, func(branch string) error {
-		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-		return state.gitEnv.OriginRepo.CreateBranch(branch, "main")
-	})
-
-	suite.Step(`^my coworker fetches updates$`, func() error {
-		return state.gitEnv.CoworkerRepo.Fetch()
-	})
-
-	suite.Step(`^my coworker is on the "([^"]*)" branch$`, func(branchName string) error {
-		return state.gitEnv.CoworkerRepo.CheckoutBranch(branchName)
-	})
-
-	suite.Step(`^my coworker runs "([^"]+)"$`, func(command string) error {
-		state.runRes, state.runErr = state.gitEnv.CoworkerRepo.RunString(command)
-		return nil
-	})
-
-	suite.Step(`^my coworker sets the parent branch of "([^"]*)" as "([^"]*)"$`, func(childBranch, parentBranch string) error {
-		_ = state.gitEnv.CoworkerRepo.Config.SetParentBranch(childBranch, parentBranch)
-		return nil
 	})
 
 	suite.Step(`^my repo does not have a remote origin$`, func() error {

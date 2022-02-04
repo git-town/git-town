@@ -3,7 +3,7 @@ Feature: ship a branch that exists only on the remote
 
   Background:
     Given my repo has a feature branch "other-feature"
-    And my origin has a feature branch "feature"
+    And the origin has a feature branch "feature"
     And my repo contains the commits
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME        |
       | feature | remote   | feature commit | conflicting_file |
