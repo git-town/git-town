@@ -24,3 +24,9 @@ Feature: preserve the previous Git branch
     When I run "git-town prune-branches"
     Then I am now on the "main" branch
     And the previous Git branch is now "main"
+
+  Scenario: both branches exist
+    Given I am on the "current" branch with "previous" as the previous Git branch
+    When I run "git-town prune-branches"
+    Then I am still on the "current" branch
+    And the previous Git branch is still "previous"
