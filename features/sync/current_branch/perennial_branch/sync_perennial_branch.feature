@@ -10,15 +10,15 @@ Feature: sync the current perennial branch
     And I am on the "qa" branch
     When I run "git-town sync"
 
-  Scenario: no conflict
+  Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                  |
       | qa     | git fetch --prune --tags |
       |        | git rebase origin/qa     |
       |        | git push                 |
       |        | git push --tags          |
-    And I am still on the "qa" branch
     And all branches are now synchronized
+    And I am still on the "qa" branch
     And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, remote | main commit   |
