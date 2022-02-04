@@ -94,9 +94,10 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       |             | git checkout main             |
       | main        | git push --tags               |
       |             | git stash pop                 |
+    And all branches are now synchronized
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
-    And all branches are now synchronized
+    And there is no rebase in progress anymore
 
   Scenario: continue after resolving the conflicts and continuing the rebase
     When I resolve the conflict in "conflicting_file"
@@ -110,5 +111,3 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       |             | git checkout main             |
       | main        | git push --tags               |
       |             | git stash pop                 |
-    And I am now on the "main" branch
-    And all branches are now synchronized

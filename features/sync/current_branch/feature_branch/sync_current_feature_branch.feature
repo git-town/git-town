@@ -9,15 +9,12 @@ Feature: sync the current feature branch with a tracking branch
       | feature | local    | local feature commit  |
       |         | remote   | remote feature commit |
     And I am on the "feature" branch
-    And my workspace has an uncommitted file
     When I run "git-town sync"
 
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune --tags           |
-      |         | git add -A                         |
-      |         | git stash                          |
       |         | git checkout main                  |
       | main    | git rebase origin/main             |
       |         | git push                           |
@@ -25,7 +22,6 @@ Feature: sync the current feature branch with a tracking branch
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
       |         | git push                           |
-      |         | git stash pop                      |
     And all branches are now synchronized
     And I am still on the "feature" branch
     And my repo now has the commits
@@ -38,4 +34,3 @@ Feature: sync the current feature branch with a tracking branch
       |         |               | remote main commit                                         |
       |         |               | local main commit                                          |
       |         |               | Merge branch 'main' into feature                           |
-    And my workspace still contains my uncommitted file

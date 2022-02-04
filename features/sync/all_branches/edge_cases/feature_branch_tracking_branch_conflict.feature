@@ -55,7 +55,7 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       | feature-2 | local         | feature-2 local commit             |
       |           | remote        | feature-2 remote commit            |
       | feature-3 | local, remote | feature-3 commit                   |
-    And my repo still has these committed files
+    And my repo now has these committed files
       | BRANCH    | NAME             | CONTENT                 |
       | main      | main_file        | main content            |
       | feature-1 | feature1_file    | feature-1 content       |
@@ -88,7 +88,7 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       | feature-3 | local, remote | feature-3 commit                   |
       |           |               | main commit                        |
       |           |               | Merge branch 'main' into feature-3 |
-    And my repo still has these committed files
+    And my repo now has these committed files
       | BRANCH    | NAME             | CONTENT                 |
       | main      | main_file        | main content            |
       | feature-1 | feature1_file    | feature-1 content       |
@@ -123,9 +123,10 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       |           | git checkout main                    |
       | main      | git push --tags                      |
       |           | git stash pop                        |
+    And all branches are now synchronized
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
-    And all branches are now synchronized
+    And there is no merge in progress
     And my repo still has these committed files
       | BRANCH    | NAME             | CONTENT           |
       | main      | main_file        | main content      |
@@ -151,6 +152,3 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       |           | git checkout main                    |
       | main      | git push --tags                      |
       |           | git stash pop                        |
-    And I am now on the "main" branch
-    And my workspace has the uncommitted file again
-    And all branches are now synchronized
