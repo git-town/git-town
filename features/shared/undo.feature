@@ -1,4 +1,4 @@
-Feature: does not double undo
+Feature: no double undo
 
   Scenario:
     Given my repo has a feature branch "feature"
