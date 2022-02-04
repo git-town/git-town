@@ -8,16 +8,18 @@ Feature: sync the current feature branch (without a tracking branch or remote re
       | main    | local    | local main commit    |
       | feature | local    | local feature commit |
     And I am on the "feature" branch
-    And my workspace has an uncommitted file
     When I run "git-town sync"
 
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                  |
-      | feature | git add -A               |
-      |         | git stash                |
-      |         | git merge --no-edit main |
-      |         | git stash pop            |
+      | feature | git merge --no-edit main |
     And I am still on the "feature" branch
-    And my workspace still contains my uncommitted file
+    And my repo now has the commits
+      | BRANCH  | LOCATION | MESSAGE                          |
+      | main    | local    | local main commit                |
+      | feature | local    | local feature commit             |
+      |         |          | local main commit                |
+      |         |          | Merge branch 'main' into feature |
     And all branches are now synchronized
+    And my repo still has its initial branches and branch hierarchy

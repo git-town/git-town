@@ -24,6 +24,8 @@ Feature: collaborative feature branch syncing
       | BRANCH  | LOCATION      | MESSAGE         |
       | feature | local, remote | my commit       |
       |         | coworker      | coworker commit |
+    And all branches are now synchronized
+    And my repo still has its initial branches and branch hierarchy
 
     Given a coworker is on the "feature" branch
     When a coworker runs "git-town sync"
@@ -41,6 +43,8 @@ Feature: collaborative feature branch syncing
       | feature | local, coworker, remote | my commit                                                  |
       |         | coworker, remote        | coworker commit                                            |
       |         |                         | Merge remote-tracking branch 'origin/feature' into feature |
+    And all branches are now synchronized
+    And my repo still has its initial branches and branch hierarchy
 
     Given I am on the "feature" branch
     When I run "git-town sync"
@@ -57,3 +61,5 @@ Feature: collaborative feature branch syncing
       | feature | local, coworker, remote | coworker commit                                            |
       |         |                         | my commit                                                  |
       |         |                         | Merge remote-tracking branch 'origin/feature' into feature |
+    And all branches are now synchronized
+    And my repo still has its initial branches and branch hierarchy

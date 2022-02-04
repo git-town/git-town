@@ -30,3 +30,5 @@ Feature: with upstream remote
       | feature | local, remote           | local commit                     |
       |         |                         | upstream commit                  |
       |         |                         | Merge branch 'main' into feature |
+    And all branches are now synchronized
+    And my repo still has its initial branches and branch hierarchy

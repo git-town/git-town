@@ -12,13 +12,10 @@ Feature: nested feature branches
       | child-feature  | local    | local child feature commit   |
       |                | remote   | remote child feature commit  |
     And I am on the "child-feature" branch
-    And my workspace has an uncommitted file
     When I run "git-town sync"
     Then it runs the commands
       | BRANCH         | COMMAND                                   |
       | child-feature  | git fetch --prune --tags                  |
-      |                | git add -A                                |
-      |                | git stash                                 |
       |                | git checkout main                         |
       | main           | git rebase origin/main                    |
       |                | git push                                  |
@@ -30,9 +27,7 @@ Feature: nested feature branches
       | child-feature  | git merge --no-edit origin/child-feature  |
       |                | git merge --no-edit parent-feature        |
       |                | git push                                  |
-      |                | git stash pop                             |
     And I am still on the "child-feature" branch
-    And my workspace still contains my uncommitted file
     And my repo now has the commits
       | BRANCH         | LOCATION      | MESSAGE                                                                  |
       | main           | local, remote | remote main commit                                                       |
@@ -53,4 +48,5 @@ Feature: nested feature branches
       |                |               | remote main commit                                                       |
       |                |               | local main commit                                                        |
       |                |               | Merge branch 'main' into parent-feature                                  |
-    And Git Town still has the original branch hierarchy
+    And all branches are now synchronized
+    And my repo still has its initial branches and branch hierarchy

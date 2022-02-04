@@ -36,4 +36,5 @@ Feature: with pull-branch-strategy set to "merge"
       |         |               | remote main commit                                         |
       |         |               | Merge remote-tracking branch 'origin/main'                 |
       |         |               | Merge branch 'main' into feature                           |
-    And Git Town still has the original branch hierarchy
+    And all branches are now synchronized
+    And my repo still has its initial branches and branch hierarchy
