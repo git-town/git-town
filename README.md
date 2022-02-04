@@ -23,37 +23,37 @@ Git Town provides these additional Git commands:
 
 - [git hack](https://www.git-town.com/commands/hack.html) - cuts a new
   up-to-date feature branch off the main branch
-- [git sync](https://www.git-town.com/commands/sync.html) - updates
-  the current branch with all ongoing changes
+- [git sync](https://www.git-town.com/commands/sync.html) - updates the current
+  branch with all ongoing changes
 - [git new-pull-request](https://www.git-town.com/commands/new-pull-request.html) -
   create a new pull request
-- [git ship](https://www.git-town.com/commands/ship.html) - delivers
-  a completed feature branch and removes it
+- [git ship](https://www.git-town.com/commands/ship.html) - delivers a completed
+  feature branch and removes it
 
 #### Advanced development commands
 
-- [git kill](https://www.git-town.com/commands/kill.html) - removes
-  a feature branch
+- [git kill](https://www.git-town.com/commands/kill.html) - removes a feature
+  branch
 - [git prune-branches](https://www.git-town.com/commands/prune-branches.html) -
   delete all merged branches
 - [git rename-branch](https://www.git-town.com/commands/rename-branch.html) -
   rename a branch
-- [git repo](https://www.git-town.com/commands/repo.html) - view the
-  repository homepage
+- [git repo](https://www.git-town.com/commands/repo.html) - view the repository
+  homepage
 
 #### Nested feature branches
 
-- [git append](https://www.git-town.com/commands/append.html) -
-  insert a new branch as a child of the current branch
-- [git prepend](https://www.git-town.com/commands/prepend.html) -
-  insert a new branch between the current branch and its parent
+- [git append](https://www.git-town.com/commands/append.html) - insert a new
+  branch as a child of the current branch
+- [git prepend](https://www.git-town.com/commands/prepend.html) - insert a new
+  branch between the current branch and its parent
 - [git set-parent-branch](https://www.git-town.com/commands/set-parent-branch.html) -
   updates a branch's parent
 
 #### Git Town configuration
 
-- [git town config](https://www.git-town.com/commands/config.html) -
-  displays or updates your Git Town configuration
+- [git town config](https://www.git-town.com/commands/config.html) - displays or
+  updates your Git Town configuration
 - [git town new-branch-push-flag](https://www.git-town.com/commands/new-branch-push-flag.html) -
   configures whether new empty branches get pushed to origin
 - [git town main-branch](https://www.git-town.com/commands/main-branch.html) -
@@ -67,12 +67,12 @@ Git Town provides these additional Git commands:
 
 #### Git Town setup
 
-- [git town alias](https://www.git-town.com/commands/alias.html) -
-  adds or removes shorter aliases for Git Town commands
+- [git town alias](https://www.git-town.com/commands/alias.html) - adds or
+  removes shorter aliases for Git Town commands
 - [git town completions](https://www.git-town.com/commands/completions.html) -
   generates completion scripts for Bash, zsh, fish & PowerShell.
-- [git town version](https://www.git-town.com/commands/version.html) -
-  displays the installed version of Git Town
+- [git town version](https://www.git-town.com/commands/version.html) - displays
+  the installed version of Git Town
 
 ## Installation
 
