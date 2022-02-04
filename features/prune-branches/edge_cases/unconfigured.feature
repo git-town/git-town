@@ -7,4 +7,3 @@ Feature: ask for missing configuration
       | PROMPT                                     | ANSWER  |
       | Please specify the main development branch | [ENTER] |
     And the main branch is now "main"
-    And my repo now has no perennial branches
