@@ -4,13 +4,13 @@ Feature: preserve the previous Git branch
     Given my repo has the feature branches "previous" and "current"
     And I am on the "current" branch with "previous" as the previous Git branch
 
-  Scenario: current branch deleted, previous branch exists
+  Scenario: current branch gone, previous branch exists
     And the "current" branch gets deleted on the remote
     When I run "git-town prune-branches"
     Then I am now on the "main" branch
     And the previous Git branch is still "previous"
 
-  Scenario: current branch exists, previous branch deleted
+  Scenario: current branch exists, previous branch gone
     Given the "previous" branch gets deleted on the remote
     When I run "git-town prune-branches"
     Then I am still on the "current" branch
