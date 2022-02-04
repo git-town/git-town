@@ -1,6 +1,6 @@
-Feature: create a new branch makes the current branch the new previous branch
+Feature: preserve the previous Git branch
 
-  Scenario: hack
+  Scenario:
     Given my repo has the feature branches "previous" and "current"
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run "git-town hack new"
