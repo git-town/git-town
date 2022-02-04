@@ -22,6 +22,7 @@ Feature: preserve the previous Git branch
     And the previous Git branch is now "main"
 
   Scenario: both branches exist
+    Given my repo has a feature branch "feature"
     Given my repo contains the commits
       | BRANCH  | LOCATION |
       | feature | remote   |

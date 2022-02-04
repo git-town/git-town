@@ -1,7 +1,8 @@
 Feature: preserve the previous Git branch
 
   Scenario:
-    Given my computer has the "open" tool installed
+    Given my repo has the feature branches "previous" and "current"
+    And my computer has the "open" tool installed
     And my repo's origin is "https://github.com/git-town/git-town.git"
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run "git-town new-pull-request"
