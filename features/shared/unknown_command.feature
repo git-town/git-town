@@ -1,6 +1,6 @@
-Feature: help for unknown command
+Feature: unknown command
 
-  Scenario: run an unknown Git Town command
+  Scenario:
     When I run "git-town invalidcommand"
     Then it prints the error:
       """

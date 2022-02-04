@@ -1,4 +1,4 @@
-Feature: show explanation when trying to continue after a successful command
+Feature: continue after successful command
 
   Scenario Outline:
     Given my repo has a feature branch "feature"
