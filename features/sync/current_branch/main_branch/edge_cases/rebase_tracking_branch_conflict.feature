@@ -54,9 +54,9 @@ Feature: handle conflicts between the main branch and its tracking branch when s
       |        | git push              |
       |        | git push --tags       |
       |        | git stash pop         |
+    And all branches are now synchronized
     And I am still on the "main" branch
     And my workspace still contains my uncommitted file
-    And all branches are now synchronized
     And my repo now has these committed files
       | BRANCH | NAME             | CONTENT          |
       | main   | conflicting_file | resolved content |
@@ -70,9 +70,9 @@ Feature: handle conflicts between the main branch and its tracking branch when s
       | main   | git push        |
       |        | git push --tags |
       |        | git stash pop   |
+    And all branches are now synchronized
     And I am still on the "main" branch
     And my workspace still contains my uncommitted file
-    And all branches are now synchronized
     And my repo now has these committed files
       | BRANCH | NAME             | CONTENT          |
       | main   | conflicting_file | resolved content |

@@ -11,12 +11,13 @@ Feature: sync the current perennial branch (without remote repo)
     And my workspace has an uncommitted file
     When I run "git-town sync"
 
-  Scenario: no conflict
+  Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND       |
       | qa     | git add -A    |
       |        | git stash     |
       |        | git stash pop |
+    And all branches are now synchronized
     And I am still on the "qa" branch
     And my workspace still contains my uncommitted file
     And my repo is left with my original commits
