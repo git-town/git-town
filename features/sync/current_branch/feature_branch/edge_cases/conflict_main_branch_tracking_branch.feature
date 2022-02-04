@@ -60,9 +60,10 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | git merge --no-edit main           |
       |         | git push                           |
       |         | git stash pop                      |
-    And I am still on the "feature" branch
-    And my workspace still contains my uncommitted file
     And all branches are now synchronized
+    And I am still on the "feature" branch
+    And there is no rebase in progress anymore
+    And my workspace still contains my uncommitted file
     And my repo now has these committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |
@@ -80,9 +81,10 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | git merge --no-edit main           |
       |         | git push                           |
       |         | git stash pop                      |
-    And I am still on the "feature" branch
-    And my workspace still contains my uncommitted file
     And all branches are now synchronized
+    And I am still on the "feature" branch
+    And there is no rebase in progress anymore
+    And my workspace still contains my uncommitted file
     And my repo now has these committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |

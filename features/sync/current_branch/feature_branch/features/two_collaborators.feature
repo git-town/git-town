@@ -37,12 +37,12 @@ Feature: collaborative feature branch syncing
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
       |         | git push                           |
+    And all branches are now synchronized
     And my repo now has the commits
       | BRANCH  | LOCATION                | MESSAGE                                                    |
       | feature | local, coworker, remote | my commit                                                  |
       |         | coworker, remote        | coworker commit                                            |
       |         |                         | Merge remote-tracking branch 'origin/feature' into feature |
-    And all branches are now synchronized
 
     Given I am on the "feature" branch
     When I run "git-town sync"
@@ -54,9 +54,9 @@ Feature: collaborative feature branch syncing
       |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
+    And all branches are now synchronized
     And my repo now has the commits
       | BRANCH  | LOCATION                | MESSAGE                                                    |
       | feature | local, coworker, remote | coworker commit                                            |
       |         |                         | my commit                                                  |
       |         |                         | Merge remote-tracking branch 'origin/feature' into feature |
-    And all branches are now synchronized

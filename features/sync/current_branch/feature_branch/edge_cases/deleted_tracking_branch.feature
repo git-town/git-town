@@ -18,6 +18,6 @@ Feature: restores deleted tracking branch
       |         | git checkout feature       |
       | feature | git merge --no-edit main   |
       |         | git push -u origin feature |
-    And I am still on the "feature" branch
     And all branches are now synchronized
+    And I am still on the "feature" branch
     And my repo is left with my original commits

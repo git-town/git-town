@@ -72,6 +72,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       |         | git stash pop        |
     And all branches are now synchronized
     And I am still on the "feature" branch
+    And there is no merge in progress
     And my workspace has the uncommitted file again
     And my repo now has these committed files
       | BRANCH  | NAME             | CONTENT          |

@@ -14,6 +14,7 @@ Feature: sync the current feature branch (without a tracking branch or remote re
     Then it runs the commands
       | BRANCH  | COMMAND                  |
       | feature | git merge --no-edit main |
+    And all branches are now synchronized
     And I am still on the "feature" branch
     And my repo now has the commits
       | BRANCH  | LOCATION | MESSAGE                          |
@@ -21,4 +22,3 @@ Feature: sync the current feature branch (without a tracking branch or remote re
       | feature | local    | local feature commit             |
       |         |          | local main commit                |
       |         |          | Merge branch 'main' into feature |
-    And all branches are now synchronized
