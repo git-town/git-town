@@ -26,8 +26,8 @@ Feature: sync the current feature branch with a tracking branch
       |         | git merge --no-edit main           |
       |         | git push                           |
       |         | git stash pop                      |
+    And all branches are now synchronized
     And I am still on the "feature" branch
-    And my workspace still contains my uncommitted file
     And my repo now has the commits
       | BRANCH  | LOCATION      | MESSAGE                                                    |
       | main    | local, remote | remote main commit                                         |
@@ -38,3 +38,4 @@ Feature: sync the current feature branch with a tracking branch
       |         |               | remote main commit                                         |
       |         |               | local main commit                                          |
       |         |               | Merge branch 'main' into feature                           |
+    And my workspace still contains my uncommitted file

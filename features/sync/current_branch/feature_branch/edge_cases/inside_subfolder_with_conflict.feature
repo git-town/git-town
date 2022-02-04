@@ -69,6 +69,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
       |                 | git checkout current-feature             |
       | current-feature | git push --tags                          |
       |                 | git stash pop                            |
+    And all branches are now synchronized
     And I am still on the "current-feature" branch
     And my workspace has the uncommitted file again
     And there is no merge in progress

@@ -24,6 +24,7 @@ Feature: collaborative feature branch syncing
       | BRANCH  | LOCATION      | MESSAGE         |
       | feature | local, remote | my commit       |
       |         | coworker      | coworker commit |
+    And all branches are now synchronized
 
     Given a coworker is on the "feature" branch
     When a coworker runs "git-town sync"
@@ -36,6 +37,7 @@ Feature: collaborative feature branch syncing
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
       |         | git push                           |
+    And all branches are now synchronized
     And my repo now has the commits
       | BRANCH  | LOCATION                | MESSAGE                                                    |
       | feature | local, coworker, remote | my commit                                                  |
@@ -52,6 +54,7 @@ Feature: collaborative feature branch syncing
       |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
+    And all branches are now synchronized
     And my repo now has the commits
       | BRANCH  | LOCATION                | MESSAGE                                                    |
       | feature | local, coworker, remote | coworker commit                                            |

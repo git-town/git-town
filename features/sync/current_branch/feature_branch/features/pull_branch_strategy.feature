@@ -23,6 +23,7 @@ Feature: with pull-branch-strategy set to "merge"
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
       |         | git push                           |
+    And all branches are now synchronized
     And I am still on the "feature" branch
     And my repo now has the commits
       | BRANCH  | LOCATION      | MESSAGE                                                    |
@@ -36,4 +37,3 @@ Feature: with pull-branch-strategy set to "merge"
       |         |               | remote main commit                                         |
       |         |               | Merge remote-tracking branch 'origin/main'                 |
       |         |               | Merge branch 'main' into feature                           |
-    And Git Town still has the original branch hierarchy

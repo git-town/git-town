@@ -70,10 +70,11 @@ Feature: handle conflicts between the current feature branch and the main branch
       | feature | git commit --no-edit |
       |         | git push             |
       |         | git stash pop        |
-    And I am still on the "feature" branch
-    And my workspace has the uncommitted file again
     And all branches are now synchronized
-    And my repo still has these committed files
+    And I am still on the "feature" branch
+    And there is no merge in progress
+    And my workspace has the uncommitted file again
+    And my repo now has these committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |
@@ -87,11 +88,3 @@ Feature: handle conflicts between the current feature branch and the main branch
       | BRANCH  | COMMAND       |
       | feature | git push      |
       |         | git stash pop |
-    And I am still on the "feature" branch
-    And my workspace has the uncommitted file again
-    And all branches are now synchronized
-    And my repo still has these committed files
-      | BRANCH  | NAME             | CONTENT          |
-      | main    | conflicting_file | main content     |
-      | feature | conflicting_file | resolved content |
-      |         | feature_file     | feature content  |

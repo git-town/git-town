@@ -23,6 +23,7 @@ Feature: with upstream remote
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
       |         | git push                           |
+    And all branches are now synchronized
     And I am still on the "feature" branch
     And my repo now has the commits
       | BRANCH  | LOCATION                | MESSAGE                          |
