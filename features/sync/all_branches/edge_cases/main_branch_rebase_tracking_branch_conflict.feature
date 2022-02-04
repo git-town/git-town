@@ -60,9 +60,10 @@ Feature: handle rebase conflicts between main branch and its tracking branch
       |         | git checkout main                  |
       | main    | git push --tags                    |
       |         | git stash pop                      |
+    And all branches are now synchronized
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
-    And all branches are now synchronized
+    And there is no rebase in progress anymore
     And my repo now has these committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |
@@ -83,6 +84,3 @@ Feature: handle rebase conflicts between main branch and its tracking branch
       |         | git checkout main                  |
       | main    | git push --tags                    |
       |         | git stash pop                      |
-    And I am now on the "main" branch
-    And my workspace has the uncommitted file again
-    And all branches are now synchronized
