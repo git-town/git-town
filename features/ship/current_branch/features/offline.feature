@@ -40,4 +40,4 @@ Feature: offline mode
       |         | git checkout feature                          |
     And I am now on the "feature" branch
     And my repo is left with my original commits
-    And Git Town now has the original branch hierarchy
+    And my repo now has its initial branches and branch hierarchy

@@ -51,4 +51,4 @@ Feature: ship a parent branch
       |                |               | Revert "parent feature done" |
       | child-feature  | local, remote | child feature commit         |
       | parent-feature | local, remote | parent feature commit        |
-    And Git Town now has the original branch hierarchy
+    And my repo now has its initial branches and branch hierarchy
