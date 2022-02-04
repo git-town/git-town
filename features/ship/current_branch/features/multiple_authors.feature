@@ -50,4 +50,4 @@ Feature: ship a coworker's feature branch
       | feature | local, remote | feature commit1       |
       |         |               | feature commit2       |
       |         |               | feature commit3       |
-    And Git Town now has the original branch hierarchy
+    And my repo now has its initial branches and branch hierarchy

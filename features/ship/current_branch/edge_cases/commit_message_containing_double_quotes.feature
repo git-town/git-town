@@ -50,7 +50,4 @@ Feature: commit message can contain double-quotes
       | main    | local, remote | message containing "double quotes"          |
       |         |               | Revert "message containing "double quotes"" |
       | feature | local, remote | feature commit                              |
-    And my repo now has the initial branches
-    And Git Town is now aware of this branch hierarchy
-      | BRANCH  | PARENT |
-      | feature | main   |
+    And my repo now has its initial branches and branch hierarchy

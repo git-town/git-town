@@ -23,7 +23,7 @@ Feature: does not ship a child branch
       """
     And I am still on the "feature-3" branch
     And my repo is left with my original commits
-    And Git Town still has the original branch hierarchy
+    And my repo now has its initial branches and branch hierarchy
 
   Scenario: undo
     When I run "git-town undo"
@@ -34,4 +34,4 @@ Feature: does not ship a child branch
       """
     And I am still on the "feature-3" branch
     And my repo is left with my original commits
-    And Git Town still has the original branch hierarchy
+    And my repo now has its initial branches and branch hierarchy
