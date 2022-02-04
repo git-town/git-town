@@ -52,6 +52,7 @@ Feature: warn about unfinished prompt asking the user how to proceed
       |         | git merge --no-edit main           |
       |         | git push                           |
       |         | git stash pop                      |
+    And all branches are now synchronized
 
   Scenario: attempt to sync again and choosing to abort
     When I run "git-town sync" and answer the prompts:
@@ -62,6 +63,7 @@ Feature: warn about unfinished prompt asking the user how to proceed
       | main    | git rebase --abort   |
       |         | git checkout feature |
       | feature | git stash pop        |
+    And my repo is left with my original commits
 
   Scenario: run another command after manually aborting
     When I run "git rebase --abort"

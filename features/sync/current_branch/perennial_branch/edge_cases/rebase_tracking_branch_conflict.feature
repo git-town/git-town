@@ -56,9 +56,10 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       |        | git push              |
       |        | git push --tags       |
       |        | git stash pop         |
-    And I am still on the "qa" branch
-    And my workspace still contains my uncommitted file
     And all branches are now synchronized
+    And I am still on the "qa" branch
+    And there is no rebase in progress anymore
+    And my workspace still contains my uncommitted file
     And my repo now has these committed files
       | BRANCH | NAME             | CONTENT          |
       | qa     | conflicting_file | resolved content |
@@ -72,9 +73,10 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       | qa     | git push        |
       |        | git push --tags |
       |        | git stash pop   |
-    And I am still on the "qa" branch
-    And my workspace still contains my uncommitted file
     And all branches are now synchronized
+    And I am still on the "qa" branch
+    And there is no rebase in progress anymore
+    And my workspace still contains my uncommitted file
     And my repo now has these committed files
       | BRANCH | NAME             | CONTENT          |
       | qa     | conflicting_file | resolved content |
