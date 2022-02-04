@@ -1,43 +1,43 @@
 Feature: rename a parent branch
 
   Background:
-    Given my repo has a feature branch "parent-feature"
-    And my repo has a feature branch "child-feature" as a child of "parent-feature"
+    Given my repo has a feature branch "parent"
+    And my repo has a feature branch "child" as a child of "parent"
     And my repo contains the commits
-      | BRANCH         | LOCATION      | MESSAGE               |
-      | child-feature  | local, remote | child feature commit  |
-      | parent-feature | local, remote | parent feature commit |
-    And I am on the "parent-feature" branch
-    When I run "git-town rename-branch parent-feature renamed-parent-feature"
+      | BRANCH | LOCATION      | MESSAGE       |
+      | child  | local, remote | child commit  |
+      | parent | local, remote | parent commit |
+    And I am on the "parent" branch
+    When I run "git-town rename-branch parent new"
 
   Scenario: result
     Then it runs the commands
-      | BRANCH                 | COMMAND                                          |
-      | parent-feature         | git fetch --prune --tags                         |
-      |                        | git branch renamed-parent-feature parent-feature |
-      |                        | git checkout renamed-parent-feature              |
-      | renamed-parent-feature | git push -u origin renamed-parent-feature        |
-      |                        | git push origin :parent-feature                  |
-      |                        | git branch -D parent-feature                     |
-    And I am now on the "renamed-parent-feature" branch
+      | BRANCH | COMMAND                  |
+      | parent | git fetch --prune --tags |
+      |        | git branch new parent    |
+      |        | git checkout new         |
+      | new    | git push -u origin new   |
+      |        | git push origin :parent  |
+      |        | git branch -D parent     |
+    And I am now on the "new" branch
     And my repo now has the commits
-      | BRANCH                 | LOCATION      | MESSAGE               |
-      | child-feature          | local, remote | child feature commit  |
-      | renamed-parent-feature | local, remote | parent feature commit |
+      | BRANCH | LOCATION      | MESSAGE       |
+      | child  | local, remote | child commit  |
+      | new    | local, remote | parent commit |
     And Git Town is now aware of this branch hierarchy
-      | BRANCH                 | PARENT                 |
-      | child-feature          | renamed-parent-feature |
-      | renamed-parent-feature | main                   |
+      | BRANCH | PARENT |
+      | child  | new    |
+      | new    | main   |
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH                 | COMMAND                                                     |
-      | renamed-parent-feature | git branch parent-feature {{ sha 'parent feature commit' }} |
-      |                        | git push -u origin parent-feature                           |
-      |                        | git push origin :renamed-parent-feature                     |
-      |                        | git checkout parent-feature                                 |
-      | parent-feature         | git branch -D renamed-parent-feature                        |
-    And I am now on the "parent-feature" branch
+      | BRANCH | COMMAND                                     |
+      | new    | git branch parent {{ sha 'parent commit' }} |
+      |        | git push -u origin parent                   |
+      |        | git push origin :new                        |
+      |        | git checkout parent                         |
+      | parent | git branch -D new                           |
+    And I am now on the "parent" branch
     And my repo is left with my original commits
-    And Git Town now has the original branch hierarchy
+    And my repo now has its initial branches and branch hierarchy

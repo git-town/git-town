@@ -1,34 +1,34 @@
 Feature: rename an unsynced branch
 
   Background:
-    Given my repo has a feature branch "current-feature"
+    Given my repo has a feature branch "old"
 
   Scenario: unpulled remote commits
-    And my repo contains the commits
-      | BRANCH          | LOCATION | MESSAGE               |
-      | current-feature | remote   | remote feature commit |
-    And I am on the "current-feature" branch
-    When I run "git-town rename-branch current-feature renamed-feature"
+    Given my repo contains the commits
+      | BRANCH | LOCATION | MESSAGE               |
+      | old    | remote   | remote feature commit |
+    And I am on the "old" branch
+    When I run "git-town rename-branch old new"
     Then it runs the commands
-      | BRANCH          | COMMAND                  |
-      | current-feature | git fetch --prune --tags |
+      | BRANCH | COMMAND                  |
+      | old    | git fetch --prune --tags |
     And it prints the error:
       """
-      "current-feature" is not in sync with its tracking branch, please sync the branches before renaming
+      "old" is not in sync with its tracking branch, please sync the branches before renaming
       """
-    And I am still on the "current-feature" branch
+    And I am still on the "old" branch
 
   Scenario: unpushed local commits
-    And my repo contains the commits
-      | BRANCH          | LOCATION | MESSAGE              |
-      | current-feature | local    | local feature commit |
-    And I am on the "current-feature" branch
-    When I run "git-town rename-branch current-feature renamed-feature"
+    Given my repo contains the commits
+      | BRANCH | LOCATION | MESSAGE              |
+      | old    | local    | local feature commit |
+    And I am on the "old" branch
+    When I run "git-town rename-branch old new"
     Then it runs the commands
-      | BRANCH          | COMMAND                  |
-      | current-feature | git fetch --prune --tags |
+      | BRANCH | COMMAND                  |
+      | old    | git fetch --prune --tags |
     And it prints the error:
       """
-      "current-feature" is not in sync with its tracking branch, please sync the branches before renaming
+      "old" is not in sync with its tracking branch, please sync the branches before renaming
       """
-    And I am now on the "current-feature" branch
+    And I am now on the "old" branch
