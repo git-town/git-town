@@ -1,11 +1,11 @@
 Feature: rename a branch to itself
 
   Background:
-    Given my repo has a feature branch "feature"
-    And I am on the "feature" branch
+    Given my repo has a feature branch "old"
+    And I am on the "old" branch
 
   Scenario: without force
-    When I run "git-town rename-branch feature"
+    When I run "git-town rename-branch old"
     Then it runs no commands
     And it prints the error:
       """
@@ -13,7 +13,7 @@ Feature: rename a branch to itself
       """
 
   Scenario: with force
-    When I run "git-town rename-branch --force feature"
+    When I run "git-town rename-branch --force old"
     Then it runs no commands
     And it prints the error:
       """
