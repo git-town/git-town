@@ -1,6 +1,6 @@
 Feature: display the currently configured pull_branch_strategy
 
-  Scenario: default setting
+  Scenario: default
     When I run "git-town pull-branch-strategy"
     Then it prints:
       """
