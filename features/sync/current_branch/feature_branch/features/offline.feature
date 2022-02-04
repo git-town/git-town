@@ -29,4 +29,3 @@ Feature: offline mode
       |         |          | local main commit                |
       |         |          | Merge branch 'main' into feature |
       |         | remote   | remote feature commit            |
-    And my repo still has its initial branches and branch hierarchy

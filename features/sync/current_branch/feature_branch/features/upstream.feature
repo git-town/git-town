@@ -24,11 +24,10 @@ Feature: with upstream remote
       |         | git merge --no-edit main           |
       |         | git push                           |
     And I am still on the "feature" branch
+    And all branches are now synchronized
     And my repo now has the commits
       | BRANCH  | LOCATION                | MESSAGE                          |
       | main    | local, remote, upstream | upstream commit                  |
       | feature | local, remote           | local commit                     |
       |         |                         | upstream commit                  |
       |         |                         | Merge branch 'main' into feature |
-    And all branches are now synchronized
-    And my repo still has its initial branches and branch hierarchy

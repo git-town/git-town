@@ -22,4 +22,3 @@ Feature: sync the current feature branch (without a tracking branch or remote re
       |         |          | local main commit                |
       |         |          | Merge branch 'main' into feature |
     And all branches are now synchronized
-    And my repo still has its initial branches and branch hierarchy

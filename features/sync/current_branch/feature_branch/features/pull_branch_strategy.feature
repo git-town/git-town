@@ -37,4 +37,3 @@ Feature: with pull-branch-strategy set to "merge"
       |         |               | Merge remote-tracking branch 'origin/main'                 |
       |         |               | Merge branch 'main' into feature                           |
     And all branches are now synchronized
-    And my repo still has its initial branches and branch hierarchy

@@ -68,8 +68,8 @@ Feature: handle conflicts between the current feature branch and the main branch
       |         | git push             |
       |         | git stash pop        |
     And I am still on the "feature" branch
-    And my workspace has the uncommitted file again
     And all branches are now synchronized
+    And my workspace has the uncommitted file again
     And my repo still has these committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
@@ -84,8 +84,8 @@ Feature: handle conflicts between the current feature branch and the main branch
       |         | git push             |
       |         | git stash pop        |
     And I am still on the "feature" branch
-    And my workspace still contains my uncommitted file
     And all branches are now synchronized
+    And my workspace still contains my uncommitted file
     And my repo still has these committed files
       | BRANCH  | NAME             | CONTENT         |
       | main    | conflicting_file | main content    |
@@ -100,8 +100,8 @@ Feature: handle conflicts between the current feature branch and the main branch
       | feature | git push      |
       |         | git stash pop |
     And I am still on the "feature" branch
-    And my workspace has the uncommitted file again
     And all branches are now synchronized
+    And my workspace has the uncommitted file again
     And my repo still has these committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |

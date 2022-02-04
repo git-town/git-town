@@ -21,6 +21,7 @@ Feature: sync the current feature branch without a tracking branch
       | feature | git merge --no-edit main   |
       |         | git push -u origin feature |
     And I am still on the "feature" branch
+    And all branches are now synchronized
     And my repo now has the commits
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, remote | remote main commit               |
@@ -29,8 +30,6 @@ Feature: sync the current feature branch without a tracking branch
       |         |               | remote main commit               |
       |         |               | local main commit                |
       |         |               | Merge branch 'main' into feature |
-    And all branches are now synchronized
     And the existing branches are
       | REPOSITORY    | BRANCHES      |
       | local, remote | main, feature |
-    And Git Town now has the original branch hierarchy
