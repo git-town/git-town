@@ -1,43 +1,43 @@
 Feature: in a local repo
 
   Background:
-    Given my repo has a feature branch "existing-feature"
+    Given my repo has a feature branch "existing"
     And my repo does not have a remote origin
     And my repo contains the commits
-      | BRANCH           | LOCATION | MESSAGE                 |
-      | existing-feature | local    | existing_feature_commit |
-    And I am on the "existing-feature" branch
+      | BRANCH   | LOCATION | MESSAGE                 |
+      | existing | local    | existing_feature_commit |
+    And I am on the "existing" branch
     And my workspace has an uncommitted file
-    When I run "git-town hack new-feature"
+    When I run "git-town hack new"
 
   Scenario: result
     Then it runs the commands
-      | BRANCH           | COMMAND                     |
-      | existing-feature | git add -A                  |
-      |                  | git stash                   |
-      |                  | git branch new-feature main |
-      |                  | git checkout new-feature    |
-      | new-feature      | git stash pop               |
-    And I am now on the "new-feature" branch
+      | BRANCH   | COMMAND             |
+      | existing | git add -A          |
+      |          | git stash           |
+      |          | git branch new main |
+      |          | git checkout new    |
+      | new      | git stash pop       |
+    And I am now on the "new" branch
     And my workspace still contains my uncommitted file
     And my repo now has the commits
-      | BRANCH           | LOCATION | MESSAGE                 |
-      | existing-feature | local    | existing_feature_commit |
+      | BRANCH   | LOCATION | MESSAGE                 |
+      | existing | local    | existing_feature_commit |
     And Git Town is now aware of this branch hierarchy
-      | BRANCH           | PARENT |
-      | existing-feature | main   |
-      | new-feature      | main   |
+      | BRANCH   | PARENT |
+      | existing | main   |
+      | new      | main   |
 
   Scenario: undo
     When I run "git town undo"
     Then it runs the commands
-      | BRANCH           | COMMAND                       |
-      | new-feature      | git add -A                    |
-      |                  | git stash                     |
-      |                  | git checkout existing-feature |
-      | existing-feature | git branch -d new-feature     |
-      |                  | git stash pop                 |
-    And I am now on the "existing-feature" branch
+      | BRANCH   | COMMAND               |
+      | new      | git add -A            |
+      |          | git stash             |
+      |          | git checkout existing |
+      | existing | git branch -d new     |
+      |          | git stash pop         |
+    And I am now on the "existing" branch
     And my repo is left with my original commits
     And my workspace still contains my uncommitted file
     And my repo now has its initial branches and branch hierarchy
