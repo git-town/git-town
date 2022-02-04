@@ -2,11 +2,11 @@ Feature: in a local repo
 
   Background:
     Given my repo does not have a remote origin
-    And my repo has the local feature branches "feature" and "other-feature"
+    And my repo has the local feature branches "feature" and "other"
     And my repo contains the commits
-      | BRANCH        | LOCATION | MESSAGE              |
-      | feature       | local    | feature commit       |
-      | other-feature | local    | other feature commit |
+      | BRANCH  | LOCATION | MESSAGE              |
+      | feature | local    | feature commit       |
+      | other   | local    | other feature commit |
     And I am on the "feature" branch
     And my workspace has an uncommitted file
     When I run "git-town kill"
@@ -20,14 +20,14 @@ Feature: in a local repo
       | main    | git branch -D feature          |
     And I am now on the "main" branch
     And the existing branches are
-      | REPOSITORY | BRANCHES            |
-      | local      | main, other-feature |
+      | REPOSITORY | BRANCHES    |
+      | local      | main, other |
     And my repo now has the commits
-      | BRANCH        | LOCATION | MESSAGE              |
-      | other-feature | local    | other feature commit |
+      | BRANCH | LOCATION | MESSAGE              |
+      | other  | local    | other feature commit |
     And Git Town is now aware of this branch hierarchy
-      | BRANCH        | PARENT |
-      | other-feature | main   |
+      | BRANCH | PARENT |
+      | other  | main   |
 
   Scenario: undo
     When I run "git-town undo"
