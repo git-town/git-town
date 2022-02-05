@@ -1,4 +1,4 @@
-Feature: require running inside a Git repository
+Feature: require a Git repository
 
   Scenario Outline:
     Given my workspace is currently not a Git repo
