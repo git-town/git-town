@@ -1,5 +1,5 @@
 @skipWindows
-Feature: warn user about previous operation
+Feature: warn the user about an unfinished operation
 
   Background:
     Given my repo has a feature branch "feature"
