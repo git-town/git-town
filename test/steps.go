@@ -200,7 +200,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^I haven't configured Git Town yet$`, func() error {
+	suite.Step(`^Git Town is not configured$`, func() error {
 		err := state.gitEnv.DevRepo.Config.DeletePerennialBranchConfiguration()
 		if err != nil {
 			return err

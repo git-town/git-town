@@ -7,6 +7,6 @@ Feature: reset the configuration
     Then Git Town is no longer configured for this repo
 
   Scenario: no configuration
-    Given I haven't configured Git Town yet
+    Given Git Town is not configured
     When I run "git-town config reset"
     Then Git Town is no longer configured for this repo

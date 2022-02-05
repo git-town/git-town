@@ -41,7 +41,7 @@ Feature: show the configuration
       """
 
   Scenario: no configuration data
-    Given I haven't configured Git Town yet
+    Given Git Town is not configured
     When I run "git-town config"
     Then it prints:
       """

@@ -2,7 +2,7 @@
 Feature: missing configuration
 
   Background: running unconfigured
-    Given I haven't configured Git Town yet
+    Given Git Town is not configured
     When I run "git-town hack feature" and answer the prompts:
       | PROMPT                                     | ANSWER  |
       | Please specify the main development branch | [ENTER] |
