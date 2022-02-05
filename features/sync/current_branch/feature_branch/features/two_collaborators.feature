@@ -1,10 +1,10 @@
 Feature: collaborative feature branch syncing
 
   Scenario:
-    Given I am collaborating with a coworker
+    Given a coworker clones the repository
     And my repo has a feature branch "feature"
-    And a coworker fetches updates
-    And a coworker sets the parent branch of "feature" as "main"
+    And the coworker fetches updates
+    And the coworker sets the parent branch of "feature" as "main"
     And my repo contains the commits
       | BRANCH  | LOCATION | MESSAGE         |
       | feature | local    | my commit       |
@@ -26,7 +26,7 @@ Feature: collaborative feature branch syncing
       |         | coworker      | coworker commit |
     And all branches are now synchronized
 
-    Given a coworker is on the "feature" branch
+    Given the coworker is on the "feature" branch
     When a coworker runs "git-town sync"
     Then it runs the commands
       | BRANCH  | COMMAND                            |
