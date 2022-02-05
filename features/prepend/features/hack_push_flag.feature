@@ -37,4 +37,4 @@ Feature: auto-push new branches
       |        | git checkout old     |
     And I am now on the "old" branch
     And my repo is left with my initial commits
-    And Git Town now knows the initial branch hierarchy
+    And Git Town is now aware of the initial branch hierarchy

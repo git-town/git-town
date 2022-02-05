@@ -23,7 +23,7 @@ Feature: does not ship a child branch
       """
     And I am now on the "alpha" branch
     And my repo is left with my initial commits
-    And Git Town now knows the initial branch hierarchy
+    And Git Town is now aware of the initial branch hierarchy
 
   Scenario: undo
     When I run "git-town undo"
@@ -34,4 +34,4 @@ Feature: does not ship a child branch
       """
     And I am still on the "alpha" branch
     And my repo is left with my initial commits
-    And Git Town now knows the initial branch hierarchy
+    And Git Town is now aware of the initial branch hierarchy

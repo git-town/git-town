@@ -60,4 +60,4 @@ Feature: skip deleting the remote branch when shipping another branch
       | REPOSITORY | BRANCHES             |
       | local      | main, feature, other |
       | remote     | main, other          |
-    And Git Town now knows the initial branch hierarchy
+    And Git Town is now aware of the initial branch hierarchy
