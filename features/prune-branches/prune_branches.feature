@@ -22,7 +22,7 @@ Feature: delete branches that were shipped or removed on another machine
     And the existing branches are
       | REPOSITORY    | BRANCHES     |
       | local, remote | main, active |
-    And Git Town now knows this branch hierarchy
+    And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
       | active | main   |
 

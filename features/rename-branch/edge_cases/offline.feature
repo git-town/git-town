@@ -22,7 +22,7 @@ Feature: offline mode
       | main   | local, remote | main commit |
       | new    | local         | old commit  |
       | old    | remote        | old commit  |
-    And Git Town now knows this branch hierarchy
+    And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
       | new    | main   |
 

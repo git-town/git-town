@@ -18,7 +18,7 @@ Feature: inside a committed subfolder that exists only on the current feature br
       |          | git checkout new         |
     And I am now on the "new" branch
     And my repo is left with my initial commits
-    And Git Town now knows this branch hierarchy
+    And Git Town is now aware of this branch hierarchy
       | BRANCH   | PARENT |
       | existing | main   |
       | new      | main   |

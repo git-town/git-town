@@ -27,7 +27,7 @@ Feature: the branch to kill has a deleted tracking branch
     And the existing branches are
       | REPOSITORY    | BRANCHES    |
       | local, remote | main, other |
-    And Git Town now knows this branch hierarchy
+    And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
       | other  | main   |
 

@@ -40,7 +40,7 @@ Feature: ship a branch that exists only on the remote
     And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, remote | feature done |
-    And Git Town now knows this branch hierarchy
+    And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
       | other  | main   |
 
@@ -68,7 +68,7 @@ Feature: ship a branch that exists only on the remote
     And the existing branches are
       | REPOSITORY    | BRANCHES             |
       | local, remote | main, feature, other |
-    And Git Town now knows this branch hierarchy
+    And Git Town is now aware of this branch hierarchy
       | BRANCH  | PARENT |
       | feature | main   |
       | other   | main   |

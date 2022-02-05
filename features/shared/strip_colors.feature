@@ -8,6 +8,6 @@ Feature: strip colors
     When I run "git-town hack new-feature" and answer the prompts:
       | PROMPT                                     | ANSWER  |
       | Please specify the main development branch | [ENTER] |
-    Then Git Town now knows this branch hierarchy
+    Then Git Town is now aware of this branch hierarchy
       | BRANCH      | PARENT |
       | new-feature | main   |

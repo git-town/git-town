@@ -25,7 +25,7 @@ Feature: prepend a branch to a feature branch
     And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, remote | old commit |
-    And Git Town now knows this branch hierarchy
+    And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
       | old    | parent |
       | parent | main   |

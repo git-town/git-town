@@ -25,7 +25,7 @@ Feature: in a subfolder on the main branch
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, remote | folder commit |
       | new    | local         | folder commit |
-    And Git Town now knows this branch hierarchy
+    And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
       | new    | main   |
 

@@ -23,7 +23,7 @@ Feature: in a local repo
     And my repo now has the commits
       | BRANCH   | LOCATION | MESSAGE         |
       | existing | local    | existing commit |
-    And Git Town now knows this branch hierarchy
+    And Git Town is now aware of this branch hierarchy
       | BRANCH   | PARENT |
       | existing | main   |
       | new      | main   |
