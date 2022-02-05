@@ -63,7 +63,7 @@ Feature: warn the user about an unfinished operation
       | main    | git rebase --abort   |
       |         | git checkout feature |
       | feature | git stash pop        |
-    And my repo is left with my original commits
+    And my repo is left with my initial commits
 
   Scenario: manually abort the rebase and run another command still shows warning about unfinished command
     When I run "git rebase --abort"

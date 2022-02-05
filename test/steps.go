@@ -146,7 +146,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^Git Town (?:now|still) has the original branch hierarchy$`, func() error {
+	suite.Step(`^Git Town (?:now|still) has the initial branch hierarchy$`, func() error {
 		have := state.gitEnv.DevRepo.BranchHierarchyTable()
 		state.initialBranchHierarchy.Sort()
 		diff, errCnt := have.EqualDataTable(state.initialBranchHierarchy)
@@ -565,7 +565,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.PushBranchToOrigin(branch)
 	})
 
-	suite.Step(`^my repo is left with my original commits$`, func() error {
+	suite.Step(`^my repo is left with my initial commits$`, func() error {
 		return compareExistingCommits(state, state.initialCommits)
 	})
 

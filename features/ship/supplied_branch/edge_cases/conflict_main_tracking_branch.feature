@@ -37,8 +37,8 @@ Feature: handle conflicts between the main branch and its tracking branch
     And I am still on the "other" branch
     And my workspace still contains my uncommitted file
     And there is no rebase in progress anymore
-    And my repo is left with my original commits
-    And Git Town still has the original branch hierarchy
+    And my repo is left with my initial commits
+    And Git Town still has the initial branch hierarchy
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"

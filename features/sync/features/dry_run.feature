@@ -23,4 +23,4 @@ Feature: dry run
       |         | git merge --no-edit main           |
       |         | git push                           |
     And I am still on the "feature" branch
-    And my repo is left with my original commits
+    And my repo is left with my initial commits

@@ -38,6 +38,6 @@ Feature: in a local repo
       | existing | git branch -d new     |
       |          | git stash pop         |
     And I am now on the "existing" branch
-    And my repo is left with my original commits
+    And my repo is left with my initial commits
     And my workspace still contains my uncommitted file
     And my repo now has its initial branches and branch hierarchy

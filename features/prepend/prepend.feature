@@ -42,5 +42,5 @@ Feature: prepend a branch to a feature branch
       | old    | git stash pop        |
     And I am now on the "old" branch
     And my workspace still contains my uncommitted file
-    And my repo is left with my original commits
-    And Git Town now has the original branch hierarchy
+    And my repo is left with my initial commits
+    And Git Town now has the initial branch hierarchy

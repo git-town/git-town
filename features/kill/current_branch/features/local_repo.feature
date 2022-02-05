@@ -38,5 +38,5 @@ Feature: in a local repo
       | feature | git reset {{ sha 'feature commit' }}          |
     And I am now on the "feature" branch
     And my workspace still contains my uncommitted file
-    And my repo is left with my original commits
+    And my repo is left with my initial commits
     And my repo now has its initial branches and branch hierarchy

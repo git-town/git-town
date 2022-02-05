@@ -33,5 +33,5 @@ Feature: offline mode
       | main   | git branch -d new |
       |        | git checkout old  |
     And I am now on the "old" branch
-    And my repo is left with my original commits
-    And Git Town now has the original branch hierarchy
+    And my repo is left with my initial commits
+    And Git Town now has the initial branch hierarchy

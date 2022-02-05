@@ -33,7 +33,7 @@ Feature: handle conflicts between the main branch and its tracking branch when s
     And I am still on the "main" branch
     And my workspace still contains my uncommitted file
     And there is no rebase in progress anymore
-    And my repo is left with my original commits
+    And my repo is left with my initial commits
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"

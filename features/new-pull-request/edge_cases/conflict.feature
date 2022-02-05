@@ -36,7 +36,7 @@ Feature: merge conflict
       | main    | git checkout feature |
     And I am still on the "feature" branch
     And there is no merge in progress
-    And my repo is left with my original commits
+    And my repo is left with my initial commits
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"

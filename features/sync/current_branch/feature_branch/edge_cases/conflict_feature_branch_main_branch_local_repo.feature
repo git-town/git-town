@@ -36,7 +36,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     And I am still on the "feature" branch
     And my workspace has the uncommitted file again
     And there is no merge in progress
-    And my repo is left with my original commits
+    And my repo is left with my initial commits
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"

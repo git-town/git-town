@@ -42,7 +42,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
     And I am still on the "current" branch
     And my workspace has the uncommitted file again
     And there is no merge in progress
-    And my repo is left with my original commits
+    And my repo is left with my initial commits
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue" in the "new_folder" folder

@@ -41,5 +41,5 @@ Feature: delete the current branch
       |         | git push -u origin current                    |
     And I am now on the "current" branch
     And my workspace has the uncommitted file again
-    And my repo is left with my original commits
+    And my repo is left with my initial commits
     And my repo now has its initial branches and branch hierarchy
