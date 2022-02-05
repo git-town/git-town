@@ -20,7 +20,7 @@ Feature: destination branch exists
 
   Scenario: destination branch exists remotely
     Given my repo has a feature branch "alpha"
-    And a coworker has a feature branch "beta"
+    And the origin has a feature branch "beta"
     And my repo contains the commits
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, remote | alpha commit |

@@ -14,4 +14,4 @@ Feature: already existing branch
     Examples:
       | LOCATION   |
       | my repo    |
-      | a coworker |
+      | the origin |
