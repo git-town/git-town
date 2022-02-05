@@ -36,7 +36,7 @@ Feature: handle rebase conflicts between main branch and its tracking branch
     And my workspace has the uncommitted file again
     And my repo is left with my original commits
 
-  Scenario: continue with resolved conflict
+  Scenario: continue with unresolved conflict
     When I run "git-town continue"
     Then it runs no commands
     And it prints the error:

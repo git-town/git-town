@@ -44,7 +44,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
     And there is no merge in progress
     And my repo is left with my original commits
 
-  Scenario: continue with resolved conflict
+  Scenario: continue with unresolved conflict
     When I run "git-town continue" in the "new_folder" folder
     Then it runs no commands
     And it prints the error:

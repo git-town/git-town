@@ -97,7 +97,7 @@ Feature: handle merge conflicts between feature branch and main branch
       | gamma  | conflicting_file | main content  |
       |        | feature2_file    | gamma content |
 
-  Scenario: continue with resolved conflict
+  Scenario: continue with unresolved conflict
     When I run "git-town continue"
     Then it runs no commands
     And it prints the error:
