@@ -31,7 +31,7 @@ Feature: commit message can contain double-quotes
     And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, remote | with "double quotes" |
-    And Git Town now knows about no branch hierarchy
+    And Git Town now knows branch hierarchy
 
   Scenario: undo
     When I run "git-town undo"

@@ -31,7 +31,7 @@ Feature: ship hotfixes
     And my repo now has the commits
       | BRANCH     | LOCATION      | MESSAGE     |
       | production | local, remote | hotfix done |
-    And Git Town now knows about no branch hierarchy
+    And Git Town now knows branch hierarchy
 
   Scenario: undo
     When I run "git-town undo"

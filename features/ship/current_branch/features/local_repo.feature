@@ -24,7 +24,7 @@ Feature: ship a feature branch in a local repo
     And my repo now has the commits
       | BRANCH | LOCATION | MESSAGE      |
       | main   | local    | feature done |
-    And Git Town now knows about no branch hierarchy
+    And Git Town now knows branch hierarchy
 
   Scenario: undo
     When I run "git-town undo"

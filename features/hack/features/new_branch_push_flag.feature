@@ -36,4 +36,4 @@ Feature: auto-push the new branch
     And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, remote | remote commit |
-    And Git Town now knows about no branch hierarchy
+    And Git Town now knows branch hierarchy
