@@ -4,7 +4,7 @@ Feature: auto-push the new branch to the remote
     Given the new-branch-push-flag configuration is true
     And my repo contains the commits
       | BRANCH | LOCATION | MESSAGE     |
-      | main   | remote   | main_commit |
+      | main   | remote   | main commit |
     And I am on the "main" branch
     When I run "git-town append new"
 
@@ -19,8 +19,8 @@ Feature: auto-push the new branch to the remote
     And I am now on the "new" branch
     And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE     |
-      | main   | local, remote | main_commit |
-      | new    | local, remote | main_commit |
+      | main   | local, remote | main commit |
+      | new    | local, remote | main commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
       | new    | main   |
@@ -35,5 +35,5 @@ Feature: auto-push the new branch to the remote
     And I am now on the "main" branch
     And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE     |
-      | main   | local, remote | main_commit |
+      | main   | local, remote | main commit |
     And Git Town now has no branch hierarchy information
