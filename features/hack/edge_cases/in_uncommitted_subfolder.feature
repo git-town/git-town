@@ -43,4 +43,4 @@ Feature: inside an uncommitted subfolder on the current feature branch
       | existing | git stash pop         |
     And I am now on the "existing" branch
     And my repo is left with my original commits
-    And Git Town now has the original branch hierarchy
+    And Git Town now has the initial branch hierarchy

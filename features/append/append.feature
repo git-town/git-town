@@ -48,4 +48,4 @@ Feature: append a new feature branch to an existing feature branch
     And I am now on the "existing" branch
     And my workspace still contains my uncommitted file
     And my repo is left with my original commits
-    And Git Town still has the original branch hierarchy
+    And Git Town still has the initial branch hierarchy
