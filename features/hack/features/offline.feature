@@ -39,4 +39,4 @@ Feature: offline mode
     And I am now on the "main" branch
     And my workspace still contains my uncommitted file
     And my repo is left with my initial commits
-    And Git Town now has no branch hierarchy information
+    And Git Town now knows about no branch hierarchy

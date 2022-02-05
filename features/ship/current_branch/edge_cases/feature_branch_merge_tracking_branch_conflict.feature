@@ -57,7 +57,7 @@ Feature: handle conflicts between the shipped branch and its tracking branch
     And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME        |
       | main   | local, remote | feature done | conflicting_file |
-    And Git Town now has no branch hierarchy information
+    And Git Town now knows about no branch hierarchy
 
   Scenario: resolve, commit, and continue
     When I resolve the conflict in "conflicting_file"

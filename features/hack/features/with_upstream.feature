@@ -42,4 +42,4 @@ Feature: on a forked repo
     And my repo now has the commits
       | BRANCH | LOCATION                | MESSAGE         |
       | main   | local, remote, upstream | upstream commit |
-    And Git Town now has no branch hierarchy information
+    And Git Town now knows about no branch hierarchy
