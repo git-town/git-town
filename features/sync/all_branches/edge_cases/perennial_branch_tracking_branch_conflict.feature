@@ -5,10 +5,10 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
     And my repo contains the commits
       | BRANCH | LOCATION      | MESSAGE            | FILE NAME        | FILE CONTENT        |
       | main   | remote        | main commit        | main_file        | main content        |
-      | alpha  | local, remote | alpha commit       | peren1_file      | alpha content       |
+      | alpha  | local, remote | alpha commit       | alpha_file       | alpha content       |
       | beta   | local         | local beta commit  | conflicting_file | local beta content  |
       |        | remote        | remote beta commit | conflicting_file | remote beta content |
-      | gamma  | local, remote | gamma commit       | peren3_file      | gamma content       |
+      | gamma  | local, remote | gamma commit       | gamma_file       | gamma content       |
     And I am on the "main" branch
     And my workspace has an uncommitted file
     When I run "git-town sync --all"
