@@ -43,4 +43,4 @@ Feature: prepend a branch to a feature branch
     And I am now on the "old" branch
     And my workspace still contains my uncommitted file
     And my repo is left with my initial commits
-    And Git Town now has the initial branch hierarchy
+    And Git Town now knows the initial branch hierarchy

@@ -32,4 +32,4 @@ Feature: inside a committed subfolder that exists only on the current feature br
       |        | git checkout existing |
     And I am now on the "existing" branch
     And my repo is left with my initial commits
-    And Git Town now has the initial branch hierarchy
+    And Git Town now knows the initial branch hierarchy

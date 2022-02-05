@@ -46,7 +46,7 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       | BRANCH  | LOCATION      | MESSAGE                    |
       | main    | local, remote | conflicting main commit    |
       | feature | local         | conflicting feature commit |
-    And Git Town still has the initial branch hierarchy
+    And Git Town still knows the initial branch hierarchy
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
