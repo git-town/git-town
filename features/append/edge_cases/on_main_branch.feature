@@ -3,7 +3,7 @@ Feature: on the main branch
   Background:
     Given my repo contains the commits
       | BRANCH | LOCATION | MESSAGE     |
-      | main   | remote   | main_commit |
+      | main   | remote   | main commit |
     And I am on the "main" branch
     And my workspace has an uncommitted file
     When I run "git-town append new"
@@ -22,8 +22,8 @@ Feature: on the main branch
     And my workspace still contains my uncommitted file
     And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE     |
-      | main   | local, remote | main_commit |
-      | new    | local         | main_commit |
+      | main   | local, remote | main commit |
+      | new    | local         | main commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
       | new    | main   |
@@ -41,5 +41,5 @@ Feature: on the main branch
     And my workspace still contains my uncommitted file
     And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE     |
-      | main   | local, remote | main_commit |
+      | main   | local, remote | main commit |
     And Git Town now has no branch hierarchy information
