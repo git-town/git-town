@@ -433,7 +433,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.AddUpstream()
 	})
 
-	suite.Step(`^Git Town's "color\.ui" setting is "([^"]*)"$`, func(value string) error {
+	suite.Step(`^Git Town's local "color.ui" setting is "([^"]*)"$`, func(value string) error {
 		return state.gitEnv.DevRepo.Config.SetColorUI(value)
 	})
 
