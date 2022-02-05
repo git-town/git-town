@@ -4,9 +4,9 @@ Feature: ship a parent branch
     Given my repo has a feature branch "parent"
     And my repo has a feature branch "child" as a child of "parent"
     And my repo contains the commits
-      | BRANCH | LOCATION      | MESSAGE               |
-      | parent | local, remote | parent feature commit |
-      | child  | local, remote | child feature commit  |
+      | BRANCH | LOCATION      | MESSAGE       |
+      | parent | local, remote | parent commit |
+      | child  | local, remote | child commit  |
     And I am on the "child" branch
     When I run "git-town ship parent -m 'parent done'"
 
@@ -27,10 +27,10 @@ Feature: ship a parent branch
       |        | git checkout child                |
     And I am now on the "child" branch
     And my repo now has the commits
-      | BRANCH | LOCATION      | MESSAGE               |
-      | main   | local, remote | parent done           |
-      | child  | local, remote | child feature commit  |
-      | parent | remote        | parent feature commit |
+      | BRANCH | LOCATION      | MESSAGE       |
+      | main   | local, remote | parent done   |
+      | child  | local, remote | child commit  |
+      | parent | remote        | parent commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
       | child  | main   |
@@ -38,19 +38,19 @@ Feature: ship a parent branch
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                             |
-      | child  | git checkout main                                   |
-      | main   | git branch parent {{ sha 'parent feature commit' }} |
-      |        | git revert {{ sha 'parent done' }}                  |
-      |        | git push                                            |
-      |        | git checkout parent                                 |
-      | parent | git checkout main                                   |
-      | main   | git checkout child                                  |
+      | BRANCH | COMMAND                                     |
+      | child  | git checkout main                           |
+      | main   | git branch parent {{ sha 'parent commit' }} |
+      |        | git revert {{ sha 'parent done' }}          |
+      |        | git push                                    |
+      |        | git checkout parent                         |
+      | parent | git checkout main                           |
+      | main   | git checkout child                          |
     And I am now on the "child" branch
     And my repo now has the commits
-      | BRANCH | LOCATION      | MESSAGE               |
-      | main   | local, remote | parent done           |
-      |        |               | Revert "parent done"  |
-      | child  | local, remote | child feature commit  |
-      | parent | local, remote | parent feature commit |
+      | BRANCH | LOCATION      | MESSAGE              |
+      | main   | local, remote | parent done          |
+      |        |               | Revert "parent done" |
+      | child  | local, remote | child commit         |
+      | parent | local, remote | parent commit        |
     And Git Town now has the original branch hierarchy

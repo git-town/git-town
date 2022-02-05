@@ -4,9 +4,9 @@ Feature: local branch
     Given my repo does not have a remote origin
     And my repo has the local feature branches "dead" and "other"
     And my repo contains the commits
-      | BRANCH | LOCATION | MESSAGE              |
-      | dead   | local    | dead feature commit  |
-      | other  | local    | other feature commit |
+      | BRANCH | LOCATION | MESSAGE      |
+      | dead   | local    | dead commit  |
+      | other  | local    | other commit |
     And I am on the "dead" branch
     And my workspace has an uncommitted file
     When I run "git-town kill dead"
@@ -24,8 +24,8 @@ Feature: local branch
       | REPOSITORY | BRANCHES    |
       | local      | main, other |
     And my repo now has the commits
-      | BRANCH | LOCATION | MESSAGE              |
-      | other  | local    | other feature commit |
+      | BRANCH | LOCATION | MESSAGE      |
+      | other  | local    | other commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
       | other  | main   |
@@ -33,10 +33,10 @@ Feature: local branch
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                   |
-      | main   | git branch dead {{ sha 'WIP on dead' }}   |
-      |        | git checkout dead                         |
-      | dead   | git reset {{ sha 'dead feature commit' }} |
+      | BRANCH | COMMAND                                 |
+      | main   | git branch dead {{ sha 'WIP on dead' }} |
+      |        | git checkout dead                       |
+      | dead   | git reset {{ sha 'dead commit' }}       |
     And I am now on the "dead" branch
     And my workspace has the uncommitted file again
     And my repo is left with my original commits

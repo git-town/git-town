@@ -4,10 +4,10 @@ Feature: ship a coworker's feature branch
   Background:
     Given my repo has a feature branch "feature"
     And my repo contains the commits
-      | BRANCH  | LOCATION | MESSAGE         | AUTHOR                            |
-      | feature | local    | feature commit1 | developer <developer@example.com> |
-      |         |          | feature commit2 | developer <developer@example.com> |
-      |         |          | feature commit3 | coworker <coworker@example.com>   |
+      | BRANCH  | LOCATION | MESSAGE            | AUTHOR                            |
+      | feature | local    | developer commit 1 | developer <developer@example.com> |
+      |         |          | developer commit 2 | developer <developer@example.com> |
+      |         |          | coworker commit    | coworker <coworker@example.com>   |
     And I am on the "feature" branch
 
   Scenario: choose myself as the author
@@ -35,7 +35,7 @@ Feature: ship a coworker's feature branch
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH  | COMMAND                                        |
-      | main    | git branch feature {{ sha 'feature commit3' }} |
+      | main    | git branch feature {{ sha 'coworker commit' }} |
       |         | git push -u origin feature                     |
       |         | git revert {{ sha 'feature done' }}            |
       |         | git push                                       |
@@ -47,7 +47,7 @@ Feature: ship a coworker's feature branch
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, remote | feature done          |
       |         |               | Revert "feature done" |
-      | feature | local, remote | feature commit1       |
-      |         |               | feature commit2       |
-      |         |               | feature commit3       |
+      | feature | local, remote | developer commit 1    |
+      |         |               | developer commit 2    |
+      |         |               | coworker commit       |
     And my repo now has its initial branches and branch hierarchy

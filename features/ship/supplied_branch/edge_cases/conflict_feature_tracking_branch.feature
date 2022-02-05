@@ -4,8 +4,8 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
     Given my repo has the feature branches "feature" and "other"
     And my repo contains the commits
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
-      | feature | local    | local conflicting commit  | conflicting_file | local conflicting content  |
-      |         | remote   | remote conflicting commit | conflicting_file | remote conflicting content |
+      | feature | local    | conflicting local commit  | conflicting_file | local conflicting content  |
+      |         | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
     And I am on the "other" branch
     And my workspace has an uncommitted file
     And I run "git-town ship feature -m 'feature done'"
@@ -110,7 +110,7 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
       | BRANCH  | LOCATION      | MESSAGE                                                    |
       | main    | local, remote | feature done                                               |
       |         |               | Revert "feature done"                                      |
-      | feature | local, remote | local conflicting commit                                   |
-      |         |               | remote conflicting commit                                  |
+      | feature | local, remote | conflicting local commit                                   |
+      |         |               | conflicting remote commit                                  |
       |         |               | Merge remote-tracking branch 'origin/feature' into feature |
     And my repo now has its initial branches and branch hierarchy

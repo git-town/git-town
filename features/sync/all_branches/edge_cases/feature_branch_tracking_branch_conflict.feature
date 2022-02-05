@@ -6,8 +6,8 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       | BRANCH | LOCATION      | MESSAGE            | FILE NAME        | FILE CONTENT        |
       | main   | remote        | main commit        | main_file        | main content        |
       | alpha  | local, remote | alpha commit       | feature1_file    | alpha content       |
-      | beta   | local         | beta local commit  | conflicting_file | beta local content  |
-      |        | remote        | beta remote commit | conflicting_file | beta remote content |
+      | beta   | local         | local beta commit  | conflicting_file | local beta content  |
+      |        | remote        | remote beta commit | conflicting_file | remote beta content |
       | gamma  | local, remote | gamma commit       | feature3_file    | gamma content       |
     And I am on the "main" branch
     And my workspace has an uncommitted file
@@ -52,15 +52,15 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       | alpha  | local, remote | alpha commit                   |
       |        |               | main commit                    |
       |        |               | Merge branch 'main' into alpha |
-      | beta   | local         | beta local commit              |
-      |        | remote        | beta remote commit             |
+      | beta   | local         | local beta commit              |
+      |        | remote        | remote beta commit             |
       | gamma  | local, remote | gamma commit                   |
     And my repo now has these committed files
       | BRANCH | NAME             | CONTENT            |
       | main   | main_file        | main content       |
       | alpha  | feature1_file    | alpha content      |
       |        | main_file        | main content       |
-      | beta   | conflicting_file | beta local content |
+      | beta   | conflicting_file | local beta content |
       | gamma  | feature3_file    | gamma content      |
 
   Scenario: skip
@@ -83,8 +83,8 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       | alpha  | local, remote | alpha commit                   |
       |        |               | main commit                    |
       |        |               | Merge branch 'main' into alpha |
-      | beta   | local         | beta local commit              |
-      |        | remote        | beta remote commit             |
+      | beta   | local         | local beta commit              |
+      |        | remote        | remote beta commit             |
       | gamma  | local, remote | gamma commit                   |
       |        |               | main commit                    |
       |        |               | Merge branch 'main' into gamma |
@@ -93,7 +93,7 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       | main   | main_file        | main content       |
       | alpha  | feature1_file    | alpha content      |
       |        | main_file        | main content       |
-      | beta   | conflicting_file | beta local content |
+      | beta   | conflicting_file | local beta content |
       | gamma  | feature3_file    | gamma content      |
       |        | main_file        | main content       |
 

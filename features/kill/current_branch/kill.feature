@@ -3,9 +3,9 @@ Feature: delete the current feature branch
   Background:
     Given my repo has the feature branches "current" and "other"
     And my repo contains the commits
-      | BRANCH  | LOCATION      | MESSAGE                |
-      | current | local, remote | current feature commit |
-      | other   | local, remote | other feature commit   |
+      | BRANCH  | LOCATION      | MESSAGE        |
+      | current | local, remote | current commit |
+      | other   | local, remote | other commit   |
     And I am on the "current" branch
     And my workspace has an uncommitted file
     When I run "git-town kill"
@@ -25,8 +25,8 @@ Feature: delete the current feature branch
       | REPOSITORY    | BRANCHES    |
       | local, remote | main, other |
     And my repo now has the commits
-      | BRANCH | LOCATION      | MESSAGE              |
-      | other  | local, remote | other feature commit |
+      | BRANCH | LOCATION      | MESSAGE      |
+      | other  | local, remote | other commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
       | other  | main   |
@@ -37,7 +37,7 @@ Feature: delete the current feature branch
       | BRANCH  | COMMAND                                       |
       | main    | git branch current {{ sha 'WIP on current' }} |
       |         | git checkout current                          |
-      | current | git reset {{ sha 'current feature commit' }}  |
+      | current | git reset {{ sha 'current commit' }}          |
       |         | git push -u origin current                    |
     And I am now on the "current" branch
     And my workspace has the uncommitted file again
