@@ -36,4 +36,4 @@ Feature: append in offline mode
       | main     | git checkout existing |
     And I am now on the "existing" branch
     And my repo is left with my initial commits
-    And Git Town now has the initial branch hierarchy
+    And Git Town is now aware of the initial branch hierarchy

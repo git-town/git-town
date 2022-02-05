@@ -41,4 +41,4 @@ Feature: on a feature branch
     And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, remote | main commit |
-    And Git Town now has no branch hierarchy information
+    And Git Town is now aware of no branch hierarchy

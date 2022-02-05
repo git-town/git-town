@@ -38,7 +38,7 @@ Feature: abort the ship via empty commit message
     And I am still on the "other" branch
     And my workspace still contains my uncommitted file
     And my repo is left with my initial commits
-    And Git Town still has the initial branch hierarchy
+    And Git Town is still aware of the initial branch hierarchy
 
   Scenario: undo
     When I run "git-town undo"
@@ -52,4 +52,4 @@ Feature: abort the ship via empty commit message
       | BRANCH  | LOCATION      | MESSAGE        |
       | main    | local, remote | main commit    |
       | feature | local         | feature commit |
-    And Git Town still has the initial branch hierarchy
+    And Git Town is still aware of the initial branch hierarchy

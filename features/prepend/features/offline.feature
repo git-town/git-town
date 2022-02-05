@@ -34,4 +34,4 @@ Feature: offline mode
       |        | git checkout old  |
     And I am now on the "old" branch
     And my repo is left with my initial commits
-    And Git Town now has the initial branch hierarchy
+    And Git Town is now aware of the initial branch hierarchy

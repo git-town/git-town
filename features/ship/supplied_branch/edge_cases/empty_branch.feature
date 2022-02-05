@@ -31,7 +31,7 @@ Feature: does not ship empty feature branches
       """
     And I am still on the "other" branch
     And my workspace still contains my uncommitted file
-    And Git Town still has the initial branch hierarchy
+    And Git Town is still aware of the initial branch hierarchy
 
   Scenario: undo
     When I run "git-town undo"
@@ -45,4 +45,4 @@ Feature: does not ship empty feature branches
       | BRANCH | LOCATION      | MESSAGE        |
       | main   | local, remote | main commit    |
       | empty  | local         | feature commit |
-    And Git Town still has the initial branch hierarchy
+    And Git Town is still aware of the initial branch hierarchy

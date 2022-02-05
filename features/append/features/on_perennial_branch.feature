@@ -34,4 +34,4 @@ Feature: append to a perennial branch
     And my repo now has the commits
       | BRANCH     | LOCATION      | MESSAGE           |
       | production | local, remote | production commit |
-    And Git Town now has the initial branch hierarchy
+    And Git Town is now aware of the initial branch hierarchy

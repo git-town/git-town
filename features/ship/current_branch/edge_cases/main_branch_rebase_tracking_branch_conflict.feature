@@ -32,7 +32,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And I am still on the "feature" branch
     And there is no rebase in progress anymore
     And my repo is left with my initial commits
-    And Git Town still has the initial branch hierarchy
+    And Git Town is still aware of the initial branch hierarchy
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
@@ -59,7 +59,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | main   | local, remote | conflicting remote commit |
       |        |               | conflicting local commit  |
       |        |               | feature done              |
-    And Git Town now has no branch hierarchy information
+    And Git Town is now aware of no branch hierarchy
 
   Scenario: resolve, finish the rebase, and continue
     When I resolve the conflict in "conflicting_file"

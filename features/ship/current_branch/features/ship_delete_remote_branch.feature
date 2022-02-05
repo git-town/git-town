@@ -31,7 +31,7 @@ Feature: ship-delete-remote-branch disabled
     And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, remote | feature done |
-    And Git Town now has no branch hierarchy information
+    And Git Town is now aware of no branch hierarchy
 
   Scenario: undo
     When I run "git-town undo"

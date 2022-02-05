@@ -26,7 +26,7 @@ Feature: ship a coworker's feature branch
     And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE      | AUTHOR                          |
       | main   | local, remote | feature done | coworker <coworker@example.com> |
-    And Git Town now has no branch hierarchy information
+    And Git Town is now aware of no branch hierarchy
 
   Scenario: result (commit message via editor)
     When I run "git-town ship" and enter "feature done" for the commit message
@@ -47,7 +47,7 @@ Feature: ship a coworker's feature branch
     And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE      | AUTHOR                          |
       | main   | local, remote | feature done | coworker <coworker@example.com> |
-    And Git Town now has no branch hierarchy information
+    And Git Town is now aware of no branch hierarchy
 
   Scenario:  undo
     Given I ran "git-town ship -m 'feature done'"
@@ -67,4 +67,4 @@ Feature: ship a coworker's feature branch
       | main    | local, remote | feature done          |
       |         |               | Revert "feature done" |
       | feature | local, remote | coworker commit       |
-    And Git Town now has the initial branch hierarchy
+    And Git Town is now aware of the initial branch hierarchy

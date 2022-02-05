@@ -137,7 +137,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^Git Town (?:now|still) has no branch hierarchy information$`, func() error {
+	suite.Step(`^Git Town is (?:now|still) aware of no branch hierarchy$`, func() error {
 		state.gitEnv.DevRepo.Config.Reload()
 		if state.gitEnv.DevRepo.Config.HasBranchInformation() {
 			branchInfo := state.gitEnv.DevRepo.Config.ParentBranchMap()
@@ -146,7 +146,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^Git Town (?:now|still) has the initial branch hierarchy$`, func() error {
+	suite.Step(`^Git Town is (?:now|still) aware of the initial branch hierarchy$`, func() error {
 		have := state.gitEnv.DevRepo.BranchHierarchyTable()
 		state.initialBranchHierarchy.Sort()
 		diff, errCnt := have.EqualDataTable(state.initialBranchHierarchy)

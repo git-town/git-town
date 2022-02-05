@@ -21,7 +21,7 @@ Feature: delete a local branch
     And the existing branches are
       | REPOSITORY    | BRANCHES |
       | local, remote | main     |
-    And Git Town now has no branch hierarchy information
+    And Git Town is now aware of no branch hierarchy
 
   Scenario: undo
     When I run "git-town undo"

@@ -35,7 +35,7 @@ Feature: handle conflicts between the shipped branch and its tracking branch
     And I am still on the "feature" branch
     And there is no merge in progress
     And my repo is left with my initial commits
-    And Git Town still has the initial branch hierarchy
+    And Git Town is still aware of the initial branch hierarchy
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
@@ -57,7 +57,7 @@ Feature: handle conflicts between the shipped branch and its tracking branch
     And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME        |
       | main   | local, remote | feature done | conflicting_file |
-    And Git Town now has no branch hierarchy information
+    And Git Town is now aware of no branch hierarchy
 
   Scenario: resolve, commit, and continue
     When I resolve the conflict in "conflicting_file"
