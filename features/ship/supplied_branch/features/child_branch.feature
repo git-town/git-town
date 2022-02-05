@@ -22,7 +22,7 @@ Feature: does not ship a child branch
       please ship "alpha" first
       """
     And I am now on the "alpha" branch
-    And my repo is left with my original commits
+    And my repo is left with my initial commits
     And Git Town now has the initial branch hierarchy
 
   Scenario: undo
@@ -33,5 +33,5 @@ Feature: does not ship a child branch
       nothing to undo
       """
     And I am still on the "alpha" branch
-    And my repo is left with my original commits
+    And my repo is left with my initial commits
     And Git Town now has the initial branch hierarchy

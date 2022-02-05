@@ -34,7 +34,7 @@ Feature: handle conflicts between the shipped branch and its tracking branch
       | main    | git checkout feature |
     And I am still on the "feature" branch
     And there is no merge in progress
-    And my repo is left with my original commits
+    And my repo is left with my initial commits
     And Git Town still has the initial branch hierarchy
 
   Scenario: resolve and continue

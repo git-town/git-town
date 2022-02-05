@@ -17,7 +17,7 @@ Feature: inside a committed subfolder that exists only on the current feature br
       |          | git branch new main      |
       |          | git checkout new         |
     And I am now on the "new" branch
-    And my repo is left with my original commits
+    And my repo is left with my initial commits
     And Git Town is now aware of this branch hierarchy
       | BRANCH   | PARENT |
       | existing | main   |
@@ -31,5 +31,5 @@ Feature: inside a committed subfolder that exists only on the current feature br
       | main   | git branch -d new     |
       |        | git checkout existing |
     And I am now on the "existing" branch
-    And my repo is left with my original commits
+    And my repo is left with my initial commits
     And Git Town now has the initial branch hierarchy

@@ -50,7 +50,7 @@ Feature: conflicts between uncommitted changes and the main branch
       cannot check out branch "existing"
       """
     And I am now on the "main" branch
-    And my repo is left with my original commits
+    And my repo is left with my initial commits
     And my workspace now contains the file "conflicting_file" with content "resolved content"
 
   Scenario: continue with unresolved conflict
@@ -85,5 +85,5 @@ Feature: conflicts between uncommitted changes and the main branch
       cannot check out branch "existing"
       """
     And I am now on the "main" branch
-    And my repo is left with my original commits
+    And my repo is left with my initial commits
     And my workspace now contains the file "conflicting_file" with content "resolved content"

@@ -40,7 +40,7 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
     And I am now on the "other" branch
     And my workspace still contains my uncommitted file
     And there is no merge in progress
-    And my repo is left with my original commits
+    And my repo is left with my initial commits
     And Git Town still has the initial branch hierarchy
 
   Scenario: resolve and continue

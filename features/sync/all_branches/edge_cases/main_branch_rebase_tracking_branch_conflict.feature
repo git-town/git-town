@@ -34,7 +34,7 @@ Feature: handle rebase conflicts between main branch and its tracking branch
       |        | git stash pop      |
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
-    And my repo is left with my original commits
+    And my repo is left with my initial commits
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"

@@ -37,7 +37,7 @@ Feature: abort the ship via empty commit message
       """
     And I am still on the "other" branch
     And my workspace still contains my uncommitted file
-    And my repo is left with my original commits
+    And my repo is left with my initial commits
     And Git Town still has the initial branch hierarchy
 
   Scenario: undo

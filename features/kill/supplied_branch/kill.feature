@@ -38,5 +38,5 @@ Feature: delete another than the current branch
       |        | git push -u origin dead                     |
     And I am still on the "good" branch
     And my workspace still contains my uncommitted file
-    And my repo is left with my original commits
+    And my repo is left with my initial commits
     And my repo now has its initial branches and branch hierarchy

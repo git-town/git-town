@@ -35,7 +35,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
     And I am still on the "qa" branch
     And my workspace still contains my uncommitted file
     And there is no rebase in progress anymore
-    And my repo is left with my original commits
+    And my repo is left with my initial commits
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
