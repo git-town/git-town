@@ -4,8 +4,8 @@ Feature: handle rebase conflicts between main branch and its tracking branch
     Given my repo has a feature branch "feature"
     And my repo contains the commits
       | BRANCH  | LOCATION | MESSAGE            | FILE NAME        | FILE CONTENT        |
-      | main    | local    | main local commit  | conflicting_file | main local content  |
-      |         | remote   | main remote commit | conflicting_file | main remote content |
+      | main    | local    | local main commit  | conflicting_file | local main content  |
+      |         | remote   | remote main commit | conflicting_file | remote main content |
       | feature | local    | feature commit     | feature_file     | feature content     |
     And I am on the "main" branch
     And my workspace has an uncommitted file

@@ -5,8 +5,8 @@ Feature: rename an unsynced branch
 
   Scenario: unpulled remote commits
     Given my repo contains the commits
-      | BRANCH | LOCATION | MESSAGE               |
-      | old    | remote   | remote feature commit |
+      | BRANCH | LOCATION | MESSAGE       |
+      | old    | remote   | remote commit |
     And I am on the "old" branch
     When I run "git-town rename-branch old new"
     Then it runs the commands
@@ -20,8 +20,8 @@ Feature: rename an unsynced branch
 
   Scenario: unpushed local commits
     Given my repo contains the commits
-      | BRANCH | LOCATION | MESSAGE              |
-      | old    | local    | local feature commit |
+      | BRANCH | LOCATION | MESSAGE      |
+      | old    | local    | local commit |
     And I am on the "old" branch
     When I run "git-town rename-branch old new"
     Then it runs the commands

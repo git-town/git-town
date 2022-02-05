@@ -3,9 +3,9 @@ Feature: the branch to kill has a deleted tracking branch
   Background:
     Given my repo has the feature branches "old" and "other"
     And my repo contains the commits
-      | BRANCH | LOCATION      | MESSAGE              |
-      | old    | local, remote | old commit           |
-      | other  | local, remote | other feature commit |
+      | BRANCH | LOCATION      | MESSAGE      |
+      | old    | local, remote | old commit   |
+      | other  | local, remote | other commit |
     And the "old" branch gets deleted on the remote
     And I am on the "old" branch
     And my workspace has an uncommitted file
@@ -22,8 +22,8 @@ Feature: the branch to kill has a deleted tracking branch
     And I am now on the "main" branch
     And my repo doesn't have any uncommitted files
     And my repo now has the commits
-      | BRANCH | LOCATION      | MESSAGE              |
-      | other  | local, remote | other feature commit |
+      | BRANCH | LOCATION      | MESSAGE      |
+      | other  | local, remote | other commit |
     And the existing branches are
       | REPOSITORY    | BRANCHES    |
       | local, remote | main, other |
@@ -40,8 +40,8 @@ Feature: the branch to kill has a deleted tracking branch
       | old    | git reset {{ sha 'old commit' }}      |
     And I am now on the "old" branch
     And my repo now has the commits
-      | BRANCH | LOCATION      | MESSAGE              |
-      | old    | local         | old commit           |
-      | other  | local, remote | other feature commit |
+      | BRANCH | LOCATION      | MESSAGE      |
+      | old    | local         | old commit   |
+      | other  | local, remote | other commit |
     And my workspace has the uncommitted file again
     And my repo now has its initial branches and branch hierarchy

@@ -3,8 +3,8 @@ Feature: append a new feature branch to an existing feature branch
   Background:
     Given my repo has a feature branch "existing"
     And my repo contains the commits
-      | BRANCH   | LOCATION      | MESSAGE                 |
-      | existing | local, remote | existing_feature_commit |
+      | BRANCH   | LOCATION      | MESSAGE         |
+      | existing | local, remote | existing_commit |
     And I am on the "existing" branch
     And my workspace has an uncommitted file
     When I run "git-town append new"
@@ -26,9 +26,9 @@ Feature: append a new feature branch to an existing feature branch
     And I am now on the "new" branch
     And my workspace still contains my uncommitted file
     And my repo now has the commits
-      | BRANCH   | LOCATION      | MESSAGE                 |
-      | existing | local, remote | existing_feature_commit |
-      | new      | local         | existing_feature_commit |
+      | BRANCH   | LOCATION      | MESSAGE         |
+      | existing | local, remote | existing_commit |
+      | new      | local         | existing_commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH   | PARENT   |
       | existing | main     |

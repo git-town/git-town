@@ -4,8 +4,8 @@ Feature: append in offline mode
     Given Git Town is in offline mode
     And my repo has a feature branch "existing"
     And my repo contains the commits
-      | BRANCH   | LOCATION      | MESSAGE                 |
-      | existing | local, remote | existing feature commit |
+      | BRANCH   | LOCATION      | MESSAGE         |
+      | existing | local, remote | existing commit |
     And I am on the "existing" branch
 
   Scenario: result
@@ -21,9 +21,9 @@ Feature: append in offline mode
       |          | git checkout new                    |
     And I am now on the "new" branch
     And my repo now has the commits
-      | BRANCH   | LOCATION      | MESSAGE                 |
-      | existing | local, remote | existing feature commit |
-      | new      | local         | existing feature commit |
+      | BRANCH   | LOCATION      | MESSAGE         |
+      | existing | local, remote | existing commit |
+      | new      | local         | existing commit |
 
   Scenario: undo
     Given I ran "git-town append new"

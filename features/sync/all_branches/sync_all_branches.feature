@@ -8,8 +8,8 @@ Feature: sync all feature branches
       | main       | remote        | main commit              |
       | alpha      | local, remote | alpha commit             |
       | beta       | local, remote | beta commit              |
-      | production | local         | production local commit  |
-      |            | remote        | production remote commit |
+      | production | local         | local production commit  |
+      |            | remote        | remote production commit |
       | qa         | local         | qa local commit          |
       |            | remote        | qa remote commit         |
     And I am on the "alpha" branch
