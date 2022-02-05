@@ -95,7 +95,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^(?:a coworker|the origin) has a feature branch "([^"]*)"$`, func(branch string) error {
+	suite.Step(`^the origin has a feature branch "([^"]*)"$`, func(branch string) error {
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 		return state.gitEnv.OriginRepo.CreateBranch(branch, "main")
 	})
