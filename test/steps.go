@@ -77,11 +77,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 	})
 
-	suite.Step(`^a coworker fetches updates$`, func() error {
+	suite.Step(`^the coworker fetches updates$`, func() error {
 		return state.gitEnv.CoworkerRepo.Fetch()
 	})
 
-	suite.Step(`^a coworker is on the "([^"]*)" branch$`, func(branchName string) error {
+	suite.Step(`^the coworker is on the "([^"]*)" branch$`, func(branchName string) error {
 		return state.gitEnv.CoworkerRepo.CheckoutBranch(branchName)
 	})
 
@@ -90,7 +90,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^a coworker sets the parent branch of "([^"]*)" as "([^"]*)"$`, func(childBranch, parentBranch string) error {
+	suite.Step(`^the coworker sets the parent branch of "([^"]*)" as "([^"]*)"$`, func(childBranch, parentBranch string) error {
 		_ = state.gitEnv.CoworkerRepo.Config.SetParentBranch(childBranch, parentBranch)
 		return nil
 	})
@@ -160,7 +160,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^I am collaborating with a coworker$`, func() error {
+	suite.Step(`^a coworker clones the repository$`, func() error {
 		return state.gitEnv.AddCoworkerRepo()
 	})
 
