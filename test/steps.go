@@ -437,7 +437,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.Config.SetColorUI(value)
 	})
 
-	suite.Step(`^my repo has "git-town.code-hosting-driver" set to "([^"]*)"$`, func(value string) error {
+	suite.Step(`^Git Town's local "git-town.code-hosting-driver" setting is "([^"]*)"$`, func(value string) error {
 		return state.gitEnv.DevRepo.Config.SetCodeHostingDriver(value)
 	})
 
