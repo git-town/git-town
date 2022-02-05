@@ -450,7 +450,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repo has "git-town.sync-upstream" set to (true|false)$`, func(text string) error {
+	suite.Step(`^Git Town's local "git-town.sync-upstream" setting is (true|false)$`, func(text string) error {
 		value, err := strconv.ParseBool(text)
 		if err != nil {
 			return err
