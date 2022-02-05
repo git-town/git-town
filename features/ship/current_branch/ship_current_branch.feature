@@ -30,7 +30,7 @@ Feature: enter the commit message interactively via the editor
     And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, remote | feature done |
-    And Git Town now knows no branch hierarchy
+    And Git Town is now aware of no branch hierarchy
 
   Scenario: undo
     When I run "git-town undo"

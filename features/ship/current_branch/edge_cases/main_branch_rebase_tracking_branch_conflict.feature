@@ -59,7 +59,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | main   | local, remote | conflicting remote commit |
       |        |               | conflicting local commit  |
       |        |               | feature done              |
-    And Git Town now knows no branch hierarchy
+    And Git Town is now aware of no branch hierarchy
 
   Scenario: resolve, finish the rebase, and continue
     When I resolve the conflict in "conflicting_file"
