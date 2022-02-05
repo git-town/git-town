@@ -20,7 +20,7 @@ Feature: append to a perennial branch
       | BRANCH     | LOCATION      | MESSAGE           |
       | new        | local         | production commit |
       | production | local, remote | production commit |
-    And Git Town is now aware of this branch hierarchy
+    And Git Town now knows about this branch hierarchy
       | BRANCH | PARENT     |
       | new    | production |
 

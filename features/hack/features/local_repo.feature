@@ -24,7 +24,7 @@ Feature: local repo
       | BRANCH | LOCATION | MESSAGE     |
       | main   | local    | main commit |
       | new    | local    | main commit |
-    And Git Town is now aware of this branch hierarchy
+    And Git Town now knows about this branch hierarchy
       | BRANCH   | PARENT |
       | existing | main   |
       | new      | main   |

@@ -28,7 +28,7 @@ Feature: delete a parent branch
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, remote | alpha commit |
       | gamma  | local, remote | gamma commit |
-    And Git Town is now aware of this branch hierarchy
+    And Git Town now knows about this branch hierarchy
       | BRANCH | PARENT |
       | alpha  | main   |
       | gamma  | alpha  |

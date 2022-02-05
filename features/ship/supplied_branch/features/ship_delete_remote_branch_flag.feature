@@ -34,7 +34,7 @@ Feature: skip deleting the remote branch when shipping another branch
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, remote | feature done |
       | other  | local         | other commit |
-    And Git Town is now aware of this branch hierarchy
+    And Git Town now knows about this branch hierarchy
       | BRANCH | PARENT |
       | other  | main   |
 
