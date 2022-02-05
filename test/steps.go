@@ -115,7 +115,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.Config.SetOffline(true)
 	})
 
-	suite.Step(`^Git Town is no longer configured for this repo$`, func() error {
+	suite.Step(`^Git Town is no longer configured$`, func() error {
 		res, err := state.gitEnv.DevRepo.HasGitTownConfigNow()
 		if err != nil {
 			return err
