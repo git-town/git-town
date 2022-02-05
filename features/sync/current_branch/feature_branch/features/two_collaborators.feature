@@ -27,7 +27,7 @@ Feature: collaborative feature branch syncing
     And all branches are now synchronized
 
     Given the coworker is on the "feature" branch
-    When a coworker runs "git-town sync"
+    When the coworker runs "git-town sync"
     Then it runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune --tags           |
