@@ -437,15 +437,15 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.Config.SetColorUI(value)
 	})
 
-	suite.Step(`^Git Town's local "git-town.code-hosting-driver" setting is "([^"]*)"$`, func(value string) error {
+	suite.Step(`^Git Town's local "code-hosting-driver" setting is "([^"]*)"$`, func(value string) error {
 		return state.gitEnv.DevRepo.Config.SetCodeHostingDriver(value)
 	})
 
-	suite.Step(`^Git Town's local "git-town.code-hosting-origin-hostname" setting is "([^"]*)"$`, func(value string) error {
+	suite.Step(`^Git Town's local "code-hosting-origin-hostname" setting is "([^"]*)"$`, func(value string) error {
 		return state.gitEnv.DevRepo.Config.SetCodeHostingOriginHostname(value)
 	})
 
-	suite.Step(`^Git Town's local "git-town.ship-delete-remote-branch" setting is "(true|false)"$`, func(value string) error {
+	suite.Step(`^Git Town's local "ship-delete-remote-branch" setting is "(true|false)"$`, func(value string) error {
 		parsed, err := strconv.ParseBool(value)
 		if err != nil {
 			return err
@@ -454,7 +454,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^Git Town's local "git-town.sync-upstream" setting is (true|false)$`, func(text string) error {
+	suite.Step(`^Git Town's local "sync-upstream" setting is (true|false)$`, func(text string) error {
 		value, err := strconv.ParseBool(text)
 		if err != nil {
 			return err
