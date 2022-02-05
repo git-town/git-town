@@ -6,7 +6,7 @@ Feature: ask for missing parent branch information
     When I run "git-town append new" and answer the prompts:
       | PROMPT                                        | ANSWER  |
       | Please specify the parent branch of 'feature' | [ENTER] |
-    Then Git Town now knows about this branch hierarchy
+    Then Git Town now knows this branch hierarchy
       | BRANCH  | PARENT  |
       | feature | main    |
       | new     | feature |

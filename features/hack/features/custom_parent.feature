@@ -18,7 +18,7 @@ Feature: customize the parent for the new feature branch
       |          | git branch new existing     |
       |          | git checkout new            |
     And I am now on the "new" branch
-    And Git Town now knows about this branch hierarchy
+    And Git Town now knows this branch hierarchy
       | BRANCH   | PARENT   |
       | existing | main     |
       | new      | existing |
@@ -31,6 +31,6 @@ Feature: customize the parent for the new feature branch
       | existing | git branch -d new         |
       |          | git push origin :existing |
     And I am now on the "existing" branch
-    And Git Town now knows about this branch hierarchy
+    And Git Town now knows this branch hierarchy
       | BRANCH   | PARENT |
       | existing | main   |

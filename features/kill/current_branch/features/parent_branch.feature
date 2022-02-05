@@ -31,7 +31,7 @@ Feature: delete a branch within a branch chain
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, remote | alpha commit |
       | gamma  | local, remote | gamma commit |
-    And Git Town now knows about this branch hierarchy
+    And Git Town now knows this branch hierarchy
       | BRANCH | PARENT |
       | alpha  | main   |
       | gamma  | alpha  |

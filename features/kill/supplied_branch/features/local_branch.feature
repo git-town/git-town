@@ -26,7 +26,7 @@ Feature: local branch
     And my repo now has the commits
       | BRANCH | LOCATION | MESSAGE      |
       | other  | local    | other commit |
-    And Git Town now knows about this branch hierarchy
+    And Git Town now knows this branch hierarchy
       | BRANCH | PARENT |
       | other  | main   |
 

@@ -21,7 +21,7 @@ Feature: auto-push the new branch to the remote
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, remote | main commit |
       | new    | local, remote | main commit |
-    And Git Town now knows about this branch hierarchy
+    And Git Town now knows this branch hierarchy
       | BRANCH | PARENT |
       | new    | main   |
 

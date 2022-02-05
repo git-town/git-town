@@ -126,7 +126,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^Git Town now knows about this branch hierarchy$`, func(input *messages.PickleStepArgument_PickleTable) error {
+	suite.Step(`^Git Town now knows this branch hierarchy$`, func(input *messages.PickleStepArgument_PickleTable) error {
 		table := state.gitEnv.DevRepo.BranchHierarchyTable()
 		diff, errCount := table.EqualGherkin(input)
 		if errCount > 0 {

@@ -27,7 +27,7 @@ Feature: delete the current branch
     And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE      |
       | other  | local, remote | other commit |
-    And Git Town now knows about this branch hierarchy
+    And Git Town now knows this branch hierarchy
       | BRANCH | PARENT |
       | other  | main   |
 

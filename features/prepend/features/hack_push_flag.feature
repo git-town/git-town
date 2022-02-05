@@ -22,7 +22,7 @@ Feature: auto-push new branches
     And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE        |
       | old    | local, remote | feature commit |
-    And Git Town now knows about this branch hierarchy
+    And Git Town now knows this branch hierarchy
       | BRANCH | PARENT |
       | new    | main   |
       | old    | new    |

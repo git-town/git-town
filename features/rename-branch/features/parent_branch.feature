@@ -24,7 +24,7 @@ Feature: rename a parent branch
       | BRANCH | LOCATION      | MESSAGE       |
       | child  | local, remote | child commit  |
       | new    | local, remote | parent commit |
-    And Git Town now knows about this branch hierarchy
+    And Git Town now knows this branch hierarchy
       | BRANCH | PARENT |
       | child  | new    |
       | new    | main   |

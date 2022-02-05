@@ -29,7 +29,7 @@ Feature: append a new feature branch to an existing feature branch
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, remote | existing commit |
       | new      | local         | existing commit |
-    And Git Town now knows about this branch hierarchy
+    And Git Town now knows this branch hierarchy
       | BRANCH   | PARENT   |
       | existing | main     |
       | new      | existing |

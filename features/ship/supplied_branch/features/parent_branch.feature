@@ -31,7 +31,7 @@ Feature: ship a parent branch
       | main   | local, remote | parent done   |
       | child  | local, remote | child commit  |
       | parent | remote        | parent commit |
-    And Git Town now knows about this branch hierarchy
+    And Git Town now knows this branch hierarchy
       | BRANCH | PARENT |
       | child  | main   |
 

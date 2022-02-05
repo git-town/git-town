@@ -36,7 +36,7 @@ Feature: provide the commit message via a CLI argument
     And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, remote | feature done |
-    And Git Town now knows about this branch hierarchy
+    And Git Town now knows this branch hierarchy
       | BRANCH | PARENT |
       | other  | main   |
 
