@@ -2,7 +2,7 @@
 Feature: ask for missing configuration
 
   Scenario: run unconfigured
-    Given I haven't configured Git Town yet
+    Given Git Town is not configured
     And my repo's origin is "https://github.com/git-town/git-town.git"
     And my computer has the "open" tool installed
     When I run "git-town new-pull-request" and answer the prompts:

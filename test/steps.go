@@ -115,7 +115,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.Config.SetOffline(true)
 	})
 
-	suite.Step(`^Git Town is no longer configured for this repo$`, func() error {
+	suite.Step(`^Git Town is no longer configured$`, func() error {
 		res, err := state.gitEnv.DevRepo.HasGitTownConfigNow()
 		if err != nil {
 			return err
@@ -200,7 +200,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^I haven't configured Git Town yet$`, func() error {
+	suite.Step(`^Git Town is not configured$`, func() error {
 		err := state.gitEnv.DevRepo.Config.DeletePerennialBranchConfiguration()
 		if err != nil {
 			return err
@@ -433,19 +433,19 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.AddUpstream()
 	})
 
-	suite.Step(`^my repo has "color\.ui" set to "([^"]*)"$`, func(value string) error {
+	suite.Step(`^Git Town's local "color.ui" setting is "([^"]*)"$`, func(value string) error {
 		return state.gitEnv.DevRepo.Config.SetColorUI(value)
 	})
 
-	suite.Step(`^my repo has "git-town.code-hosting-driver" set to "([^"]*)"$`, func(value string) error {
+	suite.Step(`^Git Town's local "code-hosting-driver" setting is "([^"]*)"$`, func(value string) error {
 		return state.gitEnv.DevRepo.Config.SetCodeHostingDriver(value)
 	})
 
-	suite.Step(`^my repo has "git-town.code-hosting-origin-hostname" set to "([^"]*)"$`, func(value string) error {
+	suite.Step(`^Git Town's local "code-hosting-origin-hostname" setting is "([^"]*)"$`, func(value string) error {
 		return state.gitEnv.DevRepo.Config.SetCodeHostingOriginHostname(value)
 	})
 
-	suite.Step(`^my repo has "git-town.ship-delete-remote-branch" set to "(true|false)"$`, func(value string) error {
+	suite.Step(`^Git Town's local "ship-delete-remote-branch" setting is "(true|false)"$`, func(value string) error {
 		parsed, err := strconv.ParseBool(value)
 		if err != nil {
 			return err
@@ -454,7 +454,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repo has "git-town.sync-upstream" set to (true|false)$`, func(text string) error {
+	suite.Step(`^Git Town's local "sync-upstream" setting is (true|false)$`, func(text string) error {
 		value, err := strconv.ParseBool(text)
 		if err != nil {
 			return err
@@ -882,7 +882,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the offline configuration is accidentally set to "([^"]*)"$`, func(value string) error {
+	suite.Step(`^Git Town's local "offline" setting is "([^"]*)"$`, func(value string) error {
 		_, err := state.gitEnv.DevRepo.Config.SetGlobalConfigValue("git-town.offline", value)
 		return err
 	})
