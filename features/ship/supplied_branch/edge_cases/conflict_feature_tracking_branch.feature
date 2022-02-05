@@ -3,9 +3,9 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
   Background:
     Given my repo has the feature branches "feature" and "other"
     And my repo contains the commits
-      | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
-      | feature | local    | conflicting local commit  | conflicting_file | conflicting local content  |
-      |         | remote   | conflicting remote commit | conflicting_file | conflicting remote content |
+      | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
+      | feature | local    | conflicting local commit  | conflicting_file | local content  |
+      |         | remote   | conflicting remote commit | conflicting_file | remote content |
     And I am on the "other" branch
     And my workspace has an uncommitted file
     And I run "git-town ship feature -m 'feature done'"
