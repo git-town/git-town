@@ -27,4 +27,4 @@ Feature: missing configuration
       | feature | git checkout main     |
       | main    | git branch -d feature |
     And I am now on the "main" branch
-    And Git Town now knows branch hierarchy
+    And Git Town now knows no branch hierarchy

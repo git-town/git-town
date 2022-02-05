@@ -42,4 +42,4 @@ Feature: in a subfolder on the main branch
     And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, remote | folder commit |
-    And Git Town now knows branch hierarchy
+    And Git Town now knows no branch hierarchy

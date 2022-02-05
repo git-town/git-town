@@ -5,4 +5,4 @@ Feature: automatically remove outdated git-town configuration
     And I run "git checkout main"
     And I run "git branch -d feature"
     When I run "git-town sync"
-    And Git Town now knows branch hierarchy
+    And Git Town now knows no branch hierarchy

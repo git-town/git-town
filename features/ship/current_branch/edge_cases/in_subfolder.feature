@@ -30,7 +30,7 @@ Feature: ship the current feature branch from a subfolder on the shipped branch
     And my repo now has the commits
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, remote | feature done |
-    And Git Town now knows branch hierarchy
+    And Git Town now knows no branch hierarchy
 
   Scenario: undo
     When I run "git-town undo"
