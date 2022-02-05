@@ -4,8 +4,8 @@ Feature: handle conflicts between the main branch and its tracking branch
     Given my repo has a feature branch "feature"
     And my repo contains the commits
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
-      | main   | local    | conflicting local commit  | conflicting_file | local conflicting content  |
-      |        | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
+      | main   | local    | conflicting local commit  | conflicting_file | conflicting local content  |
+      |        | remote   | conflicting remote commit | conflicting_file | conflicting remote content |
     And I am on the "feature" branch
     And my workspace has an uncommitted file
     When I run "git-town sync"

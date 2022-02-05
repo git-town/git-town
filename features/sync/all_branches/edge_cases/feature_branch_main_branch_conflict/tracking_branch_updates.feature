@@ -6,8 +6,8 @@ Feature: handle merge conflicts between feature branch and main branch
       | BRANCH | LOCATION      | MESSAGE            | FILE NAME            | FILE CONTENT        |
       | main   | remote        | main commit        | conflicting_file     | main content        |
       | alpha  | local, remote | alpha commit       | feature1_file        | alpha content       |
-      | beta   | local         | beta local commit  | conflicting_file     | beta local content  |
-      |        | remote        | beta remote commit | feature2_remote_file | beta remote content |
+      | beta   | local         | local beta commit  | conflicting_file     | local beta content  |
+      |        | remote        | remote beta commit | feature2_remote_file | remote beta content |
       | gamma  | remote        | gamma commit       | feature3_file        | gamma content       |
     And I am on the "main" branch
     And my workspace has an uncommitted file
@@ -42,7 +42,7 @@ Feature: handle merge conflicts between feature branch and main branch
     Then it runs the commands
       | BRANCH | COMMAND                                        |
       | beta   | git merge --abort                              |
-      |        | git reset --hard {{ sha 'beta local commit' }} |
+      |        | git reset --hard {{ sha 'local beta commit' }} |
       |        | git checkout alpha                             |
       | alpha  | git checkout main                              |
       | main   | git stash pop                                  |
@@ -55,22 +55,22 @@ Feature: handle merge conflicts between feature branch and main branch
       | alpha  | local, remote | alpha commit                   |
       |        |               | main commit                    |
       |        |               | Merge branch 'main' into alpha |
-      | beta   | local         | beta local commit              |
-      |        | remote        | beta remote commit             |
+      | beta   | local         | local beta commit              |
+      |        | remote        | remote beta commit             |
       | gamma  | remote        | gamma commit                   |
     And my repo still has these committed files
       | BRANCH | NAME             | CONTENT            |
       | main   | conflicting_file | main content       |
       | alpha  | conflicting_file | main content       |
       |        | feature1_file    | alpha content      |
-      | beta   | conflicting_file | beta local content |
+      | beta   | conflicting_file | local beta content |
 
   Scenario: skip
     When I run "git-town skip"
     Then it runs the commands
       | BRANCH | COMMAND                                        |
       | beta   | git merge --abort                              |
-      |        | git reset --hard {{ sha 'beta local commit' }} |
+      |        | git reset --hard {{ sha 'local beta commit' }} |
       |        | git checkout gamma                             |
       | gamma  | git merge --no-edit origin/gamma               |
       |        | git merge --no-edit main                       |
@@ -87,8 +87,8 @@ Feature: handle merge conflicts between feature branch and main branch
       | alpha  | local, remote | alpha commit                   |
       |        |               | main commit                    |
       |        |               | Merge branch 'main' into alpha |
-      | beta   | local         | beta local commit              |
-      |        | remote        | beta remote commit             |
+      | beta   | local         | local beta commit              |
+      |        | remote        | remote beta commit             |
       | gamma  | local, remote | gamma commit                   |
       |        |               | main commit                    |
       |        |               | Merge branch 'main' into gamma |
@@ -97,7 +97,7 @@ Feature: handle merge conflicts between feature branch and main branch
       | main   | conflicting_file | main content       |
       | alpha  | conflicting_file | main content       |
       |        | feature1_file    | alpha content      |
-      | beta   | conflicting_file | beta local content |
+      | beta   | conflicting_file | local beta content |
       | gamma  | conflicting_file | main content       |
       |        | feature3_file    | gamma content      |
 
@@ -136,7 +136,7 @@ Feature: handle merge conflicts between feature branch and main branch
       | alpha  | conflicting_file     | main content        |
       |        | feature1_file        | alpha content       |
       | beta   | conflicting_file     | resolved content    |
-      |        | feature2_remote_file | beta remote content |
+      |        | feature2_remote_file | remote beta content |
       | gamma  | conflicting_file     | main content        |
       |        | feature3_file        | gamma content       |
 

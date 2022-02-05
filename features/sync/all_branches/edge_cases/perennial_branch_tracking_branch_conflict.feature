@@ -6,8 +6,8 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       | BRANCH      | LOCATION      | MESSAGE                   | FILE NAME        | FILE CONTENT               |
       | main        | remote        | main commit               | main_file        | main content               |
       | perennial-1 | local, remote | perennial-1 commit        | peren1_file      | perennial-1 content        |
-      | perennial-2 | local         | perennial-2 local commit  | conflicting_file | perennial-2 local content  |
-      |             | remote        | perennial-2 remote commit | conflicting_file | perennial-2 remote content |
+      | perennial-2 | local         | local perennial-2 commit  | conflicting_file | local perennial-2 content  |
+      |             | remote        | remote perennial-2 commit | conflicting_file | remote perennial-2 content |
       | perennial-3 | local, remote | perennial-3 commit        | peren3_file      | perennial-3 content        |
     And I am on the "main" branch
     And my workspace has an uncommitted file
@@ -48,8 +48,8 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       | BRANCH      | LOCATION      | MESSAGE                   |
       | main        | local, remote | main commit               |
       | perennial-1 | local, remote | perennial-1 commit        |
-      | perennial-2 | local         | perennial-2 local commit  |
-      |             | remote        | perennial-2 remote commit |
+      | perennial-2 | local         | local perennial-2 commit  |
+      |             | remote        | remote perennial-2 commit |
       | perennial-3 | local, remote | perennial-3 commit        |
 
   Scenario: skip
@@ -68,8 +68,8 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       | BRANCH      | LOCATION      | MESSAGE                   |
       | main        | local, remote | main commit               |
       | perennial-1 | local, remote | perennial-1 commit        |
-      | perennial-2 | local         | perennial-2 local commit  |
-      |             | remote        | perennial-2 remote commit |
+      | perennial-2 | local         | local perennial-2 commit  |
+      |             | remote        | remote perennial-2 commit |
       | perennial-3 | local, remote | perennial-3 commit        |
 
   Scenario: continue without resolving the conflicts

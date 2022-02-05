@@ -5,9 +5,9 @@ Feature: sync inside a folder that doesn't exist on the main branch
     And my repo contains the commits
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local, remote | conflicting main commit    | conflicting_file | main content    |
-      | current | local         | conflicting feature commit | conflicting_file | feature content |
+      | current | local         | conflicting current commit | conflicting_file | current content |
       |         |               | folder commit              | new_folder/file1 |                 |
-      | other   | local, remote | other feature commit       | file2            |                 |
+      | other   | local, remote | other commit               | file2            |                 |
     And I am on the "current" branch
     And my workspace has an uncommitted file
     When I run "git-town sync --all" in the "new_folder" folder
@@ -76,11 +76,11 @@ Feature: sync inside a folder that doesn't exist on the main branch
     And my repo now has the commits
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, remote | conflicting main commit          |
-      | current | local, remote | conflicting feature commit       |
+      | current | local, remote | conflicting current commit       |
       |         |               | folder commit                    |
       |         |               | conflicting main commit          |
       |         |               | Merge branch 'main' into current |
-      | other   | local, remote | other feature commit             |
+      | other   | local, remote | other commit                     |
       |         |               | conflicting main commit          |
       |         |               | Merge branch 'main' into other   |
     And my repo still has these committed files
