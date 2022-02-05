@@ -433,6 +433,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.AddUpstream()
 	})
 
+	suite.Step(`^Git Town's "color\.ui" setting is "([^"]*)"$`, func(value string) error {
+		return state.gitEnv.DevRepo.Config.SetColorUI(value)
+	})
+
 	suite.Step(`^Git Town's local "git-town.code-hosting-driver" setting is "([^"]*)"$`, func(value string) error {
 		return state.gitEnv.DevRepo.Config.SetCodeHostingDriver(value)
 	})
