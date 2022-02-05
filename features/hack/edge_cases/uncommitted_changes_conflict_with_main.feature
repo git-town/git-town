@@ -26,7 +26,7 @@ Feature: conflicts between uncommitted changes and the main branch
       """
     And the file "conflicting_file" contains unresolved conflicts
 
-  Scenario: abort with unresolved conflicts fails due to unresolved merge conflicts
+  Scenario: abort with unresolved conflict fails due to unresolved merge conflicts
     When I run "git-town abort"
     Then it runs the commands
       | BRANCH | COMMAND           |

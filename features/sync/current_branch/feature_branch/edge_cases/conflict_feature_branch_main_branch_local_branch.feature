@@ -76,7 +76,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |
 
-  Scenario: resolve the conflicts so that there are no changes and continue
+  Scenario: resolve the conflict resulting in no changes and continue
     When I resolve the conflict in "conflicting_file" with "feature content"
     And I run "git-town continue"
     Then it runs the commands
