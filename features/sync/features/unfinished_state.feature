@@ -16,7 +16,7 @@ Feature: warn user about previous operation
       To continue after having resolved conflicts, run "git-town continue".
       """
 
-  Scenario: attempt to sync again and choosing to quit
+  Scenario: sync again and quit
     When I run "git-town sync" and answer the prompts:
       | PROMPT                       | ANSWER  |
       | Please choose how to proceed | [ENTER] |
@@ -27,7 +27,7 @@ Feature: warn user about previous operation
       """
     And my uncommitted file is stashed
 
-  Scenario: attempt to sync again and choosing to continue without resolving conflicts
+  Scenario: sync again and continue with unresolved conflict
     When I run "git-town sync" and answer the prompts:
       | PROMPT                       | ANSWER        |
       | Please choose how to proceed | [DOWN][ENTER] |
@@ -38,7 +38,7 @@ Feature: warn user about previous operation
       """
     And my uncommitted file is stashed
 
-  Scenario: attempt to sync again and choosing to continue after resolving conflicts
+  Scenario: resolve, sync again, and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town sync", answer the prompts, and close the next editor:
       | PROMPT                       | ANSWER        |
@@ -54,7 +54,7 @@ Feature: warn user about previous operation
       |         | git stash pop                      |
     And all branches are now synchronized
 
-  Scenario: attempt to sync again and choosing to abort
+  Scenario: sync again and abort
     When I run "git-town sync" and answer the prompts:
       | PROMPT                       | ANSWER              |
       | Please choose how to proceed | [DOWN][DOWN][ENTER] |
@@ -65,7 +65,7 @@ Feature: warn user about previous operation
       | feature | git stash pop        |
     And my repo is left with my original commits
 
-  Scenario: run another command after manually aborting
+  Scenario: manually abort the rebase and run another command still shows warning about unfinished command
     When I run "git rebase --abort"
     And I run "git checkout feature"
     And I run "git stash pop"
@@ -81,7 +81,7 @@ Feature: warn user about previous operation
       |         | git checkout main              |
       | main    | git branch -D feature          |
 
-  Scenario: does not report unfinished state after abort
+  Scenario: abort and run another command
     When I run "git-town abort"
     And I run "git-town kill"
     Then it does not print "You have an unfinished `sync` command that ended on the `main` branch now."

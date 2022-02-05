@@ -37,7 +37,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
     And there is no rebase in progress anymore
     And my repo is left with my original commits
 
-  Scenario: continue without resolving the conflicts
+  Scenario: continue with unresolved conflict
     When I run "git-town continue"
     Then it runs no commands
     And it prints the error:
@@ -47,7 +47,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
     And my uncommitted file is stashed
     And my repo still has a rebase in progress
 
-  Scenario: continue after resolving the conflicts
+  Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then it runs the commands
@@ -64,7 +64,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       | BRANCH | NAME             | CONTENT          |
       | qa     | conflicting_file | resolved content |
 
-  Scenario: continue after resolving the conflicts and continuing the rebase
+  Scenario: resolve, finish the rebase, and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"

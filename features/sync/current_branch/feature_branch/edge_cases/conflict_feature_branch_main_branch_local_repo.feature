@@ -38,7 +38,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     And there is no merge in progress
     And my repo is left with my original commits
 
-  Scenario: continue without resolving the conflicts
+  Scenario: continue with unresolved conflict
     When I run "git-town continue"
     Then it runs no commands
     And it prints the error:
@@ -49,7 +49,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     And my uncommitted file is stashed
     And my repo still has a merge in progress
 
-  Scenario: continue after resolving the conflicts
+  Scenario: resolve the conflict and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
     Then it runs the commands
@@ -65,7 +65,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |
 
-  Scenario: continue after resolving the conflicts and comitting
+  Scenario: resolve, commit, and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git commit --no-edit"
     And I run "git-town continue"
