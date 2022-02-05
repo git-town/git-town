@@ -38,7 +38,7 @@ Feature: conflicts between the main branch and its tracking branch
     And there is no rebase in progress anymore
     And my repo is left with my original commits
 
-  Scenario: continue without resolving the conflicts
+  Scenario: continue with unresolved conflict
     When I run "git-town continue"
     Then it prints the error:
       """
@@ -47,7 +47,7 @@ Feature: conflicts between the main branch and its tracking branch
     And my uncommitted file is stashed
     And my repo still has a rebase in progress
 
-  Scenario: continue after resolving the conflicts but not finishing the rebase
+  Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then it runs the commands
@@ -70,7 +70,7 @@ Feature: conflicts between the main branch and its tracking branch
       | main   | conflicting_file | resolved content |
       | new    | conflicting_file | resolved content |
 
-  Scenario: continue after resolving the conflicts and finishing the rebase
+  Scenario: resolve, finish the rebase, and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"

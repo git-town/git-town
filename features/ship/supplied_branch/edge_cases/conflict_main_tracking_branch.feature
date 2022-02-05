@@ -40,7 +40,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And my repo is left with my original commits
     And Git Town still has the original branch hierarchy
 
-  Scenario: continue after resolving the conflicts
+  Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then it runs the commands
@@ -72,7 +72,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | BRANCH | PARENT |
       | other  | main   |
 
-  Scenario: continue after resolving the conflicts and continuing the rebase
+  Scenario: resolve, finish the rebase, and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
@@ -92,7 +92,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | other   | git stash pop                      |
     And I am now on the "other" branch
 
-  Scenario: undo after continue
+  Scenario: resolve, continue, and undo
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     And I run "git-town undo"

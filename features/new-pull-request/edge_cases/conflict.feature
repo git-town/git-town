@@ -38,7 +38,7 @@ Feature: merge conflict
     And there is no merge in progress
     And my repo is left with my original commits
 
-  Scenario: continue without resolving the conflicts
+  Scenario: continue with unresolved conflict
     When I run "git-town continue"
     Then it runs no commands
     And it prints the error:
@@ -49,7 +49,7 @@ Feature: merge conflict
     And my repo still has a merge in progress
 
   @skipWindows
-  Scenario: continue after resolving conflicts
+  Scenario: resolve and continue
     Given I resolve the conflict in "conflicting_file"
     When I run "git-town continue"
     Then it runs the commands
@@ -74,7 +74,7 @@ Feature: merge conflict
       | feature | conflicting_file | resolved content |
 
   @skipWindows
-  Scenario: continue after resolving conflicts and committing
+  Scenario: resolve, commit, and continue
     Given I resolve the conflict in "conflicting_file"
     When I run "git commit --no-edit"
     And I run "git-town continue"
