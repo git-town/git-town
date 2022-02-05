@@ -48,7 +48,7 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       | feature | local         | conflicting feature commit |
     And Git Town still has the original branch hierarchy
 
-  Scenario: resolve the conflict and continue
+  Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
     Then it runs the commands
@@ -75,7 +75,7 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       | BRANCH | PARENT |
       | other  | main   |
 
-  Scenario: resolve the conflict, commit, and continue
+  Scenario: resolve, commit, and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git commit --no-edit"
     And I run "git-town continue"
@@ -92,7 +92,7 @@ Feature: handle conflicts between the supplied feature branch and the main branc
     And I am now on the "other" branch
     And my workspace still contains my uncommitted file
 
-  Scenario: resolve the conflict, continue, and undo
+  Scenario: resolve, continue, and undo
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
     And I run "git-town undo"

@@ -34,7 +34,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And my repo is left with my original commits
     And Git Town still has the original branch hierarchy
 
-  Scenario: resolve the conflict and continue
+  Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then it runs the commands
@@ -61,7 +61,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       |        |               | feature done              |
     And Git Town now has no branch hierarchy information
 
-  Scenario: resolve the conflict, finish the rebase, and continue
+  Scenario: resolve, finish the rebase, and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"

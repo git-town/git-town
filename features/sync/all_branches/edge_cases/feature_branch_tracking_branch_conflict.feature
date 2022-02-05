@@ -108,7 +108,7 @@ Feature: handle merge conflicts between feature branches and their tracking bran
     And my uncommitted file is stashed
     And my repo still has a merge in progress
 
-  Scenario: resolve the conflict and continue
+  Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
     Then it runs the commands
@@ -137,7 +137,7 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       | gamma  | feature3_file    | gamma content    |
       |        | main_file        | main content     |
 
-  Scenario: resolve the conflict, commit, and continue
+  Scenario: resolve, commit, and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git commit --no-edit"
     And I run "git-town continue"

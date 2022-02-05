@@ -49,7 +49,7 @@ Feature: merge conflict
     And my repo still has a merge in progress
 
   @skipWindows
-  Scenario: resolve the conflict and continue
+  Scenario: resolve and continue
     Given I resolve the conflict in "conflicting_file"
     When I run "git-town continue"
     Then it runs the commands
@@ -74,7 +74,7 @@ Feature: merge conflict
       | feature | conflicting_file | resolved content |
 
   @skipWindows
-  Scenario: resolve the conflict, commit, and continue
+  Scenario: resolve, commit, and continue
     Given I resolve the conflict in "conflicting_file"
     When I run "git commit --no-edit"
     And I run "git-town continue"
