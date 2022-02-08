@@ -1,5 +1,5 @@
 @skipWindows
-Feature: ship a branch that exists only on the remote
+Feature: ship a branch that exists only on origin
 
   Background:
     Given my repo has a feature branch "other"

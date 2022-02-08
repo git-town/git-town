@@ -1,4 +1,4 @@
-Feature: sync the current feature branch (without a tracking branch or remote repo)
+Feature: sync the current feature branch (in a local repo)
 
   Background:
     Given my repo does not have an origin

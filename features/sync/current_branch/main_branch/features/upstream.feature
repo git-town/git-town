@@ -1,4 +1,4 @@
-Feature: on the main branch with a upstream remote
+Feature: on the main branch with an upstream repo
 
   Background:
     Given my repo has an upstream repo

@@ -1,4 +1,4 @@
-Feature: does not sync branches that exist only on the remote
+Feature: does not sync branches that exist only on remotes
 
   Background:
     Given my repo has a feature branch "mine"

@@ -9,7 +9,7 @@ Feature: sync all feature branches
       | alpha      | local, origin | alpha commit             |
       | beta       | local, origin | beta commit              |
       | production | local         | local production commit  |
-      |            | origin        | remote production commit |
+      |            | origin        | origin production commit |
       | qa         | local         | qa local commit          |
       |            | origin        | qa origin commit         |
     And I am on the "alpha" branch

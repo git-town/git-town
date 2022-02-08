@@ -1,4 +1,4 @@
-Feature: syncs all feature branches (without remote repo)
+Feature: syncs all feature branches (in a local repo)
 
   Background:
     Given my repo does not have an origin

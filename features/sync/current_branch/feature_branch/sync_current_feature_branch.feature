@@ -7,7 +7,7 @@ Feature: sync the current feature branch with a tracking branch
       | main    | local    | local main commit     |
       |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
-      |         | origin   | remote feature commit |
+      |         | origin   | origin feature commit |
     And I am on the "feature" branch
     When I run "git-town sync"
 
@@ -29,7 +29,7 @@ Feature: sync the current feature branch with a tracking branch
       | main    | local, origin | origin main commit                                         |
       |         |               | local main commit                                          |
       | feature | local, origin | local feature commit                                       |
-      |         |               | remote feature commit                                      |
+      |         |               | origin feature commit                                      |
       |         |               | Merge remote-tracking branch 'origin/feature' into feature |
       |         |               | origin main commit                                         |
       |         |               | local main commit                                          |

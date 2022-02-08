@@ -7,7 +7,7 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       | main   | origin        | main commit        | main_file        | main content        |
       | alpha  | local, origin | alpha commit       | feature1_file    | alpha content       |
       | beta   | local         | local beta commit  | conflicting_file | local beta content  |
-      |        | origin        | remote beta commit | conflicting_file | remote beta content |
+      |        | origin        | origin beta commit | conflicting_file | origin beta content |
       | gamma  | local, origin | gamma commit       | feature3_file    | gamma content       |
     And I am on the "main" branch
     And my workspace has an uncommitted file
@@ -53,7 +53,7 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       |        |               | main commit                    |
       |        |               | Merge branch 'main' into alpha |
       | beta   | local         | local beta commit              |
-      |        | origin        | remote beta commit             |
+      |        | origin        | origin beta commit             |
       | gamma  | local, origin | gamma commit                   |
     And my repo now has these committed files
       | BRANCH | NAME             | CONTENT            |
@@ -84,7 +84,7 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       |        |               | main commit                    |
       |        |               | Merge branch 'main' into alpha |
       | beta   | local         | local beta commit              |
-      |        | origin        | remote beta commit             |
+      |        | origin        | origin beta commit             |
       | gamma  | local, origin | gamma commit                   |
       |        |               | main commit                    |
       |        |               | Merge branch 'main' into gamma |

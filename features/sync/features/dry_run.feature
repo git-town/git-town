@@ -7,7 +7,7 @@ Feature: dry run
       | main    | local    | local main commit     |
       |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
-      |         | origin   | remote feature commit |
+      |         | origin   | origin feature commit |
     And I am on the "feature" branch
     When I run "git-town sync --dry-run"
 

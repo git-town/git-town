@@ -1,4 +1,4 @@
-Feature: handle conflicts between the current feature branch and the main branch (without remote repo)
+Feature: handle conflicts between the current feature branch and the main branch (in a local repo)
 
   Background:
     Given my repo does not have an origin

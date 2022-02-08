@@ -8,7 +8,7 @@ Feature: with pull-branch-strategy set to "merge"
       | main    | local    | local main commit     |
       |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
-      |         | origin   | remote feature commit |
+      |         | origin   | origin feature commit |
     And I am on the "feature" branch
     When I run "git-town sync"
 
@@ -31,7 +31,7 @@ Feature: with pull-branch-strategy set to "merge"
       |         |               | origin main commit                                         |
       |         |               | Merge remote-tracking branch 'origin/main'                 |
       | feature | local, origin | local feature commit                                       |
-      |         |               | remote feature commit                                      |
+      |         |               | origin feature commit                                      |
       |         |               | Merge remote-tracking branch 'origin/feature' into feature |
       |         |               | local main commit                                          |
       |         |               | origin main commit                                         |

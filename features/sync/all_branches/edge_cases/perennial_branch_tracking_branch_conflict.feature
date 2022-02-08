@@ -7,7 +7,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       | main   | origin        | main commit        | main_file        | main content        |
       | alpha  | local, origin | alpha commit       | alpha_file       | alpha content       |
       | beta   | local         | local beta commit  | conflicting_file | local beta content  |
-      |        | origin        | remote beta commit | conflicting_file | remote beta content |
+      |        | origin        | origin beta commit | conflicting_file | origin beta content |
       | gamma  | local, origin | gamma commit       | gamma_file       | gamma content       |
     And I am on the "main" branch
     And my workspace has an uncommitted file
@@ -49,7 +49,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       | main   | local, origin | main commit        |
       | alpha  | local, origin | alpha commit       |
       | beta   | local         | local beta commit  |
-      |        | origin        | remote beta commit |
+      |        | origin        | origin beta commit |
       | gamma  | local, origin | gamma commit       |
 
   Scenario: skip
@@ -69,7 +69,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       | main   | local, origin | main commit        |
       | alpha  | local, origin | alpha commit       |
       | beta   | local         | local beta commit  |
-      |        | origin        | remote beta commit |
+      |        | origin        | origin beta commit |
       | gamma  | local, origin | gamma commit       |
 
   Scenario: continue with unresolved conflict

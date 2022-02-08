@@ -1,4 +1,4 @@
-Feature: with upstream remote
+Feature: with upstream repo
 
   Background:
     Given my repo has an upstream repo
