@@ -43,7 +43,7 @@ Feature: sync before creating the pull request
       """
     And I am still on the "child" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                                                  |
       | main   | local, remote | remote main commit                                       |
       |        |               | local main commit                                        |

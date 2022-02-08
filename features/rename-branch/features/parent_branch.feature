@@ -20,7 +20,7 @@ Feature: rename a parent branch
       |        | git push origin :parent  |
       |        | git branch -D parent     |
     And I am now on the "new" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE       |
       | child  | local, remote | child commit  |
       | new    | local, remote | parent commit |

@@ -25,7 +25,7 @@ Feature: with pull-branch-strategy set to "merge"
       |         | git push                           |
     And all branches are now synchronized
     And I am still on the "feature" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                                                    |
       | main    | local, remote | local main commit                                          |
       |         |               | remote main commit                                         |

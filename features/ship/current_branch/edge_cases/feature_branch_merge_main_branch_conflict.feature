@@ -36,7 +36,7 @@ Feature: handle conflicts between the shipped branch and the main branch
       | main    | git checkout feature |
     And I am still on the "feature" branch
     And there is no merge in progress
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local, remote | conflicting main commit    | conflicting_file | main content    |
       | feature | local         | conflicting feature commit | conflicting_file | feature content |
@@ -58,7 +58,7 @@ Feature: handle conflicts between the shipped branch and the main branch
     And the existing branches are
       | REPOSITORY    | BRANCHES |
       | local, remote | main     |
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                 | FILE NAME        | FILE CONTENT     |
       | main   | local, remote | conflicting main commit | conflicting_file | main content     |
       |        |               | feature done            | conflicting_file | resolved content |

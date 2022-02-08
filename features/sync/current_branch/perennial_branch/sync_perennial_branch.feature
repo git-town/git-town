@@ -19,7 +19,7 @@ Feature: sync the current perennial branch
       |        | git push --tags          |
     And all branches are now synchronized
     And I am still on the "qa" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, remote | main commit   |
       | qa     | local, remote | remote commit |

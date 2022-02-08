@@ -58,7 +58,7 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
     And there is no merge in progress
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION | MESSAGE                        |
       | main   | local    | main commit                    |
       | alpha  | local    | alpha commit                   |

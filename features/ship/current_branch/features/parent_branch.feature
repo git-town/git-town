@@ -25,7 +25,7 @@ Feature: ship a parent branch
       |        | git push                          |
       |        | git branch -D parent              |
     And I am now on the "main" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, remote | parent done   |
       | child  | local, remote | child commit  |
@@ -45,7 +45,7 @@ Feature: ship a parent branch
       | parent | git checkout main                           |
       | main   | git checkout parent                         |
     And I am now on the "parent" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, remote | parent done          |
       |        |               | Revert "parent done" |

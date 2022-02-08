@@ -47,7 +47,7 @@ Feature: handle merge conflicts between feature branch and main branch
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
     And there is no merge in progress
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                        |
       | main   | local, remote | main commit                    |
       | alpha  | local, remote | alpha commit                   |
@@ -78,7 +78,7 @@ Feature: handle merge conflicts between feature branch and main branch
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
     And there is no merge in progress
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                        |
       | main   | local, remote | main commit                    |
       | alpha  | local, remote | alpha commit                   |

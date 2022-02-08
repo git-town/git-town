@@ -30,7 +30,7 @@ Feature: skip deleting the remote branch when shipping another branch
     And the existing branches are
       | REPOSITORY    | BRANCHES    |
       | local, remote | main, other |
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, remote | feature done |
       | other  | local         | other commit |
@@ -50,7 +50,7 @@ Feature: skip deleting the remote branch when shipping another branch
       | feature | git checkout main                             |
       | main    | git checkout other                            |
     And I am now on the "other" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, remote | feature done          |
       |         |               | Revert "feature done" |

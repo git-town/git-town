@@ -17,7 +17,7 @@ Feature: auto-push the new branch to the remote
       |        | git checkout new         |
       | new    | git push -u origin new   |
     And I am now on the "new" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, remote | main commit |
       | new    | local, remote | main commit |
@@ -33,7 +33,7 @@ Feature: auto-push the new branch to the remote
       |        | git checkout main    |
       | main   | git branch -d new    |
     And I am now on the "main" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, remote | main commit |
     And Git Town is now aware of no branch hierarchy

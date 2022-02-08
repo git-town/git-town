@@ -17,7 +17,7 @@ Feature: offline mode
       |        | git checkout new   |
       | new    | git branch -D old  |
     And I am now on the "new" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, remote | main commit |
       | new    | local         | old commit  |

@@ -21,7 +21,7 @@ Feature: the branch to kill has a deleted tracking branch
       | main   | git branch -D old          |
     And I am now on the "main" branch
     And my repo doesn't have any uncommitted files
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      |
       | other  | local, remote | other commit |
     And the existing branches are
@@ -39,7 +39,7 @@ Feature: the branch to kill has a deleted tracking branch
       |        | git checkout old                      |
       | old    | git reset {{ sha 'old commit' }}      |
     And I am now on the "old" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      |
       | old    | local         | old commit   |
       | other  | local, remote | other commit |

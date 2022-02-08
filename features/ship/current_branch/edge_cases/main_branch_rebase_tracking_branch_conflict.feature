@@ -54,7 +54,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And the existing branches are
       | REPOSITORY    | BRANCHES |
       | local, remote | main     |
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                   |
       | main   | local, remote | conflicting remote commit |
       |        |               | conflicting local commit  |

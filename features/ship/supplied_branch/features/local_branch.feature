@@ -33,7 +33,7 @@ Feature: ship the supplied feature branch without a tracking branch
     And the existing branches are
       | REPOSITORY    | BRANCHES    |
       | local, remote | main, other |
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, remote | feature done |
     And Git Town is now aware of this branch hierarchy
@@ -56,7 +56,7 @@ Feature: ship the supplied feature branch without a tracking branch
       | main    | git checkout other                            |
       | other   | git stash pop                                 |
     And I am now on the "other" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, remote | feature done          |
       |         |               | Revert "feature done" |

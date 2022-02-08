@@ -37,7 +37,7 @@ Feature: ship a branch that exists only on the remote
     And the existing branches are
       | REPOSITORY    | BRANCHES    |
       | local, remote | main, other |
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, remote | feature done |
     And Git Town is now aware of this branch hierarchy
@@ -60,7 +60,7 @@ Feature: ship a branch that exists only on the remote
       | main    | git checkout other                            |
       | other   | git stash pop                                 |
     And I am now on the "other" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, remote | feature done          |
       |         |               | Revert "feature done" |

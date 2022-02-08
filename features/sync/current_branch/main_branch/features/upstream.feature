@@ -19,7 +19,7 @@ Feature: on the main branch with a upstream remote
       |        | git push --tags          |
     And all branches are now synchronized
     And I am still on the "main" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION                | MESSAGE         |
       | main   | local, remote, upstream | upstream commit |
 
@@ -40,7 +40,7 @@ Feature: on the main branch with a upstream remote
       |        | git push --tags          |
     And all branches are now synchronized
     And I am still on the "main" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE         |
       | main   | local, remote | remote commit   |
       |        |               | local commit    |

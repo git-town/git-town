@@ -28,7 +28,7 @@ Feature: ship the supplied feature branch without a remote origin
     And the existing branches are
       | REPOSITORY | BRANCHES    |
       | local      | main, other |
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION | MESSAGE      |
       | main   | local    | feature done |
     And Git Town is now aware of this branch hierarchy
@@ -48,7 +48,7 @@ Feature: ship the supplied feature branch without a remote origin
       | feature | git checkout other                            |
       | other   | git stash pop                                 |
     And I am now on the "other" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH  | LOCATION | MESSAGE               |
       | main    | local    | feature done          |
       |         |          | Revert "feature done" |

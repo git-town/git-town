@@ -73,7 +73,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
     And I am still on the "current" branch
     And my workspace has the uncommitted file again
     And there is no merge in progress
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, remote | conflicting main commit          |
       | current | local, remote | conflicting current commit       |

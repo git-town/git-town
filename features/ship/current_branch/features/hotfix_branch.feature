@@ -28,7 +28,7 @@ Feature: ship hotfixes
     And the existing branches are
       | REPOSITORY    | BRANCHES         |
       | local, remote | main, production |
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH     | LOCATION      | MESSAGE     |
       | production | local, remote | hotfix done |
     And Git Town is now aware of no branch hierarchy
@@ -45,7 +45,7 @@ Feature: ship hotfixes
       | hotfix     | git checkout production                     |
       | production | git checkout hotfix                         |
     And I am now on the "hotfix" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH     | LOCATION      | MESSAGE              |
       | hotfix     | local, remote | hotfix commit        |
       | production | local, remote | hotfix done          |

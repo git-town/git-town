@@ -22,7 +22,7 @@ Feature: prepend a branch to a feature branch
       | parent | git stash pop            |
     And I am now on the "parent" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, remote | old commit |
     And Git Town is now aware of this branch hierarchy

@@ -54,7 +54,7 @@ Feature: handle conflicts between the shipped branch and its tracking branch
     And the existing branches are
       | REPOSITORY    | BRANCHES |
       | local, remote | main     |
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME        |
       | main   | local, remote | feature done | conflicting_file |
     And Git Town is now aware of no branch hierarchy

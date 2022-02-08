@@ -24,7 +24,7 @@ Feature: sync the current feature branch with a tracking branch
       |         | git push                           |
     And all branches are now synchronized
     And I am still on the "feature" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                                                    |
       | main    | local, remote | remote main commit                                         |
       |         |               | local main commit                                          |

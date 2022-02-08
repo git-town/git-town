@@ -23,7 +23,7 @@ Feature: local branch
     And the existing branches are
       | REPOSITORY | BRANCHES    |
       | local      | main, other |
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION | MESSAGE      |
       | other  | local    | other commit |
     And Git Town is now aware of this branch hierarchy

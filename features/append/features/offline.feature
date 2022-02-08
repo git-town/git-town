@@ -20,7 +20,7 @@ Feature: append in offline mode
       |          | git branch new existing             |
       |          | git checkout new                    |
     And I am now on the "new" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, remote | existing commit |
       | new      | local         | existing commit |

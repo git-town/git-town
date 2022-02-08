@@ -24,7 +24,7 @@ Feature: on a forked repo
       | new    | git stash pop            |
     And I am now on the "new" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION                | MESSAGE         |
       | main   | local, remote, upstream | upstream commit |
       | new    | local                   | upstream commit |
@@ -39,7 +39,7 @@ Feature: on a forked repo
       | main   | git branch -d new |
       |        | git stash pop     |
     And I am now on the "main" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION                | MESSAGE         |
       | main   | local, remote, upstream | upstream commit |
     And Git Town is now aware of no branch hierarchy

@@ -41,7 +41,7 @@ Feature: does not ship empty feature branches
       nothing to undo
       """
     And I am still on the "other" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE        |
       | main   | local, remote | main commit    |
       | empty  | local         | feature commit |

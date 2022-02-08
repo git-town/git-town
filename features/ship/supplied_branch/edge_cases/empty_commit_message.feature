@@ -48,7 +48,7 @@ Feature: abort the ship via empty commit message
       nothing to undo
       """
     And I am still on the "other" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE        |
       | main    | local, remote | main commit    |
       | feature | local         | feature commit |

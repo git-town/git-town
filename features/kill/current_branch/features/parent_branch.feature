@@ -27,7 +27,7 @@ Feature: delete a branch within a branch chain
     And the existing branches are
       | REPOSITORY    | BRANCHES           |
       | local, remote | main, alpha, gamma |
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, remote | alpha commit |
       | gamma  | local, remote | gamma commit |

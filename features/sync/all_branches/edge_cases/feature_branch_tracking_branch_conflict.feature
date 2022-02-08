@@ -46,7 +46,7 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       | main   | git stash pop      |
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                        |
       | main   | local, remote | main commit                    |
       | alpha  | local, remote | alpha commit                   |
@@ -77,7 +77,7 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       |        | git stash pop                    |
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                        |
       | main   | local, remote | main commit                    |
       | alpha  | local, remote | alpha commit                   |

@@ -19,7 +19,7 @@ Feature: auto-push new branches
       |        | git checkout new         |
       | new    | git push -u origin new   |
     And I am now on the "new" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE        |
       | old    | local, remote | feature commit |
     And Git Town is now aware of this branch hierarchy

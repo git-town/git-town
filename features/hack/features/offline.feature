@@ -19,7 +19,7 @@ Feature: offline mode
       | new    | git stash pop          |
     And I am now on the "new" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, remote | main commit |
       | new    | local         | main commit |

@@ -19,7 +19,7 @@ Feature: rename the current branch
       |        | git push origin :old     |
       |        | git branch -D old        |
     And I am now on the "new" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, remote | main commit |
       | new    | local, remote | old commit  |

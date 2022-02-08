@@ -25,7 +25,7 @@ Feature: append a new feature branch to an existing feature branch
       | new      | git stash pop                       |
     And I am now on the "new" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, remote | existing commit |
       | new      | local         | existing commit |

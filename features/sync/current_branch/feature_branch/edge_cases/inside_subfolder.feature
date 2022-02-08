@@ -33,7 +33,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
     And all branches are now synchronized
     And I am still on the "alpha" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                        |
       | main   | local, remote | main commit                    |
       | alpha  | local, remote | folder commit                  |

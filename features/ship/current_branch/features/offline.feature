@@ -22,7 +22,7 @@ Feature: offline mode
       |         | git commit -m "feature done"       |
       |         | git branch -D feature              |
     And I am now on the "main" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH  | LOCATION | MESSAGE        |
       | main    | local    | feature done   |
       | feature | remote   | feature commit |

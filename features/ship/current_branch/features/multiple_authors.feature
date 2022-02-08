@@ -14,7 +14,7 @@ Feature: ship a coworker's feature branch
     When I run "git-town ship -m 'feature done'" and answer the prompts:
       | PROMPT                                        | ANSWER  |
       | Please choose an author for the squash commit | [ENTER] |
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      | AUTHOR                            |
       | main   | local, remote | feature done | developer <developer@example.com> |
     And Git Town is now aware of no branch hierarchy
@@ -23,7 +23,7 @@ Feature: ship a coworker's feature branch
     When I run "git-town ship -m 'feature done'" and answer the prompts:
       | PROMPT                                        | ANSWER        |
       | Please choose an author for the squash commit | [DOWN][ENTER] |
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      | AUTHOR                          |
       | main   | local, remote | feature done | coworker <coworker@example.com> |
     And Git Town is now aware of no branch hierarchy
@@ -43,7 +43,7 @@ Feature: ship a coworker's feature branch
       | feature | git checkout main                              |
       | main    | git checkout feature                           |
     And I am now on the "feature" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, remote | feature done          |
       |         |               | Revert "feature done" |

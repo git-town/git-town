@@ -29,7 +29,7 @@ Feature: rename a perennial branch
       |            | git branch -D production    |
     And I am now on the "new" branch
     And the perennial branches are now "new"
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE           |
       | hotfix | local, remote | hotfix commit     |
       | new    | local, remote | production commit |

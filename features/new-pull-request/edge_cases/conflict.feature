@@ -62,7 +62,7 @@ Feature: merge conflict
       https://github.com/git-town/git-town/compare/feature?expand=1
       """
     And I am still on the "feature" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, remote | main commit                      |
       | feature | local, remote | feature commit                   |
