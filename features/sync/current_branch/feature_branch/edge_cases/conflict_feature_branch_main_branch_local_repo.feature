@@ -1,7 +1,7 @@
 Feature: handle conflicts between the current feature branch and the main branch (without remote repo)
 
   Background:
-    Given my repo does not have a remote origin
+    Given my repo does not have an origin remote
     And my repo has a local feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |

@@ -2,7 +2,7 @@ Feature: ship a feature branch in a local repo
 
   Background:
     Given my repo has a feature branch "feature"
-    And my repo does not have a remote origin
+    And my repo does not have an origin remote
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | local    | feature commit |

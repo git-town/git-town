@@ -1,7 +1,7 @@
 Feature: sync the main branch in a local repo
 
   Background:
-    Given my repo does not have a remote origin
+    Given my repo does not have an origin remote
     And I am on the "main" branch
     And the commits
       | BRANCH | LOCATION | MESSAGE      | FILE NAME  |

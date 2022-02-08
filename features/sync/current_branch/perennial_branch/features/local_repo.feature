@@ -1,7 +1,7 @@
 Feature: sync the current perennial branch (without remote repo)
 
   Background:
-    Given my repo does not have a remote origin
+    Given my repo does not have an origin remote
     And my repo has the local perennial branches "production" and "qa"
     And the commits
       | BRANCH | LOCATION | MESSAGE      | FILE NAME  |

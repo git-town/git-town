@@ -1,7 +1,7 @@
 Feature: sync the current feature branch (without a tracking branch or remote repo)
 
   Background:
-    Given my repo does not have a remote origin
+    Given my repo does not have an origin remote
     And my repo has a local feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
