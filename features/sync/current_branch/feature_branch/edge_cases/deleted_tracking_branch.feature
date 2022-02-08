@@ -5,7 +5,7 @@ Feature: restores deleted tracking branch
     And my repo contains the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
-    And the "feature" branch gets deleted at origin
+    And origin deletes the "feature" branch
     And I am on the "feature" branch
     When I run "git-town sync"
 

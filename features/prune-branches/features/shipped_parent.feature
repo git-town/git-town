@@ -7,7 +7,7 @@ Feature: a parent branch of a local branch was shipped
       | BRANCH | LOCATION      | MESSAGE       |
       | parent | local, origin | parent commit |
       | child  | local, origin | child commit  |
-    And the "parent" branch gets deleted at origin
+    And origin deletes the "parent" branch
     And I am on the "main" branch
     When I run "git-town prune-branches"
 

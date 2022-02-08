@@ -6,7 +6,7 @@ Feature: the branch to kill has a deleted tracking branch
       | BRANCH | LOCATION      | MESSAGE      |
       | old    | local, origin | old commit   |
       | other  | local, origin | other commit |
-    And the "old" branch gets deleted at origin
+    And origin deletes the "old" branch
     And I am on the "old" branch
     And my workspace has an uncommitted file
     When I run "git-town kill"

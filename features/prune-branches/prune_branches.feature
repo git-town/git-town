@@ -6,7 +6,7 @@ Feature: delete branches that were shipped or removed on another machine
       | BRANCH | LOCATION      | MESSAGE       |
       | active | local, origin | active commit |
       | old    | local, origin | old commit    |
-    And the "old" branch gets deleted at origin
+    And origin deletes the "old" branch
     And I am on the "old" branch
     And my workspace has an uncommitted file
     When I run "git-town prune-branches"

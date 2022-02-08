@@ -6,7 +6,7 @@ Feature: remove perennial branch configuration when pruning a perennial branch
       | BRANCH | LOCATION      | MESSAGE       |
       | active | local, origin | active commit |
       | old    | local, origin | old commit    |
-    And the "old" branch gets deleted at origin
+    And origin deletes the "old" branch
     And I am on the "old" branch
     When I run "git-town prune-branches"
 
