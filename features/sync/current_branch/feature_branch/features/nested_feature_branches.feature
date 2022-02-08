@@ -10,7 +10,7 @@ Feature: nested feature branches
       | parent | local    | local parent commit  |
       |        | origin   | origin parent commit |
       | child  | local    | local child commit   |
-      |        | origin   | remote child commit  |
+      |        | origin   | origin child commit  |
     And I am on the "child" branch
     When I run "git-town sync"
     Then it runs the commands
@@ -34,7 +34,7 @@ Feature: nested feature branches
       | main   | local, origin | origin main commit                                       |
       |        |               | local main commit                                        |
       | child  | local, origin | local child commit                                       |
-      |        |               | remote child commit                                      |
+      |        |               | origin child commit                                      |
       |        |               | Merge remote-tracking branch 'origin/child' into child   |
       |        |               | local parent commit                                      |
       |        |               | origin parent commit                                     |

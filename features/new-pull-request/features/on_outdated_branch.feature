@@ -11,7 +11,7 @@ Feature: sync before creating the pull request
       | parent | local    | local parent commit  |
       |        | origin   | origin parent commit |
       | child  | local    | local child commit   |
-      |        | origin   | remote child commit  |
+      |        | origin   | origin child commit  |
     And my computer has the "open" tool installed
     And my repo's origin is "git@github.com:git-town/git-town.git"
     And I am on the "child" branch
@@ -48,7 +48,7 @@ Feature: sync before creating the pull request
       | main   | local, origin | origin main commit                                       |
       |        |               | local main commit                                        |
       | child  | local, origin | local child commit                                       |
-      |        |               | remote child commit                                      |
+      |        |               | origin child commit                                      |
       |        |               | Merge remote-tracking branch 'origin/child' into child   |
       |        |               | local parent commit                                      |
       |        |               | origin parent commit                                     |
