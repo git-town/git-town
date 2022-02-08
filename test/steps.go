@@ -841,7 +841,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return err
 	})
 
-	suite.Step(`^the new-branch-push-flag configuration is now (true|false)$`, func(text string) error {
+	suite.Step(`^the new-branch-push-flag configuration is now "(true|false)"$`, func(text string) error {
 		want, err := strconv.ParseBool(text)
 		if err != nil {
 			return err
