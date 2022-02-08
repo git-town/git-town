@@ -9,7 +9,7 @@ Feature: sync before creating the pull request
       | main   | local    | local main commit    |
       |        | origin   | origin main commit   |
       | parent | local    | local parent commit  |
-      |        | origin   | remote parent commit |
+      |        | origin   | origin parent commit |
       | child  | local    | local child commit   |
       |        | origin   | remote child commit  |
     And my computer has the "open" tool installed
@@ -51,14 +51,14 @@ Feature: sync before creating the pull request
       |        |               | remote child commit                                      |
       |        |               | Merge remote-tracking branch 'origin/child' into child   |
       |        |               | local parent commit                                      |
-      |        |               | remote parent commit                                     |
+      |        |               | origin parent commit                                     |
       |        |               | Merge remote-tracking branch 'origin/parent' into parent |
       |        |               | origin main commit                                       |
       |        |               | local main commit                                        |
       |        |               | Merge branch 'main' into parent                          |
       |        |               | Merge branch 'parent' into child                         |
       | parent | local, origin | local parent commit                                      |
-      |        |               | remote parent commit                                     |
+      |        |               | origin parent commit                                     |
       |        |               | Merge remote-tracking branch 'origin/parent' into parent |
       |        |               | origin main commit                                       |
       |        |               | local main commit                                        |
