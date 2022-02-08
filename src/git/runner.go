@@ -635,7 +635,7 @@ func (r *Runner) HasRebaseInProgress() (bool, error) {
 	return false, nil
 }
 
-// HasRemote indicates whether this repo has an origin remote.
+// HasOrigin indicates whether this repo has an origin remote.
 func (r *Runner) HasOrigin() (result bool, err error) {
 	return r.HasRemote("origin")
 }
