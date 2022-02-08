@@ -424,8 +424,8 @@ func (c *Config) ShouldNewBranchPushGlobal() bool {
 	return config == "true"
 }
 
-// ShouldShipDeleteRemoteBranch indicates whether to delete the remote branch after shipping.
-func (c *Config) ShouldShipDeleteRemoteBranch() bool {
+// ShouldShipDeleteOriginBranch indicates whether to delete the remote branch after shipping.
+func (c *Config) ShouldShipDeleteOriginBranch() bool {
 	setting := c.localOrGlobalConfigValue("git-town.ship-delete-remote-branch")
 	if setting == "" {
 		return true

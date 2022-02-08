@@ -40,12 +40,12 @@ Squash-merges the current branch, or <branch_name> if given,
 into the main branch, resulting in linear history on the main branch.
 
 - syncs the main branch
-- pulls remote updates for <branch_name>
+- pulls updates for <branch_name>
 - merges the main branch into <branch_name>
 - squash-merges <branch_name> into the main branch
   with commit message specified by the user
-- pushes the main branch to the remote repository
-- deletes <branch_name> from the local and remote repositories
+- pushes the main branch to the origin repository
+- deletes <branch_name> from the local and origin repositories
 
 Ships direct children of the main branch.
 To ship a nested child branch, ship or kill all ancestor branches first.
@@ -144,7 +144,7 @@ func gitShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (re
 	result.defaultCommitMessage = prInfo.DefaultCommitMessage
 	result.pullRequestNumber = prInfo.PullRequestNumber
 	result.childBranches = repo.Config.ChildBranches(result.branchToShip)
-	result.deleteOriginBranch = prodRepo.Config.ShouldShipDeleteRemoteBranch()
+	result.deleteOriginBranch = prodRepo.Config.ShouldShipDeleteOriginBranch()
 	return result, err
 }
 
