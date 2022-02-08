@@ -5,7 +5,7 @@ Feature: sync the main branch
     And the commits
       | LOCATION | MESSAGE       | FILE NAME   |
       | local    | local commit  | local_file  |
-      | origin   | remote commit | remote_file |
+      | origin   | origin commit | origin_file |
     And my workspace has an uncommitted file
     When I run "git-town sync"
 
@@ -24,5 +24,5 @@ Feature: sync the main branch
     And all branches are now synchronized
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE       |
-      | main   | local, origin | remote commit |
+      | main   | local, origin | origin commit |
       |        |               | local commit  |

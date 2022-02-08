@@ -11,7 +11,7 @@ Feature: sync all feature branches
       | production | local         | local production commit  |
       |            | origin        | remote production commit |
       | qa         | local         | qa local commit          |
-      |            | origin        | qa remote commit         |
+      |            | origin        | qa origin commit         |
     And I am on the "alpha" branch
     When I run "git-town sync --all"
 

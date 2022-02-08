@@ -27,7 +27,7 @@ Feature: on the main branch with a upstream remote
     Given the commits
       | BRANCH | LOCATION | MESSAGE         |
       | main   | local    | local commit    |
-      |        | origin   | remote commit   |
+      |        | origin   | origin commit   |
       |        | upstream | upstream commit |
     And I am on the "main" branch
     And Git Town's local "sync-upstream" setting is false
@@ -42,6 +42,6 @@ Feature: on the main branch with a upstream remote
     And I am still on the "main" branch
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE         |
-      | main   | local, origin | remote commit   |
+      | main   | local, origin | origin commit   |
       |        |               | local commit    |
       |        | upstream      | upstream commit |

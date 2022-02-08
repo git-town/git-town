@@ -7,7 +7,7 @@ Feature: handle merge conflicts between feature branch and main branch
       | main   | origin        | main commit        | conflicting_file     | main content        |
       | alpha  | local, origin | alpha commit       | feature1_file        | alpha content       |
       | beta   | local         | local beta commit  | conflicting_file     | local beta content  |
-      |        | origin        | remote beta commit | feature2_remote_file | remote beta content |
+      |        | origin        | remote beta commit | feature2_origin_file | remote beta content |
       | gamma  | origin        | gamma commit       | feature3_file        | gamma content       |
     And I am on the "main" branch
     And my workspace has an uncommitted file
@@ -136,7 +136,7 @@ Feature: handle merge conflicts between feature branch and main branch
       | alpha  | conflicting_file     | main content        |
       |        | feature1_file        | alpha content       |
       | beta   | conflicting_file     | resolved content    |
-      |        | feature2_remote_file | remote beta content |
+      |        | feature2_origin_file | remote beta content |
       | gamma  | conflicting_file     | main content        |
       |        | feature3_file        | gamma content       |
 
