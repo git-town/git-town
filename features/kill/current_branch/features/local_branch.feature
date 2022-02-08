@@ -2,7 +2,7 @@ Feature: delete a local branch
 
   Background:
     And my repo has a local feature branch "local"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION | MESSAGE      |
       | local  | local    | local commit |
     And I am on the "local" branch

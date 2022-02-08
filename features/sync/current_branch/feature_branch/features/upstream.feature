@@ -3,7 +3,7 @@ Feature: with upstream repo
   Background:
     Given my repo has an upstream repo
     And my repo has a feature branch "feature"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION | MESSAGE         |
       | main    | upstream | upstream commit |
       | feature | local    | local commit    |

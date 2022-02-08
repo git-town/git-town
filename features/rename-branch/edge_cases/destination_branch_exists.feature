@@ -2,7 +2,7 @@ Feature: destination branch exists
 
   Scenario: destination branch exists locally
     Given my repo has the feature branches "alpha" and "beta"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, origin | alpha commit |
       | beta   | local, origin | beta commit  |
@@ -21,7 +21,7 @@ Feature: destination branch exists
   Scenario: destination branch exists in origin
     Given my repo has a feature branch "alpha"
     And the origin has a feature branch "beta"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, origin | alpha commit |
       | beta   | origin        | beta commit  |

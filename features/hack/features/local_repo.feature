@@ -3,7 +3,7 @@ Feature: local repo
   Background:
     Given my repo has a feature branch "existing"
     And my repo does not have an origin
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION | MESSAGE     |
       | main   | local    | main commit |
     And I am on the "existing" branch

@@ -2,7 +2,7 @@ Feature: rename the current branch
 
   Background:
     Given my repo has a feature branch "old"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
       | old    | local, origin | old commit  |

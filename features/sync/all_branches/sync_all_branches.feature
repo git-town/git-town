@@ -3,7 +3,7 @@ Feature: sync all feature branches
   Background:
     Given my repo has the feature branches "alpha" and "beta"
     And my repo has the perennial branches "production" and "qa"
-    And my repo contains the commits
+    And the commits
       | BRANCH     | LOCATION      | MESSAGE                  |
       | main       | origin        | main commit              |
       | alpha      | local, origin | alpha commit             |

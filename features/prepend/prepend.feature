@@ -2,7 +2,7 @@ Feature: prepend a branch to a feature branch
 
   Background:
     Given my repo has a feature branch "old"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
     And I am on the "old" branch

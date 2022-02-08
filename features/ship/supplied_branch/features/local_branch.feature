@@ -2,7 +2,7 @@ Feature: ship the supplied feature branch without a tracking branch
 
   Background:
     Given my repo has the feature branches "feature" and "other"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME        |
       | feature | local    | feature commit | conflicting_file |
     And I am on the "other" branch

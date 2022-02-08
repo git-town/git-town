@@ -1,7 +1,7 @@
 Feature: branch does not exist
 
   Scenario:
-    Given my repo contains the commits
+    Given the commits
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
     And I am on the "main" branch

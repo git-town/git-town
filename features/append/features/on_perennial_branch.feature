@@ -2,7 +2,7 @@ Feature: append to a perennial branch
 
   Background:
     Given my repo has the perennial branches "qa" and "production"
-    And my repo contains the commits
+    And the commits
       | BRANCH     | LOCATION | MESSAGE           |
       | production | origin   | production commit |
     And I am on the "production" branch

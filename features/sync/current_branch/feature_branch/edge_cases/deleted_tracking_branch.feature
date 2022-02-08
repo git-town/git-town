@@ -2,7 +2,7 @@ Feature: restores deleted tracking branch
 
   Background:
     Given my repo has a feature branch "feature"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
     And origin deletes the "feature" branch

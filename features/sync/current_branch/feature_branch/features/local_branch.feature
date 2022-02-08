@@ -2,7 +2,7 @@ Feature: sync the current feature branch without a tracking branch
 
   Background:
     Given my repo has a local feature branch "feature"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION | MESSAGE              |
       | main    | local    | local main commit    |
       |         | origin   | origin main commit   |

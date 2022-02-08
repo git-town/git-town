@@ -4,7 +4,7 @@ Feature: delete a parent branch
     Given my repo has a feature branch "alpha"
     And my repo has a feature branch "beta" as a child of "alpha"
     And my repo has a feature branch "gamma" as a child of "beta"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, origin | alpha commit |
       | beta   | local, origin | beta commit  |

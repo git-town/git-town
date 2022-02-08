@@ -2,7 +2,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
 
   Background:
     Given my repo has the perennial branches "alpha", "beta", and "gamma"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION      | MESSAGE            | FILE NAME        | FILE CONTENT        |
       | main   | origin        | main commit        | main_file        | main content        |
       | alpha  | local, origin | alpha commit       | alpha_file       | alpha content       |

@@ -2,7 +2,7 @@ Feature: remove perennial branch configuration when pruning a perennial branch
 
   Background:
     Given my repo has the perennial branches "active" and "old"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION      | MESSAGE       |
       | active | local, origin | active commit |
       | old    | local, origin | old commit    |

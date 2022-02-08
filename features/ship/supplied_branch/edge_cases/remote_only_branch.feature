@@ -4,7 +4,7 @@ Feature: ship a branch that exists only on origin
   Background:
     Given my repo has a feature branch "other"
     And the origin has a feature branch "feature"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME        |
       | feature | origin   | feature commit | conflicting_file |
     And I am on the "other" branch

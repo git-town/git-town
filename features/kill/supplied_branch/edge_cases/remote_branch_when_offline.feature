@@ -3,7 +3,7 @@ Feature: does not kill a remote branch in offline mode
   Background:
     Given Git Town is in offline mode
     And the origin has a feature branch "feature"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | origin   | feature commit |
     And my repo knows about the remote branch
