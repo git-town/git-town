@@ -2,7 +2,7 @@ Feature: handle conflicts between the main branch and its tracking branch
 
   Background:
     Given my repo has the feature branches "feature" and "other"
-    And the commits
+    And my repo contains the commits
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting local commit  | conflicting_file | local content   |
       |         | origin   | conflicting origin commit | conflicting_file | origin content  |

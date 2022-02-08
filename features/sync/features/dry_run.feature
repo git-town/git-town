@@ -2,7 +2,7 @@ Feature: dry run
 
   Background:
     Given my repo has a feature branch "feature"
-    And the commits
+    And my repo contains the commits
       | BRANCH  | LOCATION | MESSAGE               |
       | main    | local    | local main commit     |
       |         | origin   | origin main commit    |

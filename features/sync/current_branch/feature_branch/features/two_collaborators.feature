@@ -5,7 +5,7 @@ Feature: collaborative feature branch syncing
     And my repo has a feature branch "feature"
     And the coworker fetches updates
     And the coworker sets the parent branch of "feature" as "main"
-    And the commits
+    And my repo contains the commits
       | BRANCH  | LOCATION | MESSAGE         |
       | feature | local    | my commit       |
       |         | coworker | coworker commit |

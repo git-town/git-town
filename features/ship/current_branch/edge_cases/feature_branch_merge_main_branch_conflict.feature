@@ -2,7 +2,7 @@ Feature: handle conflicts between the shipped branch and the main branch
 
   Background:
     Given my repo has a feature branch "feature"
-    And the commits
+    And my repo contains the commits
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |

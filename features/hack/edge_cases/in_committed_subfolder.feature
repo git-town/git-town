@@ -2,7 +2,7 @@ Feature: inside a committed subfolder that exists only on the current feature br
 
   Background:
     Given my repo has a feature branch "existing"
-    And the commits
+    And my repo contains the commits
       | BRANCH   | LOCATION      | MESSAGE       | FILE NAME        |
       | existing | local, origin | folder commit | new_folder/file1 |
     And I am on the "existing" branch

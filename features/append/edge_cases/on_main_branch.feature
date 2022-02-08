@@ -1,7 +1,7 @@
 Feature: on the main branch
 
   Background:
-    Given the commits
+    Given my repo contains the commits
       | BRANCH | LOCATION | MESSAGE     |
       | main   | origin   | main commit |
     And I am on the "main" branch

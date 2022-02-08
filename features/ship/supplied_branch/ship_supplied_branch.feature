@@ -2,7 +2,7 @@ Feature: ship the supplied feature branch
 
   Background:
     Given my repo has the feature branches "feature" and "other"
-    And the commits
+    And my repo contains the commits
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME        |
       | feature | local, origin | feature commit | conflicting_file |
     And I am on the "other" branch

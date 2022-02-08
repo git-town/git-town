@@ -807,7 +807,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the commits$`, func(table *messages.PickleStepArgument_PickleTable) error {
+	suite.Step(`^my repo contains the commits$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		state.initialCommits = table
 		commits, err := FromGherkinTable(table)
 		if err != nil {

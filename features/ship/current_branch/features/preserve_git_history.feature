@@ -4,7 +4,7 @@ Feature: preserve the previous Git branch
     Given my repo has the feature branches "previous" and "current"
 
   Scenario: current branch gone
-    And the commits
+    And my repo contains the commits
       | BRANCH  | LOCATION |
       | current | local    |
     And I am on the "current" branch with "previous" as the previous Git branch
@@ -13,7 +13,7 @@ Feature: preserve the previous Git branch
     And the previous Git branch is still "previous"
 
   Scenario: previous branch gone
-    Given the commits
+    Given my repo contains the commits
       | BRANCH   | LOCATION |
       | previous | local    |
     And I am on the "current" branch with "previous" as the previous Git branch
@@ -23,7 +23,7 @@ Feature: preserve the previous Git branch
 
   Scenario: both branches exist
     Given my repo has a feature branch "feature"
-    And the commits
+    And my repo contains the commits
       | BRANCH  | LOCATION |
       | feature | origin   |
     And I am on the "current" branch with "previous" as the previous Git branch

@@ -4,7 +4,7 @@ Feature: rename an unsynced branch
     Given my repo has a feature branch "old"
 
   Scenario: unpulled remote commits
-    Given the commits
+    Given my repo contains the commits
       | BRANCH | LOCATION | MESSAGE       |
       | old    | origin   | origin commit |
     And I am on the "old" branch
@@ -19,7 +19,7 @@ Feature: rename an unsynced branch
     And I am still on the "old" branch
 
   Scenario: unpushed local commits
-    Given the commits
+    Given my repo contains the commits
       | BRANCH | LOCATION | MESSAGE      |
       | old    | local    | local commit |
     And I am on the "old" branch

@@ -2,7 +2,7 @@ Feature: ship the current feature branch with a tracking branch
 
   Background:
     Given my repo has a feature branch "feature"
-    And the commits
+    And my repo contains the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
     And I am on the "feature" branch

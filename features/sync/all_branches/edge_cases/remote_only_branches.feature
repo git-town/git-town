@@ -3,7 +3,7 @@ Feature: does not sync branches that exist only on remotes
   Background:
     Given my repo has a feature branch "mine"
     And the origin has a feature branch "other"
-    And the commits
+    And my repo contains the commits
       | BRANCH | LOCATION      | MESSAGE         |
       | main   | origin        | main commit     |
       | mine   | local, origin | my commit       |

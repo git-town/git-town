@@ -2,7 +2,7 @@ Feature: inside an uncommitted subfolder on the current feature branch
 
   Background:
     Given my repo has a feature branch "existing"
-    And the commits
+    And my repo contains the commits
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
     And I am on the "existing" branch
