@@ -6,7 +6,7 @@ Feature: with pull-branch-strategy set to "merge"
     And the commits
       | BRANCH  | LOCATION | MESSAGE               |
       | main    | local    | local main commit     |
-      |         | origin   | remote main commit    |
+      |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
       |         | origin   | remote feature commit |
     And I am on the "feature" branch
@@ -28,12 +28,12 @@ Feature: with pull-branch-strategy set to "merge"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                                                    |
       | main    | local, origin | local main commit                                          |
-      |         |               | remote main commit                                         |
+      |         |               | origin main commit                                         |
       |         |               | Merge remote-tracking branch 'origin/main'                 |
       | feature | local, origin | local feature commit                                       |
       |         |               | remote feature commit                                      |
       |         |               | Merge remote-tracking branch 'origin/feature' into feature |
       |         |               | local main commit                                          |
-      |         |               | remote main commit                                         |
+      |         |               | origin main commit                                         |
       |         |               | Merge remote-tracking branch 'origin/main'                 |
       |         |               | Merge branch 'main' into feature                           |

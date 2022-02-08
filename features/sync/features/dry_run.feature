@@ -5,7 +5,7 @@ Feature: dry run
     And the commits
       | BRANCH  | LOCATION | MESSAGE               |
       | main    | local    | local main commit     |
-      |         | origin   | remote main commit    |
+      |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
       |         | origin   | remote feature commit |
     And I am on the "feature" branch

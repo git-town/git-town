@@ -5,7 +5,7 @@ Feature: handle rebase conflicts between main branch and its tracking branch
     And the commits
       | BRANCH  | LOCATION | MESSAGE            | FILE NAME        | FILE CONTENT    |
       | main    | local    | local main commit  | conflicting_file | local content   |
-      |         | origin   | remote main commit | conflicting_file | origin content  |
+      |         | origin   | origin main commit | conflicting_file | origin content  |
       | feature | local    | feature commit     | feature_file     | feature content |
     And I am on the "main" branch
     And my workspace has an uncommitted file

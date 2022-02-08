@@ -6,7 +6,7 @@ Feature: nested feature branches
     And the commits
       | BRANCH | LOCATION | MESSAGE              |
       | main   | local    | local main commit    |
-      |        | origin   | remote main commit   |
+      |        | origin   | origin main commit   |
       | parent | local    | local parent commit  |
       |        | origin   | remote parent commit |
       | child  | local    | local child commit   |
@@ -31,7 +31,7 @@ Feature: nested feature branches
     And I am still on the "child" branch
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                                                  |
-      | main   | local, origin | remote main commit                                       |
+      | main   | local, origin | origin main commit                                       |
       |        |               | local main commit                                        |
       | child  | local, origin | local child commit                                       |
       |        |               | remote child commit                                      |
@@ -39,13 +39,13 @@ Feature: nested feature branches
       |        |               | local parent commit                                      |
       |        |               | remote parent commit                                     |
       |        |               | Merge remote-tracking branch 'origin/parent' into parent |
-      |        |               | remote main commit                                       |
+      |        |               | origin main commit                                       |
       |        |               | local main commit                                        |
       |        |               | Merge branch 'main' into parent                          |
       |        |               | Merge branch 'parent' into child                         |
       | parent | local, origin | local parent commit                                      |
       |        |               | remote parent commit                                     |
       |        |               | Merge remote-tracking branch 'origin/parent' into parent |
-      |        |               | remote main commit                                       |
+      |        |               | origin main commit                                       |
       |        |               | local main commit                                        |
       |        |               | Merge branch 'main' into parent                          |

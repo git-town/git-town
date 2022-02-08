@@ -5,7 +5,7 @@ Feature: sync the current feature branch without a tracking branch
     And the commits
       | BRANCH  | LOCATION | MESSAGE              |
       | main    | local    | local main commit    |
-      |         | origin   | remote main commit   |
+      |         | origin   | origin main commit   |
       | feature | local    | local feature commit |
     And I am on the "feature" branch
     When I run "git-town sync"
@@ -24,10 +24,10 @@ Feature: sync the current feature branch without a tracking branch
     And I am still on the "feature" branch
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                          |
-      | main    | local, origin | remote main commit               |
+      | main    | local, origin | origin main commit               |
       |         |               | local main commit                |
       | feature | local, origin | local feature commit             |
-      |         |               | remote main commit               |
+      |         |               | origin main commit               |
       |         |               | local main commit                |
       |         |               | Merge branch 'main' into feature |
     And the existing branches are
