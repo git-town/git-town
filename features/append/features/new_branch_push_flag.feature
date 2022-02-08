@@ -1,7 +1,7 @@
 Feature: auto-push the new branch to the remote
 
   Background:
-    Given the new-branch-push-flag configuration is true
+    Given the new-branch-push-flag configuration is "true"
     And my repo contains the commits
       | BRANCH | LOCATION | MESSAGE     |
       | main   | remote   | main commit |

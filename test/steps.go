@@ -814,16 +814,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the (global )?new-branch-push-flag configuration is (true|false)$`, func(globalText string, text string) error {
-		global := globalText != ""
-		b, err := strconv.ParseBool(text)
-		if err != nil {
-			return err
-		}
-		_ = state.gitEnv.DevRepo.Config.SetNewBranchPush(b, global)
-		return nil
-	})
-
 	suite.Step(`^the main branch is "([^"]+)"$`, func(name string) error {
 		return state.gitEnv.DevRepo.Config.SetMainBranch(name)
 	})
@@ -837,7 +827,16 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the new-branch-push-flag configuration is "([^"]*)"$`, func(value string) error {
+	suite.Step(`^the (global )?new-branch-push-flag configuration is "([^"]*)"$`, func(global string, value string) error {
+		setGlobal := global != ""
+		if value == "true" || value == "false" {
+			b, err := strconv.ParseBool(value)
+			if err != nil {
+				return err
+			}
+			_ = state.gitEnv.DevRepo.Config.SetNewBranchPush(b, setGlobal)
+			return nil
+		}
 		_, err := state.gitEnv.DevRepo.Config.SetLocalConfigValue("git-town.new-branch-push-flag", value)
 		return err
 	})
