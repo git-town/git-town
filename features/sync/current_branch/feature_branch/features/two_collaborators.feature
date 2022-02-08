@@ -5,7 +5,7 @@ Feature: collaborative feature branch syncing
     And my repo has a feature branch "feature"
     And the coworker fetches updates
     And the coworker sets the parent branch of "feature" as "main"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION | MESSAGE         |
       | feature | local    | my commit       |
       |         | coworker | coworker commit |
@@ -20,9 +20,9 @@ Feature: collaborative feature branch syncing
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
       |         | git push                           |
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE         |
-      | feature | local, remote | my commit       |
+      | feature | local, origin | my commit       |
       |         | coworker      | coworker commit |
     And all branches are now synchronized
 
@@ -38,10 +38,10 @@ Feature: collaborative feature branch syncing
       |         | git merge --no-edit main           |
       |         | git push                           |
     And all branches are now synchronized
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH  | LOCATION                | MESSAGE                                                    |
-      | feature | local, coworker, remote | my commit                                                  |
-      |         | coworker, remote        | coworker commit                                            |
+      | feature | local, coworker, origin | my commit                                                  |
+      |         | coworker, origin        | coworker commit                                            |
       |         |                         | Merge remote-tracking branch 'origin/feature' into feature |
 
     Given I am on the "feature" branch
@@ -55,8 +55,8 @@ Feature: collaborative feature branch syncing
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
     And all branches are now synchronized
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH  | LOCATION                | MESSAGE                                                    |
-      | feature | local, coworker, remote | coworker commit                                            |
+      | feature | local, coworker, origin | coworker commit                                            |
       |         |                         | my commit                                                  |
       |         |                         | Merge remote-tracking branch 'origin/feature' into feature |

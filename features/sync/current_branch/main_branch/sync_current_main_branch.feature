@@ -2,10 +2,10 @@ Feature: sync the main branch
 
   Background:
     Given I am on the "main" branch
-    And my repo contains the commits
+    And the commits
       | LOCATION | MESSAGE       | FILE NAME   |
       | local    | local commit  | local_file  |
-      | remote   | remote commit | remote_file |
+      | origin   | origin commit | origin_file |
     And my workspace has an uncommitted file
     When I run "git-town sync"
 
@@ -22,7 +22,7 @@ Feature: sync the main branch
     And I am still on the "main" branch
     And my workspace still contains my uncommitted file
     And all branches are now synchronized
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE       |
-      | main   | local, remote | remote commit |
+      | main   | local, origin | origin commit |
       |        |               | local commit  |

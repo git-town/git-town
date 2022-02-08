@@ -4,14 +4,14 @@ Feature: sync before creating the pull request
   Background:
     Given my repo has a feature branch "parent"
     And my repo has a feature branch "child" as a child of "parent"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION | MESSAGE              |
       | main   | local    | local main commit    |
-      |        | remote   | remote main commit   |
+      |        | origin   | origin main commit   |
       | parent | local    | local parent commit  |
-      |        | remote   | remote parent commit |
+      |        | origin   | origin parent commit |
       | child  | local    | local child commit   |
-      |        | remote   | remote child commit  |
+      |        | origin   | origin child commit  |
     And my computer has the "open" tool installed
     And my repo's origin is "git@github.com:git-town/git-town.git"
     And I am on the "child" branch
@@ -43,23 +43,23 @@ Feature: sync before creating the pull request
       """
     And I am still on the "child" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                                                  |
-      | main   | local, remote | remote main commit                                       |
+      | main   | local, origin | origin main commit                                       |
       |        |               | local main commit                                        |
-      | child  | local, remote | local child commit                                       |
-      |        |               | remote child commit                                      |
+      | child  | local, origin | local child commit                                       |
+      |        |               | origin child commit                                      |
       |        |               | Merge remote-tracking branch 'origin/child' into child   |
       |        |               | local parent commit                                      |
-      |        |               | remote parent commit                                     |
+      |        |               | origin parent commit                                     |
       |        |               | Merge remote-tracking branch 'origin/parent' into parent |
-      |        |               | remote main commit                                       |
+      |        |               | origin main commit                                       |
       |        |               | local main commit                                        |
       |        |               | Merge branch 'main' into parent                          |
       |        |               | Merge branch 'parent' into child                         |
-      | parent | local, remote | local parent commit                                      |
-      |        |               | remote parent commit                                     |
+      | parent | local, origin | local parent commit                                      |
+      |        |               | origin parent commit                                     |
       |        |               | Merge remote-tracking branch 'origin/parent' into parent |
-      |        |               | remote main commit                                       |
+      |        |               | origin main commit                                       |
       |        |               | local main commit                                        |
       |        |               | Merge branch 'main' into parent                          |

@@ -1,9 +1,9 @@
-Feature: ship the supplied feature branch without a remote origin
+Feature: ship the supplied feature branch in a local repo
 
   Background:
     Given my repo has the feature branches "feature" and "other"
-    And my repo does not have a remote origin
-    And my repo contains the commits
+    And my repo does not have an origin
+    And the commits
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME        |
       | feature | local    | feature commit | conflicting_file |
     And I am on the "other" branch
@@ -28,7 +28,7 @@ Feature: ship the supplied feature branch without a remote origin
     And the existing branches are
       | REPOSITORY | BRANCHES    |
       | local      | main, other |
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION | MESSAGE      |
       | main   | local    | feature done |
     And Git Town is now aware of this branch hierarchy
@@ -48,7 +48,7 @@ Feature: ship the supplied feature branch without a remote origin
       | feature | git checkout other                            |
       | other   | git stash pop                                 |
     And I am now on the "other" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH  | LOCATION | MESSAGE               |
       | main    | local    | feature done          |
       |         |          | Revert "feature done" |

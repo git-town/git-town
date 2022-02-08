@@ -2,10 +2,10 @@ Feature: handle conflicts between the shipped branch and its tracking branch
 
   Background:
     Given my repo has a feature branch "feature"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | feature | local    | conflicting local commit  | conflicting_file | local content  |
-      |         | remote   | conflicting remote commit | conflicting_file | remote content |
+      |         | origin   | conflicting origin commit | conflicting_file | origin content |
     And I am on the "feature" branch
     When I run "git-town ship -m 'feature done'"
 
@@ -34,7 +34,7 @@ Feature: handle conflicts between the shipped branch and its tracking branch
       | main    | git checkout feature |
     And I am still on the "feature" branch
     And there is no merge in progress
-    And my repo is left with my initial commits
+    And now the initial commits exist
     And Git Town is still aware of the initial branch hierarchy
 
   Scenario: resolve and continue
@@ -53,10 +53,10 @@ Feature: handle conflicts between the shipped branch and its tracking branch
     And I am now on the "main" branch
     And the existing branches are
       | REPOSITORY    | BRANCHES |
-      | local, remote | main     |
-    And my repo now has the commits
+      | local, origin | main     |
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME        |
-      | main   | local, remote | feature done | conflicting_file |
+      | main   | local, origin | feature done | conflicting_file |
     And Git Town is now aware of no branch hierarchy
 
   Scenario: resolve, commit, and continue

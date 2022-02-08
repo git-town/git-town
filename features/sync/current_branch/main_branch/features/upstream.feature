@@ -1,10 +1,10 @@
-Feature: on the main branch with a upstream remote
+Feature: on the main branch with an upstream repo
 
   Background:
     Given my repo has an upstream repo
 
   Scenario: sync-upstream is set to true
-    Given my repo contains the commits
+    Given the commits
       | BRANCH | LOCATION | MESSAGE         |
       | main   | upstream | upstream commit |
     And I am on the "main" branch
@@ -19,15 +19,15 @@ Feature: on the main branch with a upstream remote
       |        | git push --tags          |
     And all branches are now synchronized
     And I am still on the "main" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION                | MESSAGE         |
-      | main   | local, remote, upstream | upstream commit |
+      | main   | local, origin, upstream | upstream commit |
 
   Scenario: sync-upstream is set to false
-    Given my repo contains the commits
+    Given the commits
       | BRANCH | LOCATION | MESSAGE         |
       | main   | local    | local commit    |
-      |        | remote   | remote commit   |
+      |        | origin   | origin commit   |
       |        | upstream | upstream commit |
     And I am on the "main" branch
     And Git Town's local "sync-upstream" setting is false
@@ -40,8 +40,8 @@ Feature: on the main branch with a upstream remote
       |        | git push --tags          |
     And all branches are now synchronized
     And I am still on the "main" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE         |
-      | main   | local, remote | remote commit   |
+      | main   | local, origin | origin commit   |
       |        |               | local commit    |
       |        | upstream      | upstream commit |

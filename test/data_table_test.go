@@ -31,9 +31,9 @@ func TestDataTable_Remove(t *testing.T) {
 	t.Parallel()
 	table := test.DataTable{}
 	table.AddRow("local", "main, master, foo")
-	table.AddRow("remote", "master, bar")
+	table.AddRow("origin", "master, bar")
 	table.RemoveText("master, ")
-	expected := "| local  | main, foo |\n| remote | bar       |\n"
+	expected := "| local  | main, foo |\n| origin | bar       |\n"
 	assert.Equal(t, expected, table.String())
 }
 

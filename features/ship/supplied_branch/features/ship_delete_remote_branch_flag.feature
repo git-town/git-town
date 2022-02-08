@@ -2,14 +2,14 @@ Feature: skip deleting the remote branch when shipping another branch
 
   Background:
     Given my repo has the feature branches "feature" and "other"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
-      | feature | local, remote | feature commit |
+      | feature | local, origin | feature commit |
       | other   | local         | other commit   |
     And I am on the "other" branch
     And Git Town's local "ship-delete-remote-branch" setting is "false"
     When I run "git-town ship feature -m 'feature done'"
-    And the remote deletes the "feature" branch
+    And origin deletes the "feature" branch
 
   Scenario: result
     Then it runs the commands
@@ -29,10 +29,10 @@ Feature: skip deleting the remote branch when shipping another branch
     And I am now on the "other" branch
     And the existing branches are
       | REPOSITORY    | BRANCHES    |
-      | local, remote | main, other |
-    And my repo now has the commits
+      | local, origin | main, other |
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      |
-      | main   | local, remote | feature done |
+      | main   | local, origin | feature done |
       | other  | local         | other commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
@@ -50,14 +50,14 @@ Feature: skip deleting the remote branch when shipping another branch
       | feature | git checkout main                             |
       | main    | git checkout other                            |
     And I am now on the "other" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE               |
-      | main    | local, remote | feature done          |
+      | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
       | feature | local         | feature commit        |
       | other   | local         | other commit          |
     And the existing branches are
       | REPOSITORY | BRANCHES             |
       | local      | main, feature, other |
-      | remote     | main, other          |
+      | origin     | main, other          |
     And Git Town is now aware of the initial branch hierarchy

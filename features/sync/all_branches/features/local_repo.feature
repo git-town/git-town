@@ -1,9 +1,9 @@
-Feature: syncs all feature branches (without remote repo)
+Feature: syncs all feature branches (in a local repo)
 
   Background:
-    Given my repo does not have a remote origin
+    Given my repo does not have an origin
     And my repo has the local feature branches "alpha" and "beta"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION | MESSAGE      |
       | main   | local    | main commit  |
       | alpha  | local    | alpha commit |

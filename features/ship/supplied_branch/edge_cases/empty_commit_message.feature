@@ -2,9 +2,9 @@ Feature: abort the ship via empty commit message
 
   Background:
     Given my repo has the feature branches "feature" and "other"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME        | FILE CONTENT    |
-      | main    | local, remote | main commit    | main_file        | main content    |
+      | main    | local, origin | main commit    | main_file        | main content    |
       | feature | local         | feature commit | conflicting_file | feature content |
     And I am on the "other" branch
     And my workspace has an uncommitted file with name "conflicting_file" and content "conflicting content"
@@ -37,7 +37,7 @@ Feature: abort the ship via empty commit message
       """
     And I am still on the "other" branch
     And my workspace still contains my uncommitted file
-    And my repo is left with my initial commits
+    And now the initial commits exist
     And Git Town is still aware of the initial branch hierarchy
 
   Scenario: undo
@@ -48,8 +48,8 @@ Feature: abort the ship via empty commit message
       nothing to undo
       """
     And I am still on the "other" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE        |
-      | main    | local, remote | main commit    |
+      | main    | local, origin | main commit    |
       | feature | local         | feature commit |
     And Git Town is still aware of the initial branch hierarchy

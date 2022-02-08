@@ -29,8 +29,8 @@ type GitEnvironment struct {
 	// DevShell provides a reference to the MockingShell instance used in the DeveloperRepo.
 	DevShell MockingShell
 
-	// OriginRepo is the Git repository that simulates the remote repo (on GitHub).
-	// If this value is nil, the current test setup has no remote.
+	// OriginRepo is the Git repository that simulates the origin repo (on GitHub).
+	// If this value is nil, the current test setup has no origin.
 	OriginRepo *Repo
 
 	// SubmoduleRepo is the Git repository that simulates an external repo used as a submodule.
@@ -192,17 +192,17 @@ func (env *GitEnvironment) Branches() (result DataTable, err error) {
 		result.AddRow("local", localBranchesJoined)
 		return result, nil
 	}
-	remoteBranches, err := env.OriginRepo.LocalBranchesMainFirst()
+	originBranches, err := env.OriginRepo.LocalBranchesMainFirst()
 	if err != nil {
 		return result, fmt.Errorf("cannot determine the origin repo branches of the GitEnvironment: %w", err)
 	}
-	remoteBranches = stringslice.Remove(remoteBranches, "master")
-	remoteBranchesJoined := strings.Join(remoteBranches, ", ")
-	if localBranchesJoined == remoteBranchesJoined {
-		result.AddRow("local, remote", localBranchesJoined)
+	originBranches = stringslice.Remove(originBranches, "master")
+	originBranchesJoined := strings.Join(originBranches, ", ")
+	if localBranchesJoined == originBranchesJoined {
+		result.AddRow("local, origin", localBranchesJoined)
 	} else {
 		result.AddRow("local", localBranchesJoined)
-		result.AddRow("remote", remoteBranchesJoined)
+		result.AddRow("origin", originBranchesJoined)
 	}
 	return result, nil
 }
@@ -217,7 +217,7 @@ func (env *GitEnvironment) CreateCommits(commits []git.Commit) error {
 				err = env.CoworkerRepo.CreateCommit(commit)
 			case "local":
 				err = env.DevRepo.CreateCommit(commit)
-			case "local, remote":
+			case "local, origin":
 				err = env.DevRepo.CreateCommit(commit)
 				if err != nil {
 					return fmt.Errorf("cannot create local commit: %w", err)
@@ -226,7 +226,7 @@ func (env *GitEnvironment) CreateCommits(commits []git.Commit) error {
 				if err != nil {
 					return fmt.Errorf("cannot push branch %q after creating commit: %w", commit.Branch, err)
 				}
-			case "remote":
+			case "origin":
 				err = env.OriginRepo.CreateCommit(commit)
 			case "upstream":
 				err = env.UpstreamRepo.CreateCommit(commit)
@@ -248,11 +248,11 @@ func (env *GitEnvironment) CreateCommits(commits []git.Commit) error {
 	return nil
 }
 
-// CreateRemoteBranch creates a branch with the given name only in the remote directory.
-func (env GitEnvironment) CreateRemoteBranch(name, parent string) error {
+// CreateOriginBranch creates a branch with the given name only in the origin directory.
+func (env GitEnvironment) CreateOriginBranch(name, parent string) error {
 	err := env.OriginRepo.CreateBranch(name, parent)
 	if err != nil {
-		return fmt.Errorf("cannot create remote branch %q: %w", name, err)
+		return fmt.Errorf("cannot create origin branch %q: %w", name, err)
 	}
 	return nil
 }
@@ -270,10 +270,10 @@ func (env GitEnvironment) CreateTags(table *messages.PickleStepArgument_PickleTa
 		switch location {
 		case "local":
 			err = env.DevRepo.CreateTag(name)
-		case "remote":
+		case "origin":
 			err = env.OriginRepo.CreateTag(name)
 		default:
-			err = fmt.Errorf("tag table LOCATION must be 'local' or 'remote'")
+			err = fmt.Errorf("tag table LOCATION must be 'local' or 'origin'")
 		}
 		if err != nil {
 			return err
@@ -298,11 +298,11 @@ func (env GitEnvironment) CommitTable(fields []string) (result DataTable, err er
 		builder.AddMany(coworkerCommits, "coworker")
 	}
 	if env.OriginRepo != nil {
-		remoteCommits, err := env.OriginRepo.Commits(fields)
+		originCommits, err := env.OriginRepo.Commits(fields)
 		if err != nil {
 			return result, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
 		}
-		builder.AddMany(remoteCommits, "remote")
+		builder.AddMany(originCommits, "origin")
 	}
 	if env.UpstreamRepo != nil {
 		upstreamCommits, err := env.UpstreamRepo.Commits(fields)
@@ -323,11 +323,11 @@ func (env GitEnvironment) TagTable() (result DataTable, err error) {
 	}
 	builder.AddMany(localTags, "local")
 	if env.OriginRepo != nil {
-		remoteTags, err := env.OriginRepo.Tags()
+		originTags, err := env.OriginRepo.Tags()
 		if err != nil {
 			return result, err
 		}
-		builder.AddMany(remoteTags, "remote")
+		builder.AddMany(originTags, "origin")
 	}
 	return builder.Table(), nil
 }

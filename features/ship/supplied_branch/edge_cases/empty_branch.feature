@@ -2,9 +2,9 @@ Feature: does not ship empty feature branches
 
   Background:
     Given my repo has the feature branches "empty" and "other"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION | MESSAGE        | FILE NAME   | FILE CONTENT   |
-      | main   | remote   | main commit    | common_file | common content |
+      | main   | origin   | main commit    | common_file | common content |
       | empty  | local    | feature commit | common_file | common content |
     And I am on the "other" branch
     And my workspace has an uncommitted file
@@ -41,8 +41,8 @@ Feature: does not ship empty feature branches
       nothing to undo
       """
     And I am still on the "other" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE        |
-      | main   | local, remote | main commit    |
+      | main   | local, origin | main commit    |
       | empty  | local         | feature commit |
     And Git Town is still aware of the initial branch hierarchy

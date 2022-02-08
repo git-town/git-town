@@ -2,12 +2,12 @@ Feature: sync the current feature branch with a tracking branch
 
   Background:
     Given my repo has a feature branch "feature"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION | MESSAGE               |
       | main    | local    | local main commit     |
-      |         | remote   | remote main commit    |
+      |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
-      |         | remote   | remote feature commit |
+      |         | origin   | origin feature commit |
     And I am on the "feature" branch
     When I run "git-town sync"
 
@@ -24,13 +24,13 @@ Feature: sync the current feature branch with a tracking branch
       |         | git push                           |
     And all branches are now synchronized
     And I am still on the "feature" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                                                    |
-      | main    | local, remote | remote main commit                                         |
+      | main    | local, origin | origin main commit                                         |
       |         |               | local main commit                                          |
-      | feature | local, remote | local feature commit                                       |
-      |         |               | remote feature commit                                      |
+      | feature | local, origin | local feature commit                                       |
+      |         |               | origin feature commit                                      |
       |         |               | Merge remote-tracking branch 'origin/feature' into feature |
-      |         |               | remote main commit                                         |
+      |         |               | origin main commit                                         |
       |         |               | local main commit                                          |
       |         |               | Merge branch 'main' into feature                           |

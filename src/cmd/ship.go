@@ -14,18 +14,18 @@ import (
 )
 
 type shipConfig struct {
-	branchToShip                 string
-	branchToMergeInto            string
-	canShipWithDriver            bool
-	childBranches                []string
-	defaultCommitMessage         string
-	hasOrigin                    bool
-	hasTrackingBranch            bool
-	initialBranch                string
-	isShippingInitialBranch      bool
-	isOffline                    bool
-	pullRequestNumber            int64
-	shouldShipDeleteRemoteBranch bool
+	branchToShip            string
+	branchToMergeInto       string
+	canShipWithDriver       bool
+	childBranches           []string
+	defaultCommitMessage    string
+	hasOrigin               bool
+	hasTrackingBranch       bool
+	initialBranch           string
+	isShippingInitialBranch bool
+	isOffline               bool
+	pullRequestNumber       int64
+	deleteOriginBranch      bool
 }
 
 // optional commit message provided via the command line.
@@ -40,12 +40,12 @@ Squash-merges the current branch, or <branch_name> if given,
 into the main branch, resulting in linear history on the main branch.
 
 - syncs the main branch
-- pulls remote updates for <branch_name>
+- pulls updates for <branch_name>
 - merges the main branch into <branch_name>
 - squash-merges <branch_name> into the main branch
   with commit message specified by the user
-- pushes the main branch to the remote repository
-- deletes <branch_name> from the local and remote repositories
+- pushes the main branch to the origin repository
+- deletes <branch_name> from the local and origin repositories
 
 Ships direct children of the main branch.
 To ship a nested child branch, ship or kill all ancestor branches first.
@@ -116,7 +116,7 @@ func gitShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (re
 		}
 	}
 	if result.branchToShip != result.initialBranch {
-		hasBranch, err := repo.Silent.HasLocalOrRemoteBranch(result.branchToShip)
+		hasBranch, err := repo.Silent.HasLocalOrOriginBranch(result.branchToShip)
 		if err != nil {
 			return result, err
 		}
@@ -144,7 +144,7 @@ func gitShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (re
 	result.defaultCommitMessage = prInfo.DefaultCommitMessage
 	result.pullRequestNumber = prInfo.PullRequestNumber
 	result.childBranches = repo.Config.ChildBranches(result.branchToShip)
-	result.shouldShipDeleteRemoteBranch = prodRepo.Config.ShouldShipDeleteRemoteBranch()
+	result.deleteOriginBranch = prodRepo.Config.ShouldShipDeleteOriginBranch()
 	return result, err
 }
 
@@ -192,8 +192,8 @@ func createShipStepList(config shipConfig, repo *git.ProdRepo) (result runstate.
 	// - we have updated the PRs of all child branches (because we have API access)
 	// - we know we are online
 	if config.canShipWithDriver || (config.hasTrackingBranch && len(config.childBranches) == 0 && !config.isOffline) {
-		if config.shouldShipDeleteRemoteBranch {
-			result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.branchToShip, IsTracking: true})
+		if config.deleteOriginBranch {
+			result.Append(&steps.DeleteOriginBranchStep{BranchName: config.branchToShip, IsTracking: true})
 		}
 	}
 	result.Append(&steps.DeleteLocalBranchStep{BranchName: config.branchToShip})

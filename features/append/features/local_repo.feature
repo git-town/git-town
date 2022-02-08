@@ -2,8 +2,8 @@ Feature: in a local repo
 
   Background:
     Given my repo has a feature branch "existing"
-    And my repo does not have a remote origin
-    And my repo contains the commits
+    And my repo does not have an origin
+    And the commits
       | BRANCH   | LOCATION | MESSAGE         |
       | existing | local    | existing commit |
     And I am on the "existing" branch
@@ -20,7 +20,7 @@ Feature: in a local repo
       | new      | git stash pop       |
     And I am now on the "new" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH   | LOCATION | MESSAGE         |
       | existing | local    | existing commit |
     And Git Town is now aware of this branch hierarchy
@@ -38,6 +38,6 @@ Feature: in a local repo
       | existing | git branch -d new     |
       |          | git stash pop         |
     And I am now on the "existing" branch
-    And my repo is left with my initial commits
+    And now the initial commits exist
     And my workspace still contains my uncommitted file
     And my repo now has its initial branches and branch hierarchy

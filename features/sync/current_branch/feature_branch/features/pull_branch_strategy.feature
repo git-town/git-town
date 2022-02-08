@@ -3,12 +3,12 @@ Feature: with pull-branch-strategy set to "merge"
   Background:
     Given the pull-branch-strategy configuration is "merge"
     And my repo has a feature branch "feature"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION | MESSAGE               |
       | main    | local    | local main commit     |
-      |         | remote   | remote main commit    |
+      |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
-      |         | remote   | remote feature commit |
+      |         | origin   | origin feature commit |
     And I am on the "feature" branch
     When I run "git-town sync"
 
@@ -25,15 +25,15 @@ Feature: with pull-branch-strategy set to "merge"
       |         | git push                           |
     And all branches are now synchronized
     And I am still on the "feature" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                                                    |
-      | main    | local, remote | local main commit                                          |
-      |         |               | remote main commit                                         |
+      | main    | local, origin | local main commit                                          |
+      |         |               | origin main commit                                         |
       |         |               | Merge remote-tracking branch 'origin/main'                 |
-      | feature | local, remote | local feature commit                                       |
-      |         |               | remote feature commit                                      |
+      | feature | local, origin | local feature commit                                       |
+      |         |               | origin feature commit                                      |
       |         |               | Merge remote-tracking branch 'origin/feature' into feature |
       |         |               | local main commit                                          |
-      |         |               | remote main commit                                         |
+      |         |               | origin main commit                                         |
       |         |               | Merge remote-tracking branch 'origin/main'                 |
       |         |               | Merge branch 'main' into feature                           |

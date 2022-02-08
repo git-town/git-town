@@ -2,10 +2,10 @@ Feature: handle rebase conflicts between main branch and its tracking branch
 
   Background:
     Given my repo has a feature branch "feature"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION | MESSAGE            | FILE NAME        | FILE CONTENT    |
       | main    | local    | local main commit  | conflicting_file | local content   |
-      |         | remote   | remote main commit | conflicting_file | remote content  |
+      |         | origin   | origin main commit | conflicting_file | origin content  |
       | feature | local    | feature commit     | feature_file     | feature content |
     And I am on the "main" branch
     And my workspace has an uncommitted file
@@ -34,7 +34,7 @@ Feature: handle rebase conflicts between main branch and its tracking branch
       |        | git stash pop      |
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
-    And my repo is left with my initial commits
+    And now the initial commits exist
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"

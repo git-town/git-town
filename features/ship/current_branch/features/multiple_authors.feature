@@ -3,7 +3,7 @@ Feature: ship a coworker's feature branch
 
   Background:
     Given my repo has a feature branch "feature"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION | MESSAGE            | AUTHOR                            |
       | feature | local    | developer commit 1 | developer <developer@example.com> |
       |         |          | developer commit 2 | developer <developer@example.com> |
@@ -14,18 +14,18 @@ Feature: ship a coworker's feature branch
     When I run "git-town ship -m 'feature done'" and answer the prompts:
       | PROMPT                                        | ANSWER  |
       | Please choose an author for the squash commit | [ENTER] |
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      | AUTHOR                            |
-      | main   | local, remote | feature done | developer <developer@example.com> |
+      | main   | local, origin | feature done | developer <developer@example.com> |
     And Git Town is now aware of no branch hierarchy
 
   Scenario: choose a coworker as the author
     When I run "git-town ship -m 'feature done'" and answer the prompts:
       | PROMPT                                        | ANSWER        |
       | Please choose an author for the squash commit | [DOWN][ENTER] |
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      | AUTHOR                          |
-      | main   | local, remote | feature done | coworker <coworker@example.com> |
+      | main   | local, origin | feature done | coworker <coworker@example.com> |
     And Git Town is now aware of no branch hierarchy
 
   Scenario:  undo
@@ -43,11 +43,11 @@ Feature: ship a coworker's feature branch
       | feature | git checkout main                              |
       | main    | git checkout feature                           |
     And I am now on the "feature" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE               |
-      | main    | local, remote | feature done          |
+      | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
-      | feature | local, remote | developer commit 1    |
+      | feature | local, origin | developer commit 1    |
       |         |               | developer commit 2    |
       |         |               | coworker commit       |
     And my repo now has its initial branches and branch hierarchy

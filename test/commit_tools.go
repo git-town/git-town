@@ -13,7 +13,7 @@ func DefaultCommit() git.Commit {
 	return git.Commit{
 		FileName:    "default_file_name_" + helpers.UniqueString(),
 		Message:     "default commit message",
-		Locations:   []string{"local", "remote"},
+		Locations:   []string{"local", "origin"},
 		Branch:      "main",
 		FileContent: "default file content",
 	}

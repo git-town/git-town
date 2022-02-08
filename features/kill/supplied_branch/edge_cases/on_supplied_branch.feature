@@ -2,10 +2,10 @@ Feature: delete the current branch
 
   Background:
     Given my repo has the feature branches "other" and "current"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
-      | current | local, remote | current commit |
-      | other   | local, remote | other commit   |
+      | current | local, origin | current commit |
+      | other   | local, origin | other commit   |
     And I am on the "current" branch
     And my workspace has an uncommitted file
     When I run "git-town kill current"
@@ -23,10 +23,10 @@ Feature: delete the current branch
     And my repo doesn't have any uncommitted files
     And the existing branches are
       | REPOSITORY    | BRANCHES    |
-      | local, remote | main, other |
-    And my repo now has the commits
+      | local, origin | main, other |
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      |
-      | other  | local, remote | other commit |
+      | other  | local, origin | other commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
       | other  | main   |
@@ -41,5 +41,5 @@ Feature: delete the current branch
       |         | git push -u origin current                    |
     And I am now on the "current" branch
     And my workspace has the uncommitted file again
-    And my repo is left with my initial commits
+    And now the initial commits exist
     And my repo now has its initial branches and branch hierarchy

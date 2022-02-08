@@ -3,10 +3,10 @@ Feature: rename a parent branch
   Background:
     Given my repo has a feature branch "parent"
     And my repo has a feature branch "child" as a child of "parent"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION      | MESSAGE       |
-      | child  | local, remote | child commit  |
-      | parent | local, remote | parent commit |
+      | child  | local, origin | child commit  |
+      | parent | local, origin | parent commit |
     And I am on the "parent" branch
     When I run "git-town rename-branch parent new"
 
@@ -20,10 +20,10 @@ Feature: rename a parent branch
       |        | git push origin :parent  |
       |        | git branch -D parent     |
     And I am now on the "new" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE       |
-      | child  | local, remote | child commit  |
-      | new    | local, remote | parent commit |
+      | child  | local, origin | child commit  |
+      | new    | local, origin | parent commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
       | child  | new    |
@@ -39,5 +39,5 @@ Feature: rename a parent branch
       |        | git checkout parent                         |
       | parent | git branch -D new                           |
     And I am now on the "parent" branch
-    And my repo is left with my initial commits
+    And now the initial commits exist
     And my repo now has its initial branches and branch hierarchy

@@ -2,10 +2,10 @@ Feature: conflicts between the main branch and its tracking branch
 
   Background:
     Given my repo has a feature branch "existing"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | main   | local    | conflicting local commit  | conflicting_file | local content  |
-      |        | remote   | conflicting remote commit | conflicting_file | remote content |
+      |        | origin   | conflicting origin commit | conflicting_file | origin content |
     And I am on the "existing" branch
     And my workspace has an uncommitted file
     When I run "git-town hack new"
@@ -36,7 +36,7 @@ Feature: conflicts between the main branch and its tracking branch
     And I am now on the "existing" branch
     And my workspace has the uncommitted file again
     And there is no rebase in progress anymore
-    And my repo is left with my initial commits
+    And now the initial commits exist
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
@@ -59,11 +59,11 @@ Feature: conflicts between the main branch and its tracking branch
       | new    | git stash pop         |
     And I am now on the "new" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                   |
-      | main   | local, remote | conflicting remote commit |
+      | main   | local, origin | conflicting origin commit |
       |        |               | conflicting local commit  |
-      | new    | local         | conflicting remote commit |
+      | new    | local         | conflicting origin commit |
       |        |               | conflicting local commit  |
     And my repo now has these committed files
       | BRANCH | NAME             | CONTENT          |

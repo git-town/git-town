@@ -2,13 +2,13 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
 
   Background:
     Given my repo has the perennial branches "alpha", "beta", and "gamma"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION      | MESSAGE            | FILE NAME        | FILE CONTENT        |
-      | main   | remote        | main commit        | main_file        | main content        |
-      | alpha  | local, remote | alpha commit       | alpha_file       | alpha content       |
+      | main   | origin        | main commit        | main_file        | main content        |
+      | alpha  | local, origin | alpha commit       | alpha_file       | alpha content       |
       | beta   | local         | local beta commit  | conflicting_file | local beta content  |
-      |        | remote        | remote beta commit | conflicting_file | remote beta content |
-      | gamma  | local, remote | gamma commit       | gamma_file       | gamma content       |
+      |        | origin        | origin beta commit | conflicting_file | origin beta content |
+      | gamma  | local, origin | gamma commit       | gamma_file       | gamma content       |
     And I am on the "main" branch
     And my workspace has an uncommitted file
     When I run "git-town sync --all"
@@ -44,13 +44,13 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       | main   | git stash pop      |
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE            |
-      | main   | local, remote | main commit        |
-      | alpha  | local, remote | alpha commit       |
+      | main   | local, origin | main commit        |
+      | alpha  | local, origin | alpha commit       |
       | beta   | local         | local beta commit  |
-      |        | remote        | remote beta commit |
-      | gamma  | local, remote | gamma commit       |
+      |        | origin        | origin beta commit |
+      | gamma  | local, origin | gamma commit       |
 
   Scenario: skip
     When I run "git-town skip"
@@ -64,13 +64,13 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       |        | git stash pop           |
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE            |
-      | main   | local, remote | main commit        |
-      | alpha  | local, remote | alpha commit       |
+      | main   | local, origin | main commit        |
+      | alpha  | local, origin | alpha commit       |
       | beta   | local         | local beta commit  |
-      |        | remote        | remote beta commit |
-      | gamma  | local, remote | gamma commit       |
+      |        | origin        | origin beta commit |
+      | gamma  | local, origin | gamma commit       |
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"

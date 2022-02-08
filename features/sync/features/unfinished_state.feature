@@ -3,10 +3,10 @@ Feature: warn the user about an unfinished operation
 
   Background:
     Given my repo has a feature branch "feature"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | main   | local    | conflicting local commit  | conflicting_file | local content  |
-      |        | remote   | conflicting remote commit | conflicting_file | remote content |
+      |        | origin   | conflicting origin commit | conflicting_file | origin content |
     And I am on the "feature" branch
     And my workspace has an uncommitted file
     And I run "git-town sync"
@@ -63,7 +63,7 @@ Feature: warn the user about an unfinished operation
       | main    | git rebase --abort   |
       |         | git checkout feature |
       | feature | git stash pop        |
-    And my repo is left with my initial commits
+    And now the initial commits exist
 
   Scenario: manually abort the rebase and run another command still shows warning about unfinished command
     When I run "git rebase --abort"

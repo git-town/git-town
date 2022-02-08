@@ -30,7 +30,7 @@ type CommitTableBuilder struct {
 	//
 	// Structure:
 	//   commit 1 SHA + branch 1 name:  ["local"]
-	//   commit 1 SHA + branch 2 name:  ["local", "remote"]
+	//   commit 1 SHA + branch 2 name:  ["local", "origin"]
 	locations map[string]helpers.OrderedStringSet
 }
 
