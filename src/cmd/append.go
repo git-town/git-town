@@ -62,7 +62,7 @@ func createAppendConfig(args []string, repo *git.ProdRepo) (result appendConfig,
 		return result, err
 	}
 	result.targetBranch = args[0]
-	result.hasOrigin, err = repo.Silent.HasRemote("origin")
+	result.hasOrigin, err = repo.Silent.HasOrigin()
 	if err != nil {
 		return result, err
 	}
