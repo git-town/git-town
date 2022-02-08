@@ -814,12 +814,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the global new-branch-push-flag configuration is (true|false)$`, func(text string) error {
+	suite.Step(`^the (global )?new-branch-push-flag configuration is (true|false)$`, func(globalText string, text string) error {
+		global := globalText != ""
 		b, err := strconv.ParseBool(text)
 		if err != nil {
 			return err
 		}
-		_ = state.gitEnv.DevRepo.Config.SetNewBranchPush(b, true)
+		_ = state.gitEnv.DevRepo.Config.SetNewBranchPush(b, global)
 		return nil
 	})
 
@@ -834,14 +835,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return fmt.Errorf("expected %q, got %q", name, actual)
 		}
 		return nil
-	})
-
-	suite.Step(`^the new-branch-push-flag configuration is (true|false)$`, func(value string) error {
-		b, err := strconv.ParseBool(value)
-		if err != nil {
-			return err
-		}
-		return state.gitEnv.DevRepo.Config.SetNewBranchPush(b, false)
 	})
 
 	suite.Step(`^the new-branch-push-flag configuration is "([^"]*)"$`, func(value string) error {
