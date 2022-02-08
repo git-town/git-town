@@ -45,17 +45,17 @@ func (r *Runner) AbortRebase() error {
 	return nil
 }
 
-// AddRemote adds the given Git remote to this repository.
-func (r *Runner) AddRemote(name, value string) error {
-	_, err := r.Run("git", "remote", "add", name, value)
+// AddRemote adds a Git remote with the given name and URL to this repository.
+func (r *Runner) AddRemote(name, url string) error {
+	_, err := r.Run("git", "remote", "add", name, url)
 	if err != nil {
-		return fmt.Errorf("cannot add remote %q --> %q: %w", name, value, err)
+		return fmt.Errorf("cannot add remote %q --> %q: %w", name, url, err)
 	}
 	r.RemotesCache.Invalidate()
 	return nil
 }
 
-// AddRemote adds the given Git remote to this repository.
+// AddSubmodule adds a Git submodule with the given URL to this repository.
 func (r *Runner) AddSubmodule(url string) error {
 	_, err := r.Run("git", "submodule", "add", url)
 	if err != nil {
@@ -202,7 +202,7 @@ func (r *Runner) Commit(message, author string) error {
 	return err
 }
 
-// ConnectTrackingBranch connects the branch with the given name to its remote tracking branch.
+// ConnectTrackingBranch connects the branch with the given name to its counterpart at origin.
 // The branch must exist.
 func (r *Runner) ConnectTrackingBranch(name string) error {
 	_, err := r.Run("git", "branch", "--set-upstream-to=origin/"+name, name)
@@ -484,7 +484,7 @@ func (r *Runner) ExpectedPreviouslyCheckedOutBranch(initialPreviouslyCheckedOutB
 	return r.Config.MainBranch(), nil
 }
 
-// Fetch retrieves the updates from the remote repo.
+// Fetch retrieves the updates from the origin repo.
 func (r *Runner) Fetch() error {
 	_, err := r.Run("git", "fetch", "--prune", "--tags")
 	if err != nil {
@@ -546,7 +546,7 @@ func (r *Runner) FilesInBranch(branch string) (result []string, err error) {
 	return result, err
 }
 
-// HasBranchesOutOfSync indicates whether one or more local branches are out of sync with their remote.
+// HasBranchesOutOfSync indicates whether one or more local branches are out of sync with their tracking branch.
 func (r *Runner) HasBranchesOutOfSync() (bool, error) {
 	res, err := r.Run("git", "for-each-ref", "--format=%(refname:short) %(upstream:track)", "refs/heads")
 	if err != nil {
@@ -595,7 +595,7 @@ func (r *Runner) HasLocalBranch(name string) (bool, error) {
 	return stringslice.Contains(branches, name), nil
 }
 
-// HasLocalOrOriginBranch indicates whether this repo has a local or remote branch with the given name.
+// HasLocalOrRemoteBranch indicates whether this repo or origin have a branch with the given name.
 func (r *Runner) HasLocalOrOriginBranch(name string) (bool, error) {
 	branches, err := r.LocalAndOriginBranches()
 	if err != nil {
@@ -635,7 +635,7 @@ func (r *Runner) HasRebaseInProgress() (bool, error) {
 	return false, nil
 }
 
-// HasRemote indicates whether this repo has an origin remote.
+// HasOrigin indicates whether this repo has an origin remote.
 func (r *Runner) HasOrigin() (result bool, err error) {
 	return r.HasRemote("origin")
 }
@@ -816,7 +816,7 @@ func (r *Runner) PreviouslyCheckedOutBranch() (name string, err error) {
 	return outcome.OutputSanitized(), nil
 }
 
-// Pull fetches updates from the origin remote and updates the currently checked out branch.
+// Pull fetches updates from origin and updates the currently checked out branch.
 func (r *Runner) Pull() error {
 	_, err := r.Run("git", "pull")
 	if err != nil {
@@ -825,7 +825,7 @@ func (r *Runner) Pull() error {
 	return nil
 }
 
-// PushBranch pushes the branch with the given name to the remote.
+// PushBranch pushes the branch with the given name to origin.
 func (r *Runner) PushBranch() error {
 	_, err := r.Run("git", "push")
 	if err != nil {
@@ -834,7 +834,7 @@ func (r *Runner) PushBranch() error {
 	return nil
 }
 
-// PushBranchForce pushes the branch with the given name to the remote.
+// PushBranchForce force-pushes the branch with the given name to origin.
 func (r *Runner) PushBranchForce(name string) error {
 	_, err := r.Run("git", "push", "-f", "origin", name)
 	if err != nil {
@@ -843,7 +843,7 @@ func (r *Runner) PushBranchForce(name string) error {
 	return nil
 }
 
-// PushBranchToOrigin pushes the branch with the given name to the remote.
+// PushBranchToOrigin pushes the branch with the given name to origin.
 func (r *Runner) PushBranchToOrigin(name string) error {
 	_, err := r.Run("git", "push", "-u", "origin", name)
 	if err != nil {
@@ -992,7 +992,7 @@ func (r *Runner) ShaForCommit(name string) (string, error) {
 }
 
 // ShouldPushBranch returns whether the local branch with the given name
-// contains commits that have not been pushed to the remote.
+// contains commits that have not been pushed to its tracking branch.
 func (r *Runner) ShouldPushBranch(branch string) (bool, error) {
 	trackingBranch := r.TrackingBranchName(branch)
 	out, err := r.Run("git", "rev-list", "--left-right", branch+"..."+trackingBranch)
@@ -1047,7 +1047,7 @@ func (r *Runner) Tags() (result []string, err error) {
 	return result, err
 }
 
-// TrackingBranchName provides the name of the remote branch tracking the given local branch.
+// TrackingBranchName provides the name of the remote branch tracking the local branch with the given name.
 func (r *Runner) TrackingBranchName(branch string) string {
 	return "origin/" + branch
 }
