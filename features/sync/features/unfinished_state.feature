@@ -6,7 +6,7 @@ Feature: warn the user about an unfinished operation
     And the commits
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | main   | local    | conflicting local commit  | conflicting_file | local content  |
-      |        | remote   | conflicting remote commit | conflicting_file | remote content |
+      |        | remote   | conflicting remote commit | conflicting_file | origin content |
     And I am on the "feature" branch
     And my workspace has an uncommitted file
     And I run "git-town sync"

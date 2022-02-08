@@ -5,7 +5,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And the commits
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting local commit  | conflicting_file | local content   |
-      |         | remote   | conflicting remote commit | conflicting_file | remote content  |
+      |         | remote   | conflicting remote commit | conflicting_file | origin content  |
       | feature | local    | feature commit            | feature_file     | feature content |
     And I am on the "other" branch
     And my workspace has an uncommitted file
@@ -62,7 +62,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And my workspace still contains my uncommitted file
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                   | FILE NAME        | FILE CONTENT     |
-      | main   | local, remote | conflicting remote commit | conflicting_file | remote content   |
+      | main   | local, remote | conflicting remote commit | conflicting_file | origin content   |
       |        |               | conflicting local commit  | conflicting_file | resolved content |
       |        |               | feature done              | feature_file     | feature content  |
     And the existing branches are

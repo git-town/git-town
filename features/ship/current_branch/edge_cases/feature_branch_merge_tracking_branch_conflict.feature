@@ -5,7 +5,7 @@ Feature: handle conflicts between the shipped branch and its tracking branch
     And the commits
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | feature | local    | conflicting local commit  | conflicting_file | local content  |
-      |         | remote   | conflicting remote commit | conflicting_file | remote content |
+      |         | remote   | conflicting remote commit | conflicting_file | origin content |
     And I am on the "feature" branch
     When I run "git-town ship -m 'feature done'"
 
