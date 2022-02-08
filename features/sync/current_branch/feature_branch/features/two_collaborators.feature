@@ -22,7 +22,7 @@ Feature: collaborative feature branch syncing
       |         | git push                           |
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE         |
-      | feature | local, remote | my commit       |
+      | feature | local, origin | my commit       |
       |         | coworker      | coworker commit |
     And all branches are now synchronized
 
@@ -40,8 +40,8 @@ Feature: collaborative feature branch syncing
     And all branches are now synchronized
     And now these commits exist
       | BRANCH  | LOCATION                | MESSAGE                                                    |
-      | feature | local, coworker, remote | my commit                                                  |
-      |         | coworker, remote        | coworker commit                                            |
+      | feature | local, coworker, origin | my commit                                                  |
+      |         | coworker, origin        | coworker commit                                            |
       |         |                         | Merge remote-tracking branch 'origin/feature' into feature |
 
     Given I am on the "feature" branch
@@ -57,6 +57,6 @@ Feature: collaborative feature branch syncing
     And all branches are now synchronized
     And now these commits exist
       | BRANCH  | LOCATION                | MESSAGE                                                    |
-      | feature | local, coworker, remote | coworker commit                                            |
+      | feature | local, coworker, origin | coworker commit                                            |
       |         |                         | my commit                                                  |
       |         |                         | Merge remote-tracking branch 'origin/feature' into feature |

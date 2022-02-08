@@ -20,7 +20,7 @@ Feature: delete a local branch
     And I am now on the "main" branch
     And the existing branches are
       | REPOSITORY    | BRANCHES |
-      | local, remote | main     |
+      | local, origin | main     |
     And Git Town is now aware of no branch hierarchy
 
   Scenario: undo

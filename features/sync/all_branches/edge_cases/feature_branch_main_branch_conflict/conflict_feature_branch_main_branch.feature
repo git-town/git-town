@@ -4,10 +4,10 @@ Feature: handle merge conflicts between feature branch and main branch
     Given my repo has the local feature branches "alpha", "beta", and "gamma"
     And the commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME        | FILE CONTENT  |
-      | main   | remote        | main commit  | conflicting_file | main content  |
-      | alpha  | local, remote | alpha commit | feature1_file    | alpha content |
-      | beta   | local, remote | beta commit  | conflicting_file | beta content  |
-      | gamma  | local, remote | gamma commit | feature2_file    | gamma content |
+      | main   | origin        | main commit  | conflicting_file | main content  |
+      | alpha  | local, origin | alpha commit | feature1_file    | alpha content |
+      | beta   | local, origin | beta commit  | conflicting_file | beta content  |
+      | gamma  | local, origin | gamma commit | feature2_file    | gamma content |
     And I am on the "main" branch
     And my workspace has an uncommitted file
     When I run "git-town sync --all"
@@ -49,12 +49,12 @@ Feature: handle merge conflicts between feature branch and main branch
     And there is no merge in progress
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                        |
-      | main   | local, remote | main commit                    |
-      | alpha  | local, remote | alpha commit                   |
+      | main   | local, origin | main commit                    |
+      | alpha  | local, origin | alpha commit                   |
       |        |               | main commit                    |
       |        |               | Merge branch 'main' into alpha |
-      | beta   | local, remote | beta commit                    |
-      | gamma  | local, remote | gamma commit                   |
+      | beta   | local, origin | beta commit                    |
+      | gamma  | local, origin | gamma commit                   |
     And my repo now has these committed files
       | BRANCH | NAME             | CONTENT       |
       | main   | conflicting_file | main content  |
@@ -80,12 +80,12 @@ Feature: handle merge conflicts between feature branch and main branch
     And there is no merge in progress
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                        |
-      | main   | local, remote | main commit                    |
-      | alpha  | local, remote | alpha commit                   |
+      | main   | local, origin | main commit                    |
+      | alpha  | local, origin | alpha commit                   |
       |        |               | main commit                    |
       |        |               | Merge branch 'main' into alpha |
-      | beta   | local, remote | beta commit                    |
-      | gamma  | local, remote | gamma commit                   |
+      | beta   | local, origin | beta commit                    |
+      | gamma  | local, origin | gamma commit                   |
       |        |               | main commit                    |
       |        |               | Merge branch 'main' into gamma |
     And my repo now has these committed files

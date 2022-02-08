@@ -27,7 +27,7 @@ Feature: with upstream remote
     And I am still on the "feature" branch
     And now these commits exist
       | BRANCH  | LOCATION                | MESSAGE                          |
-      | main    | local, remote, upstream | upstream commit                  |
-      | feature | local, remote           | local commit                     |
+      | main    | local, origin, upstream | upstream commit                  |
+      | feature | local, origin           | local commit                     |
       |         |                         | upstream commit                  |
       |         |                         | Merge branch 'main' into feature |

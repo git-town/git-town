@@ -5,8 +5,8 @@ Feature: offline mode
     And my repo has the feature branches "feature" and "other"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
-      | feature | local, remote | feature commit |
-      | other   | local, remote | other commit   |
+      | feature | local, origin | feature commit |
+      | other   | local, origin | other commit   |
     And I am on the "feature" branch
     And my workspace has an uncommitted file
     When I run "git-town kill"
@@ -23,11 +23,11 @@ Feature: offline mode
     And the existing branches are
       | REPOSITORY | BRANCHES             |
       | local      | main, other          |
-      | remote     | main, feature, other |
+      | origin     | main, feature, other |
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE        |
-      | feature | remote        | feature commit |
-      | other   | local, remote | other commit   |
+      | feature | origin        | feature commit |
+      | other   | local, origin | other commit   |
     And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
       | other  | main   |

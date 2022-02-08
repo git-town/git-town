@@ -6,9 +6,9 @@ Feature: offline mode
     And the commits
       | BRANCH  | LOCATION | MESSAGE               |
       | main    | local    | local main commit     |
-      |         | remote   | remote main commit    |
+      |         | origin   | remote main commit    |
       | feature | local    | local feature commit  |
-      |         | remote   | remote feature commit |
+      |         | origin   | remote feature commit |
     And I am on the "feature" branch
     When I run "git-town sync"
 
@@ -24,8 +24,8 @@ Feature: offline mode
     And now these commits exist
       | BRANCH  | LOCATION | MESSAGE                          |
       | main    | local    | local main commit                |
-      |         | remote   | remote main commit               |
+      |         | origin   | remote main commit               |
       | feature | local    | local feature commit             |
       |         |          | local main commit                |
       |         |          | Merge branch 'main' into feature |
-      |         | remote   | remote feature commit            |
+      |         | origin   | remote feature commit            |

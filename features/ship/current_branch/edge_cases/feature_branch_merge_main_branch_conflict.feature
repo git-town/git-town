@@ -38,7 +38,7 @@ Feature: handle conflicts between the shipped branch and the main branch
     And there is no merge in progress
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
-      | main    | local, remote | conflicting main commit    | conflicting_file | main content    |
+      | main    | local, origin | conflicting main commit    | conflicting_file | main content    |
       | feature | local         | conflicting feature commit | conflicting_file | feature content |
     And Git Town is still aware of the initial branch hierarchy
 
@@ -57,10 +57,10 @@ Feature: handle conflicts between the shipped branch and the main branch
     And I am now on the "main" branch
     And the existing branches are
       | REPOSITORY    | BRANCHES |
-      | local, remote | main     |
+      | local, origin | main     |
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                 | FILE NAME        | FILE CONTENT     |
-      | main   | local, remote | conflicting main commit | conflicting_file | main content     |
+      | main   | local, origin | conflicting main commit | conflicting_file | main content     |
       |        |               | feature done            | conflicting_file | resolved content |
     And Git Town is now aware of no branch hierarchy
 

@@ -24,10 +24,10 @@ Feature: ship a local feature branch
     And I am now on the "main" branch
     And the existing branches are
       | REPOSITORY    | BRANCHES |
-      | local, remote | main     |
+      | local, origin | main     |
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      |
-      | main   | local, remote | feature done |
+      | main   | local, origin | feature done |
     And Git Town is now aware of no branch hierarchy
 
   Scenario: undo
@@ -43,7 +43,7 @@ Feature: ship a local feature branch
     And I am now on the "feature" branch
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE               |
-      | main    | local, remote | feature done          |
+      | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
       | feature | local         | feature commit        |
     And my repo now has its initial branches and branch hierarchy

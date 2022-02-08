@@ -4,7 +4,7 @@ Feature: ship the current feature branch from a subfolder on the shipped branch
     Given my repo has a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME               |
-      | feature | local, remote | feature commit | new_folder/feature_file |
+      | feature | local, origin | feature commit | new_folder/feature_file |
     And I am on the "feature" branch
     When I run "git-town ship -m 'feature done'" in the "new_folder" folder
 
@@ -26,10 +26,10 @@ Feature: ship the current feature branch from a subfolder on the shipped branch
     And I am now on the "main" branch
     And the existing branches are
       | REPOSITORY    | BRANCHES |
-      | local, remote | main     |
+      | local, origin | main     |
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      |
-      | main   | local, remote | feature done |
+      | main   | local, origin | feature done |
     And Git Town is now aware of no branch hierarchy
 
   Scenario: undo
@@ -46,7 +46,7 @@ Feature: ship the current feature branch from a subfolder on the shipped branch
     And I am now on the "feature" branch
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE               |
-      | main    | local, remote | feature done          |
+      | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
-      | feature | local, remote | feature commit        |
+      | feature | local, origin | feature commit        |
     And my repo now has its initial branches and branch hierarchy

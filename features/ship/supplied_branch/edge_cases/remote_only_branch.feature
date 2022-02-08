@@ -6,7 +6,7 @@ Feature: ship a branch that exists only on the remote
     And the origin has a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME        |
-      | feature | remote   | feature commit | conflicting_file |
+      | feature | origin   | feature commit | conflicting_file |
     And I am on the "other" branch
     And my workspace has an uncommitted file with name "conflicting_file" and content "conflicting content"
     When I run "git-town ship feature -m 'feature done'" and answer the prompts:
@@ -36,10 +36,10 @@ Feature: ship a branch that exists only on the remote
     And my workspace still contains my uncommitted file
     And the existing branches are
       | REPOSITORY    | BRANCHES    |
-      | local, remote | main, other |
+      | local, origin | main, other |
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      |
-      | main   | local, remote | feature done |
+      | main   | local, origin | feature done |
     And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
       | other  | main   |
@@ -62,12 +62,12 @@ Feature: ship a branch that exists only on the remote
     And I am now on the "other" branch
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE               |
-      | main    | local, remote | feature done          |
+      | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
-      | feature | local, remote | feature commit        |
+      | feature | local, origin | feature commit        |
     And the existing branches are
       | REPOSITORY    | BRANCHES             |
-      | local, remote | main, feature, other |
+      | local, origin | main, feature, other |
     And Git Town is now aware of this branch hierarchy
       | BRANCH  | PARENT |
       | feature | main   |

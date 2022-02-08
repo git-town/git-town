@@ -4,7 +4,7 @@ Feature: ship a coworker's feature branch
     Given my repo has a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE         | AUTHOR                          |
-      | feature | local, remote | coworker commit | coworker <coworker@example.com> |
+      | feature | local, origin | coworker commit | coworker <coworker@example.com> |
     And I am on the "feature" branch
 
   Scenario: result (commit message via CLI)
@@ -25,7 +25,7 @@ Feature: ship a coworker's feature branch
       |         | git branch -D feature                                                   |
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      | AUTHOR                          |
-      | main   | local, remote | feature done | coworker <coworker@example.com> |
+      | main   | local, origin | feature done | coworker <coworker@example.com> |
     And Git Town is now aware of no branch hierarchy
 
   Scenario: result (commit message via editor)
@@ -46,7 +46,7 @@ Feature: ship a coworker's feature branch
       |         | git branch -D feature                                 |
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      | AUTHOR                          |
-      | main   | local, remote | feature done | coworker <coworker@example.com> |
+      | main   | local, origin | feature done | coworker <coworker@example.com> |
     And Git Town is now aware of no branch hierarchy
 
   Scenario:  undo
@@ -64,7 +64,7 @@ Feature: ship a coworker's feature branch
     And I am now on the "feature" branch
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE               |
-      | main    | local, remote | feature done          |
+      | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
-      | feature | local, remote | coworker commit       |
+      | feature | local, origin | coworker commit       |
     And Git Town is now aware of the initial branch hierarchy

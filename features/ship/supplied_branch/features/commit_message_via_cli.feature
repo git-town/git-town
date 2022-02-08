@@ -4,7 +4,7 @@ Feature: provide the commit message via a CLI argument
     Given my repo has the feature branches "feature" and "other"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME        |
-      | feature | local, remote | feature commit | conflicting_file |
+      | feature | local, origin | feature commit | conflicting_file |
     And I am on the "other" branch
     And my workspace has an uncommitted file with name "conflicting_file" and content "conflicting content"
     When I run "git-town ship feature -m 'feature done'"
@@ -32,10 +32,10 @@ Feature: provide the commit message via a CLI argument
     And my workspace still contains my uncommitted file
     And the existing branches are
       | REPOSITORY    | BRANCHES    |
-      | local, remote | main, other |
+      | local, origin | main, other |
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      |
-      | main   | local, remote | feature done |
+      | main   | local, origin | feature done |
     And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
       | other  | main   |
@@ -58,7 +58,7 @@ Feature: provide the commit message via a CLI argument
     And I am now on the "other" branch
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE               |
-      | main    | local, remote | feature done          |
+      | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
-      | feature | local, remote | feature commit        |
+      | feature | local, origin | feature commit        |
     And my repo now has its initial branches and branch hierarchy

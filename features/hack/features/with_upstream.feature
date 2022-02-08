@@ -26,7 +26,7 @@ Feature: on a forked repo
     And my workspace still contains my uncommitted file
     And now these commits exist
       | BRANCH | LOCATION                | MESSAGE         |
-      | main   | local, remote, upstream | upstream commit |
+      | main   | local, origin, upstream | upstream commit |
       | new    | local                   | upstream commit |
 
   Scenario: undo
@@ -41,5 +41,5 @@ Feature: on a forked repo
     And I am now on the "main" branch
     And now these commits exist
       | BRANCH | LOCATION                | MESSAGE         |
-      | main   | local, remote, upstream | upstream commit |
+      | main   | local, origin, upstream | upstream commit |
     And Git Town is now aware of no branch hierarchy

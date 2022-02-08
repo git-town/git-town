@@ -6,9 +6,9 @@ Feature: with pull-branch-strategy set to "merge"
     And the commits
       | BRANCH  | LOCATION | MESSAGE               |
       | main    | local    | local main commit     |
-      |         | remote   | remote main commit    |
+      |         | origin   | remote main commit    |
       | feature | local    | local feature commit  |
-      |         | remote   | remote feature commit |
+      |         | origin   | remote feature commit |
     And I am on the "feature" branch
     When I run "git-town sync"
 
@@ -27,10 +27,10 @@ Feature: with pull-branch-strategy set to "merge"
     And I am still on the "feature" branch
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                                                    |
-      | main    | local, remote | local main commit                                          |
+      | main    | local, origin | local main commit                                          |
       |         |               | remote main commit                                         |
       |         |               | Merge remote-tracking branch 'origin/main'                 |
-      | feature | local, remote | local feature commit                                       |
+      | feature | local, origin | local feature commit                                       |
       |         |               | remote feature commit                                      |
       |         |               | Merge remote-tracking branch 'origin/feature' into feature |
       |         |               | local main commit                                          |

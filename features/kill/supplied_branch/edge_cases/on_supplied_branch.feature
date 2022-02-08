@@ -4,8 +4,8 @@ Feature: delete the current branch
     Given my repo has the feature branches "other" and "current"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
-      | current | local, remote | current commit |
-      | other   | local, remote | other commit   |
+      | current | local, origin | current commit |
+      | other   | local, origin | other commit   |
     And I am on the "current" branch
     And my workspace has an uncommitted file
     When I run "git-town kill current"
@@ -23,10 +23,10 @@ Feature: delete the current branch
     And my repo doesn't have any uncommitted files
     And the existing branches are
       | REPOSITORY    | BRANCHES    |
-      | local, remote | main, other |
+      | local, origin | main, other |
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      |
-      | other  | local, remote | other commit |
+      | other  | local, origin | other commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
       | other  | main   |

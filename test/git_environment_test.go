@@ -157,7 +157,7 @@ func TestGitEnvironment_CreateRemoteBranch(t *testing.T) {
 	cloned, err := CloneGitEnvironment(memoizedGitEnv, filepath.Join(dir, "cloned"))
 	assert.NoError(t, err)
 	// create the remote mranch
-	err = cloned.CreateRemoteBranch("b1", "main")
+	err = cloned.CreateOriginBranch("b1", "main")
 	assert.NoError(t, err)
 	// verify it is in the remote branches
 	branches, err := cloned.OriginRepo.LocalBranchesMainFirst()

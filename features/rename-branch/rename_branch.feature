@@ -4,8 +4,8 @@ Feature: rename the current branch
     Given my repo has a feature branch "old"
     And the commits
       | BRANCH | LOCATION      | MESSAGE     |
-      | main   | local, remote | main commit |
-      | old    | local, remote | old commit  |
+      | main   | local, origin | main commit |
+      | old    | local, origin | old commit  |
     And I am on the "old" branch
     When I run "git-town rename-branch new"
 
@@ -21,8 +21,8 @@ Feature: rename the current branch
     And I am now on the "new" branch
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE     |
-      | main   | local, remote | main commit |
-      | new    | local, remote | old commit  |
+      | main   | local, origin | main commit |
+      | new    | local, origin | old commit  |
 
   Scenario: undo
     When I run "git-town undo"

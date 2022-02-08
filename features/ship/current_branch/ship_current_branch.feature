@@ -4,7 +4,7 @@ Feature: enter the commit message interactively via the editor
     Given my repo has a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
-      | feature | local, remote | feature commit |
+      | feature | local, origin | feature commit |
     And I am on the "feature" branch
     When I run "git-town ship" and enter "feature done" for the commit message
 
@@ -26,10 +26,10 @@ Feature: enter the commit message interactively via the editor
     And I am now on the "main" branch
     And the existing branches are
       | REPOSITORY    | BRANCHES |
-      | local, remote | main     |
+      | local, origin | main     |
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      |
-      | main   | local, remote | feature done |
+      | main   | local, origin | feature done |
     And Git Town is now aware of no branch hierarchy
 
   Scenario: undo
@@ -46,7 +46,7 @@ Feature: enter the commit message interactively via the editor
     And I am now on the "feature" branch
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE               |
-      | main    | local, remote | feature done          |
+      | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
-      | feature | local, remote | feature commit        |
+      | feature | local, origin | feature commit        |
     And my repo now has its initial branches and branch hierarchy

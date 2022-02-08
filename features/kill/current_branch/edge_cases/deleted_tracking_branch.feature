@@ -4,8 +4,8 @@ Feature: the branch to kill has a deleted tracking branch
     Given my repo has the feature branches "old" and "other"
     And the commits
       | BRANCH | LOCATION      | MESSAGE      |
-      | old    | local, remote | old commit   |
-      | other  | local, remote | other commit |
+      | old    | local, origin | old commit   |
+      | other  | local, origin | other commit |
     And the "old" branch gets deleted on the remote
     And I am on the "old" branch
     And my workspace has an uncommitted file
@@ -23,10 +23,10 @@ Feature: the branch to kill has a deleted tracking branch
     And my repo doesn't have any uncommitted files
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      |
-      | other  | local, remote | other commit |
+      | other  | local, origin | other commit |
     And the existing branches are
       | REPOSITORY    | BRANCHES    |
-      | local, remote | main, other |
+      | local, origin | main, other |
     And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
       | other  | main   |
@@ -42,6 +42,6 @@ Feature: the branch to kill has a deleted tracking branch
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      |
       | old    | local         | old commit   |
-      | other  | local, remote | other commit |
+      | other  | local, origin | other commit |
     And my workspace has the uncommitted file again
     And my repo now has its initial branches and branch hierarchy

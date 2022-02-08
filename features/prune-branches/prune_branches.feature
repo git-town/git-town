@@ -4,8 +4,8 @@ Feature: delete branches that were shipped or removed on another machine
     Given my repo has the feature branches "active" and "old"
     And the commits
       | BRANCH | LOCATION      | MESSAGE       |
-      | active | local, remote | active commit |
-      | old    | local, remote | old commit    |
+      | active | local, origin | active commit |
+      | old    | local, origin | old commit    |
     And the "old" branch gets deleted on the remote
     And I am on the "old" branch
     And my workspace has an uncommitted file
@@ -21,7 +21,7 @@ Feature: delete branches that were shipped or removed on another machine
     And my workspace still contains my uncommitted file
     And the existing branches are
       | REPOSITORY    | BRANCHES     |
-      | local, remote | main, active |
+      | local, origin | main, active |
     And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
       | active | main   |

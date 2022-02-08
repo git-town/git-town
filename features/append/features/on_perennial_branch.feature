@@ -4,7 +4,7 @@ Feature: append to a perennial branch
     Given my repo has the perennial branches "qa" and "production"
     And the commits
       | BRANCH     | LOCATION | MESSAGE           |
-      | production | remote   | production commit |
+      | production | origin   | production commit |
     And I am on the "production" branch
     When I run "git-town append new"
 
@@ -19,7 +19,7 @@ Feature: append to a perennial branch
     And now these commits exist
       | BRANCH     | LOCATION      | MESSAGE           |
       | new        | local         | production commit |
-      | production | local, remote | production commit |
+      | production | local, origin | production commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT     |
       | new    | production |
@@ -33,5 +33,5 @@ Feature: append to a perennial branch
     And I am now on the "production" branch
     And now these commits exist
       | BRANCH     | LOCATION      | MESSAGE           |
-      | production | local, remote | production commit |
+      | production | local, origin | production commit |
     And Git Town is now aware of the initial branch hierarchy

@@ -4,8 +4,8 @@ Feature: destination branch exists
     Given my repo has the feature branches "alpha" and "beta"
     And the commits
       | BRANCH | LOCATION      | MESSAGE      |
-      | alpha  | local, remote | alpha commit |
-      | beta   | local, remote | beta commit  |
+      | alpha  | local, origin | alpha commit |
+      | beta   | local, origin | beta commit  |
     And I am on the "alpha" branch
     When I run "git-town rename-branch alpha beta"
     Then it runs the commands
@@ -23,8 +23,8 @@ Feature: destination branch exists
     And the origin has a feature branch "beta"
     And the commits
       | BRANCH | LOCATION      | MESSAGE      |
-      | alpha  | local, remote | alpha commit |
-      | beta   | remote        | beta commit  |
+      | alpha  | local, origin | alpha commit |
+      | beta   | origin        | beta commit  |
     And I am on the "alpha" branch
     When I run "git-town rename-branch alpha beta"
     Then it runs the commands

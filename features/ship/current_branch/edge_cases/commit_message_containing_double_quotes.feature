@@ -26,11 +26,11 @@ Feature: commit message can contain double-quotes
     And I am now on the "main" branch
     And the existing branches are
       | REPOSITORY    | BRANCHES |
-      | local, remote | main     |
+      | local, origin | main     |
     And my repo doesn't have any uncommitted files
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE              |
-      | main   | local, remote | with "double quotes" |
+      | main   | local, origin | with "double quotes" |
     And Git Town is now aware of no branch hierarchy
 
   Scenario: undo
@@ -47,7 +47,7 @@ Feature: commit message can contain double-quotes
     And I am now on the "feature" branch
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                       |
-      | main    | local, remote | with "double quotes"          |
+      | main    | local, origin | with "double quotes"          |
       |         |               | Revert "with "double quotes"" |
-      | feature | local, remote | feature commit                |
+      | feature | local, origin | feature commit                |
     And my repo now has its initial branches and branch hierarchy

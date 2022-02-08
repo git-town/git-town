@@ -4,10 +4,10 @@ Feature: sync inside a folder that doesn't exist on the main branch
     Given my repo has the feature branches "current" and "other"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
-      | main    | local, remote | conflicting main commit    | conflicting_file | main content    |
+      | main    | local, origin | conflicting main commit    | conflicting_file | main content    |
       | current | local         | conflicting current commit | conflicting_file | current content |
       |         |               | folder commit              | new_folder/file1 |                 |
-      | other   | local, remote | other commit               | file2            |                 |
+      | other   | local, origin | other commit               | file2            |                 |
     And I am on the "current" branch
     And my workspace has an uncommitted file
     When I run "git-town sync --all" in the "new_folder" folder
@@ -75,12 +75,12 @@ Feature: sync inside a folder that doesn't exist on the main branch
     And there is no merge in progress
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                          |
-      | main    | local, remote | conflicting main commit          |
-      | current | local, remote | conflicting current commit       |
+      | main    | local, origin | conflicting main commit          |
+      | current | local, origin | conflicting current commit       |
       |         |               | folder commit                    |
       |         |               | conflicting main commit          |
       |         |               | Merge branch 'main' into current |
-      | other   | local, remote | other commit                     |
+      | other   | local, origin | other commit                     |
       |         |               | conflicting main commit          |
       |         |               | Merge branch 'main' into other   |
     And my repo still has these committed files

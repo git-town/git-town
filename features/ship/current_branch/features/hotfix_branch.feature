@@ -5,7 +5,7 @@ Feature: ship hotfixes
     And my repo has a feature branch "hotfix" as a child of "production"
     And the commits
       | BRANCH | LOCATION      | MESSAGE       |
-      | hotfix | local, remote | hotfix commit |
+      | hotfix | local, origin | hotfix commit |
     And I am on the "hotfix" branch
     When I run "git-town ship -m 'hotfix done'"
 
@@ -27,10 +27,10 @@ Feature: ship hotfixes
     And I am now on the "production" branch
     And the existing branches are
       | REPOSITORY    | BRANCHES         |
-      | local, remote | main, production |
+      | local, origin | main, production |
     And now these commits exist
       | BRANCH     | LOCATION      | MESSAGE     |
-      | production | local, remote | hotfix done |
+      | production | local, origin | hotfix done |
     And Git Town is now aware of no branch hierarchy
 
   Scenario: undo
@@ -47,7 +47,7 @@ Feature: ship hotfixes
     And I am now on the "hotfix" branch
     And now these commits exist
       | BRANCH     | LOCATION      | MESSAGE              |
-      | hotfix     | local, remote | hotfix commit        |
-      | production | local, remote | hotfix done          |
+      | hotfix     | local, origin | hotfix commit        |
+      | production | local, origin | hotfix done          |
       |            |               | Revert "hotfix done" |
     And my repo now has its initial branches and branch hierarchy

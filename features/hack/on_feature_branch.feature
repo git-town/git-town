@@ -4,7 +4,7 @@ Feature: on the main branch
     Given my repo has a feature branch "existing"
     And the commits
       | BRANCH   | LOCATION | MESSAGE         |
-      | main     | remote   | main commit     |
+      | main     | origin   | main commit     |
       | existing | local    | existing commit |
     And I am on the "existing" branch
     And my workspace has an uncommitted file
@@ -25,7 +25,7 @@ Feature: on the main branch
     And my workspace still contains my uncommitted file
     And now these commits exist
       | BRANCH   | LOCATION      | MESSAGE         |
-      | main     | local, remote | main commit     |
+      | main     | local, origin | main commit     |
       | existing | local         | existing commit |
       | new      | local         | main commit     |
     And Git Town is now aware of this branch hierarchy
@@ -46,6 +46,6 @@ Feature: on the main branch
     And I am now on the "existing" branch
     And now these commits exist
       | BRANCH   | LOCATION      | MESSAGE         |
-      | main     | local, remote | main commit     |
+      | main     | local, origin | main commit     |
       | existing | local         | existing commit |
     And Git Town is now aware of the initial branch hierarchy

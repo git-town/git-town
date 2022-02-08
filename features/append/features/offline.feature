@@ -5,7 +5,7 @@ Feature: append in offline mode
     And my repo has a feature branch "existing"
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         |
-      | existing | local, remote | existing commit |
+      | existing | local, origin | existing commit |
     And I am on the "existing" branch
 
   Scenario: result
@@ -22,7 +22,7 @@ Feature: append in offline mode
     And I am now on the "new" branch
     And now these commits exist
       | BRANCH   | LOCATION      | MESSAGE         |
-      | existing | local, remote | existing commit |
+      | existing | local, origin | existing commit |
       | new      | local         | existing commit |
 
   Scenario: undo

@@ -66,11 +66,11 @@ func (state *ScenarioState) InitialBranches() (result DataTable) {
 	localBranchesJoined := strings.Join(state.initialLocalBranches, ", ")
 	remoteBranchesJoined := strings.Join(state.initialRemoteBranches, ", ")
 	if localBranchesJoined == remoteBranchesJoined {
-		result.AddRow("local, remote", localBranchesJoined)
+		result.AddRow("local, origin", localBranchesJoined)
 	} else {
 		result.AddRow("local", localBranchesJoined)
 		if remoteBranchesJoined != "" {
-			result.AddRow("remote", remoteBranchesJoined)
+			result.AddRow("origin", remoteBranchesJoined)
 		}
 	}
 	return result

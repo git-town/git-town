@@ -45,7 +45,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     And there is no merge in progress
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
-      | main    | local, remote | conflicting main commit    | conflicting_file | main content    |
+      | main    | local, origin | conflicting main commit    | conflicting_file | main content    |
       | feature | local         | conflicting feature commit | conflicting_file | feature content |
 
   Scenario: continue with unresolved conflict

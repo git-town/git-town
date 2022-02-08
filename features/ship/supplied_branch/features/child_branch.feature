@@ -6,9 +6,9 @@ Feature: does not ship a child branch
     And my repo has a feature branch "gamma" as a child of "beta"
     And the commits
       | BRANCH | LOCATION      | MESSAGE      |
-      | alpha  | local, remote | alpha commit |
-      | beta   | local, remote | beta commit  |
-      | gamma  | local, remote | gamma commit |
+      | alpha  | local, origin | alpha commit |
+      | beta   | local, origin | beta commit  |
+      | gamma  | local, origin | gamma commit |
     And I am on the "alpha" branch
     When I run "git-town ship gamma -m 'gamma done'"
 

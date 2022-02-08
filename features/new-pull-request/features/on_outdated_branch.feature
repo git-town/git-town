@@ -7,11 +7,11 @@ Feature: sync before creating the pull request
     And the commits
       | BRANCH | LOCATION | MESSAGE              |
       | main   | local    | local main commit    |
-      |        | remote   | remote main commit   |
+      |        | origin   | remote main commit   |
       | parent | local    | local parent commit  |
-      |        | remote   | remote parent commit |
+      |        | origin   | remote parent commit |
       | child  | local    | local child commit   |
-      |        | remote   | remote child commit  |
+      |        | origin   | remote child commit  |
     And my computer has the "open" tool installed
     And my repo's origin is "git@github.com:git-town/git-town.git"
     And I am on the "child" branch
@@ -45,9 +45,9 @@ Feature: sync before creating the pull request
     And my workspace still contains my uncommitted file
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                                                  |
-      | main   | local, remote | remote main commit                                       |
+      | main   | local, origin | remote main commit                                       |
       |        |               | local main commit                                        |
-      | child  | local, remote | local child commit                                       |
+      | child  | local, origin | local child commit                                       |
       |        |               | remote child commit                                      |
       |        |               | Merge remote-tracking branch 'origin/child' into child   |
       |        |               | local parent commit                                      |
@@ -57,7 +57,7 @@ Feature: sync before creating the pull request
       |        |               | local main commit                                        |
       |        |               | Merge branch 'main' into parent                          |
       |        |               | Merge branch 'parent' into child                         |
-      | parent | local, remote | local parent commit                                      |
+      | parent | local, origin | local parent commit                                      |
       |        |               | remote parent commit                                     |
       |        |               | Merge remote-tracking branch 'origin/parent' into parent |
       |        |               | remote main commit                                       |

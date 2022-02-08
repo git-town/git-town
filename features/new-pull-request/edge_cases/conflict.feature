@@ -4,7 +4,7 @@ Feature: merge conflict
     Given my repo has a local feature branch "feature"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME        | FILE CONTENT    |
-      | main    | local, remote | main commit    | conflicting_file | main content    |
+      | main    | local, origin | main commit    | conflicting_file | main content    |
       | feature | local         | feature commit | conflicting_file | feature content |
     And my computer has the "open" tool installed
     And my repo's origin is "git@github.com:git-town/git-town.git"
@@ -64,8 +64,8 @@ Feature: merge conflict
     And I am still on the "feature" branch
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                          |
-      | main    | local, remote | main commit                      |
-      | feature | local, remote | feature commit                   |
+      | main    | local, origin | main commit                      |
+      | feature | local, origin | feature commit                   |
       |         |               | main commit                      |
       |         |               | Merge branch 'main' into feature |
     And my repo now has these committed files

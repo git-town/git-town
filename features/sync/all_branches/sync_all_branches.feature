@@ -5,13 +5,13 @@ Feature: sync all feature branches
     And my repo has the perennial branches "production" and "qa"
     And the commits
       | BRANCH     | LOCATION      | MESSAGE                  |
-      | main       | remote        | main commit              |
-      | alpha      | local, remote | alpha commit             |
-      | beta       | local, remote | beta commit              |
+      | main       | origin        | main commit              |
+      | alpha      | local, origin | alpha commit             |
+      | beta       | local, origin | beta commit              |
       | production | local         | local production commit  |
-      |            | remote        | remote production commit |
+      |            | origin        | remote production commit |
       | qa         | local         | qa local commit          |
-      |            | remote        | qa remote commit         |
+      |            | origin        | qa remote commit         |
     And I am on the "alpha" branch
     When I run "git-town sync --all"
 

@@ -5,9 +5,9 @@ Feature: does not sync branches that exist only on the remote
     And the origin has a feature branch "other"
     And the commits
       | BRANCH | LOCATION      | MESSAGE         |
-      | main   | remote        | main commit     |
-      | mine   | local, remote | my commit       |
-      | other  | remote        | coworker commit |
+      | main   | origin        | main commit     |
+      | mine   | local, origin | my commit       |
+      | other  | origin        | coworker commit |
     And I am on the "main" branch
     When I run "git-town sync --all"
 
@@ -26,8 +26,8 @@ Feature: does not sync branches that exist only on the remote
     And all branches are now synchronized
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                       |
-      | main   | local, remote | main commit                   |
-      | mine   | local, remote | my commit                     |
+      | main   | local, origin | main commit                   |
+      | mine   | local, origin | my commit                     |
       |        |               | main commit                   |
       |        |               | Merge branch 'main' into mine |
-      | other  | remote        | coworker commit               |
+      | other  | origin        | coworker commit               |

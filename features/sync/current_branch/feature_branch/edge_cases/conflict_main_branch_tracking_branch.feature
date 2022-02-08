@@ -5,7 +5,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And the commits
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | main   | local    | conflicting local commit  | conflicting_file | local content  |
-      |        | remote   | conflicting remote commit | conflicting_file | origin content |
+      |        | origin   | conflicting remote commit | conflicting_file | origin content |
     And I am on the "feature" branch
     And my workspace has an uncommitted file
     When I run "git-town sync"

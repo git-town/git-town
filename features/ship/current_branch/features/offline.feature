@@ -5,7 +5,7 @@ Feature: offline mode
     And my repo has a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
-      | feature | local, remote | feature commit |
+      | feature | local, origin | feature commit |
     And I am on the "feature" branch
     When I run "git-town ship -m 'feature done'"
 
@@ -25,7 +25,7 @@ Feature: offline mode
     And now these commits exist
       | BRANCH  | LOCATION | MESSAGE        |
       | main    | local    | feature done   |
-      | feature | remote   | feature commit |
+      | feature | origin   | feature commit |
     And Git Town is now aware of no branch hierarchy
 
   Scenario: undo

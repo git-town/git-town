@@ -5,7 +5,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And the commits
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting local commit  | conflicting_file | local content   |
-      |         | remote   | conflicting remote commit | conflicting_file | origin content  |
+      |         | origin   | conflicting remote commit | conflicting_file | origin content  |
       | feature | local    | feature commit            | feature_file     | feature content |
     And I am on the "other" branch
     And my workspace has an uncommitted file
@@ -62,12 +62,12 @@ Feature: handle conflicts between the main branch and its tracking branch
     And my workspace still contains my uncommitted file
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                   | FILE NAME        | FILE CONTENT     |
-      | main   | local, remote | conflicting remote commit | conflicting_file | origin content   |
+      | main   | local, origin | conflicting remote commit | conflicting_file | origin content   |
       |        |               | conflicting local commit  | conflicting_file | resolved content |
       |        |               | feature done              | feature_file     | feature content  |
     And the existing branches are
       | REPOSITORY    | BRANCHES    |
-      | local, remote | main, other |
+      | local, origin | main, other |
     And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
       | other  | main   |
@@ -113,12 +113,12 @@ Feature: handle conflicts between the main branch and its tracking branch
     And I am now on the "other" branch
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                          |
-      | main    | local, remote | conflicting remote commit        |
+      | main    | local, origin | conflicting remote commit        |
       |         |               | conflicting local commit         |
       |         |               | feature done                     |
       |         |               | Revert "feature done"            |
-      | feature | local, remote | feature commit                   |
-      |         | remote        | conflicting remote commit        |
+      | feature | local, origin | feature commit                   |
+      |         | origin        | conflicting remote commit        |
       |         |               | conflicting local commit         |
       |         |               | Merge branch 'main' into feature |
     And my repo now has its initial branches and branch hierarchy

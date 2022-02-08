@@ -4,7 +4,7 @@ Feature: restores deleted tracking branch
     Given my repo has a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
-      | feature | local, remote | feature commit |
+      | feature | local, origin | feature commit |
     And the "feature" branch gets deleted on the remote
     And I am on the "feature" branch
     When I run "git-town sync"

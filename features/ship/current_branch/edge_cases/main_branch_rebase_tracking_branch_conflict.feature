@@ -5,7 +5,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And the commits
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting local commit  | conflicting_file | local content   |
-      |         | remote   | conflicting remote commit | conflicting_file | origin content  |
+      |         | origin   | conflicting remote commit | conflicting_file | origin content  |
       | feature | local    | feature commit            | feature_file     | feature content |
     And I am on the "feature" branch
     When I run "git-town ship -m 'feature done'"
@@ -53,10 +53,10 @@ Feature: handle conflicts between the main branch and its tracking branch
     And I am now on the "main" branch
     And the existing branches are
       | REPOSITORY    | BRANCHES |
-      | local, remote | main     |
+      | local, origin | main     |
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                   |
-      | main   | local, remote | conflicting remote commit |
+      | main   | local, origin | conflicting remote commit |
       |        |               | conflicting local commit  |
       |        |               | feature done              |
     And Git Town is now aware of no branch hierarchy

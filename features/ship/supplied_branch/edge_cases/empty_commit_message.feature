@@ -4,7 +4,7 @@ Feature: abort the ship via empty commit message
     Given my repo has the feature branches "feature" and "other"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME        | FILE CONTENT    |
-      | main    | local, remote | main commit    | main_file        | main content    |
+      | main    | local, origin | main commit    | main_file        | main content    |
       | feature | local         | feature commit | conflicting_file | feature content |
     And I am on the "other" branch
     And my workspace has an uncommitted file with name "conflicting_file" and content "conflicting content"
@@ -50,6 +50,6 @@ Feature: abort the ship via empty commit message
     And I am still on the "other" branch
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE        |
-      | main    | local, remote | main commit    |
+      | main    | local, origin | main commit    |
       | feature | local         | feature commit |
     And Git Town is still aware of the initial branch hierarchy

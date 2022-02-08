@@ -5,7 +5,7 @@ Feature: auto-push new branches
     And my repo has a feature branch "old"
     And the commits
       | BRANCH | LOCATION      | MESSAGE        |
-      | old    | local, remote | feature commit |
+      | old    | local, origin | feature commit |
     And I am on the "old" branch
     When I run "git-town prepend new"
 
@@ -21,7 +21,7 @@ Feature: auto-push new branches
     And I am now on the "new" branch
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE        |
-      | old    | local, remote | feature commit |
+      | old    | local, origin | feature commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
       | new    | main   |

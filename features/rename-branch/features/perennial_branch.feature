@@ -5,8 +5,8 @@ Feature: rename a perennial branch
     And my repo has a feature branch "hotfix" as a child of "production"
     And the commits
       | BRANCH     | LOCATION      | MESSAGE           |
-      | hotfix     | local, remote | hotfix commit     |
-      | production | local, remote | production commit |
+      | hotfix     | local, origin | hotfix commit     |
+      | production | local, origin | production commit |
     And I am on the "production" branch
 
   Scenario: normal rename fails
@@ -31,8 +31,8 @@ Feature: rename a perennial branch
     And the perennial branches are now "new"
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE           |
-      | hotfix | local, remote | hotfix commit     |
-      | new    | local, remote | production commit |
+      | hotfix | local, origin | hotfix commit     |
+      | new    | local, origin | production commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
       | hotfix | new    |

@@ -5,8 +5,8 @@ Feature: sync the current perennial branch
     And the commits
       | BRANCH | LOCATION      | MESSAGE       | FILE NAME   |
       | qa     | local         | local commit  | local_file  |
-      |        | remote        | remote commit | remote_file |
-      | main   | local, remote | main commit   | main_file   |
+      |        | origin        | remote commit | remote_file |
+      | main   | local, origin | main commit   | main_file   |
     And I am on the "qa" branch
     When I run "git-town sync"
 
@@ -21,6 +21,6 @@ Feature: sync the current perennial branch
     And I am still on the "qa" branch
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE       |
-      | main   | local, remote | main commit   |
-      | qa     | local, remote | remote commit |
+      | main   | local, origin | main commit   |
+      | qa     | local, origin | remote commit |
       |        |               | local commit  |

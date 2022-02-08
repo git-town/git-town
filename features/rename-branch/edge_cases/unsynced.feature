@@ -6,7 +6,7 @@ Feature: rename an unsynced branch
   Scenario: unpulled remote commits
     Given the commits
       | BRANCH | LOCATION | MESSAGE       |
-      | old    | remote   | remote commit |
+      | old    | origin   | remote commit |
     And I am on the "old" branch
     When I run "git-town rename-branch old new"
     Then it runs the commands

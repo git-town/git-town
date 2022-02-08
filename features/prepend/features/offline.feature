@@ -5,7 +5,7 @@ Feature: offline mode
     And my repo has a feature branch "old"
     And the commits
       | BRANCH | LOCATION      | MESSAGE    |
-      | old    | local, remote | old commit |
+      | old    | local, origin | old commit |
     And I am on the "old" branch
     When I run "git-town prepend new"
 
@@ -19,7 +19,7 @@ Feature: offline mode
     And I am now on the "new" branch
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE    |
-      | old    | local, remote | old commit |
+      | old    | local, origin | old commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
       | new    | main   |

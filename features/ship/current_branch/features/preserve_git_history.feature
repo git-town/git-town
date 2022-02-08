@@ -25,7 +25,7 @@ Feature: preserve the previous Git branch
     Given my repo has a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION |
-      | feature | remote   |
+      | feature | origin   |
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run "git-town ship feature -m "feature done""
     Then I am still on the "current" branch

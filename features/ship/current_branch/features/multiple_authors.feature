@@ -16,7 +16,7 @@ Feature: ship a coworker's feature branch
       | Please choose an author for the squash commit | [ENTER] |
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      | AUTHOR                            |
-      | main   | local, remote | feature done | developer <developer@example.com> |
+      | main   | local, origin | feature done | developer <developer@example.com> |
     And Git Town is now aware of no branch hierarchy
 
   Scenario: choose a coworker as the author
@@ -25,7 +25,7 @@ Feature: ship a coworker's feature branch
       | Please choose an author for the squash commit | [DOWN][ENTER] |
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      | AUTHOR                          |
-      | main   | local, remote | feature done | coworker <coworker@example.com> |
+      | main   | local, origin | feature done | coworker <coworker@example.com> |
     And Git Town is now aware of no branch hierarchy
 
   Scenario:  undo
@@ -45,9 +45,9 @@ Feature: ship a coworker's feature branch
     And I am now on the "feature" branch
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE               |
-      | main    | local, remote | feature done          |
+      | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
-      | feature | local, remote | developer commit 1    |
+      | feature | local, origin | developer commit 1    |
       |         |               | developer commit 2    |
       |         |               | coworker commit       |
     And my repo now has its initial branches and branch hierarchy

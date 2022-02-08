@@ -23,7 +23,7 @@ Feature: in a subfolder on the main branch
     And my workspace still contains my uncommitted file
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE       |
-      | main   | local, remote | folder commit |
+      | main   | local, origin | folder commit |
       | new    | local         | folder commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
@@ -41,5 +41,5 @@ Feature: in a subfolder on the main branch
     And I am now on the "main" branch
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE       |
-      | main   | local, remote | folder commit |
+      | main   | local, origin | folder commit |
     And Git Town is now aware of no branch hierarchy
