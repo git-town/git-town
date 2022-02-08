@@ -8,7 +8,7 @@ Feature: ship-delete-remote-branch disabled
     And I am on the "feature" branch
     And Git Town's local "ship-delete-remote-branch" setting is "false"
     When I run "git-town ship -m 'feature done'"
-    And the remote deletes the "feature" branch
+    And origin deletes the "feature" branch
 
   Scenario: result
     Then it runs the commands
