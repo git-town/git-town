@@ -375,7 +375,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repo doesn't have a main branch configured$`, func() error {
+	suite.Step(`^the main branch is not set$`, func() error {
 		return state.gitEnv.DevRepo.DeleteMainBranchConfiguration()
 	})
 
@@ -775,22 +775,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^Git Town is no longer in offline mode$`, func() error {
-		state.gitEnv.DevRepo.Config.Reload()
-		if state.gitEnv.DevRepo.Config.IsOffline() {
-			return fmt.Errorf("expected to not be offline but am")
-		}
-		return nil
-	})
-
-	suite.Step(`^Git Town is now in offline mode$`, func() error {
-		state.gitEnv.DevRepo.Config.Reload()
-		if !state.gitEnv.DevRepo.Config.IsOffline() {
-			return fmt.Errorf("expected to be offline but am not")
-		}
-		return nil
-	})
-
 	suite.Step(`^the "([^"]*)" branch gets deleted on the remote$`, func(name string) error {
 		state.initialRemoteBranches = stringslice.Remove(state.initialRemoteBranches, name)
 		return state.gitEnv.OriginRepo.RemoveBranch(name)
@@ -887,7 +871,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return err
 	})
 
-	suite.Step(`^Git Town's "offline" setting is now "([^"]*)"$`, func(value string) error {
+	suite.Step(`^Git Town's "offline" setting is (?:now|still) "([^"]*)"$`, func(value string) error {
 		want, err := strconv.ParseBool(value)
 		if err != nil {
 			return err
