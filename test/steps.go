@@ -775,7 +775,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^offline mode is disabled$`, func() error {
+	suite.Step(`^Git Town is no longer in offline mode$`, func() error {
 		state.gitEnv.DevRepo.Config.Reload()
 		if state.gitEnv.DevRepo.Config.IsOffline() {
 			return fmt.Errorf("expected to not be offline but am")
@@ -783,7 +783,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^offline mode is enabled$`, func() error {
+	suite.Step(`^Git Town is now in offline mode$`, func() error {
 		state.gitEnv.DevRepo.Config.Reload()
 		if !state.gitEnv.DevRepo.Config.IsOffline() {
 			return fmt.Errorf("expected to be offline but am not")
@@ -885,6 +885,19 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^Git Town's "offline" setting is "([^"]*)"$`, func(value string) error {
 		_, err := state.gitEnv.DevRepo.Config.SetGlobalConfigValue("git-town.offline", value)
 		return err
+	})
+
+	suite.Step(`^Git Town's "offline" setting is now "([^"]*)"$`, func(value string) error {
+		want, err := strconv.ParseBool(value)
+		if err != nil {
+			return err
+		}
+		state.gitEnv.DevRepo.Config.Reload()
+		have := state.gitEnv.DevRepo.Config.IsOffline()
+		if have != want {
+			return fmt.Errorf("expected %t but have %t", want, have)
+		}
+		return nil
 	})
 
 	suite.Step(`^the perennial branches are "([^"]+)"$`, func(name string) error {
