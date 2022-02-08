@@ -597,7 +597,7 @@ func (r *Runner) HasLocalBranch(name string) (bool, error) {
 
 // HasLocalOrRemoteBranch indicates whether this repo has a local or remote branch with the given name.
 func (r *Runner) HasLocalOrRemoteBranch(name string) (bool, error) {
-	branches, err := r.LocalAndRemoteBranches()
+	branches, err := r.LocalAndOriginBranches()
 	if err != nil {
 		return false, fmt.Errorf("cannot determine whether the local or remote branch %q exists: %w", name, err)
 	}
@@ -704,8 +704,8 @@ func (r *Runner) LastCommitMessage() (string, error) {
 	return out.OutputSanitized(), nil
 }
 
-// LocalAndRemoteBranches provides the names of all local branches in this repo.
-func (r *Runner) LocalAndRemoteBranches() ([]string, error) {
+// LocalAndOriginBranches provides the names of all local branches in this repo.
+func (r *Runner) LocalAndOriginBranches() ([]string, error) {
 	outcome, err := r.Run("git", "branch", "-a")
 	if err != nil {
 		return []string{}, fmt.Errorf("cannot determine the local branches")

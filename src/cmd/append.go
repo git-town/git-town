@@ -27,11 +27,11 @@ var appendCommand = &cobra.Command{
 Syncs the current branch,
 forks a new feature branch with the given name off the current branch,
 makes the new branch a child of the current branch,
-pushes the new feature branch to the remote repository
+pushes the new feature branch to the origin repository
 (if and only if "new-branch-push-flag" is true),
 and brings over all uncommitted changes to the new feature branch.
 
-See "sync" for information regarding remote upstream.`,
+See "sync" for information regarding upstream remotes.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		config, err := createAppendConfig(args, prodRepo)
 		if err != nil {
