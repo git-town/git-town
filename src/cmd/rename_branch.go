@@ -141,7 +141,7 @@ func createRenameBranchStepList(config renameBranchConfig, repo *git.ProdRepo) (
 	}
 	if config.oldBranchHasTrackingBranch && !config.isOffline {
 		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.newBranchName})
-		result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.oldBranchName, IsTracking: true})
+		result.Append(&steps.DeleteOriginBranchStep{BranchName: config.oldBranchName, IsTracking: true})
 	}
 	result.Append(&steps.DeleteLocalBranchStep{BranchName: config.oldBranchName})
 	err = result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, repo)

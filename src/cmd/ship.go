@@ -193,7 +193,7 @@ func createShipStepList(config shipConfig, repo *git.ProdRepo) (result runstate.
 	// - we know we are online
 	if config.canShipWithDriver || (config.hasTrackingBranch && len(config.childBranches) == 0 && !config.isOffline) {
 		if config.shouldShipDeleteRemoteBranch {
-			result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.branchToShip, IsTracking: true})
+			result.Append(&steps.DeleteOriginBranchStep{BranchName: config.branchToShip, IsTracking: true})
 		}
 	}
 	result.Append(&steps.DeleteLocalBranchStep{BranchName: config.branchToShip})

@@ -28,7 +28,7 @@ var killCommand = &cobra.Command{
 	Short: "Removes an obsolete feature branch",
 	Long: `Removes an obsolete feature branch
 
-Deletes the current or provided branch from the local and remote repositories.
+Deletes the current or provided branch from the local and origin repositories.
 Does not delete perennial branches nor the main branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		config, err := createKillConfig(args, prodRepo)
@@ -120,7 +120,7 @@ func createKillStepList(config killConfig, repo *git.ProdRepo) (result runstate.
 	switch {
 	case config.isTargetBranchLocal:
 		if config.hasTrackingBranch && !config.isOffline {
-			result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.targetBranch, IsTracking: true})
+			result.Append(&steps.DeleteOriginBranchStep{BranchName: config.targetBranch, IsTracking: true})
 		}
 		if config.initialBranch == config.targetBranch {
 			if config.hasOpenChanges {
@@ -134,7 +134,7 @@ func createKillStepList(config killConfig, repo *git.ProdRepo) (result runstate.
 		}
 		result.Append(&steps.DeleteParentBranchStep{BranchName: config.targetBranch})
 	case !repo.Config.IsOffline():
-		result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.targetBranch, IsTracking: false})
+		result.Append(&steps.DeleteOriginBranchStep{BranchName: config.targetBranch, IsTracking: false})
 	default:
 		return result, fmt.Errorf("cannot delete remote branch %q in offline mode", config.targetBranch)
 	}
