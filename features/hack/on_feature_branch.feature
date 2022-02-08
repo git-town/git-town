@@ -2,7 +2,7 @@ Feature: on the main branch
 
   Background:
     Given my repo has a feature branch "existing"
-    And my repo contains the commits
+    And the commits
       | BRANCH   | LOCATION | MESSAGE         |
       | main     | remote   | main commit     |
       | existing | local    | existing commit |

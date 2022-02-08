@@ -3,7 +3,7 @@ Feature: nested feature branches
   Scenario:
     Given my repo has a feature branch "parent"
     And my repo has a feature branch "child" as a child of "parent"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION | MESSAGE              |
       | main   | local    | local main commit    |
       |        | remote   | remote main commit   |

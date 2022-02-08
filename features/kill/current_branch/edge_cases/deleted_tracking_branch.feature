@@ -2,7 +2,7 @@ Feature: the branch to kill has a deleted tracking branch
 
   Background:
     Given my repo has the feature branches "old" and "other"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION      | MESSAGE      |
       | old    | local, remote | old commit   |
       | other  | local, remote | other commit |

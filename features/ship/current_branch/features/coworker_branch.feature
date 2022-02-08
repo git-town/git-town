@@ -2,7 +2,7 @@ Feature: ship a coworker's feature branch
 
   Background:
     Given my repo has a feature branch "feature"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION      | MESSAGE         | AUTHOR                          |
       | feature | local, remote | coworker commit | coworker <coworker@example.com> |
     And I am on the "feature" branch

@@ -2,7 +2,7 @@ Feature: append a new feature branch to an existing feature branch
 
   Background:
     Given my repo has a feature branch "existing"
-    And my repo contains the commits
+    And the commits
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, remote | existing commit |
     And I am on the "existing" branch

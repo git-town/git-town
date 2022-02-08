@@ -3,7 +3,7 @@ Feature: sync the current feature branch (without a tracking branch or remote re
   Background:
     Given my repo does not have a remote origin
     And my repo has a local feature branch "feature"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | main    | local    | main commit    |
       | feature | local    | feature commit |

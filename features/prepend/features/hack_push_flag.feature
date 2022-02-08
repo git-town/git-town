@@ -3,7 +3,7 @@ Feature: auto-push new branches
   Background:
     Given the new-branch-push-flag configuration is true
     And my repo has a feature branch "old"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION      | MESSAGE        |
       | old    | local, remote | feature commit |
     And I am on the "old" branch

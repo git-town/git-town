@@ -2,7 +2,7 @@ Feature: sync the current perennial branch
 
   Background:
     Given my repo has the perennial branches "production" and "qa"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION      | MESSAGE       | FILE NAME   |
       | qa     | local         | local commit  | local_file  |
       |        | remote        | remote commit | remote_file |

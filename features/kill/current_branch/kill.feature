@@ -2,7 +2,7 @@ Feature: delete the current feature branch
 
   Background:
     Given my repo has the feature branches "current" and "other"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | current | local, remote | current commit |
       | other   | local, remote | other commit   |

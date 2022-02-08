@@ -3,7 +3,7 @@ Feature: rename a perennial branch
   Background:
     Given my repo has a perennial branch "production"
     And my repo has a feature branch "hotfix" as a child of "production"
-    And my repo contains the commits
+    And the commits
       | BRANCH     | LOCATION      | MESSAGE           |
       | hotfix     | local, remote | hotfix commit     |
       | production | local, remote | production commit |

@@ -2,7 +2,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
 
   Background:
     Given my repo has the feature branches "alpha" and "beta"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION      | MESSAGE       | FILE NAME        |
       | main   | local, remote | main commit   | main_file        |
       | alpha  | local, remote | folder commit | new_folder/file1 |

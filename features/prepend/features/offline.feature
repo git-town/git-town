@@ -3,7 +3,7 @@ Feature: offline mode
   Background:
     Given Git Town is in offline mode
     And my repo has a feature branch "old"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, remote | old commit |
     And I am on the "old" branch

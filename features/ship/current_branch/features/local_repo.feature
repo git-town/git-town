@@ -3,7 +3,7 @@ Feature: ship a feature branch in a local repo
   Background:
     Given my repo has a feature branch "feature"
     And my repo does not have a remote origin
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | local    | feature commit |
     And I am on the "feature" branch

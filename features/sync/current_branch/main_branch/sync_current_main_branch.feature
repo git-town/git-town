@@ -2,7 +2,7 @@ Feature: sync the main branch
 
   Background:
     Given I am on the "main" branch
-    And my repo contains the commits
+    And the commits
       | LOCATION | MESSAGE       | FILE NAME   |
       | local    | local commit  | local_file  |
       | remote   | remote commit | remote_file |

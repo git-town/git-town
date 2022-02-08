@@ -2,7 +2,7 @@ Feature: on a forked repo
 
   Background:
     Given my repo has an upstream repo
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION | MESSAGE         |
       | main   | upstream | upstream commit |
     And I am on the "main" branch

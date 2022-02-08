@@ -2,7 +2,7 @@ Feature: ship the supplied feature branch from a subfolder
 
   Background:
     Given my repo has the feature branches "feature" and "other"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | remote   | feature commit |
     And I am on the "other" branch

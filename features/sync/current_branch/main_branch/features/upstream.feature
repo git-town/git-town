@@ -4,7 +4,7 @@ Feature: on the main branch with a upstream remote
     Given my repo has an upstream repo
 
   Scenario: sync-upstream is set to true
-    Given my repo contains the commits
+    Given the commits
       | BRANCH | LOCATION | MESSAGE         |
       | main   | upstream | upstream commit |
     And I am on the "main" branch
@@ -24,7 +24,7 @@ Feature: on the main branch with a upstream remote
       | main   | local, remote, upstream | upstream commit |
 
   Scenario: sync-upstream is set to false
-    Given my repo contains the commits
+    Given the commits
       | BRANCH | LOCATION | MESSAGE         |
       | main   | local    | local commit    |
       |        | remote   | remote commit   |
