@@ -91,7 +91,7 @@ func createKillConfig(args []string, repo *git.ProdRepo) (result killConfig, err
 		}
 	}
 	if result.initialBranch != result.targetBranch {
-		hasTargetBranch, err := repo.Silent.HasLocalOrRemoteBranch(result.targetBranch)
+		hasTargetBranch, err := repo.Silent.HasLocalOrOriginBranch(result.targetBranch)
 		if err != nil {
 			return result, err
 		}

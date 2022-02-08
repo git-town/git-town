@@ -112,7 +112,7 @@ func createRenameBranchConfig(args []string, repo *git.ProdRepo) (result renameB
 	if !isBranchInSync {
 		return result, fmt.Errorf("%q is not in sync with its tracking branch, please sync the branches before renaming", result.oldBranchName)
 	}
-	hasNewBranch, err := repo.Silent.HasLocalOrRemoteBranch(result.newBranchName)
+	hasNewBranch, err := repo.Silent.HasLocalOrOriginBranch(result.newBranchName)
 	if err != nil {
 		return result, err
 	}

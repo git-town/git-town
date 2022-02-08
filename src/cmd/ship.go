@@ -116,7 +116,7 @@ func gitShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (re
 		}
 	}
 	if result.branchToShip != result.initialBranch {
-		hasBranch, err := repo.Silent.HasLocalOrRemoteBranch(result.branchToShip)
+		hasBranch, err := repo.Silent.HasLocalOrOriginBranch(result.branchToShip)
 		if err != nil {
 			return result, err
 		}

@@ -72,7 +72,7 @@ func createAppendConfig(args []string, repo *git.ProdRepo) (result appendConfig,
 			return result, err
 		}
 	}
-	hasBranch, err := repo.Silent.HasLocalOrRemoteBranch(result.targetBranch)
+	hasBranch, err := repo.Silent.HasLocalOrOriginBranch(result.targetBranch)
 	if err != nil {
 		return result, err
 	}

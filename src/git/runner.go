@@ -595,8 +595,8 @@ func (r *Runner) HasLocalBranch(name string) (bool, error) {
 	return stringslice.Contains(branches, name), nil
 }
 
-// HasLocalOrRemoteBranch indicates whether this repo has a local or remote branch with the given name.
-func (r *Runner) HasLocalOrRemoteBranch(name string) (bool, error) {
+// HasLocalOrOriginBranch indicates whether this repo has a local or remote branch with the given name.
+func (r *Runner) HasLocalOrOriginBranch(name string) (bool, error) {
 	branches, err := r.LocalAndOriginBranches()
 	if err != nil {
 		return false, fmt.Errorf("cannot determine whether the local or remote branch %q exists: %w", name, err)
