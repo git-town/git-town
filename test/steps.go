@@ -565,7 +565,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.PushBranchToOrigin(branch)
 	})
 
-	suite.Step(`^my repo is left with my initial commits$`, func() error {
+	suite.Step(`^now the initial commits exist$`, func() error {
 		return compareExistingCommits(state, state.initialCommits)
 	})
 

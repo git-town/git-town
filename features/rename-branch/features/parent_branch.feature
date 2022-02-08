@@ -39,5 +39,5 @@ Feature: rename a parent branch
       |        | git checkout parent                         |
       | parent | git branch -D new                           |
     And I am now on the "parent" branch
-    And my repo is left with my initial commits
+    And now the initial commits exist
     And my repo now has its initial branches and branch hierarchy

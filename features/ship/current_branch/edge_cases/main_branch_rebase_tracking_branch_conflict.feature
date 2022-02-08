@@ -31,7 +31,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       |        | git checkout feature |
     And I am still on the "feature" branch
     And there is no rebase in progress anymore
-    And my repo is left with my initial commits
+    And now the initial commits exist
     And Git Town is still aware of the initial branch hierarchy
 
   Scenario: resolve and continue

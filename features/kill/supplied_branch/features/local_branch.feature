@@ -39,5 +39,5 @@ Feature: local branch
       | dead   | git reset {{ sha 'dead commit' }}       |
     And I am now on the "dead" branch
     And my workspace has the uncommitted file again
-    And my repo is left with my initial commits
+    And now the initial commits exist
     And my repo now has its initial branches and branch hierarchy

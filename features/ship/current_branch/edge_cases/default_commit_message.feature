@@ -29,7 +29,7 @@ Feature: must provide a commit message
       aborted because commit exited with error
       """
     And I am still on the "feature" branch
-    And my repo is left with my initial commits
+    And now the initial commits exist
     And Git Town is still aware of the initial branch hierarchy
 
   Scenario: undo
@@ -39,5 +39,5 @@ Feature: must provide a commit message
       nothing to undo
       """
     And I am still on the "feature" branch
-    And my repo is left with my initial commits
+    And now the initial commits exist
     And Git Town is still aware of the initial branch hierarchy

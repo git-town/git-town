@@ -32,5 +32,5 @@ Feature: delete a local branch
       | local  | git reset {{ sha 'local commit' }}        |
     And I am now on the "local" branch
     And my workspace still contains my uncommitted file
-    And my repo is left with my initial commits
+    And now the initial commits exist
     And my repo now has its initial branches and branch hierarchy

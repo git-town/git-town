@@ -43,7 +43,7 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       | main   | git stash pop                             |
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
-    And my repo is left with my initial commits
+    And now the initial commits exist
     And there is no merge in progress
 
   Scenario: skip

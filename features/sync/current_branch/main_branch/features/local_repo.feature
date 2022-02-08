@@ -11,4 +11,4 @@ Feature: sync the main branch in a local repo
   Scenario: result
     Then it runs no commands
     And I am still on the "main" branch
-    And my repo is left with my initial commits
+    And now the initial commits exist

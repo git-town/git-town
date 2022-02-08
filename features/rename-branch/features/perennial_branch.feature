@@ -49,5 +49,5 @@ Feature: rename a perennial branch
       | production | git branch -D new                                   |
     And I am now on the "production" branch
     And the perennial branches are now "production"
-    And my repo is left with my initial commits
+    And now the initial commits exist
     And my repo now has its initial branches and branch hierarchy

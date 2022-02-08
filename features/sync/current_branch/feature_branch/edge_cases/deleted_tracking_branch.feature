@@ -20,4 +20,4 @@ Feature: restores deleted tracking branch
       |         | git push -u origin feature |
     And all branches are now synchronized
     And I am still on the "feature" branch
-    And my repo is left with my initial commits
+    And now the initial commits exist
