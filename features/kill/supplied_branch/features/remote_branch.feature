@@ -23,6 +23,6 @@ Feature: delete a remote only branch
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                                                 |
-      | main   | git push origin {{ sha-in-remote 'feature commit' }}:refs/heads/feature |
+      | main   | git push origin {{ sha-in-origin 'feature commit' }}:refs/heads/feature |
     And my repo now has the initial branches
     And Git Town is still aware of no branch hierarchy
