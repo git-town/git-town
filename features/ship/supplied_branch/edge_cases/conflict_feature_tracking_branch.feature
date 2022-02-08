@@ -5,7 +5,7 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
     And the commits
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | feature | local    | conflicting local commit  | conflicting_file | local content  |
-      |         | origin   | conflicting remote commit | conflicting_file | origin content |
+      |         | origin   | conflicting origin commit | conflicting_file | origin content |
     And I am on the "other" branch
     And my workspace has an uncommitted file
     And I run "git-town ship feature -m 'feature done'"
@@ -111,6 +111,6 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
       | main    | local, origin | feature done                                               |
       |         |               | Revert "feature done"                                      |
       | feature | local, origin | conflicting local commit                                   |
-      |         |               | conflicting remote commit                                  |
+      |         |               | conflicting origin commit                                  |
       |         |               | Merge remote-tracking branch 'origin/feature' into feature |
     And my repo now has its initial branches and branch hierarchy

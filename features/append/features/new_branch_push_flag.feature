@@ -1,4 +1,4 @@
-Feature: auto-push the new branch to the remote
+Feature: auto-push the new branch to origin
 
   Background:
     Given the new-branch-push-flag configuration is true

@@ -5,7 +5,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And the commits
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting local commit  | conflicting_file | local content   |
-      |         | origin   | conflicting remote commit | conflicting_file | origin content  |
+      |         | origin   | conflicting origin commit | conflicting_file | origin content  |
       | feature | local    | feature commit            | feature_file     | feature content |
     And I am on the "other" branch
     And my workspace has an uncommitted file
@@ -62,7 +62,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And my workspace still contains my uncommitted file
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                   | FILE NAME        | FILE CONTENT     |
-      | main   | local, origin | conflicting remote commit | conflicting_file | origin content   |
+      | main   | local, origin | conflicting origin commit | conflicting_file | origin content   |
       |        |               | conflicting local commit  | conflicting_file | resolved content |
       |        |               | feature done              | feature_file     | feature content  |
     And the existing branches are
@@ -113,12 +113,12 @@ Feature: handle conflicts between the main branch and its tracking branch
     And I am now on the "other" branch
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                          |
-      | main    | local, origin | conflicting remote commit        |
+      | main    | local, origin | conflicting origin commit        |
       |         |               | conflicting local commit         |
       |         |               | feature done                     |
       |         |               | Revert "feature done"            |
       | feature | local, origin | feature commit                   |
-      |         | origin        | conflicting remote commit        |
+      |         | origin        | conflicting origin commit        |
       |         |               | conflicting local commit         |
       |         |               | Merge branch 'main' into feature |
     And my repo now has its initial branches and branch hierarchy
