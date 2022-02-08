@@ -33,12 +33,12 @@ Aborts if the new branch name already exists or the tracking branch is out of sy
 - creates a branch with the new name
 - deletes the old branch
 
-When there is a remote repository
+When there is an origin repository
 - syncs the repository
 
 When there is a tracking branch
-- pushes the new branch to the remote repository
-- deletes the old branch from the remote repository
+- pushes the new branch to the origin repository
+- deletes the old branch from the origin repository
 
 When run on a perennial branch
 - confirm with the "-f" option
