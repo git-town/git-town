@@ -10,7 +10,7 @@ import (
 // SyncBranchSteps provides the steps to sync the branch with the given name.
 func SyncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (result StepList, err error) {
 	isFeature := repo.Config.IsFeatureBranch(branchName)
-	hasRemoteOrigin, err := repo.Silent.HasRemote("origin")
+	hasRemoteOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
 		return result, err
 	}

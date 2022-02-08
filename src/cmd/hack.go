@@ -69,7 +69,7 @@ func createHackConfig(args []string, repo *git.ProdRepo) (result appendConfig, e
 	if err != nil {
 		return result, err
 	}
-	result.hasOrigin, err = repo.Silent.HasRemote("origin")
+	result.hasOrigin, err = repo.Silent.HasOrigin()
 	if err != nil {
 		return result, err
 	}

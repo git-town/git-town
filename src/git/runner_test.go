@@ -438,7 +438,7 @@ func TestRunner_HasRemote(t *testing.T) {
 	repoDir := test.CreateTempDir(t)
 	repo, err := origin.Clone(repoDir)
 	assert.NoError(t, err)
-	has, err := repo.Runner.HasRemote("origin")
+	has, err := repo.Runner.HasOrigin()
 	assert.NoError(t, err)
 	assert.True(t, has)
 	has, err = repo.Runner.HasRemote("zonk")

@@ -105,7 +105,7 @@ func gitShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (re
 			return result, fmt.Errorf("you have uncommitted changes. Did you mean to commit them before shipping?")
 		}
 	}
-	result.hasOrigin, err = repo.Silent.HasRemote("origin")
+	result.hasOrigin, err = repo.Silent.HasOrigin()
 	if err != nil {
 		return result, err
 	}
@@ -209,7 +209,7 @@ func createShipStepList(config shipConfig, repo *git.ProdRepo) (result runstate.
 }
 
 func createPullRequestInfo(branch, parentBranch string, driver hosting.Driver) (result hosting.PullRequestInfo, err error) {
-	hasOrigin, err := prodRepo.Silent.HasRemote("origin")
+	hasOrigin, err := prodRepo.Silent.HasOrigin()
 	if err != nil {
 		return result, err
 	}

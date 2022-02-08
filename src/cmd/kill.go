@@ -79,7 +79,7 @@ func createKillConfig(args []string, repo *git.ProdRepo) (result killConfig, err
 		}
 		repo.Config.Reload()
 	}
-	hasOrigin, err := repo.Silent.HasRemote("origin")
+	hasOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
 		return result, err
 	}
