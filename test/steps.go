@@ -791,7 +791,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the "([^"]*)" branch gets deleted on the remote$`, func(name string) error {
+	suite.Step(`^the "([^"]*)" branch gets deleted at origin$`, func(name string) error {
 		state.initialRemoteBranches = stringslice.Remove(state.initialRemoteBranches, name)
 		return state.gitEnv.OriginRepo.RemoveBranch(name)
 	})
