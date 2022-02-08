@@ -1,7 +1,7 @@
 Feature: local branch
 
   Background:
-    Given my repo does not have an origin remote
+    Given my repo does not have an origin
     And my repo has the local feature branches "dead" and "other"
     And the commits
       | BRANCH | LOCATION | MESSAGE      |

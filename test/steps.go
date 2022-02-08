@@ -365,7 +365,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevShell.MockCommand(tool)
 	})
 
-	suite.Step(`^my repo does not have an origin remote$`, func() error {
+	suite.Step(`^my repo does not have an origin$`, func() error {
 		err := state.gitEnv.DevRepo.RemoveRemote("origin")
 		if err != nil {
 			return err

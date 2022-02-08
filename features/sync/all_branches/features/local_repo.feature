@@ -1,7 +1,7 @@
 Feature: syncs all feature branches (without remote repo)
 
   Background:
-    Given my repo does not have an origin remote
+    Given my repo does not have an origin
     And my repo has the local feature branches "alpha" and "beta"
     And the commits
       | BRANCH | LOCATION | MESSAGE      |

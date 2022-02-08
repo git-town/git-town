@@ -2,7 +2,7 @@ Feature: ship the supplied feature branch without a remote origin
 
   Background:
     Given my repo has the feature branches "feature" and "other"
-    And my repo does not have an origin remote
+    And my repo does not have an origin
     And the commits
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME        |
       | feature | local    | feature commit | conflicting_file |

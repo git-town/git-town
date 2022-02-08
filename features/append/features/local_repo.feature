@@ -2,7 +2,7 @@ Feature: in a local repo
 
   Background:
     Given my repo has a feature branch "existing"
-    And my repo does not have an origin remote
+    And my repo does not have an origin
     And the commits
       | BRANCH   | LOCATION | MESSAGE         |
       | existing | local    | existing commit |
