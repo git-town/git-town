@@ -511,7 +511,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repo has the tags$`, func(table *messages.PickleStepArgument_PickleTable) error {
+	suite.Step(`^the tags$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		return state.gitEnv.CreateTags(table)
 	})
 
@@ -645,7 +645,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return compareExistingCommits(state, table)
 	})
 
-	suite.Step(`^my repo now has the tags$`, func(table *messages.PickleStepArgument_PickleTable) error {
+	suite.Step(`^these tags exist$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		tagTable, err := state.gitEnv.TagTable()
 		if err != nil {
 			return err
@@ -712,7 +712,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repo has a remote tag "([^"]+)" that is not on a branch$`, func(name string) error {
+	suite.Step(`^a remote tag "([^"]+)" not on a branch$`, func(name string) error {
 		return state.gitEnv.OriginRepo.CreateStandaloneTag(name)
 	})
 
