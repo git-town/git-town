@@ -39,4 +39,4 @@ Feature: in a local repo
     And I am now on the "feature" branch
     And my workspace still contains my uncommitted file
     And now the initial commits exist
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branch setup exists

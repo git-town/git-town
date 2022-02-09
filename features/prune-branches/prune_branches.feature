@@ -34,4 +34,4 @@ Feature: delete branches that were shipped or removed on another machine
       |        | git checkout old                      |
     And I am now on the "old" branch
     And my workspace still contains my uncommitted file
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branch setup exists

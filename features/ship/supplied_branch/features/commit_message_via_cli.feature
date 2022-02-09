@@ -61,4 +61,4 @@ Feature: provide the commit message via a CLI argument
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
       | feature | local, origin | feature commit        |
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branch setup exists

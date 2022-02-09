@@ -39,4 +39,4 @@ Feature: ship a feature branch in a local repo
       | main    | local    | feature done          |
       |         |          | Revert "feature done" |
       | feature | local    | feature commit        |
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branch setup exists

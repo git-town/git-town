@@ -62,4 +62,4 @@ Feature: ship the supplied feature branch from a subfolder
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
       | feature | origin        | feature commit        |
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branch setup exists

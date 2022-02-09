@@ -47,4 +47,4 @@ Feature: delete a branch within a branch chain
     And I am now on the "beta" branch
     And my workspace has the uncommitted file again
     And now the initial commits exist
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branch setup exists

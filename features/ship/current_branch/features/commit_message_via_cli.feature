@@ -49,4 +49,4 @@ Feature: ship the current feature branch with a tracking branch
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
       | feature | local, origin | feature commit        |
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branch setup exists

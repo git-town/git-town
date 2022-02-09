@@ -30,4 +30,4 @@ Feature: a parent branch of a local branch was shipped
       | BRANCH | COMMAND                                     |
       | main   | git branch parent {{ sha 'parent commit' }} |
     And I am now on the "main" branch
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branch setup exists

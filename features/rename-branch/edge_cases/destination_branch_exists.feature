@@ -16,7 +16,7 @@ Feature: destination branch exists
       a branch named "beta" already exists
       """
     And I am still on the "alpha" branch
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branch setup exists
 
   Scenario: destination branch exists in origin
     Given a feature branch "alpha"
@@ -35,4 +35,4 @@ Feature: destination branch exists
       a branch named "beta" already exists
       """
     And I am still on the "alpha" branch
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branch setup exists

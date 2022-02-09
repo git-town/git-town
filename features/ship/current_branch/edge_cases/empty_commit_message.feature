@@ -31,7 +31,7 @@ Feature: abort the ship by empty commit message
       """
     And I am still on the "feature" branch
     And now the initial commits exist
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branch setup exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -41,4 +41,4 @@ Feature: abort the ship by empty commit message
       """
     And I am still on the "feature" branch
     And now the initial commits exist
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branch setup exists

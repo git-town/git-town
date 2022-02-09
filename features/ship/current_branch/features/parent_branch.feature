@@ -51,4 +51,4 @@ Feature: ship a parent branch
       |        |               | Revert "parent done" |
       | child  | local, origin | child commit         |
       | parent | local, origin | parent commit        |
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branch setup exists

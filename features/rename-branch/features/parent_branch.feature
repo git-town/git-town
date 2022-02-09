@@ -40,4 +40,4 @@ Feature: rename a parent branch
       | parent | git branch -D new                           |
     And I am now on the "parent" branch
     And now the initial commits exist
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branch setup exists

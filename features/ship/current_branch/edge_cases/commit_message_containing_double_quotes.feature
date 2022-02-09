@@ -50,4 +50,4 @@ Feature: commit message can contain double-quotes
       | main    | local, origin | with "double quotes"          |
       |         |               | Revert "with "double quotes"" |
       | feature | local, origin | feature commit                |
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branch setup exists

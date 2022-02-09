@@ -33,4 +33,4 @@ Feature: delete a local branch
     And I am now on the "local" branch
     And my workspace still contains my uncommitted file
     And now the initial commits exist
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branch setup exists

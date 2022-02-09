@@ -49,4 +49,4 @@ Feature: enter the commit message interactively via the editor
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
       | feature | local, origin | feature commit        |
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branch setup exists

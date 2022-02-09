@@ -50,4 +50,4 @@ Feature: rename a perennial branch
     And I am now on the "production" branch
     And the perennial branches are now "production"
     And now the initial commits exist
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branch setup exists

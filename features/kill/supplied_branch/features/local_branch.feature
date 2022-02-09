@@ -40,4 +40,4 @@ Feature: local branch
     And I am now on the "dead" branch
     And my workspace has the uncommitted file again
     And now the initial commits exist
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branch setup exists
