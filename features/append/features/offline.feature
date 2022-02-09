@@ -1,7 +1,7 @@
 Feature: append in offline mode
 
   Background:
-    Given Git Town is in offline mode
+    Given offline mode is enabled
     And my repo has a feature branch "existing"
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         |

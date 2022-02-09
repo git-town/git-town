@@ -1,7 +1,7 @@
 Feature: offline mode
 
   Background:
-    Given Git Town is in offline mode
+    Given offline mode is enabled
     And the commits
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |

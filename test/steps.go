@@ -111,7 +111,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^Git Town is in offline mode$`, func() error {
+	suite.Step(`^offline mode is enabled$`, func() error {
 		return state.gitEnv.DevRepo.Config.SetOffline(true)
 	})
 
@@ -375,7 +375,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repo doesn't have a main branch configured$`, func() error {
+	suite.Step(`^the main branch is not set$`, func() error {
 		return state.gitEnv.DevRepo.DeleteMainBranchConfiguration()
 	})
 
@@ -433,19 +433,19 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.AddUpstream()
 	})
 
-	suite.Step(`^Git Town's local "color.ui" setting is "([^"]*)"$`, func(value string) error {
+	suite.Step(`^the "color.ui" setting is "([^"]*)"$`, func(value string) error {
 		return state.gitEnv.DevRepo.Config.SetColorUI(value)
 	})
 
-	suite.Step(`^Git Town's local "code-hosting-driver" setting is "([^"]*)"$`, func(value string) error {
+	suite.Step(`^the "code-hosting-driver" setting is "([^"]*)"$`, func(value string) error {
 		return state.gitEnv.DevRepo.Config.SetCodeHostingDriver(value)
 	})
 
-	suite.Step(`^Git Town's local "code-hosting-origin-hostname" setting is "([^"]*)"$`, func(value string) error {
+	suite.Step(`^the "code-hosting-origin-hostname" setting is "([^"]*)"$`, func(value string) error {
 		return state.gitEnv.DevRepo.Config.SetCodeHostingOriginHostname(value)
 	})
 
-	suite.Step(`^Git Town's local "ship-delete-remote-branch" setting is "(true|false)"$`, func(value string) error {
+	suite.Step(`^the "ship-delete-remote-branch" setting is "(true|false)"$`, func(value string) error {
 		parsed, err := strconv.ParseBool(value)
 		if err != nil {
 			return err
@@ -454,7 +454,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^Git Town's local "sync-upstream" setting is (true|false)$`, func(text string) error {
+	suite.Step(`^the "sync-upstream" setting is (true|false)$`, func(text string) error {
 		value, err := strconv.ParseBool(text)
 		if err != nil {
 			return err
@@ -558,7 +558,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^my repo has a perennial branch "([^"]+)"`, func(branch string) error {
 		err := state.gitEnv.DevRepo.CreatePerennialBranches(branch)
 		if err != nil {
-			return fmt.Errorf("cannot create perennial branches: %w", err)
+			return fmt.Errorf("cannot create perennial branch: %w", err)
 		}
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
@@ -569,7 +569,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return compareExistingCommits(state, state.initialCommits)
 	})
 
-	suite.Step(`^my repo now has no perennial branches$`, func() error {
+	suite.Step(`^there are still no perennial branches$`, func() error {
 		state.gitEnv.DevRepo.Config.Reload()
 		branches := state.gitEnv.DevRepo.Config.PerennialBranches()
 		if len(branches) > 0 {
@@ -830,21 +830,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the global new-branch-push-flag configuration is (true|false)$`, func(text string) error {
-		b, err := strconv.ParseBool(text)
-		if err != nil {
-			return err
-		}
-		_ = state.gitEnv.DevRepo.Config.SetNewBranchPush(b, true)
-		return nil
-	})
-
 	suite.Step(`^the main branch is "([^"]+)"$`, func(name string) error {
 		return state.gitEnv.DevRepo.Config.SetMainBranch(name)
-	})
-
-	suite.Step(`^the main branch is not configured$`, func() error {
-		return state.gitEnv.DevRepo.DeleteMainBranchConfiguration()
 	})
 
 	suite.Step(`^the main branch is now "([^"]+)"$`, func(name string) error {
@@ -856,20 +843,21 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the new-branch-push-flag configuration is (true|false)$`, func(value string) error {
-		b, err := strconv.ParseBool(value)
-		if err != nil {
-			return err
+	suite.Step(`^the (global )?"new-branch-push-flag" setting is "([^"]*)"$`, func(global string, value string) error {
+		setGlobal := global != ""
+		if value == "true" || value == "false" {
+			b, err := strconv.ParseBool(value)
+			if err != nil {
+				return err
+			}
+			_ = state.gitEnv.DevRepo.Config.SetNewBranchPush(b, setGlobal)
+			return nil
 		}
-		return state.gitEnv.DevRepo.Config.SetNewBranchPush(b, false)
-	})
-
-	suite.Step(`^the new-branch-push-flag configuration is "([^"]*)"$`, func(value string) error {
 		_, err := state.gitEnv.DevRepo.Config.SetLocalConfigValue("git-town.new-branch-push-flag", value)
 		return err
 	})
 
-	suite.Step(`^the new-branch-push-flag configuration is now (true|false)$`, func(text string) error {
+	suite.Step(`^the "new-branch-push-flag" setting is now "(true|false)"$`, func(text string) error {
 		want, err := strconv.ParseBool(text)
 		if err != nil {
 			return err
@@ -882,9 +870,22 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^Git Town's local "offline" setting is "([^"]*)"$`, func(value string) error {
+	suite.Step(`^the "offline" setting is "([^"]*)"$`, func(value string) error {
 		_, err := state.gitEnv.DevRepo.Config.SetGlobalConfigValue("git-town.offline", value)
 		return err
+	})
+
+	suite.Step(`^the "offline" setting is (?:now|still) "([^"]*)"$`, func(value string) error {
+		want, err := strconv.ParseBool(value)
+		if err != nil {
+			return err
+		}
+		state.gitEnv.DevRepo.Config.Reload()
+		have := state.gitEnv.DevRepo.Config.IsOffline()
+		if have != want {
+			return fmt.Errorf("expected %t but have %t", want, have)
+		}
+		return nil
 	})
 
 	suite.Step(`^the perennial branches are "([^"]+)"$`, func(name string) error {
@@ -938,11 +939,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.CheckoutBranch("-")
 	})
 
-	suite.Step(`^the pull-branch-strategy configuration is "(merge|rebase)"$`, func(value string) error {
+	suite.Step(`^the "pull-branch-strategy" setting is "(merge|rebase)"$`, func(value string) error {
 		return state.gitEnv.DevRepo.Config.SetPullBranchStrategy(value)
 	})
 
-	suite.Step(`^the pull-branch-strategy configuration is now "(merge|rebase)"$`, func(want string) error {
+	suite.Step(`^the "pull-branch-strategy" setting is now "(merge|rebase)"$`, func(want string) error {
 		state.gitEnv.DevRepo.Config.Reload()
 		have := state.gitEnv.DevRepo.Config.PullBranchStrategy()
 		if have != want {
