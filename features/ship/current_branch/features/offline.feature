@@ -25,7 +25,7 @@ Feature: offline mode
       | BRANCH  | LOCATION | MESSAGE        |
       | main    | local    | feature done   |
       | feature | origin   | feature commit |
-    And Git Town is now aware of no branch hierarchy
+    And no branch hierarchy exists now
 
   Scenario: undo
     When I run "git-town undo"

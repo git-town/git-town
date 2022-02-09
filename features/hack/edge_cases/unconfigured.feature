@@ -27,4 +27,4 @@ Feature: missing configuration
       | feature | git checkout main     |
       | main    | git branch -d feature |
     And the current branch is now "main"
-    And Git Town is now aware of no branch hierarchy
+    And no branch hierarchy exists now

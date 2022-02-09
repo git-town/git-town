@@ -61,7 +61,7 @@ Feature: handle conflicts between the shipped branch and the main branch
       | BRANCH | LOCATION      | MESSAGE                 | FILE NAME        | FILE CONTENT     |
       | main   | local, origin | conflicting main commit | conflicting_file | main content     |
       |        |               | feature done            | conflicting_file | resolved content |
-    And Git Town is now aware of no branch hierarchy
+    And no branch hierarchy exists now
 
   Scenario: resolve, commit, and continue
     When I resolve the conflict in "conflicting_file"

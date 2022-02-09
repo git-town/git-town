@@ -16,7 +16,7 @@ Feature: ship a coworker's feature branch
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      | AUTHOR                            |
       | main   | local, origin | feature done | developer <developer@example.com> |
-    And Git Town is now aware of no branch hierarchy
+    And no branch hierarchy exists now
 
   Scenario: choose a coworker as the author
     When I run "git-town ship -m 'feature done'" and answer the prompts:
@@ -25,7 +25,7 @@ Feature: ship a coworker's feature branch
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      | AUTHOR                          |
       | main   | local, origin | feature done | coworker <coworker@example.com> |
-    And Git Town is now aware of no branch hierarchy
+    And no branch hierarchy exists now
 
   Scenario:  undo
     Given I ran "git-town ship -m 'feature done'" and answered the prompts:

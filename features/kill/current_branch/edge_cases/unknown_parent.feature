@@ -10,4 +10,4 @@ Feature: ask for missing parent branch information
       | feature | git fetch --prune --tags |
       |         | git checkout main        |
       | main    | git branch -D feature    |
-    And Git Town is now aware of no branch hierarchy
+    And no branch hierarchy exists now

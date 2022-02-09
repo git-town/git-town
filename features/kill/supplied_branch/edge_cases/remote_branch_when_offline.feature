@@ -17,4 +17,4 @@ Feature: does not kill a remote branch in offline mode
       cannot delete remote branch "feature" in offline mode
       """
     And the current branch is still "main"
-    And Git Town is still aware of no branch hierarchy
+    And no branch hierarchy exists now
