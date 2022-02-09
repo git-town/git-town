@@ -1,12 +1,11 @@
 Feature: conflicts between the main branch and its tracking branch
 
   Background:
-    Given my repo has a feature branch "existing"
+    Given the current branch is a feature branch "existing"
     And the commits
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | main   | local    | conflicting local commit  | conflicting_file | local content  |
       |        | origin   | conflicting origin commit | conflicting_file | origin content |
-    And I am on the "existing" branch
     And my workspace has an uncommitted file
     When I run "git-town hack new"
 
@@ -33,7 +32,7 @@ Feature: conflicts between the main branch and its tracking branch
       | main     | git rebase --abort    |
       |          | git checkout existing |
       | existing | git stash pop         |
-    And I am now on the "existing" branch
+    And the current branch is now "existing"
     And my workspace has the uncommitted file again
     And there is no rebase in progress anymore
     And now the initial commits exist
@@ -57,7 +56,7 @@ Feature: conflicts between the main branch and its tracking branch
       |        | git branch new main   |
       |        | git checkout new      |
       | new    | git stash pop         |
-    And I am now on the "new" branch
+    And the current branch is now "new"
     And my workspace still contains my uncommitted file
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                   |
@@ -80,5 +79,5 @@ Feature: conflicts between the main branch and its tracking branch
       |        | git branch new main |
       |        | git checkout new    |
       | new    | git stash pop       |
-    And I am now on the "new" branch
+    And the current branch is now "new"
     And my workspace still contains my uncommitted file

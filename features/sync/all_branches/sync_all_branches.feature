@@ -1,7 +1,7 @@
 Feature: sync all feature branches
 
   Background:
-    Given my repo has the feature branches "alpha" and "beta"
+    Given the feature branches "alpha" and "beta"
     And the perennial branches "production" and "qa"
     And the commits
       | BRANCH     | LOCATION      | MESSAGE                  |
@@ -12,7 +12,7 @@ Feature: sync all feature branches
       |            | origin        | origin production commit |
       | qa         | local         | qa local commit          |
       |            | origin        | qa origin commit         |
-    And I am on the "alpha" branch
+    And the current branch is "alpha"
     When I run "git-town sync --all"
 
   Scenario: result
@@ -37,5 +37,5 @@ Feature: sync all feature branches
       |            | git push                         |
       |            | git checkout alpha               |
       | alpha      | git push --tags                  |
-    And I am still on the "alpha" branch
+    And the current branch is still "alpha"
     And all branches are now synchronized

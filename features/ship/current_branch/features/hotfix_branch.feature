@@ -2,11 +2,11 @@ Feature: ship hotfixes
 
   Background:
     Given a perennial branch "production"
-    And my repo has a feature branch "hotfix" as a child of "production"
+    And a feature branch "hotfix" as a child of "production"
     And the commits
       | BRANCH | LOCATION      | MESSAGE       |
       | hotfix | local, origin | hotfix commit |
-    And I am on the "hotfix" branch
+    And the current branch is "hotfix"
     When I run "git-town ship -m 'hotfix done'"
 
   Scenario: result
@@ -24,8 +24,8 @@ Feature: ship hotfixes
       |            | git push                          |
       |            | git push origin :hotfix           |
       |            | git branch -D hotfix              |
-    And I am now on the "production" branch
-    And the existing branches are
+    And the current branch is now "production"
+    And the branches are now
       | REPOSITORY    | BRANCHES         |
       | local, origin | main, production |
     And now these commits exist
@@ -44,10 +44,10 @@ Feature: ship hotfixes
       |            | git checkout hotfix                         |
       | hotfix     | git checkout production                     |
       | production | git checkout hotfix                         |
-    And I am now on the "hotfix" branch
+    And the current branch is now "hotfix"
     And now these commits exist
       | BRANCH     | LOCATION      | MESSAGE              |
       | hotfix     | local, origin | hotfix commit        |
       | production | local, origin | hotfix done          |
       |            |               | Revert "hotfix done" |
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branches and hierarchy exist

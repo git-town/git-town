@@ -9,7 +9,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       | beta   | local         | local beta commit  | conflicting_file | local beta content  |
       |        | origin        | origin beta commit | conflicting_file | origin beta content |
       | gamma  | local, origin | gamma commit       | gamma_file       | gamma content       |
-    And I am on the "main" branch
+    And the current branch is "main"
     And my workspace has an uncommitted file
     When I run "git-town sync --all"
 
@@ -42,7 +42,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       |        | git checkout alpha |
       | alpha  | git checkout main  |
       | main   | git stash pop      |
-    And I am now on the "main" branch
+    And the current branch is now "main"
     And my workspace has the uncommitted file again
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE            |
@@ -62,7 +62,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       |        | git checkout main       |
       | main   | git push --tags         |
       |        | git stash pop           |
-    And I am now on the "main" branch
+    And the current branch is now "main"
     And my workspace has the uncommitted file again
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE            |
@@ -95,7 +95,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       | main   | git push --tags         |
       |        | git stash pop           |
     And all branches are now synchronized
-    And I am now on the "main" branch
+    And the current branch is now "main"
     And my workspace has the uncommitted file again
     And there is no rebase in progress anymore
 

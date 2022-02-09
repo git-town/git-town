@@ -1,7 +1,7 @@
 Feature: does not prepend perennial branches
 
   Scenario: on main branch
-    And I am on the "main" branch
+    And the current branch is "main"
     When I run "git-town prepend new"
     Then it runs the commands
       | BRANCH | COMMAND                  |
@@ -10,11 +10,10 @@ Feature: does not prepend perennial branches
       """
       the branch "main" is not a feature branch. Only feature branches can have parent branches
       """
-    And I am still on the "main" branch
+    And the current branch is still "main"
 
   Scenario: on perennial branch
-    Given a perennial branch "production"
-    And I am on the "production" branch
+    And the current branch is a perennial branch "production"
     When I run "git-town prepend new"
     Then it runs the commands
       | BRANCH     | COMMAND                  |
@@ -23,4 +22,4 @@ Feature: does not prepend perennial branches
       """
       the branch "production" is not a feature branch. Only feature branches can have parent branches
       """
-    And I am still on the "production" branch
+    And the current branch is still "production"

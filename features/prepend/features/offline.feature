@@ -2,11 +2,10 @@ Feature: offline mode
 
   Background:
     Given offline mode is enabled
-    And my repo has a feature branch "old"
+    And the current branch is a feature branch "old"
     And the commits
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
-    And I am on the "old" branch
     When I run "git-town prepend new"
 
   Scenario: result
@@ -16,7 +15,7 @@ Feature: offline mode
       | main   | git rebase origin/main |
       |        | git branch new main    |
       |        | git checkout new       |
-    And I am now on the "new" branch
+    And the current branch is now "new"
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
@@ -32,6 +31,6 @@ Feature: offline mode
       | new    | git checkout main |
       | main   | git branch -d new |
       |        | git checkout old  |
-    And I am now on the "old" branch
+    And the current branch is now "old"
     And now the initial commits exist
     And Git Town is now aware of the initial branch hierarchy

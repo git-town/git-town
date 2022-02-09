@@ -1,13 +1,13 @@
 Feature: handle conflicts between the main branch and its tracking branch
 
   Background:
-    Given my repo has the feature branches "feature" and "other"
+    Given the feature branches "feature" and "other"
     And the commits
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting local commit  | conflicting_file | local content   |
       |         | origin   | conflicting origin commit | conflicting_file | origin content  |
       | feature | local    | feature commit            | feature_file     | feature content |
-    And I am on the "other" branch
+    And the current branch is "other"
     And my workspace has an uncommitted file
     And I run "git-town ship feature -m 'feature done'"
 
@@ -34,7 +34,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | main   | git rebase --abort |
       |        | git checkout other |
       | other  | git stash pop      |
-    And I am still on the "other" branch
+    And the current branch is still "other"
     And my workspace still contains my uncommitted file
     And there is no rebase in progress anymore
     And now the initial commits exist
@@ -58,14 +58,14 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | git branch -D feature              |
       |         | git checkout other                 |
       | other   | git stash pop                      |
-    And I am now on the "other" branch
+    And the current branch is now "other"
     And my workspace still contains my uncommitted file
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                   | FILE NAME        | FILE CONTENT     |
       | main   | local, origin | conflicting origin commit | conflicting_file | origin content   |
       |        |               | conflicting local commit  | conflicting_file | resolved content |
       |        |               | feature done              | feature_file     | feature content  |
-    And the existing branches are
+    And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
     And Git Town is now aware of this branch hierarchy
@@ -90,7 +90,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | git branch -D feature              |
       |         | git checkout other                 |
       | other   | git stash pop                      |
-    And I am now on the "other" branch
+    And the current branch is now "other"
 
   Scenario: resolve, continue, and undo
     When I resolve the conflict in "conflicting_file"
@@ -110,7 +110,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | git checkout main                                               |
       | main    | git checkout other                                              |
       | other   | git stash pop                                                   |
-    And I am now on the "other" branch
+    And the current branch is now "other"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, origin | conflicting origin commit        |
@@ -121,4 +121,4 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | origin        | conflicting origin commit        |
       |         |               | conflicting local commit         |
       |         |               | Merge branch 'main' into feature |
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branches and hierarchy exist

@@ -1,13 +1,12 @@
 Feature: rename a perennial branch
 
   Background:
-    Given a perennial branch "production"
-    And my repo has a feature branch "hotfix" as a child of "production"
+    Given the current branch is a perennial branch "production"
+    And a feature branch "hotfix" as a child of "production"
     And the commits
       | BRANCH     | LOCATION      | MESSAGE           |
       | hotfix     | local, origin | hotfix commit     |
       | production | local, origin | production commit |
-    And I am on the "production" branch
 
   Scenario: normal rename fails
     When I run "git-town rename-branch production new"
@@ -27,7 +26,7 @@ Feature: rename a perennial branch
       | new        | git push -u origin new      |
       |            | git push origin :production |
       |            | git branch -D production    |
-    And I am now on the "new" branch
+    And the current branch is now "new"
     And the perennial branches are now "new"
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE           |
@@ -47,7 +46,7 @@ Feature: rename a perennial branch
       |            | git push origin :new                                |
       |            | git checkout production                             |
       | production | git branch -D new                                   |
-    And I am now on the "production" branch
+    And the current branch is now "production"
     And the perennial branches are now "production"
     And now the initial commits exist
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branches and hierarchy exist

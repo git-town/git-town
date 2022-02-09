@@ -1,14 +1,13 @@
 Feature: merge conflict
 
   Background:
-    Given my repo has a local feature branch "feature"
+    Given the current branch is a local feature branch "feature"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME        | FILE CONTENT    |
       | main    | local, origin | main commit    | conflicting_file | main content    |
       | feature | local         | feature commit | conflicting_file | feature content |
     And my computer has the "open" tool installed
     And my repo's origin is "git@github.com:git-town/git-town.git"
-    And I am on the "feature" branch
     When I run "git-town new-pull-request"
 
   Scenario: result
@@ -24,7 +23,7 @@ Feature: merge conflict
       To abort, run "git-town abort".
       To continue after having resolved conflicts, run "git-town continue".
       """
-    And I am still on the "feature" branch
+    And the current branch is still "feature"
     And my repo now has a merge in progress
 
   Scenario: abort
@@ -34,7 +33,7 @@ Feature: merge conflict
       | feature | git merge --abort    |
       |         | git checkout main    |
       | main    | git checkout feature |
-    And I am still on the "feature" branch
+    And the current branch is still "feature"
     And there is no merge in progress
     And now the initial commits exist
 
@@ -45,7 +44,7 @@ Feature: merge conflict
       """
       you must resolve the conflicts before continuing
       """
-    And I am still on the "feature" branch
+    And the current branch is still "feature"
     And my repo still has a merge in progress
 
   @skipWindows
@@ -61,7 +60,7 @@ Feature: merge conflict
       """
       https://github.com/git-town/git-town/compare/feature?expand=1
       """
-    And I am still on the "feature" branch
+    And the current branch is still "feature"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, origin | main commit                      |
@@ -86,4 +85,4 @@ Feature: merge conflict
       """
       https://github.com/git-town/git-town/compare/feature?expand=1
       """
-    And I am still on the "feature" branch
+    And the current branch is still "feature"

@@ -5,7 +5,7 @@ Feature: auto-push the new branch to origin
     And the commits
       | BRANCH | LOCATION | MESSAGE     |
       | main   | origin   | main commit |
-    And I am on the "main" branch
+    And the current branch is "main"
     When I run "git-town append new"
 
   Scenario: result
@@ -16,7 +16,7 @@ Feature: auto-push the new branch to origin
       |        | git branch new main      |
       |        | git checkout new         |
       | new    | git push -u origin new   |
-    And I am now on the "new" branch
+    And the current branch is now "new"
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
@@ -32,7 +32,7 @@ Feature: auto-push the new branch to origin
       | new    | git push origin :new |
       |        | git checkout main    |
       | main   | git branch -d new    |
-    And I am now on the "main" branch
+    And the current branch is now "main"
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |

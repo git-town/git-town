@@ -1,8 +1,7 @@
 Feature: does not ship with uncommitted changes
 
   Background:
-    Given my repo has a feature branch "feature"
-    And I am on the "feature" branch
+    Given the current branch is a feature branch "feature"
     And my workspace has an uncommitted file
     When I run "git-town ship"
 

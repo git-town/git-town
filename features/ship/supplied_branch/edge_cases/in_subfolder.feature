@@ -1,11 +1,11 @@
 Feature: ship the supplied feature branch from a subfolder
 
   Background:
-    Given my repo has the feature branches "feature" and "other"
+    Given the feature branches "feature" and "other"
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | origin   | feature commit |
-    And I am on the "other" branch
+    And the current branch is "other"
     And my workspace has an uncommitted file with name "new_folder/other_feature_file" and content "other feature content"
     When I run "git-town ship feature -m 'feature done'" in the "new_folder" folder
 
@@ -28,9 +28,9 @@ Feature: ship the supplied feature branch from a subfolder
       |         | git branch -D feature              |
       |         | git checkout other                 |
       | other   | git stash pop                      |
-    And I am now on the "other" branch
+    And the current branch is now "other"
     And my workspace still contains my uncommitted file
-    And the existing branches are
+    And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
     And now these commits exist
@@ -56,10 +56,10 @@ Feature: ship the supplied feature branch from a subfolder
       |         | git checkout main                             |
       | main    | git checkout other                            |
       | other   | git stash pop                                 |
-    And I am now on the "other" branch
+    And the current branch is now "other"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
       | feature | origin        | feature commit        |
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branches and hierarchy exist

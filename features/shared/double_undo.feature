@@ -1,8 +1,7 @@
 Feature: no double undo
 
   Scenario:
-    Given my repo has a feature branch "feature"
-    And I am on the "feature" branch
+    Given the current branch is a feature branch "feature"
     And I run "git-town kill"
     And I run "git-town undo"
     When I run "git-town undo"

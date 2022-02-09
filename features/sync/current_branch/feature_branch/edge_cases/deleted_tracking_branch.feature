@@ -1,12 +1,11 @@
 Feature: restores deleted tracking branch
 
   Background:
-    Given my repo has a feature branch "feature"
+    Given the current branch is a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
     And origin deletes the "feature" branch
-    And I am on the "feature" branch
     When I run "git-town sync"
 
   Scenario: result
@@ -19,5 +18,5 @@ Feature: restores deleted tracking branch
       | feature | git merge --no-edit main   |
       |         | git push -u origin feature |
     And all branches are now synchronized
-    And I am still on the "feature" branch
+    And the current branch is still "feature"
     And now the initial commits exist

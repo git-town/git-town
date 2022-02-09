@@ -1,11 +1,10 @@
 Feature: must provide a commit message
 
   Background:
-    Given my repo has a feature branch "feature"
+    Given the current branch is a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | local    | feature commit |
-    And I am on the "feature" branch
     When I run "git-town ship" and close the editor
 
   Scenario: result
@@ -28,7 +27,7 @@ Feature: must provide a commit message
       """
       aborted because commit exited with error
       """
-    And I am still on the "feature" branch
+    And the current branch is still "feature"
     And now the initial commits exist
     And Git Town is still aware of the initial branch hierarchy
 
@@ -38,6 +37,6 @@ Feature: must provide a commit message
       """
       nothing to undo
       """
-    And I am still on the "feature" branch
+    And the current branch is still "feature"
     And now the initial commits exist
     And Git Town is still aware of the initial branch hierarchy

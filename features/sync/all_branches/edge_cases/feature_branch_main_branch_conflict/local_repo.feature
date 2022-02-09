@@ -2,14 +2,14 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
 
   Background:
     Given my repo does not have an origin
-    And my repo has the local feature branches "alpha", "beta", and "gamma"
+    And the local feature branches "alpha", "beta", and "gamma"
     And the commits
       | BRANCH | LOCATION | MESSAGE      | FILE NAME        | FILE CONTENT  |
       | main   | local    | main commit  | conflicting_file | main content  |
       | alpha  | local    | alpha commit | feature1_file    | alpha content |
       | beta   | local    | beta commit  | conflicting_file | beta content  |
       | gamma  | local    | gamma commit | feature3_file    | gamma content |
-    And I am on the "main" branch
+    And the current branch is "main"
     And my workspace has an uncommitted file
     When I run "git-town sync --all"
 
@@ -28,7 +28,7 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       To continue after having resolved conflicts, run "git-town continue".
       To continue by skipping the current branch, run "git-town skip".
       """
-    And I am now on the "beta" branch
+    And the current branch is now "beta"
     And my uncommitted file is stashed
     And my repo now has a merge in progress
 
@@ -41,7 +41,7 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       | alpha  | git reset --hard {{ sha 'alpha commit' }} |
       |        | git checkout main                         |
       | main   | git stash pop                             |
-    And I am now on the "main" branch
+    And the current branch is now "main"
     And my workspace has the uncommitted file again
     And now the initial commits exist
     And there is no merge in progress
@@ -55,7 +55,7 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       | gamma  | git merge --no-edit main |
       |        | git checkout main        |
       | main   | git stash pop            |
-    And I am now on the "main" branch
+    And the current branch is now "main"
     And my workspace has the uncommitted file again
     And there is no merge in progress
     And now these commits exist
@@ -84,7 +84,7 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       """
       you must resolve the conflicts before continuing
       """
-    And I am still on the "beta" branch
+    And the current branch is still "beta"
     And my uncommitted file is stashed
     And my repo still has a merge in progress
 
@@ -99,7 +99,7 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       |        | git checkout main        |
       | main   | git stash pop            |
     And all branches are now synchronized
-    And I am now on the "main" branch
+    And the current branch is now "main"
     And my workspace has the uncommitted file again
     And there is no merge in progress
     And my repo now has these committed files

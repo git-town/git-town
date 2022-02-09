@@ -95,7 +95,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the origin has a feature branch "([^"]*)"$`, func(branch string) error {
+	suite.Step(`^a remote feature branch "([^"]*)"$`, func(branch string) error {
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 		return state.gitEnv.OriginRepo.CreateBranch(branch, "main")
 	})
@@ -172,15 +172,20 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^I am on the "([^"]*)" branch$`, func(branchName string) error {
-		err := state.gitEnv.DevRepo.CheckoutBranch(branchName)
-		if err != nil {
-			return fmt.Errorf("cannot change to branch %q: %w", branchName, err)
+	suite.Step(`^the current branch is "([^"]*)"$`, func(name string) error {
+		state.initialCurrentBranch = name
+		if !stringslice.Contains(state.initialLocalBranches, name) {
+			state.initialLocalBranches = append(state.initialLocalBranches, name)
+			err := state.gitEnv.DevRepo.CreateBranch(name, "main")
+			if err != nil {
+				return err
+			}
 		}
-		return nil
+		return state.gitEnv.DevRepo.CheckoutBranch(name)
 	})
 
-	suite.Step(`^I am on the "([^"]*)" branch with "([^"]*)" as the previous Git branch$`, func(current, previous string) error {
+	suite.Step(`^the current branch is "([^"]*)" and the previous branch is "([^"]*)"$`, func(current, previous string) error {
+		state.initialCurrentBranch = current
 		err := state.gitEnv.DevRepo.CheckoutBranch(previous)
 		if err != nil {
 			return err
@@ -188,7 +193,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.CheckoutBranch(current)
 	})
 
-	suite.Step(`^I am (?:now|still) on the "([^"]*)" branch$`, func(expected string) error {
+	suite.Step(`^the current branch is (?:now|still) "([^"]*)"$`, func(expected string) error {
 		state.gitEnv.DevRepo.CurrentBranchCache.Invalidate()
 		actual, err := state.gitEnv.DevRepo.CurrentBranch()
 		if err != nil {
@@ -390,12 +395,12 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repo has a branch "([^"]*)"$`, func(branch string) error {
+	suite.Step(`^a branch "([^"]*)"$`, func(branch string) error {
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		return state.gitEnv.DevRepo.CreateBranch(branch, "main")
 	})
 
-	suite.Step(`^my repo has a feature branch "([^"]+)" as a child of "([^"]+)"$`, func(branch, parentBranch string) error {
+	suite.Step(`^a feature branch "([^"]+)" as a child of "([^"]+)"$`, func(branch, parentBranch string) error {
 		err := state.gitEnv.DevRepo.CreateChildFeatureBranch(branch, parentBranch)
 		if err != nil {
 			return fmt.Errorf("cannot create feature branch %q: %w", branch, err)
@@ -406,7 +411,39 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.PushBranchToOrigin(branch)
 	})
 
-	suite.Step(`^my repo has a (local )?feature branch "([^"]*)"$`, func(localStr, branch string) error {
+	suite.Step(`^the current branch is a (local )?(feature|perennial) branch "([^"]*)"$`, func(localStr, branchType, branch string) error {
+		isLocal := localStr != ""
+		var err error
+		switch branchType {
+		case "feature":
+			err = state.gitEnv.DevRepo.CreateFeatureBranch(branch)
+		case "perennial":
+			err = state.gitEnv.DevRepo.CreatePerennialBranches(branch)
+		default:
+			panic(fmt.Sprintf("unknown branch type: %q", branchType))
+		}
+		if err != nil {
+			return err
+		}
+		state.initialLocalBranches = append(state.initialLocalBranches, branch)
+		if branchType == "feature" {
+			state.initialBranchHierarchy.AddRow(branch, "main")
+		}
+		if !isLocal {
+			state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
+			err := state.gitEnv.DevRepo.PushBranchToOrigin(branch)
+			if err != nil {
+				return err
+			}
+		}
+		state.initialCurrentBranch = branch
+		if !state.gitEnv.DevRepo.CurrentBranchCache.Initialized() || state.gitEnv.DevRepo.CurrentBranchCache.Value() != branch {
+			return state.gitEnv.DevRepo.CheckoutBranch(branch)
+		}
+		return nil
+	})
+
+	suite.Step(`^a (local )?feature branch "([^"]*)"$`, func(localStr, branch string) error {
 		isLocal := localStr != ""
 		err := state.gitEnv.DevRepo.CreateFeatureBranch(branch)
 		if err != nil {
@@ -463,7 +500,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repo has the branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
+	suite.Step(`^the branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
 		for _, branch := range []string{branch1, branch2} {
 			err := state.gitEnv.DevRepo.CreateBranch(branch, "main")
 			if err != nil {
@@ -478,7 +515,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.CreateTags(table)
 	})
 
-	suite.Step(`^my repo has the (local )?feature branches "([^"]+)" and "([^"]+)"$`, func(localStr, branch1, branch2 string) error {
+	suite.Step(`^the (local )?feature branches "([^"]+)" and "([^"]+)"$`, func(localStr, branch1, branch2 string) error {
 		isLocal := localStr != ""
 		for _, branch := range []string{branch1, branch2} {
 			err := state.gitEnv.DevRepo.CreateFeatureBranch(branch)
@@ -498,7 +535,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repo has the (local )?feature branches "([^"]+)", "([^"]+)", and "([^"]+)"$`, func(localStr, branch1, branch2, branch3 string) error {
+	suite.Step(`^the (local )?feature branches "([^"]+)", "([^"]+)", and "([^"]+)"$`, func(localStr, branch1, branch2, branch3 string) error {
 		isLocal := localStr != ""
 		for _, branch := range []string{branch1, branch2, branch3} {
 			err := state.gitEnv.DevRepo.CreateFeatureBranch(branch)
@@ -578,7 +615,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repo (?:now|still) has its initial branches and branch hierarchy$`, func() error {
+	suite.Step(`^the initial branches and hierarchy exist$`, func() error {
 		// verify initial branches
 		have, err := state.gitEnv.Branches()
 		if err != nil {
@@ -602,10 +639,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return fmt.Errorf("mismatching branch hierarchy found, see the diff above")
 		}
 		return nil
-	})
-
-	suite.Step(`^my repo knows about the remote branch$`, func() error {
-		return state.gitEnv.DevRepo.Fetch()
 	})
 
 	suite.Step(`^now these commits exist$`, func(table *messages.PickleStepArgument_PickleTable) error {
@@ -662,7 +695,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repo (?:now|still) has the initial branches$`, func() error {
+	suite.Step(`^the initial branches exist$`, func() error {
 		have, err := state.gitEnv.Branches()
 		if err != nil {
 			return err
@@ -809,14 +842,26 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the commits$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		state.initialCommits = table
+		// create the commits
 		commits, err := FromGherkinTable(table)
 		if err != nil {
 			return fmt.Errorf("cannot parse Gherkin table: %w", err)
 		}
-		return state.gitEnv.CreateCommits(commits)
+		err = state.gitEnv.CreateCommits(commits)
+		if err != nil {
+			return fmt.Errorf("cannot create commits: %w", err)
+		}
+		// restore the initial branch
+		if state.initialCurrentBranch == "" {
+			return state.gitEnv.DevRepo.CheckoutBranch("main")
+		}
+		if state.gitEnv.DevRepo.CurrentBranchCache.Value() != state.initialCurrentBranch {
+			return state.gitEnv.DevRepo.CheckoutBranch(state.initialCurrentBranch)
+		}
+		return nil
 	})
 
-	suite.Step(`^the existing branches are$`, func(table *messages.PickleStepArgument_PickleTable) error {
+	suite.Step(`^the branches are now$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		existing, err := state.gitEnv.Branches()
 		if err != nil {
 			return err

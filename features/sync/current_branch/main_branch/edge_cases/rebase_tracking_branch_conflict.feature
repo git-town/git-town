@@ -1,7 +1,7 @@
 Feature: handle conflicts between the main branch and its tracking branch when syncing the main branch
 
   Background:
-    Given I am on the "main" branch
+    Given the current branch is "main"
     And the commits
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | main   | local    | conflicting local commit  | conflicting_file | local content  |
@@ -30,7 +30,7 @@ Feature: handle conflicts between the main branch and its tracking branch when s
       | BRANCH | COMMAND            |
       | main   | git rebase --abort |
       |        | git stash pop      |
-    And I am still on the "main" branch
+    And the current branch is still "main"
     And my workspace still contains my uncommitted file
     And there is no rebase in progress anymore
     And now the initial commits exist
@@ -55,7 +55,7 @@ Feature: handle conflicts between the main branch and its tracking branch when s
       |        | git push --tags       |
       |        | git stash pop         |
     And all branches are now synchronized
-    And I am still on the "main" branch
+    And the current branch is still "main"
     And my workspace still contains my uncommitted file
     And my repo now has these committed files
       | BRANCH | NAME             | CONTENT          |
@@ -71,7 +71,7 @@ Feature: handle conflicts between the main branch and its tracking branch when s
       |        | git push --tags |
       |        | git stash pop   |
     And all branches are now synchronized
-    And I am still on the "main" branch
+    And the current branch is still "main"
     And my workspace still contains my uncommitted file
     And my repo now has these committed files
       | BRANCH | NAME             | CONTENT          |

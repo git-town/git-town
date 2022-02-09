@@ -2,12 +2,11 @@ Feature: with upstream repo
 
   Background:
     Given my repo has an upstream repo
-    And my repo has a feature branch "feature"
+    And the current branch is a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE         |
       | main    | upstream | upstream commit |
       | feature | local    | local commit    |
-    And I am on the "feature" branch
     When I run "git-town sync"
 
   Scenario: result
@@ -24,7 +23,7 @@ Feature: with upstream repo
       |         | git merge --no-edit main           |
       |         | git push                           |
     And all branches are now synchronized
-    And I am still on the "feature" branch
+    And the current branch is still "feature"
     And now these commits exist
       | BRANCH  | LOCATION                | MESSAGE                          |
       | main    | local, origin, upstream | upstream commit                  |

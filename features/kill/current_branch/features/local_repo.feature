@@ -2,12 +2,12 @@ Feature: in a local repo
 
   Background:
     Given my repo does not have an origin
-    And my repo has the local feature branches "feature" and "other"
+    And the local feature branches "feature" and "other"
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | local    | feature commit |
       | other   | local    | other commit   |
-    And I am on the "feature" branch
+    And the current branch is "feature"
     And my workspace has an uncommitted file
     When I run "git-town kill"
 
@@ -18,8 +18,8 @@ Feature: in a local repo
       |         | git commit -m "WIP on feature" |
       |         | git checkout main              |
       | main    | git branch -D feature          |
-    And I am now on the "main" branch
-    And the existing branches are
+    And the current branch is now "main"
+    And the branches are now
       | REPOSITORY | BRANCHES    |
       | local      | main, other |
     And now these commits exist
@@ -36,7 +36,7 @@ Feature: in a local repo
       | main    | git branch feature {{ sha 'WIP on feature' }} |
       |         | git checkout feature                          |
       | feature | git reset {{ sha 'feature commit' }}          |
-    And I am now on the "feature" branch
+    And the current branch is now "feature"
     And my workspace still contains my uncommitted file
     And now the initial commits exist
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branches and hierarchy exist

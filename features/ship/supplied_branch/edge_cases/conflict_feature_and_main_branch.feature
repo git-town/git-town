@@ -1,12 +1,12 @@
 Feature: handle conflicts between the supplied feature branch and the main branch
 
   Background:
-    Given my repo has the feature branches "feature" and "other"
+    Given the feature branches "feature" and "other"
     And the commits
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
-    And I am on the "other" branch
+    And the current branch is "other"
     And my workspace has an uncommitted file
     And I run "git-town ship feature -m 'feature done'"
 
@@ -27,7 +27,7 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       To abort, run "git-town abort".
       To continue after having resolved conflicts, run "git-town continue".
       """
-    And I am now on the "feature" branch
+    And the current branch is now "feature"
     And my uncommitted file is stashed
     And my repo now has a merge in progress
 
@@ -39,7 +39,7 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       |         | git checkout main  |
       | main    | git checkout other |
       | other   | git stash pop      |
-    And I am now on the "other" branch
+    And the current branch is now "other"
     And my workspace still contains my uncommitted file
     And there is no merge in progress
     And now these commits exist
@@ -62,9 +62,9 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       |         | git branch -D feature        |
       |         | git checkout other           |
       | other   | git stash pop                |
-    And I am now on the "other" branch
+    And the current branch is now "other"
     And my workspace still contains my uncommitted file
-    And the existing branches are
+    And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
     And now these commits exist
@@ -89,7 +89,7 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       |         | git branch -D feature        |
       |         | git checkout other           |
       | other   | git stash pop                |
-    And I am now on the "other" branch
+    And the current branch is now "other"
     And my workspace still contains my uncommitted file
 
   Scenario: resolve, continue, and undo
@@ -110,7 +110,7 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       |         | git checkout main                                               |
       | main    | git checkout other                                              |
       | other   | git stash pop                                                   |
-    And I am now on the "other" branch
+    And the current branch is now "other"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, origin | conflicting main commit          |
@@ -119,4 +119,4 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       | feature | local, origin | conflicting feature commit       |
       |         | origin        | conflicting main commit          |
       |         |               | Merge branch 'main' into feature |
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branches and hierarchy exist

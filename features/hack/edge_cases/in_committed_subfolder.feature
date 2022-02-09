@@ -1,11 +1,10 @@
 Feature: inside a committed subfolder that exists only on the current feature branch
 
   Background:
-    Given my repo has a feature branch "existing"
+    Given the current branch is a feature branch "existing"
     And the commits
       | BRANCH   | LOCATION      | MESSAGE       | FILE NAME        |
       | existing | local, origin | folder commit | new_folder/file1 |
-    And I am on the "existing" branch
     When I run "git-town hack new" in the "new_folder" folder
 
   Scenario: result
@@ -16,7 +15,7 @@ Feature: inside a committed subfolder that exists only on the current feature br
       | main     | git rebase origin/main   |
       |          | git branch new main      |
       |          | git checkout new         |
-    And I am now on the "new" branch
+    And the current branch is now "new"
     And now the initial commits exist
     And Git Town is now aware of this branch hierarchy
       | BRANCH   | PARENT |
@@ -30,6 +29,6 @@ Feature: inside a committed subfolder that exists only on the current feature br
       | new    | git checkout main     |
       | main   | git branch -d new     |
       |        | git checkout existing |
-    And I am now on the "existing" branch
+    And the current branch is now "existing"
     And now the initial commits exist
     And Git Town is now aware of the initial branch hierarchy

@@ -1,12 +1,12 @@
 Feature: destination branch exists
 
   Scenario: destination branch exists locally
-    Given my repo has the feature branches "alpha" and "beta"
+    Given the feature branches "alpha" and "beta"
     And the commits
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, origin | alpha commit |
       | beta   | local, origin | beta commit  |
-    And I am on the "alpha" branch
+    And the current branch is "alpha"
     When I run "git-town rename-branch alpha beta"
     Then it runs the commands
       | BRANCH | COMMAND                  |
@@ -15,17 +15,16 @@ Feature: destination branch exists
       """
       a branch named "beta" already exists
       """
-    And I am still on the "alpha" branch
-    And my repo now has its initial branches and branch hierarchy
+    And the current branch is still "alpha"
+    And the initial branches and hierarchy exist
 
   Scenario: destination branch exists in origin
-    Given my repo has a feature branch "alpha"
-    And the origin has a feature branch "beta"
+    Given the current branch is a feature branch "alpha"
+    And a remote feature branch "beta"
     And the commits
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, origin | alpha commit |
       | beta   | origin        | beta commit  |
-    And I am on the "alpha" branch
     When I run "git-town rename-branch alpha beta"
     Then it runs the commands
       | BRANCH | COMMAND                  |
@@ -34,5 +33,5 @@ Feature: destination branch exists
       """
       a branch named "beta" already exists
       """
-    And I am still on the "alpha" branch
-    And my repo now has its initial branches and branch hierarchy
+    And the current branch is still "alpha"
+    And the initial branches and hierarchy exist

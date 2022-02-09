@@ -1,13 +1,13 @@
 Feature: delete another than the current branch
 
   Background:
-    Given my repo has the feature branches "good" and "dead"
+    Given the feature branches "good" and "dead"
     And the commits
       | BRANCH | LOCATION      | MESSAGE            | FILE NAME        |
       | main   | local, origin | conflicting commit | conflicting_file |
       | dead   | local, origin | dead-end commit    | file             |
       | good   | local, origin | good commit        | file             |
-    And I am on the "good" branch
+    And the current branch is "good"
     And my workspace has an uncommitted file with name "conflicting_file" and content "conflicting content"
     When I run "git-town kill dead"
 
@@ -17,9 +17,9 @@ Feature: delete another than the current branch
       | good   | git fetch --prune --tags |
       |        | git push origin :dead    |
       |        | git branch -D dead       |
-    And I am still on the "good" branch
+    And the current branch is still "good"
     And my workspace still contains my uncommitted file
-    And the existing branches are
+    And the branches are now
       | REPOSITORY    | BRANCHES   |
       | local, origin | main, good |
     And now these commits exist
@@ -36,7 +36,7 @@ Feature: delete another than the current branch
       | BRANCH | COMMAND                                     |
       | good   | git branch dead {{ sha 'dead-end commit' }} |
       |        | git push -u origin dead                     |
-    And I am still on the "good" branch
+    And the current branch is still "good"
     And my workspace still contains my uncommitted file
     And now the initial commits exist
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branches and hierarchy exist

@@ -5,9 +5,8 @@ Feature: Gitea support
     Given my computer has the "open" tool installed
 
   Scenario Outline: normal origin
-    Given my repo has a feature branch "feature"
+    Given the current branch is a feature branch "feature"
     And my repo's origin is "<ORIGIN>"
-    And I am on the "feature" branch
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:
       """
@@ -26,9 +25,8 @@ Feature: Gitea support
       | ssh://git@gitea.com/git-town/git-town     |
 
   Scenario Outline: origin contains path that looks like a URL
-    Given my repo has a feature branch "feature"
+    Given the current branch is a feature branch "feature"
     And my repo's origin is "<ORIGIN>"
-    And I am on the "feature" branch
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:
       """
@@ -45,9 +43,8 @@ Feature: Gitea support
       | git@gitea.com:git-town/git-town.gitea.com         |
 
   Scenario Outline: proper URL encoding
-    Given my repo has a feature branch "<BRANCH_NAME>"
+    Given the current branch is a feature branch "<BRANCH_NAME>"
     And my repo's origin is "https://gitea.com/git-town/git-town"
-    And I am on the "<BRANCH_NAME>" branch
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:
       """
@@ -62,10 +59,10 @@ Feature: Gitea support
       | test/feature   | https://gitea.com/git-town/git-town/compare/main...test%2Ffeature |
 
   Scenario: nested feature branch with known parent
-    Given my repo has a feature branch "parent-feature"
-    And my repo has a feature branch "child-feature" as a child of "parent-feature"
+    Given a feature branch "parent-feature"
+    And a feature branch "child-feature" as a child of "parent-feature"
     And my repo's origin is "git@gitea.com:git-town/git-town.git"
-    And I am on the "child-feature" branch
+    And the current branch is "child-feature"
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:
       """

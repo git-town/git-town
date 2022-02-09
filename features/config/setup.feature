@@ -3,7 +3,7 @@ Feature: enter Git Town configuration
 
   Scenario: already configured
     Given a perennial branch "qa"
-    And my repo has a branch "production"
+    And a branch "production"
     And the main branch is "main"
     When I run "git-town config setup" and answer the prompts:
       | PROMPT                                     | ANSWER                      |
@@ -13,7 +13,7 @@ Feature: enter Git Town configuration
     And the perennial branches are now "production"
 
   Scenario: unconfigured
-    Given my repo has the branches "dev" and "production"
+    Given the branches "dev" and "production"
     And Git Town is not configured
     When I run "git-town config setup" and answer the prompts:
       | PROMPT                                     | ANSWER                      |

@@ -2,11 +2,10 @@ Feature: offline mode
 
   Background:
     Given offline mode is enabled
-    And my repo has a feature branch "feature"
+    And the current branch is a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
-    And I am on the "feature" branch
     When I run "git-town ship -m 'feature done'"
 
   Scenario: result
@@ -21,7 +20,7 @@ Feature: offline mode
       | main    | git merge --squash feature         |
       |         | git commit -m "feature done"       |
       |         | git branch -D feature              |
-    And I am now on the "main" branch
+    And the current branch is now "main"
     And now these commits exist
       | BRANCH  | LOCATION | MESSAGE        |
       | main    | local    | feature done   |
@@ -38,6 +37,6 @@ Feature: offline mode
       | feature | git checkout main                             |
       | main    | git reset --hard {{ sha 'Initial commit' }}   |
       |         | git checkout feature                          |
-    And I am now on the "feature" branch
+    And the current branch is now "feature"
     And now the initial commits exist
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branches and hierarchy exist

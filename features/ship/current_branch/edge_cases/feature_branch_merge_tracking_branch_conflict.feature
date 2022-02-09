@@ -1,12 +1,11 @@
 Feature: handle conflicts between the shipped branch and its tracking branch
 
   Background:
-    Given my repo has a feature branch "feature"
+    Given the current branch is a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | feature | local    | conflicting local commit  | conflicting_file | local content  |
       |         | origin   | conflicting origin commit | conflicting_file | origin content |
-    And I am on the "feature" branch
     When I run "git-town ship -m 'feature done'"
 
   Scenario: result
@@ -22,7 +21,7 @@ Feature: handle conflicts between the shipped branch and its tracking branch
       To abort, run "git-town abort".
       To continue after having resolved conflicts, run "git-town continue".
       """
-    And I am still on the "feature" branch
+    And the current branch is still "feature"
     And my repo now has a merge in progress
 
   Scenario: abort
@@ -32,7 +31,7 @@ Feature: handle conflicts between the shipped branch and its tracking branch
       | feature | git merge --abort    |
       |         | git checkout main    |
       | main    | git checkout feature |
-    And I am still on the "feature" branch
+    And the current branch is still "feature"
     And there is no merge in progress
     And now the initial commits exist
     And Git Town is still aware of the initial branch hierarchy
@@ -50,8 +49,8 @@ Feature: handle conflicts between the shipped branch and its tracking branch
       |         | git push                     |
       |         | git push origin :feature     |
       |         | git branch -D feature        |
-    And I am now on the "main" branch
-    And the existing branches are
+    And the current branch is now "main"
+    And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
     And now these commits exist
@@ -72,4 +71,4 @@ Feature: handle conflicts between the shipped branch and its tracking branch
       |         | git push                     |
       |         | git push origin :feature     |
       |         | git branch -D feature        |
-    And I am now on the "main" branch
+    And the current branch is now "main"

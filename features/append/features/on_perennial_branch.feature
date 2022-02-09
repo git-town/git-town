@@ -5,7 +5,7 @@ Feature: append to a perennial branch
     And the commits
       | BRANCH     | LOCATION | MESSAGE           |
       | production | origin   | production commit |
-    And I am on the "production" branch
+    And the current branch is "production"
     When I run "git-town append new"
 
   Scenario: result
@@ -15,7 +15,7 @@ Feature: append to a perennial branch
       |            | git rebase origin/production |
       |            | git branch new production    |
       |            | git checkout new             |
-    And I am now on the "new" branch
+    And the current branch is now "new"
     And now these commits exist
       | BRANCH     | LOCATION      | MESSAGE           |
       | new        | local         | production commit |
@@ -30,7 +30,7 @@ Feature: append to a perennial branch
       | BRANCH     | COMMAND                 |
       | new        | git checkout production |
       | production | git branch -D new       |
-    And I am now on the "production" branch
+    And the current branch is now "production"
     And now these commits exist
       | BRANCH     | LOCATION      | MESSAGE           |
       | production | local, origin | production commit |

@@ -1,14 +1,13 @@
 Feature: dry run
 
   Background:
-    Given my repo has a feature branch "feature"
+    Given the current branch is a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE               |
       | main    | local    | local main commit     |
       |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
       |         | origin   | origin feature commit |
-    And I am on the "feature" branch
     When I run "git-town sync --dry-run"
 
   Scenario: result
@@ -22,5 +21,5 @@ Feature: dry run
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
       |         | git push                           |
-    And I am still on the "feature" branch
+    And the current branch is still "feature"
     And now the initial commits exist

@@ -1,13 +1,12 @@
 Feature: sync the current feature branch without a tracking branch
 
   Background:
-    Given my repo has a local feature branch "feature"
+    Given the current branch is a local feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE              |
       | main    | local    | local main commit    |
       |         | origin   | origin main commit   |
       | feature | local    | local feature commit |
-    And I am on the "feature" branch
     When I run "git-town sync"
 
   Scenario: result
@@ -21,7 +20,7 @@ Feature: sync the current feature branch without a tracking branch
       | feature | git merge --no-edit main   |
       |         | git push -u origin feature |
     And all branches are now synchronized
-    And I am still on the "feature" branch
+    And the current branch is still "feature"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, origin | origin main commit               |
@@ -30,6 +29,6 @@ Feature: sync the current feature branch without a tracking branch
       |         |               | origin main commit               |
       |         |               | local main commit                |
       |         |               | Merge branch 'main' into feature |
-    And the existing branches are
+    And the branches are now
       | REPOSITORY    | BRANCHES      |
       | local, origin | main, feature |

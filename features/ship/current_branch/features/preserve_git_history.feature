@@ -1,32 +1,32 @@
 Feature: preserve the previous Git branch
 
   Background:
-    Given my repo has the feature branches "previous" and "current"
+    Given the feature branches "previous" and "current"
 
   Scenario: current branch gone
     And the commits
       | BRANCH  | LOCATION |
       | current | local    |
-    And I am on the "current" branch with "previous" as the previous Git branch
+    And the current branch is "current" and the previous branch is "previous"
     When I run "git-town ship -m 'feature done'"
-    Then I am now on the "main" branch
+    Then the current branch is now "main"
     And the previous Git branch is still "previous"
 
   Scenario: previous branch gone
     Given the commits
       | BRANCH   | LOCATION |
       | previous | local    |
-    And I am on the "current" branch with "previous" as the previous Git branch
+    And the current branch is "current" and the previous branch is "previous"
     When I run "git-town ship previous -m 'feature done'"
-    Then I am still on the "current" branch
+    Then the current branch is still "current"
     And the previous Git branch is now "main"
 
   Scenario: both branches exist
-    Given my repo has a feature branch "feature"
+    Given a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION |
       | feature | origin   |
-    And I am on the "current" branch with "previous" as the previous Git branch
+    And the current branch is "current" and the previous branch is "previous"
     When I run "git-town ship feature -m "feature done""
-    Then I am still on the "current" branch
+    Then the current branch is still "current"
     And the previous Git branch is still "previous"

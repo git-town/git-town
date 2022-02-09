@@ -2,12 +2,11 @@ Feature: handle conflicts between the current feature branch and the main branch
 
   Background:
     Given my repo does not have an origin
-    And my repo has a local feature branch "feature"
+    And the current branch is a local feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
-    And I am on the "feature" branch
     And my workspace has an uncommitted file
     When I run "git-town sync"
 
@@ -23,7 +22,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       To continue after having resolved conflicts, run "git-town continue".
       To continue by skipping the current branch, run "git-town skip".
       """
-    And I am still on the "feature" branch
+    And the current branch is still "feature"
     And my uncommitted file is stashed
     And my repo now has a merge in progress
 
@@ -33,7 +32,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       | BRANCH  | COMMAND           |
       | feature | git merge --abort |
       |         | git stash pop     |
-    And I am still on the "feature" branch
+    And the current branch is still "feature"
     And my workspace has the uncommitted file again
     And there is no merge in progress
     And now the initial commits exist
@@ -45,7 +44,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       """
       you must resolve the conflicts before continuing
       """
-    And I am still on the "feature" branch
+    And the current branch is still "feature"
     And my uncommitted file is stashed
     And my repo still has a merge in progress
 
@@ -57,7 +56,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       | feature | git commit --no-edit |
       |         | git stash pop        |
     And all branches are now synchronized
-    And I am still on the "feature" branch
+    And the current branch is still "feature"
     And there is no merge in progress
     And my workspace has the uncommitted file again
     And my repo now has these committed files

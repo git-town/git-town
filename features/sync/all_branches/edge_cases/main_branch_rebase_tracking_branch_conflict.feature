@@ -1,13 +1,13 @@
 Feature: handle rebase conflicts between main branch and its tracking branch
 
   Background:
-    Given my repo has a feature branch "feature"
+    Given a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE            | FILE NAME        | FILE CONTENT    |
       | main    | local    | local main commit  | conflicting_file | local content   |
       |         | origin   | origin main commit | conflicting_file | origin content  |
       | feature | local    | feature commit     | feature_file     | feature content |
-    And I am on the "main" branch
+    And the current branch is "main"
     And my workspace has an uncommitted file
     When I run "git-town sync --all"
 
@@ -32,7 +32,7 @@ Feature: handle rebase conflicts between main branch and its tracking branch
       | BRANCH | COMMAND            |
       | main   | git rebase --abort |
       |        | git stash pop      |
-    And I am now on the "main" branch
+    And the current branch is now "main"
     And my workspace has the uncommitted file again
     And now the initial commits exist
 
@@ -61,7 +61,7 @@ Feature: handle rebase conflicts between main branch and its tracking branch
       | main    | git push --tags                    |
       |         | git stash pop                      |
     And all branches are now synchronized
-    And I am now on the "main" branch
+    And the current branch is now "main"
     And my workspace has the uncommitted file again
     And there is no rebase in progress anymore
     And my repo now has these committed files

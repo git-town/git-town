@@ -1,15 +1,15 @@
 Feature: delete a branch within a branch chain
 
   Background:
-    Given my repo has a feature branch "alpha"
-    And my repo has a feature branch "beta" as a child of "alpha"
-    And my repo has a feature branch "gamma" as a child of "beta"
+    Given a feature branch "alpha"
+    And a feature branch "beta" as a child of "alpha"
+    And a feature branch "gamma" as a child of "beta"
     And the commits
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, origin | alpha commit |
       | beta   | local, origin | beta commit  |
       | gamma  | local, origin | gamma commit |
-    And I am on the "beta" branch
+    And the current branch is "beta"
     And my workspace has an uncommitted file
     When I run "git-town kill"
 
@@ -22,9 +22,9 @@ Feature: delete a branch within a branch chain
       |        | git commit -m "WIP on beta" |
       |        | git checkout alpha          |
       | alpha  | git branch -D beta          |
-    And I am now on the "alpha" branch
+    And the current branch is now "alpha"
     And my repo doesn't have any uncommitted files
-    And the existing branches are
+    And the branches are now
       | REPOSITORY    | BRANCHES           |
       | local, origin | main, alpha, gamma |
     And now these commits exist
@@ -44,7 +44,7 @@ Feature: delete a branch within a branch chain
       |        | git checkout beta                       |
       | beta   | git reset {{ sha 'beta commit' }}       |
       |        | git push -u origin beta                 |
-    And I am now on the "beta" branch
+    And the current branch is now "beta"
     And my workspace has the uncommitted file again
     And now the initial commits exist
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branches and hierarchy exist

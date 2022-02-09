@@ -5,7 +5,7 @@ Feature: sync all branches syncs the tags
       | NAME       | LOCATION |
       | local-tag  | local    |
       | origin-tag | origin   |
-    And I am on the "main" branch
+    And the current branch is "main"
     When I run "git-town sync --all"
     Then my repo now has the tags
       | NAME       | LOCATION      |

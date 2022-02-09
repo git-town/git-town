@@ -2,9 +2,9 @@
 Feature: update the parent of a feature branch
 
   Background:
-    Given my repo has a feature branch "parent"
-    And my repo has a feature branch "child" as a child of "parent"
-    And I am on the "child" branch
+    Given a feature branch "parent"
+    And a feature branch "child" as a child of "parent"
+    And the current branch is "child"
 
   Scenario: select the default branch (current parent)
     When I run "git-town set-parent-branch" and answer the prompts:
