@@ -173,20 +173,19 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the current branch is "([^"]*)"$`, func(name string) error {
-		// create the branch if it doesn't exist yet
+		state.initialCurrentBranch = name
 		if !stringslice.Contains(state.initialLocalBranches, name) {
 			state.initialLocalBranches = append(state.initialLocalBranches, name)
-			state.gitEnv.DevRepo.CreateBranch(name, "main")
+			err := state.gitEnv.DevRepo.CreateBranch(name, "main")
+			if err != nil {
+				return err
+			}
 		}
-		// check out the branch
-		err := state.gitEnv.DevRepo.CheckoutBranch(name)
-		if err != nil {
-			return fmt.Errorf("cannot change to branch %q: %w", name, err)
-		}
-		return nil
+		return state.gitEnv.DevRepo.CheckoutBranch(name)
 	})
 
 	suite.Step(`^the current branch is "([^"]*)" and the previous branch is "([^"]*)"$`, func(current, previous string) error {
+		state.initialCurrentBranch = current
 		err := state.gitEnv.DevRepo.CheckoutBranch(previous)
 		if err != nil {
 			return err
@@ -815,7 +814,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return fmt.Errorf("cannot parse Gherkin table: %w", err)
 		}
-		return state.gitEnv.CreateCommits(commits)
+		err = state.gitEnv.CreateCommits(commits)
+		if err != nil {
+			return fmt.Errorf("cannot create commits: %w", err)
+		}
+		if state.initialCurrentBranch == "" {
+			return state.gitEnv.DevRepo.CheckoutBranch("main")
+		}
+		return state.gitEnv.DevRepo.CheckoutBranch(state.initialCurrentBranch)
 	})
 
 	suite.Step(`^the branches are now$`, func(table *messages.PickleStepArgument_PickleTable) error {

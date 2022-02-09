@@ -15,10 +15,7 @@ Feature: local repository
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND             |
-      | good   | git add -A          |
-      |        | git stash           |
-      |        | git branch -D other |
-      |        | git stash pop       |
+      | good   | git branch -D other |
     And the current branch is still "good"
     And my workspace still contains my uncommitted file
     And the branches are now
@@ -36,10 +33,7 @@ Feature: local repository
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                   |
-      | good   | git add -A                                |
-      |        | git stash                                 |
-      |        | git branch other {{ sha 'other commit' }} |
-      |        | git stash pop                             |
+      | good   | git branch other {{ sha 'other commit' }} |
     And the current branch is still "good"
     And my workspace still contains my uncommitted file
     And now the initial commits exist

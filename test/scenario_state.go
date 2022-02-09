@@ -26,6 +26,9 @@ type ScenarioState struct {
 	// initialBranchHierarchy describes the branch hierarchy before the WHEN steps ran.
 	initialBranchHierarchy DataTable
 
+	// initialCurrentBranch contains the name of the branch that was checked out before the WHEN steps ran
+	initialCurrentBranch string
+
 	// the error of the last run of Git Town
 	runErr error
 
@@ -49,6 +52,7 @@ func (state *ScenarioState) Reset(gitEnv GitEnvironment) {
 	state.initialRemoteBranches = []string{"main"}
 	state.initialCommits = nil
 	state.initialBranchHierarchy = DataTable{Cells: [][]string{{"BRANCH", "PARENT"}}}
+	state.initialCurrentBranch = ""
 	state.runRes = nil
 	state.runErr = nil
 	state.runErrChecked = false
