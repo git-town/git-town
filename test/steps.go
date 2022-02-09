@@ -939,11 +939,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.CheckoutBranch("-")
 	})
 
-	suite.Step(`^the pull-branch-strategy configuration is "(merge|rebase)"$`, func(value string) error {
+	suite.Step(`^the "pull-branch-strategy" configuration is "(merge|rebase)"$`, func(value string) error {
 		return state.gitEnv.DevRepo.Config.SetPullBranchStrategy(value)
 	})
 
-	suite.Step(`^the pull-branch-strategy configuration is now "(merge|rebase)"$`, func(want string) error {
+	suite.Step(`^the "pull-branch-strategy" configuration is now "(merge|rebase)"$`, func(want string) error {
 		state.gitEnv.DevRepo.Config.Reload()
 		have := state.gitEnv.DevRepo.Config.PullBranchStrategy()
 		if have != want {
