@@ -53,7 +53,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
       """
     And the current branch is still "current"
     And the uncommitted file is stashed
-    And a merge is still in progress
+    And a merge is now in progress
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"

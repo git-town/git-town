@@ -45,7 +45,7 @@ Feature: merge conflict
       you must resolve the conflicts before continuing
       """
     And the current branch is still "feature"
-    And a merge is still in progress
+    And a merge is now in progress
 
   @skipWindows
   Scenario: resolve and continue

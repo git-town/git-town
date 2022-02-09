@@ -56,7 +56,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       """
     And the current branch is still "feature"
     And the uncommitted file is stashed
-    And a merge is still in progress
+    And a merge is now in progress
 
   Scenario: resolve, commit, and continue
     When I resolve the conflict in "conflicting_file"

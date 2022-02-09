@@ -106,7 +106,7 @@ Feature: handle merge conflicts between feature branch and main branch
       """
     And the current branch is still "beta"
     And the uncommitted file is stashed
-    And a merge is still in progress
+    And a merge is now in progress
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
