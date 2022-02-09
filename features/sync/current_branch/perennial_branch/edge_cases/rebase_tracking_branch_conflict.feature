@@ -24,7 +24,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       To continue by skipping the current branch, run "git-town skip".
       """
     And my repo now has a rebase in progress
-    And my uncommitted file is stashed
+    And the uncommitted file is stashed
 
   Scenario: abort
     When I run "git-town abort"
@@ -44,7 +44,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       """
       you must resolve the conflicts before continuing
       """
-    And my uncommitted file is stashed
+    And the uncommitted file is stashed
     And my repo still has a rebase in progress
 
   Scenario: resolve and continue

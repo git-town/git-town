@@ -23,7 +23,7 @@ Feature: handle rebase conflicts between main branch and its tracking branch
       To abort, run "git-town abort".
       To continue after having resolved conflicts, run "git-town continue".
       """
-    And my uncommitted file is stashed
+    And the uncommitted file is stashed
     And my repo now has a rebase in progress
 
   Scenario: abort
@@ -43,7 +43,7 @@ Feature: handle rebase conflicts between main branch and its tracking branch
       """
       you must resolve the conflicts before continuing
       """
-    And my uncommitted file is stashed
+    And the uncommitted file is stashed
     And my repo still has a rebase in progress
 
   Scenario: resolve and continue

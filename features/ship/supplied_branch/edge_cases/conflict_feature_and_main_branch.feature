@@ -28,7 +28,7 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       To continue after having resolved conflicts, run "git-town continue".
       """
     And the current branch is now "feature"
-    And my uncommitted file is stashed
+    And the uncommitted file is stashed
     And my repo now has a merge in progress
 
   Scenario: abort

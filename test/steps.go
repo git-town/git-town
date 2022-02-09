@@ -721,7 +721,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my uncommitted file is stashed$`, func() error {
+	suite.Step(`^the uncommitted file is stashed$`, func() error {
 		uncommittedFiles, err := state.gitEnv.DevRepo.UncommittedFiles()
 		if err != nil {
 			return err

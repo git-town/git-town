@@ -31,7 +31,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       To continue after having resolved conflicts, run "git-town continue".
       To continue by skipping the current branch, run "git-town skip".
       """
-    And my uncommitted file is stashed
+    And the uncommitted file is stashed
     And my repo now has a rebase in progress
 
   Scenario: abort
@@ -79,7 +79,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       """
       you must resolve the conflicts before continuing
       """
-    And my uncommitted file is stashed
+    And the uncommitted file is stashed
     And my repo still has a rebase in progress
 
   Scenario: resolve and continue
