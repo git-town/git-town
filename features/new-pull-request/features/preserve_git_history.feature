@@ -2,7 +2,7 @@ Feature: preserve the previous Git branch
 
   Scenario:
     Given the feature branches "previous" and "current"
-    And the "open" tool is installed
+    And tool "open" is installed
     And the origin is "https://github.com/git-town/git-town.git"
     And the current branch is "current" and the previous branch is "previous"
     When I run "git-town new-pull-request"

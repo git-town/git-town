@@ -4,7 +4,7 @@ Feature: support many browsers and operating systems
   Scenario Outline:
     Given the current branch is a feature branch "feature"
     And the origin is "https://github.com/git-town/git-town.git"
-    And the "<TOOL>" tool is installed
+    And tool "<TOOL>" is installed
     When I run "git-town new-pull-request"
     Then "<TOOL>" launches a new pull request with this url in my browser:
       """
