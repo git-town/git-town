@@ -843,7 +843,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the (global )?"new-branch-push-flag" configuration is "([^"]*)"$`, func(global string, value string) error {
+	suite.Step(`^the (global )?"new-branch-push-flag" setting is "([^"]*)"$`, func(global string, value string) error {
 		setGlobal := global != ""
 		if value == "true" || value == "false" {
 			b, err := strconv.ParseBool(value)
@@ -857,7 +857,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return err
 	})
 
-	suite.Step(`^the "new-branch-push-flag" configuration is now "(true|false)"$`, func(text string) error {
+	suite.Step(`^the "new-branch-push-flag" setting is now "(true|false)"$`, func(text string) error {
 		want, err := strconv.ParseBool(text)
 		if err != nil {
 			return err
