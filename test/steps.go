@@ -172,10 +172,16 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the current branch is "([^"]*)"$`, func(branchName string) error {
-		err := state.gitEnv.DevRepo.CheckoutBranch(branchName)
+	suite.Step(`^the current branch is "([^"]*)"$`, func(name string) error {
+		// create the branch if it doesn't exist yet
+		if !stringslice.Contains(state.initialLocalBranches, name) {
+			state.initialLocalBranches = append(state.initialLocalBranches, name)
+			state.gitEnv.DevRepo.CreateBranch(name, "main")
+		}
+		// check out the branch
+		err := state.gitEnv.DevRepo.CheckoutBranch(name)
 		if err != nil {
-			return fmt.Errorf("cannot change to branch %q: %w", branchName, err)
+			return fmt.Errorf("cannot change to branch %q: %w", name, err)
 		}
 		return nil
 	})
