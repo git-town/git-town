@@ -1,8 +1,8 @@
 Feature: in a local repo
 
   Background:
-    Given a feature branch "existing"
-    And my repo does not have an origin
+    Given my repo does not have an origin
+    And a local feature branch "existing"
     And the commits
       | BRANCH   | LOCATION | MESSAGE         |
       | existing | local    | existing commit |
