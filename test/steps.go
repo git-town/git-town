@@ -783,7 +783,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the file "([^"]*)" still has content "([^"]*)"$`, func(file, expectedContent string) error {
+	suite.Step(`^file "([^"]*)" still has content "([^"]*)"$`, func(file, expectedContent string) error {
 		actualContent, err := state.gitEnv.DevRepo.FileContent(file)
 		if err != nil {
 			return err
@@ -815,7 +815,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.OriginRepo.RemoveBranch(name)
 	})
 
-	suite.Step(`^the file "([^"]+)" contains unresolved conflicts$`, func(name string) error {
+	suite.Step(`^file "([^"]+)" still contains unresolved conflicts$`, func(name string) error {
 		content, err := state.gitEnv.DevRepo.FileContent(name)
 		if err != nil {
 			return fmt.Errorf("cannot read file %q: %w", name, err)

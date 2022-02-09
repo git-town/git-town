@@ -7,4 +7,4 @@ Feature: ignore files
       | feature | local    | my commit | .gitignore | ignored      |
     And an uncommitted file with name "test/ignored/important" and content "changed ignored file"
     When I run "git-town sync"
-    Then the file "test/ignored/important" still has content "changed ignored file"
+    Then file "test/ignored/important" still has content "changed ignored file"

@@ -23,7 +23,7 @@ Feature: conflicts between uncommitted changes and the main branch
       """
       conflicts between your uncommmitted changes and the main branch
       """
-    And the file "conflicting_file" contains unresolved conflicts
+    And file "conflicting_file" still contains unresolved conflicts
 
   Scenario: abort with unresolved conflict fails due to unresolved merge conflicts
     When I run "git-town abort"
@@ -50,7 +50,7 @@ Feature: conflicts between uncommitted changes and the main branch
       """
     And the current branch is now "main"
     And now the initial commits exist
-    And my workspace now contains the file "conflicting_file" with content "resolved content"
+    And file "conflicting_file" still has content "resolved content"
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
@@ -68,7 +68,7 @@ Feature: conflicts between uncommitted changes and the main branch
       | BRANCH | LOCATION      | MESSAGE            | FILE NAME        | FILE CONTENT |
       | main   | local, origin | conflicting commit | conflicting_file | main content |
       | new    | local         | conflicting commit | conflicting_file | main content |
-    And my workspace now contains the file "conflicting_file" with content "resolved content"
+    And file "conflicting_file" still has content "resolved content"
 
   Scenario: resolve and undo undoes the hack but cannot get back to the original branch due to merge conflicts
     Given I resolve the conflict in "conflicting_file"
@@ -85,4 +85,4 @@ Feature: conflicts between uncommitted changes and the main branch
       """
     And the current branch is now "main"
     And now the initial commits exist
-    And my workspace now contains the file "conflicting_file" with content "resolved content"
+    And file "conflicting_file" still has content "resolved content"
