@@ -2,11 +2,10 @@ Feature: in a local repo
 
   Background:
     Given my repo does not have an origin
-    And a local feature branch "existing"
+    And the current branch is a local feature branch "existing"
     And the commits
       | BRANCH   | LOCATION | MESSAGE         |
       | existing | local    | existing commit |
-    And the current branch is "existing"
     And my workspace has an uncommitted file
     When I run "git-town hack new"
 

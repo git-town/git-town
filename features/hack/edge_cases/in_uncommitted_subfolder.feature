@@ -1,11 +1,10 @@
 Feature: inside an uncommitted subfolder on the current feature branch
 
   Background:
-    Given a feature branch "existing"
+    Given the current branch is a feature branch "existing"
     And the commits
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
-    And the current branch is "existing"
     And my workspace has an uncommitted file in folder "new_folder"
     When I run "git-town hack new" in the "new_folder" folder
 

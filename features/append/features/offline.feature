@@ -2,11 +2,10 @@ Feature: append in offline mode
 
   Background:
     Given offline mode is enabled
-    And a feature branch "existing"
+    And the current branch is a feature branch "existing"
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
-    And the current branch is "existing"
 
   Scenario: result
     When I run "git-town append new"

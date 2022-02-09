@@ -1,12 +1,12 @@
 Feature: delete the current feature branch
 
   Background:
-    Given the feature branches "current" and "other"
+    Given the current branch is a feature branch "current"
+    And a feature branch "other"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | current | local, origin | current commit |
       | other   | local, origin | other commit   |
-    And the current branch is "current"
     And my workspace has an uncommitted file
     When I run "git-town kill"
 

@@ -1,12 +1,11 @@
 Feature: on the main branch
 
   Background:
-    Given a feature branch "existing"
+    Given the current branch is a feature branch "existing"
     And the commits
       | BRANCH   | LOCATION | MESSAGE         |
       | main     | origin   | main commit     |
       | existing | local    | existing commit |
-    And the current branch is "existing"
     And my workspace has an uncommitted file
     When I run "git-town hack new"
 

@@ -411,6 +411,50 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.PushBranchToOrigin(branch)
 	})
 
+	suite.Step(`^the current branch is a (local )?feature branch "([^"]*)"$`, func(localStr, branch string) error {
+		isLocal := localStr != ""
+		err := state.gitEnv.DevRepo.CreateFeatureBranch(branch)
+		if err != nil {
+			return err
+		}
+		state.initialLocalBranches = append(state.initialLocalBranches, branch)
+		state.initialBranchHierarchy.AddRow(branch, "main")
+		if !isLocal {
+			state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
+			err := state.gitEnv.DevRepo.PushBranchToOrigin(branch)
+			if err != nil {
+				return err
+			}
+		}
+		state.initialCurrentBranch = branch
+		if !state.gitEnv.DevRepo.CurrentBranchCache.Initialized() || state.gitEnv.DevRepo.CurrentBranchCache.Value() != branch {
+			return state.gitEnv.DevRepo.CheckoutBranch(branch)
+		}
+		return nil
+	})
+
+	suite.Step(`^the current branch is a (local )?perennial branch "([^"]*)"$`, func(localStr, branch string) error {
+		isLocal := localStr != ""
+		err := state.gitEnv.DevRepo.CreatePerennialBranches(branch)
+		if err != nil {
+			return err
+		}
+		state.initialLocalBranches = append(state.initialLocalBranches, branch)
+		state.initialBranchHierarchy.AddRow(branch, "main")
+		if !isLocal {
+			state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
+			err := state.gitEnv.DevRepo.PushBranchToOrigin(branch)
+			if err != nil {
+				return err
+			}
+		}
+		state.initialCurrentBranch = branch
+		if !state.gitEnv.DevRepo.CurrentBranchCache.Initialized() || state.gitEnv.DevRepo.CurrentBranchCache.Value() != branch {
+			return state.gitEnv.DevRepo.CheckoutBranch(branch)
+		}
+		return nil
+	})
+
 	suite.Step(`^a (local )?feature branch "([^"]*)"$`, func(localStr, branch string) error {
 		isLocal := localStr != ""
 		err := state.gitEnv.DevRepo.CreateFeatureBranch(branch)
@@ -821,7 +865,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if state.initialCurrentBranch == "" {
 			return state.gitEnv.DevRepo.CheckoutBranch("main")
 		}
-		return state.gitEnv.DevRepo.CheckoutBranch(state.initialCurrentBranch)
+		if state.gitEnv.DevRepo.CurrentBranchCache.Value() != state.initialCurrentBranch {
+			return state.gitEnv.DevRepo.CheckoutBranch(state.initialCurrentBranch)
+		}
+		return nil
 	})
 
 	suite.Step(`^the branches are now$`, func(table *messages.PickleStepArgument_PickleTable) error {

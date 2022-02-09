@@ -2,8 +2,7 @@
 Feature: customize the parent for the new feature branch
 
   Background:
-    Given a branch "existing"
-    And the current branch is "existing"
+    Given the current branch is "existing"
     When I run "git-town hack -p new" and answer the prompts:
       | PROMPT                                         | ANSWER        |
       | Please specify the parent branch of 'new'      | [DOWN][ENTER] |

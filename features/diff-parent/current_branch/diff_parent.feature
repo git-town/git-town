@@ -1,8 +1,7 @@
 Feature: view changes made on the current feature branch
 
   Scenario: feature branch
-    Given a feature branch "feature"
-    And the current branch is "feature"
+    And the current branch is a feature branch "feature"
     When I run "git-town diff-parent"
     Then it runs the commands
       | BRANCH  | COMMAND                |

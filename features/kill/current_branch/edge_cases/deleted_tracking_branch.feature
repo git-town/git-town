@@ -1,13 +1,13 @@
 Feature: the branch to kill has a deleted tracking branch
 
   Background:
-    Given the feature branches "old" and "other"
+    Given the current branch is a feature branch "old"
+    And a feature branch "other"
     And the commits
       | BRANCH | LOCATION      | MESSAGE      |
       | old    | local, origin | old commit   |
       | other  | local, origin | other commit |
     And origin deletes the "old" branch
-    And the current branch is "old"
     And my workspace has an uncommitted file
     When I run "git-town kill"
 

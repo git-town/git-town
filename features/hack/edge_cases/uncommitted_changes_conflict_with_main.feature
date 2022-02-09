@@ -1,11 +1,10 @@
 Feature: conflicts between uncommitted changes and the main branch
 
   Background:
-    Given a feature branch "existing"
+    Given the current branch is a feature branch "existing"
     And the commits
       | BRANCH | LOCATION      | MESSAGE            | FILE NAME        | FILE CONTENT |
       | main   | local, origin | conflicting commit | conflicting_file | main content |
-    And the current branch is "existing"
     And my workspace has an uncommitted file with name "conflicting_file" and content "conflicting content"
     When I run "git-town hack new"
 

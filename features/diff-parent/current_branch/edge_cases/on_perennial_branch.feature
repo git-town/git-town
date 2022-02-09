@@ -10,8 +10,7 @@ Feature: on perennial branch
       """
 
   Scenario: on perennial branch
-    Given a perennial branch "qa"
-    And the current branch is "qa"
+    And the current branch is a perennial branch "qa"
     When I run "git-town diff-parent"
     Then it runs no commands
     And it prints the error:

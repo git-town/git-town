@@ -1,12 +1,11 @@
 Feature: conflicts between the main branch and its tracking branch
 
   Background:
-    Given a feature branch "existing"
+    Given the current branch is a feature branch "existing"
     And the commits
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | main   | local    | conflicting local commit  | conflicting_file | local content  |
       |        | origin   | conflicting origin commit | conflicting_file | origin content |
-    And the current branch is "existing"
     And my workspace has an uncommitted file
     When I run "git-town hack new"
 
