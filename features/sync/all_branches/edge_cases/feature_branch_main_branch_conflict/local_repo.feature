@@ -30,7 +30,7 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       """
     And the current branch is now "beta"
     And the uncommitted file is stashed
-    And my repo now has a merge in progress
+    And a merge is now in progress
 
   Scenario: abort
     When I run "git-town abort"
@@ -86,7 +86,7 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       """
     And the current branch is still "beta"
     And the uncommitted file is stashed
-    And my repo still has a merge in progress
+    And a merge is still in progress
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"

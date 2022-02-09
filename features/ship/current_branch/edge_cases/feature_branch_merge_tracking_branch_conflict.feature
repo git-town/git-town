@@ -22,7 +22,7 @@ Feature: handle conflicts between the shipped branch and its tracking branch
       To continue after having resolved conflicts, run "git-town continue".
       """
     And the current branch is still "feature"
-    And my repo now has a merge in progress
+    And a merge is now in progress
 
   Scenario: abort
     When I run "git-town abort"

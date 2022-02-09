@@ -659,7 +659,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repo (?:now|still) has a merge in progress$`, func() error {
+	suite.Step(`^a merge is (?:now|still) in progress$`, func() error {
 		hasMerge, err := state.gitEnv.DevRepo.HasMergeInProgress()
 		if err != nil {
 			return err

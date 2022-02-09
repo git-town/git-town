@@ -24,7 +24,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       """
     And the current branch is still "feature"
     And the uncommitted file is stashed
-    And my repo now has a merge in progress
+    And a merge is now in progress
 
   Scenario: abort
     When I run "git-town abort"
@@ -46,7 +46,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       """
     And the current branch is still "feature"
     And the uncommitted file is stashed
-    And my repo still has a merge in progress
+    And a merge is still in progress
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"

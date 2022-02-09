@@ -25,7 +25,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
       |         | git merge --no-edit main           |
     And the current branch is still "current"
     And the uncommitted file is stashed
-    And my repo now has a merge in progress
+    And a merge is now in progress
     And it prints the error:
       """
       exit status 1
@@ -53,7 +53,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
       """
     And the current branch is still "current"
     And the uncommitted file is stashed
-    And my repo still has a merge in progress
+    And a merge is still in progress
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
