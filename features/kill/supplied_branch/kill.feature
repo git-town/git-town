@@ -39,4 +39,4 @@ Feature: delete another than the current branch
     And I am still on the "good" branch
     And my workspace still contains my uncommitted file
     And now the initial commits exist
-    And the initial branch setup exists
+    And the initial branch setup and hierarchy exists

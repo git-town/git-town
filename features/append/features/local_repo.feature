@@ -40,4 +40,4 @@ Feature: in a local repo
     And I am now on the "existing" branch
     And now the initial commits exist
     And my workspace still contains my uncommitted file
-    And the initial branch setup exists
+    And the initial branch setup and hierarchy exists

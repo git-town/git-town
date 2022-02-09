@@ -23,7 +23,7 @@ Feature: does not ship a child branch
       """
     And I am still on the "gamma" branch
     And now the initial commits exist
-    And the initial branch setup exists
+    And the initial branch setup and hierarchy exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -34,4 +34,4 @@ Feature: does not ship a child branch
       """
     And I am still on the "gamma" branch
     And now the initial commits exist
-    And the initial branch setup exists
+    And the initial branch setup and hierarchy exists

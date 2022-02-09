@@ -49,4 +49,4 @@ Feature: ship the current feature branch from a subfolder on the shipped branch
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
       | feature | local, origin | feature commit        |
-    And the initial branch setup exists
+    And the initial branch setup and hierarchy exists

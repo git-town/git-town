@@ -35,4 +35,4 @@ Feature: offline mode
       | old    | git branch -D new                     |
     And I am now on the "old" branch
     And now the initial commits exist
-    And the initial branch setup exists
+    And the initial branch setup and hierarchy exists

@@ -49,4 +49,4 @@ Feature: ship-delete-remote-branch disabled
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
       | feature | local         | feature commit        |
-    And the initial branch setup exists
+    And the initial branch setup and hierarchy exists

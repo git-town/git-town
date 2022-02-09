@@ -10,7 +10,7 @@ Feature: does not kill perennial branches
       you can only kill feature branches
       """
     And I am still on the "feature" branch
-    And the initial branch setup exists
+    And the initial branch setup and hierarchy exists
 
   Scenario: perennial branch
     Given a perennial branch "qa"

@@ -121,4 +121,4 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | origin        | conflicting origin commit        |
       |         |               | conflicting local commit         |
       |         |               | Merge branch 'main' into feature |
-    And the initial branch setup exists
+    And the initial branch setup and hierarchy exists
