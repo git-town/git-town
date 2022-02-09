@@ -1,7 +1,7 @@
 Feature: does not kill a remote branch in offline mode
 
   Background:
-    Given Git Town is in offline mode
+    Given offline mode is enabled
     And the origin has a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
