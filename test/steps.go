@@ -842,6 +842,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the commits$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		state.initialCommits = table
+		// create the commits
 		commits, err := FromGherkinTable(table)
 		if err != nil {
 			return fmt.Errorf("cannot parse Gherkin table: %w", err)
@@ -850,6 +851,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return fmt.Errorf("cannot create commits: %w", err)
 		}
+		// restore the initial branch
 		if state.initialCurrentBranch == "" {
 			return state.gitEnv.DevRepo.CheckoutBranch("main")
 		}
