@@ -20,7 +20,7 @@ Feature: prepend a branch to a feature branch
       |        | git checkout parent      |
       | parent | git stash pop            |
     And the current branch is now "parent"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
@@ -40,6 +40,6 @@ Feature: prepend a branch to a feature branch
       |        | git checkout old     |
       | old    | git stash pop        |
     And the current branch is now "old"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And now the initial commits exist
     And Git Town is now aware of the initial branch hierarchy

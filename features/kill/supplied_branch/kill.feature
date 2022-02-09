@@ -18,7 +18,7 @@ Feature: delete another than the current branch
       |        | git push origin :dead    |
       |        | git branch -D dead       |
     And the current branch is still "good"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And the branches are now
       | REPOSITORY    | BRANCHES   |
       | local, origin | main, good |
@@ -37,6 +37,6 @@ Feature: delete another than the current branch
       | good   | git branch dead {{ sha 'dead-end commit' }} |
       |        | git push -u origin dead                     |
     And the current branch is still "good"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And now the initial commits exist
     And the initial branches and hierarchy exist

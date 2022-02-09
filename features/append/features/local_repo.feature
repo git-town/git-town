@@ -18,7 +18,7 @@ Feature: in a local repo
       |          | git checkout new    |
       | new      | git stash pop       |
     And the current branch is now "new"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And now these commits exist
       | BRANCH   | LOCATION | MESSAGE         |
       | existing | local    | existing commit |
@@ -38,5 +38,5 @@ Feature: in a local repo
       |          | git stash pop         |
     And the current branch is now "existing"
     And now the initial commits exist
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And the initial branches and hierarchy exist

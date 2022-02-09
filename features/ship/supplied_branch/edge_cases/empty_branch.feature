@@ -30,7 +30,7 @@ Feature: does not ship empty feature branches
       the branch "empty" has no shippable changes
       """
     And the current branch is still "other"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And Git Town is still aware of the initial branch hierarchy
 
   Scenario: undo

@@ -33,7 +33,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       | qa     | git rebase --abort |
       |        | git stash pop      |
     And the current branch is still "qa"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And there is no rebase in progress anymore
     And now the initial commits exist
 
@@ -59,7 +59,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
     And all branches are now synchronized
     And the current branch is still "qa"
     And there is no rebase in progress anymore
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And my repo now has these committed files
       | BRANCH | NAME             | CONTENT          |
       | qa     | conflicting_file | resolved content |
@@ -76,7 +76,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
     And all branches are now synchronized
     And the current branch is still "qa"
     And there is no rebase in progress anymore
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And my repo now has these committed files
       | BRANCH | NAME             | CONTENT          |
       | qa     | conflicting_file | resolved content |

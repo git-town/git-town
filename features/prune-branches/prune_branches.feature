@@ -18,7 +18,7 @@ Feature: delete branches that were shipped or removed on another machine
       |        | git checkout main        |
       | main   | git branch -D old        |
     And the current branch is now "main"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And the branches are now
       | REPOSITORY    | BRANCHES     |
       | local, origin | main, active |
@@ -33,5 +33,5 @@ Feature: delete branches that were shipped or removed on another machine
       | main   | git branch old {{ sha 'old commit' }} |
       |        | git checkout old                      |
     And the current branch is now "old"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And the initial branches and hierarchy exist

@@ -38,7 +38,7 @@ Feature: handle conflicts between the current feature branch and its tracking br
       | main    | git checkout feature |
       | feature | git stash pop        |
     And the current branch is still "feature"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And there is no merge in progress
     And now the initial commits exist
 
@@ -65,7 +65,7 @@ Feature: handle conflicts between the current feature branch and its tracking br
     And all branches are now synchronized
     And the current branch is still "feature"
     And there is no merge in progress
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And my repo now has these committed files
       | BRANCH  | NAME             | CONTENT          |
       | feature | conflicting_file | resolved content |

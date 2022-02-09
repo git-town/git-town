@@ -36,7 +36,7 @@ Feature: abort the ship via empty commit message
       aborted because commit exited with error
       """
     And the current branch is still "other"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And now the initial commits exist
     And Git Town is still aware of the initial branch hierarchy
 

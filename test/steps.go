@@ -783,20 +783,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my workspace still contains my uncommitted file$`, func() error {
-		hasFile, err := state.gitEnv.DevRepo.HasFile(
-			state.uncommittedFileName,
-			state.uncommittedContent,
-		)
-		if err != nil {
-			return fmt.Errorf("cannot determine if workspace contains uncommitted file: %w", err)
-		}
-		if !hasFile {
-			return fmt.Errorf("expected the uncommitted file but didn't find one")
-		}
-		return nil
-	})
-
 	suite.Step(`^my workspace (?:still|now) contains the file "([^"]*)" with content "([^"]*)"$`, func(file, expectedContent string) error {
 		actualContent, err := state.gitEnv.DevRepo.FileContent(file)
 		if err != nil {

@@ -32,7 +32,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
       |        | git stash pop                    |
     And all branches are now synchronized
     And the current branch is still "alpha"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                        |
       | main   | local, origin | main commit                    |

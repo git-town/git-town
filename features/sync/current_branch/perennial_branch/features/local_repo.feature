@@ -19,5 +19,5 @@ Feature: sync the current perennial branch (local repo)
       |        | git stash pop |
     And all branches are now synchronized
     And the current branch is still "qa"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And now the initial commits exist

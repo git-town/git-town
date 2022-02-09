@@ -35,7 +35,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       |        | git checkout other |
       | other  | git stash pop      |
     And the current branch is still "other"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And there is no rebase in progress anymore
     And now the initial commits exist
     And Git Town is still aware of the initial branch hierarchy
@@ -59,7 +59,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | git checkout other                 |
       | other   | git stash pop                      |
     And the current branch is now "other"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                   | FILE NAME        | FILE CONTENT     |
       | main   | local, origin | conflicting origin commit | conflicting_file | origin content   |

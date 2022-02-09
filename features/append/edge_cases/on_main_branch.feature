@@ -19,7 +19,7 @@ Feature: on the main branch
       |        | git checkout new         |
       | new    | git stash pop            |
     And the current branch is now "new"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
@@ -38,7 +38,7 @@ Feature: on the main branch
       | main   | git branch -d new |
       |        | git stash pop     |
     And the current branch is now "main"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |

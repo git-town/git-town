@@ -17,7 +17,7 @@ Feature: local repository
       | BRANCH | COMMAND             |
       | good   | git branch -D other |
     And the current branch is still "good"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And the branches are now
       | REPOSITORY | BRANCHES   |
       | local      | main, good |
@@ -35,6 +35,6 @@ Feature: local repository
       | BRANCH | COMMAND                                   |
       | good   | git branch other {{ sha 'other commit' }} |
     And the current branch is still "good"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And now the initial commits exist
     And the initial branches and hierarchy exist

@@ -17,4 +17,4 @@ Feature: on a feature branch in a repository with a submodule that has uncommitt
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
     And the current branch is still "feature"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists

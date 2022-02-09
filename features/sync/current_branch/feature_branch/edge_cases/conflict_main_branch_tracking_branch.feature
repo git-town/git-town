@@ -33,7 +33,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | git checkout feature |
       | feature | git stash pop        |
     And the current branch is still "feature"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And there is no rebase in progress anymore
     And now the initial commits exist
 
@@ -62,7 +62,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And all branches are now synchronized
     And the current branch is still "feature"
     And there is no rebase in progress anymore
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And my repo now has these committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |
@@ -83,7 +83,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And all branches are now synchronized
     And the current branch is still "feature"
     And there is no rebase in progress anymore
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And my repo now has these committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |

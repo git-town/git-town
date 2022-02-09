@@ -20,7 +20,7 @@ Feature: delete a parent branch
       |        | git push origin :beta    |
       |        | git branch -D beta       |
     And the current branch is now "gamma"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And the branches are now
       | REPOSITORY    | BRANCHES           |
       | local, origin | main, alpha, gamma |

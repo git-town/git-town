@@ -12,7 +12,7 @@ Feature: does not ship a branch that has open changes
       you have uncommitted changes. Did you mean to commit them before shipping?
       """
     And the current branch is still "feature"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"

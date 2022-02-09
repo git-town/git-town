@@ -12,4 +12,4 @@ Feature: non-existing branch
       there is no branch named "non-existing"
       """
     And the current branch is now "main"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists

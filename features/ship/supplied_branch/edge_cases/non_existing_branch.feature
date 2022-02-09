@@ -14,7 +14,7 @@ Feature: does not ship a non-existing branch
       there is no branch named "non-existing-branch"
       """
     And the current branch is now "main"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"

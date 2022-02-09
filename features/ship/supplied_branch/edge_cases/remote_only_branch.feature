@@ -32,7 +32,7 @@ Feature: ship a branch that exists only on origin
       |         | git checkout other                 |
       | other   | git stash pop                      |
     And the current branch is now "other"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |

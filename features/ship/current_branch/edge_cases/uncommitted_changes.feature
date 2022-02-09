@@ -11,7 +11,7 @@ Feature: does not ship with uncommitted changes
       """
       you have uncommitted changes. Did you mean to commit them before shipping?
       """
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -20,4 +20,4 @@ Feature: does not ship with uncommitted changes
       """
       nothing to undo
       """
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists

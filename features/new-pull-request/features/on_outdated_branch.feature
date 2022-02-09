@@ -42,7 +42,7 @@ Feature: sync before creating the pull request
       https://github.com/git-town/git-town/compare/parent...child?expand=1
       """
     And the current branch is still "child"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                                                  |
       | main   | local, origin | origin main commit                                       |

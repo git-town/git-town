@@ -38,7 +38,7 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
       | main    | git checkout other |
       | other   | git stash pop      |
     And the current branch is now "other"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And there is no merge in progress
     And now the initial commits exist
     And Git Town is still aware of the initial branch hierarchy
@@ -59,7 +59,7 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
       |         | git checkout other           |
       | other   | git stash pop                |
     And the current branch is now "other"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
@@ -86,7 +86,7 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
       |         | git checkout other           |
       | other   | git stash pop                |
     And the current branch is now "other"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
 
   Scenario: resolve, continue, and undo
     When I resolve the conflict in "conflicting_file"

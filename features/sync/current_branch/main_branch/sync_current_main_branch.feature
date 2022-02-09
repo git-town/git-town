@@ -20,7 +20,7 @@ Feature: sync the main branch
       |        | git push --tags          |
       |        | git stash pop            |
     And the current branch is still "main"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And all branches are now synchronized
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE       |
