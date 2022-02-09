@@ -778,7 +778,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my workspace is currently not a Git repo$`, func() error {
+	suite.Step(`^I am outside a Git repo$`, func() error {
 		os.RemoveAll(filepath.Join(state.gitEnv.DevRepo.WorkingDir(), ".git"))
 		return nil
 	})
