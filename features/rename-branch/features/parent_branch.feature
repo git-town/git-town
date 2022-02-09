@@ -1,13 +1,12 @@
 Feature: rename a parent branch
 
   Background:
-    Given a feature branch "parent"
+    Given the current branch is a feature branch "parent"
     And a feature branch "child" as a child of "parent"
     And the commits
       | BRANCH | LOCATION      | MESSAGE       |
       | child  | local, origin | child commit  |
       | parent | local, origin | parent commit |
-    And the current branch is "parent"
     When I run "git-town rename-branch parent new"
 
   Scenario: result

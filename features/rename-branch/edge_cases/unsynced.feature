@@ -1,13 +1,12 @@
 Feature: rename an unsynced branch
 
   Background:
-    Given a feature branch "old"
+    Given the current branch is a feature branch "old"
 
   Scenario: unpulled remote commits
     Given the commits
       | BRANCH | LOCATION | MESSAGE       |
       | old    | origin   | origin commit |
-    And the current branch is "old"
     When I run "git-town rename-branch old new"
     Then it runs the commands
       | BRANCH | COMMAND                  |
@@ -22,7 +21,6 @@ Feature: rename an unsynced branch
     Given the commits
       | BRANCH | LOCATION | MESSAGE      |
       | old    | local    | local commit |
-    And the current branch is "old"
     When I run "git-town rename-branch old new"
     Then it runs the commands
       | BRANCH | COMMAND                  |
