@@ -353,7 +353,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my computer has a broken "([^"]*)" tool installed$`, func(name string) error {
+	suite.Step(`^a broken "([^"]*)" tool$`, func(name string) error {
 		return state.gitEnv.DevShell.MockBrokenCommand(name)
 	})
 
