@@ -13,7 +13,7 @@ Feature: sync before creating the pull request
       | child  | local    | local child commit   |
       |        | origin   | origin child commit  |
     And the "open" tool is installed
-    And my repo's origin is "git@github.com:git-town/git-town.git"
+    And the origin is "git@github.com:git-town/git-town.git"
     And the current branch is "child"
     And my workspace has an uncommitted file
     When I run "git-town new-pull-request"

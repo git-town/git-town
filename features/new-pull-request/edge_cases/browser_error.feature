@@ -3,7 +3,7 @@ Feature: print the URL when the browser crashes
 
   Background:
     Given the current branch is a feature branch "feature"
-    And my repo's origin is "git@github.com:git-town/git-town"
+    And the origin is "git@github.com:git-town/git-town"
     And a broken "open" tool
     When I run "git-town new-pull-request"
 

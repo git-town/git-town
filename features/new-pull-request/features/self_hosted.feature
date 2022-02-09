@@ -3,7 +3,7 @@ Feature: self-hosted service
 
   Scenario Outline: self hosted
     Given the "open" tool is installed
-    And my repo's origin is "git@self-hosted:git-town/git-town.git"
+    And the origin is "git@self-hosted:git-town/git-town.git"
     And the "code-hosting-driver" setting is "<DRIVER>"
     And the current branch is a feature branch "feature"
     When I run "git-town new-pull-request"

@@ -6,7 +6,7 @@ Feature: GitHub support
 
   Scenario Outline: normal origin
     Given the current branch is a feature branch "feature"
-    And my repo's origin is "<ORIGIN>"
+    And the origin is "<ORIGIN>"
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:
       """
@@ -26,7 +26,7 @@ Feature: GitHub support
 
   Scenario Outline: origin contains path that looks like a URL
     Given the current branch is a feature branch "feature"
-    And my repo's origin is "<ORIGIN>"
+    And the origin is "<ORIGIN>"
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:
       """
@@ -44,7 +44,7 @@ Feature: GitHub support
 
   Scenario Outline: proper URL encoding
     Given the current branch is a feature branch "<BRANCH_NAME>"
-    And my repo's origin is "https://github.com/git-town/git-town"
+    And the origin is "https://github.com/git-town/git-town"
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:
       """
@@ -61,7 +61,7 @@ Feature: GitHub support
   Scenario: nested feature branch with known parent
     Given a feature branch "parent-feature"
     And a feature branch "child-feature" as a child of "parent-feature"
-    And my repo's origin is "git@github.com:git-town/git-town.git"
+    And the origin is "git@github.com:git-town/git-town.git"
     And the current branch is "child-feature"
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:

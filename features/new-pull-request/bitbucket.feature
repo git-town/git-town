@@ -3,7 +3,7 @@ Feature: Bitbucket support
 
   Scenario Outline: normal origin
     Given the current branch is a feature branch "feature"
-    And my repo's origin is "<ORIGIN>"
+    And the origin is "<ORIGIN>"
     And the "open" tool is installed
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:
@@ -24,7 +24,7 @@ Feature: Bitbucket support
 
   Scenario Outline: origin includes path that looks like a URL
     Given the current branch is a feature branch "feature"
-    And my repo's origin is "<ORIGIN>"
+    And the origin is "<ORIGIN>"
     And the "open" tool is installed
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:

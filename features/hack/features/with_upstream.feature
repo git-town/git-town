@@ -1,7 +1,7 @@
 Feature: on a forked repo
 
   Background:
-    Given my repo has an upstream repo
+    Given an upstream repo
     And the commits
       | BRANCH | LOCATION | MESSAGE         |
       | main   | upstream | upstream commit |

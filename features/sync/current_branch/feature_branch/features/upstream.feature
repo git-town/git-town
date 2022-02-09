@@ -1,7 +1,7 @@
 Feature: with upstream repo
 
   Background:
-    Given my repo has an upstream repo
+    Given an upstream repo
     And the current branch is a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE         |
