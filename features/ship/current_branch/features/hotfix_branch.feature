@@ -50,4 +50,4 @@ Feature: ship hotfixes
       | hotfix     | local, origin | hotfix commit        |
       | production | local, origin | hotfix done          |
       |            |               | Revert "hotfix done" |
-    And the initial branch setup and hierarchy exists
+    And the initial branch setup and hierarchy exist

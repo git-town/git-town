@@ -578,7 +578,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the initial branch setup and hierarchy exists$`, func() error {
+	suite.Step(`^the initial branch setup and hierarchy exist$`, func() error {
 		// verify initial branches
 		have, err := state.gitEnv.Branches()
 		if err != nil {
