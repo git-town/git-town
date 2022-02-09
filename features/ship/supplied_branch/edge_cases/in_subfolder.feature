@@ -62,4 +62,4 @@ Feature: ship the supplied feature branch from a subfolder
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
       | feature | origin        | feature commit        |
-    And the initial branch setup and hierarchy exist
+    And the initial branches and hierarchy exist

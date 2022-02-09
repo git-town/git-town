@@ -34,4 +34,4 @@ Feature: rename the current branch
       |        | git checkout old                      |
       | old    | git branch -D new                     |
     And I am now on the "old" branch
-    And the initial branch setup and hierarchy exist
+    And the initial branches and hierarchy exist

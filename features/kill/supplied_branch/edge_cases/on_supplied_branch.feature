@@ -42,4 +42,4 @@ Feature: delete the current branch
     And I am now on the "current" branch
     And my workspace has the uncommitted file again
     And now the initial commits exist
-    And the initial branch setup and hierarchy exist
+    And the initial branches and hierarchy exist

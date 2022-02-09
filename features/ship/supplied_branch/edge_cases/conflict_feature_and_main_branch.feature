@@ -119,4 +119,4 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       | feature | local, origin | conflicting feature commit       |
       |         | origin        | conflicting main commit          |
       |         |               | Merge branch 'main' into feature |
-    And the initial branch setup and hierarchy exist
+    And the initial branches and hierarchy exist

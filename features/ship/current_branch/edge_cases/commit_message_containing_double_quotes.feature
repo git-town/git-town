@@ -50,4 +50,4 @@ Feature: commit message can contain double-quotes
       | main    | local, origin | with "double quotes"          |
       |         |               | Revert "with "double quotes"" |
       | feature | local, origin | feature commit                |
-    And the initial branch setup and hierarchy exist
+    And the initial branches and hierarchy exist

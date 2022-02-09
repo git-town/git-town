@@ -46,4 +46,4 @@ Feature: ship a local feature branch
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
       | feature | local         | feature commit        |
-    And the initial branch setup and hierarchy exist
+    And the initial branches and hierarchy exist

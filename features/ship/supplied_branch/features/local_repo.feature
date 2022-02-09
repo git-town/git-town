@@ -53,4 +53,4 @@ Feature: ship the supplied feature branch in a local repo
       | main    | local    | feature done          |
       |         |          | Revert "feature done" |
       | feature | local    | feature commit        |
-    And the initial branch setup and hierarchy exist
+    And the initial branches and hierarchy exist

@@ -61,4 +61,4 @@ Feature: provide the commit message via a CLI argument
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
       | feature | local, origin | feature commit        |
-    And the initial branch setup and hierarchy exist
+    And the initial branches and hierarchy exist
