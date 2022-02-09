@@ -1,7 +1,7 @@
 Feature: require minimum Git version
 
   Scenario Outline: using an unsupported Git Version
-    Given my computer has Git "2.6.2" installed
+    Given Git has version "2.6.2"
     When I run "git-town <COMMAND>"
     Then it prints the error:
       """

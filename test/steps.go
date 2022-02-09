@@ -357,7 +357,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevShell.MockBrokenCommand(name)
 	})
 
-	suite.Step(`^my computer has Git "([^"]*)" installed$`, func(version string) error {
+	suite.Step(`^Git has version "([^"]*)"$`, func(version string) error {
 		err := state.gitEnv.DevShell.MockGit(version)
 		return err
 	})
