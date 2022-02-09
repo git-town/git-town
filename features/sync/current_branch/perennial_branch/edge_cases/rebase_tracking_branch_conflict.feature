@@ -1,7 +1,7 @@
 Feature: handle conflicts between the current perennial branch and its tracking branch
 
   Background:
-    Given my repo has the perennial branches "production" and "qa"
+    Given the perennial branches "production" and "qa"
     And the commits
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | qa     | local    | conflicting local commit  | conflicting_file | local content  |
