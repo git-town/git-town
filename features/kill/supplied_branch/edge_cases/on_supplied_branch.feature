@@ -20,7 +20,7 @@ Feature: delete the current branch
       |         | git checkout main              |
       | main    | git branch -D current          |
     And the current branch is now "main"
-    And my repo doesn't have any uncommitted files
+    And no uncommitted files exist
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |

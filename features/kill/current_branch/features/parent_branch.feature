@@ -23,7 +23,7 @@ Feature: delete a branch within a branch chain
       |        | git checkout alpha          |
       | alpha  | git branch -D beta          |
     And the current branch is now "alpha"
-    And my repo doesn't have any uncommitted files
+    And no uncommitted files exist
     And the branches are now
       | REPOSITORY    | BRANCHES           |
       | local, origin | main, alpha, gamma |

@@ -26,7 +26,7 @@ Feature: commit message can contain double-quotes
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
-    And my repo doesn't have any uncommitted files
+    And no uncommitted files exist
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | with "double quotes" |

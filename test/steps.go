@@ -384,7 +384,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.DeleteMainBranchConfiguration()
 	})
 
-	suite.Step(`^my repo doesn't have any uncommitted files$`, func() error {
+	suite.Step(`^no uncommitted files exist$`, func() error {
 		files, err := state.gitEnv.DevRepo.UncommittedFiles()
 		if err != nil {
 			return fmt.Errorf("cannot determine uncommitted files: %w", err)

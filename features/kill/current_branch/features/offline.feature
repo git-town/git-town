@@ -19,7 +19,7 @@ Feature: offline mode
       |         | git checkout main              |
       | main    | git branch -D feature          |
     And the current branch is now "main"
-    And my repo doesn't have any uncommitted files
+    And no uncommitted files exist
     And the branches are now
       | REPOSITORY | BRANCHES             |
       | local      | main, other          |

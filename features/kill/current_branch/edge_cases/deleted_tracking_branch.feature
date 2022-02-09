@@ -20,7 +20,7 @@ Feature: the branch to kill has a deleted tracking branch
       |        | git checkout main          |
       | main   | git branch -D old          |
     And the current branch is now "main"
-    And my repo doesn't have any uncommitted files
+    And no uncommitted files exist
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      |
       | other  | local, origin | other commit |
