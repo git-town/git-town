@@ -2,7 +2,7 @@
 Feature: Gitea support
 
   Background:
-    Given my computer has the "open" tool installed
+    Given the "open" tool is installed
 
   Scenario Outline: normal origin
     Given the current branch is a feature branch "feature"

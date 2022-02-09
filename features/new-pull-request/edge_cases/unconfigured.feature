@@ -4,7 +4,7 @@ Feature: ask for missing configuration
   Scenario: run unconfigured
     Given Git Town is not configured
     And my repo's origin is "https://github.com/git-town/git-town.git"
-    And my computer has the "open" tool installed
+    And the "open" tool is installed
     When I run "git-town new-pull-request" and answer the prompts:
       | PROMPT                                     | ANSWER  |
       | Please specify the main development branch | [ENTER] |

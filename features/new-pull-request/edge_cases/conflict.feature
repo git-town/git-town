@@ -6,7 +6,7 @@ Feature: merge conflict
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME        | FILE CONTENT    |
       | main    | local, origin | main commit    | conflicting_file | main content    |
       | feature | local         | feature commit | conflicting_file | feature content |
-    And my computer has the "open" tool installed
+    And the "open" tool is installed
     And my repo's origin is "git@github.com:git-town/git-town.git"
     When I run "git-town new-pull-request"
 

@@ -12,7 +12,7 @@ Feature: sync before creating the pull request
       |        | origin   | origin parent commit |
       | child  | local    | local child commit   |
       |        | origin   | origin child commit  |
-    And my computer has the "open" tool installed
+    And the "open" tool is installed
     And my repo's origin is "git@github.com:git-town/git-town.git"
     And the current branch is "child"
     And my workspace has an uncommitted file

@@ -353,20 +353,20 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my computer has a broken "([^"]*)" tool installed$`, func(name string) error {
+	suite.Step(`^a broken "([^"]*)" tool$`, func(name string) error {
 		return state.gitEnv.DevShell.MockBrokenCommand(name)
 	})
 
-	suite.Step(`^my computer has Git "([^"]*)" installed$`, func(version string) error {
+	suite.Step(`^Git has version "([^"]*)"$`, func(version string) error {
 		err := state.gitEnv.DevShell.MockGit(version)
 		return err
 	})
 
-	suite.Step(`^my computer has no tool to open browsers installed$`, func() error {
+	suite.Step(`^no tool to open browsers is installed$`, func() error {
 		return state.gitEnv.DevShell.MockNoCommandsInstalled()
 	})
 
-	suite.Step(`^my computer has the "([^"]*)" tool installed$`, func(tool string) error {
+	suite.Step(`^the "([^"]*)" tool is installed$`, func(tool string) error {
 		return state.gitEnv.DevShell.MockCommand(tool)
 	})
 
