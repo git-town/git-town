@@ -783,7 +783,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my workspace (?:still|now) contains the file "([^"]*)" with content "([^"]*)"$`, func(file, expectedContent string) error {
+	suite.Step(`^the file "([^"]*)" still has content "([^"]*)"$`, func(file, expectedContent string) error {
 		actualContent, err := state.gitEnv.DevRepo.FileContent(file)
 		if err != nil {
 			return err
