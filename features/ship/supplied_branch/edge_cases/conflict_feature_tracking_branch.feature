@@ -41,7 +41,7 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
     And the uncommitted file still exists
     And no merge is in progress
     And now the initial commits exist
-    And Git Town is still aware of the initial branch hierarchy
+    And the initial branch hierarchy exists
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"

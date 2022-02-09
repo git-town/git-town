@@ -31,4 +31,4 @@ Feature: inside a committed subfolder that exists only on the current feature br
       |        | git checkout existing |
     And the current branch is now "existing"
     And now the initial commits exist
-    And Git Town is now aware of the initial branch hierarchy
+    And the initial branch hierarchy exists

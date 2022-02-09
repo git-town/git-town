@@ -42,4 +42,4 @@ Feature: prepend a branch to a feature branch
     And the current branch is now "old"
     And the uncommitted file still exists
     And now the initial commits exist
-    And Git Town is now aware of the initial branch hierarchy
+    And the initial branch hierarchy exists

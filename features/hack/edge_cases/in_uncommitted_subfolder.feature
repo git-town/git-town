@@ -42,4 +42,4 @@ Feature: inside an uncommitted subfolder on the current feature branch
       | existing | git stash pop         |
     And the current branch is now "existing"
     And now the initial commits exist
-    And Git Town is now aware of the initial branch hierarchy
+    And the initial branch hierarchy exists

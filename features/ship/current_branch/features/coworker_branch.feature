@@ -66,4 +66,4 @@ Feature: ship a coworker's feature branch
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
       | feature | local, origin | coworker commit       |
-    And Git Town is now aware of the initial branch hierarchy
+    And the initial branch hierarchy exists

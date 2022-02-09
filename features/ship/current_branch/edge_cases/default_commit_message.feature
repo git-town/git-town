@@ -29,7 +29,7 @@ Feature: must provide a commit message
       """
     And the current branch is still "feature"
     And now the initial commits exist
-    And Git Town is still aware of the initial branch hierarchy
+    And the initial branch hierarchy exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -39,4 +39,4 @@ Feature: must provide a commit message
       """
     And the current branch is still "feature"
     And now the initial commits exist
-    And Git Town is still aware of the initial branch hierarchy
+    And the initial branch hierarchy exists

@@ -53,4 +53,4 @@ Feature: ship a parent branch
       |        |               | Revert "parent done" |
       | child  | local, origin | child commit         |
       | parent | local, origin | parent commit        |
-    And Git Town is now aware of the initial branch hierarchy
+    And the initial branch hierarchy exists

@@ -47,4 +47,4 @@ Feature: on the main branch
       | BRANCH   | LOCATION      | MESSAGE         |
       | main     | local, origin | main commit     |
       | existing | local         | existing commit |
-    And Git Town is now aware of the initial branch hierarchy
+    And the initial branch hierarchy exists
