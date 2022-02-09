@@ -2,12 +2,11 @@
 Feature: ship a branch that exists only on origin
 
   Background:
-    Given a feature branch "other"
+    Given the current branch is a feature branch "other"
     And a remote feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME        |
       | feature | origin   | feature commit | conflicting_file |
-    And the current branch is "other"
     And my workspace has an uncommitted file with name "conflicting_file" and content "conflicting content"
     When I run "git-town ship feature -m 'feature done'" and answer the prompts:
       | PROMPT                                        | ANSWER  |

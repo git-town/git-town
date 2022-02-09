@@ -1,7 +1,7 @@
 Feature: does not ship a child branch
 
   Background:
-    Given a feature branch "alpha"
+    Given the current branch is a feature branch "alpha"
     And a feature branch "beta" as a child of "alpha"
     And a feature branch "gamma" as a child of "beta"
     And the commits
@@ -9,7 +9,6 @@ Feature: does not ship a child branch
       | alpha  | local, origin | alpha commit |
       | beta   | local, origin | beta commit  |
       | gamma  | local, origin | gamma commit |
-    And the current branch is "alpha"
     When I run "git-town ship gamma -m 'gamma done'"
 
   Scenario: result

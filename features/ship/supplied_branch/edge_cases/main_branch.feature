@@ -1,8 +1,7 @@
 Feature: does not ship the main branch
 
   Background:
-    Given a feature branch "feature"
-    And the current branch is "feature"
+    Given the current branch is a feature branch "feature"
     And my workspace has an uncommitted file
     When I run "git-town ship main"
 

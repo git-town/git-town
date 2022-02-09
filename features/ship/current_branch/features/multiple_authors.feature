@@ -2,13 +2,12 @@
 Feature: ship a coworker's feature branch
 
   Background:
-    Given a feature branch "feature"
+    Given the current branch is a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE            | AUTHOR                            |
       | feature | local    | developer commit 1 | developer <developer@example.com> |
       |         |          | developer commit 2 | developer <developer@example.com> |
       |         |          | coworker commit    | coworker <coworker@example.com>   |
-    And the current branch is "feature"
 
   Scenario: choose myself as the author
     When I run "git-town ship -m 'feature done'" and answer the prompts:

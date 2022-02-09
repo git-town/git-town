@@ -1,13 +1,12 @@
 Feature: ship a parent branch
 
   Background:
-    Given a feature branch "parent"
+    Given the current branch is a feature branch "parent"
     And a feature branch "child" as a child of "parent"
     And the commits
       | BRANCH | LOCATION      | MESSAGE       |
       | parent | local, origin | parent commit |
       | child  | local, origin | child commit  |
-    And the current branch is "parent"
     When I run "git-town ship -m 'parent done'"
 
   Scenario: result

@@ -2,11 +2,10 @@ Feature: offline mode
 
   Background:
     Given offline mode is enabled
-    And a feature branch "feature"
+    And the current branch is a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
-    And the current branch is "feature"
     When I run "git-town ship -m 'feature done'"
 
   Scenario: result
