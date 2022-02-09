@@ -7,7 +7,7 @@ Feature: configure the main branch
     And the main branch is now "main"
 
   Scenario: configured
-    Given my repo has the branches "old" and "new"
+    Given the branches "old" and "new"
     And the main branch is "old"
     When I run "git-town main-branch new"
     Then it prints no output

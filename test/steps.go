@@ -463,7 +463,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repo has the branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
+	suite.Step(`^the branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
 		for _, branch := range []string{branch1, branch2} {
 			err := state.gitEnv.DevRepo.CreateBranch(branch, "main")
 			if err != nil {

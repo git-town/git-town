@@ -2,7 +2,7 @@
 Feature: change the perennial branches
 
   Background:
-    Given my repo has the branches "staging" and "qa"
+    Given the branches "staging" and "qa"
 
   Scenario: add a perennial branch
     Given the perennial branches are "qa"

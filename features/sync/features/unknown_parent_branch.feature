@@ -2,7 +2,7 @@
 Feature: enter a parent branch name when prompted
 
   Background:
-    Given my repo has the branches "alpha" and "beta"
+    Given the branches "alpha" and "beta"
     And I am on the "beta" branch
 
   Scenario: choose the default branch name
