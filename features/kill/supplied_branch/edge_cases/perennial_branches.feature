@@ -1,8 +1,7 @@
 Feature: does not kill perennial branches
 
   Scenario: main branch
-    Given a feature branch "feature"
-    And the current branch is "feature"
+    Given the current branch is a feature branch "feature"
     When I run "git-town kill main"
     Then it runs no commands
     And it prints the error:

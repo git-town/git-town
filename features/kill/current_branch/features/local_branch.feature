@@ -1,11 +1,10 @@
 Feature: delete a local branch
 
   Background:
-    And a local feature branch "local"
+    Given the current branch is a local feature branch "local"
     And the commits
       | BRANCH | LOCATION | MESSAGE      |
       | local  | local    | local commit |
-    And the current branch is "local"
     And my workspace has an uncommitted file
     When I run "git-town kill"
 

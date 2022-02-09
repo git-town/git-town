@@ -2,10 +2,9 @@
 Feature: Bitbucket support
 
   Scenario Outline: normal origin
-    Given a feature branch "feature"
+    Given the current branch is a feature branch "feature"
     And my repo's origin is "<ORIGIN>"
     And my computer has the "open" tool installed
-    And the current branch is "feature"
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:
       """
