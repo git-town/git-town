@@ -2,10 +2,10 @@ Feature: restores deleted tracking branch
 
   Background:
     Given my repo has a feature branch "feature"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
-      | feature | local, remote | feature commit |
-    And the "feature" branch gets deleted on the remote
+      | feature | local, origin | feature commit |
+    And origin deletes the "feature" branch
     And I am on the "feature" branch
     When I run "git-town sync"
 
@@ -20,4 +20,4 @@ Feature: restores deleted tracking branch
       |         | git push -u origin feature |
     And all branches are now synchronized
     And I am still on the "feature" branch
-    And my repo is left with my initial commits
+    And now the initial commits exist

@@ -2,9 +2,9 @@ Feature: conflicts between uncommitted changes and the main branch
 
   Background:
     Given my repo has a feature branch "existing"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION      | MESSAGE            | FILE NAME        | FILE CONTENT |
-      | main   | local, remote | conflicting commit | conflicting_file | main content |
+      | main   | local, origin | conflicting commit | conflicting_file | main content |
     And I am on the "existing" branch
     And my workspace has an uncommitted file with name "conflicting_file" and content "conflicting content"
     When I run "git-town hack new"
@@ -50,7 +50,7 @@ Feature: conflicts between uncommitted changes and the main branch
       cannot check out branch "existing"
       """
     And I am now on the "main" branch
-    And my repo is left with my initial commits
+    And now the initial commits exist
     And my workspace now contains the file "conflicting_file" with content "resolved content"
 
   Scenario: continue with unresolved conflict
@@ -65,9 +65,9 @@ Feature: conflicts between uncommitted changes and the main branch
     And I run "git-town continue" and close the editor
     Then it runs no commands
     And I am now on the "new" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE            | FILE NAME        | FILE CONTENT |
-      | main   | local, remote | conflicting commit | conflicting_file | main content |
+      | main   | local, origin | conflicting commit | conflicting_file | main content |
       | new    | local         | conflicting commit | conflicting_file | main content |
     And my workspace now contains the file "conflicting_file" with content "resolved content"
 
@@ -85,5 +85,5 @@ Feature: conflicts between uncommitted changes and the main branch
       cannot check out branch "existing"
       """
     And I am now on the "main" branch
-    And my repo is left with my initial commits
+    And now the initial commits exist
     And my workspace now contains the file "conflicting_file" with content "resolved content"

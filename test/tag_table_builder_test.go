@@ -11,12 +11,12 @@ func TestTagTableBuilder(t *testing.T) {
 	t.Parallel()
 	builder := NewTagTableBuilder()
 	builder.AddMany([]string{"tagB", "tagC"}, "local")
-	builder.AddMany([]string{"tagA", "tagB"}, "remote")
+	builder.AddMany([]string{"tagA", "tagB"}, "origin")
 	table := builder.Table()
 	expected := `
 | NAME | LOCATION      |
-| tagA | remote        |
-| tagB | local, remote |
+| tagA | origin        |
+| tagB | local, origin |
 | tagC | local         |
 `
 	assert.Equal(t, expected, "\n"+table.String())

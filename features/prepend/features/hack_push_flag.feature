@@ -3,9 +3,9 @@ Feature: auto-push new branches
   Background:
     Given the new-branch-push-flag configuration is "true"
     And my repo has a feature branch "old"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION      | MESSAGE        |
-      | old    | local, remote | feature commit |
+      | old    | local, origin | feature commit |
     And I am on the "old" branch
     When I run "git-town prepend new"
 
@@ -19,9 +19,9 @@ Feature: auto-push new branches
       |        | git checkout new         |
       | new    | git push -u origin new   |
     And I am now on the "new" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE        |
-      | old    | local, remote | feature commit |
+      | old    | local, origin | feature commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
       | new    | main   |
@@ -36,5 +36,5 @@ Feature: auto-push new branches
       | main   | git branch -d new    |
       |        | git checkout old     |
     And I am now on the "old" branch
-    And my repo is left with my initial commits
+    And now the initial commits exist
     And Git Town is now aware of the initial branch hierarchy

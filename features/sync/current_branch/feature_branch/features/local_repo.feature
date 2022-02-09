@@ -1,9 +1,9 @@
-Feature: sync the current feature branch (without a tracking branch or remote repo)
+Feature: sync the current feature branch (in a local repo)
 
   Background:
-    Given my repo does not have a remote origin
+    Given my repo does not have an origin
     And my repo has a local feature branch "feature"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | main    | local    | main commit    |
       | feature | local    | feature commit |
@@ -16,7 +16,7 @@ Feature: sync the current feature branch (without a tracking branch or remote re
       | feature | git merge --no-edit main |
     And all branches are now synchronized
     And I am still on the "feature" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH  | LOCATION | MESSAGE                          |
       | main    | local    | main commit                      |
       | feature | local    | feature commit                   |

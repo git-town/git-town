@@ -3,11 +3,11 @@ Feature: a parent branch of a local branch was shipped
   Background:
     Given my repo has a feature branch "parent"
     And my repo has a feature branch "child" as a child of "parent"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION      | MESSAGE       |
-      | parent | local, remote | parent commit |
-      | child  | local, remote | child commit  |
-    And the "parent" branch gets deleted on the remote
+      | parent | local, origin | parent commit |
+      | child  | local, origin | child commit  |
+    And origin deletes the "parent" branch
     And I am on the "main" branch
     When I run "git-town prune-branches"
 
@@ -19,7 +19,7 @@ Feature: a parent branch of a local branch was shipped
     And I am now on the "main" branch
     And the existing branches are
       | REPOSITORY    | BRANCHES    |
-      | local, remote | main, child |
+      | local, origin | main, child |
     And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
       | child  | main   |

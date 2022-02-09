@@ -2,10 +2,10 @@ Feature: handle conflicts between the main branch and its tracking branch
 
   Background:
     Given my repo has a feature branch "feature"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | main   | local    | conflicting local commit  | conflicting_file | local content  |
-      |        | remote   | conflicting remote commit | conflicting_file | remote content |
+      |        | origin   | conflicting origin commit | conflicting_file | origin content |
     And I am on the "feature" branch
     And my workspace has an uncommitted file
     When I run "git-town sync"
@@ -36,7 +36,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
     And there is no rebase in progress anymore
-    And my repo is left with my initial commits
+    And now the initial commits exist
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"

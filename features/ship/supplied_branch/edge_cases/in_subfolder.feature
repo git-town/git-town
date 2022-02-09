@@ -2,9 +2,9 @@ Feature: ship the supplied feature branch from a subfolder
 
   Background:
     Given my repo has the feature branches "feature" and "other"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION | MESSAGE        |
-      | feature | remote   | feature commit |
+      | feature | origin   | feature commit |
     And I am on the "other" branch
     And my workspace has an uncommitted file with name "new_folder/other_feature_file" and content "other feature content"
     When I run "git-town ship feature -m 'feature done'" in the "new_folder" folder
@@ -32,10 +32,10 @@ Feature: ship the supplied feature branch from a subfolder
     And my workspace still contains my uncommitted file
     And the existing branches are
       | REPOSITORY    | BRANCHES    |
-      | local, remote | main, other |
-    And my repo now has the commits
+      | local, origin | main, other |
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      |
-      | main   | local, remote | feature done |
+      | main   | local, origin | feature done |
     And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
       | other  | main   |
@@ -57,9 +57,9 @@ Feature: ship the supplied feature branch from a subfolder
       | main    | git checkout other                            |
       | other   | git stash pop                                 |
     And I am now on the "other" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE               |
-      | main    | local, remote | feature done          |
+      | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
-      | feature | remote        | feature commit        |
+      | feature | origin        | feature commit        |
     And my repo now has its initial branches and branch hierarchy

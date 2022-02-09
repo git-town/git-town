@@ -2,11 +2,11 @@ Feature: sync inside a folder that doesn't exist on the main branch
 
   Background:
     Given my repo has the feature branches "alpha" and "beta"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION      | MESSAGE       | FILE NAME        |
-      | main   | local, remote | main commit   | main_file        |
-      | alpha  | local, remote | folder commit | new_folder/file1 |
-      | beta   | local, remote | beta commit   | file2            |
+      | main   | local, origin | main commit   | main_file        |
+      | alpha  | local, origin | folder commit | new_folder/file1 |
+      | beta   | local, origin | beta commit   | file2            |
     And I am on the "alpha" branch
     And my workspace has an uncommitted file
     When I run "git-town sync --all" in the "new_folder" folder
@@ -33,12 +33,12 @@ Feature: sync inside a folder that doesn't exist on the main branch
     And all branches are now synchronized
     And I am still on the "alpha" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                        |
-      | main   | local, remote | main commit                    |
-      | alpha  | local, remote | folder commit                  |
+      | main   | local, origin | main commit                    |
+      | alpha  | local, origin | folder commit                  |
       |        |               | main commit                    |
       |        |               | Merge branch 'main' into alpha |
-      | beta   | local, remote | beta commit                    |
+      | beta   | local, origin | beta commit                    |
       |        |               | main commit                    |
       |        |               | Merge branch 'main' into beta  |

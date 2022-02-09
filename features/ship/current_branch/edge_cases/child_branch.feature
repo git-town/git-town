@@ -4,11 +4,11 @@ Feature: does not ship a child branch
     Given my repo has a feature branch "alpha"
     And my repo has a feature branch "beta" as a child of "alpha"
     And my repo has a feature branch "gamma" as a child of "beta"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION      | MESSAGE      |
-      | alpha  | local, remote | alpha commit |
-      | beta   | local, remote | beta commit  |
-      | gamma  | local, remote | gamma commit |
+      | alpha  | local, origin | alpha commit |
+      | beta   | local, origin | beta commit  |
+      | gamma  | local, origin | gamma commit |
     And I am on the "gamma" branch
     When I run "git-town ship"
 
@@ -22,7 +22,7 @@ Feature: does not ship a child branch
       please ship "alpha" first
       """
     And I am still on the "gamma" branch
-    And my repo is left with my initial commits
+    And now the initial commits exist
     And my repo now has its initial branches and branch hierarchy
 
   Scenario: undo
@@ -33,5 +33,5 @@ Feature: does not ship a child branch
       nothing to undo
       """
     And I am still on the "gamma" branch
-    And my repo is left with my initial commits
+    And now the initial commits exist
     And my repo now has its initial branches and branch hierarchy

@@ -81,7 +81,7 @@ You can disable this by running "git config git-town.sync-upstream false".`,
 }
 
 func createSyncConfig(repo *git.ProdRepo) (result syncConfig, err error) {
-	result.hasOrigin, err = repo.Silent.HasRemote("origin")
+	result.hasOrigin, err = repo.Silent.HasOrigin()
 	if err != nil {
 		return result, err
 	}

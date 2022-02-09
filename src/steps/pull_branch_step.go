@@ -5,7 +5,7 @@ import (
 	"github.com/git-town/git-town/v7/src/hosting"
 )
 
-// PullBranchStep pulls the branch with the given name from the origin remote.
+// PullBranchStep updates the branch with the given name with commits from its remote.
 type PullBranchStep struct {
 	NoOpStep
 	BranchName string

@@ -49,7 +49,7 @@ This usually means the branch was shipped or killed on another machine.`,
 }
 
 func createPruneBranchesConfig(repo *git.ProdRepo) (result pruneBranchesConfig, err error) {
-	hasOrigin, err := repo.Silent.HasRemote("origin")
+	hasOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
 		return result, err
 	}

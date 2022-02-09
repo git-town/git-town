@@ -5,7 +5,7 @@ import (
 	"github.com/git-town/git-town/v7/src/hosting"
 )
 
-// PushTagsStep pushes newly created Git tags to the remote.
+// PushTagsStep pushes newly created Git tags to origin.
 type PushTagsStep struct {
 	NoOpStep
 }

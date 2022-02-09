@@ -4,11 +4,11 @@ Feature: delete a branch within a branch chain
     Given my repo has a feature branch "alpha"
     And my repo has a feature branch "beta" as a child of "alpha"
     And my repo has a feature branch "gamma" as a child of "beta"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION      | MESSAGE      |
-      | alpha  | local, remote | alpha commit |
-      | beta   | local, remote | beta commit  |
-      | gamma  | local, remote | gamma commit |
+      | alpha  | local, origin | alpha commit |
+      | beta   | local, origin | beta commit  |
+      | gamma  | local, origin | gamma commit |
     And I am on the "beta" branch
     And my workspace has an uncommitted file
     When I run "git-town kill"
@@ -26,11 +26,11 @@ Feature: delete a branch within a branch chain
     And my repo doesn't have any uncommitted files
     And the existing branches are
       | REPOSITORY    | BRANCHES           |
-      | local, remote | main, alpha, gamma |
-    And my repo now has the commits
+      | local, origin | main, alpha, gamma |
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      |
-      | alpha  | local, remote | alpha commit |
-      | gamma  | local, remote | gamma commit |
+      | alpha  | local, origin | alpha commit |
+      | gamma  | local, origin | gamma commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
       | alpha  | main   |
@@ -46,5 +46,5 @@ Feature: delete a branch within a branch chain
       |        | git push -u origin beta                 |
     And I am now on the "beta" branch
     And my workspace has the uncommitted file again
-    And my repo is left with my initial commits
+    And now the initial commits exist
     And my repo now has its initial branches and branch hierarchy

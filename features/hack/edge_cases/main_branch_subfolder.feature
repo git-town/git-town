@@ -1,7 +1,7 @@
 Feature: in a subfolder on the main branch
 
   Background:
-    Given my repo contains the commits
+    Given the commits
       | BRANCH | LOCATION | MESSAGE       | FILE NAME        |
       | main   | local    | folder commit | new_folder/file1 |
     And I am on the "main" branch
@@ -21,9 +21,9 @@ Feature: in a subfolder on the main branch
       | new    | git stash pop            |
     And I am now on the "new" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE       |
-      | main   | local, remote | folder commit |
+      | main   | local, origin | folder commit |
       | new    | local         | folder commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
@@ -39,7 +39,7 @@ Feature: in a subfolder on the main branch
       | main   | git branch -d new |
       |        | git stash pop     |
     And I am now on the "main" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE       |
-      | main   | local, remote | folder commit |
+      | main   | local, origin | folder commit |
     And Git Town is now aware of no branch hierarchy

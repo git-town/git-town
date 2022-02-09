@@ -3,12 +3,12 @@ Feature: offline mode
   Background:
     Given Git Town is in offline mode
     And my repo has a feature branch "feature"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION | MESSAGE               |
       | main    | local    | local main commit     |
-      |         | remote   | remote main commit    |
+      |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
-      |         | remote   | remote feature commit |
+      |         | origin   | origin feature commit |
     And I am on the "feature" branch
     When I run "git-town sync"
 
@@ -21,11 +21,11 @@ Feature: offline mode
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
     And I am still on the "feature" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH  | LOCATION | MESSAGE                          |
       | main    | local    | local main commit                |
-      |         | remote   | remote main commit               |
+      |         | origin   | origin main commit               |
       | feature | local    | local feature commit             |
       |         |          | local main commit                |
       |         |          | Merge branch 'main' into feature |
-      |         | remote   | remote feature commit            |
+      |         | origin   | origin feature commit            |

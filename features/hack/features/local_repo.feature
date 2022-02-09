@@ -2,8 +2,8 @@ Feature: local repo
 
   Background:
     Given my repo has a feature branch "existing"
-    And my repo does not have a remote origin
-    And my repo contains the commits
+    And my repo does not have an origin
+    And the commits
       | BRANCH | LOCATION | MESSAGE     |
       | main   | local    | main commit |
     And I am on the "existing" branch
@@ -20,7 +20,7 @@ Feature: local repo
       | new      | git stash pop       |
     And I am now on the "new" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION | MESSAGE     |
       | main   | local    | main commit |
       | new    | local    | main commit |

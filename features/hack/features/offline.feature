@@ -2,9 +2,9 @@ Feature: offline mode
 
   Background:
     Given Git Town is in offline mode
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION      | MESSAGE     |
-      | main   | local, remote | main commit |
+      | main   | local, origin | main commit |
     And my workspace has an uncommitted file
     When I run "git-town hack new"
 
@@ -19,9 +19,9 @@ Feature: offline mode
       | new    | git stash pop          |
     And I am now on the "new" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE     |
-      | main   | local, remote | main commit |
+      | main   | local, origin | main commit |
       | new    | local         | main commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
@@ -38,5 +38,5 @@ Feature: offline mode
       |        | git stash pop     |
     And I am now on the "main" branch
     And my workspace still contains my uncommitted file
-    And my repo is left with my initial commits
+    And now the initial commits exist
     And Git Town is now aware of no branch hierarchy

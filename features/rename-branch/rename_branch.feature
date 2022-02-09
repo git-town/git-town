@@ -2,10 +2,10 @@ Feature: rename the current branch
 
   Background:
     Given my repo has a feature branch "old"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION      | MESSAGE     |
-      | main   | local, remote | main commit |
-      | old    | local, remote | old commit  |
+      | main   | local, origin | main commit |
+      | old    | local, origin | old commit  |
     And I am on the "old" branch
     When I run "git-town rename-branch new"
 
@@ -19,10 +19,10 @@ Feature: rename the current branch
       |        | git push origin :old     |
       |        | git branch -D old        |
     And I am now on the "new" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE     |
-      | main   | local, remote | main commit |
-      | new    | local, remote | old commit  |
+      | main   | local, origin | main commit |
+      | new    | local, origin | old commit  |
 
   Scenario: undo
     When I run "git-town undo"

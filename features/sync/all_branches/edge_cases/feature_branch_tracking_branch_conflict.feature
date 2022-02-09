@@ -2,13 +2,13 @@ Feature: handle merge conflicts between feature branches and their tracking bran
 
   Background:
     Given my repo has the feature branches "alpha", "beta", and "gamma"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION      | MESSAGE            | FILE NAME        | FILE CONTENT        |
-      | main   | remote        | main commit        | main_file        | main content        |
-      | alpha  | local, remote | alpha commit       | feature1_file    | alpha content       |
+      | main   | origin        | main commit        | main_file        | main content        |
+      | alpha  | local, origin | alpha commit       | feature1_file    | alpha content       |
       | beta   | local         | local beta commit  | conflicting_file | local beta content  |
-      |        | remote        | remote beta commit | conflicting_file | remote beta content |
-      | gamma  | local, remote | gamma commit       | feature3_file    | gamma content       |
+      |        | origin        | origin beta commit | conflicting_file | origin beta content |
+      | gamma  | local, origin | gamma commit       | feature3_file    | gamma content       |
     And I am on the "main" branch
     And my workspace has an uncommitted file
     When I run "git-town sync --all"
@@ -46,15 +46,15 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       | main   | git stash pop      |
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                        |
-      | main   | local, remote | main commit                    |
-      | alpha  | local, remote | alpha commit                   |
+      | main   | local, origin | main commit                    |
+      | alpha  | local, origin | alpha commit                   |
       |        |               | main commit                    |
       |        |               | Merge branch 'main' into alpha |
       | beta   | local         | local beta commit              |
-      |        | remote        | remote beta commit             |
-      | gamma  | local, remote | gamma commit                   |
+      |        | origin        | origin beta commit             |
+      | gamma  | local, origin | gamma commit                   |
     And my repo now has these committed files
       | BRANCH | NAME             | CONTENT            |
       | main   | main_file        | main content       |
@@ -77,15 +77,15 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       |        | git stash pop                    |
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                        |
-      | main   | local, remote | main commit                    |
-      | alpha  | local, remote | alpha commit                   |
+      | main   | local, origin | main commit                    |
+      | alpha  | local, origin | alpha commit                   |
       |        |               | main commit                    |
       |        |               | Merge branch 'main' into alpha |
       | beta   | local         | local beta commit              |
-      |        | remote        | remote beta commit             |
-      | gamma  | local, remote | gamma commit                   |
+      |        | origin        | origin beta commit             |
+      | gamma  | local, origin | gamma commit                   |
       |        |               | main commit                    |
       |        |               | Merge branch 'main' into gamma |
     And my repo now has these committed files

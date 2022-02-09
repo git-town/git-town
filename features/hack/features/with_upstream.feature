@@ -2,7 +2,7 @@ Feature: on a forked repo
 
   Background:
     Given my repo has an upstream repo
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION | MESSAGE         |
       | main   | upstream | upstream commit |
     And I am on the "main" branch
@@ -24,9 +24,9 @@ Feature: on a forked repo
       | new    | git stash pop            |
     And I am now on the "new" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION                | MESSAGE         |
-      | main   | local, remote, upstream | upstream commit |
+      | main   | local, origin, upstream | upstream commit |
       | new    | local                   | upstream commit |
 
   Scenario: undo
@@ -39,7 +39,7 @@ Feature: on a forked repo
       | main   | git branch -d new |
       |        | git stash pop     |
     And I am now on the "main" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION                | MESSAGE         |
-      | main   | local, remote, upstream | upstream commit |
+      | main   | local, origin, upstream | upstream commit |
     And Git Town is now aware of no branch hierarchy

@@ -16,16 +16,16 @@ func TestCommitTableBuilder(t *testing.T) {
 	commit3 := git.Commit{SHA: "sha3", Branch: "main", Message: "commit3"}
 	commit4 := git.Commit{SHA: "sha4", Branch: "branch3", Message: "commit4"}
 	builder.Add(commit1, "local")
-	builder.Add(commit1, "remote")
+	builder.Add(commit1, "origin")
 	builder.Add(commit2, "local")
-	builder.Add(commit3, "remote")
-	builder.Add(commit4, "remote")
+	builder.Add(commit3, "origin")
+	builder.Add(commit4, "origin")
 	table := builder.Table([]string{"BRANCH", "LOCATION", "MESSAGE"})
 	expected := `| BRANCH  | LOCATION      | MESSAGE |
 | main    | local         | commit2 |
-|         | remote        | commit3 |
-| branch1 | local, remote | commit1 |
-| branch3 | remote        | commit4 |
+|         | origin        | commit3 |
+| branch1 | local, origin | commit1 |
+| branch3 | origin        | commit4 |
 `
 	assert.Equal(t, expected, table.String())
 }
