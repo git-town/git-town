@@ -1,7 +1,7 @@
 Feature: with pull-branch-strategy set to "merge"
 
   Background:
-    Given the "pull-branch-strategy" configuration is "merge"
+    Given the "pull-branch-strategy" setting is "merge"
     And my repo has a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE               |
