@@ -13,7 +13,7 @@ Feature: does not prepend perennial branches
     And I am still on the "main" branch
 
   Scenario: on perennial branch
-    Given my repo has a perennial branch "production"
+    Given a perennial branch "production"
     And I am on the "production" branch
     When I run "git-town prepend new"
     Then it runs the commands
