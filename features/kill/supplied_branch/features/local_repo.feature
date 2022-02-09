@@ -25,7 +25,7 @@ Feature: local repository
       | BRANCH | LOCATION | MESSAGE     |
       | main   | local    | main commit |
       | good   | local    | good commit |
-    And Git Town is now aware of this branch hierarchy
+    And this branch hierarchy exists now
       | BRANCH | PARENT |
       | good   | main   |
 

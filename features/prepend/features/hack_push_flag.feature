@@ -21,7 +21,7 @@ Feature: auto-push new branches
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE        |
       | old    | local, origin | feature commit |
-    And Git Town is now aware of this branch hierarchy
+    And this branch hierarchy exists now
       | BRANCH | PARENT |
       | new    | main   |
       | old    | new    |
@@ -36,4 +36,4 @@ Feature: auto-push new branches
       |        | git checkout old     |
     And the current branch is now "old"
     And now the initial commits exist
-    And Git Town is now aware of the initial branch hierarchy
+    And the initial branch hierarchy exists

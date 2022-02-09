@@ -26,7 +26,7 @@ Feature: local branch
     And now these commits exist
       | BRANCH | LOCATION | MESSAGE      |
       | other  | local    | other commit |
-    And Git Town is now aware of this branch hierarchy
+    And this branch hierarchy exists now
       | BRANCH | PARENT |
       | other  | main   |
 

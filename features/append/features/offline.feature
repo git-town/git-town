@@ -35,4 +35,4 @@ Feature: append in offline mode
       | main     | git checkout existing |
     And the current branch is now "existing"
     And now the initial commits exist
-    And Git Town is now aware of the initial branch hierarchy
+    And the initial branch hierarchy exists

@@ -24,7 +24,7 @@ Feature: prepend a branch to a feature branch
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
-    And Git Town is now aware of this branch hierarchy
+    And this branch hierarchy exists now
       | BRANCH | PARENT |
       | old    | parent |
       | parent | main   |
@@ -42,4 +42,4 @@ Feature: prepend a branch to a feature branch
     And the current branch is now "old"
     And the uncommitted file still exists
     And now the initial commits exist
-    And Git Town is now aware of the initial branch hierarchy
+    And the initial branch hierarchy exists

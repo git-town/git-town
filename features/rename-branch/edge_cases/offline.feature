@@ -21,7 +21,7 @@ Feature: offline mode
       | main   | local, origin | main commit |
       | new    | local         | old commit  |
       | old    | origin        | old commit  |
-    And Git Town is now aware of this branch hierarchy
+    And this branch hierarchy exists now
       | BRANCH | PARENT |
       | new    | main   |
 

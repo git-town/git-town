@@ -30,7 +30,7 @@ Feature: commit message can contain double-quotes
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | with "double quotes" |
-    And Git Town is now aware of no branch hierarchy
+    And no branch hierarchy exists now
 
   Scenario: undo
     When I run "git-town undo"

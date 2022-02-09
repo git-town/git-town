@@ -31,7 +31,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And the current branch is still "feature"
     And no rebase is in progress
     And now the initial commits exist
-    And Git Town is still aware of the initial branch hierarchy
+    And the initial branch hierarchy exists
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
@@ -58,7 +58,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | main   | local, origin | conflicting origin commit |
       |        |               | conflicting local commit  |
       |        |               | feature done              |
-    And Git Town is now aware of no branch hierarchy
+    And no branch hierarchy exists now
 
   Scenario: resolve, finish the rebase, and continue
     When I resolve the conflict in "conflicting_file"

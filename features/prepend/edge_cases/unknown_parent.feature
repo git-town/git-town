@@ -12,7 +12,7 @@ Feature: ask for missing parent information
       | main   | git rebase origin/main   |
       |        | git branch new main      |
       |        | git checkout new         |
-    And Git Town is now aware of this branch hierarchy
+    And this branch hierarchy exists now
       | BRANCH | PARENT |
       | new    | main   |
       | old    | new    |

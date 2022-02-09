@@ -42,4 +42,4 @@ Feature: on a forked repo
     And now these commits exist
       | BRANCH | LOCATION                | MESSAGE         |
       | main   | local, origin, upstream | upstream commit |
-    And Git Town is now aware of no branch hierarchy
+    And no branch hierarchy exists now

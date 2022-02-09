@@ -25,7 +25,7 @@ Feature: does not ship an empty branch
       the branch "empty-feature" has no shippable changes
       """
     And the current branch is still "empty-feature"
-    And Git Town is still aware of the initial branch hierarchy
+    And the initial branch hierarchy exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -39,4 +39,4 @@ Feature: does not ship an empty branch
       | BRANCH        | LOCATION      | MESSAGE        |
       | main          | local, origin | main commit    |
       | empty-feature | local         | feature commit |
-    And Git Town is still aware of the initial branch hierarchy
+    And the initial branch hierarchy exists

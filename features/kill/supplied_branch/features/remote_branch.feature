@@ -17,7 +17,7 @@ Feature: delete a remote only branch
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
-    And Git Town is now aware of no branch hierarchy
+    And no branch hierarchy exists now
 
   Scenario: undo
     When I run "git-town undo"
@@ -25,4 +25,4 @@ Feature: delete a remote only branch
       | BRANCH | COMMAND                                                                 |
       | main   | git push origin {{ sha-in-origin 'feature commit' }}:refs/heads/feature |
     And the initial branches exist
-    And Git Town is still aware of no branch hierarchy
+    And no branch hierarchy exists now

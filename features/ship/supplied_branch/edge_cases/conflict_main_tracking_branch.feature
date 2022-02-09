@@ -38,7 +38,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And the uncommitted file still exists
     And no rebase is in progress
     And now the initial commits exist
-    And Git Town is still aware of the initial branch hierarchy
+    And the initial branch hierarchy exists
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
@@ -68,7 +68,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
-    And Git Town is now aware of this branch hierarchy
+    And this branch hierarchy exists now
       | BRANCH | PARENT |
       | other  | main   |
 

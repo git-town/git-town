@@ -27,7 +27,7 @@ Feature: on the main branch
       | main     | local, origin | main commit     |
       | existing | local         | existing commit |
       | new      | local         | main commit     |
-    And Git Town is now aware of this branch hierarchy
+    And this branch hierarchy exists now
       | BRANCH   | PARENT |
       | existing | main   |
       | new      | main   |
@@ -47,4 +47,4 @@ Feature: on the main branch
       | BRANCH   | LOCATION      | MESSAGE         |
       | main     | local, origin | main commit     |
       | existing | local         | existing commit |
-    And Git Town is now aware of the initial branch hierarchy
+    And the initial branch hierarchy exists

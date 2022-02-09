@@ -26,7 +26,7 @@ Feature: delete another than the current branch
       | BRANCH | LOCATION      | MESSAGE            |
       | main   | local, origin | conflicting commit |
       | good   | local, origin | good commit        |
-    And Git Town is now aware of this branch hierarchy
+    And this branch hierarchy exists now
       | BRANCH | PARENT |
       | good   | main   |
 
