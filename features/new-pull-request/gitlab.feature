@@ -6,7 +6,7 @@ Feature: GitLab support
 
   Scenario Outline: creating pull-requests
     Given the current branch is a feature branch "feature"
-    And my repo's origin is "<ORIGIN>"
+    And the origin is "<ORIGIN>"
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:
       """
@@ -21,7 +21,7 @@ Feature: GitLab support
   Scenario: nested feature branch with known parent
     Given a feature branch "parent-feature"
     And a feature branch "child-feature" as a child of "parent-feature"
-    And my repo's origin is "git@gitlab.com:kadu/kadu.git"
+    And the origin is "git@gitlab.com:kadu/kadu.git"
     And the current branch is "child-feature"
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:

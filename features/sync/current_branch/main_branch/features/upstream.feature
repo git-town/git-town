@@ -1,7 +1,7 @@
 Feature: on the main branch with an upstream repo
 
   Background:
-    Given my repo has an upstream repo
+    Given an upstream repo
 
   Scenario: sync-upstream is set to true
     Given the commits

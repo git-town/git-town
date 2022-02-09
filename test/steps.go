@@ -458,7 +458,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repo has a submodule$`, func() error {
+	suite.Step(`^my repo has a Git submodule$`, func() error {
 		err := state.gitEnv.AddSubmoduleRepo()
 		if err != nil {
 			return err
@@ -466,7 +466,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.AddSubmodule(state.gitEnv.SubmoduleRepo.WorkingDir())
 	})
 
-	suite.Step(`^my repo has an upstream repo$`, func() error {
+	suite.Step(`^an upstream repo$`, func() error {
 		return state.gitEnv.AddUpstream()
 	})
 
@@ -716,7 +716,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.OriginRepo.CreateStandaloneTag(name)
 	})
 
-	suite.Step(`^my repo's origin is "([^"]*)"$`, func(origin string) error {
+	suite.Step(`^the origin is "([^"]*)"$`, func(origin string) error {
 		state.gitEnv.DevShell.SetTestOrigin(origin)
 		return nil
 	})

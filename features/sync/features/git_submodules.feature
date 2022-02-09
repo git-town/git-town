@@ -1,7 +1,7 @@
 Feature: on a feature branch in a repository with a submodule that has uncommitted changes
 
   Background:
-    Given my repo has a submodule
+    Given my repo has a Git submodule
     And the current branch is a feature branch "feature"
     And my workspace has an uncommitted file with name "submodule/file" and content "a change in the submodule"
     When I run "git-town sync"

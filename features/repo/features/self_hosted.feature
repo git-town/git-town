@@ -3,7 +3,7 @@ Feature: self hosted servie
 
   Scenario Outline:
     Given the "open" tool is installed
-    And my repo's origin is "git@self-hosted:git-town/git-town.git"
+    And the origin is "git@self-hosted:git-town/git-town.git"
     And the "code-hosting-driver" setting is "<DRIVER>"
     When I run "git-town repo"
     Then "open" launches a new pull request with this url in my browser:
