@@ -20,7 +20,7 @@ Feature: a parent branch of a local branch was shipped
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, child |
-    And Git Town is now aware of this branch hierarchy
+    And this branch hierarchy exists now
       | BRANCH | PARENT |
       | child  | main   |
 

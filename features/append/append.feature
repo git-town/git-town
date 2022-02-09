@@ -28,7 +28,7 @@ Feature: append a new feature branch to an existing feature branch
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
       | new      | local         | existing commit |
-    And Git Town is now aware of this branch hierarchy
+    And this branch hierarchy exists now
       | BRANCH   | PARENT   |
       | existing | main     |
       | new      | existing |

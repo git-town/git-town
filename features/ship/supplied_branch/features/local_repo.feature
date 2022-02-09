@@ -31,7 +31,7 @@ Feature: ship the supplied feature branch in a local repo
     And now these commits exist
       | BRANCH | LOCATION | MESSAGE      |
       | main   | local    | feature done |
-    And Git Town is now aware of this branch hierarchy
+    And this branch hierarchy exists now
       | BRANCH | PARENT |
       | other  | main   |
 

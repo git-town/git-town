@@ -25,7 +25,7 @@ Feature: inside an uncommitted subfolder on the current feature branch
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
       | new    | local         | main commit |
-    And Git Town is now aware of this branch hierarchy
+    And this branch hierarchy exists now
       | BRANCH   | PARENT |
       | existing | main   |
       | new      | main   |

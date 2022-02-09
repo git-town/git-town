@@ -9,7 +9,7 @@ Feature: enter a parent branch name when prompted
     When I run "git-town sync" and answer the prompts:
       | PROMPT                                     | ANSWER  |
       | Please specify the parent branch of 'beta' | [ENTER] |
-    Then Git Town is now aware of this branch hierarchy
+    Then this branch hierarchy exists now
       | BRANCH | PARENT |
       | beta   | main   |
 
@@ -18,7 +18,7 @@ Feature: enter a parent branch name when prompted
       | PROMPT                                      | ANSWER        |
       | Please specify the parent branch of 'beta'  | [DOWN][ENTER] |
       | Please specify the parent branch of 'alpha' | [ENTER]       |
-    And Git Town is now aware of this branch hierarchy
+    And this branch hierarchy exists now
       | BRANCH | PARENT |
       | alpha  | main   |
       | beta   | alpha  |
@@ -34,7 +34,7 @@ Feature: enter a parent branch name when prompted
       | PROMPT                                      | ANSWER  |
       | Please specify the parent branch of 'alpha' | [ENTER] |
       | Please specify the parent branch of 'beta'  | [ENTER] |
-    Then Git Town is now aware of this branch hierarchy
+    Then this branch hierarchy exists now
       | BRANCH | PARENT |
       | alpha  | main   |
       | beta   | main   |

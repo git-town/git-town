@@ -16,7 +16,7 @@ Feature: missing configuration
       |        | git checkout feature     |
     And the main branch is now "main"
     And the current branch is now "feature"
-    And Git Town is now aware of this branch hierarchy
+    And this branch hierarchy exists now
       | BRANCH  | PARENT |
       | feature | main   |
 

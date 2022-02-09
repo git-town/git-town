@@ -66,7 +66,7 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, origin | feature done |
-    And Git Town is now aware of this branch hierarchy
+    And this branch hierarchy exists now
       | BRANCH | PARENT |
       | other  | main   |
 

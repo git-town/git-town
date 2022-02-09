@@ -68,7 +68,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
-    And Git Town is now aware of this branch hierarchy
+    And this branch hierarchy exists now
       | BRANCH | PARENT |
       | other  | main   |
 

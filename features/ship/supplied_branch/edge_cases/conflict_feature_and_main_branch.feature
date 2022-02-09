@@ -71,7 +71,7 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       | BRANCH | LOCATION      | MESSAGE                 | FILE NAME        | FILE CONTENT     |
       | main   | local, origin | conflicting main commit | conflicting_file | main content     |
       |        |               | feature done            | conflicting_file | resolved content |
-    And Git Town is now aware of this branch hierarchy
+    And this branch hierarchy exists now
       | BRANCH | PARENT |
       | other  | main   |
 

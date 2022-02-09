@@ -9,6 +9,6 @@ Feature: ask for missing parent
     Then it runs the commands
       | BRANCH  | COMMAND                |
       | feature | git diff main..feature |
-    And Git Town is now aware of this branch hierarchy
+    And this branch hierarchy exists now
       | BRANCH  | PARENT |
       | feature | main   |
