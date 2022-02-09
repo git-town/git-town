@@ -2,11 +2,10 @@ Feature: auto-push new branches
 
   Background:
     Given the "new-branch-push-flag" setting is "true"
-    And a feature branch "old"
+    And the current branch is a feature branch "old"
     And the commits
       | BRANCH | LOCATION      | MESSAGE        |
       | old    | local, origin | feature commit |
-    And the current branch is "old"
     When I run "git-town prepend new"
 
   Scenario: result

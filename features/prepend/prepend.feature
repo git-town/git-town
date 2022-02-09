@@ -1,11 +1,10 @@
 Feature: prepend a branch to a feature branch
 
   Background:
-    Given a feature branch "old"
+    Given the current branch is a feature branch "old"
     And the commits
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
-    And the current branch is "old"
     And my workspace has an uncommitted file
     When I run "git-town prepend parent"
 

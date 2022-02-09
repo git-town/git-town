@@ -1,14 +1,13 @@
 Feature: merge conflict
 
   Background:
-    Given a local feature branch "feature"
+    Given the current branch is a local feature branch "feature"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME        | FILE CONTENT    |
       | main    | local, origin | main commit    | conflicting_file | main content    |
       | feature | local         | feature commit | conflicting_file | feature content |
     And my computer has the "open" tool installed
     And my repo's origin is "git@github.com:git-town/git-town.git"
-    And the current branch is "feature"
     When I run "git-town new-pull-request"
 
   Scenario: result

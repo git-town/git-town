@@ -13,8 +13,7 @@ Feature: does not prepend perennial branches
     And the current branch is still "main"
 
   Scenario: on perennial branch
-    Given a perennial branch "production"
-    And the current branch is "production"
+    And the current branch is a perennial branch "production"
     When I run "git-town prepend new"
     Then it runs the commands
       | BRANCH     | COMMAND                  |

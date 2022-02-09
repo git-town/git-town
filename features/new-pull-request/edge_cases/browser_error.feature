@@ -2,10 +2,9 @@
 Feature: print the URL when the browser crashes
 
   Background:
-    Given a feature branch "feature"
+    Given the current branch is a feature branch "feature"
     And my repo's origin is "git@github.com:git-town/git-town"
     And my computer has a broken "open" tool installed
-    And the current branch is "feature"
     When I run "git-town new-pull-request"
 
   Scenario: result

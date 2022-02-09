@@ -5,9 +5,8 @@ Feature: GitHub support
     Given my computer has the "open" tool installed
 
   Scenario Outline: normal origin
-    Given a feature branch "feature"
+    Given the current branch is a feature branch "feature"
     And my repo's origin is "<ORIGIN>"
-    And the current branch is "feature"
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:
       """
@@ -26,9 +25,8 @@ Feature: GitHub support
       | ssh://git@github.com/git-town/git-town     |
 
   Scenario Outline: origin contains path that looks like a URL
-    Given a feature branch "feature"
+    Given the current branch is a feature branch "feature"
     And my repo's origin is "<ORIGIN>"
-    And the current branch is "feature"
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:
       """
@@ -45,9 +43,8 @@ Feature: GitHub support
       | git@github.com:git-town/git-town.github.com         |
 
   Scenario Outline: proper URL encoding
-    Given a feature branch "<BRANCH_NAME>"
+    Given the current branch is a feature branch "<BRANCH_NAME>"
     And my repo's origin is "https://github.com/git-town/git-town"
-    And the current branch is "<BRANCH_NAME>"
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:
       """

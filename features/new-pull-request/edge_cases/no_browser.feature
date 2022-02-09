@@ -2,10 +2,9 @@
 Feature: print the URL when no browser installed
 
   Background:
-    Given a feature branch "feature"
-    And my repo's origin is "git@github.com:git-town/git-town"
+    Given my repo's origin is "git@github.com:git-town/git-town"
     And my computer has no tool to open browsers installed
-    And the current branch is "feature"
+    And the current branch is a feature branch "feature"
     When I run "git-town new-pull-request"
 
   Scenario: result

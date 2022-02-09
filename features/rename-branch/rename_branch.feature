@@ -1,12 +1,11 @@
 Feature: rename the current branch
 
   Background:
-    Given a feature branch "old"
+    Given the current branch is a feature branch "old"
     And the commits
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
       | old    | local, origin | old commit  |
-    And the current branch is "old"
     When I run "git-town rename-branch new"
 
   Scenario: result
