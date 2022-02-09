@@ -2,14 +2,13 @@ Feature: collaborative feature branch syncing
 
   Scenario:
     Given a coworker clones the repository
-    And a feature branch "feature"
+    And the current branch is a feature branch "feature"
     And the coworker fetches updates
     And the coworker sets the parent branch of "feature" as "main"
     And the commits
       | BRANCH  | LOCATION | MESSAGE         |
       | feature | local    | my commit       |
       |         | coworker | coworker commit |
-    And the current branch is "feature"
     When I run "git-town sync"
     Then it runs the commands
       | BRANCH  | COMMAND                            |

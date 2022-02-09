@@ -2,12 +2,11 @@ Feature: sync the current feature branch (in a local repo)
 
   Background:
     Given my repo does not have an origin
-    And a local feature branch "feature"
+    And the current branch is a local feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | main    | local    | main commit    |
       | feature | local    | feature commit |
-    And the current branch is "feature"
     When I run "git-town sync"
 
   Scenario: result
