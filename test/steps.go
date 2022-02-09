@@ -670,7 +670,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^a rebase is (?:now|still) in progress$`, func() error {
+	suite.Step(`^a rebase is now in progress$`, func() error {
 		hasRebase, err := state.gitEnv.DevRepo.HasRebaseInProgress()
 		if err != nil {
 			return err

@@ -44,7 +44,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       """
       you must resolve the conflicts before continuing
       """
-    And a rebase is still in progress
+    And a rebase is now in progress
     And the uncommitted file is stashed
 
   Scenario: resolve and continue

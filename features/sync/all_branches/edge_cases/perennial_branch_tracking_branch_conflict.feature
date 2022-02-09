@@ -80,7 +80,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       you must resolve the conflicts before continuing
       """
     And the uncommitted file is stashed
-    And a rebase is still in progress
+    And a rebase is now in progress
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
