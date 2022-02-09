@@ -38,6 +38,6 @@ Feature: local branch
       |        | git checkout dead                       |
       | dead   | git reset {{ sha 'dead commit' }}       |
     And the current branch is now "dead"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And now the initial commits exist
     And the initial branches and hierarchy exist

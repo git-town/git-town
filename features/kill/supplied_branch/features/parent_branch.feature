@@ -40,6 +40,6 @@ Feature: delete a parent branch
       | gamma  | git branch beta {{ sha 'beta commit' }} |
       |        | git push -u origin beta                 |
     And the current branch is now "gamma"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And now the initial commits exist
     And the initial branches and hierarchy exist

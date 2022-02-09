@@ -42,7 +42,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       | main    | git checkout feature                                    |
       | feature | git stash pop                                           |
     And the current branch is still "feature"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And there is no merge in progress
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
@@ -72,7 +72,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     And all branches are now synchronized
     And the current branch is still "feature"
     And there is no merge in progress
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And my repo now has these committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |

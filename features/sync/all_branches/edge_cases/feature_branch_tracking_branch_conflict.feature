@@ -45,7 +45,7 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       | alpha  | git checkout main  |
       | main   | git stash pop      |
     And the current branch is now "main"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                        |
       | main   | local, origin | main commit                    |
@@ -76,7 +76,7 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       | main   | git push --tags                  |
       |        | git stash pop                    |
     And the current branch is now "main"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                        |
       | main   | local, origin | main commit                    |
@@ -125,7 +125,7 @@ Feature: handle merge conflicts between feature branches and their tracking bran
       |        | git stash pop                    |
     And all branches are now synchronized
     And the current branch is now "main"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And there is no merge in progress
     And my repo still has these committed files
       | BRANCH | NAME             | CONTENT          |

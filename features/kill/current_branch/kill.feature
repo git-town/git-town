@@ -40,6 +40,6 @@ Feature: delete the current feature branch
       | current | git reset {{ sha 'current commit' }}          |
       |         | git push -u origin current                    |
     And the current branch is now "current"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And now the initial commits exist
     And the initial branches and hierarchy exist

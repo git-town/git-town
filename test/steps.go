@@ -764,7 +764,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.CreateFile(name, content)
 	})
 
-	suite.Step(`^my workspace has the uncommitted file again$`, func() error {
+	suite.Step(`^the uncommitted file still exists$`, func() error {
 		hasFile, err := state.gitEnv.DevRepo.HasFile(
 			state.uncommittedFileName,
 			state.uncommittedContent,

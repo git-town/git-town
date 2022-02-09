@@ -43,5 +43,5 @@ Feature: the branch to kill has a deleted tracking branch
       | BRANCH | LOCATION      | MESSAGE      |
       | old    | local         | old commit   |
       | other  | local, origin | other commit |
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And the initial branches and hierarchy exist

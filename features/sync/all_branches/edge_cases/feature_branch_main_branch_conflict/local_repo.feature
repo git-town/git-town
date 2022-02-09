@@ -42,7 +42,7 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       |        | git checkout main                         |
       | main   | git stash pop                             |
     And the current branch is now "main"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And now the initial commits exist
     And there is no merge in progress
 
@@ -56,7 +56,7 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       |        | git checkout main        |
       | main   | git stash pop            |
     And the current branch is now "main"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And there is no merge in progress
     And now these commits exist
       | BRANCH | LOCATION | MESSAGE                        |
@@ -100,7 +100,7 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       | main   | git stash pop            |
     And all branches are now synchronized
     And the current branch is now "main"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And there is no merge in progress
     And my repo now has these committed files
       | BRANCH | NAME             | CONTENT          |

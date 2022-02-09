@@ -43,7 +43,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       | alpha  | git checkout main  |
       | main   | git stash pop      |
     And the current branch is now "main"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE            |
       | main   | local, origin | main commit        |
@@ -63,7 +63,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       | main   | git push --tags         |
       |        | git stash pop           |
     And the current branch is now "main"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE            |
       | main   | local, origin | main commit        |
@@ -96,7 +96,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       |        | git stash pop           |
     And all branches are now synchronized
     And the current branch is now "main"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And there is no rebase in progress anymore
 
   Scenario: resolve, finish the rebase, and continue

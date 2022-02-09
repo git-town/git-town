@@ -33,7 +33,7 @@ Feature: conflicts between the main branch and its tracking branch
       |          | git checkout existing |
       | existing | git stash pop         |
     And the current branch is now "existing"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And there is no rebase in progress anymore
     And now the initial commits exist
 

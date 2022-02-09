@@ -40,7 +40,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
       | main    | git checkout current |
       | current | git stash pop        |
     And the current branch is still "current"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And there is no merge in progress
     And now the initial commits exist
 
@@ -71,7 +71,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
       |         | git stash pop                    |
     And all branches are now synchronized
     And the current branch is still "current"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And there is no merge in progress
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                          |

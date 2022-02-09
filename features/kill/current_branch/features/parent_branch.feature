@@ -45,6 +45,6 @@ Feature: delete a branch within a branch chain
       | beta   | git reset {{ sha 'beta commit' }}       |
       |        | git push -u origin beta                 |
     And the current branch is now "beta"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And now the initial commits exist
     And the initial branches and hierarchy exist

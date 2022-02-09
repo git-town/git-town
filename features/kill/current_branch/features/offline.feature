@@ -40,6 +40,6 @@ Feature: offline mode
       |         | git checkout feature                          |
       | feature | git reset {{ sha 'feature commit' }}          |
     And the current branch is now "feature"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And now the initial commits exist
     And the initial branches and hierarchy exist

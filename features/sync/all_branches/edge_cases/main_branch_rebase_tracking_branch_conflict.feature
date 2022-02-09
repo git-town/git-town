@@ -33,7 +33,7 @@ Feature: handle rebase conflicts between main branch and its tracking branch
       | main   | git rebase --abort |
       |        | git stash pop      |
     And the current branch is now "main"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And now the initial commits exist
 
   Scenario: continue with unresolved conflict
@@ -62,7 +62,7 @@ Feature: handle rebase conflicts between main branch and its tracking branch
       |         | git stash pop                      |
     And all branches are now synchronized
     And the current branch is now "main"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And there is no rebase in progress anymore
     And my repo now has these committed files
       | BRANCH  | NAME             | CONTENT          |
