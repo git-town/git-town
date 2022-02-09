@@ -126,7 +126,7 @@ Feature: handle merge conflicts between feature branches and their tracking bran
     And all branches are now synchronized
     And the current branch is now "main"
     And the uncommitted file still exists
-    And there is no merge in progress
+    And no merge is in progress
     And these committed files exist now
       | BRANCH | NAME             | CONTENT          |
       | main   | main_file        | main content     |

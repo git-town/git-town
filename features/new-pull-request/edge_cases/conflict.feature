@@ -34,7 +34,7 @@ Feature: merge conflict
       |         | git checkout main    |
       | main    | git checkout feature |
     And the current branch is still "feature"
-    And there is no merge in progress
+    And no merge is in progress
     And now the initial commits exist
 
   Scenario: continue with unresolved conflict

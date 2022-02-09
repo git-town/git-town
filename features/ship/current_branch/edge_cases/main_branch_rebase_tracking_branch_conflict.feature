@@ -29,7 +29,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | main   | git rebase --abort   |
       |        | git checkout feature |
     And the current branch is still "feature"
-    And there is no rebase in progress anymore
+    And no rebase is in progress
     And now the initial commits exist
     And Git Town is still aware of the initial branch hierarchy
 

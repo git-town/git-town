@@ -34,7 +34,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       |        | git stash pop      |
     And the current branch is still "qa"
     And the uncommitted file still exists
-    And there is no rebase in progress anymore
+    And no rebase is in progress
     And now the initial commits exist
 
   Scenario: continue with unresolved conflict
@@ -58,7 +58,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       |        | git stash pop         |
     And all branches are now synchronized
     And the current branch is still "qa"
-    And there is no rebase in progress anymore
+    And no rebase is in progress
     And the uncommitted file still exists
     And these committed files exist now
       | BRANCH | NAME             | CONTENT          |
@@ -75,7 +75,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       |        | git stash pop   |
     And all branches are now synchronized
     And the current branch is still "qa"
-    And there is no rebase in progress anymore
+    And no rebase is in progress
     And the uncommitted file still exists
     And these committed files exist now
       | BRANCH | NAME             | CONTENT          |

@@ -97,7 +97,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
     And all branches are now synchronized
     And the current branch is now "main"
     And the uncommitted file still exists
-    And there is no rebase in progress anymore
+    And no rebase is in progress
 
   Scenario: resolve, finish the rebase, and continue
     When I resolve the conflict in "conflicting_file"

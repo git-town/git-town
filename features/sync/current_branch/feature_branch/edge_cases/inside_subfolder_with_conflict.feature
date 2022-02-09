@@ -41,7 +41,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
       | current | git stash pop        |
     And the current branch is still "current"
     And the uncommitted file still exists
-    And there is no merge in progress
+    And no merge is in progress
     And now the initial commits exist
 
   Scenario: continue with unresolved conflict
@@ -72,7 +72,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
     And all branches are now synchronized
     And the current branch is still "current"
     And the uncommitted file still exists
-    And there is no merge in progress
+    And no merge is in progress
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, origin | conflicting main commit          |

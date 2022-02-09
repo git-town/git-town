@@ -32,7 +32,7 @@ Feature: handle conflicts between the shipped branch and its tracking branch
       |         | git checkout main    |
       | main    | git checkout feature |
     And the current branch is still "feature"
-    And there is no merge in progress
+    And no merge is in progress
     And now the initial commits exist
     And Git Town is still aware of the initial branch hierarchy
 

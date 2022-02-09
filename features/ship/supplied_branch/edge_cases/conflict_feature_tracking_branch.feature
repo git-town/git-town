@@ -39,7 +39,7 @@ Feature: handle conflicts between the supplied feature branch and its tracking b
       | other   | git stash pop      |
     And the current branch is now "other"
     And the uncommitted file still exists
-    And there is no merge in progress
+    And no merge is in progress
     And now the initial commits exist
     And Git Town is still aware of the initial branch hierarchy
 

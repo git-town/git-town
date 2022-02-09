@@ -48,7 +48,7 @@ Feature: handle merge conflicts between feature branch and main branch
       | main   | git stash pop                                  |
     And the current branch is now "main"
     And the uncommitted file still exists
-    And there is no merge in progress
+    And no merge is in progress
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                        |
       | main   | local, origin | main commit                    |
@@ -80,7 +80,7 @@ Feature: handle merge conflicts between feature branch and main branch
       |        | git stash pop                                  |
     And the current branch is now "main"
     And the uncommitted file still exists
-    And there is no merge in progress
+    And no merge is in progress
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                        |
       | main   | local, origin | main commit                    |
@@ -129,7 +129,7 @@ Feature: handle merge conflicts between feature branch and main branch
     And the current branch is now "main"
     And the uncommitted file still exists
     And all branches are now synchronized
-    And there is no merge in progress
+    And no merge is in progress
     And these committed files exist now
       | BRANCH | NAME                 | CONTENT             |
       | main   | conflicting_file     | main content        |

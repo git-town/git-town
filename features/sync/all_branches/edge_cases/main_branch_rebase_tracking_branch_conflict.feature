@@ -63,7 +63,7 @@ Feature: handle rebase conflicts between main branch and its tracking branch
     And all branches are now synchronized
     And the current branch is now "main"
     And the uncommitted file still exists
-    And there is no rebase in progress anymore
+    And no rebase is in progress
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |

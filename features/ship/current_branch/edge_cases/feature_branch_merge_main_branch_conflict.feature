@@ -34,7 +34,7 @@ Feature: handle conflicts between the shipped branch and the main branch
       |         | git checkout main    |
       | main    | git checkout feature |
     And the current branch is still "feature"
-    And there is no merge in progress
+    And no merge is in progress
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local, origin | conflicting main commit    | conflicting_file | main content    |

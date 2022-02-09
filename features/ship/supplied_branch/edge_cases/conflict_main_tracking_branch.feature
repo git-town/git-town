@@ -36,7 +36,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | other  | git stash pop      |
     And the current branch is still "other"
     And the uncommitted file still exists
-    And there is no rebase in progress anymore
+    And no rebase is in progress
     And now the initial commits exist
     And Git Town is still aware of the initial branch hierarchy
 

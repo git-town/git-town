@@ -987,7 +987,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.OriginRepo.RemoveBranch(name)
 	})
 
-	suite.Step(`^there is no merge in progress$`, func() error {
+	suite.Step(`^no merge is in progress$`, func() error {
 		hasMerge, err := state.gitEnv.DevRepo.HasMergeInProgress()
 		if err != nil {
 			return err
@@ -998,7 +998,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^there is no rebase in progress anymore$`, func() error {
+	suite.Step(`^no rebase is in progress$`, func() error {
 		hasRebase, err := state.gitEnv.DevRepo.HasRebaseInProgress()
 		if err != nil {
 			return err

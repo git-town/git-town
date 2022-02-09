@@ -34,7 +34,7 @@ Feature: conflicts between the main branch and its tracking branch
       | existing | git stash pop         |
     And the current branch is now "existing"
     And the uncommitted file still exists
-    And there is no rebase in progress anymore
+    And no rebase is in progress
     And now the initial commits exist
 
   Scenario: continue with unresolved conflict
