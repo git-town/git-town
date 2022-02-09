@@ -1,12 +1,11 @@
 Feature: restores deleted tracking branch
 
   Background:
-    Given a feature branch "feature"
+    Given the current branch is a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
     And origin deletes the "feature" branch
-    And the current branch is "feature"
     When I run "git-town sync"
 
   Scenario: result
