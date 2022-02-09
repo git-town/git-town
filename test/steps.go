@@ -875,7 +875,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return err
 	})
 
-	suite.Step(`^Git Town's "offline" setting is (?:now|still) "([^"]*)"$`, func(value string) error {
+	suite.Step(`^the "offline" setting is (?:now|still) "([^"]*)"$`, func(value string) error {
 		want, err := strconv.ParseBool(value)
 		if err != nil {
 			return err
