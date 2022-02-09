@@ -24,5 +24,5 @@ Feature: delete a remote only branch
     Then it runs the commands
       | BRANCH | COMMAND                                                                 |
       | main   | git push origin {{ sha-in-origin 'feature commit' }}:refs/heads/feature |
-    And my repo now has the initial branches
+    And the initial branches exist
     And Git Town is still aware of no branch hierarchy

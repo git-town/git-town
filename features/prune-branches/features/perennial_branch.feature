@@ -29,5 +29,5 @@ Feature: remove perennial branch configuration when pruning a perennial branch
       | main   | git branch old {{ sha 'old commit' }} |
       |        | git checkout old                      |
     And I am now on the "old" branch
-    And my repo now has the initial branches
+    And the initial branches exist
     And the perennial branches are now "active" and "old"
