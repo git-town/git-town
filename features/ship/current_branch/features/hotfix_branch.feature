@@ -3,9 +3,9 @@ Feature: ship hotfixes
   Background:
     Given my repo has a perennial branch "production"
     And my repo has a feature branch "hotfix" as a child of "production"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION      | MESSAGE       |
-      | hotfix | local, remote | hotfix commit |
+      | hotfix | local, origin | hotfix commit |
     And I am on the "hotfix" branch
     When I run "git-town ship -m 'hotfix done'"
 
@@ -27,11 +27,11 @@ Feature: ship hotfixes
     And I am now on the "production" branch
     And the existing branches are
       | REPOSITORY    | BRANCHES         |
-      | local, remote | main, production |
-    And my repo now has the commits
+      | local, origin | main, production |
+    And now these commits exist
       | BRANCH     | LOCATION      | MESSAGE     |
-      | production | local, remote | hotfix done |
-    And Git Town now has no branch hierarchy information
+      | production | local, origin | hotfix done |
+    And Git Town is now aware of no branch hierarchy
 
   Scenario: undo
     When I run "git-town undo"
@@ -45,9 +45,9 @@ Feature: ship hotfixes
       | hotfix     | git checkout production                     |
       | production | git checkout hotfix                         |
     And I am now on the "hotfix" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH     | LOCATION      | MESSAGE              |
-      | hotfix     | local, remote | hotfix commit        |
-      | production | local, remote | hotfix done          |
+      | hotfix     | local, origin | hotfix commit        |
+      | production | local, origin | hotfix done          |
       |            |               | Revert "hotfix done" |
     And my repo now has its initial branches and branch hierarchy

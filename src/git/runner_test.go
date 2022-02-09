@@ -438,7 +438,7 @@ func TestRunner_HasRemote(t *testing.T) {
 	repoDir := test.CreateTempDir(t)
 	repo, err := origin.Clone(repoDir)
 	assert.NoError(t, err)
-	has, err := repo.Runner.HasRemote("origin")
+	has, err := repo.Runner.HasOrigin()
 	assert.NoError(t, err)
 	assert.True(t, has)
 	has, err = repo.Runner.HasRemote("zonk")
@@ -489,7 +489,7 @@ func TestRunner_LocalBranches(t *testing.T) {
 	assert.Equal(t, []string{"b1", "b2", "master"}, branches)
 }
 
-func TestRunner_LocalAndRemoteBranches(t *testing.T) {
+func TestRunner_LocalAndOriginBranches(t *testing.T) {
 	t.Parallel()
 	origin := test.CreateRepo(t)
 	repoDir := test.CreateTempDir(t)
@@ -503,7 +503,7 @@ func TestRunner_LocalAndRemoteBranches(t *testing.T) {
 	assert.NoError(t, err)
 	err = repo.Fetch()
 	assert.NoError(t, err)
-	branches, err := repo.Runner.LocalAndRemoteBranches()
+	branches, err := repo.Runner.LocalAndOriginBranches()
 	assert.NoError(t, err)
 	assert.Equal(t, []string{"b1", "b2", "b3", "master"}, branches)
 }

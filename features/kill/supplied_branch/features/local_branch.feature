@@ -1,43 +1,43 @@
 Feature: local branch
 
   Background:
-    Given my repo does not have a remote origin
-    And my repo has the local feature branches "dead-feature" and "other-feature"
-    And my repo contains the commits
-      | BRANCH        | LOCATION | MESSAGE              |
-      | dead-feature  | local    | dead feature commit  |
-      | other-feature | local    | other feature commit |
-    And I am on the "dead-feature" branch
+    Given my repo does not have an origin
+    And my repo has the local feature branches "dead" and "other"
+    And the commits
+      | BRANCH | LOCATION | MESSAGE      |
+      | dead   | local    | dead commit  |
+      | other  | local    | other commit |
+    And I am on the "dead" branch
     And my workspace has an uncommitted file
-    When I run "git-town kill dead-feature"
+    When I run "git-town kill dead"
 
   Scenario: result
     Then it runs the commands
-      | BRANCH       | COMMAND                             |
-      | dead-feature | git add -A                          |
-      |              | git commit -m "WIP on dead-feature" |
-      |              | git checkout main                   |
-      | main         | git branch -D dead-feature          |
+      | BRANCH | COMMAND                     |
+      | dead   | git add -A                  |
+      |        | git commit -m "WIP on dead" |
+      |        | git checkout main           |
+      | main   | git branch -D dead          |
     And I am now on the "main" branch
     And my repo doesn't have any uncommitted files
     And the existing branches are
-      | REPOSITORY | BRANCHES            |
-      | local      | main, other-feature |
-    And my repo now has the commits
-      | BRANCH        | LOCATION | MESSAGE              |
-      | other-feature | local    | other feature commit |
+      | REPOSITORY | BRANCHES    |
+      | local      | main, other |
+    And now these commits exist
+      | BRANCH | LOCATION | MESSAGE      |
+      | other  | local    | other commit |
     And Git Town is now aware of this branch hierarchy
-      | BRANCH        | PARENT |
-      | other-feature | main   |
+      | BRANCH | PARENT |
+      | other  | main   |
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH       | COMMAND                                                 |
-      | main         | git branch dead-feature {{ sha 'WIP on dead-feature' }} |
-      |              | git checkout dead-feature                               |
-      | dead-feature | git reset {{ sha 'dead feature commit' }}               |
-    And I am now on the "dead-feature" branch
+      | BRANCH | COMMAND                                 |
+      | main   | git branch dead {{ sha 'WIP on dead' }} |
+      |        | git checkout dead                       |
+      | dead   | git reset {{ sha 'dead commit' }}       |
+    And I am now on the "dead" branch
     And my workspace has the uncommitted file again
-    And my repo is left with my original commits
+    And now the initial commits exist
     And my repo now has its initial branches and branch hierarchy

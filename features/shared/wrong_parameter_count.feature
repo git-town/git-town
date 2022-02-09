@@ -1,4 +1,4 @@
-Feature: invalid invocation
+Feature: too few or many parameters
 
   Scenario Outline:
     When I run "git-town <CMD>"

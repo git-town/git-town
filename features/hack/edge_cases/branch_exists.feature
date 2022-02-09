@@ -1,7 +1,7 @@
 Feature: already existing branch
 
   Scenario Outline:
-    Given my <LOCATION> has a feature branch "existing"
+    Given <LOCATION> has a feature branch "existing"
     When I run "git-town hack existing"
     Then it runs the commands
       | BRANCH | COMMAND                  |
@@ -12,6 +12,6 @@ Feature: already existing branch
       """
 
     Examples:
-      | LOCATION |
-      | repo     |
-      | coworker |
+      | LOCATION   |
+      | my repo    |
+      | the origin |

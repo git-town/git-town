@@ -1,6 +1,6 @@
+@skipWindows
 Feature: ask for missing parent
 
-  @skipWindows
   Scenario: feature branch without parent
     Given my repo has a branch "feature"
     And I am on the "main" branch

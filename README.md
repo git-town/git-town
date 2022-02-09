@@ -23,56 +23,56 @@ Git Town provides these additional Git commands:
 
 - [git hack](https://www.git-town.com/commands/hack.html) - cuts a new
   up-to-date feature branch off the main branch
-- [git sync](https://www.git-town.com/documentation/commands/sync.md) - updates
-  the current branch with all ongoing changes
-- [git new-pull-request](https://www.git-town.com/documentation/commands/new-pull-request.md) -
+- [git sync](https://www.git-town.com/commands/sync.html) - updates the current
+  branch with all ongoing changes
+- [git new-pull-request](https://www.git-town.com/commands/new-pull-request.html) -
   create a new pull request
-- [git ship](https://www.git-town.com/documentation/commands/ship.md) - delivers
-  a completed feature branch and removes it
+- [git ship](https://www.git-town.com/commands/ship.html) - delivers a completed
+  feature branch and removes it
 
 #### Advanced development commands
 
-- [git kill](https://www.git-town.com/documentation/commands/kill.md) - removes
-  a feature branch
-- [git prune-branches](https://www.git-town.com/documentation/commands/prune-branches.md) -
+- [git kill](https://www.git-town.com/commands/kill.html) - removes a feature
+  branch
+- [git prune-branches](https://www.git-town.com/commands/prune-branches.html) -
   delete all merged branches
-- [git rename-branch](https://www.git-town.com/documentation/commands/rename-branch.md) -
+- [git rename-branch](https://www.git-town.com/commands/rename-branch.html) -
   rename a branch
-- [git repo](https://www.git-town.com/documentation/commands/repo.md) - view the
-  repository homepage
+- [git repo](https://www.git-town.com/commands/repo.html) - view the repository
+  homepage
 
 #### Nested feature branches
 
-- [git append](https://www.git-town.com/documentation/commands/append.md) -
-  insert a new branch as a child of the current branch
-- [git prepend](https://www.git-town.com/documentation/commands/prepend.md) -
-  insert a new branch between the current branch and its parent
-- [git set-parent-branch](https://www.git-town.com/documentation/commands/set-parent-branch.md) -
+- [git append](https://www.git-town.com/commands/append.html) - insert a new
+  branch as a child of the current branch
+- [git prepend](https://www.git-town.com/commands/prepend.html) - insert a new
+  branch between the current branch and its parent
+- [git set-parent-branch](https://www.git-town.com/commands/set-parent-branch.html) -
   updates a branch's parent
 
 #### Git Town configuration
 
-- [git town config](https://www.git-town.com/documentation/commands/config.md) -
-  displays or updates your Git Town configuration
-- [git town new-branch-push-flag](https://www.git-town.com/documentation/commands/new-branch-push-flag.md) -
+- [git town config](https://www.git-town.com/commands/config.html) - displays or
+  updates your Git Town configuration
+- [git town new-branch-push-flag](https://www.git-town.com/commands/new-branch-push-flag.html) -
   configures whether new empty branches get pushed to origin
-- [git town main-branch](https://www.git-town.com/documentation/commands/main-branch.md) -
+- [git town main-branch](https://www.git-town.com/commands/main-branch.html) -
   displays or sets the main development branch for the current repo
-- [git town offline](https://www.git-town.com/documentation/commands/offline.md) -
+- [git town offline](https://www.git-town.com/commands/offline.html) -
   enables/disables offline mode
-- [git town perennial-branches](https://www.git-town.com/documentation/commands/perennial-branches.md) -
+- [git town perennial-branches](https://www.git-town.com/commands/perennial-branches.html) -
   displays or updates the perennial branches for the current repo
-- [git town pull-branch-strategy](https://www.git-town.com/documentation/commands/pull-branch-strategy.md) -
+- [git town pull-branch-strategy](https://www.git-town.com/commands/pull-branch-strategy.html) -
   displays or sets the strategy to update perennial branches
 
 #### Git Town setup
 
-- [git town alias](https://www.git-town.com/documentation/commands/alias.md) -
-  adds or removes shorter aliases for Git Town commands
-- [git town completions](https://www.git-town.com/documentation/commands/completions.md) -
+- [git town alias](https://www.git-town.com/commands/alias.html) - adds or
+  removes shorter aliases for Git Town commands
+- [git town completions](https://www.git-town.com/commands/completions.html) -
   generates completion scripts for Bash, zsh, fish & PowerShell.
-- [git town version](https://www.git-town.com/documentation/commands/version.md) -
-  displays the installed version of Git Town
+- [git town version](https://www.git-town.com/commands/version.html) - displays
+  the installed version of Git Town
 
 ## Installation
 

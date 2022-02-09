@@ -2,22 +2,19 @@ Feature: merge conflict
 
   Background:
     Given my repo has a local feature branch "feature"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME        | FILE CONTENT    |
-      | main    | local, remote | main commit    | conflicting_file | main content    |
+      | main    | local, origin | main commit    | conflicting_file | main content    |
       | feature | local         | feature commit | conflicting_file | feature content |
     And my computer has the "open" tool installed
     And my repo's origin is "git@github.com:git-town/git-town.git"
     And I am on the "feature" branch
-    And my workspace has an uncommitted file
     When I run "git-town new-pull-request"
 
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                  |
       | feature | git fetch --prune --tags |
-      |         | git add -A               |
-      |         | git stash                |
       |         | git checkout main        |
       | main    | git rebase origin/main   |
       |         | git checkout feature     |
@@ -28,7 +25,6 @@ Feature: merge conflict
       To continue after having resolved conflicts, run "git-town continue".
       """
     And I am still on the "feature" branch
-    And my uncommitted file is stashed
     And my repo now has a merge in progress
 
   Scenario: abort
@@ -38,13 +34,11 @@ Feature: merge conflict
       | feature | git merge --abort    |
       |         | git checkout main    |
       | main    | git checkout feature |
-      | feature | git stash pop        |
     And I am still on the "feature" branch
-    And my workspace has the uncommitted file again
     And there is no merge in progress
-    And my repo is left with my original commits
+    And now the initial commits exist
 
-  Scenario: continue without resolving the conflicts
+  Scenario: continue with unresolved conflict
     When I run "git-town continue"
     Then it runs no commands
     And it prints the error:
@@ -52,29 +46,26 @@ Feature: merge conflict
       you must resolve the conflicts before continuing
       """
     And I am still on the "feature" branch
-    And my uncommitted file is stashed
     And my repo still has a merge in progress
 
   @skipWindows
-  Scenario: continue after resolving conflicts
+  Scenario: resolve and continue
     Given I resolve the conflict in "conflicting_file"
     When I run "git-town continue"
     Then it runs the commands
       | BRANCH  | COMMAND                                                            |
       | feature | git commit --no-edit                                               |
       |         | git push -u origin feature                                         |
-      |         | git stash pop                                                      |
       | <none>  | open https://github.com/git-town/git-town/compare/feature?expand=1 |
     And "open" launches a new pull request with this url in my browser:
       """
       https://github.com/git-town/git-town/compare/feature?expand=1
       """
     And I am still on the "feature" branch
-    And my workspace still contains my uncommitted file
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                          |
-      | main    | local, remote | main commit                      |
-      | feature | local, remote | feature commit                   |
+      | main    | local, origin | main commit                      |
+      | feature | local, origin | feature commit                   |
       |         |               | main commit                      |
       |         |               | Merge branch 'main' into feature |
     And my repo now has these committed files
@@ -83,18 +74,16 @@ Feature: merge conflict
       | feature | conflicting_file | resolved content |
 
   @skipWindows
-  Scenario: continue after resolving conflicts and committing
+  Scenario: resolve, commit, and continue
     Given I resolve the conflict in "conflicting_file"
     When I run "git commit --no-edit"
     And I run "git-town continue"
     Then it runs the commands
       | BRANCH  | COMMAND                                                            |
       | feature | git push -u origin feature                                         |
-      |         | git stash pop                                                      |
       | <none>  | open https://github.com/git-town/git-town/compare/feature?expand=1 |
     And "open" launches a new pull request with this url in my browser:
       """
       https://github.com/git-town/git-town/compare/feature?expand=1
       """
     And I am still on the "feature" branch
-    And my workspace still contains my uncommitted file

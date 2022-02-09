@@ -3,9 +3,9 @@ Feature: offline mode
   Background:
     Given Git Town is in offline mode
     And my repo has a feature branch "feature"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
-      | feature | local, remote | feature commit |
+      | feature | local, origin | feature commit |
     And I am on the "feature" branch
     When I run "git-town ship -m 'feature done'"
 
@@ -22,11 +22,11 @@ Feature: offline mode
       |         | git commit -m "feature done"       |
       |         | git branch -D feature              |
     And I am now on the "main" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH  | LOCATION | MESSAGE        |
       | main    | local    | feature done   |
-      | feature | remote   | feature commit |
-    And Git Town now has no branch hierarchy information
+      | feature | origin   | feature commit |
+    And Git Town is now aware of no branch hierarchy
 
   Scenario: undo
     When I run "git-town undo"
@@ -39,5 +39,5 @@ Feature: offline mode
       | main    | git reset --hard {{ sha 'Initial commit' }}   |
       |         | git checkout feature                          |
     And I am now on the "feature" branch
-    And my repo is left with my original commits
-    And Git Town now has the original branch hierarchy
+    And now the initial commits exist
+    And my repo now has its initial branches and branch hierarchy

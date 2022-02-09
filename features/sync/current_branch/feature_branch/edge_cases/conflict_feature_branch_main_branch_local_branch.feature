@@ -2,7 +2,7 @@ Feature: handle conflicts between the current feature branch and the main branch
 
   Background:
     Given my repo has a feature branch "feature"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
@@ -43,12 +43,12 @@ Feature: handle conflicts between the current feature branch and the main branch
     And I am still on the "feature" branch
     And my workspace has the uncommitted file again
     And there is no merge in progress
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
-      | main    | local, remote | conflicting main commit    | conflicting_file | main content    |
+      | main    | local, origin | conflicting main commit    | conflicting_file | main content    |
       | feature | local         | conflicting feature commit | conflicting_file | feature content |
 
-  Scenario: continue without resolving the conflicts
+  Scenario: continue with unresolved conflict
     When I run "git-town continue"
     Then it runs no commands
     And it prints the error:
@@ -59,7 +59,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     And my uncommitted file is stashed
     And my repo still has a merge in progress
 
-  Scenario: continue after resolving the conflicts
+  Scenario: resolve, commit, and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
     Then it runs the commands
@@ -67,15 +67,16 @@ Feature: handle conflicts between the current feature branch and the main branch
       | feature | git commit --no-edit |
       |         | git push             |
       |         | git stash pop        |
-    And I am still on the "feature" branch
-    And my workspace has the uncommitted file again
     And all branches are now synchronized
-    And my repo still has these committed files
+    And I am still on the "feature" branch
+    And there is no merge in progress
+    And my workspace has the uncommitted file again
+    And my repo now has these committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |
 
-  Scenario: continue after resolving the conflicts resulting in no changes
+  Scenario: resolve resulting in no changes and continue
     When I resolve the conflict in "conflicting_file" with "feature content"
     And I run "git-town continue"
     Then it runs the commands
@@ -84,14 +85,15 @@ Feature: handle conflicts between the current feature branch and the main branch
       |         | git push             |
       |         | git stash pop        |
     And I am still on the "feature" branch
-    And my workspace still contains my uncommitted file
     And all branches are now synchronized
-    And my repo still has these committed files
+    And there is no merge in progress
+    And my workspace still contains my uncommitted file
+    And my repo now has these committed files
       | BRANCH  | NAME             | CONTENT         |
       | main    | conflicting_file | main content    |
       | feature | conflicting_file | feature content |
 
-  Scenario: continue after resolving the conflicts and comitting
+  Scenario: resolve, commit, and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git commit --no-edit"
     And I run "git-town continue"
@@ -100,9 +102,10 @@ Feature: handle conflicts between the current feature branch and the main branch
       | feature | git push      |
       |         | git stash pop |
     And I am still on the "feature" branch
-    And my workspace has the uncommitted file again
     And all branches are now synchronized
-    And my repo still has these committed files
+    And there is no merge in progress
+    And my workspace has the uncommitted file again
+    And my repo now has these committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |

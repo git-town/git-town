@@ -77,6 +77,29 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 	})
 
+	suite.Step(`^the coworker fetches updates$`, func() error {
+		return state.gitEnv.CoworkerRepo.Fetch()
+	})
+
+	suite.Step(`^the coworker is on the "([^"]*)" branch$`, func(branchName string) error {
+		return state.gitEnv.CoworkerRepo.CheckoutBranch(branchName)
+	})
+
+	suite.Step(`^a coworker runs "([^"]+)"$`, func(command string) error {
+		state.runRes, state.runErr = state.gitEnv.CoworkerRepo.RunString(command)
+		return nil
+	})
+
+	suite.Step(`^the coworker sets the parent branch of "([^"]*)" as "([^"]*)"$`, func(childBranch, parentBranch string) error {
+		_ = state.gitEnv.CoworkerRepo.Config.SetParentBranch(childBranch, parentBranch)
+		return nil
+	})
+
+	suite.Step(`^the origin has a feature branch "([^"]*)"$`, func(branch string) error {
+		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
+		return state.gitEnv.OriginRepo.CreateBranch(branch, "main")
+	})
+
 	suite.Step(`^all branches are now synchronized$`, func() error {
 		outOfSync, err := state.gitEnv.DevRepo.HasBranchesOutOfSync()
 		if err != nil {
@@ -92,7 +115,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.Config.SetOffline(true)
 	})
 
-	suite.Step(`^Git Town is no longer configured for this repo$`, func() error {
+	suite.Step(`^Git Town is no longer configured$`, func() error {
 		res, err := state.gitEnv.DevRepo.HasGitTownConfigNow()
 		if err != nil {
 			return err
@@ -114,7 +137,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^Git Town (?:now|still) has no branch hierarchy information$`, func() error {
+	suite.Step(`^Git Town is (?:now|still) aware of no branch hierarchy$`, func() error {
 		state.gitEnv.DevRepo.Config.Reload()
 		if state.gitEnv.DevRepo.Config.HasBranchInformation() {
 			branchInfo := state.gitEnv.DevRepo.Config.ParentBranchMap()
@@ -123,7 +146,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^Git Town (?:now|still) has the original branch hierarchy$`, func() error {
+	suite.Step(`^Git Town is (?:now|still) aware of the initial branch hierarchy$`, func() error {
 		have := state.gitEnv.DevRepo.BranchHierarchyTable()
 		state.initialBranchHierarchy.Sort()
 		diff, errCnt := have.EqualDataTable(state.initialBranchHierarchy)
@@ -137,7 +160,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^I am collaborating with a coworker$`, func() error {
+	suite.Step(`^a coworker clones the repository$`, func() error {
 		return state.gitEnv.AddCoworkerRepo()
 	})
 
@@ -177,7 +200,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^I haven't configured Git Town yet$`, func() error {
+	suite.Step(`^Git Town is not configured$`, func() error {
 		err := state.gitEnv.DevRepo.Config.DeletePerennialBranchConfiguration()
 		if err != nil {
 			return err
@@ -342,30 +365,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevShell.MockCommand(tool)
 	})
 
-	suite.Step(`^my (?:coworker|origin) has a feature branch "([^"]*)"$`, func(branch string) error {
-		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-		return state.gitEnv.OriginRepo.CreateBranch(branch, "main")
-	})
-
-	suite.Step(`^my coworker fetches updates$`, func() error {
-		return state.gitEnv.CoworkerRepo.Fetch()
-	})
-
-	suite.Step(`^my coworker is on the "([^"]*)" branch$`, func(branchName string) error {
-		return state.gitEnv.CoworkerRepo.CheckoutBranch(branchName)
-	})
-
-	suite.Step(`^my coworker runs "([^"]+)"$`, func(command string) error {
-		state.runRes, state.runErr = state.gitEnv.CoworkerRepo.RunString(command)
-		return nil
-	})
-
-	suite.Step(`^my coworker sets the parent branch of "([^"]*)" as "([^"]*)"$`, func(childBranch, parentBranch string) error {
-		_ = state.gitEnv.CoworkerRepo.Config.SetParentBranch(childBranch, parentBranch)
-		return nil
-	})
-
-	suite.Step(`^my repo does not have a remote origin$`, func() error {
+	suite.Step(`^my repo does not have an origin$`, func() error {
 		err := state.gitEnv.DevRepo.RemoveRemote("origin")
 		if err != nil {
 			return err
@@ -433,19 +433,19 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.AddUpstream()
 	})
 
-	suite.Step(`^my repo has "color\.ui" set to "([^"]*)"$`, func(value string) error {
+	suite.Step(`^Git Town's local "color.ui" setting is "([^"]*)"$`, func(value string) error {
 		return state.gitEnv.DevRepo.Config.SetColorUI(value)
 	})
 
-	suite.Step(`^my repo has "git-town.code-hosting-driver" set to "([^"]*)"$`, func(value string) error {
+	suite.Step(`^Git Town's local "code-hosting-driver" setting is "([^"]*)"$`, func(value string) error {
 		return state.gitEnv.DevRepo.Config.SetCodeHostingDriver(value)
 	})
 
-	suite.Step(`^my repo has "git-town.code-hosting-origin-hostname" set to "([^"]*)"$`, func(value string) error {
+	suite.Step(`^Git Town's local "code-hosting-origin-hostname" setting is "([^"]*)"$`, func(value string) error {
 		return state.gitEnv.DevRepo.Config.SetCodeHostingOriginHostname(value)
 	})
 
-	suite.Step(`^my repo has "git-town.ship-delete-remote-branch" set to "(true|false)"$`, func(value string) error {
+	suite.Step(`^Git Town's local "ship-delete-remote-branch" setting is "(true|false)"$`, func(value string) error {
 		parsed, err := strconv.ParseBool(value)
 		if err != nil {
 			return err
@@ -454,7 +454,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repo has "git-town.sync-upstream" set to (true|false)$`, func(text string) error {
+	suite.Step(`^Git Town's local "sync-upstream" setting is (true|false)$`, func(text string) error {
 		value, err := strconv.ParseBool(text)
 		if err != nil {
 			return err
@@ -565,7 +565,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.PushBranchToOrigin(branch)
 	})
 
-	suite.Step(`^my repo is left with my original commits$`, func() error {
+	suite.Step(`^now the initial commits exist$`, func() error {
 		return compareExistingCommits(state, state.initialCommits)
 	})
 
@@ -608,7 +608,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.Fetch()
 	})
 
-	suite.Step(`^my repo now has the commits$`, func(table *messages.PickleStepArgument_PickleTable) error {
+	suite.Step(`^now these commits exist$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		return compareExistingCommits(state, table)
 	})
 
@@ -791,7 +791,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the "([^"]*)" branch gets deleted on the remote$`, func(name string) error {
+	suite.Step(`^origin deletes the "([^"]*)" branch$`, func(name string) error {
 		state.initialRemoteBranches = stringslice.Remove(state.initialRemoteBranches, name)
 		return state.gitEnv.OriginRepo.RemoveBranch(name)
 	})
@@ -807,7 +807,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repo contains the commits$`, func(table *messages.PickleStepArgument_PickleTable) error {
+	suite.Step(`^the commits$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		state.initialCommits = table
 		commits, err := FromGherkinTable(table)
 		if err != nil {
@@ -882,7 +882,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the offline configuration is accidentally set to "([^"]*)"$`, func(value string) error {
+	suite.Step(`^Git Town's local "offline" setting is "([^"]*)"$`, func(value string) error {
 		_, err := state.gitEnv.DevRepo.Config.SetGlobalConfigValue("git-town.offline", value)
 		return err
 	})
@@ -951,7 +951,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the remote deletes the "([^"]*)" branch$`, func(name string) error {
+	suite.Step(`^origin deletes the "([^"]*)" branch$`, func(name string) error {
 		return state.gitEnv.OriginRepo.RemoveBranch(name)
 	})
 

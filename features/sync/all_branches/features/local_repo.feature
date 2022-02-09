@@ -1,27 +1,22 @@
-Feature: syncs all feature branches (without remote repo)
+Feature: syncs all feature branches (in a local repo)
 
   Background:
-    Given my repo does not have a remote origin
-    And my repo has the local feature branches "feature-1" and "feature-2"
-    And my repo contains the commits
-      | BRANCH    | LOCATION | MESSAGE          |
-      | main      | local    | main commit      |
-      | feature-1 | local    | feature-1 commit |
-      | feature-2 | local    | feature-2 commit |
-    And I am on the "feature-1" branch
-    And my workspace has an uncommitted file
+    Given my repo does not have an origin
+    And my repo has the local feature branches "alpha" and "beta"
+    And the commits
+      | BRANCH | LOCATION | MESSAGE      |
+      | main   | local    | main commit  |
+      | alpha  | local    | alpha commit |
+      | beta   | local    | beta commit  |
+    And I am on the "alpha" branch
     When I run "git-town sync --all"
 
   Scenario: result
     Then it runs the commands
-      | BRANCH    | COMMAND                  |
-      | feature-1 | git add -A               |
-      |           | git stash                |
-      |           | git merge --no-edit main |
-      |           | git checkout feature-2   |
-      | feature-2 | git merge --no-edit main |
-      |           | git checkout feature-1   |
-      | feature-1 | git stash pop            |
-    And I am still on the "feature-1" branch
-    And my workspace still contains my uncommitted file
+      | BRANCH | COMMAND                  |
+      | alpha  | git merge --no-edit main |
+      |        | git checkout beta        |
+      | beta   | git merge --no-edit main |
+      |        | git checkout alpha       |
+    And I am still on the "alpha" branch
     And all branches are now synchronized

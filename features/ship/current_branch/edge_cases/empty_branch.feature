@@ -2,9 +2,9 @@ Feature: does not ship an empty branch
 
   Background:
     Given my repo has a feature branch "empty-feature"
-    And my repo contains the commits
+    And the commits
       | BRANCH        | LOCATION | MESSAGE        | FILE NAME   | FILE CONTENT   |
-      | main          | remote   | main commit    | common_file | common content |
+      | main          | origin   | main commit    | common_file | common content |
       | empty-feature | local    | feature commit | common_file | common content |
     And I am on the "empty-feature" branch
     When I run "git-town ship"
@@ -26,7 +26,7 @@ Feature: does not ship an empty branch
       the branch "empty-feature" has no shippable changes
       """
     And I am still on the "empty-feature" branch
-    And Git Town still has the original branch hierarchy
+    And Git Town is still aware of the initial branch hierarchy
 
   Scenario: undo
     When I run "git-town undo"
@@ -36,8 +36,8 @@ Feature: does not ship an empty branch
       nothing to undo
       """
     And I am still on the "empty-feature" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH        | LOCATION      | MESSAGE        |
-      | main          | local, remote | main commit    |
+      | main          | local, origin | main commit    |
       | empty-feature | local         | feature commit |
-    And Git Town still has the original branch hierarchy
+    And Git Town is still aware of the initial branch hierarchy

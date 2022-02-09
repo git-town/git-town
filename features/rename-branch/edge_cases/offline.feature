@@ -2,37 +2,37 @@ Feature: offline mode
 
   Background:
     Given Git Town is in offline mode
-    And my repo has a feature branch "feature"
-    And my repo contains the commits
-      | BRANCH  | LOCATION      | MESSAGE     |
-      | main    | local, remote | main commit |
-      | feature | local, remote | feat commit |
-    And I am on the "feature" branch
-    When I run "git-town rename-branch renamed-feature"
+    And my repo has a feature branch "old"
+    And the commits
+      | BRANCH | LOCATION      | MESSAGE     |
+      | main   | local, origin | main commit |
+      | old    | local, origin | old commit  |
+    And I am on the "old" branch
+    When I run "git-town rename-branch new"
 
   Scenario: result
     Then it runs the commands
-      | BRANCH          | COMMAND                            |
-      | feature         | git branch renamed-feature feature |
-      |                 | git checkout renamed-feature       |
-      | renamed-feature | git branch -D feature              |
-    And I am now on the "renamed-feature" branch
-    And my repo now has the commits
-      | BRANCH          | LOCATION      | MESSAGE     |
-      | main            | local, remote | main commit |
-      | feature         | remote        | feat commit |
-      | renamed-feature | local         | feat commit |
+      | BRANCH | COMMAND            |
+      | old    | git branch new old |
+      |        | git checkout new   |
+      | new    | git branch -D old  |
+    And I am now on the "new" branch
+    And now these commits exist
+      | BRANCH | LOCATION      | MESSAGE     |
+      | main   | local, origin | main commit |
+      | new    | local         | old commit  |
+      | old    | origin        | old commit  |
     And Git Town is now aware of this branch hierarchy
-      | BRANCH          | PARENT |
-      | renamed-feature | main   |
+      | BRANCH | PARENT |
+      | new    | main   |
 
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH          | COMMAND                                    |
-      | renamed-feature | git branch feature {{ sha 'feat commit' }} |
-      |                 | git checkout feature                       |
-      | feature         | git branch -D renamed-feature              |
-    And I am now on the "feature" branch
-    And my repo is left with my original commits
-    And Git Town now has the original branch hierarchy
+      | BRANCH | COMMAND                               |
+      | new    | git branch old {{ sha 'old commit' }} |
+      |        | git checkout old                      |
+      | old    | git branch -D new                     |
+    And I am now on the "old" branch
+    And now the initial commits exist
+    And my repo now has its initial branches and branch hierarchy

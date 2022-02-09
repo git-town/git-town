@@ -1,9 +1,9 @@
 @skipWindows
-Feature: Strip colors
+Feature: strip colors
 
   Scenario: colors are stripped from the output of git commands run internally
-    Given I haven't configured Git Town yet
-    And my repo has "color.ui" set to "always"
+    Given Git Town is not configured
+    And Git Town's local "color.ui" setting is "always"
     And I am on the "main" branch
     When I run "git-town hack new-feature" and answer the prompts:
       | PROMPT                                     | ANSWER  |

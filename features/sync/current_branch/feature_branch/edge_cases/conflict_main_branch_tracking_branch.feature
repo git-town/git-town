@@ -2,10 +2,10 @@ Feature: handle conflicts between the main branch and its tracking branch
 
   Background:
     Given my repo has a feature branch "feature"
-    And my repo contains the commits
-      | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
-      | main   | local    | conflicting local commit  | conflicting_file | local conflicting content  |
-      |        | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
+    And the commits
+      | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
+      | main   | local    | conflicting local commit  | conflicting_file | local content  |
+      |        | origin   | conflicting origin commit | conflicting_file | origin content |
     And I am on the "feature" branch
     And my workspace has an uncommitted file
     When I run "git-town sync"
@@ -36,9 +36,9 @@ Feature: handle conflicts between the main branch and its tracking branch
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
     And there is no rebase in progress anymore
-    And my repo is left with my original commits
+    And now the initial commits exist
 
-  Scenario: continue without resolving the conflicts
+  Scenario: continue with unresolved conflict
     When I run "git-town continue"
     Then it runs no commands
     And it prints the error:
@@ -48,7 +48,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And my repo still has a rebase in progress
     And my uncommitted file is stashed
 
-  Scenario: continue after resolving the conflicts
+  Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then it runs the commands
@@ -60,15 +60,16 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | git merge --no-edit main           |
       |         | git push                           |
       |         | git stash pop                      |
-    And I am still on the "feature" branch
-    And my workspace still contains my uncommitted file
     And all branches are now synchronized
+    And I am still on the "feature" branch
+    And there is no rebase in progress anymore
+    And my workspace still contains my uncommitted file
     And my repo now has these committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |
       | feature | conflicting_file | resolved content |
 
-  Scenario: continue after resolving the conflicts and continuing the rebase
+  Scenario: resolve, finish the rebase, and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
@@ -80,9 +81,10 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | git merge --no-edit main           |
       |         | git push                           |
       |         | git stash pop                      |
-    And I am still on the "feature" branch
-    And my workspace still contains my uncommitted file
     And all branches are now synchronized
+    And I am still on the "feature" branch
+    And there is no rebase in progress anymore
+    And my workspace still contains my uncommitted file
     And my repo now has these committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |

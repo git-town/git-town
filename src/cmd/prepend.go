@@ -29,11 +29,11 @@ var prependCommand = &cobra.Command{
 Syncs the parent branch,
 cuts a new feature branch with the given name off the parent branch,
 makes the new branch the parent of the current branch,
-pushes the new feature branch to the remote repository
+pushes the new feature branch to the origin repository
 (if "new-branch-push-flag" is true),
 and brings over all uncommitted changes to the new feature branch.
 
-See "sync" for remote upstream options.
+See "sync" for upstream remote options.
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		config, err := createPrependConfig(args, prodRepo)
@@ -66,7 +66,7 @@ func createPrependConfig(args []string, repo *git.ProdRepo) (result prependConfi
 		return result, err
 	}
 	result.targetBranch = args[0]
-	result.hasOrigin, err = repo.Silent.HasRemote("origin")
+	result.hasOrigin, err = repo.Silent.HasOrigin()
 	if err != nil {
 		return result, err
 	}
@@ -78,7 +78,7 @@ func createPrependConfig(args []string, repo *git.ProdRepo) (result prependConfi
 			return result, err
 		}
 	}
-	hasBranch, err := repo.Silent.HasLocalOrRemoteBranch(result.targetBranch)
+	hasBranch, err := repo.Silent.HasLocalOrOriginBranch(result.targetBranch)
 	if err != nil {
 		return result, err
 	}

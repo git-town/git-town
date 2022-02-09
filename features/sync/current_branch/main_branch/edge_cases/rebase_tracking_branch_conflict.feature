@@ -2,10 +2,10 @@ Feature: handle conflicts between the main branch and its tracking branch when s
 
   Background:
     Given I am on the "main" branch
-    And my repo contains the commits
-      | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
-      | main   | local    | conflicting local commit  | conflicting_file | local conflicting content  |
-      |        | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
+    And the commits
+      | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
+      | main   | local    | conflicting local commit  | conflicting_file | local content  |
+      |        | origin   | conflicting origin commit | conflicting_file | origin content |
     And my workspace has an uncommitted file
     When I run "git-town sync"
 
@@ -33,9 +33,9 @@ Feature: handle conflicts between the main branch and its tracking branch when s
     And I am still on the "main" branch
     And my workspace still contains my uncommitted file
     And there is no rebase in progress anymore
-    And my repo is left with my original commits
+    And now the initial commits exist
 
-  Scenario: continue without resolving the conflicts
+  Scenario: continue with unresolved conflict
     When I run "git-town continue"
     Then it runs no commands
     And it prints the error:
@@ -45,7 +45,7 @@ Feature: handle conflicts between the main branch and its tracking branch when s
     And my uncommitted file is stashed
     And my repo still has a rebase in progress
 
-  Scenario: continue after resolving the conflicts
+  Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then it runs the commands
@@ -54,14 +54,14 @@ Feature: handle conflicts between the main branch and its tracking branch when s
       |        | git push              |
       |        | git push --tags       |
       |        | git stash pop         |
+    And all branches are now synchronized
     And I am still on the "main" branch
     And my workspace still contains my uncommitted file
-    And all branches are now synchronized
     And my repo now has these committed files
       | BRANCH | NAME             | CONTENT          |
       | main   | conflicting_file | resolved content |
 
-  Scenario: continue after resolving the conflicts and continuing the rebase
+  Scenario: resolve, finish the rebase, and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
@@ -70,9 +70,9 @@ Feature: handle conflicts between the main branch and its tracking branch when s
       | main   | git push        |
       |        | git push --tags |
       |        | git stash pop   |
+    And all branches are now synchronized
     And I am still on the "main" branch
     And my workspace still contains my uncommitted file
-    And all branches are now synchronized
     And my repo now has these committed files
       | BRANCH | NAME             | CONTENT          |
       | main   | conflicting_file | resolved content |

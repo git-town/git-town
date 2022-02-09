@@ -1,56 +1,51 @@
 Feature: nested feature branches
 
   Scenario:
-    Given my repo has a feature branch "parent-feature"
-    And my repo has a feature branch "child-feature" as a child of "parent-feature"
-    And my repo contains the commits
-      | BRANCH         | LOCATION | MESSAGE                      |
-      | main           | local    | local main commit            |
-      |                | remote   | remote main commit           |
-      | parent-feature | local    | local parent feature commit  |
-      |                | remote   | remote parent feature commit |
-      | child-feature  | local    | local child feature commit   |
-      |                | remote   | remote child feature commit  |
-    And I am on the "child-feature" branch
-    And my workspace has an uncommitted file
+    Given my repo has a feature branch "parent"
+    And my repo has a feature branch "child" as a child of "parent"
+    And the commits
+      | BRANCH | LOCATION | MESSAGE              |
+      | main   | local    | local main commit    |
+      |        | origin   | origin main commit   |
+      | parent | local    | local parent commit  |
+      |        | origin   | origin parent commit |
+      | child  | local    | local child commit   |
+      |        | origin   | origin child commit  |
+    And I am on the "child" branch
     When I run "git-town sync"
     Then it runs the commands
-      | BRANCH         | COMMAND                                   |
-      | child-feature  | git fetch --prune --tags                  |
-      |                | git add -A                                |
-      |                | git stash                                 |
-      |                | git checkout main                         |
-      | main           | git rebase origin/main                    |
-      |                | git push                                  |
-      |                | git checkout parent-feature               |
-      | parent-feature | git merge --no-edit origin/parent-feature |
-      |                | git merge --no-edit main                  |
-      |                | git push                                  |
-      |                | git checkout child-feature                |
-      | child-feature  | git merge --no-edit origin/child-feature  |
-      |                | git merge --no-edit parent-feature        |
-      |                | git push                                  |
-      |                | git stash pop                             |
-    And I am still on the "child-feature" branch
-    And my workspace still contains my uncommitted file
-    And my repo now has the commits
-      | BRANCH         | LOCATION      | MESSAGE                                                                  |
-      | main           | local, remote | remote main commit                                                       |
-      |                |               | local main commit                                                        |
-      | child-feature  | local, remote | local child feature commit                                               |
-      |                |               | remote child feature commit                                              |
-      |                |               | Merge remote-tracking branch 'origin/child-feature' into child-feature   |
-      |                |               | local parent feature commit                                              |
-      |                |               | remote parent feature commit                                             |
-      |                |               | Merge remote-tracking branch 'origin/parent-feature' into parent-feature |
-      |                |               | remote main commit                                                       |
-      |                |               | local main commit                                                        |
-      |                |               | Merge branch 'main' into parent-feature                                  |
-      |                |               | Merge branch 'parent-feature' into child-feature                         |
-      | parent-feature | local, remote | local parent feature commit                                              |
-      |                |               | remote parent feature commit                                             |
-      |                |               | Merge remote-tracking branch 'origin/parent-feature' into parent-feature |
-      |                |               | remote main commit                                                       |
-      |                |               | local main commit                                                        |
-      |                |               | Merge branch 'main' into parent-feature                                  |
-    And Git Town still has the original branch hierarchy
+      | BRANCH | COMMAND                           |
+      | child  | git fetch --prune --tags          |
+      |        | git checkout main                 |
+      | main   | git rebase origin/main            |
+      |        | git push                          |
+      |        | git checkout parent               |
+      | parent | git merge --no-edit origin/parent |
+      |        | git merge --no-edit main          |
+      |        | git push                          |
+      |        | git checkout child                |
+      | child  | git merge --no-edit origin/child  |
+      |        | git merge --no-edit parent        |
+      |        | git push                          |
+    And all branches are now synchronized
+    And I am still on the "child" branch
+    And now these commits exist
+      | BRANCH | LOCATION      | MESSAGE                                                  |
+      | main   | local, origin | origin main commit                                       |
+      |        |               | local main commit                                        |
+      | child  | local, origin | local child commit                                       |
+      |        |               | origin child commit                                      |
+      |        |               | Merge remote-tracking branch 'origin/child' into child   |
+      |        |               | local parent commit                                      |
+      |        |               | origin parent commit                                     |
+      |        |               | Merge remote-tracking branch 'origin/parent' into parent |
+      |        |               | origin main commit                                       |
+      |        |               | local main commit                                        |
+      |        |               | Merge branch 'main' into parent                          |
+      |        |               | Merge branch 'parent' into child                         |
+      | parent | local, origin | local parent commit                                      |
+      |        |               | origin parent commit                                     |
+      |        |               | Merge remote-tracking branch 'origin/parent' into parent |
+      |        |               | origin main commit                                       |
+      |        |               | local main commit                                        |
+      |        |               | Merge branch 'main' into parent                          |

@@ -1,30 +1,40 @@
 @skipWindows
-Feature: Entering a parent branch name when prompted
+Feature: enter a parent branch name when prompted
 
   Background:
-    Given my repo has the branches "feature-1" and "feature-2"
-    And I am on the "feature-2" branch
+    Given my repo has the branches "alpha" and "beta"
+    And I am on the "beta" branch
 
   Scenario: choose the default branch name
     When I run "git-town sync" and answer the prompts:
-      | PROMPT                                          | ANSWER  |
-      | Please specify the parent branch of 'feature-2' | [ENTER] |
+      | PROMPT                                     | ANSWER  |
+      | Please specify the parent branch of 'beta' | [ENTER] |
     Then Git Town is now aware of this branch hierarchy
-      | BRANCH    | PARENT |
-      | feature-2 | main   |
+      | BRANCH | PARENT |
+      | beta   | main   |
 
   Scenario: choose other branches
     When I run "git-town sync" and answer the prompts:
-      | PROMPT                                          | ANSWER        |
-      | Please specify the parent branch of 'feature-2' | [DOWN][ENTER] |
-      | Please specify the parent branch of 'feature-1' | [ENTER]       |
+      | PROMPT                                      | ANSWER        |
+      | Please specify the parent branch of 'beta'  | [DOWN][ENTER] |
+      | Please specify the parent branch of 'alpha' | [ENTER]       |
     And Git Town is now aware of this branch hierarchy
-      | BRANCH    | PARENT    |
-      | feature-1 | main      |
-      | feature-2 | feature-1 |
+      | BRANCH | PARENT |
+      | alpha  | main   |
+      | beta   | alpha  |
 
   Scenario: choose "<none> (make a perennial branch)"
     When I run "git-town sync" and answer the prompts:
-      | PROMPT                                          | ANSWER      |
-      | Please specify the parent branch of 'feature-2' | [UP][ENTER] |
-    Then the perennial branches are now "feature-2"
+      | PROMPT                                     | ANSWER      |
+      | Please specify the parent branch of 'beta' | [UP][ENTER] |
+    Then the perennial branches are now "beta"
+
+  Scenario: enter the parent for several branches
+    When I run "git-town sync --all" and answer the prompts:
+      | PROMPT                                      | ANSWER  |
+      | Please specify the parent branch of 'alpha' | [ENTER] |
+      | Please specify the parent branch of 'beta'  | [ENTER] |
+    Then Git Town is now aware of this branch hierarchy
+      | BRANCH | PARENT |
+      | alpha  | main   |
+      | beta   | main   |

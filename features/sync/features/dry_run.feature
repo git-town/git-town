@@ -2,12 +2,12 @@ Feature: dry run
 
   Background:
     Given my repo has a feature branch "feature"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION | MESSAGE               |
       | main    | local    | local main commit     |
-      |         | remote   | remote main commit    |
+      |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
-      |         | remote   | remote feature commit |
+      |         | origin   | origin feature commit |
     And I am on the "feature" branch
     When I run "git-town sync --dry-run"
 
@@ -23,4 +23,4 @@ Feature: dry run
       |         | git merge --no-edit main           |
       |         | git push                           |
     And I am still on the "feature" branch
-    And my repo is left with my original commits
+    And now the initial commits exist

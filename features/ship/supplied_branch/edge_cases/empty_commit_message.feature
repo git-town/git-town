@@ -1,44 +1,44 @@
 Feature: abort the ship via empty commit message
 
   Background:
-    Given my repo has the feature branches "feature" and "other-feature"
-    And my repo contains the commits
+    Given my repo has the feature branches "feature" and "other"
+    And the commits
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME        | FILE CONTENT    |
-      | main    | local, remote | main commit    | main_file        | main content    |
+      | main    | local, origin | main commit    | main_file        | main content    |
       | feature | local         | feature commit | conflicting_file | feature content |
-    And I am on the "other-feature" branch
+    And I am on the "other" branch
     And my workspace has an uncommitted file with name "conflicting_file" and content "conflicting content"
     When I run "git-town ship feature" and enter an empty commit message
 
   @skipWindows
   Scenario: result
     Then it runs the commands
-      | BRANCH        | COMMAND                                     |
-      | other-feature | git fetch --prune --tags                    |
-      |               | git add -A                                  |
-      |               | git stash                                   |
-      |               | git checkout main                           |
-      | main          | git rebase origin/main                      |
-      |               | git checkout feature                        |
-      | feature       | git merge --no-edit origin/feature          |
-      |               | git merge --no-edit main                    |
-      |               | git checkout main                           |
-      | main          | git merge --squash feature                  |
-      |               | git commit                                  |
-      |               | git reset --hard                            |
-      |               | git checkout feature                        |
-      | feature       | git reset --hard {{ sha 'feature commit' }} |
-      |               | git checkout main                           |
-      | main          | git checkout other-feature                  |
-      | other-feature | git stash pop                               |
+      | BRANCH  | COMMAND                                     |
+      | other   | git fetch --prune --tags                    |
+      |         | git add -A                                  |
+      |         | git stash                                   |
+      |         | git checkout main                           |
+      | main    | git rebase origin/main                      |
+      |         | git checkout feature                        |
+      | feature | git merge --no-edit origin/feature          |
+      |         | git merge --no-edit main                    |
+      |         | git checkout main                           |
+      | main    | git merge --squash feature                  |
+      |         | git commit                                  |
+      |         | git reset --hard                            |
+      |         | git checkout feature                        |
+      | feature | git reset --hard {{ sha 'feature commit' }} |
+      |         | git checkout main                           |
+      | main    | git checkout other                          |
+      | other   | git stash pop                               |
     And it prints the error:
       """
       aborted because commit exited with error
       """
-    And I am still on the "other-feature" branch
+    And I am still on the "other" branch
     And my workspace still contains my uncommitted file
-    And my repo is left with my original commits
-    And Git Town still has the original branch hierarchy
+    And now the initial commits exist
+    And Git Town is still aware of the initial branch hierarchy
 
   Scenario: undo
     When I run "git-town undo"
@@ -47,9 +47,9 @@ Feature: abort the ship via empty commit message
       """
       nothing to undo
       """
-    And I am still on the "other-feature" branch
-    And my repo now has the commits
+    And I am still on the "other" branch
+    And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE        |
-      | main    | local, remote | main commit    |
+      | main    | local, origin | main commit    |
       | feature | local         | feature commit |
-    And Git Town still has the original branch hierarchy
+    And Git Town is still aware of the initial branch hierarchy

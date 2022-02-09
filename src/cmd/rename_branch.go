@@ -33,12 +33,12 @@ Aborts if the new branch name already exists or the tracking branch is out of sy
 - creates a branch with the new name
 - deletes the old branch
 
-When there is a remote repository
+When there is an origin repository
 - syncs the repository
 
 When there is a tracking branch
-- pushes the new branch to the remote repository
-- deletes the old branch from the remote repository
+- pushes the new branch to the origin repository
+- deletes the old branch from the origin repository
 
 When run on a perennial branch
 - confirm with the "-f" option
@@ -112,7 +112,7 @@ func createRenameBranchConfig(args []string, repo *git.ProdRepo) (result renameB
 	if !isBranchInSync {
 		return result, fmt.Errorf("%q is not in sync with its tracking branch, please sync the branches before renaming", result.oldBranchName)
 	}
-	hasNewBranch, err := repo.Silent.HasLocalOrRemoteBranch(result.newBranchName)
+	hasNewBranch, err := repo.Silent.HasLocalOrOriginBranch(result.newBranchName)
 	if err != nil {
 		return result, err
 	}
@@ -141,7 +141,7 @@ func createRenameBranchStepList(config renameBranchConfig, repo *git.ProdRepo) (
 	}
 	if config.oldBranchHasTrackingBranch && !config.isOffline {
 		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.newBranchName})
-		result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.oldBranchName, IsTracking: true})
+		result.Append(&steps.DeleteOriginBranchStep{BranchName: config.oldBranchName, IsTracking: true})
 	}
 	result.Append(&steps.DeleteLocalBranchStep{BranchName: config.oldBranchName})
 	err = result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, repo)

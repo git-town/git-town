@@ -1,33 +1,33 @@
 Feature: local repo
 
   Background:
-    Given my repo has a feature branch "existing-feature"
-    And my repo does not have a remote origin
-    And my repo contains the commits
+    Given my repo has a feature branch "existing"
+    And my repo does not have an origin
+    And the commits
       | BRANCH | LOCATION | MESSAGE     |
       | main   | local    | main commit |
-    And I am on the "existing-feature" branch
+    And I am on the "existing" branch
     And my workspace has an uncommitted file
-    When I run "git-town hack new-feature"
+    When I run "git-town hack new"
 
   Scenario: result
     Then it runs the commands
-      | BRANCH           | COMMAND                     |
-      | existing-feature | git add -A                  |
-      |                  | git stash                   |
-      |                  | git branch new-feature main |
-      |                  | git checkout new-feature    |
-      | new-feature      | git stash pop               |
-    And I am now on the "new-feature" branch
+      | BRANCH   | COMMAND             |
+      | existing | git add -A          |
+      |          | git stash           |
+      |          | git branch new main |
+      |          | git checkout new    |
+      | new      | git stash pop       |
+    And I am now on the "new" branch
     And my workspace still contains my uncommitted file
-    And my repo now has the commits
-      | BRANCH      | LOCATION | MESSAGE     |
-      | main        | local    | main commit |
-      | new-feature | local    | main commit |
+    And now these commits exist
+      | BRANCH | LOCATION | MESSAGE     |
+      | main   | local    | main commit |
+      | new    | local    | main commit |
     And Git Town is now aware of this branch hierarchy
-      | BRANCH           | PARENT |
-      | existing-feature | main   |
-      | new-feature      | main   |
+      | BRANCH   | PARENT |
+      | existing | main   |
+      | new      | main   |
 
   Scenario: undo
     When I run "git-town undo"
