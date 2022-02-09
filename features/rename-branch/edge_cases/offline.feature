@@ -2,12 +2,11 @@ Feature: offline mode
 
   Background:
     Given offline mode is enabled
-    And a feature branch "old"
+    And the current branch is a feature branch "old"
     And the commits
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
       | old    | local, origin | old commit  |
-    And the current branch is "old"
     When I run "git-town rename-branch new"
 
   Scenario: result

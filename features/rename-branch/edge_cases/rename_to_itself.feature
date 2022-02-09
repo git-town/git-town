@@ -1,8 +1,7 @@
 Feature: rename a branch to itself
 
   Background:
-    Given a feature branch "old"
-    And the current branch is "old"
+    Given the current branch is a feature branch "old"
 
   Scenario: without force
     When I run "git-town rename-branch old"

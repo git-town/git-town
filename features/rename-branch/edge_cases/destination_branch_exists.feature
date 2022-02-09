@@ -19,13 +19,12 @@ Feature: destination branch exists
     And the initial branches and hierarchy exist
 
   Scenario: destination branch exists in origin
-    Given a feature branch "alpha"
+    Given the current branch is a feature branch "alpha"
     And a remote feature branch "beta"
     And the commits
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, origin | alpha commit |
       | beta   | origin        | beta commit  |
-    And the current branch is "alpha"
     When I run "git-town rename-branch alpha beta"
     Then it runs the commands
       | BRANCH | COMMAND                  |
