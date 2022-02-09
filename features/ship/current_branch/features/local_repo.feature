@@ -1,12 +1,11 @@
 Feature: ship a feature branch in a local repo
 
   Background:
-    Given a feature branch "feature"
+    Given the current branch is a feature branch "feature"
     And my repo does not have an origin
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | local    | feature commit |
-    And the current branch is "feature"
     When I run "git-town ship -m 'feature done'"
 
   Scenario: result

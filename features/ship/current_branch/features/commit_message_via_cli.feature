@@ -1,11 +1,10 @@
 Feature: ship the current feature branch with a tracking branch
 
   Background:
-    Given a feature branch "feature"
+    Given the current branch is a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
-    And the current branch is "feature"
     When I run "git-town ship -m 'feature done'"
 
   Scenario: result

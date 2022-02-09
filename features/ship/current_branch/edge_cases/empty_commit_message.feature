@@ -2,11 +2,10 @@
 Feature: abort the ship by empty commit message
 
   Background:
-    Given a feature branch "feature"
+    Given the current branch is a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | local    | feature commit |
-    And the current branch is "feature"
     When I run "git-town ship" and enter an empty commit message
 
   Scenario: result

@@ -1,12 +1,11 @@
 Feature: handle conflicts between the shipped branch and the main branch
 
   Background:
-    Given a feature branch "feature"
+    Given the current branch is a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
-    And the current branch is "feature"
     And I run "git-town ship -m 'feature done'"
 
   Scenario: result

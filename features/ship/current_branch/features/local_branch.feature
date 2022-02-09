@@ -1,11 +1,10 @@
 Feature: ship a local feature branch
 
   Background:
-    Given a local feature branch "feature"
+    Given the current branch is a local feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | local    | feature commit |
-    And the current branch is "feature"
     When I run "git-town ship -m 'feature done'"
 
   Scenario: result

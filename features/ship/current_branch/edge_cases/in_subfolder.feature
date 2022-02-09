@@ -1,11 +1,10 @@
 Feature: ship the current feature branch from a subfolder on the shipped branch
 
   Background:
-    Given a feature branch "feature"
+    Given the current branch is a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME               |
       | feature | local, origin | feature commit | new_folder/feature_file |
-    And the current branch is "feature"
     When I run "git-town ship -m 'feature done'" in the "new_folder" folder
 
   Scenario: result

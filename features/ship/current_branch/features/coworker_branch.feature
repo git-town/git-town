@@ -1,11 +1,10 @@
 Feature: ship a coworker's feature branch
 
   Background:
-    Given a feature branch "feature"
+    Given the current branch is a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE         | AUTHOR                          |
       | feature | local, origin | coworker commit | coworker <coworker@example.com> |
-    And the current branch is "feature"
 
   Scenario: result (commit message via CLI)
     When I run "git-town ship -m 'feature done'"
