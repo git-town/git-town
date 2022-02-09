@@ -111,7 +111,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^Git Town is in offline mode$`, func() error {
+	suite.Step(`^offline mode is enabled$`, func() error {
 		return state.gitEnv.DevRepo.Config.SetOffline(true)
 	})
 
@@ -569,7 +569,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return compareExistingCommits(state, state.initialCommits)
 	})
 
-	suite.Step(`^my repo now has no perennial branches$`, func() error {
+	suite.Step(`^there are still no perennial branches$`, func() error {
 		state.gitEnv.DevRepo.Config.Reload()
 		branches := state.gitEnv.DevRepo.Config.PerennialBranches()
 		if len(branches) > 0 {

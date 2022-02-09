@@ -8,7 +8,7 @@ Feature: display the current offline status
       """
 
   Scenario: enabled
-    Given Git Town is in offline mode
+    Given offline mode is enabled
     When I run "git-town offline"
     Then it prints:
       """
