@@ -1,7 +1,7 @@
 Feature: ask for missing parent branch information
 
   Scenario:
-    Given my repo has a branch "feature"
+    Given a branch "feature"
     And I am on the "feature" branch
     When I run "git-town append new" and answer the prompts:
       | PROMPT                                        | ANSWER  |

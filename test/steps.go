@@ -390,7 +390,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repo has a branch "([^"]*)"$`, func(branch string) error {
+	suite.Step(`^a branch "([^"]*)"$`, func(branch string) error {
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		return state.gitEnv.DevRepo.CreateBranch(branch, "main")
 	})

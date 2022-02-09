@@ -1,7 +1,7 @@
 Feature: ask for missing parent information
 
   Scenario:
-    Given my repo has a branch "old"
+    Given a branch "old"
     And I am on the "old" branch
     When I run "git-town prepend new" and answer the prompts:
       | PROMPT                                    | ANSWER  |
