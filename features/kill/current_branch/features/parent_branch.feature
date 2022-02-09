@@ -24,7 +24,7 @@ Feature: delete a branch within a branch chain
       | alpha  | git branch -D beta          |
     And I am now on the "alpha" branch
     And my repo doesn't have any uncommitted files
-    And the existing branches are
+    And the branches are now
       | REPOSITORY    | BRANCHES           |
       | local, origin | main, alpha, gamma |
     And now these commits exist

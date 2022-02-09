@@ -18,7 +18,7 @@ Feature: ship a feature branch in a local repo
       |         | git commit -m "feature done" |
       |         | git branch -D feature        |
     And I am now on the "main" branch
-    And the existing branches are
+    And the branches are now
       | REPOSITORY | BRANCHES |
       | local      | main     |
     And now these commits exist

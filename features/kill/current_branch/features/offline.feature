@@ -20,7 +20,7 @@ Feature: offline mode
       | main    | git branch -D feature          |
     And I am now on the "main" branch
     And my repo doesn't have any uncommitted files
-    And the existing branches are
+    And the branches are now
       | REPOSITORY | BRANCHES             |
       | local      | main, other          |
       | origin     | main, feature, other |

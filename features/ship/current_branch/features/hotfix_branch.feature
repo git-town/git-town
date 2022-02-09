@@ -25,7 +25,7 @@ Feature: ship hotfixes
       |            | git push origin :hotfix           |
       |            | git branch -D hotfix              |
     And I am now on the "production" branch
-    And the existing branches are
+    And the branches are now
       | REPOSITORY    | BRANCHES         |
       | local, origin | main, production |
     And now these commits exist

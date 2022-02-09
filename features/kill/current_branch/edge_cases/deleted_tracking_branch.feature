@@ -24,7 +24,7 @@ Feature: the branch to kill has a deleted tracking branch
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      |
       | other  | local, origin | other commit |
-    And the existing branches are
+    And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
     And Git Town is now aware of this branch hierarchy

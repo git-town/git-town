@@ -30,6 +30,6 @@ Feature: sync the current feature branch without a tracking branch
       |         |               | origin main commit               |
       |         |               | local main commit                |
       |         |               | Merge branch 'main' into feature |
-    And the existing branches are
+    And the branches are now
       | REPOSITORY    | BRANCHES      |
       | local, origin | main, feature |

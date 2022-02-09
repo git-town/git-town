@@ -27,7 +27,7 @@ Feature: skip deleting the remote branch when shipping another branch
       |         | git branch -D feature              |
       |         | git checkout other                 |
     And I am now on the "other" branch
-    And the existing branches are
+    And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
     And now these commits exist
@@ -56,7 +56,7 @@ Feature: skip deleting the remote branch when shipping another branch
       |         |               | Revert "feature done" |
       | feature | local         | feature commit        |
       | other   | local         | other commit          |
-    And the existing branches are
+    And the branches are now
       | REPOSITORY | BRANCHES             |
       | local      | main, feature, other |
       | origin     | main, other          |

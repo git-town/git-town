@@ -24,7 +24,7 @@ Feature: commit message can contain double-quotes
       |         | git push origin :feature             |
       |         | git branch -D feature                |
     And I am now on the "main" branch
-    And the existing branches are
+    And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
     And my repo doesn't have any uncommitted files

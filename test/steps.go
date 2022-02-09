@@ -816,7 +816,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.CreateCommits(commits)
 	})
 
-	suite.Step(`^the existing branches are$`, func(table *messages.PickleStepArgument_PickleTable) error {
+	suite.Step(`^the branches are now$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		existing, err := state.gitEnv.Branches()
 		if err != nil {
 			return err

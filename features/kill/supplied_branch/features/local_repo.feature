@@ -21,7 +21,7 @@ Feature: local repository
       |        | git stash pop       |
     And I am still on the "good" branch
     And my workspace still contains my uncommitted file
-    And the existing branches are
+    And the branches are now
       | REPOSITORY | BRANCHES   |
       | local      | main, good |
     And now these commits exist

@@ -20,7 +20,7 @@ Feature: local branch
       | main   | git branch -D dead          |
     And I am now on the "main" branch
     And my repo doesn't have any uncommitted files
-    And the existing branches are
+    And the branches are now
       | REPOSITORY | BRANCHES    |
       | local      | main, other |
     And now these commits exist

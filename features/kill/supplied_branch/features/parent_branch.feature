@@ -21,7 +21,7 @@ Feature: delete a parent branch
       |        | git branch -D beta       |
     And I am now on the "gamma" branch
     And my workspace still contains my uncommitted file
-    And the existing branches are
+    And the branches are now
       | REPOSITORY    | BRANCHES           |
       | local, origin | main, alpha, gamma |
     And now these commits exist

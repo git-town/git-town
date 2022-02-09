@@ -51,7 +51,7 @@ Feature: handle conflicts between the shipped branch and its tracking branch
       |         | git push origin :feature     |
       |         | git branch -D feature        |
     And I am now on the "main" branch
-    And the existing branches are
+    And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
     And now these commits exist

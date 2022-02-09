@@ -17,7 +17,7 @@ Feature: a parent branch of a local branch was shipped
       | main   | git fetch --prune --tags |
       |        | git branch -D parent     |
     And I am now on the "main" branch
-    And the existing branches are
+    And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, child |
     And Git Town is now aware of this branch hierarchy

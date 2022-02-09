@@ -64,7 +64,7 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       | other   | git stash pop                |
     And I am now on the "other" branch
     And my workspace still contains my uncommitted file
-    And the existing branches are
+    And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
     And now these commits exist

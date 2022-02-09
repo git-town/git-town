@@ -21,7 +21,7 @@ Feature: delete the current feature branch
       | main    | git branch -D current          |
     And I am now on the "main" branch
     And my repo doesn't have any uncommitted files
-    And the existing branches are
+    And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
     And now these commits exist

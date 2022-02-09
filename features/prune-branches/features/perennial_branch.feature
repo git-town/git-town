@@ -17,7 +17,7 @@ Feature: remove perennial branch configuration when pruning a perennial branch
       |        | git checkout main        |
       | main   | git branch -D old        |
     And I am now on the "main" branch
-    And the existing branches are
+    And the branches are now
       | REPOSITORY    | BRANCHES     |
       | local, origin | main, active |
     And the perennial branches are now "active"

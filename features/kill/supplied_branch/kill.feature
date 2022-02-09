@@ -19,7 +19,7 @@ Feature: delete another than the current branch
       |        | git branch -D dead       |
     And I am still on the "good" branch
     And my workspace still contains my uncommitted file
-    And the existing branches are
+    And the branches are now
       | REPOSITORY    | BRANCHES   |
       | local, origin | main, good |
     And now these commits exist

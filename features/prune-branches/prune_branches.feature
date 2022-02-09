@@ -19,7 +19,7 @@ Feature: delete branches that were shipped or removed on another machine
       | main   | git branch -D old        |
     And I am now on the "main" branch
     And my workspace still contains my uncommitted file
-    And the existing branches are
+    And the branches are now
       | REPOSITORY    | BRANCHES     |
       | local, origin | main, active |
     And Git Town is now aware of this branch hierarchy

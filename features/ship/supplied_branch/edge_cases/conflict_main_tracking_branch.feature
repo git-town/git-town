@@ -65,7 +65,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | main   | local, origin | conflicting origin commit | conflicting_file | origin content   |
       |        |               | conflicting local commit  | conflicting_file | resolved content |
       |        |               | feature done              | feature_file     | feature content  |
-    And the existing branches are
+    And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
     And Git Town is now aware of this branch hierarchy

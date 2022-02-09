@@ -34,7 +34,7 @@ Feature: ship a branch that exists only on origin
       | other   | git stash pop                      |
     And I am now on the "other" branch
     And my workspace still contains my uncommitted file
-    And the existing branches are
+    And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
     And now these commits exist
@@ -65,7 +65,7 @@ Feature: ship a branch that exists only on origin
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
       | feature | local, origin | feature commit        |
-    And the existing branches are
+    And the branches are now
       | REPOSITORY    | BRANCHES             |
       | local, origin | main, feature, other |
     And Git Town is now aware of this branch hierarchy

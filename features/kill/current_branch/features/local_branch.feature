@@ -18,7 +18,7 @@ Feature: delete a local branch
       |        | git checkout main            |
       | main   | git branch -D local          |
     And I am now on the "main" branch
-    And the existing branches are
+    And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
     And Git Town is now aware of no branch hierarchy
