@@ -8,7 +8,7 @@ Feature: in a local repo
       | feature | local    | feature commit |
       | other   | local    | other commit   |
     And the current branch is "feature"
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town kill"
 
   Scenario: result

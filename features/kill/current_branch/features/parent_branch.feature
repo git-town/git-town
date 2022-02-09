@@ -10,7 +10,7 @@ Feature: delete a branch within a branch chain
       | beta   | local, origin | beta commit  |
       | gamma  | local, origin | gamma commit |
     And the current branch is "beta"
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town kill"
 
   Scenario: result

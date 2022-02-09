@@ -9,7 +9,7 @@ Feature: handle merge conflicts between feature branch and main branch
       | beta   | local, origin | beta commit  | conflicting_file | beta content  |
       | gamma  | local, origin | gamma commit | feature2_file    | gamma content |
     And the current branch is "main"
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town sync --all"
 
   Scenario: result

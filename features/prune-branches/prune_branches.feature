@@ -8,7 +8,7 @@ Feature: delete branches that were shipped or removed on another machine
       | old    | local, origin | old commit    |
     And origin deletes the "old" branch
     And the current branch is "old"
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town prune-branches"
 
   Scenario: result

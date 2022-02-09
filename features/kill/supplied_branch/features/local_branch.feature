@@ -8,7 +8,7 @@ Feature: local branch
       | dead   | local    | dead commit  |
       | other  | local    | other commit |
     And the current branch is "dead"
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town kill dead"
 
   Scenario: result

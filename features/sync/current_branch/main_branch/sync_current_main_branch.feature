@@ -6,7 +6,7 @@ Feature: sync the main branch
       | LOCATION | MESSAGE       | FILE NAME   |
       | local    | local commit  | local_file  |
       | origin   | origin commit | origin_file |
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town sync"
 
   Scenario: result

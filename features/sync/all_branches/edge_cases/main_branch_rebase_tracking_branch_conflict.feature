@@ -8,7 +8,7 @@ Feature: handle rebase conflicts between main branch and its tracking branch
       |         | origin   | origin main commit | conflicting_file | origin content  |
       | feature | local    | feature commit     | feature_file     | feature content |
     And the current branch is "main"
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town sync --all"
 
   Scenario: result

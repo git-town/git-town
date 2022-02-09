@@ -5,7 +5,7 @@ Feature: append a new feature branch to an existing feature branch
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town append new"
 
   Scenario: result

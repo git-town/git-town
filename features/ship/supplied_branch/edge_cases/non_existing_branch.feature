@@ -2,7 +2,7 @@ Feature: does not ship a non-existing branch
 
   Background:
     Given the current branch is "main"
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town ship non-existing-branch"
 
   Scenario: result

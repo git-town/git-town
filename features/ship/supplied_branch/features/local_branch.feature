@@ -6,7 +6,7 @@ Feature: ship the supplied feature branch without a tracking branch
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME        |
       | feature | local    | feature commit | conflicting_file |
     And the current branch is "other"
-    And my workspace has an uncommitted file with name "conflicting_file" and content "conflicting content"
+    And an uncommitted file with name "conflicting_file" and content "conflicting content"
     When I run "git-town ship feature -m 'feature done'"
 
   Scenario: result

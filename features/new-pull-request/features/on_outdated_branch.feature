@@ -15,7 +15,7 @@ Feature: sync before creating the pull request
     And the "open" tool is installed
     And the origin is "git@github.com:git-town/git-town.git"
     And the current branch is "child"
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town new-pull-request"
 
   Scenario: result

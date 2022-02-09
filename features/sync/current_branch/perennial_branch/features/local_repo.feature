@@ -8,7 +8,7 @@ Feature: sync the current perennial branch (local repo)
       | main   | local    | main commit  | main_file  |
       | qa     | local    | local commit | local_file |
     And the current branch is "qa"
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town sync"
 
   Scenario: result

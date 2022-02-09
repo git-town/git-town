@@ -7,7 +7,7 @@ Feature: delete the current feature branch
       | BRANCH  | LOCATION      | MESSAGE        |
       | current | local, origin | current commit |
       | other   | local, origin | other commit   |
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town kill"
 
   Scenario: result

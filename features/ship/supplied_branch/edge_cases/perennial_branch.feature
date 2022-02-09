@@ -3,7 +3,7 @@ Feature: does not ship perennial branches
   Background:
     Given a perennial branch "production"
     And the current branch is "main"
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town ship production"
 
   Scenario: result

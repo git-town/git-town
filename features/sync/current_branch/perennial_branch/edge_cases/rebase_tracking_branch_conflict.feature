@@ -7,7 +7,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       | qa     | local    | conflicting local commit  | conflicting_file | local content  |
       |        | origin   | conflicting origin commit | conflicting_file | origin content |
     And the current branch is "qa"
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town sync"
 
   Scenario: result

@@ -7,7 +7,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
       |         | origin   | feature commit             | feature_file     | feature content |
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town sync"
 
   Scenario: result

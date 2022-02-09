@@ -6,7 +6,7 @@ Feature: conflicts between the main branch and its tracking branch
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | main   | local    | conflicting local commit  | conflicting_file | local content  |
       |        | origin   | conflicting origin commit | conflicting_file | origin content |
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town hack new"
 
   Scenario: result

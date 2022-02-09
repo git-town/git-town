@@ -6,7 +6,7 @@ Feature: on a forked repo
       | BRANCH | LOCATION | MESSAGE         |
       | main   | upstream | upstream commit |
     And the current branch is "main"
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town hack new"
 
   Scenario: result

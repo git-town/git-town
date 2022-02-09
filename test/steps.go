@@ -741,7 +741,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my workspace has an uncommitted file$`, func() error {
+	suite.Step(`^an uncommitted file$`, func() error {
 		state.uncommittedFileName = "uncommitted file"
 		state.uncommittedContent = "uncommitted content"
 		return state.gitEnv.DevRepo.CreateFile(
@@ -750,7 +750,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		)
 	})
 
-	suite.Step(`^my workspace has an uncommitted file in folder "([^"]*)"$`, func(folder string) error {
+	suite.Step(`^an uncommitted file in folder "([^"]*)"$`, func(folder string) error {
 		state.uncommittedFileName = fmt.Sprintf("%s/uncommitted file", folder)
 		return state.gitEnv.DevRepo.CreateFile(
 			state.uncommittedFileName,
@@ -758,7 +758,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		)
 	})
 
-	suite.Step(`^my workspace has an uncommitted file with name "([^"]+)" and content "([^"]+)"$`, func(name, content string) error {
+	suite.Step(`^an uncommitted file with name "([^"]+)" and content "([^"]+)"$`, func(name, content string) error {
 		state.uncommittedFileName = name
 		state.uncommittedContent = content
 		return state.gitEnv.DevRepo.CreateFile(name, content)

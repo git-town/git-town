@@ -10,7 +10,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       |        | origin        | origin beta commit | conflicting_file | origin beta content |
       | gamma  | local, origin | gamma commit       | gamma_file       | gamma content       |
     And the current branch is "main"
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town sync --all"
 
   Scenario: result

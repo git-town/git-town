@@ -7,7 +7,7 @@ Feature: delete the current branch
       | current | local, origin | current commit |
       | other   | local, origin | other commit   |
     And the current branch is "current"
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town kill current"
 
   Scenario: result

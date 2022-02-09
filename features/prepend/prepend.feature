@@ -5,7 +5,7 @@ Feature: prepend a branch to a feature branch
     And the commits
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town prepend parent"
 
   Scenario: result

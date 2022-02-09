@@ -8,7 +8,7 @@ Feature: delete another than the current branch
       | dead   | local, origin | dead-end commit    | file             |
       | good   | local, origin | good commit        | file             |
     And the current branch is "good"
-    And my workspace has an uncommitted file with name "conflicting_file" and content "conflicting content"
+    And an uncommitted file with name "conflicting_file" and content "conflicting content"
     When I run "git-town kill dead"
 
   Scenario: result

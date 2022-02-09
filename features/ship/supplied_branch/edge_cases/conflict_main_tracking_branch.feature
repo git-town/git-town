@@ -8,7 +8,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | origin   | conflicting origin commit | conflicting_file | origin content  |
       | feature | local    | feature commit            | feature_file     | feature content |
     And the current branch is "other"
-    And my workspace has an uncommitted file
+    And an uncommitted file
     And I run "git-town ship feature -m 'feature done'"
 
   Scenario: result

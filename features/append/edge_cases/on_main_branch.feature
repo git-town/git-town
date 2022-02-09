@@ -5,7 +5,7 @@ Feature: on the main branch
       | BRANCH | LOCATION | MESSAGE     |
       | main   | origin   | main commit |
     And the current branch is "main"
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town append new"
 
   Scenario: result

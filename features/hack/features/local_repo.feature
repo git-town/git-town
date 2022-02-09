@@ -6,7 +6,7 @@ Feature: local repo
     And the commits
       | BRANCH | LOCATION | MESSAGE     |
       | main   | local    | main commit |
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town hack new"
 
   Scenario: result

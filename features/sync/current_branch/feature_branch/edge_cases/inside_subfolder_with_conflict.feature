@@ -9,7 +9,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
       |         |               | folder commit              | new_folder/file1 |                 |
       | other   | local, origin | other commit               | file2            |                 |
     And the current branch is "current"
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town sync --all" in the "new_folder" folder
 
   Scenario: result

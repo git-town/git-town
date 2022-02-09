@@ -7,7 +7,7 @@ Feature: warn the user about an unfinished operation
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | main   | local    | conflicting local commit  | conflicting_file | local content  |
       |        | origin   | conflicting origin commit | conflicting_file | origin content |
-    And my workspace has an uncommitted file
+    And an uncommitted file
     And I run "git-town sync"
     And it prints the error:
       """

@@ -5,7 +5,7 @@ Feature: delete a local branch
     And the commits
       | BRANCH | LOCATION | MESSAGE      |
       | local  | local    | local commit |
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town kill"
 
   Scenario: result
