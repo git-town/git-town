@@ -2,7 +2,7 @@ Feature: append in offline mode
 
   Background:
     Given offline mode is enabled
-    And my repo has a feature branch "existing"
+    And a feature branch "existing"
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |

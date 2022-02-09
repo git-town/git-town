@@ -95,7 +95,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the origin has a feature branch "([^"]*)"$`, func(branch string) error {
+	suite.Step(`^a remote feature branch "([^"]*)"$`, func(branch string) error {
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 		return state.gitEnv.OriginRepo.CreateBranch(branch, "main")
 	})
@@ -395,7 +395,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.CreateBranch(branch, "main")
 	})
 
-	suite.Step(`^my repo has a feature branch "([^"]+)" as a child of "([^"]+)"$`, func(branch, parentBranch string) error {
+	suite.Step(`^a feature branch "([^"]+)" as a child of "([^"]+)"$`, func(branch, parentBranch string) error {
 		err := state.gitEnv.DevRepo.CreateChildFeatureBranch(branch, parentBranch)
 		if err != nil {
 			return fmt.Errorf("cannot create feature branch %q: %w", branch, err)
@@ -406,7 +406,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.PushBranchToOrigin(branch)
 	})
 
-	suite.Step(`^my repo has a (local )?feature branch "([^"]*)"$`, func(localStr, branch string) error {
+	suite.Step(`^a (local )?feature branch "([^"]*)"$`, func(localStr, branch string) error {
 		isLocal := localStr != ""
 		err := state.gitEnv.DevRepo.CreateFeatureBranch(branch)
 		if err != nil {

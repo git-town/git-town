@@ -1,7 +1,7 @@
 Feature: ship the current feature branch from a subfolder on the shipped branch
 
   Background:
-    Given my repo has a feature branch "feature"
+    Given a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME               |
       | feature | local, origin | feature commit | new_folder/feature_file |

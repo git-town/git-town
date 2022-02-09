@@ -1,7 +1,7 @@
 Feature: does not ship a branch that has open changes
 
   Background:
-    Given my repo has a feature branch "feature"
+    Given a feature branch "feature"
     And my workspace has an uncommitted file
     And I am on the "feature" branch
     When I run "git-town ship feature"

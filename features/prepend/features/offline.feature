@@ -2,7 +2,7 @@ Feature: offline mode
 
   Background:
     Given offline mode is enabled
-    And my repo has a feature branch "old"
+    And a feature branch "old"
     And the commits
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |

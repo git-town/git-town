@@ -1,7 +1,7 @@
 Feature: continue after successful command
 
   Scenario Outline:
-    Given my repo has a feature branch "feature"
+    Given a feature branch "feature"
     And I run "git-town <COMMAND>"
     When I run "git-town continue"
     Then it prints the error:

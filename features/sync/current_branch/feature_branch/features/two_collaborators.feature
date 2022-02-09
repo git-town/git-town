@@ -2,7 +2,7 @@ Feature: collaborative feature branch syncing
 
   Scenario:
     Given a coworker clones the repository
-    And my repo has a feature branch "feature"
+    And a feature branch "feature"
     And the coworker fetches updates
     And the coworker sets the parent branch of "feature" as "main"
     And the commits

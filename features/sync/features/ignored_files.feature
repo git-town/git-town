@@ -1,7 +1,7 @@
 Feature: ignore files
 
   Scenario: with ignored files
-    Given my repo has a feature branch "feature"
+    Given a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE   | FILE NAME  | FILE CONTENT |
       | feature | local    | my commit | .gitignore | ignored      |

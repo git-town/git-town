@@ -2,7 +2,7 @@ Feature: ship hotfixes
 
   Background:
     Given a perennial branch "production"
-    And my repo has a feature branch "hotfix" as a child of "production"
+    And a feature branch "hotfix" as a child of "production"
     And the commits
       | BRANCH | LOCATION      | MESSAGE       |
       | hotfix | local, origin | hotfix commit |

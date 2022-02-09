@@ -2,7 +2,7 @@ Feature: handle conflicts between the current feature branch and the main branch
 
   Background:
     Given my repo does not have an origin
-    And my repo has a local feature branch "feature"
+    And a local feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |

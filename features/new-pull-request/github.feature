@@ -5,7 +5,7 @@ Feature: GitHub support
     Given my computer has the "open" tool installed
 
   Scenario Outline: normal origin
-    Given my repo has a feature branch "feature"
+    Given a feature branch "feature"
     And my repo's origin is "<ORIGIN>"
     And I am on the "feature" branch
     When I run "git-town new-pull-request"
@@ -26,7 +26,7 @@ Feature: GitHub support
       | ssh://git@github.com/git-town/git-town     |
 
   Scenario Outline: origin contains path that looks like a URL
-    Given my repo has a feature branch "feature"
+    Given a feature branch "feature"
     And my repo's origin is "<ORIGIN>"
     And I am on the "feature" branch
     When I run "git-town new-pull-request"
@@ -45,7 +45,7 @@ Feature: GitHub support
       | git@github.com:git-town/git-town.github.com         |
 
   Scenario Outline: proper URL encoding
-    Given my repo has a feature branch "<BRANCH_NAME>"
+    Given a feature branch "<BRANCH_NAME>"
     And my repo's origin is "https://github.com/git-town/git-town"
     And I am on the "<BRANCH_NAME>" branch
     When I run "git-town new-pull-request"
@@ -62,8 +62,8 @@ Feature: GitHub support
       | test/feature   | https://github.com/git-town/git-town/compare/test%2Ffeature?expand=1 |
 
   Scenario: nested feature branch with known parent
-    Given my repo has a feature branch "parent-feature"
-    And my repo has a feature branch "child-feature" as a child of "parent-feature"
+    Given a feature branch "parent-feature"
+    And a feature branch "child-feature" as a child of "parent-feature"
     And my repo's origin is "git@github.com:git-town/git-town.git"
     And I am on the "child-feature" branch
     When I run "git-town new-pull-request"

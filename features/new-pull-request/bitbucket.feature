@@ -2,7 +2,7 @@
 Feature: Bitbucket support
 
   Scenario Outline: normal origin
-    Given my repo has a feature branch "feature"
+    Given a feature branch "feature"
     And my repo's origin is "<ORIGIN>"
     And my computer has the "open" tool installed
     And I am on the "feature" branch
@@ -24,7 +24,7 @@ Feature: Bitbucket support
       | ssh://git@bitbucket.org/git-town/git-town            |
 
   Scenario Outline: origin includes path that looks like a URL
-    Given my repo has a feature branch "feature"
+    Given a feature branch "feature"
     And my repo's origin is "<ORIGIN>"
     And my computer has the "open" tool installed
     And I am on the "feature" branch

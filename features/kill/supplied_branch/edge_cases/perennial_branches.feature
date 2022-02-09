@@ -1,7 +1,7 @@
 Feature: does not kill perennial branches
 
   Scenario: main branch
-    Given my repo has a feature branch "feature"
+    Given a feature branch "feature"
     And I am on the "feature" branch
     When I run "git-town kill main"
     Then it runs no commands

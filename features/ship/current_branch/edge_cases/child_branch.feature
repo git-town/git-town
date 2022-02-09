@@ -1,9 +1,9 @@
 Feature: does not ship a child branch
 
   Background:
-    Given my repo has a feature branch "alpha"
-    And my repo has a feature branch "beta" as a child of "alpha"
-    And my repo has a feature branch "gamma" as a child of "beta"
+    Given a feature branch "alpha"
+    And a feature branch "beta" as a child of "alpha"
+    And a feature branch "gamma" as a child of "beta"
     And the commits
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, origin | alpha commit |

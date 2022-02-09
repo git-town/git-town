@@ -3,7 +3,7 @@ Feature: self-hosted service
 
   Scenario Outline: self hosted
     And my computer has the "open" tool installed
-    And my repo has a feature branch "feature"
+    And a feature branch "feature"
     And my repo's origin is "git@self-hosted:git-town/git-town.git"
     And the "code-hosting-driver" setting is "<DRIVER>"
     And I am on the "feature" branch

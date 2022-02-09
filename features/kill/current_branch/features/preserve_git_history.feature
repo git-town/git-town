@@ -15,7 +15,7 @@ Feature: preserve the previous Git branch
     And the previous Git branch is now "main"
 
   Scenario: current and previous branch exist
-    Given my repo has a feature branch "victim"
+    Given a feature branch "victim"
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run "git-town kill victim"
     Then I am still on the "current" branch

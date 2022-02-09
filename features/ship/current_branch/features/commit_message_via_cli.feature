@@ -1,7 +1,7 @@
 Feature: ship the current feature branch with a tracking branch
 
   Background:
-    Given my repo has a feature branch "feature"
+    Given a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |

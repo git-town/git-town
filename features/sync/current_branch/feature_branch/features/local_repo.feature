@@ -2,7 +2,7 @@ Feature: sync the current feature branch (in a local repo)
 
   Background:
     Given my repo does not have an origin
-    And my repo has a local feature branch "feature"
+    And a local feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | main    | local    | main commit    |

@@ -2,8 +2,8 @@
 Feature: update the parent of a feature branch
 
   Background:
-    Given my repo has a feature branch "parent"
-    And my repo has a feature branch "child" as a child of "parent"
+    Given a feature branch "parent"
+    And a feature branch "child" as a child of "parent"
     And I am on the "child" branch
 
   Scenario: select the default branch (current parent)

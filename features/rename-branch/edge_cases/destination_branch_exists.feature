@@ -19,8 +19,8 @@ Feature: destination branch exists
     And my repo now has its initial branches and branch hierarchy
 
   Scenario: destination branch exists in origin
-    Given my repo has a feature branch "alpha"
-    And the origin has a feature branch "beta"
+    Given a feature branch "alpha"
+    And a remote feature branch "beta"
     And the commits
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, origin | alpha commit |

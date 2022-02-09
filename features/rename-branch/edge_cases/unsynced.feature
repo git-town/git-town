@@ -1,7 +1,7 @@
 Feature: rename an unsynced branch
 
   Background:
-    Given my repo has a feature branch "old"
+    Given a feature branch "old"
 
   Scenario: unpulled remote commits
     Given the commits

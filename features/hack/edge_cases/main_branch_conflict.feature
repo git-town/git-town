@@ -1,7 +1,7 @@
 Feature: conflicts between the main branch and its tracking branch
 
   Background:
-    Given my repo has a feature branch "existing"
+    Given a feature branch "existing"
     And the commits
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | main   | local    | conflicting local commit  | conflicting_file | local content  |

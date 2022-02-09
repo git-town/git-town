@@ -1,7 +1,7 @@
 Feature: does not ship an empty branch
 
   Background:
-    Given my repo has a feature branch "empty-feature"
+    Given a feature branch "empty-feature"
     And the commits
       | BRANCH        | LOCATION | MESSAGE        | FILE NAME   | FILE CONTENT   |
       | main          | origin   | main commit    | common_file | common content |

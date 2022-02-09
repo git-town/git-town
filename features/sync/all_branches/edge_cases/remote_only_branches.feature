@@ -1,8 +1,8 @@
 Feature: does not sync branches that exist only on remotes
 
   Background:
-    Given my repo has a feature branch "mine"
-    And the origin has a feature branch "other"
+    Given a feature branch "mine"
+    And a remote feature branch "other"
     And the commits
       | BRANCH | LOCATION      | MESSAGE         |
       | main   | origin        | main commit     |

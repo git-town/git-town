@@ -1,7 +1,7 @@
 Feature: ship a feature branch in a local repo
 
   Background:
-    Given my repo has a feature branch "feature"
+    Given a feature branch "feature"
     And my repo does not have an origin
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
