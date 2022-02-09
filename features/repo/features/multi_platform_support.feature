@@ -3,7 +3,7 @@ Feature: multi-platform support
 
   Scenario Outline: supported tool installed
     Given my repo's origin is "https://github.com/git-town/git-town.git"
-    And my computer has the "<TOOL>" tool installed
+    And the "<TOOL>" tool is installed
     When I run "git-town repo"
     Then "open" launches a new pull request with this url in my browser:
       """

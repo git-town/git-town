@@ -366,7 +366,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevShell.MockNoCommandsInstalled()
 	})
 
-	suite.Step(`^my computer has the "([^"]*)" tool installed$`, func(tool string) error {
+	suite.Step(`^the "([^"]*)" tool is installed$`, func(tool string) error {
 		return state.gitEnv.DevShell.MockCommand(tool)
 	})
 

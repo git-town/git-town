@@ -2,7 +2,7 @@
 Feature: self hosted servie
 
   Scenario Outline:
-    Given my computer has the "open" tool installed
+    Given the "open" tool is installed
     And my repo's origin is "git@self-hosted:git-town/git-town.git"
     And the "code-hosting-driver" setting is "<DRIVER>"
     When I run "git-town repo"

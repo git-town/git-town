@@ -2,7 +2,7 @@
 Feature: GitLab support
 
   Background:
-    Given my computer has the "open" tool installed
+    Given the "open" tool is installed
 
   Scenario Outline: creating pull-requests
     Given the current branch is a feature branch "feature"

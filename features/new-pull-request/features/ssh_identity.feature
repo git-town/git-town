@@ -2,7 +2,7 @@
 Feature: use a SSH identity
 
   Scenario Outline: ssh identity
-    And my computer has the "open" tool installed
+    And the "open" tool is installed
     And my repo's origin is "git@my-ssh-identity:git-town/git-town.git"
     And the "code-hosting-origin-hostname" setting is "<ORIGIN_HOSTNAME>"
     And the current branch is a feature branch "feature"
