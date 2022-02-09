@@ -411,35 +411,24 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.PushBranchToOrigin(branch)
 	})
 
-	suite.Step(`^the current branch is a (local )?feature branch "([^"]*)"$`, func(localStr, branch string) error {
+	suite.Step(`^the current branch is a (local )?(feature|perennial) branch "([^"]*)"$`, func(localStr, branchType, branch string) error {
 		isLocal := localStr != ""
-		err := state.gitEnv.DevRepo.CreateFeatureBranch(branch)
+		var err error
+		switch branchType {
+		case "feature":
+			err = state.gitEnv.DevRepo.CreateFeatureBranch(branch)
+		case "perennial":
+			err = state.gitEnv.DevRepo.CreatePerennialBranches(branch)
+		default:
+			panic(fmt.Sprintf("unknown branch type: %q", branchType))
+		}
 		if err != nil {
 			return err
 		}
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
-		state.initialBranchHierarchy.AddRow(branch, "main")
-		if !isLocal {
-			state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-			err := state.gitEnv.DevRepo.PushBranchToOrigin(branch)
-			if err != nil {
-				return err
-			}
+		if branchType == "feature" {
+			state.initialBranchHierarchy.AddRow(branch, "main")
 		}
-		state.initialCurrentBranch = branch
-		if !state.gitEnv.DevRepo.CurrentBranchCache.Initialized() || state.gitEnv.DevRepo.CurrentBranchCache.Value() != branch {
-			return state.gitEnv.DevRepo.CheckoutBranch(branch)
-		}
-		return nil
-	})
-
-	suite.Step(`^the current branch is a (local )?perennial branch "([^"]*)"$`, func(localStr, branch string) error {
-		isLocal := localStr != ""
-		err := state.gitEnv.DevRepo.CreatePerennialBranches(branch)
-		if err != nil {
-			return err
-		}
-		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		if !isLocal {
 			state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 			err := state.gitEnv.DevRepo.PushBranchToOrigin(branch)
