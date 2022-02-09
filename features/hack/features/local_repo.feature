@@ -32,15 +32,15 @@ Feature: local repo
   Scenario: undo
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH           | COMMAND                       |
-      | new-feature      | git add -A                    |
-      |                  | git stash                     |
-      |                  | git checkout existing-feature |
-      | existing-feature | git branch -D new-feature     |
-      |                  | git stash pop                 |
-    And I am now on the "existing-feature" branch
+      | BRANCH   | COMMAND               |
+      | new      | git add -A            |
+      |          | git stash             |
+      |          | git checkout existing |
+      | existing | git branch -D new     |
+      |          | git stash pop         |
+    And I am now on the "existing" branch
     And my workspace still contains my uncommitted file
-    And my repo is left with my original commits
+    And now the initial commits exist
     And Git Town is now aware of this branch hierarchy
-      | BRANCH           | PARENT |
-      | existing-feature | main   |
+      | BRANCH   | PARENT |
+      | existing | main   |
