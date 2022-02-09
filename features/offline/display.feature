@@ -16,7 +16,7 @@ Feature: display the current offline status
       """
 
   Scenario: invalid value
-    Given Git Town's "offline" setting is "zonk"
+    Given the "offline" setting is "zonk"
     When I run "git-town offline"
     Then it prints:
       """

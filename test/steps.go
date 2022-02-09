@@ -870,7 +870,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^Git Town's "offline" setting is "([^"]*)"$`, func(value string) error {
+	suite.Step(`^the "offline" setting is "([^"]*)"$`, func(value string) error {
 		_, err := state.gitEnv.DevRepo.Config.SetGlobalConfigValue("git-town.offline", value)
 		return err
 	})
