@@ -1,9 +1,9 @@
 Feature: local repository
 
   Background:
-    Given my repo does not have a remote origin
+    Given my repo does not have an origin
     And my repo has the local feature branches "good" and "other"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION | MESSAGE      | FILE NAME        |
       | main   | local    | main commit  | conflicting_file |
       | good   | local    | good commit  | file             |
@@ -24,7 +24,7 @@ Feature: local repository
     And the existing branches are
       | REPOSITORY | BRANCHES   |
       | local      | main, good |
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION | MESSAGE     |
       | main   | local    | main commit |
       | good   | local    | good commit |
@@ -42,5 +42,5 @@ Feature: local repository
       |        | git stash pop                             |
     And I am still on the "good" branch
     And my workspace still contains my uncommitted file
-    And my repo is left with my initial commits
+    And now the initial commits exist
     And my repo now has its initial branches and branch hierarchy

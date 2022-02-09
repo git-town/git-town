@@ -90,7 +90,7 @@ func (table *DataTable) Expand(localRepo *Repo, remoteRepo *Repo) (result DataTa
 						return result, fmt.Errorf("cannot determine SHA: %w", err)
 					}
 					cell = strings.Replace(cell, match, sha, 1)
-				case strings.HasPrefix(match, "{{ sha-in-remote "):
+				case strings.HasPrefix(match, "{{ sha-in-origin "):
 					commitName := match[18 : len(match)-4]
 					sha, err := remoteRepo.ShaForCommit(commitName)
 					if err != nil {

@@ -2,9 +2,9 @@ Feature: append to a perennial branch
 
   Background:
     Given my repo has the perennial branches "qa" and "production"
-    And my repo contains the commits
+    And the commits
       | BRANCH     | LOCATION | MESSAGE           |
-      | production | remote   | production commit |
+      | production | origin   | production commit |
     And I am on the "production" branch
     When I run "git-town append new"
 
@@ -16,10 +16,10 @@ Feature: append to a perennial branch
       |            | git branch new production    |
       |            | git checkout new             |
     And I am now on the "new" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH     | LOCATION      | MESSAGE           |
       | new        | local         | production commit |
-      | production | local, remote | production commit |
+      | production | local, origin | production commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT     |
       | new    | production |
@@ -31,7 +31,7 @@ Feature: append to a perennial branch
       | new        | git checkout production |
       | production | git branch -D new       |
     And I am now on the "production" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH     | LOCATION      | MESSAGE           |
-      | production | local, remote | production commit |
+      | production | local, origin | production commit |
     And Git Town is now aware of the initial branch hierarchy

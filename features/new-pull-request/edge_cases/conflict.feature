@@ -2,9 +2,9 @@ Feature: merge conflict
 
   Background:
     Given my repo has a local feature branch "feature"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME        | FILE CONTENT    |
-      | main    | local, remote | main commit    | conflicting_file | main content    |
+      | main    | local, origin | main commit    | conflicting_file | main content    |
       | feature | local         | feature commit | conflicting_file | feature content |
     And my computer has the "open" tool installed
     And my repo's origin is "git@github.com:git-town/git-town.git"
@@ -36,7 +36,7 @@ Feature: merge conflict
       | main    | git checkout feature |
     And I am still on the "feature" branch
     And there is no merge in progress
-    And my repo is left with my initial commits
+    And now the initial commits exist
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"
@@ -62,10 +62,10 @@ Feature: merge conflict
       https://github.com/git-town/git-town/compare/feature?expand=1
       """
     And I am still on the "feature" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                          |
-      | main    | local, remote | main commit                      |
-      | feature | local, remote | feature commit                   |
+      | main    | local, origin | main commit                      |
+      | feature | local, origin | feature commit                   |
       |         |               | main commit                      |
       |         |               | Merge branch 'main' into feature |
     And my repo now has these committed files

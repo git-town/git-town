@@ -365,7 +365,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevShell.MockCommand(tool)
 	})
 
-	suite.Step(`^my repo does not have a remote origin$`, func() error {
+	suite.Step(`^my repo does not have an origin$`, func() error {
 		err := state.gitEnv.DevRepo.RemoveRemote("origin")
 		if err != nil {
 			return err
@@ -565,7 +565,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.PushBranchToOrigin(branch)
 	})
 
-	suite.Step(`^my repo is left with my initial commits$`, func() error {
+	suite.Step(`^now the initial commits exist$`, func() error {
 		return compareExistingCommits(state, state.initialCommits)
 	})
 
@@ -608,7 +608,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.Fetch()
 	})
 
-	suite.Step(`^my repo now has the commits$`, func(table *messages.PickleStepArgument_PickleTable) error {
+	suite.Step(`^now these commits exist$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		return compareExistingCommits(state, table)
 	})
 
@@ -791,7 +791,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the "([^"]*)" branch gets deleted on the remote$`, func(name string) error {
+	suite.Step(`^origin deletes the "([^"]*)" branch$`, func(name string) error {
 		state.initialRemoteBranches = stringslice.Remove(state.initialRemoteBranches, name)
 		return state.gitEnv.OriginRepo.RemoveBranch(name)
 	})
@@ -807,7 +807,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repo contains the commits$`, func(table *messages.PickleStepArgument_PickleTable) error {
+	suite.Step(`^the commits$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		state.initialCommits = table
 		commits, err := FromGherkinTable(table)
 		if err != nil {
@@ -951,7 +951,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the remote deletes the "([^"]*)" branch$`, func(name string) error {
+	suite.Step(`^origin deletes the "([^"]*)" branch$`, func(name string) error {
 		return state.gitEnv.OriginRepo.RemoveBranch(name)
 	})
 

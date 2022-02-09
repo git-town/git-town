@@ -3,10 +3,10 @@ Feature: offline mode
   Background:
     Given Git Town is in offline mode
     And my repo has the feature branches "feature" and "other"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
-      | feature | local, remote | feature commit |
-      | other   | local, remote | other commit   |
+      | feature | local, origin | feature commit |
+      | other   | local, origin | other commit   |
     And I am on the "feature" branch
     And my workspace has an uncommitted file
     When I run "git-town kill"
@@ -23,11 +23,11 @@ Feature: offline mode
     And the existing branches are
       | REPOSITORY | BRANCHES             |
       | local      | main, other          |
-      | remote     | main, feature, other |
-    And my repo now has the commits
+      | origin     | main, feature, other |
+    And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE        |
-      | feature | remote        | feature commit |
-      | other   | local, remote | other commit   |
+      | feature | origin        | feature commit |
+      | other   | local, origin | other commit   |
     And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
       | other  | main   |
@@ -41,5 +41,5 @@ Feature: offline mode
       | feature | git reset {{ sha 'feature commit' }}          |
     And I am now on the "feature" branch
     And my workspace has the uncommitted file again
-    And my repo is left with my initial commits
+    And now the initial commits exist
     And my repo now has its initial branches and branch hierarchy

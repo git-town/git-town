@@ -2,13 +2,13 @@ Feature: ship-delete-remote-branch disabled
 
   Background:
     Given my repo has a local feature branch "feature"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
-      | feature | local, remote | feature commit |
+      | feature | local, origin | feature commit |
     And I am on the "feature" branch
     And Git Town's local "ship-delete-remote-branch" setting is "false"
     When I run "git-town ship -m 'feature done'"
-    And the remote deletes the "feature" branch
+    And origin deletes the "feature" branch
 
   Scenario: result
     Then it runs the commands
@@ -27,10 +27,10 @@ Feature: ship-delete-remote-branch disabled
     And I am now on the "main" branch
     And the existing branches are
       | REPOSITORY    | BRANCHES |
-      | local, remote | main     |
-    And my repo now has the commits
+      | local, origin | main     |
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      |
-      | main   | local, remote | feature done |
+      | main   | local, origin | feature done |
     And Git Town is now aware of no branch hierarchy
 
   Scenario: undo
@@ -44,9 +44,9 @@ Feature: ship-delete-remote-branch disabled
       | feature | git checkout main                             |
       | main    | git checkout feature                          |
     And I am now on the "feature" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE               |
-      | main    | local, remote | feature done          |
+      | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
       | feature | local         | feature commit        |
     And my repo now has its initial branches and branch hierarchy

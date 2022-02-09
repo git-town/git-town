@@ -3,9 +3,9 @@ Feature: does not kill a remote branch in offline mode
   Background:
     Given Git Town is in offline mode
     And the origin has a feature branch "feature"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION | MESSAGE        |
-      | feature | remote   | feature commit |
+      | feature | origin   | feature commit |
     And my repo knows about the remote branch
     And I am on the "main" branch
     When I run "git-town kill feature"

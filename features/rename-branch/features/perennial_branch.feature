@@ -3,10 +3,10 @@ Feature: rename a perennial branch
   Background:
     Given my repo has a perennial branch "production"
     And my repo has a feature branch "hotfix" as a child of "production"
-    And my repo contains the commits
+    And the commits
       | BRANCH     | LOCATION      | MESSAGE           |
-      | hotfix     | local, remote | hotfix commit     |
-      | production | local, remote | production commit |
+      | hotfix     | local, origin | hotfix commit     |
+      | production | local, origin | production commit |
     And I am on the "production" branch
 
   Scenario: normal rename fails
@@ -29,10 +29,10 @@ Feature: rename a perennial branch
       |            | git branch -D production    |
     And I am now on the "new" branch
     And the perennial branches are now "new"
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE           |
-      | hotfix | local, remote | hotfix commit     |
-      | new    | local, remote | production commit |
+      | hotfix | local, origin | hotfix commit     |
+      | new    | local, origin | production commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
       | hotfix | new    |
@@ -49,5 +49,5 @@ Feature: rename a perennial branch
       | production | git branch -D new                                   |
     And I am now on the "production" branch
     And the perennial branches are now "production"
-    And my repo is left with my initial commits
+    And now the initial commits exist
     And my repo now has its initial branches and branch hierarchy

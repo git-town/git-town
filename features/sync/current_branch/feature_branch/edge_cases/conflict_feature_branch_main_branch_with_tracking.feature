@@ -2,11 +2,11 @@ Feature: handle conflicts between the current feature branch and the main branch
 
   Background:
     Given my repo has a feature branch "feature"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
-      |         | remote   | feature commit             | feature_file     | feature content |
+      |         | origin   | feature commit             | feature_file     | feature content |
     And I am on the "feature" branch
     And my workspace has an uncommitted file
     When I run "git-town sync"
@@ -45,11 +45,11 @@ Feature: handle conflicts between the current feature branch and the main branch
     And I am still on the "feature" branch
     And my workspace has the uncommitted file again
     And there is no merge in progress
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
-      | main    | local, remote | conflicting main commit    | conflicting_file | main content    |
+      | main    | local, origin | conflicting main commit    | conflicting_file | main content    |
       | feature | local         | conflicting feature commit | conflicting_file | feature content |
-      |         | remote        | feature commit             | feature_file     | feature content |
+      |         | origin        | feature commit             | feature_file     | feature content |
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"

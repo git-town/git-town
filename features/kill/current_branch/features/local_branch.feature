@@ -2,7 +2,7 @@ Feature: delete a local branch
 
   Background:
     And my repo has a local feature branch "local"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION | MESSAGE      |
       | local  | local    | local commit |
     And I am on the "local" branch
@@ -20,7 +20,7 @@ Feature: delete a local branch
     And I am now on the "main" branch
     And the existing branches are
       | REPOSITORY    | BRANCHES |
-      | local, remote | main     |
+      | local, origin | main     |
     And Git Town is now aware of no branch hierarchy
 
   Scenario: undo
@@ -32,5 +32,5 @@ Feature: delete a local branch
       | local  | git reset {{ sha 'local commit' }}        |
     And I am now on the "local" branch
     And my workspace still contains my uncommitted file
-    And my repo is left with my initial commits
+    And now the initial commits exist
     And my repo now has its initial branches and branch hierarchy

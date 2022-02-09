@@ -3,10 +3,10 @@ Feature: ship a parent branch
   Background:
     Given my repo has a feature branch "parent"
     And my repo has a feature branch "child" as a child of "parent"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION      | MESSAGE       |
-      | parent | local, remote | parent commit |
-      | child  | local, remote | child commit  |
+      | parent | local, origin | parent commit |
+      | child  | local, origin | child commit  |
     And I am on the "child" branch
     When I run "git-town ship parent -m 'parent done'"
 
@@ -26,11 +26,11 @@ Feature: ship a parent branch
       |        | git branch -D parent              |
       |        | git checkout child                |
     And I am now on the "child" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE       |
-      | main   | local, remote | parent done   |
-      | child  | local, remote | child commit  |
-      | parent | remote        | parent commit |
+      | main   | local, origin | parent done   |
+      | child  | local, origin | child commit  |
+      | parent | origin        | parent commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
       | child  | main   |
@@ -47,10 +47,10 @@ Feature: ship a parent branch
       | parent | git checkout main                           |
       | main   | git checkout child                          |
     And I am now on the "child" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE              |
-      | main   | local, remote | parent done          |
+      | main   | local, origin | parent done          |
       |        |               | Revert "parent done" |
-      | child  | local, remote | child commit         |
-      | parent | local, remote | parent commit        |
+      | child  | local, origin | child commit         |
+      | parent | local, origin | parent commit        |
     And Git Town is now aware of the initial branch hierarchy

@@ -93,7 +93,7 @@ func (c *Config) HostingService() string {
 	return c.localOrGlobalConfigValue("git-town.code-hosting-driver")
 }
 
-// OriginOverride provides the override for the origin remote from the Git Town configuration.
+// OriginOverride provides the override for the origin hostname from the Git Town configuration.
 func (c *Config) OriginOverride() string {
 	return c.localConfigValue("git-town.code-hosting-origin-hostname")
 }
@@ -349,7 +349,7 @@ func (c *Config) SetMainBranch(branchName string) error {
 }
 
 // SetNewBranchPush updates whether the current repository is configured to push
-// freshly created branches up to the origin remote.
+// freshly created branches to origin.
 func (c *Config) SetNewBranchPush(value bool, global bool) error {
 	if global {
 		_, err := c.SetGlobalConfigValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
@@ -403,7 +403,7 @@ func (c *Config) SetTestOrigin(value string) error {
 }
 
 // ShouldNewBranchPush indicates whether the current repository is configured to push
-// freshly created branches up to the origin remote.
+// freshly created branches up to origin.
 func (c *Config) ShouldNewBranchPush() bool {
 	config := c.localOrGlobalConfigValue("git-town.new-branch-push-flag")
 	if config == "" {
@@ -418,14 +418,14 @@ func (c *Config) ShouldNewBranchPush() bool {
 }
 
 // ShouldNewBranchPushGlobal indictes whether the global configuration requires to push
-// freshly created branches up to the origin remote.
+// freshly created branches to origin.
 func (c *Config) ShouldNewBranchPushGlobal() bool {
 	config := c.globalConfigValue("git-town.new-branch-push-flag")
 	return config == "true"
 }
 
-// ShouldShipDeleteRemoteBranch indicates whether to delete the remote branch after shipping.
-func (c *Config) ShouldShipDeleteRemoteBranch() bool {
+// ShouldShipDeleteOriginBranch indicates whether to delete the remote branch after shipping.
+func (c *Config) ShouldShipDeleteOriginBranch() bool {
 	setting := c.localOrGlobalConfigValue("git-town.ship-delete-remote-branch")
 	if setting == "" {
 		return true

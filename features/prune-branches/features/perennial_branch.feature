@@ -2,11 +2,11 @@ Feature: remove perennial branch configuration when pruning a perennial branch
 
   Background:
     Given my repo has the perennial branches "active" and "old"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION      | MESSAGE       |
-      | active | local, remote | active commit |
-      | old    | local, remote | old commit    |
-    And the "old" branch gets deleted on the remote
+      | active | local, origin | active commit |
+      | old    | local, origin | old commit    |
+    And origin deletes the "old" branch
     And I am on the "old" branch
     When I run "git-town prune-branches"
 
@@ -19,7 +19,7 @@ Feature: remove perennial branch configuration when pruning a perennial branch
     And I am now on the "main" branch
     And the existing branches are
       | REPOSITORY    | BRANCHES     |
-      | local, remote | main, active |
+      | local, origin | main, active |
     And the perennial branches are now "active"
 
   Scenario: undo

@@ -1,9 +1,9 @@
 Feature: local branch
 
   Background:
-    Given my repo does not have a remote origin
+    Given my repo does not have an origin
     And my repo has the local feature branches "dead" and "other"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION | MESSAGE      |
       | dead   | local    | dead commit  |
       | other  | local    | other commit |
@@ -23,7 +23,7 @@ Feature: local branch
     And the existing branches are
       | REPOSITORY | BRANCHES    |
       | local      | main, other |
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION | MESSAGE      |
       | other  | local    | other commit |
     And Git Town is now aware of this branch hierarchy
@@ -39,5 +39,5 @@ Feature: local branch
       | dead   | git reset {{ sha 'dead commit' }}       |
     And I am now on the "dead" branch
     And my workspace has the uncommitted file again
-    And my repo is left with my initial commits
+    And now the initial commits exist
     And my repo now has its initial branches and branch hierarchy

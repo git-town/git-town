@@ -1,9 +1,9 @@
 Feature: handle merge conflicts between feature branch and main branch in a local repo
 
   Background:
-    Given my repo does not have a remote origin
+    Given my repo does not have an origin
     And my repo has the local feature branches "alpha", "beta", and "gamma"
-    And my repo contains the commits
+    And the commits
       | BRANCH | LOCATION | MESSAGE      | FILE NAME        | FILE CONTENT  |
       | main   | local    | main commit  | conflicting_file | main content  |
       | alpha  | local    | alpha commit | feature1_file    | alpha content |
@@ -43,7 +43,7 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       | main   | git stash pop                             |
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
-    And my repo is left with my initial commits
+    And now the initial commits exist
     And there is no merge in progress
 
   Scenario: skip
@@ -58,7 +58,7 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
     And I am now on the "main" branch
     And my workspace has the uncommitted file again
     And there is no merge in progress
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH | LOCATION | MESSAGE                        |
       | main   | local    | main commit                    |
       | alpha  | local    | alpha commit                   |

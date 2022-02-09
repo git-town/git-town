@@ -2,10 +2,10 @@ Feature: sync the current feature branch without a tracking branch
 
   Background:
     Given my repo has a local feature branch "feature"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION | MESSAGE              |
       | main    | local    | local main commit    |
-      |         | remote   | remote main commit   |
+      |         | origin   | origin main commit   |
       | feature | local    | local feature commit |
     And I am on the "feature" branch
     When I run "git-town sync"
@@ -22,14 +22,14 @@ Feature: sync the current feature branch without a tracking branch
       |         | git push -u origin feature |
     And all branches are now synchronized
     And I am still on the "feature" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                          |
-      | main    | local, remote | remote main commit               |
+      | main    | local, origin | origin main commit               |
       |         |               | local main commit                |
-      | feature | local, remote | local feature commit             |
-      |         |               | remote main commit               |
+      | feature | local, origin | local feature commit             |
+      |         |               | origin main commit               |
       |         |               | local main commit                |
       |         |               | Merge branch 'main' into feature |
     And the existing branches are
       | REPOSITORY    | BRANCHES      |
-      | local, remote | main, feature |
+      | local, origin | main, feature |

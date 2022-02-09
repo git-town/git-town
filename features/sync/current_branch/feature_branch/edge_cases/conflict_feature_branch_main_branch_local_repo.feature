@@ -1,9 +1,9 @@
-Feature: handle conflicts between the current feature branch and the main branch (without remote repo)
+Feature: handle conflicts between the current feature branch and the main branch (in a local repo)
 
   Background:
-    Given my repo does not have a remote origin
+    Given my repo does not have an origin
     And my repo has a local feature branch "feature"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
@@ -36,7 +36,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     And I am still on the "feature" branch
     And my workspace has the uncommitted file again
     And there is no merge in progress
-    And my repo is left with my initial commits
+    And now the initial commits exist
 
   Scenario: continue with unresolved conflict
     When I run "git-town continue"

@@ -1,9 +1,9 @@
-Feature: with upstream remote
+Feature: with upstream repo
 
   Background:
     Given my repo has an upstream repo
     And my repo has a feature branch "feature"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION | MESSAGE         |
       | main    | upstream | upstream commit |
       | feature | local    | local commit    |
@@ -25,9 +25,9 @@ Feature: with upstream remote
       |         | git push                           |
     And all branches are now synchronized
     And I am still on the "feature" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH  | LOCATION                | MESSAGE                          |
-      | main    | local, remote, upstream | upstream commit                  |
-      | feature | local, remote           | local commit                     |
+      | main    | local, origin, upstream | upstream commit                  |
+      | feature | local, origin           | local commit                     |
       |         |                         | upstream commit                  |
       |         |                         | Merge branch 'main' into feature |

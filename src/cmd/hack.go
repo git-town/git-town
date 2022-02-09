@@ -19,11 +19,11 @@ var hackCmd = &cobra.Command{
 
 Syncs the main branch,
 forks a new feature branch with the given name off the main branch,
-pushes the new feature branch to the remote repository
+pushes the new feature branch to origin
 (if and only if "new-branch-push-flag" is true),
 and brings over all uncommitted changes to the new feature branch.
 
-See "sync" for information regarding remote upstream.`,
+See "sync" for information regarding upstream remotes.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		config, err := createHackConfig(args, prodRepo)
 		if err != nil {
@@ -69,7 +69,7 @@ func createHackConfig(args []string, repo *git.ProdRepo) (result appendConfig, e
 	if err != nil {
 		return result, err
 	}
-	result.hasOrigin, err = repo.Silent.HasRemote("origin")
+	result.hasOrigin, err = repo.Silent.HasOrigin()
 	if err != nil {
 		return result, err
 	}
@@ -81,7 +81,7 @@ func createHackConfig(args []string, repo *git.ProdRepo) (result appendConfig, e
 			return result, err
 		}
 	}
-	hasBranch, err := repo.Silent.HasLocalOrRemoteBranch(result.targetBranch)
+	hasBranch, err := repo.Silent.HasLocalOrOriginBranch(result.targetBranch)
 	if err != nil {
 		return result, err
 	}

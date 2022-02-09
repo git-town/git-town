@@ -1,9 +1,9 @@
 Feature: branch does not exist
 
   Scenario:
-    Given my repo contains the commits
+    Given the commits
       | BRANCH | LOCATION      | MESSAGE     |
-      | main   | local, remote | main commit |
+      | main   | local, origin | main commit |
     And I am on the "main" branch
     When I run "git-town rename-branch non-existing new"
     Then it runs the commands

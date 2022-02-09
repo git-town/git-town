@@ -27,11 +27,11 @@ var appendCommand = &cobra.Command{
 Syncs the current branch,
 forks a new feature branch with the given name off the current branch,
 makes the new branch a child of the current branch,
-pushes the new feature branch to the remote repository
+pushes the new feature branch to the origin repository
 (if and only if "new-branch-push-flag" is true),
 and brings over all uncommitted changes to the new feature branch.
 
-See "sync" for information regarding remote upstream.`,
+See "sync" for information regarding upstream remotes.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		config, err := createAppendConfig(args, prodRepo)
 		if err != nil {
@@ -62,7 +62,7 @@ func createAppendConfig(args []string, repo *git.ProdRepo) (result appendConfig,
 		return result, err
 	}
 	result.targetBranch = args[0]
-	result.hasOrigin, err = repo.Silent.HasRemote("origin")
+	result.hasOrigin, err = repo.Silent.HasOrigin()
 	if err != nil {
 		return result, err
 	}
@@ -72,7 +72,7 @@ func createAppendConfig(args []string, repo *git.ProdRepo) (result appendConfig,
 			return result, err
 		}
 	}
-	hasBranch, err := repo.Silent.HasLocalOrRemoteBranch(result.targetBranch)
+	hasBranch, err := repo.Silent.HasLocalOrOriginBranch(result.targetBranch)
 	if err != nil {
 		return result, err
 	}

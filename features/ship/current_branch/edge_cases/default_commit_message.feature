@@ -2,7 +2,7 @@ Feature: must provide a commit message
 
   Background:
     Given my repo has a feature branch "feature"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | local    | feature commit |
     And I am on the "feature" branch
@@ -29,7 +29,7 @@ Feature: must provide a commit message
       aborted because commit exited with error
       """
     And I am still on the "feature" branch
-    And my repo is left with my initial commits
+    And now the initial commits exist
     And Git Town is still aware of the initial branch hierarchy
 
   Scenario: undo
@@ -39,5 +39,5 @@ Feature: must provide a commit message
       nothing to undo
       """
     And I am still on the "feature" branch
-    And my repo is left with my initial commits
+    And now the initial commits exist
     And Git Town is still aware of the initial branch hierarchy

@@ -3,7 +3,7 @@ Feature: abort the ship by empty commit message
 
   Background:
     Given my repo has a feature branch "feature"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | local    | feature commit |
     And I am on the "feature" branch
@@ -30,7 +30,7 @@ Feature: abort the ship by empty commit message
       aborted because commit exited with error
       """
     And I am still on the "feature" branch
-    And my repo is left with my initial commits
+    And now the initial commits exist
     And my repo now has its initial branches and branch hierarchy
 
   Scenario: undo
@@ -40,5 +40,5 @@ Feature: abort the ship by empty commit message
       nothing to undo
       """
     And I am still on the "feature" branch
-    And my repo is left with my initial commits
+    And now the initial commits exist
     And my repo now has its initial branches and branch hierarchy

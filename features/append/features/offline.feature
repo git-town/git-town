@@ -3,9 +3,9 @@ Feature: append in offline mode
   Background:
     Given Git Town is in offline mode
     And my repo has a feature branch "existing"
-    And my repo contains the commits
+    And the commits
       | BRANCH   | LOCATION      | MESSAGE         |
-      | existing | local, remote | existing commit |
+      | existing | local, origin | existing commit |
     And I am on the "existing" branch
 
   Scenario: result
@@ -20,9 +20,9 @@ Feature: append in offline mode
       |          | git branch new existing             |
       |          | git checkout new                    |
     And I am now on the "new" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH   | LOCATION      | MESSAGE         |
-      | existing | local, remote | existing commit |
+      | existing | local, origin | existing commit |
       | new      | local         | existing commit |
 
   Scenario: undo
@@ -35,5 +35,5 @@ Feature: append in offline mode
       |          | git checkout main     |
       | main     | git checkout existing |
     And I am now on the "existing" branch
-    And my repo is left with my initial commits
+    And now the initial commits exist
     And Git Town is now aware of the initial branch hierarchy

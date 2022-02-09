@@ -4,9 +4,9 @@ Feature: rename an unsynced branch
     Given my repo has a feature branch "old"
 
   Scenario: unpulled remote commits
-    Given my repo contains the commits
+    Given the commits
       | BRANCH | LOCATION | MESSAGE       |
-      | old    | remote   | remote commit |
+      | old    | origin   | origin commit |
     And I am on the "old" branch
     When I run "git-town rename-branch old new"
     Then it runs the commands
@@ -19,7 +19,7 @@ Feature: rename an unsynced branch
     And I am still on the "old" branch
 
   Scenario: unpushed local commits
-    Given my repo contains the commits
+    Given the commits
       | BRANCH | LOCATION | MESSAGE      |
       | old    | local    | local commit |
     And I am on the "old" branch

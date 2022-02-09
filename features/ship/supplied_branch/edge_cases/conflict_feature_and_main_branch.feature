@@ -2,7 +2,7 @@ Feature: handle conflicts between the supplied feature branch and the main branc
 
   Background:
     Given my repo has the feature branches "feature" and "other"
-    And my repo contains the commits
+    And the commits
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
@@ -42,9 +42,9 @@ Feature: handle conflicts between the supplied feature branch and the main branc
     And I am now on the "other" branch
     And my workspace still contains my uncommitted file
     And there is no merge in progress
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                    |
-      | main    | local, remote | conflicting main commit    |
+      | main    | local, origin | conflicting main commit    |
       | feature | local         | conflicting feature commit |
     And Git Town is still aware of the initial branch hierarchy
 
@@ -66,10 +66,10 @@ Feature: handle conflicts between the supplied feature branch and the main branc
     And my workspace still contains my uncommitted file
     And the existing branches are
       | REPOSITORY    | BRANCHES    |
-      | local, remote | main, other |
-    And my repo now has the commits
+      | local, origin | main, other |
+    And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                 | FILE NAME        | FILE CONTENT     |
-      | main   | local, remote | conflicting main commit | conflicting_file | main content     |
+      | main   | local, origin | conflicting main commit | conflicting_file | main content     |
       |        |               | feature done            | conflicting_file | resolved content |
     And Git Town is now aware of this branch hierarchy
       | BRANCH | PARENT |
@@ -111,12 +111,12 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       | main    | git checkout other                                              |
       | other   | git stash pop                                                   |
     And I am now on the "other" branch
-    And my repo now has the commits
+    And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                          |
-      | main    | local, remote | conflicting main commit          |
+      | main    | local, origin | conflicting main commit          |
       |         |               | feature done                     |
       |         |               | Revert "feature done"            |
-      | feature | local, remote | conflicting feature commit       |
-      |         | remote        | conflicting main commit          |
+      | feature | local, origin | conflicting feature commit       |
+      |         | origin        | conflicting main commit          |
       |         |               | Merge branch 'main' into feature |
     And my repo now has its initial branches and branch hierarchy
