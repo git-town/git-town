@@ -478,7 +478,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.CreateTags(table)
 	})
 
-	suite.Step(`^my repo has the (local )?feature branches "([^"]+)" and "([^"]+)"$`, func(localStr, branch1, branch2 string) error {
+	suite.Step(`^the (local )?feature branches "([^"]+)" and "([^"]+)"$`, func(localStr, branch1, branch2 string) error {
 		isLocal := localStr != ""
 		for _, branch := range []string{branch1, branch2} {
 			err := state.gitEnv.DevRepo.CreateFeatureBranch(branch)
@@ -498,7 +498,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repo has the (local )?feature branches "([^"]+)", "([^"]+)", and "([^"]+)"$`, func(localStr, branch1, branch2, branch3 string) error {
+	suite.Step(`^the (local )?feature branches "([^"]+)", "([^"]+)", and "([^"]+)"$`, func(localStr, branch1, branch2, branch3 string) error {
 		isLocal := localStr != ""
 		for _, branch := range []string{branch1, branch2, branch3} {
 			err := state.gitEnv.DevRepo.CreateFeatureBranch(branch)

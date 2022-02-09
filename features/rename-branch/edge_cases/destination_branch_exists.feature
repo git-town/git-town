@@ -1,7 +1,7 @@
 Feature: destination branch exists
 
   Scenario: destination branch exists locally
-    Given my repo has the feature branches "alpha" and "beta"
+    Given the feature branches "alpha" and "beta"
     And the commits
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, origin | alpha commit |

@@ -1,7 +1,7 @@
 Feature: handle merge conflicts between feature branches and their tracking branches
 
   Background:
-    Given my repo has the feature branches "alpha", "beta", and "gamma"
+    Given the feature branches "alpha", "beta", and "gamma"
     And the commits
       | BRANCH | LOCATION      | MESSAGE            | FILE NAME        | FILE CONTENT        |
       | main   | origin        | main commit        | main_file        | main content        |

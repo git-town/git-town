@@ -2,7 +2,7 @@ Feature: in a local repo
 
   Background:
     Given my repo does not have an origin
-    And my repo has the local feature branches "feature" and "other"
+    And the local feature branches "feature" and "other"
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | local    | feature commit |

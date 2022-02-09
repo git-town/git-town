@@ -1,7 +1,7 @@
 Feature: sync all feature branches
 
   Background:
-    Given my repo has the feature branches "alpha" and "beta"
+    Given the feature branches "alpha" and "beta"
     And the perennial branches "production" and "qa"
     And the commits
       | BRANCH     | LOCATION      | MESSAGE                  |

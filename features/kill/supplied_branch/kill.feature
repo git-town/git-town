@@ -1,7 +1,7 @@
 Feature: delete another than the current branch
 
   Background:
-    Given my repo has the feature branches "good" and "dead"
+    Given the feature branches "good" and "dead"
     And the commits
       | BRANCH | LOCATION      | MESSAGE            | FILE NAME        |
       | main   | local, origin | conflicting commit | conflicting_file |

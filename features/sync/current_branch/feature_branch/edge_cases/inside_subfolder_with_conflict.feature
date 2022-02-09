@@ -1,7 +1,7 @@
 Feature: sync inside a folder that doesn't exist on the main branch
 
   Background:
-    Given my repo has the feature branches "current" and "other"
+    Given the feature branches "current" and "other"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local, origin | conflicting main commit    | conflicting_file | main content    |

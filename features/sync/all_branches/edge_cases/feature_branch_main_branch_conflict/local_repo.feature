@@ -2,7 +2,7 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
 
   Background:
     Given my repo does not have an origin
-    And my repo has the local feature branches "alpha", "beta", and "gamma"
+    And the local feature branches "alpha", "beta", and "gamma"
     And the commits
       | BRANCH | LOCATION | MESSAGE      | FILE NAME        | FILE CONTENT  |
       | main   | local    | main commit  | conflicting_file | main content  |

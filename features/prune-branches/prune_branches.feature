@@ -1,7 +1,7 @@
 Feature: delete branches that were shipped or removed on another machine
 
   Background:
-    Given my repo has the feature branches "active" and "old"
+    Given the feature branches "active" and "old"
     And the commits
       | BRANCH | LOCATION      | MESSAGE       |
       | active | local, origin | active commit |

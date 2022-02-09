@@ -16,7 +16,7 @@ Feature: show the configuration
 
   Scenario: all configured, with nested branches
     Given the perennial branches "qa" and "staging"
-    And my repo has the feature branches "alpha" and "beta"
+    And the feature branches "alpha" and "beta"
     And a feature branch "child" as a child of "alpha"
     And a feature branch "hotfix" as a child of "qa"
     When I run "git-town config"

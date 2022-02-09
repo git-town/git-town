@@ -2,7 +2,7 @@ Feature: local repository
 
   Background:
     Given my repo does not have an origin
-    And my repo has the local feature branches "good" and "other"
+    And the local feature branches "good" and "other"
     And the commits
       | BRANCH | LOCATION | MESSAGE      | FILE NAME        |
       | main   | local    | main commit  | conflicting_file |

@@ -1,7 +1,7 @@
 Feature: preserve the previous Git branch
 
   Background:
-    Given my repo has the feature branches "previous" and "current"
+    Given the feature branches "previous" and "current"
 
   Scenario: current branch gone
     And the commits
