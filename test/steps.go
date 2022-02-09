@@ -85,7 +85,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.CoworkerRepo.CheckoutBranch(branchName)
 	})
 
-	suite.Step(`^a coworker runs "([^"]+)"$`, func(command string) error {
+	suite.Step(`^the coworker runs "([^"]+)"$`, func(command string) error {
 		state.runRes, state.runErr = state.gitEnv.CoworkerRepo.RunString(command)
 		return nil
 	})
