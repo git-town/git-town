@@ -2,12 +2,11 @@
 Feature: warn the user about an unfinished operation
 
   Background:
-    Given a feature branch "feature"
+    Given the current branch is a feature branch "feature"
     And the commits
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | main   | local    | conflicting local commit  | conflicting_file | local content  |
       |        | origin   | conflicting origin commit | conflicting_file | origin content |
-    And the current branch is "feature"
     And my workspace has an uncommitted file
     And I run "git-town sync"
     And it prints the error:

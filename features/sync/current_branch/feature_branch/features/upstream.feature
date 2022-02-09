@@ -2,12 +2,11 @@ Feature: with upstream repo
 
   Background:
     Given my repo has an upstream repo
-    And a feature branch "feature"
+    And the current branch is a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE         |
       | main    | upstream | upstream commit |
       | feature | local    | local commit    |
-    And the current branch is "feature"
     When I run "git-town sync"
 
   Scenario: result
