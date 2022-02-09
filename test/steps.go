@@ -604,10 +604,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^I fetch Git updates$`, func() error {
-		return state.gitEnv.DevRepo.Fetch()
-	})
-
 	suite.Step(`^now these commits exist$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		return compareExistingCommits(state, table)
 	})

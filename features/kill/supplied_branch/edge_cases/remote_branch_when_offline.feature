@@ -5,14 +5,13 @@ Feature: does not kill a remote branch in offline mode
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | origin   | feature commit |
-    And I fetch Git updates
+    And I run "git fetch"
     And offline mode is enabled
     And I am on the "main" branch
     When I run "git-town kill feature"
 
   Scenario: result
-    Then it runs the commands
-      | BRANCH | COMMAND |
+    Then it runs no commands
     And it prints the error:
       """
       cannot delete remote branch "feature" in offline mode
