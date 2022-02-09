@@ -8,11 +8,19 @@ Feature: display the current offline status
       """
 
   Scenario: enabled
-    Given offline mode is enabled
+    Given the "offline" setting is "true"
     When I run "git-town offline"
     Then it prints:
       """
       true
+      """
+
+  Scenario: disabled
+    Given the "offline" setting is "false"
+    When I run "git-town offline"
+    Then it prints:
+      """
+      false
       """
 
   Scenario: invalid value
