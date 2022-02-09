@@ -1,11 +1,10 @@
 Feature: enter the commit message interactively via the editor
 
   Background:
-    Given a feature branch "feature"
+    Given the current branch is a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
-    And the current branch is "feature"
     When I run "git-town ship" and enter "feature done" for the commit message
 
   Scenario: result

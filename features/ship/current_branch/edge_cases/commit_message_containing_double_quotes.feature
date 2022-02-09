@@ -1,11 +1,10 @@
 Feature: commit message can contain double-quotes
 
   Background:
-    Given a feature branch "feature"
+    Given the current branch is a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | local    | feature commit |
-    And the current branch is "feature"
     When I run "git-town ship -m 'with "double quotes"'"
 
   Scenario: result
