@@ -66,7 +66,7 @@ Feature: handle conflicts between the current feature branch and its tracking br
     And the current branch is still "feature"
     And there is no merge in progress
     And the uncommitted file still exists
-    And my repo now has these committed files
+    And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | feature | conflicting_file | resolved content |
 

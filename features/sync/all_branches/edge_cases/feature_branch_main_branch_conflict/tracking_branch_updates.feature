@@ -58,7 +58,7 @@ Feature: handle merge conflicts between feature branch and main branch
       | beta   | local         | local beta commit              |
       |        | origin        | origin beta commit             |
       | gamma  | origin        | gamma commit                   |
-    And my repo still has these committed files
+    And these committed files exist now
       | BRANCH | NAME             | CONTENT            |
       | main   | conflicting_file | main content       |
       | alpha  | conflicting_file | main content       |
@@ -92,7 +92,7 @@ Feature: handle merge conflicts between feature branch and main branch
       | gamma  | local, origin | gamma commit                   |
       |        |               | main commit                    |
       |        |               | Merge branch 'main' into gamma |
-    And my repo now has these committed files
+    And these committed files exist now
       | BRANCH | NAME             | CONTENT            |
       | main   | conflicting_file | main content       |
       | alpha  | conflicting_file | main content       |
@@ -130,7 +130,7 @@ Feature: handle merge conflicts between feature branch and main branch
     And the uncommitted file still exists
     And all branches are now synchronized
     And there is no merge in progress
-    And my repo now has these committed files
+    And these committed files exist now
       | BRANCH | NAME                 | CONTENT             |
       | main   | conflicting_file     | main content        |
       | alpha  | conflicting_file     | main content        |

@@ -73,7 +73,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     And the current branch is still "feature"
     And there is no merge in progress
     And the uncommitted file still exists
-    And my repo now has these committed files
+    And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |

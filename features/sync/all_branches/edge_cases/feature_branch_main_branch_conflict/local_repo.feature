@@ -68,7 +68,7 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       | gamma  | local    | gamma commit                   |
       |        |          | main commit                    |
       |        |          | Merge branch 'main' into gamma |
-    And my repo now has these committed files
+    And these committed files exist now
       | BRANCH | NAME             | CONTENT       |
       | main   | conflicting_file | main content  |
       | alpha  | conflicting_file | main content  |
@@ -102,7 +102,7 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
     And the current branch is now "main"
     And the uncommitted file still exists
     And there is no merge in progress
-    And my repo now has these committed files
+    And these committed files exist now
       | BRANCH | NAME             | CONTENT          |
       | main   | conflicting_file | main content     |
       | alpha  | conflicting_file | main content     |

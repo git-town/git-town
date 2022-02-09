@@ -21,7 +21,7 @@ Feature: handle conflicts between the main branch and its tracking branch when s
       To abort, run "git-town abort".
       To continue after having resolved conflicts, run "git-town continue".
       """
-    And my repo now has a rebase in progress
+    And a rebase is now in progress
     And the uncommitted file is stashed
 
   Scenario: abort
@@ -43,7 +43,7 @@ Feature: handle conflicts between the main branch and its tracking branch when s
       you must resolve the conflicts before continuing
       """
     And the uncommitted file is stashed
-    And my repo still has a rebase in progress
+    And a rebase is still in progress
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
@@ -57,7 +57,7 @@ Feature: handle conflicts between the main branch and its tracking branch when s
     And all branches are now synchronized
     And the current branch is still "main"
     And the uncommitted file still exists
-    And my repo now has these committed files
+    And these committed files exist now
       | BRANCH | NAME             | CONTENT          |
       | main   | conflicting_file | resolved content |
 
@@ -73,6 +73,6 @@ Feature: handle conflicts between the main branch and its tracking branch when s
     And all branches are now synchronized
     And the current branch is still "main"
     And the uncommitted file still exists
-    And my repo now has these committed files
+    And these committed files exist now
       | BRANCH | NAME             | CONTENT          |
       | main   | conflicting_file | resolved content |

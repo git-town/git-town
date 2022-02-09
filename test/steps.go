@@ -670,7 +670,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repo (?:now|still) has a rebase in progress$`, func() error {
+	suite.Step(`^a rebase is (?:now|still) in progress$`, func() error {
 		hasRebase, err := state.gitEnv.DevRepo.HasRebaseInProgress()
 		if err != nil {
 			return err
@@ -681,7 +681,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repo (?:now|still) has these committed files$`, func(table *messages.PickleStepArgument_PickleTable) error {
+	suite.Step(`^these committed files exist now$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		fileTable, err := state.gitEnv.DevRepo.FilesInBranches()
 		if err != nil {
 			return fmt.Errorf("cannot determine files in branches in the developer repo: %w", err)

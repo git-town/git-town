@@ -83,7 +83,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
       | other   | local, origin | other commit                     |
       |         |               | conflicting main commit          |
       |         |               | Merge branch 'main' into other   |
-    And my repo still has these committed files
+    And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | current | conflicting_file | resolved content |
