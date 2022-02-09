@@ -5,7 +5,7 @@ Feature: delete a local branch
     And the commits
       | BRANCH | LOCATION | MESSAGE      |
       | local  | local    | local commit |
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town kill"
 
   Scenario: result
@@ -30,6 +30,6 @@ Feature: delete a local branch
       |        | git checkout local                        |
       | local  | git reset {{ sha 'local commit' }}        |
     And the current branch is now "local"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And now the initial commits exist
     And the initial branches and hierarchy exist

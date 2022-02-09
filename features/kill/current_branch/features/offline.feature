@@ -8,7 +8,7 @@ Feature: offline mode
       | feature | local, origin | feature commit |
       | other   | local, origin | other commit   |
     And the current branch is "feature"
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town kill"
 
   Scenario: result
@@ -19,7 +19,7 @@ Feature: offline mode
       |         | git checkout main              |
       | main    | git branch -D feature          |
     And the current branch is now "main"
-    And my repo doesn't have any uncommitted files
+    And no uncommitted files exist
     And the branches are now
       | REPOSITORY | BRANCHES             |
       | local      | main, other          |
@@ -40,6 +40,6 @@ Feature: offline mode
       |         | git checkout feature                          |
       | feature | git reset {{ sha 'feature commit' }}          |
     And the current branch is now "feature"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And now the initial commits exist
     And the initial branches and hierarchy exist

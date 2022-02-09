@@ -6,7 +6,7 @@ Feature: handle conflicts between the current feature branch and its tracking br
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | feature | local    | conflicting local commit  | conflicting_file | local content  |
       |         | origin   | conflicting origin commit | conflicting_file | origin content |
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town sync"
 
   Scenario: result
@@ -26,7 +26,7 @@ Feature: handle conflicts between the current feature branch and its tracking br
       To continue by skipping the current branch, run "git-town skip".
       """
     And the current branch is still "feature"
-    And my uncommitted file is stashed
+    And the uncommitted file is stashed
     And my repo now has a merge in progress
 
   Scenario: abort
@@ -38,7 +38,7 @@ Feature: handle conflicts between the current feature branch and its tracking br
       | main    | git checkout feature |
       | feature | git stash pop        |
     And the current branch is still "feature"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And there is no merge in progress
     And now the initial commits exist
 
@@ -50,7 +50,7 @@ Feature: handle conflicts between the current feature branch and its tracking br
       you must resolve the conflicts before continuing
       """
     And the current branch is still "feature"
-    And my uncommitted file is stashed
+    And the uncommitted file is stashed
     And my repo still has a merge in progress
 
   Scenario: resolve and continue
@@ -65,7 +65,7 @@ Feature: handle conflicts between the current feature branch and its tracking br
     And all branches are now synchronized
     And the current branch is still "feature"
     And there is no merge in progress
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And my repo now has these committed files
       | BRANCH  | NAME             | CONTENT          |
       | feature | conflicting_file | resolved content |

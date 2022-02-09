@@ -5,7 +5,7 @@ Feature: append a new feature branch to an existing feature branch
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town append new"
 
   Scenario: result
@@ -23,7 +23,7 @@ Feature: append a new feature branch to an existing feature branch
       |          | git checkout new                    |
       | new      | git stash pop                       |
     And the current branch is now "new"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And now these commits exist
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
@@ -45,6 +45,6 @@ Feature: append a new feature branch to an existing feature branch
       | main     | git checkout existing |
       | existing | git stash pop         |
     And the current branch is now "existing"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And now the initial commits exist
     And Git Town is still aware of the initial branch hierarchy

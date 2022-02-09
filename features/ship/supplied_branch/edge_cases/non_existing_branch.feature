@@ -2,7 +2,7 @@ Feature: does not ship a non-existing branch
 
   Background:
     Given the current branch is "main"
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town ship non-existing-branch"
 
   Scenario: result
@@ -14,7 +14,7 @@ Feature: does not ship a non-existing branch
       there is no branch named "non-existing-branch"
       """
     And the current branch is now "main"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"

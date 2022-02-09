@@ -384,7 +384,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.DeleteMainBranchConfiguration()
 	})
 
-	suite.Step(`^my repo doesn't have any uncommitted files$`, func() error {
+	suite.Step(`^no uncommitted files exist$`, func() error {
 		files, err := state.gitEnv.DevRepo.UncommittedFiles()
 		if err != nil {
 			return fmt.Errorf("cannot determine uncommitted files: %w", err)
@@ -721,7 +721,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my uncommitted file is stashed$`, func() error {
+	suite.Step(`^the uncommitted file is stashed$`, func() error {
 		uncommittedFiles, err := state.gitEnv.DevRepo.UncommittedFiles()
 		if err != nil {
 			return err
@@ -741,7 +741,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my workspace has an uncommitted file$`, func() error {
+	suite.Step(`^an uncommitted file$`, func() error {
 		state.uncommittedFileName = "uncommitted file"
 		state.uncommittedContent = "uncommitted content"
 		return state.gitEnv.DevRepo.CreateFile(
@@ -750,7 +750,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		)
 	})
 
-	suite.Step(`^my workspace has an uncommitted file in folder "([^"]*)"$`, func(folder string) error {
+	suite.Step(`^an uncommitted file in folder "([^"]*)"$`, func(folder string) error {
 		state.uncommittedFileName = fmt.Sprintf("%s/uncommitted file", folder)
 		return state.gitEnv.DevRepo.CreateFile(
 			state.uncommittedFileName,
@@ -758,13 +758,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		)
 	})
 
-	suite.Step(`^my workspace has an uncommitted file with name "([^"]+)" and content "([^"]+)"$`, func(name, content string) error {
+	suite.Step(`^an uncommitted file with name "([^"]+)" and content "([^"]+)"$`, func(name, content string) error {
 		state.uncommittedFileName = name
 		state.uncommittedContent = content
 		return state.gitEnv.DevRepo.CreateFile(name, content)
 	})
 
-	suite.Step(`^my workspace has the uncommitted file again$`, func() error {
+	suite.Step(`^the uncommitted file still exists$`, func() error {
 		hasFile, err := state.gitEnv.DevRepo.HasFile(
 			state.uncommittedFileName,
 			state.uncommittedContent,
@@ -783,21 +783,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my workspace still contains my uncommitted file$`, func() error {
-		hasFile, err := state.gitEnv.DevRepo.HasFile(
-			state.uncommittedFileName,
-			state.uncommittedContent,
-		)
-		if err != nil {
-			return fmt.Errorf("cannot determine if workspace contains uncommitted file: %w", err)
-		}
-		if !hasFile {
-			return fmt.Errorf("expected the uncommitted file but didn't find one")
-		}
-		return nil
-	})
-
-	suite.Step(`^my workspace (?:still|now) contains the file "([^"]*)" with content "([^"]*)"$`, func(file, expectedContent string) error {
+	suite.Step(`^file "([^"]*)" still has content "([^"]*)"$`, func(file, expectedContent string) error {
 		actualContent, err := state.gitEnv.DevRepo.FileContent(file)
 		if err != nil {
 			return err
@@ -829,7 +815,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.OriginRepo.RemoveBranch(name)
 	})
 
-	suite.Step(`^the file "([^"]+)" contains unresolved conflicts$`, func(name string) error {
+	suite.Step(`^file "([^"]+)" still contains unresolved conflicts$`, func(name string) error {
 		content, err := state.gitEnv.DevRepo.FileContent(name)
 		if err != nil {
 			return fmt.Errorf("cannot read file %q: %w", name, err)

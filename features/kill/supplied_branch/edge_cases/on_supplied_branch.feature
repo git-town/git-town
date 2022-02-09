@@ -7,7 +7,7 @@ Feature: delete the current branch
       | current | local, origin | current commit |
       | other   | local, origin | other commit   |
     And the current branch is "current"
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town kill current"
 
   Scenario: result
@@ -20,7 +20,7 @@ Feature: delete the current branch
       |         | git checkout main              |
       | main    | git branch -D current          |
     And the current branch is now "main"
-    And my repo doesn't have any uncommitted files
+    And no uncommitted files exist
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
@@ -40,6 +40,6 @@ Feature: delete the current branch
       | current | git reset {{ sha 'current commit' }}          |
       |         | git push -u origin current                    |
     And the current branch is now "current"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And now the initial commits exist
     And the initial branches and hierarchy exist

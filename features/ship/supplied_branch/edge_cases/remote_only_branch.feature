@@ -7,7 +7,7 @@ Feature: ship a branch that exists only on origin
     And the commits
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME        |
       | feature | origin   | feature commit | conflicting_file |
-    And my workspace has an uncommitted file with name "conflicting_file" and content "conflicting content"
+    And an uncommitted file with name "conflicting_file" and content "conflicting content"
     When I run "git-town ship feature -m 'feature done'" and answer the prompts:
       | PROMPT                                        | ANSWER  |
       | Please specify the parent branch of 'feature' | [ENTER] |
@@ -32,7 +32,7 @@ Feature: ship a branch that exists only on origin
       |         | git checkout other                 |
       | other   | git stash pop                      |
     And the current branch is now "other"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |

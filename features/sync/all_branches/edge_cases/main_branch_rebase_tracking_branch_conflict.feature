@@ -8,7 +8,7 @@ Feature: handle rebase conflicts between main branch and its tracking branch
       |         | origin   | origin main commit | conflicting_file | origin content  |
       | feature | local    | feature commit     | feature_file     | feature content |
     And the current branch is "main"
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town sync --all"
 
   Scenario: result
@@ -23,7 +23,7 @@ Feature: handle rebase conflicts between main branch and its tracking branch
       To abort, run "git-town abort".
       To continue after having resolved conflicts, run "git-town continue".
       """
-    And my uncommitted file is stashed
+    And the uncommitted file is stashed
     And my repo now has a rebase in progress
 
   Scenario: abort
@@ -33,7 +33,7 @@ Feature: handle rebase conflicts between main branch and its tracking branch
       | main   | git rebase --abort |
       |        | git stash pop      |
     And the current branch is now "main"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And now the initial commits exist
 
   Scenario: continue with unresolved conflict
@@ -43,7 +43,7 @@ Feature: handle rebase conflicts between main branch and its tracking branch
       """
       you must resolve the conflicts before continuing
       """
-    And my uncommitted file is stashed
+    And the uncommitted file is stashed
     And my repo still has a rebase in progress
 
   Scenario: resolve and continue
@@ -62,7 +62,7 @@ Feature: handle rebase conflicts between main branch and its tracking branch
       |         | git stash pop                      |
     And all branches are now synchronized
     And the current branch is now "main"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And there is no rebase in progress anymore
     And my repo now has these committed files
       | BRANCH  | NAME             | CONTENT          |

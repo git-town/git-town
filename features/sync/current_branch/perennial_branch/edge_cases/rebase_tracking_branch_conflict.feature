@@ -7,7 +7,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       | qa     | local    | conflicting local commit  | conflicting_file | local content  |
       |        | origin   | conflicting origin commit | conflicting_file | origin content |
     And the current branch is "qa"
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town sync"
 
   Scenario: result
@@ -24,7 +24,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       To continue by skipping the current branch, run "git-town skip".
       """
     And my repo now has a rebase in progress
-    And my uncommitted file is stashed
+    And the uncommitted file is stashed
 
   Scenario: abort
     When I run "git-town abort"
@@ -33,7 +33,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       | qa     | git rebase --abort |
       |        | git stash pop      |
     And the current branch is still "qa"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And there is no rebase in progress anymore
     And now the initial commits exist
 
@@ -44,7 +44,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       """
       you must resolve the conflicts before continuing
       """
-    And my uncommitted file is stashed
+    And the uncommitted file is stashed
     And my repo still has a rebase in progress
 
   Scenario: resolve and continue
@@ -59,7 +59,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
     And all branches are now synchronized
     And the current branch is still "qa"
     And there is no rebase in progress anymore
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And my repo now has these committed files
       | BRANCH | NAME             | CONTENT          |
       | qa     | conflicting_file | resolved content |
@@ -76,7 +76,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
     And all branches are now synchronized
     And the current branch is still "qa"
     And there is no rebase in progress anymore
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And my repo now has these committed files
       | BRANCH | NAME             | CONTENT          |
       | qa     | conflicting_file | resolved content |

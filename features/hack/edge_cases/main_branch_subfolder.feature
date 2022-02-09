@@ -5,7 +5,7 @@ Feature: in a subfolder on the main branch
       | BRANCH | LOCATION | MESSAGE       | FILE NAME        |
       | main   | local    | folder commit | new_folder/file1 |
     And the current branch is "main"
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town hack new" in the "new_folder" folder
 
   Scenario: result
@@ -20,7 +20,7 @@ Feature: in a subfolder on the main branch
       |        | git checkout new         |
       | new    | git stash pop            |
     And the current branch is now "new"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | folder commit |

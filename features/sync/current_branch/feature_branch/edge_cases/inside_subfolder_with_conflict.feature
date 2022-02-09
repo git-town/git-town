@@ -9,7 +9,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
       |         |               | folder commit              | new_folder/file1 |                 |
       | other   | local, origin | other commit               | file2            |                 |
     And the current branch is "current"
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town sync --all" in the "new_folder" folder
 
   Scenario: result
@@ -24,7 +24,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
       | current | git merge --no-edit origin/current |
       |         | git merge --no-edit main           |
     And the current branch is still "current"
-    And my uncommitted file is stashed
+    And the uncommitted file is stashed
     And my repo now has a merge in progress
     And it prints the error:
       """
@@ -40,7 +40,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
       | main    | git checkout current |
       | current | git stash pop        |
     And the current branch is still "current"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And there is no merge in progress
     And now the initial commits exist
 
@@ -52,7 +52,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
       you must resolve the conflicts before continuing
       """
     And the current branch is still "current"
-    And my uncommitted file is stashed
+    And the uncommitted file is stashed
     And my repo still has a merge in progress
 
   Scenario: resolve and continue
@@ -71,7 +71,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
       |         | git stash pop                    |
     And all branches are now synchronized
     And the current branch is still "current"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And there is no merge in progress
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                          |

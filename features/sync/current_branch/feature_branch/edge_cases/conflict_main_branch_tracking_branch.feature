@@ -6,7 +6,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | main   | local    | conflicting local commit  | conflicting_file | local content  |
       |        | origin   | conflicting origin commit | conflicting_file | origin content |
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town sync"
 
   Scenario: result
@@ -23,7 +23,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       To continue after having resolved conflicts, run "git-town continue".
       """
     And my repo now has a rebase in progress
-    And my uncommitted file is stashed
+    And the uncommitted file is stashed
 
   Scenario: abort
     When I run "git-town abort"
@@ -33,7 +33,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | git checkout feature |
       | feature | git stash pop        |
     And the current branch is still "feature"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And there is no rebase in progress anymore
     And now the initial commits exist
 
@@ -45,7 +45,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       you must resolve the conflicts before continuing
       """
     And my repo still has a rebase in progress
-    And my uncommitted file is stashed
+    And the uncommitted file is stashed
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
@@ -62,7 +62,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And all branches are now synchronized
     And the current branch is still "feature"
     And there is no rebase in progress anymore
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And my repo now has these committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |
@@ -83,7 +83,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And all branches are now synchronized
     And the current branch is still "feature"
     And there is no rebase in progress anymore
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And my repo now has these committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |

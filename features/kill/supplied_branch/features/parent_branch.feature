@@ -10,7 +10,7 @@ Feature: delete a parent branch
       | beta   | local, origin | beta commit  |
       | gamma  | local, origin | gamma commit |
     And the current branch is "gamma"
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town kill beta"
 
   Scenario: result
@@ -20,7 +20,7 @@ Feature: delete a parent branch
       |        | git push origin :beta    |
       |        | git branch -D beta       |
     And the current branch is now "gamma"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And the branches are now
       | REPOSITORY    | BRANCHES           |
       | local, origin | main, alpha, gamma |
@@ -40,6 +40,6 @@ Feature: delete a parent branch
       | gamma  | git branch beta {{ sha 'beta commit' }} |
       |        | git push -u origin beta                 |
     And the current branch is now "gamma"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And now the initial commits exist
     And the initial branches and hierarchy exist

@@ -6,7 +6,7 @@ Feature: on the main branch
       | BRANCH   | LOCATION | MESSAGE         |
       | main     | origin   | main commit     |
       | existing | local    | existing commit |
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town hack new"
 
   Scenario: result
@@ -21,7 +21,7 @@ Feature: on the main branch
       |          | git checkout new         |
       | new      | git stash pop            |
     And the current branch is now "new"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And now these commits exist
       | BRANCH   | LOCATION      | MESSAGE         |
       | main     | local, origin | main commit     |

@@ -10,7 +10,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       |        | origin        | origin beta commit | conflicting_file | origin beta content |
       | gamma  | local, origin | gamma commit       | gamma_file       | gamma content       |
     And the current branch is "main"
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town sync --all"
 
   Scenario: result
@@ -31,7 +31,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       To continue after having resolved conflicts, run "git-town continue".
       To continue by skipping the current branch, run "git-town skip".
       """
-    And my uncommitted file is stashed
+    And the uncommitted file is stashed
     And my repo now has a rebase in progress
 
   Scenario: abort
@@ -43,7 +43,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       | alpha  | git checkout main  |
       | main   | git stash pop      |
     And the current branch is now "main"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE            |
       | main   | local, origin | main commit        |
@@ -63,7 +63,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       | main   | git push --tags         |
       |        | git stash pop           |
     And the current branch is now "main"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE            |
       | main   | local, origin | main commit        |
@@ -79,7 +79,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       """
       you must resolve the conflicts before continuing
       """
-    And my uncommitted file is stashed
+    And the uncommitted file is stashed
     And my repo still has a rebase in progress
 
   Scenario: resolve and continue
@@ -96,7 +96,7 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       |        | git stash pop           |
     And all branches are now synchronized
     And the current branch is now "main"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And there is no rebase in progress anymore
 
   Scenario: resolve, finish the rebase, and continue

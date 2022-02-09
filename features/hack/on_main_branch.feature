@@ -5,7 +5,7 @@ Feature: on a feature branch
       | BRANCH | LOCATION | MESSAGE     |
       | main   | origin   | main commit |
     And the current branch is "main"
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town hack new"
 
   Scenario: result
@@ -19,7 +19,7 @@ Feature: on a feature branch
       |        | git checkout new         |
       | new    | git stash pop            |
     And the current branch is now "new"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |

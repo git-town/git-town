@@ -8,7 +8,7 @@ Feature: local branch
       | dead   | local    | dead commit  |
       | other  | local    | other commit |
     And the current branch is "dead"
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town kill dead"
 
   Scenario: result
@@ -19,7 +19,7 @@ Feature: local branch
       |        | git checkout main           |
       | main   | git branch -D dead          |
     And the current branch is now "main"
-    And my repo doesn't have any uncommitted files
+    And no uncommitted files exist
     And the branches are now
       | REPOSITORY | BRANCHES    |
       | local      | main, other |
@@ -38,6 +38,6 @@ Feature: local branch
       |        | git checkout dead                       |
       | dead   | git reset {{ sha 'dead commit' }}       |
     And the current branch is now "dead"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And now the initial commits exist
     And the initial branches and hierarchy exist

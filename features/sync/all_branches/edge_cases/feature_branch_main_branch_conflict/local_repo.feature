@@ -10,7 +10,7 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       | beta   | local    | beta commit  | conflicting_file | beta content  |
       | gamma  | local    | gamma commit | feature3_file    | gamma content |
     And the current branch is "main"
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town sync --all"
 
   Scenario: result
@@ -29,7 +29,7 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       To continue by skipping the current branch, run "git-town skip".
       """
     And the current branch is now "beta"
-    And my uncommitted file is stashed
+    And the uncommitted file is stashed
     And my repo now has a merge in progress
 
   Scenario: abort
@@ -42,7 +42,7 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       |        | git checkout main                         |
       | main   | git stash pop                             |
     And the current branch is now "main"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And now the initial commits exist
     And there is no merge in progress
 
@@ -56,7 +56,7 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       |        | git checkout main        |
       | main   | git stash pop            |
     And the current branch is now "main"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And there is no merge in progress
     And now these commits exist
       | BRANCH | LOCATION | MESSAGE                        |
@@ -85,7 +85,7 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       you must resolve the conflicts before continuing
       """
     And the current branch is still "beta"
-    And my uncommitted file is stashed
+    And the uncommitted file is stashed
     And my repo still has a merge in progress
 
   Scenario: resolve and continue
@@ -100,7 +100,7 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       | main   | git stash pop            |
     And all branches are now synchronized
     And the current branch is now "main"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And there is no merge in progress
     And my repo now has these committed files
       | BRANCH | NAME             | CONTENT          |

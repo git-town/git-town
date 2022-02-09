@@ -5,7 +5,7 @@ Feature: inside an uncommitted subfolder on the current feature branch
     And the commits
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
-    And my workspace has an uncommitted file in folder "new_folder"
+    And an uncommitted file in folder "new_folder"
     When I run "git-town hack new" in the "new_folder" folder
 
   Scenario: result
@@ -20,7 +20,7 @@ Feature: inside an uncommitted subfolder on the current feature branch
       |          | git checkout new         |
       | new      | git stash pop            |
     And the current branch is now "new"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |

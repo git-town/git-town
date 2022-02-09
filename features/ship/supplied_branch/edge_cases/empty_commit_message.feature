@@ -7,7 +7,7 @@ Feature: abort the ship via empty commit message
       | main    | local, origin | main commit    | main_file        | main content    |
       | feature | local         | feature commit | conflicting_file | feature content |
     And the current branch is "other"
-    And my workspace has an uncommitted file with name "conflicting_file" and content "conflicting content"
+    And an uncommitted file with name "conflicting_file" and content "conflicting content"
     When I run "git-town ship feature" and enter an empty commit message
 
   @skipWindows
@@ -36,7 +36,7 @@ Feature: abort the ship via empty commit message
       aborted because commit exited with error
       """
     And the current branch is still "other"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And now the initial commits exist
     And Git Town is still aware of the initial branch hierarchy
 

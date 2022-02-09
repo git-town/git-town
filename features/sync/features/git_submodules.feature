@@ -3,7 +3,7 @@ Feature: on a feature branch in a repository with a submodule that has uncommitt
   Background:
     Given my repo has a Git submodule
     And the current branch is a feature branch "feature"
-    And my workspace has an uncommitted file with name "submodule/file" and content "a change in the submodule"
+    And an uncommitted file with name "submodule/file" and content "a change in the submodule"
     When I run "git-town sync"
 
   Scenario: result
@@ -17,4 +17,4 @@ Feature: on a feature branch in a repository with a submodule that has uncommitt
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
     And the current branch is still "feature"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists

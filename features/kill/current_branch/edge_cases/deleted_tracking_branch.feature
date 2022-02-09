@@ -8,7 +8,7 @@ Feature: the branch to kill has a deleted tracking branch
       | old    | local, origin | old commit   |
       | other  | local, origin | other commit |
     And origin deletes the "old" branch
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town kill"
 
   Scenario: result
@@ -20,7 +20,7 @@ Feature: the branch to kill has a deleted tracking branch
       |        | git checkout main          |
       | main   | git branch -D old          |
     And the current branch is now "main"
-    And my repo doesn't have any uncommitted files
+    And no uncommitted files exist
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      |
       | other  | local, origin | other commit |
@@ -43,5 +43,5 @@ Feature: the branch to kill has a deleted tracking branch
       | BRANCH | LOCATION      | MESSAGE      |
       | old    | local         | old commit   |
       | other  | local, origin | other commit |
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And the initial branches and hierarchy exist

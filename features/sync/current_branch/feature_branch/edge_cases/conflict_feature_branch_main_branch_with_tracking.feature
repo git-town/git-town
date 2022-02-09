@@ -7,7 +7,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
       |         | origin   | feature commit             | feature_file     | feature content |
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town sync"
 
   Scenario: result
@@ -29,7 +29,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       To continue by skipping the current branch, run "git-town skip".
       """
     And the current branch is still "feature"
-    And my uncommitted file is stashed
+    And the uncommitted file is stashed
     And my repo now has a merge in progress
 
   Scenario: abort
@@ -42,7 +42,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       | main    | git checkout feature                                    |
       | feature | git stash pop                                           |
     And the current branch is still "feature"
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And there is no merge in progress
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
@@ -58,7 +58,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       you must resolve the conflicts before continuing
       """
     And the current branch is still "feature"
-    And my uncommitted file is stashed
+    And the uncommitted file is stashed
     And my repo still has a merge in progress
 
   Scenario: resolve and continue
@@ -72,7 +72,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     And all branches are now synchronized
     And the current branch is still "feature"
     And there is no merge in progress
-    And my workspace has the uncommitted file again
+    And the uncommitted file still exists
     And my repo now has these committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |

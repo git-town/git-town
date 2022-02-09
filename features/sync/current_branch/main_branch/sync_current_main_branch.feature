@@ -6,7 +6,7 @@ Feature: sync the main branch
       | LOCATION | MESSAGE       | FILE NAME   |
       | local    | local commit  | local_file  |
       | origin   | origin commit | origin_file |
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town sync"
 
   Scenario: result
@@ -20,7 +20,7 @@ Feature: sync the main branch
       |        | git push --tags          |
       |        | git stash pop            |
     And the current branch is still "main"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And all branches are now synchronized
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE       |

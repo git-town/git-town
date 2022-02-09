@@ -3,7 +3,7 @@ Feature: does not ship perennial branches
   Background:
     Given a perennial branch "production"
     And the current branch is "main"
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town ship production"
 
   Scenario: result
@@ -15,7 +15,7 @@ Feature: does not ship perennial branches
       the branch "production" is not a feature branch. Only feature branches can be shipped
       """
     And the current branch is still "main"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And Git Town is now aware of no branch hierarchy
 
   Scenario: undo

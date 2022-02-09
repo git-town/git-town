@@ -7,7 +7,7 @@ Feature: warn the user about an unfinished operation
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | main   | local    | conflicting local commit  | conflicting_file | local content  |
       |        | origin   | conflicting origin commit | conflicting_file | origin content |
-    And my workspace has an uncommitted file
+    And an uncommitted file
     And I run "git-town sync"
     And it prints the error:
       """
@@ -24,7 +24,7 @@ Feature: warn the user about an unfinished operation
       """
       You have an unfinished `sync` command that ended on the `main` branch now.
       """
-    And my uncommitted file is stashed
+    And the uncommitted file is stashed
 
   Scenario: sync again and continue with unresolved conflict
     When I run "git-town sync" and answer the prompts:
@@ -35,7 +35,7 @@ Feature: warn the user about an unfinished operation
       """
       you must resolve the conflicts before continuing
       """
-    And my uncommitted file is stashed
+    And the uncommitted file is stashed
 
   Scenario: resolve, sync again, and continue
     When I resolve the conflict in "conflicting_file"

@@ -6,7 +6,7 @@ Feature: ship the supplied feature branch
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME        |
       | feature | local, origin | feature commit | conflicting_file |
     And the current branch is "other"
-    And my workspace has an uncommitted file with name "conflicting_file" and content "conflicting content"
+    And an uncommitted file with name "conflicting_file" and content "conflicting content"
     When I run "git-town ship feature" and enter "feature done" for the commit message
 
   Scenario: result
@@ -29,7 +29,7 @@ Feature: ship the supplied feature branch
       |         | git checkout other                 |
       | other   | git stash pop                      |
     And the current branch is now "other"
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
