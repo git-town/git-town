@@ -8,7 +8,7 @@ Feature: a parent branch of a local branch was shipped
       | parent | local, origin | parent commit |
       | child  | local, origin | child commit  |
     And origin deletes the "parent" branch
-    And I am on the "main" branch
+    And the current branch is "main"
     When I run "git-town prune-branches"
 
   Scenario: result
@@ -16,7 +16,7 @@ Feature: a parent branch of a local branch was shipped
       | BRANCH | COMMAND                  |
       | main   | git fetch --prune --tags |
       |        | git branch -D parent     |
-    And I am now on the "main" branch
+    And the current branch is now "main"
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, child |
@@ -29,5 +29,5 @@ Feature: a parent branch of a local branch was shipped
     Then it runs the commands
       | BRANCH | COMMAND                                     |
       | main   | git branch parent {{ sha 'parent commit' }} |
-    And I am now on the "main" branch
+    And the current branch is now "main"
     And the initial branches and hierarchy exist

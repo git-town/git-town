@@ -3,7 +3,7 @@ Feature: does not ship a branch that has open changes
   Background:
     Given a feature branch "feature"
     And my workspace has an uncommitted file
-    And I am on the "feature" branch
+    And the current branch is "feature"
     When I run "git-town ship feature"
 
   Scenario: result
@@ -12,7 +12,7 @@ Feature: does not ship a branch that has open changes
       """
       you have uncommitted changes. Did you mean to commit them before shipping?
       """
-    And I am still on the "feature" branch
+    And the current branch is still "feature"
     And my workspace still contains my uncommitted file
 
   Scenario: undo
@@ -22,4 +22,4 @@ Feature: does not ship a branch that has open changes
       """
       nothing to undo
       """
-    And I am still on the "feature" branch
+    And the current branch is still "feature"

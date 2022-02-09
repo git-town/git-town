@@ -5,7 +5,7 @@ Feature: provide the commit message via a CLI argument
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME        |
       | feature | local, origin | feature commit | conflicting_file |
-    And I am on the "other" branch
+    And the current branch is "other"
     And my workspace has an uncommitted file with name "conflicting_file" and content "conflicting content"
     When I run "git-town ship feature -m 'feature done'"
 
@@ -28,7 +28,7 @@ Feature: provide the commit message via a CLI argument
       |         | git branch -D feature              |
       |         | git checkout other                 |
       | other   | git stash pop                      |
-    And I am now on the "other" branch
+    And the current branch is now "other"
     And my workspace still contains my uncommitted file
     And the branches are now
       | REPOSITORY    | BRANCHES    |
@@ -55,7 +55,7 @@ Feature: provide the commit message via a CLI argument
       | feature | git checkout main                             |
       | main    | git checkout other                            |
       | other   | git stash pop                                 |
-    And I am now on the "other" branch
+    And the current branch is now "other"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | feature done          |

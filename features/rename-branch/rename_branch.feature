@@ -6,7 +6,7 @@ Feature: rename the current branch
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
       | old    | local, origin | old commit  |
-    And I am on the "old" branch
+    And the current branch is "old"
     When I run "git-town rename-branch new"
 
   Scenario: result
@@ -18,7 +18,7 @@ Feature: rename the current branch
       | new    | git push -u origin new   |
       |        | git push origin :old     |
       |        | git branch -D old        |
-    And I am now on the "new" branch
+    And the current branch is now "new"
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
@@ -33,5 +33,5 @@ Feature: rename the current branch
       |        | git push origin :new                  |
       |        | git checkout old                      |
       | old    | git branch -D new                     |
-    And I am now on the "old" branch
+    And the current branch is now "old"
     And the initial branches and hierarchy exist

@@ -6,7 +6,7 @@ Feature: skip deleting the remote branch when shipping another branch
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
       | other   | local         | other commit   |
-    And I am on the "other" branch
+    And the current branch is "other"
     And the "ship-delete-remote-branch" setting is "false"
     When I run "git-town ship feature -m 'feature done'"
     And origin deletes the "feature" branch
@@ -26,7 +26,7 @@ Feature: skip deleting the remote branch when shipping another branch
       |         | git push                           |
       |         | git branch -D feature              |
       |         | git checkout other                 |
-    And I am now on the "other" branch
+    And the current branch is now "other"
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
@@ -49,7 +49,7 @@ Feature: skip deleting the remote branch when shipping another branch
       |         | git checkout feature                          |
       | feature | git checkout main                             |
       | main    | git checkout other                            |
-    And I am now on the "other" branch
+    And the current branch is now "other"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | feature done          |

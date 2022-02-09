@@ -7,7 +7,7 @@ Feature: the branch to kill has a deleted tracking branch
       | old    | local, origin | old commit   |
       | other  | local, origin | other commit |
     And origin deletes the "old" branch
-    And I am on the "old" branch
+    And the current branch is "old"
     And my workspace has an uncommitted file
     When I run "git-town kill"
 
@@ -19,7 +19,7 @@ Feature: the branch to kill has a deleted tracking branch
       |        | git commit -m "WIP on old" |
       |        | git checkout main          |
       | main   | git branch -D old          |
-    And I am now on the "main" branch
+    And the current branch is now "main"
     And my repo doesn't have any uncommitted files
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      |
@@ -38,7 +38,7 @@ Feature: the branch to kill has a deleted tracking branch
       | main   | git branch old {{ sha 'WIP on old' }} |
       |        | git checkout old                      |
       | old    | git reset {{ sha 'old commit' }}      |
-    And I am now on the "old" branch
+    And the current branch is now "old"
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      |
       | old    | local         | old commit   |

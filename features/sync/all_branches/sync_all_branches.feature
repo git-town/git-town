@@ -12,7 +12,7 @@ Feature: sync all feature branches
       |            | origin        | origin production commit |
       | qa         | local         | qa local commit          |
       |            | origin        | qa origin commit         |
-    And I am on the "alpha" branch
+    And the current branch is "alpha"
     When I run "git-town sync --all"
 
   Scenario: result
@@ -37,5 +37,5 @@ Feature: sync all feature branches
       |            | git push                         |
       |            | git checkout alpha               |
       | alpha      | git push --tags                  |
-    And I am still on the "alpha" branch
+    And the current branch is still "alpha"
     And all branches are now synchronized

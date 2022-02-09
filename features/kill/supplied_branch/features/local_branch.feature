@@ -7,7 +7,7 @@ Feature: local branch
       | BRANCH | LOCATION | MESSAGE      |
       | dead   | local    | dead commit  |
       | other  | local    | other commit |
-    And I am on the "dead" branch
+    And the current branch is "dead"
     And my workspace has an uncommitted file
     When I run "git-town kill dead"
 
@@ -18,7 +18,7 @@ Feature: local branch
       |        | git commit -m "WIP on dead" |
       |        | git checkout main           |
       | main   | git branch -D dead          |
-    And I am now on the "main" branch
+    And the current branch is now "main"
     And my repo doesn't have any uncommitted files
     And the branches are now
       | REPOSITORY | BRANCHES    |
@@ -37,7 +37,7 @@ Feature: local branch
       | main   | git branch dead {{ sha 'WIP on dead' }} |
       |        | git checkout dead                       |
       | dead   | git reset {{ sha 'dead commit' }}       |
-    And I am now on the "dead" branch
+    And the current branch is now "dead"
     And my workspace has the uncommitted file again
     And now the initial commits exist
     And the initial branches and hierarchy exist

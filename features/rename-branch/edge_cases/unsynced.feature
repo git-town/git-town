@@ -7,7 +7,7 @@ Feature: rename an unsynced branch
     Given the commits
       | BRANCH | LOCATION | MESSAGE       |
       | old    | origin   | origin commit |
-    And I am on the "old" branch
+    And the current branch is "old"
     When I run "git-town rename-branch old new"
     Then it runs the commands
       | BRANCH | COMMAND                  |
@@ -16,13 +16,13 @@ Feature: rename an unsynced branch
       """
       "old" is not in sync with its tracking branch, please sync the branches before renaming
       """
-    And I am still on the "old" branch
+    And the current branch is still "old"
 
   Scenario: unpushed local commits
     Given the commits
       | BRANCH | LOCATION | MESSAGE      |
       | old    | local    | local commit |
-    And I am on the "old" branch
+    And the current branch is "old"
     When I run "git-town rename-branch old new"
     Then it runs the commands
       | BRANCH | COMMAND                  |
@@ -31,4 +31,4 @@ Feature: rename an unsynced branch
       """
       "old" is not in sync with its tracking branch, please sync the branches before renaming
       """
-    And I am now on the "old" branch
+    And the current branch is now "old"

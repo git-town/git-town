@@ -2,7 +2,7 @@ Feature: does not ship with uncommitted changes
 
   Background:
     Given a feature branch "feature"
-    And I am on the "feature" branch
+    And the current branch is "feature"
     And my workspace has an uncommitted file
     When I run "git-town ship"
 

@@ -7,7 +7,7 @@ Feature: with upstream repo
       | BRANCH  | LOCATION | MESSAGE         |
       | main    | upstream | upstream commit |
       | feature | local    | local commit    |
-    And I am on the "feature" branch
+    And the current branch is "feature"
     When I run "git-town sync"
 
   Scenario: result
@@ -24,7 +24,7 @@ Feature: with upstream repo
       |         | git merge --no-edit main           |
       |         | git push                           |
     And all branches are now synchronized
-    And I am still on the "feature" branch
+    And the current branch is still "feature"
     And now these commits exist
       | BRANCH  | LOCATION                | MESSAGE                          |
       | main    | local, origin, upstream | upstream commit                  |

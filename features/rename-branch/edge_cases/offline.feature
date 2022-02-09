@@ -7,7 +7,7 @@ Feature: offline mode
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
       | old    | local, origin | old commit  |
-    And I am on the "old" branch
+    And the current branch is "old"
     When I run "git-town rename-branch new"
 
   Scenario: result
@@ -16,7 +16,7 @@ Feature: offline mode
       | old    | git branch new old |
       |        | git checkout new   |
       | new    | git branch -D old  |
-    And I am now on the "new" branch
+    And the current branch is now "new"
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
@@ -33,6 +33,6 @@ Feature: offline mode
       | new    | git branch old {{ sha 'old commit' }} |
       |        | git checkout old                      |
       | old    | git branch -D new                     |
-    And I am now on the "old" branch
+    And the current branch is now "old"
     And now the initial commits exist
     And the initial branches and hierarchy exist

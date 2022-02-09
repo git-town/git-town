@@ -1,7 +1,7 @@
 Feature: sync the main branch
 
   Background:
-    Given I am on the "main" branch
+    Given the current branch is "main"
     And the commits
       | LOCATION | MESSAGE       | FILE NAME   |
       | local    | local commit  | local_file  |
@@ -19,7 +19,7 @@ Feature: sync the main branch
       |        | git push                 |
       |        | git push --tags          |
       |        | git stash pop            |
-    And I am still on the "main" branch
+    And the current branch is still "main"
     And my workspace still contains my uncommitted file
     And all branches are now synchronized
     And now these commits exist

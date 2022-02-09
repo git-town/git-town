@@ -7,7 +7,7 @@ Feature: rename a parent branch
       | BRANCH | LOCATION      | MESSAGE       |
       | child  | local, origin | child commit  |
       | parent | local, origin | parent commit |
-    And I am on the "parent" branch
+    And the current branch is "parent"
     When I run "git-town rename-branch parent new"
 
   Scenario: result
@@ -19,7 +19,7 @@ Feature: rename a parent branch
       | new    | git push -u origin new   |
       |        | git push origin :parent  |
       |        | git branch -D parent     |
-    And I am now on the "new" branch
+    And the current branch is now "new"
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE       |
       | child  | local, origin | child commit  |
@@ -38,6 +38,6 @@ Feature: rename a parent branch
       |        | git push origin :new                        |
       |        | git checkout parent                         |
       | parent | git branch -D new                           |
-    And I am now on the "parent" branch
+    And the current branch is now "parent"
     And now the initial commits exist
     And the initial branches and hierarchy exist

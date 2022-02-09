@@ -7,7 +7,7 @@ Feature: Gitea support
   Scenario Outline: normal origin
     Given a feature branch "feature"
     And my repo's origin is "<ORIGIN>"
-    And I am on the "feature" branch
+    And the current branch is "feature"
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:
       """
@@ -28,7 +28,7 @@ Feature: Gitea support
   Scenario Outline: origin contains path that looks like a URL
     Given a feature branch "feature"
     And my repo's origin is "<ORIGIN>"
-    And I am on the "feature" branch
+    And the current branch is "feature"
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:
       """
@@ -47,7 +47,7 @@ Feature: Gitea support
   Scenario Outline: proper URL encoding
     Given a feature branch "<BRANCH_NAME>"
     And my repo's origin is "https://gitea.com/git-town/git-town"
-    And I am on the "<BRANCH_NAME>" branch
+    And the current branch is "<BRANCH_NAME>"
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:
       """
@@ -65,7 +65,7 @@ Feature: Gitea support
     Given a feature branch "parent-feature"
     And a feature branch "child-feature" as a child of "parent-feature"
     And my repo's origin is "git@gitea.com:git-town/git-town.git"
-    And I am on the "child-feature" branch
+    And the current branch is "child-feature"
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:
       """

@@ -5,7 +5,7 @@ Feature: inside an uncommitted subfolder on the current feature branch
     And the commits
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
-    And I am on the "existing" branch
+    And the current branch is "existing"
     And my workspace has an uncommitted file in folder "new_folder"
     When I run "git-town hack new" in the "new_folder" folder
 
@@ -20,7 +20,7 @@ Feature: inside an uncommitted subfolder on the current feature branch
       |          | git branch new main      |
       |          | git checkout new         |
       | new      | git stash pop            |
-    And I am now on the "new" branch
+    And the current branch is now "new"
     And my workspace still contains my uncommitted file
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE     |
@@ -41,6 +41,6 @@ Feature: inside an uncommitted subfolder on the current feature branch
       | main     | git branch -d new     |
       |          | git checkout existing |
       | existing | git stash pop         |
-    And I am now on the "existing" branch
+    And the current branch is now "existing"
     And now the initial commits exist
     And Git Town is now aware of the initial branch hierarchy

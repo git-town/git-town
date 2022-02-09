@@ -6,7 +6,7 @@ Feature: ship a feature branch in a local repo
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | local    | feature commit |
-    And I am on the "feature" branch
+    And the current branch is "feature"
     When I run "git-town ship -m 'feature done'"
 
   Scenario: result
@@ -17,7 +17,7 @@ Feature: ship a feature branch in a local repo
       | main    | git merge --squash feature   |
       |         | git commit -m "feature done" |
       |         | git branch -D feature        |
-    And I am now on the "main" branch
+    And the current branch is now "main"
     And the branches are now
       | REPOSITORY | BRANCHES |
       | local      | main     |
@@ -33,7 +33,7 @@ Feature: ship a feature branch in a local repo
       | main   | git branch feature {{ sha 'feature commit' }} |
       |        | git revert {{ sha 'feature done' }}           |
       |        | git checkout feature                          |
-    And I am now on the "feature" branch
+    And the current branch is now "feature"
     And now these commits exist
       | BRANCH  | LOCATION | MESSAGE               |
       | main    | local    | feature done          |

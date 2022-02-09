@@ -2,7 +2,7 @@ Feature: unsupported hosting service
 
   Background:
     Given a feature branch "feature"
-    And I am on the "feature" branch
+    And the current branch is "feature"
     When I run "git-town new-pull-request"
 
   Scenario: result

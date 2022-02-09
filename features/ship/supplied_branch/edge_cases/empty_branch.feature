@@ -6,7 +6,7 @@ Feature: does not ship empty feature branches
       | BRANCH | LOCATION | MESSAGE        | FILE NAME   | FILE CONTENT   |
       | main   | origin   | main commit    | common_file | common content |
       | empty  | local    | feature commit | common_file | common content |
-    And I am on the "other" branch
+    And the current branch is "other"
     And my workspace has an uncommitted file
     When I run "git-town ship empty"
 
@@ -29,7 +29,7 @@ Feature: does not ship empty feature branches
       """
       the branch "empty" has no shippable changes
       """
-    And I am still on the "other" branch
+    And the current branch is still "other"
     And my workspace still contains my uncommitted file
     And Git Town is still aware of the initial branch hierarchy
 
@@ -40,7 +40,7 @@ Feature: does not ship empty feature branches
       """
       nothing to undo
       """
-    And I am still on the "other" branch
+    And the current branch is still "other"
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE        |
       | main   | local, origin | main commit    |

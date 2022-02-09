@@ -5,7 +5,7 @@ Feature: delete a local branch
     And the commits
       | BRANCH | LOCATION | MESSAGE      |
       | local  | local    | local commit |
-    And I am on the "local" branch
+    And the current branch is "local"
     And my workspace has an uncommitted file
     When I run "git-town kill"
 
@@ -17,7 +17,7 @@ Feature: delete a local branch
       |        | git commit -m "WIP on local" |
       |        | git checkout main            |
       | main   | git branch -D local          |
-    And I am now on the "main" branch
+    And the current branch is now "main"
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
@@ -30,7 +30,7 @@ Feature: delete a local branch
       | main   | git branch local {{ sha 'WIP on local' }} |
       |        | git checkout local                        |
       | local  | git reset {{ sha 'local commit' }}        |
-    And I am now on the "local" branch
+    And the current branch is now "local"
     And my workspace still contains my uncommitted file
     And now the initial commits exist
     And the initial branches and hierarchy exist

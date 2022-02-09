@@ -6,7 +6,7 @@ Feature: auto-push new branches
     And the commits
       | BRANCH | LOCATION      | MESSAGE        |
       | old    | local, origin | feature commit |
-    And I am on the "old" branch
+    And the current branch is "old"
     When I run "git-town prepend new"
 
   Scenario: result
@@ -18,7 +18,7 @@ Feature: auto-push new branches
       |        | git branch new main      |
       |        | git checkout new         |
       | new    | git push -u origin new   |
-    And I am now on the "new" branch
+    And the current branch is now "new"
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE        |
       | old    | local, origin | feature commit |
@@ -35,6 +35,6 @@ Feature: auto-push new branches
       |        | git checkout main    |
       | main   | git branch -d new    |
       |        | git checkout old     |
-    And I am now on the "old" branch
+    And the current branch is now "old"
     And now the initial commits exist
     And Git Town is now aware of the initial branch hierarchy

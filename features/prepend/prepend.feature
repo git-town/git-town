@@ -5,7 +5,7 @@ Feature: prepend a branch to a feature branch
     And the commits
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
-    And I am on the "old" branch
+    And the current branch is "old"
     And my workspace has an uncommitted file
     When I run "git-town prepend parent"
 
@@ -20,7 +20,7 @@ Feature: prepend a branch to a feature branch
       |        | git branch parent main   |
       |        | git checkout parent      |
       | parent | git stash pop            |
-    And I am now on the "parent" branch
+    And the current branch is now "parent"
     And my workspace still contains my uncommitted file
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE    |
@@ -40,7 +40,7 @@ Feature: prepend a branch to a feature branch
       | main   | git branch -d parent |
       |        | git checkout old     |
       | old    | git stash pop        |
-    And I am now on the "old" branch
+    And the current branch is now "old"
     And my workspace still contains my uncommitted file
     And now the initial commits exist
     And Git Town is now aware of the initial branch hierarchy

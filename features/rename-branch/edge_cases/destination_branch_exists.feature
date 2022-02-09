@@ -6,7 +6,7 @@ Feature: destination branch exists
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, origin | alpha commit |
       | beta   | local, origin | beta commit  |
-    And I am on the "alpha" branch
+    And the current branch is "alpha"
     When I run "git-town rename-branch alpha beta"
     Then it runs the commands
       | BRANCH | COMMAND                  |
@@ -15,7 +15,7 @@ Feature: destination branch exists
       """
       a branch named "beta" already exists
       """
-    And I am still on the "alpha" branch
+    And the current branch is still "alpha"
     And the initial branches and hierarchy exist
 
   Scenario: destination branch exists in origin
@@ -25,7 +25,7 @@ Feature: destination branch exists
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, origin | alpha commit |
       | beta   | origin        | beta commit  |
-    And I am on the "alpha" branch
+    And the current branch is "alpha"
     When I run "git-town rename-branch alpha beta"
     Then it runs the commands
       | BRANCH | COMMAND                  |
@@ -34,5 +34,5 @@ Feature: destination branch exists
       """
       a branch named "beta" already exists
       """
-    And I am still on the "alpha" branch
+    And the current branch is still "alpha"
     And the initial branches and hierarchy exist

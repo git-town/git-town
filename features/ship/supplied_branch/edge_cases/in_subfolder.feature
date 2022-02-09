@@ -5,7 +5,7 @@ Feature: ship the supplied feature branch from a subfolder
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | origin   | feature commit |
-    And I am on the "other" branch
+    And the current branch is "other"
     And my workspace has an uncommitted file with name "new_folder/other_feature_file" and content "other feature content"
     When I run "git-town ship feature -m 'feature done'" in the "new_folder" folder
 
@@ -28,7 +28,7 @@ Feature: ship the supplied feature branch from a subfolder
       |         | git branch -D feature              |
       |         | git checkout other                 |
       | other   | git stash pop                      |
-    And I am now on the "other" branch
+    And the current branch is now "other"
     And my workspace still contains my uncommitted file
     And the branches are now
       | REPOSITORY    | BRANCHES    |
@@ -56,7 +56,7 @@ Feature: ship the supplied feature branch from a subfolder
       |         | git checkout main                             |
       | main    | git checkout other                            |
       | other   | git stash pop                                 |
-    And I am now on the "other" branch
+    And the current branch is now "other"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | feature done          |

@@ -7,7 +7,7 @@ Feature: does not kill a remote branch in offline mode
       | feature | origin   | feature commit |
     And I run "git fetch"
     And offline mode is enabled
-    And I am on the "main" branch
+    And the current branch is "main"
     When I run "git-town kill feature"
 
   Scenario: result
@@ -16,5 +16,5 @@ Feature: does not kill a remote branch in offline mode
       """
       cannot delete remote branch "feature" in offline mode
       """
-    And I am still on the "main" branch
+    And the current branch is still "main"
     And Git Town is still aware of no branch hierarchy

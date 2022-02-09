@@ -2,7 +2,7 @@ Feature: view changes made on the current feature branch
 
   Scenario: feature branch
     Given a feature branch "feature"
-    And I am on the "feature" branch
+    And the current branch is "feature"
     When I run "git-town diff-parent"
     Then it runs the commands
       | BRANCH  | COMMAND                |
@@ -11,7 +11,7 @@ Feature: view changes made on the current feature branch
   Scenario: child branch
     Given a feature branch "parent"
     And a feature branch "child" as a child of "parent"
-    And I am on the "child" branch
+    And the current branch is "child"
     When I run "git-town diff-parent"
     Then it runs the commands
       | BRANCH | COMMAND                |

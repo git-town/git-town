@@ -6,7 +6,7 @@ Feature: abort the ship by empty commit message
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | local    | feature commit |
-    And I am on the "feature" branch
+    And the current branch is "feature"
     When I run "git-town ship" and enter an empty commit message
 
   Scenario: result
@@ -29,7 +29,7 @@ Feature: abort the ship by empty commit message
       """
       aborted because commit exited with error
       """
-    And I am still on the "feature" branch
+    And the current branch is still "feature"
     And now the initial commits exist
     And the initial branches and hierarchy exist
 
@@ -39,6 +39,6 @@ Feature: abort the ship by empty commit message
       """
       nothing to undo
       """
-    And I am still on the "feature" branch
+    And the current branch is still "feature"
     And now the initial commits exist
     And the initial branches and hierarchy exist

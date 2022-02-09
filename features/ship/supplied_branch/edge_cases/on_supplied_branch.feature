@@ -5,7 +5,7 @@ Feature: ship the current feature branch
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
-    And I am on the "feature" branch
+    And the current branch is "feature"
     When I run "git-town ship feature -m 'feature done'"
 
   Scenario: result
@@ -23,7 +23,7 @@ Feature: ship the current feature branch
       |         | git push                           |
       |         | git push origin :feature           |
       |         | git branch -D feature              |
-    And I am now on the "main" branch
+    And the current branch is now "main"
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
@@ -43,7 +43,7 @@ Feature: ship the current feature branch
       |         | git checkout feature                          |
       | feature | git checkout main                             |
       | main    | git checkout feature                          |
-    And I am now on the "feature" branch
+    And the current branch is now "feature"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | feature done          |

@@ -7,7 +7,7 @@ Feature: offline mode
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
       | other   | local, origin | other commit   |
-    And I am on the "feature" branch
+    And the current branch is "feature"
     And my workspace has an uncommitted file
     When I run "git-town kill"
 
@@ -18,7 +18,7 @@ Feature: offline mode
       |         | git commit -m "WIP on feature" |
       |         | git checkout main              |
       | main    | git branch -D feature          |
-    And I am now on the "main" branch
+    And the current branch is now "main"
     And my repo doesn't have any uncommitted files
     And the branches are now
       | REPOSITORY | BRANCHES             |
@@ -39,7 +39,7 @@ Feature: offline mode
       | main    | git branch feature {{ sha 'WIP on feature' }} |
       |         | git checkout feature                          |
       | feature | git reset {{ sha 'feature commit' }}          |
-    And I am now on the "feature" branch
+    And the current branch is now "feature"
     And my workspace has the uncommitted file again
     And now the initial commits exist
     And the initial branches and hierarchy exist

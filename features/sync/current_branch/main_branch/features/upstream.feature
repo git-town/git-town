@@ -7,7 +7,7 @@ Feature: on the main branch with an upstream repo
     Given the commits
       | BRANCH | LOCATION | MESSAGE         |
       | main   | upstream | upstream commit |
-    And I am on the "main" branch
+    And the current branch is "main"
     When I run "git-town sync"
     Then it runs the commands
       | BRANCH | COMMAND                  |
@@ -18,7 +18,7 @@ Feature: on the main branch with an upstream repo
       |        | git push                 |
       |        | git push --tags          |
     And all branches are now synchronized
-    And I am still on the "main" branch
+    And the current branch is still "main"
     And now these commits exist
       | BRANCH | LOCATION                | MESSAGE         |
       | main   | local, origin, upstream | upstream commit |
@@ -29,7 +29,7 @@ Feature: on the main branch with an upstream repo
       | main   | local    | local commit    |
       |        | origin   | origin commit   |
       |        | upstream | upstream commit |
-    And I am on the "main" branch
+    And the current branch is "main"
     And the "sync-upstream" setting is false
     When I run "git-town sync"
     Then it runs the commands
@@ -39,7 +39,7 @@ Feature: on the main branch with an upstream repo
       |        | git push                 |
       |        | git push --tags          |
     And all branches are now synchronized
-    And I am still on the "main" branch
+    And the current branch is still "main"
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE         |
       | main   | local, origin | origin commit   |

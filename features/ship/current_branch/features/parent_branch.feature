@@ -7,7 +7,7 @@ Feature: ship a parent branch
       | BRANCH | LOCATION      | MESSAGE       |
       | parent | local, origin | parent commit |
       | child  | local, origin | child commit  |
-    And I am on the "parent" branch
+    And the current branch is "parent"
     When I run "git-town ship -m 'parent done'"
 
   Scenario: result
@@ -24,7 +24,7 @@ Feature: ship a parent branch
       |        | git commit -m "parent done"       |
       |        | git push                          |
       |        | git branch -D parent              |
-    And I am now on the "main" branch
+    And the current branch is now "main"
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | parent done   |
@@ -44,7 +44,7 @@ Feature: ship a parent branch
       |        | git checkout parent                         |
       | parent | git checkout main                           |
       | main   | git checkout parent                         |
-    And I am now on the "parent" branch
+    And the current branch is now "parent"
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | parent done          |

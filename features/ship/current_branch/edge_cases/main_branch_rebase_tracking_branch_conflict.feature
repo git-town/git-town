@@ -7,7 +7,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | main    | local    | conflicting local commit  | conflicting_file | local content   |
       |         | origin   | conflicting origin commit | conflicting_file | origin content  |
       | feature | local    | feature commit            | feature_file     | feature content |
-    And I am on the "feature" branch
+    And the current branch is "feature"
     When I run "git-town ship -m 'feature done'"
 
   Scenario: result
@@ -29,7 +29,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | BRANCH | COMMAND              |
       | main   | git rebase --abort   |
       |        | git checkout feature |
-    And I am still on the "feature" branch
+    And the current branch is still "feature"
     And there is no rebase in progress anymore
     And now the initial commits exist
     And Git Town is still aware of the initial branch hierarchy
@@ -50,7 +50,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | git push                           |
       |         | git push origin :feature           |
       |         | git branch -D feature              |
-    And I am now on the "main" branch
+    And the current branch is now "main"
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
@@ -77,4 +77,4 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | git push                           |
       |         | git push origin :feature           |
       |         | git branch -D feature              |
-    And I am now on the "main" branch
+    And the current branch is now "main"

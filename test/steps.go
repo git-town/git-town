@@ -172,7 +172,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^I am on the "([^"]*)" branch$`, func(branchName string) error {
+	suite.Step(`^the current branch is "([^"]*)"$`, func(branchName string) error {
 		err := state.gitEnv.DevRepo.CheckoutBranch(branchName)
 		if err != nil {
 			return fmt.Errorf("cannot change to branch %q: %w", branchName, err)
@@ -180,7 +180,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^I am on the "([^"]*)" branch with "([^"]*)" as the previous Git branch$`, func(current, previous string) error {
+	suite.Step(`^the current branch is "([^"]*)" and the previous branch is "([^"]*)"$`, func(current, previous string) error {
 		err := state.gitEnv.DevRepo.CheckoutBranch(previous)
 		if err != nil {
 			return err
@@ -188,7 +188,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.CheckoutBranch(current)
 	})
 
-	suite.Step(`^I am (?:now|still) on the "([^"]*)" branch$`, func(expected string) error {
+	suite.Step(`^the current branch is (?:now|still) "([^"]*)"$`, func(expected string) error {
 		state.gitEnv.DevRepo.CurrentBranchCache.Invalidate()
 		actual, err := state.gitEnv.DevRepo.CurrentBranch()
 		if err != nil {

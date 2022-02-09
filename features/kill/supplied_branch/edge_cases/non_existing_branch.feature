@@ -1,7 +1,7 @@
 Feature: non-existing branch
 
   Scenario:
-    Given I am on the "main" branch
+    Given the current branch is "main"
     And my workspace has an uncommitted file
     When I run "git-town kill non-existing"
     Then it runs the commands
@@ -11,5 +11,5 @@ Feature: non-existing branch
       """
       there is no branch named "non-existing"
       """
-    And I am now on the "main" branch
+    And the current branch is now "main"
     And my workspace still contains my uncommitted file

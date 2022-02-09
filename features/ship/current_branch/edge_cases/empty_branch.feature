@@ -6,7 +6,7 @@ Feature: does not ship an empty branch
       | BRANCH        | LOCATION | MESSAGE        | FILE NAME   | FILE CONTENT   |
       | main          | origin   | main commit    | common_file | common content |
       | empty-feature | local    | feature commit | common_file | common content |
-    And I am on the "empty-feature" branch
+    And the current branch is "empty-feature"
     When I run "git-town ship"
 
   Scenario: result
@@ -25,7 +25,7 @@ Feature: does not ship an empty branch
       """
       the branch "empty-feature" has no shippable changes
       """
-    And I am still on the "empty-feature" branch
+    And the current branch is still "empty-feature"
     And Git Town is still aware of the initial branch hierarchy
 
   Scenario: undo
@@ -35,7 +35,7 @@ Feature: does not ship an empty branch
       """
       nothing to undo
       """
-    And I am still on the "empty-feature" branch
+    And the current branch is still "empty-feature"
     And now these commits exist
       | BRANCH        | LOCATION      | MESSAGE        |
       | main          | local, origin | main commit    |

@@ -2,7 +2,7 @@ Feature: preserve the previous Git branch
 
   Scenario:
     Given the feature branches "previous" and "current"
-    And I am on the "current" branch with "previous" as the previous Git branch
+    And the current branch is "current" and the previous branch is "previous"
     When I run "git-town sync"
-    Then I am still on the "current" branch
+    Then the current branch is still "current"
     And the previous Git branch is still "previous"

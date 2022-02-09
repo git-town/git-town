@@ -9,7 +9,7 @@ Feature: does not ship a child branch
       | alpha  | local, origin | alpha commit |
       | beta   | local, origin | beta commit  |
       | gamma  | local, origin | gamma commit |
-    And I am on the "gamma" branch
+    And the current branch is "gamma"
     When I run "git-town ship"
 
   Scenario: result
@@ -21,7 +21,7 @@ Feature: does not ship a child branch
       shipping this branch would ship "alpha, beta" as well,
       please ship "alpha" first
       """
-    And I am still on the "gamma" branch
+    And the current branch is still "gamma"
     And now the initial commits exist
     And the initial branches and hierarchy exist
 
@@ -32,6 +32,6 @@ Feature: does not ship a child branch
       """
       nothing to undo
       """
-    And I am still on the "gamma" branch
+    And the current branch is still "gamma"
     And now the initial commits exist
     And the initial branches and hierarchy exist

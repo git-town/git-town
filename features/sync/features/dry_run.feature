@@ -8,7 +8,7 @@ Feature: dry run
       |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
       |         | origin   | origin feature commit |
-    And I am on the "feature" branch
+    And the current branch is "feature"
     When I run "git-town sync --dry-run"
 
   Scenario: result
@@ -22,5 +22,5 @@ Feature: dry run
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
       |         | git push                           |
-    And I am still on the "feature" branch
+    And the current branch is still "feature"
     And now the initial commits exist

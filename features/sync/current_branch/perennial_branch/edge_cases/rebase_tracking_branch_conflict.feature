@@ -6,7 +6,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | qa     | local    | conflicting local commit  | conflicting_file | local content  |
       |        | origin   | conflicting origin commit | conflicting_file | origin content |
-    And I am on the "qa" branch
+    And the current branch is "qa"
     And my workspace has an uncommitted file
     When I run "git-town sync"
 
@@ -32,7 +32,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       | BRANCH | COMMAND            |
       | qa     | git rebase --abort |
       |        | git stash pop      |
-    And I am still on the "qa" branch
+    And the current branch is still "qa"
     And my workspace still contains my uncommitted file
     And there is no rebase in progress anymore
     And now the initial commits exist
@@ -57,7 +57,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       |        | git push --tags       |
       |        | git stash pop         |
     And all branches are now synchronized
-    And I am still on the "qa" branch
+    And the current branch is still "qa"
     And there is no rebase in progress anymore
     And my workspace still contains my uncommitted file
     And my repo now has these committed files
@@ -74,7 +74,7 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       |        | git push --tags |
       |        | git stash pop   |
     And all branches are now synchronized
-    And I am still on the "qa" branch
+    And the current branch is still "qa"
     And there is no rebase in progress anymore
     And my workspace still contains my uncommitted file
     And my repo now has these committed files

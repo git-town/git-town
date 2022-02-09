@@ -5,7 +5,7 @@ Feature: support many browsers and operating systems
     Given a feature branch "feature"
     And my repo's origin is "https://github.com/git-town/git-town.git"
     And my computer has the "<TOOL>" tool installed
-    And I am on the "feature" branch
+    And the current branch is "feature"
     When I run "git-town new-pull-request"
     Then "<TOOL>" launches a new pull request with this url in my browser:
       """
@@ -27,7 +27,7 @@ Feature: support many browsers and operating systems
     Given a feature branch "feature"
     And my repo's origin is "https://github.com/git-town/git-town.git"
     And my computer has no tool to open browsers installed
-    And I am on the "feature" branch
+    And the current branch is "feature"
     When I run "git-town new-pull-request"
     Then it prints:
       """

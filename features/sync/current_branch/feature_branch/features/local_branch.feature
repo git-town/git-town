@@ -7,7 +7,7 @@ Feature: sync the current feature branch without a tracking branch
       | main    | local    | local main commit    |
       |         | origin   | origin main commit   |
       | feature | local    | local feature commit |
-    And I am on the "feature" branch
+    And the current branch is "feature"
     When I run "git-town sync"
 
   Scenario: result
@@ -21,7 +21,7 @@ Feature: sync the current feature branch without a tracking branch
       | feature | git merge --no-edit main   |
       |         | git push -u origin feature |
     And all branches are now synchronized
-    And I am still on the "feature" branch
+    And the current branch is still "feature"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, origin | origin main commit               |

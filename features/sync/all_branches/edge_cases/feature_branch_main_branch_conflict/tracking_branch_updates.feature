@@ -9,7 +9,7 @@ Feature: handle merge conflicts between feature branch and main branch
       | beta   | local         | local beta commit  | conflicting_file     | local beta content  |
       |        | origin        | origin beta commit | feature2_origin_file | origin beta content |
       | gamma  | origin        | gamma commit       | feature3_file        | gamma content       |
-    And I am on the "main" branch
+    And the current branch is "main"
     And my workspace has an uncommitted file
     When I run "git-town sync --all"
 
@@ -33,7 +33,7 @@ Feature: handle merge conflicts between feature branch and main branch
       To continue after having resolved conflicts, run "git-town continue".
       To continue by skipping the current branch, run "git-town skip".
       """
-    And I am now on the "beta" branch
+    And the current branch is now "beta"
     And my uncommitted file is stashed
     And my repo now has a merge in progress
 
@@ -46,7 +46,7 @@ Feature: handle merge conflicts between feature branch and main branch
       |        | git checkout alpha                             |
       | alpha  | git checkout main                              |
       | main   | git stash pop                                  |
-    And I am now on the "main" branch
+    And the current branch is now "main"
     And my workspace has the uncommitted file again
     And there is no merge in progress
     And now these commits exist
@@ -78,7 +78,7 @@ Feature: handle merge conflicts between feature branch and main branch
       |        | git checkout main                              |
       | main   | git push --tags                                |
       |        | git stash pop                                  |
-    And I am now on the "main" branch
+    And the current branch is now "main"
     And my workspace has the uncommitted file again
     And there is no merge in progress
     And now these commits exist
@@ -108,7 +108,7 @@ Feature: handle merge conflicts between feature branch and main branch
       """
       you must resolve the conflicts before continuing
       """
-    And I am still on the "beta" branch
+    And the current branch is still "beta"
     And my uncommitted file is stashed
     And my repo still has a merge in progress
 
@@ -126,7 +126,7 @@ Feature: handle merge conflicts between feature branch and main branch
       |        | git checkout main                |
       | main   | git push --tags                  |
       |        | git stash pop                    |
-    And I am now on the "main" branch
+    And the current branch is now "main"
     And my workspace has the uncommitted file again
     And all branches are now synchronized
     And there is no merge in progress

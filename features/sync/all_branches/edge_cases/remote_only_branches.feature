@@ -8,7 +8,7 @@ Feature: does not sync branches that exist only on remotes
       | main   | origin        | main commit     |
       | mine   | local, origin | my commit       |
       | other  | origin        | coworker commit |
-    And I am on the "main" branch
+    And the current branch is "main"
     When I run "git-town sync --all"
 
   Scenario: result
@@ -22,7 +22,7 @@ Feature: does not sync branches that exist only on remotes
       |        | git push                        |
       |        | git checkout main               |
       | main   | git push --tags                 |
-    And I am still on the "main" branch
+    And the current branch is still "main"
     And all branches are now synchronized
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                       |

@@ -14,7 +14,7 @@ Feature: sync before creating the pull request
       |        | origin   | origin child commit  |
     And my computer has the "open" tool installed
     And my repo's origin is "git@github.com:git-town/git-town.git"
-    And I am on the "child" branch
+    And the current branch is "child"
     And my workspace has an uncommitted file
     When I run "git-town new-pull-request"
 
@@ -41,7 +41,7 @@ Feature: sync before creating the pull request
       """
       https://github.com/git-town/git-town/compare/parent...child?expand=1
       """
-    And I am still on the "child" branch
+    And the current branch is still "child"
     And my workspace still contains my uncommitted file
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                                                  |

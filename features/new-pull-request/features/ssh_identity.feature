@@ -6,7 +6,7 @@ Feature: use a SSH identity
     And a feature branch "feature"
     And my repo's origin is "git@my-ssh-identity:git-town/git-town.git"
     And the "code-hosting-origin-hostname" setting is "<ORIGIN_HOSTNAME>"
-    And I am on the "feature" branch
+    And the current branch is "feature"
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:
       """

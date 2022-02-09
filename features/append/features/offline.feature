@@ -6,7 +6,7 @@ Feature: append in offline mode
     And the commits
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
-    And I am on the "existing" branch
+    And the current branch is "existing"
 
   Scenario: result
     When I run "git-town append new"
@@ -19,7 +19,7 @@ Feature: append in offline mode
       |          | git merge --no-edit main            |
       |          | git branch new existing             |
       |          | git checkout new                    |
-    And I am now on the "new" branch
+    And the current branch is now "new"
     And now these commits exist
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
@@ -34,6 +34,6 @@ Feature: append in offline mode
       | existing | git branch -D new     |
       |          | git checkout main     |
       | main     | git checkout existing |
-    And I am now on the "existing" branch
+    And the current branch is now "existing"
     And now the initial commits exist
     And Git Town is now aware of the initial branch hierarchy

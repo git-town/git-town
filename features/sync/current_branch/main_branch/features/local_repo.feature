@@ -2,7 +2,7 @@ Feature: sync the main branch in a local repo
 
   Background:
     Given my repo does not have an origin
-    And I am on the "main" branch
+    And the current branch is "main"
     And the commits
       | BRANCH | LOCATION | MESSAGE      | FILE NAME  |
       | main   | local    | local commit | local_file |
@@ -10,5 +10,5 @@ Feature: sync the main branch in a local repo
 
   Scenario: result
     Then it runs no commands
-    And I am still on the "main" branch
+    And the current branch is still "main"
     And now the initial commits exist

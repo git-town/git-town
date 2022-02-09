@@ -7,7 +7,7 @@ Feature: sync the current feature branch (in a local repo)
       | BRANCH  | LOCATION | MESSAGE        |
       | main    | local    | main commit    |
       | feature | local    | feature commit |
-    And I am on the "feature" branch
+    And the current branch is "feature"
     When I run "git-town sync"
 
   Scenario: result
@@ -15,7 +15,7 @@ Feature: sync the current feature branch (in a local repo)
       | BRANCH  | COMMAND                  |
       | feature | git merge --no-edit main |
     And all branches are now synchronized
-    And I am still on the "feature" branch
+    And the current branch is still "feature"
     And now these commits exist
       | BRANCH  | LOCATION | MESSAGE                          |
       | main    | local    | main commit                      |

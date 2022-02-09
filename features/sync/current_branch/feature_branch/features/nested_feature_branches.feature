@@ -11,7 +11,7 @@ Feature: nested feature branches
       |        | origin   | origin parent commit |
       | child  | local    | local child commit   |
       |        | origin   | origin child commit  |
-    And I am on the "child" branch
+    And the current branch is "child"
     When I run "git-town sync"
     Then it runs the commands
       | BRANCH | COMMAND                           |
@@ -28,7 +28,7 @@ Feature: nested feature branches
       |        | git merge --no-edit parent        |
       |        | git push                          |
     And all branches are now synchronized
-    And I am still on the "child" branch
+    And the current branch is still "child"
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                                                  |
       | main   | local, origin | origin main commit                                       |

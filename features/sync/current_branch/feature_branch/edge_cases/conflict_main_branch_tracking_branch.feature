@@ -6,7 +6,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | main   | local    | conflicting local commit  | conflicting_file | local content  |
       |        | origin   | conflicting origin commit | conflicting_file | origin content |
-    And I am on the "feature" branch
+    And the current branch is "feature"
     And my workspace has an uncommitted file
     When I run "git-town sync"
 
@@ -33,7 +33,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | main    | git rebase --abort   |
       |         | git checkout feature |
       | feature | git stash pop        |
-    And I am still on the "feature" branch
+    And the current branch is still "feature"
     And my workspace still contains my uncommitted file
     And there is no rebase in progress anymore
     And now the initial commits exist
@@ -61,7 +61,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | git push                           |
       |         | git stash pop                      |
     And all branches are now synchronized
-    And I am still on the "feature" branch
+    And the current branch is still "feature"
     And there is no rebase in progress anymore
     And my workspace still contains my uncommitted file
     And my repo now has these committed files
@@ -82,7 +82,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | git push                           |
       |         | git stash pop                      |
     And all branches are now synchronized
-    And I am still on the "feature" branch
+    And the current branch is still "feature"
     And there is no rebase in progress anymore
     And my workspace still contains my uncommitted file
     And my repo now has these committed files

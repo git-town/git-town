@@ -5,7 +5,7 @@ Feature: conflicts between uncommitted changes and the main branch
     And the commits
       | BRANCH | LOCATION      | MESSAGE            | FILE NAME        | FILE CONTENT |
       | main   | local, origin | conflicting commit | conflicting_file | main content |
-    And I am on the "existing" branch
+    And the current branch is "existing"
     And my workspace has an uncommitted file with name "conflicting_file" and content "conflicting content"
     When I run "git-town hack new"
 
@@ -35,7 +35,7 @@ Feature: conflicts between uncommitted changes and the main branch
       """
       cannot check out branch "main"
       """
-    And I am still on the "new" branch
+    And the current branch is still "new"
 
   Scenario: resolve and abort
     Given I resolve the conflict in "conflicting_file"
@@ -49,7 +49,7 @@ Feature: conflicts between uncommitted changes and the main branch
       """
       cannot check out branch "existing"
       """
-    And I am now on the "main" branch
+    And the current branch is now "main"
     And now the initial commits exist
     And my workspace now contains the file "conflicting_file" with content "resolved content"
 
@@ -64,7 +64,7 @@ Feature: conflicts between uncommitted changes and the main branch
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
     Then it runs no commands
-    And I am now on the "new" branch
+    And the current branch is now "new"
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE            | FILE NAME        | FILE CONTENT |
       | main   | local, origin | conflicting commit | conflicting_file | main content |
@@ -84,6 +84,6 @@ Feature: conflicts between uncommitted changes and the main branch
       """
       cannot check out branch "existing"
       """
-    And I am now on the "main" branch
+    And the current branch is now "main"
     And now the initial commits exist
     And my workspace now contains the file "conflicting_file" with content "resolved content"

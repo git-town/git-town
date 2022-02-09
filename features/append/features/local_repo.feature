@@ -6,7 +6,7 @@ Feature: in a local repo
     And the commits
       | BRANCH   | LOCATION | MESSAGE         |
       | existing | local    | existing commit |
-    And I am on the "existing" branch
+    And the current branch is "existing"
     And my workspace has an uncommitted file
     When I run "git-town hack new"
 
@@ -18,7 +18,7 @@ Feature: in a local repo
       |          | git branch new main |
       |          | git checkout new    |
       | new      | git stash pop       |
-    And I am now on the "new" branch
+    And the current branch is now "new"
     And my workspace still contains my uncommitted file
     And now these commits exist
       | BRANCH   | LOCATION | MESSAGE         |
@@ -37,7 +37,7 @@ Feature: in a local repo
       |          | git checkout existing |
       | existing | git branch -d new     |
       |          | git stash pop         |
-    And I am now on the "existing" branch
+    And the current branch is now "existing"
     And now the initial commits exist
     And my workspace still contains my uncommitted file
     And the initial branches and hierarchy exist

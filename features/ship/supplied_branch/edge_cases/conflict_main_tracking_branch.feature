@@ -7,7 +7,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | main    | local    | conflicting local commit  | conflicting_file | local content   |
       |         | origin   | conflicting origin commit | conflicting_file | origin content  |
       | feature | local    | feature commit            | feature_file     | feature content |
-    And I am on the "other" branch
+    And the current branch is "other"
     And my workspace has an uncommitted file
     And I run "git-town ship feature -m 'feature done'"
 
@@ -34,7 +34,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | main   | git rebase --abort |
       |        | git checkout other |
       | other  | git stash pop      |
-    And I am still on the "other" branch
+    And the current branch is still "other"
     And my workspace still contains my uncommitted file
     And there is no rebase in progress anymore
     And now the initial commits exist
@@ -58,7 +58,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | git branch -D feature              |
       |         | git checkout other                 |
       | other   | git stash pop                      |
-    And I am now on the "other" branch
+    And the current branch is now "other"
     And my workspace still contains my uncommitted file
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                   | FILE NAME        | FILE CONTENT     |
@@ -90,7 +90,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | git branch -D feature              |
       |         | git checkout other                 |
       | other   | git stash pop                      |
-    And I am now on the "other" branch
+    And the current branch is now "other"
 
   Scenario: resolve, continue, and undo
     When I resolve the conflict in "conflicting_file"
@@ -110,7 +110,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | git checkout main                                               |
       | main    | git checkout other                                              |
       | other   | git stash pop                                                   |
-    And I am now on the "other" branch
+    And the current branch is now "other"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, origin | conflicting origin commit        |

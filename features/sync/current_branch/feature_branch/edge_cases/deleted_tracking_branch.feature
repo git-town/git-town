@@ -6,7 +6,7 @@ Feature: restores deleted tracking branch
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
     And origin deletes the "feature" branch
-    And I am on the "feature" branch
+    And the current branch is "feature"
     When I run "git-town sync"
 
   Scenario: result
@@ -19,5 +19,5 @@ Feature: restores deleted tracking branch
       | feature | git merge --no-edit main   |
       |         | git push -u origin feature |
     And all branches are now synchronized
-    And I am still on the "feature" branch
+    And the current branch is still "feature"
     And now the initial commits exist

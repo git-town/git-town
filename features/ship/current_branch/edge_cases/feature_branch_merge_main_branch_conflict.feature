@@ -6,7 +6,7 @@ Feature: handle conflicts between the shipped branch and the main branch
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
-    And I am on the "feature" branch
+    And the current branch is "feature"
     And I run "git-town ship -m 'feature done'"
 
   Scenario: result
@@ -24,7 +24,7 @@ Feature: handle conflicts between the shipped branch and the main branch
       To abort, run "git-town abort".
       To continue after having resolved conflicts, run "git-town continue".
       """
-    And I am still on the "feature" branch
+    And the current branch is still "feature"
     And my repo now has a merge in progress
 
   Scenario: abort
@@ -34,7 +34,7 @@ Feature: handle conflicts between the shipped branch and the main branch
       | feature | git merge --abort    |
       |         | git checkout main    |
       | main    | git checkout feature |
-    And I am still on the "feature" branch
+    And the current branch is still "feature"
     And there is no merge in progress
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
@@ -54,7 +54,7 @@ Feature: handle conflicts between the shipped branch and the main branch
       |         | git push                     |
       |         | git push origin :feature     |
       |         | git branch -D feature        |
-    And I am now on the "main" branch
+    And the current branch is now "main"
     And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
@@ -76,4 +76,4 @@ Feature: handle conflicts between the shipped branch and the main branch
       |         | git push                     |
       |         | git push origin :feature     |
       |         | git branch -D feature        |
-    And I am now on the "main" branch
+    And the current branch is now "main"

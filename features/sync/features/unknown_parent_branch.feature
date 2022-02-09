@@ -3,7 +3,7 @@ Feature: enter a parent branch name when prompted
 
   Background:
     Given the branches "alpha" and "beta"
-    And I am on the "beta" branch
+    And the current branch is "beta"
 
   Scenario: choose the default branch name
     When I run "git-town sync" and answer the prompts:

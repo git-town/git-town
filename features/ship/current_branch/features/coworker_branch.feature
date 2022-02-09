@@ -5,7 +5,7 @@ Feature: ship a coworker's feature branch
     And the commits
       | BRANCH  | LOCATION      | MESSAGE         | AUTHOR                          |
       | feature | local, origin | coworker commit | coworker <coworker@example.com> |
-    And I am on the "feature" branch
+    And the current branch is "feature"
 
   Scenario: result (commit message via CLI)
     When I run "git-town ship -m 'feature done'"
@@ -61,7 +61,7 @@ Feature: ship a coworker's feature branch
       |         | git checkout feature                           |
       | feature | git checkout main                              |
       | main    | git checkout feature                           |
-    And I am now on the "feature" branch
+    And the current branch is now "feature"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | feature done          |

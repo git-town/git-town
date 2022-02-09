@@ -5,7 +5,7 @@ Feature: Bitbucket support
     Given a feature branch "feature"
     And my repo's origin is "<ORIGIN>"
     And my computer has the "open" tool installed
-    And I am on the "feature" branch
+    And the current branch is "feature"
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:
       """
@@ -27,7 +27,7 @@ Feature: Bitbucket support
     Given a feature branch "feature"
     And my repo's origin is "<ORIGIN>"
     And my computer has the "open" tool installed
-    And I am on the "feature" branch
+    And the current branch is "feature"
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:
       """

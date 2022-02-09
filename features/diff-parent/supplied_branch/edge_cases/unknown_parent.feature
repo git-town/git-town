@@ -3,7 +3,7 @@ Feature: ask for missing parent
 
   Scenario: feature branch without parent
     Given a branch "feature"
-    And I am on the "main" branch
+    And the current branch is "main"
     When I run "git-town diff-parent feature" and answer the prompts:
       | PROMPT                                        | ANSWER  |
       | Please specify the parent branch of 'feature' | [ENTER] |

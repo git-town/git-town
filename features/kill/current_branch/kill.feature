@@ -6,7 +6,7 @@ Feature: delete the current feature branch
       | BRANCH  | LOCATION      | MESSAGE        |
       | current | local, origin | current commit |
       | other   | local, origin | other commit   |
-    And I am on the "current" branch
+    And the current branch is "current"
     And my workspace has an uncommitted file
     When I run "git-town kill"
 
@@ -19,7 +19,7 @@ Feature: delete the current feature branch
       |         | git commit -m "WIP on current" |
       |         | git checkout main              |
       | main    | git branch -D current          |
-    And I am now on the "main" branch
+    And the current branch is now "main"
     And my repo doesn't have any uncommitted files
     And the branches are now
       | REPOSITORY    | BRANCHES    |
@@ -39,7 +39,7 @@ Feature: delete the current feature branch
       |         | git checkout current                          |
       | current | git reset {{ sha 'current commit' }}          |
       |         | git push -u origin current                    |
-    And I am now on the "current" branch
+    And the current branch is now "current"
     And my workspace has the uncommitted file again
     And now the initial commits exist
     And the initial branches and hierarchy exist

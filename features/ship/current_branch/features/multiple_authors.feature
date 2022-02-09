@@ -8,7 +8,7 @@ Feature: ship a coworker's feature branch
       | feature | local    | developer commit 1 | developer <developer@example.com> |
       |         |          | developer commit 2 | developer <developer@example.com> |
       |         |          | coworker commit    | coworker <coworker@example.com>   |
-    And I am on the "feature" branch
+    And the current branch is "feature"
 
   Scenario: choose myself as the author
     When I run "git-town ship -m 'feature done'" and answer the prompts:
@@ -42,7 +42,7 @@ Feature: ship a coworker's feature branch
       |         | git checkout feature                           |
       | feature | git checkout main                              |
       | main    | git checkout feature                           |
-    And I am now on the "feature" branch
+    And the current branch is now "feature"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | feature done          |

@@ -5,7 +5,7 @@ Feature: delete a remote only branch
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | origin   | feature commit |
-    And I am on the "main" branch
+    And the current branch is "main"
     And I run "git-town sync"
     When I run "git-town kill feature"
 

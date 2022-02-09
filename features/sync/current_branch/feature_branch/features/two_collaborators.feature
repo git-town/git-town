@@ -9,7 +9,7 @@ Feature: collaborative feature branch syncing
       | BRANCH  | LOCATION | MESSAGE         |
       | feature | local    | my commit       |
       |         | coworker | coworker commit |
-    And I am on the "feature" branch
+    And the current branch is "feature"
     When I run "git-town sync"
     Then it runs the commands
       | BRANCH  | COMMAND                            |
@@ -44,7 +44,7 @@ Feature: collaborative feature branch syncing
       |         | coworker, origin        | coworker commit                                            |
       |         |                         | Merge remote-tracking branch 'origin/feature' into feature |
 
-    Given I am on the "feature" branch
+    Given the current branch is "feature"
     When I run "git-town sync"
     Then it runs the commands
       | BRANCH  | COMMAND                            |
