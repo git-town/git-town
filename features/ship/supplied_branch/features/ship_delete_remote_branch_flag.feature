@@ -7,7 +7,7 @@ Feature: skip deleting the remote branch when shipping another branch
       | feature | local, origin | feature commit |
       | other   | local         | other commit   |
     And I am on the "other" branch
-    And Git Town's local "ship-delete-remote-branch" setting is "false"
+    And the "ship-delete-remote-branch" setting is "false"
     When I run "git-town ship feature -m 'feature done'"
     And origin deletes the "feature" branch
 
