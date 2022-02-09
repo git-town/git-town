@@ -604,7 +604,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repo knows about the remote branch$`, func() error {
+	suite.Step(`^I fetch Git updates$`, func() error {
 		return state.gitEnv.DevRepo.Fetch()
 	})
 

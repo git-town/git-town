@@ -1,12 +1,12 @@
 Feature: does not kill a remote branch in offline mode
 
   Background:
-    Given offline mode is enabled
-    And a remote feature branch "feature"
+    Given a remote feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | origin   | feature commit |
-    And my repo knows about the remote branch
+    And I fetch Git updates
+    And offline mode is enabled
     And I am on the "main" branch
     When I run "git-town kill feature"
 
