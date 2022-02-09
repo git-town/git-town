@@ -17,7 +17,7 @@ Feature: multi-platform support
 
   Scenario: no supported tool installed
     Given my repo's origin is "https://github.com/git-town/git-town.git"
-    And my computer has no tool to open browsers installed
+    And no tool to open browsers is installed
     When I run "git-town repo"
     Then it prints:
       """

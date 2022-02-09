@@ -25,7 +25,7 @@ Feature: support many browsers and operating systems
   Scenario: no supported tool installed
     Given the current branch is a feature branch "feature"
     And my repo's origin is "https://github.com/git-town/git-town.git"
-    And my computer has no tool to open browsers installed
+    And no tool to open browsers is installed
     When I run "git-town new-pull-request"
     Then it prints:
       """

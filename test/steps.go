@@ -362,7 +362,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return err
 	})
 
-	suite.Step(`^my computer has no tool to open browsers installed$`, func() error {
+	suite.Step(`^no tool to open browsers is installed$`, func() error {
 		return state.gitEnv.DevShell.MockNoCommandsInstalled()
 	})
 
