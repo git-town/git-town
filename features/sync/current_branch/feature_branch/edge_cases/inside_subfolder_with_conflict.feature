@@ -25,7 +25,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
       |         | git merge --no-edit main           |
     And the current branch is still "current"
     And the uncommitted file is stashed
-    And my repo now has a merge in progress
+    And a merge is now in progress
     And it prints the error:
       """
       exit status 1
@@ -41,7 +41,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
       | current | git stash pop        |
     And the current branch is still "current"
     And the uncommitted file still exists
-    And there is no merge in progress
+    And no merge is in progress
     And now the initial commits exist
 
   Scenario: continue with unresolved conflict
@@ -53,7 +53,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
       """
     And the current branch is still "current"
     And the uncommitted file is stashed
-    And my repo still has a merge in progress
+    And a merge is now in progress
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
@@ -72,7 +72,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
     And all branches are now synchronized
     And the current branch is still "current"
     And the uncommitted file still exists
-    And there is no merge in progress
+    And no merge is in progress
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, origin | conflicting main commit          |
@@ -83,7 +83,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
       | other   | local, origin | other commit                     |
       |         |               | conflicting main commit          |
       |         |               | Merge branch 'main' into other   |
-    And my repo still has these committed files
+    And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | current | conflicting_file | resolved content |

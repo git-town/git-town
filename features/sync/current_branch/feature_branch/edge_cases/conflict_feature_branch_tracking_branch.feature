@@ -27,7 +27,7 @@ Feature: handle conflicts between the current feature branch and its tracking br
       """
     And the current branch is still "feature"
     And the uncommitted file is stashed
-    And my repo now has a merge in progress
+    And a merge is now in progress
 
   Scenario: abort
     When I run "git-town abort"
@@ -39,7 +39,7 @@ Feature: handle conflicts between the current feature branch and its tracking br
       | feature | git stash pop        |
     And the current branch is still "feature"
     And the uncommitted file still exists
-    And there is no merge in progress
+    And no merge is in progress
     And now the initial commits exist
 
   Scenario: continue with unresolved conflict
@@ -51,7 +51,7 @@ Feature: handle conflicts between the current feature branch and its tracking br
       """
     And the current branch is still "feature"
     And the uncommitted file is stashed
-    And my repo still has a merge in progress
+    And a merge is now in progress
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
@@ -64,9 +64,9 @@ Feature: handle conflicts between the current feature branch and its tracking br
       |         | git stash pop            |
     And all branches are now synchronized
     And the current branch is still "feature"
-    And there is no merge in progress
+    And no merge is in progress
     And the uncommitted file still exists
-    And my repo now has these committed files
+    And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | feature | conflicting_file | resolved content |
 

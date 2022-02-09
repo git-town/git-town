@@ -24,7 +24,7 @@ Feature: merge conflict
       To continue after having resolved conflicts, run "git-town continue".
       """
     And the current branch is still "feature"
-    And my repo now has a merge in progress
+    And a merge is now in progress
 
   Scenario: abort
     When I run "git-town abort"
@@ -34,7 +34,7 @@ Feature: merge conflict
       |         | git checkout main    |
       | main    | git checkout feature |
     And the current branch is still "feature"
-    And there is no merge in progress
+    And no merge is in progress
     And now the initial commits exist
 
   Scenario: continue with unresolved conflict
@@ -45,7 +45,7 @@ Feature: merge conflict
       you must resolve the conflicts before continuing
       """
     And the current branch is still "feature"
-    And my repo still has a merge in progress
+    And a merge is now in progress
 
   @skipWindows
   Scenario: resolve and continue
@@ -67,7 +67,7 @@ Feature: merge conflict
       | feature | local, origin | feature commit                   |
       |         |               | main commit                      |
       |         |               | Merge branch 'main' into feature |
-    And my repo now has these committed files
+    And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |

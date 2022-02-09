@@ -29,7 +29,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       """
     And the current branch is still "feature"
     And the uncommitted file is stashed
-    And my repo now has a merge in progress
+    And a merge is now in progress
 
   Scenario: abort
     When I run "git-town abort"
@@ -41,7 +41,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       | feature | git stash pop        |
     And the current branch is still "feature"
     And the uncommitted file still exists
-    And there is no merge in progress
+    And no merge is in progress
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local, origin | conflicting main commit    | conflicting_file | main content    |
@@ -56,7 +56,7 @@ Feature: handle conflicts between the current feature branch and the main branch
       """
     And the current branch is still "feature"
     And the uncommitted file is stashed
-    And my repo still has a merge in progress
+    And a merge is now in progress
 
   Scenario: resolve, commit, and continue
     When I resolve the conflict in "conflicting_file"
@@ -68,9 +68,9 @@ Feature: handle conflicts between the current feature branch and the main branch
       |         | git stash pop        |
     And all branches are now synchronized
     And the current branch is still "feature"
-    And there is no merge in progress
+    And no merge is in progress
     And the uncommitted file still exists
-    And my repo now has these committed files
+    And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |
@@ -85,9 +85,9 @@ Feature: handle conflicts between the current feature branch and the main branch
       |         | git stash pop        |
     And the current branch is still "feature"
     And all branches are now synchronized
-    And there is no merge in progress
+    And no merge is in progress
     And the uncommitted file still exists
-    And my repo now has these committed files
+    And these committed files exist now
       | BRANCH  | NAME             | CONTENT         |
       | main    | conflicting_file | main content    |
       | feature | conflicting_file | feature content |
@@ -102,9 +102,9 @@ Feature: handle conflicts between the current feature branch and the main branch
       |         | git stash pop |
     And the current branch is still "feature"
     And all branches are now synchronized
-    And there is no merge in progress
+    And no merge is in progress
     And the uncommitted file still exists
-    And my repo now has these committed files
+    And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |

@@ -659,7 +659,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repo (?:now|still) has a merge in progress$`, func() error {
+	suite.Step(`^a merge is now in progress$`, func() error {
 		hasMerge, err := state.gitEnv.DevRepo.HasMergeInProgress()
 		if err != nil {
 			return err
@@ -670,7 +670,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repo (?:now|still) has a rebase in progress$`, func() error {
+	suite.Step(`^a rebase is now in progress$`, func() error {
 		hasRebase, err := state.gitEnv.DevRepo.HasRebaseInProgress()
 		if err != nil {
 			return err
@@ -681,7 +681,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repo (?:now|still) has these committed files$`, func(table *messages.PickleStepArgument_PickleTable) error {
+	suite.Step(`^these committed files exist now$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		fileTable, err := state.gitEnv.DevRepo.FilesInBranches()
 		if err != nil {
 			return fmt.Errorf("cannot determine files in branches in the developer repo: %w", err)
@@ -778,7 +778,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my workspace is currently not a Git repo$`, func() error {
+	suite.Step(`^I am outside a Git repo$`, func() error {
 		os.RemoveAll(filepath.Join(state.gitEnv.DevRepo.WorkingDir(), ".git"))
 		return nil
 	})
@@ -987,7 +987,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.OriginRepo.RemoveBranch(name)
 	})
 
-	suite.Step(`^there is no merge in progress$`, func() error {
+	suite.Step(`^no merge is in progress$`, func() error {
 		hasMerge, err := state.gitEnv.DevRepo.HasMergeInProgress()
 		if err != nil {
 			return err
@@ -998,7 +998,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^there is no rebase in progress anymore$`, func() error {
+	suite.Step(`^no rebase is in progress$`, func() error {
 		hasRebase, err := state.gitEnv.DevRepo.HasRebaseInProgress()
 		if err != nil {
 			return err

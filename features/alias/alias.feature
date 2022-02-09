@@ -37,6 +37,6 @@ Feature: shorter Git Town commands
     Then it runs no commands
 
   Scenario: works outside of a Git repository
-    Given my workspace is currently not a Git repo
+    Given I am outside a Git repo
     When I run "git-town alias true"
     Then it does not print "Not a git repository"
