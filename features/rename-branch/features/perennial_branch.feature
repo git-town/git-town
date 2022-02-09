@@ -1,7 +1,7 @@
 Feature: rename a perennial branch
 
   Background:
-    Given my repo has a perennial branch "production"
+    Given a perennial branch "production"
     And my repo has a feature branch "hotfix" as a child of "production"
     And the commits
       | BRANCH     | LOCATION      | MESSAGE           |

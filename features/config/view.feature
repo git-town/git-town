@@ -15,8 +15,7 @@ Feature: show the configuration
       """
 
   Scenario: all configured, with nested branches
-    Given the main branch is "main"
-    And my repo has the perennial branches "qa" and "staging"
+    Given the perennial branches "qa" and "staging"
     And my repo has the feature branches "alpha" and "beta"
     And my repo has a feature branch "child" as a child of "alpha"
     And my repo has a feature branch "hotfix" as a child of "qa"

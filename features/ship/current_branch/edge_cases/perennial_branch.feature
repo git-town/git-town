@@ -10,7 +10,7 @@ Feature: does not ship perennial branches
     And I am still on the "main" branch
 
   Scenario: try to ship a perennial branch
-    Given my repo has the perennial branches "qa" and "production"
+    Given the perennial branches "qa" and "production"
     And I am on the "production" branch
     When I run "git-town ship"
     Then it runs the commands

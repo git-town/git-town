@@ -11,7 +11,7 @@ Feature: does not kill perennial branches
     And I am still on the "main" branch
 
   Scenario: perennial branch
-    Given my repo has a perennial branch "qa"
+    Given a perennial branch "qa"
     And I am on the "qa" branch
     When I run "git-town kill"
     Then it runs no commands

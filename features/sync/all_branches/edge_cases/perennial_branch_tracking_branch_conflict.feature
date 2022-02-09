@@ -1,7 +1,7 @@
 Feature: handle rebase conflicts between perennial branch and its tracking branch
 
   Background:
-    Given my repo has the perennial branches "alpha", "beta", and "gamma"
+    Given the perennial branches "alpha", "beta", and "gamma"
     And the commits
       | BRANCH | LOCATION      | MESSAGE            | FILE NAME        | FILE CONTENT        |
       | main   | origin        | main commit        | main_file        | main content        |

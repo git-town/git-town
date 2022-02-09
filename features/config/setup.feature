@@ -2,9 +2,9 @@
 Feature: enter Git Town configuration
 
   Scenario: already configured
-    Given my repo has the branches "production" and "qa"
+    Given a perennial branch "qa"
+    And my repo has a branch "production"
     And the main branch is "main"
-    And the perennial branches are "qa"
     When I run "git-town config setup" and answer the prompts:
       | PROMPT                                     | ANSWER                      |
       | Please specify the main development branch | [ENTER]                     |

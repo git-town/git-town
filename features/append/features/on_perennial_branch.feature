@@ -1,7 +1,7 @@
 Feature: append to a perennial branch
 
   Background:
-    Given my repo has the perennial branches "qa" and "production"
+    Given the perennial branches "qa" and "production"
     And the commits
       | BRANCH     | LOCATION | MESSAGE           |
       | production | origin   | production commit |
