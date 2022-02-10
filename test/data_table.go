@@ -22,8 +22,8 @@ type DataTable struct {
 func FromGherkin(table *messages.PickleStepArgument_PickleTable) (result DataTable) {
 	for _, tableRow := range table.Rows {
 		resultRow := make([]string, len(tableRow.Cells))
-		for i, tableCell := range tableRow.Cells {
-			resultRow[i] = tableCell.Value
+		for t, tableCell := range tableRow.Cells {
+			resultRow[t] = tableCell.Value
 		}
 		result.AddRow(resultRow...)
 	}

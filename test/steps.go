@@ -911,8 +911,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return err
 		}
-		for ucf := range uncommittedFiles {
-			if uncommittedFiles[ucf] == state.uncommittedFileName {
+		for _, ucf := range uncommittedFiles {
+			if ucf == state.uncommittedFileName {
 				return fmt.Errorf("expected file %q to be stashed but it is still uncommitted", state.uncommittedFileName)
 			}
 		}
