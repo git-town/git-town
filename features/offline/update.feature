@@ -1,20 +1,20 @@
 Feature: change offline mode
 
   Scenario: enable
-    Given the "offline" setting is "false"
+    Given setting "offline" is "false"
     When I run "git-town offline true"
-    Then the "offline" setting is now "true"
+    Then setting "offline" is now "true"
 
   Scenario: disable
-    Given the "offline" setting is "true"
+    Given setting "offline" is "true"
     When I run "git-town offline false"
-    Then the "offline" setting is now "false"
+    Then setting "offline" is now "false"
 
   Scenario: invalid value
-    Given the "offline" setting is "false"
+    Given setting "offline" is "false"
     When I run "git-town offline zonk"
     Then it prints the error:
       """
       invalid argument: "zonk". Please provide either "true" or "false"
       """
-    And the "offline" setting is still "false"
+    And setting "offline" is still "false"

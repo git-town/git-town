@@ -8,7 +8,7 @@ Feature: display the currently configured pull_branch_strategy
       """
 
   Scenario Outline:
-    Given the "pull-branch-strategy" setting is "<VALUE>"
+    Given setting "pull-branch-strategy" is "<VALUE>"
     When I run "git-town pull-branch-strategy"
     Then it prints:
       """

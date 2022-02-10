@@ -1,7 +1,7 @@
 Feature: auto-push new branches
 
   Background:
-    Given the "new-branch-push-flag" setting is "true"
+    Given setting "new-branch-push-flag" is "true"
     And the current branch is a feature branch "old"
     And the commits
       | BRANCH | LOCATION      | MESSAGE        |

@@ -8,7 +8,7 @@ Feature: display the current offline status
       """
 
   Scenario: enabled
-    Given the "offline" setting is "true"
+    Given setting "offline" is "true"
     When I run "git-town offline"
     Then it prints:
       """
@@ -16,7 +16,7 @@ Feature: display the current offline status
       """
 
   Scenario: disabled
-    Given the "offline" setting is "false"
+    Given setting "offline" is "false"
     When I run "git-town offline"
     Then it prints:
       """
@@ -24,7 +24,7 @@ Feature: display the current offline status
       """
 
   Scenario: invalid value
-    Given the "offline" setting is "zonk"
+    Given setting "offline" is "zonk"
     When I run "git-town offline"
     Then it prints:
       """
