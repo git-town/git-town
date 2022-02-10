@@ -77,24 +77,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 	})
 
-	suite.Step(`^the coworker fetches updates$`, func() error {
-		return state.gitEnv.CoworkerRepo.Fetch()
-	})
-
-	suite.Step(`^the coworker is on the "([^"]*)" branch$`, func(branchName string) error {
-		return state.gitEnv.CoworkerRepo.CheckoutBranch(branchName)
-	})
-
-	suite.Step(`^the coworker runs "([^"]+)"$`, func(command string) error {
-		state.runRes, state.runErr = state.gitEnv.CoworkerRepo.RunString(command)
-		return nil
-	})
-
-	suite.Step(`^the coworker sets the parent branch of "([^"]*)" as "([^"]*)"$`, func(childBranch, parentBranch string) error {
-		_ = state.gitEnv.CoworkerRepo.Config.SetParentBranch(childBranch, parentBranch)
-		return nil
-	})
-
 	suite.Step(`^a remote feature branch "([^"]*)"$`, func(branch string) error {
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 		return state.gitEnv.OriginRepo.CreateBranch(branch, "main")
@@ -109,10 +91,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return fmt.Errorf("expected no branches out of sync")
 		}
 		return nil
-	})
-
-	suite.Step(`^offline mode is enabled$`, func() error {
-		return state.gitEnv.DevRepo.Config.SetOffline(true)
 	})
 
 	suite.Step(`^Git Town is no longer configured$`, func() error {
@@ -511,6 +489,24 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^the coworker fetches updates$`, func() error {
+		return state.gitEnv.CoworkerRepo.Fetch()
+	})
+
+	suite.Step(`^the coworker is on the "([^"]*)" branch$`, func(branchName string) error {
+		return state.gitEnv.CoworkerRepo.CheckoutBranch(branchName)
+	})
+
+	suite.Step(`^the coworker runs "([^"]+)"$`, func(command string) error {
+		state.runRes, state.runErr = state.gitEnv.CoworkerRepo.RunString(command)
+		return nil
+	})
+
+	suite.Step(`^the coworker sets the parent branch of "([^"]*)" as "([^"]*)"$`, func(childBranch, parentBranch string) error {
+		_ = state.gitEnv.CoworkerRepo.Config.SetParentBranch(childBranch, parentBranch)
+		return nil
+	})
+
 	suite.Step(`^the tags$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		return state.gitEnv.CreateTags(table)
 	})
@@ -803,11 +799,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^offline mode is enabled$`, func() error {
-		state.gitEnv.DevRepo.Config.Reload()
-		if !state.gitEnv.DevRepo.Config.IsOffline() {
-			return fmt.Errorf("expected to be offline but am not")
-		}
-		return nil
+		return state.gitEnv.DevRepo.Config.SetOffline(true)
 	})
 
 	suite.Step(`^origin deletes the "([^"]*)" branch$`, func(name string) error {
