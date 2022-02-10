@@ -4,7 +4,7 @@ Feature: use an SSH identity
   Scenario Outline:
     Given tool "open" is installed
     And the origin is "git@my-ssh-identity:git-town/git-town.git"
-    And the "code-hosting-origin-hostname" setting is "<ORIGIN_HOSTNAME>"
+    And setting "code-hosting-origin-hostname" is "<ORIGIN_HOSTNAME>"
     When I run "git-town repo"
     Then "open" launches a new pull request with this url in my browser:
       """

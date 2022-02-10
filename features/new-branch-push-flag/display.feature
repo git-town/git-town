@@ -15,7 +15,7 @@ Feature: display the new-branch-push-flag setting
       """
 
   Scenario Outline: local setting
-    Given the "new-branch-push-flag" setting is "<VALUE>"
+    Given setting "new-branch-push-flag" is "<VALUE>"
     When I run "git-town new-branch-push-flag"
     Then it prints:
       """
@@ -27,7 +27,7 @@ Feature: display the new-branch-push-flag setting
       | false |
 
   Scenario Outline: global setting
-    Given the global "new-branch-push-flag" setting is "<VALUE>"
+    Given setting "new-branch-push-flag" is globally "<VALUE>"
     When I run "git-town new-branch-push-flag --global"
     Then it prints:
       """
@@ -40,7 +40,7 @@ Feature: display the new-branch-push-flag setting
       | false |
 
   Scenario: global set, local not set
-    Given the global "new-branch-push-flag" setting is "true"
+    Given setting "new-branch-push-flag" is globally "true"
     When I run "git-town new-branch-push-flag"
     Then it prints:
       """
@@ -48,8 +48,8 @@ Feature: display the new-branch-push-flag setting
       """
 
   Scenario: global and local set
-    Given the global "new-branch-push-flag" setting is "true"
-    And the "new-branch-push-flag" setting is "false"
+    Given setting "new-branch-push-flag" is globally "true"
+    And setting "new-branch-push-flag" is "false"
     When I run "git-town new-branch-push-flag"
     Then it prints:
       """
@@ -57,7 +57,7 @@ Feature: display the new-branch-push-flag setting
       """
 
   Scenario: invalid value
-    Given the "new-branch-push-flag" setting is "zonk"
+    Given setting "new-branch-push-flag" is "zonk"
     When I run "git-town new-branch-push-flag"
     Then it prints:
       """

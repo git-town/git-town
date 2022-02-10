@@ -3,7 +3,7 @@ Feature: strip colors
 
   Scenario: colors are stripped from the output of git commands run internally
     Given Git Town is not configured
-    And the "color.ui" setting is "always"
+    And setting "color.ui" is "always"
     And the current branch is "main"
     When I run "git-town hack new-feature" and answer the prompts:
       | PROMPT                                     | ANSWER  |
