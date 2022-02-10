@@ -89,8 +89,8 @@ func (stepList *StepList) Wrap(options WrapOptions, repo *git.ProdRepo) error {
 // MarshalJSON marshals the step list to JSON.
 func (stepList *StepList) MarshalJSON() (b []byte, e error) {
 	jsonSteps := make([]*JSONStep, len(stepList.List))
-	for i, step := range stepList.List {
-		jsonSteps[i] = &JSONStep{Step: step}
+	for s, step := range stepList.List {
+		jsonSteps[s] = &JSONStep{Step: step}
 	}
 	return json.Marshal(jsonSteps)
 }
@@ -104,8 +104,8 @@ func (stepList *StepList) UnmarshalJSON(b []byte) error {
 	}
 	if len(jsonSteps) > 0 {
 		stepList.List = make([]steps.Step, len(jsonSteps))
-		for i, jsonStep := range jsonSteps {
-			stepList.List[i] = jsonStep.Step
+		for j, jsonStep := range jsonSteps {
+			stepList.List[j] = jsonStep.Step
 		}
 	}
 	return nil
