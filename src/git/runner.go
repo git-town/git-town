@@ -717,9 +717,9 @@ func (r *Runner) LocalAndOriginBranches() ([]string, error) {
 	}
 	lines := outcome.OutputLines()
 	branchNames := make(map[string]struct{})
-	for l := range lines {
-		if !strings.Contains(lines[l], " -> ") {
-			branchNames[strings.TrimSpace(strings.Replace(strings.Replace(lines[l], "* ", "", 1), "remotes/origin/", "", 1))] = struct{}{}
+	for _, line := range lines {
+		if !strings.Contains(line, " -> ") {
+			branchNames[strings.TrimSpace(strings.Replace(strings.Replace(line, "* ", "", 1), "remotes/origin/", "", 1))] = struct{}{}
 		}
 	}
 	result := make([]string, len(branchNames))
@@ -879,9 +879,9 @@ func (r *Runner) RemoteBranches() ([]string, error) {
 		}
 		lines := outcome.OutputLines()
 		branches := make([]string, 0, len(lines)-1)
-		for l := range lines {
-			if !strings.Contains(lines[l], " -> ") {
-				branches = append(branches, strings.TrimSpace(lines[l]))
+		for _, line := range lines {
+			if !strings.Contains(line, " -> ") {
+				branches = append(branches, strings.TrimSpace(line))
 			}
 		}
 		r.RemoteBranchCache.Set(branches)
@@ -1059,11 +1059,11 @@ func (r *Runner) UncommittedFiles() (result []string, err error) {
 		return result, fmt.Errorf("cannot determine uncommitted files in %q: %w", r.WorkingDir(), err)
 	}
 	lines := res.OutputLines()
-	for l := range lines {
-		if lines[l] == "" {
+	for _, line := range lines {
+		if line == "" {
 			continue
 		}
-		parts := strings.Split(lines[l], " ")
+		parts := strings.Split(line, " ")
 		result = append(result, parts[1])
 	}
 	return result, nil

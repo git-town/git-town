@@ -16,8 +16,8 @@ type BranchAncestryConfig interface {
 func PrintableBranchAncestry(config BranchAncestryConfig) string {
 	roots := config.BranchAncestryRoots()
 	trees := make([]string, len(roots))
-	for r := range roots {
-		trees[r] = PrintableBranchTree(roots[r], config)
+	for r, root := range roots {
+		trees[r] = PrintableBranchTree(root, config)
 	}
 	return strings.Join(trees, "\n\n")
 }

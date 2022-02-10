@@ -45,8 +45,8 @@ func assertHasGlobalGitConfiguration(t *testing.T, dir string) {
 	t.Helper()
 	entries, err := ioutil.ReadDir(dir)
 	assert.Nilf(t, err, "cannot list directory %q", dir)
-	for i := range entries {
-		if entries[i].Name() == ".gitconfig" {
+	for e := range entries {
+		if entries[e].Name() == ".gitconfig" {
 			return
 		}
 	}

@@ -13,14 +13,14 @@ func Contains(list []string, value string) bool {
 }
 
 // MainFirst provides the given list of strings, with an element "main" moved to its first position.
-func MainFirst(input []string) []string {
-	result := make([]string, 0, len(input))
+func MainFirst(inputs []string) []string {
+	result := make([]string, 0, len(inputs))
 	hasMain := false
-	for i := range input {
-		if input[i] == "main" {
+	for _, input := range inputs {
+		if input == "main" {
 			hasMain = true
 		} else {
-			result = append(result, input[i])
+			result = append(result, input)
 		}
 	}
 	if hasMain {
