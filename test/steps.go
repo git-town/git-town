@@ -353,7 +353,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^a broken "([^"]*)" tool$`, func(name string) error {
+	suite.Step(`^tool "([^"]*)" is broken$`, func(name string) error {
 		return state.gitEnv.DevShell.MockBrokenCommand(name)
 	})
 
@@ -366,7 +366,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevShell.MockNoCommandsInstalled()
 	})
 
-	suite.Step(`^the "([^"]*)" tool is installed$`, func(tool string) error {
+	suite.Step(`^tool "([^"]*)" is installed$`, func(tool string) error {
 		return state.gitEnv.DevShell.MockCommand(tool)
 	})
 
