@@ -23,13 +23,13 @@ func PrependPath(envVars []string, directory string) []string {
 // Replace provides a new envvars in which the entry with the given key contains the given value instead of its original value.
 // If no entry with the given key exists, appends one at the end.
 // This function assumes that keys are unique, i.e. no duplicate keys exist.
-func Replace(envvars []string, key string, value string) []string {
+func Replace(envVars []string, key string, value string) []string {
 	prefix := key + "="
-	for i := range envvars {
-		if strings.HasPrefix((envvars)[i], prefix) {
-			(envvars)[i] = prefix + value
-			return envvars
+	for e, envVar := range envVars {
+		if strings.HasPrefix(envVar, prefix) {
+			envVars[e] = prefix + value
+			return envVars
 		}
 	}
-	return append(envvars, prefix+value)
+	return append(envVars, prefix+value)
 }
