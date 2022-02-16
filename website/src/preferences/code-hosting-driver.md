@@ -16,5 +16,5 @@ git config [--global] git-town.code-hosting-driver <driver>
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on
-your local machine. When not present, the setting applies only to the repo you
-are currently in. `<driver>` can be "github", "gitlab", "gitea", or "bitbucket".
+your local machine. When not present, the setting applies to the current repo.
+`<driver>` can be "github", "gitlab", "gitea", or "bitbucket".
