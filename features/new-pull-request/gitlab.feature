@@ -19,12 +19,12 @@ Feature: GitLab support
       | git@gitlab.com:kadu/kadu.git     |
 
   Scenario: nested feature branch with known parent
-    Given a feature branch "parent-feature"
-    And a feature branch "child-feature" as a child of "parent-feature"
+    Given a feature branch "parent"
+    And a feature branch "child" as a child of "parent"
     And the origin is "git@gitlab.com:kadu/kadu.git"
-    And the current branch is "child-feature"
+    And the current branch is "child"
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:
       """
-      https://gitlab.com/kadu/kadu/merge_requests/new?merge_request%5Bsource_branch%5D=child-feature&merge_request%5Btarget_branch%5D=parent-feature
+      https://gitlab.com/kadu/kadu/merge_requests/new?merge_request%5Bsource_branch%5D=child&merge_request%5Btarget_branch%5D=parent
       """

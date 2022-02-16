@@ -1,30 +1,30 @@
 Feature: does not ship an empty branch
 
   Background:
-    Given the current branch is a feature branch "empty-feature"
+    Given the current branch is a feature branch "empty"
     And the commits
-      | BRANCH        | LOCATION | MESSAGE        | FILE NAME   | FILE CONTENT   |
-      | main          | origin   | main commit    | common_file | common content |
-      | empty-feature | local    | feature commit | common_file | common content |
+      | BRANCH | LOCATION | MESSAGE      | FILE NAME   | FILE CONTENT   |
+      | main   | origin   | main commit  | common_file | common content |
+      | empty  | local    | empty commit | common_file | common content |
     When I run "git-town ship"
 
   Scenario: result
     Then it runs the commands
-      | BRANCH        | COMMAND                                     |
-      | empty-feature | git fetch --prune --tags                    |
-      |               | git checkout main                           |
-      | main          | git rebase origin/main                      |
-      |               | git checkout empty-feature                  |
-      | empty-feature | git merge --no-edit origin/empty-feature    |
-      |               | git merge --no-edit main                    |
-      |               | git reset --hard {{ sha 'feature commit' }} |
-      |               | git checkout main                           |
-      | main          | git checkout empty-feature                  |
+      | BRANCH | COMMAND                                   |
+      | empty  | git fetch --prune --tags                  |
+      |        | git checkout main                         |
+      | main   | git rebase origin/main                    |
+      |        | git checkout empty                        |
+      | empty  | git merge --no-edit origin/empty          |
+      |        | git merge --no-edit main                  |
+      |        | git reset --hard {{ sha 'empty commit' }} |
+      |        | git checkout main                         |
+      | main   | git checkout empty                        |
     And it prints the error:
       """
-      the branch "empty-feature" has no shippable changes
+      the branch "empty" has no shippable changes
       """
-    And the current branch is still "empty-feature"
+    And the current branch is still "empty"
     And the initial branch hierarchy exists
 
   Scenario: undo
@@ -34,9 +34,9 @@ Feature: does not ship an empty branch
       """
       nothing to undo
       """
-    And the current branch is still "empty-feature"
+    And the current branch is still "empty"
     And now these commits exist
-      | BRANCH        | LOCATION      | MESSAGE        |
-      | main          | local, origin | main commit    |
-      | empty-feature | local         | feature commit |
+      | BRANCH | LOCATION      | MESSAGE      |
+      | main   | local, origin | main commit  |
+      | empty  | local         | empty commit |
     And the initial branch hierarchy exists
