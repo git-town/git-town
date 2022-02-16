@@ -1,12 +1,12 @@
 Feature: on a forked repo
 
   Background:
-    Given my repo has an upstream repo
+    Given an upstream repo
     And the commits
       | BRANCH | LOCATION | MESSAGE         |
       | main   | upstream | upstream commit |
-    And I am on the "main" branch
-    And my workspace has an uncommitted file
+    And the current branch is "main"
+    And an uncommitted file
     When I run "git-town hack new"
 
   Scenario: result
@@ -22,8 +22,8 @@ Feature: on a forked repo
       |        | git branch new main      |
       |        | git checkout new         |
       | new    | git stash pop            |
-    And I am now on the "new" branch
-    And my workspace still contains my uncommitted file
+    And the current branch is now "new"
+    And the uncommitted file still exists
     And now these commits exist
       | BRANCH | LOCATION                | MESSAGE         |
       | main   | local, origin, upstream | upstream commit |
@@ -38,8 +38,8 @@ Feature: on a forked repo
       |        | git checkout main |
       | main   | git branch -D new |
       |        | git stash pop     |
-    And I am now on the "main" branch
+    And the current branch is now "main"
     And now these commits exist
       | BRANCH | LOCATION                | MESSAGE         |
       | main   | local, origin, upstream | upstream commit |
-    And Git Town is now aware of no branch hierarchy
+    And no branch hierarchy exists now

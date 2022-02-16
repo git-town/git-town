@@ -2,7 +2,7 @@ Feature: set the new-branch-push-flag
 
   Scenario Outline: local setting
     When I run "git-town new-branch-push-flag <GIVE>"
-    Then the new-branch-push-flag configuration is now <WANT>
+    Then setting "new-branch-push-flag" is now "<WANT>"
 
     Examples:
       | GIVE  | WANT  |
@@ -22,7 +22,7 @@ Feature: set the new-branch-push-flag
 
   Scenario Outline: global setting
     When I run "git-town new-branch-push-flag --global <GIVE>"
-    Then the new-branch-push-flag configuration is now <WANT>
+    Then setting "new-branch-push-flag" is now "<WANT>"
 
     Examples:
       | GIVE  | WANT  |

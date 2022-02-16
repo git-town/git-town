@@ -1,7 +1,7 @@
 Feature: require a Git repository
 
   Scenario Outline:
-    Given my workspace is currently not a Git repo
+    Given I am outside a Git repo
     When I run "<COMMAND>"
     Then it prints the error:
       """

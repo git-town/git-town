@@ -1,11 +1,11 @@
 Feature: auto-push the new branch
 
   Background:
-    Given the new-branch-push-flag configuration is true
+    Given setting "new-branch-push-flag" is "true"
     And the commits
       | BRANCH | LOCATION | MESSAGE       |
       | main   | origin   | origin commit |
-    And I am on the "main" branch
+    And the current branch is "main"
     When I run "git-town hack new"
 
   Scenario: result
@@ -16,12 +16,12 @@ Feature: auto-push the new branch
       |        | git branch new main      |
       |        | git checkout new         |
       | new    | git push -u origin new   |
-    And I am now on the "new" branch
+    And the current branch is now "new"
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | origin commit |
       | new    | local, origin | origin commit |
-    And Git Town is now aware of this branch hierarchy
+    And this branch hierarchy exists now
       | BRANCH | PARENT |
       | new    | main   |
 
@@ -32,8 +32,8 @@ Feature: auto-push the new branch
       | new    | git push origin :new |
       |        | git checkout main    |
       | main   | git branch -D new    |
-    And I am now on the "main" branch
+    And the current branch is now "main"
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | origin commit |
-    And Git Town is now aware of no branch hierarchy
+    And no branch hierarchy exists now

@@ -2,13 +2,13 @@ Feature: syncs all feature branches (in a local repo)
 
   Background:
     Given my repo does not have an origin
-    And my repo has the local feature branches "alpha" and "beta"
+    And the local feature branches "alpha" and "beta"
     And the commits
       | BRANCH | LOCATION | MESSAGE      |
       | main   | local    | main commit  |
       | alpha  | local    | alpha commit |
       | beta   | local    | beta commit  |
-    And I am on the "alpha" branch
+    And the current branch is "alpha"
     When I run "git-town sync --all"
 
   Scenario: result
@@ -18,5 +18,5 @@ Feature: syncs all feature branches (in a local repo)
       |        | git checkout beta        |
       | beta   | git merge --no-edit main |
       |        | git checkout alpha       |
-    And I am still on the "alpha" branch
+    And the current branch is still "alpha"
     And all branches are now synchronized

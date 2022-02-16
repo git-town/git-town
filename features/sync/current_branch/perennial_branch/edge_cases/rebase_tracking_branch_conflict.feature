@@ -1,13 +1,13 @@
 Feature: handle conflicts between the current perennial branch and its tracking branch
 
   Background:
-    Given my repo has the perennial branches "production" and "qa"
+    Given the perennial branches "production" and "qa"
     And the commits
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | qa     | local    | conflicting local commit  | conflicting_file | local content  |
       |        | origin   | conflicting origin commit | conflicting_file | origin content |
-    And I am on the "qa" branch
-    And my workspace has an uncommitted file
+    And the current branch is "qa"
+    And an uncommitted file
     When I run "git-town sync"
 
   Scenario: result
@@ -23,8 +23,8 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       To continue after having resolved conflicts, run "git-town continue".
       To continue by skipping the current branch, run "git-town skip".
       """
-    And my repo now has a rebase in progress
-    And my uncommitted file is stashed
+    And a rebase is now in progress
+    And the uncommitted file is stashed
 
   Scenario: abort
     When I run "git-town abort"
@@ -32,9 +32,9 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       | BRANCH | COMMAND            |
       | qa     | git rebase --abort |
       |        | git stash pop      |
-    And I am still on the "qa" branch
-    And my workspace still contains my uncommitted file
-    And there is no rebase in progress anymore
+    And the current branch is still "qa"
+    And the uncommitted file still exists
+    And no rebase is in progress
     And now the initial commits exist
 
   Scenario: continue with unresolved conflict
@@ -44,8 +44,8 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       """
       you must resolve the conflicts before continuing
       """
-    And my uncommitted file is stashed
-    And my repo still has a rebase in progress
+    And the uncommitted file is stashed
+    And a rebase is now in progress
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
@@ -57,10 +57,10 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       |        | git push --tags       |
       |        | git stash pop         |
     And all branches are now synchronized
-    And I am still on the "qa" branch
-    And there is no rebase in progress anymore
-    And my workspace still contains my uncommitted file
-    And my repo now has these committed files
+    And the current branch is still "qa"
+    And no rebase is in progress
+    And the uncommitted file still exists
+    And these committed files exist now
       | BRANCH | NAME             | CONTENT          |
       | qa     | conflicting_file | resolved content |
 
@@ -74,9 +74,9 @@ Feature: handle conflicts between the current perennial branch and its tracking 
       |        | git push --tags |
       |        | git stash pop   |
     And all branches are now synchronized
-    And I am still on the "qa" branch
-    And there is no rebase in progress anymore
-    And my workspace still contains my uncommitted file
-    And my repo now has these committed files
+    And the current branch is still "qa"
+    And no rebase is in progress
+    And the uncommitted file still exists
+    And these committed files exist now
       | BRANCH | NAME             | CONTENT          |
       | qa     | conflicting_file | resolved content |

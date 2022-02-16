@@ -2,12 +2,11 @@
 Feature: GitLab support
 
   Background:
-    Given my computer has the "open" tool installed
+    Given tool "open" is installed
 
   Scenario Outline: creating pull-requests
-    Given my repo has a feature branch "feature"
-    And my repo's origin is "<ORIGIN>"
-    And I am on the "feature" branch
+    Given the current branch is a feature branch "feature"
+    And the origin is "<ORIGIN>"
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:
       """
@@ -20,10 +19,10 @@ Feature: GitLab support
       | git@gitlab.com:kadu/kadu.git     |
 
   Scenario: nested feature branch with known parent
-    Given my repo has a feature branch "parent-feature"
-    And my repo has a feature branch "child-feature" as a child of "parent-feature"
-    And my repo's origin is "git@gitlab.com:kadu/kadu.git"
-    And I am on the "child-feature" branch
+    Given a feature branch "parent-feature"
+    And a feature branch "child-feature" as a child of "parent-feature"
+    And the origin is "git@gitlab.com:kadu/kadu.git"
+    And the current branch is "child-feature"
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:
       """

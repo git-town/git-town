@@ -4,7 +4,7 @@ Feature: branch does not exist
     Given the commits
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, origin | main commit |
-    And I am on the "main" branch
+    And the current branch is "main"
     When I run "git-town rename-branch non-existing new"
     Then it runs the commands
       | BRANCH | COMMAND                  |
@@ -13,4 +13,4 @@ Feature: branch does not exist
       """
       there is no branch named "non-existing"
       """
-    And I am still on the "main" branch
+    And the current branch is still "main"

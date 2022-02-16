@@ -1,13 +1,12 @@
 Feature: handle conflicts between the main branch and its tracking branch
 
   Background:
-    Given my repo has a feature branch "feature"
+    Given the current branch is a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting local commit  | conflicting_file | local content   |
       |         | origin   | conflicting origin commit | conflicting_file | origin content  |
       | feature | local    | feature commit            | feature_file     | feature content |
-    And I am on the "feature" branch
     When I run "git-town ship -m 'feature done'"
 
   Scenario: result
@@ -21,7 +20,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       To abort, run "git-town abort".
       To continue after having resolved conflicts, run "git-town continue".
       """
-    And my repo now has a rebase in progress
+    And a rebase is now in progress
 
   Scenario: abort
     When I run "git-town abort"
@@ -29,10 +28,10 @@ Feature: handle conflicts between the main branch and its tracking branch
       | BRANCH | COMMAND              |
       | main   | git rebase --abort   |
       |        | git checkout feature |
-    And I am still on the "feature" branch
-    And there is no rebase in progress anymore
+    And the current branch is still "feature"
+    And no rebase is in progress
     And now the initial commits exist
-    And Git Town is still aware of the initial branch hierarchy
+    And the initial branch hierarchy exists
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
@@ -50,8 +49,8 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | git push                           |
       |         | git push origin :feature           |
       |         | git branch -D feature              |
-    And I am now on the "main" branch
-    And the existing branches are
+    And the current branch is now "main"
+    And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
     And now these commits exist
@@ -59,7 +58,7 @@ Feature: handle conflicts between the main branch and its tracking branch
       | main   | local, origin | conflicting origin commit |
       |        |               | conflicting local commit  |
       |        |               | feature done              |
-    And Git Town is now aware of no branch hierarchy
+    And no branch hierarchy exists now
 
   Scenario: resolve, finish the rebase, and continue
     When I resolve the conflict in "conflicting_file"
@@ -77,4 +76,4 @@ Feature: handle conflicts between the main branch and its tracking branch
       |         | git push                           |
       |         | git push origin :feature           |
       |         | git branch -D feature              |
-    And I am now on the "main" branch
+    And the current branch is now "main"

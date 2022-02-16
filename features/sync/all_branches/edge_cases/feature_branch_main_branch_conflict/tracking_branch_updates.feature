@@ -1,7 +1,7 @@
 Feature: handle merge conflicts between feature branch and main branch
 
   Background:
-    Given my repo has the feature branches "alpha", "beta", and "gamma"
+    Given the feature branches "alpha", "beta", and "gamma"
     And the commits
       | BRANCH | LOCATION      | MESSAGE            | FILE NAME            | FILE CONTENT        |
       | main   | origin        | main commit        | conflicting_file     | main content        |
@@ -9,8 +9,8 @@ Feature: handle merge conflicts between feature branch and main branch
       | beta   | local         | local beta commit  | conflicting_file     | local beta content  |
       |        | origin        | origin beta commit | feature2_origin_file | origin beta content |
       | gamma  | origin        | gamma commit       | feature3_file        | gamma content       |
-    And I am on the "main" branch
-    And my workspace has an uncommitted file
+    And the current branch is "main"
+    And an uncommitted file
     When I run "git-town sync --all"
 
   Scenario: result
@@ -33,9 +33,9 @@ Feature: handle merge conflicts between feature branch and main branch
       To continue after having resolved conflicts, run "git-town continue".
       To continue by skipping the current branch, run "git-town skip".
       """
-    And I am now on the "beta" branch
-    And my uncommitted file is stashed
-    And my repo now has a merge in progress
+    And the current branch is now "beta"
+    And the uncommitted file is stashed
+    And a merge is now in progress
 
   Scenario: abort
     When I run "git-town abort"
@@ -46,9 +46,9 @@ Feature: handle merge conflicts between feature branch and main branch
       |        | git checkout alpha                             |
       | alpha  | git checkout main                              |
       | main   | git stash pop                                  |
-    And I am now on the "main" branch
-    And my workspace has the uncommitted file again
-    And there is no merge in progress
+    And the current branch is now "main"
+    And the uncommitted file still exists
+    And no merge is in progress
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                        |
       | main   | local, origin | main commit                    |
@@ -58,7 +58,7 @@ Feature: handle merge conflicts between feature branch and main branch
       | beta   | local         | local beta commit              |
       |        | origin        | origin beta commit             |
       | gamma  | origin        | gamma commit                   |
-    And my repo still has these committed files
+    And these committed files exist now
       | BRANCH | NAME             | CONTENT            |
       | main   | conflicting_file | main content       |
       | alpha  | conflicting_file | main content       |
@@ -78,9 +78,9 @@ Feature: handle merge conflicts between feature branch and main branch
       |        | git checkout main                              |
       | main   | git push --tags                                |
       |        | git stash pop                                  |
-    And I am now on the "main" branch
-    And my workspace has the uncommitted file again
-    And there is no merge in progress
+    And the current branch is now "main"
+    And the uncommitted file still exists
+    And no merge is in progress
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                        |
       | main   | local, origin | main commit                    |
@@ -92,7 +92,7 @@ Feature: handle merge conflicts between feature branch and main branch
       | gamma  | local, origin | gamma commit                   |
       |        |               | main commit                    |
       |        |               | Merge branch 'main' into gamma |
-    And my repo now has these committed files
+    And these committed files exist now
       | BRANCH | NAME             | CONTENT            |
       | main   | conflicting_file | main content       |
       | alpha  | conflicting_file | main content       |
@@ -108,9 +108,9 @@ Feature: handle merge conflicts between feature branch and main branch
       """
       you must resolve the conflicts before continuing
       """
-    And I am still on the "beta" branch
-    And my uncommitted file is stashed
-    And my repo still has a merge in progress
+    And the current branch is still "beta"
+    And the uncommitted file is stashed
+    And a merge is now in progress
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
@@ -126,11 +126,11 @@ Feature: handle merge conflicts between feature branch and main branch
       |        | git checkout main                |
       | main   | git push --tags                  |
       |        | git stash pop                    |
-    And I am now on the "main" branch
-    And my workspace has the uncommitted file again
+    And the current branch is now "main"
+    And the uncommitted file still exists
     And all branches are now synchronized
-    And there is no merge in progress
-    And my repo now has these committed files
+    And no merge is in progress
+    And these committed files exist now
       | BRANCH | NAME                 | CONTENT             |
       | main   | conflicting_file     | main content        |
       | alpha  | conflicting_file     | main content        |

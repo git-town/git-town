@@ -1,15 +1,14 @@
 Feature: with pull-branch-strategy set to "merge"
 
   Background:
-    Given the pull-branch-strategy configuration is "merge"
-    And my repo has a feature branch "feature"
+    Given setting "pull-branch-strategy" is "merge"
+    And the current branch is a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE               |
       | main    | local    | local main commit     |
       |         | origin   | origin main commit    |
       | feature | local    | local feature commit  |
       |         | origin   | origin feature commit |
-    And I am on the "feature" branch
     When I run "git-town sync"
 
   Scenario: result
@@ -24,7 +23,7 @@ Feature: with pull-branch-strategy set to "merge"
       |         | git merge --no-edit main           |
       |         | git push                           |
     And all branches are now synchronized
-    And I am still on the "feature" branch
+    And the current branch is still "feature"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                                                    |
       | main    | local, origin | local main commit                                          |

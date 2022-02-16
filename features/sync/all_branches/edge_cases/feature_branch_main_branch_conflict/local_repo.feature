@@ -2,15 +2,15 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
 
   Background:
     Given my repo does not have an origin
-    And my repo has the local feature branches "alpha", "beta", and "gamma"
+    And the local feature branches "alpha", "beta", and "gamma"
     And the commits
       | BRANCH | LOCATION | MESSAGE      | FILE NAME        | FILE CONTENT  |
       | main   | local    | main commit  | conflicting_file | main content  |
       | alpha  | local    | alpha commit | feature1_file    | alpha content |
       | beta   | local    | beta commit  | conflicting_file | beta content  |
       | gamma  | local    | gamma commit | feature3_file    | gamma content |
-    And I am on the "main" branch
-    And my workspace has an uncommitted file
+    And the current branch is "main"
+    And an uncommitted file
     When I run "git-town sync --all"
 
   Scenario: result
@@ -28,9 +28,9 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       To continue after having resolved conflicts, run "git-town continue".
       To continue by skipping the current branch, run "git-town skip".
       """
-    And I am now on the "beta" branch
-    And my uncommitted file is stashed
-    And my repo now has a merge in progress
+    And the current branch is now "beta"
+    And the uncommitted file is stashed
+    And a merge is now in progress
 
   Scenario: abort
     When I run "git-town abort"
@@ -41,10 +41,10 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       | alpha  | git reset --hard {{ sha 'alpha commit' }} |
       |        | git checkout main                         |
       | main   | git stash pop                             |
-    And I am now on the "main" branch
-    And my workspace has the uncommitted file again
+    And the current branch is now "main"
+    And the uncommitted file still exists
     And now the initial commits exist
-    And there is no merge in progress
+    And no merge is in progress
 
   Scenario: skip
     When I run "git-town skip"
@@ -55,9 +55,9 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       | gamma  | git merge --no-edit main |
       |        | git checkout main        |
       | main   | git stash pop            |
-    And I am now on the "main" branch
-    And my workspace has the uncommitted file again
-    And there is no merge in progress
+    And the current branch is now "main"
+    And the uncommitted file still exists
+    And no merge is in progress
     And now these commits exist
       | BRANCH | LOCATION | MESSAGE                        |
       | main   | local    | main commit                    |
@@ -68,7 +68,7 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       | gamma  | local    | gamma commit                   |
       |        |          | main commit                    |
       |        |          | Merge branch 'main' into gamma |
-    And my repo now has these committed files
+    And these committed files exist now
       | BRANCH | NAME             | CONTENT       |
       | main   | conflicting_file | main content  |
       | alpha  | conflicting_file | main content  |
@@ -84,9 +84,9 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       """
       you must resolve the conflicts before continuing
       """
-    And I am still on the "beta" branch
-    And my uncommitted file is stashed
-    And my repo still has a merge in progress
+    And the current branch is still "beta"
+    And the uncommitted file is stashed
+    And a merge is now in progress
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
@@ -99,10 +99,10 @@ Feature: handle merge conflicts between feature branch and main branch in a loca
       |        | git checkout main        |
       | main   | git stash pop            |
     And all branches are now synchronized
-    And I am now on the "main" branch
-    And my workspace has the uncommitted file again
-    And there is no merge in progress
-    And my repo now has these committed files
+    And the current branch is now "main"
+    And the uncommitted file still exists
+    And no merge is in progress
+    And these committed files exist now
       | BRANCH | NAME             | CONTENT          |
       | main   | conflicting_file | main content     |
       | alpha  | conflicting_file | main content     |

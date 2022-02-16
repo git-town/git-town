@@ -2,8 +2,8 @@
 Feature: multi-platform support
 
   Scenario Outline: supported tool installed
-    Given my repo's origin is "https://github.com/git-town/git-town.git"
-    And my computer has the "<TOOL>" tool installed
+    Given the origin is "https://github.com/git-town/git-town.git"
+    And tool "<TOOL>" is installed
     When I run "git-town repo"
     Then "open" launches a new pull request with this url in my browser:
       """
@@ -16,8 +16,8 @@ Feature: multi-platform support
       | xdg-open |
 
   Scenario: no supported tool installed
-    Given my repo's origin is "https://github.com/git-town/git-town.git"
-    And my computer has no tool to open browsers installed
+    Given the origin is "https://github.com/git-town/git-town.git"
+    And no tool to open browsers is installed
     When I run "git-town repo"
     Then it prints:
       """

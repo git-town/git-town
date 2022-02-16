@@ -1,9 +1,8 @@
 Feature: does not ship the main branch
 
   Background:
-    Given my repo has a feature branch "feature"
-    And I am on the "feature" branch
-    And my workspace has an uncommitted file
+    Given the current branch is a feature branch "feature"
+    And an uncommitted file
     When I run "git-town ship main"
 
   Scenario: result
@@ -14,8 +13,8 @@ Feature: does not ship the main branch
       """
       the branch "main" is not a feature branch. Only feature branches can be shipped
       """
-    And I am still on the "feature" branch
-    And my workspace still contains my uncommitted file
+    And the current branch is still "feature"
+    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -24,4 +23,4 @@ Feature: does not ship the main branch
       """
       nothing to undo
       """
-    And I am still on the "feature" branch
+    And the current branch is still "feature"

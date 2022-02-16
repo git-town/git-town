@@ -1,9 +1,8 @@
 Feature: does not ship with uncommitted changes
 
   Background:
-    Given my repo has a feature branch "feature"
-    And I am on the "feature" branch
-    And my workspace has an uncommitted file
+    Given the current branch is a feature branch "feature"
+    And an uncommitted file
     When I run "git-town ship"
 
   Scenario: result
@@ -12,7 +11,7 @@ Feature: does not ship with uncommitted changes
       """
       you have uncommitted changes. Did you mean to commit them before shipping?
       """
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -21,4 +20,4 @@ Feature: does not ship with uncommitted changes
       """
       nothing to undo
       """
-    And my workspace still contains my uncommitted file
+    And the uncommitted file still exists

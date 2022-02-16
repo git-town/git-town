@@ -1,14 +1,14 @@
 Feature: handle rebase conflicts between main branch and its tracking branch
 
   Background:
-    Given my repo has a feature branch "feature"
+    Given a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE            | FILE NAME        | FILE CONTENT    |
       | main    | local    | local main commit  | conflicting_file | local content   |
       |         | origin   | origin main commit | conflicting_file | origin content  |
       | feature | local    | feature commit     | feature_file     | feature content |
-    And I am on the "main" branch
-    And my workspace has an uncommitted file
+    And the current branch is "main"
+    And an uncommitted file
     When I run "git-town sync --all"
 
   Scenario: result
@@ -23,8 +23,8 @@ Feature: handle rebase conflicts between main branch and its tracking branch
       To abort, run "git-town abort".
       To continue after having resolved conflicts, run "git-town continue".
       """
-    And my uncommitted file is stashed
-    And my repo now has a rebase in progress
+    And the uncommitted file is stashed
+    And a rebase is now in progress
 
   Scenario: abort
     When I run "git-town abort"
@@ -32,8 +32,8 @@ Feature: handle rebase conflicts between main branch and its tracking branch
       | BRANCH | COMMAND            |
       | main   | git rebase --abort |
       |        | git stash pop      |
-    And I am now on the "main" branch
-    And my workspace has the uncommitted file again
+    And the current branch is now "main"
+    And the uncommitted file still exists
     And now the initial commits exist
 
   Scenario: continue with unresolved conflict
@@ -43,8 +43,8 @@ Feature: handle rebase conflicts between main branch and its tracking branch
       """
       you must resolve the conflicts before continuing
       """
-    And my uncommitted file is stashed
-    And my repo still has a rebase in progress
+    And the uncommitted file is stashed
+    And a rebase is now in progress
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
@@ -61,10 +61,10 @@ Feature: handle rebase conflicts between main branch and its tracking branch
       | main    | git push --tags                    |
       |         | git stash pop                      |
     And all branches are now synchronized
-    And I am now on the "main" branch
-    And my workspace has the uncommitted file again
-    And there is no rebase in progress anymore
-    And my repo now has these committed files
+    And the current branch is now "main"
+    And the uncommitted file still exists
+    And no rebase is in progress
+    And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |
       | feature | conflicting_file | resolved content |

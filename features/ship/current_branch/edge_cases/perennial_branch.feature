@@ -1,17 +1,17 @@
 Feature: does not ship perennial branches
 
   Scenario: try to ship the main branch
-    Given I am on the "main" branch
+    Given the current branch is "main"
     When I run "git-town ship -m done"
     Then it prints the error:
       """
       the branch "main" is not a feature branch. Only feature branches can be shipped
       """
-    And I am still on the "main" branch
+    And the current branch is still "main"
 
   Scenario: try to ship a perennial branch
-    Given my repo has the perennial branches "qa" and "production"
-    And I am on the "production" branch
+    Given the perennial branches "qa" and "production"
+    And the current branch is "production"
     When I run "git-town ship"
     Then it runs the commands
       | BRANCH     | COMMAND                  |
@@ -20,4 +20,4 @@ Feature: does not ship perennial branches
       """
       the branch "production" is not a feature branch. Only feature branches can be shipped
       """
-    And I am still on the "production" branch
+    And the current branch is still "production"

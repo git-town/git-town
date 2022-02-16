@@ -15,11 +15,10 @@ Feature: show the configuration
       """
 
   Scenario: all configured, with nested branches
-    Given the main branch is "main"
-    And my repo has the perennial branches "qa" and "staging"
-    And my repo has the feature branches "alpha" and "beta"
-    And my repo has a feature branch "child" as a child of "alpha"
-    And my repo has a feature branch "hotfix" as a child of "qa"
+    Given the perennial branches "qa" and "staging"
+    And the feature branches "alpha" and "beta"
+    And a feature branch "child" as a child of "alpha"
+    And a feature branch "hotfix" as a child of "qa"
     When I run "git-town config"
     Then it prints:
       """

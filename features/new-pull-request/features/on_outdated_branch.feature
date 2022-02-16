@@ -2,8 +2,8 @@
 Feature: sync before creating the pull request
 
   Background:
-    Given my repo has a feature branch "parent"
-    And my repo has a feature branch "child" as a child of "parent"
+    Given a feature branch "parent"
+    And a feature branch "child" as a child of "parent"
     And the commits
       | BRANCH | LOCATION | MESSAGE              |
       | main   | local    | local main commit    |
@@ -12,10 +12,10 @@ Feature: sync before creating the pull request
       |        | origin   | origin parent commit |
       | child  | local    | local child commit   |
       |        | origin   | origin child commit  |
-    And my computer has the "open" tool installed
-    And my repo's origin is "git@github.com:git-town/git-town.git"
-    And I am on the "child" branch
-    And my workspace has an uncommitted file
+    And tool "open" is installed
+    And the origin is "git@github.com:git-town/git-town.git"
+    And the current branch is "child"
+    And an uncommitted file
     When I run "git-town new-pull-request"
 
   Scenario: result
@@ -41,8 +41,8 @@ Feature: sync before creating the pull request
       """
       https://github.com/git-town/git-town/compare/parent...child?expand=1
       """
-    And I am still on the "child" branch
-    And my workspace still contains my uncommitted file
+    And the current branch is still "child"
+    And the uncommitted file still exists
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                                                  |
       | main   | local, origin | origin main commit                                       |

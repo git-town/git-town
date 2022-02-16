@@ -1,8 +1,8 @@
 Feature: nested feature branches
 
   Scenario:
-    Given my repo has a feature branch "parent"
-    And my repo has a feature branch "child" as a child of "parent"
+    Given a feature branch "parent"
+    And a feature branch "child" as a child of "parent"
     And the commits
       | BRANCH | LOCATION | MESSAGE              |
       | main   | local    | local main commit    |
@@ -11,7 +11,7 @@ Feature: nested feature branches
       |        | origin   | origin parent commit |
       | child  | local    | local child commit   |
       |        | origin   | origin child commit  |
-    And I am on the "child" branch
+    And the current branch is "child"
     When I run "git-town sync"
     Then it runs the commands
       | BRANCH | COMMAND                           |
@@ -28,7 +28,7 @@ Feature: nested feature branches
       |        | git merge --no-edit parent        |
       |        | git push                          |
     And all branches are now synchronized
-    And I am still on the "child" branch
+    And the current branch is still "child"
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                                                  |
       | main   | local, origin | origin main commit                                       |

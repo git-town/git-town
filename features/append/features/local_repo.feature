@@ -1,13 +1,12 @@
 Feature: in a local repo
 
   Background:
-    Given my repo has a feature branch "existing"
-    And my repo does not have an origin
+    Given my repo does not have an origin
+    And the current branch is a local feature branch "existing"
     And the commits
       | BRANCH   | LOCATION | MESSAGE         |
       | existing | local    | existing commit |
-    And I am on the "existing" branch
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town hack new"
 
   Scenario: result
@@ -18,12 +17,12 @@ Feature: in a local repo
       |          | git branch new main |
       |          | git checkout new    |
       | new      | git stash pop       |
-    And I am now on the "new" branch
-    And my workspace still contains my uncommitted file
+    And the current branch is now "new"
+    And the uncommitted file still exists
     And now these commits exist
       | BRANCH   | LOCATION | MESSAGE         |
       | existing | local    | existing commit |
-    And Git Town is now aware of this branch hierarchy
+    And this branch hierarchy exists now
       | BRANCH   | PARENT |
       | existing | main   |
       | new      | main   |
@@ -37,7 +36,7 @@ Feature: in a local repo
       |          | git checkout existing |
       | existing | git branch -D new     |
       |          | git stash pop         |
-    And I am now on the "existing" branch
+    And the current branch is now "existing"
     And now the initial commits exist
-    And my workspace still contains my uncommitted file
-    And my repo now has its initial branches and branch hierarchy
+    And the uncommitted file still exists
+    And the initial branches and hierarchy exist

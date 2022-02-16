@@ -1,7 +1,7 @@
 Feature: handle rebase conflicts between perennial branch and its tracking branch
 
   Background:
-    Given my repo has the perennial branches "alpha", "beta", and "gamma"
+    Given the perennial branches "alpha", "beta", and "gamma"
     And the commits
       | BRANCH | LOCATION      | MESSAGE            | FILE NAME        | FILE CONTENT        |
       | main   | origin        | main commit        | main_file        | main content        |
@@ -9,8 +9,8 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       | beta   | local         | local beta commit  | conflicting_file | local beta content  |
       |        | origin        | origin beta commit | conflicting_file | origin beta content |
       | gamma  | local, origin | gamma commit       | gamma_file       | gamma content       |
-    And I am on the "main" branch
-    And my workspace has an uncommitted file
+    And the current branch is "main"
+    And an uncommitted file
     When I run "git-town sync --all"
 
   Scenario: result
@@ -31,8 +31,8 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       To continue after having resolved conflicts, run "git-town continue".
       To continue by skipping the current branch, run "git-town skip".
       """
-    And my uncommitted file is stashed
-    And my repo now has a rebase in progress
+    And the uncommitted file is stashed
+    And a rebase is now in progress
 
   Scenario: abort
     When I run "git-town abort"
@@ -42,8 +42,8 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       |        | git checkout alpha |
       | alpha  | git checkout main  |
       | main   | git stash pop      |
-    And I am now on the "main" branch
-    And my workspace has the uncommitted file again
+    And the current branch is now "main"
+    And the uncommitted file still exists
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE            |
       | main   | local, origin | main commit        |
@@ -62,8 +62,8 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       |        | git checkout main       |
       | main   | git push --tags         |
       |        | git stash pop           |
-    And I am now on the "main" branch
-    And my workspace has the uncommitted file again
+    And the current branch is now "main"
+    And the uncommitted file still exists
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE            |
       | main   | local, origin | main commit        |
@@ -79,8 +79,8 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       """
       you must resolve the conflicts before continuing
       """
-    And my uncommitted file is stashed
-    And my repo still has a rebase in progress
+    And the uncommitted file is stashed
+    And a rebase is now in progress
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
@@ -95,9 +95,9 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
       | main   | git push --tags         |
       |        | git stash pop           |
     And all branches are now synchronized
-    And I am now on the "main" branch
-    And my workspace has the uncommitted file again
-    And there is no rebase in progress anymore
+    And the current branch is now "main"
+    And the uncommitted file still exists
+    And no rebase is in progress
 
   Scenario: resolve, finish the rebase, and continue
     When I resolve the conflict in "conflicting_file"

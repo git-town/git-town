@@ -1,12 +1,11 @@
 Feature: prepend a branch to a feature branch
 
   Background:
-    Given my repo has a feature branch "old"
+    Given the current branch is a feature branch "old"
     And the commits
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
-    And I am on the "old" branch
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town prepend parent"
 
   Scenario: result
@@ -20,12 +19,12 @@ Feature: prepend a branch to a feature branch
       |        | git branch parent main   |
       |        | git checkout parent      |
       | parent | git stash pop            |
-    And I am now on the "parent" branch
-    And my workspace still contains my uncommitted file
+    And the current branch is now "parent"
+    And the uncommitted file still exists
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
-    And Git Town is now aware of this branch hierarchy
+    And this branch hierarchy exists now
       | BRANCH | PARENT |
       | old    | parent |
       | parent | main   |
@@ -40,7 +39,7 @@ Feature: prepend a branch to a feature branch
       | main   | git branch -D parent |
       |        | git checkout old     |
       | old    | git stash pop        |
-    And I am now on the "old" branch
-    And my workspace still contains my uncommitted file
+    And the current branch is now "old"
+    And the uncommitted file still exists
     And now the initial commits exist
-    And Git Town is now aware of the initial branch hierarchy
+    And the initial branch hierarchy exists

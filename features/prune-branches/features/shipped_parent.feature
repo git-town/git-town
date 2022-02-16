@@ -1,14 +1,14 @@
 Feature: a parent branch of a local branch was shipped
 
   Background:
-    Given my repo has a feature branch "parent"
-    And my repo has a feature branch "child" as a child of "parent"
+    Given a feature branch "parent"
+    And a feature branch "child" as a child of "parent"
     And the commits
       | BRANCH | LOCATION      | MESSAGE       |
       | parent | local, origin | parent commit |
       | child  | local, origin | child commit  |
     And origin deletes the "parent" branch
-    And I am on the "main" branch
+    And the current branch is "main"
     When I run "git-town prune-branches"
 
   Scenario: result
@@ -16,11 +16,11 @@ Feature: a parent branch of a local branch was shipped
       | BRANCH | COMMAND                  |
       | main   | git fetch --prune --tags |
       |        | git branch -D parent     |
-    And I am now on the "main" branch
-    And the existing branches are
+    And the current branch is now "main"
+    And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, child |
-    And Git Town is now aware of this branch hierarchy
+    And this branch hierarchy exists now
       | BRANCH | PARENT |
       | child  | main   |
 
@@ -29,5 +29,5 @@ Feature: a parent branch of a local branch was shipped
     Then it runs the commands
       | BRANCH | COMMAND                                     |
       | main   | git branch parent {{ sha 'parent commit' }} |
-    And I am now on the "main" branch
-    And my repo now has its initial branches and branch hierarchy
+    And the current branch is now "main"
+    And the initial branches and hierarchy exist

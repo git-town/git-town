@@ -1,11 +1,10 @@
 Feature: ship a coworker's feature branch
 
   Background:
-    Given my repo has a feature branch "feature"
+    Given the current branch is a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE         | AUTHOR                          |
       | feature | local, origin | coworker commit | coworker <coworker@example.com> |
-    And I am on the "feature" branch
 
   Scenario: result (commit message via CLI)
     When I run "git-town ship -m 'feature done'"
@@ -26,7 +25,7 @@ Feature: ship a coworker's feature branch
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      | AUTHOR                          |
       | main   | local, origin | feature done | coworker <coworker@example.com> |
-    And Git Town is now aware of no branch hierarchy
+    And no branch hierarchy exists now
 
   Scenario: result (commit message via editor)
     When I run "git-town ship" and enter "feature done" for the commit message
@@ -47,7 +46,7 @@ Feature: ship a coworker's feature branch
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      | AUTHOR                          |
       | main   | local, origin | feature done | coworker <coworker@example.com> |
-    And Git Town is now aware of no branch hierarchy
+    And no branch hierarchy exists now
 
   Scenario:  undo
     Given I ran "git-town ship -m 'feature done'"
@@ -61,10 +60,10 @@ Feature: ship a coworker's feature branch
       |         | git checkout feature                           |
       | feature | git checkout main                              |
       | main    | git checkout feature                           |
-    And I am now on the "feature" branch
+    And the current branch is now "feature"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
       | feature | local, origin | coworker commit       |
-    And Git Town is now aware of the initial branch hierarchy
+    And the initial branch hierarchy exists

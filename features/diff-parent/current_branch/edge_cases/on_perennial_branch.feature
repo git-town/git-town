@@ -1,7 +1,7 @@
 Feature: on perennial branch
 
   Scenario: on main branch
-    And I am on the "main" branch
+    And the current branch is "main"
     When I run "git-town diff-parent"
     Then it runs no commands
     And it prints the error:
@@ -10,8 +10,7 @@ Feature: on perennial branch
       """
 
   Scenario: on perennial branch
-    Given my repo has a perennial branch "qa"
-    And I am on the "qa" branch
+    And the current branch is a perennial branch "qa"
     When I run "git-town diff-parent"
     Then it runs no commands
     And it prints the error:

@@ -1,15 +1,15 @@
 Feature: does not ship a child branch
 
   Background:
-    Given my repo has a feature branch "alpha"
-    And my repo has a feature branch "beta" as a child of "alpha"
-    And my repo has a feature branch "gamma" as a child of "beta"
+    Given a feature branch "alpha"
+    And a feature branch "beta" as a child of "alpha"
+    And a feature branch "gamma" as a child of "beta"
     And the commits
       | BRANCH | LOCATION      | MESSAGE      |
       | alpha  | local, origin | alpha commit |
       | beta   | local, origin | beta commit  |
       | gamma  | local, origin | gamma commit |
-    And I am on the "gamma" branch
+    And the current branch is "gamma"
     When I run "git-town ship"
 
   Scenario: result
@@ -21,9 +21,9 @@ Feature: does not ship a child branch
       shipping this branch would ship "alpha, beta" as well,
       please ship "alpha" first
       """
-    And I am still on the "gamma" branch
+    And the current branch is still "gamma"
     And now the initial commits exist
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branches and hierarchy exist
 
   Scenario: undo
     When I run "git-town undo"
@@ -32,6 +32,6 @@ Feature: does not ship a child branch
       """
       nothing to undo
       """
-    And I am still on the "gamma" branch
+    And the current branch is still "gamma"
     And now the initial commits exist
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branches and hierarchy exist

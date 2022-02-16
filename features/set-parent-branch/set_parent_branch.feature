@@ -2,21 +2,21 @@
 Feature: update the parent of a feature branch
 
   Background:
-    Given my repo has a feature branch "parent"
-    And my repo has a feature branch "child" as a child of "parent"
-    And I am on the "child" branch
+    Given a feature branch "parent"
+    And a feature branch "child" as a child of "parent"
+    And the current branch is "child"
 
   Scenario: select the default branch (current parent)
     When I run "git-town set-parent-branch" and answer the prompts:
       | PROMPT                                      | ANSWER  |
       | Please specify the parent branch of 'child' | [ENTER] |
-    And Git Town is still aware of the initial branch hierarchy
+    And the initial branch hierarchy exists
 
   Scenario: select another branch
     When I run "git-town set-parent-branch" and answer the prompts:
       | PROMPT                                      | ANSWER      |
       | Please specify the parent branch of 'child' | [UP][ENTER] |
-    Then Git Town is now aware of this branch hierarchy
+    Then this branch hierarchy exists now
       | BRANCH | PARENT |
       | child  | main   |
       | parent | main   |
@@ -26,6 +26,6 @@ Feature: update the parent of a feature branch
       | PROMPT                                      | ANSWER          |
       | Please specify the parent branch of 'child' | [UP][UP][ENTER] |
     Then the perennial branches are now "child"
-    And Git Town is now aware of this branch hierarchy
+    And this branch hierarchy exists now
       | BRANCH | PARENT |
       | parent | main   |

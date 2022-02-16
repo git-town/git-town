@@ -1,13 +1,13 @@
 Feature: sync the current perennial branch
 
   Background:
-    Given my repo has the perennial branches "production" and "qa"
+    Given the perennial branches "production" and "qa"
     And the commits
       | BRANCH | LOCATION      | MESSAGE       | FILE NAME   |
       | qa     | local         | local commit  | local_file  |
       |        | origin        | origin commit | origin_file |
       | main   | local, origin | main commit   | main_file   |
-    And I am on the "qa" branch
+    And the current branch is "qa"
     When I run "git-town sync"
 
   Scenario: result
@@ -18,7 +18,7 @@ Feature: sync the current perennial branch
       |        | git push                 |
       |        | git push --tags          |
     And all branches are now synchronized
-    And I am still on the "qa" branch
+    And the current branch is still "qa"
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | main commit   |

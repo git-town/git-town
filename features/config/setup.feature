@@ -2,9 +2,9 @@
 Feature: enter Git Town configuration
 
   Scenario: already configured
-    Given my repo has the branches "production" and "qa"
+    Given a perennial branch "qa"
+    And a branch "production"
     And the main branch is "main"
-    And the perennial branches are "qa"
     When I run "git-town config setup" and answer the prompts:
       | PROMPT                                     | ANSWER                      |
       | Please specify the main development branch | [ENTER]                     |
@@ -13,7 +13,7 @@ Feature: enter Git Town configuration
     And the perennial branches are now "production"
 
   Scenario: unconfigured
-    Given my repo has the branches "dev" and "production"
+    Given the branches "dev" and "production"
     And Git Town is not configured
     When I run "git-town config setup" and answer the prompts:
       | PROMPT                                     | ANSWER                      |
@@ -28,4 +28,4 @@ Feature: enter Git Town configuration
       | PROMPT                                     | ANSWER        |
       | Please specify the main development branch | [DOWN][ENTER] |
     Then the main branch is now "main"
-    And my repo now has no perennial branches
+    And there are still no perennial branches

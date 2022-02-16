@@ -1,15 +1,15 @@
 Feature: sync inside a folder that doesn't exist on the main branch
 
   Background:
-    Given my repo has the feature branches "current" and "other"
+    Given the feature branches "current" and "other"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local, origin | conflicting main commit    | conflicting_file | main content    |
       | current | local         | conflicting current commit | conflicting_file | current content |
       |         |               | folder commit              | new_folder/file1 |                 |
       | other   | local, origin | other commit               | file2            |                 |
-    And I am on the "current" branch
-    And my workspace has an uncommitted file
+    And the current branch is "current"
+    And an uncommitted file
     When I run "git-town sync --all" in the "new_folder" folder
 
   Scenario: result
@@ -23,9 +23,9 @@ Feature: sync inside a folder that doesn't exist on the main branch
       |         | git checkout current               |
       | current | git merge --no-edit origin/current |
       |         | git merge --no-edit main           |
-    And I am still on the "current" branch
-    And my uncommitted file is stashed
-    And my repo now has a merge in progress
+    And the current branch is still "current"
+    And the uncommitted file is stashed
+    And a merge is now in progress
     And it prints the error:
       """
       exit status 1
@@ -39,9 +39,9 @@ Feature: sync inside a folder that doesn't exist on the main branch
       |         | git checkout main    |
       | main    | git checkout current |
       | current | git stash pop        |
-    And I am still on the "current" branch
-    And my workspace has the uncommitted file again
-    And there is no merge in progress
+    And the current branch is still "current"
+    And the uncommitted file still exists
+    And no merge is in progress
     And now the initial commits exist
 
   Scenario: continue with unresolved conflict
@@ -51,9 +51,9 @@ Feature: sync inside a folder that doesn't exist on the main branch
       """
       you must resolve the conflicts before continuing
       """
-    And I am still on the "current" branch
-    And my uncommitted file is stashed
-    And my repo still has a merge in progress
+    And the current branch is still "current"
+    And the uncommitted file is stashed
+    And a merge is now in progress
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
@@ -70,9 +70,9 @@ Feature: sync inside a folder that doesn't exist on the main branch
       | current | git push --tags                  |
       |         | git stash pop                    |
     And all branches are now synchronized
-    And I am still on the "current" branch
-    And my workspace has the uncommitted file again
-    And there is no merge in progress
+    And the current branch is still "current"
+    And the uncommitted file still exists
+    And no merge is in progress
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, origin | conflicting main commit          |
@@ -83,7 +83,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
       | other   | local, origin | other commit                     |
       |         |               | conflicting main commit          |
       |         |               | Merge branch 'main' into other   |
-    And my repo still has these committed files
+    And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | current | conflicting_file | resolved content |

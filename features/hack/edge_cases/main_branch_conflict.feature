@@ -1,13 +1,12 @@
 Feature: conflicts between the main branch and its tracking branch
 
   Background:
-    Given my repo has a feature branch "existing"
+    Given the current branch is a feature branch "existing"
     And the commits
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | main   | local    | conflicting local commit  | conflicting_file | local content  |
       |        | origin   | conflicting origin commit | conflicting_file | origin content |
-    And I am on the "existing" branch
-    And my workspace has an uncommitted file
+    And an uncommitted file
     When I run "git-town hack new"
 
   Scenario: result
@@ -23,8 +22,8 @@ Feature: conflicts between the main branch and its tracking branch
       To abort, run "git-town abort".
       To continue after having resolved conflicts, run "git-town continue".
       """
-    And my repo now has a rebase in progress
-    And my uncommitted file is stashed
+    And a rebase is now in progress
+    And the uncommitted file is stashed
 
   Scenario: abort
     When I run "git-town abort"
@@ -33,9 +32,9 @@ Feature: conflicts between the main branch and its tracking branch
       | main     | git rebase --abort    |
       |          | git checkout existing |
       | existing | git stash pop         |
-    And I am now on the "existing" branch
-    And my workspace has the uncommitted file again
-    And there is no rebase in progress anymore
+    And the current branch is now "existing"
+    And the uncommitted file still exists
+    And no rebase is in progress
     And now the initial commits exist
 
   Scenario: continue with unresolved conflict
@@ -44,8 +43,8 @@ Feature: conflicts between the main branch and its tracking branch
       """
       you must resolve the conflicts before continuing
       """
-    And my uncommitted file is stashed
-    And my repo still has a rebase in progress
+    And the uncommitted file is stashed
+    And a rebase is now in progress
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
@@ -57,15 +56,15 @@ Feature: conflicts between the main branch and its tracking branch
       |        | git branch new main   |
       |        | git checkout new      |
       | new    | git stash pop         |
-    And I am now on the "new" branch
-    And my workspace still contains my uncommitted file
+    And the current branch is now "new"
+    And the uncommitted file still exists
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                   |
       | main   | local, origin | conflicting origin commit |
       |        |               | conflicting local commit  |
       | new    | local         | conflicting origin commit |
       |        |               | conflicting local commit  |
-    And my repo now has these committed files
+    And these committed files exist now
       | BRANCH | NAME             | CONTENT          |
       | main   | conflicting_file | resolved content |
       | new    | conflicting_file | resolved content |
@@ -80,5 +79,5 @@ Feature: conflicts between the main branch and its tracking branch
       |        | git branch new main |
       |        | git checkout new    |
       | new    | git stash pop       |
-    And I am now on the "new" branch
-    And my workspace still contains my uncommitted file
+    And the current branch is now "new"
+    And the uncommitted file still exists

@@ -1,13 +1,13 @@
 Feature: does not ship empty feature branches
 
   Background:
-    Given my repo has the feature branches "empty" and "other"
+    Given the feature branches "empty" and "other"
     And the commits
       | BRANCH | LOCATION | MESSAGE        | FILE NAME   | FILE CONTENT   |
       | main   | origin   | main commit    | common_file | common content |
       | empty  | local    | feature commit | common_file | common content |
-    And I am on the "other" branch
-    And my workspace has an uncommitted file
+    And the current branch is "other"
+    And an uncommitted file
     When I run "git-town ship empty"
 
   Scenario: result
@@ -29,9 +29,9 @@ Feature: does not ship empty feature branches
       """
       the branch "empty" has no shippable changes
       """
-    And I am still on the "other" branch
-    And my workspace still contains my uncommitted file
-    And Git Town is still aware of the initial branch hierarchy
+    And the current branch is still "other"
+    And the uncommitted file still exists
+    And the initial branch hierarchy exists
 
   Scenario: undo
     When I run "git-town undo"
@@ -40,9 +40,9 @@ Feature: does not ship empty feature branches
       """
       nothing to undo
       """
-    And I am still on the "other" branch
+    And the current branch is still "other"
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE        |
       | main   | local, origin | main commit    |
       | empty  | local         | feature commit |
-    And Git Town is still aware of the initial branch hierarchy
+    And the initial branch hierarchy exists

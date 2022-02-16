@@ -1,11 +1,10 @@
 Feature: ship a local feature branch
 
   Background:
-    Given my repo has a local feature branch "feature"
+    Given the current branch is a local feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | local    | feature commit |
-    And I am on the "feature" branch
     When I run "git-town ship -m 'feature done'"
 
   Scenario: result
@@ -21,14 +20,14 @@ Feature: ship a local feature branch
       |         | git commit -m "feature done" |
       |         | git push                     |
       |         | git branch -D feature        |
-    And I am now on the "main" branch
-    And the existing branches are
+    And the current branch is now "main"
+    And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, origin | feature done |
-    And Git Town is now aware of no branch hierarchy
+    And no branch hierarchy exists now
 
   Scenario: undo
     When I run "git-town undo"
@@ -40,10 +39,10 @@ Feature: ship a local feature branch
       |         | git checkout feature                          |
       | feature | git checkout main                             |
       | main    | git checkout feature                          |
-    And I am now on the "feature" branch
+    And the current branch is now "feature"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | feature done          |
       |         |               | Revert "feature done" |
       | feature | local         | feature commit        |
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branches and hierarchy exist

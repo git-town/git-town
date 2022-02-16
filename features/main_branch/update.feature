@@ -1,13 +1,13 @@
 Feature: configure the main branch
 
   Scenario: not configured
-    Given my repo doesn't have a main branch configured
+    Given the main branch is not set
     When I run "git-town main-branch main"
     Then it prints no output
     And the main branch is now "main"
 
   Scenario: configured
-    Given my repo has the branches "old" and "new"
+    Given the branches "old" and "new"
     And the main branch is "old"
     When I run "git-town main-branch new"
     Then it prints no output

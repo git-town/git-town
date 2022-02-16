@@ -15,8 +15,8 @@ Feature: missing configuration
       |        | git branch feature main  |
       |        | git checkout feature     |
     And the main branch is now "main"
-    And I am now on the "feature" branch
-    And Git Town is now aware of this branch hierarchy
+    And the current branch is now "feature"
+    And this branch hierarchy exists now
       | BRANCH  | PARENT |
       | feature | main   |
 
@@ -26,5 +26,5 @@ Feature: missing configuration
       | BRANCH  | COMMAND               |
       | feature | git checkout main     |
       | main    | git branch -D feature |
-    And I am now on the "main" branch
-    And Git Town is now aware of no branch hierarchy
+    And the current branch is now "main"
+    And no branch hierarchy exists now

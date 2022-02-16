@@ -1,12 +1,11 @@
 Feature: offline mode
 
   Background:
-    Given Git Town is in offline mode
-    And my repo has a feature branch "feature"
+    Given offline mode is enabled
+    And the current branch is a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
-    And I am on the "feature" branch
     When I run "git-town ship -m 'feature done'"
 
   Scenario: result
@@ -21,12 +20,12 @@ Feature: offline mode
       | main    | git merge --squash feature         |
       |         | git commit -m "feature done"       |
       |         | git branch -D feature              |
-    And I am now on the "main" branch
+    And the current branch is now "main"
     And now these commits exist
       | BRANCH  | LOCATION | MESSAGE        |
       | main    | local    | feature done   |
       | feature | origin   | feature commit |
-    And Git Town is now aware of no branch hierarchy
+    And no branch hierarchy exists now
 
   Scenario: undo
     When I run "git-town undo"
@@ -38,6 +37,6 @@ Feature: offline mode
       | feature | git checkout main                             |
       | main    | git reset --hard {{ sha 'Initial commit' }}   |
       |         | git checkout feature                          |
-    And I am now on the "feature" branch
+    And the current branch is now "feature"
     And now the initial commits exist
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branches and hierarchy exist

@@ -1,7 +1,7 @@
 Feature: does not rename the main branch
 
   Background:
-    Given I am on the "main" branch
+    Given the current branch is "main"
 
   Scenario: try to rename
     When I run "git-town rename-branch main new"
@@ -10,7 +10,7 @@ Feature: does not rename the main branch
       """
       the main branch cannot be renamed
       """
-    And I am still on the "main" branch
+    And the current branch is still "main"
 
   Scenario: try to force rename
     When I run "git-town rename-branch main new --force"
@@ -19,4 +19,4 @@ Feature: does not rename the main branch
       """
       the main branch cannot be renamed
       """
-    And I am still on the "main" branch
+    And the current branch is still "main"

@@ -2,8 +2,7 @@
 Feature: customize the parent for the new feature branch
 
   Background:
-    Given my repo has a branch "existing"
-    And I am on the "existing" branch
+    Given the current branch is "existing"
     When I run "git-town hack -p new" and answer the prompts:
       | PROMPT                                         | ANSWER        |
       | Please specify the parent branch of 'new'      | [DOWN][ENTER] |
@@ -17,8 +16,8 @@ Feature: customize the parent for the new feature branch
       |          | git push -u origin existing |
       |          | git branch new existing     |
       |          | git checkout new            |
-    And I am now on the "new" branch
-    And Git Town is now aware of this branch hierarchy
+    And the current branch is now "new"
+    And this branch hierarchy exists now
       | BRANCH   | PARENT   |
       | existing | main     |
       | new      | existing |
@@ -30,7 +29,7 @@ Feature: customize the parent for the new feature branch
       | new      | git checkout existing     |
       | existing | git branch -D new         |
       |          | git push origin :existing |
-    And I am now on the "existing" branch
-    And Git Town is now aware of this branch hierarchy
+    And the current branch is now "existing"
+    And this branch hierarchy exists now
       | BRANCH   | PARENT |
       | existing | main   |

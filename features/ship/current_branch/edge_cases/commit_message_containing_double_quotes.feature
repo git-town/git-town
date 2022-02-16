@@ -1,11 +1,10 @@
 Feature: commit message can contain double-quotes
 
   Background:
-    Given my repo has a feature branch "feature"
+    Given the current branch is a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | local    | feature commit |
-    And I am on the "feature" branch
     When I run "git-town ship -m 'with "double quotes"'"
 
   Scenario: result
@@ -23,15 +22,15 @@ Feature: commit message can contain double-quotes
       |         | git push                             |
       |         | git push origin :feature             |
       |         | git branch -D feature                |
-    And I am now on the "main" branch
-    And the existing branches are
+    And the current branch is now "main"
+    And the branches are now
       | REPOSITORY    | BRANCHES |
       | local, origin | main     |
-    And my repo doesn't have any uncommitted files
+    And no uncommitted files exist
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | with "double quotes" |
-    And Git Town is now aware of no branch hierarchy
+    And no branch hierarchy exists now
 
   Scenario: undo
     When I run "git-town undo"
@@ -44,10 +43,10 @@ Feature: commit message can contain double-quotes
       |         | git checkout feature                          |
       | feature | git checkout main                             |
       | main    | git checkout feature                          |
-    And I am now on the "feature" branch
+    And the current branch is now "feature"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                       |
       | main    | local, origin | with "double quotes"          |
       |         |               | Revert "with "double quotes"" |
       | feature | local, origin | feature commit                |
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branches and hierarchy exist

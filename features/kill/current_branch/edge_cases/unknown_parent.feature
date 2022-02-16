@@ -1,8 +1,7 @@
 Feature: ask for missing parent branch information
 
   Scenario:
-    Given my repo has a branch "feature"
-    And I am on the "feature" branch
+    Given the current branch is "feature"
     When I run "git-town kill feature" and answer the prompts:
       | PROMPT                                        | ANSWER  |
       | Please specify the parent branch of 'feature' | [ENTER] |
@@ -11,4 +10,4 @@ Feature: ask for missing parent branch information
       | feature | git fetch --prune --tags |
       |         | git checkout main        |
       | main    | git branch -D feature    |
-    And Git Town is now aware of no branch hierarchy
+    And no branch hierarchy exists now

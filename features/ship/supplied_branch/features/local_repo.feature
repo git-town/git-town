@@ -1,13 +1,13 @@
 Feature: ship the supplied feature branch in a local repo
 
   Background:
-    Given my repo has the feature branches "feature" and "other"
+    Given the feature branches "feature" and "other"
     And my repo does not have an origin
     And the commits
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME        |
       | feature | local    | feature commit | conflicting_file |
-    And I am on the "other" branch
-    And my workspace has an uncommitted file with name "conflicting_file" and content "conflicting content"
+    And the current branch is "other"
+    And an uncommitted file with name "conflicting_file" and content "conflicting content"
     When I run "git-town ship feature -m 'feature done'"
 
   Scenario: result
@@ -23,15 +23,15 @@ Feature: ship the supplied feature branch in a local repo
       |         | git branch -D feature        |
       |         | git checkout other           |
       | other   | git stash pop                |
-    And I am now on the "other" branch
-    And my workspace still contains my uncommitted file
-    And the existing branches are
+    And the current branch is now "other"
+    And the uncommitted file still exists
+    And the branches are now
       | REPOSITORY | BRANCHES    |
       | local      | main, other |
     And now these commits exist
       | BRANCH | LOCATION | MESSAGE      |
       | main   | local    | feature done |
-    And Git Town is now aware of this branch hierarchy
+    And this branch hierarchy exists now
       | BRANCH | PARENT |
       | other  | main   |
 
@@ -47,10 +47,10 @@ Feature: ship the supplied feature branch in a local repo
       |         | git checkout feature                          |
       | feature | git checkout other                            |
       | other   | git stash pop                                 |
-    And I am now on the "other" branch
+    And the current branch is now "other"
     And now these commits exist
       | BRANCH  | LOCATION | MESSAGE               |
       | main    | local    | feature done          |
       |         |          | Revert "feature done" |
       | feature | local    | feature commit        |
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branches and hierarchy exist

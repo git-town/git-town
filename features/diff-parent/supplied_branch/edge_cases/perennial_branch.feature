@@ -9,7 +9,7 @@ Feature: does not diff perennial branches
       """
 
   Scenario: perennial branch
-    Given my repo has a perennial branch "qa"
+    Given a perennial branch "qa"
     When I run "git-town diff-parent qa"
     Then it runs no commands
     And it prints the error:

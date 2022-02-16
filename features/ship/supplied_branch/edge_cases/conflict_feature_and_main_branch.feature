@@ -1,13 +1,13 @@
 Feature: handle conflicts between the supplied feature branch and the main branch
 
   Background:
-    Given my repo has the feature branches "feature" and "other"
+    Given the feature branches "feature" and "other"
     And the commits
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
-    And I am on the "other" branch
-    And my workspace has an uncommitted file
+    And the current branch is "other"
+    And an uncommitted file
     And I run "git-town ship feature -m 'feature done'"
 
   Scenario: result
@@ -27,9 +27,9 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       To abort, run "git-town abort".
       To continue after having resolved conflicts, run "git-town continue".
       """
-    And I am now on the "feature" branch
-    And my uncommitted file is stashed
-    And my repo now has a merge in progress
+    And the current branch is now "feature"
+    And the uncommitted file is stashed
+    And a merge is now in progress
 
   Scenario: abort
     When I run "git-town abort"
@@ -39,14 +39,14 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       |         | git checkout main  |
       | main    | git checkout other |
       | other   | git stash pop      |
-    And I am now on the "other" branch
-    And my workspace still contains my uncommitted file
-    And there is no merge in progress
+    And the current branch is now "other"
+    And the uncommitted file still exists
+    And no merge is in progress
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                    |
       | main    | local, origin | conflicting main commit    |
       | feature | local         | conflicting feature commit |
-    And Git Town is still aware of the initial branch hierarchy
+    And the initial branch hierarchy exists
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
@@ -62,16 +62,16 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       |         | git branch -D feature        |
       |         | git checkout other           |
       | other   | git stash pop                |
-    And I am now on the "other" branch
-    And my workspace still contains my uncommitted file
-    And the existing branches are
+    And the current branch is now "other"
+    And the uncommitted file still exists
+    And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE                 | FILE NAME        | FILE CONTENT     |
       | main   | local, origin | conflicting main commit | conflicting_file | main content     |
       |        |               | feature done            | conflicting_file | resolved content |
-    And Git Town is now aware of this branch hierarchy
+    And this branch hierarchy exists now
       | BRANCH | PARENT |
       | other  | main   |
 
@@ -89,8 +89,8 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       |         | git branch -D feature        |
       |         | git checkout other           |
       | other   | git stash pop                |
-    And I am now on the "other" branch
-    And my workspace still contains my uncommitted file
+    And the current branch is now "other"
+    And the uncommitted file still exists
 
   Scenario: resolve, continue, and undo
     When I resolve the conflict in "conflicting_file"
@@ -110,7 +110,7 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       |         | git checkout main                                               |
       | main    | git checkout other                                              |
       | other   | git stash pop                                                   |
-    And I am now on the "other" branch
+    And the current branch is now "other"
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, origin | conflicting main commit          |
@@ -119,4 +119,4 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       | feature | local, origin | conflicting feature commit       |
       |         | origin        | conflicting main commit          |
       |         |               | Merge branch 'main' into feature |
-    And my repo now has its initial branches and branch hierarchy
+    And the initial branches and hierarchy exist

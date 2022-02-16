@@ -4,8 +4,8 @@ Feature: in a subfolder on the main branch
     Given the commits
       | BRANCH | LOCATION | MESSAGE       | FILE NAME        |
       | main   | local    | folder commit | new_folder/file1 |
-    And I am on the "main" branch
-    And my workspace has an uncommitted file
+    And the current branch is "main"
+    And an uncommitted file
     When I run "git-town hack new" in the "new_folder" folder
 
   Scenario: result
@@ -19,13 +19,13 @@ Feature: in a subfolder on the main branch
       |        | git branch new main      |
       |        | git checkout new         |
       | new    | git stash pop            |
-    And I am now on the "new" branch
-    And my workspace still contains my uncommitted file
+    And the current branch is now "new"
+    And the uncommitted file still exists
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | folder commit |
       | new    | local         | folder commit |
-    And Git Town is now aware of this branch hierarchy
+    And this branch hierarchy exists now
       | BRANCH | PARENT |
       | new    | main   |
 
@@ -38,8 +38,8 @@ Feature: in a subfolder on the main branch
       |        | git checkout main |
       | main   | git branch -D new |
       |        | git stash pop     |
-    And I am now on the "main" branch
+    And the current branch is now "main"
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | folder commit |
-    And Git Town is now aware of no branch hierarchy
+    And no branch hierarchy exists now

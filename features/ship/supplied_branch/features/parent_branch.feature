@@ -1,13 +1,13 @@
 Feature: ship a parent branch
 
   Background:
-    Given my repo has a feature branch "parent"
-    And my repo has a feature branch "child" as a child of "parent"
+    Given a feature branch "parent"
+    And a feature branch "child" as a child of "parent"
     And the commits
       | BRANCH | LOCATION      | MESSAGE       |
       | parent | local, origin | parent commit |
       | child  | local, origin | child commit  |
-    And I am on the "child" branch
+    And the current branch is "child"
     When I run "git-town ship parent -m 'parent done'"
 
   Scenario: result
@@ -25,13 +25,13 @@ Feature: ship a parent branch
       |        | git push                          |
       |        | git branch -D parent              |
       |        | git checkout child                |
-    And I am now on the "child" branch
+    And the current branch is now "child"
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE       |
       | main   | local, origin | parent done   |
       | child  | local, origin | child commit  |
       | parent | origin        | parent commit |
-    And Git Town is now aware of this branch hierarchy
+    And this branch hierarchy exists now
       | BRANCH | PARENT |
       | child  | main   |
 
@@ -46,11 +46,11 @@ Feature: ship a parent branch
       |        | git checkout parent                         |
       | parent | git checkout main                           |
       | main   | git checkout child                          |
-    And I am now on the "child" branch
+    And the current branch is now "child"
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE              |
       | main   | local, origin | parent done          |
       |        |               | Revert "parent done" |
       | child  | local, origin | child commit         |
       | parent | local, origin | parent commit        |
-    And Git Town is now aware of the initial branch hierarchy
+    And the initial branch hierarchy exists
