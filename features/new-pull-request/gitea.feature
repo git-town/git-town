@@ -59,12 +59,12 @@ Feature: Gitea support
       | test/feature   | https://gitea.com/git-town/git-town/compare/main...test%2Ffeature |
 
   Scenario: nested feature branch with known parent
-    Given a feature branch "parent-feature"
-    And a feature branch "child-feature" as a child of "parent-feature"
+    Given a feature branch "parent"
+    And a feature branch "child" as a child of "parent"
     And the origin is "git@gitea.com:git-town/git-town.git"
-    And the current branch is "child-feature"
+    And the current branch is "child"
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:
       """
-      https://gitea.com/git-town/git-town/compare/parent-feature...child-feature
+      https://gitea.com/git-town/git-town/compare/parent...child
       """

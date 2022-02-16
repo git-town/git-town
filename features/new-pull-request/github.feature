@@ -59,12 +59,12 @@ Feature: GitHub support
       | test/feature   | https://github.com/git-town/git-town/compare/test%2Ffeature?expand=1 |
 
   Scenario: nested feature branch with known parent
-    Given a feature branch "parent-feature"
-    And a feature branch "child-feature" as a child of "parent-feature"
+    Given a feature branch "parent"
+    And a feature branch "child" as a child of "parent"
     And the origin is "git@github.com:git-town/git-town.git"
-    And the current branch is "child-feature"
+    And the current branch is "child"
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:
       """
-      https://github.com/git-town/git-town/compare/parent-feature...child-feature?expand=1
+      https://github.com/git-town/git-town/compare/parent...child?expand=1
       """
