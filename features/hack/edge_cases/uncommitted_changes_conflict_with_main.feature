@@ -42,7 +42,7 @@ Feature: conflicts between uncommitted changes and the main branch
     Then it runs the commands
       | BRANCH | COMMAND               |
       | new    | git checkout main     |
-      | main   | git branch -d new     |
+      | main   | git branch -D new     |
       |        | git checkout existing |
     And it prints the error:
       """
@@ -77,7 +77,7 @@ Feature: conflicts between uncommitted changes and the main branch
     Then it runs the commands
       | BRANCH | COMMAND               |
       | new    | git checkout main     |
-      | main   | git branch -d new     |
+      | main   | git branch -D new     |
       |        | git checkout existing |
     And it prints the error:
       """

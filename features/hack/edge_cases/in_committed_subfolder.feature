@@ -27,7 +27,7 @@ Feature: inside a committed subfolder that exists only on the current feature br
     Then it runs the commands
       | BRANCH | COMMAND               |
       | new    | git checkout main     |
-      | main   | git branch -d new     |
+      | main   | git branch -D new     |
       |        | git checkout existing |
     And the current branch is now "existing"
     And now the initial commits exist

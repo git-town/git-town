@@ -36,7 +36,7 @@ Feature: on a forked repo
       | new    | git add -A        |
       |        | git stash         |
       |        | git checkout main |
-      | main   | git branch -d new |
+      | main   | git branch -D new |
       |        | git stash pop     |
     And the current branch is now "main"
     And now these commits exist

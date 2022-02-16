@@ -34,7 +34,7 @@ Feature: in a local repo
       | new      | git add -A            |
       |          | git stash             |
       |          | git checkout existing |
-      | existing | git branch -d new     |
+      | existing | git branch -D new     |
       |          | git stash pop         |
     And the current branch is now "existing"
     And now the initial commits exist

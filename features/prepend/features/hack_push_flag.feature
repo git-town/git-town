@@ -32,7 +32,7 @@ Feature: auto-push new branches
       | BRANCH | COMMAND              |
       | new    | git push origin :new |
       |        | git checkout main    |
-      | main   | git branch -d new    |
+      | main   | git branch -D new    |
       |        | git checkout old     |
     And the current branch is now "old"
     And now the initial commits exist

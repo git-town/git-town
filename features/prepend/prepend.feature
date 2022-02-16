@@ -36,7 +36,7 @@ Feature: prepend a branch to a feature branch
       | parent | git add -A           |
       |        | git stash            |
       |        | git checkout main    |
-      | main   | git branch -d parent |
+      | main   | git branch -D parent |
       |        | git checkout old     |
       | old    | git stash pop        |
     And the current branch is now "old"

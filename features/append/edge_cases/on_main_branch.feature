@@ -35,7 +35,7 @@ Feature: on the main branch
       | new    | git add -A        |
       |        | git stash         |
       |        | git checkout main |
-      | main   | git branch -d new |
+      | main   | git branch -D new |
       |        | git stash pop     |
     And the current branch is now "main"
     And the uncommitted file still exists

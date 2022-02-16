@@ -27,3 +27,19 @@ Feature: local repo
       | BRANCH   | PARENT |
       | existing | main   |
       | new      | main   |
+
+  Scenario: undo
+    When I run "git-town undo"
+    Then it runs the commands
+      | BRANCH   | COMMAND               |
+      | new      | git add -A            |
+      |          | git stash             |
+      |          | git checkout existing |
+      | existing | git branch -D new     |
+      |          | git stash pop         |
+    And the current branch is now "existing"
+    And the uncommitted file still exists
+    And now the initial commits exist
+    And this branch hierarchy exists now
+      | BRANCH   | PARENT |
+      | existing | main   |

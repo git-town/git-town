@@ -31,7 +31,7 @@ Feature: auto-push the new branch
       | BRANCH | COMMAND              |
       | new    | git push origin :new |
       |        | git checkout main    |
-      | main   | git branch -d new    |
+      | main   | git branch -D new    |
     And the current branch is now "main"
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE       |

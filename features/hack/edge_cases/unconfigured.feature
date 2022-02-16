@@ -25,6 +25,6 @@ Feature: missing configuration
     Then it runs the commands
       | BRANCH  | COMMAND               |
       | feature | git checkout main     |
-      | main    | git branch -d feature |
+      | main    | git branch -D feature |
     And the current branch is now "main"
     And no branch hierarchy exists now

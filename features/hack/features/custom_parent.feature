@@ -27,7 +27,7 @@ Feature: customize the parent for the new feature branch
     Then it runs the commands
       | BRANCH   | COMMAND                   |
       | new      | git checkout existing     |
-      | existing | git branch -d new         |
+      | existing | git branch -D new         |
       |          | git push origin :existing |
     And the current branch is now "existing"
     And this branch hierarchy exists now
