@@ -4,12 +4,16 @@
 git-town.new-branch-push-flag=<true|false>
 ```
 
-By default, [git hack](../commands/hack.md), [append](../commands/append.md),
-and [prepend](../commands/prepend.md) create new feature branches in your local
-repository. They don't push the new branch to `origin` because that would be
-slow and unnecessarily trigger a CI run for the empty branch. Git Town will push
-the new feature branch the first time you run [git sync](../commands/sync.md).
+By default, Git Town does not push new feature branches to the `origin` remote
+since that would make creating branches slower and triggers an unnecessary CI
+run for a branch containing no changes. Running [git sync](../commands/sync.md)
+or [git new-pull-request](../commands/new-pull-request.md) will push the branch
+to origin later. If you prefer to push new branches upon creation, set this
+option to `true` by running:
 
-If you prefer that new branches get pushed when creating them, enable the
-`new-branch-push-flag` configuration setting by running the
-[git town new-branch-push-flag](../commands/new-branch-push-flag.md) command.
+```
+git config [--global] new-branch-push-flag <true|false>
+```
+
+The optional `--global` flag applies this setting to all Git repositories on
+your machine. Without it, this setting applies to the Git repo you are in.
