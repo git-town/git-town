@@ -7,5 +7,6 @@ branches.
 
 ### Variations
 
-- without an argument, displays the existing perennial branches
-- the `update` subcommand displays UI to set the perennial branches
+- without an argument, displays the current branch strategy
+- with `rebase`, set the pull branch strategy to rebase
+- with `merge`, set the pull branch strategy to merge
