@@ -8,4 +8,5 @@ branches.
 ### Variations
 
 - without an argument, displays the current branch strategy
-- with `rebase` or `merge`, set the branch strategy
+- with `rebase`, set the pull branch strategy to rebase
+- with `merge`, set the pull branch strategy to merge
