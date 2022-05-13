@@ -14,6 +14,7 @@ require (
 	github.com/sergi/go-diff v1.0.0
 	github.com/spf13/cobra v1.3.0
 	github.com/stretchr/testify v1.7.0
+	github.com/xanzy/go-gitlab v0.65.0
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8
 	gopkg.in/AlecAivazis/survey.v1 v1.8.8
 	gopkg.in/jarcoal/httpmock.v1 v1.0.0-20180304133419-61bcb58a0752
