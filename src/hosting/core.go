@@ -37,6 +37,9 @@ type config interface {
 	// GitHubToken provides the personal access token for GitHub stored in the Git configuration.
 	GitHubToken() string
 
+	// GitLabToken provides the personal access token for GitLab stored in the Git configuration.
+	GitLabToken() string
+
 	// MainBranch provides the name of the main branch.
 	MainBranch() string
 

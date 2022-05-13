@@ -10,6 +10,7 @@ import (
 
 // GitlabDriver provides access to the API of GitLab installations.
 type GitlabDriver struct {
+	apiToken   string
 	hostname   string
 	originURL  string
 	repository string
@@ -29,6 +30,7 @@ func NewGitlabDriver(config config) *GitlabDriver {
 		return nil
 	}
 	return &GitlabDriver{
+		apiToken:   config.GitLabToken(),
 		originURL:  originURL,
 		hostname:   hostname,
 		repository: giturl.Repo(originURL),
