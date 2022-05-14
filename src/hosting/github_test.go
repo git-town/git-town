@@ -192,7 +192,7 @@ func TestGitHubDriver_MergePullRequest_MergeFails(t *testing.T) {
 	assert.Error(t, err)
 }
 
-//nolint:paralleltest  // mocks HTTP
+//nolint:paralleltest,dupl  // mocks HTTP
 func TestGitHubDriver_MergePullRequest_UpdateChildPRs(t *testing.T) {
 	driver, teardown := setupGithubDriver(t, "TOKEN")
 	defer teardown()
