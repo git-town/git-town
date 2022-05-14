@@ -17,6 +17,7 @@ This page helps you get started hacking on the Git Town codebase.
    [Node.js](https://nodejs.org), [Yarn](https://yarnpkg.com/),
    [scc](https://github.com/boyter/scc)
 5. run the tests: <code type="make/command">make test</code>
+   * Note: When running on a non-English locale, run with `LANG=C make test` to prevent tests from failing.
 6. compile the tool: <code type="make/command">make build</code>
 
 ## dependencies
