@@ -12,11 +12,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - uses: dprint/check@v2.0
-    - name: golangci-lint
-      uses: golangci/golangci-lint-action@v2
+    - uses: actions/setup-go@v2
       with:
-        version: v1.46.1
+        go-version: 1.16
+    - uses: dprint/check@v2.0
+    - run: go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.46.1
+    # NOTE: Downloading golangci-lint binaries doesn't work as of 2022-05-15.
+    #       A likely cause is that this binary is compiled with the wrong version of Go.
+    #       Installing from source does work since it uses the native Go toolchain on this machine.
+    # TODO: re-enable downloading the binary once the changes introduced in Go 1.18 stabilize
+    #       and the ecosystem has caught up with them.
+    # - name: golangci-lint
+    #   uses: golangci/golangci-lint-action@v2
+    #   with:
+    #     version: v1.46.1
     - name: ShellCheck
       uses: ludeeus/action-shellcheck@1.1.0
       with:
