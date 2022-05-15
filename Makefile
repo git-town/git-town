@@ -79,7 +79,7 @@ setup-tools:  # the setup steps necessary for document tests
 
 setup-go: setup-godog
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.46.1
-	go install mvdan.cc/gofumpt@latest
+	go install mvdan.cc/gofumpt@v0.3.0
 	go install github.com/KyleBanks/depth/cmd/depth@latest
 	go install github.com/boyter/scc@latest
 
@@ -106,3 +106,5 @@ update:  # updates all dependencies
 	go get -u ./...
 	go mod tidy
 	go mod vendor
+	echo
+	echo Please update the tools that "make setup" installs manually.
