@@ -17,7 +17,7 @@ teams. See [this screencast](https://youtu.be/oLaUsUlFfTo) for an introduction.
 
 ## Commands
 
-Git Town provides these additional Git commands:
+222 Git Town provides these additional Git commands:
 
 #### Typical development commands
 
