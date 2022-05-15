@@ -4,7 +4,7 @@ This page helps you get started hacking on the Git Town codebase.
 
 ## setup
 
-1. install [Go](https://golang.org) version 1.18
+1. install [Go](https://golang.org) version 1.16
 2. install [Make](https://www.gnu.org/software/make)
    - Mac and Linux users have this out of the box
    - Windows users can install

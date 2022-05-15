@@ -16,6 +16,7 @@ jobs:
       with:
         go-version: 1.16
     - uses: dprint/check@v2.0
+    - run: go version
     - name: golangci-lint
       uses: golangci/golangci-lint-action@v2
       with:
