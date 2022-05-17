@@ -4,7 +4,7 @@ This page helps you get started hacking on the Git Town codebase.
 
 ## setup
 
-1. install [Go](https://golang.org) version 1.16 or higher
+1. install [Go](https://golang.org) version 1.16
 2. install [Make](https://www.gnu.org/software/make)
    - Mac and Linux users have this out of the box
    - Windows users can install
@@ -113,9 +113,10 @@ To see the CLI output of the shell commands in a Cucumber test, add a tag
 Scenario: A foo walks into a bar
 ```
 
-To inspect the workspace containing the various Git repositories at any step of
-an end-to-end test, insert the step `And inspect the repo`. Cucumber will print
-the path of the workspace and wait until you hit ENTER.
+To inspect the local and remote Git repository used in an end-to-end test,
+insert the step `And inspect the repo`. This step will make Cucumber print the
+path of the workspace and wait until you hit ENTER. This gives you time to
+inspect that folder using the tool of your choice.
 
 Debug a Godog Cucumber feature in [VSCode](https://code.visualstudio.com):
 
