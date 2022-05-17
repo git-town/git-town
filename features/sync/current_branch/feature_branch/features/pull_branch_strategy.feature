@@ -28,11 +28,11 @@ Feature: with pull-branch-strategy set to "merge"
       | BRANCH  | LOCATION      | MESSAGE                                                    |
       | main    | local, origin | local main commit                                          |
       |         |               | origin main commit                                         |
-      |         |               | Merge remote-tracking branch 'origin/main' into main       |
+      |         |               | Merge remote-tracking branch 'origin/main'                 |
       | feature | local, origin | local feature commit                                       |
       |         |               | origin feature commit                                      |
       |         |               | Merge remote-tracking branch 'origin/feature' into feature |
       |         |               | local main commit                                          |
       |         |               | origin main commit                                         |
-      |         |               | Merge remote-tracking branch 'origin/main' into main       |
+      |         |               | Merge remote-tracking branch 'origin/main'                 |
       |         |               | Merge branch 'main' into feature                           |
