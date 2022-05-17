@@ -61,7 +61,7 @@ func (d *GitlabDriver) LoadPullRequestInfo(branch, parentBranch string) (result 
 		return result, err
 	}
 	if len(mergeRequests) != 1 {
-		return result, err
+		return result, nil
 	}
 	result.CanMergeWithAPI = true
 	result.DefaultCommitMessage = d.defaultCommitMessage(mergeRequests[0])
