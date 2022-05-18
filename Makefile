@@ -7,14 +7,14 @@ build:  # builds for the current platform
 	go install -ldflags "-X github.com/git-town/git-town/v7/src/cmd.version=v${VERSION}-dev -X github.com/git-town/git-town/v7/src/cmd.buildDate=${TODAY}"
 
 cuke: build   # runs the new Godog-based feature tests
-	@env GOGC=off go test . -v -count=1
+	@env LANG=C GOGC=off go test . -v -count=1
 
 cuke-open:  # runs only the currently uncommitted feature tests
 	@git status --porcelain | grep -v '^\s*D ' | sed 's/^\s*\w\s*//' | grep '\.feature' | xargs godog
 #                           remove deleted     remove indicator
 
 cuke-prof: build  # creates a flamegraph
-	env GOGC=off go test . -v -cpuprofile=godog.out
+	env LANG=C GOGC=off go test . -v -cpuprofile=godog.out
 	@rm git-town.test
 	@echo Please open https://www.speedscope.app and load the file godog.out
 
