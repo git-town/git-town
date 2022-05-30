@@ -21,7 +21,7 @@ To remove these aliases, run `git town alias false`.
 Git Town can ship branches that have an open pull request by merging this pull
 request via your code hosting service's API. This feature is currently
 implemented for GitHub, GitLab and Gitea only. To enable it, create an API token
-for hyour account at your code hosting provider.
+for your account at your code hosting provider.
 
 - [instructions for GitHub](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
 - [instructions for GitLab](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html)
