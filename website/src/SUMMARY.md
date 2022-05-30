@@ -34,6 +34,7 @@
   - [code-hosting-driver](preferences/code-hosting-driver.md)
   - [code-hosting-origin-hostname](preferences/code-hosting-origin-hostname.md)
   - [github-token](preferences/github-token.md)
+  - [gitlab-token](preferences/gitlab-token.md)
   - [main-branch-name](preferences/main-branch-name.md)
   - [new-branch-push-flag](preferences/new-branch-push-flag.md)
   - [offline](preferences/offline.md)

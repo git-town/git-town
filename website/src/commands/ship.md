@@ -18,7 +18,7 @@ branches.
 Similar to `git commit`, the `-m` parameter allows specifying the commit message
 via the CLI.
 
-If you use GitHub or Gitea, have enabled
+If you use GitHub, GitLab or Gitea, have enabled
 [API access to your hosting provider](../quick-configuration.md#api-access-to-your-hosting-provider),
 and the branch to be shipped has an open pull request, this command merges pull
 requests via the API of the hosting service.

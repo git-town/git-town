@@ -20,17 +20,19 @@ To remove these aliases, run `git town alias false`.
 
 Git Town can ship branches that have an open pull request by merging this pull
 request via your code hosting service's API. This feature is currently
-implemented for GitHub and Gitea only. To enable it, create an API token for
-your account at your code hosting provider.
+implemented for GitHub, GitLab and Gitea only. To enable it, create an API token
+for your account at your code hosting provider.
 
 - [instructions for GitHub](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+- [instructions for GitLab](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html)
 - [instructions for Gitea](https://docs.gitea.io/en-us/api-usage)
 
-Then run this command inside the folder that contains your Git repository to
-provide this API token to Git Town.
+Then run one of the following commands inside the folder that contains your Git
+repository to provide this API token to Git Town.
 
 ```
-git config --add git-town.github-token <your api token>
+git config --add git-town.github-token <your api token> # for GitHub
+git config --add git-town.gitlab-token <your api token> # for GitLab
 ```
 
 ## Delete remote branches

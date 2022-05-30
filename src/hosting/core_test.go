@@ -3,6 +3,7 @@ package hosting_test
 type mockConfig struct {
 	giteaToken     string
 	gitHubToken    string
+	gitLabToken    string
 	hostingService string
 	mainBranch     string
 	originOverride string
@@ -15,6 +16,10 @@ func (mc mockConfig) GiteaToken() string {
 
 func (mc mockConfig) GitHubToken() string {
 	return mc.gitHubToken
+}
+
+func (mc mockConfig) GitLabToken() string {
+	return mc.gitLabToken
 }
 
 func (mc mockConfig) HostingService() string {

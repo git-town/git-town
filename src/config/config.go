@@ -124,6 +124,11 @@ func (c *Config) GitHubToken() string {
 	return c.localOrGlobalConfigValue("git-town.github-token")
 }
 
+// GitLabToken provides the content of the GitLab API token stored in the local or global Git Town configuration.
+func (c *Config) GitLabToken() string {
+	return c.localOrGlobalConfigValue("git-town.gitlab-token")
+}
+
 // GiteaToken provides the content of the Gitea API token stored in the local or global Git Town configuration.
 func (c *Config) GiteaToken() string {
 	return c.localOrGlobalConfigValue("git-town.gitea-token")
