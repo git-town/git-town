@@ -8,7 +8,7 @@ import (
 
 // Host provides the hostname contained within the given Git hosting URL.
 func Host(url string) string {
-	hostnameRegex := regexp.MustCompile("(^[^:]*://([^@]*@)?|git@)([^/:]+).*")
+	hostnameRegex := regexp.MustCompile("(^[^:]*://([^@]*@)?|[^@]*@)([^/:]+).*")
 	matches := hostnameRegex.FindStringSubmatch(url)
 	if matches == nil {
 		return ""
