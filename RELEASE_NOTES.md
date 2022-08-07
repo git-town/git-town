@@ -1,5 +1,21 @@
 # Git Town Release Notes
 
+## 7.8.0 (2022-08-07)
+
+#### New Features
+
+- update Regex for hostname extraction to support more ssh usernames
+  ([#1883](https://github.com/git-town/git-town/pull/1883))
+- merge GitLab merge requests when shipping
+  ([#1874](https://github.com/git-town/git-town/pull/1874))
+
+#### Bug Fixes
+
+- fix tests on non-English locales
+  ([#1875](https://github.com/git-town/git-town/pull/1875))
+- fix bug in undo of "git hack" in local repo
+  ([#1804](https://github.com/git-town/git-town/pull/1804))
+
 ## 7.7.0 (2022-01-22)
 
 #### New Features
