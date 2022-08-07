@@ -2,6 +2,11 @@
 
 This guide is for maintainers who make releases of Git Town.
 
+### update release notes
+
+- file `RELEASE_NOTES.md`
+- commit to `main`
+
 ### bump the version
 
 - search-and-replace the old version with the new version
@@ -13,7 +18,6 @@ On a Linux machine:
 
 - install [hub](https://github.com/github/hub#installation)
 - install [goreleaser](https://goreleaser.com/install)
-- update `RELEASE_NOTES.md` on `master`
 - create and push a new Git Tag for the release: `git tag v7.7.0`
 - `env GITHUB_TOKEN=<your Github token> VERSION=7.7.0 make release-linux`
   - or omit the Github token and enter your credentials when asked
