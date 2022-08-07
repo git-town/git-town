@@ -10,7 +10,7 @@ import (
 func PrintDryRunMessage() {
 	_, err := color.New(color.FgBlue).Print(dryRunMessage)
 	if err != nil {
-		fmt.Println(dryRunMessage)
+		fmt.Print(dryRunMessage)
 	}
 }
 
