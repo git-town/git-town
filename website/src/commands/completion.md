@@ -33,5 +33,5 @@ git-town completion fish | source
 To install autocompletions for Powershell, run this command:
 
 ```
-git-town completion powershell | source
+Invoke-Expression -Command $(git-town completion powershell | Out-String)
 ```
