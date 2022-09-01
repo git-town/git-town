@@ -1,8 +1,6 @@
 VERSION ?= 0.0.0
 TODAY=$(shell date +'%Y/%m/%d')
 
-.DEFAULT_GOAL := help
-
 build:  # builds for the current platform
 	go install -ldflags "-X github.com/git-town/git-town/v7/src/cmd.version=v${VERSION}-dev -X github.com/git-town/git-town/v7/src/cmd.buildDate=${TODAY}"
 
@@ -108,3 +106,6 @@ update:  # updates all dependencies
 	go mod vendor
 	echo
 	echo Please update the tools that "make setup" installs manually.
+
+
+.DEFAULT_GOAL := help
