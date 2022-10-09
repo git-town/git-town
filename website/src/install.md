@@ -3,6 +3,8 @@
 Git Town ships as a single self-contained binary. It doesn't bundle a Git client
 but uses the native Git installation on your machine.
 
+[![Packaging status](https://repology.org/badge/vertical-allrepos/git-town.svg)](https://repology.org/project/git-town/versions)
+
 ## macOS
 
 The easiest way to install Git Town on macOS is via Homebrew:
