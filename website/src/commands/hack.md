@@ -1,9 +1,10 @@
 # git hack &lt;branch&gt;
 
 The _hack_ command ("let's start hacking") creates a new feature branch with the
-given name off the [main branch](../preferences/main-branch-name.md) and brings all uncommitted changes over to it.
-Before it does that, it [syncs](sync.md) the main branch to ensure commits into
-the new branch are on top of the current state of the repository.
+given name off the [main branch](../preferences/main-branch-name.md) and brings
+all uncommitted changes over to it. Before it does that, it [syncs](sync.md) the
+main branch to ensure commits into the new branch are on top of the current
+state of the repository.
 
 ### Variations
 
