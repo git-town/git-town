@@ -119,7 +119,7 @@ func TestRunner_CreateBranchContainingSlash(t *testing.T) {
 	assert.Equal(t, "initial", currentBranch)
 	branches, err := runner.LocalBranchesMainFirst()
 	assert.NoError(t, err)
-	assert.Equal(t, []string{"my/feature", "initial"}, branches)
+	assert.Equal(t, []string{"initial", "my/feature"}, branches)
 }
 
 func TestRunner_CreateChildFeatureBranch(t *testing.T) {
@@ -222,7 +222,7 @@ func TestRunner_CreatePerennialBranches(t *testing.T) {
 	assert.NoError(t, err)
 	branches, err := runner.LocalBranchesMainFirst()
 	assert.NoError(t, err)
-	assert.Equal(t, []string{"main", "p1", "p2", "initial"}, branches)
+	assert.Equal(t, []string{"main", "initial", "p1", "p2"}, branches)
 	runner.Config.Reload()
 	assert.True(t, runner.Config.IsPerennialBranch("p1"))
 	assert.True(t, runner.Config.IsPerennialBranch("p2"))
