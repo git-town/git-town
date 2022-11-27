@@ -172,7 +172,6 @@ func (d *GiteaDriver) apiMergePullRequest(pullRequestNumber int64, commitTitle, 
 //   ancestor -> initial
 //   children1 -> ancestor  --> initial (retargeted to initial after merge)
 //   children2 -> ancestor  --> initial (retargeted to initial after merge)
-//
 //nolint:unparam
 func (d *GiteaDriver) apiRetargetPullRequests(pullRequests []*gitea.PullRequest, newBaseName string) error {
 	for _, pullRequest := range pullRequests {
