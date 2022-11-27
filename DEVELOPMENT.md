@@ -86,8 +86,8 @@ make cuke
 
 </a>
 
-Run individual Cucumber tests, add a `@this` flag to the test you want to run,
-for example:
+To run individual Cucumber tests, add a `@this` flag to the test you want to
+run. Example:
 
 ```cucumber
 @this
