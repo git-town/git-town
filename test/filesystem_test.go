@@ -31,5 +31,5 @@ func TestCopyDirectory_GitRepo(t *testing.T) {
 	err := CopyDirectory(origin.WorkingDir(), dstDir)
 	assert.NoError(t, err)
 	assertFileExists(t, dstDir, "one.txt")
-	assertFileExistsWithContent(t, dstDir, ".git/HEAD", "ref: refs/heads/master\n")
+	assertFileExistsWithContent(t, dstDir, ".git/HEAD", "ref: refs/heads/initial\n")
 }

@@ -30,9 +30,9 @@ func TestDataTable(t *testing.T) {
 func TestDataTable_Remove(t *testing.T) {
 	t.Parallel()
 	table := test.DataTable{}
-	table.AddRow("local", "main, master, foo")
-	table.AddRow("origin", "master, bar")
-	table.RemoveText("master, ")
+	table.AddRow("local", "main, initial, foo")
+	table.AddRow("origin", "initial, bar")
+	table.RemoveText("initial, ")
 	expected := "| local  | main, foo |\n| origin | bar       |\n"
 	assert.Equal(t, expected, table.String())
 }
