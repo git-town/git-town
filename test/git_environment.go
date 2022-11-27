@@ -141,6 +141,7 @@ func (env *GitEnvironment) AddSubmoduleRepo() (err error) {
 		return err
 	}
 	err = submoduleRepo.RunMany([][]string{
+		{"git", "config", "--global", "protocol.file.allow", "always"},
 		{"git", "commit", "--allow-empty", "-m", "Initial commit"},
 	})
 	if err != nil {
