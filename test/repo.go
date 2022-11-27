@@ -41,7 +41,7 @@ func CreateRepo(t *testing.T) Repo {
 func InitRepo(workingDir, homeDir, binDir string) (Repo, error) {
 	result := NewRepo(workingDir, homeDir, binDir)
 	err := result.RunMany([][]string{
-		{"git", "init"},
+		{"git", "init", "--initial-branch=master"},
 		{"git", "config", "--global", "user.name", "user"},
 		{"git", "config", "--global", "user.email", "email@example.com"},
 	})
