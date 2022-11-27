@@ -10,7 +10,6 @@ import (
 // TagTableBuilder collects data about tags in Git repositories
 // in the same way that our Gherkin tables describing tags in repos are organized.
 type TagTableBuilder struct {
-
 	// tagsToLocations stores data about what locations tags are.
 	//
 	// Structure:

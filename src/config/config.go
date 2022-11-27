@@ -21,7 +21,6 @@ import (
 // stored in Git metadata in the given local repo and the global Git configuration.
 // This class manages which config values are stored in local vs global settings.
 type Config struct {
-
 	// globalConfigCache is a cache of the global Git configuration.
 	globalConfigCache map[string]string
 
