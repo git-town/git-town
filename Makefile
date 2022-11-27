@@ -11,6 +11,9 @@ cuke-open:  # runs only the currently uncommitted feature tests
 	@git status --porcelain | grep -v '^\s*D ' | sed 's/^\s*\w\s*//' | grep '\.feature' | xargs godog
 #                           remove deleted     remove indicator
 
+cukethis: build   # runs the new Godog-based feature tests
+	@env LANG=C GOGC=off go test . -v -count=1 -this
+
 cuke-prof: build  # creates a flamegraph
 	env LANG=C GOGC=off go test . -v -cpuprofile=godog.out
 	@rm git-town.test

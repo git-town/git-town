@@ -86,10 +86,18 @@ make cuke
 
 </a>
 
-Run individual Cucumber tests:
+Run individual Cucumber tests, add a `@this` flag to the test you want to run,
+for example:
 
-```bash
-godog [path to file/folder]     # runs the given end-to-end tests
+```cucumber
+@this
+Scenario: foo bar
+```
+
+Then run:
+
+```
+make cukethis
 ```
 
 Certain tests require that the Git remote points to an actual GitHub, Gitea,
