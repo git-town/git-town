@@ -41,7 +41,7 @@ func CreateRepo(t *testing.T) Repo {
 func InitRepo(workingDir, homeDir, binDir string) (Repo, error) {
 	result := NewRepo(workingDir, homeDir, binDir)
 	err := result.RunMany([][]string{
-		{"git", "init"},
+		{"git", "init", "--initial-branch=initial"},
 		{"git", "config", "--global", "user.name", "user"},
 		{"git", "config", "--global", "user.email", "email@example.com"},
 	})
@@ -125,7 +125,7 @@ func (repo *Repo) FilesInBranches() (result DataTable, err error) {
 func CreateTestGitTownRepo(t *testing.T) Repo {
 	t.Helper()
 	repo := CreateRepo(t)
-	err := repo.CreateBranch("main", "master")
+	err := repo.CreateBranch("main", "initial")
 	assert.NoError(t, err)
 	err = repo.RunMany([][]string{
 		{"git", "config", "git-town.main-branch-name", "main"},

@@ -169,9 +169,9 @@ func (d *GiteaDriver) apiMergePullRequest(pullRequestNumber int64, commitTitle, 
 // retargetPullRequests retargets pullrequests onto a new base branch
 // this comes in handy when an ancestor got merged, so that children can be retargeted to the ancestor's own target branch
 // example:
-//   ancerstor -> master
-//   children1 -> ancestor  --> master (retargeted to master after merge)
-//   children2 -> ancestor  --> master (retargeted to master after merge)
+//   ancerstor -> initial
+//   children1 -> ancestor  --> initial (retargeted to initial after merge)
+//   children2 -> ancestor  --> initial (retargeted to initial after merge)
 //nolint:unparam
 func (d *GiteaDriver) apiRetargetPullRequests(pullRequests []*gitea.PullRequest, newBaseName string) error {
 	for _, pullRequest := range pullRequests {

@@ -24,32 +24,32 @@ func TestRunner_AddRemote(t *testing.T) {
 func TestRunner_CheckoutBranch(t *testing.T) {
 	t.Parallel()
 	runner := test.CreateRepo(t).Runner
-	err := runner.CreateBranch("branch1", "master")
+	err := runner.CreateBranch("branch1", "initial")
 	assert.NoError(t, err)
 	err = runner.CheckoutBranch("branch1")
 	assert.NoError(t, err)
 	currentBranch, err := runner.CurrentBranch()
 	assert.NoError(t, err)
 	assert.Equal(t, "branch1", currentBranch)
-	err = runner.CheckoutBranch("master")
+	err = runner.CheckoutBranch("initial")
 	assert.NoError(t, err)
 	currentBranch, err = runner.CurrentBranch()
 	assert.NoError(t, err)
-	assert.Equal(t, "master", currentBranch)
+	assert.Equal(t, "initial", currentBranch)
 }
 
 func TestRunner_Commits(t *testing.T) {
 	t.Parallel()
 	runner := test.CreateRepo(t).Runner
 	err := runner.CreateCommit(git.Commit{
-		Branch:      "master",
+		Branch:      "initial",
 		FileName:    "file1",
 		FileContent: "hello",
 		Message:     "first commit",
 	})
 	assert.NoError(t, err)
 	err = runner.CreateCommit(git.Commit{
-		Branch:      "master",
+		Branch:      "initial",
 		FileName:    "file2",
 		FileContent: "hello again",
 		Message:     "second commit",
@@ -58,11 +58,11 @@ func TestRunner_Commits(t *testing.T) {
 	commits, err := runner.Commits([]string{"FILE NAME", "FILE CONTENT"})
 	assert.NoError(t, err)
 	assert.Len(t, commits, 2)
-	assert.Equal(t, "master", commits[0].Branch)
+	assert.Equal(t, "initial", commits[0].Branch)
 	assert.Equal(t, "file1", commits[0].FileName)
 	assert.Equal(t, "hello", commits[0].FileContent)
 	assert.Equal(t, "first commit", commits[0].Message)
-	assert.Equal(t, "master", commits[1].Branch)
+	assert.Equal(t, "initial", commits[1].Branch)
 	assert.Equal(t, "file2", commits[1].FileName)
 	assert.Equal(t, "hello again", commits[1].FileContent)
 	assert.Equal(t, "second commit", commits[1].Message)
@@ -90,7 +90,7 @@ func TestRunner_ConnectTrackingBranch(t *testing.T) {
 	assert.NoError(t, err)
 	err = runner.Fetch()
 	assert.NoError(t, err)
-	err = runner.ConnectTrackingBranch("master")
+	err = runner.ConnectTrackingBranch("initial")
 	assert.NoError(t, err)
 	err = runner.PushBranch()
 	assert.NoError(t, err)
@@ -99,27 +99,27 @@ func TestRunner_ConnectTrackingBranch(t *testing.T) {
 func TestRunner_CreateBranch(t *testing.T) {
 	t.Parallel()
 	runner := test.CreateRepo(t).Runner
-	err := runner.CreateBranch("branch1", "master")
+	err := runner.CreateBranch("branch1", "initial")
 	assert.NoError(t, err)
 	currentBranch, err := runner.CurrentBranch()
 	assert.NoError(t, err)
-	assert.Equal(t, "master", currentBranch)
+	assert.Equal(t, "initial", currentBranch)
 	branches, err := runner.LocalBranchesMainFirst()
 	assert.NoError(t, err)
-	assert.Equal(t, []string{"branch1", "master"}, branches)
+	assert.Equal(t, []string{"branch1", "initial"}, branches)
 }
 
 func TestRunner_CreateBranchContainingSlash(t *testing.T) {
 	t.Parallel()
 	runner := test.CreateRepo(t).Runner
-	err := runner.CreateBranch("my/feature", "master")
+	err := runner.CreateBranch("my/feature", "initial")
 	assert.NoError(t, err)
 	currentBranch, err := runner.CurrentBranch()
 	assert.NoError(t, err)
-	assert.Equal(t, "master", currentBranch)
+	assert.Equal(t, "initial", currentBranch)
 	branches, err := runner.LocalBranchesMainFirst()
 	assert.NoError(t, err)
-	assert.Equal(t, []string{"master", "my/feature"}, branches)
+	assert.Equal(t, []string{"initial", "my/feature"}, branches)
 }
 
 func TestRunner_CreateChildFeatureBranch(t *testing.T) {
@@ -139,7 +139,7 @@ func TestRunner_CreateCommit(t *testing.T) {
 	t.Parallel()
 	runner := test.CreateRepo(t).Runner
 	err := runner.CreateCommit(git.Commit{
-		Branch:      "master",
+		Branch:      "initial",
 		FileName:    "hello.txt",
 		FileContent: "hello world",
 		Message:     "test commit",
@@ -151,14 +151,14 @@ func TestRunner_CreateCommit(t *testing.T) {
 	assert.Equal(t, "hello.txt", commits[0].FileName)
 	assert.Equal(t, "hello world", commits[0].FileContent)
 	assert.Equal(t, "test commit", commits[0].Message)
-	assert.Equal(t, "master", commits[0].Branch)
+	assert.Equal(t, "initial", commits[0].Branch)
 }
 
 func TestRunner_CreateCommit_Author(t *testing.T) {
 	t.Parallel()
 	runner := test.CreateRepo(t).Runner
 	err := runner.CreateCommit(git.Commit{
-		Branch:      "master",
+		Branch:      "initial",
 		FileName:    "hello.txt",
 		FileContent: "hello world",
 		Message:     "test commit",
@@ -171,7 +171,7 @@ func TestRunner_CreateCommit_Author(t *testing.T) {
 	assert.Equal(t, "hello.txt", commits[0].FileName)
 	assert.Equal(t, "hello world", commits[0].FileContent)
 	assert.Equal(t, "test commit", commits[0].Message)
-	assert.Equal(t, "master", commits[0].Branch)
+	assert.Equal(t, "initial", commits[0].Branch)
 	assert.Equal(t, "developer <developer@example.com>", commits[0].Author)
 }
 
@@ -222,7 +222,7 @@ func TestRunner_CreatePerennialBranches(t *testing.T) {
 	assert.NoError(t, err)
 	branches, err := runner.LocalBranchesMainFirst()
 	assert.NoError(t, err)
-	assert.Equal(t, []string{"main", "master", "p1", "p2"}, branches)
+	assert.Equal(t, []string{"main", "initial", "p1", "p2"}, branches)
 	runner.Config.Reload()
 	assert.True(t, runner.Config.IsPerennialBranch("p1"))
 	assert.True(t, runner.Config.IsPerennialBranch("p2"))
@@ -231,20 +231,20 @@ func TestRunner_CreatePerennialBranches(t *testing.T) {
 func TestRunner_CurrentBranch(t *testing.T) {
 	t.Parallel()
 	runner := test.CreateRepo(t).Runner
-	err := runner.CheckoutBranch("master")
+	err := runner.CheckoutBranch("initial")
 	assert.NoError(t, err)
-	err = runner.CreateBranch("b1", "master")
+	err = runner.CreateBranch("b1", "initial")
 	assert.NoError(t, err)
 	err = runner.CheckoutBranch("b1")
 	assert.NoError(t, err)
 	branch, err := runner.CurrentBranch()
 	assert.NoError(t, err)
 	assert.Equal(t, "b1", branch)
-	err = runner.CheckoutBranch("master")
+	err = runner.CheckoutBranch("initial")
 	assert.NoError(t, err)
 	branch, err = runner.CurrentBranch()
 	assert.NoError(t, err)
-	assert.Equal(t, "master", branch)
+	assert.Equal(t, "initial", branch)
 }
 
 func TestRunner_Fetch(t *testing.T) {
@@ -261,13 +261,13 @@ func TestRunner_FileContentInCommit(t *testing.T) {
 	t.Parallel()
 	runner := test.CreateRepo(t).Runner
 	err := runner.CreateCommit(git.Commit{
-		Branch:      "master",
+		Branch:      "initial",
 		FileName:    "hello.txt",
 		FileContent: "hello world",
 		Message:     "commit",
 	})
 	assert.NoError(t, err)
-	commits, err := runner.CommitsInBranch("master", []string{})
+	commits, err := runner.CommitsInBranch("initial", []string{})
 	assert.NoError(t, err)
 	assert.Len(t, commits, 1)
 	content, err := runner.FileContentInCommit(commits[0].SHA, "hello.txt")
@@ -352,7 +352,7 @@ func TestRunner_HasBranchesOutOfSync_branchBehind(t *testing.T) {
 	assert.NoError(t, err)
 	err = env.OriginRepo.CommitStagedChanges("stuff")
 	assert.NoError(t, err)
-	err = env.OriginRepo.CheckoutBranch("master")
+	err = env.OriginRepo.CheckoutBranch("initial")
 	assert.NoError(t, err)
 	err = env.DevRepo.Fetch()
 	assert.NoError(t, err)
@@ -367,7 +367,7 @@ func TestRunner_HasGitTownConfigNow(t *testing.T) {
 	res, err := runner.HasGitTownConfigNow()
 	assert.NoError(t, err)
 	assert.False(t, res)
-	err = runner.CreateBranch("main", "master")
+	err = runner.CreateBranch("main", "initial")
 	assert.NoError(t, err)
 	err = runner.CreateFeatureBranch("foo")
 	assert.NoError(t, err)
@@ -396,9 +396,9 @@ func TestRunner_HasLocalBranch(t *testing.T) {
 	repoDir := test.CreateTempDir(t)
 	repo, err := origin.Clone(repoDir)
 	assert.NoError(t, err)
-	err = repo.CreateBranch("b1", "master")
+	err = repo.CreateBranch("b1", "initial")
 	assert.NoError(t, err)
-	err = repo.CreateBranch("b2", "master")
+	err = repo.CreateBranch("b2", "initial")
 	assert.NoError(t, err)
 	has, err := repo.HasLocalBranch("b1")
 	assert.NoError(t, err)
@@ -449,7 +449,7 @@ func TestRunner_HasRemote(t *testing.T) {
 func TestRunner_HasTrackingBranch(t *testing.T) {
 	t.Parallel()
 	origin := test.CreateRepo(t)
-	err := origin.CreateBranch("b1", "master")
+	err := origin.CreateBranch("b1", "initial")
 	assert.NoError(t, err)
 	repoDir := test.CreateTempDir(t)
 	repo, err := origin.Clone(repoDir)
@@ -457,7 +457,7 @@ func TestRunner_HasTrackingBranch(t *testing.T) {
 	runner := repo.Runner
 	err = runner.CheckoutBranch("b1")
 	assert.NoError(t, err)
-	err = runner.CreateBranch("b2", "master")
+	err = runner.CreateBranch("b2", "initial")
 	assert.NoError(t, err)
 	has, err := runner.HasTrackingBranch("b1")
 	assert.NoError(t, err)
@@ -476,17 +476,17 @@ func TestRunner_LocalBranches(t *testing.T) {
 	repoDir := test.CreateTempDir(t)
 	repo, err := origin.Clone(repoDir)
 	assert.NoError(t, err)
-	err = repo.CreateBranch("b1", "master")
+	err = repo.CreateBranch("b1", "initial")
 	assert.NoError(t, err)
-	err = repo.CreateBranch("b2", "master")
+	err = repo.CreateBranch("b2", "initial")
 	assert.NoError(t, err)
-	err = origin.CreateBranch("b3", "master")
+	err = origin.CreateBranch("b3", "initial")
 	assert.NoError(t, err)
 	err = repo.Fetch()
 	assert.NoError(t, err)
 	branches, err := repo.Runner.LocalBranchesMainFirst()
 	assert.NoError(t, err)
-	assert.Equal(t, []string{"b1", "b2", "master"}, branches)
+	assert.Equal(t, []string{"b1", "b2", "initial"}, branches)
 }
 
 func TestRunner_LocalAndOriginBranches(t *testing.T) {
@@ -495,25 +495,25 @@ func TestRunner_LocalAndOriginBranches(t *testing.T) {
 	repoDir := test.CreateTempDir(t)
 	repo, err := origin.Clone(repoDir)
 	assert.NoError(t, err)
-	err = repo.CreateBranch("b1", "master")
+	err = repo.CreateBranch("b1", "initial")
 	assert.NoError(t, err)
-	err = repo.CreateBranch("b2", "master")
+	err = repo.CreateBranch("b2", "initial")
 	assert.NoError(t, err)
-	err = origin.CreateBranch("b3", "master")
+	err = origin.CreateBranch("b3", "initial")
 	assert.NoError(t, err)
 	err = repo.Fetch()
 	assert.NoError(t, err)
 	branches, err := repo.Runner.LocalAndOriginBranches()
 	assert.NoError(t, err)
-	assert.Equal(t, []string{"b1", "b2", "b3", "master"}, branches)
+	assert.Equal(t, []string{"b1", "b2", "b3", "initial"}, branches)
 }
 
 func TestRunner_PreviouslyCheckedOutBranch(t *testing.T) {
 	t.Parallel()
 	runner := test.CreateRepo(t).Runner
-	err := runner.CreateBranch("feature1", "master")
+	err := runner.CreateBranch("feature1", "initial")
 	assert.NoError(t, err)
-	err = runner.CreateBranch("feature2", "master")
+	err = runner.CreateBranch("feature2", "initial")
 	assert.NoError(t, err)
 	err = runner.CheckoutBranch("feature1")
 	assert.NoError(t, err)
@@ -530,13 +530,13 @@ func TestRunner_PushBranch(t *testing.T) {
 	origin := test.CreateRepo(t)
 	err := runner.AddRemote("origin", origin.WorkingDir())
 	assert.NoError(t, err)
-	err = runner.CreateBranch("b1", "master")
+	err = runner.CreateBranch("b1", "initial")
 	assert.NoError(t, err)
 	err = runner.PushBranchToOrigin("b1")
 	assert.NoError(t, err)
 	branches, err := origin.LocalBranchesMainFirst()
 	assert.NoError(t, err)
-	assert.Equal(t, []string{"b1", "master"}, branches)
+	assert.Equal(t, []string{"b1", "initial"}, branches)
 }
 
 func TestRunner_RemoteBranches(t *testing.T) {
@@ -545,17 +545,17 @@ func TestRunner_RemoteBranches(t *testing.T) {
 	repoDir := test.CreateTempDir(t)
 	repo, err := origin.Clone(repoDir)
 	assert.NoError(t, err)
-	err = repo.CreateBranch("b1", "master")
+	err = repo.CreateBranch("b1", "initial")
 	assert.NoError(t, err)
-	err = repo.CreateBranch("b2", "master")
+	err = repo.CreateBranch("b2", "initial")
 	assert.NoError(t, err)
-	err = origin.CreateBranch("b3", "master")
+	err = origin.CreateBranch("b3", "initial")
 	assert.NoError(t, err)
 	err = repo.Fetch()
 	assert.NoError(t, err)
 	branches, err := repo.Runner.RemoteBranches()
 	assert.NoError(t, err)
-	assert.Equal(t, []string{"origin/b3", "origin/master"}, branches)
+	assert.Equal(t, []string{"origin/b3", "origin/initial"}, branches)
 }
 
 func TestRunner_Remotes(t *testing.T) {
@@ -572,16 +572,16 @@ func TestRunner_Remotes(t *testing.T) {
 func TestRunner_RemoveBranch(t *testing.T) {
 	t.Parallel()
 	runner := test.CreateRepo(t).Runner
-	err := runner.CreateBranch("b1", "master")
+	err := runner.CreateBranch("b1", "initial")
 	assert.NoError(t, err)
 	branches, err := runner.LocalBranchesMainFirst()
 	assert.NoError(t, err)
-	assert.Equal(t, []string{"b1", "master"}, branches)
+	assert.Equal(t, []string{"b1", "initial"}, branches)
 	err = runner.RemoveBranch("b1")
 	assert.NoError(t, err)
 	branches, err = runner.LocalBranchesMainFirst()
 	assert.NoError(t, err)
-	assert.Equal(t, []string{"master"}, branches)
+	assert.Equal(t, []string{"initial"}, branches)
 }
 
 func TestRunner_RemoveRemote(t *testing.T) {
@@ -614,7 +614,7 @@ func TestRunner_SetRemote(t *testing.T) {
 func TestRunner_ShaForCommit(t *testing.T) {
 	t.Parallel()
 	runner := test.CreateRepo(t).Runner
-	err := runner.CreateCommit(git.Commit{Branch: "master", FileName: "foo", FileContent: "bar", Message: "commit"})
+	err := runner.CreateCommit(git.Commit{Branch: "initial", FileName: "foo", FileContent: "bar", Message: "commit"})
 	assert.NoError(t, err)
 	sha, err := runner.ShaForCommit("commit")
 	assert.NoError(t, err)
