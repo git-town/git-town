@@ -13,6 +13,7 @@ import (
 )
 
 func TestRun(t *testing.T) {
+	t.Parallel()
 	t.Run(".Exec()", func(t *testing.T) {
 		t.Run("happy path", func(t *testing.T) {
 			t.Parallel()

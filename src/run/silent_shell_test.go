@@ -10,6 +10,7 @@ import (
 )
 
 func TestSilentShell(t *testing.T) {
+	t.Parallel()
 	t.Run(".Run()", func(t *testing.T) {
 		t.Parallel()
 		shell := run.SilentShell{}

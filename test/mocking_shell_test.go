@@ -12,6 +12,7 @@ import (
 )
 
 func TestMockingShell(t *testing.T) {
+	t.Parallel()
 	t.Run(".MockCommand()", func(t *testing.T) {
 		t.Parallel()
 		workDir := CreateTempDir(t)
