@@ -63,15 +63,18 @@ func determineParentBranch(targetBranch string, repo *git.ProdRepo) (string, err
 	return repo.Config.MainBranch(), nil
 }
 
-func createHackConfig(args []string, repo *git.ProdRepo) (result appendConfig, err error) {
-	result.targetBranch = args[0]
+func createHackConfig(args []string, repo *git.ProdRepo) (appendConfig, error) {
+	result := appendConfig{
+		targetBranch: args[0],
+	}
+	var err error
 	result.parentBranch, err = determineParentBranch(result.targetBranch, repo)
 	if err != nil {
-		return result, err
+		return appendConfig{}, err
 	}
 	result.hasOrigin, err = repo.Silent.HasOrigin()
 	if err != nil {
-		return result, err
+		return appendConfig{}, err
 	}
 	result.shouldNewBranchPush = repo.Config.ShouldNewBranchPush()
 	result.isOffline = repo.Config.IsOffline()
@@ -83,12 +86,12 @@ func createHackConfig(args []string, repo *git.ProdRepo) (result appendConfig, e
 	}
 	hasBranch, err := repo.Silent.HasLocalOrOriginBranch(result.targetBranch)
 	if err != nil {
-		return result, err
+		return appendConfig{}, err
 	}
 	if hasBranch {
-		return result, fmt.Errorf("a branch named %q already exists", result.targetBranch)
+		return appendConfig{}, fmt.Errorf("a branch named %q already exists", result.targetBranch)
 	}
-	return
+	return result, nil
 }
 
 func init() {

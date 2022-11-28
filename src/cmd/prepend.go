@@ -60,37 +60,40 @@ See "sync" for upstream remote options.
 	},
 }
 
-func createPrependConfig(args []string, repo *git.ProdRepo) (result prependConfig, err error) {
-	result.initialBranch, err = repo.Silent.CurrentBranch()
+func createPrependConfig(args []string, repo *git.ProdRepo) (prependConfig, error) {
+	initialBranch, err := repo.Silent.CurrentBranch()
 	if err != nil {
-		return result, err
+		return prependConfig{}, err
 	}
-	result.targetBranch = args[0]
+	result := prependConfig{
+		initialBranch: initialBranch,
+		targetBranch:  args[0],
+	}
 	result.hasOrigin, err = repo.Silent.HasOrigin()
 	if err != nil {
-		return result, err
+		return prependConfig{}, err
 	}
 	result.shouldNewBranchPush = repo.Config.ShouldNewBranchPush()
 	result.isOffline = repo.Config.IsOffline()
 	if result.hasOrigin && !result.isOffline {
 		err := repo.Logging.Fetch()
 		if err != nil {
-			return result, err
+			return prependConfig{}, err
 		}
 	}
 	hasBranch, err := repo.Silent.HasLocalOrOriginBranch(result.targetBranch)
 	if err != nil {
-		return result, err
+		return prependConfig{}, err
 	}
 	if hasBranch {
-		return result, fmt.Errorf("a branch named %q already exists", result.targetBranch)
+		return prependConfig{}, fmt.Errorf("a branch named %q already exists", result.targetBranch)
 	}
 	if !repo.Config.IsFeatureBranch(result.initialBranch) {
-		return result, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can have parent branches", result.initialBranch)
+		return prependConfig{}, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can have parent branches", result.initialBranch)
 	}
 	err = userinput.EnsureKnowsParentBranches([]string{result.initialBranch}, repo)
 	if err != nil {
-		return result, err
+		return prependConfig{}, err
 	}
 	result.parentBranch = repo.Config.ParentBranch(result.initialBranch)
 	result.ancestorBranches = repo.Config.AncestorBranches(result.initialBranch)

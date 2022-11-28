@@ -16,26 +16,26 @@ func SyncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (St
 	}
 	result := StepList{}
 	if !hasOrigin && !isFeature {
-		return result, nil
+		return StepList{}, nil
 	}
 	result.Append(&steps.CheckoutBranchStep{BranchName: branchName})
 	if isFeature {
 		steps, err := syncFeatureBranchSteps(branchName, repo)
 		if err != nil {
-			return result, err
+			return StepList{}, err
 		}
 		result.AppendList(steps)
 	} else {
 		steps, err := syncNonFeatureBranchSteps(branchName, repo)
 		if err != nil {
-			return result, err
+			return StepList{}, err
 		}
 		result.AppendList(steps)
 	}
 	if pushBranch && hasOrigin && !repo.Config.IsOffline() {
 		hasTrackingBranch, err := repo.Silent.HasTrackingBranch(branchName)
 		if err != nil {
-			return result, err
+			return StepList{}, err
 		}
 		if hasTrackingBranch {
 			result.Append(&steps.PushBranchStep{BranchName: branchName})
@@ -78,7 +78,7 @@ func syncNonFeatureBranchSteps(branchName string, repo *git.ProdRepo) (StepList,
 	mainBranchName := repo.Config.MainBranch()
 	hasUpstream, err := repo.Silent.HasRemote("upstream")
 	if err != nil {
-		return result, err
+		return StepList{}, err
 	}
 	if mainBranchName == branchName && hasUpstream && repo.Config.ShouldSyncUpstream() {
 		result.Append(&steps.FetchUpstreamStep{BranchName: mainBranchName})
