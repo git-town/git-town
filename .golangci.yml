@@ -1,20 +1,20 @@
 linters:
   enable-all: true
   disable:
-    - cyclop  # we keep a tab on function length ourselves
-    - exhaustivestruct  # not applicable at the moment
-    - forbidigo  # Git Town prints a lot to the CLI
+    - cyclop # we keep a tab on function length ourselves
+    - exhaustivestruct # not applicable at the moment
+    - forbidigo # Git Town prints a lot to the CLI
     - gochecknoglobals # Cobra requires globals
     - gochecknoinits # Cobra requires init blocks
     - goconst # tests contain a ton of hard-coded test strings, for example branch names
-    - golint  # deprecated
+    - golint # deprecated
     - gomnd # tests contain hard-coded test data that wouldn't make sense to extract into constants
-    - ifshort  # this enforces less readable code
-    - interfacer  # deprecated
+    - ifshort # this enforces less readable code
+    - interfacer # deprecated
     - lll # we aren't enforcing a line length at this point
-    - maligned  # deprecated
-    - nlreturn  # this forces unnecessary empty lines in function bodies
-    - scopelint  # deprecated
+    - maligned # deprecated
+    - nlreturn # this forces unnecessary empty lines in function bodies
+    - scopelint # deprecated
     - wrapcheck
     - wsl # this linter creates too many false positives, our policy is to not have any empty lines in code blocks
 
