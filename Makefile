@@ -25,7 +25,7 @@ dependencies:  # prints the dependencies between packages as a tree
 docs: build  # tests the documentation
 	${CURDIR}/tools/node_modules/.bin/text-run --offline
 
-fix: # auto-fixes lint issues in all languages
+fix: tools/node_modules  # auto-fixes lint issues in all languages
 	gofumpt -l -w .
 	dprint fmt
 	cd tools && npm exec -- prettier --write '../**/*.yml'
@@ -107,5 +107,8 @@ update:  # updates all dependencies
 	echo
 	echo Please update the tools that "make setup" installs manually.
 
+
+tools/node_modules: tools/yarn.lock
+	cd tools && yarn install
 
 .DEFAULT_GOAL := help
