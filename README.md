@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/git-town/git-town/master/website/src/logo.svg">
+  <img src="https://raw.githubusercontent.com/git-town/git-town/main/website/src/logo.svg">
   <br>
   <img src="https://github.com/git-town/git-town/actions/workflows/cuke.yml/badge.svg" alt="end-to-end test status">
   <img src="https://github.com/git-town/git-town/actions/workflows/lint_unit.yml/badge.svg" alt="unit test status">

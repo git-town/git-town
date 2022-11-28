@@ -34,7 +34,7 @@ func TestGitEnvironment_NewStandardGitEnvironment(t *testing.T) {
 	assertIsNormalGitRepo(t, filepath.Join(gitEnvRootDir, "origin"))
 	branch, err := result.OriginRepo.CurrentBranch()
 	assert.NoError(t, err)
-	assert.Equal(t, "master", branch, "the origin should be at the master branch so that we can push to it")
+	assert.Equal(t, "initial", branch, "the origin should be at the initial branch so that we can push to it")
 	// verify the developer repo
 	assertIsNormalGitRepo(t, filepath.Join(gitEnvRootDir, "developer"))
 	assertHasGlobalGitConfiguration(t, gitEnvRootDir)
@@ -54,9 +54,9 @@ func TestGitEnvironment_Branches_Different(t *testing.T) {
 	assert.NoError(t, err)
 	err = gitEnv.DevRepo.CreateBranch("d2", "main")
 	assert.NoError(t, err)
-	err = gitEnv.OriginRepo.CreateBranch("o1", "master")
+	err = gitEnv.OriginRepo.CreateBranch("o1", "initial")
 	assert.NoError(t, err)
-	err = gitEnv.OriginRepo.CreateBranch("o2", "master")
+	err = gitEnv.OriginRepo.CreateBranch("o2", "initial")
 	assert.NoError(t, err)
 	// get branches
 	table, err := gitEnv.Branches()
@@ -142,10 +142,10 @@ func TestGitEnvironment_CreateCommits(t *testing.T) {
 	assert.Equal(t, "local and origin commit", commits[1].Message)
 	assert.Equal(t, "loc-rem-file", commits[1].FileName)
 	assert.Equal(t, "lrc", commits[1].FileContent)
-	// verify origin is at master
+	// verify origin is at "initial" branch
 	branch, err := cloned.OriginRepo.CurrentBranch()
 	assert.NoError(t, err)
-	assert.Equal(t, "master", branch)
+	assert.Equal(t, "initial", branch)
 }
 
 func TestGitEnvironment_CreateOriginBranch(t *testing.T) {

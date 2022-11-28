@@ -83,10 +83,10 @@ func CloneGitEnvironment(original GitEnvironment, dir string) (gitEnv GitEnviron
 // NewStandardGitEnvironment provides a GitEnvironment in the given directory,
 // fully populated as a standardized setup for scenarios.
 //
-// The origin repo has the master branch checked out.
+// The origin repo has the initial branch checked out.
 // Git repos cannot receive pushes of the currently checked out branch
 // because that will change files in the current workspace.
-// The tests don't use the master branch.
+// The tests don't use the initial branch.
 func NewStandardGitEnvironment(dir string) (gitEnv GitEnvironment, err error) {
 	// create the folder
 	// create the GitEnvironment
@@ -103,7 +103,7 @@ func NewStandardGitEnvironment(dir string) (gitEnv GitEnvironment, err error) {
 	}
 	err = originRepo.RunMany([][]string{
 		{"git", "commit", "--allow-empty", "-m", "Initial commit"},
-		{"git", "branch", "main", "master"},
+		{"git", "branch", "main", "initial"},
 	})
 	if err != nil {
 		return gitEnv, fmt.Errorf("cannot initialize origin directory at %q: %w", gitEnv.originRepoPath(), err)
@@ -186,7 +186,7 @@ func (env *GitEnvironment) Branches() (result DataTable, err error) {
 	if err != nil {
 		return result, fmt.Errorf("cannot determine the developer repo branches of the GitEnvironment: %w", err)
 	}
-	localBranches = stringslice.Remove(localBranches, "master")
+	localBranches = stringslice.Remove(localBranches, "initial")
 	localBranchesJoined := strings.Join(localBranches, ", ")
 	if env.OriginRepo == nil {
 		result.AddRow("local", localBranchesJoined)
@@ -196,7 +196,7 @@ func (env *GitEnvironment) Branches() (result DataTable, err error) {
 	if err != nil {
 		return result, fmt.Errorf("cannot determine the origin repo branches of the GitEnvironment: %w", err)
 	}
-	originBranches = stringslice.Remove(originBranches, "master")
+	originBranches = stringslice.Remove(originBranches, "initial")
 	originBranchesJoined := strings.Join(originBranches, ", ")
 	if localBranchesJoined == originBranchesJoined {
 		result.AddRow("local, origin", localBranchesJoined)
@@ -238,11 +238,11 @@ func (env *GitEnvironment) CreateCommits(commits []git.Commit) error {
 			return err
 		}
 	}
-	// after setting up the commits, check out the "master" branch in the origin repo so that we can git-push to it.
+	// after setting up the commits, check out the "initial" branch in the origin repo so that we can git-push to it.
 	if env.OriginRepo != nil {
-		err := env.OriginRepo.CheckoutBranch("master")
+		err := env.OriginRepo.CheckoutBranch("initial")
 		if err != nil {
-			return fmt.Errorf("cannot change origin repo back to master: %w", err)
+			return fmt.Errorf("cannot change origin repo back to initial: %w", err)
 		}
 	}
 	return nil
@@ -337,9 +337,9 @@ func (env GitEnvironment) initializeWorkspace(repo *Repo) error {
 		{"git", "config", "git-town.main-branch-name", "main"},
 		{"git", "config", "git-town.perennial-branch-names", ""},
 		{"git", "checkout", "main"},
-		// NOTE: the developer repos receives the master branch from origin
+		// NOTE: the developer repos receives the initial branch from origin
 		//       but we don't want it here because it isn't used in tests.
-		{"git", "branch", "-d", "master"},
+		{"git", "branch", "-d", "initial"},
 	})
 }
 
