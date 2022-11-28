@@ -44,7 +44,8 @@ func (builder *TagTableBuilder) AddMany(tags []string, location string) {
 }
 
 // Table provides the data accumulated by this TagTableBuilder as a DataTable.
-func (builder *TagTableBuilder) Table() (result DataTable) {
+func (builder *TagTableBuilder) Table() DataTable {
+	result := DataTable{}
 	result.AddRow("NAME", "LOCATION")
 	tags := make([]string, len(builder.tagToLocations))
 	index := 0
