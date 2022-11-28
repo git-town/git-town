@@ -60,6 +60,8 @@ func (table *DataTable) EqualDataTable(other DataTable) (diff string, errorCount
 
 // EqualGherkin compares this DataTable instance to the given Gherkin table.
 // If both are equal it returns an empty string, otherwise a diff printable on the console.
+//
+//nolint:nonamedreturn
 func (table *DataTable) EqualGherkin(other *messages.PickleStepArgument_PickleTable) (diff string, errorCount int) {
 	if len(table.Cells) == 0 {
 		return "your data is empty", 1
@@ -74,7 +76,8 @@ var (
 )
 
 // Expand returns a new DataTable instance with the placeholders in this datatable replaced with the given values.
-func (table *DataTable) Expand(localRepo *Repo, remoteRepo *Repo) (result DataTable, err error) {
+func (table *DataTable) Expand(localRepo *Repo, remoteRepo *Repo) (DataTable, error) {
+	result := DataTable{}
 	for row := range table.Cells {
 		cells := []string{}
 		for col := range table.Cells[row] {
@@ -87,18 +90,18 @@ func (table *DataTable) Expand(localRepo *Repo, remoteRepo *Repo) (result DataTa
 					commitName := match[8 : len(match)-4]
 					sha, err := localRepo.ShaForCommit(commitName)
 					if err != nil {
-						return result, fmt.Errorf("cannot determine SHA: %w", err)
+						return DataTable{}, fmt.Errorf("cannot determine SHA: %w", err)
 					}
 					cell = strings.Replace(cell, match, sha, 1)
 				case strings.HasPrefix(match, "{{ sha-in-origin "):
 					commitName := match[18 : len(match)-4]
 					sha, err := remoteRepo.ShaForCommit(commitName)
 					if err != nil {
-						return result, fmt.Errorf("cannot determine SHA in remote: %w", err)
+						return DataTable{}, fmt.Errorf("cannot determine SHA in remote: %w", err)
 					}
 					cell = strings.Replace(cell, match, sha, 1)
 				default:
-					return result, fmt.Errorf("DataTable.Expand: unknown template expression %q", cell)
+					return DataTable{}, fmt.Errorf("DataTable.Expand: unknown template expression %q", cell)
 				}
 			}
 			cells = append(cells, cell)
@@ -142,7 +145,8 @@ func (table *DataTable) String() (result string) {
 }
 
 // widths provides the widths of all columns.
-func (table *DataTable) widths() (result []int) {
+func (table *DataTable) widths() []int {
+	result := []int{}
 	for _, column := range table.columns() {
 		result = append(result, helpers.LongestStringLength(column))
 	}

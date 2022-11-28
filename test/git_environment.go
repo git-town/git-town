@@ -43,10 +43,10 @@ type GitEnvironment struct {
 
 // CloneGitEnvironment provides a GitEnvironment instance in the given directory,
 // containing a copy of the given GitEnvironment.
-func CloneGitEnvironment(original GitEnvironment, dir string) (gitEnv GitEnvironment, err error) {
-	err = CopyDirectory(original.Dir, dir)
+func CloneGitEnvironment(original GitEnvironment, dir string) (GitEnvironment, error) {
+	err := CopyDirectory(original.Dir, dir)
 	if err != nil {
-		return gitEnv, fmt.Errorf("cannot clone GitEnvironment %q to folder %q: %w", original.Dir, dir, err)
+		return GitEnvironment{}, fmt.Errorf("cannot clone GitEnvironment %q to folder %q: %w", original.Dir, dir, err)
 	}
 	binDir := filepath.Join(dir, "bin")
 	originDir := filepath.Join(dir, "origin")
@@ -63,20 +63,20 @@ func CloneGitEnvironment(original GitEnvironment, dir string) (gitEnv GitEnviron
 	// we have to set the "origin" remote to the copied origin repo here.
 	_, err = result.DevShell.Run("git", "remote", "remove", "origin")
 	if err != nil {
-		return gitEnv, fmt.Errorf("cannot remove remote: %w", err)
+		return GitEnvironment{}, fmt.Errorf("cannot remove remote: %w", err)
 	}
 	err = result.DevRepo.AddRemote("origin", result.originRepoPath())
 	if err != nil {
-		return gitEnv, fmt.Errorf("cannot set remote: %w", err)
+		return GitEnvironment{}, fmt.Errorf("cannot set remote: %w", err)
 	}
 	err = result.DevRepo.Fetch()
 	if err != nil {
-		return gitEnv, fmt.Errorf("cannot fetch: %w", err)
+		return GitEnvironment{}, fmt.Errorf("cannot fetch: %w", err)
 	}
 	// and connect the main branches again
 	err = result.DevRepo.ConnectTrackingBranch("main")
 	if err != nil {
-		return gitEnv, fmt.Errorf("cannot connect tracking branch: %w", err)
+		return GitEnvironment{}, fmt.Errorf("cannot connect tracking branch: %w", err)
 	}
 	return result, err
 }
@@ -88,12 +88,12 @@ func CloneGitEnvironment(original GitEnvironment, dir string) (gitEnv GitEnviron
 // Git repos cannot receive pushes of the currently checked out branch
 // because that will change files in the current workspace.
 // The tests don't use the initial branch.
-func NewStandardGitEnvironment(dir string) (gitEnv GitEnvironment, err error) {
+func NewStandardGitEnvironment(dir string) (GitEnvironment, error) {
 	// create the folder
 	// create the GitEnvironment
-	gitEnv = GitEnvironment{Dir: dir}
+	gitEnv := GitEnvironment{Dir: dir}
 	// create the origin repo
-	err = os.MkdirAll(gitEnv.originRepoPath(), 0o744)
+	err := os.MkdirAll(gitEnv.originRepoPath(), 0o744)
 	if err != nil {
 		return gitEnv, fmt.Errorf("cannot create directory %q: %w", gitEnv.originRepoPath(), err)
 	}
