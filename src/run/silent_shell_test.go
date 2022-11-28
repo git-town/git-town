@@ -1,7 +1,6 @@
 package run_test
 
 import (
-	"io/ioutil"
 	"os"
 	"testing"
 
@@ -29,10 +28,10 @@ func TestSilentShell(t *testing.T) {
 		})
 		defer os.RemoveAll("tmp")
 		assert.NoError(t, err)
-		infos, err := ioutil.ReadDir("tmp")
+		entries, err := os.ReadDir("tmp")
 		assert.NoError(t, err)
-		assert.Equal(t, "first", infos[0].Name())
-		assert.Equal(t, "second", infos[1].Name())
+		assert.Equal(t, "first", entries[0].Name())
+		assert.Equal(t, "second", entries[1].Name())
 	})
 
 	t.Run(".RunString()", func(t *testing.T) {

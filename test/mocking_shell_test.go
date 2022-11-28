@@ -2,7 +2,6 @@
 package test
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
@@ -46,11 +45,11 @@ func TestMockingShell(t *testing.T) {
 			{"touch", "second"},
 		})
 		assert.NoError(t, err)
-		infos, err := ioutil.ReadDir(workDir)
+		entries, err := os.ReadDir(workDir)
 		assert.NoError(t, err)
-		assert.Len(t, infos, 2)
-		assert.Equal(t, "first", infos[0].Name())
-		assert.Equal(t, "second", infos[1].Name())
+		assert.Len(t, entries, 2)
+		assert.Equal(t, "first", entries[0].Name())
+		assert.Equal(t, "second", entries[1].Name())
 	})
 
 	t.Run(".RunString()", func(t *testing.T) {

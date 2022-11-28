@@ -2,7 +2,6 @@ package test
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -52,7 +51,7 @@ func (ms *MockingShell) createMockBinary(name string, content string) error {
 	if err := ms.createBinDir(); err != nil {
 		return err
 	}
-	err := ioutil.WriteFile(filepath.Join(ms.binDir, name), []byte(content), 0o500)
+	err := os.WriteFile(filepath.Join(ms.binDir, name), []byte(content), 0o500)
 	if err != nil {
 		return fmt.Errorf("cannot write custom %q command: %w", name, err)
 	}

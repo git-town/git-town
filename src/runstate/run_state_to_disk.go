@@ -3,7 +3,6 @@ package runstate
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -25,7 +24,7 @@ func Load(repo *git.ProdRepo) (result *RunState, err error) {
 		return nil, fmt.Errorf("cannot check file %q: %w", filename, err)
 	}
 	var runState RunState
-	content, err := ioutil.ReadFile(filename)
+	content, err := os.ReadFile(filename)
 	if err != nil {
 		return result, fmt.Errorf("cannot read file %q: %w", filename, err)
 	}
@@ -66,7 +65,7 @@ func Save(runState *RunState, repo *git.ProdRepo) error {
 	if err != nil {
 		return err
 	}
-	err = ioutil.WriteFile(filename, content, 0o600)
+	err = os.WriteFile(filename, content, 0o600)
 	if err != nil {
 		return fmt.Errorf("cannot write file %q: %w", filename, err)
 	}

@@ -2,7 +2,6 @@ package run_test
 
 import (
 	"errors"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -50,12 +49,12 @@ hi
 
 	t.Run(".InDir()", func(t *testing.T) {
 		t.Parallel()
-		dir, err := ioutil.TempDir("", "")
+		dir, err := os.MkdirTemp("", "")
 		assert.NoError(t, err)
 		dirPath := filepath.Join(dir, "mydir")
 		err = os.Mkdir(dirPath, 0o700)
 		assert.NoError(t, err)
-		err = ioutil.WriteFile(filepath.Join(dirPath, "one"), []byte{}, 0o500)
+		err = os.WriteFile(filepath.Join(dirPath, "one"), []byte{}, 0o500)
 		assert.NoError(t, err)
 		res, err := run.InDir(dirPath, "ls", "-1")
 		assert.NoError(t, err)
