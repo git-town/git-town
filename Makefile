@@ -39,8 +39,8 @@ help:  # prints all available targets
 lint: lint-go lint-md  # lints all the source code
 	git diff --check
 
-lint-go:  # lints the Go files
-	golangci-lint run
+lint-go: tools/golangci-lint  # lints the Go files
+	tools/golangci-lint run
 
 lint-md:   # lints the Markdown files
 	dprint check
@@ -79,7 +79,6 @@ setup-tools:  # the setup steps necessary for document tests
 	cd tools && yarn install
 
 setup-go: setup-godog
-	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.43.0
 	go install mvdan.cc/gofumpt@v0.3.0
 	go install github.com/KyleBanks/depth/cmd/depth@latest
 	go install github.com/boyter/scc@latest
@@ -109,6 +108,11 @@ update:  # updates all dependencies
 	go mod vendor
 	echo
 	echo Please update the tools that "make setup" installs manually.
+
+
+tools/golangci-lint: Makefile
+	@echo "Installing golangci-lint ..."
+	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b tools v1.43.0
 
 
 .DEFAULT_GOAL := help
