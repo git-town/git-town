@@ -3,7 +3,6 @@ package test
 import (
 	"bufio"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -26,6 +25,7 @@ var beforeSuiteMux sync.Mutex
 var gitManager *GitManager
 
 // Steps defines Cucumber step implementations around Git workspace management.
+//
 //nolint:gocyclo,gocognit,funlen
 func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.BeforeScenario(func(scenario *messages.Pickle) {
@@ -50,7 +50,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		beforeSuiteMux.Lock()
 		defer beforeSuiteMux.Unlock()
 		if gitManager == nil {
-			baseDir, err := ioutil.TempDir("", "")
+			baseDir, err := os.MkdirTemp("", "")
 			if err != nil {
 				log.Fatalf("cannot create base directory for feature specs: %s", err)
 			}
