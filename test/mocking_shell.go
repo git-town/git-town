@@ -14,9 +14,9 @@ import (
 
 // MockingShell runs shell commands using a customizable environment.
 // This is useful in tests. Possible customizations:
-//   - overide environment variables
-//   - Temporarily override certain shell commands with mock implementations.
-//     Temporary mocks are only valid for the next command being run.
+// - overide environment variables
+// - Temporarily override certain shell commands with mock implementations.
+//   Temporary mocks are only valid for the next command being run.
 type MockingShell struct {
 	binDir     string // the directory that stores the mock shell command implementations, ignored if empty
 	gitEditor  string // name of the binary to use as the custom editor during "git commit"
