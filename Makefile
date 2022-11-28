@@ -25,13 +25,10 @@ dependencies:  # prints the dependencies between packages as a tree
 docs: build  # tests the documentation
 	${CURDIR}/tools/node_modules/.bin/text-run --offline
 
-fix: fix-go fix-md  # auto-fixes lint issues in all languages
-
-fix-go:  # auto-fixes all Go lint issues
+fix: # auto-fixes lint issues in all languages
 	gofumpt -l -w .
-
-fix-md:  # auto-fixes all Markdown lint issues
 	dprint fmt
+	cd tools && npm exec -- prettier --write '../**/*.yml'
 
 help:  # prints all available targets
 	@cat Makefile | grep '^[^ ]*:' | grep -v '.PHONY' | grep -v help | sed 's/:.*#/#/' | column -s "#" -t
