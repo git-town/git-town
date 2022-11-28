@@ -100,11 +100,12 @@ func createPrependConfig(args []string, repo *git.ProdRepo) (prependConfig, erro
 	return result, nil
 }
 
-func createPrependStepList(config prependConfig, repo *git.ProdRepo) (result runstate.StepList, err error) {
+func createPrependStepList(config prependConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+	result := runstate.StepList{}
 	for _, branchName := range config.ancestorBranches {
 		steps, err := runstate.SyncBranchSteps(branchName, true, repo)
 		if err != nil {
-			return result, err
+			return runstate.StepList{}, err
 		}
 		result.AppendList(steps)
 	}
@@ -115,7 +116,7 @@ func createPrependStepList(config prependConfig, repo *git.ProdRepo) (result run
 	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
 		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.targetBranch})
 	}
-	err = result.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
+	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
 	return result, err
 }
 

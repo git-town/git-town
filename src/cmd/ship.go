@@ -162,15 +162,16 @@ please ship %q first`, strings.Join(ancestorsWithoutMainOrPerennial, ", "), olde
 	}
 }
 
-func createShipStepList(config shipConfig, repo *git.ProdRepo) (result runstate.StepList, err error) {
+func createShipStepList(config shipConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	syncSteps, err := runstate.SyncBranchSteps(config.branchToMergeInto, true, repo)
 	if err != nil {
-		return result, err
+		return runstate.StepList{}, err
 	}
+	result := runstate.StepList{}
 	result.AppendList(syncSteps)
 	syncSteps, err = runstate.SyncBranchSteps(config.branchToShip, false, repo)
 	if err != nil {
-		return result, err
+		return runstate.StepList{}, err
 	}
 	result.AppendList(syncSteps)
 	result.Append(&steps.EnsureHasShippableChangesStep{BranchName: config.branchToShip})

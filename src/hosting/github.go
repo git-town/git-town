@@ -53,21 +53,23 @@ func NewGithubDriver(config config, log logFn) *GithubDriver {
 	}
 }
 
-func (d *GithubDriver) LoadPullRequestInfo(branch, parentBranch string) (result PullRequestInfo, err error) {
+func (d *GithubDriver) LoadPullRequestInfo(branch, parentBranch string) (PullRequestInfo, error) {
 	if d.apiToken == "" {
-		return result, nil
+		return PullRequestInfo{}, nil
 	}
 	d.connect()
 	pullRequests, err := d.loadPullRequests(branch, parentBranch)
 	if err != nil {
-		return result, err
+		return PullRequestInfo{}, err
 	}
 	if len(pullRequests) != 1 {
-		return result, nil
+		return PullRequestInfo{}, nil
 	}
-	result.CanMergeWithAPI = true
-	result.DefaultCommitMessage = d.defaultCommitMessage(pullRequests[0])
-	result.PullRequestNumber = int64(pullRequests[0].GetNumber())
+	result := PullRequestInfo{
+		CanMergeWithAPI:      true,
+		DefaultCommitMessage: d.defaultCommitMessage(pullRequests[0]),
+		PullRequestNumber:    int64(pullRequests[0].GetNumber()),
+	}
 	return result, nil
 }
 

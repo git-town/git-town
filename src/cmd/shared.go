@@ -45,11 +45,12 @@ func ValidateIsRepository(repo *git.ProdRepo) error {
 	return errors.New("this is not a Git repository")
 }
 
-func createAppendStepList(config appendConfig, repo *git.ProdRepo) (result runstate.StepList, err error) {
+func createAppendStepList(config appendConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+	result := runstate.StepList{}
 	for _, branchName := range append(config.ancestorBranches, config.parentBranch) {
 		steps, err := runstate.SyncBranchSteps(branchName, true, repo)
 		if err != nil {
-			return result, err
+			return runstate.StepList{}, err
 		}
 		result.AppendList(steps)
 	}
@@ -59,7 +60,7 @@ func createAppendStepList(config appendConfig, repo *git.ProdRepo) (result runst
 	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
 		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.targetBranch})
 	}
-	err = result.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
+	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
 	return result, err
 }
 

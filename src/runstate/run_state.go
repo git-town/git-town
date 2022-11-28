@@ -93,11 +93,12 @@ func (runState *RunState) CreateSkipRunState() (result RunState) {
 // CreateUndoRunState returns a new runstate
 // to be run when undoing the Git Town command
 // represented by this runstate.
-func (runState *RunState) CreateUndoRunState() (result RunState) {
-	result.Command = runState.Command
-	result.isUndo = true
-	result.RunStepList.AppendList(runState.UndoStepList)
-	return
+func (runState *RunState) CreateUndoRunState() RunState {
+	return RunState{
+		Command:     runState.Command,
+		isUndo:      true,
+		RunStepList: runState.UndoStepList,
+	}
 }
 
 // IsUnfinished returns whether or not the run state is unfinished.

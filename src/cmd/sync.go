@@ -121,11 +121,12 @@ func createSyncConfig(repo *git.ProdRepo) (syncConfig, error) {
 	return result, nil
 }
 
-func createSyncStepList(config syncConfig, repo *git.ProdRepo) (result runstate.StepList, err error) {
+func createSyncStepList(config syncConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+	result := runstate.StepList{}
 	for _, branchName := range config.branchesToSync {
 		steps, err := runstate.SyncBranchSteps(branchName, true, repo)
 		if err != nil {
-			return result, err
+			return runstate.StepList{}, err
 		}
 		result.AppendList(steps)
 	}
@@ -133,7 +134,7 @@ func createSyncStepList(config syncConfig, repo *git.ProdRepo) (result runstate.
 	if config.hasOrigin && config.shouldPushTags && !config.isOffline {
 		result.Append(&steps.PushTagsStep{})
 	}
-	err = result.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
+	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
 	return result, err
 }
 
