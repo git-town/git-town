@@ -69,9 +69,11 @@ func (runState *RunState) CreateAbortRunState() (result RunState) {
 
 // CreateSkipRunState returns a new Runstate
 // that skips operations for the current branch.
-func (runState *RunState) CreateSkipRunState() (result RunState) {
-	result.Command = runState.Command
-	result.RunStepList.AppendList(runState.AbortStepList)
+func (runState *RunState) CreateSkipRunState() RunState {
+	result := RunState{
+		Command:     runState.Command,
+		RunStepList: runState.AbortStepList,
+	}
 	for _, step := range runState.UndoStepList.List {
 		if isCheckoutBranchStep(step) {
 			break
@@ -87,7 +89,7 @@ func (runState *RunState) CreateSkipRunState() (result RunState) {
 			result.RunStepList.Append(step)
 		}
 	}
-	return
+	return result
 }
 
 // CreateUndoRunState returns a new runstate
