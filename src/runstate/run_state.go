@@ -59,12 +59,14 @@ func (runState *RunState) AddPushBranchStepAfterCurrentBranchSteps(repo *git.Pro
 // CreateAbortRunState returns a new runstate
 // to be run to aborting and undoing the Git Town command
 // represented by this runstate.
-func (runState *RunState) CreateAbortRunState() (result RunState) {
-	result.Command = runState.Command
-	result.IsAbort = true
-	result.RunStepList.AppendList(runState.AbortStepList)
-	result.RunStepList.AppendList(runState.UndoStepList)
-	return
+func (runState *RunState) CreateAbortRunState() RunState {
+	stepList := runState.AbortStepList
+	stepList.AppendList(runState.UndoStepList)
+	return RunState{
+		Command:     runState.Command,
+		IsAbort:     true,
+		RunStepList: stepList,
+	}
 }
 
 // CreateSkipRunState returns a new Runstate
