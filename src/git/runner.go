@@ -2,7 +2,6 @@ package git
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -107,7 +106,7 @@ func (r *Runner) CheckoutBranch(name string) error {
 // Adds the given prefix with the newline if provided.
 func (r *Runner) CommentOutSquashCommitMessage(prefix string) error {
 	squashMessageFile := ".git/SQUASH_MSG"
-	contentBytes, err := ioutil.ReadFile(squashMessageFile)
+	contentBytes, err := os.ReadFile(squashMessageFile)
 	if err != nil {
 		return fmt.Errorf("cannot read squash message file %q: %w", squashMessageFile, err)
 	}
@@ -116,7 +115,7 @@ func (r *Runner) CommentOutSquashCommitMessage(prefix string) error {
 		content = prefix + "\n" + content
 	}
 	content = regexp.MustCompile("(?m)^").ReplaceAllString(content, "# ")
-	return ioutil.WriteFile(squashMessageFile, []byte(content), 0o600)
+	return os.WriteFile(squashMessageFile, []byte(content), 0o600)
 }
 
 // CommitNoEdit commits all staged files with the default commit message.
@@ -297,7 +296,7 @@ func (r *Runner) CreateFile(name, content string) error {
 	if err != nil {
 		return fmt.Errorf("cannot create folder %q: %w", folderPath, err)
 	}
-	err = ioutil.WriteFile(filePath, []byte(content), 0o500)
+	err = os.WriteFile(filePath, []byte(content), 0o500)
 	if err != nil {
 		return fmt.Errorf("cannot create file %q: %w", name, err)
 	}
@@ -385,10 +384,10 @@ func (r *Runner) currentBranchDuringRebase() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	rawContent, err := ioutil.ReadFile(fmt.Sprintf("%s/.git/rebase-apply/head-name", rootDir))
+	rawContent, err := os.ReadFile(fmt.Sprintf("%s/.git/rebase-apply/head-name", rootDir))
 	if err != nil {
 		// Git 2.26 introduces a new rebase backend, see https://github.com/git/git/blob/master/Documentation/RelNotes/2.26.0.txt
-		rawContent, err = ioutil.ReadFile(fmt.Sprintf("%s/.git/rebase-merge/head-name", rootDir))
+		rawContent, err = os.ReadFile(fmt.Sprintf("%s/.git/rebase-merge/head-name", rootDir))
 		if err != nil {
 			return "", err
 		}
@@ -504,7 +503,7 @@ func (r *Runner) FetchUpstream(branch string) error {
 
 // FileContent provides the current content of a file.
 func (r *Runner) FileContent(filename string) (result string, err error) {
-	content, err := ioutil.ReadFile(filepath.Join(r.WorkingDir(), filename))
+	content, err := os.ReadFile(filepath.Join(r.WorkingDir(), filename))
 	return string(content), err
 }
 
@@ -566,7 +565,7 @@ func (r *Runner) HasConflicts() (bool, error) {
 
 // HasFile indicates whether this repository contains a file with the given name and content.
 func (r *Runner) HasFile(name, content string) (result bool, err error) {
-	rawContent, err := ioutil.ReadFile(filepath.Join(r.WorkingDir(), name))
+	rawContent, err := os.ReadFile(filepath.Join(r.WorkingDir(), name))
 	if err != nil {
 		return result, fmt.Errorf("repo doesn't have file %q: %w", name, err)
 	}

@@ -4,7 +4,6 @@
 package test
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
@@ -23,7 +22,7 @@ func assertFileExists(t *testing.T, dir, filename string) {
 
 func assertFileExistsWithContent(t *testing.T, dir, filename, expectedContent string) {
 	t.Helper()
-	fileContent, err := ioutil.ReadFile(filepath.Join(dir, filename))
+	fileContent, err := os.ReadFile(filepath.Join(dir, filename))
 	assert.NoError(t, err)
 	assert.Equal(t, expectedContent, string(fileContent))
 }
@@ -43,7 +42,7 @@ func assertHasGitBranch(t *testing.T, dir, expectedBranch string) {
 
 func assertHasGlobalGitConfiguration(t *testing.T, dir string) {
 	t.Helper()
-	entries, err := ioutil.ReadDir(dir)
+	entries, err := os.ReadDir(dir)
 	assert.Nilf(t, err, "cannot list directory %q", dir)
 	for e := range entries {
 		if entries[e].Name() == ".gitconfig" {
@@ -56,7 +55,7 @@ func assertHasGlobalGitConfiguration(t *testing.T, dir string) {
 func assertIsNormalGitRepo(t *testing.T, dir string) {
 	t.Helper()
 	assertFolderExists(t, dir)
-	entries, err := ioutil.ReadDir(dir)
+	entries, err := os.ReadDir(dir)
 	assert.Nilf(t, err, "cannot list directory %q", dir)
 	assert.Equal(t, ".git", entries[0].Name())
 }

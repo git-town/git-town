@@ -1,7 +1,7 @@
 package git_test
 
 import (
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -211,7 +211,7 @@ func TestRunner(t *testing.T) {
 			runner := test.CreateRepo(t).Runner
 			err := runner.CreateFile("filename", "content")
 			assert.Nil(t, err, "cannot create file in repo")
-			content, err := ioutil.ReadFile(filepath.Join(runner.WorkingDir(), "filename"))
+			content, err := os.ReadFile(filepath.Join(runner.WorkingDir(), "filename"))
 			assert.Nil(t, err, "cannot read file")
 			assert.Equal(t, "content", string(content))
 		})
@@ -221,7 +221,7 @@ func TestRunner(t *testing.T) {
 			runner := test.CreateRepo(t).Runner
 			err := runner.CreateFile("folder/filename", "content")
 			assert.Nil(t, err, "cannot create file in repo")
-			content, err := ioutil.ReadFile(filepath.Join(runner.WorkingDir(), "folder/filename"))
+			content, err := os.ReadFile(filepath.Join(runner.WorkingDir(), "folder/filename"))
 			assert.Nil(t, err, "cannot read file")
 			assert.Equal(t, "content", string(content))
 		})
