@@ -2,7 +2,7 @@ package hosting_test
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"testing"
 
@@ -229,7 +229,7 @@ func TestGithubDriver(t *testing.T) {
 }
 
 func loadRequestData(request *http.Request) map[string]interface{} {
-	dataStr, err := ioutil.ReadAll(request.Body)
+	dataStr, err := io.ReadAll(request.Body)
 	if err != nil {
 		panic(err)
 	}
