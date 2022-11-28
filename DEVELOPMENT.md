@@ -52,7 +52,7 @@ Run all unit tests:
 <a type="make/command">
 
 ```
-make unit
+make unit-all
 ```
 
 </a>
@@ -62,7 +62,7 @@ Run unit tests for packages containing changes:
 <a type="make/command">
 
 ```
-make u
+make unit
 ```
 
 </a>
