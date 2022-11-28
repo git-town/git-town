@@ -9,6 +9,7 @@ import (
 )
 
 func TestRepo(t *testing.T) {
+	t.Parallel()
 	t.Run("NewRepo", func(t *testing.T) {
 		t.Parallel()
 		dir := CreateTempDir(t)

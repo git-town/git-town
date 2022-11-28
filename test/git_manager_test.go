@@ -10,6 +10,7 @@ import (
 )
 
 func TestGitManager(t *testing.T) {
+	t.Parallel()
 	t.Run("NewGitManager()", func(t *testing.T) {
 		t.Parallel()
 		dir := CreateTempDir(t)

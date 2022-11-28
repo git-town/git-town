@@ -129,15 +129,16 @@ func (r *Runner) CommitNoEdit() error {
 }
 
 // Commits provides a list of the commits in this Git repository with the given fields.
-func (r *Runner) Commits(fields []string) (result []Commit, err error) {
+func (r *Runner) Commits(fields []string) ([]Commit, error) {
 	branches, err := r.LocalBranchesMainFirst()
 	if err != nil {
-		return result, fmt.Errorf("cannot determine the Git branches: %w", err)
+		return []Commit{}, fmt.Errorf("cannot determine the Git branches: %w", err)
 	}
+	result := []Commit{}
 	for _, branch := range branches {
 		commits, err := r.CommitsInBranch(branch, fields)
 		if err != nil {
-			return result, err
+			return []Commit{}, err
 		}
 		result = append(result, commits...)
 	}
