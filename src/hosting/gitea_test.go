@@ -32,8 +32,9 @@ func setupGiteaDriver(t *testing.T, token string) (*hosting.GiteaDriver, func())
 	}
 }
 
+//nolint:paralleltest  // mocks HTTP
 func TestGitea(t *testing.T) {
-
+	// TODO: try removing all these nolint statements
 	//nolint:paralleltest  // mocks HTTP
 	t.Run(".NewGiteaDriver()", func(t *testing.T) {
 		t.Run("normal repo", func(t *testing.T) {
@@ -58,7 +59,7 @@ func TestGitea(t *testing.T) {
 		})
 	})
 
-	//nolint:paralleltest  // mocks HTTP
+	//nolint:paralleltest,dupl  // mocks HTTP
 	t.Run(".LoadPullRequestInfo()", func(t *testing.T) {
 		t.Run("happy path", func(t *testing.T) {
 			driver, teardown := setupGiteaDriver(t, "TOKEN")
@@ -111,7 +112,6 @@ func TestGitea(t *testing.T) {
 	})
 
 	t.Run(".MergePullRequest()", func(t *testing.T) {
-
 		t.Run("happy path", func(t *testing.T) {
 			driver, teardown := setupGiteaDriver(t, "TOKEN")
 			defer teardown()

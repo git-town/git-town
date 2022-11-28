@@ -64,7 +64,7 @@ func (r *Runner) AddSubmodule(url string) error {
 }
 
 // Author provides the locally Git configured user.
-func (r *Runner) Author() (author string, err error) {
+func (r *Runner) Author() (string, error) {
 	out, err := r.Run("git", "config", "user.name")
 	if err != nil {
 		return "", err
@@ -145,11 +145,12 @@ func (r *Runner) Commits(fields []string) ([]Commit, error) {
 }
 
 // CommitsInBranch provides all commits in the given Git branch.
-func (r *Runner) CommitsInBranch(branch string, fields []string) (result []Commit, err error) {
+func (r *Runner) CommitsInBranch(branch string, fields []string) ([]Commit, error) {
 	outcome, err := r.Run("git", "log", branch, "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse")
 	if err != nil {
-		return result, fmt.Errorf("cannot get commits in branch %q: %w", branch, err)
+		return []Commit{}, fmt.Errorf("cannot get commits in branch %q: %w", branch, err)
 	}
+	result := []Commit{}
 	for _, line := range strings.Split(outcome.OutputSanitized(), "\n") {
 		parts := strings.Split(line, "|")
 		commit := Commit{Branch: branch, SHA: parts[0], Message: parts[1], Author: parts[2]}
@@ -159,14 +160,14 @@ func (r *Runner) CommitsInBranch(branch string, fields []string) (result []Commi
 		if stringslice.Contains(fields, "FILE NAME") {
 			filenames, err := r.FilesInCommit(commit.SHA)
 			if err != nil {
-				return result, fmt.Errorf("cannot determine file name for commit %q in branch %q: %w", commit.SHA, branch, err)
+				return []Commit{}, fmt.Errorf("cannot determine file name for commit %q in branch %q: %w", commit.SHA, branch, err)
 			}
 			commit.FileName = strings.Join(filenames, ", ")
 		}
 		if stringslice.Contains(fields, "FILE CONTENT") {
 			filecontent, err := r.FileContentInCommit(commit.SHA, commit.FileName)
 			if err != nil {
-				return result, fmt.Errorf("cannot determine file content for commit %q in branch %q: %w", commit.SHA, branch, err)
+				return []Commit{}, fmt.Errorf("cannot determine file content for commit %q in branch %q: %w", commit.SHA, branch, err)
 			}
 			commit.FileContent = filecontent
 		}
@@ -353,7 +354,7 @@ func (r *Runner) CreateTrackingBranch(branch string) error {
 }
 
 // CurrentBranch provides the currently checked out branch for this repo.
-func (r *Runner) CurrentBranch() (result string, err error) {
+func (r *Runner) CurrentBranch() (string, error) {
 	if r.DryRun.IsActive() {
 		return r.DryRun.CurrentBranch(), nil
 	}
@@ -503,7 +504,7 @@ func (r *Runner) FetchUpstream(branch string) error {
 }
 
 // FileContent provides the current content of a file.
-func (r *Runner) FileContent(filename string) (result string, err error) {
+func (r *Runner) FileContent(filename string) (string, error) {
 	content, err := os.ReadFile(filepath.Join(r.WorkingDir(), filename))
 	return string(content), err
 }
@@ -565,20 +566,20 @@ func (r *Runner) HasConflicts() (bool, error) {
 }
 
 // HasFile indicates whether this repository contains a file with the given name and content.
-func (r *Runner) HasFile(name, content string) (result bool, err error) {
+func (r *Runner) HasFile(name, content string) (bool, error) {
 	rawContent, err := os.ReadFile(filepath.Join(r.WorkingDir(), name))
 	if err != nil {
-		return result, fmt.Errorf("repo doesn't have file %q: %w", name, err)
+		return false, fmt.Errorf("repo doesn't have file %q: %w", name, err)
 	}
 	actualContent := string(rawContent)
 	if actualContent != content {
-		return result, fmt.Errorf("file %q should have content %q but has %q", name, content, actualContent)
+		return false, fmt.Errorf("file %q should have content %q but has %q", name, content, actualContent)
 	}
 	return true, nil
 }
 
 // HasGitTownConfigNow indicates whether this repository contain Git Town specific configuration.
-func (r *Runner) HasGitTownConfigNow() (result bool, err error) {
+func (r *Runner) HasGitTownConfigNow() (bool, error) {
 	outcome, err := r.Run("git", "config", "--local", "--get-regex", "git-town")
 	if outcome.ExitCode() == 1 {
 		return false, nil
@@ -605,8 +606,8 @@ func (r *Runner) HasLocalOrOriginBranch(name string) (bool, error) {
 }
 
 // HasMergeInProgress indicates whether this Git repository currently has a merge in progress.
-func (r *Runner) HasMergeInProgress() (result bool, err error) {
-	_, err = os.Stat(filepath.Join(r.WorkingDir(), ".git", "MERGE_HEAD"))
+func (r *Runner) HasMergeInProgress() (bool, error) {
+	_, err := os.Stat(filepath.Join(r.WorkingDir(), ".git", "MERGE_HEAD"))
 	return err == nil, nil
 }
 
@@ -808,7 +809,7 @@ func (r *Runner) PopStash() error {
 }
 
 // PreviouslyCheckedOutBranch provides the name of the branch that was previously checked out in this repo.
-func (r *Runner) PreviouslyCheckedOutBranch() (name string, err error) {
+func (r *Runner) PreviouslyCheckedOutBranch() (string, error) {
 	outcome, err := r.Run("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
 	if err != nil {
 		return "", fmt.Errorf("cannot determine the previously checked out branch: %w", err)
@@ -1089,6 +1090,8 @@ func (r *Runner) StartCommit() error {
 }
 
 // Version indicates whether the needed Git version is installed.
+//
+//nolint:nonamedreturns
 func (r *Runner) Version() (major int, minor int, err error) {
 	versionRegexp := regexp.MustCompile(`git version (\d+).(\d+).(\d+)`)
 	res, err := r.Run("git", "version")

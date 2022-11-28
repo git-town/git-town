@@ -58,7 +58,7 @@ func TestGithubDriver(t *testing.T) {
 		})
 	})
 
-	//nolint:paralleltest  // mocks HTTP
+	//nolint:paralleltest,dupl  // mocks HTTP
 	t.Run(".LoadPullRequestInfo()", func(t *testing.T) {
 		t.Run("with token", func(t *testing.T) {
 			driver, teardown := setupGithubDriver(t, "TOKEN")
@@ -111,7 +111,6 @@ func TestGithubDriver(t *testing.T) {
 	})
 
 	t.Run(".MergePullRequest()", func(t *testing.T) {
-
 		t.Run("happy path", func(t *testing.T) {
 			driver, teardown := setupGithubDriver(t, "TOKEN")
 			defer teardown()
