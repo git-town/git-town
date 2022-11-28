@@ -47,12 +47,12 @@ make update
 
 ## unit tests
 
-Run all unit tests:
+Run all unit tests with race detector:
 
 <a type="make/command">
 
 ```
-make unit
+make unit-race
 ```
 
 </a>
@@ -62,7 +62,7 @@ Run unit tests for packages containing changes:
 <a type="make/command">
 
 ```
-make u
+make unit
 ```
 
 </a>
