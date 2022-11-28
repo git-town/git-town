@@ -89,7 +89,8 @@ func (builder *CommitTableBuilder) branches() []string {
 }
 
 // Table provides the data accumulated by this CommitTableBuilder as a DataTable.
-func (builder *CommitTableBuilder) Table(fields []string) (result DataTable) {
+func (builder *CommitTableBuilder) Table(fields []string) DataTable {
+	result := DataTable{}
 	result.AddRow(fields...)
 	lastBranch := ""
 	lastLocation := ""

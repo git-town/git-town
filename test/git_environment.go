@@ -181,7 +181,8 @@ func (env *GitEnvironment) binPath() string {
 }
 
 // Branches provides a tabular list of all branches in this GitEnvironment.
-func (env *GitEnvironment) Branches() (result DataTable, err error) {
+func (env *GitEnvironment) Branches() (DataTable, error) {
+	result := DataTable{}
 	result.AddRow("REPOSITORY", "BRANCHES")
 	localBranches, err := env.DevRepo.LocalBranchesMainFirst()
 	if err != nil {
@@ -284,31 +285,31 @@ func (env GitEnvironment) CreateTags(table *messages.PickleStepArgument_PickleTa
 }
 
 // CommitTable provides a table for all commits in this Git environment containing only the given fields.
-func (env GitEnvironment) CommitTable(fields []string) (result DataTable, err error) {
+func (env GitEnvironment) CommitTable(fields []string) (DataTable, error) {
 	builder := NewCommitTableBuilder()
 	localCommits, err := env.DevRepo.Commits(fields)
 	if err != nil {
-		return result, fmt.Errorf("cannot determine commits in the developer repo: %w", err)
+		return DataTable{}, fmt.Errorf("cannot determine commits in the developer repo: %w", err)
 	}
 	builder.AddMany(localCommits, "local")
 	if env.CoworkerRepo != nil {
 		coworkerCommits, err := env.CoworkerRepo.Commits(fields)
 		if err != nil {
-			return result, fmt.Errorf("cannot determine commits in the coworker repo: %w", err)
+			return DataTable{}, fmt.Errorf("cannot determine commits in the coworker repo: %w", err)
 		}
 		builder.AddMany(coworkerCommits, "coworker")
 	}
 	if env.OriginRepo != nil {
 		originCommits, err := env.OriginRepo.Commits(fields)
 		if err != nil {
-			return result, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
+			return DataTable{}, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
 		}
 		builder.AddMany(originCommits, "origin")
 	}
 	if env.UpstreamRepo != nil {
 		upstreamCommits, err := env.UpstreamRepo.Commits(fields)
 		if err != nil {
-			return result, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
+			return DataTable{}, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
 		}
 		builder.AddMany(upstreamCommits, "upstream")
 	}
@@ -316,17 +317,17 @@ func (env GitEnvironment) CommitTable(fields []string) (result DataTable, err er
 }
 
 // TagTable provides a table for all tags in this Git environment.
-func (env GitEnvironment) TagTable() (result DataTable, err error) {
+func (env GitEnvironment) TagTable() (DataTable, error) {
 	builder := NewTagTableBuilder()
 	localTags, err := env.DevRepo.Tags()
 	if err != nil {
-		return result, err
+		return DataTable{}, err
 	}
 	builder.AddMany(localTags, "local")
 	if env.OriginRepo != nil {
 		originTags, err := env.OriginRepo.Tags()
 		if err != nil {
-			return result, err
+			return DataTable{}, err
 		}
 		builder.AddMany(originTags, "origin")
 	}

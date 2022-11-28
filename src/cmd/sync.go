@@ -80,37 +80,40 @@ You can disable this by running "git config git-town.sync-upstream false".`,
 	},
 }
 
-func createSyncConfig(repo *git.ProdRepo) (result syncConfig, err error) {
-	result.hasOrigin, err = repo.Silent.HasOrigin()
+func createSyncConfig(repo *git.ProdRepo) (syncConfig, error) {
+	hasOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
-		return result, err
+		return syncConfig{}, err
 	}
-	result.isOffline = prodRepo.Config.IsOffline()
+	result := syncConfig{
+		hasOrigin: hasOrigin,
+		isOffline: prodRepo.Config.IsOffline(),
+	}
 	if result.hasOrigin && !result.isOffline {
 		err := repo.Logging.Fetch()
 		if err != nil {
-			return result, err
+			return syncConfig{}, err
 		}
 	}
 	result.initialBranch, err = repo.Silent.CurrentBranch()
 	if err != nil {
-		return result, err
+		return syncConfig{}, err
 	}
 	if allFlag {
 		branches, err := repo.Silent.LocalBranchesMainFirst()
 		if err != nil {
-			return result, err
+			return syncConfig{}, err
 		}
 		err = userinput.EnsureKnowsParentBranches(branches, repo)
 		if err != nil {
-			return result, err
+			return syncConfig{}, err
 		}
 		result.branchesToSync = branches
 		result.shouldPushTags = true
 	} else {
 		err = userinput.EnsureKnowsParentBranches([]string{result.initialBranch}, repo)
 		if err != nil {
-			return result, err
+			return syncConfig{}, err
 		}
 		result.branchesToSync = append(prodRepo.Config.AncestorBranches(result.initialBranch), result.initialBranch)
 		result.shouldPushTags = !prodRepo.Config.IsFeatureBranch(result.initialBranch)

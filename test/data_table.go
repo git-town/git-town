@@ -19,7 +19,8 @@ type DataTable struct {
 }
 
 // FromGherkin provides a DataTable instance populated with data from the given Gherkin table.
-func FromGherkin(table *messages.PickleStepArgument_PickleTable) (result DataTable) {
+func FromGherkin(table *messages.PickleStepArgument_PickleTable) DataTable {
+	result := DataTable{}
 	for _, tableRow := range table.Rows {
 		resultRow := make([]string, len(tableRow.Cells))
 		for t, tableCell := range tableRow.Cells {
@@ -36,7 +37,8 @@ func (table *DataTable) AddRow(elements ...string) {
 }
 
 // columns provides the table data organized into columns.
-func (table *DataTable) columns() (result [][]string) {
+func (table *DataTable) columns() [][]string {
+	result := [][]string{}
 	for column := range table.Cells[0] {
 		colData := []string{}
 		for row := range table.Cells {
@@ -49,6 +51,8 @@ func (table *DataTable) columns() (result [][]string) {
 
 // EqualDataTable compares this DataTable instance to the given DataTable.
 // If both are equal it returns an empty string, otherwise a diff printable on the console.
+//
+//nolint:nonamedreturns
 func (table *DataTable) EqualDataTable(other DataTable) (diff string, errorCount int) {
 	dmp := diffmatchpatch.New()
 	diffs := dmp.DiffMain(other.String(), table.String(), false)
@@ -61,7 +65,7 @@ func (table *DataTable) EqualDataTable(other DataTable) (diff string, errorCount
 // EqualGherkin compares this DataTable instance to the given Gherkin table.
 // If both are equal it returns an empty string, otherwise a diff printable on the console.
 //
-//nolint:nonamedreturn
+//nolint:nonamedreturns
 func (table *DataTable) EqualGherkin(other *messages.PickleStepArgument_PickleTable) (diff string, errorCount int) {
 	if len(table.Cells) == 0 {
 		return "your data is empty", 1

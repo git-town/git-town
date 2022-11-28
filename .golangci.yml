@@ -15,6 +15,7 @@ linters:
     - interfacer # deprecated
     - lll # we aren't enforcing a line length at this point
     - maligned # deprecated
+    - maintidx # we keep complexity under check with code reviews
     - nosnakecase # deprecated
     - nlreturn # this forces unnecessary empty lines in function bodies
     - scopelint # deprecated

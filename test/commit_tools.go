@@ -20,10 +20,11 @@ func DefaultCommit() git.Commit {
 }
 
 // FromGherkinTable provides a Commit collection representing the data in the given Gherkin table.
-func FromGherkinTable(table *messages.PickleStepArgument_PickleTable) (result []git.Commit, err error) {
+func FromGherkinTable(table *messages.PickleStepArgument_PickleTable) ([]git.Commit, error) {
 	columnNames := helpers.TableFields(table)
 	lastBranchName := ""
 	lastLocationName := ""
+	result := []git.Commit{}
 	for _, row := range table.Rows[1:] {
 		commit := DefaultCommit()
 		for cellNo, cell := range row.Cells {
