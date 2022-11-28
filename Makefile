@@ -112,7 +112,7 @@ update:  # updates all dependencies
 
 tools/golangci-lint: Makefile
 	@echo "Installing golangci-lint ..."
-	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b tools v1.43.0
+	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b tools v1.46.0
 
 
 .DEFAULT_GOAL := help
