@@ -47,23 +47,25 @@ func SyncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (re
 
 // Helpers
 
-func syncFeatureBranchSteps(branchName string, repo *git.ProdRepo) (result StepList, err error) {
+func syncFeatureBranchSteps(branchName string, repo *git.ProdRepo) (StepList, error) {
 	hasTrackingBranch, err := repo.Silent.HasTrackingBranch(branchName)
 	if err != nil {
-		return result, err
+		return StepList{}, err
 	}
+	result := StepList{}
 	if hasTrackingBranch {
 		result.Append(&steps.MergeBranchStep{BranchName: repo.Silent.TrackingBranchName(branchName)})
 	}
 	result.Append(&steps.MergeBranchStep{BranchName: repo.Config.ParentBranch(branchName)})
-	return
+	return result, nil
 }
 
-func syncNonFeatureBranchSteps(branchName string, repo *git.ProdRepo) (result StepList, err error) {
+func syncNonFeatureBranchSteps(branchName string, repo *git.ProdRepo) (StepList, error) {
 	hasTrackingBranch, err := repo.Silent.HasTrackingBranch(branchName)
 	if err != nil {
-		return result, err
+		return StepList{}, err
 	}
+	result := StepList{}
 	if hasTrackingBranch {
 		if repo.Config.PullBranchStrategy() == "rebase" {
 			result.Append(&steps.RebaseBranchStep{BranchName: repo.Silent.TrackingBranchName(branchName)})
@@ -81,5 +83,5 @@ func syncNonFeatureBranchSteps(branchName string, repo *git.ProdRepo) (result St
 		result.Append(&steps.FetchUpstreamStep{BranchName: mainBranchName})
 		result.Append(&steps.RebaseBranchStep{BranchName: fmt.Sprintf("upstream/%s", mainBranchName)})
 	}
-	return
+	return result, nil
 }

@@ -79,7 +79,7 @@ setup-tools:  # the setup steps necessary for document tests
 	cd tools && yarn install
 
 setup-go: setup-godog
-	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.43.0
+	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.50.0
 	go install mvdan.cc/gofumpt@v0.3.0
 	go install github.com/KyleBanks/depth/cmd/depth@latest
 	go install github.com/boyter/scc@latest
