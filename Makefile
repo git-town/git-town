@@ -100,7 +100,7 @@ test-md: lint-md   # runs all Markdown tests
 unit:  # runs only the unit tests for changed code
 	env GOGC=off go test -timeout 30s ./src/... ./test/...
 
-unit-race:  # runs all the unit tests with race detector
+unit-all:  # runs all the unit tests with race detector
 	env GOGC=off go test -count=1 -timeout 60s -race ./src/... ./test/...
 
 update:  # updates all dependencies

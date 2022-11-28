@@ -31,4 +31,4 @@ jobs:
           ignore: vendor
       - run: make setup-tools
       - run: make docs
-      - run: make unit-race
+      - run: make unit-all
