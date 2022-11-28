@@ -8,14 +8,15 @@ import (
 )
 
 // SyncBranchSteps provides the steps to sync the branch with the given name.
-func SyncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (result StepList, err error) {
+func SyncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (StepList, error) {
 	isFeature := repo.Config.IsFeatureBranch(branchName)
 	hasOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
-		return result, err
+		return StepList{}, err
 	}
+	result := StepList{}
 	if !hasOrigin && !isFeature {
-		return
+		return result, nil
 	}
 	result.Append(&steps.CheckoutBranchStep{BranchName: branchName})
 	if isFeature {

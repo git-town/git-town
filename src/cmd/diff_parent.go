@@ -42,11 +42,12 @@ Exits with error code 1 if the given branch is a perennial branch or the main br
 }
 
 // Does not return error because "Ensure" functions will call exit directly.
-func createDiffParentConfig(args []string, repo *git.ProdRepo) (config diffParentConfig, err error) {
+func createDiffParentConfig(args []string, repo *git.ProdRepo) (diffParentConfig, error) {
 	initialBranch, err := repo.Silent.CurrentBranch()
 	if err != nil {
-		return config, err
+		return diffParentConfig{}, err
 	}
+	config := diffParentConfig{}
 	if len(args) == 0 {
 		config.branch = initialBranch
 	} else {
