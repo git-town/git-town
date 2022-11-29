@@ -64,12 +64,15 @@ func createPruneBranchesConfig(repo *git.ProdRepo) (pruneBranchesConfig, error) 
 		return pruneBranchesConfig{}, err
 	}
 	localBranchesWithDeletedTrackingBranches, err := repo.Silent.LocalBranchesWithDeletedTrackingBranches()
+	if err != nil {
+		return pruneBranchesConfig{}, err
+	}
 	result := pruneBranchesConfig{
 		initialBranchName:                        initialBranchName,
 		localBranchesWithDeletedTrackingBranches: localBranchesWithDeletedTrackingBranches,
 		mainBranch:                               repo.Config.MainBranch(),
 	}
-	return result, err
+	return result, nil
 }
 
 func createPruneBranchesStepList(config pruneBranchesConfig, repo *git.ProdRepo) (runstate.StepList, error) {
