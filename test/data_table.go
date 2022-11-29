@@ -132,13 +132,14 @@ func (table *DataTable) Sort() {
 }
 
 // String provides the data in this DataTable instance formatted in Gherkin table format.
-func (table *DataTable) String() (result string) {
+func (table *DataTable) String() string {
 	// determine how to format each column
 	formatStrings := []string{}
 	for _, width := range table.widths() {
 		formatStrings = append(formatStrings, fmt.Sprintf("| %%-%dv ", width))
 	}
 	// render the table using this format
+	result := ""
 	for row := range table.Cells {
 		for col := range table.Cells[row] {
 			result += fmt.Sprintf(formatStrings[col], table.Cells[row][col])

@@ -736,17 +736,18 @@ func (r *Runner) LocalAndOriginBranches() ([]string, error) {
 
 // LocalBranches provides the names of all branches in the local repository,
 // ordered alphabetically.
-func (r *Runner) LocalBranches() (result []string, err error) {
+func (r *Runner) LocalBranches() ([]string, error) {
 	res, err := r.Run("git", "branch")
 	if err != nil {
-		return result, err
+		return []string{}, err
 	}
+	result := []string{}
 	for _, line := range res.OutputLines() {
 		line = strings.Trim(line, "* ")
 		line = strings.TrimSpace(line)
 		result = append(result, line)
 	}
-	return
+	return result, nil
 }
 
 // LocalBranchesMainFirst provides the names of all local branches in this repo.
