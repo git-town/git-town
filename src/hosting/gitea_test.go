@@ -34,8 +34,6 @@ func setupGiteaDriver(t *testing.T, token string) (*hosting.GiteaDriver, func())
 
 //nolint:paralleltest  // mocks HTTP
 func TestGitea(t *testing.T) {
-	// TODO: try removing all these nolint statements
-	//nolint:paralleltest  // mocks HTTP
 	t.Run(".NewGiteaDriver()", func(t *testing.T) {
 		t.Run("normal repo", func(t *testing.T) {
 			driver := hosting.NewGiteaDriver(mockConfig{
@@ -47,7 +45,6 @@ func TestGitea(t *testing.T) {
 			assert.Equal(t, "https://self-hosted-gitea.com/git-town/git-town", driver.RepositoryURL())
 		})
 
-		//nolint:paralleltest  // mocks HTTP
 		t.Run("custom hostname", func(t *testing.T) {
 			driver := hosting.NewGiteaDriver(mockConfig{
 				originURL:      "git@my-ssh-identity.com:git-town/git-town.git",
@@ -59,7 +56,7 @@ func TestGitea(t *testing.T) {
 		})
 	})
 
-	//nolint:paralleltest,dupl  // mocks HTTP
+	//nolint:dupl
 	t.Run(".LoadPullRequestInfo()", func(t *testing.T) {
 		t.Run("happy path", func(t *testing.T) {
 			driver, teardown := setupGiteaDriver(t, "TOKEN")
@@ -72,7 +69,6 @@ func TestGitea(t *testing.T) {
 			assert.Equal(t, int64(1), prInfo.PullRequestNumber)
 		})
 
-		//nolint:paralleltest  // mocks HTTP
 		t.Run("empty Git token", func(t *testing.T) {
 			driver, teardown := setupGiteaDriver(t, "")
 			defer teardown()
@@ -81,7 +77,6 @@ func TestGitea(t *testing.T) {
 			assert.False(t, prInfo.CanMergeWithAPI)
 		})
 
-		//nolint:paralleltest  // mocks HTTP
 		t.Run("cannot load pull request number", func(t *testing.T) {
 			driver, teardown := setupGiteaDriver(t, "TOKEN")
 			defer teardown()
@@ -90,7 +85,6 @@ func TestGitea(t *testing.T) {
 			assert.Error(t, err)
 		})
 
-		//nolint:paralleltest  // mocks HTTP
 		t.Run("branch has no pull request", func(t *testing.T) {
 			driver, teardown := setupGiteaDriver(t, "TOKEN")
 			defer teardown()
@@ -100,7 +94,6 @@ func TestGitea(t *testing.T) {
 			assert.False(t, prInfo.CanMergeWithAPI)
 		})
 
-		//nolint:paralleltest  // mocks HTTP
 		t.Run("multiple pull requests for this banch", func(t *testing.T) {
 			driver, teardown := setupGiteaDriver(t, "TOKEN")
 			defer teardown()
