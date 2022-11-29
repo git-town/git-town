@@ -11,7 +11,6 @@ import (
 // CommitTableBuilder collects data about commits in Git repositories
 // in the same way that our Gherkin tables describing commits in repos are organized.
 type CommitTableBuilder struct {
-
 	// commits stores data about commits.
 	//
 	// Structure:
