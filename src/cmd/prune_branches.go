@@ -59,14 +59,16 @@ func createPruneBranchesConfig(repo *git.ProdRepo) (pruneBranchesConfig, error) 
 			return pruneBranchesConfig{}, err
 		}
 	}
-	result := pruneBranchesConfig{
-		mainBranch: repo.Config.MainBranch(),
-	}
-	result.initialBranchName, err = repo.Silent.CurrentBranch()
+	initialBranchName, err := repo.Silent.CurrentBranch()
 	if err != nil {
 		return pruneBranchesConfig{}, err
 	}
-	result.localBranchesWithDeletedTrackingBranches, err = repo.Silent.LocalBranchesWithDeletedTrackingBranches()
+	localBranchesWithDeletedTrackingBranches, err := repo.Silent.LocalBranchesWithDeletedTrackingBranches()
+	result := pruneBranchesConfig{
+		initialBranchName:                        initialBranchName,
+		localBranchesWithDeletedTrackingBranches: localBranchesWithDeletedTrackingBranches,
+		mainBranch:                               repo.Config.MainBranch(),
+	}
 	return result, err
 }
 
