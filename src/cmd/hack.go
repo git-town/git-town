@@ -64,32 +64,36 @@ func determineParentBranch(targetBranch string, repo *git.ProdRepo) (string, err
 }
 
 func createHackConfig(args []string, repo *git.ProdRepo) (appendConfig, error) {
-	result := appendConfig{
-		targetBranch: args[0],
-	}
-	var err error
-	result.parentBranch, err = determineParentBranch(result.targetBranch, repo)
+	targetBranch := args[0]
+	parentBranch, err := determineParentBranch(targetBranch, repo)
 	if err != nil {
 		return appendConfig{}, err
 	}
-	result.hasOrigin, err = repo.Silent.HasOrigin()
+	hasOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
 		return appendConfig{}, err
 	}
-	result.shouldNewBranchPush = repo.Config.ShouldNewBranchPush()
-	result.isOffline = repo.Config.IsOffline()
-	if result.hasOrigin && !repo.Config.IsOffline() {
+	shouldNewBranchPush := repo.Config.ShouldNewBranchPush()
+	isOffline := repo.Config.IsOffline()
+	if hasOrigin && !repo.Config.IsOffline() {
 		err := repo.Logging.Fetch()
 		if err != nil {
-			return result, err
+			return appendConfig{}, err
 		}
 	}
-	hasBranch, err := repo.Silent.HasLocalOrOriginBranch(result.targetBranch)
+	hasBranch, err := repo.Silent.HasLocalOrOriginBranch(targetBranch)
 	if err != nil {
 		return appendConfig{}, err
 	}
 	if hasBranch {
-		return appendConfig{}, fmt.Errorf("a branch named %q already exists", result.targetBranch)
+		return appendConfig{}, fmt.Errorf("a branch named %q already exists", targetBranch)
+	}
+	result := appendConfig{
+		targetBranch:        targetBranch,
+		parentBranch:        parentBranch,
+		hasOrigin:           hasOrigin,
+		shouldNewBranchPush: shouldNewBranchPush,
+		isOffline:           isOffline,
 	}
 	return result, nil
 }
