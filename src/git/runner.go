@@ -895,11 +895,11 @@ func (r *Runner) RemoteBranches() ([]string, error) {
 }
 
 // Remotes provides the names of all Git remotes in this repository.
-func (r *Runner) Remotes() (result []string, err error) {
+func (r *Runner) Remotes() ([]string, error) {
 	if !r.RemotesCache.initialized {
 		out, err := r.Run("git", "remote")
 		if err != nil {
-			return result, fmt.Errorf("cannot determine remotes: %w", err)
+			return []string{}, fmt.Errorf("cannot determine remotes: %w", err)
 		}
 		if out.OutputSanitized() == "" {
 			r.RemotesCache.Set([]string{})
@@ -1041,11 +1041,12 @@ func (r *Runner) StashSize() (int, error) {
 }
 
 // Tags provides a list of the tags in this repository.
-func (r *Runner) Tags() (result []string, err error) {
+func (r *Runner) Tags() ([]string, error) {
 	res, err := r.Run("git", "tag")
 	if err != nil {
-		return result, fmt.Errorf("cannot determine tags in repo %q: %w", r.WorkingDir(), err)
+		return []string{}, fmt.Errorf("cannot determine tags in repo %q: %w", r.WorkingDir(), err)
 	}
+	result := []string{}
 	for _, line := range strings.Split(res.OutputSanitized(), "\n") {
 		result = append(result, strings.TrimSpace(line))
 	}

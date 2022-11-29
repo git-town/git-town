@@ -14,7 +14,6 @@ import (
 
 // GitEnvironment is a complete Git environment for a Cucumber scenario.
 type GitEnvironment struct {
-
 	// Dir defines the local folder in which this GitEnvironment is stored.
 	// This folder also acts as the HOME directory for tests using this GitEnvironment.
 	// It contains the global Git configuration to use in this test.
