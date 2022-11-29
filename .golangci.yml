@@ -6,8 +6,8 @@ linters:
     - exhaustruct # not applicable at the moment
     - exhaustivestruct # not applicable at the moment
     - forbidigo # Git Town prints a lot to the CLI
-    - funlen
-    - gci # don't like empty lines in import statements
+    - funlen # we keep track of this via code reviews
+    - gci # we prefer keeping import statements as one blocks without empty lines
     - gochecknoglobals # Cobra requires globals
     - gochecknoinits # Cobra requires init blocks
     - goconst # tests contain a ton of hard-coded test strings, for example branch names
@@ -23,7 +23,7 @@ linters:
     - scopelint # deprecated
     - structcheck # deprecated
     - varcheck # deprecated
-    - wrapcheck
+    - wrapcheck # too many false positives for return values defined in internal packages
     - wsl # this linter creates too many false positives, our policy is to not have any empty lines in code blocks
 
 issues:
