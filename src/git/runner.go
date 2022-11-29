@@ -751,10 +751,10 @@ func (r *Runner) LocalBranches() ([]string, error) {
 }
 
 // LocalBranchesMainFirst provides the names of all local branches in this repo.
-func (r *Runner) LocalBranchesMainFirst() (result []string, err error) {
+func (r *Runner) LocalBranchesMainFirst() ([]string, error) {
 	branches, err := r.LocalBranches()
 	if err != nil {
-		return result, err
+		return []string{}, err
 	}
 	return stringslice.MainFirst(sort.StringSlice(branches)), nil
 }
