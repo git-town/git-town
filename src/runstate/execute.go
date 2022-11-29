@@ -9,7 +9,8 @@ import (
 )
 
 // Execute runs the commands in the given runstate.
-//nolint:gocognit,nestif,funlen
+//
+//nolint:nestif
 func Execute(runState *RunState, repo *git.ProdRepo, driver hosting.Driver) error {
 	for {
 		step := runState.RunStepList.Pop()

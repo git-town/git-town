@@ -11,7 +11,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-//nolint:funlen,maintidx
 func TestRunner(t *testing.T) {
 	t.Parallel()
 	t.Run(".AddRemote()", func(t *testing.T) {

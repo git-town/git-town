@@ -54,7 +54,6 @@ Does not delete perennial branches nor the main branch.`,
 	},
 }
 
-//nolint:funlen
 func createKillConfig(args []string, repo *git.ProdRepo) (killConfig, error) {
 	initialBranch, err := repo.Silent.CurrentBranch()
 	if err != nil {

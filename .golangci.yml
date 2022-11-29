@@ -10,7 +10,9 @@ linters:
     - gci # we prefer keeping import statements as one blocks without empty lines
     - gochecknoglobals # Cobra requires globals
     - gochecknoinits # Cobra requires init blocks
+    - gocognit # we keep track of this via code reviews
     - goconst # tests contain a ton of hard-coded test strings, for example branch names
+    - gocyclo # we keep track of this via code reviews
     - golint # deprecated
     - gomnd # tests contain hard-coded test data that wouldn't make sense to extract into constants
     - ifshort # this enforces less readable code
