@@ -27,8 +27,9 @@ func EnsureKnowsParentBranches(branchNames []string, repo *git.ProdRepo) error {
 }
 
 // AskForBranchAncestry prompts the user for all unknown ancestors of the given branch.
-func AskForBranchAncestry(branchName, defaultBranchName string, repo *git.ProdRepo) (err error) {
+func AskForBranchAncestry(branchName, defaultBranchName string, repo *git.ProdRepo) error {
 	current := branchName
+	var err error
 	for {
 		parent := repo.Config.ParentBranch(current)
 		if parent == "" { //nolint:nestif
@@ -90,6 +91,7 @@ var (
 	perennialBranchOption      = "<none> (perennial branch)"
 )
 
+//nolint:nonamedreturns
 func filterOutSelfAndDescendants(branchName string, choices []string, repo *git.ProdRepo) (filteredChoices []string) {
 	for _, choice := range choices {
 		if choice == branchName || repo.Config.IsAncestorBranch(choice, branchName) {

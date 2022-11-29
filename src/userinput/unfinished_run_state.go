@@ -22,6 +22,8 @@ var (
 )
 
 // AskHowToHandleUnfinishedRunState prompts the user for how to handle the unfinished run state.
+//
+//nolint:nonamedreturns
 func AskHowToHandleUnfinishedRunState(command, endBranch string, endTime time.Time, canSkip bool) (responseType string, err error) {
 	formattedOptions := map[string]string{
 		ResponseTypeAbort:    fmt.Sprintf("Abort the `%s` command", command),

@@ -14,7 +14,7 @@ type JSONStep struct {
 }
 
 // MarshalJSON marshals the step to JSON.
-func (j *JSONStep) MarshalJSON() (b []byte, e error) {
+func (j *JSONStep) MarshalJSON() ([]byte, error) {
 	return json.Marshal(map[string]interface{}{
 		"data": j.Step,
 		"type": typeName(j.Step),

@@ -61,22 +61,22 @@ func ConfigurePerennialBranches(repo *git.ProdRepo) error {
 
 // Helpers
 
-func mainBranchPrompt(repo *git.ProdRepo) (result string) {
-	result += "Please specify the main development branch:"
+func mainBranchPrompt(repo *git.ProdRepo) string {
+	result := "Please specify the main development branch:"
 	currentMainBranch := repo.Config.MainBranch()
 	if currentMainBranch != "" {
 		coloredBranchName := color.New(color.Bold).Add(color.FgCyan).Sprintf(currentMainBranch)
 		result += fmt.Sprintf(" (current value: %s)", coloredBranchName)
 	}
-	return
+	return result
 }
 
-func perennialBranchesPrompt(repo *git.ProdRepo) (result string) {
-	result += "Please specify perennial branches:"
+func perennialBranchesPrompt(repo *git.ProdRepo) string {
+	result := "Please specify perennial branches:"
 	currentPerennialBranches := repo.Config.PerennialBranches()
 	if len(currentPerennialBranches) > 0 {
 		coloredBranchNames := color.New(color.Bold).Add(color.FgCyan).Sprintf(strings.Join(currentPerennialBranches, ", "))
 		result += fmt.Sprintf(" (current value: %s)", coloredBranchNames)
 	}
-	return
+	return result
 }

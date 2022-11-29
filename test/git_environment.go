@@ -131,8 +131,8 @@ func NewStandardGitEnvironment(dir string) (GitEnvironment, error) {
 }
 
 // AddSubmodule adds a submodule repository.
-func (env *GitEnvironment) AddSubmoduleRepo() (err error) {
-	err = os.MkdirAll(env.submoduleRepoPath(), 0o744)
+func (env *GitEnvironment) AddSubmoduleRepo() error {
+	err := os.MkdirAll(env.submoduleRepoPath(), 0o744)
 	if err != nil {
 		return fmt.Errorf("cannot create directory %q: %w", env.submoduleRepoPath(), err)
 	}
@@ -152,7 +152,7 @@ func (env *GitEnvironment) AddSubmoduleRepo() (err error) {
 }
 
 // AddUpstream adds an upstream repository.
-func (env *GitEnvironment) AddUpstream() (err error) {
+func (env *GitEnvironment) AddUpstream() error {
 	repo, err := env.DevRepo.Clone(filepath.Join(env.Dir, "upstream"))
 	if err != nil {
 		return fmt.Errorf("cannot clone upstream: %w", err)

@@ -510,12 +510,12 @@ func (r *Runner) FileContent(filename string) (string, error) {
 }
 
 // FileContentInCommit provides the content of the file with the given name in the commit with the given SHA.
-func (r *Runner) FileContentInCommit(sha string, filename string) (result string, err error) {
+func (r *Runner) FileContentInCommit(sha string, filename string) (string, error) {
 	outcome, err := r.Run("git", "show", sha+":"+filename)
 	if err != nil {
-		return result, fmt.Errorf("cannot determine the content for file %q in commit %q: %w", filename, sha, err)
+		return "", fmt.Errorf("cannot determine the content for file %q in commit %q: %w", filename, sha, err)
 	}
-	result = outcome.OutputSanitized()
+	result := outcome.OutputSanitized()
 	if strings.HasPrefix(result, "tree ") {
 		// merge commits get an empty file content instead of "tree <SHA>"
 		result = ""
@@ -524,20 +524,21 @@ func (r *Runner) FileContentInCommit(sha string, filename string) (result string
 }
 
 // FilesInCommit provides the names of the files that the commit with the given SHA changes.
-func (r *Runner) FilesInCommit(sha string) (result []string, err error) {
+func (r *Runner) FilesInCommit(sha string) ([]string, error) {
 	outcome, err := r.Run("git", "diff-tree", "--no-commit-id", "--name-only", "-r", sha)
 	if err != nil {
-		return result, fmt.Errorf("cannot get files for commit %q: %w", sha, err)
+		return []string{}, fmt.Errorf("cannot get files for commit %q: %w", sha, err)
 	}
 	return strings.Split(outcome.OutputSanitized(), "\n"), nil
 }
 
 // FilesInBranch provides the list of the files present in the given branch.
-func (r *Runner) FilesInBranch(branch string) (result []string, err error) {
+func (r *Runner) FilesInBranch(branch string) ([]string, error) {
 	outcome, err := r.Run("git", "ls-tree", "-r", "--name-only", branch)
 	if err != nil {
-		return result, fmt.Errorf("cannot determine files in branch %q in repo %q: %w", branch, r.WorkingDir(), err)
+		return []string{}, fmt.Errorf("cannot determine files in branch %q in repo %q: %w", branch, r.WorkingDir(), err)
 	}
+	result := []string{}
 	for _, line := range strings.Split(outcome.OutputSanitized(), "\n") {
 		file := strings.TrimSpace(line)
 		if file != "" {
@@ -637,12 +638,12 @@ func (r *Runner) HasRebaseInProgress() (bool, error) {
 }
 
 // HasOrigin indicates whether this repo has an origin remote.
-func (r *Runner) HasOrigin() (result bool, err error) {
+func (r *Runner) HasOrigin() (bool, error) {
 	return r.HasRemote("origin")
 }
 
 // HasRemote indicates whether this repo has a remote with the given name.
-func (r *Runner) HasRemote(name string) (result bool, err error) {
+func (r *Runner) HasRemote(name string) (bool, error) {
 	remotes, err := r.Remotes()
 	if err != nil {
 		return false, fmt.Errorf("cannot determine if remote %q exists: %w", name, err)
@@ -661,7 +662,7 @@ func (r *Runner) HasShippableChanges(branch string) (bool, error) {
 }
 
 // HasTrackingBranch indicates whether the local branch with the given name has a remote tracking branch.
-func (r *Runner) HasTrackingBranch(name string) (result bool, err error) {
+func (r *Runner) HasTrackingBranch(name string) (bool, error) {
 	trackingBranchName := "origin/" + name
 	remoteBranches, err := r.RemoteBranches()
 	if err != nil {
