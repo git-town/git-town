@@ -197,7 +197,8 @@ func (c *Config) IsPerennialBranch(branchName string) bool {
 }
 
 // localConfigKeysMatching provides the names of the Git Town configuration keys matching the given RegExp string.
-func (c *Config) localConfigKeysMatching(toMatch string) (result []string) {
+func (c *Config) localConfigKeysMatching(toMatch string) []string {
+	result := []string{}
 	re := regexp.MustCompile(toMatch)
 	for key := range c.localConfigCache {
 		if re.MatchString(key) {

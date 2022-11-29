@@ -1059,12 +1059,13 @@ func (r *Runner) TrackingBranchName(branch string) string {
 }
 
 // UncommittedFiles provides the names of the files not committed into Git.
-func (r *Runner) UncommittedFiles() (result []string, err error) {
+func (r *Runner) UncommittedFiles() ([]string, error) {
 	res, err := r.Run("git", "status", "--porcelain", "--untracked-files=all")
 	if err != nil {
-		return result, fmt.Errorf("cannot determine uncommitted files in %q: %w", r.WorkingDir(), err)
+		return []string{}, fmt.Errorf("cannot determine uncommitted files in %q: %w", r.WorkingDir(), err)
 	}
 	lines := res.OutputLines()
+	result := []string{}
 	for _, line := range lines {
 		if line == "" {
 			continue

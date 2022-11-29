@@ -3,6 +3,7 @@ linters:
   disable:
     - cyclop # we keep a tab on function length ourselves
     - deadcode # deprecated
+    - exhaustruct # not applicable at the moment
     - exhaustivestruct # not applicable at the moment
     - forbidigo # Git Town prints a lot to the CLI
     - funlen
