@@ -51,21 +51,23 @@ func NewGitlabDriver(config config, log logFn) *GitlabDriver {
 	}
 }
 
-func (d *GitlabDriver) LoadPullRequestInfo(branch, parentBranch string) (result PullRequestInfo, err error) {
+func (d *GitlabDriver) LoadPullRequestInfo(branch, parentBranch string) (PullRequestInfo, error) {
 	if d.apiToken == "" {
-		return result, nil
+		return PullRequestInfo{}, nil
 	}
 	d.connect()
 	mergeRequests, err := d.loadMergeRequests(branch, parentBranch)
 	if err != nil {
-		return result, err
+		return PullRequestInfo{}, err
 	}
 	if len(mergeRequests) != 1 {
-		return result, nil
+		return PullRequestInfo{}, nil
 	}
-	result.CanMergeWithAPI = true
-	result.DefaultCommitMessage = d.defaultCommitMessage(mergeRequests[0])
-	result.PullRequestNumber = int64(mergeRequests[0].IID)
+	result := PullRequestInfo{
+		CanMergeWithAPI:      true,
+		DefaultCommitMessage: d.defaultCommitMessage(mergeRequests[0]),
+		PullRequestNumber:    int64(mergeRequests[0].IID),
+	}
 	return result, nil
 }
 
@@ -88,6 +90,7 @@ func (d *GitlabDriver) RepositoryURL() string {
 	return fmt.Sprintf("%s/%s", d.BaseURL(), d.ProjectPath())
 }
 
+//nolint:nonamedreturns
 func (d *GitlabDriver) MergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
 	d.connect()
 	err = d.updatePullRequestsAgainst(options)
@@ -130,6 +133,7 @@ func (d *GitlabDriver) loadMergeRequests(branch, parentBranch string) ([]*gitlab
 	return mergeRequests, err
 }
 
+//nolint:nonamedreturns
 func (d *GitlabDriver) mergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
 	if options.PullRequestNumber <= 0 {
 		return "", fmt.Errorf("cannot merge via GitLab since there is no merge request")

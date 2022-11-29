@@ -761,11 +761,12 @@ func (r *Runner) LocalBranchesMainFirst() ([]string, error) {
 
 // LocalBranchesWithDeletedTrackingBranches provides the names of all branches
 // whose remote tracking branches have been deleted.
-func (r *Runner) LocalBranchesWithDeletedTrackingBranches() (result []string, err error) {
+func (r *Runner) LocalBranchesWithDeletedTrackingBranches() ([]string, error) {
 	res, err := r.Run("git", "branch", "-vv")
 	if err != nil {
-		return result, err
+		return []string{}, err
 	}
+	result := []string{}
 	for _, line := range res.OutputLines() {
 		line = strings.Trim(line, "* ")
 		parts := strings.SplitN(line, " ", 2)
@@ -780,18 +781,19 @@ func (r *Runner) LocalBranchesWithDeletedTrackingBranches() (result []string, er
 
 // LocalBranchesWithoutMain provides the names of all branches in the local repository,
 // ordered alphabetically without the main branch.
-func (r *Runner) LocalBranchesWithoutMain() (result []string, err error) {
+func (r *Runner) LocalBranchesWithoutMain() ([]string, error) {
 	mainBranch := r.Config.MainBranch()
 	branches, err := r.LocalBranches()
 	if err != nil {
-		return result, err
+		return []string{}, err
 	}
+	result := []string{}
 	for _, branch := range branches {
 		if branch != mainBranch {
 			result = append(result, branch)
 		}
 	}
-	return
+	return result, nil
 }
 
 // MergeBranchNoEdit merges the given branch into the current branch,

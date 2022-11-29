@@ -166,7 +166,7 @@ func (env *GitEnvironment) AddUpstream() error {
 }
 
 // AddCoworkerRepo adds a coworker repository.
-func (env *GitEnvironment) AddCoworkerRepo() (err error) {
+func (env *GitEnvironment) AddCoworkerRepo() error {
 	coworkerRepo, err := env.OriginRepo.Clone(env.coworkerRepoPath())
 	if err != nil {
 		return fmt.Errorf("cannot clone coworker: %w", err)
