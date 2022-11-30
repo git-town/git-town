@@ -16,7 +16,6 @@ import (
 // Making copies of a fully set up Git repo is much faster than creating it from scratch.
 // End-to-end tests run multi-threaded, all threads share a global GitManager instance.
 type GitManager struct {
-
 	// path of the folder that this class operates in
 	dir string
 
