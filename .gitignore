@@ -1,6 +1,7 @@
 dist/
 git-town_*
 node_modules/
+tools/gofumpt
 tools/golangci-lint
 website/bin/
 website/book/

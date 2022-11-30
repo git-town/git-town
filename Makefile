@@ -27,7 +27,7 @@ docs: build  # tests the documentation
 
 fix: fix-go fix-md  # auto-fixes lint issues in all languages
 
-fix-go:  # auto-fixes all Go lint issues
+fix-go: tools/gofumpt  # auto-fixes all Go lint issues
 	tools/gofumpt -l -w .
 
 fix-md:  # auto-fixes all Markdown lint issues
@@ -112,7 +112,7 @@ update:  # updates all dependencies
 # --- HELPER TARGETS --------------------------------------------------------------------------------------------------------------------------------
 
 tools/gofumpt: Makefile
-	go install mvdan.cc/gofumpt@v0.3.0
+	env GOBIN="$(CURDIR)/tools" go install mvdan.cc/gofumpt@v0.3.0
 
 tools/golangci-lint: Makefile
 	@echo "Installing golangci-lint ..."
