@@ -19,8 +19,8 @@ cuke-prof: build  # creates a flamegraph
 	@rm git-town.test
 	@echo Please open https://www.speedscope.app and load the file godog.out
 
-dependencies:  # prints the dependencies between packages as a tree
-	@depth . | grep git-town
+dependencies: tools/depth  # prints the dependencies between packages as a tree
+	@tools/depth . | grep git-town
 
 docs: build  # tests the documentation
 	${CURDIR}/tools/node_modules/.bin/text-run --offline
@@ -79,7 +79,6 @@ setup-tools:  # the setup steps necessary for document tests
 	cd tools && yarn install
 
 setup-go: setup-godog
-	go install github.com/KyleBanks/depth/cmd/depth@latest
 	go install github.com/boyter/scc@latest
 
 setup-godog:  # install the godog binary
@@ -110,6 +109,9 @@ update:  # updates all dependencies
 
 
 # --- HELPER TARGETS --------------------------------------------------------------------------------------------------------------------------------
+
+tools/depth: Makefile
+	env GOBIN="$(CURDIR)/tools" go install github.com/KyleBanks/depth/cmd/depth@latest
 
 tools/gofumpt: Makefile
 	env GOBIN="$(CURDIR)/tools" go install mvdan.cc/gofumpt@v0.3.0
