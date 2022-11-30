@@ -31,7 +31,7 @@ fix-md:  # auto-fixes all Markdown lint issues
 	dprint fmt
 
 help:  # prints all available targets
-	@cat Makefile | grep '^[^ ]*:' | grep -v '.PHONY' | grep -v help | sed 's/:.*#/#/' | column -s "#" -t
+	@cat Makefile | grep '^[^ ]*:' | grep -v '.PHONY' | grep -v help | grep -vF "tools/" | sed 's/:.*#/#/' | column -s "#" -t
 
 lint: lint-go lint-md  # lints all the source code
 	git diff --check
