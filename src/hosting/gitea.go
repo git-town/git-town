@@ -51,9 +51,9 @@ func NewGiteaDriver(config config, log logFn) *GiteaDriver {
 	}
 }
 
-func (d *GiteaDriver) LoadPullRequestInfo(branch, parentBranch string) (result PullRequestInfo, err error) {
+func (d *GiteaDriver) LoadPullRequestInfo(branch, parentBranch string) (PullRequestInfo, error) {
 	if d.apiToken == "" {
-		return result, nil
+		return PullRequestInfo{}, nil
 	}
 	d.connect()
 	openPullRequests, err := d.client.ListRepoPullRequests(d.owner, d.repository, gitea.ListPullRequestsOptions{
@@ -63,21 +63,23 @@ func (d *GiteaDriver) LoadPullRequestInfo(branch, parentBranch string) (result P
 		State: gitea.StateOpen,
 	})
 	if err != nil {
-		return result, err
+		return PullRequestInfo{}, err
 	}
 	baseName := parentBranch
 	headName := d.owner + "/" + branch
 	pullRequests := filterPullRequests(openPullRequests, baseName, headName)
 	if len(pullRequests) != 1 {
-		return result, nil
+		return PullRequestInfo{}, nil
 	}
 	pullRequest := pullRequests[0]
 	if !pullRequest.Mergeable {
-		return result, nil
+		return PullRequestInfo{}, nil
 	}
-	result.CanMergeWithAPI = true
-	result.DefaultCommitMessage = createDefaultCommitMessage(pullRequest)
-	result.PullRequestNumber = pullRequest.Index
+	result := PullRequestInfo{
+		CanMergeWithAPI:      true,
+		DefaultCommitMessage: createDefaultCommitMessage(pullRequest),
+		PullRequestNumber:    pullRequest.Index,
+	}
 	return result, nil
 }
 
@@ -94,6 +96,7 @@ func (d *GiteaDriver) HostingServiceName() string {
 	return "Gitea"
 }
 
+//nolint:nonamedreturns return value isn't obvious from function name
 func (d *GiteaDriver) MergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
 	d.connect()
 	openPullRequests, err := d.client.ListRepoPullRequests(d.owner, d.repository, gitea.ListPullRequestsOptions{
@@ -150,6 +153,7 @@ func filterPullRequests(pullRequests []*gitea.PullRequest, baseName, headName st
 	return pullRequestsFiltered
 }
 
+//nolint:nonamedreturns return value isn't obvious from function name
 func (d *GiteaDriver) apiMergePullRequest(pullRequestNumber int64, commitTitle, commitMessage string) (mergeSha string, err error) {
 	_, err = d.client.MergePullRequest(d.owner, d.repository, pullRequestNumber, gitea.MergePullRequestOption{
 		Style:   gitea.MergeStyleSquash,
@@ -169,9 +173,11 @@ func (d *GiteaDriver) apiMergePullRequest(pullRequestNumber int64, commitTitle, 
 // retargetPullRequests retargets pullrequests onto a new base branch
 // this comes in handy when an ancestor got merged, so that children can be retargeted to the ancestor's own target branch
 // example:
-//   ancestor -> initial
-//   children1 -> ancestor  --> initial (retargeted to initial after merge)
-//   children2 -> ancestor  --> initial (retargeted to initial after merge)
+//
+//	ancestor -> initial
+//	children1 -> ancestor  --> initial (retargeted to initial after merge)
+//	children2 -> ancestor  --> initial (retargeted to initial after merge)
+//
 //nolint:unparam
 func (d *GiteaDriver) apiRetargetPullRequests(pullRequests []*gitea.PullRequest, newBaseName string) error {
 	for _, pullRequest := range pullRequests {

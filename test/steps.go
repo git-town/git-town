@@ -25,7 +25,6 @@ var beforeSuiteMux sync.Mutex
 var gitManager *GitManager
 
 // Steps defines Cucumber step implementations around Git workspace management.
-//nolint:gocyclo,gocognit,funlen
 func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.BeforeScenario(func(scenario *messages.Pickle) {
 		// create a GitEnvironment for the scenario

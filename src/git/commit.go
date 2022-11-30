@@ -16,7 +16,7 @@ type Commit struct {
 }
 
 // Set assigns the given value to the property with the given Gherkin table name.
-func (commit *Commit) Set(name, value string) (err error) {
+func (commit *Commit) Set(name, value string) error {
 	switch name {
 	case "BRANCH":
 		commit.Branch = value

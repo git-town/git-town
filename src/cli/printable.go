@@ -23,14 +23,14 @@ func PrintableBranchAncestry(config BranchAncestryConfig) string {
 }
 
 // PrintableBranchTree returns a user printable branch tree.
-func PrintableBranchTree(branchName string, config BranchAncestryConfig) (result string) {
-	result += branchName
+func PrintableBranchTree(branchName string, config BranchAncestryConfig) string {
+	result := branchName
 	childBranches := config.ChildBranches(branchName)
 	sort.Strings(childBranches)
 	for _, childBranch := range childBranches {
 		result += "\n" + Indent(PrintableBranchTree(childBranch, config))
 	}
-	return
+	return result
 }
 
 // PrintableMainBranch returns a user printable main branch.

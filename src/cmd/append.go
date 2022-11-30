@@ -56,32 +56,35 @@ See "sync" for information regarding upstream remotes.`,
 	},
 }
 
-func createAppendConfig(args []string, repo *git.ProdRepo) (result appendConfig, err error) {
-	result.parentBranch, err = repo.Silent.CurrentBranch()
+func createAppendConfig(args []string, repo *git.ProdRepo) (appendConfig, error) {
+	parentBranch, err := repo.Silent.CurrentBranch()
 	if err != nil {
-		return result, err
+		return appendConfig{}, err
 	}
-	result.targetBranch = args[0]
+	result := appendConfig{
+		parentBranch: parentBranch,
+		targetBranch: args[0],
+	}
 	result.hasOrigin, err = repo.Silent.HasOrigin()
 	if err != nil {
-		return result, err
+		return appendConfig{}, err
 	}
 	if result.hasOrigin && !repo.Config.IsOffline() {
 		err := repo.Logging.Fetch()
 		if err != nil {
-			return result, err
+			return appendConfig{}, err
 		}
 	}
 	hasBranch, err := repo.Silent.HasLocalOrOriginBranch(result.targetBranch)
 	if err != nil {
-		return result, err
+		return appendConfig{}, err
 	}
 	if hasBranch {
-		return result, fmt.Errorf("a branch named %q already exists", result.targetBranch)
+		return appendConfig{}, fmt.Errorf("a branch named %q already exists", result.targetBranch)
 	}
 	err = userinput.EnsureKnowsParentBranches([]string{result.parentBranch}, repo)
 	if err != nil {
-		return result, err
+		return appendConfig{}, err
 	}
 	result.ancestorBranches = repo.Config.AncestorBranches(result.parentBranch)
 	result.shouldNewBranchPush = repo.Config.ShouldNewBranchPush()

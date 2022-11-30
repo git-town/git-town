@@ -48,28 +48,36 @@ This usually means the branch was shipped or killed on another machine.`,
 	},
 }
 
-func createPruneBranchesConfig(repo *git.ProdRepo) (result pruneBranchesConfig, err error) {
+func createPruneBranchesConfig(repo *git.ProdRepo) (pruneBranchesConfig, error) {
 	hasOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
-		return result, err
+		return pruneBranchesConfig{}, err
 	}
 	if hasOrigin {
 		err = repo.Logging.Fetch()
 		if err != nil {
-			return result, err
+			return pruneBranchesConfig{}, err
 		}
 	}
-	result.mainBranch = repo.Config.MainBranch()
-	result.initialBranchName, err = repo.Silent.CurrentBranch()
+	initialBranchName, err := repo.Silent.CurrentBranch()
 	if err != nil {
-		return result, err
+		return pruneBranchesConfig{}, err
 	}
-	result.localBranchesWithDeletedTrackingBranches, err = repo.Silent.LocalBranchesWithDeletedTrackingBranches()
-	return result, err
+	localBranchesWithDeletedTrackingBranches, err := repo.Silent.LocalBranchesWithDeletedTrackingBranches()
+	if err != nil {
+		return pruneBranchesConfig{}, err
+	}
+	result := pruneBranchesConfig{
+		initialBranchName:                        initialBranchName,
+		localBranchesWithDeletedTrackingBranches: localBranchesWithDeletedTrackingBranches,
+		mainBranch:                               repo.Config.MainBranch(),
+	}
+	return result, nil
 }
 
-func createPruneBranchesStepList(config pruneBranchesConfig, repo *git.ProdRepo) (result runstate.StepList, err error) {
+func createPruneBranchesStepList(config pruneBranchesConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	initialBranchName := config.initialBranchName
+	result := runstate.StepList{}
 	for _, branchName := range config.localBranchesWithDeletedTrackingBranches {
 		if initialBranchName == branchName {
 			result.Append(&steps.CheckoutBranchStep{BranchName: config.mainBranch})
@@ -86,7 +94,7 @@ func createPruneBranchesStepList(config pruneBranchesConfig, repo *git.ProdRepo)
 		}
 		result.Append(&steps.DeleteLocalBranchStep{BranchName: branchName})
 	}
-	err = result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, repo)
+	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, repo)
 	return result, err
 }
 

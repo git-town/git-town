@@ -8,6 +8,7 @@ import (
 )
 
 func TestRunner(t *testing.T) {
+	t.Parallel()
 	t.Run(".SetOffline()", func(t *testing.T) {
 		t.Parallel()
 		repo := test.CreateTestGitTownRepo(t)

@@ -46,7 +46,6 @@ func TestGithubDriver(t *testing.T) {
 			assert.Equal(t, "https://self-hosted-github.com/git-town/git-town", driver.RepositoryURL())
 		})
 
-		//nolint:paralleltest  // mocks HTTP
 		t.Run("custom hostname", func(t *testing.T) {
 			driver := hosting.NewGithubDriver(mockConfig{
 				originURL:      "git@my-ssh-identity.com:git-town/git-town.git",
@@ -58,7 +57,7 @@ func TestGithubDriver(t *testing.T) {
 		})
 	})
 
-	//nolint:paralleltest  // mocks HTTP
+	//nolint:dupl
 	t.Run(".LoadPullRequestInfo()", func(t *testing.T) {
 		t.Run("with token", func(t *testing.T) {
 			driver, teardown := setupGithubDriver(t, "TOKEN")
@@ -71,7 +70,6 @@ func TestGithubDriver(t *testing.T) {
 			assert.Equal(t, int64(1), prInfo.PullRequestNumber)
 		})
 
-		//nolint:paralleltest  // mocks HTTP
 		t.Run("empty token", func(t *testing.T) {
 			driver, teardown := setupGithubDriver(t, "")
 			defer teardown()
@@ -80,7 +78,6 @@ func TestGithubDriver(t *testing.T) {
 			assert.False(t, prInfo.CanMergeWithAPI)
 		})
 
-		//nolint:paralleltest  // mocks HTTP
 		t.Run("cannot fetch pull request number", func(t *testing.T) {
 			driver, teardown := setupGithubDriver(t, "TOKEN")
 			defer teardown()
@@ -89,7 +86,6 @@ func TestGithubDriver(t *testing.T) {
 			assert.Error(t, err)
 		})
 
-		//nolint:paralleltest  // mocks HTTP
 		t.Run("cannot fetch pull request data", func(t *testing.T) {
 			driver, teardown := setupGithubDriver(t, "TOKEN")
 			defer teardown()
@@ -99,7 +95,6 @@ func TestGithubDriver(t *testing.T) {
 			assert.False(t, prInfo.CanMergeWithAPI)
 		})
 
-		//nolint:paralleltest  // mocks HTTP
 		t.Run("multiple pull requests for this branch", func(t *testing.T) {
 			driver, teardown := setupGithubDriver(t, "TOKEN")
 			defer teardown()
@@ -111,7 +106,6 @@ func TestGithubDriver(t *testing.T) {
 	})
 
 	t.Run(".MergePullRequest()", func(t *testing.T) {
-
 		t.Run("happy path", func(t *testing.T) {
 			driver, teardown := setupGithubDriver(t, "TOKEN")
 			defer teardown()
@@ -150,7 +144,6 @@ func TestGithubDriver(t *testing.T) {
 			assert.Error(t, err)
 		})
 
-		//nolint:paralleltest  // mocks HTTP
 		t.Run("cannot get pull request to merge", func(t *testing.T) {
 			driver, teardown := setupGithubDriver(t, "TOKEN")
 			defer teardown()
@@ -165,7 +158,6 @@ func TestGithubDriver(t *testing.T) {
 			assert.Error(t, err)
 		})
 
-		//nolint:paralleltest  // mocks HTTP
 		t.Run("pull request not found", func(t *testing.T) {
 			driver, teardown := setupGithubDriver(t, "TOKEN")
 			defer teardown()
@@ -196,7 +188,7 @@ func TestGithubDriver(t *testing.T) {
 			assert.Error(t, err)
 		})
 
-		//nolint:paralleltest,dupl  // mocks HTTP
+		//nolint:dupl
 		t.Run("updates child PRs", func(t *testing.T) {
 			driver, teardown := setupGithubDriver(t, "TOKEN")
 			defer teardown()

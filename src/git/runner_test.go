@@ -12,6 +12,7 @@ import (
 )
 
 func TestRunner(t *testing.T) {
+	t.Parallel()
 	t.Run(".AddRemote()", func(t *testing.T) {
 		t.Parallel()
 		runner := test.CreateRepo(t).Runner
@@ -201,11 +202,10 @@ func TestRunner(t *testing.T) {
 		assert.NoError(t, err)
 		runner.Config.Reload()
 		assert.True(t, runner.Config.IsFeatureBranch("f1"))
-		assert.Equal(t, []string(nil), runner.Config.AncestorBranches("f1"))
+		assert.Equal(t, []string{}, runner.Config.AncestorBranches("f1"))
 	})
 
 	t.Run(".CreateFile()", func(t *testing.T) {
-
 		t.Run("simple example", func(t *testing.T) {
 			t.Parallel()
 			runner := test.CreateRepo(t).Runner

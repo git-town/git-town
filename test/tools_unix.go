@@ -8,6 +8,8 @@ import "os"
 // This package contains platform-specific testing tool implementations for Unix-like platforms.
 
 // CallScriptArgs provides the command and arguments to call the given script on Windows.
+//
+//nolint:nonamedreturns multiple return values with non-obvious meaning
 func CallScriptArgs(toolPath string) (cmd string, args []string) {
 	return toolPath, []string{}
 }

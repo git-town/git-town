@@ -68,40 +68,43 @@ where hostname matches what is in your ssh config file.`,
 	},
 }
 
-func createNewPullRequestConfig(repo *git.ProdRepo) (result newPullRequestConfig, err error) {
+func createNewPullRequestConfig(repo *git.ProdRepo) (newPullRequestConfig, error) {
 	hasOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
-		return result, err
+		return newPullRequestConfig{}, err
 	}
 	if hasOrigin {
 		err := repo.Logging.Fetch()
 		if err != nil {
-			return result, err
+			return newPullRequestConfig{}, err
 		}
 	}
-	result.InitialBranch, err = repo.Silent.CurrentBranch()
+	initialBranch, err := repo.Silent.CurrentBranch()
 	if err != nil {
-		return result, err
+		return newPullRequestConfig{}, err
 	}
-	err = userinput.EnsureKnowsParentBranches([]string{result.InitialBranch}, repo)
+	err = userinput.EnsureKnowsParentBranches([]string{initialBranch}, repo)
 	if err != nil {
-		return result, err
+		return newPullRequestConfig{}, err
 	}
-	result.BranchesToSync = append(repo.Config.AncestorBranches(result.InitialBranch), result.InitialBranch)
-	return
+	return newPullRequestConfig{
+		InitialBranch:  initialBranch,
+		BranchesToSync: append(repo.Config.AncestorBranches(initialBranch), initialBranch),
+	}, nil
 }
 
-func createNewPullRequestStepList(config newPullRequestConfig, repo *git.ProdRepo) (result runstate.StepList, err error) {
+func createNewPullRequestStepList(config newPullRequestConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+	result := runstate.StepList{}
 	for _, branchName := range config.BranchesToSync {
 		steps, err := runstate.SyncBranchSteps(branchName, true, repo)
 		if err != nil {
-			return result, err
+			return runstate.StepList{}, err
 		}
 		result.AppendList(steps)
 	}
-	err = result.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
+	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
 	if err != nil {
-		return result, err
+		return runstate.StepList{}, err
 	}
 	result.Append(&steps.CreatePullRequestStep{BranchName: config.InitialBranch})
 	return result, nil

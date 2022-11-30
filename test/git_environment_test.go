@@ -11,6 +11,7 @@ import (
 )
 
 func TestGitEnvironment(t *testing.T) {
+	t.Parallel()
 	t.Run(".CloneGitEnvironment()", func(t *testing.T) {
 		t.Parallel()
 		dir := CreateTempDir(t)

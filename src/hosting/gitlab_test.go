@@ -32,6 +32,7 @@ func setupGitlabDriver(t *testing.T, token string) (*hosting.GitlabDriver, func(
 	}
 }
 
+//nolint:paralleltest  // mocks HTTP
 func TestGitLab(t *testing.T) {
 	t.Run("NewGitlabDriver()", func(t *testing.T) {
 		t.Run("standard setup", func(t *testing.T) {
@@ -57,6 +58,7 @@ func TestGitLab(t *testing.T) {
 		})
 	})
 
+	//nolint:dupl
 	t.Run(".LoadPullRequestInfo()", func(t *testing.T) {
 		t.Run("happy path", func(t *testing.T) {
 			driver, teardown := setupGitlabDriver(t, "TOKEN")
@@ -161,7 +163,7 @@ func TestGitLab(t *testing.T) {
 			assert.Equal(t, "cannot merge via GitLab since there is no merge request", err.Error())
 		})
 
-		t.Run("cannot load child pull request",func(t *testing.T) {
+		t.Run("cannot load child pull request", func(t *testing.T) {
 			driver, teardown := setupGitlabDriver(t, "TOKEN")
 			defer teardown()
 			options := hosting.MergePullRequestOptions{
@@ -189,6 +191,7 @@ func TestGitLab(t *testing.T) {
 			assert.Error(t, err)
 		})
 
+		//nolint:dupl
 		t.Run("updating child PRs", func(t *testing.T) {
 			driver, teardown := setupGitlabDriver(t, "TOKEN")
 			defer teardown()

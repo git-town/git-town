@@ -14,9 +14,9 @@ import (
 
 // MockingShell runs shell commands using a customizable environment.
 // This is useful in tests. Possible customizations:
-// - overide environment variables
-// - Temporarily override certain shell commands with mock implementations.
-//   Temporary mocks are only valid for the next command being run.
+//   - overide environment variables
+//   - Temporarily override certain shell commands with mock implementations.
+//     Temporary mocks are only valid for the next command being run.
 type MockingShell struct {
 	binDir     string // the directory that stores the mock shell command implementations, ignored if empty
 	gitEditor  string // name of the binary to use as the custom editor during "git commit"
@@ -145,17 +145,17 @@ func (ms *MockingShell) RunString(fullCmd string) (*run.Result, error) {
 // in this ShellRunner's directory using the given options.
 // opts.Dir is a relative path inside the working directory of this ShellRunner.
 // Shell overrides will be used and removed when done.
-func (ms *MockingShell) RunStringWith(fullCmd string, opts run.Options) (result *run.Result, err error) {
+func (ms *MockingShell) RunStringWith(fullCmd string, opts run.Options) (*run.Result, error) {
 	parts, err := shellquote.Split(fullCmd)
 	if err != nil {
-		return result, fmt.Errorf("cannot split command %q: %w", fullCmd, err)
+		return nil, fmt.Errorf("cannot split command %q: %w", fullCmd, err)
 	}
 	cmd, args := parts[0], parts[1:]
 	return ms.RunWith(opts, cmd, args...)
 }
 
 // RunWith runs the given command with the given options in this ShellRunner's directory.
-func (ms *MockingShell) RunWith(opts run.Options, cmd string, args ...string) (result *run.Result, err error) {
+func (ms *MockingShell) RunWith(opts run.Options, cmd string, args ...string) (*run.Result, error) {
 	// create an environment with the temp shell overrides directory added to the PATH
 	if opts.Env == nil {
 		opts.Env = os.Environ()
@@ -177,7 +177,7 @@ func (ms *MockingShell) RunWith(opts run.Options, cmd string, args ...string) (r
 	// set the working dir
 	opts.Dir = filepath.Join(ms.workingDir, opts.Dir)
 	// run the command inside the custom environment
-	result, err = run.WithOptions(opts, cmd, args...)
+	result, err := run.WithOptions(opts, cmd, args...)
 	if Debug {
 		fmt.Println(filepath.Base(ms.workingDir), ">", cmd, strings.Join(args, " "))
 		fmt.Println(result.Output())

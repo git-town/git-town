@@ -61,7 +61,8 @@ func (state *ScenarioState) Reset(gitEnv GitEnvironment) {
 }
 
 // InitialBranches provides the branches in this Scenario before the WHEN steps ran.
-func (state *ScenarioState) InitialBranches() (result DataTable) {
+func (state *ScenarioState) InitialBranches() DataTable {
+	result := DataTable{}
 	result.AddRow("REPOSITORY", "BRANCHES")
 	sort.Strings(state.initialLocalBranches)
 	state.initialLocalBranches = stringslice.MainFirst(state.initialLocalBranches)
