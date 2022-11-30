@@ -16,31 +16,31 @@ cuke-prof: build  # creates a flamegraph
 	@rm git-town.test
 	@echo Please open https://www.speedscope.app and load the file godog.out
 
-dependencies:  # prints the dependencies between packages as a tree
-	@depth . | grep git-town
+dependencies: tools/depth  # prints the dependencies between packages as a tree
+	@tools/depth . | grep git-town
 
-docs: build  # tests the documentation
+docs: build tools/node_modules  # tests the documentation
 	${CURDIR}/tools/node_modules/.bin/text-run --offline
 
 fix: fix-go fix-md  # auto-fixes lint issues in all languages
 
-fix-go:  # auto-fixes all Go lint issues
-	gofumpt -l -w .
+fix-go: tools/gofumpt  # auto-fixes all Go lint issues
+	tools/gofumpt -l -w .
 
 fix-md:  # auto-fixes all Markdown lint issues
 	dprint fmt
 
 help:  # prints all available targets
-	@cat Makefile | grep '^[^ ]*:' | grep -v '.PHONY' | grep -v help | sed 's/:.*#/#/' | column -s "#" -t
+	@cat Makefile | grep '^[^ ]*:' | grep -v '.PHONY' | grep -v help | grep -v "^tools\/" | sed 's/:.*#/#/' | column -s "#" -t
 
 lint: lint-go lint-md  # lints all the source code
 	git diff --check
 
-lint-go:  # lints the Go files
-	golangci-lint run
+lint-go: tools/golangci-lint  # lints the Go files
+	tools/golangci-lint run
 
-lint-md:   # lints the Markdown files
-	dprint check
+lint-md: tools/node_modules   # lints the Markdown files
+	@${CURDIR}/tools/node_modules/.bin/dprint check
 
 msi:  # compiles the MSI installer for Windows
 	rm -f git-town*.msi
@@ -70,21 +70,7 @@ release-win: msi  # adds the Windows installer to the release
 		-a dist/git-town_${VERSION}_windows_intel_64.msi
 		v${VERSION}
 
-setup: setup-go setup-tools  # the setup steps necessary on developer machines
-
-setup-tools:  # the setup steps necessary for document tests
-	cd tools && yarn install
-
-setup-go: setup-godog
-	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.50.0
-	go install mvdan.cc/gofumpt@v0.3.0
-	go install github.com/KyleBanks/depth/cmd/depth@latest
-	go install github.com/boyter/scc@latest
-
-setup-godog:  # install the godog binary
-	go install github.com/cucumber/godog/cmd/godog@v0.9.0
-
-stats:  # shows code statistics
+stats: tools/scc  # shows code statistics
 	@find . -type f | grep -v './tools/node_modules' | grep -v '\./vendor/' | grep -v '\./.git/' | grep -v './website/book' | xargs scc
 
 test: lint docs u cuke  # runs all the tests
@@ -104,5 +90,26 @@ update:  # updates all dependencies
 	go get -u ./...
 	go mod tidy
 	go mod vendor
+	(cd tools && yarn upgrade --latest)
 	echo
-	echo Please update the tools that "make setup" installs manually.
+	echo Please update the third-party tooling in the Makefile manually.
+
+
+# --- HELPER TARGETS --------------------------------------------------------------------------------------------------------------------------------
+
+tools/depth: Makefile
+	env GOBIN="$(CURDIR)/tools" go install github.com/KyleBanks/depth/cmd/depth@latest
+
+tools/gofumpt: Makefile
+	env GOBIN="$(CURDIR)/tools" go install mvdan.cc/gofumpt@v0.3.0
+
+tools/golangci-lint: Makefile
+	@echo "Installing golangci-lint ..."
+	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b tools v1.50.0
+
+tools/node_modules: tools/yarn.lock
+	@cd tools && yarn install
+	@touch tools/node_modules  # update timestamp of the node_modules folder so that Make doesn't re-install it on every command
+
+tools/scc: Makefile
+	env GOBIN="$(CURDIR)/tools" go install github.com/boyter/scc@latest
