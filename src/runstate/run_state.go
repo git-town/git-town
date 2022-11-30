@@ -59,19 +59,23 @@ func (runState *RunState) AddPushBranchStepAfterCurrentBranchSteps(repo *git.Pro
 // CreateAbortRunState returns a new runstate
 // to be run to aborting and undoing the Git Town command
 // represented by this runstate.
-func (runState *RunState) CreateAbortRunState() (result RunState) {
-	result.Command = runState.Command
-	result.IsAbort = true
-	result.RunStepList.AppendList(runState.AbortStepList)
-	result.RunStepList.AppendList(runState.UndoStepList)
-	return
+func (runState *RunState) CreateAbortRunState() RunState {
+	stepList := runState.AbortStepList
+	stepList.AppendList(runState.UndoStepList)
+	return RunState{
+		Command:     runState.Command,
+		IsAbort:     true,
+		RunStepList: stepList,
+	}
 }
 
 // CreateSkipRunState returns a new Runstate
 // that skips operations for the current branch.
-func (runState *RunState) CreateSkipRunState() (result RunState) {
-	result.Command = runState.Command
-	result.RunStepList.AppendList(runState.AbortStepList)
+func (runState *RunState) CreateSkipRunState() RunState {
+	result := RunState{
+		Command:     runState.Command,
+		RunStepList: runState.AbortStepList,
+	}
 	for _, step := range runState.UndoStepList.List {
 		if isCheckoutBranchStep(step) {
 			break
@@ -87,17 +91,18 @@ func (runState *RunState) CreateSkipRunState() (result RunState) {
 			result.RunStepList.Append(step)
 		}
 	}
-	return
+	return result
 }
 
 // CreateUndoRunState returns a new runstate
 // to be run when undoing the Git Town command
 // represented by this runstate.
-func (runState *RunState) CreateUndoRunState() (result RunState) {
-	result.Command = runState.Command
-	result.isUndo = true
-	result.RunStepList.AppendList(runState.UndoStepList)
-	return
+func (runState *RunState) CreateUndoRunState() RunState {
+	return RunState{
+		Command:     runState.Command,
+		isUndo:      true,
+		RunStepList: runState.UndoStepList,
+	}
 }
 
 // IsUnfinished returns whether or not the run state is unfinished.

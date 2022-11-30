@@ -46,16 +46,17 @@ func (c *Config) AddToPerennialBranches(branchNames ...string) error {
 // AncestorBranches provides the names of all parent branches for the given branch,
 // This information is read from the cache in the Git config,
 // so might be out of date when the branch hierarchy has been modified.
-func (c *Config) AncestorBranches(branchName string) (result []string) {
+func (c *Config) AncestorBranches(branchName string) []string {
 	parentBranchMap := c.ParentBranchMap()
 	current := branchName
+	result := []string{}
 	for {
 		if c.IsMainBranch(current) || c.IsPerennialBranch(current) {
-			return
+			return result
 		}
 		parent := parentBranchMap[current]
 		if parent == "" {
-			return
+			return result
 		}
 		result = append([]string{parent}, result...)
 		current = parent
@@ -77,7 +78,8 @@ func (c *Config) BranchAncestryRoots() []string {
 
 // ChildBranches provides the names of all branches for which the given branch
 // is a parent.
-func (c *Config) ChildBranches(branchName string) (result []string) {
+func (c *Config) ChildBranches(branchName string) []string {
+	result := []string{}
 	for _, key := range c.localConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
 		parent := c.localConfigValue(key)
 		if parent == branchName {
@@ -85,7 +87,7 @@ func (c *Config) ChildBranches(branchName string) (result []string) {
 			result = append(result, child)
 		}
 	}
-	return
+	return result
 }
 
 // HostingService provides the name of the code hosting driver to use.
@@ -195,7 +197,8 @@ func (c *Config) IsPerennialBranch(branchName string) bool {
 }
 
 // localConfigKeysMatching provides the names of the Git Town configuration keys matching the given RegExp string.
-func (c *Config) localConfigKeysMatching(toMatch string) (result []string) {
+func (c *Config) localConfigKeysMatching(toMatch string) []string {
+	result := []string{}
 	re := regexp.MustCompile(toMatch)
 	for key := range c.localConfigCache {
 		if re.MatchString(key) {

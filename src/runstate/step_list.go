@@ -28,7 +28,7 @@ func (stepList *StepList) isEmpty() bool {
 }
 
 // Peek provides the first element of this StepList.
-func (stepList *StepList) Peek() (result steps.Step) { //nolint:ireturn
+func (stepList *StepList) Peek() steps.Step { //nolint:ireturn
 	if stepList.isEmpty() {
 		return nil
 	}
@@ -36,13 +36,13 @@ func (stepList *StepList) Peek() (result steps.Step) { //nolint:ireturn
 }
 
 // Pop removes and provides the first element of this StepList.
-func (stepList *StepList) Pop() (result steps.Step) { //nolint:ireturn
+func (stepList *StepList) Pop() steps.Step { //nolint:ireturn
 	if stepList.isEmpty() {
 		return nil
 	}
-	result = stepList.List[0]
+	result := stepList.List[0]
 	stepList.List = stepList.List[1:]
-	return
+	return result
 }
 
 // Prepend adds the given step to the beginning of this StepList.
@@ -87,7 +87,7 @@ func (stepList *StepList) Wrap(options WrapOptions, repo *git.ProdRepo) error {
 }
 
 // MarshalJSON marshals the step list to JSON.
-func (stepList *StepList) MarshalJSON() (b []byte, e error) {
+func (stepList *StepList) MarshalJSON() ([]byte, error) {
 	jsonSteps := make([]*JSONStep, len(stepList.List))
 	for s, step := range stepList.List {
 		jsonSteps[s] = &JSONStep{Step: step}

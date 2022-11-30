@@ -18,7 +18,8 @@ func (step *CommitOpenChangesStep) CreateUndoStep(repo *git.ProdRepo) (Step, err
 	return &ResetToShaStep{Sha: step.previousSha}, nil
 }
 
-func (step *CommitOpenChangesStep) Run(repo *git.ProdRepo, driver hosting.Driver) (err error) {
+func (step *CommitOpenChangesStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
+	var err error
 	step.previousSha, err = repo.Silent.CurrentSha()
 	if err != nil {
 		return err

@@ -9,6 +9,7 @@ import (
 )
 
 func TestCopyDirectory(t *testing.T) {
+	t.Parallel()
 	t.Run("normal directory", func(t *testing.T) {
 		t.Parallel()
 		tmpDir := CreateTempDir(t)

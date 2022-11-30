@@ -66,7 +66,8 @@ func NewRepo(workingDir, homeDir, binDir string) Repo {
 }
 
 // BranchHierarchyTable provides the currently configured branch hierarchy information as a DataTable.
-func (repo *Repo) BranchHierarchyTable() (result DataTable) {
+func (repo *Repo) BranchHierarchyTable() DataTable {
+	result := DataTable{}
 	repo.Config.Reload()
 	parentBranchMap := repo.Config.ParentBranchMap()
 	result.AddRow("BRANCH", "PARENT")
@@ -92,22 +93,23 @@ func (repo *Repo) Clone(targetDir string) (Repo, error) {
 }
 
 // FilesInBranches provides a data table of files and their content in all branches.
-func (repo *Repo) FilesInBranches() (result DataTable, err error) {
+func (repo *Repo) FilesInBranches() (DataTable, error) {
+	result := DataTable{}
 	result.AddRow("BRANCH", "NAME", "CONTENT")
 	branches, err := repo.LocalBranchesMainFirst()
 	if err != nil {
-		return result, err
+		return DataTable{}, err
 	}
 	lastBranch := ""
 	for _, branch := range branches {
 		files, err := repo.FilesInBranch(branch)
 		if err != nil {
-			return result, err
+			return DataTable{}, err
 		}
 		for _, file := range files {
 			content, err := repo.FileContentInCommit(branch, file)
 			if err != nil {
-				return result, err
+				return DataTable{}, err
 			}
 			if branch == lastBranch {
 				result.AddRow("", file, content)

@@ -42,12 +42,13 @@ func askForAuthor(authors []string) (string, error) {
 	return result, nil
 }
 
-func loadBranchAuthors(branchName string, repo *git.ProdRepo) (result []string, err error) {
+func loadBranchAuthors(branchName string, repo *git.ProdRepo) ([]string, error) {
 	// Returns lines of "<number of commits>\t<name and email>"
 	lines, err := run.Exec("git", "shortlog", "-s", "-n", "-e", repo.Config.MainBranch()+".."+branchName)
 	if err != nil {
-		return result, err
+		return []string{}, err
 	}
+	result := []string{}
 	for _, line := range lines.OutputLines() {
 		line = strings.TrimSpace(line)
 		parts := strings.Split(line, "\t")

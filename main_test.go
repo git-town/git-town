@@ -19,7 +19,7 @@ func FeatureContext(suite *godog.Suite) {
 	test.Steps(suite, state)
 }
 
-// nolint:paralleltest
+//nolint:paralleltest
 func TestGodog(t *testing.T) {
 	tags := ""
 	if *useThis {

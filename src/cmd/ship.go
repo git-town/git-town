@@ -85,11 +85,13 @@ and Git Town will leave it up to your origin server to delete the remote branch.
 	},
 }
 
-//nolint:funlen
-func gitShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (result shipConfig, err error) {
-	result.initialBranch, err = repo.Silent.CurrentBranch()
+func gitShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (shipConfig, error) {
+	initialBranch, err := repo.Silent.CurrentBranch()
 	if err != nil {
-		return result, err
+		return shipConfig{}, err
+	}
+	result := shipConfig{
+		initialBranch: initialBranch,
 	}
 	if len(args) == 0 {
 		result.branchToShip = result.initialBranch
@@ -99,42 +101,42 @@ func gitShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (re
 	if result.branchToShip == result.initialBranch {
 		hasOpenChanges, err := repo.Silent.HasOpenChanges()
 		if err != nil {
-			return result, err
+			return shipConfig{}, err
 		}
 		if hasOpenChanges {
-			return result, fmt.Errorf("you have uncommitted changes. Did you mean to commit them before shipping?")
+			return shipConfig{}, fmt.Errorf("you have uncommitted changes. Did you mean to commit them before shipping?")
 		}
 	}
 	result.hasOrigin, err = repo.Silent.HasOrigin()
 	if err != nil {
-		return result, err
+		return shipConfig{}, err
 	}
 	if result.hasOrigin && !repo.Config.IsOffline() {
 		err := repo.Logging.Fetch()
 		if err != nil {
-			return result, err
+			return shipConfig{}, err
 		}
 	}
 	if result.branchToShip != result.initialBranch {
 		hasBranch, err := repo.Silent.HasLocalOrOriginBranch(result.branchToShip)
 		if err != nil {
-			return result, err
+			return shipConfig{}, err
 		}
 		if !hasBranch {
-			return result, fmt.Errorf("there is no branch named %q", result.branchToShip)
+			return shipConfig{}, fmt.Errorf("there is no branch named %q", result.branchToShip)
 		}
 	}
 	if !repo.Config.IsFeatureBranch(result.branchToShip) {
-		return result, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can be shipped", result.branchToShip)
+		return shipConfig{}, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can be shipped", result.branchToShip)
 	}
 	err = userinput.EnsureKnowsParentBranches([]string{result.branchToShip}, repo)
 	if err != nil {
-		return result, err
+		return shipConfig{}, err
 	}
 	ensureParentBranchIsMainOrPerennialBranch(result.branchToShip)
 	result.hasTrackingBranch, err = repo.Silent.HasTrackingBranch(result.branchToShip)
 	if err != nil {
-		return result, err
+		return shipConfig{}, err
 	}
 	result.isOffline = repo.Config.IsOffline()
 	result.isShippingInitialBranch = result.branchToShip == result.initialBranch
@@ -159,15 +161,16 @@ please ship %q first`, strings.Join(ancestorsWithoutMainOrPerennial, ", "), olde
 	}
 }
 
-func createShipStepList(config shipConfig, repo *git.ProdRepo) (result runstate.StepList, err error) {
+func createShipStepList(config shipConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	syncSteps, err := runstate.SyncBranchSteps(config.branchToMergeInto, true, repo)
 	if err != nil {
-		return result, err
+		return runstate.StepList{}, err
 	}
+	result := runstate.StepList{}
 	result.AppendList(syncSteps)
 	syncSteps, err = runstate.SyncBranchSteps(config.branchToShip, false, repo)
 	if err != nil {
-		return result, err
+		return runstate.StepList{}, err
 	}
 	result.AppendList(syncSteps)
 	result.Append(&steps.EnsureHasShippableChangesStep{BranchName: config.branchToShip})
@@ -208,19 +211,19 @@ func createShipStepList(config shipConfig, repo *git.ProdRepo) (result runstate.
 	return result, err
 }
 
-func createPullRequestInfo(branch, parentBranch string, driver hosting.Driver) (result hosting.PullRequestInfo, err error) {
+func createPullRequestInfo(branch, parentBranch string, driver hosting.Driver) (hosting.PullRequestInfo, error) {
 	hasOrigin, err := prodRepo.Silent.HasOrigin()
 	if err != nil {
-		return result, err
+		return hosting.PullRequestInfo{}, err
 	}
 	if !hasOrigin {
-		return result, nil
+		return hosting.PullRequestInfo{}, nil
 	}
 	if prodRepo.Config.IsOffline() {
-		return result, nil
+		return hosting.PullRequestInfo{}, nil
 	}
 	if driver == nil {
-		return result, nil
+		return hosting.PullRequestInfo{}, nil
 	}
 	return driver.LoadPullRequestInfo(branch, parentBranch)
 }
