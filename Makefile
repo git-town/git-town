@@ -7,10 +7,6 @@ build:  # builds for the current platform
 cuke: build   # runs all end-to-end tests
 	@env LANG=C GOGC=off go test . -v -count=1
 
-cuke-open:  # runs only the currently uncommitted end-to-end tests
-	@git status --porcelain | grep -v '^\s*D ' | sed 's/^\s*\w\s*//' | grep '\.feature' | xargs godog
-#                           remove deleted     remove indicator
-
 cukethis: build   # runs the end-to-end tests that have a @this tag
 	@env LANG=C GOGC=off go test . -v -count=1 -this
 
@@ -78,13 +74,7 @@ setup: setup-go setup-tools  # the setup steps necessary on developer machines
 setup-tools:  # the setup steps necessary for document tests
 	cd tools && yarn install
 
-setup-go: setup-godog
-	go install github.com/boyter/scc@latest
-
-setup-godog:  # install the godog binary
-	go install github.com/cucumber/godog/cmd/godog@v0.9.0
-
-stats:  # shows code statistics
+stats: tools/scc  # shows code statistics
 	@find . -type f | grep -v './tools/node_modules' | grep -v '\./vendor/' | grep -v '\./.git/' | grep -v './website/book' | xargs scc
 
 test: lint docs u cuke  # runs all the tests
@@ -120,6 +110,8 @@ tools/golangci-lint: Makefile
 	@echo "Installing golangci-lint ..."
 	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b tools v1.50.0
 
+tools/scc: Makefile
+	env GOBIN="$(CURDIR)/tools" go install github.com/boyter/scc@latest
 
 
 .DEFAULT_GOAL := help
