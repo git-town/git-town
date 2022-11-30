@@ -109,7 +109,7 @@ tools/golangci-lint: Makefile
 
 tools/node_modules: tools/yarn.lock
 	@cd tools && yarn install
-	@touch tools/node_modules
+	@touch tools/node_modules  # update timestamp of the node_modules folder so that Make doesn't re-install it on every command
 
 tools/scc: Makefile
 	env GOBIN="$(CURDIR)/tools" go install github.com/boyter/scc@latest
