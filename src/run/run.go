@@ -12,7 +12,6 @@ import (
 
 // Options defines optional arguments for ShellRunner.RunWith().
 type Options struct {
-
 	// Dir contains the directory in which to execute the command.
 	// If empty, runs in the current directory.
 	Dir string
