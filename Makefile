@@ -1,5 +1,6 @@
 VERSION ?= 0.0.0
 TODAY=$(shell date +'%Y/%m/%d')
+.DEFAULT_GOAL := help
 
 build:  # builds for the current platform
 	go install -ldflags "-X github.com/git-town/git-town/v7/src/cmd.version=v${VERSION}-dev -X github.com/git-town/git-town/v7/src/cmd.buildDate=${TODAY}"
@@ -112,6 +113,3 @@ tools/golangci-lint: Makefile
 
 tools/scc: Makefile
 	env GOBIN="$(CURDIR)/tools" go install github.com/boyter/scc@latest
-
-
-.DEFAULT_GOAL := help
