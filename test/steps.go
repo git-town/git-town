@@ -368,7 +368,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return err
 		}
-		diff, errorCount := table.Diff(expanded)
+		diff, errorCount := table.EqualDataTable(expanded)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the commands run\n\n", errorCount)
 			fmt.Println(diff)
@@ -697,7 +697,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^the initial branch hierarchy exists$`, func() error {
 		have := state.gitEnv.DevRepo.BranchHierarchyTable()
 		state.initialBranchHierarchy.Sort()
-		diff, errCnt := have.Diff(state.initialBranchHierarchy)
+		diff, errCnt := have.EqualDataTable(state.initialBranchHierarchy)
 		if errCnt > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the branch hierarchy\n\n", errCnt)
 			fmt.Printf("INITIAL BRANCH HIERARCHY:\n%s\n", state.initialBranchHierarchy.String())
@@ -715,7 +715,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return err
 		}
 		want := state.InitialBranches()
-		diff, errorCount := have.Diff(want)
+		diff, errorCount := have.EqualDataTable(want)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing branches\n\n", errorCount)
 			fmt.Println(diff)
@@ -724,7 +724,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		// verify initial branch hierarchy
 		state.initialBranchHierarchy.Sort()
 		have = state.gitEnv.DevRepo.BranchHierarchyTable()
-		diff, errCnt := have.Diff(state.initialBranchHierarchy)
+		diff, errCnt := have.EqualDataTable(state.initialBranchHierarchy)
 		if errCnt > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the branch hierarchy\n\n", errCnt)
 			fmt.Println(diff)
@@ -741,7 +741,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		want := state.InitialBranches()
 		// fmt.Printf("HAVE:\n%s\n", have.String())
 		// fmt.Printf("WANT:\n%s\n", want.String())
-		diff, errorCount := have.Diff(want)
+		diff, errorCount := have.EqualDataTable(want)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing branches\n\n", errorCount)
 			fmt.Println(diff)

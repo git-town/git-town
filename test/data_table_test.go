@@ -47,7 +47,7 @@ func TestDataTable(t *testing.T) {
 		table.AddRow("alpha", "1")
 		table.Sort()
 		want := test.DataTable{Cells: [][]string{{"alpha", "1"}, {"beta", "2"}, {"gamma", "3"}}}
-		diff, errCnt := table.Diff(want)
+		diff, errCnt := table.EqualDataTable(want)
 		if errCnt > 0 {
 			t.Errorf("\nERROR! Found %d differences\n\n%s", errCnt, diff)
 		}
