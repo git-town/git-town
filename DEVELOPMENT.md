@@ -11,13 +11,8 @@ This page helps you get started hacking on the Git Town codebase.
      [Make for Windows](https://gnuwin32.sourceforge.net/packages/make.htm) or
      run `choco install make` if [Chocolatey](https://chocolatey.org) is
      available.
-3. automatically install Go-based tooling
-   <code type="make/command">make setup</code>
-4. manually install optional tooling: [dprint](https://dprint.dev),
-   [Node.js](https://nodejs.org), [Yarn](https://yarnpkg.com/),
-   [scc](https://github.com/boyter/scc)
-5. run the tests: <code type="make/command">make test</code>
-6. compile the tool: <code type="make/command">make build</code>
+3. run the tests: <code type="make/command">make test</code>
+4. compile the tool: <code type="make/command">make build</code>
 
 ## dependencies
 
