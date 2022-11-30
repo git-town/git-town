@@ -22,9 +22,7 @@ var (
 )
 
 // AskHowToHandleUnfinishedRunState prompts the user for how to handle the unfinished run state.
-//
-//nolint:nonamedreturns
-func AskHowToHandleUnfinishedRunState(command, endBranch string, endTime time.Time, canSkip bool) (responseType string, err error) {
+func AskHowToHandleUnfinishedRunState(command, endBranch string, endTime time.Time, canSkip bool) (string, error) {
 	formattedOptions := map[string]string{
 		ResponseTypeAbort:    fmt.Sprintf("Abort the `%s` command", command),
 		ResponseTypeContinue: fmt.Sprintf("Restart the `%s` command after having resolved conflicts", command),
@@ -46,9 +44,9 @@ func AskHowToHandleUnfinishedRunState(command, endBranch string, endTime time.Ti
 		Default: formattedOptions[ResponseTypeQuit],
 	}
 	result := ""
-	err = survey.AskOne(prompt, &result, nil)
+	err := survey.AskOne(prompt, &result, nil)
 	if err != nil {
-		return responseType, fmt.Errorf("cannot read user answer from CLI: %w", err)
+		return "", fmt.Errorf("cannot read user answer from CLI: %w", err)
 	}
 	for responseType, formattedResponseType := range formattedOptions {
 		if formattedResponseType == result {

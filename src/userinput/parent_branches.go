@@ -91,15 +91,15 @@ var (
 	perennialBranchOption      = "<none> (perennial branch)"
 )
 
-//nolint:nonamedreturns
-func filterOutSelfAndDescendants(branchName string, choices []string, repo *git.ProdRepo) (filteredChoices []string) {
+func filterOutSelfAndDescendants(branchName string, choices []string, repo *git.ProdRepo) []string {
+	result := []string{}
 	for _, choice := range choices {
 		if choice == branchName || repo.Config.IsAncestorBranch(choice, branchName) {
 			continue
 		}
-		filteredChoices = append(filteredChoices, choice)
+		result = append(result, choice)
 	}
-	return filteredChoices
+	return result
 }
 
 func printParentBranchHeader(repo *git.ProdRepo) {

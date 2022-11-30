@@ -1097,7 +1097,7 @@ func (r *Runner) StartCommit() error {
 
 // Version indicates whether the needed Git version is installed.
 //
-//nolint:nonamedreturns
+//nolint:nonamedreturns multiple int return values justify using names for return values
 func (r *Runner) Version() (major int, minor int, err error) {
 	versionRegexp := regexp.MustCompile(`git version (\d+).(\d+).(\d+)`)
 	res, err := r.Run("git", "version")

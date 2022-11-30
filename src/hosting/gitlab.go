@@ -90,7 +90,7 @@ func (d *GitlabDriver) RepositoryURL() string {
 	return fmt.Sprintf("%s/%s", d.BaseURL(), d.ProjectPath())
 }
 
-//nolint:nonamedreturns
+//nolint:nonamedreturns return value isn't obvious from function name
 func (d *GitlabDriver) MergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
 	d.connect()
 	err = d.updatePullRequestsAgainst(options)
@@ -133,7 +133,7 @@ func (d *GitlabDriver) loadMergeRequests(branch, parentBranch string) ([]*gitlab
 	return mergeRequests, err
 }
 
-//nolint:nonamedreturns
+//nolint:nonamedreturns return value isn't obvious from function name
 func (d *GitlabDriver) mergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
 	if options.PullRequestNumber <= 0 {
 		return "", fmt.Errorf("cannot merge via GitLab since there is no merge request")

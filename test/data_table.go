@@ -52,8 +52,8 @@ func (table *DataTable) columns() [][]string {
 // EqualDataTable compares this DataTable instance to the given DataTable.
 // If both are equal it returns an empty string, otherwise a diff printable on the console.
 //
-//nolint:nonamedreturns
-func (table *DataTable) EqualDataTable(other DataTable) (diff string, errorCount int) {
+//nolint:nonamedreturns return value isn't
+func (table *DataTable) Diff(other DataTable) (diff string, errorCount int) {
 	dmp := diffmatchpatch.New()
 	diffs := dmp.DiffMain(other.String(), table.String(), false)
 	if len(diffs) == 1 && diffs[0].Type == 0 {
@@ -71,7 +71,7 @@ func (table *DataTable) EqualGherkin(other *messages.PickleStepArgument_PickleTa
 		return "your data is empty", 1
 	}
 	dataTable := FromGherkin(other)
-	return table.EqualDataTable(dataTable)
+	return table.Diff(dataTable)
 }
 
 var (

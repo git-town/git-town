@@ -96,7 +96,7 @@ func (d *GiteaDriver) HostingServiceName() string {
 	return "Gitea"
 }
 
-//nolint:nonamedreturns
+//nolint:nonamedreturns return value isn't obvious from function name
 func (d *GiteaDriver) MergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
 	d.connect()
 	openPullRequests, err := d.client.ListRepoPullRequests(d.owner, d.repository, gitea.ListPullRequestsOptions{
@@ -153,7 +153,7 @@ func filterPullRequests(pullRequests []*gitea.PullRequest, baseName, headName st
 	return pullRequestsFiltered
 }
 
-//nolint:nonamedreturns
+//nolint:nonamedreturns return value isn't obvious from function name
 func (d *GiteaDriver) apiMergePullRequest(pullRequestNumber int64, commitTitle, commitMessage string) (mergeSha string, err error) {
 	_, err = d.client.MergePullRequest(d.owner, d.repository, pullRequestNumber, gitea.MergePullRequestOption{
 		Style:   gitea.MergeStyleSquash,
