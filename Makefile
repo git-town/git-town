@@ -19,7 +19,7 @@ cuke-prof: build  # creates a flamegraph
 dependencies: tools/depth  # prints the dependencies between packages as a tree
 	@tools/depth . | grep git-town
 
-docs: build  # tests the documentation
+docs: build tools/node_modules  # tests the documentation
 	${CURDIR}/tools/node_modules/.bin/text-run --offline
 
 fix: fix-go fix-md  # auto-fixes lint issues in all languages
@@ -70,11 +70,6 @@ release-win: msi  # adds the Windows installer to the release
 		-a dist/git-town_${VERSION}_windows_intel_64.msi
 		v${VERSION}
 
-setup: setup-go setup-tools  # the setup steps necessary on developer machines
-
-setup-tools:  # the setup steps necessary for document tests
-	cd tools && yarn install
-
 stats: tools/scc  # shows code statistics
 	@find . -type f | grep -v './tools/node_modules' | grep -v '\./vendor/' | grep -v '\./.git/' | grep -v './website/book' | xargs scc
 
@@ -110,6 +105,9 @@ tools/gofumpt: Makefile
 tools/golangci-lint: Makefile
 	@echo "Installing golangci-lint ..."
 	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b tools v1.50.0
+
+tools/node_modules: tools/yarn.lock
+	@cd tools && yarn install
 
 tools/scc: Makefile
 	env GOBIN="$(CURDIR)/tools" go install github.com/boyter/scc@latest
