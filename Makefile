@@ -31,7 +31,7 @@ fix-md:  # auto-fixes all Markdown lint issues
 	dprint fmt
 
 help:  # prints all available targets
-	@cat Makefile | grep '^[^ ]*:' | grep -v '.PHONY' | grep -v help | grep -vF "tools/" | sed 's/:.*#/#/' | column -s "#" -t
+	@cat Makefile | grep '^[^ ]*:' | grep -v '.PHONY' | grep -v help | grep -v "^tools\/" | sed 's/:.*#/#/' | column -s "#" -t
 
 lint: lint-go lint-md  # lints all the source code
 	git diff --check
@@ -91,7 +91,7 @@ update:  # updates all dependencies
 	go mod tidy
 	go mod vendor
 	echo
-	echo Please update the tools that "make setup" installs manually.
+	echo Please update the third-party tooling in the Makefile manually.
 
 
 # --- HELPER TARGETS --------------------------------------------------------------------------------------------------------------------------------

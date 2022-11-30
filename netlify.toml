@@ -1,5 +1,5 @@
 [build]
   base = "website/"
   publish = "book/"
-  command = "make setup && make build"
+  command = "make build"
   ignore = "/bin/false"

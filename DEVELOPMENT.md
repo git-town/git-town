@@ -161,8 +161,6 @@ The source code for the [website](https://www.git-town.com) is in the
 [website](website) folder. This folder contains its own
 [Makefile](website/Makefile) for activities related to working on the website.
 To work on the website, cd into the `website` folder and run
-<code type="make/command" dir="website">make setup</code> to download the
-necessary tooling and then
 <code type="make/command" dir="website">make serve</code> to start a local
 development server. The production site auto-updates on changes to the `main`
 branch. The site hoster is [Netlify](https://www.netlify.com). Netlify
