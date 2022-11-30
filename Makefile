@@ -28,7 +28,7 @@ docs: build  # tests the documentation
 fix: fix-go fix-md  # auto-fixes lint issues in all languages
 
 fix-go:  # auto-fixes all Go lint issues
-	gofumpt -l -w .
+	tools/gofumpt -l -w .
 
 fix-md:  # auto-fixes all Markdown lint issues
 	dprint fmt
@@ -79,7 +79,6 @@ setup-tools:  # the setup steps necessary for document tests
 	cd tools && yarn install
 
 setup-go: setup-godog
-	go install mvdan.cc/gofumpt@v0.3.0
 	go install github.com/KyleBanks/depth/cmd/depth@latest
 	go install github.com/boyter/scc@latest
 
@@ -110,9 +109,15 @@ update:  # updates all dependencies
 	echo Please update the tools that "make setup" installs manually.
 
 
+# --- HELPER TARGETS --------------------------------------------------------------------------------------------------------------------------------
+
+tools/gofumpt: Makefile
+	go install mvdan.cc/gofumpt@v0.3.0
+
 tools/golangci-lint: Makefile
 	@echo "Installing golangci-lint ..."
 	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b tools v1.50.0
+
 
 
 .DEFAULT_GOAL := help
