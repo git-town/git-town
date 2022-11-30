@@ -39,8 +39,8 @@ lint: lint-go lint-md  # lints all the source code
 lint-go: tools/golangci-lint  # lints the Go files
 	tools/golangci-lint run
 
-lint-md:   # lints the Markdown files
-	dprint check
+lint-md: tools/node_modules   # lints the Markdown files
+	@${CURDIR}/tools/node_modules/.bin/dprint check
 
 msi:  # compiles the MSI installer for Windows
 	rm -f git-town*.msi
@@ -108,6 +108,7 @@ tools/golangci-lint: Makefile
 
 tools/node_modules: tools/yarn.lock
 	@cd tools && yarn install
+	@touch tools/node_modules
 
 tools/scc: Makefile
 	env GOBIN="$(CURDIR)/tools" go install github.com/boyter/scc@latest
