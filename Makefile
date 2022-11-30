@@ -90,6 +90,7 @@ update:  # updates all dependencies
 	go get -u ./...
 	go mod tidy
 	go mod vendor
+	(cd tools && yarn upgrade --latest)
 	echo
 	echo Please update the third-party tooling in the Makefile manually.
 
