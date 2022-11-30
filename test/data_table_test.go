@@ -10,6 +10,7 @@ import (
 )
 
 func TestDataTable(t *testing.T) {
+	t.Parallel()
 	t.Run("String serialization", func(t *testing.T) {
 		t.Parallel()
 		table := test.DataTable{}

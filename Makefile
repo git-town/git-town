@@ -76,7 +76,7 @@ setup-tools:  # the setup steps necessary for document tests
 	cd tools && yarn install
 
 setup-go: setup-godog
-	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.43.0
+	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.50.0
 	go install mvdan.cc/gofumpt@v0.3.0
 	go install github.com/KyleBanks/depth/cmd/depth@latest
 	go install github.com/boyter/scc@latest
@@ -94,10 +94,10 @@ test-go: build u lint-go cuke  # runs all tests for Golang
 
 test-md: lint-md   # runs all Markdown tests
 
-u:  # runs only the unit tests for changed code
+unit:  # runs only the unit tests for changed code
 	env GOGC=off go test -timeout 30s ./src/... ./test/...
 
-unit:  # runs all the unit tests with race detector
+unit-all:  # runs all the unit tests with race detector
 	env GOGC=off go test -count=1 -timeout 60s -race ./src/... ./test/...
 
 update:  # updates all dependencies

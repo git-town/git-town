@@ -24,7 +24,8 @@ func (step *MergeBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { 
 	return &ResetToShaStep{Hard: true, Sha: step.previousSha}, nil
 }
 
-func (step *MergeBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) (err error) {
+func (step *MergeBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
+	var err error
 	step.previousSha, err = repo.Silent.CurrentSha()
 	if err != nil {
 		return err

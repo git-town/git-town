@@ -53,21 +53,23 @@ func NewGithubDriver(config config, log logFn) *GithubDriver {
 	}
 }
 
-func (d *GithubDriver) LoadPullRequestInfo(branch, parentBranch string) (result PullRequestInfo, err error) {
+func (d *GithubDriver) LoadPullRequestInfo(branch, parentBranch string) (PullRequestInfo, error) {
 	if d.apiToken == "" {
-		return result, nil
+		return PullRequestInfo{}, nil
 	}
 	d.connect()
 	pullRequests, err := d.loadPullRequests(branch, parentBranch)
 	if err != nil {
-		return result, err
+		return PullRequestInfo{}, err
 	}
 	if len(pullRequests) != 1 {
-		return result, nil
+		return PullRequestInfo{}, nil
 	}
-	result.CanMergeWithAPI = true
-	result.DefaultCommitMessage = d.defaultCommitMessage(pullRequests[0])
-	result.PullRequestNumber = int64(pullRequests[0].GetNumber())
+	result := PullRequestInfo{
+		CanMergeWithAPI:      true,
+		DefaultCommitMessage: d.defaultCommitMessage(pullRequests[0]),
+		PullRequestNumber:    int64(pullRequests[0].GetNumber()),
+	}
 	return result, nil
 }
 
@@ -83,6 +85,7 @@ func (d *GithubDriver) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", d.hostname, d.owner, d.repository)
 }
 
+//nolint:nonamedreturns return value isn't obvious from function name
 func (d *GithubDriver) MergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
 	d.connect()
 	err = d.updatePullRequestsAgainst(options)
@@ -121,6 +124,7 @@ func (d *GithubDriver) loadPullRequests(branch, parentBranch string) ([]*github.
 	return pullRequests, err
 }
 
+//nolint:nonamedreturns return value isn't obvious from function name
 func (d *GithubDriver) mergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
 	if options.PullRequestNumber == 0 {
 		return "", fmt.Errorf("cannot merge via Github since there is no pull request")

@@ -34,7 +34,8 @@ Exits with error code 1 if the given branch is a perennial branch or the main br
 	},
 	Args: cobra.MaximumNArgs(1),
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		if err := ValidateIsRepository(prodRepo); err != nil {
+		err := ValidateIsRepository(prodRepo)
+		if err != nil {
 			return err
 		}
 		return validateIsConfigured(prodRepo)
@@ -42,11 +43,12 @@ Exits with error code 1 if the given branch is a perennial branch or the main br
 }
 
 // Does not return error because "Ensure" functions will call exit directly.
-func createDiffParentConfig(args []string, repo *git.ProdRepo) (config diffParentConfig, err error) {
+func createDiffParentConfig(args []string, repo *git.ProdRepo) (diffParentConfig, error) {
 	initialBranch, err := repo.Silent.CurrentBranch()
 	if err != nil {
-		return config, err
+		return diffParentConfig{}, err
 	}
+	config := diffParentConfig{}
 	if len(args) == 0 {
 		config.branch = initialBranch
 	} else {
@@ -55,18 +57,18 @@ func createDiffParentConfig(args []string, repo *git.ProdRepo) (config diffParen
 	if initialBranch != config.branch {
 		hasBranch, err := repo.Silent.HasLocalBranch(config.branch)
 		if err != nil {
-			return config, err
+			return diffParentConfig{}, err
 		}
 		if !hasBranch {
-			return config, fmt.Errorf("there is no local branch named %q", config.branch)
+			return diffParentConfig{}, fmt.Errorf("there is no local branch named %q", config.branch)
 		}
 	}
 	if !prodRepo.Config.IsFeatureBranch(config.branch) {
-		return config, fmt.Errorf("you can only diff-parent feature branches")
+		return diffParentConfig{}, fmt.Errorf("you can only diff-parent feature branches")
 	}
 	err = userinput.EnsureKnowsParentBranches([]string{config.branch}, repo)
 	if err != nil {
-		return config, err
+		return diffParentConfig{}, err
 	}
 	config.parentBranch = repo.Config.ParentBranch(config.branch)
 	return config, nil

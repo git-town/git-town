@@ -14,7 +14,7 @@ type JSONStep struct {
 }
 
 // MarshalJSON marshals the step to JSON.
-func (j *JSONStep) MarshalJSON() (b []byte, e error) {
+func (j *JSONStep) MarshalJSON() ([]byte, error) {
 	return json.Marshal(map[string]interface{}{
 		"data": j.Step,
 		"type": typeName(j.Step),
@@ -37,7 +37,6 @@ func (j *JSONStep) UnmarshalJSON(b []byte) error {
 	return json.Unmarshal(*mapping["data"], &j.Step)
 }
 
-//nolint:gocyclo,funlen
 func determineStep(stepType string) steps.Step { //nolint:ireturn
 	switch stepType {
 	case "*AbortMergeBranchStep":

@@ -14,7 +14,6 @@ import (
 
 // GitEnvironment is a complete Git environment for a Cucumber scenario.
 type GitEnvironment struct {
-
 	// Dir defines the local folder in which this GitEnvironment is stored.
 	// This folder also acts as the HOME directory for tests using this GitEnvironment.
 	// It contains the global Git configuration to use in this test.
@@ -43,10 +42,10 @@ type GitEnvironment struct {
 
 // CloneGitEnvironment provides a GitEnvironment instance in the given directory,
 // containing a copy of the given GitEnvironment.
-func CloneGitEnvironment(original GitEnvironment, dir string) (gitEnv GitEnvironment, err error) {
-	err = CopyDirectory(original.Dir, dir)
+func CloneGitEnvironment(original GitEnvironment, dir string) (GitEnvironment, error) {
+	err := CopyDirectory(original.Dir, dir)
 	if err != nil {
-		return gitEnv, fmt.Errorf("cannot clone GitEnvironment %q to folder %q: %w", original.Dir, dir, err)
+		return GitEnvironment{}, fmt.Errorf("cannot clone GitEnvironment %q to folder %q: %w", original.Dir, dir, err)
 	}
 	binDir := filepath.Join(dir, "bin")
 	originDir := filepath.Join(dir, "origin")
@@ -63,20 +62,20 @@ func CloneGitEnvironment(original GitEnvironment, dir string) (gitEnv GitEnviron
 	// we have to set the "origin" remote to the copied origin repo here.
 	_, err = result.DevShell.Run("git", "remote", "remove", "origin")
 	if err != nil {
-		return gitEnv, fmt.Errorf("cannot remove remote: %w", err)
+		return GitEnvironment{}, fmt.Errorf("cannot remove remote: %w", err)
 	}
 	err = result.DevRepo.AddRemote("origin", result.originRepoPath())
 	if err != nil {
-		return gitEnv, fmt.Errorf("cannot set remote: %w", err)
+		return GitEnvironment{}, fmt.Errorf("cannot set remote: %w", err)
 	}
 	err = result.DevRepo.Fetch()
 	if err != nil {
-		return gitEnv, fmt.Errorf("cannot fetch: %w", err)
+		return GitEnvironment{}, fmt.Errorf("cannot fetch: %w", err)
 	}
 	// and connect the main branches again
 	err = result.DevRepo.ConnectTrackingBranch("main")
 	if err != nil {
-		return gitEnv, fmt.Errorf("cannot connect tracking branch: %w", err)
+		return GitEnvironment{}, fmt.Errorf("cannot connect tracking branch: %w", err)
 	}
 	return result, err
 }
@@ -88,12 +87,12 @@ func CloneGitEnvironment(original GitEnvironment, dir string) (gitEnv GitEnviron
 // Git repos cannot receive pushes of the currently checked out branch
 // because that will change files in the current workspace.
 // The tests don't use the initial branch.
-func NewStandardGitEnvironment(dir string) (gitEnv GitEnvironment, err error) {
+func NewStandardGitEnvironment(dir string) (GitEnvironment, error) {
 	// create the folder
 	// create the GitEnvironment
-	gitEnv = GitEnvironment{Dir: dir}
+	gitEnv := GitEnvironment{Dir: dir}
 	// create the origin repo
-	err = os.MkdirAll(gitEnv.originRepoPath(), 0o744)
+	err := os.MkdirAll(gitEnv.originRepoPath(), 0o744)
 	if err != nil {
 		return gitEnv, fmt.Errorf("cannot create directory %q: %w", gitEnv.originRepoPath(), err)
 	}
@@ -131,8 +130,8 @@ func NewStandardGitEnvironment(dir string) (gitEnv GitEnvironment, err error) {
 }
 
 // AddSubmodule adds a submodule repository.
-func (env *GitEnvironment) AddSubmoduleRepo() (err error) {
-	err = os.MkdirAll(env.submoduleRepoPath(), 0o744)
+func (env *GitEnvironment) AddSubmoduleRepo() error {
+	err := os.MkdirAll(env.submoduleRepoPath(), 0o744)
 	if err != nil {
 		return fmt.Errorf("cannot create directory %q: %w", env.submoduleRepoPath(), err)
 	}
@@ -152,7 +151,7 @@ func (env *GitEnvironment) AddSubmoduleRepo() (err error) {
 }
 
 // AddUpstream adds an upstream repository.
-func (env *GitEnvironment) AddUpstream() (err error) {
+func (env *GitEnvironment) AddUpstream() error {
 	repo, err := env.DevRepo.Clone(filepath.Join(env.Dir, "upstream"))
 	if err != nil {
 		return fmt.Errorf("cannot clone upstream: %w", err)
@@ -166,7 +165,7 @@ func (env *GitEnvironment) AddUpstream() (err error) {
 }
 
 // AddCoworkerRepo adds a coworker repository.
-func (env *GitEnvironment) AddCoworkerRepo() (err error) {
+func (env *GitEnvironment) AddCoworkerRepo() error {
 	coworkerRepo, err := env.OriginRepo.Clone(env.coworkerRepoPath())
 	if err != nil {
 		return fmt.Errorf("cannot clone coworker: %w", err)
@@ -181,7 +180,8 @@ func (env *GitEnvironment) binPath() string {
 }
 
 // Branches provides a tabular list of all branches in this GitEnvironment.
-func (env *GitEnvironment) Branches() (result DataTable, err error) {
+func (env *GitEnvironment) Branches() (DataTable, error) {
+	result := DataTable{}
 	result.AddRow("REPOSITORY", "BRANCHES")
 	localBranches, err := env.DevRepo.LocalBranchesMainFirst()
 	if err != nil {
@@ -284,31 +284,31 @@ func (env GitEnvironment) CreateTags(table *messages.PickleStepArgument_PickleTa
 }
 
 // CommitTable provides a table for all commits in this Git environment containing only the given fields.
-func (env GitEnvironment) CommitTable(fields []string) (result DataTable, err error) {
+func (env GitEnvironment) CommitTable(fields []string) (DataTable, error) {
 	builder := NewCommitTableBuilder()
 	localCommits, err := env.DevRepo.Commits(fields)
 	if err != nil {
-		return result, fmt.Errorf("cannot determine commits in the developer repo: %w", err)
+		return DataTable{}, fmt.Errorf("cannot determine commits in the developer repo: %w", err)
 	}
 	builder.AddMany(localCommits, "local")
 	if env.CoworkerRepo != nil {
 		coworkerCommits, err := env.CoworkerRepo.Commits(fields)
 		if err != nil {
-			return result, fmt.Errorf("cannot determine commits in the coworker repo: %w", err)
+			return DataTable{}, fmt.Errorf("cannot determine commits in the coworker repo: %w", err)
 		}
 		builder.AddMany(coworkerCommits, "coworker")
 	}
 	if env.OriginRepo != nil {
 		originCommits, err := env.OriginRepo.Commits(fields)
 		if err != nil {
-			return result, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
+			return DataTable{}, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
 		}
 		builder.AddMany(originCommits, "origin")
 	}
 	if env.UpstreamRepo != nil {
 		upstreamCommits, err := env.UpstreamRepo.Commits(fields)
 		if err != nil {
-			return result, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
+			return DataTable{}, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
 		}
 		builder.AddMany(upstreamCommits, "upstream")
 	}
@@ -316,17 +316,17 @@ func (env GitEnvironment) CommitTable(fields []string) (result DataTable, err er
 }
 
 // TagTable provides a table for all tags in this Git environment.
-func (env GitEnvironment) TagTable() (result DataTable, err error) {
+func (env GitEnvironment) TagTable() (DataTable, error) {
 	builder := NewTagTableBuilder()
 	localTags, err := env.DevRepo.Tags()
 	if err != nil {
-		return result, err
+		return DataTable{}, err
 	}
 	builder.AddMany(localTags, "local")
 	if env.OriginRepo != nil {
 		originTags, err := env.OriginRepo.Tags()
 		if err != nil {
-			return result, err
+			return DataTable{}, err
 		}
 		builder.AddMany(originTags, "origin")
 	}

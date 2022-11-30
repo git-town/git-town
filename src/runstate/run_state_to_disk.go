@@ -3,7 +3,6 @@ package runstate
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -12,7 +11,7 @@ import (
 )
 
 // Load loads the run state for the given Git repo from disk. Can return nil if there is no saved runstate.
-func Load(repo *git.ProdRepo) (result *RunState, err error) {
+func Load(repo *git.ProdRepo) (*RunState, error) {
 	filename, err := runResultFilename(repo)
 	if err != nil {
 		return nil, err
@@ -25,13 +24,13 @@ func Load(repo *git.ProdRepo) (result *RunState, err error) {
 		return nil, fmt.Errorf("cannot check file %q: %w", filename, err)
 	}
 	var runState RunState
-	content, err := ioutil.ReadFile(filename)
+	content, err := os.ReadFile(filename)
 	if err != nil {
-		return result, fmt.Errorf("cannot read file %q: %w", filename, err)
+		return nil, fmt.Errorf("cannot read file %q: %w", filename, err)
 	}
 	err = json.Unmarshal(content, &runState)
 	if err != nil {
-		return result, fmt.Errorf("cannot parse content of file %q: %w", filename, err)
+		return nil, fmt.Errorf("cannot parse content of file %q: %w", filename, err)
 	}
 	return &runState, nil
 }
@@ -66,7 +65,7 @@ func Save(runState *RunState, repo *git.ProdRepo) error {
 	if err != nil {
 		return err
 	}
-	err = ioutil.WriteFile(filename, content, 0o600)
+	err = os.WriteFile(filename, content, 0o600)
 	if err != nil {
 		return fmt.Errorf("cannot write file %q: %w", filename, err)
 	}

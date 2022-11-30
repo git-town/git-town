@@ -54,12 +54,12 @@ Does not delete perennial branches nor the main branch.`,
 	},
 }
 
-//nolint:funlen
-func createKillConfig(args []string, repo *git.ProdRepo) (result killConfig, err error) {
-	result.initialBranch, err = repo.Silent.CurrentBranch()
+func createKillConfig(args []string, repo *git.ProdRepo) (killConfig, error) {
+	initialBranch, err := repo.Silent.CurrentBranch()
 	if err != nil {
-		return result, err
+		return killConfig{}, err
 	}
+	result := killConfig{initialBranch: initialBranch}
 	if len(args) == 0 {
 		result.targetBranch = result.initialBranch
 	} else {
@@ -116,7 +116,8 @@ func createKillConfig(args []string, repo *git.ProdRepo) (result killConfig, err
 	return result, nil
 }
 
-func createKillStepList(config killConfig, repo *git.ProdRepo) (result runstate.StepList, err error) {
+func createKillStepList(config killConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+	result := runstate.StepList{}
 	switch {
 	case config.isTargetBranchLocal:
 		if config.hasTrackingBranch && !config.isOffline {
@@ -136,9 +137,9 @@ func createKillStepList(config killConfig, repo *git.ProdRepo) (result runstate.
 	case !repo.Config.IsOffline():
 		result.Append(&steps.DeleteOriginBranchStep{BranchName: config.targetBranch, IsTracking: false})
 	default:
-		return result, fmt.Errorf("cannot delete remote branch %q in offline mode", config.targetBranch)
+		return runstate.StepList{}, fmt.Errorf("cannot delete remote branch %q in offline mode", config.targetBranch)
 	}
-	err = result.Wrap(runstate.WrapOptions{
+	err := result.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.initialBranch != config.targetBranch && config.targetBranch == config.previousBranch,
 	}, repo)

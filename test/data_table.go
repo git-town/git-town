@@ -19,7 +19,8 @@ type DataTable struct {
 }
 
 // FromGherkin provides a DataTable instance populated with data from the given Gherkin table.
-func FromGherkin(table *messages.PickleStepArgument_PickleTable) (result DataTable) {
+func FromGherkin(table *messages.PickleStepArgument_PickleTable) DataTable {
+	result := DataTable{}
 	for _, tableRow := range table.Rows {
 		resultRow := make([]string, len(tableRow.Cells))
 		for t, tableCell := range tableRow.Cells {
@@ -36,7 +37,8 @@ func (table *DataTable) AddRow(elements ...string) {
 }
 
 // columns provides the table data organized into columns.
-func (table *DataTable) columns() (result [][]string) {
+func (table *DataTable) columns() [][]string {
+	result := [][]string{}
 	for column := range table.Cells[0] {
 		colData := []string{}
 		for row := range table.Cells {
@@ -49,6 +51,8 @@ func (table *DataTable) columns() (result [][]string) {
 
 // EqualDataTable compares this DataTable instance to the given DataTable.
 // If both are equal it returns an empty string, otherwise a diff printable on the console.
+//
+//nolint:nonamedreturns multiple return values with non-obvious meaning
 func (table *DataTable) EqualDataTable(other DataTable) (diff string, errorCount int) {
 	dmp := diffmatchpatch.New()
 	diffs := dmp.DiffMain(other.String(), table.String(), false)
@@ -60,6 +64,8 @@ func (table *DataTable) EqualDataTable(other DataTable) (diff string, errorCount
 
 // EqualGherkin compares this DataTable instance to the given Gherkin table.
 // If both are equal it returns an empty string, otherwise a diff printable on the console.
+//
+//nolint:nonamedreturns multiple return values with non-obvious meaning
 func (table *DataTable) EqualGherkin(other *messages.PickleStepArgument_PickleTable) (diff string, errorCount int) {
 	if len(table.Cells) == 0 {
 		return "your data is empty", 1
@@ -74,7 +80,8 @@ var (
 )
 
 // Expand returns a new DataTable instance with the placeholders in this datatable replaced with the given values.
-func (table *DataTable) Expand(localRepo *Repo, remoteRepo *Repo) (result DataTable, err error) {
+func (table *DataTable) Expand(localRepo *Repo, remoteRepo *Repo) (DataTable, error) {
+	result := DataTable{}
 	for row := range table.Cells {
 		cells := []string{}
 		for col := range table.Cells[row] {
@@ -87,18 +94,18 @@ func (table *DataTable) Expand(localRepo *Repo, remoteRepo *Repo) (result DataTa
 					commitName := match[8 : len(match)-4]
 					sha, err := localRepo.ShaForCommit(commitName)
 					if err != nil {
-						return result, fmt.Errorf("cannot determine SHA: %w", err)
+						return DataTable{}, fmt.Errorf("cannot determine SHA: %w", err)
 					}
 					cell = strings.Replace(cell, match, sha, 1)
 				case strings.HasPrefix(match, "{{ sha-in-origin "):
 					commitName := match[18 : len(match)-4]
 					sha, err := remoteRepo.ShaForCommit(commitName)
 					if err != nil {
-						return result, fmt.Errorf("cannot determine SHA in remote: %w", err)
+						return DataTable{}, fmt.Errorf("cannot determine SHA in remote: %w", err)
 					}
 					cell = strings.Replace(cell, match, sha, 1)
 				default:
-					return result, fmt.Errorf("DataTable.Expand: unknown template expression %q", cell)
+					return DataTable{}, fmt.Errorf("DataTable.Expand: unknown template expression %q", cell)
 				}
 			}
 			cells = append(cells, cell)
@@ -125,13 +132,14 @@ func (table *DataTable) Sort() {
 }
 
 // String provides the data in this DataTable instance formatted in Gherkin table format.
-func (table *DataTable) String() (result string) {
+func (table *DataTable) String() string {
 	// determine how to format each column
 	formatStrings := []string{}
 	for _, width := range table.widths() {
 		formatStrings = append(formatStrings, fmt.Sprintf("| %%-%dv ", width))
 	}
 	// render the table using this format
+	result := ""
 	for row := range table.Cells {
 		for col := range table.Cells[row] {
 			result += fmt.Sprintf(formatStrings[col], table.Cells[row][col])
@@ -142,7 +150,8 @@ func (table *DataTable) String() (result string) {
 }
 
 // widths provides the widths of all columns.
-func (table *DataTable) widths() (result []int) {
+func (table *DataTable) widths() []int {
+	result := []int{}
 	for _, column := range table.columns() {
 		result = append(result, helpers.LongestStringLength(column))
 	}

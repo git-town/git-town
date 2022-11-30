@@ -1,4 +1,6 @@
 dist/
 git-town_*
-node_modules
+node_modules/
+website/bin/
+website/book/
 www/

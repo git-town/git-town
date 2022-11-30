@@ -19,7 +19,6 @@ func TestLoadBitbucket(t *testing.T) {
 		assert.Equal(t, "https://self-hosted-bitbucket.com/git-town/git-town", driver.RepositoryURL())
 	})
 
-	//nolint:paralleltest  // mocks HTTP
 	t.Run("custom hostname", func(t *testing.T) {
 		driver := hosting.NewBitbucketDriver(mockConfig{
 			originURL:      "git@my-ssh-identity.com:git-town/git-town.git",
@@ -30,7 +29,6 @@ func TestLoadBitbucket(t *testing.T) {
 		assert.Equal(t, "https://bitbucket.org/git-town/git-town", driver.RepositoryURL())
 	})
 
-	//nolint:paralleltest  // mocks HTTP
 	t.Run("custom username", func(t *testing.T) {
 		driver := hosting.NewBitbucketDriver(mockConfig{
 			hostingService: "bitbucket",

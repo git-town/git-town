@@ -2,20 +2,30 @@ linters:
   enable-all: true
   disable:
     - cyclop # we keep a tab on function length ourselves
+    - deadcode # deprecated
+    - exhaustruct # not applicable at the moment
     - exhaustivestruct # not applicable at the moment
     - forbidigo # Git Town prints a lot to the CLI
+    - funlen # we keep track of this via code reviews
+    - gci # we prefer keeping import statements as one blocks without empty lines
     - gochecknoglobals # Cobra requires globals
     - gochecknoinits # Cobra requires init blocks
+    - gocognit # we keep track of this via code reviews
     - goconst # tests contain a ton of hard-coded test strings, for example branch names
+    - gocyclo # we keep track of this via code reviews
     - golint # deprecated
     - gomnd # tests contain hard-coded test data that wouldn't make sense to extract into constants
     - ifshort # this enforces less readable code
     - interfacer # deprecated
     - lll # we aren't enforcing a line length at this point
     - maligned # deprecated
+    - maintidx # we keep complexity under check with code reviews
+    - nosnakecase # deprecated
     - nlreturn # this forces unnecessary empty lines in function bodies
     - scopelint # deprecated
-    - wrapcheck
+    - structcheck # deprecated
+    - varcheck # deprecated
+    - wrapcheck # too many false positives for return values defined in internal packages
     - wsl # this linter creates too many false positives, our policy is to not have any empty lines in code blocks
 
 issues:
