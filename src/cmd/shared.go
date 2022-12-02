@@ -66,7 +66,7 @@ func createAppendStepList(config appendConfig, repo *git.ProdRepo) (runstate.Ste
 
 // handleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
 //
-//nolint:nonamedreturns return value isn't obvious from function name
+//nolint:nonamedreturns  // return value isn't obvious from function name
 func handleUnfinishedState(repo *git.ProdRepo, driver hosting.Driver) (quit bool, err error) {
 	runState, err := runstate.Load(repo)
 	if err != nil {
