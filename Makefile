@@ -36,9 +36,9 @@ lint: tools/golangci-lint tools/node_modules tools/shellcheck tools/shfmt  # lin
 	git diff --check
 	tools/golangci-lint run
 	${CURDIR}/tools/node_modules/.bin/dprint check
-	find . -type f | grep -v tools/node_modules | grep -v '^\.\/\vendor\/' | grep -v '\.sample$$' | xargs grep -l '^\#!\/' | xargs tools/shellcheck
+	tools/shfmt -f . | grep -v tools/node_modules | grep -v '^vendor\/' | xargs tools/shellcheck
 	${CURDIR}/tools/node_modules/.bin/prettier --check '**/*.yml'
-	tools/shfmt --diff .
+	tools/shfmt -f . | grep -v tools/node_modules | grep -v '^vendor\/' | xargs tools/shfmt --diff
 
 
 msi:  # compiles the MSI installer for Windows
