@@ -129,17 +129,7 @@ Debug a Godog Cucumber feature in [VSCode](https://code.visualstudio.com):
 
 ## run linters
 
-Run all linters:
-
-<a type="make/command">
-
-```
-make lint
-```
-
-</a>
-
-Auto-fix linter errors:
+Format all code, auto-fix all fixable issues, and run all linters:
 
 <a type="make/command">
 
