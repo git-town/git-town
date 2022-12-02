@@ -85,7 +85,7 @@ func (d *GithubDriver) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", d.hostname, d.owner, d.repository)
 }
 
-//nolint:nonamedreturns return value isn't obvious from function name
+//nolint:nonamedreturns  // return value isn't obvious from function name
 func (d *GithubDriver) MergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
 	d.connect()
 	err = d.updatePullRequestsAgainst(options)
@@ -124,7 +124,7 @@ func (d *GithubDriver) loadPullRequests(branch, parentBranch string) ([]*github.
 	return pullRequests, err
 }
 
-//nolint:nonamedreturns return value isn't obvious from function name
+//nolint:nonamedreturns  // return value isn't obvious from function name
 func (d *GithubDriver) mergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
 	if options.PullRequestNumber == 0 {
 		return "", fmt.Errorf("cannot merge via Github since there is no pull request")
