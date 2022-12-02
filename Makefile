@@ -69,10 +69,6 @@ stats: tools/scc  # shows code statistics
 test: fix docs unit cuke  # runs all the tests
 .PHONY: test
 
-test-go: build u lint-go cuke  # runs all tests for Golang
-
-test-md: lint-md   # runs all Markdown tests
-
 unit:  # runs only the unit tests for changed code
 	env GOGC=off go test -timeout 30s ./src/... ./test/...
 
