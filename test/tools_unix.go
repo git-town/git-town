@@ -9,7 +9,7 @@ import "os"
 
 // CallScriptArgs provides the command and arguments to call the given script on Windows.
 //
-//nolint:nonamedreturns multiple return values with non-obvious meaning
+//nolint:nonamedreturns  // multiple return values with non-obvious meaning
 func CallScriptArgs(toolPath string) (cmd string, args []string) {
 	return toolPath, []string{}
 }
