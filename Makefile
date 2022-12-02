@@ -30,10 +30,11 @@ fix: tools/gofumpt  # auto-fixes lint issues in all languages
 help:  # prints all available targets
 	@cat Makefile | grep '^[^ ]*:' | grep -v '.PHONY' | grep -v help | grep -v "^tools\/" | sed 's/:.*#/#/' | column -s "#" -t
 
-lint: tools/golangci-lint tools/node_modules  # lints all the source code
+lint: tools/golangci-lint tools/node_modules tools/shellcheck  # lints all the source code
 	git diff --check
 	tools/golangci-lint run
 	${CURDIR}/tools/node_modules/.bin/dprint check
+	find . -type f | grep -v tools/node_modules | grep -v '^\.\/\vendor\/' | grep -v '\.sample$$' | xargs grep -l '^\#!\/' | xargs tools/shellcheck
 	${CURDIR}/tools/node_modules/.bin/prettier --check '**/*.yml'
 
 msi:  # compiles the MSI installer for Windows
@@ -107,3 +108,10 @@ tools/node_modules: tools/yarn.lock
 
 tools/scc: Makefile
 	env GOBIN="$(CURDIR)/tools" go install github.com/boyter/scc@latest
+
+tools/shellcheck: Makefile
+	@echo installing Shellcheck ...
+	@curl -sSL https://github.com/koalaman/shellcheck/releases/download/stable/shellcheck-stable.linux.x86_64.tar.xz | tar xJ
+	@mv shellcheck-stable/shellcheck tools
+	@rm -rf shellcheck-stable
+	@touch tools/shellcheck   # update the timestamp so that Make doesn't re-install Shellcheck each time it runs
