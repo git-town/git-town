@@ -21,11 +21,10 @@ Feature: Bitbucket support
       | git@bitbucket.org/git-town/git-town                  |
       | ssh://git@bitbucket.org/git-town/git-town.git        |
       | ssh://git@bitbucket.org/git-town/git-town            |
-      | username@bitbucket.org/git-town/git-town.git              |
-      | username@bitbucket.org/git-town/git-town                  |
-      | ssh://username@bitbucket.org/git-town/git-town.git        |
-      | ssh://username@bitbucket.org/git-town/git-town            |
-
+      | username@bitbucket.org/git-town/git-town.git         |
+      | username@bitbucket.org/git-town/git-town             |
+      | ssh://username@bitbucket.org/git-town/git-town.git   |
+      | ssh://username@bitbucket.org/git-town/git-town       |
 
   Scenario Outline: origin includes path that looks like a URL
     Given the current branch is a feature branch "feature"

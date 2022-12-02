@@ -29,12 +29,11 @@ fix: tools/golangci-lint tools/gofumpt tools/node_modules tools/shellcheck tools
 	${CURDIR}/tools/node_modules/.bin/prettier --write '**/*.yml'
 	tools/shfmt -f . | grep -v tools/node_modules | grep -v '^vendor\/' | xargs tools/shfmt --write
 	tools/shfmt -f . | grep -v tools/node_modules | grep -v '^vendor\/' | xargs tools/shellcheck
+	${CURDIR}/tools/node_modules/.bin/gherkin-lint
 	tools/golangci-lint run
-
 
 help:  # prints all available targets
 	@cat Makefile | grep '^[^ ]*:' | grep -v '.PHONY' | grep -v help | grep -v "^tools\/" | sed 's/:.*#/#/' | column -s "#" -t
-
 
 msi:  # compiles the MSI installer for Windows
 	rm -f git-town*.msi
@@ -87,7 +86,6 @@ update:  # updates all dependencies
 	(cd tools && yarn upgrade --latest)
 	echo
 	echo Please update the third-party tooling in the Makefile manually.
-
 
 # --- HELPER TARGETS --------------------------------------------------------------------------------------------------------------------------------
 
