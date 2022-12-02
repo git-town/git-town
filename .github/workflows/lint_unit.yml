@@ -18,6 +18,8 @@ jobs:
         uses: ludeeus/action-shellcheck@1.1.0
         with:
           ignore: vendor
-      - run: make lint
+      - run: make fix
+      - name: Indicate formatting issues
+        run: git diff HEAD --exit-code --color
       - run: make docs
       - run: make unit-all
