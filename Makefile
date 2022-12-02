@@ -22,25 +22,17 @@ dependencies: tools/depth  # prints the dependencies between packages as a tree
 docs: build tools/node_modules  # tests the documentation
 	${CURDIR}/tools/node_modules/.bin/text-run --offline
 
-fix: fix-go fix-md  # auto-fixes lint issues in all languages
-
-fix-go: tools/gofumpt  # auto-fixes all Go lint issues
+fix: tools/gofumpt  # auto-fixes lint issues in all languages
 	tools/gofumpt -l -w .
-
-fix-md:  # auto-fixes all Markdown lint issues
 	dprint fmt
 	cd tools && npm exec -- prettier --write '../**/*.yml'
 
 help:  # prints all available targets
 	@cat Makefile | grep '^[^ ]*:' | grep -v '.PHONY' | grep -v help | grep -v "^tools\/" | sed 's/:.*#/#/' | column -s "#" -t
 
-lint: lint-go lint-md  # lints all the source code
+lint: tools/golangci-lint tools/node_modules  # lints all the source code
 	git diff --check
-
-lint-go: tools/golangci-lint  # lints the Go files
 	tools/golangci-lint run
-
-lint-md: tools/node_modules   # lints the Markdown files
 	@${CURDIR}/tools/node_modules/.bin/dprint check
 
 msi:  # compiles the MSI installer for Windows
