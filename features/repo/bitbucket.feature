@@ -20,8 +20,7 @@ Feature: Bitbucket
       | git@bitbucket.org/git-town/git-town                  |
       | ssh://git@bitbucket.org/git-town/git-town.git        |
       | ssh://git@bitbucket.org/git-town/git-town            |
-      | username@bitbucket.org/git-town/git-town.git              |
-      | username@bitbucket.org/git-town/git-town                  |
-      | ssh://username@bitbucket.org/git-town/git-town.git        |
-      | ssh://username@bitbucket.org/git-town/git-town            |
-
+      | username@bitbucket.org/git-town/git-town.git         |
+      | username@bitbucket.org/git-town/git-town             |
+      | ssh://username@bitbucket.org/git-town/git-town.git   |
+      | ssh://username@bitbucket.org/git-town/git-town       |

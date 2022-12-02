@@ -58,7 +58,7 @@ Feature: handle conflicts between the current feature branch and the main branch
     And the uncommitted file is stashed
     And a merge is now in progress
 
-  Scenario: resolve, commit, and continue
+  Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue"
     Then it runs the commands
