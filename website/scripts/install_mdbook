@@ -4,15 +4,14 @@ LINUX_URL=https://github.com/rust-lang/mdBook/releases/download/v0.4.15/mdbook-v
 MACOS_URL=https://github.com/rust-lang/mdBook/releases/download/v0.4.15/mdbook-v0.4.15-x86_64-apple-darwin.tar.gz
 MSWIN_URL=https://github.com/rust-lang/mdBook/releases/download/v0.4.15/mdbook-v0.4.15-x86_64-pc-windows-msvc.zip
 
-
 function os_name {
-  case "$OSTYPE" in
-    darwin*)  echo "macos" ;;
-    linux*)   echo "linux" ;;
-    msys*)    echo "windows" ;;
-    cygwin*)  echo "windows" ;;
-    *)        echo "unknown" ;;
-  esac
+	case "$OSTYPE" in
+	darwin*) echo "macos" ;;
+	linux*) echo "linux" ;;
+	msys*) echo "windows" ;;
+	cygwin*) echo "windows" ;;
+	*) echo "unknown" ;;
+	esac
 }
 
 function download_linux {
@@ -20,19 +19,19 @@ function download_linux {
 }
 
 function download_macos {
-  echo Note: this is untested, please submit bug reports and fixes if it is broken
+	echo Note: this is untested, please submit bug reports and fixes if it is broken
 	curl -L $MACOS_URL | tar xz --directory bin
 }
 
 function download_win {
-  echo Note: this is untested, please submit bug reports and fixes if it is broken
+	echo Note: this is untested, please submit bug reports and fixes if it is broken
 	curl -L $MSWIN_URL | tar xz --directory bin
 }
 
 function download_unknown {
-  echo "Error: unsupported operating system."
-  echo "Please compile mdBook from source."
-  exit 1
+	echo "Error: unsupported operating system."
+	echo "Please compile mdBook from source."
+	exit 1
 }
 
 mkdir -p bin

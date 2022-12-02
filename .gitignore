@@ -4,6 +4,7 @@ node_modules/
 tools/gofumpt
 tools/golangci-lint
 tools/shellcheck
+tools/shfmt
 website/bin/
 website/book/
 www/

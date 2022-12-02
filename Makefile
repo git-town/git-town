@@ -26,16 +26,20 @@ fix: tools/gofumpt  # auto-fixes lint issues in all languages
 	tools/gofumpt -l -w .
 	dprint fmt
 	${CURDIR}/tools/node_modules/.bin/prettier --write '**/*.yml'
+	tools/shfmt -f . | grep -v tools/node_modules | grep -v '^vendor\/' | xargs tools/shfmt --write
+
 
 help:  # prints all available targets
 	@cat Makefile | grep '^[^ ]*:' | grep -v '.PHONY' | grep -v help | grep -v "^tools\/" | sed 's/:.*#/#/' | column -s "#" -t
 
-lint: tools/golangci-lint tools/node_modules tools/shellcheck  # lints all the source code
+lint: tools/golangci-lint tools/node_modules tools/shellcheck tools/shfmt  # lints all the source code
 	git diff --check
 	tools/golangci-lint run
 	${CURDIR}/tools/node_modules/.bin/dprint check
-	find . -type f | grep -v tools/node_modules | grep -v '^\.\/\vendor\/' | grep -v '\.sample$$' | xargs grep -l '^\#!\/' | xargs tools/shellcheck
+	tools/shfmt -f . | grep -v tools/node_modules | grep -v '^vendor\/' | xargs tools/shellcheck
 	${CURDIR}/tools/node_modules/.bin/prettier --check '**/*.yml'
+	tools/shfmt -f . | grep -v tools/node_modules | grep -v '^vendor\/' | xargs tools/shfmt --diff
+
 
 msi:  # compiles the MSI installer for Windows
 	rm -f git-town*.msi
@@ -115,3 +119,8 @@ tools/shellcheck: Makefile
 	@mv shellcheck-stable/shellcheck tools
 	@rm -rf shellcheck-stable
 	@touch tools/shellcheck   # update the timestamp so that Make doesn't re-install Shellcheck each time it runs
+
+tools/shfmt: Makefile
+	echo installing Shellfmt ...
+	curl -sSL https://github.com/mvdan/sh/releases/download/v3.5.1/shfmt_v3.5.1_linux_amd64 -o tools/shfmt
+	chmod +x tools/shfmt
