@@ -33,7 +33,8 @@ help:  # prints all available targets
 lint: tools/golangci-lint tools/node_modules  # lints all the source code
 	git diff --check
 	tools/golangci-lint run
-	@${CURDIR}/tools/node_modules/.bin/dprint check
+	${CURDIR}/tools/node_modules/.bin/dprint check
+	${CURDIR}/tools/node_modules/.bin/prettier --check '**/*.yml'
 
 msi:  # compiles the MSI installer for Windows
 	rm -f git-town*.msi
