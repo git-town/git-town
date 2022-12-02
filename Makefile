@@ -26,7 +26,7 @@ fix: tools/gofumpt  # auto-fixes lint issues in all languages
 	tools/gofumpt -l -w .
 	dprint fmt
 	${CURDIR}/tools/node_modules/.bin/prettier --write '**/*.yml'
-	tools/shfmt --write .
+	tools/shfmt -f . | grep -v tools/node_modules | grep -v '^vendor\/' | xargs tools/shfmt --write
 
 
 help:  # prints all available targets
