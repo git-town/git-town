@@ -18,5 +18,6 @@ jobs:
         uses: ludeeus/action-shellcheck@1.1.0
         with:
           ignore: vendor
+      - run: make lint
       - run: make docs
       - run: make unit-all
