@@ -25,6 +25,7 @@ docs: build tools/node_modules  # tests the documentation
 fix: tools/gofumpt  # auto-fixes lint issues in all languages
 	tools/gofumpt -l -w .
 	dprint fmt
+	${CURDIR}/tools/node_modules/.bin/prettier --write '**/*.yml'
 
 help:  # prints all available targets
 	@cat Makefile | grep '^[^ ]*:' | grep -v '.PHONY' | grep -v help | grep -v "^tools\/" | sed 's/:.*#/#/' | column -s "#" -t
@@ -32,7 +33,8 @@ help:  # prints all available targets
 lint: tools/golangci-lint tools/node_modules  # lints all the source code
 	git diff --check
 	tools/golangci-lint run
-	@${CURDIR}/tools/node_modules/.bin/dprint check
+	${CURDIR}/tools/node_modules/.bin/dprint check
+	${CURDIR}/tools/node_modules/.bin/prettier --check '**/*.yml'
 
 msi:  # compiles the MSI installer for Windows
 	rm -f git-town*.msi
