@@ -25,7 +25,7 @@ docs: build tools/node_modules  # tests the documentation
 fix: tools/gofumpt  # auto-fixes lint issues in all languages
 	tools/gofumpt -l -w .
 	dprint fmt
-	cd tools && npm exec -- prettier --write '../**/*.yml'
+	${CURDIR}/tools/node_modules/.bin/prettier --write '**/*.yml'
 
 help:  # prints all available targets
 	@cat Makefile | grep '^[^ ]*:' | grep -v '.PHONY' | grep -v help | grep -v "^tools\/" | sed 's/:.*#/#/' | column -s "#" -t
