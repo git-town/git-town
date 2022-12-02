@@ -6,7 +6,6 @@ import (
 
 // ExecutedGitCommand describes a Git command that was executed by Git Town during testing.
 type ExecutedGitCommand struct {
-
 	// Branch contains the branch in which this command ran.
 	Branch string
 
