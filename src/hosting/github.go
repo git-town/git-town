@@ -28,28 +28,22 @@ type GithubDriver struct {
 func NewGithubDriver(config config, log logFn) *GithubDriver {
 	driverType := config.HostingService()
 	originURL := config.OriginURL()
-	hostname := giturl.Host(originURL)
+	url := giturl.Parse(originURL)
 	manualHostName := config.OriginOverride()
 	if manualHostName != "" {
-		hostname = manualHostName
+		url.Host = manualHostName
 	}
-	if driverType != "github" && hostname != "github.com" {
+	if driverType != "github" && url.Host != "github.com" {
 		return nil
 	}
-	repositoryParts := strings.SplitN(giturl.Repo(originURL), "/", 2)
-	if len(repositoryParts) != 2 {
-		return nil
-	}
-	owner := repositoryParts[0]
-	repository := repositoryParts[1]
 	return &GithubDriver{
 		apiToken:   config.GitHubToken(),
 		config:     config,
-		hostname:   hostname,
+		hostname:   url.Host,
 		log:        log,
 		originURL:  originURL,
-		owner:      owner,
-		repository: repository,
+		owner:      url.Org,
+		repository: url.Repo,
 	}
 }
 

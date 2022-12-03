@@ -27,27 +27,21 @@ type GiteaDriver struct {
 func NewGiteaDriver(config config, log logFn) *GiteaDriver {
 	driverType := config.HostingService()
 	originURL := config.OriginURL()
-	hostname := giturl.Host(originURL)
+	url := giturl.Parse(originURL)
 	manualHostName := config.OriginOverride()
 	if manualHostName != "" {
-		hostname = manualHostName
+		url.Host = manualHostName
 	}
-	if driverType != "gitea" && hostname != "gitea.com" {
+	if driverType != "gitea" && url.Host != "gitea.com" {
 		return nil
 	}
-	repositoryParts := strings.SplitN(giturl.Repo(originURL), "/", 2)
-	if len(repositoryParts) != 2 {
-		return nil
-	}
-	owner := repositoryParts[0]
-	repository := repositoryParts[1]
 	return &GiteaDriver{
 		originURL:  originURL,
-		hostname:   hostname,
+		hostname:   url.Host,
 		apiToken:   config.GiteaToken(),
 		log:        log,
-		owner:      owner,
-		repository: repository,
+		owner:      url.Org,
+		repository: url.Repo,
 	}
 }
 

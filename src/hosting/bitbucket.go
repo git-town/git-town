@@ -22,19 +22,19 @@ type BitbucketDriver struct {
 func NewBitbucketDriver(config config, git gitRunner) *BitbucketDriver {
 	driverType := config.HostingService()
 	originURL := config.OriginURL()
-	hostname := giturl.Host(originURL)
+	url := giturl.Parse(originURL)
 	manualOrigin := config.OriginOverride()
 	if manualOrigin != "" {
-		hostname = manualOrigin
+		url.Host = manualOrigin
 	}
-	if driverType != "bitbucket" && hostname != "bitbucket.org" {
+	if driverType != "bitbucket" && url.Host != "bitbucket.org" {
 		return nil
 	}
 	return &BitbucketDriver{
 		git:        git,
-		hostname:   hostname,
+		hostname:   url.Host,
 		originURL:  originURL,
-		repository: giturl.Repo(originURL),
+		repository: url.Repo,
 	}
 }
 

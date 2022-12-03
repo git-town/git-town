@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"strings"
 
 	"github.com/git-town/git-town/v7/src/giturl"
 	"github.com/xanzy/go-gitlab"
@@ -26,29 +25,21 @@ type GitlabDriver struct {
 func NewGitlabDriver(config config, log logFn) *GitlabDriver {
 	driverType := config.HostingService()
 	originURL := config.OriginURL()
-	hostname := giturl.Host(originURL)
+	url := giturl.Parse(originURL)
 	manualHostName := config.OriginOverride()
 	if manualHostName != "" {
-		hostname = manualHostName
+		url.Host = manualHostName
 	}
-	if driverType != "gitlab" && hostname != "gitlab.com" {
+	if driverType != "gitlab" && url.Host != "gitlab.com" {
 		return nil
 	}
-	repo_name := giturl.Repo(originURL)
-	repositoryParts := strings.Split(repo_name, "/")
-	if len(repositoryParts) < 2 {
-		return nil
-	}
-	lastIdx := len(repositoryParts) - 1
-	owner := strings.Join(repositoryParts[:lastIdx], "/")
-	repository := repositoryParts[lastIdx]
 	return &GitlabDriver{
 		apiToken:   config.GitLabToken(),
 		originURL:  originURL,
-		hostname:   hostname,
+		hostname:   url.Host,
 		log:        log,
-		owner:      owner,
-		repository: repository,
+		owner:      url.Org,
+		repository: url.Repo,
 	}
 }
 
