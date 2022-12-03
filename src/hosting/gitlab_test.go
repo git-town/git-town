@@ -54,7 +54,7 @@ func TestGitLab(t *testing.T) {
 			assert.Equal(t, "https://self-hosted-gitlab.com/git-town/git-town", driver.RepositoryURL())
 		})
 
-		t.Run("custom hostname", func(t *testing.T) {
+		t.Run("custom SSH identity with hostname override", func(t *testing.T) {
 			driver := hosting.NewGitlabDriver(mockConfig{
 				originURL:      "git@my-ssh-identity.com:git-town/git-town.git",
 				originOverride: "gitlab.com",
