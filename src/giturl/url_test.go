@@ -25,6 +25,7 @@ func TestHost(t *testing.T) {
 func TestRepo(t *testing.T) {
 	t.Parallel()
 	tests := map[string]string{
+		"git@gitlab.com:gitlab-com/www-gitlab-com.git":         "gitlab-com/www-gitlab-com",
 		"git@github.com:git-town/git-town.git":                 "git-town/git-town",
 		"username@bitbucket.org:git-town/git-town.git":         "git-town/git-town",
 		"https://github.com/git-town/git-town.git":             "git-town/git-town",

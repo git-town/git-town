@@ -34,7 +34,8 @@ func NewGitlabDriver(config config, log logFn) *GitlabDriver {
 	if driverType != "gitlab" && hostname != "gitlab.com" {
 		return nil
 	}
-	repositoryParts := strings.Split(giturl.Repo(originURL), "/")
+	repo_name := giturl.Repo(originURL)
+	repositoryParts := strings.Split(repo_name, "/")
 	if len(repositoryParts) < 2 {
 		return nil
 	}
