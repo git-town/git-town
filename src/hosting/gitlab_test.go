@@ -35,7 +35,7 @@ func setupGitlabDriver(t *testing.T, token string) (*hosting.GitlabDriver, func(
 //nolint:paralleltest  // mocks HTTP
 func TestGitLab(t *testing.T) {
 	t.Run("NewGitlabDriver()", func(t *testing.T) {
-		t.Run("standard setup", func(t *testing.T) {
+		t.Run("self-hosted GitLab server", func(t *testing.T) {
 			driver := hosting.NewGitlabDriver(mockConfig{
 				hostingService: "gitlab",
 				originURL:      "git@self-hosted-gitlab.com:git-town/git-town.git",
@@ -45,7 +45,7 @@ func TestGitLab(t *testing.T) {
 			assert.Equal(t, "https://self-hosted-gitlab.com/git-town/git-town", driver.RepositoryURL())
 		})
 
-		t.Run("custom hostname", func(t *testing.T) {
+		t.Run("custom SSH identity with hostname override", func(t *testing.T) {
 			driver := hosting.NewGitlabDriver(mockConfig{
 				originURL:      "git@my-ssh-identity.com:git-town/git-town.git",
 				originOverride: "gitlab.com",
