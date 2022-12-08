@@ -15,8 +15,8 @@ type Parts struct {
 }
 
 func Parse(url string) *Parts {
-	httpsRe := regexp.MustCompile(`https://(?P<user>.*@)?(?P<host>.*\/)(?P<org>.*\/)(?P<repo>.*)\.git`)
-	matches := httpsRe.FindStringSubmatch(url)
+	regex := regexp.MustCompile(`https://(?P<user>.*@)?(?P<host>.*\/)(?P<org>.*\/)(?P<repo>.*)\.git`)
+	matches := regex.FindStringSubmatch(url)
 	if matches != nil {
 		return &Parts{
 			Protocol: "https",
@@ -26,8 +26,74 @@ func Parse(url string) *Parts {
 			Repo:     matches[4],
 		}
 	}
-	sshRe := regexp.MustCompile(`(?P<user>.*@)?(?P<host>.*:)(?P<org>.*\/)(?P<repo>.*).git`)
-	matches = sshRe.FindStringSubmatch(url)
+	regex = regexp.MustCompile(`https://(?P<user>.*@)?(?P<host>.*\/)(?P<org>.*\/)(?P<repo>.*)`)
+	matches = regex.FindStringSubmatch(url)
+	if matches != nil {
+		return &Parts{
+			Protocol: "https",
+			User:     trimLast(matches[1]),
+			Host:     trimLast(matches[2]),
+			Org:      trimLast(matches[3]),
+			Repo:     matches[4],
+		}
+	}
+	regex = regexp.MustCompile(`http://(?P<user>.*@)?(?P<host>.*\/)(?P<org>.*\/)(?P<repo>.*)\.git`)
+	matches = regex.FindStringSubmatch(url)
+	if matches != nil {
+		return &Parts{
+			Protocol: "http",
+			User:     trimLast(matches[1]),
+			Host:     trimLast(matches[2]),
+			Org:      trimLast(matches[3]),
+			Repo:     matches[4],
+		}
+	}
+	regex = regexp.MustCompile(`http://(?P<user>.*@)?(?P<host>.*\/)(?P<org>.*\/)(?P<repo>.*)`)
+	matches = regex.FindStringSubmatch(url)
+	if matches != nil {
+		return &Parts{
+			Protocol: "http",
+			User:     trimLast(matches[1]),
+			Host:     trimLast(matches[2]),
+			Org:      trimLast(matches[3]),
+			Repo:     matches[4],
+		}
+	}
+	regex = regexp.MustCompile(`ssh://(?P<user>.*@)?(?P<host>.*\/)(?P<org>.*\/)(?P<repo>.*)\.git`)
+	matches = regex.FindStringSubmatch(url)
+	if matches != nil {
+		return &Parts{
+			Protocol: "ssh",
+			User:     trimLast(matches[1]),
+			Host:     trimLast(matches[2]),
+			Org:      trimLast(matches[3]),
+			Repo:     matches[4],
+		}
+	}
+	regex = regexp.MustCompile(`ssh://(?P<user>.*@)?(?P<host>.*\/)(?P<org>.*\/)(?P<repo>.*)`)
+	matches = regex.FindStringSubmatch(url)
+	if matches != nil {
+		return &Parts{
+			Protocol: "ssh",
+			User:     trimLast(matches[1]),
+			Host:     trimLast(matches[2]),
+			Org:      trimLast(matches[3]),
+			Repo:     matches[4],
+		}
+	}
+	regex = regexp.MustCompile(`(?P<user>.*@)?(?P<host>.*[:/])(?P<org>.*\/)(?P<repo>.*)\.git`)
+	matches = regex.FindStringSubmatch(url)
+	if matches != nil {
+		return &Parts{
+			Protocol: "ssh",
+			User:     trimLast(matches[1]),
+			Host:     trimLast(matches[2]),
+			Org:      trimLast(matches[3]),
+			Repo:     matches[4],
+		}
+	}
+	regex = regexp.MustCompile(`(?P<user>.*@)?(?P<host>.*[:/])(?P<org>.*\/)(?P<repo>.*)`)
+	matches = regex.FindStringSubmatch(url)
 	if matches != nil {
 		return &Parts{
 			Protocol: "ssh",

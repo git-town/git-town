@@ -53,8 +53,8 @@ func (d *BitbucketDriver) NewPullRequestURL(branch, parentBranch string) (string
 	if err != nil {
 		return "", fmt.Errorf("cannot determine pull request URL from %q to %q: %w", branch, parentBranch, err)
 	}
-	query.Add("source", strings.Join([]string{d.repository, branchSha[0:12], branch}, ":"))
-	query.Add("dest", strings.Join([]string{d.repository, "", parentBranch}, ":"))
+	query.Add("source", strings.Join([]string{d.organization + "/" + d.repository, branchSha[0:12], branch}, ":"))
+	query.Add("dest", strings.Join([]string{d.organization + "/" + d.repository, "", parentBranch}, ":"))
 	return fmt.Sprintf("%s/pull-request/new?%s", d.RepositoryURL(), query.Encode()), nil
 }
 
