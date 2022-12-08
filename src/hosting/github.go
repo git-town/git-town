@@ -29,9 +29,7 @@ func NewGithubDriver(config config, log logFn) *GithubDriver {
 	driverType := config.HostingService()
 	// TODO: parse this outside of the driver and inject the parsed URL here to avoid parsing in all repo drivers
 	originURL := config.OriginURL()
-	fmt.Printf("url: %v\n", originURL)
 	url := giturl.Parse(originURL)
-	fmt.Printf("parsed: %v\n", url)
 	if url == nil {
 		return nil
 	}
