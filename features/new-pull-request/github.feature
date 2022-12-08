@@ -4,7 +4,6 @@ Feature: GitHub support
   Background:
     Given tool "open" is installed
 
-  @this
   Scenario Outline: normal origin
     Given the current branch is a feature branch "feature"
     And the origin is "<ORIGIN>"
