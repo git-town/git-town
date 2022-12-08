@@ -19,6 +19,6 @@ func TestParse(t *testing.T) {
 	}
 	for give, want := range tests {
 		have := giturl.Parse(give)
-		assert.Equal(t, &want, have, give)
+		assert.Equal(t, want, *have, give)
 	}
 }

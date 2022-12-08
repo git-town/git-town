@@ -28,6 +28,9 @@ func NewGiteaDriver(config config, log logFn) *GiteaDriver {
 	driverType := config.HostingService()
 	originURL := config.OriginURL()
 	url := giturl.Parse(originURL)
+	if url == nil {
+		return nil
+	}
 	manualHostName := config.OriginOverride()
 	if manualHostName != "" {
 		url.Host = manualHostName

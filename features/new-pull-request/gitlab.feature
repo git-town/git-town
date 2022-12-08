@@ -4,7 +4,6 @@ Feature: GitLab support
   Background:
     Given tool "open" is installed
 
-  @this
   Scenario Outline: creating pull-requests
     Given the current branch is a feature branch "feature"
     And the origin is "<REPO ORIGIN>"

@@ -5,7 +5,7 @@ import (
 	"regexp"
 )
 
-// Parts contains recognized parts of a Git URL
+// Parts contains recognized parts of a Git URL.
 type Parts struct {
 	Protocol string // the protocol used to access the Git server, typically one of "ssh" or "https"
 	User     string // optional username
@@ -40,7 +40,8 @@ func Parse(url string) *Parts {
 	return nil
 }
 
-// trims the last character of the given text, if the
+// trimLast trims the last character of the given text.
+// Handles empty strings gracefully.
 func trimLast(text string) string {
 	textLen := len(text)
 	if textLen == 0 {
