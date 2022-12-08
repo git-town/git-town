@@ -15,7 +15,7 @@ type Parts struct {
 }
 
 func Parse(url string) *Parts {
-	regex := regexp.MustCompile(`https://(?P<user>.*@)?(?P<host>.*\/)(?P<org>.*\/)(?P<repo>.*)\.git`)
+	regex := regexp.MustCompile(`^https://(?P<user>.*@)?(?P<host>.*\/)(?P<org>.*\/)(?P<repo>.*)\.git$`)
 	matches := regex.FindStringSubmatch(url)
 	if matches != nil {
 		return &Parts{
@@ -26,7 +26,7 @@ func Parse(url string) *Parts {
 			Repo:     matches[4],
 		}
 	}
-	regex = regexp.MustCompile(`https://(?P<user>.*@)?(?P<host>.*\/)(?P<org>.*\/)(?P<repo>.*)`)
+	regex = regexp.MustCompile(`^https://(?P<user>.*@)?(?P<host>.*\/)(?P<org>.*\/)(?P<repo>.*)$`)
 	matches = regex.FindStringSubmatch(url)
 	if matches != nil {
 		return &Parts{
@@ -37,7 +37,7 @@ func Parse(url string) *Parts {
 			Repo:     matches[4],
 		}
 	}
-	regex = regexp.MustCompile(`http://(?P<user>.*@)?(?P<host>.*\/)(?P<org>.*\/)(?P<repo>.*)\.git`)
+	regex = regexp.MustCompile(`^http://(?P<user>.*@)?(?P<host>.*\/)(?P<org>.*\/)(?P<repo>.*)\.git$`)
 	matches = regex.FindStringSubmatch(url)
 	if matches != nil {
 		return &Parts{
@@ -48,7 +48,7 @@ func Parse(url string) *Parts {
 			Repo:     matches[4],
 		}
 	}
-	regex = regexp.MustCompile(`http://(?P<user>.*@)?(?P<host>.*\/)(?P<org>.*\/)(?P<repo>.*)`)
+	regex = regexp.MustCompile(`^http://(?P<user>.*@)?(?P<host>.*\/)(?P<org>.*\/)(?P<repo>.*)$`)
 	matches = regex.FindStringSubmatch(url)
 	if matches != nil {
 		return &Parts{
@@ -59,7 +59,7 @@ func Parse(url string) *Parts {
 			Repo:     matches[4],
 		}
 	}
-	regex = regexp.MustCompile(`ssh://(?P<user>.*@)?(?P<host>.*\/)(?P<org>.*\/)(?P<repo>.*)\.git`)
+	regex = regexp.MustCompile(`^ssh://(?P<user>.*@)?(?P<host>.*\/)(?P<org>.*\/)(?P<repo>.*)\.git$`)
 	matches = regex.FindStringSubmatch(url)
 	if matches != nil {
 		return &Parts{
@@ -70,7 +70,7 @@ func Parse(url string) *Parts {
 			Repo:     matches[4],
 		}
 	}
-	regex = regexp.MustCompile(`ssh://(?P<user>.*@)?(?P<host>.*\/)(?P<org>.*\/)(?P<repo>.*)`)
+	regex = regexp.MustCompile(`^ssh://(?P<user>.*@)?(?P<host>.*\/)(?P<org>.*\/)(?P<repo>.*)$`)
 	matches = regex.FindStringSubmatch(url)
 	if matches != nil {
 		return &Parts{
@@ -81,7 +81,7 @@ func Parse(url string) *Parts {
 			Repo:     matches[4],
 		}
 	}
-	regex = regexp.MustCompile(`(?P<user>.*@)?(?P<host>.*[:/])(?P<org>.*\/)(?P<repo>.*)\.git`)
+	regex = regexp.MustCompile(`^(?P<user>.*@)?(?P<host>.*[:/])(?P<org>.*\/)(?P<repo>.*)\.git$`)
 	matches = regex.FindStringSubmatch(url)
 	if matches != nil {
 		return &Parts{
@@ -92,7 +92,7 @@ func Parse(url string) *Parts {
 			Repo:     matches[4],
 		}
 	}
-	regex = regexp.MustCompile(`(?P<user>.*@)?(?P<host>.*[:/])(?P<org>.*\/)(?P<repo>.*)`)
+	regex = regexp.MustCompile(`^(?P<user>.*@)?(?P<host>.*[:/])(?P<org>.*\/)(?P<repo>.*)$`)
 	matches = regex.FindStringSubmatch(url)
 	if matches != nil {
 		return &Parts{

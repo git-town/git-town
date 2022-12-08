@@ -12,6 +12,7 @@ func TestParse(t *testing.T) {
 	tests := map[string]giturl.Parts{
 		"git@github.com:git-town/git-town.git":                 {Protocol: "ssh", User: "git", Host: "github.com", Org: "git-town", Repo: "git-town"},
 		"git@bitbucket.org/git-town/git-town.git":              {Protocol: "ssh", User: "git", Host: "bitbucket.org", Org: "git-town", Repo: "git-town"},
+		"git@bitbucket.org/git-town/git-town.github.com":       {Protocol: "ssh", User: "git", Host: "bitbucket.org", Org: "git-town", Repo: "git-town.github.com"},
 		"git@github.com:git-town/git-town":                     {Protocol: "ssh", User: "git", Host: "github.com", Org: "git-town", Repo: "git-town"},
 		"git@gitlab.com:gitlab-com/www-gitlab-com.git":         {Protocol: "ssh", User: "git", Host: "gitlab.com", Org: "gitlab-com", Repo: "www-gitlab-com"},
 		"git@gitlab.com:gitlab-com/www-gitlab-com":             {Protocol: "ssh", User: "git", Host: "gitlab.com", Org: "gitlab-com", Repo: "www-gitlab-com"},

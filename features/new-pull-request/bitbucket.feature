@@ -26,6 +26,7 @@ Feature: Bitbucket support
       | ssh://username@bitbucket.org/git-town/git-town.git   |
       | ssh://username@bitbucket.org/git-town/git-town       |
 
+  @this
   Scenario Outline: origin includes path that looks like a URL
     Given the current branch is a feature branch "feature"
     And the origin is "<ORIGIN>"
