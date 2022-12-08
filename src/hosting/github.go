@@ -27,6 +27,7 @@ type GithubDriver struct {
 // otherwise nil.
 func NewGithubDriver(config config, log logFn) *GithubDriver {
 	driverType := config.HostingService()
+	// TODO: parse this outside of the driver and inject the parsed URL here to avoid parsing in all repo drivers
 	originURL := config.OriginURL()
 	url := giturl.Parse(originURL)
 	if url == nil {
