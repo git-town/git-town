@@ -11,10 +11,11 @@ import (
 
 // BitbucketDriver provides access to the API of Bitbucket installations.
 type BitbucketDriver struct {
-	git        gitRunner
-	hostname   string
-	originURL  string
-	repository string
+	git          gitRunner
+	hostname     string
+	originURL    string
+	organization string
+	repository   string
 }
 
 // NewBitbucketDriver provides a Bitbucket driver instance if the given repo configuration is for a Bitbucket repo,
@@ -31,10 +32,11 @@ func NewBitbucketDriver(config config, git gitRunner) *BitbucketDriver {
 		return nil
 	}
 	return &BitbucketDriver{
-		git:        git,
-		hostname:   url.Host,
-		originURL:  originURL,
-		repository: url.Repo,
+		git:          git,
+		hostname:     url.Host,
+		organization: url.Org,
+		originURL:    originURL,
+		repository:   url.Repo,
 	}
 }
 
@@ -54,7 +56,7 @@ func (d *BitbucketDriver) NewPullRequestURL(branch, parentBranch string) (string
 }
 
 func (d *BitbucketDriver) RepositoryURL() string {
-	return fmt.Sprintf("https://%s/%s", d.hostname, d.repository)
+	return fmt.Sprintf("https://%s/%s/%s", d.hostname, d.organization, d.repository)
 }
 
 func (d *BitbucketDriver) MergePullRequest(options MergePullRequestOptions) (string, error) {

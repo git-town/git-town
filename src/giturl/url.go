@@ -14,11 +14,11 @@ type Parts struct {
 	Repo     string // name of the repository
 }
 
-func Parse(url string) Parts {
+func Parse(url string) *Parts {
 	httpsRe := regexp.MustCompile(`https://(?P<user>.*@)?(?P<host>.*\/)(?P<org>.*\/)(?P<repo>.*)\.git`)
 	matches := httpsRe.FindStringSubmatch(url)
 	if matches != nil {
-		return Parts{
+		return &Parts{
 			Protocol: "https",
 			User:     trimLast(matches[1]),
 			Host:     trimLast(matches[2]),
@@ -29,7 +29,7 @@ func Parse(url string) Parts {
 	sshRe := regexp.MustCompile(`(?P<user>.*@)?(?P<host>.*:)(?P<org>.*\/)(?P<repo>.*).git`)
 	matches = sshRe.FindStringSubmatch(url)
 	if matches != nil {
-		return Parts{
+		return &Parts{
 			Protocol: "ssh",
 			User:     trimLast(matches[1]),
 			Host:     trimLast(matches[2]),
@@ -37,7 +37,7 @@ func Parse(url string) Parts {
 			Repo:     matches[4],
 		}
 	}
-	return Parts{}
+	return nil
 }
 
 // trims the last character of the given text, if the
