@@ -271,7 +271,6 @@ func (c *Config) Reload() {
 // In tests this value can be stubbed.
 func (c *Config) OriginURL() string {
 	remote := os.Getenv("GIT_TOWN_REMOTE")
-	fmt.Printf("GIT_TOWN_REMOTE value: %v\n", remote)
 	if remote != "" {
 		return remote
 	}
