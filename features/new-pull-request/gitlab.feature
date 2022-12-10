@@ -6,17 +6,18 @@ Feature: GitLab support
 
   Scenario Outline: creating pull-requests
     Given the current branch is a feature branch "feature"
-    And the origin is "<ORIGIN>"
+    And the origin is "<REPO ORIGIN>"
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:
       """
-      https://gitlab.com/kadu/kadu/merge_requests/new?merge_request%5Bsource_branch%5D=feature&merge_request%5Btarget_branch%5D=main
+      <BROWSER URL>
       """
 
     Examples:
-      | ORIGIN                           |
-      | https://gitlab.com/kadu/kadu.git |
-      | git@gitlab.com:kadu/kadu.git     |
+      | REPO ORIGIN                                  | BROWSER URL                                                                                                                                    |
+      | https://gitlab.com/kadu/kadu.git             | https://gitlab.com/kadu/kadu/merge_requests/new?merge_request%5Bsource_branch%5D=feature&merge_request%5Btarget_branch%5D=main                 |
+      | git@gitlab.com:kadu/kadu.git                 | https://gitlab.com/kadu/kadu/merge_requests/new?merge_request%5Bsource_branch%5D=feature&merge_request%5Btarget_branch%5D=main                 |
+      | git@gitlab.com:gitlab-com/www-gitlab-com.git | https://gitlab.com/gitlab-com/www-gitlab-com/merge_requests/new?merge_request%5Bsource_branch%5D=feature&merge_request%5Btarget_branch%5D=main |
 
   Scenario: nested feature branch with known parent
     Given a feature branch "parent"

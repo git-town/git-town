@@ -1,6 +1,10 @@
 package hosting
 
-import "errors"
+import (
+	"errors"
+
+	"github.com/git-town/git-town/v7/src/giturl"
+)
 
 // Driver defines the structure of drivers for the different code hosting services.
 type Driver interface {
@@ -73,19 +77,23 @@ type logFn func(string, ...interface{})
 
 // NewDriver provides an instance of the code hosting driver to use based on the git config.
 func NewDriver(config config, git gitRunner, log logFn) Driver { //nolint:ireturn,nolintlint  // nolintlint causes false positive here
-	githubDriver := NewGithubDriver(config, log)
+	url := giturl.Parse(config.OriginURL())
+	if url == nil {
+		return nil
+	}
+	githubDriver := NewGithubDriver(*url, config, log)
 	if githubDriver != nil {
 		return githubDriver
 	}
-	giteaDriver := NewGiteaDriver(config, log)
+	giteaDriver := NewGiteaDriver(*url, config, log)
 	if giteaDriver != nil {
 		return giteaDriver
 	}
-	bitbucketDriver := NewBitbucketDriver(config, git)
+	bitbucketDriver := NewBitbucketDriver(*url, config, git)
 	if bitbucketDriver != nil {
 		return bitbucketDriver
 	}
-	gitlabDriver := NewGitlabDriver(config, log)
+	gitlabDriver := NewGitlabDriver(*url, config, log)
 	if gitlabDriver != nil {
 		return gitlabDriver
 	}

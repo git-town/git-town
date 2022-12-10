@@ -11,30 +11,30 @@ import (
 
 // BitbucketDriver provides access to the API of Bitbucket installations.
 type BitbucketDriver struct {
-	git        gitRunner
-	hostname   string
-	originURL  string
-	repository string
+	git          gitRunner
+	hostname     string
+	originURL    string
+	organization string
+	repository   string
 }
 
 // NewBitbucketDriver provides a Bitbucket driver instance if the given repo configuration is for a Bitbucket repo,
 // otherwise nil.
-func NewBitbucketDriver(config config, git gitRunner) *BitbucketDriver {
+func NewBitbucketDriver(url giturl.Parts, config config, git gitRunner) *BitbucketDriver {
 	driverType := config.HostingService()
-	originURL := config.OriginURL()
-	hostname := giturl.Host(originURL)
 	manualOrigin := config.OriginOverride()
 	if manualOrigin != "" {
-		hostname = manualOrigin
+		url.Host = manualOrigin
 	}
-	if driverType != "bitbucket" && hostname != "bitbucket.org" {
+	if driverType != "bitbucket" && url.Host != "bitbucket.org" {
 		return nil
 	}
 	return &BitbucketDriver{
-		git:        git,
-		hostname:   hostname,
-		originURL:  originURL,
-		repository: giturl.Repo(originURL),
+		git:          git,
+		hostname:     url.Host,
+		organization: url.Org,
+		originURL:    config.OriginURL(),
+		repository:   url.Repo,
 	}
 }
 
@@ -48,13 +48,13 @@ func (d *BitbucketDriver) NewPullRequestURL(branch, parentBranch string) (string
 	if err != nil {
 		return "", fmt.Errorf("cannot determine pull request URL from %q to %q: %w", branch, parentBranch, err)
 	}
-	query.Add("source", strings.Join([]string{d.repository, branchSha[0:12], branch}, ":"))
-	query.Add("dest", strings.Join([]string{d.repository, "", parentBranch}, ":"))
+	query.Add("source", strings.Join([]string{d.organization + "/" + d.repository, branchSha[0:12], branch}, ":"))
+	query.Add("dest", strings.Join([]string{d.organization + "/" + d.repository, "", parentBranch}, ":"))
 	return fmt.Sprintf("%s/pull-request/new?%s", d.RepositoryURL(), query.Encode()), nil
 }
 
 func (d *BitbucketDriver) RepositoryURL() string {
-	return fmt.Sprintf("https://%s/%s", d.hostname, d.repository)
+	return fmt.Sprintf("https://%s/%s/%s", d.hostname, d.organization, d.repository)
 }
 
 func (d *BitbucketDriver) MergePullRequest(options MergePullRequestOptions) (string, error) {

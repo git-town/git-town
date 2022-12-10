@@ -25,31 +25,23 @@ type GithubDriver struct {
 
 // NewGithubDriver provides a GitHub driver instance if the given repo configuration is for a Github repo,
 // otherwise nil.
-func NewGithubDriver(config config, log logFn) *GithubDriver {
+func NewGithubDriver(url giturl.Parts, config config, log logFn) *GithubDriver {
 	driverType := config.HostingService()
-	originURL := config.OriginURL()
-	hostname := giturl.Host(originURL)
 	manualHostName := config.OriginOverride()
 	if manualHostName != "" {
-		hostname = manualHostName
+		url.Host = manualHostName
 	}
-	if driverType != "github" && hostname != "github.com" {
+	if driverType != "github" && url.Host != "github.com" {
 		return nil
 	}
-	repositoryParts := strings.SplitN(giturl.Repo(originURL), "/", 2)
-	if len(repositoryParts) != 2 {
-		return nil
-	}
-	owner := repositoryParts[0]
-	repository := repositoryParts[1]
 	return &GithubDriver{
 		apiToken:   config.GitHubToken(),
 		config:     config,
-		hostname:   hostname,
+		hostname:   url.Host,
 		log:        log,
-		originURL:  originURL,
-		owner:      owner,
-		repository: repository,
+		originURL:  config.OriginURL(),
+		owner:      url.Org,
+		repository: url.Repo,
 	}
 }
 
