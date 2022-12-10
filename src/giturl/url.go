@@ -7,11 +7,10 @@ import (
 
 // Parts contains recognized parts of a Git URL.
 type Parts struct {
-	Protocol string // the protocol used to access the Git server, typically one of "ssh" or "https"
-	User     string // optional username
-	Host     string // hostname of the Git server
-	Org      string // name of the organization that the repo is in
-	Repo     string // name of the repository
+	User string // optional username
+	Host string // hostname of the Git server
+	Org  string // name of the organization that the repo is in
+	Repo string // name of the repository
 }
 
 func Parse(url string) *Parts {
@@ -19,88 +18,80 @@ func Parse(url string) *Parts {
 	matches := regex.FindStringSubmatch(url)
 	if matches != nil {
 		return &Parts{
-			Protocol: "https",
-			User:     trimLast(matches[1]),
-			Host:     trimLast(matches[2]),
-			Org:      trimLast(matches[3]),
-			Repo:     matches[4],
+			User: trimLast(matches[1]),
+			Host: trimLast(matches[2]),
+			Org:  trimLast(matches[3]),
+			Repo: matches[4],
 		}
 	}
 	regex = regexp.MustCompile(`^https://(?P<user>.*@)?(?P<host>.*\/)(?P<org>.*\/)(?P<repo>.*)$`)
 	matches = regex.FindStringSubmatch(url)
 	if matches != nil {
 		return &Parts{
-			Protocol: "https",
-			User:     trimLast(matches[1]),
-			Host:     trimLast(matches[2]),
-			Org:      trimLast(matches[3]),
-			Repo:     matches[4],
+			User: trimLast(matches[1]),
+			Host: trimLast(matches[2]),
+			Org:  trimLast(matches[3]),
+			Repo: matches[4],
 		}
 	}
 	regex = regexp.MustCompile(`^http://(?P<user>.*@)?(?P<host>.*\/)(?P<org>.*\/)(?P<repo>.*)\.git$`)
 	matches = regex.FindStringSubmatch(url)
 	if matches != nil {
 		return &Parts{
-			Protocol: "http",
-			User:     trimLast(matches[1]),
-			Host:     trimLast(matches[2]),
-			Org:      trimLast(matches[3]),
-			Repo:     matches[4],
+			User: trimLast(matches[1]),
+			Host: trimLast(matches[2]),
+			Org:  trimLast(matches[3]),
+			Repo: matches[4],
 		}
 	}
 	regex = regexp.MustCompile(`^http://(?P<user>.*@)?(?P<host>.*\/)(?P<org>.*\/)(?P<repo>.*)$`)
 	matches = regex.FindStringSubmatch(url)
 	if matches != nil {
 		return &Parts{
-			Protocol: "http",
-			User:     trimLast(matches[1]),
-			Host:     trimLast(matches[2]),
-			Org:      trimLast(matches[3]),
-			Repo:     matches[4],
+			User: trimLast(matches[1]),
+			Host: trimLast(matches[2]),
+			Org:  trimLast(matches[3]),
+			Repo: matches[4],
 		}
 	}
 	regex = regexp.MustCompile(`^ssh://(?P<user>.*@)?(?P<host>.*\/)(?P<org>.*\/)(?P<repo>.*)\.git$`)
 	matches = regex.FindStringSubmatch(url)
 	if matches != nil {
 		return &Parts{
-			Protocol: "ssh",
-			User:     trimLast(matches[1]),
-			Host:     trimLast(matches[2]),
-			Org:      trimLast(matches[3]),
-			Repo:     matches[4],
+			User: trimLast(matches[1]),
+			Host: trimLast(matches[2]),
+			Org:  trimLast(matches[3]),
+			Repo: matches[4],
 		}
 	}
 	regex = regexp.MustCompile(`^ssh://(?P<user>.*@)?(?P<host>.*\/)(?P<org>.*\/)(?P<repo>.*)$`)
 	matches = regex.FindStringSubmatch(url)
 	if matches != nil {
 		return &Parts{
-			Protocol: "ssh",
-			User:     trimLast(matches[1]),
-			Host:     trimLast(matches[2]),
-			Org:      trimLast(matches[3]),
-			Repo:     matches[4],
+			User: trimLast(matches[1]),
+			Host: trimLast(matches[2]),
+			Org:  trimLast(matches[3]),
+			Repo: matches[4],
 		}
 	}
 	regex = regexp.MustCompile(`^(?P<user>.*@)?(?P<host>.*[:/])(?P<org>.*\/)(?P<repo>.*)\.git$`)
 	matches = regex.FindStringSubmatch(url)
 	if matches != nil {
 		return &Parts{
-			Protocol: "ssh",
-			User:     trimLast(matches[1]),
-			Host:     trimLast(matches[2]),
-			Org:      trimLast(matches[3]),
-			Repo:     matches[4],
+			User: trimLast(matches[1]),
+			Host: trimLast(matches[2]),
+			Org:  trimLast(matches[3]),
+			Repo: matches[4],
 		}
 	}
 	regex = regexp.MustCompile(`^(?P<user>.*@)?(?P<host>.*[:/])(?P<org>.*\/)(?P<repo>.*)$`)
 	matches = regex.FindStringSubmatch(url)
 	if matches != nil {
 		return &Parts{
-			Protocol: "ssh",
-			User:     trimLast(matches[1]),
-			Host:     trimLast(matches[2]),
-			Org:      trimLast(matches[3]),
-			Repo:     matches[4],
+			User: trimLast(matches[1]),
+			Host: trimLast(matches[2]),
+			Org:  trimLast(matches[3]),
+			Repo: matches[4],
 		}
 	}
 	return nil
