@@ -24,7 +24,7 @@ func Parse(url string) *Parts {
 			Repo: matches[4],
 		}
 	}
-	regex = regexp.MustCompile(`^https?://(?P<user>.*@)?(?P<host>.*\/)(?P<org>.*\/)(?P<repo>.*)$`)
+	regex = regexp.MustCompile(`^[^:]+://(?P<user>.*@)?(?P<host>.*\/)(?P<org>.*\/)(?P<repo>.*)$`)
 	matches = regex.FindStringSubmatch(url)
 	if matches != nil {
 		return &Parts{
