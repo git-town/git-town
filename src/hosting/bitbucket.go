@@ -20,13 +20,8 @@ type BitbucketDriver struct {
 
 // NewBitbucketDriver provides a Bitbucket driver instance if the given repo configuration is for a Bitbucket repo,
 // otherwise nil.
-func NewBitbucketDriver(config config, git gitRunner) *BitbucketDriver {
+func NewBitbucketDriver(url giturl.Parts, config config, git gitRunner) *BitbucketDriver {
 	driverType := config.HostingService()
-	originURL := config.OriginURL()
-	url := giturl.Parse(originURL)
-	if url == nil {
-		return nil
-	}
 	manualOrigin := config.OriginOverride()
 	if manualOrigin != "" {
 		url.Host = manualOrigin
@@ -38,7 +33,7 @@ func NewBitbucketDriver(config config, git gitRunner) *BitbucketDriver {
 		git:          git,
 		hostname:     url.Host,
 		organization: url.Org,
-		originURL:    originURL,
+		originURL:    config.OriginURL(),
 		repository:   url.Repo,
 	}
 }

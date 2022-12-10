@@ -22,13 +22,8 @@ type GitlabDriver struct {
 
 // NewGitlabDriver provides a GitLab driver instance if the given repo configuration is for a GitLab repo,
 // otherwise nil.
-func NewGitlabDriver(config config, log logFn) *GitlabDriver {
+func NewGitlabDriver(url giturl.Parts, config config, log logFn) *GitlabDriver {
 	driverType := config.HostingService()
-	originURL := config.OriginURL()
-	url := giturl.Parse(originURL)
-	if url == nil {
-		return nil
-	}
 	manualHostName := config.OriginOverride()
 	if manualHostName != "" {
 		url.Host = manualHostName
@@ -38,7 +33,7 @@ func NewGitlabDriver(config config, log logFn) *GitlabDriver {
 	}
 	return &GitlabDriver{
 		apiToken:   config.GitLabToken(),
-		originURL:  originURL,
+		originURL:  config.OriginURL(),
 		hostname:   url.Host,
 		log:        log,
 		owner:      url.Org,

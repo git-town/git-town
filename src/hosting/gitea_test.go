@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/git-town/git-town/v7/src/giturl"
 	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/stretchr/testify/assert"
 	httpmock "gopkg.in/jarcoal/httpmock.v1"
@@ -22,10 +23,12 @@ func log(template string, messages ...interface{}) {}
 func setupGiteaDriver(t *testing.T, token string) (*hosting.GiteaDriver, func()) {
 	t.Helper()
 	httpmock.Activate()
-	driver := hosting.NewGiteaDriver(mockConfig{
+	config := mockConfig{
 		originURL:  "git@gitea.com:git-town/git-town.git",
 		giteaToken: token,
-	}, log)
+	}
+	url := giturl.Parse(config.originURL)
+	driver := hosting.NewGiteaDriver(*url, config, log)
 	assert.NotNil(t, driver)
 	return driver, func() {
 		httpmock.DeactivateAndReset()
@@ -36,20 +39,24 @@ func setupGiteaDriver(t *testing.T, token string) (*hosting.GiteaDriver, func())
 func TestGitea(t *testing.T) {
 	t.Run(".NewGiteaDriver()", func(t *testing.T) {
 		t.Run("normal repo", func(t *testing.T) {
-			driver := hosting.NewGiteaDriver(mockConfig{
+			config := mockConfig{
 				hostingService: "gitea",
 				originURL:      "git@self-hosted-gitea.com:git-town/git-town.git",
-			}, log)
+			}
+			url := giturl.Parse(config.originURL)
+			driver := hosting.NewGiteaDriver(*url, config, log)
 			assert.NotNil(t, driver)
 			assert.Equal(t, "Gitea", driver.HostingServiceName())
 			assert.Equal(t, "https://self-hosted-gitea.com/git-town/git-town", driver.RepositoryURL())
 		})
 
 		t.Run("custom hostname", func(t *testing.T) {
-			driver := hosting.NewGiteaDriver(mockConfig{
+			config := mockConfig{
 				originURL:      "git@my-ssh-identity.com:git-town/git-town.git",
 				originOverride: "gitea.com",
-			}, log)
+			}
+			url := giturl.Parse(config.originURL)
+			driver := hosting.NewGiteaDriver(*url, config, log)
 			assert.NotNil(t, driver)
 			assert.Equal(t, "Gitea", driver.HostingServiceName())
 			assert.Equal(t, "https://gitea.com/git-town/git-town", driver.RepositoryURL())

@@ -24,13 +24,8 @@ type GiteaDriver struct {
 
 // NewGiteaDriver provides a Gitea driver instance if the given repo configuration is for a Gitea repo,
 // otherwise nil.
-func NewGiteaDriver(config config, log logFn) *GiteaDriver {
+func NewGiteaDriver(url giturl.Parts, config config, log logFn) *GiteaDriver {
 	driverType := config.HostingService()
-	originURL := config.OriginURL()
-	url := giturl.Parse(originURL)
-	if url == nil {
-		return nil
-	}
 	manualHostName := config.OriginOverride()
 	if manualHostName != "" {
 		url.Host = manualHostName
@@ -39,7 +34,7 @@ func NewGiteaDriver(config config, log logFn) *GiteaDriver {
 		return nil
 	}
 	return &GiteaDriver{
-		originURL:  originURL,
+		originURL:  config.OriginURL(),
 		hostname:   url.Host,
 		apiToken:   config.GiteaToken(),
 		log:        log,
