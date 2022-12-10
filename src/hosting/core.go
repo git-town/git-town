@@ -85,17 +85,17 @@ func NewDriver(config config, git gitRunner, log logFn) Driver { //nolint:iretur
 	if githubDriver != nil {
 		return githubDriver
 	}
-	giteaDriver := NewGiteaDriver(*url, config, log)
-	if giteaDriver != nil {
-		return giteaDriver
+	gitlabDriver := NewGitlabDriver(*url, config, log)
+	if gitlabDriver != nil {
+		return gitlabDriver
 	}
 	bitbucketDriver := NewBitbucketDriver(*url, config, git)
 	if bitbucketDriver != nil {
 		return bitbucketDriver
 	}
-	gitlabDriver := NewGitlabDriver(*url, config, log)
-	if gitlabDriver != nil {
-		return gitlabDriver
+	giteaDriver := NewGiteaDriver(*url, config, log)
+	if giteaDriver != nil {
+		return giteaDriver
 	}
 	return nil
 }
