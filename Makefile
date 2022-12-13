@@ -69,7 +69,7 @@ release-win: msi  # adds the Windows installer to the release
 		v${VERSION}
 
 stats: tools/scc-${SCC_VERSION}  # shows code statistics
-	@find . -type f | grep -v './tools/node_modules' | grep -v '\./vendor/' | grep -v '\./.git/' | grep -v './website/book' | xargs scc-${SCC_VERSION}
+	@find . -type f | grep -v './tools/node_modules' | grep -v '\./vendor/' | grep -v '\./.git/' | grep -v './website/book' | xargs tools/scc-${SCC_VERSION}
 
 test: fix docs unit cuke  # runs all the tests
 .PHONY: test
