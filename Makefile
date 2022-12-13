@@ -40,7 +40,7 @@ fix: tools/golangci-lint-${GOLANGCILINT_VERSION} tools/gofumpt-${GOFUMPT_VERSION
 	tools/golangci-lint-${GOLANGCILINT_VERSION} run
 
 help:  # prints all available targets
-	@cat Makefile | grep '^[^ ]*:' | grep -v '.PHONY' | grep -v help | grep -v "^tools\/" | sed 's/:.*#/#/' | column -s "#" -t
+	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 msi:  # compiles the MSI installer for Windows
 	rm -f git-town*.msi
