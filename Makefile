@@ -106,10 +106,8 @@ tools/node_modules: tools/yarn.lock
 	@touch tools/node_modules  # update timestamp of the node_modules folder so that Make doesn't re-install it on every command
 
 tools/scc-${SCC_VERSION}:
-	@mkdir scc
-	@curl -sSL https://github.com/boyter/scc/releases/download/v${SCC_VERSION}/scc_${SCC_VERSION}_Linux_x86_64.tar.gz | tar x -C scc/
-	@mv scc/scc tools/scc-${SCC_VERSION}
-	@rm -rf scc/
+	@env GOBIN=${shell pwd}/tools go install github.com/boyter/scc/v3@v3.1.0
+	@mv tools/scc tools/scc-${SCC_VERSION}
 
 tools/shellcheck-${SHELLCHECK_VERSION}:
 	@echo installing Shellcheck ${SHELLCHECK_VERSION} ...
