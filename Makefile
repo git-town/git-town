@@ -94,7 +94,7 @@ update:  # updates all dependencies
 
 tools/depth-${DEPTH_VERSION}:
 	@echo "Installing depth ${DEPTH_VERSION} ..."
-	@env GOBIN="$(CURDIR)/tools" go install github.com/KyleBanks/depth/cmd/depth@${DEPTH_VERSION}
+	@env GOBIN="$(CURDIR)/tools" go install github.com/KyleBanks/depth/cmd/depth@v${DEPTH_VERSION}
 	@mv tools/depth tools/depth-${DEPTH_VERSION}
 
 tools/gofumpt-${GOFUMPT_VERSION}:
