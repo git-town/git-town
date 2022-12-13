@@ -119,7 +119,7 @@ tools/scc-${SCC_VERSION}:
 
 tools/shellcheck-${SHELLCHECK_VERSION}:
 	@echo installing Shellcheck ${SHELLCHECK_VERSION} ...
-	@curl -sSL https://github.com/koalaman/shellcheck/releases/download/v${SHELLCHECK_VERSION}/shellcheck-v${SHELLCHECK_VERSION}.linux.x86_64.tar.xz | tar xJ
+	@curl -sSL https://github.com/koalaman/shellcheck/releases/download/v${SHELLCHECK_VERSION}/shellcheck-v${SHELLCHECK_VERSION}.$(shell go env GOOS).x86_64.tar.xz | tar xJ
 	@mv shellcheck-v${SHELLCHECK_VERSION}/shellcheck tools/shellcheck-${SHELLCHECK_VERSION}
 	@rm -rf shellcheck-v${SHELLCHECK_VERSION}
 
