@@ -95,7 +95,9 @@ tools/depth: Makefile
 	env GOBIN="$(CURDIR)/tools" go install github.com/KyleBanks/depth/cmd/depth@latest
 
 tools/gofumpt-${GOFUMPT_VERSION}:
-	env GOBIN="$(CURDIR)/tools" go install mvdan.cc/gofumpt@v${GOFUMPT_VERSION}
+	@echo "Installing gofumpt ${GOFUMPT_VERSION} ..."
+	@env GOBIN="$(CURDIR)/tools" go install mvdan.cc/gofumpt@v${GOFUMPT_VERSION}
+	@mv tools/gofumpt tools/gofumpt-${GOFUMPT_VERSION}
 
 tools/golangci-lint-${GOLANGCILINT_VERSION}:
 	@echo "Installing golangci-lint ${GOLANGCILINT_VERSION} ..."
@@ -108,7 +110,7 @@ tools/node_modules: tools/yarn.lock
 
 tools/scc-${SCC_VERSION}:
 	@echo "Installing scc ${SCC_VERSION} ..."
-	@env GOBIN=${shell pwd}/tools go install github.com/boyter/scc/v3@v3.1.0
+	@env GOBIN=$(CURDIR)/tools go install github.com/boyter/scc/v3@v3.1.0
 	@mv tools/scc tools/scc-${SCC_VERSION}
 
 tools/shellcheck-${SHELLCHECK_VERSION}:
