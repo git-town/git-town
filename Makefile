@@ -2,8 +2,15 @@ VERSION ?= $(shell git describe --tags 2>/dev/null || git rev-parse --short HEAD
 TODAY=$(shell date +'%Y/%m/%d')
 .DEFAULT_GOAL := help
 
+DEPTH_VERSION = 1.2.1
+GOFUMPT_VERSION = 0.3.0
+GOLANGCILINT_VERSION = 1.50.0
+SCC_VERSION = 3.1.0
+SHELLCHECK_VERSION = 0.8.0
+SHFMT_VERSION = 3.5.1
+
 build:  # builds for the current platform
-	go install -ldflags "-X github.com/git-town/git-town/v7/src/cmd.version=${VERSION} -X github.com/git-town/git-town/v7/src/cmd.buildDate=${TODAY}"
+	go install -trimpath -ldflags "-X github.com/git-town/git-town/v7/src/cmd.version=${VERSION} -X github.com/git-town/git-town/v7/src/cmd.buildDate=${TODAY}"
 
 cuke: build   # runs all end-to-end tests
 	@env LANG=C GOGC=off go test . -v -count=1
@@ -16,28 +23,28 @@ cuke-prof: build  # creates a flamegraph
 	@rm git-town.test
 	@echo Please open https://www.speedscope.app and load the file godog.out
 
-dependencies: tools/depth  # prints the dependencies between packages as a tree
-	@tools/depth . | grep git-town
+dependencies: tools/depth-${DEPTH_VERSION}  # prints the dependencies between packages as a tree
+	@tools/depth-${DEPTH_VERSION} . | grep git-town
 
 docs: build tools/node_modules  # tests the documentation
 	${CURDIR}/tools/node_modules/.bin/text-run --offline
 
-fix: tools/golangci-lint tools/gofumpt tools/node_modules tools/shellcheck tools/shfmt  # auto-fixes lint issues in all languages
+fix: tools/golangci-lint-${GOLANGCILINT_VERSION} tools/gofumpt-${GOFUMPT_VERSION} tools/node_modules tools/shellcheck-${SHELLCHECK_VERSION} tools/shfmt-${SHFMT_VERSION}  # auto-fixes lint issues in all languages
 	git diff --check
-	tools/gofumpt -l -w .
+	tools/gofumpt-${GOFUMPT_VERSION} -l -w .
 	${CURDIR}/tools/node_modules/.bin/dprint fmt
 	${CURDIR}/tools/node_modules/.bin/prettier --write '**/*.yml'
-	tools/shfmt -f . | grep -v tools/node_modules | grep -v '^vendor\/' | xargs tools/shfmt --write
-	tools/shfmt -f . | grep -v tools/node_modules | grep -v '^vendor\/' | xargs tools/shellcheck
+	tools/shfmt-${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor\/' | xargs tools/shfmt-${SHFMT_VERSION} --write
+	tools/shfmt-${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor\/' | xargs tools/shellcheck-${SHELLCHECK_VERSION}
 	${CURDIR}/tools/node_modules/.bin/gherkin-lint
-	tools/golangci-lint run
+	tools/golangci-lint-${GOLANGCILINT_VERSION} run
 
 help:  # prints all available targets
 	@cat Makefile | grep '^[^ ]*:' | grep -v '.PHONY' | grep -v help | grep -v "^tools\/" | sed 's/:.*#/#/' | column -s "#" -t
 
 msi:  # compiles the MSI installer for Windows
 	rm -f git-town*.msi
-	go build -ldflags "-X github.com/git-town/git-town/src/cmd.version=${VERSION} -X github.com/git-town/git-town/src/cmd.buildDate=${TODAY}"
+	go build -trimpath -ldflags "-X github.com/git-town/git-town/src/cmd.version=${VERSION} -X github.com/git-town/git-town/src/cmd.buildDate=${TODAY}"
 	go-msi make --msi dist/git-town_${VERSION}_windows_intel_64.msi --version ${VERSION} --src installer/templates/ --path installer/wix.json
 	@rm git-town.exe
 
@@ -63,8 +70,8 @@ release-win: msi  # adds the Windows installer to the release
 		-a dist/git-town_${VERSION}_windows_intel_64.msi
 		${VERSION}
 
-stats: tools/scc  # shows code statistics
-	@find . -type f | grep -v './tools/node_modules' | grep -v '\./vendor/' | grep -v '\./.git/' | grep -v './website/book' | xargs scc
+stats: tools/scc-${SCC_VERSION}  # shows code statistics
+	@find . -type f | grep -v './tools/node_modules' | grep -v '\./vendor/' | grep -v '\./.git/' | grep -v './website/book' | xargs tools/scc-${SCC_VERSION}
 
 test: fix docs unit cuke  # runs all the tests
 .PHONY: test
@@ -85,31 +92,38 @@ update:  # updates all dependencies
 
 # --- HELPER TARGETS --------------------------------------------------------------------------------------------------------------------------------
 
-tools/depth: Makefile
-	env GOBIN="$(CURDIR)/tools" go install github.com/KyleBanks/depth/cmd/depth@latest
+tools/depth-${DEPTH_VERSION}:
+	@echo "Installing depth ${DEPTH_VERSION} ..."
+	@env GOBIN="$(CURDIR)/tools" go install github.com/KyleBanks/depth/cmd/depth@v${DEPTH_VERSION}
+	@mv tools/depth tools/depth-${DEPTH_VERSION}
 
-tools/gofumpt: Makefile
-	env GOBIN="$(CURDIR)/tools" go install mvdan.cc/gofumpt@v0.3.0
+tools/gofumpt-${GOFUMPT_VERSION}:
+	@echo "Installing gofumpt ${GOFUMPT_VERSION} ..."
+	@env GOBIN="$(CURDIR)/tools" go install mvdan.cc/gofumpt@v${GOFUMPT_VERSION}
+	@mv tools/gofumpt tools/gofumpt-${GOFUMPT_VERSION}
 
-tools/golangci-lint: Makefile
-	@echo "Installing golangci-lint ..."
-	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b tools v1.50.0
+tools/golangci-lint-${GOLANGCILINT_VERSION}:
+	@echo "Installing golangci-lint ${GOLANGCILINT_VERSION} ..."
+	@curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b tools v${GOLANGCILINT_VERSION}
+	@mv tools/golangci-lint tools/golangci-lint-${GOLANGCILINT_VERSION}
 
 tools/node_modules: tools/yarn.lock
+	@echo "Installing Node based tools"
 	@cd tools && yarn install
 	@touch tools/node_modules  # update timestamp of the node_modules folder so that Make doesn't re-install it on every command
 
-tools/scc: Makefile
-	env GOBIN="$(CURDIR)/tools" go install github.com/boyter/scc@latest
+tools/scc-${SCC_VERSION}:
+	@echo "Installing scc ${SCC_VERSION} ..."
+	@env GOBIN=$(CURDIR)/tools go install github.com/boyter/scc/v3@v3.1.0
+	@mv tools/scc tools/scc-${SCC_VERSION}
 
-tools/shellcheck: Makefile
-	@echo installing Shellcheck ...
-	@curl -sSL https://github.com/koalaman/shellcheck/releases/download/stable/shellcheck-stable.linux.x86_64.tar.xz | tar xJ
-	@mv shellcheck-stable/shellcheck tools
-	@rm -rf shellcheck-stable
-	@touch tools/shellcheck   # update the timestamp so that Make doesn't re-install Shellcheck each time it runs
+tools/shellcheck-${SHELLCHECK_VERSION}:
+	@echo installing Shellcheck ${SHELLCHECK_VERSION} ...
+	@curl -sSL https://github.com/koalaman/shellcheck/releases/download/v${SHELLCHECK_VERSION}/shellcheck-v${SHELLCHECK_VERSION}.linux.x86_64.tar.xz | tar xJ
+	@mv shellcheck-v${SHELLCHECK_VERSION}/shellcheck tools/shellcheck-${SHELLCHECK_VERSION}
+	@rm -rf shellcheck-v${SHELLCHECK_VERSION}
 
-tools/shfmt: Makefile
-	echo installing Shellfmt ...
-	curl -sSL https://github.com/mvdan/sh/releases/download/v3.5.1/shfmt_v3.5.1_linux_amd64 -o tools/shfmt
-	chmod +x tools/shfmt
+tools/shfmt-${SHFMT_VERSION}:
+	@echo installing Shellfmt ${SHFMT_VERSION} ...
+	@curl -sSL https://github.com/mvdan/sh/releases/download/v${SHFMT_VERSION}/shfmt_v${SHFMT_VERSION}_linux_amd64 -o tools/shfmt-${SHFMT_VERSION}
+	@chmod +x tools/shfmt-${SHFMT_VERSION}
