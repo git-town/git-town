@@ -63,7 +63,7 @@ release-linux:   # creates a new release
 		-a dist/git-town_${VERSION}_macos_intel_64.tar.gz \
 		-a dist/git-town_${VERSION}_macos_arm_64.tar.gz \
 		-a dist/git-town_${VERSION}_windows_intel_64.zip \
-		${VERSION}
+		v${VERSION}
 
 release-win: msi  # adds the Windows installer to the release
 	hub release edit --browse --message ${VERSION} \
