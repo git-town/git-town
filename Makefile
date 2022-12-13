@@ -2,6 +2,7 @@ VERSION ?= 0.0.0
 TODAY=$(shell date +'%Y/%m/%d')
 .DEFAULT_GOAL := help
 
+DEPTH_VERSION = 1.2.1
 GOFUMPT_VERSION = 0.3.0
 GOLANGCILINT_VERSION = 1.50.0
 SCC_VERSION = 3.1.0
@@ -22,8 +23,8 @@ cuke-prof: build  # creates a flamegraph
 	@rm git-town.test
 	@echo Please open https://www.speedscope.app and load the file godog.out
 
-dependencies: tools/depth  # prints the dependencies between packages as a tree
-	@tools/depth . | grep git-town
+dependencies: tools/depth-${DEPTH_VERSION}  # prints the dependencies between packages as a tree
+	@tools/depth-${DEPTH_VERSION} . | grep git-town
 
 docs: build tools/node_modules  # tests the documentation
 	${CURDIR}/tools/node_modules/.bin/text-run --offline
@@ -91,8 +92,10 @@ update:  # updates all dependencies
 
 # --- HELPER TARGETS --------------------------------------------------------------------------------------------------------------------------------
 
-tools/depth: Makefile
-	env GOBIN="$(CURDIR)/tools" go install github.com/KyleBanks/depth/cmd/depth@latest
+tools/depth-${DEPTH_VERSION}:
+	@echo "Installing depth ${DEPTH_VERSION} ..."
+	@env GOBIN="$(CURDIR)/tools" go install github.com/KyleBanks/depth/cmd/depth@v${DEPTH_VERSION}
+	@mv tools/depth tools/depth-${DEPTH_VERSION}
 
 tools/gofumpt-${GOFUMPT_VERSION}:
 	@echo "Installing gofumpt ${GOFUMPT_VERSION} ..."
@@ -101,10 +104,11 @@ tools/gofumpt-${GOFUMPT_VERSION}:
 
 tools/golangci-lint-${GOLANGCILINT_VERSION}:
 	@echo "Installing golangci-lint ${GOLANGCILINT_VERSION} ..."
-	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b tools v${GOLANGCILINT_VERSION}
-	mv tools/golangci-lint tools/golangci-lint-${GOLANGCILINT_VERSION}
+	@curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b tools v${GOLANGCILINT_VERSION}
+	@mv tools/golangci-lint tools/golangci-lint-${GOLANGCILINT_VERSION}
 
 tools/node_modules: tools/yarn.lock
+	@echo "Installing Node based tools"
 	@cd tools && yarn install
 	@touch tools/node_modules  # update timestamp of the node_modules folder so that Make doesn't re-install it on every command
 
