@@ -96,7 +96,7 @@ tools/gofumpt: Makefile
 tools/golangci-lint-${GOLANGCILINT_VERSION}:
 	@echo "Installing golangci-lint ${GOLANGCILINT_VERSION} ..."
 	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b tools v${GOLANGCILINT_VERSION}
-	mv tools/golangci-lint $@
+	mv tools/golangci-lint tools/golangci-lint-${GOLANGCILINT_VERSION}
 
 tools/node_modules: tools/yarn.lock
 	@cd tools && yarn install
