@@ -107,7 +107,7 @@ tools/node_modules: tools/yarn.lock
 
 tools/scc-${SCC_VERSION}:
 	@mkdir scc
-	@curl -sSL https://github.com/boyter/scc/releases/download/v3.1.0/scc_3.1.0_Linux_x86_64.tar.gz | tar x -C scc/
+	@curl -sSL https://github.com/boyter/scc/releases/download/v${SCC_VERSION}/scc_${SCC_VERSION}_Linux_x86_64.tar.gz | tar x -C scc/
 	@mv scc/scc tools/scc-${SCC_VERSION}
 	@rm -rf scc/
 
