@@ -1,6 +1,4 @@
 VERSION ?= 0.0.0
-TODAY=$(shell date +'%Y/%m/%d')
-.DEFAULT_GOAL := help
 
 DEPTH_VERSION = 1.2.1
 GOFUMPT_VERSION = 0.3.0
@@ -8,6 +6,9 @@ GOLANGCILINT_VERSION = 1.50.0
 SCC_VERSION = 3.1.0
 SHELLCHECK_VERSION = 0.8.0
 SHFMT_VERSION = 3.5.1
+
+TODAY=$(shell date +'%Y/%m/%d')
+.DEFAULT_GOAL := help
 
 build:  # builds for the current platform
 	go install -trimpath -ldflags "-X github.com/git-town/git-town/v7/src/cmd.version=v${VERSION}-dev -X github.com/git-town/git-town/v7/src/cmd.buildDate=${TODAY}"
