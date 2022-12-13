@@ -3,7 +3,7 @@ TODAY=$(shell date +'%Y/%m/%d')
 .DEFAULT_GOAL := help
 
 build:  # builds for the current platform
-	go install -ldflags "-X github.com/git-town/git-town/v7/src/cmd.version=v${VERSION}-dev -X github.com/git-town/git-town/v7/src/cmd.buildDate=${TODAY}"
+	go install -trimpath -ldflags "-X github.com/git-town/git-town/v7/src/cmd.version=v${VERSION}-dev -X github.com/git-town/git-town/v7/src/cmd.buildDate=${TODAY}"
 
 cuke: build   # runs all end-to-end tests
 	@env LANG=C GOGC=off go test . -v -count=1
@@ -37,7 +37,7 @@ help:  # prints all available targets
 
 msi:  # compiles the MSI installer for Windows
 	rm -f git-town*.msi
-	go build -ldflags "-X github.com/git-town/git-town/src/cmd.version=v${VERSION} -X github.com/git-town/git-town/src/cmd.buildDate=${TODAY}"
+	go build -trimpath -ldflags "-X github.com/git-town/git-town/src/cmd.version=v${VERSION} -X github.com/git-town/git-town/src/cmd.buildDate=${TODAY}"
 	go-msi make --msi dist/git-town_${VERSION}_windows_intel_64.msi --version ${VERSION} --src installer/templates/ --path installer/wix.json
 	@rm git-town.exe
 
