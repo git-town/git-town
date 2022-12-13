@@ -68,7 +68,7 @@ release-linux:   # creates a new release
 release-win: msi  # adds the Windows installer to the release
 	hub release edit --browse --message ${VERSION} \
 		-a dist/git-town_${VERSION}_windows_intel_64.msi
-		${VERSION}
+		v${VERSION}
 
 stats: tools/scc-${SCC_VERSION}  # shows code statistics
 	@find . -type f | grep -v './tools/node_modules' | grep -v '\./vendor/' | grep -v '\./.git/' | grep -v './website/book' | xargs tools/scc-${SCC_VERSION}
