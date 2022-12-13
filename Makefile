@@ -1,9 +1,9 @@
-VERSION ?= 0.0.0
+VERSION ?= $(shell git describe --tags 2>/dev/null || git rev-parse --short HEAD)
 TODAY=$(shell date +'%Y/%m/%d')
 .DEFAULT_GOAL := help
 
 build:  # builds for the current platform
-	go install -ldflags "-X github.com/git-town/git-town/v7/src/cmd.version=v${VERSION}-dev -X github.com/git-town/git-town/v7/src/cmd.buildDate=${TODAY}"
+	go install -ldflags "-X github.com/git-town/git-town/v7/src/cmd.version=${VERSION} -X github.com/git-town/git-town/v7/src/cmd.buildDate=${TODAY}"
 
 cuke: build   # runs all end-to-end tests
 	@env LANG=C GOGC=off go test . -v -count=1
@@ -37,7 +37,7 @@ help:  # prints all available targets
 
 msi:  # compiles the MSI installer for Windows
 	rm -f git-town*.msi
-	go build -ldflags "-X github.com/git-town/git-town/src/cmd.version=v${VERSION} -X github.com/git-town/git-town/src/cmd.buildDate=${TODAY}"
+	go build -ldflags "-X github.com/git-town/git-town/src/cmd.version=${VERSION} -X github.com/git-town/git-town/src/cmd.buildDate=${TODAY}"
 	go-msi make --msi dist/git-town_${VERSION}_windows_intel_64.msi --version ${VERSION} --src installer/templates/ --path installer/wix.json
 	@rm git-town.exe
 
@@ -46,7 +46,7 @@ release-linux:   # creates a new release
 	goreleaser --rm-dist
 
 	# create GitHub release with files in alphabetical order
-	hub release create --draft --browse --message v${VERSION} \
+	hub release create --draft --browse --message ${VERSION} \
 		-a dist/git-town_${VERSION}_linux_intel_64.deb \
 		-a dist/git-town_${VERSION}_linux_intel_64.rpm \
 		-a dist/git-town_${VERSION}_linux_intel_64.tar.gz \
@@ -56,12 +56,12 @@ release-linux:   # creates a new release
 		-a dist/git-town_${VERSION}_macos_intel_64.tar.gz \
 		-a dist/git-town_${VERSION}_macos_arm_64.tar.gz \
 		-a dist/git-town_${VERSION}_windows_intel_64.zip \
-		v${VERSION}
+		${VERSION}
 
 release-win: msi  # adds the Windows installer to the release
-	hub release edit --browse --message v${VERSION} \
+	hub release edit --browse --message ${VERSION} \
 		-a dist/git-town_${VERSION}_windows_intel_64.msi
-		v${VERSION}
+		${VERSION}
 
 stats: tools/scc  # shows code statistics
 	@find . -type f | grep -v './tools/node_modules' | grep -v '\./vendor/' | grep -v '\./.git/' | grep -v './website/book' | xargs scc
