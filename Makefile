@@ -110,7 +110,7 @@ tools/scc: Makefile
 tools/shellcheck-${SHELLCHECK_VERSION}:
 	@echo installing Shellcheck ${SHELLCHECK_VERSION} ...
 	@curl -sSL https://github.com/koalaman/shellcheck/releases/download/v${SHELLCHECK_VERSION}/shellcheck-v${SHELLCHECK_VERSION}.linux.x86_64.tar.xz | tar xJ
-	@mv shellcheck-stable/shellcheck tools/shellcheck-${SHELLCHECK_VERSION}
+	@mv shellcheck-${SHELLCHECK_VERSION}/shellcheck tools/shellcheck-${SHELLCHECK_VERSION}
 	@rm -rf shellcheck-stable
 
 tools/shfmt-${SHFMT_VERSION}:
