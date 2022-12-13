@@ -114,6 +114,6 @@ tools/shellcheck-${SHELLCHECK_VERSION}:
 	@rm -rf shellcheck-v${SHELLCHECK_VERSION}
 
 tools/shfmt-${SHFMT_VERSION}:
-	echo installing Shellfmt ${SHFMT_VERSION} ...
-	curl -sSL https://github.com/mvdan/sh/releases/download/v${SHFMT_VERSION}/shfmt_v${SHFMT_VERSION}_linux_amd64 -o tools/shfmt-${SHFMT_VERSION}
-	chmod +x tools/shfmt-${SHFMT_VERSION}
+	@echo installing Shellfmt ${SHFMT_VERSION} ...
+	@curl -sSL https://github.com/mvdan/sh/releases/download/v${SHFMT_VERSION}/shfmt_v${SHFMT_VERSION}_linux_amd64 -o tools/shfmt-${SHFMT_VERSION}
+	@chmod +x tools/shfmt-${SHFMT_VERSION}
