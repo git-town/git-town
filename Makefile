@@ -106,6 +106,7 @@ tools/node_modules: tools/yarn.lock
 	@touch tools/node_modules  # update timestamp of the node_modules folder so that Make doesn't re-install it on every command
 
 tools/scc-${SCC_VERSION}:
+	@echo "Installing scc ${SCC_VERSION} ..."
 	@env GOBIN=${shell pwd}/tools go install github.com/boyter/scc/v3@v3.1.0
 	@mv tools/scc tools/scc-${SCC_VERSION}
 
