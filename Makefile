@@ -3,6 +3,7 @@ TODAY=$(shell date +'%Y/%m/%d')
 .DEFAULT_GOAL := help
 
 GOLANGCILINT_VERSION = 1.50.0
+SHELLCHECK_VERSION = 0.8.0
 SHFMT_VERSION = 3.5.1
 
 build:  # builds for the current platform
@@ -25,13 +26,13 @@ dependencies: tools/depth  # prints the dependencies between packages as a tree
 docs: build tools/node_modules  # tests the documentation
 	${CURDIR}/tools/node_modules/.bin/text-run --offline
 
-fix: tools/golangci-lint-${GOLANGCILINT_VERSION} tools/gofumpt tools/node_modules tools/shellcheck tools/shfmt-${SHFMT_VERSION}  # auto-fixes lint issues in all languages
+fix: tools/golangci-lint-${GOLANGCILINT_VERSION} tools/gofumpt tools/node_modules tools/shellcheck-${SHELLCHECK_VERSION} tools/shfmt-${SHFMT_VERSION}  # auto-fixes lint issues in all languages
 	git diff --check
 	tools/gofumpt -l -w .
 	${CURDIR}/tools/node_modules/.bin/dprint fmt
 	${CURDIR}/tools/node_modules/.bin/prettier --write '**/*.yml'
 	tools/shfmt-${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor\/' | xargs tools/shfmt-${SHFMT_VERSION} --write
-	tools/shfmt-${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor\/' | xargs tools/shellcheck
+	tools/shfmt-${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor\/' | xargs tools/shellcheck-${SHELLCHECK_VERSION}
 	${CURDIR}/tools/node_modules/.bin/gherkin-lint
 	tools/golangci-lint-${GOLANGCILINT_VERSION} run
 
@@ -106,14 +107,13 @@ tools/node_modules: tools/yarn.lock
 tools/scc: Makefile
 	env GOBIN="$(CURDIR)/tools" go install github.com/boyter/scc@latest
 
-tools/shellcheck: Makefile
-	@echo installing Shellcheck ...
-	@curl -sSL https://github.com/koalaman/shellcheck/releases/download/stable/shellcheck-stable.linux.x86_64.tar.xz | tar xJ
-	@mv shellcheck-stable/shellcheck tools
+tools/shellcheck-${SHELLCHECK_VERSION}:
+	@echo installing Shellcheck ${SHELLCHECK_VERSION} ...
+	@curl -sSL https://github.com/koalaman/shellcheck/releases/download/v${SHELLCHECK_VERSION}/shellcheck-v${SHELLCHECK_VERSION}.linux.x86_64.tar.xz | tar xJ
+	@mv shellcheck-stable/shellcheck tools/shellcheck-${SHELLCHECK_VERSION}
 	@rm -rf shellcheck-stable
-	@touch tools/shellcheck   # update the timestamp so that Make doesn't re-install Shellcheck each time it runs
 
-tools/shfmt-${SHFMT_VERSION}: Makefile
-	echo installing Shellfmt ...
+tools/shfmt-${SHFMT_VERSION}:
+	echo installing Shellfmt ${SHFMT_VERSION} ...
 	curl -sSL https://github.com/mvdan/sh/releases/download/v${SHFMT_VERSION}/shfmt_v${SHFMT_VERSION}_linux_amd64 -o tools/shfmt-${SHFMT_VERSION}
 	chmod +x tools/shfmt-${SHFMT_VERSION}
