@@ -3,6 +3,7 @@ git-town_*
 node_modules/
 tools/gofumpt
 tools/golangci-lint*
+tools/scc*
 tools/shellcheck*
 tools/shfmt*
 website/bin/

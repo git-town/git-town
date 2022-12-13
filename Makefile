@@ -3,6 +3,7 @@ TODAY=$(shell date +'%Y/%m/%d')
 .DEFAULT_GOAL := help
 
 GOLANGCILINT_VERSION = 1.50.0
+SCC_VERSION = 3.1.0
 SHELLCHECK_VERSION = 0.8.0
 SHFMT_VERSION = 3.5.1
 
@@ -67,8 +68,8 @@ release-win: msi  # adds the Windows installer to the release
 		-a dist/git-town_${VERSION}_windows_intel_64.msi
 		v${VERSION}
 
-stats: tools/scc  # shows code statistics
-	@find . -type f | grep -v './tools/node_modules' | grep -v '\./vendor/' | grep -v '\./.git/' | grep -v './website/book' | xargs scc
+stats: tools/scc-${SCC_VERSION}  # shows code statistics
+	@find . -type f | grep -v './tools/node_modules' | grep -v '\./vendor/' | grep -v '\./.git/' | grep -v './website/book' | xargs scc-${SCC_VERSION}
 
 test: fix docs unit cuke  # runs all the tests
 .PHONY: test
@@ -104,8 +105,11 @@ tools/node_modules: tools/yarn.lock
 	@cd tools && yarn install
 	@touch tools/node_modules  # update timestamp of the node_modules folder so that Make doesn't re-install it on every command
 
-tools/scc: Makefile
-	env GOBIN="$(CURDIR)/tools" go install github.com/boyter/scc@latest
+tools/scc-${SCC_VERSION}:
+	@mkdir scc
+	@curl -sSL https://github.com/boyter/scc/releases/download/v3.1.0/scc_3.1.0_Linux_x86_64.tar.gz | tar x -C scc/
+	@mv scc/scc tools/scc-${SCC_VERSION}
+	@rm -rf scc/
 
 tools/shellcheck-${SHELLCHECK_VERSION}:
 	@echo installing Shellcheck ${SHELLCHECK_VERSION} ...
