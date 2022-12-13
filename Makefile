@@ -2,6 +2,7 @@ VERSION ?= 0.0.0
 TODAY=$(shell date +'%Y/%m/%d')
 .DEFAULT_GOAL := help
 
+GOFUMPT_VERSION = 0.3.0
 GOLANGCILINT_VERSION = 1.50.0
 SCC_VERSION = 3.1.0
 SHELLCHECK_VERSION = 0.8.0
@@ -27,9 +28,9 @@ dependencies: tools/depth  # prints the dependencies between packages as a tree
 docs: build tools/node_modules  # tests the documentation
 	${CURDIR}/tools/node_modules/.bin/text-run --offline
 
-fix: tools/golangci-lint-${GOLANGCILINT_VERSION} tools/gofumpt tools/node_modules tools/shellcheck-${SHELLCHECK_VERSION} tools/shfmt-${SHFMT_VERSION}  # auto-fixes lint issues in all languages
+fix: tools/golangci-lint-${GOLANGCILINT_VERSION} tools/gofumpt-${GOFUMPT_VERSION} tools/node_modules tools/shellcheck-${SHELLCHECK_VERSION} tools/shfmt-${SHFMT_VERSION}  # auto-fixes lint issues in all languages
 	git diff --check
-	tools/gofumpt -l -w .
+	tools/gofumpt-${GOFUMPT_VERSION} -l -w .
 	${CURDIR}/tools/node_modules/.bin/dprint fmt
 	${CURDIR}/tools/node_modules/.bin/prettier --write '**/*.yml'
 	tools/shfmt-${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor\/' | xargs tools/shfmt-${SHFMT_VERSION} --write
@@ -93,8 +94,8 @@ update:  # updates all dependencies
 tools/depth: Makefile
 	env GOBIN="$(CURDIR)/tools" go install github.com/KyleBanks/depth/cmd/depth@latest
 
-tools/gofumpt: Makefile
-	env GOBIN="$(CURDIR)/tools" go install mvdan.cc/gofumpt@v0.3.0
+tools/gofumpt-${GOFUMPT_VERSION}:
+	env GOBIN="$(CURDIR)/tools" go install mvdan.cc/gofumpt@v${GOFUMPT_VERSION}
 
 tools/golangci-lint-${GOLANGCILINT_VERSION}:
 	@echo "Installing golangci-lint ${GOLANGCILINT_VERSION} ..."
