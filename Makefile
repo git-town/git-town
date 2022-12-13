@@ -10,7 +10,7 @@ SHELLCHECK_VERSION = 0.8.0
 SHFMT_VERSION = 3.5.1
 
 build:  # builds for the current platform
-	go install -trimpath -ldflags "-X github.com/git-town/git-town/v7/src/cmd.version=${VERSION} -X github.com/git-town/git-town/v7/src/cmd.buildDate=${TODAY}"
+	go install -trimpath -ldflags "-X github.com/git-town/git-town/v7/src/cmd.version=v${VERSION} -X github.com/git-town/git-town/v7/src/cmd.buildDate=${TODAY}"
 
 cuke: build   # runs all end-to-end tests
 	@env LANG=C GOGC=off go test . -v -count=1
