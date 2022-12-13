@@ -3,6 +3,7 @@ TODAY=$(shell date +'%Y/%m/%d')
 .DEFAULT_GOAL := help
 
 GOLANGCILINT_VERSION = 1.50.0
+SHFMT_VERSION = 3.5.1
 
 build:  # builds for the current platform
 	go install -trimpath -ldflags "-X github.com/git-town/git-town/v7/src/cmd.version=v${VERSION}-dev -X github.com/git-town/git-town/v7/src/cmd.buildDate=${TODAY}"
@@ -24,13 +25,13 @@ dependencies: tools/depth  # prints the dependencies between packages as a tree
 docs: build tools/node_modules  # tests the documentation
 	${CURDIR}/tools/node_modules/.bin/text-run --offline
 
-fix: tools/golangci-lint-${GOLANGCILINT_VERSION} tools/gofumpt tools/node_modules tools/shellcheck tools/shfmt  # auto-fixes lint issues in all languages
+fix: tools/golangci-lint-${GOLANGCILINT_VERSION} tools/gofumpt tools/node_modules tools/shellcheck tools/shfmt-${SHFMT_VERSION}  # auto-fixes lint issues in all languages
 	git diff --check
 	tools/gofumpt -l -w .
 	${CURDIR}/tools/node_modules/.bin/dprint fmt
 	${CURDIR}/tools/node_modules/.bin/prettier --write '**/*.yml'
-	tools/shfmt -f . | grep -v tools/node_modules | grep -v '^vendor\/' | xargs tools/shfmt --write
-	tools/shfmt -f . | grep -v tools/node_modules | grep -v '^vendor\/' | xargs tools/shellcheck
+	tools/shfmt-${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor\/' | xargs tools/shfmt-${SHFMT_VERSION} --write
+	tools/shfmt-${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor\/' | xargs tools/shellcheck
 	${CURDIR}/tools/node_modules/.bin/gherkin-lint
 	tools/golangci-lint-${GOLANGCILINT_VERSION} run
 
@@ -112,7 +113,7 @@ tools/shellcheck: Makefile
 	@rm -rf shellcheck-stable
 	@touch tools/shellcheck   # update the timestamp so that Make doesn't re-install Shellcheck each time it runs
 
-tools/shfmt: Makefile
+tools/shfmt-${SHFMT_VERSION}: Makefile
 	echo installing Shellfmt ...
-	curl -sSL https://github.com/mvdan/sh/releases/download/v3.5.1/shfmt_v3.5.1_linux_amd64 -o tools/shfmt
-	chmod +x tools/shfmt
+	curl -sSL https://github.com/mvdan/sh/releases/download/v${SHFMT_VERSION}/shfmt_v${SHFMT_VERSION}_linux_amd64 -o tools/shfmt-${SHFMT_VERSION}
+	chmod +x tools/shfmt-${SHFMT_VERSION}
