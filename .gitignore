@@ -2,7 +2,7 @@ dist/
 git-town_*
 node_modules/
 tools/gofumpt
-tools/golangci-lint
+tools/golangci-lint*
 tools/shellcheck
 tools/shfmt
 website/bin/

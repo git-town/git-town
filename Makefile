@@ -2,6 +2,8 @@ VERSION ?= 0.0.0
 TODAY=$(shell date +'%Y/%m/%d')
 .DEFAULT_GOAL := help
 
+GOLANGCILINT_VERSION = 1.50.0
+
 build:  # builds for the current platform
 	go install -trimpath -ldflags "-X github.com/git-town/git-town/v7/src/cmd.version=v${VERSION}-dev -X github.com/git-town/git-town/v7/src/cmd.buildDate=${TODAY}"
 
@@ -22,7 +24,7 @@ dependencies: tools/depth  # prints the dependencies between packages as a tree
 docs: build tools/node_modules  # tests the documentation
 	${CURDIR}/tools/node_modules/.bin/text-run --offline
 
-fix: tools/golangci-lint tools/gofumpt tools/node_modules tools/shellcheck tools/shfmt  # auto-fixes lint issues in all languages
+fix: tools/golangci-lint-${GOLANGCILINT_VERSION} tools/gofumpt tools/node_modules tools/shellcheck tools/shfmt  # auto-fixes lint issues in all languages
 	git diff --check
 	tools/gofumpt -l -w .
 	${CURDIR}/tools/node_modules/.bin/dprint fmt
@@ -30,7 +32,7 @@ fix: tools/golangci-lint tools/gofumpt tools/node_modules tools/shellcheck tools
 	tools/shfmt -f . | grep -v tools/node_modules | grep -v '^vendor\/' | xargs tools/shfmt --write
 	tools/shfmt -f . | grep -v tools/node_modules | grep -v '^vendor\/' | xargs tools/shellcheck
 	${CURDIR}/tools/node_modules/.bin/gherkin-lint
-	tools/golangci-lint run
+	tools/golangci-lint-${GOLANGCILINT_VERSION} run
 
 help:  # prints all available targets
 	@cat Makefile | grep '^[^ ]*:' | grep -v '.PHONY' | grep -v help | grep -v "^tools\/" | sed 's/:.*#/#/' | column -s "#" -t
@@ -91,9 +93,10 @@ tools/depth: Makefile
 tools/gofumpt: Makefile
 	env GOBIN="$(CURDIR)/tools" go install mvdan.cc/gofumpt@v0.3.0
 
-tools/golangci-lint: Makefile
-	@echo "Installing golangci-lint ..."
-	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b tools v1.50.0
+tools/golangci-lint-${GOLANGCILINT_VERSION}:
+	@echo "Installing golangci-lint ${GOLANGCILINT_VERSION} ..."
+	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b tools v${GOLANGCILINT_VERSION}
+	mv tools/golangci-lint tools/golangci-lint-${GOLANGCILINT_VERSION}
 
 tools/node_modules: tools/yarn.lock
 	@cd tools && yarn install
