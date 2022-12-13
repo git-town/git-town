@@ -93,8 +93,8 @@ tools/depth: Makefile
 tools/gofumpt: Makefile
 	env GOBIN="$(CURDIR)/tools" go install mvdan.cc/gofumpt@v0.3.0
 
-tools/golangci-lint-${GOLANGCILINT_VERSION}: Makefile
-	@echo "Installing golangci-lint ..."
+tools/golangci-lint-${GOLANGCILINT_VERSION}:
+	@echo "Installing golangci-lint ${GOLANGCILINT_VERSION} ..."
 	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b tools v${GOLANGCILINT_VERSION}
 
 tools/node_modules: tools/yarn.lock
