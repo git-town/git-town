@@ -35,34 +35,37 @@ func setupGiteaDriver(t *testing.T, token string) (*hosting.GiteaDriver, func())
 	}
 }
 
-//nolint:paralleltest  // mocks HTTP
-func TestGitea(t *testing.T) {
-	t.Run(".NewGiteaDriver()", func(t *testing.T) {
-		t.Run("normal repo", func(t *testing.T) {
-			config := mockConfig{
-				hostingService: "gitea",
-				originURL:      "git@self-hosted-gitea.com:git-town/git-town.git",
-			}
-			url := giturl.Parse(config.originURL)
-			driver := hosting.NewGiteaDriver(*url, config, log)
-			assert.NotNil(t, driver)
-			assert.Equal(t, "Gitea", driver.HostingServiceName())
-			assert.Equal(t, "https://self-hosted-gitea.com/git-town/git-town", driver.RepositoryURL())
-		})
-
-		t.Run("custom hostname", func(t *testing.T) {
-			config := mockConfig{
-				originURL:      "git@my-ssh-identity.com:git-town/git-town.git",
-				originOverride: "gitea.com",
-			}
-			url := giturl.Parse(config.originURL)
-			driver := hosting.NewGiteaDriver(*url, config, log)
-			assert.NotNil(t, driver)
-			assert.Equal(t, "Gitea", driver.HostingServiceName())
-			assert.Equal(t, "https://gitea.com/git-town/git-town", driver.RepositoryURL())
-		})
+func TestNewGiteaDriver(t *testing.T) {
+	t.Parallel()
+	t.Run("normal repo", func(t *testing.T) {
+		t.Parallel()
+		config := mockConfig{
+			hostingService: "gitea",
+			originURL:      "git@self-hosted-gitea.com:git-town/git-town.git",
+		}
+		url := giturl.Parse(config.originURL)
+		driver := hosting.NewGiteaDriver(*url, config, log)
+		assert.NotNil(t, driver)
+		assert.Equal(t, "Gitea", driver.HostingServiceName())
+		assert.Equal(t, "https://self-hosted-gitea.com/git-town/git-town", driver.RepositoryURL())
 	})
 
+	t.Run("custom hostname", func(t *testing.T) {
+		t.Parallel()
+		config := mockConfig{
+			originURL:      "git@my-ssh-identity.com:git-town/git-town.git",
+			originOverride: "gitea.com",
+		}
+		url := giturl.Parse(config.originURL)
+		driver := hosting.NewGiteaDriver(*url, config, log)
+		assert.NotNil(t, driver)
+		assert.Equal(t, "Gitea", driver.HostingServiceName())
+		assert.Equal(t, "https://gitea.com/git-town/git-town", driver.RepositoryURL())
+	})
+}
+
+//nolint:paralleltest  // mocks HTTP
+func TestGitea(t *testing.T) {
 	//nolint:dupl
 	t.Run(".LoadPullRequestInfo()", func(t *testing.T) {
 		t.Run("happy path", func(t *testing.T) {

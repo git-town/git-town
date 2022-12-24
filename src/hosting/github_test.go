@@ -36,45 +36,49 @@ func setupGithubDriver(t *testing.T, token string) (*hosting.GithubDriver, func(
 	}
 }
 
-//nolint:paralleltest  // mocks HTTP
-func TestGithubDriver(t *testing.T) {
-	t.Run("create a new instance", func(t *testing.T) {
-		t.Run("GitHub SaaS", func(t *testing.T) {
-			config := mockConfig{
-				originURL: "git@github.com:git-town/git-town.git",
-			}
-			url := giturl.Parse(config.originURL)
-			driver := hosting.NewGithubDriver(*url, config, log)
-			assert.NotNil(t, driver)
-			assert.Equal(t, "GitHub", driver.HostingServiceName())
-			assert.Equal(t, "https://github.com/git-town/git-town", driver.RepositoryURL())
-		})
-
-		t.Run("self-hosted GitHub instance", func(t *testing.T) {
-			config := mockConfig{
-				hostingService: "github",
-				originURL:      "git@self-hosted-github.com:git-town/git-town.git",
-			}
-			url := giturl.Parse(config.originURL)
-			driver := hosting.NewGithubDriver(*url, config, log)
-			assert.NotNil(t, driver)
-			assert.Equal(t, "GitHub", driver.HostingServiceName())
-			assert.Equal(t, "https://self-hosted-github.com/git-town/git-town", driver.RepositoryURL())
-		})
-
-		t.Run("custom hostname override", func(t *testing.T) {
-			config := mockConfig{
-				originURL:      "git@my-ssh-identity.com:git-town/git-town.git",
-				originOverride: "github.com",
-			}
-			url := giturl.Parse(config.originURL)
-			driver := hosting.NewGithubDriver(*url, config, log)
-			assert.NotNil(t, driver)
-			assert.Equal(t, "GitHub", driver.HostingServiceName())
-			assert.Equal(t, "https://github.com/git-town/git-town", driver.RepositoryURL())
-		})
+func TestNewGithubDriver(t *testing.T) {
+	t.Parallel()
+	t.Run("GitHub SaaS", func(t *testing.T) {
+		t.Parallel()
+		config := mockConfig{
+			originURL: "git@github.com:git-town/git-town.git",
+		}
+		url := giturl.Parse(config.originURL)
+		driver := hosting.NewGithubDriver(*url, config, log)
+		assert.NotNil(t, driver)
+		assert.Equal(t, "GitHub", driver.HostingServiceName())
+		assert.Equal(t, "https://github.com/git-town/git-town", driver.RepositoryURL())
 	})
 
+	t.Run("self-hosted GitHub instance", func(t *testing.T) {
+		t.Parallel()
+		config := mockConfig{
+			hostingService: "github",
+			originURL:      "git@self-hosted-github.com:git-town/git-town.git",
+		}
+		url := giturl.Parse(config.originURL)
+		driver := hosting.NewGithubDriver(*url, config, log)
+		assert.NotNil(t, driver)
+		assert.Equal(t, "GitHub", driver.HostingServiceName())
+		assert.Equal(t, "https://self-hosted-github.com/git-town/git-town", driver.RepositoryURL())
+	})
+
+	t.Run("custom hostname override", func(t *testing.T) {
+		t.Parallel()
+		config := mockConfig{
+			originURL:      "git@my-ssh-identity.com:git-town/git-town.git",
+			originOverride: "github.com",
+		}
+		url := giturl.Parse(config.originURL)
+		driver := hosting.NewGithubDriver(*url, config, log)
+		assert.NotNil(t, driver)
+		assert.Equal(t, "GitHub", driver.HostingServiceName())
+		assert.Equal(t, "https://github.com/git-town/git-town", driver.RepositoryURL())
+	})
+}
+
+//nolint:paralleltest  // mocks HTTP
+func TestGithubDriver(t *testing.T) {
 	//nolint:dupl
 	t.Run(".LoadPullRequestInfo()", func(t *testing.T) {
 		t.Run("with token", func(t *testing.T) {

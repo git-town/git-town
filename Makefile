@@ -9,6 +9,9 @@ SCC_VERSION = 3.1.0
 SHELLCHECK_VERSION = 0.8.0
 SHFMT_VERSION = 3.5.1
 
+TODAY=$(shell date +'%Y/%m/%d')
+.DEFAULT_GOAL := help
+
 build:  # builds for the current platform
 	go install -trimpath -ldflags "-X github.com/git-town/git-town/v7/src/cmd.version=v${VERSION} -X github.com/git-town/git-town/v7/src/cmd.buildDate=${TODAY}"
 
@@ -40,7 +43,7 @@ fix: tools/golangci-lint-${GOLANGCILINT_VERSION} tools/gofumpt-${GOFUMPT_VERSION
 	tools/golangci-lint-${GOLANGCILINT_VERSION} run
 
 help:  # prints all available targets
-	@cat Makefile | grep '^[^ ]*:' | grep -v '.PHONY' | grep -v help | grep -v "^tools\/" | sed 's/:.*#/#/' | column -s "#" -t
+	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 msi:  # compiles the MSI installer for Windows
 	rm -f git-town*.msi
@@ -119,11 +122,11 @@ tools/scc-${SCC_VERSION}:
 
 tools/shellcheck-${SHELLCHECK_VERSION}:
 	@echo installing Shellcheck ${SHELLCHECK_VERSION} ...
-	@curl -sSL https://github.com/koalaman/shellcheck/releases/download/v${SHELLCHECK_VERSION}/shellcheck-v${SHELLCHECK_VERSION}.linux.x86_64.tar.xz | tar xJ
+	@curl -sSL https://github.com/koalaman/shellcheck/releases/download/v${SHELLCHECK_VERSION}/shellcheck-v${SHELLCHECK_VERSION}.$(shell go env GOOS).x86_64.tar.xz | tar xJ
 	@mv shellcheck-v${SHELLCHECK_VERSION}/shellcheck tools/shellcheck-${SHELLCHECK_VERSION}
 	@rm -rf shellcheck-v${SHELLCHECK_VERSION}
 
 tools/shfmt-${SHFMT_VERSION}:
 	@echo installing Shellfmt ${SHFMT_VERSION} ...
-	@curl -sSL https://github.com/mvdan/sh/releases/download/v${SHFMT_VERSION}/shfmt_v${SHFMT_VERSION}_linux_amd64 -o tools/shfmt-${SHFMT_VERSION}
-	@chmod +x tools/shfmt-${SHFMT_VERSION}
+	@env GOBIN="$(CURDIR)/tools" go install mvdan.cc/sh/v3/cmd/shfmt@v${SHFMT_VERSION}
+	@mv tools/shfmt tools/shfmt-${SHFMT_VERSION}

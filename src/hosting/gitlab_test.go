@@ -35,47 +35,63 @@ func setupGitlabDriver(t *testing.T, token string) (*hosting.GitlabDriver, func(
 	}
 }
 
-//nolint:paralleltest  // mocks HTTP
-func TestGitLab(t *testing.T) {
-	t.Run("NewGitlabDriver()", func(t *testing.T) {
-		t.Run("GitLab handbook repo on gitlab.com", func(t *testing.T) {
-			config := mockConfig{
-				originURL: "git@gitlab.com:gitlab-com/www-gitlab-com.git",
-			}
-			url := giturl.Parse(config.originURL)
-			driver := hosting.NewGitlabDriver(*url, config, log)
-			assert.NotNil(t, driver)
-			assert.Equal(t, "GitLab", driver.HostingServiceName())
-			assert.Equal(t, "https://gitlab.com/gitlab-com/www-gitlab-com", driver.RepositoryURL())
-		})
-
-		t.Run("self-hosted GitLab server", func(t *testing.T) {
-			config := mockConfig{
-				hostingService: "gitlab",
-				originURL:      "git@self-hosted-gitlab.com:git-town/git-town.git",
-			}
-			url := giturl.Parse(config.originURL)
-			driver := hosting.NewGitlabDriver(*url, config, log)
-			assert.NotNil(t, driver)
-			assert.Equal(t, "GitLab", driver.HostingServiceName())
-			assert.Equal(t, "https://self-hosted-gitlab.com/git-town/git-town", driver.RepositoryURL())
-		})
-
-		t.Run("custom SSH identity with hostname override", func(t *testing.T) {
-			config := mockConfig{
-				originURL:      "git@my-ssh-identity.com:git-town/git-town.git",
-				originOverride: "gitlab.com",
-			}
-			url := giturl.Parse(config.originURL)
-			driver := hosting.NewGitlabDriver(*url, config, log)
-			assert.NotNil(t, driver)
-			assert.Equal(t, "GitLab", driver.HostingServiceName())
-			assert.Equal(t, "https://gitlab.com", driver.BaseURL())
-			assert.Equal(t, "git-town/git-town", driver.ProjectPath())
-			assert.Equal(t, "https://gitlab.com/git-town/git-town", driver.RepositoryURL())
-		})
+func TestNewGitlabDriver(t *testing.T) {
+	t.Parallel()
+	t.Run("GitLab handbook repo on gitlab.com", func(t *testing.T) {
+		t.Parallel()
+		config := mockConfig{
+			originURL: "git@gitlab.com:gitlab-com/www-gitlab-com.git",
+		}
+		url := giturl.Parse(config.originURL)
+		driver := hosting.NewGitlabDriver(*url, config, log)
+		assert.NotNil(t, driver)
+		assert.Equal(t, "GitLab", driver.HostingServiceName())
+		assert.Equal(t, "https://gitlab.com/gitlab-com/www-gitlab-com", driver.RepositoryURL())
 	})
 
+	t.Run("repository nested inside a group", func(t *testing.T) {
+		t.Parallel()
+		config := mockConfig{
+			originURL: "git@gitlab.com:gitlab-org/quality/triage-ops.git",
+		}
+		url := giturl.Parse(config.originURL)
+		driver := hosting.NewGitlabDriver(*url, config, log)
+		assert.NotNil(t, driver)
+		assert.Equal(t, "GitLab", driver.HostingServiceName())
+		assert.Equal(t, "https://gitlab.com/gitlab-org/quality/triage-ops", driver.RepositoryURL())
+	})
+
+	t.Run("self-hosted GitLab server", func(t *testing.T) {
+		t.Parallel()
+		config := mockConfig{
+			hostingService: "gitlab",
+			originURL:      "git@self-hosted-gitlab.com:git-town/git-town.git",
+		}
+		url := giturl.Parse(config.originURL)
+		driver := hosting.NewGitlabDriver(*url, config, log)
+		assert.NotNil(t, driver)
+		assert.Equal(t, "GitLab", driver.HostingServiceName())
+		assert.Equal(t, "https://self-hosted-gitlab.com/git-town/git-town", driver.RepositoryURL())
+	})
+
+	t.Run("custom SSH identity with hostname override", func(t *testing.T) {
+		t.Parallel()
+		config := mockConfig{
+			originURL:      "git@my-ssh-identity.com:git-town/git-town.git",
+			originOverride: "gitlab.com",
+		}
+		url := giturl.Parse(config.originURL)
+		driver := hosting.NewGitlabDriver(*url, config, log)
+		assert.NotNil(t, driver)
+		assert.Equal(t, "GitLab", driver.HostingServiceName())
+		assert.Equal(t, "https://gitlab.com", driver.BaseURL())
+		assert.Equal(t, "git-town/git-town", driver.ProjectPath())
+		assert.Equal(t, "https://gitlab.com/git-town/git-town", driver.RepositoryURL())
+	})
+}
+
+//nolint:paralleltest  // mocks HTTP
+func TestGitLab(t *testing.T) {
 	//nolint:dupl
 	t.Run(".LoadPullRequestInfo()", func(t *testing.T) {
 		t.Run("happy path", func(t *testing.T) {

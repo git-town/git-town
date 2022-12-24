@@ -8,9 +8,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-//nolint:paralleltest  // mocks HTTP
-func TestLoadBitbucket(t *testing.T) {
+func TestNewBitbucketDriver(t *testing.T) {
+	t.Parallel()
 	t.Run("normal example", func(t *testing.T) {
+		t.Parallel()
 		config := mockConfig{
 			hostingService: "bitbucket",
 			originURL:      "git@self-hosted-bitbucket.com:git-town/git-town.git",
@@ -23,6 +24,7 @@ func TestLoadBitbucket(t *testing.T) {
 	})
 
 	t.Run("custom hostname", func(t *testing.T) {
+		t.Parallel()
 		config := mockConfig{
 			originURL:      "git@my-ssh-identity.com:git-town/git-town.git",
 			originOverride: "bitbucket.org",
@@ -35,6 +37,7 @@ func TestLoadBitbucket(t *testing.T) {
 	})
 
 	t.Run("custom username", func(t *testing.T) {
+		t.Parallel()
 		config := mockConfig{
 			hostingService: "bitbucket",
 			originURL:      "username@bitbucket.org:git-town/git-town.git",
