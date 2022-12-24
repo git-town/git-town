@@ -1,5 +1,4 @@
-VERSION ?= $(shell git describe --tags 2>/dev/null || git rev-parse --short HEAD)
-
+# versions of development tooling used here
 DEPTH_VERSION = 1.2.1
 GOFUMPT_VERSION = 0.3.0
 GOLANGCILINT_VERSION = 1.50.0
@@ -11,7 +10,8 @@ TODAY=$(shell date +'%Y/%m/%d')
 .DEFAULT_GOAL := help
 
 build:  # builds for the current platform
-	go install -trimpath -ldflags "-X github.com/git-town/git-town/v7/src/cmd.version=v${VERSION} -X github.com/git-town/git-town/v7/src/cmd.buildDate=${TODAY}"
+	$(eval DEV_VERSION = $(shell git describe --tags 2>/dev/null || git rev-parse --short HEAD))
+	go install -trimpath -ldflags "-X github.com/git-town/git-town/v7/src/cmd.version=${DEV_VERSION}-dev -X github.com/git-town/git-town/v7/src/cmd.buildDate=${TODAY}"
 
 cuke: build   # runs all end-to-end tests
 	@env LANG=C GOGC=off go test . -v -count=1
