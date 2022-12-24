@@ -37,7 +37,7 @@
 
 #### Bug Fixes
 
-- fix author not being set properly
+- fix author not set properly
   ([1686](https://github.com/git-town/git-town/pull/1686))
 - filenames of assets at GitHub releases are all lowercase now
   ([#1710](https://github.com/git-town/git-town/pull/1710))
@@ -96,7 +96,7 @@ experience. Ruby is no longer a development dependency.
 
 #### Bug Fixes
 
-- many improved error messages
+- improved error messages
 
 ## 7.3.0 (2019-11-05)
 
@@ -131,7 +131,7 @@ experience. Ruby is no longer a development dependency.
 
 #### Changes
 
-- when fetching the upstream repository, only fetch the main branch
+- fetch only the main branch when fetching the upstream repository
 
 ## 7.1.1 (2018-04-09)
 
@@ -157,11 +157,11 @@ experience. Ruby is no longer a development dependency.
 
 #### New Features
 
-- now catches when there is an unfinished state from a git town command that hit
-  conflicts. If you try to run another git town command, you will be prompted on
-  how to resolve the unfinished state. The unfinished state can be discarded and
-  there is also a new top level command `git town discard` to delete the state
-  of the last run command.
+- Catches when there is an unfinished state from a git town command that hit
+  conflicts. If you try to run another git town command, Git Town will prompt
+  you on how to resolve the unfinished state. The unfinished state can be
+  discarded and there is also a new top level command `git town discard` to
+  delete the state of the last run command.
 
 #### Bug Fixes
 
@@ -193,11 +193,10 @@ experience. Ruby is no longer a development dependency.
 
 #### New Features
 
-- `git town new-branch-push-flag`: add `--global` flag in order to set your
-  default value. Any locally configured value will override.
-- add `--debug` flag in order to see all the git commands runs under the hood
-- speed improvement thanks to various optimizations to greatly reduce the number
-  of git commands run under the hood
+- `git town new-branch-push-flag`: add `--global` flag to set your default
+  value. Any locally configured value will override.
+- add `--debug` flag to see all the git commands runs under the hood
+- speed improvement from reducing the number of git commands run under the hood
 
 ## 5.1.0 (2017-12-05)
 
@@ -216,7 +215,7 @@ experience. Ruby is no longer a development dependency.
 #### BREAKING CHANGES
 
 - `git new-pull-request / repo`: support for ssh identities changed
-  - Previously: ssh identity needed to include "github", "gitlab" or "bitbucket"
+  - Before: ssh identity needed to include "github", "gitlab" or "bitbucket"
   - Now: Run `git config git-town.code-hosting-origin-hostname <hostname>` where
     hostname matches what is in your ssh config file
 
@@ -225,8 +224,8 @@ experience. Ruby is no longer a development dependency.
 - `git new-pull-request / repo`: support for self hosted versions
   - Run `git config git-town.code-hosting-driver <driver>` where driver is
     "bitbucket", "github", or "gitlab"
-- `git sync`: add `--dry-run` flag to view the commands that would be run
-  without running them
+- `git sync`: add `--dry-run` flag to view the planned commands without running
+  them
 - `git ship`: when merging via the GitHub API, update the default commit message
   to include the PR title and number
 
@@ -272,7 +271,7 @@ experience. Ruby is no longer a development dependency.
 
 #### Changes
 
-- make `hack-push-flag` false by default (previously was true)
+- make `hack-push-flag` false by default (was true before)
   ([#929](https://github.com/git-town/git-town/issues/929))
 
 #### Bug Fixes
@@ -280,7 +279,7 @@ experience. Ruby is no longer a development dependency.
 - replace all non-alpha numeric characters in temporary filename
   ([#925](https://github.com/git-town/git-town/issues/925))
 - fix spacing in parent branch prompts
-- enforce a minimum Git version of 2.7.0
+- enforce Git version 2.7.0 or higher
 
 ## 4.0.1 (2017-05-21)
 
@@ -288,10 +287,10 @@ experience. Ruby is no longer a development dependency.
 
 - fix infinite loop when prompting for parent branch and there are perennial
   branches configured
-- enforce a minimum Git version of 2.6.0
+- enforce a Git version 2.6.0 or higher
 - fix `ship` when the supplied branch is equal to the current branch and there
   are open changes
-- allow `alias` to be run in a non-git directory
+- allow running `alias` command in non-git directories
 
 ## 4.0.0 (2017-05-12)
 
@@ -333,7 +332,7 @@ experience. Ruby is no longer a development dependency.
 
 #### New Features
 
-- support multiple SSH identities
+- support SSH identities
   ([#739](https://github.com/git-town/git-town/issues/739))
 
 #### Bug Fixes
@@ -377,7 +376,7 @@ experience. Ruby is no longer a development dependency.
 
 #### New Features
 
-- `git hack`: add configuration for whether or not to push
+- `git hack`: add configuration to omit pushing new branches
   ([#720](https://github.com/git-town/git-town/issues/720))
 
 #### Bug Fixes
@@ -418,7 +417,7 @@ experience. Ruby is no longer a development dependency.
 
 - `git new-pull-request`: support forked repos
   ([#682](https://github.com/git-town/git-town/issues/682))
-- `git sync`: if there is a remote upstream, the main branch is synced with its
+- `git sync`: if there is a remote upstream, syncs the main branch with its
   upstream counterpart ([#685](https://github.com/git-town/git-town/issues/685))
 
 ## 0.8.0 (2015-10-14)
@@ -427,17 +426,17 @@ experience. Ruby is no longer a development dependency.
 
 - removed `git extract`
 - update internal storage of perennial branches
-  - if you have configured multiple perennial branches, you will need to reset
-    your configuration
+  - if you have configured more than one perennial branch, you will need to
+    reset your configuration
     - `git town config --reset`
-    - `git town config --setup` or you will be prompted the next time you run a
-      Git Town command
+    - `git town config --setup` or follow the prompt the next time you run a Git
+      Town command
 
 #### New Features
 
 - configuration prompt: allow user to select branch by number, ability to
   recover from bad input
-- parent branch prompt: only show description and branch list once per command
+- parent branch prompt: show description and branch list once per command
 - preserve checkout history so that `git checkout -` works as expected alongside
   Git Town commands ([#65](https://github.com/git-town/git-town/issues/65))
 - `git hack`: pushes the new branch to the remote repository
@@ -456,9 +455,9 @@ experience. Ruby is no longer a development dependency.
 
 ## 0.7.3 (2015-09-02)
 
-- `git kill`: remote only branch
+- `git kill`: can remove branches that exist on the remote and not locally
   ([#380](https://github.com/git-town/git-town/issues/380))
-- `git ship`: prompt when there are multiple authors
+- `git ship`: prompt when there is more than one author
   ([#486](https://github.com/git-town/git-town/issues/486))
 
 ## 0.7.2 (2015-08-28)
@@ -469,7 +468,7 @@ experience. Ruby is no longer a development dependency.
 
 ## 0.7.1 (2015-08-27)
 
-- `git ship`: add ability to ship remote only branch
+- `git ship`: add ability to ship remote branches
   ([#593](https://github.com/git-town/git-town/issues/593))
 - `git new-pull-request`/`git repo`: remove empty line output
   ([#602](https://github.com/git-town/git-town/issues/602))
@@ -525,15 +524,15 @@ experience. Ruby is no longer a development dependency.
     ([#236](https://github.com/git-town/git-town/issues/236))
   - removed restriction: need to be on a feature branch
     ([#269](https://github.com/git-town/git-town/issues/269))
-  - added restriction: if no commits are provided, errors if the current branch
-    does not have any have extractable commits (commits not in the main branch)
-    ([#269](https://github.com/git-town/git-town/issues/269))
+  - added restriction: errors if the current branch does not have any have
+    extractable commits and the user provided no commits (commits not in the
+    main branch) ([#269](https://github.com/git-town/git-town/issues/269))
 - **git hack:** errors if branch exists remotely
   ([#237](https://github.com/git-town/git-town/issues/237))
 - **git kill:**
   - optional branch name
     ([#126](https://github.com/git-town/git-town/issues/126))
-  - does not error if tracking branch has already been deleted
+  - does not error if tracking branch is already deleted
     ([#196](https://github.com/git-town/git-town/issues/196))
 - **git pr:**
   - linux compatibility
@@ -547,10 +546,10 @@ experience. Ruby is no longer a development dependency.
 - **git sync:**
   - `--all` option to sync all local branches
     ([#83](https://github.com/git-town/git-town/issues/83))
-  - abort correctly after main branch updates and tracking branch conflicts
-    ([#228](https://github.com/git-town/git-town/issues/228))
-- **git town**: view and change Git Town configuration and easily view help page
-  ([#98](https://github.com/git-town/git-town/issues/98))
+  - abort with correct state after main branch updates and tracking branch
+    conflicts ([#228](https://github.com/git-town/git-town/issues/228))
+- **git town**: view and change Git Town configuration and improved view help
+  page ([#98](https://github.com/git-town/git-town/issues/98))
 - auto-completion for [Fish shell](https://fishshell.com)
   ([#177](https://github.com/git-town/git-town/issues/177))
 
@@ -567,8 +566,8 @@ experience. Ruby is no longer a development dependency.
     ([#188](https://github.com/git-town/git-town/issues/188),
     [52fd94](https://github.com/git-town/git-town/commit/52fd94eca05bd3c2db5e7ac36121f08e56b9558b))
 - **git sync:**
-  - can now continue after just resolving conflicts (no need to commit or
-    continue rebasing) ([#123](https://github.com/git-town/git-town/issues/123),
+  - can now continue after resolving conflicts (no need to commit or continue
+    rebasing) ([#123](https://github.com/git-town/git-town/issues/123),
     [1a50ad](https://github.com/git-town/git-town/commit/1a50ad689a752f4eaed663e0ab22184621ee96a2))
   - restores deleted tracking branch
     ([#165](https://github.com/git-town/git-town/issues/165),
@@ -593,13 +592,13 @@ experience. Ruby is no longer a development dependency.
 
 ## 0.4.0 (2014-11-13)
 
-- **git kill:** completely removes a feature branch
+- **git kill:** removes a feature branch
   ([#87](https://github.com/git-town/git-town/issues/87),
   [edd7d8](https://github.com/git-town/git-town/commit/edd7d8180eb76717fd72e77d2c75edf8e3b6b6ca))
 - **git sync:** pushes tags to the remote when running on the main branch
   ([#68](https://github.com/git-town/git-town/issues/68),
   [71b607](https://github.com/git-town/git-town/commit/71b607988c00e6dfc8f2598e9b964cc2ed4cfc39))
-- **non-feature branches:** cannot be shipped and do not merge main when syncing
+- **non-feature branches:** are not shipped and do not merge main when syncing
   ([#45](https://github.com/git-town/git-town/issues/45),
   [31dce1](https://github.com/git-town/git-town/commit/31dce1dfaf11e1e17f17e141a26cb38360ab731a))
 - **git ship:**
@@ -636,7 +635,7 @@ experience. Ruby is no longer a development dependency.
   [1f1f9f](https://github.com/git-town/git-town/commit/1f1f9f98ffa7288d6a5982ec0c9e571695590fe1))
 - stores configuration in the Git configuration instead of a dedicated file
   ([8b8695](https://github.com/git-town/git-town/commit/8b86953d7c7c719f28dbc7af6e86d02adaf2053e))
-- only makes one fetch from the central repo per session
+- removes redundant fetches from the central repo per session
   ([#15](https://github.com/git-town/git-town/issues/15),
   [43400a](https://github.com/git-town/git-town/commit/43400a5b968a47eb55484f73e34026f66b1e939a))
 - automatically prunes remote branches when fetching updates
@@ -647,7 +646,7 @@ experience. Ruby is no longer a development dependency.
 - **<a href="https://cukes.info" target="_blank">Cucumber</a>** feature specs
   (you need Ruby 2.x)
   ([c9d175](https://github.com/git-town/git-town/commit/c9d175fe2f28fbda3f662454f54ed80306ce2f46))
-- much faster testing thanks to completely local test Git repos
+- much faster testing thanks to fully local test Git repos
   ([#25](https://github.com/git-town/git-town/issues/25),
   [c9d175](https://github.com/git-town/git-town/commit/c9d175fe2f28fbda3f662454f54ed80306ce2f46))
 
@@ -665,11 +664,11 @@ experience. Ruby is no longer a development dependency.
 ## 0.2.0 (2014-05-29)
 
 - displays the duration of specs
-- only pulls the main branch if it has a remote
+- pulls the main branch only if it has a remote
 - --abort options to abort failed Git Town operations
 - --continue options to continue some Git Town operations after fixing the
   underlying issues
-- can be installed through Homebrew
+- installation through Homebrew
 - colored test output
 - display summary after tests
 - exit with proper status codes
