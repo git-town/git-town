@@ -18,7 +18,7 @@ func Parse(url string) *Parts {
 		`^[^:]+://(?P<user>.*@)?(?P<host>.*\/)(?P<org>.*\/)(?P<repo>.*)\.git$`,
 		`^[^:]+://(?P<user>.*@)?(?P<host>.*\/)(?P<org>.*\/)(?P<repo>.*)$`,
 		`^(?P<user>.*@)?(?P<host>.*?[:/])(?P<org>.*\/)(?P<repo>.*)\.git$`,
-		`^(?P<user>.*@)?(?P<host>.*[:/])(?P<org>.*\/)(?P<repo>.*)$`,
+		`^(?P<user>.*@)?(?P<host>.*?[:/])(?P<org>.*\/)(?P<repo>.*)$`,
 	}
 	for _, pattern := range patterns {
 		regex := regexp.MustCompile(pattern)

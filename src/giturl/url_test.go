@@ -17,6 +17,7 @@ func TestParse(t *testing.T) {
 		"git@gitlab.com:gitlab-com/www-gitlab-com.git":         {User: "git", Host: "gitlab.com", Org: "gitlab-com", Repo: "www-gitlab-com"},
 		"git@gitlab.com:gitlab-com/www-gitlab-com":             {User: "git", Host: "gitlab.com", Org: "gitlab-com", Repo: "www-gitlab-com"},
 		"git@gitlab.com:gitlab-org/quality/triage-ops.git":     {User: "git", Host: "gitlab.com", Org: "gitlab-org/quality", Repo: "triage-ops"},
+		"git@gitlab.com:gitlab-org/quality/triage-ops":         {User: "git", Host: "gitlab.com", Org: "gitlab-org/quality", Repo: "triage-ops"},
 		"username@bitbucket.org:git-town/git-town.git":         {User: "username", Host: "bitbucket.org", Org: "git-town", Repo: "git-town"},
 		"username@bitbucket.org:git-town/git-town":             {User: "username", Host: "bitbucket.org", Org: "git-town", Repo: "git-town"},
 		"https://github.com/git-town/git-town.git":             {User: "", Host: "github.com", Org: "git-town", Repo: "git-town"},
