@@ -16,7 +16,7 @@ build:  # builds for the current platform
 	go install -trimpath -ldflags "-X github.com/git-town/git-town/v7/src/cmd.version=v${VERSION}-dev -X github.com/git-town/git-town/v7/src/cmd.buildDate=${TODAY}"
 
 cuke: build   # runs all end-to-end tests
-	env $(BUILD_ARGS) go test . -v -count=1
+	@env $(BUILD_ARGS) go test . -v -count=1
 
 cukethis: build   # runs the end-to-end tests that have a @this tag
 	@env $(BUILD_ARGS) go test . -v -count=1 -this
