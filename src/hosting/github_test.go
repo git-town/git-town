@@ -36,7 +36,7 @@ func setupGithubDriver(t *testing.T, token string) (*hosting.GithubDriver, func(
 	}
 }
 
-func TestNowGithubDriver(t *testing.T) {
+func TestNewGithubDriver(t *testing.T) {
 	t.Parallel()
 	t.Run("GitHub SaaS", func(t *testing.T) {
 		t.Parallel()
