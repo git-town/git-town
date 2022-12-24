@@ -7,7 +7,7 @@ SCC_VERSION = 3.1.0
 SHELLCHECK_VERSION = 0.8.0
 SHFMT_VERSION = 3.5.1
 
-TODAY=$(shell date +'%Y/%m/%d')
+TODAY = $(shell date +'%Y/%m/%d')
 .DEFAULT_GOAL := help
 
 build:  # builds for the current platform
