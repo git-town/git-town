@@ -1,6 +1,4 @@
 VERSION ?= $(shell git describe --tags 2>/dev/null || git rev-parse --short HEAD)
-TODAY=$(shell date +'%Y/%m/%d')
-.DEFAULT_GOAL := help
 
 DEPTH_VERSION = 1.2.1
 GOFUMPT_VERSION = 0.3.0
