@@ -49,6 +49,17 @@ func TestGitLab(t *testing.T) {
 			assert.Equal(t, "https://gitlab.com/gitlab-com/www-gitlab-com", driver.RepositoryURL())
 		})
 
+		t.Run("repository nested inside a group", func(t *testing.T) {
+			config := mockConfig{
+				originURL: "git@gitlab.com:gitlab-org/quality/triage-ops.git",
+			}
+			url := giturl.Parse(config.originURL)
+			driver := hosting.NewGitlabDriver(*url, config, log)
+			assert.NotNil(t, driver)
+			assert.Equal(t, "GitLab", driver.HostingServiceName())
+			assert.Equal(t, "https://gitlab.com/gitlab-org/quality/triage-ops", driver.RepositoryURL())
+		})
+
 		t.Run("self-hosted GitLab server", func(t *testing.T) {
 			config := mockConfig{
 				hostingService: "gitlab",
