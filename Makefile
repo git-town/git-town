@@ -6,25 +6,27 @@ SCC_VERSION = 3.1.0
 SHELLCHECK_VERSION = 0.8.0
 SHFMT_VERSION = 3.5.1
 
-TODAY=$(shell date +'%Y/%m/%d')
+TODAY = $(shell date +'%Y/%m/%d')
 .DEFAULT_GOAL := help
 
 ifndef MY_FLAG
 $(error MY_FLAG is not set)
 endif
 
+BUILD_ARGS = LANG=C GOGC=off
+
 build:  # builds for the current platform
 	$(eval DEV_VERSION = $(shell git describe --tags 2>/dev/null || git rev-parse --short HEAD))
 	go install -trimpath -ldflags "-X github.com/git-town/git-town/v7/src/cmd.version=${DEV_VERSION}-dev -X github.com/git-town/git-town/v7/src/cmd.buildDate=${TODAY}"
 
 cuke: build   # runs all end-to-end tests
-	@env LANG=C GOGC=off go test . -v -count=1
+	@env $(BUILD_ARGS) go test . -v -count=1
 
-cukethis: build   # runs only the end-to-end tests that have a @this tag
-	@env LANG=C GOGC=off go test . -v -count=1 -this
+cukethis: build   # runs the end-to-end tests that have a @this tag
+	@env $(BUILD_ARGS) go test . -v -count=1 -this
 
 cuke-prof: build  # creates a flamegraph
-	env LANG=C GOGC=off go test . -v -cpuprofile=godog.out
+	env $(BUILD_ARGS) go test . -v -cpuprofile=godog.out
 	@rm git-town.test
 	@echo Please open https://www.speedscope.app and load the file godog.out
 
