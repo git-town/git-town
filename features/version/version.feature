@@ -5,5 +5,5 @@ Feature: show the version of the current Git Town installation
     When I run "git-town version"
     Then it prints something like:
       """
-      Git Town v.*-dev
+      Git Town .*-dev
       """
