@@ -339,7 +339,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		regex := regexp.MustCompile(expected.Content)
 		have := state.runRes.OutputSanitized()
 		if !regex.MatchString(have) {
-			return fmt.Errorf("EXPECTED: a regex matching %q\nGOT: %q", expected.Content, have)
+			return fmt.Errorf("EXPECTED: content matching %q\nGOT: %q", expected.Content, have)
 		}
 		return nil
 	})
