@@ -1,4 +1,4 @@
-# define versions of the development tooling
+# dev tooling and versions
 DEPTH_VERSION = 1.2.1
 GOFUMPT_VERSION = 0.3.0
 GOLANGCILINT_VERSION = 1.50.0
@@ -6,7 +6,7 @@ SCC_VERSION = 3.1.0
 SHELLCHECK_VERSION = 0.8.0
 SHFMT_VERSION = 3.5.1
 
-# automatically derived helpers
+# automatically derived internally used data and state
 .DEFAULT_GOAL := help
 TODAY = $(shell date +'%Y/%m/%d')
 VERSION = $(shell git describe --exact-match --tags)
