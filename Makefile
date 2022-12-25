@@ -10,19 +10,19 @@ SHFMT_VERSION = 3.5.1
 TODAY = $(shell date +'%Y/%m/%d')
 .DEFAULT_GOAL := help
 
-BUILD_ARGS = LANG=C GOGC=off
+GO_BUILD_ARGS = LANG=C GOGC=off
 
 build:  # builds for the current platform
 	go install -trimpath -ldflags "-X github.com/git-town/git-town/v7/src/cmd.version=v${VERSION}-dev -X github.com/git-town/git-town/v7/src/cmd.buildDate=${TODAY}"
 
 cuke: build   # runs all end-to-end tests
-	@env $(BUILD_ARGS) go test . -v -count=1
+	@env $(GO_BUILD_ARGS) go test . -v -count=1
 
 cukethis: build   # runs the end-to-end tests that have a @this tag
-	@env $(BUILD_ARGS) go test . -v -count=1 -this
+	@env $(GO_BUILD_ARGS) go test . -v -count=1 -this
 
 cuke-prof: build  # creates a flamegraph
-	env $(BUILD_ARGS) go test . -v -cpuprofile=godog.out
+	env $(GO_BUILD_ARGS) go test . -v -cpuprofile=godog.out
 	@rm git-town.test
 	@echo Please open https://www.speedscope.app and load the file godog.out
 
