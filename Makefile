@@ -9,7 +9,7 @@ SHFMT_VERSION = 3.5.1
 # automatically derived helpers
 .DEFAULT_GOAL := help
 TODAY = $(shell date +'%Y/%m/%d')
-VERSION_TAG = $(shell git describe --exact-match --tags)
+VERSION = $(shell git describe --exact-match --tags)
 BUILD_ARGS = LANG=C GOGC=off
 
 build:  # builds for the current platform
@@ -133,4 +133,4 @@ tools/shfmt-${SHFMT_VERSION}:
 	@mv tools/shfmt tools/shfmt-${SHFMT_VERSION}
 
 version_tag:
-	@[ ! -z "$(VERSION)" ] || (echo "Please add current a Git for the version to release"; exit 5)
+	@[ ! -z "$(VERSION)" ] || (echo "Please add a current Git tag for the version to release"; exit 5)
