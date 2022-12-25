@@ -9,7 +9,7 @@ SHFMT_VERSION = 3.5.1
 # automatically derived internally used data and state
 .DEFAULT_GOAL := help
 TODAY = $(shell date +'%Y/%m/%d')
-VERSION := $(shell git describe --exact-match --tags)
+RELEASE_VERSION := $(shell git describe --exact-match --tags)
 DEV_VERSION := $(shell git describe --tags 2>/dev/null || git rev-parse --short HEAD)
 BUILD_ARGS = LANG=C GOGC=off
 
@@ -48,8 +48,8 @@ help:  # prints all available targets
 
 msi: valid_version_tag  # compiles the MSI installer for Windows
 	rm -f git-town*.msi
-	go build -trimpath -ldflags "-X github.com/git-town/git-town/src/cmd.version=${VERSION} -X github.com/git-town/git-town/src/cmd.buildDate=${TODAY}"
-	go-msi make --msi dist/git-town_${VERSION}_windows_intel_64.msi --version ${VERSION} --src installer/templates/ --path installer/wix.json
+	go build -trimpath -ldflags "-X github.com/git-town/git-town/src/cmd.version=${RELEASE_VERSION} -X github.com/git-town/git-town/src/cmd.buildDate=${TODAY}"
+	go-msi make --msi dist/git-town_${RELEASE_VERSION}_windows_intel_64.msi --version ${RELEASE_VERSION} --src installer/templates/ --path installer/wix.json
 	@rm git-town.exe
 
 release-linux: valid_version_tag   # creates a new release
@@ -57,22 +57,22 @@ release-linux: valid_version_tag   # creates a new release
 	goreleaser --rm-dist
 
 	# create GitHub release with files in alphabetical order
-	hub release create --draft --browse --message ${VERSION} \
-		-a dist/git-town_${VERSION}_linux_intel_64.deb \
-		-a dist/git-town_${VERSION}_linux_intel_64.rpm \
-		-a dist/git-town_${VERSION}_linux_intel_64.tar.gz \
-		-a dist/git-town_${VERSION}_linux_arm_64.deb \
-		-a dist/git-town_${VERSION}_linux_arm_64.rpm \
-		-a dist/git-town_${VERSION}_linux_arm_64.tar.gz \
-		-a dist/git-town_${VERSION}_macos_intel_64.tar.gz \
-		-a dist/git-town_${VERSION}_macos_arm_64.tar.gz \
-		-a dist/git-town_${VERSION}_windows_intel_64.zip \
-		${VERSION}
+	hub release create --draft --browse --message ${RELEASE_VERSION} \
+		-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.deb \
+		-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.rpm \
+		-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.tar.gz \
+		-a dist/git-town_${RELEASE_VERSION}_linux_arm_64.deb \
+		-a dist/git-town_${RELEASE_VERSION}_linux_arm_64.rpm \
+		-a dist/git-town_${RELEASE_VERSION}_linux_arm_64.tar.gz \
+		-a dist/git-town_${RELEASE_VERSION}_macos_intel_64.tar.gz \
+		-a dist/git-town_${RELEASE_VERSION}_macos_arm_64.tar.gz \
+		-a dist/git-town_${RELEASE_VERSION}_windows_intel_64.zip \
+		${RELEASE_VERSION}
 
 release-win: msi valid_version_tag  # adds the Windows installer to the release
-	hub release edit --browse --message ${VERSION} \
-		-a dist/git-town_${VERSION}_windows_intel_64.msi
-		${VERSION}
+	hub release edit --browse --message ${RELEASE_VERSION} \
+		-a dist/git-town_${RELEASE_VERSION}_windows_intel_64.msi
+		${RELEASE_VERSION}
 
 stats: tools/scc-${SCC_VERSION}  # shows code statistics
 	@find . -type f | grep -v './tools/node_modules' | grep -v '\./vendor/' | grep -v '\./.git/' | grep -v './website/book' | xargs tools/scc-${SCC_VERSION}
@@ -133,4 +133,4 @@ tools/shfmt-${SHFMT_VERSION}:
 	@mv tools/shfmt tools/shfmt-${SHFMT_VERSION}
 
 valid_version_tag:
-	@[ ! -z "$(VERSION)" ] || (echo "Please add a current Git tag for the version to release"; exit 5)
+	@[ ! -z "$(RELEASE_VERSION)" ] || (echo "Please add an up-to-date Git tag for the release"; exit 5)
