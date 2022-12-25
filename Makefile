@@ -9,7 +9,7 @@ SHFMT_VERSION = 3.5.1
 # automatically derived helpers
 .DEFAULT_GOAL := help
 TODAY = $(shell date +'%Y/%m/%d')
-VERSION_TAG = $(shell git describe --exact-match)
+VERSION_TAG = $(shell git describe --exact-match --tags)
 BUILD_ARGS = LANG=C GOGC=off
 
 build:  # builds for the current platform
