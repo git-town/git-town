@@ -1,5 +1,4 @@
-VERSION ?= 0.0.0
-
+# dev tooling and versions
 DEPTH_VERSION = 1.2.1
 GOFUMPT_VERSION = 0.3.0
 GOLANGCILINT_VERSION = 1.50.0
@@ -7,13 +6,15 @@ SCC_VERSION = 3.1.0
 SHELLCHECK_VERSION = 0.8.0
 SHFMT_VERSION = 3.5.1
 
-TODAY = $(shell date +'%Y/%m/%d')
+# internal data and state
 .DEFAULT_GOAL := help
-
+TODAY = $(shell date +'%Y/%m/%d')
+DEV_VERSION := $(shell git describe --tags 2> /dev/null || git rev-parse --short HEAD)
+RELEASE_VERSION := $(shell git describe --exact-match --tags 2> /dev/null)
 GO_BUILD_ARGS = LANG=C GOGC=off
 
 build:  # builds for the current platform
-	go install -trimpath -ldflags "-X github.com/git-town/git-town/v7/src/cmd.version=v${VERSION}-dev -X github.com/git-town/git-town/v7/src/cmd.buildDate=${TODAY}"
+	go install -trimpath -ldflags "-X github.com/git-town/git-town/v7/src/cmd.version=${DEV_VERSION}-dev -X github.com/git-town/git-town/v7/src/cmd.buildDate=${TODAY}"
 
 cuke: build   # runs all end-to-end tests
 	@env $(GO_BUILD_ARGS) go test . -v -count=1
@@ -45,33 +46,33 @@ fix: tools/golangci-lint-${GOLANGCILINT_VERSION} tools/gofumpt-${GOFUMPT_VERSION
 help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-msi:  # compiles the MSI installer for Windows
+msi: version_tag_is_up_to_date  # compiles the MSI installer for Windows
 	rm -f git-town*.msi
-	go build -trimpath -ldflags "-X github.com/git-town/git-town/src/cmd.version=v${VERSION} -X github.com/git-town/git-town/src/cmd.buildDate=${TODAY}"
-	go-msi make --msi dist/git-town_${VERSION}_windows_intel_64.msi --version ${VERSION} --src installer/templates/ --path installer/wix.json
+	go build -trimpath -ldflags "-X github.com/git-town/git-town/src/cmd.version=${RELEASE_VERSION} -X github.com/git-town/git-town/src/cmd.buildDate=${TODAY}"
+	go-msi make --msi dist/git-town_${RELEASE_VERSION}_windows_intel_64.msi --version ${RELEASE_VERSION} --src installer/templates/ --path installer/wix.json
 	@rm git-town.exe
 
-release-linux:   # creates a new release
+release-linux: version_tag_is_up_to_date   # creates a new release
 	# cross-compile the binaries
 	goreleaser --rm-dist
 
 	# create GitHub release with files in alphabetical order
-	hub release create --draft --browse --message v${VERSION} \
-		-a dist/git-town_${VERSION}_linux_intel_64.deb \
-		-a dist/git-town_${VERSION}_linux_intel_64.rpm \
-		-a dist/git-town_${VERSION}_linux_intel_64.tar.gz \
-		-a dist/git-town_${VERSION}_linux_arm_64.deb \
-		-a dist/git-town_${VERSION}_linux_arm_64.rpm \
-		-a dist/git-town_${VERSION}_linux_arm_64.tar.gz \
-		-a dist/git-town_${VERSION}_macos_intel_64.tar.gz \
-		-a dist/git-town_${VERSION}_macos_arm_64.tar.gz \
-		-a dist/git-town_${VERSION}_windows_intel_64.zip \
-		v${VERSION}
+	hub release create --draft --browse --message ${RELEASE_VERSION} \
+		-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.deb \
+		-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.rpm \
+		-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.tar.gz \
+		-a dist/git-town_${RELEASE_VERSION}_linux_arm_64.deb \
+		-a dist/git-town_${RELEASE_VERSION}_linux_arm_64.rpm \
+		-a dist/git-town_${RELEASE_VERSION}_linux_arm_64.tar.gz \
+		-a dist/git-town_${RELEASE_VERSION}_macos_intel_64.tar.gz \
+		-a dist/git-town_${RELEASE_VERSION}_macos_arm_64.tar.gz \
+		-a dist/git-town_${RELEASE_VERSION}_windows_intel_64.zip \
+		${RELEASE_VERSION}
 
-release-win: msi  # adds the Windows installer to the release
-	hub release edit --browse --message v${VERSION} \
-		-a dist/git-town_${VERSION}_windows_intel_64.msi
-		v${VERSION}
+release-win: msi version_tag_is_up_to_date  # adds the Windows installer to the release
+	hub release edit --browse --message ${RELEASE_VERSION} \
+		-a dist/git-town_${RELEASE_VERSION}_windows_intel_64.msi
+		${RELEASE_VERSION}
 
 stats: tools/scc-${SCC_VERSION}  # shows code statistics
 	@find . -type f | grep -v './tools/node_modules' | grep -v '\./vendor/' | grep -v '\./.git/' | grep -v './website/book' | xargs tools/scc-${SCC_VERSION}
@@ -130,3 +131,7 @@ tools/shfmt-${SHFMT_VERSION}:
 	@echo installing Shellfmt ${SHFMT_VERSION} ...
 	@env GOBIN="$(CURDIR)/tools" go install mvdan.cc/sh/v3/cmd/shfmt@v${SHFMT_VERSION}
 	@mv tools/shfmt tools/shfmt-${SHFMT_VERSION}
+
+# verifies that the latest commit in the repo has a Git tag
+version_tag_is_up_to_date:
+	@[ ! -z "$(RELEASE_VERSION)" ] || (echo "Please add an up-to-date Git tag for the release"; exit 5)
