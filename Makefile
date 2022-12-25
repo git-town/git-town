@@ -13,7 +13,6 @@ VERSION_TAG = $(shell git describe --exact-match)
 BUILD_ARGS = LANG=C GOGC=off
 
 build:  # builds for the current platform
-	echo VERSION $(VERSION)
 	$(eval DEV_VERSION = $(shell git describe --tags 2>/dev/null || git rev-parse --short HEAD))
 	go install -trimpath -ldflags "-X github.com/git-town/git-town/v7/src/cmd.version=${DEV_VERSION}-dev -X github.com/git-town/git-town/v7/src/cmd.buildDate=${TODAY}"
 
