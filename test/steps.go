@@ -328,8 +328,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^it prints no output$`, func() error {
-		if !strings.Contains(state.runRes.OutputSanitized(), expected.Content) {
-			return fmt.Errorf("text not found:\n\nEXPECTED: %q\n\nACTUAL:\n\n%q", expected.Content, state.runRes.OutputSanitized())
+		output := state.runRes.OutputSanitized()
+		if output != "" {
+			return fmt.Errorf("expected no output but found %q", output)
 		}
 		return nil
 	})
