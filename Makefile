@@ -48,7 +48,7 @@ help:  # prints all available targets
 
 msi: version_tag  # compiles the MSI installer for Windows
 	rm -f git-town*.msi
-	go build -trimpath -ldflags "-X github.com/git-town/git-town/src/cmd.version=v${VERSION} -X github.com/git-town/git-town/src/cmd.buildDate=${TODAY}"
+	go build -trimpath -ldflags "-X github.com/git-town/git-town/src/cmd.version=${VERSION} -X github.com/git-town/git-town/src/cmd.buildDate=${TODAY}"
 	go-msi make --msi dist/git-town_${VERSION}_windows_intel_64.msi --version ${VERSION} --src installer/templates/ --path installer/wix.json
 	@rm git-town.exe
 
@@ -67,12 +67,12 @@ release-linux: version_tag   # creates a new release
 		-a dist/git-town_${VERSION}_macos_intel_64.tar.gz \
 		-a dist/git-town_${VERSION}_macos_arm_64.tar.gz \
 		-a dist/git-town_${VERSION}_windows_intel_64.zip \
-		v${VERSION}
+		${VERSION}
 
 release-win: msi version_tag  # adds the Windows installer to the release
 	hub release edit --browse --message ${VERSION} \
 		-a dist/git-town_${VERSION}_windows_intel_64.msi
-		v${VERSION}
+		${VERSION}
 
 stats: tools/scc-${SCC_VERSION}  # shows code statistics
 	@find . -type f | grep -v './tools/node_modules' | grep -v '\./vendor/' | grep -v '\./.git/' | grep -v './website/book' | xargs tools/scc-${SCC_VERSION}
