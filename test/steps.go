@@ -330,9 +330,17 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^it prints no output$`, func() error {
-		output := state.runRes.OutputSanitized()
-		if output != "" {
-			return fmt.Errorf("expected no output but found %q", output)
+		if !strings.Contains(state.runRes.OutputSanitized(), expected.Content) {
+			return fmt.Errorf("text not found:\n\nEXPECTED: %q\n\nACTUAL:\n\n%q", expected.Content, state.runRes.OutputSanitized())
+		}
+		return nil
+	})
+
+	suite.Step(`^it prints something like:$`, func(expected *messages.PickleStepArgument_PickleDocString) error {
+		regex := regexp.MustCompile(expected.Content)
+		have := state.runRes.OutputSanitized()
+		if !regex.MatchString(have) {
+			return fmt.Errorf("EXPECTED: a regex matching %q\nGOT: %q", expected.Content, have)
 		}
 		return nil
 	})
