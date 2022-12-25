@@ -9,7 +9,8 @@ SHFMT_VERSION = 3.5.1
 # automatically derived internally used data and state
 .DEFAULT_GOAL := help
 TODAY = $(shell date +'%Y/%m/%d')
-VERSION = $(shell git describe --exact-match --tags)
+VERSION := $(shell git describe --exact-match --tags)
+DEV_VERSION := $(shell git describe --tags 2>/dev/null || git rev-parse --short HEAD)
 BUILD_ARGS = LANG=C GOGC=off
 
 build:  # builds for the current platform
@@ -45,13 +46,13 @@ fix: tools/golangci-lint-${GOLANGCILINT_VERSION} tools/gofumpt-${GOFUMPT_VERSION
 help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-msi: version_tag  # compiles the MSI installer for Windows
+msi: valid_version_tag  # compiles the MSI installer for Windows
 	rm -f git-town*.msi
 	go build -trimpath -ldflags "-X github.com/git-town/git-town/src/cmd.version=${VERSION} -X github.com/git-town/git-town/src/cmd.buildDate=${TODAY}"
 	go-msi make --msi dist/git-town_${VERSION}_windows_intel_64.msi --version ${VERSION} --src installer/templates/ --path installer/wix.json
 	@rm git-town.exe
 
-release-linux: version_tag   # creates a new release
+release-linux: valid_version_tag   # creates a new release
 	# cross-compile the binaries
 	goreleaser --rm-dist
 
@@ -68,7 +69,7 @@ release-linux: version_tag   # creates a new release
 		-a dist/git-town_${VERSION}_windows_intel_64.zip \
 		${VERSION}
 
-release-win: msi version_tag  # adds the Windows installer to the release
+release-win: msi valid_version_tag  # adds the Windows installer to the release
 	hub release edit --browse --message ${VERSION} \
 		-a dist/git-town_${VERSION}_windows_intel_64.msi
 		${VERSION}
@@ -131,5 +132,5 @@ tools/shfmt-${SHFMT_VERSION}:
 	@env GOBIN="$(CURDIR)/tools" go install mvdan.cc/sh/v3/cmd/shfmt@v${SHFMT_VERSION}
 	@mv tools/shfmt tools/shfmt-${SHFMT_VERSION}
 
-version_tag:
+valid_version_tag:
 	@[ ! -z "$(VERSION)" ] || (echo "Please add a current Git tag for the version to release"; exit 5)
