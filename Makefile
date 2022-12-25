@@ -6,7 +6,7 @@ SCC_VERSION = 3.1.0
 SHELLCHECK_VERSION = 0.8.0
 SHFMT_VERSION = 3.5.1
 
-# internally data and state
+# internal data and state
 .DEFAULT_GOAL := help
 TODAY = $(shell date +'%Y/%m/%d')
 DEV_VERSION := $(shell git describe --tags 2> /dev/null || git rev-parse --short HEAD)
