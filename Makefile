@@ -46,13 +46,13 @@ fix: tools/golangci-lint-${GOLANGCILINT_VERSION} tools/gofumpt-${GOFUMPT_VERSION
 help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-msi: valid_version_tag  # compiles the MSI installer for Windows
+msi: version_tag_is_up_to_date  # compiles the MSI installer for Windows
 	rm -f git-town*.msi
 	go build -trimpath -ldflags "-X github.com/git-town/git-town/src/cmd.version=${RELEASE_VERSION} -X github.com/git-town/git-town/src/cmd.buildDate=${TODAY}"
 	go-msi make --msi dist/git-town_${RELEASE_VERSION}_windows_intel_64.msi --version ${RELEASE_VERSION} --src installer/templates/ --path installer/wix.json
 	@rm git-town.exe
 
-release-linux: valid_version_tag   # creates a new release
+release-linux: version_tag_is_up_to_date   # creates a new release
 	# cross-compile the binaries
 	goreleaser --rm-dist
 
@@ -69,7 +69,7 @@ release-linux: valid_version_tag   # creates a new release
 		-a dist/git-town_${RELEASE_VERSION}_windows_intel_64.zip \
 		${RELEASE_VERSION}
 
-release-win: msi valid_version_tag  # adds the Windows installer to the release
+release-win: msi version_tag_is_up_to_date  # adds the Windows installer to the release
 	hub release edit --browse --message ${RELEASE_VERSION} \
 		-a dist/git-town_${RELEASE_VERSION}_windows_intel_64.msi
 		${RELEASE_VERSION}
@@ -132,5 +132,5 @@ tools/shfmt-${SHFMT_VERSION}:
 	@env GOBIN="$(CURDIR)/tools" go install mvdan.cc/sh/v3/cmd/shfmt@v${SHFMT_VERSION}
 	@mv tools/shfmt tools/shfmt-${SHFMT_VERSION}
 
-valid_version_tag:
+version_tag_is_up_to_date:
 	@[ ! -z "$(RELEASE_VERSION)" ] || (echo "Please add an up-to-date Git tag for the release"; exit 5)
