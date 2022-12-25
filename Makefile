@@ -132,5 +132,6 @@ tools/shfmt-${SHFMT_VERSION}:
 	@env GOBIN="$(CURDIR)/tools" go install mvdan.cc/sh/v3/cmd/shfmt@v${SHFMT_VERSION}
 	@mv tools/shfmt tools/shfmt-${SHFMT_VERSION}
 
+# verifies that the latest commit in the repo has a Git tag
 version_tag_is_up_to_date:
 	@[ ! -z "$(RELEASE_VERSION)" ] || (echo "Please add an up-to-date Git tag for the release"; exit 5)
