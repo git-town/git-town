@@ -643,6 +643,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^the coworker sets the "sync-strategy" to "(merge|rebase)"$`, func(value string) error {
+		_ = state.gitEnv.CoworkerRepo.Config.SetSyncStrategy(value)
+		return nil
+	})
+
 	suite.Step(`^the current branch is "([^"]*)"$`, func(name string) error {
 		state.initialCurrentBranch = name
 		if !stringslice.Contains(state.initialLocalBranches, name) {
