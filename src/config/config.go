@@ -403,6 +403,11 @@ func (c *Config) SetShouldSyncUpstream(value bool) error {
 	return err
 }
 
+func (c *Config) SetSyncStrategy(value string) error {
+	_, err := c.SetLocalConfigValue("git-town.sync-strategy", value)
+	return err
+}
+
 // SetTestOrigin sets the origin to be used for testing.
 func (c *Config) SetTestOrigin(value string) error {
 	_, err := c.SetLocalConfigValue("git-town.testing.remote-url", value)

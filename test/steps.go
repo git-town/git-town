@@ -565,6 +565,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^setting "sync-strategy" is "(merge|rebase)"$`, func(value string) error {
+		_ = state.gitEnv.DevRepo.Config.SetSyncStrategy(value)
+		return nil
+	})
+
 	suite.Step(`^setting "sync-upstream" is (true|false)$`, func(text string) error {
 		value, err := strconv.ParseBool(text)
 		if err != nil {

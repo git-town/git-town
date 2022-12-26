@@ -11,6 +11,7 @@ Feature: sync the current feature branch using rebases
       |         | origin   | origin feature commit |
     When I run "git-town sync"
 
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                     |
