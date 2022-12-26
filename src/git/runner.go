@@ -859,9 +859,9 @@ func (r *Runner) PushBranchToOrigin(name string) error {
 
 // PushBranchForce force-pushes the branch with the given name to origin.
 func (r *Runner) PushBranchForceWithLease(name string) error {
-	_, err := r.Run("git", "push", "--force-with-lease", "origin", name)
+	_, err := r.Run("git", "push", "--force-with-lease")
 	if err != nil {
-		return fmt.Errorf("cannot force-push branch %q in repo %q to origin: %w", name, r.WorkingDir(), err)
+		return fmt.Errorf("cannot force-push with lease branch %q in repo %q to origin: %w", name, r.WorkingDir(), err)
 	}
 	return nil
 }

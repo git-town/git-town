@@ -18,7 +18,7 @@ Feature: sync the current feature branch using rebases
       | feature | git fetch --prune --tags    |
       |         | git checkout main           |
       | main    | git rebase origin/main      |
-      |         | git push                    |
+      |         | git push --force-with-lease |
       |         | git checkout feature        |
       | feature | git rebase origin/feature   |
       |         | git rebase main             |
@@ -29,7 +29,7 @@ Feature: sync the current feature branch using rebases
       | BRANCH  | LOCATION      | MESSAGE               |
       | main    | local, origin | origin main commit    |
       |         |               | local main commit     |
-      | feature | local, origin | local feature commit  |
-      |         |               | origin feature commit |
-      |         |               | origin main commit    |
+      | feature | local, origin | origin main commit    |
       |         |               | local main commit     |
+      |         |               | origin feature commit |
+      |         |               | local feature commit  |

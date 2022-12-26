@@ -43,7 +43,7 @@ func SyncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (St
 			case "merge":
 				result.Append(&steps.PushBranchStep{BranchName: branchName})
 			case "rebase":
-				result.Append(&steps.PushBranchWithLeaseStep{BranchName: branchName})
+				result.Append(&steps.PushBranchStep{BranchName: branchName, ForceWithLease: true})
 			default:
 				return StepList{}, fmt.Errorf("unknown syncStrategy value: %q", syncStrategy)
 			}
