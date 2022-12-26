@@ -456,7 +456,11 @@ func (c *Config) ShouldSyncUpstream() bool {
 }
 
 func (c *Config) SyncStrategy() string {
-	return c.localOrGlobalConfigValue("git-town.sync-strategy")
+	setting := c.localOrGlobalConfigValue("git-town.sync-strategy")
+	if setting == "" {
+		setting = "rebase"
+	}
+	return setting
 }
 
 // ValidateIsOnline asserts that Git Town is not in offline mode.
