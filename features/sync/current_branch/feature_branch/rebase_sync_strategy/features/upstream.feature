@@ -10,7 +10,6 @@ Feature: with upstream repo
       | feature | local    | local commit    |
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                     |

@@ -1002,6 +1002,7 @@ func (r *Runner) ShaForCommit(name string) (string, error) {
 	if result == "" {
 		return "", fmt.Errorf("cannot find the SHA of commit %q", name)
 	}
+	result = strings.Split(result, "\n")[0]
 	return result, nil
 }
 
