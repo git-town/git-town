@@ -1,7 +1,8 @@
 Feature: sync inside a folder that doesn't exist on the main branch
 
   Background:
-    Given the feature branches "current" and "other"
+    Given setting "sync-strategy" is "rebase"
+    And the feature branches "current" and "other"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local, origin | conflicting main commit    | conflicting_file | main content    |
@@ -14,34 +15,35 @@ Feature: sync inside a folder that doesn't exist on the main branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                            |
-      | current | git fetch --prune --tags           |
-      |         | git add -A                         |
-      |         | git stash                          |
-      |         | git checkout main                  |
-      | main    | git rebase origin/main             |
-      |         | git checkout current               |
-      | current | git merge --no-edit origin/current |
-      |         | git merge --no-edit main           |
+      | BRANCH  | COMMAND                   |
+      | current | git fetch --prune --tags  |
+      |         | git add -A                |
+      |         | git stash                 |
+      |         | git checkout main         |
+      | main    | git rebase origin/main    |
+      |         | git checkout current      |
+      | current | git rebase origin/current |
+      |         | git rebase main           |
     And the current branch is still "current"
     And the uncommitted file is stashed
-    And a merge is now in progress
+    And a rebase is now in progress
     And it prints the error:
       """
       exit status 1
       """
 
+  @this
   Scenario: abort
     When I run "git-town abort" in the "new_folder" folder
     Then it runs the commands
       | BRANCH  | COMMAND              |
-      | current | git merge --abort    |
+      | current | git rebase --abort   |
       |         | git checkout main    |
       | main    | git checkout current |
       | current | git stash pop        |
     And the current branch is still "current"
     And the uncommitted file still exists
-    And no merge is in progress
+    And no rebase is in progress
     And now the initial commits exist
 
   Scenario: continue with unresolved conflict
@@ -53,7 +55,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
       """
     And the current branch is still "current"
     And the uncommitted file is stashed
-    And a merge is now in progress
+    And a rebase is now in progress
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
@@ -72,7 +74,7 @@ Feature: sync inside a folder that doesn't exist on the main branch
     And all branches are now synchronized
     And the current branch is still "current"
     And the uncommitted file still exists
-    And no merge is in progress
+    And no rebase is in progress
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, origin | conflicting main commit          |

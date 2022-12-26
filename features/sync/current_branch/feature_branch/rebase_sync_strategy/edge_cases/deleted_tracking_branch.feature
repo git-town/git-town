@@ -1,7 +1,8 @@
 Feature: restores deleted tracking branch
 
   Background:
-    Given the current branch is a feature branch "feature"
+    Given setting "sync-strategy" is "rebase"
+    And the current branch is a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
@@ -15,7 +16,7 @@ Feature: restores deleted tracking branch
       |         | git checkout main          |
       | main    | git rebase origin/main     |
       |         | git checkout feature       |
-      | feature | git merge --no-edit main   |
+      | feature | git rebase main            |
       |         | git push -u origin feature |
     And all branches are now synchronized
     And the current branch is still "feature"

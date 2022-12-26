@@ -1,7 +1,8 @@
 Feature: handle conflicts between the current feature branch and its tracking branch
 
   Background:
-    Given the current branch is a feature branch "feature"
+    Given setting "sync-strategy" is "rebase"
+    And the current branch is a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | feature | local    | conflicting local commit  | conflicting_file | local content  |
@@ -11,14 +12,14 @@ Feature: handle conflicts between the current feature branch and its tracking br
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                            |
-      | feature | git fetch --prune --tags           |
-      |         | git add -A                         |
-      |         | git stash                          |
-      |         | git checkout main                  |
-      | main    | git rebase origin/main             |
-      |         | git checkout feature               |
-      | feature | git merge --no-edit origin/feature |
+      | BRANCH  | COMMAND                   |
+      | feature | git fetch --prune --tags  |
+      |         | git add -A                |
+      |         | git stash                 |
+      |         | git checkout main         |
+      | main    | git rebase origin/main    |
+      |         | git checkout feature      |
+      | feature | git rebase origin/feature |
     And it prints the error:
       """
       To abort, run "git-town abort".
@@ -27,19 +28,19 @@ Feature: handle conflicts between the current feature branch and its tracking br
       """
     And the current branch is still "feature"
     And the uncommitted file is stashed
-    And a merge is now in progress
+    And a rebase is now in progress
 
   Scenario: abort
     When I run "git-town abort"
     Then it runs the commands
       | BRANCH  | COMMAND              |
-      | feature | git merge --abort    |
+      | feature | git rebase --abort   |
       |         | git checkout main    |
       | main    | git checkout feature |
       | feature | git stash pop        |
     And the current branch is still "feature"
     And the uncommitted file still exists
-    And no merge is in progress
+    And no rebase is in progress
     And now the initial commits exist
 
   Scenario: continue with unresolved conflict
@@ -51,20 +52,20 @@ Feature: handle conflicts between the current feature branch and its tracking br
       """
     And the current branch is still "feature"
     And the uncommitted file is stashed
-    And a merge is now in progress
+    And a rebase is now in progress
 
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
-    And I run "git-town continue"
+    And I run "git-town continue" and enter "resolved commit" for the commit message
     Then it runs the commands
-      | BRANCH  | COMMAND                  |
-      | feature | git commit --no-edit     |
-      |         | git merge --no-edit main |
-      |         | git push                 |
-      |         | git stash pop            |
+      | BRANCH  | COMMAND                     |
+      | feature | git rebase --continue       |
+      |         | git rebase main             |
+      |         | git push --force-with-lease |
+      |         | git stash pop               |
     And all branches are now synchronized
     And the current branch is still "feature"
-    And no merge is in progress
+    And no rebase is in progress
     And the uncommitted file still exists
     And these committed files exist now
       | BRANCH  | NAME             | CONTENT          |
@@ -75,7 +76,8 @@ Feature: handle conflicts between the current feature branch and its tracking br
     And I run "git commit --no-edit"
     And I run "git-town continue"
     Then it runs the commands
-      | BRANCH  | COMMAND                  |
-      | feature | git merge --no-edit main |
-      |         | git push                 |
-      |         | git stash pop            |
+      | BRANCH  | COMMAND                     |
+      | feature | git rebase --continue       |
+      |         | git rebase main             |
+      |         | git push --force-with-lease |
+      |         | git stash pop               |
