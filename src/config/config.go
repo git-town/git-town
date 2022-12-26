@@ -458,7 +458,7 @@ func (c *Config) ShouldSyncUpstream() bool {
 func (c *Config) SyncStrategy() string {
 	setting := c.localOrGlobalConfigValue("git-town.sync-strategy")
 	if setting == "" {
-		setting = "rebase"
+		setting = "merge"
 	}
 	return setting
 }
