@@ -49,15 +49,26 @@ func SyncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (St
 // Helpers
 
 func syncFeatureBranchSteps(branchName string, repo *git.ProdRepo) (StepList, error) {
+	syncStrategy := repo.Config.SyncStrategy()
 	hasTrackingBranch, err := repo.Silent.HasTrackingBranch(branchName)
 	if err != nil {
 		return StepList{}, err
 	}
 	result := StepList{}
 	if hasTrackingBranch {
-		result.Append(&steps.MergeBranchStep{BranchName: repo.Silent.TrackingBranchName(branchName)})
+		switch syncStrategy {
+		case "merge":
+			result.Append(&steps.MergeBranchStep{BranchName: repo.Silent.TrackingBranchName(branchName)})
+		case "rebase":
+			result.Append(&steps.RebaseBranchStep{BranchName: repo.Silent.TrackingBranchName(branchName)})
+		}
 	}
-	result.Append(&steps.MergeBranchStep{BranchName: repo.Config.ParentBranch(branchName)})
+	switch syncStrategy {
+	case "merge":
+		result.Append(&steps.MergeBranchStep{BranchName: repo.Config.ParentBranch(branchName)})
+	case "rebase":
+		result.Append(&steps.RebaseBranchStep{BranchName: repo.Config.ParentBranch(branchName)})
+	}
 	return result, nil
 }
 
