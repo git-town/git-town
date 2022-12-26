@@ -857,6 +857,15 @@ func (r *Runner) PushBranchToOrigin(name string) error {
 	return nil
 }
 
+// PushBranchForce force-pushes the branch with the given name to origin.
+func (r *Runner) PushBranchForceWithLease(name string) error {
+	_, err := r.Run("git", "push", "--force-with-lease", "origin", name)
+	if err != nil {
+		return fmt.Errorf("cannot force-push branch %q in repo %q to origin: %w", name, r.WorkingDir(), err)
+	}
+	return nil
+}
+
 // PushTags pushes new the Git tags to origin.
 func (r *Runner) PushTags() error {
 	_, err := r.Run("git", "push", "--tags")

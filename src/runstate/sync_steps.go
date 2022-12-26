@@ -10,6 +10,7 @@ import (
 // SyncBranchSteps provides the steps to sync the branch with the given name.
 func SyncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (StepList, error) {
 	isFeature := repo.Config.IsFeatureBranch(branchName)
+	syncStrategy := repo.Config.SyncStrategy()
 	hasOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
 		return StepList{}, err
@@ -38,7 +39,14 @@ func SyncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (St
 			return StepList{}, err
 		}
 		if hasTrackingBranch {
-			result.Append(&steps.PushBranchStep{BranchName: branchName})
+			switch syncStrategy {
+			case "merge":
+				result.Append(&steps.PushBranchStep{BranchName: branchName})
+			case "rebase":
+				result.Append(&steps.PushBranchWithLeaseStep{BranchName: branchName})
+			default:
+				return StepList{}, fmt.Errorf("unknown syncStrategy value: %q", syncStrategy)
+			}
 		} else {
 			result.Append(&steps.CreateTrackingBranchStep{BranchName: branchName})
 		}
@@ -61,6 +69,8 @@ func syncFeatureBranchSteps(branchName string, repo *git.ProdRepo) (StepList, er
 			result.Append(&steps.MergeBranchStep{BranchName: repo.Silent.TrackingBranchName(branchName)})
 		case "rebase":
 			result.Append(&steps.RebaseBranchStep{BranchName: repo.Silent.TrackingBranchName(branchName)})
+		default:
+			return StepList{}, fmt.Errorf("unknown syncStrategy value: %q", syncStrategy)
 		}
 	}
 	switch syncStrategy {
@@ -68,6 +78,8 @@ func syncFeatureBranchSteps(branchName string, repo *git.ProdRepo) (StepList, er
 		result.Append(&steps.MergeBranchStep{BranchName: repo.Config.ParentBranch(branchName)})
 	case "rebase":
 		result.Append(&steps.RebaseBranchStep{BranchName: repo.Config.ParentBranch(branchName)})
+	default:
+		return StepList{}, fmt.Errorf("unknown syncStrategy value: %q", syncStrategy)
 	}
 	return result, nil
 }
