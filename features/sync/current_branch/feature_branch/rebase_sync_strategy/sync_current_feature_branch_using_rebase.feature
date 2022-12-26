@@ -17,7 +17,7 @@ Feature: sync the current feature branch using the "rebase" sync strategy
       | feature | git fetch --prune --tags    |
       |         | git checkout main           |
       | main    | git rebase origin/main      |
-      |         | git push --force-with-lease |
+      |         | git push                    |
       |         | git checkout feature        |
       | feature | git rebase origin/feature   |
       |         | git rebase main             |
