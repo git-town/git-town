@@ -1,4 +1,4 @@
-Feature: sync the current feature branch using rebases
+Feature: sync the current feature branch using the "rebase" sync strategy
 
   Background:
     Given setting "sync-strategy" is "rebase"
