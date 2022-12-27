@@ -12,8 +12,8 @@ type PushBranchStep struct {
 	BranchName     string
 	Force          bool
 	ForceWithLease bool
-	Undoable       bool
 	NoPushVerify   bool
+	Undoable       bool
 }
 
 func (step *PushBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
