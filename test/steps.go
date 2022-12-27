@@ -574,7 +574,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.gitEnv.DevRepo.Config.Reload()
 		have := state.gitEnv.DevRepo.Config.SyncStrategy()
 		if have != want {
-			return fmt.Errorf("expected pull-branch-strategy to be %q but was %q", want, have)
+			return fmt.Errorf("expected sync-strategy to be %q but was %q", want, have)
 		}
 		return nil
 	})
