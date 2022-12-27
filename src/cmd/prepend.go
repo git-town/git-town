@@ -16,6 +16,7 @@ type prependConfig struct {
 	hasOrigin           bool
 	initialBranch       string
 	isOffline           bool
+	noPushVerify        bool
 	parentBranch        string
 	shouldNewBranchPush bool
 	targetBranch        string
@@ -95,6 +96,7 @@ func createPrependConfig(args []string, repo *git.ProdRepo) (prependConfig, erro
 	if err != nil {
 		return prependConfig{}, err
 	}
+	result.noPushVerify = !repo.Config.PushVerify()
 	result.parentBranch = repo.Config.ParentBranch(result.initialBranch)
 	result.ancestorBranches = repo.Config.AncestorBranches(result.initialBranch)
 	return result, nil
@@ -114,7 +116,7 @@ func createPrependStepList(config prependConfig, repo *git.ProdRepo) (runstate.S
 	result.Append(&steps.SetParentBranchStep{BranchName: config.initialBranch, ParentBranchName: config.targetBranch})
 	result.Append(&steps.CheckoutBranchStep{BranchName: config.targetBranch})
 	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
-		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.targetBranch})
+		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.targetBranch, NoPushVerify: config.noPushVerify})
 	}
 	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
 	return result, err

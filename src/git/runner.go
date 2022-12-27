@@ -317,8 +317,13 @@ func (r *Runner) CreatePerennialBranches(names ...string) error {
 }
 
 // CreateRemoteBranch creates a remote branch from the given local SHA.
-func (r *Runner) CreateRemoteBranch(localSha, branchName string) error {
-	_, err := r.Run("git", "push", "origin", localSha+":refs/heads/"+branchName)
+func (r *Runner) CreateRemoteBranch(localSha, branchName string, noPushVerify bool) error {
+	args := []string{"push"}
+	if noPushVerify {
+		args = append(args, "--no-verify")
+	}
+	args = append(args, "origin", localSha+":refs/heads/"+branchName)
+	_, err := r.Run("git", args...)
 	if err != nil {
 		return fmt.Errorf("cannot create remote branch for local SHA %q: %w", localSha, err)
 	}
@@ -345,8 +350,13 @@ func (r *Runner) CreateTag(name string) error {
 }
 
 // CreateTrackingBranch creates a remote tracking branch for the given local branch.
-func (r *Runner) CreateTrackingBranch(branch string) error {
-	_, err := r.Run("git", "push", "-u", "origin", branch)
+func (r *Runner) CreateTrackingBranch(branch string, noPushVerify bool) error {
+	args := []string{"push"}
+	if noPushVerify {
+		args = append(args, "--no-verify")
+	}
+	args = append(args, "-u", "origin", branch)
+	_, err := r.Run("git", args...)
 	if err != nil {
 		return fmt.Errorf("cannot create tracking branch for %q: %w", branch, err)
 	}
@@ -831,8 +841,12 @@ func (r *Runner) Pull() error {
 }
 
 // PushBranch pushes the branch with the given name to origin.
-func (r *Runner) PushBranch() error {
-	_, err := r.Run("git", "push")
+func (r *Runner) PushBranch(noVerify bool) error {
+	args := []string{"push"}
+	if noVerify {
+		args = append(args, "--no-verify")
+	}
+	_, err := r.Run("git", args...)
 	if err != nil {
 		return fmt.Errorf("cannot push branch in repo %q to origin: %w", r.WorkingDir(), err)
 	}
@@ -840,8 +854,14 @@ func (r *Runner) PushBranch() error {
 }
 
 // PushBranchForce force-pushes the branch with the given name to origin.
-func (r *Runner) PushBranchForce(name string) error {
-	_, err := r.Run("git", "push", "-f", "origin", name)
+// TODO: merge into PushBranchForceWithLease.
+func (r *Runner) PushBranchForce(name string, noVerify bool) error {
+	args := []string{"push"}
+	if noVerify {
+		args = append(args, "--no-verify")
+	}
+	args = append(args, "-f", "origin", name)
+	_, err := r.Run("git", args...)
 	if err != nil {
 		return fmt.Errorf("cannot force-push branch %q in repo %q to origin: %w", name, r.WorkingDir(), err)
 	}
@@ -849,8 +869,13 @@ func (r *Runner) PushBranchForce(name string) error {
 }
 
 // PushBranchToOrigin pushes the branch with the given name to origin.
-func (r *Runner) PushBranchToOrigin(name string) error {
-	_, err := r.Run("git", "push", "-u", "origin", name)
+func (r *Runner) PushBranchToOrigin(name string, noVerify bool) error {
+	args := []string{"push"}
+	if noVerify {
+		args = append(args, "--no-verify")
+	}
+	args = append(args, "-u", "origin", name)
+	_, err := r.Run("git", args...)
 	if err != nil {
 		return fmt.Errorf("cannot push branch %q in repo %q to origin: %w", name, r.WorkingDir(), err)
 	}
@@ -858,8 +883,12 @@ func (r *Runner) PushBranchToOrigin(name string) error {
 }
 
 // PushBranchForce force-pushes the branch with the given name to origin.
-func (r *Runner) PushBranchForceWithLease(name string) error {
-	_, err := r.Run("git", "push", "--force-with-lease")
+func (r *Runner) PushBranchForceWithLease(name string, noVerify bool) error {
+	args := []string{"push", "--force-with-lease"}
+	if noVerify {
+		args = append(args, "--no-verify")
+	}
+	_, err := r.Run("git", args...)
 	if err != nil {
 		return fmt.Errorf("cannot force-push with lease branch %q in repo %q to origin: %w", name, r.WorkingDir(), err)
 	}

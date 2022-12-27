@@ -58,7 +58,7 @@ func createAppendStepList(config appendConfig, repo *git.ProdRepo) (runstate.Ste
 	result.Append(&steps.SetParentBranchStep{BranchName: config.targetBranch, ParentBranchName: config.parentBranch})
 	result.Append(&steps.CheckoutBranchStep{BranchName: config.targetBranch})
 	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
-		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.targetBranch})
+		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.targetBranch, NoPushVerify: config.noPushVerify})
 	}
 	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
 	return result, err
