@@ -68,7 +68,7 @@ Feature: push-verify setting
       | feature | git fetch --prune --tags           |
       |         | git checkout main                  |
       | main    | git rebase origin/main             |
-      |         | git push --no-verify               |
+      |         | git push                           |
       |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |

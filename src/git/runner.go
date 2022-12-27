@@ -831,9 +831,9 @@ func (r *Runner) Pull() error {
 }
 
 // PushBranch pushes the branch with the given name to origin.
-func (r *Runner) PushBranch(verify bool) error {
+func (r *Runner) PushBranch(noVerify bool) error {
 	args := []string{"push"}
-	if !verify {
+	if noVerify {
 		args = append(args, "--no-verify")
 	}
 	_, err := r.Run("git", args...)
@@ -845,9 +845,9 @@ func (r *Runner) PushBranch(verify bool) error {
 
 // PushBranchForce force-pushes the branch with the given name to origin.
 // TODO: merge into PushBranchForceWithLease.
-func (r *Runner) PushBranchForce(name string, verify bool) error {
+func (r *Runner) PushBranchForce(name string, noVerify bool) error {
 	args := []string{"push", "-f", "origin", name}
-	if !verify {
+	if noVerify {
 		args = append(args, "--no-verify")
 	}
 	_, err := r.Run("git", args...)
@@ -858,9 +858,9 @@ func (r *Runner) PushBranchForce(name string, verify bool) error {
 }
 
 // PushBranchToOrigin pushes the branch with the given name to origin.
-func (r *Runner) PushBranchToOrigin(name string, verify bool) error {
+func (r *Runner) PushBranchToOrigin(name string, noVerify bool) error {
 	args := []string{"push", "-u", "origin", name}
-	if !verify {
+	if noVerify {
 		args = append(args, "--no-verify")
 	}
 	_, err := r.Run("git", args...)
@@ -871,9 +871,9 @@ func (r *Runner) PushBranchToOrigin(name string, verify bool) error {
 }
 
 // PushBranchForce force-pushes the branch with the given name to origin.
-func (r *Runner) PushBranchForceWithLease(name string, verify bool) error {
+func (r *Runner) PushBranchForceWithLease(name string, noVerify bool) error {
 	args := []string{"push", "--force-with-lease"}
-	if !verify {
+	if noVerify {
 		args = append(args, "--no-verify")
 	}
 	_, err := r.Run("git", args...)

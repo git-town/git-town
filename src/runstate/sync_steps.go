@@ -45,7 +45,7 @@ func SyncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (St
 			if repo.Config.IsFeatureBranch(branchName) {
 				switch syncStrategy {
 				case "merge":
-					result.Append(&steps.PushBranchStep{BranchName: branchName, Verify: pushVerify})
+					result.Append(&steps.PushBranchStep{BranchName: branchName, NoVerify: !pushVerify})
 				case "rebase":
 					result.Append(&steps.PushBranchStep{BranchName: branchName, ForceWithLease: true})
 				default:
