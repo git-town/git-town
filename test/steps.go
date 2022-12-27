@@ -570,6 +570,15 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^setting "sync-strategy" is now "(merge|rebase)"$`, func(want string) error {
+		state.gitEnv.DevRepo.Config.Reload()
+		have := state.gitEnv.DevRepo.Config.SyncStrategy()
+		if have != want {
+			return fmt.Errorf("expected pull-branch-strategy to be %q but was %q", want, have)
+		}
+		return nil
+	})
+
 	suite.Step(`^setting "sync-upstream" is (true|false)$`, func(text string) error {
 		value, err := strconv.ParseBool(text)
 		if err != nil {
