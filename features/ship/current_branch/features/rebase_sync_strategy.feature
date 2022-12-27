@@ -1,4 +1,3 @@
-@this
 Feature: "rebase" sync strategy
 
   Background:

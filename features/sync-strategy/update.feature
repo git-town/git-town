@@ -1,4 +1,3 @@
-@this
 Feature: configure the pull_branch_strategy
 
   Scenario Outline:
