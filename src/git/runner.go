@@ -870,10 +870,11 @@ func (r *Runner) PushBranchForce(name string, noVerify bool) error {
 
 // PushBranchToOrigin pushes the branch with the given name to origin.
 func (r *Runner) PushBranchToOrigin(name string, noVerify bool) error {
-	args := []string{"push", "-u", "origin", name}
+	args := []string{"push"}
 	if noVerify {
 		args = append(args, "--no-verify")
 	}
+	args = append(args, "-u", "origin", name)
 	_, err := r.Run("git", args...)
 	if err != nil {
 		return fmt.Errorf("cannot push branch %q in repo %q to origin: %w", name, r.WorkingDir(), err)
