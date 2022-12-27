@@ -1,4 +1,5 @@
 vendor/**
 
 # this file has an intentionally unusual structure
-features/sync/current_branch/feature_branch/features/two_collaborators.feature
+features/sync/current_branch/feature_branch/merge_sync_strategy/features/two_collaborators.feature
+features/sync/current_branch/feature_branch/rebase_sync_strategy/features/two_collaborators.feature

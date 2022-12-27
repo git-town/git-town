@@ -1,4 +1,4 @@
-Feature: configure the pull_branch_strategy
+Feature: configure the sync-strategy
 
   Scenario Outline:
     When I run "git-town sync-strategy <VALUE>"
