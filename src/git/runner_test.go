@@ -98,7 +98,7 @@ func TestRunner(t *testing.T) {
 		assert.NoError(t, err)
 		err = runner.ConnectTrackingBranch("initial")
 		assert.NoError(t, err)
-		err = runner.PushBranch(git.PushArgs{})
+		err = runner.PushBranch()
 		assert.NoError(t, err)
 	})
 
@@ -336,7 +336,7 @@ func TestRunner(t *testing.T) {
 			runner := env.DevRepo.Runner
 			err = runner.CreateBranch("branch1", "main")
 			assert.NoError(t, err)
-			err = runner.PushBranch(git.PushArgs{})
+			err = runner.PushBranch()
 			assert.NoError(t, err)
 			err = runner.CreateFile("file1", "content")
 			assert.NoError(t, err)
@@ -355,7 +355,7 @@ func TestRunner(t *testing.T) {
 			assert.NoError(t, err)
 			err = env.DevRepo.CreateBranch("branch1", "main")
 			assert.NoError(t, err)
-			err = env.DevRepo.PushBranch(git.PushArgs{})
+			err = env.DevRepo.PushBranch()
 			assert.NoError(t, err)
 			err = env.OriginRepo.CheckoutBranch("main")
 			assert.NoError(t, err)
