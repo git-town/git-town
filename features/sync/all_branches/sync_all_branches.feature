@@ -13,9 +13,9 @@ Feature: sync all feature branches
       | qa         | local         | qa local commit          |
       |            | origin        | qa origin commit         |
     And the current branch is "alpha"
-    When I run "git-town sync --all"
 
-  Scenario: result
+  Scenario: with "merge" sync strategy
+    When I run "git-town sync --all"
     Then it runs the commands
       | BRANCH     | COMMAND                          |
       | alpha      | git fetch --prune --tags         |
@@ -37,5 +37,32 @@ Feature: sync all feature branches
       |            | git push                         |
       |            | git checkout alpha               |
       | alpha      | git push --tags                  |
+    And the current branch is still "alpha"
+    And all branches are now synchronized
+
+  Scenario: with "rebase" sync strategy
+    Given setting "sync-strategy" is "rebase"
+    When I run "git-town sync --all"
+    Then it runs the commands
+      | BRANCH     | COMMAND                      |
+      | alpha      | git fetch --prune --tags     |
+      |            | git checkout main            |
+      | main       | git rebase origin/main       |
+      |            | git checkout alpha           |
+      | alpha      | git rebase origin/alpha      |
+      |            | git rebase main              |
+      |            | git push --force-with-lease  |
+      |            | git checkout beta            |
+      | beta       | git rebase origin/beta       |
+      |            | git rebase main              |
+      |            | git push --force-with-lease  |
+      |            | git checkout production      |
+      | production | git rebase origin/production |
+      |            | git push                     |
+      |            | git checkout qa              |
+      | qa         | git rebase origin/qa         |
+      |            | git push                     |
+      |            | git checkout alpha           |
+      | alpha      | git push --tags              |
     And the current branch is still "alpha"
     And all branches are now synchronized

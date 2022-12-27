@@ -857,6 +857,15 @@ func (r *Runner) PushBranchToOrigin(name string) error {
 	return nil
 }
 
+// PushBranchForce force-pushes the branch with the given name to origin.
+func (r *Runner) PushBranchForceWithLease(name string) error {
+	_, err := r.Run("git", "push", "--force-with-lease")
+	if err != nil {
+		return fmt.Errorf("cannot force-push with lease branch %q in repo %q to origin: %w", name, r.WorkingDir(), err)
+	}
+	return nil
+}
+
 // PushTags pushes new the Git tags to origin.
 func (r *Runner) PushTags() error {
 	_, err := r.Run("git", "push", "--tags")
@@ -993,6 +1002,7 @@ func (r *Runner) ShaForCommit(name string) (string, error) {
 	if result == "" {
 		return "", fmt.Errorf("cannot find the SHA of commit %q", name)
 	}
+	result = strings.Split(result, "\n")[0]
 	return result, nil
 }
 

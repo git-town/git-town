@@ -9,9 +9,10 @@ import (
 // Optionally with force.
 type PushBranchStep struct {
 	NoOpStep
-	BranchName string
-	Force      bool
-	Undoable   bool
+	BranchName     string
+	Force          bool
+	ForceWithLease bool
+	Undoable       bool
 }
 
 func (step *PushBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
@@ -28,6 +29,9 @@ func (step *PushBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error
 	}
 	if !shouldPush && !repo.DryRun.IsActive() {
 		return nil
+	}
+	if step.ForceWithLease {
+		return repo.Logging.PushBranchForceWithLease(step.BranchName)
 	}
 	if step.Force {
 		return repo.Logging.PushBranchForce(step.BranchName)

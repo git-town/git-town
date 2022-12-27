@@ -403,6 +403,11 @@ func (c *Config) SetShouldSyncUpstream(value bool) error {
 	return err
 }
 
+func (c *Config) SetSyncStrategy(value string) error {
+	_, err := c.SetLocalConfigValue("git-town.sync-strategy", value)
+	return err
+}
+
 // SetTestOrigin sets the origin to be used for testing.
 func (c *Config) SetTestOrigin(value string) error {
 	_, err := c.SetLocalConfigValue("git-town.testing.remote-url", value)
@@ -448,6 +453,14 @@ func (c *Config) ShouldShipDeleteOriginBranch() bool {
 // ShouldSyncUpstream indicates whether this repo should sync with its upstream.
 func (c *Config) ShouldSyncUpstream() bool {
 	return c.localOrGlobalConfigValue("git-town.sync-upstream") != "false"
+}
+
+func (c *Config) SyncStrategy() string {
+	setting := c.localOrGlobalConfigValue("git-town.sync-strategy")
+	if setting == "" {
+		setting = "merge"
+	}
+	return setting
 }
 
 // ValidateIsOnline asserts that Git Town is not in offline mode.

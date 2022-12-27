@@ -565,6 +565,20 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^setting "sync-strategy" is "(merge|rebase)"$`, func(value string) error {
+		_ = state.gitEnv.DevRepo.Config.SetSyncStrategy(value)
+		return nil
+	})
+
+	suite.Step(`^setting "sync-strategy" is now "(merge|rebase)"$`, func(want string) error {
+		state.gitEnv.DevRepo.Config.Reload()
+		have := state.gitEnv.DevRepo.Config.SyncStrategy()
+		if have != want {
+			return fmt.Errorf("expected sync-strategy to be %q but was %q", want, have)
+		}
+		return nil
+	})
+
 	suite.Step(`^setting "sync-upstream" is (true|false)$`, func(text string) error {
 		value, err := strconv.ParseBool(text)
 		if err != nil {
@@ -635,6 +649,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the coworker sets the parent branch of "([^"]*)" as "([^"]*)"$`, func(childBranch, parentBranch string) error {
 		_ = state.gitEnv.CoworkerRepo.Config.SetParentBranch(childBranch, parentBranch)
+		return nil
+	})
+
+	suite.Step(`^the coworker sets the "sync-strategy" to "(merge|rebase)"$`, func(value string) error {
+		_ = state.gitEnv.CoworkerRepo.Config.SetSyncStrategy(value)
 		return nil
 	})
 
