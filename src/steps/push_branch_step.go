@@ -31,18 +31,15 @@ func (step *PushBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error
 	if !shouldPush && !repo.DryRun.IsActive() {
 		return nil
 	}
-	if step.ForceWithLease {
-		return repo.Logging.PushBranchForceWithLease(step.BranchName, step.NoPushVerify)
-	}
-	if step.Force {
-		return repo.Logging.PushBranchForce(step.BranchName, step.NoPushVerify)
-	}
 	currentBranch, err := repo.Silent.CurrentBranch()
 	if err != nil {
 		return err
 	}
-	if currentBranch == step.BranchName {
-		return repo.Logging.PushBranch(step.NoPushVerify)
-	}
-	return repo.Logging.PushBranchToOrigin(step.BranchName, step.NoPushVerify)
+	return repo.Logging.PushBranch(git.PushBranchArgs{
+		BranchName:     step.BranchName,
+		ForceWithLease: step.ForceWithLease,
+		NoPushVerify:   step.NoPushVerify,
+		Force:          step.Force,
+		ToOrigin:       currentBranch != step.BranchName,
+	})
 }

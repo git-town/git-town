@@ -14,6 +14,7 @@ import (
 	"github.com/cucumber/godog"
 	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/run"
 	"github.com/git-town/git-town/v7/src/stringslice"
 )
@@ -92,7 +93,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 		state.initialBranchHierarchy.AddRow(branch, parentBranch)
-		return state.gitEnv.DevRepo.PushBranchToOrigin(branch, false)
+		return state.gitEnv.DevRepo.PushBranch(git.PushBranchArgs{BranchName: branch, ToOrigin: true})
 	})
 
 	suite.Step(`^a merge is now in progress$`, func() error {
@@ -116,7 +117,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.initialBranchHierarchy.AddRow(branch, "main")
 		if !isLocal {
 			state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-			return state.gitEnv.DevRepo.PushBranchToOrigin(branch, false)
+			return state.gitEnv.DevRepo.PushBranch(git.PushBranchArgs{BranchName: branch, ToOrigin: true})
 		}
 		return nil
 	})
@@ -128,7 +129,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-		return state.gitEnv.DevRepo.PushBranchToOrigin(branch, false)
+		return state.gitEnv.DevRepo.PushBranch(git.PushBranchArgs{BranchName: branch, ToOrigin: true})
 	})
 
 	suite.Step(`^a rebase is now in progress$`, func() error {
@@ -693,7 +694,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 		if !isLocal {
 			state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-			err := state.gitEnv.DevRepo.PushBranchToOrigin(branch, false)
+			err := state.gitEnv.DevRepo.PushBranch(git.PushBranchArgs{BranchName: branch, ToOrigin: true})
 			if err != nil {
 				return err
 			}
@@ -792,7 +793,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			state.initialBranchHierarchy.AddRow(branch, "main")
 			if !isLocal {
-				err = state.gitEnv.DevRepo.PushBranchToOrigin(branch, false)
+				err = state.gitEnv.DevRepo.PushBranch(git.PushBranchArgs{BranchName: branch, ToOrigin: true})
 				if err != nil {
 					return err
 				}
@@ -812,7 +813,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			state.initialBranchHierarchy.AddRow(branch, "main")
 			if !isLocal {
-				err = state.gitEnv.DevRepo.PushBranchToOrigin(branch, false)
+				err = state.gitEnv.DevRepo.PushBranch(git.PushBranchArgs{BranchName: branch, ToOrigin: true})
 				if err != nil {
 					return err
 				}
@@ -831,11 +832,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.initialLocalBranches = append(state.initialLocalBranches, branch1, branch2)
 		if !isLocal {
 			state.initialRemoteBranches = append(state.initialRemoteBranches, branch1, branch2)
-			err = state.gitEnv.DevRepo.PushBranchToOrigin(branch1, false)
+			err = state.gitEnv.DevRepo.PushBranch(git.PushBranchArgs{BranchName: branch1, ToOrigin: true})
 			if err != nil {
 				return err
 			}
-			return state.gitEnv.DevRepo.PushBranchToOrigin(branch2, false)
+			return state.gitEnv.DevRepo.PushBranch(git.PushBranchArgs{BranchName: branch2, ToOrigin: true})
 		}
 		return nil
 	})
@@ -849,7 +850,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			}
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			if !isLocal {
-				err = state.gitEnv.DevRepo.PushBranchToOrigin(branch, false)
+				err = state.gitEnv.DevRepo.PushBranch(git.PushBranchArgs{BranchName: branch, ToOrigin: true})
 				if err != nil {
 					return fmt.Errorf("cannot push perennial branch upstream: %w", err)
 				}

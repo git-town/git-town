@@ -350,6 +350,7 @@ func (r *Runner) CreateTag(name string) error {
 }
 
 // CreateTrackingBranch creates a remote tracking branch for the given local branch.
+// TODO: use a the identical Push* method here
 func (r *Runner) CreateTrackingBranch(branch string, noPushVerify bool) error {
 	args := []string{"push"}
 	if noPushVerify {
@@ -840,57 +841,37 @@ func (r *Runner) Pull() error {
 	return nil
 }
 
+type PushBranchArgs struct {
+	BranchName     string
+	Force          bool
+	ForceWithLease bool
+	NoPushVerify   bool
+	ToOrigin       bool
+}
+
 // PushBranch pushes the branch with the given name to origin.
-func (r *Runner) PushBranch(noVerify bool) error {
+func (r *Runner) PushBranch(options PushBranchArgs) error {
 	args := []string{"push"}
-	if noVerify {
+	provideBranch := false
+	if options.Force {
+		args = append(args, "-f")
+	}
+	if options.NoPushVerify {
 		args = append(args, "--no-verify")
+	}
+	if options.ForceWithLease {
+		args = append(args, "--force-with-lease")
+	}
+	if options.ToOrigin {
+		args = append(args, "-u", "origin")
+		provideBranch = true
+	}
+	if options.BranchName != "" && provideBranch {
+		args = append(args, options.BranchName)
 	}
 	_, err := r.Run("git", args...)
 	if err != nil {
 		return fmt.Errorf("cannot push branch in repo %q to origin: %w", r.WorkingDir(), err)
-	}
-	return nil
-}
-
-// PushBranchForce force-pushes the branch with the given name to origin.
-// TODO: merge into PushBranchForceWithLease.
-func (r *Runner) PushBranchForce(name string, noVerify bool) error {
-	args := []string{"push"}
-	if noVerify {
-		args = append(args, "--no-verify")
-	}
-	args = append(args, "-f", "origin", name)
-	_, err := r.Run("git", args...)
-	if err != nil {
-		return fmt.Errorf("cannot force-push branch %q in repo %q to origin: %w", name, r.WorkingDir(), err)
-	}
-	return nil
-}
-
-// PushBranchToOrigin pushes the branch with the given name to origin.
-func (r *Runner) PushBranchToOrigin(name string, noVerify bool) error {
-	args := []string{"push"}
-	if noVerify {
-		args = append(args, "--no-verify")
-	}
-	args = append(args, "-u", "origin", name)
-	_, err := r.Run("git", args...)
-	if err != nil {
-		return fmt.Errorf("cannot push branch %q in repo %q to origin: %w", name, r.WorkingDir(), err)
-	}
-	return nil
-}
-
-// PushBranchForce force-pushes the branch with the given name to origin.
-func (r *Runner) PushBranchForceWithLease(name string, noVerify bool) error {
-	args := []string{"push", "--force-with-lease"}
-	if noVerify {
-		args = append(args, "--no-verify")
-	}
-	_, err := r.Run("git", args...)
-	if err != nil {
-		return fmt.Errorf("cannot force-push with lease branch %q in repo %q to origin: %w", name, r.WorkingDir(), err)
 	}
 	return nil
 }
