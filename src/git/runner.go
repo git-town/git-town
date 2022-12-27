@@ -856,10 +856,11 @@ func (r *Runner) PushBranch(noVerify bool) error {
 // PushBranchForce force-pushes the branch with the given name to origin.
 // TODO: merge into PushBranchForceWithLease.
 func (r *Runner) PushBranchForce(name string, noVerify bool) error {
-	args := []string{"push", "-f", "origin", name}
+	args := []string{"push"}
 	if noVerify {
 		args = append(args, "--no-verify")
 	}
+	args = append(args, "-f", "origin", name)
 	_, err := r.Run("git", args...)
 	if err != nil {
 		return fmt.Errorf("cannot force-push branch %q in repo %q to origin: %w", name, r.WorkingDir(), err)
