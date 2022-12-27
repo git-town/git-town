@@ -12,6 +12,7 @@ type PushBranchStep struct {
 	BranchName     string
 	Force          bool
 	ForceWithLease bool
+	NoPushVerify   bool
 	Undoable       bool
 }
 
@@ -31,17 +32,17 @@ func (step *PushBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error
 		return nil
 	}
 	if step.ForceWithLease {
-		return repo.Logging.PushBranchForceWithLease(step.BranchName)
+		return repo.Logging.PushBranchForceWithLease(step.BranchName, step.NoPushVerify)
 	}
 	if step.Force {
-		return repo.Logging.PushBranchForce(step.BranchName)
+		return repo.Logging.PushBranchForce(step.BranchName, step.NoPushVerify)
 	}
 	currentBranch, err := repo.Silent.CurrentBranch()
 	if err != nil {
 		return err
 	}
 	if currentBranch == step.BranchName {
-		return repo.Logging.PushBranch()
+		return repo.Logging.PushBranch(step.NoPushVerify)
 	}
-	return repo.Logging.PushBranchToOrigin(step.BranchName)
+	return repo.Logging.PushBranchToOrigin(step.BranchName, step.NoPushVerify)
 }

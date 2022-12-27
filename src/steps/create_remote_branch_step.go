@@ -8,10 +8,11 @@ import (
 // CreateRemoteBranchStep pushes the current branch up to origin.
 type CreateRemoteBranchStep struct {
 	NoOpStep
-	BranchName string
-	Sha        string
+	BranchName   string
+	NoPushVerify bool
+	Sha          string
 }
 
 func (step *CreateRemoteBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
-	return repo.Logging.CreateRemoteBranch(step.Sha, step.BranchName)
+	return repo.Logging.CreateRemoteBranch(step.Sha, step.BranchName, step.NoPushVerify)
 }
