@@ -1,4 +1,3 @@
-@this
 Feature: sync all feature branches
 
   Background:
