@@ -13,6 +13,7 @@ type PushBranchStep struct {
 	Force          bool
 	ForceWithLease bool
 	Undoable       bool
+	NoVerify       bool
 }
 
 func (step *PushBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
@@ -31,17 +32,17 @@ func (step *PushBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error
 		return nil
 	}
 	if step.ForceWithLease {
-		return repo.Logging.PushBranchForceWithLease(step.BranchName)
+		return repo.Logging.PushBranchForceWithLease(step.BranchName, step.Verify)
 	}
 	if step.Force {
-		return repo.Logging.PushBranchForce(step.BranchName)
+		return repo.Logging.PushBranchForce(step.BranchName, step.Verify)
 	}
 	currentBranch, err := repo.Silent.CurrentBranch()
 	if err != nil {
 		return err
 	}
 	if currentBranch == step.BranchName {
-		return repo.Logging.PushBranch()
+		return repo.Logging.PushBranch(step.Verify)
 	}
-	return repo.Logging.PushBranchToOrigin(step.BranchName)
+	return repo.Logging.PushBranchToOrigin(step.BranchName, step.Verify)
 }

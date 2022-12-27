@@ -831,8 +831,12 @@ func (r *Runner) Pull() error {
 }
 
 // PushBranch pushes the branch with the given name to origin.
-func (r *Runner) PushBranch() error {
-	_, err := r.Run("git", "push")
+func (r *Runner) PushBranch(verify bool) error {
+	args := []string{"push"}
+	if !verify {
+		args = append(args, "--no-verify")
+	}
+	_, err := r.Run("git", args...)
 	if err != nil {
 		return fmt.Errorf("cannot push branch in repo %q to origin: %w", r.WorkingDir(), err)
 	}
@@ -840,8 +844,13 @@ func (r *Runner) PushBranch() error {
 }
 
 // PushBranchForce force-pushes the branch with the given name to origin.
-func (r *Runner) PushBranchForce(name string) error {
-	_, err := r.Run("git", "push", "-f", "origin", name)
+// TODO: merge into PushBranchForceWithLease.
+func (r *Runner) PushBranchForce(name string, verify bool) error {
+	args := []string{"push", "-f", "origin", name}
+	if !verify {
+		args = append(args, "--no-verify")
+	}
+	_, err := r.Run("git", args...)
 	if err != nil {
 		return fmt.Errorf("cannot force-push branch %q in repo %q to origin: %w", name, r.WorkingDir(), err)
 	}
@@ -849,8 +858,12 @@ func (r *Runner) PushBranchForce(name string) error {
 }
 
 // PushBranchToOrigin pushes the branch with the given name to origin.
-func (r *Runner) PushBranchToOrigin(name string) error {
-	_, err := r.Run("git", "push", "-u", "origin", name)
+func (r *Runner) PushBranchToOrigin(name string, verify bool) error {
+	args := []string{"push", "-u", "origin", name}
+	if !verify {
+		args = append(args, "--no-verify")
+	}
+	_, err := r.Run("git", args...)
 	if err != nil {
 		return fmt.Errorf("cannot push branch %q in repo %q to origin: %w", name, r.WorkingDir(), err)
 	}
@@ -858,8 +871,12 @@ func (r *Runner) PushBranchToOrigin(name string) error {
 }
 
 // PushBranchForce force-pushes the branch with the given name to origin.
-func (r *Runner) PushBranchForceWithLease(name string) error {
-	_, err := r.Run("git", "push", "--force-with-lease")
+func (r *Runner) PushBranchForceWithLease(name string, verify bool) error {
+	args := []string{"push", "--force-with-lease"}
+	if !verify {
+		args = append(args, "--no-verify")
+	}
+	_, err := r.Run("git", args...)
 	if err != nil {
 		return fmt.Errorf("cannot force-push with lease branch %q in repo %q to origin: %w", name, r.WorkingDir(), err)
 	}
