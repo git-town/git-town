@@ -12,7 +12,6 @@ Feature: sync inside a folder that doesn't exist on the main branch
     And an uncommitted file
     When I run "git-town sync --all" in the "new_folder" folder
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                     |
