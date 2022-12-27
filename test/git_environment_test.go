@@ -23,7 +23,7 @@ func TestGitEnvironment(t *testing.T) {
 		assertIsNormalGitRepo(t, filepath.Join(dir, "cloned", "developer"))
 		assertHasGitBranch(t, filepath.Join(dir, "cloned", "developer"), "main")
 		// check pushing
-		err = cloned.DevRepo.PushBranchToOrigin("main", true)
+		err = cloned.DevRepo.PushBranchToOrigin("main", false)
 		assert.NoError(t, err)
 	})
 
