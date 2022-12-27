@@ -349,21 +349,6 @@ func (r *Runner) CreateTag(name string) error {
 	return err
 }
 
-// CreateTrackingBranch creates a remote tracking branch for the given local branch.
-// TODO: use a the identical Push* method here
-func (r *Runner) CreateTrackingBranch(branch string, noPushVerify bool) error {
-	args := []string{"push"}
-	if noPushVerify {
-		args = append(args, "--no-verify")
-	}
-	args = append(args, "-u", "origin", branch)
-	_, err := r.Run("git", args...)
-	if err != nil {
-		return fmt.Errorf("cannot create tracking branch for %q: %w", branch, err)
-	}
-	return nil
-}
-
 // CurrentBranch provides the currently checked out branch for this repo.
 func (r *Runner) CurrentBranch() (string, error) {
 	if r.DryRun.IsActive() {

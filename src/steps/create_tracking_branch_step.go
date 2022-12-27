@@ -18,5 +18,9 @@ func (step *CreateTrackingBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, 
 }
 
 func (step *CreateTrackingBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
-	return repo.Logging.CreateTrackingBranch(step.BranchName, step.NoPushVerify)
+	return repo.Logging.PushBranch(git.PushBranchArgs{
+		BranchName:   step.BranchName,
+		NoPushVerify: step.NoPushVerify,
+		ToOrigin:     true,
+	})
 }
