@@ -35,7 +35,7 @@ func (step *PushBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error
 	if err != nil {
 		return err
 	}
-	return repo.Logging.PushBranch(git.PushBranchArgs{
+	return repo.Logging.PushBranch(git.PushArgs{
 		BranchName:     step.BranchName,
 		ForceWithLease: step.ForceWithLease,
 		NoPushVerify:   step.NoPushVerify,

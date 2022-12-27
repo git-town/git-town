@@ -826,7 +826,7 @@ func (r *Runner) Pull() error {
 	return nil
 }
 
-type PushBranchArgs struct {
+type PushArgs struct {
 	BranchName     string
 	Force          bool
 	ForceWithLease bool
@@ -835,7 +835,7 @@ type PushBranchArgs struct {
 }
 
 // PushBranch pushes the branch with the given name to origin.
-func (r *Runner) PushBranch(options PushBranchArgs) error {
+func (r *Runner) PushBranch(options PushArgs) error {
 	args := []string{"push"}
 	provideBranch := false
 	if options.Force {
