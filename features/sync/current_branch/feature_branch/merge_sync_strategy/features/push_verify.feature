@@ -1,4 +1,3 @@
-@this
 Feature: push-verify setting
 
   Background:
