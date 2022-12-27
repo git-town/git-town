@@ -8,6 +8,8 @@ import (
 )
 
 // SyncBranchSteps provides the steps to sync the branch with the given name.
+//
+//nolint:nestif
 func SyncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (StepList, error) {
 	isFeature := repo.Config.IsFeatureBranch(branchName)
 	syncStrategy := repo.Config.SyncStrategy()
