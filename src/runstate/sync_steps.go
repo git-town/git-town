@@ -11,7 +11,6 @@ import (
 func SyncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (StepList, error) {
 	isFeature := repo.Config.IsFeatureBranch(branchName)
 	syncStrategy := repo.Config.SyncStrategy()
-	mainBranch := repo.Config.MainBranch()
 	hasOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
 		return StepList{}, err
@@ -40,9 +39,7 @@ func SyncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (St
 			return StepList{}, err
 		}
 		if hasTrackingBranch {
-			if branchName == mainBranch {
-				result.Append(&steps.PushBranchStep{BranchName: branchName})
-			} else {
+			if repo.Config.IsFeatureBranch(branchName) {
 				switch syncStrategy {
 				case "merge":
 					result.Append(&steps.PushBranchStep{BranchName: branchName})
@@ -51,6 +48,8 @@ func SyncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (St
 				default:
 					return StepList{}, fmt.Errorf("unknown syncStrategy value: %q", syncStrategy)
 				}
+			} else {
+				result.Append(&steps.PushBranchStep{BranchName: branchName})
 			}
 		} else {
 			result.Append(&steps.CreateTrackingBranchStep{BranchName: branchName})
