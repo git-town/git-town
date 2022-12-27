@@ -190,7 +190,7 @@ func TestGitEnvironment(t *testing.T) {
 				Message:     "local-origin",
 			})
 			assert.NoError(t, err)
-			err = cloned.DevRepo.PushBranchToOrigin("main", true)
+			err = cloned.DevRepo.PushBranchToOrigin("main", false)
 			assert.NoError(t, err)
 			err = cloned.OriginRepo.CreateCommit(git.Commit{
 				Branch:      "main",
