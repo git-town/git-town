@@ -24,10 +24,7 @@ func TestGitCommandsInGitTownOutput(t *testing.T) {
 			{Command: "command one", Branch: ""},
 		},
 	}
-	for input, expected := range tests { //nolint:paralleltest
-		t.Run(input, func(t *testing.T) {
-			t.Parallel()
-			assert.Equal(t, expected, GitCommandsInGitTownOutput(input))
-		})
+	for input, expected := range tests {
+		assert.Equal(t, expected, GitCommandsInGitTownOutput(input), input)
 	}
 }
