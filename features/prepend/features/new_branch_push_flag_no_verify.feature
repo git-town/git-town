@@ -1,4 +1,3 @@
-@this
 Feature: auto-push new branches
 
   Background:

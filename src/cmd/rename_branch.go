@@ -15,6 +15,7 @@ type renameBranchConfig struct {
 	isInitialBranchPerennial   bool
 	isOffline                  bool
 	newBranchName              string
+	noPushVerify               bool
 	oldBranchChildren          []string
 	oldBranchHasTrackingBranch bool
 	oldBranchName              string
@@ -122,6 +123,7 @@ func createRenameBranchConfig(args []string, repo *git.ProdRepo) (renameBranchCo
 	if hasNewBranch {
 		return renameBranchConfig{}, fmt.Errorf("a branch named %q already exists", result.newBranchName)
 	}
+	result.noPushVerify = !repo.Config.PushVerify()
 	result.oldBranchChildren = repo.Config.ChildBranches(result.oldBranchName)
 	result.oldBranchHasTrackingBranch, err = repo.Silent.HasTrackingBranch(result.oldBranchName)
 	return result, err
@@ -144,7 +146,7 @@ func createRenameBranchStepList(config renameBranchConfig, repo *git.ProdRepo) (
 		result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: config.newBranchName})
 	}
 	if config.oldBranchHasTrackingBranch && !config.isOffline {
-		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.newBranchName})
+		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.newBranchName, NoPushVerify: config.noPushVerify})
 		result.Append(&steps.DeleteOriginBranchStep{BranchName: config.oldBranchName, IsTracking: true})
 	}
 	result.Append(&steps.DeleteLocalBranchStep{BranchName: config.oldBranchName})
