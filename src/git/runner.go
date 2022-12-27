@@ -317,8 +317,13 @@ func (r *Runner) CreatePerennialBranches(names ...string) error {
 }
 
 // CreateRemoteBranch creates a remote branch from the given local SHA.
-func (r *Runner) CreateRemoteBranch(localSha, branchName string) error {
-	_, err := r.Run("git", "push", "origin", localSha+":refs/heads/"+branchName)
+func (r *Runner) CreateRemoteBranch(localSha, branchName string, noPushVerify bool) error {
+	args := []string{"push"}
+	if noPushVerify {
+		args = append(args, "--no-verify")
+	}
+	args = append(args, "origin", localSha+":refs/heads/"+branchName)
+	_, err := r.Run("git", args...)
 	if err != nil {
 		return fmt.Errorf("cannot create remote branch for local SHA %q: %w", localSha, err)
 	}
