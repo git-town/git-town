@@ -835,24 +835,30 @@ type PushArgs struct {
 }
 
 // PushBranch pushes the branch with the given name to origin.
-func (r *Runner) PushBranch(options PushArgs) error {
+func (r *Runner) PushBranch(options ...PushArgs) error {
+	var option PushArgs
+	if len(options) > 0 {
+		option = options[0]
+	} else {
+		option = PushArgs{}
+	}
 	args := []string{"push"}
 	provideBranch := false
-	if options.Force {
+	if option.Force {
 		args = append(args, "-f")
 	}
-	if options.NoPushVerify {
+	if option.NoPushVerify {
 		args = append(args, "--no-verify")
 	}
-	if options.ForceWithLease {
+	if option.ForceWithLease {
 		args = append(args, "--force-with-lease")
 	}
-	if options.ToOrigin {
+	if option.ToOrigin {
 		args = append(args, "-u", "origin")
 		provideBranch = true
 	}
-	if options.BranchName != "" && provideBranch {
-		args = append(args, options.BranchName)
+	if option.BranchName != "" && provideBranch {
+		args = append(args, option.BranchName)
 	}
 	_, err := r.Run("git", args...)
 	if err != nil {
