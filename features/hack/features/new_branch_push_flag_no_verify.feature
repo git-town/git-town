@@ -7,24 +7,6 @@ Feature: auto-push the new branch without running Git push hooks
       | main   | origin   | origin commit |
     And the current branch is "main"
 
-  Scenario: not set
-    When I run "git-town hack new"
-    Then it runs the commands
-      | BRANCH | COMMAND                  |
-      | main   | git fetch --prune --tags |
-      |        | git rebase origin/main   |
-      |        | git branch new main      |
-      |        | git checkout new         |
-      | new    | git push -u origin new   |
-    And the current branch is now "new"
-    And now these commits exist
-      | BRANCH | LOCATION      | MESSAGE       |
-      | main   | local, origin | origin commit |
-      | new    | local, origin | origin commit |
-    And this branch hierarchy exists now
-      | BRANCH | PARENT |
-      | new    | main   |
-
   Scenario: set to "true"
     Given setting "push-verify" is "true"
     When I run "git-town hack new"
