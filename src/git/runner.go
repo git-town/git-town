@@ -345,8 +345,13 @@ func (r *Runner) CreateTag(name string) error {
 }
 
 // CreateTrackingBranch creates a remote tracking branch for the given local branch.
-func (r *Runner) CreateTrackingBranch(branch string) error {
-	_, err := r.Run("git", "push", "-u", "origin", branch)
+func (r *Runner) CreateTrackingBranch(branch string, noPushVerify bool) error {
+	args := []string{"push"}
+	if noPushVerify {
+		args = append(args, "--no-verify")
+	}
+	args = append(args, "-u", "origin", branch)
+	_, err := r.Run("git", args...)
 	if err != nil {
 		return fmt.Errorf("cannot create tracking branch for %q: %w", branch, err)
 	}

@@ -1,3 +1,4 @@
+@this
 Feature: push-verify setting
 
   Background:
@@ -72,7 +73,7 @@ Feature: push-verify setting
       |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
-      |         | git push                           |
+      |         | git push --no-verify               |
     And all branches are now synchronized
     And the current branch is still "feature"
     And now these commits exist

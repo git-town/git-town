@@ -263,7 +263,7 @@ func (c *Config) PullBranchStrategy() string {
 
 // PushVerify provides the currently configured pull branch strategy.
 func (c *Config) PushVerify() bool {
-	config := c.globalConfigValue("git-town.push-verify")
+	config := c.localOrGlobalConfigValue("git-town.push-verify")
 	if config == "" {
 		return true
 	}
