@@ -128,6 +128,38 @@ Git Town avoids network operations in offline mode.`,
 	Args: cobra.MaximumNArgs(1),
 }
 
+var perennialBranchesCommand = &cobra.Command{
+	Use:   "perennial-branches",
+	Short: "Displays your perennial branches",
+	Long: `Displays your perennial branches
+
+Perennial branches are long-lived branches.
+They cannot be shipped.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		cli.Println(cli.PrintablePerennialBranches(prodRepo.Config.PerennialBranches()))
+	},
+	Args: cobra.NoArgs,
+	PreRunE: func(cmd *cobra.Command, args []string) error {
+		return ValidateIsRepository(prodRepo)
+	},
+}
+
+var updatePrennialBranchesCommand = &cobra.Command{
+	Use:   "update",
+	Short: "Prompts to update your perennial branches",
+	Long:  `Prompts to update your perennial branches`,
+	Run: func(cmd *cobra.Command, args []string) {
+		err := userinput.ConfigurePerennialBranches(prodRepo)
+		if err != nil {
+			cli.Exit(err)
+		}
+	},
+	Args: cobra.NoArgs,
+	PreRunE: func(cmd *cobra.Command, args []string) error {
+		return ValidateIsRepository(prodRepo)
+	},
+}
+
 var resetConfigCommand = &cobra.Command{
 	Use:   "reset",
 	Short: "Resets your Git Town configuration",
@@ -167,6 +199,8 @@ func init() {
 	newBranchPushFlagCommand.Flags().BoolVar(&globalFlag, "global", false, "Displays or sets your global new branch push flag")
 	configCommand.AddCommand(newBranchPushFlagCommand)
 	configCommand.AddCommand(offlineCommand)
+	perennialBranchesCommand.AddCommand(updatePrennialBranchesCommand)
+	configCommand.AddCommand(perennialBranchesCommand)
 	configCommand.AddCommand(resetConfigCommand)
 	configCommand.AddCommand(setupConfigCommand)
 	RootCmd.AddCommand(configCommand)

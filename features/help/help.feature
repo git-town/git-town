@@ -18,12 +18,12 @@ Feature: help for commands
       | config main-branch          |
       | config new-branch-push-flag |
       | config offline              |
+      | config perennial-branches   |
       | diff-parent                 |
       | hack                        |
       | help                        |
       | kill                        |
       | new-pull-request            |
-      | perennial-branches          |
       | prepend                     |
       | prune-branches              |
       | pull-branch-strategy        |
