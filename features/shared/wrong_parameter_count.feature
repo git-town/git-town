@@ -23,6 +23,7 @@ Feature: too few or many parameters
       | config perennial-branches update arg1 |
       | config pull-branch-strategy arg1 arg2 |
       | config pull-branch-strategy invalid   |
+      | config sync-strategy invalid          |
       | hack                                  |
       | hack arg1 arg2                        |
       | kill arg1 arg2                        |

@@ -1,7 +1,7 @@
 Feature: display the currently configured sync-strategy
 
   Scenario: default
-    When I run "git-town sync-strategy"
+    When I run "git-town config sync-strategy"
     Then it prints:
       """
       merge
@@ -9,7 +9,7 @@ Feature: display the currently configured sync-strategy
 
   Scenario Outline:
     Given setting "sync-strategy" is "<VALUE>"
-    When I run "git-town sync-strategy"
+    When I run "git-town config sync-strategy"
     Then it prints:
       """
       <VALUE>

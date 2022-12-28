@@ -19,6 +19,7 @@ Feature: help for commands
       | config offline              |
       | config perennial-branches   |
       | config pull-branch-strategy |
+      | config sync-strategy        |
       | diff-parent                 |
       | hack                        |
       | help                        |
