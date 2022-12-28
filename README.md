@@ -22,18 +22,18 @@ Git Town adds these high-level workflow commands to Git:
 
 #### Typical development commands
 
-- [git hack](https://www.git-town.com/commands/hack.html) - cuts a new
+- [git hack](https://www.git-town.com/commands/hack.html) - create a new
   up-to-date feature branch off the main branch
-- [git sync](https://www.git-town.com/commands/sync.html) - updates the current
+- [git sync](https://www.git-town.com/commands/sync.html) - update the current
   branch with all ongoing changes
 - [git new-pull-request](https://www.git-town.com/commands/new-pull-request.html) -
   create a new pull request
-- [git ship](https://www.git-town.com/commands/ship.html) - delivers a completed
-  feature branch and removes it
+- [git ship](https://www.git-town.com/commands/ship.html) - merge a completed
+  feature branch and remove it
 
 #### Advanced development commands
 
-- [git kill](https://www.git-town.com/commands/kill.html) - removes a feature
+- [git kill](https://www.git-town.com/commands/kill.html) - remove a feature
   branch
 - [git prune-branches](https://www.git-town.com/commands/prune-branches.html) -
   delete all merged branches
@@ -53,18 +53,17 @@ Git Town adds these high-level workflow commands to Git:
 
 #### Setup/configuration
 
-- [git town install](https://www.git-town.com/commands/install.html) - commands
-  to install Git Town on your computer
-- [git town config](https://www.git-town.com/commands/config.html) - displays or
-  updates your Git Town configuration
-- [git town version](https://www.git-town.com/commands/version.html) - displays
+- [git town install](https://www.git-town.com/commands/install.html) - install
+  Git Town on your computer
+- [git town config](https://www.git-town.com/commands/config.html) - display or
+  update your Git Town configuration
+- [git town version](https://www.git-town.com/commands/version.html) - display
   the installed version of Git Town
 
 ## Installation
 
 See the [installation](https://www.git-town.com/install.html) and
-[configuration](https://www.git-town.com/quick-configuration.html) instructions
-for more details.
+[configuration](https://www.git-town.com/quick-configuration.html) instructions.
 
 ## Documentation
 
