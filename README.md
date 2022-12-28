@@ -16,9 +16,9 @@
   <img src="https://api.netlify.com/api/v1/badges/c2ea5505-be48-42e5-bb8a-b807d18d99ed/deploy-status" alt="Netlify deploy status">
 </p>
 
-Git Town makes [Git](https://git-scm.com) more efficient, especially for large
-teams. See [this screencast](https://youtu.be/oLaUsUlFfTo) for an introduction.
-Git Town adds these high-level workflow commands to Git:
+Automation of repetitive Git commands, compatible with Git Flow, GitHub Flow,
+GitLab Flow, and many others! Check out
+[this screencast](https://youtu.be/oLaUsUlFfTo) for an introduction.
 
 #### Typical development commands
 
