@@ -1,5 +1,9 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/git-town/git-town/main/website/src/logo.svg">
+  <picture>
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/git-town/git-town/main/website/src/logo.svg">
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/git-town/git-town/main/website/src/logo-dark.svg">
+    <img alt="Git Town logo" src="https://raw.githubusercontent.com/git-town/git-town/main/website/src/logo.svg">
+  </picture>
   <br>
   <img src="https://github.com/git-town/git-town/actions/workflows/cuke.yml/badge.svg" alt="end-to-end test status">
   <img src="https://github.com/git-town/git-town/actions/workflows/lint_unit.yml/badge.svg" alt="unit test status">
