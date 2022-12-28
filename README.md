@@ -17,7 +17,7 @@
 </p>
 
 Automation of repetitive Git commands, compatible with Git Flow, GitHub Flow,
-GitLab Flow, and many others! Check out
+GitLab Flow, trunk-based development, and many others. Check out
 [this screencast](https://youtu.be/oLaUsUlFfTo) for an introduction.
 
 #### Typical development commands
