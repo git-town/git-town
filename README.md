@@ -18,10 +18,7 @@
 
 Git Town makes [Git](https://git-scm.com) more efficient, especially for large
 teams. See [this screencast](https://youtu.be/oLaUsUlFfTo) for an introduction.
-
-## Commands
-
-Git Town provides these additional Git commands:
+Git Town adds these high-level workflow commands to Git:
 
 #### Typical development commands
 
@@ -54,27 +51,12 @@ Git Town provides these additional Git commands:
 - [git set-parent-branch](https://www.git-town.com/commands/set-parent-branch.html) -
   updates a branch's parent
 
-#### Git Town configuration
+#### Setup/configuration
 
 - [git town config](https://www.git-town.com/commands/config.html) - displays or
   updates your Git Town configuration
-- [git town new-branch-push-flag](https://www.git-town.com/commands/new-branch-push-flag.html) -
-  configures whether new empty branches get pushed to origin
-- [git town main-branch](https://www.git-town.com/commands/main-branch.html) -
-  displays or sets the main development branch for the current repo
-- [git town offline](https://www.git-town.com/commands/offline.html) -
-  enables/disables offline mode
-- [git town perennial-branches](https://www.git-town.com/commands/perennial-branches.html) -
-  displays or updates the perennial branches for the current repo
-- [git town pull-branch-strategy](https://www.git-town.com/commands/pull-branch-strategy.html) -
-  displays or sets the strategy to update perennial branches
-
-#### Git Town setup
-
-- [git town alias](https://www.git-town.com/commands/alias.html) - adds or
-  removes shorter aliases for Git Town commands
-- [git town completions](https://www.git-town.com/commands/completions.html) -
-  generates completion scripts for Bash, zsh, fish & PowerShell.
+- [git town install](https://www.git-town.com/commands/install.html) - commands
+  to install Git Town on your computer or updates your Git Town configuration
 - [git town version](https://www.git-town.com/commands/version.html) - displays
   the installed version of Git Town
 
