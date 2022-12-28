@@ -14,11 +14,11 @@ Feature: help for commands
       | append               |
       | completions          |
       | config               |
+      | config main-branch   |
       | diff-parent          |
       | hack                 |
       | help                 |
       | kill                 |
-      | main-branch          |
       | new-branch-push-flag |
       | new-pull-request     |
       | offline              |

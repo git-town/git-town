@@ -16,10 +16,10 @@ Feature: too few or many parameters
       | append arg1 arg2               |
       | completions arg1               |
       | config arg1                    |
+      | config main-branch arg1 arg2   |
       | hack                           |
       | hack arg1 arg2                 |
       | kill arg1 arg2                 |
-      | main-branch arg1 arg2          |
       | new-branch-push-flag arg1 arg2 |
       | new-pull-request arg1          |
       | offline arg1 arg2              |

@@ -1,4 +1,3 @@
-@this
 Feature: configure the main branch
 
   Scenario: not configured

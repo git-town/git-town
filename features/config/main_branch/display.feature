@@ -1,4 +1,3 @@
-@this
 Feature: display the main branch configuration
 
   Scenario: not configured

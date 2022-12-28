@@ -11,7 +11,7 @@ Feature: require a Git repository
     Examples:
       | COMMAND                     |
       | git-town config             |
-      | git-town main-branch        |
+      | git-town config main-branch |
       | git-town perennial-branches |
       | git-town hack feature       |
       | git-town kill               |
