@@ -54,7 +54,7 @@ Git Town adds these high-level workflow commands to Git:
 #### Setup/configuration
 
 - [git town install](https://www.git-town.com/commands/install.html) - commands
-  to install Git Town on your computer or updates your Git Town configuration
+  to install Git Town on your computer
 - [git town config](https://www.git-town.com/commands/config.html) - displays or
   updates your Git Town configuration
 - [git town version](https://www.git-town.com/commands/version.html) - displays
