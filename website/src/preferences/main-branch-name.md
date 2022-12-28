@@ -10,5 +10,5 @@ parent branch for new feature branches created with
 [ships](../commands/ship.md) finished feature branches.
 
 Git Town automatically asks for this setting if needed. You can run the
-[git town main-branch](../commands/main-branch.md) command to see or update the
-configured main branch.
+[git town main-branch](../commands/config-main-branch.md) command to see or
+update the configured main branch.

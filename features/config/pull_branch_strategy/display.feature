@@ -1,7 +1,7 @@
 Feature: display the currently configured pull_branch_strategy
 
   Scenario: default
-    When I run "git-town pull-branch-strategy"
+    When I run "git-town config pull-branch-strategy"
     Then it prints:
       """
       rebase
@@ -9,7 +9,7 @@ Feature: display the currently configured pull_branch_strategy
 
   Scenario Outline:
     Given setting "pull-branch-strategy" is "<VALUE>"
-    When I run "git-town pull-branch-strategy"
+    When I run "git-town config pull-branch-strategy"
     Then it prints:
       """
       <VALUE>
