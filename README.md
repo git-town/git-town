@@ -16,9 +16,10 @@
   <img src="https://api.netlify.com/api/v1/badges/c2ea5505-be48-42e5-bb8a-b807d18d99ed/deploy-status" alt="Netlify deploy status">
 </p>
 
-Automation of repetitive Git commands, compatible with Git Flow, GitHub Flow,
-GitLab Flow, trunk-based development, and many others. Check out
-[this screencast](https://youtu.be/oLaUsUlFfTo) for an introduction.
+Automation of repetitive Git commands. Compatible with all major Git workflows
+including Git Flow, GitHub Flow, GitLab Flow, trunk-based development, and many
+others. Check out [this screencast](https://youtu.be/oLaUsUlFfTo) for an
+introduction.
 
 #### Typical development commands
 
