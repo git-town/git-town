@@ -10,4 +10,4 @@ perennial branches are `master`, `main`, `development`, `production`, or
 `staging`.
 
 You can see and update the configured perennial branches via the
-[git town perennial-branches](../commands/perennial-branches.md) command.
+[git town perennial-branches](../commands/config-perennial-branches.md) command.

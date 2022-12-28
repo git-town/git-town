@@ -35,15 +35,15 @@ commands in the shorter form available after running
 
 - [git town config](commands/config.md) - display or update your Git Town
   configuration
-- [git town new-branch-push-flag](commands/new-branch-push-flag.md) - configure
-  whether new empty branches are pushed to origin
-- [git town main-branch](commands/main-branch.md) - display/set the main
+- [git town new-branch-push-flag](commands/config-new-branch-push-flag.md) -
+  configure whether new empty branches are pushed to origin
+- [git town main-branch](commands/config-main-branch.md) - display/set the main
   development branch for the current repo
-- [git town offline](commands/offline.md) - enable/disable offline mode
-- [git town perennial-branches](commands/perennial-branches.md) - display or
-  update the perennial branches for the current repo
-- [git town pull-branch-strategy](commands/pull-branch-strategy.md) - display or
-  set the strategy to update perennial branches
+- [git town offline](commands/config-offline.md) - enable/disable offline mode
+- [git town perennial-branches](commands/config-perennial-branches.md) - display
+  or update the perennial branches for the current repo
+- [git town pull-branch-strategy](commands/config-pull-branch-strategy.md) -
+  display or set the strategy to update perennial branches
 
 ### Git Town setup
 
