@@ -1,3 +1,4 @@
+@this
 Feature: help for commands
 
   Scenario Outline: known commands
@@ -16,12 +17,12 @@ Feature: help for commands
       | config                      |
       | config main-branch          |
       | config new-branch-push-flag |
+      | config offline              |
       | diff-parent                 |
       | hack                        |
       | help                        |
       | kill                        |
       | new-pull-request            |
-      | offline                     |
       | perennial-branches          |
       | prepend                     |
       | prune-branches              |

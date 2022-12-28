@@ -105,6 +105,29 @@ func setMainBranch(branchName string, repo *git.ProdRepo) error {
 	return repo.Config.SetMainBranch(branchName)
 }
 
+var offlineCommand = &cobra.Command{
+	Use:   "offline [(true | false)]",
+	Short: "Displays or sets offline mode",
+	Long: `Displays or sets offline mode
+
+Git Town avoids network operations in offline mode.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		if len(args) == 0 {
+			cli.Println(cli.PrintableOfflineFlag(prodRepo.Config.IsOffline()))
+		} else {
+			value, err := strconv.ParseBool(args[0])
+			if err != nil {
+				cli.Exit(fmt.Errorf(`invalid argument: %q. Please provide either "true" or "false".\n`, args[0]))
+			}
+			err = prodRepo.Config.SetOffline(value)
+			if err != nil {
+				cli.Exit(err)
+			}
+		}
+	},
+	Args: cobra.MaximumNArgs(1),
+}
+
 var resetConfigCommand = &cobra.Command{
 	Use:   "reset",
 	Short: "Resets your Git Town configuration",
@@ -143,6 +166,7 @@ func init() {
 	configCommand.AddCommand(mainBranchConfigCommand)
 	newBranchPushFlagCommand.Flags().BoolVar(&globalFlag, "global", false, "Displays or sets your global new branch push flag")
 	configCommand.AddCommand(newBranchPushFlagCommand)
+	configCommand.AddCommand(offlineCommand)
 	configCommand.AddCommand(resetConfigCommand)
 	configCommand.AddCommand(setupConfigCommand)
 	RootCmd.AddCommand(configCommand)

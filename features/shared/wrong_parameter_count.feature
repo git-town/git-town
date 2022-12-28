@@ -18,11 +18,11 @@ Feature: too few or many parameters
       | config arg1                           |
       | config main-branch arg1 arg2          |
       | config new-branch-push-flag arg1 arg2 |
+      | config offline arg1 arg2              |
       | hack                                  |
       | hack arg1 arg2                        |
       | kill arg1 arg2                        |
       | new-pull-request arg1                 |
-      | offline arg1 arg2                     |
       | perennial-branches arg1               |
       | perennial-branches update arg1        |
       | prepend                               |
