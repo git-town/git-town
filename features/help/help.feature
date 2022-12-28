@@ -1,4 +1,3 @@
-@this
 Feature: help for commands
 
   Scenario Outline: known commands
@@ -19,6 +18,7 @@ Feature: help for commands
       | config new-branch-push-flag |
       | config offline              |
       | config perennial-branches   |
+      | config pull-branch-strategy |
       | diff-parent                 |
       | hack                        |
       | help                        |
@@ -26,7 +26,6 @@ Feature: help for commands
       | new-pull-request            |
       | prepend                     |
       | prune-branches              |
-      | pull-branch-strategy        |
       | rename-branch               |
       | repo                        |
       | set-parent-branch           |

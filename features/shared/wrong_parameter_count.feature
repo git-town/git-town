@@ -21,14 +21,14 @@ Feature: too few or many parameters
       | config offline arg1 arg2              |
       | config perennial-branches arg1        |
       | config perennial-branches update arg1 |
+      | config pull-branch-strategy arg1 arg2 |
+      | config pull-branch-strategy invalid   |
       | hack                                  |
       | hack arg1 arg2                        |
       | kill arg1 arg2                        |
       | new-pull-request arg1                 |
       | prepend                               |
       | prune-branches arg1                   |
-      | pull-branch-strategy arg1 arg2        |
-      | pull-branch-strategy invalid          |
       | rename-branch                         |
       | rename-branch arg1 arg2 arg3          |
       | repo arg1                             |
