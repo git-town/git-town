@@ -4,7 +4,7 @@ Run `git town` for an overview of all Git Town commands and
 `git town help <command>` for help with individual commands. Each Git Town
 command can be called like `git town <command>`. This user manual displays the
 commands in the shorter form available after running
-[git town alias](commands/alias.md).
+[git town alias](commands/install-alias.md).
 
 ### Typical development commands
 
@@ -47,8 +47,8 @@ commands in the shorter form available after running
 
 ### Git Town setup
 
-- [git town alias](commands/alias.md) - add or remove shorter aliases for Git
-  Town commands
+- [git town alias](commands/install-alias.md) - add or remove shorter aliases
+  for Git Town commands
 - [git town completion](commands/completion.md) - generate completion scripts
   for Bash, zsh, fish & PowerShell.
 - [git town version](commands/version.md) - display the installed version of Git

@@ -75,5 +75,5 @@ func removeAlias(command string, repo *git.ProdRepo) error {
 }
 
 func init() {
-	RootCmd.AddCommand(aliasCommand)
+	installCommand.AddCommand(aliasCommand)
 }
