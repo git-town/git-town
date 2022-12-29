@@ -10,7 +10,6 @@ Feature: help for commands
 
     Examples:
       | COMMAND                     |
-      | alias                       |
       | append                      |
       | completions                 |
       | config                      |
@@ -23,6 +22,7 @@ Feature: help for commands
       | diff-parent                 |
       | hack                        |
       | help                        |
+      | install alias               |
       | kill                        |
       | new-pull-request            |
       | prepend                     |
