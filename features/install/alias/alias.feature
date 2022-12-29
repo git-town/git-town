@@ -1,7 +1,7 @@
 Feature: shorter Git Town commands
 
   Scenario: add aliases
-    When I run "git-town alias true"
+    When I run "git-town install alias true"
     Then it runs the commands
       | COMMAND                                                            |
       | git config --global alias.append "town append"                     |
@@ -16,8 +16,8 @@ Feature: shorter Git Town commands
       | git config --global alias.sync "town sync"                         |
 
   Scenario: remove aliases
-    Given I ran "git-town alias true"
-    When I run "git-town alias false"
+    Given I ran "git-town install alias true"
+    When I run "git-town install alias false"
     Then it runs the commands
       | COMMAND                                            |
       | git config --global --unset alias.append           |
@@ -31,12 +31,12 @@ Feature: shorter Git Town commands
       | git config --global --unset alias.ship             |
       | git config --global --unset alias.sync             |
 
-  Scenario: remove alias does not remove unrelated aliases
+  Scenario: removing aliases does not remove unrelated aliases
     Given I ran "git config --global alias.hack checkout"
-    When I run "git-town alias false"
+    When I run "git-town install alias false"
     Then it runs no commands
 
-  Scenario: works outside of a Git repository
+  Scenario: works outside Git repositories
     Given I am outside a Git repo
-    When I run "git-town alias true"
+    When I run "git-town install alias true"
     Then it does not print "Not a git repository"
