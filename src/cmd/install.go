@@ -6,7 +6,7 @@ import (
 
 var installCommand = &cobra.Command{
 	Use:   "install",
-	Short: "Set up Git Town on your computer",
+	Short: "Commands to set up Git Town on your computer",
 	Args:  cobra.NoArgs,
 }
 
