@@ -1,10 +1,10 @@
 # Commands
 
 Run `git town` for an overview of all Git Town commands and
-`git town help <command>` for help with individual commands. Each Git Town
-command can be called like `git town <command>`. This user manual displays the
+`git town help <command>` for help with individual commands. You can call each
+Git Town command like `git town <command>`. This user manual displays the
 commands in the shorter form available after running
-[git town alias](commands/install-aliases.md).
+[git town install aliases](commands/install-aliases.md).
 
 ### Typical development commands
 
@@ -31,12 +31,21 @@ commands in the shorter form available after running
 - [git town set-parent-branch](commands/set-parent-branch.md) - change the
   parent of a feature branch
 
+### Git Town installation
+
+- [git town install aliases](commands/install-aliases.md) - add or remove
+  shorter aliases for Git Town commands
+- [git town completion](commands/completion.md) - generate completion scripts
+  for Bash, zsh, fish & PowerShell.
+- [git town version](commands/version.md) - display the installed version of Git
+  Town
+
 ### Git Town configuration
 
 - [git town config](commands/config.md) - display or update your Git Town
   configuration
 - [git town new-branch-push-flag](commands/config-new-branch-push-flag.md) -
-  configure whether new empty branches are pushed to origin
+  configure whether to push new empty branches to origin
 - [git town main-branch](commands/config-main-branch.md) - display/set the main
   development branch for the current repo
 - [git town offline](commands/config-offline.md) - enable/disable offline mode
@@ -44,12 +53,3 @@ commands in the shorter form available after running
   or update the perennial branches for the current repo
 - [git town pull-branch-strategy](commands/config-pull-branch-strategy.md) -
   display or set the strategy to update perennial branches
-
-### Git Town setup
-
-- [git town alias](commands/install-aliases.md) - add or remove shorter aliases
-  for Git Town commands
-- [git town completion](commands/completion.md) - generate completion scripts
-  for Bash, zsh, fish & PowerShell.
-- [git town version](commands/version.md) - display the installed version of Git
-  Town
