@@ -36,7 +36,7 @@ Feature: shorter Git Town commands
     When I run "git-town install alias false"
     Then it runs no commands
 
-  Scenario: works outside of a Git repository
+  Scenario: works outside Git repositories
     Given I am outside a Git repo
     When I run "git-town install alias true"
     Then it does not print "Not a git repository"
