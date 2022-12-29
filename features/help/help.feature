@@ -22,7 +22,7 @@ Feature: help for commands
       | diff-parent                 |
       | hack                        |
       | help                        |
-      | install alias               |
+      | install aliases             |
       | kill                        |
       | new-pull-request            |
       | prepend                     |

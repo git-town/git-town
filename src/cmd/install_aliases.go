@@ -10,7 +10,7 @@ import (
 )
 
 var aliasCommand = &cobra.Command{
-	Use:   "alias (true | false)",
+	Use:   "aliases (true | false)",
 	Short: "Adds or removes default global aliases",
 	Long: `Adds or removes default global aliases
 

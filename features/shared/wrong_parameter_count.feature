@@ -24,8 +24,8 @@ Feature: too few or many parameters
       | config sync-strategy invalid          |
       | hack                                  |
       | hack arg1 arg2                        |
-      | install alias                         |
-      | install alias arg1 arg2               |
+      | install aliases                       |
+      | install aliases arg1 arg2             |
       | kill arg1 arg2                        |
       | new-pull-request arg1                 |
       | prepend                               |
