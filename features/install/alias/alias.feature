@@ -31,7 +31,7 @@ Feature: shorter Git Town commands
       | git config --global --unset alias.ship             |
       | git config --global --unset alias.sync             |
 
-  Scenario: remove aliases does not remove unrelated aliases
+  Scenario: removing aliases does not remove unrelated aliases
     Given I ran "git config --global alias.hack checkout"
     When I run "git-town install alias false"
     Then it runs no commands
