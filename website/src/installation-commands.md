@@ -1,5 +1,10 @@
 # Installation commands
 
-Git Town provides commands that help set up the tool on your machine.
+These commands help set up Git Town on your machine.
 
-- [git town install alias](commands/install-alias.md)
+- [git town alias](commands/install-alias.md) - add or remove shorter aliases
+  for Git Town commands
+- [git town completion](commands/completion.md) - generate completion scripts
+  for Bash, zsh, fish, and PowerShell
+- [git town version](commands/version.md) - display the installed version of Git
+  Town
