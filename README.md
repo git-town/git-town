@@ -69,10 +69,10 @@ Git Town provides these additional Git commands:
 - [git town pull-branch-strategy](https://www.git-town.com/commands/pull-branch-strategy.html) -
   displays or sets the strategy to update perennial branches
 
-#### Git Town setup
+#### Git Town installation
 
-- [git town alias](https://www.git-town.com/commands/alias.html) - adds or
-  removes shorter aliases for Git Town commands
+- [git town aliases](https://www.git-town.com/commands/install-aliases.html) -
+  adds or removes shorter aliases for Git Town commands
 - [git town completions](https://www.git-town.com/commands/completions.html) -
   generates completion scripts for Bash, zsh, fish & PowerShell.
 - [git town version](https://www.git-town.com/commands/version.html) - displays
