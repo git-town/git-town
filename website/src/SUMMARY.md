@@ -27,7 +27,7 @@
     - [perennial-branches](commands/config-perennial-branches.md)
     - [pull-branch-strategy](commands/config-pull-branch-strategy.md)
   - [Setup commands](setup-commands.md)
-    - [alias](commands/alias.md)
+    - [alias](commands/install-alias.md)
     - [completion](commands/completion.md)
     - [version](commands/version.md)
 - [Preferences](preferences.md)
