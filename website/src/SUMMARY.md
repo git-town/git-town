@@ -20,7 +20,7 @@
     - [prepend](commands/prepend.md)
     - [set-parent-branch](commands/set-parent-branch.md)
   - [Installation commands](installation-commands.md)
-    - [alias](commands/install-alias.md)
+    - [aliases](commands/install-aliases.md)
     - [completion](commands/completion.md)
     - [version](commands/version.md)
   - [Configuration commands](configuration-commands.md)
