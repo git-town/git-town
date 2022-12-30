@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"strconv"
 
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/git"
@@ -10,7 +9,7 @@ import (
 )
 
 var aliasCommand = &cobra.Command{
-	Use:   "aliases (true | false)",
+	Use:   "aliases (add | remove)",
 	Short: "Adds or removes default global aliases",
 	Long: `Adds or removes default global aliases
 
@@ -21,9 +20,14 @@ Does not overwrite existing aliases.
 
 This can conflict with other tools that also define Git aliases.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		toggle, err := strconv.ParseBool(args[0])
-		if err != nil {
-			cli.Exit(fmt.Errorf(`invalid argument %q. Please provide either "true" or "false"`, args[0]))
+		var action func(string, *git.ProdRepo) error
+		switch args[0] {
+		case "add":
+			action = addAlias
+		case "remove":
+			action = removeAlias
+		default:
+			cli.Exit(fmt.Errorf(`invalid argument %q. Please provide either "add" or "remove"`, args[0]))
 		}
 		commandsToAlias := []string{
 			"append",
@@ -38,16 +42,9 @@ This can conflict with other tools that also define Git aliases.`,
 			"sync",
 		}
 		for _, command := range commandsToAlias {
-			if toggle {
-				err := addAlias(command, prodRepo)
-				if err != nil {
-					cli.Exit(err)
-				}
-			} else {
-				err := removeAlias(command, prodRepo)
-				if err != nil {
-					cli.Exit(err)
-				}
+			err := action(command, prodRepo)
+			if err != nil {
+				cli.Exit(err)
 			}
 		}
 	},
