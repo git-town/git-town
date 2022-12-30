@@ -11,7 +11,6 @@ Feature: help for commands
     Examples:
       | COMMAND                     |
       | append                      |
-      | completions                 |
       | config                      |
       | config main-branch          |
       | config new-branch-push-flag |
@@ -23,6 +22,7 @@ Feature: help for commands
       | hack                        |
       | help                        |
       | install aliases             |
+      | install completions         |
       | kill                        |
       | new-pull-request            |
       | prepend                     |

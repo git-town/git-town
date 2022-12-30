@@ -12,7 +12,6 @@ Feature: too few or many parameters
       | CMD                                   |
       | append                                |
       | append arg1 arg2                      |
-      | completions arg1                      |
       | config arg1                           |
       | config main-branch arg1 arg2          |
       | config new-branch-push-flag arg1 arg2 |
@@ -26,6 +25,7 @@ Feature: too few or many parameters
       | hack arg1 arg2                        |
       | install aliases                       |
       | install aliases arg1 arg2             |
+      | install completions arg1              |
       | kill arg1 arg2                        |
       | new-pull-request arg1                 |
       | prepend                               |
