@@ -21,7 +21,7 @@
     - [set-parent-branch](commands/set-parent-branch.md)
   - [Installation commands](installation-commands.md)
     - [aliases](commands/install-aliases.md)
-    - [completion](commands/completion.md)
+    - [completions](commands/install-completions.md)
     - [version](commands/version.md)
   - [Configuration commands](configuration-commands.md)
     - [config](commands/config.md)

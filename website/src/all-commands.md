@@ -35,8 +35,8 @@ commands in the shorter form available after running
 
 - [git town install aliases](commands/install-aliases.md) - add or remove
   shorter aliases for Git Town commands
-- [git town completion](commands/completion.md) - generate completion scripts
-  for Bash, zsh, fish & PowerShell.
+- [git town completion](commands/install-completions.md) - generate completion
+  scripts for Bash, zsh, fish & PowerShell.
 - [git town version](commands/version.md) - display the installed version of Git
   Town
 
