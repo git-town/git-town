@@ -10,8 +10,8 @@ var completionsNoDesc bool
 
 var completionsCmd = &cobra.Command{
 	Use:   "completions [bash|zsh|fish|powershell]",
-	Short: "Generates tab completion for bash, zsh, fish, or PowerShell",
-	Long: `Generates tab completion for bash, zsh, fish, or PowerShell
+	Short: "Generates auto-completion for bash, zsh, fish, or PowerShell",
+	Long: `Generates auto-completion for bash, zsh, fish, or PowerShell
 
 When set up, "git-town <TAB>" will auto-complete Git Town subcommands.
 
