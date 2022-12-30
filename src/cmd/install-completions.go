@@ -11,42 +11,35 @@ var completionsNoDesc bool
 var completionsCmd = &cobra.Command{
 	Use:   "completions [bash|zsh|fish|powershell]",
 	Short: "Generates auto-completion for bash, zsh, fish, or PowerShell",
-	Long: `Generates auto-completion for bash, zsh, fish, or PowerShell
-
+	Long: `Generates auto-completion for bash, zsh, fish, or PowerShell.
 When set up, "git-town <TAB>" will auto-complete Git Town subcommands.
 
-To enable completions:
+To load autocompletion for Bash, run this command:
 
-Bash:
+	git-town install completions bash | source
 
-$ source <(git-town install completions bash)
+To load completions for each session, add the above line to your ~/.bashrc file.
 
-Persist and autoload on each session:
 
-Linux: $ git-town install completions bash > /etc/bash_completion.d/git-town
+To load autocompletion for Zsh, run this command:
 
-MacOS: $ git-town install completions bash > /usr/local/etc/bash_completion.d/git-town
+	source <(git-town install completions zsh)
 
-Zsh:
+To load completions for each session, add the above line to your ~/.zshrc file.
 
-$ source <(git-town install completions zsh)
 
-Persist and autoload on each session:
+To load autocompletion for Fish, run this command:
 
-$ git-town install completions zsh > /usr/share/zsh/vendor-completions/_git-town
+	git-town install completions fish | source
 
-Fish:
+To load completions for each session, add the above line to your ~/.config/fish/config.fish file.
 
-$ git-town install completions fish | source
 
-Persist and autoload on each session:
+To load autocompletions for Powershell, run this command:
 
-$ git-town install completions fish > /etc/fish/completions/git-town.fish
+	git-town install completions powershell | Out-String | Invoke-Expression
 
-You might be a power user who has their dotfiles under version control. Or you
-might have another motivation to keep those scripts in your home folder.
-Since it sometimes depends on your particular setup, you probably should consult
-the official docs for your shell.
+To load completions for each session, add the above line to your PowerShell profile.
 `,
 	DisableFlagsInUseLine: true,
 	ValidArgs:             []string{"bash", "zsh", "fish", "powershell"},

@@ -6,23 +6,27 @@ Git Town in Bash, Zsh, Fish, or PowerShell. When set up, typing
 
 ## Bash
 
-To install autocompletion for Bash, run this command:
+To load autocompletion for Bash, run this command:
 
 ```
-source <(git-town install completions bash)
+git-town install completions bash | source
 ```
+
+To load completions for each session, add the above line to your `.bashrc`.
 
 ## Zsh
 
-To install autocompletions for Zsh, run this command:
+To load autocompletions for Zsh, run this command:
 
 ```
-source <(git-town install completions zsh)
+git-town install completions zsh | source
 ```
+
+To load completions for each session, add the above line to your `.zshrc`.
 
 ## Fish
 
-To install autocompletions for Fish, run this command:
+To load autocompletions for Fish, run this command:
 
 ```
 git-town install completions fish | source
@@ -31,10 +35,16 @@ git-town install completions fish | source
 CAUTION: pending upstream issue breaks this:
 https://github.com/spf13/cobra/pull/1122
 
+To load completions for each session, add the above line to your
+`.config/fish/config.fish`.
+
 ## Powershell
 
 To install autocompletions for Powershell, run this command:
 
 ```
-Invoke-Expression -Command $(git-town install completions powershell | Out-String)
+git-town install completions powershell | Out-String | Invoke-Expression
 ```
+
+To load completions for each session, add the above line to your PowerShell
+profile.
