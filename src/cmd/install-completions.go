@@ -23,7 +23,7 @@ To load completions for each session, add the above line to your ~/.bashrc file.
 
 To load autocompletion for Zsh, run this command:
 
-	source <(git-town install completions zsh)
+	git-town install completions zsh | source
 
 To load completions for each session, add the above line to your ~/.zshrc file.
 
