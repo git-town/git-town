@@ -1,4 +1,4 @@
-# git town aliases (true|false)
+# git town aliases (add|remove)
 
 The _aliases_ command adds or removes default global aliases. Global aliases
 make Git Town commands feel like native Git commands. When enabled, you can run
@@ -13,5 +13,5 @@ git config --global alias.hack 'town hack'
 
 ### Variations
 
-- when given `true`, creates the aliases
-- when given `false`, removes the aliases
+- when given `add`, creates the aliases
+- when given `remove`, removes the aliases
