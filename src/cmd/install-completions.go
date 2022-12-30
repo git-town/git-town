@@ -13,8 +13,7 @@ var completionsCmd = &cobra.Command{
 	Short: "Generates tab completion for bash, zsh, fish, or PowerShell",
 	Long: `Generates tab completion for bash, zsh, fish, or PowerShell
 
-With completions enabled, "git-town <TAB>" will show you all possible
-subcommands and optionally a short description.
+When set up, "git-town <TAB>" will auto-complete Git Town subcommands.
 
 To enable completions:
 
@@ -37,8 +36,6 @@ Persist and autoload on each session:
 $ git-town install completions zsh > /usr/share/zsh/vendor-completions/_git-town
 
 Fish:
-
-CAUTION: pending upstream issue breaks this: https://github.com/spf13/cobra/pull/1122
 
 $ git-town install completions fish | source
 

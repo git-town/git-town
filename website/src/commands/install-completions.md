@@ -28,6 +28,9 @@ To install autocompletions for Fish, run this command:
 git-town install completions fish | source
 ```
 
+CAUTION: pending upstream issue breaks this:
+https://github.com/spf13/cobra/pull/1122
+
 ## Powershell
 
 To install autocompletions for Powershell, run this command:
