@@ -78,4 +78,5 @@ func init() {
 		"no-descriptions", false,
 		"disable completions description for shells that support it")
 	RootCmd.AddCommand(completionsCmd)
+	RootCmd.CompletionOptions.DisableDefaultCmd = true
 }
