@@ -12,7 +12,7 @@ import (
 // Missing ancestry information is queried from the user.
 func EnsureKnowsParentBranches(branchNames []string, repo *git.ProdRepo) error {
 	for _, branchName := range branchNames {
-		if repo.Config.IsMainBranch(branchName) || repo.Config.IsPerennialBranch(branchName) || repo.Config.HasParentBranch(branchName) {
+		if repo.Config.IsMainBranch(branchName) || repo.Config.PerennialBranches.Is(branchName) || repo.Config.HasParentBranch(branchName) {
 			continue
 		}
 		err := AskForBranchAncestry(branchName, repo.Config.MainBranch(), repo)
@@ -39,7 +39,7 @@ func AskForBranchAncestry(branchName, defaultBranchName string, repo *git.ProdRe
 				return err
 			}
 			if parent == perennialBranchOption {
-				err = repo.Config.AddToPerennialBranches(current)
+				err = repo.Config.PerennialBranches.Add(current)
 				if err != nil {
 					return err
 				}
@@ -50,7 +50,7 @@ func AskForBranchAncestry(branchName, defaultBranchName string, repo *git.ProdRe
 				return err
 			}
 		}
-		if parent == repo.Config.MainBranch() || repo.Config.IsPerennialBranch(parent) {
+		if parent == repo.Config.MainBranch() || repo.Config.PerennialBranches.Is(parent) {
 			break
 		}
 		current = parent

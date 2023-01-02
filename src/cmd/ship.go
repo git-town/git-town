@@ -61,7 +61,7 @@ GitHub's feature to automatically delete head branches,
 run "git config git-town.ship-delete-remote-branch false"
 and Git Town will leave it up to your origin server to delete the remote branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		driver := hosting.NewDriver(&prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction)
+		driver := hosting.NewDriver(prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction)
 		config, err := gitShipConfig(args, driver, prodRepo)
 		if err != nil {
 			cli.Exit(err)
@@ -152,7 +152,7 @@ func gitShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (sh
 
 func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
 	parentBranch := prodRepo.Config.ParentBranch(branchName)
-	if !prodRepo.Config.IsMainBranch(parentBranch) && !prodRepo.Config.IsPerennialBranch(parentBranch) {
+	if !prodRepo.Config.IsMainBranch(parentBranch) && !prodRepo.Config.PerennialBranches.Is(parentBranch) {
 		ancestors := prodRepo.Config.AncestorBranches(branchName)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
 		oldestAncestor := ancestorsWithoutMainOrPerennial[0]

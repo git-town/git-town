@@ -19,15 +19,20 @@ import (
 )
 
 type Config struct {
-	gitConfig gitConfig
+	gitConfig         *gitConfig
+	PerennialBranches *PerennialBranches
 }
 
 func NewConfiguration(shell run.Shell) Config {
+	gitConfig := gitConfig{
+		localConfigCache:  loadGitConfig(shell, false),
+		globalConfigCache: loadGitConfig(shell, true),
+		shell:             shell,
+	}
 	return Config{
-		gitConfig: gitConfig{
-			localConfigCache:  loadGitConfig(shell, false),
-			globalConfigCache: loadGitConfig(shell, true),
-			shell:             shell,
+		gitConfig: &gitConfig,
+		PerennialBranches: &PerennialBranches{
+			gc: &gitConfig,
 		},
 	}
 }
@@ -60,12 +65,6 @@ func (c *Config) AddGitAlias(command string) (*run.Result, error) {
 	return c.gitConfig.SetGlobalConfigValue("alias."+command, "town "+command)
 }
 
-// AddToPerennialBranches registers the given branch names as perennial branches.
-// The branches must exist.
-func (c *Config) AddToPerennialBranches(branchNames ...string) error {
-	return c.SetPerennialBranches(append(c.PerennialBranches(), branchNames...))
-}
-
 // List provides the names of all parent branches for the given branch.
 //
 // This information is read from the cache in the Git config,
@@ -75,7 +74,7 @@ func (c *Config) AncestorBranches(branchName string) []string {
 	current := branchName
 	result := []string{}
 	for {
-		if c.IsMainBranch(current) || c.IsPerennialBranch(current) {
+		if c.IsMainBranch(current) || c.PerennialBranches.Is(current) {
 			return result
 		}
 		parent := parentBranchMap[current]
@@ -122,7 +121,7 @@ func (c *Config) ChildBranches(branchName string) []string {
 
 // HostingService provides the name of the code hosting driver to use.
 func (c *Config) HostingService() string {
-	return c.localOrGlobalConfigValue("git-town.code-hosting-driver")
+	return c.gitConfig.localOrGlobalConfigValue("git-town.code-hosting-driver")
 }
 
 // OriginOverride provides the override for the origin hostname from the Git Town configuration.
@@ -141,11 +140,6 @@ func (c *Config) DeleteParentBranch(branchName string) error {
 	return c.gitConfig.removeLocalConfigValue("git-town-branch." + branchName + ".parent")
 }
 
-// DeletePerennialBranchConfiguration removes the configuration entry for the perennial branches.
-func (c *Config) DeletePerennialBranchConfiguration() error {
-	return c.gitConfig.removeLocalConfigValue("git-town.perennial-branch-names")
-}
-
 // GitAlias provides the currently set alias for the given Git Town command.
 func (c *Config) GitAlias(command string) string {
 	return c.gitConfig.globalConfigValue("alias." + command)
@@ -153,17 +147,17 @@ func (c *Config) GitAlias(command string) string {
 
 // GitHubToken provides the content of the GitHub API token stored in the local or global Git Town configuration.
 func (c *Config) GitHubToken() string {
-	return c.localOrGlobalConfigValue("git-town.github-token")
+	return c.gitConfig.localOrGlobalConfigValue("git-town.github-token")
 }
 
 // GitLabToken provides the content of the GitLab API token stored in the local or global Git Town configuration.
 func (c *Config) GitLabToken() string {
-	return c.localOrGlobalConfigValue("git-town.gitlab-token")
+	return c.gitConfig.localOrGlobalConfigValue("git-town.gitlab-token")
 }
 
 // GiteaToken provides the content of the Gitea API token stored in the local or global Git Town configuration.
 func (c *Config) GiteaToken() string {
-	return c.localOrGlobalConfigValue("git-town.gitea-token")
+	return c.gitConfig.localOrGlobalConfigValue("git-town.gitea-token")
 }
 
 // HasBranchInformation indicates whether this configuration contains any branch hierarchy entries.
@@ -184,7 +178,7 @@ func (c *Config) HasParentBranch(branchName string) bool {
 // IsFeatureBranch indicates whether the branch with the given name is
 // a feature branch.
 func (c *Config) IsFeatureBranch(branchName string) bool {
-	return !c.IsMainBranch(branchName) && !c.IsPerennialBranch(branchName)
+	return !c.IsMainBranch(branchName) && !c.PerennialBranches.Is(branchName)
 }
 
 // IsMainBranch indicates whether the branch with the given name
@@ -208,13 +202,6 @@ func (c *Config) IsOffline() bool {
 	return result
 }
 
-// IsPerennialBranch indicates whether the branch with the given name is
-// a perennial branch.
-func (c *Config) IsPerennialBranch(branchName string) bool {
-	perennialBranches := c.PerennialBranches()
-	return stringslice.Contains(perennialBranches, branchName)
-}
-
 // localConfigKeysMatching provides the names of the Git Town configuration keys matching the given RegExp string.
 func (c *Config) localConfigKeysMatching(toMatch string) []string {
 	result := []string{}
@@ -227,19 +214,9 @@ func (c *Config) localConfigKeysMatching(toMatch string) []string {
 	return result
 }
 
-// localOrGlobalConfigValue provides the configuration value with the given key from the local and global Git configuration.
-// Local configuration takes precedence.
-func (c *Config) localOrGlobalConfigValue(key string) string {
-	local := c.gitConfig.localConfigValue(key)
-	if local != "" {
-		return local
-	}
-	return c.gitConfig.globalConfigValue(key)
-}
-
 // MainBranch provides the name of the main branch.
 func (c *Config) MainBranch() string {
-	return c.localOrGlobalConfigValue("git-town.main-branch-name")
+	return c.gitConfig.localOrGlobalConfigValue("git-town.main-branch-name")
 }
 
 // ParentBranchMap returns a map from branch name to its parent branch.
@@ -258,18 +235,9 @@ func (c *Config) ParentBranch(branchName string) string {
 	return c.gitConfig.localConfigValue("git-town-branch." + branchName + ".parent")
 }
 
-// PerennialBranches returns all branches that are marked as perennial.
-func (c *Config) PerennialBranches() []string {
-	result := c.localOrGlobalConfigValue("git-town.perennial-branch-names")
-	if result == "" {
-		return []string{}
-	}
-	return strings.Split(result, " ")
-}
-
 // PullBranchStrategy provides the currently configured pull branch strategy.
 func (c *Config) PullBranchStrategy() string {
-	config := c.localOrGlobalConfigValue("git-town.pull-branch-strategy")
+	config := c.gitConfig.localOrGlobalConfigValue("git-town.pull-branch-strategy")
 	if config != "" {
 		return config
 	}
@@ -278,7 +246,7 @@ func (c *Config) PullBranchStrategy() string {
 
 // PushVerify provides the currently configured pull branch strategy.
 func (c *Config) PushVerify() bool {
-	config := c.localOrGlobalConfigValue("git-town.push-verify")
+	config := c.gitConfig.localOrGlobalConfigValue("git-town.push-verify")
 	if config == "" {
 		return true
 	}
@@ -300,11 +268,6 @@ func (c *Config) OriginURL() string {
 	}
 	res, _ := c.gitConfig.shell.Run("git", "remote", "get-url", "origin")
 	return res.OutputSanitized()
-}
-
-// RemoveFromPerennialBranches removes the given branch as a perennial branch.
-func (c *Config) RemoveFromPerennialBranches(branchName string) error {
-	return c.SetPerennialBranches(stringslice.Remove(c.PerennialBranches(), branchName))
 }
 
 // RemoveGitAlias removes the given Git alias.
@@ -359,12 +322,6 @@ func (c *Config) SetParentBranch(branchName, parentBranchName string) error {
 	return err
 }
 
-// SetPerennialBranches marks the given branches as perennial branches.
-func (c *Config) SetPerennialBranches(branchNames []string) error {
-	_, err := c.gitConfig.SetLocalConfigValue("git-town.perennial-branch-names", strings.Join(branchNames, " "))
-	return err
-}
-
 // SetPullBranchStrategy updates the configured pull branch strategy.
 func (c *Config) SetPullBranchStrategy(strategy string) error {
 	_, err := c.gitConfig.SetLocalConfigValue("git-town.pull-branch-strategy", strategy)
@@ -409,7 +366,7 @@ func (c *Config) SetTestOrigin(value string) error {
 // ShouldNewBranchPush indicates whether the current repository is configured to push
 // freshly created branches up to origin.
 func (c *Config) ShouldNewBranchPush() bool {
-	config := c.localOrGlobalConfigValue("git-town.new-branch-push-flag")
+	config := c.gitConfig.localOrGlobalConfigValue("git-town.new-branch-push-flag")
 	if config == "" {
 		return false
 	}
@@ -430,7 +387,7 @@ func (c *Config) ShouldNewBranchPushGlobal() bool {
 
 // ShouldShipDeleteOriginBranch indicates whether to delete the remote branch after shipping.
 func (c *Config) ShouldShipDeleteOriginBranch() bool {
-	setting := c.localOrGlobalConfigValue("git-town.ship-delete-remote-branch")
+	setting := c.gitConfig.localOrGlobalConfigValue("git-town.ship-delete-remote-branch")
 	if setting == "" {
 		return true
 	}
@@ -444,11 +401,11 @@ func (c *Config) ShouldShipDeleteOriginBranch() bool {
 
 // ShouldSyncUpstream indicates whether this repo should sync with its upstream.
 func (c *Config) ShouldSyncUpstream() bool {
-	return c.localOrGlobalConfigValue("git-town.sync-upstream") != "false"
+	return c.gitConfig.localOrGlobalConfigValue("git-town.sync-upstream") != "false"
 }
 
 func (c *Config) SyncStrategy() string {
-	setting := c.localOrGlobalConfigValue("git-town.sync-strategy")
+	setting := c.gitConfig.localOrGlobalConfigValue("git-town.sync-strategy")
 	if setting == "" {
 		setting = "merge"
 	}

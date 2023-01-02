@@ -59,6 +59,16 @@ func (c *gitConfig) localConfigValue(key string) string {
 	return c.localConfigCache[key]
 }
 
+// localOrGlobalConfigValue provides the configuration value with the given key from the local and global Git configuration.
+// Local configuration takes precedence.
+func (c *gitConfig) localOrGlobalConfigValue(key string) string {
+	local := c.localConfigValue(key)
+	if local != "" {
+		return local
+	}
+	return c.globalConfigValue(key)
+}
+
 // Reload refreshes the cached configuration information.
 func (c *gitConfig) Reload() {
 	c.localConfigCache = loadGitConfig(c.shell, false)

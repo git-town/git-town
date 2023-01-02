@@ -89,7 +89,7 @@ func createPruneBranchesStepList(config pruneBranchesConfig, repo *git.ProdRepo)
 			}
 			result.Append(&steps.DeleteParentBranchStep{BranchName: branchName})
 		}
-		if repo.Config.IsPerennialBranch(branchName) {
+		if repo.Config.PerennialBranches.Is(branchName) {
 			result.Append(&steps.RemoveFromPerennialBranchesStep{BranchName: branchName})
 		}
 		result.Append(&steps.DeleteLocalBranchStep{BranchName: branchName})

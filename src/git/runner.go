@@ -17,7 +17,7 @@ import (
 // Runner executes Git commands.
 type Runner struct {
 	run.Shell                            // for running console commands
-	Config             config.Config     // caches Git configuration settings
+	Config             *config.Config    // caches Git configuration settings
 	CurrentBranchCache *StringCache      // caches the currently checked out Git branch
 	DryRun             *DryRun           // tracks dry-run information
 	IsRepoCache        *BoolCache        // caches whether the current directory is a Git repo
@@ -313,7 +313,7 @@ func (r *Runner) CreatePerennialBranches(names ...string) error {
 			return fmt.Errorf("cannot create perennial branch %q in repo %q: %w", name, r.WorkingDir(), err)
 		}
 	}
-	return r.Config.AddToPerennialBranches(names...)
+	return r.Config.PerennialBranches.Add(names...)
 }
 
 // CreateRemoteBranch creates a remote branch from the given local SHA.

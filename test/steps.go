@@ -229,7 +229,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^Git Town is not configured$`, func() error {
-		err := state.gitEnv.DevRepo.Config.DeletePerennialBranchConfiguration()
+		err := state.gitEnv.DevRepo.Config.PerennialBranches.RemoveAll()
 		if err != nil {
 			return err
 		}
@@ -883,20 +883,20 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the perennial branches are "([^"]+)"$`, func(name string) error {
-		return state.gitEnv.DevRepo.Config.AddToPerennialBranches(name)
+		return state.gitEnv.DevRepo.Config.PerennialBranches.Add(name)
 	})
 
 	suite.Step(`^the perennial branches are "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
-		return state.gitEnv.DevRepo.Config.AddToPerennialBranches(branch1, branch2)
+		return state.gitEnv.DevRepo.Config.PerennialBranches.Add(branch1, branch2)
 	})
 
 	suite.Step(`^the perennial branches are not configured$`, func() error {
-		return state.gitEnv.DevRepo.Config.DeletePerennialBranchConfiguration()
+		return state.gitEnv.DevRepo.Config.PerennialBranches.RemoveAll()
 	})
 
 	suite.Step(`^the perennial branches are now "([^"]+)"$`, func(name string) error {
 		state.gitEnv.DevRepo.Config.Reload()
-		actual := state.gitEnv.DevRepo.Config.PerennialBranches()
+		actual := state.gitEnv.DevRepo.Config.PerennialBranches.List()
 		if len(actual) != 1 {
 			return fmt.Errorf("expected 1 perennial branch, got %q", actual)
 		}
@@ -908,7 +908,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the perennial branches are now "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
 		state.gitEnv.DevRepo.Config.Reload()
-		actual := state.gitEnv.DevRepo.Config.PerennialBranches()
+		actual := state.gitEnv.DevRepo.Config.PerennialBranches.List()
 		if len(actual) != 2 {
 			return fmt.Errorf("expected 2 perennial branches, got %q", actual)
 		}
@@ -973,7 +973,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^there are still no perennial branches$`, func() error {
 		state.gitEnv.DevRepo.Config.Reload()
-		branches := state.gitEnv.DevRepo.Config.PerennialBranches()
+		branches := state.gitEnv.DevRepo.Config.PerennialBranches.List()
 		if len(branches) > 0 {
 			return fmt.Errorf("expected no perennial branches, got %q", branches)
 		}

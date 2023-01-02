@@ -236,8 +236,8 @@ func TestRunner(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, []string{"main", "initial", "p1", "p2"}, branches)
 		runner.Config.Reload()
-		assert.True(t, runner.Config.IsPerennialBranch("p1"))
-		assert.True(t, runner.Config.IsPerennialBranch("p2"))
+		assert.True(t, runner.Config.PerennialBranches.Is("p1"))
+		assert.True(t, runner.Config.PerennialBranches.Is("p2"))
 	})
 
 	t.Run(".CurrentBranch()", func(t *testing.T) {

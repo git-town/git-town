@@ -16,9 +16,9 @@ var configCommand = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println()
 		cli.PrintLabelAndValue("Main branch", cli.PrintableMainBranch(prodRepo.Config.MainBranch()))
-		cli.PrintLabelAndValue("Perennial branches", cli.PrintablePerennialBranches(prodRepo.Config.PerennialBranches()))
+		cli.PrintLabelAndValue("Perennial branches", cli.PrintablePerennialBranches(prodRepo.Config.PerennialBranches.List()))
 		if prodRepo.Config.MainBranch() != "" {
-			cli.PrintLabelAndValue("Branch Ancestry", cli.PrintableBranchAncestry(&prodRepo.Config))
+			cli.PrintLabelAndValue("Branch Ancestry", cli.PrintableBranchAncestry(prodRepo.Config))
 		}
 		cli.PrintLabelAndValue("Pull branch strategy", prodRepo.Config.PullBranchStrategy())
 		cli.PrintLabelAndValue("New Branch Push Flag", cli.PrintableNewBranchPushFlag(prodRepo.Config.ShouldNewBranchPush()))
@@ -136,7 +136,7 @@ var perennialBranchesCommand = &cobra.Command{
 Perennial branches are long-lived branches.
 They cannot be shipped.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		cli.Println(cli.PrintablePerennialBranches(prodRepo.Config.PerennialBranches()))
+		cli.Println(cli.PrintablePerennialBranches(prodRepo.Config.PerennialBranches.List()))
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {

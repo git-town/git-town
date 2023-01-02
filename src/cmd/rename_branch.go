@@ -75,7 +75,7 @@ func createRenameBranchConfig(args []string, repo *git.ProdRepo) (renameBranchCo
 	}
 	result := renameBranchConfig{
 		initialBranch:            initialBranch,
-		isInitialBranchPerennial: repo.Config.IsPerennialBranch(initialBranch),
+		isInitialBranchPerennial: repo.Config.PerennialBranches.Is(initialBranch),
 		isOffline:                repo.Config.IsOffline(),
 	}
 	if len(args) == 1 {
@@ -89,7 +89,7 @@ func createRenameBranchConfig(args []string, repo *git.ProdRepo) (renameBranchCo
 		return renameBranchConfig{}, fmt.Errorf("the main branch cannot be renamed")
 	}
 	if !forceFlag {
-		if repo.Config.IsPerennialBranch(result.oldBranchName) {
+		if repo.Config.PerennialBranches.Is(result.oldBranchName) {
 			return renameBranchConfig{}, fmt.Errorf("%q is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'", result.oldBranchName)
 		}
 	}

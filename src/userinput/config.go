@@ -51,12 +51,12 @@ func ConfigurePerennialBranches(repo *git.ProdRepo) error {
 	newPerennialBranches, err := askForBranches(askForBranchesOptions{
 		branchNames:        branchNames,
 		prompt:             perennialBranchesPrompt(repo),
-		defaultBranchNames: repo.Config.PerennialBranches(),
+		defaultBranchNames: repo.Config.PerennialBranches.List(),
 	})
 	if err != nil {
 		return err
 	}
-	return repo.Config.SetPerennialBranches(newPerennialBranches)
+	return repo.Config.PerennialBranches.Set(newPerennialBranches)
 }
 
 // Helpers
@@ -73,7 +73,7 @@ func mainBranchPrompt(repo *git.ProdRepo) string {
 
 func perennialBranchesPrompt(repo *git.ProdRepo) string {
 	result := "Please specify perennial branches:"
-	currentPerennialBranches := repo.Config.PerennialBranches()
+	currentPerennialBranches := repo.Config.PerennialBranches.List()
 	if len(currentPerennialBranches) > 0 {
 		coloredBranchNames := color.New(color.Bold).Add(color.FgCyan).Sprintf(strings.Join(currentPerennialBranches, ", "))
 		result += fmt.Sprintf(" (current value: %s)", coloredBranchNames)
