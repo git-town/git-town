@@ -104,7 +104,7 @@ func createKillConfig(args []string, repo *git.ProdRepo) (killConfig, error) {
 	if err != nil {
 		return result, err
 	}
-	result.targetBranchParent = repo.Config.ParentBranch(result.targetBranch)
+	result.targetBranchParent = repo.Config.Ancestry.Parent(result.targetBranch)
 	result.previousBranch, err = repo.Silent.PreviouslyCheckedOutBranch()
 	if err != nil {
 		return result, err
@@ -113,7 +113,7 @@ func createKillConfig(args []string, repo *git.ProdRepo) (killConfig, error) {
 	if err != nil {
 		return result, err
 	}
-	result.childBranches = repo.Config.ChildBranches(result.targetBranch)
+	result.childBranches = repo.Config.Ancestry.Children(result.targetBranch)
 	result.noPushVerify = !repo.Config.PushVerify()
 	return result, nil
 }

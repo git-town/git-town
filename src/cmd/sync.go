@@ -115,7 +115,7 @@ func createSyncConfig(repo *git.ProdRepo) (syncConfig, error) {
 		if err != nil {
 			return syncConfig{}, err
 		}
-		result.branchesToSync = append(prodRepo.Config.AncestorBranches(result.initialBranch), result.initialBranch)
+		result.branchesToSync = append(prodRepo.Config.Ancestry.Ancestors(result.initialBranch), result.initialBranch)
 		result.shouldPushTags = !prodRepo.Config.IsFeatureBranch(result.initialBranch)
 	}
 	return result, nil

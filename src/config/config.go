@@ -10,17 +10,15 @@ import (
 	"fmt"
 	"os"
 	"regexp"
-	"sort"
 	"strconv"
-	"strings"
 
 	"github.com/git-town/git-town/v7/src/run"
-	"github.com/git-town/git-town/v7/src/stringslice"
 )
 
 type Config struct {
 	gitConfig         *gitConfig
 	PerennialBranches *PerennialBranches
+	Ancestry          *Ancestry
 }
 
 func NewConfiguration(shell run.Shell) Config {
@@ -29,12 +27,17 @@ func NewConfiguration(shell run.Shell) Config {
 		globalConfigCache: loadGitConfig(shell, true),
 		shell:             shell,
 	}
-	return Config{
+	config := Config{
 		gitConfig: &gitConfig,
 		PerennialBranches: &PerennialBranches{
 			gc: &gitConfig,
 		},
 	}
+	config.Ancestry = &Ancestry{
+		gitConfig: &gitConfig,
+		config:    &config,
+	}
+	return config
 }
 
 // Reload refreshes the cached configuration information.
@@ -65,60 +68,6 @@ func (c *Config) AddGitAlias(command string) (*run.Result, error) {
 	return c.gitConfig.SetGlobalConfigValue("alias."+command, "town "+command)
 }
 
-// List provides the names of all parent branches for the given branch.
-//
-// This information is read from the cache in the Git config,
-// so might be out of date when the branch hierarchy has been modified.
-func (c *Config) AncestorBranches(branchName string) []string {
-	parentBranchMap := c.ParentBranchMap()
-	current := branchName
-	result := []string{}
-	for {
-		if c.IsMainBranch(current) || c.PerennialBranches.Is(current) {
-			return result
-		}
-		parent := parentBranchMap[current]
-		if parent == "" {
-			return result
-		}
-		result = append([]string{parent}, result...)
-		current = parent
-	}
-}
-
-// IsAncestorBranch indicates whether the given branch is an ancestor of the other given branch.
-func (c *Config) IsAncestorBranch(branchName, ancestorBranchName string) bool {
-	ancestorBranches := c.AncestorBranches(branchName)
-	return stringslice.Contains(ancestorBranches, ancestorBranchName)
-}
-
-// BranchAncestryRoots provides the branches with children and no parents.
-func (c *Config) BranchAncestryRoots() []string {
-	parentMap := c.ParentBranchMap()
-	roots := []string{}
-	for _, parent := range parentMap {
-		if _, ok := parentMap[parent]; !ok && !stringslice.Contains(roots, parent) {
-			roots = append(roots, parent)
-		}
-	}
-	sort.Strings(roots)
-	return roots
-}
-
-// ChildBranches provides the names of all branches for which the given branch
-// is a parent.
-func (c *Config) ChildBranches(branchName string) []string {
-	result := []string{}
-	for _, key := range c.localConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
-		parent := c.gitConfig.localConfigValue(key)
-		if parent == branchName {
-			child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
-			result = append(result, child)
-		}
-	}
-	return result
-}
-
 // HostingService provides the name of the code hosting driver to use.
 func (c *Config) HostingService() string {
 	return c.gitConfig.localOrGlobalConfigValue("git-town.code-hosting-driver")
@@ -132,12 +81,6 @@ func (c *Config) OriginOverride() string {
 // DeleteMainBranchConfiguration removes the configuration entry for the main branch name.
 func (c *Config) DeleteMainBranchConfiguration() error {
 	return c.gitConfig.removeLocalConfigValue("git-town.main-branch-name")
-}
-
-// DeleteParentBranch removes the parent branch entry for the given branch
-// from the Git configuration.
-func (c *Config) DeleteParentBranch(branchName string) error {
-	return c.gitConfig.removeLocalConfigValue("git-town-branch." + branchName + ".parent")
 }
 
 // GitAlias provides the currently set alias for the given Git Town command.
@@ -158,21 +101,6 @@ func (c *Config) GitLabToken() string {
 // GiteaToken provides the content of the Gitea API token stored in the local or global Git Town configuration.
 func (c *Config) GiteaToken() string {
 	return c.gitConfig.localOrGlobalConfigValue("git-town.gitea-token")
-}
-
-// HasBranchInformation indicates whether this configuration contains any branch hierarchy entries.
-func (c *Config) HasBranchInformation() bool {
-	for key := range c.gitConfig.localConfigCache {
-		if strings.HasPrefix(key, "git-town-branch.") {
-			return true
-		}
-	}
-	return false
-}
-
-// HasParentBranch returns whether or not the given branch has a parent.
-func (c *Config) HasParentBranch(branchName string) bool {
-	return c.ParentBranch(branchName) != ""
 }
 
 // IsFeatureBranch indicates whether the branch with the given name is
@@ -217,22 +145,6 @@ func (c *Config) localConfigKeysMatching(toMatch string) []string {
 // MainBranch provides the name of the main branch.
 func (c *Config) MainBranch() string {
 	return c.gitConfig.localOrGlobalConfigValue("git-town.main-branch-name")
-}
-
-// ParentBranchMap returns a map from branch name to its parent branch.
-func (c *Config) ParentBranchMap() map[string]string {
-	result := map[string]string{}
-	for _, key := range c.localConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
-		child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
-		parent := c.gitConfig.localConfigValue(key)
-		result[child] = parent
-	}
-	return result
-}
-
-// ParentBranch provides the name of the parent branch of the given branch.
-func (c *Config) ParentBranch(branchName string) string {
-	return c.gitConfig.localConfigValue("git-town-branch." + branchName + ".parent")
 }
 
 // PullBranchStrategy provides the currently configured pull branch strategy.
@@ -312,13 +224,6 @@ func (c *Config) SetNewBranchPush(value bool, global bool) error {
 		return err
 	}
 	_, err := c.gitConfig.SetLocalConfigValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
-	return err
-}
-
-// SetParentBranch marks the given branch as the direct parent of the other given branch
-// in the Git Town configuration.
-func (c *Config) SetParentBranch(branchName, parentBranchName string) error {
-	_, err := c.gitConfig.SetLocalConfigValue("git-town-branch."+branchName+".parent", parentBranchName)
 	return err
 }
 

@@ -124,7 +124,7 @@ func createRenameBranchConfig(args []string, repo *git.ProdRepo) (renameBranchCo
 		return renameBranchConfig{}, fmt.Errorf("a branch named %q already exists", result.newBranchName)
 	}
 	result.noPushVerify = !repo.Config.PushVerify()
-	result.oldBranchChildren = repo.Config.ChildBranches(result.oldBranchName)
+	result.oldBranchChildren = repo.Config.Ancestry.Children(result.oldBranchName)
 	result.oldBranchHasTrackingBranch, err = repo.Silent.HasTrackingBranch(result.oldBranchName)
 	return result, err
 }
@@ -140,7 +140,7 @@ func createRenameBranchStepList(config renameBranchConfig, repo *git.ProdRepo) (
 		result.Append(&steps.AddToPerennialBranchesStep{BranchName: config.newBranchName})
 	} else {
 		result.Append(&steps.DeleteParentBranchStep{BranchName: config.oldBranchName})
-		result.Append(&steps.SetParentBranchStep{BranchName: config.newBranchName, ParentBranchName: repo.Config.ParentBranch(config.oldBranchName)})
+		result.Append(&steps.SetParentBranchStep{BranchName: config.newBranchName, ParentBranchName: repo.Config.Ancestry.Parent(config.oldBranchName)})
 	}
 	for _, child := range config.oldBranchChildren {
 		result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: config.newBranchName})

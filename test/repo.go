@@ -70,7 +70,7 @@ func NewRepo(workingDir, homeDir, binDir string) Repo {
 func (repo *Repo) BranchHierarchyTable() DataTable {
 	result := DataTable{}
 	repo.Config.Reload()
-	parentBranchMap := repo.Config.ParentBranchMap()
+	parentBranchMap := repo.Config.Ancestry.ParentMap()
 	result.AddRow("BRANCH", "PARENT")
 	childBranches := make([]string, 0, len(parentBranchMap))
 	for child := range parentBranchMap {

@@ -20,11 +20,11 @@ var setParentBranchCommand = &cobra.Command{
 		if !prodRepo.Config.IsFeatureBranch(branchName) {
 			cli.Exit(errors.New("only feature branches can have parent branches"))
 		}
-		defaultParentBranch := prodRepo.Config.ParentBranch(branchName)
+		defaultParentBranch := prodRepo.Config.Ancestry.Parent(branchName)
 		if defaultParentBranch == "" {
 			defaultParentBranch = prodRepo.Config.MainBranch()
 		}
-		err = prodRepo.Config.DeleteParentBranch(branchName)
+		err = prodRepo.Config.Ancestry.RemoveParent(branchName)
 		if err != nil {
 			cli.Exit(err)
 		}

@@ -89,7 +89,7 @@ func createNewPullRequestConfig(repo *git.ProdRepo) (newPullRequestConfig, error
 	}
 	return newPullRequestConfig{
 		InitialBranch:  initialBranch,
-		BranchesToSync: append(repo.Config.AncestorBranches(initialBranch), initialBranch),
+		BranchesToSync: append(repo.Config.Ancestry.Ancestors(initialBranch), initialBranch),
 	}, nil
 }
 

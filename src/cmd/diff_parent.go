@@ -70,7 +70,7 @@ func createDiffParentConfig(args []string, repo *git.ProdRepo) (diffParentConfig
 	if err != nil {
 		return diffParentConfig{}, err
 	}
-	config.parentBranch = repo.Config.ParentBranch(config.branch)
+	config.parentBranch = repo.Config.Ancestry.Parent(config.branch)
 	return config, nil
 }
 

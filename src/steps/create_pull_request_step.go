@@ -13,7 +13,7 @@ type CreatePullRequestStep struct {
 }
 
 func (step *CreatePullRequestStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
-	parentBranch := repo.Config.ParentBranch(step.BranchName)
+	parentBranch := repo.Config.Ancestry.Parent(step.BranchName)
 	prURL, err := driver.NewPullRequestURL(step.BranchName, parentBranch)
 	if err != nil {
 		return err

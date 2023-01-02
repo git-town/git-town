@@ -97,8 +97,8 @@ func createPrependConfig(args []string, repo *git.ProdRepo) (prependConfig, erro
 		return prependConfig{}, err
 	}
 	result.noPushVerify = !repo.Config.PushVerify()
-	result.parentBranch = repo.Config.ParentBranch(result.initialBranch)
-	result.ancestorBranches = repo.Config.AncestorBranches(result.initialBranch)
+	result.parentBranch = repo.Config.Ancestry.Parent(result.initialBranch)
+	result.ancestorBranches = repo.Config.Ancestry.Ancestors(result.initialBranch)
 	return result, nil
 }
 

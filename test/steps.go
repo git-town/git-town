@@ -418,8 +418,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^no branch hierarchy exists now$`, func() error {
 		state.gitEnv.DevRepo.Config.Reload()
-		if state.gitEnv.DevRepo.Config.HasBranchInformation() {
-			branchInfo := state.gitEnv.DevRepo.Config.ParentBranchMap()
+		if state.gitEnv.DevRepo.Config.Ancestry.HasInformation() {
+			branchInfo := state.gitEnv.DevRepo.Config.Ancestry.ParentMap()
 			return fmt.Errorf("unexpected Git Town branch hierarchy information: %+v", branchInfo)
 		}
 		return nil
@@ -653,7 +653,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the coworker sets the parent branch of "([^"]*)" as "([^"]*)"$`, func(childBranch, parentBranch string) error {
-		_ = state.gitEnv.CoworkerRepo.Config.SetParentBranch(childBranch, parentBranch)
+		_ = state.gitEnv.CoworkerRepo.Config.Ancestry.SetParent(childBranch, parentBranch)
 		return nil
 	})
 

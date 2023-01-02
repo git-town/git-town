@@ -140,20 +140,20 @@ func gitShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (sh
 	}
 	result.isOffline = repo.Config.IsOffline()
 	result.isShippingInitialBranch = result.branchToShip == result.initialBranch
-	result.branchToMergeInto = repo.Config.ParentBranch(result.branchToShip)
+	result.branchToMergeInto = repo.Config.Ancestry.Parent(result.branchToShip)
 	prInfo, err := createPullRequestInfo(result.branchToShip, result.branchToMergeInto, driver)
 	result.canShipWithDriver = prInfo.CanMergeWithAPI
 	result.defaultCommitMessage = prInfo.DefaultCommitMessage
 	result.pullRequestNumber = prInfo.PullRequestNumber
-	result.childBranches = repo.Config.ChildBranches(result.branchToShip)
+	result.childBranches = repo.Config.Ancestry.Children(result.branchToShip)
 	result.deleteOriginBranch = prodRepo.Config.ShouldShipDeleteOriginBranch()
 	return result, err
 }
 
 func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
-	parentBranch := prodRepo.Config.ParentBranch(branchName)
+	parentBranch := prodRepo.Config.Ancestry.Parent(branchName)
 	if !prodRepo.Config.IsMainBranch(parentBranch) && !prodRepo.Config.PerennialBranches.Is(parentBranch) {
-		ancestors := prodRepo.Config.AncestorBranches(branchName)
+		ancestors := prodRepo.Config.Ancestry.Ancestors(branchName)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
 		oldestAncestor := ancestorsWithoutMainOrPerennial[0]
 		cli.Exit(fmt.Errorf(`shipping this branch would ship %q as well,

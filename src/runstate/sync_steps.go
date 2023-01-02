@@ -82,9 +82,9 @@ func syncFeatureBranchSteps(branchName string, repo *git.ProdRepo) (StepList, er
 	}
 	switch syncStrategy {
 	case "merge":
-		result.Append(&steps.MergeBranchStep{BranchName: repo.Config.ParentBranch(branchName)})
+		result.Append(&steps.MergeBranchStep{BranchName: repo.Config.Ancestry.Parent(branchName)})
 	case "rebase":
-		result.Append(&steps.RebaseBranchStep{BranchName: repo.Config.ParentBranch(branchName)})
+		result.Append(&steps.RebaseBranchStep{BranchName: repo.Config.Ancestry.Parent(branchName)})
 	default:
 		return StepList{}, fmt.Errorf("unknown syncStrategy value: %q", syncStrategy)
 	}
