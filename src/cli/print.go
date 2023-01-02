@@ -6,6 +6,14 @@ import (
 	"github.com/fatih/color"
 )
 
+// BoolSetting provides a human-readable serialization for bool values.
+func BoolSetting(value bool) string {
+	if value {
+		return "yes"
+	}
+	return "no"
+}
+
 // Printf prints the given text using fmt.Printf
 // in a way where colors work on Windows.
 func Printf(format string, a ...interface{}) {
@@ -33,6 +41,10 @@ func PrintlnColor(color *color.Color, messages ...interface{}) {
 	}
 }
 
+func PrintEntry(label, value string) {
+	Printf("  %s: %s\n", label, value)
+}
+
 // PrintError prints the given error message to the console.
 func PrintError(err error) {
 	fmt.Println()
@@ -40,12 +52,16 @@ func PrintError(err error) {
 	fmt.Println()
 }
 
+func PrintHeader(text string) {
+	boldUnderline := color.New(color.Bold).Add(color.Underline)
+	PrintlnColor(boldUnderline, text+":")
+}
+
 // PrintLabelAndValue prints the label bolded and underlined
 // the value indented on the next line
 // followed by an empty line.
 func PrintLabelAndValue(label, value string) {
-	labelFmt := color.New(color.Bold).Add(color.Underline)
-	PrintlnColor(labelFmt, label+":")
+	PrintHeader(label)
 	Println(Indent(value))
 	fmt.Println()
 }
@@ -57,4 +73,11 @@ func PrintDriverAction(template string, messages ...interface{}) {
 	if err != nil {
 		fmt.Printf(template, messages...)
 	}
+}
+
+func StringSetting(text string) string {
+	if text != "" {
+		return text
+	}
+	return "(not set)"
 }

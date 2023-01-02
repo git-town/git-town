@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/git"
@@ -15,13 +16,28 @@ var configCommand = &cobra.Command{
 	Short: "Displays your Git Town configuration",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println()
-		cli.PrintLabelAndValue("Main branch", cli.PrintableMainBranch(prodRepo.Config.MainBranch()))
-		cli.PrintLabelAndValue("Perennial branches", cli.PrintablePerennialBranches(prodRepo.Config.PerennialBranches()))
+		cli.PrintHeader("Branches")
+		cli.PrintEntry("main branch", cli.StringSetting(prodRepo.Config.MainBranch()))
+		cli.PrintEntry("perennial branches", cli.StringSetting(strings.Join(prodRepo.Config.PerennialBranches(), ", ")))
+		fmt.Println()
+		cli.PrintHeader("Configuration")
+		cli.PrintEntry("offline", cli.BoolSetting(prodRepo.Config.IsOffline()))
+		cli.PrintEntry("pull branch strategy", prodRepo.Config.PullBranchStrategy())
+		cli.PrintEntry("push using --no-verify", cli.BoolSetting(!prodRepo.Config.PushVerify()))
+		cli.PrintEntry("push new branches", cli.BoolSetting(prodRepo.Config.ShouldNewBranchPush()))
+		cli.PrintEntry("ship removes the remote branch", cli.BoolSetting(prodRepo.Config.ShouldShipDeleteOriginBranch()))
+		cli.PrintEntry("sync strategy", prodRepo.Config.SyncStrategy())
+		cli.PrintEntry("sync with upstream", cli.BoolSetting(prodRepo.Config.ShouldSyncUpstream()))
+		fmt.Println()
+		cli.PrintHeader("Hosting")
+		cli.PrintEntry("hosting service override", cli.StringSetting(prodRepo.Config.HostingService()))
+		cli.PrintEntry("GitHub token", cli.StringSetting(prodRepo.Config.GitHubToken()))
+		cli.PrintEntry("GitLab token", cli.StringSetting(prodRepo.Config.GitLabToken()))
+		cli.PrintEntry("Gitea token", cli.StringSetting(prodRepo.Config.GiteaToken()))
+		fmt.Println()
 		if prodRepo.Config.MainBranch() != "" {
 			cli.PrintLabelAndValue("Branch Ancestry", cli.PrintableBranchAncestry(&prodRepo.Config))
 		}
-		cli.PrintLabelAndValue("Pull branch strategy", prodRepo.Config.PullBranchStrategy())
-		cli.PrintLabelAndValue("New Branch Push Flag", cli.PrintableNewBranchPushFlag(prodRepo.Config.ShouldNewBranchPush()))
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -52,7 +68,7 @@ The main branch is the Git branch from which new feature branches are cut.`,
 }
 
 func printMainBranch() {
-	cli.Println(cli.PrintableMainBranch(prodRepo.Config.MainBranch()))
+	cli.Println(cli.StringSetting(prodRepo.Config.MainBranch()))
 }
 
 var newBranchPushFlagCommand = &cobra.Command{
@@ -136,7 +152,7 @@ var perennialBranchesCommand = &cobra.Command{
 Perennial branches are long-lived branches.
 They cannot be shipped.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		cli.Println(cli.PrintablePerennialBranches(prodRepo.Config.PerennialBranches()))
+		cli.Println(cli.StringSetting(strings.Join(prodRepo.Config.PerennialBranches(), "\n")))
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
