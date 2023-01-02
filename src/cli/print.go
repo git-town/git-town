@@ -6,6 +6,7 @@ import (
 	"github.com/fatih/color"
 )
 
+// BoolSetting provides a human-readable serialization for bool values.
 func BoolSetting(value bool) string {
 	if value {
 		return "yes"
