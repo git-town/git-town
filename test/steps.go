@@ -509,7 +509,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			_ = state.gitEnv.DevRepo.Config.SetNewBranchPush(b, setGlobal)
 			return nil
 		}
-		_, err := state.gitEnv.DevRepo.Config.SetLocalConfigValue("git-town.new-branch-push-flag", value)
+		_, err := state.gitEnv.DevRepo.Config.SetLocalConfigValueInTests("git-town.new-branch-push-flag", value)
 		return err
 	})
 
@@ -527,7 +527,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^setting "offline" is "([^"]*)"$`, func(value string) error {
-		_, err := state.gitEnv.DevRepo.Config.SetGlobalConfigValue("git-town.offline", value)
+		_, err := state.gitEnv.DevRepo.Config.SetGlobalConfigValueInTests("git-town.offline", value)
 		return err
 	})
 
