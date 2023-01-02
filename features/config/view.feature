@@ -6,13 +6,30 @@ Feature: show the configuration
     When I run "git-town config"
     Then it prints:
       """
-      Main branch:
-        main
+      BRANCHES
+      Main branch: main
+      Perennial branches: qa, staging
 
-      Perennial branches:
-        qa
-        staging
+      Pull branch strategy: xxx
+      push using --no-verify: (not set)
+      push new branches: xxx
+      ship deletes the remote branch:
+      sync strategy: [ ] merge [x] rebase
+      sync upstream:
+
+      Hosting service: xxx
+
+      Github token: (not set)
+      Gitlab token: (not set)
+      Gitea token: (not set)
+      Offline: disabled
+
+      Repo URL:
+      Upstream URL:
+
+      Aliases: (not set)
       """
+
 
   Scenario: all configured, with nested branches
     Given the perennial branches "qa" and "staging"
@@ -22,12 +39,8 @@ Feature: show the configuration
     When I run "git-town config"
     Then it prints:
       """
-      Main branch:
-        main
-
-      Perennial branches:
-        qa
-        staging
+      Main branch: main
+      Perennial branches: qa, staging
 
       Branch Ancestry:
         main
@@ -44,9 +57,6 @@ Feature: show the configuration
     When I run "git-town config"
     Then it prints:
       """
-      Main branch:
-        [none]
-
-      Perennial branches:
-        [none]
+      Main branch: [none]
+      Perennial branches: [none]
       """
