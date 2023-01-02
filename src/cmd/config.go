@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/git"
@@ -16,8 +17,8 @@ var configCommand = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println()
 		cli.PrintHeader("Branches")
-		cli.PrintEntry("main branch", cli.PrintableMainBranch(prodRepo.Config.MainBranch()))
-		cli.PrintEntry("perennial branches", cli.PrintablePerennialBranches(prodRepo.Config.PerennialBranches()))
+		cli.PrintEntry("main branch", cli.StringSetting(prodRepo.Config.MainBranch()))
+		cli.PrintEntry("perennial branches", cli.StringSetting(strings.Join(prodRepo.Config.PerennialBranches(), ", ")))
 		fmt.Println()
 		cli.PrintHeader("Configuration")
 		cli.PrintEntry("offline", strconv.FormatBool(prodRepo.Config.IsOffline()))
@@ -29,10 +30,10 @@ var configCommand = &cobra.Command{
 		cli.PrintEntry("sync with upstream", strconv.FormatBool(prodRepo.Config.ShouldSyncUpstream()))
 		fmt.Println()
 		cli.PrintHeader("Hosting")
-		cli.PrintEntry("hosting service", prodRepo.Config.HostingService())
-		cli.PrintEntry("GitHub token", prodRepo.Config.GitHubToken())
-		cli.PrintEntry("GitLab token", prodRepo.Config.GitLabToken())
-		cli.PrintEntry("Gitea token", prodRepo.Config.GiteaToken())
+		cli.PrintEntry("hosting service", cli.StringSetting(prodRepo.Config.HostingService()))
+		cli.PrintEntry("GitHub token", cli.StringSetting(prodRepo.Config.GitHubToken()))
+		cli.PrintEntry("GitLab token", cli.StringSetting(prodRepo.Config.GitLabToken()))
+		cli.PrintEntry("Gitea token", cli.StringSetting(prodRepo.Config.GiteaToken()))
 		fmt.Println()
 		if prodRepo.Config.MainBranch() != "" {
 			cli.PrintLabelAndValue("Branch Ancestry", cli.PrintableBranchAncestry(&prodRepo.Config))
@@ -67,7 +68,7 @@ The main branch is the Git branch from which new feature branches are cut.`,
 }
 
 func printMainBranch() {
-	cli.Println(cli.PrintableMainBranch(prodRepo.Config.MainBranch()))
+	cli.Println(cli.StringSetting(prodRepo.Config.MainBranch()))
 }
 
 var newBranchPushFlagCommand = &cobra.Command{
@@ -151,7 +152,7 @@ var perennialBranchesCommand = &cobra.Command{
 Perennial branches are long-lived branches.
 They cannot be shipped.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		cli.Println(cli.PrintablePerennialBranches(prodRepo.Config.PerennialBranches()))
+		cli.Println(cli.StringSetting(strings.Join(prodRepo.Config.PerennialBranches(), "\n")))
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {

@@ -33,14 +33,6 @@ func PrintableBranchTree(branchName string, config BranchAncestryConfig) string 
 	return result
 }
 
-// PrintableMainBranch returns a user printable main branch.
-func PrintableMainBranch(mainBranch string) string {
-	if mainBranch == "" {
-		return "[none]"
-	}
-	return mainBranch
-}
-
 // PrintableNewBranchPushFlag returns a user printable new branch push flag.
 func PrintableNewBranchPushFlag(flag bool) string {
 	return strconv.FormatBool(flag)
@@ -49,12 +41,4 @@ func PrintableNewBranchPushFlag(flag bool) string {
 // PrintableOfflineFlag provides a printable version of the given offline flag.
 func PrintableOfflineFlag(flag bool) string {
 	return strconv.FormatBool(flag)
-}
-
-// PrintablePerennialBranches returns a user printable list of perennial branches.
-func PrintablePerennialBranches(perennialBranches []string) string {
-	if len(perennialBranches) == 0 {
-		return "[none]"
-	}
-	return strings.Join(perennialBranches, ", ")
 }

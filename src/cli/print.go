@@ -66,3 +66,11 @@ func PrintDriverAction(template string, messages ...interface{}) {
 		fmt.Printf(template, messages...)
 	}
 }
+
+func StringSetting(text string) string {
+	if text != "" {
+		return text
+	} else {
+		return "(not set)"
+	}
+}

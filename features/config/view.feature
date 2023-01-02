@@ -1,3 +1,4 @@
+@this
 Feature: show the configuration
 
   Scenario: all configured, no nested branches
@@ -7,27 +8,23 @@ Feature: show the configuration
     Then it prints:
       """
       Branches:
-      main branch: main
-      perennial branches: qa, staging
+        main branch: main
+        perennial branches: qa, staging
 
-      COMMANDS
-      Pull branch strategy: xxx
-      push using --no-verify: (not set)
-      push new branches: xxx
-      ship deletes the remote branch:
-      sync strategy: [ ] merge [x] rebase
-      sync upstream:
-      offline: disabled
+      Configuration:
+        offline: false
+        pull branch strategy: rebase
+        push using --no-verify: false
+        push new branches: false
+        ship removes the remote branch: true
+        sync strategy: merge
+        sync with upstream: true
 
-      Aliases: (not set)
-
-      HOSTING
-      Repo URL:
-      Upstream URL:
-      Detected hosting service: xxx
-      Github token: (not set)
-      Gitlab token: (not set)
-      Gitea token: (not set)
+      Hosting:
+        hosting service: (not set)
+        GitHub token: (not set)
+        GitLab token: (not set)
+        Gitea token: (not set)
       """
 
 
@@ -39,8 +36,24 @@ Feature: show the configuration
     When I run "git-town config"
     Then it prints:
       """
-      Main branch: main
-      Perennial branches: qa, staging
+      Branches:
+        main branch: main
+        perennial branches: qa, staging
+
+      Configuration:
+        offline: false
+        pull branch strategy: rebase
+        push using --no-verify: false
+        push new branches: false
+        ship removes the remote branch: true
+        sync strategy: merge
+        sync with upstream: true
+
+      Hosting:
+        hosting service: (not set)
+        GitHub token: (not set)
+        GitLab token: (not set)
+        Gitea token: (not set)
 
       Branch Ancestry:
         main
@@ -57,6 +70,22 @@ Feature: show the configuration
     When I run "git-town config"
     Then it prints:
       """
-      Main branch: [none]
-      Perennial branches: [none]
+      Branches:
+        main branch: (not set)
+        perennial branches: (not set)
+
+      Configuration:
+        offline: false
+        pull branch strategy: rebase
+        push using --no-verify: false
+        push new branches: false
+        ship removes the remote branch: true
+        sync strategy: merge
+        sync with upstream: true
+
+      Hosting:
+        hosting service: (not set)
+        GitHub token: (not set)
+        GitLab token: (not set)
+        Gitea token: (not set)
       """
