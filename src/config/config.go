@@ -5,7 +5,6 @@
 package config
 
 import (
-	"errors"
 	"flag"
 	"fmt"
 	"os"
@@ -19,6 +18,7 @@ type Config struct {
 	gitConfig         *gitConfig
 	PerennialBranches *PerennialBranches
 	Ancestry          *Ancestry
+	Offline           *Offline
 }
 
 func NewConfiguration(shell run.Shell) Config {
@@ -31,6 +31,9 @@ func NewConfiguration(shell run.Shell) Config {
 		gitConfig: &gitConfig,
 		PerennialBranches: &PerennialBranches{
 			gc: &gitConfig,
+		},
+		Offline: &Offline{
+			gitConfig: &gitConfig,
 		},
 	}
 	config.Ancestry = &Ancestry{
@@ -113,21 +116,6 @@ func (c *Config) IsFeatureBranch(branchName string) bool {
 // is the main branch of the repository.
 func (c *Config) IsMainBranch(branchName string) bool {
 	return branchName == c.MainBranch()
-}
-
-// IsOffline indicates whether Git Town is currently in offline mode.
-func (c *Config) IsOffline() bool {
-	config := c.gitConfig.globalConfigValue("git-town.offline")
-	if config == "" {
-		return false
-	}
-	result, err := strconv.ParseBool(config)
-	if err != nil {
-		fmt.Printf("Invalid value for git-town.offline: %q. Please provide either true or false. Considering false for now.", config)
-		fmt.Println()
-		return false
-	}
-	return result
 }
 
 // localConfigKeysMatching provides the names of the Git Town configuration keys matching the given RegExp string.
@@ -239,12 +227,6 @@ func (c *Config) SetPushVerify(strategy string) error {
 	return err
 }
 
-// SetOffline updates whether Git Town is in offline mode.
-func (c *Config) SetOffline(value bool) error {
-	_, err := c.gitConfig.SetGlobalConfigValue("git-town.offline", strconv.FormatBool(value))
-	return err
-}
-
 // SetShouldShipDeleteRemoteBranch updates the configured pull branch strategy.
 func (c *Config) SetShouldShipDeleteRemoteBranch(value bool) error {
 	_, err := c.gitConfig.SetLocalConfigValue("git-town.ship-delete-remote-branch", strconv.FormatBool(value))
@@ -315,12 +297,4 @@ func (c *Config) SyncStrategy() string {
 		setting = "merge"
 	}
 	return setting
-}
-
-// ValidateIsOnline asserts that Git Town is not in offline mode.
-func (c *Config) ValidateIsOnline() error {
-	if c.IsOffline() {
-		return errors.New("this command requires an active internet connection")
-	}
-	return nil
 }

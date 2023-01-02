@@ -472,14 +472,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^offline mode is disabled$`, func() error {
 		state.gitEnv.DevRepo.Config.Reload()
-		if state.gitEnv.DevRepo.Config.IsOffline() {
+		if state.gitEnv.DevRepo.Config.Offline.Enabled() {
 			return fmt.Errorf("expected to not be offline but am")
 		}
 		return nil
 	})
 
 	suite.Step(`^offline mode is enabled$`, func() error {
-		return state.gitEnv.DevRepo.Config.SetOffline(true)
+		return state.gitEnv.DevRepo.Config.Offline.Enable(true)
 	})
 
 	suite.Step(`^origin deletes the "([^"]*)" branch$`, func(name string) error {
@@ -537,7 +537,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return err
 		}
 		state.gitEnv.DevRepo.Config.Reload()
-		have := state.gitEnv.DevRepo.Config.IsOffline()
+		have := state.gitEnv.DevRepo.Config.Offline.Enabled()
 		if have != want {
 			return fmt.Errorf("expected %t but have %t", want, have)
 		}

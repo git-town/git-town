@@ -36,7 +36,7 @@ func SyncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (St
 		}
 		result.AppendList(steps)
 	}
-	if pushBranch && hasOrigin && !repo.Config.IsOffline() {
+	if pushBranch && hasOrigin && !repo.Config.Offline.Enabled() {
 		hasTrackingBranch, err := repo.Silent.HasTrackingBranch(branchName)
 		if err != nil {
 			return StepList{}, err

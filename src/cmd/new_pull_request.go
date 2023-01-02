@@ -61,7 +61,7 @@ where hostname matches what is in your ssh config file.`,
 		if err := validateIsConfigured(prodRepo); err != nil {
 			return err
 		}
-		if err := prodRepo.Config.ValidateIsOnline(); err != nil {
+		if err := prodRepo.Config.Offline.Validate(); err != nil {
 			return err
 		}
 		return nil

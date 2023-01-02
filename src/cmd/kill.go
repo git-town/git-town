@@ -84,7 +84,7 @@ func createKillConfig(args []string, repo *git.ProdRepo) (killConfig, error) {
 	if err != nil {
 		return result, err
 	}
-	result.isOffline = repo.Config.IsOffline()
+	result.isOffline = repo.Config.Offline.Enabled()
 	if hasOrigin && !result.isOffline {
 		err := repo.Logging.Fetch()
 		if err != nil {
@@ -136,7 +136,7 @@ func createKillStepList(config killConfig, repo *git.ProdRepo) (runstate.StepLis
 			result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: config.targetBranchParent})
 		}
 		result.Append(&steps.DeleteParentBranchStep{BranchName: config.targetBranch})
-	case !repo.Config.IsOffline():
+	case !repo.Config.Offline.Enabled():
 		result.Append(&steps.DeleteOriginBranchStep{BranchName: config.targetBranch, IsTracking: false, NoPushVerify: config.noPushVerify})
 	default:
 		return runstate.StepList{}, fmt.Errorf("cannot delete remote branch %q in offline mode", config.targetBranch)

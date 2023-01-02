@@ -44,7 +44,7 @@ This usually means the branch was shipped or killed on another machine.`,
 		if err := validateIsConfigured(prodRepo); err != nil {
 			return err
 		}
-		return prodRepo.Config.ValidateIsOnline()
+		return prodRepo.Config.Offline.Validate()
 	},
 }
 

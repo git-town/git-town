@@ -12,13 +12,13 @@ func TestRunner(t *testing.T) {
 	t.Run(".SetOffline()", func(t *testing.T) {
 		t.Parallel()
 		repo := test.CreateTestGitTownRepo(t)
-		err := repo.Config.SetOffline(true)
+		err := repo.Config.Offline.Enable(true)
 		assert.NoError(t, err)
-		offline := repo.Config.IsOffline()
+		offline := repo.Config.Offline.Enabled()
 		assert.True(t, offline)
-		err = repo.Config.SetOffline(false)
+		err = repo.Config.Offline.Enable(false)
 		assert.NoError(t, err)
-		offline = repo.Config.IsOffline()
+		offline = repo.Config.Offline.Enabled()
 		assert.False(t, offline)
 	})
 }

@@ -70,7 +70,7 @@ func createAppendConfig(args []string, repo *git.ProdRepo) (appendConfig, error)
 	if err != nil {
 		return appendConfig{}, err
 	}
-	if result.hasOrigin && !repo.Config.IsOffline() {
+	if result.hasOrigin && !repo.Config.Offline.Enabled() {
 		err := repo.Logging.Fetch()
 		if err != nil {
 			return appendConfig{}, err
@@ -90,7 +90,7 @@ func createAppendConfig(args []string, repo *git.ProdRepo) (appendConfig, error)
 	result.ancestorBranches = repo.Config.Ancestry.Ancestors(result.parentBranch)
 	result.noPushVerify = !repo.Config.PushVerify()
 	result.shouldNewBranchPush = repo.Config.ShouldNewBranchPush()
-	result.isOffline = repo.Config.IsOffline()
+	result.isOffline = repo.Config.Offline.Enabled()
 	return result, err
 }
 
