@@ -6,6 +6,13 @@ import (
 	"github.com/fatih/color"
 )
 
+func BoolSetting(value bool) string {
+	if value {
+		return "yes"
+	}
+	return "no"
+}
+
 // Printf prints the given text using fmt.Printf
 // in a way where colors work on Windows.
 func Printf(format string, a ...interface{}) {

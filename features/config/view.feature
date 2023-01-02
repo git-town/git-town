@@ -11,13 +11,13 @@ Feature: show the configuration
         perennial branches: qa, staging
 
       Configuration:
-        offline: false
+        offline: no
         pull branch strategy: rebase
-        push using --no-verify: false
-        push new branches: false
-        ship removes the remote branch: true
+        push using --no-verify: no
+        push new branches: no
+        ship removes the remote branch: yes
         sync strategy: merge
-        sync with upstream: true
+        sync with upstream: yes
 
       Hosting:
         hosting service: (not set)
@@ -39,13 +39,13 @@ Feature: show the configuration
         perennial branches: qa, staging
 
       Configuration:
-        offline: false
+        offline: no
         pull branch strategy: rebase
-        push using --no-verify: false
-        push new branches: false
-        ship removes the remote branch: true
+        push using --no-verify: no
+        push new branches: no
+        ship removes the remote branch: yes
         sync strategy: merge
-        sync with upstream: true
+        sync with upstream: yes
 
       Hosting:
         hosting service: (not set)
@@ -73,13 +73,13 @@ Feature: show the configuration
         perennial branches: (not set)
 
       Configuration:
-        offline: false
+        offline: no
         pull branch strategy: rebase
-        push using --no-verify: false
-        push new branches: false
-        ship removes the remote branch: true
+        push using --no-verify: no
+        push new branches: no
+        ship removes the remote branch: yes
         sync strategy: merge
-        sync with upstream: true
+        sync with upstream: yes
 
       Hosting:
         hosting service: (not set)
