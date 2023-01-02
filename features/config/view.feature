@@ -9,7 +9,10 @@ Feature: show the configuration
       BRANCHES
       Main branch: main
       Perennial branches: qa, staging
+      Offline: disabled
 
+      COMMANDS
+      Aliases: (not set)
       Pull branch strategy: xxx
       push using --no-verify: (not set)
       push new branches: xxx
@@ -17,17 +20,13 @@ Feature: show the configuration
       sync strategy: [ ] merge [x] rebase
       sync upstream:
 
-      Hosting service: xxx
-
+      HOSTING
+      Repo URL:
+      Upstream URL:
+      Detected hosting service: xxx
       Github token: (not set)
       Gitlab token: (not set)
       Gitea token: (not set)
-      Offline: disabled
-
-      Repo URL:
-      Upstream URL:
-
-      Aliases: (not set)
       """
 
 
