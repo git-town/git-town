@@ -15,13 +15,28 @@ var configCommand = &cobra.Command{
 	Short: "Displays your Git Town configuration",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println()
-		cli.PrintLabelAndValue("Main branch", cli.PrintableMainBranch(prodRepo.Config.MainBranch()))
-		cli.PrintLabelAndValue("Perennial branches", cli.PrintablePerennialBranches(prodRepo.Config.PerennialBranches()))
+		cli.PrintHeader("Branches")
+		cli.PrintEntry("main branch", cli.PrintableMainBranch(prodRepo.Config.MainBranch()))
+		cli.PrintEntry("perennial branches", cli.PrintablePerennialBranches(prodRepo.Config.PerennialBranches()))
+		fmt.Println()
+		cli.PrintHeader("Configuration")
+		cli.PrintEntry("offline", strconv.FormatBool(prodRepo.Config.IsOffline()))
+		cli.PrintEntry("pull branch strategy", prodRepo.Config.PullBranchStrategy())
+		cli.PrintEntry("push using --no-verify", strconv.FormatBool(!prodRepo.Config.PushVerify()))
+		cli.PrintEntry("push new branches", strconv.FormatBool(prodRepo.Config.ShouldNewBranchPush()))
+		cli.PrintEntry("ship removes the remote branch", strconv.FormatBool(prodRepo.Config.ShouldShipDeleteOriginBranch()))
+		cli.PrintEntry("sync strategy", prodRepo.Config.SyncStrategy())
+		cli.PrintEntry("sync with upstream", strconv.FormatBool(prodRepo.Config.ShouldSyncUpstream()))
+		fmt.Println()
+		cli.PrintHeader("Hosting")
+		cli.PrintEntry("hosting service", prodRepo.Config.HostingService())
+		cli.PrintEntry("GitHub token", prodRepo.Config.GitHubToken())
+		cli.PrintEntry("GitLab token", prodRepo.Config.GitLabToken())
+		cli.PrintEntry("Gitea token", prodRepo.Config.GiteaToken())
+		fmt.Println()
 		if prodRepo.Config.MainBranch() != "" {
 			cli.PrintLabelAndValue("Branch Ancestry", cli.PrintableBranchAncestry(&prodRepo.Config))
 		}
-		cli.PrintLabelAndValue("Pull branch strategy", prodRepo.Config.PullBranchStrategy())
-		cli.PrintLabelAndValue("New Branch Push Flag", cli.PrintableNewBranchPushFlag(prodRepo.Config.ShouldNewBranchPush()))
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {

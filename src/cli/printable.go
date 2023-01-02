@@ -56,5 +56,5 @@ func PrintablePerennialBranches(perennialBranches []string) string {
 	if len(perennialBranches) == 0 {
 		return "[none]"
 	}
-	return strings.Join(perennialBranches, "\n")
+	return strings.Join(perennialBranches, ", ")
 }

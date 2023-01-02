@@ -6,19 +6,20 @@ Feature: show the configuration
     When I run "git-town config"
     Then it prints:
       """
-      BRANCHES
-      Main branch: main
-      Perennial branches: qa, staging
-      Offline: disabled
+      Branches:
+      main branch: main
+      perennial branches: qa, staging
 
       COMMANDS
-      Aliases: (not set)
       Pull branch strategy: xxx
       push using --no-verify: (not set)
       push new branches: xxx
       ship deletes the remote branch:
       sync strategy: [ ] merge [x] rebase
       sync upstream:
+      offline: disabled
+
+      Aliases: (not set)
 
       HOSTING
       Repo URL:
