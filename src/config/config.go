@@ -18,6 +18,7 @@ type Config struct {
 	gitConfig         *gitConfig
 	PerennialBranches *PerennialBranches
 	Ancestry          *Ancestry
+	Hosting           *Hosting
 	Offline           *Offline
 }
 
@@ -33,6 +34,9 @@ func NewConfiguration(shell run.Shell) Config {
 			gc: &gitConfig,
 		},
 		Offline: &Offline{
+			gitConfig: &gitConfig,
+		},
+		Hosting: &Hosting{
 			gitConfig: &gitConfig,
 		},
 	}
@@ -71,16 +75,6 @@ func (c *Config) AddGitAlias(command string) (*run.Result, error) {
 	return c.gitConfig.SetGlobalConfigValue("alias."+command, "town "+command)
 }
 
-// HostingService provides the name of the code hosting driver to use.
-func (c *Config) HostingService() string {
-	return c.gitConfig.localOrGlobalConfigValue("git-town.code-hosting-driver")
-}
-
-// OriginOverride provides the override for the origin hostname from the Git Town configuration.
-func (c *Config) OriginOverride() string {
-	return c.gitConfig.localConfigValue("git-town.code-hosting-origin-hostname")
-}
-
 // DeleteMainBranchConfiguration removes the configuration entry for the main branch name.
 func (c *Config) DeleteMainBranchConfiguration() error {
 	return c.gitConfig.removeLocalConfigValue("git-town.main-branch-name")
@@ -89,21 +83,6 @@ func (c *Config) DeleteMainBranchConfiguration() error {
 // GitAlias provides the currently set alias for the given Git Town command.
 func (c *Config) GitAlias(command string) string {
 	return c.gitConfig.globalConfigValue("alias." + command)
-}
-
-// GitHubToken provides the content of the GitHub API token stored in the local or global Git Town configuration.
-func (c *Config) GitHubToken() string {
-	return c.gitConfig.localOrGlobalConfigValue("git-town.github-token")
-}
-
-// GitLabToken provides the content of the GitLab API token stored in the local or global Git Town configuration.
-func (c *Config) GitLabToken() string {
-	return c.gitConfig.localOrGlobalConfigValue("git-town.gitlab-token")
-}
-
-// GiteaToken provides the content of the Gitea API token stored in the local or global Git Town configuration.
-func (c *Config) GiteaToken() string {
-	return c.gitConfig.localOrGlobalConfigValue("git-town.gitea-token")
 }
 
 // IsFeatureBranch indicates whether the branch with the given name is
@@ -175,22 +154,6 @@ func (c *Config) RemoveGitAlias(command string) (*run.Result, error) {
 	return c.gitConfig.removeGlobalConfigValue("alias." + command)
 }
 
-// SetCodeHostingDriver sets the "github.code-hosting-driver" setting.
-func (c *Config) SetCodeHostingDriver(value string) error {
-	const key = "git-town.code-hosting-driver"
-	c.gitConfig.localConfigCache[key] = value
-	_, err := c.gitConfig.shell.Run("git", "config", key, value)
-	return err
-}
-
-// SetCodeHostingOriginHostname sets the "github.code-hosting-driver" setting.
-func (c *Config) SetCodeHostingOriginHostname(value string) error {
-	const key = "git-town.code-hosting-origin-hostname"
-	c.gitConfig.localConfigCache[key] = value
-	_, err := c.gitConfig.shell.Run("git", "config", key, value)
-	return err
-}
-
 // SetColorUI configures whether Git output contains color codes.
 func (c *Config) SetColorUI(value string) error {
 	_, err := c.gitConfig.shell.Run("git", "config", "color.ui", value)
@@ -241,12 +204,6 @@ func (c *Config) SetShouldSyncUpstream(value bool) error {
 
 func (c *Config) SetSyncStrategy(value string) error {
 	_, err := c.gitConfig.SetLocalConfigValue("git-town.sync-strategy", value)
-	return err
-}
-
-// SetTestOrigin sets the origin to be used for testing.
-func (c *Config) SetTestOrigin(value string) error {
-	_, err := c.gitConfig.SetLocalConfigValue("git-town.testing.remote-url", value)
 	return err
 }
 

@@ -32,6 +32,14 @@ type config interface {
 	// OriginOverride provides the override for the origin URL from the Git Town configuration.
 	OriginOverride() string
 
+	// MainBranch provides the name of the main branch.
+	MainBranch() string
+
+	// OriginURL provides the URL of the origin remote.
+	OriginURL() string
+}
+
+type hostingConfig interface {
 	// HostingService provides the name of the hosting service that runs at the origin remote.
 	HostingService() string
 
@@ -43,12 +51,6 @@ type config interface {
 
 	// GitLabToken provides the personal access token for GitLab stored in the Git configuration.
 	GitLabToken() string
-
-	// MainBranch provides the name of the main branch.
-	MainBranch() string
-
-	// OriginURL provides the URL of the origin remote.
-	OriginURL() string
 }
 
 // runner defines the runner methods used by the driver package.
@@ -76,7 +78,7 @@ type MergePullRequestOptions struct {
 type logFn func(string, ...interface{})
 
 // NewDriver provides an instance of the code hosting driver to use based on the git config.
-func NewDriver(config config, git gitRunner, log logFn) Driver { //nolint:ireturn,nolintlint  // nolintlint causes false positive here
+func NewDriver(config config, hostingConfig hostingConfig, git gitRunner, log logFn) Driver { //nolint:ireturn,nolintlint  // nolintlint causes false positive here
 	url := giturl.Parse(config.OriginURL())
 	if url == nil {
 		return nil

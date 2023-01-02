@@ -26,7 +26,7 @@ type GithubDriver struct {
 // NewGithubDriver provides a GitHub driver instance if the given repo configuration is for a Github repo,
 // otherwise nil.
 func NewGithubDriver(url giturl.Parts, config config, log logFn) *GithubDriver {
-	driverType := config.HostingService()
+	driverType := hostingConfig.HostingService()
 	manualHostName := config.OriginOverride()
 	if manualHostName != "" {
 		url.Host = manualHostName
@@ -35,7 +35,7 @@ func NewGithubDriver(url giturl.Parts, config config, log logFn) *GithubDriver {
 		return nil
 	}
 	return &GithubDriver{
-		apiToken:   config.GitHubToken(),
+		apiToken:   hostingConfig.GitHubToken(),
 		config:     config,
 		hostname:   url.Host,
 		log:        log,
