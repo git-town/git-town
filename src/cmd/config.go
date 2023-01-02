@@ -30,7 +30,7 @@ var configCommand = &cobra.Command{
 		cli.PrintEntry("sync with upstream", cli.BoolSetting(prodRepo.Config.ShouldSyncUpstream()))
 		fmt.Println()
 		cli.PrintHeader("Hosting")
-		cli.PrintEntry("hosting service", cli.StringSetting(prodRepo.Config.HostingService()))
+		cli.PrintEntry("hosting service override", cli.StringSetting(prodRepo.Config.HostingService()))
 		cli.PrintEntry("GitHub token", cli.StringSetting(prodRepo.Config.GitHubToken()))
 		cli.PrintEntry("GitLab token", cli.StringSetting(prodRepo.Config.GitLabToken()))
 		cli.PrintEntry("Gitea token", cli.StringSetting(prodRepo.Config.GiteaToken()))

@@ -20,7 +20,7 @@ Feature: show the configuration
         sync with upstream: yes
 
       Hosting:
-        hosting service: (not set)
+        hosting service override: (not set)
         GitHub token: (not set)
         GitLab token: (not set)
         Gitea token: (not set)
@@ -48,7 +48,7 @@ Feature: show the configuration
         sync with upstream: yes
 
       Hosting:
-        hosting service: (not set)
+        hosting service override: (not set)
         GitHub token: (not set)
         GitLab token: (not set)
         Gitea token: (not set)
@@ -82,7 +82,7 @@ Feature: show the configuration
         sync with upstream: yes
 
       Hosting:
-        hosting service: (not set)
+        hosting service override: (not set)
         GitHub token: (not set)
         GitLab token: (not set)
         Gitea token: (not set)
