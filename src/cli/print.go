@@ -70,7 +70,6 @@ func PrintDriverAction(template string, messages ...interface{}) {
 func StringSetting(text string) string {
 	if text != "" {
 		return text
-	} else {
-		return "(not set)"
 	}
+	return "(not set)"
 }

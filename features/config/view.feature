@@ -1,4 +1,3 @@
-@this
 Feature: show the configuration
 
   Scenario: all configured, no nested branches
@@ -26,7 +25,6 @@ Feature: show the configuration
         GitLab token: (not set)
         Gitea token: (not set)
       """
-
 
   Scenario: all configured, with nested branches
     Given the perennial branches "qa" and "staging"

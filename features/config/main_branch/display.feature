@@ -5,7 +5,7 @@ Feature: display the main branch configuration
     When I run "git-town config main-branch"
     Then it prints:
       """
-      [none]
+      (not set)
       """
 
   Scenario: configured
