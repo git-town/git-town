@@ -37,8 +37,3 @@ func PrintableBranchTree(branchName string, config BranchAncestryConfig) string 
 func PrintableNewBranchPushFlag(flag bool) string {
 	return strconv.FormatBool(flag)
 }
-
-// PrintableOfflineFlag provides a printable version of the given offline flag.
-func PrintableOfflineFlag(flag bool) string {
-	return strconv.FormatBool(flag)
-}

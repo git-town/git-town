@@ -122,18 +122,18 @@ func setMainBranch(branchName string, repo *git.ProdRepo) error {
 }
 
 var offlineCommand = &cobra.Command{
-	Use:   "offline [(true | false)]",
+	Use:   "offline [(yes | no)]",
 	Short: "Displays or sets offline mode",
 	Long: `Displays or sets offline mode
 
 Git Town avoids network operations in offline mode.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			cli.Println(cli.PrintableOfflineFlag(prodRepo.Config.IsOffline()))
+			cli.Println(cli.RenderBool(prodRepo.Config.IsOffline()))
 		} else {
-			value, err := strconv.ParseBool(args[0])
+			value, err := cli.ParseBool(args[0])
 			if err != nil {
-				cli.Exit(fmt.Errorf(`invalid argument: %q. Please provide either "true" or "false".\n`, args[0]))
+				cli.Exit(fmt.Errorf(`invalid argument: %q. Please provide either "yes" or "no".\n`, args[0]))
 			}
 			err = prodRepo.Config.SetOffline(value)
 			if err != nil {

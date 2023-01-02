@@ -181,7 +181,7 @@ func (c *Config) IsOffline() bool {
 	}
 	result, err := strconv.ParseBool(config)
 	if err != nil {
-		fmt.Printf("Invalid value for git-town.offline: %q. Please provide either true or false. Considering false for now.", config)
+		fmt.Printf("Invalid value for git-town.offline: %q. Please provide either \"yes\" or \"no\". Considering \"no\" for now.", config)
 		fmt.Println()
 		return false
 	}
