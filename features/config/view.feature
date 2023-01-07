@@ -6,12 +6,24 @@ Feature: show the configuration
     When I run "git-town config"
     Then it prints:
       """
-      Main branch:
-        main
+      Branches:
+        main branch: main
+        perennial branches: qa, staging
 
-      Perennial branches:
-        qa
-        staging
+      Configuration:
+        offline: no
+        pull branch strategy: rebase
+        push using --no-verify: no
+        push new branches: no
+        ship removes the remote branch: yes
+        sync strategy: merge
+        sync with upstream: yes
+
+      Hosting:
+        hosting service override: (not set)
+        GitHub token: (not set)
+        GitLab token: (not set)
+        Gitea token: (not set)
       """
 
   Scenario: all configured, with nested branches
@@ -22,12 +34,24 @@ Feature: show the configuration
     When I run "git-town config"
     Then it prints:
       """
-      Main branch:
-        main
+      Branches:
+        main branch: main
+        perennial branches: qa, staging
 
-      Perennial branches:
-        qa
-        staging
+      Configuration:
+        offline: no
+        pull branch strategy: rebase
+        push using --no-verify: no
+        push new branches: no
+        ship removes the remote branch: yes
+        sync strategy: merge
+        sync with upstream: yes
+
+      Hosting:
+        hosting service override: (not set)
+        GitHub token: (not set)
+        GitLab token: (not set)
+        Gitea token: (not set)
 
       Branch Ancestry:
         main
@@ -44,9 +68,22 @@ Feature: show the configuration
     When I run "git-town config"
     Then it prints:
       """
-      Main branch:
-        [none]
+      Branches:
+        main branch: (not set)
+        perennial branches: (not set)
 
-      Perennial branches:
-        [none]
+      Configuration:
+        offline: no
+        pull branch strategy: rebase
+        push using --no-verify: no
+        push new branches: no
+        ship removes the remote branch: yes
+        sync strategy: merge
+        sync with upstream: yes
+
+      Hosting:
+        hosting service override: (not set)
+        GitHub token: (not set)
+        GitLab token: (not set)
+        Gitea token: (not set)
       """

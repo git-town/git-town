@@ -5,7 +5,7 @@ Feature: display the perennial branches
     When I run "git-town config perennial-branches"
     Then it prints:
       """
-      [none]
+      (not set)
       """
 
   Scenario: configured
