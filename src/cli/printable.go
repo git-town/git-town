@@ -2,7 +2,6 @@ package cli
 
 import (
 	"sort"
-	"strconv"
 	"strings"
 )
 
@@ -31,9 +30,4 @@ func PrintableBranchTree(branchName string, config BranchAncestryConfig) string 
 		result += "\n" + Indent(PrintableBranchTree(childBranch, config))
 	}
 	return result
-}
-
-// PrintableNewBranchPushFlag returns a user printable new branch push flag.
-func PrintableNewBranchPushFlag(flag bool) string {
-	return strconv.FormatBool(flag)
 }

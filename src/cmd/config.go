@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 
 	"github.com/git-town/git-town/v7/src/cli"
@@ -72,7 +71,7 @@ func printMainBranch() {
 }
 
 var newBranchPushFlagCommand = &cobra.Command{
-	Use:   "new-branch-push-flag [(true | false)]",
+	Use:   "new-branch-push-flag [(yes | no)]",
 	Short: "Displays or sets your new branch push flag",
 	Long: `Displays or sets your new branch push flag
 
@@ -82,9 +81,9 @@ hack / append / prepend on creation. Defaults to false.`,
 		if len(args) == 0 {
 			printNewBranchPushFlag(prodRepo)
 		} else {
-			value, err := strconv.ParseBool(args[0])
+			value, err := cli.ParseBool(args[0])
 			if err != nil {
-				cli.Exit(fmt.Errorf(`invalid argument: %q. Please provide either "true" or "false"`, args[0]))
+				cli.Exit(fmt.Errorf(`invalid argument: %q. Please provide either "yes" or "no"`, args[0]))
 			}
 			err = setNewBranchPushFlag(value, prodRepo)
 			if err != nil {
@@ -100,9 +99,9 @@ hack / append / prepend on creation. Defaults to false.`,
 
 func printNewBranchPushFlag(repo *git.ProdRepo) {
 	if globalFlag {
-		cli.Println(strconv.FormatBool(repo.Config.ShouldNewBranchPushGlobal()))
+		cli.Println(cli.RenderBool(repo.Config.ShouldNewBranchPushGlobal()))
 	} else {
-		cli.Println(cli.PrintableNewBranchPushFlag(prodRepo.Config.ShouldNewBranchPush()))
+		cli.Println(cli.RenderBool(prodRepo.Config.ShouldNewBranchPush()))
 	}
 }
 

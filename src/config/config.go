@@ -13,6 +13,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/run"
 	"github.com/git-town/git-town/v7/src/stringslice"
 )
@@ -373,11 +374,12 @@ func (c *Config) SetMainBranch(branchName string) error {
 // SetNewBranchPush updates whether the current repository is configured to push
 // freshly created branches to origin.
 func (c *Config) SetNewBranchPush(value bool, global bool) error {
+	setting := cli.RenderBool(value)
 	if global {
-		_, err := c.SetGlobalConfigValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
+		_, err := c.SetGlobalConfigValue("git-town.new-branch-push-flag", setting)
 		return err
 	}
-	_, err := c.SetLocalConfigValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
+	_, err := c.SetLocalConfigValue("git-town.new-branch-push-flag", setting)
 	return err
 }
 
