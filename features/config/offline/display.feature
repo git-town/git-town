@@ -7,21 +7,25 @@ Feature: display the current offline status
       no
       """
 
-  Scenario: enabled
-    Given setting "offline" is "true"
+  Scenario Outline: valid settings
+    Given setting "offline" is "<VALUE>"
     When I run "git-town config offline"
     Then it prints:
       """
-      yes
+      <OUTPUT>
       """
-
-  Scenario: disabled
-    Given setting "offline" is "false"
-    When I run "git-town config offline"
-    Then it prints:
-      """
-      no
-      """
+    Examples:
+      | VALUE | OUTPUT |
+      | yes   | yes    |
+      | on    | yes    |
+      | true  | yes    |
+      | 1     | yes    |
+      | t     | yes    |
+      | no    | no     |
+      | off   | no     |
+      | false | no     |
+      | f     | no     |
+      | 0     | no     |
 
   Scenario: invalid value
     Given setting "offline" is "zonk"
