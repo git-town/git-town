@@ -444,7 +444,7 @@ func (c *Config) ShouldNewBranchPush() bool {
 	if config == "" {
 		return false
 	}
-	value, err := strconv.ParseBool(config)
+	value, err := cli.ParseBool(config)
 	if err != nil {
 		fmt.Printf("Invalid value for git-town.new-branch-push-flag: %q. Please provide either true or false. Considering false for now.\n", config)
 		return false
@@ -456,7 +456,7 @@ func (c *Config) ShouldNewBranchPush() bool {
 // freshly created branches to origin.
 func (c *Config) ShouldNewBranchPushGlobal() bool {
 	config := c.globalConfigValue("git-town.new-branch-push-flag")
-	return config == "true"
+	return config == "yes"
 }
 
 // ShouldShipDeleteOriginBranch indicates whether to delete the remote branch after shipping.
