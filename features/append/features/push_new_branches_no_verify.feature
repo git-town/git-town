@@ -7,7 +7,7 @@ Feature: auto-push the new branch to origin without running Git push hooks
       | main   | origin   | main commit |
     And the current branch is "main"
 
-  Scenario: set to "no"
+  Scenario: set to "false"
     Given setting "push-verify" is "false"
     When I run "git-town append new"
     Then it runs the commands
@@ -26,7 +26,7 @@ Feature: auto-push the new branch to origin without running Git push hooks
       | BRANCH | PARENT |
       | new    | main   |
 
-  Scenario: set to "yes"
+  Scenario: set to "true"
     Given setting "push-verify" is "true"
     When I run "git-town append new"
     Then it runs the commands
