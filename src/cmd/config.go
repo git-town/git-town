@@ -71,11 +71,11 @@ func printMainBranch() {
 }
 
 var newBranchPushFlagCommand = &cobra.Command{
-	Use:   "new-branch-push-flag [(yes | no)]",
+	Use:   "push-new-branches [(yes | no)]",
 	Short: "Displays or sets your new branch push flag",
 	Long: `Displays or sets your new branch push flag
 
-If "new-branch-push-flag" is true, Git Town pushes branches created with
+If "push-new-branches" is true, Git Town pushes branches created with
 hack / append / prepend on creation. Defaults to false.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {

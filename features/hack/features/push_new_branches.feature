@@ -1,7 +1,7 @@
 Feature: auto-push the new branch
 
   Background:
-    Given setting "new-branch-push-flag" is "true"
+    Given setting "push-new-branches" is "yes"
     And the commits
       | BRANCH | LOCATION | MESSAGE       |
       | main   | origin   | origin commit |

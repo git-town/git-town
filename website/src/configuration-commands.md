@@ -14,7 +14,7 @@ to run Git configuration commands manually:
   configuration
 - [git town config main-branch](commands/config-main-branch.md) - display/set
   the main development branch for the current repo
-- [git town config new-branch-push-flag](commands/config-new-branch-push-flag.md) -
+- [git town config push-new-branches](commands/config-push-new-branches.md) -
   configure whether to push new empty branches to origin
 - [git town config offline](commands/config-offline.md) - enable/disable offline
   mode

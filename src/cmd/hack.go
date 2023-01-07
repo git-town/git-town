@@ -20,7 +20,7 @@ var hackCmd = &cobra.Command{
 Syncs the main branch,
 forks a new feature branch with the given name off the main branch,
 pushes the new feature branch to origin
-(if and only if "new-branch-push-flag" is true),
+(if and only if "push-new-branches" is true),
 and brings over all uncommitted changes to the new feature branch.
 
 See "sync" for information regarding upstream remotes.`,

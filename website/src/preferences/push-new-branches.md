@@ -1,7 +1,7 @@
-# new-branch-push-flag
+# push-new-branches
 
 ```
-git-town.new-branch-push-flag=<true|false>
+git-town.push-new-branches=<true|false>
 ```
 
 By default, Git Town does not push new feature branches to the `origin` remote
@@ -12,7 +12,7 @@ to origin later. If you prefer to push new branches upon creation, set this
 option to `true` by running:
 
 ```
-git config [--global] new-branch-push-flag <true|false>
+git config [--global] push-new-branches <true|false>
 ```
 
 The optional `--global` flag applies this setting to all Git repositories on

@@ -1,13 +1,13 @@
 Feature: auto-push the new branch to origin without running Git push hooks
 
   Background:
-    Given setting "new-branch-push-flag" is "true"
+    Given setting "push-new-branches" is "true"
     And the commits
       | BRANCH | LOCATION | MESSAGE     |
       | main   | origin   | main commit |
     And the current branch is "main"
 
-  Scenario: set to "false"
+  Scenario: set to "no"
     Given setting "push-verify" is "false"
     When I run "git-town append new"
     Then it runs the commands
@@ -26,7 +26,7 @@ Feature: auto-push the new branch to origin without running Git push hooks
       | BRANCH | PARENT |
       | new    | main   |
 
-  Scenario: set to "true"
+  Scenario: set to "yes"
     Given setting "push-verify" is "true"
     When I run "git-town append new"
     Then it runs the commands

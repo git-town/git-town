@@ -13,7 +13,7 @@ Feature: help for commands
       | append                      |
       | config                      |
       | config main-branch          |
-      | config new-branch-push-flag |
+      | config push-new-branches    |
       | config offline              |
       | config perennial-branches   |
       | config pull-branch-strategy |

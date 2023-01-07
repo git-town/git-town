@@ -499,17 +499,17 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.Config.SetCodeHostingOriginHostname(value)
 	})
 
-	suite.Step(`^setting "new-branch-push-flag" is (globally )?"([^"]*)"$`, func(global string, value string) error {
+	suite.Step(`^setting "push-new-branches" is (globally )?"([^"]*)"$`, func(global string, value string) error {
 		setGlobal := global != ""
 		setting, err := cli.ParseBool(value)
 		if err == nil {
 			return state.gitEnv.DevRepo.Config.SetNewBranchPush(setting, setGlobal)
 		}
-		_, err = state.gitEnv.DevRepo.Config.SetLocalConfigValue("git-town.new-branch-push-flag", value)
+		_, err = state.gitEnv.DevRepo.Config.SetLocalConfigValue("git-town.push-new-branches", value)
 		return err
 	})
 
-	suite.Step(`^setting "new-branch-push-flag" is now "(true|false)"$`, func(text string) error {
+	suite.Step(`^setting "push-new-branches" is now "(true|false)"$`, func(text string) error {
 		want, err := strconv.ParseBool(text)
 		if err != nil {
 			return err
@@ -517,7 +517,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.gitEnv.DevRepo.Config.Reload()
 		have := state.gitEnv.DevRepo.Config.ShouldNewBranchPush()
 		if have != want {
-			return fmt.Errorf("expected global new-branch-push-flag to be %t, but was %t", want, have)
+			return fmt.Errorf("expected global push-new-branches to be %t, but was %t", want, have)
 		}
 		return nil
 	})

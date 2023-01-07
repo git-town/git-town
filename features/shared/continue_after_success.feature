@@ -21,7 +21,7 @@ Feature: continue after successful command
       | install aliases true |
       | kill feature         |
       | main_branch          |
-      | new-branch-push-flag |
+      | push-new-branches    |
       | new-pull-request     |
       | offline              |
       | perennial-branches   |
