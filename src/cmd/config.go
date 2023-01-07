@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 
 	"github.com/git-town/git-town/v7/src/cli"
@@ -72,7 +71,7 @@ func printMainBranch() {
 }
 
 var newBranchPushFlagCommand = &cobra.Command{
-	Use:   "new-branch-push-flag [(true | false)]",
+	Use:   "new-branch-push-flag [(yes | no)]",
 	Short: "Displays or sets your new branch push flag",
 	Long: `Displays or sets your new branch push flag
 
@@ -82,9 +81,9 @@ hack / append / prepend on creation. Defaults to false.`,
 		if len(args) == 0 {
 			printNewBranchPushFlag(prodRepo)
 		} else {
-			value, err := strconv.ParseBool(args[0])
+			value, err := cli.ParseBool(args[0])
 			if err != nil {
-				cli.Exit(fmt.Errorf(`invalid argument: %q. Please provide either "true" or "false"`, args[0]))
+				cli.Exit(fmt.Errorf(`invalid argument: %q. Please provide either "yes" or "no"`, args[0]))
 			}
 			err = setNewBranchPushFlag(value, prodRepo)
 			if err != nil {
@@ -100,9 +99,9 @@ hack / append / prepend on creation. Defaults to false.`,
 
 func printNewBranchPushFlag(repo *git.ProdRepo) {
 	if globalFlag {
-		cli.Println(strconv.FormatBool(repo.Config.ShouldNewBranchPushGlobal()))
+		cli.Println(cli.FormatBool(repo.Config.ShouldNewBranchPushGlobal()))
 	} else {
-		cli.Println(cli.PrintableNewBranchPushFlag(prodRepo.Config.ShouldNewBranchPush()))
+		cli.Println(cli.FormatBool(prodRepo.Config.ShouldNewBranchPush()))
 	}
 }
 
@@ -122,18 +121,18 @@ func setMainBranch(branchName string, repo *git.ProdRepo) error {
 }
 
 var offlineCommand = &cobra.Command{
-	Use:   "offline [(true | false)]",
+	Use:   "offline [(yes | no)]",
 	Short: "Displays or sets offline mode",
 	Long: `Displays or sets offline mode
 
 Git Town avoids network operations in offline mode.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			cli.Println(cli.PrintableOfflineFlag(prodRepo.Config.IsOffline()))
+			cli.Println(cli.FormatBool(prodRepo.Config.IsOffline()))
 		} else {
-			value, err := strconv.ParseBool(args[0])
+			value, err := cli.ParseBool(args[0])
 			if err != nil {
-				cli.Exit(fmt.Errorf(`invalid argument: %q. Please provide either "true" or "false".\n`, args[0]))
+				cli.Exit(fmt.Errorf(`invalid argument: %q. Please provide either "yes" or "no".\n`, args[0]))
 			}
 			err = prodRepo.Config.SetOffline(value)
 			if err != nil {

@@ -13,6 +13,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/run"
 	"github.com/git-town/git-town/v7/src/stringslice"
 )
@@ -181,7 +182,7 @@ func (c *Config) IsOffline() bool {
 	}
 	result, err := strconv.ParseBool(config)
 	if err != nil {
-		fmt.Printf("Invalid value for git-town.offline: %q. Please provide either true or false. Considering false for now.", config)
+		fmt.Printf("Invalid value for git-town.offline: %q. Please provide either \"yes\" or \"no\". Considering \"no\" for now.", config)
 		fmt.Println()
 		return false
 	}
@@ -373,11 +374,12 @@ func (c *Config) SetMainBranch(branchName string) error {
 // SetNewBranchPush updates whether the current repository is configured to push
 // freshly created branches to origin.
 func (c *Config) SetNewBranchPush(value bool, global bool) error {
+	setting := cli.FormatBool(value)
 	if global {
-		_, err := c.SetGlobalConfigValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
+		_, err := c.SetGlobalConfigValue("git-town.new-branch-push-flag", setting)
 		return err
 	}
-	_, err := c.SetLocalConfigValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
+	_, err := c.SetLocalConfigValue("git-town.new-branch-push-flag", setting)
 	return err
 }
 
@@ -442,9 +444,9 @@ func (c *Config) ShouldNewBranchPush() bool {
 	if config == "" {
 		return false
 	}
-	value, err := strconv.ParseBool(config)
+	value, err := cli.ParseBool(config)
 	if err != nil {
-		fmt.Printf("Invalid value for git-town.new-branch-push-flag: %q. Please provide either true or false. Considering false for now.\n", config)
+		fmt.Printf("Invalid value for git-town.new-branch-push-flag: %q. Please provide either \"yes\" or \"no\". Considering \"no\" for now.\n", config)
 		return false
 	}
 	return value
@@ -454,7 +456,7 @@ func (c *Config) ShouldNewBranchPush() bool {
 // freshly created branches to origin.
 func (c *Config) ShouldNewBranchPushGlobal() bool {
 	config := c.globalConfigValue("git-town.new-branch-push-flag")
-	return config == "true"
+	return config == "yes"
 }
 
 // ShouldShipDeleteOriginBranch indicates whether to delete the remote branch after shipping.

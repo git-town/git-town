@@ -4,7 +4,7 @@ Feature: display the current offline status
     When I run "git-town config offline"
     Then it prints:
       """
-      false
+      no
       """
 
   Scenario: enabled
@@ -12,7 +12,7 @@ Feature: display the current offline status
     When I run "git-town config offline"
     Then it prints:
       """
-      true
+      yes
       """
 
   Scenario: disabled
@@ -20,7 +20,7 @@ Feature: display the current offline status
     When I run "git-town config offline"
     Then it prints:
       """
-      false
+      no
       """
 
   Scenario: invalid value
@@ -28,5 +28,5 @@ Feature: display the current offline status
     When I run "git-town config offline"
     Then it prints:
       """
-      Invalid value for git-town.offline: "zonk". Please provide either true or false. Considering false for now.
+      Invalid value for git-town.offline: "zonk". Please provide either "yes" or "no". Considering "no" for now.
       """
