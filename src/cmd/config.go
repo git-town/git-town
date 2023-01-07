@@ -99,9 +99,9 @@ hack / append / prepend on creation. Defaults to false.`,
 
 func printNewBranchPushFlag(repo *git.ProdRepo) {
 	if globalFlag {
-		cli.Println(cli.RenderBool(repo.Config.ShouldNewBranchPushGlobal()))
+		cli.Println(cli.FormatBool(repo.Config.ShouldNewBranchPushGlobal()))
 	} else {
-		cli.Println(cli.RenderBool(prodRepo.Config.ShouldNewBranchPush()))
+		cli.Println(cli.FormatBool(prodRepo.Config.ShouldNewBranchPush()))
 	}
 }
 
@@ -128,7 +128,7 @@ var offlineCommand = &cobra.Command{
 Git Town avoids network operations in offline mode.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			cli.Println(cli.RenderBool(prodRepo.Config.IsOffline()))
+			cli.Println(cli.FormatBool(prodRepo.Config.IsOffline()))
 		} else {
 			value, err := cli.ParseBool(args[0])
 			if err != nil {

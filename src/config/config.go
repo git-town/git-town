@@ -374,7 +374,7 @@ func (c *Config) SetMainBranch(branchName string) error {
 // SetNewBranchPush updates whether the current repository is configured to push
 // freshly created branches to origin.
 func (c *Config) SetNewBranchPush(value bool, global bool) error {
-	setting := cli.RenderBool(value)
+	setting := cli.FormatBool(value)
 	if global {
 		_, err := c.SetGlobalConfigValue("git-town.new-branch-push-flag", setting)
 		return err
