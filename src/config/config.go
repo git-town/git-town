@@ -446,7 +446,7 @@ func (c *Config) ShouldNewBranchPush() bool {
 	}
 	value, err := cli.ParseBool(config)
 	if err != nil {
-		fmt.Printf("Invalid value for git-town.new-branch-push-flag: %q. Please provide either true or false. Considering false for now.\n", config)
+		fmt.Printf("Invalid value for git-town.new-branch-push-flag: %q. Please provide either \"yes\" or \"no\". Considering \"no\" for now.\n", config)
 		return false
 	}
 	return value

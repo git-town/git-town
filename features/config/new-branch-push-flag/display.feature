@@ -26,7 +26,6 @@ Feature: display the new-branch-push-flag setting
       | yes   |
       | no    |
 
-  @this
   Scenario Outline: global setting
     Given setting "new-branch-push-flag" is globally "<VALUE>"
     When I run "git-town config new-branch-push-flag --global"
