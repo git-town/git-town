@@ -1,14 +1,21 @@
 Feature: change offline mode
 
-  Scenario: enable
-    Given setting "offline" is "false"
-    When I run "git-town config offline yes"
-    Then setting "offline" is now "true"
+  Scenario Outline: valid settings
+    When I run "git-town config offline <GIVE>"
+    Then setting "offline" is now "<WANT>"
 
-  Scenario: disable
-    Given setting "offline" is "true"
-    When I run "git-town config offline no"
-    Then setting "offline" is now "false"
+    Examples:
+      | GIVE  | WANT  |
+      | true  | true  |
+      | t     | true  |
+      | 1     | true  |
+      | on    | true  |
+      | yes   | true  |
+      | false | false |
+      | f     | false |
+      | 0     | false |
+      | off   | false |
+      | no    | false |
 
   Scenario: invalid value
     Given setting "offline" is "false"
