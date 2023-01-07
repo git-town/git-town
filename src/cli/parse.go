@@ -3,14 +3,10 @@ package cli
 import "strconv"
 
 func ParseBool(text string) (bool, error) {
-	switch text {
-	case "yes":
+	if text == "yes" || text == "on" {
 		return true, nil
-	case "on":
-		return true, nil
-	case "no":
-		return false, nil
-	case "off":
+	}
+	if text == "no" || text == "off" {
 		return false, nil
 	}
 	return strconv.ParseBool(text)

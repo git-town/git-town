@@ -55,7 +55,6 @@ Feature: display the new-branch-push-flag setting
       | f     | no     |
       | 0     | no     |
 
-
   Scenario: global set, local not set
     Given setting "new-branch-push-flag" is globally "yes"
     When I run "git-town config new-branch-push-flag"

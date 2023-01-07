@@ -504,10 +504,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		setting, err := cli.ParseBool(value)
 		if err == nil {
 			return state.gitEnv.DevRepo.Config.SetNewBranchPush(setting, setGlobal)
-		} else {
-			_, err := state.gitEnv.DevRepo.Config.SetLocalConfigValue("git-town.new-branch-push-flag", value)
-			return err
 		}
+		_, err = state.gitEnv.DevRepo.Config.SetLocalConfigValue("git-town.new-branch-push-flag", value)
+		return err
 	})
 
 	suite.Step(`^setting "new-branch-push-flag" is now "(true|false)"$`, func(text string) error {
