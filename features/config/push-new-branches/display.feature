@@ -56,7 +56,7 @@ Feature: display the push-new-branches setting
       | 0     | no     |
 
   Scenario: global set, local not set
-    Given setting "push-new-branches" is globally "yes"
+    Given setting "push-new-branches" is globally "true"
     When I run "git-town config push-new-branches"
     Then it prints:
       """
@@ -64,7 +64,7 @@ Feature: display the push-new-branches setting
       """
 
   Scenario: global and local set
-    Given setting "push-new-branches" is globally "yes"
+    Given setting "push-new-branches" is globally "true"
     And setting "push-new-branches" is "false"
     When I run "git-town config push-new-branches"
     Then it prints:
