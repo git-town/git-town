@@ -16,27 +16,25 @@
   <img src="https://api.netlify.com/api/v1/badges/c2ea5505-be48-42e5-bb8a-b807d18d99ed/deploy-status" alt="Netlify deploy status">
 </p>
 
-Git Town makes [Git](https://git-scm.com) more efficient, especially for large
-teams. See [this screencast](https://youtu.be/oLaUsUlFfTo) for an introduction.
-
-## Commands
-
-Git Town provides these additional Git commands:
+Git Town reduces merge conflicts by keeping Git branches better in sync.
+Compatible with all major Git workflows including Git Flow, GitHub Flow, GitLab
+Flow, and trunk-based development. Check out
+[this screencast](https://youtu.be/oLaUsUlFfTo) for an introduction.
 
 #### Typical development commands
 
-- [git hack](https://www.git-town.com/commands/hack.html) - cuts a new
+- [git hack](https://www.git-town.com/commands/hack.html) - create a new
   up-to-date feature branch off the main branch
-- [git sync](https://www.git-town.com/commands/sync.html) - updates the current
+- [git sync](https://www.git-town.com/commands/sync.html) - update the current
   branch with all ongoing changes
 - [git new-pull-request](https://www.git-town.com/commands/new-pull-request.html) -
   create a new pull request
-- [git ship](https://www.git-town.com/commands/ship.html) - delivers a completed
-  feature branch and removes it
+- [git ship](https://www.git-town.com/commands/ship.html) - merge a completed
+  feature branch and remove it
 
 #### Advanced development commands
 
-- [git kill](https://www.git-town.com/commands/kill.html) - removes a feature
+- [git kill](https://www.git-town.com/commands/kill.html) - remove a feature
   branch
 - [git prune-branches](https://www.git-town.com/commands/prune-branches.html) -
   delete all merged branches
@@ -54,35 +52,19 @@ Git Town provides these additional Git commands:
 - [git set-parent-branch](https://www.git-town.com/commands/set-parent-branch.html) -
   updates a branch's parent
 
-#### Git Town configuration
+#### Setup/configuration
 
-- [git town config](https://www.git-town.com/commands/config.html) - displays or
-  updates your Git Town configuration
-- [git town push-new-branches](https://www.git-town.com/commands/push-new-branches.html) -
-  configures whether new empty branches get pushed to origin
-- [git town main-branch](https://www.git-town.com/commands/main-branch.html) -
-  displays or sets the main development branch for the current repo
-- [git town offline](https://www.git-town.com/commands/offline.html) -
-  enables/disables offline mode
-- [git town perennial-branches](https://www.git-town.com/commands/perennial-branches.html) -
-  displays or updates the perennial branches for the current repo
-- [git town pull-branch-strategy](https://www.git-town.com/commands/pull-branch-strategy.html) -
-  displays or sets the strategy to update perennial branches
-
-#### Git Town installation
-
-- [git town aliases](https://www.git-town.com/commands/install-aliases.html) -
-  adds or removes shorter aliases for Git Town commands
-- [git town completions](https://www.git-town.com/commands/completions.html) -
-  generates completion scripts for Bash, zsh, fish & PowerShell.
-- [git town version](https://www.git-town.com/commands/version.html) - displays
+- [git town install](https://www.git-town.com/commands/install.html) - install
+  Git Town on your computer
+- [git town config](https://www.git-town.com/commands/config.html) - display or
+  update your Git Town configuration
+- [git town version](https://www.git-town.com/commands/version.html) - display
   the installed version of Git Town
 
 ## Installation
 
 See the [installation](https://www.git-town.com/install.html) and
-[configuration](https://www.git-town.com/quick-configuration.html) instructions
-for more details.
+[configuration](https://www.git-town.com/quick-configuration.html) instructions.
 
 ## Documentation
 
