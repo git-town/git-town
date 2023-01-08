@@ -3,9 +3,9 @@ package steps
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/hosting"
-	"github.com/git-town/git-town/v7/src/userinput"
 )
 
 // SquashMergeBranchStep squash merges the branch with the given name into the current branch.
@@ -36,7 +36,7 @@ func (step *SquashMergeBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver
 	if err != nil {
 		return err
 	}
-	author, err := userinput.DetermineSquashCommitAuthor(step.BranchName, repo)
+	author, err := dialog.DetermineSquashCommitAuthor(step.BranchName, repo)
 	if err != nil {
 		return fmt.Errorf("error getting squash commit author: %w", err)
 	}
