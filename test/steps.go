@@ -471,7 +471,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^offline mode is disabled$`, func() error {
-		state.gitEnv.DevRepo.Config.Reload()
 		if state.gitEnv.DevRepo.Config.IsOffline() {
 			return fmt.Errorf("expected to not be offline but am")
 		}
@@ -497,6 +496,34 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^setting "code-hosting-origin-hostname" is "([^"]*)"$`, func(value string) error {
 		return state.gitEnv.DevRepo.Config.SetCodeHostingOriginHostname(value)
+	})
+
+	suite.Step(`^setting "new-branch-push-flag" is "(true|false)"$`, func(value string) error {
+		_, err := state.gitEnv.DevRepo.Config.SetLocalConfigValue("git-town.new-branch-push-flag", value)
+		return err
+	})
+
+	suite.Step(`^setting "new-branch-push-flag" is globally "(true|false)"$`, func(value string) error {
+		_, err := state.gitEnv.DevRepo.Config.SetGlobalConfigValue("git-town.new-branch-push-flag", value)
+		return err
+	})
+
+	suite.Step(`^setting "new-branch-push-flag" no longer exists locally$`, func() error {
+		state.gitEnv.DevRepo.Config.Reload()
+		newValue := state.gitEnv.DevRepo.Config.DeprecatedNewBranchPushFlagLocal()
+		if newValue == "" {
+			return nil
+		}
+		return fmt.Errorf("should not have local new-branch-push-flag anymore but has value %q", newValue)
+	})
+
+	suite.Step(`^setting "new-branch-push-flag" no longer exists globally$`, func() error {
+		state.gitEnv.DevRepo.Config.Reload()
+		newValue := state.gitEnv.DevRepo.Config.DeprecatedNewBranchPushFlagGlobal()
+		if newValue == "" {
+			return nil
+		}
+		return fmt.Errorf("should not have global new-branch-push-flag anymore but has value %q", newValue)
 	})
 
 	suite.Step(`^setting "push-new-branches" is (globally )?"([^"]*)"$`, func(global string, value string) error {

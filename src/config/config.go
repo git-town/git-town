@@ -116,6 +116,14 @@ func (c *Config) DeletePerennialBranchConfiguration() error {
 	return c.removeLocalConfigValue("git-town.perennial-branch-names")
 }
 
+func (c *Config) DeprecatedNewBranchPushFlagGlobal() string {
+	return c.globalConfigCache["git-town.new-branch-push-flag"]
+}
+
+func (c *Config) DeprecatedNewBranchPushFlagLocal() string {
+	return c.localConfigCache["git-town.new-branch-push-flag"]
+}
+
 // GitAlias provides the currently set alias for the given Git Town command.
 func (c *Config) GitAlias(command string) string {
 	return c.globalConfigValue("alias." + command)
@@ -209,6 +217,7 @@ func (c *Config) localConfigKeysMatching(toMatch string) []string {
 }
 
 // localConfigValue provides the configuration value with the given key from the local Git configuration.
+// TODO: delete this?
 func (c *Config) localConfigValue(key string) string {
 	return c.localConfigCache[key]
 }
@@ -440,7 +449,23 @@ func (c *Config) SetTestOrigin(value string) error {
 // ShouldNewBranchPush indicates whether the current repository is configured to push
 // freshly created branches up to origin.
 func (c *Config) ShouldNewBranchPush() bool {
-	config := c.localOrGlobalConfigValue("git-town.push-new-branches")
+	config := c.localConfigValue("git-town.new-branch-push-flag")
+	if config != "" {
+		fmt.Println("I found the deprecated local setting \"git-town.new-branch-push-flag\".")
+		fmt.Println("I am upgrading this setting to the new format \"git-town.push-new-branches\".")
+		c.removeLocalConfigValue("git-town.new-branch-push-flag")
+		setting, _ := cli.ParseBool(config)
+		c.SetNewBranchPush(setting, false)
+	}
+	config = c.globalConfigValue("git-town.new-branch-push-flag")
+	if config != "" {
+		fmt.Println("I found the deprecated global setting \"git-town.new-branch-push-flag\".")
+		fmt.Println("I am upgrading this setting to the new format \"git-town.push-new-branches\".")
+		c.removeGlobalConfigValue("git-town.new-branch-push-flag")
+		setting, _ := cli.ParseBool(config)
+		c.SetNewBranchPush(setting, true)
+	}
+	config = c.localOrGlobalConfigValue("git-town.push-new-branches")
 	if config == "" {
 		return false
 	}
