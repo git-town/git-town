@@ -452,17 +452,17 @@ func (c *Config) ShouldNewBranchPush() bool {
 	if config != "" {
 		fmt.Println("I found the deprecated local setting \"git-town.new-branch-push-flag\".")
 		fmt.Println("I am upgrading this setting to the new format \"git-town.push-new-branches\".")
-		c.removeLocalConfigValue("git-town.new-branch-push-flag")
+		_ = c.removeLocalConfigValue("git-town.new-branch-push-flag")
 		setting, _ := cli.ParseBool(config)
-		c.SetNewBranchPush(setting, false)
+		_ = c.SetNewBranchPush(setting, false)
 	}
 	config = c.globalConfigValue("git-town.new-branch-push-flag")
 	if config != "" {
 		fmt.Println("I found the deprecated global setting \"git-town.new-branch-push-flag\".")
 		fmt.Println("I am upgrading this setting to the new format \"git-town.push-new-branches\".")
-		c.removeGlobalConfigValue("git-town.new-branch-push-flag")
+		_, _ = c.removeGlobalConfigValue("git-town.new-branch-push-flag")
 		setting, _ := cli.ParseBool(config)
-		c.SetNewBranchPush(setting, true)
+		_ = c.SetNewBranchPush(setting, true)
 	}
 	config = c.localOrGlobalConfigValue("git-town.push-new-branches")
 	if config == "" {
