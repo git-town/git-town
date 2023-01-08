@@ -1,5 +1,37 @@
 # Git Town Release Notes
 
+## 8.0.0 (2023-01-08)
+
+#### BREAKING CHANGES
+
+- rename `new-branch-push-flag` to `push-new-branches`
+  ([#1980](https://github.com/git-town/git-town/pull/1980))
+- all commands that display/update configuration are now subcommands of the
+  `config` command ([#1963](https://github.com/git-town/git-town/pull/1963),
+  [#1976](https://github.com/git-town/git-town/pull/1976))
+- all commands that help install Git Town are now subcommands of the `install`
+  command ([#1969](https://github.com/git-town/git-town/pull/1969))
+- moves the default `git town completion` and `git town completions` commands
+  under `git town install completions`
+  ([#1969](https://github.com/git-town/git-town/pull/1969),
+  [#1970](https://github.com/git-town/git-town/pull/1970))
+- installation of the shorter command aliases changes from `git town alias true`
+  to `git town install aliases add` and `... remove`
+  ([#1965](https://github.com/git-town/git-town/pull/1965),
+  [#1966](https://github.com/git-town/git-town/pull/1966),
+  [#1968](https://github.com/git-town/git-town/pull/1968))
+
+#### New Features
+
+- you can skip Git's pre-push hook while syncing branches using the new
+  [push-verify]() option
+  ([#1958](https://github.com/git-town/git-town/pull/1958))
+- Git Town accepts more configuration value formats
+  ([#1978](https://github.com/git-town/git-town/pull/1978),
+  [#1979](https://github.com/git-town/git-town/pull/1979))
+
+#### Bug Fixes
+
 ## 7.8.0 (2022-08-07)
 
 #### New Features
