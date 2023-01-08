@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
-	"github.com/git-town/git-town/v7/src/userinput"
 	"github.com/spf13/cobra"
 )
 
@@ -66,7 +66,7 @@ func createDiffParentConfig(args []string, repo *git.ProdRepo) (diffParentConfig
 	if !prodRepo.Config.IsFeatureBranch(config.branch) {
 		return diffParentConfig{}, fmt.Errorf("you can only diff-parent feature branches")
 	}
-	err = userinput.EnsureKnowsParentBranches([]string{config.branch}, repo)
+	err = dialog.EnsureKnowsParentBranches([]string{config.branch}, repo)
 	if err != nil {
 		return diffParentConfig{}, err
 	}

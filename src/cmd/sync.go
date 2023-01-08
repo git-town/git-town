@@ -4,10 +4,10 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
-	"github.com/git-town/git-town/v7/src/userinput"
 	"github.com/spf13/cobra"
 )
 
@@ -104,14 +104,14 @@ func createSyncConfig(repo *git.ProdRepo) (syncConfig, error) {
 		if err != nil {
 			return syncConfig{}, err
 		}
-		err = userinput.EnsureKnowsParentBranches(branches, repo)
+		err = dialog.EnsureKnowsParentBranches(branches, repo)
 		if err != nil {
 			return syncConfig{}, err
 		}
 		result.branchesToSync = branches
 		result.shouldPushTags = true
 	} else {
-		err = userinput.EnsureKnowsParentBranches([]string{result.initialBranch}, repo)
+		err = dialog.EnsureKnowsParentBranches([]string{result.initialBranch}, repo)
 		if err != nil {
 			return syncConfig{}, err
 		}

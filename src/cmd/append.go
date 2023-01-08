@@ -4,9 +4,9 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
-	"github.com/git-town/git-town/v7/src/userinput"
 	"github.com/spf13/cobra"
 )
 
@@ -83,7 +83,7 @@ func createAppendConfig(args []string, repo *git.ProdRepo) (appendConfig, error)
 	if hasBranch {
 		return appendConfig{}, fmt.Errorf("a branch named %q already exists", result.targetBranch)
 	}
-	err = userinput.EnsureKnowsParentBranches([]string{result.parentBranch}, repo)
+	err = dialog.EnsureKnowsParentBranches([]string{result.parentBranch}, repo)
 	if err != nil {
 		return appendConfig{}, err
 	}
