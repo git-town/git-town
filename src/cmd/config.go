@@ -14,6 +14,10 @@ var configCommand = &cobra.Command{
 	Use:   "config",
 	Short: "Displays your Git Town configuration",
 	Run: func(cmd *cobra.Command, args []string) {
+		pushNewBranches, err := prodRepo.Config.ShouldNewBranchPush()
+		if err != nil {
+			cli.Exit(err)
+		}
 		fmt.Println()
 		cli.PrintHeader("Branches")
 		cli.PrintEntry("main branch", cli.StringSetting(prodRepo.Config.MainBranch()))
@@ -23,7 +27,7 @@ var configCommand = &cobra.Command{
 		cli.PrintEntry("offline", cli.BoolSetting(prodRepo.Config.IsOffline()))
 		cli.PrintEntry("pull branch strategy", prodRepo.Config.PullBranchStrategy())
 		cli.PrintEntry("push using --no-verify", cli.BoolSetting(!prodRepo.Config.PushVerify()))
-		cli.PrintEntry("push new branches", cli.BoolSetting(prodRepo.Config.ShouldNewBranchPush()))
+		cli.PrintEntry("push new branches", cli.BoolSetting(pushNewBranches))
 		cli.PrintEntry("ship removes the remote branch", cli.BoolSetting(prodRepo.Config.ShouldShipDeleteOriginBranch()))
 		cli.PrintEntry("sync strategy", prodRepo.Config.SyncStrategy())
 		cli.PrintEntry("sync with upstream", cli.BoolSetting(prodRepo.Config.ShouldSyncUpstream()))
@@ -79,7 +83,10 @@ If "push-new-branches" is true, Git Town pushes branches created with
 hack / append / prepend on creation. Defaults to false.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			printNewBranchPushFlag(prodRepo)
+			err := printNewBranchPushFlag(prodRepo)
+			if err != nil {
+				cli.Exit(err)
+			}
 		} else {
 			value, err := cli.ParseBool(args[0])
 			if err != nil {
@@ -97,12 +104,17 @@ hack / append / prepend on creation. Defaults to false.`,
 	},
 }
 
-func printNewBranchPushFlag(repo *git.ProdRepo) {
+func printNewBranchPushFlag(repo *git.ProdRepo) error {
 	if globalFlag {
 		cli.Println(cli.FormatBool(repo.Config.ShouldNewBranchPushGlobal()))
 	} else {
-		cli.Println(cli.FormatBool(prodRepo.Config.ShouldNewBranchPush()))
+		pushNewBranch, err := prodRepo.Config.ShouldNewBranchPush()
+		if err != nil {
+			return err
+		}
+		cli.Println(cli.FormatBool(pushNewBranch))
 	}
+	return nil
 }
 
 func setNewBranchPushFlag(value bool, repo *git.ProdRepo) error {

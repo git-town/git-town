@@ -73,7 +73,10 @@ func createHackConfig(args []string, repo *git.ProdRepo) (appendConfig, error) {
 	if err != nil {
 		return appendConfig{}, err
 	}
-	shouldNewBranchPush := repo.Config.ShouldNewBranchPush()
+	shouldNewBranchPush, err := repo.Config.ShouldNewBranchPush()
+	if err != nil {
+		return appendConfig{}, err
+	}
 	isOffline := repo.Config.IsOffline()
 	if hasOrigin && !repo.Config.IsOffline() {
 		err := repo.Logging.Fetch()

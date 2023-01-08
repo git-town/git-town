@@ -447,33 +447,50 @@ func (c *Config) SetTestOrigin(value string) error {
 
 // ShouldNewBranchPush indicates whether the current repository is configured to push
 // freshly created branches up to origin.
-func (c *Config) ShouldNewBranchPush() bool {
+func (c *Config) ShouldNewBranchPush() (bool, error) {
 	config := c.localConfigValue("git-town.new-branch-push-flag")
 	if config != "" {
 		fmt.Println("I found the deprecated local setting \"git-town.new-branch-push-flag\".")
 		fmt.Println("I am upgrading this setting to the new format \"git-town.push-new-branches\".")
-		_ = c.removeLocalConfigValue("git-town.new-branch-push-flag")
-		setting, _ := cli.ParseBool(config)
-		_ = c.SetNewBranchPush(setting, false)
+		err := c.removeLocalConfigValue("git-town.new-branch-push-flag")
+		if err != nil {
+			return false, err
+		}
+		setting, err := cli.ParseBool(config)
+		if err != nil {
+			return false, err
+		}
+		err = c.SetNewBranchPush(setting, false)
+		if err != nil {
+			return false, err
+		}
 	}
 	config = c.globalConfigValue("git-town.new-branch-push-flag")
 	if config != "" {
 		fmt.Println("I found the deprecated global setting \"git-town.new-branch-push-flag\".")
 		fmt.Println("I am upgrading this setting to the new format \"git-town.push-new-branches\".")
-		_, _ = c.removeGlobalConfigValue("git-town.new-branch-push-flag")
-		setting, _ := cli.ParseBool(config)
-		_ = c.SetNewBranchPush(setting, true)
+		_, err := c.removeGlobalConfigValue("git-town.new-branch-push-flag")
+		if err != nil {
+			return false, err
+		}
+		setting, err := cli.ParseBool(config)
+		if err != nil {
+			return false, err
+		}
+		err = c.SetNewBranchPush(setting, true)
+		if err != nil {
+			return false, err
+		}
 	}
 	config = c.localOrGlobalConfigValue("git-town.push-new-branches")
 	if config == "" {
-		return false
+		return false, nil
 	}
 	value, err := cli.ParseBool(config)
 	if err != nil {
-		fmt.Printf("Invalid value for git-town.push-new-branches: %q. Please provide either \"yes\" or \"no\". Considering \"no\" for now.\n", config)
-		return false
+		return false, fmt.Errorf("invalid value for git-town.push-new-branches: %q. Please provide either \"yes\" or \"no\"", config)
 	}
-	return value
+	return value, nil
 }
 
 // ShouldNewBranchPushGlobal indictes whether the global configuration requires to push

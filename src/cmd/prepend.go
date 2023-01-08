@@ -74,7 +74,10 @@ func createPrependConfig(args []string, repo *git.ProdRepo) (prependConfig, erro
 	if err != nil {
 		return prependConfig{}, err
 	}
-	result.shouldNewBranchPush = repo.Config.ShouldNewBranchPush()
+	result.shouldNewBranchPush, err = repo.Config.ShouldNewBranchPush()
+	if err != nil {
+		return prependConfig{}, err
+	}
 	result.isOffline = repo.Config.IsOffline()
 	if result.hasOrigin && !result.isOffline {
 		err := repo.Logging.Fetch()

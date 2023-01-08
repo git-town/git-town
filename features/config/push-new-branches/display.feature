@@ -75,7 +75,7 @@ Feature: display the push-new-branches setting
   Scenario: invalid value
     Given setting "push-new-branches" is "zonk"
     When I run "git-town config push-new-branches"
-    Then it prints:
+    Then it prints the error:
       """
-      Invalid value for git-town.push-new-branches: "zonk". Please provide either "yes" or "no". Considering "no" for now.
+      Error: invalid value for git-town.push-new-branches: "zonk". Please provide either "yes" or "no"
       """
