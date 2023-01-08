@@ -7,7 +7,7 @@ Git Town uses these configuration settings:
 - [github-token](preferences/github-token.md)
 - [gitlab-token](preferences/gitlab-token.md)
 - [main-branch-name](preferences/main-branch-name.md)
-- [new-branch-push-flag](preferences/new-branch-push-flag.md)
+- [push-new-branches](preferences/push-new-branches.md)
 - [offline](preferences/offline.md)
 - [parent](preferences/parent.md)
 - [pererennial-branch-names](preferences/perennial-branch-names.md)

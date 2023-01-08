@@ -44,8 +44,8 @@ commands in the shorter form available after running
 
 - [git town config](commands/config.md) - display or update your Git Town
   configuration
-- [git town new-branch-push-flag](commands/config-new-branch-push-flag.md) -
-  configure whether to push new empty branches to origin
+- [git town push-new-branches](commands/config-push-new-branches.md) - configure
+  whether to push new empty branches to origin
 - [git town main-branch](commands/config-main-branch.md) - display/set the main
   development branch for the current repo
 - [git town offline](commands/config-offline.md) - enable/disable offline mode

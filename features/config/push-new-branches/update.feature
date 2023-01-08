@@ -1,8 +1,8 @@
-Feature: set the new-branch-push-flag
+Feature: set push-new-branches
 
   Scenario Outline: local setting
-    When I run "git-town config new-branch-push-flag <GIVE>"
-    Then setting "new-branch-push-flag" is now "<WANT>"
+    When I run "git-town config push-new-branches <GIVE>"
+    Then setting "push-new-branches" is now "<WANT>"
 
     Examples:
       | GIVE  | WANT  |
@@ -18,15 +18,15 @@ Feature: set the new-branch-push-flag
       | no    | false |
 
   Scenario: invalid value
-    When I run "git-town config new-branch-push-flag zonk"
+    When I run "git-town config push-new-branches zonk"
     Then it prints the error:
       """
       invalid argument: "zonk". Please provide either "yes" or "no"
       """
 
   Scenario Outline: global setting
-    When I run "git-town config new-branch-push-flag --global <GIVE>"
-    Then setting "new-branch-push-flag" is now "<WANT>"
+    When I run "git-town config push-new-branches --global <GIVE>"
+    Then setting "push-new-branches" is now "<WANT>"
 
     Examples:
       | GIVE  | WANT  |

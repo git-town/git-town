@@ -1,48 +1,46 @@
-Feature: auto-push new branches
+Feature: auto-push the new branch to origin without running Git push hooks
 
   Background:
-    Given setting "new-branch-push-flag" is "true"
-    And the current branch is a feature branch "old"
+    Given setting "push-new-branches" is "true"
     And the commits
-      | BRANCH | LOCATION      | MESSAGE        |
-      | old    | local, origin | feature commit |
+      | BRANCH | LOCATION | MESSAGE     |
+      | main   | origin   | main commit |
+    And the current branch is "main"
 
   Scenario: set to "false"
     Given setting "push-verify" is "false"
-    When I run "git-town prepend new"
+    When I run "git-town append new"
     Then it runs the commands
       | BRANCH | COMMAND                            |
-      | old    | git fetch --prune --tags           |
-      |        | git checkout main                  |
-      | main   | git rebase origin/main             |
+      | main   | git fetch --prune --tags           |
+      |        | git rebase origin/main             |
       |        | git branch new main                |
       |        | git checkout new                   |
       | new    | git push --no-verify -u origin new |
     And the current branch is now "new"
     And now these commits exist
-      | BRANCH | LOCATION      | MESSAGE        |
-      | old    | local, origin | feature commit |
+      | BRANCH | LOCATION      | MESSAGE     |
+      | main   | local, origin | main commit |
+      | new    | local, origin | main commit |
     And this branch hierarchy exists now
       | BRANCH | PARENT |
       | new    | main   |
-      | old    | new    |
 
   Scenario: set to "true"
     Given setting "push-verify" is "true"
-    When I run "git-town prepend new"
+    When I run "git-town append new"
     Then it runs the commands
       | BRANCH | COMMAND                  |
-      | old    | git fetch --prune --tags |
-      |        | git checkout main        |
-      | main   | git rebase origin/main   |
+      | main   | git fetch --prune --tags |
+      |        | git rebase origin/main   |
       |        | git branch new main      |
       |        | git checkout new         |
       | new    | git push -u origin new   |
     And the current branch is now "new"
     And now these commits exist
-      | BRANCH | LOCATION      | MESSAGE        |
-      | old    | local, origin | feature commit |
+      | BRANCH | LOCATION      | MESSAGE     |
+      | main   | local, origin | main commit |
+      | new    | local, origin | main commit |
     And this branch hierarchy exists now
       | BRANCH | PARENT |
       | new    | main   |
-      | old    | new    |

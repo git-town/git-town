@@ -14,7 +14,7 @@ Feature: too few or many parameters
       | append arg1 arg2                      |
       | config arg1                           |
       | config main-branch arg1 arg2          |
-      | config new-branch-push-flag arg1 arg2 |
+      | config push-new-branches arg1 arg2    |
       | config offline arg1 arg2              |
       | config perennial-branches arg1        |
       | config perennial-branches update arg1 |

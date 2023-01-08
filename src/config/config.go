@@ -116,6 +116,14 @@ func (c *Config) DeletePerennialBranchConfiguration() error {
 	return c.removeLocalConfigValue("git-town.perennial-branch-names")
 }
 
+func (c *Config) DeprecatedNewBranchPushFlagGlobal() string {
+	return c.globalConfigCache["git-town.new-branch-push-flag"]
+}
+
+func (c *Config) DeprecatedNewBranchPushFlagLocal() string {
+	return c.localConfigCache["git-town.new-branch-push-flag"]
+}
+
 // GitAlias provides the currently set alias for the given Git Town command.
 func (c *Config) GitAlias(command string) string {
 	return c.globalConfigValue("alias." + command)
@@ -376,10 +384,10 @@ func (c *Config) SetMainBranch(branchName string) error {
 func (c *Config) SetNewBranchPush(value bool, global bool) error {
 	setting := cli.FormatBool(value)
 	if global {
-		_, err := c.SetGlobalConfigValue("git-town.new-branch-push-flag", setting)
+		_, err := c.SetGlobalConfigValue("git-town.push-new-branches", setting)
 		return err
 	}
-	_, err := c.SetLocalConfigValue("git-town.new-branch-push-flag", setting)
+	_, err := c.SetLocalConfigValue("git-town.push-new-branches", setting)
 	return err
 }
 
@@ -439,23 +447,56 @@ func (c *Config) SetTestOrigin(value string) error {
 
 // ShouldNewBranchPush indicates whether the current repository is configured to push
 // freshly created branches up to origin.
-func (c *Config) ShouldNewBranchPush() bool {
-	config := c.localOrGlobalConfigValue("git-town.new-branch-push-flag")
+func (c *Config) ShouldNewBranchPush() (bool, error) {
+	oldLocalConfig := c.localConfigValue("git-town.new-branch-push-flag")
+	if oldLocalConfig != "" {
+		fmt.Println("I found the deprecated local setting \"git-town.new-branch-push-flag\".")
+		fmt.Println("I am upgrading this setting to the new format \"git-town.push-new-branches\".")
+		err := c.removeLocalConfigValue("git-town.new-branch-push-flag")
+		if err != nil {
+			return false, err
+		}
+		parsed, err := cli.ParseBool(oldLocalConfig)
+		if err != nil {
+			return false, err
+		}
+		err = c.SetNewBranchPush(parsed, false)
+		if err != nil {
+			return false, err
+		}
+	}
+	oldGlobalConfig := c.globalConfigValue("git-town.new-branch-push-flag")
+	if oldGlobalConfig != "" {
+		fmt.Println("I found the deprecated global setting \"git-town.new-branch-push-flag\".")
+		fmt.Println("I am upgrading this setting to the new format \"git-town.push-new-branches\".")
+		_, err := c.removeGlobalConfigValue("git-town.new-branch-push-flag")
+		if err != nil {
+			return false, err
+		}
+		parsed, err := cli.ParseBool(oldGlobalConfig)
+		if err != nil {
+			return false, err
+		}
+		err = c.SetNewBranchPush(parsed, true)
+		if err != nil {
+			return false, err
+		}
+	}
+	config := c.localOrGlobalConfigValue("git-town.push-new-branches")
 	if config == "" {
-		return false
+		return false, nil
 	}
 	value, err := cli.ParseBool(config)
 	if err != nil {
-		fmt.Printf("Invalid value for git-town.new-branch-push-flag: %q. Please provide either \"yes\" or \"no\". Considering \"no\" for now.\n", config)
-		return false
+		return false, fmt.Errorf("invalid value for git-town.push-new-branches: %q. Please provide either \"yes\" or \"no\"", config)
 	}
-	return value
+	return value, nil
 }
 
 // ShouldNewBranchPushGlobal indictes whether the global configuration requires to push
 // freshly created branches to origin.
 func (c *Config) ShouldNewBranchPushGlobal() bool {
-	config := c.globalConfigValue("git-town.new-branch-push-flag")
+	config := c.globalConfigValue("git-town.push-new-branches")
 	return config == "yes"
 }
 

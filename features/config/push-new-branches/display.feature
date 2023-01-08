@@ -1,22 +1,22 @@
-Feature: display the new-branch-push-flag setting
+Feature: display the push-new-branches setting
 
   Scenario: default local setting
-    When I run "git-town config new-branch-push-flag"
+    When I run "git-town config push-new-branches"
     Then it prints:
       """
       no
       """
 
   Scenario: default global setting
-    When I run "git-town config new-branch-push-flag --global"
+    When I run "git-town config push-new-branches --global"
     Then it prints:
       """
       no
       """
 
   Scenario Outline: local setting
-    Given setting "new-branch-push-flag" is "<VALUE>"
-    When I run "git-town config new-branch-push-flag"
+    Given setting "push-new-branches" is "<VALUE>"
+    When I run "git-town config push-new-branches"
     Then it prints:
       """
       <OUTPUT>
@@ -35,8 +35,8 @@ Feature: display the new-branch-push-flag setting
       | 0     | no     |
 
   Scenario Outline: global setting
-    Given setting "new-branch-push-flag" is globally "<VALUE>"
-    When I run "git-town config new-branch-push-flag --global"
+    Given setting "push-new-branches" is globally "<VALUE>"
+    When I run "git-town config push-new-branches --global"
     Then it prints:
       """
       <OUTPUT>
@@ -56,26 +56,26 @@ Feature: display the new-branch-push-flag setting
       | 0     | no     |
 
   Scenario: global set, local not set
-    Given setting "new-branch-push-flag" is globally "yes"
-    When I run "git-town config new-branch-push-flag"
+    Given setting "push-new-branches" is globally "yes"
+    When I run "git-town config push-new-branches"
     Then it prints:
       """
       yes
       """
 
   Scenario: global and local set
-    Given setting "new-branch-push-flag" is globally "yes"
-    And setting "new-branch-push-flag" is "false"
-    When I run "git-town config new-branch-push-flag"
+    Given setting "push-new-branches" is globally "yes"
+    And setting "push-new-branches" is "false"
+    When I run "git-town config push-new-branches"
     Then it prints:
       """
       no
       """
 
   Scenario: invalid value
-    Given setting "new-branch-push-flag" is "zonk"
-    When I run "git-town config new-branch-push-flag"
-    Then it prints:
+    Given setting "push-new-branches" is "zonk"
+    When I run "git-town config push-new-branches"
+    Then it prints the error:
       """
-      Invalid value for git-town.new-branch-push-flag: "zonk". Please provide either "yes" or "no". Considering "no" for now.
+      Error: invalid value for git-town.push-new-branches: "zonk". Please provide either "yes" or "no"
       """

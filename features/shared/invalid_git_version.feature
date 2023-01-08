@@ -19,7 +19,7 @@ Feature: require minimum Git version
       | install aliases true |
       | kill                 |
       | main_branch          |
-      | new-branch-push-flag |
+      | push-new-branches    |
       | new-pull-request     |
       | offline              |
       | perennial-branches   |
