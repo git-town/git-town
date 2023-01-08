@@ -90,22 +90,6 @@ func (c *Config) ChildBranches(branchName string) []string {
 	return result
 }
 
-// DeleteMainBranchConfiguration removes the configuration entry for the main branch name.
-func (c *Config) DeleteMainBranchConfiguration() error {
-	return c.removeLocalConfigValue("git-town.main-branch-name")
-}
-
-// DeleteParentBranch removes the parent branch entry for the given branch
-// from the Git configuration.
-func (c *Config) DeleteParentBranch(branchName string) error {
-	return c.removeLocalConfigValue("git-town-branch." + branchName + ".parent")
-}
-
-// DeletePerennialBranchConfiguration removes the configuration entry for the perennial branches.
-func (c *Config) DeletePerennialBranchConfiguration() error {
-	return c.removeLocalConfigValue("git-town.perennial-branch-names")
-}
-
 func (c *Config) DeprecatedNewBranchPushFlagGlobal() string {
 	return c.globalConfigCache["git-town.new-branch-push-flag"]
 }
@@ -336,6 +320,22 @@ func (c *Config) RemoveLocalGitConfiguration() error {
 		return fmt.Errorf("unexpected error while removing the 'git-town' section from the Git configuration: %w", err)
 	}
 	return nil
+}
+
+// RemoveMainBranchConfiguration removes the configuration entry for the main branch name.
+func (c *Config) RemoveMainBranchConfiguration() error {
+	return c.removeLocalConfigValue("git-town.main-branch-name")
+}
+
+// RemoveParentBranch removes the parent branch entry for the given branch
+// from the Git configuration.
+func (c *Config) RemoveParentBranch(branchName string) error {
+	return c.removeLocalConfigValue("git-town-branch." + branchName + ".parent")
+}
+
+// RemovePerennialBranchConfiguration removes the configuration entry for the perennial branches.
+func (c *Config) RemovePerennialBranchConfiguration() error {
+	return c.removeLocalConfigValue("git-town.perennial-branch-names")
 }
 
 // SetCodeHostingDriver sets the "github.code-hosting-driver" setting.
