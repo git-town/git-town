@@ -31,7 +31,7 @@ Syncs the parent branch,
 cuts a new feature branch with the given name off the parent branch,
 makes the new branch the parent of the current branch,
 pushes the new feature branch to the origin repository
-(if "new-branch-push-flag" is true),
+(if "push-new-branches" is true),
 and brings over all uncommitted changes to the new feature branch.
 
 See "sync" for upstream remote options.
@@ -74,7 +74,10 @@ func createPrependConfig(args []string, repo *git.ProdRepo) (prependConfig, erro
 	if err != nil {
 		return prependConfig{}, err
 	}
-	result.shouldNewBranchPush = repo.Config.ShouldNewBranchPush()
+	result.shouldNewBranchPush, err = repo.Config.ShouldNewBranchPush()
+	if err != nil {
+		return prependConfig{}, err
+	}
 	result.isOffline = repo.Config.IsOffline()
 	if result.hasOrigin && !result.isOffline {
 		err := repo.Logging.Fetch()
