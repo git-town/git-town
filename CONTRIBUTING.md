@@ -1,7 +1,7 @@
 # How to contribute
 
-We invite everybody to help make Git Town better. No matter how big or small
-your contribution, thank you!
+We invite everybody to help make Git Town better. Every contribution is welcome,
+no matter how big or small.
 
 #### I want to report a bug or need a feature
 
