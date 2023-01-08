@@ -217,7 +217,6 @@ func (c *Config) localConfigKeysMatching(toMatch string) []string {
 }
 
 // localConfigValue provides the configuration value with the given key from the local Git configuration.
-// TODO: delete this?
 func (c *Config) localConfigValue(key string) string {
 	return c.localConfigCache[key]
 }
