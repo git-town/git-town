@@ -74,16 +74,16 @@ func printMainBranch() {
 	cli.Println(cli.StringSetting(prodRepo.Config.MainBranch()))
 }
 
-var newBranchPushFlagCommand = &cobra.Command{
+var pushNewBranchesCommand = &cobra.Command{
 	Use:   "push-new-branches [(yes | no)]",
-	Short: "Displays or sets your new branch push flag",
-	Long: `Displays or sets your new branch push flag
+	Short: "Displays or changes whether new branches get pushed to origin",
+	Long: `Displays or changes whether new branches get pushed to origin.
 
-If "push-new-branches" is true, Git Town pushes branches created with
-hack / append / prepend on creation. Defaults to false.`,
+If "push-new-branches" is true, the Git Town commands hack, append, and prepend
+push the new branch to the origin remote.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			err := printNewBranchPushFlag(prodRepo)
+			err := printPushNewBranches(prodRepo)
 			if err != nil {
 				cli.Exit(err)
 			}
@@ -92,7 +92,7 @@ hack / append / prepend on creation. Defaults to false.`,
 			if err != nil {
 				cli.Exit(fmt.Errorf(`invalid argument: %q. Please provide either "yes" or "no"`, args[0]))
 			}
-			err = setNewBranchPushFlag(value, prodRepo)
+			err = setPushNewBranches(value, prodRepo)
 			if err != nil {
 				cli.Exit(err)
 			}
@@ -104,7 +104,7 @@ hack / append / prepend on creation. Defaults to false.`,
 	},
 }
 
-func printNewBranchPushFlag(repo *git.ProdRepo) error {
+func printPushNewBranches(repo *git.ProdRepo) error {
 	if globalFlag {
 		cli.Println(cli.FormatBool(repo.Config.ShouldNewBranchPushGlobal()))
 	} else {
@@ -117,7 +117,7 @@ func printNewBranchPushFlag(repo *git.ProdRepo) error {
 	return nil
 }
 
-func setNewBranchPushFlag(value bool, repo *git.ProdRepo) error {
+func setPushNewBranches(value bool, repo *git.ProdRepo) error {
 	return repo.Config.SetNewBranchPush(value, globalFlag)
 }
 
@@ -280,8 +280,8 @@ when merging remote tracking branches into local feature branches.`,
 
 func init() {
 	configCommand.AddCommand(mainBranchConfigCommand)
-	newBranchPushFlagCommand.Flags().BoolVar(&globalFlag, "global", false, "Displays or sets your global new branch push flag")
-	configCommand.AddCommand(newBranchPushFlagCommand)
+	pushNewBranchesCommand.Flags().BoolVar(&globalFlag, "global", false, "Displays or sets your global new branch push flag")
+	configCommand.AddCommand(pushNewBranchesCommand)
 	configCommand.AddCommand(offlineCommand)
 	perennialBranchesCommand.AddCommand(updatePrennialBranchesCommand)
 	configCommand.AddCommand(perennialBranchesCommand)
