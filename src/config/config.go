@@ -382,7 +382,7 @@ func (c *Config) SetMainBranch(branchName string) error {
 // SetNewBranchPush updates whether the current repository is configured to push
 // freshly created branches to origin.
 func (c *Config) SetNewBranchPush(value bool, global bool) error {
-	setting := cli.FormatBool(value)
+	setting := strconv.FormatBool(value)
 	if global {
 		_, err := c.SetGlobalConfigValue("git-town.push-new-branches", setting)
 		return err
@@ -497,7 +497,7 @@ func (c *Config) ShouldNewBranchPush() (bool, error) {
 // freshly created branches to origin.
 func (c *Config) ShouldNewBranchPushGlobal() bool {
 	config := c.globalConfigValue("git-town.push-new-branches")
-	return config == "yes"
+	return config == "true"
 }
 
 // ShouldShipDeleteOriginBranch indicates whether to delete the remote branch after shipping.
