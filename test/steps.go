@@ -471,6 +471,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^offline mode is disabled$`, func() error {
+		state.gitEnv.DevRepo.Config.Reload()
 		if state.gitEnv.DevRepo.Config.IsOffline() {
 			return fmt.Errorf("expected to not be offline but am")
 		}
