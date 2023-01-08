@@ -346,13 +346,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^it prints the error:$`, func(expected *messages.PickleStepArgument_PickleDocString) error {
+		state.runErrChecked = true
 		if !strings.Contains(state.runRes.OutputSanitized(), expected.Content) {
 			return fmt.Errorf("text not found: %s\n\nactual text:\n%s", expected.Content, state.runRes.OutputSanitized())
 		}
 		if state.runErr == nil {
 			return fmt.Errorf("expected error")
 		}
-		state.runErrChecked = true
 		return nil
 	})
 
