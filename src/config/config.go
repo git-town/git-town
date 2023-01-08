@@ -90,16 +90,6 @@ func (c *Config) ChildBranches(branchName string) []string {
 	return result
 }
 
-// HostingService provides the name of the code hosting driver to use.
-func (c *Config) HostingService() string {
-	return c.localOrGlobalConfigValue("git-town.code-hosting-driver")
-}
-
-// OriginOverride provides the override for the origin hostname from the Git Town configuration.
-func (c *Config) OriginOverride() string {
-	return c.localConfigValue("git-town.code-hosting-origin-hostname")
-}
-
 // DeleteMainBranchConfiguration removes the configuration entry for the main branch name.
 func (c *Config) DeleteMainBranchConfiguration() error {
 	return c.removeLocalConfigValue("git-town.main-branch-name")
@@ -162,6 +152,11 @@ func (c *Config) HasBranchInformation() bool {
 // HasParentBranch returns whether or not the given branch has a parent.
 func (c *Config) HasParentBranch(branchName string) bool {
 	return c.ParentBranch(branchName) != ""
+}
+
+// HostingService provides the name of the code hosting driver to use.
+func (c *Config) HostingService() string {
+	return c.localOrGlobalConfigValue("git-town.code-hosting-driver")
 }
 
 // IsAncestorBranch indicates whether the given branch is an ancestor of the other given branch.
@@ -236,6 +231,22 @@ func (c *Config) MainBranch() string {
 	return c.localOrGlobalConfigValue("git-town.main-branch-name")
 }
 
+// OriginOverride provides the override for the origin hostname from the Git Town configuration.
+func (c *Config) OriginOverride() string {
+	return c.localConfigValue("git-town.code-hosting-origin-hostname")
+}
+
+// OriginURL provides the URL for the "origin" remote.
+// In tests this value can be stubbed.
+func (c *Config) OriginURL() string {
+	remote := os.Getenv("GIT_TOWN_REMOTE")
+	if remote != "" {
+		return remote
+	}
+	res, _ := c.shell.Run("git", "remote", "get-url", "origin")
+	return res.OutputSanitized()
+}
+
 // ParentBranchMap returns a map from branch name to its parent branch.
 func (c *Config) ParentBranchMap() map[string]string {
 	result := map[string]string{}
@@ -289,17 +300,6 @@ func (c *Config) PushVerify() bool {
 func (c *Config) Reload() {
 	c.localConfigCache = loadGitConfig(c.shell, false)
 	c.globalConfigCache = loadGitConfig(c.shell, true)
-}
-
-// OriginURL provides the URL for the "origin" remote.
-// In tests this value can be stubbed.
-func (c *Config) OriginURL() string {
-	remote := os.Getenv("GIT_TOWN_REMOTE")
-	if remote != "" {
-		return remote
-	}
-	res, _ := c.shell.Run("git", "remote", "get-url", "origin")
-	return res.OutputSanitized()
 }
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
@@ -391,6 +391,12 @@ func (c *Config) SetNewBranchPush(value bool, global bool) error {
 	return err
 }
 
+// SetOffline updates whether Git Town is in offline mode.
+func (c *Config) SetOffline(value bool) error {
+	_, err := c.SetGlobalConfigValue("git-town.offline", strconv.FormatBool(value))
+	return err
+}
+
 // SetParentBranch marks the given branch as the direct parent of the other given branch
 // in the Git Town configuration.
 func (c *Config) SetParentBranch(branchName, parentBranchName string) error {
@@ -413,12 +419,6 @@ func (c *Config) SetPullBranchStrategy(strategy string) error {
 // SetPullBranchStrategy updates the configured pull branch strategy.
 func (c *Config) SetPushVerify(strategy string) error {
 	_, err := c.SetLocalConfigValue("git-town.push-verify", strategy)
-	return err
-}
-
-// SetOffline updates whether Git Town is in offline mode.
-func (c *Config) SetOffline(value bool) error {
-	_, err := c.SetGlobalConfigValue("git-town.offline", strconv.FormatBool(value))
 	return err
 }
 
