@@ -68,7 +68,7 @@ func (r *ProdRepo) RemoveOutdatedConfiguration() error {
 			return err
 		}
 		if !hasChildBranch || !hasParentBranch {
-			return r.Config.DeleteParentBranch(child)
+			return r.Config.RemoveParentBranch(child)
 		}
 	}
 	return nil

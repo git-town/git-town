@@ -229,7 +229,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^Git Town is not configured$`, func() error {
-		err := state.gitEnv.DevRepo.Config.DeletePerennialBranchConfiguration()
+		err := state.gitEnv.DevRepo.Config.RemovePerennialBranchConfiguration()
 		if err != nil {
 			return err
 		}
@@ -918,7 +918,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the perennial branches are not configured$`, func() error {
-		return state.gitEnv.DevRepo.Config.DeletePerennialBranchConfiguration()
+		return state.gitEnv.DevRepo.Config.RemovePerennialBranchConfiguration()
 	})
 
 	suite.Step(`^the perennial branches are now "([^"]+)"$`, func(name string) error {
