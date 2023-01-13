@@ -48,6 +48,8 @@ var configCommand = &cobra.Command{
 	},
 }
 
+// MAIN BRANCH SUBCOMMAND
+
 var mainBranchConfigCommand = &cobra.Command{
 	Use:   "main-branch [<branch>]",
 	Short: "Displays or sets your main development branch",
@@ -73,6 +75,109 @@ The main branch is the Git branch from which new feature branches are cut.`,
 func printMainBranch() {
 	cli.Println(cli.StringSetting(prodRepo.Config.MainBranch()))
 }
+
+func setMainBranch(branchName string, repo *git.ProdRepo) error {
+	hasBranch, err := repo.Silent.HasLocalBranch(branchName)
+	if err != nil {
+		return err
+	}
+	if !hasBranch {
+		return fmt.Errorf("there is no branch named %q", branchName)
+	}
+	return repo.Config.SetMainBranch(branchName)
+}
+
+// OFFLINE SUBCOMMAND
+
+var offlineCommand = &cobra.Command{
+	Use:   "offline [(yes | no)]",
+	Short: "Displays or sets offline mode",
+	Long: `Displays or sets offline mode
+
+Git Town avoids network operations in offline mode.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		if len(args) == 0 {
+			cli.Println(cli.FormatBool(prodRepo.Config.IsOffline()))
+		} else {
+			value, err := cli.ParseBool(args[0])
+			if err != nil {
+				cli.Exit(fmt.Errorf(`invalid argument: %q. Please provide either "yes" or "no".\n`, args[0]))
+			}
+			err = prodRepo.Config.SetOffline(value)
+			if err != nil {
+				cli.Exit(err)
+			}
+		}
+	},
+	Args: cobra.MaximumNArgs(1),
+}
+
+// PERENNIAL-BRANCHES SUBCOMMAND
+
+var perennialBranchesCommand = &cobra.Command{
+	Use:   "perennial-branches",
+	Short: "Displays your perennial branches",
+	Long: `Displays your perennial branches
+
+Perennial branches are long-lived branches.
+They cannot be shipped.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		cli.Println(cli.StringSetting(strings.Join(prodRepo.Config.PerennialBranches(), "\n")))
+	},
+	Args: cobra.NoArgs,
+	PreRunE: func(cmd *cobra.Command, args []string) error {
+		return ValidateIsRepository(prodRepo)
+	},
+}
+
+var updatePrennialBranchesCommand = &cobra.Command{
+	Use:   "update",
+	Short: "Prompts to update your perennial branches",
+	Long:  `Prompts to update your perennial branches`,
+	Run: func(cmd *cobra.Command, args []string) {
+		err := dialog.ConfigurePerennialBranches(prodRepo)
+		if err != nil {
+			cli.Exit(err)
+		}
+	},
+	Args: cobra.NoArgs,
+	PreRunE: func(cmd *cobra.Command, args []string) error {
+		return ValidateIsRepository(prodRepo)
+	},
+}
+
+// PULL-BRANCH-STRATEGY SUBCOMMAND
+
+var pullBranchStrategyCommand = &cobra.Command{
+	Use:   "pull-branch-strategy [(rebase | merge)]",
+	Short: "Displays or sets your pull branch strategy",
+	Long: `Displays or sets your pull branch strategy
+
+The pull branch strategy specifies what strategy to use
+when merging remote tracking branches into local branches
+for the main branch and perennial branches.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		if len(args) == 0 {
+			cli.Println(prodRepo.Config.PullBranchStrategy())
+		} else {
+			err := prodRepo.Config.SetPullBranchStrategy(args[0])
+			if err != nil {
+				cli.Exit(err)
+			}
+		}
+	},
+	Args: func(cmd *cobra.Command, args []string) error {
+		if len(args) == 1 && args[0] != "rebase" && args[0] != "merge" {
+			return fmt.Errorf("invalid value: %q", args[0])
+		}
+		return cobra.MaximumNArgs(1)(cmd, args)
+	},
+	PreRunE: func(cmd *cobra.Command, args []string) error {
+		return ValidateIsRepository(prodRepo)
+	},
+}
+
+// PUSH-NEW-BRANCHES SUBCOMMAND
 
 var pushNewBranchesCommand = &cobra.Command{
 	Use:   "push-new-branches [(yes | no)]",
@@ -121,100 +226,7 @@ func setPushNewBranches(value bool, repo *git.ProdRepo) error {
 	return repo.Config.SetNewBranchPush(value, globalFlag)
 }
 
-func setMainBranch(branchName string, repo *git.ProdRepo) error {
-	hasBranch, err := repo.Silent.HasLocalBranch(branchName)
-	if err != nil {
-		return err
-	}
-	if !hasBranch {
-		return fmt.Errorf("there is no branch named %q", branchName)
-	}
-	return repo.Config.SetMainBranch(branchName)
-}
-
-var offlineCommand = &cobra.Command{
-	Use:   "offline [(yes | no)]",
-	Short: "Displays or sets offline mode",
-	Long: `Displays or sets offline mode
-
-Git Town avoids network operations in offline mode.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) == 0 {
-			cli.Println(cli.FormatBool(prodRepo.Config.IsOffline()))
-		} else {
-			value, err := cli.ParseBool(args[0])
-			if err != nil {
-				cli.Exit(fmt.Errorf(`invalid argument: %q. Please provide either "yes" or "no".\n`, args[0]))
-			}
-			err = prodRepo.Config.SetOffline(value)
-			if err != nil {
-				cli.Exit(err)
-			}
-		}
-	},
-	Args: cobra.MaximumNArgs(1),
-}
-
-var perennialBranchesCommand = &cobra.Command{
-	Use:   "perennial-branches",
-	Short: "Displays your perennial branches",
-	Long: `Displays your perennial branches
-
-Perennial branches are long-lived branches.
-They cannot be shipped.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		cli.Println(cli.StringSetting(strings.Join(prodRepo.Config.PerennialBranches(), "\n")))
-	},
-	Args: cobra.NoArgs,
-	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return ValidateIsRepository(prodRepo)
-	},
-}
-
-var updatePrennialBranchesCommand = &cobra.Command{
-	Use:   "update",
-	Short: "Prompts to update your perennial branches",
-	Long:  `Prompts to update your perennial branches`,
-	Run: func(cmd *cobra.Command, args []string) {
-		err := dialog.ConfigurePerennialBranches(prodRepo)
-		if err != nil {
-			cli.Exit(err)
-		}
-	},
-	Args: cobra.NoArgs,
-	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return ValidateIsRepository(prodRepo)
-	},
-}
-
-var pullBranchStrategyCommand = &cobra.Command{
-	Use:   "pull-branch-strategy [(rebase | merge)]",
-	Short: "Displays or sets your pull branch strategy",
-	Long: `Displays or sets your pull branch strategy
-
-The pull branch strategy specifies what strategy to use
-when merging remote tracking branches into local branches
-for the main branch and perennial branches.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) == 0 {
-			cli.Println(prodRepo.Config.PullBranchStrategy())
-		} else {
-			err := prodRepo.Config.SetPullBranchStrategy(args[0])
-			if err != nil {
-				cli.Exit(err)
-			}
-		}
-	},
-	Args: func(cmd *cobra.Command, args []string) error {
-		if len(args) == 1 && args[0] != "rebase" && args[0] != "merge" {
-			return fmt.Errorf("invalid value: %q", args[0])
-		}
-		return cobra.MaximumNArgs(1)(cmd, args)
-	},
-	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return ValidateIsRepository(prodRepo)
-	},
-}
+// RESET SUBCOMMAND
 
 var resetConfigCommand = &cobra.Command{
 	Use:   "reset",
@@ -230,6 +242,8 @@ var resetConfigCommand = &cobra.Command{
 		return ValidateIsRepository(prodRepo)
 	},
 }
+
+// SETUP SUBCOMMAND
 
 var setupConfigCommand = &cobra.Command{
 	Use:   "setup",
@@ -249,6 +263,8 @@ var setupConfigCommand = &cobra.Command{
 		return ValidateIsRepository(prodRepo)
 	},
 }
+
+// SYNC-STRATEGY SUBCOMMAND
 
 var syncStrategyCommand = &cobra.Command{
 	Use:   "sync-strategy [(merge | rebase)]",
