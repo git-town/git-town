@@ -1,4 +1,4 @@
-Feature: push-verify setting
+Feature: push-hook setting
 
   Background:
     Given the current branch is a feature branch "feature"
@@ -10,7 +10,7 @@ Feature: push-verify setting
       |         | origin   | origin feature commit |
 
   Scenario: set to "false"
-    Given setting "push-verify" is "false"
+    Given setting "push-hook" is "false"
     When I run "git-town sync"
     Then it runs the commands
       | BRANCH  | COMMAND                            |
@@ -36,7 +36,7 @@ Feature: push-verify setting
       |         |               | Merge branch 'main' into feature                           |
 
   Scenario: set to "true"
-    Given setting "push-verify" is "true"
+    Given setting "push-hook" is "true"
     When I run "git-town sync"
     Then it runs the commands
       | BRANCH  | COMMAND                            |

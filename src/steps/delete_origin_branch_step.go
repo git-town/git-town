@@ -8,17 +8,17 @@ import (
 // DeleteOriginBranchStep deletes the current branch from the origin remote.
 type DeleteOriginBranchStep struct {
 	NoOpStep
-	BranchName   string
-	IsTracking   bool
-	NoPushVerify bool
-	branchSha    string
+	BranchName string
+	IsTracking bool
+	NoPushHook bool
+	branchSha  string
 }
 
 func (step *DeleteOriginBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
 	if step.IsTracking {
-		return &CreateTrackingBranchStep{BranchName: step.BranchName, NoPushVerify: step.NoPushVerify}, nil
+		return &CreateTrackingBranchStep{BranchName: step.BranchName, NoPushHook: step.NoPushHook}, nil
 	}
-	return &CreateRemoteBranchStep{BranchName: step.BranchName, Sha: step.branchSha, NoPushVerify: step.NoPushVerify}, nil
+	return &CreateRemoteBranchStep{BranchName: step.BranchName, Sha: step.branchSha, NoPushHook: step.NoPushHook}, nil
 }
 
 func (step *DeleteOriginBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {

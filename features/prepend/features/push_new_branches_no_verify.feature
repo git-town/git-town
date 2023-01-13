@@ -8,7 +8,7 @@ Feature: auto-push new branches
       | old    | local, origin | feature commit |
 
   Scenario: set to "false"
-    Given setting "push-verify" is "false"
+    Given setting "push-hook" is "false"
     When I run "git-town prepend new"
     Then it runs the commands
       | BRANCH | COMMAND                            |
@@ -28,7 +28,7 @@ Feature: auto-push new branches
       | old    | new    |
 
   Scenario: set to "true"
-    Given setting "push-verify" is "true"
+    Given setting "push-hook" is "true"
     When I run "git-town prepend new"
     Then it runs the commands
       | BRANCH | COMMAND                  |
