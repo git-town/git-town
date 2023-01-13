@@ -226,6 +226,54 @@ func setPushNewBranches(value bool, repo *git.ProdRepo) error {
 	return repo.Config.SetNewBranchPush(value, globalFlag)
 }
 
+// PUSH-VERIFY SUBCOMMAND
+
+var pushVerifyCommand = &cobra.Command{
+	Use:   "push-hook [(yes | no)]",
+	Short: "Configures whether Git Town should bypass Git's pre-push hook.",
+	Long: `Configures whether Git Town should bypass Git's pre-push hook.
+
+Enabled by default. When disabled, Git Town prevents Git's pre-push hook from running.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		if len(args) == 0 {
+			err := printPushNewBranches(prodRepo)
+			if err != nil {
+				cli.Exit(err)
+			}
+		} else {
+			value, err := cli.ParseBool(args[0])
+			if err != nil {
+				cli.Exit(fmt.Errorf(`invalid argument: %q. Please provide either "yes" or "no"`, args[0]))
+			}
+			err = setPushNewBranches(value, prodRepo)
+			if err != nil {
+				cli.Exit(err)
+			}
+		}
+	},
+	Args: cobra.MaximumNArgs(1),
+	PreRunE: func(cmd *cobra.Command, args []string) error {
+		return ValidateIsRepository(prodRepo)
+	},
+}
+
+func printPushNewBranches(repo *git.ProdRepo) error {
+	if globalFlag {
+		cli.Println(cli.FormatBool(repo.Config.ShouldNewBranchPushGlobal()))
+	} else {
+		pushNewBranch, err := prodRepo.Config.ShouldNewBranchPush()
+		if err != nil {
+			return err
+		}
+		cli.Println(cli.FormatBool(pushNewBranch))
+	}
+	return nil
+}
+
+func setPushNewBranches(value bool, repo *git.ProdRepo) error {
+	return repo.Config.SetNewBranchPush(value, globalFlag)
+}
+
 // RESET SUBCOMMAND
 
 var resetConfigCommand = &cobra.Command{
