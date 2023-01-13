@@ -317,9 +317,9 @@ func (r *Runner) CreatePerennialBranches(names ...string) error {
 }
 
 // CreateRemoteBranch creates a remote branch from the given local SHA.
-func (r *Runner) CreateRemoteBranch(localSha, branchName string, noPushVerify bool) error {
+func (r *Runner) CreateRemoteBranch(localSha, branchName string, noPushHook bool) error {
 	args := []string{"push"}
-	if noPushVerify {
+	if noPushHook {
 		args = append(args, "--no-verify")
 	}
 	args = append(args, "origin", localSha+":refs/heads/"+branchName)
@@ -830,7 +830,7 @@ type PushArgs struct {
 	BranchName     string
 	Force          bool
 	ForceWithLease bool
-	NoPushVerify   bool
+	NoPushHook     bool
 	ToOrigin       bool
 }
 
@@ -845,7 +845,7 @@ func (r *Runner) PushBranch(options ...PushArgs) error {
 	if option.Force {
 		args = append(args, "-f")
 	}
-	if option.NoPushVerify {
+	if option.NoPushHook {
 		args = append(args, "--no-verify")
 	}
 	if option.ForceWithLease {

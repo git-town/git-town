@@ -1,4 +1,4 @@
-Feature: rename the current branch without Git push verify
+Feature: rename the current branch without Git pre-push hook
 
   Background:
     Given the current branch is a feature branch "old"
@@ -8,7 +8,7 @@ Feature: rename the current branch without Git push verify
       | old    | local, origin | old commit  |
 
   Scenario: set to "false"
-    Given setting "push-verify" is "false"
+    Given setting "push-hook" is "false"
     When I run "git-town rename-branch new"
     Then it runs the commands
       | BRANCH | COMMAND                            |
@@ -25,7 +25,7 @@ Feature: rename the current branch without Git push verify
       | new    | local, origin | old commit  |
 
   Scenario: set to "true"
-    Given setting "push-verify" is "true"
+    Given setting "push-hook" is "true"
     When I run "git-town rename-branch new"
     Then it runs the commands
       | BRANCH | COMMAND                  |
