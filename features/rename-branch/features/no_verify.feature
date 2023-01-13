@@ -1,4 +1,4 @@
-Feature: rename the current branch without Git pre-push hook
+Feature: rename the current branch without pre-push hook
 
   Background:
     Given the current branch is a feature branch "old"
