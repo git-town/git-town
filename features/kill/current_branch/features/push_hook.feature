@@ -1,4 +1,4 @@
-Feature: undo deleting the current feature branch with push-hook
+Feature: undo deleting the current feature branch with disabled push-hook
 
   Background:
     Given the current branch is a feature branch "current"
