@@ -14,7 +14,7 @@ type appendConfig struct {
 	ancestorBranches    []string
 	hasOrigin           bool
 	isOffline           bool
-	noPushVerify        bool
+	noPushHook          bool
 	parentBranch        string
 	shouldNewBranchPush bool
 	targetBranch        string
@@ -88,7 +88,7 @@ func createAppendConfig(args []string, repo *git.ProdRepo) (appendConfig, error)
 		return appendConfig{}, err
 	}
 	result.ancestorBranches = repo.Config.AncestorBranches(result.parentBranch)
-	result.noPushVerify = !repo.Config.PushVerify()
+	result.noPushHook = !repo.Config.PushHook()
 	result.shouldNewBranchPush, err = repo.Config.ShouldNewBranchPush()
 	if err != nil {
 		return appendConfig{}, err

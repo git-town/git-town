@@ -9,8 +9,8 @@ import (
 // and marks it as tracking the current branch.
 type CreateTrackingBranchStep struct {
 	NoOpStep
-	BranchName   string
-	NoPushVerify bool
+	BranchName string
+	NoPushHook bool
 }
 
 func (step *CreateTrackingBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
@@ -19,8 +19,8 @@ func (step *CreateTrackingBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, 
 
 func (step *CreateTrackingBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
 	return repo.Logging.PushBranch(git.PushArgs{
-		BranchName:   step.BranchName,
-		NoPushVerify: step.NoPushVerify,
-		ToOrigin:     true,
+		BranchName: step.BranchName,
+		NoPushHook: step.NoPushHook,
+		ToOrigin:   true,
 	})
 }

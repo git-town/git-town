@@ -8,7 +8,7 @@ Feature: auto-push the new branch without running Git push hooks
     And the current branch is "main"
 
   Scenario: set to "false"
-    Given setting "push-verify" is "false"
+    Given setting "push-hook" is "false"
     When I run "git-town hack new"
     Then it runs the commands
       | BRANCH | COMMAND                            |
@@ -27,7 +27,7 @@ Feature: auto-push the new branch without running Git push hooks
       | new    | main   |
 
   Scenario: set to "true"
-    Given setting "push-verify" is "true"
+    Given setting "push-hook" is "true"
     When I run "git-town hack new"
     Then it runs the commands
       | BRANCH | COMMAND                  |

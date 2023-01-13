@@ -18,7 +18,7 @@ type killConfig struct {
 	initialBranch       string
 	isOffline           bool
 	isTargetBranchLocal bool
-	noPushVerify        bool
+	noPushHook          bool
 	previousBranch      string
 	targetBranchParent  string
 	targetBranch        string
@@ -114,7 +114,7 @@ func createKillConfig(args []string, repo *git.ProdRepo) (killConfig, error) {
 		return result, err
 	}
 	result.childBranches = repo.Config.ChildBranches(result.targetBranch)
-	result.noPushVerify = !repo.Config.PushVerify()
+	result.noPushHook = !repo.Config.PushHook()
 	return result, nil
 }
 
@@ -123,7 +123,7 @@ func createKillStepList(config killConfig, repo *git.ProdRepo) (runstate.StepLis
 	switch {
 	case config.isTargetBranchLocal:
 		if config.hasTrackingBranch && !config.isOffline {
-			result.Append(&steps.DeleteOriginBranchStep{BranchName: config.targetBranch, IsTracking: true, NoPushVerify: config.noPushVerify})
+			result.Append(&steps.DeleteOriginBranchStep{BranchName: config.targetBranch, IsTracking: true, NoPushHook: config.noPushHook})
 		}
 		if config.initialBranch == config.targetBranch {
 			if config.hasOpenChanges {
@@ -137,7 +137,7 @@ func createKillStepList(config killConfig, repo *git.ProdRepo) (runstate.StepLis
 		}
 		result.Append(&steps.DeleteParentBranchStep{BranchName: config.targetBranch})
 	case !repo.Config.IsOffline():
-		result.Append(&steps.DeleteOriginBranchStep{BranchName: config.targetBranch, IsTracking: false, NoPushVerify: config.noPushVerify})
+		result.Append(&steps.DeleteOriginBranchStep{BranchName: config.targetBranch, IsTracking: false, NoPushHook: config.noPushHook})
 	default:
 		return runstate.StepList{}, fmt.Errorf("cannot delete remote branch %q in offline mode", config.targetBranch)
 	}

@@ -1,4 +1,4 @@
-Feature: undo deleting the current feature branch with no-push-verify
+Feature: undo deleting the current feature branch with disabled push-hook
 
   Background:
     Given the current branch is a feature branch "current"
@@ -10,7 +10,7 @@ Feature: undo deleting the current feature branch with no-push-verify
     And an uncommitted file
 
   Scenario: set to "false"
-    Given setting "push-verify" is "false"
+    Given setting "push-hook" is "false"
     When I run "git-town kill"
     And I run "git-town undo"
     Then it runs the commands
@@ -25,7 +25,7 @@ Feature: undo deleting the current feature branch with no-push-verify
     And the initial branches and hierarchy exist
 
   Scenario: set to "true"
-    Given setting "push-verify" is "true"
+    Given setting "push-hook" is "true"
     When I run "git-town kill"
     And I run "git-town undo"
     Then it runs the commands

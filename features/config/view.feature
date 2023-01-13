@@ -13,7 +13,7 @@ Feature: show the configuration
       Configuration:
         offline: no
         pull branch strategy: rebase
-        push using --no-verify: no
+        run pre-push hook: yes
         push new branches: no
         ship removes the remote branch: yes
         sync strategy: merge
@@ -41,7 +41,7 @@ Feature: show the configuration
       Configuration:
         offline: no
         pull branch strategy: rebase
-        push using --no-verify: no
+        run pre-push hook: yes
         push new branches: no
         ship removes the remote branch: yes
         sync strategy: merge
@@ -75,7 +75,7 @@ Feature: show the configuration
       Configuration:
         offline: no
         pull branch strategy: rebase
-        push using --no-verify: no
+        run pre-push hook: yes
         push new branches: no
         ship removes the remote branch: yes
         sync strategy: merge
