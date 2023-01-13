@@ -1,4 +1,3 @@
-@this
 Feature: show the configuration
 
   Scenario: all configured, no nested branches
