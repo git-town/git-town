@@ -26,7 +26,7 @@ var configCommand = &cobra.Command{
 		cli.PrintHeader("Configuration")
 		cli.PrintEntry("offline", cli.BoolSetting(prodRepo.Config.IsOffline()))
 		cli.PrintEntry("pull branch strategy", prodRepo.Config.PullBranchStrategy())
-		cli.PrintEntry("run pre-push hook", cli.BoolSetting(!prodRepo.Config.PushHook()))
+		cli.PrintEntry("run pre-push hook", cli.BoolSetting(prodRepo.Config.PushHook()))
 		cli.PrintEntry("push new branches", cli.BoolSetting(pushNewBranches))
 		cli.PrintEntry("ship removes the remote branch", cli.BoolSetting(prodRepo.Config.ShouldShipDeleteOriginBranch()))
 		cli.PrintEntry("sync strategy", prodRepo.Config.SyncStrategy())
