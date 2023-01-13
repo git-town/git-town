@@ -265,15 +265,15 @@ func (c *Config) PullBranchStrategy() string {
 	return "rebase"
 }
 
-// PushVerify provides the currently configured pull branch strategy.
-func (c *Config) PushVerify() bool {
-	config := c.localOrGlobalConfigValue("git-town.push-verify")
+// PushHook provides the currently configured pull branch strategy.
+func (c *Config) PushHook() bool {
+	config := c.localOrGlobalConfigValue("git-town.push-hook")
 	if config == "" {
 		return true
 	}
 	result, err := strconv.ParseBool(config)
 	if err != nil {
-		fmt.Printf("Invalid value for git-town.push-verify: %q. Please provide either true or false. Considering true for now.", config)
+		fmt.Printf("Invalid value for git-town.push-hook: %q. Please provide either true or false. Considering true for now.", config)
 		fmt.Println()
 		return true
 	}
@@ -417,8 +417,8 @@ func (c *Config) SetPullBranchStrategy(strategy string) error {
 }
 
 // SetPullBranchStrategy updates the configured pull branch strategy.
-func (c *Config) SetPushVerify(strategy string) error {
-	_, err := c.SetLocalConfigValue("git-town.push-verify", strategy)
+func (c *Config) SetPushHook(strategy string) error {
+	_, err := c.SetLocalConfigValue("git-town.push-hook", strategy)
 	return err
 }
 

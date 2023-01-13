@@ -96,7 +96,7 @@ func createHackConfig(args []string, repo *git.ProdRepo) (appendConfig, error) {
 		parentBranch:        parentBranch,
 		hasOrigin:           hasOrigin,
 		shouldNewBranchPush: shouldNewBranchPush,
-		noPushVerify:        !repo.Config.PushVerify(),
+		noPushHook:          !repo.Config.PushHook(),
 		isOffline:           isOffline,
 	}
 	return result, nil

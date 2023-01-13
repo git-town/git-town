@@ -12,7 +12,7 @@ type PushBranchStep struct {
 	BranchName     string
 	Force          bool
 	ForceWithLease bool
-	NoPushVerify   bool
+	NoPushHook     bool
 	Undoable       bool
 }
 
@@ -38,7 +38,7 @@ func (step *PushBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error
 	return repo.Logging.PushBranch(git.PushArgs{
 		BranchName:     step.BranchName,
 		ForceWithLease: step.ForceWithLease,
-		NoPushVerify:   step.NoPushVerify,
+		NoPushHook:     step.NoPushHook,
 		Force:          step.Force,
 		ToOrigin:       currentBranch != step.BranchName,
 	})
