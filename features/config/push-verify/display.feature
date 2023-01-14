@@ -1,20 +1,18 @@
 Feature: display the push-hook setting
 
-  Scenario: default local setting
-    When I run "git-town config push-hook"
+  Scenario Outline: default settings
+    When I run "git-town config <SWITCH> push-hook"
     Then it prints:
       """
       yes
       """
 
-  Scenario: default global setting
-    When I run "git-town config push-hook --global"
-    Then it prints:
-      """
-      yes
-      """
+    Examples:
+      | SWITCH   |
+      | --global |
+      |          |
 
-  Scenario Outline: local setting
+  Scenario Outline: display the local setting
     Given local setting "push-hook" is "<VALUE>"
     When I run "git-town config push-hook"
     Then it prints:
@@ -34,7 +32,7 @@ Feature: display the push-hook setting
       | f     | no     |
       | 0     | no     |
 
-  Scenario Outline: global setting
+  Scenario Outline: display the global setting
     Given global setting "push-hook" is "<VALUE>"
     When I run "git-town config push-hook --global"
     Then it prints:
