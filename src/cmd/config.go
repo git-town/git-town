@@ -256,11 +256,17 @@ Enabled by default. When disabled, Git Town prevents Git's pre-push hook from ru
 }
 
 func printPushHook(repo *git.ProdRepo) error {
-	hook, err := repo.Config.PushHook()
+	var setting bool
+	var err error
+	if globalFlag {
+		setting, err = repo.Config.PushHookGlobal()
+	} else {
+		setting, err = repo.Config.PushHook()
+	}
 	if err != nil {
 		return err
 	}
-	cli.Println(cli.FormatBool(hook))
+	cli.Println(cli.FormatBool(setting))
 	return nil
 }
 

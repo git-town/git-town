@@ -267,13 +267,26 @@ func (c *Config) PullBranchStrategy() string {
 
 // PushHook provides the currently configured push-hook setting.
 func (c *Config) PushHook() (bool, error) {
-	config := c.LocalOrGlobalConfigValue("git-town.push-hook")
-	if config == "" {
+	setting := c.LocalOrGlobalConfigValue("git-town.push-hook")
+	if setting == "" {
 		return true, nil
 	}
-	result, err := cli.ParseBool(config)
+	result, err := cli.ParseBool(setting)
 	if err != nil {
-		return false, fmt.Errorf("invalid value for git-town.push-hook: %q. Please provide either \"true\" or \"false\"", config)
+		return false, fmt.Errorf("invalid value for git-town.push-hook: %q. Please provide either \"true\" or \"false\"", setting)
+	}
+	return result, nil
+}
+
+// PushHook provides the currently configured push-hook setting.
+func (c *Config) PushHookGlobal() (bool, error) {
+	setting := c.GlobalConfigValue("git-town.push-hook")
+	if setting == "" {
+		return true, nil
+	}
+	result, err := cli.ParseBool(setting)
+	if err != nil {
+		return false, fmt.Errorf("invalid value for git-town.push-hook: %q. Please provide either \"true\" or \"false\"", setting)
 	}
 	return result, nil
 }
