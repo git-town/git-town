@@ -551,15 +551,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return err
 	})
 
-	suite.Step(`^setting "offline" is (?:now|still) "([^"]*)"$`, func(value string) error {
-		want, err := strconv.ParseBool(value)
-		if err != nil {
-			return err
-		}
+	suite.Step(`^setting "offline" is (?:now|still) "([^"]*)"$`, func(want string) error {
 		state.gitEnv.DevRepo.Config.Storage.Reload()
-		have := state.gitEnv.DevRepo.Config.IsOffline()
+		have := state.gitEnv.DevRepo.Config.Storage.LocalOrGlobalConfigValue("git-town.offline")
 		if have != want {
-			return fmt.Errorf("expected %t but have %t", want, have)
+			return fmt.Errorf("expected %q but have %q", want, have)
 		}
 		return nil
 	})
