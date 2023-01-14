@@ -1,3 +1,4 @@
+@this
 Feature: display the push-new-branches setting
 
   Scenario: default local setting

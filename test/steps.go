@@ -527,13 +527,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return fmt.Errorf("should not have global new-branch-push-flag anymore but has value %q", newValue)
 	})
 
-	suite.Step(`^setting "push-new-branches" is (globally )?"([^"]*)"$`, func(global string, value string) error {
-		setGlobal := global != ""
-		setting, err := cli.ParseBool(value)
-		if err == nil {
-			return state.gitEnv.DevRepo.Config.SetNewBranchPush(setting, setGlobal)
-		}
-		_, err = state.gitEnv.DevRepo.Config.Storage.SetLocalConfigValue("git-town.push-new-branches", value)
+	suite.Step(`^setting "push-new-branches" is "([^"]*)"$`, func(value string) error {
+		_, err := state.gitEnv.DevRepo.Config.Storage.SetLocalConfigValue("git-town.push-new-branches", value)
+		return err
+	})
+
+	suite.Step(`^setting "push-new-branches" is globally "([^"]*)"$`, func(value string) error {
+		_, err := state.gitEnv.DevRepo.Config.Storage.SetGlobalConfigValue("git-town.push-new-branches", value)
 		return err
 	})
 

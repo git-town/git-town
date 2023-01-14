@@ -447,9 +447,12 @@ func (gt *GitTown) ShouldNewBranchPush() (bool, error) {
 
 // ShouldNewBranchPushGlobal indictes whether the global configuration requires to push
 // freshly created branches to origin.
-func (gt *GitTown) ShouldNewBranchPushGlobal() bool {
+func (gt *GitTown) ShouldNewBranchPushGlobal() (bool, error) {
 	config := gt.Storage.GlobalConfigValue("git-town.push-new-branches")
-	return config == "true"
+	if config == "" {
+		return false, nil
+	}
+	return cli.ParseBool(config)
 }
 
 // ShouldShipDeleteOriginBranch indicates whether to delete the remote branch after shipping.

@@ -197,11 +197,7 @@ push the new branch to the origin remote.`,
 				cli.Exit(err)
 			}
 		} else {
-			value, err := cli.ParseBool(args[0])
-			if err != nil {
-				cli.Exit(fmt.Errorf(`invalid argument: %q. Please provide either "yes" or "no"`, args[0]))
-			}
-			err = setPushNewBranches(value, prodRepo)
+			err := setPushNewBranches(args[0], prodRepo)
 			if err != nil {
 				cli.Exit(err)
 			}
@@ -215,7 +211,11 @@ push the new branch to the origin remote.`,
 
 func printPushNewBranches(repo *git.ProdRepo) error {
 	if globalFlag {
-		cli.Println(cli.FormatBool(repo.Config.ShouldNewBranchPushGlobal()))
+		setting, err := repo.Config.ShouldNewBranchPushGlobal()
+		if err != nil {
+			return err
+		}
+		cli.Println(cli.FormatBool(setting))
 	} else {
 		pushNewBranch, err := prodRepo.Config.ShouldNewBranchPush()
 		if err != nil {
@@ -226,7 +226,11 @@ func printPushNewBranches(repo *git.ProdRepo) error {
 	return nil
 }
 
-func setPushNewBranches(value bool, repo *git.ProdRepo) error {
+func setPushNewBranches(text string, repo *git.ProdRepo) error {
+	value, err := cli.ParseBool(text)
+	if err != nil {
+		return fmt.Errorf(`invalid argument: %q. Please provide either "yes" or "no"`, text)
+	}
 	return repo.Config.SetNewBranchPush(value, globalFlag)
 }
 
