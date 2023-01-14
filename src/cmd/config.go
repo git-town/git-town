@@ -358,7 +358,7 @@ func init() {
 	configCommand.AddCommand(perennialBranchesCommand)
 	configCommand.AddCommand(pullBranchStrategyCommand)
 	configCommand.AddCommand(pushHookCommand)
-	pushHookCommand.Flags().BoolVar(&globalFlag, "global", false, "Displays or sets your global push hook flag")
+	pushHookCommand.Flags().BoolVar(&globalFlag, "global", false, "Displays or sets the global push hook flag")
 	configCommand.AddCommand(resetConfigCommand)
 	configCommand.AddCommand(setupConfigCommand)
 	configCommand.AddCommand(syncStrategyCommand)
