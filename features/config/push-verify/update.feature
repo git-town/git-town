@@ -1,4 +1,3 @@
-@this
 Feature: update the push-hook setting
 
   Scenario Outline: local setting
