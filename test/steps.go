@@ -504,22 +504,22 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return err
 	})
 
-	suite.Step(`^setting "new-branch-push-flag" no longer exists locally$`, func() error {
+	suite.Step(`^setting "([^"]*)" no longer exists locally$`, func(name string) error {
 		state.gitEnv.DevRepo.Config.Storage.Reload()
-		newValue := state.gitEnv.DevRepo.Config.DeprecatedNewBranchPushFlagLocal()
+		newValue := state.gitEnv.DevRepo.Config.Storage.LocalConfigValue("git-town." + name)
 		if newValue == "" {
 			return nil
 		}
-		return fmt.Errorf("should not have local new-branch-push-flag anymore but has value %q", newValue)
+		return fmt.Errorf("should not have local %q anymore but has value %q", name, newValue)
 	})
 
-	suite.Step(`^setting "new-branch-push-flag" no longer exists globally$`, func() error {
+	suite.Step(`^setting "([^"]*)" no longer exists globally$`, func(name string) error {
 		state.gitEnv.DevRepo.Config.Storage.Reload()
-		newValue := state.gitEnv.DevRepo.Config.DeprecatedNewBranchPushFlagGlobal()
+		newValue := state.gitEnv.DevRepo.Config.Storage.GlobalConfigValue("git-town." + name)
 		if newValue == "" {
 			return nil
 		}
-		return fmt.Errorf("should not have global new-branch-push-flag anymore but has value %q", newValue)
+		return fmt.Errorf("should not have global %q anymore but has value %q", name, newValue)
 	})
 
 	suite.Step(`^setting "([^"]*)" is now "([^"]*)"$`, func(name, want string) error {
