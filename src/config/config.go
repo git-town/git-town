@@ -80,8 +80,8 @@ func (c *Config) BranchAncestryRoots() []string {
 // is a parent.
 func (c *Config) ChildBranches(branchName string) []string {
 	result := []string{}
-	for _, key := range c.localConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
-		parent := c.localConfigValue(key)
+	for _, key := range c.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
+		parent := c.LocalConfigValue(key)
 		if parent == branchName {
 			child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
 			result = append(result, child)
@@ -100,26 +100,26 @@ func (c *Config) DeprecatedNewBranchPushFlagLocal() string {
 
 // GitAlias provides the currently set alias for the given Git Town command.
 func (c *Config) GitAlias(command string) string {
-	return c.globalConfigValue("alias." + command)
+	return c.GlobalConfigValue("alias." + command)
 }
 
 // GitHubToken provides the content of the GitHub API token stored in the local or global Git Town configuration.
 func (c *Config) GitHubToken() string {
-	return c.localOrGlobalConfigValue("git-town.github-token")
+	return c.LocalOrGlobalConfigValue("git-town.github-token")
 }
 
 // GitLabToken provides the content of the GitLab API token stored in the local or global Git Town configuration.
 func (c *Config) GitLabToken() string {
-	return c.localOrGlobalConfigValue("git-town.gitlab-token")
+	return c.LocalOrGlobalConfigValue("git-town.gitlab-token")
 }
 
 // GiteaToken provides the content of the Gitea API token stored in the local or global Git Town configuration.
 func (c *Config) GiteaToken() string {
-	return c.localOrGlobalConfigValue("git-town.gitea-token")
+	return c.LocalOrGlobalConfigValue("git-town.gitea-token")
 }
 
-// globalConfigValue provides the configuration value with the given key from the local Git configuration.
-func (c *Config) globalConfigValue(key string) string {
+// GlobalConfigValue provides the configuration value with the given key from the local Git configuration.
+func (c *Config) GlobalConfigValue(key string) string {
 	return c.globalConfigCache[key]
 }
 
@@ -140,7 +140,7 @@ func (c *Config) HasParentBranch(branchName string) bool {
 
 // HostingService provides the name of the code hosting driver to use.
 func (c *Config) HostingService() string {
-	return c.localOrGlobalConfigValue("git-town.code-hosting-driver")
+	return c.LocalOrGlobalConfigValue("git-town.code-hosting-driver")
 }
 
 // IsAncestorBranch indicates whether the given branch is an ancestor of the other given branch.
@@ -163,7 +163,7 @@ func (c *Config) IsMainBranch(branchName string) bool {
 
 // IsOffline indicates whether Git Town is currently in offline mode.
 func (c *Config) IsOffline() bool {
-	config := c.globalConfigValue("git-town.offline")
+	config := c.GlobalConfigValue("git-town.offline")
 	if config == "" {
 		return false
 	}
@@ -183,8 +183,8 @@ func (c *Config) IsPerennialBranch(branchName string) bool {
 	return stringslice.Contains(perennialBranches, branchName)
 }
 
-// localConfigKeysMatching provides the names of the Git Town configuration keys matching the given RegExp string.
-func (c *Config) localConfigKeysMatching(toMatch string) []string {
+// LocalConfigKeysMatching provides the names of the Git Town configuration keys matching the given RegExp string.
+func (c *Config) LocalConfigKeysMatching(toMatch string) []string {
 	result := []string{}
 	re := regexp.MustCompile(toMatch)
 	for key := range c.localConfigCache {
@@ -195,29 +195,29 @@ func (c *Config) localConfigKeysMatching(toMatch string) []string {
 	return result
 }
 
-// localConfigValue provides the configuration value with the given key from the local Git configuration.
-func (c *Config) localConfigValue(key string) string {
+// LocalConfigValue provides the configuration value with the given key from the local Git configuration.
+func (c *Config) LocalConfigValue(key string) string {
 	return c.localConfigCache[key]
 }
 
-// localOrGlobalConfigValue provides the configuration value with the given key from the local and global Git configuration.
+// LocalOrGlobalConfigValue provides the configuration value with the given key from the local and global Git configuration.
 // Local configuration takes precedence.
-func (c *Config) localOrGlobalConfigValue(key string) string {
-	local := c.localConfigValue(key)
+func (c *Config) LocalOrGlobalConfigValue(key string) string {
+	local := c.LocalConfigValue(key)
 	if local != "" {
 		return local
 	}
-	return c.globalConfigValue(key)
+	return c.GlobalConfigValue(key)
 }
 
 // MainBranch provides the name of the main branch.
 func (c *Config) MainBranch() string {
-	return c.localOrGlobalConfigValue("git-town.main-branch-name")
+	return c.LocalOrGlobalConfigValue("git-town.main-branch-name")
 }
 
 // OriginOverride provides the override for the origin hostname from the Git Town configuration.
 func (c *Config) OriginOverride() string {
-	return c.localConfigValue("git-town.code-hosting-origin-hostname")
+	return c.LocalConfigValue("git-town.code-hosting-origin-hostname")
 }
 
 // OriginURL provides the URL for the "origin" remote.
@@ -234,9 +234,9 @@ func (c *Config) OriginURL() string {
 // ParentBranchMap returns a map from branch name to its parent branch.
 func (c *Config) ParentBranchMap() map[string]string {
 	result := map[string]string{}
-	for _, key := range c.localConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
+	for _, key := range c.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
 		child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
-		parent := c.localConfigValue(key)
+		parent := c.LocalConfigValue(key)
 		result[child] = parent
 	}
 	return result
@@ -244,12 +244,12 @@ func (c *Config) ParentBranchMap() map[string]string {
 
 // ParentBranch provides the name of the parent branch of the given branch.
 func (c *Config) ParentBranch(branchName string) string {
-	return c.localConfigValue("git-town-branch." + branchName + ".parent")
+	return c.LocalConfigValue("git-town-branch." + branchName + ".parent")
 }
 
 // PerennialBranches returns all branches that are marked as perennial.
 func (c *Config) PerennialBranches() []string {
-	result := c.localOrGlobalConfigValue("git-town.perennial-branch-names")
+	result := c.LocalOrGlobalConfigValue("git-town.perennial-branch-names")
 	if result == "" {
 		return []string{}
 	}
@@ -258,7 +258,7 @@ func (c *Config) PerennialBranches() []string {
 
 // PullBranchStrategy provides the currently configured pull branch strategy.
 func (c *Config) PullBranchStrategy() string {
-	config := c.localOrGlobalConfigValue("git-town.pull-branch-strategy")
+	config := c.LocalOrGlobalConfigValue("git-town.pull-branch-strategy")
 	if config != "" {
 		return config
 	}
@@ -267,7 +267,7 @@ func (c *Config) PullBranchStrategy() string {
 
 // PushHook provides the currently configured push-hook setting.
 func (c *Config) PushHook() (bool, error) {
-	config := c.localOrGlobalConfigValue("git-town.push-hook")
+	config := c.LocalOrGlobalConfigValue("git-town.push-hook")
 	if config == "" {
 		return true, nil
 	}
@@ -414,8 +414,8 @@ func (c *Config) SetPullBranchStrategy(strategy string) error {
 	return err
 }
 
-// SetPushHook updates the configured pull branch strategy.
-func (c *Config) SetPushHook(value bool) error {
+// SetPushHookLocally updates the configured pull branch strategy.
+func (c *Config) SetPushHookLocally(value bool) error {
 	_, err := c.SetLocalConfigValue("git-town.push-hook", strconv.FormatBool(value))
 	return err
 }
@@ -452,7 +452,7 @@ func (c *Config) SetTestOrigin(value string) error {
 // ShouldNewBranchPush indicates whether the current repository is configured to push
 // freshly created branches up to origin.
 func (c *Config) ShouldNewBranchPush() (bool, error) {
-	oldLocalConfig := c.localConfigValue("git-town.new-branch-push-flag")
+	oldLocalConfig := c.LocalConfigValue("git-town.new-branch-push-flag")
 	if oldLocalConfig != "" {
 		fmt.Println("I found the deprecated local setting \"git-town.new-branch-push-flag\".")
 		fmt.Println("I am upgrading this setting to the new format \"git-town.push-new-branches\".")
@@ -469,7 +469,7 @@ func (c *Config) ShouldNewBranchPush() (bool, error) {
 			return false, err
 		}
 	}
-	oldGlobalConfig := c.globalConfigValue("git-town.new-branch-push-flag")
+	oldGlobalConfig := c.GlobalConfigValue("git-town.new-branch-push-flag")
 	if oldGlobalConfig != "" {
 		fmt.Println("I found the deprecated global setting \"git-town.new-branch-push-flag\".")
 		fmt.Println("I am upgrading this setting to the new format \"git-town.push-new-branches\".")
@@ -486,7 +486,7 @@ func (c *Config) ShouldNewBranchPush() (bool, error) {
 			return false, err
 		}
 	}
-	config := c.localOrGlobalConfigValue("git-town.push-new-branches")
+	config := c.LocalOrGlobalConfigValue("git-town.push-new-branches")
 	if config == "" {
 		return false, nil
 	}
@@ -500,13 +500,13 @@ func (c *Config) ShouldNewBranchPush() (bool, error) {
 // ShouldNewBranchPushGlobal indictes whether the global configuration requires to push
 // freshly created branches to origin.
 func (c *Config) ShouldNewBranchPushGlobal() bool {
-	config := c.globalConfigValue("git-town.push-new-branches")
+	config := c.GlobalConfigValue("git-town.push-new-branches")
 	return config == "true"
 }
 
 // ShouldShipDeleteOriginBranch indicates whether to delete the remote branch after shipping.
 func (c *Config) ShouldShipDeleteOriginBranch() bool {
-	setting := c.localOrGlobalConfigValue("git-town.ship-delete-remote-branch")
+	setting := c.LocalOrGlobalConfigValue("git-town.ship-delete-remote-branch")
 	if setting == "" {
 		return true
 	}
@@ -520,11 +520,11 @@ func (c *Config) ShouldShipDeleteOriginBranch() bool {
 
 // ShouldSyncUpstream indicates whether this repo should sync with its upstream.
 func (c *Config) ShouldSyncUpstream() bool {
-	return c.localOrGlobalConfigValue("git-town.sync-upstream") != "false"
+	return c.LocalOrGlobalConfigValue("git-town.sync-upstream") != "false"
 }
 
 func (c *Config) SyncStrategy() string {
-	setting := c.localOrGlobalConfigValue("git-town.sync-strategy")
+	setting := c.LocalOrGlobalConfigValue("git-town.sync-strategy")
 	if setting == "" {
 		setting = "merge"
 	}

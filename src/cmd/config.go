@@ -274,7 +274,7 @@ func setPushHook(value bool, repo *git.ProdRepo) error {
 	if globalFlag {
 		return repo.Config.SetPushHookGlobally(value)
 	} else {
-		return repo.Config.SetPushHookGlobally(value)
+		return repo.Config.SetPushHookLocally(value)
 	}
 }
 
