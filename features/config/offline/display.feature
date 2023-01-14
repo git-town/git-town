@@ -27,7 +27,6 @@ Feature: display the current offline status
       | f     | no     |
       | 0     | no     |
 
-  @this
   Scenario: invalid value
     Given global setting "offline" is "zonk"
     When I run "git-town config offline"
