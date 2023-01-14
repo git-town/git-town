@@ -22,13 +22,17 @@ var configCommand = &cobra.Command{
 		if err != nil {
 			cli.Exit(err)
 		}
+		isOffline, err := prodRepo.Config.IsOffline()
+		if err != nil {
+			cli.Exit(err)
+		}
 		fmt.Println()
 		cli.PrintHeader("Branches")
 		cli.PrintEntry("main branch", cli.StringSetting(prodRepo.Config.MainBranch()))
 		cli.PrintEntry("perennial branches", cli.StringSetting(strings.Join(prodRepo.Config.PerennialBranches(), ", ")))
 		fmt.Println()
 		cli.PrintHeader("Configuration")
-		cli.PrintEntry("offline", cli.BoolSetting(prodRepo.Config.IsOffline()))
+		cli.PrintEntry("offline", cli.BoolSetting(isOffline))
 		cli.PrintEntry("pull branch strategy", prodRepo.Config.PullBranchStrategy())
 		cli.PrintEntry("run pre-push hook", cli.BoolSetting(pushHook))
 		cli.PrintEntry("push new branches", cli.BoolSetting(pushNewBranches))
@@ -101,7 +105,11 @@ var offlineCommand = &cobra.Command{
 Git Town avoids network operations in offline mode.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			cli.Println(cli.FormatBool(prodRepo.Config.IsOffline()))
+			isOffline, err := prodRepo.Config.IsOffline()
+			if err != nil {
+				cli.Exit(err)
+			}
+			cli.Println(cli.FormatBool(isOffline))
 		} else {
 			value, err := cli.ParseBool(args[0])
 			if err != nil {

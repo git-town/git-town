@@ -154,18 +154,16 @@ func (gt *GitTown) IsMainBranch(branchName string) bool {
 }
 
 // IsOffline indicates whether Git Town is currently in offline mode.
-func (gt *GitTown) IsOffline() bool {
+func (gt *GitTown) IsOffline() (bool, error) {
 	config := gt.Storage.GlobalConfigValue("git-town.offline")
 	if config == "" {
-		return false
+		return false, nil
 	}
-	result, err := strconv.ParseBool(config)
+	result, err := cli.ParseBool(config)
 	if err != nil {
-		fmt.Printf("Invalid value for git-town.offline: %q. Please provide either \"yes\" or \"no\". Considering \"no\" for now.", config)
-		fmt.Println()
-		return false
+		return false, fmt.Errorf("invalid value for git-town.offline: %q. Please provide either \"true\" or \"false\"", config)
 	}
-	return result
+	return result, nil
 }
 
 // IsPerennialBranch indicates whether the branch with the given name is
@@ -484,7 +482,11 @@ func (gt *GitTown) SyncStrategy() string {
 
 // ValidateIsOnline asserts that Git Town is not in offline mode.
 func (gt *GitTown) ValidateIsOnline() error {
-	if gt.IsOffline() {
+	isOffline, err := gt.IsOffline()
+	if err != nil {
+		return err
+	}
+	if isOffline {
 		return errors.New("this command requires an active internet connection")
 	}
 	return nil

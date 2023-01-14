@@ -12,7 +12,7 @@ Feature: automatic upgrade of new-branch-push-flag to push-new-branches
     And setting "new-branch-push-flag" no longer exists locally
 
   Scenario: old flag is set globally
-    Given setting "new-branch-push-flag" is globally "true"
+    Given global setting "new-branch-push-flag" is "true"
     When I run "git-town config"
     Then it prints:
       """

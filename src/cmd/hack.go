@@ -77,8 +77,11 @@ func createHackConfig(args []string, repo *git.ProdRepo) (appendConfig, error) {
 	if err != nil {
 		return appendConfig{}, err
 	}
-	isOffline := repo.Config.IsOffline()
-	if hasOrigin && !repo.Config.IsOffline() {
+	isOffline, err := repo.Config.IsOffline()
+	if err != nil {
+		return appendConfig{}, err
+	}
+	if hasOrigin && !isOffline {
 		err := repo.Logging.Fetch()
 		if err != nil {
 			return appendConfig{}, err

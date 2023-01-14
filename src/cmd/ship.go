@@ -111,7 +111,11 @@ func gitShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (sh
 	if err != nil {
 		return shipConfig{}, err
 	}
-	if result.hasOrigin && !repo.Config.IsOffline() {
+	isOffline, err := repo.Config.IsOffline()
+	if err != nil {
+		return shipConfig{}, err
+	}
+	if result.hasOrigin && !isOffline {
 		err := repo.Logging.Fetch()
 		if err != nil {
 			return shipConfig{}, err
@@ -138,7 +142,7 @@ func gitShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (sh
 	if err != nil {
 		return shipConfig{}, err
 	}
-	result.isOffline = repo.Config.IsOffline()
+	result.isOffline = isOffline
 	result.isShippingInitialBranch = result.branchToShip == result.initialBranch
 	result.branchToMergeInto = repo.Config.ParentBranch(result.branchToShip)
 	prInfo, err := createPullRequestInfo(result.branchToShip, result.branchToMergeInto, driver)
@@ -219,7 +223,11 @@ func createPullRequestInfo(branch, parentBranch string, driver hosting.Driver) (
 	if !hasOrigin {
 		return hosting.PullRequestInfo{}, nil
 	}
-	if prodRepo.Config.IsOffline() {
+	isOffline, err := prodRepo.Config.IsOffline()
+	if err != nil {
+		return hosting.PullRequestInfo{}, err
+	}
+	if isOffline {
 		return hosting.PullRequestInfo{}, nil
 	}
 	if driver == nil {
