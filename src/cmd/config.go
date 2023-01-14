@@ -245,11 +245,7 @@ Enabled by default. When disabled, Git Town prevents Git's pre-push hook from ru
 				cli.Exit(err)
 			}
 		} else {
-			value, err := cli.ParseBool(args[0])
-			if err != nil {
-				cli.Exit(fmt.Errorf(`invalid argument: %q. Please provide either "yes" or "no"`, args[0]))
-			}
-			err = setPushHook(value, prodRepo)
+			err := setPushHook(args[0], prodRepo)
 			if err != nil {
 				cli.Exit(err)
 			}
@@ -270,7 +266,11 @@ func printPushHook(repo *git.ProdRepo) error {
 	return nil
 }
 
-func setPushHook(value bool, repo *git.ProdRepo) error {
+func setPushHook(text string, repo *git.ProdRepo) error {
+	value, err := cli.ParseBool(text)
+	if err != nil {
+		return fmt.Errorf(`invalid argument: %q. Please provide either "yes" or "no"`, text)
+	}
 	if globalFlag {
 		return repo.Config.SetPushHookGlobally(value)
 	}
