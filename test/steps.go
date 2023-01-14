@@ -602,12 +602,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^setting "ship-delete-remote-branch" is "(true|false)"$`, func(value string) error {
-		parsed, err := strconv.ParseBool(value)
-		if err != nil {
-			return err
-		}
-		_ = state.gitEnv.DevRepo.Config.SetShouldShipDeleteRemoteBranch(parsed)
-		return nil
+		_, err := state.gitEnv.DevRepo.Config.Storage.SetLocalConfigValue("git-town.ship-delete-remote-branch", value)
+		return err
 	})
 
 	suite.Step(`^setting "sync-strategy" is "(merge|rebase)"$`, func(value string) error {
