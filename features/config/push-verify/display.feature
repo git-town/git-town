@@ -48,8 +48,8 @@ Feature: display the push-hook setting
       | yes   | yes    |
       | on    | yes    |
       | true  | yes    |
-      | 1     | yes    |
       | t     | yes    |
+      | 1     | yes    |
       | no    | no     |
       | off   | no     |
       | false | no     |
