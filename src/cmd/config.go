@@ -239,16 +239,14 @@ var pushHookCommand = &cobra.Command{
 
 Enabled by default. When disabled, Git Town prevents Git's pre-push hook from running.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		var err error
 		if len(args) == 0 {
-			err := printPushHook(prodRepo)
-			if err != nil {
-				cli.Exit(err)
-			}
+			err = printPushHook(prodRepo)
 		} else {
-			err := setPushHook(args[0], prodRepo)
-			if err != nil {
-				cli.Exit(err)
-			}
+			err = setPushHook(args[0], prodRepo)
+		}
+		if err != nil {
+			cli.Exit(err)
 		}
 	},
 	Args: cobra.MaximumNArgs(1),
