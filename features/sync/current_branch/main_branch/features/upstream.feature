@@ -30,7 +30,7 @@ Feature: on the main branch with an upstream repo
       |        | origin   | origin commit   |
       |        | upstream | upstream commit |
     And the current branch is "main"
-    And setting "sync-upstream" is false
+    And setting "sync-upstream" is "false"
     When I run "git-town sync"
     Then it runs the commands
       | BRANCH | COMMAND                  |

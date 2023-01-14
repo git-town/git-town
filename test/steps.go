@@ -522,73 +522,31 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return fmt.Errorf("should not have global new-branch-push-flag anymore but has value %q", newValue)
 	})
 
-	suite.Step(`^setting "push-new-branches" is now "(true|false)"$`, func(want string) error {
+	suite.Step(`^setting "([^"]*)" is now "([^"]*)"$`, func(name, want string) error {
 		state.gitEnv.DevRepo.Config.Storage.Reload()
-		have := state.gitEnv.DevRepo.Config.Storage.LocalOrGlobalConfigValue("git-town.push-new-branches")
+		have := state.gitEnv.DevRepo.Config.Storage.LocalOrGlobalConfigValue("git-town." + name)
 		if have != want {
-			return fmt.Errorf("expected global push-new-branches to be %q, but was %q", want, have)
+			return fmt.Errorf("expected setting %q to be %q, but was %q", name, want, have)
 		}
 		return nil
 	})
 
-	suite.Step(`^setting "offline" is (?:now|still) "([^"]*)"$`, func(want string) error {
+	suite.Step(`^local setting "([^"]*)" is now "([^"]*)"$`, func(name, want string) error {
 		state.gitEnv.DevRepo.Config.Storage.Reload()
-		have := state.gitEnv.DevRepo.Config.Storage.LocalOrGlobalConfigValue("git-town.offline")
+		have := state.gitEnv.DevRepo.Config.Storage.LocalConfigValue("git-town." + name)
 		if have != want {
-			return fmt.Errorf("expected %q but have %q", want, have)
+			return fmt.Errorf("expected local setting %q to be %q, but was %q", name, want, have)
 		}
 		return nil
 	})
 
-	suite.Step(`^setting "pull-branch-strategy" is now "(merge|rebase)"$`, func(want string) error {
+	suite.Step(`^global setting "([^"]*)" is (?:now|still) "([^"]*)"$`, func(name, want string) error {
 		state.gitEnv.DevRepo.Config.Storage.Reload()
-		have := state.gitEnv.DevRepo.Config.PullBranchStrategy()
+		have := state.gitEnv.DevRepo.Config.Storage.GlobalConfigValue("git-town." + name)
 		if have != want {
-			return fmt.Errorf("expected pull-branch-strategy to be %q but was %q", want, have)
+			return fmt.Errorf("expected global setting %q to be %q, but was %q", name, want, have)
 		}
 		return nil
-	})
-
-	suite.Step(`^local setting "push-hook" is now "(.*)"$`, func(want string) error {
-		state.gitEnv.DevRepo.Config.Storage.Reload()
-		have := state.gitEnv.DevRepo.Config.Storage.LocalConfigValue("git-town.push-hook")
-		if have != want {
-			return fmt.Errorf("expected local push-hook to be %q but was %q", want, have)
-		}
-		return nil
-	})
-
-	suite.Step(`^global setting "push-hook" is now "(.*)"$`, func(want string) error {
-		state.gitEnv.DevRepo.Config.Storage.Reload()
-		have := state.gitEnv.DevRepo.Config.Storage.GlobalConfigValue("git-town.push-hook")
-		if have != want {
-			return fmt.Errorf("expected global push-hook to be %q but was %q", want, have)
-		}
-		return nil
-	})
-
-	suite.Step(`^setting "ship-delete-remote-branch" is "(true|false)"$`, func(value string) error {
-		_, err := state.gitEnv.DevRepo.Config.Storage.SetLocalConfigValue("git-town.ship-delete-remote-branch", value)
-		return err
-	})
-
-	suite.Step(`^setting "sync-strategy" is "(merge|rebase)"$`, func(value string) error {
-		_ = state.gitEnv.DevRepo.Config.SetSyncStrategy(value)
-		return nil
-	})
-
-	suite.Step(`^setting "sync-strategy" is now "(merge|rebase)"$`, func(want string) error {
-		state.gitEnv.DevRepo.Config.Storage.Reload()
-		have := state.gitEnv.DevRepo.Config.SyncStrategy()
-		if have != want {
-			return fmt.Errorf("expected sync-strategy to be %q but was %q", want, have)
-		}
-		return nil
-	})
-
-	suite.Step(`^setting "sync-upstream" is (true|false)$`, func(value string) error {
-		_, err := state.gitEnv.DevRepo.Config.Storage.SetLocalConfigValue("git-town.sync-upstream", value)
-		return err
 	})
 
 	suite.Step(`^the branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
