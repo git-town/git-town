@@ -20,18 +20,18 @@ import (
 // GitTown provides type-safe access to Git Town configuration settings
 // stored in the local and global Git configuration.
 type GitTown struct {
-	Store Git
+	Storage Git
 }
 
 func NewGitTown(shell run.Shell) GitTown {
 	return GitTown{
-		Store: NewGit(shell),
+		Storage: NewGit(shell),
 	}
 }
 
 // AddGitAlias sets the given Git alias.
 func (gt *GitTown) AddGitAlias(command string) (*run.Result, error) {
-	return gt.Store.SetGlobalConfigValue("alias."+command, "town "+command)
+	return gt.Storage.SetGlobalConfigValue("alias."+command, "town "+command)
 }
 
 // AddToPerennialBranches registers the given branch names as perennial branches.
@@ -77,8 +77,8 @@ func (gt *GitTown) BranchAncestryRoots() []string {
 // is a parent.
 func (gt *GitTown) ChildBranches(branchName string) []string {
 	result := []string{}
-	for _, key := range gt.Store.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
-		parent := gt.Store.LocalConfigValue(key)
+	for _, key := range gt.Storage.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
+		parent := gt.Storage.LocalConfigValue(key)
 		if parent == branchName {
 			child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
 			result = append(result, child)
@@ -88,36 +88,36 @@ func (gt *GitTown) ChildBranches(branchName string) []string {
 }
 
 func (gt *GitTown) DeprecatedNewBranchPushFlagGlobal() string {
-	return gt.Store.globalConfigCache["git-town.new-branch-push-flag"]
+	return gt.Storage.globalConfigCache["git-town.new-branch-push-flag"]
 }
 
 func (gt *GitTown) DeprecatedNewBranchPushFlagLocal() string {
-	return gt.Store.localConfigCache["git-town.new-branch-push-flag"]
+	return gt.Storage.localConfigCache["git-town.new-branch-push-flag"]
 }
 
 // GitAlias provides the currently set alias for the given Git Town command.
 func (gt *GitTown) GitAlias(command string) string {
-	return gt.Store.GlobalConfigValue("alias." + command)
+	return gt.Storage.GlobalConfigValue("alias." + command)
 }
 
 // GitHubToken provides the content of the GitHub API token stored in the local or global Git Town configuration.
 func (gt *GitTown) GitHubToken() string {
-	return gt.Store.LocalOrGlobalConfigValue("git-town.github-token")
+	return gt.Storage.LocalOrGlobalConfigValue("git-town.github-token")
 }
 
 // GitLabToken provides the content of the GitLab API token stored in the local or global Git Town configuration.
 func (gt *GitTown) GitLabToken() string {
-	return gt.Store.LocalOrGlobalConfigValue("git-town.gitlab-token")
+	return gt.Storage.LocalOrGlobalConfigValue("git-town.gitlab-token")
 }
 
 // GiteaToken provides the content of the Gitea API token stored in the local or global Git Town configuration.
 func (gt *GitTown) GiteaToken() string {
-	return gt.Store.LocalOrGlobalConfigValue("git-town.gitea-token")
+	return gt.Storage.LocalOrGlobalConfigValue("git-town.gitea-token")
 }
 
 // HasBranchInformation indicates whether this configuration contains any branch hierarchy entries.
 func (gt *GitTown) HasBranchInformation() bool {
-	for key := range gt.Store.localConfigCache {
+	for key := range gt.Storage.localConfigCache {
 		if strings.HasPrefix(key, "git-town-branch.") {
 			return true
 		}
@@ -132,7 +132,7 @@ func (gt *GitTown) HasParentBranch(branchName string) bool {
 
 // HostingService provides the name of the code hosting driver to use.
 func (gt *GitTown) HostingService() string {
-	return gt.Store.LocalOrGlobalConfigValue("git-town.code-hosting-driver")
+	return gt.Storage.LocalOrGlobalConfigValue("git-town.code-hosting-driver")
 }
 
 // IsAncestorBranch indicates whether the given branch is an ancestor of the other given branch.
@@ -155,7 +155,7 @@ func (gt *GitTown) IsMainBranch(branchName string) bool {
 
 // IsOffline indicates whether Git Town is currently in offline mode.
 func (gt *GitTown) IsOffline() bool {
-	config := gt.Store.GlobalConfigValue("git-town.offline")
+	config := gt.Storage.GlobalConfigValue("git-town.offline")
 	if config == "" {
 		return false
 	}
@@ -177,12 +177,12 @@ func (gt *GitTown) IsPerennialBranch(branchName string) bool {
 
 // MainBranch provides the name of the main branch.
 func (gt *GitTown) MainBranch() string {
-	return gt.Store.LocalOrGlobalConfigValue("git-town.main-branch-name")
+	return gt.Storage.LocalOrGlobalConfigValue("git-town.main-branch-name")
 }
 
 // OriginOverride provides the override for the origin hostname from the Git Town configuration.
 func (gt *GitTown) OriginOverride() string {
-	return gt.Store.LocalConfigValue("git-town.code-hosting-origin-hostname")
+	return gt.Storage.LocalConfigValue("git-town.code-hosting-origin-hostname")
 }
 
 // OriginURL provides the URL for the "origin" remote.
@@ -192,16 +192,16 @@ func (gt *GitTown) OriginURL() string {
 	if remote != "" {
 		return remote
 	}
-	res, _ := gt.Store.shell.Run("git", "remote", "get-url", "origin")
+	res, _ := gt.Storage.shell.Run("git", "remote", "get-url", "origin")
 	return res.OutputSanitized()
 }
 
 // ParentBranchMap returns a map from branch name to its parent branch.
 func (gt *GitTown) ParentBranchMap() map[string]string {
 	result := map[string]string{}
-	for _, key := range gt.Store.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
+	for _, key := range gt.Storage.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
 		child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
-		parent := gt.Store.LocalConfigValue(key)
+		parent := gt.Storage.LocalConfigValue(key)
 		result[child] = parent
 	}
 	return result
@@ -209,12 +209,12 @@ func (gt *GitTown) ParentBranchMap() map[string]string {
 
 // ParentBranch provides the name of the parent branch of the given branch.
 func (gt *GitTown) ParentBranch(branchName string) string {
-	return gt.Store.LocalConfigValue("git-town-branch." + branchName + ".parent")
+	return gt.Storage.LocalConfigValue("git-town-branch." + branchName + ".parent")
 }
 
 // PerennialBranches returns all branches that are marked as perennial.
 func (gt *GitTown) PerennialBranches() []string {
-	result := gt.Store.LocalOrGlobalConfigValue("git-town.perennial-branch-names")
+	result := gt.Storage.LocalOrGlobalConfigValue("git-town.perennial-branch-names")
 	if result == "" {
 		return []string{}
 	}
@@ -223,7 +223,7 @@ func (gt *GitTown) PerennialBranches() []string {
 
 // PullBranchStrategy provides the currently configured pull branch strategy.
 func (gt *GitTown) PullBranchStrategy() string {
-	config := gt.Store.LocalOrGlobalConfigValue("git-town.pull-branch-strategy")
+	config := gt.Storage.LocalOrGlobalConfigValue("git-town.pull-branch-strategy")
 	if config != "" {
 		return config
 	}
@@ -232,7 +232,7 @@ func (gt *GitTown) PullBranchStrategy() string {
 
 // PushHook provides the currently configured push-hook setting.
 func (gt *GitTown) PushHook() (bool, error) {
-	setting := gt.Store.LocalOrGlobalConfigValue("git-town.push-hook")
+	setting := gt.Storage.LocalOrGlobalConfigValue("git-town.push-hook")
 	if setting == "" {
 		return true, nil
 	}
@@ -245,7 +245,7 @@ func (gt *GitTown) PushHook() (bool, error) {
 
 // PushHook provides the currently configured push-hook setting.
 func (gt *GitTown) PushHookGlobal() (bool, error) {
-	setting := gt.Store.GlobalConfigValue("git-town.push-hook")
+	setting := gt.Storage.GlobalConfigValue("git-town.push-hook")
 	if setting == "" {
 		return true, nil
 	}
@@ -263,12 +263,12 @@ func (gt *GitTown) RemoveFromPerennialBranches(branchName string) error {
 
 // RemoveGitAlias removes the given Git alias.
 func (gt *GitTown) RemoveGitAlias(command string) (*run.Result, error) {
-	return gt.Store.removeGlobalConfigValue("alias." + command)
+	return gt.Storage.removeGlobalConfigValue("alias." + command)
 }
 
 // RemoveLocalGitConfiguration removes all Git Town configuration.
 func (gt *GitTown) RemoveLocalGitConfiguration() error {
-	result, err := gt.Store.shell.Run("git", "config", "--remove-section", "git-town")
+	result, err := gt.Storage.shell.Run("git", "config", "--remove-section", "git-town")
 	if err != nil {
 		if result.ExitCode() == 128 {
 			// Git returns exit code 128 when trying to delete a non-existing config section.
@@ -282,46 +282,46 @@ func (gt *GitTown) RemoveLocalGitConfiguration() error {
 
 // RemoveMainBranchConfiguration removes the configuration entry for the main branch name.
 func (gt *GitTown) RemoveMainBranchConfiguration() error {
-	return gt.Store.removeLocalConfigValue("git-town.main-branch-name")
+	return gt.Storage.removeLocalConfigValue("git-town.main-branch-name")
 }
 
 // RemoveParentBranch removes the parent branch entry for the given branch
 // from the Git configuration.
 func (gt *GitTown) RemoveParentBranch(branchName string) error {
-	return gt.Store.removeLocalConfigValue("git-town-branch." + branchName + ".parent")
+	return gt.Storage.removeLocalConfigValue("git-town-branch." + branchName + ".parent")
 }
 
 // RemovePerennialBranchConfiguration removes the configuration entry for the perennial branches.
 func (gt *GitTown) RemovePerennialBranchConfiguration() error {
-	return gt.Store.removeLocalConfigValue("git-town.perennial-branch-names")
+	return gt.Storage.removeLocalConfigValue("git-town.perennial-branch-names")
 }
 
 // SetCodeHostingDriver sets the "github.code-hosting-driver" setting.
 func (gt *GitTown) SetCodeHostingDriver(value string) error {
 	const key = "git-town.code-hosting-driver"
-	gt.Store.localConfigCache[key] = value
-	_, err := gt.Store.shell.Run("git", "config", key, value)
+	gt.Storage.localConfigCache[key] = value
+	_, err := gt.Storage.shell.Run("git", "config", key, value)
 	return err
 }
 
 // SetCodeHostingOriginHostname sets the "github.code-hosting-driver" setting.
 func (gt *GitTown) SetCodeHostingOriginHostname(value string) error {
 	const key = "git-town.code-hosting-origin-hostname"
-	gt.Store.localConfigCache[key] = value
-	_, err := gt.Store.shell.Run("git", "config", key, value)
+	gt.Storage.localConfigCache[key] = value
+	_, err := gt.Storage.shell.Run("git", "config", key, value)
 	return err
 }
 
 // SetColorUI configures whether Git output contains color codes.
 func (gt *GitTown) SetColorUI(value string) error {
-	_, err := gt.Store.shell.Run("git", "config", "color.ui", value)
+	_, err := gt.Storage.shell.Run("git", "config", "color.ui", value)
 	return err
 }
 
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
 func (gt *GitTown) SetMainBranch(branchName string) error {
-	_, err := gt.Store.SetLocalConfigValue("git-town.main-branch-name", branchName)
+	_, err := gt.Storage.SetLocalConfigValue("git-town.main-branch-name", branchName)
 	return err
 }
 
@@ -330,81 +330,81 @@ func (gt *GitTown) SetMainBranch(branchName string) error {
 func (gt *GitTown) SetNewBranchPush(value bool, global bool) error {
 	setting := strconv.FormatBool(value)
 	if global {
-		_, err := gt.Store.SetGlobalConfigValue("git-town.push-new-branches", setting)
+		_, err := gt.Storage.SetGlobalConfigValue("git-town.push-new-branches", setting)
 		return err
 	}
-	_, err := gt.Store.SetLocalConfigValue("git-town.push-new-branches", setting)
+	_, err := gt.Storage.SetLocalConfigValue("git-town.push-new-branches", setting)
 	return err
 }
 
 // SetOffline updates whether Git Town is in offline mode.
 func (gt *GitTown) SetOffline(value bool) error {
-	_, err := gt.Store.SetGlobalConfigValue("git-town.offline", strconv.FormatBool(value))
+	_, err := gt.Storage.SetGlobalConfigValue("git-town.offline", strconv.FormatBool(value))
 	return err
 }
 
 // SetParentBranch marks the given branch as the direct parent of the other given branch
 // in the Git Town configuration.
 func (gt *GitTown) SetParentBranch(branchName, parentBranchName string) error {
-	_, err := gt.Store.SetLocalConfigValue("git-town-branch."+branchName+".parent", parentBranchName)
+	_, err := gt.Storage.SetLocalConfigValue("git-town-branch."+branchName+".parent", parentBranchName)
 	return err
 }
 
 // SetPerennialBranches marks the given branches as perennial branches.
 func (gt *GitTown) SetPerennialBranches(branchNames []string) error {
-	_, err := gt.Store.SetLocalConfigValue("git-town.perennial-branch-names", strings.Join(branchNames, " "))
+	_, err := gt.Storage.SetLocalConfigValue("git-town.perennial-branch-names", strings.Join(branchNames, " "))
 	return err
 }
 
 // SetPullBranchStrategy updates the configured pull branch strategy.
 func (gt *GitTown) SetPullBranchStrategy(strategy string) error {
-	_, err := gt.Store.SetLocalConfigValue("git-town.pull-branch-strategy", strategy)
+	_, err := gt.Storage.SetLocalConfigValue("git-town.pull-branch-strategy", strategy)
 	return err
 }
 
 // SetPushHookLocally updates the configured pull branch strategy.
 func (gt *GitTown) SetPushHookLocally(value bool) error {
-	_, err := gt.Store.SetLocalConfigValue("git-town.push-hook", strconv.FormatBool(value))
+	_, err := gt.Storage.SetLocalConfigValue("git-town.push-hook", strconv.FormatBool(value))
 	return err
 }
 
 // SetPushHook updates the configured pull branch strategy.
 func (gt *GitTown) SetPushHookGlobally(value bool) error {
-	_, err := gt.Store.SetGlobalConfigValue("git-town.push-hook", strconv.FormatBool(value))
+	_, err := gt.Storage.SetGlobalConfigValue("git-town.push-hook", strconv.FormatBool(value))
 	return err
 }
 
 // SetShouldShipDeleteRemoteBranch updates the configured pull branch strategy.
 func (gt *GitTown) SetShouldShipDeleteRemoteBranch(value bool) error {
-	_, err := gt.Store.SetLocalConfigValue("git-town.ship-delete-remote-branch", strconv.FormatBool(value))
+	_, err := gt.Storage.SetLocalConfigValue("git-town.ship-delete-remote-branch", strconv.FormatBool(value))
 	return err
 }
 
 // SetShouldSyncUpstream updates the configured pull branch strategy.
 func (gt *GitTown) SetShouldSyncUpstream(value bool) error {
-	_, err := gt.Store.SetLocalConfigValue("git-town.sync-upstream", strconv.FormatBool(value))
+	_, err := gt.Storage.SetLocalConfigValue("git-town.sync-upstream", strconv.FormatBool(value))
 	return err
 }
 
 func (gt *GitTown) SetSyncStrategy(value string) error {
-	_, err := gt.Store.SetLocalConfigValue("git-town.sync-strategy", value)
+	_, err := gt.Storage.SetLocalConfigValue("git-town.sync-strategy", value)
 	return err
 }
 
 // SetTestOrigin sets the origin to be used for testing.
 func (gt *GitTown) SetTestOrigin(value string) error {
-	_, err := gt.Store.SetLocalConfigValue("git-town.testing.remote-url", value)
+	_, err := gt.Storage.SetLocalConfigValue("git-town.testing.remote-url", value)
 	return err
 }
 
 // ShouldNewBranchPush indicates whether the current repository is configured to push
 // freshly created branches up to origin.
 func (gt *GitTown) ShouldNewBranchPush() (bool, error) {
-	oldLocalConfig := gt.Store.LocalConfigValue("git-town.new-branch-push-flag")
+	oldLocalConfig := gt.Storage.LocalConfigValue("git-town.new-branch-push-flag")
 	if oldLocalConfig != "" {
 		fmt.Println("I found the deprecated local setting \"git-town.new-branch-push-flag\".")
 		fmt.Println("I am upgrading this setting to the new format \"git-town.push-new-branches\".")
-		err := gt.Store.removeLocalConfigValue("git-town.new-branch-push-flag")
+		err := gt.Storage.removeLocalConfigValue("git-town.new-branch-push-flag")
 		if err != nil {
 			return false, err
 		}
@@ -417,11 +417,11 @@ func (gt *GitTown) ShouldNewBranchPush() (bool, error) {
 			return false, err
 		}
 	}
-	oldGlobalConfig := gt.Store.GlobalConfigValue("git-town.new-branch-push-flag")
+	oldGlobalConfig := gt.Storage.GlobalConfigValue("git-town.new-branch-push-flag")
 	if oldGlobalConfig != "" {
 		fmt.Println("I found the deprecated global setting \"git-town.new-branch-push-flag\".")
 		fmt.Println("I am upgrading this setting to the new format \"git-town.push-new-branches\".")
-		_, err := gt.Store.removeGlobalConfigValue("git-town.new-branch-push-flag")
+		_, err := gt.Storage.removeGlobalConfigValue("git-town.new-branch-push-flag")
 		if err != nil {
 			return false, err
 		}
@@ -434,7 +434,7 @@ func (gt *GitTown) ShouldNewBranchPush() (bool, error) {
 			return false, err
 		}
 	}
-	config := gt.Store.LocalOrGlobalConfigValue("git-town.push-new-branches")
+	config := gt.Storage.LocalOrGlobalConfigValue("git-town.push-new-branches")
 	if config == "" {
 		return false, nil
 	}
@@ -448,13 +448,13 @@ func (gt *GitTown) ShouldNewBranchPush() (bool, error) {
 // ShouldNewBranchPushGlobal indictes whether the global configuration requires to push
 // freshly created branches to origin.
 func (gt *GitTown) ShouldNewBranchPushGlobal() bool {
-	config := gt.Store.GlobalConfigValue("git-town.push-new-branches")
+	config := gt.Storage.GlobalConfigValue("git-town.push-new-branches")
 	return config == "true"
 }
 
 // ShouldShipDeleteOriginBranch indicates whether to delete the remote branch after shipping.
 func (gt *GitTown) ShouldShipDeleteOriginBranch() bool {
-	setting := gt.Store.LocalOrGlobalConfigValue("git-town.ship-delete-remote-branch")
+	setting := gt.Storage.LocalOrGlobalConfigValue("git-town.ship-delete-remote-branch")
 	if setting == "" {
 		return true
 	}
@@ -468,11 +468,11 @@ func (gt *GitTown) ShouldShipDeleteOriginBranch() bool {
 
 // ShouldSyncUpstream indicates whether this repo should sync with its upstream.
 func (gt *GitTown) ShouldSyncUpstream() bool {
-	return gt.Store.LocalOrGlobalConfigValue("git-town.sync-upstream") != "false"
+	return gt.Storage.LocalOrGlobalConfigValue("git-town.sync-upstream") != "false"
 }
 
 func (gt *GitTown) SyncStrategy() string {
-	setting := gt.Store.LocalOrGlobalConfigValue("git-town.sync-strategy")
+	setting := gt.Storage.LocalOrGlobalConfigValue("git-town.sync-strategy")
 	if setting == "" {
 		setting = "merge"
 	}

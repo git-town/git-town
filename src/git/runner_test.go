@@ -190,7 +190,7 @@ func TestRunner(t *testing.T) {
 		runner := test.CreateTestGitTownRepo(t).Runner
 		err := runner.CreateFeatureBranch("f1")
 		assert.NoError(t, err)
-		runner.Config.Store.Reload()
+		runner.Config.Storage.Reload()
 		assert.True(t, runner.Config.IsFeatureBranch("f1"))
 		assert.Equal(t, []string{"main"}, runner.Config.AncestorBranches("f1"))
 	})
@@ -200,7 +200,7 @@ func TestRunner(t *testing.T) {
 		runner := test.CreateTestGitTownRepo(t).Runner
 		err := runner.CreateFeatureBranchNoParent("f1")
 		assert.NoError(t, err)
-		runner.Config.Store.Reload()
+		runner.Config.Storage.Reload()
 		assert.True(t, runner.Config.IsFeatureBranch("f1"))
 		assert.Equal(t, []string{}, runner.Config.AncestorBranches("f1"))
 	})
@@ -235,7 +235,7 @@ func TestRunner(t *testing.T) {
 		branches, err := runner.LocalBranchesMainFirst()
 		assert.NoError(t, err)
 		assert.Equal(t, []string{"main", "initial", "p1", "p2"}, branches)
-		runner.Config.Store.Reload()
+		runner.Config.Storage.Reload()
 		assert.True(t, runner.Config.IsPerennialBranch("p1"))
 		assert.True(t, runner.Config.IsPerennialBranch("p2"))
 	})

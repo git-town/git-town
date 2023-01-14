@@ -68,7 +68,7 @@ func NewRepo(workingDir, homeDir, binDir string) Repo {
 // BranchHierarchyTable provides the currently configured branch hierarchy information as a DataTable.
 func (repo *Repo) BranchHierarchyTable() DataTable {
 	result := DataTable{}
-	repo.Config.Store.Reload()
+	repo.Config.Storage.Reload()
 	parentBranchMap := repo.Config.ParentBranchMap()
 	result.AddRow("BRANCH", "PARENT")
 	childBranches := make([]string, 0, len(parentBranchMap))
