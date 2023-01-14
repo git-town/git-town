@@ -114,7 +114,11 @@ func createKillConfig(args []string, repo *git.ProdRepo) (killConfig, error) {
 		return result, err
 	}
 	result.childBranches = repo.Config.ChildBranches(result.targetBranch)
-	result.noPushHook = !repo.Config.PushHook()
+	pushHook, err := repo.Config.PushHook()
+	if err != nil {
+		return result, err
+	}
+	result.noPushHook = !pushHook
 	return result, nil
 }
 

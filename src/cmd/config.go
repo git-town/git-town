@@ -18,6 +18,10 @@ var configCommand = &cobra.Command{
 		if err != nil {
 			cli.Exit(err)
 		}
+		pushHook, err := prodRepo.Config.PushHook()
+		if err != nil {
+			cli.Exit(err)
+		}
 		fmt.Println()
 		cli.PrintHeader("Branches")
 		cli.PrintEntry("main branch", cli.StringSetting(prodRepo.Config.MainBranch()))
@@ -26,7 +30,7 @@ var configCommand = &cobra.Command{
 		cli.PrintHeader("Configuration")
 		cli.PrintEntry("offline", cli.BoolSetting(prodRepo.Config.IsOffline()))
 		cli.PrintEntry("pull branch strategy", prodRepo.Config.PullBranchStrategy())
-		cli.PrintEntry("run pre-push hook", cli.BoolSetting(prodRepo.Config.PushHook()))
+		cli.PrintEntry("run pre-push hook", cli.BoolSetting(pushHook))
 		cli.PrintEntry("push new branches", cli.BoolSetting(pushNewBranches))
 		cli.PrintEntry("ship removes the remote branch", cli.BoolSetting(prodRepo.Config.ShouldShipDeleteOriginBranch()))
 		cli.PrintEntry("sync strategy", prodRepo.Config.SyncStrategy())
@@ -180,7 +184,7 @@ for the main branch and perennial branches.`,
 // PUSH-NEW-BRANCHES SUBCOMMAND
 
 var pushNewBranchesCommand = &cobra.Command{
-	Use:   "push-new-branches [(yes | no)]",
+	Use:   "push-new-branches [--global] [(yes | no)]",
 	Short: "Displays or changes whether new branches get pushed to origin",
 	Long: `Displays or changes whether new branches get pushed to origin.
 
@@ -224,6 +228,57 @@ func printPushNewBranches(repo *git.ProdRepo) error {
 
 func setPushNewBranches(value bool, repo *git.ProdRepo) error {
 	return repo.Config.SetNewBranchPush(value, globalFlag)
+}
+
+// PUSH-HOOK SUBCOMMAND
+
+var pushHookCommand = &cobra.Command{
+	Use:   "push-hook [--global] [(yes | no)]",
+	Short: "Configures whether Git Town should run Git's pre-push hook.",
+	Long: `Configures whether Git Town should run Git's pre-push hook.
+
+Enabled by default. When disabled, Git Town prevents Git's pre-push hook from running.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		var err error
+		if len(args) == 0 {
+			err = printPushHook(prodRepo)
+		} else {
+			err = setPushHook(args[0], prodRepo)
+		}
+		if err != nil {
+			cli.Exit(err)
+		}
+	},
+	Args: cobra.MaximumNArgs(1),
+	PreRunE: func(cmd *cobra.Command, args []string) error {
+		return ValidateIsRepository(prodRepo)
+	},
+}
+
+func printPushHook(repo *git.ProdRepo) error {
+	var setting bool
+	var err error
+	if globalFlag {
+		setting, err = repo.Config.PushHookGlobal()
+	} else {
+		setting, err = repo.Config.PushHook()
+	}
+	if err != nil {
+		return err
+	}
+	cli.Println(cli.FormatBool(setting))
+	return nil
+}
+
+func setPushHook(text string, repo *git.ProdRepo) error {
+	value, err := cli.ParseBool(text)
+	if err != nil {
+		return fmt.Errorf(`invalid argument: %q. Please provide either "yes" or "no"`, text)
+	}
+	if globalFlag {
+		return repo.Config.SetPushHookGlobally(value)
+	}
+	return repo.Config.SetPushHookLocally(value)
 }
 
 // RESET SUBCOMMAND
@@ -302,6 +357,8 @@ func init() {
 	perennialBranchesCommand.AddCommand(updatePrennialBranchesCommand)
 	configCommand.AddCommand(perennialBranchesCommand)
 	configCommand.AddCommand(pullBranchStrategyCommand)
+	configCommand.AddCommand(pushHookCommand)
+	pushHookCommand.Flags().BoolVar(&globalFlag, "global", false, "Displays or sets the global push hook flag")
 	configCommand.AddCommand(resetConfigCommand)
 	configCommand.AddCommand(setupConfigCommand)
 	configCommand.AddCommand(syncStrategyCommand)

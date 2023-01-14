@@ -91,12 +91,16 @@ func createHackConfig(args []string, repo *git.ProdRepo) (appendConfig, error) {
 	if hasBranch {
 		return appendConfig{}, fmt.Errorf("a branch named %q already exists", targetBranch)
 	}
+	pushHook, err := repo.Config.PushHook()
+	if err != nil {
+		return appendConfig{}, err
+	}
 	result := appendConfig{
 		targetBranch:        targetBranch,
 		parentBranch:        parentBranch,
 		hasOrigin:           hasOrigin,
 		shouldNewBranchPush: shouldNewBranchPush,
-		noPushHook:          !repo.Config.PushHook(),
+		noPushHook:          !pushHook,
 		isOffline:           isOffline,
 	}
 	return result, nil
