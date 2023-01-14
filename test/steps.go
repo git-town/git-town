@@ -537,18 +537,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return err
 	})
 
-	suite.Step(`^setting "push-new-branches" is now "(true|false)"$`, func(text string) error {
-		want, err := strconv.ParseBool(text)
-		if err != nil {
-			return err
-		}
+	suite.Step(`^setting "push-new-branches" is now "(true|false)"$`, func(want string) error {
 		state.gitEnv.DevRepo.Config.Storage.Reload()
-		have, err := state.gitEnv.DevRepo.Config.ShouldNewBranchPush()
-		if err != nil {
-			return err
-		}
+		have := state.gitEnv.DevRepo.Config.Storage.LocalOrGlobalConfigValue("git-town.push-new-branches")
 		if have != want {
-			return fmt.Errorf("expected global push-new-branches to be %t, but was %t", want, have)
+			return fmt.Errorf("expected global push-new-branches to be %q, but was %q", want, have)
 		}
 		return nil
 	})
