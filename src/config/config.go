@@ -265,19 +265,17 @@ func (c *Config) PullBranchStrategy() string {
 	return "rebase"
 }
 
-// PushHook provides the currently configured pull branch strategy.
-func (c *Config) PushHook() bool {
+// PushHook provides the currently configured push-hook setting.
+func (c *Config) PushHook() (bool, error) {
 	config := c.localOrGlobalConfigValue("git-town.push-hook")
 	if config == "" {
-		return true
+		return true, nil
 	}
 	result, err := strconv.ParseBool(config)
 	if err != nil {
-		fmt.Printf("Invalid value for git-town.push-hook: %q. Please provide either true or false. Considering true for now.", config)
-		fmt.Println()
-		return true
+		return false, fmt.Errorf("invalid value for git-town.push-hook: \"%q\", please provide either true or false", config)
 	}
-	return result
+	return result, nil
 }
 
 // Reload refreshes the cached configuration information.
@@ -416,9 +414,15 @@ func (c *Config) SetPullBranchStrategy(strategy string) error {
 	return err
 }
 
-// SetPullBranchStrategy updates the configured pull branch strategy.
-func (c *Config) SetPushHook(strategy string) error {
-	_, err := c.SetLocalConfigValue("git-town.push-hook", strategy)
+// SetPushHook updates the configured pull branch strategy.
+func (c *Config) SetPushHook(value bool) error {
+	_, err := c.SetLocalConfigValue("git-town.push-hook", strconv.FormatBool(value))
+	return err
+}
+
+// SetPushHook updates the configured pull branch strategy.
+func (c *Config) SetPushHookGlobally(value bool) error {
+	_, err := c.SetGlobalConfigValue("git-town.push-hook", strconv.FormatBool(value))
 	return err
 }
 

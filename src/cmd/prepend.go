@@ -99,7 +99,11 @@ func createPrependConfig(args []string, repo *git.ProdRepo) (prependConfig, erro
 	if err != nil {
 		return prependConfig{}, err
 	}
-	result.noPushHook = !repo.Config.PushHook()
+	pushHook, err := repo.Config.PushHook()
+	if err != nil {
+		return prependConfig{}, err
+	}
+	result.noPushHook = !pushHook
 	result.parentBranch = repo.Config.ParentBranch(result.initialBranch)
 	result.ancestorBranches = repo.Config.AncestorBranches(result.initialBranch)
 	return result, nil

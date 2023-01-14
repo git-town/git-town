@@ -18,6 +18,10 @@ var configCommand = &cobra.Command{
 		if err != nil {
 			cli.Exit(err)
 		}
+		pushHook, err := prodRepo.Config.PushHook()
+		if err != nil {
+			cli.Exit(err)
+		}
 		fmt.Println()
 		cli.PrintHeader("Branches")
 		cli.PrintEntry("main branch", cli.StringSetting(prodRepo.Config.MainBranch()))
@@ -26,7 +30,7 @@ var configCommand = &cobra.Command{
 		cli.PrintHeader("Configuration")
 		cli.PrintEntry("offline", cli.BoolSetting(prodRepo.Config.IsOffline()))
 		cli.PrintEntry("pull branch strategy", prodRepo.Config.PullBranchStrategy())
-		cli.PrintEntry("run pre-push hook", cli.BoolSetting(prodRepo.Config.PushHook()))
+		cli.PrintEntry("run pre-push hook", cli.BoolSetting(pushHook))
 		cli.PrintEntry("push new branches", cli.BoolSetting(pushNewBranches))
 		cli.PrintEntry("ship removes the remote branch", cli.BoolSetting(prodRepo.Config.ShouldShipDeleteOriginBranch()))
 		cli.PrintEntry("sync strategy", prodRepo.Config.SyncStrategy())
@@ -180,7 +184,7 @@ for the main branch and perennial branches.`,
 // PUSH-NEW-BRANCHES SUBCOMMAND
 
 var pushNewBranchesCommand = &cobra.Command{
-	Use:   "push-new-branches [(yes | no)]",
+	Use:   "push-new-branches [--global] [(yes | no)]",
 	Short: "Displays or changes whether new branches get pushed to origin",
 	Long: `Displays or changes whether new branches get pushed to origin.
 
@@ -226,17 +230,17 @@ func setPushNewBranches(value bool, repo *git.ProdRepo) error {
 	return repo.Config.SetNewBranchPush(value, globalFlag)
 }
 
-// PUSH-VERIFY SUBCOMMAND
+// PUSH-HOOK SUBCOMMAND
 
-var pushVerifyCommand = &cobra.Command{
-	Use:   "push-hook [(yes | no)]",
-	Short: "Configures whether Git Town should bypass Git's pre-push hook.",
-	Long: `Configures whether Git Town should bypass Git's pre-push hook.
+var pushHookCommand = &cobra.Command{
+	Use:   "push-hook [--global] [(yes | no)]",
+	Short: "Configures whether Git Town should run Git's pre-push hook.",
+	Long: `Configures whether Git Town should run Git's pre-push hook.
 
 Enabled by default. When disabled, Git Town prevents Git's pre-push hook from running.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			err := printPushNewBranches(prodRepo)
+			err := printPushHook(prodRepo)
 			if err != nil {
 				cli.Exit(err)
 			}
@@ -245,7 +249,7 @@ Enabled by default. When disabled, Git Town prevents Git's pre-push hook from ru
 			if err != nil {
 				cli.Exit(fmt.Errorf(`invalid argument: %q. Please provide either "yes" or "no"`, args[0]))
 			}
-			err = setPushNewBranches(value, prodRepo)
+			err = setPushHook(value, prodRepo)
 			if err != nil {
 				cli.Exit(err)
 			}
@@ -257,21 +261,21 @@ Enabled by default. When disabled, Git Town prevents Git's pre-push hook from ru
 	},
 }
 
-func printPushNewBranches(repo *git.ProdRepo) error {
-	if globalFlag {
-		cli.Println(cli.FormatBool(repo.Config.ShouldNewBranchPushGlobal()))
-	} else {
-		pushNewBranch, err := prodRepo.Config.ShouldNewBranchPush()
-		if err != nil {
-			return err
-		}
-		cli.Println(cli.FormatBool(pushNewBranch))
+func printPushHook(repo *git.ProdRepo) error {
+	hook, err := prodRepo.Config.PushHook()
+	if err != nil {
+		return err
 	}
+	cli.Println(cli.FormatBool(hook))
 	return nil
 }
 
-func setPushNewBranches(value bool, repo *git.ProdRepo) error {
-	return repo.Config.SetNewBranchPush(value, globalFlag)
+func setPushHook(value bool, repo *git.ProdRepo) error {
+	if globalFlag {
+		return repo.Config.SetPushHookGlobally(value)
+	} else {
+		return repo.Config.SetPushHook(value)
+	}
 }
 
 // RESET SUBCOMMAND
@@ -350,6 +354,8 @@ func init() {
 	perennialBranchesCommand.AddCommand(updatePrennialBranchesCommand)
 	configCommand.AddCommand(perennialBranchesCommand)
 	configCommand.AddCommand(pullBranchStrategyCommand)
+	configCommand.AddCommand(pushHookCommand)
+	pushHookCommand.Flags().BoolVar(&globalFlag, "global", false, "Displays or sets your global push hook flag")
 	configCommand.AddCommand(resetConfigCommand)
 	configCommand.AddCommand(setupConfigCommand)
 	configCommand.AddCommand(syncStrategyCommand)

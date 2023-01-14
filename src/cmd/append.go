@@ -88,7 +88,11 @@ func createAppendConfig(args []string, repo *git.ProdRepo) (appendConfig, error)
 		return appendConfig{}, err
 	}
 	result.ancestorBranches = repo.Config.AncestorBranches(result.parentBranch)
-	result.noPushHook = !repo.Config.PushHook()
+	pushHook, err := repo.Config.PushHook()
+	if err != nil {
+		return appendConfig{}, err
+	}
+	result.noPushHook = !pushHook
 	result.shouldNewBranchPush, err = repo.Config.ShouldNewBranchPush()
 	if err != nil {
 		return appendConfig{}, err
