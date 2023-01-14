@@ -18,7 +18,7 @@ Feature: update the push-hook setting
       | 0     | false |
 
   Scenario Outline: changing the global setting
-    When I run "git-town config push-hook --global <GIVE>"
+    When I run "git-town config push-hook <GIVE> --global"
     Then global setting "push-hook" is now "<WANT>"
 
     Examples:
