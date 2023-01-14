@@ -14,7 +14,10 @@ func SyncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (St
 	isFeature := repo.Config.IsFeatureBranch(branchName)
 	syncStrategy := repo.Config.SyncStrategy()
 	hasOrigin, err := repo.Silent.HasOrigin()
-	pushHook := repo.Config.PushHook()
+	if err != nil {
+		return StepList{}, err
+	}
+	pushHook, err := repo.Config.PushHook()
 	if err != nil {
 		return StepList{}, err
 	}

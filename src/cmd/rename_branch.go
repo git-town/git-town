@@ -123,7 +123,11 @@ func createRenameBranchConfig(args []string, repo *git.ProdRepo) (renameBranchCo
 	if hasNewBranch {
 		return renameBranchConfig{}, fmt.Errorf("a branch named %q already exists", result.newBranchName)
 	}
-	result.noPushHook = !repo.Config.PushHook()
+	pushHook, err := repo.Config.PushHook()
+	if err != nil {
+		return renameBranchConfig{}, err
+	}
+	result.noPushHook = !pushHook
 	result.oldBranchChildren = repo.Config.ChildBranches(result.oldBranchName)
 	result.oldBranchHasTrackingBranch, err = repo.Silent.HasTrackingBranch(result.oldBranchName)
 	return result, err

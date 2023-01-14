@@ -584,8 +584,32 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^setting "push-hook" is "(true|false)"$`, func(value string) error {
-		return state.gitEnv.DevRepo.Config.SetPushHook(value)
+	suite.Step(`^(local )?setting "push-hook" is "(.*)"$`, func(local, value string) error {
+		_, err := state.gitEnv.DevRepo.Config.SetLocalConfigValue("git-town.push-hook", value)
+		return err
+	})
+
+	suite.Step(`^global setting "push-hook" is "(.*)"$`, func(value string) error {
+		_, err := state.gitEnv.DevRepo.Config.SetGlobalConfigValue("git-town.push-hook", value)
+		return err
+	})
+
+	suite.Step(`^local setting "push-hook" is now "(.*)"$`, func(want string) error {
+		state.gitEnv.DevRepo.Config.Reload()
+		have := state.gitEnv.DevRepo.Config.LocalConfigValue("git-town.push-hook")
+		if have != want {
+			return fmt.Errorf("expected local push-hook to be %q but was %q", want, have)
+		}
+		return nil
+	})
+
+	suite.Step(`^global setting "push-hook" is now "(.*)"$`, func(want string) error {
+		state.gitEnv.DevRepo.Config.Reload()
+		have := state.gitEnv.DevRepo.Config.GlobalConfigValue("git-town.push-hook")
+		if have != want {
+			return fmt.Errorf("expected global push-hook to be %q but was %q", want, have)
+		}
+		return nil
 	})
 
 	suite.Step(`^setting "ship-delete-remote-branch" is "(true|false)"$`, func(value string) error {
