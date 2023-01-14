@@ -34,7 +34,6 @@ Feature: display the push-hook setting
       | f     | no     |
       | 0     | no     |
 
-  @this
   Scenario Outline: global setting
     Given setting "push-hook" is globally "<VALUE>"
     When I run "git-town config push-hook --global"

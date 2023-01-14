@@ -584,12 +584,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^setting "push-hook" is "(true|false)"$`, func(text string) error {
-		value, err := strconv.ParseBool(text)
-		if err != nil {
-			return err
-		}
-		return state.gitEnv.DevRepo.Config.SetPushHook(value)
+	suite.Step(`^setting "push-hook" is "(.*)"$`, func(value string) error {
+		_, err := state.gitEnv.DevRepo.Config.SetLocalConfigValue("git-town.push-hook", value)
+		return err
 	})
 
 	suite.Step(`^setting "push-hook" is globally "(.*)"$`, func(value string) error {

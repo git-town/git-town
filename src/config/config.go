@@ -273,7 +273,7 @@ func (c *Config) PushHook() (bool, error) {
 	}
 	result, err := cli.ParseBool(config)
 	if err != nil {
-		return false, fmt.Errorf("invalid value for git-town.push-hook: \"%q\", please provide either true or false", config)
+		return false, fmt.Errorf("invalid value for git-town.push-hook: %q. Please provide either \"true\" or \"false\"", config)
 	}
 	return result, nil
 }
