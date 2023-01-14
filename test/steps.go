@@ -7,7 +7,6 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
-	"strconv"
 	"strings"
 	"sync"
 
@@ -620,13 +619,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^setting "sync-upstream" is (true|false)$`, func(text string) error {
-		value, err := strconv.ParseBool(text)
-		if err != nil {
-			return err
-		}
-		_ = state.gitEnv.DevRepo.Config.SetShouldSyncUpstream(value)
-		return nil
+	suite.Step(`^setting "sync-upstream" is (true|false)$`, func(value string) error {
+		_, err := state.gitEnv.DevRepo.Config.Storage.SetLocalConfigValue("git-town.sync-upstream", value)
+		return err
 	})
 
 	suite.Step(`^the branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
