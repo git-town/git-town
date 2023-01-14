@@ -486,7 +486,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.OriginRepo.RemoveBranch(name)
 	})
 
-	suite.Step(`^setting "color.ui" is "([^"]*)"$`, func(value string) error {
+	suite.Step(`^Git setting "color.ui" is "([^"]*)"$`, func(value string) error {
 		return state.gitEnv.DevRepo.Config.SetColorUI(value)
 	})
 
