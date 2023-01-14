@@ -5,7 +5,7 @@ Feature: require minimum Git version
     When I run "git-town <COMMAND>"
     Then it prints the error:
       """
-      Git Town requires Git 2.7.0 or higher
+      this app requires Git 2.7.0 or higher
       """
 
     Examples:

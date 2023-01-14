@@ -28,7 +28,7 @@ func Execute() {
 		cli.Exit(err)
 	}
 	if !IsAcceptableGitVersion(majorVersion, minorVersion) {
-		cli.Exit(errors.New("Git Town requires Git 2.7.0 or higher")) //nolint:stylecheck // proper noun
+		cli.Exit(errors.New("this app requires Git 2.7.0 or higher"))
 	}
 	color.NoColor = false // Prevent color from auto disable
 	if err := RootCmd.Execute(); err != nil {
