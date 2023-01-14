@@ -20,8 +20,8 @@ type Git struct {
 	shell run.Shell
 }
 
-// loadGitConfig provides the Git configuration from the given directory or the global one if the global flag is set.
-func loadGitConfig(shell run.Shell, global bool) map[string]string {
+// loadGit provides the Git configuration from the given directory or the global one if the global flag is set.
+func loadGit(shell run.Shell, global bool) map[string]string {
 	result := map[string]string{}
 	cmdArgs := []string{"config", "-lz"}
 	if global {
@@ -51,8 +51,8 @@ func loadGitConfig(shell run.Shell, global bool) map[string]string {
 // NewConfiguration provides a Configuration instance reflecting the configuration values in the given directory.
 func NewGit(shell run.Shell) Git {
 	return Git{
-		localConfigCache:  loadGitConfig(shell, false),
-		globalConfigCache: loadGitConfig(shell, true),
+		localConfigCache:  loadGit(shell, false),
+		globalConfigCache: loadGit(shell, true),
 		shell:             shell,
 	}
 }
@@ -91,8 +91,8 @@ func (g *Git) LocalOrGlobalConfigValue(key string) string {
 
 // Reload refreshes the cached configuration information.
 func (g *Git) Reload() {
-	g.localConfigCache = loadGitConfig(g.shell, false)
-	g.globalConfigCache = loadGitConfig(g.shell, true)
+	g.localConfigCache = loadGit(g.shell, false)
+	g.globalConfigCache = loadGit(g.shell, true)
 }
 
 func (g *Git) removeGlobalConfigValue(key string) (*run.Result, error) {
