@@ -78,7 +78,7 @@ func createKillConfig(args []string, repo *git.ProdRepo) (killConfig, error) {
 		if err != nil {
 			return result, err
 		}
-		repo.Config.Storage.Reload()
+		repo.Config.Store.Reload()
 	}
 	hasOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
