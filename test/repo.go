@@ -54,7 +54,7 @@ func NewRepo(workingDir, homeDir, binDir string) Repo {
 	shell := NewMockingShell(workingDir, homeDir, binDir)
 	runner := git.Runner{
 		Shell:              &shell,
-		Config:             config.NewConfiguration(&shell),
+		Config:             config.NewGitTown(&shell),
 		DryRun:             &git.DryRun{},
 		IsRepoCache:        &git.BoolCache{},
 		RemoteBranchCache:  &git.StringSliceCache{},
@@ -68,7 +68,7 @@ func NewRepo(workingDir, homeDir, binDir string) Repo {
 // BranchHierarchyTable provides the currently configured branch hierarchy information as a DataTable.
 func (repo *Repo) BranchHierarchyTable() DataTable {
 	result := DataTable{}
-	repo.Config.Reload()
+	repo.Config.Storage.Reload()
 	parentBranchMap := repo.Config.ParentBranchMap()
 	result.AddRow("BRANCH", "PARENT")
 	childBranches := make([]string, 0, len(parentBranchMap))
