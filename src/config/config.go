@@ -256,7 +256,7 @@ func (gt *GitTown) PushHookGlobal() (bool, error) {
 
 // Reload refreshes the cached configuration data.
 func (gt *GitTown) Reload() {
-	gt.Storage.reload()
+	gt.Storage.Reload()
 }
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
@@ -266,7 +266,7 @@ func (gt *GitTown) RemoveFromPerennialBranches(branchName string) error {
 
 // RemoveGitAlias removes the given Git alias.
 func (gt *GitTown) RemoveGitAlias(command string) (*run.Result, error) {
-	return gt.Storage.removeGlobalConfigValue("alias." + command)
+	return gt.Storage.RemoveGlobalConfigValue("alias." + command)
 }
 
 // RemoveLocalGitConfiguration removes all Git Town configuration.
@@ -285,18 +285,18 @@ func (gt *GitTown) RemoveLocalGitConfiguration() error {
 
 // RemoveMainBranchConfiguration removes the configuration entry for the main branch name.
 func (gt *GitTown) RemoveMainBranchConfiguration() error {
-	return gt.Storage.removeLocalConfigValue("git-town.main-branch-name")
+	return gt.Storage.RemoveLocalConfigValue("git-town.main-branch-name")
 }
 
 // RemoveParentBranch removes the parent branch entry for the given branch
 // from the Git configuration.
 func (gt *GitTown) RemoveParentBranch(branchName string) error {
-	return gt.Storage.removeLocalConfigValue("git-town-branch." + branchName + ".parent")
+	return gt.Storage.RemoveLocalConfigValue("git-town-branch." + branchName + ".parent")
 }
 
 // RemovePerennialBranchConfiguration removes the configuration entry for the perennial branches.
 func (gt *GitTown) RemovePerennialBranchConfiguration() error {
-	return gt.Storage.removeLocalConfigValue("git-town.perennial-branch-names")
+	return gt.Storage.RemoveLocalConfigValue("git-town.perennial-branch-names")
 }
 
 // SetCodeHostingDriver sets the "github.code-hosting-driver" setting.
@@ -407,7 +407,7 @@ func (gt *GitTown) ShouldNewBranchPush() (bool, error) {
 	if oldLocalConfig != "" {
 		fmt.Println("I found the deprecated local setting \"git-town.new-branch-push-flag\".")
 		fmt.Println("I am upgrading this setting to the new format \"git-town.push-new-branches\".")
-		err := gt.Storage.removeLocalConfigValue("git-town.new-branch-push-flag")
+		err := gt.Storage.RemoveLocalConfigValue("git-town.new-branch-push-flag")
 		if err != nil {
 			return false, err
 		}
@@ -424,7 +424,7 @@ func (gt *GitTown) ShouldNewBranchPush() (bool, error) {
 	if oldGlobalConfig != "" {
 		fmt.Println("I found the deprecated global setting \"git-town.new-branch-push-flag\".")
 		fmt.Println("I am upgrading this setting to the new format \"git-town.push-new-branches\".")
-		_, err := gt.Storage.removeGlobalConfigValue("git-town.new-branch-push-flag")
+		_, err := gt.Storage.RemoveGlobalConfigValue("git-town.new-branch-push-flag")
 		if err != nil {
 			return false, err
 		}
