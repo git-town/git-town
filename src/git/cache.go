@@ -14,7 +14,7 @@ func (c *Cache[T]) Set(newValue T) {
 }
 
 // Value provides the current value.
-func (c *Cache[T]) Value() T {
+func (c *Cache[T]) Value() T { //nolint:ireturn
 	if !c.initialized {
 		panic("using current branch before initialization")
 	}
