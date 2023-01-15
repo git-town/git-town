@@ -26,6 +26,10 @@ var configCommand = &cobra.Command{
 		if err != nil {
 			cli.Exit(err)
 		}
+		deleteOrigin, err := prodRepo.Config.ShouldShipDeleteOriginBranch()
+		if err != nil {
+			cli.Exit(err)
+		}
 		fmt.Println()
 		cli.PrintHeader("Branches")
 		cli.PrintEntry("main branch", cli.StringSetting(prodRepo.Config.MainBranch()))
@@ -36,7 +40,7 @@ var configCommand = &cobra.Command{
 		cli.PrintEntry("pull branch strategy", prodRepo.Config.PullBranchStrategy())
 		cli.PrintEntry("run pre-push hook", cli.BoolSetting(pushHook))
 		cli.PrintEntry("push new branches", cli.BoolSetting(pushNewBranches))
-		cli.PrintEntry("ship removes the remote branch", cli.BoolSetting(prodRepo.Config.ShouldShipDeleteOriginBranch()))
+		cli.PrintEntry("ship removes the remote branch", cli.BoolSetting(deleteOrigin))
 		cli.PrintEntry("sync strategy", prodRepo.Config.SyncStrategy())
 		cli.PrintEntry("sync with upstream", cli.BoolSetting(prodRepo.Config.ShouldSyncUpstream()))
 		fmt.Println()

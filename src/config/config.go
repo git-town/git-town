@@ -481,17 +481,16 @@ func (gt *GitTown) ShouldNewBranchPushGlobal() (bool, error) {
 }
 
 // ShouldShipDeleteOriginBranch indicates whether to delete the remote branch after shipping.
-func (gt *GitTown) ShouldShipDeleteOriginBranch() bool {
+func (gt *GitTown) ShouldShipDeleteOriginBranch() (bool, error) {
 	setting := gt.Storage.LocalOrGlobalConfigValue(ShipDeleteRemoteBranch)
 	if setting == "" {
-		return true
+		return true, nil
 	}
 	result, err := strconv.ParseBool(setting)
 	if err != nil {
-		fmt.Printf("Invalid value for %s: %q. Please provide either \"true\" or \"false\". Considering true for now.\n", ShipDeleteRemoteBranch, setting)
-		return true
+		return true, fmt.Errorf("invalid value for %s: %q. Please provide either \"true\" or \"false\"", ShipDeleteRemoteBranch, setting)
 	}
-	return result
+	return result, nil
 }
 
 // ShouldSyncUpstream indicates whether this repo should sync with its upstream.

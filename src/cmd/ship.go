@@ -147,11 +147,18 @@ func gitShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (sh
 	result.isShippingInitialBranch = result.branchToShip == result.initialBranch
 	result.branchToMergeInto = repo.Config.ParentBranch(result.branchToShip)
 	prInfo, err := createPullRequestInfo(result.branchToShip, result.branchToMergeInto, driver)
+	if err != nil {
+		return shipConfig{}, err
+	}
 	result.canShipWithDriver = prInfo.CanMergeWithAPI
 	result.defaultCommitMessage = prInfo.DefaultCommitMessage
 	result.pullRequestNumber = prInfo.PullRequestNumber
 	result.childBranches = repo.Config.ChildBranches(result.branchToShip)
-	result.deleteOriginBranch = prodRepo.Config.ShouldShipDeleteOriginBranch()
+	deleteOrigin, err := prodRepo.Config.ShouldShipDeleteOriginBranch()
+	if err != nil {
+		return shipConfig{}, err
+	}
+	result.deleteOriginBranch = deleteOrigin
 	return result, err
 }
 
