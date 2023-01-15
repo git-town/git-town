@@ -30,6 +30,7 @@
     - [offline](commands/config-offline.md)
     - [perennial-branches](commands/config-perennial-branches.md)
     - [pull-branch-strategy](commands/config-pull-branch-strategy.md)
+    - [sync-strategy](commands/config-sync-strategy.md)
 - [Preferences](preferences.md)
   - [code-hosting-driver](preferences/code-hosting-driver.md)
   - [code-hosting-origin-hostname](preferences/code-hosting-origin-hostname.md)
