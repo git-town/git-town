@@ -71,6 +71,11 @@ Feature: display the push-new-branches setting
       """
       no
       """
+    When I run "git-town config push-new-branches --global"
+    Then it prints:
+      """
+      yes
+      """
 
   Scenario: invalid value
     Given setting "push-new-branches" is "zonk"
