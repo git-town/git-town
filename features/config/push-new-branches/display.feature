@@ -63,14 +63,19 @@ Feature: display the push-new-branches setting
       yes
       """
 
-  Scenario: global and local set
+  Scenario Outline: global and local set to different values
     Given global setting "push-new-branches" is "true"
     And local setting "push-new-branches" is "false"
-    When I run "git-town config push-new-branches"
+    When I run "git-town config push-new-branches <FLAG>"
     Then it prints:
       """
-      no
+      <OUTPUT>
       """
+
+    Examples:
+      | FLAG     | OUTPUT |
+      | --global | yes    |
+      |          | no     |
 
   Scenario: invalid value
     Given setting "push-new-branches" is "zonk"

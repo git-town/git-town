@@ -218,19 +218,17 @@ push the new branch to the origin remote.`,
 }
 
 func printPushNewBranches(repo *git.ProdRepo) error {
+	var setting bool
+	var err error
 	if globalFlag {
-		setting, err := repo.Config.ShouldNewBranchPushGlobal()
-		if err != nil {
-			return err
-		}
-		cli.Println(cli.FormatBool(setting))
+		setting, err = repo.Config.ShouldNewBranchPushGlobal()
 	} else {
-		pushNewBranch, err := prodRepo.Config.ShouldNewBranchPush()
-		if err != nil {
-			return err
-		}
-		cli.Println(cli.FormatBool(pushNewBranch))
+		setting, err = repo.Config.ShouldNewBranchPush()
 	}
+	if err != nil {
+		return err
+	}
+	cli.Println(cli.FormatBool(setting))
 	return nil
 }
 
@@ -342,9 +340,9 @@ The sync strategy specifies what strategy to use
 when merging remote tracking branches into local feature branches.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			cli.Println(prodRepo.Config.SyncStrategy())
+			printSyncStrategy(prodRepo)
 		} else {
-			err := prodRepo.Config.SetSyncStrategy(args[0])
+			err := setSyncStrategy(prodRepo, args[0])
 			if err != nil {
 				cli.Exit(err)
 			}
@@ -361,6 +359,23 @@ when merging remote tracking branches into local feature branches.`,
 	},
 }
 
+func printSyncStrategy(repo *git.ProdRepo) {
+	var strategy string
+	if globalFlag {
+		strategy = repo.Config.SyncStrategyGlobal()
+	} else {
+		strategy = repo.Config.SyncStrategy()
+	}
+	cli.Println(strategy)
+}
+
+func setSyncStrategy(repo *git.ProdRepo, value string) error {
+	if globalFlag {
+		return repo.Config.SetSyncStrategyGlobal(value)
+	}
+	return repo.Config.SetSyncStrategy(value)
+}
+
 func init() {
 	configCommand.AddCommand(mainBranchConfigCommand)
 	pushNewBranchesCommand.Flags().BoolVar(&globalFlag, "global", false, "Displays or sets your global new branch push flag")
@@ -374,5 +389,6 @@ func init() {
 	configCommand.AddCommand(resetConfigCommand)
 	configCommand.AddCommand(setupConfigCommand)
 	configCommand.AddCommand(syncStrategyCommand)
+	syncStrategyCommand.Flags().BoolVar(&globalFlag, "global", false, "Displays or sets the global sync strategy")
 	RootCmd.AddCommand(configCommand)
 }
