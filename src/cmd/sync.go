@@ -85,9 +85,13 @@ func createSyncConfig(repo *git.ProdRepo) (syncConfig, error) {
 	if err != nil {
 		return syncConfig{}, err
 	}
+	isOffline, err := prodRepo.Config.IsOffline()
+	if err != nil {
+		return syncConfig{}, err
+	}
 	result := syncConfig{
 		hasOrigin: hasOrigin,
-		isOffline: prodRepo.Config.IsOffline(),
+		isOffline: isOffline,
 	}
 	if result.hasOrigin && !result.isOffline {
 		err := repo.Logging.Fetch()

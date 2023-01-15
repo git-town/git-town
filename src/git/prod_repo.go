@@ -10,7 +10,7 @@ import (
 
 // ProdRepo is a Git Repo in production code.
 type ProdRepo struct {
-	Config       config.Config // the git.Configuration instance for this repo
+	Config       config.GitTown // the git.Configuration instance for this repo
 	DryRun       *DryRun
 	Logging      Runner        // the Runner instance to Git operations that show up in the output
 	LoggingShell *LoggingShell // the LoggingShell instance used
@@ -20,7 +20,7 @@ type ProdRepo struct {
 // NewProdRepo provides a Repo instance in the current working directory.
 func NewProdRepo() *ProdRepo {
 	silentShell := run.SilentShell{}
-	config := config.NewConfiguration(silentShell)
+	config := config.NewGitTown(silentShell)
 	currentBranchTracker := StringCache{}
 	dryRun := DryRun{}
 	isRepoCache := BoolCache{}
