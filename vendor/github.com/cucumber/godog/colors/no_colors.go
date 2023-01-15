@@ -11,8 +11,6 @@ type noColors struct {
 	lastbuf bytes.Buffer
 }
 
-// Uncolored will accept and io.Writer and return a
-// new io.Writer that won't include colors.
 func Uncolored(w io.Writer) io.Writer {
 	return &noColors{out: w}
 }
