@@ -1,6 +1,6 @@
 package git
 
-// Cache stores data of the generic type.
+// Cache is a cache implementation for arbitrary data structures that ensures it is initialized.
 // The zero value is an empty cache.
 type Cache[T any] struct {
 	initialized bool
