@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/hosting"
@@ -34,7 +35,7 @@ var commitMessage string
 var shipCmd = &cobra.Command{
 	Use:   "ship",
 	Short: "Deliver a completed feature branch",
-	Long: `Deliver a completed feature branch
+	Long: fmt.Sprintf(`Deliver a completed feature branch
 
 Squash-merges the current branch, or <branch_name> if given,
 into the main branch, resulting in linear history on the main branch.
@@ -52,14 +53,14 @@ To ship a nested child branch, ship or kill all ancestor branches first.
 
 If you use GitHub, this command can squash merge pull requests via the GitHub API. Setup:
 1. Get a GitHub personal access token with the "repo" scope
-2. Run 'git config git-town.github-token XXX' (optionally add the '--global' flag)
+2. Run 'git config %s <token>' (optionally add the '--global' flag)
 Now anytime you ship a branch with a pull request on GitHub, it will squash merge via the GitHub API.
 It will also update the base branch for any pull requests against that branch.
 
 If your origin server deletes shipped branches, for example
 GitHub's feature to automatically delete head branches,
-run "git config git-town.ship-delete-remote-branch false"
-and Git Town will leave it up to your origin server to delete the remote branch.`,
+run "git config %s false"
+and Git Town will leave it up to your origin server to delete the remote branch.`, config.GithubToken, config.ShipDeleteRemoteBranch),
 	Run: func(cmd *cobra.Command, args []string) {
 		driver := hosting.NewDriver(&prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction)
 		config, err := gitShipConfig(args, driver, prodRepo)

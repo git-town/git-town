@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/cucumber/messages-go/v10"
+	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/stringslice"
 	"github.com/git-town/git-town/v7/test/helpers"
@@ -335,8 +336,8 @@ func (env GitEnvironment) TagTable() (DataTable, error) {
 
 func (env GitEnvironment) initializeWorkspace(repo *Repo) error {
 	return repo.RunMany([][]string{
-		{"git", "config", "git-town.main-branch-name", "main"},
-		{"git", "config", "git-town.perennial-branch-names", ""},
+		{"git", "config", config.MainBranchName, "main"},
+		{"git", "config", config.PerennialBranchNames, ""},
 		{"git", "checkout", "main"},
 		// NOTE: the developer repos receives the initial branch from origin
 		//       but we don't want it here because it isn't used in tests.
