@@ -1,18 +1,6 @@
 {
-  "allowed-tags": [
-    "on",
-    {
-      "tags": [
-        "@skipWindows"
-      ]
-    }
-  ],
-  "file-name": [
-    "on",
-    {
-      "style": "snake_case"
-    }
-  ],
+  "allowed-tags": [ "on", { "tags": [ "@skipWindows" ] } ],
+  "file-name": [ "on", { "style": "snake_case" } ],
   "indentation": [
     "on",
     {
