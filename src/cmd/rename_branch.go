@@ -73,10 +73,14 @@ func createRenameBranchConfig(args []string, repo *git.ProdRepo) (renameBranchCo
 	if err != nil {
 		return renameBranchConfig{}, err
 	}
+	isOffline, err := prodRepo.Config.IsOffline()
+	if err != nil {
+		return renameBranchConfig{}, err
+	}
 	result := renameBranchConfig{
 		initialBranch:            initialBranch,
 		isInitialBranchPerennial: repo.Config.IsPerennialBranch(initialBranch),
-		isOffline:                repo.Config.IsOffline(),
+		isOffline:                isOffline,
 	}
 	if len(args) == 1 {
 		result.oldBranchName = result.initialBranch

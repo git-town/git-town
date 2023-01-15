@@ -70,7 +70,11 @@ func createAppendConfig(args []string, repo *git.ProdRepo) (appendConfig, error)
 	if err != nil {
 		return appendConfig{}, err
 	}
-	if result.hasOrigin && !repo.Config.IsOffline() {
+	isOffline, err := repo.Config.IsOffline()
+	if err != nil {
+		return appendConfig{}, err
+	}
+	if result.hasOrigin && !isOffline {
 		err := repo.Logging.Fetch()
 		if err != nil {
 			return appendConfig{}, err
@@ -97,7 +101,7 @@ func createAppendConfig(args []string, repo *git.ProdRepo) (appendConfig, error)
 	if err != nil {
 		return appendConfig{}, err
 	}
-	result.isOffline = repo.Config.IsOffline()
+	result.isOffline = isOffline
 	return result, err
 }
 

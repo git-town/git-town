@@ -78,7 +78,11 @@ func createPrependConfig(args []string, repo *git.ProdRepo) (prependConfig, erro
 	if err != nil {
 		return prependConfig{}, err
 	}
-	result.isOffline = repo.Config.IsOffline()
+	isOffline, err := prodRepo.Config.IsOffline()
+	if err != nil {
+		return prependConfig{}, err
+	}
+	result.isOffline = isOffline
 	if result.hasOrigin && !result.isOffline {
 		err := repo.Logging.Fetch()
 		if err != nil {
