@@ -9,7 +9,7 @@ import (
 
 func TestBoolCache(t *testing.T) {
 	t.Parallel()
-	sc := git.BoolCache{}
+	sc := git.Cache[bool]{}
 	assert.False(t, sc.Initialized())
 	sc.Set(true)
 	assert.True(t, sc.Initialized())
@@ -18,7 +18,7 @@ func TestBoolCache(t *testing.T) {
 
 func TestStringCache(t *testing.T) {
 	t.Parallel()
-	sc := git.StringCache{}
+	sc := git.Cache[string]{}
 	assert.False(t, sc.Initialized())
 	sc.Set("foo")
 	assert.True(t, sc.Initialized())
@@ -27,7 +27,7 @@ func TestStringCache(t *testing.T) {
 
 func TestStringSliceCache(t *testing.T) {
 	t.Parallel()
-	ssc := git.StringSliceCache{}
+	ssc := git.Cache[[]string]{}
 	assert.False(t, ssc.Initialized())
 	ssc.Set([]string{"foo"})
 	assert.True(t, ssc.Initialized())
