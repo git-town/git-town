@@ -473,7 +473,7 @@ func (gt *GitTown) ShouldNewBranchPush() (bool, error) {
 // ShouldNewBranchPushGlobal indictes whether the global configuration requires to push
 // freshly created branches to origin.
 func (gt *GitTown) ShouldNewBranchPushGlobal() (bool, error) {
-	config := gt.Storage.GlobalConfigValue("git-town.push-new-branches")
+	config := gt.Storage.GlobalConfigValue(PushNewBranches)
 	if config == "" {
 		return false, nil
 	}
@@ -482,13 +482,13 @@ func (gt *GitTown) ShouldNewBranchPushGlobal() (bool, error) {
 
 // ShouldShipDeleteOriginBranch indicates whether to delete the remote branch after shipping.
 func (gt *GitTown) ShouldShipDeleteOriginBranch() bool {
-	setting := gt.Storage.LocalOrGlobalConfigValue("git-town.ship-delete-remote-branch")
+	setting := gt.Storage.LocalOrGlobalConfigValue(ShipDeleteRemoteBranch)
 	if setting == "" {
 		return true
 	}
 	result, err := strconv.ParseBool(setting)
 	if err != nil {
-		fmt.Printf("Invalid value for git-town.ship-delete-remote-branch: %q. Please provide either true or false. Considering true for now.\n", setting)
+		fmt.Printf("Invalid value for %s: %q. Please provide either \"true\" or \"false\". Considering true for now.\n", ShipDeleteRemoteBranch, setting)
 		return true
 	}
 	return result
@@ -496,11 +496,11 @@ func (gt *GitTown) ShouldShipDeleteOriginBranch() bool {
 
 // ShouldSyncUpstream indicates whether this repo should sync with its upstream.
 func (gt *GitTown) ShouldSyncUpstream() bool {
-	return gt.Storage.LocalOrGlobalConfigValue("git-town.sync-upstream") != "false"
+	return gt.Storage.LocalOrGlobalConfigValue(SyncUpstream) != "false"
 }
 
 func (gt *GitTown) SyncStrategy() string {
-	setting := gt.Storage.LocalOrGlobalConfigValue("git-town.sync-strategy")
+	setting := gt.Storage.LocalOrGlobalConfigValue(SyncStrategy)
 	if setting == "" {
 		setting = "merge"
 	}
@@ -508,7 +508,7 @@ func (gt *GitTown) SyncStrategy() string {
 }
 
 func (gt *GitTown) SyncStrategyGlobal() string {
-	setting := gt.Storage.GlobalConfigValue("git-town.sync-strategy")
+	setting := gt.Storage.GlobalConfigValue(SyncStrategy)
 	if setting == "" {
 		setting = "merge"
 	}
