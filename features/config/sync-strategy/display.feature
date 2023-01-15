@@ -7,7 +7,7 @@ Feature: display the currently configured sync-strategy
       merge
       """
 
-  Scenario Outline:
+  Scenario Outline: local setting
     Given setting "sync-strategy" is "<VALUE>"
     When I run "git-town config sync-strategy"
     Then it prints:
@@ -19,3 +19,17 @@ Feature: display the currently configured sync-strategy
       | VALUE  |
       | rebase |
       | merge  |
+
+  Scenario Outline: global and local set to different values
+    Given global setting "sync-strategy" is "merge"
+    And local setting "sync-strategy" is "rebase"
+    When I run "git-town config sync-strategy <FLAG>"
+    Then it prints:
+      """
+      <OUTPUT>
+      """
+
+    Examples:
+      | FLAG     | OUTPUT |
+      | --global | merge  |
+      |          | rebase |
