@@ -1,7 +1,10 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/hosting"
@@ -18,7 +21,7 @@ type newPullRequestConfig struct {
 var newPullRequestCommand = &cobra.Command{
 	Use:   "new-pull-request",
 	Short: "Creates a new pull request",
-	Long: `Creates a new pull request
+	Long: fmt.Sprintf(`Creates a new pull request
 
 Syncs the current branch
 and opens a browser window to the new pull request page of your repository.
@@ -29,11 +32,11 @@ against the immediate parent branch.
 
 Supported only for repositories hosted on GitHub, GitLab, Gitea and Bitbucket.
 When using self-hosted versions this command needs to be configured with
-"git config git-town.code-hosting-driver <driver>"
+"git config %s <driver>"
 where driver is "github", "gitlab", "gitea", or "bitbucket".
 When using SSH identities, this command needs to be configured with
-"git config git-town.code-hosting-origin-hostname <hostname>"
-where hostname matches what is in your ssh config file.`,
+"git config %s <hostname>"
+where hostname matches what is in your ssh config file.`, config.CodeHostingDriver, config.CodeHostingOriginHostname),
 	Run: func(cmd *cobra.Command, args []string) {
 		config, err := createNewPullRequestConfig(prodRepo)
 		if err != nil {

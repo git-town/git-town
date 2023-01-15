@@ -130,8 +130,8 @@ func CreateTestGitTownRepo(t *testing.T) Repo {
 	err := repo.CreateBranch("main", "initial")
 	assert.NoError(t, err)
 	err = repo.RunMany([][]string{
-		{"git", "config", "git-town.main-branch-name", "main"},
-		{"git", "config", "git-town.perennial-branch-names", ""},
+		{"git", "config", config.MainBranchName, "main"},
+		{"git", "config", config.PerennialBranchNames, ""},
 	})
 	assert.NoError(t, err)
 	return repo
