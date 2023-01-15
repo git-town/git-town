@@ -89,8 +89,8 @@ func (g *Git) LocalOrGlobalConfigValue(key string) string {
 	return g.GlobalConfigValue(key)
 }
 
-// Reload refreshes the cached configuration information.
-func (g *Git) Reload() {
+// reload refreshes the cached configuration information.
+func (g *Git) reload() {
 	g.localConfigCache = loadGit(g.shell, false)
 	g.globalConfigCache = loadGit(g.shell, true)
 }

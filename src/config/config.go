@@ -256,7 +256,7 @@ func (gt *GitTown) PushHookGlobal() (bool, error) {
 
 // Reload refreshes the cached configuration data.
 func (gt *GitTown) Reload() {
-	gt.Storage.Reload()
+	gt.Storage.reload()
 }
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
