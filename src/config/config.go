@@ -17,6 +17,20 @@ import (
 	"github.com/git-town/git-town/v7/src/stringslice"
 )
 
+const (
+	CodeHostingDriver         = "git-town.code-hosting-driver"
+	CodeHostingOriginHostname = "git-town.code-hosting-origin-hostname"
+	GiteaToken                = "git-town.gitea-token"  //nolint:gosec
+	GithubToken               = "git-town.github-token" //nolint:gosec
+	GitlabToken               = "git-town.gitlab-token" //nolint:gosec
+	MainBranchName            = "git-town.main-branch-name"
+	NewBranchPushFlag         = "git-town.new-branch-push-flag"
+	Offline                   = "git-town.offline"
+	PerennialBranchNames      = "git-town.perennial-branch-names"
+	PullBranchStrategy        = "git-town.pull-branch-strategy"
+	PushHook                  = "git-town.push-hook"
+)
+
 // GitTown provides type-safe access to Git Town configuration settings
 // stored in the local and global Git configuration.
 type GitTown struct {
@@ -88,11 +102,11 @@ func (gt *GitTown) ChildBranches(branchName string) []string {
 }
 
 func (gt *GitTown) DeprecatedNewBranchPushFlagGlobal() string {
-	return gt.Storage.globalConfigCache["git-town.new-branch-push-flag"]
+	return gt.Storage.globalConfigCache[NewBranchPushFlag]
 }
 
 func (gt *GitTown) DeprecatedNewBranchPushFlagLocal() string {
-	return gt.Storage.localConfigCache["git-town.new-branch-push-flag"]
+	return gt.Storage.localConfigCache[NewBranchPushFlag]
 }
 
 // GitAlias provides the currently set alias for the given Git Town command.
@@ -102,17 +116,17 @@ func (gt *GitTown) GitAlias(command string) string {
 
 // GitHubToken provides the content of the GitHub API token stored in the local or global Git Town configuration.
 func (gt *GitTown) GitHubToken() string {
-	return gt.Storage.LocalOrGlobalConfigValue("git-town.github-token")
+	return gt.Storage.LocalOrGlobalConfigValue(GithubToken)
 }
 
 // GitLabToken provides the content of the GitLab API token stored in the local or global Git Town configuration.
 func (gt *GitTown) GitLabToken() string {
-	return gt.Storage.LocalOrGlobalConfigValue("git-town.gitlab-token")
+	return gt.Storage.LocalOrGlobalConfigValue(GitlabToken)
 }
 
 // GiteaToken provides the content of the Gitea API token stored in the local or global Git Town configuration.
 func (gt *GitTown) GiteaToken() string {
-	return gt.Storage.LocalOrGlobalConfigValue("git-town.gitea-token")
+	return gt.Storage.LocalOrGlobalConfigValue(GiteaToken)
 }
 
 // HasBranchInformation indicates whether this configuration contains any branch hierarchy entries.
@@ -132,7 +146,7 @@ func (gt *GitTown) HasParentBranch(branchName string) bool {
 
 // HostingService provides the name of the code hosting driver to use.
 func (gt *GitTown) HostingService() string {
-	return gt.Storage.LocalOrGlobalConfigValue("git-town.code-hosting-driver")
+	return gt.Storage.LocalOrGlobalConfigValue(CodeHostingDriver)
 }
 
 // IsAncestorBranch indicates whether the given branch is an ancestor of the other given branch.
@@ -155,13 +169,13 @@ func (gt *GitTown) IsMainBranch(branchName string) bool {
 
 // IsOffline indicates whether Git Town is currently in offline mode.
 func (gt *GitTown) IsOffline() (bool, error) {
-	config := gt.Storage.GlobalConfigValue("git-town.offline")
+	config := gt.Storage.GlobalConfigValue(Offline)
 	if config == "" {
 		return false, nil
 	}
 	result, err := cli.ParseBool(config)
 	if err != nil {
-		return false, fmt.Errorf("invalid value for git-town.offline: %q. Please provide either \"true\" or \"false\"", config)
+		return false, fmt.Errorf("invalid value for %s: %q. Please provide either \"true\" or \"false\"", Offline, config)
 	}
 	return result, nil
 }
@@ -175,12 +189,12 @@ func (gt *GitTown) IsPerennialBranch(branchName string) bool {
 
 // MainBranch provides the name of the main branch.
 func (gt *GitTown) MainBranch() string {
-	return gt.Storage.LocalOrGlobalConfigValue("git-town.main-branch-name")
+	return gt.Storage.LocalOrGlobalConfigValue(MainBranchName)
 }
 
 // OriginOverride provides the override for the origin hostname from the Git Town configuration.
 func (gt *GitTown) OriginOverride() string {
-	return gt.Storage.LocalConfigValue("git-town.code-hosting-origin-hostname")
+	return gt.Storage.LocalConfigValue(CodeHostingOriginHostname)
 }
 
 // OriginURL provides the URL for the "origin" remote.
@@ -212,7 +226,7 @@ func (gt *GitTown) ParentBranch(branchName string) string {
 
 // PerennialBranches returns all branches that are marked as perennial.
 func (gt *GitTown) PerennialBranches() []string {
-	result := gt.Storage.LocalOrGlobalConfigValue("git-town.perennial-branch-names")
+	result := gt.Storage.LocalOrGlobalConfigValue(PerennialBranchNames)
 	if result == "" {
 		return []string{}
 	}
@@ -221,7 +235,7 @@ func (gt *GitTown) PerennialBranches() []string {
 
 // PullBranchStrategy provides the currently configured pull branch strategy.
 func (gt *GitTown) PullBranchStrategy() string {
-	config := gt.Storage.LocalOrGlobalConfigValue("git-town.pull-branch-strategy")
+	config := gt.Storage.LocalOrGlobalConfigValue(PullBranchStrategy)
 	if config != "" {
 		return config
 	}
@@ -230,26 +244,26 @@ func (gt *GitTown) PullBranchStrategy() string {
 
 // PushHook provides the currently configured push-hook setting.
 func (gt *GitTown) PushHook() (bool, error) {
-	setting := gt.Storage.LocalOrGlobalConfigValue("git-town.push-hook")
+	setting := gt.Storage.LocalOrGlobalConfigValue(PushHook)
 	if setting == "" {
 		return true, nil
 	}
 	result, err := cli.ParseBool(setting)
 	if err != nil {
-		return false, fmt.Errorf("invalid value for git-town.push-hook: %q. Please provide either \"true\" or \"false\"", setting)
+		return false, fmt.Errorf("invalid value for %s: %q. Please provide either \"true\" or \"false\"", PushHook, setting)
 	}
 	return result, nil
 }
 
 // PushHook provides the currently configured push-hook setting.
 func (gt *GitTown) PushHookGlobal() (bool, error) {
-	setting := gt.Storage.GlobalConfigValue("git-town.push-hook")
+	setting := gt.Storage.GlobalConfigValue(PushHook)
 	if setting == "" {
 		return true, nil
 	}
 	result, err := cli.ParseBool(setting)
 	if err != nil {
-		return false, fmt.Errorf("invalid value for git-town.push-hook: %q. Please provide either \"true\" or \"false\"", setting)
+		return false, fmt.Errorf("invalid value for global %s: %q. Please provide either \"true\" or \"false\"", PushHook, setting)
 	}
 	return result, nil
 }
@@ -285,7 +299,7 @@ func (gt *GitTown) RemoveLocalGitConfiguration() error {
 
 // RemoveMainBranchConfiguration removes the configuration entry for the main branch name.
 func (gt *GitTown) RemoveMainBranchConfiguration() error {
-	return gt.Storage.RemoveLocalConfigValue("git-town.main-branch-name")
+	return gt.Storage.RemoveLocalConfigValue(MainBranchName)
 }
 
 // RemoveParentBranch removes the parent branch entry for the given branch
