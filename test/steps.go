@@ -513,7 +513,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return fmt.Errorf("should not have local %q anymore but has value %q", name, newValue)
 	})
 
-	suite.Step(`^setting "([^"]*)" no longer exists globally$`, func(name string) error {
+	suite.Step(`^global setting "([^"]*)" no longer exists$`, func(name string) error {
 		state.gitEnv.DevRepo.Config.Reload()
 		newValue := state.gitEnv.DevRepo.Config.Storage.GlobalConfigValue("git-town." + name)
 		if newValue == "" {

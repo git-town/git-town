@@ -20,4 +20,4 @@ Feature: automatic upgrade of new-branch-push-flag to push-new-branches
       I am upgrading this setting to the new format "git-town.push-new-branches".
       """
     And setting "push-new-branches" is now "true"
-    And setting "new-branch-push-flag" no longer exists globally
+    And global setting "new-branch-push-flag" no longer exists
