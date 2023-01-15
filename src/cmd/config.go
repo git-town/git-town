@@ -219,18 +219,26 @@ push the new branch to the origin remote.`,
 
 func printPushNewBranches(repo *git.ProdRepo) error {
 	if globalFlag {
-		setting, err := repo.Config.ShouldNewBranchPushGlobal()
-		if err != nil {
-			return err
-		}
-		cli.Println(cli.FormatBool(setting))
-	} else {
-		pushNewBranch, err := prodRepo.Config.ShouldNewBranchPush()
-		if err != nil {
-			return err
-		}
-		cli.Println(cli.FormatBool(pushNewBranch))
+		return printPushNewBranchesGlobal(repo)
 	}
+	return printPushNewBranchesLocal(repo)
+}
+
+func printPushNewBranchesGlobal(repo *git.ProdRepo) error {
+	setting, err := repo.Config.ShouldNewBranchPushGlobal()
+	if err != nil {
+		return err
+	}
+	cli.Println(cli.FormatBool(setting))
+	return nil
+}
+
+func printPushNewBranchesLocal(repo *git.ProdRepo) error {
+	pushNewBranch, err := repo.Config.ShouldNewBranchPush()
+	if err != nil {
+		return err
+	}
+	cli.Println(cli.FormatBool(pushNewBranch))
 	return nil
 }
 
