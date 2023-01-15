@@ -423,7 +423,7 @@ func (r *Runner) DeleteLocalBranch(name string, force bool) error {
 
 // DeleteMainBranchConfiguration removes the configuration for which branch is the main branch.
 func (r *Runner) DeleteMainBranchConfiguration() error {
-	_, err := r.Run("git", "config", "--unset", "git-town.main-branch-name")
+	_, err := r.Run("git", "config", "--unset", config.MainBranchName)
 	if err != nil {
 		return fmt.Errorf("cannot delete main branch configuration: %w", err)
 	}

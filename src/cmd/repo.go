@@ -1,8 +1,11 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v7/src/browser"
 	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/spf13/cobra"
 )
@@ -10,17 +13,17 @@ import (
 var repoCommand = &cobra.Command{
 	Use:   "repo",
 	Short: "Opens the repository homepage",
-	Long: `Opens the repository homepage
+	Long: fmt.Sprintf(`Opens the repository homepage
 
 Supported for repositories hosted on GitHub, GitLab, Gitea, and Bitbucket.
 Derives the Git provider from the "origin" remote.
 You can override this detection with
-"git config git-town.code-hosting-driver <DRIVER>"
+"git config %s <DRIVER>"
 where DRIVER is "github", "gitlab", "gitea", or "bitbucket".
 
 When using SSH identities, run
-"git config git-town.code-hosting-origin-hostname <HOSTNAME>"
-where HOSTNAME matches what is in your ssh config file.`,
+"git config %s <HOSTNAME>"
+where HOSTNAME matches what is in your ssh config file.`, config.CodeHostingDriver, config.CodeHostingOriginHostname),
 	Run: func(cmd *cobra.Command, args []string) {
 		driver := hosting.NewDriver(&prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction)
 		if driver == nil {

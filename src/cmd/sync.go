@@ -1,9 +1,11 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
@@ -22,7 +24,7 @@ type syncConfig struct {
 var syncCmd = &cobra.Command{
 	Use:   "sync",
 	Short: "Updates the current branch with all relevant changes",
-	Long: `Updates the current branch with all relevant changes
+	Long: fmt.Sprintf(`Updates the current branch with all relevant changes
 
 Synchronizes the current branch with the rest of the world.
 
@@ -38,7 +40,7 @@ When run on the main branch or a perennial branch
 
 If the repository contains an "upstream" remote,
 syncs the main branch with its upstream counterpart.
-You can disable this by running "git config git-town.sync-upstream false".`,
+You can disable this by running "git config %s false".`, config.SyncUpstream),
 	Run: func(cmd *cobra.Command, args []string) {
 		config, err := createSyncConfig(prodRepo)
 		if err != nil {
