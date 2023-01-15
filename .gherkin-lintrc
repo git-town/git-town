@@ -1,10 +1,21 @@
 {
-  "allowed-tags": ["on", {
-    "tags": ["@skipWindows"]
-  }],
-  "file-name": ["on", {"style": "snake_case"}],
-  "indentation" : [
-    "on", {
+  "allowed-tags": [
+    "on",
+    {
+      "tags": [
+        "@skipWindows"
+      ]
+    }
+  ],
+  "file-name": [
+    "on",
+    {
+      "style": "snake_case"
+    }
+  ],
+  "indentation": [
+    "on",
+    {
       "Feature": 0,
       "Background": 2,
       "Scenario": 2,
@@ -21,9 +32,15 @@
     }
   ],
   "keywords-in-logical-order": "on",
-  "new-line-at-eof": ["on", "yes"],
+  "new-line-at-eof": [
+    "on",
+    "yes"
+  ],
   "no-background-only-scenario": "off",
-  "no-dupe-scenario-names": ["on", "in-feature"],
+  "no-dupe-scenario-names": [
+    "on",
+    "in-feature"
+  ],
   "no-duplicate-tags": "on",
   "no-empty-background": "on",
   "no-empty-file": "on",

@@ -61,19 +61,19 @@ Feature: display the push-hook setting
       yes
       """
 
-  Scenario: global and local set
+  Scenario Outline: global and local set to different values
     Given global setting "push-hook" is "true"
     And local setting "push-hook" is "false"
-    When I run "git-town config push-hook"
+    When I run "git-town config push-hook <FLAG>"
     Then it prints:
       """
-      no
+      <OUTPUT>
       """
-    When I run "git-town config push-hook --global"
-    Then it prints:
-      """
-      yes
-      """
+
+    Examples:
+      | FLAG     | OUTPUT |
+      | --global | yes    |
+      |          | no     |
 
   Scenario: invalid value
     Given local setting "push-hook" is "zonk"

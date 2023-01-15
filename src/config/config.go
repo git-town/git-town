@@ -394,6 +394,11 @@ func (gt *GitTown) SetSyncStrategy(value string) error {
 	return err
 }
 
+func (gt *GitTown) SetSyncStrategyGlobal(value string) error {
+	_, err := gt.Storage.SetGlobalConfigValue("git-town.sync-strategy", value)
+	return err
+}
+
 // SetTestOrigin sets the origin to be used for testing.
 func (gt *GitTown) SetTestOrigin(value string) error {
 	_, err := gt.Storage.SetLocalConfigValue("git-town.testing.remote-url", value)
@@ -479,6 +484,14 @@ func (gt *GitTown) ShouldSyncUpstream() bool {
 
 func (gt *GitTown) SyncStrategy() string {
 	setting := gt.Storage.LocalOrGlobalConfigValue("git-town.sync-strategy")
+	if setting == "" {
+		setting = "merge"
+	}
+	return setting
+}
+
+func (gt *GitTown) SyncStrategyGlobal() string {
+	setting := gt.Storage.GlobalConfigValue("git-town.sync-strategy")
 	if setting == "" {
 		setting = "merge"
 	}
