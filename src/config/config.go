@@ -494,8 +494,8 @@ func (gt *GitTown) ShouldShipDeleteOriginBranch() (bool, error) {
 }
 
 // ShouldSyncUpstream indicates whether this repo should sync with its upstream.
-func (gt *GitTown) ShouldSyncUpstream() bool {
-	return gt.Storage.LocalOrGlobalConfigValue(SyncUpstream) != "false"
+func (gt *GitTown) ShouldSyncUpstream() (bool, error) {
+	return cli.ParseBool(gt.Storage.LocalOrGlobalConfigValue(SyncUpstream))
 }
 
 func (gt *GitTown) SyncStrategy() string {

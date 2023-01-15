@@ -30,6 +30,10 @@ var configCommand = &cobra.Command{
 		if err != nil {
 			cli.Exit(err)
 		}
+		shouldSyncUpstream, err := prodRepo.Config.ShouldSyncUpstream()
+		if err != nil {
+			cli.Exit(err)
+		}
 		fmt.Println()
 		cli.PrintHeader("Branches")
 		cli.PrintEntry("main branch", cli.StringSetting(prodRepo.Config.MainBranch()))
@@ -42,7 +46,7 @@ var configCommand = &cobra.Command{
 		cli.PrintEntry("push new branches", cli.BoolSetting(pushNewBranches))
 		cli.PrintEntry("ship removes the remote branch", cli.BoolSetting(deleteOrigin))
 		cli.PrintEntry("sync strategy", prodRepo.Config.SyncStrategy())
-		cli.PrintEntry("sync with upstream", cli.BoolSetting(prodRepo.Config.ShouldSyncUpstream()))
+		cli.PrintEntry("sync with upstream", cli.BoolSetting(shouldSyncUpstream))
 		fmt.Println()
 		cli.PrintHeader("Hosting")
 		cli.PrintEntry("hosting service override", cli.StringSetting(prodRepo.Config.HostingService()))

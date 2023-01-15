@@ -117,7 +117,11 @@ func syncNonFeatureBranchSteps(branchName string, repo *git.ProdRepo) (StepList,
 	if err != nil {
 		return StepList{}, err
 	}
-	if mainBranchName == branchName && hasUpstream && repo.Config.ShouldSyncUpstream() {
+	shouldSyncUpstream, err := repo.Config.ShouldSyncUpstream()
+	if err != nil {
+		return StepList{}, err
+	}
+	if mainBranchName == branchName && hasUpstream && shouldSyncUpstream {
 		result.Append(&steps.FetchUpstreamStep{BranchName: mainBranchName})
 		result.Append(&steps.RebaseBranchStep{BranchName: fmt.Sprintf("upstream/%s", mainBranchName)})
 	}
