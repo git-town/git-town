@@ -1,9 +1,9 @@
 {
   "dependencies": {
-    "dprint": "0.33.0",
+    "dprint": "0.34.1",
     "gherkin-lint": "4.2.2",
-    "prettier": "2.8.0",
-    "text-runner": "5.0.0",
-    "textrun-make": "0.1.0"
+    "prettier": "2.8.3",
+    "text-runner": "6.0.0",
+    "textrun-make": "0.2.0"
   }
 }

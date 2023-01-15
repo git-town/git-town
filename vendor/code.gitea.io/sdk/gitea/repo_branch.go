@@ -6,6 +6,8 @@
 package gitea
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"time"
 )
@@ -17,9 +19,6 @@ type PayloadUser struct {
 	Email    string `json:"email"`
 	UserName string `json:"username"`
 }
-
-// FIXME: consider using same format as API when commits API are added.
-//        applies to PayloadCommit and PayloadCommitVerification
 
 // PayloadCommit represents a commit
 type PayloadCommit struct {
@@ -63,29 +62,82 @@ type ListRepoBranchesOptions struct {
 }
 
 // ListRepoBranches list all the branches of one repository
-func (c *Client) ListRepoBranches(user, repo string, opt ListRepoBranchesOptions) ([]*Branch, error) {
+func (c *Client) ListRepoBranches(user, repo string, opt ListRepoBranchesOptions) ([]*Branch, *Response, error) {
+	if err := escapeValidatePathSegments(&user, &repo); err != nil {
+		return nil, nil, err
+	}
 	opt.setDefaults()
 	branches := make([]*Branch, 0, opt.PageSize)
-	return branches, c.getParsedResponse("GET", fmt.Sprintf("/repos/%s/%s/branches?%s", user, repo, opt.getURLQuery().Encode()), nil, nil, &branches)
+	resp, err := c.getParsedResponse("GET", fmt.Sprintf("/repos/%s/%s/branches?%s", user, repo, opt.getURLQuery().Encode()), nil, nil, &branches)
+	return branches, resp, err
 }
 
 // GetRepoBranch get one branch's information of one repository
-func (c *Client) GetRepoBranch(user, repo, branch string) (*Branch, error) {
-	b := new(Branch)
-	if err := c.getParsedResponse("GET", fmt.Sprintf("/repos/%s/%s/branches/%s", user, repo, branch), nil, nil, &b); err != nil {
-		return nil, err
+func (c *Client) GetRepoBranch(user, repo, branch string) (*Branch, *Response, error) {
+	if err := escapeValidatePathSegments(&user, &repo, &branch); err != nil {
+		return nil, nil, err
 	}
-	return b, nil
+	b := new(Branch)
+	resp, err := c.getParsedResponse("GET", fmt.Sprintf("/repos/%s/%s/branches/%s", user, repo, branch), nil, nil, &b)
+	if err != nil {
+		return nil, resp, err
+	}
+	return b, resp, nil
 }
 
 // DeleteRepoBranch delete a branch in a repository
-func (c *Client) DeleteRepoBranch(user, repo, branch string) (bool, error) {
-	if err := c.CheckServerVersionConstraint(">=1.12.0"); err != nil {
-		return false, err
+func (c *Client) DeleteRepoBranch(user, repo, branch string) (bool, *Response, error) {
+	if err := escapeValidatePathSegments(&user, &repo, &branch); err != nil {
+		return false, nil, err
 	}
-	status, err := c.getStatusCode("DELETE", fmt.Sprintf("/repos/%s/%s/branches/%s", user, repo, branch), nil, nil)
+	if err := c.checkServerVersionGreaterThanOrEqual(version1_12_0); err != nil {
+		return false, nil, err
+	}
+	status, resp, err := c.getStatusCode("DELETE", fmt.Sprintf("/repos/%s/%s/branches/%s", user, repo, branch), nil, nil)
 	if err != nil {
-		return false, err
+		return false, resp, err
 	}
-	return status == 204, nil
+	return status == 204, resp, nil
+}
+
+// CreateBranchOption options when creating a branch in a repository
+type CreateBranchOption struct {
+	// Name of the branch to create
+	BranchName string `json:"new_branch_name"`
+	// Name of the old branch to create from (optional)
+	OldBranchName string `json:"old_branch_name"`
+}
+
+// Validate the CreateBranchOption struct
+func (opt CreateBranchOption) Validate() error {
+	if len(opt.BranchName) == 0 {
+		return fmt.Errorf("BranchName is empty")
+	}
+	if len(opt.BranchName) > 100 {
+		return fmt.Errorf("BranchName to long")
+	}
+	if len(opt.OldBranchName) > 100 {
+		return fmt.Errorf("OldBranchName to long")
+	}
+	return nil
+}
+
+// CreateBranch creates a branch for a user's repository
+func (c *Client) CreateBranch(owner, repo string, opt CreateBranchOption) (*Branch, *Response, error) {
+	if err := escapeValidatePathSegments(&owner, &repo); err != nil {
+		return nil, nil, err
+	}
+	if err := c.checkServerVersionGreaterThanOrEqual(version1_13_0); err != nil {
+		return nil, nil, err
+	}
+	if err := opt.Validate(); err != nil {
+		return nil, nil, err
+	}
+	body, err := json.Marshal(&opt)
+	if err != nil {
+		return nil, nil, err
+	}
+	branch := new(Branch)
+	resp, err := c.getParsedResponse("POST", fmt.Sprintf("/repos/%s/%s/branches", owner, repo), jsonHeader, bytes.NewReader(body), branch)
+	return branch, resp, err
 }
