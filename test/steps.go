@@ -39,7 +39,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		// See main_test.go for additional details.
 		state.Reset(gitEnvironment)
 		if hasTag(scenario, "@debug") {
-			Debug = true
+			gitEnvironment.DevShell.Debug = true
 		}
 	})
 
