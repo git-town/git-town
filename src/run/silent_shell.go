@@ -10,7 +10,8 @@ import (
 
 // SilentShell is an implementation of the Shell interface that runs commands in the current working directory.
 type SilentShell struct {
-	// Debug indicates whether debug mode is activated.
+	// Debug mode outputs the shell commands that Git Town normally runs silently
+	// behind the scenes to determine the status of the Git repository.
 	Debug *bool
 }
 
