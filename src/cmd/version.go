@@ -6,10 +6,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// the current Git Town version (set at compile time)
+// The current Git Town version (set at compile time).
 var version string
 
-// the time this Git Town binary was compiled (set at compile time)
+// The time this Git Town binary was compiled (set at compile time).
 var buildDate string
 
 // versionCmd represents the version command.
