@@ -12,7 +12,8 @@ func TestSilentShell(t *testing.T) {
 	t.Parallel()
 	t.Run(".Run()", func(t *testing.T) {
 		t.Parallel()
-		shell := run.SilentShell{}
+		debug := false
+		shell := run.SilentShell{Debug: &debug}
 		res, err := shell.Run("echo", "hello", "world")
 		assert.NoError(t, err)
 		assert.Equal(t, "hello world", res.OutputSanitized())
@@ -20,7 +21,8 @@ func TestSilentShell(t *testing.T) {
 
 	t.Run(".RunMany()", func(t *testing.T) {
 		t.Parallel()
-		shell := run.SilentShell{}
+		debug := false
+		shell := run.SilentShell{Debug: &debug}
 		err := shell.RunMany([][]string{
 			{"mkdir", "tmp"},
 			{"touch", "tmp/first"},
@@ -36,7 +38,8 @@ func TestSilentShell(t *testing.T) {
 
 	t.Run(".RunString()", func(t *testing.T) {
 		t.Parallel()
-		shell := run.SilentShell{}
+		debug := false
+		shell := run.SilentShell{Debug: &debug}
 		_, err := shell.RunString("touch first")
 		defer os.Remove("first")
 		assert.NoError(t, err)
@@ -46,7 +49,8 @@ func TestSilentShell(t *testing.T) {
 
 	t.Run(".RunStringWith()", func(t *testing.T) {
 		t.Parallel()
-		shell := run.SilentShell{}
+		debug := false
+		shell := run.SilentShell{Debug: &debug}
 		res, err := shell.RunStringWith("ls -1", &run.Options{Dir: ".."})
 		assert.NoError(t, err)
 		assert.Contains(t, res.OutputSanitized(), "cmd")

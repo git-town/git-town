@@ -10,8 +10,7 @@ import (
 )
 
 // RootCmd is the main Cobra object.
-func RootCmd(repo *git.ProdRepo) *cobra.Command {
-	debugFlag := false
+func RootCmd(repo *git.ProdRepo, debugFlag *bool) *cobra.Command {
 	rootCmd := cobra.Command{
 		Use:   "git-town",
 		Short: "Generic, high-level Git workflow support",
@@ -19,9 +18,6 @@ func RootCmd(repo *git.ProdRepo) *cobra.Command {
 
 It adds Git commands that support GitHub Flow, Git Flow, the Nvie model, GitLab Flow, and other workflows more directly,
 and it allows you to perform many common Git operations faster and easier.`,
-		PersistentPreRun: func(cmd *cobra.Command, args []string) {
-			cli.SetDebug(debugFlag)
-		},
 	}
 	rootCmd.AddCommand(abortCmd(repo))
 	rootCmd.AddCommand(appendCmd(repo))
@@ -44,13 +40,15 @@ and it allows you to perform many common Git operations faster and easier.`,
 	rootCmd.AddCommand(undoCmd(repo))
 	rootCmd.AddCommand(versionCmd())
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
-	rootCmd.PersistentFlags().BoolVar(&debugFlag, "debug", false, "Developer tool to print git commands run under the hood")
+	rootCmd.PersistentFlags().BoolVar(debugFlag, "debug", false, "Print all Git commands run under the hood")
 	return &rootCmd
 }
 
 // Execute runs the Cobra stack.
 func Execute() {
-	repo := git.NewProdRepo()
+	debugFlag := false
+	repo := git.NewProdRepo(&debugFlag)
+	rootCmd := RootCmd(&repo, &debugFlag)
 	majorVersion, minorVersion, err := repo.Silent.Version()
 	if err != nil {
 		cli.Exit(err)
@@ -59,7 +57,7 @@ func Execute() {
 		cli.Exit(errors.New("this app requires Git 2.7.0 or higher"))
 	}
 	color.NoColor = false // Prevent color from auto disable
-	if err := RootCmd(&repo).Execute(); err != nil {
+	if err := rootCmd.Execute(); err != nil {
 		cli.Exit(err)
 	}
 }

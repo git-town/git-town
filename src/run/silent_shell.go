@@ -2,21 +2,44 @@ package run
 
 import (
 	"fmt"
+	"strings"
 
+	"github.com/fatih/color"
 	"github.com/kballard/go-shellquote"
 )
 
 // SilentShell is an implementation of the Shell interface that runs commands in the current working directory.
-type SilentShell struct{}
+type SilentShell struct {
+	// Debug indicates whether debug mode is activated.
+	Debug *bool
+}
 
 // WorkingDir provides the directory that this Shell operates in.
 func (s SilentShell) WorkingDir() string {
 	return "."
 }
 
+func (s SilentShell) PrintHeader(cmd string, args ...string) {
+	_, err := color.New(color.Bold).Println(cmd, args)
+	if err != nil {
+		fmt.Println("\n1111111\n\n", cmd, strings.Join(args, " "))
+	}
+}
+
+func (s SilentShell) PrintResult(text string) {
+	fmt.Println("output")
+}
+
 // Run runs the given command in this ShellRunner's directory.
 func (s SilentShell) Run(cmd string, args ...string) (*Result, error) {
-	return Exec(cmd, args...)
+	if *s.Debug {
+		s.PrintHeader(cmd)
+	}
+	result, err := Exec(cmd, args...)
+	if *s.Debug && result != nil {
+		s.PrintResult(result.output)
+	}
+	return result, err
 }
 
 // RunMany runs all given commands in current directory.
