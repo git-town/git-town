@@ -116,7 +116,7 @@ func (ms *MockingShell) MockNoCommandsInstalled() error {
 // in this ShellRunner's directory.
 // Shell overrides will be used and removed when done.
 func (ms *MockingShell) Run(name string, arguments ...string) (*run.Result, error) {
-	return ms.RunWith(run.Options{}, name, arguments...)
+	return ms.RunWith(&run.Options{}, name, arguments...)
 }
 
 // RunMany runs all given commands in current directory.
@@ -138,14 +138,14 @@ func (ms *MockingShell) RunMany(commands [][]string) error {
 // in this ShellRunner's directory.
 // Shell overrides will be used and removed when done.
 func (ms *MockingShell) RunString(fullCmd string) (*run.Result, error) {
-	return ms.RunStringWith(fullCmd, run.Options{})
+	return ms.RunStringWith(fullCmd, &run.Options{})
 }
 
 // RunStringWith runs the given command (including possible arguments)
 // in this ShellRunner's directory using the given options.
 // opts.Dir is a relative path inside the working directory of this ShellRunner.
 // Shell overrides will be used and removed when done.
-func (ms *MockingShell) RunStringWith(fullCmd string, opts run.Options) (*run.Result, error) {
+func (ms *MockingShell) RunStringWith(fullCmd string, opts *run.Options) (*run.Result, error) {
 	parts, err := shellquote.Split(fullCmd)
 	if err != nil {
 		return nil, fmt.Errorf("cannot split command %q: %w", fullCmd, err)
@@ -155,7 +155,7 @@ func (ms *MockingShell) RunStringWith(fullCmd string, opts run.Options) (*run.Re
 }
 
 // RunWith runs the given command with the given options in this ShellRunner's directory.
-func (ms *MockingShell) RunWith(opts run.Options, cmd string, args ...string) (*run.Result, error) {
+func (ms *MockingShell) RunWith(opts *run.Options, cmd string, args ...string) (*run.Result, error) {
 	// create an environment with the temp shell overrides directory added to the PATH
 	if opts.Env == nil {
 		opts.Env = os.Environ()
