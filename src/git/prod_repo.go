@@ -21,11 +21,11 @@ type ProdRepo struct {
 func NewProdRepo() *ProdRepo {
 	silentShell := run.SilentShell{}
 	config := config.NewGitTown(silentShell)
-	currentBranchTracker := StringCache{}
+	currentBranchTracker := Cache[string]{}
 	dryRun := DryRun{}
-	isRepoCache := BoolCache{}
-	remoteBranchCache := StringSliceCache{}
-	remotesCache := StringSliceCache{}
+	isRepoCache := Cache[bool]{}
+	remoteBranchCache := Cache[[]string]{}
+	remotesCache := Cache[[]string]{}
 	silentRunner := Runner{
 		Shell:              silentShell,
 		Config:             config,
@@ -34,7 +34,7 @@ func NewProdRepo() *ProdRepo {
 		IsRepoCache:        &isRepoCache,
 		RemotesCache:       &remotesCache,
 		RemoteBranchCache:  &remoteBranchCache,
-		RootDirCache:       &StringCache{},
+		RootDirCache:       &Cache[string]{},
 	}
 	loggingShell := NewLoggingShell(&silentRunner, &dryRun)
 	loggingRunner := Runner{
@@ -45,7 +45,7 @@ func NewProdRepo() *ProdRepo {
 		IsRepoCache:        &isRepoCache,
 		RemotesCache:       &remotesCache,
 		RemoteBranchCache:  &remoteBranchCache,
-		RootDirCache:       &StringCache{},
+		RootDirCache:       &Cache[string]{},
 	}
 	return &ProdRepo{
 		Silent:       silentRunner,

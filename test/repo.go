@@ -56,11 +56,11 @@ func NewRepo(workingDir, homeDir, binDir string) Repo {
 		Shell:              &shell,
 		Config:             config.NewGitTown(&shell),
 		DryRun:             &git.DryRun{},
-		IsRepoCache:        &git.BoolCache{},
-		RemoteBranchCache:  &git.StringSliceCache{},
-		RemotesCache:       &git.StringSliceCache{},
-		RootDirCache:       &git.StringCache{},
-		CurrentBranchCache: &git.StringCache{},
+		IsRepoCache:        &git.Cache[bool]{},
+		RemoteBranchCache:  &git.Cache[[]string]{},
+		RemotesCache:       &git.Cache[[]string]{},
+		RootDirCache:       &git.Cache[string]{},
+		CurrentBranchCache: &git.Cache[string]{},
 	}
 	return Repo{Runner: runner, shell: shell}
 }
