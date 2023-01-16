@@ -29,13 +29,12 @@ type shipConfig struct {
 	deleteOriginBranch      bool
 }
 
-// optional commit message provided via the command line.
-var commitMessage string
-
-var shipCmd = &cobra.Command{
-	Use:   "ship",
-	Short: "Deliver a completed feature branch",
-	Long: fmt.Sprintf(`Deliver a completed feature branch
+func shipCmd() *cobra.Command {
+	var commitMessage string
+	shipCmd := cobra.Command{
+		Use:   "ship",
+		Short: "Deliver a completed feature branch",
+		Long: fmt.Sprintf(`Deliver a completed feature branch
 
 Squash-merges the current branch, or <branch_name> if given,
 into the main branch, resulting in linear history on the main branch.
@@ -61,29 +60,32 @@ If your origin server deletes shipped branches, for example
 GitHub's feature to automatically delete head branches,
 run "git config %s false"
 and Git Town will leave it up to your origin server to delete the remote branch.`, config.GithubToken, config.ShipDeleteRemoteBranch),
-	Run: func(cmd *cobra.Command, args []string) {
-		driver := hosting.NewDriver(&prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction)
-		config, err := gitShipConfig(args, driver, prodRepo)
-		if err != nil {
-			cli.Exit(err)
-		}
-		stepList, err := createShipStepList(config, prodRepo)
-		if err != nil {
-			cli.Exit(err)
-		}
-		runState := runstate.New("ship", stepList)
-		err = runstate.Execute(runState, prodRepo, driver)
-		if err != nil {
-			cli.Exit(err)
-		}
-	},
-	Args: cobra.MaximumNArgs(1),
-	PreRunE: func(cmd *cobra.Command, args []string) error {
-		if err := ValidateIsRepository(prodRepo); err != nil {
-			return err
-		}
-		return validateIsConfigured(prodRepo)
-	},
+		Run: func(cmd *cobra.Command, args []string) {
+			driver := hosting.NewDriver(&prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction)
+			config, err := gitShipConfig(args, driver, prodRepo)
+			if err != nil {
+				cli.Exit(err)
+			}
+			stepList, err := createShipStepList(config, commitMessage, prodRepo)
+			if err != nil {
+				cli.Exit(err)
+			}
+			runState := runstate.New("ship", stepList)
+			err = runstate.Execute(runState, prodRepo, driver)
+			if err != nil {
+				cli.Exit(err)
+			}
+		},
+		Args: cobra.MaximumNArgs(1),
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if err := ValidateIsRepository(prodRepo); err != nil {
+				return err
+			}
+			return validateIsConfigured(prodRepo)
+		},
+	}
+	shipCmd.Flags().StringVarP(&commitMessage, "message", "m", "", "Specify the commit message for the squash commit")
+	return &shipCmd
 }
 
 func gitShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (shipConfig, error) {
@@ -173,7 +175,7 @@ please ship %q first`, strings.Join(ancestorsWithoutMainOrPerennial, ", "), olde
 	}
 }
 
-func createShipStepList(config shipConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+func createShipStepList(config shipConfig, commitMessage string, repo *git.ProdRepo) (runstate.StepList, error) {
 	syncSteps, err := runstate.SyncBranchSteps(config.branchToMergeInto, true, repo)
 	if err != nil {
 		return runstate.StepList{}, err
@@ -242,9 +244,4 @@ func createPullRequestInfo(branch, parentBranch string, driver hosting.Driver) (
 		return hosting.PullRequestInfo{}, nil
 	}
 	return driver.LoadPullRequestInfo(branch, parentBranch)
-}
-
-func init() {
-	shipCmd.Flags().StringVarP(&commitMessage, "message", "m", "", "Specify the commit message for the squash commit")
-	RootCmd.AddCommand(shipCmd)
 }
