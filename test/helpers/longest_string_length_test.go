@@ -1,7 +1,6 @@
 package helpers_test
 
 import (
-	"strings"
 	"testing"
 
 	"github.com/git-town/git-town/v7/test/helpers"
@@ -14,10 +13,7 @@ func TestLongestStringLength(t *testing.T) {
 		5: {"one", "two", "three"},
 		0: {""},
 	}
-	for expected, input := range tests { //nolint:paralleltest
-		t.Run(strings.Join(input, "-"), func(t *testing.T) {
-			t.Parallel()
-			assert.Equal(t, expected, helpers.LongestStringLength(input))
-		})
+	for expected, input := range tests {
+		assert.Equal(t, expected, helpers.LongestStringLength(input))
 	}
 }

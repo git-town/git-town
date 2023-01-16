@@ -112,19 +112,20 @@ func createSyncConfig(allFlag bool, repo *git.ProdRepo) (syncConfig, error) {
 	if err != nil {
 		return syncConfig{}, err
 	}
+	parentDialog := dialog.ParentBranches{}
 	if allFlag {
 		branches, err := repo.Silent.LocalBranchesMainFirst()
 		if err != nil {
 			return syncConfig{}, err
 		}
-		err = dialog.EnsureKnowsParentBranches(branches, repo)
+		err = parentDialog.EnsureKnowsParentBranches(branches, repo)
 		if err != nil {
 			return syncConfig{}, err
 		}
 		result.branchesToSync = branches
 		result.shouldPushTags = true
 	} else {
-		err = dialog.EnsureKnowsParentBranches([]string{result.initialBranch}, repo)
+		err = parentDialog.EnsureKnowsParentBranches([]string{result.initialBranch}, repo)
 		if err != nil {
 			return syncConfig{}, err
 		}

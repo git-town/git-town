@@ -30,7 +30,8 @@ func setParentBranchCommand(repo *git.ProdRepo) *cobra.Command {
 			if err != nil {
 				cli.Exit(err)
 			}
-			err = dialog.AskForBranchAncestry(branchName, defaultParentBranch, repo)
+			parentDialog := dialog.ParentBranches{}
+			err = parentDialog.AskForBranchAncestry(branchName, defaultParentBranch, repo)
 			if err != nil {
 				cli.Exit(err)
 			}

@@ -53,11 +53,12 @@ See "sync" for information regarding upstream remotes.`,
 
 func determineParentBranch(targetBranch string, promptForParent bool, repo *git.ProdRepo) (string, error) {
 	if promptForParent {
-		parentBranch, err := dialog.AskForBranchParent(targetBranch, repo.Config.MainBranch(), repo)
+		parentDialog := dialog.ParentBranches{}
+		parentBranch, err := parentDialog.AskForBranchParent(targetBranch, repo.Config.MainBranch(), repo)
 		if err != nil {
 			return "", err
 		}
-		err = dialog.EnsureKnowsParentBranches([]string{parentBranch}, repo)
+		err = parentDialog.EnsureKnowsParentBranches([]string{parentBranch}, repo)
 		if err != nil {
 			return "", err
 		}
