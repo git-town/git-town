@@ -45,47 +45,32 @@ func (opt *ListDeployKeysOptions) QueryEncode() string {
 }
 
 // ListDeployKeys list all the deploy keys of one repository
-func (c *Client) ListDeployKeys(user, repo string, opt ListDeployKeysOptions) ([]*DeployKey, *Response, error) {
-	if err := escapeValidatePathSegments(&user, &repo); err != nil {
-		return nil, nil, err
-	}
+func (c *Client) ListDeployKeys(user, repo string, opt ListDeployKeysOptions) ([]*DeployKey, error) {
 	link, _ := url.Parse(fmt.Sprintf("/repos/%s/%s/keys", user, repo))
 	opt.setDefaults()
 	link.RawQuery = opt.QueryEncode()
 	keys := make([]*DeployKey, 0, opt.PageSize)
-	resp, err := c.getParsedResponse("GET", link.String(), nil, nil, &keys)
-	return keys, resp, err
+	return keys, c.getParsedResponse("GET", link.String(), nil, nil, &keys)
 }
 
 // GetDeployKey get one deploy key with key id
-func (c *Client) GetDeployKey(user, repo string, keyID int64) (*DeployKey, *Response, error) {
-	if err := escapeValidatePathSegments(&user, &repo); err != nil {
-		return nil, nil, err
-	}
+func (c *Client) GetDeployKey(user, repo string, keyID int64) (*DeployKey, error) {
 	key := new(DeployKey)
-	resp, err := c.getParsedResponse("GET", fmt.Sprintf("/repos/%s/%s/keys/%d", user, repo, keyID), nil, nil, &key)
-	return key, resp, err
+	return key, c.getParsedResponse("GET", fmt.Sprintf("/repos/%s/%s/keys/%d", user, repo, keyID), nil, nil, &key)
 }
 
 // CreateDeployKey options when create one deploy key
-func (c *Client) CreateDeployKey(user, repo string, opt CreateKeyOption) (*DeployKey, *Response, error) {
-	if err := escapeValidatePathSegments(&user, &repo); err != nil {
-		return nil, nil, err
-	}
+func (c *Client) CreateDeployKey(user, repo string, opt CreateKeyOption) (*DeployKey, error) {
 	body, err := json.Marshal(&opt)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 	key := new(DeployKey)
-	resp, err := c.getParsedResponse("POST", fmt.Sprintf("/repos/%s/%s/keys", user, repo), jsonHeader, bytes.NewReader(body), key)
-	return key, resp, err
+	return key, c.getParsedResponse("POST", fmt.Sprintf("/repos/%s/%s/keys", user, repo), jsonHeader, bytes.NewReader(body), key)
 }
 
 // DeleteDeployKey delete deploy key with key id
-func (c *Client) DeleteDeployKey(owner, repo string, keyID int64) (*Response, error) {
-	if err := escapeValidatePathSegments(&owner, &repo); err != nil {
-		return nil, err
-	}
-	_, resp, err := c.getResponse("DELETE", fmt.Sprintf("/repos/%s/%s/keys/%d", owner, repo, keyID), nil, nil)
-	return resp, err
+func (c *Client) DeleteDeployKey(owner, repo string, keyID int64) error {
+	_, err := c.getResponse("DELETE", fmt.Sprintf("/repos/%s/%s/keys/%d", owner, repo, keyID), nil, nil)
+	return err
 }

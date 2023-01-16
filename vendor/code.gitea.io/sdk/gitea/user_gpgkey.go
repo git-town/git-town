@@ -39,29 +39,23 @@ type ListGPGKeysOptions struct {
 }
 
 // ListGPGKeys list all the GPG keys of the user
-func (c *Client) ListGPGKeys(user string, opt ListGPGKeysOptions) ([]*GPGKey, *Response, error) {
-	if err := escapeValidatePathSegments(&user); err != nil {
-		return nil, nil, err
-	}
+func (c *Client) ListGPGKeys(user string, opt ListGPGKeysOptions) ([]*GPGKey, error) {
 	opt.setDefaults()
 	keys := make([]*GPGKey, 0, opt.PageSize)
-	resp, err := c.getParsedResponse("GET", fmt.Sprintf("/users/%s/gpg_keys?%s", user, opt.getURLQuery().Encode()), nil, nil, &keys)
-	return keys, resp, err
+	return keys, c.getParsedResponse("GET", fmt.Sprintf("/users/%s/gpg_keys?%s", user, opt.getURLQuery().Encode()), nil, nil, &keys)
 }
 
 // ListMyGPGKeys list all the GPG keys of current user
-func (c *Client) ListMyGPGKeys(opt *ListGPGKeysOptions) ([]*GPGKey, *Response, error) {
+func (c *Client) ListMyGPGKeys(opt *ListGPGKeysOptions) ([]*GPGKey, error) {
 	opt.setDefaults()
 	keys := make([]*GPGKey, 0, opt.PageSize)
-	resp, err := c.getParsedResponse("GET", fmt.Sprintf("/user/gpg_keys?%s", opt.getURLQuery().Encode()), nil, nil, &keys)
-	return keys, resp, err
+	return keys, c.getParsedResponse("GET", fmt.Sprintf("/user/gpg_keys?%s", opt.getURLQuery().Encode()), nil, nil, &keys)
 }
 
 // GetGPGKey get current user's GPG key by key id
-func (c *Client) GetGPGKey(keyID int64) (*GPGKey, *Response, error) {
+func (c *Client) GetGPGKey(keyID int64) (*GPGKey, error) {
 	key := new(GPGKey)
-	resp, err := c.getParsedResponse("GET", fmt.Sprintf("/user/gpg_keys/%d", keyID), nil, nil, &key)
-	return key, resp, err
+	return key, c.getParsedResponse("GET", fmt.Sprintf("/user/gpg_keys/%d", keyID), nil, nil, &key)
 }
 
 // CreateGPGKeyOption options create user GPG key
@@ -72,18 +66,17 @@ type CreateGPGKeyOption struct {
 }
 
 // CreateGPGKey create GPG key with options
-func (c *Client) CreateGPGKey(opt CreateGPGKeyOption) (*GPGKey, *Response, error) {
+func (c *Client) CreateGPGKey(opt CreateGPGKeyOption) (*GPGKey, error) {
 	body, err := json.Marshal(&opt)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 	key := new(GPGKey)
-	resp, err := c.getParsedResponse("POST", "/user/gpg_keys", jsonHeader, bytes.NewReader(body), key)
-	return key, resp, err
+	return key, c.getParsedResponse("POST", "/user/gpg_keys", jsonHeader, bytes.NewReader(body), key)
 }
 
 // DeleteGPGKey delete GPG key with key id
-func (c *Client) DeleteGPGKey(keyID int64) (*Response, error) {
-	_, resp, err := c.getResponse("DELETE", fmt.Sprintf("/user/gpg_keys/%d", keyID), nil, nil)
-	return resp, err
+func (c *Client) DeleteGPGKey(keyID int64) error {
+	_, err := c.getResponse("DELETE", fmt.Sprintf("/user/gpg_keys/%d", keyID), nil, nil)
+	return err
 }

@@ -8,7 +8,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"net/url"
 	"time"
 )
 
@@ -51,17 +50,13 @@ type CreateStatusOption struct {
 }
 
 // CreateStatus creates a new Status for a given Commit
-func (c *Client) CreateStatus(owner, repo, sha string, opts CreateStatusOption) (*Status, *Response, error) {
-	if err := escapeValidatePathSegments(&owner, &repo); err != nil {
-		return nil, nil, err
-	}
+func (c *Client) CreateStatus(owner, repo, sha string, opts CreateStatusOption) (*Status, error) {
 	body, err := json.Marshal(&opts)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 	status := new(Status)
-	resp, err := c.getParsedResponse("POST", fmt.Sprintf("/repos/%s/%s/statuses/%s", owner, repo, url.QueryEscape(sha)), jsonHeader, bytes.NewReader(body), status)
-	return status, resp, err
+	return status, c.getParsedResponse("POST", fmt.Sprintf("/repos/%s/%s/statuses/%s", owner, repo, sha), jsonHeader, bytes.NewReader(body), status)
 }
 
 // ListStatusesOption options for listing a repository's commit's statuses
@@ -69,15 +64,11 @@ type ListStatusesOption struct {
 	ListOptions
 }
 
-// ListStatuses returns all statuses for a given Commit by ref
-func (c *Client) ListStatuses(owner, repo, ref string, opt ListStatusesOption) ([]*Status, *Response, error) {
-	if err := escapeValidatePathSegments(&owner, &repo, &ref); err != nil {
-		return nil, nil, err
-	}
+// ListStatuses returns all statuses for a given Commit
+func (c *Client) ListStatuses(owner, repo, sha string, opt ListStatusesOption) ([]*Status, error) {
 	opt.setDefaults()
 	statuses := make([]*Status, 0, opt.PageSize)
-	resp, err := c.getParsedResponse("GET", fmt.Sprintf("/repos/%s/%s/commits/%s/statuses?%s", owner, repo, ref, opt.getURLQuery().Encode()), jsonHeader, nil, &statuses)
-	return statuses, resp, err
+	return statuses, c.getParsedResponse("GET", fmt.Sprintf("/repos/%s/%s/commits/%s/statuses?%s", owner, repo, sha, opt.getURLQuery().Encode()), nil, nil, &statuses)
 }
 
 // CombinedStatus holds the combined state of several statuses for a single commit
@@ -92,17 +83,7 @@ type CombinedStatus struct {
 }
 
 // GetCombinedStatus returns the CombinedStatus for a given Commit
-func (c *Client) GetCombinedStatus(owner, repo, ref string) (*CombinedStatus, *Response, error) {
-	if err := escapeValidatePathSegments(&owner, &repo, &ref); err != nil {
-		return nil, nil, err
-	}
+func (c *Client) GetCombinedStatus(owner, repo, sha string) (*CombinedStatus, error) {
 	status := new(CombinedStatus)
-	resp, err := c.getParsedResponse("GET", fmt.Sprintf("/repos/%s/%s/commits/%s/status", owner, repo, ref), jsonHeader, nil, status)
-
-	// gitea api return empty body if nothing here jet
-	if resp != nil && resp.StatusCode == 200 && err != nil {
-		return status, resp, nil
-	}
-
-	return status, resp, err
+	return status, c.getParsedResponse("GET", fmt.Sprintf("/repos/%s/%s/commits/%s/status", owner, repo, sha), nil, nil, status)
 }

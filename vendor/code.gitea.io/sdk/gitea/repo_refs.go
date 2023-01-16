@@ -26,53 +26,44 @@ type GitObject struct {
 }
 
 // GetRepoRef get one ref's information of one repository
-func (c *Client) GetRepoRef(user, repo, ref string) (*Reference, *Response, error) {
-	if err := escapeValidatePathSegments(&user, &repo); err != nil {
-		return nil, nil, err
-	}
+func (c *Client) GetRepoRef(user, repo, ref string) (*Reference, error) {
 	ref = strings.TrimPrefix(ref, "refs/")
-	ref = pathEscapeSegments(ref)
 	r := new(Reference)
-	resp, err := c.getParsedResponse("GET", fmt.Sprintf("/repos/%s/%s/git/refs/%s", user, repo, ref), nil, nil, &r)
+	err := c.getParsedResponse("GET", fmt.Sprintf("/repos/%s/%s/git/refs/%s", user, repo, ref), nil, nil, &r)
 	if _, ok := err.(*json.UnmarshalTypeError); ok {
 		// Multiple refs
-		return nil, resp, errors.New("no exact match found for this ref")
+		return nil, errors.New("no exact match found for this ref")
 	} else if err != nil {
-		return nil, resp, err
+		return nil, err
 	}
 
-	return r, resp, nil
+	return r, nil
 }
 
 // GetRepoRefs get list of ref's information of one repository
-func (c *Client) GetRepoRefs(user, repo, ref string) ([]*Reference, *Response, error) {
-	if err := escapeValidatePathSegments(&user, &repo); err != nil {
-		return nil, nil, err
-	}
+func (c *Client) GetRepoRefs(user, repo, ref string) ([]*Reference, error) {
 	ref = strings.TrimPrefix(ref, "refs/")
-	ref = pathEscapeSegments(ref)
-
-	data, resp, err := c.getResponse("GET", fmt.Sprintf("/repos/%s/%s/git/refs/%s", user, repo, ref), nil, nil)
+	resp, err := c.getResponse("GET", fmt.Sprintf("/repos/%s/%s/git/refs/%s", user, repo, ref), nil, nil)
 	if err != nil {
-		return nil, resp, err
+		return nil, err
 	}
 
 	// Attempt to unmarshal single returned ref.
 	r := new(Reference)
-	refErr := json.Unmarshal(data, r)
+	refErr := json.Unmarshal(resp, r)
 	if refErr == nil {
-		return []*Reference{r}, resp, nil
+		return []*Reference{r}, nil
 	}
 
 	// Attempt to unmarshal multiple refs.
 	var rs []*Reference
-	refsErr := json.Unmarshal(data, &rs)
+	refsErr := json.Unmarshal(resp, &rs)
 	if refsErr == nil {
 		if len(rs) == 0 {
-			return nil, resp, errors.New("unexpected response: an array of refs with length 0")
+			return nil, errors.New("unexpected response: an array of refs with length 0")
 		}
-		return rs, resp, nil
+		return rs, nil
 	}
 
-	return nil, resp, fmt.Errorf("unmarshalling failed for both single and multiple refs: %s and %s", refErr, refsErr)
+	return nil, fmt.Errorf("unmarshalling failed for both single and multiple refs: %s and %s", refErr, refsErr)
 }

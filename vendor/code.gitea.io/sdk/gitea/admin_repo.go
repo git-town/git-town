@@ -11,15 +11,12 @@ import (
 )
 
 // AdminCreateRepo create a repo
-func (c *Client) AdminCreateRepo(user string, opt CreateRepoOption) (*Repository, *Response, error) {
-	if err := escapeValidatePathSegments(&user); err != nil {
-		return nil, nil, err
-	}
+func (c *Client) AdminCreateRepo(user string, opt CreateRepoOption) (*Repository, error) {
 	body, err := json.Marshal(&opt)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 	repo := new(Repository)
-	resp, err := c.getParsedResponse("POST", fmt.Sprintf("/admin/users/%s/repos", user), jsonHeader, bytes.NewReader(body), repo)
-	return repo, resp, err
+	return repo, c.getParsedResponse("POST", fmt.Sprintf("/admin/users/%s/repos", user),
+		jsonHeader, bytes.NewReader(body), repo)
 }

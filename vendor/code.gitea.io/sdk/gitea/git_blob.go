@@ -18,11 +18,7 @@ type GitBlobResponse struct {
 }
 
 // GetBlob get the blob of a repository file
-func (c *Client) GetBlob(user, repo, sha string) (*GitBlobResponse, *Response, error) {
-	if err := escapeValidatePathSegments(&user, &repo, &sha); err != nil {
-		return nil, nil, err
-	}
+func (c *Client) GetBlob(user, repo, sha string) (*GitBlobResponse, error) {
 	blob := new(GitBlobResponse)
-	resp, err := c.getParsedResponse("GET", fmt.Sprintf("/repos/%s/%s/git/blobs/%s", user, repo, sha), nil, nil, blob)
-	return blob, resp, err
+	return blob, c.getParsedResponse("GET", fmt.Sprintf("/repos/%s/%s/git/blobs/%s", user, repo, sha), nil, nil, blob)
 }
