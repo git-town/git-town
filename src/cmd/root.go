@@ -48,4 +48,5 @@ func init() {
 	RootCmd.AddCommand(configCmd())
 	RootCmd.AddCommand(continueCmd())
 	RootCmd.AddCommand(diffParentCommand())
+	RootCmd.AddCommand(discardCmd())
 }
