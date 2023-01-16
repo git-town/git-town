@@ -56,6 +56,7 @@ func init() {
 	RootCmd.AddCommand(setParentBranchCommand())
 	RootCmd.AddCommand(shipCmd())
 	RootCmd.AddCommand(skipCmd())
+	RootCmd.AddCommand(syncCmd())
 
 	RootCmd.CompletionOptions.DisableDefaultCmd = true
 }
