@@ -20,7 +20,7 @@ cuke: build   # runs all end-to-end tests
 	@env $(GO_BUILD_ARGS) go test . -v -count=1
 
 cukethis: build   # runs the end-to-end tests that have a @this tag
-	@env $(GO_BUILD_ARGS) go test . -v -count=1 -this
+	@env $(GO_BUILD_ARGS) cukethis=1 go test . -v -count=1
 
 cuke-prof: build  # creates a flamegraph
 	env $(GO_BUILD_ARGS) go test . -v -cpuprofile=godog.out
