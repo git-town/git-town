@@ -13,6 +13,6 @@ type Counter struct {
 }
 
 // ToString provides a globally unique text each time it is called.
-func (us *Counter) ToString() string {
-	return strconv.Itoa(int(atomic.AddUint32(&us.value, 1)))
+func (c *Counter) ToString() string {
+	return strconv.Itoa(int(atomic.AddUint32(&c.value, 1)))
 }
