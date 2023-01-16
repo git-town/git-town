@@ -19,6 +19,7 @@ import (
 //     Temporary mocks are only valid for the next command being run.
 type MockingShell struct {
 	binDir     string // the directory that stores the mock shell command implementations, ignored if empty
+	Debug      bool   // whether to log the output of subshell commands
 	gitEditor  string // name of the binary to use as the custom editor during "git commit"
 	homeDir    string // the directory that contains the global Git configuration
 	testOrigin string // optional content of the GIT_TOWN_REMOTE environment variable
@@ -178,7 +179,7 @@ func (ms *MockingShell) RunWith(opts *run.Options, cmd string, args ...string) (
 	opts.Dir = filepath.Join(ms.workingDir, opts.Dir)
 	// run the command inside the custom environment
 	result, err := run.WithOptions(opts, cmd, args...)
-	if Debug {
+	if ms.Debug {
 		fmt.Println(filepath.Base(ms.workingDir), ">", cmd, strings.Join(args, " "))
 		fmt.Println(result.Output())
 		if err != nil {
