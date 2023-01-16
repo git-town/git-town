@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/run"
+	"github.com/git-town/git-town/v7/src/stringslice"
 )
 
 // ProdRepo is a Git Repo in production code.
@@ -58,17 +59,18 @@ func NewProdRepo(debugFlag *bool) ProdRepo {
 
 // RemoveOutdatedConfiguration removes outdated Git Town configuration.
 func (r *ProdRepo) RemoveOutdatedConfiguration() error {
+	branches, err := r.Silent.LocalAndOriginBranches()
+	if err != nil {
+		return err
+	}
 	for child, parent := range r.Config.ParentBranchMap() {
-		hasChildBranch, err := r.Silent.HasLocalOrOriginBranch(child)
-		if err != nil {
-			return err
-		}
-		hasParentBranch, err := r.Silent.HasLocalOrOriginBranch(parent)
-		if err != nil {
-			return err
-		}
+		hasChildBranch := stringslice.Contains(branches, child)
+		hasParentBranch := stringslice.Contains(branches, parent)
 		if !hasChildBranch || !hasParentBranch {
-			return r.Config.RemoveParentBranch(child)
+			err = r.Config.RemoveParentBranch(child)
+			if err != nil {
+				return err
+			}
 		}
 	}
 	return nil
