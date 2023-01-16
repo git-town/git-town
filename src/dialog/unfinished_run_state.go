@@ -8,7 +8,7 @@ import (
 	survey "gopkg.in/AlecAivazis/survey.v1"
 )
 
-var (
+const (
 	// ResponseTypeAbort stands for the user choosing to abort the unfinished run state.
 	ResponseTypeAbort = "abort"
 	// ResponseTypeContinue stands for the user choosing to continue the unfinished run state.
