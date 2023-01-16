@@ -7,10 +7,10 @@ import (
 )
 
 // The current Git Town version (set at compile time).
-var version string
+var version string //nolint:gochecknoglobals
 
 // The time this Git Town binary was compiled (set at compile time).
-var buildDate string
+var buildDate string //nolint:gochecknoglobals
 
 // versionCmd represents the version command.
 func versionCmd() *cobra.Command {
