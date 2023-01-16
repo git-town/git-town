@@ -57,6 +57,7 @@ func init() {
 	RootCmd.AddCommand(shipCmd())
 	RootCmd.AddCommand(skipCmd())
 	RootCmd.AddCommand(syncCmd())
-
+	RootCmd.AddCommand(undoCmd())
+	RootCmd.AddCommand(versionCmd())
 	RootCmd.CompletionOptions.DisableDefaultCmd = true
 }
