@@ -49,4 +49,5 @@ func init() {
 	RootCmd.AddCommand(continueCmd())
 	RootCmd.AddCommand(diffParentCommand())
 	RootCmd.AddCommand(discardCmd())
+	RootCmd.AddCommand(hackCmd())
 }
