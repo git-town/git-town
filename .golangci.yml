@@ -9,7 +9,6 @@ linters:
     - forbidigo # Git Town prints a lot to the CLI
     - funlen # we keep track of this via code reviews
     - gci # we prefer keeping import statements as one blocks without empty lines
-    - gochecknoglobals # Cobra requires globals
     - gocognit # we keep track of this via code reviews
     - goconst # tests contain a ton of hard-coded test strings, for example branch names
     - gocyclo # we keep track of this via code reviews

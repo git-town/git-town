@@ -7,7 +7,7 @@ import (
 )
 
 // The current Git Town version (set at compile time).
-var version string //nolint:gochecknoglobals
+var version string
 
 // The time this Git Town binary was compiled (set at compile time).
 var buildDate string //nolint:gochecknoglobals
