@@ -7,7 +7,7 @@ import (
 )
 
 // init configures the prompts to work on Windows.
-func init() {
+func Initialize() {
 	if runtime.GOOS == "windows" {
 		surveyCore.SelectFocusIcon = ">"
 		surveyCore.MarkedOptionIcon = "[x]"

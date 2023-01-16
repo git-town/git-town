@@ -80,7 +80,7 @@ func (shell LoggingShell) RunString(fullCmd string) (*run.Result, error) {
 }
 
 // RunStringWith runs the given command (including possible arguments) in this ShellInDir's directory.
-func (shell LoggingShell) RunStringWith(fullCmd string, options run.Options) (*run.Result, error) {
+func (shell LoggingShell) RunStringWith(fullCmd string, options *run.Options) (*run.Result, error) {
 	panic("this isn't used")
 }
 
