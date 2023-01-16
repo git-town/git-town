@@ -6,6 +6,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// These variables are set at build time.
+var (
+	version   string
+	buildDate string
+)
+
 // versionCmd represents the version command.
 func versionCmd() *cobra.Command {
 	return &cobra.Command{
