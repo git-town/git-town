@@ -53,6 +53,7 @@ func init() {
 	RootCmd.AddCommand(installCommand())
 	RootCmd.AddCommand(killCommand())
 	RootCmd.AddCommand(newPullRequestCommand())
+	RootCmd.AddCommand(repoCommand())
 	RootCmd.AddCommand(setParentBranchCommand())
 	RootCmd.AddCommand(shipCmd())
 	RootCmd.AddCommand(skipCmd())
