@@ -179,9 +179,7 @@ func (ms *MockingShell) RunWith(opts *run.Options, cmd string, args ...string) (
 	opts.Dir = filepath.Join(ms.workingDir, opts.Dir)
 	// run the command inside the custom environment
 	result, err := run.WithOptions(opts, cmd, args...)
-	fmt.Println("11111")
 	if ms.Debug {
-		fmt.Println("2222222222222222")
 		fmt.Println(filepath.Base(ms.workingDir), ">", cmd, strings.Join(args, " "))
 		fmt.Println(result.Output())
 		if err != nil {
