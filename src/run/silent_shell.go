@@ -33,7 +33,7 @@ func (s SilentShell) PrintResult(text string) {
 // Run runs the given command in this ShellRunner's directory.
 func (s SilentShell) Run(cmd string, args ...string) (*Result, error) {
 	if *s.Debug {
-		s.PrintHeader(cmd)
+		s.PrintHeader(cmd, args...)
 	}
 	result, err := Exec(cmd, args...)
 	if *s.Debug && result != nil {
