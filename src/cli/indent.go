@@ -7,8 +7,8 @@ import (
 )
 
 var (
-	indentOnce sync.Once
-	identRE    *regexp.Regexp
+	indentOnce sync.Once      //nolint:gochecknoglobals
+	identRE    *regexp.Regexp //nolint:gochecknoglobals
 )
 
 // Indent outputs the given string with the given level of indentation
