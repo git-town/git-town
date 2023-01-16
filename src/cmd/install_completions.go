@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func completionsCmd() *cobra.Command {
+func completionsCmd(rootCmd *cobra.Command) *cobra.Command {
 	completionsNoDescFlag := false
 	completionsCmd := cobra.Command{
 		Use:   "completions [bash|zsh|fish|powershell]",
@@ -47,17 +47,17 @@ To load completions for each session, add the above line to your PowerShell prof
 		Run: func(cmd *cobra.Command, args []string) {
 			switch args[0] {
 			case "bash":
-				_ = RootCmd.GenBashCompletion(os.Stdout)
+				_ = RootCmd().GenBashCompletion(os.Stdout)
 			case "zsh":
 				if completionsNoDescFlag {
-					_ = RootCmd.GenZshCompletionNoDesc(os.Stdout)
+					_ = rootCmd.GenZshCompletionNoDesc(os.Stdout)
 				} else {
-					_ = RootCmd.GenZshCompletion(os.Stdout)
+					_ = rootCmd.GenZshCompletion(os.Stdout)
 				}
 			case "fish":
-				_ = RootCmd.GenFishCompletion(os.Stdout, !completionsNoDescFlag)
+				_ = rootCmd.GenFishCompletion(os.Stdout, !completionsNoDescFlag)
 			case "powershell":
-				_ = RootCmd.GenPowerShellCompletion(os.Stdout)
+				_ = rootCmd.GenPowerShellCompletion(os.Stdout)
 			}
 		},
 	}

@@ -13,8 +13,7 @@ import (
 
 // These variables represent command-line flags.
 var (
-	debugFlag bool
-	prodRepo  = git.NewProdRepo()
+	prodRepo = git.NewProdRepo()
 )
 
 // These variables are set at build time.
