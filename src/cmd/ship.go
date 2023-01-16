@@ -29,13 +29,12 @@ type shipConfig struct {
 	deleteOriginBranch      bool
 }
 
-// optional commit message provided via the command line.
-var commitMessage string
-
-var shipCmd = &cobra.Command{
-	Use:   "ship",
-	Short: "Deliver a completed feature branch",
-	Long: fmt.Sprintf(`Deliver a completed feature branch
+func shipCmd(repo *git.ProdRepo) *cobra.Command {
+	var commitMessage string
+	shipCmd := cobra.Command{
+		Use:   "ship",
+		Short: "Deliver a completed feature branch",
+		Long: fmt.Sprintf(`Deliver a completed feature branch
 
 Squash-merges the current branch, or <branch_name> if given,
 into the main branch, resulting in linear history on the main branch.
@@ -61,29 +60,32 @@ If your origin server deletes shipped branches, for example
 GitHub's feature to automatically delete head branches,
 run "git config %s false"
 and Git Town will leave it up to your origin server to delete the remote branch.`, config.GithubToken, config.ShipDeleteRemoteBranch),
-	Run: func(cmd *cobra.Command, args []string) {
-		driver := hosting.NewDriver(&prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction)
-		config, err := gitShipConfig(args, driver, prodRepo)
-		if err != nil {
-			cli.Exit(err)
-		}
-		stepList, err := createShipStepList(config, prodRepo)
-		if err != nil {
-			cli.Exit(err)
-		}
-		runState := runstate.New("ship", stepList)
-		err = runstate.Execute(runState, prodRepo, driver)
-		if err != nil {
-			cli.Exit(err)
-		}
-	},
-	Args: cobra.MaximumNArgs(1),
-	PreRunE: func(cmd *cobra.Command, args []string) error {
-		if err := ValidateIsRepository(prodRepo); err != nil {
-			return err
-		}
-		return validateIsConfigured(prodRepo)
-	},
+		Run: func(cmd *cobra.Command, args []string) {
+			driver := hosting.NewDriver(&repo.Config, &repo.Silent, cli.PrintDriverAction)
+			config, err := gitShipConfig(args, driver, repo)
+			if err != nil {
+				cli.Exit(err)
+			}
+			stepList, err := createShipStepList(config, commitMessage, repo)
+			if err != nil {
+				cli.Exit(err)
+			}
+			runState := runstate.New("ship", stepList)
+			err = runstate.Execute(runState, repo, driver)
+			if err != nil {
+				cli.Exit(err)
+			}
+		},
+		Args: cobra.MaximumNArgs(1),
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if err := ValidateIsRepository(repo); err != nil {
+				return err
+			}
+			return validateIsConfigured(repo)
+		},
+	}
+	shipCmd.Flags().StringVarP(&commitMessage, "message", "m", "", "Specify the commit message for the squash commit")
+	return &shipCmd
 }
 
 func gitShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (shipConfig, error) {
@@ -138,7 +140,7 @@ func gitShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (sh
 	if err != nil {
 		return shipConfig{}, err
 	}
-	ensureParentBranchIsMainOrPerennialBranch(result.branchToShip)
+	ensureParentBranchIsMainOrPerennialBranch(result.branchToShip, repo)
 	result.hasTrackingBranch, err = repo.Silent.HasTrackingBranch(result.branchToShip)
 	if err != nil {
 		return shipConfig{}, err
@@ -146,7 +148,7 @@ func gitShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (sh
 	result.isOffline = isOffline
 	result.isShippingInitialBranch = result.branchToShip == result.initialBranch
 	result.branchToMergeInto = repo.Config.ParentBranch(result.branchToShip)
-	prInfo, err := createPullRequestInfo(result.branchToShip, result.branchToMergeInto, driver)
+	prInfo, err := createPullRequestInfo(result.branchToShip, result.branchToMergeInto, repo, driver)
 	if err != nil {
 		return shipConfig{}, err
 	}
@@ -154,7 +156,7 @@ func gitShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (sh
 	result.defaultCommitMessage = prInfo.DefaultCommitMessage
 	result.pullRequestNumber = prInfo.PullRequestNumber
 	result.childBranches = repo.Config.ChildBranches(result.branchToShip)
-	deleteOrigin, err := prodRepo.Config.ShouldShipDeleteOriginBranch()
+	deleteOrigin, err := repo.Config.ShouldShipDeleteOriginBranch()
 	if err != nil {
 		return shipConfig{}, err
 	}
@@ -162,10 +164,10 @@ func gitShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (sh
 	return result, err
 }
 
-func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
-	parentBranch := prodRepo.Config.ParentBranch(branchName)
-	if !prodRepo.Config.IsMainBranch(parentBranch) && !prodRepo.Config.IsPerennialBranch(parentBranch) {
-		ancestors := prodRepo.Config.AncestorBranches(branchName)
+func ensureParentBranchIsMainOrPerennialBranch(branchName string, repo *git.ProdRepo) {
+	parentBranch := repo.Config.ParentBranch(branchName)
+	if !repo.Config.IsMainBranch(parentBranch) && !repo.Config.IsPerennialBranch(parentBranch) {
+		ancestors := repo.Config.AncestorBranches(branchName)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
 		oldestAncestor := ancestorsWithoutMainOrPerennial[0]
 		cli.Exit(fmt.Errorf(`shipping this branch would ship %q as well,
@@ -173,7 +175,7 @@ please ship %q first`, strings.Join(ancestorsWithoutMainOrPerennial, ", "), olde
 	}
 }
 
-func createShipStepList(config shipConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+func createShipStepList(config shipConfig, commitMessage string, repo *git.ProdRepo) (runstate.StepList, error) {
 	syncSteps, err := runstate.SyncBranchSteps(config.branchToMergeInto, true, repo)
 	if err != nil {
 		return runstate.StepList{}, err
@@ -223,15 +225,15 @@ func createShipStepList(config shipConfig, repo *git.ProdRepo) (runstate.StepLis
 	return result, err
 }
 
-func createPullRequestInfo(branch, parentBranch string, driver hosting.Driver) (hosting.PullRequestInfo, error) {
-	hasOrigin, err := prodRepo.Silent.HasOrigin()
+func createPullRequestInfo(branch, parentBranch string, repo *git.ProdRepo, driver hosting.Driver) (hosting.PullRequestInfo, error) {
+	hasOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
 		return hosting.PullRequestInfo{}, err
 	}
 	if !hasOrigin {
 		return hosting.PullRequestInfo{}, nil
 	}
-	isOffline, err := prodRepo.Config.IsOffline()
+	isOffline, err := repo.Config.IsOffline()
 	if err != nil {
 		return hosting.PullRequestInfo{}, err
 	}
@@ -242,9 +244,4 @@ func createPullRequestInfo(branch, parentBranch string, driver hosting.Driver) (
 		return hosting.PullRequestInfo{}, nil
 	}
 	return driver.LoadPullRequestInfo(branch, parentBranch)
-}
-
-func init() {
-	shipCmd.Flags().StringVarP(&commitMessage, "message", "m", "", "Specify the commit message for the squash commit")
-	RootCmd.AddCommand(shipCmd)
 }

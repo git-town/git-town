@@ -18,7 +18,7 @@ type ProdRepo struct {
 }
 
 // NewProdRepo provides a Repo instance in the current working directory.
-func NewProdRepo() *ProdRepo {
+func NewProdRepo() ProdRepo {
 	silentShell := run.SilentShell{}
 	config := config.NewGitTown(silentShell)
 	currentBranchTracker := Cache[string]{}
@@ -47,7 +47,7 @@ func NewProdRepo() *ProdRepo {
 		RemoteBranchCache:  &remoteBranchCache,
 		RootDirCache:       &Cache[string]{},
 	}
-	return &ProdRepo{
+	return ProdRepo{
 		Silent:       silentRunner,
 		Logging:      loggingRunner,
 		LoggingShell: loggingShell,

@@ -8,10 +8,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var aliasCommand = &cobra.Command{
-	Use:   "aliases (add | remove)",
-	Short: "Adds or removes default global aliases",
-	Long: `Adds or removes default global aliases
+func aliasCommand(repo *git.ProdRepo) *cobra.Command {
+	return &cobra.Command{
+		Use:   "aliases (add | remove)",
+		Short: "Adds or removes default global aliases",
+		Long: `Adds or removes default global aliases
 
 Global aliases make Git Town commands feel like native Git commands.
 When enabled, you can run "git hack" instead of "git town hack".
@@ -19,36 +20,37 @@ When enabled, you can run "git hack" instead of "git town hack".
 Does not overwrite existing aliases.
 
 This can conflict with other tools that also define Git aliases.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		var action func(string, *git.ProdRepo) error
-		switch args[0] {
-		case "add":
-			action = addAlias
-		case "remove":
-			action = removeAlias
-		default:
-			cli.Exit(fmt.Errorf(`invalid argument %q. Please provide either "add" or "remove"`, args[0]))
-		}
-		commandsToAlias := []string{
-			"append",
-			"hack",
-			"kill",
-			"new-pull-request",
-			"prepend",
-			"prune-branches",
-			"rename-branch",
-			"repo",
-			"ship",
-			"sync",
-		}
-		for _, command := range commandsToAlias {
-			err := action(command, prodRepo)
-			if err != nil {
-				cli.Exit(err)
+		Run: func(cmd *cobra.Command, args []string) {
+			var action func(string, *git.ProdRepo) error
+			switch args[0] {
+			case "add":
+				action = addAlias
+			case "remove":
+				action = removeAlias
+			default:
+				cli.Exit(fmt.Errorf(`invalid argument %q. Please provide either "add" or "remove"`, args[0]))
 			}
-		}
-	},
-	Args: cobra.ExactArgs(1),
+			commandsToAlias := []string{
+				"append",
+				"hack",
+				"kill",
+				"new-pull-request",
+				"prepend",
+				"prune-branches",
+				"rename-branch",
+				"repo",
+				"ship",
+				"sync",
+			}
+			for _, command := range commandsToAlias {
+				err := action(command, repo)
+				if err != nil {
+					cli.Exit(err)
+				}
+			}
+		},
+		Args: cobra.ExactArgs(1),
+	}
 }
 
 func addAlias(command string, repo *git.ProdRepo) error {
@@ -69,8 +71,4 @@ func removeAlias(command string, repo *git.ProdRepo) error {
 		return repo.LoggingShell.PrintCommand(result.Command(), result.Args()...)
 	}
 	return nil
-}
-
-func init() {
-	installCommand.AddCommand(aliasCommand)
 }

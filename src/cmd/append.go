@@ -20,10 +20,11 @@ type appendConfig struct {
 	targetBranch        string
 }
 
-var appendCommand = &cobra.Command{
-	Use:   "append <branch>",
-	Short: "Creates a new feature branch as a child of the current branch",
-	Long: `Creates a new feature branch as a direct child of the current branch.
+func appendCmd(repo *git.ProdRepo) *cobra.Command {
+	return &cobra.Command{
+		Use:   "append <branch>",
+		Short: "Creates a new feature branch as a child of the current branch",
+		Long: `Creates a new feature branch as a direct child of the current branch.
 
 Syncs the current branch,
 forks a new feature branch with the given name off the current branch,
@@ -33,28 +34,29 @@ pushes the new feature branch to the origin repository
 and brings over all uncommitted changes to the new feature branch.
 
 See "sync" for information regarding upstream remotes.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		config, err := createAppendConfig(args, prodRepo)
-		if err != nil {
-			cli.Exit(err)
-		}
-		stepList, err := createAppendStepList(config, prodRepo)
-		if err != nil {
-			cli.Exit(err)
-		}
-		runState := runstate.New("append", stepList)
-		err = runstate.Execute(runState, prodRepo, nil)
-		if err != nil {
-			cli.Exit(err)
-		}
-	},
-	Args: cobra.ExactArgs(1),
-	PreRunE: func(cmd *cobra.Command, args []string) error {
-		if err := ValidateIsRepository(prodRepo); err != nil {
-			return err
-		}
-		return validateIsConfigured(prodRepo)
-	},
+		Run: func(cmd *cobra.Command, args []string) {
+			config, err := createAppendConfig(args, repo)
+			if err != nil {
+				cli.Exit(err)
+			}
+			stepList, err := createAppendStepList(config, repo)
+			if err != nil {
+				cli.Exit(err)
+			}
+			runState := runstate.New("append", stepList)
+			err = runstate.Execute(runState, repo, nil)
+			if err != nil {
+				cli.Exit(err)
+			}
+		},
+		Args: cobra.ExactArgs(1),
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if err := ValidateIsRepository(repo); err != nil {
+				return err
+			}
+			return validateIsConfigured(repo)
+		},
+	}
 }
 
 func createAppendConfig(args []string, repo *git.ProdRepo) (appendConfig, error) {
@@ -103,8 +105,4 @@ func createAppendConfig(args []string, repo *git.ProdRepo) (appendConfig, error)
 	}
 	result.isOffline = isOffline
 	return result, err
-}
-
-func init() {
-	RootCmd.AddCommand(appendCommand)
 }

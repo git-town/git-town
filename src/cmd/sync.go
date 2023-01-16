@@ -21,10 +21,13 @@ type syncConfig struct {
 	shouldPushTags bool
 }
 
-var syncCmd = &cobra.Command{
-	Use:   "sync",
-	Short: "Updates the current branch with all relevant changes",
-	Long: fmt.Sprintf(`Updates the current branch with all relevant changes
+func syncCmd(repo *git.ProdRepo) *cobra.Command {
+	var allFlag bool
+	var dryRunFlag bool
+	syncCmd := cobra.Command{
+		Use:   "sync",
+		Short: "Updates the current branch with all relevant changes",
+		Long: fmt.Sprintf(`Updates the current branch with all relevant changes
 
 Synchronizes the current branch with the rest of the world.
 
@@ -41,53 +44,57 @@ When run on the main branch or a perennial branch
 If the repository contains an "upstream" remote,
 syncs the main branch with its upstream counterpart.
 You can disable this by running "git config %s false".`, config.SyncUpstream),
-	Run: func(cmd *cobra.Command, args []string) {
-		config, err := createSyncConfig(prodRepo)
-		if err != nil {
-			cli.Exit(err)
-		}
-		stepList, err := createSyncStepList(config, prodRepo)
-		if err != nil {
-			cli.Exit(err)
-		}
-		runState := runstate.New("sync", stepList)
-		err = runstate.Execute(runState, prodRepo, nil)
-		if err != nil {
-			cli.Exit(err)
-		}
-	},
-	Args: cobra.NoArgs,
-	PreRunE: func(cmd *cobra.Command, args []string) error {
-		if err := ValidateIsRepository(prodRepo); err != nil {
-			return err
-		}
-		if dryRunFlag {
-			currentBranch, err := prodRepo.Silent.CurrentBranch()
+		Run: func(cmd *cobra.Command, args []string) {
+			config, err := createSyncConfig(allFlag, repo)
+			if err != nil {
+				cli.Exit(err)
+			}
+			stepList, err := createSyncStepList(config, repo)
+			if err != nil {
+				cli.Exit(err)
+			}
+			runState := runstate.New("sync", stepList)
+			err = runstate.Execute(runState, repo, nil)
+			if err != nil {
+				cli.Exit(err)
+			}
+		},
+		Args: cobra.NoArgs,
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if err := ValidateIsRepository(repo); err != nil {
+				return err
+			}
+			if dryRunFlag {
+				currentBranch, err := repo.Silent.CurrentBranch()
+				if err != nil {
+					return err
+				}
+				repo.DryRun.Activate(currentBranch)
+			}
+			if err := validateIsConfigured(repo); err != nil {
+				return err
+			}
+			exit, err := handleUnfinishedState(repo, nil)
 			if err != nil {
 				return err
 			}
-			prodRepo.DryRun.Activate(currentBranch)
-		}
-		if err := validateIsConfigured(prodRepo); err != nil {
-			return err
-		}
-		exit, err := handleUnfinishedState(prodRepo, nil)
-		if err != nil {
-			return err
-		}
-		if exit {
-			os.Exit(0)
-		}
-		return nil
-	},
+			if exit {
+				os.Exit(0)
+			}
+			return nil
+		},
+	}
+	syncCmd.Flags().BoolVar(&allFlag, "all", false, "Sync all local branches")
+	syncCmd.Flags().BoolVar(&dryRunFlag, "dry-run", false, "Print the commands but don't run them")
+	return &syncCmd
 }
 
-func createSyncConfig(repo *git.ProdRepo) (syncConfig, error) {
+func createSyncConfig(allFlag bool, repo *git.ProdRepo) (syncConfig, error) {
 	hasOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
 		return syncConfig{}, err
 	}
-	isOffline, err := prodRepo.Config.IsOffline()
+	isOffline, err := repo.Config.IsOffline()
 	if err != nil {
 		return syncConfig{}, err
 	}
@@ -121,8 +128,8 @@ func createSyncConfig(repo *git.ProdRepo) (syncConfig, error) {
 		if err != nil {
 			return syncConfig{}, err
 		}
-		result.branchesToSync = append(prodRepo.Config.AncestorBranches(result.initialBranch), result.initialBranch)
-		result.shouldPushTags = !prodRepo.Config.IsFeatureBranch(result.initialBranch)
+		result.branchesToSync = append(repo.Config.AncestorBranches(result.initialBranch), result.initialBranch)
+		result.shouldPushTags = !repo.Config.IsFeatureBranch(result.initialBranch)
 	}
 	return result, nil
 }
@@ -142,10 +149,4 @@ func createSyncStepList(config syncConfig, repo *git.ProdRepo) (runstate.StepLis
 	}
 	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
 	return result, err
-}
-
-func init() {
-	syncCmd.Flags().BoolVar(&allFlag, "all", false, "Sync all local branches")
-	syncCmd.Flags().BoolVar(&dryRunFlag, "dry-run", false, dryRunFlagDescription)
-	RootCmd.AddCommand(syncCmd)
 }

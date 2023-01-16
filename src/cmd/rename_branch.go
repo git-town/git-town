@@ -21,12 +21,12 @@ type renameBranchConfig struct {
 	oldBranchName              string
 }
 
-var forceFlag bool
-
-var renameBranchCommand = &cobra.Command{
-	Use:   "rename-branch [<old_branch_name>] <new_branch_name>",
-	Short: "Renames a branch both locally and remotely",
-	Long: `Renames a branch both locally and remotely
+func renameBranchCommand(repo *git.ProdRepo) *cobra.Command {
+	forceFlag := false
+	renameBranchCmd := &cobra.Command{
+		Use:   "rename-branch [<old_branch_name>] <new_branch_name>",
+		Short: "Renames a branch both locally and remotely",
+		Long: `Renames a branch both locally and remotely
 
 Renames the given branch in the local and origin repository.
 Aborts if the new branch name already exists or the tracking branch is out of sync.
@@ -44,36 +44,39 @@ When there is a tracking branch
 When run on a perennial branch
 - confirm with the "-f" option
 - registers the new perennial branch name in the local Git Town configuration`,
-	Run: func(cmd *cobra.Command, args []string) {
-		config, err := createRenameBranchConfig(args, prodRepo)
-		if err != nil {
-			cli.Exit(err)
-		}
-		stepList, err := createRenameBranchStepList(config, prodRepo)
-		if err != nil {
-			cli.Exit(err)
-		}
-		runState := runstate.New("rename-branch", stepList)
-		err = runstate.Execute(runState, prodRepo, nil)
-		if err != nil {
-			cli.Exit(err)
-		}
-	},
-	Args: cobra.RangeArgs(1, 2),
-	PreRunE: func(cmd *cobra.Command, args []string) error {
-		if err := ValidateIsRepository(prodRepo); err != nil {
-			return err
-		}
-		return validateIsConfigured(prodRepo)
-	},
+		Run: func(cmd *cobra.Command, args []string) {
+			config, err := createRenameBranchConfig(args, forceFlag, repo)
+			if err != nil {
+				cli.Exit(err)
+			}
+			stepList, err := createRenameBranchStepList(config, repo)
+			if err != nil {
+				cli.Exit(err)
+			}
+			runState := runstate.New("rename-branch", stepList)
+			err = runstate.Execute(runState, repo, nil)
+			if err != nil {
+				cli.Exit(err)
+			}
+		},
+		Args: cobra.RangeArgs(1, 2),
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if err := ValidateIsRepository(repo); err != nil {
+				return err
+			}
+			return validateIsConfigured(repo)
+		},
+	}
+	renameBranchCmd.Flags().BoolVar(&forceFlag, "force", false, "Force rename of perennial branch")
+	return renameBranchCmd
 }
 
-func createRenameBranchConfig(args []string, repo *git.ProdRepo) (renameBranchConfig, error) {
+func createRenameBranchConfig(args []string, forceFlag bool, repo *git.ProdRepo) (renameBranchConfig, error) {
 	initialBranch, err := repo.Silent.CurrentBranch()
 	if err != nil {
 		return renameBranchConfig{}, err
 	}
-	isOffline, err := prodRepo.Config.IsOffline()
+	isOffline, err := repo.Config.IsOffline()
 	if err != nil {
 		return renameBranchConfig{}, err
 	}
@@ -160,9 +163,4 @@ func createRenameBranchStepList(config renameBranchConfig, repo *git.ProdRepo) (
 	result.Append(&steps.DeleteLocalBranchStep{BranchName: config.oldBranchName})
 	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, repo)
 	return result, err
-}
-
-func init() {
-	renameBranchCommand.Flags().BoolVar(&forceFlag, "force", false, "Force rename of perennial branch")
-	RootCmd.AddCommand(renameBranchCommand)
 }

@@ -6,16 +6,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// versionCmd represents the version command.
-var versionCmd = &cobra.Command{
-	Use:   "version",
-	Short: "Displays the version",
-	Args:  cobra.NoArgs,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("Git Town %s (%s)\n", version, buildDate)
-	},
-}
+// The current Git Town version (set at compile time).
+var version string
 
-func init() {
-	RootCmd.AddCommand(versionCmd)
+// The time this Git Town binary was compiled (set at compile time).
+var buildDate string
+
+// versionCmd represents the version command.
+func versionCmd() *cobra.Command {
+	return &cobra.Command{
+		Use:   "version",
+		Short: "Displays the version",
+		Args:  cobra.NoArgs,
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Printf("Git Town %s (%s)\n", version, buildDate)
+		},
+	}
 }
