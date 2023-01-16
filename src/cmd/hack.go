@@ -12,7 +12,7 @@ import (
 
 func hackCmd() *cobra.Command {
 	promptForParent := false
-	cmd := &cobra.Command{
+	hackCmd := &cobra.Command{
 		Use:   "hack <branch>",
 		Short: "Creates a new feature branch off the main development branch",
 		Long: `Creates a new feature branch off the main development branch
@@ -47,8 +47,8 @@ See "sync" for information regarding upstream remotes.`,
 			return validateIsConfigured(prodRepo)
 		},
 	}
-	cmd.Flags().BoolVarP(&promptForParent, "prompt", "p", false, "Prompt for the parent branch")
-	return cmd
+	hackCmd.Flags().BoolVarP(&promptForParent, "prompt", "p", false, "Prompt for the parent branch")
+	return hackCmd
 }
 
 func determineParentBranch(targetBranch string, promptForParent bool, repo *git.ProdRepo) (string, error) {

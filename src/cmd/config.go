@@ -71,7 +71,6 @@ func configCmd() *cobra.Command {
 	configCmd.AddCommand(resetConfigCommand())
 	configCmd.AddCommand(setupConfigCommand())
 	configCmd.AddCommand(syncStrategyCommand())
-
 	return configCmd
 }
 

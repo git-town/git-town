@@ -24,35 +24,37 @@ type killConfig struct {
 	targetBranch        string
 }
 
-var killCommand = &cobra.Command{
-	Use:   "kill [<branch>]",
-	Short: "Removes an obsolete feature branch",
-	Long: `Removes an obsolete feature branch
+func killCommand() *cobra.Command {
+	return &cobra.Command{
+		Use:   "kill [<branch>]",
+		Short: "Removes an obsolete feature branch",
+		Long: `Removes an obsolete feature branch
 
 Deletes the current or provided branch from the local and origin repositories.
 Does not delete perennial branches nor the main branch.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		config, err := createKillConfig(args, prodRepo)
-		if err != nil {
-			cli.Exit(err)
-		}
-		stepList, err := createKillStepList(config, prodRepo)
-		if err != nil {
-			cli.Exit(err)
-		}
-		runState := runstate.New("kill", stepList)
-		err = runstate.Execute(runState, prodRepo, nil)
-		if err != nil {
-			cli.Exit(err)
-		}
-	},
-	Args: cobra.MaximumNArgs(1),
-	PreRunE: func(cmd *cobra.Command, args []string) error {
-		if err := ValidateIsRepository(prodRepo); err != nil {
-			return err
-		}
-		return validateIsConfigured(prodRepo)
-	},
+		Run: func(cmd *cobra.Command, args []string) {
+			config, err := createKillConfig(args, prodRepo)
+			if err != nil {
+				cli.Exit(err)
+			}
+			stepList, err := createKillStepList(config, prodRepo)
+			if err != nil {
+				cli.Exit(err)
+			}
+			runState := runstate.New("kill", stepList)
+			err = runstate.Execute(runState, prodRepo, nil)
+			if err != nil {
+				cli.Exit(err)
+			}
+		},
+		Args: cobra.MaximumNArgs(1),
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if err := ValidateIsRepository(prodRepo); err != nil {
+				return err
+			}
+			return validateIsConfigured(prodRepo)
+		},
+	}
 }
 
 func createKillConfig(args []string, repo *git.ProdRepo) (killConfig, error) {
@@ -158,8 +160,4 @@ func createKillStepList(config killConfig, repo *git.ProdRepo) (runstate.StepLis
 		StashOpenChanges: config.initialBranch != config.targetBranch && config.targetBranch == config.previousBranch,
 	}, repo)
 	return result, err
-}
-
-func init() {
-	RootCmd.AddCommand(killCommand)
 }

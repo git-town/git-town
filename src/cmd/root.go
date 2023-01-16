@@ -51,6 +51,7 @@ func init() {
 	RootCmd.AddCommand(discardCmd())
 	RootCmd.AddCommand(hackCmd())
 	RootCmd.AddCommand(installCommand())
+	RootCmd.AddCommand(killCommand())
 
 	RootCmd.CompletionOptions.DisableDefaultCmd = true
 }

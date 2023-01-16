@@ -5,12 +5,12 @@ import (
 )
 
 func installCommand() *cobra.Command {
-	cmd := &cobra.Command{
+	installCmd := &cobra.Command{
 		Use:   "install",
 		Short: "Commands to set up Git Town on your computer",
 		Args:  cobra.NoArgs,
 	}
-	cmd.AddCommand(aliasCommand())
-	cmd.AddCommand(completionsCmd())
-	return cmd
+	installCmd.AddCommand(aliasCommand())
+	installCmd.AddCommand(completionsCmd())
+	return installCmd
 }
