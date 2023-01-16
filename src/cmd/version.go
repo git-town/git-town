@@ -6,11 +6,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// These variables are set at build time.
-var (
-	version   string
-	buildDate string
-)
+// the current Git Town version (set at compile time)
+var version string
+
+// the time this Git Town binary was compiled (set at compile time)
+var buildDate string
 
 // versionCmd represents the version command.
 func versionCmd() *cobra.Command {
