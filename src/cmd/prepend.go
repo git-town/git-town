@@ -22,10 +22,11 @@ type prependConfig struct {
 	targetBranch        string
 }
 
-var prependCommand = &cobra.Command{
-	Use:   "prepend <branch>",
-	Short: "Creates a new feature branch as the parent of the current branch",
-	Long: `Creates a new feature branch as the parent of the current branch
+func prependCommand(repo *git.ProdRepo) *cobra.Command {
+	return &cobra.Command{
+		Use:   "prepend <branch>",
+		Short: "Creates a new feature branch as the parent of the current branch",
+		Long: `Creates a new feature branch as the parent of the current branch
 
 Syncs the parent branch,
 cuts a new feature branch with the given name off the parent branch,
@@ -36,29 +37,30 @@ and brings over all uncommitted changes to the new feature branch.
 
 See "sync" for upstream remote options.
 `,
-	Run: func(cmd *cobra.Command, args []string) {
-		config, err := createPrependConfig(args, prodRepo)
-		if err != nil {
-			cli.Exit(err)
-		}
-		stepList, err := createPrependStepList(config, prodRepo)
-		if err != nil {
-			cli.Exit(err)
-		}
-		runState := runstate.New("prepend", stepList)
-		err = runstate.Execute(runState, prodRepo, nil)
-		if err != nil {
-			fmt.Println(err)
-			cli.Exit(err)
-		}
-	},
-	Args: cobra.ExactArgs(1),
-	PreRunE: func(cmd *cobra.Command, args []string) error {
-		if err := ValidateIsRepository(prodRepo); err != nil {
-			return err
-		}
-		return validateIsConfigured(prodRepo)
-	},
+		Run: func(cmd *cobra.Command, args []string) {
+			config, err := createPrependConfig(args, repo)
+			if err != nil {
+				cli.Exit(err)
+			}
+			stepList, err := createPrependStepList(config, repo)
+			if err != nil {
+				cli.Exit(err)
+			}
+			runState := runstate.New("prepend", stepList)
+			err = runstate.Execute(runState, repo, nil)
+			if err != nil {
+				fmt.Println(err)
+				cli.Exit(err)
+			}
+		},
+		Args: cobra.ExactArgs(1),
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if err := ValidateIsRepository(repo); err != nil {
+				return err
+			}
+			return validateIsConfigured(repo)
+		},
+	}
 }
 
 func createPrependConfig(args []string, repo *git.ProdRepo) (prependConfig, error) {
@@ -78,7 +80,7 @@ func createPrependConfig(args []string, repo *git.ProdRepo) (prependConfig, erro
 	if err != nil {
 		return prependConfig{}, err
 	}
-	isOffline, err := prodRepo.Config.IsOffline()
+	isOffline, err := repo.Config.IsOffline()
 	if err != nil {
 		return prependConfig{}, err
 	}
@@ -131,8 +133,4 @@ func createPrependStepList(config prependConfig, repo *git.ProdRepo) (runstate.S
 	}
 	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
 	return result, err
-}
-
-func init() {
-	RootCmd.AddCommand(prependCommand)
 }

@@ -11,23 +11,6 @@ import (
 	"github.com/git-town/git-town/v7/src/steps"
 )
 
-// These variables represent command-line flags.
-var (
-	allFlag,
-	debugFlag,
-	dryRunFlag,
-	globalFlag bool
-	prodRepo = git.NewProdRepo()
-)
-
-// These variables are set at build time.
-var (
-	version   string
-	buildDate string
-)
-
-const dryRunFlagDescription = "Print the commands but don't run them"
-
 func validateIsConfigured(repo *git.ProdRepo) error {
 	err := dialog.EnsureIsConfigured(repo)
 	if err != nil {
