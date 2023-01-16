@@ -14,38 +14,40 @@ type pruneBranchesConfig struct {
 	mainBranch                               string
 }
 
-var pruneBranchesCommand = &cobra.Command{
-	Use:   "prune-branches",
-	Short: "Deletes local branches whose tracking branch no longer exists",
-	Long: `Deletes local branches whose tracking branch no longer exists
+func pruneBranchesCommand() *cobra.Command {
+	return &cobra.Command{
+		Use:   "prune-branches",
+		Short: "Deletes local branches whose tracking branch no longer exists",
+		Long: `Deletes local branches whose tracking branch no longer exists
 
 Deletes branches whose tracking branch no longer exists from the local repository.
 This usually means the branch was shipped or killed on another machine.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		config, err := createPruneBranchesConfig(prodRepo)
-		if err != nil {
-			cli.Exit(err)
-		}
-		stepList, err := createPruneBranchesStepList(config, prodRepo)
-		if err != nil {
-			cli.Exit(err)
-		}
-		runState := runstate.New("prune-branches", stepList)
-		err = runstate.Execute(runState, prodRepo, nil)
-		if err != nil {
-			cli.Exit(err)
-		}
-	},
-	Args: cobra.NoArgs,
-	PreRunE: func(cmd *cobra.Command, args []string) error {
-		if err := ValidateIsRepository(prodRepo); err != nil {
-			return err
-		}
-		if err := validateIsConfigured(prodRepo); err != nil {
-			return err
-		}
-		return prodRepo.Config.ValidateIsOnline()
-	},
+		Run: func(cmd *cobra.Command, args []string) {
+			config, err := createPruneBranchesConfig(prodRepo)
+			if err != nil {
+				cli.Exit(err)
+			}
+			stepList, err := createPruneBranchesStepList(config, prodRepo)
+			if err != nil {
+				cli.Exit(err)
+			}
+			runState := runstate.New("prune-branches", stepList)
+			err = runstate.Execute(runState, prodRepo, nil)
+			if err != nil {
+				cli.Exit(err)
+			}
+		},
+		Args: cobra.NoArgs,
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if err := ValidateIsRepository(prodRepo); err != nil {
+				return err
+			}
+			if err := validateIsConfigured(prodRepo); err != nil {
+				return err
+			}
+			return prodRepo.Config.ValidateIsOnline()
+		},
+	}
 }
 
 func createPruneBranchesConfig(repo *git.ProdRepo) (pruneBranchesConfig, error) {
@@ -96,8 +98,4 @@ func createPruneBranchesStepList(config pruneBranchesConfig, repo *git.ProdRepo)
 	}
 	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, repo)
 	return result, err
-}
-
-func init() {
-	RootCmd.AddCommand(pruneBranchesCommand)
 }

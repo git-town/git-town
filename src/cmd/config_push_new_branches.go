@@ -10,7 +10,7 @@ import (
 
 func pushNewBranchesCommand() *cobra.Command {
 	globalFlag := false
-	cmd := cobra.Command{
+	pushNewBranchesCmd := cobra.Command{
 		Use:   "push-new-branches [--global] [(yes | no)]",
 		Short: "Displays or changes whether new branches get pushed to origin",
 		Long: `Displays or changes whether new branches get pushed to origin.
@@ -35,8 +35,8 @@ push the new branch to the origin remote.`,
 			return ValidateIsRepository(prodRepo)
 		},
 	}
-	cmd.Flags().BoolVar(&globalFlag, "global", false, "Displays or sets your global new branch push flag")
-	return &cmd
+	pushNewBranchesCmd.Flags().BoolVar(&globalFlag, "global", false, "Displays or sets your global new branch push flag")
+	return &pushNewBranchesCmd
 }
 
 func printPushNewBranches(globalFlag bool, repo *git.ProdRepo) error {

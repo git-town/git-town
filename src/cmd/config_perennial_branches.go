@@ -9,7 +9,7 @@ import (
 )
 
 func perennialBranchesCmd() *cobra.Command {
-	cmd := cobra.Command{
+	perennialBranchesCmd := cobra.Command{
 		Use:   "perennial-branches",
 		Short: "Displays your perennial branches",
 		Long: `Displays your perennial branches
@@ -24,8 +24,8 @@ They cannot be shipped.`,
 			return ValidateIsRepository(prodRepo)
 		},
 	}
-	cmd.AddCommand(updatePerennialBranchesCmd())
-	return &cmd
+	perennialBranchesCmd.AddCommand(updatePerennialBranchesCmd())
+	return &perennialBranchesCmd
 }
 
 func updatePerennialBranchesCmd() *cobra.Command {

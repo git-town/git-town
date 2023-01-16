@@ -8,7 +8,7 @@ import (
 
 func completionsCmd() *cobra.Command {
 	completionsNoDesc := false
-	cmd := &cobra.Command{
+	completionsCmd := cobra.Command{
 		Use:   "completions [bash|zsh|fish|powershell]",
 		Short: "Generates auto-completion for bash, zsh, fish, or PowerShell",
 		Long: `Generates auto-completion for bash, zsh, fish, or PowerShell.
@@ -61,6 +61,6 @@ To load completions for each session, add the above line to your PowerShell prof
 			}
 		},
 	}
-	cmd.Flags().BoolVar(&completionsNoDesc, "no-descriptions", false, "disable completions description for shells that support it")
-	return cmd
+	completionsCmd.Flags().BoolVar(&completionsNoDesc, "no-descriptions", false, "disable completions description for shells that support it")
+	return &completionsCmd
 }
