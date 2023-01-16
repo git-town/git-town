@@ -16,6 +16,8 @@ import (
 // Making copies of a fully set up Git repo is much faster than creating it from scratch.
 // End-to-end tests run multi-threaded, all threads share a global GitManager instance.
 type GitManager struct {
+	counter helpers.Counter
+
 	// path of the folder that this class operates in
 	dir string
 
@@ -29,12 +31,16 @@ func NewGitManager(dir string) (GitManager, error) {
 	if err != nil {
 		return GitManager{}, fmt.Errorf("cannot create memoized environment: %w", err)
 	}
-	return GitManager{dir: dir, memoized: memoized}, nil
+	return GitManager{
+		counter:  helpers.Counter{},
+		dir:      dir,
+		memoized: memoized,
+	}, nil
 }
 
 // CreateScenarioEnvironment provides a new GitEnvironment for the scenario with the given name.
 func (manager *GitManager) CreateScenarioEnvironment(scenarioName string) (GitEnvironment, error) {
-	envDirName := helpers.FolderName(scenarioName) + "_" + helpers.UniqueString()
+	envDirName := helpers.FolderName(scenarioName) + "_" + manager.counter.ToString()
 	envPath := filepath.Join(manager.dir, envDirName)
 	return CloneGitEnvironment(manager.memoized, envPath)
 }

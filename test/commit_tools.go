@@ -9,9 +9,9 @@ import (
 )
 
 // DefaultCommit provides a new Commit instance populated with the default values used in the absence of value specified by the test.
-func DefaultCommit() git.Commit {
+func DefaultCommit(filenameSuffix string) git.Commit {
 	return git.Commit{
-		FileName:    "default_file_name_" + helpers.UniqueString(),
+		FileName:    "default_file_name_" + filenameSuffix,
 		Message:     "default commit message",
 		Locations:   []string{"local", "origin"},
 		Branch:      "main",
@@ -25,8 +25,9 @@ func FromGherkinTable(table *messages.PickleStepArgument_PickleTable) ([]git.Com
 	lastBranchName := ""
 	lastLocationName := ""
 	result := []git.Commit{}
+	counter := helpers.Counter{}
 	for _, row := range table.Rows[1:] {
-		commit := DefaultCommit()
+		commit := DefaultCommit(counter.ToString())
 		for cellNo, cell := range row.Cells {
 			columnName := columnNames[cellNo]
 			cellValue := cell.Value
