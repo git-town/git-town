@@ -15,8 +15,7 @@ import (
 var (
 	allFlag,
 	debugFlag,
-	dryRunFlag,
-	globalFlag bool
+	dryRunFlag bool
 	prodRepo = git.NewProdRepo()
 )
 
