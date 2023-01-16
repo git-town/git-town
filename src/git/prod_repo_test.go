@@ -9,6 +9,7 @@ import (
 
 func TestNewProdRepo(t *testing.T) {
 	t.Parallel()
-	repo := git.NewProdRepo()
+	debug := false
+	repo := git.NewProdRepo(&debug)
 	assert.Equal(t, repo.Config, repo.Silent.Config)
 }

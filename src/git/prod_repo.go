@@ -18,8 +18,8 @@ type ProdRepo struct {
 }
 
 // NewProdRepo provides a Repo instance in the current working directory.
-func NewProdRepo() ProdRepo {
-	silentShell := run.SilentShell{}
+func NewProdRepo(debugFlag *bool) ProdRepo {
+	silentShell := run.SilentShell{Debug: debugFlag}
 	config := config.NewGitTown(silentShell)
 	currentBranchTracker := Cache[string]{}
 	dryRun := DryRun{}
