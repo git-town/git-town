@@ -27,7 +27,7 @@ func DetermineSquashCommitAuthor(branchName string, repo *git.ProdRepo) (string,
 
 // Helpers
 
-var squashCommitAuthorHeaderTemplate = "Multiple people authored the %q branch."
+const squashCommitAuthorHeaderTemplate = "Multiple people authored the %q branch."
 
 func askForAuthor(authors []string) (string, error) {
 	result := ""
