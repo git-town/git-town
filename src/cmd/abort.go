@@ -9,8 +9,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func addAbortCmd(rootCmd *cobra.Command) {
-	abortCmd := &cobra.Command{
+func abortCmd() *cobra.Command {
+	return &cobra.Command{
 		Use:   "abort",
 		Short: "Aborts the last run git-town command",
 		Run: func(cmd *cobra.Command, args []string) {
@@ -35,5 +35,4 @@ func addAbortCmd(rootCmd *cobra.Command) {
 			return validateIsConfigured(prodRepo)
 		},
 	}
-	rootCmd.AddCommand(abortCmd)
 }

@@ -20,8 +20,8 @@ type appendConfig struct {
 	targetBranch        string
 }
 
-func addAppendCmd(rootCmd *cobra.Command) {
-	appendCmd := &cobra.Command{
+func appendCmd() *cobra.Command {
+	return &cobra.Command{
 		Use:   "append <branch>",
 		Short: "Creates a new feature branch as a child of the current branch",
 		Long: `Creates a new feature branch as a direct child of the current branch.
@@ -57,7 +57,6 @@ See "sync" for information regarding upstream remotes.`,
 			return validateIsConfigured(prodRepo)
 		},
 	}
-	rootCmd.AddCommand(appendCmd)
 }
 
 func createAppendConfig(args []string, repo *git.ProdRepo) (appendConfig, error) {

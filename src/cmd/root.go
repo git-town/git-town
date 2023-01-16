@@ -43,7 +43,7 @@ func IsAcceptableGitVersion(major, minor int) bool {
 
 func init() {
 	RootCmd.PersistentFlags().BoolVar(&debugFlag, "debug", false, "Developer tool to print git commands run under the hood")
-	addAbortCmd(RootCmd)
-	addAppendCmd(RootCmd)
+	RootCmd.AddCommand(abortCmd())
+	RootCmd.AddCommand(appendCmd())
 	RootCmd.AddCommand(configCmd())
 }
