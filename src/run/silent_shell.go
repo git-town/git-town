@@ -20,7 +20,7 @@ func (s SilentShell) WorkingDir() string {
 }
 
 func (s SilentShell) PrintHeader(cmd string, args ...string) {
-	_, err := color.New(color.Bold).Println(cmd, args)
+	_, err := color.New(color.Bold).Println(cmd, strings.Join(args, " "))
 	if err != nil {
 		fmt.Println("\n1111111\n\n", cmd, strings.Join(args, " "))
 	}
