@@ -74,9 +74,9 @@ func AskForBranchParent(branchName, defaultBranchName string, repo *git.ProdRepo
 
 // Helpers
 
-var (
-	parentBranchHeaderShown    = false
-	parentBranchHeaderTemplate = `
+var parentBranchHeaderShown = false
+
+const parentBranchHeaderTemplate string = `
 Feature branches can be branched directly off
 %s or from other feature branches.
 
@@ -84,7 +84,6 @@ The former allows to develop and ship features completely independent of each ot
 The latter allows to build on top of currently unshipped features.
 
 `
-)
 
 var (
 	parentBranchPromptTemplate = "Please specify the parent branch of %q:"
