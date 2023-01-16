@@ -14,7 +14,7 @@ type diffParentConfig struct {
 	parentBranch string
 }
 
-func diffParentCommand() *cobra.Command {
+func diffParentCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:   "diff-parent [<branch>]",
 		Short: "Shows the changes committed to a feature branch",
@@ -24,22 +24,22 @@ Works on either the current branch or the branch name provided.
 
 Exits with error code 1 if the given branch is a perennial branch or the main branch.`,
 		Run: func(cmd *cobra.Command, args []string) {
-			config, err := createDiffParentConfig(args, prodRepo)
+			config, err := createDiffParentConfig(args, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
-			err = prodRepo.Logging.DiffParent(config.branch, config.parentBranch)
+			err = repo.Logging.DiffParent(config.branch, config.parentBranch)
 			if err != nil {
 				cli.Exit(err)
 			}
 		},
 		Args: cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			err := ValidateIsRepository(prodRepo)
+			err := ValidateIsRepository(repo)
 			if err != nil {
 				return err
 			}
-			return validateIsConfigured(prodRepo)
+			return validateIsConfigured(repo)
 		},
 	}
 }
@@ -65,7 +65,7 @@ func createDiffParentConfig(args []string, repo *git.ProdRepo) (diffParentConfig
 			return diffParentConfig{}, fmt.Errorf("there is no local branch named %q", config.branch)
 		}
 	}
-	if !prodRepo.Config.IsFeatureBranch(config.branch) {
+	if !repo.Config.IsFeatureBranch(config.branch) {
 		return diffParentConfig{}, fmt.Errorf("you can only diff-parent feature branches")
 	}
 	err = dialog.EnsureKnowsParentBranches([]string{config.branch}, repo)

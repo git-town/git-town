@@ -5,11 +5,12 @@ import (
 
 	"github.com/fatih/color"
 	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/git"
 	"github.com/spf13/cobra"
 )
 
 // RootCmd is the main Cobra object.
-func RootCmd() *cobra.Command {
+func RootCmd(repo *git.ProdRepo) *cobra.Command {
 	debugFlag := false
 	rootCmd := cobra.Command{
 		Use:   "git-town",
@@ -22,25 +23,25 @@ and it allows you to perform many common Git operations faster and easier.`,
 			cli.SetDebug(debugFlag)
 		},
 	}
-	rootCmd.AddCommand(abortCmd())
-	rootCmd.AddCommand(appendCmd())
-	rootCmd.AddCommand(configCmd())
-	rootCmd.AddCommand(continueCmd())
-	rootCmd.AddCommand(diffParentCommand())
-	rootCmd.AddCommand(discardCmd())
-	rootCmd.AddCommand(hackCmd())
-	rootCmd.AddCommand(installCommand(&rootCmd))
-	rootCmd.AddCommand(killCommand())
-	rootCmd.AddCommand(newPullRequestCommand())
-	rootCmd.AddCommand(prependCommand())
-	rootCmd.AddCommand(pruneBranchesCommand())
-	rootCmd.AddCommand(renameBranchCommand())
-	rootCmd.AddCommand(repoCommand())
-	rootCmd.AddCommand(setParentBranchCommand())
-	rootCmd.AddCommand(shipCmd())
-	rootCmd.AddCommand(skipCmd())
-	rootCmd.AddCommand(syncCmd())
-	rootCmd.AddCommand(undoCmd())
+	rootCmd.AddCommand(abortCmd(repo))
+	rootCmd.AddCommand(appendCmd(repo))
+	rootCmd.AddCommand(configCmd(repo))
+	rootCmd.AddCommand(continueCmd(repo))
+	rootCmd.AddCommand(diffParentCommand(repo))
+	rootCmd.AddCommand(discardCmd(repo))
+	rootCmd.AddCommand(hackCmd(repo))
+	rootCmd.AddCommand(installCommand(repo, &rootCmd))
+	rootCmd.AddCommand(killCommand(repo))
+	rootCmd.AddCommand(newPullRequestCommand(repo))
+	rootCmd.AddCommand(prependCommand(repo))
+	rootCmd.AddCommand(pruneBranchesCommand(repo))
+	rootCmd.AddCommand(renameBranchCommand(repo))
+	rootCmd.AddCommand(repoCommand(repo))
+	rootCmd.AddCommand(setParentBranchCommand(repo))
+	rootCmd.AddCommand(shipCmd(repo))
+	rootCmd.AddCommand(skipCmd(repo))
+	rootCmd.AddCommand(syncCmd(repo))
+	rootCmd.AddCommand(undoCmd(repo))
 	rootCmd.AddCommand(versionCmd())
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
 	rootCmd.PersistentFlags().BoolVar(&debugFlag, "debug", false, "Developer tool to print git commands run under the hood")
@@ -49,7 +50,8 @@ and it allows you to perform many common Git operations faster and easier.`,
 
 // Execute runs the Cobra stack.
 func Execute() {
-	majorVersion, minorVersion, err := prodRepo.Silent.Version()
+	repo := git.NewProdRepo()
+	majorVersion, minorVersion, err := repo.Silent.Version()
 	if err != nil {
 		cli.Exit(err)
 	}
@@ -57,7 +59,7 @@ func Execute() {
 		cli.Exit(errors.New("this app requires Git 2.7.0 or higher"))
 	}
 	color.NoColor = false // Prevent color from auto disable
-	if err := RootCmd().Execute(); err != nil {
+	if err := RootCmd(&repo).Execute(); err != nil {
 		cli.Exit(err)
 	}
 }

@@ -21,7 +21,7 @@ type renameBranchConfig struct {
 	oldBranchName              string
 }
 
-func renameBranchCommand() *cobra.Command {
+func renameBranchCommand(repo *git.ProdRepo) *cobra.Command {
 	forceFlag := false
 	renameBranchCmd := &cobra.Command{
 		Use:   "rename-branch [<old_branch_name>] <new_branch_name>",
@@ -45,26 +45,26 @@ When run on a perennial branch
 - confirm with the "-f" option
 - registers the new perennial branch name in the local Git Town configuration`,
 		Run: func(cmd *cobra.Command, args []string) {
-			config, err := createRenameBranchConfig(args, forceFlag, prodRepo)
+			config, err := createRenameBranchConfig(args, forceFlag, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
-			stepList, err := createRenameBranchStepList(config, prodRepo)
+			stepList, err := createRenameBranchStepList(config, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
 			runState := runstate.New("rename-branch", stepList)
-			err = runstate.Execute(runState, prodRepo, nil)
+			err = runstate.Execute(runState, repo, nil)
 			if err != nil {
 				cli.Exit(err)
 			}
 		},
 		Args: cobra.RangeArgs(1, 2),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := ValidateIsRepository(prodRepo); err != nil {
+			if err := ValidateIsRepository(repo); err != nil {
 				return err
 			}
-			return validateIsConfigured(prodRepo)
+			return validateIsConfigured(repo)
 		},
 	}
 	renameBranchCmd.Flags().BoolVar(&forceFlag, "force", false, "Force rename of perennial branch")
@@ -76,7 +76,7 @@ func createRenameBranchConfig(args []string, forceFlag bool, repo *git.ProdRepo)
 	if err != nil {
 		return renameBranchConfig{}, err
 	}
-	isOffline, err := prodRepo.Config.IsOffline()
+	isOffline, err := repo.Config.IsOffline()
 	if err != nil {
 		return renameBranchConfig{}, err
 	}

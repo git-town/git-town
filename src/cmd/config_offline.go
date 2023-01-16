@@ -4,10 +4,11 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/git"
 	"github.com/spf13/cobra"
 )
 
-func offlineCmd() *cobra.Command {
+func offlineCmd(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:   "offline [(yes | no)]",
 		Short: "Displays or sets offline mode",
@@ -16,7 +17,7 @@ func offlineCmd() *cobra.Command {
 Git Town avoids network operations in offline mode.`,
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) == 0 {
-				isOffline, err := prodRepo.Config.IsOffline()
+				isOffline, err := repo.Config.IsOffline()
 				if err != nil {
 					cli.Exit(err)
 				}
@@ -26,7 +27,7 @@ Git Town avoids network operations in offline mode.`,
 				if err != nil {
 					cli.Exit(fmt.Errorf(`invalid argument: %q. Please provide either "yes" or "no".\n`, args[0]))
 				}
-				err = prodRepo.Config.SetOffline(value)
+				err = repo.Config.SetOffline(value)
 				if err != nil {
 					cli.Exit(err)
 				}

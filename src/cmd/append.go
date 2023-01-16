@@ -20,7 +20,7 @@ type appendConfig struct {
 	targetBranch        string
 }
 
-func appendCmd() *cobra.Command {
+func appendCmd(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:   "append <branch>",
 		Short: "Creates a new feature branch as a child of the current branch",
@@ -35,26 +35,26 @@ and brings over all uncommitted changes to the new feature branch.
 
 See "sync" for information regarding upstream remotes.`,
 		Run: func(cmd *cobra.Command, args []string) {
-			config, err := createAppendConfig(args, prodRepo)
+			config, err := createAppendConfig(args, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
-			stepList, err := createAppendStepList(config, prodRepo)
+			stepList, err := createAppendStepList(config, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
 			runState := runstate.New("append", stepList)
-			err = runstate.Execute(runState, prodRepo, nil)
+			err = runstate.Execute(runState, repo, nil)
 			if err != nil {
 				cli.Exit(err)
 			}
 		},
 		Args: cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := ValidateIsRepository(prodRepo); err != nil {
+			if err := ValidateIsRepository(repo); err != nil {
 				return err
 			}
-			return validateIsConfigured(prodRepo)
+			return validateIsConfigured(repo)
 		},
 	}
 }

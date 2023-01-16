@@ -5,7 +5,9 @@
 // This reduces merge conflicts and the number of Git commands you need to run.
 package main
 
-import "github.com/git-town/git-town/v7/src/cmd"
+import (
+	"github.com/git-town/git-town/v7/src/cmd"
+)
 
 func main() {
 	cmd.Execute()

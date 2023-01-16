@@ -14,7 +14,7 @@ type pruneBranchesConfig struct {
 	mainBranch                               string
 }
 
-func pruneBranchesCommand() *cobra.Command {
+func pruneBranchesCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:   "prune-branches",
 		Short: "Deletes local branches whose tracking branch no longer exists",
@@ -23,29 +23,29 @@ func pruneBranchesCommand() *cobra.Command {
 Deletes branches whose tracking branch no longer exists from the local repository.
 This usually means the branch was shipped or killed on another machine.`,
 		Run: func(cmd *cobra.Command, args []string) {
-			config, err := createPruneBranchesConfig(prodRepo)
+			config, err := createPruneBranchesConfig(repo)
 			if err != nil {
 				cli.Exit(err)
 			}
-			stepList, err := createPruneBranchesStepList(config, prodRepo)
+			stepList, err := createPruneBranchesStepList(config, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
 			runState := runstate.New("prune-branches", stepList)
-			err = runstate.Execute(runState, prodRepo, nil)
+			err = runstate.Execute(runState, repo, nil)
 			if err != nil {
 				cli.Exit(err)
 			}
 		},
 		Args: cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := ValidateIsRepository(prodRepo); err != nil {
+			if err := ValidateIsRepository(repo); err != nil {
 				return err
 			}
-			if err := validateIsConfigured(prodRepo); err != nil {
+			if err := validateIsConfigured(repo); err != nil {
 				return err
 			}
-			return prodRepo.Config.ValidateIsOnline()
+			return repo.Config.ValidateIsOnline()
 		},
 	}
 }

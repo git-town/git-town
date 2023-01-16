@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func hackCmd() *cobra.Command {
+func hackCmd(repo *git.ProdRepo) *cobra.Command {
 	promptForParentFlag := false
 	hackCmd := cobra.Command{
 		Use:   "hack <branch>",
@@ -25,26 +25,26 @@ and brings over all uncommitted changes to the new feature branch.
 
 See "sync" for information regarding upstream remotes.`,
 		Run: func(cmd *cobra.Command, args []string) {
-			config, err := createHackConfig(args, promptForParentFlag, prodRepo)
+			config, err := createHackConfig(args, promptForParentFlag, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
-			stepList, err := createAppendStepList(config, prodRepo)
+			stepList, err := createAppendStepList(config, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
 			runState := runstate.New("hack", stepList)
-			err = runstate.Execute(runState, prodRepo, nil)
+			err = runstate.Execute(runState, repo, nil)
 			if err != nil {
 				cli.Exit(err)
 			}
 		},
 		Args: cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := ValidateIsRepository(prodRepo); err != nil {
+			if err := ValidateIsRepository(repo); err != nil {
 				return err
 			}
-			return validateIsConfigured(prodRepo)
+			return validateIsConfigured(repo)
 		},
 	}
 	hackCmd.Flags().BoolVarP(&promptForParentFlag, "prompt", "p", false, "Prompt for the parent branch")

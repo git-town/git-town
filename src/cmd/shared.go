@@ -12,9 +12,7 @@ import (
 )
 
 // These variables represent command-line flags.
-var (
-	prodRepo = git.NewProdRepo()
-)
+var ()
 
 // These variables are set at build time.
 var (

@@ -4,10 +4,11 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/git"
 	"github.com/spf13/cobra"
 )
 
-func pullBranchStrategyCommand() *cobra.Command {
+func pullBranchStrategyCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:   "pull-branch-strategy [(rebase | merge)]",
 		Short: "Displays or sets your pull branch strategy",
@@ -18,9 +19,9 @@ when merging remote tracking branches into local branches
 for the main branch and perennial branches.`,
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) == 0 {
-				cli.Println(prodRepo.Config.PullBranchStrategy())
+				cli.Println(repo.Config.PullBranchStrategy())
 			} else {
-				err := prodRepo.Config.SetPullBranchStrategy(args[0])
+				err := repo.Config.SetPullBranchStrategy(args[0])
 				if err != nil {
 					cli.Exit(err)
 				}
@@ -33,7 +34,7 @@ for the main branch and perennial branches.`,
 			return cobra.MaximumNArgs(1)(cmd, args)
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return ValidateIsRepository(prodRepo)
+			return ValidateIsRepository(repo)
 		},
 	}
 }

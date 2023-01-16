@@ -24,7 +24,7 @@ type killConfig struct {
 	targetBranch        string
 }
 
-func killCommand() *cobra.Command {
+func killCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:   "kill [<branch>]",
 		Short: "Removes an obsolete feature branch",
@@ -33,26 +33,26 @@ func killCommand() *cobra.Command {
 Deletes the current or provided branch from the local and origin repositories.
 Does not delete perennial branches nor the main branch.`,
 		Run: func(cmd *cobra.Command, args []string) {
-			config, err := createKillConfig(args, prodRepo)
+			config, err := createKillConfig(args, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
-			stepList, err := createKillStepList(config, prodRepo)
+			stepList, err := createKillStepList(config, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
 			runState := runstate.New("kill", stepList)
-			err = runstate.Execute(runState, prodRepo, nil)
+			err = runstate.Execute(runState, repo, nil)
 			if err != nil {
 				cli.Exit(err)
 			}
 		},
 		Args: cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := ValidateIsRepository(prodRepo); err != nil {
+			if err := ValidateIsRepository(repo); err != nil {
 				return err
 			}
-			return validateIsConfigured(prodRepo)
+			return validateIsConfigured(repo)
 		},
 	}
 }
@@ -86,7 +86,7 @@ func createKillConfig(args []string, repo *git.ProdRepo) (killConfig, error) {
 	if err != nil {
 		return result, err
 	}
-	isOffline, err := prodRepo.Config.IsOffline()
+	isOffline, err := repo.Config.IsOffline()
 	if err != nil {
 		return killConfig{}, err
 	}
@@ -130,7 +130,7 @@ func createKillConfig(args []string, repo *git.ProdRepo) (killConfig, error) {
 
 func createKillStepList(config killConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	result := runstate.StepList{}
-	isOffline, err := prodRepo.Config.IsOffline()
+	isOffline, err := repo.Config.IsOffline()
 	if err != nil {
 		return runstate.StepList{}, err
 	}

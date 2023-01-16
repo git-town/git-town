@@ -47,7 +47,7 @@ To load completions for each session, add the above line to your PowerShell prof
 		Run: func(cmd *cobra.Command, args []string) {
 			switch args[0] {
 			case "bash":
-				_ = RootCmd().GenBashCompletion(os.Stdout)
+				_ = rootCmd.GenBashCompletion(os.Stdout)
 			case "zsh":
 				if completionsNoDescFlag {
 					_ = rootCmd.GenZshCompletionNoDesc(os.Stdout)

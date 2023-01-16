@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func syncStrategyCommand() *cobra.Command {
+func syncStrategyCommand(repo *git.ProdRepo) *cobra.Command {
 	var globalFlag bool
 	syncStrategyCmd := cobra.Command{
 		Use:   "sync-strategy [(merge | rebase)]",
@@ -19,9 +19,9 @@ The sync strategy specifies what strategy to use
 when merging remote tracking branches into local feature branches.`,
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) == 0 {
-				printSyncStrategy(globalFlag, prodRepo)
+				printSyncStrategy(globalFlag, repo)
 			} else {
-				err := setSyncStrategy(globalFlag, prodRepo, args[0])
+				err := setSyncStrategy(globalFlag, repo, args[0])
 				if err != nil {
 					cli.Exit(err)
 				}
@@ -34,7 +34,7 @@ when merging remote tracking branches into local feature branches.`,
 			return cobra.MaximumNArgs(1)(cmd, args)
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return ValidateIsRepository(prodRepo)
+			return ValidateIsRepository(repo)
 		},
 	}
 	syncStrategyCmd.Flags().BoolVar(&globalFlag, "global", false, "Displays or sets the global sync strategy")

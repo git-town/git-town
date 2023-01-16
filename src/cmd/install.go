@@ -1,16 +1,17 @@
 package cmd
 
 import (
+	"github.com/git-town/git-town/v7/src/git"
 	"github.com/spf13/cobra"
 )
 
-func installCommand(rootCmd *cobra.Command) *cobra.Command {
+func installCommand(repo *git.ProdRepo, rootCmd *cobra.Command) *cobra.Command {
 	installCmd := cobra.Command{
 		Use:   "install",
 		Short: "Commands to set up Git Town on your computer",
 		Args:  cobra.NoArgs,
 	}
-	installCmd.AddCommand(aliasCommand())
+	installCmd.AddCommand(aliasCommand(repo))
 	installCmd.AddCommand(completionsCmd(rootCmd))
 	return &installCmd
 }

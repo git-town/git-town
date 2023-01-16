@@ -18,7 +18,7 @@ type newPullRequestConfig struct {
 	InitialBranch  string
 }
 
-func newPullRequestCommand() *cobra.Command {
+func newPullRequestCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:   "new-pull-request",
 		Short: "Creates a new pull request",
@@ -39,33 +39,33 @@ When using SSH identities, this command needs to be configured with
 "git config %s <hostname>"
 where hostname matches what is in your ssh config file.`, config.CodeHostingDriver, config.CodeHostingOriginHostname),
 		Run: func(cmd *cobra.Command, args []string) {
-			config, err := createNewPullRequestConfig(prodRepo)
+			config, err := createNewPullRequestConfig(repo)
 			if err != nil {
 				cli.Exit(err)
 			}
-			driver := hosting.NewDriver(&prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction)
+			driver := hosting.NewDriver(&repo.Config, &repo.Silent, cli.PrintDriverAction)
 			if driver == nil {
 				cli.Exit(hosting.UnsupportedServiceError())
 			}
-			stepList, err := createNewPullRequestStepList(config, prodRepo)
+			stepList, err := createNewPullRequestStepList(config, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
 			runState := runstate.New("new-pull-request", stepList)
-			err = runstate.Execute(runState, prodRepo, driver)
+			err = runstate.Execute(runState, repo, driver)
 			if err != nil {
 				cli.Exit(err)
 			}
 		},
 		Args: cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := ValidateIsRepository(prodRepo); err != nil {
+			if err := ValidateIsRepository(repo); err != nil {
 				return err
 			}
-			if err := validateIsConfigured(prodRepo); err != nil {
+			if err := validateIsConfigured(repo); err != nil {
 				return err
 			}
-			if err := prodRepo.Config.ValidateIsOnline(); err != nil {
+			if err := repo.Config.ValidateIsOnline(); err != nil {
 				return err
 			}
 			return nil

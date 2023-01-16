@@ -21,7 +21,7 @@ type syncConfig struct {
 	shouldPushTags bool
 }
 
-func syncCmd() *cobra.Command {
+func syncCmd(repo *git.ProdRepo) *cobra.Command {
 	var allFlag bool
 	var dryRunFlag bool
 	syncCmd := cobra.Command{
@@ -45,36 +45,36 @@ If the repository contains an "upstream" remote,
 syncs the main branch with its upstream counterpart.
 You can disable this by running "git config %s false".`, config.SyncUpstream),
 		Run: func(cmd *cobra.Command, args []string) {
-			config, err := createSyncConfig(allFlag, prodRepo)
+			config, err := createSyncConfig(allFlag, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
-			stepList, err := createSyncStepList(config, prodRepo)
+			stepList, err := createSyncStepList(config, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
 			runState := runstate.New("sync", stepList)
-			err = runstate.Execute(runState, prodRepo, nil)
+			err = runstate.Execute(runState, repo, nil)
 			if err != nil {
 				cli.Exit(err)
 			}
 		},
 		Args: cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := ValidateIsRepository(prodRepo); err != nil {
+			if err := ValidateIsRepository(repo); err != nil {
 				return err
 			}
 			if dryRunFlag {
-				currentBranch, err := prodRepo.Silent.CurrentBranch()
+				currentBranch, err := repo.Silent.CurrentBranch()
 				if err != nil {
 					return err
 				}
-				prodRepo.DryRun.Activate(currentBranch)
+				repo.DryRun.Activate(currentBranch)
 			}
-			if err := validateIsConfigured(prodRepo); err != nil {
+			if err := validateIsConfigured(repo); err != nil {
 				return err
 			}
-			exit, err := handleUnfinishedState(prodRepo, nil)
+			exit, err := handleUnfinishedState(repo, nil)
 			if err != nil {
 				return err
 			}
@@ -94,7 +94,7 @@ func createSyncConfig(allFlag bool, repo *git.ProdRepo) (syncConfig, error) {
 	if err != nil {
 		return syncConfig{}, err
 	}
-	isOffline, err := prodRepo.Config.IsOffline()
+	isOffline, err := repo.Config.IsOffline()
 	if err != nil {
 		return syncConfig{}, err
 	}
@@ -128,8 +128,8 @@ func createSyncConfig(allFlag bool, repo *git.ProdRepo) (syncConfig, error) {
 		if err != nil {
 			return syncConfig{}, err
 		}
-		result.branchesToSync = append(prodRepo.Config.AncestorBranches(result.initialBranch), result.initialBranch)
-		result.shouldPushTags = !prodRepo.Config.IsFeatureBranch(result.initialBranch)
+		result.branchesToSync = append(repo.Config.AncestorBranches(result.initialBranch), result.initialBranch)
+		result.shouldPushTags = !repo.Config.IsFeatureBranch(result.initialBranch)
 	}
 	return result, nil
 }

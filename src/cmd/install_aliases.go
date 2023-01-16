@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func aliasCommand() *cobra.Command {
+func aliasCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:   "aliases (add | remove)",
 		Short: "Adds or removes default global aliases",
@@ -43,7 +43,7 @@ This can conflict with other tools that also define Git aliases.`,
 				"sync",
 			}
 			for _, command := range commandsToAlias {
-				err := action(command, prodRepo)
+				err := action(command, repo)
 				if err != nil {
 					cli.Exit(err)
 				}

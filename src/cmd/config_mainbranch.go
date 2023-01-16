@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func mainbranchConfigCmd() *cobra.Command {
+func mainbranchConfigCmd(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:   "main-branch [<branch>]",
 		Short: "Displays or sets your main development branch",
@@ -17,9 +17,9 @@ func mainbranchConfigCmd() *cobra.Command {
 The main branch is the Git branch from which new feature branches are cut.`,
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) == 0 {
-				printMainBranch(prodRepo)
+				printMainBranch(repo)
 			} else {
-				err := setMainBranch(args[0], prodRepo)
+				err := setMainBranch(args[0], repo)
 				if err != nil {
 					cli.Exit(err)
 				}
@@ -27,7 +27,7 @@ The main branch is the Git branch from which new feature branches are cut.`,
 		},
 		Args: cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return ValidateIsRepository(prodRepo)
+			return ValidateIsRepository(repo)
 		},
 	}
 }

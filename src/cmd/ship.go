@@ -29,7 +29,7 @@ type shipConfig struct {
 	deleteOriginBranch      bool
 }
 
-func shipCmd() *cobra.Command {
+func shipCmd(repo *git.ProdRepo) *cobra.Command {
 	var commitMessage string
 	shipCmd := cobra.Command{
 		Use:   "ship",
@@ -61,27 +61,27 @@ GitHub's feature to automatically delete head branches,
 run "git config %s false"
 and Git Town will leave it up to your origin server to delete the remote branch.`, config.GithubToken, config.ShipDeleteRemoteBranch),
 		Run: func(cmd *cobra.Command, args []string) {
-			driver := hosting.NewDriver(&prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction)
-			config, err := gitShipConfig(args, driver, prodRepo)
+			driver := hosting.NewDriver(&repo.Config, &repo.Silent, cli.PrintDriverAction)
+			config, err := gitShipConfig(args, driver, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
-			stepList, err := createShipStepList(config, commitMessage, prodRepo)
+			stepList, err := createShipStepList(config, commitMessage, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
 			runState := runstate.New("ship", stepList)
-			err = runstate.Execute(runState, prodRepo, driver)
+			err = runstate.Execute(runState, repo, driver)
 			if err != nil {
 				cli.Exit(err)
 			}
 		},
 		Args: cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := ValidateIsRepository(prodRepo); err != nil {
+			if err := ValidateIsRepository(repo); err != nil {
 				return err
 			}
-			return validateIsConfigured(prodRepo)
+			return validateIsConfigured(repo)
 		},
 	}
 	shipCmd.Flags().StringVarP(&commitMessage, "message", "m", "", "Specify the commit message for the squash commit")
@@ -140,7 +140,7 @@ func gitShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (sh
 	if err != nil {
 		return shipConfig{}, err
 	}
-	ensureParentBranchIsMainOrPerennialBranch(result.branchToShip)
+	ensureParentBranchIsMainOrPerennialBranch(result.branchToShip, repo)
 	result.hasTrackingBranch, err = repo.Silent.HasTrackingBranch(result.branchToShip)
 	if err != nil {
 		return shipConfig{}, err
@@ -148,7 +148,7 @@ func gitShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (sh
 	result.isOffline = isOffline
 	result.isShippingInitialBranch = result.branchToShip == result.initialBranch
 	result.branchToMergeInto = repo.Config.ParentBranch(result.branchToShip)
-	prInfo, err := createPullRequestInfo(result.branchToShip, result.branchToMergeInto, driver)
+	prInfo, err := createPullRequestInfo(result.branchToShip, result.branchToMergeInto, repo, driver)
 	if err != nil {
 		return shipConfig{}, err
 	}
@@ -156,7 +156,7 @@ func gitShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (sh
 	result.defaultCommitMessage = prInfo.DefaultCommitMessage
 	result.pullRequestNumber = prInfo.PullRequestNumber
 	result.childBranches = repo.Config.ChildBranches(result.branchToShip)
-	deleteOrigin, err := prodRepo.Config.ShouldShipDeleteOriginBranch()
+	deleteOrigin, err := repo.Config.ShouldShipDeleteOriginBranch()
 	if err != nil {
 		return shipConfig{}, err
 	}
@@ -164,10 +164,10 @@ func gitShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (sh
 	return result, err
 }
 
-func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
-	parentBranch := prodRepo.Config.ParentBranch(branchName)
-	if !prodRepo.Config.IsMainBranch(parentBranch) && !prodRepo.Config.IsPerennialBranch(parentBranch) {
-		ancestors := prodRepo.Config.AncestorBranches(branchName)
+func ensureParentBranchIsMainOrPerennialBranch(branchName string, repo *git.ProdRepo) {
+	parentBranch := repo.Config.ParentBranch(branchName)
+	if !repo.Config.IsMainBranch(parentBranch) && !repo.Config.IsPerennialBranch(parentBranch) {
+		ancestors := repo.Config.AncestorBranches(branchName)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
 		oldestAncestor := ancestorsWithoutMainOrPerennial[0]
 		cli.Exit(fmt.Errorf(`shipping this branch would ship %q as well,
@@ -225,15 +225,15 @@ func createShipStepList(config shipConfig, commitMessage string, repo *git.ProdR
 	return result, err
 }
 
-func createPullRequestInfo(branch, parentBranch string, driver hosting.Driver) (hosting.PullRequestInfo, error) {
-	hasOrigin, err := prodRepo.Silent.HasOrigin()
+func createPullRequestInfo(branch, parentBranch string, repo *git.ProdRepo, driver hosting.Driver) (hosting.PullRequestInfo, error) {
+	hasOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
 		return hosting.PullRequestInfo{}, err
 	}
 	if !hasOrigin {
 		return hosting.PullRequestInfo{}, nil
 	}
-	isOffline, err := prodRepo.Config.IsOffline()
+	isOffline, err := repo.Config.IsOffline()
 	if err != nil {
 		return hosting.PullRequestInfo{}, err
 	}

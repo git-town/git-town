@@ -22,7 +22,7 @@ type prependConfig struct {
 	targetBranch        string
 }
 
-func prependCommand() *cobra.Command {
+func prependCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:   "prepend <branch>",
 		Short: "Creates a new feature branch as the parent of the current branch",
@@ -38,16 +38,16 @@ and brings over all uncommitted changes to the new feature branch.
 See "sync" for upstream remote options.
 `,
 		Run: func(cmd *cobra.Command, args []string) {
-			config, err := createPrependConfig(args, prodRepo)
+			config, err := createPrependConfig(args, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
-			stepList, err := createPrependStepList(config, prodRepo)
+			stepList, err := createPrependStepList(config, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
 			runState := runstate.New("prepend", stepList)
-			err = runstate.Execute(runState, prodRepo, nil)
+			err = runstate.Execute(runState, repo, nil)
 			if err != nil {
 				fmt.Println(err)
 				cli.Exit(err)
@@ -55,10 +55,10 @@ See "sync" for upstream remote options.
 		},
 		Args: cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := ValidateIsRepository(prodRepo); err != nil {
+			if err := ValidateIsRepository(repo); err != nil {
 				return err
 			}
-			return validateIsConfigured(prodRepo)
+			return validateIsConfigured(repo)
 		},
 	}
 }
@@ -80,7 +80,7 @@ func createPrependConfig(args []string, repo *git.ProdRepo) (prependConfig, erro
 	if err != nil {
 		return prependConfig{}, err
 	}
-	isOffline, err := prodRepo.Config.IsOffline()
+	isOffline, err := repo.Config.IsOffline()
 	if err != nil {
 		return prependConfig{}, err
 	}
