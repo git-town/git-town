@@ -23,7 +23,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"math/rand"
 	"mime/multipart"
 	"net/http"
@@ -52,12 +51,12 @@ const (
 
 // AuthType represents an authentication type within GitLab.
 //
-// GitLab API docs: https://docs.gitlab.com/ce/api/
+// GitLab API docs: https://docs.gitlab.com/ee/api/
 type AuthType int
 
 // List of available authentication types.
 //
-// GitLab API docs: https://docs.gitlab.com/ce/api/
+// GitLab API docs: https://docs.gitlab.com/ee/api/
 const (
 	BasicAuth AuthType = iota
 	JobToken
@@ -88,7 +87,7 @@ type Client struct {
 	// Token type used to make authenticated API calls.
 	authType AuthType
 
-	// Username and password used for basix authentication.
+	// Username and password used for basic authentication.
 	username, password string
 
 	// Token used to make authenticated API calls.
@@ -101,106 +100,114 @@ type Client struct {
 	UserAgent string
 
 	// Services used for talking to different parts of the GitLab API.
-	AccessRequests         *AccessRequestsService
-	Applications           *ApplicationsService
-	AuditEvents            *AuditEventsService
-	Avatar                 *AvatarRequestsService
-	AwardEmoji             *AwardEmojiService
-	Boards                 *IssueBoardsService
-	Branches               *BranchesService
-	BroadcastMessage       *BroadcastMessagesService
-	CIYMLTemplate          *CIYMLTemplatesService
-	Commits                *CommitsService
-	ContainerRegistry      *ContainerRegistryService
-	CustomAttribute        *CustomAttributesService
-	DeployKeys             *DeployKeysService
-	DeployTokens           *DeployTokensService
-	Deployments            *DeploymentsService
-	Discussions            *DiscussionsService
-	Environments           *EnvironmentsService
-	EpicIssues             *EpicIssuesService
-	Epics                  *EpicsService
-	Events                 *EventsService
-	ExternalStatusChecks   *ExternalStatusChecksService
-	Features               *FeaturesService
-	FreezePeriods          *FreezePeriodsService
-	GenericPackages        *GenericPackagesService
-	GeoNodes               *GeoNodesService
-	GitIgnoreTemplates     *GitIgnoreTemplatesService
-	GroupAccessTokens      *GroupAccessTokensService
-	GroupBadges            *GroupBadgesService
-	GroupCluster           *GroupClustersService
-	GroupImportExport      *GroupImportExportService
-	GroupIssueBoards       *GroupIssueBoardsService
-	GroupIterations        *GroupIterationsService
-	GroupLabels            *GroupLabelsService
-	GroupMembers           *GroupMembersService
-	GroupMilestones        *GroupMilestonesService
-	GroupVariables         *GroupVariablesService
-	GroupWikis             *GroupWikisService
-	Groups                 *GroupsService
-	InstanceCluster        *InstanceClustersService
-	InstanceVariables      *InstanceVariablesService
-	Invites                *InvitesService
-	IssueLinks             *IssueLinksService
-	Issues                 *IssuesService
-	IssuesStatistics       *IssuesStatisticsService
-	Jobs                   *JobsService
-	Keys                   *KeysService
-	Labels                 *LabelsService
-	License                *LicenseService
-	LicenseTemplates       *LicenseTemplatesService
-	ManagedLicenses        *ManagedLicensesService
-	Markdown               *MarkdownService
-	MergeRequestApprovals  *MergeRequestApprovalsService
-	MergeRequests          *MergeRequestsService
-	Milestones             *MilestonesService
-	Namespaces             *NamespacesService
-	Notes                  *NotesService
-	NotificationSettings   *NotificationSettingsService
-	Packages               *PackagesService
-	Pages                  *PagesService
-	PagesDomains           *PagesDomainsService
-	PersonalAccessTokens   *PersonalAccessTokensService
-	PipelineSchedules      *PipelineSchedulesService
-	PipelineTriggers       *PipelineTriggersService
-	Pipelines              *PipelinesService
-	PlanLimits             *PlanLimitsService
-	ProjectBadges          *ProjectBadgesService
-	ProjectAccessTokens    *ProjectAccessTokensService
-	ProjectCluster         *ProjectClustersService
-	ProjectImportExport    *ProjectImportExportService
-	ProjectIterations      *ProjectIterationsService
-	ProjectMembers         *ProjectMembersService
-	ProjectMirrors         *ProjectMirrorService
-	ProjectSnippets        *ProjectSnippetsService
-	ProjectVariables       *ProjectVariablesService
-	ProjectVulnerabilities *ProjectVulnerabilitiesService
-	Projects               *ProjectsService
-	ProtectedBranches      *ProtectedBranchesService
-	ProtectedEnvironments  *ProtectedEnvironmentsService
-	ProtectedTags          *ProtectedTagsService
-	ReleaseLinks           *ReleaseLinksService
-	Releases               *ReleasesService
-	Repositories           *RepositoriesService
-	RepositoryFiles        *RepositoryFilesService
-	RepositorySubmodules   *RepositorySubmodulesService
-	ResourceLabelEvents    *ResourceLabelEventsService
-	ResourceStateEvents    *ResourceStateEventsService
-	Runners                *RunnersService
-	Search                 *SearchService
-	Services               *ServicesService
-	Settings               *SettingsService
-	Sidekiq                *SidekiqService
-	Snippets               *SnippetsService
-	SystemHooks            *SystemHooksService
-	Tags                   *TagsService
-	Todos                  *TodosService
-	Topics                 *TopicsService
-	Users                  *UsersService
-	Validate               *ValidateService
-	Version                *VersionService
-	Wikis                  *WikisService
+	AccessRequests          *AccessRequestsService
+	Applications            *ApplicationsService
+	AuditEvents             *AuditEventsService
+	Avatar                  *AvatarRequestsService
+	AwardEmoji              *AwardEmojiService
+	Boards                  *IssueBoardsService
+	Branches                *BranchesService
+	BroadcastMessage        *BroadcastMessagesService
+	CIYMLTemplate           *CIYMLTemplatesService
+	ClusterAgents           *ClusterAgentsService
+	Commits                 *CommitsService
+	ContainerRegistry       *ContainerRegistryService
+	CustomAttribute         *CustomAttributesService
+	DeployKeys              *DeployKeysService
+	DeployTokens            *DeployTokensService
+	DeploymentMergeRequests *DeploymentMergeRequestsService
+	Deployments             *DeploymentsService
+	Discussions             *DiscussionsService
+	DockerfileTemplate      *DockerfileTemplatesService
+	Environments            *EnvironmentsService
+	EpicIssues              *EpicIssuesService
+	Epics                   *EpicsService
+	ErrorTracking           *ErrorTrackingService
+	Events                  *EventsService
+	ExternalStatusChecks    *ExternalStatusChecksService
+	Features                *FeaturesService
+	FreezePeriods           *FreezePeriodsService
+	GenericPackages         *GenericPackagesService
+	GeoNodes                *GeoNodesService
+	GitIgnoreTemplates      *GitIgnoreTemplatesService
+	GroupAccessTokens       *GroupAccessTokensService
+	GroupBadges             *GroupBadgesService
+	GroupCluster            *GroupClustersService
+	GroupImportExport       *GroupImportExportService
+	GroupIssueBoards        *GroupIssueBoardsService
+	GroupIterations         *GroupIterationsService
+	GroupLabels             *GroupLabelsService
+	GroupMembers            *GroupMembersService
+	GroupMilestones         *GroupMilestonesService
+	GroupVariables          *GroupVariablesService
+	GroupWikis              *GroupWikisService
+	Groups                  *GroupsService
+	InstanceCluster         *InstanceClustersService
+	InstanceVariables       *InstanceVariablesService
+	Invites                 *InvitesService
+	IssueLinks              *IssueLinksService
+	Issues                  *IssuesService
+	IssuesStatistics        *IssuesStatisticsService
+	Jobs                    *JobsService
+	Keys                    *KeysService
+	Labels                  *LabelsService
+	License                 *LicenseService
+	LicenseTemplates        *LicenseTemplatesService
+	ManagedLicenses         *ManagedLicensesService
+	Markdown                *MarkdownService
+	MergeRequestApprovals   *MergeRequestApprovalsService
+	MergeRequests           *MergeRequestsService
+	Metadata                *MetadataService
+	Milestones              *MilestonesService
+	Namespaces              *NamespacesService
+	Notes                   *NotesService
+	NotificationSettings    *NotificationSettingsService
+	Packages                *PackagesService
+	Pages                   *PagesService
+	PagesDomains            *PagesDomainsService
+	PersonalAccessTokens    *PersonalAccessTokensService
+	PipelineSchedules       *PipelineSchedulesService
+	PipelineTriggers        *PipelineTriggersService
+	Pipelines               *PipelinesService
+	PlanLimits              *PlanLimitsService
+	ProjectAccessTokens     *ProjectAccessTokensService
+	ProjectBadges           *ProjectBadgesService
+	ProjectCluster          *ProjectClustersService
+	ProjectFeatureFlags     *ProjectFeatureFlagService
+	ProjectImportExport     *ProjectImportExportService
+	ProjectIterations       *ProjectIterationsService
+	ProjectMembers          *ProjectMembersService
+	ProjectMirrors          *ProjectMirrorService
+	ProjectSnippets         *ProjectSnippetsService
+	ProjectVariables        *ProjectVariablesService
+	ProjectVulnerabilities  *ProjectVulnerabilitiesService
+	Projects                *ProjectsService
+	ProtectedBranches       *ProtectedBranchesService
+	ProtectedEnvironments   *ProtectedEnvironmentsService
+	ProtectedTags           *ProtectedTagsService
+	ReleaseLinks            *ReleaseLinksService
+	Releases                *ReleasesService
+	Repositories            *RepositoriesService
+	RepositoryFiles         *RepositoryFilesService
+	RepositorySubmodules    *RepositorySubmodulesService
+	ResourceLabelEvents     *ResourceLabelEventsService
+	ResourceMilestoneEvents *ResourceMilestoneEventsService
+	ResourceStateEvents     *ResourceStateEventsService
+	ResourceWeightEvents    *ResourceWeightEventsService
+	Runners                 *RunnersService
+	Search                  *SearchService
+	Services                *ServicesService
+	Settings                *SettingsService
+	Sidekiq                 *SidekiqService
+	Snippets                *SnippetsService
+	SystemHooks             *SystemHooksService
+	Tags                    *TagsService
+	Todos                   *TodosService
+	Topics                  *TopicsService
+	Users                   *UsersService
+	Validate                *ValidateService
+	Version                 *VersionService
+	Wikis                   *WikisService
 }
 
 // ListOptions specifies the optional parameters to various List methods that
@@ -309,16 +316,20 @@ func newClient(options ...ClientOptionFunc) (*Client, error) {
 	c.Branches = &BranchesService{client: c}
 	c.BroadcastMessage = &BroadcastMessagesService{client: c}
 	c.CIYMLTemplate = &CIYMLTemplatesService{client: c}
+	c.ClusterAgents = &ClusterAgentsService{client: c}
 	c.Commits = &CommitsService{client: c}
 	c.ContainerRegistry = &ContainerRegistryService{client: c}
 	c.CustomAttribute = &CustomAttributesService{client: c}
 	c.DeployKeys = &DeployKeysService{client: c}
 	c.DeployTokens = &DeployTokensService{client: c}
+	c.DeploymentMergeRequests = &DeploymentMergeRequestsService{client: c}
 	c.Deployments = &DeploymentsService{client: c}
 	c.Discussions = &DiscussionsService{client: c}
+	c.DockerfileTemplate = &DockerfileTemplatesService{client: c}
 	c.Environments = &EnvironmentsService{client: c}
 	c.EpicIssues = &EpicIssuesService{client: c}
 	c.Epics = &EpicsService{client: c}
+	c.ErrorTracking = &ErrorTrackingService{client: c}
 	c.Events = &EventsService{client: c}
 	c.ExternalStatusChecks = &ExternalStatusChecksService{client: c}
 	c.Features = &FeaturesService{client: c}
@@ -353,6 +364,7 @@ func newClient(options ...ClientOptionFunc) (*Client, error) {
 	c.Markdown = &MarkdownService{client: c}
 	c.MergeRequestApprovals = &MergeRequestApprovalsService{client: c}
 	c.MergeRequests = &MergeRequestsService{client: c, timeStats: timeStats}
+	c.Metadata = &MetadataService{client: c}
 	c.Milestones = &MilestonesService{client: c}
 	c.Namespaces = &NamespacesService{client: c}
 	c.Notes = &NotesService{client: c}
@@ -365,9 +377,10 @@ func newClient(options ...ClientOptionFunc) (*Client, error) {
 	c.PipelineTriggers = &PipelineTriggersService{client: c}
 	c.Pipelines = &PipelinesService{client: c}
 	c.PlanLimits = &PlanLimitsService{client: c}
-	c.ProjectBadges = &ProjectBadgesService{client: c}
 	c.ProjectAccessTokens = &ProjectAccessTokensService{client: c}
+	c.ProjectBadges = &ProjectBadgesService{client: c}
 	c.ProjectCluster = &ProjectClustersService{client: c}
+	c.ProjectFeatureFlags = &ProjectFeatureFlagService{client: c}
 	c.ProjectImportExport = &ProjectImportExportService{client: c}
 	c.ProjectIterations = &ProjectIterationsService{client: c}
 	c.ProjectMembers = &ProjectMembersService{client: c}
@@ -385,7 +398,9 @@ func newClient(options ...ClientOptionFunc) (*Client, error) {
 	c.RepositoryFiles = &RepositoryFilesService{client: c}
 	c.RepositorySubmodules = &RepositorySubmodulesService{client: c}
 	c.ResourceLabelEvents = &ResourceLabelEventsService{client: c}
+	c.ResourceMilestoneEvents = &ResourceMilestoneEventsService{client: c}
 	c.ResourceStateEvents = &ResourceStateEventsService{client: c}
+	c.ResourceWeightEvents = &ResourceWeightEventsService{client: c}
 	c.Runners = &RunnersService{client: c}
 	c.Search = &SearchService{client: c}
 	c.Services = &ServicesService{client: c}
@@ -858,7 +873,7 @@ func PathEscape(s string) string {
 // An ErrorResponse reports one or more errors caused by an API request.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ce/api/README.html#data-validation-and-error-reporting
+// https://docs.gitlab.com/ee/api/index.html#data-validation-and-error-reporting
 type ErrorResponse struct {
 	Body     []byte
 	Response *http.Response
@@ -879,13 +894,13 @@ func CheckResponse(r *http.Response) error {
 	}
 
 	errorResponse := &ErrorResponse{Response: r}
-	data, err := ioutil.ReadAll(r.Body)
+	data, err := io.ReadAll(r.Body)
 	if err == nil && data != nil {
 		errorResponse.Body = data
 
 		var raw interface{}
 		if err := json.Unmarshal(data, &raw); err != nil {
-			errorResponse.Message = "failed to parse unknown error format"
+			errorResponse.Message = fmt.Sprintf("failed to parse unknown error format: %s", data)
 		} else {
 			errorResponse.Message = parseError(raw)
 		}
@@ -895,23 +910,24 @@ func CheckResponse(r *http.Response) error {
 }
 
 // Format:
-// {
-//     "message": {
-//         "<property-name>": [
-//             "<error-message>",
-//             "<error-message>",
-//             ...
-//         ],
-//         "<embed-entity>": {
-//             "<property-name>": [
-//                 "<error-message>",
-//                 "<error-message>",
-//                 ...
-//             ],
-//         }
-//     },
-//     "error": "<error-message>"
-// }
+//
+//	{
+//	    "message": {
+//	        "<property-name>": [
+//	            "<error-message>",
+//	            "<error-message>",
+//	            ...
+//	        ],
+//	        "<embed-entity>": {
+//	            "<property-name>": [
+//	                "<error-message>",
+//	                "<error-message>",
+//	                ...
+//	            ],
+//	        }
+//	    },
+//	    "error": "<error-message>"
+//	}
 func parseError(raw interface{}) string {
 	switch raw := raw.(type) {
 	case string:

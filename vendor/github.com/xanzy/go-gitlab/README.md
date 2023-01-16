@@ -31,6 +31,7 @@ to add new and/or missing endpoints. Currently, the following services are suppo
 - [x] Environments
 - [x] Epic Issues
 - [x] Epics
+- [x] Error Tracking
 - [x] Events
 - [x] Feature Flags
 - [x] Geo Nodes
@@ -74,6 +75,7 @@ to add new and/or missing endpoints. Currently, the following services are suppo
 - [x] Project Members
 - [x] Project Milestones
 - [x] Project Snippets
+- [x] Project Vulnerabilities
 - [x] Project-Level Variables
 - [x] Projects (including setting Webhooks)
 - [x] Protected Branches
@@ -130,7 +132,7 @@ to list all projects for user "svanharmelen":
 
 ```go
 git := gitlab.NewClient("yourtokengoeshere")
-opt := &ListProjectsOptions{Search: gitlab.String("svanharmelen")}
+opt := &gitlab.ListProjectsOptions{Search: gitlab.String("svanharmelen")}
 projects, _, err := git.Projects.ListProjects(opt)
 ```
 

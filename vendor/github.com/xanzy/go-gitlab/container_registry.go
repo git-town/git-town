@@ -80,7 +80,7 @@ type ListRegistryRepositoriesOptions struct {
 // ListProjectRegistryRepositories gets a list of registry repositories in a project.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/container_registry.html#list-registry-repositories
+// https://docs.gitlab.com/ee/api/container_registry.html#within-a-project
 func (s *ContainerRegistryService) ListProjectRegistryRepositories(pid interface{}, opt *ListRegistryRepositoriesOptions, options ...RequestOptionFunc) ([]*RegistryRepository, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
@@ -272,14 +272,14 @@ func (s *ContainerRegistryService) DeleteRegistryRepositoryTag(pid interface{}, 
 // DeleteRegistryRepositoryTags() options.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/container_registry.html#delete-repository-tags-in-bulk
+// https://docs.gitlab.com/ee/api/container_registry.html#delete-registry-repository-tags-in-bulk
 type DeleteRegistryRepositoryTagsOptions struct {
 	NameRegexpDelete *string `url:"name_regex_delete,omitempty" json:"name_regex_delete,omitempty"`
 	NameRegexpKeep   *string `url:"name_regex_keep,omitempty" json:"name_regex_keep,omitempty"`
 	KeepN            *int    `url:"keep_n,omitempty" json:"keep_n,omitempty"`
 	OlderThan        *string `url:"older_than,omitempty" json:"older_than,omitempty"`
 
-	// Deprecated members
+	// Deprecated: NameRegexp is deprecated in favor of NameRegexpDelete.
 	NameRegexp *string `url:"name_regex,omitempty" json:"name_regex,omitempty"`
 }
 
@@ -287,7 +287,7 @@ type DeleteRegistryRepositoryTagsOptions struct {
 // given criteria.
 //
 // GitLab API docs:
-// https://docs.gitlab.com/ee/api/container_registry.html#delete-repository-tags-in-bulk
+// https://docs.gitlab.com/ee/api/container_registry.html#delete-registry-repository-tags-in-bulk
 func (s *ContainerRegistryService) DeleteRegistryRepositoryTags(pid interface{}, repository int, opt *DeleteRegistryRepositoryTagsOptions, options ...RequestOptionFunc) (*Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
