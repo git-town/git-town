@@ -136,7 +136,8 @@ func gitShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (sh
 	if !repo.Config.IsFeatureBranch(result.branchToShip) {
 		return shipConfig{}, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can be shipped", result.branchToShip)
 	}
-	err = dialog.EnsureKnowsParentBranches([]string{result.branchToShip}, repo)
+	parentDialog := dialog.ParentBranches{}
+	err = parentDialog.EnsureKnowsParentBranches([]string{result.branchToShip}, repo)
 	if err != nil {
 		return shipConfig{}, err
 	}

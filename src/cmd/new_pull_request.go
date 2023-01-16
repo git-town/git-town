@@ -88,7 +88,8 @@ func createNewPullRequestConfig(repo *git.ProdRepo) (newPullRequestConfig, error
 	if err != nil {
 		return newPullRequestConfig{}, err
 	}
-	err = dialog.EnsureKnowsParentBranches([]string{initialBranch}, repo)
+	parentDialog := dialog.ParentBranches{}
+	err = parentDialog.EnsureKnowsParentBranches([]string{initialBranch}, repo)
 	if err != nil {
 		return newPullRequestConfig{}, err
 	}

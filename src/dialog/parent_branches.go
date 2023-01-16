@@ -7,19 +7,23 @@ import (
 	"github.com/git-town/git-town/v7/src/git"
 )
 
+type ParentBranches struct {
+	parentBranchHeaderShown bool
+}
+
 // EnsureKnowsParentBranches asserts that the entire ancestry for all given branches
 // is known to Git Town.
 // Missing ancestry information is queried from the user.
-func EnsureKnowsParentBranches(branchNames []string, repo *git.ProdRepo) error {
+func (pbd *ParentBranches) EnsureKnowsParentBranches(branchNames []string, repo *git.ProdRepo) error {
 	for _, branchName := range branchNames {
 		if repo.Config.IsMainBranch(branchName) || repo.Config.IsPerennialBranch(branchName) || repo.Config.HasParentBranch(branchName) {
 			continue
 		}
-		err := AskForBranchAncestry(branchName, repo.Config.MainBranch(), repo)
+		err := pbd.AskForBranchAncestry(branchName, repo.Config.MainBranch(), repo)
 		if err != nil {
 			return err
 		}
-		if parentBranchHeaderShown {
+		if pbd.parentBranchHeaderShown {
 			fmt.Println()
 		}
 	}
@@ -27,14 +31,14 @@ func EnsureKnowsParentBranches(branchNames []string, repo *git.ProdRepo) error {
 }
 
 // AskForBranchAncestry prompts the user for all unknown ancestors of the given branch.
-func AskForBranchAncestry(branchName, defaultBranchName string, repo *git.ProdRepo) error {
+func (pbd *ParentBranches) AskForBranchAncestry(branchName, defaultBranchName string, repo *git.ProdRepo) error {
 	current := branchName
 	var err error
 	for {
 		parent := repo.Config.ParentBranch(current)
 		if parent == "" { //nolint:nestif
-			printParentBranchHeader(repo)
-			parent, err = AskForBranchParent(current, defaultBranchName, repo)
+			pbd.printParentBranchHeader(repo)
+			parent, err = pbd.AskForBranchParent(current, defaultBranchName, repo)
 			if err != nil {
 				return err
 			}
@@ -59,7 +63,7 @@ func AskForBranchAncestry(branchName, defaultBranchName string, repo *git.ProdRe
 }
 
 // AskForBranchParent prompts the user for the parent of the given branch.
-func AskForBranchParent(branchName, defaultBranchName string, repo *git.ProdRepo) (string, error) {
+func (pbd *ParentBranches) AskForBranchParent(branchName, defaultBranchName string, repo *git.ProdRepo) (string, error) {
 	choices, err := repo.Silent.LocalBranchesMainFirst()
 	if err != nil {
 		return "", err
@@ -74,8 +78,6 @@ func AskForBranchParent(branchName, defaultBranchName string, repo *git.ProdRepo
 
 // Helpers
 
-var parentBranchHeaderShown = false
-
 const parentBranchHeaderTemplate string = `
 Feature branches can be branched directly off
 %s or from other feature branches.
@@ -85,10 +87,9 @@ The latter allows to build on top of currently unshipped features.
 
 `
 
-var (
-	parentBranchPromptTemplate = "Please specify the parent branch of %q:"
-	perennialBranchOption      = "<none> (perennial branch)"
-)
+const parentBranchPromptTemplate = "Please specify the parent branch of %q:"
+
+const perennialBranchOption = "<none> (perennial branch)"
 
 func filterOutSelfAndDescendants(branchName string, choices []string, repo *git.ProdRepo) []string {
 	result := []string{}
@@ -101,9 +102,9 @@ func filterOutSelfAndDescendants(branchName string, choices []string, repo *git.
 	return result
 }
 
-func printParentBranchHeader(repo *git.ProdRepo) {
-	if !parentBranchHeaderShown {
-		parentBranchHeaderShown = true
+func (pbd *ParentBranches) printParentBranchHeader(repo *git.ProdRepo) {
+	if !pbd.parentBranchHeaderShown {
+		pbd.parentBranchHeaderShown = true
 		cli.Printf(parentBranchHeaderTemplate, repo.Config.MainBranch())
 	}
 }
