@@ -89,7 +89,8 @@ func createAppendConfig(args []string, repo *git.ProdRepo) (appendConfig, error)
 	if hasBranch {
 		return appendConfig{}, fmt.Errorf("a branch named %q already exists", result.targetBranch)
 	}
-	err = dialog.EnsureKnowsParentBranches([]string{result.parentBranch}, repo)
+	parentDialog := dialog.ParentBranches{}
+	err = parentDialog.EnsureKnowsParentBranches([]string{result.parentBranch}, repo)
 	if err != nil {
 		return appendConfig{}, err
 	}

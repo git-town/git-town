@@ -76,7 +76,8 @@ func createKillConfig(args []string, repo *git.ProdRepo) (killConfig, error) {
 		return result, err
 	}
 	if result.isTargetBranchLocal {
-		err = dialog.EnsureKnowsParentBranches([]string{result.targetBranch}, repo)
+		parentDialog := dialog.ParentBranches{}
+		err = parentDialog.EnsureKnowsParentBranches([]string{result.targetBranch}, repo)
 		if err != nil {
 			return result, err
 		}

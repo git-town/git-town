@@ -68,7 +68,8 @@ func createDiffParentConfig(args []string, repo *git.ProdRepo) (diffParentConfig
 	if !repo.Config.IsFeatureBranch(config.branch) {
 		return diffParentConfig{}, fmt.Errorf("you can only diff-parent feature branches")
 	}
-	err = dialog.EnsureKnowsParentBranches([]string{config.branch}, repo)
+	parentDialog := dialog.ParentBranches{}
+	err = parentDialog.EnsureKnowsParentBranches([]string{config.branch}, repo)
 	if err != nil {
 		return diffParentConfig{}, err
 	}

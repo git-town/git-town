@@ -101,7 +101,8 @@ func createPrependConfig(args []string, repo *git.ProdRepo) (prependConfig, erro
 	if !repo.Config.IsFeatureBranch(result.initialBranch) {
 		return prependConfig{}, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can have parent branches", result.initialBranch)
 	}
-	err = dialog.EnsureKnowsParentBranches([]string{result.initialBranch}, repo)
+	parentDialog := dialog.ParentBranches{}
+	err = parentDialog.EnsureKnowsParentBranches([]string{result.initialBranch}, repo)
 	if err != nil {
 		return prependConfig{}, err
 	}
