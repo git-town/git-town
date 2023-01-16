@@ -11,7 +11,7 @@ import (
 )
 
 func hackCmd() *cobra.Command {
-	promptForParent := false
+	promptForParentFlag := false
 	hackCmd := cobra.Command{
 		Use:   "hack <branch>",
 		Short: "Creates a new feature branch off the main development branch",
@@ -25,7 +25,7 @@ and brings over all uncommitted changes to the new feature branch.
 
 See "sync" for information regarding upstream remotes.`,
 		Run: func(cmd *cobra.Command, args []string) {
-			config, err := createHackConfig(args, promptForParent, prodRepo)
+			config, err := createHackConfig(args, promptForParentFlag, prodRepo)
 			if err != nil {
 				cli.Exit(err)
 			}
@@ -47,7 +47,7 @@ See "sync" for information regarding upstream remotes.`,
 			return validateIsConfigured(prodRepo)
 		},
 	}
-	hackCmd.Flags().BoolVarP(&promptForParent, "prompt", "p", false, "Prompt for the parent branch")
+	hackCmd.Flags().BoolVarP(&promptForParentFlag, "prompt", "p", false, "Prompt for the parent branch")
 	return &hackCmd
 }
 

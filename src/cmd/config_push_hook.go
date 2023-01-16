@@ -9,7 +9,7 @@ import (
 )
 
 func pushHookCommand() *cobra.Command {
-	var global bool
+	var globalFlag bool
 	pushHookCmd := cobra.Command{
 		Use:   "push-hook [--global] [(yes | no)]",
 		Short: "Configures whether Git Town should run Git's pre-push hook.",
@@ -19,9 +19,9 @@ Enabled by default. When disabled, Git Town prevents Git's pre-push hook from ru
 		Run: func(cmd *cobra.Command, args []string) {
 			var err error
 			if len(args) == 0 {
-				err = printPushHook(global, prodRepo)
+				err = printPushHook(globalFlag, prodRepo)
 			} else {
-				err = setPushHook(args[0], global, prodRepo)
+				err = setPushHook(args[0], globalFlag, prodRepo)
 			}
 			if err != nil {
 				cli.Exit(err)
@@ -32,14 +32,14 @@ Enabled by default. When disabled, Git Town prevents Git's pre-push hook from ru
 			return ValidateIsRepository(prodRepo)
 		},
 	}
-	pushHookCmd.Flags().BoolVar(&global, "global", false, "Displays or sets the global push hook flag")
+	pushHookCmd.Flags().BoolVar(&globalFlag, "global", false, "Displays or sets the global push hook flag")
 	return &pushHookCmd
 }
 
-func printPushHook(global bool, repo *git.ProdRepo) error {
+func printPushHook(globalFlag bool, repo *git.ProdRepo) error {
 	var setting bool
 	var err error
-	if global {
+	if globalFlag {
 		setting, err = repo.Config.PushHookGlobal()
 	} else {
 		setting, err = repo.Config.PushHook()

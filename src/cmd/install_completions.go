@@ -7,7 +7,7 @@ import (
 )
 
 func completionsCmd() *cobra.Command {
-	completionsNoDesc := false
+	completionsNoDescFlag := false
 	completionsCmd := cobra.Command{
 		Use:   "completions [bash|zsh|fish|powershell]",
 		Short: "Generates auto-completion for bash, zsh, fish, or PowerShell",
@@ -49,18 +49,18 @@ To load completions for each session, add the above line to your PowerShell prof
 			case "bash":
 				_ = RootCmd.GenBashCompletion(os.Stdout)
 			case "zsh":
-				if completionsNoDesc {
+				if completionsNoDescFlag {
 					_ = RootCmd.GenZshCompletionNoDesc(os.Stdout)
 				} else {
 					_ = RootCmd.GenZshCompletion(os.Stdout)
 				}
 			case "fish":
-				_ = RootCmd.GenFishCompletion(os.Stdout, !completionsNoDesc)
+				_ = RootCmd.GenFishCompletion(os.Stdout, !completionsNoDescFlag)
 			case "powershell":
 				_ = RootCmd.GenPowerShellCompletion(os.Stdout)
 			}
 		},
 	}
-	completionsCmd.Flags().BoolVar(&completionsNoDesc, "no-descriptions", false, "disable completions description for shells that support it")
+	completionsCmd.Flags().BoolVar(&completionsNoDescFlag, "no-descriptions", false, "disable completions description for shells that support it")
 	return &completionsCmd
 }
