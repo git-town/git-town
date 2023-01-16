@@ -30,16 +30,16 @@ const InputDelay = 500 * time.Millisecond
 
 // Exec executes the command given in argv notation.
 func Exec(cmd string, args ...string) (*Result, error) {
-	return WithOptions(Options{}, cmd, args...)
+	return WithOptions(&Options{}, cmd, args...)
 }
 
 // InDir executes the given command in the given directory.
 func InDir(dir string, cmd string, args ...string) (*Result, error) {
-	return WithOptions(Options{Dir: dir}, cmd, args...)
+	return WithOptions(&Options{Dir: dir}, cmd, args...)
 }
 
 // WithOptions runs the command with the given RunOptions.
-func WithOptions(opts Options, cmd string, args ...string) (*Result, error) {
+func WithOptions(opts *Options, cmd string, args ...string) (*Result, error) {
 	cli.LogRun(cmd, args...)
 	subProcess := exec.Command(cmd, args...) // #nosec
 	if opts.Dir != "" {

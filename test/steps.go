@@ -269,13 +269,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I (?:run|ran) "([^"]+)" and answer(?:ed)? the prompts:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
-		state.runRes, state.runErr = state.gitEnv.DevShell.RunStringWith(cmd, run.Options{Input: tableToInput(input)})
+		state.runRes, state.runErr = state.gitEnv.DevShell.RunStringWith(cmd, &run.Options{Input: tableToInput(input)})
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)" and close the editor$`, func(cmd string) error {
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		state.runRes, state.runErr = state.gitEnv.DevShell.RunStringWith(cmd, run.Options{Env: env})
+		state.runRes, state.runErr = state.gitEnv.DevShell.RunStringWith(cmd, &run.Options{Env: env})
 		return nil
 	})
 
@@ -297,12 +297,12 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^I run "([^"]*)", answer the prompts, and close the next editor:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		state.runRes, state.runErr = state.gitEnv.DevShell.RunStringWith(cmd, run.Options{Env: env, Input: tableToInput(input)})
+		state.runRes, state.runErr = state.gitEnv.DevShell.RunStringWith(cmd, &run.Options{Env: env, Input: tableToInput(input)})
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]+)" in the "([^"]+)" folder$`, func(cmd, folderName string) error {
-		state.runRes, state.runErr = state.gitEnv.DevShell.RunStringWith(cmd, run.Options{Dir: folderName})
+		state.runRes, state.runErr = state.gitEnv.DevShell.RunStringWith(cmd, &run.Options{Dir: folderName})
 		return nil
 	})
 

@@ -5,6 +5,6 @@ type Shell interface {
 	Run(string, ...string) (*Result, error)
 	RunMany([][]string) error
 	RunString(string) (*Result, error)
-	RunStringWith(string, Options) (*Result, error)
+	RunStringWith(string, *Options) (*Result, error)
 	WorkingDir() string
 }
