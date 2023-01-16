@@ -19,10 +19,10 @@ import (
 )
 
 // beforeSuiteMux ensures that we run BeforeSuite only once globally.
-var beforeSuiteMux sync.Mutex
+var beforeSuiteMux sync.Mutex //nolint:gochecknoglobals
 
 // the global GitManager instance.
-var gitManager *GitManager
+var gitManager *GitManager //nolint:gochecknoglobals
 
 // Steps defines Cucumber step implementations around Git workspace management.
 func Steps(suite *godog.Suite, state *ScenarioState) {
