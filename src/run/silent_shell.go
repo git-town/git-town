@@ -22,12 +22,12 @@ func (s SilentShell) WorkingDir() string {
 func (s SilentShell) PrintHeader(cmd string, args ...string) {
 	_, err := color.New(color.Bold).Println(cmd, strings.Join(args, " "))
 	if err != nil {
-		fmt.Println("\n1111111\n\n", cmd, strings.Join(args, " "))
+		fmt.Println(cmd, strings.Join(args, " "))
 	}
 }
 
 func (s SilentShell) PrintResult(text string) {
-	fmt.Println("output")
+	fmt.Println(text)
 }
 
 // Run runs the given command in this ShellRunner's directory.
