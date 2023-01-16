@@ -18,10 +18,11 @@ type newPullRequestConfig struct {
 	InitialBranch  string
 }
 
-var newPullRequestCommand = &cobra.Command{
-	Use:   "new-pull-request",
-	Short: "Creates a new pull request",
-	Long: fmt.Sprintf(`Creates a new pull request
+func newPullRequestCommand() *cobra.Command {
+	return &cobra.Command{
+		Use:   "new-pull-request",
+		Short: "Creates a new pull request",
+		Long: fmt.Sprintf(`Creates a new pull request
 
 Syncs the current branch
 and opens a browser window to the new pull request page of your repository.
@@ -37,38 +38,39 @@ where driver is "github", "gitlab", "gitea", or "bitbucket".
 When using SSH identities, this command needs to be configured with
 "git config %s <hostname>"
 where hostname matches what is in your ssh config file.`, config.CodeHostingDriver, config.CodeHostingOriginHostname),
-	Run: func(cmd *cobra.Command, args []string) {
-		config, err := createNewPullRequestConfig(prodRepo)
-		if err != nil {
-			cli.Exit(err)
-		}
-		driver := hosting.NewDriver(&prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction)
-		if driver == nil {
-			cli.Exit(hosting.UnsupportedServiceError())
-		}
-		stepList, err := createNewPullRequestStepList(config, prodRepo)
-		if err != nil {
-			cli.Exit(err)
-		}
-		runState := runstate.New("new-pull-request", stepList)
-		err = runstate.Execute(runState, prodRepo, driver)
-		if err != nil {
-			cli.Exit(err)
-		}
-	},
-	Args: cobra.NoArgs,
-	PreRunE: func(cmd *cobra.Command, args []string) error {
-		if err := ValidateIsRepository(prodRepo); err != nil {
-			return err
-		}
-		if err := validateIsConfigured(prodRepo); err != nil {
-			return err
-		}
-		if err := prodRepo.Config.ValidateIsOnline(); err != nil {
-			return err
-		}
-		return nil
-	},
+		Run: func(cmd *cobra.Command, args []string) {
+			config, err := createNewPullRequestConfig(prodRepo)
+			if err != nil {
+				cli.Exit(err)
+			}
+			driver := hosting.NewDriver(&prodRepo.Config, &prodRepo.Silent, cli.PrintDriverAction)
+			if driver == nil {
+				cli.Exit(hosting.UnsupportedServiceError())
+			}
+			stepList, err := createNewPullRequestStepList(config, prodRepo)
+			if err != nil {
+				cli.Exit(err)
+			}
+			runState := runstate.New("new-pull-request", stepList)
+			err = runstate.Execute(runState, prodRepo, driver)
+			if err != nil {
+				cli.Exit(err)
+			}
+		},
+		Args: cobra.NoArgs,
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if err := ValidateIsRepository(prodRepo); err != nil {
+				return err
+			}
+			if err := validateIsConfigured(prodRepo); err != nil {
+				return err
+			}
+			if err := prodRepo.Config.ValidateIsOnline(); err != nil {
+				return err
+			}
+			return nil
+		},
+	}
 }
 
 func createNewPullRequestConfig(repo *git.ProdRepo) (newPullRequestConfig, error) {
@@ -111,8 +113,4 @@ func createNewPullRequestStepList(config newPullRequestConfig, repo *git.ProdRep
 	}
 	result.Append(&steps.CreatePullRequestStep{BranchName: config.InitialBranch})
 	return result, nil
-}
-
-func init() {
-	RootCmd.AddCommand(newPullRequestCommand)
 }
