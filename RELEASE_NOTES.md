@@ -23,12 +23,12 @@
 
 #### New Features
 
-- you can skip Git's pre-push hook while syncing branches using the new
-  [push-verify]() option
-  ([#1958](https://github.com/git-town/git-town/pull/1958))
-- Git Town accepts more configuration value formats
-  ([#1978](https://github.com/git-town/git-town/pull/1978),
-  [#1979](https://github.com/git-town/git-town/pull/1979))
+- sync branches via rebases instead of merge by setting - this has been the most
+  requested feature.
+- sync can skip Git's pre-push hook the new [push-hook]() option
+- accepts more configuration value formats ("true", "yes", "on", "t", "1", etc)
+- handles wrong configuration values correctly
+- many performance optimizations and code simplifications
 
 #### Bug Fixes
 
