@@ -33,3 +33,8 @@ Feature: remote branch gone, local branch has additional commits
       |        | git checkout old                      |
     And the current branch is now "old"
     And the initial branches and hierarchy exist
+    And now these commits exist
+      | BRANCH | LOCATION      | MESSAGE       |
+      | active | local, origin | active commit |
+      | old    | local         | old commit    |
+      |        |               | new commit    |
