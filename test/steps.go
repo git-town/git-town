@@ -235,6 +235,15 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.DeleteMainBranchConfiguration()
 	})
 
+	suite.Step(`^I add commit "([^"]*)" to the "([^"]*)" branch`, func(message, branch string) error {
+		return state.gitEnv.DevRepo.CreateCommit(git.Commit{
+			Branch:      branch,
+			FileName:    "new_file",
+			FileContent: "new content",
+			Message:     message,
+		})
+	})
+
 	suite.Step(`^I am not prompted for any parent branches$`, func() error {
 		notExpected := "Please specify the parent branch of"
 		if state.runRes.OutputContainsText(notExpected) {
