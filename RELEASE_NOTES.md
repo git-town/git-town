@@ -4,9 +4,9 @@
 
 #### New Features
 
-- You can now sync feature branches using "rebase" to keep your commit history
-  in them clean ([#1950](https://github.com/git-town/git-town/pull/1950)). Run
-  `git town sync-strategy (merge | rebase)` to configure this
+- You can now sync feature branches by rebasing them against their parent branch
+  ([#1950](https://github.com/git-town/git-town/pull/1950)). Run
+  `git town sync-strategy (merge | rebase)` to enable this
   ([more info](https://www.git-town.com/preferences/sync-strategy.html)).
 - You can now disable Git's `pre-push` hook during sync using the new
   `push-verify` option
