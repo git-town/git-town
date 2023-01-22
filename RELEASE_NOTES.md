@@ -1,5 +1,22 @@
 # Git Town Release Notes
 
+## 7.9.0 (2023-01-22)
+
+#### New Features
+
+- you can now sync using "rebase" to update feature branches and keep your
+  commit history in them clean
+  ([#1950](https://github.com/git-town/git-town/pull/1950))
+- you can now disable Git's `pre-push` hook during sync using the new
+  `push-verify` option ([#1958](https://github.com/git-town/git-town/pull/1958))
+- support for nested GitLab groups
+  ([#1943](https://github.com/git-town/git-town/pull/1943))
+
+#### Bug Fixes
+
+- support GitLab SaaS repos with "gitlab" in their name
+  ([#1926](https://github.com/git-town/git-town/pull/1926))
+
 ## 7.8.0 (2022-08-07)
 
 #### New Features
