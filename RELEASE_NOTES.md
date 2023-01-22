@@ -4,15 +4,15 @@
 
 #### New Features
 
-- You can now sync feature branches by rebasing them against their parent branch
-  ([#1950](https://github.com/git-town/git-town/pull/1950)). Run
-  `git town sync-strategy (merge | rebase)` to enable this
-  ([more info](https://www.git-town.com/preferences/sync-strategy.html)).
-- You can now disable Git's `pre-push` hook during sync using the new
-  `push-verify` option
+- sync feature branches by rebasing them against their parent branch
+  ([#1950](https://github.com/git-town/git-town/pull/1950))
+  - `git town sync-strategy (merge | rebase)` configures this
+  - more info at https://www.git-town.com/preferences/sync-strategy.html
+- disable Git's `pre-push` hook using the new `push-verify` option
   ([#1958](https://github.com/git-town/git-town/pull/1958)).
-- Git Town now supports nested GitLab groups
-  ([#1943](https://github.com/git-town/git-town/pull/1943)).
+- support for
+  [GitLab subgroups](https://docs.gitlab.com/ee/user/group/subgroups)
+  ([#1943](https://github.com/git-town/git-town/pull/1943))
 
 #### Bug Fixes
 
