@@ -9,7 +9,7 @@
   ([#1950](https://github.com/git-town/git-town/pull/1950))
   - configure using `git town sync-strategy (merge | rebase)`
 - disable Git's `pre-push` hook using the new `push-verify` option
-  ([#1958](https://github.com/git-town/git-town/pull/1958)).
+  ([#1958](https://github.com/git-town/git-town/pull/1958))
 - support for
   [GitLab subgroups](https://docs.gitlab.com/ee/user/group/subgroups)
   ([#1943](https://github.com/git-town/git-town/pull/1943))
