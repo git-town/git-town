@@ -23,14 +23,31 @@
 
 #### New Features
 
-- sync branches via rebases instead of merge by setting - this has been the most
-  requested feature.
-- sync can skip Git's pre-push hook the new [push-hook]() option
 - accepts more configuration value formats ("true", "yes", "on", "t", "1", etc)
 - handles wrong configuration values correctly
-- many performance optimizations and code simplifications
 
 #### Bug Fixes
+
+## 7.9.0 (2023-01-22)
+
+#### New Features
+
+- rebase feature branches against their parent branch using the new
+  [sync-strategy option](https://www.git-town.com/preferences/sync-strategy.html)
+  ([#1950](https://github.com/git-town/git-town/pull/1950))
+  - configure using `git town sync-strategy (merge | rebase)`
+- disable Git's `pre-push` hook using the new `push-verify` option
+  ([#1958](https://github.com/git-town/git-town/pull/1958))
+- support for
+  [GitLab subgroups](https://docs.gitlab.com/ee/user/group/subgroups)
+  ([#1943](https://github.com/git-town/git-town/pull/1943))
+
+#### Bug Fixes
+
+- support GitLab SaaS repos whose name contains "gitlab"
+  ([#1926](https://github.com/git-town/git-town/pull/1926))
+
+> main
 
 ## 7.8.0 (2022-08-07)
 
