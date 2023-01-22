@@ -1,5 +1,24 @@
 # Git Town Release Notes
 
+## 7.9.0 (2023-01-22)
+
+#### New Features
+
+- rebase feature branches against their parent branch using the new
+  [sync-strategy option](https://www.git-town.com/preferences/sync-strategy.html)
+  ([#1950](https://github.com/git-town/git-town/pull/1950))
+  - configure using `git town sync-strategy (merge | rebase)`
+- disable Git's `pre-push` hook using the new `push-verify` option
+  ([#1958](https://github.com/git-town/git-town/pull/1958))
+- support for
+  [GitLab subgroups](https://docs.gitlab.com/ee/user/group/subgroups)
+  ([#1943](https://github.com/git-town/git-town/pull/1943))
+
+#### Bug Fixes
+
+- support GitLab SaaS repos whose name contains "gitlab"
+  ([#1926](https://github.com/git-town/git-town/pull/1926))
+
 ## 7.8.0 (2022-08-07)
 
 #### New Features
