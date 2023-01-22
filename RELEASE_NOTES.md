@@ -4,13 +4,15 @@
 
 #### New Features
 
-- you can now sync using "rebase" to update feature branches and keep your
-  commit history in them clean
-  ([#1950](https://github.com/git-town/git-town/pull/1950))
-- you can now disable Git's `pre-push` hook during sync using the new
-  `push-verify` option ([#1958](https://github.com/git-town/git-town/pull/1958))
-- support for nested GitLab groups
-  ([#1943](https://github.com/git-town/git-town/pull/1943))
+- You can now sync feature branches using "rebase" to keep your commit history
+  in them clean ([#1950](https://github.com/git-town/git-town/pull/1950)). Run
+  `git town sync-strategy (merge | rebase)` to configure this behavior.
+  [sync-strategy](https://www.git-town.com/preferences/sync-strategy.html)
+- You can now disable Git's `pre-push` hook during sync using the new
+  `push-verify` option
+  ([#1958](https://github.com/git-town/git-town/pull/1958)).
+- Git Town now supports nested GitLab groups
+  ([#1943](https://github.com/git-town/git-town/pull/1943)).
 
 #### Bug Fixes
 
