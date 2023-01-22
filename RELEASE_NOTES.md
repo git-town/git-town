@@ -4,10 +4,10 @@
 
 #### New Features
 
-- sync feature branches by rebasing them against their parent branch
+- rebase feature branches against their parent branch using the new
+  [sync-strategy option](https://www.git-town.com/preferences/sync-strategy.html)
   ([#1950](https://github.com/git-town/git-town/pull/1950))
-  - `git town sync-strategy (merge | rebase)` configures this
-  - more info at https://www.git-town.com/preferences/sync-strategy.html
+  - configure using `git town sync-strategy (merge | rebase)`
 - disable Git's `pre-push` hook using the new `push-verify` option
   ([#1958](https://github.com/git-town/git-town/pull/1958)).
 - support for
