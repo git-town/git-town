@@ -14,11 +14,12 @@ import (
 )
 
 type syncConfig struct {
-	branchesToSync []string
-	hasOrigin      bool
-	initialBranch  string
-	isOffline      bool
-	shouldPushTags bool
+	branchesToSync                           []string
+	hasOrigin                                bool
+	initialBranch                            string
+	isOffline                                bool
+	localBranchesWithDeletedTrackingBranches []string
+	shouldPushTags                           bool
 }
 
 func syncCmd(repo *git.ProdRepo) *cobra.Command {
