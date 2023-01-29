@@ -9,7 +9,7 @@ import (
 )
 
 type pruneBranchesConfig struct {
-	initialBranchName                        string
+	initialBranch                            string
 	localBranchesWithDeletedTrackingBranches []string
 	mainBranch                               string
 }
@@ -61,7 +61,7 @@ func createPruneBranchesConfig(repo *git.ProdRepo) (pruneBranchesConfig, error) 
 			return pruneBranchesConfig{}, err
 		}
 	}
-	initialBranchName, err := repo.Silent.CurrentBranch()
+	initialBranch, err := repo.Silent.CurrentBranch()
 	if err != nil {
 		return pruneBranchesConfig{}, err
 	}
@@ -70,7 +70,7 @@ func createPruneBranchesConfig(repo *git.ProdRepo) (pruneBranchesConfig, error) 
 		return pruneBranchesConfig{}, err
 	}
 	result := pruneBranchesConfig{
-		initialBranchName:                        initialBranchName,
+		initialBranch:                            initialBranch,
 		localBranchesWithDeletedTrackingBranches: localBranchesWithDeletedTrackingBranches,
 		mainBranch:                               repo.Config.MainBranch(),
 	}
@@ -78,23 +78,23 @@ func createPruneBranchesConfig(repo *git.ProdRepo) (pruneBranchesConfig, error) 
 }
 
 func createPruneBranchesStepList(config pruneBranchesConfig, repo *git.ProdRepo) (runstate.StepList, error) {
-	initialBranchName := config.initialBranchName
+	initialBranch := config.initialBranch
 	result := runstate.StepList{}
-	for _, branchName := range config.localBranchesWithDeletedTrackingBranches {
-		if initialBranchName == branchName {
+	for _, branchWithDeletedRemote := range config.localBranchesWithDeletedTrackingBranches {
+		if initialBranch == branchWithDeletedRemote {
 			result.Append(&steps.CheckoutBranchStep{BranchName: config.mainBranch})
 		}
-		parent := repo.Config.ParentBranch(branchName)
+		parent := repo.Config.ParentBranch(branchWithDeletedRemote)
 		if parent != "" {
-			for _, child := range repo.Config.ChildBranches(branchName) {
+			for _, child := range repo.Config.ChildBranches(branchWithDeletedRemote) {
 				result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: parent})
 			}
-			result.Append(&steps.DeleteParentBranchStep{BranchName: branchName})
+			result.Append(&steps.DeleteParentBranchStep{BranchName: branchWithDeletedRemote})
 		}
-		if repo.Config.IsPerennialBranch(branchName) {
-			result.Append(&steps.RemoveFromPerennialBranchesStep{BranchName: branchName})
+		if repo.Config.IsPerennialBranch(branchWithDeletedRemote) {
+			result.Append(&steps.RemoveFromPerennialBranchesStep{BranchName: branchWithDeletedRemote})
 		}
-		result.Append(&steps.DeleteLocalBranchStep{BranchName: branchName})
+		result.Append(&steps.DeleteLocalBranchStep{BranchName: branchWithDeletedRemote})
 	}
 	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, repo)
 	return result, err
