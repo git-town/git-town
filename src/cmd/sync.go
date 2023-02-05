@@ -191,20 +191,9 @@ func deleteBranchSteps(branch string, config syncConfig, repo *git.ProdRepo) (ru
 	return result, nil
 }
 
-// provides the name of the branch that should be checked out after all sync steps run
-func finalBranch(config syncConfig) string {
-	if stringslice.Contains(config.localBranchesWithDeletedTrackingBranches, config.initialBranch) {
-		return config.mainBranch
-	} else {
-		return config.initialBranch
-	}
-}
-
-// syncBranchSteps provides the steps to sync the branch with the given name.
-//
 //nolint:nestif
 func syncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (runstate.StepList, error) {
-	isFeature := repo.Config.IsFeatureBranch(branchName)
+	isFeatureBranch := repo.Config.IsFeatureBranch(branchName)
 	syncStrategy := repo.Config.SyncStrategy()
 	hasOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
@@ -214,12 +203,16 @@ func syncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (ru
 	if err != nil {
 		return runstate.StepList{}, err
 	}
+	isOffline, err := repo.Config.IsOffline()
+	if err != nil {
+		return runstate.StepList{}, err
+	}
 	result := runstate.StepList{}
-	if !hasOrigin && !isFeature {
+	if !hasOrigin && !isFeatureBranch {
 		return runstate.StepList{}, nil
 	}
 	result.Append(&steps.CheckoutBranchStep{BranchName: branchName})
-	if isFeature {
+	if isFeatureBranch {
 		steps, err := syncFeatureBranchSteps(branchName, repo)
 		if err != nil {
 			return runstate.StepList{}, err
@@ -232,17 +225,13 @@ func syncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (ru
 		}
 		result.AppendList(steps)
 	}
-	isOffline, err := repo.Config.IsOffline()
-	if err != nil {
-		return runstate.StepList{}, err
-	}
 	if pushBranch && hasOrigin && !isOffline {
 		hasTrackingBranch, err := repo.Silent.HasTrackingBranch(branchName)
 		if err != nil {
 			return runstate.StepList{}, err
 		}
 		if hasTrackingBranch {
-			if repo.Config.IsFeatureBranch(branchName) {
+			if isFeatureBranch {
 				switch syncStrategy {
 				case "merge":
 					result.Append(&steps.PushBranchStep{BranchName: branchName, NoPushHook: !pushHook})
@@ -319,4 +308,13 @@ func syncNonFeatureBranchSteps(branchName string, repo *git.ProdRepo) (runstate.
 		result.Append(&steps.RebaseBranchStep{BranchName: fmt.Sprintf("upstream/%s", mainBranchName)})
 	}
 	return result, nil
+}
+
+// provides the name of the branch that should be checked out after all sync steps run
+func finalBranch(config syncConfig) string {
+	if stringslice.Contains(config.localBranchesWithDeletedTrackingBranches, config.initialBranch) {
+		return config.mainBranch
+	} else {
+		return config.initialBranch
+	}
 }
