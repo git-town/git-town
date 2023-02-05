@@ -102,7 +102,7 @@ func createNewPullRequestConfig(repo *git.ProdRepo) (newPullRequestConfig, error
 func createNewPullRequestStepList(config newPullRequestConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	for _, branchName := range config.BranchesToSync {
-		steps, err := runstate.SyncBranchSteps(branchName, true, repo)
+		steps, err := syncBranchSteps(branchName, true, repo)
 		if err != nil {
 			return runstate.StepList{}, err
 		}

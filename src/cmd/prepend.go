@@ -119,7 +119,7 @@ func createPrependConfig(args []string, repo *git.ProdRepo) (prependConfig, erro
 func createPrependStepList(config prependConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	for _, branchName := range config.ancestorBranches {
-		steps, err := runstate.SyncBranchSteps(branchName, true, repo)
+		steps, err := syncBranchSteps(branchName, true, repo)
 		if err != nil {
 			return runstate.StepList{}, err
 		}
