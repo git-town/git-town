@@ -14,8 +14,9 @@ import (
 )
 
 type newPullRequestConfig struct {
-	BranchesToSync []string
-	InitialBranch  string
+	BranchesToSync            []string
+	branchesWithDeletedRemote []string // local branches whose tracking branches have been deleted
+	InitialBranch             string
 }
 
 func newPullRequestCommand(repo *git.ProdRepo) *cobra.Command {
@@ -93,16 +94,21 @@ func createNewPullRequestConfig(repo *git.ProdRepo) (newPullRequestConfig, error
 	if err != nil {
 		return newPullRequestConfig{}, err
 	}
+	branchesWithDeletedRemote, err := repo.Silent.LocalBranchesWithDeletedTrackingBranches()
+	if err != nil {
+		return newPullRequestConfig{}, err
+	}
 	return newPullRequestConfig{
-		InitialBranch:  initialBranch,
-		BranchesToSync: append(repo.Config.AncestorBranches(initialBranch), initialBranch),
+		InitialBranch:             initialBranch,
+		BranchesToSync:            append(repo.Config.AncestorBranches(initialBranch), initialBranch),
+		branchesWithDeletedRemote: branchesWithDeletedRemote,
 	}, nil
 }
 
 func createNewPullRequestStepList(config newPullRequestConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	for _, branchName := range config.BranchesToSync {
-		steps, err := updateBranchSteps(branchName, true, repo)
+		steps, err := updateBranchSteps(branchName, true, config.branchesWithDeletedRemote, repo)
 		if err != nil {
 			return runstate.StepList{}, err
 		}

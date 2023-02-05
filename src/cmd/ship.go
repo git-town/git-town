@@ -25,6 +25,7 @@ type shipConfig struct {
 	initialBranch           string
 	isShippingInitialBranch bool
 	isOffline               bool
+	branchesDeletedOnRemote []string // local branches whose tracking branches have been deleted
 	pullRequestNumber       int64
 	deleteOriginBranch      bool
 }
@@ -136,6 +137,10 @@ func gitShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (sh
 	if !repo.Config.IsFeatureBranch(result.branchToShip) {
 		return shipConfig{}, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can be shipped", result.branchToShip)
 	}
+	result.branchesDeletedOnRemote, err = repo.Silent.LocalBranchesWithDeletedTrackingBranches()
+	if err != nil {
+		return shipConfig{}, err
+	}
 	parentDialog := dialog.ParentBranches{}
 	err = parentDialog.EnsureKnowsParentBranches([]string{result.branchToShip}, repo)
 	if err != nil {
@@ -177,13 +182,13 @@ please ship %q first`, strings.Join(ancestorsWithoutMainOrPerennial, ", "), olde
 }
 
 func createShipStepList(config shipConfig, commitMessage string, repo *git.ProdRepo) (runstate.StepList, error) {
-	syncSteps, err := updateBranchSteps(config.branchToMergeInto, true, repo)
+	syncSteps, err := updateBranchSteps(config.branchToMergeInto, true, config.branchesDeletedOnRemote, repo)
 	if err != nil {
 		return runstate.StepList{}, err
 	}
 	result := runstate.StepList{}
 	result.AppendList(syncSteps)
-	syncSteps, err = updateBranchSteps(config.branchToShip, false, repo)
+	syncSteps, err = updateBranchSteps(config.branchToShip, false, config.branchesDeletedOnRemote, repo)
 	if err != nil {
 		return runstate.StepList{}, err
 	}

@@ -11,13 +11,14 @@ import (
 )
 
 type appendConfig struct {
-	ancestorBranches    []string
-	hasOrigin           bool
-	isOffline           bool
-	noPushHook          bool
-	parentBranch        string
-	shouldNewBranchPush bool
-	targetBranch        string
+	ancestorBranches        []string
+	branchesDeletedOnRemote []string // local branches whose tracking branches have been deleted
+	hasOrigin               bool
+	isOffline               bool
+	noPushHook              bool
+	parentBranch            string
+	shouldNewBranchPush     bool
+	targetBranch            string
 }
 
 func appendCmd(repo *git.ProdRepo) *cobra.Command {
@@ -81,6 +82,10 @@ func createAppendConfig(args []string, repo *git.ProdRepo) (appendConfig, error)
 		if err != nil {
 			return appendConfig{}, err
 		}
+	}
+	result.branchesDeletedOnRemote, err = repo.Silent.LocalBranchesWithDeletedTrackingBranches()
+	if err != nil {
+		return appendConfig{}, err
 	}
 	hasBranch, err := repo.Silent.HasLocalOrOriginBranch(result.targetBranch)
 	if err != nil {

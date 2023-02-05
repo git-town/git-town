@@ -12,6 +12,15 @@ func Contains(list []string, value string) bool {
 	return false
 }
 
+// Last provides a pointer to the last element in the slice.
+func Last(list []string) *string {
+	idx := len(list)
+	if idx == 0 {
+		return nil
+	}
+	return &list[idx-1]
+}
+
 // MainFirst provides the given list of strings, with an element "main" moved to its first position.
 func MainFirst(inputs []string) []string {
 	result := make([]string, 0, len(inputs))
@@ -35,6 +44,16 @@ func Remove(list []string, value string) []string {
 	result := []string{}
 	for _, element := range list {
 		if element != value {
+			result = append(result, element)
+		}
+	}
+	return result
+}
+
+func RemoveMany(list []string, toRemoves []string) []string {
+	result := []string{}
+	for _, element := range list {
+		if !Contains(toRemoves, element) {
 			result = append(result, element)
 		}
 	}

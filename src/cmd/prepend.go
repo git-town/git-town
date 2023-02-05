@@ -12,14 +12,15 @@ import (
 )
 
 type prependConfig struct {
-	ancestorBranches    []string
-	hasOrigin           bool
-	initialBranch       string
-	isOffline           bool
-	noPushHook          bool
-	parentBranch        string
-	shouldNewBranchPush bool
-	targetBranch        string
+	ancestorBranches        []string
+	branchesDeletedOnRemote []string // local branches whose tracking branches have been deleted
+	hasOrigin               bool
+	initialBranch           string
+	isOffline               bool
+	noPushHook              bool
+	parentBranch            string
+	shouldNewBranchPush     bool
+	targetBranch            string
 }
 
 func prependCommand(repo *git.ProdRepo) *cobra.Command {
@@ -113,13 +114,17 @@ func createPrependConfig(args []string, repo *git.ProdRepo) (prependConfig, erro
 	result.noPushHook = !pushHook
 	result.parentBranch = repo.Config.ParentBranch(result.initialBranch)
 	result.ancestorBranches = repo.Config.AncestorBranches(result.initialBranch)
+	result.branchesDeletedOnRemote, err = repo.Silent.LocalBranchesWithDeletedTrackingBranches()
+	if err != nil {
+		return prependConfig{}, err
+	}
 	return result, nil
 }
 
 func createPrependStepList(config prependConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	for _, branchName := range config.ancestorBranches {
-		steps, err := updateBranchSteps(branchName, true, repo)
+		steps, err := updateBranchSteps(branchName, true, config.branchesDeletedOnRemote, repo)
 		if err != nil {
 			return runstate.StepList{}, err
 		}

@@ -15,17 +15,17 @@ import (
 )
 
 type syncConfig struct {
-	branchesToSync                           []string
-	hasOrigin                                bool
-	initialBranch                            string
-	isOffline                                bool
-	localBranchesWithDeletedTrackingBranches []string
-	mainBranch                               string
-	shouldPushTags                           bool
+	branchesToSync            []string
+	branchesWithDeletedRemote []string // local branches whose tracking branches have been deleted
+	hasOrigin                 bool
+	initialBranch             string
+	isOffline                 bool
+	mainBranch                string
+	shouldPushTags            bool
 }
 
 func (sc *syncConfig) hasDeletedTrackingBranch(branch string) bool {
-	return stringslice.Contains(sc.localBranchesWithDeletedTrackingBranches, branch)
+	return stringslice.Contains(sc.branchesWithDeletedRemote, branch)
 }
 
 func syncCmd(repo *git.ProdRepo) *cobra.Command {
@@ -116,7 +116,7 @@ func createSyncConfig(allFlag bool, repo *git.ProdRepo) (syncConfig, error) {
 			return syncConfig{}, err
 		}
 	}
-	result.localBranchesWithDeletedTrackingBranches, err = repo.Silent.LocalBranchesWithDeletedTrackingBranches()
+	result.branchesWithDeletedRemote, err = repo.Silent.LocalBranchesWithDeletedTrackingBranches()
 	if err != nil {
 		return syncConfig{}, err
 	}
@@ -168,7 +168,7 @@ func syncStepsForBranch(branch string, config syncConfig, repo *git.ProdRepo) (r
 	if config.hasDeletedTrackingBranch(branch) {
 		return deleteBranchSteps(branch, config, repo)
 	} else {
-		return updateBranchSteps(branch, true, repo)
+		return updateBranchSteps(branch, true, config.branchesWithDeletedRemote, repo)
 	}
 }
 
@@ -192,7 +192,7 @@ func deleteBranchSteps(branch string, config syncConfig, repo *git.ProdRepo) (ru
 }
 
 //nolint:nestif
-func updateBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (runstate.StepList, error) {
+func updateBranchSteps(branchName string, pushBranch bool, branchesWithDeletedRemote []string, repo *git.ProdRepo) (runstate.StepList, error) {
 	isFeatureBranch := repo.Config.IsFeatureBranch(branchName)
 	syncStrategy := repo.Config.SyncStrategy()
 	hasOrigin, err := repo.Silent.HasOrigin()
@@ -213,7 +213,7 @@ func updateBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (
 	}
 	result.Append(&steps.CheckoutBranchStep{BranchName: branchName})
 	if isFeatureBranch {
-		steps, err := syncFeatureBranchSteps(branchName, repo)
+		steps, err := syncFeatureBranchSteps(branchName, branchesWithDeletedRemote, repo)
 		if err != nil {
 			return runstate.StepList{}, err
 		}
@@ -252,7 +252,7 @@ func updateBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (
 
 // Helpers
 
-func syncFeatureBranchSteps(branchName string, repo *git.ProdRepo) (runstate.StepList, error) {
+func syncFeatureBranchSteps(branchName string, branchesWithDeletedRemote []string, repo *git.ProdRepo) (runstate.StepList, error) {
 	syncStrategy := repo.Config.SyncStrategy()
 	hasTrackingBranch, err := repo.Silent.HasTrackingBranch(branchName)
 	if err != nil {
@@ -269,11 +269,18 @@ func syncFeatureBranchSteps(branchName string, repo *git.ProdRepo) (runstate.Ste
 			return runstate.StepList{}, fmt.Errorf("unknown syncStrategy value: %q", syncStrategy)
 		}
 	}
+	// TODO: the last non-deleted parent branch here
+	ancestorBranches := repo.Config.AncestorBranches(branchName)
+	ancestorBranches = stringslice.RemoveMany(ancestorBranches, branchesWithDeletedRemote)
+	newParentBranch := stringslice.Last(ancestorBranches)
+	if newParentBranch == nil {
+		return runstate.StepList{}, nil
+	}
 	switch syncStrategy {
 	case "merge":
-		result.Append(&steps.MergeBranchStep{BranchName: repo.Config.ParentBranch(branchName)})
+		result.Append(&steps.MergeBranchStep{BranchName: *newParentBranch})
 	case "rebase":
-		result.Append(&steps.RebaseBranchStep{BranchName: repo.Config.ParentBranch(branchName)})
+		result.Append(&steps.RebaseBranchStep{BranchName: *newParentBranch})
 	default:
 		return runstate.StepList{}, fmt.Errorf("unknown syncStrategy value: %q", syncStrategy)
 	}
@@ -312,7 +319,7 @@ func syncNonFeatureBranchSteps(branchName string, repo *git.ProdRepo) (runstate.
 
 // provides the name of the branch that should be checked out after all sync steps run
 func finalBranch(config syncConfig) string {
-	if stringslice.Contains(config.localBranchesWithDeletedTrackingBranches, config.initialBranch) {
+	if stringslice.Contains(config.branchesWithDeletedRemote, config.initialBranch) {
 		return config.mainBranch
 	} else {
 		return config.initialBranch

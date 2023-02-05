@@ -31,7 +31,7 @@ func ValidateIsRepository(repo *git.ProdRepo) error {
 func createAppendStepList(config appendConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	for _, branchName := range append(config.ancestorBranches, config.parentBranch) {
-		steps, err := updateBranchSteps(branchName, true, repo)
+		steps, err := updateBranchSteps(branchName, true, config.branchesDeletedOnRemote, repo)
 		if err != nil {
 			return runstate.StepList{}, err
 		}
