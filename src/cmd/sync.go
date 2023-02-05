@@ -24,6 +24,10 @@ type syncConfig struct {
 	shouldPushTags                           bool
 }
 
+func (sc *syncConfig) hasDeletedTrackingBranch(branch string) bool {
+	return stringslice.Contains(sc.localBranchesWithDeletedTrackingBranches, branch)
+}
+
 func syncCmd(repo *git.ProdRepo) *cobra.Command {
 	var allFlag bool
 	var dryRunFlag bool
@@ -52,7 +56,7 @@ You can disable this by running "git config %s false".`, config.SyncUpstream),
 			if err != nil {
 				cli.Exit(err)
 			}
-			stepList, err := createSyncStepList(config, repo)
+			stepList, err := syncStepList(config, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
@@ -143,28 +147,16 @@ func createSyncConfig(allFlag bool, repo *git.ProdRepo) (syncConfig, error) {
 	return result, nil
 }
 
-func createSyncStepList(config syncConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+func syncStepList(config syncConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	result := runstate.StepList{}
-	for _, branchName := range config.branchesToSync {
-		var stepsForBranch runstate.StepList
-		var err error
-		if stringslice.Contains(config.localBranchesWithDeletedTrackingBranches, branchName) {
-			stepsForBranch, err = createDeleteBranchStepList(branchName, config, repo)
-		} else {
-			stepsForBranch, err = runstate.SyncBranchSteps(branchName, true, repo)
-		}
+	for _, branch := range config.branchesToSync {
+		stepsForBranch, err := syncStepsForBranch(branch, config, repo)
 		if err != nil {
 			return runstate.StepList{}, err
 		}
 		result.AppendList(stepsForBranch)
 	}
-	var finalBranch string
-	if stringslice.Contains(config.localBranchesWithDeletedTrackingBranches, config.initialBranch) {
-		finalBranch = config.mainBranch
-	} else {
-		finalBranch = config.initialBranch
-	}
-	result.Append(&steps.CheckoutBranchStep{BranchName: finalBranch})
+	result.Append(&steps.CheckoutBranchStep{BranchName: finalBranch(config)})
 	if config.hasOrigin && config.shouldPushTags && !config.isOffline {
 		result.Append(&steps.PushTagsStep{})
 	}
@@ -172,21 +164,38 @@ func createSyncStepList(config syncConfig, repo *git.ProdRepo) (runstate.StepLis
 	return result, err
 }
 
-func createDeleteBranchStepList(branchName string, config syncConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+func syncStepsForBranch(branch string, config syncConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+	if config.hasDeletedTrackingBranch(branch) {
+		return deleteBranchSteps(branch, config, repo)
+	} else {
+		return runstate.SyncBranchSteps(branch, true, repo)
+	}
+}
+
+func deleteBranchSteps(branch string, config syncConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	result := runstate.StepList{}
-	if config.initialBranch == branchName {
+	if config.initialBranch == branch {
 		result.Append(&steps.CheckoutBranchStep{BranchName: config.mainBranch})
 	}
-	parent := repo.Config.ParentBranch(branchName)
+	parent := repo.Config.ParentBranch(branch)
 	if parent != "" {
-		for _, child := range repo.Config.ChildBranches(branchName) {
+		for _, child := range repo.Config.ChildBranches(branch) {
 			result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: parent})
 		}
-		result.Append(&steps.DeleteParentBranchStep{BranchName: branchName})
+		result.Append(&steps.DeleteParentBranchStep{BranchName: branch})
 	}
-	if repo.Config.IsPerennialBranch(branchName) {
-		result.Append(&steps.RemoveFromPerennialBranchesStep{BranchName: branchName})
+	if repo.Config.IsPerennialBranch(branch) {
+		result.Append(&steps.RemoveFromPerennialBranchesStep{BranchName: branch})
 	}
-	result.Append(&steps.DeleteLocalBranchStep{BranchName: branchName})
+	result.Append(&steps.DeleteLocalBranchStep{BranchName: branch})
 	return result, nil
+}
+
+// provides the name of the branch that should be checked out after all sync steps run
+func finalBranch(config syncConfig) string {
+	if stringslice.Contains(config.localBranchesWithDeletedTrackingBranches, config.initialBranch) {
+		return config.mainBranch
+	} else {
+		return config.initialBranch
+	}
 }
