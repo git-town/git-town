@@ -56,7 +56,7 @@ You can disable this by running "git config %s false".`, config.SyncUpstream),
 			if err != nil {
 				cli.Exit(err)
 			}
-			stepList, err := syncStepList(config, repo)
+			stepList, err := syncBranchesStepList(config, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
@@ -147,7 +147,7 @@ func createSyncConfig(allFlag bool, repo *git.ProdRepo) (syncConfig, error) {
 	return result, nil
 }
 
-func syncStepList(config syncConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+func syncBranchesStepList(config syncConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	for _, branch := range config.branchesToSync {
 		stepsForBranch, err := syncStepsForBranch(branch, config, repo)
@@ -168,7 +168,7 @@ func syncStepsForBranch(branch string, config syncConfig, repo *git.ProdRepo) (r
 	if config.hasDeletedTrackingBranch(branch) {
 		return deleteBranchSteps(branch, config, repo)
 	} else {
-		return syncBranchSteps(branch, true, repo)
+		return updateBranchSteps(branch, true, repo)
 	}
 }
 
@@ -192,7 +192,7 @@ func deleteBranchSteps(branch string, config syncConfig, repo *git.ProdRepo) (ru
 }
 
 //nolint:nestif
-func syncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (runstate.StepList, error) {
+func updateBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (runstate.StepList, error) {
 	isFeatureBranch := repo.Config.IsFeatureBranch(branchName)
 	syncStrategy := repo.Config.SyncStrategy()
 	hasOrigin, err := repo.Silent.HasOrigin()
