@@ -138,7 +138,7 @@ func createSyncConfig(allFlag bool, repo *git.ProdRepo) (syncConfig, error) {
 func createSyncStepList(config syncConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	for _, branchName := range config.branchesToSync {
-		steps, err := runstate.SyncBranchSteps(branchName, true, repo)
+		steps, err := syncBranchSteps(branchName, true, repo)
 		if err != nil {
 			return runstate.StepList{}, err
 		}
@@ -150,4 +150,125 @@ func createSyncStepList(config syncConfig, repo *git.ProdRepo) (runstate.StepLis
 	}
 	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
 	return result, err
+}
+
+// syncBranchSteps provides the steps to sync the branch with the given name.
+//
+//nolint:nestif
+func syncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (runstate.StepList, error) {
+	isFeature := repo.Config.IsFeatureBranch(branchName)
+	syncStrategy := repo.Config.SyncStrategy()
+	hasOrigin, err := repo.Silent.HasOrigin()
+	if err != nil {
+		return runstate.StepList{}, err
+	}
+	pushHook, err := repo.Config.PushHook()
+	if err != nil {
+		return runstate.StepList{}, err
+	}
+	result := runstate.StepList{}
+	if !hasOrigin && !isFeature {
+		return runstate.StepList{}, nil
+	}
+	result.Append(&steps.CheckoutBranchStep{BranchName: branchName})
+	if isFeature {
+		steps, err := syncFeatureBranchSteps(branchName, repo)
+		if err != nil {
+			return runstate.StepList{}, err
+		}
+		result.AppendList(steps)
+	} else {
+		steps, err := syncNonFeatureBranchSteps(branchName, repo)
+		if err != nil {
+			return runstate.StepList{}, err
+		}
+		result.AppendList(steps)
+	}
+	isOffline, err := repo.Config.IsOffline()
+	if err != nil {
+		return runstate.StepList{}, err
+	}
+	if pushBranch && hasOrigin && !isOffline {
+		hasTrackingBranch, err := repo.Silent.HasTrackingBranch(branchName)
+		if err != nil {
+			return runstate.StepList{}, err
+		}
+		if hasTrackingBranch {
+			if repo.Config.IsFeatureBranch(branchName) {
+				switch syncStrategy {
+				case "merge":
+					result.Append(&steps.PushBranchStep{BranchName: branchName, NoPushHook: !pushHook})
+				case "rebase":
+					result.Append(&steps.PushBranchStep{BranchName: branchName, ForceWithLease: true})
+				default:
+					return runstate.StepList{}, fmt.Errorf("unknown syncStrategy value: %q", syncStrategy)
+				}
+			} else {
+				result.Append(&steps.PushBranchStep{BranchName: branchName})
+			}
+		} else {
+			result.Append(&steps.CreateTrackingBranchStep{BranchName: branchName})
+		}
+	}
+	return result, nil
+}
+
+// Helpers
+
+func syncFeatureBranchSteps(branchName string, repo *git.ProdRepo) (runstate.StepList, error) {
+	syncStrategy := repo.Config.SyncStrategy()
+	hasTrackingBranch, err := repo.Silent.HasTrackingBranch(branchName)
+	if err != nil {
+		return runstate.StepList{}, err
+	}
+	result := runstate.StepList{}
+	if hasTrackingBranch {
+		switch syncStrategy {
+		case "merge":
+			result.Append(&steps.MergeBranchStep{BranchName: repo.Silent.TrackingBranchName(branchName)})
+		case "rebase":
+			result.Append(&steps.RebaseBranchStep{BranchName: repo.Silent.TrackingBranchName(branchName)})
+		default:
+			return runstate.StepList{}, fmt.Errorf("unknown syncStrategy value: %q", syncStrategy)
+		}
+	}
+	switch syncStrategy {
+	case "merge":
+		result.Append(&steps.MergeBranchStep{BranchName: repo.Config.ParentBranch(branchName)})
+	case "rebase":
+		result.Append(&steps.RebaseBranchStep{BranchName: repo.Config.ParentBranch(branchName)})
+	default:
+		return runstate.StepList{}, fmt.Errorf("unknown syncStrategy value: %q", syncStrategy)
+	}
+	return result, nil
+}
+
+func syncNonFeatureBranchSteps(branchName string, repo *git.ProdRepo) (runstate.StepList, error) {
+	hasTrackingBranch, err := repo.Silent.HasTrackingBranch(branchName)
+	if err != nil {
+		return runstate.StepList{}, err
+	}
+	result := runstate.StepList{}
+	if hasTrackingBranch {
+		if repo.Config.PullBranchStrategy() == "rebase" {
+			result.Append(&steps.RebaseBranchStep{BranchName: repo.Silent.TrackingBranchName(branchName)})
+		} else {
+			result.Append(&steps.MergeBranchStep{BranchName: repo.Silent.TrackingBranchName(branchName)})
+		}
+	}
+
+	mainBranchName := repo.Config.MainBranch()
+	hasUpstream, err := repo.Silent.HasRemote("upstream")
+	if err != nil {
+		return runstate.StepList{}, err
+	}
+	shouldSyncUpstream, err := repo.Config.ShouldSyncUpstream()
+	if err != nil {
+		return runstate.StepList{}, err
+	}
+	if mainBranchName == branchName && hasUpstream && shouldSyncUpstream {
+		result.Append(&steps.FetchUpstreamStep{BranchName: mainBranchName})
+		result.Append(&steps.RebaseBranchStep{BranchName: fmt.Sprintf("upstream/%s", mainBranchName)})
+	}
+	return result, nil
 }
