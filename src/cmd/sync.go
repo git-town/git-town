@@ -156,7 +156,7 @@ func createSyncStepList(config syncConfig, repo *git.ProdRepo) (runstate.StepLis
 //
 //nolint:nestif
 func syncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (runstate.StepList, error) {
-	isFeature := repo.Config.IsFeatureBranch(branchName)
+	isFeatureBranch := repo.Config.IsFeatureBranch(branchName)
 	syncStrategy := repo.Config.SyncStrategy()
 	hasOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
@@ -167,11 +167,11 @@ func syncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (ru
 		return runstate.StepList{}, err
 	}
 	result := runstate.StepList{}
-	if !hasOrigin && !isFeature {
+	if !hasOrigin && !isFeatureBranch {
 		return runstate.StepList{}, nil
 	}
 	result.Append(&steps.CheckoutBranchStep{BranchName: branchName})
-	if isFeature {
+	if isFeatureBranch {
 		steps, err := syncFeatureBranchSteps(branchName, repo)
 		if err != nil {
 			return runstate.StepList{}, err
@@ -194,7 +194,7 @@ func syncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (ru
 			return runstate.StepList{}, err
 		}
 		if hasTrackingBranch {
-			if repo.Config.IsFeatureBranch(branchName) {
+			if isFeatureBranch {
 				switch syncStrategy {
 				case "merge":
 					result.Append(&steps.PushBranchStep{BranchName: branchName, NoPushHook: !pushHook})
