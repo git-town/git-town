@@ -11,10 +11,10 @@ its commands that make them feel like native Git commands, i.e. allow you to run
 for example `git hack` instead of `git town hack`. To enable this feature:
 
 ```
-git town install aliases true
+git town install aliases add
 ```
 
-To remove these aliases, run `git town install aliases false`.
+To remove these aliases, run `git town install aliases remove`.
 
 ## API access to your hosting provider
 
