@@ -11,7 +11,6 @@ Feature: a parent branch of a local branch was shipped
     And the current branch is "child"
     When I run "git-town sync"
 
-  @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                          |
@@ -34,6 +33,8 @@ Feature: a parent branch of a local branch was shipped
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND                                     |
+      | child  | git checkout main                           |
       | main   | git branch parent {{ sha 'parent commit' }} |
-    And the current branch is now "main"
+      |        | git checkout child                          |
+    And the current branch is still "child"
     And the initial branches and hierarchy exist
