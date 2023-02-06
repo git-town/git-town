@@ -17,7 +17,9 @@ func TestContains(t *testing.T) {
 
 func TestHoist(t *testing.T) {
 	t.Parallel()
+
 	t.Run("already hoisted", func(t *testing.T) {
+		t.Parallel()
 		give := []string{"main", "one", "two"}
 		want := []string{"main", "one", "two"}
 		have := stringslice.Hoist(give, "main")
@@ -25,6 +27,7 @@ func TestHoist(t *testing.T) {
 	})
 
 	t.Run("contains the element to hoist", func(t *testing.T) {
+		t.Parallel()
 		give := []string{"alpha", "main", "omega"}
 		want := []string{"main", "alpha", "omega"}
 		have := stringslice.Hoist(give, "main")
@@ -32,6 +35,7 @@ func TestHoist(t *testing.T) {
 	})
 
 	t.Run("empty list", func(t *testing.T) {
+		t.Parallel()
 		give := []string{}
 		want := []string{}
 		have := stringslice.Hoist(give, "main")
