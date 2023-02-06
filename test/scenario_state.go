@@ -65,9 +65,9 @@ func (state *ScenarioState) InitialBranches() DataTable {
 	result := DataTable{}
 	result.AddRow("REPOSITORY", "BRANCHES")
 	sort.Strings(state.initialLocalBranches)
-	state.initialLocalBranches = stringslice.MainFirst(state.initialLocalBranches)
+	state.initialLocalBranches = stringslice.Hoist(state.initialLocalBranches, "main")
 	sort.Strings(state.initialRemoteBranches)
-	state.initialRemoteBranches = stringslice.MainFirst(state.initialRemoteBranches)
+	state.initialRemoteBranches = stringslice.Hoist(state.initialRemoteBranches, "main")
 	localBranchesJoined := strings.Join(state.initialLocalBranches, ", ")
 	remoteBranchesJoined := strings.Join(state.initialRemoteBranches, ", ")
 	if localBranchesJoined == remoteBranchesJoined {
