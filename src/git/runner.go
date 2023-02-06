@@ -727,10 +727,7 @@ func (r *Runner) LocalAndOriginBranches() ([]string, error) {
 		i++
 	}
 	sort.Strings(result)
-	mainBranch := r.Config.MainBranch()
-	if mainBranch == "" {
-		mainBranch = "main"
-	}
+	mainBranch := r.Config.MainBranchOr("main")
 	return stringslice.Hoist(result, mainBranch), nil
 }
 
@@ -756,10 +753,7 @@ func (r *Runner) LocalBranchesMainFirst() ([]string, error) {
 	if err != nil {
 		return []string{}, err
 	}
-	mainBranch := r.Config.MainBranch()
-	if mainBranch == "" {
-		mainBranch = "main"
-	}
+	mainBranch := r.Config.MainBranchOr("main")
 	return stringslice.Hoist(sort.StringSlice(branches), mainBranch), nil
 }
 
