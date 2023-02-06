@@ -21,12 +21,12 @@ func Last(list []string) *string {
 	return &list[idx-1]
 }
 
-// MainFirst provides the given list of strings, with an element "main" moved to its first position.
-func MainFirst(inputs []string) []string {
-	result := make([]string, 0, len(inputs))
+// Hoist provides the given list of strings, with the given element moved to the first position.
+func Hoist(list []string, element string) []string {
+	result := make([]string, 0, len(list))
 	hasMain := false
-	for _, input := range inputs {
-		if input == "main" {
+	for _, input := range list {
+		if input == element {
 			hasMain = true
 		} else {
 			result = append(result, input)
@@ -41,7 +41,7 @@ func MainFirst(inputs []string) []string {
 // Remove returns a new string slice which is the given string slice
 // with the given string removed.
 func Remove(list []string, value string) []string {
-	result := []string{}
+	result := make([]string, 0, len(list)-1)
 	for _, element := range list {
 		if element != value {
 			result = append(result, element)

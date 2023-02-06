@@ -197,6 +197,15 @@ func (gt *GitTown) MainBranch() string {
 	return gt.Storage.LocalOrGlobalConfigValue(MainBranchName)
 }
 
+// MainBranch provides the name of the main branch, or the given default value if none is configured.
+func (gt *GitTown) MainBranchOr(defaultValue string) string {
+	configured := gt.Storage.LocalOrGlobalConfigValue(MainBranchName)
+	if configured != "" {
+		return configured
+	}
+	return defaultValue
+}
+
 // OriginOverride provides the override for the origin hostname from the Git Town configuration.
 func (gt *GitTown) OriginOverride() string {
 	return gt.Storage.LocalConfigValue(CodeHostingOriginHostname)
