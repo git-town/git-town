@@ -12,7 +12,7 @@ func Contains(list []string, value string) bool {
 	return false
 }
 
-// Hoist provides the given list of strings, with an element "main" moved to its first position.
+// Hoist provides the given list of strings, with the given element moved to the first position.
 func Hoist(list []string, element string) []string {
 	result := make([]string, 0, len(list))
 	hasMain := false
@@ -32,7 +32,7 @@ func Hoist(list []string, element string) []string {
 // Remove returns a new string slice which is the given string slice
 // with the given string removed.
 func Remove(list []string, value string) []string {
-	result := []string{}
+	result := make([]string, 0, len(list)-1)
 	for _, element := range list {
 		if element != value {
 			result = append(result, element)
