@@ -727,7 +727,11 @@ func (r *Runner) LocalAndOriginBranches() ([]string, error) {
 		i++
 	}
 	sort.Strings(result)
-	return stringslice.MainFirst(result), nil
+	mainBranch := r.Config.MainBranch()
+	if mainBranch == "" {
+		mainBranch = "main"
+	}
+	return stringslice.Hoist(result, mainBranch), nil
 }
 
 // LocalBranches provides the names of all branches in the local repository,
@@ -752,7 +756,11 @@ func (r *Runner) LocalBranchesMainFirst() ([]string, error) {
 	if err != nil {
 		return []string{}, err
 	}
-	return stringslice.MainFirst(sort.StringSlice(branches)), nil
+	mainBranch := r.Config.MainBranch()
+	if mainBranch == "" {
+		mainBranch = "main"
+	}
+	return stringslice.Hoist(sort.StringSlice(branches), mainBranch), nil
 }
 
 // LocalBranchesWithDeletedTrackingBranches provides the names of all branches

@@ -15,21 +15,28 @@ func TestContains(t *testing.T) {
 	assert.False(t, stringslice.Contains(give, "three"))
 }
 
-func TestMainFirst(t *testing.T) {
+func TestHoist(t *testing.T) {
 	t.Parallel()
-	tests := []struct {
-		give []string
-		want []string
-	}{
-		{give: []string{"main", "one", "two"}, want: []string{"main", "one", "two"}},
-		{give: []string{"alpha", "main", "omega"}, want: []string{"main", "alpha", "omega"}},
-		{give: []string{"main"}, want: []string{"main"}},
-		{give: []string{}, want: []string{}},
-	}
-	for _, test := range tests {
-		have := stringslice.MainFirst(test.give)
-		assert.Equal(t, test.want, have)
-	}
+	t.Run("already hoisted", func(t *testing.T) {
+		give := []string{"main", "one", "two"}
+		want := []string{"main", "one", "two"}
+		have := stringslice.Hoist(give, "main")
+		assert.Equal(t, want, have)
+	})
+
+	t.Run("contains the element to hoist", func(t *testing.T) {
+		give := []string{"alpha", "main", "omega"}
+		want := []string{"main", "alpha", "omega"}
+		have := stringslice.Hoist(give, "main")
+		assert.Equal(t, want, have)
+	})
+
+	t.Run("empty list", func(t *testing.T) {
+		give := []string{}
+		want := []string{}
+		have := stringslice.Hoist(give, "main")
+		assert.Equal(t, want, have)
+	})
 }
 
 func TestRemove(t *testing.T) {

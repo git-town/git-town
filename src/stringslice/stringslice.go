@@ -12,12 +12,12 @@ func Contains(list []string, value string) bool {
 	return false
 }
 
-// MainFirst provides the given list of strings, with an element "main" moved to its first position.
-func MainFirst(inputs []string) []string {
-	result := make([]string, 0, len(inputs))
+// Hoist provides the given list of strings, with an element "main" moved to its first position.
+func Hoist(list []string, element string) []string {
+	result := make([]string, 0, len(list))
 	hasMain := false
-	for _, input := range inputs {
-		if input == "main" {
+	for _, input := range list {
+		if input == element {
 			hasMain = true
 		} else {
 			result = append(result, input)

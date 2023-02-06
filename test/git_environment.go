@@ -335,8 +335,11 @@ func (env GitEnvironment) TagTable() (DataTable, error) {
 }
 
 func (env GitEnvironment) initializeWorkspace(repo *Repo) error {
+	err := repo.Config.SetMainBranch("main")
+	if err != nil {
+		return err
+	}
 	return repo.RunMany([][]string{
-		{"git", "config", config.MainBranchName, "main"},
 		{"git", "config", config.PerennialBranchNames, ""},
 		{"git", "checkout", "main"},
 		// NOTE: the developer repos receives the initial branch from origin

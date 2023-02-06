@@ -129,10 +129,9 @@ func CreateTestGitTownRepo(t *testing.T) Repo {
 	repo := CreateRepo(t)
 	err := repo.CreateBranch("main", "initial")
 	assert.NoError(t, err)
-	err = repo.RunMany([][]string{
-		{"git", "config", config.MainBranchName, "main"},
-		{"git", "config", config.PerennialBranchNames, ""},
-	})
+	repo.Config.SetMainBranch("main")
+	assert.NoError(t, err)
+	repo.Config.SetPerennialBranches([]string{})
 	assert.NoError(t, err)
 	return repo
 }
