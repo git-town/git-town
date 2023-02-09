@@ -12,7 +12,7 @@ func TestRepo(t *testing.T) {
 	t.Parallel()
 	t.Run("NewRepo", func(t *testing.T) {
 		t.Parallel()
-		dir := CreateTempDir(t)
+		dir := t.TempDir()
 		workingDir := filepath.Join(dir, "working")
 		homeDir := filepath.Join(dir, "home")
 		binDir := filepath.Join(dir, "bin")

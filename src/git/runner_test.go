@@ -88,7 +88,7 @@ func TestRunner(t *testing.T) {
 		// replicating the situation this is used in,
 		// connecting branches of repos with the same commits in them
 		origin := test.CreateRepo(t)
-		repoDir := filepath.Join(test.CreateTempDir(t), "repo") // need a non-existing directory
+		repoDir := filepath.Join(t.TempDir(), "repo") // need a non-existing directory
 		err := test.CopyDirectory(origin.WorkingDir(), repoDir)
 		assert.NoError(t, err)
 		runner := test.NewRepo(repoDir, repoDir, "").Runner
@@ -309,7 +309,7 @@ func TestRunner(t *testing.T) {
 	t.Run(".HasBranchesOutOfSync()", func(t *testing.T) {
 		t.Run("branches are in sync", func(t *testing.T) {
 			t.Parallel()
-			env, err := test.NewStandardGitEnvironment(test.CreateTempDir(t))
+			env, err := test.NewStandardGitEnvironment(t.TempDir())
 			assert.NoError(t, err)
 			runner := env.DevRepo.Runner
 			err = runner.CreateBranch("branch1", "main")
@@ -331,7 +331,7 @@ func TestRunner(t *testing.T) {
 
 		t.Run("branch is ahead", func(t *testing.T) {
 			t.Parallel()
-			env, err := test.NewStandardGitEnvironment(test.CreateTempDir(t))
+			env, err := test.NewStandardGitEnvironment(t.TempDir())
 			assert.NoError(t, err)
 			runner := env.DevRepo.Runner
 			err = runner.CreateBranch("branch1", "main")
@@ -351,7 +351,7 @@ func TestRunner(t *testing.T) {
 
 		t.Run("branch is behind", func(t *testing.T) {
 			t.Parallel()
-			env, err := test.NewStandardGitEnvironment(test.CreateTempDir(t))
+			env, err := test.NewStandardGitEnvironment(t.TempDir())
 			assert.NoError(t, err)
 			err = env.DevRepo.CreateBranch("branch1", "main")
 			assert.NoError(t, err)
@@ -407,7 +407,7 @@ func TestRunner(t *testing.T) {
 	t.Run(".HasLocalBranch()", func(t *testing.T) {
 		t.Parallel()
 		origin := test.CreateRepo(t)
-		repoDir := test.CreateTempDir(t)
+		repoDir := t.TempDir()
 		repo, err := origin.Clone(repoDir)
 		assert.NoError(t, err)
 		err = repo.CreateBranch("b1", "initial")
@@ -449,7 +449,7 @@ func TestRunner(t *testing.T) {
 	t.Run(".HasRemote()", func(t *testing.T) {
 		t.Parallel()
 		origin := test.CreateRepo(t)
-		repoDir := test.CreateTempDir(t)
+		repoDir := t.TempDir()
 		repo, err := origin.Clone(repoDir)
 		assert.NoError(t, err)
 		has, err := repo.Runner.HasOrigin()
@@ -465,7 +465,7 @@ func TestRunner(t *testing.T) {
 		origin := test.CreateRepo(t)
 		err := origin.CreateBranch("b1", "initial")
 		assert.NoError(t, err)
-		repoDir := test.CreateTempDir(t)
+		repoDir := t.TempDir()
 		repo, err := origin.Clone(repoDir)
 		assert.NoError(t, err)
 		runner := repo.Runner
@@ -487,7 +487,7 @@ func TestRunner(t *testing.T) {
 	t.Run(".LocalBranchesMainFirst()", func(t *testing.T) {
 		t.Parallel()
 		origin := test.CreateRepo(t)
-		repoDir := test.CreateTempDir(t)
+		repoDir := t.TempDir()
 		repo, err := origin.Clone(repoDir)
 		assert.NoError(t, err)
 		err = repo.CreateBranch("b1", "initial")
@@ -506,7 +506,7 @@ func TestRunner(t *testing.T) {
 	t.Run(".LocalAndOriginBranches()", func(t *testing.T) {
 		t.Parallel()
 		origin := test.CreateRepo(t)
-		repoDir := test.CreateTempDir(t)
+		repoDir := t.TempDir()
 		repo, err := origin.Clone(repoDir)
 		assert.NoError(t, err)
 		err = repo.CreateBranch("b1", "initial")
@@ -556,7 +556,7 @@ func TestRunner(t *testing.T) {
 	t.Run(".RemoteBranches()", func(t *testing.T) {
 		t.Parallel()
 		origin := test.CreateRepo(t)
-		repoDir := test.CreateTempDir(t)
+		repoDir := t.TempDir()
 		repo, err := origin.Clone(repoDir)
 		assert.NoError(t, err)
 		err = repo.CreateBranch("b1", "initial")
