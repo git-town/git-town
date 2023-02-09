@@ -53,13 +53,3 @@ func createFile(t *testing.T, dir, filename string) {
 	err = os.WriteFile(filePath, []byte(filename+" content"), 0o500)
 	assert.NoError(t, err)
 }
-
-// CreateTempDir creates a new empty directory in the system's temp directory and provides the path to it.
-func CreateTempDir(t *testing.T) string {
-	t.Helper()
-	dir, err := os.MkdirTemp("", "")
-	assert.Nil(t, err, "cannot create TempDir")
-	evalDir, err := filepath.EvalSymlinks(dir) // Evaluate symlinks as Mac temp dir is symlinked
-	assert.Nil(t, err, "cannot evaluate symlinks of TempDir")
-	return evalDir
-}

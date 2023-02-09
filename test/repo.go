@@ -22,7 +22,7 @@ type Repo struct {
 // CreateRepo creates TestRepo instances.
 func CreateRepo(t *testing.T) Repo {
 	t.Helper()
-	dir := CreateTempDir(t)
+	dir := t.TempDir()
 	workingDir := filepath.Join(dir, "repo")
 	err := os.Mkdir(workingDir, 0o744)
 	assert.NoError(t, err)
