@@ -218,7 +218,7 @@ func (gt *GitTown) OriginURL() string {
 	if remote != "" {
 		return remote
 	}
-	res, _ := gt.Storage.shell.Run("git", "remote", "get-url", "origin")
+	res, _ := gt.Storage.shell.Run("git", "remote", "get-url", OriginRemote)
 	return res.OutputSanitized()
 }
 

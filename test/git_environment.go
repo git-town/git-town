@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/cucumber/messages-go/v10"
+	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/stringslice"
 	"github.com/git-town/git-town/v7/test/helpers"
@@ -60,11 +61,11 @@ func CloneGitEnvironment(original GitEnvironment, dir string) (GitEnvironment, e
 	}
 	// Since we copied the files from the memoized directory,
 	// we have to set the "origin" remote to the copied origin repo here.
-	_, err = result.DevShell.Run("git", "remote", "remove", "origin")
+	_, err = result.DevShell.Run("git", "remote", "remove", config.OriginRemote)
 	if err != nil {
 		return GitEnvironment{}, fmt.Errorf("cannot remove remote: %w", err)
 	}
-	err = result.DevRepo.AddRemote("origin", result.originRepoPath())
+	err = result.DevRepo.AddRemote(config.OriginRemote, result.originRepoPath())
 	if err != nil {
 		return GitEnvironment{}, fmt.Errorf("cannot set remote: %w", err)
 	}
@@ -223,7 +224,7 @@ func (env *GitEnvironment) CreateCommits(commits []git.Commit) error {
 				if err != nil {
 					return fmt.Errorf("cannot create local commit: %w", err)
 				}
-				err = env.DevRepo.PushBranch(git.PushArgs{BranchName: commit.Branch, ToOrigin: true})
+				err = env.DevRepo.PushBranch(git.PushArgs{BranchName: commit.Branch, Remote: config.OriginRemote})
 				if err != nil {
 					return fmt.Errorf("cannot push branch %q after creating commit: %w", commit.Branch, err)
 				}
@@ -303,7 +304,7 @@ func (env GitEnvironment) CommitTable(fields []string) (DataTable, error) {
 		if err != nil {
 			return DataTable{}, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
 		}
-		builder.AddMany(originCommits, "origin")
+		builder.AddMany(originCommits, config.OriginRemote)
 	}
 	if env.UpstreamRepo != nil {
 		upstreamCommits, err := env.UpstreamRepo.Commits(fields)
@@ -328,7 +329,7 @@ func (env GitEnvironment) TagTable() (DataTable, error) {
 		if err != nil {
 			return DataTable{}, err
 		}
-		builder.AddMany(originTags, "origin")
+		builder.AddMany(originTags, config.OriginRemote)
 	}
 	return builder.Table(), nil
 }
@@ -362,7 +363,7 @@ func (env GitEnvironment) developerRepoPath() string {
 
 // originRepoPath provides the full path to the Git repository with the given name.
 func (env GitEnvironment) originRepoPath() string {
-	return filepath.Join(env.Dir, "origin")
+	return filepath.Join(env.Dir, config.OriginRemote)
 }
 
 // submoduleRepoPath provides the full path to the Git repository with the given name.

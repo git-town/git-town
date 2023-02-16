@@ -1,6 +1,7 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/hosting"
 )
@@ -40,6 +41,14 @@ func (step *PushBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error
 		ForceWithLease: step.ForceWithLease,
 		NoPushHook:     step.NoPushHook,
 		Force:          step.Force,
-		ToOrigin:       currentBranch != step.BranchName,
+		Remote:         remoteName(currentBranch, step.BranchName),
 	})
+}
+
+// provides the name of the remote to push to.
+func remoteName(currentBranch, stepBranch string) string {
+	if currentBranch == stepBranch {
+		return ""
+	}
+	return config.OriginRemote
 }

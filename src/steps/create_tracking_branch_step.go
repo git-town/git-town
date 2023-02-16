@@ -1,6 +1,7 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/hosting"
 )
@@ -21,6 +22,6 @@ func (step *CreateTrackingBranchStep) Run(repo *git.ProdRepo, driver hosting.Dri
 	return repo.Logging.PushBranch(git.PushArgs{
 		BranchName: step.BranchName,
 		NoPushHook: step.NoPushHook,
-		ToOrigin:   true,
+		Remote:     config.OriginRemote,
 	})
 }
