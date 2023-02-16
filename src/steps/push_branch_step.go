@@ -1,6 +1,7 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/hosting"
 )
@@ -49,5 +50,5 @@ func remoteName(currentBranch, stepBranch string) string {
 	if currentBranch == stepBranch {
 		return ""
 	}
-	return "origin"
+	return config.OriginRemote
 }

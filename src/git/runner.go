@@ -322,7 +322,7 @@ func (r *Runner) CreateRemoteBranch(localSha, branchName string, noPushHook bool
 	if noPushHook {
 		args = append(args, "--no-verify")
 	}
-	args = append(args, "origin", localSha+":refs/heads/"+branchName)
+	args = append(args, config.OriginRemote, localSha+":refs/heads/"+branchName)
 	_, err := r.Run("git", args...)
 	if err != nil {
 		return fmt.Errorf("cannot create remote branch for local SHA %q: %w", localSha, err)
@@ -432,7 +432,7 @@ func (r *Runner) DeleteMainBranchConfiguration() error {
 
 // DeleteRemoteBranch removes the remote branch of the given local branch.
 func (r *Runner) DeleteRemoteBranch(name string) error {
-	_, err := r.Run("git", "push", "origin", ":"+name)
+	_, err := r.Run("git", "push", config.OriginRemote, ":"+name)
 	if err != nil {
 		return fmt.Errorf("cannot delete tracking branch for %q: %w", name, err)
 	}
@@ -635,7 +635,7 @@ func (r *Runner) HasRebaseInProgress() (bool, error) {
 
 // HasOrigin indicates whether this repo has an origin remote.
 func (r *Runner) HasOrigin() (bool, error) {
-	return r.HasRemote("origin")
+	return r.HasRemote(config.OriginRemote)
 }
 
 // HasRemote indicates whether this repo has a remote with the given name.
