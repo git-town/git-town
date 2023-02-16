@@ -35,11 +35,15 @@ func (step *PushBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error
 	if err != nil {
 		return err
 	}
+	remote := ""
+	if currentBranch != step.BranchName {
+		remote = "origin"
+	}
 	return repo.Logging.PushBranch(git.PushArgs{
 		BranchName:     step.BranchName,
 		ForceWithLease: step.ForceWithLease,
 		NoPushHook:     step.NoPushHook,
 		Force:          step.Force,
-		ToOrigin:       currentBranch != step.BranchName,
+		Remote:         remote,
 	})
 }

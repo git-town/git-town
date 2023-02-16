@@ -23,7 +23,7 @@ func TestGitEnvironment(t *testing.T) {
 		assertIsNormalGitRepo(t, filepath.Join(dir, "cloned", "developer"))
 		assertHasGitBranch(t, filepath.Join(dir, "cloned", "developer"), "main")
 		// check pushing
-		err = cloned.DevRepo.PushBranch(git.PushArgs{BranchName: "main", ToOrigin: true})
+		err = cloned.DevRepo.PushBranch(git.PushArgs{BranchName: "main", Remote: "origin"})
 		assert.NoError(t, err)
 	})
 
@@ -190,7 +190,7 @@ func TestGitEnvironment(t *testing.T) {
 				Message:     "local-origin",
 			})
 			assert.NoError(t, err)
-			err = cloned.DevRepo.PushBranch(git.PushArgs{BranchName: "main", ToOrigin: true})
+			err = cloned.DevRepo.PushBranch(git.PushArgs{BranchName: "main", Remote: "origin"})
 			assert.NoError(t, err)
 			err = cloned.OriginRepo.CreateCommit(git.Commit{
 				Branch:      "main",

@@ -21,6 +21,6 @@ func (step *CreateTrackingBranchStep) Run(repo *git.ProdRepo, driver hosting.Dri
 	return repo.Logging.PushBranch(git.PushArgs{
 		BranchName: step.BranchName,
 		NoPushHook: step.NoPushHook,
-		ToOrigin:   true,
+		Remote:     "origin",
 	})
 }

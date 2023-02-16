@@ -833,7 +833,7 @@ type PushArgs struct {
 	Force          bool
 	ForceWithLease bool
 	NoPushHook     bool
-	ToOrigin       bool
+	Remote         string
 }
 
 // PushBranch pushes the branch with the given name to origin.
@@ -853,8 +853,8 @@ func (r *Runner) PushBranch(options ...PushArgs) error {
 	if option.ForceWithLease {
 		args = append(args, "--force-with-lease")
 	}
-	if option.ToOrigin {
-		args = append(args, "-u", "origin")
+	if option.Remote != "" {
+		args = append(args, "-u", option.Remote)
 		provideBranch = true
 	}
 	if option.BranchName != "" && provideBranch {
