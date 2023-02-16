@@ -13,7 +13,7 @@ func TestGitManager(t *testing.T) {
 	t.Parallel()
 	t.Run("NewGitManager()", func(t *testing.T) {
 		t.Parallel()
-		dir := CreateTempDir(t)
+		dir := t.TempDir()
 		_, err := NewGitManager(dir)
 		assert.Nil(t, err, "creating memoized environment failed")
 		memoizedPath := filepath.Join(dir, "memoized")
@@ -23,7 +23,7 @@ func TestGitManager(t *testing.T) {
 
 	t.Run(".CreateScenarioEnvironment()", func(t *testing.T) {
 		t.Parallel()
-		dir := CreateTempDir(t)
+		dir := t.TempDir()
 		gm, err := NewGitManager(dir)
 		assert.Nil(t, err, "creating memoized environment failed")
 		result, err := gm.CreateScenarioEnvironment("foo")

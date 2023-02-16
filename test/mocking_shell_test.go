@@ -14,7 +14,7 @@ func TestMockingShell(t *testing.T) {
 	t.Parallel()
 	t.Run(".MockCommand()", func(t *testing.T) {
 		t.Parallel()
-		workDir := CreateTempDir(t)
+		workDir := t.TempDir()
 		devDir := filepath.Join(workDir, "dev")
 		err := os.Mkdir(devDir, 0o744)
 		assert.NoError(t, err)
@@ -30,7 +30,7 @@ func TestMockingShell(t *testing.T) {
 
 	t.Run(".Run()", func(t *testing.T) {
 		t.Parallel()
-		runner := NewMockingShell(CreateTempDir(t), CreateTempDir(t), "")
+		runner := NewMockingShell(t.TempDir(), t.TempDir(), "")
 		res, err := runner.Run("echo", "hello", "world")
 		assert.NoError(t, err)
 		assert.Equal(t, "hello world", res.OutputSanitized())
@@ -38,8 +38,8 @@ func TestMockingShell(t *testing.T) {
 
 	t.Run(".RunMany()", func(t *testing.T) {
 		t.Parallel()
-		workDir := CreateTempDir(t)
-		runner := NewMockingShell(workDir, CreateTempDir(t), "")
+		workDir := t.TempDir()
+		runner := NewMockingShell(workDir, t.TempDir(), "")
 		err := runner.RunMany([][]string{
 			{"touch", "first"},
 			{"touch", "second"},
@@ -54,8 +54,8 @@ func TestMockingShell(t *testing.T) {
 
 	t.Run(".RunString()", func(t *testing.T) {
 		t.Parallel()
-		workDir := CreateTempDir(t)
-		runner := NewMockingShell(workDir, CreateTempDir(t), "")
+		workDir := t.TempDir()
+		runner := NewMockingShell(workDir, t.TempDir(), "")
 		_, err := runner.RunString("touch first")
 		assert.NoError(t, err)
 		_, err = os.Stat(filepath.Join(workDir, "first"))
@@ -65,11 +65,11 @@ func TestMockingShell(t *testing.T) {
 	t.Run(".RunStringWith()", func(t *testing.T) {
 		t.Run("without input", func(t *testing.T) {
 			t.Parallel()
-			dir1 := CreateTempDir(t)
+			dir1 := t.TempDir()
 			dir2 := filepath.Join(dir1, "subdir")
 			err := os.Mkdir(dir2, 0o744)
 			assert.NoError(t, err)
-			runner := NewMockingShell(dir1, CreateTempDir(t), "")
+			runner := NewMockingShell(dir1, t.TempDir(), "")
 			toolPath := filepath.Join(dir2, "list-dir")
 			err = CreateLsTool(toolPath)
 			assert.NoError(t, err)
@@ -80,11 +80,11 @@ func TestMockingShell(t *testing.T) {
 
 		t.Run("with input", func(t *testing.T) {
 			t.Parallel()
-			dir1 := CreateTempDir(t)
+			dir1 := t.TempDir()
 			dir2 := filepath.Join(dir1, "subdir")
 			err := os.Mkdir(dir2, 0o744)
 			assert.NoError(t, err)
-			runner := NewMockingShell(dir1, CreateTempDir(t), "")
+			runner := NewMockingShell(dir1, t.TempDir(), "")
 			toolPath := filepath.Join(dir2, "list-dir")
 			err = CreateInputTool(toolPath)
 			assert.NoError(t, err)
