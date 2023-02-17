@@ -167,9 +167,8 @@ func syncBranchesStepList(config syncConfig, repo *git.ProdRepo) (runstate.StepL
 func syncStepsForBranch(branch string, config syncConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	if config.hasDeletedTrackingBranch(branch) {
 		return deleteBranchSteps(branch, config, repo)
-	} else {
-		return updateBranchSteps(branch, true, config.branchesWithDeletedRemote, repo)
 	}
+	return updateBranchSteps(branch, true, config.branchesWithDeletedRemote, repo)
 }
 
 func deleteBranchSteps(branch string, config syncConfig, repo *git.ProdRepo) (runstate.StepList, error) {
@@ -317,11 +316,10 @@ func syncNonFeatureBranchSteps(branchName string, repo *git.ProdRepo) (runstate.
 	return result, nil
 }
 
-// provides the name of the branch that should be checked out after all sync steps run
+// finalBranch provides the name of the branch that should be checked out after all sync steps run.
 func finalBranch(config syncConfig) string {
 	if stringslice.Contains(config.branchesWithDeletedRemote, config.initialBranch) {
 		return config.mainBranch
-	} else {
-		return config.initialBranch
 	}
+	return config.initialBranch
 }

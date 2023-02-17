@@ -19,6 +19,7 @@ func TestLast(t *testing.T) {
 	t.Parallel()
 
 	t.Run("empty list", func(t *testing.T) {
+		t.Parallel()
 		give := []string{}
 		have := stringslice.Last(give)
 		want := (*string)(nil)
@@ -26,6 +27,7 @@ func TestLast(t *testing.T) {
 	})
 
 	t.Run("one element", func(t *testing.T) {
+		t.Parallel()
 		one := "one"
 		give := []string{one}
 		have := stringslice.Last(give)
@@ -33,6 +35,7 @@ func TestLast(t *testing.T) {
 	})
 
 	t.Run("many elements", func(t *testing.T) {
+		t.Parallel()
 		one := "one"
 		two := "two"
 		give := []string{one, two}
@@ -78,6 +81,7 @@ func TestRemove(t *testing.T) {
 }
 
 func TestRemoveAll(t *testing.T) {
+	t.Parallel()
 	t.Run("remove no existing elements", func(t *testing.T) {
 		t.Parallel()
 		give := []string{"one", "two"}
