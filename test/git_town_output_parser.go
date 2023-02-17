@@ -36,19 +36,19 @@ func lineContainsGitTownCommand(line string) bool {
 	return strings.HasPrefix(line, gitCommandLineBeginning)
 }
 
-// parseLine provides the Git Town command and branchname in the given line.
+// parseLine provides the Git Town command and branch name in the given line.
 func parseLine(line string) ExecutedGitCommand {
 	// NOTE: implementing this without regex because the regex has gotten very complex and hard to maintain
 	// remove the color codes at the beginning
 	line = strings.Replace(line, gitCommandLineBeginning, "", 1)
 	// extract branch name if it exists
-	branchName := ""
+	branch := ""
 	if line[0] == '[' {
 		// line contains a branch name
 		line = line[1:] // remove the leading "["
 		parts := strings.SplitN(line, "]", 2)
-		branchName = parts[0]
+		branch = parts[0]
 		line = parts[1]
 	}
-	return ExecutedGitCommand{Command: strings.TrimSpace(line), Branch: branchName}
+	return ExecutedGitCommand{Command: strings.TrimSpace(line), Branch: branch}
 }

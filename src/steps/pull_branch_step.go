@@ -8,7 +8,7 @@ import (
 // PullBranchStep updates the branch with the given name with commits from its remote.
 type PullBranchStep struct {
 	NoOpStep
-	BranchName string
+	Branch string
 }
 
 func (step *PullBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {

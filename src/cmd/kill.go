@@ -33,11 +33,11 @@ func killCommand(repo *git.ProdRepo) *cobra.Command {
 Deletes the current or provided branch from the local and origin repositories.
 Does not delete perennial branches nor the main branch.`,
 		Run: func(cmd *cobra.Command, args []string) {
-			config, err := createKillConfig(args, repo)
+			config, err := determineKillConfig(args, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
-			stepList, err := createKillStepList(config, repo)
+			stepList, err := killStepList(config, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
@@ -57,7 +57,7 @@ Does not delete perennial branches nor the main branch.`,
 	}
 }
 
-func createKillConfig(args []string, repo *git.ProdRepo) (killConfig, error) {
+func determineKillConfig(args []string, repo *git.ProdRepo) (killConfig, error) {
 	initialBranch, err := repo.Silent.CurrentBranch()
 	if err != nil {
 		return killConfig{}, err
@@ -129,7 +129,7 @@ func createKillConfig(args []string, repo *git.ProdRepo) (killConfig, error) {
 	return result, nil
 }
 
-func createKillStepList(config killConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+func killStepList(config killConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	isOffline, err := repo.Config.IsOffline()
 	if err != nil {
@@ -138,21 +138,21 @@ func createKillStepList(config killConfig, repo *git.ProdRepo) (runstate.StepLis
 	switch {
 	case config.isTargetBranchLocal:
 		if config.hasTrackingBranch && !config.isOffline {
-			result.Append(&steps.DeleteOriginBranchStep{BranchName: config.targetBranch, IsTracking: true, NoPushHook: config.noPushHook})
+			result.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch, IsTracking: true, NoPushHook: config.noPushHook})
 		}
 		if config.initialBranch == config.targetBranch {
 			if config.hasOpenChanges {
 				result.Append(&steps.CommitOpenChangesStep{})
 			}
-			result.Append(&steps.CheckoutBranchStep{BranchName: config.targetBranchParent})
+			result.Append(&steps.CheckoutBranchStep{Branch: config.targetBranchParent})
 		}
-		result.Append(&steps.DeleteLocalBranchStep{BranchName: config.targetBranch, Force: true})
+		result.Append(&steps.DeleteLocalBranchStep{Branch: config.targetBranch, Force: true})
 		for _, child := range config.childBranches {
-			result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: config.targetBranchParent})
+			result.Append(&steps.SetParentBranchStep{Branch: child, ParentBranch: config.targetBranchParent})
 		}
-		result.Append(&steps.DeleteParentBranchStep{BranchName: config.targetBranch})
+		result.Append(&steps.DeleteParentBranchStep{Branch: config.targetBranch})
 	case !isOffline:
-		result.Append(&steps.DeleteOriginBranchStep{BranchName: config.targetBranch, IsTracking: false, NoPushHook: config.noPushHook})
+		result.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch, IsTracking: false, NoPushHook: config.noPushHook})
 	default:
 		return runstate.StepList{}, fmt.Errorf("cannot delete remote branch %q in offline mode", config.targetBranch)
 	}

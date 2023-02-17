@@ -10,7 +10,7 @@ import (
 // Optionally with force.
 type PushBranchStep struct {
 	NoOpStep
-	BranchName     string
+	Branch         string
 	Force          bool
 	ForceWithLease bool
 	NoPushHook     bool
@@ -25,7 +25,7 @@ func (step *PushBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { /
 }
 
 func (step *PushBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
-	shouldPush, err := repo.Silent.ShouldPushBranch(step.BranchName)
+	shouldPush, err := repo.Silent.ShouldPushBranch(step.Branch)
 	if err != nil {
 		return err
 	}
@@ -37,11 +37,11 @@ func (step *PushBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error
 		return err
 	}
 	return repo.Logging.PushBranch(git.PushArgs{
-		BranchName:     step.BranchName,
+		Branch:         step.Branch,
 		ForceWithLease: step.ForceWithLease,
 		NoPushHook:     step.NoPushHook,
 		Force:          step.Force,
-		Remote:         remoteName(currentBranch, step.BranchName),
+		Remote:         remoteName(currentBranch, step.Branch),
 	})
 }
 

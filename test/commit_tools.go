@@ -23,7 +23,7 @@ func DefaultCommit(filenameSuffix string) git.Commit {
 // FromGherkinTable provides a Commit collection representing the data in the given Gherkin table.
 func FromGherkinTable(table *messages.PickleStepArgument_PickleTable) ([]git.Commit, error) {
 	columnNames := helpers.TableFields(table)
-	lastBranchName := ""
+	lastBranch := ""
 	lastLocationName := ""
 	result := []git.Commit{}
 	counter := helpers.Counter{}
@@ -34,9 +34,9 @@ func FromGherkinTable(table *messages.PickleStepArgument_PickleTable) ([]git.Com
 			cellValue := cell.Value
 			if columnName == "BRANCH" {
 				if cell.Value == "" {
-					cellValue = lastBranchName
+					cellValue = lastBranch
 				} else {
-					lastBranchName = cellValue
+					lastBranch = cellValue
 				}
 			}
 			if columnName == "LOCATION" {

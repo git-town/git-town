@@ -7,23 +7,23 @@ import (
 )
 
 type askForBranchOptions struct {
-	branchNames       []string
-	defaultBranchName string
-	prompt            string
+	branches      []string
+	defaultBranch string
+	prompt        string
 }
 
 type askForBranchesOptions struct {
-	branchNames        []string
-	defaultBranchNames []string
-	prompt             string
+	branches        []string
+	defaultBranches []string
+	prompt          string
 }
 
 func askForBranch(opts askForBranchOptions) (string, error) {
 	result := ""
 	prompt := &survey.Select{
 		Message: opts.prompt,
-		Options: opts.branchNames,
-		Default: opts.defaultBranchName,
+		Options: opts.branches,
+		Default: opts.defaultBranch,
 	}
 	err := survey.AskOne(prompt, &result, nil)
 	if err != nil {
@@ -36,8 +36,8 @@ func askForBranches(opts askForBranchesOptions) ([]string, error) {
 	result := []string{}
 	prompt := &survey.MultiSelect{
 		Message: opts.prompt,
-		Options: opts.branchNames,
-		Default: opts.defaultBranchNames,
+		Options: opts.branches,
+		Default: opts.defaultBranches,
 	}
 	err := survey.AskOne(prompt, &result, nil)
 	if err != nil {

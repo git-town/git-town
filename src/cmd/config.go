@@ -74,5 +74,3 @@ func configCmd(repo *git.ProdRepo) *cobra.Command {
 	configCmd.AddCommand(syncStrategyCommand(repo))
 	return configCmd
 }
-
-// SYNC-STRATEGY SUBCOMMAND

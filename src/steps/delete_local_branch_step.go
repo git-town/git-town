@@ -9,24 +9,24 @@ import (
 // optionally in a safe or unsafe way.
 type DeleteLocalBranchStep struct {
 	NoOpStep
-	BranchName string
-	Force      bool
-	branchSha  string
+	Branch    string
+	Force     bool
+	branchSha string
 }
 
 func (step *DeleteLocalBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
-	return &CreateBranchStep{BranchName: step.BranchName, StartingPoint: step.branchSha}, nil
+	return &CreateBranchStep{Branch: step.Branch, StartingPoint: step.branchSha}, nil
 }
 
 func (step *DeleteLocalBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
 	var err error
-	step.branchSha, err = repo.Silent.ShaForBranch(step.BranchName)
+	step.branchSha, err = repo.Silent.ShaForBranch(step.Branch)
 	if err != nil {
 		return err
 	}
-	hasUnmergedCommits, err := repo.Silent.BranchHasUnmergedCommits(step.BranchName)
+	hasUnmergedCommits, err := repo.Silent.BranchHasUnmergedCommits(step.Branch)
 	if err != nil {
 		return err
 	}
-	return repo.Logging.DeleteLocalBranch(step.BranchName, step.Force || hasUnmergedCommits)
+	return repo.Logging.DeleteLocalBranch(step.Branch, step.Force || hasUnmergedCommits)
 }

@@ -11,7 +11,7 @@ import (
 // SquashMergeBranchStep squash merges the branch with the given name into the current branch.
 type SquashMergeBranchStep struct {
 	NoOpStep
-	BranchName    string
+	Branch        string
 	CommitMessage string
 }
 
@@ -32,11 +32,11 @@ func (step *SquashMergeBranchStep) CreateAutomaticAbortError() error {
 }
 
 func (step *SquashMergeBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
-	err := repo.Logging.SquashMerge(step.BranchName)
+	err := repo.Logging.SquashMerge(step.Branch)
 	if err != nil {
 		return err
 	}
-	author, err := dialog.DetermineSquashCommitAuthor(step.BranchName, repo)
+	author, err := dialog.DetermineSquashCommitAuthor(step.Branch, repo)
 	if err != nil {
 		return fmt.Errorf("error getting squash commit author: %w", err)
 	}

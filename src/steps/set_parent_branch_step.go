@@ -9,19 +9,19 @@ import (
 // of the branch with the other given name.
 type SetParentBranchStep struct {
 	NoOpStep
-	BranchName       string
-	ParentBranchName string
-	previousParent   string
+	Branch         string
+	ParentBranch   string
+	previousParent string
 }
 
 func (step *SetParentBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
 	if step.previousParent == "" {
-		return &DeleteParentBranchStep{BranchName: step.BranchName}, nil
+		return &DeleteParentBranchStep{Branch: step.Branch}, nil
 	}
-	return &SetParentBranchStep{BranchName: step.BranchName, ParentBranchName: step.previousParent}, nil
+	return &SetParentBranchStep{Branch: step.Branch, ParentBranch: step.previousParent}, nil
 }
 
 func (step *SetParentBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
-	step.previousParent = repo.Config.ParentBranch(step.BranchName)
-	return repo.Config.SetParentBranch(step.BranchName, step.ParentBranchName)
+	step.previousParent = repo.Config.ParentBranch(step.Branch)
+	return repo.Config.SetParentBranch(step.Branch, step.ParentBranch)
 }

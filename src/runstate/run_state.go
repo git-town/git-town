@@ -48,7 +48,7 @@ func (runState *RunState) AddPushBranchStepAfterCurrentBranchSteps(repo *git.Pro
 			if err != nil {
 				return err
 			}
-			runState.RunStepList.Prepend(&steps.PushBranchStep{BranchName: currentBranch})
+			runState.RunStepList.Prepend(&steps.PushBranchStep{Branch: currentBranch})
 			runState.RunStepList.PrependList(popped)
 			break
 		}

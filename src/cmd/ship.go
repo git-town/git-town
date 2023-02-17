@@ -62,11 +62,11 @@ run "git config %s false"
 and Git Town will leave it up to your origin server to delete the remote branch.`, config.GithubToken, config.ShipDeleteRemoteBranch),
 		Run: func(cmd *cobra.Command, args []string) {
 			driver := hosting.NewDriver(&repo.Config, &repo.Silent, cli.PrintDriverAction)
-			config, err := gitShipConfig(args, driver, repo)
+			config, err := determineShipConfig(args, driver, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
-			stepList, err := createShipStepList(config, commitMessage, repo)
+			stepList, err := shipStepList(config, commitMessage, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
@@ -88,7 +88,7 @@ and Git Town will leave it up to your origin server to delete the remote branch.
 	return &shipCmd
 }
 
-func gitShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (shipConfig, error) {
+func determineShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (shipConfig, error) {
 	initialBranch, err := repo.Silent.CurrentBranch()
 	if err != nil {
 		return shipConfig{}, err
@@ -149,7 +149,7 @@ func gitShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (sh
 	result.isOffline = isOffline
 	result.isShippingInitialBranch = result.branchToShip == result.initialBranch
 	result.branchToMergeInto = repo.Config.ParentBranch(result.branchToShip)
-	prInfo, err := createPullRequestInfo(result.branchToShip, result.branchToMergeInto, repo, driver)
+	prInfo, err := determinePullRequestInfo(result.branchToShip, result.branchToMergeInto, repo, driver)
 	if err != nil {
 		return shipConfig{}, err
 	}
@@ -165,10 +165,10 @@ func gitShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (sh
 	return result, err
 }
 
-func ensureParentBranchIsMainOrPerennialBranch(branchName string, repo *git.ProdRepo) {
-	parentBranch := repo.Config.ParentBranch(branchName)
+func ensureParentBranchIsMainOrPerennialBranch(branch string, repo *git.ProdRepo) {
+	parentBranch := repo.Config.ParentBranch(branch)
 	if !repo.Config.IsMainBranch(parentBranch) && !repo.Config.IsPerennialBranch(parentBranch) {
-		ancestors := repo.Config.AncestorBranches(branchName)
+		ancestors := repo.Config.AncestorBranches(branch)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
 		oldestAncestor := ancestorsWithoutMainOrPerennial[0]
 		cli.Exit(fmt.Errorf(`shipping this branch would ship %q as well,
@@ -176,7 +176,7 @@ please ship %q first`, strings.Join(ancestorsWithoutMainOrPerennial, ", "), olde
 	}
 }
 
-func createShipStepList(config shipConfig, commitMessage string, repo *git.ProdRepo) (runstate.StepList, error) {
+func shipStepList(config shipConfig, commitMessage string, repo *git.ProdRepo) (runstate.StepList, error) {
 	syncSteps, err := syncBranchSteps(config.branchToMergeInto, true, repo)
 	if err != nil {
 		return runstate.StepList{}, err
@@ -188,22 +188,22 @@ func createShipStepList(config shipConfig, commitMessage string, repo *git.ProdR
 		return runstate.StepList{}, err
 	}
 	result.AppendList(syncSteps)
-	result.Append(&steps.EnsureHasShippableChangesStep{BranchName: config.branchToShip})
-	result.Append(&steps.CheckoutBranchStep{BranchName: config.branchToMergeInto})
+	result.Append(&steps.EnsureHasShippableChangesStep{Branch: config.branchToShip})
+	result.Append(&steps.CheckoutBranchStep{Branch: config.branchToMergeInto})
 	if config.canShipWithDriver {
-		result.Append(&steps.PushBranchStep{BranchName: config.branchToShip})
+		result.Append(&steps.PushBranchStep{Branch: config.branchToShip})
 		result.Append(&steps.DriverMergePullRequestStep{
-			BranchName:           config.branchToShip,
+			Branch:               config.branchToShip,
 			PullRequestNumber:    config.pullRequestNumber,
 			CommitMessage:        commitMessage,
 			DefaultCommitMessage: config.defaultCommitMessage,
 		})
 		result.Append(&steps.PullBranchStep{})
 	} else {
-		result.Append(&steps.SquashMergeBranchStep{BranchName: config.branchToShip, CommitMessage: commitMessage})
+		result.Append(&steps.SquashMergeBranchStep{Branch: config.branchToShip, CommitMessage: commitMessage})
 	}
 	if config.hasOrigin && !config.isOffline {
-		result.Append(&steps.PushBranchStep{BranchName: config.branchToMergeInto, Undoable: true})
+		result.Append(&steps.PushBranchStep{Branch: config.branchToMergeInto, Undoable: true})
 	}
 	// NOTE: when shipping with a driver, we can always delete the remote branch because:
 	// - we know we have a tracking branch (otherwise there would be no PR to ship via driver)
@@ -211,22 +211,22 @@ func createShipStepList(config shipConfig, commitMessage string, repo *git.ProdR
 	// - we know we are online
 	if config.canShipWithDriver || (config.hasTrackingBranch && len(config.childBranches) == 0 && !config.isOffline) {
 		if config.deleteOriginBranch {
-			result.Append(&steps.DeleteOriginBranchStep{BranchName: config.branchToShip, IsTracking: true})
+			result.Append(&steps.DeleteOriginBranchStep{Branch: config.branchToShip, IsTracking: true})
 		}
 	}
-	result.Append(&steps.DeleteLocalBranchStep{BranchName: config.branchToShip})
-	result.Append(&steps.DeleteParentBranchStep{BranchName: config.branchToShip})
+	result.Append(&steps.DeleteLocalBranchStep{Branch: config.branchToShip})
+	result.Append(&steps.DeleteParentBranchStep{Branch: config.branchToShip})
 	for _, child := range config.childBranches {
-		result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: config.branchToMergeInto})
+		result.Append(&steps.SetParentBranchStep{Branch: child, ParentBranch: config.branchToMergeInto})
 	}
 	if !config.isShippingInitialBranch {
-		result.Append(&steps.CheckoutBranchStep{BranchName: config.initialBranch})
+		result.Append(&steps.CheckoutBranchStep{Branch: config.initialBranch})
 	}
 	err = result.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: !config.isShippingInitialBranch}, repo)
 	return result, err
 }
 
-func createPullRequestInfo(branch, parentBranch string, repo *git.ProdRepo, driver hosting.Driver) (hosting.PullRequestInfo, error) {
+func determinePullRequestInfo(branch, parentBranch string, repo *git.ProdRepo, driver hosting.Driver) (hosting.PullRequestInfo, error) {
 	hasOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
 		return hosting.PullRequestInfo{}, err
