@@ -609,8 +609,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.CoworkerRepo.Fetch()
 	})
 
-	suite.Step(`^the coworker is on the "([^"]*)" branch$`, func(branchName string) error {
-		return state.gitEnv.CoworkerRepo.CheckoutBranch(branchName)
+	suite.Step(`^the coworker is on the "([^"]*)" branch$`, func(branch string) error {
+		return state.gitEnv.CoworkerRepo.CheckoutBranch(branch)
 	})
 
 	suite.Step(`^the coworker runs "([^"]+)"$`, func(command string) error {
