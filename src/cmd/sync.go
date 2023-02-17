@@ -154,8 +154,6 @@ func syncSteps(config syncConfig, repo *git.ProdRepo) (runstate.StepList, error)
 }
 
 // syncBranchSteps provides the steps to sync a particular branch.
-//
-//nolint:nestif
 func syncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (runstate.StepList, error) {
 	isFeatureBranch := repo.Config.IsFeatureBranch(branchName)
 	syncStrategy := repo.Config.SyncStrategy()
@@ -194,19 +192,19 @@ func syncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (ru
 		if err != nil {
 			return runstate.StepList{}, err
 		}
-		if hasTrackingBranch {
-			if isFeatureBranch {
-				steps, err := pushFeatureBranchSteps(branchName, syncStrategy, pushHook)
-				if err != nil {
-					return runstate.StepList{}, err
-				}
-				result.AppendList(steps)
-			} else {
-				result.Append(&steps.PushBranchStep{BranchName: branchName})
-			}
-		} else {
+		if !hasTrackingBranch {
 			result.Append(&steps.CreateTrackingBranchStep{BranchName: branchName})
+			return result, nil
 		}
+		if !isFeatureBranch {
+			result.Append(&steps.PushBranchStep{BranchName: branchName})
+			return result, nil
+		}
+		steps, err := pushFeatureBranchSteps(branchName, syncStrategy, pushHook)
+		if err != nil {
+			return runstate.StepList{}, err
+		}
+		result.AppendList(steps)
 	}
 	return result, nil
 }
