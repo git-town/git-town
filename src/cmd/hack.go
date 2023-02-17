@@ -25,7 +25,7 @@ and brings over all uncommitted changes to the new feature branch.
 
 See "sync" for information regarding upstream remotes.`,
 		Run: func(cmd *cobra.Command, args []string) {
-			config, err := createHackConfig(args, promptForParentFlag, repo)
+			config, err := determineHackConfig(args, promptForParentFlag, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
@@ -67,7 +67,7 @@ func determineParentBranch(targetBranch string, promptForParent bool, repo *git.
 	return repo.Config.MainBranch(), nil
 }
 
-func createHackConfig(args []string, promptForParent bool, repo *git.ProdRepo) (appendConfig, error) {
+func determineHackConfig(args []string, promptForParent bool, repo *git.ProdRepo) (appendConfig, error) {
 	targetBranch := args[0]
 	parentBranch, err := determineParentBranch(targetBranch, promptForParent, repo)
 	if err != nil {

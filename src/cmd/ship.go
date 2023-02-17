@@ -62,11 +62,11 @@ run "git config %s false"
 and Git Town will leave it up to your origin server to delete the remote branch.`, config.GithubToken, config.ShipDeleteRemoteBranch),
 		Run: func(cmd *cobra.Command, args []string) {
 			driver := hosting.NewDriver(&repo.Config, &repo.Silent, cli.PrintDriverAction)
-			config, err := gitShipConfig(args, driver, repo)
+			config, err := determineShipConfig(args, driver, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
-			stepList, err := createShipStepList(config, commitMessage, repo)
+			stepList, err := shipStepList(config, commitMessage, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
@@ -88,7 +88,7 @@ and Git Town will leave it up to your origin server to delete the remote branch.
 	return &shipCmd
 }
 
-func gitShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (shipConfig, error) {
+func determineShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (shipConfig, error) {
 	initialBranch, err := repo.Silent.CurrentBranch()
 	if err != nil {
 		return shipConfig{}, err
@@ -149,7 +149,7 @@ func gitShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (sh
 	result.isOffline = isOffline
 	result.isShippingInitialBranch = result.branchToShip == result.initialBranch
 	result.branchToMergeInto = repo.Config.ParentBranch(result.branchToShip)
-	prInfo, err := createPullRequestInfo(result.branchToShip, result.branchToMergeInto, repo, driver)
+	prInfo, err := determinePullRequestInfo(result.branchToShip, result.branchToMergeInto, repo, driver)
 	if err != nil {
 		return shipConfig{}, err
 	}
@@ -176,7 +176,7 @@ please ship %q first`, strings.Join(ancestorsWithoutMainOrPerennial, ", "), olde
 	}
 }
 
-func createShipStepList(config shipConfig, commitMessage string, repo *git.ProdRepo) (runstate.StepList, error) {
+func shipStepList(config shipConfig, commitMessage string, repo *git.ProdRepo) (runstate.StepList, error) {
 	syncSteps, err := syncBranchSteps(config.branchToMergeInto, true, repo)
 	if err != nil {
 		return runstate.StepList{}, err
@@ -226,7 +226,7 @@ func createShipStepList(config shipConfig, commitMessage string, repo *git.ProdR
 	return result, err
 }
 
-func createPullRequestInfo(branch, parentBranch string, repo *git.ProdRepo, driver hosting.Driver) (hosting.PullRequestInfo, error) {
+func determinePullRequestInfo(branch, parentBranch string, repo *git.ProdRepo, driver hosting.Driver) (hosting.PullRequestInfo, error) {
 	hasOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
 		return hosting.PullRequestInfo{}, err

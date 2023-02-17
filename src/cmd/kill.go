@@ -33,11 +33,11 @@ func killCommand(repo *git.ProdRepo) *cobra.Command {
 Deletes the current or provided branch from the local and origin repositories.
 Does not delete perennial branches nor the main branch.`,
 		Run: func(cmd *cobra.Command, args []string) {
-			config, err := createKillConfig(args, repo)
+			config, err := determineKillConfig(args, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
-			stepList, err := createKillStepList(config, repo)
+			stepList, err := killStepList(config, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
@@ -57,7 +57,7 @@ Does not delete perennial branches nor the main branch.`,
 	}
 }
 
-func createKillConfig(args []string, repo *git.ProdRepo) (killConfig, error) {
+func determineKillConfig(args []string, repo *git.ProdRepo) (killConfig, error) {
 	initialBranch, err := repo.Silent.CurrentBranch()
 	if err != nil {
 		return killConfig{}, err
@@ -129,7 +129,7 @@ func createKillConfig(args []string, repo *git.ProdRepo) (killConfig, error) {
 	return result, nil
 }
 
-func createKillStepList(config killConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+func killStepList(config killConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	isOffline, err := repo.Config.IsOffline()
 	if err != nil {

@@ -45,11 +45,11 @@ When run on a perennial branch
 - confirm with the "-f" option
 - registers the new perennial branch name in the local Git Town configuration`,
 		Run: func(cmd *cobra.Command, args []string) {
-			config, err := createRenameBranchConfig(args, forceFlag, repo)
+			config, err := determineRenameBranchConfig(args, forceFlag, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
-			stepList, err := createRenameBranchStepList(config, repo)
+			stepList, err := renameBranchStepList(config, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
@@ -71,7 +71,7 @@ When run on a perennial branch
 	return renameBranchCmd
 }
 
-func createRenameBranchConfig(args []string, forceFlag bool, repo *git.ProdRepo) (renameBranchConfig, error) {
+func determineRenameBranchConfig(args []string, forceFlag bool, repo *git.ProdRepo) (renameBranchConfig, error) {
 	initialBranch, err := repo.Silent.CurrentBranch()
 	if err != nil {
 		return renameBranchConfig{}, err
@@ -140,7 +140,7 @@ func createRenameBranchConfig(args []string, forceFlag bool, repo *git.ProdRepo)
 	return result, err
 }
 
-func createRenameBranchStepList(config renameBranchConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+func renameBranchStepList(config renameBranchConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	result.Append(&steps.CreateBranchStep{BranchName: config.newBranchName, StartingPoint: config.oldBranchName})
 	if config.initialBranch == config.oldBranchName {
