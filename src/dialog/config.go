@@ -41,15 +41,15 @@ func ConfigureMainBranch(repo *git.ProdRepo) error {
 
 // ConfigurePerennialBranches has the user to confgure the perennial branches.
 func ConfigurePerennialBranches(repo *git.ProdRepo) error {
-	branchNames, err := repo.Silent.LocalBranchesWithoutMain()
+	branches, err := repo.Silent.LocalBranchesWithoutMain()
 	if err != nil {
 		return err
 	}
-	if len(branchNames) == 0 {
+	if len(branches) == 0 {
 		return nil
 	}
 	newPerennialBranches, err := askForBranches(askForBranchesOptions{
-		branches:        branchNames,
+		branches:        branches,
 		prompt:          perennialBranchesPrompt(repo),
 		defaultBranches: repo.Config.PerennialBranches(),
 	})

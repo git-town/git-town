@@ -165,10 +165,10 @@ func determineShipConfig(args []string, driver hosting.Driver, repo *git.ProdRep
 	return result, err
 }
 
-func ensureParentBranchIsMainOrPerennialBranch(branchName string, repo *git.ProdRepo) {
-	parentBranch := repo.Config.ParentBranch(branchName)
+func ensureParentBranchIsMainOrPerennialBranch(branch string, repo *git.ProdRepo) {
+	parentBranch := repo.Config.ParentBranch(branch)
 	if !repo.Config.IsMainBranch(parentBranch) && !repo.Config.IsPerennialBranch(parentBranch) {
-		ancestors := repo.Config.AncestorBranches(branchName)
+		ancestors := repo.Config.AncestorBranches(branch)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
 		oldestAncestor := ancestorsWithoutMainOrPerennial[0]
 		cli.Exit(fmt.Errorf(`shipping this branch would ship %q as well,

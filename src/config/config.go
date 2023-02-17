@@ -55,16 +55,16 @@ func (gt *GitTown) AddGitAlias(command string) (*run.Result, error) {
 
 // AddToPerennialBranches registers the given branch names as perennial branches.
 // The branches must exist.
-func (gt *GitTown) AddToPerennialBranches(branchNames ...string) error {
-	return gt.SetPerennialBranches(append(gt.PerennialBranches(), branchNames...))
+func (gt *GitTown) AddToPerennialBranches(branches ...string) error {
+	return gt.SetPerennialBranches(append(gt.PerennialBranches(), branches...))
 }
 
 // AncestorBranches provides the names of all parent branches for the given branch,
 // This information is read from the cache in the Git config,
 // so might be out of date when the branch hierarchy has been modified.
-func (gt *GitTown) AncestorBranches(branchName string) []string {
+func (gt *GitTown) AncestorBranches(branch string) []string {
 	parentBranchMap := gt.ParentBranchMap()
-	current := branchName
+	current := branch
 	result := []string{}
 	for {
 		if gt.IsMainBranch(current) || gt.IsPerennialBranch(current) {
@@ -94,11 +94,11 @@ func (gt *GitTown) BranchAncestryRoots() []string {
 
 // ChildBranches provides the names of all branches for which the given branch
 // is a parent.
-func (gt *GitTown) ChildBranches(branchName string) []string {
+func (gt *GitTown) ChildBranches(branch string) []string {
 	result := []string{}
 	for _, key := range gt.Storage.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
 		parent := gt.Storage.LocalConfigValue(key)
-		if parent == branchName {
+		if parent == branch {
 			child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
 			result = append(result, child)
 		}
@@ -145,8 +145,8 @@ func (gt *GitTown) HasBranchInformation() bool {
 }
 
 // HasParentBranch returns whether or not the given branch has a parent.
-func (gt *GitTown) HasParentBranch(branchName string) bool {
-	return gt.ParentBranch(branchName) != ""
+func (gt *GitTown) HasParentBranch(branch string) bool {
+	return gt.ParentBranch(branch) != ""
 }
 
 // HostingService provides the name of the code hosting driver to use.
@@ -155,21 +155,21 @@ func (gt *GitTown) HostingService() string {
 }
 
 // IsAncestorBranch indicates whether the given branch is an ancestor of the other given branch.
-func (gt *GitTown) IsAncestorBranch(branchName, ancestorBranch string) bool {
-	ancestorBranches := gt.AncestorBranches(branchName)
+func (gt *GitTown) IsAncestorBranch(branch, ancestorBranch string) bool {
+	ancestorBranches := gt.AncestorBranches(branch)
 	return stringslice.Contains(ancestorBranches, ancestorBranch)
 }
 
 // IsFeatureBranch indicates whether the branch with the given name is
 // a feature branch.
-func (gt *GitTown) IsFeatureBranch(branchName string) bool {
-	return !gt.IsMainBranch(branchName) && !gt.IsPerennialBranch(branchName)
+func (gt *GitTown) IsFeatureBranch(branch string) bool {
+	return !gt.IsMainBranch(branch) && !gt.IsPerennialBranch(branch)
 }
 
 // IsMainBranch indicates whether the branch with the given name
 // is the main branch of the repository.
-func (gt *GitTown) IsMainBranch(branchName string) bool {
-	return branchName == gt.MainBranch()
+func (gt *GitTown) IsMainBranch(branch string) bool {
+	return branch == gt.MainBranch()
 }
 
 // IsOffline indicates whether Git Town is currently in offline mode.
@@ -187,9 +187,9 @@ func (gt *GitTown) IsOffline() (bool, error) {
 
 // IsPerennialBranch indicates whether the branch with the given name is
 // a perennial branch.
-func (gt *GitTown) IsPerennialBranch(branchName string) bool {
+func (gt *GitTown) IsPerennialBranch(branch string) bool {
 	perennialBranches := gt.PerennialBranches()
-	return stringslice.Contains(perennialBranches, branchName)
+	return stringslice.Contains(perennialBranches, branch)
 }
 
 // MainBranch provides the name of the main branch.
@@ -234,8 +234,8 @@ func (gt *GitTown) ParentBranchMap() map[string]string {
 }
 
 // ParentBranch provides the name of the parent branch of the given branch.
-func (gt *GitTown) ParentBranch(branchName string) string {
-	return gt.Storage.LocalConfigValue("git-town-branch." + branchName + ".parent")
+func (gt *GitTown) ParentBranch(branch string) string {
+	return gt.Storage.LocalConfigValue("git-town-branch." + branch + ".parent")
 }
 
 // PerennialBranches returns all branches that are marked as perennial.
@@ -288,8 +288,8 @@ func (gt *GitTown) Reload() {
 }
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
-func (gt *GitTown) RemoveFromPerennialBranches(branchName string) error {
-	return gt.SetPerennialBranches(stringslice.Remove(gt.PerennialBranches(), branchName))
+func (gt *GitTown) RemoveFromPerennialBranches(branch string) error {
+	return gt.SetPerennialBranches(stringslice.Remove(gt.PerennialBranches(), branch))
 }
 
 // RemoveGitAlias removes the given Git alias.
@@ -318,8 +318,8 @@ func (gt *GitTown) RemoveMainBranchConfiguration() error {
 
 // RemoveParentBranch removes the parent branch entry for the given branch
 // from the Git configuration.
-func (gt *GitTown) RemoveParentBranch(branchName string) error {
-	return gt.Storage.RemoveLocalConfigValue("git-town-branch." + branchName + ".parent")
+func (gt *GitTown) RemoveParentBranch(branch string) error {
+	return gt.Storage.RemoveLocalConfigValue("git-town-branch." + branch + ".parent")
 }
 
 // RemovePerennialBranchConfiguration removes the configuration entry for the perennial branches.
@@ -349,8 +349,8 @@ func (gt *GitTown) SetColorUI(value string) error {
 
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
-func (gt *GitTown) SetMainBranch(branchName string) error {
-	_, err := gt.Storage.SetLocalConfigValue(MainBranch, branchName)
+func (gt *GitTown) SetMainBranch(branch string) error {
+	_, err := gt.Storage.SetLocalConfigValue(MainBranch, branch)
 	return err
 }
 
@@ -374,14 +374,14 @@ func (gt *GitTown) SetOffline(value bool) error {
 
 // SetParentBranch marks the given branch as the direct parent of the other given branch
 // in the Git Town configuration.
-func (gt *GitTown) SetParentBranch(branchName, parentBranch string) error {
-	_, err := gt.Storage.SetLocalConfigValue("git-town-branch."+branchName+".parent", parentBranch)
+func (gt *GitTown) SetParentBranch(branch, parentBranch string) error {
+	_, err := gt.Storage.SetLocalConfigValue("git-town-branch."+branch+".parent", parentBranch)
 	return err
 }
 
 // SetPerennialBranches marks the given branches as perennial branches.
-func (gt *GitTown) SetPerennialBranches(branchNames []string) error {
-	_, err := gt.Storage.SetLocalConfigValue(PerennialBranches, strings.Join(branchNames, " "))
+func (gt *GitTown) SetPerennialBranches(branch []string) error {
+	_, err := gt.Storage.SetLocalConfigValue(PerennialBranches, strings.Join(branch, " "))
 	return err
 }
 

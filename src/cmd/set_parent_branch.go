@@ -15,23 +15,23 @@ func setParentBranchCommand(repo *git.ProdRepo) *cobra.Command {
 		Short: "Prompts to set the parent branch for the current branch",
 		Long:  `Prompts to set the parent branch for the current branch`,
 		Run: func(cmd *cobra.Command, args []string) {
-			branchName, err := repo.Silent.CurrentBranch()
+			currentBranch, err := repo.Silent.CurrentBranch()
 			if err != nil {
 				cli.Exit(err)
 			}
-			if !repo.Config.IsFeatureBranch(branchName) {
+			if !repo.Config.IsFeatureBranch(currentBranch) {
 				cli.Exit(errors.New("only feature branches can have parent branches"))
 			}
-			defaultParentBranch := repo.Config.ParentBranch(branchName)
+			defaultParentBranch := repo.Config.ParentBranch(currentBranch)
 			if defaultParentBranch == "" {
 				defaultParentBranch = repo.Config.MainBranch()
 			}
-			err = repo.Config.RemoveParentBranch(branchName)
+			err = repo.Config.RemoveParentBranch(currentBranch)
 			if err != nil {
 				cli.Exit(err)
 			}
 			parentDialog := dialog.ParentBranches{}
-			err = parentDialog.AskForBranchAncestry(branchName, defaultParentBranch, repo)
+			err = parentDialog.AskForBranchAncestry(currentBranch, defaultParentBranch, repo)
 			if err != nil {
 				cli.Exit(err)
 			}

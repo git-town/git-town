@@ -36,13 +36,13 @@ func printMainBranch(repo *git.ProdRepo) {
 	cli.Println(cli.StringSetting(repo.Config.MainBranch()))
 }
 
-func setMainBranch(branchName string, repo *git.ProdRepo) error {
-	hasBranch, err := repo.Silent.HasLocalBranch(branchName)
+func setMainBranch(branch string, repo *git.ProdRepo) error {
+	hasBranch, err := repo.Silent.HasLocalBranch(branch)
 	if err != nil {
 		return err
 	}
 	if !hasBranch {
-		return fmt.Errorf("there is no branch named %q", branchName)
+		return fmt.Errorf("there is no branch named %q", branch)
 	}
-	return repo.Config.SetMainBranch(branchName)
+	return repo.Config.SetMainBranch(branch)
 }

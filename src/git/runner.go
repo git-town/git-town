@@ -317,12 +317,12 @@ func (r *Runner) CreatePerennialBranches(names ...string) error {
 }
 
 // CreateRemoteBranch creates a remote branch from the given local SHA.
-func (r *Runner) CreateRemoteBranch(localSha, branchName string, noPushHook bool) error {
+func (r *Runner) CreateRemoteBranch(localSha, branch string, noPushHook bool) error {
 	args := []string{"push"}
 	if noPushHook {
 		args = append(args, "--no-verify")
 	}
-	args = append(args, config.OriginRemote, localSha+":refs/heads/"+branchName)
+	args = append(args, config.OriginRemote, localSha+":refs/heads/"+branch)
 	_, err := r.Run("git", args...)
 	if err != nil {
 		return fmt.Errorf("cannot create remote branch for local SHA %q: %w", localSha, err)
@@ -673,17 +673,17 @@ func (r *Runner) HasTrackingBranch(name string) (bool, error) {
 }
 
 // IsBranchInSync returns whether the branch with the given name is in sync with its tracking branch.
-func (r *Runner) IsBranchInSync(branchName string) (bool, error) {
-	hasTrackingBranch, err := r.HasTrackingBranch(branchName)
+func (r *Runner) IsBranchInSync(branch string) (bool, error) {
+	hasTrackingBranch, err := r.HasTrackingBranch(branch)
 	if err != nil {
 		return false, err
 	}
 	if hasTrackingBranch {
-		localSha, err := r.ShaForBranch(branchName)
+		localSha, err := r.ShaForBranch(branch)
 		if err != nil {
 			return false, err
 		}
-		remoteSha, err := r.ShaForBranch(r.TrackingBranch(branchName))
+		remoteSha, err := r.ShaForBranch(r.TrackingBranch(branch))
 		return localSha == remoteSha, err
 	}
 	return true, nil
@@ -714,16 +714,16 @@ func (r *Runner) LocalAndOriginBranches() ([]string, error) {
 		return []string{}, fmt.Errorf("cannot determine the local branches")
 	}
 	lines := outcome.OutputLines()
-	branchNames := make(map[string]struct{})
+	branch := make(map[string]struct{})
 	for _, line := range lines {
 		if !strings.Contains(line, " -> ") {
-			branchNames[strings.TrimSpace(strings.Replace(strings.Replace(line, "* ", "", 1), "remotes/origin/", "", 1))] = struct{}{}
+			branch[strings.TrimSpace(strings.Replace(strings.Replace(line, "* ", "", 1), "remotes/origin/", "", 1))] = struct{}{}
 		}
 	}
-	result := make([]string, len(branchNames))
+	result := make([]string, len(branch))
 	i := 0
-	for branchName := range branchNames {
-		result[i] = branchName
+	for branch := range branch {
+		result[i] = branch
 		i++
 	}
 	sort.Strings(result)
@@ -768,10 +768,10 @@ func (r *Runner) LocalBranchesWithDeletedTrackingBranches() ([]string, error) {
 	for _, line := range res.OutputLines() {
 		line = strings.Trim(line, "* ")
 		parts := strings.SplitN(line, " ", 2)
-		branchName := parts[0]
-		deleteTrackingBranchStatus := fmt.Sprintf("[%s: gone]", r.TrackingBranch(branchName))
+		branch := parts[0]
+		deleteTrackingBranchStatus := fmt.Sprintf("[%s: gone]", r.TrackingBranch(branch))
 		if strings.Contains(parts[1], deleteTrackingBranchStatus) {
-			result = append(result, branchName)
+			result = append(result, branch)
 		}
 	}
 	return result, nil
