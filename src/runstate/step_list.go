@@ -12,6 +12,7 @@ type StepList struct {
 	List []steps.Step
 }
 
+// NewStepList provides a StepList instance containing the given step.
 func NewStepList(step steps.Step) StepList {
 	return StepList{
 		List: []steps.Step{step},
