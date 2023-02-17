@@ -28,7 +28,7 @@ func ValidateIsRepository(repo *git.ProdRepo) error {
 	return errors.New("this is not a Git repository")
 }
 
-func createAppendStepList(config appendConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+func appendStepList(config appendConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	for _, branchName := range append(config.ancestorBranches, config.parentBranch) {
 		steps, err := syncBranchSteps(branchName, true, repo)
