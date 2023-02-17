@@ -9,14 +9,14 @@ import (
 // but leaves the current branch unchanged.
 type CreateBranchStep struct {
 	NoOpStep
-	BranchName    string
+	Branch        string
 	StartingPoint string
 }
 
 func (step *CreateBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
-	return &DeleteLocalBranchStep{BranchName: step.BranchName, Force: true}, nil
+	return &DeleteLocalBranchStep{Branch: step.Branch, Force: true}, nil
 }
 
 func (step *CreateBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
-	return repo.Logging.CreateBranch(step.BranchName, step.StartingPoint)
+	return repo.Logging.CreateBranch(step.Branch, step.StartingPoint)
 }

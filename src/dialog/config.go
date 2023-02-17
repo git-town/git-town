@@ -29,9 +29,9 @@ func ConfigureMainBranch(repo *git.ProdRepo) error {
 		return err
 	}
 	newMainBranch, err := askForBranch(askForBranchOptions{
-		branchNames:       localBranches,
-		prompt:            mainBranchPrompt(repo),
-		defaultBranchName: repo.Config.MainBranch(),
+		branches:      localBranches,
+		prompt:        mainBranchPrompt(repo),
+		defaultBranch: repo.Config.MainBranch(),
 	})
 	if err != nil {
 		return err
@@ -49,9 +49,9 @@ func ConfigurePerennialBranches(repo *git.ProdRepo) error {
 		return nil
 	}
 	newPerennialBranches, err := askForBranches(askForBranchesOptions{
-		branchNames:        branchNames,
-		prompt:             perennialBranchesPrompt(repo),
-		defaultBranchNames: repo.Config.PerennialBranches(),
+		branches:        branchNames,
+		prompt:          perennialBranchesPrompt(repo),
+		defaultBranches: repo.Config.PerennialBranches(),
 	})
 	if err != nil {
 		return err
@@ -65,8 +65,8 @@ func mainBranchPrompt(repo *git.ProdRepo) string {
 	result := "Please specify the main development branch:"
 	currentMainBranch := repo.Config.MainBranch()
 	if currentMainBranch != "" {
-		coloredBranchName := color.New(color.Bold).Add(color.FgCyan).Sprintf(currentMainBranch)
-		result += fmt.Sprintf(" (current value: %s)", coloredBranchName)
+		coloredBranch := color.New(color.Bold).Add(color.FgCyan).Sprintf(currentMainBranch)
+		result += fmt.Sprintf(" (current value: %s)", coloredBranch)
 	}
 	return result
 }
@@ -75,8 +75,8 @@ func perennialBranchesPrompt(repo *git.ProdRepo) string {
 	result := "Please specify perennial branches:"
 	currentPerennialBranches := repo.Config.PerennialBranches()
 	if len(currentPerennialBranches) > 0 {
-		coloredBranchNames := color.New(color.Bold).Add(color.FgCyan).Sprintf(strings.Join(currentPerennialBranches, ", "))
-		result += fmt.Sprintf(" (current value: %s)", coloredBranchNames)
+		coloredBranches := color.New(color.Bold).Add(color.FgCyan).Sprintf(strings.Join(currentPerennialBranches, ", "))
+		result += fmt.Sprintf(" (current value: %s)", coloredBranches)
 	}
 	return result
 }

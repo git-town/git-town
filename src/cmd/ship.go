@@ -188,22 +188,22 @@ func shipStepList(config shipConfig, commitMessage string, repo *git.ProdRepo) (
 		return runstate.StepList{}, err
 	}
 	result.AppendList(syncSteps)
-	result.Append(&steps.EnsureHasShippableChangesStep{BranchName: config.branchToShip})
-	result.Append(&steps.CheckoutBranchStep{BranchName: config.branchToMergeInto})
+	result.Append(&steps.EnsureHasShippableChangesStep{Branch: config.branchToShip})
+	result.Append(&steps.CheckoutBranchStep{Branch: config.branchToMergeInto})
 	if config.canShipWithDriver {
-		result.Append(&steps.PushBranchStep{BranchName: config.branchToShip})
+		result.Append(&steps.PushBranchStep{Branch: config.branchToShip})
 		result.Append(&steps.DriverMergePullRequestStep{
-			BranchName:           config.branchToShip,
+			Branch:               config.branchToShip,
 			PullRequestNumber:    config.pullRequestNumber,
 			CommitMessage:        commitMessage,
 			DefaultCommitMessage: config.defaultCommitMessage,
 		})
 		result.Append(&steps.PullBranchStep{})
 	} else {
-		result.Append(&steps.SquashMergeBranchStep{BranchName: config.branchToShip, CommitMessage: commitMessage})
+		result.Append(&steps.SquashMergeBranchStep{Branch: config.branchToShip, CommitMessage: commitMessage})
 	}
 	if config.hasOrigin && !config.isOffline {
-		result.Append(&steps.PushBranchStep{BranchName: config.branchToMergeInto, Undoable: true})
+		result.Append(&steps.PushBranchStep{Branch: config.branchToMergeInto, Undoable: true})
 	}
 	// NOTE: when shipping with a driver, we can always delete the remote branch because:
 	// - we know we have a tracking branch (otherwise there would be no PR to ship via driver)
@@ -211,16 +211,16 @@ func shipStepList(config shipConfig, commitMessage string, repo *git.ProdRepo) (
 	// - we know we are online
 	if config.canShipWithDriver || (config.hasTrackingBranch && len(config.childBranches) == 0 && !config.isOffline) {
 		if config.deleteOriginBranch {
-			result.Append(&steps.DeleteOriginBranchStep{BranchName: config.branchToShip, IsTracking: true})
+			result.Append(&steps.DeleteOriginBranchStep{Branch: config.branchToShip, IsTracking: true})
 		}
 	}
-	result.Append(&steps.DeleteLocalBranchStep{BranchName: config.branchToShip})
-	result.Append(&steps.DeleteParentBranchStep{BranchName: config.branchToShip})
+	result.Append(&steps.DeleteLocalBranchStep{Branch: config.branchToShip})
+	result.Append(&steps.DeleteParentBranchStep{Branch: config.branchToShip})
 	for _, child := range config.childBranches {
-		result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: config.branchToMergeInto})
+		result.Append(&steps.SetParentBranchStep{Branch: child, ParentBranch: config.branchToMergeInto})
 	}
 	if !config.isShippingInitialBranch {
-		result.Append(&steps.CheckoutBranchStep{BranchName: config.initialBranch})
+		result.Append(&steps.CheckoutBranchStep{Branch: config.initialBranch})
 	}
 	err = result.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: !config.isShippingInitialBranch}, repo)
 	return result, err

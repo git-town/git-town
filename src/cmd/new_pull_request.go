@@ -112,6 +112,6 @@ func newPullRequestStepList(config newPullRequestConfig, repo *git.ProdRepo) (ru
 	if err != nil {
 		return runstate.StepList{}, err
 	}
-	result.Append(&steps.CreatePullRequestStep{BranchName: config.InitialBranch})
+	result.Append(&steps.CreatePullRequestStep{Branch: config.InitialBranch})
 	return result, nil
 }

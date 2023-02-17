@@ -9,7 +9,7 @@ import (
 // against the branch with the given name.
 type RebaseBranchStep struct {
 	NoOpStep
-	BranchName  string
+	Branch      string
 	previousSha string
 }
 
@@ -31,7 +31,7 @@ func (step *RebaseBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) err
 	if err != nil {
 		return err
 	}
-	err = repo.Logging.Rebase(step.BranchName)
+	err = repo.Logging.Rebase(step.Branch)
 	if err != nil {
 		repo.Silent.CurrentBranchCache.Invalidate()
 	}

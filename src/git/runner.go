@@ -423,7 +423,7 @@ func (r *Runner) DeleteLocalBranch(name string, force bool) error {
 
 // DeleteMainBranchConfiguration removes the configuration for which branch is the main branch.
 func (r *Runner) DeleteMainBranchConfiguration() error {
-	_, err := r.Run("git", "config", "--unset", config.MainBranchName)
+	_, err := r.Run("git", "config", "--unset", config.MainBranch)
 	if err != nil {
 		return fmt.Errorf("cannot delete main branch configuration: %w", err)
 	}
@@ -659,13 +659,13 @@ func (r *Runner) HasShippableChanges(branch string) (bool, error) {
 
 // HasTrackingBranch indicates whether the local branch with the given name has a remote tracking branch.
 func (r *Runner) HasTrackingBranch(name string) (bool, error) {
-	trackingBranchName := "origin/" + name
+	trackingBranch := "origin/" + name
 	remoteBranches, err := r.RemoteBranches()
 	if err != nil {
 		return false, fmt.Errorf("cannot determine if tracking branch %q exists: %w", name, err)
 	}
 	for _, line := range remoteBranches {
-		if strings.TrimSpace(line) == trackingBranchName {
+		if strings.TrimSpace(line) == trackingBranch {
 			return true, nil
 		}
 	}
@@ -683,7 +683,7 @@ func (r *Runner) IsBranchInSync(branchName string) (bool, error) {
 		if err != nil {
 			return false, err
 		}
-		remoteSha, err := r.ShaForBranch(r.TrackingBranchName(branchName))
+		remoteSha, err := r.ShaForBranch(r.TrackingBranch(branchName))
 		return localSha == remoteSha, err
 	}
 	return true, nil
@@ -769,7 +769,7 @@ func (r *Runner) LocalBranchesWithDeletedTrackingBranches() ([]string, error) {
 		line = strings.Trim(line, "* ")
 		parts := strings.SplitN(line, " ", 2)
 		branchName := parts[0]
-		deleteTrackingBranchStatus := fmt.Sprintf("[%s: gone]", r.TrackingBranchName(branchName))
+		deleteTrackingBranchStatus := fmt.Sprintf("[%s: gone]", r.TrackingBranch(branchName))
 		if strings.Contains(parts[1], deleteTrackingBranchStatus) {
 			result = append(result, branchName)
 		}
@@ -829,7 +829,7 @@ func (r *Runner) Pull() error {
 }
 
 type PushArgs struct {
-	BranchName     string
+	Branch         string
 	Force          bool
 	ForceWithLease bool
 	NoPushHook     bool
@@ -857,8 +857,8 @@ func (r *Runner) PushBranch(options ...PushArgs) error {
 		args = append(args, "-u", option.Remote)
 		provideBranch = true
 	}
-	if option.BranchName != "" && provideBranch {
-		args = append(args, option.BranchName)
+	if option.Branch != "" && provideBranch {
+		args = append(args, option.Branch)
 	}
 	_, err := r.Run("git", args...)
 	if err != nil {
@@ -1010,7 +1010,7 @@ func (r *Runner) ShaForCommit(name string) (string, error) {
 // ShouldPushBranch returns whether the local branch with the given name
 // contains commits that have not been pushed to its tracking branch.
 func (r *Runner) ShouldPushBranch(branch string) (bool, error) {
-	trackingBranch := r.TrackingBranchName(branch)
+	trackingBranch := r.TrackingBranch(branch)
 	out, err := r.Run("git", "rev-list", "--left-right", branch+"..."+trackingBranch)
 	if err != nil {
 		return false, fmt.Errorf("cannot list diff of %q and %q: %w", branch, trackingBranch, err)
@@ -1064,8 +1064,8 @@ func (r *Runner) Tags() ([]string, error) {
 	return result, err
 }
 
-// TrackingBranchName provides the name of the remote branch tracking the local branch with the given name.
-func (r *Runner) TrackingBranchName(branch string) string {
+// TrackingBranch provides the name of the remote branch tracking the local branch with the given name.
+func (r *Runner) TrackingBranch(branch string) string {
 	return "origin/" + branch
 }
 

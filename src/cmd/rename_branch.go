@@ -14,11 +14,11 @@ type renameBranchConfig struct {
 	initialBranch              string
 	isInitialBranchPerennial   bool
 	isOffline                  bool
-	newBranchName              string
+	newBranch                  string
 	noPushHook                 bool
 	oldBranchChildren          []string
 	oldBranchHasTrackingBranch bool
-	oldBranchName              string
+	oldBranch                  string
 }
 
 func renameBranchCommand(repo *git.ProdRepo) *cobra.Command {
@@ -86,21 +86,21 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *git.ProdRe
 		isOffline:                isOffline,
 	}
 	if len(args) == 1 {
-		result.oldBranchName = result.initialBranch
-		result.newBranchName = args[0]
+		result.oldBranch = result.initialBranch
+		result.newBranch = args[0]
 	} else {
-		result.oldBranchName = args[0]
-		result.newBranchName = args[1]
+		result.oldBranch = args[0]
+		result.newBranch = args[1]
 	}
-	if repo.Config.IsMainBranch(result.oldBranchName) {
+	if repo.Config.IsMainBranch(result.oldBranch) {
 		return renameBranchConfig{}, fmt.Errorf("the main branch cannot be renamed")
 	}
 	if !forceFlag {
-		if repo.Config.IsPerennialBranch(result.oldBranchName) {
-			return renameBranchConfig{}, fmt.Errorf("%q is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'", result.oldBranchName)
+		if repo.Config.IsPerennialBranch(result.oldBranch) {
+			return renameBranchConfig{}, fmt.Errorf("%q is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'", result.oldBranch)
 		}
 	}
-	if result.oldBranchName == result.newBranchName {
+	if result.oldBranch == result.newBranch {
 		cli.Exit(fmt.Errorf("cannot rename branch to current name"))
 	}
 	if !result.isOffline {
@@ -109,58 +109,58 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *git.ProdRe
 			return renameBranchConfig{}, err
 		}
 	}
-	hasOldBranch, err := repo.Silent.HasLocalBranch(result.oldBranchName)
+	hasOldBranch, err := repo.Silent.HasLocalBranch(result.oldBranch)
 	if err != nil {
 		return renameBranchConfig{}, err
 	}
 	if !hasOldBranch {
-		return renameBranchConfig{}, fmt.Errorf("there is no branch named %q", result.oldBranchName)
+		return renameBranchConfig{}, fmt.Errorf("there is no branch named %q", result.oldBranch)
 	}
-	isBranchInSync, err := repo.Silent.IsBranchInSync(result.oldBranchName)
+	isBranchInSync, err := repo.Silent.IsBranchInSync(result.oldBranch)
 	if err != nil {
 		return renameBranchConfig{}, err
 	}
 	if !isBranchInSync {
-		return renameBranchConfig{}, fmt.Errorf("%q is not in sync with its tracking branch, please sync the branches before renaming", result.oldBranchName)
+		return renameBranchConfig{}, fmt.Errorf("%q is not in sync with its tracking branch, please sync the branches before renaming", result.oldBranch)
 	}
-	hasNewBranch, err := repo.Silent.HasLocalOrOriginBranch(result.newBranchName)
+	hasNewBranch, err := repo.Silent.HasLocalOrOriginBranch(result.newBranch)
 	if err != nil {
 		return renameBranchConfig{}, err
 	}
 	if hasNewBranch {
-		return renameBranchConfig{}, fmt.Errorf("a branch named %q already exists", result.newBranchName)
+		return renameBranchConfig{}, fmt.Errorf("a branch named %q already exists", result.newBranch)
 	}
 	pushHook, err := repo.Config.PushHook()
 	if err != nil {
 		return renameBranchConfig{}, err
 	}
 	result.noPushHook = !pushHook
-	result.oldBranchChildren = repo.Config.ChildBranches(result.oldBranchName)
-	result.oldBranchHasTrackingBranch, err = repo.Silent.HasTrackingBranch(result.oldBranchName)
+	result.oldBranchChildren = repo.Config.ChildBranches(result.oldBranch)
+	result.oldBranchHasTrackingBranch, err = repo.Silent.HasTrackingBranch(result.oldBranch)
 	return result, err
 }
 
 func renameBranchStepList(config renameBranchConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	result := runstate.StepList{}
-	result.Append(&steps.CreateBranchStep{BranchName: config.newBranchName, StartingPoint: config.oldBranchName})
-	if config.initialBranch == config.oldBranchName {
-		result.Append(&steps.CheckoutBranchStep{BranchName: config.newBranchName})
+	result.Append(&steps.CreateBranchStep{Branch: config.newBranch, StartingPoint: config.oldBranch})
+	if config.initialBranch == config.oldBranch {
+		result.Append(&steps.CheckoutBranchStep{Branch: config.newBranch})
 	}
 	if config.isInitialBranchPerennial {
-		result.Append(&steps.RemoveFromPerennialBranchesStep{BranchName: config.oldBranchName})
-		result.Append(&steps.AddToPerennialBranchesStep{BranchName: config.newBranchName})
+		result.Append(&steps.RemoveFromPerennialBranchesStep{Branch: config.oldBranch})
+		result.Append(&steps.AddToPerennialBranchesStep{Branch: config.newBranch})
 	} else {
-		result.Append(&steps.DeleteParentBranchStep{BranchName: config.oldBranchName})
-		result.Append(&steps.SetParentBranchStep{BranchName: config.newBranchName, ParentBranchName: repo.Config.ParentBranch(config.oldBranchName)})
+		result.Append(&steps.DeleteParentBranchStep{Branch: config.oldBranch})
+		result.Append(&steps.SetParentBranchStep{Branch: config.newBranch, ParentBranch: repo.Config.ParentBranch(config.oldBranch)})
 	}
 	for _, child := range config.oldBranchChildren {
-		result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: config.newBranchName})
+		result.Append(&steps.SetParentBranchStep{Branch: child, ParentBranch: config.newBranch})
 	}
 	if config.oldBranchHasTrackingBranch && !config.isOffline {
-		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.newBranchName, NoPushHook: config.noPushHook})
-		result.Append(&steps.DeleteOriginBranchStep{BranchName: config.oldBranchName, IsTracking: true})
+		result.Append(&steps.CreateTrackingBranchStep{Branch: config.newBranch, NoPushHook: config.noPushHook})
+		result.Append(&steps.DeleteOriginBranchStep{Branch: config.oldBranch, IsTracking: true})
 	}
-	result.Append(&steps.DeleteLocalBranchStep{BranchName: config.oldBranchName})
+	result.Append(&steps.DeleteLocalBranchStep{Branch: config.oldBranch})
 	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, repo)
 	return result, err
 }

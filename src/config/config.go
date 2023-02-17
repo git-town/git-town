@@ -23,10 +23,10 @@ const (
 	GiteaToken                = "git-town.gitea-token"  //nolint:gosec
 	GithubToken               = "git-town.github-token" //nolint:gosec
 	GitlabToken               = "git-town.gitlab-token" //nolint:gosec
-	MainBranchName            = "git-town.main-branch-name"
+	MainBranch                = "git-town.main-branch-name"
 	NewBranchPushFlag         = "git-town.new-branch-push-flag"
 	Offline                   = "git-town.offline"
-	PerennialBranchNames      = "git-town.perennial-branch-names"
+	PerennialBranches         = "git-town.perennial-branch-names"
 	PullBranchStrategy        = "git-town.pull-branch-strategy"
 	PushHook                  = "git-town.push-hook"
 	PushNewBranches           = "git-town.push-new-branches"
@@ -155,9 +155,9 @@ func (gt *GitTown) HostingService() string {
 }
 
 // IsAncestorBranch indicates whether the given branch is an ancestor of the other given branch.
-func (gt *GitTown) IsAncestorBranch(branchName, ancestorBranchName string) bool {
+func (gt *GitTown) IsAncestorBranch(branchName, ancestorBranch string) bool {
 	ancestorBranches := gt.AncestorBranches(branchName)
-	return stringslice.Contains(ancestorBranches, ancestorBranchName)
+	return stringslice.Contains(ancestorBranches, ancestorBranch)
 }
 
 // IsFeatureBranch indicates whether the branch with the given name is
@@ -194,12 +194,12 @@ func (gt *GitTown) IsPerennialBranch(branchName string) bool {
 
 // MainBranch provides the name of the main branch.
 func (gt *GitTown) MainBranch() string {
-	return gt.Storage.LocalOrGlobalConfigValue(MainBranchName)
+	return gt.Storage.LocalOrGlobalConfigValue(MainBranch)
 }
 
 // MainBranch provides the name of the main branch, or the given default value if none is configured.
 func (gt *GitTown) MainBranchOr(defaultValue string) string {
-	configured := gt.Storage.LocalOrGlobalConfigValue(MainBranchName)
+	configured := gt.Storage.LocalOrGlobalConfigValue(MainBranch)
 	if configured != "" {
 		return configured
 	}
@@ -240,7 +240,7 @@ func (gt *GitTown) ParentBranch(branchName string) string {
 
 // PerennialBranches returns all branches that are marked as perennial.
 func (gt *GitTown) PerennialBranches() []string {
-	result := gt.Storage.LocalOrGlobalConfigValue(PerennialBranchNames)
+	result := gt.Storage.LocalOrGlobalConfigValue(PerennialBranches)
 	if result == "" {
 		return []string{}
 	}
@@ -313,7 +313,7 @@ func (gt *GitTown) RemoveLocalGitConfiguration() error {
 
 // RemoveMainBranchConfiguration removes the configuration entry for the main branch name.
 func (gt *GitTown) RemoveMainBranchConfiguration() error {
-	return gt.Storage.RemoveLocalConfigValue(MainBranchName)
+	return gt.Storage.RemoveLocalConfigValue(MainBranch)
 }
 
 // RemoveParentBranch removes the parent branch entry for the given branch
@@ -324,7 +324,7 @@ func (gt *GitTown) RemoveParentBranch(branchName string) error {
 
 // RemovePerennialBranchConfiguration removes the configuration entry for the perennial branches.
 func (gt *GitTown) RemovePerennialBranchConfiguration() error {
-	return gt.Storage.RemoveLocalConfigValue(PerennialBranchNames)
+	return gt.Storage.RemoveLocalConfigValue(PerennialBranches)
 }
 
 // SetCodeHostingDriver sets the "github.code-hosting-driver" setting.
@@ -350,7 +350,7 @@ func (gt *GitTown) SetColorUI(value string) error {
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
 func (gt *GitTown) SetMainBranch(branchName string) error {
-	_, err := gt.Storage.SetLocalConfigValue(MainBranchName, branchName)
+	_, err := gt.Storage.SetLocalConfigValue(MainBranch, branchName)
 	return err
 }
 
@@ -374,14 +374,14 @@ func (gt *GitTown) SetOffline(value bool) error {
 
 // SetParentBranch marks the given branch as the direct parent of the other given branch
 // in the Git Town configuration.
-func (gt *GitTown) SetParentBranch(branchName, parentBranchName string) error {
-	_, err := gt.Storage.SetLocalConfigValue("git-town-branch."+branchName+".parent", parentBranchName)
+func (gt *GitTown) SetParentBranch(branchName, parentBranch string) error {
+	_, err := gt.Storage.SetLocalConfigValue("git-town-branch."+branchName+".parent", parentBranch)
 	return err
 }
 
 // SetPerennialBranches marks the given branches as perennial branches.
 func (gt *GitTown) SetPerennialBranches(branchNames []string) error {
-	_, err := gt.Storage.SetLocalConfigValue(PerennialBranchNames, strings.Join(branchNames, " "))
+	_, err := gt.Storage.SetLocalConfigValue(PerennialBranches, strings.Join(branchNames, " "))
 	return err
 }
 

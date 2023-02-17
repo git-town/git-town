@@ -31,14 +31,14 @@ func (pbd *ParentBranches) EnsureKnowsParentBranches(branchNames []string, repo 
 }
 
 // AskForBranchAncestry prompts the user for all unknown ancestors of the given branch.
-func (pbd *ParentBranches) AskForBranchAncestry(branchName, defaultBranchName string, repo *git.ProdRepo) error {
+func (pbd *ParentBranches) AskForBranchAncestry(branchName, defaultBranch string, repo *git.ProdRepo) error {
 	current := branchName
 	var err error
 	for {
 		parent := repo.Config.ParentBranch(current)
 		if parent == "" { //nolint:nestif
 			pbd.printParentBranchHeader(repo)
-			parent, err = pbd.AskForBranchParent(current, defaultBranchName, repo)
+			parent, err = pbd.AskForBranchParent(current, defaultBranch, repo)
 			if err != nil {
 				return err
 			}
@@ -63,16 +63,16 @@ func (pbd *ParentBranches) AskForBranchAncestry(branchName, defaultBranchName st
 }
 
 // AskForBranchParent prompts the user for the parent of the given branch.
-func (pbd *ParentBranches) AskForBranchParent(branchName, defaultBranchName string, repo *git.ProdRepo) (string, error) {
+func (pbd *ParentBranches) AskForBranchParent(branchName, defaultBranch string, repo *git.ProdRepo) (string, error) {
 	choices, err := repo.Silent.LocalBranchesMainFirst()
 	if err != nil {
 		return "", err
 	}
 	filteredChoices := filterOutSelfAndDescendants(branchName, choices, repo)
 	return askForBranch(askForBranchOptions{
-		branchNames:       append([]string{perennialBranchOption}, filteredChoices...),
-		prompt:            fmt.Sprintf(parentBranchPromptTemplate, branchName),
-		defaultBranchName: defaultBranchName,
+		branches:      append([]string{perennialBranchOption}, filteredChoices...),
+		prompt:        fmt.Sprintf(parentBranchPromptTemplate, branchName),
+		defaultBranch: defaultBranch,
 	})
 }
 

@@ -11,15 +11,15 @@ import (
 // EnsureHasShippableChangesStep asserts that the branch has unique changes not on the main branch.
 type EnsureHasShippableChangesStep struct {
 	NoOpStep
-	BranchName string
+	Branch string
 }
 
 func (step *EnsureHasShippableChangesStep) CreateAutomaticAbortError() error {
-	return fmt.Errorf("the branch %q has no shippable changes", step.BranchName)
+	return fmt.Errorf("the branch %q has no shippable changes", step.Branch)
 }
 
 func (step *EnsureHasShippableChangesStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
-	hasShippableChanges, err := repo.Silent.HasShippableChanges(step.BranchName)
+	hasShippableChanges, err := repo.Silent.HasShippableChanges(step.Branch)
 	if err != nil {
 		return err
 	}
