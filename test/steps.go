@@ -558,6 +558,15 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^the feature branch "([^"]+)"$`, func(branch string) error {
+		err := state.gitEnv.DevRepo.CreateBranch(branch, "main")
+		if err != nil {
+			return err
+		}
+		state.initialLocalBranches = append(state.initialLocalBranches, branch)
+		return nil
+	})
+
 	suite.Step(`^the branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
 		for _, branch := range []string{branch1, branch2} {
 			err := state.gitEnv.DevRepo.CreateBranch(branch, "main")
