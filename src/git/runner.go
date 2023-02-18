@@ -317,12 +317,12 @@ func (r *Runner) CreatePerennialBranches(names ...string) error {
 }
 
 // CreateRemoteBranch creates a remote branch from the given local SHA.
-func (r *Runner) CreateRemoteBranch(localSha, branchName string, noPushHook bool) error {
+func (r *Runner) CreateRemoteBranch(localSha, branch string, noPushHook bool) error {
 	args := []string{"push"}
 	if noPushHook {
 		args = append(args, "--no-verify")
 	}
-	args = append(args, "origin", localSha+":refs/heads/"+branchName)
+	args = append(args, config.OriginRemote, localSha+":refs/heads/"+branch)
 	_, err := r.Run("git", args...)
 	if err != nil {
 		return fmt.Errorf("cannot create remote branch for local SHA %q: %w", localSha, err)
@@ -423,7 +423,7 @@ func (r *Runner) DeleteLocalBranch(name string, force bool) error {
 
 // DeleteMainBranchConfiguration removes the configuration for which branch is the main branch.
 func (r *Runner) DeleteMainBranchConfiguration() error {
-	_, err := r.Run("git", "config", "--unset", config.MainBranchName)
+	_, err := r.Run("git", "config", "--unset", config.MainBranch)
 	if err != nil {
 		return fmt.Errorf("cannot delete main branch configuration: %w", err)
 	}
@@ -432,7 +432,7 @@ func (r *Runner) DeleteMainBranchConfiguration() error {
 
 // DeleteRemoteBranch removes the remote branch of the given local branch.
 func (r *Runner) DeleteRemoteBranch(name string) error {
-	_, err := r.Run("git", "push", "origin", ":"+name)
+	_, err := r.Run("git", "push", config.OriginRemote, ":"+name)
 	if err != nil {
 		return fmt.Errorf("cannot delete tracking branch for %q: %w", name, err)
 	}
@@ -635,7 +635,7 @@ func (r *Runner) HasRebaseInProgress() (bool, error) {
 
 // HasOrigin indicates whether this repo has an origin remote.
 func (r *Runner) HasOrigin() (bool, error) {
-	return r.HasRemote("origin")
+	return r.HasRemote(config.OriginRemote)
 }
 
 // HasRemote indicates whether this repo has a remote with the given name.
@@ -659,13 +659,13 @@ func (r *Runner) HasShippableChanges(branch string) (bool, error) {
 
 // HasTrackingBranch indicates whether the local branch with the given name has a remote tracking branch.
 func (r *Runner) HasTrackingBranch(name string) (bool, error) {
-	trackingBranchName := "origin/" + name
+	trackingBranch := "origin/" + name
 	remoteBranches, err := r.RemoteBranches()
 	if err != nil {
 		return false, fmt.Errorf("cannot determine if tracking branch %q exists: %w", name, err)
 	}
 	for _, line := range remoteBranches {
-		if strings.TrimSpace(line) == trackingBranchName {
+		if strings.TrimSpace(line) == trackingBranch {
 			return true, nil
 		}
 	}
@@ -673,17 +673,17 @@ func (r *Runner) HasTrackingBranch(name string) (bool, error) {
 }
 
 // IsBranchInSync returns whether the branch with the given name is in sync with its tracking branch.
-func (r *Runner) IsBranchInSync(branchName string) (bool, error) {
-	hasTrackingBranch, err := r.HasTrackingBranch(branchName)
+func (r *Runner) IsBranchInSync(branch string) (bool, error) {
+	hasTrackingBranch, err := r.HasTrackingBranch(branch)
 	if err != nil {
 		return false, err
 	}
 	if hasTrackingBranch {
-		localSha, err := r.ShaForBranch(branchName)
+		localSha, err := r.ShaForBranch(branch)
 		if err != nil {
 			return false, err
 		}
-		remoteSha, err := r.ShaForBranch(r.TrackingBranchName(branchName))
+		remoteSha, err := r.ShaForBranch(r.TrackingBranch(branch))
 		return localSha == remoteSha, err
 	}
 	return true, nil
@@ -714,16 +714,16 @@ func (r *Runner) LocalAndOriginBranches() ([]string, error) {
 		return []string{}, fmt.Errorf("cannot determine the local branches")
 	}
 	lines := outcome.OutputLines()
-	branchNames := make(map[string]struct{})
+	branch := make(map[string]struct{})
 	for _, line := range lines {
 		if !strings.Contains(line, " -> ") {
-			branchNames[strings.TrimSpace(strings.Replace(strings.Replace(line, "* ", "", 1), "remotes/origin/", "", 1))] = struct{}{}
+			branch[strings.TrimSpace(strings.Replace(strings.Replace(line, "* ", "", 1), "remotes/origin/", "", 1))] = struct{}{}
 		}
 	}
-	result := make([]string, len(branchNames))
+	result := make([]string, len(branch))
 	i := 0
-	for branchName := range branchNames {
-		result[i] = branchName
+	for branch := range branch {
+		result[i] = branch
 		i++
 	}
 	sort.Strings(result)
@@ -768,10 +768,10 @@ func (r *Runner) LocalBranchesWithDeletedTrackingBranches() ([]string, error) {
 	for _, line := range res.OutputLines() {
 		line = strings.Trim(line, "* ")
 		parts := strings.SplitN(line, " ", 2)
-		branchName := parts[0]
-		deleteTrackingBranchStatus := fmt.Sprintf("[%s: gone]", r.TrackingBranchName(branchName))
+		branch := parts[0]
+		deleteTrackingBranchStatus := fmt.Sprintf("[%s: gone]", r.TrackingBranch(branch))
 		if strings.Contains(parts[1], deleteTrackingBranchStatus) {
-			result = append(result, branchName)
+			result = append(result, branch)
 		}
 	}
 	return result, nil
@@ -829,11 +829,11 @@ func (r *Runner) Pull() error {
 }
 
 type PushArgs struct {
-	BranchName     string
+	Branch         string
 	Force          bool
 	ForceWithLease bool
 	NoPushHook     bool
-	ToOrigin       bool
+	Remote         string
 }
 
 // PushBranch pushes the branch with the given name to origin.
@@ -853,12 +853,12 @@ func (r *Runner) PushBranch(options ...PushArgs) error {
 	if option.ForceWithLease {
 		args = append(args, "--force-with-lease")
 	}
-	if option.ToOrigin {
-		args = append(args, "-u", "origin")
+	if option.Remote != "" {
+		args = append(args, "-u", option.Remote)
 		provideBranch = true
 	}
-	if option.BranchName != "" && provideBranch {
-		args = append(args, option.BranchName)
+	if option.Branch != "" && provideBranch {
+		args = append(args, option.Branch)
 	}
 	_, err := r.Run("git", args...)
 	if err != nil {
@@ -1010,7 +1010,7 @@ func (r *Runner) ShaForCommit(name string) (string, error) {
 // ShouldPushBranch returns whether the local branch with the given name
 // contains commits that have not been pushed to its tracking branch.
 func (r *Runner) ShouldPushBranch(branch string) (bool, error) {
-	trackingBranch := r.TrackingBranchName(branch)
+	trackingBranch := r.TrackingBranch(branch)
 	out, err := r.Run("git", "rev-list", "--left-right", branch+"..."+trackingBranch)
 	if err != nil {
 		return false, fmt.Errorf("cannot list diff of %q and %q: %w", branch, trackingBranch, err)
@@ -1064,8 +1064,8 @@ func (r *Runner) Tags() ([]string, error) {
 	return result, err
 }
 
-// TrackingBranchName provides the name of the remote branch tracking the local branch with the given name.
-func (r *Runner) TrackingBranchName(branch string) string {
+// TrackingBranch provides the name of the remote branch tracking the local branch with the given name.
+func (r *Runner) TrackingBranch(branch string) string {
 	return "origin/" + branch
 }
 

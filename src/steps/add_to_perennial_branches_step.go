@@ -8,13 +8,13 @@ import (
 // AddToPerennialBranchesStep adds the branch with the given name as a perennial branch.
 type AddToPerennialBranchesStep struct {
 	NoOpStep
-	BranchName string
+	Branch string
 }
 
 func (step *AddToPerennialBranchesStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
-	return &RemoveFromPerennialBranchesStep{BranchName: step.BranchName}, nil
+	return &RemoveFromPerennialBranchesStep{Branch: step.Branch}, nil
 }
 
 func (step *AddToPerennialBranchesStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
-	return repo.Config.AddToPerennialBranches(step.BranchName)
+	return repo.Config.AddToPerennialBranches(step.Branch)
 }

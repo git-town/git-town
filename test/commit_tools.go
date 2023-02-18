@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/cucumber/messages-go/v10"
+	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/test/helpers"
 )
@@ -13,7 +14,7 @@ func DefaultCommit(filenameSuffix string) git.Commit {
 	return git.Commit{
 		FileName:    "default_file_name_" + filenameSuffix,
 		Message:     "default commit message",
-		Locations:   []string{"local", "origin"},
+		Locations:   []string{"local", config.OriginRemote},
 		Branch:      "main",
 		FileContent: "default file content",
 	}
@@ -22,7 +23,7 @@ func DefaultCommit(filenameSuffix string) git.Commit {
 // FromGherkinTable provides a Commit collection representing the data in the given Gherkin table.
 func FromGherkinTable(table *messages.PickleStepArgument_PickleTable) ([]git.Commit, error) {
 	columnNames := helpers.TableFields(table)
-	lastBranchName := ""
+	lastBranch := ""
 	lastLocationName := ""
 	result := []git.Commit{}
 	counter := helpers.Counter{}
@@ -33,9 +34,9 @@ func FromGherkinTable(table *messages.PickleStepArgument_PickleTable) ([]git.Com
 			cellValue := cell.Value
 			if columnName == "BRANCH" {
 				if cell.Value == "" {
-					cellValue = lastBranchName
+					cellValue = lastBranch
 				} else {
-					lastBranchName = cellValue
+					lastBranch = cellValue
 				}
 			}
 			if columnName == "LOCATION" {

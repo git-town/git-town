@@ -23,11 +23,11 @@ func pruneBranchesCommand(repo *git.ProdRepo) *cobra.Command {
 Deletes branches whose tracking branch no longer exists from the local repository.
 This usually means the branch was shipped or killed on another machine.`,
 		Run: func(cmd *cobra.Command, args []string) {
-			config, err := createPruneBranchesConfig(repo)
+			config, err := determinePruneBranchesConfig(repo)
 			if err != nil {
 				cli.Exit(err)
 			}
-			stepList, err := createPruneBranchesStepList(config, repo)
+			stepList, err := pruneBranchesStepList(config, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
@@ -50,7 +50,7 @@ This usually means the branch was shipped or killed on another machine.`,
 	}
 }
 
-func createPruneBranchesConfig(repo *git.ProdRepo) (pruneBranchesConfig, error) {
+func determinePruneBranchesConfig(repo *git.ProdRepo) (pruneBranchesConfig, error) {
 	hasOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
 		return pruneBranchesConfig{}, err
@@ -77,24 +77,24 @@ func createPruneBranchesConfig(repo *git.ProdRepo) (pruneBranchesConfig, error) 
 	return result, nil
 }
 
-func createPruneBranchesStepList(config pruneBranchesConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+func pruneBranchesStepList(config pruneBranchesConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	initialBranch := config.initialBranch
 	result := runstate.StepList{}
 	for _, branchWithDeletedRemote := range config.localBranchesWithDeletedTrackingBranches {
 		if initialBranch == branchWithDeletedRemote {
-			result.Append(&steps.CheckoutBranchStep{BranchName: config.mainBranch})
+			result.Append(&steps.CheckoutBranchStep{Branch: config.mainBranch})
 		}
 		parent := repo.Config.ParentBranch(branchWithDeletedRemote)
 		if parent != "" {
 			for _, child := range repo.Config.ChildBranches(branchWithDeletedRemote) {
-				result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: parent})
+				result.Append(&steps.SetParentBranchStep{Branch: child, ParentBranch: parent})
 			}
-			result.Append(&steps.DeleteParentBranchStep{BranchName: branchWithDeletedRemote})
+			result.Append(&steps.DeleteParentBranchStep{Branch: branchWithDeletedRemote})
 		}
 		if repo.Config.IsPerennialBranch(branchWithDeletedRemote) {
-			result.Append(&steps.RemoveFromPerennialBranchesStep{BranchName: branchWithDeletedRemote})
+			result.Append(&steps.RemoveFromPerennialBranchesStep{Branch: branchWithDeletedRemote})
 		}
-		result.Append(&steps.DeleteLocalBranchStep{BranchName: branchWithDeletedRemote})
+		result.Append(&steps.DeleteLocalBranchStep{Branch: branchWithDeletedRemote})
 	}
 	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, repo)
 	return result, err

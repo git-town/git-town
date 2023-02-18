@@ -8,7 +8,7 @@ import (
 // MergeBranchStep merges the branch with the given name into the current branch.
 type MergeBranchStep struct {
 	NoOpStep
-	BranchName  string
+	Branch      string
 	previousSha string
 }
 
@@ -30,5 +30,5 @@ func (step *MergeBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) erro
 	if err != nil {
 		return err
 	}
-	return repo.Logging.MergeBranchNoEdit(step.BranchName)
+	return repo.Logging.MergeBranchNoEdit(step.Branch)
 }

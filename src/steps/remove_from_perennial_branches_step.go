@@ -8,13 +8,13 @@ import (
 // RemoveFromPerennialBranchesStep removes the branch with the given name as a perennial branch.
 type RemoveFromPerennialBranchesStep struct {
 	NoOpStep
-	BranchName string
+	Branch string
 }
 
 func (step *RemoveFromPerennialBranchesStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
-	return &AddToPerennialBranchesStep{BranchName: step.BranchName}, nil
+	return &AddToPerennialBranchesStep{Branch: step.Branch}, nil
 }
 
 func (step *RemoveFromPerennialBranchesStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
-	return repo.Config.RemoveFromPerennialBranches(step.BranchName)
+	return repo.Config.RemoveFromPerennialBranches(step.Branch)
 }
