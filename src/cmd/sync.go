@@ -200,11 +200,11 @@ func syncBranchSteps(branch string, pushBranch bool, repo *git.ProdRepo) (runsta
 			result.Append(&steps.PushBranchStep{Branch: branch})
 			return result, nil
 		}
-		steps, err := pushFeatureBranchSteps(branch, syncStrategy, pushHook)
+		step, err := pushFeatureBranchStep(branch, syncStrategy, pushHook)
 		if err != nil {
 			return runstate.StepList{}, err
 		}
-		result.AppendList(steps)
+		result.Append(step)
 	}
 	return result, nil
 }
@@ -284,13 +284,13 @@ func syncParentStep(parentBranch, syncStrategy string) (steps.Step, error) {
 	}
 }
 
-func pushFeatureBranchSteps(branch, syncStrategy string, pushHook bool) (runstate.StepList, error) {
+func pushFeatureBranchStep(branch, syncStrategy string, pushHook bool) (steps.Step, error) {
 	switch syncStrategy {
 	case "merge":
-		return runstate.NewStepList(&steps.PushBranchStep{Branch: branch, NoPushHook: !pushHook}), nil
+		return &steps.PushBranchStep{Branch: branch, NoPushHook: !pushHook}, nil
 	case "rebase":
-		return runstate.NewStepList(&steps.PushBranchStep{Branch: branch, ForceWithLease: true}), nil
+		return &steps.PushBranchStep{Branch: branch, ForceWithLease: true}, nil
 	default:
-		return runstate.StepList{}, fmt.Errorf("unknown syncStrategy value: %q", syncStrategy)
+		return nil, fmt.Errorf("unknown syncStrategy value: %q", syncStrategy)
 	}
 }
