@@ -38,4 +38,6 @@ issues:
     - linters:
         - goerr113
       text: "do not define dynamic errors"
-    - path:
+    - linters:
+        - exhaustruct
+      text: NoOpStep is missing in
