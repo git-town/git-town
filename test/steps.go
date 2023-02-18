@@ -566,7 +566,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		state.initialBranchHierarchy.AddRow(branch, "main")
-		err = state.gitEnv.DevRepo.PushBranch(git.PushArgs{BranchName: branch, ToOrigin: true})
+		err = state.gitEnv.DevRepo.PushBranch(git.PushArgs{Branch: branch, Remote: config.OriginRemote})
 		if err != nil {
 			return err
 		}

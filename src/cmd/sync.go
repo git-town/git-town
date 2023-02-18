@@ -179,7 +179,7 @@ func deleteBranchSteps(branch string, config syncConfig, repo *git.ProdRepo) (ru
 	parent := repo.Config.ParentBranch(branch)
 	if parent != "" {
 		for _, child := range repo.Config.ChildBranches(branch) {
-			result.Append(&steps.SetParentBranchStep{Branch: child, ParentBranchName: parent})
+			result.Append(&steps.SetParentBranchStep{Branch: child, ParentBranch: parent})
 		}
 		result.Append(&steps.DeleteParentBranchStep{Branch: branch})
 	}
@@ -267,13 +267,9 @@ func syncFeatureBranchSteps(branch string, branchesWithDeletedRemote []string, r
 	if newParentBranch == nil {
 		return runstate.StepList{}, nil
 	}
-	switch syncStrategy {
-	case "merge":
-		result.Append(&steps.MergeBranchStep{Branch: *newParentBranch})
-	case "rebase":
-		result.Append(&steps.RebaseBranchStep{Branch: *newParentBranch})
-	default:
-		return runstate.StepList{}, fmt.Errorf("unknown syncStrategy value: %q", syncStrategy)
+	steps, err := syncParentSteps(*newParentBranch, syncStrategy)
+	if err != nil {
+		return runstate.StepList{}, nil
 	}
 	result.AppendList(steps)
 	return result, nil
