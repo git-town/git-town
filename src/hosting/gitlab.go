@@ -9,7 +9,7 @@ import (
 	"github.com/xanzy/go-gitlab"
 )
 
-// GitlabConfig provides access to the API of GitLab installations.
+// GitlabConfig contains connection information for GitLab based hosting platforms.
 type GitlabConfig struct {
 	apiToken   string
 	hostname   string
@@ -81,6 +81,7 @@ func (c GitlabConfig) RepositoryURL() string {
 	return fmt.Sprintf("%s/%s", c.BaseURL(), c.ProjectPath())
 }
 
+// GitlabDriver provides access to the API of GitLab installations.
 type GitlabDriver struct {
 	GitlabConfig
 	client *gitlab.Client

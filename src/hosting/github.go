@@ -11,7 +11,7 @@ import (
 	"golang.org/x/oauth2"
 )
 
-// GithubConfig provides access to the API of GitHub installations.
+// GithubConfig contains connection information for Github-based hosting platforms.
 type GithubConfig struct {
 	apiToken   string
 	config     config
@@ -75,6 +75,7 @@ func (c GithubConfig) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", c.hostname, c.owner, c.repository)
 }
 
+// GithubDriver provides access to the API of GitHub installations.
 type GithubDriver struct {
 	GithubConfig
 	client *github.Client // TODO: remove pointer

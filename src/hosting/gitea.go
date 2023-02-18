@@ -11,7 +11,7 @@ import (
 	"golang.org/x/oauth2"
 )
 
-// GiteaConfig provides access to the API of Gitea installations.
+// GiteaConfig contains connection information for Gitea-based hosting platforms.
 type GiteaConfig struct {
 	apiToken   string
 	hostname   string
@@ -66,6 +66,7 @@ func (c GiteaConfig) HostingServiceName() string {
 	return "Gitea"
 }
 
+// GiteaDriver provides access to the API of Gitea installations.
 type GiteaDriver struct {
 	GiteaConfig
 	client *gitea.Client
