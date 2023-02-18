@@ -4,8 +4,7 @@ linters:
     - cyclop # we keep a tab on function length ourselves
     - deadcode # deprecated
     - dupl # too many false positives
-    - exhaustruct # not applicable at the moment
-    - exhaustivestruct # not applicable at the moment
+    - exhaustivestruct # abandoned
     - forbidigo # Git Town prints a lot to the CLI
     - funlen # we keep track of this via code reviews
     - gci # we prefer keeping import statements as one blocks without empty lines
@@ -39,3 +38,4 @@ issues:
     - linters:
         - goerr113
       text: "do not define dynamic errors"
+    - path:
