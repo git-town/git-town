@@ -217,17 +217,17 @@ func syncFeatureBranchSteps(branch string, repo *git.ProdRepo) (runstate.StepLis
 	}
 	result := runstate.StepList{}
 	if hasTrackingBranch {
-		steps, err := syncTrackingBranchSteps(repo.Silent.TrackingBranch(branch), syncStrategy)
+		step, err := syncTrackingBranchStep(repo.Silent.TrackingBranch(branch), syncStrategy)
 		if err != nil {
 			return runstate.StepList{}, err
 		}
-		result.AppendList(steps)
+		result.Append(step)
 	}
-	steps, err := syncParentSteps(repo.Config.ParentBranch(branch), syncStrategy)
+	step, err := syncParentStep(repo.Config.ParentBranch(branch), syncStrategy)
 	if err != nil {
 		return runstate.StepList{}, err
 	}
-	result.AppendList(steps)
+	result.Append(step)
 	return result, nil
 }
 
@@ -238,10 +238,11 @@ func syncNonFeatureBranchSteps(branch string, repo *git.ProdRepo) (runstate.Step
 	}
 	result := runstate.StepList{}
 	if hasTrackingBranch {
-		result, err = syncTrackingBranchSteps(repo.Silent.TrackingBranch(branch), repo.Config.PullBranchStrategy())
+		step, err := syncTrackingBranchStep(repo.Silent.TrackingBranch(branch), repo.Config.PullBranchStrategy())
 		if err != nil {
 			return runstate.StepList{}, err
 		}
+		result.Append(step)
 	}
 	mainBranch := repo.Config.MainBranch()
 	hasUpstream, err := repo.Silent.HasRemote("upstream")
@@ -260,26 +261,26 @@ func syncNonFeatureBranchSteps(branch string, repo *git.ProdRepo) (runstate.Step
 }
 
 // syncTrackingBranchStep provides the steps to sync the given tracking branch into the current branch.
-func syncTrackingBranchSteps(trackingBranch, syncStrategy string) (runstate.StepList, error) {
+func syncTrackingBranchStep(trackingBranch, syncStrategy string) (steps.Step, error) {
 	switch syncStrategy {
 	case "merge":
-		return runstate.NewStepList(&steps.MergeBranchStep{Branch: trackingBranch}), nil
+		return &steps.MergeBranchStep{Branch: trackingBranch}, nil
 	case "rebase":
-		return runstate.NewStepList(&steps.RebaseBranchStep{Branch: trackingBranch}), nil
+		return &steps.RebaseBranchStep{Branch: trackingBranch}, nil
 	default:
-		return runstate.StepList{}, fmt.Errorf("unknown syncStrategy value: %q", syncStrategy)
+		return nil, fmt.Errorf("unknown syncStrategy value: %q", syncStrategy)
 	}
 }
 
-// syncParentSteps provides the steps to sync the given parent branch into the current branch.
-func syncParentSteps(parentBranch, syncStrategy string) (runstate.StepList, error) {
+// syncParentStep provides the steps to sync the given parent branch into the current branch.
+func syncParentStep(parentBranch, syncStrategy string) (steps.Step, error) {
 	switch syncStrategy {
 	case "merge":
-		return runstate.NewStepList(&steps.MergeBranchStep{Branch: parentBranch}), nil
+		return &steps.MergeBranchStep{Branch: parentBranch}, nil
 	case "rebase":
-		return runstate.NewStepList(&steps.RebaseBranchStep{Branch: parentBranch}), nil
+		return &steps.RebaseBranchStep{Branch: parentBranch}, nil
 	default:
-		return runstate.StepList{}, fmt.Errorf("unknown syncStrategy value: %q", syncStrategy)
+		return nil, fmt.Errorf("unknown syncStrategy value: %q", syncStrategy)
 	}
 }
 
