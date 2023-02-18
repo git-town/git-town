@@ -23,13 +23,15 @@ const (
 func setupGitlabDriver(t *testing.T, token string) (*hosting.GitlabDriver, func()) {
 	t.Helper()
 	httpmock.Activate()
-	config := mockConfig{
+	mc := mockConfig{
 		originURL:   "git@gitlab.com:git-town/git-town.git",
 		gitLabToken: token,
 	}
-	url := giturl.Parse(config.originURL)
-	driver := hosting.NewGitlabDriver(*url, config, log)
-	assert.NotNil(t, driver)
+	url := giturl.Parse(mc.originURL)
+	gitlabConfig := hosting.NewGitlabConfig(*url, mc)
+	assert.NotNil(t, gitlabConfig)
+	driver, err := gitlabConfig.Driver(nil)
+	assert.NoError(t, err)
 	return driver, func() {
 		httpmock.DeactivateAndReset()
 	}
@@ -43,7 +45,7 @@ func TestNewGitlabDriver(t *testing.T) {
 			originURL: "git@gitlab.com:gitlab-com/www-gitlab-com.git",
 		}
 		url := giturl.Parse(config.originURL)
-		driver := hosting.NewGitlabDriver(*url, config, log)
+		driver := hosting.NewGitlabConfig(*url, config)
 		assert.NotNil(t, driver)
 		assert.Equal(t, "GitLab", driver.HostingServiceName())
 		assert.Equal(t, "https://gitlab.com/gitlab-com/www-gitlab-com", driver.RepositoryURL())
@@ -55,7 +57,7 @@ func TestNewGitlabDriver(t *testing.T) {
 			originURL: "git@gitlab.com:gitlab-org/quality/triage-ops.git",
 		}
 		url := giturl.Parse(config.originURL)
-		driver := hosting.NewGitlabDriver(*url, config, log)
+		driver := hosting.NewGitlabConfig(*url, config)
 		assert.NotNil(t, driver)
 		assert.Equal(t, "GitLab", driver.HostingServiceName())
 		assert.Equal(t, "https://gitlab.com/gitlab-org/quality/triage-ops", driver.RepositoryURL())
@@ -68,7 +70,7 @@ func TestNewGitlabDriver(t *testing.T) {
 			originURL:      "git@self-hosted-gitlab.com:git-town/git-town.git",
 		}
 		url := giturl.Parse(config.originURL)
-		driver := hosting.NewGitlabDriver(*url, config, log)
+		driver := hosting.NewGitlabConfig(*url, config)
 		assert.NotNil(t, driver)
 		assert.Equal(t, "GitLab", driver.HostingServiceName())
 		assert.Equal(t, "https://self-hosted-gitlab.com/git-town/git-town", driver.RepositoryURL())
@@ -81,7 +83,7 @@ func TestNewGitlabDriver(t *testing.T) {
 			originOverride: "gitlab.com",
 		}
 		url := giturl.Parse(config.originURL)
-		driver := hosting.NewGitlabDriver(*url, config, log)
+		driver := hosting.NewGitlabConfig(*url, config)
 		assert.NotNil(t, driver)
 		assert.Equal(t, "GitLab", driver.HostingServiceName())
 		assert.Equal(t, "https://gitlab.com", driver.BaseURL())

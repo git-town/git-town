@@ -61,7 +61,10 @@ GitHub's feature to automatically delete head branches,
 run "git config %s false"
 and Git Town will leave it up to your origin server to delete the remote branch.`, config.GithubToken, config.ShipDeleteRemoteBranch),
 		Run: func(cmd *cobra.Command, args []string) {
-			driver := hosting.NewDriver(&repo.Config, &repo.Silent, cli.PrintDriverAction)
+			driver, err := hosting.NewDriver(&repo.Config, &repo.Silent, cli.PrintDriverAction)
+			if err != nil {
+				cli.Exit(err)
+			}
 			config, err := determineShipConfig(args, driver, repo)
 			if err != nil {
 				cli.Exit(err)

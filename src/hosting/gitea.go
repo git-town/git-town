@@ -11,20 +11,18 @@ import (
 	"golang.org/x/oauth2"
 )
 
-// GiteaDriver provides access to the API of Gitea installations.
-type GiteaDriver struct {
+// GiteaConfig provides access to the API of Gitea installations.
+type GiteaConfig struct {
 	apiToken   string
-	client     *gitea.Client
 	hostname   string
-	log        logFn
 	originURL  string
 	owner      string
 	repository string
 }
 
-// NewGiteaDriver provides a Gitea driver instance if the given repo configuration is for a Gitea repo,
+// NewGiteaConfig provides a Gitea driver instance if the given repo configuration is for a Gitea repo,
 // otherwise nil.
-func NewGiteaDriver(url giturl.Parts, config config, log logFn) *GiteaDriver {
+func NewGiteaConfig(url giturl.Parts, config config) *GiteaConfig {
 	driverType := config.HostingService()
 	manualHostName := config.OriginOverride()
 	if manualHostName != "" {
@@ -33,116 +31,45 @@ func NewGiteaDriver(url giturl.Parts, config config, log logFn) *GiteaDriver {
 	if driverType != "gitea" && url.Host != "gitea.com" {
 		return nil
 	}
-	return &GiteaDriver{
+	return &GiteaConfig{
 		originURL:  config.OriginURL(),
 		hostname:   url.Host,
 		apiToken:   config.GiteaToken(),
-		log:        log,
 		owner:      url.Org,
 		repository: url.Repo,
 	}
 }
 
-func (d *GiteaDriver) LoadPullRequestInfo(branch, parentBranch string) (PullRequestInfo, error) {
-	if d.apiToken == "" {
-		return PullRequestInfo{}, nil
+func (c GiteaConfig) Driver(log logFn) GiteaDriver {
+	ts := oauth2.StaticTokenSource(
+		&oauth2.Token{AccessToken: c.apiToken},
+	)
+	tc := oauth2.NewClient(context.Background(), ts)
+	client := gitea.NewClientWithHTTP(fmt.Sprintf("https://%s", c.hostname), tc)
+	return GiteaDriver{
+		client:      client,
+		GiteaConfig: c,
+		log:         log,
 	}
-	d.connect()
-	openPullRequests, err := d.client.ListRepoPullRequests(d.owner, d.repository, gitea.ListPullRequestsOptions{
-		ListOptions: gitea.ListOptions{
-			PageSize: 50,
-		},
-		State: gitea.StateOpen,
-	})
-	if err != nil {
-		return PullRequestInfo{}, err
-	}
-	baseName := parentBranch
-	headName := d.owner + "/" + branch
-	pullRequests := filterPullRequests(openPullRequests, baseName, headName)
-	if len(pullRequests) != 1 {
-		return PullRequestInfo{}, nil
-	}
-	pullRequest := pullRequests[0]
-	if !pullRequest.Mergeable {
-		return PullRequestInfo{}, nil
-	}
-	result := PullRequestInfo{
-		CanMergeWithAPI:      true,
-		DefaultCommitMessage: createDefaultCommitMessage(pullRequest),
-		PullRequestNumber:    pullRequest.Index,
-	}
-	return result, nil
 }
 
-func (d *GiteaDriver) NewPullRequestURL(branch string, parentBranch string) (string, error) {
+func (c GiteaConfig) NewPullRequestURL(branch string, parentBranch string) (string, error) {
 	toCompare := parentBranch + "..." + branch
-	return fmt.Sprintf("%s/compare/%s", d.RepositoryURL(), url.PathEscape(toCompare)), nil
+	return fmt.Sprintf("%s/compare/%s", c.RepositoryURL(), url.PathEscape(toCompare)), nil
 }
 
-func (d *GiteaDriver) RepositoryURL() string {
-	return fmt.Sprintf("https://%s/%s/%s", d.hostname, d.owner, d.repository)
+func (c GiteaConfig) RepositoryURL() string {
+	return fmt.Sprintf("https://%s/%s/%s", c.hostname, c.owner, c.repository)
 }
 
-func (d *GiteaDriver) HostingServiceName() string {
+func (c GiteaConfig) HostingServiceName() string {
 	return "Gitea"
 }
 
-//nolint:nonamedreturns  // return value isn't obvious from function name
-func (d *GiteaDriver) MergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
-	d.connect()
-	openPullRequests, err := d.client.ListRepoPullRequests(d.owner, d.repository, gitea.ListPullRequestsOptions{
-		ListOptions: gitea.ListOptions{
-			PageSize: 50,
-		},
-		State: gitea.StateOpen,
-	})
-	if err != nil {
-		return "", err
-	}
-	baseName := options.Branch
-	newBaseName := options.ParentBranch
-	err = d.apiRetargetPullRequests(filterPullRequests(openPullRequests, baseName, ""), newBaseName)
-	if err != nil {
-		return "", err
-	}
-	commitMessageParts := strings.SplitN(options.CommitMessage, "\n", 2)
-	commitTitle := commitMessageParts[0]
-	commitMessage := ""
-	if len(commitMessageParts) == 2 {
-		commitMessage = commitMessageParts[1]
-	}
-	return d.apiMergePullRequest(options.PullRequestNumber, commitTitle, commitMessage)
-}
-
-// Helper
-
-func (d *GiteaDriver) connect() {
-	if d.client == nil {
-		ts := oauth2.StaticTokenSource(
-			&oauth2.Token{AccessToken: d.apiToken},
-		)
-		tc := oauth2.NewClient(context.Background(), ts)
-		d.client = gitea.NewClientWithHTTP(fmt.Sprintf("https://%s", d.hostname), tc)
-	}
-}
-
-func createDefaultCommitMessage(pullRequest *gitea.PullRequest) string {
-	return fmt.Sprintf("%s (#%d)", pullRequest.Title, pullRequest.Index)
-}
-
-func filterPullRequests(pullRequests []*gitea.PullRequest, baseName, headName string) []*gitea.PullRequest {
-	pullRequestsFiltered := []*gitea.PullRequest{}
-	for _, pullRequest := range pullRequests {
-		if pullRequest.Base.Name != baseName {
-			break
-		}
-		if headName != "" && pullRequest.Head.Name != headName {
-			break
-		}
-		pullRequestsFiltered = append(pullRequestsFiltered, pullRequest)
-	}
-	return pullRequestsFiltered
+type GiteaDriver struct {
+	GiteaConfig
+	client *gitea.Client
+	log    logFn
 }
 
 //nolint:nonamedreturns  // return value isn't obvious from function name
@@ -187,4 +114,79 @@ func (d *GiteaDriver) apiRetargetPullRequests(pullRequests []*gitea.PullRequest,
 		// }
 	}
 	return nil
+}
+
+func (d *GiteaDriver) LoadPullRequestInfo(branch, parentBranch string) (PullRequestInfo, error) {
+	if d.apiToken == "" {
+		return PullRequestInfo{}, nil
+	}
+	openPullRequests, err := d.client.ListRepoPullRequests(d.owner, d.repository, gitea.ListPullRequestsOptions{
+		ListOptions: gitea.ListOptions{
+			PageSize: 50,
+		},
+		State: gitea.StateOpen,
+	})
+	if err != nil {
+		return PullRequestInfo{}, err
+	}
+	baseName := parentBranch
+	headName := d.owner + "/" + branch
+	pullRequests := filterPullRequests(openPullRequests, baseName, headName)
+	if len(pullRequests) != 1 {
+		return PullRequestInfo{}, nil
+	}
+	pullRequest := pullRequests[0]
+	if !pullRequest.Mergeable {
+		return PullRequestInfo{}, nil
+	}
+	result := PullRequestInfo{
+		CanMergeWithAPI:      true,
+		DefaultCommitMessage: createDefaultCommitMessage(pullRequest),
+		PullRequestNumber:    pullRequest.Index,
+	}
+	return result, nil
+}
+
+//nolint:nonamedreturns  // return value isn't obvious from function name
+func (d *GiteaDriver) MergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
+	openPullRequests, err := d.client.ListRepoPullRequests(d.owner, d.repository, gitea.ListPullRequestsOptions{
+		ListOptions: gitea.ListOptions{
+			PageSize: 50,
+		},
+		State: gitea.StateOpen,
+	})
+	if err != nil {
+		return "", err
+	}
+	baseName := options.Branch
+	newBaseName := options.ParentBranch
+	err = d.apiRetargetPullRequests(filterPullRequests(openPullRequests, baseName, ""), newBaseName)
+	if err != nil {
+		return "", err
+	}
+	commitMessageParts := strings.SplitN(options.CommitMessage, "\n", 2)
+	commitTitle := commitMessageParts[0]
+	commitMessage := ""
+	if len(commitMessageParts) == 2 {
+		commitMessage = commitMessageParts[1]
+	}
+	return d.apiMergePullRequest(options.PullRequestNumber, commitTitle, commitMessage)
+}
+
+func createDefaultCommitMessage(pullRequest *gitea.PullRequest) string {
+	return fmt.Sprintf("%s (#%d)", pullRequest.Title, pullRequest.Index)
+}
+
+func filterPullRequests(pullRequests []*gitea.PullRequest, baseName, headName string) []*gitea.PullRequest {
+	pullRequestsFiltered := []*gitea.PullRequest{}
+	for _, pullRequest := range pullRequests {
+		if pullRequest.Base.Name != baseName {
+			break
+		}
+		if headName != "" && pullRequest.Head.Name != headName {
+			break
+		}
+		pullRequestsFiltered = append(pullRequestsFiltered, pullRequest)
+	}
+	return pullRequestsFiltered
 }

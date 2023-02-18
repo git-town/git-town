@@ -27,7 +27,10 @@ When using SSH identities, run
 "git config %s <HOSTNAME>"
 where HOSTNAME matches what is in your ssh config file.`, config.CodeHostingDriver, config.CodeHostingOriginHostname),
 		Run: func(cmd *cobra.Command, args []string) {
-			driver := hosting.NewDriver(&repo.Config, &repo.Silent, cli.PrintDriverAction)
+			driver, err := hosting.NewDriver(&repo.Config, &repo.Silent, cli.PrintDriverAction)
+			if err != nil {
+				cli.Exit(err)
+			}
 			if driver == nil {
 				cli.Exit(hosting.UnsupportedServiceError())
 			}

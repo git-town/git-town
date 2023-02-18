@@ -28,9 +28,10 @@ func setupGiteaDriver(t *testing.T, token string) (*hosting.GiteaDriver, func())
 		giteaToken: token,
 	}
 	url := giturl.Parse(config.originURL)
-	driver := hosting.NewGiteaDriver(*url, config, log)
-	assert.NotNil(t, driver)
-	return driver, func() {
+	giteaConfig := hosting.NewGiteaConfig(*url, config)
+	assert.NotNil(t, giteaConfig)
+	driver := giteaConfig.Driver(log)
+	return &driver, func() {
 		httpmock.DeactivateAndReset()
 	}
 }
@@ -44,7 +45,7 @@ func TestNewGiteaDriver(t *testing.T) {
 			originURL:      "git@self-hosted-gitea.com:git-town/git-town.git",
 		}
 		url := giturl.Parse(config.originURL)
-		driver := hosting.NewGiteaDriver(*url, config, log)
+		driver := hosting.NewGiteaConfig(*url, config)
 		assert.NotNil(t, driver)
 		assert.Equal(t, "Gitea", driver.HostingServiceName())
 		assert.Equal(t, "https://self-hosted-gitea.com/git-town/git-town", driver.RepositoryURL())
@@ -57,7 +58,7 @@ func TestNewGiteaDriver(t *testing.T) {
 			originOverride: "gitea.com",
 		}
 		url := giturl.Parse(config.originURL)
-		driver := hosting.NewGiteaDriver(*url, config, log)
+		driver := hosting.NewGiteaConfig(*url, config)
 		assert.NotNil(t, driver)
 		assert.Equal(t, "Gitea", driver.HostingServiceName())
 		assert.Equal(t, "https://gitea.com/git-town/git-town", driver.RepositoryURL())
