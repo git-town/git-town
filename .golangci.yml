@@ -41,3 +41,6 @@ issues:
     - linters:
         - exhaustruct
       text: NoOpStep is missing in
+    - linters:
+        - exhaustruct
+      text: are missing in mockConfig
