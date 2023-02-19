@@ -76,33 +76,33 @@ where hostname matches what is in your ssh config file.`, config.CodeHostingDriv
 	}
 }
 
-func determineNewPullRequestConfig(repo *git.ProdRepo) (newPullRequestConfig, error) {
+func determineNewPullRequestConfig(repo *git.ProdRepo) (*newPullRequestConfig, error) {
 	hasOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
-		return newPullRequestConfig{}, err
+		return nil, err
 	}
 	if hasOrigin {
 		err := repo.Logging.Fetch()
 		if err != nil {
-			return newPullRequestConfig{}, err
+			return nil, err
 		}
 	}
 	initialBranch, err := repo.Silent.CurrentBranch()
 	if err != nil {
-		return newPullRequestConfig{}, err
+		return nil, err
 	}
 	parentDialog := dialog.ParentBranches{}
 	err = parentDialog.EnsureKnowsParentBranches([]string{initialBranch}, repo)
 	if err != nil {
-		return newPullRequestConfig{}, err
+		return nil, err
 	}
-	return newPullRequestConfig{
+	return &newPullRequestConfig{
 		InitialBranch:  initialBranch,
 		BranchesToSync: append(repo.Config.AncestorBranches(initialBranch), initialBranch),
 	}, nil
 }
 
-func newPullRequestStepList(config newPullRequestConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+func newPullRequestStepList(config *newPullRequestConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	for _, branch := range config.BranchesToSync {
 		steps, err := syncBranchSteps(branch, true, repo)

@@ -57,79 +57,86 @@ Does not delete perennial branches nor the main branch.`,
 	}
 }
 
-func determineKillConfig(args []string, repo *git.ProdRepo) (killConfig, error) {
+func determineKillConfig(args []string, repo *git.ProdRepo) (*killConfig, error) {
 	initialBranch, err := repo.Silent.CurrentBranch()
 	if err != nil {
-		return killConfig{}, err
+		return nil, err
 	}
-	result := killConfig{initialBranch: initialBranch}
+	var targetBranch string
 	if len(args) == 0 {
-		result.targetBranch = result.initialBranch
+		targetBranch = initialBranch
 	} else {
-		result.targetBranch = args[0]
+		targetBranch = args[0]
 	}
-	if !repo.Config.IsFeatureBranch(result.targetBranch) {
-		return result, fmt.Errorf("you can only kill feature branches")
+	if !repo.Config.IsFeatureBranch(targetBranch) {
+		return nil, fmt.Errorf("you can only kill feature branches")
 	}
-	result.isTargetBranchLocal, err = repo.Silent.HasLocalBranch(result.targetBranch)
+	isTargetBranchLocal, err := repo.Silent.HasLocalBranch(targetBranch)
 	if err != nil {
-		return result, err
+		return nil, err
 	}
-	if result.isTargetBranchLocal {
+	if isTargetBranchLocal {
 		parentDialog := dialog.ParentBranches{}
-		err = parentDialog.EnsureKnowsParentBranches([]string{result.targetBranch}, repo)
+		err = parentDialog.EnsureKnowsParentBranches([]string{targetBranch}, repo)
 		if err != nil {
-			return result, err
+			return nil, err
 		}
 		repo.Config.Reload()
 	}
 	hasOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
-		return result, err
+		return nil, err
 	}
 	isOffline, err := repo.Config.IsOffline()
 	if err != nil {
-		return killConfig{}, err
+		return nil, err
 	}
-	result.isOffline = isOffline
-	if hasOrigin && !result.isOffline {
+	if hasOrigin && !isOffline {
 		err := repo.Logging.Fetch()
 		if err != nil {
-			return result, err
+			return nil, err
 		}
 	}
-	if result.initialBranch != result.targetBranch {
-		hasTargetBranch, err := repo.Silent.HasLocalOrOriginBranch(result.targetBranch)
+	if initialBranch != targetBranch {
+		hasTargetBranch, err := repo.Silent.HasLocalOrOriginBranch(targetBranch)
 		if err != nil {
-			return result, err
+			return nil, err
 		}
 		if !hasTargetBranch {
-			return result, fmt.Errorf("there is no branch named %q", result.targetBranch)
+			return nil, fmt.Errorf("there is no branch named %q", targetBranch)
 		}
 	}
-	result.hasTrackingBranch, err = repo.Silent.HasTrackingBranch(result.targetBranch)
+	hasTrackingBranch, err := repo.Silent.HasTrackingBranch(targetBranch)
 	if err != nil {
-		return result, err
+		return nil, err
 	}
-	result.targetBranchParent = repo.Config.ParentBranch(result.targetBranch)
-	result.previousBranch, err = repo.Silent.PreviouslyCheckedOutBranch()
+	previousBranch, err := repo.Silent.PreviouslyCheckedOutBranch()
 	if err != nil {
-		return result, err
+		return nil, err
 	}
-	result.hasOpenChanges, err = repo.Silent.HasOpenChanges()
+	hasOpenChanges, err := repo.Silent.HasOpenChanges()
 	if err != nil {
-		return result, err
+		return nil, err
 	}
-	result.childBranches = repo.Config.ChildBranches(result.targetBranch)
 	pushHook, err := repo.Config.PushHook()
 	if err != nil {
-		return result, err
+		return nil, err
 	}
-	result.noPushHook = !pushHook
-	return result, nil
+	return &killConfig{
+		childBranches:       repo.Config.ChildBranches(targetBranch),
+		hasOpenChanges:      hasOpenChanges,
+		hasTrackingBranch:   hasTrackingBranch,
+		initialBranch:       initialBranch,
+		isOffline:           isOffline,
+		isTargetBranchLocal: isTargetBranchLocal,
+		noPushHook:          !pushHook,
+		previousBranch:      previousBranch,
+		targetBranch:        targetBranch,
+		targetBranchParent:  repo.Config.ParentBranch(targetBranch),
+	}, nil
 }
 
-func killStepList(config killConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+func killStepList(config *killConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	isOffline, err := repo.Config.IsOffline()
 	if err != nil {
