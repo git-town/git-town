@@ -44,35 +44,51 @@ issues:
     - text: mockConfig
       linters:
         - exhaustruct
-    - text: are missing in Command
+    - text: missing in Command
       linters:
         - exhaustruct
-    - text: are missing in PullRequestBranch
+    - text: missing in PullRequestBranch
+      linters:
+        - exhaustruct
+    - path: src/hosting/gitea.go
+      text: missing in ListOptions
+      linters:
+        - exhaustruct
+    - path: src/hosting/gitea.go
+      text: missing in ListPullRequestsOptions
+      linters:
+        - exhaustruct
+    - path: src/hosting/gitea.go
+      text: missing in Token
+      linters:
+        - exhaustruct
+    - path: src/hosting/github.go
+      text: missing in Token
       linters:
         - exhaustruct
     - path: src/hosting/gitlab.go
-      text: "are missing in Client"
+      text: missing in Client
       linters:
         - exhaustruct
-    - text: are missing in Select
+    - text: missing in Select
       linters:
         - exhaustruct
-    - text: are missing in MultiSelect
+    - text: missing in MultiSelect
       linters:
         - exhaustruct
-    - text: are missing in AcceptMergeRequestOptions
+    - text: missing in AcceptMergeRequestOptions
       linters:
         - exhaustruct
-    - text: are missing in ListProjectMergeRequestsOptions
+    - text: missing in ListProjectMergeRequestsOptions
       linters:
         - exhaustruct
-    - text: are missing in PullRequest
+    - text: missing in PullRequest
       linters:
         - exhaustruct
-    - text: are missing in PushArgs
+    - text: missing in PushArgs
       linters:
         - exhaustruct
-    - text: are missing in UpdateMergeRequestOptions
+    - text: missing in UpdateMergeRequestOptions
       linters:
         - exhaustruct
     # TODO: remove this after the sync refactor ships
