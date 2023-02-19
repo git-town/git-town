@@ -830,9 +830,9 @@ func (r *Runner) Pull() error {
 
 type PushArgs struct {
 	Branch         string
-	Force          bool
-	ForceWithLease bool
-	NoPushHook     bool
+	Force          bool `exhaustruct:"optional"`
+	ForceWithLease bool `exhaustruct:"optional"`
+	NoPushHook     bool `exhaustruct:"optional"`
 	Remote         string
 }
 

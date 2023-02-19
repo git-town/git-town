@@ -12,15 +12,15 @@ import (
 type Options struct {
 	// Dir contains the directory in which to execute the command.
 	// If empty, runs in the current directory.
-	Dir string
+	Dir string `exhaustruct:"optional"`
 
 	// Env allows to override the environment variables to use in the subshell, in the format provided by os.Environ()
 	// If empty, uses the environment variables of this process.
-	Env []string
+	Env []string `exhaustruct:"optional"`
 
 	// Input contains the user input to enter into the running command.
 	// It is written to the subprocess one element at a time, with a delay defined by command.InputDelay in between.
-	Input []string // input into the subprocess
+	Input []string `exhaustruct:"optional"`
 }
 
 // InputDelay defines how long to wait before writing the next input string into the subprocess.

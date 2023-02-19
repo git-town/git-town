@@ -38,9 +38,18 @@ issues:
     - linters:
         - goerr113
       text: "do not define dynamic errors"
-    - linters:
+    - text: NoOpStep
+      linters:
         - exhaustruct
-      text: NoOpStep is missing in
-    - linters:
+    - text: mockConfig
+      linters:
         - exhaustruct
-      text: are missing in mockConfig
+    - text: are missing in Command
+      linters:
+        - exhaustruct
+    - text: are missing in PullRequestBranch
+      linters:
+        - exhaustruct
+    - text: are missing in MultiSelect
+      linters:
+        - exhaustruct
