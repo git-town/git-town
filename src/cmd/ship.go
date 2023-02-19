@@ -96,15 +96,14 @@ func determineShipConfig(args []string, driver hosting.Driver, repo *git.ProdRep
 	if err != nil {
 		return nil, err
 	}
-	result := shipConfig{
-		initialBranch: initialBranch,
-	}
+	var branchToShip string
 	if len(args) == 0 {
-		result.branchToShip = result.initialBranch
+		branchToShip = initialBranch
 	} else {
-		result.branchToShip = args[0]
+		branchToShip = args[0]
 	}
-	if result.branchToShip == result.initialBranch {
+	isShippingInitialBranch := branchToShip == initialBranch
+	if isShippingInitialBranch {
 		hasOpenChanges, err := repo.Silent.HasOpenChanges()
 		if err != nil {
 			return nil, err
@@ -113,7 +112,7 @@ func determineShipConfig(args []string, driver hosting.Driver, repo *git.ProdRep
 			return nil, fmt.Errorf("you have uncommitted changes. Did you mean to commit them before shipping?")
 		}
 	}
-	result.hasOrigin, err = repo.Silent.HasOrigin()
+	hasOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
 		return nil, err
 	}
@@ -121,51 +120,57 @@ func determineShipConfig(args []string, driver hosting.Driver, repo *git.ProdRep
 	if err != nil {
 		return nil, err
 	}
-	if result.hasOrigin && !isOffline {
+	if hasOrigin && !isOffline {
 		err := repo.Logging.Fetch()
 		if err != nil {
 			return nil, err
 		}
 	}
-	if result.branchToShip != result.initialBranch {
-		hasBranch, err := repo.Silent.HasLocalOrOriginBranch(result.branchToShip)
+	if !isShippingInitialBranch {
+		hasBranch, err := repo.Silent.HasLocalOrOriginBranch(branchToShip)
 		if err != nil {
 			return nil, err
 		}
 		if !hasBranch {
-			return nil, fmt.Errorf("there is no branch named %q", result.branchToShip)
+			return nil, fmt.Errorf("there is no branch named %q", branchToShip)
 		}
 	}
-	if !repo.Config.IsFeatureBranch(result.branchToShip) {
-		return nil, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can be shipped", result.branchToShip)
+	if !repo.Config.IsFeatureBranch(branchToShip) {
+		return nil, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can be shipped", branchToShip)
 	}
 	parentDialog := dialog.ParentBranches{}
-	err = parentDialog.EnsureKnowsParentBranches([]string{result.branchToShip}, repo)
+	err = parentDialog.EnsureKnowsParentBranches([]string{branchToShip}, repo)
 	if err != nil {
 		return nil, err
 	}
-	ensureParentBranchIsMainOrPerennialBranch(result.branchToShip, repo)
-	result.hasTrackingBranch, err = repo.Silent.HasTrackingBranch(result.branchToShip)
+	ensureParentBranchIsMainOrPerennialBranch(branchToShip, repo)
+	hasTrackingBranch, err := repo.Silent.HasTrackingBranch(branchToShip)
 	if err != nil {
 		return nil, err
 	}
-	result.isOffline = isOffline
-	result.isShippingInitialBranch = result.branchToShip == result.initialBranch
-	result.branchToMergeInto = repo.Config.ParentBranch(result.branchToShip)
-	prInfo, err := determinePullRequestInfo(result.branchToShip, result.branchToMergeInto, repo, driver)
+	branchToMergeInto := repo.Config.ParentBranch(branchToShip)
+	prInfo, err := determinePullRequestInfo(branchToShip, branchToMergeInto, repo, driver)
 	if err != nil {
 		return nil, err
 	}
-	result.canShipWithDriver = prInfo.CanMergeWithAPI
-	result.defaultCommitMessage = prInfo.DefaultCommitMessage
-	result.pullRequestNumber = prInfo.PullRequestNumber
-	result.childBranches = repo.Config.ChildBranches(result.branchToShip)
 	deleteOrigin, err := repo.Config.ShouldShipDeleteOriginBranch()
 	if err != nil {
 		return nil, err
 	}
-	result.deleteOriginBranch = deleteOrigin
-	return &result, nil
+	return &shipConfig{
+		isOffline:               isOffline,
+		isShippingInitialBranch: isShippingInitialBranch,
+		branchToMergeInto:       branchToMergeInto,
+		branchToShip:            branchToShip,
+		canShipWithDriver:       prInfo.CanMergeWithAPI,
+		childBranches:           repo.Config.ChildBranches(branchToShip),
+		defaultCommitMessage:    prInfo.DefaultCommitMessage,
+		deleteOriginBranch:      deleteOrigin,
+		hasOrigin:               hasOrigin,
+		hasTrackingBranch:       hasTrackingBranch,
+		initialBranch:           initialBranch,
+		pullRequestNumber:       prInfo.PullRequestNumber,
+	}, nil
 }
 
 func ensureParentBranchIsMainOrPerennialBranch(branch string, repo *git.ProdRepo) {
@@ -179,7 +184,7 @@ please ship %q first`, strings.Join(ancestorsWithoutMainOrPerennial, ", "), olde
 	}
 }
 
-func shipStepList(config shipConfig, commitMessage string, repo *git.ProdRepo) (runstate.StepList, error) {
+func shipStepList(config *shipConfig, commitMessage string, repo *git.ProdRepo) (runstate.StepList, error) {
 	syncSteps, err := syncBranchSteps(config.branchToMergeInto, true, repo)
 	if err != nil {
 		return runstate.StepList{}, err

@@ -1,4 +1,4 @@
-Feature: commit message can contain double-quotes
+Feature: commit message with double-quotes
 
   Background:
     Given the current branch is a feature branch "feature"
