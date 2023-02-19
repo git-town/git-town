@@ -61,7 +61,7 @@ issues:
       linters:
         - exhaustruct
     - path: src/dialog/
-      text: missing in (|MultiSelect|Select)
+      text: missing in (MultiSelect|Select)
       linters:
         - exhaustruct
     # TODO: remove this after the sync refactor ships
