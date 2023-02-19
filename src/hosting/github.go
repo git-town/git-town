@@ -76,7 +76,7 @@ func (c GithubConfig) RepositoryURL() string {
 // GithubDriver provides access to the GitHub API.
 type GithubDriver struct {
 	GithubConfig
-	client *github.Client // TODO: remove pointer
+	client *github.Client
 	log    logFn
 }
 
