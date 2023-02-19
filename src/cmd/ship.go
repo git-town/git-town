@@ -91,10 +91,10 @@ and Git Town will leave it up to your origin server to delete the remote branch.
 	return &shipCmd
 }
 
-func determineShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (shipConfig, error) {
+func determineShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (*shipConfig, error) {
 	initialBranch, err := repo.Silent.CurrentBranch()
 	if err != nil {
-		return shipConfig{}, err
+		return nil, err
 	}
 	result := shipConfig{
 		initialBranch: initialBranch,
@@ -107,54 +107,54 @@ func determineShipConfig(args []string, driver hosting.Driver, repo *git.ProdRep
 	if result.branchToShip == result.initialBranch {
 		hasOpenChanges, err := repo.Silent.HasOpenChanges()
 		if err != nil {
-			return shipConfig{}, err
+			return nil, err
 		}
 		if hasOpenChanges {
-			return shipConfig{}, fmt.Errorf("you have uncommitted changes. Did you mean to commit them before shipping?")
+			return nil, fmt.Errorf("you have uncommitted changes. Did you mean to commit them before shipping?")
 		}
 	}
 	result.hasOrigin, err = repo.Silent.HasOrigin()
 	if err != nil {
-		return shipConfig{}, err
+		return nil, err
 	}
 	isOffline, err := repo.Config.IsOffline()
 	if err != nil {
-		return shipConfig{}, err
+		return nil, err
 	}
 	if result.hasOrigin && !isOffline {
 		err := repo.Logging.Fetch()
 		if err != nil {
-			return shipConfig{}, err
+			return nil, err
 		}
 	}
 	if result.branchToShip != result.initialBranch {
 		hasBranch, err := repo.Silent.HasLocalOrOriginBranch(result.branchToShip)
 		if err != nil {
-			return shipConfig{}, err
+			return nil, err
 		}
 		if !hasBranch {
-			return shipConfig{}, fmt.Errorf("there is no branch named %q", result.branchToShip)
+			return nil, fmt.Errorf("there is no branch named %q", result.branchToShip)
 		}
 	}
 	if !repo.Config.IsFeatureBranch(result.branchToShip) {
-		return shipConfig{}, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can be shipped", result.branchToShip)
+		return nil, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can be shipped", result.branchToShip)
 	}
 	parentDialog := dialog.ParentBranches{}
 	err = parentDialog.EnsureKnowsParentBranches([]string{result.branchToShip}, repo)
 	if err != nil {
-		return shipConfig{}, err
+		return nil, err
 	}
 	ensureParentBranchIsMainOrPerennialBranch(result.branchToShip, repo)
 	result.hasTrackingBranch, err = repo.Silent.HasTrackingBranch(result.branchToShip)
 	if err != nil {
-		return shipConfig{}, err
+		return nil, err
 	}
 	result.isOffline = isOffline
 	result.isShippingInitialBranch = result.branchToShip == result.initialBranch
 	result.branchToMergeInto = repo.Config.ParentBranch(result.branchToShip)
 	prInfo, err := determinePullRequestInfo(result.branchToShip, result.branchToMergeInto, repo, driver)
 	if err != nil {
-		return shipConfig{}, err
+		return nil, err
 	}
 	result.canShipWithDriver = prInfo.CanMergeWithAPI
 	result.defaultCommitMessage = prInfo.DefaultCommitMessage
@@ -162,10 +162,10 @@ func determineShipConfig(args []string, driver hosting.Driver, repo *git.ProdRep
 	result.childBranches = repo.Config.ChildBranches(result.branchToShip)
 	deleteOrigin, err := repo.Config.ShouldShipDeleteOriginBranch()
 	if err != nil {
-		return shipConfig{}, err
+		return nil, err
 	}
 	result.deleteOriginBranch = deleteOrigin
-	return result, err
+	return &result, nil
 }
 
 func ensureParentBranchIsMainOrPerennialBranch(branch string, repo *git.ProdRepo) {
