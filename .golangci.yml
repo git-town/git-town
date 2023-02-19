@@ -65,10 +65,10 @@ issues:
       text: missing in (|MultiSelect|Select)
       linters:
         - exhaustruct
-    - path: src/hosting/
-      text: missing in PullRequest
-      linters:
-        - exhaustruct
+    # - path: src/hosting/
+    #   text: missing in PullRequest
+    #   linters:
+    #     - exhaustruct
     # TODO: remove this after the sync refactor ships
     - text: are missing in syncConfig
       linters:
