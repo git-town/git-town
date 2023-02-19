@@ -100,8 +100,8 @@ func TestGithubDriver(t *testing.T) {
 			driver, teardown := setupGithubDriver(t, "")
 			defer teardown()
 			prInfo, err := driver.LoadPullRequestInfo("feature", "main")
-			assert.NoError(t, err)
-			assert.False(t, prInfo.CanMergeWithAPI)
+			assert.Nil(t, err)
+			assert.Nil(t, prInfo)
 		})
 
 		t.Run("cannot fetch pull request number", func(t *testing.T) {
@@ -116,18 +116,16 @@ func TestGithubDriver(t *testing.T) {
 			driver, teardown := setupGithubDriver(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", githubCurrOpen, httpmock.NewStringResponder(200, "[]"))
-			prInfo, err := driver.LoadPullRequestInfo("feature", "main")
-			assert.NoError(t, err)
-			assert.False(t, prInfo.CanMergeWithAPI)
+			_, err := driver.LoadPullRequestInfo("feature", "main")
+			assert.ErrorContains(t, err, "no pull request from branch \"feature\" to branch \"main\" found")
 		})
 
 		t.Run("multiple pull requests for this branch", func(t *testing.T) {
 			driver, teardown := setupGithubDriver(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", githubCurrOpen, httpmock.NewStringResponder(200, `[{"number": 1}, {"number": 2}]`))
-			prInfo, err := driver.LoadPullRequestInfo("feature", "main")
-			assert.NoError(t, err)
-			assert.False(t, prInfo.CanMergeWithAPI)
+			_, err := driver.LoadPullRequestInfo("feature", "main")
+			assert.ErrorContains(t, err, "found 2 pull requests from branch \"feature\" to branch \"main\"")
 		})
 	})
 

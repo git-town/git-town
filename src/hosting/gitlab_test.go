@@ -111,8 +111,8 @@ func TestGitLab(t *testing.T) {
 			driver, teardown := setupGitlabDriver(t, "")
 			defer teardown()
 			prInfo, err := driver.LoadPullRequestInfo("feature", "main")
-			assert.NoError(t, err)
-			assert.False(t, prInfo.CanMergeWithAPI)
+			assert.Nil(t, err)
+			assert.Nil(t, prInfo)
 		})
 
 		t.Run("cannot load pull request id", func(t *testing.T) {
@@ -127,18 +127,16 @@ func TestGitLab(t *testing.T) {
 			driver, teardown := setupGitlabDriver(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", gitlabCurrOpen, httpmock.NewStringResponder(200, "[]"))
-			prInfo, err := driver.LoadPullRequestInfo("feature", "main")
-			assert.NoError(t, err)
-			assert.False(t, prInfo.CanMergeWithAPI)
+			_, err := driver.LoadPullRequestInfo("feature", "main")
+			assert.ErrorContains(t, err, "no merge request from branch \"feature\" to branch \"main\" found")
 		})
 
 		t.Run("multiple pull requests for this branch", func(t *testing.T) {
 			driver, teardown := setupGitlabDriver(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", gitlabCurrOpen, httpmock.NewStringResponder(200, `[{"iid": 1}, {"iid": 2}]`))
-			prInfo, err := driver.LoadPullRequestInfo("feature", "main")
-			assert.NoError(t, err)
-			assert.False(t, prInfo.CanMergeWithAPI)
+			_, err := driver.LoadPullRequestInfo("feature", "main")
+			assert.ErrorContains(t, err, "found 2 merge requests from branch \"feature\" to branch \"main\"")
 		})
 	})
 
