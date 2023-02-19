@@ -48,14 +48,13 @@ func WithOptions(opts *Options, cmd string, args ...string) (*Result, error) {
 	var output bytes.Buffer
 	subProcess.Stdout = &output
 	subProcess.Stderr = &output
-	result := Result{command: cmd, args: args}
 	input, err := subProcess.StdinPipe()
 	if err != nil {
-		return &result, err
+		return nil, err
 	}
 	err = subProcess.Start()
 	if err != nil {
-		return &result, fmt.Errorf("can't start subprocess '%s %s': %w", cmd, strings.Join(args, " "), err)
+		return nil, fmt.Errorf("can't start subprocess '%s %s': %w", cmd, strings.Join(args, " "), err)
 	}
 	for _, userInput := range opts.Input {
 		// Here we simply wait for some time until the subProcess needs the input.
@@ -66,13 +65,16 @@ func WithOptions(opts *Options, cmd string, args ...string) (*Result, error) {
 		time.Sleep(InputDelay)
 		_, err := input.Write([]byte(userInput))
 		if err != nil {
-			result.output = output.String()
+			result := Result{
+				command:  cmd,
+				args:     args,
+				output:   output.String(),
+				exitCode: -1,
+			}
 			return &result, fmt.Errorf("can't write %q to subprocess '%s %s': %w", userInput, cmd, strings.Join(args, " "), err)
 		}
 	}
 	err = subProcess.Wait()
-	result.output = output.String()
-	result.exitCode = subProcess.ProcessState.ExitCode()
 	if err != nil {
 		err = fmt.Errorf(`
 ----------------------------------------
@@ -82,7 +84,13 @@ Command: %s %s
 Error: %w
 Output:
 %s
-----------------------------------------`, cmd, strings.Join(args, " "), err, result.output)
+----------------------------------------`, cmd, strings.Join(args, " "), err, output.String())
+	}
+	result := Result{
+		command:  cmd,
+		args:     args,
+		output:   output.String(),
+		exitCode: subProcess.ProcessState.ExitCode(),
 	}
 	return &result, err
 }
