@@ -57,14 +57,11 @@ issues:
       linters:
         - exhaustruct
     - path: src/hosting/gitlab.go
-      text: missing in Client
+      text: missing in (Client|AcceptMergeRequestOptions)
       linters:
         - exhaustruct
     - path: src/dialog/
       text: missing in (Select|MultiSelect)
-      linters:
-        - exhaustruct
-    - text: missing in AcceptMergeRequestOptions
       linters:
         - exhaustruct
     - text: missing in ListProjectMergeRequestsOptions
