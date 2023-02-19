@@ -21,7 +21,7 @@ type GithubConfig struct {
 	repository string
 }
 
-// NewGithubConfig provides a GitHub driver instance if the given repo configuration is for a Github repo,
+// NewGithubConfig provides GitHub configuration data if the current repo is hosted on Github,
 // otherwise nil.
 func NewGithubConfig(url giturl.Parts, config config) *GithubConfig {
 	driverType := config.HostingService()

@@ -18,7 +18,7 @@ type GitlabConfig struct {
 	repository string
 }
 
-// NewGitlabConfig provides a GitLab driver instance if the given repo configuration is for a GitLab repo,
+// NewGitlabConfig provides GitLab configuration data if the current repo is hosted on GitLab,
 // otherwise nil.
 func NewGitlabConfig(url giturl.Parts, config config) *GitlabConfig {
 	driverType := config.HostingService()
