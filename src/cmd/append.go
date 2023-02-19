@@ -59,51 +59,54 @@ See "sync" for information regarding upstream remotes.`,
 	}
 }
 
-func determineAppendConfig(args []string, repo *git.ProdRepo) (appendConfig, error) {
+func determineAppendConfig(args []string, repo *git.ProdRepo) (*appendConfig, error) {
 	parentBranch, err := repo.Silent.CurrentBranch()
 	if err != nil {
-		return appendConfig{}, err
+		return nil, err
 	}
-	result := appendConfig{
-		parentBranch: parentBranch,
-		targetBranch: args[0],
-	}
-	result.hasOrigin, err = repo.Silent.HasOrigin()
+	hasOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
-		return appendConfig{}, err
+		return nil, err
 	}
 	isOffline, err := repo.Config.IsOffline()
 	if err != nil {
-		return appendConfig{}, err
+		return nil, err
 	}
-	if result.hasOrigin && !isOffline {
+	if hasOrigin && !isOffline {
 		err := repo.Logging.Fetch()
 		if err != nil {
-			return appendConfig{}, err
+			return nil, err
 		}
 	}
-	hasBranch, err := repo.Silent.HasLocalOrOriginBranch(result.targetBranch)
+	targetBranch := args[0]
+	hasBranch, err := repo.Silent.HasLocalOrOriginBranch(targetBranch)
 	if err != nil {
-		return appendConfig{}, err
+		return nil, err
 	}
 	if hasBranch {
-		return appendConfig{}, fmt.Errorf("a branch named %q already exists", result.targetBranch)
+		return nil, fmt.Errorf("a branch named %q already exists", targetBranch)
 	}
 	parentDialog := dialog.ParentBranches{}
-	err = parentDialog.EnsureKnowsParentBranches([]string{result.parentBranch}, repo)
+	err = parentDialog.EnsureKnowsParentBranches([]string{parentBranch}, repo)
 	if err != nil {
-		return appendConfig{}, err
+		return nil, err
 	}
-	result.ancestorBranches = repo.Config.AncestorBranches(result.parentBranch)
+	ancestorBranches := repo.Config.AncestorBranches(parentBranch)
 	pushHook, err := repo.Config.PushHook()
 	if err != nil {
-		return appendConfig{}, err
+		return nil, err
 	}
-	result.noPushHook = !pushHook
-	result.shouldNewBranchPush, err = repo.Config.ShouldNewBranchPush()
+	shouldNewBranchPush, err := repo.Config.ShouldNewBranchPush()
 	if err != nil {
-		return appendConfig{}, err
+		return nil, err
 	}
-	result.isOffline = isOffline
-	return result, err
+	return &appendConfig{
+		ancestorBranches:    ancestorBranches,
+		isOffline:           isOffline,
+		hasOrigin:           hasOrigin,
+		noPushHook:          !pushHook,
+		parentBranch:        parentBranch,
+		shouldNewBranchPush: shouldNewBranchPush,
+		targetBranch:        targetBranch,
+	}, nil
 }
