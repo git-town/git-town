@@ -23,15 +23,15 @@ func log(template string, messages ...interface{}) {}
 func setupGiteaDriver(t *testing.T, token string) (*hosting.GiteaDriver, func()) {
 	t.Helper()
 	httpmock.Activate()
-	config := mockConfig{
+	repoConfig := mockConfig{
 		originURL:  "git@gitea.com:git-town/git-town.git",
 		giteaToken: token,
 	}
-	url := giturl.Parse(config.originURL)
-	giteaConfig := hosting.NewGiteaConfig(*url, config)
+	url := giturl.Parse(repoConfig.originURL)
+	giteaConfig := hosting.NewGiteaConfig(*url, repoConfig)
 	assert.NotNil(t, giteaConfig)
-	driver := giteaConfig.Driver(log)
-	return &driver, func() {
+	giteaDriver := giteaConfig.Driver(log)
+	return &giteaDriver, func() {
 		httpmock.DeactivateAndReset()
 	}
 }

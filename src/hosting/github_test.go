@@ -24,15 +24,15 @@ const (
 func setupGithubDriver(t *testing.T, token string) (*hosting.GithubDriver, func()) {
 	t.Helper()
 	httpmock.Activate()
-	hostingConfig := mockConfig{
+	repoConfig := mockConfig{
 		originURL:   "git@github.com:git-town/git-town.git",
 		gitHubToken: token,
 	}
-	url := giturl.Parse(hostingConfig.originURL)
-	githubConfig := hosting.NewGithubConfig(*url, hostingConfig)
+	url := giturl.Parse(repoConfig.originURL)
+	githubConfig := hosting.NewGithubConfig(*url, repoConfig)
 	assert.NotNil(t, githubConfig)
-	driver := githubConfig.Driver(nil)
-	return &driver, func() {
+	githubDriver := githubConfig.Driver(nil)
+	return &githubDriver, func() {
 		httpmock.DeactivateAndReset()
 	}
 }

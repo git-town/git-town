@@ -23,16 +23,16 @@ const (
 func setupGitlabDriver(t *testing.T, token string) (*hosting.GitlabDriver, func()) {
 	t.Helper()
 	httpmock.Activate()
-	mc := mockConfig{
+	repoConfig := mockConfig{
 		originURL:   "git@gitlab.com:git-town/git-town.git",
 		gitLabToken: token,
 	}
-	url := giturl.Parse(mc.originURL)
-	gitlabConfig := hosting.NewGitlabConfig(*url, mc)
+	url := giturl.Parse(repoConfig.originURL)
+	gitlabConfig := hosting.NewGitlabConfig(*url, repoConfig)
 	assert.NotNil(t, gitlabConfig)
-	driver, err := gitlabConfig.Driver(nil)
+	gitlabDriver, err := gitlabConfig.Driver(nil)
 	assert.NoError(t, err)
-	return driver, func() {
+	return gitlabDriver, func() {
 		httpmock.DeactivateAndReset()
 	}
 }
