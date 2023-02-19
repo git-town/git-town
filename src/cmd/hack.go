@@ -29,7 +29,7 @@ See "sync" for information regarding upstream remotes.`,
 			if err != nil {
 				cli.Exit(err)
 			}
-			stepList, err := appendStepList(config, repo)
+			stepList, err := appendStepList(&config, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
