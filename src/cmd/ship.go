@@ -153,7 +153,7 @@ func determineShipConfig(args []string, driver hosting.Driver, repo *git.ProdRep
 	defaultCommitMessage := ""
 	pullRequestNumber := int64(-1)
 	if hasTrackingBranch && !isOffline && driver != nil {
-		prInfo, err := determinePullRequestInfo(branchToShip, branchToMergeInto, driver)
+		prInfo, err := driver.LoadPullRequestInfo(branchToShip, branchToMergeInto)
 		if err != nil {
 			return nil, err
 		}
@@ -240,9 +240,4 @@ func shipStepList(config *shipConfig, commitMessage string, repo *git.ProdRepo) 
 	}
 	err = result.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: !config.isShippingInitialBranch}, repo)
 	return result, err
-}
-
-func determinePullRequestInfo(branch, parentBranch string, driver hosting.Driver) (*hosting.PullRequestInfo, error) {
-	pullRequestInfo, err := driver.LoadPullRequestInfo(branch, parentBranch)
-	return &pullRequestInfo, err
 }
