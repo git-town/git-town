@@ -92,12 +92,11 @@ func (d *GithubDriver) LoadPullRequestInfo(branch, parentBranch string) (PullReq
 		// TODO: do something better than returning an empty info object here. At least return an error message.
 		return PullRequestInfo{}, nil
 	}
-	result := PullRequestInfo{
+	return PullRequestInfo{
 		CanMergeWithAPI:      true,
 		DefaultCommitMessage: d.defaultCommitMessage(pullRequests[0]),
 		PullRequestNumber:    int64(pullRequests[0].GetNumber()),
-	}
-	return result, nil
+	}, nil
 }
 
 func (d *GithubDriver) loadPullRequests(branch, parentBranch string) ([]*github.PullRequest, error) {

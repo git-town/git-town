@@ -139,12 +139,11 @@ func (d *GiteaDriver) LoadPullRequestInfo(branch, parentBranch string) (PullRequ
 	if !pullRequest.Mergeable {
 		return PullRequestInfo{}, nil
 	}
-	result := PullRequestInfo{
+	return PullRequestInfo{
 		CanMergeWithAPI:      true,
 		DefaultCommitMessage: createDefaultCommitMessage(pullRequest),
 		PullRequestNumber:    pullRequest.Index,
-	}
-	return result, nil
+	}, nil
 }
 
 //nolint:nonamedreturns  // return value isn't obvious from function name

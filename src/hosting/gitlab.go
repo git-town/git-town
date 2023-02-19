@@ -100,12 +100,11 @@ func (d *GitlabDriver) LoadPullRequestInfo(branch, parentBranch string) (PullReq
 		// TODO: return proper error here
 		return PullRequestInfo{}, nil
 	}
-	result := PullRequestInfo{
+	return PullRequestInfo{
 		CanMergeWithAPI:      true,
 		DefaultCommitMessage: d.defaultCommitMessage(mergeRequests[0]),
 		PullRequestNumber:    int64(mergeRequests[0].IID),
-	}
-	return result, nil
+	}, nil
 }
 
 func (d *GitlabDriver) loadMergeRequests(branch, parentBranch string) ([]*gitlab.MergeRequest, error) {
