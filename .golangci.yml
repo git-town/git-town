@@ -50,6 +50,13 @@ issues:
     - text: are missing in PullRequestBranch
       linters:
         - exhaustruct
+    - text: are missing in Select
+      linters:
+        - exhaustruct
     - text: are missing in MultiSelect
+      linters:
+        - exhaustruct
+    # TODO: remove this after the sync refactor ships
+    - text: are missing in syncConfig
       linters:
         - exhaustruct
