@@ -44,10 +44,8 @@ issues:
     - text: mockConfig
       linters:
         - exhaustruct
-    - text: missing in Command
-      linters:
-        - exhaustruct
-    - text: missing in PullRequestBranch
+    - path: src/cmd/
+      text: missing in Command
       linters:
         - exhaustruct
     - path: src/hosting/gitea.go
