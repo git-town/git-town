@@ -53,11 +53,13 @@ issues:
       linters:
         - exhaustruct
     - path: src/hosting/github.go
-      text: missing in Token
+      text:
+        missing in (PullRequest|PullRequestListOptions|PullRequestOptions|Token)
       linters:
         - exhaustruct
     - path: src/hosting/gitlab.go
-      text: missing in
+      text:
+        missing in
         (AcceptMergeRequestOptions|Client|ListProjectMergeRequestsOptions|UpdateMergeRequestOptions)
       linters:
         - exhaustruct
@@ -65,10 +67,6 @@ issues:
       text: missing in (|MultiSelect|Select)
       linters:
         - exhaustruct
-    # - path: src/hosting/
-    #   text: missing in PullRequest
-    #   linters:
-    #     - exhaustruct
     # TODO: remove this after the sync refactor ships
     - text: are missing in syncConfig
       linters:
