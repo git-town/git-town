@@ -151,7 +151,7 @@ func determineShipConfig(args []string, driver hosting.Driver, repo *git.ProdRep
 	branchToMergeInto := repo.Config.ParentBranch(branchToShip)
 	canShipWithDriver := false
 	defaultCommitMessage := ""
-	pullRequestNumber := -1
+	pullRequestNumber := int64(-1)
 	if hasTrackingBranch && !isOffline && driver != nil {
 		prInfo, err := determinePullRequestInfo(branchToShip, branchToMergeInto, driver)
 		if err != nil {
@@ -159,7 +159,7 @@ func determineShipConfig(args []string, driver hosting.Driver, repo *git.ProdRep
 		}
 		canShipWithDriver = prInfo.CanMergeWithAPI
 		defaultCommitMessage = prInfo.DefaultCommitMessage
-		pullRequestNumber = int(prInfo.PullRequestNumber)
+		pullRequestNumber = prInfo.PullRequestNumber
 	}
 	deleteOrigin, err := repo.Config.ShouldShipDeleteOriginBranch()
 	if err != nil {
@@ -177,7 +177,7 @@ func determineShipConfig(args []string, driver hosting.Driver, repo *git.ProdRep
 		hasOrigin:               hasOrigin,
 		hasTrackingBranch:       hasTrackingBranch,
 		initialBranch:           initialBranch,
-		pullRequestNumber:       int64(pullRequestNumber),
+		pullRequestNumber:       pullRequestNumber,
 	}, nil
 }
 
