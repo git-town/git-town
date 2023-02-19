@@ -57,9 +57,8 @@ issues:
       linters:
         - exhaustruct
     - path: src/hosting/gitlab.go
-      text:
-        missing in
-        (AcceptMergeRequestOptions|Client|ListProjectMergeRequestsOptions)
+      text: missing in
+        (AcceptMergeRequestOptions|Client|ListProjectMergeRequestsOptions|UpdateMergeRequestOptions)
       linters:
         - exhaustruct
     - path: src/dialog/
@@ -68,9 +67,6 @@ issues:
         - exhaustruct
     - path: src/hosting/
       text: missing in PullRequest
-      linters:
-        - exhaustruct
-    - text: missing in UpdateMergeRequestOptions
       linters:
         - exhaustruct
     # TODO: remove this after the sync refactor ships
