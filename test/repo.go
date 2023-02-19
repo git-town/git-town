@@ -22,7 +22,7 @@ type Repo struct {
 // CreateRepo creates TestRepo instances.
 func CreateRepo(t *testing.T) Repo {
 	t.Helper()
-	dir := CreateTempDir(t)
+	dir := t.TempDir()
 	workingDir := filepath.Join(dir, "repo")
 	err := os.Mkdir(workingDir, 0o744)
 	assert.NoError(t, err)
@@ -129,10 +129,9 @@ func CreateTestGitTownRepo(t *testing.T) Repo {
 	repo := CreateRepo(t)
 	err := repo.CreateBranch("main", "initial")
 	assert.NoError(t, err)
-	err = repo.RunMany([][]string{
-		{"git", "config", config.MainBranchName, "main"},
-		{"git", "config", config.PerennialBranchNames, ""},
-	})
+	err = repo.Config.SetMainBranch("main")
+	assert.NoError(t, err)
+	err = repo.Config.SetPerennialBranches([]string{})
 	assert.NoError(t, err)
 	return repo
 }

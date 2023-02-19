@@ -14,12 +14,12 @@ type ParentBranches struct {
 // EnsureKnowsParentBranches asserts that the entire ancestry for all given branches
 // is known to Git Town.
 // Missing ancestry information is queried from the user.
-func (pbd *ParentBranches) EnsureKnowsParentBranches(branchNames []string, repo *git.ProdRepo) error {
-	for _, branchName := range branchNames {
-		if repo.Config.IsMainBranch(branchName) || repo.Config.IsPerennialBranch(branchName) || repo.Config.HasParentBranch(branchName) {
+func (pbd *ParentBranches) EnsureKnowsParentBranches(branches []string, repo *git.ProdRepo) error {
+	for _, branch := range branches {
+		if repo.Config.IsMainBranch(branch) || repo.Config.IsPerennialBranch(branch) || repo.Config.HasParentBranch(branch) {
 			continue
 		}
-		err := pbd.AskForBranchAncestry(branchName, repo.Config.MainBranch(), repo)
+		err := pbd.AskForBranchAncestry(branch, repo.Config.MainBranch(), repo)
 		if err != nil {
 			return err
 		}
@@ -31,14 +31,14 @@ func (pbd *ParentBranches) EnsureKnowsParentBranches(branchNames []string, repo 
 }
 
 // AskForBranchAncestry prompts the user for all unknown ancestors of the given branch.
-func (pbd *ParentBranches) AskForBranchAncestry(branchName, defaultBranchName string, repo *git.ProdRepo) error {
-	current := branchName
+func (pbd *ParentBranches) AskForBranchAncestry(branch, defaultBranch string, repo *git.ProdRepo) error {
+	current := branch
 	var err error
 	for {
 		parent := repo.Config.ParentBranch(current)
 		if parent == "" { //nolint:nestif
 			pbd.printParentBranchHeader(repo)
-			parent, err = pbd.AskForBranchParent(current, defaultBranchName, repo)
+			parent, err = pbd.AskForBranchParent(current, defaultBranch, repo)
 			if err != nil {
 				return err
 			}
@@ -63,16 +63,16 @@ func (pbd *ParentBranches) AskForBranchAncestry(branchName, defaultBranchName st
 }
 
 // AskForBranchParent prompts the user for the parent of the given branch.
-func (pbd *ParentBranches) AskForBranchParent(branchName, defaultBranchName string, repo *git.ProdRepo) (string, error) {
+func (pbd *ParentBranches) AskForBranchParent(branch, defaultBranch string, repo *git.ProdRepo) (string, error) {
 	choices, err := repo.Silent.LocalBranchesMainFirst()
 	if err != nil {
 		return "", err
 	}
-	filteredChoices := filterOutSelfAndDescendants(branchName, choices, repo)
+	filteredChoices := filterOutSelfAndDescendants(branch, choices, repo)
 	return askForBranch(askForBranchOptions{
-		branchNames:       append([]string{perennialBranchOption}, filteredChoices...),
-		prompt:            fmt.Sprintf(parentBranchPromptTemplate, branchName),
-		defaultBranchName: defaultBranchName,
+		branches:      append([]string{perennialBranchOption}, filteredChoices...),
+		prompt:        fmt.Sprintf(parentBranchPromptTemplate, branch),
+		defaultBranch: defaultBranch,
 	})
 }
 
@@ -91,10 +91,10 @@ const parentBranchPromptTemplate = "Please specify the parent branch of %q:"
 
 const perennialBranchOption = "<none> (perennial branch)"
 
-func filterOutSelfAndDescendants(branchName string, choices []string, repo *git.ProdRepo) []string {
+func filterOutSelfAndDescendants(branch string, choices []string, repo *git.ProdRepo) []string {
 	result := []string{}
 	for _, choice := range choices {
-		if choice == branchName || repo.Config.IsAncestorBranch(choice, branchName) {
+		if choice == branch || repo.Config.IsAncestorBranch(choice, branch) {
 			continue
 		}
 		result = append(result, choice)

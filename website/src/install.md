@@ -20,7 +20,7 @@ You can also [install Git Town manually](#manual-installation) or
 ## Windows
 
 The easiest way to install Git Town on Windows is to
-[download the Windows installer](https://github.com/git-town/git-town/releases/download/v7.8.0/git-town_7.8.0_windows_intel_64.msi)
+[download the Windows installer](https://github.com/git-town/git-town/releases/download/v7.9.0/git-town_7.9.0_windows_intel_64.msi)
 and run it. You can also install Git Town via [scoop](https://scoop.sh):
 
 ```
@@ -44,7 +44,7 @@ On Debian-based systems,
 matching your CPU architecture and run:
 
 ```
-sudo apt-get install git-town_7.8.0_linux_intel_64.deb
+sudo apt-get install git-town_7.9.0_linux_intel_64.deb
 ```
 
 On RedHat-based systems
@@ -52,7 +52,7 @@ On RedHat-based systems
 matching your CPU architecture and run
 
 ```
-rpm -i git-town_7.8.0_linux_intel_64.rpm
+rpm -i git-town_7.9.0_linux_intel_64.rpm
 ```
 
 On Arch Linux, install the

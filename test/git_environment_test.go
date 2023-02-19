@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/stretchr/testify/assert"
 )
@@ -14,7 +15,7 @@ func TestGitEnvironment(t *testing.T) {
 	t.Parallel()
 	t.Run(".CloneGitEnvironment()", func(t *testing.T) {
 		t.Parallel()
-		dir := CreateTempDir(t)
+		dir := t.TempDir()
 		memoizedGitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
 		assert.NoError(t, err)
 		cloned, err := CloneGitEnvironment(memoizedGitEnv, filepath.Join(dir, "cloned"))
@@ -23,13 +24,13 @@ func TestGitEnvironment(t *testing.T) {
 		assertIsNormalGitRepo(t, filepath.Join(dir, "cloned", "developer"))
 		assertHasGitBranch(t, filepath.Join(dir, "cloned", "developer"), "main")
 		// check pushing
-		err = cloned.DevRepo.PushBranch(git.PushArgs{BranchName: "main", ToOrigin: true})
+		err = cloned.DevRepo.PushBranch(git.PushArgs{Branch: "main", Remote: config.OriginRemote})
 		assert.NoError(t, err)
 	})
 
 	t.Run(".NewStandardGitEnvironment()", func(t *testing.T) {
 		t.Parallel()
-		gitEnvRootDir := CreateTempDir(t)
+		gitEnvRootDir := t.TempDir()
 		result, err := NewStandardGitEnvironment(gitEnvRootDir)
 		assert.NoError(t, err)
 		// verify the origin repo
@@ -49,7 +50,7 @@ func TestGitEnvironment(t *testing.T) {
 		t.Run("different branches in dev and origin repo", func(t *testing.T) {
 			t.Parallel()
 			// create GitEnvironment instance
-			dir := CreateTempDir(t)
+			dir := t.TempDir()
 			gitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, ""))
 			assert.NoError(t, err)
 			// create the branches
@@ -72,7 +73,7 @@ func TestGitEnvironment(t *testing.T) {
 		t.Run("same branches in dev and origin repo", func(t *testing.T) {
 			t.Parallel()
 			// create GitEnvironment instance
-			dir := CreateTempDir(t)
+			dir := t.TempDir()
 			gitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, ""))
 			assert.NoError(t, err)
 			// create the branches
@@ -96,7 +97,7 @@ func TestGitEnvironment(t *testing.T) {
 	t.Run(".CreateCommits()", func(t *testing.T) {
 		t.Parallel()
 		// create GitEnvironment instance
-		dir := CreateTempDir(t)
+		dir := t.TempDir()
 		memoizedGitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
 		assert.NoError(t, err)
 		cloned, err := CloneGitEnvironment(memoizedGitEnv, filepath.Join(dir, "cloned"))
@@ -155,7 +156,7 @@ func TestGitEnvironment(t *testing.T) {
 	t.Run(".CreateOriginBranch()", func(t *testing.T) {
 		t.Parallel()
 		// create GitEnvironment instance
-		dir := CreateTempDir(t)
+		dir := t.TempDir()
 		memoizedGitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
 		assert.NoError(t, err)
 		cloned, err := CloneGitEnvironment(memoizedGitEnv, filepath.Join(dir, "cloned"))
@@ -177,7 +178,7 @@ func TestGitEnvironment(t *testing.T) {
 		t.Run("without upstream repo", func(t *testing.T) {
 			t.Parallel()
 			// create GitEnvironment instance
-			dir := CreateTempDir(t)
+			dir := t.TempDir()
 			memoizedGitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
 			assert.NoError(t, err)
 			cloned, err := CloneGitEnvironment(memoizedGitEnv, filepath.Join(dir, "cloned"))
@@ -190,7 +191,7 @@ func TestGitEnvironment(t *testing.T) {
 				Message:     "local-origin",
 			})
 			assert.NoError(t, err)
-			err = cloned.DevRepo.PushBranch(git.PushArgs{BranchName: "main", ToOrigin: true})
+			err = cloned.DevRepo.PushBranch(git.PushArgs{Branch: "main", Remote: config.OriginRemote})
 			assert.NoError(t, err)
 			err = cloned.OriginRepo.CreateCommit(git.Commit{
 				Branch:      "main",
@@ -214,7 +215,7 @@ func TestGitEnvironment(t *testing.T) {
 		t.Run("with upstream repo", func(t *testing.T) {
 			t.Parallel()
 			// create GitEnvironment instance
-			dir := CreateTempDir(t)
+			dir := t.TempDir()
 			memoizedGitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
 			assert.NoError(t, err)
 			cloned, err := CloneGitEnvironment(memoizedGitEnv, filepath.Join(dir, "cloned"))
@@ -252,7 +253,7 @@ func TestGitEnvironment(t *testing.T) {
 	t.Run(".Remove()", func(t *testing.T) {
 		t.Parallel()
 		// create GitEnvironment instance
-		dir := CreateTempDir(t)
+		dir := t.TempDir()
 		memoizedGitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
 		assert.NoError(t, err)
 		cloned, err := CloneGitEnvironment(memoizedGitEnv, filepath.Join(dir, "cloned"))

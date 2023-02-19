@@ -10,7 +10,7 @@ import (
 // DriverMergePullRequestStep squash merges the branch with the given name into the current branch.
 type DriverMergePullRequestStep struct {
 	NoOpStep
-	BranchName                string
+	Branch                    string
 	CommitMessage             string
 	DefaultCommitMessage      string
 	enteredEmptyCommitMessage bool
@@ -44,7 +44,7 @@ func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo, driver hosting.D
 		// Allow the user to enter the commit message as if shipping without a driver
 		// then revert the commit since merging via the driver will perform the actual squash merge
 		step.enteredEmptyCommitMessage = true
-		err := repo.Logging.SquashMerge(step.BranchName)
+		err := repo.Logging.SquashMerge(step.Branch)
 		if err != nil {
 			return err
 		}
@@ -71,7 +71,7 @@ func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo, driver hosting.D
 		return err
 	}
 	step.mergeSha, step.mergeError = driver.MergePullRequest(hosting.MergePullRequestOptions{
-		Branch:            step.BranchName,
+		Branch:            step.Branch,
 		PullRequestNumber: step.PullRequestNumber,
 		CommitMessage:     commitMessage,
 		LogRequests:       true,

@@ -8,22 +8,22 @@ import (
 // CheckoutBranchStep checks out a new branch.
 type CheckoutBranchStep struct {
 	NoOpStep
-	BranchName         string
-	previousBranchName string
+	Branch         string
+	previousBranch string
 }
 
 func (step *CheckoutBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
-	return &CheckoutBranchStep{BranchName: step.previousBranchName}, nil
+	return &CheckoutBranchStep{Branch: step.previousBranch}, nil
 }
 
 func (step *CheckoutBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
 	var err error
-	step.previousBranchName, err = repo.Silent.CurrentBranch()
+	step.previousBranch, err = repo.Silent.CurrentBranch()
 	if err != nil {
 		return err
 	}
-	if step.previousBranchName != step.BranchName {
-		err := repo.Logging.CheckoutBranch(step.BranchName)
+	if step.previousBranch != step.Branch {
+		err := repo.Logging.CheckoutBranch(step.Branch)
 		return err
 	}
 	return nil

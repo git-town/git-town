@@ -12,7 +12,7 @@ func TestCopyDirectory(t *testing.T) {
 	t.Parallel()
 	t.Run("normal directory", func(t *testing.T) {
 		t.Parallel()
-		tmpDir := CreateTempDir(t)
+		tmpDir := t.TempDir()
 		srcDir := filepath.Join(tmpDir, "src")
 		dstDir := filepath.Join(tmpDir, "dst")
 		createFile(t, srcDir, "one.txt")
@@ -29,7 +29,7 @@ func TestCopyDirectory(t *testing.T) {
 		t.Parallel()
 		origin := CreateRepo(t)
 		createFile(t, origin.WorkingDir(), "one.txt")
-		dstDir := filepath.Join(CreateTempDir(t), "dest")
+		dstDir := filepath.Join(t.TempDir(), "dest")
 		err := CopyDirectory(origin.WorkingDir(), dstDir)
 		assert.NoError(t, err)
 		assertFileExists(t, dstDir, "one.txt")

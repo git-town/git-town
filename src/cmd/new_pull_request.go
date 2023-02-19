@@ -39,15 +39,18 @@ When using SSH identities, this command needs to be configured with
 "git config %s <hostname>"
 where hostname matches what is in your ssh config file.`, config.CodeHostingDriver, config.CodeHostingOriginHostname),
 		Run: func(cmd *cobra.Command, args []string) {
-			config, err := createNewPullRequestConfig(repo)
+			config, err := determineNewPullRequestConfig(repo)
 			if err != nil {
 				cli.Exit(err)
 			}
-			driver := hosting.NewDriver(&repo.Config, &repo.Silent, cli.PrintDriverAction)
+			driver, err := hosting.NewDriver(&repo.Config, &repo.Silent, cli.PrintDriverAction)
+			if err != nil {
+				cli.Exit(err)
+			}
 			if driver == nil {
 				cli.Exit(hosting.UnsupportedServiceError())
 			}
-			stepList, err := createNewPullRequestStepList(config, repo)
+			stepList, err := newPullRequestStepList(config, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
@@ -73,7 +76,7 @@ where hostname matches what is in your ssh config file.`, config.CodeHostingDriv
 	}
 }
 
-func createNewPullRequestConfig(repo *git.ProdRepo) (newPullRequestConfig, error) {
+func determineNewPullRequestConfig(repo *git.ProdRepo) (newPullRequestConfig, error) {
 	hasOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
 		return newPullRequestConfig{}, err
@@ -99,10 +102,10 @@ func createNewPullRequestConfig(repo *git.ProdRepo) (newPullRequestConfig, error
 	}, nil
 }
 
-func createNewPullRequestStepList(config newPullRequestConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+func newPullRequestStepList(config newPullRequestConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	result := runstate.StepList{}
-	for _, branchName := range config.BranchesToSync {
-		steps, err := runstate.SyncBranchSteps(branchName, true, repo)
+	for _, branch := range config.BranchesToSync {
+		steps, err := syncBranchSteps(branch, true, repo)
 		if err != nil {
 			return runstate.StepList{}, err
 		}
@@ -112,6 +115,6 @@ func createNewPullRequestStepList(config newPullRequestConfig, repo *git.ProdRep
 	if err != nil {
 		return runstate.StepList{}, err
 	}
-	result.Append(&steps.CreatePullRequestStep{BranchName: config.InitialBranch})
+	result.Append(&steps.CreatePullRequestStep{Branch: config.InitialBranch})
 	return result, nil
 }

@@ -9,20 +9,18 @@ import (
 	"github.com/xanzy/go-gitlab"
 )
 
-// GitlabDriver provides access to the API of GitLab installations.
-type GitlabDriver struct {
+// GitlabConfig contains connection information for GitLab based hosting platforms.
+type GitlabConfig struct {
 	apiToken   string
-	client     *gitlab.Client
 	hostname   string
-	log        logFn
 	originURL  string
 	owner      string
 	repository string
 }
 
-// NewGitlabDriver provides a GitLab driver instance if the given repo configuration is for a GitLab repo,
+// NewGitlabConfig provides GitLab configuration data if the current repo is hosted on GitLab,
 // otherwise nil.
-func NewGitlabDriver(url giturl.Parts, config config, log logFn) *GitlabDriver {
+func NewGitlabConfig(url giturl.Parts, config config) *GitlabConfig {
 	driverType := config.HostingService()
 	manualHostName := config.OriginOverride()
 	if manualHostName != "" {
@@ -31,85 +29,82 @@ func NewGitlabDriver(url giturl.Parts, config config, log logFn) *GitlabDriver {
 	if driverType != "gitlab" && url.Host != "gitlab.com" {
 		return nil
 	}
-	return &GitlabDriver{
+	return &GitlabConfig{
 		apiToken:   config.GitLabToken(),
 		originURL:  config.OriginURL(),
 		hostname:   url.Host,
-		log:        log,
 		owner:      url.Org,
 		repository: url.Repo,
 	}
+}
+
+func (c GitlabConfig) BaseURL() string {
+	return fmt.Sprintf("https://%s", c.hostname)
+}
+
+func (c GitlabConfig) defaultCommitMessage(mergeRequest *gitlab.MergeRequest) string {
+	// GitLab uses a dash as MR prefix for the (project-)internal ID (IID)
+	return fmt.Sprintf("%s (!%d)", mergeRequest.Title, mergeRequest.IID)
+}
+
+func (c GitlabConfig) Driver(log logFn) (*GitlabDriver, error) {
+	baseURL := gitlab.WithBaseURL(c.BaseURL())
+	httpClient := gitlab.WithHTTPClient(&http.Client{})
+	client, err := gitlab.NewOAuthClient(c.apiToken, httpClient, baseURL)
+	if err != nil {
+		return nil, err
+	}
+	driver := GitlabDriver{
+		client:       client,
+		GitlabConfig: c,
+		log:          log,
+	}
+	return &driver, nil
+}
+
+func (c GitlabConfig) HostingServiceName() string {
+	return "GitLab"
+}
+
+func (c GitlabConfig) NewPullRequestURL(branch, parentBranch string) (string, error) {
+	query := url.Values{}
+	query.Add("merge_request[source_branch]", branch)
+	query.Add("merge_request[target_branch]", parentBranch)
+	return fmt.Sprintf("%s/merge_requests/new?%s", c.RepositoryURL(), query.Encode()), nil
+}
+
+func (c GitlabConfig) ProjectPath() string {
+	return fmt.Sprintf("%s/%s", c.owner, c.repository)
+}
+
+func (c GitlabConfig) RepositoryURL() string {
+	return fmt.Sprintf("%s/%s", c.BaseURL(), c.ProjectPath())
+}
+
+// GitlabDriver provides access to the GitLab API.
+type GitlabDriver struct {
+	GitlabConfig
+	client *gitlab.Client
+	log    logFn
 }
 
 func (d *GitlabDriver) LoadPullRequestInfo(branch, parentBranch string) (PullRequestInfo, error) {
 	if d.apiToken == "" {
 		return PullRequestInfo{}, nil
 	}
-	d.connect()
 	mergeRequests, err := d.loadMergeRequests(branch, parentBranch)
 	if err != nil {
 		return PullRequestInfo{}, err
 	}
 	if len(mergeRequests) != 1 {
+		// TODO: return proper error here
 		return PullRequestInfo{}, nil
 	}
-	result := PullRequestInfo{
+	return PullRequestInfo{
 		CanMergeWithAPI:      true,
 		DefaultCommitMessage: d.defaultCommitMessage(mergeRequests[0]),
 		PullRequestNumber:    int64(mergeRequests[0].IID),
-	}
-	return result, nil
-}
-
-func (d *GitlabDriver) NewPullRequestURL(branch, parentBranch string) (string, error) {
-	query := url.Values{}
-	query.Add("merge_request[source_branch]", branch)
-	query.Add("merge_request[target_branch]", parentBranch)
-	return fmt.Sprintf("%s/merge_requests/new?%s", d.RepositoryURL(), query.Encode()), nil
-}
-
-func (d *GitlabDriver) BaseURL() string {
-	return fmt.Sprintf("https://%s", d.hostname)
-}
-
-func (d *GitlabDriver) ProjectPath() string {
-	return fmt.Sprintf("%s/%s", d.owner, d.repository)
-}
-
-func (d *GitlabDriver) RepositoryURL() string {
-	return fmt.Sprintf("%s/%s", d.BaseURL(), d.ProjectPath())
-}
-
-//nolint:nonamedreturns  // return value isn't obvious from function name
-func (d *GitlabDriver) MergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
-	d.connect()
-	err = d.updatePullRequestsAgainst(options)
-	if err != nil {
-		return "", err
-	}
-	return d.mergePullRequest(options)
-}
-
-func (d *GitlabDriver) HostingServiceName() string {
-	return "GitLab"
-}
-
-// Helper
-
-func (d *GitlabDriver) connect() {
-	if d.client == nil {
-		baseURL := gitlab.WithBaseURL(d.BaseURL())
-		httpClient := gitlab.WithHTTPClient(&http.Client{})
-		client, err := gitlab.NewOAuthClient(d.apiToken, httpClient, baseURL)
-		if err == nil {
-			d.client = client
-		}
-	}
-}
-
-func (d *GitlabDriver) defaultCommitMessage(mergeRequest *gitlab.MergeRequest) string {
-	// GitLab uses a dash as MR prefix for the (project-)internal ID (IID)
-	return fmt.Sprintf("%s (!%d)", mergeRequest.Title, mergeRequest.IID)
+	}, nil
 }
 
 func (d *GitlabDriver) loadMergeRequests(branch, parentBranch string) ([]*gitlab.MergeRequest, error) {
@@ -124,7 +119,11 @@ func (d *GitlabDriver) loadMergeRequests(branch, parentBranch string) ([]*gitlab
 }
 
 //nolint:nonamedreturns  // return value isn't obvious from function name
-func (d *GitlabDriver) mergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
+func (d *GitlabDriver) MergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
+	err = d.updatePullRequestsAgainst(options)
+	if err != nil {
+		return "", err
+	}
 	if options.PullRequestNumber <= 0 {
 		return "", fmt.Errorf("cannot merge via GitLab since there is no merge request")
 	}

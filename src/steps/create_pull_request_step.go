@@ -9,12 +9,12 @@ import (
 // CreatePullRequestStep creates a new pull request for the current branch.
 type CreatePullRequestStep struct {
 	NoOpStep
-	BranchName string
+	Branch string
 }
 
 func (step *CreatePullRequestStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
-	parentBranch := repo.Config.ParentBranch(step.BranchName)
-	prURL, err := driver.NewPullRequestURL(step.BranchName, parentBranch)
+	parentBranch := repo.Config.ParentBranch(step.Branch)
+	prURL, err := driver.NewPullRequestURL(step.Branch, parentBranch)
 	if err != nil {
 		return err
 	}

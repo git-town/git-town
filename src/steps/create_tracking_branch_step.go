@@ -1,6 +1,7 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/hosting"
 )
@@ -9,18 +10,18 @@ import (
 // and marks it as tracking the current branch.
 type CreateTrackingBranchStep struct {
 	NoOpStep
-	BranchName string
+	Branch     string
 	NoPushHook bool
 }
 
 func (step *CreateTrackingBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
-	return &DeleteOriginBranchStep{BranchName: step.BranchName}, nil
+	return &DeleteOriginBranchStep{Branch: step.Branch}, nil
 }
 
 func (step *CreateTrackingBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
 	return repo.Logging.PushBranch(git.PushArgs{
-		BranchName: step.BranchName,
+		Branch:     step.Branch,
 		NoPushHook: step.NoPushHook,
-		ToOrigin:   true,
+		Remote:     config.OriginRemote,
 	})
 }

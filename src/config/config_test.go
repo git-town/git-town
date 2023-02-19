@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestRunner(t *testing.T) {
+func TestGitTown(t *testing.T) {
 	t.Parallel()
 	t.Run(".SetOffline()", func(t *testing.T) {
 		t.Parallel()

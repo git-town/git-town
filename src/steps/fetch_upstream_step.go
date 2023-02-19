@@ -9,9 +9,9 @@ import (
 // up to speed with activities that happened in the upstream remote.
 type FetchUpstreamStep struct {
 	NoOpStep
-	BranchName string
+	Branch string
 }
 
 func (step *FetchUpstreamStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
-	return repo.Logging.FetchUpstream(step.BranchName)
+	return repo.Logging.FetchUpstream(step.Branch)
 }

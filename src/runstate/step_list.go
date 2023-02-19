@@ -12,6 +12,13 @@ type StepList struct {
 	List []steps.Step
 }
 
+// NewStepList provides a StepList instance containing the given step.
+func NewStepList(step steps.Step) StepList {
+	return StepList{
+		List: []steps.Step{step},
+	}
+}
+
 // Append adds the given step to the end of this StepList.
 func (stepList *StepList) Append(step steps.Step) {
 	stepList.List = append(stepList.List, step)
