@@ -40,17 +40,20 @@ func NewGiteaConfig(url giturl.Parts, config config) *GiteaConfig {
 	}
 }
 
+// Driver provides a fully configured driver instance for the Gitea API.
 func (c GiteaConfig) Driver(log logFn) GiteaDriver {
-	ts := oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken: c.apiToken},
-	)
-	tc := oauth2.NewClient(context.Background(), ts)
-	client := gitea.NewClientWithHTTP(fmt.Sprintf("https://%s", c.hostname), tc)
+	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: c.apiToken})
+	httpClient := oauth2.NewClient(context.Background(), tokenSource)
+	giteaClient := gitea.NewClientWithHTTP(fmt.Sprintf("https://%s", c.hostname), httpClient)
 	return GiteaDriver{
-		client:      client,
+		client:      giteaClient,
 		GiteaConfig: c,
 		log:         log,
 	}
+}
+
+func (c GiteaConfig) HostingServiceName() string {
+	return "Gitea"
 }
 
 func (c GiteaConfig) NewPullRequestURL(branch string, parentBranch string) (string, error) {
@@ -60,10 +63,6 @@ func (c GiteaConfig) NewPullRequestURL(branch string, parentBranch string) (stri
 
 func (c GiteaConfig) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", c.hostname, c.owner, c.repository)
-}
-
-func (c GiteaConfig) HostingServiceName() string {
-	return "Gitea"
 }
 
 // GiteaDriver provides access to the API of Gitea installations.
