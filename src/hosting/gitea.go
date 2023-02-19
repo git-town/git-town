@@ -116,9 +116,9 @@ func (d *GiteaDriver) apiRetargetPullRequests(pullRequests []*gitea.PullRequest,
 	return nil
 }
 
-func (d *GiteaDriver) LoadPullRequestInfo(branch, parentBranch string) (PullRequestInfo, error) {
+func (d *GiteaDriver) LoadPullRequestInfo(branch, parentBranch string) (*PullRequestInfo, error) {
 	if d.apiToken == "" {
-		return PullRequestInfo{}, nil
+		return nil, nil //nolint:nilnil // we really want to return nil here
 	}
 	openPullRequests, err := d.client.ListRepoPullRequests(d.owner, d.repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{
@@ -127,20 +127,20 @@ func (d *GiteaDriver) LoadPullRequestInfo(branch, parentBranch string) (PullRequ
 		State: gitea.StateOpen,
 	})
 	if err != nil {
-		return PullRequestInfo{}, err
+		return nil, err
 	}
 	baseName := parentBranch
 	headName := d.owner + "/" + branch
 	pullRequests := filterPullRequests(openPullRequests, baseName, headName)
-	if len(pullRequests) != 1 {
-		return PullRequestInfo{}, nil
+	if len(pullRequests) < 1 {
+		return nil, fmt.Errorf("no pull request from branch %q to branch %q found", branch, parentBranch)
+	}
+	if len(pullRequests) > 1 {
+		return nil, fmt.Errorf("found %d pull requests from branch %q to branch %q", len(pullRequests), branch, parentBranch)
 	}
 	pullRequest := pullRequests[0]
-	if !pullRequest.Mergeable {
-		return PullRequestInfo{}, nil
-	}
-	return PullRequestInfo{
-		CanMergeWithAPI:      true,
+	return &PullRequestInfo{
+		CanMergeWithAPI:      pullRequest.Mergeable,
 		DefaultCommitMessage: createDefaultCommitMessage(pullRequest),
 		PullRequestNumber:    pullRequest.Index,
 	}, nil
