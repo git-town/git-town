@@ -40,12 +40,12 @@ func TestNewGiteaConfig(t *testing.T) {
 	t.Parallel()
 	t.Run("normal repo", func(t *testing.T) {
 		t.Parallel()
-		repoConfi := mockRepoConfig{
+		repoConfig := mockRepoConfig{
 			hostingService: "gitea",
 			originURL:      "git@self-hosted-gitea.com:git-town/git-town.git",
 		}
-		url := giturl.Parse(repoConfi.originURL)
-		giteaConfig := hosting.NewGiteaConfig(*url, repoConfi)
+		url := giturl.Parse(repoConfig.originURL)
+		giteaConfig := hosting.NewGiteaConfig(*url, repoConfig)
 		assert.NotNil(t, giteaConfig)
 		assert.Equal(t, "Gitea", giteaConfig.HostingServiceName())
 		assert.Equal(t, "https://self-hosted-gitea.com/git-town/git-town", giteaConfig.RepositoryURL())
