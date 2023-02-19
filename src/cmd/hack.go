@@ -29,7 +29,7 @@ See "sync" for information regarding upstream remotes.`,
 			if err != nil {
 				cli.Exit(err)
 			}
-			stepList, err := appendStepList(&config, repo)
+			stepList, err := appendStepList(config, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
@@ -67,48 +67,47 @@ func determineParentBranch(targetBranch string, promptForParent bool, repo *git.
 	return repo.Config.MainBranch(), nil
 }
 
-func determineHackConfig(args []string, promptForParent bool, repo *git.ProdRepo) (appendConfig, error) {
+func determineHackConfig(args []string, promptForParent bool, repo *git.ProdRepo) (*appendConfig, error) {
 	targetBranch := args[0]
 	parentBranch, err := determineParentBranch(targetBranch, promptForParent, repo)
 	if err != nil {
-		return appendConfig{}, err
+		return nil, err
 	}
 	hasOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
-		return appendConfig{}, err
+		return nil, err
 	}
 	shouldNewBranchPush, err := repo.Config.ShouldNewBranchPush()
 	if err != nil {
-		return appendConfig{}, err
+		return nil, err
 	}
 	isOffline, err := repo.Config.IsOffline()
 	if err != nil {
-		return appendConfig{}, err
+		return nil, err
 	}
 	if hasOrigin && !isOffline {
 		err := repo.Logging.Fetch()
 		if err != nil {
-			return appendConfig{}, err
+			return nil, err
 		}
 	}
 	hasBranch, err := repo.Silent.HasLocalOrOriginBranch(targetBranch)
 	if err != nil {
-		return appendConfig{}, err
+		return nil, err
 	}
 	if hasBranch {
-		return appendConfig{}, fmt.Errorf("a branch named %q already exists", targetBranch)
+		return nil, fmt.Errorf("a branch named %q already exists", targetBranch)
 	}
 	pushHook, err := repo.Config.PushHook()
 	if err != nil {
-		return appendConfig{}, err
+		return nil, err
 	}
-	result := appendConfig{
+	return &appendConfig{
 		targetBranch:        targetBranch,
 		parentBranch:        parentBranch,
 		hasOrigin:           hasOrigin,
 		shouldNewBranchPush: shouldNewBranchPush,
 		noPushHook:          !pushHook,
 		isOffline:           isOffline,
-	}
-	return result, nil
+	}, nil
 }
