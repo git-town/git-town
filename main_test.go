@@ -30,7 +30,7 @@ func TestGodog(t *testing.T) {
 	}
 	status := godog.RunWithOptions("godog", func(s *godog.Suite) {
 		FeatureContext(s)
-	}, godog.Options{
+	}, godog.Options{ //nolint:exhaustruct
 		Format:      "progress",
 		Concurrency: runtime.NumCPU(),
 		Strict:      true,
