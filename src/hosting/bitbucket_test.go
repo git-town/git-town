@@ -17,20 +17,20 @@ func TestNewBitbucketDriver(t *testing.T) {
 			originURL:      "git@self-hosted-bitbucket.com:git-town/git-town.git",
 		}
 		url := giturl.Parse(repoConfig.originURL)
-		bitbucketDriver := hosting.NewBitbucketDriver(*url, repoConfig, nil)
-		assert.NotNil(t, bitbucketDriver)
-		assert.Equal(t, "Bitbucket", bitbucketDriver.HostingServiceName())
-		assert.Equal(t, "https://self-hosted-bitbucket.com/git-town/git-town", bitbucketDriver.RepositoryURL())
+		driver := hosting.NewBitbucketDriver(*url, repoConfig, nil)
+		assert.NotNil(t, driver)
+		assert.Equal(t, "Bitbucket", driver.HostingServiceName())
+		assert.Equal(t, "https://self-hosted-bitbucket.com/git-town/git-town", driver.RepositoryURL())
 	})
 
 	t.Run("custom hostname", func(t *testing.T) {
 		t.Parallel()
-		config := mockRepoConfig{
+		repoConfig := mockRepoConfig{
 			originURL:      "git@my-ssh-identity.com:git-town/git-town.git",
 			originOverride: "bitbucket.org",
 		}
-		url := giturl.Parse(config.originURL)
-		driver := hosting.NewBitbucketDriver(*url, config, nil)
+		url := giturl.Parse(repoConfig.originURL)
+		driver := hosting.NewBitbucketDriver(*url, repoConfig, nil)
 		assert.NotNil(t, driver)
 		assert.Equal(t, "Bitbucket", driver.HostingServiceName())
 		assert.Equal(t, "https://bitbucket.org/git-town/git-town", driver.RepositoryURL())
@@ -38,12 +38,12 @@ func TestNewBitbucketDriver(t *testing.T) {
 
 	t.Run("custom username", func(t *testing.T) {
 		t.Parallel()
-		config := mockRepoConfig{
+		repoConfig := mockRepoConfig{
 			hostingService: "bitbucket",
 			originURL:      "username@bitbucket.org:git-town/git-town.git",
 		}
-		url := giturl.Parse(config.originURL)
-		driver := hosting.NewBitbucketDriver(*url, config, nil)
+		url := giturl.Parse(repoConfig.originURL)
+		driver := hosting.NewBitbucketDriver(*url, repoConfig, nil)
 		assert.NotNil(t, driver)
 		assert.Equal(t, "Bitbucket", driver.HostingServiceName())
 		assert.Equal(t, "https://bitbucket.org/git-town/git-town", driver.RepositoryURL())
