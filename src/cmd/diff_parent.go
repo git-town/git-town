@@ -45,34 +45,36 @@ Exits with error code 1 if the given branch is a perennial branch or the main br
 }
 
 // Does not return error because "Ensure" functions will call exit directly.
-func determineDiffParentConfig(args []string, repo *git.ProdRepo) (diffParentConfig, error) {
+func determineDiffParentConfig(args []string, repo *git.ProdRepo) (*diffParentConfig, error) {
 	initialBranch, err := repo.Silent.CurrentBranch()
 	if err != nil {
-		return diffParentConfig{}, err
+		return nil, err
 	}
-	config := diffParentConfig{}
+	var branch string
 	if len(args) == 0 {
-		config.branch = initialBranch
+		branch = initialBranch
 	} else {
-		config.branch = args[0]
+		branch = args[0]
 	}
-	if initialBranch != config.branch {
-		hasBranch, err := repo.Silent.HasLocalBranch(config.branch)
+	if initialBranch != branch {
+		hasBranch, err := repo.Silent.HasLocalBranch(branch)
 		if err != nil {
-			return diffParentConfig{}, err
+			return nil, err
 		}
 		if !hasBranch {
-			return diffParentConfig{}, fmt.Errorf("there is no local branch named %q", config.branch)
+			return nil, fmt.Errorf("there is no local branch named %q", branch)
 		}
 	}
-	if !repo.Config.IsFeatureBranch(config.branch) {
-		return diffParentConfig{}, fmt.Errorf("you can only diff-parent feature branches")
+	if !repo.Config.IsFeatureBranch(branch) {
+		return nil, fmt.Errorf("you can only diff-parent feature branches")
 	}
 	parentDialog := dialog.ParentBranches{}
-	err = parentDialog.EnsureKnowsParentBranches([]string{config.branch}, repo)
+	err = parentDialog.EnsureKnowsParentBranches([]string{branch}, repo)
 	if err != nil {
-		return diffParentConfig{}, err
+		return nil, err
 	}
-	config.parentBranch = repo.Config.ParentBranch(config.branch)
-	return config, nil
+	return &diffParentConfig{
+		branch:       branch,
+		parentBranch: repo.Config.ParentBranch(branch),
+	}, nil
 }

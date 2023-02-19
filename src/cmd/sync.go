@@ -105,26 +105,23 @@ func determineSyncConfig(allFlag bool, repo *git.ProdRepo) (*syncConfig, error) 
 	if err != nil {
 		return nil, err
 	}
-	result := syncConfig{
-		hasOrigin:  hasOrigin,
-		isOffline:  isOffline,
-		mainBranch: repo.Config.MainBranch(),
-	}
-	if result.hasOrigin && !result.isOffline {
+	if hasOrigin && !isOffline {
 		err := repo.Logging.Fetch()
 		if err != nil {
 			return nil, err
 		}
 	}
-	result.branchesWithDeletedRemote, err = repo.Silent.LocalBranchesWithDeletedTrackingBranches()
+	branchesWithDeletedRemote, err := repo.Silent.LocalBranchesWithDeletedTrackingBranches()
 	if err != nil {
-		return syncConfig{}, err
+		return nil, err
 	}
-	result.initialBranch, err = repo.Silent.CurrentBranch()
+	initialBranch, err := repo.Silent.CurrentBranch()
 	if err != nil {
 		return nil, err
 	}
 	parentDialog := dialog.ParentBranches{}
+	var branchesToSync []string
+	var shouldPushTags bool
 	if allFlag {
 		branches, err := repo.Silent.LocalBranchesMainFirst()
 		if err != nil {
@@ -134,17 +131,23 @@ func determineSyncConfig(allFlag bool, repo *git.ProdRepo) (*syncConfig, error) 
 		if err != nil {
 			return nil, err
 		}
-		result.branchesToSync = branches
-		result.shouldPushTags = true
+		branchesToSync = branches
+		shouldPushTags = true
 	} else {
-		err = parentDialog.EnsureKnowsParentBranches([]string{result.initialBranch}, repo)
+		err = parentDialog.EnsureKnowsParentBranches([]string{initialBranch}, repo)
 		if err != nil {
 			return nil, err
 		}
-		result.branchesToSync = append(repo.Config.AncestorBranches(result.initialBranch), result.initialBranch)
-		result.shouldPushTags = !repo.Config.IsFeatureBranch(result.initialBranch)
+		branchesToSync = append(repo.Config.AncestorBranches(initialBranch), initialBranch)
+		shouldPushTags = !repo.Config.IsFeatureBranch(initialBranch)
 	}
-	return &result, nil
+	return &syncConfig{
+		branchesToSync: branchesToSync,
+		hasOrigin:      hasOrigin,
+		initialBranch:  initialBranch,
+		isOffline:      isOffline,
+		shouldPushTags: shouldPushTags,
+	}, nil
 }
 
 func syncBranchesStepList(config syncConfig, repo *git.ProdRepo) (runstate.StepList, error) {
