@@ -60,10 +60,8 @@ issues:
       text: missing in Client
       linters:
         - exhaustruct
-    # - text: missing in Select
-    #   linters:
-    #     - exhaustruct
-    - text: missing in MultiSelect
+    - path: src/dialog/
+      text: missing in (Select|MultiSelect)
       linters:
         - exhaustruct
     - text: missing in AcceptMergeRequestOptions
