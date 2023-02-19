@@ -63,60 +63,62 @@ See "sync" for upstream remote options.
 	}
 }
 
-func determinePrependConfig(args []string, repo *git.ProdRepo) (prependConfig, error) {
+func determinePrependConfig(args []string, repo *git.ProdRepo) (*prependConfig, error) {
 	initialBranch, err := repo.Silent.CurrentBranch()
 	if err != nil {
-		return prependConfig{}, err
+		return nil, err
 	}
-	result := prependConfig{
-		initialBranch: initialBranch,
-		targetBranch:  args[0],
-	}
-	result.hasOrigin, err = repo.Silent.HasOrigin()
+	hasOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
-		return prependConfig{}, err
+		return nil, err
 	}
-	result.shouldNewBranchPush, err = repo.Config.ShouldNewBranchPush()
+	shouldNewBranchPush, err := repo.Config.ShouldNewBranchPush()
 	if err != nil {
-		return prependConfig{}, err
+		return nil, err
 	}
 	isOffline, err := repo.Config.IsOffline()
 	if err != nil {
-		return prependConfig{}, err
+		return nil, err
 	}
-	result.isOffline = isOffline
-	if result.hasOrigin && !result.isOffline {
+	if hasOrigin && !isOffline {
 		err := repo.Logging.Fetch()
 		if err != nil {
-			return prependConfig{}, err
+			return nil, err
 		}
 	}
-	hasBranch, err := repo.Silent.HasLocalOrOriginBranch(result.targetBranch)
+	targetBranch := args[0]
+	hasBranch, err := repo.Silent.HasLocalOrOriginBranch(targetBranch)
 	if err != nil {
-		return prependConfig{}, err
+		return nil, err
 	}
 	if hasBranch {
-		return prependConfig{}, fmt.Errorf("a branch named %q already exists", result.targetBranch)
+		return nil, fmt.Errorf("a branch named %q already exists", targetBranch)
 	}
-	if !repo.Config.IsFeatureBranch(result.initialBranch) {
-		return prependConfig{}, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can have parent branches", result.initialBranch)
+	if !repo.Config.IsFeatureBranch(initialBranch) {
+		return nil, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can have parent branches", initialBranch)
 	}
 	parentDialog := dialog.ParentBranches{}
-	err = parentDialog.EnsureKnowsParentBranches([]string{result.initialBranch}, repo)
+	err = parentDialog.EnsureKnowsParentBranches([]string{initialBranch}, repo)
 	if err != nil {
-		return prependConfig{}, err
+		return nil, err
 	}
 	pushHook, err := repo.Config.PushHook()
 	if err != nil {
-		return prependConfig{}, err
+		return nil, err
 	}
-	result.noPushHook = !pushHook
-	result.parentBranch = repo.Config.ParentBranch(result.initialBranch)
-	result.ancestorBranches = repo.Config.AncestorBranches(result.initialBranch)
-	return result, nil
+	return &prependConfig{
+		hasOrigin:           hasOrigin,
+		initialBranch:       initialBranch,
+		isOffline:           isOffline,
+		noPushHook:          !pushHook,
+		parentBranch:        repo.Config.ParentBranch(initialBranch),
+		ancestorBranches:    repo.Config.AncestorBranches(initialBranch),
+		shouldNewBranchPush: shouldNewBranchPush,
+		targetBranch:        targetBranch,
+	}, nil
 }
 
-func prependStepList(config prependConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+func prependStepList(config *prependConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	for _, branch := range config.ancestorBranches {
 		steps, err := syncBranchSteps(branch, true, repo)
