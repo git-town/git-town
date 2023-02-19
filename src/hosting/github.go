@@ -80,19 +80,21 @@ type GithubDriver struct {
 	log    logFn
 }
 
-func (d *GithubDriver) LoadPullRequestInfo(branch, parentBranch string) (PullRequestInfo, error) {
+func (d *GithubDriver) LoadPullRequestInfo(branch, parentBranch string) (*PullRequestInfo, error) {
 	if d.apiToken == "" {
-		return PullRequestInfo{}, nil
+		return nil, nil //nolint:nilnil // we really want to return nil here
 	}
 	pullRequests, err := d.loadPullRequests(branch, parentBranch)
 	if err != nil {
-		return PullRequestInfo{}, err
+		return nil, err
 	}
-	if len(pullRequests) != 1 {
-		// TODO: do something better than returning an empty info object here. At least return an error message.
-		return PullRequestInfo{}, nil
+	if len(pullRequests) < 1 {
+		return nil, fmt.Errorf("no pull request from branch %q to branch %q found", branch, parentBranch)
 	}
-	return PullRequestInfo{
+	if len(pullRequests) > 1 {
+		return nil, fmt.Errorf("found %d pull requests from branch %q to branch %q", len(pullRequests), branch, parentBranch)
+	}
+	return &PullRequestInfo{
 		CanMergeWithAPI:      true,
 		DefaultCommitMessage: d.defaultCommitMessage(pullRequests[0]),
 		PullRequestNumber:    int64(pullRequests[0].GetNumber()),

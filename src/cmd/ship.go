@@ -162,9 +162,11 @@ func determineShipConfig(args []string, driver hosting.Driver, repo *git.ProdRep
 		if err != nil {
 			return nil, err
 		}
-		canShipWithDriver = prInfo.CanMergeWithAPI
-		defaultCommitMessage = prInfo.DefaultCommitMessage
-		pullRequestNumber = prInfo.PullRequestNumber
+		if prInfo != nil {
+			canShipWithDriver = prInfo.CanMergeWithAPI
+			defaultCommitMessage = prInfo.DefaultCommitMessage
+			pullRequestNumber = prInfo.PullRequestNumber
+		}
 	}
 	deleteOrigin, err := repo.Config.ShouldShipDeleteOriginBranch()
 	if err != nil {

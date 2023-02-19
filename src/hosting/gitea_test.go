@@ -84,8 +84,8 @@ func TestGitea(t *testing.T) {
 			driver, teardown := setupGiteaDriver(t, "")
 			defer teardown()
 			prInfo, err := driver.LoadPullRequestInfo("feature", "main")
-			assert.NoError(t, err)
-			assert.False(t, prInfo.CanMergeWithAPI)
+			assert.Nil(t, err)
+			assert.Nil(t, prInfo)
 		})
 
 		t.Run("cannot load pull request number", func(t *testing.T) {
@@ -100,18 +100,16 @@ func TestGitea(t *testing.T) {
 			driver, teardown := setupGiteaDriver(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", giteaCurrOpen, httpmock.NewStringResponder(200, "[]"))
-			prInfo, err := driver.LoadPullRequestInfo("feature", "main")
-			assert.NoError(t, err)
-			assert.False(t, prInfo.CanMergeWithAPI)
+			_, err := driver.LoadPullRequestInfo("feature", "main")
+			assert.ErrorContains(t, err, "no pull request from branch \"feature\" to branch \"main\" found")
 		})
 
 		t.Run("multiple pull requests for this banch", func(t *testing.T) {
 			driver, teardown := setupGiteaDriver(t, "TOKEN")
 			defer teardown()
-			httpmock.RegisterResponder("GET", giteaCurrOpen, httpmock.NewStringResponder(200, `[{"number": 1, "base": {"label": "main"}, "head": {"label": "no-match"} }, {"number": 2, "base": {"label": "main"}, "head": {"label": "no-match2"} }]`))
-			prInfo, err := driver.LoadPullRequestInfo("feature", "main")
-			assert.NoError(t, err)
-			assert.False(t, prInfo.CanMergeWithAPI)
+			httpmock.RegisterResponder("GET", giteaCurrOpen, httpmock.NewStringResponder(200, `[{"number": 1, "title": "title 1", "mergeable": true, "base": {"label": "main"}, "head": {"label": "git-town/feature"} },{"number": 2, "title": "title 2", "mergeable": true, "base": {"label": "main"}, "head": {"label": "git-town/feature"} }]`))
+			_, err := driver.LoadPullRequestInfo("feature", "main")
+			assert.ErrorContains(t, err, "found 2 pull requests from branch \"feature\" to branch \"main\"")
 		})
 	})
 

@@ -10,7 +10,7 @@ import (
 type Driver interface {
 	// LoadPullRequestInfo loads information about the pull request of the given branch into the given parent branch
 	// from the code hosting provider.
-	LoadPullRequestInfo(branch, parentBranch string) (PullRequestInfo, error)
+	LoadPullRequestInfo(branch, parentBranch string) (*PullRequestInfo, error)
 
 	// NewPullRequestURL provides the URL of the page
 	// to create a new pull request online.
