@@ -50,34 +50,33 @@ This usually means the branch was shipped or killed on another machine.`,
 	}
 }
 
-func determinePruneBranchesConfig(repo *git.ProdRepo) (pruneBranchesConfig, error) {
+func determinePruneBranchesConfig(repo *git.ProdRepo) (*pruneBranchesConfig, error) {
 	hasOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
-		return pruneBranchesConfig{}, err
+		return nil, err
 	}
 	if hasOrigin {
 		err = repo.Logging.Fetch()
 		if err != nil {
-			return pruneBranchesConfig{}, err
+			return nil, err
 		}
 	}
 	initialBranch, err := repo.Silent.CurrentBranch()
 	if err != nil {
-		return pruneBranchesConfig{}, err
+		return nil, err
 	}
 	localBranchesWithDeletedTrackingBranches, err := repo.Silent.LocalBranchesWithDeletedTrackingBranches()
 	if err != nil {
-		return pruneBranchesConfig{}, err
+		return nil, err
 	}
-	result := pruneBranchesConfig{
+	return &pruneBranchesConfig{
 		initialBranch:                            initialBranch,
 		localBranchesWithDeletedTrackingBranches: localBranchesWithDeletedTrackingBranches,
 		mainBranch:                               repo.Config.MainBranch(),
-	}
-	return result, nil
+	}, nil
 }
 
-func pruneBranchesStepList(config pruneBranchesConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+func pruneBranchesStepList(config *pruneBranchesConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	initialBranch := config.initialBranch
 	result := runstate.StepList{}
 	for _, branchWithDeletedRemote := range config.localBranchesWithDeletedTrackingBranches {
