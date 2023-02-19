@@ -89,14 +89,14 @@ You can disable this by running "git config %s false".`, config.SyncUpstream),
 	return &syncCmd
 }
 
-func determineSyncConfig(allFlag bool, repo *git.ProdRepo) (syncConfig, error) {
+func determineSyncConfig(allFlag bool, repo *git.ProdRepo) (*syncConfig, error) {
 	hasOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
-		return syncConfig{}, err
+		return nil, err
 	}
 	isOffline, err := repo.Config.IsOffline()
 	if err != nil {
-		return syncConfig{}, err
+		return nil, err
 	}
 	result := syncConfig{
 		hasOrigin: hasOrigin,
@@ -105,38 +105,38 @@ func determineSyncConfig(allFlag bool, repo *git.ProdRepo) (syncConfig, error) {
 	if result.hasOrigin && !result.isOffline {
 		err := repo.Logging.Fetch()
 		if err != nil {
-			return syncConfig{}, err
+			return nil, err
 		}
 	}
 	result.initialBranch, err = repo.Silent.CurrentBranch()
 	if err != nil {
-		return syncConfig{}, err
+		return nil, err
 	}
 	parentDialog := dialog.ParentBranches{}
 	if allFlag {
 		branches, err := repo.Silent.LocalBranchesMainFirst()
 		if err != nil {
-			return syncConfig{}, err
+			return nil, err
 		}
 		err = parentDialog.EnsureKnowsParentBranches(branches, repo)
 		if err != nil {
-			return syncConfig{}, err
+			return nil, err
 		}
 		result.branchesToSync = branches
 		result.shouldPushTags = true
 	} else {
 		err = parentDialog.EnsureKnowsParentBranches([]string{result.initialBranch}, repo)
 		if err != nil {
-			return syncConfig{}, err
+			return nil, err
 		}
 		result.branchesToSync = append(repo.Config.AncestorBranches(result.initialBranch), result.initialBranch)
 		result.shouldPushTags = !repo.Config.IsFeatureBranch(result.initialBranch)
 	}
-	return result, nil
+	return &result, nil
 }
 
 // syncSteps provides the step list for the "git sync" command.
-func syncSteps(config syncConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+func syncSteps(config *syncConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	for _, branch := range config.branchesToSync {
 		steps, err := syncBranchSteps(branch, true, repo)
