@@ -65,7 +65,7 @@ func (c GiteaConfig) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", c.hostname, c.owner, c.repository)
 }
 
-// GiteaDriver provides access to the API of Gitea installations.
+// GiteaDriver provides access to the Gitea API.
 type GiteaDriver struct {
 	GiteaConfig
 	client *gitea.Client

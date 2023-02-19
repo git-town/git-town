@@ -81,7 +81,7 @@ func (c GitlabConfig) RepositoryURL() string {
 	return fmt.Sprintf("%s/%s", c.BaseURL(), c.ProjectPath())
 }
 
-// GitlabDriver provides access to the API of GitLab installations.
+// GitlabDriver provides access to the GitLab API.
 type GitlabDriver struct {
 	GitlabConfig
 	client *gitlab.Client
