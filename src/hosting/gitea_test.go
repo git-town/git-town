@@ -23,44 +23,45 @@ func log(template string, messages ...interface{}) {}
 func setupGiteaDriver(t *testing.T, token string) (*hosting.GiteaDriver, func()) {
 	t.Helper()
 	httpmock.Activate()
-	config := mockConfig{
+	repoConfig := mockRepoConfig{
 		originURL:  "git@gitea.com:git-town/git-town.git",
 		giteaToken: token,
 	}
-	url := giturl.Parse(config.originURL)
-	driver := hosting.NewGiteaDriver(*url, config, log)
-	assert.NotNil(t, driver)
-	return driver, func() {
+	url := giturl.Parse(repoConfig.originURL)
+	giteaConfig := hosting.NewGiteaConfig(*url, repoConfig)
+	assert.NotNil(t, giteaConfig)
+	driver := giteaConfig.Driver(log)
+	return &driver, func() {
 		httpmock.DeactivateAndReset()
 	}
 }
 
-func TestNewGiteaDriver(t *testing.T) {
+func TestNewGiteaConfig(t *testing.T) {
 	t.Parallel()
 	t.Run("normal repo", func(t *testing.T) {
 		t.Parallel()
-		config := mockConfig{
+		repoConfig := mockRepoConfig{
 			hostingService: "gitea",
 			originURL:      "git@self-hosted-gitea.com:git-town/git-town.git",
 		}
-		url := giturl.Parse(config.originURL)
-		driver := hosting.NewGiteaDriver(*url, config, log)
-		assert.NotNil(t, driver)
-		assert.Equal(t, "Gitea", driver.HostingServiceName())
-		assert.Equal(t, "https://self-hosted-gitea.com/git-town/git-town", driver.RepositoryURL())
+		url := giturl.Parse(repoConfig.originURL)
+		giteaConfig := hosting.NewGiteaConfig(*url, repoConfig)
+		assert.NotNil(t, giteaConfig)
+		assert.Equal(t, "Gitea", giteaConfig.HostingServiceName())
+		assert.Equal(t, "https://self-hosted-gitea.com/git-town/git-town", giteaConfig.RepositoryURL())
 	})
 
 	t.Run("custom hostname", func(t *testing.T) {
 		t.Parallel()
-		config := mockConfig{
+		repoConfig := mockRepoConfig{
 			originURL:      "git@my-ssh-identity.com:git-town/git-town.git",
 			originOverride: "gitea.com",
 		}
-		url := giturl.Parse(config.originURL)
-		driver := hosting.NewGiteaDriver(*url, config, log)
-		assert.NotNil(t, driver)
-		assert.Equal(t, "Gitea", driver.HostingServiceName())
-		assert.Equal(t, "https://gitea.com/git-town/git-town", driver.RepositoryURL())
+		url := giturl.Parse(repoConfig.originURL)
+		giteaConfig := hosting.NewGiteaConfig(*url, repoConfig)
+		assert.NotNil(t, giteaConfig)
+		assert.Equal(t, "Gitea", giteaConfig.HostingServiceName())
+		assert.Equal(t, "https://gitea.com/git-town/git-town", giteaConfig.RepositoryURL())
 	})
 }
 

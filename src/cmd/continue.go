@@ -29,7 +29,11 @@ func continueCmd(repo *git.ProdRepo) *cobra.Command {
 			if hasConflicts {
 				cli.Exit(fmt.Errorf("you must resolve the conflicts before continuing"))
 			}
-			err = runstate.Execute(runState, repo, hosting.NewDriver(&repo.Config, &repo.Silent, cli.PrintDriverAction))
+			driver, err := hosting.NewDriver(&repo.Config, &repo.Silent, cli.PrintDriverAction)
+			if err != nil {
+				cli.Exit(err)
+			}
+			err = runstate.Execute(runState, repo, driver)
 			if err != nil {
 				cli.Exit(err)
 			}
