@@ -57,7 +57,8 @@ issues:
       linters:
         - exhaustruct
     - path: src/hosting/gitlab.go
-      text: missing in
+      text:
+        missing in
         (AcceptMergeRequestOptions|Client|ListProjectMergeRequestsOptions)
       linters:
         - exhaustruct
@@ -67,9 +68,6 @@ issues:
         - exhaustruct
     - path: src/hosting/
       text: missing in PullRequest
-      linters:
-        - exhaustruct
-    - text: missing in PushArgs
       linters:
         - exhaustruct
     - text: missing in UpdateMergeRequestOptions

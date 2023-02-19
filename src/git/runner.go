@@ -842,7 +842,7 @@ func (r *Runner) PushBranch(options ...PushArgs) error {
 	if len(options) > 0 {
 		option = options[0]
 	} else {
-		option = PushArgs{}
+		option = PushArgs{} //nolint:exhaustruct  // intentional zero-value object
 	}
 	args := []string{"push"}
 	provideBranch := false
