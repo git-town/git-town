@@ -53,14 +53,11 @@ issues:
       linters:
         - exhaustruct
     - path: src/hosting/github.go
-      text:
-        missing in (PullRequest|PullRequestListOptions|PullRequestOptions|Token)
+      text: missing in (PullRequest|PullRequestListOptions|PullRequestOptions|Token)
       linters:
         - exhaustruct
     - path: src/hosting/gitlab.go
-      text:
-        missing in
-        (AcceptMergeRequestOptions|Client|ListProjectMergeRequestsOptions|UpdateMergeRequestOptions)
+      text: missing in (AcceptMergeRequestOptions|Client|ListProjectMergeRequestsOptions|UpdateMergeRequestOptions)
       linters:
         - exhaustruct
     - path: src/dialog/
