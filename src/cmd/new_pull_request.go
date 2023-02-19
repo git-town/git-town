@@ -44,7 +44,10 @@ where hostname matches what is in your ssh config file.`, config.CodeHostingDriv
 			if err != nil {
 				cli.Exit(err)
 			}
-			driver := hosting.NewDriver(&repo.Config, &repo.Silent, cli.PrintDriverAction)
+			driver, err := hosting.NewDriver(&repo.Config, &repo.Silent, cli.PrintDriverAction)
+			if err != nil {
+				cli.Exit(err)
+			}
 			if driver == nil {
 				cli.Exit(hosting.UnsupportedServiceError())
 			}
