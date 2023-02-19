@@ -69,7 +69,7 @@ func WithOptions(opts *Options, cmd string, args ...string) (*Result, error) {
 				command:  cmd,
 				args:     args,
 				output:   output.String(),
-				exitCode: -1,
+				exitCode: subProcess.ProcessState.ExitCode(),
 			}
 			return &result, fmt.Errorf("can't write %q to subprocess '%s %s': %w", userInput, cmd, strings.Join(args, " "), err)
 		}
