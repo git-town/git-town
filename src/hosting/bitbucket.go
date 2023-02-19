@@ -18,7 +18,7 @@ type BitbucketDriver struct {
 	repository   string
 }
 
-// NewBitbucketDriver provides a Bitbucket driver instance if the given repo configuration is for a Bitbucket repo,
+// NewBitbucketDriver provides a Bitbucket driver instance if the current repo is hosted on Bitbucket,
 // otherwise nil.
 func NewBitbucketDriver(url giturl.Parts, config config, git gitRunner) *BitbucketDriver {
 	driverType := config.HostingService()
@@ -39,7 +39,7 @@ func NewBitbucketDriver(url giturl.Parts, config config, git gitRunner) *Bitbuck
 }
 
 func (d *BitbucketDriver) LoadPullRequestInfo(branch, parentBranch string) (PullRequestInfo, error) {
-	return PullRequestInfo{}, nil
+	return PullRequestInfo{}, fmt.Errorf("BitBucket API functionality isn't implemented")
 }
 
 func (d *BitbucketDriver) NewPullRequestURL(branch, parentBranch string) (string, error) {

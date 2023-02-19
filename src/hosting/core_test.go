@@ -1,6 +1,6 @@
 package hosting_test
 
-type mockConfig struct {
+type mockRepoConfig struct {
 	giteaToken     string
 	gitHubToken    string
 	gitLabToken    string
@@ -10,30 +10,30 @@ type mockConfig struct {
 	originURL      string
 }
 
-func (mc mockConfig) GiteaToken() string {
+func (mc mockRepoConfig) GiteaToken() string {
 	return mc.giteaToken
 }
 
-func (mc mockConfig) GitHubToken() string {
+func (mc mockRepoConfig) GitHubToken() string {
 	return mc.gitHubToken
 }
 
-func (mc mockConfig) GitLabToken() string {
+func (mc mockRepoConfig) GitLabToken() string {
 	return mc.gitLabToken
 }
 
-func (mc mockConfig) HostingService() string {
+func (mc mockRepoConfig) HostingService() string {
 	return mc.hostingService
 }
 
-func (mc mockConfig) MainBranch() string {
+func (mc mockRepoConfig) MainBranch() string {
 	return mc.mainBranch
 }
 
-func (mc mockConfig) OriginOverride() string {
+func (mc mockRepoConfig) OriginOverride() string {
 	return mc.originOverride
 }
 
-func (mc mockConfig) OriginURL() string {
+func (mc mockRepoConfig) OriginURL() string {
 	return mc.originURL
 }
