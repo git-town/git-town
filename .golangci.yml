@@ -60,9 +60,9 @@ issues:
       text: missing in Client
       linters:
         - exhaustruct
-    - text: missing in Select
-      linters:
-        - exhaustruct
+    # - text: missing in Select
+    #   linters:
+    #     - exhaustruct
     - text: missing in MultiSelect
       linters:
         - exhaustruct
