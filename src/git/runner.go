@@ -838,9 +838,11 @@ type PushArgs struct {
 
 // PushBranch pushes the branch with the given name to origin.
 func (r *Runner) PushBranch(options ...PushArgs) error {
-	option := PushArgs{}
+	var option PushArgs
 	if len(options) > 0 {
 		option = options[0]
+	} else {
+		option = PushArgs{}
 	}
 	args := []string{"push"}
 	provideBranch := false

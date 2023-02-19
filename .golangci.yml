@@ -30,7 +30,7 @@ linters:
 issues:
   # List of regexps of issue texts to exclude, empty list by default.
   # But independently from this option we use default exclude patterns,
-  # it can be disabled by `exclude-use-default: false`. To list all
+  # it can be disabled by `exclude-use-default: false`.
   # excluded by default patterns execute `golangci-lint run --help`
   exclude:
     - Using the variable on range scope `(input|expected)` in function literal
@@ -50,10 +50,29 @@ issues:
     - text: are missing in PullRequestBranch
       linters:
         - exhaustruct
+    - path: src/hosting/gitlab.go
+      text: "are missing in Client"
+      linters:
+        - exhaustruct
     - text: are missing in Select
       linters:
         - exhaustruct
     - text: are missing in MultiSelect
+      linters:
+        - exhaustruct
+    - text: are missing in AcceptMergeRequestOptions
+      linters:
+        - exhaustruct
+    - text: are missing in ListProjectMergeRequestsOptions
+      linters:
+        - exhaustruct
+    - text: are missing in PullRequest
+      linters:
+        - exhaustruct
+    - text: are missing in PushArgs
+      linters:
+        - exhaustruct
+    - text: are missing in UpdateMergeRequestOptions
       linters:
         - exhaustruct
     # TODO: remove this after the sync refactor ships
