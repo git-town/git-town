@@ -49,15 +49,7 @@ issues:
       linters:
         - exhaustruct
     - path: src/hosting/gitea.go
-      text: missing in ListOptions
-      linters:
-        - exhaustruct
-    - path: src/hosting/gitea.go
-      text: missing in ListPullRequestsOptions
-      linters:
-        - exhaustruct
-    - path: src/hosting/gitea.go
-      text: missing in Token
+      text: missing in (ListOptions|ListPullRequestsOptions|Token)
       linters:
         - exhaustruct
     - path: src/hosting/github.go
