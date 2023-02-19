@@ -149,9 +149,17 @@ func determineShipConfig(args []string, driver hosting.Driver, repo *git.ProdRep
 		return nil, err
 	}
 	branchToMergeInto := repo.Config.ParentBranch(branchToShip)
-	prInfo, err := determinePullRequestInfo(branchToShip, branchToMergeInto, repo, driver)
-	if err != nil {
-		return nil, err
+	canShipWithDriver := false
+	defaultCommitMessage := ""
+	pullRequestNumber := -1
+	if hasTrackingBranch && !isOffline && driver != nil {
+		prInfo, err := determinePullRequestInfo(branchToShip, branchToMergeInto, driver)
+		if err != nil {
+			return nil, err
+		}
+		canShipWithDriver = prInfo.CanMergeWithAPI
+		defaultCommitMessage = prInfo.DefaultCommitMessage
+		pullRequestNumber = int(prInfo.PullRequestNumber)
 	}
 	deleteOrigin, err := repo.Config.ShouldShipDeleteOriginBranch()
 	if err != nil {
@@ -162,14 +170,14 @@ func determineShipConfig(args []string, driver hosting.Driver, repo *git.ProdRep
 		isShippingInitialBranch: isShippingInitialBranch,
 		branchToMergeInto:       branchToMergeInto,
 		branchToShip:            branchToShip,
-		canShipWithDriver:       prInfo.CanMergeWithAPI,
+		canShipWithDriver:       canShipWithDriver,
 		childBranches:           repo.Config.ChildBranches(branchToShip),
-		defaultCommitMessage:    prInfo.DefaultCommitMessage,
+		defaultCommitMessage:    defaultCommitMessage,
 		deleteOriginBranch:      deleteOrigin,
 		hasOrigin:               hasOrigin,
 		hasTrackingBranch:       hasTrackingBranch,
 		initialBranch:           initialBranch,
-		pullRequestNumber:       prInfo.PullRequestNumber,
+		pullRequestNumber:       int64(pullRequestNumber),
 	}, nil
 }
 
@@ -234,23 +242,7 @@ func shipStepList(config *shipConfig, commitMessage string, repo *git.ProdRepo) 
 	return result, err
 }
 
-func determinePullRequestInfo(branch, parentBranch string, repo *git.ProdRepo, driver hosting.Driver) (hosting.PullRequestInfo, error) {
-	hasOrigin, err := repo.Silent.HasOrigin()
-	if err != nil {
-		return hosting.PullRequestInfo{}, err
-	}
-	if !hasOrigin {
-		return hosting.PullRequestInfo{}, nil
-	}
-	isOffline, err := repo.Config.IsOffline()
-	if err != nil {
-		return hosting.PullRequestInfo{}, err
-	}
-	if isOffline {
-		return hosting.PullRequestInfo{}, nil
-	}
-	if driver == nil {
-		return hosting.PullRequestInfo{}, nil
-	}
-	return driver.LoadPullRequestInfo(branch, parentBranch)
+func determinePullRequestInfo(branch, parentBranch string, driver hosting.Driver) (*hosting.PullRequestInfo, error) {
+	pullRequestInfo, err := driver.LoadPullRequestInfo(branch, parentBranch)
+	return &pullRequestInfo, err
 }
