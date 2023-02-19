@@ -20,7 +20,7 @@ type GiteaConfig struct {
 	repository string
 }
 
-// NewGiteaConfig provides a Gitea configuration data if the current repo is hosted on Gitea,
+// NewGiteaConfig provides Gitea configuration data if the current repo is hosted on Gitea,
 // otherwise nil.
 func NewGiteaConfig(url giturl.Parts, config config) *GiteaConfig {
 	driverType := config.HostingService()
