@@ -88,19 +88,21 @@ type GitlabDriver struct {
 	log    logFn
 }
 
-func (d *GitlabDriver) LoadPullRequestInfo(branch, parentBranch string) (PullRequestInfo, error) {
+func (d *GitlabDriver) LoadPullRequestInfo(branch, parentBranch string) (*PullRequestInfo, error) {
 	if d.apiToken == "" {
-		return PullRequestInfo{}, nil
+		return nil, nil //nolint:nilnil // we really want to return nil here
 	}
 	mergeRequests, err := d.loadMergeRequests(branch, parentBranch)
 	if err != nil {
-		return PullRequestInfo{}, err
+		return nil, err
 	}
-	if len(mergeRequests) != 1 {
-		// TODO: return proper error here
-		return PullRequestInfo{}, nil
+	if len(mergeRequests) < 1 {
+		return nil, fmt.Errorf("no merge request from branch %q to branch %q found", branch, parentBranch)
 	}
-	return PullRequestInfo{
+	if len(mergeRequests) > 1 {
+		return nil, fmt.Errorf("found %d merge requests from branch %q to branch %q", len(mergeRequests), branch, parentBranch)
+	}
+	return &PullRequestInfo{
 		CanMergeWithAPI:      true,
 		DefaultCommitMessage: d.defaultCommitMessage(mergeRequests[0]),
 		PullRequestNumber:    int64(mergeRequests[0].IID),
