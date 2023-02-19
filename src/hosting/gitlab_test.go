@@ -23,7 +23,7 @@ const (
 func setupGitlabDriver(t *testing.T, token string) (*hosting.GitlabDriver, func()) {
 	t.Helper()
 	httpmock.Activate()
-	repoConfig := mockConfig{
+	repoConfig := mockRepoConfig{
 		originURL:   "git@gitlab.com:git-town/git-town.git",
 		gitLabToken: token,
 	}
@@ -41,7 +41,7 @@ func TestNewGitlabDriver(t *testing.T) {
 	t.Parallel()
 	t.Run("GitLab handbook repo on gitlab.com", func(t *testing.T) {
 		t.Parallel()
-		config := mockConfig{
+		config := mockRepoConfig{
 			originURL: "git@gitlab.com:gitlab-com/www-gitlab-com.git",
 		}
 		url := giturl.Parse(config.originURL)
@@ -53,7 +53,7 @@ func TestNewGitlabDriver(t *testing.T) {
 
 	t.Run("repository nested inside a group", func(t *testing.T) {
 		t.Parallel()
-		config := mockConfig{
+		config := mockRepoConfig{
 			originURL: "git@gitlab.com:gitlab-org/quality/triage-ops.git",
 		}
 		url := giturl.Parse(config.originURL)
@@ -65,7 +65,7 @@ func TestNewGitlabDriver(t *testing.T) {
 
 	t.Run("self-hosted GitLab server", func(t *testing.T) {
 		t.Parallel()
-		config := mockConfig{
+		config := mockRepoConfig{
 			hostingService: "gitlab",
 			originURL:      "git@self-hosted-gitlab.com:git-town/git-town.git",
 		}
@@ -78,7 +78,7 @@ func TestNewGitlabDriver(t *testing.T) {
 
 	t.Run("custom SSH identity with hostname override", func(t *testing.T) {
 		t.Parallel()
-		config := mockConfig{
+		config := mockRepoConfig{
 			originURL:      "git@my-ssh-identity.com:git-town/git-town.git",
 			originOverride: "gitlab.com",
 		}
