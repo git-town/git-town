@@ -48,9 +48,7 @@ func (c GithubConfig) defaultCommitMessage(pullRequest *github.PullRequest) stri
 
 // Driver provides a working driver instance ready to talk to the GitHub API.
 func (c GithubConfig) Driver(log logFn) GithubDriver {
-	tokenSource := oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken: c.apiToken},
-	)
+	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: c.apiToken})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
 	return GithubDriver{
 		client:       github.NewClient(httpClient),
