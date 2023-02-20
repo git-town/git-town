@@ -146,6 +146,9 @@ func (d *GithubDriver) updatePullRequestsAgainst(options MergePullRequestOptions
 	if err != nil {
 		return err
 	}
+	if len(pullRequests) == 0 {
+		return fmt.Errorf("no pull request for branch %q found", options.Branch)
+	}
 	for _, pullRequest := range pullRequests {
 		if options.LogRequests {
 			d.log("GitHub API: Updating base branch for PR #%d\n", *pullRequest.Number)

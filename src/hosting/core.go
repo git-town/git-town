@@ -69,7 +69,7 @@ type MergePullRequestOptions struct {
 	CommitMessage     string
 	LogRequests       bool `exhaustruct:"optional"`
 	ParentBranch      string
-	PullRequestNumber int64 `exhaustruct:"optional"`
+	PullRequestNumber int64
 }
 
 // logFn defines a function with fmt.Printf API that CodeHostingDriver instances can use to give updates on activities they do.

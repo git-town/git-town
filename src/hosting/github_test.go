@@ -135,9 +135,9 @@ func TestGithubDriver(t *testing.T) {
 			defer teardown()
 			options := hosting.MergePullRequestOptions{
 				Branch:            "feature",
-				PullRequestNumber: 1,
 				CommitMessage:     "title\nextra detail1\nextra detail2",
 				ParentBranch:      "main",
+				PullRequestNumber: 1,
 			}
 			var mergeRequest *http.Request
 			httpmock.RegisterResponder("GET", githubChildOpen, httpmock.NewStringResponder(200, "[]"))
@@ -158,41 +158,41 @@ func TestGithubDriver(t *testing.T) {
 		t.Run("cannot get pull request id", func(t *testing.T) {
 			driver, teardown := setupGithubDriver(t, "TOKEN")
 			defer teardown()
-			options := hosting.MergePullRequestOptions{
-				Branch:        "feature",
-				CommitMessage: "title\nextra detail1\nextra detail2",
-				ParentBranch:  "main",
-			}
 			httpmock.RegisterResponder("GET", githubChildOpen, httpmock.NewStringResponder(404, ""))
-			_, err := driver.MergePullRequest(options)
+			_, err := driver.MergePullRequest(hosting.MergePullRequestOptions{
+				PullRequestNumber: 1,
+				Branch:            "feature",
+				CommitMessage:     "title\nextra detail1\nextra detail2",
+				ParentBranch:      "main",
+			})
 			assert.Error(t, err)
 		})
 
 		t.Run("cannot get pull request to merge", func(t *testing.T) {
 			driver, teardown := setupGithubDriver(t, "TOKEN")
 			defer teardown()
-			options := hosting.MergePullRequestOptions{
-				Branch:        "feature",
-				CommitMessage: "title\nextra detail1\nextra detail2",
-				ParentBranch:  "main",
-			}
 			httpmock.RegisterResponder("GET", githubChildOpen, httpmock.NewStringResponder(200, "[]"))
 			httpmock.RegisterResponder("GET", githubCurrOpen, httpmock.NewStringResponder(404, ""))
-			_, err := driver.MergePullRequest(options)
+			_, err := driver.MergePullRequest(hosting.MergePullRequestOptions{
+				PullRequestNumber: 1,
+				Branch:            "feature",
+				CommitMessage:     "title\nextra detail1\nextra detail2",
+				ParentBranch:      "main",
+			})
 			assert.Error(t, err)
 		})
 
 		t.Run("pull request not found", func(t *testing.T) {
 			driver, teardown := setupGithubDriver(t, "TOKEN")
 			defer teardown()
-			options := hosting.MergePullRequestOptions{
-				Branch:        "feature",
-				CommitMessage: "title\nextra detail1\nextra detail2",
-				ParentBranch:  "main",
-			}
 			httpmock.RegisterResponder("GET", githubChildOpen, httpmock.NewStringResponder(200, "[]"))
 			httpmock.RegisterResponder("GET", githubCurrOpen, httpmock.NewStringResponder(200, "[]"))
-			_, err := driver.MergePullRequest(options)
+			_, err := driver.MergePullRequest(hosting.MergePullRequestOptions{
+				PullRequestNumber: 1,
+				Branch:            "feature",
+				CommitMessage:     "title\nextra detail1\nextra detail2",
+				ParentBranch:      "main",
+			})
 			assert.Error(t, err)
 			assert.Equal(t, "cannot merge via Github since there is no pull request", err.Error())
 		})
