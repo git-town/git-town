@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v7/src/giturl"
-	"github.com/google/go-github/v42/github"
+	"github.com/google/go-github/v50/github"
 	"golang.org/x/oauth2"
 )
 
