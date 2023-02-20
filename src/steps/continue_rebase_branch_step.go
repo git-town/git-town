@@ -11,11 +11,11 @@ type ContinueRebaseBranchStep struct {
 	NoOpStep
 }
 
-func (step *ContinueRebaseBranchStep) CreateAbortStep() Step { //nolint:ireturn
+func (step *ContinueRebaseBranchStep) CreateAbortStep() Step {
 	return &AbortRebaseBranchStep{}
 }
 
-func (step *ContinueRebaseBranchStep) CreateContinueStep() Step { //nolint:ireturn
+func (step *ContinueRebaseBranchStep) CreateContinueStep() Step {
 	return step
 }
 

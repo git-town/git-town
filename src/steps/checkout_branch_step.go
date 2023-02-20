@@ -12,7 +12,7 @@ type CheckoutBranchStep struct {
 	previousBranch string
 }
 
-func (step *CheckoutBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
+func (step *CheckoutBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
 	return &CheckoutBranchStep{Branch: step.previousBranch}, nil
 }
 

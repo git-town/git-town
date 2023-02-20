@@ -14,7 +14,7 @@ type CommitOpenChangesStep struct {
 	previousSha string
 }
 
-func (step *CommitOpenChangesStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
+func (step *CommitOpenChangesStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
 	return &ResetToShaStep{Sha: step.previousSha}, nil
 }
 

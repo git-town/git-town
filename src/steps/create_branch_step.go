@@ -13,7 +13,7 @@ type CreateBranchStep struct {
 	StartingPoint string
 }
 
-func (step *CreateBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
+func (step *CreateBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
 	return &DeleteLocalBranchStep{Branch: step.Branch, Force: true}, nil
 }
 
