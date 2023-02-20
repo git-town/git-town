@@ -73,6 +73,12 @@ func (c GithubConfig) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", c.hostname, c.owner, c.repository)
 }
 
+/*************************************************************************
+ *
+ *  GITHUB DRIVER
+ *
+ */
+
 // GithubDriver provides access to the GitHub API.
 type GithubDriver struct {
 	GithubConfig
