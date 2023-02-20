@@ -144,12 +144,6 @@ func TestGitLab(t *testing.T) {
 		t.Run("happy path", func(t *testing.T) {
 			driver, teardown := setupGitlabDriver(t, "TOKEN")
 			defer teardown()
-			options := hosting.MergePullRequestOptions{
-				Branch:            "feature",
-				PullRequestNumber: 1,
-				CommitMessage:     "title\nextra detail1\nextra detail2",
-				ParentBranch:      "main",
-			}
 			var mergeRequest *http.Request
 			httpmock.RegisterResponder("GET", gitlabChildOpen, httpmock.NewStringResponder(200, "[]"))
 			httpmock.RegisterResponder("GET", gitlabCurrOpen, httpmock.NewStringResponder(200, `[{"iid": 1}]`))
@@ -157,7 +151,12 @@ func TestGitLab(t *testing.T) {
 				mergeRequest = req
 				return httpmock.NewStringResponse(200, `{"sha": "abc123"}`), nil
 			})
-			sha, err := driver.MergePullRequest(options)
+			sha, err := driver.MergePullRequest(hosting.MergePullRequestOptions{
+				Branch:            "feature",
+				PullRequestNumber: 1,
+				CommitMessage:     "title\nextra detail1\nextra detail2",
+				ParentBranch:      "main",
+			})
 			assert.NoError(t, err)
 			assert.Equal(t, "abc123", sha)
 			mergeParameters := loadRequestData(mergeRequest)
@@ -171,28 +170,26 @@ func TestGitLab(t *testing.T) {
 		t.Run("cannot load pull request data", func(t *testing.T) {
 			driver, teardown := setupGitlabDriver(t, "TOKEN")
 			defer teardown()
-			options := hosting.MergePullRequestOptions{
+			httpmock.RegisterResponder("GET", gitlabChildOpen, httpmock.NewStringResponder(200, "[]"))
+			httpmock.RegisterResponder("GET", gitlabCurrOpen, httpmock.NewStringResponder(404, ""))
+			_, err := driver.MergePullRequest(hosting.MergePullRequestOptions{
 				Branch:        "feature",
 				CommitMessage: "title\nextra detail1\nextra detail2",
 				ParentBranch:  "main",
-			}
-			httpmock.RegisterResponder("GET", gitlabChildOpen, httpmock.NewStringResponder(200, "[]"))
-			httpmock.RegisterResponder("GET", gitlabCurrOpen, httpmock.NewStringResponder(404, ""))
-			_, err := driver.MergePullRequest(options)
+			})
 			assert.Error(t, err)
 		})
 
 		t.Run("pull request doesn't exist", func(t *testing.T) {
 			driver, teardown := setupGitlabDriver(t, "TOKEN")
 			defer teardown()
-			options := hosting.MergePullRequestOptions{
+			httpmock.RegisterResponder("GET", gitlabChildOpen, httpmock.NewStringResponder(200, "[]"))
+			httpmock.RegisterResponder("GET", gitlabCurrOpen, httpmock.NewStringResponder(200, "[]"))
+			_, err := driver.MergePullRequest(hosting.MergePullRequestOptions{
 				Branch:        "feature",
 				CommitMessage: "title\nextra detail1\nextra detail2",
 				ParentBranch:  "main",
-			}
-			httpmock.RegisterResponder("GET", gitlabChildOpen, httpmock.NewStringResponder(200, "[]"))
-			httpmock.RegisterResponder("GET", gitlabCurrOpen, httpmock.NewStringResponder(200, "[]"))
-			_, err := driver.MergePullRequest(options)
+			})
 			assert.Error(t, err)
 			assert.Equal(t, "cannot merge via GitLab since there is no merge request", err.Error())
 		})
@@ -200,28 +197,26 @@ func TestGitLab(t *testing.T) {
 		t.Run("cannot load child pull request", func(t *testing.T) {
 			driver, teardown := setupGitlabDriver(t, "TOKEN")
 			defer teardown()
-			options := hosting.MergePullRequestOptions{
+			httpmock.RegisterResponder("GET", gitlabChildOpen, httpmock.NewStringResponder(404, ""))
+			_, err := driver.MergePullRequest(hosting.MergePullRequestOptions{
 				Branch:        "feature",
 				CommitMessage: "title\nextra detail1\nextra detail2",
 				ParentBranch:  "main",
-			}
-			httpmock.RegisterResponder("GET", gitlabChildOpen, httpmock.NewStringResponder(404, ""))
-			_, err := driver.MergePullRequest(options)
+			})
 			assert.Error(t, err)
 		})
 
 		t.Run("merge fails", func(t *testing.T) {
 			driver, teardown := setupGitlabDriver(t, "TOKEN")
 			defer teardown()
-			options := hosting.MergePullRequestOptions{
-				Branch:        "feature",
-				CommitMessage: "title\nextra detail1\nextra detail2",
-				ParentBranch:  "main",
-			}
 			httpmock.RegisterResponder("GET", gitlabChildOpen, httpmock.NewStringResponder(200, "[]"))
 			httpmock.RegisterResponder("GET", gitlabCurrOpen, httpmock.NewStringResponder(200, `[{"iid": 1}]`))
 			httpmock.RegisterResponder("PUT", gitlabMR1Merge, httpmock.NewStringResponder(404, ""))
-			_, err := driver.MergePullRequest(options)
+			_, err := driver.MergePullRequest(hosting.MergePullRequestOptions{
+				Branch:        "feature",
+				CommitMessage: "title\nextra detail1\nextra detail2",
+				ParentBranch:  "main",
+			})
 			assert.Error(t, err)
 		})
 
@@ -229,12 +224,6 @@ func TestGitLab(t *testing.T) {
 		t.Run("updating child PRs", func(t *testing.T) {
 			driver, teardown := setupGitlabDriver(t, "TOKEN")
 			defer teardown()
-			options := hosting.MergePullRequestOptions{
-				Branch:            "feature",
-				PullRequestNumber: 1,
-				CommitMessage:     "title\nextra detail1\nextra detail2",
-				ParentBranch:      "main",
-			}
 			var updateRequest1, updateRequest2 *http.Request
 			httpmock.RegisterResponder("GET", gitlabChildOpen, httpmock.NewStringResponder(200, `[{"iid": 2}, {"iid": 3}]`))
 			httpmock.RegisterResponder("PUT", gitlabMR2, func(req *http.Request) (*http.Response, error) {
@@ -248,7 +237,12 @@ func TestGitLab(t *testing.T) {
 			httpmock.RegisterResponder("GET", gitlabCurrOpen, httpmock.NewStringResponder(200, `[{"iid": 1}]`))
 			httpmock.RegisterResponder("PUT", gitlabMR1Merge, httpmock.NewStringResponder(200, `{"sha": "abc123"}`))
 
-			_, err := driver.MergePullRequest(options)
+			_, err := driver.MergePullRequest(hosting.MergePullRequestOptions{
+				Branch:            "feature",
+				PullRequestNumber: 1,
+				CommitMessage:     "title\nextra detail1\nextra detail2",
+				ParentBranch:      "main",
+			})
 			assert.NoError(t, err)
 			updateParameters1 := loadRequestData(updateRequest1)
 			assert.Equal(t, "main", updateParameters1["target_branch"])
