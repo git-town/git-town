@@ -35,7 +35,7 @@ func (stepList *StepList) isEmpty() bool {
 }
 
 // Peek provides the first element of this StepList.
-func (stepList *StepList) Peek() steps.Step { //nolint:ireturn
+func (stepList *StepList) Peek() steps.Step {
 	if stepList.isEmpty() {
 		return nil
 	}
@@ -43,7 +43,7 @@ func (stepList *StepList) Peek() steps.Step { //nolint:ireturn
 }
 
 // Pop removes and provides the first element of this StepList.
-func (stepList *StepList) Pop() steps.Step { //nolint:ireturn
+func (stepList *StepList) Pop() steps.Step {
 	if stepList.isEmpty() {
 		return nil
 	}

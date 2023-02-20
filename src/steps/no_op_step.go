@@ -11,15 +11,15 @@ import (
 // It is used for steps that have no undo or abort steps.
 type NoOpStep struct{}
 
-func (step *NoOpStep) CreateAbortStep() Step { //nolint:ireturn
+func (step *NoOpStep) CreateAbortStep() Step {
 	return &NoOpStep{}
 }
 
-func (step *NoOpStep) CreateContinueStep() Step { //nolint:ireturn
+func (step *NoOpStep) CreateContinueStep() Step {
 	return &NoOpStep{}
 }
 
-func (step *NoOpStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
+func (step *NoOpStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
 	return &NoOpStep{}, nil
 }
 

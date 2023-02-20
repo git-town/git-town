@@ -39,3 +39,6 @@ issues:
     - linters:
         - goerr113
       text: "do not define dynamic errors"
+    - linters:
+        - ireturn
+      text: (github.com/git-town/git-town/v7/src/hosting.Driver|github.com/git-town/git-town/v7/src/steps.Step)

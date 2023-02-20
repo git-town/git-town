@@ -12,15 +12,15 @@ type MergeBranchStep struct {
 	previousSha string
 }
 
-func (step *MergeBranchStep) CreateAbortStep() Step { //nolint:ireturn
+func (step *MergeBranchStep) CreateAbortStep() Step {
 	return &AbortMergeBranchStep{}
 }
 
-func (step *MergeBranchStep) CreateContinueStep() Step { //nolint:ireturn
+func (step *MergeBranchStep) CreateContinueStep() Step {
 	return &ContinueMergeBranchStep{}
 }
 
-func (step *MergeBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
+func (step *MergeBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
 	return &ResetToShaStep{Hard: true, Sha: step.previousSha}, nil
 }
 
