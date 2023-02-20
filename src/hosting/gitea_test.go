@@ -67,7 +67,6 @@ func TestNewGiteaConfig(t *testing.T) {
 
 //nolint:paralleltest  // mocks HTTP
 func TestGitea(t *testing.T) {
-	//nolint:dupl
 	t.Run(".LoadPullRequestInfo()", func(t *testing.T) {
 		t.Run("happy path", func(t *testing.T) {
 			driver, teardown := setupGiteaDriver(t, "TOKEN")

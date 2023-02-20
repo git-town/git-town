@@ -74,7 +74,6 @@ func TestNewGithubDriver(t *testing.T) {
 
 //nolint:paralleltest  // mocks HTTP
 func TestGithubDriver(t *testing.T) {
-	//nolint:dupl
 	t.Run(".LoadPullRequestInfo()", func(t *testing.T) {
 		t.Run("with token", func(t *testing.T) {
 			driver, teardown := setupGithubDriver(t, "TOKEN")
@@ -201,7 +200,6 @@ func TestGithubDriver(t *testing.T) {
 			assert.Error(t, err)
 		})
 
-		//nolint:dupl
 		t.Run("updates child PRs", func(t *testing.T) {
 			driver, teardown := setupGithubDriver(t, "TOKEN")
 			defer teardown()
