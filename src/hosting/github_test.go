@@ -12,15 +12,6 @@ import (
 	httpmock "gopkg.in/jarcoal/httpmock.v1"
 )
 
-const (
-	githubRoot      = "https://api.github.com"
-	githubCurrOpen  = githubRoot + "/repos/git-town/git-town/pulls?base=main&head=git-town%3Afeature&state=open"
-	githubChildOpen = githubRoot + "/repos/git-town/git-town/pulls?base=feature&state=open"
-	githubPR2       = githubRoot + "/repos/git-town/git-town/pulls/2"
-	githubPR3       = githubRoot + "/repos/git-town/git-town/pulls/3"
-	githubPR1Merge  = githubRoot + "/repos/git-town/git-town/pulls/1/merge"
-)
-
 func setupGithubDriver(t *testing.T, token string) (*hosting.GithubDriver, func()) {
 	t.Helper()
 	httpmock.Activate()
@@ -250,3 +241,19 @@ func loadRequestData(request *http.Request) map[string]interface{} {
 	}
 	return data
 }
+
+// func mockListOpenPRs(owner, repository, base, response string) {
+// 	httpmock.RegisterResponder(
+// 		"GET",
+// 		"https://api.github.com/repos/git-town/git-town/pulls?base=main&head=git-town%3Afeature&state=open",
+// 		httpmock.NewStringResponder(200, response))
+// }
+
+const (
+	githubRoot      = "https://api.github.com"
+	githubCurrOpen  = githubRoot + "/repos/git-town/git-town/pulls?base=main&head=git-town%3Afeature&state=open"
+	githubChildOpen = githubRoot + "/repos/git-town/git-town/pulls?base=feature&state=open"
+	githubPR2       = githubRoot + "/repos/git-town/git-town/pulls/2"
+	githubPR3       = githubRoot + "/repos/git-town/git-town/pulls/3"
+	githubPR1Merge  = githubRoot + "/repos/git-town/git-town/pulls/1/merge"
+)
