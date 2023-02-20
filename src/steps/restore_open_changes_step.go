@@ -12,7 +12,7 @@ type RestoreOpenChangesStep struct {
 	NoOpStep
 }
 
-func (step *RestoreOpenChangesStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
+func (step *RestoreOpenChangesStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
 	return &StashOpenChangesStep{}, nil
 }
 

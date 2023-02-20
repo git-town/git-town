@@ -14,7 +14,7 @@ type DeleteOriginBranchStep struct {
 	branchSha  string
 }
 
-func (step *DeleteOriginBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
+func (step *DeleteOriginBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
 	if step.IsTracking {
 		return &CreateTrackingBranchStep{Branch: step.Branch, NoPushHook: step.NoPushHook}, nil
 	}
