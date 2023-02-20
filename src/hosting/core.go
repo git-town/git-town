@@ -80,7 +80,7 @@ type MergePullRequestOptions struct {
 type logFn func(string, ...interface{})
 
 // NewDriver provides an instance of the code hosting driver to use based on the git config.
-func NewDriver(config config, git gitRunner, log logFn) (Driver, error) { //nolint:ireturn,nolintlint  // causes false positive here
+func NewDriver(config config, git gitRunner, log logFn) (Driver, error) {
 	url := giturl.Parse(config.OriginURL())
 	if url == nil {
 		return nil, nil //nolint:nilnil  // "nil, nil" is a legitimate return value here

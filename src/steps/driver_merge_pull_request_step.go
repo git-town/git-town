@@ -19,14 +19,14 @@ type DriverMergePullRequestStep struct {
 	PullRequestNumber         int64
 }
 
-func (step *DriverMergePullRequestStep) CreateAbortStep() Step { //nolint:ireturn
+func (step *DriverMergePullRequestStep) CreateAbortStep() Step {
 	if step.enteredEmptyCommitMessage {
 		return &DiscardOpenChangesStep{}
 	}
 	return nil
 }
 
-func (step *DriverMergePullRequestStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
+func (step *DriverMergePullRequestStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
 	return &RevertCommitStep{Sha: step.mergeSha}, nil
 }
 

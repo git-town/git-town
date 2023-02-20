@@ -13,15 +13,15 @@ type RebaseBranchStep struct {
 	previousSha string
 }
 
-func (step *RebaseBranchStep) CreateAbortStep() Step { //nolint:ireturn
+func (step *RebaseBranchStep) CreateAbortStep() Step {
 	return &AbortRebaseBranchStep{}
 }
 
-func (step *RebaseBranchStep) CreateContinueStep() Step { //nolint:ireturn
+func (step *RebaseBranchStep) CreateContinueStep() Step {
 	return &ContinueRebaseBranchStep{}
 }
 
-func (step *RebaseBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
+func (step *RebaseBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
 	return &ResetToShaStep{Hard: true, Sha: step.previousSha}, nil
 }
 
