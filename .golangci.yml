@@ -38,10 +38,7 @@ issues:
     - linters:
         - goerr113
       text: "do not define dynamic errors"
-    - text: NoOpStep
-      linters:
-        - exhaustruct
-    - text: mockConfig
+    - text: (mockConfig|NoOpStep)
       linters:
         - exhaustruct
     - path: src/cmd/
