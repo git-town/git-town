@@ -9,7 +9,7 @@ require (
 	github.com/cucumber/messages-go/v10 v10.0.3
 	github.com/dustin/go-humanize v1.0.1
 	github.com/fatih/color v1.13.0
-	github.com/google/go-github/v42 v42.0.0
+	github.com/google/go-github/v50 v50.0.0
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
 	github.com/sergi/go-diff v1.3.1
 	github.com/spf13/cobra v1.6.1
