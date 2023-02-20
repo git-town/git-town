@@ -15,11 +15,11 @@ type SquashMergeBranchStep struct {
 	CommitMessage string
 }
 
-func (step *SquashMergeBranchStep) CreateAbortStep() Step { //nolint:ireturn
+func (step *SquashMergeBranchStep) CreateAbortStep() Step {
 	return &DiscardOpenChangesStep{}
 }
 
-func (step *SquashMergeBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) { //nolint:ireturn
+func (step *SquashMergeBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
 	currentSHA, err := repo.Silent.CurrentSha()
 	if err != nil {
 		return nil, err

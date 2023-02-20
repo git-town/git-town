@@ -11,7 +11,7 @@ type ContinueMergeBranchStep struct {
 	NoOpStep
 }
 
-func (step *ContinueMergeBranchStep) CreateContinueStep() Step { //nolint:ireturn
+func (step *ContinueMergeBranchStep) CreateContinueStep() Step {
 	return step
 }
 
