@@ -206,7 +206,6 @@ func TestGithubDriver(t *testing.T) {
 			assert.Error(t, err)
 		})
 
-		//nolint:dupl
 		t.Run("updates child PRs", func(t *testing.T) {
 			driver, teardown := setupGithubDriver(t, "TOKEN")
 			defer teardown()

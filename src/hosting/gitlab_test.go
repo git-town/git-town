@@ -94,7 +94,6 @@ func TestNewGitlabDriver(t *testing.T) {
 
 //nolint:paralleltest  // mocks HTTP
 func TestGitLab(t *testing.T) {
-	//nolint:dupl
 	t.Run(".LoadPullRequestInfo()", func(t *testing.T) {
 		t.Run("happy path", func(t *testing.T) {
 			driver, teardown := setupGitlabDriver(t, "TOKEN")
@@ -220,7 +219,6 @@ func TestGitLab(t *testing.T) {
 			assert.Error(t, err)
 		})
 
-		//nolint:dupl
 		t.Run("updating child PRs", func(t *testing.T) {
 			driver, teardown := setupGitlabDriver(t, "TOKEN")
 			defer teardown()
