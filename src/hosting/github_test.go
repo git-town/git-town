@@ -12,7 +12,7 @@ import (
 	httpmock "gopkg.in/jarcoal/httpmock.v1"
 )
 
-func setupGithubDriver(t *testing.T, token string) (*hosting.GithubDriver, func()) {
+func setupGithubDriver(t *testing.T, token string) (*hosting.GitHubConnector, func()) {
 	t.Helper()
 	httpmock.Activate()
 	repoConfig := mockRepoConfig{
@@ -20,10 +20,9 @@ func setupGithubDriver(t *testing.T, token string) (*hosting.GithubDriver, func(
 		gitHubToken: token,
 	}
 	url := giturl.Parse(repoConfig.originURL)
-	githubConfig := hosting.NewGithubConfig(*url, repoConfig)
-	assert.NotNil(t, githubConfig)
-	driver := githubConfig.Driver(nil)
-	return &driver, func() {
+	connector := hosting.NewGithubConnector(*url, repoConfig, nil)
+	assert.NotNil(t, connector)
+	return connector, func() {
 		httpmock.DeactivateAndReset()
 	}
 }
@@ -74,12 +73,12 @@ func TestNewGithubDriver(t *testing.T) {
 
 //nolint:paralleltest  // mocks HTTP
 func TestGithubDriver(t *testing.T) {
-	t.Run(".LoadPullRequestInfo()", func(t *testing.T) {
+	t.Run("ChangeRequestForBranch", func(t *testing.T) {
 		t.Run("with token", func(t *testing.T) {
 			driver, teardown := setupGithubDriver(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", githubCurrOpen, httpmock.NewStringResponder(200, `[{"number": 1, "title": "my title" }]`))
-			prInfo, err := driver.LoadPullRequestInfo("feature", "main")
+			prInfo, err := driver.ChangeRequestForBranch("feature")
 			assert.NoError(t, err)
 			assert.True(t, prInfo.CanMergeWithAPI)
 			assert.Equal(t, "my title (#1)", prInfo.DefaultCommitMessage)
