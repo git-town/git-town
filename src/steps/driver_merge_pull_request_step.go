@@ -16,7 +16,7 @@ type DriverMergePullRequestStep struct {
 	enteredEmptyCommitMessage bool
 	mergeError                error
 	mergeSha                  string
-	PullRequestNumber         int64
+	PullRequestNumber         int
 }
 
 func (step *DriverMergePullRequestStep) CreateAbortStep() Step {
@@ -37,12 +37,12 @@ func (step *DriverMergePullRequestStep) CreateAutomaticAbortError() error {
 	return step.mergeError
 }
 
-func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
+func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
 	commitMessage := step.CommitMessage
 	//nolint:nestif
 	if commitMessage == "" {
-		// Allow the user to enter the commit message as if shipping without a driver
-		// then revert the commit since merging via the driver will perform the actual squash merge
+		// Allow the user to enter the commit message as if shipping without a connector
+		// then revert the commit since merging via the connector will perform the actual squash merge.
 		step.enteredEmptyCommitMessage = true
 		err := repo.Logging.SquashMerge(step.Branch)
 		if err != nil {
@@ -66,17 +66,7 @@ func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo, driver hosting.D
 		}
 		step.enteredEmptyCommitMessage = false
 	}
-	currentBranch, err := repo.Silent.CurrentBranch()
-	if err != nil {
-		return err
-	}
-	step.mergeSha, step.mergeError = driver.MergePullRequest(hosting.MergePullRequestOptions{
-		Branch:            step.Branch,
-		PullRequestNumber: step.PullRequestNumber,
-		CommitMessage:     commitMessage,
-		LogRequests:       true,
-		ParentBranch:      currentBranch,
-	})
+	step.mergeSha, step.mergeError = connector.SquashMergeChangeRequest(step.PullRequestNumber, commitMessage)
 	return step.mergeError
 }
 

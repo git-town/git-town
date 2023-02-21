@@ -15,6 +15,6 @@ func (step *RemoveFromPerennialBranchesStep) CreateUndoStep(repo *git.ProdRepo) 
 	return &AddToPerennialBranchesStep{Branch: step.Branch}, nil
 }
 
-func (step *RemoveFromPerennialBranchesStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
+func (step *RemoveFromPerennialBranchesStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
 	return repo.Config.RemoveFromPerennialBranches(step.Branch)
 }
