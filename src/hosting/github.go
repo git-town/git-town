@@ -19,6 +19,11 @@ type GitHubConnector struct {
 	log logFn
 }
 
+func (c *GitHubConnector) ChangeRequestDetails(number int) (*ChangeRequestInfo, error) {
+	pullRequest, _, err := c.client.PullRequests.Get(context.Background(), c.owner, c.repository, number)
+	return parseGithubPullRequest(pullRequest), err
+}
+
 func (c *GitHubConnector) ChangeRequestForBranch(branch string) (*ChangeRequestInfo, error) {
 	pullRequests, _, err := c.client.PullRequests.List(context.Background(), c.owner, c.repository, &github.PullRequestListOptions{
 		Head:  c.owner + ":" + branch,
@@ -33,8 +38,7 @@ func (c *GitHubConnector) ChangeRequestForBranch(branch string) (*ChangeRequestI
 	if len(pullRequests) > 1 {
 		return nil, fmt.Errorf("found %d pull requests for branch %q", len(pullRequests), branch)
 	}
-	changeRequest := parseGithubPullRequest(pullRequests[0])
-	return &changeRequest, nil
+	return parseGithubPullRequest(pullRequests[0]), nil
 }
 
 func (c *GitHubConnector) ChangeRequests() ([]ChangeRequestInfo, error) {
@@ -46,7 +50,7 @@ func (c *GitHubConnector) ChangeRequests() ([]ChangeRequestInfo, error) {
 		return result, err
 	}
 	for p := range pullRequests {
-		result[p] = parseGithubPullRequest(pullRequests[p])
+		result[p] = *parseGithubPullRequest(pullRequests[p])
 	}
 	return result, nil
 }
@@ -139,11 +143,15 @@ func (c *GitHubConfig) RepositoryURL() string {
 // *************************************
 
 // parseGithubPullRequest extracts ChangeRequestInfo from the given GitHub pull-request data.
-func parseGithubPullRequest(pullRequest *github.PullRequest) ChangeRequestInfo {
-	return ChangeRequestInfo{
+func parseGithubPullRequest(pullRequest *github.PullRequest) *ChangeRequestInfo {
+	if pullRequest == nil {
+		return nil
+	}
+	return &ChangeRequestInfo{
 		Number:          pullRequest.GetNumber(),
 		Title:           pullRequest.GetTitle(),
-		CanMergeWithAPI: pullRequest.GetMergeable(),
+		CanMergeWithAPI: pullRequest.GetMergeableState() == "clean",
+		// see https://docs.github.com/en/rest/guides/using-the-rest-api-to-interact-with-your-git-database?apiVersion=2022-11-28#checking-mergeability-of-pull-requests for details around the mergeability state
 	}
 }
 

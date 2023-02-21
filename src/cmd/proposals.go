@@ -1,10 +1,14 @@
 package cmd
 
 import (
+	"fmt"
+	"strconv"
+
 	"github.com/fatih/color"
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/hosting"
+	"github.com/git-town/git-town/v7/src/stringslice"
 	"github.com/spf13/cobra"
 )
 
@@ -21,10 +25,25 @@ func proposalsCommand(repo *git.ProdRepo) *cobra.Command {
 			if err != nil {
 				cli.Exit(err)
 			}
+			for p := range proposals {
+				fmt.Print(".")
+				proposal, err := connector.ChangeRequestDetails(proposals[p].Number)
+				if err != nil {
+					cli.Exit(err)
+				}
+				proposals[p] = *proposal
+			}
+			fmt.Println()
+			titles := make([]string, len(proposals))
+			for p := range proposals {
+				titles[p] = proposals[p].Title
+			}
+			longest := stringslice.Longest(titles)
+			format := "  %-" + strconv.Itoa(longest+1) + "s #%d\n"
 			for _, proposal := range proposals {
 				cli.Print(" ")
 				cli.PrintColor(mergeability(proposal.CanMergeWithAPI))
-				cli.Printf("  %s (#%d)\n", proposal.Title, proposal.Number)
+				cli.Printf(format, proposal.Title, proposal.Number)
 			}
 		},
 		Args: cobra.NoArgs,

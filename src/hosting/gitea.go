@@ -16,6 +16,10 @@ type GiteaConnector struct {
 	log logFn
 }
 
+func (c *GiteaConnector) ChangeRequestDetails(number int) (*ChangeRequestInfo, error) {
+	return nil, fmt.Errorf("TODO: implement")
+}
+
 func (c *GiteaConnector) ChangeRequestForBranch(branch string) (*ChangeRequestInfo, error) {
 	openPullRequests, err := c.client.ListRepoPullRequests(c.owner, c.repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{
