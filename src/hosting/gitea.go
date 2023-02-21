@@ -75,8 +75,9 @@ func (c *GiteaConnector) UpdateChangeRequestTarget(number int, target string) er
 // NewGiteaConfig provides Gitea configuration data if the current repo is hosted on Gitea,
 // otherwise nil.
 func NewGiteaConnector(url giturl.Parts, config gitConfig, log logFn) *GiteaConnector {
+	hostingService := config.HostingService()
 	manualHostName := config.OriginOverride()
-	if config.HostingService() != "gitea" && manualHostName != "gitea.com" {
+	if hostingService != "gitea" && manualHostName != "gitea.com" {
 		return nil
 	}
 	if manualHostName != "" {
