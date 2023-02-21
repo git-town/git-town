@@ -49,13 +49,17 @@ func (c *BitbucketConnector) MergeChangeRequest(number int, message string) (mer
 func (c *BitbucketConnector) UpdateChangeRequestTarget(number int, target string) error
 
 // *************************************
-// GitHubConfig
+//   CONFIG
 // *************************************
 
 type bitBucketConfig struct {
 	Config
 	organization string
 	git          gitRunner
+}
+
+func (c *bitBucketConfig) DefaultCommitMessage(crInfo ChangeRequestInfo) string {
+	return fmt.Sprintf("%s (#%d)", crInfo.Title, crInfo.Number)
 }
 
 func (c *bitBucketConfig) NewChangeRequestURL(branch, parentBranch string) (string, error) {

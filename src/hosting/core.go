@@ -20,20 +20,19 @@ type Config struct {
 	repository string
 }
 
-// Connector describes the API methods that Git Town performs on code hosting platforms.
+// Connector describes the API methods that Git Town performs on code hosting platforms
+// in a standardized format.
 type Connector interface {
-	// FindChangeRequest provides the change request for the branch with the given name.
+	// ChangeRequestForBranch provides the change request for the branch with the given name.
 	ChangeRequestForBranch(branch string) (*ChangeRequestInfo, error)
+
+	DefaultCommitMessage(crInfo ChangeRequestInfo) string
 
 	// HostingServiceName provides the name of the code hosting service.
 	HostingServiceName() string
 
 	// MergeChangeRequest squash-merges the given change request using the given commit message.
 	MergeChangeRequest(number int, message string) (mergeSHA string, err error)
-
-	// // MergePullRequest merges the pull request
-	// // through the hosting service API.
-	// func MergePullRequest(MergePullRequestOptions) (mergeSha string, err error)
 
 	// NewChangeRequestURL provides the URL of the page
 	// to create a new pull request online.
@@ -84,8 +83,6 @@ type gitConfig interface {
 	OriginURL() string
 }
 
-// ********************************************************************
-
 // runner defines the runner methods used by the driver package.
 type gitRunner interface {
 	ShaForBranch(string) (string, error)
@@ -115,10 +112,9 @@ func NewConnector(config gitConfig, git gitRunner, log logFn) (Connector, error)
 	if bitbucketConnector != nil {
 		return bitbucketConnector, nil
 	}
-	giteaConfig := NewGiteaConfig(*url, config)
-	if giteaConfig != nil {
-		driver := giteaConfig.Driver(log)
-		return &driver, nil
+	giteaConnector := NewGiteaConnector(*url, config, log)
+	if giteaConnector != nil {
+		return giteaConnector, nil
 	}
 	return nil, nil //nolint:nilnil  // "nil, nil" is a legitimate return value here
 }

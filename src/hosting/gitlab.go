@@ -13,13 +13,8 @@ import (
 // via the GitLab API.
 type GitLabConnector struct {
 	client *gitlab.Client
-	gitLabConfig
+	GitLabConfig
 	log logFn
-}
-
-func (c *GitLabConnector) defaultCommitMessage(changeRequest *ChangeRequestInfo) string {
-	// GitLab uses a dash as MR prefix for the (project-)internal ID (IID)
-	return fmt.Sprintf("%s (!%d)", changeRequest.Title, changeRequest.Number)
 }
 
 func (c *GitLabConnector) ChangeRequestForBranch(branch string) (*ChangeRequestInfo, error) {
@@ -85,7 +80,7 @@ func NewGitlabConnector(url giturl.Parts, config gitConfig, log logFn) (*GitLabC
 	if manualHostName != "" {
 		url.Host = manualHostName
 	}
-	gitlabConfig := gitLabConfig{Config{
+	gitlabConfig := GitLabConfig{Config{
 		apiToken:   config.GitLabToken(),
 		originURL:  config.OriginURL(),
 		hostname:   url.Host,
@@ -100,7 +95,7 @@ func NewGitlabConnector(url giturl.Parts, config gitConfig, log logFn) (*GitLabC
 	}
 	driver := GitLabConnector{
 		client:       client,
-		gitLabConfig: gitlabConfig,
+		GitLabConfig: gitlabConfig,
 		log:          log,
 	}
 	return &driver, nil
@@ -110,30 +105,34 @@ func NewGitlabConnector(url giturl.Parts, config gitConfig, log logFn) (*GitLabC
 // GitLabConfig
 // *************************************
 
-type gitLabConfig struct {
+type GitLabConfig struct {
 	Config
 }
 
-func (c *gitLabConfig) projectPath() string {
+func (c *GitLabConfig) DefaultCommitMessage(changeRequest ChangeRequestInfo) string {
+	return fmt.Sprintf("%s (!%d)", changeRequest.Title, changeRequest.Number)
+}
+
+func (c *GitLabConfig) projectPath() string {
 	return fmt.Sprintf("%s/%s", c.owner, c.repository)
 }
 
-func (c *gitLabConfig) baseURL() string {
+func (c *GitLabConfig) baseURL() string {
 	return fmt.Sprintf("https://%s", c.hostname)
 }
 
-func (c *gitLabConfig) HostingServiceName() string {
+func (c *GitLabConfig) HostingServiceName() string {
 	return "GitLab"
 }
 
-func (c *gitLabConfig) NewChangeRequestURL(branch, parentBranch string) (string, error) {
+func (c *GitLabConfig) NewChangeRequestURL(branch, parentBranch string) (string, error) {
 	query := url.Values{}
 	query.Add("merge_request[source_branch]", branch)
 	query.Add("merge_request[target_branch]", parentBranch)
 	return fmt.Sprintf("%s/merge_requests/new?%s", c.RepositoryURL(), query.Encode()), nil
 }
 
-func (c *gitLabConfig) RepositoryURL() string {
+func (c *GitLabConfig) RepositoryURL() string {
 	return fmt.Sprintf("%s/%s", c.baseURL(), c.projectPath())
 }
 

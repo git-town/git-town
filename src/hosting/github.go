@@ -99,8 +99,8 @@ type GitHubConfig struct {
 	Config
 }
 
-func (c *GitHubConnector) defaultCommitMessage(changeRequest *ChangeRequestInfo) string {
-	return fmt.Sprintf("%s (#%d)", changeRequest.Title, changeRequest.Number)
+func (c *GitHubConfig) DefaultCommitMessage(crInfo ChangeRequestInfo) string {
+	return fmt.Sprintf("%s (#%d)", crInfo.Title, crInfo.Number)
 }
 
 func (c *GitHubConfig) HostingServiceName() string {

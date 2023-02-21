@@ -20,7 +20,7 @@ const (
 
 func log(template string, messages ...interface{}) {}
 
-func setupGiteaDriver(t *testing.T, token string) (*hosting.GiteaDriver, func()) {
+func setupGiteaConnector(t *testing.T, token string) (*hosting.GiteaConnector, func()) {
 	t.Helper()
 	httpmock.Activate()
 	repoConfig := mockRepoConfig{
@@ -28,15 +28,14 @@ func setupGiteaDriver(t *testing.T, token string) (*hosting.GiteaDriver, func())
 		giteaToken: token,
 	}
 	url := giturl.Parse(repoConfig.originURL)
-	giteaConfig := hosting.NewGiteaConfig(*url, repoConfig)
-	assert.NotNil(t, giteaConfig)
-	driver := giteaConfig.Driver(log)
-	return &driver, func() {
+	connector := hosting.NewGiteaConnector(*url, repoConfig, nil)
+	assert.NotNil(t, connector)
+	return connector, func() {
 		httpmock.DeactivateAndReset()
 	}
 }
 
-func TestNewGiteaConfig(t *testing.T) {
+func TestNewGiteaConnector(t *testing.T) {
 	t.Parallel()
 	t.Run("normal repo", func(t *testing.T) {
 		t.Parallel()
@@ -45,10 +44,10 @@ func TestNewGiteaConfig(t *testing.T) {
 			originURL:      "git@self-hosted-gitea.com:git-town/git-town.git",
 		}
 		url := giturl.Parse(repoConfig.originURL)
-		giteaConfig := hosting.NewGiteaConfig(*url, repoConfig)
-		assert.NotNil(t, giteaConfig)
-		assert.Equal(t, "Gitea", giteaConfig.HostingServiceName())
-		assert.Equal(t, "https://self-hosted-gitea.com/git-town/git-town", giteaConfig.RepositoryURL())
+		giteaConnector := hosting.NewGiteaConnector(*url, repoConfig, nil)
+		assert.NotNil(t, giteaConnector)
+		assert.Equal(t, "Gitea", giteaConnector.HostingServiceName())
+		assert.Equal(t, "https://self-hosted-gitea.com/git-town/git-town", giteaConnector.RepositoryURL())
 	})
 
 	t.Run("custom hostname", func(t *testing.T) {
@@ -58,7 +57,7 @@ func TestNewGiteaConfig(t *testing.T) {
 			originOverride: "gitea.com",
 		}
 		url := giturl.Parse(repoConfig.originURL)
-		giteaConfig := hosting.NewGiteaConfig(*url, repoConfig)
+		giteaConfig := hosting.NewGiteaConnector(*url, repoConfig, nil)
 		assert.NotNil(t, giteaConfig)
 		assert.Equal(t, "Gitea", giteaConfig.HostingServiceName())
 		assert.Equal(t, "https://gitea.com/git-town/git-town", giteaConfig.RepositoryURL())
@@ -67,20 +66,20 @@ func TestNewGiteaConfig(t *testing.T) {
 
 //nolint:paralleltest  // mocks HTTP
 func TestGitea(t *testing.T) {
-	t.Run(".LoadPullRequestInfo()", func(t *testing.T) {
+	t.Run(".ChangeRequestForBranch()", func(t *testing.T) {
 		t.Run("happy path", func(t *testing.T) {
-			driver, teardown := setupGiteaDriver(t, "TOKEN")
+			driver, teardown := setupGiteaConnector(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", giteaCurrOpen, httpmock.NewStringResponder(200, `[{"number": 1, "title": "my title", "mergeable": true, "base": {"label": "main"}, "head": {"label": "git-town/feature"} }]`))
-			prInfo, err := driver.LoadPullRequestInfo("feature", "main")
+			prInfo, err := driver.ChangeRequestForBranch("feature")
 			assert.NoError(t, err)
 			assert.True(t, prInfo.CanMergeWithAPI)
 			assert.Equal(t, "my title (#1)", prInfo.DefaultCommitMessage)
-			assert.Equal(t, int64(1), prInfo.PullRequestNumber)
+			assert.Equal(t, 1, prInfo.Number)
 		})
 
 		t.Run("empty Git token", func(t *testing.T) {
-			driver, teardown := setupGiteaDriver(t, "")
+			driver, teardown := setupGiteaConnector(t, "")
 			defer teardown()
 			prInfo, err := driver.LoadPullRequestInfo("feature", "main")
 			assert.Nil(t, err)
@@ -88,7 +87,7 @@ func TestGitea(t *testing.T) {
 		})
 
 		t.Run("cannot load pull request number", func(t *testing.T) {
-			driver, teardown := setupGiteaDriver(t, "TOKEN")
+			driver, teardown := setupGiteaConnector(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", giteaCurrOpen, httpmock.NewStringResponder(404, ""))
 			_, err := driver.LoadPullRequestInfo("feature", "main")
@@ -96,7 +95,7 @@ func TestGitea(t *testing.T) {
 		})
 
 		t.Run("branch has no pull request", func(t *testing.T) {
-			driver, teardown := setupGiteaDriver(t, "TOKEN")
+			driver, teardown := setupGiteaConnector(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", giteaCurrOpen, httpmock.NewStringResponder(200, "[]"))
 			_, err := driver.LoadPullRequestInfo("feature", "main")
@@ -104,7 +103,7 @@ func TestGitea(t *testing.T) {
 		})
 
 		t.Run("multiple pull requests for this banch", func(t *testing.T) {
-			driver, teardown := setupGiteaDriver(t, "TOKEN")
+			driver, teardown := setupGiteaConnector(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", giteaCurrOpen, httpmock.NewStringResponder(200, `[{"number": 1, "title": "title 1", "mergeable": true, "base": {"label": "main"}, "head": {"label": "git-town/feature"} },{"number": 2, "title": "title 2", "mergeable": true, "base": {"label": "main"}, "head": {"label": "git-town/feature"} }]`))
 			_, err := driver.LoadPullRequestInfo("feature", "main")
@@ -114,7 +113,7 @@ func TestGitea(t *testing.T) {
 
 	t.Run(".MergePullRequest()", func(t *testing.T) {
 		t.Run("happy path", func(t *testing.T) {
-			driver, teardown := setupGiteaDriver(t, "TOKEN")
+			driver, teardown := setupGiteaConnector(t, "TOKEN")
 			defer teardown()
 			var mergeRequest *http.Request
 			httpmock.RegisterResponder("GET", giteaCurrOpen, httpmock.NewStringResponder(200, `[{"number": 1, "base": {"label": "main"}, "head": {"label": "git-town/feature"} }]`))
@@ -139,7 +138,7 @@ func TestGitea(t *testing.T) {
 		})
 
 		t.Run("cannot load pull request id", func(t *testing.T) {
-			driver, teardown := setupGiteaDriver(t, "TOKEN")
+			driver, teardown := setupGiteaConnector(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", giteaCurrOpen, httpmock.NewStringResponder(404, ""))
 			_, err := driver.MergePullRequest(hosting.MergePullRequestOptions{
@@ -151,7 +150,7 @@ func TestGitea(t *testing.T) {
 		})
 
 		t.Run("cannot load pull request to merge", func(t *testing.T) {
-			driver, teardown := setupGiteaDriver(t, "TOKEN")
+			driver, teardown := setupGiteaConnector(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", giteaCurrOpen, httpmock.NewStringResponder(200, "[]"))
 			httpmock.RegisterResponder("GET", giteaPR1Merge, httpmock.NewStringResponder(404, ""))
@@ -165,7 +164,7 @@ func TestGitea(t *testing.T) {
 		})
 
 		t.Run("pull request not found", func(t *testing.T) {
-			driver, teardown := setupGiteaDriver(t, "TOKEN")
+			driver, teardown := setupGiteaConnector(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", giteaCurrOpen, httpmock.NewStringResponder(200, "[]"))
 			httpmock.RegisterResponder("POST", giteaPR1Merge, func(req *http.Request) (*http.Response, error) {
@@ -181,7 +180,7 @@ func TestGitea(t *testing.T) {
 		})
 
 		t.Run("merge fails", func(t *testing.T) {
-			driver, teardown := setupGiteaDriver(t, "TOKEN")
+			driver, teardown := setupGiteaConnector(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", giteaCurrOpen, httpmock.NewStringResponder(200, `[{"number": 1, "base": {"label": "main"}, "head": {"label": "foo"} }]`))
 			httpmock.RegisterResponder("GET", giteaVersion, httpmock.NewStringResponder(200, `{"version": "1.11.5"}`))

@@ -4,123 +4,20 @@ import (
 	"context"
 	"fmt"
 	"net/url"
-	"strings"
 
 	"code.gitea.io/sdk/gitea"
 	"github.com/git-town/git-town/v7/src/giturl"
 	"golang.org/x/oauth2"
 )
 
-// GiteaConfig contains connection information for Gitea-based hosting platforms.
-type GiteaConfig struct {
-	apiToken   string
-	hostname   string
-	originURL  string
-	owner      string
-	repository string
-}
-
-// NewGiteaConfig provides Gitea configuration data if the current repo is hosted on Gitea,
-// otherwise nil.
-func NewGiteaConfig(url giturl.Parts, config config) *GiteaConfig {
-	driverType := config.HostingService()
-	manualHostName := config.OriginOverride()
-	if manualHostName != "" {
-		url.Host = manualHostName
-	}
-	if driverType != "gitea" && url.Host != "gitea.com" {
-		return nil
-	}
-	return &GiteaConfig{
-		originURL:  config.OriginURL(),
-		hostname:   url.Host,
-		apiToken:   config.GiteaToken(),
-		owner:      url.Org,
-		repository: url.Repo,
-	}
-}
-
-// Driver provides a fully configured driver instance for the Gitea API.
-func (c GiteaConfig) Driver(log logFn) GiteaDriver {
-	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: c.apiToken})
-	httpClient := oauth2.NewClient(context.Background(), tokenSource)
-	giteaClient := gitea.NewClientWithHTTP(fmt.Sprintf("https://%s", c.hostname), httpClient)
-	return GiteaDriver{
-		client:      giteaClient,
-		GiteaConfig: c,
-		log:         log,
-	}
-}
-
-func (c GiteaConfig) HostingServiceName() string {
-	return "Gitea"
-}
-
-func (c GiteaConfig) NewPullRequestURL(branch string, parentBranch string) (string, error) {
-	toCompare := parentBranch + "..." + branch
-	return fmt.Sprintf("%s/compare/%s", c.RepositoryURL(), url.PathEscape(toCompare)), nil
-}
-
-func (c GiteaConfig) RepositoryURL() string {
-	return fmt.Sprintf("https://%s/%s/%s", c.hostname, c.owner, c.repository)
-}
-
-// GiteaDriver provides access to the Gitea API.
-type GiteaDriver struct {
-	GiteaConfig
+type GiteaConnector struct {
 	client *gitea.Client
-	log    logFn
+	giteaConfig
+	log logFn
 }
 
-//nolint:nonamedreturns  // return value isn't obvious from function name
-func (d *GiteaDriver) apiMergePullRequest(pullRequestNumber int64, commitTitle, commitMessage string) (mergeSha string, err error) {
-	_, err = d.client.MergePullRequest(d.owner, d.repository, pullRequestNumber, gitea.MergePullRequestOption{
-		Style:   gitea.MergeStyleSquash,
-		Title:   commitTitle,
-		Message: commitMessage,
-	})
-	if err != nil {
-		return "", err
-	}
-	pullRequest, err := d.client.GetPullRequest(d.owner, d.repository, pullRequestNumber)
-	if err != nil {
-		return "", err
-	}
-	return *pullRequest.MergedCommitID, nil
-}
-
-// retargetPullRequests retargets pullrequests onto a new base branch
-// this comes in handy when an ancestor got merged, so that children can be retargeted to the ancestor's own target branch
-// example:
-//
-//	ancestor -> initial
-//	children1 -> ancestor  --> initial (retargeted to initial after merge)
-//	children2 -> ancestor  --> initial (retargeted to initial after merge)
-//
-//nolint:unparam
-func (d *GiteaDriver) apiRetargetPullRequests(pullRequests []*gitea.PullRequest, newBaseName string) error {
-	for _, pullRequest := range pullRequests {
-		// RE-ENABLE AFTER https://github.com/go-gitea/gitea/issues/11552 and remove the nolint above
-		// if options.LogRequests {
-		// 	helpers.PrintLog(fmt.Sprintf("Gitea API: Updating base branch for PR #%d to #%s", *pullRequest.Index, newBaseName))
-		// }
-		d.log("Gitea API: Updating base branch for PR #%d to #%s", 1, newBaseName)
-		d.log("The Gitea API currently does not support retargeting, please restarget #%d manually, see https://github.com/go-gitea/gitea/issues/11552", pullRequest.Index)
-		// _, err = d.client.EditPullRequest(d.owner, d.repository, *pullRequest.Index, &gitea.EditPullRequestOption{
-		// 	Base: newBaseName
-		// })
-		// if err != nil {
-		//	return err
-		// }
-	}
-	return nil
-}
-
-func (d *GiteaDriver) LoadPullRequestInfo(branch, parentBranch string) (*PullRequestInfo, error) {
-	if d.apiToken == "" {
-		return nil, nil //nolint:nilnil // we really want to return nil here
-	}
-	openPullRequests, err := d.client.ListRepoPullRequests(d.owner, d.repository, gitea.ListPullRequestsOptions{
+func (c *GiteaConnector) ChangeRequestForBranch(branch string) (*ChangeRequestInfo, error) {
+	openPullRequests, err := c.client.ListRepoPullRequests(c.owner, c.repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{
 			PageSize: 50,
 		},
@@ -129,63 +26,110 @@ func (d *GiteaDriver) LoadPullRequestInfo(branch, parentBranch string) (*PullReq
 	if err != nil {
 		return nil, err
 	}
-	baseName := parentBranch
-	headName := d.owner + "/" + branch
-	pullRequests := filterPullRequests(openPullRequests, baseName, headName)
-	if len(pullRequests) < 1 {
-		return nil, fmt.Errorf("no pull request from branch %q to branch %q found", branch, parentBranch)
+	headName := c.owner + "/" + branch
+	pullRequests := filterPullRequests(openPullRequests, headName)
+	if len(pullRequests) == 0 {
+		return nil, nil
 	}
 	if len(pullRequests) > 1 {
-		return nil, fmt.Errorf("found %d pull requests from branch %q to branch %q", len(pullRequests), branch, parentBranch)
+		return nil, fmt.Errorf("found %d pull requests for branch %q", len(pullRequests), branch)
 	}
 	pullRequest := pullRequests[0]
-	return &PullRequestInfo{
-		CanMergeWithAPI:      pullRequest.Mergeable,
-		DefaultCommitMessage: createDefaultCommitMessage(pullRequest),
-		PullRequestNumber:    pullRequest.Index,
+	return &ChangeRequestInfo{
+		CanMergeWithAPI: pullRequest.Mergeable,
+		Number:          int(pullRequest.Index),
+		Title:           pullRequest.Title,
 	}, nil
 }
 
 //nolint:nonamedreturns  // return value isn't obvious from function name
-func (d *GiteaDriver) MergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
-	openPullRequests, err := d.client.ListRepoPullRequests(d.owner, d.repository, gitea.ListPullRequestsOptions{
-		ListOptions: gitea.ListOptions{
-			PageSize: 50,
-		},
-		State: gitea.StateOpen,
+func (c *GiteaConnector) MergeChangeRequest(number int, message string) (mergeSha string, err error) {
+	title, body := parseCommitMessage(message)
+	_, err = c.client.MergePullRequest(c.owner, c.repository, int64(number), gitea.MergePullRequestOption{
+		Style:   gitea.MergeStyleSquash,
+		Title:   title,
+		Message: body,
 	})
 	if err != nil {
 		return "", err
 	}
-	baseName := options.Branch
-	newBaseName := options.ParentBranch
-	err = d.apiRetargetPullRequests(filterPullRequests(openPullRequests, baseName, ""), newBaseName)
+	pullRequest, err := c.client.GetPullRequest(c.owner, c.repository, int64(number))
 	if err != nil {
 		return "", err
 	}
-	commitMessageParts := strings.SplitN(options.CommitMessage, "\n", 2)
-	commitTitle := commitMessageParts[0]
-	commitMessage := ""
-	if len(commitMessageParts) == 2 {
-		commitMessage = commitMessageParts[1]
+	return *pullRequest.MergedCommitID, nil
+}
+
+func (c *GiteaConnector) UpdateChangeRequestTarget(number int, target string) error {
+	// TODO: update the client and uncomment
+	// if c.log != nil {
+	// 	c.log("Gitea API: Updating base branch for PR #%d to #%s", number, target)
+	// }
+	// _, err := c.client.EditPullRequest(c.owner, c.repository, int64(number), gitea.EditPullRequestOption{
+	// 	Base: newBaseName,
+	// })
+	// return err
+	return fmt.Errorf("Updating Gitea pull requests is currently not supported")
+}
+
+// NewGiteaConfig provides Gitea configuration data if the current repo is hosted on Gitea,
+// otherwise nil.
+func NewGiteaConnector(url giturl.Parts, config gitConfig, log logFn) *GiteaConnector {
+	manualHostName := config.OriginOverride()
+	if config.HostingService() != "gitea" && manualHostName != "gitea.com" {
+		return nil
 	}
-	return d.apiMergePullRequest(options.PullRequestNumber, commitTitle, commitMessage)
+	if manualHostName != "" {
+		url.Host = manualHostName
+	}
+	giteaConfig := giteaConfig{
+		Config: Config{
+			apiToken:   config.GiteaToken(),
+			hostname:   url.Host,
+			originURL:  config.OriginURL(),
+			owner:      url.Org,
+			repository: url.Repo,
+		},
+	}
+	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: giteaConfig.apiToken})
+	httpClient := oauth2.NewClient(context.Background(), tokenSource)
+	giteaClient := gitea.NewClientWithHTTP(fmt.Sprintf("https://%s", giteaConfig.hostname), httpClient)
+	return &GiteaConnector{
+		client:      giteaClient,
+		giteaConfig: giteaConfig,
+		log:         log,
+	}
 }
 
-func createDefaultCommitMessage(pullRequest *gitea.PullRequest) string {
-	return fmt.Sprintf("%s (#%d)", pullRequest.Title, pullRequest.Index)
+// GiteaConfig contains connection information for Gitea-based hosting platforms.
+type giteaConfig struct {
+	Config
 }
 
-func filterPullRequests(pullRequests []*gitea.PullRequest, baseName, headName string) []*gitea.PullRequest {
+func (c *giteaConfig) HostingServiceName() string {
+	return "Gitea"
+}
+
+func (c *giteaConfig) NewChangeRequestURL(branch, parentBranch string) (string, error) {
+	toCompare := parentBranch + "..." + branch
+	return fmt.Sprintf("%s/compare/%s", c.RepositoryURL(), url.PathEscape(toCompare)), nil
+}
+
+func (c *giteaConfig) RepositoryURL() string {
+	return fmt.Sprintf("https://%s/%s/%s", c.hostname, c.owner, c.repository)
+}
+
+func (c *giteaConfig) DefaultCommitMessage(crInfo ChangeRequestInfo) string {
+	return fmt.Sprintf("%s (#%d)", crInfo.Title, crInfo.Number)
+}
+
+func filterPullRequests(pullRequests []*gitea.PullRequest, branch string) []*gitea.PullRequest {
 	pullRequestsFiltered := []*gitea.PullRequest{}
+	// TODO: don't copy the entire pullRequest struct here, use the index
 	for _, pullRequest := range pullRequests {
-		if pullRequest.Base.Name != baseName {
-			break
+		if pullRequest.Head.Name == branch {
+			pullRequestsFiltered = append(pullRequestsFiltered, pullRequest)
 		}
-		if headName != "" && pullRequest.Head.Name != headName {
-			break
-		}
-		pullRequestsFiltered = append(pullRequestsFiltered, pullRequest)
 	}
 	return pullRequestsFiltered
 }
