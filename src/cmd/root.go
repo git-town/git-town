@@ -30,7 +30,7 @@ and it allows you to perform many common Git operations faster and easier.`,
 	rootCmd.AddCommand(killCommand(repo))
 	rootCmd.AddCommand(newPullRequestCommand(repo))
 	rootCmd.AddCommand(prependCommand(repo))
-	rootCmd.AddCommand(proposalsCommand(repo))
+	rootCmd.AddCommand(doctorCommand(repo))
 	rootCmd.AddCommand(pruneBranchesCommand(repo))
 	rootCmd.AddCommand(renameBranchCommand(repo))
 	rootCmd.AddCommand(repoCommand(repo))
