@@ -103,7 +103,7 @@ func TestGitLab(t *testing.T) {
 			assert.NoError(t, err)
 			assert.True(t, prInfo.CanMergeWithAPI)
 			assert.Equal(t, "my title (!1)", prInfo.DefaultCommitMessage)
-			assert.Equal(t, int64(1), prInfo.PullRequestNumber)
+			assert.Equal(t, 1, prInfo.PullRequestNumber)
 		})
 
 		t.Run("empty Gitlab token", func(t *testing.T) {

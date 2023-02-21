@@ -16,7 +16,7 @@ type DriverMergePullRequestStep struct {
 	enteredEmptyCommitMessage bool
 	mergeError                error
 	mergeSha                  string
-	PullRequestNumber         int64
+	PullRequestNumber         int
 }
 
 func (step *DriverMergePullRequestStep) CreateAbortStep() Step {

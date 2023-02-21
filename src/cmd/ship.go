@@ -25,7 +25,7 @@ type shipConfig struct {
 	initialBranch           string
 	isShippingInitialBranch bool
 	isOffline               bool
-	pullRequestNumber       int64
+	pullRequestNumber       int
 	deleteOriginBranch      bool
 }
 
@@ -151,7 +151,7 @@ func determineShipConfig(args []string, driver hosting.Driver, repo *git.ProdRep
 	branchToMergeInto := repo.Config.ParentBranch(branchToShip)
 	canShipWithDriver := false
 	defaultCommitMessage := ""
-	pullRequestNumber := int64(-1)
+	pullRequestNumber := -1
 	if hasTrackingBranch && !isOffline && driver != nil {
 		prInfo, err := driver.LoadPullRequestInfo(branchToShip, branchToMergeInto)
 		if err != nil {

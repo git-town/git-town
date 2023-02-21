@@ -64,7 +64,7 @@ type gitRunner interface {
 type PullRequestInfo struct {
 	CanMergeWithAPI      bool
 	DefaultCommitMessage string
-	PullRequestNumber    int64
+	PullRequestNumber    int
 }
 
 // MergePullRequestOptions defines the options to the MergePullRequest function.
@@ -73,7 +73,7 @@ type MergePullRequestOptions struct {
 	CommitMessage     string
 	LogRequests       bool
 	ParentBranch      string
-	PullRequestNumber int64
+	PullRequestNumber int
 }
 
 // logFn defines a function with fmt.Printf API that CodeHostingDriver instances can use to give updates on activities they do.
