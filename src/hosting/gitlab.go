@@ -17,6 +17,10 @@ type GitLabConnector struct {
 	log logFn
 }
 
+func (c *GitLabConnector) ChangeRequestDetails(number int) (*ChangeRequestInfo, error) {
+	return nil, fmt.Errorf("TODO: implement")
+}
+
 func (c *GitLabConnector) ChangeRequestForBranch(branch string) (*ChangeRequestInfo, error) {
 	opts := &gitlab.ListProjectMergeRequestsOptions{
 		State:        gitlab.String("opened"),

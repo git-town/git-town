@@ -24,6 +24,13 @@ func proposalsCommand(repo *git.ProdRepo) *cobra.Command {
 			if err != nil {
 				cli.Exit(err)
 			}
+			for p := range proposals {
+				proposal, err := connector.ChangeRequestDetails(proposals[p].Number)
+				if err != nil {
+					cli.Exit(err)
+				}
+				proposals[p] = *proposal
+			}
 			titles := make([]string, len(proposals))
 			for p := range proposals {
 				titles[p] = proposals[p].Title

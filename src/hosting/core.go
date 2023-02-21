@@ -23,6 +23,9 @@ type Config struct {
 // Connector describes the API methods that Git Town performs on code hosting platforms
 // in a standardized format.
 type Connector interface {
+	// ChangeRequestDetails provides details about the change request with the given number.
+	ChangeRequestDetails(number int) (*ChangeRequestInfo, error)
+
 	// ChangeRequestForBranch provides the change request for the branch with the given name.
 	ChangeRequestForBranch(branch string) (*ChangeRequestInfo, error)
 
