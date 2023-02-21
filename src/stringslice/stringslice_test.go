@@ -43,10 +43,18 @@ func TestHoist(t *testing.T) {
 	})
 }
 
+func TestLongest(t *testing.T) {
+	t.Parallel()
+	give := []string{"1", "333", "22"}
+	want := 3
+	have := stringslice.Longest(give)
+	assert.Equal(t, want, have)
+}
+
 func TestRemove(t *testing.T) {
 	t.Parallel()
 	give := []string{"one", "two", "three"}
-	have := stringslice.Remove(give, "two")
 	want := []string{"one", "three"}
-	assert.Equal(t, have, want)
+	have := stringslice.Remove(give, "two")
+	assert.Equal(t, want, have)
 }
