@@ -100,20 +100,20 @@ func NewConnector(config gitConfig, git gitRunner, log logFn) (Connector, error)
 	if url == nil {
 		return nil, nil //nolint:nilnil  // "nil, nil" is a legitimate return value here
 	}
-	githubConnector := NewGithubConnector(*url, config)
+	githubConnector := NewGithubConnector(*url, config, log)
 	if githubConnector != nil {
 		return githubConnector, nil
 	}
-	gitlabConnector, err := NewGitlabConnector(*url, config)
+	gitlabConnector, err := NewGitlabConnector(*url, config, log)
 	if err != nil {
 		return nil, err
 	}
 	if gitlabConnector != nil {
 		return gitlabConnector, nil
 	}
-	bitbucketDriver := NewBitbucketDriver(*url, config, git)
-	if bitbucketDriver != nil {
-		return bitbucketDriver, nil
+	bitbucketConnector := NewBitbucketConnector(*url, config, git)
+	if bitbucketConnector != nil {
+		return bitbucketConnector, nil
 	}
 	giteaConfig := NewGiteaConfig(*url, config)
 	if giteaConfig != nil {
