@@ -29,7 +29,7 @@ func (c *GiteaConnector) ChangeRequestForBranch(branch string) (*ChangeRequestIn
 	headName := c.owner + "/" + branch
 	pullRequests := filterPullRequests(openPullRequests, headName)
 	if len(pullRequests) == 0 {
-		return nil, nil
+		return nil, nil //nolint:nilnil
 	}
 	if len(pullRequests) > 1 {
 		return nil, fmt.Errorf("found %d pull requests for branch %q", len(pullRequests), branch)

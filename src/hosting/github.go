@@ -28,7 +28,7 @@ func (c *GitHubConnector) ChangeRequestForBranch(branch string) (*ChangeRequestI
 		return nil, err
 	}
 	if len(pullRequests) == 0 {
-		return nil, nil
+		return nil, nil //nolint:nilnil
 	}
 	if len(pullRequests) > 1 {
 		return nil, fmt.Errorf("found %d pull requests for branch %q", len(pullRequests), branch)
@@ -37,6 +37,7 @@ func (c *GitHubConnector) ChangeRequestForBranch(branch string) (*ChangeRequestI
 	return &changeRequest, nil
 }
 
+//nolint:nonamedreturns
 func (c *GitHubConnector) SquashMergeChangeRequest(number int, message string) (mergeSHA string, err error) {
 	if number == 0 {
 		return "", fmt.Errorf("no pull request number given")
@@ -45,7 +46,7 @@ func (c *GitHubConnector) SquashMergeChangeRequest(number int, message string) (
 		c.log("GitHub API: merging PR #%d\n", number)
 	}
 	title, body := parseCommitMessage(message)
-	result, _, err := c.client.PullRequests.Merge(context.Background(), c.owner, c.repository, int(number), body, &github.PullRequestOptions{
+	result, _, err := c.client.PullRequests.Merge(context.Background(), c.owner, c.repository, number, body, &github.PullRequestOptions{
 		MergeMethod: "squash",
 		CommitTitle: title,
 	})
@@ -132,6 +133,7 @@ func parsePullRequest(pullRequest *github.PullRequest) ChangeRequestInfo {
 	}
 }
 
+//nolint:nonamedreturns
 func parseCommitMessage(message string) (title, body string) {
 	parts := strings.SplitN(message, "\n", 2)
 	title = parts[0]

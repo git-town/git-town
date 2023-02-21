@@ -18,7 +18,7 @@ const (
 	giteaPR1Merge = giteaRoot + "/repos/git-town/git-town/pulls/1/merge"
 )
 
-func log(template string, messages ...interface{}) {}
+// func log(template string, messages ...interface{}) {}
 
 func setupGiteaConnector(t *testing.T, token string) (*hosting.GiteaConnector, func()) {
 	t.Helper()

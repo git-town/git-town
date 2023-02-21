@@ -27,7 +27,7 @@ func (c *GitLabConnector) ChangeRequestForBranch(branch string) (*ChangeRequestI
 		return nil, err
 	}
 	if len(mergeRequests) == 0 {
-		return nil, nil
+		return nil, nil //nolint:nilnil
 	}
 	if len(mergeRequests) > 1 {
 		return nil, fmt.Errorf("found %d merge requests for branch %q", len(mergeRequests), branch)
@@ -75,7 +75,7 @@ func (c *GitLabConnector) UpdateChangeRequestTarget(number int, target string) e
 func NewGitlabConnector(url giturl.Parts, config gitConfig, log logFn) (*GitLabConnector, error) {
 	manualHostName := config.OriginOverride()
 	if config.HostingService() != "gitlab" && manualHostName != "gitlab.com" {
-		return nil, nil
+		return nil, nil //nolint:nilnil
 	}
 	if manualHostName != "" {
 		url.Host = manualHostName
