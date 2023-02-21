@@ -18,7 +18,7 @@ func (step *CreateTrackingBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, 
 	return &DeleteOriginBranchStep{Branch: step.Branch}, nil
 }
 
-func (step *CreateTrackingBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
+func (step *CreateTrackingBranchStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
 	return repo.Logging.PushBranch(git.PushArgs{
 		Branch:     step.Branch,
 		NoPushHook: step.NoPushHook,

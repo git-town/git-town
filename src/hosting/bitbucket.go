@@ -9,58 +9,81 @@ import (
 	"github.com/git-town/git-town/v7/src/giturl"
 )
 
-// BitbucketDriver provides access to the API of Bitbucket installations.
-type BitbucketDriver struct {
-	git          gitRunner
-	hostname     string
-	originURL    string
-	organization string
-	repository   string
+// BitbucketConnector provides access to the API of Bitbucket installations.
+type BitbucketConnector struct {
+	bitBucketConfig
 }
 
-// NewBitbucketDriver provides a Bitbucket driver instance if the current repo is hosted on Bitbucket,
+// NewBitbucketConnector provides a Bitbucket driver instance if the current repo is hosted on Bitbucket,
 // otherwise nil.
-func NewBitbucketDriver(url giturl.Parts, config config, git gitRunner) *BitbucketDriver {
-	driverType := config.HostingService()
-	manualOrigin := config.OriginOverride()
+func NewBitbucketConnector(url giturl.Parts, gitConfig gitConfig, git gitRunner) *BitbucketConnector {
+	manualOrigin := gitConfig.OriginOverride()
 	if manualOrigin != "" {
 		url.Host = manualOrigin
 	}
-	if driverType != "bitbucket" && url.Host != "bitbucket.org" {
+	if gitConfig.HostingService() != "bitbucket" && url.Host != "bitbucket.org" {
 		return nil
 	}
-	return &BitbucketDriver{
-		git:          git,
-		hostname:     url.Host,
+	bitBucketConfig := bitBucketConfig{
+		Config: Config{
+			hostname:   url.Host,
+			originURL:  gitConfig.OriginURL(),
+			repository: url.Repo,
+		},
 		organization: url.Org,
-		originURL:    config.OriginURL(),
-		repository:   url.Repo,
+		git:          git,
+	}
+	return &BitbucketConnector{
+		bitBucketConfig: bitBucketConfig,
 	}
 }
 
-func (d *BitbucketDriver) LoadPullRequestInfo(branch, parentBranch string) (*PullRequestInfo, error) {
-	return nil, fmt.Errorf("BitBucket API functionality isn't implemented")
+func (c *BitbucketConnector) ChangeRequestForBranch(branch string) (*ChangeRequestInfo, error) {
+	return nil, fmt.Errorf("BitBucket API functionality isn't implemented yet")
 }
 
-func (d *BitbucketDriver) NewPullRequestURL(branch, parentBranch string) (string, error) {
-	query := url.Values{}
-	branchSha, err := d.git.ShaForBranch(branch)
-	if err != nil {
-		return "", fmt.Errorf("cannot determine pull request URL from %q to %q: %w", branch, parentBranch, err)
-	}
-	query.Add("source", strings.Join([]string{d.organization + "/" + d.repository, branchSha[0:12], branch}, ":"))
-	query.Add("dest", strings.Join([]string{d.organization + "/" + d.repository, "", parentBranch}, ":"))
-	return fmt.Sprintf("%s/pull-request/new?%s", d.RepositoryURL(), query.Encode()), nil
+func (c *BitbucketConnector) ChangeRequests() ([]ChangeRequestInfo, error) {
+	return nil, fmt.Errorf("BitBucket API functionality isn't implemented yet")
 }
 
-func (d *BitbucketDriver) RepositoryURL() string {
-	return fmt.Sprintf("https://%s/%s/%s", d.hostname, d.organization, d.repository)
-}
-
-func (d *BitbucketDriver) MergePullRequest(options MergePullRequestOptions) (string, error) {
+//nolint:nonamedreturns
+func (c *BitbucketConnector) SquashMergeChangeRequest(number int, message string) (mergeSHA string, err error) {
 	return "", errors.New("shipping pull requests via the Bitbucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues")
 }
 
-func (d *BitbucketDriver) HostingServiceName() string {
+func (c *BitbucketConnector) UpdateChangeRequestTarget(number int, target string) error {
+	return errors.New("shipping pull requests via the Bitbucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues")
+}
+
+// *************************************
+//   CONFIG
+// *************************************
+
+type bitBucketConfig struct {
+	Config
+	organization string
+	git          gitRunner
+}
+
+func (c *bitBucketConfig) DefaultCommitMessage(crInfo ChangeRequestInfo) string {
+	return fmt.Sprintf("%s (#%d)", crInfo.Title, crInfo.Number)
+}
+
+func (c *bitBucketConfig) NewChangeRequestURL(branch, parentBranch string) (string, error) {
+	query := url.Values{}
+	branchSha, err := c.git.ShaForBranch(branch)
+	if err != nil {
+		return "", fmt.Errorf("cannot determine pull request URL from %q to %q: %w", branch, parentBranch, err)
+	}
+	query.Add("source", strings.Join([]string{c.organization + "/" + c.repository, branchSha[0:12], branch}, ":"))
+	query.Add("dest", strings.Join([]string{c.organization + "/" + c.repository, "", parentBranch}, ":"))
+	return fmt.Sprintf("%s/pull-request/new?%s", c.RepositoryURL(), query.Encode()), nil
+}
+
+func (c *bitBucketConfig) HostingServiceName() string {
 	return "Bitbucket"
+}
+
+func (c *bitBucketConfig) RepositoryURL() string {
+	return fmt.Sprintf("https://%s/%s/%s", c.hostname, c.organization, c.repository)
 }

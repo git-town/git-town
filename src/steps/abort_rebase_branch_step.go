@@ -11,6 +11,6 @@ type AbortRebaseBranchStep struct {
 	NoOpStep
 }
 
-func (step *AbortRebaseBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
+func (step *AbortRebaseBranchStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
 	return repo.Logging.AbortRebase()
 }

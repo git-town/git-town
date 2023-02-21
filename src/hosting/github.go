@@ -11,162 +11,150 @@ import (
 	"golang.org/x/oauth2"
 )
 
-// GithubConfig contains connection information for Github-based hosting platforms.
-type GithubConfig struct {
-	apiToken   string
-	config     config
-	hostname   string
-	originURL  string
-	owner      string
-	repository string
+// GitHubConnector provides standardized connectivity for the given repository (github.com/owner/repo)
+// via the GitHub API.
+type GitHubConnector struct {
+	client *github.Client
+	GitHubConfig
+	log logFn
+}
+
+func (c *GitHubConnector) ChangeRequestForBranch(branch string) (*ChangeRequestInfo, error) {
+	pullRequests, _, err := c.client.PullRequests.List(context.Background(), c.owner, c.repository, &github.PullRequestListOptions{
+		Head:  c.owner + ":" + branch,
+		State: "open",
+	})
+	if err != nil {
+		return nil, err
+	}
+	if len(pullRequests) == 0 {
+		return nil, nil //nolint:nilnil
+	}
+	if len(pullRequests) > 1 {
+		return nil, fmt.Errorf("found %d pull requests for branch %q", len(pullRequests), branch)
+	}
+	changeRequest := parseGithubPullRequest(pullRequests[0])
+	return &changeRequest, nil
+}
+
+func (c *GitHubConnector) ChangeRequests() ([]ChangeRequestInfo, error) {
+	pullRequests, _, err := c.client.PullRequests.List(context.Background(), c.owner, c.repository, &github.PullRequestListOptions{
+		State: "open",
+	})
+	result := make([]ChangeRequestInfo, len(pullRequests))
+	if err != nil {
+		return result, err
+	}
+	for p := range pullRequests {
+		result[p] = parseGithubPullRequest(pullRequests[p])
+	}
+	return result, nil
+}
+
+//nolint:nonamedreturns
+func (c *GitHubConnector) SquashMergeChangeRequest(number int, message string) (mergeSHA string, err error) {
+	if number == 0 {
+		return "", fmt.Errorf("no pull request number given")
+	}
+	if c.log != nil {
+		c.log("GitHub API: merging PR #%d\n", number)
+	}
+	title, body := parseCommitMessage(message)
+	result, _, err := c.client.PullRequests.Merge(context.Background(), c.owner, c.repository, number, body, &github.PullRequestOptions{
+		MergeMethod: "squash",
+		CommitTitle: title,
+	})
+	return result.GetSHA(), err
+}
+
+func (c *GitHubConnector) UpdateChangeRequestTarget(number int, target string) error {
+	if c.log != nil {
+		c.log("GitHub API: updating base branch for PR #%d\n", number)
+	}
+	_, _, err := c.client.PullRequests.Edit(context.Background(), c.owner, c.repository, number, &github.PullRequest{
+		Base: &github.PullRequestBranch{
+			Ref: &target,
+		},
+	})
+	return err
 }
 
 // NewGithubConfig provides GitHub configuration data if the current repo is hosted on Github,
 // otherwise nil.
-func NewGithubConfig(url giturl.Parts, config config) *GithubConfig {
-	driverType := config.HostingService()
-	manualHostName := config.OriginOverride()
+func NewGithubConnector(url giturl.Parts, gitConfig gitConfig, log logFn) *GitHubConnector {
+	manualHostName := gitConfig.OriginOverride()
 	if manualHostName != "" {
 		url.Host = manualHostName
 	}
-	if driverType != "github" && url.Host != "github.com" {
+	if gitConfig.HostingService() != "github" && url.Host != "github.com" {
 		return nil
 	}
-	return &GithubConfig{
-		apiToken:   config.GitHubToken(),
-		config:     config,
+	hostingConfig := Config{
+		apiToken:   gitConfig.GitHubToken(),
 		hostname:   url.Host,
-		originURL:  config.OriginURL(),
+		mainBranch: gitConfig.MainBranch(),
+		originURL:  gitConfig.OriginURL(),
 		owner:      url.Org,
 		repository: url.Repo,
 	}
-}
-
-func (c GithubConfig) defaultCommitMessage(pullRequest *github.PullRequest) string {
-	return fmt.Sprintf("%s (#%d)", *pullRequest.Title, *pullRequest.Number)
-}
-
-// Driver provides a working driver instance ready to talk to the GitHub API.
-func (c GithubConfig) Driver(log logFn) GithubDriver {
-	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: c.apiToken})
+	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: hostingConfig.apiToken})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
-	return GithubDriver{
+	return &GitHubConnector{
 		client:       github.NewClient(httpClient),
-		GithubConfig: c,
+		GitHubConfig: GitHubConfig{Config: hostingConfig},
 		log:          log,
 	}
 }
 
-func (c GithubConfig) HostingServiceName() string {
+// *************************************
+// GitHubConfig
+// *************************************
+
+type GitHubConfig struct {
+	Config
+}
+
+func (c *GitHubConfig) DefaultCommitMessage(crInfo ChangeRequestInfo) string {
+	return fmt.Sprintf("%s (#%d)", crInfo.Title, crInfo.Number)
+}
+
+func (c *GitHubConfig) HostingServiceName() string {
 	return "GitHub"
 }
 
-func (c GithubConfig) NewPullRequestURL(branch string, parentBranch string) (string, error) {
+func (c *GitHubConfig) NewChangeRequestURL(branch, parentBranch string) (string, error) {
 	toCompare := branch
-	if parentBranch != c.config.MainBranch() {
+	if parentBranch != c.mainBranch {
 		toCompare = parentBranch + "..." + branch
 	}
 	return fmt.Sprintf("%s/compare/%s?expand=1", c.RepositoryURL(), url.PathEscape(toCompare)), nil
 }
 
-func (c GithubConfig) RepositoryURL() string {
+func (c *GitHubConfig) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", c.hostname, c.owner, c.repository)
 }
 
-/*************************************************************************
- *
- *  GITHUB DRIVER
- *
- */
+// *************************************
+// Helper functions
+// *************************************
 
-// GithubDriver provides access to the GitHub API.
-type GithubDriver struct {
-	GithubConfig
-	client *github.Client
-	log    logFn
+// parseGithubPullRequest extracts ChangeRequestInfo from the given GitHub pull-request data.
+func parseGithubPullRequest(pullRequest *github.PullRequest) ChangeRequestInfo {
+	return ChangeRequestInfo{
+		Number:          pullRequest.GetNumber(),
+		Title:           pullRequest.GetTitle(),
+		CanMergeWithAPI: pullRequest.GetMergeable(),
+	}
 }
 
-func (d *GithubDriver) LoadPullRequestInfo(branch, parentBranch string) (*PullRequestInfo, error) {
-	if d.apiToken == "" {
-		return nil, nil //nolint:nilnil // we really want to return nil here
+//nolint:nonamedreturns
+func parseCommitMessage(message string) (title, body string) {
+	parts := strings.SplitN(message, "\n", 2)
+	title = parts[0]
+	if len(parts) == 2 {
+		body = parts[1]
+	} else {
+		body = ""
 	}
-	pullRequests, err := d.loadPullRequests(branch, parentBranch)
-	if err != nil {
-		return nil, err
-	}
-	if len(pullRequests) < 1 {
-		return nil, fmt.Errorf("no pull request from branch %q to branch %q found", branch, parentBranch)
-	}
-	if len(pullRequests) > 1 {
-		return nil, fmt.Errorf("found %d pull requests from branch %q to branch %q", len(pullRequests), branch, parentBranch)
-	}
-	return &PullRequestInfo{
-		CanMergeWithAPI:      true,
-		DefaultCommitMessage: d.defaultCommitMessage(pullRequests[0]),
-		PullRequestNumber:    int64(pullRequests[0].GetNumber()),
-	}, nil
-}
-
-func (d *GithubDriver) loadPullRequests(branch, parentBranch string) ([]*github.PullRequest, error) {
-	pullRequests, _, err := d.client.PullRequests.List(context.Background(), d.owner, d.repository, &github.PullRequestListOptions{
-		Base:  parentBranch,
-		Head:  d.owner + ":" + branch,
-		State: "open",
-	})
-	return pullRequests, err
-}
-
-//nolint:nonamedreturns  // return value isn't obvious from function name
-func (d *GithubDriver) MergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
-	err = d.updatePullRequestsAgainst(options)
-	if err != nil {
-		return "", err
-	}
-	if options.PullRequestNumber == 0 {
-		return "", fmt.Errorf("cannot merge via Github since there is no pull request")
-	}
-	if options.LogRequests {
-		d.log("GitHub API: Merging PR #%d\n", options.PullRequestNumber)
-	}
-	commitMessageParts := strings.SplitN(options.CommitMessage, "\n", 2)
-	githubCommitTitle := commitMessageParts[0]
-	githubCommitMessage := ""
-	if len(commitMessageParts) == 2 {
-		githubCommitMessage = commitMessageParts[1]
-	}
-	result, _, err := d.client.PullRequests.Merge(context.Background(), d.owner, d.repository, int(options.PullRequestNumber), githubCommitMessage, &github.PullRequestOptions{
-		MergeMethod: "squash",
-		CommitTitle: githubCommitTitle,
-	})
-	if err != nil {
-		return "", err
-	}
-	return *result.SHA, nil
-}
-
-func (d *GithubDriver) updatePullRequestsAgainst(options MergePullRequestOptions) error {
-	pullRequests, _, err := d.client.PullRequests.List(context.Background(), d.owner, d.repository, &github.PullRequestListOptions{
-		Base:  options.Branch,
-		State: "open",
-	})
-	if err != nil {
-		return err
-	}
-	if len(pullRequests) == 0 {
-		return fmt.Errorf("no pull request for branch %q found", options.Branch)
-	}
-	for _, pullRequest := range pullRequests {
-		if options.LogRequests {
-			d.log("GitHub API: Updating base branch for PR #%d\n", *pullRequest.Number)
-		}
-		_, _, err = d.client.PullRequests.Edit(context.Background(), d.owner, d.repository, *pullRequest.Number, &github.PullRequest{
-			Base: &github.PullRequestBranch{
-				Ref: &options.ParentBranch,
-			},
-		})
-		if err != nil {
-			return err
-		}
-	}
-	return nil
+	return
 }

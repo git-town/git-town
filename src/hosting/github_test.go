@@ -12,7 +12,7 @@ import (
 	httpmock "gopkg.in/jarcoal/httpmock.v1"
 )
 
-func setupGithubDriver(t *testing.T, token string) (*hosting.GithubDriver, func()) {
+func setupGithubDriver(t *testing.T, token string) (*hosting.GitHubConnector, func()) {
 	t.Helper()
 	httpmock.Activate()
 	repoConfig := mockRepoConfig{
@@ -20,10 +20,9 @@ func setupGithubDriver(t *testing.T, token string) (*hosting.GithubDriver, func(
 		gitHubToken: token,
 	}
 	url := giturl.Parse(repoConfig.originURL)
-	githubConfig := hosting.NewGithubConfig(*url, repoConfig)
-	assert.NotNil(t, githubConfig)
-	driver := githubConfig.Driver(nil)
-	return &driver, func() {
+	connector := hosting.NewGithubConnector(*url, repoConfig, nil)
+	assert.NotNil(t, connector)
+	return connector, func() {
 		httpmock.DeactivateAndReset()
 	}
 }
@@ -36,11 +35,10 @@ func TestNewGithubDriver(t *testing.T) {
 			originURL: "git@github.com:git-town/git-town.git",
 		}
 		url := giturl.Parse(repoConfig.originURL)
-		githubConfig := hosting.NewGithubConfig(*url, repoConfig)
-		assert.NotNil(t, githubConfig)
-		driver := githubConfig.Driver(nil)
-		assert.Equal(t, "GitHub", driver.HostingServiceName())
-		assert.Equal(t, "https://github.com/git-town/git-town", githubConfig.RepositoryURL())
+		connector := hosting.NewGithubConnector(*url, repoConfig, nil)
+		assert.NotNil(t, connector)
+		assert.Equal(t, "GitHub", connector.HostingServiceName())
+		assert.Equal(t, "https://github.com/git-town/git-town", connector.RepositoryURL())
 	})
 
 	t.Run("self-hosted GitHub instance", func(t *testing.T) {
@@ -50,11 +48,10 @@ func TestNewGithubDriver(t *testing.T) {
 			originURL:      "git@self-hosted-github.com:git-town/git-town.git",
 		}
 		url := giturl.Parse(repoConfig.originURL)
-		githubConfig := hosting.NewGithubConfig(*url, repoConfig)
-		assert.NotNil(t, githubConfig)
-		driver := githubConfig.Driver(nil)
-		assert.Equal(t, "GitHub", driver.HostingServiceName())
-		assert.Equal(t, "https://self-hosted-github.com/git-town/git-town", githubConfig.RepositoryURL())
+		connector := hosting.NewGithubConnector(*url, repoConfig, nil)
+		assert.NotNil(t, connector)
+		assert.Equal(t, "GitHub", connector.HostingServiceName())
+		assert.Equal(t, "https://self-hosted-github.com/git-town/git-town", connector.RepositoryURL())
 	})
 
 	t.Run("custom hostname override", func(t *testing.T) {
@@ -64,41 +61,39 @@ func TestNewGithubDriver(t *testing.T) {
 			originOverride: "github.com",
 		}
 		url := giturl.Parse(repoConfig.originURL)
-		githubConfig := hosting.NewGithubConfig(*url, repoConfig)
-		assert.NotNil(t, githubConfig)
-		driver := githubConfig.Driver(nil)
-		assert.Equal(t, "GitHub", driver.HostingServiceName())
-		assert.Equal(t, "https://github.com/git-town/git-town", githubConfig.RepositoryURL())
+		connector := hosting.NewGithubConnector(*url, repoConfig, nil)
+		assert.NotNil(t, connector)
+		assert.Equal(t, "GitHub", connector.HostingServiceName())
+		assert.Equal(t, "https://github.com/git-town/git-town", connector.RepositoryURL())
 	})
 }
 
 //nolint:paralleltest  // mocks HTTP
 func TestGithubDriver(t *testing.T) {
-	t.Run(".LoadPullRequestInfo()", func(t *testing.T) {
+	t.Run("ChangeRequestForBranch", func(t *testing.T) {
 		t.Run("with token", func(t *testing.T) {
 			driver, teardown := setupGithubDriver(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", githubCurrOpen, httpmock.NewStringResponder(200, `[{"number": 1, "title": "my title" }]`))
-			prInfo, err := driver.LoadPullRequestInfo("feature", "main")
+			prInfo, err := driver.ChangeRequestForBranch("feature")
 			assert.NoError(t, err)
 			assert.True(t, prInfo.CanMergeWithAPI)
-			assert.Equal(t, "my title (#1)", prInfo.DefaultCommitMessage)
-			assert.Equal(t, int64(1), prInfo.PullRequestNumber)
+			assert.Equal(t, 1, prInfo.Number)
 		})
 
 		t.Run("empty token", func(t *testing.T) {
-			driver, teardown := setupGithubDriver(t, "")
+			connector, teardown := setupGithubDriver(t, "")
 			defer teardown()
-			prInfo, err := driver.LoadPullRequestInfo("feature", "main")
+			prInfo, err := connector.ChangeRequestForBranch("feature")
 			assert.Nil(t, err)
 			assert.Nil(t, prInfo)
 		})
 
 		t.Run("cannot fetch pull request number", func(t *testing.T) {
-			driver, teardown := setupGithubDriver(t, "TOKEN")
+			connector, teardown := setupGithubDriver(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", githubCurrOpen, httpmock.NewStringResponder(404, ""))
-			_, err := driver.LoadPullRequestInfo("feature", "main")
+			_, err := connector.ChangeRequestForBranch("feature")
 			assert.Error(t, err)
 		})
 
@@ -106,17 +101,29 @@ func TestGithubDriver(t *testing.T) {
 			driver, teardown := setupGithubDriver(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", githubCurrOpen, httpmock.NewStringResponder(200, "[]"))
-			_, err := driver.LoadPullRequestInfo("feature", "main")
+			_, err := driver.ChangeRequestForBranch("feature")
 			assert.ErrorContains(t, err, "no pull request from branch \"feature\" to branch \"main\" found")
 		})
 
 		t.Run("multiple pull requests for this branch", func(t *testing.T) {
-			driver, teardown := setupGithubDriver(t, "TOKEN")
+			connector, teardown := setupGithubDriver(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", githubCurrOpen, httpmock.NewStringResponder(200, `[{"number": 1}, {"number": 2}]`))
-			_, err := driver.LoadPullRequestInfo("feature", "main")
+			_, err := connector.ChangeRequestForBranch("feature")
 			assert.ErrorContains(t, err, "found 2 pull requests from branch \"feature\" to branch \"main\"")
 		})
+	})
+
+	t.Run("DefaultCommitMessage", func(t *testing.T) {
+		give := hosting.ChangeRequestInfo{
+			Number:          1,
+			Title:           "my title",
+			CanMergeWithAPI: true,
+		}
+		want := "my title (#1)"
+		connector := hosting.GitHubConnector{}
+		have := connector.DefaultCommitMessage(give)
+		assert.Equal(t, want, have)
 	})
 
 	t.Run(".MergePullRequest()", func(t *testing.T) {
@@ -130,12 +137,7 @@ func TestGithubDriver(t *testing.T) {
 				mergeRequest = req
 				return httpmock.NewStringResponse(200, `{"sha": "abc123"}`), nil
 			})
-			sha, err := driver.MergePullRequest(hosting.MergePullRequestOptions{
-				Branch:            "feature",
-				PullRequestNumber: 1,
-				CommitMessage:     "title\nextra detail1\nextra detail2",
-				ParentBranch:      "main",
-			})
+			sha, err := driver.SquashMergeChangeRequest(1, "title\nextra detail1\nextra detail2")
 			assert.NoError(t, err)
 			assert.Equal(t, "abc123", sha)
 			mergeParameters := loadRequestData(mergeRequest)
@@ -145,63 +147,44 @@ func TestGithubDriver(t *testing.T) {
 		})
 
 		t.Run("cannot get pull request id", func(t *testing.T) {
-			driver, teardown := setupGithubDriver(t, "TOKEN")
+			connector, teardown := setupGithubDriver(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", githubChildOpen, httpmock.NewStringResponder(404, ""))
-			_, err := driver.MergePullRequest(hosting.MergePullRequestOptions{
-				PullRequestNumber: 1,
-				Branch:            "feature",
-				CommitMessage:     "title\nextra detail1\nextra detail2",
-				ParentBranch:      "main",
-			})
+			_, err := connector.SquashMergeChangeRequest(1, "title\nextra detail1\nextra detail2")
 			assert.Error(t, err)
 		})
 
 		t.Run("cannot get pull request to merge", func(t *testing.T) {
-			driver, teardown := setupGithubDriver(t, "TOKEN")
+			connector, teardown := setupGithubDriver(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", githubChildOpen, httpmock.NewStringResponder(200, "[]"))
 			httpmock.RegisterResponder("GET", githubCurrOpen, httpmock.NewStringResponder(404, ""))
-			_, err := driver.MergePullRequest(hosting.MergePullRequestOptions{
-				PullRequestNumber: 1,
-				Branch:            "feature",
-				CommitMessage:     "title\nextra detail1\nextra detail2",
-				ParentBranch:      "main",
-			})
+			_, err := connector.SquashMergeChangeRequest(1, "title\nextra detail1\nextra detail2")
 			assert.Error(t, err)
 		})
 
 		t.Run("pull request not found", func(t *testing.T) {
-			driver, teardown := setupGithubDriver(t, "TOKEN")
+			connector, teardown := setupGithubDriver(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", githubChildOpen, httpmock.NewStringResponder(200, "[]"))
 			httpmock.RegisterResponder("GET", githubCurrOpen, httpmock.NewStringResponder(200, "[]"))
-			_, err := driver.MergePullRequest(hosting.MergePullRequestOptions{
-				PullRequestNumber: 1,
-				Branch:            "feature",
-				CommitMessage:     "title\nextra detail1\nextra detail2",
-				ParentBranch:      "main",
-			})
+			_, err := connector.SquashMergeChangeRequest(1, "title\nextra detail1\nextra detail2")
 			assert.Error(t, err)
 			assert.Equal(t, "cannot merge via Github since there is no pull request", err.Error())
 		})
 
 		t.Run("merge fails", func(t *testing.T) {
-			driver, teardown := setupGithubDriver(t, "TOKEN")
+			connector, teardown := setupGithubDriver(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", githubChildOpen, httpmock.NewStringResponder(200, "[]"))
 			httpmock.RegisterResponder("GET", githubCurrOpen, httpmock.NewStringResponder(200, `[{"number": 1}]`))
 			httpmock.RegisterResponder("PUT", githubPR1Merge, httpmock.NewStringResponder(404, ""))
-			_, err := driver.MergePullRequest(hosting.MergePullRequestOptions{
-				Branch:        "feature",
-				CommitMessage: "title\nextra detail1\nextra detail2",
-				ParentBranch:  "main",
-			})
+			_, err := connector.SquashMergeChangeRequest(1, "title\nextra detail1\nextra detail2")
 			assert.Error(t, err)
 		})
 
 		t.Run("updates child PRs", func(t *testing.T) {
-			driver, teardown := setupGithubDriver(t, "TOKEN")
+			connector, teardown := setupGithubDriver(t, "TOKEN")
 			defer teardown()
 			var updateRequest1, updateRequest2 *http.Request
 			httpmock.RegisterResponder("GET", githubChildOpen, httpmock.NewStringResponder(200, `[{"number": 2}, {"number": 3}]`))
@@ -215,12 +198,7 @@ func TestGithubDriver(t *testing.T) {
 			})
 			httpmock.RegisterResponder("GET", githubCurrOpen, httpmock.NewStringResponder(200, `[{"number": 1}]`))
 			httpmock.RegisterResponder("PUT", githubPR1Merge, httpmock.NewStringResponder(200, `{"sha": "abc123"}`))
-			_, err := driver.MergePullRequest(hosting.MergePullRequestOptions{
-				Branch:            "feature",
-				PullRequestNumber: 1,
-				CommitMessage:     "title\nextra detail1\nextra detail2",
-				ParentBranch:      "main",
-			})
+			_, err := connector.SquashMergeChangeRequest(1, "title\nextra detail1\nextra detail2")
 			assert.NoError(t, err)
 			updateParameters1 := loadRequestData(updateRequest1)
 			assert.Equal(t, "main", updateParameters1["base"])

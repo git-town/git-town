@@ -23,11 +23,11 @@ func abortCmd(repo *git.ProdRepo) *cobra.Command {
 				cli.Exit(fmt.Errorf("nothing to abort"))
 			}
 			abortRunState := runState.CreateAbortRunState()
-			driver, err := hosting.NewDriver(&repo.Config, &repo.Silent, cli.PrintDriverAction)
+			connector, err := hosting.NewConnector(&repo.Config, &repo.Silent, cli.PrintDriverAction)
 			if err != nil {
 				cli.Exit(err)
 			}
-			err = runstate.Execute(&abortRunState, repo, driver)
+			err = runstate.Execute(&abortRunState, repo, connector)
 			if err != nil {
 				cli.Exit(err)
 			}
