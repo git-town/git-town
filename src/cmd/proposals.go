@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/fatih/color"
@@ -25,12 +26,14 @@ func proposalsCommand(repo *git.ProdRepo) *cobra.Command {
 				cli.Exit(err)
 			}
 			for p := range proposals {
+				fmt.Print(".")
 				proposal, err := connector.ChangeRequestDetails(proposals[p].Number)
 				if err != nil {
 					cli.Exit(err)
 				}
 				proposals[p] = *proposal
 			}
+			fmt.Println()
 			titles := make([]string, len(proposals))
 			for p := range proposals {
 				titles[p] = proposals[p].Title
