@@ -103,7 +103,7 @@ func (d *GithubDriver) LoadPullRequestInfo(branch, parentBranch string) (*PullRe
 	return &PullRequestInfo{
 		CanMergeWithAPI:      true,
 		DefaultCommitMessage: d.defaultCommitMessage(pullRequests[0]),
-		PullRequestNumber:    int64(pullRequests[0].GetNumber()),
+		PullRequestNumber:    pullRequests[0].GetNumber(),
 	}, nil
 }
 

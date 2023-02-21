@@ -105,7 +105,7 @@ func (d *GitlabDriver) LoadPullRequestInfo(branch, parentBranch string) (*PullRe
 	return &PullRequestInfo{
 		CanMergeWithAPI:      true,
 		DefaultCommitMessage: d.defaultCommitMessage(mergeRequests[0]),
-		PullRequestNumber:    int64(mergeRequests[0].IID),
+		PullRequestNumber:    mergeRequests[0].IID,
 	}, nil
 }
 

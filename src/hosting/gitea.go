@@ -73,8 +73,8 @@ type GiteaDriver struct {
 }
 
 //nolint:nonamedreturns  // return value isn't obvious from function name
-func (d *GiteaDriver) apiMergePullRequest(pullRequestNumber int64, commitTitle, commitMessage string) (mergeSha string, err error) {
-	_, err = d.client.MergePullRequest(d.owner, d.repository, pullRequestNumber, gitea.MergePullRequestOption{
+func (d *GiteaDriver) apiMergePullRequest(pullRequestNumber int, commitTitle, commitMessage string) (mergeSha string, err error) {
+	_, err = d.client.MergePullRequest(d.owner, d.repository, int64(pullRequestNumber), gitea.MergePullRequestOption{
 		Style:   gitea.MergeStyleSquash,
 		Title:   commitTitle,
 		Message: commitMessage,
@@ -82,7 +82,7 @@ func (d *GiteaDriver) apiMergePullRequest(pullRequestNumber int64, commitTitle, 
 	if err != nil {
 		return "", err
 	}
-	pullRequest, err := d.client.GetPullRequest(d.owner, d.repository, pullRequestNumber)
+	pullRequest, err := d.client.GetPullRequest(d.owner, d.repository, int64(pullRequestNumber))
 	if err != nil {
 		return "", err
 	}
@@ -142,7 +142,7 @@ func (d *GiteaDriver) LoadPullRequestInfo(branch, parentBranch string) (*PullReq
 	return &PullRequestInfo{
 		CanMergeWithAPI:      pullRequest.Mergeable,
 		DefaultCommitMessage: createDefaultCommitMessage(pullRequest),
-		PullRequestNumber:    pullRequest.Index,
+		PullRequestNumber:    int(pullRequest.Index),
 	}, nil
 }
 
