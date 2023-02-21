@@ -41,8 +41,8 @@ func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo, driver hosting.D
 	commitMessage := step.CommitMessage
 	//nolint:nestif
 	if commitMessage == "" {
-		// Allow the user to enter the commit message as if shipping without a driver
-		// then revert the commit since merging via the driver will perform the actual squash merge
+		// Allow the user to enter the commit message as if shipping without a connector
+		// then revert the commit since merging via the connector will perform the actual squash merge.
 		step.enteredEmptyCommitMessage = true
 		err := repo.Logging.SquashMerge(step.Branch)
 		if err != nil {
