@@ -69,11 +69,11 @@ func (c *GitHubConnector) UpdateChangeRequestTarget(number int, target string) e
 // otherwise nil.
 func NewGithubConnector(url giturl.Parts, gitConfig gitConfig, log logFn) *GitHubConnector {
 	manualHostName := gitConfig.OriginOverride()
-	if gitConfig.HostingService() != "github" && manualHostName != "github.com" {
-		return nil
-	}
 	if manualHostName != "" {
 		url.Host = manualHostName
+	}
+	if gitConfig.HostingService() != "github" && url.Host != "github.com" {
+		return nil
 	}
 	hostingConfig := Config{
 		apiToken:   gitConfig.GitHubToken(),

@@ -77,11 +77,11 @@ func (c *GiteaConnector) UpdateChangeRequestTarget(number int, target string) er
 func NewGiteaConnector(url giturl.Parts, config gitConfig, log logFn) *GiteaConnector {
 	hostingService := config.HostingService()
 	manualHostName := config.OriginOverride()
-	if hostingService != "gitea" && manualHostName != "gitea.com" {
-		return nil
-	}
 	if manualHostName != "" {
 		url.Host = manualHostName
+	}
+	if hostingService != "gitea" && url.Host != "gitea.com" {
+		return nil
 	}
 	giteaConfig := giteaConfig{
 		Config: Config{

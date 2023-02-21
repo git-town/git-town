@@ -18,11 +18,11 @@ type BitbucketConnector struct {
 // otherwise nil.
 func NewBitbucketConnector(url giturl.Parts, gitConfig gitConfig, git gitRunner) *BitbucketConnector {
 	manualOrigin := gitConfig.OriginOverride()
-	if gitConfig.HostingService() != "bitbucket" && manualOrigin != "bitbucket.org" {
-		return nil
-	}
 	if manualOrigin != "" {
 		url.Host = manualOrigin
+	}
+	if gitConfig.HostingService() != "bitbucket" && url.Host != "bitbucket.org" {
+		return nil
 	}
 	bitBucketConfig := bitBucketConfig{
 		Config: Config{

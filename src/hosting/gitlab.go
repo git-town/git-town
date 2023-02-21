@@ -74,11 +74,11 @@ func (c *GitLabConnector) UpdateChangeRequestTarget(number int, target string) e
 // otherwise nil.
 func NewGitlabConnector(url giturl.Parts, config gitConfig, log logFn) (*GitLabConnector, error) {
 	manualHostName := config.OriginOverride()
-	if config.HostingService() != "gitlab" && manualHostName != "gitlab.com" {
-		return nil, nil //nolint:nilnil
-	}
 	if manualHostName != "" {
 		url.Host = manualHostName
+	}
+	if config.HostingService() != "gitlab" && url.Host != "gitlab.com" {
+		return nil, nil //nolint:nilnil
 	}
 	gitlabConfig := GitLabConfig{Config{
 		apiToken:   config.GitLabToken(),
