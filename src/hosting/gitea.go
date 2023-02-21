@@ -69,7 +69,7 @@ func (c *GiteaConnector) UpdateChangeRequestTarget(number int, target string) er
 	// 	Base: newBaseName,
 	// })
 	// return err
-	return fmt.Errorf("Updating Gitea pull requests is currently not supported")
+	return fmt.Errorf("updating Gitea pull requests is currently not supported")
 }
 
 // NewGiteaConfig provides Gitea configuration data if the current repo is hosted on Gitea,
