@@ -25,7 +25,7 @@ type shipConfig struct {
 	initialBranch           string
 	isShippingInitialBranch bool
 	isOffline               bool
-	pullRequestNumber       int64
+	pullRequestNumber       int
 	deleteOriginBranch      bool
 }
 
@@ -61,11 +61,11 @@ GitHub's feature to automatically delete head branches,
 run "git config %s false"
 and Git Town will leave it up to your origin server to delete the remote branch.`, config.GithubToken, config.ShipDeleteRemoteBranch),
 		Run: func(cmd *cobra.Command, args []string) {
-			driver, err := hosting.NewDriver(&repo.Config, &repo.Silent, cli.PrintDriverAction)
+			connector, err := hosting.NewConnector(&repo.Config, &repo.Silent, cli.PrintDriverAction)
 			if err != nil {
 				cli.Exit(err)
 			}
-			config, err := determineShipConfig(args, driver, repo)
+			config, err := determineShipConfig(args, connector, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
@@ -74,7 +74,7 @@ and Git Town will leave it up to your origin server to delete the remote branch.
 				cli.Exit(err)
 			}
 			runState := runstate.New("ship", stepList)
-			err = runstate.Execute(runState, repo, driver)
+			err = runstate.Execute(runState, repo, connector)
 			if err != nil {
 				cli.Exit(err)
 			}
@@ -91,7 +91,7 @@ and Git Town will leave it up to your origin server to delete the remote branch.
 	return &shipCmd
 }
 
-func determineShipConfig(args []string, driver hosting.Driver, repo *git.ProdRepo) (*shipConfig, error) {
+func determineShipConfig(args []string, connector hosting.Connector, repo *git.ProdRepo) (*shipConfig, error) {
 	initialBranch, err := repo.Silent.CurrentBranch()
 	if err != nil {
 		return nil, err
@@ -151,16 +151,16 @@ func determineShipConfig(args []string, driver hosting.Driver, repo *git.ProdRep
 	branchToMergeInto := repo.Config.ParentBranch(branchToShip)
 	canShipWithDriver := false
 	defaultCommitMessage := ""
-	pullRequestNumber := int64(-1)
-	if hasTrackingBranch && !isOffline && driver != nil {
-		prInfo, err := driver.LoadPullRequestInfo(branchToShip, branchToMergeInto)
+	pullRequestNumber := -1
+	if hasTrackingBranch && !isOffline && connector != nil {
+		prInfo, err := connector.ChangeRequestForBranch(branchToShip)
 		if err != nil {
 			return nil, err
 		}
 		if prInfo != nil {
 			canShipWithDriver = prInfo.CanMergeWithAPI
-			defaultCommitMessage = prInfo.DefaultCommitMessage
-			pullRequestNumber = prInfo.PullRequestNumber
+			defaultCommitMessage = connector.DefaultCommitMessage(*prInfo)
+			pullRequestNumber = prInfo.Number
 		}
 	}
 	deleteOrigin, err := repo.Config.ShouldShipDeleteOriginBranch()

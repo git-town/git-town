@@ -11,7 +11,7 @@ import (
 // Execute runs the commands in the given runstate.
 //
 //nolint:nestif
-func Execute(runState *RunState, repo *git.ProdRepo, driver hosting.Driver) error {
+func Execute(runState *RunState, repo *git.ProdRepo, connector hosting.Connector) error {
 	for {
 		step := runState.RunStepList.Pop()
 		if step == nil {
@@ -41,13 +41,13 @@ func Execute(runState *RunState, repo *git.ProdRepo, driver hosting.Driver) erro
 			}
 			continue
 		}
-		runErr := step.Run(repo, driver)
+		runErr := step.Run(repo, connector)
 		if runErr != nil {
 			runState.AbortStepList.Append(step.CreateAbortStep())
 			if step.ShouldAutomaticallyAbortOnError() {
 				cli.PrintError(fmt.Errorf(runErr.Error() + "\nAuto-aborting..."))
 				abortRunState := runState.CreateAbortRunState()
-				err := Execute(&abortRunState, repo, driver)
+				err := Execute(&abortRunState, repo, connector)
 				if err != nil {
 					return fmt.Errorf("cannot run the abort steps: %w", err)
 				}

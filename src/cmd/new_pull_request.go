@@ -43,11 +43,11 @@ where hostname matches what is in your ssh config file.`, config.CodeHostingDriv
 			if err != nil {
 				cli.Exit(err)
 			}
-			driver, err := hosting.NewDriver(&repo.Config, &repo.Silent, cli.PrintDriverAction)
+			connector, err := hosting.NewConnector(&repo.Config, &repo.Silent, cli.PrintDriverAction)
 			if err != nil {
 				cli.Exit(err)
 			}
-			if driver == nil {
+			if connector == nil {
 				cli.Exit(hosting.UnsupportedServiceError())
 			}
 			stepList, err := newPullRequestStepList(config, repo)
@@ -55,7 +55,7 @@ where hostname matches what is in your ssh config file.`, config.CodeHostingDriv
 				cli.Exit(err)
 			}
 			runState := runstate.New("new-pull-request", stepList)
-			err = runstate.Execute(runState, repo, driver)
+			err = runstate.Execute(runState, repo, connector)
 			if err != nil {
 				cli.Exit(err)
 			}
