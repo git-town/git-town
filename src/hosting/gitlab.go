@@ -37,7 +37,7 @@ func (c *GitLabConnector) ChangeRequestForBranch(branch string) (*ChangeRequestI
 }
 
 //nolint:nonamedreturns  // return value isn't obvious from function name
-func (c *GitLabConnector) MergeChangeRequest(number int, message string) (mergeSHA string, err error) {
+func (c *GitLabConnector) SquashMergeChangeRequest(number int, message string) (mergeSHA string, err error) {
 	// TODO: update PR target? Probably better to check the target here,
 	// warn if it is different on GitLab than it is locally,
 	// and update and merge only if a "--force" option is given.

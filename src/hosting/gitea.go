@@ -43,7 +43,7 @@ func (c *GiteaConnector) ChangeRequestForBranch(branch string) (*ChangeRequestIn
 }
 
 //nolint:nonamedreturns  // return value isn't obvious from function name
-func (c *GiteaConnector) MergeChangeRequest(number int, message string) (mergeSha string, err error) {
+func (c *GiteaConnector) SquashMergeChangeRequest(number int, message string) (mergeSha string, err error) {
 	title, body := parseCommitMessage(message)
 	_, err = c.client.MergePullRequest(c.owner, c.repository, int64(number), gitea.MergePullRequestOption{
 		Style:   gitea.MergeStyleSquash,

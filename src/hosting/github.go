@@ -37,7 +37,7 @@ func (c *GitHubConnector) ChangeRequestForBranch(branch string) (*ChangeRequestI
 	return &changeRequest, nil
 }
 
-func (c *GitHubConnector) MergeChangeRequest(number int, message string) (mergeSHA string, err error) {
+func (c *GitHubConnector) SquashMergeChangeRequest(number int, message string) (mergeSHA string, err error) {
 	if number == 0 {
 		return "", fmt.Errorf("no pull request number given")
 	}

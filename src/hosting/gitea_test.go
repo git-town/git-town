@@ -134,7 +134,7 @@ func TestGitea(t *testing.T) {
 				return httpmock.NewStringResponse(200, `[]`), nil
 			})
 			httpmock.RegisterResponder("GET", giteaPR1, httpmock.NewStringResponder(200, `{"number": 1, "merge_commit_sha": "abc123"}`))
-			sha, err := connector.MergeChangeRequest(1, "title\nextra detail1\nextra detail2")
+			sha, err := connector.SquashMergeChangeRequest(1, "title\nextra detail1\nextra detail2")
 			assert.NoError(t, err)
 			assert.Equal(t, "abc123", sha)
 			mergeParameters := loadRequestData(mergeRequest)
@@ -147,7 +147,7 @@ func TestGitea(t *testing.T) {
 			connector, teardown := setupGiteaConnector(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", giteaCurrOpen, httpmock.NewStringResponder(404, ""))
-			_, err := connector.MergeChangeRequest(1, "title\nextra detail1\nextra detail2")
+			_, err := connector.SquashMergeChangeRequest(1, "title\nextra detail1\nextra detail2")
 			assert.Error(t, err)
 		})
 
@@ -156,7 +156,7 @@ func TestGitea(t *testing.T) {
 			defer teardown()
 			httpmock.RegisterResponder("GET", giteaCurrOpen, httpmock.NewStringResponder(200, "[]"))
 			httpmock.RegisterResponder("GET", giteaPR1Merge, httpmock.NewStringResponder(404, ""))
-			_, err := connector.MergeChangeRequest(1, "title\nextra detail1\nextra detail2")
+			_, err := connector.SquashMergeChangeRequest(1, "title\nextra detail1\nextra detail2")
 			assert.Error(t, err)
 		})
 
@@ -167,7 +167,7 @@ func TestGitea(t *testing.T) {
 			httpmock.RegisterResponder("POST", giteaPR1Merge, func(req *http.Request) (*http.Response, error) {
 				return httpmock.NewStringResponse(409, `{}`), nil
 			})
-			_, err := connector.MergeChangeRequest(1, "title\nextra detail1\nextra detail2")
+			_, err := connector.SquashMergeChangeRequest(1, "title\nextra detail1\nextra detail2")
 			assert.Error(t, err)
 		})
 
@@ -177,7 +177,7 @@ func TestGitea(t *testing.T) {
 			httpmock.RegisterResponder("GET", giteaCurrOpen, httpmock.NewStringResponder(200, `[{"number": 1, "base": {"label": "main"}, "head": {"label": "foo"} }]`))
 			httpmock.RegisterResponder("GET", giteaVersion, httpmock.NewStringResponder(200, `{"version": "1.11.5"}`))
 			httpmock.RegisterResponder("POST", giteaPR1Merge, httpmock.NewStringResponder(404, ""))
-			_, err := connector.MergeChangeRequest(1, "title\nextra detail1\nextra detail2")
+			_, err := connector.SquashMergeChangeRequest(1, "title\nextra detail1\nextra detail2")
 			assert.Error(t, err)
 		})
 	})

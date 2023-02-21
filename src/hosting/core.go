@@ -31,8 +31,8 @@ type Connector interface {
 	// HostingServiceName provides the name of the code hosting service.
 	HostingServiceName() string
 
-	// MergeChangeRequest squash-merges the given change request using the given commit message.
-	MergeChangeRequest(number int, message string) (mergeSHA string, err error)
+	// SquashMergeChangeRequest squash-merges the given change request using the given commit message.
+	SquashMergeChangeRequest(number int, message string) (mergeSHA string, err error)
 
 	// NewChangeRequestURL provides the URL of the page
 	// to create a new pull request online.

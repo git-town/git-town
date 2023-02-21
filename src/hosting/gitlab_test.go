@@ -163,7 +163,7 @@ func TestGitlabConnector(t *testing.T) {
 			httpmock.RegisterResponder("PUT", gitlabMR1Merge, func(req *http.Request) (*http.Response, error) {
 				return httpmock.NewStringResponse(200, `{"sha": "abc123"}`), nil
 			})
-			sha, err := connector.MergeChangeRequest(1, "title\nextra detail1\nextra detail2")
+			sha, err := connector.SquashMergeChangeRequest(1, "title\nextra detail1\nextra detail2")
 			assert.NoError(t, err)
 			assert.Equal(t, "abc123", sha)
 		})
@@ -173,7 +173,7 @@ func TestGitlabConnector(t *testing.T) {
 			defer teardown()
 			httpmock.RegisterResponder("GET", gitlabChildOpen, httpmock.NewStringResponder(200, "[]"))
 			httpmock.RegisterResponder("GET", gitlabCurrOpen, httpmock.NewStringResponder(404, ""))
-			_, err := driver.MergeChangeRequest(1, "title\nextra detail1\nextra detail2")
+			_, err := driver.SquashMergeChangeRequest(1, "title\nextra detail1\nextra detail2")
 			assert.Error(t, err)
 		})
 
@@ -182,7 +182,7 @@ func TestGitlabConnector(t *testing.T) {
 			defer teardown()
 			httpmock.RegisterResponder("GET", gitlabChildOpen, httpmock.NewStringResponder(200, "[]"))
 			httpmock.RegisterResponder("GET", gitlabCurrOpen, httpmock.NewStringResponder(200, "[]"))
-			_, err := connector.MergeChangeRequest(1, "title\nextra detail1\nextra detail2")
+			_, err := connector.SquashMergeChangeRequest(1, "title\nextra detail1\nextra detail2")
 			assert.Error(t, err)
 			assert.Equal(t, "cannot merge via GitLab since there is no merge request", err.Error())
 		})
@@ -191,7 +191,7 @@ func TestGitlabConnector(t *testing.T) {
 			driver, teardown := setupGitlabConnector(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", gitlabChildOpen, httpmock.NewStringResponder(404, ""))
-			_, err := driver.MergeChangeRequest(1, "title\nextra detail1\nextra detail2")
+			_, err := driver.SquashMergeChangeRequest(1, "title\nextra detail1\nextra detail2")
 			assert.Error(t, err)
 		})
 
@@ -201,7 +201,7 @@ func TestGitlabConnector(t *testing.T) {
 			httpmock.RegisterResponder("GET", gitlabChildOpen, httpmock.NewStringResponder(200, "[]"))
 			httpmock.RegisterResponder("GET", gitlabCurrOpen, httpmock.NewStringResponder(200, `[{"iid": 1}]`))
 			httpmock.RegisterResponder("PUT", gitlabMR1Merge, httpmock.NewStringResponder(404, ""))
-			_, err := driver.MergeChangeRequest(1, "title\nextra detail1\nextra detail2")
+			_, err := driver.SquashMergeChangeRequest(1, "title\nextra detail1\nextra detail2")
 			assert.Error(t, err)
 		})
 	})

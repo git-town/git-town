@@ -137,7 +137,7 @@ func TestGithubDriver(t *testing.T) {
 				mergeRequest = req
 				return httpmock.NewStringResponse(200, `{"sha": "abc123"}`), nil
 			})
-			sha, err := driver.MergeChangeRequest(1, "title\nextra detail1\nextra detail2")
+			sha, err := driver.SquashMergeChangeRequest(1, "title\nextra detail1\nextra detail2")
 			assert.NoError(t, err)
 			assert.Equal(t, "abc123", sha)
 			mergeParameters := loadRequestData(mergeRequest)
@@ -150,7 +150,7 @@ func TestGithubDriver(t *testing.T) {
 			connector, teardown := setupGithubDriver(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", githubChildOpen, httpmock.NewStringResponder(404, ""))
-			_, err := connector.MergeChangeRequest(1, "title\nextra detail1\nextra detail2")
+			_, err := connector.SquashMergeChangeRequest(1, "title\nextra detail1\nextra detail2")
 			assert.Error(t, err)
 		})
 
@@ -159,7 +159,7 @@ func TestGithubDriver(t *testing.T) {
 			defer teardown()
 			httpmock.RegisterResponder("GET", githubChildOpen, httpmock.NewStringResponder(200, "[]"))
 			httpmock.RegisterResponder("GET", githubCurrOpen, httpmock.NewStringResponder(404, ""))
-			_, err := connector.MergeChangeRequest(1, "title\nextra detail1\nextra detail2")
+			_, err := connector.SquashMergeChangeRequest(1, "title\nextra detail1\nextra detail2")
 			assert.Error(t, err)
 		})
 
@@ -168,7 +168,7 @@ func TestGithubDriver(t *testing.T) {
 			defer teardown()
 			httpmock.RegisterResponder("GET", githubChildOpen, httpmock.NewStringResponder(200, "[]"))
 			httpmock.RegisterResponder("GET", githubCurrOpen, httpmock.NewStringResponder(200, "[]"))
-			_, err := connector.MergeChangeRequest(1, "title\nextra detail1\nextra detail2")
+			_, err := connector.SquashMergeChangeRequest(1, "title\nextra detail1\nextra detail2")
 			assert.Error(t, err)
 			assert.Equal(t, "cannot merge via Github since there is no pull request", err.Error())
 		})
@@ -179,7 +179,7 @@ func TestGithubDriver(t *testing.T) {
 			httpmock.RegisterResponder("GET", githubChildOpen, httpmock.NewStringResponder(200, "[]"))
 			httpmock.RegisterResponder("GET", githubCurrOpen, httpmock.NewStringResponder(200, `[{"number": 1}]`))
 			httpmock.RegisterResponder("PUT", githubPR1Merge, httpmock.NewStringResponder(404, ""))
-			_, err := connector.MergeChangeRequest(1, "title\nextra detail1\nextra detail2")
+			_, err := connector.SquashMergeChangeRequest(1, "title\nextra detail1\nextra detail2")
 			assert.Error(t, err)
 		})
 
@@ -198,7 +198,7 @@ func TestGithubDriver(t *testing.T) {
 			})
 			httpmock.RegisterResponder("GET", githubCurrOpen, httpmock.NewStringResponder(200, `[{"number": 1}]`))
 			httpmock.RegisterResponder("PUT", githubPR1Merge, httpmock.NewStringResponder(200, `{"sha": "abc123"}`))
-			_, err := connector.MergeChangeRequest(1, "title\nextra detail1\nextra detail2")
+			_, err := connector.SquashMergeChangeRequest(1, "title\nextra detail1\nextra detail2")
 			assert.NoError(t, err)
 			updateParameters1 := loadRequestData(updateRequest1)
 			assert.Equal(t, "main", updateParameters1["base"])
