@@ -42,6 +42,23 @@ func (c *GiteaConnector) ChangeRequestForBranch(branch string) (*ChangeRequestIn
 	}, nil
 }
 
+func (c *GiteaConnector) ChangeRequests() ([]ChangeRequestInfo, error) {
+	pullRequests, err := c.client.ListRepoPullRequests(c.owner, c.repository, gitea.ListPullRequestsOptions{
+		ListOptions: gitea.ListOptions{
+			PageSize: 50,
+		},
+		State: gitea.StateOpen,
+	})
+	result := make([]ChangeRequestInfo, len(pullRequests))
+	if err != nil {
+		return result, err
+	}
+	for p := range pullRequests {
+		result[p] = parseGiteaPullRequest(pullRequests[p])
+	}
+	return result, nil
+}
+
 //nolint:nonamedreturns  // return value isn't obvious from function name
 func (c *GiteaConnector) SquashMergeChangeRequest(number int, message string) (mergeSha string, err error) {
 	title, body := parseCommitMessage(message)
@@ -133,4 +150,12 @@ func filterPullRequests(pullRequests []*gitea.PullRequest, branch string) []*git
 		}
 	}
 	return pullRequestsFiltered
+}
+
+func parseGiteaPullRequest(pullRequest *gitea.PullRequest) ChangeRequestInfo {
+	return ChangeRequestInfo{
+		CanMergeWithAPI: pullRequest.Mergeable,
+		Number:          int(pullRequest.Index),
+		Title:           pullRequest.Title,
+	}
 }

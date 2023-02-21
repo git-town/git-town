@@ -33,8 +33,22 @@ func (c *GitHubConnector) ChangeRequestForBranch(branch string) (*ChangeRequestI
 	if len(pullRequests) > 1 {
 		return nil, fmt.Errorf("found %d pull requests for branch %q", len(pullRequests), branch)
 	}
-	changeRequest := parsePullRequest(pullRequests[0])
+	changeRequest := parseGithubPullRequest(pullRequests[0])
 	return &changeRequest, nil
+}
+
+func (c *GitHubConnector) ChangeRequests() ([]ChangeRequestInfo, error) {
+	pullRequests, _, err := c.client.PullRequests.List(context.Background(), c.owner, c.repository, &github.PullRequestListOptions{
+		State: "open",
+	})
+	result := make([]ChangeRequestInfo, len(pullRequests))
+	if err != nil {
+		return result, err
+	}
+	for p := range pullRequests {
+		result[p] = parseGithubPullRequest(pullRequests[p])
+	}
+	return result, nil
 }
 
 //nolint:nonamedreturns
@@ -124,12 +138,12 @@ func (c *GitHubConfig) RepositoryURL() string {
 // Helper functions
 // *************************************
 
-// parsePullRequest extracts ChangeRequestInfo from the given GitHub pull-request data.
-func parsePullRequest(pullRequest *github.PullRequest) ChangeRequestInfo {
+// parseGithubPullRequest extracts ChangeRequestInfo from the given GitHub pull-request data.
+func parseGithubPullRequest(pullRequest *github.PullRequest) ChangeRequestInfo {
 	return ChangeRequestInfo{
 		Number:          pullRequest.GetNumber(),
 		Title:           pullRequest.GetTitle(),
-		CanMergeWithAPI: true,
+		CanMergeWithAPI: pullRequest.GetMergeable(),
 	}
 }
 

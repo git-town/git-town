@@ -36,6 +36,21 @@ func (c *GitLabConnector) ChangeRequestForBranch(branch string) (*ChangeRequestI
 	return &changeRequest, nil
 }
 
+func (c *GitLabConnector) ChangeRequests() ([]ChangeRequestInfo, error) {
+	opts := &gitlab.ListProjectMergeRequestsOptions{
+		State: gitlab.String("opened"),
+	}
+	mergeRequests, _, err := c.client.MergeRequests.ListProjectMergeRequests(c.projectPath(), opts)
+	result := make([]ChangeRequestInfo, len(mergeRequests))
+	if err != nil {
+		return result, err
+	}
+	for m := range mergeRequests {
+		result[m] = parseMergeRequest(mergeRequests[m])
+	}
+	return result, nil
+}
+
 //nolint:nonamedreturns  // return value isn't obvious from function name
 func (c *GitLabConnector) SquashMergeChangeRequest(number int, message string) (mergeSHA string, err error) {
 	// TODO: update PR target? Probably better to check the target here,

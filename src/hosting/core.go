@@ -26,6 +26,10 @@ type Connector interface {
 	// ChangeRequestForBranch provides the change request for the branch with the given name.
 	ChangeRequestForBranch(branch string) (*ChangeRequestInfo, error)
 
+	// ChangeRequests provides all open change requests on the hosting platform.
+	ChangeRequests() ([]ChangeRequestInfo, error)
+
+	// DefaultCommitMessage provides the default message to use when shipping change requests.
 	DefaultCommitMessage(crInfo ChangeRequestInfo) string
 
 	// HostingServiceName provides the name of the code hosting service.
