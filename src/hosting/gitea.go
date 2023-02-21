@@ -12,7 +12,7 @@ import (
 
 type GiteaConnector struct {
 	client *gitea.Client
-	giteaConfig
+	Config
 	log logFn
 }
 
@@ -40,6 +40,23 @@ func (c *GiteaConnector) ChangeRequestForBranch(branch string) (*ChangeRequestIn
 		Number:          int(pullRequest.Index),
 		Title:           pullRequest.Title,
 	}, nil
+}
+
+func (c *GiteaConnector) DefaultCommitMessage(crInfo ChangeRequestInfo) string {
+	return fmt.Sprintf("%s (#%d)", crInfo.Title, crInfo.Number)
+}
+
+func (c *GiteaConnector) HostingServiceName() string {
+	return "Gitea"
+}
+
+func (c *GiteaConnector) NewChangeRequestURL(branch, parentBranch string) (string, error) {
+	toCompare := parentBranch + "..." + branch
+	return fmt.Sprintf("%s/compare/%s", c.RepositoryURL(), url.PathEscape(toCompare)), nil
+}
+
+func (c *GiteaConnector) RepositoryURL() string {
+	return fmt.Sprintf("https://%s/%s/%s", c.hostname, c.owner, c.repository)
 }
 
 //nolint:nonamedreturns  // return value isn't obvious from function name
@@ -83,45 +100,21 @@ func NewGiteaConnector(url giturl.Parts, config gitConfig, log logFn) *GiteaConn
 	if hostingService != "gitea" && url.Host != "gitea.com" {
 		return nil
 	}
-	giteaConfig := giteaConfig{
-		Config: Config{
-			apiToken:   config.GiteaToken(),
-			hostname:   url.Host,
-			originURL:  config.OriginURL(),
-			owner:      url.Org,
-			repository: url.Repo,
-		},
+	hostingConfig := Config{
+		apiToken:   config.GiteaToken(),
+		hostname:   url.Host,
+		originURL:  config.OriginURL(),
+		owner:      url.Org,
+		repository: url.Repo,
 	}
-	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: giteaConfig.apiToken})
+	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: hostingConfig.apiToken})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
-	giteaClient := gitea.NewClientWithHTTP(fmt.Sprintf("https://%s", giteaConfig.hostname), httpClient)
+	giteaClient := gitea.NewClientWithHTTP(fmt.Sprintf("https://%s", hostingConfig.hostname), httpClient)
 	return &GiteaConnector{
-		client:      giteaClient,
-		giteaConfig: giteaConfig,
-		log:         log,
+		client: giteaClient,
+		Config: hostingConfig,
+		log:    log,
 	}
-}
-
-// GiteaConfig contains connection information for Gitea-based hosting platforms.
-type giteaConfig struct {
-	Config
-}
-
-func (c *giteaConfig) HostingServiceName() string {
-	return "Gitea"
-}
-
-func (c *giteaConfig) NewChangeRequestURL(branch, parentBranch string) (string, error) {
-	toCompare := parentBranch + "..." + branch
-	return fmt.Sprintf("%s/compare/%s", c.RepositoryURL(), url.PathEscape(toCompare)), nil
-}
-
-func (c *giteaConfig) RepositoryURL() string {
-	return fmt.Sprintf("https://%s/%s/%s", c.hostname, c.owner, c.repository)
-}
-
-func (c *giteaConfig) DefaultCommitMessage(crInfo ChangeRequestInfo) string {
-	return fmt.Sprintf("%s (#%d)", crInfo.Title, crInfo.Number)
 }
 
 func filterPullRequests(pullRequests []*gitea.PullRequest, branch string) []*gitea.PullRequest {
