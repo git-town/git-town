@@ -10,29 +10,58 @@ import (
 	"github.com/git-town/git-town/v7/src/giturl"
 )
 
-// Driver defines the structure of drivers for the different code hosting services.
-type Driver interface {
-	// LoadPullRequestInfo loads information about the pull request of the given branch into the given parent branch
-	// from the code hosting provider.
-	LoadPullRequestInfo(branch, parentBranch string) (*PullRequestInfo, error)
+// Config contains the information needed for platform connections.
+type Config struct {
+	apiToken   string
+	hostname   string
+	mainBranch string
+	originURL  string
+	owner      string
+	repository string
+}
 
-	// NewPullRequestURL provides the URL of the page
-	// to create a new pull request online.
-	NewPullRequestURL(branch, parentBranch string) (string, error)
-
-	// MergePullRequest merges the pull request through the hosting service API.
-	MergePullRequest(MergePullRequestOptions) (mergeSha string, err error)
-
-	// RepositoryURL provides the URL where the given repository
-	// can be found online.
-	RepositoryURL() string
+// Connector describes the API methods that Git Town performs on code hosting platforms.
+type Connector interface {
+	// FindChangeRequest provides the change request for the branch with the given name.
+	ChangeRequestForBranch(branch string) (*ChangeRequestInfo, error)
 
 	// HostingServiceName provides the name of the code hosting service.
 	HostingServiceName() string
+
+	// MergeChangeRequest squash-merges the given change request using the given commit message.
+	MergeChangeRequest(number int, message string) (mergeSHA string, err error)
+
+	// // MergePullRequest merges the pull request
+	// // through the hosting service API.
+	// func MergePullRequest(MergePullRequestOptions) (mergeSha string, err error)
+
+	// NewChangeRequestURL provides the URL of the page
+	// to create a new pull request online.
+	NewChangeRequestURL(branch, parentBranch string) (string, error)
+
+	// RepositoryURL provides the URL
+	// where the current repository can be found online.
+	RepositoryURL() string
+
+	// UpdateChangeRequestTarget updates the target branch of the given change request.
+	UpdateChangeRequestTarget(number int, target string) error
+}
+
+// ChangeRequestInfo contains information about a change request
+// on a code hosting platform.
+type ChangeRequestInfo struct {
+	// the change request Number
+	Number int
+
+	// textual title of the change request
+	Title string
+
+	// whether this change request can be merged programmatically
+	CanMergeWithAPI bool
 }
 
 // config defines the configuration data needed by the driver package.
-type config interface {
+type gitConfig interface {
 	// OriginOverride provides the override for the origin URL from the Git Town configuration.
 	OriginOverride() string
 
@@ -55,44 +84,32 @@ type config interface {
 	OriginURL() string
 }
 
+// ********************************************************************
+
 // runner defines the runner methods used by the driver package.
 type gitRunner interface {
 	ShaForBranch(string) (string, error)
-}
-
-// PullRequestInfo contains information about a pull request.
-type PullRequestInfo struct {
-	CanMergeWithAPI      bool
-	DefaultCommitMessage string
-	PullRequestNumber    int64
-}
-
-// MergePullRequestOptions defines the options to the MergePullRequest function.
-type MergePullRequestOptions struct {
-	Branch            string
-	CommitMessage     string
-	LogRequests       bool
-	ParentBranch      string
-	PullRequestNumber int64
 }
 
 // logFn defines a function with fmt.Printf API that CodeHostingDriver instances can use to give updates on activities they do.
 type logFn func(string, ...interface{})
 
 // NewDriver provides an instance of the code hosting driver to use based on the git config.
-func NewDriver(config config, git gitRunner, log logFn) (Driver, error) {
+func NewConnector(config gitConfig, git gitRunner, log logFn) (Connector, error) {
 	url := giturl.Parse(config.OriginURL())
 	if url == nil {
 		return nil, nil //nolint:nilnil  // "nil, nil" is a legitimate return value here
 	}
-	githubConfig := NewGithubConfig(*url, config)
-	if githubConfig != nil {
-		driver := githubConfig.Driver(log)
-		return &driver, nil
+	githubConnector := NewGithubConnector(*url, config)
+	if githubConnector != nil {
+		return githubConnector, nil
 	}
-	gitlabConfig := NewGitlabConfig(*url, config)
-	if gitlabConfig != nil {
-		return gitlabConfig.Driver(log)
+	gitlabConnector, err := NewGitlabConnector(*url, config)
+	if err != nil {
+		return nil, err
+	}
+	if gitlabConnector != nil {
+		return gitlabConnector, nil
 	}
 	bitbucketDriver := NewBitbucketDriver(*url, config, git)
 	if bitbucketDriver != nil {
