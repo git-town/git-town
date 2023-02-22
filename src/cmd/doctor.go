@@ -12,23 +12,42 @@ func doctorCommand(repo *git.ProdRepo) *cobra.Command {
 		Use:   "doctor",
 		Short: "Displays diagnostic information",
 		Run: func(cmd *cobra.Command, args []string) {
-			cli.Printf("Git Town v%s\n", version)
-			cli.Println()
-			err := ValidateIsRepository(repo)
-			if err == nil {
-				cli.Println("Git repository detected")
+			cli.Println("Git Town:")
+			cli.Printf("- version: %s\n", version)
+			cli.Printf("- built: %s\n\n", buildDate)
+			isRepo := repo.Silent.IsRepository()
+			if isRepo {
+				cli.Println("Git repository:")
+				// print origin
+				// print upstream
 			} else {
-				cli.Println("Running outside a Git repository")
+				cli.Println("The current folder does not seem to contain a Git repository")
 			}
-			if err := validateIsConfigured(repo); err != nil {
-				return err
+			cli.Print("- main branch: ")
+			isOffline, err := repo.Config.IsOffline()
+			if err == nil {
+				if isOffline {
+					cli.Println("enabled")
+				} else {
+					cli.Println("disabled")
+				}
+			} else {
+				cli.Println("(cannot determine: %v)", err)
 			}
-			if err := repo.Config.ValidateIsOnline(); err != nil {
-				return err
+			cli.Print("- main branch: ")
+			mainbranch := repo.Config.MainBranch()
+			if mainbranch == "" {
+				cli.Println("(not configured)")
+			} else {
+				cli.Println(mainbranch)
 			}
-			driver, driverErr := hosting.NewDriver(&repo.Config, &repo.Silent, cli.PrintDriverAction)
-			if err != nil {
-				cli.Exit(err)
+			cli.Println("\nhosting service:")
+			driver, err := hosting.NewDriver(&repo.Config, &repo.Silent, cli.PrintDriverAction)
+			if err == nil {
+				cli.Println("- name: ", driver.HostingServiceName())
+				cli.Println("- repo: ", driver.RepositoryURL())
+			} else {
+				cli.Println("(cannot determine: %v)", err)
 			}
 		},
 		Args: cobra.NoArgs,
