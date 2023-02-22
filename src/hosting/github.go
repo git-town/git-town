@@ -103,7 +103,7 @@ func (d *GithubDriver) LoadPullRequestInfo(branch, parentBranch string) (*PullRe
 	return &PullRequestInfo{
 		CanMergeWithAPI:      true,
 		DefaultCommitMessage: d.defaultCommitMessage(pullRequests[0]),
-		PullRequestNumber:    int64(pullRequests[0].GetNumber()),
+		PullRequestNumber:    pullRequests[0].GetNumber(),
 	}, nil
 }
 
@@ -134,7 +134,7 @@ func (d *GithubDriver) MergePullRequest(options MergePullRequestOptions) (mergeS
 	if len(commitMessageParts) == 2 {
 		githubCommitMessage = commitMessageParts[1]
 	}
-	result, _, err := d.client.PullRequests.Merge(context.Background(), d.owner, d.repository, int(options.PullRequestNumber), githubCommitMessage, &github.PullRequestOptions{
+	result, _, err := d.client.PullRequests.Merge(context.Background(), d.owner, d.repository, options.PullRequestNumber, githubCommitMessage, &github.PullRequestOptions{
 		MergeMethod: "squash",
 		CommitTitle: githubCommitTitle,
 	})
