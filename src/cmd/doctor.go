@@ -1,7 +1,8 @@
 package cmd
 
 import (
-	"strings"
+	"errors"
+	"fmt"
 
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/git"
@@ -14,37 +15,16 @@ func doctorCommand(repo *git.ProdRepo) *cobra.Command {
 		Use:   "doctor",
 		Short: "Displays diagnostic information",
 		Run: func(cmd *cobra.Command, args []string) {
-			cli.Printf("Git Town v%s, built %s\n\n", version, buildDate)
 			isRepo := repo.Silent.IsRepository()
-			if isRepo {
-				cli.Println("Git repository detected")
-				// print origin
-				// print upstream
-			} else {
-				cli.Println("The current folder does not seem to contain a Git repository")
+			if !isRepo {
+				cli.Exit(errors.New("running outside a Git repository"))
 			}
-			cli.Print("- main branch: ")
-			mainbranch := repo.Config.MainBranch()
-			if mainbranch == "" {
-				cli.Println("(not configured)")
+			cli.Print("Hosting service: ")
+			connector, err := hosting.NewConnector(&repo.Config, &repo.Silent, cli.PrintConnectorAction)
+			if err != nil {
+				cli.Exit(fmt.Errorf("(cannot determine hosting connector: %v)", err))
 			} else {
-				cli.Println(mainbranch)
-			}
-			cli.Print("- perennial branches: ")
-			perennialBranches := repo.Config.PerennialBranches()
-			if len(perennialBranches) == 0 {
-				cli.Println("(none)")
-			} else {
-				cli.Println(strings.Join(perennialBranches, ", "))
-			}
-			cli.Print("\nHosting service: ")
-			driver, err := hosting.NewDriver(&repo.Config, &repo.Silent, cli.PrintDriverAction)
-			if err == nil {
-				cli.Println(driver.HostingServiceName())
-				cli.Println("- repo URL: ", driver.RepositoryURL())
-				cli.Println("- API token: %s", repo.)
-			} else {
-				cli.Println("(cannot determine: %v)", err)
+				cli.Println(connector.HostingServiceName())
 			}
 		},
 		Args: cobra.NoArgs,
