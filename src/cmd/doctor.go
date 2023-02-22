@@ -15,8 +15,10 @@ func doctorCommand(repo *git.ProdRepo) *cobra.Command {
 			cli.Printf("Git Town v%s\n", version)
 			cli.Println()
 			err := ValidateIsRepository(repo)
-			if err != nil {
-				return err
+			if err == nil {
+				cli.Println("Git repository detected")
+			} else {
+				cli.Println("Running outside a Git repository")
 			}
 			if err := validateIsConfigured(repo); err != nil {
 				return err
