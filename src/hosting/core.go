@@ -18,8 +18,8 @@ type Connector interface {
 	// Returns nil if no proposal exists.
 	ProposalForBranch(branch string) (*Proposal, error)
 
-	// DefaultProposalMessage provides the text to prepopulate the form for creating new proposals
-	// on the respective hosting platform.
+	// DefaultProposalMessage provides the text that the form for creating new proposals
+	// on the respective hosting platform is prepopulated with.
 	DefaultProposalMessage(proposal Proposal) string
 
 	// HostingServiceName provides the name of the code hosting service
