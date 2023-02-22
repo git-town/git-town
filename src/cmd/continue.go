@@ -29,7 +29,7 @@ func continueCmd(repo *git.ProdRepo) *cobra.Command {
 			if hasConflicts {
 				cli.Exit(fmt.Errorf("you must resolve the conflicts before continuing"))
 			}
-			connector, err := hosting.NewConnector(&repo.Config, &repo.Silent, cli.PrintDriverAction)
+			connector, err := hosting.NewConnector(&repo.Config, &repo.Silent, cli.PrintConnectorAction)
 			if err != nil {
 				cli.Exit(err)
 			}

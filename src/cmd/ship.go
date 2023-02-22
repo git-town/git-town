@@ -17,7 +17,7 @@ import (
 type shipConfig struct {
 	branchToShip            string
 	branchToMergeInto       string
-	canShipWithDriver       bool
+	canShipViaAPI           bool
 	childBranches           []string
 	defaultProposalMessage  string
 	hasOrigin               bool
@@ -61,7 +61,7 @@ GitHub's feature to automatically delete head branches,
 run "git config %s false"
 and Git Town will leave it up to your origin server to delete the remote branch.`, config.GithubToken, config.ShipDeleteRemoteBranch),
 		Run: func(cmd *cobra.Command, args []string) {
-			connector, err := hosting.NewConnector(&repo.Config, &repo.Silent, cli.PrintDriverAction)
+			connector, err := hosting.NewConnector(&repo.Config, &repo.Silent, cli.PrintConnectorAction)
 			if err != nil {
 				cli.Exit(err)
 			}
@@ -149,7 +149,7 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 		return nil, err
 	}
 	branchToMergeInto := repo.Config.ParentBranch(branchToShip)
-	canShipWithDriver := false
+	canShipViaAPI := false
 	defaultProposalMessage := ""
 	pullRequestNumber := -1
 	if hasTrackingBranch && !isOffline && connector != nil {
@@ -158,7 +158,7 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 			return nil, err
 		}
 		if prInfo != nil {
-			canShipWithDriver = prInfo.CanMergeWithAPI
+			canShipViaAPI = prInfo.CanMergeWithAPI
 			defaultProposalMessage = connector.DefaultProposalMessage(*prInfo)
 			pullRequestNumber = prInfo.Number
 		}
@@ -172,7 +172,7 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 		isShippingInitialBranch: isShippingInitialBranch,
 		branchToMergeInto:       branchToMergeInto,
 		branchToShip:            branchToShip,
-		canShipWithDriver:       canShipWithDriver,
+		canShipViaAPI:           canShipViaAPI,
 		childBranches:           repo.Config.ChildBranches(branchToShip),
 		defaultProposalMessage:  defaultProposalMessage,
 		deleteOriginBranch:      deleteOrigin,
@@ -208,7 +208,7 @@ func shipStepList(config *shipConfig, commitMessage string, repo *git.ProdRepo) 
 	result.AppendList(syncSteps)
 	result.Append(&steps.EnsureHasShippableChangesStep{Branch: config.branchToShip})
 	result.Append(&steps.CheckoutBranchStep{Branch: config.branchToMergeInto})
-	if config.canShipWithDriver {
+	if config.canShipViaAPI {
 		result.Append(&steps.PushBranchStep{Branch: config.branchToShip})
 		result.Append(&steps.DriverMergePullRequestStep{
 			Branch:                 config.branchToShip,
@@ -227,7 +227,7 @@ func shipStepList(config *shipConfig, commitMessage string, repo *git.ProdRepo) 
 	// - we know we have a tracking branch (otherwise there would be no PR to ship via driver)
 	// - we have updated the PRs of all child branches (because we have API access)
 	// - we know we are online
-	if config.canShipWithDriver || (config.hasTrackingBranch && len(config.childBranches) == 0 && !config.isOffline) {
+	if config.canShipViaAPI || (config.hasTrackingBranch && len(config.childBranches) == 0 && !config.isOffline) {
 		if config.deleteOriginBranch {
 			result.Append(&steps.DeleteOriginBranchStep{Branch: config.branchToShip, IsTracking: true})
 		}
