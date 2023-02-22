@@ -18,8 +18,8 @@ type Connector interface {
 	// Returns nil if no proposal exists.
 	ProposalForBranch(branch string) (*Proposal, error)
 
-	// DefaultProposalMessage provides the commit message template to use
-	// for proposals on the respective hosting platform.
+	// DefaultProposalMessage provides the text to prepopulate the form for creating new proposals
+	// on the respective hosting platform.
 	DefaultProposalMessage(proposal Proposal) string
 
 	// HostingServiceName provides the name of the code hosting service
