@@ -119,12 +119,12 @@ func NewGiteaConnector(url giturl.Parts, config gitConfig, log logFn) *GiteaConn
 }
 
 func filterPullRequests(pullRequests []*gitea.PullRequest, branch string) []*gitea.PullRequest {
-	pullRequestsFiltered := []*gitea.PullRequest{}
+	result := []*gitea.PullRequest{}
 	// TODO: don't copy the entire pullRequest struct here, use the index
 	for _, pullRequest := range pullRequests {
 		if pullRequest.Head.Name == branch {
-			pullRequestsFiltered = append(pullRequestsFiltered, pullRequest)
+			result = append(result, pullRequest)
 		}
 	}
-	return pullRequestsFiltered
+	return result
 }
