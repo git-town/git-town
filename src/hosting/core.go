@@ -33,8 +33,8 @@ type Config struct {
 // Individual implementations exist to talk to specific hosting platforms.
 // They all conform to this interface.
 type Connector interface {
-	// ChangeRequestForBranch provides details about the change request for the given branch.
-	ChangeRequestForBranch(branch string) (*Proposal, error)
+	// ProposalForBranch provides details about the change request for the given branch.
+	ProposalForBranch(branch string) (*Proposal, error)
 
 	// DefaultCommitMessage provides the commit message template to use
 	// for change requests on the respective hosting platform.

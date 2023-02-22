@@ -17,7 +17,7 @@ type GitLabConnector struct {
 	log logFn
 }
 
-func (c *GitLabConnector) ChangeRequestForBranch(branch string) (*Proposal, error) {
+func (c *GitLabConnector) ProposalForBranch(branch string) (*Proposal, error) {
 	opts := &gitlab.ListProjectMergeRequestsOptions{
 		State:        gitlab.String("opened"),
 		SourceBranch: gitlab.String(branch),

@@ -153,7 +153,7 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 	defaultCommitMessage := ""
 	pullRequestNumber := -1
 	if hasTrackingBranch && !isOffline && connector != nil {
-		prInfo, err := connector.ChangeRequestForBranch(branchToShip)
+		prInfo, err := connector.ProposalForBranch(branchToShip)
 		if err != nil {
 			return nil, err
 		}
