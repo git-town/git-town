@@ -42,7 +42,7 @@ func (c GitlabConfig) BaseURL() string {
 	return fmt.Sprintf("https://%s", c.hostname)
 }
 
-func (c GitlabConfig) defaultCommitMessage(mergeRequest *gitlab.MergeRequest) string {
+func (c GitlabConfig) defaultProposalMessage(mergeRequest *gitlab.MergeRequest) string {
 	// GitLab uses a dash as MR prefix for the (project-)internal ID (IID)
 	return fmt.Sprintf("%s (!%d)", mergeRequest.Title, mergeRequest.IID)
 }
@@ -104,7 +104,7 @@ func (d *GitlabDriver) ProposalDetails(branch, parentBranch string) (*Proposal, 
 	}
 	return &Proposal{
 		CanMergeWithAPI:        true,
-		DefaultProposalMessage: d.defaultCommitMessage(mergeRequests[0]),
+		DefaultProposalMessage: d.defaultProposalMessage(mergeRequests[0]),
 		ProposalNumber:         mergeRequests[0].IID,
 	}, nil
 }

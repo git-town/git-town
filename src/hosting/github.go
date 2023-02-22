@@ -42,7 +42,7 @@ func NewGithubConfig(url giturl.Parts, config config) *GithubConfig {
 	}
 }
 
-func (c GithubConfig) defaultCommitMessage(pullRequest *github.PullRequest) string {
+func (c GithubConfig) defaultProposalMessage(pullRequest *github.PullRequest) string {
 	return fmt.Sprintf("%s (#%d)", *pullRequest.Title, *pullRequest.Number)
 }
 
@@ -102,7 +102,7 @@ func (d *GithubDriver) ProposalDetails(branch, parentBranch string) (*Proposal, 
 	}
 	return &Proposal{
 		CanMergeWithAPI:        true,
-		DefaultProposalMessage: d.defaultCommitMessage(pullRequests[0]),
+		DefaultProposalMessage: d.defaultProposalMessage(pullRequests[0]),
 		ProposalNumber:         pullRequests[0].GetNumber(),
 	}, nil
 }

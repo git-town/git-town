@@ -19,7 +19,7 @@ type shipConfig struct {
 	branchToMergeInto       string
 	canShipWithDriver       bool
 	childBranches           []string
-	defaultCommitMessage    string
+	defaultProposalMessage  string
 	hasOrigin               bool
 	hasTrackingBranch       bool
 	initialBranch           string
@@ -150,7 +150,7 @@ func determineShipConfig(args []string, driver hosting.Driver, repo *git.ProdRep
 	}
 	branchToMergeInto := repo.Config.ParentBranch(branchToShip)
 	canShipWithDriver := false
-	defaultCommitMessage := ""
+	defaultProposalMessage := ""
 	proposalNumber := -1
 	if hasTrackingBranch && !isOffline && driver != nil {
 		prInfo, err := driver.ProposalDetails(branchToShip, branchToMergeInto)
@@ -159,7 +159,7 @@ func determineShipConfig(args []string, driver hosting.Driver, repo *git.ProdRep
 		}
 		if prInfo != nil {
 			canShipWithDriver = prInfo.CanMergeWithAPI
-			defaultCommitMessage = prInfo.DefaultProposalMessage
+			defaultProposalMessage = prInfo.DefaultProposalMessage
 			proposalNumber = prInfo.ProposalNumber
 		}
 	}
@@ -174,7 +174,7 @@ func determineShipConfig(args []string, driver hosting.Driver, repo *git.ProdRep
 		branchToShip:            branchToShip,
 		canShipWithDriver:       canShipWithDriver,
 		childBranches:           repo.Config.ChildBranches(branchToShip),
-		defaultCommitMessage:    defaultCommitMessage,
+		defaultProposalMessage:  defaultProposalMessage,
 		deleteOriginBranch:      deleteOrigin,
 		hasOrigin:               hasOrigin,
 		hasTrackingBranch:       hasTrackingBranch,
@@ -214,7 +214,7 @@ func shipStepList(config *shipConfig, commitMessage string, repo *git.ProdRepo) 
 			Branch:                 config.branchToShip,
 			ProposalNumber:         config.proposalNumber,
 			CommitMessage:          commitMessage,
-			DefaultProposalMessage: config.defaultCommitMessage,
+			DefaultProposalMessage: config.defaultProposalMessage,
 		})
 		result.Append(&steps.PullBranchStep{})
 	} else {

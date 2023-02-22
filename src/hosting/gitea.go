@@ -73,8 +73,8 @@ type GiteaDriver struct {
 }
 
 //nolint:nonamedreturns  // return value isn't obvious from function name
-func (d *GiteaDriver) apiSquashMergeProposal(pullRequestNumber int, commitTitle, commitMessage string) (mergeSha string, err error) {
-	_, err = d.client.MergePullRequest(d.owner, d.repository, int64(pullRequestNumber), gitea.MergePullRequestOption{
+func (d *GiteaDriver) apiSquashMergeProposal(proposalNumber int, commitTitle, commitMessage string) (mergeSha string, err error) {
+	_, err = d.client.MergePullRequest(d.owner, d.repository, int64(proposalNumber), gitea.MergePullRequestOption{
 		Style:   gitea.MergeStyleSquash,
 		Title:   commitTitle,
 		Message: commitMessage,
@@ -82,7 +82,7 @@ func (d *GiteaDriver) apiSquashMergeProposal(pullRequestNumber int, commitTitle,
 	if err != nil {
 		return "", err
 	}
-	pullRequest, err := d.client.GetPullRequest(d.owner, d.repository, int64(pullRequestNumber))
+	pullRequest, err := d.client.GetPullRequest(d.owner, d.repository, int64(proposalNumber))
 	if err != nil {
 		return "", err
 	}
