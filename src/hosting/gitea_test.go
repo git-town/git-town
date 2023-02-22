@@ -48,7 +48,7 @@ func TestNewGiteaConnector(t *testing.T) {
 //nolint:paralleltest  // mocks HTTP
 func TestGitea(t *testing.T) {
 	t.Run("DefaultCommitMessage", func(t *testing.T) {
-		give := hosting.ChangeRequestInfo{
+		give := hosting.Proposal{
 			Number:          1,
 			Title:           "my title",
 			CanMergeWithAPI: true,

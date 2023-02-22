@@ -34,11 +34,11 @@ type Config struct {
 // They all conform to this interface.
 type Connector interface {
 	// ChangeRequestForBranch provides details about the change request for the given branch.
-	ChangeRequestForBranch(branch string) (*ChangeRequestInfo, error)
+	ChangeRequestForBranch(branch string) (*Proposal, error)
 
 	// DefaultCommitMessage provides the commit message template to use
 	// for change requests on the respective hosting platform.
-	DefaultCommitMessage(crInfo ChangeRequestInfo) string
+	DefaultCommitMessage(proposal Proposal) string
 
 	// HostingServiceName provides the name of the code hosting service
 	// supported by the respective connector implementation.
@@ -59,9 +59,9 @@ type Connector interface {
 	UpdateChangeRequestTarget(number int, target string) error
 }
 
-// ChangeRequestInfo contains information about a change request
+// Proposal contains information about a change request
 // on a code hosting platform.
-type ChangeRequestInfo struct {
+type Proposal struct {
 	// the change request Number
 	Number int
 

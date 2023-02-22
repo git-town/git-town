@@ -39,12 +39,12 @@ func NewBitbucketConnector(url giturl.Parts, gitConfig gitConfig, git gitRunner)
 	}
 }
 
-func (c *BitbucketConnector) ChangeRequestForBranch(branch string) (*ChangeRequestInfo, error) {
+func (c *BitbucketConnector) ChangeRequestForBranch(branch string) (*Proposal, error) {
 	return nil, fmt.Errorf("BitBucket API functionality isn't implemented yet")
 }
 
-func (c *BitbucketConnector) DefaultCommitMessage(crInfo ChangeRequestInfo) string {
-	return fmt.Sprintf("%s (#%d)", crInfo.Title, crInfo.Number)
+func (c *BitbucketConnector) DefaultCommitMessage(proposal Proposal) string {
+	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 
 func (c *BitbucketConnector) HostingServiceName() string {

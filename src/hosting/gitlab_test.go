@@ -78,7 +78,7 @@ func TestNewGitlabConnector(t *testing.T) {
 //nolint:paralleltest  // mocks HTTP
 func TestGitlabConnector(t *testing.T) {
 	t.Run("TestDefaultCommitMessage", func(t *testing.T) {
-		give := hosting.ChangeRequestInfo{
+		give := hosting.Proposal{
 			Number:          1,
 			Title:           "my title",
 			CanMergeWithAPI: true,

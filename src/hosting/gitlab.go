@@ -17,7 +17,7 @@ type GitLabConnector struct {
 	log logFn
 }
 
-func (c *GitLabConnector) ChangeRequestForBranch(branch string) (*ChangeRequestInfo, error) {
+func (c *GitLabConnector) ChangeRequestForBranch(branch string) (*Proposal, error) {
 	opts := &gitlab.ListProjectMergeRequestsOptions{
 		State:        gitlab.String("opened"),
 		SourceBranch: gitlab.String(branch),
@@ -109,7 +109,7 @@ type GitLabConfig struct {
 	Config
 }
 
-func (c *GitLabConfig) DefaultCommitMessage(changeRequest ChangeRequestInfo) string {
+func (c *GitLabConfig) DefaultCommitMessage(changeRequest Proposal) string {
 	return fmt.Sprintf("%s (!%d)", changeRequest.Title, changeRequest.Number)
 }
 
@@ -140,8 +140,8 @@ func (c *GitLabConfig) RepositoryURL() string {
 // Helper functions
 // *************************************
 
-func parseMergeRequest(mergeRequest *gitlab.MergeRequest) ChangeRequestInfo {
-	return ChangeRequestInfo{
+func parseMergeRequest(mergeRequest *gitlab.MergeRequest) Proposal {
+	return Proposal{
 		Number:          mergeRequest.IID,
 		Title:           mergeRequest.Title,
 		CanMergeWithAPI: true,

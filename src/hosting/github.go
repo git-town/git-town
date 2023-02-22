@@ -20,7 +20,7 @@ type GitHubConnector struct {
 	log        logFn
 }
 
-func (c *GitHubConnector) ChangeRequestForBranch(branch string) (*ChangeRequestInfo, error) {
+func (c *GitHubConnector) ChangeRequestForBranch(branch string) (*Proposal, error) {
 	pullRequests, _, err := c.client.PullRequests.List(context.Background(), c.owner, c.repository, &github.PullRequestListOptions{
 		Head:  c.owner + ":" + branch,
 		State: "open",
@@ -38,8 +38,8 @@ func (c *GitHubConnector) ChangeRequestForBranch(branch string) (*ChangeRequestI
 	return &changeRequest, nil
 }
 
-func (c *GitHubConnector) DefaultCommitMessage(crInfo ChangeRequestInfo) string {
-	return fmt.Sprintf("%s (#%d)", crInfo.Title, crInfo.Number)
+func (c *GitHubConnector) DefaultCommitMessage(proposal Proposal) string {
+	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 
 func (c *GitHubConnector) HostingServiceName() string {
@@ -114,8 +114,8 @@ func NewGithubConnector(url giturl.Parts, gitConfig gitConfig, log logFn) *GitHu
 }
 
 // parsePullRequest extracts ChangeRequestInfo from the given GitHub pull-request data.
-func parsePullRequest(pullRequest *github.PullRequest) ChangeRequestInfo {
-	return ChangeRequestInfo{
+func parsePullRequest(pullRequest *github.PullRequest) Proposal {
+	return Proposal{
 		Number:          pullRequest.GetNumber(),
 		Title:           pullRequest.GetTitle(),
 		CanMergeWithAPI: true,

@@ -16,7 +16,7 @@ type GiteaConnector struct {
 	log logFn
 }
 
-func (c *GiteaConnector) ChangeRequestForBranch(branch string) (*ChangeRequestInfo, error) {
+func (c *GiteaConnector) ChangeRequestForBranch(branch string) (*Proposal, error) {
 	openPullRequests, err := c.client.ListRepoPullRequests(c.owner, c.repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{
 			PageSize: 50,
@@ -35,15 +35,15 @@ func (c *GiteaConnector) ChangeRequestForBranch(branch string) (*ChangeRequestIn
 		return nil, fmt.Errorf("found %d pull requests for branch %q", len(pullRequests), branch)
 	}
 	pullRequest := pullRequests[0]
-	return &ChangeRequestInfo{
+	return &Proposal{
 		CanMergeWithAPI: pullRequest.Mergeable,
 		Number:          int(pullRequest.Index),
 		Title:           pullRequest.Title,
 	}, nil
 }
 
-func (c *GiteaConnector) DefaultCommitMessage(crInfo ChangeRequestInfo) string {
-	return fmt.Sprintf("%s (#%d)", crInfo.Title, crInfo.Number)
+func (c *GiteaConnector) DefaultCommitMessage(proposal Proposal) string {
+	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 
 func (c *GiteaConnector) HostingServiceName() string {
