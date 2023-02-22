@@ -66,7 +66,7 @@ func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo, connector hostin
 		}
 		step.enteredEmptyCommitMessage = false
 	}
-	// TODO: update the target of the change request to the local parent branch here?
+	// TODO: update the target of the proposal to the local parent branch here?
 	step.mergeSha, step.mergeError = connector.SquashMergeProposal(step.PullRequestNumber, commitMessage)
 	return step.mergeError
 }

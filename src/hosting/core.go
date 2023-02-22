@@ -33,18 +33,18 @@ type Config struct {
 // Individual implementations exist to talk to specific hosting platforms.
 // They all conform to this interface.
 type Connector interface {
-	// ProposalForBranch provides details about the change request for the given branch.
+	// ProposalForBranch provides details about the proposal for the given branch.
 	ProposalForBranch(branch string) (*Proposal, error)
 
 	// DefaultCommitMessage provides the commit message template to use
-	// for change requests on the respective hosting platform.
+	// for proposals on the respective hosting platform.
 	DefaultCommitMessage(proposal Proposal) string
 
 	// HostingServiceName provides the name of the code hosting service
 	// supported by the respective connector implementation.
 	HostingServiceName() string
 
-	// SquashMergeProposal squash-merges the change request with the given number
+	// SquashMergeProposal squash-merges the proposal with the given number
 	// using the given commit message.
 	SquashMergeProposal(number int, message string) (mergeSHA string, err error)
 
@@ -55,20 +55,21 @@ type Connector interface {
 	// RepositoryURL provides the URL where the current repository can be found online.
 	RepositoryURL() string
 
-	// UpdateProposalTarget updates the target branch of the given change request.
+	// UpdateProposalTarget updates the target branch of the given proposal.
 	UpdateProposalTarget(number int, target string) error
 }
 
 // Proposal contains information about a change request
 // on a code hosting platform.
+// Alternative names are "pull request" or "merge request".
 type Proposal struct {
-	// the change request Number
+	// the number used to identify the proposal on the hosting platform
 	Number int
 
-	// textual title of the change request
+	// textual title of the proposal
 	Title string
 
-	// whether this change request can be merged programmatically
+	// whether this proposal can be merged via the API now
 	CanMergeWithAPI bool
 }
 

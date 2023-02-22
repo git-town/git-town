@@ -113,7 +113,7 @@ func NewGithubConnector(url giturl.Parts, gitConfig gitConfig, log logFn) *GitHu
 	}
 }
 
-// parsePullRequest extracts ChangeRequestInfo from the given GitHub pull-request data.
+// parsePullRequest extracts standardized proposal data from the given GitHub pull-request.
 func parsePullRequest(pullRequest *github.PullRequest) Proposal {
 	return Proposal{
 		Number:          pullRequest.GetNumber(),
