@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNewGithubDriver(t *testing.T) {
+func TestNewGithubConnector(t *testing.T) {
 	t.Parallel()
 	t.Run("GitHub SaaS", func(t *testing.T) {
 		t.Parallel()
@@ -50,7 +50,7 @@ func TestNewGithubDriver(t *testing.T) {
 }
 
 //nolint:paralleltest  // mocks HTTP
-func TestGithubDriver(t *testing.T) {
+func TestGithubConnector(t *testing.T) {
 	t.Run("DefaultProposalMessage", func(t *testing.T) {
 		give := hosting.Proposal{
 			Number:          1,

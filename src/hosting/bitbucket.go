@@ -16,7 +16,7 @@ type BitbucketConnector struct {
 	git          gitRunner
 }
 
-// NewBitbucketConnector provides a Bitbucket driver instance if the current repo is hosted on Bitbucket,
+// NewBitbucketConnector provides a Bitbucket connector instance if the current repo is hosted on Bitbucket,
 // otherwise nil.
 func NewBitbucketConnector(url giturl.Parts, gitConfig gitConfig, git gitRunner) *BitbucketConnector {
 	manualOrigin := gitConfig.OriginOverride()

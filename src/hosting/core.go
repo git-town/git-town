@@ -1,7 +1,7 @@
 // Package hosting provides support for interacting with code hosting services.
 // Commands like "new-pull-request", "repo", and "ship" use this package
 // to know how to perform Git Town operations on GitHub, Gitlab, Bitbucket, etc.
-// Drivers implement the CodeHostingDriver interface.
+// Implementations of connectors for particular code hosting platforms implement the Connector interface.
 package hosting
 
 import (
@@ -73,7 +73,7 @@ type Proposal struct {
 	CanMergeWithAPI bool
 }
 
-// config defines the configuration data needed by the driver package.
+// gitConfig defines the configuration data needed by the hosting package.
 type gitConfig interface {
 	// OriginOverride provides the override for the origin URL from the Git Town configuration.
 	OriginOverride() string
@@ -97,15 +97,15 @@ type gitConfig interface {
 	OriginURL() string
 }
 
-// runner defines the runner methods used by the driver package.
+// runner defines the runner methods used by the hosting package.
 type gitRunner interface {
 	ShaForBranch(string) (string, error)
 }
 
-// logFn defines a function with fmt.Printf API that CodeHostingDriver instances can use to give updates on activities they do.
+// logFn defines a function with fmt.Printf API that Connector instances can use to give updates on activities they do.
 type logFn func(string, ...interface{})
 
-// NewDriver provides an instance of the code hosting driver to use based on the git config.
+// NewConnector provides an instance of the code hosting connector to use based on the git config.
 //
 //nolint:ireturn,nolintlint
 func NewConnector(config gitConfig, git gitRunner, log logFn) (Connector, error) {

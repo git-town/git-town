@@ -93,12 +93,12 @@ func NewGitlabConnector(url giturl.Parts, config gitConfig, log logFn) (*GitLabC
 	if err != nil {
 		return nil, err
 	}
-	driver := GitLabConnector{
+	connector := GitLabConnector{
 		client:       client,
 		GitLabConfig: gitlabConfig,
 		log:          log,
 	}
-	return &driver, nil
+	return &connector, nil
 }
 
 // *************************************
