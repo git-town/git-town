@@ -29,12 +29,14 @@ type Config struct {
 	repository string
 }
 
-// Connector describes the API methods that Git Town performs on code hosting platforms
-// in a standardized format.
+// Connector describes the activities that Git Town performs on code hosting platforms via their API.
+// Individual implementations exist to talk to specific hosting platforms.
+// They all conform to this interface.
 type Connector interface {
-	// ChangeRequestForBranch provides the change request for the branch with the given name.
+	// ChangeRequestForBranch provides details about the change request for the given branch.
 	ChangeRequestForBranch(branch string) (*ChangeRequestInfo, error)
 
+	// DefaultCommitMessage provides the commit message template to use for change requests.
 	DefaultCommitMessage(crInfo ChangeRequestInfo) string
 
 	// HostingServiceName provides the name of the code hosting service.
