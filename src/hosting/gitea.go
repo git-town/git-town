@@ -100,20 +100,21 @@ func NewGiteaConnector(url giturl.Parts, config gitConfig, log logFn) *GiteaConn
 	if hostingService != "gitea" && url.Host != "gitea.com" {
 		return nil
 	}
-	hostingConfig := Config{
-		apiToken:   config.GiteaToken(),
-		hostname:   url.Host,
-		originURL:  config.OriginURL(),
-		owner:      url.Org,
-		repository: url.Repo,
-	}
-	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: hostingConfig.apiToken})
+	apiToken := config.GiteaToken()
+	hostname := url.Host
+	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: apiToken})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
-	giteaClient := gitea.NewClientWithHTTP(fmt.Sprintf("https://%s", hostingConfig.hostname), httpClient)
+	giteaClient := gitea.NewClientWithHTTP(fmt.Sprintf("https://%s", hostname), httpClient)
 	return &GiteaConnector{
 		client: giteaClient,
-		Config: hostingConfig,
-		log:    log,
+		Config: Config{
+			apiToken:   apiToken,
+			hostname:   hostname,
+			originURL:  config.OriginURL(),
+			owner:      url.Org,
+			repository: url.Repo,
+		},
+		log: log,
 	}
 }
 

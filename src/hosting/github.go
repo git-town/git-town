@@ -96,18 +96,18 @@ func NewGithubConnector(url giturl.Parts, gitConfig gitConfig, log logFn) *GitHu
 	if gitConfig.HostingService() != "github" && url.Host != "github.com" {
 		return nil
 	}
-	hostingConfig := Config{
-		apiToken:   gitConfig.GitHubToken(),
-		hostname:   url.Host,
-		originURL:  gitConfig.OriginURL(),
-		owner:      url.Org,
-		repository: url.Repo,
-	}
-	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: hostingConfig.apiToken})
+	apiToken := gitConfig.GitHubToken()
+	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: apiToken})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
 	return &GitHubConnector{
-		client:     github.NewClient(httpClient),
-		Config:     hostingConfig,
+		client: github.NewClient(httpClient),
+		Config: Config{
+			apiToken:   apiToken,
+			hostname:   url.Host,
+			originURL:  gitConfig.OriginURL(),
+			owner:      url.Org,
+			repository: url.Repo,
+		},
 		mainBranch: gitConfig.MainBranch(),
 		log:        log,
 	}
