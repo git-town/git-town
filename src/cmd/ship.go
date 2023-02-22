@@ -25,7 +25,7 @@ type shipConfig struct {
 	initialBranch           string
 	isShippingInitialBranch bool
 	isOffline               bool
-	pullRequestNumber       int
+	proposalNumber          int
 	deleteOriginBranch      bool
 }
 
@@ -179,7 +179,7 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 		hasOrigin:               hasOrigin,
 		hasTrackingBranch:       hasTrackingBranch,
 		initialBranch:           initialBranch,
-		pullRequestNumber:       pullRequestNumber,
+		proposalNumber:          proposalNumber,
 	}, nil
 }
 
