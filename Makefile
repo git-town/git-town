@@ -8,7 +8,7 @@ SHFMT_VERSION = 3.6.0
 
 # internal data and state
 .DEFAULT_GOAL := help
-TODAY = $(shell date +'%Y/%m/%d')
+TODAY = $(shell date +'%Y-%m-%d')
 DEV_VERSION := $(shell git describe --tags 2> /dev/null || git rev-parse --short HEAD)
 RELEASE_VERSION := $(shell git describe --exact-match --tags 2> /dev/null)
 GO_BUILD_ARGS = LANG=C GOGC=off
