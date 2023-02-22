@@ -117,7 +117,7 @@ func TestGitea(t *testing.T) {
 			CanMergeWithAPI: true,
 		}
 		want := "my title (#1)"
-		connector := hosting.GiteaConnector{}
+		connector := hosting.GiteaConnector{} //nolint:exhaustruct
 		have := connector.DefaultCommitMessage(give)
 		assert.Equal(t, have, want)
 	})

@@ -121,7 +121,7 @@ func TestGithubDriver(t *testing.T) {
 			CanMergeWithAPI: true,
 		}
 		want := "my title (#1)"
-		connector := hosting.GitHubConnector{}
+		connector := hosting.GitHubConnector{} //nolint:exhaustruct
 		have := connector.DefaultCommitMessage(give)
 		assert.Equal(t, want, have)
 	})

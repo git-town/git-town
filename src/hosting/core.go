@@ -99,7 +99,7 @@ type logFn func(string, ...interface{})
 
 // NewDriver provides an instance of the code hosting driver to use based on the git config.
 //
-//nolint:ireturn
+//nolint:ireturn // we really need to return an interface here and it works
 func NewConnector(config gitConfig, git gitRunner, log logFn) (Connector, error) {
 	url := giturl.Parse(config.OriginURL())
 	if url == nil {

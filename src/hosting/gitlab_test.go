@@ -149,7 +149,7 @@ func TestGitlabConnector(t *testing.T) {
 			CanMergeWithAPI: true,
 		}
 		want := "my title (!1)"
-		config := hosting.GitLabConfig{}
+		config := hosting.GitLabConfig{} //nolint:exhaustruct
 		have := config.DefaultCommitMessage(give)
 		assert.Equal(t, want, have)
 	})
