@@ -86,8 +86,8 @@ func (c *GitHubConnector) UpdateProposalTarget(number int, target string) error 
 	return err
 }
 
-// NewGithubConnector provides GitHub configuration data if the current repo is hosted on Github,
-// otherwise nil.
+// NewGithubConnector provides a fully configured NewGithubConnector instance
+// if the current repo is hosted on Github, otherwise nil.
 func NewGithubConnector(url giturl.Parts, gitConfig gitConfig, log logFn) *GitHubConnector {
 	manualHostName := gitConfig.OriginOverride()
 	if manualHostName != "" {
