@@ -14,6 +14,15 @@ func BoolSetting(value bool) string {
 	return "no"
 }
 
+// Print prints the given text using fmt.Println
+// in a way where colors work on Windows.
+func Print(a ...interface{}) {
+	_, err := fmt.Fprint(color.Output, a...)
+	if err != nil {
+		fmt.Print(a...)
+	}
+}
+
 // Printf prints the given text using fmt.Printf
 // in a way where colors work on Windows.
 func Printf(format string, a ...interface{}) {
