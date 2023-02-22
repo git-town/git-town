@@ -22,7 +22,7 @@ func doctorCommand(repo *git.ProdRepo) *cobra.Command {
 			cli.Print("Hosting service: ")
 			connector, err := hosting.NewConnector(&repo.Config, &repo.Silent, cli.PrintConnectorAction)
 			if err != nil {
-				cli.Exit(fmt.Errorf("(cannot determine hosting connector: %v)", err))
+				cli.Exit(fmt.Errorf("(cannot determine hosting connector: %w)", err))
 			} else {
 				cli.Println(connector.HostingServiceName())
 			}
