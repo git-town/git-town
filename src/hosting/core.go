@@ -36,21 +36,23 @@ type Connector interface {
 	// ChangeRequestForBranch provides details about the change request for the given branch.
 	ChangeRequestForBranch(branch string) (*ChangeRequestInfo, error)
 
-	// DefaultCommitMessage provides the commit message template to use for change requests.
+	// DefaultCommitMessage provides the commit message template to use
+	// for change requests on the respective hosting platform.
 	DefaultCommitMessage(crInfo ChangeRequestInfo) string
 
-	// HostingServiceName provides the name of the code hosting service.
+	// HostingServiceName provides the name of the code hosting service
+	// supported by the respective connector implementation.
 	HostingServiceName() string
 
-	// SquashMergeChangeRequest squash-merges the given change request using the given commit message.
+	// SquashMergeChangeRequest squash-merges the change request with the given number
+	// using the given commit message.
 	SquashMergeChangeRequest(number int, message string) (mergeSHA string, err error)
 
 	// NewChangeRequestURL provides the URL of the page
 	// to create a new pull request online.
 	NewChangeRequestURL(branch, parentBranch string) (string, error)
 
-	// RepositoryURL provides the URL
-	// where the current repository can be found online.
+	// RepositoryURL provides the URL where the current repository can be found online.
 	RepositoryURL() string
 
 	// UpdateChangeRequestTarget updates the target branch of the given change request.
