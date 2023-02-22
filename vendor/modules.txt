@@ -147,9 +147,6 @@ google.golang.org/protobuf/types/descriptorpb
 gopkg.in/AlecAivazis/survey.v1
 gopkg.in/AlecAivazis/survey.v1/core
 gopkg.in/AlecAivazis/survey.v1/terminal
-# gopkg.in/jarcoal/httpmock.v1 v1.0.0-20180304133419-61bcb58a0752
-## explicit
-gopkg.in/jarcoal/httpmock.v1
 # gopkg.in/yaml.v3 v3.0.1
 ## explicit
 gopkg.in/yaml.v3
