@@ -151,7 +151,7 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 	branchToMergeInto := repo.Config.ParentBranch(branchToShip)
 	canShipViaAPI := false
 	defaultProposalMessage := ""
-	pullRequestNumber := -1
+	proposalNumber := -1
 	if hasTrackingBranch && !isOffline && connector != nil {
 		prInfo, err := connector.ProposalForBranch(branchToShip)
 		if err != nil {
@@ -160,7 +160,7 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 		if prInfo != nil {
 			canShipViaAPI = prInfo.CanMergeWithAPI
 			defaultProposalMessage = connector.DefaultProposalMessage(*prInfo)
-			pullRequestNumber = prInfo.Number
+			proposalNumber = prInfo.Number
 		}
 	}
 	deleteOrigin, err := repo.Config.ShouldShipDeleteOriginBranch()
@@ -212,7 +212,7 @@ func shipStepList(config *shipConfig, commitMessage string, repo *git.ProdRepo) 
 		result.Append(&steps.PushBranchStep{Branch: config.branchToShip})
 		result.Append(&steps.ConnectorMergeProposalStep{
 			Branch:                 config.branchToShip,
-			PullRequestNumber:      config.pullRequestNumber,
+			ProposalNumber:         config.proposalNumber,
 			CommitMessage:          commitMessage,
 			DefaultProposalMessage: config.defaultProposalMessage,
 		})
