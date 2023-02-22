@@ -142,7 +142,7 @@ func (d *GiteaDriver) ProposalDetails(branch, parentBranch string) (*PullRequest
 	return &PullRequestInfo{
 		CanMergeWithAPI:        pullRequest.Mergeable,
 		DefaultProposalMessage: createDefaultProposalMessage(pullRequest),
-		PullRequestNumber:      int(pullRequest.Index),
+		ProposalNumber:         int(pullRequest.Index),
 	}, nil
 }
 
@@ -169,7 +169,7 @@ func (d *GiteaDriver) SquashMergeProposal(options SquashMergeProposalOptions) (m
 	if len(commitMessageParts) == 2 {
 		commitMessage = commitMessageParts[1]
 	}
-	return d.apiSquashMergeProposal(options.PullRequestNumber, commitTitle, commitMessage)
+	return d.apiSquashMergeProposal(options.ProposalNumber, commitTitle, commitMessage)
 }
 
 func createDefaultProposalMessage(pullRequest *gitea.PullRequest) string {

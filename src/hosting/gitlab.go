@@ -105,7 +105,7 @@ func (d *GitlabDriver) ProposalDetails(branch, parentBranch string) (*PullReques
 	return &PullRequestInfo{
 		CanMergeWithAPI:        true,
 		DefaultProposalMessage: d.defaultCommitMessage(mergeRequests[0]),
-		PullRequestNumber:      mergeRequests[0].IID,
+		ProposalNumber:         mergeRequests[0].IID,
 	}, nil
 }
 
@@ -126,14 +126,14 @@ func (d *GitlabDriver) SquashMergeProposal(options SquashMergeProposalOptions) (
 	if err != nil {
 		return "", err
 	}
-	if options.PullRequestNumber <= 0 {
+	if options.ProposalNumber <= 0 {
 		return "", fmt.Errorf("cannot merge via GitLab since there is no merge request")
 	}
 	if options.LogRequests {
-		d.log("GitLab API: Merging MR !%d\n", options.PullRequestNumber)
+		d.log("GitLab API: Merging MR !%d\n", options.ProposalNumber)
 	}
 	// GitLab API wants the full commit message in the body
-	result, _, err := d.client.MergeRequests.AcceptMergeRequest(d.ProjectPath(), options.PullRequestNumber, &gitlab.AcceptMergeRequestOptions{
+	result, _, err := d.client.MergeRequests.AcceptMergeRequest(d.ProjectPath(), options.ProposalNumber, &gitlab.AcceptMergeRequestOptions{
 		SquashCommitMessage: gitlab.String(options.CommitMessage),
 		Squash:              gitlab.Bool(true),
 		// This will be deleted by Git Town and make it fail if it is already deleted

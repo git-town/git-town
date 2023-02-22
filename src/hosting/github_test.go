@@ -92,7 +92,7 @@ func TestGithubDriver(t *testing.T) {
 			assert.NoError(t, err)
 			assert.True(t, prInfo.CanMergeWithAPI)
 			assert.Equal(t, "my title (#1)", prInfo.DefaultProposalMessage)
-			assert.Equal(t, 1, prInfo.PullRequestNumber)
+			assert.Equal(t, 1, prInfo.ProposalNumber)
 		})
 
 		t.Run("empty token", func(t *testing.T) {
@@ -140,10 +140,10 @@ func TestGithubDriver(t *testing.T) {
 				return httpmock.NewStringResponse(200, `{"sha": "abc123"}`), nil
 			})
 			sha, err := driver.SquashMergeProposal(hosting.SquashMergeProposalOptions{
-				Branch:            "feature",
-				PullRequestNumber: 1,
-				CommitMessage:     "title\nextra detail1\nextra detail2",
-				ParentBranch:      "main",
+				Branch:         "feature",
+				ProposalNumber: 1,
+				CommitMessage:  "title\nextra detail1\nextra detail2",
+				ParentBranch:   "main",
 			})
 			assert.NoError(t, err)
 			assert.Equal(t, "abc123", sha)
@@ -222,10 +222,10 @@ func TestGithubDriver(t *testing.T) {
 			httpmock.RegisterResponder("GET", githubCurrOpen, httpmock.NewStringResponder(200, `[{"number": 1}]`))
 			httpmock.RegisterResponder("PUT", githubPR1Merge, httpmock.NewStringResponder(200, `{"sha": "abc123"}`))
 			_, err := driver.SquashMergeProposal(hosting.SquashMergeProposalOptions{
-				Branch:            "feature",
-				PullRequestNumber: 1,
-				CommitMessage:     "title\nextra detail1\nextra detail2",
-				ParentBranch:      "main",
+				Branch:         "feature",
+				ProposalNumber: 1,
+				CommitMessage:  "title\nextra detail1\nextra detail2",
+				ParentBranch:   "main",
 			})
 			assert.NoError(t, err)
 			updateParameters1 := loadRequestData(updateRequest1)

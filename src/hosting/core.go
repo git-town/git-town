@@ -64,16 +64,16 @@ type gitRunner interface {
 type PullRequestInfo struct {
 	CanMergeWithAPI        bool
 	DefaultProposalMessage string
-	PullRequestNumber      int
+	ProposalNumber         int
 }
 
 // SquashMergeProposalOptions defines the options to the SquashMergeProposal function.
 type SquashMergeProposalOptions struct {
-	Branch            string
-	CommitMessage     string
-	LogRequests       bool
-	ParentBranch      string
-	PullRequestNumber int
+	Branch         string
+	CommitMessage  string
+	LogRequests    bool
+	ParentBranch   string
+	ProposalNumber int
 }
 
 // logFn defines a function with fmt.Printf API that CodeHostingDriver instances can use to give updates on activities they do.

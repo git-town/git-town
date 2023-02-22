@@ -103,7 +103,7 @@ func (d *GithubDriver) ProposalDetails(branch, parentBranch string) (*PullReques
 	return &PullRequestInfo{
 		CanMergeWithAPI:        true,
 		DefaultProposalMessage: d.defaultCommitMessage(pullRequests[0]),
-		PullRequestNumber:      pullRequests[0].GetNumber(),
+		ProposalNumber:         pullRequests[0].GetNumber(),
 	}, nil
 }
 
@@ -122,11 +122,11 @@ func (d *GithubDriver) SquashMergeProposal(options SquashMergeProposalOptions) (
 	if err != nil {
 		return "", err
 	}
-	if options.PullRequestNumber == 0 {
+	if options.ProposalNumber == 0 {
 		return "", fmt.Errorf("cannot merge via Github since there is no pull request")
 	}
 	if options.LogRequests {
-		d.log("GitHub API: Merging PR #%d\n", options.PullRequestNumber)
+		d.log("GitHub API: Merging PR #%d\n", options.ProposalNumber)
 	}
 	commitMessageParts := strings.SplitN(options.CommitMessage, "\n", 2)
 	githubCommitTitle := commitMessageParts[0]
@@ -134,7 +134,7 @@ func (d *GithubDriver) SquashMergeProposal(options SquashMergeProposalOptions) (
 	if len(commitMessageParts) == 2 {
 		githubCommitMessage = commitMessageParts[1]
 	}
-	result, _, err := d.client.PullRequests.Merge(context.Background(), d.owner, d.repository, options.PullRequestNumber, githubCommitMessage, &github.PullRequestOptions{
+	result, _, err := d.client.PullRequests.Merge(context.Background(), d.owner, d.repository, options.ProposalNumber, githubCommitMessage, &github.PullRequestOptions{
 		MergeMethod: "squash",
 		CommitTitle: githubCommitTitle,
 	})

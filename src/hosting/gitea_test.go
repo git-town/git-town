@@ -76,7 +76,7 @@ func TestGitea(t *testing.T) {
 			assert.NoError(t, err)
 			assert.True(t, prInfo.CanMergeWithAPI)
 			assert.Equal(t, "my title (#1)", prInfo.DefaultProposalMessage)
-			assert.Equal(t, 1, prInfo.PullRequestNumber)
+			assert.Equal(t, 1, prInfo.ProposalNumber)
 		})
 
 		t.Run("empty Git token", func(t *testing.T) {
@@ -125,10 +125,10 @@ func TestGitea(t *testing.T) {
 			})
 			httpmock.RegisterResponder("GET", giteaPR1, httpmock.NewStringResponder(200, `{"number": 1, "merge_commit_sha": "abc123"}`))
 			sha, err := driver.SquashMergeProposal(hosting.SquashMergeProposalOptions{
-				Branch:            "feature",
-				PullRequestNumber: 1,
-				CommitMessage:     "title\nextra detail1\nextra detail2",
-				ParentBranch:      "main",
+				Branch:         "feature",
+				ProposalNumber: 1,
+				CommitMessage:  "title\nextra detail1\nextra detail2",
+				ParentBranch:   "main",
 			})
 			assert.NoError(t, err)
 			assert.Equal(t, "abc123", sha)
@@ -156,10 +156,10 @@ func TestGitea(t *testing.T) {
 			httpmock.RegisterResponder("GET", giteaCurrOpen, httpmock.NewStringResponder(200, "[]"))
 			httpmock.RegisterResponder("GET", giteaPR1Merge, httpmock.NewStringResponder(404, ""))
 			_, err := driver.SquashMergeProposal(hosting.SquashMergeProposalOptions{
-				Branch:            "feature",
-				PullRequestNumber: 1,
-				CommitMessage:     "title\nextra detail1\nextra detail2",
-				ParentBranch:      "main",
+				Branch:         "feature",
+				ProposalNumber: 1,
+				CommitMessage:  "title\nextra detail1\nextra detail2",
+				ParentBranch:   "main",
 			})
 			assert.Error(t, err)
 		})
@@ -172,10 +172,10 @@ func TestGitea(t *testing.T) {
 				return httpmock.NewStringResponse(409, `{}`), nil
 			})
 			_, err := driver.SquashMergeProposal(hosting.SquashMergeProposalOptions{
-				Branch:            "feature",
-				PullRequestNumber: 1,
-				CommitMessage:     "title\nextra detail1\nextra detail2",
-				ParentBranch:      "main",
+				Branch:         "feature",
+				ProposalNumber: 1,
+				CommitMessage:  "title\nextra detail1\nextra detail2",
+				ParentBranch:   "main",
 			})
 			assert.Error(t, err)
 		})

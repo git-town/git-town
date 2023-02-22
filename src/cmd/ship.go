@@ -160,7 +160,7 @@ func determineShipConfig(args []string, driver hosting.Driver, repo *git.ProdRep
 		if prInfo != nil {
 			canShipWithDriver = prInfo.CanMergeWithAPI
 			defaultCommitMessage = prInfo.DefaultProposalMessage
-			proposalNumber = prInfo.PullRequestNumber
+			proposalNumber = prInfo.ProposalNumber
 		}
 	}
 	deleteOrigin, err := repo.Config.ShouldShipDeleteOriginBranch()
@@ -212,7 +212,7 @@ func shipStepList(config *shipConfig, commitMessage string, repo *git.ProdRepo) 
 		result.Append(&steps.PushBranchStep{Branch: config.branchToShip})
 		result.Append(&steps.DriverSquashMergeProposalStep{
 			Branch:                 config.branchToShip,
-			PullRequestNumber:      config.proposalNumber,
+			ProposalNumber:         config.proposalNumber,
 			CommitMessage:          commitMessage,
 			DefaultProposalMessage: config.defaultCommitMessage,
 		})

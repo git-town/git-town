@@ -16,7 +16,7 @@ type DriverSquashMergeProposalStep struct {
 	enteredEmptyCommitMessage bool
 	mergeError                error
 	mergeSha                  string
-	PullRequestNumber         int
+	ProposalNumber            int
 }
 
 func (step *DriverSquashMergeProposalStep) CreateAbortStep() Step {
@@ -71,11 +71,11 @@ func (step *DriverSquashMergeProposalStep) Run(repo *git.ProdRepo, driver hostin
 		return err
 	}
 	step.mergeSha, step.mergeError = driver.SquashMergeProposal(hosting.SquashMergeProposalOptions{
-		Branch:            step.Branch,
-		PullRequestNumber: step.PullRequestNumber,
-		CommitMessage:     commitMessage,
-		LogRequests:       true,
-		ParentBranch:      currentBranch,
+		Branch:         step.Branch,
+		ProposalNumber: step.ProposalNumber,
+		CommitMessage:  commitMessage,
+		LogRequests:    true,
+		ParentBranch:   currentBranch,
 	})
 	return step.mergeError
 }
