@@ -9,23 +9,7 @@ import (
 	"github.com/git-town/git-town/v7/src/giturl"
 	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/stretchr/testify/assert"
-	httpmock "gopkg.in/jarcoal/httpmock.v1"
 )
-
-func setupGithubDriver(t *testing.T, token string) (*hosting.GitHubConnector, func()) {
-	t.Helper()
-	httpmock.Activate()
-	repoConfig := mockRepoConfig{
-		originURL:   "git@github.com:git-town/git-town.git",
-		gitHubToken: token,
-	}
-	url := giturl.Parse(repoConfig.originURL)
-	connector := hosting.NewGithubConnector(*url, repoConfig, nil)
-	assert.NotNil(t, connector)
-	return connector, func() {
-		httpmock.DeactivateAndReset()
-	}
-}
 
 func TestNewGithubDriver(t *testing.T) {
 	t.Parallel()

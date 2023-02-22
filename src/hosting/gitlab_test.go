@@ -6,7 +6,6 @@ import (
 	"github.com/git-town/git-town/v7/src/giturl"
 	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/stretchr/testify/assert"
-	httpmock "gopkg.in/jarcoal/httpmock.v1"
 )
 
 const (
@@ -18,22 +17,6 @@ const (
 	gitlabMR3       = gitlabRoot + "/projects/" + projectPathEnc + "/merge_requests/3"
 	gitlabMR1Merge  = gitlabRoot + "/projects/" + projectPathEnc + "/merge_requests/1/merge"
 )
-
-func setupGitlabConnector(t *testing.T, token string) (*hosting.GitLabConnector, func()) {
-	t.Helper()
-	httpmock.Activate()
-	repoConfig := mockRepoConfig{
-		originURL:   "git@gitlab.com:git-town/git-town.git",
-		gitLabToken: token,
-	}
-	url := giturl.Parse(repoConfig.originURL)
-	connector, err := hosting.NewGitlabConnector(*url, repoConfig, nil)
-	assert.NoError(t, err)
-	assert.NotNil(t, connector)
-	return connector, func() {
-		httpmock.DeactivateAndReset()
-	}
-}
 
 func TestNewGitlabConnector(t *testing.T) {
 	t.Parallel()

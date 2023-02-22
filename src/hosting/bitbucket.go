@@ -11,7 +11,9 @@ import (
 
 // BitbucketConnector provides access to the API of Bitbucket installations.
 type BitbucketConnector struct {
-	bitBucketConfig
+	Config
+	organization string
+	git          gitRunner
 }
 
 // NewBitbucketConnector provides a Bitbucket driver instance if the current repo is hosted on Bitbucket,
@@ -24,7 +26,7 @@ func NewBitbucketConnector(url giturl.Parts, gitConfig gitConfig, git gitRunner)
 	if gitConfig.HostingService() != "bitbucket" && url.Host != "bitbucket.org" {
 		return nil
 	}
-	bitBucketConfig := bitBucketConfig{
+	return &BitbucketConnector{
 		Config: Config{
 			apiToken:   "",
 			hostname:   url.Host,
@@ -35,39 +37,21 @@ func NewBitbucketConnector(url giturl.Parts, gitConfig gitConfig, git gitRunner)
 		organization: url.Org,
 		git:          git,
 	}
-	return &BitbucketConnector{
-		bitBucketConfig: bitBucketConfig,
-	}
 }
 
 func (c *BitbucketConnector) ChangeRequestForBranch(branch string) (*ChangeRequestInfo, error) {
 	return nil, fmt.Errorf("BitBucket API functionality isn't implemented yet")
 }
 
-//nolint:nonamedreturns
-func (c *BitbucketConnector) SquashMergeChangeRequest(number int, message string) (mergeSHA string, err error) {
-	return "", errors.New("shipping pull requests via the Bitbucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues")
-}
-
-func (c *BitbucketConnector) UpdateChangeRequestTarget(number int, target string) error {
-	return errors.New("shipping pull requests via the Bitbucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues")
-}
-
-// *************************************
-//   CONFIG
-// *************************************
-
-type bitBucketConfig struct {
-	Config
-	organization string
-	git          gitRunner
-}
-
-func (c *bitBucketConfig) DefaultCommitMessage(crInfo ChangeRequestInfo) string {
+func (c *BitbucketConnector) DefaultCommitMessage(crInfo ChangeRequestInfo) string {
 	return fmt.Sprintf("%s (#%d)", crInfo.Title, crInfo.Number)
 }
 
-func (c *bitBucketConfig) NewChangeRequestURL(branch, parentBranch string) (string, error) {
+func (c *BitbucketConnector) HostingServiceName() string {
+	return "Bitbucket"
+}
+
+func (c *BitbucketConnector) NewChangeRequestURL(branch, parentBranch string) (string, error) {
 	query := url.Values{}
 	branchSha, err := c.git.ShaForBranch(branch)
 	if err != nil {
@@ -78,10 +62,15 @@ func (c *bitBucketConfig) NewChangeRequestURL(branch, parentBranch string) (stri
 	return fmt.Sprintf("%s/pull-request/new?%s", c.RepositoryURL(), query.Encode()), nil
 }
 
-func (c *bitBucketConfig) HostingServiceName() string {
-	return "Bitbucket"
+func (c *BitbucketConnector) RepositoryURL() string {
+	return fmt.Sprintf("https://%s/%s/%s", c.hostname, c.organization, c.repository)
 }
 
-func (c *bitBucketConfig) RepositoryURL() string {
-	return fmt.Sprintf("https://%s/%s/%s", c.hostname, c.organization, c.repository)
+//nolint:nonamedreturns
+func (c *BitbucketConnector) SquashMergeChangeRequest(number int, message string) (mergeSHA string, err error) {
+	return "", errors.New("shipping pull requests via the Bitbucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues")
+}
+
+func (c *BitbucketConnector) UpdateChangeRequestTarget(number int, target string) error {
+	return errors.New("shipping pull requests via the Bitbucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues")
 }
