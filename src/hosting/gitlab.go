@@ -133,7 +133,7 @@ func (d *GitlabDriver) MergePullRequest(options MergePullRequestOptions) (mergeS
 		d.log("GitLab API: Merging MR !%d\n", options.PullRequestNumber)
 	}
 	// GitLab API wants the full commit message in the body
-	result, _, err := d.client.MergeRequests.AcceptMergeRequest(d.ProjectPath(), int(options.PullRequestNumber), &gitlab.AcceptMergeRequestOptions{
+	result, _, err := d.client.MergeRequests.AcceptMergeRequest(d.ProjectPath(), options.PullRequestNumber, &gitlab.AcceptMergeRequestOptions{
 		SquashCommitMessage: gitlab.String(options.CommitMessage),
 		Squash:              gitlab.Bool(true),
 		// This will be deleted by Git Town and make it fail if it is already deleted
