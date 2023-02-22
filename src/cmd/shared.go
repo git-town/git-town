@@ -22,10 +22,10 @@ func validateIsConfigured(repo *git.ProdRepo) error {
 // ValidateIsRepository asserts that the current directory is in a Git repository.
 // If so, it also navigates to the root directory.
 func ValidateIsRepository(repo *git.ProdRepo) error {
-	if repo.Silent.IsRepository() {
-		return repo.NavigateToRootIfNecessary()
+	if !repo.Silent.IsRepository() {
+		return errors.New("this is not a Git repository")
 	}
-	return errors.New("this is not a Git repository")
+	return repo.NavigateToRootIfNecessary()
 }
 
 func appendStepList(config *appendConfig, repo *git.ProdRepo) (runstate.StepList, error) {
