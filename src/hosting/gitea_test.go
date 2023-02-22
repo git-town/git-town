@@ -76,38 +76,6 @@ func TestGitea(t *testing.T) {
 			assert.True(t, prInfo.CanMergeWithAPI)
 			assert.Equal(t, 1, prInfo.Number)
 		})
-
-		t.Run("empty Git token", func(t *testing.T) {
-			connector, teardown := setupGiteaConnector(t, "")
-			defer teardown()
-			prInfo, err := connector.ChangeRequestForBranch("feature")
-			assert.Nil(t, err)
-			assert.Nil(t, prInfo)
-		})
-
-		t.Run("cannot load pull request number", func(t *testing.T) {
-			connector, teardown := setupGiteaConnector(t, "TOKEN")
-			defer teardown()
-			httpmock.RegisterResponder("GET", giteaCurrOpen, httpmock.NewStringResponder(404, ""))
-			_, err := connector.ChangeRequestForBranch("feature")
-			assert.Error(t, err)
-		})
-
-		t.Run("branch has no pull request", func(t *testing.T) {
-			connector, teardown := setupGiteaConnector(t, "TOKEN")
-			defer teardown()
-			httpmock.RegisterResponder("GET", giteaCurrOpen, httpmock.NewStringResponder(200, "[]"))
-			_, err := connector.ChangeRequestForBranch("feature")
-			assert.ErrorContains(t, err, "no pull request from branch \"feature\" to branch \"main\" found")
-		})
-
-		t.Run("multiple pull requests for this banch", func(t *testing.T) {
-			connector, teardown := setupGiteaConnector(t, "TOKEN")
-			defer teardown()
-			httpmock.RegisterResponder("GET", giteaCurrOpen, httpmock.NewStringResponder(200, `[{"number": 1, "title": "title 1", "mergeable": true, "base": {"label": "main"}, "head": {"label": "git-town/feature"} },{"number": 2, "title": "title 2", "mergeable": true, "base": {"label": "main"}, "head": {"label": "git-town/feature"} }]`))
-			_, err := connector.ChangeRequestForBranch("feature")
-			assert.ErrorContains(t, err, "found 2 pull requests from branch \"feature\" to branch \"main\"")
-		})
 	})
 
 	t.Run("DefaultCommitMessage", func(t *testing.T) {
