@@ -238,6 +238,7 @@ func shipStepList(config *shipConfig, commitMessage string, repo *git.ProdRepo) 
 		result.Append(&steps.SetParentBranchStep{Branch: child, ParentBranch: config.branchToMergeInto})
 	}
 	if !config.isShippingInitialBranch {
+		// TODO: check out the main branch here?
 		result.Append(&steps.CheckoutBranchStep{Branch: config.initialBranch})
 	}
 	err = result.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: !config.isShippingInitialBranch}, repo)
