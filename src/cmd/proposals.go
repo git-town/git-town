@@ -17,17 +17,17 @@ func proposalsCommand(repo *git.ProdRepo) *cobra.Command {
 		Use:   "proposals",
 		Short: "Analyzes the Git Town setup",
 		Run: func(cmd *cobra.Command, args []string) {
-			connector, err := hosting.NewConnector(&repo.Config, &repo.Silent, cli.PrintDriverAction)
+			connector, err := hosting.NewConnector(&repo.Config, &repo.Silent, cli.PrintConnectorAction)
 			if err != nil {
 				cli.Exit(err)
 			}
-			proposals, err := connector.ChangeRequests()
+			proposals, err := connector.Proposals()
 			if err != nil {
 				cli.Exit(err)
 			}
 			for p := range proposals {
 				fmt.Print(".")
-				proposal, err := connector.ChangeRequestDetails(proposals[p].Number)
+				proposal, err := connector.ProposalDetails(proposals[p].Number)
 				if err != nil {
 					cli.Exit(err)
 				}

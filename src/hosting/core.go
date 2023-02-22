@@ -15,7 +15,7 @@ import (
 // They all conform to this interface.
 type Connector interface {
 	// ChangeRequestDetails provides details about the change request with the given number.
-	ProposalDetails(number int) (*ChangeRequestInfo, error)
+	ProposalDetails(number int) (*Proposal, error)
 
 	// ProposalForBranch provides details about the proposal for the given branch.
 	// Returns nil if no proposal exists.

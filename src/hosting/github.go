@@ -20,7 +20,7 @@ type GitHubConnector struct {
 	log        logFn
 }
 
-func (c *GitHubConnector) ProposalDetails(number int) (*ChangeRequestInfo, error) {
+func (c *GitHubConnector) ProposalDetails(number int) (*Proposal, error) {
 	pullRequest, _, err := c.client.PullRequests.Get(context.Background(), c.owner, c.repository, number)
 	return parseGithubPullRequest(pullRequest), err
 }
@@ -42,11 +42,11 @@ func (c *GitHubConnector) ProposalForBranch(branch string) (*Proposal, error) {
 	return parseGithubPullRequest(pullRequests[0]), nil
 }
 
-func (c *GitHubConnector) ChangeRequests() ([]ChangeRequestInfo, error) {
+func (c *GitHubConnector) ChangeRequests() ([]Proposal, error) {
 	pullRequests, _, err := c.client.PullRequests.List(context.Background(), c.owner, c.repository, &github.PullRequestListOptions{
 		State: "open",
 	})
-	result := make([]ChangeRequestInfo, len(pullRequests))
+	result := make([]Proposal, len(pullRequests))
 	if err != nil {
 		return result, err
 	}
@@ -132,11 +132,11 @@ func NewGithubConnector(url giturl.Parts, gitConfig gitConfig, log logFn) *GitHu
 }
 
 // parseGithubPullRequest extracts ChangeRequestInfo from the given GitHub pull-request data.
-func parseGithubPullRequest(pullRequest *github.PullRequest) *ChangeRequestInfo {
+func parseGithubPullRequest(pullRequest *github.PullRequest) *Proposal {
 	if pullRequest == nil {
 		return nil
 	}
-	return Proposal{
+	return &Proposal{
 		Number:          pullRequest.GetNumber(),
 		Title:           pullRequest.GetTitle(),
 		CanMergeWithAPI: pullRequest.GetMergeableState() == "clean",

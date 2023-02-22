@@ -150,8 +150,8 @@ func filterPullRequests(pullRequests []*gitea.PullRequest, branch string) []*git
 	return result
 }
 
-func parseGiteaPullRequest(pullRequest *gitea.PullRequest) ChangeRequestInfo {
-	return ChangeRequestInfo{
+func parseGiteaPullRequest(pullRequest *gitea.PullRequest) Proposal {
+	return Proposal{
 		CanMergeWithAPI: pullRequest.Mergeable,
 		Number:          int(pullRequest.Index),
 		Title:           pullRequest.Title,

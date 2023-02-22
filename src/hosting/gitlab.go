@@ -17,7 +17,7 @@ type GitLabConnector struct {
 	log logFn
 }
 
-func (c *GitLabConnector) ProposalDetails(number int) (*ChangeRequestInfo, error) {
+func (c *GitLabConnector) ProposalDetails(number int) (*Proposal, error) {
 	return nil, fmt.Errorf("TODO: implement")
 }
 
@@ -40,12 +40,12 @@ func (c *GitLabConnector) ProposalForBranch(branch string) (*Proposal, error) {
 	return &changeRequest, nil
 }
 
-func (c *GitLabConnector) ChangeRequests() ([]ChangeRequestInfo, error) {
+func (c *GitLabConnector) ChangeRequests() ([]Proposal, error) {
 	opts := &gitlab.ListProjectMergeRequestsOptions{
 		State: gitlab.String("opened"),
 	}
 	mergeRequests, _, err := c.client.MergeRequests.ListProjectMergeRequests(c.projectPath(), opts)
-	result := make([]ChangeRequestInfo, len(mergeRequests))
+	result := make([]Proposal, len(mergeRequests))
 	if err != nil {
 		return result, err
 	}
