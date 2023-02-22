@@ -53,8 +53,8 @@ func determineStep(stepType string) steps.Step {
 		return &steps.ContinueRebaseBranchStep{}
 	case "*CreateBranchStep":
 		return &steps.CreateBranchStep{}
-	case "*CreatePullRequestStep":
-		return &steps.CreatePullRequestStep{}
+	case "*CreateProposalStep":
+		return &steps.CreateProposalStep{}
 	case "*CreateRemoteBranchStep":
 		return &steps.CreateRemoteBranchStep{}
 	case "*CreateTrackingBranchStep":
