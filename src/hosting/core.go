@@ -16,12 +16,12 @@ type Driver interface {
 	// from the code hosting provider.
 	ProposalDetails(branch, parentBranch string) (*PullRequestInfo, error)
 
-	// NewPullRequestURL provides the URL of the page
+	// NewProposalURL provides the URL of the page
 	// to create a new pull request online.
-	NewPullRequestURL(branch, parentBranch string) (string, error)
+	NewProposalURL(branch, parentBranch string) (string, error)
 
-	// MergePullRequest merges the pull request through the hosting service API.
-	MergePullRequest(MergePullRequestOptions) (mergeSha string, err error)
+	// SquashMergeProposal merges the pull request through the hosting service API.
+	SquashMergeProposal(SquashMergeProposalOptions) (mergeSha string, err error)
 
 	// RepositoryURL provides the URL where the given repository
 	// can be found online.
@@ -62,13 +62,13 @@ type gitRunner interface {
 
 // PullRequestInfo contains information about a pull request.
 type PullRequestInfo struct {
-	CanMergeWithAPI      bool
-	DefaultCommitMessage string
-	PullRequestNumber    int
+	CanMergeWithAPI        bool
+	DefaultProposalMessage string
+	PullRequestNumber      int
 }
 
-// MergePullRequestOptions defines the options to the MergePullRequest function.
-type MergePullRequestOptions struct {
+// SquashMergeProposalOptions defines the options to the SquashMergeProposal function.
+type SquashMergeProposalOptions struct {
 	Branch            string
 	CommitMessage     string
 	LogRequests       bool

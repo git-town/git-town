@@ -66,7 +66,7 @@ func (c GitlabConfig) HostingServiceName() string {
 	return "GitLab"
 }
 
-func (c GitlabConfig) NewPullRequestURL(branch, parentBranch string) (string, error) {
+func (c GitlabConfig) NewProposalURL(branch, parentBranch string) (string, error) {
 	query := url.Values{}
 	query.Add("merge_request[source_branch]", branch)
 	query.Add("merge_request[target_branch]", parentBranch)
@@ -103,9 +103,9 @@ func (d *GitlabDriver) ProposalDetails(branch, parentBranch string) (*PullReques
 		return nil, fmt.Errorf("found %d merge requests from branch %q to branch %q", len(mergeRequests), branch, parentBranch)
 	}
 	return &PullRequestInfo{
-		CanMergeWithAPI:      true,
-		DefaultCommitMessage: d.defaultCommitMessage(mergeRequests[0]),
-		PullRequestNumber:    mergeRequests[0].IID,
+		CanMergeWithAPI:        true,
+		DefaultProposalMessage: d.defaultCommitMessage(mergeRequests[0]),
+		PullRequestNumber:      mergeRequests[0].IID,
 	}, nil
 }
 
@@ -121,7 +121,7 @@ func (d *GitlabDriver) loadMergeRequests(branch, parentBranch string) ([]*gitlab
 }
 
 //nolint:nonamedreturns  // return value isn't obvious from function name
-func (d *GitlabDriver) MergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
+func (d *GitlabDriver) SquashMergeProposal(options SquashMergeProposalOptions) (mergeSha string, err error) {
 	err = d.updatePullRequestsAgainst(options)
 	if err != nil {
 		return "", err
@@ -146,7 +146,7 @@ func (d *GitlabDriver) MergePullRequest(options MergePullRequestOptions) (mergeS
 	return result.SHA, nil
 }
 
-func (d *GitlabDriver) updatePullRequestsAgainst(options MergePullRequestOptions) error {
+func (d *GitlabDriver) updatePullRequestsAgainst(options SquashMergeProposalOptions) error {
 	// Fetch all open child merge requests that have this branch as their parent
 	mergeRequests, _, err := d.client.MergeRequests.ListProjectMergeRequests(d.ProjectPath(), &gitlab.ListProjectMergeRequestsOptions{
 		TargetBranch: gitlab.String(options.Branch),

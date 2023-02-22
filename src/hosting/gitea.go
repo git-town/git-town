@@ -56,7 +56,7 @@ func (c GiteaConfig) HostingServiceName() string {
 	return "Gitea"
 }
 
-func (c GiteaConfig) NewPullRequestURL(branch string, parentBranch string) (string, error) {
+func (c GiteaConfig) NewProposalURL(branch string, parentBranch string) (string, error) {
 	toCompare := parentBranch + "..." + branch
 	return fmt.Sprintf("%s/compare/%s", c.RepositoryURL(), url.PathEscape(toCompare)), nil
 }
@@ -73,7 +73,7 @@ type GiteaDriver struct {
 }
 
 //nolint:nonamedreturns  // return value isn't obvious from function name
-func (d *GiteaDriver) apiMergePullRequest(pullRequestNumber int, commitTitle, commitMessage string) (mergeSha string, err error) {
+func (d *GiteaDriver) apiSquashMergeProposal(pullRequestNumber int, commitTitle, commitMessage string) (mergeSha string, err error) {
 	_, err = d.client.MergePullRequest(d.owner, d.repository, int64(pullRequestNumber), gitea.MergePullRequestOption{
 		Style:   gitea.MergeStyleSquash,
 		Title:   commitTitle,
@@ -140,14 +140,14 @@ func (d *GiteaDriver) ProposalDetails(branch, parentBranch string) (*PullRequest
 	}
 	pullRequest := pullRequests[0]
 	return &PullRequestInfo{
-		CanMergeWithAPI:      pullRequest.Mergeable,
-		DefaultCommitMessage: createDefaultCommitMessage(pullRequest),
-		PullRequestNumber:    int(pullRequest.Index),
+		CanMergeWithAPI:        pullRequest.Mergeable,
+		DefaultProposalMessage: createDefaultProposalMessage(pullRequest),
+		PullRequestNumber:      int(pullRequest.Index),
 	}, nil
 }
 
 //nolint:nonamedreturns  // return value isn't obvious from function name
-func (d *GiteaDriver) MergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
+func (d *GiteaDriver) SquashMergeProposal(options SquashMergeProposalOptions) (mergeSha string, err error) {
 	openPullRequests, err := d.client.ListRepoPullRequests(d.owner, d.repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{
 			PageSize: 50,
@@ -169,10 +169,10 @@ func (d *GiteaDriver) MergePullRequest(options MergePullRequestOptions) (mergeSh
 	if len(commitMessageParts) == 2 {
 		commitMessage = commitMessageParts[1]
 	}
-	return d.apiMergePullRequest(options.PullRequestNumber, commitTitle, commitMessage)
+	return d.apiSquashMergeProposal(options.PullRequestNumber, commitTitle, commitMessage)
 }
 
-func createDefaultCommitMessage(pullRequest *gitea.PullRequest) string {
+func createDefaultProposalMessage(pullRequest *gitea.PullRequest) string {
 	return fmt.Sprintf("%s (#%d)", pullRequest.Title, pullRequest.Index)
 }
 

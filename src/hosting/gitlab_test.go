@@ -102,7 +102,7 @@ func TestGitLab(t *testing.T) {
 			prInfo, err := driver.ProposalDetails("feature", "main")
 			assert.NoError(t, err)
 			assert.True(t, prInfo.CanMergeWithAPI)
-			assert.Equal(t, "my title (!1)", prInfo.DefaultCommitMessage)
+			assert.Equal(t, "my title (!1)", prInfo.DefaultProposalMessage)
 			assert.Equal(t, 1, prInfo.PullRequestNumber)
 		})
 
@@ -139,7 +139,7 @@ func TestGitLab(t *testing.T) {
 		})
 	})
 
-	t.Run(".MergePullRequest()", func(t *testing.T) {
+	t.Run(".SquashMergeProposal()", func(t *testing.T) {
 		t.Run("happy path", func(t *testing.T) {
 			driver, teardown := setupGitlabDriver(t, "TOKEN")
 			defer teardown()
@@ -150,7 +150,7 @@ func TestGitLab(t *testing.T) {
 				mergeRequest = req
 				return httpmock.NewStringResponse(200, `{"sha": "abc123"}`), nil
 			})
-			sha, err := driver.MergePullRequest(hosting.MergePullRequestOptions{
+			sha, err := driver.SquashMergeProposal(hosting.SquashMergeProposalOptions{
 				Branch:            "feature",
 				PullRequestNumber: 1,
 				CommitMessage:     "title\nextra detail1\nextra detail2",
@@ -171,7 +171,7 @@ func TestGitLab(t *testing.T) {
 			defer teardown()
 			httpmock.RegisterResponder("GET", gitlabChildOpen, httpmock.NewStringResponder(200, "[]"))
 			httpmock.RegisterResponder("GET", gitlabCurrOpen, httpmock.NewStringResponder(404, ""))
-			_, err := driver.MergePullRequest(hosting.MergePullRequestOptions{
+			_, err := driver.SquashMergeProposal(hosting.SquashMergeProposalOptions{
 				Branch:        "feature",
 				CommitMessage: "title\nextra detail1\nextra detail2",
 				ParentBranch:  "main",
@@ -184,7 +184,7 @@ func TestGitLab(t *testing.T) {
 			defer teardown()
 			httpmock.RegisterResponder("GET", gitlabChildOpen, httpmock.NewStringResponder(200, "[]"))
 			httpmock.RegisterResponder("GET", gitlabCurrOpen, httpmock.NewStringResponder(200, "[]"))
-			_, err := driver.MergePullRequest(hosting.MergePullRequestOptions{
+			_, err := driver.SquashMergeProposal(hosting.SquashMergeProposalOptions{
 				Branch:        "feature",
 				CommitMessage: "title\nextra detail1\nextra detail2",
 				ParentBranch:  "main",
@@ -197,7 +197,7 @@ func TestGitLab(t *testing.T) {
 			driver, teardown := setupGitlabDriver(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", gitlabChildOpen, httpmock.NewStringResponder(404, ""))
-			_, err := driver.MergePullRequest(hosting.MergePullRequestOptions{
+			_, err := driver.SquashMergeProposal(hosting.SquashMergeProposalOptions{
 				Branch:        "feature",
 				CommitMessage: "title\nextra detail1\nextra detail2",
 				ParentBranch:  "main",
@@ -211,7 +211,7 @@ func TestGitLab(t *testing.T) {
 			httpmock.RegisterResponder("GET", gitlabChildOpen, httpmock.NewStringResponder(200, "[]"))
 			httpmock.RegisterResponder("GET", gitlabCurrOpen, httpmock.NewStringResponder(200, `[{"iid": 1}]`))
 			httpmock.RegisterResponder("PUT", gitlabMR1Merge, httpmock.NewStringResponder(404, ""))
-			_, err := driver.MergePullRequest(hosting.MergePullRequestOptions{
+			_, err := driver.SquashMergeProposal(hosting.SquashMergeProposalOptions{
 				Branch:        "feature",
 				CommitMessage: "title\nextra detail1\nextra detail2",
 				ParentBranch:  "main",
@@ -235,7 +235,7 @@ func TestGitLab(t *testing.T) {
 			httpmock.RegisterResponder("GET", gitlabCurrOpen, httpmock.NewStringResponder(200, `[{"iid": 1}]`))
 			httpmock.RegisterResponder("PUT", gitlabMR1Merge, httpmock.NewStringResponder(200, `{"sha": "abc123"}`))
 
-			_, err := driver.MergePullRequest(hosting.MergePullRequestOptions{
+			_, err := driver.SquashMergeProposal(hosting.SquashMergeProposalOptions{
 				Branch:            "feature",
 				PullRequestNumber: 1,
 				CommitMessage:     "title\nextra detail1\nextra detail2",
