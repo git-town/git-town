@@ -26,8 +26,10 @@ func NewBitbucketConnector(url giturl.Parts, gitConfig gitConfig, git gitRunner)
 	}
 	bitBucketConfig := bitBucketConfig{
 		Config: Config{
+			apiToken:   "",
 			hostname:   url.Host,
 			originURL:  gitConfig.OriginURL(),
+			owner:      url.Org,
 			repository: url.Repo,
 		},
 		organization: url.Org,
