@@ -25,7 +25,7 @@ func proposalsCommand(repo *git.ProdRepo) *cobra.Command {
 			if err != nil {
 				cli.Exit(err)
 			}
-			for p := range proposals {
+			for p := range proposals { //nolint:varnamelen
 				fmt.Print(".")
 				proposal, err := connector.ProposalDetails(proposals[p].Number)
 				if err != nil {
