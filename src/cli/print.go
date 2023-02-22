@@ -14,6 +14,15 @@ func BoolSetting(value bool) string {
 	return "no"
 }
 
+// Print prints the given text using fmt.Println
+// in a way where colors work on Windows.
+func Print(a ...interface{}) {
+	_, err := fmt.Fprint(color.Output, a...)
+	if err != nil {
+		fmt.Print(a...)
+	}
+}
+
 // Printf prints the given text using fmt.Printf
 // in a way where colors work on Windows.
 func Print(a ...interface{}) {
@@ -84,8 +93,8 @@ func PrintLabelAndValue(label, value string) {
 	fmt.Println()
 }
 
-// PrintDriverAction logs activities from a code hosting driver on the CLI.
-func PrintDriverAction(template string, messages ...interface{}) {
+// PrintConnectorAction logs activities from a code hosting connector on the CLI.
+func PrintConnectorAction(template string, messages ...interface{}) {
 	fmt.Println()
 	_, err := color.New(color.Bold).Printf(template, messages...)
 	if err != nil {

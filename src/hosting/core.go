@@ -1,7 +1,7 @@
 // Package hosting provides support for interacting with code hosting services.
 // Commands like "new-pull-request", "repo", and "ship" use this package
 // to know how to perform Git Town operations on GitHub, Gitlab, Bitbucket, etc.
-// Drivers implement the CodeHostingDriver interface.
+// Implementations of connectors for particular code hosting platforms conform to the Connector interface.
 package hosting
 
 import (
@@ -10,62 +10,77 @@ import (
 	"github.com/git-town/git-town/v7/src/giturl"
 )
 
-// Config contains the information needed for platform connections.
+// Connector describes the activities that Git Town performs on code hosting platforms via their API.
+// Individual implementations exist to talk to specific hosting platforms.
+// They all conform to this interface.
+type Connector interface {
+	// ChangeRequestDetails provides details about the change request with the given number.
+	ProposalDetails(number int) (*ChangeRequestInfo, error)
+
+	// ProposalForBranch provides details about the proposal for the given branch.
+	// Returns nil if no proposal exists.
+	ProposalForBranch(branch string) (*Proposal, error)
+
+	// ChangeRequests provides all open change requests on the hosting platform.
+	Proposals() ([]Proposal, error)
+
+	// DefaultProposalMessage provides the text that the form for creating new proposals
+	// on the respective hosting platform is prepopulated with.
+	DefaultProposalMessage(proposal Proposal) string
+
+	// HostingServiceName provides the name of the code hosting service
+	// supported by the respective connector implementation.
+	HostingServiceName() string
+
+	// SquashMergeProposal squash-merges the proposal with the given number
+	// using the given commit message.
+	SquashMergeProposal(number int, message string) (mergeSHA string, err error)
+
+	// NewProposalURL provides the URL of the page
+	// to create a new proposal online.
+	NewProposalURL(branch, parentBranch string) (string, error)
+
+	// RepositoryURL provides the URL where the current repository can be found online.
+	RepositoryURL() string
+
+	// UpdateProposalTarget updates the target branch of the given proposal.
+	UpdateProposalTarget(number int, target string) error
+}
+
+// Config contains the information needed for all platform connectors.
 type Config struct {
-	apiToken   string
-	hostname   string
-	originURL  string
-	owner      string
+	// bearer token to authenticate with the API
+	apiToken string
+
+	// hostname override
+	hostname string
+
+	// where the "origin" remote points to
+	originURL string
+
+	// the organization within the hosting platform that owns the repo
+	// TODO: rename no "organization"
+	owner string
+
+	// repo name within the organization
 	repository string
 }
 
-// Connector describes the API methods that Git Town performs on code hosting platforms
-// in a standardized format.
-type Connector interface {
-	// ChangeRequestDetails provides details about the change request with the given number.
-	ChangeRequestDetails(number int) (*ChangeRequestInfo, error)
-
-	// ChangeRequestForBranch provides the change request for the branch with the given name.
-	ChangeRequestForBranch(branch string) (*ChangeRequestInfo, error)
-
-	// ChangeRequests provides all open change requests on the hosting platform.
-	ChangeRequests() ([]ChangeRequestInfo, error)
-
-	// DefaultCommitMessage provides the default message to use when shipping change requests.
-	DefaultCommitMessage(crInfo ChangeRequestInfo) string
-
-	// HostingServiceName provides the name of the code hosting service.
-	HostingServiceName() string
-
-	// SquashMergeChangeRequest squash-merges the given change request using the given commit message.
-	SquashMergeChangeRequest(number int, message string) (mergeSHA string, err error)
-
-	// NewChangeRequestURL provides the URL of the page
-	// to create a new pull request online.
-	NewChangeRequestURL(branch, parentBranch string) (string, error)
-
-	// RepositoryURL provides the URL
-	// where the current repository can be found online.
-	RepositoryURL() string
-
-	// UpdateChangeRequestTarget updates the target branch of the given change request.
-	UpdateChangeRequestTarget(number int, target string) error
-}
-
-// ChangeRequestInfo contains information about a change request
+// Proposal contains information about a change request
 // on a code hosting platform.
-type ChangeRequestInfo struct {
-	// the change request Number
+// Alternative names are "pull request" or "merge request".
+type Proposal struct {
+	// the number used to identify the proposal on the hosting platform
 	Number int
 
-	// textual title of the change request
+	// textual title of the proposal
 	Title string
 
-	// whether this change request can be merged programmatically
+	// whether this proposal can be merged via the API
 	CanMergeWithAPI bool
 }
 
-// config defines the configuration data needed by the driver package.
+// gitConfig defines the configuration data needed by the hosting package.
 type gitConfig interface {
 	// OriginOverride provides the override for the origin URL from the Git Town configuration.
 	OriginOverride() string
@@ -89,17 +104,17 @@ type gitConfig interface {
 	OriginURL() string
 }
 
-// runner defines the runner methods used by the driver package.
+// runner defines the runner methods used by the hosting package.
 type gitRunner interface {
 	ShaForBranch(string) (string, error)
 }
 
-// logFn defines a function with fmt.Printf API that CodeHostingDriver instances can use to give updates on activities they do.
+// logFn defines a function with fmt.Printf API that Connector instances can use to give updates on activities they do.
 type logFn func(string, ...interface{})
 
-// NewDriver provides an instance of the code hosting driver to use based on the git config.
+// NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
 //
-//nolint:ireturn
+//nolint:ireturn,nolintlint
 func NewConnector(config gitConfig, git gitRunner, log logFn) (Connector, error) {
 	url := giturl.Parse(config.OriginURL())
 	if url == nil {

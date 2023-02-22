@@ -28,7 +28,7 @@ Flow, and trunk-based development. Check out
 - [git sync](https://www.git-town.com/commands/sync.html) - update the current
   branch with all ongoing changes
 - [git new-pull-request](https://www.git-town.com/commands/new-pull-request.html) -
-  create a new pull request
+  create a new proposal
 - [git ship](https://www.git-town.com/commands/ship.html) - merge a completed
   feature branch and remove it
 

@@ -17,7 +17,6 @@ require (
 	github.com/xanzy/go-gitlab v0.78.0
 	golang.org/x/oauth2 v0.4.0
 	gopkg.in/AlecAivazis/survey.v1 v1.8.8
-	gopkg.in/jarcoal/httpmock.v1 v1.0.0-20180304133419-61bcb58a0752
 )
 
 require (
