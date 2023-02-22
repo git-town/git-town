@@ -16,7 +16,7 @@ type ConnectorMergeProposalStep struct {
 	enteredEmptyCommitMessage bool
 	mergeError                error
 	mergeSha                  string
-	PullRequestNumber         int
+	ProposalNumber            int
 }
 
 func (step *ConnectorMergeProposalStep) CreateAbortStep() Step {
