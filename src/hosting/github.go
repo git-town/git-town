@@ -86,7 +86,7 @@ type GithubDriver struct {
 	log    logFn
 }
 
-func (d *GithubDriver) ProposalDetails(branch, parentBranch string) (*PullRequestInfo, error) {
+func (d *GithubDriver) ProposalDetails(branch, parentBranch string) (*Proposal, error) {
 	if d.apiToken == "" {
 		return nil, nil //nolint:nilnil // we really want to return nil here
 	}
@@ -100,7 +100,7 @@ func (d *GithubDriver) ProposalDetails(branch, parentBranch string) (*PullReques
 	if len(pullRequests) > 1 {
 		return nil, fmt.Errorf("found %d pull requests from branch %q to branch %q", len(pullRequests), branch, parentBranch)
 	}
-	return &PullRequestInfo{
+	return &Proposal{
 		CanMergeWithAPI:        true,
 		DefaultProposalMessage: d.defaultCommitMessage(pullRequests[0]),
 		ProposalNumber:         pullRequests[0].GetNumber(),

@@ -116,7 +116,7 @@ func (d *GiteaDriver) apiRetargetPullRequests(pullRequests []*gitea.PullRequest,
 	return nil
 }
 
-func (d *GiteaDriver) ProposalDetails(branch, parentBranch string) (*PullRequestInfo, error) {
+func (d *GiteaDriver) ProposalDetails(branch, parentBranch string) (*Proposal, error) {
 	if d.apiToken == "" {
 		return nil, nil //nolint:nilnil // we really want to return nil here
 	}
@@ -139,7 +139,7 @@ func (d *GiteaDriver) ProposalDetails(branch, parentBranch string) (*PullRequest
 		return nil, fmt.Errorf("found %d pull requests from branch %q to branch %q", len(pullRequests), branch, parentBranch)
 	}
 	pullRequest := pullRequests[0]
-	return &PullRequestInfo{
+	return &Proposal{
 		CanMergeWithAPI:        pullRequest.Mergeable,
 		DefaultProposalMessage: createDefaultProposalMessage(pullRequest),
 		ProposalNumber:         int(pullRequest.Index),

@@ -38,7 +38,7 @@ func NewBitbucketDriver(url giturl.Parts, config config, git gitRunner) *Bitbuck
 	}
 }
 
-func (d *BitbucketDriver) ProposalDetails(branch, parentBranch string) (*PullRequestInfo, error) {
+func (d *BitbucketDriver) ProposalDetails(branch, parentBranch string) (*Proposal, error) {
 	return nil, fmt.Errorf("BitBucket API functionality isn't implemented")
 }
 

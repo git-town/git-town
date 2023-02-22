@@ -14,7 +14,7 @@ import (
 type Driver interface {
 	// ProposalDetails loads information about the pull request of the given branch into the given parent branch
 	// from the code hosting provider.
-	ProposalDetails(branch, parentBranch string) (*PullRequestInfo, error)
+	ProposalDetails(branch, parentBranch string) (*Proposal, error)
 
 	// NewProposalURL provides the URL of the page
 	// to create a new pull request online.
@@ -60,8 +60,8 @@ type gitRunner interface {
 	ShaForBranch(string) (string, error)
 }
 
-// PullRequestInfo contains information about a pull request.
-type PullRequestInfo struct {
+// Proposal contains information about a pull request.
+type Proposal struct {
 	CanMergeWithAPI        bool
 	DefaultProposalMessage string
 	ProposalNumber         int

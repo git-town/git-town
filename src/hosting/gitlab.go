@@ -88,7 +88,7 @@ type GitlabDriver struct {
 	log    logFn
 }
 
-func (d *GitlabDriver) ProposalDetails(branch, parentBranch string) (*PullRequestInfo, error) {
+func (d *GitlabDriver) ProposalDetails(branch, parentBranch string) (*Proposal, error) {
 	if d.apiToken == "" {
 		return nil, nil //nolint:nilnil // we really want to return nil here
 	}
@@ -102,7 +102,7 @@ func (d *GitlabDriver) ProposalDetails(branch, parentBranch string) (*PullReques
 	if len(mergeRequests) > 1 {
 		return nil, fmt.Errorf("found %d merge requests from branch %q to branch %q", len(mergeRequests), branch, parentBranch)
 	}
-	return &PullRequestInfo{
+	return &Proposal{
 		CanMergeWithAPI:        true,
 		DefaultProposalMessage: d.defaultCommitMessage(mergeRequests[0]),
 		ProposalNumber:         mergeRequests[0].IID,
