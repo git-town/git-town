@@ -118,7 +118,7 @@ func parsePullRequest(pullRequest *github.PullRequest) Proposal {
 	return Proposal{
 		Number:          pullRequest.GetNumber(),
 		Title:           pullRequest.GetTitle(),
-		CanMergeWithAPI: true,
+		CanMergeWithAPI: pullRequest.GetMergeableState() == "clean",
 	}
 }
 
