@@ -6,13 +6,13 @@ import (
 	"github.com/git-town/git-town/v7/src/hosting"
 )
 
-// CreatePullRequestStep creates a new pull request for the current branch.
-type CreatePullRequestStep struct {
+// CreateProposalStep creates a new pull request for the current branch.
+type CreateProposalStep struct {
 	NoOpStep
 	Branch string
 }
 
-func (step *CreatePullRequestStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
+func (step *CreateProposalStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
 	parentBranch := repo.Config.ParentBranch(step.Branch)
 	prURL, err := connector.NewProposalURL(step.Branch, parentBranch)
 	if err != nil {
