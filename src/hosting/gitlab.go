@@ -60,7 +60,7 @@ func (c *GitLabConnector) SquashMergeProposal(number int, message string) (merge
 	return result.SHA, nil
 }
 
-func (c *GitLabConnector) UpdateChangeRequestTarget(number int, target string) error {
+func (c *GitLabConnector) UpdateProposalTarget(number int, target string) error {
 	if c.log != nil {
 		c.log("GitLab API: Updating target branch for MR !%d to %q\n", number, target)
 	}

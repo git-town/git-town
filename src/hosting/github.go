@@ -74,7 +74,7 @@ func (c *GitHubConnector) SquashMergeProposal(number int, message string) (merge
 	return result.GetSHA(), err
 }
 
-func (c *GitHubConnector) UpdateChangeRequestTarget(number int, target string) error {
+func (c *GitHubConnector) UpdateProposalTarget(number int, target string) error {
 	if c.log != nil {
 		c.log("GitHub API: updating base branch for PR #%d\n", number)
 	}

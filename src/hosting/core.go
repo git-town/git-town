@@ -55,8 +55,8 @@ type Connector interface {
 	// RepositoryURL provides the URL where the current repository can be found online.
 	RepositoryURL() string
 
-	// UpdateChangeRequestTarget updates the target branch of the given change request.
-	UpdateChangeRequestTarget(number int, target string) error
+	// UpdateProposalTarget updates the target branch of the given change request.
+	UpdateProposalTarget(number int, target string) error
 }
 
 // Proposal contains information about a change request
