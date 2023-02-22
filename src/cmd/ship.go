@@ -210,7 +210,7 @@ func shipStepList(config *shipConfig, commitMessage string, repo *git.ProdRepo) 
 	result.Append(&steps.CheckoutBranchStep{Branch: config.branchToMergeInto})
 	if config.canShipViaAPI {
 		result.Append(&steps.PushBranchStep{Branch: config.branchToShip})
-		result.Append(&steps.DriverMergePullRequestStep{
+		result.Append(&steps.ConnectorMergeProposalStep{
 			Branch:                 config.branchToShip,
 			PullRequestNumber:      config.pullRequestNumber,
 			CommitMessage:          commitMessage,

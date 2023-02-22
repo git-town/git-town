@@ -68,7 +68,7 @@ func determineStep(stepType string) steps.Step {
 	case "*DiscardOpenChangesStep":
 		return &steps.DiscardOpenChangesStep{}
 	case "*DriverMergePullRequestStep":
-		return &steps.DriverMergePullRequestStep{}
+		return &steps.ConnectorMergeProposalStep{}
 	case "*EnsureHasShippableChangesStep":
 		return &steps.EnsureHasShippableChangesStep{}
 	case "*FetchUpstreamStep":
