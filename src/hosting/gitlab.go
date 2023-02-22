@@ -40,7 +40,7 @@ func (c *GitLabConnector) ProposalForBranch(branch string) (*Proposal, error) {
 	return &changeRequest, nil
 }
 
-func (c *GitLabConnector) ChangeRequests() ([]Proposal, error) {
+func (c *GitLabConnector) Proposals() ([]Proposal, error) {
 	opts := &gitlab.ListProjectMergeRequestsOptions{
 		State: gitlab.String("opened"),
 	}

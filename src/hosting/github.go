@@ -42,7 +42,7 @@ func (c *GitHubConnector) ProposalForBranch(branch string) (*Proposal, error) {
 	return parseGithubPullRequest(pullRequests[0]), nil
 }
 
-func (c *GitHubConnector) ChangeRequests() ([]Proposal, error) {
+func (c *GitHubConnector) Proposals() ([]Proposal, error) {
 	pullRequests, _, err := c.client.PullRequests.List(context.Background(), c.owner, c.repository, &github.PullRequestListOptions{
 		State: "open",
 	})
