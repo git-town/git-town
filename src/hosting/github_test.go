@@ -83,12 +83,12 @@ func TestNewGithubDriver(t *testing.T) {
 
 //nolint:paralleltest  // mocks HTTP
 func TestGithubDriver(t *testing.T) {
-	t.Run(".LoadPullRequestInfo()", func(t *testing.T) {
+	t.Run(".ProposalDetails()", func(t *testing.T) {
 		t.Run("with token", func(t *testing.T) {
 			driver, teardown := setupGithubDriver(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", githubCurrOpen, httpmock.NewStringResponder(200, `[{"number": 1, "title": "my title" }]`))
-			prInfo, err := driver.LoadPullRequestInfo("feature", "main")
+			prInfo, err := driver.ProposalDetails("feature", "main")
 			assert.NoError(t, err)
 			assert.True(t, prInfo.CanMergeWithAPI)
 			assert.Equal(t, "my title (#1)", prInfo.DefaultCommitMessage)
@@ -98,7 +98,7 @@ func TestGithubDriver(t *testing.T) {
 		t.Run("empty token", func(t *testing.T) {
 			driver, teardown := setupGithubDriver(t, "")
 			defer teardown()
-			prInfo, err := driver.LoadPullRequestInfo("feature", "main")
+			prInfo, err := driver.ProposalDetails("feature", "main")
 			assert.Nil(t, err)
 			assert.Nil(t, prInfo)
 		})
@@ -107,7 +107,7 @@ func TestGithubDriver(t *testing.T) {
 			driver, teardown := setupGithubDriver(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", githubCurrOpen, httpmock.NewStringResponder(404, ""))
-			_, err := driver.LoadPullRequestInfo("feature", "main")
+			_, err := driver.ProposalDetails("feature", "main")
 			assert.Error(t, err)
 		})
 
@@ -115,7 +115,7 @@ func TestGithubDriver(t *testing.T) {
 			driver, teardown := setupGithubDriver(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", githubCurrOpen, httpmock.NewStringResponder(200, "[]"))
-			_, err := driver.LoadPullRequestInfo("feature", "main")
+			_, err := driver.ProposalDetails("feature", "main")
 			assert.ErrorContains(t, err, "no pull request from branch \"feature\" to branch \"main\" found")
 		})
 
@@ -123,7 +123,7 @@ func TestGithubDriver(t *testing.T) {
 			driver, teardown := setupGithubDriver(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", githubCurrOpen, httpmock.NewStringResponder(200, `[{"number": 1}, {"number": 2}]`))
-			_, err := driver.LoadPullRequestInfo("feature", "main")
+			_, err := driver.ProposalDetails("feature", "main")
 			assert.ErrorContains(t, err, "found 2 pull requests from branch \"feature\" to branch \"main\"")
 		})
 	})

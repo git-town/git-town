@@ -116,7 +116,7 @@ func (d *GiteaDriver) apiRetargetPullRequests(pullRequests []*gitea.PullRequest,
 	return nil
 }
 
-func (d *GiteaDriver) LoadPullRequestInfo(branch, parentBranch string) (*PullRequestInfo, error) {
+func (d *GiteaDriver) ProposalDetails(branch, parentBranch string) (*PullRequestInfo, error) {
 	if d.apiToken == "" {
 		return nil, nil //nolint:nilnil // we really want to return nil here
 	}

@@ -94,12 +94,12 @@ func TestNewGitlabDriver(t *testing.T) {
 
 //nolint:paralleltest  // mocks HTTP
 func TestGitLab(t *testing.T) {
-	t.Run(".LoadPullRequestInfo()", func(t *testing.T) {
+	t.Run(".ProposalDetails()", func(t *testing.T) {
 		t.Run("happy path", func(t *testing.T) {
 			driver, teardown := setupGitlabDriver(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", gitlabCurrOpen, httpmock.NewStringResponder(200, `[{"iid": 1, "title": "my title"}]`))
-			prInfo, err := driver.LoadPullRequestInfo("feature", "main")
+			prInfo, err := driver.ProposalDetails("feature", "main")
 			assert.NoError(t, err)
 			assert.True(t, prInfo.CanMergeWithAPI)
 			assert.Equal(t, "my title (!1)", prInfo.DefaultCommitMessage)
@@ -109,7 +109,7 @@ func TestGitLab(t *testing.T) {
 		t.Run("empty Gitlab token", func(t *testing.T) {
 			driver, teardown := setupGitlabDriver(t, "")
 			defer teardown()
-			prInfo, err := driver.LoadPullRequestInfo("feature", "main")
+			prInfo, err := driver.ProposalDetails("feature", "main")
 			assert.Nil(t, err)
 			assert.Nil(t, prInfo)
 		})
@@ -118,7 +118,7 @@ func TestGitLab(t *testing.T) {
 			driver, teardown := setupGitlabDriver(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", gitlabCurrOpen, httpmock.NewStringResponder(404, ""))
-			_, err := driver.LoadPullRequestInfo("feature", "main")
+			_, err := driver.ProposalDetails("feature", "main")
 			assert.Error(t, err)
 		})
 
@@ -126,7 +126,7 @@ func TestGitLab(t *testing.T) {
 			driver, teardown := setupGitlabDriver(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", gitlabCurrOpen, httpmock.NewStringResponder(200, "[]"))
-			_, err := driver.LoadPullRequestInfo("feature", "main")
+			_, err := driver.ProposalDetails("feature", "main")
 			assert.ErrorContains(t, err, "no merge request from branch \"feature\" to branch \"main\" found")
 		})
 
@@ -134,7 +134,7 @@ func TestGitLab(t *testing.T) {
 			driver, teardown := setupGitlabDriver(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", gitlabCurrOpen, httpmock.NewStringResponder(200, `[{"iid": 1}, {"iid": 2}]`))
-			_, err := driver.LoadPullRequestInfo("feature", "main")
+			_, err := driver.ProposalDetails("feature", "main")
 			assert.ErrorContains(t, err, "found 2 merge requests from branch \"feature\" to branch \"main\"")
 		})
 	})

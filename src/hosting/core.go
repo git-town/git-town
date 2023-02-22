@@ -12,9 +12,9 @@ import (
 
 // Driver defines the structure of drivers for the different code hosting services.
 type Driver interface {
-	// LoadPullRequestInfo loads information about the pull request of the given branch into the given parent branch
+	// ProposalDetails loads information about the pull request of the given branch into the given parent branch
 	// from the code hosting provider.
-	LoadPullRequestInfo(branch, parentBranch string) (*PullRequestInfo, error)
+	ProposalDetails(branch, parentBranch string) (*PullRequestInfo, error)
 
 	// NewPullRequestURL provides the URL of the page
 	// to create a new pull request online.

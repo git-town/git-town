@@ -67,12 +67,12 @@ func TestNewGiteaConfig(t *testing.T) {
 
 //nolint:paralleltest  // mocks HTTP
 func TestGitea(t *testing.T) {
-	t.Run(".LoadPullRequestInfo()", func(t *testing.T) {
+	t.Run(".ProposalDetails()", func(t *testing.T) {
 		t.Run("happy path", func(t *testing.T) {
 			driver, teardown := setupGiteaDriver(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", giteaCurrOpen, httpmock.NewStringResponder(200, `[{"number": 1, "title": "my title", "mergeable": true, "base": {"label": "main"}, "head": {"label": "git-town/feature"} }]`))
-			prInfo, err := driver.LoadPullRequestInfo("feature", "main")
+			prInfo, err := driver.ProposalDetails("feature", "main")
 			assert.NoError(t, err)
 			assert.True(t, prInfo.CanMergeWithAPI)
 			assert.Equal(t, "my title (#1)", prInfo.DefaultCommitMessage)
@@ -82,7 +82,7 @@ func TestGitea(t *testing.T) {
 		t.Run("empty Git token", func(t *testing.T) {
 			driver, teardown := setupGiteaDriver(t, "")
 			defer teardown()
-			prInfo, err := driver.LoadPullRequestInfo("feature", "main")
+			prInfo, err := driver.ProposalDetails("feature", "main")
 			assert.Nil(t, err)
 			assert.Nil(t, prInfo)
 		})
@@ -91,7 +91,7 @@ func TestGitea(t *testing.T) {
 			driver, teardown := setupGiteaDriver(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", giteaCurrOpen, httpmock.NewStringResponder(404, ""))
-			_, err := driver.LoadPullRequestInfo("feature", "main")
+			_, err := driver.ProposalDetails("feature", "main")
 			assert.Error(t, err)
 		})
 
@@ -99,7 +99,7 @@ func TestGitea(t *testing.T) {
 			driver, teardown := setupGiteaDriver(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", giteaCurrOpen, httpmock.NewStringResponder(200, "[]"))
-			_, err := driver.LoadPullRequestInfo("feature", "main")
+			_, err := driver.ProposalDetails("feature", "main")
 			assert.ErrorContains(t, err, "no pull request from branch \"feature\" to branch \"main\" found")
 		})
 
@@ -107,7 +107,7 @@ func TestGitea(t *testing.T) {
 			driver, teardown := setupGiteaDriver(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", giteaCurrOpen, httpmock.NewStringResponder(200, `[{"number": 1, "title": "title 1", "mergeable": true, "base": {"label": "main"}, "head": {"label": "git-town/feature"} },{"number": 2, "title": "title 2", "mergeable": true, "base": {"label": "main"}, "head": {"label": "git-town/feature"} }]`))
-			_, err := driver.LoadPullRequestInfo("feature", "main")
+			_, err := driver.ProposalDetails("feature", "main")
 			assert.ErrorContains(t, err, "found 2 pull requests from branch \"feature\" to branch \"main\"")
 		})
 	})
