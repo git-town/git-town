@@ -70,7 +70,7 @@ type Proposal struct {
 	// textual title of the proposal
 	Title string
 
-	// whether this proposal can be merged via the API now
+	// whether this proposal can be merged via the API
 	CanMergeWithAPI bool
 }
 
