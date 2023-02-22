@@ -16,7 +16,8 @@ import (
 type GitHubConnector struct {
 	client *github.Client
 	Config
-	log logFn
+	mainBranch string
+	log        logFn
 }
 
 func (c *GitHubConnector) ChangeRequestDetails(number int) (*ChangeRequestInfo, error) {
@@ -116,7 +117,6 @@ func NewGithubConnector(url giturl.Parts, gitConfig gitConfig, log logFn) *GitHu
 	hostingConfig := Config{
 		apiToken:   gitConfig.GitHubToken(),
 		hostname:   url.Host,
-		mainBranch: gitConfig.MainBranch(),
 		originURL:  gitConfig.OriginURL(),
 		owner:      url.Org,
 		repository: url.Repo,
@@ -124,9 +124,10 @@ func NewGithubConnector(url giturl.Parts, gitConfig gitConfig, log logFn) *GitHu
 	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: hostingConfig.apiToken})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
 	return &GitHubConnector{
-		client: github.NewClient(httpClient),
-		Config: hostingConfig,
-		log:    log,
+		client:     github.NewClient(httpClient),
+		Config:     hostingConfig,
+		mainBranch: gitConfig.MainBranch(),
+		log:        log,
 	}
 }
 
