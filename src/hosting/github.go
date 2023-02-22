@@ -46,7 +46,7 @@ func (c *GitHubConnector) HostingServiceName() string {
 	return "GitHub"
 }
 
-func (c *GitHubConnector) NewChangeRequestURL(branch, parentBranch string) (string, error) {
+func (c *GitHubConnector) NewProposalURL(branch, parentBranch string) (string, error) {
 	toCompare := branch
 	if parentBranch != c.mainBranch {
 		toCompare = parentBranch + "..." + branch

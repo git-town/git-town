@@ -125,7 +125,7 @@ func (c *GitLabConfig) HostingServiceName() string {
 	return "GitLab"
 }
 
-func (c *GitLabConfig) NewChangeRequestURL(branch, parentBranch string) (string, error) {
+func (c *GitLabConfig) NewProposalURL(branch, parentBranch string) (string, error) {
 	query := url.Values{}
 	query.Add("merge_request[source_branch]", branch)
 	query.Add("merge_request[target_branch]", parentBranch)

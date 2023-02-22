@@ -51,7 +51,7 @@ func (c *BitbucketConnector) HostingServiceName() string {
 	return "Bitbucket"
 }
 
-func (c *BitbucketConnector) NewChangeRequestURL(branch, parentBranch string) (string, error) {
+func (c *BitbucketConnector) NewProposalURL(branch, parentBranch string) (string, error) {
 	query := url.Values{}
 	branchSha, err := c.git.ShaForBranch(branch)
 	if err != nil {

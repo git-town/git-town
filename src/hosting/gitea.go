@@ -50,7 +50,7 @@ func (c *GiteaConnector) HostingServiceName() string {
 	return "Gitea"
 }
 
-func (c *GiteaConnector) NewChangeRequestURL(branch, parentBranch string) (string, error) {
+func (c *GiteaConnector) NewProposalURL(branch, parentBranch string) (string, error) {
 	toCompare := parentBranch + "..." + branch
 	return fmt.Sprintf("%s/compare/%s", c.RepositoryURL(), url.PathEscape(toCompare)), nil
 }

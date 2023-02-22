@@ -48,9 +48,9 @@ type Connector interface {
 	// using the given commit message.
 	SquashMergeChangeRequest(number int, message string) (mergeSHA string, err error)
 
-	// NewChangeRequestURL provides the URL of the page
+	// NewProposalURL provides the URL of the page
 	// to create a new pull request online.
-	NewChangeRequestURL(branch, parentBranch string) (string, error)
+	NewProposalURL(branch, parentBranch string) (string, error)
 
 	// RepositoryURL provides the URL where the current repository can be found online.
 	RepositoryURL() string
