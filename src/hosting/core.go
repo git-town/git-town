@@ -10,12 +10,21 @@ import (
 	"github.com/git-town/git-town/v7/src/giturl"
 )
 
-// Config contains the information needed for platform connections.
+// Config contains the information needed for all platform connectors.
 type Config struct {
-	apiToken   string
-	hostname   string
-	originURL  string
-	owner      string
+	// the bearer token to authenticate with the API
+	apiToken string
+
+	// hostname override
+	hostname string
+
+	// where the "origin" remote points to
+	originURL string
+
+	// the organization within the hosting platform that owns the repo
+	owner string
+
+	// repo name within the organization
 	repository string
 }
 
