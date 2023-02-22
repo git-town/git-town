@@ -195,13 +195,13 @@ please ship %q first`, strings.Join(ancestorsWithoutMainOrPerennial, ", "), olde
 }
 
 func shipStepList(config *shipConfig, commitMessage string, repo *git.ProdRepo) (runstate.StepList, error) {
-	syncSteps, err := syncBranchSteps(config.branchToMergeInto, true, repo)
+	// sync the parent branch
+	result, err := syncBranchSteps(config.branchToMergeInto, true, repo)
 	if err != nil {
 		return runstate.StepList{}, err
 	}
-	result := runstate.StepList{}
-	result.AppendList(syncSteps)
-	syncSteps, err = syncBranchSteps(config.branchToShip, false, repo)
+	// sync the branch to ship locally only
+	syncSteps, err := syncBranchSteps(config.branchToShip, false, repo)
 	if err != nil {
 		return runstate.StepList{}, err
 	}
