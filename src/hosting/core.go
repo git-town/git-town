@@ -12,7 +12,7 @@ import (
 
 // Config contains the information needed for all platform connectors.
 type Config struct {
-	// the bearer token to authenticate with the API
+	// bearer token to authenticate with the API
 	apiToken string
 
 	// hostname override
