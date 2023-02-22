@@ -106,7 +106,7 @@ type gitRunner interface {
 // logFn defines a function with fmt.Printf API that Connector instances can use to give updates on activities they do.
 type logFn func(string, ...interface{})
 
-// NewConnector provides an instance of the code hosting connector to use based on the git config.
+// NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
 //
 //nolint:ireturn,nolintlint
 func NewConnector(config gitConfig, git gitRunner, log logFn) (Connector, error) {
