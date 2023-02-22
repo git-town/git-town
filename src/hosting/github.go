@@ -15,7 +15,7 @@ import (
 // via the GitHub API.
 type GitHubConnector struct {
 	client *github.Client
-	GitHubConfig
+	Config
 	log logFn
 }
 
@@ -53,6 +53,26 @@ func (c *GitHubConnector) ChangeRequests() ([]ChangeRequestInfo, error) {
 		result[p] = *parseGithubPullRequest(pullRequests[p])
 	}
 	return result, nil
+}
+
+func (c *GitHubConnector) DefaultCommitMessage(crInfo ChangeRequestInfo) string {
+	return fmt.Sprintf("%s (#%d)", crInfo.Title, crInfo.Number)
+}
+
+func (c *GitHubConnector) HostingServiceName() string {
+	return "GitHub"
+}
+
+func (c *GitHubConnector) NewChangeRequestURL(branch, parentBranch string) (string, error) {
+	toCompare := branch
+	if parentBranch != c.mainBranch {
+		toCompare = parentBranch + "..." + branch
+	}
+	return fmt.Sprintf("%s/compare/%s?expand=1", c.RepositoryURL(), url.PathEscape(toCompare)), nil
+}
+
+func (c *GitHubConnector) RepositoryURL() string {
+	return fmt.Sprintf("https://%s/%s/%s", c.hostname, c.owner, c.repository)
 }
 
 //nolint:nonamedreturns
@@ -104,43 +124,11 @@ func NewGithubConnector(url giturl.Parts, gitConfig gitConfig, log logFn) *GitHu
 	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: hostingConfig.apiToken})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
 	return &GitHubConnector{
-		client:       github.NewClient(httpClient),
-		GitHubConfig: GitHubConfig{Config: hostingConfig},
-		log:          log,
+		client: github.NewClient(httpClient),
+		Config: hostingConfig,
+		log:    log,
 	}
 }
-
-// *************************************
-// GitHubConfig
-// *************************************
-
-type GitHubConfig struct {
-	Config
-}
-
-func (c *GitHubConfig) DefaultCommitMessage(crInfo ChangeRequestInfo) string {
-	return fmt.Sprintf("%s (#%d)", crInfo.Title, crInfo.Number)
-}
-
-func (c *GitHubConfig) HostingServiceName() string {
-	return "GitHub"
-}
-
-func (c *GitHubConfig) NewChangeRequestURL(branch, parentBranch string) (string, error) {
-	toCompare := branch
-	if parentBranch != c.mainBranch {
-		toCompare = parentBranch + "..." + branch
-	}
-	return fmt.Sprintf("%s/compare/%s?expand=1", c.RepositoryURL(), url.PathEscape(toCompare)), nil
-}
-
-func (c *GitHubConfig) RepositoryURL() string {
-	return fmt.Sprintf("https://%s/%s/%s", c.hostname, c.owner, c.repository)
-}
-
-// *************************************
-// Helper functions
-// *************************************
 
 // parseGithubPullRequest extracts ChangeRequestInfo from the given GitHub pull-request data.
 func parseGithubPullRequest(pullRequest *github.PullRequest) *ChangeRequestInfo {
