@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNewBitbucketDriver(t *testing.T) {
+func TestNewBitbucketConnector(t *testing.T) {
 	t.Parallel()
 	t.Run("normal example", func(t *testing.T) {
 		t.Parallel()

@@ -149,7 +149,7 @@ func (gt *GitTown) HasParentBranch(branch string) bool {
 	return gt.ParentBranch(branch) != ""
 }
 
-// HostingService provides the name of the code hosting driver to use.
+// HostingService provides the name of the code hosting connector to use.
 func (gt *GitTown) HostingService() string {
 	return gt.Storage.LocalOrGlobalConfigValue(CodeHostingDriver)
 }

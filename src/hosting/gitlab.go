@@ -17,11 +17,11 @@ type GitLabConnector struct {
 	log logFn
 }
 
-func (c *GitLabConnector) ChangeRequestDetails(number int) (*ChangeRequestInfo, error) {
+func (c *GitLabConnector) ProposalDetails(number int) (*Proposal, error) {
 	return nil, fmt.Errorf("TODO: implement")
 }
 
-func (c *GitLabConnector) ChangeRequestForBranch(branch string) (*ChangeRequestInfo, error) {
+func (c *GitLabConnector) ProposalForBranch(branch string) (*Proposal, error) {
 	opts := &gitlab.ListProjectMergeRequestsOptions{
 		State:        gitlab.String("opened"),
 		SourceBranch: gitlab.String(branch),
@@ -40,12 +40,12 @@ func (c *GitLabConnector) ChangeRequestForBranch(branch string) (*ChangeRequestI
 	return &changeRequest, nil
 }
 
-func (c *GitLabConnector) ChangeRequests() ([]ChangeRequestInfo, error) {
+func (c *GitLabConnector) Proposals() ([]Proposal, error) {
 	opts := &gitlab.ListProjectMergeRequestsOptions{
 		State: gitlab.String("opened"),
 	}
 	mergeRequests, _, err := c.client.MergeRequests.ListProjectMergeRequests(c.projectPath(), opts)
-	result := make([]ChangeRequestInfo, len(mergeRequests))
+	result := make([]Proposal, len(mergeRequests))
 	if err != nil {
 		return result, err
 	}
@@ -56,7 +56,7 @@ func (c *GitLabConnector) ChangeRequests() ([]ChangeRequestInfo, error) {
 }
 
 //nolint:nonamedreturns  // return value isn't obvious from function name
-func (c *GitLabConnector) SquashMergeChangeRequest(number int, message string) (mergeSHA string, err error) {
+func (c *GitLabConnector) SquashMergeProposal(number int, message string) (mergeSHA string, err error) {
 	// TODO: update PR target? Probably better to check the target here,
 	// warn if it is different on GitLab than it is locally,
 	// and update and merge only if a "--force" option is given.
@@ -79,7 +79,7 @@ func (c *GitLabConnector) SquashMergeChangeRequest(number int, message string) (
 	return result.SHA, nil
 }
 
-func (c *GitLabConnector) UpdateChangeRequestTarget(number int, target string) error {
+func (c *GitLabConnector) UpdateProposalTarget(number int, target string) error {
 	if c.log != nil {
 		c.log("GitLab API: Updating target branch for MR !%d to %q\n", number, target)
 	}
@@ -112,12 +112,12 @@ func NewGitlabConnector(url giturl.Parts, config gitConfig, log logFn) (*GitLabC
 	if err != nil {
 		return nil, err
 	}
-	driver := GitLabConnector{
+	connector := GitLabConnector{
 		client:       client,
 		GitLabConfig: gitlabConfig,
 		log:          log,
 	}
-	return &driver, nil
+	return &connector, nil
 }
 
 // *************************************
@@ -128,7 +128,7 @@ type GitLabConfig struct {
 	Config
 }
 
-func (c *GitLabConfig) DefaultCommitMessage(changeRequest ChangeRequestInfo) string {
+func (c *GitLabConfig) DefaultProposalMessage(changeRequest Proposal) string {
 	return fmt.Sprintf("%s (!%d)", changeRequest.Title, changeRequest.Number)
 }
 
@@ -144,7 +144,7 @@ func (c *GitLabConfig) HostingServiceName() string {
 	return "GitLab"
 }
 
-func (c *GitLabConfig) NewChangeRequestURL(branch, parentBranch string) (string, error) {
+func (c *GitLabConfig) NewProposalURL(branch, parentBranch string) (string, error) {
 	query := url.Values{}
 	query.Add("merge_request[source_branch]", branch)
 	query.Add("merge_request[target_branch]", parentBranch)
@@ -159,8 +159,8 @@ func (c *GitLabConfig) RepositoryURL() string {
 // Helper functions
 // *************************************
 
-func parseMergeRequest(mergeRequest *gitlab.MergeRequest) ChangeRequestInfo {
-	return ChangeRequestInfo{
+func parseMergeRequest(mergeRequest *gitlab.MergeRequest) Proposal {
+	return Proposal{
 		Number:          mergeRequest.IID,
 		Title:           mergeRequest.Title,
 		CanMergeWithAPI: true,

@@ -27,7 +27,7 @@ When using SSH identities, run
 "git config %s <HOSTNAME>"
 where HOSTNAME matches what is in your ssh config file.`, config.CodeHostingDriver, config.CodeHostingOriginHostname),
 		Run: func(cmd *cobra.Command, args []string) {
-			connector, err := hosting.NewConnector(&repo.Config, &repo.Silent, cli.PrintDriverAction)
+			connector, err := hosting.NewConnector(&repo.Config, &repo.Silent, cli.PrintConnectorAction)
 			if err != nil {
 				cli.Exit(err)
 			}

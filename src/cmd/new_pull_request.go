@@ -43,7 +43,7 @@ where hostname matches what is in your ssh config file.`, config.CodeHostingDriv
 			if err != nil {
 				cli.Exit(err)
 			}
-			connector, err := hosting.NewConnector(&repo.Config, &repo.Silent, cli.PrintDriverAction)
+			connector, err := hosting.NewConnector(&repo.Config, &repo.Silent, cli.PrintConnectorAction)
 			if err != nil {
 				cli.Exit(err)
 			}
