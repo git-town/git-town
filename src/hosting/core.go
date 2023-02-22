@@ -15,6 +15,7 @@ import (
 // They all conform to this interface.
 type Connector interface {
 	// ProposalForBranch provides details about the proposal for the given branch.
+	// Returns nil if no proposal exists.
 	ProposalForBranch(branch string) (*Proposal, error)
 
 	// DefaultProposalMessage provides the commit message template to use
