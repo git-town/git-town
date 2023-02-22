@@ -59,7 +59,7 @@ func (c *GitHubConnector) RepositoryURL() string {
 }
 
 //nolint:nonamedreturns
-func (c *GitHubConnector) SquashMergeChangeRequest(number int, message string) (mergeSHA string, err error) {
+func (c *GitHubConnector) SquashMergeProposal(number int, message string) (mergeSHA string, err error) {
 	if number == 0 {
 		return "", fmt.Errorf("no pull request number given")
 	}

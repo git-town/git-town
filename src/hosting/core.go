@@ -44,9 +44,9 @@ type Connector interface {
 	// supported by the respective connector implementation.
 	HostingServiceName() string
 
-	// SquashMergeChangeRequest squash-merges the change request with the given number
+	// SquashMergeProposal squash-merges the change request with the given number
 	// using the given commit message.
-	SquashMergeChangeRequest(number int, message string) (mergeSHA string, err error)
+	SquashMergeProposal(number int, message string) (mergeSHA string, err error)
 
 	// NewProposalURL provides the URL of the page
 	// to create a new pull request online.

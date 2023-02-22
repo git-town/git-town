@@ -67,7 +67,7 @@ func (c *BitbucketConnector) RepositoryURL() string {
 }
 
 //nolint:nonamedreturns
-func (c *BitbucketConnector) SquashMergeChangeRequest(number int, message string) (mergeSHA string, err error) {
+func (c *BitbucketConnector) SquashMergeProposal(number int, message string) (mergeSHA string, err error) {
 	return "", errors.New("shipping pull requests via the Bitbucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues")
 }
 
