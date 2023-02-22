@@ -36,9 +36,9 @@ type Connector interface {
 	// ProposalForBranch provides details about the proposal for the given branch.
 	ProposalForBranch(branch string) (*Proposal, error)
 
-	// DefaultCommitMessage provides the commit message template to use
+	// DefaultProposalMessage provides the commit message template to use
 	// for proposals on the respective hosting platform.
-	DefaultCommitMessage(proposal Proposal) string
+	DefaultProposalMessage(proposal Proposal) string
 
 	// HostingServiceName provides the name of the code hosting service
 	// supported by the respective connector implementation.

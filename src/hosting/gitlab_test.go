@@ -77,7 +77,7 @@ func TestNewGitlabConnector(t *testing.T) {
 
 //nolint:paralleltest  // mocks HTTP
 func TestGitlabConnector(t *testing.T) {
-	t.Run("TestDefaultCommitMessage", func(t *testing.T) {
+	t.Run("TestDefaultProposalMessage", func(t *testing.T) {
 		give := hosting.Proposal{
 			Number:          1,
 			Title:           "my title",
@@ -85,7 +85,7 @@ func TestGitlabConnector(t *testing.T) {
 		}
 		want := "my title (!1)"
 		config := hosting.GitLabConfig{}
-		have := config.DefaultCommitMessage(give)
+		have := config.DefaultProposalMessage(give)
 		assert.Equal(t, want, have)
 	})
 }

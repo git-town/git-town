@@ -38,7 +38,7 @@ func (c *GitHubConnector) ProposalForBranch(branch string) (*Proposal, error) {
 	return &changeRequest, nil
 }
 
-func (c *GitHubConnector) DefaultCommitMessage(proposal Proposal) string {
+func (c *GitHubConnector) DefaultProposalMessage(proposal Proposal) string {
 	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 

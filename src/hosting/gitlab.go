@@ -109,7 +109,7 @@ type GitLabConfig struct {
 	Config
 }
 
-func (c *GitLabConfig) DefaultCommitMessage(changeRequest Proposal) string {
+func (c *GitLabConfig) DefaultProposalMessage(changeRequest Proposal) string {
 	return fmt.Sprintf("%s (!%d)", changeRequest.Title, changeRequest.Number)
 }
 

@@ -42,7 +42,7 @@ func (c *GiteaConnector) ProposalForBranch(branch string) (*Proposal, error) {
 	}, nil
 }
 
-func (c *GiteaConnector) DefaultCommitMessage(proposal Proposal) string {
+func (c *GiteaConnector) DefaultProposalMessage(proposal Proposal) string {
 	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 

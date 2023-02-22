@@ -159,7 +159,7 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 		}
 		if prInfo != nil {
 			canShipWithDriver = prInfo.CanMergeWithAPI
-			defaultCommitMessage = connector.DefaultCommitMessage(*prInfo)
+			defaultCommitMessage = connector.DefaultProposalMessage(*prInfo)
 			pullRequestNumber = prInfo.Number
 		}
 	}
@@ -211,10 +211,10 @@ func shipStepList(config *shipConfig, commitMessage string, repo *git.ProdRepo) 
 	if config.canShipWithDriver {
 		result.Append(&steps.PushBranchStep{Branch: config.branchToShip})
 		result.Append(&steps.DriverMergePullRequestStep{
-			Branch:               config.branchToShip,
-			PullRequestNumber:    config.pullRequestNumber,
-			CommitMessage:        commitMessage,
-			DefaultCommitMessage: config.defaultCommitMessage,
+			Branch:                 config.branchToShip,
+			PullRequestNumber:      config.pullRequestNumber,
+			CommitMessage:          commitMessage,
+			DefaultProposalMessage: config.defaultCommitMessage,
 		})
 		result.Append(&steps.PullBranchStep{})
 	} else {

@@ -43,7 +43,7 @@ func (c *BitbucketConnector) ProposalForBranch(branch string) (*Proposal, error)
 	return nil, fmt.Errorf("BitBucket API functionality isn't implemented yet")
 }
 
-func (c *BitbucketConnector) DefaultCommitMessage(proposal Proposal) string {
+func (c *BitbucketConnector) DefaultProposalMessage(proposal Proposal) string {
 	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
 }
 

@@ -12,7 +12,7 @@ type DriverMergePullRequestStep struct {
 	NoOpStep
 	Branch                    string
 	CommitMessage             string
-	DefaultCommitMessage      string
+	DefaultProposalMessage    string
 	enteredEmptyCommitMessage bool
 	mergeError                error
 	mergeSha                  string
@@ -48,7 +48,7 @@ func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo, connector hostin
 		if err != nil {
 			return err
 		}
-		err = repo.Silent.CommentOutSquashCommitMessage(step.DefaultCommitMessage + "\n\n")
+		err = repo.Silent.CommentOutSquashCommitMessage(step.DefaultProposalMessage + "\n\n")
 		if err != nil {
 			return fmt.Errorf("cannot comment out the squash commit message: %w", err)
 		}

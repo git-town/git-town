@@ -51,7 +51,7 @@ func TestNewGithubDriver(t *testing.T) {
 
 //nolint:paralleltest  // mocks HTTP
 func TestGithubDriver(t *testing.T) {
-	t.Run("DefaultCommitMessage", func(t *testing.T) {
+	t.Run("DefaultProposalMessage", func(t *testing.T) {
 		give := hosting.Proposal{
 			Number:          1,
 			Title:           "my title",
@@ -59,7 +59,7 @@ func TestGithubDriver(t *testing.T) {
 		}
 		want := "my title (#1)"
 		connector := hosting.GitHubConnector{}
-		have := connector.DefaultCommitMessage(give)
+		have := connector.DefaultProposalMessage(give)
 		assert.Equal(t, want, have)
 	})
 }
