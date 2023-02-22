@@ -14,7 +14,6 @@ import (
 type Config struct {
 	apiToken   string
 	hostname   string
-	mainBranch string
 	originURL  string
 	owner      string
 	repository string

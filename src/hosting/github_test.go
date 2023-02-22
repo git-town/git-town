@@ -71,7 +71,7 @@ func TestNewGithubDriver(t *testing.T) {
 //nolint:paralleltest  // mocks HTTP
 func TestGithubDriver(t *testing.T) {
 	t.Run("ChangeRequestForBranch", func(t *testing.T) {
-		t.Run("with token", func(t *testing.T) {
+		t.Run("happy path", func(t *testing.T) {
 			driver, teardown := setupGithubDriver(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", githubCurrOpen, httpmock.NewStringResponder(200, `[{"number": 1, "title": "my title" }]`))
