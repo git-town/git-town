@@ -10,25 +10,6 @@ import (
 	"github.com/git-town/git-town/v7/src/giturl"
 )
 
-// Config contains the information needed for all platform connectors.
-type Config struct {
-	// bearer token to authenticate with the API
-	apiToken string
-
-	// hostname override
-	hostname string
-
-	// where the "origin" remote points to
-	originURL string
-
-	// the organization within the hosting platform that owns the repo
-	// TODO: rename no "organization"
-	owner string
-
-	// repo name within the organization
-	repository string
-}
-
 // Connector describes the activities that Git Town performs on code hosting platforms via their API.
 // Individual implementations exist to talk to specific hosting platforms.
 // They all conform to this interface.
@@ -57,6 +38,25 @@ type Connector interface {
 
 	// UpdateProposalTarget updates the target branch of the given proposal.
 	UpdateProposalTarget(number int, target string) error
+}
+
+// Config contains the information needed for all platform connectors.
+type Config struct {
+	// bearer token to authenticate with the API
+	apiToken string
+
+	// hostname override
+	hostname string
+
+	// where the "origin" remote points to
+	originURL string
+
+	// the organization within the hosting platform that owns the repo
+	// TODO: rename no "organization"
+	owner string
+
+	// repo name within the organization
+	repository string
 }
 
 // Proposal contains information about a change request
