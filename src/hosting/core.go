@@ -14,9 +14,9 @@ import (
 // Individual implementations exist to talk to specific hosting platforms.
 // They all conform to this interface.
 type Connector interface {
-	// ProposalForBranch provides details about the proposal for the given branch.
+	// ProposalDetails provides details about the proposal for the given branch.
 	// Returns nil if no proposal exists.
-	ProposalForBranch(branch string) (*Proposal, error)
+	ProposalDetails(branch string) (*Proposal, error)
 
 	// DefaultProposalMessage provides the text that the form for creating new proposals
 	// on the respective hosting platform is prepopulated with.

@@ -20,7 +20,7 @@ type GitHubConnector struct {
 	log        logFn
 }
 
-func (c *GitHubConnector) ProposalForBranch(branch string) (*Proposal, error) {
+func (c *GitHubConnector) ProposalDetails(branch string) (*Proposal, error) {
 	pullRequests, _, err := c.client.PullRequests.List(context.Background(), c.owner, c.repository, &github.PullRequestListOptions{
 		Head:  c.owner + ":" + branch,
 		State: "open",

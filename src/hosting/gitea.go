@@ -16,7 +16,7 @@ type GiteaConnector struct {
 	log logFn
 }
 
-func (c *GiteaConnector) ProposalForBranch(branch string) (*Proposal, error) {
+func (c *GiteaConnector) ProposalDetails(branch string) (*Proposal, error) {
 	openPullRequests, err := c.client.ListRepoPullRequests(c.owner, c.repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{
 			PageSize: 50,
