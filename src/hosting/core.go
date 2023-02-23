@@ -17,7 +17,7 @@ type Driver interface {
 	ProposalDetails(branch, parentBranch string) (*Proposal, error)
 
 	// NewProposalURL provides the URL of the page
-	// to create a new pull request online.
+	// to create a new proposal online.
 	NewProposalURL(branch, parentBranch string) (string, error)
 
 	// SquashMergeProposal merges the pull request through the hosting service API.
