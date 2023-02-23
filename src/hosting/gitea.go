@@ -12,7 +12,7 @@ import (
 
 type GiteaConnector struct {
 	client *gitea.Client
-	Config
+	CommonConfig
 	log logFn
 }
 
@@ -109,7 +109,7 @@ func NewGiteaConnector(url giturl.Parts, config gitConfig, log logFn) *GiteaConn
 	giteaClient := gitea.NewClientWithHTTP(fmt.Sprintf("https://%s", hostname), httpClient)
 	return &GiteaConnector{
 		client: giteaClient,
-		Config: Config{
+		CommonConfig: CommonConfig{
 			apiToken:   apiToken,
 			hostname:   hostname,
 			originURL:  config.OriginURL(),

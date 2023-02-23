@@ -11,7 +11,7 @@ import (
 
 // BitbucketConnector provides access to the API of Bitbucket installations.
 type BitbucketConnector struct {
-	Config
+	CommonConfig
 	organization string
 	git          gitRunner
 }
@@ -27,7 +27,7 @@ func NewBitbucketConnector(url giturl.Parts, gitConfig gitConfig, git gitRunner)
 		return nil
 	}
 	return &BitbucketConnector{
-		Config: Config{
+		CommonConfig: CommonConfig{
 			apiToken:   "",
 			hostname:   url.Host,
 			originURL:  gitConfig.OriginURL(),

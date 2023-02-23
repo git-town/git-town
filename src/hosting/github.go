@@ -15,7 +15,7 @@ import (
 // via the GitHub API.
 type GitHubConnector struct {
 	client *github.Client
-	Config
+	CommonConfig
 	mainBranch string
 	log        logFn
 }
@@ -102,7 +102,7 @@ func NewGithubConnector(url giturl.Parts, gitConfig gitConfig, log logFn) *GitHu
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
 	return &GitHubConnector{
 		client: github.NewClient(httpClient),
-		Config: Config{
+		CommonConfig: CommonConfig{
 			apiToken:   apiToken,
 			hostname:   url.Host,
 			originURL:  gitConfig.OriginURL(),

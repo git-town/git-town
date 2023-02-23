@@ -78,7 +78,7 @@ func NewGitlabConnector(url giturl.Parts, config gitConfig, log logFn) (*GitLabC
 	if config.HostingService() != "gitlab" && url.Host != "gitlab.com" {
 		return nil, nil //nolint:nilnil
 	}
-	gitlabConfig := GitLabConfig{Config{
+	gitlabConfig := GitLabConfig{CommonConfig{
 		apiToken:   config.GitLabToken(),
 		originURL:  config.OriginURL(),
 		hostname:   url.Host,
@@ -104,7 +104,7 @@ func NewGitlabConnector(url giturl.Parts, config gitConfig, log logFn) (*GitLabC
 // *************************************
 
 type GitLabConfig struct {
-	Config
+	CommonConfig
 }
 
 func (c *GitLabConfig) DefaultProposalMessage(changeRequest Proposal) string {

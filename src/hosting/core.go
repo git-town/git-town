@@ -41,8 +41,8 @@ type Connector interface {
 	UpdateProposalTarget(number int, target string) error
 }
 
-// Config contains the information needed for all platform connectors.
-type Config struct {
+// CommonConfig contains data needed by all platform connectors.
+type CommonConfig struct {
 	// bearer token to authenticate with the API
 	apiToken string
 
