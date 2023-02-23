@@ -80,6 +80,11 @@ stats: tools/scc-${SCC_VERSION}  # shows code statistics
 test: fix docs unit cuke  # runs all the tests
 .PHONY: test
 
+test-go:  # smoke tests for Go refactorings
+	tools/gofumpt-${GOFUMPT_VERSION} -l -w . &
+	make --no-print-directory unit &
+	tools/golangci-lint-${GOLANGCILINT_VERSION} run
+
 unit:  # runs only the unit tests for changed code
 	env GOGC=off go test -timeout 30s ./src/... ./test/...
 
