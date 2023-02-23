@@ -17,7 +17,7 @@ import (
 type shipConfig struct {
 	branchToShip            string
 	branchToMergeInto       string
-	canShipWithDriver       bool
+	canShipViaAPI           bool
 	childBranches           []string
 	defaultCommitMessage    string
 	hasOrigin               bool
@@ -154,7 +154,7 @@ func determineShipConfig(args []string, driver hosting.Driver, repo *git.ProdRep
 		return nil, err
 	}
 	branchToMergeInto := repo.Config.ParentBranch(branchToShip)
-	canShipWithDriver := false
+	canShipViaAPI := false
 	defaultCommitMessage := ""
 	pullRequestNumber := -1
 	if hasTrackingBranch && !isOffline && driver != nil {
@@ -163,7 +163,7 @@ func determineShipConfig(args []string, driver hosting.Driver, repo *git.ProdRep
 			return nil, err
 		}
 		if prInfo != nil {
-			canShipWithDriver = prInfo.CanMergeWithAPI
+			canShipViaAPI = prInfo.CanMergeWithAPI
 			defaultCommitMessage = prInfo.DefaultCommitMessage
 			pullRequestNumber = prInfo.PullRequestNumber
 		}
@@ -177,7 +177,7 @@ func determineShipConfig(args []string, driver hosting.Driver, repo *git.ProdRep
 		isShippingInitialBranch: isShippingInitialBranch,
 		branchToMergeInto:       branchToMergeInto,
 		branchToShip:            branchToShip,
-		canShipWithDriver:       canShipWithDriver,
+		canShipViaAPI:           canShipViaAPI,
 		childBranches:           repo.Config.ChildBranches(branchToShip),
 		defaultCommitMessage:    defaultCommitMessage,
 		deleteOriginBranch:      deleteOrigin,
@@ -213,7 +213,7 @@ func shipStepList(config *shipConfig, commitMessage string, repo *git.ProdRepo) 
 	result.AppendList(syncSteps)
 	result.Append(&steps.EnsureHasShippableChangesStep{Branch: config.branchToShip})
 	result.Append(&steps.CheckoutBranchStep{Branch: config.branchToMergeInto})
-	if config.canShipWithDriver {
+	if config.canShipViaAPI {
 		result.Append(&steps.PushBranchStep{Branch: config.branchToShip})
 		result.Append(&steps.DriverMergePullRequestStep{
 			Branch:               config.branchToShip,
@@ -232,7 +232,7 @@ func shipStepList(config *shipConfig, commitMessage string, repo *git.ProdRepo) 
 	// - we know we have a tracking branch (otherwise there would be no PR to ship via driver)
 	// - we have updated the PRs of all child branches (because we have API access)
 	// - we know we are online
-	if config.canShipWithDriver || (config.hasTrackingBranch && len(config.childBranches) == 0 && !config.isOffline) {
+	if config.canShipViaAPI || (config.hasTrackingBranch && len(config.childBranches) == 0 && !config.isOffline) {
 		if config.deleteOriginBranch {
 			result.Append(&steps.DeleteOriginBranchStep{Branch: config.branchToShip, IsTracking: true})
 		}
