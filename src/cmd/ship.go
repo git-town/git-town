@@ -153,7 +153,7 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 	defaultProposalMessage := ""
 	proposalNumber := -1
 	if hasTrackingBranch && !isOffline && connector != nil {
-		prInfo, err := connector.ProposalDetails(branchToShip)
+		prInfo, err := connector.FindProposal(branchToShip, branchToMergeInto)
 		if err != nil {
 			return nil, err
 		}

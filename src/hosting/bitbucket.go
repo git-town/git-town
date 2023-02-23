@@ -39,7 +39,7 @@ func NewBitbucketConnector(url giturl.Parts, gitConfig gitConfig, git gitRunner)
 	}
 }
 
-func (c *BitbucketConnector) ProposalDetails(branch string) (*Proposal, error) {
+func (c *BitbucketConnector) FindProposal(branch, target string) (*Proposal, error) {
 	return nil, fmt.Errorf("BitBucket API functionality isn't implemented yet")
 }
 

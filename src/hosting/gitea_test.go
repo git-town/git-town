@@ -3,6 +3,7 @@ package hosting_test
 import (
 	"testing"
 
+	"code.gitea.io/sdk/gitea"
 	"github.com/git-town/git-town/v7/src/giturl"
 	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/stretchr/testify/assert"
@@ -58,4 +59,58 @@ func TestGitea(t *testing.T) {
 		have := connector.DefaultProposalMessage(give)
 		assert.Equal(t, have, want)
 	})
+}
+
+func TestFilterPullRequests(t *testing.T) {
+	t.Parallel()
+	give := []*gitea.PullRequest{
+		// matching branch
+		{
+			Head: &gitea.PRBranchInfo{
+				Name: "organization/branch",
+			},
+			Base: &gitea.PRBranchInfo{
+				Name: "target",
+			},
+		},
+		// branch with different name
+		{
+			Head: &gitea.PRBranchInfo{
+				Name: "organization/other",
+			},
+			Base: &gitea.PRBranchInfo{
+				Name: "target",
+			},
+		},
+		// branch with different target
+		{
+			Head: &gitea.PRBranchInfo{
+				Name: "organization/branch",
+			},
+			Base: &gitea.PRBranchInfo{
+				Name: "other",
+			},
+		},
+		// branch with different organization
+		{
+			Head: &gitea.PRBranchInfo{
+				Name: "other/branch",
+			},
+			Base: &gitea.PRBranchInfo{
+				Name: "target",
+			},
+		},
+	}
+	want := []*gitea.PullRequest{
+		{
+			Head: &gitea.PRBranchInfo{
+				Name: "organization/branch",
+			},
+			Base: &gitea.PRBranchInfo{
+				Name: "target",
+			},
+		},
+	}
+	have := hosting.FilterGiteaPullRequests(give, "organization", "branch", "target")
+	assert.Equal(t, want, have)
 }

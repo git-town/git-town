@@ -17,10 +17,11 @@ type GitLabConnector struct {
 	log logFn
 }
 
-func (c *GitLabConnector) ProposalDetails(branch string) (*Proposal, error) {
+func (c *GitLabConnector) FindProposal(branch, target string) (*Proposal, error) {
 	opts := &gitlab.ListProjectMergeRequestsOptions{
 		State:        gitlab.String("opened"),
 		SourceBranch: gitlab.String(branch),
+		TargetBranch: gitlab.String(target),
 	}
 	mergeRequests, _, err := c.client.MergeRequests.ListProjectMergeRequests(c.projectPath(), opts)
 	if err != nil {
@@ -38,11 +39,8 @@ func (c *GitLabConnector) ProposalDetails(branch string) (*Proposal, error) {
 
 //nolint:nonamedreturns  // return value isn't obvious from function name
 func (c *GitLabConnector) SquashMergeProposal(number int, message string) (mergeSHA string, err error) {
-	// TODO: update PR target? Probably better to check the target here,
-	// warn if it is different on GitLab than it is locally,
-	// and update and merge only if a "--force" option is given.
 	if number <= 0 {
-		return "", fmt.Errorf("cannot merge via GitLab since there is no merge request")
+		return "", fmt.Errorf("no merge request number given")
 	}
 	if c.log != nil {
 		c.log("GitLab API: Merging MR !%d\n", number)

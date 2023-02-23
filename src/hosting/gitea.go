@@ -16,7 +16,7 @@ type GiteaConnector struct {
 	log logFn
 }
 
-func (c *GiteaConnector) ProposalDetails(branch string) (*Proposal, error) {
+func (c *GiteaConnector) FindProposal(branch, target string) (*Proposal, error) {
 	openPullRequests, err := c.client.ListRepoPullRequests(c.owner, c.repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{
 			PageSize: 50,
@@ -26,8 +26,7 @@ func (c *GiteaConnector) ProposalDetails(branch string) (*Proposal, error) {
 	if err != nil {
 		return nil, err
 	}
-	headName := c.owner + "/" + branch
-	pullRequests := filterPullRequests(openPullRequests, headName)
+	pullRequests := FilterGiteaPullRequests(openPullRequests, c.owner, branch, target)
 	if len(pullRequests) == 0 {
 		return nil, nil //nolint:nilnil
 	}
@@ -61,6 +60,9 @@ func (c *GiteaConnector) RepositoryURL() string {
 
 //nolint:nonamedreturns  // return value isn't obvious from function name
 func (c *GiteaConnector) SquashMergeProposal(number int, message string) (mergeSha string, err error) {
+	if number <= 0 {
+		return "", fmt.Errorf("no pull request number given")
+	}
 	title, body := parseCommitMessage(message)
 	_, err = c.client.MergePullRequest(c.owner, c.repository, int64(number), gitea.MergePullRequestOption{
 		Style:   gitea.MergeStyleSquash,
@@ -118,11 +120,12 @@ func NewGiteaConnector(url giturl.Parts, config gitConfig, log logFn) *GiteaConn
 	}
 }
 
-func filterPullRequests(pullRequests []*gitea.PullRequest, branch string) []*gitea.PullRequest {
+func FilterGiteaPullRequests(pullRequests []*gitea.PullRequest, organization, branch, target string) []*gitea.PullRequest {
 	result := []*gitea.PullRequest{}
-	// TODO: don't copy the entire pullRequest struct here, use the index
-	for _, pullRequest := range pullRequests {
-		if pullRequest.Head.Name == branch {
+	headName := organization + "/" + branch
+	for p := range pullRequests {
+		pullRequest := pullRequests[p]
+		if pullRequest.Head.Name == headName && pullRequest.Base.Name == target {
 			result = append(result, pullRequest)
 		}
 	}

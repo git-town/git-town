@@ -20,9 +20,10 @@ type GitHubConnector struct {
 	log        logFn
 }
 
-func (c *GitHubConnector) ProposalDetails(branch string) (*Proposal, error) {
+func (c *GitHubConnector) FindProposal(branch, target string) (*Proposal, error) {
 	pullRequests, _, err := c.client.PullRequests.List(context.Background(), c.owner, c.repository, &github.PullRequestListOptions{
 		Head:  c.owner + ":" + branch,
+		Base:  target,
 		State: "open",
 	})
 	if err != nil {
@@ -32,7 +33,7 @@ func (c *GitHubConnector) ProposalDetails(branch string) (*Proposal, error) {
 		return nil, nil //nolint:nilnil
 	}
 	if len(pullRequests) > 1 {
-		return nil, fmt.Errorf("found %d pull requests for branch %q", len(pullRequests), branch)
+		return nil, fmt.Errorf("found %d pull requests from branch %q into branch %q", len(pullRequests), branch, target)
 	}
 	changeRequest := parsePullRequest(pullRequests[0])
 	return &changeRequest, nil
@@ -60,7 +61,7 @@ func (c *GitHubConnector) RepositoryURL() string {
 
 //nolint:nonamedreturns
 func (c *GitHubConnector) SquashMergeProposal(number int, message string) (mergeSHA string, err error) {
-	if number == 0 {
+	if number <= 0 {
 		return "", fmt.Errorf("no pull request number given")
 	}
 	if c.log != nil {
