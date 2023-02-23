@@ -66,7 +66,6 @@ func (step *ConnectorMergeProposalStep) Run(repo *git.ProdRepo, connector hostin
 		}
 		step.enteredEmptyCommitMessage = false
 	}
-	// TODO: update the target of the proposal to the local parent branch here?
 	step.mergeSha, step.mergeError = connector.SquashMergeProposal(step.ProposalNumber, commitMessage)
 	return step.mergeError
 }
