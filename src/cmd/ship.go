@@ -223,8 +223,8 @@ func shipStepList(config *shipConfig, commitMessage string, repo *git.ProdRepo) 
 	if config.hasOrigin && !config.isOffline {
 		result.Append(&steps.PushBranchStep{Branch: config.branchToMergeInto, Undoable: true})
 	}
-	// NOTE: when shipping with a driver, we can always delete the remote branch because:
-	// - we know we have a tracking branch (otherwise there would be no PR to ship via driver)
+	// NOTE: when shipping via API, we can always delete the remote branch because:
+	// - we know we have a tracking branch (otherwise there would be no PR to ship via API)
 	// - we have updated the PRs of all child branches (because we have API access)
 	// - we know we are online
 	if config.canShipViaAPI || (config.hasTrackingBranch && len(config.childBranches) == 0 && !config.isOffline) {
