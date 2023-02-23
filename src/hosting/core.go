@@ -53,8 +53,7 @@ type CommonConfig struct {
 	originURL string
 
 	// the organization within the hosting platform that owns the repo
-	// TODO: rename no "organization"
-	owner string
+	organization string
 
 	// repo name within the organization
 	repository string

@@ -21,8 +21,8 @@ type GitHubConnector struct {
 }
 
 func (c *GitHubConnector) FindProposal(branch, target string) (*Proposal, error) {
-	pullRequests, _, err := c.client.PullRequests.List(context.Background(), c.owner, c.repository, &github.PullRequestListOptions{
-		Head:  c.owner + ":" + branch,
+	pullRequests, _, err := c.client.PullRequests.List(context.Background(), c.organization, c.repository, &github.PullRequestListOptions{
+		Head:  c.organization + ":" + branch,
 		Base:  target,
 		State: "open",
 	})
@@ -56,7 +56,7 @@ func (c *GitHubConnector) NewProposalURL(branch, parentBranch string) (string, e
 }
 
 func (c *GitHubConnector) RepositoryURL() string {
-	return fmt.Sprintf("https://%s/%s/%s", c.hostname, c.owner, c.repository)
+	return fmt.Sprintf("https://%s/%s/%s", c.hostname, c.organization, c.repository)
 }
 
 //nolint:nonamedreturns
@@ -68,7 +68,7 @@ func (c *GitHubConnector) SquashMergeProposal(number int, message string) (merge
 		c.log("GitHub API: merging PR #%d\n", number)
 	}
 	title, body := parseCommitMessage(message)
-	result, _, err := c.client.PullRequests.Merge(context.Background(), c.owner, c.repository, number, body, &github.PullRequestOptions{
+	result, _, err := c.client.PullRequests.Merge(context.Background(), c.organization, c.repository, number, body, &github.PullRequestOptions{
 		MergeMethod: "squash",
 		CommitTitle: title,
 	})
@@ -79,7 +79,7 @@ func (c *GitHubConnector) UpdateProposalTarget(number int, target string) error 
 	if c.log != nil {
 		c.log("GitHub API: updating base branch for PR #%d\n", number)
 	}
-	_, _, err := c.client.PullRequests.Edit(context.Background(), c.owner, c.repository, number, &github.PullRequest{
+	_, _, err := c.client.PullRequests.Edit(context.Background(), c.organization, c.repository, number, &github.PullRequest{
 		Base: &github.PullRequestBranch{
 			Ref: &target,
 		},
@@ -103,11 +103,11 @@ func NewGithubConnector(url giturl.Parts, gitConfig gitConfig, log logFn) *GitHu
 	return &GitHubConnector{
 		client: github.NewClient(httpClient),
 		CommonConfig: CommonConfig{
-			apiToken:   apiToken,
-			hostname:   url.Host,
-			originURL:  gitConfig.OriginURL(),
-			owner:      url.Org,
-			repository: url.Repo,
+			apiToken:     apiToken,
+			hostname:     url.Host,
+			originURL:    gitConfig.OriginURL(),
+			organization: url.Org,
+			repository:   url.Repo,
 		},
 		mainBranch: gitConfig.MainBranch(),
 		log:        log,

@@ -79,11 +79,11 @@ func NewGitlabConnector(url giturl.Parts, config gitConfig, log logFn) (*GitLabC
 		return nil, nil //nolint:nilnil
 	}
 	gitlabConfig := GitLabConfig{CommonConfig{
-		apiToken:   config.GitLabToken(),
-		originURL:  config.OriginURL(),
-		hostname:   url.Host,
-		owner:      url.Org,
-		repository: url.Repo,
+		apiToken:     config.GitLabToken(),
+		originURL:    config.OriginURL(),
+		hostname:     url.Host,
+		organization: url.Org,
+		repository:   url.Repo,
 	}}
 	clientOptFunc := gitlab.WithBaseURL(gitlabConfig.baseURL())
 	httpClient := gitlab.WithHTTPClient(&http.Client{})
@@ -112,7 +112,7 @@ func (c *GitLabConfig) DefaultProposalMessage(changeRequest Proposal) string {
 }
 
 func (c *GitLabConfig) projectPath() string {
-	return fmt.Sprintf("%s/%s", c.owner, c.repository)
+	return fmt.Sprintf("%s/%s", c.organization, c.repository)
 }
 
 func (c *GitLabConfig) baseURL() string {

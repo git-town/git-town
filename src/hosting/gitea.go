@@ -17,7 +17,7 @@ type GiteaConnector struct {
 }
 
 func (c *GiteaConnector) FindProposal(branch, target string) (*Proposal, error) {
-	openPullRequests, err := c.client.ListRepoPullRequests(c.owner, c.repository, gitea.ListPullRequestsOptions{
+	openPullRequests, err := c.client.ListRepoPullRequests(c.organization, c.repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{
 			PageSize: 50,
 		},
@@ -26,7 +26,7 @@ func (c *GiteaConnector) FindProposal(branch, target string) (*Proposal, error) 
 	if err != nil {
 		return nil, err
 	}
-	pullRequests := FilterGiteaPullRequests(openPullRequests, c.owner, branch, target)
+	pullRequests := FilterGiteaPullRequests(openPullRequests, c.organization, branch, target)
 	if len(pullRequests) == 0 {
 		return nil, nil //nolint:nilnil
 	}
@@ -55,7 +55,7 @@ func (c *GiteaConnector) NewProposalURL(branch, parentBranch string) (string, er
 }
 
 func (c *GiteaConnector) RepositoryURL() string {
-	return fmt.Sprintf("https://%s/%s/%s", c.hostname, c.owner, c.repository)
+	return fmt.Sprintf("https://%s/%s/%s", c.hostname, c.organization, c.repository)
 }
 
 //nolint:nonamedreturns  // return value isn't obvious from function name
@@ -64,7 +64,7 @@ func (c *GiteaConnector) SquashMergeProposal(number int, message string) (mergeS
 		return "", fmt.Errorf("no pull request number given")
 	}
 	title, body := parseCommitMessage(message)
-	_, err = c.client.MergePullRequest(c.owner, c.repository, int64(number), gitea.MergePullRequestOption{
+	_, err = c.client.MergePullRequest(c.organization, c.repository, int64(number), gitea.MergePullRequestOption{
 		Style:   gitea.MergeStyleSquash,
 		Title:   title,
 		Message: body,
@@ -72,7 +72,7 @@ func (c *GiteaConnector) SquashMergeProposal(number int, message string) (mergeS
 	if err != nil {
 		return "", err
 	}
-	pullRequest, err := c.client.GetPullRequest(c.owner, c.repository, int64(number))
+	pullRequest, err := c.client.GetPullRequest(c.organization, c.repository, int64(number))
 	if err != nil {
 		return "", err
 	}
@@ -110,11 +110,11 @@ func NewGiteaConnector(url giturl.Parts, config gitConfig, log logFn) *GiteaConn
 	return &GiteaConnector{
 		client: giteaClient,
 		CommonConfig: CommonConfig{
-			apiToken:   apiToken,
-			hostname:   hostname,
-			originURL:  config.OriginURL(),
-			owner:      url.Org,
-			repository: url.Repo,
+			apiToken:     apiToken,
+			hostname:     hostname,
+			originURL:    config.OriginURL(),
+			organization: url.Org,
+			repository:   url.Repo,
 		},
 		log: log,
 	}

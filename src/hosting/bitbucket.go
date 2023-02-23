@@ -28,11 +28,11 @@ func NewBitbucketConnector(url giturl.Parts, gitConfig gitConfig, git gitRunner)
 	}
 	return &BitbucketConnector{
 		CommonConfig: CommonConfig{
-			apiToken:   "",
-			hostname:   url.Host,
-			originURL:  gitConfig.OriginURL(),
-			owner:      url.Org,
-			repository: url.Repo,
+			apiToken:     "",
+			hostname:     url.Host,
+			originURL:    gitConfig.OriginURL(),
+			organization: url.Org,
+			repository:   url.Repo,
 		},
 		organization: url.Org,
 		git:          git,
