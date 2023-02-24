@@ -78,13 +78,13 @@ func TestNewGitlabConnector(t *testing.T) {
 //nolint:paralleltest  // mocks HTTP
 func TestGitlabConnector(t *testing.T) {
 	t.Run("DefaultProposalMessage", func(t *testing.T) {
+		config := hosting.GitLabConfig{}
 		give := hosting.Proposal{
 			Number:          1,
 			Title:           "my title",
 			CanMergeWithAPI: true,
 		}
 		want := "my title (!1)"
-		config := hosting.GitLabConfig{}
 		have := config.DefaultProposalMessage(give)
 		assert.Equal(t, want, have)
 	})

@@ -54,13 +54,13 @@ func TestGithubConnector(t *testing.T) {
 	t.Parallel()
 	t.Run("DefaultProposalMessage", func(t *testing.T) {
 		t.Parallel()
+		connector := hosting.GitHubConnector{}
 		give := hosting.Proposal{
 			Number:          1,
 			Title:           "my title",
 			CanMergeWithAPI: true,
 		}
 		want := "my title (#1)"
-		connector := hosting.GitHubConnector{}
 		have := connector.DefaultProposalMessage(give)
 		assert.Equal(t, want, have)
 	})
