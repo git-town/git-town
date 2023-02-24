@@ -1,7 +1,7 @@
 // Package hosting provides support for interacting with code hosting services.
 // Commands like "new-pull-request", "repo", and "ship" use this package
 // to know how to perform Git Town operations on GitHub, Gitlab, Bitbucket, etc.
-// Drivers implement the CodeHostingDriver interface.
+// Implementations of connectors for particular code hosting platforms conform to the Connector interface.
 package hosting
 
 import (
@@ -10,29 +10,74 @@ import (
 	"github.com/git-town/git-town/v7/src/giturl"
 )
 
-// Driver defines the structure of drivers for the different code hosting services.
-type Driver interface {
-	// ProposalDetails loads information about the pull request of the given branch into the given parent branch
-	// from the code hosting provider.
-	ProposalDetails(branch, parentBranch string) (*Proposal, error)
+// Connector describes the activities that Git Town performs on code hosting platforms via their API.
+// Individual implementations exist to talk to specific hosting platforms.
+// They all conform to this interface.
+type Connector interface {
+	// DefaultProposalMessage provides the text that the form for creating new proposals
+	// on the respective hosting platform is prepopulated with.
+	DefaultProposalMessage(proposal Proposal) string
+
+	// FindProposal provides details about the proposal for the given branch into the given target branch.
+	// Returns nil if no proposal exists.
+	FindProposal(branch, target string) (*Proposal, error)
+
+	// HostingServiceName provides the name of the code hosting service
+	// supported by the respective connector implementation.
+	HostingServiceName() string
+
+	// SquashMergeProposal squash-merges the proposal with the given number
+	// using the given commit message.
+	SquashMergeProposal(number int, message string) (mergeSHA string, err error)
 
 	// NewProposalURL provides the URL of the page
 	// to create a new proposal online.
 	NewProposalURL(branch, parentBranch string) (string, error)
 
-	// SquashMergeProposal merges the pull request through the hosting service API.
-	SquashMergeProposal(SquashMergeProposalOptions) (mergeSha string, err error)
-
-	// RepositoryURL provides the URL where the given repository
-	// can be found online.
+	// RepositoryURL provides the URL where the current repository can be found online.
 	RepositoryURL() string
 
-	// HostingServiceName provides the name of the code hosting service.
-	HostingServiceName() string
+	// UpdateProposalTarget updates the target branch of the given proposal.
+	UpdateProposalTarget(number int, target string) error
 }
 
-// config defines the configuration data needed by the driver package.
-type config interface {
+// CommonConfig contains data needed by all platform connectors.
+type CommonConfig struct {
+	// bearer token to authenticate with the API
+	APIToken string
+
+	// Hostname override
+	Hostname string
+
+	// where the "origin" remote points to
+	OriginURL string
+
+	// the Organization within the hosting platform that owns the repo
+	Organization string
+
+	// repo name within the organization
+	Repository string
+}
+
+// Proposal contains information about a change request
+// on a code hosting platform.
+// Alternative names are "pull request" or "merge request".
+type Proposal struct {
+	// the number used to identify the proposal on the hosting platform
+	Number int
+
+	// name of the target branch ("base") of this proposal
+	Target string
+
+	// textual title of the proposal
+	Title string
+
+	// whether this proposal can be merged via the API
+	CanMergeWithAPI bool
+}
+
+// gitConfig defines the configuration data needed by the hosting package.
+type gitConfig interface {
 	// OriginOverride provides the override for the origin URL from the Git Town configuration.
 	OriginOverride() string
 
@@ -55,53 +100,40 @@ type config interface {
 	OriginURL() string
 }
 
-// runner defines the runner methods used by the driver package.
+// runner defines the runner methods used by the hosting package.
 type gitRunner interface {
 	ShaForBranch(string) (string, error)
 }
 
-// Proposal contains information about a pull request.
-type Proposal struct {
-	CanMergeWithAPI        bool
-	DefaultProposalMessage string
-	ProposalNumber         int
-}
-
-// SquashMergeProposalOptions defines the options to the SquashMergeProposal function.
-type SquashMergeProposalOptions struct {
-	Branch         string
-	CommitMessage  string
-	LogRequests    bool
-	ParentBranch   string
-	ProposalNumber int
-}
-
-// logFn defines a function with fmt.Printf API that CodeHostingDriver instances can use to give updates on activities they do.
+// logFn defines a function with fmt.Printf API that Connector instances can use to give updates on activities they do.
 type logFn func(string, ...interface{})
 
-// NewDriver provides an instance of the code hosting driver to use based on the git config.
-func NewDriver(config config, git gitRunner, log logFn) (Driver, error) {
+// NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
+//
+//nolint:ireturn,nolintlint
+func NewConnector(config gitConfig, git gitRunner, log logFn) (Connector, error) {
 	url := giturl.Parse(config.OriginURL())
 	if url == nil {
 		return nil, nil //nolint:nilnil  // "nil, nil" is a legitimate return value here
 	}
-	githubConfig := NewGithubConfig(*url, config)
-	if githubConfig != nil {
-		driver := githubConfig.Driver(log)
-		return &driver, nil
+	githubConnector := NewGithubConnector(*url, config, log)
+	if githubConnector != nil {
+		return githubConnector, nil
 	}
-	gitlabConfig := NewGitlabConfig(*url, config)
-	if gitlabConfig != nil {
-		return gitlabConfig.Driver(log)
+	gitlabConnector, err := NewGitlabConnector(*url, config, log)
+	if err != nil {
+		return nil, err
 	}
-	bitbucketDriver := NewBitbucketDriver(*url, config, git)
-	if bitbucketDriver != nil {
-		return bitbucketDriver, nil
+	if gitlabConnector != nil {
+		return gitlabConnector, nil
 	}
-	giteaConfig := NewGiteaConfig(*url, config)
-	if giteaConfig != nil {
-		driver := giteaConfig.Driver(log)
-		return &driver, nil
+	bitbucketConnector := NewBitbucketConnector(*url, config, git)
+	if bitbucketConnector != nil {
+		return bitbucketConnector, nil
+	}
+	giteaConnector := NewGiteaConnector(*url, config, log)
+	if giteaConnector != nil {
+		return giteaConnector, nil
 	}
 	return nil, nil //nolint:nilnil  // "nil, nil" is a legitimate return value here
 }

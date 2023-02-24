@@ -16,7 +16,7 @@ func (step *CheckoutBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error)
 	return &CheckoutBranchStep{Branch: step.previousBranch}, nil
 }
 
-func (step *CheckoutBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
+func (step *CheckoutBranchStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
 	var err error
 	step.previousBranch, err = repo.Silent.CurrentBranch()
 	if err != nil {

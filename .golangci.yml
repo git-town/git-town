@@ -20,6 +20,7 @@ linters:
     - lll # we aren't enforcing a line length at this point
     - maligned # deprecated
     - maintidx # we keep complexity under check with code reviews
+    - nestif # we keep complexity under check with code reviews
     - nosnakecase # deprecated
     - nlreturn # this forces unnecessary empty lines in function bodies
     - scopelint # deprecated
@@ -41,4 +42,4 @@ issues:
       text: "do not define dynamic errors"
     - linters:
         - ireturn
-      text: (github.com/git-town/git-town/v7/src/hosting.Driver|github.com/git-town/git-town/v7/src/steps.Step)
+      text: (github.com/git-town/git-town/v7/src/hosting.Connector|github.com/git-town/git-town/v7/src/steps.Step)

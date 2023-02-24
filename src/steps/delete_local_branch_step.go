@@ -18,7 +18,7 @@ func (step *DeleteLocalBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, err
 	return &CreateBranchStep{Branch: step.Branch, StartingPoint: step.branchSha}, nil
 }
 
-func (step *DeleteLocalBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
+func (step *DeleteLocalBranchStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
 	var err error
 	step.branchSha, err = repo.Silent.ShaForBranch(step.Branch)
 	if err != nil {

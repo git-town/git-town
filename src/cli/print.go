@@ -66,8 +66,8 @@ func PrintLabelAndValue(label, value string) {
 	fmt.Println()
 }
 
-// PrintDriverAction logs activities from a code hosting driver on the CLI.
-func PrintDriverAction(template string, messages ...interface{}) {
+// PrintConnectorAction logs activities from a code hosting connector on the CLI.
+func PrintConnectorAction(template string, messages ...interface{}) {
 	fmt.Println()
 	_, err := color.New(color.Bold).Printf(template, messages...)
 	if err != nil {

@@ -9,136 +9,48 @@ import (
 	"github.com/xanzy/go-gitlab"
 )
 
-// GitlabConfig contains connection information for GitLab based hosting platforms.
-type GitlabConfig struct {
-	apiToken   string
-	hostname   string
-	originURL  string
-	owner      string
-	repository string
-}
-
-// NewGitlabConfig provides GitLab configuration data if the current repo is hosted on GitLab,
-// otherwise nil.
-func NewGitlabConfig(url giturl.Parts, config config) *GitlabConfig {
-	driverType := config.HostingService()
-	manualHostName := config.OriginOverride()
-	if manualHostName != "" {
-		url.Host = manualHostName
-	}
-	if driverType != "gitlab" && url.Host != "gitlab.com" {
-		return nil
-	}
-	return &GitlabConfig{
-		apiToken:   config.GitLabToken(),
-		originURL:  config.OriginURL(),
-		hostname:   url.Host,
-		owner:      url.Org,
-		repository: url.Repo,
-	}
-}
-
-func (c GitlabConfig) BaseURL() string {
-	return fmt.Sprintf("https://%s", c.hostname)
-}
-
-func (c GitlabConfig) defaultProposalMessage(mergeRequest *gitlab.MergeRequest) string {
-	// GitLab uses a dash as MR prefix for the (project-)internal ID (IID)
-	return fmt.Sprintf("%s (!%d)", mergeRequest.Title, mergeRequest.IID)
-}
-
-func (c GitlabConfig) Driver(log logFn) (*GitlabDriver, error) {
-	baseURL := gitlab.WithBaseURL(c.BaseURL())
-	httpClient := gitlab.WithHTTPClient(&http.Client{})
-	client, err := gitlab.NewOAuthClient(c.apiToken, httpClient, baseURL)
-	if err != nil {
-		return nil, err
-	}
-	driver := GitlabDriver{
-		client:       client,
-		GitlabConfig: c,
-		log:          log,
-	}
-	return &driver, nil
-}
-
-func (c GitlabConfig) HostingServiceName() string {
-	return "GitLab"
-}
-
-func (c GitlabConfig) NewProposalURL(branch, parentBranch string) (string, error) {
-	query := url.Values{}
-	query.Add("merge_request[source_branch]", branch)
-	query.Add("merge_request[target_branch]", parentBranch)
-	return fmt.Sprintf("%s/merge_requests/new?%s", c.RepositoryURL(), query.Encode()), nil
-}
-
-func (c GitlabConfig) ProjectPath() string {
-	return fmt.Sprintf("%s/%s", c.owner, c.repository)
-}
-
-func (c GitlabConfig) RepositoryURL() string {
-	return fmt.Sprintf("%s/%s", c.BaseURL(), c.ProjectPath())
-}
-
-// GitlabDriver provides access to the GitLab API.
-type GitlabDriver struct {
-	GitlabConfig
+// GitLabConnector provides standardized connectivity for the given repository (gitlab.com/owner/repo)
+// via the GitLab API.
+type GitLabConnector struct {
 	client *gitlab.Client
-	log    logFn
+	GitLabConfig
+	log logFn
 }
 
-func (d *GitlabDriver) ProposalDetails(branch, parentBranch string) (*Proposal, error) {
-	if d.apiToken == "" {
-		return nil, nil //nolint:nilnil // we really want to return nil here
-	}
-	mergeRequests, err := d.loadMergeRequests(branch, parentBranch)
-	if err != nil {
-		return nil, err
-	}
-	if len(mergeRequests) < 1 {
-		return nil, fmt.Errorf("no merge request from branch %q to branch %q found", branch, parentBranch)
-	}
-	if len(mergeRequests) > 1 {
-		return nil, fmt.Errorf("found %d merge requests from branch %q to branch %q", len(mergeRequests), branch, parentBranch)
-	}
-	return &Proposal{
-		CanMergeWithAPI:        true,
-		DefaultProposalMessage: d.defaultProposalMessage(mergeRequests[0]),
-		ProposalNumber:         mergeRequests[0].IID,
-	}, nil
-}
-
-func (d *GitlabDriver) loadMergeRequests(branch, parentBranch string) ([]*gitlab.MergeRequest, error) {
+func (c *GitLabConnector) FindProposal(branch, target string) (*Proposal, error) {
 	opts := &gitlab.ListProjectMergeRequestsOptions{
 		State:        gitlab.String("opened"),
 		SourceBranch: gitlab.String(branch),
-		TargetBranch: gitlab.String(parentBranch),
+		TargetBranch: gitlab.String(target),
 	}
-	// ListProjectMergeRequests takes care of encoding the project path already.
-	mergeRequests, _, err := d.client.MergeRequests.ListProjectMergeRequests(d.ProjectPath(), opts)
-	return mergeRequests, err
+	mergeRequests, _, err := c.client.MergeRequests.ListProjectMergeRequests(c.projectPath(), opts)
+	if err != nil {
+		return nil, err
+	}
+	if len(mergeRequests) == 0 {
+		return nil, nil //nolint:nilnil
+	}
+	if len(mergeRequests) > 1 {
+		return nil, fmt.Errorf("found %d merge requests for branch %q", len(mergeRequests), branch)
+	}
+	proposal := parseGitLabMergeRequest(mergeRequests[0])
+	return &proposal, nil
 }
 
 //nolint:nonamedreturns  // return value isn't obvious from function name
-func (d *GitlabDriver) SquashMergeProposal(options SquashMergeProposalOptions) (mergeSha string, err error) {
-	err = d.updatePullRequestsAgainst(options)
-	if err != nil {
-		return "", err
+func (c *GitLabConnector) SquashMergeProposal(number int, message string) (mergeSHA string, err error) {
+	if number <= 0 {
+		return "", fmt.Errorf("no merge request number given")
 	}
-	if options.ProposalNumber <= 0 {
-		return "", fmt.Errorf("cannot merge via GitLab since there is no merge request")
+	if c.log != nil {
+		c.log("GitLab API: Merging MR !%d\n", number)
 	}
-	if options.LogRequests {
-		d.log("GitLab API: Merging MR !%d\n", options.ProposalNumber)
-	}
-	// GitLab API wants the full commit message in the body
-	result, _, err := d.client.MergeRequests.AcceptMergeRequest(d.ProjectPath(), options.ProposalNumber, &gitlab.AcceptMergeRequestOptions{
-		SquashCommitMessage: gitlab.String(options.CommitMessage),
+	// the GitLab API wants the full commit message in the body
+	result, _, err := c.client.MergeRequests.AcceptMergeRequest(c.projectPath(), number, &gitlab.AcceptMergeRequestOptions{
+		SquashCommitMessage: gitlab.String(message),
 		Squash:              gitlab.Bool(true),
-		// This will be deleted by Git Town and make it fail if it is already deleted
+		// the branch will be deleted by Git Town
 		ShouldRemoveSourceBranch: gitlab.Bool(false),
-		// SHA: gitlab.String(mergeSha),
 	})
 	if err != nil {
 		return "", err
@@ -146,26 +58,91 @@ func (d *GitlabDriver) SquashMergeProposal(options SquashMergeProposalOptions) (
 	return result.SHA, nil
 }
 
-func (d *GitlabDriver) updatePullRequestsAgainst(options SquashMergeProposalOptions) error {
-	// Fetch all open child merge requests that have this branch as their parent
-	mergeRequests, _, err := d.client.MergeRequests.ListProjectMergeRequests(d.ProjectPath(), &gitlab.ListProjectMergeRequestsOptions{
-		TargetBranch: gitlab.String(options.Branch),
-		State:        gitlab.String("opened"),
+func (c *GitLabConnector) UpdateProposalTarget(number int, target string) error {
+	if c.log != nil {
+		c.log("GitLab API: Updating target branch for MR !%d to %q\n", number, target)
+	}
+	_, _, err := c.client.MergeRequests.UpdateMergeRequest(c.projectPath(), number, &gitlab.UpdateMergeRequestOptions{
+		TargetBranch: gitlab.String(target),
 	})
+	return err
+}
+
+// NewGitlabConfig provides GitLab configuration data if the current repo is hosted on GitLab,
+// otherwise nil.
+func NewGitlabConnector(url giturl.Parts, config gitConfig, log logFn) (*GitLabConnector, error) {
+	manualHostName := config.OriginOverride()
+	if manualHostName != "" {
+		url.Host = manualHostName
+	}
+	if config.HostingService() != "gitlab" && url.Host != "gitlab.com" {
+		return nil, nil //nolint:nilnil
+	}
+	gitlabConfig := GitLabConfig{CommonConfig{
+		APIToken:     config.GitLabToken(),
+		OriginURL:    config.OriginURL(),
+		Hostname:     url.Host,
+		Organization: url.Org,
+		Repository:   url.Repo,
+	}}
+	clientOptFunc := gitlab.WithBaseURL(gitlabConfig.baseURL())
+	httpClient := gitlab.WithHTTPClient(&http.Client{})
+	client, err := gitlab.NewOAuthClient(gitlabConfig.APIToken, httpClient, clientOptFunc)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	for _, mergeRequest := range mergeRequests {
-		if options.LogRequests {
-			d.log("GitLab API: Updating target branch for MR !%d\n", mergeRequest.IID)
-		}
-		// Update the target branch to be the latest version of the branch this MR is merged into
-		_, _, err = d.client.MergeRequests.UpdateMergeRequest(d.ProjectPath(), mergeRequest.IID, &gitlab.UpdateMergeRequestOptions{
-			TargetBranch: gitlab.String(options.ParentBranch),
-		})
-		if err != nil {
-			return err
-		}
+	connector := GitLabConnector{
+		client:       client,
+		GitLabConfig: gitlabConfig,
+		log:          log,
 	}
-	return nil
+	return &connector, nil
+}
+
+// *************************************
+// GitLabConfig
+// *************************************
+
+type GitLabConfig struct {
+	CommonConfig
+}
+
+func (c *GitLabConfig) DefaultProposalMessage(proposal Proposal) string {
+	return fmt.Sprintf("%s (!%d)", proposal.Title, proposal.Number)
+}
+
+func (c *GitLabConfig) projectPath() string {
+	return fmt.Sprintf("%s/%s", c.Organization, c.Repository)
+}
+
+func (c *GitLabConfig) baseURL() string {
+	return fmt.Sprintf("https://%s", c.Hostname)
+}
+
+func (c *GitLabConfig) HostingServiceName() string {
+	return "GitLab"
+}
+
+func (c *GitLabConfig) NewProposalURL(branch, parentBranch string) (string, error) {
+	query := url.Values{}
+	query.Add("merge_request[source_branch]", branch)
+	query.Add("merge_request[target_branch]", parentBranch)
+	return fmt.Sprintf("%s/merge_requests/new?%s", c.RepositoryURL(), query.Encode()), nil
+}
+
+func (c *GitLabConfig) RepositoryURL() string {
+	return fmt.Sprintf("%s/%s", c.baseURL(), c.projectPath())
+}
+
+// *************************************
+// Helper functions
+// *************************************
+
+func parseGitLabMergeRequest(mergeRequest *gitlab.MergeRequest) Proposal {
+	return Proposal{
+		Number:          mergeRequest.IID,
+		Target:          mergeRequest.TargetBranch,
+		Title:           mergeRequest.Title,
+		CanMergeWithAPI: true,
+	}
 }

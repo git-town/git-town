@@ -31,7 +31,7 @@ func (step *SquashMergeBranchStep) CreateAutomaticAbortError() error {
 	return fmt.Errorf("aborted because commit exited with error")
 }
 
-func (step *SquashMergeBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
+func (step *SquashMergeBranchStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
 	err := repo.Logging.SquashMerge(step.Branch)
 	if err != nil {
 		return err
