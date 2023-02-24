@@ -79,15 +79,15 @@ func NewGitlabConnector(url giturl.Parts, config gitConfig, log logFn) (*GitLabC
 		return nil, nil //nolint:nilnil
 	}
 	gitlabConfig := GitLabConfig{CommonConfig{
-		apiToken:     config.GitLabToken(),
-		originURL:    config.OriginURL(),
-		hostname:     url.Host,
-		organization: url.Org,
-		repository:   url.Repo,
+		APIToken:     config.GitLabToken(),
+		OriginURL:    config.OriginURL(),
+		Hostname:     url.Host,
+		Organization: url.Org,
+		Repository:   url.Repo,
 	}}
 	clientOptFunc := gitlab.WithBaseURL(gitlabConfig.baseURL())
 	httpClient := gitlab.WithHTTPClient(&http.Client{})
-	client, err := gitlab.NewOAuthClient(gitlabConfig.apiToken, httpClient, clientOptFunc)
+	client, err := gitlab.NewOAuthClient(gitlabConfig.APIToken, httpClient, clientOptFunc)
 	if err != nil {
 		return nil, err
 	}
@@ -112,11 +112,11 @@ func (c *GitLabConfig) DefaultProposalMessage(proposal Proposal) string {
 }
 
 func (c *GitLabConfig) projectPath() string {
-	return fmt.Sprintf("%s/%s", c.organization, c.repository)
+	return fmt.Sprintf("%s/%s", c.Organization, c.Repository)
 }
 
 func (c *GitLabConfig) baseURL() string {
-	return fmt.Sprintf("https://%s", c.hostname)
+	return fmt.Sprintf("https://%s", c.Hostname)
 }
 
 func (c *GitLabConfig) HostingServiceName() string {

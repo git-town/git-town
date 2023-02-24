@@ -16,13 +16,13 @@ import (
 type GitHubConnector struct {
 	client *github.Client
 	CommonConfig
-	mainBranch string
+	MainBranch string
 	log        logFn
 }
 
 func (c *GitHubConnector) FindProposal(branch, target string) (*Proposal, error) {
-	pullRequests, _, err := c.client.PullRequests.List(context.Background(), c.organization, c.repository, &github.PullRequestListOptions{
-		Head:  c.organization + ":" + branch,
+	pullRequests, _, err := c.client.PullRequests.List(context.Background(), c.Organization, c.Repository, &github.PullRequestListOptions{
+		Head:  c.Organization + ":" + branch,
 		Base:  target,
 		State: "open",
 	})
@@ -49,14 +49,14 @@ func (c *GitHubConnector) HostingServiceName() string {
 
 func (c *GitHubConnector) NewProposalURL(branch, parentBranch string) (string, error) {
 	toCompare := branch
-	if parentBranch != c.mainBranch {
+	if parentBranch != c.MainBranch {
 		toCompare = parentBranch + "..." + branch
 	}
 	return fmt.Sprintf("%s/compare/%s?expand=1", c.RepositoryURL(), url.PathEscape(toCompare)), nil
 }
 
 func (c *GitHubConnector) RepositoryURL() string {
-	return fmt.Sprintf("https://%s/%s/%s", c.hostname, c.organization, c.repository)
+	return fmt.Sprintf("https://%s/%s/%s", c.Hostname, c.Organization, c.Repository)
 }
 
 //nolint:nonamedreturns
@@ -68,7 +68,7 @@ func (c *GitHubConnector) SquashMergeProposal(number int, message string) (merge
 		c.log("GitHub API: merging PR #%d\n", number)
 	}
 	title, body := ParseCommitMessage(message)
-	result, _, err := c.client.PullRequests.Merge(context.Background(), c.organization, c.repository, number, body, &github.PullRequestOptions{
+	result, _, err := c.client.PullRequests.Merge(context.Background(), c.Organization, c.Repository, number, body, &github.PullRequestOptions{
 		MergeMethod: "squash",
 		CommitTitle: title,
 	})
@@ -79,7 +79,7 @@ func (c *GitHubConnector) UpdateProposalTarget(number int, target string) error 
 	if c.log != nil {
 		c.log("GitHub API: updating base branch for PR #%d\n", number)
 	}
-	_, _, err := c.client.PullRequests.Edit(context.Background(), c.organization, c.repository, number, &github.PullRequest{
+	_, _, err := c.client.PullRequests.Edit(context.Background(), c.Organization, c.Repository, number, &github.PullRequest{
 		Base: &github.PullRequestBranch{
 			Ref: &target,
 		},
@@ -103,13 +103,13 @@ func NewGithubConnector(url giturl.Parts, gitConfig gitConfig, log logFn) *GitHu
 	return &GitHubConnector{
 		client: github.NewClient(httpClient),
 		CommonConfig: CommonConfig{
-			apiToken:     apiToken,
-			hostname:     url.Host,
-			originURL:    gitConfig.OriginURL(),
-			organization: url.Org,
-			repository:   url.Repo,
+			APIToken:     apiToken,
+			Hostname:     url.Host,
+			OriginURL:    gitConfig.OriginURL(),
+			Organization: url.Org,
+			Repository:   url.Repo,
 		},
-		mainBranch: gitConfig.MainBranch(),
+		MainBranch: gitConfig.MainBranch(),
 		log:        log,
 	}
 }

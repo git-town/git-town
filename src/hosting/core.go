@@ -44,19 +44,19 @@ type Connector interface {
 // CommonConfig contains data needed by all platform connectors.
 type CommonConfig struct {
 	// bearer token to authenticate with the API
-	apiToken string
+	APIToken string
 
-	// hostname override
-	hostname string
+	// Hostname override
+	Hostname string
 
 	// where the "origin" remote points to
-	originURL string
+	OriginURL string
 
-	// the organization within the hosting platform that owns the repo
-	organization string
+	// the Organization within the hosting platform that owns the repo
+	Organization string
 
 	// repo name within the organization
-	repository string
+	Repository string
 }
 
 // Proposal contains information about a change request

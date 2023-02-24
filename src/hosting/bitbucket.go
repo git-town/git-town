@@ -28,11 +28,11 @@ func NewBitbucketConnector(url giturl.Parts, gitConfig gitConfig, git gitRunner)
 	}
 	return &BitbucketConnector{
 		CommonConfig: CommonConfig{
-			apiToken:     "",
-			hostname:     url.Host,
-			originURL:    gitConfig.OriginURL(),
-			organization: url.Org,
-			repository:   url.Repo,
+			APIToken:     "",
+			Hostname:     url.Host,
+			OriginURL:    gitConfig.OriginURL(),
+			Organization: url.Org,
+			Repository:   url.Repo,
 		},
 		organization: url.Org,
 		git:          git,
@@ -57,13 +57,13 @@ func (c *BitbucketConnector) NewProposalURL(branch, parentBranch string) (string
 	if err != nil {
 		return "", fmt.Errorf("cannot determine pull request URL from %q to %q: %w", branch, parentBranch, err)
 	}
-	query.Add("source", strings.Join([]string{c.organization + "/" + c.repository, branchSha[0:12], branch}, ":"))
-	query.Add("dest", strings.Join([]string{c.organization + "/" + c.repository, "", parentBranch}, ":"))
+	query.Add("source", strings.Join([]string{c.organization + "/" + c.Repository, branchSha[0:12], branch}, ":"))
+	query.Add("dest", strings.Join([]string{c.organization + "/" + c.Repository, "", parentBranch}, ":"))
 	return fmt.Sprintf("%s/pull-request/new?%s", c.RepositoryURL(), query.Encode()), nil
 }
 
 func (c *BitbucketConnector) RepositoryURL() string {
-	return fmt.Sprintf("https://%s/%s/%s", c.hostname, c.organization, c.repository)
+	return fmt.Sprintf("https://%s/%s/%s", c.Hostname, c.organization, c.Repository)
 }
 
 //nolint:nonamedreturns

@@ -74,27 +74,29 @@ func TestGithubConnector(t *testing.T) {
 			"top-level branch": {
 				branch: "feature",
 				parent: "main",
-				want:   "https://github.com/git-town/git-town/compare/feature?expand=1",
+				want:   "https://github.com/organization/repo/compare/feature?expand=1",
 			},
 			"nested branch": {
 				branch: "feature-3",
 				parent: "feature-2",
-				want:   "https://github.com/git-town/git-town/compare/feature-2...feature-3?expand=1",
+				want:   "https://github.com/organization/repo/compare/feature-2...feature-3?expand=1",
 			},
 			"special characters in branch name": {
 				branch: "feature-#",
 				parent: "main",
-				want:   "https://github.com/git-town/git-town/compare/feature-%23?expand=1",
+				want:   "https://github.com/organization/repo/compare/feature-%23?expand=1",
 			},
 		}
 		for name, test := range tests {
 			t.Run(name, func(t *testing.T) {
-				repoConfig := mockRepoConfig{
-					mainBranch: "main",
-					originURL:  "git@github.com:git-town/git-town.git",
+				connector := hosting.GitHubConnector{
+					CommonConfig: hosting.CommonConfig{
+						Hostname:     "github.com",
+						Organization: "organization",
+						Repository:   "repo",
+					},
+					MainBranch: "main",
 				}
-				url := giturl.Parse(repoConfig.originURL)
-				connector := hosting.NewGithubConnector(*url, repoConfig, nil)
 				have, err := connector.NewProposalURL(test.branch, test.parent)
 				assert.Nil(t, err)
 				assert.Equal(t, have, test.want)
@@ -103,13 +105,14 @@ func TestGithubConnector(t *testing.T) {
 	})
 	t.Run("RepositoryURL", func(t *testing.T) {
 		t.Parallel()
-		repoConfig := mockRepoConfig{
-			mainBranch: "main",
-			originURL:  "git@github.com:git-town/git-town.git",
+		connector := hosting.GitHubConnector{
+			CommonConfig: hosting.CommonConfig{
+				Hostname:     "github.com",
+				Organization: "organization",
+				Repository:   "repo",
+			},
 		}
-		url := giturl.Parse(repoConfig.originURL)
-		connector := hosting.NewGithubConnector(*url, repoConfig, nil)
-		want := "https://github.com/git-town/git-town"
+		want := "https://github.com/organization/repo"
 		have := connector.RepositoryURL()
 		assert.Equal(t, have, want)
 	})
