@@ -149,33 +149,35 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 	if err != nil {
 		return nil, err
 	}
-	branchToMergeInto := repo.Config.ParentBranch(branchToShip)
-	canShipViaAPI := false
-	defaultProposalMessage := ""
-	var proposal *hosting.Proposal
-	if hasTrackingBranch && !isOffline && connector != nil {
-		proposal, err = connector.FindProposal(branchToShip, branchToMergeInto)
-		if err != nil {
-			return nil, err
-		}
-		if proposal != nil {
-			canShipViaAPI = true
-			defaultProposalMessage = connector.DefaultProposalMessage(*proposal)
-		}
-	}
 	deleteOrigin, err := repo.Config.ShouldShipDeleteOriginBranch()
 	if err != nil {
 		return nil, err
 	}
+	branchToMergeInto := repo.Config.ParentBranch(branchToShip)
+	canShipViaAPI := false
+	defaultProposalMessage := ""
+	var proposal *hosting.Proposal
 	childBranches := repo.Config.ChildBranches(branchToShip)
 	proposalsOfChildBranches := []hosting.Proposal{}
-	for _, childBranch := range childBranches {
-		childProposal, err := connector.FindProposal(childBranch, branchToShip)
-		if err != nil {
-			return nil, fmt.Errorf("cannot determine proposal for branch %q: %w", branchToShip, err)
+	if !isOffline && connector != nil {
+		if hasTrackingBranch {
+			proposal, err = connector.FindProposal(branchToShip, branchToMergeInto)
+			if err != nil {
+				return nil, err
+			}
+			if proposal != nil {
+				canShipViaAPI = true
+				defaultProposalMessage = connector.DefaultProposalMessage(*proposal)
+			}
 		}
-		if childProposal != nil {
-			proposalsOfChildBranches = append(proposalsOfChildBranches, *childProposal)
+		for _, childBranch := range childBranches {
+			childProposal, err := connector.FindProposal(childBranch, branchToShip)
+			if err != nil {
+				return nil, fmt.Errorf("cannot determine proposal for branch %q: %w", branchToShip, err)
+			}
+			if childProposal != nil {
+				proposalsOfChildBranches = append(proposalsOfChildBranches, *childProposal)
+			}
 		}
 	}
 	return &shipConfig{
