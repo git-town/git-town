@@ -13,12 +13,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type newPullRequestConfig struct {
-	BranchesToSync            []string
-	branchesWithDeletedRemote []string // local branches whose tracking branches have been deleted
-	InitialBranch             string
-}
-
 func newPullRequestCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:   "new-pull-request",
@@ -75,6 +69,12 @@ where hostname matches what is in your ssh config file.`, config.CodeHostingDriv
 			return nil
 		},
 	}
+}
+
+type newPullRequestConfig struct {
+	BranchesToSync            []string
+	branchesWithDeletedRemote []string // local branches whose tracking branches have been deleted
+	InitialBranch             string
 }
 
 func determineNewPullRequestConfig(repo *git.ProdRepo) (*newPullRequestConfig, error) {

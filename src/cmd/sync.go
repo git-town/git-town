@@ -14,20 +14,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type syncConfig struct {
-	branchesToSync            []string
-	branchesWithDeletedRemote []string // local branches whose tracking branches have been deleted
-	hasOrigin                 bool
-	initialBranch             string
-	isOffline                 bool
-	mainBranch                string
-	shouldPushTags            bool
-}
-
-func (sc *syncConfig) hasDeletedTrackingBranch(branch string) bool {
-	return stringslice.Contains(sc.branchesWithDeletedRemote, branch)
-}
-
 func syncCmd(repo *git.ProdRepo) *cobra.Command {
 	var allFlag bool
 	var dryRunFlag bool
@@ -96,6 +82,16 @@ You can disable this by running "git config %s false".`, config.SyncUpstream),
 	return &syncCmd
 }
 
+type syncConfig struct {
+	branchesToSync            []string
+	branchesWithDeletedRemote []string // local branches whose tracking branches have been deleted
+	hasOrigin                 bool
+	initialBranch             string
+	isOffline                 bool
+	mainBranch                string
+	shouldPushTags            bool
+}
+
 func determineSyncConfig(allFlag bool, repo *git.ProdRepo) (*syncConfig, error) {
 	hasOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
@@ -150,6 +146,7 @@ func determineSyncConfig(allFlag bool, repo *git.ProdRepo) (*syncConfig, error) 
 	}, nil
 }
 
+// syncSteps provides the step list for the "git sync" command.
 func syncBranchesStepList(config syncConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	for _, branch := range config.branchesToSync {
@@ -165,6 +162,10 @@ func syncBranchesStepList(config syncConfig, repo *git.ProdRepo) (runstate.StepL
 	}
 	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
 	return result, err
+}
+
+func (sc *syncConfig) hasDeletedTrackingBranch(branch string) bool {
+	return stringslice.Contains(sc.branchesWithDeletedRemote, branch)
 }
 
 func syncStepsForBranch(branch string, config syncConfig, repo *git.ProdRepo) (runstate.StepList, error) {
