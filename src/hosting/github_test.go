@@ -100,4 +100,16 @@ func TestGithubConnector(t *testing.T) {
 			})
 		}
 	})
+	t.Run("RepositoryURL", func(t *testing.T) {
+		t.Parallel()
+		repoConfig := mockRepoConfig{
+			mainBranch: "main",
+			originURL:  "git@github.com:git-town/git-town.git",
+		}
+		url := giturl.Parse(repoConfig.originURL)
+		connector := hosting.NewGithubConnector(*url, repoConfig, nil)
+		want := "https://github.com/git-town/git-town"
+		have := connector.RepositoryURL()
+		assert.Equal(t, have, want)
+	})
 }
