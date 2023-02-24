@@ -45,10 +45,6 @@ issues:
     - text: (mockConfig|NoOpStep|Options)
       linters:
         - exhaustruct
-    - path: src/cmd/
-      text: missing in Command
-      linters:
-        - exhaustruct
     - path: src/hosting/gitea.*.go
       text: missing in (ListOptions|ListPullRequestsOptions|PRBranchInfo|Token)
       linters:
