@@ -69,6 +69,15 @@ func TestGitea(t *testing.T) {
 		assert.Nil(t, err)
 		assert.Equal(t, have, "https://gitea.com/git-town/git-town/compare/parent...feature")
 	})
+	t.Run("RepositoryURL", func(t *testing.T) {
+		repoConfig := mockRepoConfig{
+			originURL: "git@gitea.com:git-town/git-town.git",
+		}
+		url := giturl.Parse(repoConfig.originURL)
+		connector := hosting.NewGiteaConnector(*url, repoConfig, nil)
+		have := connector.RepositoryURL()
+		assert.Equal(t, have, "https://gitea.com/git-town/git-town")
+	})
 }
 
 func TestFilterGiteaPullRequests(t *testing.T) {
