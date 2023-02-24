@@ -89,16 +89,43 @@ func TestGitlabConnector(t *testing.T) {
 		assert.Equal(t, want, have)
 	})
 	t.Run("NewProposalURL", func(t *testing.T) {
-		config := hosting.GitLabConfig{
-			CommonConfig: hosting.CommonConfig{
-				Hostname:     "gitlab.com",
-				Organization: "organization",
-				Repository:   "repo",
+		t.Parallel()
+		tests := map[string]struct {
+			branch string
+			parent string
+			want   string
+		}{
+			"top-level branch": {
+				branch: "feature",
+				parent: "main",
+				want:   "https://gitlab.com/organization/repo/merge_requests/new?merge_request%5Bsource_branch%5D=feature&merge_request%5Btarget_branch%5D=main",
+			},
+			"nested branch": {
+				branch: "feature-3",
+				parent: "feature-2",
+				want:   "https://gitlab.com/organization/repo/merge_requests/new?merge_request%5Bsource_branch%5D=feature-3&merge_request%5Btarget_branch%5D=feature-2",
+			},
+			"special characters in branch name": {
+				branch: "feature-#",
+				parent: "main",
+				want:   "https://gitlab.com/organization/repo/merge_requests/new?merge_request%5Bsource_branch%5D=feature-%23&merge_request%5Btarget_branch%5D=main",
 			},
 		}
-		have, err := config.NewProposalURL("feature", "parent")
-		assert.Nil(t, err)
-		want := "https://gitlab.com/organization/repo/merge_requests/new?merge_request%5Bsource_branch%5D=feature&merge_request%5Btarget_branch%5D=parent"
-		assert.Equal(t, have, want)
+		for name, test := range tests {
+			t.Run(name, func(t *testing.T) {
+				connector := hosting.GitLabConnector{
+					GitLabConfig: hosting.GitLabConfig{
+						CommonConfig: hosting.CommonConfig{
+							Hostname:     "gitlab.com",
+							Organization: "organization",
+							Repository:   "repo",
+						},
+					},
+				}
+				have, err := connector.NewProposalURL(test.branch, test.parent)
+				assert.Nil(t, err)
+				assert.Equal(t, test.want, have)
+			})
+		}
 	})
 }
