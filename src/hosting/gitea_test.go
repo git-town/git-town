@@ -26,10 +26,10 @@ func TestNewGiteaConnector(t *testing.T) {
 			originURL:      "git@self-hosted-gitea.com:git-town/git-town.git",
 		}
 		url := giturl.Parse(repoConfig.originURL)
-		giteaConnector := hosting.NewGiteaConnector(*url, repoConfig, nil)
-		assert.NotNil(t, giteaConnector)
-		assert.Equal(t, "Gitea", giteaConnector.HostingServiceName())
-		assert.Equal(t, "https://self-hosted-gitea.com/git-town/git-town", giteaConnector.RepositoryURL())
+		connector := hosting.NewGiteaConnector(*url, repoConfig, nil)
+		assert.NotNil(t, connector)
+		assert.Equal(t, "Gitea", connector.HostingServiceName())
+		assert.Equal(t, "https://self-hosted-gitea.com/git-town/git-town", connector.RepositoryURL())
 	})
 
 	t.Run("custom hostname", func(t *testing.T) {
@@ -39,10 +39,10 @@ func TestNewGiteaConnector(t *testing.T) {
 			originOverride: "gitea.com",
 		}
 		url := giturl.Parse(repoConfig.originURL)
-		giteaConfig := hosting.NewGiteaConnector(*url, repoConfig, nil)
-		assert.NotNil(t, giteaConfig)
-		assert.Equal(t, "Gitea", giteaConfig.HostingServiceName())
-		assert.Equal(t, "https://gitea.com/git-town/git-town", giteaConfig.RepositoryURL())
+		connector := hosting.NewGiteaConnector(*url, repoConfig, nil)
+		assert.NotNil(t, connector)
+		assert.Equal(t, "Gitea", connector.HostingServiceName())
+		assert.Equal(t, "https://gitea.com/git-town/git-town", connector.RepositoryURL())
 	})
 }
 
@@ -59,9 +59,19 @@ func TestGitea(t *testing.T) {
 		have := connector.DefaultProposalMessage(give)
 		assert.Equal(t, have, want)
 	})
+	t.Run("NewProposalURL", func(t *testing.T) {
+		repoConfig := mockRepoConfig{
+			originURL: "git@gitea.com:git-town/git-town.git",
+		}
+		url := giturl.Parse(repoConfig.originURL)
+		connector := hosting.NewGiteaConnector(*url, repoConfig, nil)
+		have, err := connector.NewProposalURL("feature", "parent")
+		assert.Nil(t, err)
+		assert.Equal(t, have, "https://gitea.com/git-town/git-town/compare/parent...feature")
+	})
 }
 
-func TestFilterPullRequests(t *testing.T) {
+func TestFilterGiteaPullRequests(t *testing.T) {
 	t.Parallel()
 	give := []*gitea.PullRequest{
 		// matching branch
