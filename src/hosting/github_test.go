@@ -119,6 +119,7 @@ func TestGithubConnector(t *testing.T) {
 }
 
 func TestParseCommitMessage(t *testing.T) {
+	t.Parallel()
 	tests := map[string]struct {
 		title string
 		body  string
