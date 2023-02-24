@@ -33,8 +33,8 @@ func (c *GitLabConnector) FindProposal(branch, target string) (*Proposal, error)
 	if len(mergeRequests) > 1 {
 		return nil, fmt.Errorf("found %d merge requests for branch %q", len(mergeRequests), branch)
 	}
-	changeRequest := parseMergeRequest(mergeRequests[0])
-	return &changeRequest, nil
+	proposal := parseMergeRequest(mergeRequests[0])
+	return &proposal, nil
 }
 
 //nolint:nonamedreturns  // return value isn't obvious from function name
@@ -107,8 +107,8 @@ type GitLabConfig struct {
 	CommonConfig
 }
 
-func (c *GitLabConfig) DefaultProposalMessage(changeRequest Proposal) string {
-	return fmt.Sprintf("%s (!%d)", changeRequest.Title, changeRequest.Number)
+func (c *GitLabConfig) DefaultProposalMessage(proposal Proposal) string {
+	return fmt.Sprintf("%s (!%d)", proposal.Title, proposal.Number)
 }
 
 func (c *GitLabConfig) projectPath() string {

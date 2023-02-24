@@ -35,8 +35,8 @@ func (c *GitHubConnector) FindProposal(branch, target string) (*Proposal, error)
 	if len(pullRequests) > 1 {
 		return nil, fmt.Errorf("found %d pull requests from branch %q into branch %q", len(pullRequests), branch, target)
 	}
-	changeRequest := parsePullRequest(pullRequests[0])
-	return &changeRequest, nil
+	proposal := parsePullRequest(pullRequests[0])
+	return &proposal, nil
 }
 
 func (c *GitHubConnector) DefaultProposalMessage(proposal Proposal) string {
