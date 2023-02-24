@@ -9,11 +9,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type diffParentConfig struct {
-	branch       string
-	parentBranch string
-}
-
 func diffParentCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:   "diff-parent [<branch>]",
@@ -42,6 +37,11 @@ Exits with error code 1 if the given branch is a perennial branch or the main br
 			return validateIsConfigured(repo)
 		},
 	}
+}
+
+type diffParentConfig struct {
+	branch       string
+	parentBranch string
 }
 
 // Does not return error because "Ensure" functions will call exit directly.

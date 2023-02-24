@@ -8,12 +8,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type pruneBranchesConfig struct {
-	initialBranch                            string
-	localBranchesWithDeletedTrackingBranches []string
-	mainBranch                               string
-}
-
 func pruneBranchesCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:   "prune-branches",
@@ -48,6 +42,12 @@ This usually means the branch was shipped or killed on another machine.`,
 			return repo.Config.ValidateIsOnline()
 		},
 	}
+}
+
+type pruneBranchesConfig struct {
+	initialBranch                            string
+	localBranchesWithDeletedTrackingBranches []string
+	mainBranch                               string
 }
 
 func determinePruneBranchesConfig(repo *git.ProdRepo) (*pruneBranchesConfig, error) {

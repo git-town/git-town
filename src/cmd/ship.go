@@ -14,22 +14,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type shipConfig struct {
-	branchToShip             string
-	branchToMergeInto        string // TODO: rename to parentBranch
-	canShipViaAPI            bool
-	childBranches            []string
-	defaultProposalMessage   string // TODO: rename to proposalMessage
-	deleteOriginBranch       bool
-	hasOrigin                bool
-	hasTrackingBranch        bool
-	initialBranch            string
-	isShippingInitialBranch  bool
-	isOffline                bool
-	proposal                 *hosting.Proposal
-	proposalsOfChildBranches []hosting.Proposal
-}
-
 func shipCmd(repo *git.ProdRepo) *cobra.Command {
 	var commitMessage string
 	shipCmd := cobra.Command{
@@ -195,6 +179,22 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 		proposal:                 proposal,
 		proposalsOfChildBranches: proposalsOfChildBranches,
 	}, nil
+}
+
+type shipConfig struct {
+	branchToShip             string
+	branchToMergeInto        string // TODO: rename to parentBranch
+	canShipViaAPI            bool
+	childBranches            []string
+	defaultProposalMessage   string // TODO: rename to proposalMessage
+	deleteOriginBranch       bool
+	hasOrigin                bool
+	hasTrackingBranch        bool
+	initialBranch            string
+	isShippingInitialBranch  bool
+	isOffline                bool
+	proposal                 *hosting.Proposal
+	proposalsOfChildBranches []hosting.Proposal
 }
 
 func ensureParentBranchIsMainOrPerennialBranch(branch string, repo *git.ProdRepo) {
