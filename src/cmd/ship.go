@@ -153,14 +153,14 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 	defaultProposalMessage := ""
 	proposalNumber := -1
 	if hasTrackingBranch && !isOffline && connector != nil {
-		prInfo, err := connector.FindProposal(branchToShip, branchToMergeInto)
+		proposal, err := connector.FindProposal(branchToShip, branchToMergeInto)
 		if err != nil {
 			return nil, err
 		}
-		if prInfo != nil {
-			canShipViaAPI = prInfo.CanMergeWithAPI
-			defaultProposalMessage = connector.DefaultProposalMessage(*prInfo)
-			proposalNumber = prInfo.Number
+		if proposal != nil {
+			canShipViaAPI = proposal.CanMergeWithAPI
+			defaultProposalMessage = connector.DefaultProposalMessage(*proposal)
+			proposalNumber = proposal.Number
 		}
 	}
 	deleteOrigin, err := repo.Config.ShouldShipDeleteOriginBranch()
