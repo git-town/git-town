@@ -15,7 +15,8 @@ import (
 // DataTable allows comparing user-generated data with Gherkin tables.
 // The zero value is an empty DataTable.
 type DataTable struct {
-	Cells [][]string // contains table data organized as rows and columns
+	// table data organized as rows and columns
+	Cells [][]string `exhaustruct:"optional"`
 }
 
 // FromGherkin provides a DataTable instance populated with data from the given Gherkin table.

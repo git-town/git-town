@@ -54,11 +54,10 @@ func TestGithubConnector(t *testing.T) {
 	t.Parallel()
 	t.Run("DefaultProposalMessage", func(t *testing.T) {
 		t.Parallel()
-		connector := hosting.GitHubConnector{}
-		give := hosting.Proposal{
-			Number:          1,
-			Title:           "my title",
-			CanMergeWithAPI: true,
+		connector := hosting.GitHubConnector{} //nolint:exhaustruct
+		give := hosting.Proposal{              //nolint:exhaustruct
+			Number: 1,
+			Title:  "my title",
 		}
 		want := "my title (#1)"
 		have := connector.DefaultProposalMessage(give)
@@ -90,7 +89,7 @@ func TestGithubConnector(t *testing.T) {
 		for name, test := range tests {
 			t.Run(name, func(t *testing.T) {
 				connector := hosting.GitHubConnector{
-					CommonConfig: hosting.CommonConfig{
+					CommonConfig: hosting.CommonConfig{ //nolint:exhaustruct
 						Hostname:     "github.com",
 						Organization: "organization",
 						Repository:   "repo",
@@ -105,8 +104,8 @@ func TestGithubConnector(t *testing.T) {
 	})
 	t.Run("RepositoryURL", func(t *testing.T) {
 		t.Parallel()
-		connector := hosting.GitHubConnector{
-			CommonConfig: hosting.CommonConfig{
+		connector := hosting.GitHubConnector{ //nolint:exhaustruct
+			CommonConfig: hosting.CommonConfig{ //nolint:exhaustruct
 				Hostname:     "github.com",
 				Organization: "organization",
 				Repository:   "repo",

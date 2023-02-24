@@ -18,18 +18,35 @@ import (
 //   - Temporarily override certain shell commands with mock implementations.
 //     Temporary mocks are only valid for the next command being run.
 type MockingShell struct {
-	binDir     string // the directory that stores the mock shell command implementations, ignored if empty
-	Debug      bool   // whether to log the output of subshell commands
-	gitEditor  string // name of the binary to use as the custom editor during "git commit"
-	homeDir    string // the directory that contains the global Git configuration
-	testOrigin string // optional content of the GIT_TOWN_REMOTE environment variable
-	usesBinDir bool   // indicates whether the current test has created the binDir
-	workingDir string // the directory in which this runner runs
+	// the directory that stores the mock shell command implementations, ignored if empty
+	binDir string
+
+	// whether to log the output of subshell commands
+	Debug bool `exhaustruct:"optional"`
+
+	// name of the binary to use as the custom editor during "git commit"
+	gitEditor string `exhaustruct:"optional"`
+
+	// the directory that contains the global Git configuration
+	homeDir string
+
+	// optional content of the GIT_TOWN_REMOTE environment variable
+	testOrigin string `exhaustruct:"optional"`
+
+	// indicates whether the current test has created the binDir
+	usesBinDir bool `exhaustruct:"optional"`
+
+	// the directory in which this runner runs
+	workingDir string
 }
 
 // NewMockingShell provides a new MockingShell instance that executes in the given directory.
 func NewMockingShell(workingDir string, homeDir string, binDir string) MockingShell {
-	return MockingShell{workingDir: workingDir, homeDir: homeDir, binDir: binDir}
+	return MockingShell{
+		workingDir: workingDir,
+		homeDir:    homeDir,
+		binDir:     binDir,
+	}
 }
 
 // createBinDir creates the directory that contains mock shell command implementations.

@@ -21,24 +21,24 @@ type GitEnvironment struct {
 	Dir string
 
 	// CoworkerRepo is the optional Git repository that is locally checked out at the coworker machine.
-	CoworkerRepo *Repo
+	CoworkerRepo *Repo `exhaustruct:"optional"`
 
 	// DevRepo is the Git repository that is locally checked out at the developer machine.
-	DevRepo Repo
+	DevRepo Repo `exhaustruct:"optional"`
 
 	// DevShell provides a reference to the MockingShell instance used in the DeveloperRepo.
-	DevShell *MockingShell
+	DevShell *MockingShell `exhaustruct:"optional"`
 
 	// OriginRepo is the Git repository that simulates the origin repo (on GitHub).
 	// If this value is nil, the current test setup has no origin.
-	OriginRepo *Repo
+	OriginRepo *Repo `exhaustruct:"optional"`
 
 	// SubmoduleRepo is the Git repository that simulates an external repo used as a submodule.
 	// If this value is nil, the current test setup uses no submodules.
-	SubmoduleRepo *Repo
+	SubmoduleRepo *Repo `exhaustruct:"optional"`
 
 	// UpstreamRepo is the optional Git repository that contains the upstream for this environment.
-	UpstreamRepo *Repo
+	UpstreamRepo *Repo `exhaustruct:"optional"`
 }
 
 // CloneGitEnvironment provides a GitEnvironment instance in the given directory,
