@@ -1,6 +1,7 @@
 package hosting_test
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/git-town/git-town/v7/src/giturl"
@@ -112,4 +113,37 @@ func TestGithubConnector(t *testing.T) {
 		have := connector.RepositoryURL()
 		assert.Equal(t, have, want)
 	})
+}
+
+func TestParseCommitMessage(t *testing.T) {
+	tests := map[string]struct {
+		title string
+		body  string
+	}{
+		"title": {
+			title: "title",
+			body:  "",
+		},
+		"title\nbody": {
+			title: "title",
+			body:  "body",
+		},
+		"title\n\nbody": {
+			title: "title",
+			body:  "body",
+		},
+		"title\n\n\nbody": {
+			title: "title",
+			body:  "body",
+		},
+		"title\nbody1\nbody2\n": {
+			title: "title",
+			body:  "body1\nbody2\n",
+		},
+	}
+	for give, want := range tests {
+		haveTitle, haveBody := hosting.ParseCommitMessage(give)
+		assert.Equal(t, want.title, haveTitle, give)
+		assert.Equal(t, want.body, haveBody, strings.ReplaceAll(give, "\n", "\\n"))
+	}
 }

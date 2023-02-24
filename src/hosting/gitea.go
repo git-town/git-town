@@ -63,7 +63,7 @@ func (c *GiteaConnector) SquashMergeProposal(number int, message string) (mergeS
 	if number <= 0 {
 		return "", fmt.Errorf("no pull request number given")
 	}
-	title, body := parseCommitMessage(message)
+	title, body := ParseCommitMessage(message)
 	_, err = c.client.MergePullRequest(c.organization, c.repository, int64(number), gitea.MergePullRequestOption{
 		Style:   gitea.MergeStyleSquash,
 		Title:   title,

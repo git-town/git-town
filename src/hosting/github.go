@@ -67,7 +67,7 @@ func (c *GitHubConnector) SquashMergeProposal(number int, message string) (merge
 	if c.log != nil {
 		c.log("GitHub API: merging PR #%d\n", number)
 	}
-	title, body := parseCommitMessage(message)
+	title, body := ParseCommitMessage(message)
 	result, _, err := c.client.PullRequests.Merge(context.Background(), c.organization, c.repository, number, body, &github.PullRequestOptions{
 		MergeMethod: "squash",
 		CommitTitle: title,
@@ -124,13 +124,16 @@ func parsePullRequest(pullRequest *github.PullRequest) Proposal {
 }
 
 //nolint:nonamedreturns
-func parseCommitMessage(message string) (title, body string) {
+func ParseCommitMessage(message string) (title, body string) {
 	parts := strings.SplitN(message, "\n", 2)
 	title = parts[0]
 	if len(parts) == 2 {
 		body = parts[1]
 	} else {
 		body = ""
+	}
+	for strings.HasPrefix(body, "\n") {
+		body = body[1:]
 	}
 	return
 }
