@@ -176,6 +176,37 @@ func determineSyncBranchConfig(repo *git.ProdRepo, initialBranch string) (SyncBr
 	return result, nil
 }
 
+// syncSteps provides the step list for the "git sync" command.
+func syncSteps(config *SyncConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+	result := runstate.StepList{}
+	for _, branch := range config.branchesToSync {
+		steps, err := syncBranchSteps(branch, true, config.syncBranchConfig, repo)
+		if err != nil {
+			return runstate.StepList{}, err
+		}
+		result.AppendList(steps)
+	}
+	result.Append(&steps.CheckoutBranchStep{Branch: config.initialBranch})
+	if config.syncBranchConfig.hasOrigin && config.syncBranchConfig.shouldPushTags && !config.syncBranchConfig.isOffline {
+		result.Append(&steps.PushTagsStep{})
+	}
+	result.pushHook, err = repo.Config.PushHook()
+	if err != nil {
+		return result, err
+	}
+	result.mainBranch = repo.Config.MainBranch()
+	result.hasUpstream, err = repo.Silent.HasRemote("upstream")
+	if err != nil {
+		return result, err
+	}
+	result.shouldSyncUpstream, err = repo.Config.ShouldSyncUpstream()
+	if err != nil {
+		return result, err
+	}
+	result.shouldPushTags = !repo.Config.IsFeatureBranch(initialBranch)
+	return result, nil
+}
+
 func (b *syncBuilder) append(step steps.Step) {
 	b.steps.Append(step)
 }
