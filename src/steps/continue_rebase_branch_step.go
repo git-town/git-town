@@ -19,7 +19,7 @@ func (step *ContinueRebaseBranchStep) CreateContinueStep() Step {
 	return step
 }
 
-func (step *ContinueRebaseBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
+func (step *ContinueRebaseBranchStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
 	hasRebaseInProgress, err := repo.Silent.HasRebaseInProgress()
 	if err != nil {
 		return err

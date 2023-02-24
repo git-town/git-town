@@ -9,58 +9,68 @@ import (
 	"github.com/git-town/git-town/v7/src/giturl"
 )
 
-// BitbucketDriver provides access to the API of Bitbucket installations.
-type BitbucketDriver struct {
-	git          gitRunner
-	hostname     string
-	originURL    string
+// BitbucketConnector provides access to the API of Bitbucket installations.
+type BitbucketConnector struct {
+	CommonConfig
 	organization string
-	repository   string
+	git          gitRunner
 }
 
-// NewBitbucketDriver provides a Bitbucket driver instance if the current repo is hosted on Bitbucket,
+// NewBitbucketConnector provides a Bitbucket connector instance if the current repo is hosted on Bitbucket,
 // otherwise nil.
-func NewBitbucketDriver(url giturl.Parts, config config, git gitRunner) *BitbucketDriver {
-	driverType := config.HostingService()
-	manualOrigin := config.OriginOverride()
+func NewBitbucketConnector(url giturl.Parts, gitConfig gitConfig, git gitRunner) *BitbucketConnector {
+	manualOrigin := gitConfig.OriginOverride()
 	if manualOrigin != "" {
 		url.Host = manualOrigin
 	}
-	if driverType != "bitbucket" && url.Host != "bitbucket.org" {
+	if gitConfig.HostingService() != "bitbucket" && url.Host != "bitbucket.org" {
 		return nil
 	}
-	return &BitbucketDriver{
-		git:          git,
-		hostname:     url.Host,
+	return &BitbucketConnector{
+		CommonConfig: CommonConfig{
+			APIToken:     "",
+			Hostname:     url.Host,
+			OriginURL:    gitConfig.OriginURL(),
+			Organization: url.Org,
+			Repository:   url.Repo,
+		},
 		organization: url.Org,
-		originURL:    config.OriginURL(),
-		repository:   url.Repo,
+		git:          git,
 	}
 }
 
-func (d *BitbucketDriver) ProposalDetails(branch, parentBranch string) (*Proposal, error) {
-	return nil, fmt.Errorf("BitBucket API functionality isn't implemented")
+func (c *BitbucketConnector) FindProposal(branch, target string) (*Proposal, error) {
+	return nil, fmt.Errorf("BitBucket API functionality isn't implemented yet")
 }
 
-func (d *BitbucketDriver) NewProposalURL(branch, parentBranch string) (string, error) {
+func (c *BitbucketConnector) DefaultProposalMessage(proposal Proposal) string {
+	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
+}
+
+func (c *BitbucketConnector) HostingServiceName() string {
+	return "Bitbucket"
+}
+
+func (c *BitbucketConnector) NewProposalURL(branch, parentBranch string) (string, error) {
 	query := url.Values{}
-	branchSha, err := d.git.ShaForBranch(branch)
+	branchSha, err := c.git.ShaForBranch(branch)
 	if err != nil {
 		return "", fmt.Errorf("cannot determine pull request URL from %q to %q: %w", branch, parentBranch, err)
 	}
-	query.Add("source", strings.Join([]string{d.organization + "/" + d.repository, branchSha[0:12], branch}, ":"))
-	query.Add("dest", strings.Join([]string{d.organization + "/" + d.repository, "", parentBranch}, ":"))
-	return fmt.Sprintf("%s/pull-request/new?%s", d.RepositoryURL(), query.Encode()), nil
+	query.Add("source", strings.Join([]string{c.organization + "/" + c.Repository, branchSha[0:12], branch}, ":"))
+	query.Add("dest", strings.Join([]string{c.organization + "/" + c.Repository, "", parentBranch}, ":"))
+	return fmt.Sprintf("%s/pull-request/new?%s", c.RepositoryURL(), query.Encode()), nil
 }
 
-func (d *BitbucketDriver) RepositoryURL() string {
-	return fmt.Sprintf("https://%s/%s/%s", d.hostname, d.organization, d.repository)
+func (c *BitbucketConnector) RepositoryURL() string {
+	return fmt.Sprintf("https://%s/%s/%s", c.Hostname, c.organization, c.Repository)
 }
 
-func (d *BitbucketDriver) SquashMergeProposal(options SquashMergeProposalOptions) (string, error) {
+//nolint:nonamedreturns
+func (c *BitbucketConnector) SquashMergeProposal(number int, message string) (mergeSHA string, err error) {
 	return "", errors.New("shipping pull requests via the Bitbucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues")
 }
 
-func (d *BitbucketDriver) HostingServiceName() string {
-	return "Bitbucket"
+func (c *BitbucketConnector) UpdateProposalTarget(number int, target string) error {
+	return errors.New("shipping pull requests via the Bitbucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues")
 }

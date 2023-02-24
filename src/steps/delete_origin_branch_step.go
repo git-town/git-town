@@ -21,7 +21,7 @@ func (step *DeleteOriginBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, er
 	return &CreateRemoteBranchStep{Branch: step.Branch, Sha: step.branchSha, NoPushHook: step.NoPushHook}, nil
 }
 
-func (step *DeleteOriginBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
+func (step *DeleteOriginBranchStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
 	if !step.IsTracking {
 		trackingBranch := repo.Silent.TrackingBranch(step.Branch)
 		var err error

@@ -13,6 +13,6 @@ func (step *StashOpenChangesStep) CreateUndoStep(repo *git.ProdRepo) (Step, erro
 	return &RestoreOpenChangesStep{}, nil
 }
 
-func (step *StashOpenChangesStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
+func (step *StashOpenChangesStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
 	return repo.Logging.Stash()
 }

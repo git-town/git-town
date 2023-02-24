@@ -70,7 +70,7 @@ func appendStepList(config *appendConfig, repo *git.ProdRepo) (runstate.StepList
 // handleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
 //
 //nolint:nonamedreturns  // return value isn't obvious from function name
-func handleUnfinishedState(repo *git.ProdRepo, driver hosting.Driver) (quit bool, err error) {
+func handleUnfinishedState(repo *git.ProdRepo, connector hosting.Connector) (quit bool, err error) {
 	runState, err := runstate.Load(repo)
 	if err != nil {
 		return false, fmt.Errorf("cannot load previous run state: %w", err)
@@ -99,13 +99,13 @@ func handleUnfinishedState(repo *git.ProdRepo, driver hosting.Driver) (quit bool
 		if hasConflicts {
 			return false, fmt.Errorf("you must resolve the conflicts before continuing")
 		}
-		return true, runstate.Execute(runState, repo, driver)
+		return true, runstate.Execute(runState, repo, connector)
 	case dialog.ResponseTypeAbort:
 		abortRunState := runState.CreateAbortRunState()
-		return true, runstate.Execute(&abortRunState, repo, driver)
+		return true, runstate.Execute(&abortRunState, repo, connector)
 	case dialog.ResponseTypeSkip:
 		skipRunState := runState.CreateSkipRunState()
-		return true, runstate.Execute(&skipRunState, repo, driver)
+		return true, runstate.Execute(&skipRunState, repo, connector)
 	default:
 		return false, fmt.Errorf("unknown response: %s", response)
 	}

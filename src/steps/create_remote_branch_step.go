@@ -13,6 +13,6 @@ type CreateRemoteBranchStep struct {
 	Sha        string
 }
 
-func (step *CreateRemoteBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
+func (step *CreateRemoteBranchStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
 	return repo.Logging.CreateRemoteBranch(step.Sha, step.Branch, step.NoPushHook)
 }

@@ -15,7 +15,7 @@ func (step *ContinueMergeBranchStep) CreateContinueStep() Step {
 	return step
 }
 
-func (step *ContinueMergeBranchStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
+func (step *ContinueMergeBranchStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
 	hasMergeInprogress, err := repo.Silent.HasMergeInProgress()
 	if err != nil {
 		return err
