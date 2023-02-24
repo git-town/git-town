@@ -49,9 +49,10 @@ func TestNewGithubConnector(t *testing.T) {
 	})
 }
 
-//nolint:paralleltest  // mocks HTTP
 func TestGithubConnector(t *testing.T) {
+	t.Parallel()
 	t.Run("DefaultProposalMessage", func(t *testing.T) {
+		t.Parallel()
 		give := hosting.Proposal{
 			Number:          1,
 			Title:           "my title",
@@ -61,5 +62,42 @@ func TestGithubConnector(t *testing.T) {
 		connector := hosting.GitHubConnector{}
 		have := connector.DefaultProposalMessage(give)
 		assert.Equal(t, want, have)
+	})
+	t.Run("NewProposalURL", func(t *testing.T) {
+		t.Parallel()
+		tests := map[string]struct {
+			branch string
+			parent string
+			want   string
+		}{
+			"top-level branch": {
+				branch: "feature",
+				parent: "main",
+				want:   "https://github.com/git-town/git-town/compare/feature?expand=1",
+			},
+			"nested branch": {
+				branch: "feature-3",
+				parent: "feature-2",
+				want:   "https://github.com/git-town/git-town/compare/feature-2...feature-3?expand=1",
+			},
+			"special characters in branch name": {
+				branch: "feature-#",
+				parent: "main",
+				want:   "https://github.com/git-town/git-town/compare/feature-%23?expand=1",
+			},
+		}
+		for name, test := range tests {
+			t.Run(name, func(t *testing.T) {
+				repoConfig := mockRepoConfig{
+					mainBranch: "main",
+					originURL:  "git@github.com:git-town/git-town.git",
+				}
+				url := giturl.Parse(repoConfig.originURL)
+				connector := hosting.NewGithubConnector(*url, repoConfig, nil)
+				have, err := connector.NewProposalURL(test.branch, test.parent)
+				assert.Nil(t, err)
+				assert.Equal(t, have, test.want)
+			})
+		}
 	})
 }
