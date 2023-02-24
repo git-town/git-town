@@ -67,22 +67,22 @@ func TestNewGiteaConfig(t *testing.T) {
 
 //nolint:paralleltest  // mocks HTTP
 func TestGitea(t *testing.T) {
-	t.Run(".LoadPullRequestInfo()", func(t *testing.T) {
+	t.Run(".ProposalDetails()", func(t *testing.T) {
 		t.Run("happy path", func(t *testing.T) {
 			driver, teardown := setupGiteaDriver(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", giteaCurrOpen, httpmock.NewStringResponder(200, `[{"number": 1, "title": "my title", "mergeable": true, "base": {"label": "main"}, "head": {"label": "git-town/feature"} }]`))
-			prInfo, err := driver.LoadPullRequestInfo("feature", "main")
+			prInfo, err := driver.ProposalDetails("feature", "main")
 			assert.NoError(t, err)
 			assert.True(t, prInfo.CanMergeWithAPI)
-			assert.Equal(t, "my title (#1)", prInfo.DefaultCommitMessage)
-			assert.Equal(t, 1, prInfo.PullRequestNumber)
+			assert.Equal(t, "my title (#1)", prInfo.DefaultProposalMessage)
+			assert.Equal(t, 1, prInfo.ProposalNumber)
 		})
 
 		t.Run("empty Git token", func(t *testing.T) {
 			driver, teardown := setupGiteaDriver(t, "")
 			defer teardown()
-			prInfo, err := driver.LoadPullRequestInfo("feature", "main")
+			prInfo, err := driver.ProposalDetails("feature", "main")
 			assert.Nil(t, err)
 			assert.Nil(t, prInfo)
 		})
@@ -91,7 +91,7 @@ func TestGitea(t *testing.T) {
 			driver, teardown := setupGiteaDriver(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", giteaCurrOpen, httpmock.NewStringResponder(404, ""))
-			_, err := driver.LoadPullRequestInfo("feature", "main")
+			_, err := driver.ProposalDetails("feature", "main")
 			assert.Error(t, err)
 		})
 
@@ -99,7 +99,7 @@ func TestGitea(t *testing.T) {
 			driver, teardown := setupGiteaDriver(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", giteaCurrOpen, httpmock.NewStringResponder(200, "[]"))
-			_, err := driver.LoadPullRequestInfo("feature", "main")
+			_, err := driver.ProposalDetails("feature", "main")
 			assert.ErrorContains(t, err, "no pull request from branch \"feature\" to branch \"main\" found")
 		})
 
@@ -107,12 +107,12 @@ func TestGitea(t *testing.T) {
 			driver, teardown := setupGiteaDriver(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", giteaCurrOpen, httpmock.NewStringResponder(200, `[{"number": 1, "title": "title 1", "mergeable": true, "base": {"label": "main"}, "head": {"label": "git-town/feature"} },{"number": 2, "title": "title 2", "mergeable": true, "base": {"label": "main"}, "head": {"label": "git-town/feature"} }]`))
-			_, err := driver.LoadPullRequestInfo("feature", "main")
+			_, err := driver.ProposalDetails("feature", "main")
 			assert.ErrorContains(t, err, "found 2 pull requests from branch \"feature\" to branch \"main\"")
 		})
 	})
 
-	t.Run(".MergePullRequest()", func(t *testing.T) {
+	t.Run(".SquashMergeProposal()", func(t *testing.T) {
 		t.Run("happy path", func(t *testing.T) {
 			driver, teardown := setupGiteaDriver(t, "TOKEN")
 			defer teardown()
@@ -124,11 +124,11 @@ func TestGitea(t *testing.T) {
 				return httpmock.NewStringResponse(200, `[]`), nil
 			})
 			httpmock.RegisterResponder("GET", giteaPR1, httpmock.NewStringResponder(200, `{"number": 1, "merge_commit_sha": "abc123"}`))
-			sha, err := driver.MergePullRequest(hosting.MergePullRequestOptions{
-				Branch:            "feature",
-				PullRequestNumber: 1,
-				CommitMessage:     "title\nextra detail1\nextra detail2",
-				ParentBranch:      "main",
+			sha, err := driver.SquashMergeProposal(hosting.SquashMergeProposalOptions{
+				Branch:         "feature",
+				ProposalNumber: 1,
+				CommitMessage:  "title\nextra detail1\nextra detail2",
+				ParentBranch:   "main",
 			})
 			assert.NoError(t, err)
 			assert.Equal(t, "abc123", sha)
@@ -142,7 +142,7 @@ func TestGitea(t *testing.T) {
 			driver, teardown := setupGiteaDriver(t, "TOKEN")
 			defer teardown()
 			httpmock.RegisterResponder("GET", giteaCurrOpen, httpmock.NewStringResponder(404, ""))
-			_, err := driver.MergePullRequest(hosting.MergePullRequestOptions{
+			_, err := driver.SquashMergeProposal(hosting.SquashMergeProposalOptions{
 				Branch:        "feature",
 				CommitMessage: "title\nextra detail1\nextra detail2",
 				ParentBranch:  "main",
@@ -155,11 +155,11 @@ func TestGitea(t *testing.T) {
 			defer teardown()
 			httpmock.RegisterResponder("GET", giteaCurrOpen, httpmock.NewStringResponder(200, "[]"))
 			httpmock.RegisterResponder("GET", giteaPR1Merge, httpmock.NewStringResponder(404, ""))
-			_, err := driver.MergePullRequest(hosting.MergePullRequestOptions{
-				Branch:            "feature",
-				PullRequestNumber: 1,
-				CommitMessage:     "title\nextra detail1\nextra detail2",
-				ParentBranch:      "main",
+			_, err := driver.SquashMergeProposal(hosting.SquashMergeProposalOptions{
+				Branch:         "feature",
+				ProposalNumber: 1,
+				CommitMessage:  "title\nextra detail1\nextra detail2",
+				ParentBranch:   "main",
 			})
 			assert.Error(t, err)
 		})
@@ -171,11 +171,11 @@ func TestGitea(t *testing.T) {
 			httpmock.RegisterResponder("POST", giteaPR1Merge, func(req *http.Request) (*http.Response, error) {
 				return httpmock.NewStringResponse(409, `{}`), nil
 			})
-			_, err := driver.MergePullRequest(hosting.MergePullRequestOptions{
-				Branch:            "feature",
-				PullRequestNumber: 1,
-				CommitMessage:     "title\nextra detail1\nextra detail2",
-				ParentBranch:      "main",
+			_, err := driver.SquashMergeProposal(hosting.SquashMergeProposalOptions{
+				Branch:         "feature",
+				ProposalNumber: 1,
+				CommitMessage:  "title\nextra detail1\nextra detail2",
+				ParentBranch:   "main",
 			})
 			assert.Error(t, err)
 		})
@@ -186,7 +186,7 @@ func TestGitea(t *testing.T) {
 			httpmock.RegisterResponder("GET", giteaCurrOpen, httpmock.NewStringResponder(200, `[{"number": 1, "base": {"label": "main"}, "head": {"label": "foo"} }]`))
 			httpmock.RegisterResponder("GET", giteaVersion, httpmock.NewStringResponder(200, `{"version": "1.11.5"}`))
 			httpmock.RegisterResponder("POST", giteaPR1Merge, httpmock.NewStringResponder(404, ""))
-			_, err := driver.MergePullRequest(hosting.MergePullRequestOptions{
+			_, err := driver.SquashMergeProposal(hosting.SquashMergeProposalOptions{
 				Branch:        "feature",
 				CommitMessage: "title\nextra detail1\nextra detail2",
 				ParentBranch:  "main",

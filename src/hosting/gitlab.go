@@ -42,7 +42,7 @@ func (c GitlabConfig) BaseURL() string {
 	return fmt.Sprintf("https://%s", c.hostname)
 }
 
-func (c GitlabConfig) defaultCommitMessage(mergeRequest *gitlab.MergeRequest) string {
+func (c GitlabConfig) defaultProposalMessage(mergeRequest *gitlab.MergeRequest) string {
 	// GitLab uses a dash as MR prefix for the (project-)internal ID (IID)
 	return fmt.Sprintf("%s (!%d)", mergeRequest.Title, mergeRequest.IID)
 }
@@ -66,7 +66,7 @@ func (c GitlabConfig) HostingServiceName() string {
 	return "GitLab"
 }
 
-func (c GitlabConfig) NewPullRequestURL(branch, parentBranch string) (string, error) {
+func (c GitlabConfig) NewProposalURL(branch, parentBranch string) (string, error) {
 	query := url.Values{}
 	query.Add("merge_request[source_branch]", branch)
 	query.Add("merge_request[target_branch]", parentBranch)
@@ -88,7 +88,7 @@ type GitlabDriver struct {
 	log    logFn
 }
 
-func (d *GitlabDriver) LoadPullRequestInfo(branch, parentBranch string) (*PullRequestInfo, error) {
+func (d *GitlabDriver) ProposalDetails(branch, parentBranch string) (*Proposal, error) {
 	if d.apiToken == "" {
 		return nil, nil //nolint:nilnil // we really want to return nil here
 	}
@@ -102,10 +102,10 @@ func (d *GitlabDriver) LoadPullRequestInfo(branch, parentBranch string) (*PullRe
 	if len(mergeRequests) > 1 {
 		return nil, fmt.Errorf("found %d merge requests from branch %q to branch %q", len(mergeRequests), branch, parentBranch)
 	}
-	return &PullRequestInfo{
-		CanMergeWithAPI:      true,
-		DefaultCommitMessage: d.defaultCommitMessage(mergeRequests[0]),
-		PullRequestNumber:    mergeRequests[0].IID,
+	return &Proposal{
+		CanMergeWithAPI:        true,
+		DefaultProposalMessage: d.defaultProposalMessage(mergeRequests[0]),
+		ProposalNumber:         mergeRequests[0].IID,
 	}, nil
 }
 
@@ -121,19 +121,19 @@ func (d *GitlabDriver) loadMergeRequests(branch, parentBranch string) ([]*gitlab
 }
 
 //nolint:nonamedreturns  // return value isn't obvious from function name
-func (d *GitlabDriver) MergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
+func (d *GitlabDriver) SquashMergeProposal(options SquashMergeProposalOptions) (mergeSha string, err error) {
 	err = d.updatePullRequestsAgainst(options)
 	if err != nil {
 		return "", err
 	}
-	if options.PullRequestNumber <= 0 {
+	if options.ProposalNumber <= 0 {
 		return "", fmt.Errorf("cannot merge via GitLab since there is no merge request")
 	}
 	if options.LogRequests {
-		d.log("GitLab API: Merging MR !%d\n", options.PullRequestNumber)
+		d.log("GitLab API: Merging MR !%d\n", options.ProposalNumber)
 	}
 	// GitLab API wants the full commit message in the body
-	result, _, err := d.client.MergeRequests.AcceptMergeRequest(d.ProjectPath(), options.PullRequestNumber, &gitlab.AcceptMergeRequestOptions{
+	result, _, err := d.client.MergeRequests.AcceptMergeRequest(d.ProjectPath(), options.ProposalNumber, &gitlab.AcceptMergeRequestOptions{
 		SquashCommitMessage: gitlab.String(options.CommitMessage),
 		Squash:              gitlab.Bool(true),
 		// This will be deleted by Git Town and make it fail if it is already deleted
@@ -146,7 +146,7 @@ func (d *GitlabDriver) MergePullRequest(options MergePullRequestOptions) (mergeS
 	return result.SHA, nil
 }
 
-func (d *GitlabDriver) updatePullRequestsAgainst(options MergePullRequestOptions) error {
+func (d *GitlabDriver) updatePullRequestsAgainst(options SquashMergeProposalOptions) error {
 	// Fetch all open child merge requests that have this branch as their parent
 	mergeRequests, _, err := d.client.MergeRequests.ListProjectMergeRequests(d.ProjectPath(), &gitlab.ListProjectMergeRequestsOptions{
 		TargetBranch: gitlab.String(options.Branch),

@@ -7,37 +7,37 @@ import (
 	"github.com/git-town/git-town/v7/src/hosting"
 )
 
-// DriverMergePullRequestStep squash merges the branch with the given name into the current branch.
-type DriverMergePullRequestStep struct {
+// DriverSquashMergeProposalStep squash merges the branch with the given name into the current branch.
+type DriverSquashMergeProposalStep struct {
 	NoOpStep
 	Branch                    string
 	CommitMessage             string
-	DefaultCommitMessage      string
+	DefaultProposalMessage    string
 	enteredEmptyCommitMessage bool
 	mergeError                error
 	mergeSha                  string
-	PullRequestNumber         int
+	ProposalNumber            int
 }
 
-func (step *DriverMergePullRequestStep) CreateAbortStep() Step {
+func (step *DriverSquashMergeProposalStep) CreateAbortStep() Step {
 	if step.enteredEmptyCommitMessage {
 		return &DiscardOpenChangesStep{}
 	}
 	return nil
 }
 
-func (step *DriverMergePullRequestStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+func (step *DriverSquashMergeProposalStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
 	return &RevertCommitStep{Sha: step.mergeSha}, nil
 }
 
-func (step *DriverMergePullRequestStep) CreateAutomaticAbortError() error {
+func (step *DriverSquashMergeProposalStep) CreateAutomaticAbortError() error {
 	if step.enteredEmptyCommitMessage {
 		return fmt.Errorf("aborted because commit exited with error")
 	}
 	return step.mergeError
 }
 
-func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
+func (step *DriverSquashMergeProposalStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
 	commitMessage := step.CommitMessage
 	//nolint:nestif
 	if commitMessage == "" {
@@ -48,7 +48,7 @@ func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo, driver hosting.D
 		if err != nil {
 			return err
 		}
-		err = repo.Silent.CommentOutSquashCommitMessage(step.DefaultCommitMessage + "\n\n")
+		err = repo.Silent.CommentOutSquashCommitMessage(step.DefaultProposalMessage + "\n\n")
 		if err != nil {
 			return fmt.Errorf("cannot comment out the squash commit message: %w", err)
 		}
@@ -70,18 +70,18 @@ func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo, driver hosting.D
 	if err != nil {
 		return err
 	}
-	step.mergeSha, step.mergeError = driver.MergePullRequest(hosting.MergePullRequestOptions{
-		Branch:            step.Branch,
-		PullRequestNumber: step.PullRequestNumber,
-		CommitMessage:     commitMessage,
-		LogRequests:       true,
-		ParentBranch:      currentBranch,
+	step.mergeSha, step.mergeError = driver.SquashMergeProposal(hosting.SquashMergeProposalOptions{
+		Branch:         step.Branch,
+		ProposalNumber: step.ProposalNumber,
+		CommitMessage:  commitMessage,
+		LogRequests:    true,
+		ParentBranch:   currentBranch,
 	})
 	return step.mergeError
 }
 
 // ShouldAutomaticallyAbortOnError returns whether this step should cause the command to
 // automatically abort if it errors.
-func (step *DriverMergePullRequestStep) ShouldAutomaticallyAbortOnError() bool {
+func (step *DriverSquashMergeProposalStep) ShouldAutomaticallyAbortOnError() bool {
 	return true
 }

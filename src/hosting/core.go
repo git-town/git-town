@@ -12,16 +12,16 @@ import (
 
 // Driver defines the structure of drivers for the different code hosting services.
 type Driver interface {
-	// LoadPullRequestInfo loads information about the pull request of the given branch into the given parent branch
+	// ProposalDetails loads information about the pull request of the given branch into the given parent branch
 	// from the code hosting provider.
-	LoadPullRequestInfo(branch, parentBranch string) (*PullRequestInfo, error)
+	ProposalDetails(branch, parentBranch string) (*Proposal, error)
 
-	// NewPullRequestURL provides the URL of the page
-	// to create a new pull request online.
-	NewPullRequestURL(branch, parentBranch string) (string, error)
+	// NewProposalURL provides the URL of the page
+	// to create a new proposal online.
+	NewProposalURL(branch, parentBranch string) (string, error)
 
-	// MergePullRequest merges the pull request through the hosting service API.
-	MergePullRequest(MergePullRequestOptions) (mergeSha string, err error)
+	// SquashMergeProposal merges the pull request through the hosting service API.
+	SquashMergeProposal(SquashMergeProposalOptions) (mergeSha string, err error)
 
 	// RepositoryURL provides the URL where the given repository
 	// can be found online.
@@ -60,20 +60,20 @@ type gitRunner interface {
 	ShaForBranch(string) (string, error)
 }
 
-// PullRequestInfo contains information about a pull request.
-type PullRequestInfo struct {
-	CanMergeWithAPI      bool
-	DefaultCommitMessage string
-	PullRequestNumber    int
+// Proposal contains information about a pull request.
+type Proposal struct {
+	CanMergeWithAPI        bool
+	DefaultProposalMessage string
+	ProposalNumber         int
 }
 
-// MergePullRequestOptions defines the options to the MergePullRequest function.
-type MergePullRequestOptions struct {
-	Branch            string
-	CommitMessage     string
-	LogRequests       bool
-	ParentBranch      string
-	PullRequestNumber int
+// SquashMergeProposalOptions defines the options to the SquashMergeProposal function.
+type SquashMergeProposalOptions struct {
+	Branch         string
+	CommitMessage  string
+	LogRequests    bool
+	ParentBranch   string
+	ProposalNumber int
 }
 
 // logFn defines a function with fmt.Printf API that CodeHostingDriver instances can use to give updates on activities they do.
