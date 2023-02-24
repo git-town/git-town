@@ -13,15 +13,25 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type syncConfig struct {
-	branchesToSync []string
-	hasOrigin      bool
-	initialBranch  string
-	isOffline      bool
-	shouldPushTags bool
+type SyncConfig struct {
+	branchesToSync   []string
+	initialBranch    string
+	syncBranchConfig SyncBranchConfig
+}
+
+type SyncBranchConfig struct {
+	hasOrigin          bool
+	hasUpstream        bool
+	isOffline          bool
+	mainBranch         string
+	pushHook           bool
+	shouldPushTags     bool
+	shouldSyncUpstream bool
+	syncStrategy       string
 }
 
 func syncCmd(repo *git.ProdRepo) *cobra.Command {
+	// TODO: move to bottom of this function
 	var allFlag bool
 	var dryRunFlag bool
 	syncCmd := cobra.Command{
@@ -45,11 +55,11 @@ If the repository contains an "upstream" remote,
 syncs the main branch with its upstream counterpart.
 You can disable this by running "git config %s false".`, config.SyncUpstream),
 		Run: func(cmd *cobra.Command, args []string) {
-			config, err := determineSyncConfig(allFlag, repo)
+			syncConfig, err := determineSyncConfig(allFlag, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
-			stepList, err := syncSteps(config, repo)
+			stepList, err := syncSteps(syncConfig, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
@@ -89,12 +99,16 @@ You can disable this by running "git config %s false".`, config.SyncUpstream),
 	return &syncCmd
 }
 
-func determineSyncConfig(allFlag bool, repo *git.ProdRepo) (*syncConfig, error) {
+func determineSyncConfig(allFlag bool, repo *git.ProdRepo) (*SyncConfig, error) {
+	initialBranch, err := repo.Silent.CurrentBranch()
+	if err != nil {
+		return nil, err
+	}
 	hasOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
 		return nil, err
 	}
-	isOffline, err := repo.Config.IsOffline()
+	syncBranchConfig, err := determineSyncBranchConfig(repo, initialBranch)
 	if err != nil {
 		return nil, err
 	}
@@ -120,37 +134,58 @@ func determineSyncConfig(allFlag bool, repo *git.ProdRepo) (*syncConfig, error) 
 		if err != nil {
 			return nil, err
 		}
-		branchesToSync = branches
-		shouldPushTags = true
+		syncConfig.branchesToSync = branches
+		syncBranchConfig.shouldPushTags = true
 	} else {
-		err = parentDialog.EnsureKnowsParentBranches([]string{initialBranch}, repo)
+		err = parentDialog.EnsureKnowsParentBranches([]string{syncConfig.initialBranch}, repo)
 		if err != nil {
 			return nil, err
 		}
-		branchesToSync = append(repo.Config.AncestorBranches(initialBranch), initialBranch)
-		shouldPushTags = !repo.Config.IsFeatureBranch(initialBranch)
+		syncConfig.branchesToSync = append(repo.Config.AncestorBranches(syncConfig.initialBranch), syncConfig.initialBranch)
 	}
-	return &syncConfig{
-		branchesToSync: branchesToSync,
-		hasOrigin:      hasOrigin,
-		initialBranch:  initialBranch,
-		isOffline:      isOffline,
-		shouldPushTags: shouldPushTags,
-	}, nil
+	return &syncConfig, nil
+}
+
+func determineSyncBranchConfig(repo *git.ProdRepo, initialBranch string) (SyncBranchConfig, error) {
+	result := SyncBranchConfig{}
+	var err error
+	result.hasOrigin, err = repo.Silent.HasOrigin()
+	if err != nil {
+		return result, err
+	}
+	result.isOffline, err = repo.Config.IsOffline()
+	if err != nil {
+		return result, err
+	}
+	result.pushHook, err = repo.Config.PushHook()
+	if err != nil {
+		return result, err
+	}
+	result.mainBranch = repo.Config.MainBranch()
+	result.hasUpstream, err = repo.Silent.HasRemote("upstream")
+	if err != nil {
+		return result, err
+	}
+	result.shouldSyncUpstream, err = repo.Config.ShouldSyncUpstream()
+	if err != nil {
+		return result, err
+	}
+	result.shouldPushTags = !repo.Config.IsFeatureBranch(initialBranch)
+	return result, nil
 }
 
 // syncSteps provides the step list for the "git sync" command.
-func syncSteps(config *syncConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+func syncSteps(config *SyncConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	for _, branch := range config.branchesToSync {
-		steps, err := syncBranchSteps(branch, true, repo)
+		steps, err := syncBranchSteps(branch, true, config.syncBranchConfig, repo)
 		if err != nil {
 			return runstate.StepList{}, err
 		}
 		result.AppendList(steps)
 	}
 	result.Append(&steps.CheckoutBranchStep{Branch: config.initialBranch})
-	if config.hasOrigin && config.shouldPushTags && !config.isOffline {
+	if config.syncBranchConfig.hasOrigin && config.syncBranchConfig.shouldPushTags && !config.syncBranchConfig.isOffline {
 		result.Append(&steps.PushTagsStep{})
 	}
 	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
@@ -158,107 +193,82 @@ func syncSteps(config *syncConfig, repo *git.ProdRepo) (runstate.StepList, error
 }
 
 // syncBranchSteps provides the steps to sync a particular branch.
-func syncBranchSteps(branch string, pushBranch bool, repo *git.ProdRepo) (runstate.StepList, error) {
-	isFeatureBranch := repo.Config.IsFeatureBranch(branch)
-	syncStrategy := repo.Config.SyncStrategy()
-	hasOrigin, err := repo.Silent.HasOrigin()
-	if err != nil {
-		return runstate.StepList{}, err
-	}
-	pushHook, err := repo.Config.PushHook()
-	if err != nil {
-		return runstate.StepList{}, err
-	}
+func syncBranchSteps(branch string, pushBranch bool, config SyncBranchConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	result := runstate.StepList{}
-	if !hasOrigin && !isFeatureBranch {
+	isFeatureBranch := repo.Config.IsFeatureBranch(branch)
+	if !config.hasOrigin && !isFeatureBranch {
 		return runstate.StepList{}, nil
+	}
+	hasTrackingBranch, err := repo.Silent.HasTrackingBranch(branch)
+	if err != nil {
+		return runstate.StepList{}, err
 	}
 	result.Append(&steps.CheckoutBranchStep{Branch: branch})
 	if isFeatureBranch {
-		steps, err := syncFeatureBranchSteps(branch, repo)
+		steps, err := syncFeatureBranchSteps(branch, config, hasTrackingBranch, pushBranch, repo)
 		if err != nil {
 			return runstate.StepList{}, err
 		}
 		result.AppendList(steps)
 	} else {
-		steps, err := syncNonFeatureBranchSteps(branch, repo)
+		steps, err := syncNonFeatureBranchSteps(branch, config, hasTrackingBranch, pushBranch, repo)
 		if err != nil {
 			return runstate.StepList{}, err
 		}
 		result.AppendList(steps)
 	}
-	isOffline, err := repo.Config.IsOffline()
-	if err != nil {
-		return runstate.StepList{}, err
-	}
-	if pushBranch && hasOrigin && !isOffline {
-		hasTrackingBranch, err := repo.Silent.HasTrackingBranch(branch)
+	return result, nil
+}
+
+// syncFeatureBranchSteps provides the steps to sync the feature branch with the given name.
+func syncFeatureBranchSteps(branch string, config SyncBranchConfig, hasTrackingBranch bool, pushBranch bool, repo *git.ProdRepo) (runstate.StepList, error) {
+	result := runstate.StepList{}
+	if hasTrackingBranch {
+		steps, err := syncTrackingBranchSteps(repo.Silent.TrackingBranch(branch), config.syncStrategy)
 		if err != nil {
 			return runstate.StepList{}, err
 		}
+		result.AppendList(steps)
+	}
+	parentSteps, err := syncParentSteps(repo.Config.ParentBranch(branch), config.syncStrategy)
+	if err != nil {
+		return runstate.StepList{}, err
+	}
+	result.AppendList(parentSteps)
+	if pushBranch && config.hasOrigin && !config.isOffline {
 		if !hasTrackingBranch {
 			result.Append(&steps.CreateTrackingBranchStep{Branch: branch})
-			return result, nil
+		} else {
+			steps, err := pushFeatureBranchSteps(branch, config.syncStrategy, config.pushHook)
+			if err != nil {
+				return runstate.StepList{}, err
+			}
+			result.AppendList(steps)
 		}
-		if !isFeatureBranch {
+	}
+	return result, nil
+}
+
+// syncNonFeatureBranchSteps provides the steps to sync the non-feature branch with the given name.
+func syncNonFeatureBranchSteps(branch string, config SyncBranchConfig, hasTrackingBranch bool, pushBranch bool, repo *git.ProdRepo) (runstate.StepList, error) {
+	result := runstate.StepList{}
+	if hasTrackingBranch {
+		steps, err := syncTrackingBranchSteps(repo.Silent.TrackingBranch(branch), repo.Config.PullBranchStrategy())
+		if err != nil {
+			return runstate.StepList{}, err
+		}
+		result.AppendList(steps)
+	}
+	if config.mainBranch == branch && config.hasUpstream && config.shouldSyncUpstream {
+		result.Append(&steps.FetchUpstreamStep{Branch: config.mainBranch})
+		result.Append(&steps.RebaseBranchStep{Branch: fmt.Sprintf("upstream/%s", config.mainBranch)})
+	}
+	if pushBranch && config.hasOrigin && !config.isOffline {
+		if !hasTrackingBranch {
+			result.Append(&steps.CreateTrackingBranchStep{Branch: branch})
+		} else {
 			result.Append(&steps.PushBranchStep{Branch: branch})
-			return result, nil
 		}
-		steps, err := pushFeatureBranchSteps(branch, syncStrategy, pushHook)
-		if err != nil {
-			return runstate.StepList{}, err
-		}
-		result.AppendList(steps)
-	}
-	return result, nil
-}
-
-func syncFeatureBranchSteps(branch string, repo *git.ProdRepo) (runstate.StepList, error) {
-	syncStrategy := repo.Config.SyncStrategy()
-	hasTrackingBranch, err := repo.Silent.HasTrackingBranch(branch)
-	if err != nil {
-		return runstate.StepList{}, err
-	}
-	result := runstate.StepList{}
-	if hasTrackingBranch {
-		steps, err := syncTrackingBranchSteps(repo.Silent.TrackingBranch(branch), syncStrategy)
-		if err != nil {
-			return runstate.StepList{}, err
-		}
-		result.AppendList(steps)
-	}
-	steps, err := syncParentSteps(repo.Config.ParentBranch(branch), syncStrategy)
-	if err != nil {
-		return runstate.StepList{}, err
-	}
-	result.AppendList(steps)
-	return result, nil
-}
-
-func syncNonFeatureBranchSteps(branch string, repo *git.ProdRepo) (runstate.StepList, error) {
-	hasTrackingBranch, err := repo.Silent.HasTrackingBranch(branch)
-	if err != nil {
-		return runstate.StepList{}, err
-	}
-	result := runstate.StepList{}
-	if hasTrackingBranch {
-		result, err = syncTrackingBranchSteps(repo.Silent.TrackingBranch(branch), repo.Config.PullBranchStrategy())
-		if err != nil {
-			return runstate.StepList{}, err
-		}
-	}
-	mainBranch := repo.Config.MainBranch()
-	hasUpstream, err := repo.Silent.HasRemote("upstream")
-	if err != nil {
-		return runstate.StepList{}, err
-	}
-	shouldSyncUpstream, err := repo.Config.ShouldSyncUpstream()
-	if err != nil {
-		return runstate.StepList{}, err
-	}
-	if mainBranch == branch && hasUpstream && shouldSyncUpstream {
-		result.Append(&steps.FetchUpstreamStep{Branch: mainBranch})
-		result.Append(&steps.RebaseBranchStep{Branch: fmt.Sprintf("upstream/%s", mainBranch)})
 	}
 	return result, nil
 }

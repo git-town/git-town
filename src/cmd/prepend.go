@@ -13,13 +13,12 @@ import (
 
 type prependConfig struct {
 	ancestorBranches    []string
-	hasOrigin           bool
 	initialBranch       string
-	isOffline           bool
 	noPushHook          bool
 	parentBranch        string
 	shouldNewBranchPush bool
 	targetBranch        string
+	syncBranchConfig    SyncBranchConfig
 }
 
 func prependCommand(repo *git.ProdRepo) *cobra.Command {
@@ -121,7 +120,7 @@ func determinePrependConfig(args []string, repo *git.ProdRepo) (*prependConfig, 
 func prependStepList(config *prependConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	for _, branch := range config.ancestorBranches {
-		steps, err := syncBranchSteps(branch, true, repo)
+		steps, err := syncBranchSteps(branch, true, SyncBranchConfig{}, repo)
 		if err != nil {
 			return runstate.StepList{}, err
 		}
