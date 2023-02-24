@@ -158,7 +158,7 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 			return nil, err
 		}
 		if proposal != nil {
-			canShipViaAPI = proposal.CanMergeWithAPI
+			canShipViaAPI = true
 			defaultProposalMessage = connector.DefaultProposalMessage(*proposal)
 			proposalNumber = proposal.Number
 		}
