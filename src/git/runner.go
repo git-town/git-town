@@ -830,17 +830,19 @@ func (r *Runner) Pull() error {
 
 type PushArgs struct {
 	Branch         string
-	Force          bool
-	ForceWithLease bool
-	NoPushHook     bool
+	Force          bool `exhaustruct:"optional"`
+	ForceWithLease bool `exhaustruct:"optional"`
+	NoPushHook     bool `exhaustruct:"optional"`
 	Remote         string
 }
 
 // PushBranch pushes the branch with the given name to origin.
 func (r *Runner) PushBranch(options ...PushArgs) error {
-	option := PushArgs{}
+	var option PushArgs
 	if len(options) > 0 {
 		option = options[0]
+	} else {
+		option = PushArgs{} //nolint:exhaustruct  // intentional zero-value object
 	}
 	args := []string{"push"}
 	provideBranch := false

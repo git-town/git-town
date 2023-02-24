@@ -1,12 +1,12 @@
 package hosting_test
 
 type mockRepoConfig struct {
-	giteaToken     string
-	gitHubToken    string
-	gitLabToken    string
-	hostingService string
-	mainBranch     string
-	originOverride string
+	giteaToken     string `exhaustruct:"optional"`
+	gitHubToken    string `exhaustruct:"optional"`
+	gitLabToken    string `exhaustruct:"optional"`
+	hostingService string `exhaustruct:"optional"`
+	mainBranch     string `exhaustruct:"optional"`
+	originOverride string `exhaustruct:"optional"`
 	originURL      string
 }
 

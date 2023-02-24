@@ -21,13 +21,13 @@ type UnfinishedRunStateDetails struct {
 // including which operations are left to do,
 // and how to undo what has been done so far.
 type RunState struct {
-	AbortStepList     StepList
+	AbortStepList     StepList `exhaustruct:"optional"`
 	Command           string
-	IsAbort           bool
-	isUndo            bool
+	IsAbort           bool `exhaustruct:"optional"`
+	isUndo            bool `exhaustruct:"optional"`
 	RunStepList       StepList
-	UndoStepList      StepList
-	UnfinishedDetails *UnfinishedRunStateDetails
+	UndoStepList      StepList                   `exhaustruct:"optional"`
+	UnfinishedDetails *UnfinishedRunStateDetails `exhaustruct:"optional"`
 }
 
 // New constructs a RunState instance with the given values.

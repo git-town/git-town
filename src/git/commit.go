@@ -6,13 +6,13 @@ import (
 
 // Commit describes a Git commit.
 type Commit struct {
-	Author      string
+	Author      string `exhaustruct:"optional"`
 	Branch      string
-	FileContent string
-	FileName    string
-	Locations   []string
+	FileContent string   `exhaustruct:"optional"`
+	FileName    string   `exhaustruct:"optional"`
+	Locations   []string `exhaustruct:"optional"`
 	Message     string
-	SHA         string
+	SHA         string `exhaustruct:"optional"`
 }
 
 // Set assigns the given value to the property with the given Gherkin table name.

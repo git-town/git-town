@@ -49,13 +49,12 @@ func TestNewGiteaConnector(t *testing.T) {
 //nolint:paralleltest  // mocks HTTP
 func TestGitea(t *testing.T) {
 	t.Run("DefaultProposalMessage", func(t *testing.T) {
-		give := hosting.Proposal{
-			Number:          1,
-			Title:           "my title",
-			CanMergeWithAPI: true,
+		give := hosting.Proposal{ //nolint:exhaustruct
+			Number: 1,
+			Title:  "my title",
 		}
 		want := "my title (#1)"
-		connector := hosting.GiteaConnector{}
+		connector := hosting.GiteaConnector{} //nolint:exhaustruct
 		have := connector.DefaultProposalMessage(give)
 		assert.Equal(t, have, want)
 	})

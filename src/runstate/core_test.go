@@ -27,7 +27,7 @@ func TestRunState(t *testing.T) {
 		}
 		data, err := json.Marshal(runState)
 		assert.NoError(t, err)
-		newRunState := &runstate.RunState{}
+		newRunState := &runstate.RunState{} //nolint:exhaustruct
 		err = json.Unmarshal(data, &newRunState)
 		assert.NoError(t, err)
 		assert.Equal(t, runState, newRunState)
