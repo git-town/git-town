@@ -11,17 +11,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type prependConfig struct {
-	ancestorBranches    []string
-	hasOrigin           bool
-	initialBranch       string
-	isOffline           bool
-	noPushHook          bool
-	parentBranch        string
-	shouldNewBranchPush bool
-	targetBranch        string
-}
-
 func prependCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:   "prepend <branch>",
@@ -61,6 +50,17 @@ See "sync" for upstream remote options.
 			return validateIsConfigured(repo)
 		},
 	}
+}
+
+type prependConfig struct {
+	ancestorBranches    []string
+	hasOrigin           bool
+	initialBranch       string
+	isOffline           bool
+	noPushHook          bool
+	parentBranch        string
+	shouldNewBranchPush bool
+	targetBranch        string
 }
 
 func determinePrependConfig(args []string, repo *git.ProdRepo) (*prependConfig, error) {

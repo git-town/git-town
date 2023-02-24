@@ -10,17 +10,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type renameBranchConfig struct {
-	initialBranch              string
-	isInitialBranchPerennial   bool
-	isOffline                  bool
-	newBranch                  string
-	noPushHook                 bool
-	oldBranchChildren          []string
-	oldBranchHasTrackingBranch bool
-	oldBranch                  string
-}
-
 func renameBranchCommand(repo *git.ProdRepo) *cobra.Command {
 	forceFlag := false
 	renameBranchCmd := &cobra.Command{
@@ -69,6 +58,17 @@ When run on a perennial branch
 	}
 	renameBranchCmd.Flags().BoolVar(&forceFlag, "force", false, "Force rename of perennial branch")
 	return renameBranchCmd
+}
+
+type renameBranchConfig struct {
+	initialBranch              string
+	isInitialBranchPerennial   bool
+	isOffline                  bool
+	newBranch                  string
+	noPushHook                 bool
+	oldBranchChildren          []string
+	oldBranchHasTrackingBranch bool
+	oldBranch                  string
 }
 
 func determineRenameBranchConfig(args []string, forceFlag bool, repo *git.ProdRepo) (*renameBranchConfig, error) {

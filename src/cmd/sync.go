@@ -13,14 +13,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type syncConfig struct {
-	branchesToSync []string
-	hasOrigin      bool
-	initialBranch  string
-	isOffline      bool
-	shouldPushTags bool
-}
-
 func syncCmd(repo *git.ProdRepo) *cobra.Command {
 	var allFlag bool
 	var dryRunFlag bool
@@ -137,6 +129,14 @@ func determineSyncConfig(allFlag bool, repo *git.ProdRepo) (*syncConfig, error) 
 		isOffline:      isOffline,
 		shouldPushTags: shouldPushTags,
 	}, nil
+}
+
+type syncConfig struct {
+	branchesToSync []string
+	hasOrigin      bool
+	initialBranch  string
+	isOffline      bool
+	shouldPushTags bool
 }
 
 // syncSteps provides the step list for the "git sync" command.

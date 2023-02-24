@@ -11,19 +11,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type killConfig struct {
-	childBranches       []string
-	hasOpenChanges      bool
-	hasTrackingBranch   bool
-	initialBranch       string
-	isOffline           bool
-	isTargetBranchLocal bool
-	noPushHook          bool
-	previousBranch      string
-	targetBranchParent  string
-	targetBranch        string
-}
-
 func killCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:   "kill [<branch>]",
@@ -55,6 +42,19 @@ Does not delete perennial branches nor the main branch.`,
 			return validateIsConfigured(repo)
 		},
 	}
+}
+
+type killConfig struct {
+	childBranches       []string
+	hasOpenChanges      bool
+	hasTrackingBranch   bool
+	initialBranch       string
+	isOffline           bool
+	isTargetBranchLocal bool
+	noPushHook          bool
+	previousBranch      string
+	targetBranchParent  string
+	targetBranch        string
 }
 
 func determineKillConfig(args []string, repo *git.ProdRepo) (*killConfig, error) {
