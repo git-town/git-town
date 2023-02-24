@@ -118,6 +118,7 @@ func NewGithubConnector(url giturl.Parts, gitConfig gitConfig, log logFn) *GitHu
 func parsePullRequest(pullRequest *github.PullRequest) Proposal {
 	return Proposal{
 		Number:          pullRequest.GetNumber(),
+		Target:          pullRequest.Base.GetRef(),
 		Title:           pullRequest.GetTitle(),
 		CanMergeWithAPI: pullRequest.GetMergeableState() == "clean",
 	}

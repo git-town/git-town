@@ -37,6 +37,7 @@ func (c *GiteaConnector) FindProposal(branch, target string) (*Proposal, error) 
 	return &Proposal{
 		CanMergeWithAPI: pullRequest.Mergeable,
 		Number:          int(pullRequest.Index),
+		Target:          pullRequest.Base.Ref,
 		Title:           pullRequest.Title,
 	}, nil
 }

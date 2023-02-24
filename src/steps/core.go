@@ -30,7 +30,9 @@ type Step interface {
 	// Run executes this step.
 	Run(repo *git.ProdRepo, connector hosting.Connector) error
 
-	// ShouldAutomaticallyAbortOnError returns whether this step should cause the command to
-	// automatically abort if it errors.
+	// ShouldAutomaticallyAbortOnError indicates whether this step should
+	// cause the command to automatically abort if it errors.
+	// When true, automatically runs the abort logic and leaves the user where they started.
+	// When false, stops execution to let the user fix the issue and continue or manually abort.
 	ShouldAutomaticallyAbortOnError() bool
 }

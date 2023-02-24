@@ -141,6 +141,7 @@ func (c *GitLabConfig) RepositoryURL() string {
 func parseGitLabMergeRequest(mergeRequest *gitlab.MergeRequest) Proposal {
 	return Proposal{
 		Number:          mergeRequest.IID,
+		Target:          mergeRequest.TargetBranch,
 		Title:           mergeRequest.Title,
 		CanMergeWithAPI: true,
 	}
