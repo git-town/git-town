@@ -38,11 +38,11 @@ func NewBitbucketDriver(url giturl.Parts, config config, git gitRunner) *Bitbuck
 	}
 }
 
-func (d *BitbucketDriver) LoadPullRequestInfo(branch, parentBranch string) (*PullRequestInfo, error) {
+func (d *BitbucketDriver) ProposalDetails(branch, parentBranch string) (*Proposal, error) {
 	return nil, fmt.Errorf("BitBucket API functionality isn't implemented")
 }
 
-func (d *BitbucketDriver) NewPullRequestURL(branch, parentBranch string) (string, error) {
+func (d *BitbucketDriver) NewProposalURL(branch, parentBranch string) (string, error) {
 	query := url.Values{}
 	branchSha, err := d.git.ShaForBranch(branch)
 	if err != nil {
@@ -57,7 +57,7 @@ func (d *BitbucketDriver) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", d.hostname, d.organization, d.repository)
 }
 
-func (d *BitbucketDriver) MergePullRequest(options MergePullRequestOptions) (string, error) {
+func (d *BitbucketDriver) SquashMergeProposal(options SquashMergeProposalOptions) (string, error) {
 	return "", errors.New("shipping pull requests via the Bitbucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues")
 }
 

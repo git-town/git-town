@@ -42,7 +42,7 @@ func NewGithubConfig(url giturl.Parts, config config) *GithubConfig {
 	}
 }
 
-func (c GithubConfig) defaultCommitMessage(pullRequest *github.PullRequest) string {
+func (c GithubConfig) defaultProposalMessage(pullRequest *github.PullRequest) string {
 	return fmt.Sprintf("%s (#%d)", *pullRequest.Title, *pullRequest.Number)
 }
 
@@ -61,7 +61,7 @@ func (c GithubConfig) HostingServiceName() string {
 	return "GitHub"
 }
 
-func (c GithubConfig) NewPullRequestURL(branch string, parentBranch string) (string, error) {
+func (c GithubConfig) NewProposalURL(branch string, parentBranch string) (string, error) {
 	toCompare := branch
 	if parentBranch != c.config.MainBranch() {
 		toCompare = parentBranch + "..." + branch
@@ -86,7 +86,7 @@ type GithubDriver struct {
 	log    logFn
 }
 
-func (d *GithubDriver) LoadPullRequestInfo(branch, parentBranch string) (*PullRequestInfo, error) {
+func (d *GithubDriver) ProposalDetails(branch, parentBranch string) (*Proposal, error) {
 	if d.apiToken == "" {
 		return nil, nil //nolint:nilnil // we really want to return nil here
 	}
@@ -100,10 +100,10 @@ func (d *GithubDriver) LoadPullRequestInfo(branch, parentBranch string) (*PullRe
 	if len(pullRequests) > 1 {
 		return nil, fmt.Errorf("found %d pull requests from branch %q to branch %q", len(pullRequests), branch, parentBranch)
 	}
-	return &PullRequestInfo{
-		CanMergeWithAPI:      true,
-		DefaultCommitMessage: d.defaultCommitMessage(pullRequests[0]),
-		PullRequestNumber:    pullRequests[0].GetNumber(),
+	return &Proposal{
+		CanMergeWithAPI:        true,
+		DefaultProposalMessage: d.defaultProposalMessage(pullRequests[0]),
+		ProposalNumber:         pullRequests[0].GetNumber(),
 	}, nil
 }
 
@@ -117,16 +117,16 @@ func (d *GithubDriver) loadPullRequests(branch, parentBranch string) ([]*github.
 }
 
 //nolint:nonamedreturns  // return value isn't obvious from function name
-func (d *GithubDriver) MergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
+func (d *GithubDriver) SquashMergeProposal(options SquashMergeProposalOptions) (mergeSha string, err error) {
 	err = d.updatePullRequestsAgainst(options)
 	if err != nil {
 		return "", err
 	}
-	if options.PullRequestNumber == 0 {
+	if options.ProposalNumber == 0 {
 		return "", fmt.Errorf("cannot merge via Github since there is no pull request")
 	}
 	if options.LogRequests {
-		d.log("GitHub API: Merging PR #%d\n", options.PullRequestNumber)
+		d.log("GitHub API: Merging PR #%d\n", options.ProposalNumber)
 	}
 	commitMessageParts := strings.SplitN(options.CommitMessage, "\n", 2)
 	githubCommitTitle := commitMessageParts[0]
@@ -134,7 +134,7 @@ func (d *GithubDriver) MergePullRequest(options MergePullRequestOptions) (mergeS
 	if len(commitMessageParts) == 2 {
 		githubCommitMessage = commitMessageParts[1]
 	}
-	result, _, err := d.client.PullRequests.Merge(context.Background(), d.owner, d.repository, options.PullRequestNumber, githubCommitMessage, &github.PullRequestOptions{
+	result, _, err := d.client.PullRequests.Merge(context.Background(), d.owner, d.repository, options.ProposalNumber, githubCommitMessage, &github.PullRequestOptions{
 		MergeMethod: "squash",
 		CommitTitle: githubCommitTitle,
 	})
@@ -144,7 +144,7 @@ func (d *GithubDriver) MergePullRequest(options MergePullRequestOptions) (mergeS
 	return *result.SHA, nil
 }
 
-func (d *GithubDriver) updatePullRequestsAgainst(options MergePullRequestOptions) error {
+func (d *GithubDriver) updatePullRequestsAgainst(options SquashMergeProposalOptions) error {
 	pullRequests, _, err := d.client.PullRequests.List(context.Background(), d.owner, d.repository, &github.PullRequestListOptions{
 		Base:  options.Branch,
 		State: "open",
