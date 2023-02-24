@@ -13,23 +13,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type SyncConfig struct {
-	branchesToSync   []string
-	initialBranch    string
-	syncBranchConfig SyncBranchConfig
-}
-
-type SyncBranchConfig struct {
-	hasOrigin          bool
-	hasUpstream        bool
-	isOffline          bool
-	mainBranch         string
-	pushHook           bool
-	shouldPushTags     bool
-	shouldSyncUpstream bool
-	syncStrategy       string
-}
-
 func syncCmd(repo *git.ProdRepo) *cobra.Command {
 	// TODO: move to bottom of this function
 	var allFlag bool
@@ -172,6 +155,14 @@ func determineSyncBranchConfig(repo *git.ProdRepo, initialBranch string) (SyncBr
 	}
 	result.shouldPushTags = !repo.Config.IsFeatureBranch(initialBranch)
 	return result, nil
+}
+
+type syncConfig struct {
+	branchesToSync []string
+	hasOrigin      bool
+	initialBranch  string
+	isOffline      bool
+	shouldPushTags bool
 }
 
 // syncSteps provides the step list for the "git sync" command.

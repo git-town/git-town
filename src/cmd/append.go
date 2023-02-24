@@ -10,16 +10,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type appendConfig struct {
-	ancestorBranches    []string
-	hasOrigin           bool
-	isOffline           bool
-	noPushHook          bool
-	parentBranch        string
-	shouldNewBranchPush bool
-	targetBranch        string
-}
-
 func appendCmd(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:   "append <branch>",
@@ -57,6 +47,16 @@ See "sync" for information regarding upstream remotes.`,
 			return validateIsConfigured(repo)
 		},
 	}
+}
+
+type appendConfig struct {
+	ancestorBranches    []string
+	hasOrigin           bool
+	isOffline           bool
+	noPushHook          bool
+	parentBranch        string
+	shouldNewBranchPush bool
+	targetBranch        string
 }
 
 func determineAppendConfig(args []string, repo *git.ProdRepo) (*appendConfig, error) {
