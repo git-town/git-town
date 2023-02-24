@@ -1,0 +1,10 @@
+{
+  "overrides": [
+    {
+      "files": "*.yml",
+      "options": {
+        "printWidth": 120
+      }
+    }
+  ]
+}

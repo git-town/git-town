@@ -1,10 +1,10 @@
 package git
 
 // DryRun implements the dry-run feature.
-// The zero value is a deactivate DruRun.
+// The zero value is a non-activate DruRun.
 type DryRun struct {
-	active        bool
-	currentBranch string
+	active        bool   `exhaustruct:"optional"`
+	currentBranch string `exhaustruct:"optional"`
 }
 
 // Activate enables dry-run.

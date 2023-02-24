@@ -9,7 +9,7 @@ import (
 
 // StepList is a fifo containing Step instances.
 type StepList struct {
-	List []steps.Step
+	List []steps.Step `exhaustruct:"optional"`
 }
 
 // NewStepList provides a StepList instance containing the given step.
