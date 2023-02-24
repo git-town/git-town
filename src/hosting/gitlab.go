@@ -33,7 +33,7 @@ func (c *GitLabConnector) FindProposal(branch, target string) (*Proposal, error)
 	if len(mergeRequests) > 1 {
 		return nil, fmt.Errorf("found %d merge requests for branch %q", len(mergeRequests), branch)
 	}
-	proposal := parseMergeRequest(mergeRequests[0])
+	proposal := parseGitLabMergeRequest(mergeRequests[0])
 	return &proposal, nil
 }
 
@@ -138,7 +138,7 @@ func (c *GitLabConfig) RepositoryURL() string {
 // Helper functions
 // *************************************
 
-func parseMergeRequest(mergeRequest *gitlab.MergeRequest) Proposal {
+func parseGitLabMergeRequest(mergeRequest *gitlab.MergeRequest) Proposal {
 	return Proposal{
 		Number:          mergeRequest.IID,
 		Title:           mergeRequest.Title,
