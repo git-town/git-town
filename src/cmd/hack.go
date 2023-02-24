@@ -103,6 +103,7 @@ func determineHackConfig(args []string, promptForParent bool, repo *git.ProdRepo
 		return nil, err
 	}
 	return &appendConfig{
+		ancestorBranches:    []string{},
 		targetBranch:        targetBranch,
 		parentBranch:        parentBranch,
 		hasOrigin:           hasOrigin,
