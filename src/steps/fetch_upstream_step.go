@@ -12,6 +12,6 @@ type FetchUpstreamStep struct {
 	Branch string
 }
 
-func (step *FetchUpstreamStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
+func (step *FetchUpstreamStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
 	return repo.Logging.FetchUpstream(step.Branch)
 }

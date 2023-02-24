@@ -27,14 +27,14 @@ When using SSH identities, run
 "git config %s <HOSTNAME>"
 where HOSTNAME matches what is in your ssh config file.`, config.CodeHostingDriver, config.CodeHostingOriginHostname),
 		Run: func(cmd *cobra.Command, args []string) {
-			driver, err := hosting.NewDriver(&repo.Config, &repo.Silent, cli.PrintDriverAction)
+			connector, err := hosting.NewConnector(&repo.Config, &repo.Silent, cli.PrintConnectorAction)
 			if err != nil {
 				cli.Exit(err)
 			}
-			if driver == nil {
+			if connector == nil {
 				cli.Exit(hosting.UnsupportedServiceError())
 			}
-			browser.Open(driver.RepositoryURL(), repo.LoggingShell)
+			browser.Open(connector.RepositoryURL(), repo.LoggingShell)
 		},
 		Args: cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

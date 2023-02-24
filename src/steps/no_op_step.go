@@ -27,7 +27,7 @@ func (step *NoOpStep) CreateAutomaticAbortError() error {
 	return errors.New("")
 }
 
-func (step *NoOpStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
+func (step *NoOpStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
 	return nil
 }
 

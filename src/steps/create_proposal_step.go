@@ -12,9 +12,9 @@ type CreateProposalStep struct {
 	Branch string
 }
 
-func (step *CreateProposalStep) Run(repo *git.ProdRepo, driver hosting.Driver) error {
+func (step *CreateProposalStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
 	parentBranch := repo.Config.ParentBranch(step.Branch)
-	prURL, err := driver.NewProposalURL(step.Branch, parentBranch)
+	prURL, err := connector.NewProposalURL(step.Branch, parentBranch)
 	if err != nil {
 		return err
 	}

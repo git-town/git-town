@@ -4,123 +4,20 @@ import (
 	"context"
 	"fmt"
 	"net/url"
-	"strings"
 
 	"code.gitea.io/sdk/gitea"
 	"github.com/git-town/git-town/v7/src/giturl"
 	"golang.org/x/oauth2"
 )
 
-// GiteaConfig contains connection information for Gitea-based hosting platforms.
-type GiteaConfig struct {
-	apiToken   string
-	hostname   string
-	originURL  string
-	owner      string
-	repository string
-}
-
-// NewGiteaConfig provides Gitea configuration data if the current repo is hosted on Gitea,
-// otherwise nil.
-func NewGiteaConfig(url giturl.Parts, config config) *GiteaConfig {
-	driverType := config.HostingService()
-	manualHostName := config.OriginOverride()
-	if manualHostName != "" {
-		url.Host = manualHostName
-	}
-	if driverType != "gitea" && url.Host != "gitea.com" {
-		return nil
-	}
-	return &GiteaConfig{
-		originURL:  config.OriginURL(),
-		hostname:   url.Host,
-		apiToken:   config.GiteaToken(),
-		owner:      url.Org,
-		repository: url.Repo,
-	}
-}
-
-// Driver provides a fully configured driver instance for the Gitea API.
-func (c GiteaConfig) Driver(log logFn) GiteaDriver {
-	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: c.apiToken})
-	httpClient := oauth2.NewClient(context.Background(), tokenSource)
-	giteaClient := gitea.NewClientWithHTTP(fmt.Sprintf("https://%s", c.hostname), httpClient)
-	return GiteaDriver{
-		client:      giteaClient,
-		GiteaConfig: c,
-		log:         log,
-	}
-}
-
-func (c GiteaConfig) HostingServiceName() string {
-	return "Gitea"
-}
-
-func (c GiteaConfig) NewProposalURL(branch string, parentBranch string) (string, error) {
-	toCompare := parentBranch + "..." + branch
-	return fmt.Sprintf("%s/compare/%s", c.RepositoryURL(), url.PathEscape(toCompare)), nil
-}
-
-func (c GiteaConfig) RepositoryURL() string {
-	return fmt.Sprintf("https://%s/%s/%s", c.hostname, c.owner, c.repository)
-}
-
-// GiteaDriver provides access to the Gitea API.
-type GiteaDriver struct {
-	GiteaConfig
+type GiteaConnector struct {
 	client *gitea.Client
-	log    logFn
+	CommonConfig
+	log logFn
 }
 
-//nolint:nonamedreturns  // return value isn't obvious from function name
-func (d *GiteaDriver) apiSquashMergeProposal(proposalNumber int, commitTitle, commitMessage string) (mergeSha string, err error) {
-	_, err = d.client.MergePullRequest(d.owner, d.repository, int64(proposalNumber), gitea.MergePullRequestOption{
-		Style:   gitea.MergeStyleSquash,
-		Title:   commitTitle,
-		Message: commitMessage,
-	})
-	if err != nil {
-		return "", err
-	}
-	pullRequest, err := d.client.GetPullRequest(d.owner, d.repository, int64(proposalNumber))
-	if err != nil {
-		return "", err
-	}
-	return *pullRequest.MergedCommitID, nil
-}
-
-// retargetPullRequests retargets pullrequests onto a new base branch
-// this comes in handy when an ancestor got merged, so that children can be retargeted to the ancestor's own target branch
-// example:
-//
-//	ancestor -> initial
-//	children1 -> ancestor  --> initial (retargeted to initial after merge)
-//	children2 -> ancestor  --> initial (retargeted to initial after merge)
-//
-//nolint:unparam
-func (d *GiteaDriver) apiRetargetPullRequests(pullRequests []*gitea.PullRequest, newBaseName string) error {
-	for _, pullRequest := range pullRequests {
-		// RE-ENABLE AFTER https://github.com/go-gitea/gitea/issues/11552 and remove the nolint above
-		// if options.LogRequests {
-		// 	helpers.PrintLog(fmt.Sprintf("Gitea API: Updating base branch for PR #%d to #%s", *pullRequest.Index, newBaseName))
-		// }
-		d.log("Gitea API: Updating base branch for PR #%d to #%s", 1, newBaseName)
-		d.log("The Gitea API currently does not support retargeting, please restarget #%d manually, see https://github.com/go-gitea/gitea/issues/11552", pullRequest.Index)
-		// _, err = d.client.EditPullRequest(d.owner, d.repository, *pullRequest.Index, &gitea.EditPullRequestOption{
-		// 	Base: newBaseName
-		// })
-		// if err != nil {
-		//	return err
-		// }
-	}
-	return nil
-}
-
-func (d *GiteaDriver) ProposalDetails(branch, parentBranch string) (*Proposal, error) {
-	if d.apiToken == "" {
-		return nil, nil //nolint:nilnil // we really want to return nil here
-	}
-	openPullRequests, err := d.client.ListRepoPullRequests(d.owner, d.repository, gitea.ListPullRequestsOptions{
+func (c *GiteaConnector) FindProposal(branch, target string) (*Proposal, error) {
+	openPullRequests, err := c.client.ListRepoPullRequests(c.Organization, c.Repository, gitea.ListPullRequestsOptions{
 		ListOptions: gitea.ListOptions{
 			PageSize: 50,
 		},
@@ -129,63 +26,109 @@ func (d *GiteaDriver) ProposalDetails(branch, parentBranch string) (*Proposal, e
 	if err != nil {
 		return nil, err
 	}
-	baseName := parentBranch
-	headName := d.owner + "/" + branch
-	pullRequests := filterPullRequests(openPullRequests, baseName, headName)
-	if len(pullRequests) < 1 {
-		return nil, fmt.Errorf("no pull request from branch %q to branch %q found", branch, parentBranch)
+	pullRequests := FilterGiteaPullRequests(openPullRequests, c.Organization, branch, target)
+	if len(pullRequests) == 0 {
+		return nil, nil //nolint:nilnil
 	}
 	if len(pullRequests) > 1 {
-		return nil, fmt.Errorf("found %d pull requests from branch %q to branch %q", len(pullRequests), branch, parentBranch)
+		return nil, fmt.Errorf("found %d pull requests for branch %q", len(pullRequests), branch)
 	}
 	pullRequest := pullRequests[0]
 	return &Proposal{
-		CanMergeWithAPI:        pullRequest.Mergeable,
-		DefaultProposalMessage: createDefaultProposalMessage(pullRequest),
-		ProposalNumber:         int(pullRequest.Index),
+		CanMergeWithAPI: pullRequest.Mergeable,
+		Number:          int(pullRequest.Index),
+		Target:          pullRequest.Base.Ref,
+		Title:           pullRequest.Title,
 	}, nil
 }
 
+func (c *GiteaConnector) DefaultProposalMessage(proposal Proposal) string {
+	return fmt.Sprintf("%s (#%d)", proposal.Title, proposal.Number)
+}
+
+func (c *GiteaConnector) HostingServiceName() string {
+	return "Gitea"
+}
+
+func (c *GiteaConnector) NewProposalURL(branch, parentBranch string) (string, error) {
+	toCompare := parentBranch + "..." + branch
+	return fmt.Sprintf("%s/compare/%s", c.RepositoryURL(), url.PathEscape(toCompare)), nil
+}
+
+func (c *GiteaConnector) RepositoryURL() string {
+	return fmt.Sprintf("https://%s/%s/%s", c.Hostname, c.Organization, c.Repository)
+}
+
 //nolint:nonamedreturns  // return value isn't obvious from function name
-func (d *GiteaDriver) SquashMergeProposal(options SquashMergeProposalOptions) (mergeSha string, err error) {
-	openPullRequests, err := d.client.ListRepoPullRequests(d.owner, d.repository, gitea.ListPullRequestsOptions{
-		ListOptions: gitea.ListOptions{
-			PageSize: 50,
-		},
-		State: gitea.StateOpen,
+func (c *GiteaConnector) SquashMergeProposal(number int, message string) (mergeSha string, err error) {
+	if number <= 0 {
+		return "", fmt.Errorf("no pull request number given")
+	}
+	title, body := ParseCommitMessage(message)
+	_, err = c.client.MergePullRequest(c.Organization, c.Repository, int64(number), gitea.MergePullRequestOption{
+		Style:   gitea.MergeStyleSquash,
+		Title:   title,
+		Message: body,
 	})
 	if err != nil {
 		return "", err
 	}
-	baseName := options.Branch
-	newBaseName := options.ParentBranch
-	err = d.apiRetargetPullRequests(filterPullRequests(openPullRequests, baseName, ""), newBaseName)
+	pullRequest, err := c.client.GetPullRequest(c.Organization, c.Repository, int64(number))
 	if err != nil {
 		return "", err
 	}
-	commitMessageParts := strings.SplitN(options.CommitMessage, "\n", 2)
-	commitTitle := commitMessageParts[0]
-	commitMessage := ""
-	if len(commitMessageParts) == 2 {
-		commitMessage = commitMessageParts[1]
-	}
-	return d.apiSquashMergeProposal(options.ProposalNumber, commitTitle, commitMessage)
+	return *pullRequest.MergedCommitID, nil
 }
 
-func createDefaultProposalMessage(pullRequest *gitea.PullRequest) string {
-	return fmt.Sprintf("%s (#%d)", pullRequest.Title, pullRequest.Index)
+func (c *GiteaConnector) UpdateProposalTarget(number int, target string) error {
+	// TODO: update the client and uncomment
+	// if c.log != nil {
+	// 	c.log("Gitea API: Updating base branch for PR #%d to #%s", number, target)
+	// }
+	// _, err := c.client.EditPullRequest(c.owner, c.repository, int64(number), gitea.EditPullRequestOption{
+	// 	Base: newBaseName,
+	// })
+	// return err
+	return fmt.Errorf("updating Gitea pull requests is currently not supported")
 }
 
-func filterPullRequests(pullRequests []*gitea.PullRequest, baseName, headName string) []*gitea.PullRequest {
-	pullRequestsFiltered := []*gitea.PullRequest{}
-	for _, pullRequest := range pullRequests {
-		if pullRequest.Base.Name != baseName {
-			break
-		}
-		if headName != "" && pullRequest.Head.Name != headName {
-			break
-		}
-		pullRequestsFiltered = append(pullRequestsFiltered, pullRequest)
+// NewGiteaConfig provides Gitea configuration data if the current repo is hosted on Gitea,
+// otherwise nil.
+func NewGiteaConnector(url giturl.Parts, config gitConfig, log logFn) *GiteaConnector {
+	hostingService := config.HostingService()
+	manualHostName := config.OriginOverride()
+	if manualHostName != "" {
+		url.Host = manualHostName
 	}
-	return pullRequestsFiltered
+	if hostingService != "gitea" && url.Host != "gitea.com" {
+		return nil
+	}
+	apiToken := config.GiteaToken()
+	hostname := url.Host
+	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: apiToken})
+	httpClient := oauth2.NewClient(context.Background(), tokenSource)
+	giteaClient := gitea.NewClientWithHTTP(fmt.Sprintf("https://%s", hostname), httpClient)
+	return &GiteaConnector{
+		client: giteaClient,
+		CommonConfig: CommonConfig{
+			APIToken:     apiToken,
+			Hostname:     hostname,
+			OriginURL:    config.OriginURL(),
+			Organization: url.Org,
+			Repository:   url.Repo,
+		},
+		log: log,
+	}
+}
+
+func FilterGiteaPullRequests(pullRequests []*gitea.PullRequest, organization, branch, target string) []*gitea.PullRequest {
+	result := []*gitea.PullRequest{}
+	headName := organization + "/" + branch
+	for p := range pullRequests {
+		pullRequest := pullRequests[p]
+		if pullRequest.Head.Name == headName && pullRequest.Base.Name == target {
+			result = append(result, pullRequest)
+		}
+	}
+	return result
 }

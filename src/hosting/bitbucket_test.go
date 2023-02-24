@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNewBitbucketDriver(t *testing.T) {
+func TestNewBitbucketConnector(t *testing.T) {
 	t.Parallel()
 	t.Run("normal example", func(t *testing.T) {
 		t.Parallel()
@@ -17,10 +17,10 @@ func TestNewBitbucketDriver(t *testing.T) {
 			originURL:      "git@self-hosted-bitbucket.com:git-town/git-town.git",
 		}
 		url := giturl.Parse(repoConfig.originURL)
-		driver := hosting.NewBitbucketDriver(*url, repoConfig, nil)
-		assert.NotNil(t, driver)
-		assert.Equal(t, "Bitbucket", driver.HostingServiceName())
-		assert.Equal(t, "https://self-hosted-bitbucket.com/git-town/git-town", driver.RepositoryURL())
+		connector := hosting.NewBitbucketConnector(*url, repoConfig, nil)
+		assert.NotNil(t, connector)
+		assert.Equal(t, "Bitbucket", connector.HostingServiceName())
+		assert.Equal(t, "https://self-hosted-bitbucket.com/git-town/git-town", connector.RepositoryURL())
 	})
 
 	t.Run("custom hostname", func(t *testing.T) {
@@ -30,10 +30,10 @@ func TestNewBitbucketDriver(t *testing.T) {
 			originOverride: "bitbucket.org",
 		}
 		url := giturl.Parse(repoConfig.originURL)
-		driver := hosting.NewBitbucketDriver(*url, repoConfig, nil)
-		assert.NotNil(t, driver)
-		assert.Equal(t, "Bitbucket", driver.HostingServiceName())
-		assert.Equal(t, "https://bitbucket.org/git-town/git-town", driver.RepositoryURL())
+		connector := hosting.NewBitbucketConnector(*url, repoConfig, nil)
+		assert.NotNil(t, connector)
+		assert.Equal(t, "Bitbucket", connector.HostingServiceName())
+		assert.Equal(t, "https://bitbucket.org/git-town/git-town", connector.RepositoryURL())
 	})
 
 	t.Run("custom username", func(t *testing.T) {
@@ -43,9 +43,9 @@ func TestNewBitbucketDriver(t *testing.T) {
 			originURL:      "username@bitbucket.org:git-town/git-town.git",
 		}
 		url := giturl.Parse(repoConfig.originURL)
-		driver := hosting.NewBitbucketDriver(*url, repoConfig, nil)
-		assert.NotNil(t, driver)
-		assert.Equal(t, "Bitbucket", driver.HostingServiceName())
-		assert.Equal(t, "https://bitbucket.org/git-town/git-town", driver.RepositoryURL())
+		connector := hosting.NewBitbucketConnector(*url, repoConfig, nil)
+		assert.NotNil(t, connector)
+		assert.Equal(t, "Bitbucket", connector.HostingServiceName())
+		assert.Equal(t, "https://bitbucket.org/git-town/git-town", connector.RepositoryURL())
 	})
 }
