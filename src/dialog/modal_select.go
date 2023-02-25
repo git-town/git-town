@@ -78,7 +78,7 @@ func (mi *modalSelect) print() {
 	}
 }
 
-// Process waits for keyboard input, updates the dialog state, and re-draws the dialog.
+// handleInput waits for keyboard input and updates the dialog state.
 func (mi *modalSelect) handleInput() error {
 	char, key, err := keyboard.GetSingleKey()
 	if err != nil {
