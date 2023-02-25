@@ -60,7 +60,7 @@ func (mi *ModalInput) Display() (*string, error) {
 		mi.print()
 	}
 	if mi.status == modalInputStatusAborted {
-		return nil, nil
+		return nil, nil //nolint:nilnil
 	}
 	selectedValue := mi.selectedValue()
 	return &selectedValue, nil
