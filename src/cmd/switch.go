@@ -30,17 +30,14 @@ func switchCmd(repo *git.ProdRepo) *cobra.Command {
 				cursor.Show()
 				keyboard.Close()
 			}()
-			for {
-				input.Display()
+			input.Display()
+			for input.Status == dialog.ModalInputStatusSelecting {
 				err := input.HandleInput()
 				if err != nil {
 					cli.Exit(err)
 				}
-				if input.Status == dialog.ModalInputStatusAborted {
-					break
-				}
+				input.Display()
 			}
-			input.Display()
 			if input.Status == dialog.ModalInputStatusSelected {
 				if input.SelectedValue() != currentBranch {
 					err = repo.Silent.CheckoutBranch(input.SelectedValue())
