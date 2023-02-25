@@ -11,10 +11,10 @@ import (
 
 // ModalInput allows selecting a value using VIM keybindings.
 type ModalInput struct {
-	entries         []ModalEntry     // the entries to display
+	activeLineColor *color.Color     // color with which to print the currently selected line
 	cursorPos       int              // index of the currently selected row
 	cursorText      string           // the text of the cursor, including color codes
-	activeLineColor *color.Color     // color with which to print the currently selected line
+	entries         []ModalEntry     // the entries to display
 	status          modalInputStatus // the current status of this ModalInput instance
 }
 
