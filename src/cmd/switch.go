@@ -24,12 +24,12 @@ func switchCmd(repo *git.ProdRepo) *cobra.Command {
 				cli.Exit(err)
 			}
 			defer cleanup()
-			userChoice, err := input.Display()
+			selection, err := input.Display()
 			if err != nil {
 				cli.Exit(err)
 			}
-			if userChoice != nil && *userChoice != currentBranch {
-				err = repo.Silent.CheckoutBranch(*userChoice)
+			if selection != nil && *selection != currentBranch {
+				err = repo.Silent.CheckoutBranch(*selection)
 				if err != nil {
 					cli.Exit(err)
 				}
@@ -46,10 +46,9 @@ func switchCmd(repo *git.ProdRepo) *cobra.Command {
 }
 
 func createInput(currentBranch string, repo *git.ProdRepo) (*dialog.ModalInput, func(), error) {
-	roots := repo.Config.BranchAncestryRoots()
 	entries := []dialog.ModalEntry{}
 	var err error
-	for _, root := range roots {
+	for _, root := range repo.Config.BranchAncestryRoots() {
 		entries, err = addEntries(entries, root, 0, repo)
 		if err != nil {
 			return nil, func() {}, err
