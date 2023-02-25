@@ -15,7 +15,7 @@ func switchCmd(repo *git.ProdRepo) *cobra.Command {
 			roots := repo.Config.BranchAncestryRoots()
 			for _, root := range roots {
 				printBranch(printOptions{
-					depth:  0,
+					indent: 0,
 					cursor: 0,
 					branch: root,
 					repo:   repo,
@@ -33,23 +33,31 @@ func switchCmd(repo *git.ProdRepo) *cobra.Command {
 }
 
 type printOptions struct {
-	depth  uint8
-	cursor uint8
-	branch string
+	pos    uint8  // the current position in the list
+	indent uint8  // the indentation of the current item
+	cursor uint8  // position of the cursor in the list
+	branch string // text of the list item
 	repo   *git.ProdRepo
 }
 
 func printBranch(args printOptions) {
-	for i := uint8(0); i < args.depth; i++ {
-		fmt.Print("  ")
+	space := "  "
+	for i := uint8(0); i < args.indent; i++ {
+		space += "  "
 	}
-	fmt.Println(args.branch)
+	if args.cursor == args.pos {
+		space = "*" + space[1:]
+	}
+	fmt.Println(space + args.branch)
 	children := args.repo.Silent.Config.ChildBranches(args.branch)
 	for _, child := range children {
+		args.pos++
 		printBranch(printOptions{
-			depth:  args.depth + 1,
-			branch: child,
+			pos:    args.pos,
+			indent: args.indent + 1,
 			cursor: args.cursor,
-			repo:   args.repo})
+			branch: child,
+			repo:   args.repo,
+		})
 	}
 }
