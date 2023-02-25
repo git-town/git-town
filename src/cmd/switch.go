@@ -1,12 +1,13 @@
 package cmd
 
 import (
-	"fmt"
 	"sort"
+	"strings"
 
 	"atomicgo.dev/cursor"
 	"github.com/eiannone/keyboard"
 	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/spf13/cobra"
 )
@@ -16,36 +17,34 @@ func switchCmd(repo *git.ProdRepo) *cobra.Command {
 		Use:   "switch",
 		Short: "Displays the local branches visually and allows switching between them",
 		Run: func(cmd *cobra.Command, args []string) {
-			roots := repo.Config.BranchAncestryRoots()
-			if err := keyboard.Open(); err != nil {
+			currentBranch, err := repo.Silent.CurrentBranch()
+			if err != nil {
+				cli.Exit(err)
+			}
+			input, err := createInput(currentBranch, 0, repo)
+			if err != nil {
 				cli.Exit(err)
 			}
 			cursor.Hide()
 			defer func() {
 				cursor.Show()
-				_ = keyboard.Close()
+				keyboard.Close()
 			}()
-			cursorPos := uint8(0)
 			for {
-				for _, root := range roots {
-					_ = printBranch(printOptions{
-						indent: 0,
-						cursor: cursorPos,
-						branch: root,
-						repo:   repo,
-					})
-					cursor.Up(6)
-				}
-				char, key, err := keyboard.GetSingleKey()
+				input.Display()
+				err := input.HandleInput()
 				if err != nil {
 					cli.Exit(err)
 				}
-				if char == 'j' || key == keyboard.KeyArrowDown {
-					cursorPos += 1
-				} else if char == 'k' || key == keyboard.KeyArrowUp {
-					cursorPos -= 1
-				} else if key == keyboard.KeyEsc || key == keyboard.KeyEnter || key == keyboard.KeySpace {
+				if input.Done {
+					input.Display()
 					break
+				}
+			}
+			if input.SelectedValue() != currentBranch {
+				err = repo.Silent.CheckoutBranch(input.SelectedValue())
+				if err != nil {
+					cli.Exit(err)
 				}
 			}
 		},
@@ -59,34 +58,46 @@ func switchCmd(repo *git.ProdRepo) *cobra.Command {
 	}
 }
 
-type printOptions struct {
-	pos    uint8  // the current position in the list
-	indent uint8  // the indentation of the current item
-	cursor uint8  // position of the cursor in the list
-	branch string // text of the list item
-	repo   *git.ProdRepo
+func createInput(currentBranch string, indent int, repo *git.ProdRepo) (*dialog.ModalInput, error) {
+	roots := repo.Config.BranchAncestryRoots()
+	if err := keyboard.Open(); err != nil {
+		return nil, err
+	}
+	entries := []dialog.ModalEntry{}
+	var err error
+	for _, root := range roots {
+		entries, err = addEntries(entries, root, 0, repo)
+		if err != nil {
+			return nil, err
+		}
+	}
+	cursorPos := 0
+	for e, entry := range entries {
+		if entry.Value == currentBranch {
+			cursorPos = e
+			break
+		}
+	}
+	return &dialog.ModalInput{
+		Entries:    entries,
+		CursorPos:  uint8(cursorPos),
+		CursorText: "> ",
+	}, nil
 }
 
-func printBranch(args printOptions) uint8 {
-	space := "  "
-	for i := uint8(0); i < args.indent; i++ {
-		space += "  "
-	}
-	if args.cursor == args.pos {
-		space = ">" + space[1:]
-	}
-	fmt.Println(space + args.branch)
-	children := args.repo.Silent.Config.ChildBranches(args.branch)
+func addEntries(entries []dialog.ModalEntry, branch string, indent int, repo *git.ProdRepo) ([]dialog.ModalEntry, error) {
+	entries = append(entries, dialog.ModalEntry{
+		Text:  strings.Repeat("  ", indent) + branch,
+		Value: branch,
+	})
+	children := repo.Silent.Config.ChildBranches(branch)
 	sort.Strings(children)
+	var err error
 	for _, child := range children {
-		args.pos++
-		printBranch(printOptions{
-			pos:    args.pos,
-			indent: args.indent + 1,
-			cursor: args.cursor,
-			branch: child,
-			repo:   args.repo,
-		})
+		entries, err = addEntries(entries, child, indent+1, repo)
+		if err != nil {
+			return entries, err
+		}
 	}
-	return args.pos
+	return entries, nil
 }
