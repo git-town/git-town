@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"atomicgo.dev/cursor"
 	"github.com/eiannone/keyboard"
 )
 
@@ -25,6 +26,9 @@ type ModalInput struct {
 
 // Display displays this dialog.
 func (mi *ModalInput) Display() {
+	if mi.Status != ModalInputStatusNew {
+		cursor.Up(len(mi.Entries))
+	}
 	cursorSpace := strings.Repeat(" ", len(mi.CursorText))
 	for e := range mi.Entries {
 		if e == int(mi.CursorPos) {
@@ -67,7 +71,8 @@ type ModalEntry struct {
 type ModalInputStatus int
 
 const (
-	ModalInputStatusSelecting ModalInputStatus = iota
+	ModalInputStatusNew ModalInputStatus = iota
+	ModalInputStatusSelecting
 	ModalInputStatusSelected
 	ModalInputStatusAborted
 )
