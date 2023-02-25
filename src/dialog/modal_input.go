@@ -4,10 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/fatih/color"
-
 	"atomicgo.dev/cursor"
 	"github.com/eiannone/keyboard"
+	"github.com/fatih/color"
 )
 
 // ModalInput allows selecting a value using VIM keybindings.
