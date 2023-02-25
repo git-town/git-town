@@ -14,7 +14,12 @@ func switchCmd(repo *git.ProdRepo) *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			roots := repo.Config.BranchAncestryRoots()
 			for _, root := range roots {
-				printBranch(0, root, repo)
+				printBranch(printOptions{
+					depth:  0,
+					cursor: 0,
+					branch: root,
+					repo:   repo,
+				})
 			}
 		},
 		Args: cobra.NoArgs,
@@ -27,13 +32,24 @@ func switchCmd(repo *git.ProdRepo) *cobra.Command {
 	}
 }
 
-func printBranch(depth int, branch string, repo *git.ProdRepo) {
-	for i := 0; i < depth; i++ {
+type printOptions struct {
+	depth  uint8
+	cursor uint8
+	branch string
+	repo   *git.ProdRepo
+}
+
+func printBranch(args printOptions) {
+	for i := uint8(0); i < args.depth; i++ {
 		fmt.Print("  ")
 	}
-	fmt.Println(branch)
-	children := repo.Silent.Config.ChildBranches(branch)
+	fmt.Println(args.branch)
+	children := args.repo.Silent.Config.ChildBranches(args.branch)
 	for _, child := range children {
-		printBranch(depth+1, child, repo)
+		printBranch(printOptions{
+			depth:  args.depth + 1,
+			branch: child,
+			cursor: args.cursor,
+			repo:   args.repo})
 	}
 }
