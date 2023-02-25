@@ -9,41 +9,42 @@ import (
 	"github.com/fatih/color"
 )
 
-// ModalInput allows selecting a value using VIM keybindings.
-type ModalInput struct {
-	activeLineColor *color.Color     // color with which to print the currently selected line
-	cursorPos       int              // index of the currently selected row
-	cursorText      string           // the text of the cursor, including color codes
-	entries         []ModalEntry     // the entries to display
-	status          modalInputStatus // the current status of this ModalInput instance
+// ModalSelect allows the user to select a value from the given entries.
+// The given initial value is preselected.
+func ModalSelect(entries ModalEntries, cursorText string, initialValue string) (*string, error) {
+	cursorPos := entries.IndexOfValue(initialValue)
+	if cursorPos == nil {
+		return nil, fmt.Errorf("given initial value %q not in given entries", initialValue)
+	}
+	input := modalSelect{
+		activeColor: color.New(color.FgCyan, color.Bold),
+		entries:     entries,
+		cursorPos:   *cursorPos,
+		cursorText:  cursorText,
+		status:      modalInputStatusNew,
+	}
+	return input.Display()
 }
 
-func NewModalInput(entries []ModalEntry, cursorText string, initialValue string) (*ModalInput, func(), error) {
-	cursor.Hide()
-	err := keyboard.Open()
-	if err != nil {
-		return nil, nil, err
-	}
-	cursorPos := 0
-	for e, entry := range entries {
-		if entry.Value == initialValue {
-			cursorPos = e
-			break
-		}
-	}
-	input := ModalInput{
-		activeLineColor: color.New(color.FgCyan, color.Bold),
-		entries:         entries,
-		cursorPos:       cursorPos,
-		cursorText:      cursorText,
-		status:          modalInputStatusNew,
-	}
-	return &input, input.cleanup, nil
+// modalSelect allows selecting a value from a list using VIM keybindings.
+type modalSelect struct {
+	activeColor *color.Color     // color with which to print the currently selected line
+	cursorPos   int              // index of the currently selected row
+	cursorText  string           // the text of the cursor, including color codes
+	entries     ModalEntries     // the entries to display
+	status      modalInputStatus // the current status of this ModalInput instance
 }
 
 // Display shows the dialog and lets the user select an entry.
 // Returns the selected value or nil if the user aborted the dialog.
-func (mi *ModalInput) Display() (*string, error) {
+func (mi *modalSelect) Display() (*string, error) {
+	cursor.Hide()
+	defer cursor.Show()
+	err := keyboard.Open()
+	if err != nil {
+		return nil, err
+	}
+	defer keyboard.Close()
 	mi.print()
 	for mi.status == modalInputStatusSelecting {
 		err := mi.handleInput()
@@ -59,13 +60,8 @@ func (mi *ModalInput) Display() (*string, error) {
 	return &selectedValue, nil
 }
 
-func (mi *ModalInput) cleanup() {
-	cursor.Show()
-	keyboard.Close()
-}
-
 // Display displays this dialog.
-func (mi *ModalInput) print() {
+func (mi *modalSelect) print() {
 	if mi.status == modalInputStatusNew {
 		mi.status = modalInputStatusSelecting
 	} else {
@@ -74,7 +70,7 @@ func (mi *ModalInput) print() {
 	cursorSpace := strings.Repeat(" ", len(mi.cursorText))
 	for e := range mi.entries {
 		if e == mi.cursorPos {
-			mi.activeLineColor.Println(mi.cursorText + mi.entries[e].Text)
+			mi.activeColor.Println(mi.cursorText + mi.entries[e].Text)
 		} else {
 			fmt.Println(cursorSpace + mi.entries[e].Text)
 		}
@@ -82,7 +78,7 @@ func (mi *ModalInput) print() {
 }
 
 // Process waits for keyboard input, updates the dialog state, and re-draws the dialog.
-func (mi *ModalInput) handleInput() error {
+func (mi *modalSelect) handleInput() error {
 	char, key, err := keyboard.GetSingleKey()
 	if err != nil {
 		return err
@@ -108,7 +104,7 @@ func (mi *ModalInput) handleInput() error {
 	return nil
 }
 
-func (mi *ModalInput) selectedValue() string {
+func (mi *modalSelect) selectedValue() string {
 	return mi.entries[mi.cursorPos].Value
 }
 
@@ -118,6 +114,18 @@ type ModalEntry struct {
 
 	// the return value
 	Value string
+}
+
+type ModalEntries []ModalEntry
+
+// IndexOfValue provides the index of the entry with the given value
+func (mes ModalEntries) IndexOfValue(value string) *int {
+	for e, entry := range mes {
+		if entry.Value == value {
+			return &e
+		}
+	}
+	return nil
 }
 
 type modalInputStatus int

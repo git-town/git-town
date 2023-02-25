@@ -41,7 +41,7 @@ func switchCmd(repo *git.ProdRepo) *cobra.Command {
 }
 
 func queryBranch(currentBranch string, repo *git.ProdRepo) (*string, error) {
-	entries := []dialog.ModalEntry{}
+	entries := dialog.ModalEntries{}
 	var err error
 	for _, root := range repo.Config.BranchAncestryRoots() {
 		entries, err = addEntries(entries, root, 0, repo)
@@ -49,12 +49,7 @@ func queryBranch(currentBranch string, repo *git.ProdRepo) (*string, error) {
 			return nil, err
 		}
 	}
-	input, cleanup, err := dialog.NewModalInput(entries, "> ", currentBranch)
-	if err != nil {
-		return nil, err
-	}
-	defer cleanup()
-	return input.Display()
+	return dialog.ModalSelect(entries, "> ", currentBranch)
 }
 
 func addEntries(entries []dialog.ModalEntry, branch string, indent int, repo *git.ProdRepo) ([]dialog.ModalEntry, error) {
