@@ -2,7 +2,9 @@ package cmd
 
 import (
 	"fmt"
+	"sort"
 
+	"atomicgo.dev/cursor"
 	"github.com/eiannone/keyboard"
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/git"
@@ -18,15 +20,21 @@ func switchCmd(repo *git.ProdRepo) *cobra.Command {
 			if err := keyboard.Open(); err != nil {
 				cli.Exit(err)
 			}
-			cursor := uint8(0)
+			cursor.Hide()
+			defer func() {
+				cursor.Show()
+				_ = keyboard.Close()
+			}()
+			cursorPos := uint8(0)
 			for {
 				for _, root := range roots {
-					printBranch(printOptions{
+					_ = printBranch(printOptions{
 						indent: 0,
-						cursor: cursor,
+						cursor: cursorPos,
 						branch: root,
 						repo:   repo,
 					})
+					cursor.Up(6)
 				}
 				char, key, err := keyboard.GetSingleKey()
 				if err != nil {
@@ -34,9 +42,9 @@ func switchCmd(repo *git.ProdRepo) *cobra.Command {
 				}
 				switch char {
 				case 'j':
-					cursor += 1
+					cursorPos += 1
 				case 'k':
-					cursor -= 1
+					cursorPos -= 1
 				}
 				if key == keyboard.KeyEsc {
 					break
@@ -61,16 +69,17 @@ type printOptions struct {
 	repo   *git.ProdRepo
 }
 
-func printBranch(args printOptions) {
+func printBranch(args printOptions) uint8 {
 	space := "  "
 	for i := uint8(0); i < args.indent; i++ {
 		space += "  "
 	}
 	if args.cursor == args.pos {
-		space = "*" + space[1:]
+		space = ">" + space[1:]
 	}
 	fmt.Println(space + args.branch)
 	children := args.repo.Silent.Config.ChildBranches(args.branch)
+	sort.Strings(children)
 	for _, child := range children {
 		args.pos++
 		printBranch(printOptions{
@@ -81,4 +90,5 @@ func printBranch(args printOptions) {
 			repo:   args.repo,
 		})
 	}
+	return args.pos
 }

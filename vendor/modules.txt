@@ -1,3 +1,6 @@
+# atomicgo.dev/cursor v0.1.1
+## explicit; go 1.15
+atomicgo.dev/cursor
 # code.gitea.io/sdk/gitea v0.12.0
 ## explicit; go 1.12
 code.gitea.io/sdk/gitea
