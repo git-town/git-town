@@ -11,20 +11,11 @@ import (
 
 // ModalInput allows selecting a value using VIM keybindings.
 type ModalInput struct {
-	// the entries to display
-	entries []ModalEntry
-
-	// cursorPos contains the index of the currently selected row.
-	cursorPos int
-
-	// cursorText contains the text of the cursor, including color codes.
-	cursorText string
-
-	activeLineColor *color.Color
-
-	// Result contains the result that the user has selected,
-	// or nil if no selection has taken place yet.
-	status modalInputStatus
+	entries         []ModalEntry     // the entries to display
+	cursorPos       int              // index of the currently selected row
+	cursorText      string           // the text of the cursor, including color codes
+	activeLineColor *color.Color     // color with which to print the currently selected line
+	status          modalInputStatus // the current status of this ModalInput instance
 }
 
 func NewModalInput(entries []ModalEntry, cursorText string, initialValue string) (*ModalInput, func(), error) {
