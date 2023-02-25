@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/fatih/color"
+
 	"atomicgo.dev/cursor"
 	"github.com/eiannone/keyboard"
 )
@@ -18,6 +20,8 @@ type ModalInput struct {
 
 	// CursorText contains the text of the cursor, including color codes.
 	CursorText string
+
+	ActiveLineColor *color.Color
 
 	// Result contains the result that the user has selected,
 	// or nil if no selection has taken place yet.
@@ -37,10 +41,11 @@ func NewModalInput(entries []ModalEntry, cursorText string, initialValue string)
 		}
 	}
 	input := ModalInput{
-		Entries:    entries,
-		CursorPos:  cursorPos,
-		CursorText: cursorText,
-		Status:     ModalInputStatusNew,
+		ActiveLineColor: color.New(color.FgGreen),
+		Entries:         entries,
+		CursorPos:       cursorPos,
+		CursorText:      cursorText,
+		Status:          ModalInputStatusNew,
 	}
 	return &input, input.Cleanup, nil
 }
@@ -75,7 +80,7 @@ func (mi *ModalInput) print() {
 	cursorSpace := strings.Repeat(" ", len(mi.CursorText))
 	for e := range mi.Entries {
 		if e == int(mi.CursorPos) {
-			fmt.Println(mi.CursorText + mi.Entries[e].Text)
+			mi.ActiveLineColor.Println(mi.CursorText + mi.Entries[e].Text)
 		} else {
 			fmt.Println(cursorSpace + mi.Entries[e].Text)
 		}
