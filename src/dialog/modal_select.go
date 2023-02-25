@@ -31,7 +31,7 @@ func ModalSelect(entries ModalEntries, cursorText string, initialValue string) (
 type modalSelect struct {
 	activeColor *color.Color     // color with which to print the currently selected line
 	cursorPos   int              // index of the currently selected row
-	cursorText  string           // the text of the cursor, including color codes
+	cursorText  string           // text that gets prepended to the currently selected row
 	entries     ModalEntries     // the entries to display
 	status      modalInputStatus // the current status of this ModalInput instance
 }
