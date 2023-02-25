@@ -24,6 +24,32 @@ type ModalInput struct {
 	Status ModalInputStatus
 }
 
+func NewModalInput(entries []ModalEntry, cursorText string, initialValue string) (*ModalInput, func(), error) {
+	cursor.Hide()
+	if err := keyboard.Open(); err != nil {
+		return nil, nil, err
+	}
+	cursorPos := 0
+	for e, entry := range entries {
+		if entry.Value == initialValue {
+			cursorPos = e
+			break
+		}
+	}
+	input := ModalInput{
+		Entries:    entries,
+		CursorPos:  uint8(cursorPos),
+		CursorText: cursorText,
+		Status:     ModalInputStatusNew,
+	}
+	return &input, input.Cleanup, nil
+}
+
+func (mi *ModalInput) Cleanup() {
+	cursor.Show()
+	keyboard.Close()
+}
+
 // Display displays this dialog.
 func (mi *ModalInput) Display() {
 	if mi.Status == ModalInputStatusNew {

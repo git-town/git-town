@@ -4,8 +4,6 @@ import (
 	"sort"
 	"strings"
 
-	"atomicgo.dev/cursor"
-	"github.com/eiannone/keyboard"
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
@@ -21,14 +19,14 @@ func switchCmd(repo *git.ProdRepo) *cobra.Command {
 			if err != nil {
 				cli.Exit(err)
 			}
-			input, err := createInput(currentBranch, 0, repo)
+			input, cleanup, err := createInput(currentBranch, 0, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
-			cursor.Hide()
 			defer func() {
-				cursor.Show()
-				keyboard.Close()
+				if cleanup != nil {
+					cleanup()
+				}
 			}()
 			input.Display()
 			for input.Status == dialog.ModalInputStatusSelecting {
@@ -57,31 +55,17 @@ func switchCmd(repo *git.ProdRepo) *cobra.Command {
 	}
 }
 
-func createInput(currentBranch string, indent int, repo *git.ProdRepo) (*dialog.ModalInput, error) {
+func createInput(currentBranch string, indent int, repo *git.ProdRepo) (*dialog.ModalInput, func(), error) {
 	roots := repo.Config.BranchAncestryRoots()
-	if err := keyboard.Open(); err != nil {
-		return nil, err
-	}
 	entries := []dialog.ModalEntry{}
 	var err error
 	for _, root := range roots {
 		entries, err = addEntries(entries, root, 0, repo)
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 	}
-	cursorPos := 0
-	for e, entry := range entries {
-		if entry.Value == currentBranch {
-			cursorPos = e
-			break
-		}
-	}
-	return &dialog.ModalInput{
-		Entries:    entries,
-		CursorPos:  uint8(cursorPos),
-		CursorText: "> ",
-	}, nil
+	return dialog.NewModalInput(entries, "> ", currentBranch)
 }
 
 func addEntries(entries []dialog.ModalEntry, branch string, indent int, repo *git.ProdRepo) ([]dialog.ModalEntry, error) {
