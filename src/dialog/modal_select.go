@@ -105,6 +105,7 @@ func (mi *modalSelect) handleInput() error {
 	return nil
 }
 
+// selectedValue provides the value selected by the user.
 func (mi *modalSelect) selectedValue() string {
 	return mi.entries[mi.cursorPos].Value
 }
