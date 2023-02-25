@@ -34,7 +34,6 @@ func switchCmd(repo *git.ProdRepo) *cobra.Command {
 				if err != nil {
 					cli.Exit(err)
 				}
-				input.Display()
 			}
 			if input.Status == dialog.ModalInputStatusSelected {
 				if input.SelectedValue() != currentBranch {

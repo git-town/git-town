@@ -67,6 +67,7 @@ func (mi *ModalInput) Display() {
 	}
 }
 
+// HandleInput waits for keyboard input and updates the dialog state accordingly
 func (mi *ModalInput) HandleInput() error {
 	char, key, err := keyboard.GetSingleKey()
 	if err != nil {
@@ -89,6 +90,7 @@ func (mi *ModalInput) HandleInput() error {
 	} else if key == keyboard.KeyEsc {
 		mi.Status = ModalInputStatusAborted
 	}
+	mi.Display()
 	return nil
 }
 
