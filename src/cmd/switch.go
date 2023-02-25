@@ -19,7 +19,7 @@ func switchCmd(repo *git.ProdRepo) *cobra.Command {
 			if err != nil {
 				cli.Exit(err)
 			}
-			input, cleanup, err := createInput(currentBranch, 0, repo)
+			input, cleanup, err := createInput(currentBranch, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
@@ -45,7 +45,7 @@ func switchCmd(repo *git.ProdRepo) *cobra.Command {
 	}
 }
 
-func createInput(currentBranch string, indent int, repo *git.ProdRepo) (*dialog.ModalInput, func(), error) {
+func createInput(currentBranch string, repo *git.ProdRepo) (*dialog.ModalInput, func(), error) {
 	roots := repo.Config.BranchAncestryRoots()
 	entries := []dialog.ModalEntry{}
 	var err error
