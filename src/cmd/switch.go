@@ -40,13 +40,11 @@ func switchCmd(repo *git.ProdRepo) *cobra.Command {
 				if err != nil {
 					cli.Exit(err)
 				}
-				switch char {
-				case 'j':
+				if char == 'j' || key == keyboard.KeyArrowDown {
 					cursorPos += 1
-				case 'k':
+				} else if char == 'k' || key == keyboard.KeyArrowUp {
 					cursorPos -= 1
-				}
-				if key == keyboard.KeyEsc {
+				} else if key == keyboard.KeyEsc || key == keyboard.KeyEnter || key == keyboard.KeySpace {
 					break
 				}
 			}
