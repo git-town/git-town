@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"sort"
 	"strings"
 
 	"github.com/git-town/git-town/v7/src/cli"
@@ -58,10 +57,8 @@ func addEntries(entries []dialog.ModalEntry, branch string, indent int, repo *gi
 		Text:  strings.Repeat("  ", indent) + branch,
 		Value: branch,
 	})
-	children := repo.Silent.Config.ChildBranches(branch)
-	sort.Strings(children)
 	var err error
-	for _, child := range children {
+	for _, child := range repo.Silent.Config.ChildBranches(branch) {
 		entries, err = addEntries(entries, child, indent+1, repo)
 		if err != nil {
 			return entries, err
