@@ -46,7 +46,7 @@ func (mi *ModalInput) HandleInput() error {
 	if err != nil {
 		return err
 	}
-	if char == 'j' || key == keyboard.KeyArrowDown {
+	if char == 'j' || key == keyboard.KeyArrowDown || key == keyboard.KeyTab {
 		mi.CursorPos += 1
 	} else if char == 'k' || key == keyboard.KeyArrowUp {
 		mi.CursorPos -= 1
