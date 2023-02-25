@@ -19,12 +19,12 @@ func switchCmd(repo *git.ProdRepo) *cobra.Command {
 			if err != nil {
 				cli.Exit(err)
 			}
-			selection, err := queryBranch(currentBranch, repo)
+			newBranch, err := queryBranch(currentBranch, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
-			if selection != nil && *selection != currentBranch {
-				err = repo.Silent.CheckoutBranch(*selection)
+			if newBranch != nil && *newBranch != currentBranch {
+				err = repo.Silent.CheckoutBranch(*newBranch)
 				if err != nil {
 					cli.Exit(err)
 				}
@@ -40,6 +40,7 @@ func switchCmd(repo *git.ProdRepo) *cobra.Command {
 	}
 }
 
+// queryBranch lets the user select a new branch via a visual dialog
 func queryBranch(currentBranch string, repo *git.ProdRepo) (*string, error) {
 	entries := dialog.ModalEntries{}
 	var err error
