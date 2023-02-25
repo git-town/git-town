@@ -9,7 +9,3 @@ navigate the UI:
 - `DOWN`, `TAB`, `j`: move the selection down
 - `ENTER`, `s`: switch to the selected branch
 - `ESC`: abort the dialog
-
-The dialog starts at the selected branch, so running
-`git town switch <ENTER><ENTER>` displays the branch hierarchy, with the active
-branch highlighted.
