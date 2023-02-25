@@ -10,6 +10,7 @@ import (
 )
 
 // ModalSelect allows the user to select a value from the given entries.
+// Entries can be arbitrarily formatted.
 // The given initial value is preselected.
 func ModalSelect(entries ModalEntries, cursorText string, initialValue string) (*string, error) {
 	cursorPos := entries.IndexOfValue(initialValue)
