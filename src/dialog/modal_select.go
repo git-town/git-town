@@ -61,7 +61,7 @@ func (mi *modalSelect) Display() (*string, error) {
 	return &selectedValue, nil
 }
 
-// Display displays this dialog.
+// print renders the dialog in its current status to the CLI.
 func (mi *modalSelect) print() {
 	if mi.status == modalInputStatusNew {
 		mi.status = modalInputStatusSelecting
