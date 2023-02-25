@@ -26,7 +26,9 @@ type ModalInput struct {
 
 // Display displays this dialog.
 func (mi *ModalInput) Display() {
-	if mi.Status != ModalInputStatusNew {
+	if mi.Status == ModalInputStatusNew {
+		mi.Status = ModalInputStatusSelecting
+	} else {
 		cursor.Up(len(mi.Entries))
 	}
 	cursorSpace := strings.Repeat(" ", len(mi.CursorText))
