@@ -54,7 +54,7 @@ func createEntries(currentBranch string, repo *git.ProdRepo) (dialog.ModalEntrie
 	entries := dialog.ModalEntries{}
 	var err error
 	for _, root := range repo.Config.BranchAncestryRoots() {
-		entries, err = addEntries(entries, root, 0, repo)
+		entries, err = addEntryAndChildren(entries, root, 0, repo)
 		if err != nil {
 			return nil, err
 		}
@@ -62,14 +62,15 @@ func createEntries(currentBranch string, repo *git.ProdRepo) (dialog.ModalEntrie
 	return entries, nil
 }
 
-func addEntries(entries []dialog.ModalEntry, branch string, indent int, repo *git.ProdRepo) (dialog.ModalEntries, error) {
+// addEntryAndChildren adds the given branch and all its child branches to the given entries collection.
+func addEntryAndChildren(entries dialog.ModalEntries, branch string, indent int, repo *git.ProdRepo) (dialog.ModalEntries, error) {
 	entries = append(entries, dialog.ModalEntry{
 		Text:  strings.Repeat("  ", indent) + branch,
 		Value: branch,
 	})
 	var err error
 	for _, child := range repo.Silent.Config.ChildBranches(branch) {
-		entries, err = addEntries(entries, child, indent+1, repo)
+		entries, err = addEntryAndChildren(entries, child, indent+1, repo)
 		if err != nil {
 			return entries, err
 		}
