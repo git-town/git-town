@@ -110,12 +110,10 @@ func (mi *modalSelect) selectedValue() string {
 	return mi.entries[mi.cursorPos].Value
 }
 
+// ModalEntry contains one of the many entries that the user can choose from.
 type ModalEntry struct {
-	// the text to display
-	Text string
-
-	// the return value
-	Value string
+	Text  string // the text to display
+	Value string // the return value
 }
 
 type ModalEntries []ModalEntry
