@@ -118,7 +118,8 @@ type ModalEntry struct {
 
 type ModalEntries []ModalEntry
 
-// IndexOfValue provides the index of the entry with the given value.
+// IndexOfValue provides the index of the entry with the given value,
+// or nil if the given value is not in the list.
 func (mes ModalEntries) IndexOfValue(value string) *int {
 	for e, entry := range mes {
 		if entry.Value == value {
