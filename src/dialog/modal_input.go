@@ -49,9 +49,24 @@ func (mi *ModalInput) Cleanup() {
 	cursor.Show()
 	keyboard.Close()
 }
+func (mi *ModalInput) Display() (*string, error) {
+	mi.print()
+	for mi.Status == ModalInputStatusSelecting {
+		err := mi.handleInput()
+		if err != nil {
+			return nil, err
+		}
+		mi.print()
+	}
+	if mi.Status == ModalInputStatusAborted {
+		return nil, nil
+	}
+	selectedValue := mi.selectedValue()
+	return &selectedValue, nil
+}
 
 // Display displays this dialog.
-func (mi *ModalInput) Display() {
+func (mi *ModalInput) print() {
 	if mi.Status == ModalInputStatusNew {
 		mi.Status = ModalInputStatusSelecting
 	} else {
@@ -67,8 +82,8 @@ func (mi *ModalInput) Display() {
 	}
 }
 
-// HandleInput waits for keyboard input and updates the dialog state accordingly
-func (mi *ModalInput) HandleInput() error {
+// Process waits for keyboard input, updates the dialog state, and re-draws the dialog.
+func (mi *ModalInput) handleInput() error {
 	char, key, err := keyboard.GetSingleKey()
 	if err != nil {
 		return err
@@ -90,11 +105,10 @@ func (mi *ModalInput) HandleInput() error {
 	} else if key == keyboard.KeyEsc {
 		mi.Status = ModalInputStatusAborted
 	}
-	mi.Display()
 	return nil
 }
 
-func (mi *ModalInput) SelectedValue() string {
+func (mi *ModalInput) selectedValue() string {
 	return mi.Entries[mi.CursorPos].Value
 }
 
