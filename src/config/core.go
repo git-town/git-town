@@ -103,6 +103,7 @@ func (gt *GitTown) ChildBranches(branch string) []string {
 			result = append(result, child)
 		}
 	}
+	sort.Strings(result)
 	return result
 }
 
