@@ -22,18 +22,18 @@ func ModalSelect(entries ModalEntries, cursorText string, initialValue string) (
 		entries:     entries,
 		cursorPos:   *cursorPos,
 		cursorText:  cursorText,
-		status:      modalInputStatusNew,
+		status:      modalSelectStatusNew,
 	}
 	return input.Display()
 }
 
 // modalSelect allows selecting a value from a list using VIM keybindings.
 type modalSelect struct {
-	activeColor *color.Color     // color with which to print the currently selected line
-	cursorPos   int              // index of the currently selected row
-	cursorText  string           // text that gets prepended to the currently selected row
-	entries     ModalEntries     // the entries to display
-	status      modalInputStatus // the current status of this ModalInput instance
+	activeColor *color.Color      // color with which to print the currently selected line
+	cursorPos   int               // index of the currently selected row
+	cursorText  string            // text that gets prepended to the currently selected row
+	entries     ModalEntries      // the entries to display
+	status      modalSelectStatus // the current status of this ModalInput instance
 }
 
 // Display shows the dialog and lets the user select an entry.
@@ -47,14 +47,14 @@ func (mi *modalSelect) Display() (*string, error) {
 	}
 	defer keyboard.Close()
 	mi.print()
-	for mi.status == modalInputStatusSelecting {
+	for mi.status == modalSelectStatusSelecting {
 		err := mi.handleInput()
 		if err != nil {
 			return nil, err
 		}
 		mi.print()
 	}
-	if mi.status == modalInputStatusAborted {
+	if mi.status == modalSelectStatusAborted {
 		return nil, nil //nolint:nilnil
 	}
 	selectedValue := mi.selectedValue()
@@ -63,8 +63,8 @@ func (mi *modalSelect) Display() (*string, error) {
 
 // print renders the dialog in its current status to the CLI.
 func (mi *modalSelect) print() {
-	if mi.status == modalInputStatusNew {
-		mi.status = modalInputStatusSelecting
+	if mi.status == modalSelectStatusNew {
+		mi.status = modalSelectStatusSelecting
 	} else {
 		cursor.Up(len(mi.entries))
 	}
@@ -98,9 +98,9 @@ func (mi *modalSelect) handleInput() error {
 			mi.cursorPos = len(mi.entries) - 1
 		}
 	case key == keyboard.KeyEnter, char == 's':
-		mi.status = modalInputStatusSelected
+		mi.status = modalSelectStatusSelected
 	case key == keyboard.KeyEsc:
-		mi.status = modalInputStatusAborted
+		mi.status = modalSelectStatusAborted
 	}
 	return nil
 }
@@ -129,11 +129,12 @@ func (mes ModalEntries) IndexOfValue(value string) *int {
 	return nil
 }
 
-type modalInputStatus int
+// modalSelectStatus represents the different states that a modalSelect instance can be in.
+type modalSelectStatus int
 
 const (
-	modalInputStatusNew modalInputStatus = iota
-	modalInputStatusSelecting
-	modalInputStatusSelected
-	modalInputStatusAborted
+	modalSelectStatusNew modalSelectStatus = iota
+	modalSelectStatusSelecting
+	modalSelectStatusSelected
+	modalSelectStatusAborted
 )
