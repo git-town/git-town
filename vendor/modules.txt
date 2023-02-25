@@ -1,6 +1,11 @@
 # code.gitea.io/sdk/gitea v0.12.0
 ## explicit; go 1.12
 code.gitea.io/sdk/gitea
+# github.com/AlecAivazis/survey/v2 v2.3.6
+## explicit; go 1.13
+github.com/AlecAivazis/survey/v2
+github.com/AlecAivazis/survey/v2/core
+github.com/AlecAivazis/survey/v2/terminal
 # github.com/acarl005/stripansi v0.0.0-20180116102854-5a71ef0e047d
 ## explicit
 github.com/acarl005/stripansi
@@ -100,7 +105,17 @@ golang.org/x/oauth2
 golang.org/x/oauth2/internal
 # golang.org/x/sys v0.4.0
 ## explicit; go 1.17
+golang.org/x/sys/internal/unsafeheader
+golang.org/x/sys/plan9
 golang.org/x/sys/unix
+golang.org/x/sys/windows
+# golang.org/x/term v0.4.0
+## explicit; go 1.17
+golang.org/x/term
+# golang.org/x/text v0.6.0
+## explicit; go 1.17
+golang.org/x/text/transform
+golang.org/x/text/width
 # golang.org/x/time v0.3.0
 ## explicit
 golang.org/x/time/rate
@@ -144,9 +159,6 @@ google.golang.org/protobuf/runtime/protoimpl
 google.golang.org/protobuf/types/descriptorpb
 # gopkg.in/AlecAivazis/survey.v1 v1.8.8
 ## explicit; go 1.13
-gopkg.in/AlecAivazis/survey.v1
-gopkg.in/AlecAivazis/survey.v1/core
-gopkg.in/AlecAivazis/survey.v1/terminal
 # gopkg.in/yaml.v3 v3.0.1
 ## explicit
 gopkg.in/yaml.v3

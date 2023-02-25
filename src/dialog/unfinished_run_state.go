@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
+	survey "github.com/AlecAivazis/survey/v2"
 	humanize "github.com/dustin/go-humanize"
-	survey "gopkg.in/AlecAivazis/survey.v1"
 )
 
 const (

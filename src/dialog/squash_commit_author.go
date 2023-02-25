@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"strings"
 
+	survey "github.com/AlecAivazis/survey/v2"
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/run"
-	survey "gopkg.in/AlecAivazis/survey.v1"
 )
 
 // DetermineSquashCommitAuthor gets the author of the supplied branch.

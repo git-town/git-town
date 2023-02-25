@@ -4,6 +4,7 @@ go 1.19
 
 require (
 	code.gitea.io/sdk/gitea v0.12.0
+	github.com/AlecAivazis/survey/v2 v2.3.6
 	github.com/acarl005/stripansi v0.0.0-20180116102854-5a71ef0e047d
 	github.com/cucumber/godog v0.9.0
 	github.com/cucumber/messages-go/v10 v10.0.3
@@ -16,7 +17,6 @@ require (
 	github.com/stretchr/testify v1.8.1
 	github.com/xanzy/go-gitlab v0.78.0
 	golang.org/x/oauth2 v0.4.0
-	gopkg.in/AlecAivazis/survey.v1 v1.8.8
 )
 
 require (
@@ -38,6 +38,8 @@ require (
 	golang.org/x/crypto v0.5.0 // indirect
 	golang.org/x/net v0.5.0 // indirect
 	golang.org/x/sys v0.4.0 // indirect
+	golang.org/x/term v0.4.0 // indirect
+	golang.org/x/text v0.6.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
