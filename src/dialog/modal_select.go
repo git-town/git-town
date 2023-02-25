@@ -69,11 +69,11 @@ func (mi *modalSelect) print() {
 		cursor.Up(len(mi.entries))
 	}
 	cursorSpace := strings.Repeat(" ", len(mi.cursorText))
-	for e := range mi.entries {
+	for e, entry := range mi.entries {
 		if e == mi.cursorPos {
-			mi.activeColor.Println(mi.cursorText + mi.entries[e].Text)
+			mi.activeColor.Println(mi.cursorText + entry.Text)
 		} else {
-			fmt.Println(cursorSpace + mi.entries[e].Text)
+			fmt.Println(cursorSpace + entry.Text)
 		}
 	}
 }
