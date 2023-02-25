@@ -23,11 +23,7 @@ func switchCmd(repo *git.ProdRepo) *cobra.Command {
 			if err != nil {
 				cli.Exit(err)
 			}
-			defer func() {
-				if cleanup != nil {
-					cleanup()
-				}
-			}()
+			defer cleanup()
 			userChoice, err := input.Display()
 			if err != nil {
 				cli.Exit(err)
@@ -56,7 +52,7 @@ func createInput(currentBranch string, indent int, repo *git.ProdRepo) (*dialog.
 	for _, root := range roots {
 		entries, err = addEntries(entries, root, 0, repo)
 		if err != nil {
-			return nil, nil, err
+			return nil, func() {}, err
 		}
 	}
 	return dialog.NewModalInput(entries, "> ", currentBranch)
