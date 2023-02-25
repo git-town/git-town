@@ -14,7 +14,7 @@ type ModalInput struct {
 	Entries []ModalEntry
 
 	// CursorPos contains the index of the currently selected row.
-	CursorPos uint8
+	CursorPos int
 
 	// CursorText contains the text of the cursor, including color codes.
 	CursorText string
@@ -38,7 +38,7 @@ func NewModalInput(entries []ModalEntry, cursorText string, initialValue string)
 	}
 	input := ModalInput{
 		Entries:    entries,
-		CursorPos:  uint8(cursorPos),
+		CursorPos:  cursorPos,
 		CursorText: cursorText,
 		Status:     ModalInputStatusNew,
 	}
@@ -73,9 +73,17 @@ func (mi *ModalInput) HandleInput() error {
 		return err
 	}
 	if char == 'j' || key == keyboard.KeyArrowDown || key == keyboard.KeyTab {
-		mi.CursorPos += 1
+		if mi.CursorPos < len(mi.Entries)-1 {
+			mi.CursorPos += 1
+		} else {
+			mi.CursorPos = 0
+		}
 	} else if char == 'k' || key == keyboard.KeyArrowUp {
-		mi.CursorPos -= 1
+		if mi.CursorPos > 0 {
+			mi.CursorPos -= 1
+		} else {
+			mi.CursorPos = len(mi.Entries) - 1
+		}
 	} else if key == keyboard.KeyEnter || key == keyboard.KeySpace {
 		mi.Status = ModalInputStatusSelected
 	} else if key == keyboard.KeyEsc {
