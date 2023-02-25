@@ -100,7 +100,7 @@ func (mi *ModalInput) handleInput() error {
 		} else {
 			mi.CursorPos = len(mi.Entries) - 1
 		}
-	} else if key == keyboard.KeyEnter || key == keyboard.KeySpace {
+	} else if key == keyboard.KeyEnter || char == 's' {
 		mi.Status = ModalInputStatusSelected
 	} else if key == keyboard.KeyEsc {
 		mi.Status = ModalInputStatusAborted
