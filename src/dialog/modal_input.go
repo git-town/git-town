@@ -20,7 +20,8 @@ type ModalInput struct {
 
 func NewModalInput(entries []ModalEntry, cursorText string, initialValue string) (*ModalInput, func(), error) {
 	cursor.Hide()
-	if err := keyboard.Open(); err != nil {
+	err := keyboard.Open()
+	if err != nil {
 		return nil, nil, err
 	}
 	cursorPos := 0
