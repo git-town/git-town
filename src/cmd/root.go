@@ -36,6 +36,7 @@ and it allows you to perform many common Git operations faster and easier.`,
 	rootCmd.AddCommand(setParentBranchCommand(repo))
 	rootCmd.AddCommand(shipCmd(repo))
 	rootCmd.AddCommand(skipCmd(repo))
+	rootCmd.AddCommand(switchCmd(repo))
 	rootCmd.AddCommand(syncCmd(repo))
 	rootCmd.AddCommand(undoCmd(repo))
 	rootCmd.AddCommand(versionCmd())

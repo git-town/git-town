@@ -3,12 +3,14 @@ module github.com/git-town/git-town/v7
 go 1.19
 
 require (
+	atomicgo.dev/cursor v0.1.1
 	code.gitea.io/sdk/gitea v0.12.0
 	github.com/AlecAivazis/survey/v2 v2.3.6
 	github.com/acarl005/stripansi v0.0.0-20180116102854-5a71ef0e047d
 	github.com/cucumber/godog v0.9.0
 	github.com/cucumber/messages-go/v10 v10.0.3
 	github.com/dustin/go-humanize v1.0.1
+	github.com/eiannone/keyboard v0.0.0-20220611211555-0d226195f203
 	github.com/fatih/color v1.13.0
 	github.com/google/go-github/v50 v50.0.0
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
@@ -37,7 +39,7 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	golang.org/x/crypto v0.5.0 // indirect
 	golang.org/x/net v0.5.0 // indirect
-	golang.org/x/sys v0.4.0 // indirect
+	golang.org/x/sys v0.5.0 // indirect
 	golang.org/x/term v0.4.0 // indirect
 	golang.org/x/text v0.6.0 // indirect
 	golang.org/x/time v0.3.0 // indirect

@@ -8,6 +8,7 @@
   - [Typical development workflow](typical-dev-commands.md)
     - [hack](commands/hack.md)
     - [sync](commands/sync.md)
+    - [switch](commands/switch.md)
     - [new-pull-request](commands/new-pull-request.md)
     - [ship](commands/ship.md)
   - [Advanced development workflow](advanced-dev-commands.md)

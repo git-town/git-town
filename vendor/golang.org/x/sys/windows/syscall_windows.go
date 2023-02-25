@@ -10,7 +10,10 @@ import (
 	errorspkg "errors"
 	"fmt"
 	"runtime"
+<<<<<<< HEAD
 	"strings"
+=======
+>>>>>>> main
 	"sync"
 	"syscall"
 	"time"
@@ -87,15 +90,20 @@ func StringToUTF16(s string) []uint16 {
 // s, with a terminating NUL added. If s contains a NUL byte at any
 // location, it returns (nil, syscall.EINVAL).
 func UTF16FromString(s string) ([]uint16, error) {
+<<<<<<< HEAD
 	if strings.IndexByte(s, 0) != -1 {
 		return nil, syscall.EINVAL
 	}
 	return utf16.Encode([]rune(s + "\x00")), nil
+=======
+	return syscall.UTF16FromString(s)
+>>>>>>> main
 }
 
 // UTF16ToString returns the UTF-8 encoding of the UTF-16 sequence s,
 // with a terminating NUL and any bytes after the NUL removed.
 func UTF16ToString(s []uint16) string {
+<<<<<<< HEAD
 	for i, v := range s {
 		if v == 0 {
 			s = s[:i]
@@ -103,6 +111,9 @@ func UTF16ToString(s []uint16) string {
 		}
 	}
 	return string(utf16.Decode(s))
+=======
+	return syscall.UTF16ToString(s)
+>>>>>>> main
 }
 
 // StringToUTF16Ptr is deprecated. Use UTF16PtrFromString instead.
