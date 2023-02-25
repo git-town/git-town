@@ -83,6 +83,7 @@ test: fix docs unit cuke  # runs all the tests
 test-go:  # smoke tests for Go refactorings
 	tools/gofumpt-${GOFUMPT_VERSION} -l -w . &
 	make --no-print-directory unit &
+	make --no-print-directory build &
 	tools/golangci-lint-${GOLANGCILINT_VERSION} run
 
 unit:  # runs only the unit tests for changed code
