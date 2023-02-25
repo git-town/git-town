@@ -3,6 +3,8 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/eiannone/keyboard"
+	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/spf13/cobra"
 )
@@ -13,13 +15,32 @@ func switchCmd(repo *git.ProdRepo) *cobra.Command {
 		Short: "Displays the local branches visually and allows switching between them",
 		Run: func(cmd *cobra.Command, args []string) {
 			roots := repo.Config.BranchAncestryRoots()
-			for _, root := range roots {
-				printBranch(printOptions{
-					indent: 0,
-					cursor: 0,
-					branch: root,
-					repo:   repo,
-				})
+			if err := keyboard.Open(); err != nil {
+				cli.Exit(err)
+			}
+			cursor := uint8(0)
+			for {
+				for _, root := range roots {
+					printBranch(printOptions{
+						indent: 0,
+						cursor: cursor,
+						branch: root,
+						repo:   repo,
+					})
+				}
+				char, key, err := keyboard.GetSingleKey()
+				if err != nil {
+					cli.Exit(err)
+				}
+				switch char {
+				case 'j':
+					cursor += 1
+				case 'k':
+					cursor -= 1
+				}
+				if key == keyboard.KeyEsc {
+					break
+				}
 			}
 		},
 		Args: cobra.NoArgs,
