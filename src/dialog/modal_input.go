@@ -20,7 +20,7 @@ type ModalInput struct {
 
 	// Result contains the result that the user has selected,
 	// or nil if no selection has taken place yet.
-	Done bool
+	Status ModalInputStatus
 }
 
 // Display displays this dialog.
@@ -44,8 +44,10 @@ func (mi *ModalInput) HandleInput() error {
 		mi.CursorPos += 1
 	} else if char == 'k' || key == keyboard.KeyArrowUp {
 		mi.CursorPos -= 1
-	} else if key == keyboard.KeyEsc || key == keyboard.KeyEnter || key == keyboard.KeySpace {
-		mi.Done = true
+	} else if key == keyboard.KeyEnter || key == keyboard.KeySpace {
+		mi.Status = ModalInputStatusSelected
+	} else if key == keyboard.KeyEsc {
+		mi.Status = ModalInputStatusAborted
 	}
 	return nil
 }
@@ -61,3 +63,11 @@ type ModalEntry struct {
 	// the return value
 	Value string
 }
+
+type ModalInputStatus int
+
+const (
+	ModalInputStatusSelecting ModalInputStatus = iota
+	ModalInputStatusSelected
+	ModalInputStatusAborted
+)

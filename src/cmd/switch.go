@@ -36,7 +36,7 @@ func switchCmd(repo *git.ProdRepo) *cobra.Command {
 				if err != nil {
 					cli.Exit(err)
 				}
-				if input.Done {
+				if input.Status == dialog.ModalInputStatusAborted {
 					input.Display()
 					break
 				}
