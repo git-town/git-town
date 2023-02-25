@@ -94,21 +94,22 @@ func (mi *ModalInput) handleInput() error {
 	if err != nil {
 		return err
 	}
-	if char == 'j' || key == keyboard.KeyArrowDown || key == keyboard.KeyTab {
+	switch {
+	case char == 'j', key == keyboard.KeyArrowDown, key == keyboard.KeyTab:
 		if mi.cursorPos < len(mi.entries)-1 {
 			mi.cursorPos += 1
 		} else {
 			mi.cursorPos = 0
 		}
-	} else if char == 'k' || key == keyboard.KeyArrowUp {
+	case char == 'k', key == keyboard.KeyArrowUp:
 		if mi.cursorPos > 0 {
 			mi.cursorPos -= 1
 		} else {
 			mi.cursorPos = len(mi.entries) - 1
 		}
-	} else if key == keyboard.KeyEnter || char == 's' {
+	case key == keyboard.KeyEnter, char == 's':
 		mi.status = modalInputStatusSelected
-	} else if key == keyboard.KeyEsc {
+	case key == keyboard.KeyEsc:
 		mi.status = modalInputStatusAborted
 	}
 	return nil
