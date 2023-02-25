@@ -41,6 +41,8 @@ func NewModalInput(entries []ModalEntry, cursorText string, initialValue string)
 	return &input, input.cleanup, nil
 }
 
+// Display shows the dialog and lets the user select an entry.
+// Returns the selected value or nil if the user aborted the dialog.
 func (mi *ModalInput) Display() (*string, error) {
 	mi.print()
 	for mi.status == modalInputStatusSelecting {
