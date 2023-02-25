@@ -13,19 +13,19 @@ import (
 // ModalInput allows selecting a value using VIM keybindings.
 type ModalInput struct {
 	// the entries to display
-	Entries []ModalEntry
+	entries []ModalEntry
 
-	// CursorPos contains the index of the currently selected row.
-	CursorPos int
+	// cursorPos contains the index of the currently selected row.
+	cursorPos int
 
-	// CursorText contains the text of the cursor, including color codes.
-	CursorText string
+	// cursorText contains the text of the cursor, including color codes.
+	cursorText string
 
-	ActiveLineColor *color.Color
+	activeLineColor *color.Color
 
 	// Result contains the result that the user has selected,
 	// or nil if no selection has taken place yet.
-	Status ModalInputStatus
+	status modalInputStatus
 }
 
 func NewModalInput(entries []ModalEntry, cursorText string, initialValue string) (*ModalInput, func(), error) {
@@ -41,48 +41,49 @@ func NewModalInput(entries []ModalEntry, cursorText string, initialValue string)
 		}
 	}
 	input := ModalInput{
-		ActiveLineColor: color.New(color.FgCyan, color.Bold),
-		Entries:         entries,
-		CursorPos:       cursorPos,
-		CursorText:      cursorText,
-		Status:          ModalInputStatusNew,
+		activeLineColor: color.New(color.FgCyan, color.Bold),
+		entries:         entries,
+		cursorPos:       cursorPos,
+		cursorText:      cursorText,
+		status:          modalInputStatusNew,
 	}
-	return &input, input.Cleanup, nil
+	return &input, input.cleanup, nil
 }
 
-func (mi *ModalInput) Cleanup() {
-	cursor.Show()
-	keyboard.Close()
-}
 func (mi *ModalInput) Display() (*string, error) {
 	mi.print()
-	for mi.Status == ModalInputStatusSelecting {
+	for mi.status == modalInputStatusSelecting {
 		err := mi.handleInput()
 		if err != nil {
 			return nil, err
 		}
 		mi.print()
 	}
-	if mi.Status == ModalInputStatusAborted {
+	if mi.status == modalInputStatusAborted {
 		return nil, nil
 	}
 	selectedValue := mi.selectedValue()
 	return &selectedValue, nil
 }
 
+func (mi *ModalInput) cleanup() {
+	cursor.Show()
+	keyboard.Close()
+}
+
 // Display displays this dialog.
 func (mi *ModalInput) print() {
-	if mi.Status == ModalInputStatusNew {
-		mi.Status = ModalInputStatusSelecting
+	if mi.status == modalInputStatusNew {
+		mi.status = modalInputStatusSelecting
 	} else {
-		cursor.Up(len(mi.Entries))
+		cursor.Up(len(mi.entries))
 	}
-	cursorSpace := strings.Repeat(" ", len(mi.CursorText))
-	for e := range mi.Entries {
-		if e == int(mi.CursorPos) {
-			mi.ActiveLineColor.Println(mi.CursorText + mi.Entries[e].Text)
+	cursorSpace := strings.Repeat(" ", len(mi.cursorText))
+	for e := range mi.entries {
+		if e == int(mi.cursorPos) {
+			mi.activeLineColor.Println(mi.cursorText + mi.entries[e].Text)
 		} else {
-			fmt.Println(cursorSpace + mi.Entries[e].Text)
+			fmt.Println(cursorSpace + mi.entries[e].Text)
 		}
 	}
 }
@@ -94,27 +95,27 @@ func (mi *ModalInput) handleInput() error {
 		return err
 	}
 	if char == 'j' || key == keyboard.KeyArrowDown || key == keyboard.KeyTab {
-		if mi.CursorPos < len(mi.Entries)-1 {
-			mi.CursorPos += 1
+		if mi.cursorPos < len(mi.entries)-1 {
+			mi.cursorPos += 1
 		} else {
-			mi.CursorPos = 0
+			mi.cursorPos = 0
 		}
 	} else if char == 'k' || key == keyboard.KeyArrowUp {
-		if mi.CursorPos > 0 {
-			mi.CursorPos -= 1
+		if mi.cursorPos > 0 {
+			mi.cursorPos -= 1
 		} else {
-			mi.CursorPos = len(mi.Entries) - 1
+			mi.cursorPos = len(mi.entries) - 1
 		}
 	} else if key == keyboard.KeyEnter || char == 's' {
-		mi.Status = ModalInputStatusSelected
+		mi.status = modalInputStatusSelected
 	} else if key == keyboard.KeyEsc {
-		mi.Status = ModalInputStatusAborted
+		mi.status = modalInputStatusAborted
 	}
 	return nil
 }
 
 func (mi *ModalInput) selectedValue() string {
-	return mi.Entries[mi.CursorPos].Value
+	return mi.entries[mi.cursorPos].Value
 }
 
 type ModalEntry struct {
@@ -125,11 +126,11 @@ type ModalEntry struct {
 	Value string
 }
 
-type ModalInputStatus int
+type modalInputStatus int
 
 const (
-	ModalInputStatusNew ModalInputStatus = iota
-	ModalInputStatusSelecting
-	ModalInputStatusSelected
-	ModalInputStatusAborted
+	modalInputStatusNew modalInputStatus = iota
+	modalInputStatusSelecting
+	modalInputStatusSelected
+	modalInputStatusAborted
 )
