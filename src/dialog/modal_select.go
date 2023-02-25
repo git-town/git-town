@@ -116,6 +116,7 @@ type ModalEntry struct {
 	Value string // the return value
 }
 
+// ModalEntries is a collection of ModalEntry.
 type ModalEntries []ModalEntry
 
 // IndexOfValue provides the index of the entry with the given value,
