@@ -42,17 +42,27 @@ func switchCmd(repo *git.ProdRepo) *cobra.Command {
 // queryBranch lets the user select a new branch via a visual dialog.
 // Returns the selected branch or nil if the user aborted.
 func queryBranch(currentBranch string, repo *git.ProdRepo) (selection *string, err error) { //nolint:nonamedreturns
+	entries, err := createEntries(currentBranch, repo)
+	if err != nil {
+		return nil, err
+	}
+	return dialog.ModalSelect(entries, "> ", currentBranch)
+}
+
+// createEntries provides all the entries for the branch dialog.
+func createEntries(currentBranch string, repo *git.ProdRepo) (dialog.ModalEntries, error) { //nolint:nonamedreturns
 	entries := dialog.ModalEntries{}
+	var err error
 	for _, root := range repo.Config.BranchAncestryRoots() {
 		entries, err = addEntries(entries, root, 0, repo)
 		if err != nil {
 			return nil, err
 		}
 	}
-	return dialog.ModalSelect(entries, "> ", currentBranch)
+	return entries, nil
 }
 
-func addEntries(entries []dialog.ModalEntry, branch string, indent int, repo *git.ProdRepo) ([]dialog.ModalEntry, error) {
+func addEntries(entries []dialog.ModalEntry, branch string, indent int, repo *git.ProdRepo) (dialog.ModalEntries, error) {
 	entries = append(entries, dialog.ModalEntry{
 		Text:  strings.Repeat("  ", indent) + branch,
 		Value: branch,
