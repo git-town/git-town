@@ -80,7 +80,7 @@ func (mi *ModalInput) print() {
 	}
 	cursorSpace := strings.Repeat(" ", len(mi.cursorText))
 	for e := range mi.entries {
-		if e == int(mi.cursorPos) {
+		if e == mi.cursorPos {
 			mi.activeLineColor.Println(mi.cursorText + mi.entries[e].Text)
 		} else {
 			fmt.Println(cursorSpace + mi.entries[e].Text)
@@ -97,13 +97,13 @@ func (mi *ModalInput) handleInput() error {
 	switch {
 	case char == 'j', key == keyboard.KeyArrowDown, key == keyboard.KeyTab:
 		if mi.cursorPos < len(mi.entries)-1 {
-			mi.cursorPos += 1
+			mi.cursorPos++
 		} else {
 			mi.cursorPos = 0
 		}
 	case char == 'k', key == keyboard.KeyArrowUp:
 		if mi.cursorPos > 0 {
-			mi.cursorPos -= 1
+			mi.cursorPos--
 		} else {
 			mi.cursorPos = len(mi.entries) - 1
 		}
