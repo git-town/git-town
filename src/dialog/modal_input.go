@@ -41,7 +41,7 @@ func NewModalInput(entries []ModalEntry, cursorText string, initialValue string)
 		}
 	}
 	input := ModalInput{
-		ActiveLineColor: color.New(color.FgCyan),
+		ActiveLineColor: color.New(color.FgCyan, color.Bold),
 		Entries:         entries,
 		CursorPos:       cursorPos,
 		CursorText:      cursorText,
