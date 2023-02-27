@@ -33,12 +33,12 @@ func ModalSelect(entries ModalEntries, initialValue string) (*string, error) {
 // modalSelect allows selecting a value from a list using VIM keybindings.
 type modalSelect struct {
 	activeColor   *color.Color      // color with which to print the currently selected line
-	activePos     int               // index of the currently selected row
 	activeCursor  string            // text that gets prepended to the currently selected row
+	activePos     int               // index of the currently selected row
 	entries       ModalEntries      // the entries to display
 	initialColor  *color.Color      // color with which to print the initially selected value
-	initialPos    int               // index of the initially selected value
 	initialCursor string            // cursor at the initial entry
+	initialPos    int               // index of the initially selected value
 	status        modalSelectStatus // the current status of this ModalInput instance
 }
 
