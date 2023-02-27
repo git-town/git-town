@@ -1,8 +1,42 @@
 #!/usr/bin/env bash
 
-LINUX_URL=https://github.com/rust-lang/mdBook/releases/download/v0.4.15/mdbook-v0.4.15-x86_64-unknown-linux-gnu.tar.gz
-MACOS_URL=https://github.com/rust-lang/mdBook/releases/download/v0.4.15/mdbook-v0.4.15-x86_64-apple-darwin.tar.gz
-MSWIN_URL=https://github.com/rust-lang/mdBook/releases/download/v0.4.15/mdbook-v0.4.15-x86_64-pc-windows-msvc.zip
+VERSION=$1
+if [ -z "$VERSION" ]; then
+	echo "Please call with the version of mdbook to install."
+	echo "Example: $0 0.4.15"
+	exit 1
+fi
+
+function download_url {
+	FILENAME=$1
+	echo "https://github.com/rust-lang/mdBook/releases/download/v${VERSION}/mdbook-v${VERSION}-${FILENAME}"
+}
+
+function download_linux {
+	LINUX_URL=$(download_url "x86_64-unknown-linux-gnu.tar.gz")
+	curl -L "$LINUX_URL" | tar xz --directory bin
+	mv bin/mdbook "bin/mdbook_${VERSION}"
+}
+
+function download_macos {
+	MACOS_URL=$(download_url "x86_64-apple-darwin.tar.gz")
+	echo Note: this is untested, please submit bug reports and fixes if it is broken
+	curl -L "$MACOS_URL" | tar xz --directory bin
+	mv bin/mdbook "bin/mdbook_${VERSION}"
+}
+
+function download_win {
+	MSWIN_URL=$(download_url "x86_64-pc-windows-msvc.zip")
+	echo Note: this is untested, please submit bug reports and fixes if it is broken
+	curl -L "$MSWIN_URL" | tar xz --directory bin
+	mv bin/mdbook.exe "bin/mdbook_${VERSION}.exe"
+}
+
+function download_unknown {
+	echo "Error: unsupported operating system."
+	echo "Please compile mdBook from source."
+	exit 1
+}
 
 function os_name {
 	case "$OSTYPE" in
@@ -12,26 +46,6 @@ function os_name {
 	cygwin*) echo "windows" ;;
 	*) echo "unknown" ;;
 	esac
-}
-
-function download_linux {
-	curl -L $LINUX_URL | tar xz --directory bin
-}
-
-function download_macos {
-	echo Note: this is untested, please submit bug reports and fixes if it is broken
-	curl -L $MACOS_URL | tar xz --directory bin
-}
-
-function download_win {
-	echo Note: this is untested, please submit bug reports and fixes if it is broken
-	curl -L $MSWIN_URL | tar xz --directory bin
-}
-
-function download_unknown {
-	echo "Error: unsupported operating system."
-	echo "Please compile mdBook from source."
-	exit 1
 }
 
 mkdir -p bin
