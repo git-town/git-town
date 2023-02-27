@@ -13,19 +13,15 @@ import (
 // Entries can be arbitrarily formatted.
 // The given initial value is preselected.
 func ModalSelect(entries ModalEntries, initialValue string) (*string, error) {
-	cursorPos := entries.IndexOfValue(initialValue)
-	if cursorPos == nil {
-		return nil, fmt.Errorf("given initial value %q not in given entries", initialValue)
-	}
 	initialPos := entries.IndexOfValue(initialValue)
 	if initialPos == nil {
-		return nil, fmt.Errorf("the given initial value %q is not a part of the given entries", initialValue)
+		return nil, fmt.Errorf("given initial value %q not in given entries", initialValue)
 	}
 	input := modalSelect{
 		entries:       entries,
 		activeCursor:  "> ",
 		activeColor:   color.New(color.FgCyan, color.Bold),
-		activePos:     *cursorPos,
+		activePos:     *initialPos,
 		initialCursor: "* ",
 		initialColor:  color.New(color.FgGreen),
 		initialPos:    *initialPos,
