@@ -74,7 +74,6 @@ func (mi *modalSelect) print() {
 	} else {
 		cursor.Up(len(mi.entries))
 	}
-	cursorSpace := strings.Repeat(" ", len(mi.activeCursor))
 	for e, entry := range mi.entries {
 		if e == mi.initialPos && e == mi.activePos { //nolint:gocritic
 			mi.activeColor.Println(mi.initialCursor + entry.Text)
@@ -83,7 +82,7 @@ func (mi *modalSelect) print() {
 		} else if e == mi.activePos {
 			mi.activeColor.Println(mi.activeCursor + entry.Text)
 		} else {
-			fmt.Println(cursorSpace + entry.Text)
+			fmt.Println(strings.Repeat(" ", len(mi.activeCursor)) + entry.Text)
 		}
 	}
 }
