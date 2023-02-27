@@ -46,7 +46,7 @@ func queryBranch(currentBranch string, repo *git.ProdRepo) (selection *string, e
 	if err != nil {
 		return nil, err
 	}
-	return dialog.ModalSelect(entries, "> ", currentBranch)
+	return dialog.ModalSelect(entries, currentBranch)
 }
 
 // createEntries provides all the entries for the branch dialog.
