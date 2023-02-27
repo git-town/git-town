@@ -12,28 +12,34 @@ import (
 // ModalSelect allows the user to select a value from the given entries.
 // Entries can be arbitrarily formatted.
 // The given initial value is preselected.
-func ModalSelect(entries ModalEntries, cursorText string, initialValue string) (*string, error) {
-	cursorPos := entries.IndexOfValue(initialValue)
-	if cursorPos == nil {
+func ModalSelect(entries ModalEntries, initialValue string) (*string, error) {
+	initialPos := entries.IndexOfValue(initialValue)
+	if initialPos == nil {
 		return nil, fmt.Errorf("given initial value %q not in given entries", initialValue)
 	}
 	input := modalSelect{
-		activeColor: color.New(color.FgCyan, color.Bold),
-		entries:     entries,
-		cursorPos:   *cursorPos,
-		cursorText:  cursorText,
-		status:      modalSelectStatusNew,
+		entries:       entries,
+		activeCursor:  "> ",
+		activeColor:   color.New(color.FgCyan, color.Bold),
+		activePos:     *initialPos,
+		initialCursor: "* ",
+		initialColor:  color.New(color.FgGreen),
+		initialPos:    *initialPos,
+		status:        modalSelectStatusNew,
 	}
 	return input.Display()
 }
 
 // modalSelect allows selecting a value from a list using VIM keybindings.
 type modalSelect struct {
-	activeColor *color.Color      // color with which to print the currently selected line
-	cursorPos   int               // index of the currently selected row
-	cursorText  string            // text that gets prepended to the currently selected row
-	entries     ModalEntries      // the entries to display
-	status      modalSelectStatus // the current status of this ModalInput instance
+	activeColor   *color.Color      // color with which to print the currently selected line
+	activeCursor  string            // text that gets prepended to the currently selected row
+	activePos     int               // index of the currently selected row
+	entries       ModalEntries      // the entries to display
+	initialColor  *color.Color      // color with which to print the initially selected value
+	initialCursor string            // cursor at the initial entry
+	initialPos    int               // index of the initially selected value
+	status        modalSelectStatus // the current status of this ModalInput instance
 }
 
 // Display shows the dialog and lets the user select an entry.
@@ -68,12 +74,15 @@ func (mi *modalSelect) print() {
 	} else {
 		cursor.Up(len(mi.entries))
 	}
-	cursorSpace := strings.Repeat(" ", len(mi.cursorText))
 	for e, entry := range mi.entries {
-		if e == mi.cursorPos {
-			mi.activeColor.Println(mi.cursorText + entry.Text)
+		if e == mi.initialPos && e == mi.activePos { //nolint:gocritic
+			mi.activeColor.Println(mi.initialCursor + entry.Text)
+		} else if e == mi.initialPos {
+			mi.initialColor.Println(mi.initialCursor + entry.Text)
+		} else if e == mi.activePos {
+			mi.activeColor.Println(mi.activeCursor + entry.Text)
 		} else {
-			fmt.Println(cursorSpace + entry.Text)
+			fmt.Println(strings.Repeat(" ", len(mi.activeCursor)) + entry.Text)
 		}
 	}
 }
@@ -86,16 +95,16 @@ func (mi *modalSelect) handleInput() error {
 	}
 	switch {
 	case char == 'j', key == keyboard.KeyArrowDown, key == keyboard.KeyTab:
-		if mi.cursorPos < len(mi.entries)-1 {
-			mi.cursorPos++
+		if mi.activePos < len(mi.entries)-1 {
+			mi.activePos++
 		} else {
-			mi.cursorPos = 0
+			mi.activePos = 0
 		}
 	case char == 'k', key == keyboard.KeyArrowUp:
-		if mi.cursorPos > 0 {
-			mi.cursorPos--
+		if mi.activePos > 0 {
+			mi.activePos--
 		} else {
-			mi.cursorPos = len(mi.entries) - 1
+			mi.activePos = len(mi.entries) - 1
 		}
 	case key == keyboard.KeyEnter, char == 's':
 		mi.status = modalSelectStatusSelected
@@ -107,7 +116,7 @@ func (mi *modalSelect) handleInput() error {
 
 // selectedValue provides the value selected by the user.
 func (mi *modalSelect) selectedValue() string {
-	return mi.entries[mi.cursorPos].Value
+	return mi.entries[mi.activePos].Value
 }
 
 // ModalEntry contains one of the many entries that the user can choose from.
