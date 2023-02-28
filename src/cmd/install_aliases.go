@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/spf13/cobra"
 )
 
@@ -42,11 +43,12 @@ This can conflict with other tools that also define Git aliases.`,
 				"ship",
 				"sync",
 			}
+			ec := runstate.ErrorChecker{}
 			for _, command := range commandsToAlias {
-				err := action(command, repo)
-				if err != nil {
-					cli.Exit(err)
-				}
+				ec.Check(action(command, repo))
+			}
+			if ec.Err != nil {
+				cli.Exit(ec.Err)
 			}
 		},
 		Args: cobra.ExactArgs(1),
