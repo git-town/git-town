@@ -55,21 +55,8 @@ func TestErrorChecker(t *testing.T) {
 		t.Parallel()
 		t.Run("registers the given error", func(t *testing.T) {
 			ec := runstate.ErrorChecker{}
-			_ = ec.Fail("failed %s", "reason")
+			ec.Fail("failed %s", "reason")
 			assert.Error(t, ec.Err, "failed reason")
-		})
-		t.Run("returns the registered error", func(t *testing.T) {
-			t.Run("no previously error", func(t *testing.T) {
-				ec := runstate.ErrorChecker{}
-				have := ec.Fail("test error")
-				assert.Error(t, have, "test error")
-			})
-			t.Run("already registered error", func(t *testing.T) {
-				ec := runstate.ErrorChecker{}
-				_ = ec.Fail("first error")
-				have := ec.Fail("second error")
-				assert.Error(t, have, "first error")
-			})
 		})
 	})
 

@@ -214,7 +214,7 @@ func syncTrackingBranchSteps(list *runstate.StepListBuilder, trackingBranch, syn
 	case "rebase":
 		list.Add(&steps.RebaseBranchStep{Branch: trackingBranch})
 	default:
-		_ = list.Fail("unknown syncStrategy value: %q", syncStrategy)
+		list.Fail("unknown syncStrategy value: %q", syncStrategy)
 	}
 }
 
@@ -226,7 +226,7 @@ func syncParentSteps(list *runstate.StepListBuilder, parentBranch, syncStrategy 
 	case "rebase":
 		list.Add(&steps.RebaseBranchStep{Branch: parentBranch})
 	default:
-		_ = list.Fail("unknown syncStrategy value: %q", syncStrategy)
+		list.Fail("unknown syncStrategy value: %q", syncStrategy)
 	}
 }
 
@@ -237,6 +237,6 @@ func pushFeatureBranchSteps(list *runstate.StepListBuilder, branch, syncStrategy
 	case "rebase":
 		list.Add(&steps.PushBranchStep{Branch: branch, ForceWithLease: true})
 	default:
-		_ = list.Fail("unknown syncStrategy value: %q", syncStrategy)
+		list.Fail("unknown syncStrategy value: %q", syncStrategy)
 	}
 }

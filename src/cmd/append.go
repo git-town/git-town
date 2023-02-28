@@ -74,7 +74,7 @@ func determineAppendConfig(args []string, repo *git.ProdRepo) (*appendConfig, er
 	}
 	hasTargetBranch := ec.Bool(repo.Silent.HasLocalOrOriginBranch(targetBranch))
 	if hasTargetBranch {
-		_ = ec.Fail("a branch named %q already exists", targetBranch)
+		ec.Fail("a branch named %q already exists", targetBranch)
 	}
 	parentDialog := dialog.ParentBranches{}
 	ec.Check(parentDialog.EnsureKnowsParentBranches([]string{parentBranch}, repo))

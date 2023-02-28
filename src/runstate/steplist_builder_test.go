@@ -47,7 +47,7 @@ func TestStepListBuilder(t *testing.T) {
 			t.Run("does not add the given step", func(t *testing.T) {
 				t.Parallel()
 				b := runstate.StepListBuilder{}
-				_ = b.Fail("existing error")
+				b.Fail("existing error")
 				step := steps.NoOpStep{}
 				b.AddE(&step, nil)
 				list, _ := b.Result()

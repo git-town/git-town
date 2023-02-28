@@ -27,9 +27,8 @@ func (ec *ErrorChecker) Check(err error) bool {
 }
 
 // Fail registers the error constructed using the given format arguments.
-func (ec *ErrorChecker) Fail(format string, a ...any) error {
+func (ec *ErrorChecker) Fail(format string, a ...any) {
 	ec.Check(fmt.Errorf(format, a...))
-	return ec.Err
 }
 
 // Bool provides the bool part of the given fallible function result
