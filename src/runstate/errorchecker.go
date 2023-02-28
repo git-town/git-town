@@ -2,8 +2,6 @@ package runstate
 
 import (
 	"fmt"
-
-	"github.com/git-town/git-town/v7/src/hosting"
 )
 
 // ErrorChecker helps avoid excessive error checking
@@ -34,13 +32,6 @@ func (ec *ErrorChecker) Fail(format string, a ...any) {
 // Bool provides the bool part of the given fallible function result
 // while registering the given error.
 func (ec *ErrorChecker) Bool(value bool, err error) bool {
-	ec.Check(err)
-	return value
-}
-
-// String provides the string part of the given fallible function result
-// while registering the given error.
-func (ec *ErrorChecker) Proposal(value *hosting.Proposal, err error) *hosting.Proposal {
 	ec.Check(err)
 	return value
 }
