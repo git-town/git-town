@@ -81,6 +81,14 @@ You can disable this by running "git config %s false".`, config.SyncUpstream),
 	return &syncCmd
 }
 
+type syncConfig struct {
+	branchesToSync []string
+	hasOrigin      bool
+	initialBranch  string
+	isOffline      bool
+	shouldPushTags bool
+}
+
 func determineSyncConfig(allFlag bool, repo *git.ProdRepo) (*syncConfig, error) {
 	hasOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
@@ -129,14 +137,6 @@ func determineSyncConfig(allFlag bool, repo *git.ProdRepo) (*syncConfig, error) 
 		isOffline:      isOffline,
 		shouldPushTags: shouldPushTags,
 	}, nil
-}
-
-type syncConfig struct {
-	branchesToSync []string
-	hasOrigin      bool
-	initialBranch  string
-	isOffline      bool
-	shouldPushTags bool
 }
 
 // syncBranchesSteps provides the step list for the "git sync" command.
