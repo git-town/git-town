@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
@@ -61,46 +59,26 @@ type appendConfig struct {
 }
 
 func determineAppendConfig(args []string, repo *git.ProdRepo) (*appendConfig, error) {
-	parentBranch, err := repo.Silent.CurrentBranch()
-	if err != nil {
-		return nil, err
-	}
-	hasOrigin, err := repo.Silent.HasOrigin()
-	if err != nil {
-		return nil, err
-	}
-	isOffline, err := repo.Config.IsOffline()
-	if err != nil {
-		return nil, err
+	ec := runstate.ErrorChecker{}
+	parentBranch := ec.String(repo.Silent.CurrentBranch())
+	hasOrigin := ec.Bool(repo.Silent.HasOrigin())
+	isOffline := ec.Bool(repo.Config.IsOffline())
+	pushHook := ec.Bool(repo.Config.PushHook())
+	shouldNewBranchPush := ec.Bool(repo.Config.ShouldNewBranchPush())
+	targetBranch := args[0]
+	if ec.Err != nil {
+		return nil, ec.Err
 	}
 	if hasOrigin && !isOffline {
-		err := repo.Logging.Fetch()
-		if err != nil {
-			return nil, err
-		}
+		ec.Check(repo.Logging.Fetch())
 	}
-	targetBranch := args[0]
-	hasBranch, err := repo.Silent.HasLocalOrOriginBranch(targetBranch)
-	if err != nil {
-		return nil, err
-	}
-	if hasBranch {
-		return nil, fmt.Errorf("a branch named %q already exists", targetBranch)
+	hasTargetBranch := ec.Bool(repo.Silent.HasLocalOrOriginBranch(targetBranch))
+	if hasTargetBranch {
+		ec.Fail("a branch named %q already exists", targetBranch)
 	}
 	parentDialog := dialog.ParentBranches{}
-	err = parentDialog.EnsureKnowsParentBranches([]string{parentBranch}, repo)
-	if err != nil {
-		return nil, err
-	}
+	ec.Check(parentDialog.EnsureKnowsParentBranches([]string{parentBranch}, repo))
 	ancestorBranches := repo.Config.AncestorBranches(parentBranch)
-	pushHook, err := repo.Config.PushHook()
-	if err != nil {
-		return nil, err
-	}
-	shouldNewBranchPush, err := repo.Config.ShouldNewBranchPush()
-	if err != nil {
-		return nil, err
-	}
 	return &appendConfig{
 		ancestorBranches:    ancestorBranches,
 		isOffline:           isOffline,
@@ -109,24 +87,20 @@ func determineAppendConfig(args []string, repo *git.ProdRepo) (*appendConfig, er
 		parentBranch:        parentBranch,
 		shouldNewBranchPush: shouldNewBranchPush,
 		targetBranch:        targetBranch,
-	}, nil
+	}, ec.Err
 }
 
 func appendStepList(config *appendConfig, repo *git.ProdRepo) (runstate.StepList, error) {
-	result := runstate.StepList{}
+	list := runstate.StepListBuilder{}
 	for _, branch := range append(config.ancestorBranches, config.parentBranch) {
-		steps, err := syncBranchSteps(branch, true, repo)
-		if err != nil {
-			return runstate.StepList{}, err
-		}
-		result.AppendList(steps)
+		syncBranchSteps(&list, branch, true, repo)
 	}
-	result.Append(&steps.CreateBranchStep{Branch: config.targetBranch, StartingPoint: config.parentBranch})
-	result.Append(&steps.SetParentBranchStep{Branch: config.targetBranch, ParentBranch: config.parentBranch})
-	result.Append(&steps.CheckoutBranchStep{Branch: config.targetBranch})
+	list.Add(&steps.CreateBranchStep{Branch: config.targetBranch, StartingPoint: config.parentBranch})
+	list.Add(&steps.SetParentBranchStep{Branch: config.targetBranch, ParentBranch: config.parentBranch})
+	list.Add(&steps.CheckoutBranchStep{Branch: config.targetBranch})
 	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
-		result.Append(&steps.CreateTrackingBranchStep{Branch: config.targetBranch, NoPushHook: config.noPushHook})
+		list.Add(&steps.CreateTrackingBranchStep{Branch: config.targetBranch, NoPushHook: config.noPushHook})
 	}
-	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
-	return result, err
+	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
+	return list.Result()
 }
