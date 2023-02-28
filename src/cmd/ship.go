@@ -93,7 +93,19 @@ type shipConfig struct {
 }
 
 func determineShipConfig(args []string, connector hosting.Connector, repo *git.ProdRepo) (*shipConfig, error) {
+	hasOrigin, err := repo.Silent.HasOrigin()
+	if err != nil {
+		return nil, err
+	}
+	isOffline, err := repo.Config.IsOffline()
+	if err != nil {
+		return nil, err
+	}
 	initialBranch, err := repo.Silent.CurrentBranch()
+	if err != nil {
+		return nil, err
+	}
+	deleteOrigin, err := repo.Config.ShouldShipDeleteOriginBranch()
 	if err != nil {
 		return nil, err
 	}
@@ -112,14 +124,6 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 		if hasOpenChanges {
 			return nil, fmt.Errorf("you have uncommitted changes. Did you mean to commit them before shipping?")
 		}
-	}
-	hasOrigin, err := repo.Silent.HasOrigin()
-	if err != nil {
-		return nil, err
-	}
-	isOffline, err := repo.Config.IsOffline()
-	if err != nil {
-		return nil, err
 	}
 	if hasOrigin && !isOffline {
 		err := repo.Logging.Fetch()
@@ -146,10 +150,6 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 	}
 	ensureParentBranchIsMainOrPerennialBranch(branchToShip, repo)
 	hasTrackingBranch, err := repo.Silent.HasTrackingBranch(branchToShip)
-	if err != nil {
-		return nil, err
-	}
-	deleteOrigin, err := repo.Config.ShouldShipDeleteOriginBranch()
 	if err != nil {
 		return nil, err
 	}
