@@ -30,13 +30,13 @@ func (stepList *StepList) AppendList(otherList StepList) {
 }
 
 // IsEmpty returns whether or not this StepList has any elements.
-func (stepList *StepList) isEmpty() bool {
+func (stepList *StepList) IsEmpty() bool {
 	return len(stepList.List) == 0
 }
 
 // Peek provides the first element of this StepList.
 func (stepList *StepList) Peek() steps.Step {
-	if stepList.isEmpty() {
+	if stepList.IsEmpty() {
 		return nil
 	}
 	return stepList.List[0]
@@ -44,7 +44,7 @@ func (stepList *StepList) Peek() steps.Step {
 
 // Pop removes and provides the first element of this StepList.
 func (stepList *StepList) Pop() steps.Step {
-	if stepList.isEmpty() {
+	if stepList.IsEmpty() {
 		return nil
 	}
 	result := stepList.List[0]

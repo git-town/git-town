@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/spf13/cobra"
 )
 
@@ -14,25 +15,14 @@ func configCmd(repo *git.ProdRepo) *cobra.Command {
 		Use:   "config",
 		Short: "Displays your Git Town configuration",
 		Run: func(cmd *cobra.Command, args []string) {
-			pushNewBranches, err := repo.Config.ShouldNewBranchPush()
-			if err != nil {
-				cli.Exit(err)
-			}
-			pushHook, err := repo.Config.PushHook()
-			if err != nil {
-				cli.Exit(err)
-			}
-			isOffline, err := repo.Config.IsOffline()
-			if err != nil {
-				cli.Exit(err)
-			}
-			deleteOrigin, err := repo.Config.ShouldShipDeleteOriginBranch()
-			if err != nil {
-				cli.Exit(err)
-			}
-			shouldSyncUpstream, err := repo.Config.ShouldSyncUpstream()
-			if err != nil {
-				cli.Exit(err)
+			ec := runstate.ErrorChecker{}
+			pushNewBranches := ec.Bool(repo.Config.ShouldNewBranchPush())
+			pushHook := ec.Bool(repo.Config.PushHook())
+			isOffline := ec.Bool(repo.Config.IsOffline())
+			deleteOrigin := ec.Bool(repo.Config.ShouldShipDeleteOriginBranch())
+			shouldSyncUpstream := ec.Bool(repo.Config.ShouldSyncUpstream())
+			if ec.Err != nil {
+				cli.Exit(ec.Err)
 			}
 			fmt.Println()
 			cli.PrintHeader("Branches")
