@@ -25,6 +25,7 @@ linters:
     - scopelint # deprecated
     - structcheck # deprecated
     - varcheck # deprecated
+    - varnamelen # not really useful
     - wrapcheck # too many false positives for return values defined in internal packages
     - wsl # this linter creates too many false positives, our policy is to not have any empty lines in code blocks
 
