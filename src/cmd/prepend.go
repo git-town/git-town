@@ -64,21 +64,14 @@ type prependConfig struct {
 }
 
 func determinePrependConfig(args []string, repo *git.ProdRepo) (*prependConfig, error) {
-	initialBranch, err := repo.Silent.CurrentBranch()
-	if err != nil {
-		return nil, err
-	}
-	hasOrigin, err := repo.Silent.HasOrigin()
-	if err != nil {
-		return nil, err
-	}
-	shouldNewBranchPush, err := repo.Config.ShouldNewBranchPush()
-	if err != nil {
-		return nil, err
-	}
-	isOffline, err := repo.Config.IsOffline()
-	if err != nil {
-		return nil, err
+	ec := runstate.ErrorChecker{}
+	initialBranch := ec.String(repo.Silent.CurrentBranch())
+	hasOrigin := ec.Bool(repo.Silent.HasOrigin())
+	shouldNewBranchPush := ec.Bool(repo.Config.ShouldNewBranchPush())
+	pushHook := ec.Bool(repo.Config.PushHook())
+	isOffline := ec.Bool(repo.Config.IsOffline())
+	if ec.Err != nil {
+		return nil, ec.Err
 	}
 	if hasOrigin && !isOffline {
 		err := repo.Logging.Fetch()
@@ -99,10 +92,6 @@ func determinePrependConfig(args []string, repo *git.ProdRepo) (*prependConfig, 
 	}
 	parentDialog := dialog.ParentBranches{}
 	err = parentDialog.EnsureKnowsParentBranches([]string{initialBranch}, repo)
-	if err != nil {
-		return nil, err
-	}
-	pushHook, err := repo.Config.PushHook()
 	if err != nil {
 		return nil, err
 	}
