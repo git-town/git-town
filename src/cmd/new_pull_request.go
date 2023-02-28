@@ -105,7 +105,7 @@ func determineNewPullRequestConfig(repo *git.ProdRepo) (*newPullRequestConfig, e
 func newPullRequestStepList(config *newPullRequestConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.BranchesToSync {
-		syncBranchSteps(&list, branch, true, repo)
+		updateBranchSteps(&list, branch, true, repo)
 	}
 	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
 	list.Add(&steps.CreateProposalStep{Branch: config.InitialBranch})

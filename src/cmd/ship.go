@@ -210,8 +210,8 @@ please ship %q first`, strings.Join(ancestorsWithoutMainOrPerennial, ", "), olde
 
 func shipStepList(config *shipConfig, commitMessage string, repo *git.ProdRepo) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
-	syncBranchSteps(&list, config.branchToMergeInto, true, repo) // sync the parent branch
-	syncBranchSteps(&list, config.branchToShip, false, repo)     // sync the branch to ship locally only
+	updateBranchSteps(&list, config.branchToMergeInto, true, repo) // sync the parent branch
+	updateBranchSteps(&list, config.branchToShip, false, repo)     // sync the branch to ship locally only
 	list.Add(&steps.EnsureHasShippableChangesStep{Branch: config.branchToShip})
 	list.Add(&steps.CheckoutBranchStep{Branch: config.branchToMergeInto})
 	if config.canShipViaAPI {
