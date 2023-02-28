@@ -194,7 +194,7 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 		isShippingInitialBranch:  isShippingInitialBranch,
 		proposal:                 proposal,
 		proposalsOfChildBranches: proposalsOfChildBranches,
-	}, ec.Err
+	}, nil
 }
 
 func ensureParentBranchIsMainOrPerennialBranch(branch string, repo *git.ProdRepo) {
