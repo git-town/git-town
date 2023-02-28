@@ -63,10 +63,10 @@ func determineKillConfig(args []string, repo *git.ProdRepo) (*killConfig, error)
 		return nil, err
 	}
 	var targetBranch string
-	if len(args) == 0 {
-		targetBranch = initialBranch
-	} else {
+	if len(args) > 0 {
 		targetBranch = args[0]
+	} else {
+		targetBranch = initialBranch
 	}
 	if !repo.Config.IsFeatureBranch(targetBranch) {
 		return nil, fmt.Errorf("you can only kill feature branches")

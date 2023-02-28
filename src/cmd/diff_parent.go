@@ -51,10 +51,10 @@ func determineDiffParentConfig(args []string, repo *git.ProdRepo) (*diffParentCo
 		return nil, err
 	}
 	var branch string
-	if len(args) == 0 {
-		branch = initialBranch
-	} else {
+	if len(args) > 0 {
 		branch = args[0]
+	} else {
+		branch = initialBranch
 	}
 	if initialBranch != branch {
 		hasBranch, err := repo.Silent.HasLocalBranch(branch)
