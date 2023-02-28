@@ -147,21 +147,17 @@ func determineSyncConfig(allFlag bool, repo *git.ProdRepo) (*syncConfig, error) 
 }
 
 // syncSteps provides the step list for the "git sync" command.
-func syncBranchesStepList(config syncConfig, repo *git.ProdRepo) (runstate.StepList, error) {
-	result := runstate.StepList{}
+func syncSteps(config *syncConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+	list := runstate.StepListBuilder{}
 	for _, branch := range config.branchesToSync {
-		stepsForBranch, err := syncStepsForBranch(branch, config, repo)
-		if err != nil {
-			return runstate.StepList{}, err
-		}
-		result.AppendList(stepsForBranch)
+		syncBranchSteps(&list, branch, true, repo)
 	}
-	result.Append(&steps.CheckoutBranchStep{Branch: finalBranch(config)})
+	list.Add(&steps.CheckoutBranchStep{Branch: config.initialBranch})
 	if config.hasOrigin && config.shouldPushTags && !config.isOffline {
-		result.Append(&steps.PushTagsStep{})
+		list.Add(&steps.PushTagsStep{})
 	}
-	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
-	return result, err
+	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
+	return list.Result()
 }
 
 func (sc *syncConfig) hasDeletedTrackingBranch(branch string) bool {
@@ -195,74 +191,42 @@ func deleteBranchSteps(branch string, config syncConfig, repo *git.ProdRepo) (ru
 }
 
 //nolint:nestif
-func updateBranchSteps(branch string, pushBranch bool, branchesWithDeletedRemote []string, repo *git.ProdRepo) (runstate.StepList, error) {
+func updateBranchSteps(list *runstate.StepListBuilder, branch string, pushBranch bool, branchesWithDeletedRemote []string, repo *git.ProdRepo) (runstate.StepList, error) {
 	isFeatureBranch := repo.Config.IsFeatureBranch(branch)
 	syncStrategy := repo.Config.SyncStrategy()
-	hasOrigin, err := repo.Silent.HasOrigin()
-	if err != nil {
-		return runstate.StepList{}, err
-	}
-	pushHook, err := repo.Config.PushHook()
-	if err != nil {
-		return runstate.StepList{}, err
-	}
-	isOffline, err := repo.Config.IsOffline()
-	if err != nil {
-		return runstate.StepList{}, err
-	}
+	hasOrigin := list.Bool(repo.Silent.HasOrigin())
+	pushHook := list.Bool(repo.Config.PushHook())
+	isOffline := list.Bool(repo.Config.IsOffline())
 	result := runstate.StepList{}
 	if !hasOrigin && !isFeatureBranch {
-		return runstate.StepList{}, nil
+		return
 	}
-	result.Append(&steps.CheckoutBranchStep{Branch: branch})
+	list.Add(&steps.CheckoutBranchStep{Branch: branch})
 	if isFeatureBranch {
-		steps, err := syncFeatureBranchSteps(branch, branchesWithDeletedRemote, repo)
-		if err != nil {
-			return runstate.StepList{}, err
-		}
-		result.AppendList(steps)
+		syncFeatureBranchSteps(list, branch, repo)
 	} else {
-		steps, err := syncNonFeatureBranchSteps(branch, repo)
-		if err != nil {
-			return runstate.StepList{}, err
-		}
-		result.AppendList(steps)
+		syncNonFeatureBranchSteps(list, branch, repo)
 	}
+	isOffline := list.Bool(repo.Config.IsOffline())
 	if pushBranch && hasOrigin && !isOffline {
-		hasTrackingBranch, err := repo.Silent.HasTrackingBranch(branch)
-		if err != nil {
-			return runstate.StepList{}, err
-		}
+		hasTrackingBranch := list.Bool(repo.Silent.HasTrackingBranch(branch))
 		if !hasTrackingBranch {
-			result.Append(&steps.CreateTrackingBranchStep{Branch: branch})
-			return result, nil
+			list.Add(&steps.CreateTrackingBranchStep{Branch: branch})
+			return
 		}
 		if !isFeatureBranch {
-			result.Append(&steps.PushBranchStep{Branch: branch})
-			return result, nil
+			list.Add(&steps.PushBranchStep{Branch: branch})
+			return
 		}
-		steps, err := pushFeatureBranchSteps(branch, syncStrategy, pushHook)
-		if err != nil {
-			return runstate.StepList{}, err
-		}
-		result.AppendList(steps)
+		pushFeatureBranchSteps(list, branch, syncStrategy, pushHook)
 	}
-	return result, nil
 }
 
-func syncFeatureBranchSteps(branch string, branchesWithDeletedRemote []string, repo *git.ProdRepo) (runstate.StepList, error) {
+func syncFeatureBranchSteps(list *runstate.StepListBuilder, branch string, branchesWithDeletedRemote []string, repo *git.ProdRepo) {
 	syncStrategy := repo.Config.SyncStrategy()
-	hasTrackingBranch, err := repo.Silent.HasTrackingBranch(branch)
-	if err != nil {
-		return runstate.StepList{}, err
-	}
-	result := runstate.StepList{}
+	hasTrackingBranch := list.Bool(repo.Silent.HasTrackingBranch(branch))
 	if hasTrackingBranch {
-		steps, err := syncTrackingBranchSteps(repo.Silent.TrackingBranch(branch), syncStrategy)
-		if err != nil {
-			return runstate.StepList{}, err
-		}
-		result.AppendList(steps)
+		syncTrackingBranchSteps(list, repo.Silent.TrackingBranch(branch), syncStrategy)
 	}
 	// TODO: the last non-deleted parent branch here
 	ancestorBranches := repo.Config.AncestorBranches(branch)
@@ -271,40 +235,22 @@ func syncFeatureBranchSteps(branch string, branchesWithDeletedRemote []string, r
 	if newParentBranch == nil {
 		return runstate.StepList{}, nil
 	}
-	steps, err := syncParentSteps(*newParentBranch, syncStrategy)
-	if err != nil {
-		return runstate.StepList{}, nil
-	}
-	result.AppendList(steps)
+	syncParentSteps(list, repo.Config.ParentBranch(branch), syncStrategy)
 	return result, nil
 }
 
-func syncNonFeatureBranchSteps(branch string, repo *git.ProdRepo) (runstate.StepList, error) {
-	hasTrackingBranch, err := repo.Silent.HasTrackingBranch(branch)
-	if err != nil {
-		return runstate.StepList{}, err
-	}
-	result := runstate.StepList{}
+func syncNonFeatureBranchSteps(list *runstate.StepListBuilder, branch string, repo *git.ProdRepo) {
+	hasTrackingBranch := list.Bool(repo.Silent.HasTrackingBranch(branch))
 	if hasTrackingBranch {
-		result, err = syncTrackingBranchSteps(repo.Silent.TrackingBranch(branch), repo.Config.PullBranchStrategy())
-		if err != nil {
-			return runstate.StepList{}, err
-		}
+		syncTrackingBranchSteps(list, repo.Silent.TrackingBranch(branch), repo.Config.PullBranchStrategy())
 	}
 	mainBranch := repo.Config.MainBranch()
-	hasUpstream, err := repo.Silent.HasRemote("upstream")
-	if err != nil {
-		return runstate.StepList{}, err
-	}
-	shouldSyncUpstream, err := repo.Config.ShouldSyncUpstream()
-	if err != nil {
-		return runstate.StepList{}, err
-	}
+	hasUpstream := list.Bool(repo.Silent.HasRemote("upstream"))
+	shouldSyncUpstream := list.Bool(repo.Config.ShouldSyncUpstream())
 	if mainBranch == branch && hasUpstream && shouldSyncUpstream {
-		result.Append(&steps.FetchUpstreamStep{Branch: mainBranch})
-		result.Append(&steps.RebaseBranchStep{Branch: fmt.Sprintf("upstream/%s", mainBranch)})
+		list.Add(&steps.FetchUpstreamStep{Branch: mainBranch})
+		list.Add(&steps.RebaseBranchStep{Branch: fmt.Sprintf("upstream/%s", mainBranch)})
 	}
-	return result, nil
 }
 
 // finalBranch provides the name of the branch that should be checked out after all sync steps run.
@@ -316,36 +262,36 @@ func finalBranch(config syncConfig) string {
 }
 
 // syncTrackingBranchStep provides the steps to sync the given tracking branch into the current branch.
-func syncTrackingBranchSteps(trackingBranch, syncStrategy string) (runstate.StepList, error) {
+func syncTrackingBranchSteps(list *runstate.StepListBuilder, trackingBranch, syncStrategy string) {
 	switch syncStrategy {
 	case "merge":
-		return runstate.NewStepList(&steps.MergeBranchStep{Branch: trackingBranch}), nil
+		list.Add(&steps.MergeBranchStep{Branch: trackingBranch})
 	case "rebase":
-		return runstate.NewStepList(&steps.RebaseBranchStep{Branch: trackingBranch}), nil
+		list.Add(&steps.RebaseBranchStep{Branch: trackingBranch})
 	default:
-		return runstate.StepList{}, fmt.Errorf("unknown syncStrategy value: %q", syncStrategy)
+		list.Fail("unknown syncStrategy value: %q", syncStrategy)
 	}
 }
 
 // syncParentSteps provides the steps to sync the given parent branch into the current branch.
-func syncParentSteps(parentBranch, syncStrategy string) (runstate.StepList, error) {
+func syncParentSteps(list *runstate.StepListBuilder, parentBranch, syncStrategy string) {
 	switch syncStrategy {
 	case "merge":
-		return runstate.NewStepList(&steps.MergeBranchStep{Branch: parentBranch}), nil
+		list.Add(&steps.MergeBranchStep{Branch: parentBranch})
 	case "rebase":
-		return runstate.NewStepList(&steps.RebaseBranchStep{Branch: parentBranch}), nil
+		list.Add(&steps.RebaseBranchStep{Branch: parentBranch})
 	default:
-		return runstate.StepList{}, fmt.Errorf("unknown syncStrategy value: %q", syncStrategy)
+		list.Fail("unknown syncStrategy value: %q", syncStrategy)
 	}
 }
 
-func pushFeatureBranchSteps(branch, syncStrategy string, pushHook bool) (runstate.StepList, error) {
+func pushFeatureBranchSteps(list *runstate.StepListBuilder, branch, syncStrategy string, pushHook bool) {
 	switch syncStrategy {
 	case "merge":
-		return runstate.NewStepList(&steps.PushBranchStep{Branch: branch, NoPushHook: !pushHook}), nil
+		list.Add(&steps.PushBranchStep{Branch: branch, NoPushHook: !pushHook})
 	case "rebase":
-		return runstate.NewStepList(&steps.PushBranchStep{Branch: branch, ForceWithLease: true}), nil
+		list.Add(&steps.PushBranchStep{Branch: branch, ForceWithLease: true})
 	default:
-		return runstate.StepList{}, fmt.Errorf("unknown syncStrategy value: %q", syncStrategy)
+		list.Fail("unknown syncStrategy value: %q", syncStrategy)
 	}
 }

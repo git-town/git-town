@@ -80,6 +80,10 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *git.ProdRe
 	if err != nil {
 		return nil, err
 	}
+	pushHook, err := repo.Config.PushHook()
+	if err != nil {
+		return nil, err
+	}
 	var oldBranch string
 	var newBranch string
 	if len(args) == 1 {
@@ -126,10 +130,6 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *git.ProdRe
 	}
 	if hasNewBranch {
 		return nil, fmt.Errorf("a branch named %q already exists", newBranch)
-	}
-	pushHook, err := repo.Config.PushHook()
-	if err != nil {
-		return nil, err
 	}
 	oldBranchHasTrackingBranch, err := repo.Silent.HasTrackingBranch(oldBranch)
 	if err != nil {

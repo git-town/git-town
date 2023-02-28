@@ -65,21 +65,14 @@ type prependConfig struct {
 }
 
 func determinePrependConfig(args []string, repo *git.ProdRepo) (*prependConfig, error) {
-	initialBranch, err := repo.Silent.CurrentBranch()
-	if err != nil {
-		return nil, err
-	}
-	hasOrigin, err := repo.Silent.HasOrigin()
-	if err != nil {
-		return nil, err
-	}
-	shouldNewBranchPush, err := repo.Config.ShouldNewBranchPush()
-	if err != nil {
-		return nil, err
-	}
-	isOffline, err := repo.Config.IsOffline()
-	if err != nil {
-		return nil, err
+	ec := runstate.ErrorChecker{}
+	initialBranch := ec.String(repo.Silent.CurrentBranch())
+	hasOrigin := ec.Bool(repo.Silent.HasOrigin())
+	shouldNewBranchPush := ec.Bool(repo.Config.ShouldNewBranchPush())
+	pushHook := ec.Bool(repo.Config.PushHook())
+	isOffline := ec.Bool(repo.Config.IsOffline())
+	if ec.Err != nil {
+		return nil, ec.Err
 	}
 	if hasOrigin && !isOffline {
 		err := repo.Logging.Fetch()
@@ -103,14 +96,7 @@ func determinePrependConfig(args []string, repo *git.ProdRepo) (*prependConfig, 
 	if err != nil {
 		return nil, err
 	}
-	pushHook, err := repo.Config.PushHook()
-	if err != nil {
-		return nil, err
-	}
-	branchesDeletedOnRemote, err := repo.Silent.LocalBranchesWithDeletedTrackingBranches()
-	if err != nil {
-		return nil, err
-	}
+	branchesDeletedOnRemote := ec.Strings(repo.Silent.LocalBranchesWithDeletedTrackingBranches())
 	return &prependConfig{
 		branchesDeletedOnRemote: branchesDeletedOnRemote,
 		hasOrigin:               hasOrigin,
@@ -121,25 +107,21 @@ func determinePrependConfig(args []string, repo *git.ProdRepo) (*prependConfig, 
 		ancestorBranches:        repo.Config.AncestorBranches(initialBranch),
 		shouldNewBranchPush:     shouldNewBranchPush,
 		targetBranch:            targetBranch,
-	}, nil
+	}, ec.Err
 }
 
 func prependStepList(config *prependConfig, repo *git.ProdRepo) (runstate.StepList, error) {
-	result := runstate.StepList{}
+	list := runstate.StepListBuilder{}
 	for _, branch := range config.ancestorBranches {
-		steps, err := updateBranchSteps(branch, true, config.branchesDeletedOnRemote, repo)
-		if err != nil {
-			return runstate.StepList{}, err
-		}
-		result.AppendList(steps)
+		syncBranchSteps(&list, branch, true, config.branchesDeletedOnRemote, repo)
 	}
-	result.Append(&steps.CreateBranchStep{Branch: config.targetBranch, StartingPoint: config.parentBranch})
-	result.Append(&steps.SetParentBranchStep{Branch: config.targetBranch, ParentBranch: config.parentBranch})
-	result.Append(&steps.SetParentBranchStep{Branch: config.initialBranch, ParentBranch: config.targetBranch})
-	result.Append(&steps.CheckoutBranchStep{Branch: config.targetBranch})
+	list.Add(&steps.CreateBranchStep{Branch: config.targetBranch, StartingPoint: config.parentBranch})
+	list.Add(&steps.SetParentBranchStep{Branch: config.targetBranch, ParentBranch: config.parentBranch})
+	list.Add(&steps.SetParentBranchStep{Branch: config.initialBranch, ParentBranch: config.targetBranch})
+	list.Add(&steps.CheckoutBranchStep{Branch: config.targetBranch})
 	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
-		result.Append(&steps.CreateTrackingBranchStep{Branch: config.targetBranch, NoPushHook: config.noPushHook})
+		list.Add(&steps.CreateTrackingBranchStep{Branch: config.targetBranch, NoPushHook: config.noPushHook})
 	}
-	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
-	return result, err
+	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
+	return list.Result()
 }

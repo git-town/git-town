@@ -109,18 +109,11 @@ func determineNewPullRequestConfig(repo *git.ProdRepo) (*newPullRequestConfig, e
 }
 
 func newPullRequestStepList(config *newPullRequestConfig, repo *git.ProdRepo) (runstate.StepList, error) {
-	result := runstate.StepList{}
+	list := runstate.StepListBuilder{}
 	for _, branch := range config.BranchesToSync {
-		steps, err := updateBranchSteps(branch, true, config.branchesWithDeletedRemote, repo)
-		if err != nil {
-			return runstate.StepList{}, err
-		}
-		result.AppendList(steps)
+		syncBranchSteps(&list, branch, true, config.branchesWithDeletedRemote, repo)
 	}
-	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
-	if err != nil {
-		return runstate.StepList{}, err
-	}
-	result.Append(&steps.CreateProposalStep{Branch: config.InitialBranch})
-	return result, nil
+	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
+	list.Add(&steps.CreateProposalStep{Branch: config.InitialBranch})
+	return list.Result()
 }
