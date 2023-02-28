@@ -41,7 +41,7 @@ You can disable this by running "git config %s false".`, config.SyncUpstream),
 			if err != nil {
 				cli.Exit(err)
 			}
-			stepList, err := syncSteps(config, repo)
+			stepList, err := syncBranchesSteps(config, repo)
 			if err != nil {
 				cli.Exit(err)
 			}
@@ -139,8 +139,8 @@ type syncConfig struct {
 	shouldPushTags bool
 }
 
-// syncSteps provides the step list for the "git sync" command.
-func syncSteps(config *syncConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+// syncBranchesSteps provides the step list for the "git sync" command.
+func syncBranchesSteps(config *syncConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.branchesToSync {
 		syncBranchSteps(&list, branch, true, repo)
