@@ -98,10 +98,10 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 		return nil, err
 	}
 	var branchToShip string
-	if len(args) == 0 {
-		branchToShip = initialBranch
-	} else {
+	if len(args) > 0 {
 		branchToShip = args[0]
+	} else {
+		branchToShip = initialBranch
 	}
 	isShippingInitialBranch := branchToShip == initialBranch
 	if isShippingInitialBranch {
