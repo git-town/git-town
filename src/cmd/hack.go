@@ -68,39 +68,19 @@ func determineParentBranch(targetBranch string, promptForParent bool, repo *git.
 }
 
 func determineHackConfig(args []string, promptForParent bool, repo *git.ProdRepo) (*appendConfig, error) {
+	ec := runstate.ErrorChecker{}
 	targetBranch := args[0]
-	parentBranch, err := determineParentBranch(targetBranch, promptForParent, repo)
-	if err != nil {
-		return nil, err
+	parentBranch := ec.String(determineParentBranch(targetBranch, promptForParent, repo))
+	hasOrigin := ec.Bool(repo.Silent.HasOrigin())
+	shouldNewBranchPush := ec.Bool(repo.Config.ShouldNewBranchPush())
+	isOffline := ec.Bool(repo.Config.IsOffline())
+	if ec.Err == nil && hasOrigin && !isOffline {
+		ec.Check(repo.Logging.Fetch())
 	}
-	hasOrigin, err := repo.Silent.HasOrigin()
-	if err != nil {
-		return nil, err
-	}
-	shouldNewBranchPush, err := repo.Config.ShouldNewBranchPush()
-	if err != nil {
-		return nil, err
-	}
-	isOffline, err := repo.Config.IsOffline()
-	if err != nil {
-		return nil, err
-	}
-	if hasOrigin && !isOffline {
-		err := repo.Logging.Fetch()
-		if err != nil {
-			return nil, err
-		}
-	}
-	hasBranch, err := repo.Silent.HasLocalOrOriginBranch(targetBranch)
-	if err != nil {
-		return nil, err
-	}
+	hasBranch := ec.Bool(repo.Silent.HasLocalOrOriginBranch(targetBranch))
+	pushHook := ec.Bool(repo.Config.PushHook())
 	if hasBranch {
 		return nil, fmt.Errorf("a branch named %q already exists", targetBranch)
-	}
-	pushHook, err := repo.Config.PushHook()
-	if err != nil {
-		return nil, err
 	}
 	return &appendConfig{
 		ancestorBranches:    []string{},
@@ -110,5 +90,5 @@ func determineHackConfig(args []string, promptForParent bool, repo *git.ProdRepo
 		shouldNewBranchPush: shouldNewBranchPush,
 		noPushHook:          !pushHook,
 		isOffline:           isOffline,
-	}, nil
+	}, ec.Err
 }

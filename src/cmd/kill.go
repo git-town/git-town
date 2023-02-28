@@ -63,10 +63,10 @@ func determineKillConfig(args []string, repo *git.ProdRepo) (*killConfig, error)
 		return nil, err
 	}
 	var targetBranch string
-	if len(args) == 0 {
-		targetBranch = initialBranch
-	} else {
+	if len(args) > 0 {
 		targetBranch = args[0]
+	} else {
+		targetBranch = initialBranch
 	}
 	if !repo.Config.IsFeatureBranch(targetBranch) {
 		return nil, fmt.Errorf("you can only kill feature branches")
@@ -138,10 +138,6 @@ func determineKillConfig(args []string, repo *git.ProdRepo) (*killConfig, error)
 
 func killStepList(config *killConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	result := runstate.StepList{}
-	isOffline, err := repo.Config.IsOffline()
-	if err != nil {
-		return runstate.StepList{}, err
-	}
 	switch {
 	case config.isTargetBranchLocal:
 		if config.hasTrackingBranch && !config.isOffline {
@@ -158,12 +154,12 @@ func killStepList(config *killConfig, repo *git.ProdRepo) (runstate.StepList, er
 			result.Append(&steps.SetParentBranchStep{Branch: child, ParentBranch: config.targetBranchParent})
 		}
 		result.Append(&steps.DeleteParentBranchStep{Branch: config.targetBranch})
-	case !isOffline:
+	case !config.isOffline:
 		result.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch, IsTracking: false, NoPushHook: config.noPushHook})
 	default:
 		return runstate.StepList{}, fmt.Errorf("cannot delete remote branch %q in offline mode", config.targetBranch)
 	}
-	err = result.Wrap(runstate.WrapOptions{
+	err := result.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.initialBranch != config.targetBranch && config.targetBranch == config.previousBranch,
 	}, repo)
