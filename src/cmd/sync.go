@@ -138,11 +138,12 @@ func determineSyncConfig(allFlag bool, repo *git.ProdRepo) (*syncConfig, error) 
 		shouldPushTags = !repo.Config.IsFeatureBranch(initialBranch)
 	}
 	return &syncConfig{
-		branchesToSync: branchesToSync,
-		hasOrigin:      hasOrigin,
-		initialBranch:  initialBranch,
-		isOffline:      isOffline,
-		shouldPushTags: shouldPushTags,
+		branchesToSync:            branchesToSync,
+		branchesWithDeletedRemote: branchesWithDeletedRemote,
+		hasOrigin:                 hasOrigin,
+		initialBranch:             initialBranch,
+		isOffline:                 isOffline,
+		shouldPushTags:            shouldPushTags,
 	}, nil
 }
 
