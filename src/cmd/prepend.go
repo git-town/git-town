@@ -119,21 +119,17 @@ func determinePrependConfig(args []string, repo *git.ProdRepo) (*prependConfig, 
 }
 
 func prependStepList(config *prependConfig, repo *git.ProdRepo) (runstate.StepList, error) {
-	result := runstate.StepList{}
+	list := runstate.StepListBuilder{}
 	for _, branch := range config.ancestorBranches {
-		steps, err := syncBranchSteps(branch, true, repo)
-		if err != nil {
-			return runstate.StepList{}, err
-		}
-		result.AppendList(steps)
+		syncBranchSteps(&list, branch, true, repo)
 	}
-	result.Append(&steps.CreateBranchStep{Branch: config.targetBranch, StartingPoint: config.parentBranch})
-	result.Append(&steps.SetParentBranchStep{Branch: config.targetBranch, ParentBranch: config.parentBranch})
-	result.Append(&steps.SetParentBranchStep{Branch: config.initialBranch, ParentBranch: config.targetBranch})
-	result.Append(&steps.CheckoutBranchStep{Branch: config.targetBranch})
+	list.Add(&steps.CreateBranchStep{Branch: config.targetBranch, StartingPoint: config.parentBranch})
+	list.Add(&steps.SetParentBranchStep{Branch: config.targetBranch, ParentBranch: config.parentBranch})
+	list.Add(&steps.SetParentBranchStep{Branch: config.initialBranch, ParentBranch: config.targetBranch})
+	list.Add(&steps.CheckoutBranchStep{Branch: config.targetBranch})
 	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
-		result.Append(&steps.CreateTrackingBranchStep{Branch: config.targetBranch, NoPushHook: config.noPushHook})
+		list.Add(&steps.CreateTrackingBranchStep{Branch: config.targetBranch, NoPushHook: config.noPushHook})
 	}
-	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
-	return result, err
+	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
+	return list.Result()
 }

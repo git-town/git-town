@@ -1,0 +1,29 @@
+package runstate
+
+import (
+	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/steps"
+)
+
+type StepListBuilder struct {
+	StepList     StepList `exhaustruct:"optional"`
+	ErrorChecker `exhaustruct:"optional"`
+}
+
+func (slb *StepListBuilder) Add(step steps.Step) {
+	slb.StepList.Append(step)
+}
+
+func (slb *StepListBuilder) AddE(step steps.Step, err error) {
+	if !slb.Check(err) {
+		slb.Add(step)
+	}
+}
+
+func (slb *StepListBuilder) Wrap(options WrapOptions, repo *git.ProdRepo) {
+	slb.Check(slb.StepList.Wrap(options, repo))
+}
+
+func (slb *StepListBuilder) Result() (StepList, error) {
+	return slb.StepList, slb.Err
+}
