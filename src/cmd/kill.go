@@ -137,31 +137,31 @@ func determineKillConfig(args []string, repo *git.ProdRepo) (*killConfig, error)
 }
 
 func killStepList(config *killConfig, repo *git.ProdRepo) (runstate.StepList, error) {
-	list := runstate.StepListBuilder{}
+	result := runstate.StepList{}
 	switch {
 	case config.isTargetBranchLocal:
 		if config.hasTrackingBranch && !config.isOffline {
-			list.Add(&steps.DeleteOriginBranchStep{Branch: config.targetBranch, IsTracking: true, NoPushHook: config.noPushHook})
+			result.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch, IsTracking: true, NoPushHook: config.noPushHook})
 		}
 		if config.initialBranch == config.targetBranch {
 			if config.hasOpenChanges {
-				list.Add(&steps.CommitOpenChangesStep{})
+				result.Append(&steps.CommitOpenChangesStep{})
 			}
-			list.Add(&steps.CheckoutBranchStep{Branch: config.targetBranchParent})
+			result.Append(&steps.CheckoutBranchStep{Branch: config.targetBranchParent})
 		}
-		list.Add(&steps.DeleteLocalBranchStep{Branch: config.targetBranch, Force: true})
+		result.Append(&steps.DeleteLocalBranchStep{Branch: config.targetBranch, Force: true})
 		for _, child := range config.childBranches {
-			list.Add(&steps.SetParentBranchStep{Branch: child, ParentBranch: config.targetBranchParent})
+			result.Append(&steps.SetParentBranchStep{Branch: child, ParentBranch: config.targetBranchParent})
 		}
-		list.Add(&steps.DeleteParentBranchStep{Branch: config.targetBranch})
+		result.Append(&steps.DeleteParentBranchStep{Branch: config.targetBranch})
 	case !config.isOffline:
-		list.Add(&steps.DeleteOriginBranchStep{Branch: config.targetBranch, IsTracking: false, NoPushHook: config.noPushHook})
+		result.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch, IsTracking: false, NoPushHook: config.noPushHook})
 	default:
 		return runstate.StepList{}, fmt.Errorf("cannot delete remote branch %q in offline mode", config.targetBranch)
 	}
-	list.Wrap(runstate.WrapOptions{
+	err := result.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.initialBranch != config.targetBranch && config.targetBranch == config.previousBranch,
 	}, repo)
-	return list.Result()
+	return result, err
 }
