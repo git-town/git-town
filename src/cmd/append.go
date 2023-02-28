@@ -93,7 +93,7 @@ func determineAppendConfig(args []string, repo *git.ProdRepo) (*appendConfig, er
 func appendStepList(config *appendConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range append(config.ancestorBranches, config.parentBranch) {
-		syncBranchSteps(&list, branch, true, repo)
+		updateBranchSteps(&list, branch, true, repo)
 	}
 	list.Add(&steps.CreateBranchStep{Branch: config.targetBranch, StartingPoint: config.parentBranch})
 	list.Add(&steps.SetParentBranchStep{Branch: config.targetBranch, ParentBranch: config.parentBranch})

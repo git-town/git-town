@@ -143,7 +143,7 @@ type syncConfig struct {
 func syncBranchesSteps(config *syncConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.branchesToSync {
-		syncBranchSteps(&list, branch, true, repo)
+		updateBranchSteps(&list, branch, true, repo)
 	}
 	list.Add(&steps.CheckoutBranchStep{Branch: config.initialBranch})
 	if config.hasOrigin && config.shouldPushTags && !config.isOffline {
@@ -153,8 +153,8 @@ func syncBranchesSteps(config *syncConfig, repo *git.ProdRepo) (runstate.StepLis
 	return list.Result()
 }
 
-// syncBranchSteps provides the steps to sync a particular branch.
-func syncBranchSteps(list *runstate.StepListBuilder, branch string, pushBranch bool, repo *git.ProdRepo) {
+// updateBranchSteps provides the steps to sync a particular branch.
+func updateBranchSteps(list *runstate.StepListBuilder, branch string, pushBranch bool, repo *git.ProdRepo) {
 	isFeatureBranch := repo.Config.IsFeatureBranch(branch)
 	syncStrategy := repo.Config.SyncStrategy()
 	hasOrigin := list.Bool(repo.Silent.HasOrigin())
@@ -164,9 +164,9 @@ func syncBranchSteps(list *runstate.StepListBuilder, branch string, pushBranch b
 	}
 	list.Add(&steps.CheckoutBranchStep{Branch: branch})
 	if isFeatureBranch {
-		syncFeatureBranchSteps(list, branch, repo)
+		updateFeatureBranchSteps(list, branch, repo)
 	} else {
-		syncNonFeatureBranchSteps(list, branch, repo)
+		updateNonFeatureBranchSteps(list, branch, repo)
 	}
 	isOffline := list.Bool(repo.Config.IsOffline())
 	if pushBranch && hasOrigin && !isOffline {
@@ -183,7 +183,7 @@ func syncBranchSteps(list *runstate.StepListBuilder, branch string, pushBranch b
 	}
 }
 
-func syncFeatureBranchSteps(list *runstate.StepListBuilder, branch string, repo *git.ProdRepo) {
+func updateFeatureBranchSteps(list *runstate.StepListBuilder, branch string, repo *git.ProdRepo) {
 	syncStrategy := repo.Config.SyncStrategy()
 	hasTrackingBranch := list.Bool(repo.Silent.HasTrackingBranch(branch))
 	if hasTrackingBranch {
@@ -192,7 +192,7 @@ func syncFeatureBranchSteps(list *runstate.StepListBuilder, branch string, repo 
 	syncParentSteps(list, repo.Config.ParentBranch(branch), syncStrategy)
 }
 
-func syncNonFeatureBranchSteps(list *runstate.StepListBuilder, branch string, repo *git.ProdRepo) {
+func updateNonFeatureBranchSteps(list *runstate.StepListBuilder, branch string, repo *git.ProdRepo) {
 	hasTrackingBranch := list.Bool(repo.Silent.HasTrackingBranch(branch))
 	if hasTrackingBranch {
 		syncTrackingBranchSteps(list, repo.Silent.TrackingBranch(branch), repo.Config.PullBranchStrategy())
