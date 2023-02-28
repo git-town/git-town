@@ -147,11 +147,11 @@ func determineSyncConfig(allFlag bool, repo *git.ProdRepo) (*syncConfig, error) 
 	}, nil
 }
 
-// syncSteps provides the step list for the "git sync" command.
-func syncSteps(config *syncConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+// syncBranchesStepList provides the step list for the "git sync" command.
+func syncBranchesStepList(config *syncConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.branchesToSync {
-		syncBranchSteps(&list, branch, true, repo)
+		syncStepsForBranch(&list, branch, config, repo)
 	}
 	list.Add(&steps.CheckoutBranchStep{Branch: config.initialBranch})
 	if config.hasOrigin && config.shouldPushTags && !config.isOffline {
@@ -161,54 +161,54 @@ func syncSteps(config *syncConfig, repo *git.ProdRepo) (runstate.StepList, error
 	return list.Result()
 }
 
+// hasDeletedTrackingBranch indicates whether the tracking branch of the branch with the given name was deleted on the remote.
 func (sc *syncConfig) hasDeletedTrackingBranch(branch string) bool {
 	return stringslice.Contains(sc.branchesWithDeletedRemote, branch)
 }
 
-func syncStepsForBranch(branch string, config syncConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+// syncStepsForBranch adds the steps to sync the branch with the given name to the given step list.
+func syncStepsForBranch(list *runstate.StepListBuilder, branch string, config *syncConfig, repo *git.ProdRepo) {
 	if config.hasDeletedTrackingBranch(branch) {
-		return deleteBranchSteps(branch, config, repo)
+		deleteBranchSteps(list, branch, config, repo)
+	} else {
+		updateBranchSteps(list, branch, true, config.branchesWithDeletedRemote, repo)
 	}
-	return updateBranchSteps(branch, true, config.branchesWithDeletedRemote, repo)
 }
 
-func deleteBranchSteps(branch string, config syncConfig, repo *git.ProdRepo) (runstate.StepList, error) {
-	result := runstate.StepList{}
+// deleteBranchSteps adds the steps to delete the branch with the given name locally.
+func deleteBranchSteps(list *runstate.StepListBuilder, branch string, config *syncConfig, repo *git.ProdRepo) {
 	if config.initialBranch == branch {
-		result.Append(&steps.CheckoutBranchStep{Branch: config.mainBranch})
+		list.Add(&steps.CheckoutBranchStep{Branch: config.mainBranch})
 	}
 	parent := repo.Config.ParentBranch(branch)
 	if parent != "" {
 		for _, child := range repo.Config.ChildBranches(branch) {
-			result.Append(&steps.SetParentBranchStep{Branch: child, ParentBranch: parent})
+			list.Add(&steps.SetParentBranchStep{Branch: child, ParentBranch: parent})
 		}
-		result.Append(&steps.DeleteParentBranchStep{Branch: branch})
+		list.Add(&steps.DeleteParentBranchStep{Branch: branch})
 	}
 	if repo.Config.IsPerennialBranch(branch) {
-		result.Append(&steps.RemoveFromPerennialBranchesStep{Branch: branch})
+		list.Add(&steps.RemoveFromPerennialBranchesStep{Branch: branch})
 	}
-	result.Append(&steps.DeleteLocalBranchStep{Branch: branch})
-	return result, nil
+	list.Add(&steps.DeleteLocalBranchStep{Branch: branch})
 }
 
 //nolint:nestif
-func updateBranchSteps(list *runstate.StepListBuilder, branch string, pushBranch bool, branchesWithDeletedRemote []string, repo *git.ProdRepo) (runstate.StepList, error) {
+func updateBranchSteps(list *runstate.StepListBuilder, branch string, pushBranch bool, branchesWithDeletedRemote []string, repo *git.ProdRepo) {
 	isFeatureBranch := repo.Config.IsFeatureBranch(branch)
 	syncStrategy := repo.Config.SyncStrategy()
 	hasOrigin := list.Bool(repo.Silent.HasOrigin())
 	pushHook := list.Bool(repo.Config.PushHook())
 	isOffline := list.Bool(repo.Config.IsOffline())
-	result := runstate.StepList{}
 	if !hasOrigin && !isFeatureBranch {
 		return
 	}
 	list.Add(&steps.CheckoutBranchStep{Branch: branch})
 	if isFeatureBranch {
-		syncFeatureBranchSteps(list, branch, repo)
+		syncFeatureBranchSteps(list, branch, branchesWithDeletedRemote, repo)
 	} else {
 		syncNonFeatureBranchSteps(list, branch, repo)
 	}
-	isOffline := list.Bool(repo.Config.IsOffline())
 	if pushBranch && hasOrigin && !isOffline {
 		hasTrackingBranch := list.Bool(repo.Silent.HasTrackingBranch(branch))
 		if !hasTrackingBranch {
@@ -234,10 +234,9 @@ func syncFeatureBranchSteps(list *runstate.StepListBuilder, branch string, branc
 	ancestorBranches = stringslice.RemoveMany(ancestorBranches, branchesWithDeletedRemote)
 	newParentBranch := stringslice.Last(ancestorBranches)
 	if newParentBranch == nil {
-		return runstate.StepList{}, nil
+		return
 	}
 	syncParentSteps(list, repo.Config.ParentBranch(branch), syncStrategy)
-	return result, nil
 }
 
 func syncNonFeatureBranchSteps(list *runstate.StepListBuilder, branch string, repo *git.ProdRepo) {
@@ -252,14 +251,6 @@ func syncNonFeatureBranchSteps(list *runstate.StepListBuilder, branch string, re
 		list.Add(&steps.FetchUpstreamStep{Branch: mainBranch})
 		list.Add(&steps.RebaseBranchStep{Branch: fmt.Sprintf("upstream/%s", mainBranch)})
 	}
-}
-
-// finalBranch provides the name of the branch that should be checked out after all sync steps run.
-func finalBranch(config syncConfig) string {
-	if stringslice.Contains(config.branchesWithDeletedRemote, config.initialBranch) {
-		return config.mainBranch
-	}
-	return config.initialBranch
 }
 
 // syncTrackingBranchStep provides the steps to sync the given tracking branch into the current branch.

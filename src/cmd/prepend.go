@@ -113,7 +113,7 @@ func determinePrependConfig(args []string, repo *git.ProdRepo) (*prependConfig, 
 func prependStepList(config *prependConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.ancestorBranches {
-		syncBranchSteps(&list, branch, true, config.branchesDeletedOnRemote, repo)
+		updateBranchSteps(&list, branch, true, config.branchesDeletedOnRemote, repo)
 	}
 	list.Add(&steps.CreateBranchStep{Branch: config.targetBranch, StartingPoint: config.parentBranch})
 	list.Add(&steps.SetParentBranchStep{Branch: config.targetBranch, ParentBranch: config.parentBranch})

@@ -144,9 +144,9 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 	if !repo.Config.IsFeatureBranch(branchToShip) {
 		return nil, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can be shipped", branchToShip)
 	}
-	result.branchesDeletedOnRemote, err = repo.Silent.LocalBranchesWithDeletedTrackingBranches()
+	branchesDeletedOnRemote, err := repo.Silent.LocalBranchesWithDeletedTrackingBranches()
 	if err != nil {
-		return shipConfig{}, err
+		return nil, err
 	}
 	parentDialog := dialog.ParentBranches{}
 	err = parentDialog.EnsureKnowsParentBranches([]string{branchToShip}, repo)
@@ -186,6 +186,7 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 		}
 	}
 	return &shipConfig{
+		branchesDeletedOnRemote:  branchesDeletedOnRemote,
 		branchToMergeInto:        branchToMergeInto,
 		branchToShip:             branchToShip,
 		canShipViaAPI:            canShipViaAPI,
@@ -215,8 +216,8 @@ please ship %q first`, strings.Join(ancestorsWithoutMainOrPerennial, ", "), olde
 
 func shipStepList(config *shipConfig, commitMessage string, repo *git.ProdRepo) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
-	syncBranchSteps(&list, config.branchToMergeInto, true, config.branchesDeletedOnRemote, repo) // sync the parent branch
-	syncBranchSteps(&list, config.branchToShip, false, config.branchesDeletedOnRemote, repo)     // sync the branch to ship locally only
+	updateBranchSteps(&list, config.branchToMergeInto, true, config.branchesDeletedOnRemote, repo) // sync the parent branch
+	updateBranchSteps(&list, config.branchToShip, false, config.branchesDeletedOnRemote, repo)     // sync the branch to ship locally only
 	list.Add(&steps.EnsureHasShippableChangesStep{Branch: config.branchToShip})
 	list.Add(&steps.CheckoutBranchStep{Branch: config.branchToMergeInto})
 	if config.canShipViaAPI {
