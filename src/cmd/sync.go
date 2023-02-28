@@ -205,9 +205,9 @@ func updateBranchSteps(list *runstate.StepListBuilder, branch string, pushBranch
 	}
 	list.Add(&steps.CheckoutBranchStep{Branch: branch})
 	if isFeatureBranch {
-		syncFeatureBranchSteps(list, branch, branchesWithDeletedRemote, repo)
+		updateFeatureBranchSteps(list, branch, branchesWithDeletedRemote, repo)
 	} else {
-		syncNonFeatureBranchSteps(list, branch, repo)
+		updateNonFeatureBranchSteps(list, branch, repo)
 	}
 	if pushBranch && hasOrigin && !isOffline {
 		hasTrackingBranch := list.Bool(repo.Silent.HasTrackingBranch(branch))
@@ -223,7 +223,7 @@ func updateBranchSteps(list *runstate.StepListBuilder, branch string, pushBranch
 	}
 }
 
-func syncFeatureBranchSteps(list *runstate.StepListBuilder, branch string, branchesWithDeletedRemote []string, repo *git.ProdRepo) {
+func updateFeatureBranchSteps(list *runstate.StepListBuilder, branch string, branchesWithDeletedRemote []string, repo *git.ProdRepo) {
 	syncStrategy := repo.Config.SyncStrategy()
 	hasTrackingBranch := list.Bool(repo.Silent.HasTrackingBranch(branch))
 	if hasTrackingBranch {
@@ -239,7 +239,7 @@ func syncFeatureBranchSteps(list *runstate.StepListBuilder, branch string, branc
 	syncParentSteps(list, repo.Config.ParentBranch(branch), syncStrategy)
 }
 
-func syncNonFeatureBranchSteps(list *runstate.StepListBuilder, branch string, repo *git.ProdRepo) {
+func updateNonFeatureBranchSteps(list *runstate.StepListBuilder, branch string, repo *git.ProdRepo) {
 	hasTrackingBranch := list.Bool(repo.Silent.HasTrackingBranch(branch))
 	if hasTrackingBranch {
 		syncTrackingBranchSteps(list, repo.Silent.TrackingBranch(branch), repo.Config.PullBranchStrategy())
