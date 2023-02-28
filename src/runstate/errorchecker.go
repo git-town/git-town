@@ -8,15 +8,22 @@ import (
 
 // ErrorChecker helps avoid excessive error checking
 // while gathering a larger number of values through fallible operations.
+//
+// This is based on ideas outlined in https://go.dev/blog/errors-are-values.
+// Please be aware that this can lead to executing logic that would normally not run,
+// using potentially invalid data.
+// This can lead to unexpected runtime exceptions and side effects.
 type ErrorChecker struct {
 	Err error `exhaustruct:"optional"`
 }
 
-// Bool provides the bool part of the given fallible function result
-// while registering the given error.
-func (ec *ErrorChecker) Bool(value bool, err error) bool {
-	ec.Check(err)
-	return value
+// Check registers the given error and indicates
+// whether this ErrorChecker contains an error now.
+func (ec *ErrorChecker) Check(err error) bool {
+	if err != nil && ec.Err == nil {
+		ec.Err = err
+	}
+	return ec.Err != nil
 }
 
 // Fail registers an error with the given format string.
@@ -25,12 +32,11 @@ func (ec *ErrorChecker) Fail(format string, a ...any) error {
 	return ec.Err
 }
 
-// Check registers the given error and indicates whether this ErrorChecker contains an error now.
-func (ec *ErrorChecker) Check(err error) bool {
-	if err != nil && ec.Err == nil {
-		ec.Err = err
-	}
-	return ec.Err != nil
+// Bool provides the bool part of the given fallible function result
+// while registering the given error.
+func (ec *ErrorChecker) Bool(value bool, err error) bool {
+	ec.Check(err)
+	return value
 }
 
 // String provides the string part of the given fallible function result

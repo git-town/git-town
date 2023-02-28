@@ -5,6 +5,10 @@ import (
 	"github.com/git-town/git-town/v7/src/steps"
 )
 
+// StepListBuilder allows populating StepList instances
+// in concise ways out of fallible operations.
+//
+// This is based on ideas outlined in https://go.dev/blog/errors-are-values.
 type StepListBuilder struct {
 	StepList     StepList `exhaustruct:"optional"`
 	ErrorChecker `exhaustruct:"optional"`
