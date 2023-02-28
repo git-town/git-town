@@ -26,7 +26,7 @@ func (ec *ErrorChecker) Check(err error) bool {
 	return ec.Err != nil
 }
 
-// Fail registers an error with the given format string.
+// Fail registers the error constructed using the given format arguments.
 func (ec *ErrorChecker) Fail(format string, a ...any) error {
 	ec.Check(fmt.Errorf(format, a...))
 	return ec.Err
