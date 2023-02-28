@@ -11,8 +11,8 @@ import (
 //
 // This is based on ideas outlined in https://go.dev/blog/errors-are-values.
 // Please be aware that this can lead to executing logic that would normally not run,
-// using potentially invalid data.
-// This can lead to unexpected runtime exceptions and side effects.
+// using potentially invalid data, and potentially leading to unexpected runtime exceptions and side effects.
+// Use with care and only if it's abundantly clear that there are no negative side effects.
 type ErrorChecker struct {
 	Err error `exhaustruct:"optional"`
 }
