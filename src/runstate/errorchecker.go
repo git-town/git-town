@@ -20,7 +20,7 @@ type ErrorChecker struct {
 // Check registers the given error and indicates
 // whether this ErrorChecker contains an error now.
 func (ec *ErrorChecker) Check(err error) bool {
-	if err != nil && ec.Err == nil {
+	if ec.Err == nil {
 		ec.Err = err
 	}
 	return ec.Err != nil
