@@ -108,6 +108,18 @@ func (runState *RunState) CreateUndoRunState() RunState {
 	}
 }
 
+func (runState *RunState) HasAbortSteps() bool {
+	return !runState.AbortStepList.IsEmpty()
+}
+
+func (runState *RunState) HasRunSteps() bool {
+	return !runState.RunStepList.IsEmpty()
+}
+
+func (runState *RunState) HasUndoSteps() bool {
+	return !runState.UndoStepList.IsEmpty()
+}
+
 // IsUnfinished returns whether or not the run state is unfinished.
 func (runState *RunState) IsUnfinished() bool {
 	return runState.UnfinishedDetails != nil
