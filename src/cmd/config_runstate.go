@@ -20,7 +20,7 @@ func runstateCommand(repo *git.ProdRepo) *cobra.Command {
 			if err != nil {
 				cli.Exit(fmt.Errorf("cannot determine the runstate file: %w", err))
 			}
-			fmt.Printf("The runstate is stored in %s.\n", filepath)
+			fmt.Printf("The runstate for this repository is stored in %s.\n", filepath)
 			_, err = os.Stat(filepath)
 			if err != nil {
 				if errors.Is(err, os.ErrNotExist) {
@@ -40,10 +40,7 @@ func runstateCommand(repo *git.ProdRepo) *cobra.Command {
 		},
 		Args: cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := ValidateIsRepository(repo); err != nil {
-				return err
-			}
-			return validateIsConfigured(repo)
+			return ValidateIsRepository(repo)
 		},
 	}
 	cmd.AddCommand(resetRunstateCommand(repo))
