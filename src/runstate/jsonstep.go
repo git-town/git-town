@@ -106,7 +106,19 @@ func determineStep(stepType string) steps.Step {
 	case "*StashOpenChangesStep":
 		return &steps.StashOpenChangesStep{}
 
-	// legacy steps
+	// legacy steps (remove this section in 2026)
+	case "*AbortMergeBranchStep":
+		return &steps.AbortMergeStep{}
+	case "*AbortRebaseBranchStep":
+		return &steps.AbortRebaseStep{}
+	case "*CheckoutBranchStep":
+		return &steps.CheckoutStep{}
+	case "*MergeBranchStep":
+		return &steps.MergeStep{}
+	case "*NoOpStep":
+		return &steps.EmptyStep{}
+	case "*SquashMergeBranchStep":
+		return &steps.SquashMergeStep{}
 
 	default:
 		log.Fatalf("Unknown step type: %s", stepType)
