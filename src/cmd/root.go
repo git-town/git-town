@@ -34,7 +34,6 @@ and it allows you to perform many common Git operations faster and easier.`,
 	rootCmd.AddCommand(configCmd(repo))
 	rootCmd.AddCommand(continueCmd(repo))
 	rootCmd.AddCommand(diffParentCommand(repo))
-	rootCmd.AddCommand(discardCmd(repo))
 	rootCmd.AddCommand(hackCmd(repo))
 	rootCmd.AddCommand(installCommand(repo, &rootCmd))
 	rootCmd.AddCommand(killCommand(repo))
