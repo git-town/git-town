@@ -11,9 +11,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func runstateCommand(repo *git.ProdRepo) *cobra.Command {
+func statusCommand(repo *git.ProdRepo) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "errors",
+		Use:   "status",
 		Short: "Displays or resets the current suspended Git Town command",
 		Run: func(cmd *cobra.Command, args []string) {
 			config, err := loadDisplayStatusConfig(repo)

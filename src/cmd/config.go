@@ -61,7 +61,6 @@ func configCmd(repo *git.ProdRepo) *cobra.Command {
 	configCmd.AddCommand(pushNewBranchesCommand(repo))
 	configCmd.AddCommand(pushHookCommand(repo))
 	configCmd.AddCommand(resetConfigCommand(repo))
-	configCmd.AddCommand(runstateCommand(repo))
 	configCmd.AddCommand(setupConfigCommand(repo))
 	configCmd.AddCommand(syncStrategyCommand(repo))
 	return configCmd
