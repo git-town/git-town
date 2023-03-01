@@ -16,11 +16,11 @@ func runstateCommand(repo *git.ProdRepo) *cobra.Command {
 		Use:   "status",
 		Short: "Displays or resets the current interrupted Git Town command",
 		Run: func(cmd *cobra.Command, args []string) {
-			config, err := loadDisplayRunstateConfig(repo)
+			config, err := loadDisplayStatusConfig(repo)
 			if err != nil {
 				cli.Exit(err)
 			}
-			displayRunstate(*config)
+			displayStatus(*config)
 			if err != nil {
 				cli.Exit(err)
 			}
@@ -34,12 +34,12 @@ func runstateCommand(repo *git.ProdRepo) *cobra.Command {
 	return cmd
 }
 
-type displayRunstateConfig struct {
-	filepath  string
-	persisted *runstate.RunState
+type displayStatusConfig struct {
+	filepath  string             // filepath of the runstate file
+	persisted *runstate.RunState // content of the runstate file
 }
 
-func loadDisplayRunstateConfig(repo *git.ProdRepo) (*displayRunstateConfig, error) {
+func loadDisplayStatusConfig(repo *git.ProdRepo) (*displayStatusConfig, error) {
 	filepath, err := runstate.PersistenceFilename(repo)
 	if err != nil {
 		return nil, fmt.Errorf("cannot determine the runstate file: %w", err)
@@ -50,13 +50,13 @@ func loadDisplayRunstateConfig(repo *git.ProdRepo) (*displayRunstateConfig, erro
 			return nil, fmt.Errorf("the runstate file contains invalid content: %w", err)
 		}
 	}
-	return &displayRunstateConfig{
+	return &displayStatusConfig{
 		filepath:  filepath,
 		persisted: persisted,
 	}, nil
 }
 
-func displayRunstate(config displayRunstateConfig) {
+func displayStatus(config displayStatusConfig) {
 	fmt.Printf("The status for this repository is stored in %s.\n", config.filepath)
 	if config.persisted == nil {
 		fmt.Println("No status found for this repository.")

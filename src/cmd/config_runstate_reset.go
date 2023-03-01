@@ -16,11 +16,11 @@ func resetRunstateCommand(repo *git.ProdRepo) *cobra.Command {
 		Use:   "reset",
 		Short: "Resets the current interrupted Git Town command",
 		Run: func(cmd *cobra.Command, args []string) {
-			config, err := loadResetRunstateConfig(repo)
+			config, err := loadResetStatusConfig(repo)
 			if err != nil {
 				cli.Exit(err)
 			}
-			err = resetRunstate(config)
+			err = resetStatus(config)
 			if err != nil {
 				cli.Exit(fmt.Errorf("cannot delete runstate file: %w", err))
 			}
@@ -33,21 +33,21 @@ func resetRunstateCommand(repo *git.ProdRepo) *cobra.Command {
 	}
 }
 
-type resetRunstateConfig struct {
-	filepath string
+type resetStatusConfig struct {
+	filepath string // filepath of the runstate file
 }
 
-func loadResetRunstateConfig(repo *git.ProdRepo) (*resetRunstateConfig, error) {
+func loadResetStatusConfig(repo *git.ProdRepo) (*resetStatusConfig, error) {
 	filepath, err := runstate.PersistenceFilename(repo)
 	if err != nil {
 		return nil, fmt.Errorf("cannot determine the runstate file path: %w", err)
 	}
-	return &resetRunstateConfig{
+	return &resetStatusConfig{
 		filepath: filepath,
 	}, nil
 }
 
-func resetRunstate(config *resetRunstateConfig) error {
+func resetStatus(config *resetStatusConfig) error {
 	err := os.Remove(config.filepath)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
