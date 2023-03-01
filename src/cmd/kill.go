@@ -151,7 +151,7 @@ func killStepList(config *killConfig, repo *git.ProdRepo) (runstate.StepList, er
 		}
 		result.Append(&steps.DeleteLocalBranchStep{Branch: config.targetBranch, Force: true})
 		for _, child := range config.childBranches {
-			result.Append(&steps.SetParentBranchStep{Branch: child, ParentBranch: config.targetBranchParent})
+			result.Append(&steps.SetParentStep{Branch: child, ParentBranch: config.targetBranchParent})
 		}
 		result.Append(&steps.DeleteParentBranchStep{Branch: config.targetBranch})
 	case !config.isOffline:

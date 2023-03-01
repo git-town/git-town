@@ -158,10 +158,10 @@ func renameBranchStepList(config *renameBranchConfig, repo *git.ProdRepo) (runst
 		result.Append(&steps.AddToPerennialBranchesStep{Branch: config.newBranch})
 	} else {
 		result.Append(&steps.DeleteParentBranchStep{Branch: config.oldBranch})
-		result.Append(&steps.SetParentBranchStep{Branch: config.newBranch, ParentBranch: repo.Config.ParentBranch(config.oldBranch)})
+		result.Append(&steps.SetParentStep{Branch: config.newBranch, ParentBranch: repo.Config.ParentBranch(config.oldBranch)})
 	}
 	for _, child := range config.oldBranchChildren {
-		result.Append(&steps.SetParentBranchStep{Branch: child, ParentBranch: config.newBranch})
+		result.Append(&steps.SetParentStep{Branch: child, ParentBranch: config.newBranch})
 	}
 	if config.oldBranchHasTrackingBranch && !config.isOffline {
 		result.Append(&steps.CreateTrackingBranchStep{Branch: config.newBranch, NoPushHook: config.noPushHook})

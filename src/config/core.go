@@ -373,9 +373,9 @@ func (gt *GitTown) SetOffline(value bool) error {
 	return err
 }
 
-// SetParentBranch marks the given branch as the direct parent of the other given branch
+// SetParent marks the given branch as the direct parent of the other given branch
 // in the Git Town configuration.
-func (gt *GitTown) SetParentBranch(branch, parentBranch string) error {
+func (gt *GitTown) SetParent(branch, parentBranch string) error {
 	_, err := gt.Storage.SetLocalConfigValue("git-town-branch."+branch+".parent", parentBranch)
 	return err
 }

@@ -9,9 +9,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func setParentBranchCommand(repo *git.ProdRepo) *cobra.Command {
+func setParentCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
-		Use:   "set-parent-branch",
+		Use:   "set-parent",
 		Short: "Prompts to set the parent branch for the current branch",
 		Long:  `Prompts to set the parent branch for the current branch`,
 		Run: func(cmd *cobra.Command, args []string) {

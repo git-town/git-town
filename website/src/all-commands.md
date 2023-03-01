@@ -28,8 +28,8 @@ commands in the shorter form available after running
   the current branch
 - [git prepend](commands/prepend.md) - create a new feature branch between the
   current branch and its parent
-- [git town set-parent-branch](commands/set-parent-branch.md) - change the
-  parent of a feature branch
+- [git town set-parent](commands/set-parent.md) - change the parent of a feature
+  branch
 
 ### Git Town installation
 
