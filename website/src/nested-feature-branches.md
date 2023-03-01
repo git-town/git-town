@@ -200,5 +200,4 @@ ship them in any order.
 _Organize branch chains in the order you want to ship:_ You always have to ship
 the oldest branch first. You can use [git prepend](commands/prepend.md) to
 insert a feature branch as a parent of the current feature branch or
-[set parent branch](commands/set-parent-branch.md) to change the order of
-branches.
+[set parent](commands/set-parent.md) to change the order of branches.

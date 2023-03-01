@@ -85,7 +85,7 @@ func pruneBranchesStepList(config *pruneBranchesConfig, repo *git.ProdRepo) (run
 		parent := repo.Config.ParentBranch(branchWithDeletedRemote)
 		if parent != "" {
 			for _, child := range repo.Config.ChildBranches(branchWithDeletedRemote) {
-				result.Append(&steps.SetParentBranchStep{Branch: child, ParentBranch: parent})
+				result.Append(&steps.SetParentStep{Branch: child, ParentBranch: parent})
 			}
 			result.Append(&steps.DeleteParentBranchStep{Branch: branchWithDeletedRemote})
 		}

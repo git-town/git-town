@@ -250,7 +250,7 @@ func shipStepList(config *shipConfig, commitMessage string, repo *git.ProdRepo) 
 	list.Add(&steps.DeleteLocalBranchStep{Branch: config.branchToShip})
 	list.Add(&steps.DeleteParentBranchStep{Branch: config.branchToShip})
 	for _, child := range config.childBranches {
-		list.Add(&steps.SetParentBranchStep{Branch: child, ParentBranch: config.branchToMergeInto})
+		list.Add(&steps.SetParentStep{Branch: child, ParentBranch: config.branchToMergeInto})
 	}
 	if !config.isShippingInitialBranch {
 		// TODO: check out the main branch here?
