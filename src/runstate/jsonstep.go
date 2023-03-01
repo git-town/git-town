@@ -124,6 +124,8 @@ func determineStep(stepType string) steps.Step {
 		return &steps.EmptyStep{}
 	case "*SquashMergeBranchStep":
 		return &steps.SquashMergeStep{}
+	}
+	return nil
 }
 
 func typeName(myvar interface{}) string {
