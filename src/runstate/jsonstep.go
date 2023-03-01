@@ -47,10 +47,10 @@ func determineStep(stepType string) steps.Step {
 		return &steps.AddToPerennialBranchesStep{}
 	case "*CheckoutStep":
 		return &steps.CheckoutStep{}
-	case "*ContinueMergeBranchStep":
-		return &steps.ContinueMergeBranchStep{}
-	case "*ContinueRebaseBranchStep":
-		return &steps.ContinueRebaseBranchStep{}
+	case "*ContinueMergeStep":
+		return &steps.ContinueMergeStep{}
+	case "*ContinueRebaseStep":
+		return &steps.ContinueRebaseStep{}
 	case "*CreateBranchStep":
 		return &steps.CreateBranchStep{}
 	case "*CreateProposalStep":

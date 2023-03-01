@@ -17,7 +17,7 @@ func (step *MergeBranchStep) CreateAbortStep() Step {
 }
 
 func (step *MergeBranchStep) CreateContinueStep() Step {
-	return &ContinueMergeBranchStep{}
+	return &ContinueMergeStep{}
 }
 
 func (step *MergeBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {

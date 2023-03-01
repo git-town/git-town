@@ -18,7 +18,7 @@ func (step *RebaseBranchStep) CreateAbortStep() Step {
 }
 
 func (step *RebaseBranchStep) CreateContinueStep() Step {
-	return &ContinueRebaseBranchStep{}
+	return &ContinueRebaseStep{}
 }
 
 func (step *RebaseBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
