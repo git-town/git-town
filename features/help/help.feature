@@ -10,7 +10,9 @@ Feature: help for commands
 
     Examples:
       | COMMAND                     |
+      | aliases                     |
       | append                      |
+      | completions                 |
       | config                      |
       | config main-branch          |
       | config push-new-branches    |
@@ -21,8 +23,6 @@ Feature: help for commands
       | diff-parent                 |
       | hack                        |
       | help                        |
-      | install aliases             |
-      | install completions         |
       | kill                        |
       | new-pull-request            |
       | prepend                     |

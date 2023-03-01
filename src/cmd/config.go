@@ -52,6 +52,7 @@ func configCmd(repo *git.ProdRepo) *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return ValidateIsRepository(repo)
 		},
+		GroupID: "setup",
 	}
 	configCmd.AddCommand(mainbranchConfigCmd(repo))
 	configCmd.AddCommand(offlineCmd(repo))
@@ -60,7 +61,6 @@ func configCmd(repo *git.ProdRepo) *cobra.Command {
 	configCmd.AddCommand(pushNewBranchesCommand(repo))
 	configCmd.AddCommand(pushHookCommand(repo))
 	configCmd.AddCommand(resetConfigCommand(repo))
-	configCmd.AddCommand(runstateCommand(repo))
 	configCmd.AddCommand(setupConfigCommand(repo))
 	configCmd.AddCommand(syncStrategyCommand(repo))
 	return configCmd
