@@ -25,10 +25,8 @@ func resetRunstateCommand(repo *git.ProdRepo) *cobra.Command {
 				if errors.Is(err, os.ErrNotExist) {
 					fmt.Println("Runstate doesn't exist.")
 					return
-				} else {
-					fmt.Println("Cannot delete runstate file: %w", err)
-					cli.Exit(err)
 				}
+				cli.Exit(fmt.Errorf("cannot delete runstate file: %w", err))
 			}
 			fmt.Println("Runstate file deleted.")
 		},
