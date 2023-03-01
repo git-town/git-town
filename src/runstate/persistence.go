@@ -79,5 +79,5 @@ func PersistenceFilename(repo *git.ProdRepo) (string, error) {
 		return "", err
 	}
 	directory := replaceCharacterRegexp.ReplaceAllString(rootDir, "-")
-	return filepath.Join(os.TempDir(), directory), nil
+	return filepath.Join(os.TempDir(), "git-town-runstate-"+directory), nil
 }

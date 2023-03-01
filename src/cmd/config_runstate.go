@@ -56,8 +56,12 @@ func loadDisplayRunstateConfig(repo *git.ProdRepo) (*displayRunstateConfig, erro
 	}, nil
 }
 
-func displayRunstate(config displayRunstateConfig) error {
-	fmt.Printf("The runstate for this repository is stored in %s.\n", config.filepath)
+func displayRunstate(config displayRunstateConfig) {
+	fmt.Printf("The status for this repository is stored in %s.\n", config.filepath)
+	if config.persisted == nil {
+		fmt.Println("No status found for this repository.")
+		return
+	}
 	fmt.Printf("The previous Git Town command (%s) ", config.persisted.Command)
 	if config.persisted.IsUnfinished() {
 		fmt.Println("did not finish.")
@@ -73,5 +77,4 @@ func displayRunstate(config displayRunstateConfig) error {
 	if config.persisted.HasUndoSteps() {
 		fmt.Println("You can run \"git town undo\" to undo it.")
 	}
-	return nil
 }
