@@ -21,9 +21,6 @@ func runstateCommand(repo *git.ProdRepo) *cobra.Command {
 				cli.Exit(err)
 			}
 			displayStatus(*config)
-			if err != nil {
-				cli.Exit(err)
-			}
 		},
 		Args: cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
