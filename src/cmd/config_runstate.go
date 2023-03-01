@@ -41,7 +41,7 @@ func loadDisplayStatusConfig(repo *git.ProdRepo) (*displayStatusConfig, error) {
 	if err != nil {
 		return nil, fmt.Errorf("cannot determine the runstate file path: %w", err)
 	}
-	persisted, err := runstate.Load(repo)
+	state, err := runstate.Load(repo)
 	if err != nil {
 		if !errors.Is(err, os.ErrNotExist) {
 			return nil, fmt.Errorf("the runstate file contains invalid content: %w", err)
@@ -49,7 +49,7 @@ func loadDisplayStatusConfig(repo *git.ProdRepo) (*displayStatusConfig, error) {
 	}
 	return &displayStatusConfig{
 		filepath: filepath,
-		state:    persisted,
+		state:    state,
 	}, nil
 }
 
