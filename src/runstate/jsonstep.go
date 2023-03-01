@@ -35,7 +35,7 @@ func (j *JSONStep) UnmarshalJSON(b []byte) error {
 	}
 	j.Step = determineStep(stepType)
 	if j.Step == nil {
-		return fmt.Errorf("unknown step type: %q", stepType)
+		return fmt.Errorf("unknown step type: %q, run \"git town config runstate reset\" to reset it", stepType)
 	}
 	return json.Unmarshal(*mapping["data"], &j.Step)
 }
