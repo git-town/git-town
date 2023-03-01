@@ -30,11 +30,16 @@ func runstateCommand(repo *git.ProdRepo) *cobra.Command {
 				cli.Exit(fmt.Errorf("cannot analyze runstate: %w", err))
 			}
 			fmt.Print("This file exists ")
-			persisted, err = runstate.Load(repo)
+			persisted, err := runstate.Load(repo)
 			if err != nil {
 				cli.Exit(fmt.Errorf("but contains invalid content: %w", err))
 			} else {
 				fmt.Println("and is valid.")
+			}
+			if persisted.IsUnfinished() {
+				fmt.Println("Found an unfinished Git Town command.")
+			} else {
+				fmt.Println("The previous Git Town command finished successfully.")
 			}
 		},
 		Args: cobra.NoArgs,
