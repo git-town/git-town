@@ -36,10 +36,11 @@ func runstateCommand(repo *git.ProdRepo) *cobra.Command {
 			} else {
 				fmt.Println("and is valid.")
 			}
+			fmt.Printf("The previous Git Town command (%s) ", persisted.Command)
 			if persisted.IsUnfinished() {
-				fmt.Println("Found an unfinished Git Town command.")
+				fmt.Println("did not finish.")
 			} else {
-				fmt.Println("The previous Git Town command finished successfully.")
+				fmt.Println("finished successfully.")
 			}
 			if persisted.HasAbortSteps() {
 				fmt.Println("You can run \"git town abort\" to abort it.")
