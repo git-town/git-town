@@ -7,7 +7,7 @@ import (
 	"github.com/git-town/git-town/v7/src/hosting"
 )
 
-// SquashMergeBranchStep squash merges the branch with the given name into the current branch.
+// SquashMergeStep squash merges the branch with the given name into the current branch.
 type UpdateProposalTargetStep struct {
 	ProposalNumber int
 	NewTarget      string

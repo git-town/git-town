@@ -99,8 +99,8 @@ func determineStep(stepType string) steps.Step {
 		return &steps.RevertCommitStep{}
 	case "*SetParentStep":
 		return &steps.SetParentStep{}
-	case "*SquashMergeBranchStep":
-		return &steps.SquashMergeBranchStep{}
+	case "*SquashMergeStep":
+		return &steps.SquashMergeStep{}
 	case "*SkipCurrentBranchSteps":
 		return &steps.SkipCurrentBranchSteps{}
 	case "*StashOpenChangesStep":
