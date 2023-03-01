@@ -45,6 +45,7 @@ See "sync" for information regarding upstream remotes.`,
 			}
 			return validateIsConfigured(repo)
 		},
+		GroupID: "lineage",
 	}
 }
 
