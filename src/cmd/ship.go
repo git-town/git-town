@@ -71,6 +71,7 @@ and Git Town will leave it up to your origin server to delete the remote branch.
 			}
 			return validateIsConfigured(repo)
 		},
+		GroupID: "basic",
 	}
 	shipCmd.Flags().StringVarP(&commitMessage, "message", "m", "", "Specify the commit message for the squash commit")
 	return &shipCmd

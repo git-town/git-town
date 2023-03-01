@@ -37,5 +37,6 @@ func skipCmd(repo *git.ProdRepo) *cobra.Command {
 			}
 			return validateIsConfigured(repo)
 		},
+		GroupID: "errors",
 	}
 }

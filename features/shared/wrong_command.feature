@@ -4,7 +4,7 @@ Feature: show all available commands
     When I run "git-town"
     Then it prints:
       """
-      Available Commands:
+      Basic commands:
       """
 
   Scenario: unknown command

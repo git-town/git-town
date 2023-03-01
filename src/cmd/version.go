@@ -21,5 +21,6 @@ func versionCmd() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			fmt.Printf("Git Town %s (%s)\n", version, buildDate)
 		},
+		GroupID: "setup",
 	}
 }
