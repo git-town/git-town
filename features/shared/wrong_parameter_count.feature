@@ -33,7 +33,7 @@ Feature: too few or many parameters
       | rename-branch                         |
       | rename-branch arg1 arg2 arg3          |
       | repo arg1                             |
-      | set-parent-branch arg1                |
+      | set-parent arg1                       |
       | ship arg1 arg2                        |
       | sync arg1                             |
       | version arg1                          |

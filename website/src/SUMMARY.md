@@ -19,7 +19,7 @@
   - [Nested feature branches](nested-feature-branches.md)
     - [append](commands/append.md)
     - [prepend](commands/prepend.md)
-    - [set-parent-branch](commands/set-parent-branch.md)
+    - [set-parent](commands/set-parent.md)
   - [Installation commands](installation-commands.md)
     - [aliases](commands/install-aliases.md)
     - [completions](commands/install-completions.md)
