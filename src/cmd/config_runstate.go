@@ -24,17 +24,17 @@ func runstateCommand(repo *git.ProdRepo) *cobra.Command {
 			_, err = os.Stat(filepath)
 			if err != nil {
 				if errors.Is(err, os.ErrNotExist) {
-					fmt.Println("No runstate exists.")
+					fmt.Println("This file doesn't exist.")
 					return
 				}
 				cli.Exit(fmt.Errorf("cannot analyze runstate: %w", err))
 			}
-			fmt.Println("The runstate file exists.")
-			_, err = runstate.Load(repo)
+			fmt.Print("This file exists ")
+			persisted, err = runstate.Load(repo)
 			if err != nil {
-				cli.Exit(fmt.Errorf("cannot load current runstate: %w", err))
+				cli.Exit(fmt.Errorf("but contains invalid content: %w", err))
 			} else {
-				fmt.Println("Runstate is valid.")
+				fmt.Println("and is valid.")
 			}
 		},
 		Args: cobra.NoArgs,
