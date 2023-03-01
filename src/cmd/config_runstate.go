@@ -41,6 +41,15 @@ func runstateCommand(repo *git.ProdRepo) *cobra.Command {
 			} else {
 				fmt.Println("The previous Git Town command finished successfully.")
 			}
+			if persisted.HasAbortSteps() {
+				fmt.Println("You can run \"git town abort\" to abort it.")
+			}
+			if persisted.HasRunSteps() {
+				fmt.Println("You can run \"git town continue\" to finish it.")
+			}
+			if persisted.HasUndoSteps() {
+				fmt.Println("You can run \"git town undo\" to undo it.")
+			}
 		},
 		Args: cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
