@@ -7,7 +7,7 @@ import (
 
 // RevertCommitStep reverts the commit with the given sha.
 type RevertCommitStep struct {
-	NoOpStep
+	EmptyStep
 	Sha string
 }
 

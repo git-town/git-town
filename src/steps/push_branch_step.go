@@ -9,7 +9,7 @@ import (
 // PushBranchStep pushes the branch with the given name to the origin remote.
 // Optionally with force.
 type PushBranchStep struct {
-	NoOpStep
+	EmptyStep
 	Branch         string
 	Force          bool
 	ForceWithLease bool

@@ -8,7 +8,7 @@ import (
 // ContinueMergeStep finishes an ongoing merge conflict
 // assuming all conflicts have been resolved by the user.
 type ContinueMergeStep struct {
-	NoOpStep
+	EmptyStep
 }
 
 func (step *ContinueMergeStep) CreateContinueStep() Step {

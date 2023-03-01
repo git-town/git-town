@@ -8,7 +8,7 @@ import (
 // RebaseBranchStep rebases the current branch
 // against the branch with the given name.
 type RebaseBranchStep struct {
-	NoOpStep
+	EmptyStep
 	Branch      string
 	previousSha string
 }

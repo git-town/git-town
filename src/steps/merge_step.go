@@ -7,7 +7,7 @@ import (
 
 // MergeStep merges the branch with the given name into the current branch.
 type MergeStep struct {
-	NoOpStep
+	EmptyStep
 	Branch      string
 	previousSha string
 }

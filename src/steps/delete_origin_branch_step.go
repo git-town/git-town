@@ -7,7 +7,7 @@ import (
 
 // DeleteOriginBranchStep deletes the current branch from the origin remote.
 type DeleteOriginBranchStep struct {
-	NoOpStep
+	EmptyStep
 	Branch     string
 	IsTracking bool
 	NoPushHook bool

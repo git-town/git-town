@@ -7,7 +7,7 @@ import (
 
 // AbortMergeStep aborts the current merge conflict.
 type AbortMergeStep struct {
-	NoOpStep
+	EmptyStep
 }
 
 func (step *AbortMergeStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {

@@ -8,7 +8,7 @@ import (
 // AbortRebaseStep represents aborting on ongoing merge conflict.
 // This step is used in the abort scripts for Git Town commands.
 type AbortRebaseStep struct {
-	NoOpStep
+	EmptyStep
 }
 
 func (step *AbortRebaseStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {

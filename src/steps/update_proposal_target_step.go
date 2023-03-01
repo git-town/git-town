@@ -12,7 +12,7 @@ type UpdateProposalTargetStep struct {
 	ProposalNumber int
 	NewTarget      string
 	ExistingTarget string
-	NoOpStep
+	EmptyStep
 }
 
 func (step *UpdateProposalTargetStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
@@ -20,7 +20,7 @@ func (step *UpdateProposalTargetStep) Run(repo *git.ProdRepo, connector hosting.
 }
 
 func (step *UpdateProposalTargetStep) CreateAbortStep() Step {
-	return &step.NoOpStep
+	return &step.EmptyStep
 }
 
 func (step *UpdateProposalTargetStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {

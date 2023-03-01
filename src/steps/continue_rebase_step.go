@@ -8,7 +8,7 @@ import (
 // ContinueRebaseStep finishes an ongoing rebase operation
 // assuming all conflicts have been resolved by the user.
 type ContinueRebaseStep struct {
-	NoOpStep
+	EmptyStep
 }
 
 func (step *ContinueRebaseStep) CreateAbortStep() Step {

@@ -7,7 +7,7 @@ import (
 
 // CheckoutStep checks out a new branch.
 type CheckoutStep struct {
-	NoOpStep
+	EmptyStep
 	Branch         string
 	previousBranch string
 }

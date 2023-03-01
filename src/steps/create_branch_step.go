@@ -8,7 +8,7 @@ import (
 // CreateBranchStep creates a new branch
 // but leaves the current branch unchanged.
 type CreateBranchStep struct {
-	NoOpStep
+	EmptyStep
 	Branch        string
 	StartingPoint string
 }

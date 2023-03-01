@@ -10,7 +10,7 @@ import (
 
 // SquashMergeStep squash merges the branch with the given name into the current branch.
 type SquashMergeStep struct {
-	NoOpStep
+	EmptyStep
 	Branch        string
 	CommitMessage string
 }

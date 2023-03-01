@@ -8,7 +8,7 @@ import (
 
 // CreateProposalStep creates a new pull request for the current branch.
 type CreateProposalStep struct {
-	NoOpStep
+	EmptyStep
 	Branch string
 }
 

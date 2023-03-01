@@ -9,7 +9,7 @@ import (
 
 // ConnectorMergeProposalStep squash merges the branch with the given name into the current branch.
 type ConnectorMergeProposalStep struct {
-	NoOpStep
+	EmptyStep
 	Branch                    string
 	CommitMessage             string
 	DefaultProposalMessage    string

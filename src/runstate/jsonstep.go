@@ -69,14 +69,14 @@ func determineStep(stepType string) steps.Step {
 		return &steps.DeleteParentBranchStep{}
 	case "*DiscardOpenChangesStep":
 		return &steps.DiscardOpenChangesStep{}
+	case "*EmptyStep":
+		return &steps.EmptyStep{}
 	case "*EnsureHasShippableChangesStep":
 		return &steps.EnsureHasShippableChangesStep{}
 	case "*FetchUpstreamStep":
 		return &steps.FetchUpstreamStep{}
 	case "*MergeStep":
 		return &steps.MergeStep{}
-	case "*NoOpStep":
-		return &steps.NoOpStep{}
 	case "*PreserveCheckoutHistoryStep":
 		return &steps.PreserveCheckoutHistoryStep{}
 	case "*PullBranchStep":
