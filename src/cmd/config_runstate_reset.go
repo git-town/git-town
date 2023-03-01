@@ -54,7 +54,7 @@ func resetStatus(config *resetStatusConfig) error {
 			fmt.Println("Runstate doesn't exist.")
 			return nil
 		}
-		cli.Exit(fmt.Errorf("cannot delete runstate file: %w", err))
+		return fmt.Errorf("cannot delete runstate file: %w", err)
 	}
 	return nil
 }
