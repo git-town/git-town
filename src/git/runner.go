@@ -240,7 +240,7 @@ func (r *Runner) CreateChildFeatureBranch(name string, parent string) error {
 	if err != nil {
 		return fmt.Errorf("cannot create child branch %q: %w", name, err)
 	}
-	_ = r.Config.SetParentBranch(name, parent)
+	_ = r.Config.SetParent(name, parent)
 	return nil
 }
 

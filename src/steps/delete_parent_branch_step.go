@@ -16,7 +16,7 @@ func (step *DeleteParentBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, er
 	if step.previousParent == "" {
 		return &NoOpStep{}, nil
 	}
-	return &SetParentBranchStep{Branch: step.Branch, ParentBranch: step.previousParent}, nil
+	return &SetParentStep{Branch: step.Branch, ParentBranch: step.previousParent}, nil
 }
 
 func (step *DeleteParentBranchStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
