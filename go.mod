@@ -18,6 +18,7 @@ require (
 	github.com/stretchr/testify v1.8.1
 	github.com/xanzy/go-gitlab v0.78.0
 	golang.org/x/oauth2 v0.4.0
+	// NOTE: updating to v2 makes the integration tests slow
 	gopkg.in/AlecAivazis/survey.v1 v1.8.8
 )
 
