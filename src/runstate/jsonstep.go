@@ -39,8 +39,8 @@ func (j *JSONStep) UnmarshalJSON(b []byte) error {
 
 func determineStep(stepType string) steps.Step {
 	switch stepType {
-	case "*AbortMergeBranchStep":
-		return &steps.AbortMergeBranchStep{}
+	case "*AbortMergeStep":
+		return &steps.AbortMergeStep{}
 	case "*AbortRebaseBranchStep":
 		return &steps.AbortRebaseBranchStep{}
 	case "*AddToPerennialBranchesStep":

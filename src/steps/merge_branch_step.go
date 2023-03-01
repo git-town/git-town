@@ -13,7 +13,7 @@ type MergeBranchStep struct {
 }
 
 func (step *MergeBranchStep) CreateAbortStep() Step {
-	return &AbortMergeBranchStep{}
+	return &AbortMergeStep{}
 }
 
 func (step *MergeBranchStep) CreateContinueStep() Step {
