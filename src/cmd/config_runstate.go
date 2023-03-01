@@ -56,7 +56,7 @@ func loadDisplayStatusConfig(repo *git.ProdRepo) (*displayStatusConfig, error) {
 func displayStatus(config displayStatusConfig) {
 	fmt.Printf("The status for this repository is stored in %s.\n", config.filepath)
 	if config.persisted == nil {
-		fmt.Println("No status found for this repository.")
+		fmt.Println("No status file found for this repository.")
 		return
 	}
 	fmt.Printf("The previous Git Town command (%s) ", config.persisted.Command)
