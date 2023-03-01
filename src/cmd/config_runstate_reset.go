@@ -14,7 +14,7 @@ import (
 func resetRunstateCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:   "reset",
-		Short: "Resets the persisted runstate",
+		Short: "Resets the current interrupted Git Town command",
 		Run: func(cmd *cobra.Command, args []string) {
 			filepath, err := runstate.PersistenceFilename(repo)
 			if err != nil {
