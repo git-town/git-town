@@ -105,6 +105,9 @@ func determineStep(stepType string) steps.Step {
 		return &steps.SkipCurrentBranchSteps{}
 	case "*StashOpenChangesStep":
 		return &steps.StashOpenChangesStep{}
+
+	// legacy steps
+
 	default:
 		log.Fatalf("Unknown step type: %s", stepType)
 		return nil
