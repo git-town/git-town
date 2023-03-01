@@ -7,12 +7,12 @@ import (
 	"github.com/git-town/git-town/v7/src/hosting"
 )
 
-// SquashMergeBranchStep squash merges the branch with the given name into the current branch.
+// SquashMergeStep squash merges the branch with the given name into the current branch.
 type UpdateProposalTargetStep struct {
 	ProposalNumber int
 	NewTarget      string
 	ExistingTarget string
-	NoOpStep
+	EmptyStep
 }
 
 func (step *UpdateProposalTargetStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
@@ -20,7 +20,7 @@ func (step *UpdateProposalTargetStep) Run(repo *git.ProdRepo, connector hosting.
 }
 
 func (step *UpdateProposalTargetStep) CreateAbortStep() Step {
-	return &step.NoOpStep
+	return &step.EmptyStep
 }
 
 func (step *UpdateProposalTargetStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {

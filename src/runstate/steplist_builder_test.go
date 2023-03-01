@@ -18,7 +18,7 @@ func TestStepListBuilder(t *testing.T) {
 			t.Run("registers the given step", func(t *testing.T) {
 				t.Parallel()
 				b := runstate.StepListBuilder{}
-				step := steps.NoOpStep{}
+				step := steps.EmptyStep{}
 				b.AddE(&step, nil)
 				assert.Equal(t, runstate.NewStepList(&step), b.StepList)
 			})
@@ -26,7 +26,7 @@ func TestStepListBuilder(t *testing.T) {
 				t.Parallel()
 				b := runstate.StepListBuilder{}
 				err := errors.New("test error")
-				b.AddE(&steps.NoOpStep{}, err)
+				b.AddE(&steps.EmptyStep{}, err)
 				list, builderErr := b.Result()
 				assert.True(t, list.IsEmpty())
 				assert.Equal(t, err, builderErr)
@@ -40,7 +40,7 @@ func TestStepListBuilder(t *testing.T) {
 				b := runstate.StepListBuilder{}
 				firstErr := errors.New("first error")
 				b.Check(firstErr)
-				b.AddE(&steps.NoOpStep{}, errors.New("second error"))
+				b.AddE(&steps.EmptyStep{}, errors.New("second error"))
 				_, builderErr := b.Result()
 				assert.Error(t, firstErr, builderErr)
 			})
@@ -48,7 +48,7 @@ func TestStepListBuilder(t *testing.T) {
 				t.Parallel()
 				b := runstate.StepListBuilder{}
 				b.Fail("existing error")
-				step := steps.NoOpStep{}
+				step := steps.EmptyStep{}
 				b.AddE(&step, nil)
 				list, _ := b.Result()
 				assert.True(t, list.IsEmpty())

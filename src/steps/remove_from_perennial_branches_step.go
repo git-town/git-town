@@ -7,7 +7,7 @@ import (
 
 // RemoveFromPerennialBranchesStep removes the branch with the given name as a perennial branch.
 type RemoveFromPerennialBranchesStep struct {
-	NoOpStep
+	EmptyStep
 	Branch string
 }
 

@@ -151,7 +151,7 @@ func renameBranchStepList(config *renameBranchConfig, repo *git.ProdRepo) (runst
 	result := runstate.StepList{}
 	result.Append(&steps.CreateBranchStep{Branch: config.newBranch, StartingPoint: config.oldBranch})
 	if config.initialBranch == config.oldBranch {
-		result.Append(&steps.CheckoutBranchStep{Branch: config.newBranch})
+		result.Append(&steps.CheckoutStep{Branch: config.newBranch})
 	}
 	if config.isInitialBranchPerennial {
 		result.Append(&steps.RemoveFromPerennialBranchesStep{Branch: config.oldBranch})

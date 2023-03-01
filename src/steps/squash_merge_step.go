@@ -8,18 +8,18 @@ import (
 	"github.com/git-town/git-town/v7/src/hosting"
 )
 
-// SquashMergeBranchStep squash merges the branch with the given name into the current branch.
-type SquashMergeBranchStep struct {
-	NoOpStep
+// SquashMergeStep squash merges the branch with the given name into the current branch.
+type SquashMergeStep struct {
+	EmptyStep
 	Branch        string
 	CommitMessage string
 }
 
-func (step *SquashMergeBranchStep) CreateAbortStep() Step {
+func (step *SquashMergeStep) CreateAbortStep() Step {
 	return &DiscardOpenChangesStep{}
 }
 
-func (step *SquashMergeBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+func (step *SquashMergeStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
 	currentSHA, err := repo.Silent.CurrentSha()
 	if err != nil {
 		return nil, err
@@ -27,11 +27,11 @@ func (step *SquashMergeBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, err
 	return &RevertCommitStep{Sha: currentSHA}, nil
 }
 
-func (step *SquashMergeBranchStep) CreateAutomaticAbortError() error {
+func (step *SquashMergeStep) CreateAutomaticAbortError() error {
 	return fmt.Errorf("aborted because commit exited with error")
 }
 
-func (step *SquashMergeBranchStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
+func (step *SquashMergeStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
 	err := repo.Logging.SquashMerge(step.Branch)
 	if err != nil {
 		return err
@@ -53,6 +53,6 @@ func (step *SquashMergeBranchStep) Run(repo *git.ProdRepo, connector hosting.Con
 	return repo.Logging.Commit(step.CommitMessage, author)
 }
 
-func (step *SquashMergeBranchStep) ShouldAutomaticallyAbortOnError() bool {
+func (step *SquashMergeStep) ShouldAutomaticallyAbortOnError() bool {
 	return true
 }

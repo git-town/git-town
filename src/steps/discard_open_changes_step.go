@@ -7,7 +7,7 @@ import (
 
 // DiscardOpenChangesStep resets the branch to the last commit, discarding uncommitted changes.
 type DiscardOpenChangesStep struct {
-	NoOpStep
+	EmptyStep
 }
 
 func (step *DiscardOpenChangesStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {

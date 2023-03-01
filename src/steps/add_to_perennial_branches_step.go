@@ -7,7 +7,7 @@ import (
 
 // AddToPerennialBranchesStep adds the branch with the given name as a perennial branch.
 type AddToPerennialBranchesStep struct {
-	NoOpStep
+	EmptyStep
 	Branch string
 }
 

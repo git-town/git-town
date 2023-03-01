@@ -7,7 +7,7 @@ import (
 
 // PreserveCheckoutHistoryStep does stuff.
 type PreserveCheckoutHistoryStep struct {
-	NoOpStep
+	EmptyStep
 	InitialBranch                     string
 	InitialPreviouslyCheckedOutBranch string
 }
