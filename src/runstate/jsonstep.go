@@ -108,22 +108,6 @@ func determineStep(stepType string) steps.Step {
 		return &steps.SkipCurrentBranchSteps{}
 	case "*StashOpenChangesStep":
 		return &steps.StashOpenChangesStep{}
-
-	// legacy steps (remove this section in 2026)
-	case "*AbortMergeBranchStep":
-		return &steps.AbortMergeStep{}
-	case "*AbortRebaseBranchStep":
-		return &steps.AbortRebaseStep{}
-	case "*CheckoutBranchStep":
-		return &steps.CheckoutStep{}
-	case "*ContinueRebaseBranchStep":
-		return &steps.ContinueRebaseStep{}
-	case "*MergeBranchStep":
-		return &steps.MergeStep{}
-	case "*NoOpStep":
-		return &steps.EmptyStep{}
-	case "*SquashMergeBranchStep":
-		return &steps.SquashMergeStep{}
 	}
 	return nil
 }
