@@ -7,7 +7,7 @@ import (
 
 // CreateRemoteBranchStep pushes the current branch up to origin.
 type CreateRemoteBranchStep struct {
-	NoOpStep
+	EmptyStep
 	Branch     string
 	NoPushHook bool
 	Sha        string

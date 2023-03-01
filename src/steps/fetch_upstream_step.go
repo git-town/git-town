@@ -8,7 +8,7 @@ import (
 // FetchUpstreamStep brings the Git history of the local repository
 // up to speed with activities that happened in the upstream remote.
 type FetchUpstreamStep struct {
-	NoOpStep
+	EmptyStep
 	Branch string
 }
 

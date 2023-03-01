@@ -7,7 +7,7 @@ import (
 
 // PullBranchStep updates the branch with the given name with commits from its remote.
 type PullBranchStep struct {
-	NoOpStep
+	EmptyStep
 	Branch string
 }
 

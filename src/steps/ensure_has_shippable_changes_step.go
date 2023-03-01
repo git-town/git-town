@@ -10,7 +10,7 @@ import (
 
 // EnsureHasShippableChangesStep asserts that the branch has unique changes not on the main branch.
 type EnsureHasShippableChangesStep struct {
-	NoOpStep
+	EmptyStep
 	Branch string
 }
 

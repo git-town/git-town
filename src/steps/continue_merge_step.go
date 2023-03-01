@@ -5,17 +5,17 @@ import (
 	"github.com/git-town/git-town/v7/src/hosting"
 )
 
-// ContinueMergeBranchStep finishes an ongoing merge conflict
+// ContinueMergeStep finishes an ongoing merge conflict
 // assuming all conflicts have been resolved by the user.
-type ContinueMergeBranchStep struct {
-	NoOpStep
+type ContinueMergeStep struct {
+	EmptyStep
 }
 
-func (step *ContinueMergeBranchStep) CreateContinueStep() Step {
+func (step *ContinueMergeStep) CreateContinueStep() Step {
 	return step
 }
 
-func (step *ContinueMergeBranchStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
+func (step *ContinueMergeStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
 	hasMergeInprogress, err := repo.Silent.HasMergeInProgress()
 	if err != nil {
 		return err

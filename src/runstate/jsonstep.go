@@ -39,18 +39,20 @@ func (j *JSONStep) UnmarshalJSON(b []byte) error {
 
 func determineStep(stepType string) steps.Step {
 	switch stepType {
-	case "*AbortMergeBranchStep":
-		return &steps.AbortMergeBranchStep{}
-	case "*AbortRebaseBranchStep":
-		return &steps.AbortRebaseBranchStep{}
+	case "*AbortMergeStep":
+		return &steps.AbortMergeStep{}
+	case "*AbortRebaseStep":
+		return &steps.AbortRebaseStep{}
 	case "*AddToPerennialBranchesStep":
 		return &steps.AddToPerennialBranchesStep{}
-	case "*CheckoutBranchStep":
-		return &steps.CheckoutBranchStep{}
-	case "*ContinueMergeBranchStep":
-		return &steps.ContinueMergeBranchStep{}
-	case "*ContinueRebaseBranchStep":
-		return &steps.ContinueRebaseBranchStep{}
+	case "*CheckoutStep":
+		return &steps.CheckoutStep{}
+	case "*ConnectorMergeProposalStep":
+		return &steps.ConnectorMergeProposalStep{}
+	case "*ContinueMergeStep":
+		return &steps.ContinueMergeStep{}
+	case "*ContinueRebaseStep":
+		return &steps.ContinueRebaseStep{}
 	case "*CreateBranchStep":
 		return &steps.CreateBranchStep{}
 	case "*CreateProposalStep":
@@ -67,16 +69,14 @@ func determineStep(stepType string) steps.Step {
 		return &steps.DeleteParentBranchStep{}
 	case "*DiscardOpenChangesStep":
 		return &steps.DiscardOpenChangesStep{}
-	case "*ConnectorMergeProposalStep":
-		return &steps.ConnectorMergeProposalStep{}
+	case "*EmptyStep":
+		return &steps.EmptyStep{}
 	case "*EnsureHasShippableChangesStep":
 		return &steps.EnsureHasShippableChangesStep{}
 	case "*FetchUpstreamStep":
 		return &steps.FetchUpstreamStep{}
-	case "*MergeBranchStep":
-		return &steps.MergeBranchStep{}
-	case "*NoOpStep":
-		return &steps.NoOpStep{}
+	case "*MergeStep":
+		return &steps.MergeStep{}
 	case "*PreserveCheckoutHistoryStep":
 		return &steps.PreserveCheckoutHistoryStep{}
 	case "*PullBranchStep":
@@ -99,12 +99,29 @@ func determineStep(stepType string) steps.Step {
 		return &steps.RevertCommitStep{}
 	case "*SetParentStep":
 		return &steps.SetParentStep{}
-	case "*SquashMergeBranchStep":
-		return &steps.SquashMergeBranchStep{}
+	case "*SquashMergeStep":
+		return &steps.SquashMergeStep{}
 	case "*SkipCurrentBranchSteps":
 		return &steps.SkipCurrentBranchSteps{}
 	case "*StashOpenChangesStep":
 		return &steps.StashOpenChangesStep{}
+
+	// legacy steps (remove this section in 2026)
+	case "*AbortMergeBranchStep":
+		return &steps.AbortMergeStep{}
+	case "*AbortRebaseBranchStep":
+		return &steps.AbortRebaseStep{}
+	case "*CheckoutBranchStep":
+		return &steps.CheckoutStep{}
+	case "*ContinueRebaseBranchStep":
+		return &steps.ContinueRebaseStep{}
+	case "*MergeBranchStep":
+		return &steps.MergeStep{}
+	case "*NoOpStep":
+		return &steps.EmptyStep{}
+	case "*SquashMergeBranchStep":
+		return &steps.SquashMergeStep{}
+
 	default:
 		log.Fatalf("Unknown step type: %s", stepType)
 		return nil

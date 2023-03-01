@@ -147,7 +147,7 @@ func killStepList(config *killConfig, repo *git.ProdRepo) (runstate.StepList, er
 			if config.hasOpenChanges {
 				result.Append(&steps.CommitOpenChangesStep{})
 			}
-			result.Append(&steps.CheckoutBranchStep{Branch: config.targetBranchParent})
+			result.Append(&steps.CheckoutStep{Branch: config.targetBranchParent})
 		}
 		result.Append(&steps.DeleteLocalBranchStep{Branch: config.targetBranch, Force: true})
 		for _, child := range config.childBranches {

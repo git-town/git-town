@@ -9,7 +9,7 @@ import (
 
 // RestoreOpenChangesStep restores stashed away changes into the workspace.
 type RestoreOpenChangesStep struct {
-	NoOpStep
+	EmptyStep
 }
 
 func (step *RestoreOpenChangesStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {

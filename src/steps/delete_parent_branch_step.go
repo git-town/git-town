@@ -7,14 +7,14 @@ import (
 
 // DeleteParentBranchStep removes the parent branch entry in the Git Town configuration.
 type DeleteParentBranchStep struct {
-	NoOpStep
+	EmptyStep
 	Branch         string
 	previousParent string
 }
 
 func (step *DeleteParentBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
 	if step.previousParent == "" {
-		return &NoOpStep{}, nil
+		return &EmptyStep{}, nil
 	}
 	return &SetParentStep{Branch: step.Branch, ParentBranch: step.previousParent}, nil
 }
