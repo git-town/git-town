@@ -113,6 +113,8 @@ func determineStep(stepType string) steps.Step {
 		return &steps.AbortRebaseStep{}
 	case "*CheckoutBranchStep":
 		return &steps.CheckoutStep{}
+	case "*ContinueRebaseBranchStep":
+		return &steps.ContinueRebaseStep{}
 	case "*MergeBranchStep":
 		return &steps.MergeStep{}
 	case "*NoOpStep":
