@@ -12,7 +12,7 @@ import (
 
 // Load loads the run state for the given Git repo from disk. Can return nil if there is no saved runstate.
 func Load(repo *git.ProdRepo) (*RunState, error) {
-	filename, err := runResultFilename(repo)
+	filename, err := PersistenceFilename(repo)
 	if err != nil {
 		return nil, err
 	}
@@ -37,7 +37,7 @@ func Load(repo *git.ProdRepo) (*RunState, error) {
 
 // Delete removes the stored run state from disk.
 func Delete(repo *git.ProdRepo) error {
-	filename, err := runResultFilename(repo)
+	filename, err := PersistenceFilename(repo)
 	if err != nil {
 		return err
 	}
@@ -61,7 +61,7 @@ func Save(runState *RunState, repo *git.ProdRepo) error {
 	if err != nil {
 		return fmt.Errorf("cannot encode run-state: %w", err)
 	}
-	filename, err := runResultFilename(repo)
+	filename, err := PersistenceFilename(repo)
 	if err != nil {
 		return err
 	}
@@ -72,12 +72,12 @@ func Save(runState *RunState, repo *git.ProdRepo) error {
 	return nil
 }
 
-func runResultFilename(repo *git.ProdRepo) (string, error) {
+func PersistenceFilename(repo *git.ProdRepo) (string, error) {
 	replaceCharacterRegexp := regexp.MustCompile("[[:^alnum:]]")
 	rootDir, err := repo.Silent.RootDirectory()
 	if err != nil {
 		return "", err
 	}
 	directory := replaceCharacterRegexp.ReplaceAllString(rootDir, "-")
-	return filepath.Join(os.TempDir(), directory), nil
+	return filepath.Join(os.TempDir(), "git-town-runstate-"+directory), nil
 }
