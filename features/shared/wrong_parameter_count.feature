@@ -10,8 +10,11 @@ Feature: too few or many parameters
 
     Examples:
       | CMD                                   |
+      | aliases                               |
+      | aliases arg1 arg2                     |
       | append                                |
       | append arg1 arg2                      |
+      | completions arg1                      |
       | config arg1                           |
       | config main-branch arg1 arg2          |
       | config push-new-branches arg1 arg2    |
@@ -23,9 +26,6 @@ Feature: too few or many parameters
       | config sync-strategy invalid          |
       | hack                                  |
       | hack arg1 arg2                        |
-      | install aliases                       |
-      | install aliases arg1 arg2             |
-      | install completions arg1              |
       | kill arg1 arg2                        |
       | new-pull-request arg1                 |
       | prepend                               |
