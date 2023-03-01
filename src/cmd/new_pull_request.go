@@ -68,6 +68,7 @@ where hostname matches what is in your ssh config file.`, config.CodeHostingDriv
 			}
 			return nil
 		},
+		GroupID: "basic",
 	}
 }
 

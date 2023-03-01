@@ -36,6 +36,7 @@ Exits with error code 1 if the given branch is a perennial branch or the main br
 			}
 			return validateIsConfigured(repo)
 		},
+		GroupID: "lineage",
 	}
 }
 

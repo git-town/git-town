@@ -5,6 +5,7 @@ go 1.19
 require (
 	atomicgo.dev/cursor v0.1.1
 	code.gitea.io/sdk/gitea v0.12.0
+	// NOTE: updating to v2 makes the integration tests slow
 	github.com/AlecAivazis/survey/v2 v2.3.6
 	github.com/acarl005/stripansi v0.0.0-20180116102854-5a71ef0e047d
 	github.com/cucumber/godog v0.9.0

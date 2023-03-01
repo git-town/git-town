@@ -11,12 +11,12 @@ Feature: require minimum Git version
     Examples:
       | COMMAND              |
       |                      |
+      | aliases true         |
       | append               |
       | config               |
       | diff-parent          |
       | hack                 |
       | help                 |
-      | install aliases true |
       | kill                 |
       | main_branch          |
       | push-new-branches    |

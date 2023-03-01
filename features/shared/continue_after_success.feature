@@ -12,13 +12,13 @@ Feature: continue after successful command
     Examples:
       | COMMAND              |
       |                      |
+      | aliases true         |
       | append new           |
       | completions fish     |
       | config               |
       | diff-parent          |
       | hack new             |
       | help                 |
-      | install aliases true |
       | kill feature         |
       | main_branch          |
       | push-new-branches    |

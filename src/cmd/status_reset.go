@@ -9,22 +9,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func discardCmd(repo *git.ProdRepo) *cobra.Command {
+func resetRunstateCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
-		Use:   "discard",
-		Short: "Discards the saved state of the previous git-town command",
+		Use:   "reset",
+		Short: "Resets the current suspended Git Town command",
 		Run: func(cmd *cobra.Command, args []string) {
 			err := runstate.Delete(repo)
 			if err != nil {
-				cli.Exit(fmt.Errorf("cannot delete previous run state: %w", err))
+				cli.Exit(err)
 			}
+			fmt.Println("Runstate file deleted.")
 		},
 		Args: cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := ValidateIsRepository(repo); err != nil {
-				return err
-			}
-			return validateIsConfigured(repo)
+			return ValidateIsRepository(repo)
 		},
 	}
 }

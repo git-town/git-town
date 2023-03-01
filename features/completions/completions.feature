@@ -1,7 +1,7 @@
 Feature: shell autocompletion
 
   Scenario Outline:
-    Given I run "git-town install completions <SHELL>"
+    Given I run "git-town completions <SHELL>"
     Then it prints:
       """
       # <SHELL> completion for git-town
