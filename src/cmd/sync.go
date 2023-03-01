@@ -210,7 +210,7 @@ func updateNonFeatureBranchSteps(list *runstate.StepListBuilder, branch string, 
 func syncTrackingBranchSteps(list *runstate.StepListBuilder, trackingBranch, syncStrategy string) {
 	switch syncStrategy {
 	case "merge":
-		list.Add(&steps.MergeBranchStep{Branch: trackingBranch})
+		list.Add(&steps.MergeStep{Branch: trackingBranch})
 	case "rebase":
 		list.Add(&steps.RebaseBranchStep{Branch: trackingBranch})
 	default:
@@ -222,7 +222,7 @@ func syncTrackingBranchSteps(list *runstate.StepListBuilder, trackingBranch, syn
 func syncParentSteps(list *runstate.StepListBuilder, parentBranch, syncStrategy string) {
 	switch syncStrategy {
 	case "merge":
-		list.Add(&steps.MergeBranchStep{Branch: parentBranch})
+		list.Add(&steps.MergeStep{Branch: parentBranch})
 	case "rebase":
 		list.Add(&steps.RebaseBranchStep{Branch: parentBranch})
 	default:

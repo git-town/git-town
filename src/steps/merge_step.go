@@ -5,26 +5,26 @@ import (
 	"github.com/git-town/git-town/v7/src/hosting"
 )
 
-// MergeBranchStep merges the branch with the given name into the current branch.
-type MergeBranchStep struct {
+// MergeStep merges the branch with the given name into the current branch.
+type MergeStep struct {
 	NoOpStep
 	Branch      string
 	previousSha string
 }
 
-func (step *MergeBranchStep) CreateAbortStep() Step {
+func (step *MergeStep) CreateAbortStep() Step {
 	return &AbortMergeStep{}
 }
 
-func (step *MergeBranchStep) CreateContinueStep() Step {
+func (step *MergeStep) CreateContinueStep() Step {
 	return &ContinueMergeStep{}
 }
 
-func (step *MergeBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+func (step *MergeStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
 	return &ResetToShaStep{Hard: true, Sha: step.previousSha}, nil
 }
 
-func (step *MergeBranchStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
+func (step *MergeStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
 	var err error
 	step.previousSha, err = repo.Silent.CurrentSha()
 	if err != nil {

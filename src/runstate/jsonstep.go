@@ -47,6 +47,8 @@ func determineStep(stepType string) steps.Step {
 		return &steps.AddToPerennialBranchesStep{}
 	case "*CheckoutStep":
 		return &steps.CheckoutStep{}
+	case "*ConnectorMergeProposalStep":
+		return &steps.ConnectorMergeProposalStep{}
 	case "*ContinueMergeStep":
 		return &steps.ContinueMergeStep{}
 	case "*ContinueRebaseStep":
@@ -67,14 +69,12 @@ func determineStep(stepType string) steps.Step {
 		return &steps.DeleteParentBranchStep{}
 	case "*DiscardOpenChangesStep":
 		return &steps.DiscardOpenChangesStep{}
-	case "*ConnectorMergeProposalStep":
-		return &steps.ConnectorMergeProposalStep{}
 	case "*EnsureHasShippableChangesStep":
 		return &steps.EnsureHasShippableChangesStep{}
 	case "*FetchUpstreamStep":
 		return &steps.FetchUpstreamStep{}
-	case "*MergeBranchStep":
-		return &steps.MergeBranchStep{}
+	case "*MergeStep":
+		return &steps.MergeStep{}
 	case "*NoOpStep":
 		return &steps.NoOpStep{}
 	case "*PreserveCheckoutHistoryStep":
