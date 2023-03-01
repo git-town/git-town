@@ -28,7 +28,7 @@ Feature: require minimum Git version
       | pull-branch-strategy |
       | rename-branch        |
       | repo                 |
-      | set-parent-branch    |
+      | set-parent           |
       | ship                 |
       | sync                 |
       | version              |

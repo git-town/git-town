@@ -33,7 +33,7 @@ and it allows you to perform many common Git operations faster and easier.`,
 	rootCmd.AddCommand(pruneBranchesCommand(repo))
 	rootCmd.AddCommand(renameBranchCommand(repo))
 	rootCmd.AddCommand(repoCommand(repo))
-	rootCmd.AddCommand(setParentBranchCommand(repo))
+	rootCmd.AddCommand(setParentCommand(repo))
 	rootCmd.AddCommand(shipCmd(repo))
 	rootCmd.AddCommand(skipCmd(repo))
 	rootCmd.AddCommand(switchCmd(repo))

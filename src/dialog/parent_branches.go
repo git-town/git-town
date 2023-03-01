@@ -49,7 +49,7 @@ func (pbd *ParentBranches) AskForBranchAncestry(branch, defaultBranch string, re
 				}
 				break
 			}
-			err = repo.Config.SetParentBranch(current, parent)
+			err = repo.Config.SetParent(current, parent)
 			if err != nil {
 				return err
 			}

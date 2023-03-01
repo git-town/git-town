@@ -210,8 +210,8 @@ please ship %q first`, strings.Join(ancestorsWithoutMainOrPerennial, ", "), olde
 
 func shipStepList(config *shipConfig, commitMessage string, repo *git.ProdRepo) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
-	syncBranchSteps(&list, config.branchToMergeInto, true, repo) // sync the parent branch
-	syncBranchSteps(&list, config.branchToShip, false, repo)     // sync the branch to ship locally only
+	updateBranchSteps(&list, config.branchToMergeInto, true, repo) // sync the parent branch
+	updateBranchSteps(&list, config.branchToShip, false, repo)     // sync the branch to ship locally only
 	list.Add(&steps.EnsureHasShippableChangesStep{Branch: config.branchToShip})
 	list.Add(&steps.CheckoutBranchStep{Branch: config.branchToMergeInto})
 	if config.canShipViaAPI {
@@ -250,7 +250,7 @@ func shipStepList(config *shipConfig, commitMessage string, repo *git.ProdRepo) 
 	list.Add(&steps.DeleteLocalBranchStep{Branch: config.branchToShip})
 	list.Add(&steps.DeleteParentBranchStep{Branch: config.branchToShip})
 	for _, child := range config.childBranches {
-		list.Add(&steps.SetParentBranchStep{Branch: child, ParentBranch: config.branchToMergeInto})
+		list.Add(&steps.SetParentStep{Branch: child, ParentBranch: config.branchToMergeInto})
 	}
 	if !config.isShippingInitialBranch {
 		// TODO: check out the main branch here?

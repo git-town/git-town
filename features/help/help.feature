@@ -29,7 +29,7 @@ Feature: help for commands
       | prune-branches              |
       | rename-branch               |
       | repo                        |
-      | set-parent-branch           |
+      | set-parent                  |
       | ship                        |
       | sync                        |
       | version                     |
