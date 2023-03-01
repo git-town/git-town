@@ -26,6 +26,7 @@ func statusCommand(repo *git.ProdRepo) *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return ValidateIsRepository(repo)
 		},
+		GroupID: "errors",
 	}
 	cmd.AddCommand(resetRunstateCommand(repo))
 	return cmd
