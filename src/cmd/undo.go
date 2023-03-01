@@ -34,6 +34,6 @@ func undoCmd(repo *git.ProdRepo) *cobra.Command {
 			}
 			return validateIsConfigured(repo)
 		},
-		GroupID: "status",
+		GroupID: "errors",
 	}
 }

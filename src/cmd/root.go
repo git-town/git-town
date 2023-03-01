@@ -23,7 +23,7 @@ and it allows you to perform many common Git operations faster and easier.`,
 		ID:    "basic",
 		Title: "Basic commands:",
 	}, &cobra.Group{
-		ID:    "status",
+		ID:    "errors",
 		Title: "Commands to deal with errors:",
 	}, &cobra.Group{
 		ID:    "lineage",

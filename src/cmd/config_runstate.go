@@ -13,7 +13,7 @@ import (
 
 func runstateCommand(repo *git.ProdRepo) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "status",
+		Use:   "errors",
 		Short: "Displays or resets the current suspended Git Town command",
 		Run: func(cmd *cobra.Command, args []string) {
 			config, err := loadDisplayStatusConfig(repo)
