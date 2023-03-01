@@ -14,7 +14,7 @@ import (
 func runstateCommand(repo *git.ProdRepo) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "status",
-		Short: "Displays or resets the current interrupted Git Town command",
+		Short: "Displays or resets the current suspended Git Town command",
 		Run: func(cmd *cobra.Command, args []string) {
 			config, err := loadDisplayStatusConfig(repo)
 			if err != nil {
@@ -73,6 +73,9 @@ func displayStatus(config displayStatusConfig) {
 	}
 	if config.persisted.HasRunSteps() {
 		fmt.Println("You can run \"git town continue\" to finish it.")
+	}
+	if config.persisted.UnfinishedDetails != nil && config.persisted.UnfinishedDetails.CanSkip {
+		fmt.Println("You can run \"git town skip\" to skip the currently failing step.")
 	}
 	if config.persisted.HasUndoSteps() {
 		fmt.Println("You can run \"git town undo\" to undo it.")
