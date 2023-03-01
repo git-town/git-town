@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -21,8 +22,15 @@ func resetRunstateCommand(repo *git.ProdRepo) *cobra.Command {
 			}
 			err = os.Remove(filepath)
 			if err != nil {
-				cli.Exit(err)
+				if errors.Is(err, os.ErrNotExist) {
+					fmt.Println("Runstate doesn't exist.")
+					return
+				} else {
+					fmt.Println("Cannot delete runstate file: %w", err)
+					cli.Exit(err)
+				}
 			}
+			fmt.Println("Runstate file deleted.")
 		},
 		Args: cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
