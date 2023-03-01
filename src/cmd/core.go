@@ -101,6 +101,11 @@ and it allows you to perform many common Git operations faster and easier.`,
 	return &rootCmd
 }
 
+// IsAcceptableGitVersion indicates whether the given Git version works for Git Town.
+func IsAcceptableGitVersion(major, minor int) bool {
+	return major > 2 || (major == 2 && minor >= 7)
+}
+
 func validateIsConfigured(repo *git.ProdRepo) error {
 	err := dialog.EnsureIsConfigured(repo)
 	if err != nil {
@@ -160,9 +165,4 @@ func handleUnfinishedState(repo *git.ProdRepo, connector hosting.Connector) (qui
 	default:
 		return false, fmt.Errorf("unknown response: %s", response)
 	}
-}
-
-// IsAcceptableGitVersion indicates whether the given Git version works for Git Town.
-func IsAcceptableGitVersion(major, minor int) bool {
-	return major > 2 || (major == 2 && minor >= 7)
 }
