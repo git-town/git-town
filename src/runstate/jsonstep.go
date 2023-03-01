@@ -2,7 +2,7 @@ package runstate
 
 import (
 	"encoding/json"
-	"log"
+	"fmt"
 	"reflect"
 
 	"github.com/git-town/git-town/v7/src/steps"
@@ -34,6 +34,9 @@ func (j *JSONStep) UnmarshalJSON(b []byte) error {
 		return err
 	}
 	j.Step = determineStep(stepType)
+	if j.Step == nil {
+		return fmt.Errorf("unknown step type: %q", stepType)
+	}
 	return json.Unmarshal(*mapping["data"], &j.Step)
 }
 
@@ -121,11 +124,8 @@ func determineStep(stepType string) steps.Step {
 		return &steps.EmptyStep{}
 	case "*SquashMergeBranchStep":
 		return &steps.SquashMergeStep{}
-
-	default:
-		log.Fatalf("Unknown step type: %s", stepType)
-		return nil
 	}
+	return nil
 }
 
 func typeName(myvar interface{}) string {
