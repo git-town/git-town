@@ -54,7 +54,7 @@ func loadDisplayStatusConfig(repo *git.ProdRepo) (*displayStatusConfig, error) {
 }
 
 func displayStatus(config displayStatusConfig) {
-	fmt.Printf("The status for this repository is stored in %s.\n", config.filepath)
+	fmt.Printf("The status for this repository is at %s.\n", config.filepath)
 	if config.state == nil {
 		fmt.Println("No status file found for this repository.")
 		return
