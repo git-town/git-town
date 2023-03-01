@@ -20,8 +20,8 @@ It adds Git commands that support GitHub Flow, Git Flow, the Nvie model, GitLab 
 and it allows you to perform many common Git operations faster and easier.`,
 	}
 	rootCmd.AddGroup(&cobra.Group{
-		ID:    "status",
-		Title: "Status-related commands:",
+		ID:    "setup",
+		Title: "Setup commands:",
 	}, &cobra.Group{
 		ID:    "workflow",
 		Title: "workflow commands:",
