@@ -46,7 +46,7 @@ See "sync" for information regarding upstream remotes.`,
 			}
 			return validateIsConfigured(repo)
 		},
-		GroupID: "workflow",
+		GroupID: "basic",
 	}
 	hackCmd.Flags().BoolVarP(&promptForParentFlag, "prompt", "p", false, "Prompt for the parent branch")
 	return &hackCmd

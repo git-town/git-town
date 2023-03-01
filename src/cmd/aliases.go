@@ -51,7 +51,8 @@ This can conflict with other tools that also define Git aliases.`,
 				cli.Exit(ec.Err)
 			}
 		},
-		Args: cobra.ExactArgs(1),
+		Args:    cobra.ExactArgs(1),
+		GroupID: "setup",
 	}
 }
 

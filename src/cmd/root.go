@@ -20,22 +20,26 @@ It adds Git commands that support GitHub Flow, Git Flow, the Nvie model, GitLab 
 and it allows you to perform many common Git operations faster and easier.`,
 	}
 	rootCmd.AddGroup(&cobra.Group{
-		ID:    "setup",
-		Title: "Setup commands:",
+		ID:    "basic",
+		Title: "Basic commands:",
 	}, &cobra.Group{
-		ID:    "workflow",
-		Title: "workflow commands:",
+		ID:    "status",
+		Title: "Commands to deal with errors:",
 	}, &cobra.Group{
 		ID:    "lineage",
 		Title: "Commands for nested feature branches:",
+	}, &cobra.Group{
+		ID:    "setup",
+		Title: "Commands to set up Git Town on your computer:",
 	})
 	rootCmd.AddCommand(abortCmd(repo))
+	rootCmd.AddCommand(aliasCommand(repo))
 	rootCmd.AddCommand(appendCmd(repo))
+	rootCmd.AddCommand(completionsCmd(&rootCmd))
 	rootCmd.AddCommand(configCmd(repo))
 	rootCmd.AddCommand(continueCmd(repo))
 	rootCmd.AddCommand(diffParentCommand(repo))
 	rootCmd.AddCommand(hackCmd(repo))
-	rootCmd.AddCommand(installCommand(repo, &rootCmd))
 	rootCmd.AddCommand(killCommand(repo))
 	rootCmd.AddCommand(newPullRequestCommand(repo))
 	rootCmd.AddCommand(prependCommand(repo))

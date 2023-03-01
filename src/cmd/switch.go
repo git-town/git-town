@@ -36,7 +36,7 @@ func switchCmd(repo *git.ProdRepo) *cobra.Command {
 			}
 			return validateIsConfigured(repo)
 		},
-		GroupID: "workflow",
+		GroupID: "basic",
 	}
 }
 

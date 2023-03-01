@@ -60,6 +60,7 @@ To load completions for each session, add the above line to your PowerShell prof
 				_ = rootCmd.GenPowerShellCompletion(os.Stdout)
 			}
 		},
+		GroupID: "setup",
 	}
 	completionsCmd.Flags().BoolVar(&completionsNoDescFlag, "no-descriptions", false, "disable completions description for shells that support it")
 	return &completionsCmd

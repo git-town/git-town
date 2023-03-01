@@ -41,7 +41,6 @@ Does not delete perennial branches nor the main branch.`,
 			}
 			return validateIsConfigured(repo)
 		},
-		GroupID: "workflow",
 	}
 }
 
