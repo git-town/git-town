@@ -49,6 +49,7 @@ See "sync" for upstream remote options.
 			}
 			return validateIsConfigured(repo)
 		},
+		GroupID: "lineage",
 	}
 }
 

@@ -7,9 +7,10 @@ import (
 
 func installCommand(repo *git.ProdRepo, rootCmd *cobra.Command) *cobra.Command {
 	installCmd := cobra.Command{
-		Use:   "install",
-		Short: "Commands to set up Git Town on your computer",
-		Args:  cobra.NoArgs,
+		Use:     "install",
+		Short:   "Commands to set up Git Town on your computer",
+		Args:    cobra.NoArgs,
+		GroupID: "setup",
 	}
 	installCmd.AddCommand(aliasCommand(repo))
 	installCmd.AddCommand(completionsCmd(rootCmd))

@@ -75,6 +75,7 @@ You can disable this by running "git config %s false".`, config.SyncUpstream),
 			}
 			return nil
 		},
+		GroupID: "workflow",
 	}
 	syncCmd.Flags().BoolVar(&allFlag, "all", false, "Sync all local branches")
 	syncCmd.Flags().BoolVar(&dryRunFlag, "dry-run", false, "Print the commands but don't run them")
