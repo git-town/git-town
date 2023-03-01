@@ -14,7 +14,7 @@ type RebaseBranchStep struct {
 }
 
 func (step *RebaseBranchStep) CreateAbortStep() Step {
-	return &AbortRebaseBranchStep{}
+	return &AbortRebaseStep{}
 }
 
 func (step *RebaseBranchStep) CreateContinueStep() Step {
