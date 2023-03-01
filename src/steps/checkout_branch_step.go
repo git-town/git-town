@@ -5,18 +5,18 @@ import (
 	"github.com/git-town/git-town/v7/src/hosting"
 )
 
-// CheckoutBranchStep checks out a new branch.
-type CheckoutBranchStep struct {
+// CheckoutStep checks out a new branch.
+type CheckoutStep struct {
 	NoOpStep
 	Branch         string
 	previousBranch string
 }
 
-func (step *CheckoutBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
-	return &CheckoutBranchStep{Branch: step.previousBranch}, nil
+func (step *CheckoutStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+	return &CheckoutStep{Branch: step.previousBranch}, nil
 }
 
-func (step *CheckoutBranchStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
+func (step *CheckoutStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
 	var err error
 	step.previousBranch, err = repo.Silent.CurrentBranch()
 	if err != nil {

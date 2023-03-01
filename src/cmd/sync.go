@@ -145,7 +145,7 @@ func syncBranchesSteps(config *syncConfig, repo *git.ProdRepo) (runstate.StepLis
 	for _, branch := range config.branchesToSync {
 		updateBranchSteps(&list, branch, true, repo)
 	}
-	list.Add(&steps.CheckoutBranchStep{Branch: config.initialBranch})
+	list.Add(&steps.CheckoutStep{Branch: config.initialBranch})
 	if config.hasOrigin && config.shouldPushTags && !config.isOffline {
 		list.Add(&steps.PushTagsStep{})
 	}
@@ -162,7 +162,7 @@ func updateBranchSteps(list *runstate.StepListBuilder, branch string, pushBranch
 	if !hasOrigin && !isFeatureBranch {
 		return
 	}
-	list.Add(&steps.CheckoutBranchStep{Branch: branch})
+	list.Add(&steps.CheckoutStep{Branch: branch})
 	if isFeatureBranch {
 		updateFeatureBranchSteps(list, branch, repo)
 	} else {
