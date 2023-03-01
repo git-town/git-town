@@ -25,10 +25,9 @@ func runstateCommand(repo *git.ProdRepo) *cobra.Command {
 			if err != nil {
 				if errors.Is(err, os.ErrNotExist) {
 					fmt.Println("No runstate exists.")
-				} else {
-					cli.Exit(fmt.Errorf("cannot analyze runstate: %w", err))
+					return
 				}
-				return
+				cli.Exit(fmt.Errorf("cannot analyze runstate: %w", err))
 			}
 			fmt.Println("The runstate file exists.")
 			_, err = runstate.Load(repo)
