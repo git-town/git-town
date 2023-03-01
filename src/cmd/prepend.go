@@ -115,7 +115,7 @@ func prependStepList(config *prependConfig, repo *git.ProdRepo) (runstate.StepLi
 	list.Add(&steps.CreateBranchStep{Branch: config.targetBranch, StartingPoint: config.parentBranch})
 	list.Add(&steps.SetParentStep{Branch: config.targetBranch, ParentBranch: config.parentBranch})
 	list.Add(&steps.SetParentStep{Branch: config.initialBranch, ParentBranch: config.targetBranch})
-	list.Add(&steps.CheckoutBranchStep{Branch: config.targetBranch})
+	list.Add(&steps.CheckoutStep{Branch: config.targetBranch})
 	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
 		list.Add(&steps.CreateTrackingBranchStep{Branch: config.targetBranch, NoPushHook: config.noPushHook})
 	}

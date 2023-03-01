@@ -6,7 +6,7 @@ import (
 )
 
 type StashOpenChangesStep struct {
-	NoOpStep
+	EmptyStep
 }
 
 func (step *StashOpenChangesStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {

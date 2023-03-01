@@ -44,7 +44,7 @@ func (runState *RunState) AddPushBranchStepAfterCurrentBranchSteps(repo *git.Pro
 	popped := StepList{}
 	for {
 		step := runState.RunStepList.Peek()
-		if !isCheckoutBranchStep(step) {
+		if !isCheckoutStep(step) {
 			popped.Append(runState.RunStepList.Pop())
 		} else {
 			currentBranch, err := repo.Silent.CurrentBranch()
@@ -80,14 +80,14 @@ func (runState *RunState) CreateSkipRunState() RunState {
 		RunStepList: runState.AbortStepList,
 	}
 	for _, step := range runState.UndoStepList.List {
-		if isCheckoutBranchStep(step) {
+		if isCheckoutStep(step) {
 			break
 		}
 		result.RunStepList.Append(step)
 	}
 	skipping := true
 	for _, step := range runState.RunStepList.List {
-		if isCheckoutBranchStep(step) {
+		if isCheckoutStep(step) {
 			skipping = false
 		}
 		if !skipping {
@@ -137,13 +137,13 @@ func (runState *RunState) MarkAsUnfinished(repo *git.ProdRepo) error {
 func (runState *RunState) SkipCurrentBranchSteps() {
 	for {
 		step := runState.RunStepList.Peek()
-		if isCheckoutBranchStep(step) {
+		if isCheckoutStep(step) {
 			break
 		}
 		runState.RunStepList.Pop()
 	}
 }
 
-func isCheckoutBranchStep(step steps.Step) bool {
-	return typeName(step) == "*CheckoutBranchStep"
+func isCheckoutStep(step steps.Step) bool {
+	return typeName(step) == "*CheckoutStep"
 }

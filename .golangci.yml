@@ -43,7 +43,7 @@ issues:
     - linters:
         - ireturn
       text: (github.com/git-town/git-town/v7/src/hosting.Connector|github.com/git-town/git-town/v7/src/steps.Step)
-    - text: (mockConfig|NoOpStep|Options)
+    - text: (mockConfig|EmptyStep|Options)
       linters:
         - exhaustruct
     - path: src/hosting/gitea

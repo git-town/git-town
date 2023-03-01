@@ -7,7 +7,7 @@ import (
 
 // PushTagsStep pushes newly created Git tags to origin.
 type PushTagsStep struct {
-	NoOpStep
+	EmptyStep
 }
 
 func (step *PushTagsStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
