@@ -98,7 +98,7 @@ a new release!
 
 To remove Git Town from your system:
 
-1. remove Git Town's aliases: `git town install aliases false`
+1. remove Git Town's aliases: `git town aliases false`
 2. remove the Git Town configuration from your repositories: in each repo, run
    `git town config reset`
 3. uninstall the program or manually delete the binary

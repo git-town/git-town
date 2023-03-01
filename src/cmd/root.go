@@ -19,20 +19,34 @@ func RootCmd(repo *git.ProdRepo, debugFlag *bool) *cobra.Command {
 It adds Git commands that support GitHub Flow, Git Flow, the Nvie model, GitLab Flow, and other workflows more directly,
 and it allows you to perform many common Git operations faster and easier.`,
 	}
+	rootCmd.AddGroup(&cobra.Group{
+		ID:    "basic",
+		Title: "Basic commands:",
+	}, &cobra.Group{
+		ID:    "errors",
+		Title: "Commands to deal with errors:",
+	}, &cobra.Group{
+		ID:    "lineage",
+		Title: "Commands for nested feature branches:",
+	}, &cobra.Group{
+		ID:    "setup",
+		Title: "Commands to set up Git Town on your computer:",
+	})
 	rootCmd.AddCommand(abortCmd(repo))
+	rootCmd.AddCommand(aliasCommand(repo))
 	rootCmd.AddCommand(appendCmd(repo))
+	rootCmd.AddCommand(completionsCmd(&rootCmd))
 	rootCmd.AddCommand(configCmd(repo))
 	rootCmd.AddCommand(continueCmd(repo))
 	rootCmd.AddCommand(diffParentCommand(repo))
-	rootCmd.AddCommand(discardCmd(repo))
 	rootCmd.AddCommand(hackCmd(repo))
-	rootCmd.AddCommand(installCommand(repo, &rootCmd))
 	rootCmd.AddCommand(killCommand(repo))
 	rootCmd.AddCommand(newPullRequestCommand(repo))
 	rootCmd.AddCommand(prependCommand(repo))
 	rootCmd.AddCommand(pruneBranchesCommand(repo))
 	rootCmd.AddCommand(renameBranchCommand(repo))
 	rootCmd.AddCommand(repoCommand(repo))
+	rootCmd.AddCommand(statusCommand(repo))
 	rootCmd.AddCommand(setParentCommand(repo))
 	rootCmd.AddCommand(shipCmd(repo))
 	rootCmd.AddCommand(skipCmd(repo))

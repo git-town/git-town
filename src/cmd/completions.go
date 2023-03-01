@@ -16,28 +16,28 @@ When set up, "git-town <TAB>" will auto-complete Git Town subcommands.
 
 To load autocompletion for Bash, run this command:
 
-	git-town install completions bash | source
+	git-town completions bash | source
 
 To load completions for each session, add the above line to your ~/.bashrc file.
 
 
 To load autocompletion for Zsh, run this command:
 
-	git-town install completions zsh | source
+	git-town completions zsh | source
 
 To load completions for each session, add the above line to your ~/.zshrc file.
 
 
 To load autocompletion for Fish, run this command:
 
-	git-town install completions fish | source
+	git-town completions fish | source
 
 To load completions for each session, add the above line to your ~/.config/fish/config.fish file.
 
 
 To load autocompletions for Powershell, run this command:
 
-	git-town install completions powershell | Out-String | Invoke-Expression
+	git-town completions powershell | Out-String | Invoke-Expression
 
 To load completions for each session, add the above line to your PowerShell profile.
 `,
@@ -60,6 +60,7 @@ To load completions for each session, add the above line to your PowerShell prof
 				_ = rootCmd.GenPowerShellCompletion(os.Stdout)
 			}
 		},
+		GroupID: "setup",
 	}
 	completionsCmd.Flags().BoolVar(&completionsNoDescFlag, "no-descriptions", false, "disable completions description for shells that support it")
 	return &completionsCmd
