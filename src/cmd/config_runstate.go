@@ -32,8 +32,8 @@ func runstateCommand(repo *git.ProdRepo) *cobra.Command {
 }
 
 type displayStatusConfig struct {
-	filepath  string             // filepath of the runstate file
-	persisted *runstate.RunState // content of the runstate file
+	filepath string             // filepath of the runstate file
+	state    *runstate.RunState // content of the runstate file
 }
 
 func loadDisplayStatusConfig(repo *git.ProdRepo) (*displayStatusConfig, error) {
@@ -48,33 +48,33 @@ func loadDisplayStatusConfig(repo *git.ProdRepo) (*displayStatusConfig, error) {
 		}
 	}
 	return &displayStatusConfig{
-		filepath:  filepath,
-		persisted: persisted,
+		filepath: filepath,
+		state:    persisted,
 	}, nil
 }
 
 func displayStatus(config displayStatusConfig) {
 	fmt.Printf("The status for this repository is stored in %s.\n", config.filepath)
-	if config.persisted == nil {
+	if config.state == nil {
 		fmt.Println("No status file found for this repository.")
 		return
 	}
-	fmt.Printf("The previous Git Town command (%s) ", config.persisted.Command)
-	if config.persisted.IsUnfinished() {
+	fmt.Printf("The previous Git Town command (%s) ", config.state.Command)
+	if config.state.IsUnfinished() {
 		fmt.Println("did not finish.")
 	} else {
 		fmt.Println("finished successfully.")
 	}
-	if config.persisted.HasAbortSteps() {
+	if config.state.HasAbortSteps() {
 		fmt.Println("You can run \"git town abort\" to abort it.")
 	}
-	if config.persisted.HasRunSteps() {
+	if config.state.HasRunSteps() {
 		fmt.Println("You can run \"git town continue\" to finish it.")
 	}
-	if config.persisted.UnfinishedDetails != nil && config.persisted.UnfinishedDetails.CanSkip {
+	if config.state.UnfinishedDetails != nil && config.state.UnfinishedDetails.CanSkip {
 		fmt.Println("You can run \"git town skip\" to skip the currently failing step.")
 	}
-	if config.persisted.HasUndoSteps() {
+	if config.state.HasUndoSteps() {
 		fmt.Println("You can run \"git town undo\" to undo it.")
 	}
 }
