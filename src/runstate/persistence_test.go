@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestPersistenceFileName(t *testing.T) {
+func TestSanitizePath(t *testing.T) {
 	t.Parallel()
 	tests := map[string]string{
 		"/home/user/development/git-town":        "home-user-development-git-town",
