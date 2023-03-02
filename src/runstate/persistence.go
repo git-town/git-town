@@ -83,7 +83,7 @@ func PersistenceFilePath(repo *git.ProdRepo) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	persistenceDir := filepath.Join(configDir, "git-town", "runstates")
+	persistenceDir := filepath.Join(configDir, "git-town", "runstate")
 	repoDir, err := repo.Silent.RootDirectory()
 	if err != nil {
 		return "", err
