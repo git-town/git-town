@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"strings"
 
 	"github.com/git-town/git-town/v7/src/git"
 )
@@ -61,23 +62,44 @@ func Save(runState *RunState, repo *git.ProdRepo) error {
 	if err != nil {
 		return fmt.Errorf("cannot encode run-state: %w", err)
 	}
-	filename, err := PersistenceFilePath(repo)
+	persistencePath, err := PersistenceFilePath(repo)
 	if err != nil {
 		return err
 	}
-	err = os.WriteFile(filename, content, 0o600)
+	persistenceDir := filepath.Dir(persistencePath)
+	os.MkdirAll(persistenceDir, os.ModeDir)
+	err = os.WriteFile(persistencePath, content, 0o600)
 	if err != nil {
-		return fmt.Errorf("cannot write file %q: %w", filename, err)
+		return fmt.Errorf("cannot write file %q: %w", persistencePath, err)
 	}
 	return nil
 }
 
 func PersistenceFilePath(repo *git.ProdRepo) (string, error) {
-	replaceCharacterRegexp := regexp.MustCompile("[[:^alnum:]]")
-	rootDir, err := repo.Silent.RootDirectory()
+	configDir, err := os.UserConfigDir()
 	if err != nil {
 		return "", err
 	}
-	directory := replaceCharacterRegexp.ReplaceAllString(rootDir, "-")
-	return filepath.Join(os.TempDir(), "git-town-runstate-"+directory), nil
+	persistenceDir := filepath.Join(configDir, "git-town", "runstates")
+	repoDir, err := repo.Silent.RootDirectory()
+	if err != nil {
+		return "", err
+	}
+	filename := SanitizePath(repoDir)
+	if err != nil {
+		return "", err
+	}
+	return filepath.Join(persistenceDir, filename), nil
+}
+
+func SanitizePath(dir string) string {
+	replaceCharacterRE := regexp.MustCompile("[[:^alnum:]]")
+	sanitized := replaceCharacterRE.ReplaceAllString(dir, "-")
+	sanitized = strings.ToLower(sanitized)
+	replaceDoubleMinusRE := regexp.MustCompile("-+")
+	sanitized = replaceDoubleMinusRE.ReplaceAllString(sanitized, "-")
+	for strings.HasPrefix(sanitized, "-") {
+		sanitized = sanitized[1:]
+	}
+	return sanitized
 }
