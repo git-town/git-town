@@ -5,7 +5,7 @@
 - [Install](install.md)
 - [Quick configuration](quick-configuration.md)
 - [Commands](all-commands.md)
-  - [Basic workflow](typical-dev-commands.md)
+  - [Basic workflow](basic-commands.md)
     - [hack](commands/hack.md)
     - [sync](commands/sync.md)
     - [switch](commands/switch.md)
