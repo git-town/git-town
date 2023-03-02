@@ -67,7 +67,10 @@ func Save(runState *RunState, repo *git.ProdRepo) error {
 		return err
 	}
 	persistenceDir := filepath.Dir(persistencePath)
-	os.MkdirAll(persistenceDir, os.ModeDir)
+	err = os.MkdirAll(persistenceDir, os.ModeDir)
+	if err != nil {
+		return err
+	}
 	err = os.WriteFile(persistencePath, content, 0o600)
 	if err != nil {
 		return fmt.Errorf("cannot write file %q: %w", persistencePath, err)
