@@ -11,7 +11,7 @@
     - [switch](commands/switch.md)
     - [new-pull-request](commands/new-pull-request.md)
     - [ship](commands/ship.md)
-  - [Additional commands](advanced-dev-commands.md)
+  - [Additional commands](additional-commands.md)
     - [kill](commands/kill.md)
     - [prune-branches](commands/prune-branches.md)
     - [rename-branch](commands/rename-branch.md)
