@@ -67,7 +67,7 @@ func Save(runState *RunState, repo *git.ProdRepo) error {
 		return err
 	}
 	persistenceDir := filepath.Dir(persistencePath)
-	err = os.MkdirAll(persistenceDir, os.ModeDir)
+	err = os.MkdirAll(persistenceDir, 0o700)
 	if err != nil {
 		return err
 	}
@@ -92,7 +92,7 @@ func PersistenceFilePath(repo *git.ProdRepo) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return filepath.Join(persistenceDir, filename), nil
+	return filepath.Join(persistenceDir, filename+".json"), nil
 }
 
 func SanitizePath(dir string) string {
