@@ -14,7 +14,7 @@
   - [Dealing with errors](error-commands.md)
     - [abort](commands/abort.md)
     - [continue](commands/continue.md)
-    - [skip](commands/skip.md)
+    - skip
     - [undo](commands/undo.md)
   - [Advanced development workflow](advanced-dev-commands.md)
     - [kill](commands/kill.md)
