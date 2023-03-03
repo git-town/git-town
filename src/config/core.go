@@ -58,6 +58,28 @@ func (pbs PullBranchStrategy) String() string {
 	return string(pbs)
 }
 
+type SyncStrategy string
+
+const (
+	SyncStrategyMerge  = "merge"
+	SyncStrategyRebase = "rebase"
+)
+
+func ToSyncStrategy(text string) (SyncStrategy, error) {
+	switch text {
+	case "merge":
+		return SyncStrategyMerge, nil
+	case "rebase", "":
+		return SyncStrategyRebase, nil
+	default:
+		return SyncStrategyMerge, fmt.Errorf("unknown pull branch strategy: %q", text)
+	}
+}
+
+func (pbs SyncStrategy) String() string {
+	return string(pbs)
+}
+
 // GitTown provides type-safe access to Git Town configuration settings
 // stored in the local and global Git configuration.
 type GitTown struct {
@@ -435,13 +457,13 @@ func (gt *GitTown) SetShouldSyncUpstream(value bool) error {
 	return err
 }
 
-func (gt *GitTown) SetSyncStrategy(value string) error {
-	_, err := gt.Storage.SetLocalConfigValue(SyncStrategyKey, value)
+func (gt *GitTown) SetSyncStrategy(value SyncStrategy) error {
+	_, err := gt.Storage.SetLocalConfigValue(SyncStrategyKey, string(value))
 	return err
 }
 
-func (gt *GitTown) SetSyncStrategyGlobal(value string) error {
-	_, err := gt.Storage.SetGlobalConfigValue(SyncStrategyKey, value)
+func (gt *GitTown) SetSyncStrategyGlobal(value SyncStrategy) error {
+	_, err := gt.Storage.SetGlobalConfigValue(SyncStrategyKey, string(value))
 	return err
 }
 

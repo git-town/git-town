@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/spf13/cobra"
 )
@@ -21,7 +22,11 @@ when merging remote tracking branches into local feature branches.`,
 			if len(args) == 0 {
 				printSyncStrategy(globalFlag, repo)
 			} else {
-				err := setSyncStrategy(globalFlag, repo, args[0])
+				syncStrategy, err := config.ToSyncStrategy(args[0])
+				if err != nil {
+					cli.Exit(err)
+				}
+				err = setSyncStrategy(globalFlag, repo, syncStrategy)
 				if err != nil {
 					cli.Exit(err)
 				}
@@ -51,7 +56,7 @@ func printSyncStrategy(globalFlag bool, repo *git.ProdRepo) {
 	cli.Println(strategy)
 }
 
-func setSyncStrategy(globalFlag bool, repo *git.ProdRepo, value string) error {
+func setSyncStrategy(globalFlag bool, repo *git.ProdRepo, value config.SyncStrategy) error {
 	if globalFlag {
 		return repo.Config.SetSyncStrategyGlobal(value)
 	}
