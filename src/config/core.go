@@ -45,9 +45,9 @@ const (
 
 func ToPullBranchStrategy(text string) (PullBranchStrategy, error) {
 	switch text {
-	case "merge", "":
+	case "merge":
 		return PullBranchStrategyMerge, nil
-	case "rebase":
+	case "rebase", "":
 		return PullBranchStrategyRebase, nil
 	default:
 		return PullBranchStrategyMerge, fmt.Errorf("unknown pull branch strategy: %q", text)
