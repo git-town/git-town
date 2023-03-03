@@ -60,6 +60,8 @@ func RootCmd(repo *git.ProdRepo, debugFlag *bool) *cobra.Command {
 
 It adds Git commands that support GitHub Flow, Git Flow, the Nvie model, GitLab Flow, and other workflows more directly,
 and it allows you to perform many common Git operations faster and easier.`,
+		SilenceUsage:  true,
+		SilenceErrors: true,
 	}
 	rootCmd.AddGroup(&cobra.Group{
 		ID:    "basic",
