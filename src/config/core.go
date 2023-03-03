@@ -36,6 +36,28 @@ const (
 	TestingRemoteURLKey          = "git-town.testing.remote-url"
 )
 
+type PullBranchStrategy string
+
+const (
+	PullBranchStrategyMerge  = "merge"
+	PullBranchStrategyRebase = "rebase"
+)
+
+func ToPullBranchStrategy(text string) (PullBranchStrategy, error) {
+	switch text {
+	case "merge", "":
+		return PullBranchStrategyMerge, nil
+	case "rebase":
+		return PullBranchStrategyRebase, nil
+	default:
+		return PullBranchStrategyMerge, fmt.Errorf("unknown pull branch strategy: %q", text)
+	}
+}
+
+func (pbs PullBranchStrategy) String() string {
+	return string(pbs)
+}
+
 // GitTown provides type-safe access to Git Town configuration settings
 // stored in the local and global Git configuration.
 type GitTown struct {
@@ -249,12 +271,9 @@ func (gt *GitTown) PerennialBranches() []string {
 }
 
 // PullBranchStrategy provides the currently configured pull branch strategy.
-func (gt *GitTown) PullBranchStrategy() string {
-	config := gt.Storage.LocalOrGlobalConfigValue(PullBranchStrategyKey)
-	if config != "" {
-		return config
-	}
-	return "rebase"
+func (gt *GitTown) PullBranchStrategy() (PullBranchStrategy, error) {
+	text := gt.Storage.LocalOrGlobalConfigValue(PullBranchStrategyKey)
+	return ToPullBranchStrategy(text)
 }
 
 // PushHook provides the currently configured push-hook setting.

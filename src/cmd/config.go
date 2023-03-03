@@ -20,6 +20,7 @@ func configCmd(repo *git.ProdRepo) *cobra.Command {
 			pushHook := ec.Bool(repo.Config.PushHook())
 			isOffline := ec.Bool(repo.Config.IsOffline())
 			deleteOrigin := ec.Bool(repo.Config.ShouldShipDeleteOriginBranch())
+			pullBranchStrategy := ec.PullBranchStrategy(repo.Config.PullBranchStrategy())
 			shouldSyncUpstream := ec.Bool(repo.Config.ShouldSyncUpstream())
 			if ec.Err != nil {
 				cli.Exit(ec.Err)
@@ -31,7 +32,7 @@ func configCmd(repo *git.ProdRepo) *cobra.Command {
 			fmt.Println()
 			cli.PrintHeader("Configuration")
 			cli.PrintEntry("offline", cli.BoolSetting(isOffline))
-			cli.PrintEntry("pull branch strategy", repo.Config.PullBranchStrategy())
+			cli.PrintEntry("pull branch strategy", string(pullBranchStrategy))
 			cli.PrintEntry("run pre-push hook", cli.BoolSetting(pushHook))
 			cli.PrintEntry("push new branches", cli.BoolSetting(pushNewBranches))
 			cli.PrintEntry("ship removes the remote branch", cli.BoolSetting(deleteOrigin))

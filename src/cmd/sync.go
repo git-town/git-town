@@ -196,7 +196,8 @@ func updateFeatureBranchSteps(list *runstate.StepListBuilder, branch string, rep
 func updateNonFeatureBranchSteps(list *runstate.StepListBuilder, branch string, repo *git.ProdRepo) {
 	hasTrackingBranch := list.Bool(repo.Silent.HasTrackingBranch(branch))
 	if hasTrackingBranch {
-		syncTrackingBranchSteps(list, repo.Silent.TrackingBranch(branch), repo.Config.PullBranchStrategy())
+		pullBranchStrategy := list.PullBranchStrategy(repo.Config.PullBranchStrategy())
+		syncTrackingBranchSteps(list, repo.Silent.TrackingBranch(branch), pullBranchStrategy)
 	}
 	mainBranch := repo.Config.MainBranch()
 	hasUpstream := list.Bool(repo.Silent.HasRemote("upstream"))
