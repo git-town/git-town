@@ -51,9 +51,8 @@ To load completions for each session, add the above line to your PowerShell prof
 			case "zsh":
 				if completionsNoDescFlag {
 					return rootCmd.GenZshCompletionNoDesc(os.Stdout)
-				} else {
-					return rootCmd.GenZshCompletion(os.Stdout)
 				}
+				return rootCmd.GenZshCompletion(os.Stdout)
 			case "fish":
 				return rootCmd.GenFishCompletion(os.Stdout, !completionsNoDescFlag)
 			case "powershell":

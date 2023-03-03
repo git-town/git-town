@@ -14,7 +14,7 @@ Feature: too few or many parameters
       | aliases arg1 arg2                     | accepts 1 arg(s), received 2                                           |
       | append                                | accepts 1 arg(s), received 0                                           |
       | append arg1 arg2                      | accepts 1 arg(s), received 2                                           |
-      | completions arg1                      | invalid argument "arg1" for "git-town completions"                     |
+      | completions arg1                      | unknown argument: "arg1"                                               |
       | config arg1                           | unknown command "arg1" for "git-town config"                           |
       | config main-branch arg1 arg2          | accepts at most 1 arg(s), received 2                                   |
       | config push-new-branches arg1 arg2    | accepts at most 1 arg(s), received 2                                   |

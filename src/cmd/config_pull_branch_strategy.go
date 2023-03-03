@@ -18,10 +18,9 @@ for the main branch and perennial branches.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {
 				displayPullBranchStrategy(repo)
-			} else {
-				setPullBranchStrategy(args[0], repo)
+				return nil
 			}
-			return nil
+			return setPullBranchStrategy(args[0], repo)
 		},
 		ValidArgs: []string{"merge", "rebase"},
 		Args:      cobra.MatchAll(cobra.MaximumNArgs(1), cobra.OnlyValidArgs),
