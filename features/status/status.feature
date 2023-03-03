@@ -1,6 +1,14 @@
-Feature: Describe a merge conflict during "git-town sync"
+Feature: describe the status of the current/last Git Town command
 
-  @this
+  Scenario: Git Town command ran successfully
+    Given I run "git-town sync"
+    When I run "git-town status"
+    Then it prints:
+      """
+      The previous Git Town command (sync) finished successfully.
+      You can run "git town undo" to undo it.
+      """
+
   Scenario: Git Town command in progress
     Given the current branch is a feature branch "feature"
     And the commits
@@ -17,3 +25,10 @@ Feature: Describe a merge conflict during "git-town sync"
       You can run "git town skip" to skip the currently failing step.
       """
     And it does not print "git town undo"
+
+  Scenario: no runstate exists
+    When I run "git-town status"
+    Then it prints:
+      """
+      No status file found for this repository.
+      """
