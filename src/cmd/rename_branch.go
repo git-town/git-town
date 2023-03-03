@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
@@ -99,7 +98,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *git.ProdRe
 		}
 	}
 	if oldBranch == newBranch {
-		cli.Exit(fmt.Errorf("cannot rename branch to current name"))
+		return nil, fmt.Errorf("cannot rename branch to current name")
 	}
 	if !isOffline {
 		err := repo.Logging.Fetch()
