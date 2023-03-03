@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/spf13/cobra"
 )
@@ -17,8 +18,7 @@ when merging remote tracking branches into local branches
 for the main branch and perennial branches.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {
-				displayPullBranchStrategy(repo)
-				return nil
+				return displayPullBranchStrategy(repo)
 			}
 			return setPullBranchStrategy(args[0], repo)
 		},
@@ -30,8 +30,13 @@ for the main branch and perennial branches.`,
 	}
 }
 
-func displayPullBranchStrategy(repo *git.ProdRepo) {
-	cli.Println(repo.Config.PullBranchStrategy())
+func displayPullBranchStrategy(repo *git.ProdRepo) error {
+	pullBranchStrategy, err := config.ToPullBranchStrategy(args[0])
+	if err != nil {
+		return err
+	}
+	cli.Println(pullBranchStrategy)
+	return nil
 }
 
 func setPullBranchStrategy(value string, repo *git.ProdRepo) error {

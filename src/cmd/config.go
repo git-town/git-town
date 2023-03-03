@@ -22,6 +22,7 @@ func configCmd(repo *git.ProdRepo) *cobra.Command {
 			deleteOrigin := ec.Bool(repo.Config.ShouldShipDeleteOriginBranch())
 			pullBranchStrategy := ec.PullBranchStrategy(repo.Config.PullBranchStrategy())
 			shouldSyncUpstream := ec.Bool(repo.Config.ShouldSyncUpstream())
+			syncStrategy := ec.SyncStrategy(repo.Config.SyncStrategy())
 			if ec.Err != nil {
 				return ec.Err
 			}
@@ -36,7 +37,7 @@ func configCmd(repo *git.ProdRepo) *cobra.Command {
 			cli.PrintEntry("run pre-push hook", cli.BoolSetting(pushHook))
 			cli.PrintEntry("push new branches", cli.BoolSetting(pushNewBranches))
 			cli.PrintEntry("ship removes the remote branch", cli.BoolSetting(deleteOrigin))
-			cli.PrintEntry("sync strategy", repo.Config.SyncStrategy())
+			cli.PrintEntry("sync strategy", string(syncStrategy))
 			cli.PrintEntry("sync with upstream", cli.BoolSetting(shouldSyncUpstream))
 			fmt.Println()
 			cli.PrintHeader("Hosting")
