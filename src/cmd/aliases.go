@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/spf13/cobra"
@@ -21,7 +20,7 @@ When enabled, you can run "git hack" instead of "git town hack".
 Does not overwrite existing aliases.
 
 This can conflict with other tools that also define Git aliases.`,
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			var action func(string, *git.ProdRepo) error
 			switch args[0] {
 			case "add":
@@ -29,7 +28,7 @@ This can conflict with other tools that also define Git aliases.`,
 			case "remove":
 				action = removeAlias
 			default:
-				cli.Exit(fmt.Errorf(`invalid argument %q. Please provide either "add" or "remove"`, args[0]))
+				return fmt.Errorf(`invalid argument %q. Please provide either "add" or "remove"`, args[0])
 			}
 			commandsToAlias := []string{
 				"append",
@@ -49,8 +48,9 @@ This can conflict with other tools that also define Git aliases.`,
 				ec.Check(action(command, repo))
 			}
 			if ec.Err != nil {
-				cli.Exit(ec.Err)
+				return ec.Err
 			}
+			return nil
 		},
 		Args:    cobra.ExactArgs(1),
 		GroupID: "setup",

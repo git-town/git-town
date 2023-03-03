@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
@@ -23,20 +22,21 @@ pushes the new feature branch to the origin repository
 and brings over all uncommitted changes to the new feature branch.
 
 See "sync" for information regarding upstream remotes.`,
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			config, err := determineAppendConfig(args, repo)
 			if err != nil {
-				cli.Exit(err)
+				return err
 			}
 			stepList, err := appendStepList(config, repo)
 			if err != nil {
-				cli.Exit(err)
+				return err
 			}
 			runState := runstate.New("append", stepList)
 			err = runstate.Execute(runState, repo, nil)
 			if err != nil {
-				cli.Exit(err)
+				return err
 			}
+			return nil
 		},
 		Args: cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
