@@ -188,15 +188,15 @@ func updateFeatureBranchSteps(list *runstate.StepListBuilder, branch string, rep
 	syncStrategy := repo.Config.SyncStrategy()
 	hasTrackingBranch := list.Bool(repo.Silent.HasTrackingBranch(branch))
 	if hasTrackingBranch {
-		syncTrackingBranchSteps(list, repo.Silent.TrackingBranch(branch), syncStrategy)
+		syncBranchSteps(list, repo.Silent.TrackingBranch(branch), syncStrategy)
 	}
-	syncParentSteps(list, repo.Config.ParentBranch(branch), syncStrategy)
+	syncBranchSteps(list, repo.Config.ParentBranch(branch), syncStrategy)
 }
 
 func updatePerennialBranchSteps(list *runstate.StepListBuilder, branch string, repo *git.ProdRepo) {
 	hasTrackingBranch := list.Bool(repo.Silent.HasTrackingBranch(branch))
 	if hasTrackingBranch {
-		syncTrackingBranchSteps(list, repo.Silent.TrackingBranch(branch), repo.Config.PullBranchStrategy())
+		syncBranchSteps(list, repo.Silent.TrackingBranch(branch), repo.Config.PullBranchStrategy())
 	}
 	mainBranch := repo.Config.MainBranch()
 	hasUpstream := list.Bool(repo.Silent.HasRemote("upstream"))
@@ -207,27 +207,15 @@ func updatePerennialBranchSteps(list *runstate.StepListBuilder, branch string, r
 	}
 }
 
-// syncTrackingBranchStep provides the steps to sync the given tracking branch into the current branch.
-func syncTrackingBranchSteps(list *runstate.StepListBuilder, trackingBranch, syncStrategy string) {
-	switch syncStrategy {
+// syncTrackingBranchStep provides the steps to sync the given branch into the current branch.
+func syncBranchSteps(list *runstate.StepListBuilder, otherBranch, strategy string) {
+	switch strategy {
 	case "merge":
-		list.Add(&steps.MergeStep{Branch: trackingBranch})
+		list.Add(&steps.MergeStep{Branch: otherBranch})
 	case "rebase":
-		list.Add(&steps.RebaseBranchStep{Branch: trackingBranch})
+		list.Add(&steps.RebaseBranchStep{Branch: otherBranch})
 	default:
-		list.Fail("unknown syncStrategy value: %q", syncStrategy)
-	}
-}
-
-// syncParentSteps provides the steps to sync the given parent branch into the current branch.
-func syncParentSteps(list *runstate.StepListBuilder, parentBranch, syncStrategy string) {
-	switch syncStrategy {
-	case "merge":
-		list.Add(&steps.MergeStep{Branch: parentBranch})
-	case "rebase":
-		list.Add(&steps.RebaseBranchStep{Branch: parentBranch})
-	default:
-		list.Fail("unknown syncStrategy value: %q", syncStrategy)
+		list.Fail("unknown syncStrategy value: %q", strategy)
 	}
 }
 
