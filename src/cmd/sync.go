@@ -157,7 +157,7 @@ func syncBranchesSteps(config *syncConfig, repo *git.ProdRepo) (runstate.StepLis
 // updateBranchSteps provides the steps to sync a particular branch.
 func updateBranchSteps(list *runstate.StepListBuilder, branch string, pushBranch bool, repo *git.ProdRepo) {
 	isFeatureBranch := repo.Config.IsFeatureBranch(branch)
-	syncStrategy := repo.Config.SyncStrategy()
+	syncStrategy := list.SyncStrategy(repo.Config.SyncStrategy())
 	hasOrigin := list.Bool(repo.Silent.HasOrigin())
 	pushHook := list.Bool(repo.Config.PushHook())
 	if !hasOrigin && !isFeatureBranch {
@@ -185,7 +185,7 @@ func updateBranchSteps(list *runstate.StepListBuilder, branch string, pushBranch
 }
 
 func updateFeatureBranchSteps(list *runstate.StepListBuilder, branch string, repo *git.ProdRepo) {
-	syncStrategy := repo.Config.SyncStrategy()
+	syncStrategy := list.SyncStrategy(repo.Config.SyncStrategy())
 	hasTrackingBranch := list.Bool(repo.Silent.HasTrackingBranch(branch))
 	if hasTrackingBranch {
 		syncTrackingBranchSteps(list, repo.Silent.TrackingBranch(branch), syncStrategy)
@@ -209,7 +209,7 @@ func updatePerennialBranchSteps(list *runstate.StepListBuilder, branch string, r
 }
 
 // syncTrackingBranchStep provides the steps to sync the given tracking branch into the current branch.
-func syncTrackingBranchSteps(list *runstate.StepListBuilder, trackingBranch, syncStrategy string) {
+func syncTrackingBranchSteps(list *runstate.StepListBuilder, trackingBranch string, syncStrategy string) {
 	switch syncStrategy {
 	case "merge":
 		list.Add(&steps.MergeStep{Branch: trackingBranch})
@@ -232,7 +232,7 @@ func syncParentSteps(list *runstate.StepListBuilder, parentBranch, syncStrategy 
 	}
 }
 
-func pushFeatureBranchSteps(list *runstate.StepListBuilder, branch, syncStrategy string, pushHook bool) {
+func pushFeatureBranchSteps(list *runstate.StepListBuilder, branch string, syncStrategy config.SyncStrategy, pushHook bool) {
 	switch syncStrategy {
 	case "merge":
 		list.Add(&steps.PushBranchStep{Branch: branch, NoPushHook: !pushHook})

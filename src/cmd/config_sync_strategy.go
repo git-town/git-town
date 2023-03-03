@@ -20,7 +20,10 @@ The sync strategy specifies what strategy to use
 when merging remote tracking branches into local feature branches.`,
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) == 0 {
-				printSyncStrategy(globalFlag, repo)
+				err := printSyncStrategy(globalFlag, repo)
+				if err != nil {
+					cli.Exit(err)
+				}
 			} else {
 				syncStrategy, err := config.ToSyncStrategy(args[0])
 				if err != nil {
@@ -46,14 +49,19 @@ when merging remote tracking branches into local feature branches.`,
 	return &syncStrategyCmd
 }
 
-func printSyncStrategy(globalFlag bool, repo *git.ProdRepo) {
-	var strategy string
+func printSyncStrategy(globalFlag bool, repo *git.ProdRepo) error {
+	var strategy config.SyncStrategy
+	var err error
 	if globalFlag {
-		strategy = repo.Config.SyncStrategyGlobal()
+		strategy, err = repo.Config.SyncStrategyGlobal()
 	} else {
-		strategy = repo.Config.SyncStrategy()
+		strategy, err = repo.Config.SyncStrategy()
+	}
+	if err != nil {
+		return err
 	}
 	cli.Println(strategy)
+	return nil
 }
 
 func setSyncStrategy(globalFlag bool, repo *git.ProdRepo, value config.SyncStrategy) error {

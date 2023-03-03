@@ -67,9 +67,9 @@ const (
 
 func ToSyncStrategy(text string) (SyncStrategy, error) {
 	switch text {
-	case "merge":
+	case "merge", "":
 		return SyncStrategyMerge, nil
-	case "rebase", "":
+	case "rebase":
 		return SyncStrategyRebase, nil
 	default:
 		return SyncStrategyMerge, fmt.Errorf("unknown pull branch strategy: %q", text)
@@ -553,20 +553,14 @@ func (gt *GitTown) ShouldSyncUpstream() (bool, error) {
 	return cli.ParseBool(text)
 }
 
-func (gt *GitTown) SyncStrategy() string {
-	setting := gt.Storage.LocalOrGlobalConfigValue(SyncStrategyKey)
-	if setting == "" {
-		setting = "merge"
-	}
-	return setting
+func (gt *GitTown) SyncStrategy() (SyncStrategy, error) {
+	text := gt.Storage.LocalOrGlobalConfigValue(SyncStrategyKey)
+	return ToSyncStrategy(text)
 }
 
-func (gt *GitTown) SyncStrategyGlobal() string {
+func (gt *GitTown) SyncStrategyGlobal() (SyncStrategy, error) {
 	setting := gt.Storage.GlobalConfigValue(SyncStrategyKey)
-	if setting == "" {
-		setting = "merge"
-	}
-	return setting
+	return ToSyncStrategy(setting)
 }
 
 // ValidateIsOnline asserts that Git Town is not in offline mode.

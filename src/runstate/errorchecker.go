@@ -39,7 +39,7 @@ func (ec *ErrorChecker) Bool(value bool, err error) bool {
 	return value
 }
 
-// String provides the string part of the given fallible function result
+// PullBranchStrategy provides the string part of the given fallible function result
 // while registering the given error.
 func (ec *ErrorChecker) PullBranchStrategy(value config.PullBranchStrategy, err error) config.PullBranchStrategy {
 	ec.Check(err)
@@ -56,6 +56,13 @@ func (ec *ErrorChecker) String(value string, err error) string {
 // Strings provides the []string part of the given fallible function result
 // while registering the given error.
 func (ec *ErrorChecker) Strings(value []string, err error) []string {
+	ec.Check(err)
+	return value
+}
+
+// SyncStrategy provides the string part of the given fallible function result
+// while registering the given error.
+func (ec *ErrorChecker) SyncStrategy(value config.SyncStrategy, err error) config.SyncStrategy {
 	ec.Check(err)
 	return value
 }
