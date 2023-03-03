@@ -5,7 +5,7 @@ Feature: too few or many parameters
     Then it runs no commands
     And it prints the error:
       """
-      <ERROR>
+      Error: <ERROR>
       """
 
     Examples:
