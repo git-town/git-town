@@ -35,7 +35,7 @@ When run on the main branch or a perennial branch
 
 If the repository contains an "upstream" remote,
 syncs the main branch with its upstream counterpart.
-You can disable this by running "git config %s false".`, config.SyncUpstream),
+You can disable this by running "git config %s false".`, config.SyncUpstreamKey),
 		Run: func(cmd *cobra.Command, args []string) {
 			config, err := determineSyncConfig(allFlag, repo)
 			if err != nil {
