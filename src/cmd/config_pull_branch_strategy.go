@@ -17,9 +17,9 @@ when merging remote tracking branches into local branches
 for the main branch and perennial branches.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {
-				cli.Println(repo.Config.PullBranchStrategy())
+				displayPullBranchStrategy(repo)
 			} else {
-				return repo.Config.SetPullBranchStrategy(args[0])
+				setPullBranchStrategy(args[0], repo)
 			}
 			return nil
 		},
@@ -29,4 +29,12 @@ for the main branch and perennial branches.`,
 			return ValidateIsRepository(repo)
 		},
 	}
+}
+
+func displayPullBranchStrategy(repo *git.ProdRepo) {
+	cli.Println(repo.Config.PullBranchStrategy())
+}
+
+func setPullBranchStrategy(value string, repo *git.ProdRepo) error {
+	return repo.Config.SetPullBranchStrategy(value)
 }
