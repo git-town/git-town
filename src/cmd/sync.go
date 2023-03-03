@@ -167,7 +167,7 @@ func updateBranchSteps(list *runstate.StepListBuilder, branch string, pushBranch
 	if isFeatureBranch {
 		updateFeatureBranchSteps(list, branch, repo)
 	} else {
-		updateNonFeatureBranchSteps(list, branch, repo)
+		updatePerennialBranchSteps(list, branch, repo)
 	}
 	isOffline := list.Bool(repo.Config.IsOffline())
 	if pushBranch && hasOrigin && !isOffline {
@@ -193,7 +193,7 @@ func updateFeatureBranchSteps(list *runstate.StepListBuilder, branch string, rep
 	syncParentSteps(list, repo.Config.ParentBranch(branch), syncStrategy)
 }
 
-func updateNonFeatureBranchSteps(list *runstate.StepListBuilder, branch string, repo *git.ProdRepo) {
+func updatePerennialBranchSteps(list *runstate.StepListBuilder, branch string, repo *git.ProdRepo) {
 	hasTrackingBranch := list.Bool(repo.Silent.HasTrackingBranch(branch))
 	if hasTrackingBranch {
 		syncTrackingBranchSteps(list, repo.Silent.TrackingBranch(branch), repo.Config.PullBranchStrategy())
