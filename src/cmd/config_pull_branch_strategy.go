@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/spf13/cobra"
@@ -25,12 +23,8 @@ for the main branch and perennial branches.`,
 			}
 			return nil
 		},
-		Args: func(cmd *cobra.Command, args []string) error {
-			if len(args) == 1 && args[0] != "rebase" && args[0] != "merge" {
-				return fmt.Errorf("invalid value: %q", args[0])
-			}
-			return cobra.MaximumNArgs(1)(cmd, args)
-		},
+		ValidArgs: []string{"merge", "rebase"},
+		Args:      cobra.MatchAll(cobra.MaximumNArgs(1), cobra.OnlyValidArgs),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return ValidateIsRepository(repo)
 		},

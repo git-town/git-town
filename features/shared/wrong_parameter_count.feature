@@ -22,7 +22,7 @@ Feature: too few or many parameters
       | config perennial-branches arg1        | unknown command "arg1" for "git-town config perennial-branches"        |
       | config perennial-branches update arg1 | unknown command "arg1" for "git-town config perennial-branches update" |
       | config pull-branch-strategy arg1 arg2 | accepts at most 1 arg(s), received 2                                   |
-      | config pull-branch-strategy invalid   | invalid value: "invalid"                                               |
+      | config pull-branch-strategy invalid   | invalid argument "invalid" for "git-town config pull-branch-strategy"  |
       | config sync-strategy invalid          | invalid value: "invalid"                                               |
       | hack                                  | accepts 1 arg(s), received 0                                           |
       | hack arg1 arg2                        | accepts 1 arg(s), received 2                                           |
