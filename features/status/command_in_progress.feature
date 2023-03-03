@@ -1,5 +1,6 @@
 Feature: Describe a merge conflict during "git-town sync"
 
+  @this
   Scenario: Git Town command in progress
     Given the current branch is a feature branch "feature"
     And the commits
@@ -14,5 +15,5 @@ Feature: Describe a merge conflict during "git-town sync"
       You can run "git town abort" to abort it.
       You can run "git town continue" to finish it.
       You can run "git town skip" to skip the currently failing step.
-      You can run "git town undo" to undo it.
       """
+    And it does not print "git town undo"
