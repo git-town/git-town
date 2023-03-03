@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/spf13/cobra"
 )
@@ -21,7 +22,11 @@ for the main branch and perennial branches.`,
 			if len(args) == 0 {
 				cli.Println(repo.Config.PullBranchStrategy())
 			} else {
-				err := repo.Config.SetPullBranchStrategy(args[0])
+				pullBranchStrategy, err := config.ToPullBranchStrategy(args[0])
+				if err != nil {
+					cli.Exit(err)
+				}
+				err = repo.Config.SetPullBranchStrategy(pullBranchStrategy)
 				if err != nil {
 					cli.Exit(err)
 				}

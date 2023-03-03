@@ -406,8 +406,8 @@ func (gt *GitTown) SetPerennialBranches(branch []string) error {
 }
 
 // SetPullBranchStrategy updates the configured pull branch strategy.
-func (gt *GitTown) SetPullBranchStrategy(strategy string) error {
-	_, err := gt.Storage.SetLocalConfigValue(PullBranchStrategyKey, strategy)
+func (gt *GitTown) SetPullBranchStrategy(strategy PullBranchStrategy) error {
+	_, err := gt.Storage.SetLocalConfigValue(PullBranchStrategyKey, string(strategy))
 	return err
 }
 
