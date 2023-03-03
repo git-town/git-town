@@ -34,7 +34,7 @@ When run on the main branch or a perennial branch
 
 If the repository contains an "upstream" remote,
 syncs the main branch with its upstream counterpart.
-You can disable this by running "git config %s false".`, config.SyncUpstream),
+You can disable this by running "git config %s false".`, config.SyncUpstreamKey),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			config, err := determineSyncConfig(allFlag, repo)
 			if err != nil {
@@ -163,7 +163,7 @@ func updateBranchSteps(list *runstate.StepListBuilder, branch string, pushBranch
 	if isFeatureBranch {
 		updateFeatureBranchSteps(list, branch, repo)
 	} else {
-		updateNonFeatureBranchSteps(list, branch, repo)
+		updatePerennialBranchSteps(list, branch, repo)
 	}
 	isOffline := list.Bool(repo.Config.IsOffline())
 	if pushBranch && hasOrigin && !isOffline {
@@ -189,10 +189,11 @@ func updateFeatureBranchSteps(list *runstate.StepListBuilder, branch string, rep
 	syncParentSteps(list, repo.Config.ParentBranch(branch), syncStrategy)
 }
 
-func updateNonFeatureBranchSteps(list *runstate.StepListBuilder, branch string, repo *git.ProdRepo) {
+func updatePerennialBranchSteps(list *runstate.StepListBuilder, branch string, repo *git.ProdRepo) {
 	hasTrackingBranch := list.Bool(repo.Silent.HasTrackingBranch(branch))
 	if hasTrackingBranch {
-		syncTrackingBranchSteps(list, repo.Silent.TrackingBranch(branch), repo.Config.PullBranchStrategy())
+		pullBranchStrategy := list.PullBranchStrategy(repo.Config.PullBranchStrategy())
+		syncTrackingBranchSteps(list, repo.Silent.TrackingBranch(branch), pullBranchStrategy)
 	}
 	mainBranch := repo.Config.MainBranch()
 	hasUpstream := list.Bool(repo.Silent.HasRemote("upstream"))
