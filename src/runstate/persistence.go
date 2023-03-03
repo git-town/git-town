@@ -6,13 +6,14 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"strings"
 
 	"github.com/git-town/git-town/v7/src/git"
 )
 
 // Load loads the run state for the given Git repo from disk. Can return nil if there is no saved runstate.
 func Load(repo *git.ProdRepo) (*RunState, error) {
-	filename, err := PersistenceFilename(repo)
+	filename, err := PersistenceFilePath(repo)
 	if err != nil {
 		return nil, err
 	}
@@ -37,7 +38,7 @@ func Load(repo *git.ProdRepo) (*RunState, error) {
 
 // Delete removes the stored run state from disk.
 func Delete(repo *git.ProdRepo) error {
-	filename, err := PersistenceFilename(repo)
+	filename, err := PersistenceFilePath(repo)
 	if err != nil {
 		return err
 	}
@@ -61,23 +62,47 @@ func Save(runState *RunState, repo *git.ProdRepo) error {
 	if err != nil {
 		return fmt.Errorf("cannot encode run-state: %w", err)
 	}
-	filename, err := PersistenceFilename(repo)
+	persistencePath, err := PersistenceFilePath(repo)
 	if err != nil {
 		return err
 	}
-	err = os.WriteFile(filename, content, 0o600)
+	persistenceDir := filepath.Dir(persistencePath)
+	err = os.MkdirAll(persistenceDir, 0o700)
 	if err != nil {
-		return fmt.Errorf("cannot write file %q: %w", filename, err)
+		return err
+	}
+	err = os.WriteFile(persistencePath, content, 0o600)
+	if err != nil {
+		return fmt.Errorf("cannot write file %q: %w", persistencePath, err)
 	}
 	return nil
 }
 
-func PersistenceFilename(repo *git.ProdRepo) (string, error) {
-	replaceCharacterRegexp := regexp.MustCompile("[[:^alnum:]]")
-	rootDir, err := repo.Silent.RootDirectory()
+func PersistenceFilePath(repo *git.ProdRepo) (string, error) {
+	configDir, err := os.UserConfigDir()
 	if err != nil {
 		return "", err
 	}
-	directory := replaceCharacterRegexp.ReplaceAllString(rootDir, "-")
-	return filepath.Join(os.TempDir(), "git-town-runstate-"+directory), nil
+	persistenceDir := filepath.Join(configDir, "git-town", "runstate")
+	repoDir, err := repo.Silent.RootDirectory()
+	if err != nil {
+		return "", err
+	}
+	filename := SanitizePath(repoDir)
+	if err != nil {
+		return "", err
+	}
+	return filepath.Join(persistenceDir, filename+".json"), nil
+}
+
+func SanitizePath(dir string) string {
+	replaceCharacterRE := regexp.MustCompile("[[:^alnum:]]")
+	sanitized := replaceCharacterRE.ReplaceAllString(dir, "-")
+	sanitized = strings.ToLower(sanitized)
+	replaceDoubleMinusRE := regexp.MustCompile("--+") // two or more dashes
+	sanitized = replaceDoubleMinusRE.ReplaceAllString(sanitized, "-")
+	for strings.HasPrefix(sanitized, "-") {
+		sanitized = sanitized[1:]
+	}
+	return sanitized
 }
