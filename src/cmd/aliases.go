@@ -3,8 +3,8 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/git"
-	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/spf13/cobra"
 )
 
@@ -21,58 +21,53 @@ Does not overwrite existing aliases.
 
 This can conflict with other tools that also define Git aliases.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			var action func(string, *git.ProdRepo) error
 			switch args[0] {
 			case "add":
-				action = addAlias
+				err := addAliases(repo)
+				if err != nil {
+					return err
+				}
 			case "remove":
-				action = removeAlias
-			default:
-				return fmt.Errorf(`invalid argument %q. Please provide either "add" or "remove"`, args[0])
+				err := removeAliases(repo)
+				if err != nil {
+					return err
+				}
 			}
-			commandsToAlias := []string{
-				"append",
-				"diff-parent",
-				"hack",
-				"kill",
-				"new-pull-request",
-				"prepend",
-				"prune-branches",
-				"rename-branch",
-				"repo",
-				"ship",
-				"sync",
-			}
-			ec := runstate.ErrorChecker{}
-			for _, command := range commandsToAlias {
-				ec.Check(action(command, repo))
-			}
-			if ec.Err != nil {
-				return ec.Err
-			}
-			return nil
+			return fmt.Errorf(`invalid argument %q. Please provide either "add" or "remove"`, args[0])
 		},
 		Args:    cobra.ExactArgs(1),
 		GroupID: "setup",
 	}
 }
 
-func addAlias(command string, repo *git.ProdRepo) error {
-	result, err := repo.Config.AddGitAlias(command)
-	if err != nil {
-		return fmt.Errorf("cannot create alias for %q: %w", command, err)
+func addAliases(repo *git.ProdRepo) error {
+	for _, aliasType := range config.AliasTypes() {
+		result, err1 := repo.Config.AddGitAlias(aliasType)
+		err2 := repo.LoggingShell.PrintCommand(result.Command(), result.Args()...)
+		fmt.Println(result.Output())
+		if err1 != nil {
+			return err1
+		}
+		if err2 != nil {
+			return err2
+		}
 	}
-	return repo.LoggingShell.PrintCommand(result.Command(), result.Args()...)
+	return nil
 }
 
-func removeAlias(command string, repo *git.ProdRepo) error {
-	existingAlias := repo.Config.GitAlias(command)
-	if existingAlias == "town "+command {
-		result, err := repo.Config.RemoveGitAlias(command)
-		if err != nil {
-			return fmt.Errorf("cannot remove alias for %q: %w", command, err)
+func removeAliases(repo *git.ProdRepo) error {
+	for _, aliasType := range config.AliasTypes() {
+		existingAlias := repo.Config.GitAlias(aliasType)
+		if existingAlias == "town "+string(aliasType) {
+			result, err := repo.Config.RemoveGitAlias(string(aliasType))
+			if err != nil {
+				return fmt.Errorf("cannot remove alias for %q: %w", string(aliasType), err)
+			}
+			err = repo.LoggingShell.PrintCommand(result.Command(), result.Args()...)
+			if err != nil {
+				return err
+			}
 		}
-		return repo.LoggingShell.PrintCommand(result.Command(), result.Args()...)
 	}
 	return nil
 }

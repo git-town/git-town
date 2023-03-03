@@ -80,6 +80,48 @@ func (pbs SyncStrategy) String() string {
 	return string(pbs)
 }
 
+type AliasType string
+
+const (
+	AliasTypeAppend         = "append"
+	AliasTypeDiffParent     = "diff-parent"
+	AliasTypeHack           = "hack"
+	AliasTypeKill           = "kill"
+	AliasTypeNewPullRequest = "new-pull-request"
+	AliasTypePrepend        = "prepend"
+	AliasTypePruneBranches  = "prune-branches"
+	AliasTypeRenameBranch   = "rename-branch"
+	AliasTypeRepo           = "repo"
+	AliasTypeShip           = "ship"
+	AliasTypeSync           = "sync"
+)
+
+// AliasTypes provides all AliasType values.
+func AliasTypes() []AliasType {
+	return []AliasType{
+		AliasTypeAppend,
+		AliasTypeDiffParent,
+		AliasTypeHack,
+		AliasTypeKill,
+		AliasTypeNewPullRequest,
+		AliasTypePrepend,
+		AliasTypePruneBranches,
+		AliasTypeRenameBranch,
+		AliasTypeRepo,
+		AliasTypeShip,
+		AliasTypeSync,
+	}
+}
+
+func ToAliasType(text string) (AliasType, error) {
+	for _, aliasType := range AliasTypes() {
+		if string(aliasType) == text {
+			return aliasType, nil
+		}
+	}
+	return AliasTypeAppend, fmt.Errorf("unknown alias type: %q", text)
+}
+
 // GitTown provides type-safe access to Git Town configuration settings
 // stored in the local and global Git configuration.
 type GitTown struct {
@@ -93,8 +135,8 @@ func NewGitTown(shell run.Shell) GitTown {
 }
 
 // AddGitAlias sets the given Git alias.
-func (gt *GitTown) AddGitAlias(command string) (*run.Result, error) {
-	return gt.Storage.SetGlobalConfigValue("alias."+command, "town "+command)
+func (gt *GitTown) AddGitAlias(aliasType AliasType) (*run.Result, error) {
+	return gt.Storage.SetGlobalConfigValue("alias."+string(aliasType), "town "+string(aliasType))
 }
 
 // AddToPerennialBranches registers the given branch names as perennial branches.
@@ -160,8 +202,8 @@ func (gt *GitTown) DeprecatedNewBranchPushFlagLocal() string {
 }
 
 // GitAlias provides the currently set alias for the given Git Town command.
-func (gt *GitTown) GitAlias(command string) string {
-	return gt.Storage.GlobalConfigValue("alias." + command)
+func (gt *GitTown) GitAlias(aliasType AliasType) string {
+	return gt.Storage.GlobalConfigValue("alias." + string(aliasType))
 }
 
 // GitHubToken provides the content of the GitHub API token stored in the local or global Git Town configuration.
@@ -476,7 +518,7 @@ func (gt *GitTown) SetTestOrigin(value string) error {
 // ShouldNewBranchPush indicates whether the current repository is configured to push
 // freshly created branches up to origin.
 func (gt *GitTown) ShouldNewBranchPush() (bool, error) {
-	oldLocalConfig := gt.Storage.LocalConfigValue(NewBranchPushFlagKey)
+	oldLocalConfig := gt.DeprecatedNewBranchPushFlagLocal()
 	if oldLocalConfig != "" {
 		fmt.Printf("I found the deprecated local setting %q.\n", NewBranchPushFlagKey)
 		fmt.Printf("I am upgrading this setting to the new format %q.\n", PushNewBranchesKey)
@@ -493,7 +535,7 @@ func (gt *GitTown) ShouldNewBranchPush() (bool, error) {
 			return false, err
 		}
 	}
-	oldGlobalConfig := gt.Storage.GlobalConfigValue(NewBranchPushFlagKey)
+	oldGlobalConfig := gt.DeprecatedNewBranchPushFlagGlobal()
 	if oldGlobalConfig != "" {
 		fmt.Printf("I found the deprecated global setting %q.\n", NewBranchPushFlagKey)
 		fmt.Printf("I am upgrading this setting to the new format %q.\n", PushNewBranchesKey)
