@@ -197,7 +197,7 @@ func updatePerennialBranchSteps(list *runstate.StepListBuilder, branch string, r
 	hasTrackingBranch := list.Bool(repo.Silent.HasTrackingBranch(branch))
 	if hasTrackingBranch {
 		pullBranchStrategy := list.PullBranchStrategy(repo.Config.PullBranchStrategy())
-		syncTrackingBranchSteps(list, repo.Silent.TrackingBranch(branch), pullBranchStrategy)
+		syncTrackingBranchSteps(list, repo.Silent.TrackingBranch(branch), string(pullBranchStrategy))
 	}
 	mainBranch := repo.Config.MainBranch()
 	hasUpstream := list.Bool(repo.Silent.HasRemote("upstream"))
