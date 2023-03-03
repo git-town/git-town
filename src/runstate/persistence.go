@@ -99,7 +99,7 @@ func SanitizePath(dir string) string {
 	replaceCharacterRE := regexp.MustCompile("[[:^alnum:]]")
 	sanitized := replaceCharacterRE.ReplaceAllString(dir, "-")
 	sanitized = strings.ToLower(sanitized)
-	replaceDoubleMinusRE := regexp.MustCompile("-+")
+	replaceDoubleMinusRE := regexp.MustCompile("--+")
 	sanitized = replaceDoubleMinusRE.ReplaceAllString(sanitized, "-")
 	for strings.HasPrefix(sanitized, "-") {
 		sanitized = sanitized[1:]
