@@ -146,7 +146,10 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 	if err != nil {
 		return nil, err
 	}
-	ensureParentBranchIsMainOrPerennialBranch(branchToShip, repo)
+	err = ensureParentBranchIsMainOrPerennialBranch(branchToShip, repo)
+	if err != nil {
+		return nil, err
+	}
 	hasTrackingBranch, err := repo.Silent.HasTrackingBranch(branchToShip)
 	if err != nil {
 		return nil, err
@@ -195,15 +198,16 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 	}, nil
 }
 
-func ensureParentBranchIsMainOrPerennialBranch(branch string, repo *git.ProdRepo) {
+func ensureParentBranchIsMainOrPerennialBranch(branch string, repo *git.ProdRepo) error {
 	parentBranch := repo.Config.ParentBranch(branch)
 	if !repo.Config.IsMainBranch(parentBranch) && !repo.Config.IsPerennialBranch(parentBranch) {
 		ancestors := repo.Config.AncestorBranches(branch)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
 		oldestAncestor := ancestorsWithoutMainOrPerennial[0]
-		cli.Exit(fmt.Errorf(`shipping this branch would ship %q as well,
-please ship %q first`, strings.Join(ancestorsWithoutMainOrPerennial, ", "), oldestAncestor))
+		return fmt.Errorf(`shipping this branch would ship %q as well,
+please ship %q first`, strings.Join(ancestorsWithoutMainOrPerennial, ", "), oldestAncestor)
 	}
+	return nil
 }
 
 func shipStepList(config *shipConfig, commitMessage string, repo *git.ProdRepo) (runstate.StepList, error) {
