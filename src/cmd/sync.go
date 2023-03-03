@@ -188,9 +188,9 @@ func updateFeatureBranchSteps(list *runstate.StepListBuilder, branch string, rep
 	syncStrategy := list.SyncStrategy(repo.Config.SyncStrategy())
 	hasTrackingBranch := list.Bool(repo.Silent.HasTrackingBranch(branch))
 	if hasTrackingBranch {
-		syncBranchSteps(list, repo.Silent.TrackingBranch(branch), syncStrategy)
+		syncBranchSteps(list, repo.Silent.TrackingBranch(branch), string(syncStrategy))
 	}
-	syncBranchSteps(list, repo.Config.ParentBranch(branch), syncStrategy)
+	syncBranchSteps(list, repo.Config.ParentBranch(branch), string(syncStrategy))
 }
 
 func updatePerennialBranchSteps(list *runstate.StepListBuilder, branch string, repo *git.ProdRepo) {
@@ -209,8 +209,8 @@ func updatePerennialBranchSteps(list *runstate.StepListBuilder, branch string, r
 }
 
 // syncBranchStep provides the steps to sync the given tracking branch into the current branch.
-func syncBranchSteps(list *runstate.StepListBuilder, trackingBranch string, syncStrategy string) {
-	switch syncStrategy {
+func syncBranchSteps(list *runstate.StepListBuilder, otherBranch, strategy string) {
+	switch strategy {
 	case "merge":
 		list.Add(&steps.MergeStep{Branch: otherBranch})
 	case "rebase":
