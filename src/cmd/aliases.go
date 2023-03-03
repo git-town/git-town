@@ -33,6 +33,7 @@ This can conflict with other tools that also define Git aliases.`,
 			}
 			commandsToAlias := []string{
 				"append",
+				"diff-parent",
 				"hack",
 				"kill",
 				"new-pull-request",
