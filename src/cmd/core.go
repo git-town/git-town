@@ -25,7 +25,6 @@ import (
 	"fmt"
 
 	"github.com/fatih/color"
-	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/hosting"
@@ -34,21 +33,21 @@ import (
 )
 
 // Execute runs the Cobra stack.
-func Execute() {
+func Execute() error {
 	debugFlag := false
 	repo := git.NewProdRepo(&debugFlag)
 	rootCmd := RootCmd(&repo, &debugFlag)
+	// TODO: move into PersistentPreRunE
 	majorVersion, minorVersion, err := repo.Silent.Version()
 	if err != nil {
-		cli.Exit(err)
+		return err
 	}
 	if !IsAcceptableGitVersion(majorVersion, minorVersion) {
-		cli.Exit(errors.New("this app requires Git 2.7.0 or higher"))
+		return errors.New("this app requires Git 2.7.0 or higher")
 	}
+	// TODO: remove this
 	color.NoColor = false // Prevent color from auto disable
-	if err := rootCmd.Execute(); err != nil {
-		cli.Exit(err)
-	}
+	return rootCmd.Execute()
 }
 
 // RootCmd is the main Cobra object.

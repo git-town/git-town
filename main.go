@@ -6,11 +6,14 @@
 package main
 
 import (
+	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/cmd"
 	"github.com/git-town/git-town/v7/src/dialog"
 )
 
 func main() {
 	dialog.Initialize()
-	cmd.Execute()
+	if err := cmd.Execute(); err != nil {
+		cli.Exit(err)
+	}
 }
