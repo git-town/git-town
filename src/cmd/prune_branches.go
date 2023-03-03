@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
@@ -16,20 +15,17 @@ func pruneBranchesCommand(repo *git.ProdRepo) *cobra.Command {
 
 Deletes branches whose tracking branch no longer exists from the local repository.
 This usually means the branch was shipped or killed on another machine.`,
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			config, err := determinePruneBranchesConfig(repo)
 			if err != nil {
-				cli.Exit(err)
+				return err
 			}
 			stepList, err := pruneBranchesStepList(config, repo)
 			if err != nil {
-				cli.Exit(err)
+				return err
 			}
 			runState := runstate.New("prune-branches", stepList)
-			err = runstate.Execute(runState, repo, nil)
-			if err != nil {
-				cli.Exit(err)
-			}
+			return runstate.Execute(runState, repo, nil)
 		},
 		Args: cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

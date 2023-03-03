@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
@@ -26,21 +25,17 @@ and brings over all uncommitted changes to the new feature branch.
 
 See "sync" for upstream remote options.
 `,
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			config, err := determinePrependConfig(args, repo)
 			if err != nil {
-				cli.Exit(err)
+				return err
 			}
 			stepList, err := prependStepList(config, repo)
 			if err != nil {
-				cli.Exit(err)
+				return err
 			}
 			runState := runstate.New("prepend", stepList)
-			err = runstate.Execute(runState, repo, nil)
-			if err != nil {
-				fmt.Println(err)
-				cli.Exit(err)
-			}
+			return runstate.Execute(runState, repo, nil)
 		},
 		Args: cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

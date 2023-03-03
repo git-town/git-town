@@ -6,7 +6,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/spf13/cobra"
@@ -16,12 +15,13 @@ func statusCommand(repo *git.ProdRepo) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "status",
 		Short: "Displays or resets the current suspended Git Town command",
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			config, err := loadDisplayStatusConfig(repo)
 			if err != nil {
-				cli.Exit(err)
+				return err
 			}
 			displayStatus(*config)
+			return nil
 		},
 		Args: cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

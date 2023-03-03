@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
@@ -19,20 +18,17 @@ func killCommand(repo *git.ProdRepo) *cobra.Command {
 
 Deletes the current or provided branch from the local and origin repositories.
 Does not delete perennial branches nor the main branch.`,
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			config, err := determineKillConfig(args, repo)
 			if err != nil {
-				cli.Exit(err)
+				return err
 			}
 			stepList, err := killStepList(config, repo)
 			if err != nil {
-				cli.Exit(err)
+				return err
 			}
 			runState := runstate.New("kill", stepList)
-			err = runstate.Execute(runState, repo, nil)
-			if err != nil {
-				cli.Exit(err)
-			}
+			return runstate.Execute(runState, repo, nil)
 		},
 		Args: cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

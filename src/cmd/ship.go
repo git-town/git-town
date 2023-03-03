@@ -45,24 +45,21 @@ If your origin server deletes shipped branches, for example
 GitHub's feature to automatically delete head branches,
 run "git config %s false"
 and Git Town will leave it up to your origin server to delete the remote branch.`, config.GithubToken, config.ShipDeleteRemoteBranch),
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			connector, err := hosting.NewConnector(&repo.Config, &repo.Silent, cli.PrintConnectorAction)
 			if err != nil {
-				cli.Exit(err)
+				return err
 			}
 			config, err := determineShipConfig(args, connector, repo)
 			if err != nil {
-				cli.Exit(err)
+				return err
 			}
 			stepList, err := shipStepList(config, commitMessage, repo)
 			if err != nil {
-				cli.Exit(err)
+				return err
 			}
 			runState := runstate.New("ship", stepList)
-			err = runstate.Execute(runState, repo, connector)
-			if err != nil {
-				cli.Exit(err)
-			}
+			return runstate.Execute(runState, repo, connector)
 		},
 		Args: cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

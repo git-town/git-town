@@ -33,27 +33,24 @@ where driver is "github", "gitlab", "gitea", or "bitbucket".
 When using SSH identities, this command needs to be configured with
 "git config %s <hostname>"
 where hostname matches what is in your ssh config file.`, config.CodeHostingDriver, config.CodeHostingOriginHostname),
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			config, err := determineNewPullRequestConfig(repo)
 			if err != nil {
-				cli.Exit(err)
+				return err
 			}
 			connector, err := hosting.NewConnector(&repo.Config, &repo.Silent, cli.PrintConnectorAction)
 			if err != nil {
-				cli.Exit(err)
+				return err
 			}
 			if connector == nil {
-				cli.Exit(hosting.UnsupportedServiceError())
+				return hosting.UnsupportedServiceError()
 			}
 			stepList, err := newPullRequestStepList(config, repo)
 			if err != nil {
-				cli.Exit(err)
+				return err
 			}
 			runState := runstate.New("new-pull-request", stepList)
-			err = runstate.Execute(runState, repo, connector)
-			if err != nil {
-				cli.Exit(err)
-			}
+			return runstate.Execute(runState, repo, connector)
 		},
 		Args: cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
