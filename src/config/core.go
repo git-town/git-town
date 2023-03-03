@@ -518,7 +518,7 @@ func (gt *GitTown) SetTestOrigin(value string) error {
 // ShouldNewBranchPush indicates whether the current repository is configured to push
 // freshly created branches up to origin.
 func (gt *GitTown) ShouldNewBranchPush() (bool, error) {
-	oldLocalConfig := gt.Storage.LocalConfigValue(NewBranchPushFlagKey)
+	oldLocalConfig := gt.DeprecatedNewBranchPushFlagLocal()
 	if oldLocalConfig != "" {
 		fmt.Printf("I found the deprecated local setting %q.\n", NewBranchPushFlagKey)
 		fmt.Printf("I am upgrading this setting to the new format %q.\n", PushNewBranchesKey)
@@ -535,7 +535,7 @@ func (gt *GitTown) ShouldNewBranchPush() (bool, error) {
 			return false, err
 		}
 	}
-	oldGlobalConfig := gt.Storage.GlobalConfigValue(NewBranchPushFlagKey)
+	oldGlobalConfig := gt.DeprecatedNewBranchPushFlagGlobal()
 	if oldGlobalConfig != "" {
 		fmt.Printf("I found the deprecated global setting %q.\n", NewBranchPushFlagKey)
 		fmt.Printf("I am upgrading this setting to the new format %q.\n", PushNewBranchesKey)
