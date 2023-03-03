@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/spf13/cobra"
@@ -57,10 +58,14 @@ This can conflict with other tools that also define Git aliases.`,
 	}
 }
 
-func addAlias(command string, repo *git.ProdRepo) error {
-	result, err := repo.Config.AddGitAlias(command)
+func addAlias(aliasText string, repo *git.ProdRepo) error {
+	aliasType, err := config.ToAliasType(aliasText)
 	if err != nil {
-		return fmt.Errorf("cannot create alias for %q: %w", command, err)
+		return err
+	}
+	result, err := repo.Config.AddGitAlias(aliasType)
+	if err != nil {
+		return fmt.Errorf("cannot create alias for %q: %w", aliasText, err)
 	}
 	return repo.LoggingShell.PrintCommand(result.Command(), result.Args()...)
 }

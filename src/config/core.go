@@ -80,6 +80,48 @@ func (pbs SyncStrategy) String() string {
 	return string(pbs)
 }
 
+type AliasType string
+
+const (
+	AliasTypeAppend         = "append"
+	AliasTypeDiffParent     = "diff-parent"
+	AliasTypeHack           = "hack"
+	AliasTypeKill           = "kill"
+	AliasTypeNewPullRequest = "new-pull-request"
+	AliasTypePrepend        = "prepend"
+	AliasTypePruneBranches  = "prune-branches"
+	AliasTypeRenameBranch   = "rename-branch"
+	AliasTypeRepo           = "repo"
+	AliasTypeShip           = "ship"
+	AliasTypeSync           = "sync"
+)
+
+// AliasTypes provides all AliasType values.
+func AliasTypes() []AliasType {
+	return []AliasType{
+		AliasTypeAppend,
+		AliasTypeDiffParent,
+		AliasTypeHack,
+		AliasTypeKill,
+		AliasTypeNewPullRequest,
+		AliasTypePrepend,
+		AliasTypePruneBranches,
+		AliasTypeRenameBranch,
+		AliasTypeRepo,
+		AliasTypeShip,
+		AliasTypeSync,
+	}
+}
+
+func ToAliasType(text string) (AliasType, error) {
+	for _, aliasType := range AliasTypes() {
+		if string(aliasType) == text {
+			return aliasType, nil
+		}
+	}
+	return AliasTypeAppend, fmt.Errorf("unknown alias type: %q", text)
+}
+
 // GitTown provides type-safe access to Git Town configuration settings
 // stored in the local and global Git configuration.
 type GitTown struct {
@@ -93,8 +135,8 @@ func NewGitTown(shell run.Shell) GitTown {
 }
 
 // AddGitAlias sets the given Git alias.
-func (gt *GitTown) AddGitAlias(command string) (*run.Result, error) {
-	return gt.Storage.SetGlobalConfigValue("alias."+command, "town "+command)
+func (gt *GitTown) AddGitAlias(aliasType AliasType) (*run.Result, error) {
+	return gt.Storage.SetGlobalConfigValue("alias."+string(aliasType), "town "+string(aliasType))
 }
 
 // AddToPerennialBranches registers the given branch names as perennial branches.
