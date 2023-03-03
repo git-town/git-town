@@ -38,7 +38,7 @@ type displayStatusConfig struct {
 }
 
 func loadDisplayStatusConfig(repo *git.ProdRepo) (*displayStatusConfig, error) {
-	filepath, err := runstate.PersistenceFilename(repo)
+	filepath, err := runstate.PersistenceFilePath(repo)
 	if err != nil {
 		return nil, fmt.Errorf("cannot determine the runstate file path: %w", err)
 	}
