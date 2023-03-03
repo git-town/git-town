@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/git"
@@ -55,16 +56,15 @@ func loadDisplayStatusConfig(repo *git.ProdRepo) (*displayStatusConfig, error) {
 }
 
 func displayStatus(config displayStatusConfig) {
-	fmt.Printf("The status for this repository is at %s.\n", config.filepath)
 	if config.state == nil {
 		fmt.Println("No status file found for this repository.")
 		return
 	}
-	fmt.Printf("The previous Git Town command (%s) ", config.state.Command)
 	if config.state.IsUnfinished() {
-		fmt.Println("did not finish.")
+		timeDiff := time.Since(config.state.UnfinishedDetails.EndTime)
+		fmt.Printf("The last Git Town command (%s) hit a problem %v ago.\n", config.state.Command, timeDiff)
 	} else {
-		fmt.Println("finished successfully.")
+		fmt.Printf("The previous Git Town command (%s) finished successfully.", config.state.Command)
 	}
 	if config.state.HasAbortSteps() {
 		fmt.Println("You can run \"git town abort\" to abort it.")
