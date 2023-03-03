@@ -5,6 +5,7 @@ Feature: shorter Git Town commands
     Then it runs the commands
       | COMMAND                                                            |
       | git config --global alias.append "town append"                     |
+      | git config --global alias.diff-parent "town diff-parent"           |
       | git config --global alias.hack "town hack"                         |
       | git config --global alias.kill "town kill"                         |
       | git config --global alias.new-pull-request "town new-pull-request" |
@@ -21,6 +22,7 @@ Feature: shorter Git Town commands
     Then it runs the commands
       | COMMAND                                            |
       | git config --global --unset alias.append           |
+      | git config --global --unset alias.diff-parent      |
       | git config --global --unset alias.hack             |
       | git config --global --unset alias.kill             |
       | git config --global --unset alias.new-pull-request |
