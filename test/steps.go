@@ -323,7 +323,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^it does not print "([^\"]*)"$`, func(text string) error {
+	suite.Step(`^it does not print "(.+)"$`, func(text string) error {
 		if strings.Contains(state.runRes.OutputSanitized(), text) {
 			return fmt.Errorf("text found: %q", text)
 		}
