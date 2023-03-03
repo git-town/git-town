@@ -12,5 +12,4 @@ Feature: show all available commands
     Then it prints the error:
       """
       Error: unknown command "invalidcommand" for "git-town"
-      Run 'git-town --help' for usage.
       """

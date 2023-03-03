@@ -34,11 +34,8 @@ func updatePerennialBranchesCmd(repo *git.ProdRepo) *cobra.Command {
 		Use:   "update",
 		Short: "Prompts to update your perennial branches",
 		Long:  `Prompts to update your perennial branches`,
-		Run: func(cmd *cobra.Command, args []string) {
-			err := dialog.ConfigurePerennialBranches(repo)
-			if err != nil {
-				cli.Exit(err)
-			}
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return dialog.ConfigurePerennialBranches(repo)
 		},
 		Args: cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

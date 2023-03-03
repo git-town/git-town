@@ -17,15 +17,13 @@ func pullBranchStrategyCommand(repo *git.ProdRepo) *cobra.Command {
 The pull branch strategy specifies what strategy to use
 when merging remote tracking branches into local branches
 for the main branch and perennial branches.`,
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {
 				cli.Println(repo.Config.PullBranchStrategy())
 			} else {
-				err := repo.Config.SetPullBranchStrategy(args[0])
-				if err != nil {
-					cli.Exit(err)
-				}
+				return repo.Config.SetPullBranchStrategy(args[0])
 			}
+			return nil
 		},
 		Args: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 1 && args[0] != "rebase" && args[0] != "merge" {

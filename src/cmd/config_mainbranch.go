@@ -15,15 +15,13 @@ func mainbranchConfigCmd(repo *git.ProdRepo) *cobra.Command {
 		Long: `Displays or sets your main development branch
 
 The main branch is the Git branch from which new feature branches are cut.`,
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {
 				printMainBranch(repo)
 			} else {
-				err := setMainBranch(args[0], repo)
-				if err != nil {
-					cli.Exit(err)
-				}
+				return setMainBranch(args[0], repo)
 			}
+			return nil
 		},
 		Args: cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

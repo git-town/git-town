@@ -15,23 +15,24 @@ func offlineCmd(repo *git.ProdRepo) *cobra.Command {
 		Long: `Displays or sets offline mode
 
 Git Town avoids network operations in offline mode.`,
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {
 				isOffline, err := repo.Config.IsOffline()
 				if err != nil {
-					cli.Exit(err)
+					return err
 				}
 				cli.Println(cli.FormatBool(isOffline))
 			} else {
 				value, err := cli.ParseBool(args[0])
 				if err != nil {
-					cli.Exit(fmt.Errorf(`invalid argument: %q. Please provide either "yes" or "no".\n`, args[0]))
+					return fmt.Errorf(`invalid argument: %q. Please provide either "yes" or "no".\n`, args[0])
 				}
 				err = repo.Config.SetOffline(value)
 				if err != nil {
-					cli.Exit(err)
+					return err
 				}
 			}
+			return nil
 		},
 		Args: cobra.MaximumNArgs(1),
 	}

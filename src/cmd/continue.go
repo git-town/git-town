@@ -14,29 +14,26 @@ func continueCmd(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:   "continue",
 		Short: "Restarts the last run git-town command after having resolved conflicts",
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			runState, err := runstate.Load(repo)
 			if err != nil {
-				cli.Exit(fmt.Errorf("cannot load previous run state: %w", err))
+				return fmt.Errorf("cannot load previous run state: %w", err)
 			}
 			if runState == nil || !runState.IsUnfinished() {
-				cli.Exit(fmt.Errorf("nothing to continue"))
+				return fmt.Errorf("nothing to continue")
 			}
 			hasConflicts, err := repo.Silent.HasConflicts()
 			if err != nil {
-				cli.Exit(err)
+				return err
 			}
 			if hasConflicts {
-				cli.Exit(fmt.Errorf("you must resolve the conflicts before continuing"))
+				return fmt.Errorf("you must resolve the conflicts before continuing")
 			}
 			connector, err := hosting.NewConnector(&repo.Config, &repo.Silent, cli.PrintConnectorAction)
 			if err != nil {
-				cli.Exit(err)
+				return err
 			}
-			err = runstate.Execute(runState, repo, connector)
-			if err != nil {
-				cli.Exit(err)
-			}
+			return runstate.Execute(runState, repo, connector)
 		},
 		Args: cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
