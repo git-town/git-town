@@ -23,6 +23,7 @@ func configCmd(repo *git.ProdRepo) *cobra.Command {
 			pullBranchStrategy := ec.PullBranchStrategy(repo.Config.PullBranchStrategy())
 			shouldSyncUpstream := ec.Bool(repo.Config.ShouldSyncUpstream())
 			syncStrategy := ec.SyncStrategy(repo.Config.SyncStrategy())
+			hostingService := ec.HostingService(repo.Config.HostingService())
 			if ec.Err != nil {
 				cli.Exit(ec.Err)
 			}
@@ -41,7 +42,7 @@ func configCmd(repo *git.ProdRepo) *cobra.Command {
 			cli.PrintEntry("sync with upstream", cli.BoolSetting(shouldSyncUpstream))
 			fmt.Println()
 			cli.PrintHeader("Hosting")
-			cli.PrintEntry("hosting service override", cli.StringSetting(repo.Config.HostingService()))
+			cli.PrintEntry("hosting service override", cli.StringSetting(string(hostingService)))
 			cli.PrintEntry("GitHub token", cli.StringSetting(repo.Config.GitHubToken()))
 			cli.PrintEntry("GitLab token", cli.StringSetting(repo.Config.GitLabToken()))
 			cli.PrintEntry("Gitea token", cli.StringSetting(repo.Config.GiteaToken()))

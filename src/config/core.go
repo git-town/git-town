@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/giturl"
 	"github.com/git-town/git-town/v7/src/run"
 	"github.com/git-town/git-town/v7/src/stringslice"
 )
@@ -122,15 +123,51 @@ func ToAliasType(text string) (AliasType, error) {
 	return AliasTypeAppend, fmt.Errorf("unknown alias type: %q", text)
 }
 
+// HostingService defines legal values for the "git-town.code-hosting-driver" config setting.
+type HostingService string
+
+const (
+	HostingServiceBitbucket HostingService = "bitbucket"
+	HostingServiceGitHub    HostingService = "github"
+	HostingServiceGitLab    HostingService = "gitlab"
+	HostingServiceGitea     HostingService = "gitea"
+	NoHostingService        HostingService = ""
+)
+
+// hostingServices provides all legal values for HostingService.
+func hostingServices() []HostingService {
+	return []HostingService{
+		NoHostingService,
+		HostingServiceBitbucket,
+		HostingServiceGitHub,
+		HostingServiceGitLab,
+		HostingServiceGitea,
+	}
+}
+
+// ToHostingService provides the HostingService enum matching the given text.
+func ToHostingService(text string) (HostingService, error) {
+	for _, hostingService := range hostingServices() {
+		if string(hostingService) == text {
+			return hostingService, nil
+		}
+	}
+	return NoHostingService, fmt.Errorf("unknown alias type: %q", text)
+}
+
 // GitTown provides type-safe access to Git Town configuration settings
 // stored in the local and global Git configuration.
 type GitTown struct {
-	Storage Git
+	Storage             Git
+	hostingServiceCache map[string]HostingService
+	originURLCache      map[string]*giturl.Parts
 }
 
 func NewGitTown(shell run.Shell) GitTown {
 	return GitTown{
-		Storage: NewGit(shell),
+		Storage:             NewGit(shell),
+		hostingServiceCache: map[string]HostingService{},
+		originURLCache:      map[string]*giturl.Parts{},
 	}
 }
 
@@ -236,9 +273,25 @@ func (gt *GitTown) HasParentBranch(branch string) bool {
 	return gt.ParentBranch(branch) != ""
 }
 
-// HostingService provides the name of the code hosting connector to use.
-func (gt *GitTown) HostingService() string {
+// HostingServiceName provides the name of the code hosting connector to use.
+func (gt *GitTown) HostingServiceName() string {
 	return gt.Storage.LocalOrGlobalConfigValue(CodeHostingDriverKey)
+}
+
+// HostingService provides the type-safe name of the code hosting connector to use.
+// This function caches its result and can be queried repeatedly.
+func (gt *GitTown) HostingService() (HostingService, error) {
+	name := gt.HostingServiceName()
+	cached, has := gt.hostingServiceCache[name]
+	if has {
+		return cached, nil
+	}
+	hostingService, err := ToHostingService(name)
+	if err != nil {
+		return NoHostingService, err
+	}
+	gt.hostingServiceCache[name] = hostingService
+	return hostingService, nil
 }
 
 // IsAncestorBranch indicates whether the given branch is an ancestor of the other given branch.
@@ -298,15 +351,36 @@ func (gt *GitTown) OriginOverride() string {
 	return gt.Storage.LocalConfigValue(CodeHostingOriginHostnameKey)
 }
 
-// OriginURL provides the URL for the "origin" remote.
-// In tests this value can be stubbed.
-func (gt *GitTown) OriginURL() string {
+// OriginURLString provides the URL for the "origin" remote.
+// Tests can stub this through the GIT_TOWN_REMOTE environment variable.
+func (gt *GitTown) OriginURLString() string {
 	remote := os.Getenv("GIT_TOWN_REMOTE")
 	if remote != "" {
 		return remote
 	}
 	res, _ := gt.Storage.shell.Run("git", "remote", "get-url", OriginRemote)
 	return res.OutputSanitized()
+}
+
+// OriginURL provides the URL for the "origin" remote.
+// Tests can stub this through the GIT_TOWN_REMOTE environment variable.
+// Caches its result so can be called repeatedly.
+func (gt *GitTown) OriginURL() *giturl.Parts {
+	text := gt.OriginURLString()
+	if text == "" {
+		return nil
+	}
+	cached, has := gt.originURLCache[text]
+	if has {
+		return cached
+	}
+	url := giturl.Parse(text)
+	originOverride := gt.OriginOverride()
+	if originOverride != "" {
+		url.Host = originOverride
+	}
+	gt.originURLCache[text] = url
+	return url
 }
 
 // ParentBranchMap returns a map from branch name to its parent branch.

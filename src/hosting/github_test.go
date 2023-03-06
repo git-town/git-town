@@ -4,7 +4,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/git-town/git-town/v7/src/giturl"
 	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/stretchr/testify/assert"
 )
@@ -16,8 +15,8 @@ func TestNewGithubConnector(t *testing.T) {
 		repoConfig := mockRepoConfig{
 			originURL: "git@github.com:git-town/git-town.git",
 		}
-		url := giturl.Parse(repoConfig.originURL)
-		connector := hosting.NewGithubConnector(*url, repoConfig, nil)
+		connector, err := hosting.NewGithubConnector(repoConfig, nil)
+		assert.Nil(t, err)
 		assert.NotNil(t, connector)
 		assert.Equal(t, "GitHub", connector.HostingServiceName())
 		assert.Equal(t, "https://github.com/git-town/git-town", connector.RepositoryURL())
@@ -29,8 +28,8 @@ func TestNewGithubConnector(t *testing.T) {
 			hostingService: "github",
 			originURL:      "git@self-hosted-github.com:git-town/git-town.git",
 		}
-		url := giturl.Parse(repoConfig.originURL)
-		connector := hosting.NewGithubConnector(*url, repoConfig, nil)
+		connector, err := hosting.NewGithubConnector(repoConfig, nil)
+		assert.Nil(t, err)
 		assert.NotNil(t, connector)
 		assert.Equal(t, "GitHub", connector.HostingServiceName())
 		assert.Equal(t, "https://self-hosted-github.com/git-town/git-town", connector.RepositoryURL())
@@ -42,8 +41,8 @@ func TestNewGithubConnector(t *testing.T) {
 			originURL:      "git@my-ssh-identity.com:git-town/git-town.git",
 			originOverride: "github.com",
 		}
-		url := giturl.Parse(repoConfig.originURL)
-		connector := hosting.NewGithubConnector(*url, repoConfig, nil)
+		connector, err := hosting.NewGithubConnector(repoConfig, nil)
+		assert.Nil(t, err)
 		assert.NotNil(t, connector)
 		assert.Equal(t, "GitHub", connector.HostingServiceName())
 		assert.Equal(t, "https://github.com/git-town/git-town", connector.RepositoryURL())

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/stretchr/testify/assert"
 )
@@ -57,6 +58,25 @@ func TestErrorChecker(t *testing.T) {
 			ec := runstate.ErrorChecker{}
 			ec.Fail("failed %s", "reason")
 			assert.Error(t, ec.Err, "failed reason")
+		})
+	})
+
+	t.Run("HostingService", func(t *testing.T) {
+		t.Parallel()
+		t.Run("returns the given HostingService value", func(t *testing.T) {
+			t.Parallel()
+			ec := runstate.ErrorChecker{}
+			assert.Equal(t, config.HostingServiceGitHub, ec.HostingService(config.HostingServiceGitHub, nil))
+			assert.Equal(t, config.HostingServiceGitLab, ec.HostingService(config.HostingServiceGitLab, errors.New("")))
+		})
+		t.Run("captures the first error it receives", func(t *testing.T) {
+			t.Parallel()
+			ec := runstate.ErrorChecker{}
+			ec.HostingService(config.NoHostingService, nil)
+			assert.Nil(t, ec.Err)
+			ec.HostingService(config.HostingServiceGitHub, errors.New("first"))
+			ec.HostingService(config.HostingServiceGitHub, errors.New("second"))
+			assert.Error(t, ec.Err, "first")
 		})
 	})
 
