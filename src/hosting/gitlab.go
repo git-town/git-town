@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/git-town/git-town/v7/src/giturl"
+	"github.com/git-town/git-town/v7/src/config"
 	"github.com/xanzy/go-gitlab"
 )
 
@@ -70,17 +70,17 @@ func (c *GitLabConnector) UpdateProposalTarget(number int, target string) error 
 
 // NewGitlabConfig provides GitLab configuration data if the current repo is hosted on GitLab,
 // otherwise nil.
-func NewGitlabConnector(url giturl.Parts, config gitConfig, log logFn) (*GitLabConnector, error) {
-	manualHostName := config.OriginOverride()
-	if manualHostName != "" {
-		url.Host = manualHostName
+func NewGitlabConnector(gitConfig gitTownConfig, log logFn) (*GitLabConnector, error) {
+	hostingService, err := gitConfig.HostingService()
+	if err != nil {
+		return nil, err
 	}
-	if config.HostingService() != "gitlab" && url.Host != "gitlab.com" {
+	url := gitConfig.OriginURL()
+	if url == nil || (url.Host != "gitlab.com" && hostingService != config.HostingServiceGitLab) {
 		return nil, nil //nolint:nilnil
 	}
 	gitlabConfig := GitLabConfig{CommonConfig{
-		APIToken:     config.GitLabToken(),
-		OriginURL:    config.OriginURL(),
+		APIToken:     gitConfig.GitLabToken(),
 		Hostname:     url.Host,
 		Organization: url.Org,
 		Repository:   url.Repo,

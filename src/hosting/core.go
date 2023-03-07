@@ -7,6 +7,7 @@ package hosting
 import (
 	"errors"
 
+	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/giturl"
 )
 
@@ -49,9 +50,6 @@ type CommonConfig struct {
 	// Hostname override
 	Hostname string
 
-	// where the "origin" remote points to
-	OriginURL string
-
 	// the Organization within the hosting platform that owns the repo
 	Organization string
 
@@ -76,13 +74,14 @@ type Proposal struct {
 	CanMergeWithAPI bool
 }
 
-// gitConfig defines the configuration data needed by the hosting package.
-type gitConfig interface {
+// gitTownConfig defines the configuration data needed by the hosting package.
+// This extra interface is necessary to access config.GitTown without creating a cyclic dependency.
+type gitTownConfig interface {
 	// OriginOverride provides the override for the origin URL from the Git Town configuration.
 	OriginOverride() string
 
 	// HostingService provides the name of the hosting service that runs at the origin remote.
-	HostingService() string
+	HostingService() (config.HostingService, error)
 
 	// GiteaToken provides the personal access token for Gitea stored in the Git configuration.
 	GiteaToken() string
@@ -97,7 +96,7 @@ type gitConfig interface {
 	MainBranch() string
 
 	// OriginURL provides the URL of the origin remote.
-	OriginURL() string
+	OriginURL() *giturl.Parts
 }
 
 // runner defines the runner methods used by the hosting package.
@@ -111,27 +110,32 @@ type logFn func(string, ...interface{})
 // NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
 //
 //nolint:ireturn,nolintlint
-func NewConnector(config gitConfig, git gitRunner, log logFn) (Connector, error) {
-	url := giturl.Parse(config.OriginURL())
-	if url == nil {
-		return nil, nil //nolint:nilnil  // "nil, nil" is a legitimate return value here
+func NewConnector(config gitTownConfig, git gitRunner, log logFn) (Connector, error) {
+	githubConnector, err := NewGithubConnector(config, log)
+	if err != nil {
+		return nil, err
 	}
-	githubConnector := NewGithubConnector(*url, config, log)
 	if githubConnector != nil {
 		return githubConnector, nil
 	}
-	gitlabConnector, err := NewGitlabConnector(*url, config, log)
+	gitlabConnector, err := NewGitlabConnector(config, log)
 	if err != nil {
 		return nil, err
 	}
 	if gitlabConnector != nil {
 		return gitlabConnector, nil
 	}
-	bitbucketConnector := NewBitbucketConnector(*url, config, git)
+	bitbucketConnector, err := NewBitbucketConnector(config, git)
+	if err != nil {
+		return nil, err
+	}
 	if bitbucketConnector != nil {
 		return bitbucketConnector, nil
 	}
-	giteaConnector := NewGiteaConnector(*url, config, log)
+	giteaConnector, err := NewGiteaConnector(config, log)
+	if err != nil {
+		return nil, err
+	}
 	if giteaConnector != nil {
 		return giteaConnector, nil
 	}

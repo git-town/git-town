@@ -44,7 +44,7 @@ It will also update the base branch for any pull requests against that branch.
 If your origin server deletes shipped branches, for example
 GitHub's feature to automatically delete head branches,
 run "git config %s false"
-and Git Town will leave it up to your origin server to delete the remote branch.`, config.GithubToken, config.ShipDeleteRemoteBranch),
+and Git Town will leave it up to your origin server to delete the remote branch.`, config.GithubTokenKey, config.ShipDeleteRemoteBranchKey),
 		Run: func(cmd *cobra.Command, args []string) {
 			connector, err := hosting.NewConnector(&repo.Config, &repo.Silent, cli.PrintConnectorAction)
 			if err != nil {

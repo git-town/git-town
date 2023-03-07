@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/spf13/cobra"
 )
@@ -19,7 +20,10 @@ The sync strategy specifies what strategy to use
 when merging remote tracking branches into local feature branches.`,
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) == 0 {
-				printSyncStrategy(globalFlag, repo)
+				err := printSyncStrategy(globalFlag, repo)
+				if err != nil {
+					cli.Exit(err)
+				}
 			} else {
 				err := setSyncStrategy(globalFlag, repo, args[0])
 				if err != nil {
@@ -41,19 +45,28 @@ when merging remote tracking branches into local feature branches.`,
 	return &syncStrategyCmd
 }
 
-func printSyncStrategy(globalFlag bool, repo *git.ProdRepo) {
-	var strategy string
+func printSyncStrategy(globalFlag bool, repo *git.ProdRepo) error {
+	var strategy config.SyncStrategy
+	var err error
 	if globalFlag {
-		strategy = repo.Config.SyncStrategyGlobal()
+		strategy, err = repo.Config.SyncStrategyGlobal()
 	} else {
-		strategy = repo.Config.SyncStrategy()
+		strategy, err = repo.Config.SyncStrategy()
+	}
+	if err != nil {
+		return err
 	}
 	cli.Println(strategy)
+	return nil
 }
 
 func setSyncStrategy(globalFlag bool, repo *git.ProdRepo, value string) error {
-	if globalFlag {
-		return repo.Config.SetSyncStrategyGlobal(value)
+	syncStrategy, err := config.ToSyncStrategy(value)
+	if err != nil {
+		return err
 	}
-	return repo.Config.SetSyncStrategy(value)
+	if globalFlag {
+		return repo.Config.SetSyncStrategyGlobal(syncStrategy)
+	}
+	return repo.Config.SetSyncStrategy(syncStrategy)
 }

@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/git-town/git-town/v7/src/giturl"
+	"github.com/git-town/git-town/v7/src/config"
 )
 
 // BitbucketConnector provides access to the API of Bitbucket installations.
@@ -18,25 +18,25 @@ type BitbucketConnector struct {
 
 // NewBitbucketConnector provides a Bitbucket connector instance if the current repo is hosted on Bitbucket,
 // otherwise nil.
-func NewBitbucketConnector(url giturl.Parts, gitConfig gitConfig, git gitRunner) *BitbucketConnector {
-	manualOrigin := gitConfig.OriginOverride()
-	if manualOrigin != "" {
-		url.Host = manualOrigin
+func NewBitbucketConnector(gitConfig gitTownConfig, git gitRunner) (*BitbucketConnector, error) {
+	hostingService, err := gitConfig.HostingService()
+	if err != nil {
+		return nil, err
 	}
-	if gitConfig.HostingService() != "bitbucket" && url.Host != "bitbucket.org" {
-		return nil
+	url := gitConfig.OriginURL()
+	if url == nil || (url.Host != "bitbucket.org" && hostingService != config.HostingServiceBitbucket) {
+		return nil, nil //nolint:nilnil
 	}
 	return &BitbucketConnector{
 		CommonConfig: CommonConfig{
 			APIToken:     "",
 			Hostname:     url.Host,
-			OriginURL:    gitConfig.OriginURL(),
 			Organization: url.Org,
 			Repository:   url.Repo,
 		},
 		organization: url.Org,
 		git:          git,
-	}
+	}, nil
 }
 
 func (c *BitbucketConnector) FindProposal(branch, target string) (*Proposal, error) {
