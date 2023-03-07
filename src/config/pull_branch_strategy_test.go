@@ -29,7 +29,7 @@ func TestNewPullBranchStrategy(t *testing.T) {
 		assert.Equal(t, config.PullBranchStrategyRebase, have)
 	})
 
-	t.Run("invalid", func(t *testing.T) {
+	t.Run("invalid value", func(t *testing.T) {
 		t.Parallel()
 		_, err := config.NewPullBranchStrategy("zonk")
 		assert.Error(t, err)
