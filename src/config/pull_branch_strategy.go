@@ -5,10 +5,8 @@ import "fmt"
 // PullBranchStrategy defines legal values for the "pull-branch-strategy" configuration setting.
 type PullBranchStrategy string
 
-const (
-	PullBranchStrategyMerge  = "merge"
-	PullBranchStrategyRebase = "rebase"
-)
+const PullBranchStrategyMerge = "merge"
+const PullBranchStrategyRebase = "rebase"
 
 func ToPullBranchStrategy(text string) (PullBranchStrategy, error) {
 	switch text {
