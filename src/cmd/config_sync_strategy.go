@@ -25,11 +25,7 @@ when merging remote tracking branches into local feature branches.`,
 					cli.Exit(err)
 				}
 			} else {
-				syncStrategy, err := config.ToSyncStrategy(args[0])
-				if err != nil {
-					cli.Exit(err)
-				}
-				err = setSyncStrategy(globalFlag, repo, syncStrategy)
+				err := setSyncStrategy(globalFlag, repo, args[0])
 				if err != nil {
 					cli.Exit(err)
 				}
@@ -64,9 +60,13 @@ func printSyncStrategy(globalFlag bool, repo *git.ProdRepo) error {
 	return nil
 }
 
-func setSyncStrategy(globalFlag bool, repo *git.ProdRepo, value config.SyncStrategy) error {
-	if globalFlag {
-		return repo.Config.SetSyncStrategyGlobal(value)
+func setSyncStrategy(globalFlag bool, repo *git.ProdRepo, value string) error {
+	syncStrategy, err := config.ToSyncStrategy(value)
+	if err != nil {
+		return err
 	}
-	return repo.Config.SetSyncStrategy(value)
+	if globalFlag {
+		return repo.Config.SetSyncStrategyGlobal(syncStrategy)
+	}
+	return repo.Config.SetSyncStrategy(syncStrategy)
 }
