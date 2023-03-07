@@ -24,8 +24,8 @@ func NewBitbucketConnector(gitConfig gitTownConfig, git gitRunner) (*BitbucketCo
 		return nil, err
 	}
 	url := gitConfig.OriginURL()
-	if url == nil || (hostingService != config.HostingServiceBitbucket && url.Host != "bitbucket.org") {
-		return nil, nil
+	if url == nil || (url.Host != "bitbucket.org" && hostingService != config.HostingServiceBitbucket) {
+		return nil, nil //nolint:nilnil
 	}
 	return &BitbucketConnector{
 		CommonConfig: CommonConfig{

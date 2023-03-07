@@ -113,7 +113,7 @@ type logFn func(string, ...interface{})
 func NewConnector(config gitTownConfig, git gitRunner, log logFn) (Connector, error) {
 	githubConnector, err := NewGithubConnector(config, log)
 	if err != nil {
-		return nil, nil
+		return nil, err
 	}
 	if githubConnector != nil {
 		return githubConnector, nil

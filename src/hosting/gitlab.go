@@ -73,10 +73,10 @@ func (c *GitLabConnector) UpdateProposalTarget(number int, target string) error 
 func NewGitlabConnector(gitConfig gitTownConfig, log logFn) (*GitLabConnector, error) {
 	hostingService, err := gitConfig.HostingService()
 	if err != nil {
-		return nil, nil
+		return nil, err
 	}
 	url := gitConfig.OriginURL()
-	if url == nil || (hostingService != config.HostingServiceGitLab && url.Host != "gitlab.com") {
+	if url == nil || (url.Host != "gitlab.com" && hostingService != config.HostingServiceGitLab) {
 		return nil, nil //nolint:nilnil
 	}
 	gitlabConfig := GitLabConfig{CommonConfig{
