@@ -20,7 +20,3 @@ func ToSyncStrategy(text string) (SyncStrategy, error) {
 		return SyncStrategyMerge, fmt.Errorf("unknown pull branch strategy: %q", text)
 	}
 }
-
-func (pbs SyncStrategy) String() string {
-	return string(pbs)
-}
