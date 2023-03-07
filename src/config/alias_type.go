@@ -2,6 +2,7 @@ package config
 
 import "fmt"
 
+// AliasType defines Git Town commands that can be aliased.
 type AliasType string
 
 const (

@@ -2,6 +2,7 @@ package config
 
 import "fmt"
 
+// SyncStrategy defines legal values for the "sync-strategy" configuration setting.
 type SyncStrategy string
 
 const (

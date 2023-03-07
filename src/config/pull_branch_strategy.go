@@ -2,6 +2,7 @@ package config
 
 import "fmt"
 
+// PullBranchStrategy defines legal values for the "pull-branch-strategy" configuration setting.
 type PullBranchStrategy string
 
 const (
