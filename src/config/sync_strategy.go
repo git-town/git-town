@@ -17,6 +17,6 @@ func ToSyncStrategy(text string) (SyncStrategy, error) {
 	case "rebase":
 		return SyncStrategyRebase, nil
 	default:
-		return SyncStrategyMerge, fmt.Errorf("unknown pull branch strategy: %q", text)
+		return SyncStrategyMerge, fmt.Errorf("unknown sync strategy: %q", text)
 	}
 }
