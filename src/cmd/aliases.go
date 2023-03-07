@@ -61,13 +61,13 @@ func removeAliases(repo *git.ProdRepo) error {
 	for _, aliasType := range config.AliasTypes() {
 		existingAlias := repo.Config.GitAlias(aliasType)
 		if existingAlias == "town "+string(aliasType) {
-			result, err := repo.Config.RemoveGitAlias(string(aliasType))
-			if err != nil {
-				return fmt.Errorf("cannot remove alias for %q: %w", string(aliasType), err)
+			result, err1 := repo.Config.RemoveGitAlias(string(aliasType))
+			err2 := repo.LoggingShell.PrintCommand(result.Command(), result.Args()...)
+			if err1 != nil {
+				return fmt.Errorf("cannot remove alias for %q: %w", string(aliasType), err1)
 			}
-			err = repo.LoggingShell.PrintCommand(result.Command(), result.Args()...)
-			if err != nil {
-				return err
+			if err2 != nil {
+				return err2
 			}
 		}
 	}
