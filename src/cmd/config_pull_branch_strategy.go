@@ -45,7 +45,7 @@ func displayPullBranchStrategy(repo *git.ProdRepo) {
 }
 
 func updatePullBranchStrategy(value string, repo *git.ProdRepo) error {
-	pullBranchStrategy, err := config.ToPullBranchStrategy(value)
+	pullBranchStrategy, err := config.NewPullBranchStrategy(value)
 	if err != nil {
 		return err
 	}

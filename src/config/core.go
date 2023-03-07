@@ -281,7 +281,7 @@ func (gt *GitTown) PerennialBranches() []string {
 // PullBranchStrategy provides the currently configured pull branch strategy.
 func (gt *GitTown) PullBranchStrategy() (PullBranchStrategy, error) {
 	text := gt.Storage.LocalOrGlobalConfigValue(PullBranchStrategyKey)
-	return ToPullBranchStrategy(text)
+	return NewPullBranchStrategy(text)
 }
 
 // PushHook provides the currently configured push-hook setting.

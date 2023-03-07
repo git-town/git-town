@@ -6,8 +6,8 @@ import "fmt"
 type SyncStrategy string
 
 const (
-	SyncStrategyMerge  = "merge"
-	SyncStrategyRebase = "rebase"
+	SyncStrategyMerge  SyncStrategy = "merge"
+	SyncStrategyRebase SyncStrategy = "rebase"
 )
 
 func ToSyncStrategy(text string) (SyncStrategy, error) {
