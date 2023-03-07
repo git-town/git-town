@@ -40,16 +40,14 @@ const (
 // GitTown provides type-safe access to Git Town configuration settings
 // stored in the local and global Git configuration.
 type GitTown struct {
-	Storage             Git
-	hostingServiceCache map[string]HostingService
-	originURLCache      map[string]*giturl.Parts
+	Storage        Git
+	originURLCache map[string]*giturl.Parts
 }
 
 func NewGitTown(shell run.Shell) GitTown {
 	return GitTown{
-		Storage:             NewGit(shell),
-		hostingServiceCache: map[string]HostingService{},
-		originURLCache:      map[string]*giturl.Parts{},
+		Storage:        NewGit(shell),
+		originURLCache: map[string]*giturl.Parts{},
 	}
 }
 
@@ -164,15 +162,10 @@ func (gt *GitTown) HostingServiceName() string {
 // This function caches its result and can be queried repeatedly.
 func (gt *GitTown) HostingService() (HostingService, error) {
 	name := gt.HostingServiceName()
-	cached, has := gt.hostingServiceCache[name]
-	if has {
-		return cached, nil
-	}
 	hostingService, err := ToHostingService(name)
 	if err != nil {
 		return NoHostingService, err
 	}
-	gt.hostingServiceCache[name] = hostingService
 	return hostingService, nil
 }
 
