@@ -1,7 +1,5 @@
 package config
 
-import "fmt"
-
 // AliasType defines Git Town commands that can be aliased.
 type AliasType string
 
@@ -34,13 +32,4 @@ func AliasTypes() []AliasType {
 		AliasTypeShip,
 		AliasTypeSync,
 	}
-}
-
-func ToAliasType(text string) (AliasType, error) {
-	for _, aliasType := range AliasTypes() {
-		if string(aliasType) == text {
-			return aliasType, nil
-		}
-	}
-	return AliasTypeAppend, fmt.Errorf("unknown alias type: %q", text)
 }
