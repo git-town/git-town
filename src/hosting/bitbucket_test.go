@@ -3,7 +3,6 @@ package hosting_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v7/src/giturl"
 	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/stretchr/testify/assert"
 )
@@ -16,8 +15,8 @@ func TestNewBitbucketConnector(t *testing.T) {
 			hostingService: "bitbucket",
 			originURL:      "git@self-hosted-bitbucket.com:git-town/git-town.git",
 		}
-		url := giturl.Parse(repoConfig.originURL)
-		connector := hosting.NewBitbucketConnector(*url, repoConfig, nil)
+		connector, err := hosting.NewBitbucketConnector(repoConfig, nil)
+		assert.Nil(t, err)
 		assert.NotNil(t, connector)
 		assert.Equal(t, "Bitbucket", connector.HostingServiceName())
 		assert.Equal(t, "https://self-hosted-bitbucket.com/git-town/git-town", connector.RepositoryURL())
@@ -29,8 +28,8 @@ func TestNewBitbucketConnector(t *testing.T) {
 			originURL:      "git@my-ssh-identity.com:git-town/git-town.git",
 			originOverride: "bitbucket.org",
 		}
-		url := giturl.Parse(repoConfig.originURL)
-		connector := hosting.NewBitbucketConnector(*url, repoConfig, nil)
+		connector, err := hosting.NewBitbucketConnector(repoConfig, nil)
+		assert.Nil(t, err)
 		assert.NotNil(t, connector)
 		assert.Equal(t, "Bitbucket", connector.HostingServiceName())
 		assert.Equal(t, "https://bitbucket.org/git-town/git-town", connector.RepositoryURL())
@@ -42,8 +41,8 @@ func TestNewBitbucketConnector(t *testing.T) {
 			hostingService: "bitbucket",
 			originURL:      "username@bitbucket.org:git-town/git-town.git",
 		}
-		url := giturl.Parse(repoConfig.originURL)
-		connector := hosting.NewBitbucketConnector(*url, repoConfig, nil)
+		connector, err := hosting.NewBitbucketConnector(repoConfig, nil)
+		assert.Nil(t, err)
 		assert.NotNil(t, connector)
 		assert.Equal(t, "Bitbucket", connector.HostingServiceName())
 		assert.Equal(t, "https://bitbucket.org/git-town/git-town", connector.RepositoryURL())
