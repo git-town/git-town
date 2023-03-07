@@ -17,14 +17,14 @@ import (
 
 // Runner executes Git commands.
 type Runner struct {
-	run.Shell                               // for running console commands
-	Config             config.GitTown       // caches Git configuration settings
-	CurrentBranchCache *cache.Cache[string] // caches the currently checked out Git branch
-	DryRun             *DryRun              // tracks dry-run information
-	IsRepoCache        *cache.Bool          // caches whether the current directory is a Git repo
-	RemoteBranchCache  *cache.Strings       // caches the remote branches of this Git repo
-	RemotesCache       *cache.Strings       // caches Git remotes
-	RootDirCache       *cache.String        // caches the base of the Git directory
+	run.Shell                         // for running console commands
+	Config             config.GitTown // caches Git configuration settings
+	CurrentBranchCache *cache.String  // caches the currently checked out Git branch
+	DryRun             *DryRun        // tracks dry-run information
+	IsRepoCache        *cache.Bool    // caches whether the current directory is a Git repo
+	RemoteBranchCache  *cache.Strings // caches the remote branches of this Git repo
+	RemotesCache       *cache.Strings // caches Git remotes
+	RootDirCache       *cache.String  // caches the base of the Git directory
 }
 
 // AbortMerge cancels a currently ongoing Git merge operation.
