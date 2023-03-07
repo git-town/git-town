@@ -37,137 +37,17 @@ const (
 	TestingRemoteURLKey          = "git-town.testing.remote-url"
 )
 
-type PullBranchStrategy string
-
-const (
-	PullBranchStrategyMerge  = "merge"
-	PullBranchStrategyRebase = "rebase"
-)
-
-func ToPullBranchStrategy(text string) (PullBranchStrategy, error) {
-	switch text {
-	case "merge":
-		return PullBranchStrategyMerge, nil
-	case "rebase", "":
-		return PullBranchStrategyRebase, nil
-	default:
-		return PullBranchStrategyMerge, fmt.Errorf("unknown pull branch strategy: %q", text)
-	}
-}
-
-func (pbs PullBranchStrategy) String() string {
-	return string(pbs)
-}
-
-type SyncStrategy string
-
-const (
-	SyncStrategyMerge  = "merge"
-	SyncStrategyRebase = "rebase"
-)
-
-func ToSyncStrategy(text string) (SyncStrategy, error) {
-	switch text {
-	case "merge", "":
-		return SyncStrategyMerge, nil
-	case "rebase":
-		return SyncStrategyRebase, nil
-	default:
-		return SyncStrategyMerge, fmt.Errorf("unknown pull branch strategy: %q", text)
-	}
-}
-
-func (pbs SyncStrategy) String() string {
-	return string(pbs)
-}
-
-type AliasType string
-
-const (
-	AliasTypeAppend         = "append"
-	AliasTypeDiffParent     = "diff-parent"
-	AliasTypeHack           = "hack"
-	AliasTypeKill           = "kill"
-	AliasTypeNewPullRequest = "new-pull-request"
-	AliasTypePrepend        = "prepend"
-	AliasTypePruneBranches  = "prune-branches"
-	AliasTypeRenameBranch   = "rename-branch"
-	AliasTypeRepo           = "repo"
-	AliasTypeShip           = "ship"
-	AliasTypeSync           = "sync"
-)
-
-// AliasTypes provides all AliasType values.
-func AliasTypes() []AliasType {
-	return []AliasType{
-		AliasTypeAppend,
-		AliasTypeDiffParent,
-		AliasTypeHack,
-		AliasTypeKill,
-		AliasTypeNewPullRequest,
-		AliasTypePrepend,
-		AliasTypePruneBranches,
-		AliasTypeRenameBranch,
-		AliasTypeRepo,
-		AliasTypeShip,
-		AliasTypeSync,
-	}
-}
-
-func ToAliasType(text string) (AliasType, error) {
-	for _, aliasType := range AliasTypes() {
-		if string(aliasType) == text {
-			return aliasType, nil
-		}
-	}
-	return AliasTypeAppend, fmt.Errorf("unknown alias type: %q", text)
-}
-
-// HostingService defines legal values for the "git-town.code-hosting-driver" config setting.
-type HostingService string
-
-const (
-	HostingServiceBitbucket HostingService = "bitbucket"
-	HostingServiceGitHub    HostingService = "github"
-	HostingServiceGitLab    HostingService = "gitlab"
-	HostingServiceGitea     HostingService = "gitea"
-	NoHostingService        HostingService = ""
-)
-
-// hostingServices provides all legal values for HostingService.
-func hostingServices() []HostingService {
-	return []HostingService{
-		NoHostingService,
-		HostingServiceBitbucket,
-		HostingServiceGitHub,
-		HostingServiceGitLab,
-		HostingServiceGitea,
-	}
-}
-
-// ToHostingService provides the HostingService enum matching the given text.
-func ToHostingService(text string) (HostingService, error) {
-	for _, hostingService := range hostingServices() {
-		if string(hostingService) == text {
-			return hostingService, nil
-		}
-	}
-	return NoHostingService, fmt.Errorf("unknown alias type: %q", text)
-}
-
 // GitTown provides type-safe access to Git Town configuration settings
 // stored in the local and global Git configuration.
 type GitTown struct {
-	Storage             Git
-	hostingServiceCache map[string]HostingService
-	originURLCache      map[string]*giturl.Parts
+	Storage        Git
+	originURLCache map[string]*giturl.Parts
 }
 
 func NewGitTown(shell run.Shell) GitTown {
 	return GitTown{
-		Storage:             NewGit(shell),
-		hostingServiceCache: map[string]HostingService{},
-		originURLCache:      map[string]*giturl.Parts{},
+		Storage:        NewGit(shell),
+		originURLCache: map[string]*giturl.Parts{},
 	}
 }
 
@@ -282,15 +162,10 @@ func (gt *GitTown) HostingServiceName() string {
 // This function caches its result and can be queried repeatedly.
 func (gt *GitTown) HostingService() (HostingService, error) {
 	name := gt.HostingServiceName()
-	cached, has := gt.hostingServiceCache[name]
-	if has {
-		return cached, nil
-	}
 	hostingService, err := ToHostingService(name)
 	if err != nil {
 		return NoHostingService, err
 	}
-	gt.hostingServiceCache[name] = hostingService
 	return hostingService, nil
 }
 

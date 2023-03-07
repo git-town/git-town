@@ -31,7 +31,7 @@ for the main branch and perennial branches.`,
 }
 
 func displayPullBranchStrategy(repo *git.ProdRepo) error {
-	pullBranchStrategy, err := config.ToPullBranchStrategy(args[0])
+	pullBranchStrategy, err := repo.Config.PullBranchStrategy()
 	if err != nil {
 		return err
 	}
@@ -40,5 +40,9 @@ func displayPullBranchStrategy(repo *git.ProdRepo) error {
 }
 
 func setPullBranchStrategy(value string, repo *git.ProdRepo) error {
-	return repo.Config.SetPullBranchStrategy(value)
+	pullBranchStrategy, err := config.ToPullBranchStrategy(value)
+	if err != nil {
+		return err
+	}
+	return repo.Config.SetPullBranchStrategy(pullBranchStrategy)
 }
