@@ -35,7 +35,7 @@ When run on the main branch or a perennial branch
 
 If the repository contains an "upstream" remote,
 syncs the main branch with its upstream counterpart.
-You can disable this by running "git config %s false".`, config.SyncUpstream),
+You can disable this by running "git config %s false".`, config.SyncUpstreamKey),
 		Run: func(cmd *cobra.Command, args []string) {
 			config, err := determineSyncConfig(allFlag, repo)
 			if err != nil {
@@ -157,7 +157,7 @@ func syncBranchesSteps(config *syncConfig, repo *git.ProdRepo) (runstate.StepLis
 // updateBranchSteps provides the steps to sync a particular branch.
 func updateBranchSteps(list *runstate.StepListBuilder, branch string, pushBranch bool, repo *git.ProdRepo) {
 	isFeatureBranch := repo.Config.IsFeatureBranch(branch)
-	syncStrategy := repo.Config.SyncStrategy()
+	syncStrategy := list.SyncStrategy(repo.Config.SyncStrategy())
 	hasOrigin := list.Bool(repo.Silent.HasOrigin())
 	pushHook := list.Bool(repo.Config.PushHook())
 	if !hasOrigin && !isFeatureBranch {
@@ -185,18 +185,19 @@ func updateBranchSteps(list *runstate.StepListBuilder, branch string, pushBranch
 }
 
 func updateFeatureBranchSteps(list *runstate.StepListBuilder, branch string, repo *git.ProdRepo) {
-	syncStrategy := repo.Config.SyncStrategy()
+	syncStrategy := list.SyncStrategy(repo.Config.SyncStrategy())
 	hasTrackingBranch := list.Bool(repo.Silent.HasTrackingBranch(branch))
 	if hasTrackingBranch {
-		syncBranchSteps(list, repo.Silent.TrackingBranch(branch), syncStrategy)
+		syncBranchSteps(list, repo.Silent.TrackingBranch(branch), string(syncStrategy))
 	}
-	syncBranchSteps(list, repo.Config.ParentBranch(branch), syncStrategy)
+	syncBranchSteps(list, repo.Config.ParentBranch(branch), string(syncStrategy))
 }
 
 func updatePerennialBranchSteps(list *runstate.StepListBuilder, branch string, repo *git.ProdRepo) {
 	hasTrackingBranch := list.Bool(repo.Silent.HasTrackingBranch(branch))
 	if hasTrackingBranch {
-		syncBranchSteps(list, repo.Silent.TrackingBranch(branch), repo.Config.PullBranchStrategy())
+		pullBranchStrategy := list.PullBranchStrategy(repo.Config.PullBranchStrategy())
+		syncBranchSteps(list, repo.Silent.TrackingBranch(branch), string(pullBranchStrategy))
 	}
 	mainBranch := repo.Config.MainBranch()
 	hasUpstream := list.Bool(repo.Silent.HasRemote("upstream"))
@@ -207,7 +208,7 @@ func updatePerennialBranchSteps(list *runstate.StepListBuilder, branch string, r
 	}
 }
 
-// syncTrackingBranchStep provides the steps to sync the given branch into the current branch.
+// syncBranchStep provides the steps to sync the given tracking branch into the current branch.
 func syncBranchSteps(list *runstate.StepListBuilder, otherBranch, strategy string) {
 	switch strategy {
 	case "merge":
@@ -219,11 +220,11 @@ func syncBranchSteps(list *runstate.StepListBuilder, otherBranch, strategy strin
 	}
 }
 
-func pushFeatureBranchSteps(list *runstate.StepListBuilder, branch, syncStrategy string, pushHook bool) {
+func pushFeatureBranchSteps(list *runstate.StepListBuilder, branch string, syncStrategy config.SyncStrategy, pushHook bool) {
 	switch syncStrategy {
-	case "merge":
+	case config.SyncStrategyMerge:
 		list.Add(&steps.PushBranchStep{Branch: branch, NoPushHook: !pushHook})
-	case "rebase":
+	case config.SyncStrategyRebase:
 		list.Add(&steps.PushBranchStep{Branch: branch, ForceWithLease: true})
 	default:
 		list.Fail("unknown syncStrategy value: %q", syncStrategy)

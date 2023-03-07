@@ -3,7 +3,6 @@ package hosting_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v7/src/giturl"
 	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/stretchr/testify/assert"
 )
@@ -25,8 +24,7 @@ func TestNewGitlabConnector(t *testing.T) {
 		repoConfig := mockRepoConfig{
 			originURL: "git@gitlab.com:gitlab-com/www-gitlab-com.git",
 		}
-		url := giturl.Parse(repoConfig.originURL)
-		connector, err := hosting.NewGitlabConnector(*url, repoConfig, nil)
+		connector, err := hosting.NewGitlabConnector(repoConfig, nil)
 		assert.NoError(t, err)
 		assert.NotNil(t, connector)
 		assert.Equal(t, "GitLab", connector.HostingServiceName())
@@ -38,8 +36,7 @@ func TestNewGitlabConnector(t *testing.T) {
 		repoConfig := mockRepoConfig{
 			originURL: "git@gitlab.com:gitlab-org/quality/triage-ops.git",
 		}
-		url := giturl.Parse(repoConfig.originURL)
-		connector, err := hosting.NewGitlabConnector(*url, repoConfig, nil)
+		connector, err := hosting.NewGitlabConnector(repoConfig, nil)
 		assert.NoError(t, err)
 		assert.NotNil(t, connector)
 		assert.Equal(t, "GitLab", connector.HostingServiceName())
@@ -52,8 +49,7 @@ func TestNewGitlabConnector(t *testing.T) {
 			hostingService: "gitlab",
 			originURL:      "git@self-hosted-gitlab.com:git-town/git-town.git",
 		}
-		url := giturl.Parse(repoConfig.originURL)
-		connector, err := hosting.NewGitlabConnector(*url, repoConfig, nil)
+		connector, err := hosting.NewGitlabConnector(repoConfig, nil)
 		assert.NoError(t, err)
 		assert.NotNil(t, connector)
 		assert.Equal(t, "GitLab", connector.HostingServiceName())
@@ -66,8 +62,7 @@ func TestNewGitlabConnector(t *testing.T) {
 			originURL:      "git@my-ssh-identity.com:git-town/git-town.git",
 			originOverride: "gitlab.com",
 		}
-		url := giturl.Parse(repoConfig.originURL)
-		connector, err := hosting.NewGitlabConnector(*url, repoConfig, nil)
+		connector, err := hosting.NewGitlabConnector(repoConfig, nil)
 		assert.NoError(t, err)
 		assert.NotNil(t, connector)
 		assert.Equal(t, "GitLab", connector.HostingServiceName())
