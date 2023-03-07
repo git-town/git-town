@@ -72,7 +72,7 @@ func TestErrorChecker(t *testing.T) {
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()
 			ec := runstate.ErrorChecker{}
-			ec.HostingService(config.NoHostingService, nil)
+			ec.HostingService(config.HostingServiceNone, nil)
 			assert.Nil(t, ec.Err)
 			ec.HostingService(config.HostingServiceGitHub, errors.New("first"))
 			ec.HostingService(config.HostingServiceGitHub, errors.New("second"))
