@@ -23,7 +23,7 @@ type ProdRepo struct {
 func NewProdRepo(debugFlag *bool) ProdRepo {
 	silentShell := run.SilentShell{Debug: debugFlag}
 	config := config.NewGitTown(silentShell)
-	currentBranchTracker := cache.Cache[string]{}
+	currentBranchTracker := cache.String{}
 	dryRun := DryRun{}
 	isRepoCache := cache.Bool{}
 	remoteBranchCache := cache.Strings{}
