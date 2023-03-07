@@ -218,9 +218,9 @@ func syncBranchSteps(list *runstate.StepListBuilder, otherBranch, strategy strin
 
 func pushFeatureBranchSteps(list *runstate.StepListBuilder, branch string, syncStrategy config.SyncStrategy, pushHook bool) {
 	switch syncStrategy {
-	case "merge":
+	case config.SyncStrategyMerge:
 		list.Add(&steps.PushBranchStep{Branch: branch, NoPushHook: !pushHook})
-	case "rebase":
+	case config.SyncStrategyRebase:
 		list.Add(&steps.PushBranchStep{Branch: branch, ForceWithLease: true})
 	default:
 		list.Fail("unknown syncStrategy value: %q", syncStrategy)

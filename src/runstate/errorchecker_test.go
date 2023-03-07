@@ -117,4 +117,23 @@ func TestErrorChecker(t *testing.T) {
 			assert.Error(t, ec.Err, "first")
 		})
 	})
+
+	t.Run("SyncStrategy", func(t *testing.T) {
+		t.Parallel()
+		t.Run("returns the given SyncStrategy value", func(t *testing.T) {
+			t.Parallel()
+			ec := runstate.ErrorChecker{}
+			assert.Equal(t, config.SyncStrategyMerge, ec.SyncStrategy(config.SyncStrategyMerge, nil))
+			assert.Equal(t, config.SyncStrategyRebase, ec.SyncStrategy(config.SyncStrategyRebase, errors.New("")))
+		})
+		t.Run("captures the first error it receives", func(t *testing.T) {
+			t.Parallel()
+			ec := runstate.ErrorChecker{}
+			ec.SyncStrategy(config.SyncStrategyMerge, nil)
+			assert.Nil(t, ec.Err)
+			ec.SyncStrategy(config.SyncStrategyMerge, errors.New("first"))
+			ec.SyncStrategy(config.SyncStrategyMerge, errors.New("second"))
+			assert.Error(t, ec.Err, "first")
+		})
+	})
 }
