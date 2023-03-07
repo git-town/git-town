@@ -13,6 +13,16 @@ const (
 	HostingServiceNone      HostingService = ""
 )
 
+// NewHostingService provides the HostingService enum matching the given text.
+func NewHostingService(text string) (HostingService, error) {
+	for _, hostingService := range hostingServices() {
+		if string(hostingService) == text {
+			return hostingService, nil
+		}
+	}
+	return HostingServiceNone, fmt.Errorf("unknown alias type: %q", text)
+}
+
 // hostingServices provides all legal values for HostingService.
 func hostingServices() []HostingService {
 	return []HostingService{
@@ -22,14 +32,4 @@ func hostingServices() []HostingService {
 		HostingServiceGitLab,
 		HostingServiceGitea,
 	}
-}
-
-// toHostingService provides the HostingService enum matching the given text.
-func toHostingService(text string) (HostingService, error) {
-	for _, hostingService := range hostingServices() {
-		if string(hostingService) == text {
-			return hostingService, nil
-		}
-	}
-	return HostingServiceNone, fmt.Errorf("unknown alias type: %q", text)
 }

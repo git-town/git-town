@@ -1,30 +1,33 @@
-package config
+package config_test
 
 import (
 	"testing"
 
+	"github.com/git-town/git-town/v7/src/config"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestToHostingService(t *testing.T) {
 	t.Parallel()
 	t.Run("valid content", func(t *testing.T) {
-		tests := map[string]HostingService{
-			"bitbucket": HostingServiceBitbucket,
-			"github":    HostingServiceGitHub,
-			"gitlab":    HostingServiceGitLab,
-			"gitea":     HostingServiceGitea,
-			"":          HostingServiceNone,
+		t.Parallel()
+		tests := map[string]config.HostingService{
+			"bitbucket": config.HostingServiceBitbucket,
+			"github":    config.HostingServiceGitHub,
+			"gitlab":    config.HostingServiceGitLab,
+			"gitea":     config.HostingServiceGitea,
+			"":          config.HostingServiceNone,
 		}
 		for give, want := range tests {
-			have, err := toHostingService(give)
+			have, err := config.NewHostingService(give)
 			assert.Nil(t, err)
 			assert.Equal(t, want, have)
 		}
 	})
 
 	t.Run("invalid content", func(t *testing.T) {
-		_, err := toHostingService("zonk")
+		t.Parallel()
+		_, err := config.NewHostingService("zonk")
 		assert.Error(t, err)
 	})
 }
