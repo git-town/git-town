@@ -8,7 +8,7 @@ import (
 
 func TestToHostingService(t *testing.T) {
 	t.Parallel()
-	t.Run("valid", func(t *testing.T) {
+	t.Run("valid content", func(t *testing.T) {
 		tests := map[string]HostingService{
 			"bitbucket": HostingServiceBitbucket,
 			"github":    HostingServiceGitHub,
@@ -21,5 +21,10 @@ func TestToHostingService(t *testing.T) {
 			assert.Nil(t, err)
 			assert.Equal(t, want, have)
 		}
+	})
+
+	t.Run("invalid content", func(t *testing.T) {
+		_, err := toHostingService("zonk")
+		assert.Error(t, err)
 	})
 }
