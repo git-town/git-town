@@ -7,6 +7,7 @@ import (
 	"sort"
 	"testing"
 
+	"github.com/git-town/git-town/v7/src/cache"
 	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/run"
@@ -56,11 +57,11 @@ func NewRepo(workingDir, homeDir, binDir string) Repo {
 		Shell:              &shell,
 		Config:             config.NewGitTown(&shell),
 		DryRun:             &git.DryRun{},
-		IsRepoCache:        &git.Cache[bool]{},
-		RemoteBranchCache:  &git.Cache[[]string]{},
-		RemotesCache:       &git.Cache[[]string]{},
-		RootDirCache:       &git.Cache[string]{},
-		CurrentBranchCache: &git.Cache[string]{},
+		IsRepoCache:        &cache.Bool{},
+		RemoteBranchCache:  &cache.Strings{},
+		RemotesCache:       &cache.Strings{},
+		RootDirCache:       &cache.String{},
+		CurrentBranchCache: &cache.String{},
 	}
 	return Repo{Runner: runner, shell: shell}
 }

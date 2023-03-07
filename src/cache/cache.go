@@ -1,4 +1,4 @@
-package git
+package cache
 
 // Cache is a cache implementation for arbitrary data structures that ensures it is initialized.
 // The zero value is an empty cache.
