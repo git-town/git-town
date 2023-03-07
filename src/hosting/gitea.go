@@ -97,11 +97,11 @@ func (c *GiteaConnector) UpdateProposalTarget(number int, target string) error {
 func NewGiteaConnector(gitConfig gitTownConfig, log logFn) (*GiteaConnector, error) {
 	hostingService, err := gitConfig.HostingService()
 	if err != nil {
-		return nil, nil
+		return nil, err
 	}
 	url := gitConfig.OriginURL()
-	if url == nil || (hostingService != config.HostingServiceGitea && url.Host != "gitea.com") {
-		return nil, nil
+	if url == nil || (url.Host != "gitea.com" && hostingService != config.HostingServiceGitea) {
+		return nil, nil //nolint:nilnil
 	}
 	apiToken := gitConfig.GiteaToken()
 	hostname := url.Host
