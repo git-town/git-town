@@ -162,11 +162,7 @@ func (gt *GitTown) HostingServiceName() string {
 // This function caches its result and can be queried repeatedly.
 func (gt *GitTown) HostingService() (HostingService, error) {
 	name := gt.HostingServiceName()
-	hostingService, err := ToHostingService(name)
-	if err != nil {
-		return NoHostingService, err
-	}
-	return hostingService, nil
+	return ToHostingService(name)
 }
 
 // IsAncestorBranch indicates whether the given branch is an ancestor of the other given branch.
