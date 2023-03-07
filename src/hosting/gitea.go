@@ -6,7 +6,7 @@ import (
 	"net/url"
 
 	"code.gitea.io/sdk/gitea"
-	"github.com/git-town/git-town/v7/src/giturl"
+	"github.com/git-town/git-town/v7/src/config"
 	"golang.org/x/oauth2"
 )
 
@@ -94,16 +94,16 @@ func (c *GiteaConnector) UpdateProposalTarget(number int, target string) error {
 
 // NewGiteaConfig provides Gitea configuration data if the current repo is hosted on Gitea,
 // otherwise nil.
-func NewGiteaConnector(url giturl.Parts, config gitConfig, log logFn) *GiteaConnector {
-	hostingService := config.HostingService()
-	manualHostName := config.OriginOverride()
-	if manualHostName != "" {
-		url.Host = manualHostName
+func NewGiteaConnector(gitConfig gitTownConfig, log logFn) (*GiteaConnector, error) {
+	hostingService, err := gitConfig.HostingService()
+	if err != nil {
+		return nil, err
 	}
-	if hostingService != "gitea" && url.Host != "gitea.com" {
-		return nil
+	url := gitConfig.OriginURL()
+	if url == nil || (url.Host != "gitea.com" && hostingService != config.HostingServiceGitea) {
+		return nil, nil //nolint:nilnil
 	}
-	apiToken := config.GiteaToken()
+	apiToken := gitConfig.GiteaToken()
 	hostname := url.Host
 	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: apiToken})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
@@ -113,12 +113,11 @@ func NewGiteaConnector(url giturl.Parts, config gitConfig, log logFn) *GiteaConn
 		CommonConfig: CommonConfig{
 			APIToken:     apiToken,
 			Hostname:     hostname,
-			OriginURL:    config.OriginURL(),
 			Organization: url.Org,
 			Repository:   url.Repo,
 		},
 		log: log,
-	}
+	}, nil
 }
 
 func FilterGiteaPullRequests(pullRequests []*gitea.PullRequest, organization, branch, target string) []*gitea.PullRequest {

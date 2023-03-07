@@ -32,7 +32,7 @@ When using self-hosted versions this command needs to be configured with
 where driver is "github", "gitlab", "gitea", or "bitbucket".
 When using SSH identities, this command needs to be configured with
 "git config %s <hostname>"
-where hostname matches what is in your ssh config file.`, config.CodeHostingDriver, config.CodeHostingOriginHostname),
+where hostname matches what is in your ssh config file.`, config.CodeHostingDriverKey, config.CodeHostingOriginHostnameKey),
 		Run: func(cmd *cobra.Command, args []string) {
 			config, err := determineNewPullRequestConfig(repo)
 			if err != nil {

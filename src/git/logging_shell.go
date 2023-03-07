@@ -110,3 +110,10 @@ func (shell LoggingShell) PrintCommand(cmd string, args ...string) error {
 	}
 	return nil
 }
+
+// PrintCommand prints the given command-line operation on the console.
+func (shell LoggingShell) PrintCommandAndOutput(result *run.Result) error {
+	err := shell.PrintCommand(result.Command(), result.Args()...)
+	fmt.Println(result.Output())
+	return err
+}

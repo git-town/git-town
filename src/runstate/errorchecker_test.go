@@ -4,6 +4,7 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/stretchr/testify/assert"
 )
@@ -60,6 +61,44 @@ func TestErrorChecker(t *testing.T) {
 		})
 	})
 
+	t.Run("HostingService", func(t *testing.T) {
+		t.Parallel()
+		t.Run("returns the given HostingService value", func(t *testing.T) {
+			t.Parallel()
+			ec := runstate.ErrorChecker{}
+			assert.Equal(t, config.HostingServiceGitHub, ec.HostingService(config.HostingServiceGitHub, nil))
+			assert.Equal(t, config.HostingServiceGitLab, ec.HostingService(config.HostingServiceGitLab, errors.New("")))
+		})
+		t.Run("captures the first error it receives", func(t *testing.T) {
+			t.Parallel()
+			ec := runstate.ErrorChecker{}
+			ec.HostingService(config.HostingServiceNone, nil)
+			assert.Nil(t, ec.Err)
+			ec.HostingService(config.HostingServiceGitHub, errors.New("first"))
+			ec.HostingService(config.HostingServiceGitHub, errors.New("second"))
+			assert.Error(t, ec.Err, "first")
+		})
+	})
+
+	t.Run("PullBranchStrategy", func(t *testing.T) {
+		t.Parallel()
+		t.Run("returns the given PullBranchStrategy value", func(t *testing.T) {
+			t.Parallel()
+			ec := runstate.ErrorChecker{}
+			assert.Equal(t, config.PullBranchStrategyMerge, ec.PullBranchStrategy(config.PullBranchStrategyMerge, nil))
+			assert.Equal(t, config.PullBranchStrategyRebase, ec.PullBranchStrategy(config.PullBranchStrategyRebase, errors.New("")))
+		})
+		t.Run("captures the first error it receives", func(t *testing.T) {
+			t.Parallel()
+			ec := runstate.ErrorChecker{}
+			ec.PullBranchStrategy(config.PullBranchStrategyMerge, nil)
+			assert.Nil(t, ec.Err)
+			ec.PullBranchStrategy(config.PullBranchStrategyMerge, errors.New("first"))
+			ec.PullBranchStrategy(config.PullBranchStrategyMerge, errors.New("second"))
+			assert.Error(t, ec.Err, "first")
+		})
+	})
+
 	t.Run("String", func(t *testing.T) {
 		t.Parallel()
 		t.Run("returns the given string value", func(t *testing.T) {
@@ -94,6 +133,25 @@ func TestErrorChecker(t *testing.T) {
 			assert.Nil(t, ec.Err)
 			ec.Strings([]string{}, errors.New("first"))
 			ec.Strings([]string{}, errors.New("second"))
+			assert.Error(t, ec.Err, "first")
+		})
+	})
+
+	t.Run("SyncStrategy", func(t *testing.T) {
+		t.Parallel()
+		t.Run("returns the given SyncStrategy value", func(t *testing.T) {
+			t.Parallel()
+			ec := runstate.ErrorChecker{}
+			assert.Equal(t, config.SyncStrategyMerge, ec.SyncStrategy(config.SyncStrategyMerge, nil))
+			assert.Equal(t, config.SyncStrategyRebase, ec.SyncStrategy(config.SyncStrategyRebase, errors.New("")))
+		})
+		t.Run("captures the first error it receives", func(t *testing.T) {
+			t.Parallel()
+			ec := runstate.ErrorChecker{}
+			ec.SyncStrategy(config.SyncStrategyMerge, nil)
+			assert.Nil(t, ec.Err)
+			ec.SyncStrategy(config.SyncStrategyMerge, errors.New("first"))
+			ec.SyncStrategy(config.SyncStrategyMerge, errors.New("second"))
 			assert.Error(t, ec.Err, "first")
 		})
 	})

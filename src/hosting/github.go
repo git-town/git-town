@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/git-town/git-town/v7/src/giturl"
+	"github.com/git-town/git-town/v7/src/config"
 	"github.com/google/go-github/v50/github"
 	"golang.org/x/oauth2"
 )
@@ -89,13 +89,14 @@ func (c *GitHubConnector) UpdateProposalTarget(number int, target string) error 
 
 // NewGithubConnector provides a fully configured GithubConnector instance
 // if the current repo is hosted on Github, otherwise nil.
-func NewGithubConnector(url giturl.Parts, gitConfig gitConfig, log logFn) *GitHubConnector {
-	manualHostName := gitConfig.OriginOverride()
-	if manualHostName != "" {
-		url.Host = manualHostName
+func NewGithubConnector(gitConfig gitTownConfig, log logFn) (*GitHubConnector, error) {
+	hostingService, err := gitConfig.HostingService()
+	if err != nil {
+		return nil, err
 	}
-	if gitConfig.HostingService() != "github" && url.Host != "github.com" {
-		return nil
+	url := gitConfig.OriginURL()
+	if url == nil || (url.Host != "github.com" && hostingService != config.HostingServiceGitHub) {
+		return nil, nil //nolint:nilnil
 	}
 	apiToken := gitConfig.GitHubToken()
 	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: apiToken})
@@ -105,13 +106,12 @@ func NewGithubConnector(url giturl.Parts, gitConfig gitConfig, log logFn) *GitHu
 		CommonConfig: CommonConfig{
 			APIToken:     apiToken,
 			Hostname:     url.Host,
-			OriginURL:    gitConfig.OriginURL(),
 			Organization: url.Org,
 			Repository:   url.Repo,
 		},
 		MainBranch: gitConfig.MainBranch(),
 		log:        log,
-	}
+	}, nil
 }
 
 // parsePullRequest extracts standardized proposal data from the given GitHub pull-request.

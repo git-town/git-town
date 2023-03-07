@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"code.gitea.io/sdk/gitea"
-	"github.com/git-town/git-town/v7/src/giturl"
 	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/stretchr/testify/assert"
 )
@@ -25,8 +24,8 @@ func TestNewGiteaConnector(t *testing.T) {
 			hostingService: "gitea",
 			originURL:      "git@self-hosted-gitea.com:git-town/git-town.git",
 		}
-		url := giturl.Parse(repoConfig.originURL)
-		connector := hosting.NewGiteaConnector(*url, repoConfig, nil)
+		connector, err := hosting.NewGiteaConnector(repoConfig, nil)
+		assert.Nil(t, err)
 		assert.NotNil(t, connector)
 		assert.Equal(t, "Gitea", connector.HostingServiceName())
 		assert.Equal(t, "https://self-hosted-gitea.com/git-town/git-town", connector.RepositoryURL())
@@ -38,8 +37,8 @@ func TestNewGiteaConnector(t *testing.T) {
 			originURL:      "git@my-ssh-identity.com:git-town/git-town.git",
 			originOverride: "gitea.com",
 		}
-		url := giturl.Parse(repoConfig.originURL)
-		connector := hosting.NewGiteaConnector(*url, repoConfig, nil)
+		connector, err := hosting.NewGiteaConnector(repoConfig, nil)
+		assert.Nil(t, err)
 		assert.NotNil(t, connector)
 		assert.Equal(t, "Gitea", connector.HostingServiceName())
 		assert.Equal(t, "https://gitea.com/git-town/git-town", connector.RepositoryURL())
@@ -62,8 +61,8 @@ func TestGitea(t *testing.T) {
 		repoConfig := mockRepoConfig{
 			originURL: "git@gitea.com:git-town/git-town.git",
 		}
-		url := giturl.Parse(repoConfig.originURL)
-		connector := hosting.NewGiteaConnector(*url, repoConfig, nil)
+		connector, err := hosting.NewGiteaConnector(repoConfig, nil)
+		assert.Nil(t, err)
 		have, err := connector.NewProposalURL("feature", "parent")
 		assert.Nil(t, err)
 		assert.Equal(t, have, "https://gitea.com/git-town/git-town/compare/parent...feature")
@@ -72,8 +71,8 @@ func TestGitea(t *testing.T) {
 		repoConfig := mockRepoConfig{
 			originURL: "git@gitea.com:git-town/git-town.git",
 		}
-		url := giturl.Parse(repoConfig.originURL)
-		connector := hosting.NewGiteaConnector(*url, repoConfig, nil)
+		connector, err := hosting.NewGiteaConnector(repoConfig, nil)
+		assert.Nil(t, err)
 		have := connector.RepositoryURL()
 		assert.Equal(t, have, "https://gitea.com/git-town/git-town")
 	})

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/spf13/cobra"
 )
@@ -19,9 +20,9 @@ when merging remote tracking branches into local branches
 for the main branch and perennial branches.`,
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) == 0 {
-				cli.Println(repo.Config.PullBranchStrategy())
+				displayPullBranchStrategy(repo)
 			} else {
-				err := repo.Config.SetPullBranchStrategy(args[0])
+				err := updatePullBranchStrategy(args[0], repo)
 				if err != nil {
 					cli.Exit(err)
 				}
@@ -37,4 +38,16 @@ for the main branch and perennial branches.`,
 			return ValidateIsRepository(repo)
 		},
 	}
+}
+
+func displayPullBranchStrategy(repo *git.ProdRepo) {
+	cli.Println(repo.Config.PullBranchStrategy())
+}
+
+func updatePullBranchStrategy(value string, repo *git.ProdRepo) error {
+	pullBranchStrategy, err := config.NewPullBranchStrategy(value)
+	if err != nil {
+		return err
+	}
+	return repo.Config.SetPullBranchStrategy(pullBranchStrategy)
 }
