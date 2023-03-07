@@ -1,4 +1,4 @@
-// package cache provides infrastructure to cache things in memory.
+// Package cache provides infrastructure to cache things in memory.
 package cache
 
 // Bool is a cache for bool variables.
