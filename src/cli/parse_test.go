@@ -9,23 +9,36 @@ import (
 
 func TestParseBool(t *testing.T) {
 	t.Parallel()
-	t.Run("valid input", func(t *testing.T) {
+	t.Run("yes/no", func(t *testing.T) {
 		t.Parallel()
-		tests := map[string]bool{
-			"yes":   true,
-			"no":    false,
-			"on":    true,
-			"off":   false,
+		verifyParseBool(t, map[string]bool{
+			"yes": true,
+			"no":  false,
+		})
+	})
+
+	t.Run("on/off", func(t *testing.T) {
+		t.Parallel()
+		verifyParseBool(t, map[string]bool{
+			"on":  true,
+			"off": false,
+		})
+	})
+
+	t.Run("true/false", func(t *testing.T) {
+		t.Parallel()
+		verifyParseBool(t, map[string]bool{
 			"true":  true,
 			"false": false,
-			"1":     true,
-			"0":     false,
-		}
-		for give, want := range tests {
-			have, err := cli.ParseBool(give)
-			assert.Nil(t, err)
-			assert.Equal(t, want, have)
-		}
+		})
+	})
+
+	t.Run("numbers", func(t *testing.T) {
+		t.Parallel()
+		verifyParseBool(t, map[string]bool{
+			"1": true,
+			"0": false,
+		})
 	})
 
 	t.Run("case insensitive", func(t *testing.T) {
@@ -42,4 +55,13 @@ func TestParseBool(t *testing.T) {
 		_, err := cli.ParseBool("zonk")
 		assert.Error(t, err)
 	})
+}
+
+func verifyParseBool(t *testing.T, tests map[string]bool) {
+	t.Helper()
+	for give, want := range tests {
+		have, err := cli.ParseBool(give)
+		assert.Nil(t, err)
+		assert.Equal(t, want, have)
+	}
 }
