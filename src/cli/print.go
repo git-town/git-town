@@ -47,9 +47,7 @@ func PrintEntry(label, value string) {
 
 // PrintError prints the given error message to the console.
 func PrintError(err error) {
-	fmt.Println()
-	PrintlnColor(color.New(color.Bold).Add(color.FgRed), "Error:", err.Error())
-	fmt.Println()
+	PrintlnColor(color.New(color.Bold).Add(color.FgRed), "\nError:", err.Error(), "\n")
 }
 
 func PrintHeader(text string) {
