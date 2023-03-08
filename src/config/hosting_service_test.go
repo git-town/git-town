@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestToHostingService(t *testing.T) {
+func TestNewHostingService(t *testing.T) {
 	t.Parallel()
 	t.Run("valid content", func(t *testing.T) {
 		t.Parallel()
@@ -22,6 +22,15 @@ func TestToHostingService(t *testing.T) {
 			have, err := config.NewHostingService(give)
 			assert.Nil(t, err)
 			assert.Equal(t, want, have)
+		}
+	})
+
+	t.Run("case insensitive", func(t *testing.T) {
+		t.Parallel()
+		for _, give := range []string{"github", "GitHub", "GITHUB"} {
+			have, err := config.NewHostingService(give)
+			assert.Nil(t, err)
+			assert.Equal(t, config.HostingServiceGitHub, have)
 		}
 	})
 

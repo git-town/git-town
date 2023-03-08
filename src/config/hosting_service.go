@@ -1,6 +1,9 @@
 package config
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 // HostingService defines legal values for the "git-town.code-hosting-driver" config setting.
 type HostingService string
@@ -15,6 +18,7 @@ const (
 
 // NewHostingService provides the HostingService enum matching the given text.
 func NewHostingService(text string) (HostingService, error) {
+	text = strings.ToLower(text)
 	for _, hostingService := range hostingServices() {
 		if string(hostingService) == text {
 			return hostingService, nil
