@@ -97,10 +97,10 @@ and it allows you to perform many common Git operations faster and easier.`,
 func validateGitVersion(repo *git.ProdRepo) error {
 	majorVersion, minorVersion, err := repo.Silent.Version()
 	if err != nil {
-		cli.Exit(err)
+		return err
 	}
 	if !IsAcceptableGitVersion(majorVersion, minorVersion) {
-		cli.Exit(errors.New("this app requires Git 2.7.0 or higher"))
+		return errors.New("this app requires Git 2.7.0 or higher")
 	}
 	return nil
 }
