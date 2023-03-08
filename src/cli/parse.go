@@ -7,10 +7,10 @@ import (
 
 func ParseBool(text string) (bool, error) {
 	text = strings.ToLower(text)
-	if text == "yes" || text == "on" {
+	switch text {
+	case "yes", "on":
 		return true, nil
-	}
-	if text == "no" || text == "off" {
+	case "no", "off":
 		return false, nil
 	}
 	return strconv.ParseBool(text)
