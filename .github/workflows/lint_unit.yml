@@ -22,4 +22,4 @@ jobs:
       - name: Indicate formatting issues
         run: git diff HEAD --exit-code --color
       - run: make docs
-      - run: make unit-all
+      - run: make unit-race
