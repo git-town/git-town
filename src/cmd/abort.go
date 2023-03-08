@@ -27,11 +27,7 @@ func abortCmd(repo *git.ProdRepo) *cobra.Command {
 			if err != nil {
 				return err
 			}
-			err = runstate.Execute(&abortRunState, repo, connector)
-			if err != nil {
-				return err
-			}
-			return nil
+			return runstate.Execute(&abortRunState, repo, connector)
 		},
 		Args: cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
