@@ -47,7 +47,7 @@ To load completions for each session, add the above line to your PowerShell prof
 		ValidArgs:             []string{"bash", "zsh", "fish", "powershell"},
 		Args:                  cobra.MatchAll(cobra.ExactArgs(1), cobra.OnlyValidArgs),
 		Run: func(cmd *cobra.Command, args []string) {
-			completionType, err := NewCompletionType(args[0])
+			completionType, err := newCompletionType(args[0])
 			if err != nil {
 				cli.Exit(err)
 			}
@@ -93,7 +93,7 @@ func completionTypes() []CompletionType {
 	}
 }
 
-func NewCompletionType(text string) (CompletionType, error) {
+func newCompletionType(text string) (CompletionType, error) {
 	for _, completionType := range completionTypes() {
 		if text == string(completionType) {
 			return completionType, nil
