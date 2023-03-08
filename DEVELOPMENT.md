@@ -52,6 +52,16 @@ make unit-all
 
 </a>
 
+Run all unit tests with race detection:
+
+<a type="make/command">
+
+```
+make unit-race
+```
+
+</a>
+
 Run unit tests for packages containing changes:
 
 <a type="make/command">
