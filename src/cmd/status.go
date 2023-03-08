@@ -25,6 +25,9 @@ func statusCommand(repo *git.ProdRepo) *cobra.Command {
 		},
 		Args: cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if err := validateGitVersion(repo); repo != nil {
+				return err
+			}
 			return ValidateIsRepository(repo)
 		},
 		GroupID: "errors",

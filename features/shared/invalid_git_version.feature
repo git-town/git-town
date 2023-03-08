@@ -9,35 +9,35 @@ Feature: require minimum Git version
       """
 
     Examples:
-      | COMMAND              |
-      | aliases true         |
-      | append               |
-      | config               |
-      | diff-parent          |
-      | hack                 |
-      | kill                 |
-      | main_branch          |
-      | push-new-branches    |
-      | new-pull-request     |
-      | offline              |
-      | perennial-branches   |
-      | prepend              |
-      | prune-branches       |
-      | pull-branch-strategy |
-      | rename-branch        |
-      | repo                 |
-      | set-parent           |
-      | ship                 |
-      | sync                 |
+      | COMMAND                     |
+      | aliases true                |
+      | append foo                  |
+      | config                      |
+      | config main-branch          |
+      | config push-new-branches    |
+      | config offline              |
+      | config perennial-branches   |
+      | config pull-branch-strategy |
+      | diff-parent                 |
+      | hack foo                    |
+      | kill                        |
+      | new-pull-request            |
+      | prepend foo                 |
+      | prune-branches              |
+      | rename-branch foo           |
+      | repo                        |
+      | set-parent                  |
+      | ship                        |
+      | sync                        |
 
-  @this
   Scenario Outline: not requiring Git
     Given Git has version "2.6.2"
     When I run "git-town <COMMAND>"
     Then it runs no commands
 
     Examples:
-      | COMMAND |
-      |         |
-      | help    |
-      | version |
+      | COMMAND          |
+      |                  |
+      | completions bash |
+      | help             |
+      | version          |
