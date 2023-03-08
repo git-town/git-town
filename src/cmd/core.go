@@ -37,7 +37,6 @@ func Execute() error {
 	debugFlag := false
 	repo := git.NewProdRepo(&debugFlag)
 	rootCmd := RootCmd(&repo, &debugFlag)
-	// TODO: move into PersistentPreRunE
 	majorVersion, minorVersion, err := repo.Silent.Version()
 	if err != nil {
 		return err
