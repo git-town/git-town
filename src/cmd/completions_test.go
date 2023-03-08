@@ -9,12 +9,10 @@ import (
 
 func TestNewCompletionType(t *testing.T) {
 	t.Parallel()
-	t.Run("valid input", func(t *testing.T) {
+	t.Run("recognizes shells", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]cmd.CompletionType{
 			"bash":       cmd.CompletionTypeBash,
-			"Bash":       cmd.CompletionTypeBash,
-			"BASH":       cmd.CompletionTypeBash,
 			"zsh":        cmd.CompletionTypeZsh,
 			"fish":       cmd.CompletionTypeFish,
 			"powershell": cmd.CompletionTypePowershell,
@@ -25,6 +23,16 @@ func TestNewCompletionType(t *testing.T) {
 			assert.Equal(t, want, have)
 		}
 	})
+
+	t.Run("case insensitive", func(t *testing.T) {
+		t.Parallel()
+		for _, give := range []string{"bash", "Bash", "BASH"} {
+			have, err := cmd.NewCompletionType(give)
+			assert.Nil(t, err)
+			assert.Equal(t, cmd.CompletionTypeBash, have)
+		}
+	})
+
 	t.Run("invalid input", func(t *testing.T) {
 		_, err := cmd.NewCompletionType("zonk")
 		assert.Error(t, err)
