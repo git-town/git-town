@@ -89,7 +89,10 @@ test-go:  # smoke tests for Go refactorings
 unit:  # runs only the unit tests for changed code
 	env GOGC=off go test -timeout 30s ./src/... ./test/...
 
-unit-all:  # runs all the unit tests with race detector
+unit-all:  # runs all the unit tests
+	env GOGC=off go test -count=1 -timeout 60s ./src/... ./test/...
+
+unit-race:  # runs all the unit tests with race detector
 	env GOGC=off go test -count=1 -timeout 60s -race ./src/... ./test/...
 
 update:  # updates all dependencies
