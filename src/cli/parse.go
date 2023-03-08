@@ -6,8 +6,7 @@ import (
 )
 
 func ParseBool(text string) (bool, error) {
-	text = strings.ToLower(text)
-	switch text {
+	switch strings.ToLower(text) {
 	case "yes", "on":
 		return true, nil
 	case "no", "off":
