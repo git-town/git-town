@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/spf13/cobra"
@@ -47,7 +48,7 @@ To load completions for each session, add the above line to your PowerShell prof
 		ValidArgs:             []string{"bash", "zsh", "fish", "powershell"},
 		Args:                  cobra.MatchAll(cobra.ExactArgs(1), cobra.OnlyValidArgs),
 		Run: func(cmd *cobra.Command, args []string) {
-			completionType, err := newCompletionType(args[0])
+			completionType, err := NewCompletionType(args[0])
 			if err != nil {
 				cli.Exit(err)
 			}
@@ -95,7 +96,8 @@ func completionTypes() []CompletionType {
 	}
 }
 
-func newCompletionType(text string) (CompletionType, error) {
+func NewCompletionType(text string) (CompletionType, error) {
+	text = strings.ToLower(text)
 	for _, completionType := range completionTypes() {
 		if text == string(completionType) {
 			return completionType, nil
