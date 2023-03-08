@@ -32,11 +32,7 @@ See "sync" for information regarding upstream remotes.`,
 				return err
 			}
 			runState := runstate.New("append", stepList)
-			err = runstate.Execute(runState, repo, nil)
-			if err != nil {
-				return err
-			}
-			return nil
+			return runstate.Execute(runState, repo, nil)
 		},
 		Args: cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
