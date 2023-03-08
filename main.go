@@ -15,7 +15,8 @@ import (
 
 func main() {
 	dialog.Initialize()
-	if err := cmd.Execute(); err != nil {
+	err := cmd.Execute()
+	if err != nil {
 		cli.PrintError(err)
 		os.Exit(1)
 	}
