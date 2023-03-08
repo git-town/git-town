@@ -17,10 +17,10 @@ func syncStrategyCommand(repo *git.ProdRepo) *cobra.Command {
 The sync strategy specifies what strategy to use
 when merging remote tracking branches into local feature branches.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if len(args) == 0 {
-				return printSyncStrategy(globalFlag, repo)
+			if len(args) > 0 {
+				return setSyncStrategy(globalFlag, repo, args[0])
 			}
-			return setSyncStrategy(globalFlag, repo, args[0])
+			return printSyncStrategy(globalFlag, repo)
 		},
 		Args: cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

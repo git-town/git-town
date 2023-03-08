@@ -16,11 +16,10 @@ func mainbranchConfigCmd(repo *git.ProdRepo) *cobra.Command {
 
 The main branch is the Git branch from which new feature branches are cut.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if len(args) == 0 {
-				printMainBranch(repo)
-			} else {
+			if len(args) > 0 {
 				return setMainBranch(args[0], repo)
 			}
+			printMainBranch(repo)
 			return nil
 		},
 		Args: cobra.MaximumNArgs(1),

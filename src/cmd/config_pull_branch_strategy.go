@@ -17,10 +17,10 @@ The pull branch strategy specifies what strategy to use
 when merging remote tracking branches into local branches
 for the main branch and perennial branches.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if len(args) == 0 {
-				return displayPullBranchStrategy(repo)
+			if len(args) > 0 {
+				return setPullBranchStrategy(args[0], repo)
 			}
-			return setPullBranchStrategy(args[0], repo)
+			return displayPullBranchStrategy(repo)
 		},
 		Args: cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -39,7 +39,7 @@ func displayPullBranchStrategy(repo *git.ProdRepo) error {
 }
 
 func setPullBranchStrategy(value string, repo *git.ProdRepo) error {
-	pullBranchStrategy, err := config.ToPullBranchStrategy(value)
+	pullBranchStrategy, err := config.NewPullBranchStrategy(value)
 	if err != nil {
 		return err
 	}
