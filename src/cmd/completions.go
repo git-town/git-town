@@ -1,8 +1,11 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
+	"strings"
 
+	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/spf13/cobra"
 )
 
@@ -45,23 +48,60 @@ To load completions for each session, add the above line to your PowerShell prof
 		ValidArgs:             []string{"bash", "zsh", "fish", "powershell"},
 		Args:                  cobra.MatchAll(cobra.ExactArgs(1), cobra.OnlyValidArgs),
 		Run: func(cmd *cobra.Command, args []string) {
-			switch args[0] {
-			case "bash":
-				_ = rootCmd.GenBashCompletion(os.Stdout)
-			case "zsh":
+			completionType, err := NewCompletionType(args[0])
+			if err != nil {
+				cli.Exit(err)
+			}
+			switch completionType {
+			case CompletionTypeBash:
+				err = rootCmd.GenBashCompletion(os.Stdout)
+			case CompletionTypeZsh:
 				if completionsNoDescFlag {
-					_ = rootCmd.GenZshCompletionNoDesc(os.Stdout)
+					err = rootCmd.GenZshCompletionNoDesc(os.Stdout)
 				} else {
-					_ = rootCmd.GenZshCompletion(os.Stdout)
+					err = rootCmd.GenZshCompletion(os.Stdout)
 				}
-			case "fish":
-				_ = rootCmd.GenFishCompletion(os.Stdout, !completionsNoDescFlag)
-			case "powershell":
-				_ = rootCmd.GenPowerShellCompletion(os.Stdout)
+			case CompletionTypeFish:
+				err = rootCmd.GenFishCompletion(os.Stdout, !completionsNoDescFlag)
+			case CompletionTypePowershell:
+				err = rootCmd.GenPowerShellCompletion(os.Stdout)
+			}
+			if err != nil {
+				cli.Exit(err)
 			}
 		},
 		GroupID: "setup",
 	}
 	completionsCmd.Flags().BoolVar(&completionsNoDescFlag, "no-descriptions", false, "disable completions description for shells that support it")
 	return &completionsCmd
+}
+
+// CompletionType defines the valid shells for which Git Town can create auto-completions.
+type CompletionType string
+
+const (
+	CompletionTypeBash       CompletionType = "bash"
+	CompletionTypeZsh        CompletionType = "zsh"
+	CompletionTypeFish       CompletionType = "fish"
+	CompletionTypePowershell CompletionType = "powershell"
+)
+
+// completionTypes provides all CompletionType values.
+func completionTypes() []CompletionType {
+	return []CompletionType{
+		CompletionTypeBash,
+		CompletionTypeZsh,
+		CompletionTypeFish,
+		CompletionTypePowershell,
+	}
+}
+
+func NewCompletionType(text string) (CompletionType, error) {
+	text = strings.ToLower(text)
+	for _, completionType := range completionTypes() {
+		if text == string(completionType) {
+			return completionType, nil
+		}
+	}
+	return CompletionTypeBash, fmt.Errorf("unknown completiontype: %q", text)
 }
