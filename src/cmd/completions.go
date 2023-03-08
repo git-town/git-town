@@ -75,6 +75,7 @@ To load completions for each session, add the above line to your PowerShell prof
 	return &completionsCmd
 }
 
+// CompletionType defines the valid shells for which Git Town can create auto-completions.
 type CompletionType string
 
 const (
