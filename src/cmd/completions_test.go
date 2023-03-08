@@ -34,6 +34,7 @@ func TestNewCompletionType(t *testing.T) {
 	})
 
 	t.Run("invalid input", func(t *testing.T) {
+		t.Parallel()
 		_, err := cmd.NewCompletionType("zonk")
 		assert.Error(t, err)
 	})
