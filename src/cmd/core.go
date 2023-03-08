@@ -38,13 +38,6 @@ func Execute() {
 	debugFlag := false
 	repo := git.NewProdRepo(&debugFlag)
 	rootCmd := RootCmd(&repo, &debugFlag)
-	majorVersion, minorVersion, err := repo.Silent.Version()
-	if err != nil {
-		cli.Exit(err)
-	}
-	if !IsAcceptableGitVersion(majorVersion, minorVersion) {
-		cli.Exit(errors.New("this app requires Git 2.7.0 or higher"))
-	}
 	color.NoColor = false // Prevent color from auto disable
 	if err := rootCmd.Execute(); err != nil {
 		cli.Exit(err)
@@ -99,6 +92,17 @@ and it allows you to perform many common Git operations faster and easier.`,
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
 	rootCmd.PersistentFlags().BoolVar(debugFlag, "debug", false, "Print all Git commands run under the hood")
 	return &rootCmd
+}
+
+func validateGitVersion(repo *git.ProdRepo) error {
+	majorVersion, minorVersion, err := repo.Silent.Version()
+	if err != nil {
+		cli.Exit(err)
+	}
+	if !IsAcceptableGitVersion(majorVersion, minorVersion) {
+		cli.Exit(errors.New("this app requires Git 2.7.0 or higher"))
+	}
+	return nil
 }
 
 // IsAcceptableGitVersion indicates whether the given Git version works for Git Town.

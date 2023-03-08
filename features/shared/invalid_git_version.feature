@@ -10,13 +10,11 @@ Feature: require minimum Git version
 
     Examples:
       | COMMAND              |
-      |                      |
       | aliases true         |
       | append               |
       | config               |
       | diff-parent          |
       | hack                 |
-      | help                 |
       | kill                 |
       | main_branch          |
       | push-new-branches    |
@@ -31,4 +29,15 @@ Feature: require minimum Git version
       | set-parent           |
       | ship                 |
       | sync                 |
-      | version              |
+
+  @this
+  Scenario Outline: not requiring Git
+    Given Git has version "2.6.2"
+    When I run "git-town <COMMAND>"
+    Then it runs no commands
+
+    Examples:
+      | COMMAND |
+      |         |
+      | help    |
+      | version |
