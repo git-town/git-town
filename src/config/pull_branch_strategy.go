@@ -1,6 +1,9 @@
 package config
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 // PullBranchStrategy defines legal values for the "pull-branch-strategy" configuration setting.
 type PullBranchStrategy string
@@ -11,7 +14,7 @@ const (
 )
 
 func NewPullBranchStrategy(text string) (PullBranchStrategy, error) {
-	switch text {
+	switch strings.ToLower(text) {
 	case "merge":
 		return PullBranchStrategyMerge, nil
 	case "rebase", "":
