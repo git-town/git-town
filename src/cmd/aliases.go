@@ -23,15 +23,9 @@ This can conflict with other tools that also define Git aliases.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			switch args[0] {
 			case "add":
-				err := addAliases(repo)
-				if err != nil {
-					return err
-				}
+				return addAliases(repo)
 			case "remove":
-				err := removeAliases(repo)
-				if err != nil {
-					return err
-				}
+				return removeAliases(repo)
 			}
 			return fmt.Errorf(`invalid argument %q. Please provide either "add" or "remove"`, args[0])
 		},
