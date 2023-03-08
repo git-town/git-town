@@ -1,6 +1,9 @@
 package config
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 // HostingService defines legal values for the "git-town.code-hosting-driver" config setting.
 type HostingService string
@@ -13,6 +16,17 @@ const (
 	NoHostingService        HostingService = ""
 )
 
+// NewHostingService provides the HostingService enum matching the given text.
+func NewHostingService(text string) (HostingService, error) {
+	text = strings.ToLower(text)
+	for _, hostingService := range hostingServices() {
+		if string(hostingService) == text {
+			return hostingService, nil
+		}
+	}
+	return NoHostingService, fmt.Errorf("unknown alias type: %q", text)
+}
+
 // hostingServices provides all legal values for HostingService.
 func hostingServices() []HostingService {
 	return []HostingService{
@@ -22,14 +36,4 @@ func hostingServices() []HostingService {
 		HostingServiceGitLab,
 		HostingServiceGitea,
 	}
-}
-
-// ToHostingService provides the HostingService enum matching the given text.
-func ToHostingService(text string) (HostingService, error) {
-	for _, hostingService := range hostingServices() {
-		if string(hostingService) == text {
-			return hostingService, nil
-		}
-	}
-	return NoHostingService, fmt.Errorf("unknown alias type: %q", text)
 }

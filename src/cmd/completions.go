@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -45,24 +46,57 @@ To load completions for each session, add the above line to your PowerShell prof
 		DisableFlagsInUseLine: true,
 		Args:                  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			switch args[0] {
-			case "bash":
+			completionType, err := NewCompletionType(args[0])
+			if err != nil {
+				return err
+			}
+			switch completionType {
+			case CompletionTypeBash:
 				return rootCmd.GenBashCompletion(os.Stdout)
-			case "zsh":
+			case CompletionTypeZsh:
 				if completionsNoDescFlag {
 					return rootCmd.GenZshCompletionNoDesc(os.Stdout)
 				}
 				return rootCmd.GenZshCompletion(os.Stdout)
-			case "fish":
+			case CompletionTypeFish:
 				return rootCmd.GenFishCompletion(os.Stdout, !completionsNoDescFlag)
-			case "powershell":
+			case CompletionTypePowershell:
 				return rootCmd.GenPowerShellCompletion(os.Stdout)
-			default:
-				return fmt.Errorf("unknown argument: %q", args[0])
 			}
+			return fmt.Errorf("unknown argument: %q", args[0])
 		},
 		GroupID: "setup",
 	}
 	completionsCmd.Flags().BoolVar(&completionsNoDescFlag, "no-descriptions", false, "disable completions description for shells that support it")
 	return &completionsCmd
+}
+
+// CompletionType defines the valid shells for which Git Town can create auto-completions.
+type CompletionType string
+
+const (
+	CompletionTypeBash       CompletionType = "bash"
+	CompletionTypeZsh        CompletionType = "zsh"
+	CompletionTypeFish       CompletionType = "fish"
+	CompletionTypePowershell CompletionType = "powershell"
+)
+
+// completionTypes provides all CompletionType values.
+func completionTypes() []CompletionType {
+	return []CompletionType{
+		CompletionTypeBash,
+		CompletionTypeZsh,
+		CompletionTypeFish,
+		CompletionTypePowershell,
+	}
+}
+
+func NewCompletionType(text string) (CompletionType, error) {
+	text = strings.ToLower(text)
+	for _, completionType := range completionTypes() {
+		if text == string(completionType) {
+			return completionType, nil
+		}
+	}
+	return CompletionTypeBash, fmt.Errorf("unknown completiontype: %q", text)
 }

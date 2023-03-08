@@ -22,6 +22,15 @@ func TestNewPullBranchStrategy(t *testing.T) {
 		}
 	})
 
+	t.Run("case insensitive", func(t *testing.T) {
+		t.Parallel()
+		for _, give := range []string{"merge", "Merge", "MERGE"} {
+			have, err := config.NewPullBranchStrategy(give)
+			assert.Nil(t, err)
+			assert.Equal(t, config.PullBranchStrategyMerge, have)
+		}
+	})
+
 	t.Run("defaults to rebase", func(t *testing.T) {
 		t.Parallel()
 		have, err := config.NewPullBranchStrategy("")
