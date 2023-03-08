@@ -1,6 +1,6 @@
 Feature: too few or many parameters
 
-  Scenario Outline:
+  Scenario Outline: incorrect number of arguments
     When I run "git-town <CMD>"
     Then it runs no commands
     And it prints the error:
@@ -22,8 +22,6 @@ Feature: too few or many parameters
       | config perennial-branches arg1        |
       | config perennial-branches update arg1 |
       | config pull-branch-strategy arg1 arg2 |
-      | config pull-branch-strategy invalid   |
-      | config sync-strategy invalid          |
       | hack                                  |
       | hack arg1 arg2                        |
       | kill arg1 arg2                        |
@@ -37,3 +35,16 @@ Feature: too few or many parameters
       | ship arg1 arg2                        |
       | sync arg1                             |
       | version arg1                          |
+
+  Scenario Outline: invalid arguments
+    When I run "git-town <CMD>"
+    Then it runs no commands
+    And it prints the error:
+      """
+      Error: <ERROR>
+      """
+
+    Examples:
+      | CMD                                 | ERROR                                   |
+      | config pull-branch-strategy invalid | unknown pull branch strategy: "invalid" |
+      | config sync-strategy invalid        | unknown sync strategy: "invalid"        |
