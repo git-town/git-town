@@ -1,8 +1,12 @@
 package cli
 
-import "strconv"
+import (
+	"strconv"
+	"strings"
+)
 
 func ParseBool(text string) (bool, error) {
+	text = strings.ToLower(text)
 	if text == "yes" || text == "on" {
 		return true, nil
 	}
