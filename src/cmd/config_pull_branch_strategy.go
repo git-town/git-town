@@ -22,8 +22,7 @@ for the main branch and perennial branches.`,
 			}
 			return setPullBranchStrategy(args[0], repo)
 		},
-		ValidArgs: []string{"merge", "rebase"},
-		Args:      cobra.MatchAll(cobra.MaximumNArgs(1), cobra.OnlyValidArgs),
+		Args: cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return ValidateIsRepository(repo)
 		},

@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/git"
@@ -24,12 +22,7 @@ when merging remote tracking branches into local feature branches.`,
 			}
 			return setSyncStrategy(globalFlag, repo, args[0])
 		},
-		Args: func(cmd *cobra.Command, args []string) error {
-			if len(args) == 1 && args[0] != "merge" && args[0] != "rebase" {
-				return fmt.Errorf("invalid value: %q", args[0])
-			}
-			return cobra.MaximumNArgs(1)(cmd, args)
-		},
+		Args: cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return ValidateIsRepository(repo)
 		},
