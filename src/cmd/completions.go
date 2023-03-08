@@ -85,6 +85,7 @@ const (
 	CompletionTypePowershell CompletionType = "powershell"
 )
 
+// completionTypes provides all CompletionType values.
 func completionTypes() []CompletionType {
 	return []CompletionType{
 		CompletionTypeBash,
