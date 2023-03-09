@@ -161,7 +161,7 @@ func (gt *GitTown) HostingServiceName() string {
 // This function caches its result and can be queried repeatedly.
 func (gt *GitTown) HostingService() (HostingService, error) {
 	name := gt.HostingServiceName()
-	hostingService, err := ToHostingService(name)
+	hostingService, err := NewHostingService(name)
 	if err != nil {
 		return NoHostingService, err
 	}
@@ -285,7 +285,7 @@ func (gt *GitTown) PerennialBranches() []string {
 // PullBranchStrategy provides the currently configured pull branch strategy.
 func (gt *GitTown) PullBranchStrategy() (PullBranchStrategy, error) {
 	text := gt.Storage.LocalOrGlobalConfigValue(PullBranchStrategyKey)
-	return ToPullBranchStrategy(text)
+	return NewPullBranchStrategy(text)
 }
 
 // PushHook provides the currently configured push-hook setting.

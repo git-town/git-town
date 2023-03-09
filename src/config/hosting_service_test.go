@@ -16,7 +16,7 @@ func TestNewHostingService(t *testing.T) {
 			"github":    config.HostingServiceGitHub,
 			"gitlab":    config.HostingServiceGitLab,
 			"gitea":     config.HostingServiceGitea,
-			"":          config.HostingServiceNone,
+			"":          config.NoHostingService,
 		}
 		for give, want := range tests {
 			have, err := config.NewHostingService(give)
