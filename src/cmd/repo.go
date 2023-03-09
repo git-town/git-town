@@ -36,7 +36,7 @@ where HOSTNAME matches what is in your ssh config file.`, config.CodeHostingDriv
 			if connector == nil {
 				return hosting.UnsupportedServiceError()
 			}
-			browser.Open(connector.RepositoryURL(), repo.LoggingShell)
+			browser.Open(connector.RepositoryURL(), repo.LoggingRunner)
 			return nil
 		},
 	}
