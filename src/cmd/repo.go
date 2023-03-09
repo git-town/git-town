@@ -38,6 +38,9 @@ where HOSTNAME matches what is in your ssh config file.`, config.CodeHostingDriv
 		},
 		Args: cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if err := validateGitVersion(repo); err != nil {
+				return err
+			}
 			if err := ValidateIsRepository(repo); err != nil {
 				return err
 			}
