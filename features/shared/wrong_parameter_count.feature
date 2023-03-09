@@ -1,6 +1,5 @@
 Feature: too few or many parameters
 
-  @this
   Scenario Outline:
     When I run "git-town <CMD>"
     Then it runs no commands
