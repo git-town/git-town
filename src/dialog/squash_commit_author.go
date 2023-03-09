@@ -4,13 +4,12 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v7/src/cli"
-	"github.com/git-town/git-town/v7/src/git"
 	survey "gopkg.in/AlecAivazis/survey.v1"
 )
 
 // DetermineSquashCommitAuthor gets the author of the supplied branch.
 // If the branch has more than one author, the author is queried from the user.
-func DetermineSquashCommitAuthor(branch string, authors []string, repo *git.ProdRepo) (string, error) {
+func DetermineSquashCommitAuthor(branch string, authors []string) (string, error) {
 	if len(authors) == 1 {
 		return authors[0], nil
 	}
