@@ -9,8 +9,8 @@ import (
 type PullBranchStrategy string
 
 const (
-	PullBranchStrategyMerge  = "merge"
-	PullBranchStrategyRebase = "rebase"
+	PullBranchStrategyMerge  PullBranchStrategy = "merge"
+	PullBranchStrategyRebase PullBranchStrategy = "rebase"
 )
 
 func NewPullBranchStrategy(text string) (PullBranchStrategy, error) {

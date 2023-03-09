@@ -98,5 +98,5 @@ func NewCompletionType(text string) (CompletionType, error) {
 			return completionType, nil
 		}
 	}
-	return CompletionTypeBash, fmt.Errorf("unknown completiontype: %q", text)
+	return CompletionTypeBash, fmt.Errorf("unknown completion type: %q", text)
 }

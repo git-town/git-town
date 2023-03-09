@@ -72,10 +72,29 @@ func TestErrorChecker(t *testing.T) {
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()
 			ec := runstate.ErrorChecker{}
-			ec.HostingService(config.NoHostingService, nil)
+			ec.HostingService(config.HostingServiceNone, nil)
 			assert.Nil(t, ec.Err)
 			ec.HostingService(config.HostingServiceGitHub, errors.New("first"))
 			ec.HostingService(config.HostingServiceGitHub, errors.New("second"))
+			assert.Error(t, ec.Err, "first")
+		})
+	})
+
+	t.Run("PullBranchStrategy", func(t *testing.T) {
+		t.Parallel()
+		t.Run("returns the given PullBranchStrategy value", func(t *testing.T) {
+			t.Parallel()
+			ec := runstate.ErrorChecker{}
+			assert.Equal(t, config.PullBranchStrategyMerge, ec.PullBranchStrategy(config.PullBranchStrategyMerge, nil))
+			assert.Equal(t, config.PullBranchStrategyRebase, ec.PullBranchStrategy(config.PullBranchStrategyRebase, errors.New("")))
+		})
+		t.Run("captures the first error it receives", func(t *testing.T) {
+			t.Parallel()
+			ec := runstate.ErrorChecker{}
+			ec.PullBranchStrategy(config.PullBranchStrategyMerge, nil)
+			assert.Nil(t, ec.Err)
+			ec.PullBranchStrategy(config.PullBranchStrategyMerge, errors.New("first"))
+			ec.PullBranchStrategy(config.PullBranchStrategyMerge, errors.New("second"))
 			assert.Error(t, ec.Err, "first")
 		})
 	})

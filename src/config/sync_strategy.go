@@ -6,8 +6,8 @@ import "fmt"
 type SyncStrategy string
 
 const (
-	SyncStrategyMerge  = "merge"
-	SyncStrategyRebase = "rebase"
+	SyncStrategyMerge  SyncStrategy = "merge"
+	SyncStrategyRebase SyncStrategy = "rebase"
 )
 
 func ToSyncStrategy(text string) (SyncStrategy, error) {
@@ -19,8 +19,4 @@ func ToSyncStrategy(text string) (SyncStrategy, error) {
 	default:
 		return SyncStrategyMerge, fmt.Errorf("unknown sync strategy: %q", text)
 	}
-}
-
-func (pbs SyncStrategy) String() string {
-	return string(pbs)
 }

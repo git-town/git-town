@@ -160,12 +160,7 @@ func (gt *GitTown) HostingServiceName() string {
 // HostingService provides the type-safe name of the code hosting connector to use.
 // This function caches its result and can be queried repeatedly.
 func (gt *GitTown) HostingService() (HostingService, error) {
-	name := gt.HostingServiceName()
-	hostingService, err := ToHostingService(name)
-	if err != nil {
-		return NoHostingService, err
-	}
-	return hostingService, nil
+	return NewHostingService(gt.HostingServiceName())
 }
 
 // IsAncestorBranch indicates whether the given branch is an ancestor of the other given branch.
@@ -285,7 +280,7 @@ func (gt *GitTown) PerennialBranches() []string {
 // PullBranchStrategy provides the currently configured pull branch strategy.
 func (gt *GitTown) PullBranchStrategy() (PullBranchStrategy, error) {
 	text := gt.Storage.LocalOrGlobalConfigValue(PullBranchStrategyKey)
-	return ToPullBranchStrategy(text)
+	return NewPullBranchStrategy(text)
 }
 
 // PushHook provides the currently configured push-hook setting.

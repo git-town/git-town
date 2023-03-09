@@ -13,7 +13,7 @@ const (
 	HostingServiceGitHub    HostingService = "github"
 	HostingServiceGitLab    HostingService = "gitlab"
 	HostingServiceGitea     HostingService = "gitea"
-	NoHostingService        HostingService = ""
+	HostingServiceNone      HostingService = ""
 )
 
 // NewHostingService provides the HostingService enum matching the given text.
@@ -24,13 +24,13 @@ func NewHostingService(text string) (HostingService, error) {
 			return hostingService, nil
 		}
 	}
-	return NoHostingService, fmt.Errorf("unknown alias type: %q", text)
+	return HostingServiceNone, fmt.Errorf("unknown alias type: %q", text)
 }
 
 // hostingServices provides all legal values for HostingService.
 func hostingServices() []HostingService {
 	return []HostingService{
-		NoHostingService,
+		HostingServiceNone,
 		HostingServiceBitbucket,
 		HostingServiceGitHub,
 		HostingServiceGitLab,

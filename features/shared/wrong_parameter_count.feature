@@ -14,7 +14,7 @@ Feature: too few or many parameters
       | aliases arg1 arg2                     | accepts 1 arg(s), received 2                                           |
       | append                                | accepts 1 arg(s), received 0                                           |
       | append arg1 arg2                      | accepts 1 arg(s), received 2                                           |
-      | completions arg1                      | unknown argument: "arg1"                                               |
+      | completions arg1                      | unknown completion type: "arg1"                                        |
       | config arg1                           | unknown command "arg1" for "git-town config"                           |
       | config main-branch arg1 arg2          | accepts at most 1 arg(s), received 2                                   |
       | config push-new-branches arg1 arg2    | accepts at most 1 arg(s), received 2                                   |
@@ -22,8 +22,8 @@ Feature: too few or many parameters
       | config perennial-branches arg1        | unknown command "arg1" for "git-town config perennial-branches"        |
       | config perennial-branches update arg1 | unknown command "arg1" for "git-town config perennial-branches update" |
       | config pull-branch-strategy arg1 arg2 | accepts at most 1 arg(s), received 2                                   |
-      | config pull-branch-strategy invalid   | invalid argument "invalid" for "git-town config pull-branch-strategy"  |
-      | config sync-strategy invalid          | invalid value: "invalid"                                               |
+      | config pull-branch-strategy invalid   | unknown pull branch strategy: "invalid"                                |
+      | config sync-strategy invalid          | unknown sync strategy: "invalid"                                       |
       | hack                                  | accepts 1 arg(s), received 0                                           |
       | hack arg1 arg2                        | accepts 1 arg(s), received 2                                           |
       | kill arg1 arg2                        | accepts at most 1 arg(s), received 2                                   |
