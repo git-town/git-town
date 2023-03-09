@@ -66,13 +66,3 @@ func (s SilentShell) RunString(fullCmd string) (*Result, error) {
 	cmd, args := parts[0], parts[1:]
 	return s.Run(cmd, args...)
 }
-
-// RunStringWith runs the given command (including possible arguments) in this ShellInDir's directory.
-func (s SilentShell) RunStringWith(fullCmd string, options *Options) (*Result, error) {
-	parts, err := shellquote.Split(fullCmd)
-	if err != nil {
-		return nil, fmt.Errorf("cannot split command %q: %w", fullCmd, err)
-	}
-	cmd, args := parts[0], parts[1:]
-	return WithOptions(options, cmd, args...)
-}

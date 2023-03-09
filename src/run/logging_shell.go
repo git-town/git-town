@@ -78,11 +78,6 @@ func (shell LoggingShell) RunString(fullCmd string) (*Result, error) {
 	return shell.Run(cmd, args...)
 }
 
-// RunStringWith runs the given command (including possible arguments) in this ShellInDir's directory.
-func (shell LoggingShell) RunStringWith(fullCmd string, options *Options) (*Result, error) {
-	panic("this isn't used")
-}
-
 // PrintCommand prints the given command-line operation on the console.
 func (shell LoggingShell) PrintCommand(cmd string, args ...string) error {
 	header := cmd + " "
