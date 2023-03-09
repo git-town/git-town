@@ -51,14 +51,10 @@ func configCmd(repo *git.ProdRepo) *cobra.Command {
 				cli.PrintLabelAndValue("Branch Ancestry", cli.PrintableBranchAncestry(&repo.Config))
 			}
 		},
-		Args: cobra.NoArgs,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return ValidateIsRepository(repo)
-		},
-		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			return validateGitVersion(repo)
-		},
-		GroupID: "setup",
+		Args:              cobra.NoArgs,
+		PreRunE:           ensure(repo, isRepository),
+		PersistentPreRunE: ensure(repo, hasGitVersion),
+		GroupID:           "setup",
 	}
 	configCmd.AddCommand(mainbranchConfigCmd(repo))
 	configCmd.AddCommand(offlineCmd(repo))

@@ -25,10 +25,8 @@ The main branch is the Git branch from which new feature branches are cut.`,
 				}
 			}
 		},
-		Args: cobra.MaximumNArgs(1),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return ValidateIsRepository(repo)
-		},
+		Args:    cobra.MaximumNArgs(1),
+		PreRunE: ensure(repo, isRepository),
 	}
 }
 

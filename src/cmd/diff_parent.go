@@ -28,17 +28,8 @@ Exits with error code 1 if the given branch is a perennial branch or the main br
 				cli.Exit(err)
 			}
 		},
-		Args: cobra.MaximumNArgs(1),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := validateGitVersion(repo); err != nil {
-				return err
-			}
-			err := ValidateIsRepository(repo)
-			if err != nil {
-				return err
-			}
-			return validateIsConfigured(repo)
-		},
+		Args:    cobra.MaximumNArgs(1),
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
 		GroupID: "lineage",
 	}
 }

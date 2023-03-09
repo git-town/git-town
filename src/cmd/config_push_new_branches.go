@@ -30,10 +30,8 @@ push the new branch to the origin remote.`,
 				}
 			}
 		},
-		Args: cobra.MaximumNArgs(1),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return ValidateIsRepository(repo)
-		},
+		Args:    cobra.MaximumNArgs(1),
+		PreRunE: ensure(repo, isRepository),
 	}
 	pushNewBranchesCmd.Flags().BoolVar(&globalFlag, "global", false, "Displays or sets your global new branch push flag")
 	return &pushNewBranchesCmd
