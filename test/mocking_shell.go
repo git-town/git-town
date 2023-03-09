@@ -1,11 +1,14 @@
 package test
 
 import (
+	"bytes"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
+	"time"
 
 	"github.com/git-town/git-town/v7/src/envvars"
 	"github.com/git-town/git-town/v7/src/run"
@@ -194,8 +197,62 @@ func (ms *MockingShell) RunWith(opts *run.Options, cmd string, args ...string) (
 	}
 	// set the working dir
 	opts.Dir = filepath.Join(ms.workingDir, opts.Dir)
-	// run the command inside the custom environment
-	result, err := run.WithOptions(opts, cmd, args...)
+
+	// 1111111111111111111111111111
+
+	subProcess := exec.Command(cmd, args...) // #nosec
+	subProcess.Dir = opts.Dir
+	subProcess.Env = opts.Env
+	var output bytes.Buffer
+	subProcess.Stdout = &output
+	subProcess.Stderr = &output
+	input, err := subProcess.StdinPipe()
+	if err != nil {
+		return nil, err
+	}
+	err = subProcess.Start()
+	if err != nil {
+		return nil, fmt.Errorf("can't start subprocess '%s %s': %w", cmd, strings.Join(args, " "), err)
+	}
+	for _, userInput := range opts.Input {
+		// Here we simply wait for some time until the subProcess needs the input.
+		// Capturing the output and scanning for the actual content needed
+		// would introduce substantial amounts of multi-threaded complexity
+		// for not enough gains.
+		// https://github.com/git-town/go-execplus could help make this more robust.
+		time.Sleep(InputDelay)
+		_, err := input.Write([]byte(userInput))
+		if err != nil {
+			result := run.Result{
+				command:  cmd,
+				args:     args,
+				output:   output.String(),
+				exitCode: subProcess.ProcessState.ExitCode(),
+			}
+			return &result, fmt.Errorf("can't write %q to subprocess '%s %s': %w", userInput, cmd, strings.Join(args, " "), err)
+		}
+	}
+	err = subProcess.Wait()
+	if err != nil {
+		err = fmt.Errorf(`
+----------------------------------------
+Diagnostic information of failed command
+
+Command: %s %s
+Error: %w
+Output:
+%s
+----------------------------------------`, cmd, strings.Join(args, " "), err, output.String())
+	}
+	result := Result{
+		command:  cmd,
+		args:     args,
+		output:   output.String(),
+		exitCode: subProcess.ProcessState.ExitCode(),
+	}
+
+	// 2222222222222222222222222222
+
 	if ms.Debug {
 		fmt.Println(filepath.Base(ms.workingDir), ">", cmd, strings.Join(args, " "))
 		fmt.Println(result.Output())
@@ -210,3 +267,6 @@ func (ms *MockingShell) RunWith(opts *run.Options, cmd string, args ...string) (
 func (ms *MockingShell) SetTestOrigin(content string) {
 	ms.testOrigin = content
 }
+
+// InputDelay defines how long to wait before writing the next input string into the subprocess.
+const InputDelay = 500 * time.Millisecond
