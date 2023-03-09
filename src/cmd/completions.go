@@ -45,8 +45,7 @@ To load autocompletions for Powershell, run this command:
 To load completions for each session, add the above line to your PowerShell profile.
 `,
 		DisableFlagsInUseLine: true,
-		ValidArgs:             []string{"bash", "zsh", "fish", "powershell"},
-		Args:                  cobra.MatchAll(cobra.ExactArgs(1), cobra.OnlyValidArgs),
+		Args:                  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			completionType, err := NewCompletionType(args[0])
 			if err != nil {
