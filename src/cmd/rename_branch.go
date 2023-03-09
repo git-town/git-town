@@ -50,7 +50,7 @@ When run on a perennial branch
 		},
 		Args: cobra.RangeArgs(1, 2),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := validateGitVersion(repo); repo != nil {
+			if err := validateGitVersion(repo); err != nil {
 				return err
 			}
 			if err := ValidateIsRepository(repo); err != nil {

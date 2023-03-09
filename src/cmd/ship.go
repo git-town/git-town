@@ -66,7 +66,7 @@ and Git Town will leave it up to your origin server to delete the remote branch.
 		},
 		Args: cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := validateGitVersion(repo); repo != nil {
+			if err := validateGitVersion(repo); err != nil {
 				return err
 			}
 			if err := ValidateIsRepository(repo); err != nil {

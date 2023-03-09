@@ -36,7 +36,7 @@ Does not delete perennial branches nor the main branch.`,
 		},
 		Args: cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := validateGitVersion(repo); repo != nil {
+			if err := validateGitVersion(repo); err != nil {
 				return err
 			}
 			if err := ValidateIsRepository(repo); err != nil {
