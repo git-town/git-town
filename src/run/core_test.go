@@ -18,7 +18,7 @@ func TestRun(t *testing.T) {
 			t.Parallel()
 			res, err := run.Exec("echo", "foo")
 			assert.NoError(t, err)
-			assert.Equal(t, "foo\n", res.Output())
+			assert.Equal(t, "foo\n", res.Output)
 		})
 
 		t.Run("unknown executable", func(t *testing.T) {
@@ -32,7 +32,7 @@ func TestRun(t *testing.T) {
 		t.Run("non-zero exit code", func(t *testing.T) {
 			t.Parallel()
 			result, err := run.Exec("bash", "-c", "echo hi && exit 2")
-			assert.Equal(t, 2, result.ExitCode())
+			assert.Equal(t, 2, result.ExitCode)
 			expectedError := `
 ----------------------------------------
 Diagnostic information of failed command

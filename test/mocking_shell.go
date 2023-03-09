@@ -255,7 +255,7 @@ Output:
 
 	if ms.Debug {
 		fmt.Println(filepath.Base(ms.workingDir), ">", cmd, strings.Join(args, " "))
-		fmt.Println(result.Output())
+		fmt.Println(result.Output)
 		if err != nil {
 			fmt.Printf("ERROR: %v\n", err)
 		}

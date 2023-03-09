@@ -39,7 +39,7 @@ func (s SilentRunner) Run(cmd string, args ...string) (*Result, error) {
 	}
 	result, err := Exec(cmd, args...)
 	if *s.Debug && result != nil {
-		s.PrintResult(result.output)
+		s.PrintResult(result.Output)
 	}
 	return result, err
 }

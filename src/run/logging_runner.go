@@ -107,8 +107,8 @@ func (shell LoggingRunner) PrintCommand(cmd string, args ...string) error {
 
 // PrintCommand prints the given command-line operation on the console.
 func (shell LoggingRunner) PrintCommandAndOutput(result *Result) error {
-	err := shell.PrintCommand(result.Command(), result.Args()...)
-	fmt.Println(result.Output())
+	err := shell.PrintCommand(result.Command, result.Args...)
+	fmt.Println(result.Output)
 	return err
 }
 

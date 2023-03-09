@@ -62,7 +62,7 @@ func TestMockingShell(t *testing.T) {
 		assert.False(t, os.IsNotExist(err))
 	})
 
-	t.Run(".RunStringWith()", func(t *testing.T) {
+	t.Run(".RunStringWith", func(t *testing.T) {
 		t.Run("without input", func(t *testing.T) {
 			t.Parallel()
 			dir1 := t.TempDir()
