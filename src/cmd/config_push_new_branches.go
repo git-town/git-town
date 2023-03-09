@@ -17,18 +17,11 @@ func pushNewBranchesCommand(repo *git.ProdRepo) *cobra.Command {
 
 If "push-new-branches" is true, the Git Town commands hack, append, and prepend
 push the new branch to the origin remote.`,
-		Run: func(cmd *cobra.Command, args []string) {
-			if len(args) == 0 {
-				err := printPushNewBranches(globalFlag, repo)
-				if err != nil {
-					cli.Exit(err)
-				}
-			} else {
-				err := setPushNewBranches(args[0], globalFlag, repo)
-				if err != nil {
-					cli.Exit(err)
-				}
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if len(args) > 0 {
+				return setPushNewBranches(args[0], globalFlag, repo)
 			}
+			return printPushNewBranches(globalFlag, repo)
 		},
 		Args:    cobra.MaximumNArgs(1),
 		PreRunE: ensure(repo, isRepository),

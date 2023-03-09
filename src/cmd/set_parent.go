@@ -3,7 +3,6 @@ package cmd
 import (
 	"errors"
 
-	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/spf13/cobra"
@@ -14,13 +13,13 @@ func setParentCommand(repo *git.ProdRepo) *cobra.Command {
 		Use:   "set-parent",
 		Short: "Prompts to set the parent branch for the current branch",
 		Long:  `Prompts to set the parent branch for the current branch`,
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			currentBranch, err := repo.Silent.CurrentBranch()
 			if err != nil {
-				cli.Exit(err)
+				return err
 			}
 			if !repo.Config.IsFeatureBranch(currentBranch) {
-				cli.Exit(errors.New("only feature branches can have parent branches"))
+				return errors.New("only feature branches can have parent branches")
 			}
 			defaultParentBranch := repo.Config.ParentBranch(currentBranch)
 			if defaultParentBranch == "" {
@@ -28,13 +27,10 @@ func setParentCommand(repo *git.ProdRepo) *cobra.Command {
 			}
 			err = repo.Config.RemoveParentBranch(currentBranch)
 			if err != nil {
-				cli.Exit(err)
+				return err
 			}
 			parentDialog := dialog.ParentBranches{}
-			err = parentDialog.AskForBranchAncestry(currentBranch, defaultParentBranch, repo)
-			if err != nil {
-				cli.Exit(err)
-			}
+			return parentDialog.AskForBranchAncestry(currentBranch, defaultParentBranch, repo)
 		},
 		Args:    cobra.NoArgs,
 		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),

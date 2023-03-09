@@ -14,23 +14,20 @@ func abortCmd(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:   "abort",
 		Short: "Aborts the last run git-town command",
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			runState, err := runstate.Load(repo)
 			if err != nil {
-				cli.Exit(fmt.Errorf("cannot load previous run state: %w", err))
+				return fmt.Errorf("cannot load previous run state: %w", err)
 			}
 			if runState == nil || !runState.IsUnfinished() {
-				cli.Exit(fmt.Errorf("nothing to abort"))
+				return fmt.Errorf("nothing to abort")
 			}
 			abortRunState := runState.CreateAbortRunState()
 			connector, err := hosting.NewConnector(&repo.Config, &repo.Silent, cli.PrintConnectorAction)
 			if err != nil {
-				cli.Exit(err)
+				return err
 			}
-			err = runstate.Execute(&abortRunState, repo, connector)
-			if err != nil {
-				cli.Exit(err)
-			}
+			return runstate.Execute(&abortRunState, repo, connector)
 		},
 		Args:    cobra.NoArgs,
 		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),

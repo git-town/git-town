@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
@@ -36,34 +35,31 @@ When run on the main branch or a perennial branch
 If the repository contains an "upstream" remote,
 syncs the main branch with its upstream counterpart.
 You can disable this by running "git config %s false".`, config.SyncUpstreamKey),
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			if dryRunFlag {
 				currentBranch, err := repo.Silent.CurrentBranch()
 				if err != nil {
-					cli.Exit(err)
+					return err
 				}
 				repo.DryRun.Activate(currentBranch)
 			}
 			exit, err := handleUnfinishedState(repo, nil)
 			if err != nil {
-				cli.Exit(err)
+				return err
 			}
 			if exit {
 				os.Exit(0)
 			}
 			config, err := determineSyncConfig(allFlag, repo)
 			if err != nil {
-				cli.Exit(err)
+				return err
 			}
 			stepList, err := syncBranchesSteps(config, repo)
 			if err != nil {
-				cli.Exit(err)
+				return err
 			}
 			runState := runstate.New("sync", stepList)
-			err = runstate.Execute(runState, repo, nil)
-			if err != nil {
-				cli.Exit(err)
-			}
+			return runstate.Execute(runState, repo, nil)
 		},
 		Args:    cobra.NoArgs,
 		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),

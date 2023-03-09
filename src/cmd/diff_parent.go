@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/spf13/cobra"
@@ -18,15 +17,12 @@ func diffParentCommand(repo *git.ProdRepo) *cobra.Command {
 Works on either the current branch or the branch name provided.
 
 Exits with error code 1 if the given branch is a perennial branch or the main branch.`,
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			config, err := determineDiffParentConfig(args, repo)
 			if err != nil {
-				cli.Exit(err)
+				return err
 			}
-			err = repo.Logging.DiffParent(config.branch, config.parentBranch)
-			if err != nil {
-				cli.Exit(err)
-			}
+			return repo.Logging.DiffParent(config.branch, config.parentBranch)
 		},
 		Args:    cobra.MaximumNArgs(1),
 		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),

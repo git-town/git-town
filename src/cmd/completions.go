@@ -5,7 +5,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/spf13/cobra"
 )
 
@@ -46,28 +45,25 @@ To load completions for each session, add the above line to your PowerShell prof
 `,
 		DisableFlagsInUseLine: true,
 		Args:                  cobra.ExactArgs(1),
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			completionType, err := NewCompletionType(args[0])
 			if err != nil {
-				cli.Exit(err)
+				return err
 			}
 			switch completionType {
 			case CompletionTypeBash:
-				err = rootCmd.GenBashCompletion(os.Stdout)
+				return rootCmd.GenBashCompletion(os.Stdout)
 			case CompletionTypeZsh:
 				if completionsNoDescFlag {
-					err = rootCmd.GenZshCompletionNoDesc(os.Stdout)
-				} else {
-					err = rootCmd.GenZshCompletion(os.Stdout)
+					return rootCmd.GenZshCompletionNoDesc(os.Stdout)
 				}
+				return rootCmd.GenZshCompletion(os.Stdout)
 			case CompletionTypeFish:
-				err = rootCmd.GenFishCompletion(os.Stdout, !completionsNoDescFlag)
+				return rootCmd.GenFishCompletion(os.Stdout, !completionsNoDescFlag)
 			case CompletionTypePowershell:
-				err = rootCmd.GenPowerShellCompletion(os.Stdout)
+				return rootCmd.GenPowerShellCompletion(os.Stdout)
 			}
-			if err != nil {
-				cli.Exit(err)
-			}
+			return fmt.Errorf("unknown argument: %q", args[0])
 		},
 		GroupID: "setup",
 	}

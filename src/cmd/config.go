@@ -14,7 +14,7 @@ func configCmd(repo *git.ProdRepo) *cobra.Command {
 	configCmd := &cobra.Command{
 		Use:   "config",
 		Short: "Displays your Git Town configuration",
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			ec := runstate.ErrorChecker{}
 			pushNewBranches := ec.Bool(repo.Config.ShouldNewBranchPush())
 			pushHook := ec.Bool(repo.Config.PushHook())
@@ -25,7 +25,7 @@ func configCmd(repo *git.ProdRepo) *cobra.Command {
 			syncStrategy := ec.SyncStrategy(repo.Config.SyncStrategy())
 			hostingService := ec.HostingService(repo.Config.HostingService())
 			if ec.Err != nil {
-				cli.Exit(ec.Err)
+				return ec.Err
 			}
 			fmt.Println()
 			cli.PrintHeader("Branches")
@@ -50,6 +50,7 @@ func configCmd(repo *git.ProdRepo) *cobra.Command {
 			if repo.Config.MainBranch() != "" {
 				cli.PrintLabelAndValue("Branch Ancestry", cli.PrintableBranchAncestry(&repo.Config))
 			}
+			return nil
 		},
 		Args:              cobra.NoArgs,
 		PreRunE:           ensure(repo, isRepository),
