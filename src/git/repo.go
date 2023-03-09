@@ -15,7 +15,10 @@ import (
 	"github.com/git-town/git-town/v7/src/stringslice"
 )
 
-// Repo represents a Git repository.
+// Repo represents a Git repository in Git Town.
+// - Git Town configuration
+// - perform Git commands in this repo
+// - caches various aspects of the repo for better performance
 type Repo struct {
 	run.Runner                        // for running console commands
 	Config             config.GitTown // caches Git configuration settings
