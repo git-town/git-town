@@ -21,15 +21,15 @@ type ProdRepo struct {
 
 // NewProdRepo provides a Repo instance in the current working directory.
 func NewProdRepo(debugFlag *bool) ProdRepo {
-	silentShell := run.SilentRunner{Debug: debugFlag}
-	config := config.NewGitTown(silentShell)
+	silentRunner := run.SilentRunner{Debug: debugFlag}
+	config := config.NewGitTown(silentRunner)
 	currentBranchTracker := cache.String{}
 	dryRun := run.DryRun{}
 	isRepoCache := cache.Bool{}
 	remoteBranchCache := cache.Strings{}
 	remotesCache := cache.Strings{}
-	silentRunner := Repo{
-		Runner:             silentShell,
+	silentRepo := Repo{
+		Runner:             silentRunner,
 		Config:             config,
 		CurrentBranchCache: &currentBranchTracker,
 		DryRun:             &dryRun,
@@ -38,7 +38,7 @@ func NewProdRepo(debugFlag *bool) ProdRepo {
 		RemoteBranchCache:  &remoteBranchCache,
 		RootDirCache:       &cache.String{},
 	}
-	loggingShell := run.NewLoggingShell(&silentRunner, &dryRun)
+	loggingShell := run.NewLoggingRunner(&silentRepo, &dryRun)
 	loggingRunner := Repo{
 		Runner:             loggingShell,
 		Config:             config,
@@ -50,7 +50,7 @@ func NewProdRepo(debugFlag *bool) ProdRepo {
 		RootDirCache:       &cache.String{},
 	}
 	return ProdRepo{
-		Silent:        silentRunner,
+		Silent:        silentRepo,
 		Logging:       loggingRunner,
 		LoggingRunner: loggingShell,
 		Config:        config,
