@@ -82,6 +82,22 @@ func (r *Repo) Author() (string, error) {
 	return name + " <" + email + ">", nil
 }
 
+// BranchAuthors provides the user accounts that contributed to the given branch.
+// Returns lines of "name <email>".
+func (r *Repo) BranchAuthors(branch, parent string) ([]string, error) {
+	lines, err := r.Run("git", "shortlog", "-s", "-n", "-e", parent+".."+branch)
+	if err != nil {
+		return []string{}, err
+	}
+	result := []string{}
+	for _, line := range lines.OutputLines() {
+		line = strings.TrimSpace(line)
+		parts := strings.Split(line, "\t")
+		result = append(result, parts[1])
+	}
+	return result, nil
+}
+
 // BranchHasUnmergedCommits indicates whether the branch with the given name
 // contains commits that are not merged into the main branch.
 func (r *Repo) BranchHasUnmergedCommits(branch string) (bool, error) {
