@@ -3,6 +3,7 @@ package browser
 
 import (
 	"fmt"
+	"os/exec"
 	"runtime"
 
 	"github.com/git-town/git-town/v7/src/run"
@@ -29,8 +30,8 @@ func OpenBrowserCommand() string {
 		"netscape",
 	}
 	for _, browserCommand := range openBrowserCommands {
-		res, err := run.Exec("which", browserCommand)
-		if err == nil && res.OutputSanitized() != "" {
+		cmd := exec.Command("which", browserCommand)
+		if cmd.Run() == nil {
 			return browserCommand
 		}
 	}

@@ -15,18 +15,3 @@ type Options struct {
 	// It is written to the subprocess one element at a time, with a delay defined by command.InputDelay in between.
 	Input []string // input into the subprocess
 }
-
-// Exec executes the command given in argv notation.
-func Exec(cmd string, args ...string) (*Result, error) {
-	return WithOptions(&Options{}, cmd, args...)
-}
-
-// InDir executes the given command in the given directory.
-func InDir(dir string, cmd string, args ...string) (*Result, error) {
-	return WithOptions(&Options{Dir: dir}, cmd, args...)
-}
-
-// WithOptions runs the command with the given RunOptions.
-func WithOptions(opts *Options, cmd string, args ...string) (*Result, error) {
-	return &result, err
-}
