@@ -36,6 +36,7 @@ func (step *SquashMergeStep) Run(repo *git.ProdRepo, connector hosting.Connector
 	if err != nil {
 		return err
 	}
+	branchAuthors, err := repo.Silent.BranchAuthors(step.Branch, step.Parent)
 	author, err := dialog.DetermineSquashCommitAuthor(step.Branch, repo)
 	if err != nil {
 		return fmt.Errorf("error getting squash commit author: %w", err)
