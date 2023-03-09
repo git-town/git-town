@@ -49,7 +49,7 @@ Flow, and trunk-based development. Check out
   branch as a child of the current branch
 - [git prepend](https://www.git-town.com/commands/prepend.html) - insert a new
   branch between the current branch and its parent
-- [git set-parent](https://www.git-town.com/commands/set-parent.html) - updates
+- [git set-parent-branch](https://www.git-town.com/commands/set-parent-branch.html) - updates
   a branch's parent
 
 #### Setup/configuration
