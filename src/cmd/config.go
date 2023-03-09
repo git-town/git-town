@@ -52,6 +52,9 @@ func configCmd(repo *git.ProdRepo) *cobra.Command {
 			}
 		},
 		Args: cobra.NoArgs,
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return ValidateIsRepository(repo)
+		},
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			return validateGitVersion(repo)
 		},
