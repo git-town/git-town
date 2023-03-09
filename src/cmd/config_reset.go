@@ -16,9 +16,7 @@ func resetConfigCommand(repo *git.ProdRepo) *cobra.Command {
 				cli.Exit(err)
 			}
 		},
-		Args: cobra.NoArgs,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return ValidateIsRepository(repo)
-		},
+		Args:    cobra.NoArgs,
+		PreRunE: ensure(repo, isRepository),
 	}
 }
