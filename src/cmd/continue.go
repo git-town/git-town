@@ -37,6 +37,9 @@ func continueCmd(repo *git.ProdRepo) *cobra.Command {
 		},
 		Args: cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if err := validateGitVersion(repo); err != nil {
+				return err
+			}
 			if err := ValidateIsRepository(repo); err != nil {
 				return err
 			}

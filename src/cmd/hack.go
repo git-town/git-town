@@ -37,6 +37,9 @@ See "sync" for information regarding upstream remotes.`,
 		},
 		Args: cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if err := validateGitVersion(repo); err != nil {
+				return err
+			}
 			if err := ValidateIsRepository(repo); err != nil {
 				return err
 			}

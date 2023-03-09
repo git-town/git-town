@@ -30,7 +30,10 @@ This can conflict with other tools that also define Git aliases.`,
 			}
 			return fmt.Errorf(`invalid argument %q. Please provide either "add" or "remove"`, args[0])
 		},
-		Args:    cobra.ExactArgs(1),
+		Args: cobra.ExactArgs(1),
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return validateGitVersion(repo)
+		},
 		GroupID: "setup",
 	}
 }
