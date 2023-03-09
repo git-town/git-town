@@ -18,7 +18,7 @@ import (
 // Repo represents a Git repository in Git Town.
 // - Git Town configuration
 // - perform Git commands in this repo
-// - caches various aspects of the repo for better performance
+// - caches various aspects of the repo for better performance.
 type Repo struct {
 	run.Shell                         // for running console commands
 	Config             config.GitTown // caches Git configuration settings
