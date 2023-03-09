@@ -20,7 +20,7 @@ type Runner struct {
 	run.Shell                         // for running console commands
 	Config             config.GitTown // caches Git configuration settings
 	CurrentBranchCache *cache.String  // caches the currently checked out Git branch
-	DryRun             *DryRun        // tracks dry-run information
+	DryRun             *run.DryRun    // tracks dry-run information
 	IsRepoCache        *cache.Bool    // caches whether the current directory is a Git repo
 	RemoteBranchCache  *cache.Strings // caches the remote branches of this Git repo
 	RemotesCache       *cache.Strings // caches Git remotes

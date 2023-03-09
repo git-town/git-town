@@ -56,7 +56,7 @@ func NewRepo(workingDir, homeDir, binDir string) Repo {
 	runner := git.Runner{
 		Shell:              &shell,
 		Config:             config.NewGitTown(&shell),
-		DryRun:             &git.DryRun{},
+		DryRun:             &run.DryRun{},
 		IsRepoCache:        &cache.Bool{},
 		RemoteBranchCache:  &cache.Strings{},
 		RemotesCache:       &cache.Strings{},
