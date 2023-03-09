@@ -86,7 +86,7 @@ func (repo *Repo) BranchHierarchyTable() DataTable {
 // Clone creates a clone of this Repo into the given directory.
 // The cloned repo uses the same homeDir and binDir as its origin.
 func (repo *Repo) Clone(targetDir string) (Repo, error) {
-	_, err := run.Exec("git", "clone", repo.shell.workingDir, targetDir)
+	_, err := repo.shell.Run("git", "clone", repo.shell.workingDir, targetDir)
 	if err != nil {
 		return Repo{}, fmt.Errorf("cannot clone repo %q: %w", repo.shell.workingDir, err)
 	}
