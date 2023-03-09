@@ -14,9 +14,9 @@ import (
 type ProdRepo struct {
 	Config        config.GitTown // the git.Configuration instance for this repo
 	DryRun        *run.DryRun
-	Logging       Runner             // the Runner instance to Git operations that show up in the output
+	Logging       Repo               // the Runner instance to Git operations that show up in the output
 	LoggingRunner *run.LoggingRunner // the LoggingShell instance used
-	Silent        Runner             // the Runner instance for silent Git operations
+	Silent        Repo               // the Runner instance for silent Git operations
 }
 
 // NewProdRepo provides a Repo instance in the current working directory.
@@ -28,7 +28,7 @@ func NewProdRepo(debugFlag *bool) ProdRepo {
 	isRepoCache := cache.Bool{}
 	remoteBranchCache := cache.Strings{}
 	remotesCache := cache.Strings{}
-	silentRunner := Runner{
+	silentRunner := Repo{
 		Runner:             silentShell,
 		Config:             config,
 		CurrentBranchCache: &currentBranchTracker,
@@ -39,7 +39,7 @@ func NewProdRepo(debugFlag *bool) ProdRepo {
 		RootDirCache:       &cache.String{},
 	}
 	loggingShell := run.NewLoggingShell(&silentRunner, &dryRun)
-	loggingRunner := Runner{
+	loggingRunner := Repo{
 		Runner:             loggingShell,
 		Config:             config,
 		CurrentBranchCache: &currentBranchTracker,

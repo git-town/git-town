@@ -20,8 +20,8 @@ type LoggingRunner struct {
 	git    git
 }
 
-// NewLoggingShell provides StreamingShell instances.
-func NewLoggingShell(git git, dryRun *DryRun) *LoggingRunner {
+// NewLoggingRunner provides StreamingShell instances.
+func NewLoggingRunner(git git, dryRun *DryRun) *LoggingRunner {
 	return &LoggingRunner{dryRun: dryRun, git: git}
 }
 
