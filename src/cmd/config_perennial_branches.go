@@ -20,10 +20,8 @@ They cannot be shipped.`,
 		Run: func(cmd *cobra.Command, args []string) {
 			cli.Println(cli.StringSetting(strings.Join(repo.Config.PerennialBranches(), "\n")))
 		},
-		Args: cobra.NoArgs,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return ValidateIsRepository(repo)
-		},
+		Args:    cobra.NoArgs,
+		PreRunE: ensure(repo, isRepository),
 	}
 	perennialBranchesCmd.AddCommand(updatePerennialBranchesCmd(repo))
 	return &perennialBranchesCmd
@@ -37,9 +35,7 @@ func updatePerennialBranchesCmd(repo *git.ProdRepo) *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return dialog.ConfigurePerennialBranches(repo)
 		},
-		Args: cobra.NoArgs,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return ValidateIsRepository(repo)
-		},
+		Args:    cobra.NoArgs,
+		PreRunE: ensure(repo, isRepository),
 	}
 }

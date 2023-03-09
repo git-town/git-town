@@ -37,16 +37,8 @@ See "sync" for upstream remote options.
 			runState := runstate.New("prepend", stepList)
 			return runstate.Execute(runState, repo, nil)
 		},
-		Args: cobra.ExactArgs(1),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := validateGitVersion(repo); err != nil {
-				return err
-			}
-			if err := ValidateIsRepository(repo); err != nil {
-				return err
-			}
-			return validateIsConfigured(repo)
-		},
+		Args:    cobra.ExactArgs(1),
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
 		GroupID: "lineage",
 	}
 }

@@ -93,7 +93,28 @@ and it allows you to perform many common Git operations faster and easier.`,
 	return &rootCmd
 }
 
-func validateGitVersion(repo *git.ProdRepo) error {
+// validationCondition verifies that the given Git repo conforms to a particular condition.
+type validationCondition func(*git.ProdRepo) error
+
+// ensure wraps ensureInner into a Cobra-compatible format.
+func ensure(repo *git.ProdRepo, validators ...validationCondition) func(cmd *cobra.Command, args []string) error {
+	return func(cmd *cobra.Command, args []string) error {
+		return ensureInner(repo, validators...)
+	}
+}
+
+// ensureInner checks that the given repo conforms to the given validation conditions.
+func ensureInner(repo *git.ProdRepo, validators ...validationCondition) error {
+	for _, validator := range validators {
+		if err := validator(repo); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// hasGitVersion is a validationCondition that verifies that the system has Git of version 2.7 or newer installed.
+func hasGitVersion(repo *git.ProdRepo) error {
 	majorVersion, minorVersion, err := repo.Silent.Version()
 	if err != nil {
 		return err
@@ -104,12 +125,8 @@ func validateGitVersion(repo *git.ProdRepo) error {
 	return nil
 }
 
-// IsAcceptableGitVersion indicates whether the given Git version works for Git Town.
-func IsAcceptableGitVersion(major, minor int) bool {
-	return major > 2 || (major == 2 && minor >= 7)
-}
-
-func validateIsConfigured(repo *git.ProdRepo) error {
+// isConfigured is a validationCondition that verifies that the given Git repo contains necessary Git Town configuration.
+func isConfigured(repo *git.ProdRepo) error {
 	err := dialog.EnsureIsConfigured(repo)
 	if err != nil {
 		return err
@@ -117,13 +134,30 @@ func validateIsConfigured(repo *git.ProdRepo) error {
 	return repo.RemoveOutdatedConfiguration()
 }
 
-// ValidateIsRepository asserts that the current directory is in a Git repository.
-// If so, it also navigates to the root directory.
-func ValidateIsRepository(repo *git.ProdRepo) error {
+// isOnline is a validationCondition that verifies that the given Git repository is online.
+func isOnline(repo *git.ProdRepo) error {
+	isOffline, err := repo.Config.IsOffline()
+	if err != nil {
+		return err
+	}
+	if isOffline {
+		return errors.New("this command requires an active internet connection")
+	}
+	return nil
+}
+
+// isRepository is a validationCondition that verifies that the given folder contains a Git repository.
+// It also navigates to the root directory of that repository.
+func isRepository(repo *git.ProdRepo) error {
 	if !repo.Silent.IsRepository() {
 		return errors.New("this is not a Git repository")
 	}
 	return repo.NavigateToRootIfNecessary()
+}
+
+// IsAcceptableGitVersion indicates whether the given Git version works for Git Town.
+func IsAcceptableGitVersion(major, minor int) bool {
+	return major > 2 || (major == 2 && minor >= 7)
 }
 
 // handleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.

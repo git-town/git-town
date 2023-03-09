@@ -12,9 +12,7 @@ func resetConfigCommand(repo *git.ProdRepo) *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return repo.Config.RemoveLocalGitConfiguration()
 		},
-		Args: cobra.NoArgs,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return ValidateIsRepository(repo)
-		},
+		Args:    cobra.NoArgs,
+		PreRunE: ensure(repo, isRepository),
 	}
 }
