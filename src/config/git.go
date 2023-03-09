@@ -16,7 +16,7 @@ type Git struct {
 	// localConfigCache is a cache of the Git configuration in the local Git repo.
 	localConfigCache map[string]string
 
-	// for running runner commands
+	// for running shell commands
 	runner run.Runner
 }
 
