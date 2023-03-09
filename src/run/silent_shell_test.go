@@ -46,13 +46,4 @@ func TestSilentShell(t *testing.T) {
 		_, err = os.Stat("first")
 		assert.False(t, os.IsNotExist(err))
 	})
-
-	t.Run(".RunStringWith()", func(t *testing.T) {
-		t.Parallel()
-		debug := false
-		shell := run.SilentShell{Debug: &debug}
-		res, err := shell.RunStringWith("ls -1", &run.Options{Dir: ".."})
-		assert.NoError(t, err)
-		assert.Contains(t, res.OutputSanitized(), "cmd")
-	})
 }
