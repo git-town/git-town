@@ -2,6 +2,7 @@ package run
 
 import (
 	"fmt"
+	"os/exec"
 	"strings"
 
 	"github.com/fatih/color"
@@ -33,15 +34,22 @@ func (s SilentRunner) PrintResult(text string) {
 }
 
 // Run runs the given command in this ShellRunner's directory.
-func (s SilentRunner) Run(cmd string, args ...string) (*Result, error) {
+func (s SilentRunner) Run(executable string, args ...string) (*Result, error) {
 	if *s.Debug {
-		s.PrintHeader(cmd, args...)
+		s.PrintHeader(executable, args...)
 	}
-	result, err := Exec(cmd, args...)
-	if *s.Debug && result != nil {
+	cmd := exec.Cmd{Path: executable, Args: args}
+	output, err := cmd.CombinedOutput()
+	result := Result{
+		Command:  executable,
+		Args:     args,
+		ExitCode: cmd.ProcessState.ExitCode(),
+		Output:   string(output),
+	}
+	if *s.Debug {
 		s.PrintResult(result.Output)
 	}
-	return result, err
+	return &result, err
 }
 
 // RunMany runs all given commands in current directory.
