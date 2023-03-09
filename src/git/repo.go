@@ -712,7 +712,7 @@ func (r *Repo) IsBranchInSync(branch string) (bool, error) {
 // IsRepository returns whether or not the current directory is in a repository.
 func (r *Repo) IsRepository() bool {
 	if !r.IsRepoCache.Initialized() {
-		_, err := run.Exec("git", "rev-parse")
+		_, err := r.Run("git", "rev-parse")
 		r.IsRepoCache.Set(err == nil)
 	}
 	return r.IsRepoCache.Value()
