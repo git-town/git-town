@@ -230,7 +230,7 @@ func shipStepList(config *shipConfig, commitMessage string, repo *git.ProdRepo) 
 		})
 		list.Add(&steps.PullBranchStep{})
 	} else {
-		list.Add(&steps.SquashMergeStep{Branch: config.branchToShip, CommitMessage: commitMessage})
+		list.Add(&steps.SquashMergeStep{Branch: config.branchToShip, CommitMessage: commitMessage, Parent: config.branchToMergeInto})
 	}
 	if config.hasOrigin && !config.isOffline {
 		list.Add(&steps.PushBranchStep{Branch: config.branchToMergeInto, Undoable: true})
