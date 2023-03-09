@@ -12,8 +12,12 @@ import (
 
 func configCmd(repo *git.ProdRepo) *cobra.Command {
 	configCmd := &cobra.Command{
-		Use:   "config",
-		Short: "Displays your Git Town configuration",
+		Use:               "config",
+		GroupID:           "setup",
+		Args:              cobra.NoArgs,
+		PreRunE:           ensure(repo, isRepository),
+		PersistentPreRunE: ensure(repo, hasGitVersion),
+		Short:             "Displays your Git Town configuration",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			ec := runstate.ErrorChecker{}
 			pushNewBranches := ec.Bool(repo.Config.ShouldNewBranchPush())
@@ -52,10 +56,6 @@ func configCmd(repo *git.ProdRepo) *cobra.Command {
 			}
 			return nil
 		},
-		Args:              cobra.NoArgs,
-		PreRunE:           ensure(repo, isRepository),
-		PersistentPreRunE: ensure(repo, hasGitVersion),
-		GroupID:           "setup",
 	}
 	configCmd.AddCommand(mainbranchConfigCmd(repo))
 	configCmd.AddCommand(offlineCmd(repo))

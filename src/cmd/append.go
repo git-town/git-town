@@ -10,8 +10,11 @@ import (
 
 func appendCmd(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
-		Use:   "append <branch>",
-		Short: "Creates a new feature branch as a child of the current branch",
+		Use:     "append <branch>",
+		GroupID: "lineage",
+		Args:    cobra.ExactArgs(1),
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
+		Short:   "Creates a new feature branch as a child of the current branch",
 		Long: `Creates a new feature branch as a direct child of the current branch.
 
 Syncs the current branch,
@@ -34,9 +37,6 @@ See "sync" for information regarding upstream remotes.`,
 			runState := runstate.New("append", stepList)
 			return runstate.Execute(runState, repo, nil)
 		},
-		Args:    cobra.ExactArgs(1),
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
-		GroupID: "lineage",
 	}
 }
 

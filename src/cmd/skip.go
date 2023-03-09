@@ -10,8 +10,11 @@ import (
 
 func skipCmd(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
-		Use:   "skip",
-		Short: "Restarts the last run git-town command by skipping the current branch",
+		Use:     "skip",
+		GroupID: "errors",
+		Args:    cobra.NoArgs,
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
+		Short:   "Restarts the last run git-town command by skipping the current branch",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			runState, err := runstate.Load(repo)
 			if err != nil {
@@ -26,8 +29,5 @@ func skipCmd(repo *git.ProdRepo) *cobra.Command {
 			skipRunState := runState.CreateSkipRunState()
 			return runstate.Execute(&skipRunState, repo, nil)
 		},
-		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
-		GroupID: "errors",
 	}
 }

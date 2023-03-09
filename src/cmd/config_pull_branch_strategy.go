@@ -9,8 +9,10 @@ import (
 
 func pullBranchStrategyCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
-		Use:   "pull-branch-strategy [(rebase | merge)]",
-		Short: "Displays or sets your pull branch strategy",
+		Use:     "pull-branch-strategy [(rebase | merge)]",
+		Args:    cobra.MaximumNArgs(1),
+		PreRunE: ensure(repo, isRepository),
+		Short:   "Displays or sets your pull branch strategy",
 		Long: `Displays or sets your pull branch strategy
 
 The pull branch strategy specifies what strategy to use
@@ -22,8 +24,6 @@ for the main branch and perennial branches.`,
 			}
 			return displayPullBranchStrategy(repo)
 		},
-		Args:    cobra.MaximumNArgs(1),
-		PreRunE: ensure(repo, isRepository),
 	}
 }
 

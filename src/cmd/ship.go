@@ -17,8 +17,11 @@ import (
 func shipCmd(repo *git.ProdRepo) *cobra.Command {
 	var commitMessage string
 	shipCmd := cobra.Command{
-		Use:   "ship",
-		Short: "Deliver a completed feature branch",
+		Use:     "ship",
+		GroupID: "basic",
+		Args:    cobra.MaximumNArgs(1),
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
+		Short:   "Deliver a completed feature branch",
 		Long: fmt.Sprintf(`Deliver a completed feature branch
 
 Squash-merges the current branch, or <branch_name> if given,
@@ -61,9 +64,6 @@ and Git Town will leave it up to your origin server to delete the remote branch.
 			runState := runstate.New("ship", stepList)
 			return runstate.Execute(runState, repo, connector)
 		},
-		Args:    cobra.MaximumNArgs(1),
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
-		GroupID: "basic",
 	}
 	shipCmd.Flags().StringVarP(&commitMessage, "message", "m", "", "Specify the commit message for the squash commit")
 	return &shipCmd
