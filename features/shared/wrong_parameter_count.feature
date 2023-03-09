@@ -14,7 +14,6 @@ Feature: too few or many parameters
       | aliases arg1 arg2                     |
       | append                                |
       | append arg1 arg2                      |
-      | completions arg1                      |
       | config arg1                           |
       | config main-branch arg1 arg2          |
       | config push-new-branches arg1 arg2    |
@@ -48,3 +47,4 @@ Feature: too few or many parameters
       | CMD                                 | ERROR                                   |
       | config pull-branch-strategy invalid | unknown pull branch strategy: "invalid" |
       | config sync-strategy invalid        | unknown sync strategy: "invalid"        |
+      | completions arg1                    | unknown completion type: "arg1"         |
