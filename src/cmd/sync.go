@@ -37,6 +37,20 @@ If the repository contains an "upstream" remote,
 syncs the main branch with its upstream counterpart.
 You can disable this by running "git config %s false".`, config.SyncUpstreamKey),
 		Run: func(cmd *cobra.Command, args []string) {
+			if dryRunFlag {
+				currentBranch, err := repo.Silent.CurrentBranch()
+				if err != nil {
+					cli.Exit(err)
+				}
+				repo.DryRun.Activate(currentBranch)
+			}
+			exit, err := handleUnfinishedState(repo, nil)
+			if err != nil {
+				cli.Exit(err)
+			}
+			if exit {
+				os.Exit(0)
+			}
 			config, err := determineSyncConfig(allFlag, repo)
 			if err != nil {
 				cli.Exit(err)
@@ -51,33 +65,8 @@ You can disable this by running "git config %s false".`, config.SyncUpstreamKey)
 				cli.Exit(err)
 			}
 		},
-		Args: cobra.NoArgs,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := validateGitVersion(repo); err != nil {
-				return err
-			}
-			if err := ValidateIsRepository(repo); err != nil {
-				return err
-			}
-			if dryRunFlag {
-				currentBranch, err := repo.Silent.CurrentBranch()
-				if err != nil {
-					return err
-				}
-				repo.DryRun.Activate(currentBranch)
-			}
-			if err := validateIsConfigured(repo); err != nil {
-				return err
-			}
-			exit, err := handleUnfinishedState(repo, nil)
-			if err != nil {
-				return err
-			}
-			if exit {
-				os.Exit(0)
-			}
-			return nil
-		},
+		Args:    cobra.NoArgs,
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
 		GroupID: "basic",
 	}
 	syncCmd.Flags().BoolVar(&allFlag, "all", false, "Sync all local branches")

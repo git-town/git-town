@@ -42,16 +42,8 @@ See "sync" for upstream remote options.
 				cli.Exit(err)
 			}
 		},
-		Args: cobra.ExactArgs(1),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := validateGitVersion(repo); err != nil {
-				return err
-			}
-			if err := ValidateIsRepository(repo); err != nil {
-				return err
-			}
-			return validateIsConfigured(repo)
-		},
+		Args:    cobra.ExactArgs(1),
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
 		GroupID: "lineage",
 	}
 }

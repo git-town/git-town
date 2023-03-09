@@ -36,16 +36,8 @@ func setParentCommand(repo *git.ProdRepo) *cobra.Command {
 				cli.Exit(err)
 			}
 		},
-		Args: cobra.NoArgs,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := validateGitVersion(repo); err != nil {
-				return err
-			}
-			if err := ValidateIsRepository(repo); err != nil {
-				return err
-			}
-			return validateIsConfigured(repo)
-		},
+		Args:    cobra.NoArgs,
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
 		GroupID: "lineage",
 	}
 }

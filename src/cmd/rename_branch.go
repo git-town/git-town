@@ -48,16 +48,8 @@ When run on a perennial branch
 				cli.Exit(err)
 			}
 		},
-		Args: cobra.RangeArgs(1, 2),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := validateGitVersion(repo); err != nil {
-				return err
-			}
-			if err := ValidateIsRepository(repo); err != nil {
-				return err
-			}
-			return validateIsConfigured(repo)
-		},
+		Args:    cobra.RangeArgs(1, 2),
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
 	}
 	renameBranchCmd.Flags().BoolVar(&forceFlag, "force", false, "Force rename of perennial branch")
 	return renameBranchCmd

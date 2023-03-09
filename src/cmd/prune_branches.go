@@ -31,19 +31,8 @@ This usually means the branch was shipped or killed on another machine.`,
 				cli.Exit(err)
 			}
 		},
-		Args: cobra.NoArgs,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := validateGitVersion(repo); err != nil {
-				return err
-			}
-			if err := ValidateIsRepository(repo); err != nil {
-				return err
-			}
-			if err := validateIsConfigured(repo); err != nil {
-				return err
-			}
-			return repo.Config.ValidateIsOnline()
-		},
+		Args:    cobra.NoArgs,
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured, isOnline),
 	}
 }
 
