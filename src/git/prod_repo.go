@@ -15,7 +15,7 @@ type ProdRepo struct {
 	Config        config.GitTown // the git.Configuration instance for this repo
 	DryRun        *run.DryRun
 	Logging       Repo               // the Runner instance to Git operations that show up in the output
-	LoggingRunner *run.LoggingRunner // the LoggingShell instance used
+	LoggingRunner *run.LoggingRunner // the LoggingRunner instance used
 	Silent        Repo               // the Runner instance for silent Git operations
 }
 
