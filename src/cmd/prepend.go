@@ -12,8 +12,11 @@ import (
 
 func prependCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
-		Use:   "prepend <branch>",
-		Short: "Creates a new feature branch as the parent of the current branch",
+		Use:     "prepend <branch>",
+		GroupID: "lineage",
+		Args:    cobra.ExactArgs(1),
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
+		Short:   "Creates a new feature branch as the parent of the current branch",
 		Long: `Creates a new feature branch as the parent of the current branch
 
 Syncs the parent branch,
@@ -37,9 +40,6 @@ See "sync" for upstream remote options.
 			runState := runstate.New("prepend", stepList)
 			return runstate.Execute(runState, repo, nil)
 		},
-		Args:    cobra.ExactArgs(1),
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
-		GroupID: "lineage",
 	}
 }
 

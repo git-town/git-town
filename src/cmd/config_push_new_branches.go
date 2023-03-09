@@ -11,8 +11,10 @@ import (
 func pushNewBranchesCommand(repo *git.ProdRepo) *cobra.Command {
 	globalFlag := false
 	pushNewBranchesCmd := cobra.Command{
-		Use:   "push-new-branches [--global] [(yes | no)]",
-		Short: "Displays or changes whether new branches get pushed to origin",
+		Use:     "push-new-branches [--global] [(yes | no)]",
+		Args:    cobra.MaximumNArgs(1),
+		PreRunE: ensure(repo, isRepository),
+		Short:   "Displays or changes whether new branches get pushed to origin",
 		Long: `Displays or changes whether new branches get pushed to origin.
 
 If "push-new-branches" is true, the Git Town commands hack, append, and prepend
@@ -23,8 +25,6 @@ push the new branch to the origin remote.`,
 			}
 			return printPushNewBranches(globalFlag, repo)
 		},
-		Args:    cobra.MaximumNArgs(1),
-		PreRunE: ensure(repo, isRepository),
 	}
 	pushNewBranchesCmd.Flags().BoolVar(&globalFlag, "global", false, "Displays or sets your global new branch push flag")
 	return &pushNewBranchesCmd

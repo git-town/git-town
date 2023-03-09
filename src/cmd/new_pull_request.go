@@ -15,8 +15,11 @@ import (
 
 func newPullRequestCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
-		Use:   "new-pull-request",
-		Short: "Creates a new pull request",
+		Use:     "new-pull-request",
+		GroupID: "basic",
+		Args:    cobra.NoArgs,
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured, isOnline),
+		Short:   "Creates a new pull request",
 		Long: fmt.Sprintf(`Creates a new pull request
 
 Syncs the current branch
@@ -52,9 +55,6 @@ where hostname matches what is in your ssh config file.`, config.CodeHostingDriv
 			runState := runstate.New("new-pull-request", stepList)
 			return runstate.Execute(runState, repo, connector)
 		},
-		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured, isOnline),
-		GroupID: "basic",
 	}
 }
 

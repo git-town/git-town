@@ -11,8 +11,11 @@ import (
 
 func aliasCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
-		Use:   "aliases (add | remove)",
-		Short: "Adds or removes default global aliases",
+		Use:     "aliases (add | remove)",
+		GroupID: "setup",
+		Args:    cobra.ExactArgs(1),
+		PreRunE: ensure(repo, hasGitVersion),
+		Short:   "Adds or removes default global aliases",
 		Long: `Adds or removes default global aliases
 
 Global aliases make Git Town commands feel like native Git commands.
@@ -30,9 +33,6 @@ This can conflict with other tools that also define Git aliases.`,
 			}
 			return fmt.Errorf(`invalid argument %q. Please provide either "add" or "remove"`, args[0])
 		},
-		Args:    cobra.ExactArgs(1),
-		PreRunE: ensure(repo, hasGitVersion),
-		GroupID: "setup",
 	}
 }
 

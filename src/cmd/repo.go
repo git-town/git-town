@@ -13,8 +13,10 @@ import (
 
 func repoCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
-		Use:   "repo",
-		Short: "Opens the repository homepage",
+		Use:     "repo",
+		Args:    cobra.NoArgs,
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured, isOnline),
+		Short:   "Opens the repository homepage",
 		Long: fmt.Sprintf(`Opens the repository homepage
 
 Supported for repositories hosted on GitHub, GitLab, Gitea, and Bitbucket.
@@ -37,7 +39,5 @@ where HOSTNAME matches what is in your ssh config file.`, config.CodeHostingDriv
 			browser.Open(connector.RepositoryURL(), repo.LoggingShell)
 			return nil
 		},
-		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured, isOnline),
 	}
 }

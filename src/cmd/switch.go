@@ -10,8 +10,11 @@ import (
 
 func switchCmd(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
-		Use:   "switch",
-		Short: "Displays the local branches visually and allows switching between them",
+		Use:     "switch",
+		GroupID: "basic",
+		Args:    cobra.NoArgs,
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
+		Short:   "Displays the local branches visually and allows switching between them",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			currentBranch, err := repo.Silent.CurrentBranch()
 			if err != nil {
@@ -29,9 +32,6 @@ func switchCmd(repo *git.ProdRepo) *cobra.Command {
 			}
 			return nil
 		},
-		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
-		GroupID: "basic",
 	}
 }
 
