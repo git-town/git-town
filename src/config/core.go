@@ -5,7 +5,6 @@
 package config
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"sort"
@@ -547,16 +546,4 @@ func (gt *GitTown) SyncStrategy() (SyncStrategy, error) {
 func (gt *GitTown) SyncStrategyGlobal() (SyncStrategy, error) {
 	setting := gt.Storage.GlobalConfigValue(SyncStrategyKey)
 	return ToSyncStrategy(setting)
-}
-
-// ValidateIsOnline asserts that Git Town is not in offline mode.
-func (gt *GitTown) ValidateIsOnline() error {
-	isOffline, err := gt.IsOffline()
-	if err != nil {
-		return err
-	}
-	if isOffline {
-		return errors.New("this command requires an active internet connection")
-	}
-	return nil
 }

@@ -32,13 +32,8 @@ func abortCmd(repo *git.ProdRepo) *cobra.Command {
 				cli.Exit(err)
 			}
 		},
-		Args: cobra.NoArgs,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return check(repo).validate(
-				gitVersion,
-				isRepository,
-				isConfigured)
-		},
+		Args:    cobra.NoArgs,
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
 		GroupID: "errors",
 	}
 }

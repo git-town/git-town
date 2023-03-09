@@ -36,21 +36,7 @@ where HOSTNAME matches what is in your ssh config file.`, config.CodeHostingDriv
 			}
 			browser.Open(connector.RepositoryURL(), repo.LoggingShell)
 		},
-		Args: cobra.NoArgs,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := validateGitVersion(repo); err != nil {
-				return err
-			}
-			if err := ValidateIsRepository(repo); err != nil {
-				return err
-			}
-			if err := validateIsConfigured(repo); err != nil {
-				return err
-			}
-			if err := repo.Config.ValidateIsOnline(); err != nil {
-				return err
-			}
-			return nil
-		},
+		Args:    cobra.NoArgs,
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured, isOnline),
 	}
 }

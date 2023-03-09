@@ -94,27 +94,28 @@ and it allows you to perform many common Git operations faster and easier.`,
 	return &rootCmd
 }
 
-func check(repo *git.ProdRepo) checker {
-	return checker{repo: repo}
+// validationCondition verifies that the given Git repo conforms to a particular condition.
+type validationCondition func(*git.ProdRepo) error
+
+// ensure wraps ensureInner into a Cobra-compatible format.
+func ensure(repo *git.ProdRepo, validators ...validationCondition) func(cmd *cobra.Command, args []string) error {
+	return func(cmd *cobra.Command, args []string) error {
+		return ensureInner(repo, validators...)
+	}
 }
 
-type checker struct {
-	repo *git.ProdRepo
-}
-
-type validateFunc func(*git.ProdRepo) error
-
-func (c checker) validate(validators ...validateFunc) error {
+// ensureInner checks that the given repo conforms to the given validation conditions.
+func ensureInner(repo *git.ProdRepo, validators ...validationCondition) error {
 	for _, validator := range validators {
-		err := validator(c.repo)
-		if err != nil {
+		if err := validator(repo); err != nil {
 			return err
 		}
 	}
 	return nil
 }
 
-func gitVersion(repo *git.ProdRepo) error {
+// hasGitVersion is a validationCondition that verifies that the system has Git of version 2.7 or newer installed.
+func hasGitVersion(repo *git.ProdRepo) error {
 	majorVersion, minorVersion, err := repo.Silent.Version()
 	if err != nil {
 		return err
@@ -125,6 +126,7 @@ func gitVersion(repo *git.ProdRepo) error {
 	return nil
 }
 
+// isConfigured is a validationCondition that verifies that the given Git repo contains necessary Git Town configuration.
 func isConfigured(repo *git.ProdRepo) error {
 	err := dialog.EnsureIsConfigured(repo)
 	if err != nil {
@@ -133,8 +135,20 @@ func isConfigured(repo *git.ProdRepo) error {
 	return repo.RemoveOutdatedConfiguration()
 }
 
-// ValidateIsRepository asserts that the current directory is in a Git repository.
-// If so, it also navigates to the root directory.
+// isOnline is a validationCondition that verifies that the given Git repository is online.
+func isOnline(repo *git.ProdRepo) error {
+	isOffline, err := repo.Config.IsOffline()
+	if err != nil {
+		return err
+	}
+	if isOffline {
+		return errors.New("this command requires an active internet connection")
+	}
+	return nil
+}
+
+// isRepository is a validationCondition that verifies that the given folder contains a Git repository.
+// It also navigates to the root directory of that repository.
 func isRepository(repo *git.ProdRepo) error {
 	if !repo.Silent.IsRepository() {
 		return errors.New("this is not a Git repository")

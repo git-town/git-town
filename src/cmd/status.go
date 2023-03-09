@@ -23,13 +23,8 @@ func statusCommand(repo *git.ProdRepo) *cobra.Command {
 			}
 			displayStatus(*config)
 		},
-		Args: cobra.NoArgs,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := validateGitVersion(repo); err != nil {
-				return err
-			}
-			return ValidateIsRepository(repo)
-		},
+		Args:    cobra.NoArgs,
+		PreRunE: ensure(repo, hasGitVersion, isRepository),
 		GroupID: "errors",
 	}
 	cmd.AddCommand(resetRunstateCommand(repo))
