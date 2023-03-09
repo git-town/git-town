@@ -83,7 +83,7 @@ func (r *Repo) Author() (string, error) {
 }
 
 // BranchAuthors provides the user accounts that contributed to the given branch.
-// Returns lines of "name <email>"
+// Returns lines of "name <email>".
 func (r *Repo) BranchAuthors(branch, parent string) ([]string, error) {
 	lines, err := r.Run("git", "shortlog", "-s", "-n", "-e", parent+".."+branch)
 	if err != nil {
