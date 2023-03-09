@@ -54,7 +54,7 @@ func InitRepo(workingDir, homeDir, binDir string) (Repo, error) {
 func NewRepo(workingDir, homeDir, binDir string) Repo {
 	shell := NewMockingShell(workingDir, homeDir, binDir)
 	runner := git.Runner{
-		Shell:              &shell,
+		Runner:             &shell,
 		Config:             config.NewGitTown(&shell),
 		DryRun:             &run.DryRun{},
 		IsRepoCache:        &cache.Bool{},

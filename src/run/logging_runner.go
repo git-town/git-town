@@ -11,27 +11,27 @@ import (
 	"github.com/kballard/go-shellquote"
 )
 
-// LoggingShell is an implementation of the Shell interface
+// LoggingRunner is an implementation of the Shell interface
 // that runs commands in the current working directory
 // and streams the command output to the application output.
 // It is used by Git Town commands to run Git commands that show up in their output.
-type LoggingShell struct {
+type LoggingRunner struct {
 	dryRun *DryRun
 	git    git
 }
 
 // NewLoggingShell provides StreamingShell instances.
-func NewLoggingShell(git git, dryRun *DryRun) *LoggingShell {
-	return &LoggingShell{dryRun: dryRun, git: git}
+func NewLoggingShell(git git, dryRun *DryRun) *LoggingRunner {
+	return &LoggingRunner{dryRun: dryRun, git: git}
 }
 
 // WorkingDir provides the directory that this Shell operates in.
-func (shell LoggingShell) WorkingDir() string {
+func (shell LoggingRunner) WorkingDir() string {
 	return "."
 }
 
 // Run runs the given command in this ShellRunner's directory.
-func (shell LoggingShell) Run(cmd string, args ...string) (*Result, error) {
+func (shell LoggingRunner) Run(cmd string, args ...string) (*Result, error) {
 	err := shell.PrintCommand(cmd, args...)
 	if err != nil {
 		return nil, err
@@ -58,7 +58,7 @@ func (shell LoggingShell) Run(cmd string, args ...string) (*Result, error) {
 // RunMany runs all given commands in current directory.
 // Commands are provided as a list of argv-style strings.
 // Failed commands abort immediately with the encountered error.
-func (shell LoggingShell) RunMany(commands [][]string) error {
+func (shell LoggingRunner) RunMany(commands [][]string) error {
 	for _, argv := range commands {
 		_, err := shell.Run(argv[0], argv[1:]...)
 		if err != nil {
@@ -69,7 +69,7 @@ func (shell LoggingShell) RunMany(commands [][]string) error {
 }
 
 // RunString runs the given command (including possible arguments) in this ShellInDir's directory.
-func (shell LoggingShell) RunString(fullCmd string) (*Result, error) {
+func (shell LoggingRunner) RunString(fullCmd string) (*Result, error) {
 	parts, err := shellquote.Split(fullCmd)
 	if err != nil {
 		return nil, fmt.Errorf("cannot split command %q: %w", fullCmd, err)
@@ -79,7 +79,7 @@ func (shell LoggingShell) RunString(fullCmd string) (*Result, error) {
 }
 
 // PrintCommand prints the given command-line operation on the console.
-func (shell LoggingShell) PrintCommand(cmd string, args ...string) error {
+func (shell LoggingRunner) PrintCommand(cmd string, args ...string) error {
 	header := cmd + " "
 	for index, part := range args {
 		if strings.Contains(part, " ") {
@@ -106,7 +106,7 @@ func (shell LoggingShell) PrintCommand(cmd string, args ...string) error {
 }
 
 // PrintCommand prints the given command-line operation on the console.
-func (shell LoggingShell) PrintCommandAndOutput(result *Result) error {
+func (shell LoggingRunner) PrintCommandAndOutput(result *Result) error {
 	err := shell.PrintCommand(result.Command(), result.Args()...)
 	fmt.Println(result.Output())
 	return err

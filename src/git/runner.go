@@ -17,7 +17,7 @@ import (
 
 // Runner executes Git commands.
 type Runner struct {
-	run.Shell                         // for running console commands
+	run.Runner                        // for running console commands
 	Config             config.GitTown // caches Git configuration settings
 	CurrentBranchCache *cache.String  // caches the currently checked out Git branch
 	DryRun             *run.DryRun    // tracks dry-run information
