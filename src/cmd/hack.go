@@ -12,8 +12,11 @@ import (
 func hackCmd(repo *git.ProdRepo) *cobra.Command {
 	promptForParentFlag := false
 	hackCmd := cobra.Command{
-		Use:   "hack <branch>",
-		Short: "Creates a new feature branch off the main development branch",
+		Use:     "hack <branch>",
+		GroupID: "basic",
+		Args:    cobra.ExactArgs(1),
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
+		Short:   "Creates a new feature branch off the main development branch",
 		Long: `Creates a new feature branch off the main development branch
 
 Syncs the main branch,
@@ -35,9 +38,6 @@ See "sync" for information regarding upstream remotes.`,
 			runState := runstate.New("hack", stepList)
 			return runstate.Execute(runState, repo, nil)
 		},
-		Args:    cobra.ExactArgs(1),
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
-		GroupID: "basic",
 	}
 	hackCmd.Flags().BoolVarP(&promptForParentFlag, "prompt", "p", false, "Prompt for the parent branch")
 	return &hackCmd

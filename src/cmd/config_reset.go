@@ -7,12 +7,12 @@ import (
 
 func resetConfigCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
-		Use:   "reset",
-		Short: "Resets your Git Town configuration",
+		Use:     "reset",
+		Args:    cobra.NoArgs,
+		PreRunE: ensure(repo, isRepository),
+		Short:   "Resets your Git Town configuration",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return repo.Config.RemoveLocalGitConfiguration()
 		},
-		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, isRepository),
 	}
 }

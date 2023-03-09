@@ -10,8 +10,10 @@ import (
 
 func mainbranchConfigCmd(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
-		Use:   "main-branch [<branch>]",
-		Short: "Displays or sets your main development branch",
+		Use:     "main-branch [<branch>]",
+		Args:    cobra.MaximumNArgs(1),
+		PreRunE: ensure(repo, isRepository),
+		Short:   "Displays or sets your main development branch",
 		Long: `Displays or sets your main development branch
 
 The main branch is the Git branch from which new feature branches are cut.`,
@@ -22,8 +24,6 @@ The main branch is the Git branch from which new feature branches are cut.`,
 			printMainBranch(repo)
 			return nil
 		},
-		Args:    cobra.MaximumNArgs(1),
-		PreRunE: ensure(repo, isRepository),
 	}
 }
 

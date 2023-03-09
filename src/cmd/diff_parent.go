@@ -10,8 +10,11 @@ import (
 
 func diffParentCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
-		Use:   "diff-parent [<branch>]",
-		Short: "Shows the changes committed to a feature branch",
+		Use:     "diff-parent [<branch>]",
+		GroupID: "lineage",
+		Args:    cobra.MaximumNArgs(1),
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
+		Short:   "Shows the changes committed to a feature branch",
 		Long: `Shows the changes committed to a feature branch
 
 Works on either the current branch or the branch name provided.
@@ -24,9 +27,6 @@ Exits with error code 1 if the given branch is a perennial branch or the main br
 			}
 			return repo.Logging.DiffParent(config.branch, config.parentBranch)
 		},
-		Args:    cobra.MaximumNArgs(1),
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
-		GroupID: "lineage",
 	}
 }
 

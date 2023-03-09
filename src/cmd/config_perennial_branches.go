@@ -11,8 +11,10 @@ import (
 
 func perennialBranchesCmd(repo *git.ProdRepo) *cobra.Command {
 	perennialBranchesCmd := cobra.Command{
-		Use:   "perennial-branches",
-		Short: "Displays your perennial branches",
+		Use:     "perennial-branches",
+		Args:    cobra.NoArgs,
+		PreRunE: ensure(repo, isRepository),
+		Short:   "Displays your perennial branches",
 		Long: `Displays your perennial branches
 
 Perennial branches are long-lived branches.
@@ -20,8 +22,6 @@ They cannot be shipped.`,
 		Run: func(cmd *cobra.Command, args []string) {
 			cli.Println(cli.StringSetting(strings.Join(repo.Config.PerennialBranches(), "\n")))
 		},
-		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, isRepository),
 	}
 	perennialBranchesCmd.AddCommand(updatePerennialBranchesCmd(repo))
 	return &perennialBranchesCmd

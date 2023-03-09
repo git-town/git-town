@@ -10,8 +10,10 @@ import (
 func syncStrategyCommand(repo *git.ProdRepo) *cobra.Command {
 	var globalFlag bool
 	syncStrategyCmd := cobra.Command{
-		Use:   "sync-strategy [(merge | rebase)]",
-		Short: "Displays or sets your sync strategy",
+		Use:     "sync-strategy [(merge | rebase)]",
+		Args:    cobra.MaximumNArgs(1),
+		PreRunE: ensure(repo, isRepository),
+		Short:   "Displays or sets your sync strategy",
 		Long: `Displays or sets your sync strategy
 
 The sync strategy specifies what strategy to use
@@ -22,8 +24,6 @@ when merging remote tracking branches into local feature branches.`,
 			}
 			return printSyncStrategy(globalFlag, repo)
 		},
-		Args:    cobra.MaximumNArgs(1),
-		PreRunE: ensure(repo, isRepository),
 	}
 	syncStrategyCmd.Flags().BoolVar(&globalFlag, "global", false, "Displays or sets the global sync strategy")
 	return &syncStrategyCmd

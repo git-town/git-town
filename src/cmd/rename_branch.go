@@ -12,8 +12,10 @@ import (
 func renameBranchCommand(repo *git.ProdRepo) *cobra.Command {
 	forceFlag := false
 	renameBranchCmd := &cobra.Command{
-		Use:   "rename-branch [<old_branch_name>] <new_branch_name>",
-		Short: "Renames a branch both locally and remotely",
+		Use:     "rename-branch [<old_branch_name>] <new_branch_name>",
+		Args:    cobra.RangeArgs(1, 2),
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
+		Short:   "Renames a branch both locally and remotely",
 		Long: `Renames a branch both locally and remotely
 
 Renames the given branch in the local and origin repository.
@@ -44,8 +46,6 @@ When run on a perennial branch
 			runState := runstate.New("rename-branch", stepList)
 			return runstate.Execute(runState, repo, nil)
 		},
-		Args:    cobra.RangeArgs(1, 2),
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
 	}
 	renameBranchCmd.Flags().BoolVar(&forceFlag, "force", false, "Force rename of perennial branch")
 	return renameBranchCmd
