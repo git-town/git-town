@@ -12,8 +12,11 @@ import (
 
 func abortCmd(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
-		Use:   "abort",
-		Short: "Aborts the last run git-town command",
+		Use:     "abort",
+		GroupID: "errors",
+		Args:    cobra.NoArgs,
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
+		Short:   "Aborts the last run git-town command",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			runState, err := runstate.Load(repo)
 			if err != nil {
@@ -29,8 +32,5 @@ func abortCmd(repo *git.ProdRepo) *cobra.Command {
 			}
 			return runstate.Execute(&abortRunState, repo, connector)
 		},
-		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
-		GroupID: "errors",
 	}
 }

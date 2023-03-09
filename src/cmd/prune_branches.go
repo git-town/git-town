@@ -9,8 +9,10 @@ import (
 
 func pruneBranchesCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
-		Use:   "prune-branches",
-		Short: "Deletes local branches whose tracking branch no longer exists",
+		Use:     "prune-branches",
+		Args:    cobra.NoArgs,
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured, isOnline),
+		Short:   "Deletes local branches whose tracking branch no longer exists",
 		Long: `Deletes local branches whose tracking branch no longer exists
 
 Deletes branches whose tracking branch no longer exists from the local repository.
@@ -27,8 +29,6 @@ This usually means the branch was shipped or killed on another machine.`,
 			runState := runstate.New("prune-branches", stepList)
 			return runstate.Execute(runState, repo, nil)
 		},
-		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured, isOnline),
 	}
 }
 

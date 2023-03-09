@@ -16,8 +16,11 @@ func syncCmd(repo *git.ProdRepo) *cobra.Command {
 	var allFlag bool
 	var dryRunFlag bool
 	syncCmd := cobra.Command{
-		Use:   "sync",
-		Short: "Updates the current branch with all relevant changes",
+		Use:     "sync",
+		GroupID: "basic",
+		Args:    cobra.NoArgs,
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
+		Short:   "Updates the current branch with all relevant changes",
 		Long: fmt.Sprintf(`Updates the current branch with all relevant changes
 
 Synchronizes the current branch with the rest of the world.
@@ -61,9 +64,6 @@ You can disable this by running "git config %s false".`, config.SyncUpstreamKey)
 			runState := runstate.New("sync", stepList)
 			return runstate.Execute(runState, repo, nil)
 		},
-		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
-		GroupID: "basic",
 	}
 	syncCmd.Flags().BoolVar(&allFlag, "all", false, "Sync all local branches")
 	syncCmd.Flags().BoolVar(&dryRunFlag, "dry-run", false, "Print the commands but don't run them")

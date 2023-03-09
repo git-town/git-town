@@ -12,8 +12,10 @@ import (
 
 func killCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
-		Use:   "kill [<branch>]",
-		Short: "Removes an obsolete feature branch",
+		Use:     "kill [<branch>]",
+		Args:    cobra.MaximumNArgs(1),
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
+		Short:   "Removes an obsolete feature branch",
 		Long: `Removes an obsolete feature branch
 
 Deletes the current or provided branch from the local and origin repositories.
@@ -30,8 +32,6 @@ Does not delete perennial branches nor the main branch.`,
 			runState := runstate.New("kill", stepList)
 			return runstate.Execute(runState, repo, nil)
 		},
-		Args:    cobra.MaximumNArgs(1),
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
 	}
 }
 

@@ -10,8 +10,11 @@ import (
 
 func undoCmd(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
-		Use:   "undo",
-		Short: "Undoes the last run git-town command",
+		Use:     "undo",
+		GroupID: "errors",
+		Args:    cobra.NoArgs,
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
+		Short:   "Undoes the last run git-town command",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			runState, err := runstate.Load(repo)
 			if err != nil {
@@ -23,8 +26,5 @@ func undoCmd(repo *git.ProdRepo) *cobra.Command {
 			undoRunState := runState.CreateUndoRunState()
 			return runstate.Execute(&undoRunState, repo, nil)
 		},
-		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
-		GroupID: "errors",
 	}
 }

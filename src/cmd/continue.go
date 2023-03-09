@@ -12,8 +12,11 @@ import (
 
 func continueCmd(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
-		Use:   "continue",
-		Short: "Restarts the last run git-town command after having resolved conflicts",
+		Use:     "continue",
+		GroupID: "errors",
+		Args:    cobra.NoArgs,
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
+		Short:   "Restarts the last run git-town command after having resolved conflicts",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			runState, err := runstate.Load(repo)
 			if err != nil {
@@ -35,8 +38,5 @@ func continueCmd(repo *git.ProdRepo) *cobra.Command {
 			}
 			return runstate.Execute(runState, repo, connector)
 		},
-		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
-		GroupID: "errors",
 	}
 }

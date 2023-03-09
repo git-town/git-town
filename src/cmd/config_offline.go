@@ -11,6 +11,7 @@ import (
 func offlineCmd(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:   "offline [(yes | no)]",
+		Args:  cobra.MaximumNArgs(1),
 		Short: "Displays or sets offline mode",
 		Long: `Displays or sets offline mode
 
@@ -21,7 +22,6 @@ Git Town avoids network operations in offline mode.`,
 			}
 			return displayOfflineStatus(repo)
 		},
-		Args: cobra.MaximumNArgs(1),
 	}
 }
 
