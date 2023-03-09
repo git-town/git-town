@@ -1,4 +1,4 @@
-package git
+package run
 
 import (
 	"fmt"
@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
-	"github.com/git-town/git-town/v7/src/run"
 	"github.com/kballard/go-shellquote"
 )
 
@@ -17,13 +16,13 @@ import (
 // and streams the command output to the application output.
 // It is used by Git Town commands to run Git commands that show up in their output.
 type LoggingShell struct {
-	dryRun       *DryRun
-	silentRunner *Runner
+	dryRun *DryRun
+	git    git
 }
 
 // NewLoggingShell provides StreamingShell instances.
-func NewLoggingShell(silent *Runner, dryRun *DryRun) *LoggingShell {
-	return &LoggingShell{dryRun: dryRun, silentRunner: silent}
+func NewLoggingShell(git git, dryRun *DryRun) *LoggingShell {
+	return &LoggingShell{dryRun: dryRun, git: git}
 }
 
 // WorkingDir provides the directory that this Shell operates in.
@@ -32,7 +31,7 @@ func (shell LoggingShell) WorkingDir() string {
 }
 
 // Run runs the given command in this ShellRunner's directory.
-func (shell LoggingShell) Run(cmd string, args ...string) (*run.Result, error) {
+func (shell LoggingShell) Run(cmd string, args ...string) (*Result, error) {
 	err := shell.PrintCommand(cmd, args...)
 	if err != nil {
 		return nil, err
@@ -70,7 +69,7 @@ func (shell LoggingShell) RunMany(commands [][]string) error {
 }
 
 // RunString runs the given command (including possible arguments) in this ShellInDir's directory.
-func (shell LoggingShell) RunString(fullCmd string) (*run.Result, error) {
+func (shell LoggingShell) RunString(fullCmd string) (*Result, error) {
 	parts, err := shellquote.Split(fullCmd)
 	if err != nil {
 		return nil, fmt.Errorf("cannot split command %q: %w", fullCmd, err)
@@ -80,7 +79,7 @@ func (shell LoggingShell) RunString(fullCmd string) (*run.Result, error) {
 }
 
 // RunStringWith runs the given command (including possible arguments) in this ShellInDir's directory.
-func (shell LoggingShell) RunStringWith(fullCmd string, options *run.Options) (*run.Result, error) {
+func (shell LoggingShell) RunStringWith(fullCmd string, options *Options) (*Result, error) {
 	panic("this isn't used")
 }
 
@@ -96,8 +95,8 @@ func (shell LoggingShell) PrintCommand(cmd string, args ...string) error {
 		}
 		header += part
 	}
-	if cmd == "git" && shell.silentRunner.IsRepository() {
-		currentBranch, err := shell.silentRunner.CurrentBranch()
+	if cmd == "git" && shell.git.IsRepository() {
+		currentBranch, err := shell.git.CurrentBranch()
 		if err != nil {
 			return err
 		}
@@ -112,8 +111,13 @@ func (shell LoggingShell) PrintCommand(cmd string, args ...string) error {
 }
 
 // PrintCommand prints the given command-line operation on the console.
-func (shell LoggingShell) PrintCommandAndOutput(result *run.Result) error {
+func (shell LoggingShell) PrintCommandAndOutput(result *Result) error {
 	err := shell.PrintCommand(result.Command(), result.Args()...)
 	fmt.Println(result.Output())
 	return err
+}
+
+type git interface {
+	IsRepository() bool
+	CurrentBranch() (string, error)
 }
