@@ -224,10 +224,10 @@ func (ms *MockingShell) RunWith(opts *run.Options, cmd string, args ...string) (
 		_, err := input.Write([]byte(userInput))
 		if err != nil {
 			result := run.Result{
-				command:  cmd,
-				args:     args,
-				output:   output.String(),
-				exitCode: subProcess.ProcessState.ExitCode(),
+				Command:  cmd,
+				Args:     args,
+				Output:   output.String(),
+				ExitCode: subProcess.ProcessState.ExitCode(),
 			}
 			return &result, fmt.Errorf("can't write %q to subprocess '%s %s': %w", userInput, cmd, strings.Join(args, " "), err)
 		}
@@ -244,11 +244,11 @@ Output:
 %s
 ----------------------------------------`, cmd, strings.Join(args, " "), err, output.String())
 	}
-	result := Result{
-		command:  cmd,
-		args:     args,
-		output:   output.String(),
-		exitCode: subProcess.ProcessState.ExitCode(),
+	result := run.Result{
+		Command:  cmd,
+		Args:     args,
+		Output:   output.String(),
+		ExitCode: subProcess.ProcessState.ExitCode(),
 	}
 
 	// 2222222222222222222222222222
@@ -260,7 +260,7 @@ Output:
 			fmt.Printf("ERROR: %v\n", err)
 		}
 	}
-	return result, err
+	return &result, err
 }
 
 // SetTestOrigin adds the given environment variable to subsequent runs of commands.
