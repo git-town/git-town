@@ -28,7 +28,7 @@ func NewProdRepo(debugFlag *bool) ProdRepo {
 	isRepoCache := cache.Bool{}
 	remoteBranchCache := cache.Strings{}
 	remotesCache := cache.Strings{}
-	silentRunner := Repo{
+	silentRepo := Repo{
 		Shell:              silentShell,
 		Config:             config,
 		CurrentBranchCache: &currentBranchTracker,
@@ -38,8 +38,8 @@ func NewProdRepo(debugFlag *bool) ProdRepo {
 		RemoteBranchCache:  &remoteBranchCache,
 		RootDirCache:       &cache.String{},
 	}
-	loggingShell := run.NewLoggingShell(&silentRunner, &dryRun)
-	loggingRunner := Repo{
+	loggingShell := run.NewLoggingShell(&silentRepo, &dryRun)
+	loggingRepo := Repo{
 		Shell:              loggingShell,
 		Config:             config,
 		CurrentBranchCache: &currentBranchTracker,
@@ -50,8 +50,8 @@ func NewProdRepo(debugFlag *bool) ProdRepo {
 		RootDirCache:       &cache.String{},
 	}
 	return ProdRepo{
-		Silent:       silentRunner,
-		Logging:      loggingRunner,
+		Silent:       silentRepo,
+		Logging:      loggingRepo,
 		LoggingShell: loggingShell,
 		Config:       config,
 		DryRun:       &dryRun,
