@@ -94,7 +94,27 @@ and it allows you to perform many common Git operations faster and easier.`,
 	return &rootCmd
 }
 
-func validateGitVersion(repo *git.ProdRepo) error {
+func check(repo *git.ProdRepo) checker {
+	return checker{repo: repo}
+}
+
+type checker struct {
+	repo *git.ProdRepo
+}
+
+type validateFunc func(*git.ProdRepo) error
+
+func (c checker) validate(validators ...validateFunc) error {
+	for _, validator := range validators {
+		err := validator(c.repo)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func gitVersion(repo *git.ProdRepo) error {
 	majorVersion, minorVersion, err := repo.Silent.Version()
 	if err != nil {
 		return err
@@ -105,12 +125,7 @@ func validateGitVersion(repo *git.ProdRepo) error {
 	return nil
 }
 
-// IsAcceptableGitVersion indicates whether the given Git version works for Git Town.
-func IsAcceptableGitVersion(major, minor int) bool {
-	return major > 2 || (major == 2 && minor >= 7)
-}
-
-func validateIsConfigured(repo *git.ProdRepo) error {
+func isConfigured(repo *git.ProdRepo) error {
 	err := dialog.EnsureIsConfigured(repo)
 	if err != nil {
 		return err
@@ -120,11 +135,16 @@ func validateIsConfigured(repo *git.ProdRepo) error {
 
 // ValidateIsRepository asserts that the current directory is in a Git repository.
 // If so, it also navigates to the root directory.
-func ValidateIsRepository(repo *git.ProdRepo) error {
+func isRepository(repo *git.ProdRepo) error {
 	if !repo.Silent.IsRepository() {
 		return errors.New("this is not a Git repository")
 	}
 	return repo.NavigateToRootIfNecessary()
+}
+
+// IsAcceptableGitVersion indicates whether the given Git version works for Git Town.
+func IsAcceptableGitVersion(major, minor int) bool {
+	return major > 2 || (major == 2 && minor >= 7)
 }
 
 // handleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
