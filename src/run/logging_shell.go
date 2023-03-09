@@ -117,6 +117,7 @@ func (shell LoggingShell) PrintCommandAndOutput(result *Result) error {
 	return err
 }
 
+// git defines the Git commands needed by the LoggingShell.
 type git interface {
 	IsRepository() bool
 	CurrentBranch() (string, error)
