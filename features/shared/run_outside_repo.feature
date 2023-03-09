@@ -1,4 +1,3 @@
-@this
 Feature: require a Git repository
 
   Scenario Outline:
