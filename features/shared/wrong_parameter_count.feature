@@ -1,41 +1,6 @@
 Feature: too few or many parameters
 
-  Scenario Outline: incorrect number of arguments
-    When I run "git-town <CMD>"
-    Then it runs no commands
-    And it prints the error:
-      """
-      Usage:
-      """
-
-    Examples:
-      | CMD                                   |
-      | aliases                               |
-      | aliases arg1 arg2                     |
-      | append                                |
-      | append arg1 arg2                      |
-      | config arg1                           |
-      | config main-branch arg1 arg2          |
-      | config push-new-branches arg1 arg2    |
-      | config offline arg1 arg2              |
-      | config perennial-branches arg1        |
-      | config perennial-branches update arg1 |
-      | config pull-branch-strategy arg1 arg2 |
-      | hack                                  |
-      | hack arg1 arg2                        |
-      | kill arg1 arg2                        |
-      | new-pull-request arg1                 |
-      | prepend                               |
-      | prune-branches arg1                   |
-      | rename-branch                         |
-      | rename-branch arg1 arg2 arg3          |
-      | repo arg1                             |
-      | set-parent arg1                       |
-      | ship arg1 arg2                        |
-      | sync arg1                             |
-      | version arg1                          |
-
-  Scenario Outline: invalid arguments
+  Scenario Outline:
     When I run "git-town <CMD>"
     Then it runs no commands
     And it prints the error:
@@ -44,7 +9,31 @@ Feature: too few or many parameters
       """
 
     Examples:
-      | CMD                                 | ERROR                                   |
-      | config pull-branch-strategy invalid | unknown pull branch strategy: "invalid" |
-      | config sync-strategy invalid        | unknown sync strategy: "invalid"        |
-      | completions arg1                    | unknown completion type: "arg1"         |
+      | CMD                                   | ERROR                                                                  |
+      | aliases                               | accepts 1 arg(s), received 0                                           |
+      | aliases arg1 arg2                     | accepts 1 arg(s), received 2                                           |
+      | append                                | accepts 1 arg(s), received 0                                           |
+      | append arg1 arg2                      | accepts 1 arg(s), received 2                                           |
+      | completions arg1                      | unknown completion type: "arg1"                                        |
+      | config arg1                           | unknown command "arg1" for "git-town config"                           |
+      | config main-branch arg1 arg2          | accepts at most 1 arg(s), received 2                                   |
+      | config push-new-branches arg1 arg2    | accepts at most 1 arg(s), received 2                                   |
+      | config offline arg1 arg2              | accepts at most 1 arg(s), received 2                                   |
+      | config perennial-branches arg1        | unknown command "arg1" for "git-town config perennial-branches"        |
+      | config perennial-branches update arg1 | unknown command "arg1" for "git-town config perennial-branches update" |
+      | config pull-branch-strategy arg1 arg2 | accepts at most 1 arg(s), received 2                                   |
+      | config pull-branch-strategy invalid   | unknown pull branch strategy: "invalid"                                |
+      | config sync-strategy invalid          | unknown sync strategy: "invalid"                                       |
+      | hack                                  | accepts 1 arg(s), received 0                                           |
+      | hack arg1 arg2                        | accepts 1 arg(s), received 2                                           |
+      | kill arg1 arg2                        | accepts at most 1 arg(s), received 2                                   |
+      | new-pull-request arg1                 | unknown command "arg1" for "git-town new-pull-request"                 |
+      | prepend                               | accepts 1 arg(s), received 0                                           |
+      | prune-branches arg1                   | unknown command "arg1" for "git-town prune-branches"                   |
+      | rename-branch                         | accepts between 1 and 2 arg(s), received 0                             |
+      | rename-branch arg1 arg2 arg3          | accepts between 1 and 2 arg(s), received 3                             |
+      | repo arg1                             | unknown command "arg1" for "git-town repo"                             |
+      | set-parent arg1                       | unknown command "arg1" for "git-town set-parent"                       |
+      | ship arg1 arg2                        | accepts at most 1 arg(s), received 2                                   |
+      | sync arg1                             | unknown command "arg1" for "git-town sync"                             |
+      | version arg1                          | unknown command "arg1" for "git-town version"                          |

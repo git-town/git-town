@@ -25,7 +25,6 @@ import (
 	"fmt"
 
 	"github.com/fatih/color"
-	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/hosting"
@@ -34,21 +33,21 @@ import (
 )
 
 // Execute runs the Cobra stack.
-func Execute() {
+func Execute() error {
 	debugFlag := false
 	repo := git.NewProdRepo(&debugFlag)
 	rootCmd := RootCmd(&repo, &debugFlag)
 	color.NoColor = false // Prevent color from auto disable
-	if err := rootCmd.Execute(); err != nil {
-		cli.Exit(err)
-	}
+	return rootCmd.Execute()
 }
 
 // RootCmd is the main Cobra object.
 func RootCmd(repo *git.ProdRepo, debugFlag *bool) *cobra.Command {
 	rootCmd := cobra.Command{
-		Use:   "git-town",
-		Short: "Generic, high-level Git workflow support",
+		Use:           "git-town",
+		SilenceErrors: true,
+		SilenceUsage:  true,
+		Short:         "Generic, high-level Git workflow support",
 		Long: `Git Town makes software development teams who use Git even more productive and happy.
 
 It adds Git commands that support GitHub Flow, Git Flow, the Nvie model, GitLab Flow, and other workflows more directly,
