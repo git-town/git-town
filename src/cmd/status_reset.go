@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/spf13/cobra"
@@ -13,12 +12,13 @@ func resetRunstateCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:   "reset",
 		Short: "Resets the current suspended Git Town command",
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			err := runstate.Delete(repo)
 			if err != nil {
-				cli.Exit(err)
+				return err
 			}
 			fmt.Println("Runstate file deleted.")
+			return nil
 		},
 		Args:    cobra.NoArgs,
 		PreRunE: ensure(repo, hasGitVersion, isRepository),

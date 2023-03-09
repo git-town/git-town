@@ -51,39 +51,38 @@ func Execute(runState *RunState, repo *git.ProdRepo, connector hosting.Connector
 				if err != nil {
 					return fmt.Errorf("cannot run the abort steps: %w", err)
 				}
-				cli.Exit(step.CreateAutomaticAbortError())
-			} else {
-				runState.RunStepList.Prepend(step.CreateContinueStep())
-				err := runState.MarkAsUnfinished(repo)
-				if err != nil {
-					return err
-				}
-				currentBranch, err := repo.Silent.CurrentBranch()
-				if err != nil {
-					return err
-				}
-				rebasing, err := repo.Silent.HasRebaseInProgress()
-				if err != nil {
-					return err
-				}
-				if runState.Command == "sync" && !(rebasing && repo.Config.IsMainBranch(currentBranch)) {
-					runState.UnfinishedDetails.CanSkip = true
-				}
-				err = Save(runState, repo)
-				if err != nil {
-					return fmt.Errorf("cannot save run state: %w", err)
-				}
-				message := runErr.Error() + `
+				return step.CreateAutomaticAbortError()
+			}
+			runState.RunStepList.Prepend(step.CreateContinueStep())
+			err := runState.MarkAsUnfinished(repo)
+			if err != nil {
+				return err
+			}
+			currentBranch, err := repo.Silent.CurrentBranch()
+			if err != nil {
+				return err
+			}
+			rebasing, err := repo.Silent.HasRebaseInProgress()
+			if err != nil {
+				return err
+			}
+			if runState.Command == "sync" && !(rebasing && repo.Config.IsMainBranch(currentBranch)) {
+				runState.UnfinishedDetails.CanSkip = true
+			}
+			err = Save(runState, repo)
+			if err != nil {
+				return fmt.Errorf("cannot save run state: %w", err)
+			}
+			message := runErr.Error() + `
 
 To abort, run "git-town abort".
 To continue after having resolved conflicts, run "git-town continue".
 `
-				if runState.UnfinishedDetails.CanSkip {
-					message += `To continue by skipping the current branch, run "git-town skip".`
-				}
-				message += "\n"
-				return fmt.Errorf(message)
+			if runState.UnfinishedDetails.CanSkip {
+				message += `To continue by skipping the current branch, run "git-town skip".`
 			}
+			message += "\n"
+			return fmt.Errorf(message)
 		}
 		undoStep, err := step.CreateUndoStep(repo)
 		if err != nil {

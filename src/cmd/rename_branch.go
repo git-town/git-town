@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
@@ -33,20 +32,17 @@ When there is a tracking branch
 When run on a perennial branch
 - confirm with the "-f" option
 - registers the new perennial branch name in the local Git Town configuration`,
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			config, err := determineRenameBranchConfig(args, forceFlag, repo)
 			if err != nil {
-				cli.Exit(err)
+				return err
 			}
 			stepList, err := renameBranchStepList(config, repo)
 			if err != nil {
-				cli.Exit(err)
+				return err
 			}
 			runState := runstate.New("rename-branch", stepList)
-			err = runstate.Execute(runState, repo, nil)
-			if err != nil {
-				cli.Exit(err)
-			}
+			return runstate.Execute(runState, repo, nil)
 		},
 		Args:    cobra.RangeArgs(1, 2),
 		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
@@ -97,7 +93,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *git.ProdRe
 		}
 	}
 	if oldBranch == newBranch {
-		cli.Exit(fmt.Errorf("cannot rename branch to current name"))
+		return nil, fmt.Errorf("cannot rename branch to current name")
 	}
 	if !isOffline {
 		err := repo.Logging.Fetch()

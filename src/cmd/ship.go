@@ -45,24 +45,21 @@ If your origin server deletes shipped branches, for example
 GitHub's feature to automatically delete head branches,
 run "git config %s false"
 and Git Town will leave it up to your origin server to delete the remote branch.`, config.GithubTokenKey, config.ShipDeleteRemoteBranchKey),
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			connector, err := hosting.NewConnector(&repo.Config, &repo.Silent, cli.PrintConnectorAction)
 			if err != nil {
-				cli.Exit(err)
+				return err
 			}
 			config, err := determineShipConfig(args, connector, repo)
 			if err != nil {
-				cli.Exit(err)
+				return err
 			}
 			stepList, err := shipStepList(config, commitMessage, repo)
 			if err != nil {
-				cli.Exit(err)
+				return err
 			}
 			runState := runstate.New("ship", stepList)
-			err = runstate.Execute(runState, repo, connector)
-			if err != nil {
-				cli.Exit(err)
-			}
+			return runstate.Execute(runState, repo, connector)
 		},
 		Args:    cobra.MaximumNArgs(1),
 		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
@@ -144,7 +141,10 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 	if err != nil {
 		return nil, err
 	}
-	ensureParentBranchIsMainOrPerennialBranch(branchToShip, repo)
+	err = ensureParentBranchIsMainOrPerennialBranch(branchToShip, repo)
+	if err != nil {
+		return nil, err
+	}
 	hasTrackingBranch, err := repo.Silent.HasTrackingBranch(branchToShip)
 	if err != nil {
 		return nil, err
@@ -193,15 +193,16 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 	}, nil
 }
 
-func ensureParentBranchIsMainOrPerennialBranch(branch string, repo *git.ProdRepo) {
+func ensureParentBranchIsMainOrPerennialBranch(branch string, repo *git.ProdRepo) error {
 	parentBranch := repo.Config.ParentBranch(branch)
 	if !repo.Config.IsMainBranch(parentBranch) && !repo.Config.IsPerennialBranch(parentBranch) {
 		ancestors := repo.Config.AncestorBranches(branch)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
 		oldestAncestor := ancestorsWithoutMainOrPerennial[0]
-		cli.Exit(fmt.Errorf(`shipping this branch would ship %q as well,
-please ship %q first`, strings.Join(ancestorsWithoutMainOrPerennial, ", "), oldestAncestor))
+		return fmt.Errorf(`shipping this branch would ship %q as well,
+please ship %q first`, strings.Join(ancestorsWithoutMainOrPerennial, ", "), oldestAncestor)
 	}
+	return nil
 }
 
 func shipStepList(config *shipConfig, commitMessage string, repo *git.ProdRepo) (runstate.StepList, error) {
