@@ -198,7 +198,7 @@ func (ms *MockingShell) RunWith(opts *run.Options, cmd string, args ...string) (
 	result, err := run.WithOptions(opts, cmd, args...)
 	if ms.Debug {
 		fmt.Println(filepath.Base(ms.workingDir), ">", cmd, strings.Join(args, " "))
-		fmt.Println(result.Output())
+		fmt.Println(result.Output)
 		if err != nil {
 			fmt.Printf("ERROR: %v\n", err)
 		}

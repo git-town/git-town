@@ -552,9 +552,9 @@ func (r *Repo) FilesInBranch(branch string) ([]string, error) {
 func (r *Repo) HasBranchesOutOfSync() (bool, error) {
 	res, err := r.Run("git", "for-each-ref", "--format=%(refname:short) %(upstream:track)", "refs/heads")
 	if err != nil {
-		return false, fmt.Errorf("cannot determine if branches are out of sync in %q: %w %q", r.WorkingDir(), err, res.Output())
+		return false, fmt.Errorf("cannot determine if branches are out of sync in %q: %w %q", r.WorkingDir(), err, res.Output)
 	}
-	return strings.Contains(res.Output(), "["), nil
+	return strings.Contains(res.Output, "["), nil
 }
 
 // HasConflicts returns whether the local repository currently has unresolved merge conflicts.
@@ -582,7 +582,7 @@ func (r *Repo) HasFile(name, content string) (bool, error) {
 // HasGitTownConfigNow indicates whether this repository contain Git Town specific configuration.
 func (r *Repo) HasGitTownConfigNow() (bool, error) {
 	outcome, err := r.Run("git", "config", "--local", "--get-regex", "git-town")
-	if outcome.ExitCode() == 1 {
+	if outcome.ExitCode == 1 {
 		return false, nil
 	}
 	return outcome.OutputSanitized() != "", err
@@ -1123,7 +1123,7 @@ func (r *Repo) Version() (major int, minor int, err error) {
 	}
 	matches := versionRegexp.FindStringSubmatch(res.OutputSanitized())
 	if matches == nil {
-		return 0, 0, fmt.Errorf("'git version' returned unexpected output: %q.\nPlease open an issue and supply the output of running 'git version'", res.Output())
+		return 0, 0, fmt.Errorf("'git version' returned unexpected output: %q.\nPlease open an issue and supply the output of running 'git version'", res.Output)
 	}
 	majorVersion, err := strconv.Atoi(matches[1])
 	if err != nil {

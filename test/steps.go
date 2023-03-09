@@ -248,7 +248,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^I am not prompted for any parent branches$`, func() error {
 		notExpected := "Please specify the parent branch of"
 		if state.runRes.OutputContainsText(notExpected) {
-			return fmt.Errorf("text found:\n\nDID NOT EXPECT: %q\n\nACTUAL\n\n%q\n----------------------------", notExpected, state.runRes.Output())
+			return fmt.Errorf("text found:\n\nDID NOT EXPECT: %q\n\nACTUAL\n\n%q\n----------------------------", notExpected, state.runRes.Output)
 		}
 		return nil
 	})
@@ -366,7 +366,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^it runs no commands$`, func() error {
-		commands := GitCommandsInGitTownOutput(state.runRes.Output())
+		commands := GitCommandsInGitTownOutput(state.runRes.Output)
 		if len(commands) > 0 {
 			for _, command := range commands {
 				fmt.Println(command)
@@ -377,7 +377,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^it runs the commands$`, func(input *messages.PickleStepArgument_PickleTable) error {
-		commands := GitCommandsInGitTownOutput(state.runRes.Output())
+		commands := GitCommandsInGitTownOutput(state.runRes.Output)
 		table := RenderExecutedGitCommands(commands, input)
 		dataTable := FromGherkin(input)
 		expanded, err := dataTable.Expand(

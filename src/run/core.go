@@ -67,10 +67,10 @@ func WithOptions(opts *Options, cmd string, args ...string) (*Result, error) {
 		_, err := input.Write([]byte(userInput))
 		if err != nil {
 			result := Result{
-				command:  cmd,
-				args:     args,
-				output:   output.String(),
-				exitCode: subProcess.ProcessState.ExitCode(),
+				Command:  cmd,
+				Args:     args,
+				Output:   output.String(),
+				ExitCode: subProcess.ProcessState.ExitCode(),
 			}
 			return &result, fmt.Errorf("can't write %q to subprocess '%s %s': %w", userInput, cmd, strings.Join(args, " "), err)
 		}
@@ -88,10 +88,10 @@ Output:
 ----------------------------------------`, cmd, strings.Join(args, " "), err, output.String())
 	}
 	result := Result{
-		command:  cmd,
-		args:     args,
-		output:   output.String(),
-		exitCode: subProcess.ProcessState.ExitCode(),
+		Command:  cmd,
+		Args:     args,
+		Output:   output.String(),
+		ExitCode: subProcess.ProcessState.ExitCode(),
 	}
 	return &result, err
 }
