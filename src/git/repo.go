@@ -20,7 +20,7 @@ import (
 // - perform Git commands in this repo
 // - caches various aspects of the repo for better performance.
 type Repo struct {
-	run.Shell                         // for running console commands
+	run.Runner                        // for running console commands
 	Config             config.GitTown // caches Git configuration settings
 	CurrentBranchCache *cache.String  // caches the currently checked out Git branch
 	DryRun             *run.DryRun    // tracks dry-run information
