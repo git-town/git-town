@@ -328,7 +328,7 @@ func (gt *GitTown) RemoveGitAlias(command string) (*run.Result, error) {
 func (gt *GitTown) RemoveLocalGitConfiguration() error {
 	result, err := gt.Storage.runner.Run("git", "config", "--remove-section", "git-town")
 	if err != nil {
-		if result.ExitCode() == 128 {
+		if result.ExitCode == 128 {
 			// Git returns exit code 128 when trying to delete a non-existing config section.
 			// This is not an error condition in this workflow so we can ignore it here.
 			return nil

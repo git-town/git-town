@@ -40,7 +40,7 @@ func (r SilentRunner) Run(cmd string, args ...string) (*Result, error) {
 	}
 	result, err := Exec(cmd, args...)
 	if *r.Debug && result != nil {
-		r.PrintResult(result.output)
+		r.PrintResult(result.Output)
 	}
 	return result, err
 }
