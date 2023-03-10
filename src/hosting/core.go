@@ -99,7 +99,7 @@ type gitTownConfig interface {
 	OriginURL() *giturl.Parts
 }
 
-// runner defines the runner methods used by the hosting package.
+// gitRunner defines the Git functionality used by the hosting package.
 type gitRunner interface {
 	ShaForBranch(string) (string, error)
 }
