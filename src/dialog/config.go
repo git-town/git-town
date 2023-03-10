@@ -5,65 +5,42 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
-	"github.com/git-town/git-town/v7/src/git"
 )
 
-// EnsureIsConfigured has the user to confgure the main branch and perennial branches if needed.
-func EnsureIsConfigured(repo *git.ProdRepo) error {
-	if repo.Config.MainBranch() == "" {
-		fmt.Println("Git Town needs to be configured")
-		fmt.Println()
-		err := ConfigureMainBranch(repo)
-		if err != nil {
-			return err
-		}
-		return ConfigurePerennialBranches(repo)
-	}
-	return nil
-}
-
-// ConfigureMainBranch has the user to confgure the main branch.
-func ConfigureMainBranch(repo *git.ProdRepo) error {
-	localBranches, err := repo.Silent.LocalBranches()
-	if err != nil {
-		return err
-	}
+// AskMainBranch lets the user enter the main branch.
+func AskMainBranch(mainBranch string, localBranches []string) (string, error) {
 	newMainBranch, err := askForBranch(askForBranchOptions{
 		branches:      localBranches,
-		prompt:        mainBranchPrompt(repo),
-		defaultBranch: repo.Config.MainBranch(),
+		prompt:        mainBranchPrompt(mainBranch),
+		defaultBranch: mainBranch,
 	})
 	if err != nil {
-		return err
+		return "", err
 	}
-	return repo.Config.SetMainBranch(newMainBranch)
+	return newMainBranch, nil
 }
 
-// ConfigurePerennialBranches has the user to confgure the perennial branches.
-func ConfigurePerennialBranches(repo *git.ProdRepo) error {
-	branches, err := repo.Silent.LocalBranchesWithoutMain()
-	if err != nil {
-		return err
-	}
-	if len(branches) == 0 {
-		return nil
+// AskPerennialBranches lets the user enter the perennial branches.
+func AskPerennialBranches(localBranchesWithoutMain []string, perennialBranches []string) ([]string, error) {
+	if len(localBranchesWithoutMain) == 0 {
+		return []string{}, nil
 	}
 	newPerennialBranches, err := askForBranches(askForBranchesOptions{
-		branches:        branches,
-		prompt:          perennialBranchesPrompt(repo),
-		defaultBranches: repo.Config.PerennialBranches(),
+		branches:        localBranchesWithoutMain,
+		prompt:          perennialBranchesPrompt(perennialBranches),
+		defaultBranches: perennialBranches,
 	})
 	if err != nil {
-		return err
+		return []string{}, err
 	}
-	return repo.Config.SetPerennialBranches(newPerennialBranches)
+	return newPerennialBranches, nil
 }
 
 // Helpers
 
-func mainBranchPrompt(repo *git.ProdRepo) string {
+func mainBranchPrompt(mainBranch string) string {
 	result := "Please specify the main development branch:"
-	currentMainBranch := repo.Config.MainBranch()
+	currentMainBranch := mainBranch
 	if currentMainBranch != "" {
 		coloredBranch := color.New(color.Bold).Add(color.FgCyan).Sprintf(currentMainBranch)
 		result += fmt.Sprintf(" (current value: %s)", coloredBranch)
@@ -71,11 +48,10 @@ func mainBranchPrompt(repo *git.ProdRepo) string {
 	return result
 }
 
-func perennialBranchesPrompt(repo *git.ProdRepo) string {
+func perennialBranchesPrompt(perennialBranches []string) string {
 	result := "Please specify perennial branches:"
-	currentPerennialBranches := repo.Config.PerennialBranches()
-	if len(currentPerennialBranches) > 0 {
-		coloredBranches := color.New(color.Bold).Add(color.FgCyan).Sprintf(strings.Join(currentPerennialBranches, ", "))
+	if len(perennialBranches) > 0 {
+		coloredBranches := color.New(color.Bold).Add(color.FgCyan).Sprintf(strings.Join(perennialBranches, ", "))
 		result += fmt.Sprintf(" (current value: %s)", coloredBranches)
 	}
 	return result
