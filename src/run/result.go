@@ -10,36 +10,15 @@ import (
 
 // Result contains the results of a command run in a subshell.
 type Result struct {
-	args     []string // arguments for the executed command
-	command  string   // the executed command
-	exitCode int      // the exit code of the command
-	output   string   // the raw output of the command
-}
-
-// Args provides the arguments used when running the command.
-func (c *Result) Args() []string {
-	return c.args
-}
-
-// Command provides the command run that led to this result.
-func (c *Result) Command() string {
-	return c.command
-}
-
-// ExitCode provides the exit code of the command.
-func (c *Result) ExitCode() int {
-	return c.exitCode
+	Args     []string // arguments for the executed command
+	Command  string   // the executed command
+	ExitCode int      // the exit code of the command
+	Output   string   // the raw output of the command
 }
 
 // FullCmd provides the full command run.
 func (c *Result) FullCmd() string {
-	return fmt.Sprintf("%s %s", c.command, strings.Join(c.args, " "))
-}
-
-// Output provides the output of this command.
-// Runs if it hasn't so far.
-func (c *Result) Output() string {
-	return c.output
+	return fmt.Sprintf("%s %s", c.Command, strings.Join(c.Args, " "))
 }
 
 // OutputLines provides the output of this command, split into lines.
@@ -50,7 +29,7 @@ func (c *Result) OutputLines() []string {
 
 // OutputSanitized provides the output without ANSI color codes.
 func (c *Result) OutputSanitized() string {
-	return strings.TrimSpace(stripansi.Strip(c.output))
+	return strings.TrimSpace(stripansi.Strip(c.Output))
 }
 
 // OutputContainsLine returns whether the output of this command
@@ -62,5 +41,5 @@ func (c *Result) OutputContainsLine(line string) bool {
 // OutputContainsText returns whether the output of this command
 // contains the given text.
 func (c *Result) OutputContainsText(text string) bool {
-	return strings.Contains(c.output, text)
+	return strings.Contains(c.Output, text)
 }
