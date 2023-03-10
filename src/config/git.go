@@ -33,7 +33,7 @@ func LoadGit(runner run.Runner, global bool) map[string]string {
 	if err != nil {
 		return result
 	}
-	output := res.Output()
+	output := res.Output
 	if output == "" {
 		return result
 	}
