@@ -40,7 +40,7 @@ type MockingRunner struct {
 	workingDir string
 }
 
-// NewMockingRunner provides a new MockingShell instance that executes in the given directory.
+// NewMockingRunner provides a new MockingRunner instance that executes in the given directory.
 func NewMockingRunner(workingDir string, homeDir string, binDir string) MockingRunner {
 	return MockingRunner{
 		workingDir: workingDir,
@@ -76,7 +76,7 @@ func (ms *MockingRunner) createMockBinary(name string, content string) error {
 	return nil
 }
 
-// WorkingDir provides the directory this MockingShell operates in.
+// WorkingDir provides the directory this MockingRunner operates in.
 func (ms *MockingRunner) WorkingDir() string {
 	return ms.workingDir
 }

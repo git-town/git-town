@@ -17,7 +17,7 @@ import (
 // Repo is a Git Repo in test code.
 type Repo struct {
 	git.Repo               // the git.Repo instance to use
-	runner   MockingRunner // a reference to the MockingShell instance used here
+	runner   MockingRunner // a reference to the MockingRunner instance used here
 }
 
 // CreateRepo creates TestRepo instances.
