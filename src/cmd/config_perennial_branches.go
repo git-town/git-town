@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
+	. "github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -13,7 +14,7 @@ func perennialBranchesCmd(repo *git.ProdRepo) *cobra.Command {
 	perennialBranchesCmd := cobra.Command{
 		Use:     "perennial-branches",
 		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, isRepository),
+		PreRunE: Ensure(repo, IsRepository),
 		Short:   "Displays your perennial branches",
 		Long: `Displays your perennial branches
 
@@ -36,6 +37,6 @@ func updatePerennialBranchesCmd(repo *git.ProdRepo) *cobra.Command {
 			return dialog.ConfigurePerennialBranches(repo)
 		},
 		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, isRepository),
+		PreRunE: Ensure(repo, IsRepository),
 	}
 }

@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
+	. "github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -15,8 +16,8 @@ func configCmd(repo *git.ProdRepo) *cobra.Command {
 		Use:               "config",
 		GroupID:           "setup",
 		Args:              cobra.NoArgs,
-		PreRunE:           ensure(repo, isRepository),
-		PersistentPreRunE: ensure(repo, hasGitVersion),
+		PreRunE:           Ensure(repo, IsRepository),
+		PersistentPreRunE: Ensure(repo, HasGitVersion),
 		Short:             "Displays your Git Town configuration",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			ec := runstate.ErrorChecker{}

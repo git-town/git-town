@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
+	. "github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -18,7 +19,7 @@ func newPullRequestCommand(repo *git.ProdRepo) *cobra.Command {
 		Use:     "new-pull-request",
 		GroupID: "basic",
 		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured, isOnline),
+		PreRunE: Ensure(repo, HasGitVersion, IsRepository, IsConfigured, IsOnline),
 		Short:   "Creates a new pull request",
 		Long: fmt.Sprintf(`Creates a new pull request
 

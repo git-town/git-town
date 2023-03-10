@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
+	. "github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -19,7 +20,7 @@ func syncCmd(repo *git.ProdRepo) *cobra.Command {
 		Use:     "sync",
 		GroupID: "basic",
 		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
+		PreRunE: Ensure(repo, HasGitVersion, IsRepository, IsConfigured),
 		Short:   "Updates the current branch with all relevant changes",
 		Long: fmt.Sprintf(`Updates the current branch with all relevant changes
 
@@ -46,7 +47,7 @@ You can disable this by running "git config %s false".`, config.SyncUpstreamKey)
 				}
 				repo.DryRun.Activate(currentBranch)
 			}
-			exit, err := handleUnfinishedState(repo, nil)
+			exit, err := HandleUnfinishedState(repo, nil)
 			if err != nil {
 				return err
 			}

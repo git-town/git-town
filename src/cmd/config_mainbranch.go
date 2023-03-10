@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/git"
+	. "github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -12,7 +13,7 @@ func mainbranchConfigCmd(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "main-branch [<branch>]",
 		Args:    cobra.MaximumNArgs(1),
-		PreRunE: ensure(repo, isRepository),
+		PreRunE: Ensure(repo, IsRepository),
 		Short:   "Displays or sets your main development branch",
 		Long: `Displays or sets your main development branch
 

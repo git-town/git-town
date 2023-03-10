@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
+	. "github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -15,7 +16,7 @@ func prependCommand(repo *git.ProdRepo) *cobra.Command {
 		Use:     "prepend <branch>",
 		GroupID: "lineage",
 		Args:    cobra.ExactArgs(1),
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
+		PreRunE: Ensure(repo, HasGitVersion, IsRepository, IsConfigured),
 		Short:   "Creates a new feature branch as the parent of the current branch",
 		Long: `Creates a new feature branch as the parent of the current branch
 

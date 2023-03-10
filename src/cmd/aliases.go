@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/git"
+	. "github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -14,7 +15,7 @@ func aliasCommand(repo *git.ProdRepo) *cobra.Command {
 		Use:     "aliases (add | remove)",
 		GroupID: "setup",
 		Args:    cobra.ExactArgs(1),
-		PreRunE: ensure(repo, hasGitVersion),
+		PreRunE: Ensure(repo, HasGitVersion),
 		Short:   "Adds or removes default global aliases",
 		Long: `Adds or removes default global aliases
 

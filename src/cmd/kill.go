@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
+	. "github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -14,7 +15,7 @@ func killCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "kill [<branch>]",
 		Args:    cobra.MaximumNArgs(1),
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
+		PreRunE: Ensure(repo, HasGitVersion, IsRepository, IsConfigured),
 		Short:   "Removes an obsolete feature branch",
 		Long: `Removes an obsolete feature branch
 
