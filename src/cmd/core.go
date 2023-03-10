@@ -127,9 +127,16 @@ func hasGitVersion(repo *git.ProdRepo) error {
 
 // isConfigured is a validationCondition that verifies that the given Git repo contains necessary Git Town configuration.
 func isConfigured(repo *git.ProdRepo) error {
-	err := dialog.EnsureIsConfigured(repo)
-	if err != nil {
-		return err
+	if repo.Config.MainBranch() == "" {
+		fmt.Print("Git Town needs to be configured\n\n")
+		err := configureMainBranch(repo)
+		if err != nil {
+			return err
+		}
+		err = configurePerennialBranches(repo)
+		if err != nil {
+			return err
+		}
 	}
 	return repo.RemoveOutdatedConfiguration()
 }
