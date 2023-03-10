@@ -27,7 +27,7 @@ type GitEnvironment struct {
 	DevRepo Repo `exhaustruct:"optional"`
 
 	// DevShell provides a reference to the MockingShell instance used in the DeveloperRepo.
-	DevShell *MockingShell `exhaustruct:"optional"`
+	DevShell *MockingRunner `exhaustruct:"optional"`
 
 	// OriginRepo is the Git repository that simulates the origin repo (on GitHub).
 	// If this value is nil, the current test setup has no origin.
@@ -56,7 +56,7 @@ func CloneGitEnvironment(original GitEnvironment, dir string) (GitEnvironment, e
 	result := GitEnvironment{
 		Dir:        dir,
 		DevRepo:    devRepo,
-		DevShell:   &devRepo.shell,
+		DevShell:   &devRepo.runner,
 		OriginRepo: &originRepo,
 	}
 	// Since we copied the files from the memoized directory,

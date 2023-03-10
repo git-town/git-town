@@ -8,10 +8,11 @@ import (
 	"github.com/kballard/go-shellquote"
 )
 
-// SilentRunner is an implementation of the Shell interface that runs commands in the current working directory.
+// SilentRunner runs commands in the current working directory.
+// Unlike LoggingRunner, SilentRunner does not print anything to the CLI.
 type SilentRunner struct {
-	// Debug mode outputs the shell commands that Git Town normally runs silently
-	// behind the scenes to determine the status of the Git repository.
+	// When enabled, outputs the shell commands that Git Town normally runs silently
+	// to the CLI.
 	Debug *bool
 }
 

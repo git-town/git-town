@@ -17,18 +17,18 @@ func TestRepo(t *testing.T) {
 		homeDir := filepath.Join(dir, "home")
 		binDir := filepath.Join(dir, "bin")
 		repo := NewRepo(workingDir, homeDir, binDir)
-		assert.Equal(t, workingDir, repo.shell.workingDir)
-		assert.Equal(t, homeDir, repo.shell.homeDir)
-		assert.Equal(t, binDir, repo.shell.binDir)
+		assert.Equal(t, workingDir, repo.runner.workingDir)
+		assert.Equal(t, homeDir, repo.runner.homeDir)
+		assert.Equal(t, binDir, repo.runner.binDir)
 	})
 
 	t.Run(".Clone()", func(t *testing.T) {
 		t.Parallel()
 		origin := CreateRepo(t)
-		clonedPath := filepath.Join(origin.shell.workingDir, "cloned")
+		clonedPath := filepath.Join(origin.runner.workingDir, "cloned")
 		cloned, err := origin.Clone(clonedPath)
 		assert.NoError(t, err)
-		assert.Equal(t, clonedPath, cloned.shell.workingDir)
+		assert.Equal(t, clonedPath, cloned.runner.workingDir)
 		assertIsNormalGitRepo(t, clonedPath)
 	})
 }

@@ -12,13 +12,13 @@ import (
 	"github.com/kballard/go-shellquote"
 )
 
-// MockingShell runs shell commands using a customizable environment.
+// MockingRunner runs shell commands using a customizable environment.
 // This is useful in tests. Possible customizations:
 //   - overide environment variables
 //   - Temporarily override certain shell commands with mock implementations.
 //     Temporary mocks are only valid for the next command being run.
-type MockingShell struct {
-	// the directory that stores the mock shell command implementations, ignored if empty
+type MockingRunner struct {
+	// the directory that contains mock executables, ignored if empty
 	binDir string
 
 	// whether to log the output of subshell commands
@@ -36,22 +36,22 @@ type MockingShell struct {
 	// indicates whether the current test has created the binDir
 	usesBinDir bool `exhaustruct:"optional"`
 
-	// the directory in which this shell runs
+	// the directory in which this runner executes shell commands
 	workingDir string
 }
 
-// NewMockingShell provides a new MockingShell instance that executes in the given directory.
-func NewMockingShell(workingDir string, homeDir string, binDir string) MockingShell {
-	return MockingShell{
+// NewMockingRunner provides a new MockingShell instance that executes in the given directory.
+func NewMockingRunner(workingDir string, homeDir string, binDir string) MockingRunner {
+	return MockingRunner{
 		workingDir: workingDir,
 		homeDir:    homeDir,
 		binDir:     binDir,
 	}
 }
 
-// createBinDir creates the directory that contains mock shell command implementations.
+// createBinDir creates the directory that contains mock executables.
 // This method is idempotent.
-func (ms *MockingShell) createBinDir() error {
+func (ms *MockingRunner) createBinDir() error {
 	if ms.usesBinDir {
 		// binDir already created --> nothing to do here
 		return nil
@@ -65,7 +65,7 @@ func (ms *MockingShell) createBinDir() error {
 }
 
 // createMockBinary creates an executable with the given name and content in ms.binDir.
-func (ms *MockingShell) createMockBinary(name string, content string) error {
+func (ms *MockingRunner) createMockBinary(name string, content string) error {
 	if err := ms.createBinDir(); err != nil {
 		return err
 	}
@@ -77,12 +77,12 @@ func (ms *MockingShell) createMockBinary(name string, content string) error {
 }
 
 // WorkingDir provides the directory this MockingShell operates in.
-func (ms *MockingShell) WorkingDir() string {
+func (ms *MockingRunner) WorkingDir() string {
 	return ms.workingDir
 }
 
 // MockBrokenCommand adds a mock for the given command that returns an error.
-func (ms *MockingShell) MockBrokenCommand(name string) error {
+func (ms *MockingRunner) MockBrokenCommand(name string) error {
 	// write custom "which" command
 	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" == %q ]; then\n  echo %q\nelse\n  exit 1\nfi", name, filepath.Join(ms.binDir, name))
 	err := ms.createMockBinary("which", content)
@@ -95,7 +95,7 @@ func (ms *MockingShell) MockBrokenCommand(name string) error {
 }
 
 // MockCommand adds a mock for the command with the given name.
-func (ms *MockingShell) MockCommand(name string) error {
+func (ms *MockingRunner) MockCommand(name string) error {
 	// write custom "which" command
 	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" == %q ]; then\n  echo %q\nelse\n  exit 1\nfi", name, filepath.Join(ms.binDir, name))
 	if err := ms.createMockBinary("which", content); err != nil {
@@ -107,7 +107,7 @@ func (ms *MockingShell) MockCommand(name string) error {
 }
 
 // MockGit pretends that this repo has Git in the given version installed.
-func (ms *MockingShell) MockGit(version string) error {
+func (ms *MockingRunner) MockGit(version string) error {
 	if runtime.GOOS == "windows" {
 		// create Windows binary
 		content := fmt.Sprintf("echo git version %s\n", version)
@@ -118,30 +118,29 @@ func (ms *MockingShell) MockGit(version string) error {
 	return ms.createMockBinary("git", content)
 }
 
-// MockCommitMessage sets up this shell with an editor that enters the given commit message.
-func (ms *MockingShell) MockCommitMessage(message string) error {
+// MockCommitMessage sets up this runner with an editor that enters the given commit message.
+func (ms *MockingRunner) MockCommitMessage(message string) error {
 	ms.gitEditor = "git_editor"
 	return ms.createMockBinary(ms.gitEditor, fmt.Sprintf("#!/usr/bin/env bash\n\necho %q > $1", message))
 }
 
 // MockNoCommandsInstalled pretends that no commands are installed.
-func (ms *MockingShell) MockNoCommandsInstalled() error {
+func (ms *MockingRunner) MockNoCommandsInstalled() error {
 	content := "#!/usr/bin/env bash\n\nexit 1\n"
 	return ms.createMockBinary("which", content)
 }
 
-// Run runs the given command with the given arguments
-// in this ShellRunner's directory.
-// Shell overrides will be used and removed when done.
-func (ms *MockingShell) Run(name string, arguments ...string) (*run.Result, error) {
+// Run runs the given command with the given arguments.
+// Overrides will be used and removed when done.
+func (ms *MockingRunner) Run(name string, arguments ...string) (*run.Result, error) {
 	return ms.RunWith(&run.Options{}, name, arguments...)
 }
 
-// RunMany runs all given commands in current directory.
+// RunMany runs all given commands.
 // Commands are provided as a list of argv-style strings.
-// Shell overrides apply for the first command only.
+// Overrides apply for the first command only.
 // Failed commands abort immediately with the encountered error.
-func (ms *MockingShell) RunMany(commands [][]string) error {
+func (ms *MockingRunner) RunMany(commands [][]string) error {
 	for _, argv := range commands {
 		command, args := argv[0], argv[1:]
 		_, err := ms.Run(command, args...)
@@ -152,18 +151,16 @@ func (ms *MockingShell) RunMany(commands [][]string) error {
 	return nil
 }
 
-// RunString runs the given command (including possible arguments)
-// in this ShellRunner's directory.
-// Shell overrides will be used and removed when done.
-func (ms *MockingShell) RunString(fullCmd string) (*run.Result, error) {
+// RunString runs the given command (including possible arguments).
+// Overrides will be used and removed when done.
+func (ms *MockingRunner) RunString(fullCmd string) (*run.Result, error) {
 	return ms.RunStringWith(fullCmd, &run.Options{})
 }
 
-// RunStringWith runs the given command (including possible arguments)
-// in this ShellRunner's directory using the given options.
+// RunStringWith runs the given command (including possible arguments) using the given options.
 // opts.Dir is a relative path inside the working directory of this ShellRunner.
-// Shell overrides will be used and removed when done.
-func (ms *MockingShell) RunStringWith(fullCmd string, opts *run.Options) (*run.Result, error) {
+// Overrides will be used and removed when done.
+func (ms *MockingRunner) RunStringWith(fullCmd string, opts *run.Options) (*run.Result, error) {
 	parts, err := shellquote.Split(fullCmd)
 	if err != nil {
 		return nil, fmt.Errorf("cannot split command %q: %w", fullCmd, err)
@@ -173,8 +170,8 @@ func (ms *MockingShell) RunStringWith(fullCmd string, opts *run.Options) (*run.R
 }
 
 // RunWith runs the given command with the given options in this ShellRunner's directory.
-func (ms *MockingShell) RunWith(opts *run.Options, cmd string, args ...string) (*run.Result, error) {
-	// create an environment with the temp shell overrides directory added to the PATH
+func (ms *MockingRunner) RunWith(opts *run.Options, cmd string, args ...string) (*run.Result, error) {
+	// create an environment with the temp Overrides directory added to the PATH
 	if opts.Env == nil {
 		opts.Env = os.Environ()
 	}
@@ -207,6 +204,6 @@ func (ms *MockingShell) RunWith(opts *run.Options, cmd string, args ...string) (
 }
 
 // SetTestOrigin adds the given environment variable to subsequent runs of commands.
-func (ms *MockingShell) SetTestOrigin(content string) {
+func (ms *MockingRunner) SetTestOrigin(content string) {
 	ms.testOrigin = content
 }
