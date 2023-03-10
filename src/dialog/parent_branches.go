@@ -32,24 +32,24 @@ func (pbd *ParentBranches) EnsureKnowsParentBranches(branches []string, repo *gi
 
 // AskForBranchAncestry prompts the user for all unknown ancestors of the given branch.
 func (pbd *ParentBranches) AskForBranchAncestry(branch, defaultBranch string, repo *git.ProdRepo) error {
-	current := branch
+	currentBranch := branch
 	var err error
 	for {
-		parent := repo.Config.ParentBranch(current)
+		parent := repo.Config.ParentBranch(currentBranch)
 		if parent == "" { //nolint:nestif
 			pbd.printParentBranchHeader(repo)
-			parent, err = pbd.AskForBranchParent(current, defaultBranch, repo)
+			parent, err = pbd.AskForBranchParent(currentBranch, defaultBranch, repo)
 			if err != nil {
 				return err
 			}
 			if parent == perennialBranchOption {
-				err = repo.Config.AddToPerennialBranches(current)
+				err = repo.Config.AddToPerennialBranches(currentBranch)
 				if err != nil {
 					return err
 				}
 				break
 			}
-			err = repo.Config.SetParent(current, parent)
+			err = repo.Config.SetParent(currentBranch, parent)
 			if err != nil {
 				return err
 			}
@@ -57,7 +57,7 @@ func (pbd *ParentBranches) AskForBranchAncestry(branch, defaultBranch string, re
 		if parent == repo.Config.MainBranch() || repo.Config.IsPerennialBranch(parent) {
 			break
 		}
-		current = parent
+		currentBranch = parent
 	}
 	return nil
 }
