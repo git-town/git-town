@@ -261,8 +261,8 @@ Output:
 }
 
 // SetTestOrigin adds the given environment variable to subsequent runs of commands.
-func (ms *MockingRunner) SetTestOrigin(content string) {
-	ms.testOrigin = content
+func (r *MockingRunner) SetTestOrigin(content string) {
+	r.testOrigin = content
 }
 
 // InputDelay defines how long to wait before writing the next input string into the subprocess.
