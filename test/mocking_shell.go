@@ -36,7 +36,7 @@ type MockingShell struct {
 	// indicates whether the current test has created the binDir
 	usesBinDir bool `exhaustruct:"optional"`
 
-	// the directory in which this runner runs
+	// the directory in which this shell runs
 	workingDir string
 }
 
