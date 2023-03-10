@@ -72,8 +72,8 @@ hi
 	t.Run(".RunMany()", func(t *testing.T) {
 		t.Parallel()
 		debug := false
-		shell := run.SilentRunner{Debug: &debug}
-		err := shell.RunMany([][]string{
+		runner := run.SilentRunner{Debug: &debug}
+		err := runner.RunMany([][]string{
 			{"mkdir", "tmp"},
 			{"touch", "tmp/first"},
 			{"touch", "tmp/second"},
@@ -89,8 +89,8 @@ hi
 	t.Run(".RunString()", func(t *testing.T) {
 		t.Parallel()
 		debug := false
-		shell := run.SilentRunner{Debug: &debug}
-		_, err := shell.RunString("touch first")
+		runner := run.SilentRunner{Debug: &debug}
+		_, err := runner.RunString("touch first")
 		defer os.Remove("first")
 		assert.NoError(t, err)
 		_, err = os.Stat("first")

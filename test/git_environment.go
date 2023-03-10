@@ -26,8 +26,8 @@ type GitEnvironment struct {
 	// DevRepo is the Git repository that is locally checked out at the developer machine.
 	DevRepo Repo `exhaustruct:"optional"`
 
-	// DevShell provides a reference to the MockingShell instance used in the DeveloperRepo.
-	DevShell *MockingShell `exhaustruct:"optional"`
+	// DevRunner provides a reference to the MockingRunner instance used in the DeveloperRepo.
+	DevRunner *MockingRunner `exhaustruct:"optional"`
 
 	// OriginRepo is the Git repository that simulates the origin repo (on GitHub).
 	// If this value is nil, the current test setup has no origin.
@@ -56,12 +56,12 @@ func CloneGitEnvironment(original GitEnvironment, dir string) (GitEnvironment, e
 	result := GitEnvironment{
 		Dir:        dir,
 		DevRepo:    devRepo,
-		DevShell:   &devRepo.shell,
+		DevRunner:  &devRepo.runner,
 		OriginRepo: &originRepo,
 	}
 	// Since we copied the files from the memoized directory,
 	// we have to set the "origin" remote to the copied origin repo here.
-	_, err = result.DevShell.Run("git", "remote", "remove", config.OriginRemote)
+	_, err = result.DevRunner.Run("git", "remote", "remove", config.OriginRemote)
 	if err != nil {
 		return GitEnvironment{}, fmt.Errorf("cannot remove remote: %w", err)
 	}
