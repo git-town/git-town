@@ -99,15 +99,6 @@ func TestRepo(t *testing.T) {
 		assert.Equal(t, "second commit", commits[1].Message)
 	})
 
-	t.Run(".Config()", func(t *testing.T) {
-		t.Parallel()
-		repo := test.CreateRepo(t).Repo
-		config := repo.Config
-		assert.NotNil(t, config, "first path: new config")
-		config = repo.Config
-		assert.NotNil(t, config, "second path: cached config")
-	})
-
 	t.Run(".ConnectTrackingBranch()", func(t *testing.T) {
 		t.Parallel()
 		// replicating the situation this is used in,
@@ -491,20 +482,20 @@ func TestRepo(t *testing.T) {
 		err := origin.CreateBranch("b1", "initial")
 		assert.NoError(t, err)
 		repoDir := t.TempDir()
-		repo, err := origin.Clone(repoDir)
+		devRepo, err := origin.Clone(repoDir)
 		assert.NoError(t, err)
-		runner := repo.Repo
-		err = runner.CheckoutBranch("b1")
+		repo := devRepo.Repo
+		err = repo.CheckoutBranch("b1")
 		assert.NoError(t, err)
-		err = runner.CreateBranch("b2", "initial")
+		err = repo.CreateBranch("b2", "initial")
 		assert.NoError(t, err)
-		has, err := runner.HasTrackingBranch("b1")
+		has, err := repo.HasTrackingBranch("b1")
 		assert.NoError(t, err)
 		assert.True(t, has)
-		has, err = runner.HasTrackingBranch("b2")
+		has, err = repo.HasTrackingBranch("b2")
 		assert.NoError(t, err)
 		assert.False(t, has)
-		has, err = runner.HasTrackingBranch("b3")
+		has, err = repo.HasTrackingBranch("b3")
 		assert.NoError(t, err)
 		assert.False(t, has)
 	})
