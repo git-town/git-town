@@ -43,9 +43,9 @@ type GitTown struct {
 	originURLCache map[string]*giturl.Parts
 }
 
-func NewGitTown(shell run.Shell) GitTown {
+func NewGitTown(runner run.Runner) GitTown {
 	return GitTown{
-		Storage:        NewGit(shell),
+		Storage:        NewGit(runner),
 		originURLCache: map[string]*giturl.Parts{},
 	}
 }
@@ -227,7 +227,7 @@ func (gt *GitTown) OriginURLString() string {
 	if remote != "" {
 		return remote
 	}
-	res, _ := gt.Storage.shell.Run("git", "remote", "get-url", OriginRemote)
+	res, _ := gt.Storage.runner.Run("git", "remote", "get-url", OriginRemote)
 	return res.OutputSanitized()
 }
 
@@ -326,7 +326,7 @@ func (gt *GitTown) RemoveGitAlias(command string) (*run.Result, error) {
 
 // RemoveLocalGitConfiguration removes all Git Town configuration.
 func (gt *GitTown) RemoveLocalGitConfiguration() error {
-	result, err := gt.Storage.shell.Run("git", "config", "--remove-section", "git-town")
+	result, err := gt.Storage.runner.Run("git", "config", "--remove-section", "git-town")
 	if err != nil {
 		if result.ExitCode() == 128 {
 			// Git returns exit code 128 when trying to delete a non-existing config section.
@@ -357,20 +357,20 @@ func (gt *GitTown) RemovePerennialBranchConfiguration() error {
 // SetCodeHostingDriver sets the "github.code-hosting-driver" setting.
 func (gt *GitTown) SetCodeHostingDriver(value string) error {
 	gt.Storage.localConfigCache[CodeHostingDriverKey] = value
-	_, err := gt.Storage.shell.Run("git", "config", CodeHostingDriverKey, value)
+	_, err := gt.Storage.runner.Run("git", "config", CodeHostingDriverKey, value)
 	return err
 }
 
 // SetCodeHostingOriginHostname sets the "github.code-hosting-driver" setting.
 func (gt *GitTown) SetCodeHostingOriginHostname(value string) error {
 	gt.Storage.localConfigCache[CodeHostingOriginHostnameKey] = value
-	_, err := gt.Storage.shell.Run("git", "config", CodeHostingOriginHostnameKey, value)
+	_, err := gt.Storage.runner.Run("git", "config", CodeHostingOriginHostnameKey, value)
 	return err
 }
 
 // SetColorUI configures whether Git output contains color codes.
 func (gt *GitTown) SetColorUI(value string) error {
-	_, err := gt.Storage.shell.Run("git", "config", "color.ui", value)
+	_, err := gt.Storage.runner.Run("git", "config", "color.ui", value)
 	return err
 }
 

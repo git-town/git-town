@@ -16,8 +16,8 @@ import (
 
 // Repo is a Git Repo in test code.
 type Repo struct {
-	git.Repo              // the git.Repo instance to use
-	shell    MockingShell // a reference to the MockingShell instance used here
+	git.Repo               // the git.Repo instance to use
+	runner   MockingRunner // a reference to the MockingRunner instance used here
 }
 
 // CreateRepo creates TestRepo instances.
@@ -52,10 +52,10 @@ func InitRepo(workingDir, homeDir, binDir string) (Repo, error) {
 // NewRepo provides a new Repo instance working in the given directory.
 // The directory must contain an existing Git repo.
 func NewRepo(workingDir, homeDir, binDir string) Repo {
-	shell := NewMockingShell(workingDir, homeDir, binDir)
+	runner := NewMockingRunner(workingDir, homeDir, binDir)
 	repo := git.Repo{
-		Shell:              &shell,
-		Config:             config.NewGitTown(&shell),
+		Runner:             &runner,
+		Config:             config.NewGitTown(&runner),
 		DryRun:             &run.DryRun{},
 		IsRepoCache:        &cache.Bool{},
 		RemoteBranchCache:  &cache.Strings{},
@@ -63,7 +63,7 @@ func NewRepo(workingDir, homeDir, binDir string) Repo {
 		RootDirCache:       &cache.String{},
 		CurrentBranchCache: &cache.String{},
 	}
-	return Repo{Repo: repo, shell: shell}
+	return Repo{Repo: repo, runner: runner}
 }
 
 // BranchHierarchyTable provides the currently configured branch hierarchy information as a DataTable.
@@ -86,11 +86,11 @@ func (repo *Repo) BranchHierarchyTable() DataTable {
 // Clone creates a clone of this Repo into the given directory.
 // The cloned repo uses the same homeDir and binDir as its origin.
 func (repo *Repo) Clone(targetDir string) (Repo, error) {
-	_, err := run.Exec("git", "clone", repo.shell.workingDir, targetDir)
+	_, err := run.Exec("git", "clone", repo.runner.workingDir, targetDir)
 	if err != nil {
-		return Repo{}, fmt.Errorf("cannot clone repo %q: %w", repo.shell.workingDir, err)
+		return Repo{}, fmt.Errorf("cannot clone repo %q: %w", repo.runner.workingDir, err)
 	}
-	return NewRepo(targetDir, repo.shell.homeDir, repo.shell.binDir), nil
+	return NewRepo(targetDir, repo.runner.homeDir, repo.runner.binDir), nil
 }
 
 // FilesInBranches provides a data table of files and their content in all branches.

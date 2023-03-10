@@ -39,13 +39,13 @@ func OpenBrowserCommand() string {
 
 // Open opens a new window/tab in the default browser with the given URL.
 // If no browser is found, it prints the URL.
-func Open(url string, shell run.Shell) {
+func Open(url string, runner run.Runner) {
 	command := OpenBrowserCommand()
 	if command == "" {
 		fmt.Println("Please open in a browser: " + url)
 		return
 	}
-	_, err := shell.Run(command, url)
+	_, err := runner.Run(command, url)
 	if err != nil {
 		fmt.Println("Please open in a browser: " + url)
 	}

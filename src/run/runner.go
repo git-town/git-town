@@ -1,7 +1,7 @@
 package run
 
-// Shell defines operations to run commands in a subshell.
-type Shell interface {
+// Runner defines operations to run shell commands.
+type Runner interface {
 	Run(string, ...string) (*Result, error)
 	RunMany([][]string) error
 	RunString(string) (*Result, error)

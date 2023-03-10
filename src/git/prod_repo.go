@@ -12,24 +12,24 @@ import (
 
 // ProdRepo is a Git Repo in production code.
 type ProdRepo struct {
-	Config       config.GitTown // the git.Configuration instance for this repo
-	DryRun       *run.DryRun
-	Logging      Repo              // the Repo instance to Git operations that show up in the output
-	LoggingShell *run.LoggingShell // the LoggingShell instance used
-	Silent       Repo              // the Repo instance for silent Git operations
+	Config        config.GitTown // the git.Configuration instance for this repo
+	DryRun        *run.DryRun
+	Logging       Repo               // the Runner instance to Git operations that show up in the output
+	LoggingRunner *run.LoggingRunner // the LoggingRunner instance used
+	Silent        Repo               // the Runner instance for silent Git operations
 }
 
 // NewProdRepo provides a Repo instance in the current working directory.
 func NewProdRepo(debugFlag *bool) ProdRepo {
-	silentShell := run.SilentShell{Debug: debugFlag}
-	config := config.NewGitTown(silentShell)
+	silentRunner := run.SilentRunner{Debug: debugFlag}
+	config := config.NewGitTown(silentRunner)
 	currentBranchTracker := cache.String{}
 	dryRun := run.DryRun{}
 	isRepoCache := cache.Bool{}
 	remoteBranchCache := cache.Strings{}
 	remotesCache := cache.Strings{}
 	silentRepo := Repo{
-		Shell:              silentShell,
+		Runner:             silentRunner,
 		Config:             config,
 		CurrentBranchCache: &currentBranchTracker,
 		DryRun:             &dryRun,
@@ -38,9 +38,9 @@ func NewProdRepo(debugFlag *bool) ProdRepo {
 		RemoteBranchCache:  &remoteBranchCache,
 		RootDirCache:       &cache.String{},
 	}
-	loggingShell := run.NewLoggingShell(&silentRepo, &dryRun)
+	loggingRunner := run.NewLoggingRunner(&silentRepo, &dryRun)
 	loggingRepo := Repo{
-		Shell:              loggingShell,
+		Runner:             loggingRunner,
 		Config:             config,
 		CurrentBranchCache: &currentBranchTracker,
 		DryRun:             &dryRun,
@@ -50,11 +50,11 @@ func NewProdRepo(debugFlag *bool) ProdRepo {
 		RootDirCache:       &cache.String{},
 	}
 	return ProdRepo{
-		Silent:       silentRepo,
-		Logging:      loggingRepo,
-		LoggingShell: loggingShell,
-		Config:       config,
-		DryRun:       &dryRun,
+		Silent:        silentRepo,
+		Logging:       loggingRepo,
+		LoggingRunner: loggingRunner,
+		Config:        config,
+		DryRun:        &dryRun,
 	}
 }
 
