@@ -13,8 +13,8 @@ func TestSilentRunner(t *testing.T) {
 	t.Run(".Run()", func(t *testing.T) {
 		t.Parallel()
 		debug := false
-		shell := run.SilentRunner{Debug: &debug}
-		res, err := shell.Run("echo", "hello", "world")
+		runner := run.SilentRunner{Debug: &debug}
+		res, err := runner.Run("echo", "hello", "world")
 		assert.NoError(t, err)
 		assert.Equal(t, "hello world", res.OutputSanitized())
 	})
@@ -22,8 +22,8 @@ func TestSilentRunner(t *testing.T) {
 	t.Run(".RunMany()", func(t *testing.T) {
 		t.Parallel()
 		debug := false
-		shell := run.SilentRunner{Debug: &debug}
-		err := shell.RunMany([][]string{
+		runner := run.SilentRunner{Debug: &debug}
+		err := runner.RunMany([][]string{
 			{"mkdir", "tmp"},
 			{"touch", "tmp/first"},
 			{"touch", "tmp/second"},
@@ -39,8 +39,8 @@ func TestSilentRunner(t *testing.T) {
 	t.Run(".RunString()", func(t *testing.T) {
 		t.Parallel()
 		debug := false
-		shell := run.SilentRunner{Debug: &debug}
-		_, err := shell.RunString("touch first")
+		runner := run.SilentRunner{Debug: &debug}
+		_, err := runner.RunString("touch first")
 		defer os.Remove("first")
 		assert.NoError(t, err)
 		_, err = os.Stat("first")

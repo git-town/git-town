@@ -40,7 +40,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		// See main_test.go for additional details.
 		state.Reset(gitEnvironment)
 		if hasTag(scenario, "@debug") {
-			gitEnvironment.DevShell.Debug = true
+			gitEnvironment.DevRunner.Debug = true
 		}
 	})
 
@@ -213,7 +213,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^Git has version "([^"]*)"$`, func(version string) error {
-		err := state.gitEnv.DevShell.MockGit(version)
+		err := state.gitEnv.DevRunner.MockGit(version)
 		return err
 	})
 
@@ -274,45 +274,45 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I (?:run|ran) "(.+)"$`, func(command string) error {
-		state.runRes, state.runErr = state.gitEnv.DevShell.RunString(command)
+		state.runRes, state.runErr = state.gitEnv.DevRunner.RunString(command)
 		return nil
 	})
 
 	suite.Step(`^I (?:run|ran) "([^"]+)" and answer(?:ed)? the prompts:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
-		state.runRes, state.runErr = state.gitEnv.DevShell.RunStringWith(cmd, &run.Options{Input: tableToInput(input)})
+		state.runRes, state.runErr = state.gitEnv.DevRunner.RunStringWith(cmd, &run.Options{Input: tableToInput(input)})
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)" and close the editor$`, func(cmd string) error {
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		state.runRes, state.runErr = state.gitEnv.DevShell.RunStringWith(cmd, &run.Options{Env: env})
+		state.runRes, state.runErr = state.gitEnv.DevRunner.RunStringWith(cmd, &run.Options{Env: env})
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)" and enter an empty commit message$`, func(cmd string) error {
-		if err := state.gitEnv.DevShell.MockCommitMessage(""); err != nil {
+		if err := state.gitEnv.DevRunner.MockCommitMessage(""); err != nil {
 			return err
 		}
-		state.runRes, state.runErr = state.gitEnv.DevShell.RunString(cmd)
+		state.runRes, state.runErr = state.gitEnv.DevRunner.RunString(cmd)
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)" and enter "([^"]*)" for the commit message$`, func(cmd, message string) error {
-		if err := state.gitEnv.DevShell.MockCommitMessage(message); err != nil {
+		if err := state.gitEnv.DevRunner.MockCommitMessage(message); err != nil {
 			return err
 		}
-		state.runRes, state.runErr = state.gitEnv.DevShell.RunString(cmd)
+		state.runRes, state.runErr = state.gitEnv.DevRunner.RunString(cmd)
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)", answer the prompts, and close the next editor:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		state.runRes, state.runErr = state.gitEnv.DevShell.RunStringWith(cmd, &run.Options{Env: env, Input: tableToInput(input)})
+		state.runRes, state.runErr = state.gitEnv.DevRunner.RunStringWith(cmd, &run.Options{Env: env, Input: tableToInput(input)})
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]+)" in the "([^"]+)" folder$`, func(cmd, folderName string) error {
-		state.runRes, state.runErr = state.gitEnv.DevShell.RunStringWith(cmd, &run.Options{Dir: folderName})
+		state.runRes, state.runErr = state.gitEnv.DevRunner.RunStringWith(cmd, &run.Options{Dir: folderName})
 		return nil
 	})
 
@@ -457,7 +457,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^no tool to open browsers is installed$`, func() error {
-		return state.gitEnv.DevShell.MockNoCommandsInstalled()
+		return state.gitEnv.DevRunner.MockNoCommandsInstalled()
 	})
 
 	suite.Step(`^no uncommitted files exist$`, func() error {
@@ -848,7 +848,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the origin is "([^"]*)"$`, func(origin string) error {
-		state.gitEnv.DevShell.SetTestOrigin(origin)
+		state.gitEnv.DevRunner.SetTestOrigin(origin)
 		return nil
 	})
 
@@ -990,10 +990,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^tool "([^"]*)" is broken$`, func(name string) error {
-		return state.gitEnv.DevShell.MockBrokenCommand(name)
+		return state.gitEnv.DevRunner.MockBrokenCommand(name)
 	})
 
 	suite.Step(`^tool "([^"]*)" is installed$`, func(tool string) error {
-		return state.gitEnv.DevShell.MockCommand(tool)
+		return state.gitEnv.DevRunner.MockCommand(tool)
 	})
 }
