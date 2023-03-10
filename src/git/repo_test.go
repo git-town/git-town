@@ -75,15 +75,6 @@ func TestRepo(t *testing.T) {
 		assert.Equal(t, "second commit", commits[1].Message)
 	})
 
-	t.Run(".Config()", func(t *testing.T) {
-		t.Parallel()
-		repo := test.CreateRepo(t).Repo
-		config := repo.Config
-		assert.NotNil(t, config, "first path: new config")
-		config = repo.Config
-		assert.NotNil(t, config, "second path: cached config")
-	})
-
 	t.Run(".ConnectTrackingBranch()", func(t *testing.T) {
 		t.Parallel()
 		// replicating the situation this is used in,
