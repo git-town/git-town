@@ -16,7 +16,7 @@ import (
 
 // Repo is a Git Repo in test code.
 type Repo struct {
-	git.Repo              // the git.Runner instance to use
+	git.Repo              // the git.Repo instance to use
 	shell    MockingShell // a reference to the MockingShell instance used here
 }
 
@@ -53,7 +53,7 @@ func InitRepo(workingDir, homeDir, binDir string) (Repo, error) {
 // The directory must contain an existing Git repo.
 func NewRepo(workingDir, homeDir, binDir string) Repo {
 	shell := NewMockingShell(workingDir, homeDir, binDir)
-	runner := git.Repo{
+	repo := git.Repo{
 		Shell:              &shell,
 		Config:             config.NewGitTown(&shell),
 		DryRun:             &run.DryRun{},
@@ -63,7 +63,7 @@ func NewRepo(workingDir, homeDir, binDir string) Repo {
 		RootDirCache:       &cache.String{},
 		CurrentBranchCache: &cache.String{},
 	}
-	return Repo{Repo: runner, shell: shell}
+	return Repo{Repo: repo, shell: shell}
 }
 
 // BranchHierarchyTable provides the currently configured branch hierarchy information as a DataTable.

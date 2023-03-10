@@ -14,9 +14,9 @@ import (
 type ProdRepo struct {
 	Config       config.GitTown // the git.Configuration instance for this repo
 	DryRun       *run.DryRun
-	Logging      Repo              // the Runner instance to Git operations that show up in the output
+	Logging      Repo              // the Repo instance to Git operations that show up in the output
 	LoggingShell *run.LoggingShell // the LoggingShell instance used
-	Silent       Repo              // the Runner instance for silent Git operations
+	Silent       Repo              // the Repo instance for silent Git operations
 }
 
 // NewProdRepo provides a Repo instance in the current working directory.
