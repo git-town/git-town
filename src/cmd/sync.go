@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
-	"github.com/git-town/git-town/v7/src/validate"
 	. "github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
@@ -105,14 +104,14 @@ func determineSyncConfig(allFlag bool, repo *git.ProdRepo) (*syncConfig, error) 
 		if err != nil {
 			return nil, err
 		}
-		err = validate.KnowsBranchesAncestry(branches, repo)
+		err = KnowsBranchesAncestry(branches, repo)
 		if err != nil {
 			return nil, err
 		}
 		branchesToSync = branches
 		shouldPushTags = true
 	} else {
-		err = validate.KnowsBranchesAncestry([]string{initialBranch}, repo)
+		err = KnowsBranchesAncestry([]string{initialBranch}, repo)
 		if err != nil {
 			return nil, err
 		}

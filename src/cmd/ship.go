@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
-	"github.com/git-town/git-town/v7/src/validate"
 	. "github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
@@ -137,7 +136,7 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 	if !repo.Config.IsFeatureBranch(branchToShip) {
 		return nil, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can be shipped", branchToShip)
 	}
-	err = validate.KnowsBranchesAncestry([]string{branchToShip}, repo)
+	err = KnowsBranchesAncestry([]string{branchToShip}, repo)
 	if err != nil {
 		return nil, err
 	}

@@ -9,7 +9,6 @@ import (
 	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
-	"github.com/git-town/git-town/v7/src/validate"
 	. "github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
@@ -79,7 +78,7 @@ func determineNewPullRequestConfig(repo *git.ProdRepo) (*newPullRequestConfig, e
 	if err != nil {
 		return nil, err
 	}
-	err = validate.KnowsBranchesAncestry([]string{initialBranch}, repo)
+	err = KnowsBranchesAncestry([]string{initialBranch}, repo)
 	if err != nil {
 		return nil, err
 	}
