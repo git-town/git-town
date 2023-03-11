@@ -13,7 +13,7 @@ func resetRunstateCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "reset",
 		Args:    cobra.NoArgs,
-		PreRunE: Validate(repo, HasGitVersion, IsRepository),
+		PreRunE: Ensure(repo, HasGitVersion, IsRepository),
 		Short:   "Resets the current suspended Git Town command",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			err := runstate.Delete(repo)

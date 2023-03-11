@@ -14,7 +14,7 @@ func diffParentCommand(repo *git.ProdRepo) *cobra.Command {
 		Use:     "diff-parent [<branch>]",
 		GroupID: "lineage",
 		Args:    cobra.MaximumNArgs(1),
-		PreRunE: Validate(repo, HasGitVersion, IsRepository, IsConfigured),
+		PreRunE: Ensure(repo, HasGitVersion, IsRepository, IsConfigured),
 		Short:   "Shows the changes committed to a feature branch",
 		Long: `Shows the changes committed to a feature branch
 

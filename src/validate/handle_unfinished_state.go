@@ -9,7 +9,7 @@ import (
 	"github.com/git-town/git-town/v7/src/runstate"
 )
 
-// handleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
+// HandleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
 //
 //nolint:nonamedreturns  // return value isn't obvious from function name
 func HandleUnfinishedState(repo *git.ProdRepo, connector hosting.Connector) (quit bool, err error) {

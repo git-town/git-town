@@ -14,7 +14,7 @@ func setParentCommand(repo *git.ProdRepo) *cobra.Command {
 		Use:     "set-parent",
 		GroupID: "lineage",
 		Args:    cobra.NoArgs,
-		PreRunE: Validate(repo, HasGitVersion, IsRepository, IsConfigured),
+		PreRunE: Ensure(repo, HasGitVersion, IsRepository, IsConfigured),
 		Short:   "Prompts to set the parent branch for the current branch",
 		Long:    `Prompts to set the parent branch for the current branch`,
 		RunE: func(cmd *cobra.Command, args []string) error {
