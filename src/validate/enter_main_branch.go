@@ -8,7 +8,7 @@ import (
 	"github.com/git-town/git-town/v7/src/git"
 )
 
-func ConfigureMainBranch(repo *git.ProdRepo) error {
+func EnterMainBranch(repo *git.ProdRepo) error {
 	localBranches, err := repo.Silent.LocalBranches()
 	if err != nil {
 		return err

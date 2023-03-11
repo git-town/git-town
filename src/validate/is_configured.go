@@ -10,11 +10,11 @@ import (
 func IsConfigured(repo *git.ProdRepo) error {
 	if repo.Config.MainBranch() == "" {
 		fmt.Print("Git Town needs to be configured\n\n")
-		err := ConfigureMainBranch(repo)
+		err := EnterMainBranch(repo)
 		if err != nil {
 			return err
 		}
-		return ConfigurePerennialBranches(repo)
+		return EnterPerennialBranches(repo)
 	}
 	return repo.RemoveOutdatedConfiguration()
 }
