@@ -6,7 +6,7 @@ import (
 	survey "gopkg.in/AlecAivazis/survey.v1"
 )
 
-func AskForBranch(opts AskForBranchOptions) (string, error) {
+func EnterBranch(opts AskForBranchOptions) (string, error) {
 	result := ""
 	prompt := &survey.Select{
 		Message: opts.Prompt,

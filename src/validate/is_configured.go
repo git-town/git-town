@@ -26,7 +26,7 @@ func ConfigureMainBranch(repo *git.ProdRepo) error {
 		return err
 	}
 	oldMainBranch := repo.Config.MainBranch()
-	newMainBranch, err := dialog.AskMainBranch(oldMainBranch, localBranches)
+	newMainBranch, err := dialog.EnterMainBranch(oldMainBranch, localBranches)
 	if err != nil {
 		return err
 	}
@@ -39,7 +39,7 @@ func ConfigurePerennialBranches(repo *git.ProdRepo) error {
 		return err
 	}
 	perennialBranches := repo.Config.PerennialBranches()
-	newPerennialBranches, err := dialog.AskPerennialBranches(localBranchesWithoutMain, perennialBranches)
+	newPerennialBranches, err := dialog.EnterPerennialBranches(localBranchesWithoutMain, perennialBranches)
 	if err != nil {
 		return err
 	}

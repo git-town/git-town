@@ -66,14 +66,14 @@ func AskForParent(branch, defaultBranch string, repo *git.ProdRepo) (string, err
 		return "", err
 	}
 	filteredChoices := filterOutSelfAndDescendants(branch, choices, repo)
-	return dialog.AskForBranch(dialog.AskForBranchOptions{
+	return dialog.EnterBranch(dialog.AskForBranchOptions{
 		Branches:      append([]string{perennialBranchOption}, filteredChoices...),
 		Prompt:        fmt.Sprintf(parentBranchPromptTemplate, branch),
 		DefaultBranch: defaultBranch,
 	})
 }
 
-// Helpers
+// oers
 
 const parentBranchHeaderTemplate string = `
 Feature branches can be branched directly off
