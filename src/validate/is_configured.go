@@ -3,6 +3,7 @@ package validate
 import (
 	"fmt"
 
+	"github.com/fatih/color"
 	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
 )
@@ -26,11 +27,24 @@ func ConfigureMainBranch(repo *git.ProdRepo) error {
 		return err
 	}
 	oldMainBranch := repo.Config.MainBranch()
-	newMainBranch, err := dialog.EnterMainBranch(oldMainBranch, localBranches)
+	newMainBranch, err := dialog.Select(dialog.SelectArgs{
+		Options: localBranches,
+		Message: mainBranchPrompt(oldMainBranch),
+		Default: oldMainBranch,
+	})
 	if err != nil {
 		return err
 	}
 	return repo.Config.SetMainBranch(newMainBranch)
+}
+
+func mainBranchPrompt(mainBranch string) string {
+	result := "Please specify the main development branch:"
+	if mainBranch != "" {
+		coloredBranch := color.New(color.Bold).Add(color.FgCyan).Sprintf(mainBranch)
+		result += fmt.Sprintf(" (current value: %s)", coloredBranch)
+	}
+	return result
 }
 
 func ConfigurePerennialBranches(repo *git.ProdRepo) error {
