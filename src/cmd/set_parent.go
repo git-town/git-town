@@ -32,7 +32,7 @@ func setParentCommand(repo *git.ProdRepo) *cobra.Command {
 			if err != nil {
 				return err
 			}
-			_, err = validate.KnowsBranchAncestry(currentBranch, defaultParentBranch, repo)
+			err = validate.KnowsBranchAncestry(currentBranch, defaultParentBranch, repo)
 			return err
 		},
 	}
