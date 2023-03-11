@@ -13,7 +13,7 @@ func appendCmd(repo *git.ProdRepo) *cobra.Command {
 		Use:     "append <branch>",
 		GroupID: "lineage",
 		Args:    cobra.ExactArgs(1),
-		PreRunE: Ensure(repo, HasGitVersion, IsRepository, IsConfigured),
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
 		Short:   "Creates a new feature branch as a child of the current branch",
 		Long: `Creates a new feature branch as a direct child of the current branch.
 

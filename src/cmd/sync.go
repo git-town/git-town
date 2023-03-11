@@ -20,7 +20,7 @@ func syncCmd(repo *git.ProdRepo) *cobra.Command {
 		Use:     "sync",
 		GroupID: "basic",
 		Args:    cobra.NoArgs,
-		PreRunE: Ensure(repo, HasGitVersion, IsRepository, IsConfigured),
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
 		Short:   "Updates the current branch with all relevant changes",
 		Long: fmt.Sprintf(`Updates the current branch with all relevant changes
 

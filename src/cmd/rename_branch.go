@@ -14,7 +14,7 @@ func renameBranchCommand(repo *git.ProdRepo) *cobra.Command {
 	renameBranchCmd := &cobra.Command{
 		Use:     "rename-branch [<old_branch_name>] <new_branch_name>",
 		Args:    cobra.RangeArgs(1, 2),
-		PreRunE: Ensure(repo, HasGitVersion, IsRepository, IsConfigured),
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
 		Short:   "Renames a branch both locally and remotely",
 		Long: `Renames a branch both locally and remotely
 

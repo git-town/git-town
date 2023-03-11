@@ -88,8 +88,8 @@ and it allows you to perform many common Git operations faster and easier.`,
 	return &rootCmd
 }
 
-var Ensure = validate.Ensure
-var HasGitVersion = validate.HasGitVersion
-var IsRepository = validate.IsRepository
-var IsConfigured = validate.IsConfigured
-var IsOnline = validate.IsOnline
+var ensure = validate.Ensure
+var hasGitVersion = validate.HasGitVersion
+var isRepository = validate.IsRepository
+var isConfigured = validate.IsConfigured
+var isOnline = validate.IsOnline

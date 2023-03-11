@@ -12,7 +12,7 @@ func syncStrategyCommand(repo *git.ProdRepo) *cobra.Command {
 	syncStrategyCmd := cobra.Command{
 		Use:     "sync-strategy [(merge | rebase)]",
 		Args:    cobra.MaximumNArgs(1),
-		PreRunE: Ensure(repo, IsRepository),
+		PreRunE: ensure(repo, isRepository),
 		Short:   "Displays or sets your sync strategy",
 		Long: `Displays or sets your sync strategy
 

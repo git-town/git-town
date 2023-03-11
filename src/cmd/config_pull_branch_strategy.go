@@ -11,7 +11,7 @@ func pullBranchStrategyCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "pull-branch-strategy [(rebase | merge)]",
 		Args:    cobra.MaximumNArgs(1),
-		PreRunE: Ensure(repo, IsRepository),
+		PreRunE: ensure(repo, isRepository),
 		Short:   "Displays or sets your pull branch strategy",
 		Long: `Displays or sets your pull branch strategy
 
