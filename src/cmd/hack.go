@@ -16,7 +16,7 @@ func hackCmd(repo *git.ProdRepo) *cobra.Command {
 		Use:     "hack <branch>",
 		GroupID: "basic",
 		Args:    cobra.ExactArgs(1),
-		PreRunE: Validate(repo, HasGitVersion, IsRepository, IsConfigured),
+		PreRunE: Ensure(repo, HasGitVersion, IsRepository, IsConfigured),
 		Short:   "Creates a new feature branch off the main development branch",
 		Long: `Creates a new feature branch off the main development branch
 

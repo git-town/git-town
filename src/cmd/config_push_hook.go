@@ -14,7 +14,7 @@ func pushHookCommand(repo *git.ProdRepo) *cobra.Command {
 	pushHookCmd := cobra.Command{
 		Use:     "push-hook [--global] [(yes | no)]",
 		Args:    cobra.MaximumNArgs(1),
-		PreRunE: Validate(repo, IsRepository),
+		PreRunE: Ensure(repo, IsRepository),
 		Short:   "Configures whether Git Town should run Git's pre-push hook.",
 		Long: `Configures whether Git Town should run Git's pre-push hook.
 

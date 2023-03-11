@@ -1,4 +1,4 @@
-package cmd_test
+package validate_test
 
 import (
 	"fmt"

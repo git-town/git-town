@@ -21,7 +21,7 @@ func shipCmd(repo *git.ProdRepo) *cobra.Command {
 		Use:     "ship",
 		GroupID: "basic",
 		Args:    cobra.MaximumNArgs(1),
-		PreRunE: Validate(repo, HasGitVersion, IsRepository, IsConfigured),
+		PreRunE: Ensure(repo, HasGitVersion, IsRepository, IsConfigured),
 		Short:   "Deliver a completed feature branch",
 		Long: fmt.Sprintf(`Deliver a completed feature branch
 

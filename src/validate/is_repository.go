@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v7/src/git"
 )
 
-// isRepository is a validationCondition that verifies that the given folder contains a Git repository.
+// IsRepository is a validationCondition that verifies that the given folder contains a Git repository.
 // It also navigates to the root directory of that repository.
 func IsRepository(repo *git.ProdRepo) error {
 	if !repo.Silent.IsRepository() {

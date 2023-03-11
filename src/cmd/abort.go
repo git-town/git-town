@@ -16,7 +16,7 @@ func abortCmd(repo *git.ProdRepo) *cobra.Command {
 		Use:     "abort",
 		GroupID: "errors",
 		Args:    cobra.NoArgs,
-		PreRunE: Validate(repo, HasGitVersion, IsRepository, IsConfigured),
+		PreRunE: Ensure(repo, HasGitVersion, IsRepository, IsConfigured),
 		Short:   "Aborts the last run git-town command",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			runState, err := runstate.Load(repo)

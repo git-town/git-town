@@ -17,7 +17,7 @@ func statusCommand(repo *git.ProdRepo) *cobra.Command {
 		Use:     "status",
 		GroupID: "errors",
 		Args:    cobra.NoArgs,
-		PreRunE: Validate(repo, HasGitVersion, IsRepository),
+		PreRunE: Ensure(repo, HasGitVersion, IsRepository),
 		Short:   "Displays or resets the current suspended Git Town command",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			config, err := loadDisplayStatusConfig(repo)

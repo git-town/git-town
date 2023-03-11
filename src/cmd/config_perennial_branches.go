@@ -14,7 +14,7 @@ func perennialBranchesCmd(repo *git.ProdRepo) *cobra.Command {
 	perennialBranchesCmd := cobra.Command{
 		Use:     "perennial-branches",
 		Args:    cobra.NoArgs,
-		PreRunE: Validate(repo, IsRepository),
+		PreRunE: Ensure(repo, IsRepository),
 		Short:   "Displays your perennial branches",
 		Long: `Displays your perennial branches
 
@@ -37,7 +37,7 @@ func updatePerennialBranchesCmd(repo *git.ProdRepo) *cobra.Command {
 			return configurePerennialBranches(repo)
 		},
 		Args:    cobra.NoArgs,
-		PreRunE: Validate(repo, IsRepository),
+		PreRunE: Ensure(repo, IsRepository),
 	}
 }
 

@@ -19,7 +19,7 @@ func newPullRequestCommand(repo *git.ProdRepo) *cobra.Command {
 		Use:     "new-pull-request",
 		GroupID: "basic",
 		Args:    cobra.NoArgs,
-		PreRunE: Validate(repo, HasGitVersion, IsRepository, IsConfigured, IsOnline),
+		PreRunE: Ensure(repo, HasGitVersion, IsRepository, IsConfigured, IsOnline),
 		Short:   "Creates a new pull request",
 		Long: fmt.Sprintf(`Creates a new pull request
 

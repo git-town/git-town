@@ -8,15 +8,15 @@ import (
 // validationCondition verifies that the given Git repo conforms to a particular condition.
 type validationCondition func(*git.ProdRepo) error
 
-// Validate wraps ensureInner into a Cobra-compatible format.
-func Validate(repo *git.ProdRepo, validators ...validationCondition) func(cmd *cobra.Command, args []string) error {
+// Ensure wraps ensure into a Cobra-compatible format.
+func Ensure(repo *git.ProdRepo, validators ...validationCondition) func(cmd *cobra.Command, args []string) error {
 	return func(cmd *cobra.Command, args []string) error {
-		return validateInner(repo, validators...)
+		return ensure(repo, validators...)
 	}
 }
 
-// validateInner checks that the given repo conforms to the given validation conditions.
-func validateInner(repo *git.ProdRepo, validators ...validationCondition) error {
+// ensure checks that the given repo conforms to the given validation conditions.
+func ensure(repo *git.ProdRepo, validators ...validationCondition) error {
 	for _, validator := range validators {
 		if err := validator(repo); err != nil {
 			return err

@@ -14,7 +14,7 @@ func skipCmd(repo *git.ProdRepo) *cobra.Command {
 		Use:     "skip",
 		GroupID: "errors",
 		Args:    cobra.NoArgs,
-		PreRunE: Validate(repo, HasGitVersion, IsRepository, IsConfigured),
+		PreRunE: Ensure(repo, HasGitVersion, IsRepository, IsConfigured),
 		Short:   "Restarts the last run git-town command by skipping the current branch",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			runState, err := runstate.Load(repo)
