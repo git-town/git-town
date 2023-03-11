@@ -24,11 +24,6 @@ func KnowsBranchesAncestry(branches []string, repo *git.ProdRepo) error {
 // KnowsBranchAncestry prompts the user for all unknown ancestors of the given branch.
 func KnowsBranchAncestry(branch, defaultBranch string, repo *git.ProdRepo) (err error) { //nolint:nonamedreturns // return value names are useful here
 	headerShown := false
-	defer func() {
-		if headerShown {
-			fmt.Println()
-		}
-	}()
 	currentBranch := branch
 	if repo.Config.IsMainBranch(branch) || repo.Config.IsPerennialBranch(branch) || repo.Config.HasParentBranch(branch) {
 		return nil
