@@ -71,7 +71,7 @@ func determineHackConfig(args []string, promptForParent bool, repo *git.ProdRepo
 
 func determineParentBranch(targetBranch string, promptForParent bool, repo *git.ProdRepo) (string, error) {
 	if promptForParent {
-		parentBranch, err := validate.AskForParent(targetBranch, repo.Config.MainBranch(), repo)
+		parentBranch, err := validate.EnterParent(targetBranch, repo.Config.MainBranch(), repo)
 		if err != nil {
 			return "", err
 		}

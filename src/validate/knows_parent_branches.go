@@ -35,7 +35,7 @@ func KnowsBranchAncestry(branch, defaultBranch string, repo *git.ProdRepo) (err 
 				printParentBranchHeader(repo)
 				headerShown = true
 			}
-			parent, err = AskForParent(currentBranch, defaultBranch, repo)
+			parent, err = EnterParent(currentBranch, defaultBranch, repo)
 			if err != nil {
 				return
 			}
@@ -59,8 +59,8 @@ func KnowsBranchAncestry(branch, defaultBranch string, repo *git.ProdRepo) (err 
 	return
 }
 
-// AskForParent prompts the user for the parent of the given branch.
-func AskForParent(branch, defaultBranch string, repo *git.ProdRepo) (string, error) {
+// EnterParent prompts the user for the parent of the given branch.
+func EnterParent(branch, defaultBranch string, repo *git.ProdRepo) (string, error) {
 	choices, err := repo.Silent.LocalBranchesMainFirst()
 	if err != nil {
 		return "", err
