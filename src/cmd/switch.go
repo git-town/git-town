@@ -13,7 +13,7 @@ func switchCmd(repo *git.ProdRepo) *cobra.Command {
 		Use:     "switch",
 		GroupID: "basic",
 		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured), // TODO: make sure we know the ancestry of all branches
 		Short:   "Displays the local branches visually and allows switching between them",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			currentBranch, err := repo.Silent.CurrentBranch()
