@@ -14,7 +14,7 @@ func killCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "kill [<branch>]",
 		Args:    cobra.MaximumNArgs(1),
-		PreRunE: Ensure(repo, HasGitVersion, IsRepository, IsConfigured),
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
 		Short:   "Removes an obsolete feature branch",
 		Long: `Removes an obsolete feature branch
 

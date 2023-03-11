@@ -15,8 +15,8 @@ func configCmd(repo *git.ProdRepo) *cobra.Command {
 		Use:               "config",
 		GroupID:           "setup",
 		Args:              cobra.NoArgs,
-		PreRunE:           Ensure(repo, IsRepository),
-		PersistentPreRunE: Ensure(repo, HasGitVersion),
+		PreRunE:           ensure(repo, isRepository),
+		PersistentPreRunE: ensure(repo, hasGitVersion),
 		Short:             "Displays your Git Town configuration",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			ec := runstate.ErrorChecker{}

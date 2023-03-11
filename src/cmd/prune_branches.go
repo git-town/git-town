@@ -11,7 +11,7 @@ func pruneBranchesCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "prune-branches",
 		Args:    cobra.NoArgs,
-		PreRunE: Ensure(repo, HasGitVersion, IsRepository, IsConfigured, IsOnline),
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured, isOnline),
 		Short:   "Deletes local branches whose tracking branch no longer exists",
 		Long: `Deletes local branches whose tracking branch no longer exists
 
