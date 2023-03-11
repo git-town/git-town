@@ -5,7 +5,6 @@ import (
 
 	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
-	. "github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
 

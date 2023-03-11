@@ -9,7 +9,7 @@ import (
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
-	. "github.com/git-town/git-town/v7/src/validate"
+	"github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -47,7 +47,7 @@ You can disable this by running "git config %s false".`, config.SyncUpstreamKey)
 				}
 				repo.DryRun.Activate(currentBranch)
 			}
-			exit, err := HandleUnfinishedState(repo, nil)
+			exit, err := validate.HandleUnfinishedState(repo, nil)
 			if err != nil {
 				return err
 			}

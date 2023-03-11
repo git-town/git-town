@@ -23,6 +23,7 @@ package cmd
 import (
 	"github.com/fatih/color"
 	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -86,3 +87,9 @@ and it allows you to perform many common Git operations faster and easier.`,
 	rootCmd.PersistentFlags().BoolVar(debugFlag, "debug", false, "Print all Git commands run under the hood")
 	return &rootCmd
 }
+
+var Ensure = validate.Ensure
+var HasGitVersion = validate.HasGitVersion
+var IsRepository = validate.IsRepository
+var IsConfigured = validate.IsConfigured
+var IsOnline = validate.IsOnline

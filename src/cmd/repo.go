@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/hosting"
-	. "github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
 
