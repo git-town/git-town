@@ -13,9 +13,6 @@ import (
 // Missing ancestry information is queried from the user.
 func KnowsBranchesAncestry(branches []string, repo *git.ProdRepo) error {
 	for _, branch := range branches {
-		if repo.Config.IsMainBranch(branch) || repo.Config.IsPerennialBranch(branch) || repo.Config.HasParentBranch(branch) {
-			continue
-		}
 		headerShown, err := KnowsBranchAncestry(branch, repo.Config.MainBranch(), repo)
 		if err != nil {
 			return err
@@ -30,6 +27,9 @@ func KnowsBranchesAncestry(branches []string, repo *git.ProdRepo) error {
 // KnowsBranchAncestry prompts the user for all unknown ancestors of the given branch.
 func KnowsBranchAncestry(branch, defaultBranch string, repo *git.ProdRepo) (headerShown bool, err error) { //nolint:nonamedreturns // return value names are useful here
 	currentBranch := branch
+	if repo.Config.IsMainBranch(branch) || repo.Config.IsPerennialBranch(branch) || repo.Config.HasParentBranch(branch) {
+		return false, nil
+	}
 	for {
 		parent := repo.Config.ParentBranch(currentBranch)
 		if parent == "" { //nolint:nestif

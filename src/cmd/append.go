@@ -68,7 +68,7 @@ func determineAppendConfig(args []string, repo *git.ProdRepo) (*appendConfig, er
 	if hasTargetBranch {
 		ec.Fail("a branch named %q already exists", targetBranch)
 	}
-	ec.Check(validate.KnowsBranchesAncestry([]string{parentBranch}, repo))
+	ec.Bool(validate.KnowsBranchAncestry(parentBranch, repo.Config.MainBranch(), repo))
 	ancestorBranches := repo.Config.AncestorBranches(parentBranch)
 	return &appendConfig{
 		ancestorBranches:    ancestorBranches,
