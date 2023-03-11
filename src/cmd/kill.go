@@ -3,10 +3,10 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
+	"github.com/git-town/git-town/v7/src/validate"
 	. "github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
@@ -68,8 +68,7 @@ func determineKillConfig(args []string, repo *git.ProdRepo) (*killConfig, error)
 		return nil, err
 	}
 	if isTargetBranchLocal {
-		parentDialog := dialog.ParentBranches{}
-		err = parentDialog.EnsureKnowsParentBranches([]string{targetBranch}, repo)
+		err = validate.KnowsParentBranches([]string{targetBranch}, repo)
 		if err != nil {
 			return nil, err
 		}

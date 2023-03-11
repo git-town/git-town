@@ -3,9 +3,9 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
+	"github.com/git-town/git-town/v7/src/validate"
 	. "github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
@@ -46,12 +46,11 @@ See "sync" for information regarding upstream remotes.`,
 
 func determineParentBranch(targetBranch string, promptForParent bool, repo *git.ProdRepo) (string, error) {
 	if promptForParent {
-		parentDialog := dialog.ParentBranches{}
-		parentBranch, err := parentDialog.AskForBranchParent(targetBranch, repo.Config.MainBranch(), repo)
+		parentBranch, err := validate.AskForBranchParent(targetBranch, repo.Config.MainBranch(), repo)
 		if err != nil {
 			return "", err
 		}
-		err = parentDialog.EnsureKnowsParentBranches([]string{parentBranch}, repo)
+		err = validate.KnowsParentBranches([]string{parentBranch}, repo)
 		if err != nil {
 			return "", err
 		}

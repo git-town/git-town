@@ -1,57 +1,60 @@
-package dialog
+package validate
 
 import (
 	"fmt"
 
 	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
 )
 
-type ParentBranches struct {
-	parentBranchHeaderShown bool
-}
-
-// EnsureKnowsParentBranches asserts that the entire ancestry for all given branches
+// KnowsParentBranches asserts that the entire ancestry for all given branches
 // is known to Git Town.
 // Missing ancestry information is queried from the user.
-func (pbd *ParentBranches) EnsureKnowsParentBranches(branches []string, repo *git.ProdRepo) error {
+func KnowsParentBranches(branches []string, repo *git.ProdRepo) error {
 	for _, branch := range branches {
 		if repo.Config.IsMainBranch(branch) || repo.Config.IsPerennialBranch(branch) || repo.Config.HasParentBranch(branch) {
 			continue
 		}
-		err := pbd.AskForBranchAncestry(branch, repo.Config.MainBranch(), repo)
+		headerShown, err := AskForBranchAncestry(branch, repo.Config.MainBranch(), repo)
 		if err != nil {
 			return err
 		}
-		if pbd.parentBranchHeaderShown {
+		if headerShown {
 			fmt.Println()
 		}
 	}
 	return nil
 }
 
+type parentBranches struct {
+	parentBranchHeaderShown bool
+}
+
 // AskForBranchAncestry prompts the user for all unknown ancestors of the given branch.
-func (pbd *ParentBranches) AskForBranchAncestry(branch, defaultBranch string, repo *git.ProdRepo) error {
+func AskForBranchAncestry(branch, defaultBranch string, repo *git.ProdRepo) (headerShown bool, err error) {
 	currentBranch := branch
-	var err error
 	for {
 		parent := repo.Config.ParentBranch(currentBranch)
 		if parent == "" { //nolint:nestif
-			pbd.printParentBranchHeader(repo)
-			parent, err = pbd.AskForBranchParent(currentBranch, defaultBranch, repo)
+			if !headerShown {
+				printParentBranchHeader(repo)
+				headerShown = true
+			}
+			parent, err = AskForBranchParent(currentBranch, defaultBranch, repo)
 			if err != nil {
-				return err
+				return
 			}
 			if parent == perennialBranchOption {
 				err = repo.Config.AddToPerennialBranches(currentBranch)
 				if err != nil {
-					return err
+					return
 				}
 				break
 			}
 			err = repo.Config.SetParent(currentBranch, parent)
 			if err != nil {
-				return err
+				return
 			}
 		}
 		if parent == repo.Config.MainBranch() || repo.Config.IsPerennialBranch(parent) {
@@ -59,20 +62,20 @@ func (pbd *ParentBranches) AskForBranchAncestry(branch, defaultBranch string, re
 		}
 		currentBranch = parent
 	}
-	return nil
+	return
 }
 
 // AskForBranchParent prompts the user for the parent of the given branch.
-func (pbd *ParentBranches) AskForBranchParent(branch, defaultBranch string, repo *git.ProdRepo) (string, error) {
+func AskForBranchParent(branch, defaultBranch string, repo *git.ProdRepo) (string, error) {
 	choices, err := repo.Silent.LocalBranchesMainFirst()
 	if err != nil {
 		return "", err
 	}
 	filteredChoices := filterOutSelfAndDescendants(branch, choices, repo)
-	return askForBranch(askForBranchOptions{
-		branches:      append([]string{perennialBranchOption}, filteredChoices...),
-		prompt:        fmt.Sprintf(parentBranchPromptTemplate, branch),
-		defaultBranch: defaultBranch,
+	return dialog.AskForBranch(dialog.AskForBranchOptions{
+		Branches:      append([]string{perennialBranchOption}, filteredChoices...),
+		Prompt:        fmt.Sprintf(parentBranchPromptTemplate, branch),
+		DefaultBranch: defaultBranch,
 	})
 }
 
@@ -102,9 +105,6 @@ func filterOutSelfAndDescendants(branch string, choices []string, repo *git.Prod
 	return result
 }
 
-func (pbd *ParentBranches) printParentBranchHeader(repo *git.ProdRepo) {
-	if !pbd.parentBranchHeaderShown {
-		pbd.parentBranchHeaderShown = true
-		cli.Printf(parentBranchHeaderTemplate, repo.Config.MainBranch())
-	}
+func printParentBranchHeader(repo *git.ProdRepo) {
+	cli.Printf(parentBranchHeaderTemplate, repo.Config.MainBranch())
 }

@@ -7,7 +7,7 @@ import (
 	surveyCore "gopkg.in/AlecAivazis/survey.v1/core"
 )
 
-// init configures the prompts to work on Windows.
+// Initialize configures the prompts to work on Windows.
 func Initialize() {
 	if runtime.GOOS == "windows" {
 		surveyCore.SelectFocusIcon = ">"

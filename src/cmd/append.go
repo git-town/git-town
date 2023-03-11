@@ -1,10 +1,10 @@
 package cmd
 
 import (
-	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
+	"github.com/git-town/git-town/v7/src/validate"
 	. "github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
@@ -69,8 +69,7 @@ func determineAppendConfig(args []string, repo *git.ProdRepo) (*appendConfig, er
 	if hasTargetBranch {
 		ec.Fail("a branch named %q already exists", targetBranch)
 	}
-	parentDialog := dialog.ParentBranches{}
-	ec.Check(parentDialog.EnsureKnowsParentBranches([]string{parentBranch}, repo))
+	ec.Check(validate.KnowsParentBranches([]string{parentBranch}, repo))
 	ancestorBranches := repo.Config.AncestorBranches(parentBranch)
 	return &appendConfig{
 		ancestorBranches:    ancestorBranches,

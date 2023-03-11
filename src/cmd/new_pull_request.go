@@ -5,11 +5,11 @@ import (
 
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/config"
-	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
+	"github.com/git-town/git-town/v7/src/validate"
 	. "github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
@@ -79,8 +79,7 @@ func determineNewPullRequestConfig(repo *git.ProdRepo) (*newPullRequestConfig, e
 	if err != nil {
 		return nil, err
 	}
-	parentDialog := dialog.ParentBranches{}
-	err = parentDialog.EnsureKnowsParentBranches([]string{initialBranch}, repo)
+	err = validate.KnowsParentBranches([]string{initialBranch}, repo)
 	if err != nil {
 		return nil, err
 	}
