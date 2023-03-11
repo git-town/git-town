@@ -13,16 +13,8 @@ func DetermineSquashCommitAuthor(branch string, authors []string) (string, error
 	if len(authors) == 1 {
 		return authors[0], nil
 	}
-	cli.Printf(squashCommitAuthorHeaderTemplate, branch)
+	cli.Printf("Multiple people authored the %q branch.", branch)
 	fmt.Println()
-	return askForAuthor(authors)
-}
-
-// Helpers
-
-const squashCommitAuthorHeaderTemplate = "Multiple people authored the %q branch."
-
-func askForAuthor(authors []string) (string, error) {
 	result := ""
 	prompt := &survey.Select{
 		Message: "Please choose an author for the squash commit:",
