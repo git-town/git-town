@@ -8,15 +8,15 @@ import (
 	"github.com/git-town/git-town/v7/src/git"
 )
 
-// KnowsParentBranches asserts that the entire ancestry for all given branches
+// KnowsBranchesAncestry asserts that the entire ancestry for all given branches
 // is known to Git Town.
 // Missing ancestry information is queried from the user.
-func KnowsParentBranches(branches []string, repo *git.ProdRepo) error {
+func KnowsBranchesAncestry(branches []string, repo *git.ProdRepo) error {
 	for _, branch := range branches {
 		if repo.Config.IsMainBranch(branch) || repo.Config.IsPerennialBranch(branch) || repo.Config.HasParentBranch(branch) {
 			continue
 		}
-		headerShown, err := AskForBranchAncestry(branch, repo.Config.MainBranch(), repo)
+		headerShown, err := KnowsBranchAncestry(branch, repo.Config.MainBranch(), repo)
 		if err != nil {
 			return err
 		}
@@ -27,12 +27,8 @@ func KnowsParentBranches(branches []string, repo *git.ProdRepo) error {
 	return nil
 }
 
-type parentBranches struct {
-	parentBranchHeaderShown bool
-}
-
-// AskForBranchAncestry prompts the user for all unknown ancestors of the given branch.
-func AskForBranchAncestry(branch, defaultBranch string, repo *git.ProdRepo) (headerShown bool, err error) {
+// KnowsBranchAncestry prompts the user for all unknown ancestors of the given branch.
+func KnowsBranchAncestry(branch, defaultBranch string, repo *git.ProdRepo) (headerShown bool, err error) {
 	currentBranch := branch
 	for {
 		parent := repo.Config.ParentBranch(currentBranch)
@@ -41,7 +37,7 @@ func AskForBranchAncestry(branch, defaultBranch string, repo *git.ProdRepo) (hea
 				printParentBranchHeader(repo)
 				headerShown = true
 			}
-			parent, err = AskForBranchParent(currentBranch, defaultBranch, repo)
+			parent, err = AskForParent(currentBranch, defaultBranch, repo)
 			if err != nil {
 				return
 			}
@@ -65,8 +61,8 @@ func AskForBranchAncestry(branch, defaultBranch string, repo *git.ProdRepo) (hea
 	return
 }
 
-// AskForBranchParent prompts the user for the parent of the given branch.
-func AskForBranchParent(branch, defaultBranch string, repo *git.ProdRepo) (string, error) {
+// AskForParent prompts the user for the parent of the given branch.
+func AskForParent(branch, defaultBranch string, repo *git.ProdRepo) (string, error) {
 	choices, err := repo.Silent.LocalBranchesMainFirst()
 	if err != nil {
 		return "", err

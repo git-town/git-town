@@ -68,7 +68,7 @@ func determineKillConfig(args []string, repo *git.ProdRepo) (*killConfig, error)
 		return nil, err
 	}
 	if isTargetBranchLocal {
-		err = validate.KnowsParentBranches([]string{targetBranch}, repo)
+		err = validate.KnowsBranchesAncestry([]string{targetBranch}, repo)
 		if err != nil {
 			return nil, err
 		}

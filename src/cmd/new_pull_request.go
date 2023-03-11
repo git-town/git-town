@@ -79,7 +79,7 @@ func determineNewPullRequestConfig(repo *git.ProdRepo) (*newPullRequestConfig, e
 	if err != nil {
 		return nil, err
 	}
-	err = validate.KnowsParentBranches([]string{initialBranch}, repo)
+	err = validate.KnowsBranchesAncestry([]string{initialBranch}, repo)
 	if err != nil {
 		return nil, err
 	}

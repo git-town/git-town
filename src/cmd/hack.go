@@ -46,11 +46,11 @@ See "sync" for information regarding upstream remotes.`,
 
 func determineParentBranch(targetBranch string, promptForParent bool, repo *git.ProdRepo) (string, error) {
 	if promptForParent {
-		parentBranch, err := validate.AskForBranchParent(targetBranch, repo.Config.MainBranch(), repo)
+		parentBranch, err := validate.AskForParent(targetBranch, repo.Config.MainBranch(), repo)
 		if err != nil {
 			return "", err
 		}
-		err = validate.KnowsParentBranches([]string{parentBranch}, repo)
+		err = validate.KnowsBranchesAncestry([]string{parentBranch}, repo)
 		if err != nil {
 			return "", err
 		}
