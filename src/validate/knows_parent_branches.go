@@ -28,7 +28,7 @@ func KnowsBranchesAncestry(branches []string, repo *git.ProdRepo) error {
 }
 
 // KnowsBranchAncestry prompts the user for all unknown ancestors of the given branch.
-func KnowsBranchAncestry(branch, defaultBranch string, repo *git.ProdRepo) (headerShown bool, err error) {
+func KnowsBranchAncestry(branch, defaultBranch string, repo *git.ProdRepo) (headerShown bool, err error) { //nolint:nonamedreturns // return value names are useful here
 	currentBranch := branch
 	for {
 		parent := repo.Config.ParentBranch(currentBranch)
