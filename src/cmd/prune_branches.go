@@ -4,6 +4,7 @@ import (
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
+	. "github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -11,7 +12,7 @@ func pruneBranchesCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "prune-branches",
 		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured, isOnline),
+		PreRunE: Validate(repo, HasGitVersion, IsRepository, IsConfigured, IsOnline),
 		Short:   "Deletes local branches whose tracking branch no longer exists",
 		Long: `Deletes local branches whose tracking branch no longer exists
 

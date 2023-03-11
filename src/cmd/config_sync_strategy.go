@@ -4,6 +4,7 @@ import (
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/git"
+	. "github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -12,7 +13,7 @@ func syncStrategyCommand(repo *git.ProdRepo) *cobra.Command {
 	syncStrategyCmd := cobra.Command{
 		Use:     "sync-strategy [(merge | rebase)]",
 		Args:    cobra.MaximumNArgs(1),
-		PreRunE: ensure(repo, isRepository),
+		PreRunE: Validate(repo, IsRepository),
 		Short:   "Displays or sets your sync strategy",
 		Long: `Displays or sets your sync strategy
 

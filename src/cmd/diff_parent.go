@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
+	. "github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -13,7 +14,7 @@ func diffParentCommand(repo *git.ProdRepo) *cobra.Command {
 		Use:     "diff-parent [<branch>]",
 		GroupID: "lineage",
 		Args:    cobra.MaximumNArgs(1),
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
+		PreRunE: Validate(repo, HasGitVersion, IsRepository, IsConfigured),
 		Short:   "Shows the changes committed to a feature branch",
 		Long: `Shows the changes committed to a feature branch
 

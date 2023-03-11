@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
+	. "github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -13,7 +14,7 @@ func switchCmd(repo *git.ProdRepo) *cobra.Command {
 		Use:     "switch",
 		GroupID: "basic",
 		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
+		PreRunE: Validate(repo, HasGitVersion, IsRepository, IsConfigured),
 		Short:   "Displays the local branches visually and allows switching between them",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			currentBranch, err := repo.Silent.CurrentBranch()

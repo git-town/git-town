@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/hosting"
+	. "github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -15,7 +16,7 @@ func repoCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "repo",
 		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured, isOnline),
+		PreRunE: Validate(repo, HasGitVersion, IsRepository, IsConfigured, IsOnline),
 		Short:   "Opens the repository homepage",
 		Long: fmt.Sprintf(`Opens the repository homepage
 

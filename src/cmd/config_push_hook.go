@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/git"
+	. "github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -13,7 +14,7 @@ func pushHookCommand(repo *git.ProdRepo) *cobra.Command {
 	pushHookCmd := cobra.Command{
 		Use:     "push-hook [--global] [(yes | no)]",
 		Args:    cobra.MaximumNArgs(1),
-		PreRunE: ensure(repo, isRepository),
+		PreRunE: Validate(repo, IsRepository),
 		Short:   "Configures whether Git Town should run Git's pre-push hook.",
 		Long: `Configures whether Git Town should run Git's pre-push hook.
 

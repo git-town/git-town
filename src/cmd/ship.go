@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
+	. "github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -20,7 +21,7 @@ func shipCmd(repo *git.ProdRepo) *cobra.Command {
 		Use:     "ship",
 		GroupID: "basic",
 		Args:    cobra.MaximumNArgs(1),
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
+		PreRunE: Validate(repo, HasGitVersion, IsRepository, IsConfigured),
 		Short:   "Deliver a completed feature branch",
 		Long: fmt.Sprintf(`Deliver a completed feature branch
 

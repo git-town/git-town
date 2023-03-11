@@ -4,6 +4,7 @@ import (
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/git"
+	. "github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -11,7 +12,7 @@ func pullBranchStrategyCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "pull-branch-strategy [(rebase | merge)]",
 		Args:    cobra.MaximumNArgs(1),
-		PreRunE: ensure(repo, isRepository),
+		PreRunE: Validate(repo, IsRepository),
 		Short:   "Displays or sets your pull branch strategy",
 		Long: `Displays or sets your pull branch strategy
 
