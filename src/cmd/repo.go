@@ -16,7 +16,7 @@ func repoCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "repo",
 		Args:    cobra.NoArgs,
-		PreRunE: Ensure(repo, HasGitVersion, IsRepository, IsConfigured, IsOnline),
+		PreRunE: Validate(repo, HasGitVersion, IsRepository, IsConfigured, IsOnline),
 		Short:   "Opens the repository homepage",
 		Long: fmt.Sprintf(`Opens the repository homepage
 

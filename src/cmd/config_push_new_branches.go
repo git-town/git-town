@@ -14,7 +14,7 @@ func pushNewBranchesCommand(repo *git.ProdRepo) *cobra.Command {
 	pushNewBranchesCmd := cobra.Command{
 		Use:     "push-new-branches [--global] [(yes | no)]",
 		Args:    cobra.MaximumNArgs(1),
-		PreRunE: Ensure(repo, IsRepository),
+		PreRunE: Validate(repo, IsRepository),
 		Short:   "Displays or changes whether new branches get pushed to origin",
 		Long: `Displays or changes whether new branches get pushed to origin.
 

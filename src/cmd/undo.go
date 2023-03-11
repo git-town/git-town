@@ -14,7 +14,7 @@ func undoCmd(repo *git.ProdRepo) *cobra.Command {
 		Use:     "undo",
 		GroupID: "errors",
 		Args:    cobra.NoArgs,
-		PreRunE: Ensure(repo, HasGitVersion, IsRepository, IsConfigured),
+		PreRunE: Validate(repo, HasGitVersion, IsRepository, IsConfigured),
 		Short:   "Undoes the last run git-town command",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			runState, err := runstate.Load(repo)

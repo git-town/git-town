@@ -15,7 +15,7 @@ func aliasCommand(repo *git.ProdRepo) *cobra.Command {
 		Use:     "aliases (add | remove)",
 		GroupID: "setup",
 		Args:    cobra.ExactArgs(1),
-		PreRunE: Ensure(repo, HasGitVersion),
+		PreRunE: Validate(repo, HasGitVersion),
 		Short:   "Adds or removes default global aliases",
 		Long: `Adds or removes default global aliases
 

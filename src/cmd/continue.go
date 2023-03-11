@@ -16,7 +16,7 @@ func continueCmd(repo *git.ProdRepo) *cobra.Command {
 		Use:     "continue",
 		GroupID: "errors",
 		Args:    cobra.NoArgs,
-		PreRunE: Ensure(repo, HasGitVersion, IsRepository, IsConfigured),
+		PreRunE: Validate(repo, HasGitVersion, IsRepository, IsConfigured),
 		Short:   "Restarts the last run git-town command after having resolved conflicts",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			runState, err := runstate.Load(repo)

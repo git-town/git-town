@@ -13,7 +13,7 @@ func mainbranchConfigCmd(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "main-branch [<branch>]",
 		Args:    cobra.MaximumNArgs(1),
-		PreRunE: Ensure(repo, IsRepository),
+		PreRunE: Validate(repo, IsRepository),
 		Short:   "Displays or sets your main development branch",
 		Long: `Displays or sets your main development branch
 
