@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"github.com/git-town/git-town/v7/src/git"
-	. "github.com/git-town/git-town/v7/src/validate"
+	"github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -13,11 +13,11 @@ func setupConfigCommand(repo *git.ProdRepo) *cobra.Command {
 		PreRunE: Ensure(repo, IsRepository),
 		Short:   "Prompts to setup your Git Town configuration",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			err := ConfigureMainBranch(repo)
+			err := validate.ConfigureMainBranch(repo)
 			if err != nil {
 				return err
 			}
-			return ConfigurePerennialBranches(repo)
+			return validate.ConfigurePerennialBranches(repo)
 		},
 	}
 }

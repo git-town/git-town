@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
-	. "github.com/git-town/git-town/v7/src/validate"
+	"github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -67,7 +67,7 @@ func determineKillConfig(args []string, repo *git.ProdRepo) (*killConfig, error)
 		return nil, err
 	}
 	if isTargetBranchLocal {
-		err = KnowsBranchesAncestry([]string{targetBranch}, repo)
+		err = validate.KnowsBranchesAncestry([]string{targetBranch}, repo)
 		if err != nil {
 			return nil, err
 		}

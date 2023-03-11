@@ -5,7 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
-	. "github.com/git-town/git-town/v7/src/validate"
+	"github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -45,11 +45,11 @@ See "sync" for information regarding upstream remotes.`,
 
 func determineParentBranch(targetBranch string, promptForParent bool, repo *git.ProdRepo) (string, error) {
 	if promptForParent {
-		parentBranch, err := AskForParent(targetBranch, repo.Config.MainBranch(), repo)
+		parentBranch, err := validate.AskForParent(targetBranch, repo.Config.MainBranch(), repo)
 		if err != nil {
 			return "", err
 		}
-		err = KnowsBranchesAncestry([]string{parentBranch}, repo)
+		err = validate.KnowsBranchesAncestry([]string{parentBranch}, repo)
 		if err != nil {
 			return "", err
 		}

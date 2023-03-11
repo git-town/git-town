@@ -5,7 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/git"
-	. "github.com/git-town/git-town/v7/src/validate"
+	"github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -33,7 +33,7 @@ func updatePerennialBranchesCmd(repo *git.ProdRepo) *cobra.Command {
 		Short: "Prompts to update your perennial branches",
 		Long:  `Prompts to update your perennial branches`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return ConfigurePerennialBranches(repo)
+			return validate.ConfigurePerennialBranches(repo)
 		},
 		Args:    cobra.NoArgs,
 		PreRunE: Ensure(repo, IsRepository),

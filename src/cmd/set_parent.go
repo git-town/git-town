@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"github.com/git-town/git-town/v7/src/git"
-	. "github.com/git-town/git-town/v7/src/validate"
+	"github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -32,7 +32,7 @@ func setParentCommand(repo *git.ProdRepo) *cobra.Command {
 			if err != nil {
 				return err
 			}
-			_, err = KnowsBranchAncestry(currentBranch, defaultParentBranch, repo)
+			_, err = validate.KnowsBranchAncestry(currentBranch, defaultParentBranch, repo)
 			return err
 		},
 	}

@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
-	. "github.com/git-town/git-town/v7/src/validate"
+	"github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -81,7 +81,7 @@ func determinePrependConfig(args []string, repo *git.ProdRepo) (*prependConfig, 
 	if !repo.Config.IsFeatureBranch(initialBranch) {
 		return nil, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can have parent branches", initialBranch)
 	}
-	err = KnowsBranchesAncestry([]string{initialBranch}, repo)
+	err = validate.KnowsBranchesAncestry([]string{initialBranch}, repo)
 	if err != nil {
 		return nil, err
 	}
