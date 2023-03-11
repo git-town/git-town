@@ -5,9 +5,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// validationCondition verifies that the given Git repo conforms to a particular condition.
-type validationCondition func(*git.ProdRepo) error
-
 // CobraEnsure wraps ensure into a Cobra-compatible format.
 func CobraEnsure(repo *git.ProdRepo, validators ...validationCondition) func(cmd *cobra.Command, args []string) error {
 	return func(cmd *cobra.Command, args []string) error {
@@ -24,3 +21,6 @@ func ensure(repo *git.ProdRepo, validators ...validationCondition) error {
 	}
 	return nil
 }
+
+// validationCondition verifies that the given Git repo conforms to a particular condition.
+type validationCondition func(*git.ProdRepo) error
