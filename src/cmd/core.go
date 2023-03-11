@@ -89,7 +89,7 @@ and it allows you to perform many common Git operations faster and easier.`,
 }
 
 var (
-	ensure        = validate.Ensure        //nolint:gochecknoglobals
+	ensure        = validate.CobraEnsure   //nolint:gochecknoglobals
 	hasGitVersion = validate.HasGitVersion //nolint:gochecknoglobals
 	isRepository  = validate.IsRepository  //nolint:gochecknoglobals
 	isConfigured  = validate.IsConfigured  //nolint:gochecknoglobals

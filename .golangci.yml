@@ -43,12 +43,6 @@ issues:
     - linters:
         - ireturn
       text: (github.com/git-town/git-town/v7/src/hosting.Connector|github.com/git-town/git-town/v7/src/steps.Step)
-    - text: dot-imports
-      linters:
-        - revive
-    - text: should not use dot imports
-      linters:
-        - stylecheck
     - text: (mockConfig|EmptyStep|Options)
       linters:
         - exhaustruct
