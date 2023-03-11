@@ -6,12 +6,13 @@ import (
 	survey "gopkg.in/AlecAivazis/survey.v1"
 )
 
-func EnterBranch(opts AskForBranchOptions) (string, error) {
+// Select allows the user to select one of the given branches.
+func Select(opts SelectArgs) (string, error) {
 	result := ""
 	prompt := &survey.Select{
-		Message: opts.Prompt,
-		Options: opts.Branches,
-		Default: opts.DefaultBranch,
+		Message: opts.Message,
+		Options: opts.Options,
+		Default: opts.Default,
 	}
 	err := survey.AskOne(prompt, &result, nil)
 	if err != nil {
@@ -20,8 +21,8 @@ func EnterBranch(opts AskForBranchOptions) (string, error) {
 	return result, nil
 }
 
-type AskForBranchOptions struct {
-	Branches      []string
-	DefaultBranch string
-	Prompt        string
+type SelectArgs struct {
+	Options []string
+	Default string
+	Message string
 }

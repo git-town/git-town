@@ -8,10 +8,10 @@ import (
 
 // EnterMainBranch lets the user enter the main branch.
 func EnterMainBranch(mainBranch string, localBranches []string) (string, error) {
-	newMainBranch, err := EnterBranch(AskForBranchOptions{
-		Branches:      localBranches,
-		Prompt:        mainBranchPrompt(mainBranch),
-		DefaultBranch: mainBranch,
+	newMainBranch, err := Select(SelectArgs{
+		Options: localBranches,
+		Message: mainBranchPrompt(mainBranch),
+		Default: mainBranch,
 	})
 	if err != nil {
 		return "", err

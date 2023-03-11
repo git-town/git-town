@@ -66,10 +66,10 @@ func EnterParent(branch, defaultBranch string, repo *git.ProdRepo) (string, erro
 		return "", err
 	}
 	filteredChoices := filterOutSelfAndDescendants(branch, choices, repo)
-	return dialog.EnterBranch(dialog.AskForBranchOptions{
-		Branches:      append([]string{perennialBranchOption}, filteredChoices...),
-		Prompt:        fmt.Sprintf(parentBranchPromptTemplate, branch),
-		DefaultBranch: defaultBranch,
+	return dialog.Select(dialog.SelectArgs{
+		Options: append([]string{perennialBranchOption}, filteredChoices...),
+		Message: fmt.Sprintf(parentBranchPromptTemplate, branch),
+		Default: defaultBranch,
 	})
 }
 
