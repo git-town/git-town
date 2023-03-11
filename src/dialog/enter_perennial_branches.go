@@ -10,40 +10,20 @@ import (
 
 // EnterPerennialBranches lets the user enter the perennial branches.
 func EnterPerennialBranches(localBranchesWithoutMain []string, perennialBranches []string) ([]string, error) {
-	if len(localBranchesWithoutMain) == 0 {
-		return []string{}, nil
-	}
-	newPerennialBranches, err := askForBranches(askForBranchesOptions{
-		branches:        localBranchesWithoutMain,
-		prompt:          perennialBranchesPrompt(perennialBranches),
-		defaultBranches: perennialBranches,
-	})
-	if err != nil {
-		return []string{}, err
-	}
-	return newPerennialBranches, nil
-}
-
-// Helpers
-
-func askForBranches(opts askForBranchesOptions) ([]string, error) {
 	result := []string{}
+	if len(localBranchesWithoutMain) == 0 {
+		return result, nil
+	}
 	prompt := &survey.MultiSelect{
-		Message: opts.prompt,
-		Options: opts.branches,
-		Default: opts.defaultBranches,
+		Message: perennialBranchesPrompt(perennialBranches),
+		Options: localBranchesWithoutMain,
+		Default: perennialBranches,
 	}
 	err := survey.AskOne(prompt, &result, nil)
 	if err != nil {
 		return result, fmt.Errorf("cannot read branches from CLI: %w", err)
 	}
-	return result, err
-}
-
-type askForBranchesOptions struct {
-	branches        []string
-	defaultBranches []string
-	prompt          string
+	return result, nil
 }
 
 func perennialBranchesPrompt(perennialBranches []string) string {
