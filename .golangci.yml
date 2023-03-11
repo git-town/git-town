@@ -47,6 +47,9 @@ issues:
     - text: (mockConfig|EmptyStep|Options)
       linters:
         - exhaustruct
+    - path: src/cache/cache.go
+      linters:
+        - ireturn
     - path: src/hosting/gitea
       text: missing in (ListOptions|ListPullRequestsOptions|PRBranchInfo|Token)
       linters:

@@ -59,7 +59,7 @@ func determineDiffParentConfig(args []string, repo *git.ProdRepo) (*diffParentCo
 	if !repo.Config.IsFeatureBranch(branch) {
 		return nil, fmt.Errorf("you can only diff-parent feature branches")
 	}
-	err = validate.KnowsBranchesAncestry([]string{branch}, repo)
+	err = validate.KnowsBranchAncestry(branch, repo.Config.MainBranch(), repo)
 	if err != nil {
 		return nil, err
 	}
