@@ -53,9 +53,10 @@ func InitRepo(workingDir, homeDir, binDir string) (Repo, error) {
 // The directory must contain an existing Git repo.
 func NewRepo(workingDir, homeDir, binDir string) Repo {
 	runner := NewMockingRunner(workingDir, homeDir, binDir)
+	config := config.NewGitTown(&runner)
 	repo := git.Repo{
 		Runner:             &runner,
-		Config:             config.NewGitTown(&runner),
+		Config:             &config,
 		DryRun:             &run.DryRun{},
 		IsRepoCache:        &cache.Bool{},
 		RemoteBranchCache:  &cache.Strings{},
