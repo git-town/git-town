@@ -7,8 +7,8 @@ import (
 	"github.com/git-town/git-town/v7/src/git"
 )
 
-// EnterParent prompts the user for the parent of the given branch.
-func EnterParent(branch, defaultBranch string, repo *git.ProdRepo) (string, error) {
+// EnterParent lets the user select a new parent for the given branch.
+func EnterParent(branch, defaultParent string, repo *git.ProdRepo) (string, error) {
 	choices, err := repo.Silent.LocalBranchesMainFirst()
 	if err != nil {
 		return "", err
@@ -17,7 +17,7 @@ func EnterParent(branch, defaultBranch string, repo *git.ProdRepo) (string, erro
 	return dialog.Select(dialog.SelectArgs{
 		Options: append([]string{perennialBranchOption}, filteredChoices...),
 		Message: fmt.Sprintf(parentBranchPromptTemplate, branch),
-		Default: defaultBranch,
+		Default: defaultParent,
 	})
 }
 

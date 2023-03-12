@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v7/src/git"
 )
 
-// IsOnline is a validationCondition that verifies that the given Git repository is online.
+// IsOnline verifies that the given Git repository is online.
 func IsOnline(repo *git.ProdRepo) error {
 	isOffline, err := repo.Config.IsOffline()
 	if err != nil {
