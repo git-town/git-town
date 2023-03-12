@@ -21,14 +21,9 @@
 package cmd
 
 import (
-	"errors"
-	"fmt"
-
 	"github.com/fatih/color"
-	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
-	"github.com/git-town/git-town/v7/src/hosting"
-	"github.com/git-town/git-town/v7/src/runstate"
+	"github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -93,113 +88,10 @@ and it allows you to perform many common Git operations faster and easier.`,
 	return &rootCmd
 }
 
-// validationCondition verifies that the given Git repo conforms to a particular condition.
-type validationCondition func(*git.ProdRepo) error
-
-// ensure wraps ensureInner into a Cobra-compatible format.
-func ensure(repo *git.ProdRepo, validators ...validationCondition) func(cmd *cobra.Command, args []string) error {
-	return func(cmd *cobra.Command, args []string) error {
-		return ensureInner(repo, validators...)
-	}
-}
-
-// ensureInner checks that the given repo conforms to the given validation conditions.
-func ensureInner(repo *git.ProdRepo, validators ...validationCondition) error {
-	for _, validator := range validators {
-		if err := validator(repo); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-// hasGitVersion is a validationCondition that verifies that the system has Git of version 2.7 or newer installed.
-func hasGitVersion(repo *git.ProdRepo) error {
-	majorVersion, minorVersion, err := repo.Silent.Version()
-	if err != nil {
-		return err
-	}
-	if !IsAcceptableGitVersion(majorVersion, minorVersion) {
-		return errors.New("this app requires Git 2.7.0 or higher")
-	}
-	return nil
-}
-
-// isConfigured is a validationCondition that verifies that the given Git repo contains necessary Git Town configuration.
-func isConfigured(repo *git.ProdRepo) error {
-	err := dialog.EnsureIsConfigured(repo)
-	if err != nil {
-		return err
-	}
-	return repo.RemoveOutdatedConfiguration()
-}
-
-// isOnline is a validationCondition that verifies that the given Git repository is online.
-func isOnline(repo *git.ProdRepo) error {
-	isOffline, err := repo.Config.IsOffline()
-	if err != nil {
-		return err
-	}
-	if isOffline {
-		return errors.New("this command requires an active internet connection")
-	}
-	return nil
-}
-
-// isRepository is a validationCondition that verifies that the given folder contains a Git repository.
-// It also navigates to the root directory of that repository.
-func isRepository(repo *git.ProdRepo) error {
-	if !repo.Silent.IsRepository() {
-		return errors.New("this is not a Git repository")
-	}
-	return repo.NavigateToRootIfNecessary()
-}
-
-// IsAcceptableGitVersion indicates whether the given Git version works for Git Town.
-func IsAcceptableGitVersion(major, minor int) bool {
-	return major > 2 || (major == 2 && minor >= 7)
-}
-
-// handleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
-//
-//nolint:nonamedreturns  // return value isn't obvious from function name
-func handleUnfinishedState(repo *git.ProdRepo, connector hosting.Connector) (quit bool, err error) {
-	runState, err := runstate.Load(repo)
-	if err != nil {
-		return false, fmt.Errorf("cannot load previous run state: %w", err)
-	}
-	if runState == nil || !runState.IsUnfinished() {
-		return false, nil
-	}
-	response, err := dialog.AskHowToHandleUnfinishedRunState(
-		runState.Command,
-		runState.UnfinishedDetails.EndBranch,
-		runState.UnfinishedDetails.EndTime,
-		runState.UnfinishedDetails.CanSkip,
-	)
-	if err != nil {
-		return quit, err
-	}
-	switch response {
-	case dialog.ResponseTypeDiscard:
-		err = runstate.Delete(repo)
-		return false, err
-	case dialog.ResponseTypeContinue:
-		hasConflicts, err := repo.Silent.HasConflicts()
-		if err != nil {
-			return false, err
-		}
-		if hasConflicts {
-			return false, fmt.Errorf("you must resolve the conflicts before continuing")
-		}
-		return true, runstate.Execute(runState, repo, connector)
-	case dialog.ResponseTypeAbort:
-		abortRunState := runState.CreateAbortRunState()
-		return true, runstate.Execute(&abortRunState, repo, connector)
-	case dialog.ResponseTypeSkip:
-		skipRunState := runState.CreateSkipRunState()
-		return true, runstate.Execute(&skipRunState, repo, connector)
-	default:
-		return false, fmt.Errorf("unknown response: %s", response)
-	}
-}
+var (
+	ensure        = validate.CobraEnsure   //nolint:gochecknoglobals
+	hasGitVersion = validate.HasGitVersion //nolint:gochecknoglobals
+	isRepository  = validate.IsRepository  //nolint:gochecknoglobals
+	isConfigured  = validate.IsConfigured  //nolint:gochecknoglobals
+	isOnline      = validate.IsOnline      //nolint:gochecknoglobals
+)
