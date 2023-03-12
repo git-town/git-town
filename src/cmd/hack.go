@@ -3,9 +3,9 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
+	"github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -43,22 +43,6 @@ See "sync" for information regarding upstream remotes.`,
 	return &hackCmd
 }
 
-func determineParentBranch(targetBranch string, promptForParent bool, repo *git.ProdRepo) (string, error) {
-	if promptForParent {
-		parentDialog := dialog.ParentBranches{}
-		parentBranch, err := parentDialog.AskForBranchParent(targetBranch, repo.Config.MainBranch(), repo)
-		if err != nil {
-			return "", err
-		}
-		err = parentDialog.EnsureKnowsParentBranches([]string{parentBranch}, repo)
-		if err != nil {
-			return "", err
-		}
-		return parentBranch, nil
-	}
-	return repo.Config.MainBranch(), nil
-}
-
 func determineHackConfig(args []string, promptForParent bool, repo *git.ProdRepo) (*appendConfig, error) {
 	ec := runstate.ErrorChecker{}
 	targetBranch := args[0]
@@ -83,4 +67,19 @@ func determineHackConfig(args []string, promptForParent bool, repo *git.ProdRepo
 		noPushHook:          !pushHook,
 		isOffline:           isOffline,
 	}, ec.Err
+}
+
+func determineParentBranch(targetBranch string, promptForParent bool, repo *git.ProdRepo) (string, error) {
+	if promptForParent {
+		parentBranch, err := validate.EnterParent(targetBranch, repo.Config.MainBranch(), repo)
+		if err != nil {
+			return "", err
+		}
+		err = validate.KnowsBranchAncestry(parentBranch, repo.Config.MainBranch(), repo)
+		if err != nil {
+			return "", err
+		}
+		return parentBranch, nil
+	}
+	return repo.Config.MainBranch(), nil
 }

@@ -28,6 +28,30 @@ func TestRepo(t *testing.T) {
 		assert.Equal(t, []string{"origin"}, remotes)
 	})
 
+	t.Run("BranchAuthors", func(t *testing.T) {
+		t.Parallel()
+		repo := test.CreateRepo(t).Repo
+		err := repo.CreateBranch("branch", "initial")
+		assert.NoError(t, err)
+		err = repo.CreateCommit(git.Commit{
+			Branch:      "branch",
+			FileName:    "file1",
+			FileContent: "file1",
+			Message:     "first commit",
+		})
+		assert.NoError(t, err)
+		err = repo.CreateCommit(git.Commit{
+			Branch:      "branch",
+			FileName:    "file2",
+			FileContent: "file2",
+			Message:     "second commit",
+		})
+		assert.NoError(t, err)
+		authors, err := repo.BranchAuthors("branch", "initial")
+		assert.NoError(t, err)
+		assert.Equal(t, []string{"user <email@example.com>"}, authors)
+	})
+
 	t.Run(".CheckoutBranch()", func(t *testing.T) {
 		t.Parallel()
 		repo := test.CreateRepo(t).Repo
