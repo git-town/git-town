@@ -7,22 +7,14 @@ import (
 	survey "gopkg.in/AlecAivazis/survey.v1"
 )
 
-// DetermineSquashCommitAuthor gets the author of the supplied branch.
+// SelectSquashCommitAuthor gets the author of the supplied branch.
 // If the branch has more than one author, the author is queried from the user.
-func DetermineSquashCommitAuthor(branch string, authors []string) (string, error) {
+func SelectSquashCommitAuthor(branch string, authors []string) (string, error) {
 	if len(authors) == 1 {
 		return authors[0], nil
 	}
-	cli.Printf(squashCommitAuthorHeaderTemplate, branch)
+	cli.Printf("Multiple people authored the %q branch.", branch)
 	fmt.Println()
-	return askForAuthor(authors)
-}
-
-// Helpers
-
-const squashCommitAuthorHeaderTemplate = "Multiple people authored the %q branch."
-
-func askForAuthor(authors []string) (string, error) {
 	result := ""
 	prompt := &survey.Select{
 		Message: "Please choose an author for the squash commit:",

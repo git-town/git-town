@@ -1,10 +1,7 @@
 package validate
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v7/src/cli"
-	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
 )
 
@@ -35,7 +32,7 @@ func KnowsBranchAncestry(branch, defaultBranch string, repo *git.ProdRepo) (err 
 				printParentBranchHeader(repo)
 				headerShown = true
 			}
-			parent, err = AskForParent(currentBranch, defaultBranch, repo)
+			parent, err = EnterParent(currentBranch, defaultBranch, repo)
 			if err != nil {
 				return
 			}
@@ -59,21 +56,9 @@ func KnowsBranchAncestry(branch, defaultBranch string, repo *git.ProdRepo) (err 
 	return
 }
 
-// AskForParent prompts the user for the parent of the given branch.
-func AskForParent(branch, defaultBranch string, repo *git.ProdRepo) (string, error) {
-	choices, err := repo.Silent.LocalBranchesMainFirst()
-	if err != nil {
-		return "", err
-	}
-	filteredChoices := filterOutSelfAndDescendants(branch, choices, repo)
-	return dialog.AskForBranch(dialog.AskForBranchOptions{
-		Branches:      append([]string{perennialBranchOption}, filteredChoices...),
-		Prompt:        fmt.Sprintf(parentBranchPromptTemplate, branch),
-		DefaultBranch: defaultBranch,
-	})
+func printParentBranchHeader(repo *git.ProdRepo) {
+	cli.Printf(parentBranchHeaderTemplate, repo.Config.MainBranch())
 }
-
-// Helpers
 
 const parentBranchHeaderTemplate string = `
 Feature branches can be branched directly off
@@ -83,22 +68,3 @@ The former allows to develop and ship features completely independent of each ot
 The latter allows to build on top of currently unshipped features.
 
 `
-
-const parentBranchPromptTemplate = "Please specify the parent branch of %q:"
-
-const perennialBranchOption = "<none> (perennial branch)"
-
-func filterOutSelfAndDescendants(branch string, choices []string, repo *git.ProdRepo) []string {
-	result := []string{}
-	for _, choice := range choices {
-		if choice == branch || repo.Config.IsAncestorBranch(choice, branch) {
-			continue
-		}
-		result = append(result, choice)
-	}
-	return result
-}
-
-func printParentBranchHeader(repo *git.ProdRepo) {
-	cli.Printf(parentBranchHeaderTemplate, repo.Config.MainBranch())
-}
