@@ -111,7 +111,7 @@ func determineSyncConfig(allFlag bool, repo *git.ProdRepo) (*syncConfig, error) 
 		branchesToSync = branches
 		shouldPushTags = true
 	} else {
-		err = validate.KnowsBranchesAncestry([]string{initialBranch}, repo)
+		err = validate.KnowsBranchAncestry(initialBranch, repo.Config.MainBranch(), repo)
 		if err != nil {
 			return nil, err
 		}
