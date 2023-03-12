@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/spf13/cobra"
 )
@@ -45,7 +46,7 @@ func printPushHook(globalFlag bool, repo *git.ProdRepo) error {
 }
 
 func setPushHook(text string, global bool, repo *git.ProdRepo) error {
-	value, err := cli.ParseBool(text)
+	value, err := config.ParseBool(text)
 	if err != nil {
 		return fmt.Errorf(`invalid argument: %q. Please provide either "yes" or "no"`, text)
 	}

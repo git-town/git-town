@@ -11,7 +11,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/giturl"
 	"github.com/git-town/git-town/v7/src/run"
 	"github.com/git-town/git-town/v7/src/stringslice"
@@ -187,7 +186,7 @@ func (gt *GitTown) IsOffline() (bool, error) {
 	if config == "" {
 		return false, nil
 	}
-	result, err := cli.ParseBool(config)
+	result, err := ParseBool(config)
 	if err != nil {
 		return false, fmt.Errorf("invalid value for %s: %q. Please provide either \"true\" or \"false\"", OfflineKey, config)
 	}
@@ -289,7 +288,7 @@ func (gt *GitTown) PushHook() (bool, error) {
 	if setting == "" {
 		return true, nil
 	}
-	result, err := cli.ParseBool(setting)
+	result, err := ParseBool(setting)
 	if err != nil {
 		return false, fmt.Errorf("invalid value for %s: %q. Please provide either \"true\" or \"false\"", PushHookKey, setting)
 	}
@@ -302,7 +301,7 @@ func (gt *GitTown) PushHookGlobal() (bool, error) {
 	if setting == "" {
 		return true, nil
 	}
-	result, err := cli.ParseBool(setting)
+	result, err := ParseBool(setting)
 	if err != nil {
 		return false, fmt.Errorf("invalid value for global %s: %q. Please provide either \"true\" or \"false\"", PushHookKey, setting)
 	}
@@ -469,7 +468,7 @@ func (gt *GitTown) ShouldNewBranchPush() (bool, error) {
 		if err != nil {
 			return false, err
 		}
-		parsed, err := cli.ParseBool(oldLocalConfig)
+		parsed, err := ParseBool(oldLocalConfig)
 		if err != nil {
 			return false, err
 		}
@@ -486,7 +485,7 @@ func (gt *GitTown) ShouldNewBranchPush() (bool, error) {
 		if err != nil {
 			return false, err
 		}
-		parsed, err := cli.ParseBool(oldGlobalConfig)
+		parsed, err := ParseBool(oldGlobalConfig)
 		if err != nil {
 			return false, err
 		}
@@ -499,7 +498,7 @@ func (gt *GitTown) ShouldNewBranchPush() (bool, error) {
 	if config == "" {
 		return false, nil
 	}
-	value, err := cli.ParseBool(config)
+	value, err := ParseBool(config)
 	if err != nil {
 		return false, fmt.Errorf("invalid value for %s: %q. Please provide either \"yes\" or \"no\"", PushNewBranchesKey, config)
 	}
@@ -513,7 +512,7 @@ func (gt *GitTown) ShouldNewBranchPushGlobal() (bool, error) {
 	if config == "" {
 		return false, nil
 	}
-	return cli.ParseBool(config)
+	return ParseBool(config)
 }
 
 // ShouldShipDeleteOriginBranch indicates whether to delete the remote branch after shipping.
@@ -535,7 +534,7 @@ func (gt *GitTown) ShouldSyncUpstream() (bool, error) {
 	if text == "" {
 		return true, nil
 	}
-	return cli.ParseBool(text)
+	return ParseBool(text)
 }
 
 func (gt *GitTown) SyncStrategy() (SyncStrategy, error) {
