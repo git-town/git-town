@@ -6,7 +6,7 @@ import (
 	survey "gopkg.in/AlecAivazis/survey.v1"
 )
 
-// Select displays a visual dialog thta allows the user to select one of the given options.
+// Select displays a visual dialog that allows the user to select one of the given options.
 func Select(opts SelectArgs) (string, error) {
 	result := ""
 	prompt := &survey.Select{
