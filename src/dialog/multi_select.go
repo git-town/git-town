@@ -2,7 +2,7 @@ package dialog
 
 import survey "gopkg.in/AlecAivazis/survey.v1"
 
-// MultiSelect displays a dialog that lets the user select multiple entries amongst the given options.
+// MultiSelect displays a visual dialog that allows the user to select multiple entries amongst the given options.
 func MultiSelect(args MultiSelectArgs) ([]string, error) {
 	result := []string{}
 	if len(args.Options) == 0 {
