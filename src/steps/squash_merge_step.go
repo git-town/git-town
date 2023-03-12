@@ -13,6 +13,7 @@ type SquashMergeStep struct {
 	EmptyStep
 	Branch        string
 	CommitMessage string
+	Parent        string
 }
 
 func (step *SquashMergeStep) CreateAbortStep() Step {
@@ -36,7 +37,11 @@ func (step *SquashMergeStep) Run(repo *git.ProdRepo, connector hosting.Connector
 	if err != nil {
 		return err
 	}
-	author, err := dialog.DetermineSquashCommitAuthor(step.Branch, repo)
+	branchAuthors, err := repo.Silent.BranchAuthors(step.Branch, step.Parent)
+	if err != nil {
+		return err
+	}
+	author, err := dialog.SelectSquashCommitAuthor(step.Branch, branchAuthors)
 	if err != nil {
 		return fmt.Errorf("error getting squash commit author: %w", err)
 	}

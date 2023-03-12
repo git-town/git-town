@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v7/src/config"
-	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
@@ -98,7 +97,6 @@ func determineSyncConfig(allFlag bool, repo *git.ProdRepo) (*syncConfig, error) 
 	if err != nil {
 		return nil, err
 	}
-	parentDialog := dialog.ParentBranches{}
 	var branchesToSync []string
 	var shouldPushTags bool
 	if allFlag {
@@ -106,14 +104,14 @@ func determineSyncConfig(allFlag bool, repo *git.ProdRepo) (*syncConfig, error) 
 		if err != nil {
 			return nil, err
 		}
-		err = parentDialog.EnsureKnowsParentBranches(branches, repo)
+		err = validate.KnowsBranchesAncestry(branches, repo)
 		if err != nil {
 			return nil, err
 		}
 		branchesToSync = branches
 		shouldPushTags = true
 	} else {
-		err = parentDialog.EnsureKnowsParentBranches([]string{initialBranch}, repo)
+		err = validate.KnowsBranchAncestry(initialBranch, repo.Config.MainBranch(), repo)
 		if err != nil {
 			return nil, err
 		}
