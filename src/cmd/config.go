@@ -52,7 +52,7 @@ func configCmd(repo *git.ProdRepo) *cobra.Command {
 			cli.PrintEntry("Gitea token", cli.StringSetting(repo.Config.GiteaToken()))
 			fmt.Println()
 			if repo.Config.MainBranch() != "" {
-				cli.PrintLabelAndValue("Branch Ancestry", cli.PrintableBranchAncestry(&repo.Config))
+				cli.PrintLabelAndValue("Branch Ancestry", cli.PrintableBranchAncestry(repo.Config))
 			}
 			return nil
 		},
