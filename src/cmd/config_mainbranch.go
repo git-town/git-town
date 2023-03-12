@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v7/src/cli"
-	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/spf13/cobra"
 )
@@ -41,17 +40,4 @@ func setMainBranch(branch string, repo *git.ProdRepo) error {
 		return fmt.Errorf("there is no branch named %q", branch)
 	}
 	return repo.Config.SetMainBranch(branch)
-}
-
-func configureMainBranch(repo *git.ProdRepo) error {
-	localBranches, err := repo.Silent.LocalBranches()
-	if err != nil {
-		return err
-	}
-	oldMainBranch := repo.Config.MainBranch()
-	newMainBranch, err := dialog.AskMainBranch(oldMainBranch, localBranches)
-	if err != nil {
-		return err
-	}
-	return repo.Config.SetMainBranch(newMainBranch)
 }

@@ -1,7 +1,3 @@
-// Package config provides facilities to read and write the Git Town configuration.
-// Git Town stores its configuration in the Git configuration under the prefix "git-town".
-// It supports both the Git configuration for the local repository as well as the global Git configuration in `~/.gitconfig`.
-// You can manually read the Git configuration entries for Git Town by running `git config --get-regexp git-town`.
 package config
 
 import (
@@ -11,28 +7,10 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/giturl"
 	"github.com/git-town/git-town/v7/src/run"
 	"github.com/git-town/git-town/v7/src/stringslice"
-)
-
-const (
-	CodeHostingDriverKey         = "git-town.code-hosting-driver"
-	CodeHostingOriginHostnameKey = "git-town.code-hosting-origin-hostname"
-	GiteaTokenKey                = "git-town.gitea-token"  //nolint:gosec
-	GithubTokenKey               = "git-town.github-token" //nolint:gosec
-	GitlabTokenKey               = "git-town.gitlab-token" //nolint:gosec
-	MainBranchKey                = "git-town.main-branch-name"
-	NewBranchPushFlagKey         = "git-town.new-branch-push-flag"
-	OfflineKey                   = "git-town.offline"
-	PerennialBranchesKey         = "git-town.perennial-branch-names"
-	PullBranchStrategyKey        = "git-town.pull-branch-strategy"
-	PushHookKey                  = "git-town.push-hook"
-	PushNewBranchesKey           = "git-town.push-new-branches"
-	ShipDeleteRemoteBranchKey    = "git-town.ship-delete-remote-branch"
-	SyncUpstreamKey              = "git-town.sync-upstream"
-	SyncStrategyKey              = "git-town.sync-strategy"
-	TestingRemoteURLKey          = "git-town.testing.remote-url"
 )
 
 // GitTown provides type-safe access to Git Town configuration settings
@@ -186,7 +164,7 @@ func (gt *GitTown) IsOffline() (bool, error) {
 	if config == "" {
 		return false, nil
 	}
-	result, err := ParseBool(config)
+	result, err := cli.ParseBool(config)
 	if err != nil {
 		return false, fmt.Errorf("invalid value for %s: %q. Please provide either \"true\" or \"false\"", OfflineKey, config)
 	}
@@ -288,7 +266,7 @@ func (gt *GitTown) PushHook() (bool, error) {
 	if setting == "" {
 		return true, nil
 	}
-	result, err := ParseBool(setting)
+	result, err := cli.ParseBool(setting)
 	if err != nil {
 		return false, fmt.Errorf("invalid value for %s: %q. Please provide either \"true\" or \"false\"", PushHookKey, setting)
 	}
@@ -301,7 +279,7 @@ func (gt *GitTown) PushHookGlobal() (bool, error) {
 	if setting == "" {
 		return true, nil
 	}
-	result, err := ParseBool(setting)
+	result, err := cli.ParseBool(setting)
 	if err != nil {
 		return false, fmt.Errorf("invalid value for global %s: %q. Please provide either \"true\" or \"false\"", PushHookKey, setting)
 	}
@@ -468,7 +446,7 @@ func (gt *GitTown) ShouldNewBranchPush() (bool, error) {
 		if err != nil {
 			return false, err
 		}
-		parsed, err := ParseBool(oldLocalConfig)
+		parsed, err := cli.ParseBool(oldLocalConfig)
 		if err != nil {
 			return false, err
 		}
@@ -485,7 +463,7 @@ func (gt *GitTown) ShouldNewBranchPush() (bool, error) {
 		if err != nil {
 			return false, err
 		}
-		parsed, err := ParseBool(oldGlobalConfig)
+		parsed, err := cli.ParseBool(oldGlobalConfig)
 		if err != nil {
 			return false, err
 		}
@@ -498,7 +476,7 @@ func (gt *GitTown) ShouldNewBranchPush() (bool, error) {
 	if config == "" {
 		return false, nil
 	}
-	value, err := ParseBool(config)
+	value, err := cli.ParseBool(config)
 	if err != nil {
 		return false, fmt.Errorf("invalid value for %s: %q. Please provide either \"yes\" or \"no\"", PushNewBranchesKey, config)
 	}
@@ -512,7 +490,7 @@ func (gt *GitTown) ShouldNewBranchPushGlobal() (bool, error) {
 	if config == "" {
 		return false, nil
 	}
-	return ParseBool(config)
+	return cli.ParseBool(config)
 }
 
 // ShouldShipDeleteOriginBranch indicates whether to delete the remote branch after shipping.
@@ -534,7 +512,7 @@ func (gt *GitTown) ShouldSyncUpstream() (bool, error) {
 	if text == "" {
 		return true, nil
 	}
-	return ParseBool(text)
+	return cli.ParseBool(text)
 }
 
 func (gt *GitTown) SyncStrategy() (SyncStrategy, error) {

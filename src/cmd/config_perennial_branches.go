@@ -4,8 +4,8 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v7/src/cli"
-	"github.com/git-town/git-town/v7/src/dialog"
 	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -33,22 +33,9 @@ func updatePerennialBranchesCmd(repo *git.ProdRepo) *cobra.Command {
 		Short: "Prompts to update your perennial branches",
 		Long:  `Prompts to update your perennial branches`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return configurePerennialBranches(repo)
+			return validate.EnterPerennialBranches(repo)
 		},
 		Args:    cobra.NoArgs,
 		PreRunE: ensure(repo, isRepository),
 	}
-}
-
-func configurePerennialBranches(repo *git.ProdRepo) error {
-	localBranchesWithoutMain, err := repo.Silent.LocalBranchesWithoutMain()
-	if err != nil {
-		return err
-	}
-	perennialBranches := repo.Config.PerennialBranches()
-	newPerennialBranches, err := dialog.AskPerennialBranches(localBranchesWithoutMain, perennialBranches)
-	if err != nil {
-		return err
-	}
-	return repo.Config.SetPerennialBranches(newPerennialBranches)
 }
