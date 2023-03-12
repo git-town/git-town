@@ -7,8 +7,8 @@ import (
 	survey "gopkg.in/AlecAivazis/survey.v1"
 )
 
-// SelectSquashCommitAuthor allows the user to select an author amongst a given list of authors.
-func SelectSquashCommitAuthor(branch string, authors []string) (string, error) {
+// SelectAuthor allows the user to select an author amongst a given list of authors.
+func SelectAuthor(branch string, authors []string) (string, error) {
 	if len(authors) == 1 {
 		return authors[0], nil
 	}

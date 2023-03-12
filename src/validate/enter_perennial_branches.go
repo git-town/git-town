@@ -9,6 +9,8 @@ import (
 	"github.com/git-town/git-town/v7/src/git"
 )
 
+// EnterPerennialBranches lets the user update the perennial branches.
+// This includes asking the user and updating the respective settings based on the user selection.
 func EnterPerennialBranches(repo *git.ProdRepo) error {
 	localBranchesWithoutMain, err := repo.Silent.LocalBranchesWithoutMain()
 	if err != nil {
@@ -16,9 +18,9 @@ func EnterPerennialBranches(repo *git.ProdRepo) error {
 	}
 	oldPerennialBranches := repo.Config.PerennialBranches()
 	newPerennialBranches, err := dialog.MultiSelect(dialog.MultiSelectArgs{
-		Options: localBranchesWithoutMain,
-		Default: oldPerennialBranches,
-		Message: perennialBranchesPrompt(oldPerennialBranches),
+		Options:  localBranchesWithoutMain,
+		Defaults: oldPerennialBranches,
+		Message:  perennialBranchesPrompt(oldPerennialBranches),
 	})
 	if err != nil {
 		return err

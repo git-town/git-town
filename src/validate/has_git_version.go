@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v7/src/git"
 )
 
-// HasGitVersion is a validationCondition that verifies that the system has Git of version 2.7 or newer installed.
+// HasGitVersion verifies that the system has Git of version 2.7 or newer installed.
 func HasGitVersion(repo *git.ProdRepo) error {
 	majorVersion, minorVersion, err := repo.Silent.Version()
 	if err != nil {
