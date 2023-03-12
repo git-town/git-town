@@ -12,7 +12,7 @@ import (
 
 // ProdRepo is a Git Repo in production code.
 type ProdRepo struct {
-	Config        config.GitTown // the git.Configuration instance for this repo
+	Config        *config.GitTown // the git.Configuration instance for this repo
 	DryRun        *run.DryRun
 	Logging       Repo               // the Runner instance to Git operations that show up in the output
 	LoggingRunner *run.LoggingRunner // the LoggingRunner instance used
@@ -30,7 +30,7 @@ func NewProdRepo(debugFlag *bool) ProdRepo {
 	remotesCache := cache.Strings{}
 	silentRepo := Repo{
 		Runner:             silentRunner,
-		Config:             config,
+		Config:             &config,
 		CurrentBranchCache: &currentBranchTracker,
 		DryRun:             &dryRun,
 		IsRepoCache:        &isRepoCache,
@@ -41,7 +41,7 @@ func NewProdRepo(debugFlag *bool) ProdRepo {
 	loggingRunner := run.NewLoggingRunner(&silentRepo, &dryRun)
 	loggingRepo := Repo{
 		Runner:             loggingRunner,
-		Config:             config,
+		Config:             &config,
 		CurrentBranchCache: &currentBranchTracker,
 		DryRun:             &dryRun,
 		IsRepoCache:        &isRepoCache,
@@ -53,7 +53,7 @@ func NewProdRepo(debugFlag *bool) ProdRepo {
 		Silent:        silentRepo,
 		Logging:       loggingRepo,
 		LoggingRunner: loggingRunner,
-		Config:        config,
+		Config:        &config,
 		DryRun:        &dryRun,
 	}
 }
