@@ -16,9 +16,9 @@ func EnterPerennialBranches(repo *git.ProdRepo) error {
 	}
 	oldPerennialBranches := repo.Config.PerennialBranches()
 	newPerennialBranches, err := dialog.MultiSelect(dialog.MultiSelectArgs{
-		Options: localBranchesWithoutMain,
-		Default: oldPerennialBranches,
-		Message: perennialBranchesPrompt(oldPerennialBranches),
+		Options:  localBranchesWithoutMain,
+		Defaults: oldPerennialBranches,
+		Message:  perennialBranchesPrompt(oldPerennialBranches),
 	})
 	if err != nil {
 		return err

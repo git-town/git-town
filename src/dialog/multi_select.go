@@ -2,6 +2,7 @@ package dialog
 
 import survey "gopkg.in/AlecAivazis/survey.v1"
 
+// MultiSelect displays a dialog that lets the user select multiple entries amongst the given options.
 func MultiSelect(args MultiSelectArgs) ([]string, error) {
 	result := []string{}
 	if len(args.Options) == 0 {
@@ -10,14 +11,14 @@ func MultiSelect(args MultiSelectArgs) ([]string, error) {
 	prompt := &survey.MultiSelect{
 		Message: args.Message,
 		Options: args.Options,
-		Default: args.Default,
+		Default: args.Defaults,
 	}
 	err := survey.AskOne(prompt, &result, nil)
 	return result, err
 }
 
 type MultiSelectArgs struct {
-	Options []string
-	Default []string
-	Message string
+	Options  []string
+	Defaults []string
+	Message  string
 }
