@@ -2,6 +2,7 @@ package git_test
 
 import (
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -21,7 +22,7 @@ func TestRepo(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, []string{}, remotes)
 		origin := test.CreateRepo(t)
-		err = repo.AddRemote(config.OriginRemote, origin.WorkingDir())
+		err = repo.AddRemote(config.OriginRemote, origin.Dir)
 		assert.NoError(t, err)
 		remotes, err = repo.Remotes()
 		assert.NoError(t, err)
@@ -105,10 +106,10 @@ func TestRepo(t *testing.T) {
 		// connecting branches of repos with the same commits in them
 		origin := test.CreateRepo(t)
 		repoDir := filepath.Join(t.TempDir(), "repo") // need a non-existing directory
-		err := test.CopyDirectory(origin.WorkingDir(), repoDir)
+		err := test.CopyDirectory(origin.Dir, repoDir)
 		assert.NoError(t, err)
 		repo := test.NewRepo(repoDir, repoDir, "").Repo
-		err = repo.AddRemote(config.OriginRemote, origin.WorkingDir())
+		err = repo.AddRemote(config.OriginRemote, origin.Dir)
 		assert.NoError(t, err)
 		err = repo.Fetch()
 		assert.NoError(t, err)
@@ -153,9 +154,10 @@ func TestRepo(t *testing.T) {
 		assert.NoError(t, err)
 		err = repo.CreateChildFeatureBranch("f1a", "f1")
 		assert.NoError(t, err)
-		output, err := repo.Run("git", "town", "config")
+		cmd := exec.Cmd{Path: "git-town", Args: []string{"config"}}
+		output, err := cmd.CombinedOutput()
 		assert.NoError(t, err)
-		has := strings.Contains(output.Sanitized(), "Branch Ancestry:\n  main\n    f1\n      f1a")
+		has := strings.Contains(string(output), "Branch Ancestry:\n  main\n    f1\n      f1a")
 		assert.True(t, has)
 	})
 
@@ -227,7 +229,7 @@ func TestRepo(t *testing.T) {
 			repo := test.CreateRepo(t).Repo
 			err := repo.CreateFile("filename", "content")
 			assert.Nil(t, err, "cannot create file in repo")
-			content, err := os.ReadFile(filepath.Join(repo.WorkingDir(), "filename"))
+			content, err := os.ReadFile(filepath.Join(repo.Dir, "filename"))
 			assert.Nil(t, err, "cannot read file")
 			assert.Equal(t, "content", string(content))
 		})
@@ -237,7 +239,7 @@ func TestRepo(t *testing.T) {
 			repo := test.CreateRepo(t).Repo
 			err := repo.CreateFile("folder/filename", "content")
 			assert.Nil(t, err, "cannot create file in repo")
-			content, err := os.ReadFile(filepath.Join(repo.WorkingDir(), "folder/filename"))
+			content, err := os.ReadFile(filepath.Join(repo.Dir, "folder/filename"))
 			assert.Nil(t, err, "cannot read file")
 			assert.Equal(t, "content", string(content))
 		})
@@ -279,7 +281,7 @@ func TestRepo(t *testing.T) {
 		t.Parallel()
 		repo := test.CreateRepo(t).Repo
 		origin := test.CreateRepo(t)
-		err := repo.AddRemote(config.OriginRemote, origin.WorkingDir())
+		err := repo.AddRemote(config.OriginRemote, origin.Dir)
 		assert.NoError(t, err)
 		err = repo.Fetch()
 		assert.NoError(t, err)
@@ -558,7 +560,7 @@ func TestRepo(t *testing.T) {
 		t.Parallel()
 		repo := test.CreateRepo(t).Repo
 		origin := test.CreateRepo(t)
-		err := repo.AddRemote(config.OriginRemote, origin.WorkingDir())
+		err := repo.AddRemote(config.OriginRemote, origin.Dir)
 		assert.NoError(t, err)
 		err = repo.CreateBranch("b1", "initial")
 		assert.NoError(t, err)
@@ -592,7 +594,7 @@ func TestRepo(t *testing.T) {
 		t.Parallel()
 		repo := test.CreateRepo(t).Repo
 		origin := test.CreateRepo(t)
-		err := repo.AddRemote(config.OriginRemote, origin.WorkingDir())
+		err := repo.AddRemote(config.OriginRemote, origin.Dir)
 		assert.NoError(t, err)
 		remotes, err := repo.Remotes()
 		assert.NoError(t, err)
@@ -618,7 +620,7 @@ func TestRepo(t *testing.T) {
 		t.Parallel()
 		repo := test.CreateRepo(t).Repo
 		origin := test.CreateRepo(t)
-		err := repo.AddRemote(config.OriginRemote, origin.WorkingDir())
+		err := repo.AddRemote(config.OriginRemote, origin.Dir)
 		assert.NoError(t, err)
 		err = repo.RemoveRemote(config.OriginRemote)
 		assert.NoError(t, err)

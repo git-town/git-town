@@ -31,7 +31,7 @@ type publicRunner interface {
 // - perform Git commands in this repo
 // - caches various aspects of the repo for better performance.
 type Repo struct {
-	dir                string // the directory
+	Dir                string // the directory
 	internally         internalRunner
 	publicly           publicRunner
 	Config             *config.GitTown  // caches Git configuration settings
@@ -325,7 +325,7 @@ func (r *Repo) CreateFeatureBranchNoParent(name string) error {
 
 // CreateFile creates a file with the given name and content in this repository.
 func (r *Repo) CreateFile(name, content string) error {
-	filePath := filepath.Join(r.dir, name)
+	filePath := filepath.Join(r.Dir, name)
 	folderPath := filepath.Dir(filePath)
 	err := os.MkdirAll(folderPath, os.ModePerm)
 	if err != nil {
@@ -343,7 +343,7 @@ func (r *Repo) CreatePerennialBranches(names ...string) error {
 	for _, name := range names {
 		err := r.CreateBranch(name, "main")
 		if err != nil {
-			return fmt.Errorf("cannot create perennial branch %q in repo %q: %w", name, r.dir, err)
+			return fmt.Errorf("cannot create perennial branch %q in repo %q: %w", name, r.Dir, err)
 		}
 	}
 	return r.Config.AddToPerennialBranches(names...)
@@ -534,7 +534,7 @@ func (r *Repo) FetchUpstream(branch string) error {
 
 // FileContent provides the current content of a file.
 func (r *Repo) FileContent(filename string) (string, error) {
-	content, err := os.ReadFile(filepath.Join(r.dir, filename))
+	content, err := os.ReadFile(filepath.Join(r.Dir, filename))
 	return string(content), err
 }
 
@@ -565,7 +565,7 @@ func (r *Repo) FilesInCommit(sha string) ([]string, error) {
 func (r *Repo) FilesInBranch(branch string) ([]string, error) {
 	output, err := r.internally.Run("git", "ls-tree", "-r", "--name-only", branch)
 	if err != nil {
-		return []string{}, fmt.Errorf("cannot determine files in branch %q in repo %q: %w", branch, r.dir, err)
+		return []string{}, fmt.Errorf("cannot determine files in branch %q in repo %q: %w", branch, r.Dir, err)
 	}
 	result := []string{}
 	for _, line := range strings.Split(output.Sanitized(), "\n") {
@@ -581,7 +581,7 @@ func (r *Repo) FilesInBranch(branch string) ([]string, error) {
 func (r *Repo) HasBranchesOutOfSync() (bool, error) {
 	output, err := r.internally.Run("git", "for-each-ref", "--format=%(refname:short) %(upstream:track)", "refs/heads")
 	if err != nil {
-		return false, fmt.Errorf("cannot determine if branches are out of sync in %q: %w %q", r.dir, err, output.Sanitized())
+		return false, fmt.Errorf("cannot determine if branches are out of sync in %q: %w %q", r.Dir, err, output.Sanitized())
 	}
 	return output.ContainsText("["), nil
 }
@@ -597,7 +597,7 @@ func (r *Repo) HasConflicts() (bool, error) {
 
 // HasFile indicates whether this repository contains a file with the given name and content.
 func (r *Repo) HasFile(name, content string) (bool, error) {
-	rawContent, err := os.ReadFile(filepath.Join(r.dir, name))
+	rawContent, err := os.ReadFile(filepath.Join(r.Dir, name))
 	if err != nil {
 		return false, fmt.Errorf("repo doesn't have file %q: %w", name, err)
 	}
@@ -637,7 +637,7 @@ func (r *Repo) HasLocalOrOriginBranch(name string) (bool, error) {
 
 // HasMergeInProgress indicates whether this Git repository currently has a merge in progress.
 func (r *Repo) HasMergeInProgress() (bool, error) {
-	_, err := os.Stat(filepath.Join(r.dir, ".git", "MERGE_HEAD"))
+	_, err := os.Stat(filepath.Join(r.Dir, ".git", "MERGE_HEAD"))
 	return err == nil, nil
 }
 
@@ -654,7 +654,7 @@ func (r *Repo) HasOpenChanges() (bool, error) {
 func (r *Repo) HasRebaseInProgress() (bool, error) {
 	output, err := r.internally.Run("git", "status")
 	if err != nil {
-		return false, fmt.Errorf("cannot determine rebase in %q progress: %w", r.dir, err)
+		return false, fmt.Errorf("cannot determine rebase in %q progress: %w", r.Dir, err)
 	}
 	sanitizedOutput := output.Sanitized()
 	if strings.Contains(sanitizedOutput, "You are currently rebasing") {
@@ -897,7 +897,7 @@ func (r *Repo) PushBranch(options ...PushArgs) error {
 	}
 	err := r.publicly.Run("git", args...)
 	if err != nil {
-		return fmt.Errorf("cannot push branch in repo %q to origin: %w", r.dir, err)
+		return fmt.Errorf("cannot push branch in repo %q to origin: %w", r.Dir, err)
 	}
 	return nil
 }
@@ -906,7 +906,7 @@ func (r *Repo) PushBranch(options ...PushArgs) error {
 func (r *Repo) PushTags() error {
 	err := r.publicly.Run("git", "push", "--tags")
 	if err != nil {
-		return fmt.Errorf("cannot push branch in repo %q: %w", r.dir, err)
+		return fmt.Errorf("cannot push branch in repo %q: %w", r.Dir, err)
 	}
 	return nil
 }
@@ -973,13 +973,13 @@ func (r *Repo) RemoveRemote(name string) error {
 
 // RemoveUnnecessaryFiles trims all files that aren't necessary in this repo.
 func (r *Repo) RemoveUnnecessaryFiles() error {
-	fullPath := filepath.Join(r.dir, ".git", "hooks")
+	fullPath := filepath.Join(r.Dir, ".git", "hooks")
 	err := os.RemoveAll(fullPath)
 	if err != nil {
 		return fmt.Errorf("cannot remove unnecessary files in %q: %w", fullPath, err)
 	}
-	_ = os.Remove(filepath.Join(r.dir, ".git", "COMMIT_EDITMSG"))
-	_ = os.Remove(filepath.Join(r.dir, ".git", "description"))
+	_ = os.Remove(filepath.Join(r.Dir, ".git", "COMMIT_EDITMSG"))
+	_ = os.Remove(filepath.Join(r.Dir, ".git", "description"))
 	return nil
 }
 
@@ -1090,7 +1090,7 @@ func (r *Repo) StashSize() (int, error) {
 func (r *Repo) Tags() ([]string, error) {
 	output, err := r.internally.Run("git", "tag")
 	if err != nil {
-		return []string{}, fmt.Errorf("cannot determine tags in repo %q: %w", r.dir, err)
+		return []string{}, fmt.Errorf("cannot determine tags in repo %q: %w", r.Dir, err)
 	}
 	result := []string{}
 	for _, line := range strings.Split(output.Sanitized(), "\n") {
@@ -1108,7 +1108,7 @@ func (r *Repo) TrackingBranch(branch string) string {
 func (r *Repo) UncommittedFiles() ([]string, error) {
 	output, err := r.internally.Run("git", "status", "--porcelain", "--untracked-files=all")
 	if err != nil {
-		return []string{}, fmt.Errorf("cannot determine uncommitted files in %q: %w", r.dir, err)
+		return []string{}, fmt.Errorf("cannot determine uncommitted files in %q: %w", r.Dir, err)
 	}
 	lines := output.Lines()
 	result := []string{}
