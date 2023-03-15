@@ -10,6 +10,8 @@
 //  2. Public shell commands.
 //     These are the commands that Git Town runs for the end user to change their Git repository.
 //     Git Town doesn't need to know their output, only whether they failed.
+//
+// Package subshell provides various facilities to run internal and public shell commands.
 package subshell
 
 import (
