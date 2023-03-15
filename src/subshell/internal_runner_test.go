@@ -1,34 +1,64 @@
 package subshell_test
 
 import (
+	"errors"
 	"os"
+	"os/exec"
+	"path/filepath"
 	"testing"
 
 	"github.com/git-town/git-town/v7/src/subshell"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestSilentRunner(t *testing.T) {
+func TestInternalRunner(t *testing.T) {
 	t.Parallel()
 	t.Run(".Run()", func(t *testing.T) {
 		t.Parallel()
-		runner := subshell.InternalRunner{}
-		res, err := runner.Run("echo", "hello", "world")
-		assert.NoError(t, err)
-		assert.Equal(t, "hello world", res.OutputSanitized())
+		t.Run("happy path", func(t *testing.T) {
+			runner := subshell.InternalRunner{}
+			output, err := runner.Run(".", "echo", "hello", "world")
+			assert.NoError(t, err)
+			assert.Equal(t, "hello world", output.Sanitized())
+		})
+
+		t.Run("unknown executable", func(t *testing.T) {
+			t.Parallel()
+			runner := subshell.InternalRunner{}
+			_, err := runner.Run(".", "zonk")
+			assert.Error(t, err)
+			var execError *exec.Error
+			assert.True(t, errors.As(err, &execError))
+		})
+		t.Run("non-zero exit code", func(t *testing.T) {
+			t.Parallel()
+			runner := subshell.InternalRunner{}
+			_, err := runner.Run(".", "bash", "-c", "echo hi && exit 2")
+			expectedError := `
+----------------------------------------
+Diagnostic information of failed command
+
+Command: bash -c echo hi && exit 2
+Error: exit status 2
+Output:
+hi
+
+----------------------------------------`
+			assert.Equal(t, expectedError, err.Error())
+		})
 	})
 
 	t.Run(".RunMany()", func(t *testing.T) {
 		t.Parallel()
 		runner := subshell.InternalRunner{}
-		err := runner.RunMany([][]string{
+		tmpDir := t.TempDir()
+		err := runner.RunMany(tmpDir, [][]string{
 			{"mkdir", "tmp"},
 			{"touch", "tmp/first"},
 			{"touch", "tmp/second"},
 		})
-		defer os.RemoveAll("tmp")
 		assert.NoError(t, err)
-		entries, err := os.ReadDir("tmp")
+		entries, err := os.ReadDir(filepath.Join(tmpDir, "tmp"))
 		assert.NoError(t, err)
 		assert.Equal(t, "first", entries[0].Name())
 		assert.Equal(t, "second", entries[1].Name())
@@ -36,11 +66,11 @@ func TestSilentRunner(t *testing.T) {
 
 	t.Run(".RunString()", func(t *testing.T) {
 		t.Parallel()
+		tmpDir := t.TempDir()
 		runner := subshell.InternalRunner{}
-		_, err := runner.RunString("touch first")
-		defer os.Remove("first")
+		_, err := runner.RunString(tmpDir, "touch first")
 		assert.NoError(t, err)
-		_, err = os.Stat("first")
+		_, err = os.Stat(filepath.Join("first"))
 		assert.False(t, os.IsNotExist(err))
 	})
 }

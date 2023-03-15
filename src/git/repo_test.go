@@ -153,9 +153,9 @@ func TestRepo(t *testing.T) {
 		assert.NoError(t, err)
 		err = repo.CreateChildFeatureBranch("f1a", "f1")
 		assert.NoError(t, err)
-		res, err := repo.Run("git", "town", "config")
+		output, err := repo.Run("git", "town", "config")
 		assert.NoError(t, err)
-		has := strings.Contains(res.OutputSanitized(), "Branch Ancestry:\n  main\n    f1\n      f1a")
+		has := strings.Contains(output.Sanitized(), "Branch Ancestry:\n  main\n    f1\n      f1a")
 		assert.True(t, has)
 	})
 

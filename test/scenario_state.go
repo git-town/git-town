@@ -36,7 +36,7 @@ type ScenarioState struct {
 	runErrChecked bool
 
 	// the outcome of the last run of Git Town
-	runRes *subshell.Result
+	runOutput *subshell.Output
 
 	// content of the uncommitted file in the workspace
 	uncommittedContent string
@@ -53,7 +53,7 @@ func (state *ScenarioState) Reset(gitEnv GitEnvironment) {
 	state.initialCommits = nil
 	state.initialBranchHierarchy = DataTable{Cells: [][]string{{"BRANCH", "PARENT"}}}
 	state.initialCurrentBranch = ""
-	state.runRes = nil
+	state.runOutput = nil
 	state.runErr = nil
 	state.runErrChecked = false
 	state.uncommittedFileName = ""

@@ -23,25 +23,24 @@ func (r InternalDebuggingRunner) PrintHeader(cmd string, args ...string) {
 }
 
 func (r InternalDebuggingRunner) PrintResult(text string) {
-	fmt.Println(text)
 }
 
 // Run runs the given command in this ShellRunner's directory.
-func (r InternalDebuggingRunner) Run(cmd string, args ...string) (*Result, error) {
+func (r InternalDebuggingRunner) Run(dir string, cmd string, args ...string) (*Output, error) {
 	r.PrintHeader(cmd, args...)
-	result, err := r.runner.Run(cmd, args...)
-	if result != nil {
-		r.PrintResult(result.Output)
+	output, err := r.runner.Run(dir, cmd, args...)
+	if output != nil {
+		fmt.Println(output)
 	}
-	return result, err
+	return output, err
 }
 
 // RunMany runs all given commands in current directory.
 // Commands are provided as a list of argv-style strings.
 // Failed commands abort immediately with the encountered error.
-func (r InternalDebuggingRunner) RunMany(commands [][]string) error {
+func (r InternalDebuggingRunner) RunMany(dir string, commands [][]string) error {
 	for _, argv := range commands {
-		_, err := r.Run(argv[0], argv[1:]...)
+		_, err := r.Run(dir, argv[0], argv[1:]...)
 		if err != nil {
 			return fmt.Errorf("error running command %q: %w", argv, err)
 		}
@@ -50,11 +49,11 @@ func (r InternalDebuggingRunner) RunMany(commands [][]string) error {
 }
 
 // RunString runs the given command (including possible arguments) in this ShellInDir's directory.
-func (r InternalDebuggingRunner) RunString(fullCmd string) (*Result, error) {
+func (r InternalDebuggingRunner) RunString(dir, fullCmd string) (*Output, error) {
 	parts, err := shellquote.Split(fullCmd)
 	if err != nil {
 		return nil, fmt.Errorf("cannot split command %q: %w", fullCmd, err)
 	}
 	cmd, args := parts[0], parts[1:]
-	return r.Run(cmd, args...)
+	return r.Run(dir, cmd, args...)
 }

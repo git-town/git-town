@@ -6,7 +6,6 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/v7/src/subshell"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -25,7 +24,7 @@ func TestMockingRunner(t *testing.T) {
 		res, err := runner.Run("bash", "-c", "foo bar")
 		assert.NoError(t, err)
 		// verify that it called our overridden "foo" command
-		assert.Equal(t, "foo called with: bar", res.OutputSanitized())
+		assert.Equal(t, "foo called with: bar", res.Sanitized())
 	})
 
 	t.Run(".Run()", func(t *testing.T) {
@@ -33,7 +32,7 @@ func TestMockingRunner(t *testing.T) {
 		runner := NewMockingRunner(t.TempDir(), t.TempDir(), "")
 		res, err := runner.Run("echo", "hello", "world")
 		assert.NoError(t, err)
-		assert.Equal(t, "hello world", res.OutputSanitized())
+		assert.Equal(t, "hello world", res.Sanitized())
 	})
 
 	t.Run(".RunMany()", func(t *testing.T) {
@@ -73,9 +72,9 @@ func TestMockingRunner(t *testing.T) {
 			toolPath := filepath.Join(dir2, "list-dir")
 			err = CreateLsTool(toolPath)
 			assert.NoError(t, err)
-			res, err := runner.RunWith(&subshell.Options{Dir: "subdir"}, toolPath)
+			res, err := runner.RunWith(&Options{Dir: "subdir"}, toolPath)
 			assert.NoError(t, err)
-			assert.Equal(t, ScriptName("list-dir"), res.OutputSanitized())
+			assert.Equal(t, ScriptName("list-dir"), res.Sanitized())
 		})
 
 		t.Run("with input", func(t *testing.T) {
@@ -89,9 +88,9 @@ func TestMockingRunner(t *testing.T) {
 			err = CreateInputTool(toolPath)
 			assert.NoError(t, err)
 			cmd, args := CallScriptArgs(toolPath)
-			res, err := runner.RunWith(&subshell.Options{Input: []string{"one\n", "two\n"}}, cmd, args...)
+			res, err := runner.RunWith(&Options{Input: []string{"one\n", "two\n"}}, cmd, args...)
 			assert.NoError(t, err)
-			assert.Contains(t, res.OutputSanitized(), "You entered one and two")
+			assert.Contains(t, res.Sanitized(), "You entered one and two")
 		})
 	})
 }

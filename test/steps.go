@@ -16,7 +16,6 @@ import (
 	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/stringslice"
-	"github.com/git-town/git-town/v7/src/subshell"
 )
 
 // beforeSuiteMux ensures that we run BeforeSuite only once globally.
@@ -247,8 +246,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^I am not prompted for any parent branches$`, func() error {
 		notExpected := "Please specify the parent branch of"
-		if state.runRes.OutputContainsText(notExpected) {
-			return fmt.Errorf("text found:\n\nDID NOT EXPECT: %q\n\nACTUAL\n\n%q\n----------------------------", notExpected, state.runRes.Output)
+		if state.runOutput.ContainsText(notExpected) {
+			return fmt.Errorf("text found:\n\nDID NOT EXPECT: %q\n\nACTUAL\n\n%q\n----------------------------", notExpected, state.runOutput.Sanitized())
 		}
 		return nil
 	})
@@ -274,18 +273,18 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I (?:run|ran) "(.+)"$`, func(command string) error {
-		state.runRes, state.runErr = state.gitEnv.DevRunner.RunString(command)
+		state.runOutput, state.runErr = state.gitEnv.DevRunner.RunString(command)
 		return nil
 	})
 
 	suite.Step(`^I (?:run|ran) "([^"]+)" and answer(?:ed)? the prompts:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
-		state.runRes, state.runErr = state.gitEnv.DevRunner.RunStringWith(cmd, &subshell.Options{Input: tableToInput(input)})
+		state.runOutput, state.runErr = state.gitEnv.DevRunner.RunStringWith(cmd, &Options{Input: tableToInput(input)})
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)" and close the editor$`, func(cmd string) error {
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		state.runRes, state.runErr = state.gitEnv.DevRunner.RunStringWith(cmd, &subshell.Options{Env: env})
+		state.runOutput, state.runErr = state.gitEnv.DevRunner.RunStringWith(cmd, &Options{Env: env})
 		return nil
 	})
 
@@ -293,7 +292,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err := state.gitEnv.DevRunner.MockCommitMessage(""); err != nil {
 			return err
 		}
-		state.runRes, state.runErr = state.gitEnv.DevRunner.RunString(cmd)
+		state.runOutput, state.runErr = state.gitEnv.DevRunner.RunString(cmd)
 		return nil
 	})
 
@@ -301,18 +300,18 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err := state.gitEnv.DevRunner.MockCommitMessage(message); err != nil {
 			return err
 		}
-		state.runRes, state.runErr = state.gitEnv.DevRunner.RunString(cmd)
+		state.runOutput, state.runErr = state.gitEnv.DevRunner.RunString(cmd)
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)", answer the prompts, and close the next editor:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		state.runRes, state.runErr = state.gitEnv.DevRunner.RunStringWith(cmd, &subshell.Options{Env: env, Input: tableToInput(input)})
+		state.runOutput, state.runErr = state.gitEnv.DevRunner.RunStringWith(cmd, &Options{Env: env, Input: tableToInput(input)})
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]+)" in the "([^"]+)" folder$`, func(cmd, folderName string) error {
-		state.runRes, state.runErr = state.gitEnv.DevRunner.RunStringWith(cmd, &subshell.Options{Dir: folderName})
+		state.runOutput, state.runErr = state.gitEnv.DevRunner.RunStringWith(cmd, &Options{Dir: folderName})
 		return nil
 	})
 
@@ -324,21 +323,21 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^it does not print "(.+)"$`, func(text string) error {
-		if strings.Contains(state.runRes.OutputSanitized(), text) {
+		if strings.Contains(state.runOutput.Sanitized(), text) {
 			return fmt.Errorf("text found: %q", text)
 		}
 		return nil
 	})
 
 	suite.Step(`^it prints:$`, func(expected *messages.PickleStepArgument_PickleDocString) error {
-		if !strings.Contains(state.runRes.OutputSanitized(), expected.Content) {
-			return fmt.Errorf("text not found:\n\nEXPECTED:\n\n%q\n\nACTUAL:\n\n%q", expected.Content, state.runRes.OutputSanitized())
+		if !strings.Contains(state.runOutput.Sanitized(), expected.Content) {
+			return fmt.Errorf("text not found:\n\nEXPECTED:\n\n%q\n\nACTUAL:\n\n%q", expected.Content, state.runOutput.Sanitized())
 		}
 		return nil
 	})
 
 	suite.Step(`^it prints no output$`, func() error {
-		output := state.runRes.OutputSanitized()
+		output := state.runOutput.Sanitized()
 		if output != "" {
 			return fmt.Errorf("expected no output but found %q", output)
 		}
@@ -347,7 +346,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^it prints something like:$`, func(expected *messages.PickleStepArgument_PickleDocString) error {
 		regex := regexp.MustCompile(expected.Content)
-		have := state.runRes.OutputSanitized()
+		have := state.runOutput.Sanitized()
 		if !regex.MatchString(have) {
 			return fmt.Errorf("EXPECTED: content matching %q\nGOT: %q", expected.Content, have)
 		}
@@ -356,8 +355,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^it prints the error:$`, func(expected *messages.PickleStepArgument_PickleDocString) error {
 		state.runErrChecked = true
-		if !strings.Contains(state.runRes.OutputSanitized(), expected.Content) {
-			return fmt.Errorf("text not found: %s\n\nactual text:\n%s", expected.Content, state.runRes.OutputSanitized())
+		if !strings.Contains(state.runOutput.Sanitized(), expected.Content) {
+			return fmt.Errorf("text not found: %s\n\nactual text:\n%s", expected.Content, state.runOutput.Sanitized())
 		}
 		if state.runErr == nil {
 			return fmt.Errorf("expected error")
@@ -366,7 +365,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^it runs no commands$`, func() error {
-		commands := GitCommandsInGitTownOutput(state.runRes.Output)
+		commands := GitCommandsInGitTownOutput(state.runOutput.Sanitized())
 		if len(commands) > 0 {
 			for _, command := range commands {
 				fmt.Println(command)
@@ -377,7 +376,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^it runs the commands$`, func(input *messages.PickleStepArgument_PickleTable) error {
-		commands := GitCommandsInGitTownOutput(state.runRes.Output)
+		commands := GitCommandsInGitTownOutput(state.runOutput.Sanitized())
 		table := RenderExecutedGitCommands(commands, input)
 		dataTable := FromGherkin(input)
 		expanded, err := dataTable.Expand(
@@ -400,7 +399,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		want := fmt.Sprintf("%s called with: %s", tool, url.Content)
 		want = strings.ReplaceAll(want, "?", `\?`)
 		regex := regexp.MustCompile(want)
-		have := state.runRes.OutputSanitized()
+		have := state.runOutput.Sanitized()
 		if !regex.MatchString(have) {
 			return fmt.Errorf("EXPECTED: a regex matching %q\nGOT: %q", want, have)
 		}
@@ -614,7 +613,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the coworker runs "([^"]+)"$`, func(command string) error {
-		state.runRes, state.runErr = state.gitEnv.CoworkerRepo.RunString(command)
+		state.runOutput, state.runErr = state.gitEnv.CoworkerRepo.RunString(command)
 		return nil
 	})
 

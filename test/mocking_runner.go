@@ -1,11 +1,14 @@
 package test
 
 import (
+	"bytes"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
+	"time"
 
 	"github.com/git-town/git-town/v7/src/subshell"
 	"github.com/kballard/go-shellquote"
@@ -131,8 +134,8 @@ func (r *MockingRunner) MockNoCommandsInstalled() error {
 
 // Run runs the given command with the given arguments.
 // Overrides will be used and removed when done.
-func (r *MockingRunner) Run(name string, arguments ...string) (*subshell.Result, error) {
-	return r.RunWith(&subshell.Options{}, name, arguments...)
+func (r *MockingRunner) Run(name string, arguments ...string) (*subshell.Output, error) {
+	return r.RunWith(&Options{}, name, arguments...)
 }
 
 // RunMany runs all given commands.
@@ -152,14 +155,14 @@ func (r *MockingRunner) RunMany(commands [][]string) error {
 
 // RunString runs the given command (including possible arguments).
 // Overrides will be used and removed when done.
-func (r *MockingRunner) RunString(fullCmd string) (*subshell.Result, error) {
-	return r.RunStringWith(fullCmd, &subshell.Options{})
+func (r *MockingRunner) RunString(fullCmd string) (*subshell.Output, error) {
+	return r.RunStringWith(fullCmd, &Options{})
 }
 
 // RunStringWith runs the given command (including possible arguments) using the given options.
 // opts.Dir is a relative path inside the working directory of this ShellRunner.
 // Overrides will be used and removed when done.
-func (r *MockingRunner) RunStringWith(fullCmd string, opts *subshell.Options) (*subshell.Result, error) {
+func (r *MockingRunner) RunStringWith(fullCmd string, opts *Options) (*subshell.Output, error) {
 	parts, err := shellquote.Split(fullCmd)
 	if err != nil {
 		return nil, fmt.Errorf("cannot split command %q: %w", fullCmd, err)
@@ -169,7 +172,7 @@ func (r *MockingRunner) RunStringWith(fullCmd string, opts *subshell.Options) (*
 }
 
 // RunWith runs the given command with the given options in this ShellRunner's directory.
-func (r *MockingRunner) RunWith(opts *subshell.Options, cmd string, args ...string) (*subshell.Result, error) {
+func (r *MockingRunner) RunWith(opts *Options, cmd string, args ...string) (*subshell.Output, error) {
 	// create an environment with the temp Overrides directory added to the PATH
 	if opts.Env == nil {
 		opts.Env = os.Environ()
@@ -191,18 +194,82 @@ func (r *MockingRunner) RunWith(opts *subshell.Options, cmd string, args ...stri
 	// set the working dir
 	opts.Dir = filepath.Join(r.workingDir, opts.Dir)
 	// run the command inside the custom environment
-	result, err := subshell.WithOptions(opts, cmd, args...)
+	subProcess := exec.Command(cmd, args...) // #nosec
+	if opts.Dir != "" {
+		subProcess.Dir = opts.Dir
+	}
+	if opts.Env != nil {
+		subProcess.Env = opts.Env
+	}
+	var output bytes.Buffer
+	subProcess.Stdout = &output
+	subProcess.Stderr = &output
+	input, err := subProcess.StdinPipe()
+	if err != nil {
+		return nil, err
+	}
+	err = subProcess.Start()
+	if err != nil {
+		return nil, fmt.Errorf("can't start subprocess '%s %s': %w", cmd, strings.Join(args, " "), err)
+	}
+	for _, userInput := range opts.Input {
+		// Here we simply wait for some time until the subProcess needs the input.
+		// Capturing the output and scanning for the actual content needed
+		// would introduce substantial amounts of multi-threaded complexity
+		// for not enough gains.
+		// https://github.com/git-town/go-execplus could help make this more robust.
+		time.Sleep(InputDelay)
+		_, err := input.Write([]byte(userInput))
+		if err != nil {
+			return nil, fmt.Errorf("can't write %q to subprocess '%s %s': %w", userInput, cmd, strings.Join(args, " "), err)
+		}
+	}
+	err = subProcess.Wait()
+	if err != nil {
+		err = fmt.Errorf(`
+----------------------------------------
+Diagnostic information of failed command
+
+Command: %s %s
+Error: %w
+Output:
+%s
+----------------------------------------`, cmd, strings.Join(args, " "), err, output.String())
+	}
+	exitCode := subProcess.ProcessState.ExitCode()
 	if r.Debug {
 		fmt.Println(filepath.Base(r.workingDir), ">", cmd, strings.Join(args, " "))
-		fmt.Println(result.Output)
+		fmt.Println(output)
 		if err != nil {
 			fmt.Printf("ERROR: %v\n", err)
 		}
 	}
-	return result, err
+
+	if exitCode != 0 {
+		err = fmt.Errorf("process failed with code %d", exitCode)
+	}
+	return &subshell.Output{Raw: output.String()}, err
 }
 
 // SetTestOrigin adds the given environment variable to subsequent runs of commands.
 func (r *MockingRunner) SetTestOrigin(content string) {
 	r.testOrigin = content
 }
+
+// Options defines optional arguments for ShellRunner.RunWith().
+type Options struct {
+	// Dir contains the directory in which to execute the command.
+	// If empty, runs in the current directory.
+	Dir string
+
+	// Env allows to override the environment variables to use in the subshell, in the format provided by os.Environ()
+	// If empty, uses the environment variables of this process.
+	Env []string
+
+	// Input contains the user input to enter into the running command.
+	// It is written to the subprocess one element at a time, with a delay defined by command.InputDelay in between.
+	Input []string // input into the subprocess
+}
+
+// InputDelay defines how long to wait before writing the next input string into the subprocess.
+const InputDelay = 500 * time.Millisecond

@@ -203,8 +203,8 @@ func (gt *GitTown) OriginURLString() string {
 	if remote != "" {
 		return remote
 	}
-	res, _ := gt.Storage.runner.Run("git", "remote", "get-url", OriginRemote)
-	return res.OutputSanitized()
+	output, _ := gt.Storage.runner.Run("git", "remote", "get-url", OriginRemote)
+	return output.Sanitized()
 }
 
 // OriginURL provides the URL for the "origin" remote.
@@ -296,7 +296,7 @@ func (gt *GitTown) RemoveFromPerennialBranches(branch string) error {
 }
 
 // RemoveGitAlias removes the given Git alias.
-func (gt *GitTown) RemoveGitAlias(command string) (*subshell.Result, error) {
+func (gt *GitTown) RemoveGitAlias(command string) (*subshell.Output, error) {
 	return gt.Storage.RemoveGlobalConfigValue("alias." + command)
 }
 
