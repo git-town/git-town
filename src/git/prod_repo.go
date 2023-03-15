@@ -6,25 +6,25 @@ import (
 
 	"github.com/git-town/git-town/v7/src/cache"
 	"github.com/git-town/git-town/v7/src/config"
-	"github.com/git-town/git-town/v7/src/run"
 	"github.com/git-town/git-town/v7/src/stringslice"
+	"github.com/git-town/git-town/v7/src/subshell"
 )
 
 // ProdRepo is a Git Repo in production code.
 type ProdRepo struct {
 	Config        *config.GitTown // the git.Configuration instance for this repo
-	DryRun        *run.DryRun
-	Logging       Repo               // the Runner instance to Git operations that show up in the output
-	LoggingRunner *run.LoggingRunner // the LoggingRunner instance used
-	Silent        Repo               // the Runner instance for silent Git operations
+	DryRun        *subshell.DryRun
+	Logging       Repo                    // the Runner instance to Git operations that show up in the output
+	LoggingRunner *subshell.LoggingRunner // the LoggingRunner instance used
+	Silent        Repo                    // the Runner instance for silent Git operations
 }
 
 // NewProdRepo provides a Repo instance in the current working directory.
 func NewProdRepo(debugFlag *bool) ProdRepo {
-	silentRunner := run.SilentRunner{Debug: debugFlag}
+	silentRunner := subshell.SilentRunner{Debug: debugFlag}
 	config := config.NewGitTown(silentRunner)
 	currentBranchTracker := cache.String{}
-	dryRun := run.DryRun{}
+	dryRun := subshell.DryRun{}
 	isRepoCache := cache.Bool{}
 	remoteBranchCache := cache.Strings{}
 	remotesCache := cache.Strings{}
@@ -38,7 +38,7 @@ func NewProdRepo(debugFlag *bool) ProdRepo {
 		RemoteBranchCache:  &remoteBranchCache,
 		RootDirCache:       &cache.String{},
 	}
-	loggingRunner := run.NewLoggingRunner(&silentRepo, &dryRun)
+	loggingRunner := subshell.NewLoggingRunner(&silentRepo, &dryRun)
 	loggingRepo := Repo{
 		Runner:             loggingRunner,
 		Config:             &config,

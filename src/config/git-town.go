@@ -8,8 +8,8 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v7/src/giturl"
-	"github.com/git-town/git-town/v7/src/run"
 	"github.com/git-town/git-town/v7/src/stringslice"
+	"github.com/git-town/git-town/v7/src/subshell"
 )
 
 // GitTown provides type-safe access to Git Town configuration settings
@@ -19,7 +19,7 @@ type GitTown struct {
 	originURLCache map[string]*giturl.Parts
 }
 
-func NewGitTown(runner run.Runner) GitTown {
+func NewGitTown(runner subshell.Runner) GitTown {
 	return GitTown{
 		Storage:        NewGit(runner),
 		originURLCache: map[string]*giturl.Parts{},
@@ -27,7 +27,7 @@ func NewGitTown(runner run.Runner) GitTown {
 }
 
 // AddGitAlias sets the given Git alias.
-func (gt *GitTown) AddGitAlias(aliasType AliasType) (*run.Result, error) {
+func (gt *GitTown) AddGitAlias(aliasType AliasType) (*subshell.Result, error) {
 	return gt.Storage.SetGlobalConfigValue("alias."+string(aliasType), "town "+string(aliasType))
 }
 
@@ -296,7 +296,7 @@ func (gt *GitTown) RemoveFromPerennialBranches(branch string) error {
 }
 
 // RemoveGitAlias removes the given Git alias.
-func (gt *GitTown) RemoveGitAlias(command string) (*run.Result, error) {
+func (gt *GitTown) RemoveGitAlias(command string) (*subshell.Result, error) {
 	return gt.Storage.RemoveGlobalConfigValue("alias." + command)
 }
 
