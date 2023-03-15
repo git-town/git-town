@@ -12,8 +12,7 @@ func TestSilentRunner(t *testing.T) {
 	t.Parallel()
 	t.Run(".Run()", func(t *testing.T) {
 		t.Parallel()
-		debug := false
-		runner := subshell.SilentRunner{Debug: &debug}
+		runner := subshell.InternalRunner{}
 		res, err := runner.Run("echo", "hello", "world")
 		assert.NoError(t, err)
 		assert.Equal(t, "hello world", res.OutputSanitized())
@@ -21,8 +20,7 @@ func TestSilentRunner(t *testing.T) {
 
 	t.Run(".RunMany()", func(t *testing.T) {
 		t.Parallel()
-		debug := false
-		runner := subshell.SilentRunner{Debug: &debug}
+		runner := subshell.InternalRunner{}
 		err := runner.RunMany([][]string{
 			{"mkdir", "tmp"},
 			{"touch", "tmp/first"},
@@ -38,8 +36,7 @@ func TestSilentRunner(t *testing.T) {
 
 	t.Run(".RunString()", func(t *testing.T) {
 		t.Parallel()
-		debug := false
-		runner := subshell.SilentRunner{Debug: &debug}
+		runner := subshell.InternalRunner{}
 		_, err := runner.RunString("touch first")
 		defer os.Remove("first")
 		assert.NoError(t, err)
