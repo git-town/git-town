@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	"github.com/cucumber/messages-go/v10"
-	"github.com/git-town/git-town/v7/src/run"
 	"github.com/git-town/git-town/v7/src/stringslice"
+	"github.com/git-town/git-town/v7/src/subshell"
 )
 
 // ScenarioState constains the state that is shared by all steps within a scenario.
@@ -36,7 +36,7 @@ type ScenarioState struct {
 	runErrChecked bool
 
 	// the outcome of the last run of Git Town
-	runRes *run.Result
+	runRes *subshell.Result
 
 	// content of the uncommitted file in the workspace
 	uncommittedContent string

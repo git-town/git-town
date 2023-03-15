@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"runtime"
 
-	"github.com/git-town/git-town/v7/src/run"
+	"github.com/git-town/git-town/v7/src/subshell"
 )
 
 // OpenBrowserCommand provides the console command to open the default browser.
@@ -29,7 +29,7 @@ func OpenBrowserCommand() string {
 		"netscape",
 	}
 	for _, browserCommand := range openBrowserCommands {
-		res, err := run.Exec("which", browserCommand)
+		res, err := subshell.Exec("which", browserCommand)
 		if err == nil && res.OutputSanitized() != "" {
 			return browserCommand
 		}
@@ -39,7 +39,7 @@ func OpenBrowserCommand() string {
 
 // Open opens a new window/tab in the default browser with the given URL.
 // If no browser is found, it prints the URL.
-func Open(url string, runner run.Runner) {
+func Open(url string, runner subshell.Runner) {
 	command := OpenBrowserCommand()
 	if command == "" {
 		fmt.Println("Please open in a browser: " + url)
