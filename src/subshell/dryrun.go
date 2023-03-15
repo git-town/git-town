@@ -1,4 +1,4 @@
-package run
+package subshell
 
 // DryRun implements the dry-run feature.
 // The zero value is a non-activated DryRun.

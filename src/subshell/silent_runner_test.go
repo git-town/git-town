@@ -1,10 +1,10 @@
-package run_test
+package subshell_test
 
 import (
 	"os"
 	"testing"
 
-	"github.com/git-town/git-town/v7/src/run"
+	"github.com/git-town/git-town/v7/src/subshell"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -13,7 +13,7 @@ func TestSilentRunner(t *testing.T) {
 	t.Run(".Run()", func(t *testing.T) {
 		t.Parallel()
 		debug := false
-		runner := run.SilentRunner{Debug: &debug}
+		runner := subshell.SilentRunner{Debug: &debug}
 		res, err := runner.Run("echo", "hello", "world")
 		assert.NoError(t, err)
 		assert.Equal(t, "hello world", res.OutputSanitized())
@@ -22,7 +22,7 @@ func TestSilentRunner(t *testing.T) {
 	t.Run(".RunMany()", func(t *testing.T) {
 		t.Parallel()
 		debug := false
-		runner := run.SilentRunner{Debug: &debug}
+		runner := subshell.SilentRunner{Debug: &debug}
 		err := runner.RunMany([][]string{
 			{"mkdir", "tmp"},
 			{"touch", "tmp/first"},
@@ -39,7 +39,7 @@ func TestSilentRunner(t *testing.T) {
 	t.Run(".RunString()", func(t *testing.T) {
 		t.Parallel()
 		debug := false
-		runner := run.SilentRunner{Debug: &debug}
+		runner := subshell.SilentRunner{Debug: &debug}
 		_, err := runner.RunString("touch first")
 		defer os.Remove("first")
 		assert.NoError(t, err)

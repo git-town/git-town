@@ -11,8 +11,8 @@ import (
 
 	"github.com/git-town/git-town/v7/src/cache"
 	"github.com/git-town/git-town/v7/src/config"
-	"github.com/git-town/git-town/v7/src/run"
 	"github.com/git-town/git-town/v7/src/stringslice"
+	"github.com/git-town/git-town/v7/src/subshell"
 )
 
 // Repo represents a Git repository in Git Town.
@@ -20,14 +20,14 @@ import (
 // - perform Git commands in this repo
 // - caches various aspects of the repo for better performance.
 type Repo struct {
-	run.Runner                         // for running console commands
-	Config             *config.GitTown // caches Git configuration settings
-	CurrentBranchCache *cache.String   // caches the currently checked out Git branch
-	DryRun             *run.DryRun     // tracks dry-run information
-	IsRepoCache        *cache.Bool     // caches whether the current directory is a Git repo
-	RemoteBranchCache  *cache.Strings  // caches the remote branches of this Git repo
-	RemotesCache       *cache.Strings  // caches Git remotes
-	RootDirCache       *cache.String   // caches the base of the Git directory
+	subshell.Runner                     // for running console commands
+	Config             *config.GitTown  // caches Git configuration settings
+	CurrentBranchCache *cache.String    // caches the currently checked out Git branch
+	DryRun             *subshell.DryRun // tracks dry-run information
+	IsRepoCache        *cache.Bool      // caches whether the current directory is a Git repo
+	RemoteBranchCache  *cache.Strings   // caches the remote branches of this Git repo
+	RemotesCache       *cache.Strings   // caches Git remotes
+	RootDirCache       *cache.String    // caches the base of the Git directory
 }
 
 // AbortMerge cancels a currently ongoing Git merge operation.
@@ -712,7 +712,7 @@ func (r *Repo) IsBranchInSync(branch string) (bool, error) {
 // IsRepository returns whether or not the current directory is in a repository.
 func (r *Repo) IsRepository() bool {
 	if !r.IsRepoCache.Initialized() {
-		_, err := run.Exec("git", "rev-parse")
+		_, err := subshell.Exec("git", "rev-parse")
 		r.IsRepoCache.Set(err == nil)
 	}
 	return r.IsRepoCache.Value()

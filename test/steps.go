@@ -15,8 +15,8 @@ import (
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/git"
-	"github.com/git-town/git-town/v7/src/run"
 	"github.com/git-town/git-town/v7/src/stringslice"
+	"github.com/git-town/git-town/v7/src/subshell"
 )
 
 // beforeSuiteMux ensures that we run BeforeSuite only once globally.
@@ -279,13 +279,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I (?:run|ran) "([^"]+)" and answer(?:ed)? the prompts:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
-		state.runRes, state.runErr = state.gitEnv.DevRunner.RunStringWith(cmd, &run.Options{Input: tableToInput(input)})
+		state.runRes, state.runErr = state.gitEnv.DevRunner.RunStringWith(cmd, &subshell.Options{Input: tableToInput(input)})
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)" and close the editor$`, func(cmd string) error {
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		state.runRes, state.runErr = state.gitEnv.DevRunner.RunStringWith(cmd, &run.Options{Env: env})
+		state.runRes, state.runErr = state.gitEnv.DevRunner.RunStringWith(cmd, &subshell.Options{Env: env})
 		return nil
 	})
 
@@ -307,12 +307,12 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^I run "([^"]*)", answer the prompts, and close the next editor:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		state.runRes, state.runErr = state.gitEnv.DevRunner.RunStringWith(cmd, &run.Options{Env: env, Input: tableToInput(input)})
+		state.runRes, state.runErr = state.gitEnv.DevRunner.RunStringWith(cmd, &subshell.Options{Env: env, Input: tableToInput(input)})
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]+)" in the "([^"]+)" folder$`, func(cmd, folderName string) error {
-		state.runRes, state.runErr = state.gitEnv.DevRunner.RunStringWith(cmd, &run.Options{Dir: folderName})
+		state.runRes, state.runErr = state.gitEnv.DevRunner.RunStringWith(cmd, &subshell.Options{Dir: folderName})
 		return nil
 	})
 

@@ -7,7 +7,7 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/git-town/git-town/v7/src/run"
+	"github.com/git-town/git-town/v7/src/subshell"
 	"github.com/kballard/go-shellquote"
 )
 
@@ -131,8 +131,8 @@ func (r *MockingRunner) MockNoCommandsInstalled() error {
 
 // Run runs the given command with the given arguments.
 // Overrides will be used and removed when done.
-func (r *MockingRunner) Run(name string, arguments ...string) (*run.Result, error) {
-	return r.RunWith(&run.Options{}, name, arguments...)
+func (r *MockingRunner) Run(name string, arguments ...string) (*subshell.Result, error) {
+	return r.RunWith(&subshell.Options{}, name, arguments...)
 }
 
 // RunMany runs all given commands.
@@ -152,14 +152,14 @@ func (r *MockingRunner) RunMany(commands [][]string) error {
 
 // RunString runs the given command (including possible arguments).
 // Overrides will be used and removed when done.
-func (r *MockingRunner) RunString(fullCmd string) (*run.Result, error) {
-	return r.RunStringWith(fullCmd, &run.Options{})
+func (r *MockingRunner) RunString(fullCmd string) (*subshell.Result, error) {
+	return r.RunStringWith(fullCmd, &subshell.Options{})
 }
 
 // RunStringWith runs the given command (including possible arguments) using the given options.
 // opts.Dir is a relative path inside the working directory of this ShellRunner.
 // Overrides will be used and removed when done.
-func (r *MockingRunner) RunStringWith(fullCmd string, opts *run.Options) (*run.Result, error) {
+func (r *MockingRunner) RunStringWith(fullCmd string, opts *subshell.Options) (*subshell.Result, error) {
 	parts, err := shellquote.Split(fullCmd)
 	if err != nil {
 		return nil, fmt.Errorf("cannot split command %q: %w", fullCmd, err)
@@ -169,7 +169,7 @@ func (r *MockingRunner) RunStringWith(fullCmd string, opts *run.Options) (*run.R
 }
 
 // RunWith runs the given command with the given options in this ShellRunner's directory.
-func (r *MockingRunner) RunWith(opts *run.Options, cmd string, args ...string) (*run.Result, error) {
+func (r *MockingRunner) RunWith(opts *subshell.Options, cmd string, args ...string) (*subshell.Result, error) {
 	// create an environment with the temp Overrides directory added to the PATH
 	if opts.Env == nil {
 		opts.Env = os.Environ()
@@ -191,7 +191,7 @@ func (r *MockingRunner) RunWith(opts *run.Options, cmd string, args ...string) (
 	// set the working dir
 	opts.Dir = filepath.Join(r.workingDir, opts.Dir)
 	// run the command inside the custom environment
-	result, err := run.WithOptions(opts, cmd, args...)
+	result, err := subshell.WithOptions(opts, cmd, args...)
 	if r.Debug {
 		fmt.Println(filepath.Base(r.workingDir), ">", cmd, strings.Join(args, " "))
 		fmt.Println(result.Output)
