@@ -4,7 +4,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/git-town/git-town/v7/src/run"
+	"github.com/git-town/git-town/v7/src/subshell"
 )
 
 // Git manages configuration data stored in Git metadata.
@@ -17,11 +17,11 @@ type Git struct {
 	localConfigCache map[string]string
 
 	// for running shell commands
-	runner run.Runner
+	runner subshell.Runner
 }
 
 // LoadGit provides the Git configuration from the given directory or the global one if the global flag is set.
-func LoadGit(runner run.Runner, global bool) map[string]string {
+func LoadGit(runner subshell.Runner, global bool) map[string]string {
 	result := map[string]string{}
 	cmdArgs := []string{"config", "-lz"}
 	if global {
@@ -49,7 +49,7 @@ func LoadGit(runner run.Runner, global bool) map[string]string {
 }
 
 // NewConfiguration provides a Configuration instance reflecting the configuration values in the given directory.
-func NewGit(runner run.Runner) Git {
+func NewGit(runner subshell.Runner) Git {
 	return Git{
 		localConfigCache:  LoadGit(runner, false),
 		globalConfigCache: LoadGit(runner, true),
@@ -95,7 +95,7 @@ func (g *Git) Reload() {
 	g.globalConfigCache = LoadGit(g.runner, true)
 }
 
-func (g *Git) RemoveGlobalConfigValue(key string) (*run.Result, error) {
+func (g *Git) RemoveGlobalConfigValue(key string) (*subshell.Result, error) {
 	delete(g.globalConfigCache, key)
 	return g.runner.Run("git", "config", "--global", "--unset", key)
 }
@@ -108,13 +108,13 @@ func (g *Git) RemoveLocalConfigValue(key string) error {
 }
 
 // SetGlobalConfigValue sets the given configuration setting in the global Git configuration.
-func (g *Git) SetGlobalConfigValue(key, value string) (*run.Result, error) {
+func (g *Git) SetGlobalConfigValue(key, value string) (*subshell.Result, error) {
 	g.globalConfigCache[key] = value
 	return g.runner.Run("git", "config", "--global", key, value)
 }
 
 // SetLocalConfigValue sets the local configuration with the given key to the given value.
-func (g *Git) SetLocalConfigValue(key, value string) (*run.Result, error) {
+func (g *Git) SetLocalConfigValue(key, value string) (*subshell.Result, error) {
 	g.localConfigCache[key] = value
 	return g.runner.Run("git", "config", key, value)
 }

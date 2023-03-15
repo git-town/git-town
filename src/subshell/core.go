@@ -1,5 +1,5 @@
 // Package run provides facilities to execute CLI commands in subshells.
-package run
+package subshell
 
 import (
 	"bytes"
