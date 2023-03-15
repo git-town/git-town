@@ -10,7 +10,7 @@ import (
 	"github.com/git-town/git-town/v7/src/cache"
 	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/git"
-	"github.com/git-town/git-town/v7/src/run"
+	"github.com/git-town/git-town/v7/src/subshell"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -57,7 +57,7 @@ func NewRepo(workingDir, homeDir, binDir string) Repo {
 	repo := git.Repo{
 		Runner:             &runner,
 		Config:             &config,
-		DryRun:             &run.DryRun{},
+		DryRun:             &subshell.DryRun{},
 		IsRepoCache:        &cache.Bool{},
 		RemoteBranchCache:  &cache.Strings{},
 		RemotesCache:       &cache.Strings{},
@@ -87,7 +87,7 @@ func (repo *Repo) BranchHierarchyTable() DataTable {
 // Clone creates a clone of this Repo into the given directory.
 // The cloned repo uses the same homeDir and binDir as its origin.
 func (repo *Repo) Clone(targetDir string) (Repo, error) {
-	_, err := run.Exec("git", "clone", repo.runner.workingDir, targetDir)
+	_, err := subshell.Exec("git", "clone", repo.runner.workingDir, targetDir)
 	if err != nil {
 		return Repo{}, fmt.Errorf("cannot clone repo %q: %w", repo.runner.workingDir, err)
 	}

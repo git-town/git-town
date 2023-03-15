@@ -1,4 +1,4 @@
-package run
+package subshell
 
 // Runner defines operations to run shell commands.
 type Runner interface {

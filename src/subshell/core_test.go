@@ -1,4 +1,4 @@
-package run_test
+package subshell_test
 
 import (
 	"errors"
@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/v7/src/run"
+	"github.com/git-town/git-town/v7/src/subshell"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -16,14 +16,14 @@ func TestRun(t *testing.T) {
 	t.Run(".Exec()", func(t *testing.T) {
 		t.Run("happy path", func(t *testing.T) {
 			t.Parallel()
-			res, err := run.Exec("echo", "foo")
+			res, err := subshell.Exec("echo", "foo")
 			assert.NoError(t, err)
 			assert.Equal(t, "foo\n", res.Output)
 		})
 
 		t.Run("unknown executable", func(t *testing.T) {
 			t.Parallel()
-			_, err := run.Exec("zonk")
+			_, err := subshell.Exec("zonk")
 			assert.Error(t, err)
 			var execError *exec.Error
 			assert.True(t, errors.As(err, &execError))
@@ -31,7 +31,7 @@ func TestRun(t *testing.T) {
 
 		t.Run("non-zero exit code", func(t *testing.T) {
 			t.Parallel()
-			result, err := run.Exec("bash", "-c", "echo hi && exit 2")
+			result, err := subshell.Exec("bash", "-c", "echo hi && exit 2")
 			assert.Equal(t, 2, result.ExitCode)
 			expectedError := `
 ----------------------------------------
@@ -56,7 +56,7 @@ hi
 		assert.NoError(t, err)
 		err = os.WriteFile(filepath.Join(dirPath, "one"), []byte{}, 0o500)
 		assert.NoError(t, err)
-		res, err := run.InDir(dirPath, "ls", "-1")
+		res, err := subshell.InDir(dirPath, "ls", "-1")
 		assert.NoError(t, err)
 		assert.Equal(t, "one", res.OutputSanitized())
 	})
@@ -64,7 +64,7 @@ hi
 	t.Run("exec result", func(t *testing.T) {
 		t.Run(".OutputContainsText()", func(t *testing.T) {
 			t.Parallel()
-			res, err := run.Exec("echo", "hello world how are you?")
+			res, err := subshell.Exec("echo", "hello world how are you?")
 			assert.NoError(t, err)
 			assert.True(t, res.OutputContainsText("world"), "should contain 'world'")
 			assert.False(t, res.OutputContainsText("zonk"), "should not contain 'zonk'")
@@ -72,7 +72,7 @@ hi
 
 		t.Run(".OutputContainsLine()", func(t *testing.T) {
 			t.Parallel()
-			res, err := run.Exec("echo", "hello world")
+			res, err := subshell.Exec("echo", "hello world")
 			assert.NoError(t, err)
 			assert.True(t, res.OutputContainsLine("hello world"), `should contain "hello world"`)
 			assert.False(t, res.OutputContainsLine("hello"), `partial match should return false`)
