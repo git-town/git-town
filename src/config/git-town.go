@@ -19,8 +19,8 @@ type GitTown struct {
 	originURLCache map[string]*giturl.Parts
 }
 
-func NewGitTown(runner subshell.Runner) GitTown {
-	return GitTown{
+func NewGitTown(runner runner) *GitTown {
+	return &GitTown{
 		Storage:        NewGit(runner),
 		originURLCache: map[string]*giturl.Parts{},
 	}

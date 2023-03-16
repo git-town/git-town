@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func undoCmd(repo *git.ProdRepo) *cobra.Command {
+func undoCmd(repo *git.PublicRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "undo",
 		GroupID: "errors",

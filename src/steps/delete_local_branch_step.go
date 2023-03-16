@@ -10,23 +10,24 @@ import (
 type DeleteLocalBranchStep struct {
 	EmptyStep
 	Branch    string
+	Parent    string
 	Force     bool
 	branchSha string
 }
 
-func (step *DeleteLocalBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+func (step *DeleteLocalBranchStep) CreateUndoStep(repo *git.PublicRepo) (Step, error) {
 	return &CreateBranchStep{Branch: step.Branch, StartingPoint: step.branchSha}, nil
 }
 
-func (step *DeleteLocalBranchStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
+func (step *DeleteLocalBranchStep) Run(repo *git.PublicRepo, connector hosting.Connector) error {
 	var err error
-	step.branchSha, err = repo.Silent.ShaForBranch(step.Branch)
+	step.branchSha, err = repo.Internal.ShaForBranch(step.Branch)
 	if err != nil {
 		return err
 	}
-	hasUnmergedCommits, err := repo.Silent.BranchHasUnmergedCommits(step.Branch)
+	hasUnmergedCommits, err := repo.Internal.BranchHasUnmergedCommits(step.Branch, step.Parent)
 	if err != nil {
 		return err
 	}
-	return repo.Logging.DeleteLocalBranch(step.Branch, step.Force || hasUnmergedCommits)
+	return repo.DeleteLocalBranch(step.Branch, step.Force || hasUnmergedCommits)
 }

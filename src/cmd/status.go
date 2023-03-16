@@ -11,7 +11,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func statusCommand(repo *git.ProdRepo) *cobra.Command {
+func statusCommand(repo *git.PublicRepo) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "status",
 		GroupID: "errors",
@@ -36,7 +36,7 @@ type displayStatusConfig struct {
 	state    *runstate.RunState // content of the runstate file
 }
 
-func loadDisplayStatusConfig(repo *git.ProdRepo) (*displayStatusConfig, error) {
+func loadDisplayStatusConfig(repo *git.PublicRepo) (*displayStatusConfig, error) {
 	filepath, err := runstate.PersistenceFilePath(repo)
 	if err != nil {
 		return nil, fmt.Errorf("cannot determine the runstate file path: %w", err)

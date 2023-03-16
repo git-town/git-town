@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func skipCmd(repo *git.ProdRepo) *cobra.Command {
+func skipCmd(repo *git.PublicRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "skip",
 		GroupID: "errors",

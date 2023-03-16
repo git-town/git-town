@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func diffParentCommand(repo *git.ProdRepo) *cobra.Command {
+func diffParentCommand(repo *git.PublicRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "diff-parent [<branch>]",
 		GroupID: "lineage",
@@ -36,7 +36,7 @@ type diffParentConfig struct {
 }
 
 // Does not return error because "Ensure" functions will call exit directly.
-func determineDiffParentConfig(args []string, repo *git.ProdRepo) (*diffParentConfig, error) {
+func determineDiffParentConfig(args []string, repo *git.PublicRepo) (*diffParentConfig, error) {
 	initialBranch, err := repo.Silent.CurrentBranch()
 	if err != nil {
 		return nil, err

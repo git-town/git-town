@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func offlineCmd(repo *git.ProdRepo) *cobra.Command {
+func offlineCmd(repo *git.PublicRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:   "offline [(yes | no)]",
 		Args:  cobra.MaximumNArgs(1),
@@ -26,7 +26,7 @@ Git Town avoids network operations in offline mode.`,
 	}
 }
 
-func displayOfflineStatus(repo *git.ProdRepo) error {
+func displayOfflineStatus(repo *git.PublicRepo) error {
 	isOffline, err := repo.Config.IsOffline()
 	if err != nil {
 		return err
@@ -35,7 +35,7 @@ func displayOfflineStatus(repo *git.ProdRepo) error {
 	return nil
 }
 
-func setOfflineStatus(text string, repo *git.ProdRepo) error {
+func setOfflineStatus(text string, repo *git.PublicRepo) error {
 	value, err := config.ParseBool(text)
 	if err != nil {
 		return fmt.Errorf(`invalid argument: %q. Please provide either "yes" or "no".\n`, text)

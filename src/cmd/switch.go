@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func switchCmd(repo *git.ProdRepo) *cobra.Command {
+func switchCmd(repo *git.PublicRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "switch",
 		GroupID: "basic",
@@ -37,7 +37,7 @@ func switchCmd(repo *git.ProdRepo) *cobra.Command {
 
 // queryBranch lets the user select a new branch via a visual dialog.
 // Returns the selected branch or nil if the user aborted.
-func queryBranch(currentBranch string, repo *git.ProdRepo) (selection *string, err error) { //nolint:nonamedreturns
+func queryBranch(currentBranch string, repo *git.PublicRepo) (selection *string, err error) { //nolint:nonamedreturns
 	entries, err := createEntries(repo)
 	if err != nil {
 		return nil, err
@@ -46,7 +46,7 @@ func queryBranch(currentBranch string, repo *git.ProdRepo) (selection *string, e
 }
 
 // createEntries provides all the entries for the branch dialog.
-func createEntries(repo *git.ProdRepo) (dialog.ModalEntries, error) {
+func createEntries(repo *git.PublicRepo) (dialog.ModalEntries, error) {
 	entries := dialog.ModalEntries{}
 	var err error
 	for _, root := range repo.Config.BranchAncestryRoots() {
@@ -59,7 +59,7 @@ func createEntries(repo *git.ProdRepo) (dialog.ModalEntries, error) {
 }
 
 // addEntryAndChildren adds the given branch and all its child branches to the given entries collection.
-func addEntryAndChildren(entries dialog.ModalEntries, branch string, indent int, repo *git.ProdRepo) (dialog.ModalEntries, error) {
+func addEntryAndChildren(entries dialog.ModalEntries, branch string, indent int, repo *git.PublicRepo) (dialog.ModalEntries, error) {
 	entries = append(entries, dialog.ModalEntry{
 		Text:  strings.Repeat("  ", indent) + branch,
 		Value: branch,

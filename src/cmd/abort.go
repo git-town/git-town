@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func abortCmd(repo *git.ProdRepo) *cobra.Command {
+func abortCmd(repo *git.PublicRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "abort",
 		GroupID: "errors",

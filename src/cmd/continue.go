@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func continueCmd(repo *git.ProdRepo) *cobra.Command {
+func continueCmd(repo *git.PublicRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "continue",
 		GroupID: "errors",

@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func aliasCommand(repo *git.ProdRepo) *cobra.Command {
+func aliasCommand(repo *git.PublicRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "aliases (add | remove)",
 		GroupID: "setup",
@@ -36,7 +36,7 @@ This can conflict with other tools that also define Git aliases.`,
 	}
 }
 
-func addAliases(repo *git.ProdRepo) error {
+func addAliases(repo *git.PublicRepo) error {
 	for _, aliasType := range config.AliasTypes() {
 		result, err1 := repo.Config.AddGitAlias(aliasType)
 		err2 := repo.LoggingRunner.PrintCommandAndOutput(result)
@@ -50,7 +50,7 @@ func addAliases(repo *git.ProdRepo) error {
 	return nil
 }
 
-func removeAliases(repo *git.ProdRepo) error {
+func removeAliases(repo *git.PublicRepo) error {
 	for _, aliasType := range config.AliasTypes() {
 		existingAlias := repo.Config.GitAlias(aliasType)
 		if existingAlias == "town "+string(aliasType) {

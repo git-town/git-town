@@ -12,7 +12,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func syncCmd(repo *git.ProdRepo) *cobra.Command {
+func syncCmd(repo *git.PublicRepo) *cobra.Command {
 	var allFlag bool
 	var dryRunFlag bool
 	syncCmd := cobra.Command{
@@ -78,7 +78,7 @@ type syncConfig struct {
 	shouldPushTags bool
 }
 
-func determineSyncConfig(allFlag bool, repo *git.ProdRepo) (*syncConfig, error) {
+func determineSyncConfig(allFlag bool, repo *git.PublicRepo) (*syncConfig, error) {
 	hasOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
 		return nil, err
@@ -128,7 +128,7 @@ func determineSyncConfig(allFlag bool, repo *git.ProdRepo) (*syncConfig, error) 
 }
 
 // syncBranchesSteps provides the step list for the "git sync" command.
-func syncBranchesSteps(config *syncConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+func syncBranchesSteps(config *syncConfig, repo *git.PublicRepo) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.branchesToSync {
 		updateBranchSteps(&list, branch, true, repo)
@@ -142,7 +142,7 @@ func syncBranchesSteps(config *syncConfig, repo *git.ProdRepo) (runstate.StepLis
 }
 
 // updateBranchSteps provides the steps to sync a particular branch.
-func updateBranchSteps(list *runstate.StepListBuilder, branch string, pushBranch bool, repo *git.ProdRepo) {
+func updateBranchSteps(list *runstate.StepListBuilder, branch string, pushBranch bool, repo *git.PublicRepo) {
 	isFeatureBranch := repo.Config.IsFeatureBranch(branch)
 	syncStrategy := list.SyncStrategy(repo.Config.SyncStrategy())
 	hasOrigin := list.Bool(repo.Silent.HasOrigin())
@@ -171,7 +171,7 @@ func updateBranchSteps(list *runstate.StepListBuilder, branch string, pushBranch
 	}
 }
 
-func updateFeatureBranchSteps(list *runstate.StepListBuilder, branch string, repo *git.ProdRepo) {
+func updateFeatureBranchSteps(list *runstate.StepListBuilder, branch string, repo *git.PublicRepo) {
 	syncStrategy := list.SyncStrategy(repo.Config.SyncStrategy())
 	hasTrackingBranch := list.Bool(repo.Silent.HasTrackingBranch(branch))
 	if hasTrackingBranch {
@@ -180,7 +180,7 @@ func updateFeatureBranchSteps(list *runstate.StepListBuilder, branch string, rep
 	syncBranchSteps(list, repo.Config.ParentBranch(branch), string(syncStrategy))
 }
 
-func updatePerennialBranchSteps(list *runstate.StepListBuilder, branch string, repo *git.ProdRepo) {
+func updatePerennialBranchSteps(list *runstate.StepListBuilder, branch string, repo *git.PublicRepo) {
 	hasTrackingBranch := list.Bool(repo.Silent.HasTrackingBranch(branch))
 	if hasTrackingBranch {
 		pullBranchStrategy := list.PullBranchStrategy(repo.Config.PullBranchStrategy())

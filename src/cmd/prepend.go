@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func prependCommand(repo *git.ProdRepo) *cobra.Command {
+func prependCommand(repo *git.PublicRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "prepend <branch>",
 		GroupID: "lineage",
@@ -54,7 +54,7 @@ type prependConfig struct {
 	targetBranch        string
 }
 
-func determinePrependConfig(args []string, repo *git.ProdRepo) (*prependConfig, error) {
+func determinePrependConfig(args []string, repo *git.PublicRepo) (*prependConfig, error) {
 	ec := runstate.ErrorChecker{}
 	initialBranch := ec.String(repo.Silent.CurrentBranch())
 	hasOrigin := ec.Bool(repo.Silent.HasOrigin())
@@ -97,7 +97,7 @@ func determinePrependConfig(args []string, repo *git.ProdRepo) (*prependConfig, 
 	}, nil
 }
 
-func prependStepList(config *prependConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+func prependStepList(config *prependConfig, repo *git.PublicRepo) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.ancestorBranches {
 		updateBranchSteps(&list, branch, true, repo)

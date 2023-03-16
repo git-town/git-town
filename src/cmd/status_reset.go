@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func resetRunstateCommand(repo *git.ProdRepo) *cobra.Command {
+func resetRunstateCommand(repo *git.PublicRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "reset",
 		Args:    cobra.NoArgs,

@@ -21,19 +21,19 @@ func (step *RebaseBranchStep) CreateContinueStep() Step {
 	return &ContinueRebaseStep{}
 }
 
-func (step *RebaseBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+func (step *RebaseBranchStep) CreateUndoStep(repo *git.PublicRepo) (Step, error) {
 	return &ResetToShaStep{Hard: true, Sha: step.previousSha}, nil
 }
 
-func (step *RebaseBranchStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
+func (step *RebaseBranchStep) Run(repo *git.PublicRepo, connector hosting.Connector) error {
 	var err error
-	step.previousSha, err = repo.Silent.CurrentSha()
+	step.previousSha, err = repo.Internal.CurrentSha()
 	if err != nil {
 		return err
 	}
-	err = repo.Logging.Rebase(step.Branch)
+	err = repo.Rebase(step.Branch)
 	if err != nil {
-		repo.Silent.CurrentBranchCache.Invalidate()
+		repo.Internal.CurrentBranchCache.Invalidate()
 	}
 	return err
 }

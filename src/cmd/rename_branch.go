@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func renameBranchCommand(repo *git.ProdRepo) *cobra.Command {
+func renameBranchCommand(repo *git.PublicRepo) *cobra.Command {
 	forceFlag := false
 	renameBranchCmd := &cobra.Command{
 		Use:     "rename-branch [<old_branch_name>] <new_branch_name>",
@@ -62,7 +62,7 @@ type renameBranchConfig struct {
 	oldBranch                  string
 }
 
-func determineRenameBranchConfig(args []string, forceFlag bool, repo *git.ProdRepo) (*renameBranchConfig, error) {
+func determineRenameBranchConfig(args []string, forceFlag bool, repo *git.PublicRepo) (*renameBranchConfig, error) {
 	initialBranch, err := repo.Silent.CurrentBranch()
 	if err != nil {
 		return nil, err
@@ -138,7 +138,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *git.ProdRe
 	}, err
 }
 
-func renameBranchStepList(config *renameBranchConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+func renameBranchStepList(config *renameBranchConfig, repo *git.PublicRepo) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	result.Append(&steps.CreateBranchStep{Branch: config.newBranch, StartingPoint: config.oldBranch})
 	if config.initialBranch == config.oldBranch {
@@ -158,7 +158,7 @@ func renameBranchStepList(config *renameBranchConfig, repo *git.ProdRepo) (runst
 		result.Append(&steps.CreateTrackingBranchStep{Branch: config.newBranch, NoPushHook: config.noPushHook})
 		result.Append(&steps.DeleteOriginBranchStep{Branch: config.oldBranch, IsTracking: true})
 	}
-	result.Append(&steps.DeleteLocalBranchStep{Branch: config.oldBranch})
+	result.Append(&steps.DeleteLocalBranchStep{Branch: config.oldBranch, Parent: config.mainBranch})
 	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, repo)
 	return result, err
 }

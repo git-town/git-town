@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func pushHookCommand(repo *git.ProdRepo) *cobra.Command {
+func pushHookCommand(repo *git.PublicRepo) *cobra.Command {
 	var globalFlag bool
 	pushHookCmd := cobra.Command{
 		Use:     "push-hook [--global] [(yes | no)]",
@@ -30,7 +30,7 @@ Enabled by default. When disabled, Git Town prevents Git's pre-push hook from ru
 	return &pushHookCmd
 }
 
-func printPushHook(globalFlag bool, repo *git.ProdRepo) error {
+func printPushHook(globalFlag bool, repo *git.PublicRepo) error {
 	var setting bool
 	var err error
 	if globalFlag {
@@ -45,7 +45,7 @@ func printPushHook(globalFlag bool, repo *git.ProdRepo) error {
 	return nil
 }
 
-func setPushHook(text string, global bool, repo *git.ProdRepo) error {
+func setPushHook(text string, global bool, repo *git.PublicRepo) error {
 	value, err := config.ParseBool(text)
 	if err != nil {
 		return fmt.Errorf(`invalid argument: %q. Please provide either "yes" or "no"`, text)

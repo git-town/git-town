@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func mainbranchConfigCmd(repo *git.ProdRepo) *cobra.Command {
+func mainbranchConfigCmd(repo *git.PublicRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "main-branch [<branch>]",
 		Args:    cobra.MaximumNArgs(1),
@@ -27,11 +27,11 @@ The main branch is the Git branch from which new feature branches are cut.`,
 	}
 }
 
-func printMainBranch(repo *git.ProdRepo) {
+func printMainBranch(repo *git.PublicRepo) {
 	cli.Println(cli.StringSetting(repo.Config.MainBranch()))
 }
 
-func setMainBranch(branch string, repo *git.ProdRepo) error {
+func setMainBranch(branch string, repo *git.PublicRepo) error {
 	hasBranch, err := repo.Silent.HasLocalBranch(branch)
 	if err != nil {
 		return err

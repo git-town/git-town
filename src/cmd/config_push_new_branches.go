@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func pushNewBranchesCommand(repo *git.ProdRepo) *cobra.Command {
+func pushNewBranchesCommand(repo *git.PublicRepo) *cobra.Command {
 	globalFlag := false
 	pushNewBranchesCmd := cobra.Command{
 		Use:     "push-new-branches [--global] [(yes | no)]",
@@ -31,7 +31,7 @@ push the new branch to the origin remote.`,
 	return &pushNewBranchesCmd
 }
 
-func printPushNewBranches(globalFlag bool, repo *git.ProdRepo) error {
+func printPushNewBranches(globalFlag bool, repo *git.PublicRepo) error {
 	var setting bool
 	var err error
 	if globalFlag {
@@ -46,7 +46,7 @@ func printPushNewBranches(globalFlag bool, repo *git.ProdRepo) error {
 	return nil
 }
 
-func setPushNewBranches(text string, globalFlag bool, repo *git.ProdRepo) error {
+func setPushNewBranches(text string, globalFlag bool, repo *git.PublicRepo) error {
 	value, err := config.ParseBool(text)
 	if err != nil {
 		return fmt.Errorf(`invalid argument: %q. Please provide either "yes" or "no"`, text)

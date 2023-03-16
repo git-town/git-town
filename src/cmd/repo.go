@@ -11,7 +11,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func repoCommand(repo *git.ProdRepo) *cobra.Command {
+func repoCommand(repo *git.PublicRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "repo",
 		Args:    cobra.NoArgs,

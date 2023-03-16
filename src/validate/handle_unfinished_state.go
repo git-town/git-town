@@ -12,7 +12,7 @@ import (
 // HandleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
 //
 //nolint:nonamedreturns  // return value isn't obvious from function name
-func HandleUnfinishedState(repo *git.ProdRepo, connector hosting.Connector) (quit bool, err error) {
+func HandleUnfinishedState(repo *git.PublicRepo, connector hosting.Connector) (quit bool, err error) {
 	runState, err := runstate.Load(repo)
 	if err != nil {
 		return false, fmt.Errorf("cannot load previous run state: %w", err)

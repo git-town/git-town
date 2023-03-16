@@ -9,7 +9,7 @@ import (
 )
 
 // OpenBrowserCommand provides the console command to open the default browser.
-func OpenBrowserCommand() string {
+func OpenBrowserCommand(internalRunner internalRunner) string {
 	if runtime.GOOS == "windows" {
 		// NOTE: the "explorer" command cannot handle special characters like "?" and "=".
 		//       In particular, "?" can be escaped via "\", but "=" cannot.
@@ -29,8 +29,8 @@ func OpenBrowserCommand() string {
 		"netscape",
 	}
 	for _, browserCommand := range openBrowserCommands {
-		res, err := subshell.Exec("which", browserCommand)
-		if err == nil && res.OutputSanitized() != "" {
+		output, err := internalRunner.Run("which", browserCommand)
+		if err == nil && output.Sanitized() != "" {
 			return browserCommand
 		}
 	}
@@ -39,14 +39,22 @@ func OpenBrowserCommand() string {
 
 // Open opens a new window/tab in the default browser with the given URL.
 // If no browser is found, it prints the URL.
-func Open(url string, runner subshell.Runner) {
-	command := OpenBrowserCommand()
+func Open(url string, publicRunner publicRunner, internalRunner internalRunner) {
+	command := OpenBrowserCommand(internalRunner)
 	if command == "" {
 		fmt.Println("Please open in a browser: " + url)
 		return
 	}
-	_, err := runner.Run(command, url)
+	err := publicRunner.Run(command, url)
 	if err != nil {
 		fmt.Println("Please open in a browser: " + url)
 	}
+}
+
+type publicRunner interface {
+	Run(executable string, args ...string) error
+}
+
+type internalRunner interface {
+	Run(executable string, args ...string) (subshell.Output, error)
 }

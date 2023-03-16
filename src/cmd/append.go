@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func appendCmd(repo *git.ProdRepo) *cobra.Command {
+func appendCmd(repo *git.PublicRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "append <branch>",
 		GroupID: "lineage",
@@ -50,7 +50,7 @@ type appendConfig struct {
 	targetBranch        string
 }
 
-func determineAppendConfig(args []string, repo *git.ProdRepo) (*appendConfig, error) {
+func determineAppendConfig(args []string, repo *git.PublicRepo) (*appendConfig, error) {
 	ec := runstate.ErrorChecker{}
 	parentBranch := ec.String(repo.Silent.CurrentBranch())
 	hasOrigin := ec.Bool(repo.Silent.HasOrigin())
@@ -81,7 +81,7 @@ func determineAppendConfig(args []string, repo *git.ProdRepo) (*appendConfig, er
 	}, ec.Err
 }
 
-func appendStepList(config *appendConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+func appendStepList(config *appendConfig, repo *git.PublicRepo) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range append(config.ancestorBranches, config.parentBranch) {
 		updateBranchSteps(&list, branch, true, repo)

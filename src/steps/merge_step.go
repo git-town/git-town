@@ -20,15 +20,15 @@ func (step *MergeStep) CreateContinueStep() Step {
 	return &ContinueMergeStep{}
 }
 
-func (step *MergeStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+func (step *MergeStep) CreateUndoStep(repo *git.PublicRepo) (Step, error) {
 	return &ResetToShaStep{Hard: true, Sha: step.previousSha}, nil
 }
 
-func (step *MergeStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
+func (step *MergeStep) Run(repo *git.PublicRepo, connector hosting.Connector) error {
 	var err error
-	step.previousSha, err = repo.Silent.CurrentSha()
+	step.previousSha, err = repo.Internal.CurrentSha()
 	if err != nil {
 		return err
 	}
-	return repo.Logging.MergeBranchNoEdit(step.Branch)
+	return repo.MergeBranchNoEdit(step.Branch)
 }

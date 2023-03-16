@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func setupConfigCommand(repo *git.ProdRepo) *cobra.Command {
+func setupConfigCommand(repo *git.PublicRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "setup",
 		Args:    cobra.NoArgs,

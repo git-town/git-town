@@ -5,7 +5,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func resetConfigCommand(repo *git.ProdRepo) *cobra.Command {
+func resetConfigCommand(repo *git.PublicRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "reset",
 		Args:    cobra.NoArgs,

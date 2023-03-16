@@ -21,7 +21,6 @@
 package cmd
 
 import (
-	"github.com/fatih/color"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
@@ -32,12 +31,11 @@ func Execute() error {
 	debugFlag := false
 	repo := git.NewProdRepo(&debugFlag)
 	rootCmd := RootCmd(&repo, &debugFlag)
-	color.NoColor = false // Prevent color from auto disable
 	return rootCmd.Execute()
 }
 
 // RootCmd is the main Cobra object.
-func RootCmd(repo *git.ProdRepo, debugFlag *bool) *cobra.Command {
+func RootCmd(repo *git.PublicRepo, debugFlag *bool) *cobra.Command {
 	rootCmd := cobra.Command{
 		Use:           "git-town",
 		SilenceErrors: true,

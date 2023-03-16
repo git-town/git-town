@@ -13,7 +13,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func newPullRequestCommand(repo *git.ProdRepo) *cobra.Command {
+func newPullRequestCommand(repo *git.PublicRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "new-pull-request",
 		GroupID: "basic",
@@ -63,7 +63,7 @@ type newPullRequestConfig struct {
 	InitialBranch  string
 }
 
-func determineNewPullRequestConfig(repo *git.ProdRepo) (*newPullRequestConfig, error) {
+func determineNewPullRequestConfig(repo *git.PublicRepo) (*newPullRequestConfig, error) {
 	hasOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
 		return nil, err
@@ -88,7 +88,7 @@ func determineNewPullRequestConfig(repo *git.ProdRepo) (*newPullRequestConfig, e
 	}, nil
 }
 
-func newPullRequestStepList(config *newPullRequestConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+func newPullRequestStepList(config *newPullRequestConfig, repo *git.PublicRepo) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.BranchesToSync {
 		updateBranchSteps(&list, branch, true, repo)

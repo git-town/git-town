@@ -11,7 +11,7 @@ import (
 // Execute runs the commands in the given runstate.
 //
 //nolint:nestif
-func Execute(runState *RunState, repo *git.ProdRepo, connector hosting.Connector) error {
+func Execute(runState *RunState, repo *git.PublicRepo, connector hosting.Connector) error {
 	for {
 		step := runState.RunStepList.Pop()
 		if step == nil {

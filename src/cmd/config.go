@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func configCmd(repo *git.ProdRepo) *cobra.Command {
+func configCmd(repo *git.PublicRepo) *cobra.Command {
 	configCmd := &cobra.Command{
 		Use:               "config",
 		GroupID:           "setup",

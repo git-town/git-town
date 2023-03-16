@@ -17,8 +17,10 @@ type Git struct {
 	localConfigCache map[string]string
 
 	// for running shell commands
-	runner subshell.Runner
+	runner runner
 }
+
+type runner interface{}
 
 // LoadGit provides the Git configuration from the given directory or the global one if the global flag is set.
 func LoadGit(runner subshell.Runner, global bool) map[string]string {
@@ -48,7 +50,7 @@ func LoadGit(runner subshell.Runner, global bool) map[string]string {
 }
 
 // NewConfiguration provides a Configuration instance reflecting the configuration values in the given directory.
-func NewGit(runner subshell.Runner) Git {
+func NewGit(runner runner) Git {
 	return Git{
 		localConfigCache:  LoadGit(runner, false),
 		globalConfigCache: LoadGit(runner, true),

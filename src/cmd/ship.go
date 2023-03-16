@@ -14,7 +14,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func shipCmd(repo *git.ProdRepo) *cobra.Command {
+func shipCmd(repo *git.PublicRepo) *cobra.Command {
 	var commitMessage string
 	shipCmd := cobra.Command{
 		Use:     "ship",
@@ -85,7 +85,7 @@ type shipConfig struct {
 	proposalsOfChildBranches []hosting.Proposal
 }
 
-func determineShipConfig(args []string, connector hosting.Connector, repo *git.ProdRepo) (*shipConfig, error) {
+func determineShipConfig(args []string, connector hosting.Connector, repo *git.PublicRepo) (*shipConfig, error) {
 	hasOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
 		return nil, err
@@ -192,7 +192,7 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 	}, nil
 }
 
-func ensureParentBranchIsMainOrPerennialBranch(branch string, repo *git.ProdRepo) error {
+func ensureParentBranchIsMainOrPerennialBranch(branch string, repo *git.PublicRepo) error {
 	parentBranch := repo.Config.ParentBranch(branch)
 	if !repo.Config.IsMainBranch(parentBranch) && !repo.Config.IsPerennialBranch(parentBranch) {
 		ancestors := repo.Config.AncestorBranches(branch)
@@ -204,11 +204,11 @@ please ship %q first`, strings.Join(ancestorsWithoutMainOrPerennial, ", "), olde
 	return nil
 }
 
-func shipStepList(config *shipConfig, commitMessage string, repo *git.ProdRepo) (runstate.StepList, error) {
+func shipStepList(config *shipConfig, commitMessage string, repo *git.PublicRepo) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	updateBranchSteps(&list, config.branchToMergeInto, true, repo) // sync the parent branch
 	updateBranchSteps(&list, config.branchToShip, false, repo)     // sync the branch to ship locally only
-	list.Add(&steps.EnsureHasShippableChangesStep{Branch: config.branchToShip})
+	list.Add(&steps.EnsureHasShippableChangesStep{Branch: config.branchToShip, Parent: config.mainBranch})
 	list.Add(&steps.CheckoutStep{Branch: config.branchToMergeInto})
 	if config.canShipViaAPI {
 		// update the proposals of child branches
@@ -243,7 +243,7 @@ func shipStepList(config *shipConfig, commitMessage string, repo *git.ProdRepo) 
 			list.Add(&steps.DeleteOriginBranchStep{Branch: config.branchToShip, IsTracking: true})
 		}
 	}
-	list.Add(&steps.DeleteLocalBranchStep{Branch: config.branchToShip})
+	list.Add(&steps.DeleteLocalBranchStep{Branch: config.branchToShip, config.MainBranch})
 	list.Add(&steps.DeleteParentBranchStep{Branch: config.branchToShip})
 	for _, child := range config.childBranches {
 		list.Add(&steps.SetParentStep{Branch: child, ParentBranch: config.branchToMergeInto})

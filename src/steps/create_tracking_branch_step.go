@@ -14,12 +14,12 @@ type CreateTrackingBranchStep struct {
 	NoPushHook bool
 }
 
-func (step *CreateTrackingBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+func (step *CreateTrackingBranchStep) CreateUndoStep(repo *git.PublicRepo) (Step, error) {
 	return &DeleteOriginBranchStep{Branch: step.Branch}, nil
 }
 
-func (step *CreateTrackingBranchStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
-	return repo.Logging.PushBranch(git.PushArgs{
+func (step *CreateTrackingBranchStep) Run(repo *git.PublicRepo, connector hosting.Connector) error {
+	return repo.PushBranch(git.PushArgs{
 		Branch:     step.Branch,
 		NoPushHook: step.NoPushHook,
 		Remote:     config.OriginRemote,

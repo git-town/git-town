@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func perennialBranchesCmd(repo *git.ProdRepo) *cobra.Command {
+func perennialBranchesCmd(repo *git.PublicRepo) *cobra.Command {
 	perennialBranchesCmd := cobra.Command{
 		Use:     "perennial-branches",
 		Args:    cobra.NoArgs,
@@ -27,7 +27,7 @@ They cannot be shipped.`,
 	return &perennialBranchesCmd
 }
 
-func updatePerennialBranchesCmd(repo *git.ProdRepo) *cobra.Command {
+func updatePerennialBranchesCmd(repo *git.PublicRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:   "update",
 		Short: "Prompts to update your perennial branches",

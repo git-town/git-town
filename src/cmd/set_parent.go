@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func setParentCommand(repo *git.ProdRepo) *cobra.Command {
+func setParentCommand(repo *git.PublicRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "set-parent",
 		GroupID: "lineage",

@@ -24,7 +24,7 @@ func (slb *StepListBuilder) AddE(step steps.Step, err error) {
 	}
 }
 
-func (slb *StepListBuilder) Wrap(options WrapOptions, repo *git.ProdRepo) {
+func (slb *StepListBuilder) Wrap(options WrapOptions, repo *git.PublicRepo) {
 	slb.Check(slb.StepList.Wrap(options, repo))
 }
 

@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func pullBranchStrategyCommand(repo *git.ProdRepo) *cobra.Command {
+func pullBranchStrategyCommand(repo *git.PublicRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "pull-branch-strategy [(rebase | merge)]",
 		Args:    cobra.MaximumNArgs(1),
@@ -27,7 +27,7 @@ for the main branch and perennial branches.`,
 	}
 }
 
-func displayPullBranchStrategy(repo *git.ProdRepo) error {
+func displayPullBranchStrategy(repo *git.PublicRepo) error {
 	pullBranchStrategy, err := repo.Config.PullBranchStrategy()
 	if err != nil {
 		return err
@@ -36,7 +36,7 @@ func displayPullBranchStrategy(repo *git.ProdRepo) error {
 	return nil
 }
 
-func setPullBranchStrategy(value string, repo *git.ProdRepo) error {
+func setPullBranchStrategy(value string, repo *git.PublicRepo) error {
 	pullBranchStrategy, err := config.NewPullBranchStrategy(value)
 	if err != nil {
 		return err

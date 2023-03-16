@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func hackCmd(repo *git.ProdRepo) *cobra.Command {
+func hackCmd(repo *git.PublicRepo) *cobra.Command {
 	promptForParentFlag := false
 	hackCmd := cobra.Command{
 		Use:     "hack <branch>",
@@ -43,7 +43,7 @@ See "sync" for information regarding upstream remotes.`,
 	return &hackCmd
 }
 
-func determineHackConfig(args []string, promptForParent bool, repo *git.ProdRepo) (*appendConfig, error) {
+func determineHackConfig(args []string, promptForParent bool, repo *git.PublicRepo) (*appendConfig, error) {
 	ec := runstate.ErrorChecker{}
 	targetBranch := args[0]
 	parentBranch := ec.String(determineParentBranch(targetBranch, promptForParent, repo))
@@ -69,7 +69,7 @@ func determineHackConfig(args []string, promptForParent bool, repo *git.ProdRepo
 	}, ec.Err
 }
 
-func determineParentBranch(targetBranch string, promptForParent bool, repo *git.ProdRepo) (string, error) {
+func determineParentBranch(targetBranch string, promptForParent bool, repo *git.PublicRepo) (string, error) {
 	if promptForParent {
 		parentBranch, err := validate.EnterParent(targetBranch, repo.Config.MainBranch(), repo)
 		if err != nil {

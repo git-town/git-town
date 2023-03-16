@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func syncStrategyCommand(repo *git.ProdRepo) *cobra.Command {
+func syncStrategyCommand(repo *git.PublicRepo) *cobra.Command {
 	var globalFlag bool
 	syncStrategyCmd := cobra.Command{
 		Use:     "sync-strategy [(merge | rebase)]",
@@ -29,7 +29,7 @@ when merging remote tracking branches into local feature branches.`,
 	return &syncStrategyCmd
 }
 
-func printSyncStrategy(globalFlag bool, repo *git.ProdRepo) error {
+func printSyncStrategy(globalFlag bool, repo *git.PublicRepo) error {
 	var strategy config.SyncStrategy
 	var err error
 	if globalFlag {
@@ -44,7 +44,7 @@ func printSyncStrategy(globalFlag bool, repo *git.ProdRepo) error {
 	return nil
 }
 
-func setSyncStrategy(globalFlag bool, repo *git.ProdRepo, value string) error {
+func setSyncStrategy(globalFlag bool, repo *git.PublicRepo, value string) error {
 	syncStrategy, err := config.ToSyncStrategy(value)
 	if err != nil {
 		return err

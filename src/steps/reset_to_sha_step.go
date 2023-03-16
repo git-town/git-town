@@ -13,13 +13,13 @@ type ResetToShaStep struct {
 	Sha  string
 }
 
-func (step *ResetToShaStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
-	currentSha, err := repo.Silent.CurrentSha()
+func (step *ResetToShaStep) Run(repo *git.PublicRepo, connector hosting.Connector) error {
+	currentSha, err := repo.Internal.CurrentSha()
 	if err != nil {
 		return err
 	}
 	if step.Sha == currentSha {
 		return nil
 	}
-	return repo.Logging.ResetToSha(step.Sha, step.Hard)
+	return repo.ResetToSha(step.Sha, step.Hard)
 }

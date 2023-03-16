@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func pruneBranchesCommand(repo *git.ProdRepo) *cobra.Command {
+func pruneBranchesCommand(repo *git.PublicRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "prune-branches",
 		Args:    cobra.NoArgs,
@@ -38,7 +38,7 @@ type pruneBranchesConfig struct {
 	mainBranch                               string
 }
 
-func determinePruneBranchesConfig(repo *git.ProdRepo) (*pruneBranchesConfig, error) {
+func determinePruneBranchesConfig(repo *git.PublicRepo) (*pruneBranchesConfig, error) {
 	hasOrigin, err := repo.Silent.HasOrigin()
 	if err != nil {
 		return nil, err
@@ -64,7 +64,7 @@ func determinePruneBranchesConfig(repo *git.ProdRepo) (*pruneBranchesConfig, err
 	}, nil
 }
 
-func pruneBranchesStepList(config *pruneBranchesConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+func pruneBranchesStepList(config *pruneBranchesConfig, repo *git.PublicRepo) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	for _, branchWithDeletedRemote := range config.localBranchesWithDeletedTrackingBranches {
 		if config.initialBranch == branchWithDeletedRemote {
@@ -80,7 +80,7 @@ func pruneBranchesStepList(config *pruneBranchesConfig, repo *git.ProdRepo) (run
 		if repo.Config.IsPerennialBranch(branchWithDeletedRemote) {
 			result.Append(&steps.RemoveFromPerennialBranchesStep{Branch: branchWithDeletedRemote})
 		}
-		result.Append(&steps.DeleteLocalBranchStep{Branch: branchWithDeletedRemote})
+		result.Append(&steps.DeleteLocalBranchStep{Branch: branchWithDeletedRemote, Parent: config.mainBranch})
 	}
 	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, repo)
 	return result, err

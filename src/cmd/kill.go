@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func killCommand(repo *git.ProdRepo) *cobra.Command {
+func killCommand(repo *git.PublicRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "kill [<branch>]",
 		Args:    cobra.MaximumNArgs(1),
@@ -48,7 +48,7 @@ type killConfig struct {
 	targetBranch        string
 }
 
-func determineKillConfig(args []string, repo *git.ProdRepo) (*killConfig, error) {
+func determineKillConfig(args []string, repo *git.PublicRepo) (*killConfig, error) {
 	initialBranch, err := repo.Silent.CurrentBranch()
 	if err != nil {
 		return nil, err
@@ -126,7 +126,7 @@ func determineKillConfig(args []string, repo *git.ProdRepo) (*killConfig, error)
 	}, nil
 }
 
-func killStepList(config *killConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+func killStepList(config *killConfig, repo *git.PublicRepo) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	switch {
 	case config.isTargetBranchLocal:
@@ -139,7 +139,7 @@ func killStepList(config *killConfig, repo *git.ProdRepo) (runstate.StepList, er
 			}
 			result.Append(&steps.CheckoutStep{Branch: config.targetBranchParent})
 		}
-		result.Append(&steps.DeleteLocalBranchStep{Branch: config.targetBranch, Force: true})
+		result.Append(&steps.DeleteLocalBranchStep{Branch: config.targetBranch, Parent: config.mainBranch, Force: true})
 		for _, child := range config.childBranches {
 			result.Append(&steps.SetParentStep{Branch: child, ParentBranch: config.targetBranchParent})
 		}

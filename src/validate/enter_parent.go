@@ -8,7 +8,7 @@ import (
 )
 
 // EnterParent lets the user select a new parent for the given branch.
-func EnterParent(branch, defaultParent string, repo *git.ProdRepo) (string, error) {
+func EnterParent(branch, defaultParent string, repo *git.PublicRepo) (string, error) {
 	choices, err := repo.Silent.LocalBranchesMainFirst()
 	if err != nil {
 		return "", err
@@ -21,7 +21,7 @@ func EnterParent(branch, defaultParent string, repo *git.ProdRepo) (string, erro
 	})
 }
 
-func filterOutSelfAndDescendants(branch string, choices []string, repo *git.ProdRepo) []string {
+func filterOutSelfAndDescendants(branch string, choices []string, repo *git.PublicRepo) []string {
 	result := []string{}
 	for _, choice := range choices {
 		if choice == branch || repo.Config.IsAncestorBranch(choice, branch) {

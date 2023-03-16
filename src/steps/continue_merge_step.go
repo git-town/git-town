@@ -15,13 +15,13 @@ func (step *ContinueMergeStep) CreateContinueStep() Step {
 	return step
 }
 
-func (step *ContinueMergeStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
-	hasMergeInprogress, err := repo.Silent.HasMergeInProgress()
+func (step *ContinueMergeStep) Run(repo *git.PublicRepo, connector hosting.Connector) error {
+	hasMergeInprogress, err := repo.Internal.HasMergeInProgress()
 	if err != nil {
 		return err
 	}
 	if hasMergeInprogress {
-		return repo.Logging.CommitNoEdit()
+		return repo.CommitNoEdit()
 	}
 	return nil
 }
