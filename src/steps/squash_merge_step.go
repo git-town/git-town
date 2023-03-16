@@ -21,7 +21,7 @@ func (step *SquashMergeStep) CreateAbortStep() Step {
 }
 
 func (step *SquashMergeStep) CreateUndoStep(repo *git.PublicRepo) (Step, error) {
-	currentSHA, err := repo.Internal.CurrentSha()
+	currentSHA, err := repo.CurrentSha()
 	if err != nil {
 		return nil, err
 	}
@@ -37,7 +37,7 @@ func (step *SquashMergeStep) Run(repo *git.PublicRepo, connector hosting.Connect
 	if err != nil {
 		return err
 	}
-	branchAuthors, err := repo.Internal.BranchAuthors(step.Branch, step.Parent)
+	branchAuthors, err := repo.BranchAuthors(step.Branch, step.Parent)
 	if err != nil {
 		return err
 	}
@@ -45,11 +45,11 @@ func (step *SquashMergeStep) Run(repo *git.PublicRepo, connector hosting.Connect
 	if err != nil {
 		return fmt.Errorf("error getting squash commit author: %w", err)
 	}
-	repoAuthor, err := repo.Internal.Author()
+	repoAuthor, err := repo.Author()
 	if err != nil {
 		return fmt.Errorf("cannot determine repo author: %w", err)
 	}
-	if err = repo.Internal.CommentOutSquashCommitMessage(""); err != nil {
+	if err = repo.CommentOutSquashCommitMessage(""); err != nil {
 		return fmt.Errorf("cannot comment out the squash commit message: %w", err)
 	}
 	if repoAuthor == author {

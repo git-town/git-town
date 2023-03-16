@@ -25,14 +25,14 @@ func (step *PushBranchStep) CreateUndoStep(repo *git.PublicRepo) (Step, error) {
 }
 
 func (step *PushBranchStep) Run(repo *git.PublicRepo, connector hosting.Connector) error {
-	shouldPush, err := repo.Internal.ShouldPushBranch(step.Branch)
+	shouldPush, err := repo.ShouldPushBranch(step.Branch)
 	if err != nil {
 		return err
 	}
-	if !shouldPush && !repo.Internal.DryRun.IsActive() {
+	if !shouldPush && !repo.DryRun.IsActive() {
 		return nil
 	}
-	currentBranch, err := repo.Internal.CurrentBranch()
+	currentBranch, err := repo.CurrentBranch()
 	if err != nil {
 		return err
 	}

@@ -23,9 +23,9 @@ func (step *DeleteOriginBranchStep) CreateUndoStep(repo *git.PublicRepo) (Step, 
 
 func (step *DeleteOriginBranchStep) Run(repo *git.PublicRepo, connector hosting.Connector) error {
 	if !step.IsTracking {
-		trackingBranch := repo.Internal.TrackingBranch(step.Branch)
+		trackingBranch := repo.TrackingBranch(step.Branch)
 		var err error
-		step.branchSha, err = repo.Internal.ShaForBranch(trackingBranch)
+		step.branchSha, err = repo.ShaForBranch(trackingBranch)
 		if err != nil {
 			return err
 		}

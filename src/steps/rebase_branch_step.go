@@ -27,13 +27,13 @@ func (step *RebaseBranchStep) CreateUndoStep(repo *git.PublicRepo) (Step, error)
 
 func (step *RebaseBranchStep) Run(repo *git.PublicRepo, connector hosting.Connector) error {
 	var err error
-	step.previousSha, err = repo.Internal.CurrentSha()
+	step.previousSha, err = repo.CurrentSha()
 	if err != nil {
 		return err
 	}
 	err = repo.Rebase(step.Branch)
 	if err != nil {
-		repo.Internal.CurrentBranchCache.Invalidate()
+		repo.CurrentBranchCache.Invalidate()
 	}
 	return err
 }

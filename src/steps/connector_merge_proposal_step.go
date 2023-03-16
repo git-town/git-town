@@ -48,7 +48,7 @@ func (step *ConnectorMergeProposalStep) Run(repo *git.PublicRepo, connector host
 		if err != nil {
 			return err
 		}
-		err = repo.Internal.CommentOutSquashCommitMessage(step.DefaultProposalMessage + "\n\n")
+		err = repo.CommentOutSquashCommitMessage(step.DefaultProposalMessage + "\n\n")
 		if err != nil {
 			return fmt.Errorf("cannot comment out the squash commit message: %w", err)
 		}
@@ -56,7 +56,7 @@ func (step *ConnectorMergeProposalStep) Run(repo *git.PublicRepo, connector host
 		if err != nil {
 			return err
 		}
-		commitMessage, err = repo.Internal.LastCommitMessage()
+		commitMessage, err = repo.LastCommitMessage()
 		if err != nil {
 			return err
 		}

@@ -26,7 +26,7 @@ func (step *MergeStep) CreateUndoStep(repo *git.PublicRepo) (Step, error) {
 
 func (step *MergeStep) Run(repo *git.PublicRepo, connector hosting.Connector) error {
 	var err error
-	step.previousSha, err = repo.Internal.CurrentSha()
+	step.previousSha, err = repo.CurrentSha()
 	if err != nil {
 		return err
 	}

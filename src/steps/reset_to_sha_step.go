@@ -14,7 +14,7 @@ type ResetToShaStep struct {
 }
 
 func (step *ResetToShaStep) Run(repo *git.PublicRepo, connector hosting.Connector) error {
-	currentSha, err := repo.Internal.CurrentSha()
+	currentSha, err := repo.CurrentSha()
 	if err != nil {
 		return err
 	}

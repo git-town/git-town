@@ -21,11 +21,11 @@ func (step *DeleteLocalBranchStep) CreateUndoStep(repo *git.PublicRepo) (Step, e
 
 func (step *DeleteLocalBranchStep) Run(repo *git.PublicRepo, connector hosting.Connector) error {
 	var err error
-	step.branchSha, err = repo.Internal.ShaForBranch(step.Branch)
+	step.branchSha, err = repo.ShaForBranch(step.Branch)
 	if err != nil {
 		return err
 	}
-	hasUnmergedCommits, err := repo.Internal.BranchHasUnmergedCommits(step.Branch, step.Parent)
+	hasUnmergedCommits, err := repo.BranchHasUnmergedCommits(step.Branch, step.Parent)
 	if err != nil {
 		return err
 	}

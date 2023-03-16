@@ -20,7 +20,7 @@ func (step *ContinueRebaseStep) CreateContinueStep() Step {
 }
 
 func (step *ContinueRebaseStep) Run(repo *git.PublicRepo, connector hosting.Connector) error {
-	hasRebaseInProgress, err := repo.Internal.HasRebaseInProgress()
+	hasRebaseInProgress, err := repo.HasRebaseInProgress()
 	if err != nil {
 		return err
 	}

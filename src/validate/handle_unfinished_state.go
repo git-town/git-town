@@ -34,7 +34,7 @@ func HandleUnfinishedState(repo *git.PublicRepo, connector hosting.Connector) (q
 		err = runstate.Delete(repo)
 		return false, err
 	case dialog.ResponseTypeContinue:
-		hasConflicts, err := repo.Internal.HasConflicts()
+		hasConflicts, err := repo.HasConflicts()
 		if err != nil {
 			return false, err
 		}

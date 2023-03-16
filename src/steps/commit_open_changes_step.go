@@ -20,7 +20,7 @@ func (step *CommitOpenChangesStep) CreateUndoStep(repo *git.PublicRepo) (Step, e
 
 func (step *CommitOpenChangesStep) Run(repo *git.PublicRepo, connector hosting.Connector) error {
 	var err error
-	step.previousSha, err = repo.Internal.CurrentSha()
+	step.previousSha, err = repo.CurrentSha()
 	if err != nil {
 		return err
 	}
@@ -28,7 +28,7 @@ func (step *CommitOpenChangesStep) Run(repo *git.PublicRepo, connector hosting.C
 	if err != nil {
 		return err
 	}
-	currentBranch, err := repo.Internal.CurrentBranch()
+	currentBranch, err := repo.CurrentBranch()
 	if err != nil {
 		return err
 	}

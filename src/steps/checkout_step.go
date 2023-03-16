@@ -18,7 +18,7 @@ func (step *CheckoutStep) CreateUndoStep(repo *git.PublicRepo) (Step, error) {
 
 func (step *CheckoutStep) Run(repo *git.PublicRepo, connector hosting.Connector) error {
 	var err error
-	step.previousBranch, err = repo.Internal.CurrentBranch()
+	step.previousBranch, err = repo.CurrentBranch()
 	if err != nil {
 		return err
 	}
