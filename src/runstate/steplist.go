@@ -71,9 +71,9 @@ type WrapOptions struct {
 // Wrap wraps the list with steps that
 // change to the Git root directory or stash away open changes.
 func (stepList *StepList) Wrap(options WrapOptions, repo *git.PublicRepo, mainBranch string) error {
-	previousBranch, err := repo.Silent.PreviouslyCheckedOutBranch()
+	previousBranch, err := repo.Internal.PreviouslyCheckedOutBranch()
 	if err == nil {
-		currentBranch, err := repo.Silent.CurrentBranch()
+		currentBranch, err := repo.Internal.CurrentBranch()
 		if err != nil {
 			return err
 		}
@@ -83,7 +83,7 @@ func (stepList *StepList) Wrap(options WrapOptions, repo *git.PublicRepo, mainBr
 			MainBranch:                        mainBranch,
 		})
 	}
-	hasOpenChanges, err := repo.Silent.HasOpenChanges()
+	hasOpenChanges, err := repo.Internal.HasOpenChanges()
 	if err != nil {
 		return err
 	}

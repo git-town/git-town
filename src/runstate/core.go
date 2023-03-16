@@ -47,7 +47,7 @@ func (runState *RunState) AddPushBranchStepAfterCurrentBranchSteps(repo *git.Pub
 		if !isCheckoutStep(step) {
 			popped.Append(runState.RunStepList.Pop())
 		} else {
-			currentBranch, err := repo.Silent.CurrentBranch()
+			currentBranch, err := repo.Internal.CurrentBranch()
 			if err != nil {
 				return err
 			}
@@ -132,7 +132,7 @@ func (runState *RunState) MarkAsFinished() {
 
 // MarkAsUnfinished updates the run state to be marked as unfinished and populates informational fields.
 func (runState *RunState) MarkAsUnfinished(repo *git.PublicRepo) error {
-	currentBranch, err := repo.Silent.CurrentBranch()
+	currentBranch, err := repo.Internal.CurrentBranch()
 	if err != nil {
 		return err
 	}

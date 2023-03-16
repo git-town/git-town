@@ -55,6 +55,7 @@ type renameBranchConfig struct {
 	initialBranch              string
 	isInitialBranchPerennial   bool
 	isOffline                  bool
+	mainBranch                 string
 	newBranch                  string
 	noPushHook                 bool
 	oldBranchChildren          []string
@@ -63,7 +64,7 @@ type renameBranchConfig struct {
 }
 
 func determineRenameBranchConfig(args []string, forceFlag bool, repo *git.PublicRepo) (*renameBranchConfig, error) {
-	initialBranch, err := repo.Silent.CurrentBranch()
+	initialBranch, err := repo.Internal.CurrentBranch()
 	if err != nil {
 		return nil, err
 	}
@@ -75,6 +76,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *git.Public
 	if err != nil {
 		return nil, err
 	}
+	mainBranch := repo.Config.MainBranch()
 	var oldBranch string
 	var newBranch string
 	if len(args) == 1 {
@@ -96,33 +98,33 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *git.Public
 		return nil, fmt.Errorf("cannot rename branch to current name")
 	}
 	if !isOffline {
-		err := repo.Logging.Fetch()
+		err := repo.Fetch()
 		if err != nil {
 			return nil, err
 		}
 	}
-	hasOldBranch, err := repo.Silent.HasLocalBranch(oldBranch)
+	hasOldBranch, err := repo.Internal.HasLocalBranch(oldBranch)
 	if err != nil {
 		return nil, err
 	}
 	if !hasOldBranch {
 		return nil, fmt.Errorf("there is no branch named %q", oldBranch)
 	}
-	isBranchInSync, err := repo.Silent.IsBranchInSync(oldBranch)
+	isBranchInSync, err := repo.Internal.IsBranchInSync(oldBranch)
 	if err != nil {
 		return nil, err
 	}
 	if !isBranchInSync {
 		return nil, fmt.Errorf("%q is not in sync with its tracking branch, please sync the branches before renaming", oldBranch)
 	}
-	hasNewBranch, err := repo.Silent.HasLocalOrOriginBranch(newBranch)
+	hasNewBranch, err := repo.Internal.HasLocalOrOriginBranch(newBranch, mainBranch)
 	if err != nil {
 		return nil, err
 	}
 	if hasNewBranch {
 		return nil, fmt.Errorf("a branch named %q already exists", newBranch)
 	}
-	oldBranchHasTrackingBranch, err := repo.Silent.HasTrackingBranch(oldBranch)
+	oldBranchHasTrackingBranch, err := repo.Internal.HasTrackingBranch(oldBranch)
 	if err != nil {
 		return nil, err
 	}
@@ -130,6 +132,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *git.Public
 		initialBranch:              initialBranch,
 		isInitialBranchPerennial:   repo.Config.IsPerennialBranch(initialBranch),
 		isOffline:                  isOffline,
+		mainBranch:                 mainBranch,
 		newBranch:                  newBranch,
 		noPushHook:                 !pushHook,
 		oldBranch:                  oldBranch,
@@ -159,6 +162,6 @@ func renameBranchStepList(config *renameBranchConfig, repo *git.PublicRepo) (run
 		result.Append(&steps.DeleteOriginBranchStep{Branch: config.oldBranch, IsTracking: true})
 	}
 	result.Append(&steps.DeleteLocalBranchStep{Branch: config.oldBranch, Parent: config.mainBranch})
-	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, repo)
+	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, repo, config.mainBranch)
 	return result, err
 }

@@ -9,7 +9,7 @@ import (
 
 // EnterParent lets the user select a new parent for the given branch.
 func EnterParent(branch, defaultParent string, repo *git.PublicRepo) (string, error) {
-	choices, err := repo.Silent.LocalBranchesMainFirst()
+	choices, err := repo.Internal.LocalBranchesMainFirst()
 	if err != nil {
 		return "", err
 	}

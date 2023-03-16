@@ -58,11 +58,11 @@ func Execute(runState *RunState, repo *git.PublicRepo, connector hosting.Connect
 			if err != nil {
 				return err
 			}
-			currentBranch, err := repo.Silent.CurrentBranch()
+			currentBranch, err := repo.Internal.CurrentBranch()
 			if err != nil {
 				return err
 			}
-			rebasing, err := repo.Silent.HasRebaseInProgress()
+			rebasing, err := repo.Internal.HasRebaseInProgress()
 			if err != nil {
 				return err
 			}

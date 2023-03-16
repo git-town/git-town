@@ -39,21 +39,21 @@ type pruneBranchesConfig struct {
 }
 
 func determinePruneBranchesConfig(repo *git.PublicRepo) (*pruneBranchesConfig, error) {
-	hasOrigin, err := repo.Silent.HasOrigin()
+	hasOrigin, err := repo.Internal.HasOrigin()
 	if err != nil {
 		return nil, err
 	}
 	if hasOrigin {
-		err = repo.Logging.Fetch()
+		err = repo.Fetch()
 		if err != nil {
 			return nil, err
 		}
 	}
-	initialBranch, err := repo.Silent.CurrentBranch()
+	initialBranch, err := repo.Internal.CurrentBranch()
 	if err != nil {
 		return nil, err
 	}
-	localBranchesWithDeletedTrackingBranches, err := repo.Silent.LocalBranchesWithDeletedTrackingBranches()
+	localBranchesWithDeletedTrackingBranches, err := repo.Internal.LocalBranchesWithDeletedTrackingBranches()
 	if err != nil {
 		return nil, err
 	}
@@ -82,6 +82,6 @@ func pruneBranchesStepList(config *pruneBranchesConfig, repo *git.PublicRepo) (r
 		}
 		result.Append(&steps.DeleteLocalBranchStep{Branch: branchWithDeletedRemote, Parent: config.mainBranch})
 	}
-	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, repo)
+	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, repo, config.mainBranch)
 	return result, err
 }

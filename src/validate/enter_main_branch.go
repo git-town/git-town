@@ -11,7 +11,7 @@ import (
 // EnterMainBranch lets the user select a new main branch for this repo.
 // This includes asking the user and updating the respective setting.
 func EnterMainBranch(repo *git.PublicRepo) error {
-	localBranches, err := repo.Silent.LocalBranches()
+	localBranches, err := repo.Internal.LocalBranches()
 	if err != nil {
 		return err
 	}

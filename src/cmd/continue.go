@@ -25,14 +25,14 @@ func continueCmd(repo *git.PublicRepo) *cobra.Command {
 			if runState == nil || !runState.IsUnfinished() {
 				return fmt.Errorf("nothing to continue")
 			}
-			hasConflicts, err := repo.Silent.HasConflicts()
+			hasConflicts, err := repo.Internal.HasConflicts()
 			if err != nil {
 				return err
 			}
 			if hasConflicts {
 				return fmt.Errorf("you must resolve the conflicts before continuing")
 			}
-			connector, err := hosting.NewConnector(repo.Config, &repo.Silent, cli.PrintConnectorAction)
+			connector, err := hosting.NewConnector(repo.Config, &repo.Internal, cli.PrintConnectorAction)
 			if err != nil {
 				return err
 			}

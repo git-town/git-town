@@ -25,7 +25,7 @@ Exits with error code 1 if the given branch is a perennial branch or the main br
 			if err != nil {
 				return err
 			}
-			return repo.Logging.DiffParent(config.branch, config.parentBranch)
+			return repo.DiffParent(config.branch, config.parentBranch)
 		},
 	}
 }
@@ -37,7 +37,7 @@ type diffParentConfig struct {
 
 // Does not return error because "Ensure" functions will call exit directly.
 func determineDiffParentConfig(args []string, repo *git.PublicRepo) (*diffParentConfig, error) {
-	initialBranch, err := repo.Silent.CurrentBranch()
+	initialBranch, err := repo.Internal.CurrentBranch()
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +48,7 @@ func determineDiffParentConfig(args []string, repo *git.PublicRepo) (*diffParent
 		branch = initialBranch
 	}
 	if initialBranch != branch {
-		hasBranch, err := repo.Silent.HasLocalBranch(branch)
+		hasBranch, err := repo.Internal.HasLocalBranch(branch)
 		if err != nil {
 			return nil, err
 		}

@@ -11,5 +11,5 @@ func TestNewProdRepo(t *testing.T) {
 	t.Parallel()
 	debug := false
 	repo := git.NewProdRepo(&debug)
-	assert.Equal(t, repo.Config, repo.Silent.Config)
+	assert.Equal(t, repo.Config, repo.Internal.Config)
 }

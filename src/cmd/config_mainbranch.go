@@ -32,7 +32,7 @@ func printMainBranch(repo *git.PublicRepo) {
 }
 
 func setMainBranch(branch string, repo *git.PublicRepo) error {
-	hasBranch, err := repo.Silent.HasLocalBranch(branch)
+	hasBranch, err := repo.Internal.HasLocalBranch(branch)
 	if err != nil {
 		return err
 	}

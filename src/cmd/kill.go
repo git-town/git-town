@@ -49,7 +49,7 @@ type killConfig struct {
 }
 
 func determineKillConfig(args []string, repo *git.PublicRepo) (*killConfig, error) {
-	initialBranch, err := repo.Silent.CurrentBranch()
+	initialBranch, err := repo.Internal.CurrentBranch()
 	if err != nil {
 		return nil, err
 	}
@@ -62,7 +62,7 @@ func determineKillConfig(args []string, repo *git.PublicRepo) (*killConfig, erro
 	if !repo.Config.IsFeatureBranch(targetBranch) {
 		return nil, fmt.Errorf("you can only kill feature branches")
 	}
-	isTargetBranchLocal, err := repo.Silent.HasLocalBranch(targetBranch)
+	isTargetBranchLocal, err := repo.Internal.HasLocalBranch(targetBranch)
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +73,7 @@ func determineKillConfig(args []string, repo *git.PublicRepo) (*killConfig, erro
 		}
 		repo.Config.Reload()
 	}
-	hasOrigin, err := repo.Silent.HasOrigin()
+	hasOrigin, err := repo.Internal.HasOrigin()
 	if err != nil {
 		return nil, err
 	}
@@ -82,13 +82,14 @@ func determineKillConfig(args []string, repo *git.PublicRepo) (*killConfig, erro
 		return nil, err
 	}
 	if hasOrigin && !isOffline {
-		err := repo.Logging.Fetch()
+		err := repo.Fetch()
 		if err != nil {
 			return nil, err
 		}
 	}
 	if initialBranch != targetBranch {
-		hasTargetBranch, err := repo.Silent.HasLocalOrOriginBranch(targetBranch)
+		mainBranch := repo.Config.MainBranch()
+		hasTargetBranch, err := repo.Internal.HasLocalOrOriginBranch(targetBranch, mainBranch)
 		if err != nil {
 			return nil, err
 		}
@@ -96,15 +97,15 @@ func determineKillConfig(args []string, repo *git.PublicRepo) (*killConfig, erro
 			return nil, fmt.Errorf("there is no branch named %q", targetBranch)
 		}
 	}
-	hasTrackingBranch, err := repo.Silent.HasTrackingBranch(targetBranch)
+	hasTrackingBranch, err := repo.Internal.HasTrackingBranch(targetBranch)
 	if err != nil {
 		return nil, err
 	}
-	previousBranch, err := repo.Silent.PreviouslyCheckedOutBranch()
+	previousBranch, err := repo.Internal.PreviouslyCheckedOutBranch()
 	if err != nil {
 		return nil, err
 	}
-	hasOpenChanges, err := repo.Silent.HasOpenChanges()
+	hasOpenChanges, err := repo.Internal.HasOpenChanges()
 	if err != nil {
 		return nil, err
 	}

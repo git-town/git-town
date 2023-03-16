@@ -49,7 +49,7 @@ GitHub's feature to automatically delete head branches,
 run "git config %s false"
 and Git Town will leave it up to your origin server to delete the remote branch.`, config.GithubTokenKey, config.ShipDeleteRemoteBranchKey),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			connector, err := hosting.NewConnector(repo.Config, &repo.Silent, cli.PrintConnectorAction)
+			connector, err := hosting.NewConnector(repo.Config, &repo.Internal, cli.PrintConnectorAction)
 			if err != nil {
 				return err
 			}
@@ -86,7 +86,7 @@ type shipConfig struct {
 }
 
 func determineShipConfig(args []string, connector hosting.Connector, repo *git.PublicRepo) (*shipConfig, error) {
-	hasOrigin, err := repo.Silent.HasOrigin()
+	hasOrigin, err := repo.Internal.HasOrigin()
 	if err != nil {
 		return nil, err
 	}
@@ -94,7 +94,7 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 	if err != nil {
 		return nil, err
 	}
-	initialBranch, err := repo.Silent.CurrentBranch()
+	initialBranch, err := repo.Internal.CurrentBranch()
 	if err != nil {
 		return nil, err
 	}
@@ -110,7 +110,7 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 	}
 	isShippingInitialBranch := branchToShip == initialBranch
 	if isShippingInitialBranch {
-		hasOpenChanges, err := repo.Silent.HasOpenChanges()
+		hasOpenChanges, err := repo.Internal.HasOpenChanges()
 		if err != nil {
 			return nil, err
 		}
@@ -119,13 +119,13 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 		}
 	}
 	if hasOrigin && !isOffline {
-		err := repo.Logging.Fetch()
+		err := repo.Fetch()
 		if err != nil {
 			return nil, err
 		}
 	}
 	if !isShippingInitialBranch {
-		hasBranch, err := repo.Silent.HasLocalOrOriginBranch(branchToShip)
+		hasBranch, err := repo.Internal.HasLocalOrOriginBranch(branchToShip)
 		if err != nil {
 			return nil, err
 		}
@@ -144,7 +144,7 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 	if err != nil {
 		return nil, err
 	}
-	hasTrackingBranch, err := repo.Silent.HasTrackingBranch(branchToShip)
+	hasTrackingBranch, err := repo.Internal.HasTrackingBranch(branchToShip)
 	if err != nil {
 		return nil, err
 	}

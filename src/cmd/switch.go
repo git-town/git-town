@@ -16,7 +16,7 @@ func switchCmd(repo *git.PublicRepo) *cobra.Command {
 		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
 		Short:   "Displays the local branches visually and allows switching between them",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			currentBranch, err := repo.Silent.CurrentBranch()
+			currentBranch, err := repo.Internal.CurrentBranch()
 			if err != nil {
 				return err
 			}
@@ -25,7 +25,7 @@ func switchCmd(repo *git.PublicRepo) *cobra.Command {
 				return err
 			}
 			if newBranch != nil && *newBranch != currentBranch {
-				err = repo.Silent.CheckoutBranch(*newBranch)
+				err = repo.Internal.CheckoutBranch(*newBranch)
 				if err != nil {
 					return err
 				}
@@ -65,7 +65,7 @@ func addEntryAndChildren(entries dialog.ModalEntries, branch string, indent int,
 		Value: branch,
 	})
 	var err error
-	for _, child := range repo.Silent.Config.ChildBranches(branch) {
+	for _, child := range repo.Config.ChildBranches(branch) {
 		entries, err = addEntryAndChildren(entries, child, indent+1, repo)
 		if err != nil {
 			return entries, err
