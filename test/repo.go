@@ -271,6 +271,12 @@ func (r *Repo) CommitsInBranch(branch string, fields []string) ([]git.Commit, er
 	return result, nil
 }
 
+// CommitStagedChanges commits the currently staged changes.
+func (r *Repo) CommitStagedChanges(message string) error {
+	_, err := r.Run("git", "commit", "--no-edit")
+	return err
+}
+
 // ConnectTrackingBranch connects the branch with the given name to its counterpart at origin.
 // The branch must exist.
 func (r *Repo) ConnectTrackingBranch(name string) error {
@@ -399,7 +405,12 @@ func (r *Repo) HasGitTownConfigNow() (bool, error) {
 	return output.Sanitized() != "", nil
 }
 
-func (r *Repo) PushBranch(branch, remote string) error {
+func (r *Repo) PushBranch() error {
+	_, err := r.Run("git", "push")
+	return err
+}
+
+func (r *Repo) PushBranchToRemote(branch, remote string) error {
 	_, err := r.Run("git", "push", "-u", remote, branch)
 	return err
 }
@@ -441,6 +452,13 @@ func (r *Repo) ShaForCommit(name string) (string, error) {
 	}
 	result = strings.Split(result, "\n")[0]
 	return result, nil
+}
+
+// StageFiles adds the file with the given name to the Git index.
+func (r *Repo) StageFiles(names ...string) error {
+	args := append([]string{"add"}, names...)
+	_, err := r.Run("git", args...)
+	return err
 }
 
 // StashSize provides the number of stashes in this repository.

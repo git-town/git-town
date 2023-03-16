@@ -13,3 +13,6 @@ func TestNewProdRepo(t *testing.T) {
 	repo := git.NewProdRepo(&debug)
 	assert.Equal(t, repo.Config, repo.Config)
 }
+
+func TestPublicRepo(t *testing.T) {
+}
