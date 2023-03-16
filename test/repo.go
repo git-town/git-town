@@ -54,14 +54,10 @@ func InitRepo(workingDir, homeDir, binDir string) (Repo, error) {
 // NewRepo provides a new Repo instance working in the given directory.
 // The directory must contain an existing Git repo.
 func NewRepo(workingDir, homeDir, binDir string) Repo {
-	internalRunner := git.InternalRunner{
-		Dir: workingDir,
-	}
-	runner := NewMockingRunner(workingDir, homeDir, binDir)
-	config := config.NewGitTown(&runner)
-	repo := git.InternalRepo{
-		InternalRunner:     internalRunner,
-		Config:             config,
+	mockingRunner := NewMockingRunner(workingDir, homeDir, binDir)
+	internalRepo := git.InternalRepo{
+		InternalRunner:     subshell.InternalRunner{Dir: ""},
+		Config:             config.NewGitTown(&mockingRunner),
 		DryRun:             &subshell.DryRun{},
 		IsRepoCache:        &cache.Bool{},
 		RemoteBranchCache:  &cache.Strings{},
@@ -69,7 +65,7 @@ func NewRepo(workingDir, homeDir, binDir string) Repo {
 		RootDirCache:       &cache.String{},
 		CurrentBranchCache: &cache.String{},
 	}
-	return Repo{InternalRepo: repo, runner: runner}
+	return Repo{InternalRepo: internalRepo, MockingRunner: mockingRunner}
 }
 
 // AddRemote adds a Git remote with the given name and URL to this repository.

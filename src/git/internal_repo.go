@@ -16,7 +16,7 @@ import (
 )
 
 type InternalRunner interface {
-	Run(executable string, args ...string) (subshell.Output, error)
+	Run(executable string, args ...string) (*subshell.Output, error)
 	RunMany([][]string) error
 }
 
