@@ -33,7 +33,8 @@ func updatePerennialBranchesCmd(repo *git.PublicRepo) *cobra.Command {
 		Short: "Prompts to update your perennial branches",
 		Long:  `Prompts to update your perennial branches`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return validate.EnterPerennialBranches(repo)
+			mainBranch := repo.Config.MainBranch()
+			return validate.EnterPerennialBranches(repo, mainBranch)
 		},
 		Args:    cobra.NoArgs,
 		PreRunE: ensure(repo, isRepository),

@@ -48,6 +48,7 @@ type prependConfig struct {
 	hasOrigin           bool
 	initialBranch       string
 	isOffline           bool
+	mainBranch          string
 	noPushHook          bool
 	parentBranch        string
 	shouldNewBranchPush bool
@@ -90,6 +91,7 @@ func determinePrependConfig(args []string, repo *git.PublicRepo) (*prependConfig
 		hasOrigin:           hasOrigin,
 		initialBranch:       initialBranch,
 		isOffline:           isOffline,
+		mainBranch:          mainBranch,
 		noPushHook:          !pushHook,
 		parentBranch:        repo.Config.ParentBranch(initialBranch),
 		ancestorBranches:    repo.Config.AncestorBranches(initialBranch),
@@ -110,6 +112,6 @@ func prependStepList(config *prependConfig, repo *git.PublicRepo) (runstate.Step
 	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
 		list.Add(&steps.CreateTrackingBranchStep{Branch: config.targetBranch, NoPushHook: config.noPushHook})
 	}
-	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
+	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo, config.mainBranch)
 	return list.Result()
 }

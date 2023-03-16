@@ -24,8 +24,9 @@ type InternalRunner interface {
 // i.e. Git operations that determine the state of the repo
 // and aren't visible to the end user.
 type InternalRepo struct {
-	InternalRunner                      // runs shell commands
-	Dir                string           // the directory that this repositor is in
+	InternalRunner            // runs shell commands
+	Dir                string // the directory that this repositor is in
+	Config             *config.GitTown
 	CurrentBranchCache *cache.String    // caches the currently checked out Git branch
 	DryRun             *subshell.DryRun // tracks dry-run information
 	IsRepoCache        *cache.Bool      // caches whether the current directory is a Git repo
@@ -363,12 +364,12 @@ func (r *InternalRepo) LocalBranches() ([]string, error) {
 }
 
 // LocalBranchesMainFirst provides the names of all local branches in this repo.
-func (r *InternalRepo) LocalBranchesMainFirst(mainBranch string) ([]string, error) {
+func (r *InternalRepo) LocalBranchesMainFirst() ([]string, error) {
 	branches, err := r.LocalBranches()
 	if err != nil {
 		return []string{}, err
 	}
-	return stringslice.Hoist(sort.StringSlice(branches), mainBranch), nil
+	return stringslice.Hoist(sort.StringSlice(branches), r.Config.MainBranch()), nil
 }
 
 // LocalBranchesWithDeletedTrackingBranches provides the names of all branches

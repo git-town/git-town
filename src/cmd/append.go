@@ -44,6 +44,7 @@ type appendConfig struct {
 	ancestorBranches    []string
 	hasOrigin           bool
 	isOffline           bool
+	mainBranch          string
 	noPushHook          bool
 	parentBranch        string
 	shouldNewBranchPush bool
@@ -75,6 +76,7 @@ func determineAppendConfig(args []string, repo *git.PublicRepo) (*appendConfig, 
 		ancestorBranches:    ancestorBranches,
 		isOffline:           isOffline,
 		hasOrigin:           hasOrigin,
+		mainBranch:          mainBranch,
 		noPushHook:          !pushHook,
 		parentBranch:        parentBranch,
 		shouldNewBranchPush: shouldNewBranchPush,
@@ -93,6 +95,6 @@ func appendStepList(config *appendConfig, repo *git.PublicRepo) (runstate.StepLi
 	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
 		list.Add(&steps.CreateTrackingBranchStep{Branch: config.targetBranch, NoPushHook: config.noPushHook})
 	}
-	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
+	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo, config.mainBranch)
 	return list.Result()
 }

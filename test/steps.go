@@ -92,7 +92,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 		state.initialBranchHierarchy.AddRow(branch, parentBranch)
-		return state.gitEnv.DevRepo.PushBranch(git.PushArgs{Branch: branch, Remote: config.OriginRemote})
+		return state.gitEnv.DevRepo.PushBranch(branch, config.OriginRemote)
 	})
 
 	suite.Step(`^a merge is now in progress$`, func() error {
@@ -116,7 +116,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.initialBranchHierarchy.AddRow(branch, "main")
 		if !isLocal {
 			state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-			return state.gitEnv.DevRepo.PushBranch(git.PushArgs{Branch: branch, Remote: config.OriginRemote})
+			return state.gitEnv.DevRepo.PushBranch(branch, config.OriginRemote)
 		}
 		return nil
 	})
@@ -128,7 +128,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-		return state.gitEnv.DevRepo.PushBranch(git.PushArgs{Branch: branch, Remote: config.OriginRemote})
+		return state.gitEnv.DevRepo.PushBranch(branch, config.OriginRemote)
 	})
 
 	suite.Step(`^a rebase is now in progress$`, func() error {
@@ -265,10 +265,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return err
 		}
-		err = state.gitEnv.DevRepo.StageFiles(filename)
-		if err != nil {
-			return err
-		}
+		// err = state.gitEnv.DevRepo.StageFiles(filename)
+		// if err != nil {
+		// 	return err
+		// }
 		return nil
 	})
 
@@ -504,18 +504,18 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^(?:local )?setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
-		_, err := state.gitEnv.DevRepo.Config.Storage.SetLocalConfigValue("git-town."+name, value)
+		_, err := state.gitEnv.DevRepo.Config.SetLocalConfigValue("git-town."+name, value)
 		return err
 	})
 
 	suite.Step(`^global setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
-		_, err := state.gitEnv.DevRepo.Config.Storage.SetGlobalConfigValue("git-town."+name, value)
+		_, err := state.gitEnv.DevRepo.Config.SetGlobalConfigValue("git-town."+name, value)
 		return err
 	})
 
 	suite.Step(`^setting "([^"]*)" no longer exists locally$`, func(name string) error {
 		state.gitEnv.DevRepo.Config.Reload()
-		newValue := state.gitEnv.DevRepo.Config.Storage.LocalConfigValue("git-town." + name)
+		newValue := state.gitEnv.DevRepo.Config.LocalConfigValue("git-town." + name)
 		if newValue == "" {
 			return nil
 		}
@@ -524,7 +524,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^global setting "([^"]*)" no longer exists$`, func(name string) error {
 		state.gitEnv.DevRepo.Config.Reload()
-		newValue := state.gitEnv.DevRepo.Config.Storage.GlobalConfigValue("git-town." + name)
+		newValue := state.gitEnv.DevRepo.Config.GlobalConfigValue("git-town." + name)
 		if newValue == "" {
 			return nil
 		}
@@ -533,7 +533,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^setting "([^"]*)" is now "([^"]*)"$`, func(name, want string) error {
 		state.gitEnv.DevRepo.Config.Reload()
-		have := state.gitEnv.DevRepo.Config.Storage.LocalOrGlobalConfigValue("git-town." + name)
+		have := state.gitEnv.DevRepo.Config.LocalOrGlobalConfigValue("git-town." + name)
 		if have != want {
 			return fmt.Errorf("expected setting %q to be %q, but was %q", name, want, have)
 		}
@@ -542,7 +542,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^local setting "([^"]*)" is now "([^"]*)"$`, func(name, want string) error {
 		state.gitEnv.DevRepo.Config.Reload()
-		have := state.gitEnv.DevRepo.Config.Storage.LocalConfigValue("git-town." + name)
+		have := state.gitEnv.DevRepo.Config.LocalConfigValue("git-town." + name)
 		if have != want {
 			return fmt.Errorf("expected local setting %q to be %q, but was %q", name, want, have)
 		}
@@ -551,7 +551,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^global setting "([^"]*)" is (?:now|still) "([^"]*)"$`, func(name, want string) error {
 		state.gitEnv.DevRepo.Config.Reload()
-		have := state.gitEnv.DevRepo.Config.Storage.GlobalConfigValue("git-town." + name)
+		have := state.gitEnv.DevRepo.Config.GlobalConfigValue("git-town." + name)
 		if have != want {
 			return fmt.Errorf("expected global setting %q to be %q, but was %q", name, want, have)
 		}
@@ -663,7 +663,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 		if !isLocal {
 			state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-			err := state.gitEnv.DevRepo.PushBranch(git.PushArgs{Branch: branch, Remote: config.OriginRemote})
+			err := state.gitEnv.DevRepo.PushBranch(branch, config.OriginRemote)
 			if err != nil {
 				return err
 			}
@@ -762,7 +762,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			state.initialBranchHierarchy.AddRow(branch, "main")
 			if !isLocal {
-				err = state.gitEnv.DevRepo.PushBranch(git.PushArgs{Branch: branch, Remote: config.OriginRemote})
+				err = state.gitEnv.DevRepo.PushBranch(branch, config.OriginRemote)
 				if err != nil {
 					return err
 				}
@@ -782,7 +782,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			state.initialBranchHierarchy.AddRow(branch, "main")
 			if !isLocal {
-				err = state.gitEnv.DevRepo.PushBranch(git.PushArgs{Branch: branch, Remote: config.OriginRemote})
+				err = state.gitEnv.DevRepo.PushBranch(branch, config.OriginRemote)
 				if err != nil {
 					return err
 				}
@@ -801,11 +801,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.initialLocalBranches = append(state.initialLocalBranches, branch1, branch2)
 		if !isLocal {
 			state.initialRemoteBranches = append(state.initialRemoteBranches, branch1, branch2)
-			err = state.gitEnv.DevRepo.PushBranch(git.PushArgs{Branch: branch1, Remote: config.OriginRemote})
+			err = state.gitEnv.DevRepo.PushBranch(branch1, config.OriginRemote)
 			if err != nil {
 				return err
 			}
-			return state.gitEnv.DevRepo.PushBranch(git.PushArgs{Branch: branch2, Remote: config.OriginRemote})
+			return state.gitEnv.DevRepo.PushBranch(branch2, config.OriginRemote)
 		}
 		return nil
 	})
@@ -819,7 +819,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			}
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			if !isLocal {
-				err = state.gitEnv.DevRepo.PushBranch(git.PushArgs{Branch: branch, Remote: config.OriginRemote})
+				err = state.gitEnv.DevRepo.PushBranch(branch, config.OriginRemote)
 				if err != nil {
 					return fmt.Errorf("cannot push perennial branch upstream: %w", err)
 				}

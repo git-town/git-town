@@ -17,7 +17,6 @@ type PublicRunner interface {
 type PublicRepo struct {
 	Public PublicRunner
 	InternalRepo
-	Config *config.GitTown
 }
 
 // AbortMerge cancels a currently ongoing Git merge operation.
@@ -36,25 +35,6 @@ func (r *PublicRepo) AbortRebase() error {
 		return fmt.Errorf("cannot abort current merge: %w", err)
 	}
 	return nil
-}
-
-// AddRemote adds a Git remote with the given name and URL to this repository.
-func (r *PublicRepo) AddRemote(name, url string) error {
-	err := r.Public.Run("git", "remote", "add", name, url)
-	if err != nil {
-		return fmt.Errorf("cannot add remote %q --> %q: %w", name, url, err)
-	}
-	r.RemotesCache.Invalidate()
-	return nil
-}
-
-// AddSubmodule adds a Git submodule with the given URL to this repository.
-func (r *PublicRepo) AddSubmodule(url string) error {
-	_, err := r.Run("git", "submodule", "add", url)
-	if err != nil {
-		return fmt.Errorf("cannot add submodule %q: %w", url, err)
-	}
-	return r.Commit("added submodule", "")
 }
 
 // CheckoutBranch checks out the Git branch with the given name in this repo.
@@ -119,16 +99,6 @@ func (r *PublicRepo) Commit(message, author string) error {
 	}
 	err := r.Public.Run("git", gitArgs...)
 	return err
-}
-
-// ConnectTrackingBranch connects the branch with the given name to its counterpart at origin.
-// The branch must exist.
-func (r *PublicRepo) ConnectTrackingBranch(name string) error {
-	err := r.Public.Run("git", "branch", "--set-upstream-to=origin/"+name, name)
-	if err != nil {
-		return fmt.Errorf("cannot connect tracking branch for %q: %w", name, err)
-	}
-	return nil
 }
 
 // ContinueRebase continues the currently ongoing rebase.
@@ -268,6 +238,7 @@ type PushArgs struct {
 }
 
 // PushBranch pushes the branch with the given name to origin.
+// TODO: remove unused elements from PushArgs
 func (r *PublicRepo) PushBranch(options ...PushArgs) error {
 	var option PushArgs
 	if len(options) > 0 {
@@ -314,15 +285,6 @@ func (r *PublicRepo) Rebase(target string) error {
 	err := r.Public.Run("git", "rebase", target)
 	if err != nil {
 		return fmt.Errorf("cannot rebase against branch %q: %w", target, err)
-	}
-	return nil
-}
-
-// RemoveBranch deletes the branch with the given name from this repo.
-func (r *PublicRepo) RemoveBranch(name string) error {
-	err := r.Public.Run("git", "branch", "-D", name)
-	if err != nil {
-		return fmt.Errorf("cannot delete branch %q: %w", name, err)
 	}
 	return nil
 }

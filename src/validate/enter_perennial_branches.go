@@ -11,8 +11,8 @@ import (
 
 // EnterPerennialBranches lets the user update the perennial branches.
 // This includes asking the user and updating the respective settings based on the user selection.
-func EnterPerennialBranches(repo *git.PublicRepo) error {
-	localBranchesWithoutMain, err := repo.LocalBranchesWithoutMain()
+func EnterPerennialBranches(repo *git.PublicRepo, mainBranch string) error {
+	localBranchesWithoutMain, err := repo.LocalBranchesWithoutMain(mainBranch)
 	if err != nil {
 		return err
 	}

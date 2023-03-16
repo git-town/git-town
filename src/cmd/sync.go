@@ -75,6 +75,7 @@ type syncConfig struct {
 	hasOrigin      bool
 	initialBranch  string
 	isOffline      bool
+	mainBranch     string
 	shouldPushTags bool
 }
 
@@ -87,7 +88,6 @@ func determineSyncConfig(allFlag bool, repo *git.PublicRepo) (*syncConfig, error
 	if err != nil {
 		return nil, err
 	}
-	mainBranch := repo.Config.MainBranch()
 	if hasOrigin && !isOffline {
 		err := repo.Fetch()
 		if err != nil {
@@ -101,7 +101,7 @@ func determineSyncConfig(allFlag bool, repo *git.PublicRepo) (*syncConfig, error
 	var branchesToSync []string
 	var shouldPushTags bool
 	if allFlag {
-		branches, err := repo.LocalBranchesMainFirst(mainBranch)
+		branches, err := repo.LocalBranchesMainFirst()
 		if err != nil {
 			return nil, err
 		}
@@ -124,6 +124,7 @@ func determineSyncConfig(allFlag bool, repo *git.PublicRepo) (*syncConfig, error
 		hasOrigin:      hasOrigin,
 		initialBranch:  initialBranch,
 		isOffline:      isOffline,
+		mainBranch:     repo.Config.MainBranch(),
 		shouldPushTags: shouldPushTags,
 	}, nil
 }
@@ -138,7 +139,7 @@ func syncBranchesSteps(config *syncConfig, repo *git.PublicRepo) (runstate.StepL
 	if config.hasOrigin && config.shouldPushTags && !config.isOffline {
 		list.Add(&steps.PushTagsStep{})
 	}
-	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
+	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo, config.mainBranch)
 	return list.Result()
 }
 

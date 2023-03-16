@@ -56,7 +56,7 @@ func CloneGitEnvironment(original GitEnvironment, dir string) (GitEnvironment, e
 	result := GitEnvironment{
 		Dir:        dir,
 		DevRepo:    devRepo,
-		DevRunner:  &devRepo.runner,
+		DevRunner:  &devRepo.MockingRunner,
 		OriginRepo: &originRepo,
 	}
 	// Since we copied the files from the memoized directory,
@@ -224,7 +224,7 @@ func (env *GitEnvironment) CreateCommits(commits []git.Commit) error {
 				if err != nil {
 					return fmt.Errorf("cannot create local commit: %w", err)
 				}
-				err = env.DevRepo.PushBranch(git.PushArgs{Branch: commit.Branch, Remote: config.OriginRemote})
+				err = env.DevRepo.PushBranch(commit.Branch, config.OriginRemote)
 				if err != nil {
 					return fmt.Errorf("cannot push branch %q after creating commit: %w", commit.Branch, err)
 				}

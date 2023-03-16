@@ -18,7 +18,7 @@ import (
 
 // Repo is a Git Repo for test code.
 type Repo struct {
-	internal git.InternalRepo
+	git.InternalRepo
 	MockingRunner
 }
 
@@ -61,7 +61,7 @@ func NewRepo(workingDir, homeDir, binDir string) Repo {
 	config := config.NewGitTown(&runner)
 	repo := git.InternalRepo{
 		InternalRunner:     internalRunner,
-		Config:             &config,
+		Config:             config,
 		DryRun:             &subshell.DryRun{},
 		IsRepoCache:        &cache.Bool{},
 		RemoteBranchCache:  &cache.Strings{},
@@ -72,11 +72,31 @@ func NewRepo(workingDir, homeDir, binDir string) Repo {
 	return Repo{InternalRepo: repo, runner: runner}
 }
 
+// AddRemote adds a Git remote with the given name and URL to this repository.
+func (r *Repo) AddRemote(name, url string) error {
+	_, err := r.Run("git", "remote", "add", name, url)
+	if err != nil {
+		return fmt.Errorf("cannot add remote %q --> %q: %w", name, url, err)
+	}
+	r.RemotesCache.Invalidate()
+	return nil
+}
+
+// AddSubmodule adds a Git submodule with the given URL to this repository.
+func (r *Repo) AddSubmodule(url string) error {
+	_, err := r.Run("git", "submodule", "add", url)
+	if err != nil {
+		return err
+	}
+	_, err = r.Run("git", "commit", "-m", "added submodule")
+	return err
+}
+
 // BranchHierarchyTable provides the currently configured branch hierarchy information as a DataTable.
 func (r *Repo) BranchHierarchyTable() DataTable {
 	result := DataTable{}
-	r.internal.Config.Reload()
-	parentBranchMap := r.internal.Config.ParentBranchMap()
+	r.Config.Reload()
+	parentBranchMap := r.Config.ParentBranchMap()
 	result.AddRow("BRANCH", "PARENT")
 	childBranches := make([]string, 0, len(parentBranchMap))
 	for child := range parentBranchMap {
@@ -92,9 +112,9 @@ func (r *Repo) BranchHierarchyTable() DataTable {
 // Clone creates a clone of this Repo into the given directory.
 // The cloned repo uses the same homeDir and binDir as its origin.
 func (r *Repo) Clone(targetDir string) (Repo, error) {
-	_, err := r.Run("git", "clone", r.internal.Dir, targetDir)
+	_, err := r.Run("git", "clone", r.Dir, targetDir)
 	if err != nil {
-		return Repo{}, fmt.Errorf("cannot clone repo %q: %w", r.internal.Dir, err)
+		return Repo{}, fmt.Errorf("cannot clone repo %q: %w", r.Dir, err)
 	}
 	return NewRepo(targetDir, r.runner.homeDir, r.runner.binDir), nil
 }
@@ -106,9 +126,9 @@ func (r *Repo) CheckoutBranch(name string) error {
 		return fmt.Errorf("cannot check out branch %q: %w", name, err)
 	}
 	if name != "-" {
-		r.internal.CurrentBranchCache.Set(name)
+		r.CurrentBranchCache.Set(name)
 	} else {
-		r.internal.CurrentBranchCache.Invalidate()
+		r.CurrentBranchCache.Invalidate()
 	}
 	return nil
 }
@@ -128,7 +148,7 @@ func (r *Repo) CreateChildFeatureBranch(name string, parent string) error {
 	if err != nil {
 		return err
 	}
-	_ = r.internal.Config.SetParent(name, parent)
+	_ = r.Config.SetParent(name, parent)
 	return nil
 }
 
@@ -159,7 +179,7 @@ func (r *Repo) CreateCommit(commit git.Commit) error {
 
 // CreateFile creates a file with the given name and content in this repository.
 func (r *Repo) CreateFile(name, content string) error {
-	filePath := filepath.Join(r.internal.Dir, name)
+	filePath := filepath.Join(r.Dir, name)
 	folderPath := filepath.Dir(filePath)
 	err := os.MkdirAll(folderPath, os.ModePerm)
 	if err != nil {
@@ -177,10 +197,10 @@ func (r *Repo) CreatePerennialBranches(names ...string) error {
 	for _, name := range names {
 		err := r.CreateBranch(name, "main")
 		if err != nil {
-			return fmt.Errorf("cannot create perennial branch %q in repo %q: %w", name, r.internal.Dir, err)
+			return fmt.Errorf("cannot create perennial branch %q in repo %q: %w", name, r.Dir, err)
 		}
 	}
-	return r.internal.Config.AddToPerennialBranches(names...)
+	return r.Config.AddToPerennialBranches(names...)
 }
 
 // CreateStandaloneTag creates a tag not on a branch.
@@ -204,7 +224,7 @@ func (r *Repo) CreateTag(name string) error {
 
 // Commits provides a list of the commits in this Git repository with the given fields.
 func (r *Repo) Commits(fields []string) ([]git.Commit, error) {
-	branches, err := r.internal.LocalBranchesMainFirst()
+	branches, err := r.LocalBranchesMainFirst()
 	if err != nil {
 		return []git.Commit{}, fmt.Errorf("cannot determine the Git branches: %w", err)
 	}
@@ -251,6 +271,13 @@ func (r *Repo) CommitsInBranch(branch string, fields []string) ([]git.Commit, er
 	return result, nil
 }
 
+// ConnectTrackingBranch connects the branch with the given name to its counterpart at origin.
+// The branch must exist.
+func (r *Repo) ConnectTrackingBranch(name string) error {
+	_, err := r.Run("git", "branch", "--set-upstream-to=origin/"+name, name)
+	return err
+}
+
 // DeleteMainBranchConfiguration removes the configuration for which branch is the main branch.
 func (r *Repo) DeleteMainBranchConfiguration() error {
 	_, err := r.Run("git", "config", "--unset", config.MainBranchKey)
@@ -260,9 +287,15 @@ func (r *Repo) DeleteMainBranchConfiguration() error {
 	return nil
 }
 
+// Fetch retrieves the updates from the origin repo.
+func (r *Repo) Fetch() error {
+	_, err := r.Run("git", "fetch", "--prune", "--tags") // TODO: remove --prune or --tags here?
+	return err
+}
+
 // FileContent provides the current content of a file.
 func (r *Repo) FileContent(filename string) (string, error) {
-	content, err := os.ReadFile(filepath.Join(r.internal.Dir, filename))
+	content, err := os.ReadFile(filepath.Join(r.Dir, filename))
 	return string(content), err
 }
 
@@ -293,7 +326,7 @@ func (r *Repo) FilesInCommit(sha string) ([]string, error) {
 func (r *Repo) FilesInBranch(branch string) ([]string, error) {
 	output, err := r.Run("git", "ls-tree", "-r", "--name-only", branch)
 	if err != nil {
-		return []string{}, fmt.Errorf("cannot determine files in branch %q in repo %q: %w", branch, r.internal.Dir, err)
+		return []string{}, fmt.Errorf("cannot determine files in branch %q in repo %q: %w", branch, r.Dir, err)
 	}
 	result := []string{}
 	for _, line := range strings.Split(output.Sanitized(), "\n") {
@@ -309,7 +342,7 @@ func (r *Repo) FilesInBranch(branch string) ([]string, error) {
 func (repo *Repo) FilesInBranches() (DataTable, error) {
 	result := DataTable{}
 	result.AddRow("BRANCH", "NAME", "CONTENT")
-	branches, err := repo.internal.LocalBranchesMainFirst()
+	branches, err := repo.LocalBranchesMainFirst()
 	if err != nil {
 		return DataTable{}, err
 	}
@@ -339,14 +372,14 @@ func (repo *Repo) FilesInBranches() (DataTable, error) {
 func (r *Repo) HasBranchesOutOfSync() (bool, error) {
 	output, err := r.Run("git", "for-each-ref", "--format=%(refname:short) %(upstream:track)", "refs/heads")
 	if err != nil {
-		return false, fmt.Errorf("cannot determine if branches are out of sync in %q: %w %q", r.internal.Dir, err, output.Sanitized())
+		return false, fmt.Errorf("cannot determine if branches are out of sync in %q: %w %q", r.Dir, err, output.Sanitized())
 	}
 	return output.ContainsText("["), nil
 }
 
 // HasFile indicates whether this repository contains a file with the given name and content.
 func (r *Repo) HasFile(name, content string) (bool, error) {
-	rawContent, err := os.ReadFile(filepath.Join(r.internal.Dir, name))
+	rawContent, err := os.ReadFile(filepath.Join(r.Dir, name))
 	if err != nil {
 		return false, fmt.Errorf("repo doesn't have file %q: %w", name, err)
 	}
@@ -366,22 +399,33 @@ func (r *Repo) HasGitTownConfigNow() (bool, error) {
 	return output.Sanitized() != "", nil
 }
 
+func (r *Repo) PushBranch(branch, remote string) error {
+	_, err := r.Run("git", "push", "-u", remote, branch)
+	return err
+}
+
+// RemoveBranch deletes the branch with the given name from this repo.
+func (r *Repo) RemoveBranch(name string) error {
+	_, err := r.Run("git", "branch", "-D", name)
+	return err
+}
+
 // RemoveRemote deletes the Git remote with the given name.
 func (r *Repo) RemoveRemote(name string) error {
-	r.internal.RemotesCache.Invalidate()
+	r.RemotesCache.Invalidate()
 	_, err := r.Run("git", "remote", "rm", name)
 	return err
 }
 
 // RemoveUnnecessaryFiles trims all files that aren't necessary in this repo.
 func (r *Repo) RemoveUnnecessaryFiles() error {
-	fullPath := filepath.Join(r.internal.Dir, ".git", "hooks")
+	fullPath := filepath.Join(r.Dir, ".git", "hooks")
 	err := os.RemoveAll(fullPath)
 	if err != nil {
 		return fmt.Errorf("cannot remove unnecessary files in %q: %w", fullPath, err)
 	}
-	_ = os.Remove(filepath.Join(r.internal.Dir, ".git", "COMMIT_EDITMSG"))
-	_ = os.Remove(filepath.Join(r.internal.Dir, ".git", "description"))
+	_ = os.Remove(filepath.Join(r.Dir, ".git", "COMMIT_EDITMSG"))
+	_ = os.Remove(filepath.Join(r.Dir, ".git", "description"))
 	return nil
 }
 
@@ -415,7 +459,7 @@ func (r *Repo) StashSize() (int, error) {
 func (r *Repo) Tags() ([]string, error) {
 	output, err := r.Run("git", "tag")
 	if err != nil {
-		return []string{}, fmt.Errorf("cannot determine tags in repo %q: %w", r.internal.Dir, err)
+		return []string{}, fmt.Errorf("cannot determine tags in repo %q: %w", r.Dir, err)
 	}
 	result := []string{}
 	for _, line := range strings.Split(output.Sanitized(), "\n") {
@@ -428,7 +472,7 @@ func (r *Repo) Tags() ([]string, error) {
 func (r *Repo) UncommittedFiles() ([]string, error) {
 	output, err := r.Run("git", "status", "--porcelain", "--untracked-files=all")
 	if err != nil {
-		return []string{}, fmt.Errorf("cannot determine uncommitted files in %q: %w", r.internal.Dir, err)
+		return []string{}, fmt.Errorf("cannot determine uncommitted files in %q: %w", r.Dir, err)
 	}
 	lines := output.Lines()
 	result := []string{}
@@ -449,9 +493,9 @@ func CreateTestGitTownRepo(t *testing.T) Repo {
 	repo := CreateRepo(t)
 	err := repo.CreateBranch("main", "initial")
 	assert.NoError(t, err)
-	err = repo.internal.Config.SetMainBranch("main")
+	err = repo.Config.SetMainBranch("main")
 	assert.NoError(t, err)
-	err = repo.internal.Config.SetPerennialBranches([]string{})
+	err = repo.Config.SetPerennialBranches([]string{})
 	assert.NoError(t, err)
 	return repo
 }

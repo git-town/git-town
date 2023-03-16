@@ -10,20 +10,21 @@ import (
 // Git manages configuration data stored in Git metadata.
 // Supports configuration in the local repo and the global Git configuration.
 type Git struct {
+	runner
+
 	// globalConfigCache is a cache of the global Git configuration.
 	globalConfigCache map[string]string
 
 	// localConfigCache is a cache of the Git configuration in the local Git repo.
 	localConfigCache map[string]string
-
-	// for running shell commands
-	runner runner
 }
 
-type runner interface{}
+type runner interface {
+	Run(executable string, args ...string) (*subshell.Output, error)
+}
 
 // LoadGit provides the Git configuration from the given directory or the global one if the global flag is set.
-func LoadGit(runner subshell.Runner, global bool) map[string]string {
+func LoadGit(runner runner, global bool) map[string]string {
 	result := map[string]string{}
 	cmdArgs := []string{"config", "-lz"}
 	if global {
@@ -98,7 +99,7 @@ func (g *Git) Reload() {
 
 func (g *Git) RemoveGlobalConfigValue(key string) (*subshell.Output, error) {
 	delete(g.globalConfigCache, key)
-	return g.runner.Run("git", "config", "--global", "--unset", key)
+	return g.Run("git", "config", "--global", "--unset", key)
 }
 
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.

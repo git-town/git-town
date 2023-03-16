@@ -8,13 +8,14 @@ import (
 
 // IsConfigured verifies that the given Git repo contains necessary Git Town configuration.
 func IsConfigured(repo *git.PublicRepo) error {
-	if repo.Config.MainBranch() == "" {
+	mainBranch := repo.Config.MainBranch()
+	if mainBranch == "" {
 		fmt.Print("Git Town needs to be configured\n\n")
 		err := EnterMainBranch(repo)
 		if err != nil {
 			return err
 		}
-		return EnterPerennialBranches(repo)
+		return EnterPerennialBranches(repo, mainBranch)
 	}
 	return repo.RemoveOutdatedConfiguration()
 }

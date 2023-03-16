@@ -61,6 +61,7 @@ where hostname matches what is in your ssh config file.`, config.CodeHostingDriv
 type newPullRequestConfig struct {
 	BranchesToSync []string
 	InitialBranch  string
+	mainBranch     string
 }
 
 func determineNewPullRequestConfig(repo *git.PublicRepo) (*newPullRequestConfig, error) {
@@ -85,6 +86,7 @@ func determineNewPullRequestConfig(repo *git.PublicRepo) (*newPullRequestConfig,
 	return &newPullRequestConfig{
 		InitialBranch:  initialBranch,
 		BranchesToSync: append(repo.Config.AncestorBranches(initialBranch), initialBranch),
+		mainBranch:     repo.Config.MainBranch(),
 	}, nil
 }
 
@@ -93,7 +95,7 @@ func newPullRequestStepList(config *newPullRequestConfig, repo *git.PublicRepo) 
 	for _, branch := range config.BranchesToSync {
 		updateBranchSteps(&list, branch, true, repo)
 	}
-	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
+	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo, config.mainBranch)
 	list.Add(&steps.CreateProposalStep{Branch: config.InitialBranch})
 	return list.Result()
 }

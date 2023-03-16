@@ -24,8 +24,8 @@ func (slb *StepListBuilder) AddE(step steps.Step, err error) {
 	}
 }
 
-func (slb *StepListBuilder) Wrap(options WrapOptions, repo *git.PublicRepo) {
-	slb.Check(slb.StepList.Wrap(options, repo))
+func (slb *StepListBuilder) Wrap(options WrapOptions, repo *git.PublicRepo, mainBranch string) {
+	slb.Check(slb.StepList.Wrap(options, repo, mainBranch))
 }
 
 func (slb *StepListBuilder) Result() (StepList, error) {

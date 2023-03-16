@@ -9,8 +9,9 @@ import (
 // is known to Git Town.
 // Missing ancestry information is queried from the user.
 func KnowsBranchesAncestry(branches []string, repo *git.PublicRepo) error {
+	mainBranch := repo.Config.MainBranch()
 	for _, branch := range branches {
-		err := KnowsBranchAncestry(branch, repo.Config.MainBranch(), repo)
+		err := KnowsBranchAncestry(branch, mainBranch, repo)
 		if err != nil {
 			return err
 		}
