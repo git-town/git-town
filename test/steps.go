@@ -663,7 +663,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 		if !isLocal {
 			state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-			err := state.gitEnv.DevRepo.PushBranch(branch, config.OriginRemote)
+			err := state.gitEnv.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
 			if err != nil {
 				return err
 			}
@@ -762,7 +762,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			state.initialBranchHierarchy.AddRow(branch, "main")
 			if !isLocal {
-				err = state.gitEnv.DevRepo.PushBranch(branch, config.OriginRemote)
+				err = state.gitEnv.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
 				if err != nil {
 					return err
 				}
@@ -782,7 +782,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			state.initialBranchHierarchy.AddRow(branch, "main")
 			if !isLocal {
-				err = state.gitEnv.DevRepo.PushBranch(branch, config.OriginRemote)
+				err = state.gitEnv.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
 				if err != nil {
 					return err
 				}
@@ -801,11 +801,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.initialLocalBranches = append(state.initialLocalBranches, branch1, branch2)
 		if !isLocal {
 			state.initialRemoteBranches = append(state.initialRemoteBranches, branch1, branch2)
-			err = state.gitEnv.DevRepo.PushBranch(branch1, config.OriginRemote)
+			err = state.gitEnv.DevRepo.PushBranchToRemote(branch1, config.OriginRemote)
 			if err != nil {
 				return err
 			}
-			return state.gitEnv.DevRepo.PushBranch(branch2, config.OriginRemote)
+			return state.gitEnv.DevRepo.PushBranchToRemote(branch2, config.OriginRemote)
 		}
 		return nil
 	})
@@ -819,7 +819,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			}
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			if !isLocal {
-				err = state.gitEnv.DevRepo.PushBranch(branch, config.OriginRemote)
+				err = state.gitEnv.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
 				if err != nil {
 					return fmt.Errorf("cannot push perennial branch upstream: %w", err)
 				}
