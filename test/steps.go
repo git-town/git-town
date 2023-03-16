@@ -92,7 +92,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 		state.initialBranchHierarchy.AddRow(branch, parentBranch)
-		return state.gitEnv.DevRepo.PushBranch(branch, config.OriginRemote)
+		return state.gitEnv.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
 	})
 
 	suite.Step(`^a merge is now in progress$`, func() error {
@@ -116,7 +116,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.initialBranchHierarchy.AddRow(branch, "main")
 		if !isLocal {
 			state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-			return state.gitEnv.DevRepo.PushBranch(branch, config.OriginRemote)
+			return state.gitEnv.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
 		}
 		return nil
 	})
@@ -128,7 +128,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-		return state.gitEnv.DevRepo.PushBranch(branch, config.OriginRemote)
+		return state.gitEnv.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
 	})
 
 	suite.Step(`^a rebase is now in progress$`, func() error {
