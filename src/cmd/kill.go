@@ -42,6 +42,7 @@ type killConfig struct {
 	initialBranch       string
 	isOffline           bool
 	isTargetBranchLocal bool
+	mainBranch          string
 	noPushHook          bool
 	previousBranch      string
 	targetBranchParent  string
@@ -49,10 +50,11 @@ type killConfig struct {
 }
 
 func determineKillConfig(args []string, repo *git.PublicRepo) (*killConfig, error) {
-	initialBranch, err := repo.Internal.CurrentBranch()
+	initialBranch, err := repo.CurrentBranch()
 	if err != nil {
 		return nil, err
 	}
+	mainBranch := repo.Config.MainBranch()
 	var targetBranch string
 	if len(args) > 0 {
 		targetBranch = args[0]
@@ -62,18 +64,18 @@ func determineKillConfig(args []string, repo *git.PublicRepo) (*killConfig, erro
 	if !repo.Config.IsFeatureBranch(targetBranch) {
 		return nil, fmt.Errorf("you can only kill feature branches")
 	}
-	isTargetBranchLocal, err := repo.Internal.HasLocalBranch(targetBranch)
+	isTargetBranchLocal, err := repo.HasLocalBranch(targetBranch)
 	if err != nil {
 		return nil, err
 	}
 	if isTargetBranchLocal {
-		err = validate.KnowsBranchAncestry(targetBranch, repo.Config.MainBranch(), repo)
+		err = validate.KnowsBranchAncestry(targetBranch, mainBranch, repo)
 		if err != nil {
 			return nil, err
 		}
 		repo.Config.Reload()
 	}
-	hasOrigin, err := repo.Internal.HasOrigin()
+	hasOrigin, err := repo.HasOrigin()
 	if err != nil {
 		return nil, err
 	}
@@ -88,8 +90,7 @@ func determineKillConfig(args []string, repo *git.PublicRepo) (*killConfig, erro
 		}
 	}
 	if initialBranch != targetBranch {
-		mainBranch := repo.Config.MainBranch()
-		hasTargetBranch, err := repo.Internal.HasLocalOrOriginBranch(targetBranch, mainBranch)
+		hasTargetBranch, err := repo.HasLocalOrOriginBranch(targetBranch, mainBranch)
 		if err != nil {
 			return nil, err
 		}
@@ -97,15 +98,15 @@ func determineKillConfig(args []string, repo *git.PublicRepo) (*killConfig, erro
 			return nil, fmt.Errorf("there is no branch named %q", targetBranch)
 		}
 	}
-	hasTrackingBranch, err := repo.Internal.HasTrackingBranch(targetBranch)
+	hasTrackingBranch, err := repo.HasTrackingBranch(targetBranch)
 	if err != nil {
 		return nil, err
 	}
-	previousBranch, err := repo.Internal.PreviouslyCheckedOutBranch()
+	previousBranch, err := repo.PreviouslyCheckedOutBranch()
 	if err != nil {
 		return nil, err
 	}
-	hasOpenChanges, err := repo.Internal.HasOpenChanges()
+	hasOpenChanges, err := repo.HasOpenChanges()
 	if err != nil {
 		return nil, err
 	}
@@ -120,6 +121,7 @@ func determineKillConfig(args []string, repo *git.PublicRepo) (*killConfig, erro
 		initialBranch:       initialBranch,
 		isOffline:           isOffline,
 		isTargetBranchLocal: isTargetBranchLocal,
+		mainBranch:          mainBranch,
 		noPushHook:          !pushHook,
 		previousBranch:      previousBranch,
 		targetBranch:        targetBranch,
@@ -153,6 +155,6 @@ func killStepList(config *killConfig, repo *git.PublicRepo) (runstate.StepList, 
 	err := result.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.initialBranch != config.targetBranch && config.targetBranch == config.previousBranch,
-	}, repo)
+	}, repo, config.mainBranch)
 	return result, err
 }

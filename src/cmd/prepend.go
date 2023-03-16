@@ -56,8 +56,8 @@ type prependConfig struct {
 
 func determinePrependConfig(args []string, repo *git.PublicRepo) (*prependConfig, error) {
 	ec := runstate.ErrorChecker{}
-	initialBranch := ec.String(repo.Internal.CurrentBranch())
-	hasOrigin := ec.Bool(repo.Internal.HasOrigin())
+	initialBranch := ec.String(repo.CurrentBranch())
+	hasOrigin := ec.Bool(repo.HasOrigin())
 	shouldNewBranchPush := ec.Bool(repo.Config.ShouldNewBranchPush())
 	pushHook := ec.Bool(repo.Config.PushHook())
 	isOffline := ec.Bool(repo.Config.IsOffline())
@@ -72,7 +72,7 @@ func determinePrependConfig(args []string, repo *git.PublicRepo) (*prependConfig
 		}
 	}
 	targetBranch := args[0]
-	hasBranch, err := repo.Internal.HasLocalOrOriginBranch(targetBranch, mainBranch)
+	hasBranch, err := repo.HasLocalOrOriginBranch(targetBranch, mainBranch)
 	if err != nil {
 		return nil, err
 	}

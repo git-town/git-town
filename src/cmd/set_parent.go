@@ -17,7 +17,7 @@ func setParentCommand(repo *git.PublicRepo) *cobra.Command {
 		Short:   "Prompts to set the parent branch for the current branch",
 		Long:    `Prompts to set the parent branch for the current branch`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			currentBranch, err := repo.Internal.CurrentBranch()
+			currentBranch, err := repo.CurrentBranch()
 			if err != nil {
 				return err
 			}

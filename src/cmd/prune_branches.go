@@ -39,7 +39,7 @@ type pruneBranchesConfig struct {
 }
 
 func determinePruneBranchesConfig(repo *git.PublicRepo) (*pruneBranchesConfig, error) {
-	hasOrigin, err := repo.Internal.HasOrigin()
+	hasOrigin, err := repo.HasOrigin()
 	if err != nil {
 		return nil, err
 	}
@@ -49,11 +49,11 @@ func determinePruneBranchesConfig(repo *git.PublicRepo) (*pruneBranchesConfig, e
 			return nil, err
 		}
 	}
-	initialBranch, err := repo.Internal.CurrentBranch()
+	initialBranch, err := repo.CurrentBranch()
 	if err != nil {
 		return nil, err
 	}
-	localBranchesWithDeletedTrackingBranches, err := repo.Internal.LocalBranchesWithDeletedTrackingBranches()
+	localBranchesWithDeletedTrackingBranches, err := repo.LocalBranchesWithDeletedTrackingBranches()
 	if err != nil {
 		return nil, err
 	}

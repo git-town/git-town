@@ -37,7 +37,7 @@ type diffParentConfig struct {
 
 // Does not return error because "Ensure" functions will call exit directly.
 func determineDiffParentConfig(args []string, repo *git.PublicRepo) (*diffParentConfig, error) {
-	initialBranch, err := repo.Internal.CurrentBranch()
+	initialBranch, err := repo.CurrentBranch()
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +48,7 @@ func determineDiffParentConfig(args []string, repo *git.PublicRepo) (*diffParent
 		branch = initialBranch
 	}
 	if initialBranch != branch {
-		hasBranch, err := repo.Internal.HasLocalBranch(branch)
+		hasBranch, err := repo.HasLocalBranch(branch)
 		if err != nil {
 			return nil, err
 		}

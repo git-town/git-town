@@ -52,8 +52,8 @@ type appendConfig struct {
 
 func determineAppendConfig(args []string, repo *git.PublicRepo) (*appendConfig, error) {
 	ec := runstate.ErrorChecker{}
-	parentBranch := ec.String(repo.Internal.CurrentBranch())
-	hasOrigin := ec.Bool(repo.Internal.HasOrigin())
+	parentBranch := ec.String(repo.CurrentBranch())
+	hasOrigin := ec.Bool(repo.HasOrigin())
 	isOffline := ec.Bool(repo.Config.IsOffline())
 	mainBranch := repo.Config.MainBranch()
 	pushHook := ec.Bool(repo.Config.PushHook())
@@ -65,7 +65,7 @@ func determineAppendConfig(args []string, repo *git.PublicRepo) (*appendConfig, 
 	if hasOrigin && !isOffline {
 		ec.Check(repo.Fetch())
 	}
-	hasTargetBranch := ec.Bool(repo.Internal.HasLocalOrOriginBranch(targetBranch, mainBranch))
+	hasTargetBranch := ec.Bool(repo.HasLocalOrOriginBranch(targetBranch, mainBranch))
 	if hasTargetBranch {
 		ec.Fail("a branch named %q already exists", targetBranch)
 	}

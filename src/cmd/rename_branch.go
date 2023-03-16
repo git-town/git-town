@@ -64,7 +64,7 @@ type renameBranchConfig struct {
 }
 
 func determineRenameBranchConfig(args []string, forceFlag bool, repo *git.PublicRepo) (*renameBranchConfig, error) {
-	initialBranch, err := repo.Internal.CurrentBranch()
+	initialBranch, err := repo.CurrentBranch()
 	if err != nil {
 		return nil, err
 	}
@@ -103,28 +103,28 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *git.Public
 			return nil, err
 		}
 	}
-	hasOldBranch, err := repo.Internal.HasLocalBranch(oldBranch)
+	hasOldBranch, err := repo.HasLocalBranch(oldBranch)
 	if err != nil {
 		return nil, err
 	}
 	if !hasOldBranch {
 		return nil, fmt.Errorf("there is no branch named %q", oldBranch)
 	}
-	isBranchInSync, err := repo.Internal.IsBranchInSync(oldBranch)
+	isBranchInSync, err := repo.IsBranchInSync(oldBranch)
 	if err != nil {
 		return nil, err
 	}
 	if !isBranchInSync {
 		return nil, fmt.Errorf("%q is not in sync with its tracking branch, please sync the branches before renaming", oldBranch)
 	}
-	hasNewBranch, err := repo.Internal.HasLocalOrOriginBranch(newBranch, mainBranch)
+	hasNewBranch, err := repo.HasLocalOrOriginBranch(newBranch, mainBranch)
 	if err != nil {
 		return nil, err
 	}
 	if hasNewBranch {
 		return nil, fmt.Errorf("a branch named %q already exists", newBranch)
 	}
-	oldBranchHasTrackingBranch, err := repo.Internal.HasTrackingBranch(oldBranch)
+	oldBranchHasTrackingBranch, err := repo.HasTrackingBranch(oldBranch)
 	if err != nil {
 		return nil, err
 	}

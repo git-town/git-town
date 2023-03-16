@@ -39,7 +39,7 @@ This can conflict with other tools that also define Git aliases.`,
 func addAliases(repo *git.PublicRepo) error {
 	for _, aliasType := range config.AliasTypes() {
 		result, err1 := repo.Config.AddGitAlias(aliasType)
-		err2 := repo.LoggingRunner.PrintCommandAndOutput(result)
+		err2 := repo.PrintCommandAndOutput(result)
 		if err1 != nil {
 			return err1
 		}

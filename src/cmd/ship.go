@@ -49,7 +49,7 @@ GitHub's feature to automatically delete head branches,
 run "git config %s false"
 and Git Town will leave it up to your origin server to delete the remote branch.`, config.GithubTokenKey, config.ShipDeleteRemoteBranchKey),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			connector, err := hosting.NewConnector(repo.Config, &repo.Internal, cli.PrintConnectorAction)
+			connector, err := hosting.NewConnector(repo.Config, &repo.InternalRepo, cli.PrintConnectorAction)
 			if err != nil {
 				return err
 			}
@@ -81,12 +81,13 @@ type shipConfig struct {
 	initialBranch            string
 	isShippingInitialBranch  bool
 	isOffline                bool
+	mainBranch               string
 	proposal                 *hosting.Proposal
 	proposalsOfChildBranches []hosting.Proposal
 }
 
 func determineShipConfig(args []string, connector hosting.Connector, repo *git.PublicRepo) (*shipConfig, error) {
-	hasOrigin, err := repo.Internal.HasOrigin()
+	hasOrigin, err := repo.HasOrigin()
 	if err != nil {
 		return nil, err
 	}
@@ -94,7 +95,7 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 	if err != nil {
 		return nil, err
 	}
-	initialBranch, err := repo.Internal.CurrentBranch()
+	initialBranch, err := repo.CurrentBranch()
 	if err != nil {
 		return nil, err
 	}
@@ -102,6 +103,7 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 	if err != nil {
 		return nil, err
 	}
+	mainBranch := repo.Config.MainBranch()
 	var branchToShip string
 	if len(args) > 0 {
 		branchToShip = args[0]
@@ -110,7 +112,7 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 	}
 	isShippingInitialBranch := branchToShip == initialBranch
 	if isShippingInitialBranch {
-		hasOpenChanges, err := repo.Internal.HasOpenChanges()
+		hasOpenChanges, err := repo.HasOpenChanges()
 		if err != nil {
 			return nil, err
 		}
@@ -125,7 +127,7 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 		}
 	}
 	if !isShippingInitialBranch {
-		hasBranch, err := repo.Internal.HasLocalOrOriginBranch(branchToShip)
+		hasBranch, err := repo.HasLocalOrOriginBranch(branchToShip, mainBranch)
 		if err != nil {
 			return nil, err
 		}
@@ -136,7 +138,7 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 	if !repo.Config.IsFeatureBranch(branchToShip) {
 		return nil, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can be shipped", branchToShip)
 	}
-	err = validate.KnowsBranchAncestry(branchToShip, repo.Config.MainBranch(), repo)
+	err = validate.KnowsBranchAncestry(branchToShip, mainBranch, repo)
 	if err != nil {
 		return nil, err
 	}
@@ -144,7 +146,7 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 	if err != nil {
 		return nil, err
 	}
-	hasTrackingBranch, err := repo.Internal.HasTrackingBranch(branchToShip)
+	hasTrackingBranch, err := repo.HasTrackingBranch(branchToShip)
 	if err != nil {
 		return nil, err
 	}
@@ -187,6 +189,7 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 		initialBranch:            initialBranch,
 		isOffline:                isOffline,
 		isShippingInitialBranch:  isShippingInitialBranch,
+		mainBranch:               mainBranch,
 		proposal:                 proposal,
 		proposalsOfChildBranches: proposalsOfChildBranches,
 	}, nil
@@ -243,7 +246,7 @@ func shipStepList(config *shipConfig, commitMessage string, repo *git.PublicRepo
 			list.Add(&steps.DeleteOriginBranchStep{Branch: config.branchToShip, IsTracking: true})
 		}
 	}
-	list.Add(&steps.DeleteLocalBranchStep{Branch: config.branchToShip, config.MainBranch})
+	list.Add(&steps.DeleteLocalBranchStep{Branch: config.branchToShip, Parent: config.mainBranch})
 	list.Add(&steps.DeleteParentBranchStep{Branch: config.branchToShip})
 	for _, child := range config.childBranches {
 		list.Add(&steps.SetParentStep{Branch: child, ParentBranch: config.branchToMergeInto})

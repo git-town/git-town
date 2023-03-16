@@ -41,7 +41,7 @@ where hostname matches what is in your ssh config file.`, config.CodeHostingDriv
 			if err != nil {
 				return err
 			}
-			connector, err := hosting.NewConnector(repo.Config, &repo.Internal, cli.PrintConnectorAction)
+			connector, err := hosting.NewConnector(repo.Config, &repo.InternalRepo, cli.PrintConnectorAction)
 			if err != nil {
 				return err
 			}
@@ -64,7 +64,7 @@ type newPullRequestConfig struct {
 }
 
 func determineNewPullRequestConfig(repo *git.PublicRepo) (*newPullRequestConfig, error) {
-	hasOrigin, err := repo.Internal.HasOrigin()
+	hasOrigin, err := repo.HasOrigin()
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +74,7 @@ func determineNewPullRequestConfig(repo *git.PublicRepo) (*newPullRequestConfig,
 			return nil, err
 		}
 	}
-	initialBranch, err := repo.Internal.CurrentBranch()
+	initialBranch, err := repo.CurrentBranch()
 	if err != nil {
 		return nil, err
 	}
