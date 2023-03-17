@@ -20,17 +20,17 @@ func TestHoist(t *testing.T) {
 
 	t.Run("already hoisted", func(t *testing.T) {
 		t.Parallel()
-		give := []string{"main", "one", "two"}
-		want := []string{"main", "one", "two"}
-		have := stringslice.Hoist(give, "main")
+		give := []string{"initial", "one", "two"}
+		want := []string{"initial", "one", "two"}
+		have := stringslice.Hoist(give, "initial")
 		assert.Equal(t, want, have)
 	})
 
 	t.Run("contains the element to hoist", func(t *testing.T) {
 		t.Parallel()
-		give := []string{"alpha", "main", "omega"}
-		want := []string{"main", "alpha", "omega"}
-		have := stringslice.Hoist(give, "main")
+		give := []string{"alpha", "initial", "omega"}
+		want := []string{"initial", "alpha", "omega"}
+		have := stringslice.Hoist(give, "initial")
 		assert.Equal(t, want, have)
 	})
 
@@ -38,7 +38,7 @@ func TestHoist(t *testing.T) {
 		t.Parallel()
 		give := []string{}
 		want := []string{}
-		have := stringslice.Hoist(give, "main")
+		have := stringslice.Hoist(give, "initial")
 		assert.Equal(t, want, have)
 	})
 }

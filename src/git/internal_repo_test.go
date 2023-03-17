@@ -196,7 +196,7 @@ func TestRepo(t *testing.T) {
 		assert.NoError(t, err)
 		branches, err := repo.InternalRepo.LocalAndOriginBranches("initial")
 		assert.NoError(t, err)
-		assert.Equal(t, []string{"b1", "b2", "b3", "initial"}, branches)
+		assert.Equal(t, []string{"initial", "b1", "b2", "b3"}, branches)
 	})
 
 	t.Run(".PreviouslyCheckedOutBranch()", func(t *testing.T) {
