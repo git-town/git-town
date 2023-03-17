@@ -56,5 +56,5 @@ type publicRunner interface {
 }
 
 type internalRunner interface {
-	Run(executable string, args ...string) (subshell.Output, error)
+	Run(executable string, args ...string) (*subshell.Output, error)
 }

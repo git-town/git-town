@@ -29,7 +29,7 @@ import (
 // Execute runs the Cobra stack.
 func Execute() error {
 	debugFlag := false
-	repo := git.NewProdRepo(&debugFlag)
+	repo := git.PublicRepo{}
 	rootCmd := RootCmd(&repo, &debugFlag)
 	return rootCmd.Execute()
 }

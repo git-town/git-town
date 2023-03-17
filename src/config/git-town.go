@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"sort"
 	"strconv"
 	"strings"
@@ -302,12 +303,14 @@ func (gt *GitTown) RemoveGitAlias(command string) (*subshell.Output, error) {
 
 // RemoveLocalGitConfiguration removes all Git Town configuration.
 func (gt *GitTown) RemoveLocalGitConfiguration() error {
-	result, err := gt.Run("git", "config", "--remove-section", "git-town")
+	_, err := gt.Run("git", "config", "--remove-section", "git-town")
 	if err != nil {
-		if result.ExitCode == 128 {
-			// Git returns exit code 128 when trying to delete a non-existing config section.
-			// This is not an error condition in this workflow so we can ignore it here.
-			return nil
+		if exitErr, ok := err.(*exec.ExitError); ok {
+			if exitErr.ExitCode() == 128 {
+				// Git returns exit code 128 when trying to delete a non-existing config section.
+				// This is not an error condition in this workflow so we can ignore it here.
+				return nil
+			}
 		}
 		return fmt.Errorf("unexpected error while removing the 'git-town' section from the Git configuration: %w", err)
 	}
