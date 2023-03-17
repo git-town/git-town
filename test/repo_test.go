@@ -47,7 +47,7 @@ func TestRepo(t *testing.T) {
 		clonedPath := filepath.Join(origin.Dir(), "cloned")
 		cloned, err := origin.Clone(clonedPath)
 		assert.NoError(t, err)
-		assert.Equal(t, clonedPath, cloned.Dir)
+		assert.Equal(t, clonedPath, cloned.Dir())
 		assertIsNormalGitRepo(t, clonedPath)
 	})
 
@@ -135,7 +135,7 @@ func TestRepo(t *testing.T) {
 		assert.NoError(t, err)
 		err = repo.CreateChildFeatureBranch("f1a", "f1")
 		assert.NoError(t, err)
-		cmd := exec.Cmd{Path: "git-town", Args: []string{"config"}}
+		cmd := exec.Cmd{Path: "git", Args: []string{"town", "config"}}
 		output, err := cmd.CombinedOutput()
 		assert.NoError(t, err)
 		has := strings.Contains(string(output), "Branch Ancestry:\n  main\n    f1\n      f1a")
