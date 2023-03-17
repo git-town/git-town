@@ -70,7 +70,7 @@ hi
 		runner := subshell.InternalRunner{Dir: tmpDir}
 		_, err := runner.RunString("touch first")
 		assert.NoError(t, err)
-		_, err = os.Stat(filepath.Join("first"))
+		_, err = os.Stat(filepath.Join(tmpDir, "first"))
 		assert.False(t, os.IsNotExist(err))
 	})
 }
