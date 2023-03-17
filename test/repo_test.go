@@ -2,6 +2,7 @@
 package test
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -139,6 +140,9 @@ func TestRepo(t *testing.T) {
 		output, err := cmd.CombinedOutput()
 		assert.NoError(t, err)
 		has := strings.Contains(string(output), "Branch Ancestry:\n  main\n    f1\n      f1a")
+		if !has {
+			fmt.Printf("unexpected output: %s", string(output))
+		}
 		assert.True(t, has)
 	})
 
