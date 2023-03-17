@@ -11,26 +11,34 @@ import (
 )
 
 func abortCmd(repo *git.PublicRepo) *cobra.Command {
-	return &cobra.Command{
+	debug := false
+	cmd := &cobra.Command{
 		Use:     "abort",
 		GroupID: "errors",
 		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
 		Short:   "Aborts the last run git-town command",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			runState, err := runstate.Load(repo)
-			if err != nil {
-				return fmt.Errorf("cannot load previous run state: %w", err)
-			}
-			if runState == nil || !runState.IsUnfinished() {
-				return fmt.Errorf("nothing to abort")
-			}
-			abortRunState := runState.CreateAbortRunState()
-			connector, err := hosting.NewConnector(repo.Config, &repo.InternalRepo, cli.PrintConnectorAction)
-			if err != nil {
-				return err
-			}
-			return runstate.Execute(&abortRunState, repo, connector)
+			return abort(debug)
 		},
 	}
+	debugFlag(cmd, &debug)
+	return cmd
+}
+
+func abort(debug bool) error {
+	repo := Repo(".", debug, false)
+	ensure(&repo, hasGitVersion, isRepository, isConfigured)
+	runState, err := runstate.Load(&repo)
+	if err != nil {
+		return fmt.Errorf("cannot load previous run state: %w", err)
+	}
+	if runState == nil || !runState.IsUnfinished() {
+		return fmt.Errorf("nothing to abort")
+	}
+	abortRunState := runState.CreateAbortRunState()
+	connector, err := hosting.NewConnector(repo.Config, &repo.InternalRepo, cli.PrintConnectorAction)
+	if err != nil {
+		return err
+	}
+	return runstate.Execute(&abortRunState, &repo, connector)
 }

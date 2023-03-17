@@ -31,12 +31,58 @@ import (
 
 // Execute runs the Cobra stack.
 func Execute() error {
-	debugFlag := false
-	var internalRunner git.InternalRunner
-	var publicRunner git.PublicRunner
-	internalRepo := git.InternalRepo{
-		InternalRunner:     internalRunner,
-		Config:             config.NewGitTown(internalRunner),
+	rootCmd := rootCmd()
+
+	rootCmd.AddCommand(abortCmd(&repo))
+	rootCmd.AddCommand(aliasCommand(&repo))
+	rootCmd.AddCommand(appendCmd(&repo))
+	rootCmd.AddCommand(completionsCmd(&rootCmd))
+	rootCmd.AddCommand(configCmd(&repo))
+	rootCmd.AddCommand(continueCmd(&repo))
+	rootCmd.AddCommand(diffParentCommand(&repo))
+	rootCmd.AddCommand(hackCmd(&repo))
+	rootCmd.AddCommand(killCommand(&repo))
+	rootCmd.AddCommand(newPullRequestCommand(&repo))
+	rootCmd.AddCommand(prependCommand(&repo))
+	rootCmd.AddCommand(pruneBranchesCommand(&repo))
+	rootCmd.AddCommand(renameBranchCommand(&repo))
+	rootCmd.AddCommand(repoCommand(&repo))
+	rootCmd.AddCommand(statusCommand(&repo))
+	rootCmd.AddCommand(setParentCommand(&repo))
+	rootCmd.AddCommand(shipCmd(&repo))
+	rootCmd.AddCommand(skipCmd(&repo))
+	rootCmd.AddCommand(switchCmd(&repo))
+	rootCmd.AddCommand(syncCmd(&repo))
+	rootCmd.AddCommand(undoCmd(&repo))
+	rootCmd.AddCommand(versionCmd())
+
+	return rootCmd.Execute()
+}
+
+func debugFlag(cmd *cobra.Command, flag *bool) {
+	cmd.PersistentFlags().BoolVar(flag, "debug", false, "Print all Git commands run under the hood")
+}
+
+func dryRunFlag(cmd *cobra.Command) *bool {
+	return cmd.PersistentFlags().Bool("dryrun", false, "Print but do not execute the Git commands")
+}
+
+func Repo(dir string, debug, dryRun bool) git.PublicRepo {
+	internalRepo := internalRepo(dir, debug)
+	return publicRepo(dryRun, &internalRepo)
+}
+
+func internalRepo(dir string, debug bool) git.InternalRepo {
+	shellRunner := subshell.InternalRunner{WorkingDir: dir}
+	var gitRunner git.InternalRunner
+	if debug {
+		gitRunner = subshell.InternalDebuggingRunner{InternalRunner: shellRunner}
+	} else {
+		gitRunner = shellRunner
+	}
+	return git.InternalRepo{
+		InternalRunner:     gitRunner,
+		Config:             config.NewGitTown(gitRunner),
 		CurrentBranchCache: &cache.String{},
 		DryRun:             &subshell.DryRun{},
 		IsRepoCache:        &cache.Bool{},
@@ -44,16 +90,22 @@ func Execute() error {
 		RemotesCache:       &cache.Strings{},
 		RootDirCache:       &cache.String{},
 	}
-	repo := git.PublicRepo{
-		Public:       publicRunner,
-		InternalRepo: internalRepo,
-	}
-	rootCmd := RootCmd(&repo, &debugFlag)
-	return rootCmd.Execute()
 }
 
-// RootCmd is the main Cobra object.
-func RootCmd(repo *git.PublicRepo, debugFlag *bool) *cobra.Command {
+func publicRepo(dryRun bool, internalRepo *git.InternalRepo) git.PublicRepo {
+	var gitRunner git.PublicRunner
+	if dryRun {
+		gitRunner = subshell.PublicDryRunner{}
+	} else {
+		gitRunner = subshell.PublicRunner{}
+	}
+	return git.PublicRepo{
+		Public:       gitRunner,
+		InternalRepo: *internalRepo,
+	}
+}
+
+func rootCmd() cobra.Command {
 	rootCmd := cobra.Command{
 		Use:           "git-town",
 		SilenceErrors: true,
@@ -77,31 +129,8 @@ and it allows you to perform many common Git operations faster and easier.`,
 		ID:    "setup",
 		Title: "Commands to set up Git Town on your computer:",
 	})
-	rootCmd.AddCommand(abortCmd(repo))
-	rootCmd.AddCommand(aliasCommand(repo))
-	rootCmd.AddCommand(appendCmd(repo))
-	rootCmd.AddCommand(completionsCmd(&rootCmd))
-	rootCmd.AddCommand(configCmd(repo))
-	rootCmd.AddCommand(continueCmd(repo))
-	rootCmd.AddCommand(diffParentCommand(repo))
-	rootCmd.AddCommand(hackCmd(repo))
-	rootCmd.AddCommand(killCommand(repo))
-	rootCmd.AddCommand(newPullRequestCommand(repo))
-	rootCmd.AddCommand(prependCommand(repo))
-	rootCmd.AddCommand(pruneBranchesCommand(repo))
-	rootCmd.AddCommand(renameBranchCommand(repo))
-	rootCmd.AddCommand(repoCommand(repo))
-	rootCmd.AddCommand(statusCommand(repo))
-	rootCmd.AddCommand(setParentCommand(repo))
-	rootCmd.AddCommand(shipCmd(repo))
-	rootCmd.AddCommand(skipCmd(repo))
-	rootCmd.AddCommand(switchCmd(repo))
-	rootCmd.AddCommand(syncCmd(repo))
-	rootCmd.AddCommand(undoCmd(repo))
-	rootCmd.AddCommand(versionCmd())
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
-	rootCmd.PersistentFlags().BoolVar(debugFlag, "debug", false, "Print all Git commands run under the hood")
-	return &rootCmd
+	return rootCmd
 }
 
 var (

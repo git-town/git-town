@@ -11,7 +11,7 @@ import (
 // InternalDebuggingRunner runs internal shell commands in the given working directory.
 // It logs the executed commands and their output on the CLI.
 type InternalDebuggingRunner struct {
-	runner InternalRunner
+	InternalRunner
 }
 
 func (r InternalDebuggingRunner) PrintHeader(cmd string, args ...string) {
@@ -22,13 +22,10 @@ func (r InternalDebuggingRunner) PrintHeader(cmd string, args ...string) {
 	}
 }
 
-func (r InternalDebuggingRunner) PrintResult(text string) {
-}
-
 // Run runs the given command in this ShellRunner's directory.
 func (r InternalDebuggingRunner) Run(cmd string, args ...string) (*Output, error) {
 	r.PrintHeader(cmd, args...)
-	output, err := r.runner.Run(cmd, args...)
+	output, err := r.InternalRunner.Run(cmd, args...)
 	if output != nil {
 		fmt.Println(output)
 	}
