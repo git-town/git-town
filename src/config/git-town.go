@@ -10,7 +10,6 @@ import (
 
 	"github.com/git-town/git-town/v7/src/giturl"
 	"github.com/git-town/git-town/v7/src/stringslice"
-	"github.com/git-town/git-town/v7/src/subshell"
 )
 
 // GitTown provides type-safe access to Git Town configuration settings
@@ -25,11 +24,6 @@ func NewGitTown(runner runner) *GitTown {
 		Git:            NewGit(runner),
 		originURLCache: map[string]*giturl.Parts{},
 	}
-}
-
-// AddGitAlias sets the given Git alias.
-func (gt *GitTown) AddGitAlias(aliasType AliasType) (*subshell.Output, error) {
-	return gt.SetGlobalConfigValue("alias."+string(aliasType), "town "+string(aliasType))
 }
 
 // AddToPerennialBranches registers the given branch names as perennial branches.
@@ -294,11 +288,6 @@ func (gt *GitTown) Reload() {
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
 func (gt *GitTown) RemoveFromPerennialBranches(branch string) error {
 	return gt.SetPerennialBranches(stringslice.Remove(gt.PerennialBranches(), branch))
-}
-
-// RemoveGitAlias removes the given Git alias.
-func (gt *GitTown) RemoveGitAlias(command string) (*subshell.Output, error) {
-	return gt.RemoveGlobalConfigValue("alias." + command)
 }
 
 // RemoveLocalGitConfiguration removes all Git Town configuration.

@@ -37,6 +37,11 @@ func (r *PublicRepo) AbortRebase() error {
 	return nil
 }
 
+// AddGitAlias sets the given Git alias.
+func (r *PublicRepo) AddGitAlias(aliasType config.AliasType) error {
+	return r.Public.Run("git", "config", "--global", "alias."+string(aliasType), "town "+string(aliasType))
+}
+
 // CheckoutBranch checks out the Git branch with the given name in this repo.
 func (r *PublicRepo) CheckoutBranch(name string) error {
 	err := r.Public.Run("git", "checkout", name)
@@ -287,6 +292,11 @@ func (r *PublicRepo) Rebase(target string) error {
 		return fmt.Errorf("cannot rebase against branch %q: %w", target, err)
 	}
 	return nil
+}
+
+// RemoveGitAlias removes the given Git alias.
+func (r *PublicRepo) RemoveGitAlias(aliasType config.AliasType) error {
+	return r.Public.Run("git", "config", "--global", "--unset", "alias."+string(aliasType), "town "+string(aliasType))
 }
 
 // RemoveOutdatedConfiguration removes outdated Git Town configuration.
