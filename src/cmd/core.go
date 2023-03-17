@@ -21,7 +21,10 @@
 package cmd
 
 import (
+	"github.com/git-town/git-town/v7/src/cache"
+	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/subshell"
 	"github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
@@ -32,7 +35,14 @@ func Execute() error {
 	var internalRunner git.InternalRunner
 	var publicRunner git.PublicRunner
 	internalRepo := git.InternalRepo{
-		InternalRunner: internalRunner,
+		InternalRunner:     internalRunner,
+		Config:             config.NewGitTown(internalRunner),
+		CurrentBranchCache: &cache.String{},
+		DryRun:             &subshell.DryRun{},
+		IsRepoCache:        &cache.Bool{},
+		RemoteBranchCache:  &cache.Strings{},
+		RemotesCache:       &cache.Strings{},
+		RootDirCache:       &cache.String{},
 	}
 	repo := git.PublicRepo{
 		Public:       publicRunner,
