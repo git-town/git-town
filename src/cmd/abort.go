@@ -4,13 +4,12 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v7/src/cli"
-	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/spf13/cobra"
 )
 
-func abortCmd(repo *git.PublicRepo) *cobra.Command {
+func abortCmd() *cobra.Command {
 	debug := false
 	cmd := &cobra.Command{
 		Use:     "abort",
@@ -26,8 +25,8 @@ func abortCmd(repo *git.PublicRepo) *cobra.Command {
 }
 
 func abort(debug bool) error {
-	repo := Repo(".", debug, false)
-	ensure(&repo, hasGitVersion, isRepository, isConfigured)
+	repo := Repo(debug, false)
+	err := ensure(&repo, hasGitVersion, isRepository, isConfigured)
 	runState, err := runstate.Load(&repo)
 	if err != nil {
 		return fmt.Errorf("cannot load previous run state: %w", err)

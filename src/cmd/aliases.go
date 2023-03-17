@@ -9,12 +9,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func aliasCommand(repo *git.PublicRepo) *cobra.Command {
+func aliasCommand() *cobra.Command {
 	return &cobra.Command{
 		Use:     "aliases (add | remove)",
 		GroupID: "setup",
 		Args:    cobra.ExactArgs(1),
-		PreRunE: ensure(repo, hasGitVersion),
 		Short:   "Adds or removes default global aliases",
 		Long: `Adds or removes default global aliases
 
@@ -25,6 +24,8 @@ Does not overwrite existing aliases.
 
 This can conflict with other tools that also define Git aliases.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
+			repo := Repo(debug, false)
+			ensure(repo, hasGitVersion),
 			switch strings.ToLower(args[0]) {
 			case "add":
 				return addAliases(repo)
