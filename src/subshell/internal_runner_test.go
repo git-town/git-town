@@ -13,7 +13,7 @@ import (
 
 func TestInternalRunner(t *testing.T) {
 	t.Parallel()
-	t.Run(".Run()", func(t *testing.T) {
+	t.Run("Run", func(t *testing.T) {
 		t.Parallel()
 		t.Run("happy path", func(t *testing.T) {
 			runner := subshell.InternalRunner{WorkingDir: "."}
@@ -30,6 +30,7 @@ func TestInternalRunner(t *testing.T) {
 			var execError *exec.Error
 			assert.True(t, errors.As(err, &execError))
 		})
+
 		t.Run("non-zero exit code", func(t *testing.T) {
 			t.Parallel()
 			runner := subshell.InternalRunner{WorkingDir: "."}

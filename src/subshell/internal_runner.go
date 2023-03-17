@@ -3,6 +3,7 @@ package subshell
 import (
 	"fmt"
 	"os/exec"
+	"strings"
 
 	"github.com/kballard/go-shellquote"
 )
@@ -20,6 +21,17 @@ func (r InternalRunner) Run(executable string, args ...string) (*Output, error) 
 	subProcess := exec.Command(executable, args...) // #nosec
 	subProcess.Dir = r.WorkingDir
 	output, err := subProcess.CombinedOutput()
+	if err != nil {
+		err = fmt.Errorf(`
+----------------------------------------
+Diagnostic information of failed command
+
+Command: %s %v
+Error: %w
+Output:
+%s
+----------------------------------------`, executable, strings.Join(args, " "), err, output)
+	}
 	return NewOutput(output), err
 }
 
