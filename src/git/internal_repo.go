@@ -364,12 +364,12 @@ func (r *InternalRepo) LocalBranches() ([]string, error) {
 }
 
 // LocalBranchesMainFirst provides the names of all local branches in this repo.
-func (r *InternalRepo) LocalBranchesMainFirst() ([]string, error) {
+func (r *InternalRepo) LocalBranchesMainFirst(mainBranch string) ([]string, error) {
 	branches, err := r.LocalBranches()
 	if err != nil {
 		return []string{}, err
 	}
-	return stringslice.Hoist(sort.StringSlice(branches), r.Config.MainBranch()), nil
+	return stringslice.Hoist(sort.StringSlice(branches), mainBranch), nil
 }
 
 // LocalBranchesWithDeletedTrackingBranches provides the names of all branches

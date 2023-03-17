@@ -184,7 +184,8 @@ func (env *GitEnvironment) binPath() string {
 func (env *GitEnvironment) Branches() (DataTable, error) {
 	result := DataTable{}
 	result.AddRow("REPOSITORY", "BRANCHES")
-	localBranches, err := env.DevRepo.LocalBranchesMainFirst()
+	mainBranch := env.DevRepo.Config.MainBranch()
+	localBranches, err := env.DevRepo.LocalBranchesMainFirst(mainBranch)
 	if err != nil {
 		return result, fmt.Errorf("cannot determine the developer repo branches of the GitEnvironment: %w", err)
 	}
@@ -194,7 +195,7 @@ func (env *GitEnvironment) Branches() (DataTable, error) {
 		result.AddRow("local", localBranchesJoined)
 		return result, nil
 	}
-	originBranches, err := env.OriginRepo.LocalBranchesMainFirst()
+	originBranches, err := env.OriginRepo.LocalBranchesMainFirst(mainBranch)
 	if err != nil {
 		return result, fmt.Errorf("cannot determine the origin repo branches of the GitEnvironment: %w", err)
 	}
@@ -287,27 +288,27 @@ func (env GitEnvironment) CreateTags(table *messages.PickleStepArgument_PickleTa
 // CommitTable provides a table for all commits in this Git environment containing only the given fields.
 func (env GitEnvironment) CommitTable(fields []string) (DataTable, error) {
 	builder := NewCommitTableBuilder()
-	localCommits, err := env.DevRepo.Commits(fields)
+	localCommits, err := env.DevRepo.Commits(fields, "main")
 	if err != nil {
 		return DataTable{}, fmt.Errorf("cannot determine commits in the developer repo: %w", err)
 	}
 	builder.AddMany(localCommits, "local")
 	if env.CoworkerRepo != nil {
-		coworkerCommits, err := env.CoworkerRepo.Commits(fields)
+		coworkerCommits, err := env.CoworkerRepo.Commits(fields, "main")
 		if err != nil {
 			return DataTable{}, fmt.Errorf("cannot determine commits in the coworker repo: %w", err)
 		}
 		builder.AddMany(coworkerCommits, "coworker")
 	}
 	if env.OriginRepo != nil {
-		originCommits, err := env.OriginRepo.Commits(fields)
+		originCommits, err := env.OriginRepo.Commits(fields, "main")
 		if err != nil {
 			return DataTable{}, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
 		}
 		builder.AddMany(originCommits, config.OriginRemote)
 	}
 	if env.UpstreamRepo != nil {
-		upstreamCommits, err := env.UpstreamRepo.Commits(fields)
+		upstreamCommits, err := env.UpstreamRepo.Commits(fields, "main")
 		if err != nil {
 			return DataTable{}, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
 		}

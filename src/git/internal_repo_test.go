@@ -175,7 +175,7 @@ func TestRepo(t *testing.T) {
 		assert.NoError(t, err)
 		err = repo.Fetch()
 		assert.NoError(t, err)
-		branches, err := repo.InternalRepo.LocalBranchesMainFirst()
+		branches, err := repo.InternalRepo.LocalBranchesMainFirst("initial")
 		assert.NoError(t, err)
 		assert.Equal(t, []string{"b1", "b2", "initial"}, branches)
 	})

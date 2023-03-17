@@ -228,8 +228,8 @@ func (r *Repo) CreateTag(name string) error {
 }
 
 // Commits provides a list of the commits in this Git repository with the given fields.
-func (r *Repo) Commits(fields []string) ([]git.Commit, error) {
-	branches, err := r.LocalBranchesMainFirst()
+func (r *Repo) Commits(fields []string, mainBranch string) ([]git.Commit, error) {
+	branches, err := r.LocalBranchesMainFirst(mainBranch)
 	if err != nil {
 		return []git.Commit{}, fmt.Errorf("cannot determine the Git branches: %w", err)
 	}
@@ -350,10 +350,10 @@ func (r *Repo) FilesInBranch(branch string) ([]string, error) {
 }
 
 // FilesInBranches provides a data table of files and their content in all branches.
-func (r *Repo) FilesInBranches() (DataTable, error) {
+func (r *Repo) FilesInBranches(mainBranch string) (DataTable, error) {
 	result := DataTable{}
 	result.AddRow("BRANCH", "NAME", "CONTENT")
-	branches, err := r.LocalBranchesMainFirst()
+	branches, err := r.LocalBranchesMainFirst(mainBranch)
 	if err != nil {
 		return DataTable{}, err
 	}

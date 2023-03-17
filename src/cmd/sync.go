@@ -98,10 +98,11 @@ func determineSyncConfig(allFlag bool, repo *git.PublicRepo) (*syncConfig, error
 	if err != nil {
 		return nil, err
 	}
+	mainBranch := repo.Config.MainBranch()
 	var branchesToSync []string
 	var shouldPushTags bool
 	if allFlag {
-		branches, err := repo.LocalBranchesMainFirst()
+		branches, err := repo.LocalBranchesMainFirst(mainBranch)
 		if err != nil {
 			return nil, err
 		}
@@ -124,7 +125,7 @@ func determineSyncConfig(allFlag bool, repo *git.PublicRepo) (*syncConfig, error
 		hasOrigin:      hasOrigin,
 		initialBranch:  initialBranch,
 		isOffline:      isOffline,
-		mainBranch:     repo.Config.MainBranch(),
+		mainBranch:     mainBranch,
 		shouldPushTags: shouldPushTags,
 	}, nil
 }
