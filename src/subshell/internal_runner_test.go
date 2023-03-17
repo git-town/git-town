@@ -50,9 +50,9 @@ hi
 
 	t.Run(".RunMany()", func(t *testing.T) {
 		t.Parallel()
-		runner := subshell.InternalRunner{}
 		tmpDir := t.TempDir()
-		err := runner.RunMany(tmpDir, [][]string{
+		runner := subshell.InternalRunner{Dir: tmpDir}
+		err := runner.RunMany([][]string{
 			{"mkdir", "tmp"},
 			{"touch", "tmp/first"},
 			{"touch", "tmp/second"},
@@ -67,8 +67,8 @@ hi
 	t.Run(".RunString()", func(t *testing.T) {
 		t.Parallel()
 		tmpDir := t.TempDir()
-		runner := subshell.InternalRunner{}
-		_, err := runner.RunString(tmpDir, "touch first")
+		runner := subshell.InternalRunner{Dir: tmpDir}
+		_, err := runner.RunString("touch first")
 		assert.NoError(t, err)
 		_, err = os.Stat(filepath.Join("first"))
 		assert.False(t, os.IsNotExist(err))
