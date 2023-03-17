@@ -54,7 +54,11 @@ func InitRepo(workingDir, homeDir, binDir string) (Repo, error) {
 // NewRepo provides a new Repo instance working in the given directory.
 // The directory must contain an existing Git repo.
 func NewRepo(workingDir, homeDir, binDir string) Repo {
-	mockingRunner := NewMockingRunner(workingDir, homeDir, binDir)
+	mockingRunner := MockingRunner{
+		workingDir: workingDir,
+		homeDir:    homeDir,
+		binDir:     binDir,
+	}
 	internalRepo := git.InternalRepo{
 		InternalRunner:     subshell.InternalRunner{Dir: ""},
 		Config:             config.NewGitTown(&mockingRunner),
@@ -341,21 +345,21 @@ func (r *Repo) FilesInBranch(branch string) ([]string, error) {
 }
 
 // FilesInBranches provides a data table of files and their content in all branches.
-func (repo *Repo) FilesInBranches() (DataTable, error) {
+func (r *Repo) FilesInBranches() (DataTable, error) {
 	result := DataTable{}
 	result.AddRow("BRANCH", "NAME", "CONTENT")
-	branches, err := repo.LocalBranchesMainFirst()
+	branches, err := r.LocalBranchesMainFirst()
 	if err != nil {
 		return DataTable{}, err
 	}
 	lastBranch := ""
 	for _, branch := range branches {
-		files, err := repo.FilesInBranch(branch)
+		files, err := r.FilesInBranch(branch)
 		if err != nil {
 			return DataTable{}, err
 		}
 		for _, file := range files {
-			content, err := repo.FileContentInCommit(branch, file)
+			content, err := r.FileContentInCommit(branch, file)
 			if err != nil {
 				return DataTable{}, err
 			}

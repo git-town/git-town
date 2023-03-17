@@ -44,7 +44,7 @@ issues:
     - linters:
         - ireturn
       text: (github.com/git-town/git-town/v7/src/hosting.Connector|github.com/git-town/git-town/v7/src/steps.Step)
-    - text: (mockConfig|EmptyStep|Options)
+    - text: (mockConfig|EmptyStep|Options|Cmd)
       linters:
         - exhaustruct
     - path: src/cache/cache.go

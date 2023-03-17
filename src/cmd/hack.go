@@ -64,6 +64,7 @@ func determineHackConfig(args []string, promptForParent bool, repo *git.PublicRe
 		targetBranch:        targetBranch,
 		parentBranch:        parentBranch,
 		hasOrigin:           hasOrigin,
+		mainBranch:          mainBranch,
 		shouldNewBranchPush: shouldNewBranchPush,
 		noPushHook:          !pushHook,
 		isOffline:           isOffline,

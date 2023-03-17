@@ -17,7 +17,11 @@ func TestMockingRunner(t *testing.T) {
 		devDir := filepath.Join(workDir, "dev")
 		err := os.Mkdir(devDir, 0o744)
 		assert.NoError(t, err)
-		runner := NewMockingRunner(devDir, workDir, filepath.Join(workDir, "bin"))
+		runner := MockingRunner{
+			workingDir: devDir,
+			homeDir:    workDir,
+			binDir:     filepath.Join(workDir, "bin"),
+		}
 		err = runner.MockCommand("foo")
 		assert.NoError(t, err)
 		// run a program that calls the mocked command
@@ -29,7 +33,11 @@ func TestMockingRunner(t *testing.T) {
 
 	t.Run(".Run()", func(t *testing.T) {
 		t.Parallel()
-		runner := NewMockingRunner(t.TempDir(), t.TempDir(), "")
+		runner := MockingRunner{
+			workingDir: t.TempDir(),
+			homeDir:    t.TempDir(),
+			binDir:     "",
+		}
 		res, err := runner.Run("echo", "hello", "world")
 		assert.NoError(t, err)
 		assert.Equal(t, "hello world", res.Sanitized())
@@ -38,7 +46,11 @@ func TestMockingRunner(t *testing.T) {
 	t.Run(".RunMany()", func(t *testing.T) {
 		t.Parallel()
 		workDir := t.TempDir()
-		runner := NewMockingRunner(workDir, t.TempDir(), "")
+		runner := MockingRunner{
+			workingDir: workDir,
+			homeDir:    t.TempDir(),
+			binDir:     "",
+		}
 		err := runner.RunMany([][]string{
 			{"touch", "first"},
 			{"touch", "second"},
@@ -54,7 +66,11 @@ func TestMockingRunner(t *testing.T) {
 	t.Run(".RunString()", func(t *testing.T) {
 		t.Parallel()
 		workDir := t.TempDir()
-		runner := NewMockingRunner(workDir, t.TempDir(), "")
+		runner := MockingRunner{
+			workingDir: workDir,
+			homeDir:    t.TempDir(),
+			binDir:     "",
+		}
 		_, err := runner.RunString("touch first")
 		assert.NoError(t, err)
 		_, err = os.Stat(filepath.Join(workDir, "first"))
@@ -68,7 +84,11 @@ func TestMockingRunner(t *testing.T) {
 			dir2 := filepath.Join(dir1, "subdir")
 			err := os.Mkdir(dir2, 0o744)
 			assert.NoError(t, err)
-			runner := NewMockingRunner(dir1, t.TempDir(), "")
+			runner := MockingRunner{
+				workingDir: dir1,
+				homeDir:    t.TempDir(),
+				binDir:     "",
+			}
 			toolPath := filepath.Join(dir2, "list-dir")
 			err = CreateLsTool(toolPath)
 			assert.NoError(t, err)
@@ -83,7 +103,11 @@ func TestMockingRunner(t *testing.T) {
 			dir2 := filepath.Join(dir1, "subdir")
 			err := os.Mkdir(dir2, 0o744)
 			assert.NoError(t, err)
-			runner := NewMockingRunner(dir1, t.TempDir(), "")
+			runner := MockingRunner{
+				workingDir: dir1,
+				homeDir:    t.TempDir(),
+				binDir:     "",
+			}
 			toolPath := filepath.Join(dir2, "list-dir")
 			err = CreateInputTool(toolPath)
 			assert.NoError(t, err)

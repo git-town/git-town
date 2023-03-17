@@ -243,7 +243,7 @@ type PushArgs struct {
 }
 
 // PushBranch pushes the branch with the given name to origin.
-// TODO: remove unused elements from PushArgs
+// TODO: remove unused elements from PushArgs.
 func (r *PublicRepo) PushBranch(options ...PushArgs) error {
 	var option PushArgs
 	if len(options) > 0 {

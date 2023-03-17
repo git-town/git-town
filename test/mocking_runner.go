@@ -42,15 +42,6 @@ type MockingRunner struct {
 	workingDir string
 }
 
-// NewMockingRunner provides a new MockingRunner instance that executes in the given directory.
-func NewMockingRunner(workingDir string, homeDir string, binDir string) MockingRunner {
-	return MockingRunner{
-		workingDir: workingDir,
-		homeDir:    homeDir,
-		binDir:     binDir,
-	}
-}
-
 // createBinDir creates the directory that contains mock executables.
 // This method is idempotent.
 func (r *MockingRunner) createBinDir() error {

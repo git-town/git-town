@@ -244,5 +244,4 @@ func TestRepo(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, []string{config.OriginRemote}, remotes)
 	})
-
 }

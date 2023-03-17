@@ -29,7 +29,15 @@ import (
 // Execute runs the Cobra stack.
 func Execute() error {
 	debugFlag := false
-	repo := git.PublicRepo{}
+	var internalRunner git.InternalRunner
+	var publicRunner git.PublicRunner
+	internalRepo := git.InternalRepo{
+		InternalRunner: internalRunner,
+	}
+	repo := git.PublicRepo{
+		Public:       publicRunner,
+		InternalRepo: internalRepo,
+	}
 	rootCmd := RootCmd(&repo, &debugFlag)
 	return rootCmd.Execute()
 }
