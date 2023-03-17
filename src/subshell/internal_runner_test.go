@@ -16,24 +16,24 @@ func TestInternalRunner(t *testing.T) {
 	t.Run(".Run()", func(t *testing.T) {
 		t.Parallel()
 		t.Run("happy path", func(t *testing.T) {
-			runner := subshell.InternalRunner{}
-			output, err := runner.Run(".", "echo", "hello", "world")
+			runner := subshell.InternalRunner{Dir: "."}
+			output, err := runner.Run("echo", "hello", "world")
 			assert.NoError(t, err)
 			assert.Equal(t, "hello world", output.Sanitized())
 		})
 
 		t.Run("unknown executable", func(t *testing.T) {
 			t.Parallel()
-			runner := subshell.InternalRunner{}
-			_, err := runner.Run(".", "zonk")
+			runner := subshell.InternalRunner{Dir: "."}
+			_, err := runner.Run("zonk")
 			assert.Error(t, err)
 			var execError *exec.Error
 			assert.True(t, errors.As(err, &execError))
 		})
 		t.Run("non-zero exit code", func(t *testing.T) {
 			t.Parallel()
-			runner := subshell.InternalRunner{}
-			_, err := runner.Run(".", "bash", "-c", "echo hi && exit 2")
+			runner := subshell.InternalRunner{Dir: "."}
+			_, err := runner.Run("bash", "-c", "echo hi && exit 2")
 			expectedError := `
 ----------------------------------------
 Diagnostic information of failed command
