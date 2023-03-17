@@ -112,7 +112,7 @@ func (r *Repo) Clone(targetDir string) (Repo, error) {
 	if err != nil {
 		return Repo{}, fmt.Errorf("cannot clone repo %q: %w", r.Dir, err)
 	}
-	return NewRepo(targetDir, r.runner.homeDir, r.runner.binDir), nil
+	return NewRepo(targetDir, r.homeDir, r.binDir), nil
 }
 
 // CheckoutBranch checks out the Git branch with the given name in this repo.
