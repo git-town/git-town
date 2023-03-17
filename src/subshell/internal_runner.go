@@ -9,12 +9,16 @@ import (
 
 // InternalRunner runs internal shell commands in the given working directory.
 type InternalRunner struct {
-	Dir string
+	WorkingDir string
+}
+
+func (r InternalRunner) Dir() string {
+	return r.WorkingDir
 }
 
 func (r InternalRunner) Run(executable string, args ...string) (*Output, error) {
 	subProcess := exec.Command(executable, args...) // #nosec
-	subProcess.Dir = r.Dir
+	subProcess.Dir = r.WorkingDir
 	output, err := subProcess.CombinedOutput()
 	return NewOutput(output), err
 }

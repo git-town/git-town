@@ -271,7 +271,7 @@ func (r *PublicRepo) PushBranch(options ...PushArgs) error {
 	}
 	err := r.Public.Run("git", args...)
 	if err != nil {
-		return fmt.Errorf("cannot push branch in repo %q to origin: %w", r.Dir, err)
+		return fmt.Errorf("cannot push branch in repo %q to origin: %w", r.Dir(), err)
 	}
 	return nil
 }
@@ -280,7 +280,7 @@ func (r *PublicRepo) PushBranch(options ...PushArgs) error {
 func (r *PublicRepo) PushTags() error {
 	err := r.Public.Run("git", "push", "--tags")
 	if err != nil {
-		return fmt.Errorf("cannot push branch in repo %q: %w", r.Dir, err)
+		return fmt.Errorf("cannot push branch in repo %q: %w", r.Dir(), err)
 	}
 	return nil
 }

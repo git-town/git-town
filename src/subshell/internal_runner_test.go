@@ -16,7 +16,7 @@ func TestInternalRunner(t *testing.T) {
 	t.Run(".Run()", func(t *testing.T) {
 		t.Parallel()
 		t.Run("happy path", func(t *testing.T) {
-			runner := subshell.InternalRunner{Dir: "."}
+			runner := subshell.InternalRunner{WorkingDir: "."}
 			output, err := runner.Run("echo", "hello", "world")
 			assert.NoError(t, err)
 			assert.Equal(t, "hello world", output.Sanitized())
@@ -24,7 +24,7 @@ func TestInternalRunner(t *testing.T) {
 
 		t.Run("unknown executable", func(t *testing.T) {
 			t.Parallel()
-			runner := subshell.InternalRunner{Dir: "."}
+			runner := subshell.InternalRunner{WorkingDir: "."}
 			_, err := runner.Run("zonk")
 			assert.Error(t, err)
 			var execError *exec.Error
@@ -32,7 +32,7 @@ func TestInternalRunner(t *testing.T) {
 		})
 		t.Run("non-zero exit code", func(t *testing.T) {
 			t.Parallel()
-			runner := subshell.InternalRunner{Dir: "."}
+			runner := subshell.InternalRunner{WorkingDir: "."}
 			_, err := runner.Run("bash", "-c", "echo hi && exit 2")
 			expectedError := `
 ----------------------------------------
@@ -51,7 +51,7 @@ hi
 	t.Run(".RunMany()", func(t *testing.T) {
 		t.Parallel()
 		tmpDir := t.TempDir()
-		runner := subshell.InternalRunner{Dir: tmpDir}
+		runner := subshell.InternalRunner{WorkingDir: tmpDir}
 		err := runner.RunMany([][]string{
 			{"mkdir", "tmp"},
 			{"touch", "tmp/first"},
@@ -67,7 +67,7 @@ hi
 	t.Run(".RunString()", func(t *testing.T) {
 		t.Parallel()
 		tmpDir := t.TempDir()
-		runner := subshell.InternalRunner{Dir: tmpDir}
+		runner := subshell.InternalRunner{WorkingDir: tmpDir}
 		_, err := runner.RunString("touch first")
 		assert.NoError(t, err)
 		_, err = os.Stat(filepath.Join(tmpDir, "first"))

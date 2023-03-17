@@ -18,14 +18,14 @@ import (
 type InternalRunner interface {
 	Run(executable string, args ...string) (*subshell.Output, error)
 	RunMany([][]string) error
+	Dir() string
 }
 
 // InternalRepo performs internal Git operations,
 // i.e. Git operations that determine the state of the repo
 // and aren't visible to the end user.
 type InternalRepo struct {
-	InternalRunner            // runs shell commands
-	Dir                string // the directory that this repositor is in
+	InternalRunner     // runs shell commands
 	Config             *config.GitTown
 	CurrentBranchCache *cache.String    // caches the currently checked out Git branch
 	DryRun             *subshell.DryRun // tracks dry-run information
@@ -221,7 +221,7 @@ func (r *InternalRepo) HasLocalOrOriginBranch(name, mainBranch string) (bool, er
 
 // HasMergeInProgress indicates whether this Git repository currently has a merge in progress.
 func (r *InternalRepo) HasMergeInProgress() (bool, error) {
-	_, err := os.Stat(filepath.Join(r.Dir, ".git", "MERGE_HEAD"))
+	_, err := os.Stat(filepath.Join(r.Dir(), ".git", "MERGE_HEAD"))
 	return err == nil, nil
 }
 
@@ -238,7 +238,7 @@ func (r *InternalRepo) HasOpenChanges() (bool, error) {
 func (r *InternalRepo) HasRebaseInProgress() (bool, error) {
 	output, err := r.Run("git", "status")
 	if err != nil {
-		return false, fmt.Errorf("cannot determine rebase in %q progress: %w", r.Dir, err)
+		return false, fmt.Errorf("cannot determine rebase in %q progress: %w", r.Dir(), err)
 	}
 	sanitizedOutput := output.Sanitized()
 	if strings.Contains(sanitizedOutput, "You are currently rebasing") {
