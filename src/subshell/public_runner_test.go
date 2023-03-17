@@ -8,6 +8,7 @@ import (
 )
 
 func TestFormat(t *testing.T) {
+	t.Parallel()
 	tests := map[string][]string{
 		"[branch] git checkout foo": {"branch", "git", "checkout", "foo"},
 	}

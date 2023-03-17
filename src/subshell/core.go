@@ -1,6 +1,6 @@
 // Package subshell provides facilities to execute CLI commands in subshells.
 //
-// There are are two types of shell commands in Git Town:
+// There are two types of shell commands in Git Town:
 //
 //  1. Internal shell commands.
 //     Git Town runs these silently to determine the state of a Git repository.

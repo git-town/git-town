@@ -53,6 +53,7 @@ func InitRepo(workingDir, homeDir, binDir string) (Repo, error) {
 
 // NewRepo provides a new Repo instance working in the given directory.
 // The directory must contain an existing Git repo.
+// TODO: inline this method.
 func NewRepo(workingDir, homeDir, binDir string) Repo {
 	mockingRunner := MockingRunner{
 		workingDir: workingDir,

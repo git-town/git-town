@@ -1,6 +1,7 @@
 package config
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -280,11 +281,6 @@ func (gt *GitTown) PushHookGlobal() (bool, error) {
 	return result, nil
 }
 
-// Reload refreshes the cached configuration data.
-func (gt *GitTown) Reload() {
-	gt.Reload()
-}
-
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
 func (gt *GitTown) RemoveFromPerennialBranches(branch string) error {
 	return gt.SetPerennialBranches(stringslice.Remove(gt.PerennialBranches(), branch))
@@ -294,7 +290,8 @@ func (gt *GitTown) RemoveFromPerennialBranches(branch string) error {
 func (gt *GitTown) RemoveLocalGitConfiguration() error {
 	_, err := gt.Run("git", "config", "--remove-section", "git-town")
 	if err != nil {
-		if exitErr, ok := err.(*exec.ExitError); ok {
+		var exitErr *exec.ExitError
+		if errors.As(err, &exitErr) {
 			if exitErr.ExitCode() == 128 {
 				// Git returns exit code 128 when trying to delete a non-existing config section.
 				// This is not an error condition in this workflow so we can ignore it here.
