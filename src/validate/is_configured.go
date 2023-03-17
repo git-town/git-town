@@ -11,7 +11,7 @@ func IsConfigured(repo *git.PublicRepo) error {
 	mainBranch := repo.Config.MainBranch()
 	if mainBranch == "" {
 		fmt.Print("Git Town needs to be configured\n\n")
-		err := EnterMainBranch(repo)
+		mainBranch, err := EnterMainBranch(repo)
 		if err != nil {
 			return err
 		}
