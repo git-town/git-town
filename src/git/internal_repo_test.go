@@ -238,7 +238,7 @@ func TestRepo(t *testing.T) {
 		t.Parallel()
 		repo := test.CreateRepo(t)
 		origin := test.CreateRepo(t)
-		err := repo.AddRemote(config.OriginRemote, origin.Dir())
+		err := repo.AddRemote(config.OriginRemote, origin.Dir)
 		assert.NoError(t, err)
 		remotes, err := repo.InternalRepo.Remotes()
 		assert.NoError(t, err)

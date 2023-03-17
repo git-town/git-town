@@ -18,7 +18,6 @@ import (
 type InternalRunner interface {
 	Run(executable string, args ...string) (*subshell.Output, error)
 	RunMany([][]string) error
-	Dir() string
 }
 
 // InternalRepo performs internal Git operations,
@@ -220,9 +219,9 @@ func (r *InternalRepo) HasLocalOrOriginBranch(name, mainBranch string) (bool, er
 }
 
 // HasMergeInProgress indicates whether this Git repository currently has a merge in progress.
-func (r *InternalRepo) HasMergeInProgress() (bool, error) {
-	_, err := os.Stat(filepath.Join(r.Dir(), ".git", "MERGE_HEAD"))
-	return err == nil, nil
+func (r *InternalRepo) HasMergeInProgress() bool {
+	_, err := r.Run("git", "rev-parse", "-q", "--verify", "MERGE_HEAD")
+	return err == nil
 }
 
 // HasOpenChanges indicates whether this repo has open changes.
@@ -238,7 +237,7 @@ func (r *InternalRepo) HasOpenChanges() (bool, error) {
 func (r *InternalRepo) HasRebaseInProgress() (bool, error) {
 	output, err := r.Run("git", "status")
 	if err != nil {
-		return false, fmt.Errorf("cannot determine rebase in %q progress: %w", r.Dir(), err)
+		return false, fmt.Errorf("cannot determine rebase in progress: %w", err)
 	}
 	sanitizedOutput := output.Sanitized()
 	if strings.Contains(sanitizedOutput, "You are currently rebasing") {

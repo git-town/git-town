@@ -8,29 +8,15 @@ import (
 	"github.com/kballard/go-shellquote"
 )
 
-// InternalRunner runs internal shell commands in the given working directory.
+// InternalRunner runs internal shell commands in the current working directory.
 type InternalRunner struct {
-	WorkingDir string
-}
-
-func (r InternalRunner) Dir() string {
-	return r.WorkingDir
 }
 
 func (r InternalRunner) Run(executable string, args ...string) (*Output, error) {
 	subProcess := exec.Command(executable, args...) // #nosec
-	subProcess.Dir = r.WorkingDir
 	output, err := subProcess.CombinedOutput()
 	if err != nil {
-		err = fmt.Errorf(`
-----------------------------------------
-Diagnostic information of failed command
-
-Command: %s %v
-Error: %w
-Output:
-%s
-----------------------------------------`, executable, strings.Join(args, " "), err, output)
+		err = ErrorDetails(executable, args, err, output)
 	}
 	return NewOutput(output), err
 }
@@ -55,4 +41,16 @@ func (r InternalRunner) RunString(fullCmd string) (*Output, error) {
 	}
 	cmd, args := parts[0], parts[1:]
 	return r.Run(cmd, args...)
+}
+
+func ErrorDetails(executable string, args []string, err error, output []byte) error {
+	return fmt.Errorf(`
+----------------------------------------
+Diagnostic information of failed command
+
+Command: %s %v
+Error: %w
+Output:
+%s
+----------------------------------------`, executable, strings.Join(args, " "), err, string(output))
 }

@@ -68,12 +68,12 @@ func dryRunFlag(cmd *cobra.Command) *bool {
 }
 
 func Repo(dir string, debug, dryRun bool) git.PublicRepo {
-	internalRepo := internalRepo(dir, debug)
+	internalRepo := internalRepo(debug)
 	return publicRepo(dryRun, &internalRepo)
 }
 
-func internalRepo(dir string, debug bool) git.InternalRepo {
-	shellRunner := subshell.InternalRunner{WorkingDir: dir}
+func internalRepo(debug bool) git.InternalRepo {
+	shellRunner := subshell.InternalRunner{}
 	var gitRunner git.InternalRunner
 	if debug {
 		gitRunner = subshell.InternalDebuggingRunner{InternalRunner: shellRunner}
