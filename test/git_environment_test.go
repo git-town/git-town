@@ -13,7 +13,7 @@ import (
 
 func TestGitEnvironment(t *testing.T) {
 	t.Parallel()
-	t.Run(".CloneGitEnvironment()", func(t *testing.T) {
+	t.Run("CloneGitEnvironment", func(t *testing.T) {
 		t.Parallel()
 		dir := t.TempDir()
 		memoizedGitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
