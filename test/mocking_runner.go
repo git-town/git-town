@@ -237,7 +237,7 @@ Output:
 	}
 
 	if exitCode != 0 {
-		err = fmt.Errorf("process failed with code %d", exitCode)
+		err = fmt.Errorf("process \"%s %s\" failed with code %d, output:\n%s", cmd, strings.Join(args, " "), exitCode, output.String())
 	}
 	return &subshell.Output{Raw: output.String()}, err
 }

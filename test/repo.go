@@ -278,7 +278,7 @@ func (r *Repo) CommitsInBranch(branch string, fields []string) ([]git.Commit, er
 
 // CommitStagedChanges commits the currently staged changes.
 func (r *Repo) CommitStagedChanges(message string) error {
-	_, err := r.Run("git", "commit", "--no-edit")
+	_, err := r.Run("git", "commit", "-m", message)
 	return err
 }
 
