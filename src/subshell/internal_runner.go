@@ -9,8 +9,7 @@ import (
 )
 
 // InternalRunner runs internal shell commands in the current working directory.
-type InternalRunner struct {
-}
+type InternalRunner struct{}
 
 func (r InternalRunner) Run(executable string, args ...string) (*Output, error) {
 	subProcess := exec.Command(executable, args...) // #nosec

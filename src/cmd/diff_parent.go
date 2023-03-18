@@ -30,7 +30,10 @@ Exits with error code 1 if the given branch is a perennial branch or the main br
 
 func runDiffParent(debug bool, args []string) error {
 	repo := Repo(debug, false)
-	ensure(&repo, hasGitVersion, isRepository, isConfigured)
+	err := ensure(&repo, hasGitVersion, isRepository, isConfigured)
+	if err != nil {
+		return err
+	}
 	config, err := determineDiffParentConfig(args, &repo)
 	if err != nil {
 		return err
