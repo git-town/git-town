@@ -14,7 +14,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func shipCmd(repo *git.PublicRepo) *cobra.Command {
+func shipCmd() *cobra.Command {
 	var commitMessage string
 	shipCmd := cobra.Command{
 		Use:     "ship",

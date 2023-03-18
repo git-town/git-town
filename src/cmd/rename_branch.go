@@ -9,13 +9,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func renameBranchCommand(repo *git.PublicRepo) *cobra.Command {
+func renameBranchCommand() *cobra.Command {
+	debug := false
 	forceFlag := false
-	renameBranchCmd := &cobra.Command{
-		Use:     "rename-branch [<old_branch_name>] <new_branch_name>",
-		Args:    cobra.RangeArgs(1, 2),
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
-		Short:   "Renames a branch both locally and remotely",
+	cmd := cobra.Command{
+		Use:   "rename-branch [<old_branch_name>] <new_branch_name>",
+		Args:  cobra.RangeArgs(1, 2),
+		Short: "Renames a branch both locally and remotely",
 		Long: `Renames a branch both locally and remotely
 
 Renames the given branch in the local and origin repository.
@@ -35,20 +35,30 @@ When run on a perennial branch
 - confirm with the "-f" option
 - registers the new perennial branch name in the local Git Town configuration`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			config, err := determineRenameBranchConfig(args, forceFlag, repo)
-			if err != nil {
-				return err
-			}
-			stepList, err := renameBranchStepList(config, repo)
-			if err != nil {
-				return err
-			}
-			runState := runstate.New("rename-branch", stepList)
-			return runstate.Execute(runState, repo, nil)
+			return runRenameBranch(debug, forceFlag, args)
 		},
 	}
-	renameBranchCmd.Flags().BoolVar(&forceFlag, "force", false, "Force rename of perennial branch")
-	return renameBranchCmd
+	cmd.Flags().BoolVar(&forceFlag, "force", false, "Force rename of perennial branch")
+	debugFlag(&cmd, &debug)
+	return &cmd
+}
+
+func runRenameBranch(debug, force bool, args []string) error {
+	repo := Repo(debug, false)
+	err := ensure(&repo, hasGitVersion, isRepository, isConfigured)
+	if err != nil {
+		return err
+	}
+	config, err := determineRenameBranchConfig(args, force, &repo)
+	if err != nil {
+		return err
+	}
+	stepList, err := renameBranchStepList(config, &repo)
+	if err != nil {
+		return err
+	}
+	runState := runstate.New("rename-branch", stepList)
+	return runstate.Execute(runState, &repo, nil)
 }
 
 type renameBranchConfig struct {

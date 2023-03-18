@@ -10,12 +10,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func prependCommand(repo *git.PublicRepo) *cobra.Command {
-	return &cobra.Command{
+func prependCommand() *cobra.Command {
+	debug := false
+	cmd := cobra.Command{
 		Use:     "prepend <branch>",
 		GroupID: "lineage",
 		Args:    cobra.ExactArgs(1),
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
 		Short:   "Creates a new feature branch as the parent of the current branch",
 		Long: `Creates a new feature branch as the parent of the current branch
 
@@ -29,18 +29,29 @@ and brings over all uncommitted changes to the new feature branch.
 See "sync" for upstream remote options.
 `,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			config, err := determinePrependConfig(args, repo)
-			if err != nil {
-				return err
-			}
-			stepList, err := prependStepList(config, repo)
-			if err != nil {
-				return err
-			}
-			runState := runstate.New("prepend", stepList)
-			return runstate.Execute(runState, repo, nil)
+			return runPrepend(debug, args)
 		},
 	}
+	debugFlag(&cmd, &debug)
+	return &cmd
+}
+
+func runPrepend(debug bool, args []string) error {
+	repo := Repo(debug, false)
+	err := ensure(&repo, hasGitVersion, isRepository, isConfigured)
+	if err != nil {
+		return err
+	}
+	config, err := determinePrependConfig(args, &repo)
+	if err != nil {
+		return err
+	}
+	stepList, err := prependStepList(config, &repo)
+	if err != nil {
+		return err
+	}
+	runState := runstate.New("prepend", stepList)
+	return runstate.Execute(runState, &repo, nil)
 }
 
 type prependConfig struct {

@@ -3,12 +3,11 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/spf13/cobra"
 )
 
-func undoCmd(repo *git.PublicRepo) *cobra.Command {
+func undoCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:     "undo",
 		GroupID: "errors",

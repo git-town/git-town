@@ -7,29 +7,40 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func pruneBranchesCommand(repo *git.PublicRepo) *cobra.Command {
-	return &cobra.Command{
-		Use:     "prune-branches",
-		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured, isOnline),
-		Short:   "Deletes local branches whose tracking branch no longer exists",
+func pruneBranchesCommand() *cobra.Command {
+	debug := false
+	cmd := cobra.Command{
+		Use:   "prune-branches",
+		Args:  cobra.NoArgs,
+		Short: "Deletes local branches whose tracking branch no longer exists",
 		Long: `Deletes local branches whose tracking branch no longer exists
 
 Deletes branches whose tracking branch no longer exists from the local repository.
 This usually means the branch was shipped or killed on another machine.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			config, err := determinePruneBranchesConfig(repo)
-			if err != nil {
-				return err
-			}
-			stepList, err := pruneBranchesStepList(config, repo)
-			if err != nil {
-				return err
-			}
-			runState := runstate.New("prune-branches", stepList)
-			return runstate.Execute(runState, repo, nil)
+			return runPruneBranches(debug)
 		},
 	}
+	debugFlag(&cmd, &debug)
+	return &cmd
+}
+
+func runPruneBranches(debug bool) error {
+	repo := Repo(debug, false)
+	err := ensure(&repo, hasGitVersion, isRepository, isConfigured, isOnline)
+	if err != nil {
+		return err
+	}
+	config, err := determinePruneBranchesConfig(&repo)
+	if err != nil {
+		return err
+	}
+	stepList, err := pruneBranchesStepList(config, &repo)
+	if err != nil {
+		return err
+	}
+	runState := runstate.New("prune-branches", stepList)
+	return runstate.Execute(runState, &repo, nil)
 }
 
 type pruneBranchesConfig struct {

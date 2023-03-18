@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func switchCmd(repo *git.PublicRepo) *cobra.Command {
+func switchCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:     "switch",
 		GroupID: "basic",

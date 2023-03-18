@@ -9,13 +9,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func hackCmd(repo *git.PublicRepo) *cobra.Command {
+func hackCmd() *cobra.Command {
+	debug := false
 	promptForParentFlag := false
-	hackCmd := cobra.Command{
+	cmd := cobra.Command{
 		Use:     "hack <branch>",
 		GroupID: "basic",
 		Args:    cobra.ExactArgs(1),
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
 		Short:   "Creates a new feature branch off the main development branch",
 		Long: `Creates a new feature branch off the main development branch
 
@@ -27,20 +27,29 @@ and brings over all uncommitted changes to the new feature branch.
 
 See "sync" for information regarding upstream remotes.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			config, err := determineHackConfig(args, promptForParentFlag, repo)
-			if err != nil {
-				return err
-			}
-			stepList, err := appendStepList(config, repo)
-			if err != nil {
-				return err
-			}
-			runState := runstate.New("hack", stepList)
-			return runstate.Execute(runState, repo, nil)
+			return runHack(debug, promptForParentFlag, args)
 		},
 	}
-	hackCmd.Flags().BoolVarP(&promptForParentFlag, "prompt", "p", false, "Prompt for the parent branch")
-	return &hackCmd
+	cmd.Flags().BoolVarP(&promptForParentFlag, "prompt", "p", false, "Prompt for the parent branch")
+	return &cmd
+}
+
+func runHack(debug, prompt bool, args []string) error {
+	repo := Repo(debug, false)
+	err := ensure(&repo, hasGitVersion, isRepository, isConfigured)
+	if err != nil {
+		return err
+	}
+	config, err := determineHackConfig(args, prompt, &repo)
+	if err != nil {
+		return err
+	}
+	stepList, err := appendStepList(config, &repo)
+	if err != nil {
+		return err
+	}
+	runState := runstate.New("hack", stepList)
+	return runstate.Execute(runState, &repo, nil)
 }
 
 func determineHackConfig(args []string, promptForParent bool, repo *git.PublicRepo) (*appendConfig, error) {

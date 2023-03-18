@@ -8,12 +8,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func diffParentCommand(repo *git.PublicRepo) *cobra.Command {
-	return &cobra.Command{
+func diffParentCommand() *cobra.Command {
+	debug := false
+	cmd := cobra.Command{
 		Use:     "diff-parent [<branch>]",
 		GroupID: "lineage",
 		Args:    cobra.MaximumNArgs(1),
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
 		Short:   "Shows the changes committed to a feature branch",
 		Long: `Shows the changes committed to a feature branch
 
@@ -21,13 +21,21 @@ Works on either the current branch or the branch name provided.
 
 Exits with error code 1 if the given branch is a perennial branch or the main branch.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			config, err := determineDiffParentConfig(args, repo)
-			if err != nil {
-				return err
-			}
-			return repo.DiffParent(config.branch, config.parentBranch)
+			return runDiffParent(debug, args)
 		},
 	}
+	debugFlag(&cmd, &debug)
+	return &cmd
+}
+
+func runDiffParent(debug bool, args []string) error {
+	repo := Repo(debug, false)
+	ensure(&repo, hasGitVersion, isRepository, isConfigured)
+	config, err := determineDiffParentConfig(args, &repo)
+	if err != nil {
+		return err
+	}
+	return repo.DiffParent(config.branch, config.parentBranch)
 }
 
 type diffParentConfig struct {

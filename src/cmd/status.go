@@ -11,7 +11,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func statusCommand(repo *git.PublicRepo) *cobra.Command {
+func statusCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "status",
 		GroupID: "errors",

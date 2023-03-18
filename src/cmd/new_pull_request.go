@@ -13,12 +13,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func newPullRequestCommand(repo *git.PublicRepo) *cobra.Command {
-	return &cobra.Command{
+func newPullRequestCommand() *cobra.Command {
+	debug := false
+	cmd := cobra.Command{
 		Use:     "new-pull-request",
 		GroupID: "basic",
 		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured, isOnline),
 		Short:   "Creates a new pull request",
 		Long: fmt.Sprintf(`Creates a new pull request
 
@@ -37,25 +37,36 @@ When using SSH identities, this command needs to be configured with
 "git config %s <hostname>"
 where hostname matches what is in your ssh config file.`, config.CodeHostingDriverKey, config.CodeHostingOriginHostnameKey),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			config, err := determineNewPullRequestConfig(repo)
-			if err != nil {
-				return err
-			}
-			connector, err := hosting.NewConnector(repo.Config, &repo.InternalRepo, cli.PrintConnectorAction)
-			if err != nil {
-				return err
-			}
-			if connector == nil {
-				return hosting.UnsupportedServiceError()
-			}
-			stepList, err := newPullRequestStepList(config, repo)
-			if err != nil {
-				return err
-			}
-			runState := runstate.New("new-pull-request", stepList)
-			return runstate.Execute(runState, repo, connector)
+			return runNewPullRequest(debug)
 		},
 	}
+	debugFlag(&cmd, &debug)
+	return &cmd
+}
+
+func runNewPullRequest(debug bool) error {
+	repo := Repo(debug, false)
+	err := ensure(&repo, hasGitVersion, isRepository, isConfigured, isOnline)
+	if err != nil {
+		return err
+	}
+	config, err := determineNewPullRequestConfig(&repo)
+	if err != nil {
+		return err
+	}
+	connector, err := hosting.NewConnector(repo.Config, &repo.InternalRepo, cli.PrintConnectorAction)
+	if err != nil {
+		return err
+	}
+	if connector == nil {
+		return hosting.UnsupportedServiceError()
+	}
+	stepList, err := newPullRequestStepList(config, &repo)
+	if err != nil {
+		return err
+	}
+	runState := runstate.New("new-pull-request", stepList)
+	return runstate.Execute(runState, &repo, connector)
 }
 
 type newPullRequestConfig struct {

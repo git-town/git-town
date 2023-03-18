@@ -6,12 +6,11 @@ import (
 	"github.com/git-town/git-town/v7/src/browser"
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/config"
-	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/spf13/cobra"
 )
 
-func repoCommand(repo *git.PublicRepo) *cobra.Command {
+func repoCommand() *cobra.Command {
 	return &cobra.Command{
 		Use:     "repo",
 		Args:    cobra.NoArgs,

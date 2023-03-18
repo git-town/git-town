@@ -12,7 +12,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func syncCmd(repo *git.PublicRepo) *cobra.Command {
+func syncCmd() *cobra.Command {
 	var allFlag bool
 	var dryRunFlag bool
 	syncCmd := cobra.Command{

@@ -3,12 +3,11 @@ package cmd
 import (
 	"errors"
 
-	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
 
-func setParentCommand(repo *git.PublicRepo) *cobra.Command {
+func setParentCommand() *cobra.Command {
 	return &cobra.Command{
 		Use:     "set-parent",
 		GroupID: "lineage",

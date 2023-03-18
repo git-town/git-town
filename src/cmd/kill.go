@@ -10,29 +10,40 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func killCommand(repo *git.PublicRepo) *cobra.Command {
-	return &cobra.Command{
-		Use:     "kill [<branch>]",
-		Args:    cobra.MaximumNArgs(1),
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
-		Short:   "Removes an obsolete feature branch",
+func killCommand() *cobra.Command {
+	debug := false
+	cmd := cobra.Command{
+		Use:   "kill [<branch>]",
+		Args:  cobra.MaximumNArgs(1),
+		Short: "Removes an obsolete feature branch",
 		Long: `Removes an obsolete feature branch
 
 Deletes the current or provided branch from the local and origin repositories.
 Does not delete perennial branches nor the main branch.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			config, err := determineKillConfig(args, repo)
-			if err != nil {
-				return err
-			}
-			stepList, err := killStepList(config, repo)
-			if err != nil {
-				return err
-			}
-			runState := runstate.New("kill", stepList)
-			return runstate.Execute(runState, repo, nil)
+			return runKill(debug, args)
 		},
 	}
+	debugFlag(&cmd, &debug)
+	return &cmd
+}
+
+func runKill(debug bool, args []string) error {
+	repo := Repo(debug, false)
+	err := ensure(&repo, hasGitVersion, isRepository, isConfigured)
+	if err != nil {
+		return err
+	}
+	config, err := determineKillConfig(args, &repo)
+	if err != nil {
+		return err
+	}
+	stepList, err := killStepList(config, &repo)
+	if err != nil {
+		return err
+	}
+	runState := runstate.New("kill", stepList)
+	return runstate.Execute(runState, &repo, nil)
 }
 
 type killConfig struct {

@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func appendCmd(repo *git.PublicRepo) *cobra.Command {
+func appendCmd() *cobra.Command {
 	debug := false
 	cmd := &cobra.Command{
 		Use:     "append <branch>",
