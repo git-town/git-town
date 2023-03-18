@@ -30,7 +30,6 @@ Does not delete perennial branches nor the main branch.`,
 
 func runKill(debug bool, args []string) error {
 	repo, err := Repo(RepoArgs{
-		printBranchNames:     false,
 		debug:                debug,
 		dryRun:               false,
 		validateGitversion:   true,

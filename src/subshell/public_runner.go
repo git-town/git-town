@@ -14,19 +14,19 @@ import (
 
 // PublicRunner executes the given shell commands and streams their output to the CLI.
 type PublicRunner struct {
-	CurrentBranch    *cache.String
-	PrintBranchNames bool
+	CurrentBranch   *cache.String
+	OmitBranchNames bool
 }
 
 // Run runs the given command in this ShellRunner's directory.
 func (r PublicRunner) Run(cmd string, args ...string) error {
 	var branchName string
-	if r.PrintBranchNames {
-		branchName = r.CurrentBranch.Value()
-	} else {
+	if r.OmitBranchNames {
 		branchName = ""
+	} else {
+		branchName = r.CurrentBranch.Value()
 	}
-	PrintCommand(branchName, r.PrintBranchNames, cmd, args...)
+	PrintCommand(branchName, r.OmitBranchNames, cmd, args...)
 	// Windows commands run inside CMD
 	// because opening browsers is done via "start"
 	// TODO: do this only when actually running the "start" command
@@ -65,8 +65,8 @@ func (r PublicRunner) RunString(fullCmd string) error {
 }
 
 // PrintCommand prints the given command-line operation on the console.
-func PrintCommand(branch string, printBranch bool, cmd string, args ...string) {
-	header := FormatCommand(branch, printBranch, cmd, args...)
+func PrintCommand(branch string, omitBranch bool, cmd string, args ...string) {
+	header := FormatCommand(branch, omitBranch, cmd, args...)
 	fmt.Println()
 	_, err := color.New(color.Bold).Println(header)
 	if err != nil {
@@ -74,9 +74,9 @@ func PrintCommand(branch string, printBranch bool, cmd string, args ...string) {
 	}
 }
 
-func FormatCommand(currentBranch string, printBranch bool, executable string, args ...string) string {
+func FormatCommand(currentBranch string, omitBranch bool, executable string, args ...string) string {
 	result := ""
-	if executable == "git" && printBranch {
+	if executable == "git" && !omitBranch {
 		result = "[" + currentBranch + "] git "
 	} else {
 		result = executable + " "

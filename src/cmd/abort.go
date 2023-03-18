@@ -26,7 +26,7 @@ func abortCmd() *cobra.Command {
 
 func runAbort(debug bool) error {
 	repo, err := Repo(RepoArgs{
-		printBranchNames:     false,
+		omitBranchNames:      true,
 		debug:                debug,
 		dryRun:               false,
 		validateGitversion:   true,

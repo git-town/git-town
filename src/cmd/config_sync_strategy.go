@@ -28,7 +28,7 @@ when merging remote tracking branches into local feature branches.`,
 
 func runConfigSyncStrategy(debug, global bool, args []string) error {
 	repo, err := Repo(RepoArgs{
-		printBranchNames:     false,
+		omitBranchNames:      true,
 		debug:                debug,
 		dryRun:               false,
 		validateGitversion:   true,

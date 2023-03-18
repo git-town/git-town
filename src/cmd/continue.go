@@ -26,7 +26,6 @@ func continueCmd() *cobra.Command {
 
 func runContinue(debug bool) error {
 	repo, err := Repo(RepoArgs{
-		printBranchNames:     false,
 		debug:                debug,
 		dryRun:               false,
 		validateGitversion:   true,

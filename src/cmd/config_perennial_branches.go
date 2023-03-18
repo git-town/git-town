@@ -39,7 +39,7 @@ They cannot be shipped.`,
 
 func displayPerennialBranches(debug bool) error {
 	repo, err := Repo(RepoArgs{
-		printBranchNames:     false,
+		omitBranchNames:      true,
 		debug:                debug,
 		dryRun:               false,
 		validateGitversion:   true,
@@ -54,7 +54,7 @@ func displayPerennialBranches(debug bool) error {
 
 func updatePerennialBranches(debug bool) error {
 	repo, err := Repo(RepoArgs{
-		printBranchNames:     false,
+		omitBranchNames:      true,
 		debug:                debug,
 		dryRun:               false,
 		validateGitversion:   true,

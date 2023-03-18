@@ -21,7 +21,7 @@ func setupConfigCommand() *cobra.Command {
 
 func runConfigSetup(debug bool) error {
 	repo, err := Repo(RepoArgs{
-		printBranchNames:     false,
+		omitBranchNames:      true,
 		debug:                debug,
 		dryRun:               false,
 		validateGitversion:   true,

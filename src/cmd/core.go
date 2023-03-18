@@ -96,7 +96,7 @@ func dryRunFlag(cmd *cobra.Command, flag *bool) {
 
 func Repo(args RepoArgs) (git.PublicRepo, error) {
 	internalRepo := internalRepo(args.debug)
-	publicRepo := publicRepo(args.printBranchNames, args.dryRun, &internalRepo)
+	publicRepo := publicRepo(args.omitBranchNames, args.dryRun, &internalRepo)
 	ec := runstate.ErrorChecker{}
 	if args.validateGitversion {
 		ec.Check(validate.HasGitVersion(&internalRepo))
@@ -116,7 +116,7 @@ func Repo(args RepoArgs) (git.PublicRepo, error) {
 type RepoArgs struct {
 	debug                bool
 	dryRun               bool
-	printBranchNames     bool
+	omitBranchNames      bool
 	validateGitversion   bool
 	validateIsRepository bool
 	validateIsConfigured bool
@@ -143,17 +143,17 @@ func internalRepo(debug bool) git.InternalRepo {
 	}
 }
 
-func publicRepo(printBranchNames, dryRun bool, internalRepo *git.InternalRepo) git.PublicRepo {
+func publicRepo(omitBranchNames, dryRun bool, internalRepo *git.InternalRepo) git.PublicRepo {
 	var gitRunner git.PublicRunner
 	if dryRun {
 		gitRunner = subshell.PublicDryRunner{
-			CurrentBranch:    internalRepo.CurrentBranchCache,
-			PrintBranchNames: printBranchNames,
+			CurrentBranch:   internalRepo.CurrentBranchCache,
+			OmitBranchNames: omitBranchNames,
 		}
 	} else {
 		gitRunner = subshell.PublicRunner{
-			CurrentBranch:    internalRepo.CurrentBranchCache,
-			PrintBranchNames: printBranchNames,
+			CurrentBranch:   internalRepo.CurrentBranchCache,
+			OmitBranchNames: omitBranchNames,
 		}
 	}
 	return git.PublicRepo{

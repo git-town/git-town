@@ -50,7 +50,6 @@ You can disable this by running "git config %s false".`, config.SyncUpstreamKey)
 
 func runSync(debug, dryRun, all bool) error {
 	repo, err := Repo(RepoArgs{
-		printBranchNames:     false,
 		debug:                debug,
 		dryRun:               false,
 		validateGitversion:   true,

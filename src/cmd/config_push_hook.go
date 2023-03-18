@@ -30,7 +30,7 @@ Enabled by default. When disabled, Git Town prevents Git's pre-push hook from ru
 
 func runConfigurePushHook(debug, global bool, args []string) error {
 	repo, err := Repo(RepoArgs{
-		printBranchNames:     false,
+		omitBranchNames:      true,
 		debug:                debug,
 		dryRun:               false,
 		validateGitversion:   true,

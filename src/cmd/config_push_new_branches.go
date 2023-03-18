@@ -31,7 +31,7 @@ push the new branch to the origin remote.`,
 
 func runConfigurePushNewBranches(debug, global bool, args []string) error {
 	repo, err := Repo(RepoArgs{
-		printBranchNames:     false,
+		omitBranchNames:      true,
 		debug:                debug,
 		dryRun:               false,
 		validateGitversion:   true,

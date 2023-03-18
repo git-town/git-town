@@ -36,7 +36,7 @@ func runAliases(debug bool, args []string) error {
 	repo, err := Repo(RepoArgs{
 		debug:              debug,
 		dryRun:             false,
-		printBranchNames:   false,
+		omitBranchNames:    true,
 		validateGitversion: true,
 	})
 	if err != nil {

@@ -38,7 +38,6 @@ See "sync" for upstream remote options.
 
 func runPrepend(debug bool, args []string) error {
 	repo, err := Repo(RepoArgs{
-		printBranchNames:     false,
 		debug:                debug,
 		dryRun:               false,
 		validateGitversion:   true,
