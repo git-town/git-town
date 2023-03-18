@@ -73,7 +73,7 @@ func Repo(debug, dryRun bool) git.PublicRepo {
 }
 
 func internalRepo(debug bool) git.InternalRepo {
-	shellRunner := subshell.InternalRunner{}
+	shellRunner := subshell.InternalRunner{Dir: nil}
 	var gitRunner git.InternalRunner
 	if debug {
 		gitRunner = subshell.InternalDebuggingRunner{InternalRunner: shellRunner}

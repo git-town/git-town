@@ -16,7 +16,8 @@ func TestInternalRunner(t *testing.T) {
 	t.Run("Run", func(t *testing.T) {
 		t.Parallel()
 		t.Run("happy path", func(t *testing.T) {
-			runner := subshell.InternalRunner{}
+			tmpDir := t.TempDir()
+			runner := subshell.InternalRunner{Dir: &tmpDir}
 			output, err := runner.Run("echo", "hello", "world")
 			assert.NoError(t, err)
 			assert.Equal(t, "hello world", output.Sanitized())
@@ -24,7 +25,8 @@ func TestInternalRunner(t *testing.T) {
 
 		t.Run("unknown executable", func(t *testing.T) {
 			t.Parallel()
-			runner := subshell.InternalRunner{}
+			tmpDir := t.TempDir()
+			runner := subshell.InternalRunner{Dir: &tmpDir}
 			_, err := runner.Run("zonk")
 			assert.Error(t, err)
 			var execError *exec.Error
@@ -33,7 +35,8 @@ func TestInternalRunner(t *testing.T) {
 
 		t.Run("non-zero exit code", func(t *testing.T) {
 			t.Parallel()
-			runner := subshell.InternalRunner{}
+			tmpDir := t.TempDir()
+			runner := subshell.InternalRunner{Dir: &tmpDir}
 			_, err := runner.Run("bash", "-c", "echo hi && exit 2")
 			expectedError := `
 ----------------------------------------
