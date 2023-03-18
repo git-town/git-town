@@ -75,6 +75,7 @@ func NewRepo(workingDir, homeDir, binDir string) Repo {
 	return Repo{
 		InternalRepo:  internalRepo,
 		MockingRunner: mockingRunner,
+		Dir:           workingDir,
 	}
 }
 
