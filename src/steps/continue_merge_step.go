@@ -16,11 +16,7 @@ func (step *ContinueMergeStep) CreateContinueStep() Step {
 }
 
 func (step *ContinueMergeStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
-	hasMergeInprogress, err := repo.Silent.HasMergeInProgress()
-	if err != nil {
-		return err
-	}
-	if hasMergeInprogress {
+	if repo.Silent.HasMergeInProgress() {
 		return repo.Logging.CommitNoEdit()
 	}
 	return nil
