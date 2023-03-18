@@ -52,7 +52,7 @@ hi
 	t.Run(".RunMany()", func(t *testing.T) {
 		t.Parallel()
 		tmpDir := t.TempDir()
-		runner := subshell.InternalRunner{}
+		runner := subshell.InternalRunner{Dir: &tmpDir}
 		err := runner.RunMany([][]string{
 			{"mkdir", "tmp"},
 			{"touch", "tmp/first"},
