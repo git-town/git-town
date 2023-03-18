@@ -4,12 +4,11 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v7/src/cli"
-	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
 
-func perennialBranchesCmd(repo *git.PublicRepo) *cobra.Command {
+func perennialBranchesCmd() *cobra.Command {
 	debug := false
 	displayCmd := cobra.Command{
 		Use:   "perennial-branches",
@@ -40,7 +39,7 @@ They cannot be shipped.`,
 
 func displayPerennialBranches(debug bool) error {
 	repo := Repo(debug, false)
-	err := ensure(&repo, isRepository)
+	err := ensure(&repo, hasGitVersion, isRepository)
 	if err != nil {
 		return err
 	}

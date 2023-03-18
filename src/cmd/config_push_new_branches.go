@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func pushNewBranchesCommand(repo *git.PublicRepo) *cobra.Command {
+func pushNewBranchesCommand() *cobra.Command {
 	globalFlag := false
 	debug := false
 	cmd := cobra.Command{
@@ -31,7 +31,7 @@ push the new branch to the origin remote.`,
 
 func runConfigurePushNewBranches(debug, global bool, args []string) error {
 	repo := Repo(debug, false)
-	if err := ensure(&repo, isRepository); err != nil {
+	if err := ensure(&repo, hasGitVersion, isRepository); err != nil {
 		return err
 	}
 	if len(args) > 0 {

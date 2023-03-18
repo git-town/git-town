@@ -1,23 +1,33 @@
 package cmd
 
 import (
-	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
 
-func setupConfigCommand(repo *git.PublicRepo) *cobra.Command {
-	return &cobra.Command{
-		Use:     "setup",
-		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, isRepository),
-		Short:   "Prompts to setup your Git Town configuration",
+func setupConfigCommand() *cobra.Command {
+	debug := false
+	cmd := cobra.Command{
+		Use:   "setup",
+		Args:  cobra.NoArgs,
+		Short: "Prompts to setup your Git Town configuration",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			mainBranch, err := validate.EnterMainBranch(repo)
-			if err != nil {
-				return err
-			}
-			return validate.EnterPerennialBranches(repo, mainBranch)
+			return runConfigSetup(debug)
 		},
 	}
+	debugFlag(&cmd, &debug)
+	return &cmd
+}
+
+func runConfigSetup(debug bool) error {
+	repo := Repo(debug, false)
+	err := ensure(&repo, hasGitVersion, isRepository)
+	if err != nil {
+		return err
+	}
+	mainBranch, err := validate.EnterMainBranch(&repo)
+	if err != nil {
+		return err
+	}
+	return validate.EnterPerennialBranches(&repo, mainBranch)
 }

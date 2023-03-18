@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func mainbranchConfigCmd(repo *git.PublicRepo) *cobra.Command {
+func mainbranchConfigCmd() *cobra.Command {
 	debug := false
 	cmd := &cobra.Command{
 		Use:   "main-branch [<branch>]",
@@ -27,7 +27,7 @@ The main branch is the Git branch from which new feature branches are cut.`,
 
 func runConfigureMainBranch(debug bool, args []string) error {
 	repo := Repo(debug, false)
-	err := ensure(&repo, isRepository)
+	err := ensure(&repo, hasGitVersion, isRepository)
 	if err != nil {
 		return err
 	}

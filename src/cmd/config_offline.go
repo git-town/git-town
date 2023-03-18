@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func offlineCmd(repo *git.PublicRepo) *cobra.Command {
+func offlineCmd() *cobra.Command {
 	debug := false
 	cmd := &cobra.Command{
 		Use:   "offline [(yes | no)]",
@@ -28,6 +28,10 @@ Git Town avoids network operations in offline mode.`,
 
 func runConfigureOffline(debug bool, args []string) error {
 	repo := Repo(debug, false)
+	err := ensure(&repo, hasGitVersion)
+	if err != nil {
+		return err
+	}
 	if len(args) > 0 {
 		return setOfflineStatus(args[0], &repo)
 	}

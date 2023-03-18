@@ -7,26 +7,35 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func syncStrategyCommand(repo *git.PublicRepo) *cobra.Command {
-	var globalFlag bool
-	syncStrategyCmd := cobra.Command{
-		Use:     "sync-strategy [(merge | rebase)]",
-		Args:    cobra.MaximumNArgs(1),
-		PreRunE: ensure(repo, isRepository),
-		Short:   "Displays or sets your sync strategy",
+func syncStrategyCommand() *cobra.Command {
+	globalFlag := false
+	debug := false
+	cmd := cobra.Command{
+		Use:   "sync-strategy [(merge | rebase)]",
+		Args:  cobra.MaximumNArgs(1),
+		Short: "Displays or sets your sync strategy",
 		Long: `Displays or sets your sync strategy
 
 The sync strategy specifies what strategy to use
 when merging remote tracking branches into local feature branches.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if len(args) > 0 {
-				return setSyncStrategy(globalFlag, repo, args[0])
-			}
-			return printSyncStrategy(globalFlag, repo)
+			return runConfigSyncStrategy(debug, globalFlag, args)
 		},
 	}
-	syncStrategyCmd.Flags().BoolVar(&globalFlag, "global", false, "Displays or sets the global sync strategy")
-	return &syncStrategyCmd
+	cmd.Flags().BoolVar(&globalFlag, "global", false, "Displays or sets the global sync strategy")
+	return &cmd
+}
+
+func runConfigSyncStrategy(debug, global bool, args []string) error {
+	repo := Repo(debug, false)
+	err := ensure(&repo, hasGitVersion, isRepository)
+	if err != nil {
+		return err
+	}
+	if len(args) > 0 {
+		return setSyncStrategy(global, &repo, args[0])
+	}
+	return printSyncStrategy(global, &repo)
 }
 
 func printSyncStrategy(globalFlag bool, repo *git.PublicRepo) error {

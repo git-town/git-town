@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func pullBranchStrategyCommand(repo *git.PublicRepo) *cobra.Command {
+func pullBranchStrategyCommand() *cobra.Command {
 	debug := false
 	cmd := &cobra.Command{
 		Use:   "pull-branch-strategy [(rebase | merge)]",
@@ -28,7 +28,7 @@ for the main branch and perennial branches.`,
 
 func runConfigurePullBranchStrategy(debug bool, args []string) error {
 	repo := Repo(debug, false)
-	err := ensure(&repo, isRepository)
+	err := ensure(&repo, hasGitVersion, isRepository)
 	if err != nil {
 		return err
 	}

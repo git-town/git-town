@@ -1,18 +1,28 @@
 package cmd
 
 import (
-	"github.com/git-town/git-town/v7/src/git"
 	"github.com/spf13/cobra"
 )
 
-func resetConfigCommand(repo *git.PublicRepo) *cobra.Command {
-	return &cobra.Command{
-		Use:     "reset",
-		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, isRepository),
-		Short:   "Resets your Git Town configuration",
+func resetConfigCommand() *cobra.Command {
+	debug := false
+	cmd := cobra.Command{
+		Use:   "reset",
+		Args:  cobra.NoArgs,
+		Short: "Resets your Git Town configuration",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return repo.Config.RemoveLocalGitConfiguration()
+			return runConfigReset(debug)
 		},
 	}
+	debugFlag(&cmd, &debug)
+	return &cmd
+}
+
+func runConfigReset(debug bool) error {
+	repo := Repo(debug, false)
+	err := ensure(&repo, hasGitVersion, isRepository)
+	if err != nil {
+		return err
+	}
+	return repo.Config.RemoveLocalGitConfiguration()
 }

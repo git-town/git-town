@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func pushHookCommand(repo *git.PublicRepo) *cobra.Command {
+func pushHookCommand() *cobra.Command {
 	globalFlag := false
 	debug := false
 	cmd := cobra.Command{
@@ -30,7 +30,7 @@ Enabled by default. When disabled, Git Town prevents Git's pre-push hook from ru
 
 func runConfigurePushHook(debug, global bool, args []string) error {
 	repo := Repo(debug, false)
-	err := ensure(&repo, isRepository)
+	err := ensure(&repo, hasGitVersion, isRepository)
 	if err != nil {
 		return err
 	}
