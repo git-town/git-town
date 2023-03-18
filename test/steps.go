@@ -257,10 +257,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return err
 		}
-		// err = state.gitEnv.DevRepo.StageFiles(filename)
-		// if err != nil {
-		// 	return err
-		// }
+		err = state.gitEnv.DevRepo.StageFiles(filename)
+		if err != nil {
+			return err
+		}
 		return nil
 	})
 

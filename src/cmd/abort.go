@@ -26,7 +26,6 @@ func abortCmd() *cobra.Command {
 
 func runAbort(debug bool) error {
 	repo, err := LoadPublicRepo(RepoArgs{
-		omitBranchNames:      true,
 		debug:                debug,
 		dryRun:               false,
 		validateGitversion:   true,

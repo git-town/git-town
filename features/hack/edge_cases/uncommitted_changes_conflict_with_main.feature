@@ -1,4 +1,3 @@
-@this
 Feature: conflicts between uncommitted changes and the main branch
 
   Background:
