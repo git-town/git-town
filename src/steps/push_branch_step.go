@@ -29,7 +29,7 @@ func (step *PushBranchStep) Run(repo *git.PublicRepo, connector hosting.Connecto
 	if err != nil {
 		return err
 	}
-	if !shouldPush && !repo.DryRun.IsActive() {
+	if !shouldPush || repo.DryRun {
 		return nil
 	}
 	currentBranch, err := repo.CurrentBranch()

@@ -91,18 +91,21 @@ func debugFlag(cmd *cobra.Command, flag *bool) {
 }
 
 func dryRunFlag(cmd *cobra.Command, flag *bool) {
-	cmd.PersistentFlags().BoolVar(flag, "dryrun", false, "Print but do not run the Git commands")
+	cmd.PersistentFlags().BoolVar(flag, "dry-run", false, "Print but do not run the Git commands")
 }
 
 func LoadPublicRepo(args RepoArgs) (git.PublicRepo, error) {
 	internalRepo := internalRepo(args.debug)
 	publicRepo := publicRepo(args.omitBranchNames, args.dryRun, &internalRepo)
-	if !args.omitBranchNames {
+	if !args.omitBranchNames || args.dryRun {
 		currentBranch, err := internalRepo.CurrentBranch()
 		if err != nil {
 			return publicRepo, err
 		}
 		internalRepo.CurrentBranchCache.Set(currentBranch)
+	}
+	if args.dryRun {
+		internalRepo.DryRun = true
 	}
 	ec := runstate.ErrorChecker{}
 	if args.validateGitversion {
@@ -142,7 +145,7 @@ func internalRepo(debug bool) git.InternalRepo {
 		InternalRunner:     gitRunner,
 		Config:             config.NewGitTown(gitRunner),
 		CurrentBranchCache: &cache.String{},
-		DryRun:             &subshell.DryRun{},
+		DryRun:             false,
 		IsRepoCache:        &cache.Bool{},
 		RemoteBranchCache:  &cache.Strings{},
 		RemotesCache:       &cache.Strings{},

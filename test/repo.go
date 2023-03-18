@@ -12,7 +12,6 @@ import (
 	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/stringslice"
-	"github.com/git-town/git-town/v7/src/subshell"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -65,7 +64,7 @@ func NewRepo(workingDir, homeDir, binDir string) Repo {
 	internalRepo := git.InternalRepo{
 		InternalRunner:     internalRunner,
 		Config:             config.NewGitTown(&internalRunner),
-		DryRun:             &subshell.DryRun{},
+		DryRun:             false,
 		IsRepoCache:        &cache.Bool{},
 		RemoteBranchCache:  &cache.Strings{},
 		RemotesCache:       &cache.Strings{},

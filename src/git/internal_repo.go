@@ -26,12 +26,12 @@ type InternalRunner interface {
 type InternalRepo struct {
 	InternalRunner     // runs shell commands
 	Config             *config.GitTown
-	CurrentBranchCache *cache.String    // caches the currently checked out Git branch
-	DryRun             *subshell.DryRun // tracks dry-run information
-	IsRepoCache        *cache.Bool      // caches whether the current directory is a Git repo
-	RemoteBranchCache  *cache.Strings   // caches the remote branches of this Git repo
-	RemotesCache       *cache.Strings   // caches Git remotes
-	RootDirCache       *cache.String    // caches the base of the Git directory
+	CurrentBranchCache *cache.String // caches the currently checked out Git branch
+	DryRun             bool
+	IsRepoCache        *cache.Bool    // caches whether the current directory is a Git repo
+	RemoteBranchCache  *cache.Strings // caches the remote branches of this Git repo
+	RemotesCache       *cache.Strings // caches Git remotes
+	RootDirCache       *cache.String  // caches the base of the Git directory
 }
 
 // Author provides the locally Git configured user.
@@ -77,9 +77,11 @@ func (r *InternalRepo) BranchHasUnmergedCommits(branch, parent string) (bool, er
 
 // CheckoutBranch checks out the Git branch with the given name in this repo.
 func (r *InternalRepo) CheckoutBranch(name string) error {
-	_, err := r.Run("git", "checkout", name)
-	if err != nil {
-		return fmt.Errorf("cannot check out branch %q: %w", name, err)
+	if !r.DryRun {
+		_, err := r.Run("git", "checkout", name)
+		if err != nil {
+			return fmt.Errorf("cannot check out branch %q: %w", name, err)
+		}
 	}
 	if name != "-" {
 		r.CurrentBranchCache.Set(name)
@@ -119,8 +121,8 @@ func (r *InternalRepo) CreateFeatureBranch(name string) error {
 
 // CurrentBranch provides the currently checked out branch for this repo.
 func (r *InternalRepo) CurrentBranch() (string, error) {
-	if r.DryRun.IsActive() {
-		return r.DryRun.CurrentBranch(), nil
+	if r.DryRun {
+		return r.CurrentBranchCache.Value(), nil
 	}
 	if r.CurrentBranchCache.Initialized() {
 		return r.CurrentBranchCache.Value(), nil

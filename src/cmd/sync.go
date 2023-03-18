@@ -51,20 +51,13 @@ You can disable this by running "git config %s false".`, config.SyncUpstreamKey)
 func runSync(debug, dryRun, all bool) error {
 	repo, err := LoadPublicRepo(RepoArgs{
 		debug:                debug,
-		dryRun:               false,
+		dryRun:               dryRun,
 		validateGitversion:   true,
 		validateIsRepository: true,
 		validateIsConfigured: true,
 	})
 	if err != nil {
 		return err
-	}
-	if dryRun {
-		currentBranch, err := repo.CurrentBranch()
-		if err != nil {
-			return err
-		}
-		repo.DryRun.Activate(currentBranch)
 	}
 	exit, err := validate.HandleUnfinishedState(&repo, nil)
 	if err != nil {
