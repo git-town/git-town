@@ -59,10 +59,10 @@ func (r PublicRunner) RunString(fullCmd string) error {
 
 // PrintCommand prints the given command-line operation on the console.
 func PrintCommand(branch string, cmd string, args ...string) {
-	header := FormatCommand(branch, cmd, args...)
+	header := "\n" + FormatCommand(branch, cmd, args...)
 	_, err := color.New(color.Bold).Println(header)
 	if err != nil {
-		fmt.Println("\n" + header)
+		fmt.Println(header)
 	}
 }
 
