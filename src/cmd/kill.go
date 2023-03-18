@@ -171,6 +171,6 @@ func killStepList(config *killConfig, repo *git.PublicRepo) (runstate.StepList, 
 	err := result.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.initialBranch != config.targetBranch && config.targetBranch == config.previousBranch,
-	}, repo, config.mainBranch)
+	}, &repo.InternalRepo, config.mainBranch)
 	return result, err
 }

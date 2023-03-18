@@ -112,7 +112,7 @@ func newPullRequestStepList(config *newPullRequestConfig, repo *git.PublicRepo) 
 	for _, branch := range config.BranchesToSync {
 		updateBranchSteps(&list, branch, true, repo)
 	}
-	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo, config.mainBranch)
+	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &repo.InternalRepo, config.mainBranch)
 	list.Add(&steps.CreateProposalStep{Branch: config.InitialBranch})
 	return list.Result()
 }

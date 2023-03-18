@@ -155,7 +155,7 @@ func syncBranchesSteps(config *syncConfig, repo *git.PublicRepo) (runstate.StepL
 	if config.hasOrigin && config.shouldPushTags && !config.isOffline {
 		list.Add(&steps.PushTagsStep{})
 	}
-	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo, config.mainBranch)
+	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &repo.InternalRepo, config.mainBranch)
 	return list.Result()
 }
 

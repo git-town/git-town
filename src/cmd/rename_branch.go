@@ -177,6 +177,6 @@ func renameBranchStepList(config *renameBranchConfig, repo *git.PublicRepo) (run
 		result.Append(&steps.DeleteOriginBranchStep{Branch: config.oldBranch, IsTracking: true})
 	}
 	result.Append(&steps.DeleteLocalBranchStep{Branch: config.oldBranch, Parent: config.mainBranch})
-	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, repo, config.mainBranch)
+	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, &repo.InternalRepo, config.mainBranch)
 	return result, err
 }

@@ -270,6 +270,6 @@ func shipStepList(config *shipConfig, commitMessage string, repo *git.PublicRepo
 		// TODO: check out the main branch here?
 		list.Add(&steps.CheckoutStep{Branch: config.initialBranch})
 	}
-	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: !config.isShippingInitialBranch}, repo, config.mainBranch)
+	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: !config.isShippingInitialBranch}, &repo.InternalRepo, config.mainBranch)
 	return list.Result()
 }

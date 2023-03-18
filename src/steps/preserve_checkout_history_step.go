@@ -27,9 +27,9 @@ func (step *PreserveCheckoutHistoryStep) Run(repo *git.PublicRepo, connector hos
 	if err != nil {
 		return err
 	}
-	err = repo.CheckoutBranch(expectedPreviouslyCheckedOutBranch)
+	err = repo.InternalRepo.CheckoutBranch(expectedPreviouslyCheckedOutBranch)
 	if err != nil {
 		return err
 	}
-	return repo.CheckoutBranch(currentBranch)
+	return repo.InternalRepo.CheckoutBranch(currentBranch)
 }
