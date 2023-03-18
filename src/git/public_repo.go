@@ -292,7 +292,7 @@ func (r *PublicRepo) Rebase(target string) error {
 
 // RemoveGitAlias removes the given Git alias.
 func (r *PublicRepo) RemoveGitAlias(aliasType config.AliasType) error {
-	return r.Public.Run("git", "config", "--global", "--unset", "alias."+string(aliasType), "town "+string(aliasType))
+	return r.Public.Run("git", "config", "--global", "--unset", "alias."+string(aliasType))
 }
 
 // RemoveOutdatedConfiguration removes outdated Git Town configuration.

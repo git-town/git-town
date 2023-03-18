@@ -1,6 +1,5 @@
 Feature: shorter Git Town commands
 
-  @this
   Scenario: add aliases
     When I run "git-town aliases add"
     Then it runs the commands
