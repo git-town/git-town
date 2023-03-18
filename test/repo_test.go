@@ -4,7 +4,6 @@ package test
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -136,12 +135,11 @@ func TestRepo(t *testing.T) {
 		assert.NoError(t, err)
 		err = repo.CreateChildFeatureBranch("f1a", "f1")
 		assert.NoError(t, err)
-		cmd := exec.Command("git-town", "config")
-		output, err := cmd.CombinedOutput()
+		output, err := repo.InternalRunner.Run("git-town", "config")
 		assert.NoError(t, err)
-		has := strings.Contains(string(output), "Branch Ancestry:\n  main\n    f1\n      f1a")
+		has := strings.Contains(output.Sanitized(), "Branch Ancestry:\n  main\n    f1\n      f1a")
 		if !has {
-			fmt.Printf("unexpected output: %s", string(output))
+			fmt.Printf("unexpected output: %s", output.Raw)
 		}
 		assert.True(t, has)
 	})
