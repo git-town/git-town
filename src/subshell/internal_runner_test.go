@@ -68,7 +68,7 @@ hi
 	t.Run(".RunString()", func(t *testing.T) {
 		t.Parallel()
 		tmpDir := t.TempDir()
-		runner := subshell.InternalRunner{}
+		runner := subshell.InternalRunner{Dir: &tmpDir}
 		_, err := runner.RunString("touch first")
 		assert.NoError(t, err)
 		_, err = os.Stat(filepath.Join(tmpDir, "first"))

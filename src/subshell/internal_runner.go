@@ -9,10 +9,15 @@ import (
 )
 
 // InternalRunner runs internal shell commands in the current working directory.
-type InternalRunner struct{}
+type InternalRunner struct {
+	Dir *string
+}
 
 func (r InternalRunner) Run(executable string, args ...string) (*Output, error) {
 	subProcess := exec.Command(executable, args...) // #nosec
+	if r.Dir != nil {
+		subProcess.Dir = *r.Dir
+	}
 	output, err := subProcess.CombinedOutput()
 	if err != nil {
 		err = ErrorDetails(executable, args, err, output)
