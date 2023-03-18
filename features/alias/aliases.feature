@@ -16,7 +16,6 @@ Feature: Shorten Git Town commands
       | git config --global alias.ship "town ship"                         |
       | git config --global alias.sync "town sync"                         |
 
-  @this
   Scenario: outside a Git repo
     Given I am outside a Git repo
     When I run "git-town aliases add"
