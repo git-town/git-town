@@ -134,7 +134,7 @@ and it allows you to perform many common Git operations faster and easier.`,
 }
 
 var (
-	ensure        = validate.CobraEnsure   //nolint:gochecknoglobals
+	ensure        = validate.Ensure        //nolint:gochecknoglobals
 	hasGitVersion = validate.HasGitVersion //nolint:gochecknoglobals
 	isRepository  = validate.IsRepository  //nolint:gochecknoglobals
 	isConfigured  = validate.IsConfigured  //nolint:gochecknoglobals

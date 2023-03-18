@@ -8,23 +8,34 @@ import (
 )
 
 func pullBranchStrategyCommand(repo *git.PublicRepo) *cobra.Command {
-	return &cobra.Command{
-		Use:     "pull-branch-strategy [(rebase | merge)]",
-		Args:    cobra.MaximumNArgs(1),
-		PreRunE: ensure(repo, isRepository),
-		Short:   "Displays or sets your pull branch strategy",
+	debug := false
+	cmd := &cobra.Command{
+		Use:   "pull-branch-strategy [(rebase | merge)]",
+		Args:  cobra.MaximumNArgs(1),
+		Short: "Displays or sets your pull branch strategy",
 		Long: `Displays or sets your pull branch strategy
 
 The pull branch strategy specifies what strategy to use
 when merging remote tracking branches into local branches
 for the main branch and perennial branches.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if len(args) > 0 {
-				return setPullBranchStrategy(args[0], repo)
-			}
-			return displayPullBranchStrategy(repo)
+			return runConfigurePullBranchStrategy(debug, args)
 		},
 	}
+	debugFlag(cmd, &debug)
+	return cmd
+}
+
+func runConfigurePullBranchStrategy(debug bool, args []string) error {
+	repo := Repo(debug, false)
+	err := ensure(&repo, isRepository)
+	if err != nil {
+		return err
+	}
+	if len(args) > 0 {
+		return setPullBranchStrategy(args[0], &repo)
+	}
+	return displayPullBranchStrategy(&repo)
 }
 
 func displayPullBranchStrategy(repo *git.PublicRepo) error {

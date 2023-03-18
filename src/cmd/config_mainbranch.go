@@ -9,22 +9,33 @@ import (
 )
 
 func mainbranchConfigCmd(repo *git.PublicRepo) *cobra.Command {
-	return &cobra.Command{
-		Use:     "main-branch [<branch>]",
-		Args:    cobra.MaximumNArgs(1),
-		PreRunE: ensure(repo, isRepository),
-		Short:   "Displays or sets your main development branch",
+	debug := false
+	cmd := &cobra.Command{
+		Use:   "main-branch [<branch>]",
+		Args:  cobra.MaximumNArgs(1),
+		Short: "Displays or sets your main development branch",
 		Long: `Displays or sets your main development branch
 
 The main branch is the Git branch from which new feature branches are cut.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if len(args) > 0 {
-				return setMainBranch(args[0], repo)
-			}
-			printMainBranch(repo)
-			return nil
+			return runConfigureMainBranch(debug, args)
 		},
 	}
+	debugFlag(cmd, &debug)
+	return cmd
+}
+
+func runConfigureMainBranch(debug bool, args []string) error {
+	repo := Repo(debug, false)
+	err := ensure(&repo, isRepository)
+	if err != nil {
+		return err
+	}
+	if len(args) > 0 {
+		return setMainBranch(args[0], &repo)
+	}
+	printMainBranch(&repo)
+	return nil
 }
 
 func printMainBranch(repo *git.PublicRepo) {

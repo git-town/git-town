@@ -11,22 +11,25 @@ import (
 
 func abortCmd() *cobra.Command {
 	debug := false
-	cmd := &cobra.Command{
+	cmd := cobra.Command{
 		Use:     "abort",
 		GroupID: "errors",
 		Args:    cobra.NoArgs,
 		Short:   "Aborts the last run git-town command",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return abort(debug)
+			return runAbort(debug)
 		},
 	}
-	debugFlag(cmd, &debug)
-	return cmd
+	debugFlag(&cmd, &debug)
+	return &cmd
 }
 
-func abort(debug bool) error {
+func runAbort(debug bool) error {
 	repo := Repo(debug, false)
 	err := ensure(&repo, hasGitVersion, isRepository, isConfigured)
+	if err != nil {
+		return err
+	}
 	runState, err := runstate.Load(&repo)
 	if err != nil {
 		return fmt.Errorf("cannot load previous run state: %w", err)

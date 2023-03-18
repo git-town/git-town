@@ -8,12 +8,12 @@ import (
 // CobraEnsure wraps ensure into a Cobra-compatible format.
 func CobraEnsure(repo *git.PublicRepo, validators ...validationCondition) func(cmd *cobra.Command, args []string) error {
 	return func(cmd *cobra.Command, args []string) error {
-		return ensure(repo, validators...)
+		return Ensure(repo, validators...)
 	}
 }
 
 // ensure checks that the given repo conforms to the given validation conditions.
-func ensure(repo *git.PublicRepo, validators ...validationCondition) error {
+func Ensure(repo *git.PublicRepo, validators ...validationCondition) error {
 	for _, validator := range validators {
 		if err := validator(repo); err != nil {
 			return err

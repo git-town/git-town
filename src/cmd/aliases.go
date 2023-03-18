@@ -24,17 +24,25 @@ Does not overwrite existing aliases.
 
 This can conflict with other tools that also define Git aliases.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			repo := Repo(debug, false)
-			ensure(repo, hasGitVersion),
-			switch strings.ToLower(args[0]) {
-			case "add":
-				return addAliases(repo)
-			case "remove":
-				return removeAliases(repo)
-			}
-			return fmt.Errorf(`invalid argument %q. Please provide either "add" or "remove"`, args[0])
+			return runAliases(args)
 		},
 	}
+}
+
+func runAliases(args []string) error {
+	repo := Repo(false, false)
+	err := ensure(&repo, hasGitVersion)
+	if err != nil {
+		return err
+	}
+	switch strings.ToLower(args[0]) {
+	// TODO: make enum
+	case "add":
+		return addAliases(&repo)
+	case "remove":
+		return removeAliases(&repo)
+	}
+	return fmt.Errorf(`invalid argument %q. Please provide either "add" or "remove"`, args[0])
 }
 
 func addAliases(repo *git.PublicRepo) error {

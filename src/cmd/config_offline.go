@@ -10,7 +10,8 @@ import (
 )
 
 func offlineCmd(repo *git.PublicRepo) *cobra.Command {
-	return &cobra.Command{
+	debug := false
+	cmd := &cobra.Command{
 		Use:   "offline [(yes | no)]",
 		Args:  cobra.MaximumNArgs(1),
 		Short: "Displays or sets offline mode",
@@ -18,12 +19,19 @@ func offlineCmd(repo *git.PublicRepo) *cobra.Command {
 
 Git Town avoids network operations in offline mode.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if len(args) > 0 {
-				return setOfflineStatus(args[0], repo)
-			}
-			return displayOfflineStatus(repo)
+			return runConfigureOffline(debug, args)
 		},
 	}
+	debugFlag(cmd, &debug)
+	return cmd
+}
+
+func runConfigureOffline(debug bool, args []string) error {
+	repo := Repo(debug, false)
+	if len(args) > 0 {
+		return setOfflineStatus(args[0], &repo)
+	}
+	return displayOfflineStatus(&repo)
 }
 
 func displayOfflineStatus(repo *git.PublicRepo) error {

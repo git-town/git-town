@@ -9,11 +9,11 @@ import (
 )
 
 func appendCmd(repo *git.PublicRepo) *cobra.Command {
-	return &cobra.Command{
+	debug := false
+	cmd := &cobra.Command{
 		Use:     "append <branch>",
 		GroupID: "lineage",
 		Args:    cobra.ExactArgs(1),
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
 		Short:   "Creates a new feature branch as a child of the current branch",
 		Long: `Creates a new feature branch as a direct child of the current branch.
 
@@ -26,18 +26,29 @@ and brings over all uncommitted changes to the new feature branch.
 
 See "sync" for information regarding upstream remotes.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			config, err := determineAppendConfig(args, repo)
-			if err != nil {
-				return err
-			}
-			stepList, err := appendStepList(config, repo)
-			if err != nil {
-				return err
-			}
-			runState := runstate.New("append", stepList)
-			return runstate.Execute(runState, repo, nil)
+			return runAppend(debug, args)
 		},
 	}
+	debugFlag(cmd, &debug)
+	return cmd
+}
+
+func runAppend(debug bool, args []string) error {
+	repo := Repo(debug, false)
+	err := ensure(&repo, hasGitVersion, isRepository, isConfigured)
+	if err != nil {
+		return err
+	}
+	config, err := determineAppendConfig(args, &repo)
+	if err != nil {
+		return err
+	}
+	stepList, err := appendStepList(config, &repo)
+	if err != nil {
+		return err
+	}
+	runState := runstate.New("append", stepList)
+	return runstate.Execute(runState, &repo, nil)
 }
 
 type appendConfig struct {
