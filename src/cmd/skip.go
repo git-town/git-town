@@ -23,7 +23,7 @@ func skipCmd() *cobra.Command {
 }
 
 func runSkip(debug bool) error {
-	repo, err := LoadRepo(RepoArgs{
+	repo, err := LoadPublicRepo(RepoArgs{
 		debug:                debug,
 		dryRun:               false,
 		validateGitversion:   true,

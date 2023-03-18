@@ -94,9 +94,14 @@ func dryRunFlag(cmd *cobra.Command, flag *bool) {
 	cmd.PersistentFlags().BoolVar(flag, "dryrun", false, "Print but do not run the Git commands")
 }
 
-func LoadRepo(args RepoArgs) (git.PublicRepo, error) {
+func LoadPublicRepo(args RepoArgs) (git.PublicRepo, error) {
 	internalRepo := internalRepo(args.debug)
 	publicRepo := publicRepo(args.omitBranchNames, args.dryRun, &internalRepo)
+	currentBranch, err := internalRepo.CurrentBranch()
+	if err != nil {
+		return publicRepo, err
+	}
+	internalRepo.CurrentBranchCache.Set(currentBranch)
 	ec := runstate.ErrorChecker{}
 	if args.validateGitversion {
 		ec.Check(validate.HasGitVersion(&internalRepo))

@@ -25,7 +25,7 @@ func continueCmd() *cobra.Command {
 }
 
 func runContinue(debug bool) error {
-	repo, err := LoadRepo(RepoArgs{
+	repo, err := LoadPublicRepo(RepoArgs{
 		debug:                debug,
 		dryRun:               false,
 		validateGitversion:   true,

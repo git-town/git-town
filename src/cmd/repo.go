@@ -36,7 +36,7 @@ where HOSTNAME matches what is in your ssh config file.`, config.CodeHostingDriv
 }
 
 func runRepo(debug bool) error {
-	repo, err := LoadRepo(RepoArgs{
+	repo, err := LoadPublicRepo(RepoArgs{
 		debug:                debug,
 		dryRun:               false,
 		validateGitversion:   true,

@@ -19,7 +19,7 @@ func resetConfigCommand() *cobra.Command {
 }
 
 func runConfigReset(debug bool) error {
-	repo, err := LoadRepo(RepoArgs{
+	repo, err := LoadPublicRepo(RepoArgs{
 		omitBranchNames:      true,
 		debug:                debug,
 		dryRun:               false,

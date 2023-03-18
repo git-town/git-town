@@ -22,7 +22,7 @@ func resetRunstateCommand() *cobra.Command {
 }
 
 func runStatusReset(debug bool) error {
-	repo, err := LoadRepo(RepoArgs{
+	repo, err := LoadPublicRepo(RepoArgs{
 		debug:                debug,
 		dryRun:               false,
 		validateGitversion:   true,

@@ -27,7 +27,7 @@ func statusCommand() *cobra.Command {
 }
 
 func runStatus(debug bool) error {
-	repo, err := LoadRepo(RepoArgs{
+	repo, err := LoadPublicRepo(RepoArgs{
 		debug:                debug,
 		dryRun:               false,
 		validateGitversion:   true,

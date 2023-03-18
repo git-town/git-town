@@ -33,7 +33,7 @@ This can conflict with other tools that also define Git aliases.`,
 }
 
 func runAliases(debug bool, args []string) error {
-	repo, err := LoadRepo(RepoArgs{
+	repo, err := LoadPublicRepo(RepoArgs{
 		debug:              debug,
 		dryRun:             false,
 		omitBranchNames:    true,
