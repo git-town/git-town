@@ -97,11 +97,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^a merge is now in progress$`, func() error {
-		hasMerge, err := state.gitEnv.DevRepo.HasMergeInProgress()
-		if err != nil {
-			return err
-		}
-		if !hasMerge {
+		if !state.gitEnv.DevRepo.HasMergeInProgress() {
 			return fmt.Errorf("expected merge in progress")
 		}
 		return nil
@@ -435,11 +431,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^no merge is in progress$`, func() error {
-		hasMerge, err := state.gitEnv.DevRepo.HasMergeInProgress()
-		if err != nil {
-			return err
-		}
-		if hasMerge {
+		if state.gitEnv.DevRepo.HasMergeInProgress() {
 			return fmt.Errorf("expected no merge in progress")
 		}
 		return nil
