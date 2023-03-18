@@ -230,7 +230,7 @@ Output:
 	exitCode := subProcess.ProcessState.ExitCode()
 	if r.Debug {
 		fmt.Println(filepath.Base(r.workingDir), ">", cmd, strings.Join(args, " "))
-		fmt.Println(output)
+		fmt.Println(output.String())
 		if err != nil {
 			fmt.Printf("ERROR: %v\n", err)
 		}
