@@ -26,7 +26,7 @@ This usually means the branch was shipped or killed on another machine.`,
 }
 
 func runPruneBranches(debug bool) error {
-	repo, err := Repo(RepoArgs{
+	repo, err := LoadRepo(RepoArgs{
 		debug:                debug,
 		dryRun:               false,
 		validateGitversion:   true,

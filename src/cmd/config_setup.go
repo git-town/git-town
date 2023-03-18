@@ -20,7 +20,7 @@ func setupConfigCommand() *cobra.Command {
 }
 
 func runConfigSetup(debug bool) error {
-	repo, err := Repo(RepoArgs{
+	repo, err := LoadRepo(RepoArgs{
 		omitBranchNames:      true,
 		debug:                debug,
 		dryRun:               false,

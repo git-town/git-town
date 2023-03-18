@@ -34,7 +34,7 @@ See "sync" for information regarding upstream remotes.`,
 }
 
 func runAppend(debug bool, args []string) error {
-	repo, err := Repo(RepoArgs{
+	repo, err := LoadRepo(RepoArgs{
 		debug:                debug,
 		dryRun:               false,
 		validateGitversion:   true,

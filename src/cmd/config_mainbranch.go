@@ -26,7 +26,7 @@ The main branch is the Git branch from which new feature branches are cut.`,
 }
 
 func runConfigureMainBranch(debug bool, args []string) error {
-	repo, err := Repo(RepoArgs{
+	repo, err := LoadRepo(RepoArgs{
 		omitBranchNames:      true,
 		debug:                debug,
 		dryRun:               false,

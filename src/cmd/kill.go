@@ -29,7 +29,7 @@ Does not delete perennial branches nor the main branch.`,
 }
 
 func runKill(debug bool, args []string) error {
-	repo, err := Repo(RepoArgs{
+	repo, err := LoadRepo(RepoArgs{
 		debug:                debug,
 		dryRun:               false,
 		validateGitversion:   true,

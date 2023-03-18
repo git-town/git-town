@@ -29,7 +29,7 @@ Exits with error code 1 if the given branch is a perennial branch or the main br
 }
 
 func runDiffParent(debug bool, args []string) error {
-	repo, err := Repo(RepoArgs{
+	repo, err := LoadRepo(RepoArgs{
 		debug:                debug,
 		dryRun:               false,
 		validateGitversion:   true,

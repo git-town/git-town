@@ -44,7 +44,7 @@ When run on a perennial branch
 }
 
 func runRenameBranch(debug, force bool, args []string) error {
-	repo, err := Repo(RepoArgs{
+	repo, err := LoadRepo(RepoArgs{
 		debug:                debug,
 		dryRun:               false,
 		validateGitversion:   true,

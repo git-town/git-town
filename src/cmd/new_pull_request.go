@@ -45,7 +45,7 @@ where hostname matches what is in your ssh config file.`, config.CodeHostingDriv
 }
 
 func runNewPullRequest(debug bool) error {
-	repo, err := Repo(RepoArgs{
+	repo, err := LoadRepo(RepoArgs{
 		debug:                debug,
 		dryRun:               false,
 		validateGitversion:   true,

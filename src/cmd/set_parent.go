@@ -24,7 +24,7 @@ func setParentCommand() *cobra.Command {
 }
 
 func runSetParent(debug bool) error {
-	repo, err := Repo(RepoArgs{
+	repo, err := LoadRepo(RepoArgs{
 		debug:                debug,
 		dryRun:               false,
 		validateGitversion:   true,

@@ -23,7 +23,7 @@ func undoCmd() *cobra.Command {
 }
 
 func runUndo(debug bool) error {
-	repo, err := Repo(RepoArgs{
+	repo, err := LoadRepo(RepoArgs{
 		debug:                debug,
 		dryRun:               false,
 		validateGitversion:   true,
