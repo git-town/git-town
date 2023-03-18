@@ -8,18 +8,18 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
+	"github.com/git-town/git-town/v7/src/cache"
 	"github.com/kballard/go-shellquote"
 )
 
 // PublicRunner executes the given shell commands and streams their output to the CLI.
 type PublicRunner struct {
-	currentBranch CurrentBranchTracker
+	CurrentBranch *cache.String
 }
 
 // Run runs the given command in this ShellRunner's directory.
 func (r PublicRunner) Run(cmd string, args ...string) error {
-	PrintCommand(r.currentBranch.Value, cmd, args...)
-	r.currentBranch.Track(cmd, args...)
+	PrintCommand(r.CurrentBranch.Value(), cmd, args...)
 	// Windows commands run inside CMD
 	// because opening browsers is done via "start"
 	// TODO: do this only when actually running the "start" command

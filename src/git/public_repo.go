@@ -48,11 +48,7 @@ func (r *PublicRepo) CheckoutBranch(name string) error {
 	if err != nil {
 		return fmt.Errorf("cannot check out branch %q: %w", name, err)
 	}
-	// if name != "-" {
-	// 	r.CurrentBranchCache.Set(name)
-	// } else {
-	// 	r.CurrentBranchCache.Invalidate()
-	// }
+	r.CurrentBranchCache.Set(name)
 	return nil
 }
 

@@ -95,9 +95,13 @@ func internalRepo(debug bool) git.InternalRepo {
 func publicRepo(dryRun bool, internalRepo *git.InternalRepo) git.PublicRepo {
 	var gitRunner git.PublicRunner
 	if dryRun {
-		gitRunner = subshell.PublicDryRunner{}
+		gitRunner = subshell.PublicDryRunner{
+			CurrentBranch: internalRepo.CurrentBranchCache,
+		}
 	} else {
-		gitRunner = subshell.PublicRunner{}
+		gitRunner = subshell.PublicRunner{
+			CurrentBranch: internalRepo.CurrentBranchCache,
+		}
 	}
 	return git.PublicRepo{
 		Public:       gitRunner,
