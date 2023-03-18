@@ -15,12 +15,12 @@ import (
 )
 
 func shipCmd() *cobra.Command {
-	var commitMessage string
-	shipCmd := cobra.Command{
+	debug := false
+	commitMessage := ""
+	cmd := cobra.Command{
 		Use:     "ship",
 		GroupID: "basic",
 		Args:    cobra.MaximumNArgs(1),
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
 		Short:   "Deliver a completed feature branch",
 		Long: fmt.Sprintf(`Deliver a completed feature branch
 
@@ -49,24 +49,34 @@ GitHub's feature to automatically delete head branches,
 run "git config %s false"
 and Git Town will leave it up to your origin server to delete the remote branch.`, config.GithubTokenKey, config.ShipDeleteRemoteBranchKey),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			connector, err := hosting.NewConnector(repo.Config, &repo.InternalRepo, cli.PrintConnectorAction)
-			if err != nil {
-				return err
-			}
-			config, err := determineShipConfig(args, connector, repo)
-			if err != nil {
-				return err
-			}
-			stepList, err := shipStepList(config, commitMessage, repo)
-			if err != nil {
-				return err
-			}
-			runState := runstate.New("ship", stepList)
-			return runstate.Execute(runState, repo, connector)
+			return runShip(debug, commitMessage, args)
 		},
 	}
-	shipCmd.Flags().StringVarP(&commitMessage, "message", "m", "", "Specify the commit message for the squash commit")
-	return &shipCmd
+	cmd.Flags().StringVarP(&commitMessage, "message", "m", "", "Specify the commit message for the squash commit")
+	debugFlag(&cmd, &debug)
+	return &cmd
+}
+
+func runShip(debug bool, message string, args []string) error {
+	repo := Repo(debug, false)
+	err := ensure(&repo, hasGitVersion, isRepository, isConfigured)
+	if err != nil {
+		return err
+	}
+	connector, err := hosting.NewConnector(repo.Config, &repo.InternalRepo, cli.PrintConnectorAction)
+	if err != nil {
+		return err
+	}
+	config, err := determineShipConfig(args, connector, &repo)
+	if err != nil {
+		return err
+	}
+	stepList, err := shipStepList(config, message, &repo)
+	if err != nil {
+		return err
+	}
+	runState := runstate.New("ship", stepList)
+	return runstate.Execute(runState, &repo, connector)
 }
 
 type shipConfig struct {

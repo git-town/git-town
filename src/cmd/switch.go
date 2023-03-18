@@ -9,30 +9,41 @@ import (
 )
 
 func switchCmd() *cobra.Command {
-	return &cobra.Command{
+	debug := false
+	cmd := cobra.Command{
 		Use:     "switch",
 		GroupID: "basic",
 		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
 		Short:   "Displays the local branches visually and allows switching between them",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			currentBranch, err := repo.CurrentBranch()
-			if err != nil {
-				return err
-			}
-			newBranch, err := queryBranch(currentBranch, repo)
-			if err != nil {
-				return err
-			}
-			if newBranch != nil && *newBranch != currentBranch {
-				err = repo.CheckoutBranch(*newBranch)
-				if err != nil {
-					return err
-				}
-			}
-			return nil
+			return runSwitch(debug)
 		},
 	}
+	debugFlag(&cmd, &debug)
+	return &cmd
+}
+
+func runSwitch(debug bool) error {
+	repo := Repo(debug, false)
+	err := ensure(&repo, hasGitVersion, isRepository, isConfigured)
+	if err != nil {
+		return err
+	}
+	currentBranch, err := repo.CurrentBranch()
+	if err != nil {
+		return err
+	}
+	newBranch, err := queryBranch(currentBranch, &repo)
+	if err != nil {
+		return err
+	}
+	if newBranch != nil && *newBranch != currentBranch {
+		err = repo.CheckoutBranch(*newBranch)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 // queryBranch lets the user select a new branch via a visual dialog.

@@ -63,8 +63,8 @@ func debugFlag(cmd *cobra.Command, flag *bool) {
 	cmd.PersistentFlags().BoolVar(flag, "debug", false, "Print all Git commands run under the hood")
 }
 
-func dryRunFlag(cmd *cobra.Command) *bool {
-	return cmd.PersistentFlags().Bool("dryrun", false, "Print but do not execute the Git commands")
+func dryRunFlag(cmd *cobra.Command, flag *bool) {
+	cmd.PersistentFlags().BoolVar(flag, "dryrun", false, "Print but do not run the Git commands")
 }
 
 func Repo(debug, dryRun bool) git.PublicRepo {

@@ -8,18 +8,29 @@ import (
 )
 
 func resetRunstateCommand() *cobra.Command {
-	return &cobra.Command{
-		Use:     "reset",
-		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, hasGitVersion, isRepository),
-		Short:   "Resets the current suspended Git Town command",
+	debug := false
+	cmd := cobra.Command{
+		Use:   "reset",
+		Args:  cobra.NoArgs,
+		Short: "Resets the current suspended Git Town command",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			err := runstate.Delete(repo)
-			if err != nil {
-				return err
-			}
-			fmt.Println("Runstate file deleted.")
-			return nil
+			return runStatusReset(debug)
 		},
 	}
+	debugFlag(&cmd, &debug)
+	return &cmd
+}
+
+func runStatusReset(debug bool) error {
+	repo := Repo(debug, false)
+	err := ensure(&repo, hasGitVersion, isRepository)
+	if err != nil {
+		return err
+	}
+	err = runstate.Delete(&repo)
+	if err != nil {
+		return err
+	}
+	fmt.Println("Runstate file deleted.")
+	return nil
 }

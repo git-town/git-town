@@ -13,13 +13,13 @@ import (
 )
 
 func syncCmd() *cobra.Command {
-	var allFlag bool
-	var dryRunFlag bool
-	syncCmd := cobra.Command{
+	debug := false
+	dryRun := false
+	allFlag := false
+	cmd := cobra.Command{
 		Use:     "sync",
 		GroupID: "basic",
 		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
 		Short:   "Updates the current branch with all relevant changes",
 		Long: fmt.Sprintf(`Updates the current branch with all relevant changes
 
@@ -39,35 +39,45 @@ If the repository contains an "upstream" remote,
 syncs the main branch with its upstream counterpart.
 You can disable this by running "git config %s false".`, config.SyncUpstreamKey),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if dryRunFlag {
-				currentBranch, err := repo.CurrentBranch()
-				if err != nil {
-					return err
-				}
-				repo.DryRun.Activate(currentBranch)
-			}
-			exit, err := validate.HandleUnfinishedState(repo, nil)
-			if err != nil {
-				return err
-			}
-			if exit {
-				os.Exit(0)
-			}
-			config, err := determineSyncConfig(allFlag, repo)
-			if err != nil {
-				return err
-			}
-			stepList, err := syncBranchesSteps(config, repo)
-			if err != nil {
-				return err
-			}
-			runState := runstate.New("sync", stepList)
-			return runstate.Execute(runState, repo, nil)
+			return runSync(debug, dryRun, allFlag)
 		},
 	}
-	syncCmd.Flags().BoolVar(&allFlag, "all", false, "Sync all local branches")
-	syncCmd.Flags().BoolVar(&dryRunFlag, "dry-run", false, "Print the commands but don't run them")
-	return &syncCmd
+	cmd.Flags().BoolVar(&allFlag, "all", false, "Sync all local branches")
+	debugFlag(&cmd, &debug)
+	dryRunFlag(&cmd, &dryRun)
+	return &cmd
+}
+
+func runSync(debug, dryRun, all bool) error {
+	repo := Repo(debug, false)
+	err := ensure(&repo, hasGitVersion, isRepository, isConfigured)
+	if err != nil {
+		return err
+	}
+	if dryRun {
+		currentBranch, err := repo.CurrentBranch()
+		if err != nil {
+			return err
+		}
+		repo.DryRun.Activate(currentBranch)
+	}
+	exit, err := validate.HandleUnfinishedState(&repo, nil)
+	if err != nil {
+		return err
+	}
+	if exit {
+		os.Exit(0)
+	}
+	config, err := determineSyncConfig(all, &repo)
+	if err != nil {
+		return err
+	}
+	stepList, err := syncBranchesSteps(config, &repo)
+	if err != nil {
+		return err
+	}
+	runState := runstate.New("sync", stepList)
+	return runstate.Execute(runState, &repo, nil)
 }
 
 type syncConfig struct {

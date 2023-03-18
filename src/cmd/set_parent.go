@@ -8,30 +8,41 @@ import (
 )
 
 func setParentCommand() *cobra.Command {
-	return &cobra.Command{
+	debug := false
+	cmd := cobra.Command{
 		Use:     "set-parent",
 		GroupID: "lineage",
 		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
 		Short:   "Prompts to set the parent branch for the current branch",
 		Long:    `Prompts to set the parent branch for the current branch`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			currentBranch, err := repo.CurrentBranch()
-			if err != nil {
-				return err
-			}
-			if !repo.Config.IsFeatureBranch(currentBranch) {
-				return errors.New("only feature branches can have parent branches")
-			}
-			defaultParentBranch := repo.Config.ParentBranch(currentBranch)
-			if defaultParentBranch == "" {
-				defaultParentBranch = repo.Config.MainBranch()
-			}
-			err = repo.Config.RemoveParentBranch(currentBranch)
-			if err != nil {
-				return err
-			}
-			return validate.KnowsBranchAncestry(currentBranch, defaultParentBranch, repo)
+			return runSetParent(debug)
 		},
 	}
+	debugFlag(&cmd, &debug)
+	return &cmd
+}
+
+func runSetParent(debug bool) error {
+	repo := Repo(debug, false)
+	err := ensure(&repo, hasGitVersion, isRepository, isConfigured)
+	if err != nil {
+		return err
+	}
+	currentBranch, err := repo.CurrentBranch()
+	if err != nil {
+		return err
+	}
+	if !repo.Config.IsFeatureBranch(currentBranch) {
+		return errors.New("only feature branches can have parent branches")
+	}
+	defaultParentBranch := repo.Config.ParentBranch(currentBranch)
+	if defaultParentBranch == "" {
+		defaultParentBranch = repo.Config.MainBranch()
+	}
+	err = repo.Config.RemoveParentBranch(currentBranch)
+	if err != nil {
+		return err
+	}
+	return validate.KnowsBranchAncestry(currentBranch, defaultParentBranch, &repo)
 }

@@ -12,23 +12,32 @@ import (
 )
 
 func statusCommand() *cobra.Command {
-	cmd := &cobra.Command{
+	debug := false
+	cmd := cobra.Command{
 		Use:     "status",
 		GroupID: "errors",
 		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, hasGitVersion, isRepository),
 		Short:   "Displays or resets the current suspended Git Town command",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			config, err := loadDisplayStatusConfig(repo)
-			if err != nil {
-				return err
-			}
-			displayStatus(*config)
-			return nil
+			return runStatus(debug)
 		},
 	}
-	cmd.AddCommand(resetRunstateCommand(repo))
-	return cmd
+	cmd.AddCommand(resetRunstateCommand())
+	return &cmd
+}
+
+func runStatus(debug bool) error {
+	repo := Repo(debug, false)
+	err := ensure(&repo, hasGitVersion, isRepository)
+	if err != nil {
+		return err
+	}
+	config, err := loadDisplayStatusConfig(&repo)
+	if err != nil {
+		return err
+	}
+	displayStatus(*config)
+	return nil
 }
 
 type displayStatusConfig struct {

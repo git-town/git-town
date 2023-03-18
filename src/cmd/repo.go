@@ -11,11 +11,11 @@ import (
 )
 
 func repoCommand() *cobra.Command {
-	return &cobra.Command{
-		Use:     "repo",
-		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured, isOnline),
-		Short:   "Opens the repository homepage",
+	debug := false
+	cmd := cobra.Command{
+		Use:   "repo",
+		Args:  cobra.NoArgs,
+		Short: "Opens the repository homepage",
 		Long: fmt.Sprintf(`Opens the repository homepage
 
 Supported for repositories hosted on GitHub, GitLab, Gitea, and Bitbucket.
@@ -28,15 +28,26 @@ When using SSH identities, run
 "git config %s <HOSTNAME>"
 where HOSTNAME matches what is in your ssh config file.`, config.CodeHostingDriverKey, config.CodeHostingOriginHostnameKey),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			connector, err := hosting.NewConnector(repo.Config, &repo.InternalRepo, cli.PrintConnectorAction)
-			if err != nil {
-				return err
-			}
-			if connector == nil {
-				return hosting.UnsupportedServiceError()
-			}
-			browser.Open(connector.RepositoryURL(), repo.Public, repo.InternalRepo.InternalRunner)
-			return nil
+			return runRepo(debug)
 		},
 	}
+	debugFlag(&cmd, &debug)
+	return &cmd
+}
+
+func runRepo(debug bool) error {
+	repo := Repo(debug, false)
+	err := ensure(&repo, hasGitVersion, isRepository, isConfigured, isOnline)
+	if err != nil {
+		return err
+	}
+	connector, err := hosting.NewConnector(repo.Config, &repo.InternalRepo, cli.PrintConnectorAction)
+	if err != nil {
+		return err
+	}
+	if connector == nil {
+		return hosting.UnsupportedServiceError()
+	}
+	browser.Open(connector.RepositoryURL(), repo.Public, repo.InternalRepo.InternalRunner)
+	return nil
 }
