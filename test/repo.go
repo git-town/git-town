@@ -60,10 +60,9 @@ func NewRepo(workingDir, homeDir, binDir string) Repo {
 		homeDir:    homeDir,
 		binDir:     binDir,
 	}
-	internalRunner := InternalDirRunner{Dir: workingDir}
 	internalRepo := git.InternalRepo{
-		InternalRunner:     internalRunner,
-		Config:             config.NewGitTown(&internalRunner),
+		InternalRunner:     &mockingRunner,
+		Config:             config.NewGitTown(&mockingRunner),
 		DryRun:             false,
 		IsRepoCache:        &cache.Bool{},
 		RemoteBranchCache:  &cache.Strings{},
