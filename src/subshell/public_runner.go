@@ -20,7 +20,13 @@ type PublicRunner struct {
 
 // Run runs the given command in this ShellRunner's directory.
 func (r PublicRunner) Run(cmd string, args ...string) error {
-	PrintCommand(r.CurrentBranch.Value(), r.PrintBranchNames, cmd, args...)
+	var branchName string
+	if r.PrintBranchNames {
+		branchName = r.CurrentBranch.Value()
+	} else {
+		branchName = ""
+	}
+	PrintCommand(branchName, r.PrintBranchNames, cmd, args...)
 	// Windows commands run inside CMD
 	// because opening browsers is done via "start"
 	// TODO: do this only when actually running the "start" command
