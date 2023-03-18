@@ -27,8 +27,12 @@ Git Town avoids network operations in offline mode.`,
 }
 
 func runConfigureOffline(debug bool, args []string) error {
-	repo := Repo(debug, false)
-	err := ensure(&repo, hasGitVersion)
+	repo, err := Repo(RepoArgs{
+		printBranchNames:   false,
+		debug:              debug,
+		dryRun:             false,
+		validateGitversion: true,
+	})
 	if err != nil {
 		return err
 	}

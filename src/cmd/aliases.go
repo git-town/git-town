@@ -10,7 +10,8 @@ import (
 )
 
 func aliasCommand() *cobra.Command {
-	return &cobra.Command{
+	debug := false
+	cmd := cobra.Command{
 		Use:     "aliases (add | remove)",
 		GroupID: "setup",
 		Args:    cobra.ExactArgs(1),
@@ -24,14 +25,20 @@ Does not overwrite existing aliases.
 
 This can conflict with other tools that also define Git aliases.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runAliases(args)
+			return runAliases(debug, args)
 		},
 	}
+	debugFlag(&cmd, &debug)
+	return &cmd
 }
 
-func runAliases(args []string) error {
-	repo := Repo(false, false)
-	err := ensure(&repo, hasGitVersion)
+func runAliases(debug bool, args []string) error {
+	repo, err := Repo(RepoArgs{
+		debug:              debug,
+		dryRun:             false,
+		printBranchNames:   false,
+		validateGitversion: true,
+	})
 	if err != nil {
 		return err
 	}

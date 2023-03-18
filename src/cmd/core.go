@@ -24,90 +24,11 @@ import (
 	"github.com/git-town/git-town/v7/src/cache"
 	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/subshell"
 	"github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
-
-// Execute runs the Cobra stack.
-func Execute() error {
-	rootCmd := rootCmd()
-
-	rootCmd.AddCommand(abortCmd())
-	rootCmd.AddCommand(aliasCommand())
-	rootCmd.AddCommand(appendCmd())
-	rootCmd.AddCommand(completionsCmd(&rootCmd))
-	rootCmd.AddCommand(configCmd())
-	rootCmd.AddCommand(continueCmd())
-	rootCmd.AddCommand(diffParentCommand())
-	rootCmd.AddCommand(hackCmd())
-	rootCmd.AddCommand(killCommand())
-	rootCmd.AddCommand(newPullRequestCommand())
-	rootCmd.AddCommand(prependCommand())
-	rootCmd.AddCommand(pruneBranchesCommand())
-	rootCmd.AddCommand(renameBranchCommand())
-	rootCmd.AddCommand(repoCommand())
-	rootCmd.AddCommand(statusCommand())
-	rootCmd.AddCommand(setParentCommand())
-	rootCmd.AddCommand(shipCmd())
-	rootCmd.AddCommand(skipCmd())
-	rootCmd.AddCommand(switchCmd())
-	rootCmd.AddCommand(syncCmd())
-	rootCmd.AddCommand(undoCmd())
-	rootCmd.AddCommand(versionCmd())
-
-	return rootCmd.Execute()
-}
-
-func debugFlag(cmd *cobra.Command, flag *bool) {
-	cmd.PersistentFlags().BoolVar(flag, "debug", false, "Print all Git commands run under the hood")
-}
-
-func dryRunFlag(cmd *cobra.Command, flag *bool) {
-	cmd.PersistentFlags().BoolVar(flag, "dryrun", false, "Print but do not run the Git commands")
-}
-
-func Repo(debug, dryRun bool) git.PublicRepo {
-	internalRepo := internalRepo(debug)
-	return publicRepo(dryRun, &internalRepo)
-}
-
-func internalRepo(debug bool) git.InternalRepo {
-	shellRunner := subshell.InternalRunner{Dir: nil}
-	var gitRunner git.InternalRunner
-	if debug {
-		gitRunner = subshell.InternalDebuggingRunner{InternalRunner: shellRunner}
-	} else {
-		gitRunner = shellRunner
-	}
-	return git.InternalRepo{
-		InternalRunner:     gitRunner,
-		Config:             config.NewGitTown(gitRunner),
-		CurrentBranchCache: &cache.String{},
-		DryRun:             &subshell.DryRun{},
-		IsRepoCache:        &cache.Bool{},
-		RemoteBranchCache:  &cache.Strings{},
-		RemotesCache:       &cache.Strings{},
-		RootDirCache:       &cache.String{},
-	}
-}
-
-func publicRepo(dryRun bool, internalRepo *git.InternalRepo) git.PublicRepo {
-	var gitRunner git.PublicRunner
-	if dryRun {
-		gitRunner = subshell.PublicDryRunner{
-			CurrentBranch: internalRepo.CurrentBranchCache,
-		}
-	} else {
-		gitRunner = subshell.PublicRunner{
-			CurrentBranch: internalRepo.CurrentBranchCache,
-		}
-	}
-	return git.PublicRepo{
-		Public:       gitRunner,
-		InternalRepo: *internalRepo,
-	}
-}
 
 func rootCmd() cobra.Command {
 	rootCmd := cobra.Command{
@@ -137,10 +58,106 @@ and it allows you to perform many common Git operations faster and easier.`,
 	return rootCmd
 }
 
-var (
-	ensure        = validate.Ensure        //nolint:gochecknoglobals
-	hasGitVersion = validate.HasGitVersion //nolint:gochecknoglobals
-	isRepository  = validate.IsRepository  //nolint:gochecknoglobals
-	isConfigured  = validate.IsConfigured  //nolint:gochecknoglobals
-	isOnline      = validate.IsOnline      //nolint:gochecknoglobals
-)
+// Execute runs the Cobra stack.
+func Execute() error {
+	rootCmd := rootCmd()
+	rootCmd.AddCommand(abortCmd())
+	rootCmd.AddCommand(aliasCommand())
+	rootCmd.AddCommand(appendCmd())
+	rootCmd.AddCommand(completionsCmd(&rootCmd))
+	rootCmd.AddCommand(configCmd())
+	rootCmd.AddCommand(continueCmd())
+	rootCmd.AddCommand(diffParentCommand())
+	rootCmd.AddCommand(hackCmd())
+	rootCmd.AddCommand(killCommand())
+	rootCmd.AddCommand(newPullRequestCommand())
+	rootCmd.AddCommand(prependCommand())
+	rootCmd.AddCommand(pruneBranchesCommand())
+	rootCmd.AddCommand(renameBranchCommand())
+	rootCmd.AddCommand(repoCommand())
+	rootCmd.AddCommand(statusCommand())
+	rootCmd.AddCommand(setParentCommand())
+	rootCmd.AddCommand(shipCmd())
+	rootCmd.AddCommand(skipCmd())
+	rootCmd.AddCommand(switchCmd())
+	rootCmd.AddCommand(syncCmd())
+	rootCmd.AddCommand(undoCmd())
+	rootCmd.AddCommand(versionCmd())
+	return rootCmd.Execute()
+}
+
+func debugFlag(cmd *cobra.Command, flag *bool) {
+	cmd.PersistentFlags().BoolVar(flag, "debug", false, "Print all Git commands run under the hood")
+}
+
+func dryRunFlag(cmd *cobra.Command, flag *bool) {
+	cmd.PersistentFlags().BoolVar(flag, "dryrun", false, "Print but do not run the Git commands")
+}
+
+func Repo(args RepoArgs) (git.PublicRepo, error) {
+	internalRepo := internalRepo(args.debug)
+	publicRepo := publicRepo(args.printBranchNames, args.dryRun, &internalRepo)
+	ec := runstate.ErrorChecker{}
+	if args.validateGitversion {
+		ec.Check(validate.HasGitVersion(&internalRepo))
+	}
+	if args.validateIsRepository {
+		ec.Check(validate.IsRepository(&publicRepo))
+	}
+	if args.validateIsConfigured {
+		ec.Check(validate.IsConfigured(&publicRepo))
+	}
+	if args.validateIsOnline {
+		ec.Check(validate.IsOnline(&publicRepo))
+	}
+	return publicRepo, ec.Err
+}
+
+type RepoArgs struct {
+	debug                bool
+	dryRun               bool
+	printBranchNames     bool
+	validateGitversion   bool
+	validateIsRepository bool
+	validateIsConfigured bool
+	validateIsOnline     bool
+}
+
+func internalRepo(debug bool) git.InternalRepo {
+	shellRunner := subshell.InternalRunner{Dir: nil}
+	var gitRunner git.InternalRunner
+	if debug {
+		gitRunner = subshell.InternalDebuggingRunner{InternalRunner: shellRunner}
+	} else {
+		gitRunner = shellRunner
+	}
+	return git.InternalRepo{
+		InternalRunner:     gitRunner,
+		Config:             config.NewGitTown(gitRunner),
+		CurrentBranchCache: &cache.String{},
+		DryRun:             &subshell.DryRun{},
+		IsRepoCache:        &cache.Bool{},
+		RemoteBranchCache:  &cache.Strings{},
+		RemotesCache:       &cache.Strings{},
+		RootDirCache:       &cache.String{},
+	}
+}
+
+func publicRepo(printBranchNames, dryRun bool, internalRepo *git.InternalRepo) git.PublicRepo {
+	var gitRunner git.PublicRunner
+	if dryRun {
+		gitRunner = subshell.PublicDryRunner{
+			CurrentBranch:    internalRepo.CurrentBranchCache,
+			PrintBranchNames: printBranchNames,
+		}
+	} else {
+		gitRunner = subshell.PublicRunner{
+			CurrentBranch:    internalRepo.CurrentBranchCache,
+			PrintBranchNames: printBranchNames,
+		}
+	}
+	return git.PublicRepo{
+		Public:       gitRunner,
+		InternalRepo: *internalRepo,
+	}
+}

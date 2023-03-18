@@ -35,8 +35,14 @@ See "sync" for information regarding upstream remotes.`,
 }
 
 func runHack(debug, prompt bool, args []string) error {
-	repo := Repo(debug, false)
-	err := ensure(&repo, hasGitVersion, isRepository, isConfigured)
+	repo, err := Repo(RepoArgs{
+		printBranchNames:     false,
+		debug:                debug,
+		dryRun:               false,
+		validateGitversion:   true,
+		validateIsRepository: true,
+		validateIsConfigured: true,
+	})
 	if err != nil {
 		return err
 	}

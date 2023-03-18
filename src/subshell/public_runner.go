@@ -14,12 +14,13 @@ import (
 
 // PublicRunner executes the given shell commands and streams their output to the CLI.
 type PublicRunner struct {
-	CurrentBranch *cache.String
+	CurrentBranch    *cache.String
+	PrintBranchNames bool
 }
 
 // Run runs the given command in this ShellRunner's directory.
 func (r PublicRunner) Run(cmd string, args ...string) error {
-	PrintCommand(r.CurrentBranch.Value(), cmd, args...)
+	PrintCommand(r.CurrentBranch.Value(), r.PrintBranchNames, cmd, args...)
 	// Windows commands run inside CMD
 	// because opening browsers is done via "start"
 	// TODO: do this only when actually running the "start" command
@@ -58,8 +59,8 @@ func (r PublicRunner) RunString(fullCmd string) error {
 }
 
 // PrintCommand prints the given command-line operation on the console.
-func PrintCommand(branch string, cmd string, args ...string) {
-	header := FormatCommand(branch, cmd, args...)
+func PrintCommand(branch string, printBranch bool, cmd string, args ...string) {
+	header := FormatCommand(branch, printBranch, cmd, args...)
 	fmt.Println()
 	_, err := color.New(color.Bold).Println(header)
 	if err != nil {
@@ -67,9 +68,9 @@ func PrintCommand(branch string, cmd string, args ...string) {
 	}
 }
 
-func FormatCommand(currentBranch string, executable string, args ...string) string {
+func FormatCommand(currentBranch string, printBranch bool, executable string, args ...string) string {
 	result := ""
-	if executable == "git" {
+	if executable == "git" && printBranch {
 		result = "[" + currentBranch + "] git "
 	} else {
 		result = executable + " "

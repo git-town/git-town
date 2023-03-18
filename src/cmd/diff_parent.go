@@ -29,8 +29,14 @@ Exits with error code 1 if the given branch is a perennial branch or the main br
 }
 
 func runDiffParent(debug bool, args []string) error {
-	repo := Repo(debug, false)
-	err := ensure(&repo, hasGitVersion, isRepository, isConfigured)
+	repo, err := Repo(RepoArgs{
+		printBranchNames:     false,
+		debug:                debug,
+		dryRun:               false,
+		validateGitversion:   true,
+		validateIsRepository: true,
+		validateIsConfigured: true,
+	})
 	if err != nil {
 		return err
 	}

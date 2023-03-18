@@ -10,12 +10,13 @@ import (
 // PublicDryRunner prints the given shell commands to the CLI as if they were executed,
 // but does not execute them.
 type PublicDryRunner struct {
-	CurrentBranch *cache.String
+	CurrentBranch    *cache.String
+	PrintBranchNames bool
 }
 
 // Run runs the given command in this ShellRunner's directory.
 func (r PublicDryRunner) Run(executable string, args ...string) error {
-	PrintCommand(r.CurrentBranch.Value(), executable, args...)
+	PrintCommand(r.CurrentBranch.Value(), r.PrintBranchNames, executable, args...)
 	return nil
 }
 

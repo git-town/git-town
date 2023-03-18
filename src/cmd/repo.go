@@ -36,8 +36,15 @@ where HOSTNAME matches what is in your ssh config file.`, config.CodeHostingDriv
 }
 
 func runRepo(debug bool) error {
-	repo := Repo(debug, false)
-	err := ensure(&repo, hasGitVersion, isRepository, isConfigured, isOnline)
+	repo, err := Repo(RepoArgs{
+		printBranchNames:     false,
+		debug:                debug,
+		dryRun:               false,
+		validateGitversion:   true,
+		validateIsRepository: true,
+		validateIsConfigured: true,
+		validateIsOnline:     true,
+	})
 	if err != nil {
 		return err
 	}

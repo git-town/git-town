@@ -24,8 +24,14 @@ func switchCmd() *cobra.Command {
 }
 
 func runSwitch(debug bool) error {
-	repo := Repo(debug, false)
-	err := ensure(&repo, hasGitVersion, isRepository, isConfigured)
+	repo, err := Repo(RepoArgs{
+		printBranchNames:     false,
+		debug:                debug,
+		dryRun:               false,
+		validateGitversion:   true,
+		validateIsRepository: true,
+		validateIsConfigured: true,
+	})
 	if err != nil {
 		return err
 	}

@@ -27,8 +27,13 @@ for the main branch and perennial branches.`,
 }
 
 func runConfigurePullBranchStrategy(debug bool, args []string) error {
-	repo := Repo(debug, false)
-	err := ensure(&repo, hasGitVersion, isRepository)
+	repo, err := Repo(RepoArgs{
+		printBranchNames:     false,
+		debug:                debug,
+		dryRun:               false,
+		validateGitversion:   true,
+		validateIsRepository: true,
+	})
 	if err != nil {
 		return err
 	}

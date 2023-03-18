@@ -19,8 +19,13 @@ func resetConfigCommand() *cobra.Command {
 }
 
 func runConfigReset(debug bool) error {
-	repo := Repo(debug, false)
-	err := ensure(&repo, hasGitVersion, isRepository)
+	repo, err := Repo(RepoArgs{
+		printBranchNames:     false,
+		debug:                debug,
+		dryRun:               false,
+		validateGitversion:   true,
+		validateIsRepository: true,
+	})
 	if err != nil {
 		return err
 	}

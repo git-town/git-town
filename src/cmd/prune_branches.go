@@ -26,8 +26,15 @@ This usually means the branch was shipped or killed on another machine.`,
 }
 
 func runPruneBranches(debug bool) error {
-	repo := Repo(debug, false)
-	err := ensure(&repo, hasGitVersion, isRepository, isConfigured, isOnline)
+	repo, err := Repo(RepoArgs{
+		printBranchNames:     false,
+		debug:                debug,
+		dryRun:               false,
+		validateGitversion:   true,
+		validateIsRepository: true,
+		validateIsConfigured: true,
+		validateIsOnline:     true,
+	})
 	if err != nil {
 		return err
 	}

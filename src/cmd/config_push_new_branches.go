@@ -30,8 +30,14 @@ push the new branch to the origin remote.`,
 }
 
 func runConfigurePushNewBranches(debug, global bool, args []string) error {
-	repo := Repo(debug, false)
-	if err := ensure(&repo, hasGitVersion, isRepository); err != nil {
+	repo, err := Repo(RepoArgs{
+		printBranchNames:     false,
+		debug:                debug,
+		dryRun:               false,
+		validateGitversion:   true,
+		validateIsRepository: true,
+	})
+	if err != nil {
 		return err
 	}
 	if len(args) > 0 {
