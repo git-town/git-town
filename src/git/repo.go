@@ -623,9 +623,9 @@ func (r *Repo) HasLocalOrOriginBranch(name string) (bool, error) {
 }
 
 // HasMergeInProgress indicates whether this Git repository currently has a merge in progress.
-func (r *Repo) HasMergeInProgress() (bool, error) {
-	_, err := os.Stat(filepath.Join(r.WorkingDir(), ".git", "MERGE_HEAD"))
-	return err == nil, nil
+func (r *Repo) HasMergeInProgress() bool {
+	_, err := r.Run("git", "rev-parse", "-q", "--verify", "MERGE_HEAD")
+	return err == nil
 }
 
 // HasOpenChanges indicates whether this repo has open changes.
