@@ -213,11 +213,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^Git Town is no longer configured$`, func() error {
-		res, err := state.gitEnv.DevRepo.HasGitTownConfigNow()
-		if err != nil {
-			return err
-		}
-		if res {
+		if state.gitEnv.DevRepo.HasGitTownConfigNow() {
 			return fmt.Errorf("unexpected Git Town configuration")
 		}
 		return nil

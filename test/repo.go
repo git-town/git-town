@@ -404,12 +404,12 @@ func (r *Repo) HasFile(name, content string) (bool, error) {
 }
 
 // HasGitTownConfigNow indicates whether this repository contain Git Town specific configuration.
-func (r *Repo) HasGitTownConfigNow() (bool, error) {
+func (r *Repo) HasGitTownConfigNow() bool {
 	output, err := r.Run("git", "config", "--local", "--get-regex", "git-town")
 	if err != nil {
-		return false, err
+		return false
 	}
-	return output.Sanitized() != "", nil
+	return output.Sanitized() != ""
 }
 
 func (r *Repo) PushBranch() error {
