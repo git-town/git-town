@@ -1,7 +1,6 @@
 package test
 
 import (
-	"bufio"
 	"fmt"
 	"log"
 	"os"
@@ -12,6 +11,7 @@ import (
 
 	"github.com/cucumber/godog"
 	"github.com/cucumber/messages-go/v10"
+	"github.com/eiannone/keyboard"
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/git"
@@ -308,9 +308,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^inspect the repo$`, func() error {
-		fmt.Println(state.gitEnv.DevRepo.WorkingDir())
-		reader := bufio.NewReader(os.Stdin)
-		_, _ = reader.ReadString('\n')
+		fmt.Printf("\nThe workspace is at %q\n", state.gitEnv.DevRepo.WorkingDir())
+		_, _, err := keyboard.GetSingleKey()
+		if err != nil {
+			return fmt.Errorf("cannot read from os.Stdin: %w", err)
+		}
 		return nil
 	})
 
