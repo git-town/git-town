@@ -153,8 +153,7 @@ func (r *Repo) CreateChildFeatureBranch(name string, parent string) error {
 	if err != nil {
 		return err
 	}
-	_ = r.Config.SetParent(name, parent)
-	return nil
+	return r.Config.SetParent(name, parent)
 }
 
 // CreateCommit creates a commit with the given properties in this Git repo.

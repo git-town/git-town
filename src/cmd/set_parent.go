@@ -41,13 +41,14 @@ func runSetParent(debug bool) error {
 	if !repo.Config.IsFeatureBranch(currentBranch) {
 		return errors.New("only feature branches can have parent branches")
 	}
-	defaultParentBranch := repo.Config.ParentBranch(currentBranch)
-	if defaultParentBranch == "" {
-		defaultParentBranch = repo.Config.MainBranch()
+	existingParent := repo.Config.ParentBranch(currentBranch)
+	if existingParent != "" {
+		err = repo.Config.RemoveParent(currentBranch)
+		if err != nil {
+			return err
+		}
+	} else {
+		existingParent = repo.Config.MainBranch()
 	}
-	err = repo.Config.RemoveParentBranch(currentBranch)
-	if err != nil {
-		return err
-	}
-	return validate.KnowsBranchAncestry(currentBranch, defaultParentBranch, &repo)
+	return validate.KnowsBranchAncestry(currentBranch, existingParent, &repo)
 }

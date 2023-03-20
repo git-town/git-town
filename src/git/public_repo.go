@@ -305,7 +305,7 @@ func (r *PublicRepo) RemoveOutdatedConfiguration() error {
 		hasChildBranch := stringslice.Contains(branches, child)
 		hasParentBranch := stringslice.Contains(branches, parent)
 		if !hasChildBranch || !hasParentBranch {
-			err = r.Config.RemoveParentBranch(child)
+			err = r.Config.RemoveParent(child)
 			if err != nil {
 				return err
 			}

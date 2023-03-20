@@ -308,9 +308,9 @@ func (gt *GitTown) RemoveMainBranchConfiguration() error {
 	return gt.RemoveLocalConfigValue(MainBranchKey)
 }
 
-// RemoveParentBranch removes the parent branch entry for the given branch
+// RemoveParent removes the parent branch entry for the given branch
 // from the Git configuration.
-func (gt *GitTown) RemoveParentBranch(branch string) error {
+func (gt *GitTown) RemoveParent(branch string) error {
 	return gt.RemoveLocalConfigValue("git-town-branch." + branch + ".parent")
 }
 

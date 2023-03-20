@@ -21,5 +21,5 @@ func (step *DeleteParentBranchStep) CreateUndoStep(repo *git.PublicRepo) (Step, 
 
 func (step *DeleteParentBranchStep) Run(repo *git.PublicRepo, connector hosting.Connector) error {
 	step.previousParent = repo.Config.ParentBranch(step.Branch)
-	return repo.Config.RemoveParentBranch(step.Branch)
+	return repo.Config.RemoveParent(step.Branch)
 }
