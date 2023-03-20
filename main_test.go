@@ -15,8 +15,8 @@ func FeatureContext(suite *godog.Suite) {
 	// Hence we have to register the scenario state here (and reuse it for all scenarios in a feature)
 	// and register the steps here.
 	// It is initialized in SuiteSteps.BeforeScenario.
-	state := &test.ScenarioState{}
-	test.Steps(suite, state)
+	state := test.ScenarioState{}
+	test.Steps(suite, &state)
 }
 
 //nolint:paralleltest
