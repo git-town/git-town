@@ -88,7 +88,6 @@ Feature: handle previously unfinished Git Town commands
       | COMMAND |
       | sync    |
 
-  @this
   Scenario Outline: commands that don't require the user to resolve a previously unfinished Git Town command
     When I run "git rebase --abort"
     And I run "git checkout feature"
