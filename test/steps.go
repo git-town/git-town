@@ -324,6 +324,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^it prints:$`, func(expected *messages.PickleStepArgument_PickleDocString) error {
+		if state.runErr != nil {
+			return fmt.Errorf("unexpected error: %w", state.runErr)
+		}
 		if !strings.Contains(state.runOutput.Sanitized(), expected.Content) {
 			return fmt.Errorf("text not found:\n\nEXPECTED:\n\n%q\n\nACTUAL:\n\n%q", expected.Content, state.runOutput.Sanitized())
 		}
@@ -360,7 +363,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^it runs without error$`, func() error {
 		if state.runErr != nil {
-			return fmt.Errorf("did not expect the Git Town command to produce an error")
+			return fmt.Errorf("did not expect the Git Town command to produce an error: %w", state.runErr)
 		}
 		return nil
 	})

@@ -72,6 +72,7 @@ Feature: handle previously unfinished Git Town commands
 
   # TODO: after updating to a godog version > 0.9, group this and the next Scenario Outline into a Rule block
   # and merge the common setup steps into a local Background block.
+  @this
   Scenario Outline: commands that require the user to resolve a previously unfinished Git Town command
     When I run "git rebase --abort"
     And I run "git checkout feature"
@@ -85,9 +86,18 @@ Feature: handle previously unfinished Git Town commands
       """
 
     Examples:
-      | COMMAND    |
-      | append foo |
-      | hack foo   |
+      | COMMAND           |
+      | append foo        |
+      | diff-parent       |
+      | hack foo          |
+      | new-pull-request  |
+      | prepend foo       |
+      | prune-branches    |
+      | rename-branch foo |
+      # | set-parent foo    |
+      | ship              |
+      | switch            |
+      | sync              |
 
   @this
   Scenario Outline: commands that don't require the user to resolve a previously unfinished Git Town command
@@ -98,5 +108,18 @@ Feature: handle previously unfinished Git Town commands
     Then it runs without error
 
     Examples:
-      | COMMAND |
-      | kill    |
+      | COMMAND                     |
+      | aliases add                 |
+      | config                      |
+      | config main-branch          |
+      | config offline              |
+      | config perennial-branches   |
+      | config pull-branch-strategy |
+      | config push-hook            |
+      | config push-new-branches    |
+      | config reset                |
+      | config sync-strategy        |
+      | kill                        |
+      | status reset                |
+      | status                      |
+      | version                     |
