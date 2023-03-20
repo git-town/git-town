@@ -94,7 +94,7 @@ func dryRunFlag(cmd *cobra.Command, flag *bool) {
 	cmd.PersistentFlags().BoolVar(flag, "dry-run", false, "Print but do not run the Git commands")
 }
 
-func LoadPublicRepo(args RepoArgs) (repo git.PublicRepo, exit bool, err error) {
+func LoadPublicRepo(args RepoArgs) (repo git.PublicRepo, exit bool, err error) { //nolint:nonamedreturns // so many return values require names
 	internalRepo := internalRepo(args.debug)
 	repo = publicRepo(args.omitBranchNames, args.dryRun, &internalRepo)
 	if args.validateIsRepository {

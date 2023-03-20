@@ -10,16 +10,16 @@ import (
 func TestFormat(t *testing.T) {
 	t.Parallel()
 	tests := map[string]struct {
-		branch      string
-		printBranch bool
-		executable  string
-		args        []string
+		branch     string
+		omitBranch bool
+		executable string
+		args       []string
 	}{
-		"[branch] git checkout foo": {printBranch: true, branch: "branch", executable: "git", args: []string{"checkout", "foo"}},
-		"git checkout foo":          {printBranch: false, branch: "branch", executable: "git", args: []string{"checkout", "foo"}},
+		"[branch] git checkout foo": {omitBranch: false, branch: "branch", executable: "git", args: []string{"checkout", "foo"}},
+		"git checkout foo":          {omitBranch: true, branch: "branch", executable: "git", args: []string{"checkout", "foo"}},
 	}
 	for want, give := range tests {
-		have := subshell.FormatCommand(give.branch, give.printBranch, give.executable, give.args...)
+		have := subshell.FormatCommand(give.branch, give.omitBranch, give.executable, give.args...)
 		assert.Equal(t, want, have)
 	}
 }
