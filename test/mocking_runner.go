@@ -107,7 +107,17 @@ func (r *MockingRunner) MockGit(version string) error {
 		return r.createMockBinary("git.cmd", content)
 	}
 	// create Unix binary
-	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" = \"version\" ]; then\n  echo git version %s\nfi\n", version)
+	mockGit := `#!/usr/bin/env bash
+if [ "$1" = "version" ]; then
+  echo "git version %s"
+else
+	%s "$@"
+fi`
+	gitPath, err := exec.LookPath("git")
+	if err != nil {
+		return fmt.Errorf("cannot locate the git executable: %w", err)
+	}
+	content := fmt.Sprintf(mockGit, version, gitPath)
 	return r.createMockBinary("git", content)
 }
 
