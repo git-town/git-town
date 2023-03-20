@@ -16,23 +16,27 @@ func switchCmd(repo *git.ProdRepo) *cobra.Command {
 		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
 		Short:   "Displays the local branches visually and allows switching between them",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			currentBranch, err := repo.Silent.CurrentBranch()
-			if err != nil {
-				return err
-			}
-			newBranch, err := queryBranch(currentBranch, repo)
-			if err != nil {
-				return err
-			}
-			if newBranch != nil && *newBranch != currentBranch {
-				err = repo.Silent.CheckoutBranch(*newBranch)
-				if err != nil {
-					return err
-				}
-			}
-			return nil
+			return runSwitch(repo)
 		},
 	}
+}
+
+func runSwitch(repo *git.ProdRepo) error {
+	currentBranch, err := repo.Silent.CurrentBranch()
+	if err != nil {
+		return err
+	}
+	newBranch, err := queryBranch(currentBranch, repo)
+	if err != nil {
+		return err
+	}
+	if newBranch != nil && *newBranch != currentBranch {
+		err = repo.Silent.CheckoutBranch(*newBranch)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 // queryBranch lets the user select a new branch via a visual dialog.

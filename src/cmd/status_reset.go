@@ -15,12 +15,16 @@ func resetRunstateCommand(repo *git.ProdRepo) *cobra.Command {
 		PreRunE: ensure(repo, hasGitVersion, isRepository),
 		Short:   "Resets the current suspended Git Town command",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			err := runstate.Delete(repo)
-			if err != nil {
-				return err
-			}
-			fmt.Println("Runstate file deleted.")
-			return nil
+			return runStatusReset(repo)
 		},
 	}
+}
+
+func runStatusReset(repo *git.ProdRepo) error {
+	err := runstate.Delete(repo)
+	if err != nil {
+		return err
+	}
+	fmt.Println("Runstate file deleted.")
+	return nil
 }

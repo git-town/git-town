@@ -20,14 +20,18 @@ func pushHookCommand(repo *git.ProdRepo) *cobra.Command {
 
 Enabled by default. When disabled, Git Town prevents Git's pre-push hook from running.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if len(args) > 0 {
-				return setPushHook(args[0], globalFlag, repo)
-			}
-			return printPushHook(globalFlag, repo)
+			return runConfigPushHook(args, globalFlag, repo)
 		},
 	}
 	pushHookCmd.Flags().BoolVar(&globalFlag, "global", false, "Displays or sets the global push hook flag")
 	return &pushHookCmd
+}
+
+func runConfigPushHook(args []string, globalFlag bool, repo *git.ProdRepo) error {
+	if len(args) > 0 {
+		return setPushHook(args[0], globalFlag, repo)
+	}
+	return printPushHook(globalFlag, repo)
 }
 
 func printPushHook(globalFlag bool, repo *git.ProdRepo) error {

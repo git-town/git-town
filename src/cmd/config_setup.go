@@ -13,11 +13,15 @@ func setupConfigCommand(repo *git.ProdRepo) *cobra.Command {
 		PreRunE: ensure(repo, isRepository),
 		Short:   "Prompts to setup your Git Town configuration",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			err := validate.EnterMainBranch(repo)
-			if err != nil {
-				return err
-			}
-			return validate.EnterPerennialBranches(repo)
+			return runConfigSetup(repo)
 		},
 	}
+}
+
+func runConfigSetup(repo *git.ProdRepo) error {
+	err := validate.EnterMainBranch(repo)
+	if err != nil {
+		return err
+	}
+	return validate.EnterPerennialBranches(repo)
 }

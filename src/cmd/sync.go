@@ -39,35 +39,39 @@ If the repository contains an "upstream" remote,
 syncs the main branch with its upstream counterpart.
 You can disable this by running "git config %s false".`, config.SyncUpstreamKey),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if dryRunFlag {
-				currentBranch, err := repo.Silent.CurrentBranch()
-				if err != nil {
-					return err
-				}
-				repo.DryRun.Activate(currentBranch)
-			}
-			exit, err := validate.HandleUnfinishedState(repo, nil)
-			if err != nil {
-				return err
-			}
-			if exit {
-				os.Exit(0)
-			}
-			config, err := determineSyncConfig(allFlag, repo)
-			if err != nil {
-				return err
-			}
-			stepList, err := syncBranchesSteps(config, repo)
-			if err != nil {
-				return err
-			}
-			runState := runstate.New("sync", stepList)
-			return runstate.Execute(runState, repo, nil)
+			return runSync(dryRunFlag, repo, allFlag)
 		},
 	}
 	syncCmd.Flags().BoolVar(&allFlag, "all", false, "Sync all local branches")
 	syncCmd.Flags().BoolVar(&dryRunFlag, "dry-run", false, "Print the commands but don't run them")
 	return &syncCmd
+}
+
+func runSync(dryRunFlag bool, repo *git.ProdRepo, allFlag bool) error {
+	if dryRunFlag {
+		currentBranch, err := repo.Silent.CurrentBranch()
+		if err != nil {
+			return err
+		}
+		repo.DryRun.Activate(currentBranch)
+	}
+	exit, err := validate.HandleUnfinishedState(repo, nil)
+	if err != nil {
+		return err
+	}
+	if exit {
+		os.Exit(0)
+	}
+	config, err := determineSyncConfig(allFlag, repo)
+	if err != nil {
+		return err
+	}
+	stepList, err := syncBranchesSteps(config, repo)
+	if err != nil {
+		return err
+	}
+	runState := runstate.New("sync", stepList)
+	return runstate.Execute(runState, repo, nil)
 }
 
 type syncConfig struct {

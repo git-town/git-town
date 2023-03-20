@@ -25,15 +25,19 @@ Does not overwrite existing aliases.
 
 This can conflict with other tools that also define Git aliases.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			switch strings.ToLower(args[0]) {
-			case "add":
-				return addAliases(repo)
-			case "remove":
-				return removeAliases(repo)
-			}
-			return fmt.Errorf(`invalid argument %q. Please provide either "add" or "remove"`, args[0])
+			return runAliases(args, repo)
 		},
 	}
+}
+
+func runAliases(args []string, repo *git.ProdRepo) error {
+	switch strings.ToLower(args[0]) {
+	case "add":
+		return addAliases(repo)
+	case "remove":
+		return removeAliases(repo)
+	}
+	return fmt.Errorf(`invalid argument %q. Please provide either "add" or "remove"`, args[0])
 }
 
 func addAliases(repo *git.ProdRepo) error {

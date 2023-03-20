@@ -21,18 +21,22 @@ func killCommand(repo *git.ProdRepo) *cobra.Command {
 Deletes the current or provided branch from the local and origin repositories.
 Does not delete perennial branches nor the main branch.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			config, err := determineKillConfig(args, repo)
-			if err != nil {
-				return err
-			}
-			stepList, err := killStepList(config, repo)
-			if err != nil {
-				return err
-			}
-			runState := runstate.New("kill", stepList)
-			return runstate.Execute(runState, repo, nil)
+			return runKill(args, repo)
 		},
 	}
+}
+
+func runKill(args []string, repo *git.ProdRepo) error {
+	config, err := determineKillConfig(args, repo)
+	if err != nil {
+		return err
+	}
+	stepList, err := killStepList(config, repo)
+	if err != nil {
+		return err
+	}
+	runState := runstate.New("kill", stepList)
+	return runstate.Execute(runState, repo, nil)
 }
 
 type killConfig struct {

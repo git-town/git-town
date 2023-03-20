@@ -47,28 +47,32 @@ To load autocompletions for Powershell, run this command:
 To load completions for each session, add the above line to your PowerShell profile.
 `,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			completionType, err := NewCompletionType(args[0])
-			if err != nil {
-				return err
-			}
-			switch completionType {
-			case CompletionTypeBash:
-				return rootCmd.GenBashCompletion(os.Stdout)
-			case CompletionTypeZsh:
-				if completionsNoDescFlag {
-					return rootCmd.GenZshCompletionNoDesc(os.Stdout)
-				}
-				return rootCmd.GenZshCompletion(os.Stdout)
-			case CompletionTypeFish:
-				return rootCmd.GenFishCompletion(os.Stdout, !completionsNoDescFlag)
-			case CompletionTypePowershell:
-				return rootCmd.GenPowerShellCompletion(os.Stdout)
-			}
-			return fmt.Errorf("unknown argument: %q", args[0])
+			return runCompletions(args, completionsNoDescFlag, rootCmd)
 		},
 	}
 	completionsCmd.Flags().BoolVar(&completionsNoDescFlag, "no-descriptions", false, "disable completions description for shells that support it")
 	return &completionsCmd
+}
+
+func runCompletions(args []string, completionsNoDescFlag bool, rootCmd *cobra.Command) error {
+	completionType, err := NewCompletionType(args[0])
+	if err != nil {
+		return err
+	}
+	switch completionType {
+	case CompletionTypeBash:
+		return rootCmd.GenBashCompletion(os.Stdout)
+	case CompletionTypeZsh:
+		if completionsNoDescFlag {
+			return rootCmd.GenZshCompletionNoDesc(os.Stdout)
+		}
+		return rootCmd.GenZshCompletion(os.Stdout)
+	case CompletionTypeFish:
+		return rootCmd.GenFishCompletion(os.Stdout, !completionsNoDescFlag)
+	case CompletionTypePowershell:
+		return rootCmd.GenPowerShellCompletion(os.Stdout)
+	}
+	return fmt.Errorf("unknown argument: %q", args[0])
 }
 
 // CompletionType defines the valid shells for which Git Town can create auto-completions.

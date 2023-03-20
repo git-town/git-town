@@ -21,13 +21,17 @@ Works on either the current branch or the branch name provided.
 
 Exits with error code 1 if the given branch is a perennial branch or the main branch.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			config, err := determineDiffParentConfig(args, repo)
-			if err != nil {
-				return err
-			}
-			return repo.Logging.DiffParent(config.branch, config.parentBranch)
+			return runDiffParent(args, repo)
 		},
 	}
+}
+
+func runDiffParent(args []string, repo *git.ProdRepo) error {
+	config, err := determineDiffParentConfig(args, repo)
+	if err != nil {
+		return err
+	}
+	return repo.Logging.DiffParent(config.branch, config.parentBranch)
 }
 
 type diffParentConfig struct {

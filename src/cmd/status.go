@@ -19,16 +19,20 @@ func statusCommand(repo *git.ProdRepo) *cobra.Command {
 		PreRunE: ensure(repo, hasGitVersion, isRepository),
 		Short:   "Displays or resets the current suspended Git Town command",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			config, err := loadDisplayStatusConfig(repo)
-			if err != nil {
-				return err
-			}
-			displayStatus(*config)
-			return nil
+			return runStatus(repo)
 		},
 	}
 	cmd.AddCommand(resetRunstateCommand(repo))
 	return cmd
+}
+
+func runStatus(repo *git.ProdRepo) error {
+	config, err := loadDisplayStatusConfig(repo)
+	if err != nil {
+		return err
+	}
+	displayStatus(*config)
+	return nil
 }
 
 type displayStatusConfig struct {

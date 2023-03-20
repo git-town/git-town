@@ -18,18 +18,22 @@ func pruneBranchesCommand(repo *git.ProdRepo) *cobra.Command {
 Deletes branches whose tracking branch no longer exists from the local repository.
 This usually means the branch was shipped or killed on another machine.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			config, err := determinePruneBranchesConfig(repo)
-			if err != nil {
-				return err
-			}
-			stepList, err := pruneBranchesStepList(config, repo)
-			if err != nil {
-				return err
-			}
-			runState := runstate.New("prune-branches", stepList)
-			return runstate.Execute(runState, repo, nil)
+			return runPruneBranches(repo)
 		},
 	}
+}
+
+func runPruneBranches(repo *git.ProdRepo) error {
+	config, err := determinePruneBranchesConfig(repo)
+	if err != nil {
+		return err
+	}
+	stepList, err := pruneBranchesStepList(config, repo)
+	if err != nil {
+		return err
+	}
+	runState := runstate.New("prune-branches", stepList)
+	return runstate.Execute(runState, repo, nil)
 }
 
 type pruneBranchesConfig struct {

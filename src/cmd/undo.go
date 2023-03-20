@@ -16,15 +16,19 @@ func undoCmd(repo *git.ProdRepo) *cobra.Command {
 		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
 		Short:   "Undoes the last run git-town command",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			runState, err := runstate.Load(repo)
-			if err != nil {
-				return fmt.Errorf("cannot load previous run state: %w", err)
-			}
-			if runState == nil || runState.IsUnfinished() {
-				return fmt.Errorf("nothing to undo")
-			}
-			undoRunState := runState.CreateUndoRunState()
-			return runstate.Execute(&undoRunState, repo, nil)
+			return runUndo(repo)
 		},
 	}
+}
+
+func runUndo(repo *git.ProdRepo) error {
+	runState, err := runstate.Load(repo)
+	if err != nil {
+		return fmt.Errorf("cannot load previous run state: %w", err)
+	}
+	if runState == nil || runState.IsUnfinished() {
+		return fmt.Errorf("nothing to undo")
+	}
+	undoRunState := runState.CreateUndoRunState()
+	return runstate.Execute(&undoRunState, repo, nil)
 }

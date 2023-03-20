@@ -49,24 +49,28 @@ GitHub's feature to automatically delete head branches,
 run "git config %s false"
 and Git Town will leave it up to your origin server to delete the remote branch.`, config.GithubTokenKey, config.ShipDeleteRemoteBranchKey),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			connector, err := hosting.NewConnector(repo.Config, &repo.Silent, cli.PrintConnectorAction)
-			if err != nil {
-				return err
-			}
-			config, err := determineShipConfig(args, connector, repo)
-			if err != nil {
-				return err
-			}
-			stepList, err := shipStepList(config, commitMessage, repo)
-			if err != nil {
-				return err
-			}
-			runState := runstate.New("ship", stepList)
-			return runstate.Execute(runState, repo, connector)
+			return runShip(repo, args, commitMessage)
 		},
 	}
 	shipCmd.Flags().StringVarP(&commitMessage, "message", "m", "", "Specify the commit message for the squash commit")
 	return &shipCmd
+}
+
+func runShip(repo *git.ProdRepo, args []string, commitMessage string) error {
+	connector, err := hosting.NewConnector(repo.Config, &repo.Silent, cli.PrintConnectorAction)
+	if err != nil {
+		return err
+	}
+	config, err := determineShipConfig(args, connector, repo)
+	if err != nil {
+		return err
+	}
+	stepList, err := shipStepList(config, commitMessage, repo)
+	if err != nil {
+		return err
+	}
+	runState := runstate.New("ship", stepList)
+	return runstate.Execute(runState, repo, connector)
 }
 
 type shipConfig struct {

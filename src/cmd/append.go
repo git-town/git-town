@@ -26,18 +26,22 @@ and brings over all uncommitted changes to the new feature branch.
 
 See "sync" for information regarding upstream remotes.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			config, err := determineAppendConfig(args, repo)
-			if err != nil {
-				return err
-			}
-			stepList, err := appendStepList(config, repo)
-			if err != nil {
-				return err
-			}
-			runState := runstate.New("append", stepList)
-			return runstate.Execute(runState, repo, nil)
+			return runAppend(args, repo)
 		},
 	}
+}
+
+func runAppend(args []string, repo *git.ProdRepo) error {
+	config, err := determineAppendConfig(args, repo)
+	if err != nil {
+		return err
+	}
+	stepList, err := appendStepList(config, repo)
+	if err != nil {
+		return err
+	}
+	runState := runstate.New("append", stepList)
+	return runstate.Execute(runState, repo, nil)
 }
 
 type appendConfig struct {
