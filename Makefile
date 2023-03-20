@@ -14,7 +14,7 @@ RELEASE_VERSION := $(shell git describe --exact-match --tags 2> /dev/null)
 GO_BUILD_ARGS = LANG=C GOGC=off
 
 build:  # builds for the current platform
-	go install -trimpath -ldflags "-X github.com/git-town/git-town/v7/src/cmd.version=${DEV_VERSION}-dev -X github.com/git-town/git-town/v7/src/cmd.buildDate=${TODAY}"
+	go install -ldflags "-X github.com/git-town/git-town/v7/src/cmd.version=${DEV_VERSION}-dev -X github.com/git-town/git-town/v7/src/cmd.buildDate=${TODAY}"
 
 cuke: build   # runs all end-to-end tests
 	@env $(GO_BUILD_ARGS) go test . -v -count=1
