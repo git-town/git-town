@@ -8,6 +8,7 @@ package main
 import (
 	"os"
 
+	"github.com/fatih/color"
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/cmd"
 	"github.com/git-town/git-town/v7/src/dialog"
@@ -15,6 +16,7 @@ import (
 
 func main() {
 	dialog.Initialize()
+	color.NoColor = false // Prevent color from auto disable
 	err := cmd.Execute()
 	if err != nil {
 		cli.PrintError(err)
