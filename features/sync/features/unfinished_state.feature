@@ -1,4 +1,3 @@
-@this
 @skipWindows
 Feature: handle previously unfinished Git Town commands
 
@@ -71,6 +70,7 @@ Feature: handle previously unfinished Git Town commands
     And I run "git-town diff-parent"
     Then it does not print "You have an unfinished `sync` command that ended on the `main` branch now."
 
+  @this
   Scenario Outline: commands that require the user to resolve a previously unfinished Git Town command
     When I run "git rebase --abort"
     And I run "git checkout feature"
@@ -84,9 +84,9 @@ Feature: handle previously unfinished Git Town commands
       """
 
     Examples:
-      | COMMAND  |
-      # | append foo |
-      | hack foo |
+      | COMMAND    |
+      | append foo |
+      | hack foo   |
 
   Scenario Outline: commands that don't require the user to resolve a previously unfinished Git Town command
     When I run "git rebase --abort"
