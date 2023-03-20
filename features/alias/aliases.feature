@@ -1,4 +1,4 @@
-Feature: Shorten Git Town commands
+Feature: shorten Git Town commands
 
   Scenario: inside a Git repo
     When I run "git-town aliases add"
