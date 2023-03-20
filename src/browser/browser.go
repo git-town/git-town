@@ -32,7 +32,7 @@ func OpenBrowserCommand() string {
 	for _, browserCommand := range openBrowserCommands {
 		fullpath, err := exec.LookPath(browserCommand)
 		if err == nil && fullpath != "" {
-			return fullpath
+			return browserCommand
 		}
 	}
 	return ""
