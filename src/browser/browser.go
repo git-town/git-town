@@ -9,7 +9,7 @@ import (
 )
 
 // OpenBrowserCommand provides the console command to open the default browser.
-func OpenBrowserCommand(internalRunner internalRunner) string {
+func OpenBrowserCommand(runner internalRunner) string {
 	if runtime.GOOS == "windows" {
 		// NOTE: the "explorer" command cannot handle special characters like "?" and "=".
 		//       In particular, "?" can be escaped via "\", but "=" cannot.
@@ -29,7 +29,7 @@ func OpenBrowserCommand(internalRunner internalRunner) string {
 		"netscape",
 	}
 	for _, browserCommand := range openBrowserCommands {
-		output, err := internalRunner.Run("which", browserCommand)
+		output, err := runner.Run("which", browserCommand)
 		if err == nil && output.Sanitized() != "" {
 			return browserCommand
 		}
