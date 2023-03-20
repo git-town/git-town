@@ -22,7 +22,7 @@ Feature: update the parent of a feature branch
       | parent | main   |
 
   Scenario: choose "<none> (make a perennial branch)"
-    When I run "git-town set-parent --debug" and answer the prompts:
+    When I run "git-town set-parent" and answer the prompts:
       | PROMPT                                      | ANSWER      |
       | Please specify the parent branch of 'child' | [UP][ENTER] |
     Then the perennial branches are now "child"
