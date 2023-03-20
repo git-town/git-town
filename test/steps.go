@@ -396,6 +396,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^it runs without error$`, func() error {
+		if state.runErr != nil {
+			return fmt.Errorf("did not expect the Git Town command to produce an error: %w", state.runErr)
+		}
+		return nil
+	})
+
 	suite.Step(`^"([^"]*)" launches a new pull request with this url in my browser:$`, func(tool string, url *messages.PickleStepArgument_PickleDocString) error {
 		want := fmt.Sprintf("%s called with: %s", tool, url.Content)
 		want = strings.ReplaceAll(want, "?", `\?`)
