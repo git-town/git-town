@@ -361,13 +361,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^it runs without error$`, func() error {
-		if state.runErr != nil {
-			return fmt.Errorf("did not expect the Git Town command to produce an error: %w", state.runErr)
-		}
-		return nil
-	})
-
 	suite.Step(`^it runs no commands$`, func() error {
 		commands := GitCommandsInGitTownOutput(state.runOutput.Sanitized())
 		if len(commands) > 0 {
@@ -395,6 +388,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			fmt.Printf("\nERROR! Found %d differences in the commands run\n\n", errorCount)
 			fmt.Println(diff)
 			return fmt.Errorf("mismatching commands run, see diff above")
+		}
+		return nil
+	})
+
+	suite.Step(`^it runs without error$`, func() error {
+		if state.runErr != nil {
+			return fmt.Errorf("did not expect the Git Town command to produce an error: %w", state.runErr)
 		}
 		return nil
 	})
