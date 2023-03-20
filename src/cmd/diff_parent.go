@@ -21,14 +21,14 @@ Works on either the current branch or the branch name provided.
 
 Exits with error code 1 if the given branch is a perennial branch or the main branch.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runDiffParent(debug, args)
+			return runDiffParent(args, debug)
 		},
 	}
 	debugFlag(&cmd, &debug)
 	return &cmd
 }
 
-func runDiffParent(debug bool, args []string) error {
+func runDiffParent(args []string, debug bool) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,

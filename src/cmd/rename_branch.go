@@ -35,7 +35,7 @@ When run on a perennial branch
 - confirm with the "-f" option
 - registers the new perennial branch name in the local Git Town configuration`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runRenameBranch(debug, forceFlag, args)
+			return runRenameBranch(args, forceFlag, debug)
 		},
 	}
 	cmd.Flags().BoolVar(&forceFlag, "force", false, "Force rename of perennial branch")
@@ -43,7 +43,7 @@ When run on a perennial branch
 	return &cmd
 }
 
-func runRenameBranch(debug, force bool, args []string) error {
+func runRenameBranch(args []string, force, debug bool) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,

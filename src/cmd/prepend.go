@@ -29,14 +29,14 @@ and brings over all uncommitted changes to the new feature branch.
 See "sync" for upstream remote options.
 `,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runPrepend(debug, args)
+			return runPrepend(args, debug)
 		},
 	}
 	debugFlag(&cmd, &debug)
 	return &cmd
 }
 
-func runPrepend(debug bool, args []string) error {
+func runPrepend(args []string, debug bool) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,

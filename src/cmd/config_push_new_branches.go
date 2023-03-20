@@ -21,7 +21,7 @@ func pushNewBranchesCommand() *cobra.Command {
 If "push-new-branches" is true, the Git Town commands hack, append, and prepend
 push the new branch to the origin remote.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runConfigurePushNewBranches(debug, globalFlag, args)
+			return runConfigPushNewBranches(args, globalFlag, debug)
 		},
 	}
 	debugFlag(&cmd, &debug)
@@ -29,7 +29,7 @@ push the new branch to the origin remote.`,
 	return &cmd
 }
 
-func runConfigurePushNewBranches(debug, global bool, args []string) error {
+func runConfigurePushNewBranches(args []string, global, debug bool) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		omitBranchNames:       true,
 		debug:                 debug,

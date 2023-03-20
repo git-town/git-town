@@ -25,14 +25,14 @@ Does not overwrite existing aliases.
 
 This can conflict with other tools that also define Git aliases.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runAliases(debug, args)
+			return runAliases(args, debug)
 		},
 	}
 	debugFlag(&cmd, &debug)
 	return &cmd
 }
 
-func runAliases(debug bool, args []string) error {
+func runAliases(args []string, debug bool) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,

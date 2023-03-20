@@ -27,14 +27,14 @@ and brings over all uncommitted changes to the new feature branch.
 
 See "sync" for information regarding upstream remotes.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runHack(debug, promptForParentFlag, args)
+			return runHack(args, promptForParentFlag, debug)
 		},
 	}
 	cmd.Flags().BoolVarP(&promptForParentFlag, "prompt", "p", false, "Prompt for the parent branch")
 	return &cmd
 }
 
-func runHack(debug, prompt bool, args []string) error {
+func runHack(args []string, prompt, debug bool) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,

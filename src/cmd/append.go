@@ -26,14 +26,14 @@ and brings over all uncommitted changes to the new feature branch.
 
 See "sync" for information regarding upstream remotes.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runAppend(debug, args)
+			return runAppend(args, debug)
 		},
 	}
 	debugFlag(cmd, &debug)
 	return cmd
 }
 
-func runAppend(debug bool, args []string) error {
+func runAppend(args []string, debug bool) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,

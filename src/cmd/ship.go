@@ -49,7 +49,7 @@ GitHub's feature to automatically delete head branches,
 run "git config %s false"
 and Git Town will leave it up to your origin server to delete the remote branch.`, config.GithubTokenKey, config.ShipDeleteRemoteBranchKey),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runShip(debug, commitMessage, args)
+			return runShip(args, commitMessage, debug)
 		},
 	}
 	cmd.Flags().StringVarP(&commitMessage, "message", "m", "", "Specify the commit message for the squash commit")
@@ -57,7 +57,7 @@ and Git Town will leave it up to your origin server to delete the remote branch.
 	return &cmd
 }
 
-func runShip(debug bool, message string, args []string) error {
+func runShip(args []string, message string, debug bool) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,

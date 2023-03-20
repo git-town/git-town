@@ -19,14 +19,14 @@ func offlineCmd() *cobra.Command {
 
 Git Town avoids network operations in offline mode.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runConfigureOffline(debug, args)
+			return runConfigureOffline(args, debug)
 		},
 	}
 	debugFlag(cmd, &debug)
 	return cmd
 }
 
-func runConfigureOffline(debug bool, args []string) error {
+func runConfigureOffline(args []string, debug bool) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		omitBranchNames:       true,
 		debug:                 debug,

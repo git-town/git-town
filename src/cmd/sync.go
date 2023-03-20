@@ -38,7 +38,7 @@ If the repository contains an "upstream" remote,
 syncs the main branch with its upstream counterpart.
 You can disable this by running "git config %s false".`, config.SyncUpstreamKey),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runSync(debug, dryRun, allFlag)
+			return runSync(allFlag, dryRun, debug)
 		},
 	}
 	cmd.Flags().BoolVar(&allFlag, "all", false, "Sync all local branches")
@@ -47,7 +47,7 @@ You can disable this by running "git config %s false".`, config.SyncUpstreamKey)
 	return &cmd
 }
 
-func runSync(debug, dryRun, all bool) error {
+func runSync(all, dryRun, debug bool) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		debug:                 debug,
 		dryRun:                dryRun,

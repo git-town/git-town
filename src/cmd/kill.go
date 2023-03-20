@@ -21,14 +21,14 @@ func killCommand() *cobra.Command {
 Deletes the current or provided branch from the local and origin repositories.
 Does not delete perennial branches nor the main branch.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runKill(debug, args)
+			return runKill(args, debug)
 		},
 	}
 	debugFlag(&cmd, &debug)
 	return &cmd
 }
 
-func runKill(debug bool, args []string) error {
+func runKill(args []string, debug bool) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,

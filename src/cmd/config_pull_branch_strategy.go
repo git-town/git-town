@@ -19,14 +19,14 @@ The pull branch strategy specifies what strategy to use
 when merging remote tracking branches into local branches
 for the main branch and perennial branches.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runConfigurePullBranchStrategy(debug, args)
+			return runConfigurePullBranchStrategy(args, debug)
 		},
 	}
 	debugFlag(cmd, &debug)
 	return cmd
 }
 
-func runConfigurePullBranchStrategy(debug bool, args []string) error {
+func runConfigurePullBranchStrategy(args []string, debug bool) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		omitBranchNames:       true,
 		debug:                 debug,

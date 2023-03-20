@@ -19,14 +19,14 @@ func syncStrategyCommand() *cobra.Command {
 The sync strategy specifies what strategy to use
 when merging remote tracking branches into local feature branches.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runConfigSyncStrategy(debug, globalFlag, args)
+			return runConfigSyncStrategy(args, globalFlag, debug)
 		},
 	}
 	cmd.Flags().BoolVar(&globalFlag, "global", false, "Displays or sets the global sync strategy")
 	return &cmd
 }
 
-func runConfigSyncStrategy(debug, global bool, args []string) error {
+func runConfigSyncStrategy(args []string, global, debug bool) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		omitBranchNames:       true,
 		debug:                 debug,

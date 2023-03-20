@@ -18,14 +18,14 @@ func mainbranchConfigCmd() *cobra.Command {
 
 The main branch is the Git branch from which new feature branches are cut.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runConfigureMainBranch(debug, args)
+			return runConfigureMainBranch(args, debug)
 		},
 	}
 	debugFlag(cmd, &debug)
 	return cmd
 }
 
-func runConfigureMainBranch(debug bool, args []string) error {
+func runConfigureMainBranch(args []string, debug bool) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
