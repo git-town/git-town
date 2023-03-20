@@ -58,14 +58,15 @@ and Git Town will leave it up to your origin server to delete the remote branch.
 }
 
 func runShip(debug bool, message string, args []string) error {
-	repo, err := LoadPublicRepo(RepoArgs{
-		debug:                debug,
-		dryRun:               false,
-		validateGitversion:   true,
-		validateIsRepository: true,
-		validateIsConfigured: true,
+	repo, exit, err := LoadPublicRepo(RepoArgs{
+		debug:                 debug,
+		dryRun:                false,
+		handleUnfinishedState: true,
+		validateGitversion:    true,
+		validateIsRepository:  true,
+		validateIsConfigured:  true,
 	})
-	if err != nil {
+	if err != nil || exit {
 		return err
 	}
 	connector, err := hosting.NewConnector(repo.Config, &repo.InternalRepo, cli.PrintConnectorAction)

@@ -34,14 +34,15 @@ See "sync" for information regarding upstream remotes.`,
 }
 
 func runAppend(debug bool, args []string) error {
-	repo, err := LoadPublicRepo(RepoArgs{
-		debug:                debug,
-		dryRun:               false,
-		validateGitversion:   true,
-		validateIsRepository: true,
-		validateIsConfigured: true,
+	repo, exit, err := LoadPublicRepo(RepoArgs{
+		debug:                 debug,
+		dryRun:                false,
+		handleUnfinishedState: true,
+		validateGitversion:    true,
+		validateIsRepository:  true,
+		validateIsConfigured:  true,
 	})
-	if err != nil {
+	if err != nil || exit {
 		return err
 	}
 	config, err := determineAppendConfig(args, &repo)

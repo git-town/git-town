@@ -38,14 +38,15 @@ They cannot be shipped.`,
 }
 
 func displayPerennialBranches(debug bool) error {
-	repo, err := LoadPublicRepo(RepoArgs{
-		omitBranchNames:      true,
-		debug:                debug,
-		dryRun:               false,
-		validateGitversion:   true,
-		validateIsRepository: true,
+	repo, exit, err := LoadPublicRepo(RepoArgs{
+		omitBranchNames:       true,
+		debug:                 debug,
+		dryRun:                false,
+		handleUnfinishedState: false,
+		validateGitversion:    true,
+		validateIsRepository:  true,
 	})
-	if err != nil {
+	if err != nil || exit {
 		return err
 	}
 	cli.Println(cli.StringSetting(strings.Join(repo.Config.PerennialBranches(), "\n")))
@@ -53,14 +54,15 @@ func displayPerennialBranches(debug bool) error {
 }
 
 func updatePerennialBranches(debug bool) error {
-	repo, err := LoadPublicRepo(RepoArgs{
-		omitBranchNames:      true,
-		debug:                debug,
-		dryRun:               false,
-		validateGitversion:   true,
-		validateIsRepository: true,
+	repo, exit, err := LoadPublicRepo(RepoArgs{
+		omitBranchNames:       true,
+		debug:                 debug,
+		dryRun:                false,
+		handleUnfinishedState: false,
+		validateGitversion:    true,
+		validateIsRepository:  true,
 	})
-	if err != nil {
+	if err != nil || exit {
 		return err
 	}
 	mainBranch := repo.Config.MainBranch()

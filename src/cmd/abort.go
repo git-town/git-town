@@ -25,14 +25,15 @@ func abortCmd() *cobra.Command {
 }
 
 func runAbort(debug bool) error {
-	repo, err := LoadPublicRepo(RepoArgs{
-		debug:                debug,
-		dryRun:               false,
-		validateGitversion:   true,
-		validateIsRepository: true,
-		validateIsConfigured: true,
+	repo, exit, err := LoadPublicRepo(RepoArgs{
+		debug:                 debug,
+		dryRun:                false,
+		handleUnfinishedState: false,
+		validateGitversion:    true,
+		validateIsRepository:  true,
+		validateIsConfigured:  true,
 	})
-	if err != nil {
+	if err != nil || exit {
 		return err
 	}
 	runState, err := runstate.Load(&repo)

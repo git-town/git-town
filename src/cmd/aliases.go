@@ -33,13 +33,14 @@ This can conflict with other tools that also define Git aliases.`,
 }
 
 func runAliases(debug bool, args []string) error {
-	repo, err := LoadPublicRepo(RepoArgs{
-		debug:              debug,
-		dryRun:             false,
-		omitBranchNames:    true,
-		validateGitversion: true,
+	repo, exit, err := LoadPublicRepo(RepoArgs{
+		debug:                 debug,
+		dryRun:                false,
+		omitBranchNames:       true,
+		handleUnfinishedState: false,
+		validateGitversion:    true,
 	})
-	if err != nil {
+	if err != nil || exit {
 		return err
 	}
 	switch strings.ToLower(args[0]) {

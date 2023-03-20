@@ -24,14 +24,15 @@ func setParentCommand() *cobra.Command {
 }
 
 func runSetParent(debug bool) error {
-	repo, err := LoadPublicRepo(RepoArgs{
-		debug:                debug,
-		dryRun:               false,
-		validateGitversion:   true,
-		validateIsRepository: true,
-		validateIsConfigured: true,
+	repo, exit, err := LoadPublicRepo(RepoArgs{
+		debug:                 debug,
+		dryRun:                false,
+		handleUnfinishedState: true,
+		validateGitversion:    true,
+		validateIsRepository:  true,
+		validateIsConfigured:  true,
 	})
-	if err != nil {
+	if err != nil || exit {
 		return err
 	}
 	currentBranch, err := repo.CurrentBranch()

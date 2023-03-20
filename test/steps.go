@@ -358,6 +358,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^it runs without error$`, func() error {
+		if state.runErr != nil {
+			return fmt.Errorf("did not expect the Git Town command to produce an error")
+		}
+		return nil
+	})
+
 	suite.Step(`^it runs no commands$`, func() error {
 		commands := GitCommandsInGitTownOutput(state.runOutput.Sanitized())
 		if len(commands) > 0 {

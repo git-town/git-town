@@ -29,14 +29,15 @@ Exits with error code 1 if the given branch is a perennial branch or the main br
 }
 
 func runDiffParent(debug bool, args []string) error {
-	repo, err := LoadPublicRepo(RepoArgs{
-		debug:                debug,
-		dryRun:               false,
-		validateGitversion:   true,
-		validateIsRepository: true,
-		validateIsConfigured: true,
+	repo, exit, err := LoadPublicRepo(RepoArgs{
+		debug:                 debug,
+		dryRun:                false,
+		handleUnfinishedState: true,
+		validateGitversion:    true,
+		validateIsRepository:  true,
+		validateIsConfigured:  true,
 	})
-	if err != nil {
+	if err != nil || exit {
 		return err
 	}
 	config, err := determineDiffParentConfig(args, &repo)

@@ -22,13 +22,14 @@ func resetRunstateCommand() *cobra.Command {
 }
 
 func runStatusReset(debug bool) error {
-	repo, err := LoadPublicRepo(RepoArgs{
-		debug:                debug,
-		dryRun:               false,
-		validateGitversion:   true,
-		validateIsRepository: true,
+	repo, exit, err := LoadPublicRepo(RepoArgs{
+		debug:                 debug,
+		dryRun:                false,
+		handleUnfinishedState: false,
+		validateGitversion:    true,
+		validateIsRepository:  true,
 	})
-	if err != nil {
+	if err != nil || exit {
 		return err
 	}
 	err = runstate.Delete(&repo)

@@ -19,14 +19,15 @@ func resetConfigCommand() *cobra.Command {
 }
 
 func runConfigReset(debug bool) error {
-	repo, err := LoadPublicRepo(RepoArgs{
-		omitBranchNames:      true,
-		debug:                debug,
-		dryRun:               false,
-		validateGitversion:   true,
-		validateIsRepository: true,
+	repo, exit, err := LoadPublicRepo(RepoArgs{
+		omitBranchNames:       true,
+		debug:                 debug,
+		dryRun:                false,
+		handleUnfinishedState: false,
+		validateGitversion:    true,
+		validateIsRepository:  true,
 	})
-	if err != nil {
+	if err != nil || exit {
 		return err
 	}
 	return repo.Config.RemoveLocalGitConfiguration()

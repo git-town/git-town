@@ -94,13 +94,13 @@ func dryRunFlag(cmd *cobra.Command, flag *bool) {
 	cmd.PersistentFlags().BoolVar(flag, "dry-run", false, "Print but do not run the Git commands")
 }
 
-func LoadPublicRepo(args RepoArgs) (git.PublicRepo, error) {
+func LoadPublicRepo(args RepoArgs) (repo git.PublicRepo, exit bool, err error) {
 	internalRepo := internalRepo(args.debug)
 	publicRepo := publicRepo(args.omitBranchNames, args.dryRun, &internalRepo)
 	if !args.omitBranchNames || args.dryRun {
 		currentBranch, err := internalRepo.CurrentBranch()
 		if err != nil {
-			return publicRepo, err
+			return publicRepo, false, err
 		}
 		internalRepo.CurrentBranchCache.Set(currentBranch)
 	}
@@ -120,17 +120,21 @@ func LoadPublicRepo(args RepoArgs) (git.PublicRepo, error) {
 	if args.validateIsOnline {
 		ec.Check(validate.IsOnline(&publicRepo))
 	}
-	return publicRepo, ec.Err
+	if args.handleUnfinishedState {
+		exit = ec.Bool(validate.HandleUnfinishedState(&repo, nil))
+	}
+	return publicRepo, exit, ec.Err
 }
 
 type RepoArgs struct {
-	debug                bool
-	dryRun               bool
-	omitBranchNames      bool `exhaustruct:"optional"`
-	validateGitversion   bool `exhaustruct:"optional"`
-	validateIsRepository bool `exhaustruct:"optional"`
-	validateIsConfigured bool `exhaustruct:"optional"`
-	validateIsOnline     bool `exhaustruct:"optional"`
+	debug                 bool
+	dryRun                bool
+	handleUnfinishedState bool
+	omitBranchNames       bool `exhaustruct:"optional"`
+	validateGitversion    bool `exhaustruct:"optional"`
+	validateIsRepository  bool `exhaustruct:"optional"`
+	validateIsConfigured  bool `exhaustruct:"optional"`
+	validateIsOnline      bool `exhaustruct:"optional"`
 }
 
 func internalRepo(debug bool) git.InternalRepo {

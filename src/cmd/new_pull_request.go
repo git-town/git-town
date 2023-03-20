@@ -45,15 +45,16 @@ where hostname matches what is in your ssh config file.`, config.CodeHostingDriv
 }
 
 func runNewPullRequest(debug bool) error {
-	repo, err := LoadPublicRepo(RepoArgs{
-		debug:                debug,
-		dryRun:               false,
-		validateGitversion:   true,
-		validateIsRepository: true,
-		validateIsConfigured: true,
-		validateIsOnline:     true,
+	repo, exit, err := LoadPublicRepo(RepoArgs{
+		debug:                 debug,
+		dryRun:                false,
+		handleUnfinishedState: true,
+		validateGitversion:    true,
+		validateIsRepository:  true,
+		validateIsConfigured:  true,
+		validateIsOnline:      true,
 	})
-	if err != nil {
+	if err != nil || exit {
 		return err
 	}
 	config, err := determineNewPullRequestConfig(&repo)

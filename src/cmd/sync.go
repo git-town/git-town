@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/git"
@@ -49,22 +48,16 @@ You can disable this by running "git config %s false".`, config.SyncUpstreamKey)
 }
 
 func runSync(debug, dryRun, all bool) error {
-	repo, err := LoadPublicRepo(RepoArgs{
-		debug:                debug,
-		dryRun:               dryRun,
-		validateGitversion:   true,
-		validateIsRepository: true,
-		validateIsConfigured: true,
+	repo, exit, err := LoadPublicRepo(RepoArgs{
+		debug:                 debug,
+		dryRun:                dryRun,
+		handleUnfinishedState: true,
+		validateGitversion:    true,
+		validateIsRepository:  true,
+		validateIsConfigured:  true,
 	})
-	if err != nil {
+	if err != nil || exit {
 		return err
-	}
-	exit, err := validate.HandleUnfinishedState(&repo, nil)
-	if err != nil {
-		return err
-	}
-	if exit {
-		os.Exit(0)
 	}
 	config, err := determineSyncConfig(all, &repo)
 	if err != nil {

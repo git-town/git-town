@@ -48,6 +48,8 @@ func HandleUnfinishedState(repo *git.PublicRepo, connector hosting.Connector) (q
 	case dialog.ResponseTypeSkip:
 		skipRunState := runState.CreateSkipRunState()
 		return true, runstate.Execute(&skipRunState, repo, connector)
+	case dialog.ResponseTypeQuit:
+		return true, nil
 	default:
 		return false, fmt.Errorf("unknown response: %s", response)
 	}
