@@ -1,7 +1,8 @@
+@this
 @skipWindows
-Feature: warn the user about an unfinished operation
+Feature: handle previously unfinished Git Town commands
 
-  Background:
+  Background: When a Git Town command stops unfinished
     Given the current branch is a feature branch "feature"
     And the commits
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
@@ -15,7 +16,7 @@ Feature: warn the user about an unfinished operation
       To continue after having resolved conflicts, run "git-town continue".
       """
 
-  Scenario: sync again and quit
+  Scenario: quit a command that is blocked by a previously unfinished Git Town command
     When I run "git-town sync" and answer the prompts:
       | PROMPT                       | ANSWER  |
       | Please choose how to proceed | [ENTER] |
@@ -26,7 +27,7 @@ Feature: warn the user about an unfinished operation
       """
     And the uncommitted file is stashed
 
-  Scenario: sync again and continue with unresolved conflict
+  Scenario: continue a previously unfinished Git Town command without resolving the conflict
     When I run "git-town sync" and answer the prompts:
       | PROMPT                       | ANSWER        |
       | Please choose how to proceed | [DOWN][ENTER] |
@@ -37,8 +38,9 @@ Feature: warn the user about an unfinished operation
       """
     And the uncommitted file is stashed
 
-  Scenario: resolve, sync again, and continue
+  Scenario: resolve, run a command again, and continue the unfinished command
     When I resolve the conflict in "conflicting_file"
+    # TODO: run another command like "git-town diff-parent" here to make clear that it runs the previously unfinished command and not the current one
     And I run "git-town sync", answer the prompts, and close the next editor:
       | PROMPT                       | ANSWER        |
       | Please choose how to proceed | [DOWN][ENTER] |
@@ -53,7 +55,7 @@ Feature: warn the user about an unfinished operation
       |         | git stash pop                      |
     And all branches are now synchronized
 
-  Scenario: sync again and abort
+  Scenario: run a command and abort the previously unfinished one
     When I run "git-town sync" and answer the prompts:
       | PROMPT                       | ANSWER              |
       | Please choose how to proceed | [DOWN][DOWN][ENTER] |
@@ -64,23 +66,31 @@ Feature: warn the user about an unfinished operation
       | feature | git stash pop        |
     And now the initial commits exist
 
-  Scenario: manually abort the rebase and run another command still shows warning about unfinished command
+  Scenario: run a command, abort the previously finished one, and run another command
+    When I run "git-town abort"
+    And I run "git-town diff-parent"
+    Then it does not print "You have an unfinished `sync` command that ended on the `main` branch now."
+
+  Scenario Outline: commands that require the user to resolve a previously unfinished Git Town command
     When I run "git rebase --abort"
     And I run "git checkout feature"
     And I run "git stash pop"
-    And I run "git-town kill" and answer the prompts:
-      | PROMPT                       | ANSWER                    |
-      | Please choose how to proceed | [DOWN][DOWN][DOWN][ENTER] |
-    Then it runs the commands
-      | BRANCH  | COMMAND                        |
-      | feature | git fetch --prune --tags       |
-      |         | git push origin :feature       |
-      |         | git add -A                     |
-      |         | git commit -m "WIP on feature" |
-      |         | git checkout main              |
-      | main    | git branch -D feature          |
+    And I run "git-town <COMMAND>" and answer the prompts:
+      | PROMPT                       | ANSWER  |
+      | Please choose how to proceed | [ENTER] |
+    Then it prints:
+      """
+      You have an unfinished `sync` command that ended on the `main` branch
+      """
 
-  Scenario: abort and run another command
-    When I run "git-town abort"
+    Examples:
+      | COMMAND  |
+      # | append foo |
+      | hack foo |
+
+  Scenario Outline: commands that don't require the user to resolve a previously unfinished Git Town command
+    When I run "git rebase --abort"
+    And I run "git checkout feature"
+    And I run "git stash pop"
     And I run "git-town kill"
-    Then it does not print "You have an unfinished `sync` command that ended on the `main` branch now."
+    Then it runs without error
