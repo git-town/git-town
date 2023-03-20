@@ -97,6 +97,12 @@ func dryRunFlag(cmd *cobra.Command, flag *bool) {
 func LoadPublicRepo(args RepoArgs) (repo git.PublicRepo, exit bool, err error) {
 	internalRepo := internalRepo(args.debug)
 	repo = publicRepo(args.omitBranchNames, args.dryRun, &internalRepo)
+	if args.validateIsRepository {
+		err := validate.IsRepository(&repo)
+		if err != nil {
+			return repo, false, err
+		}
+	}
 	if !args.omitBranchNames || args.dryRun {
 		currentBranch, err := internalRepo.CurrentBranch()
 		if err != nil {
@@ -110,9 +116,6 @@ func LoadPublicRepo(args RepoArgs) (repo git.PublicRepo, exit bool, err error) {
 	ec := runstate.ErrorChecker{}
 	if args.validateGitversion {
 		ec.Check(validate.HasGitVersion(&internalRepo))
-	}
-	if args.validateIsRepository {
-		ec.Check(validate.IsRepository(&repo))
 	}
 	if args.validateIsConfigured {
 		ec.Check(validate.IsConfigured(&repo))
