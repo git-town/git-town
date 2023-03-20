@@ -126,11 +126,11 @@ func LoadPublicRepo(args RepoArgs) (git.PublicRepo, error) {
 type RepoArgs struct {
 	debug                bool
 	dryRun               bool
-	omitBranchNames      bool
-	validateGitversion   bool
-	validateIsRepository bool
-	validateIsConfigured bool
-	validateIsOnline     bool
+	omitBranchNames      bool `exhaustruct:"optional"`
+	validateGitversion   bool `exhaustruct:"optional"`
+	validateIsRepository bool `exhaustruct:"optional"`
+	validateIsConfigured bool `exhaustruct:"optional"`
+	validateIsOnline     bool `exhaustruct:"optional"`
 }
 
 func internalRepo(debug bool) git.InternalRepo {
