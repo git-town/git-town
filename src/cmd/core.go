@@ -96,11 +96,11 @@ func dryRunFlag(cmd *cobra.Command, flag *bool) {
 
 func LoadPublicRepo(args RepoArgs) (repo git.PublicRepo, exit bool, err error) {
 	internalRepo := internalRepo(args.debug)
-	publicRepo := publicRepo(args.omitBranchNames, args.dryRun, &internalRepo)
+	repo = publicRepo(args.omitBranchNames, args.dryRun, &internalRepo)
 	if !args.omitBranchNames || args.dryRun {
 		currentBranch, err := internalRepo.CurrentBranch()
 		if err != nil {
-			return publicRepo, false, err
+			return repo, false, err
 		}
 		internalRepo.CurrentBranchCache.Set(currentBranch)
 	}
@@ -112,18 +112,18 @@ func LoadPublicRepo(args RepoArgs) (repo git.PublicRepo, exit bool, err error) {
 		ec.Check(validate.HasGitVersion(&internalRepo))
 	}
 	if args.validateIsRepository {
-		ec.Check(validate.IsRepository(&publicRepo))
+		ec.Check(validate.IsRepository(&repo))
 	}
 	if args.validateIsConfigured {
-		ec.Check(validate.IsConfigured(&publicRepo))
+		ec.Check(validate.IsConfigured(&repo))
 	}
 	if args.validateIsOnline {
-		ec.Check(validate.IsOnline(&publicRepo))
+		ec.Check(validate.IsOnline(&repo))
 	}
 	if args.handleUnfinishedState {
 		exit = ec.Bool(validate.HandleUnfinishedState(&repo, nil))
 	}
-	return publicRepo, exit, ec.Err
+	return repo, exit, ec.Err
 }
 
 type RepoArgs struct {
