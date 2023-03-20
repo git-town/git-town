@@ -27,7 +27,7 @@ func (r InternalDebuggingRunner) Run(cmd string, args ...string) (*Output, error
 	r.PrintHeader(cmd, args...)
 	output, err := r.InternalRunner.Run(cmd, args...)
 	if output != nil {
-		fmt.Println(output)
+		fmt.Println(output.Raw)
 	}
 	return output, err
 }
