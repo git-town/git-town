@@ -33,7 +33,7 @@ You can disable this by running "git config %s false".`
 func syncCmd() *cobra.Command {
 	addDebugFlag, readDebugFlag := debugFlag()
 	addDryRunFlag, readDryRunFlag := dryRunFlag()
-	addAllFlag, readAllFlag := boolFlag("all", "Sync all local branches")
+	addAllFlag, readAllFlag := boolFlag("all", "a", "Sync all local branches")
 	cmd := cobra.Command{
 		Use:     "sync",
 		GroupID: "basic",
