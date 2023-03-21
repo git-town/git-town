@@ -51,28 +51,32 @@ func completionsCmd(rootCmd *cobra.Command) *cobra.Command {
 		Short:                 completionsDesc,
 		Long:                  long(completionsDesc, completionsHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			completionType, err := NewCompletionType(args[0])
-			if err != nil {
-				return err
-			}
-			switch completionType {
-			case CompletionTypeBash:
-				return rootCmd.GenBashCompletion(os.Stdout)
-			case CompletionTypeZsh:
-				if completionsNoDescFlag {
-					return rootCmd.GenZshCompletionNoDesc(os.Stdout)
-				}
-				return rootCmd.GenZshCompletion(os.Stdout)
-			case CompletionTypeFish:
-				return rootCmd.GenFishCompletion(os.Stdout, !completionsNoDescFlag)
-			case CompletionTypePowershell:
-				return rootCmd.GenPowerShellCompletion(os.Stdout)
-			}
-			return fmt.Errorf("unknown argument: %q", args[0])
+			return completions(args, rootCmd, completionsNoDescFlag)
 		},
 	}
 	completionsCmd.Flags().BoolVar(&completionsNoDescFlag, "no-descriptions", false, "disable completions description for shells that support it")
 	return &completionsCmd
+}
+
+func completions(args []string, rootCmd *cobra.Command, completionsNoDescFlag bool) error {
+	completionType, err := NewCompletionType(args[0])
+	if err != nil {
+		return err
+	}
+	switch completionType {
+	case CompletionTypeBash:
+		return rootCmd.GenBashCompletion(os.Stdout)
+	case CompletionTypeZsh:
+		if completionsNoDescFlag {
+			return rootCmd.GenZshCompletionNoDesc(os.Stdout)
+		}
+		return rootCmd.GenZshCompletion(os.Stdout)
+	case CompletionTypeFish:
+		return rootCmd.GenFishCompletion(os.Stdout, !completionsNoDescFlag)
+	case CompletionTypePowershell:
+		return rootCmd.GenPowerShellCompletion(os.Stdout)
+	}
+	return fmt.Errorf("unknown argument: %q", args[0])
 }
 
 // CompletionType defines the valid shells for which Git Town can create auto-completions.

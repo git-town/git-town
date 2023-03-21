@@ -32,18 +32,22 @@ func prependCommand(repo *git.ProdRepo) *cobra.Command {
 		Short:   prependDesc,
 		Long:    long(prependDesc, prependHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			config, err := determinePrependConfig(args, repo)
-			if err != nil {
-				return err
-			}
-			stepList, err := prependStepList(config, repo)
-			if err != nil {
-				return err
-			}
-			runState := runstate.New("prepend", stepList)
-			return runstate.Execute(runState, repo, nil)
+			return prepend(args, repo)
 		},
 	}
+}
+
+func prepend(args []string, repo *git.ProdRepo) error {
+	config, err := determinePrependConfig(args, repo)
+	if err != nil {
+		return err
+	}
+	stepList, err := prependStepList(config, repo)
+	if err != nil {
+		return err
+	}
+	runState := runstate.New("prepend", stepList)
+	return runstate.Execute(runState, repo, nil)
 }
 
 type prependConfig struct {

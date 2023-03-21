@@ -22,16 +22,20 @@ func statusCommand(repo *git.ProdRepo) *cobra.Command {
 		Short:   statusDesc,
 		Long:    long(statusDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			config, err := loadDisplayStatusConfig(repo)
-			if err != nil {
-				return err
-			}
-			displayStatus(*config)
-			return nil
+			return status(repo)
 		},
 	}
 	cmd.AddCommand(resetRunstateCommand(repo))
 	return cmd
+}
+
+func status(repo *git.ProdRepo) error {
+	config, err := loadDisplayStatusConfig(repo)
+	if err != nil {
+		return err
+	}
+	displayStatus(*config)
+	return nil
 }
 
 type displayStatusConfig struct {

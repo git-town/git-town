@@ -23,14 +23,18 @@ func pushHookCommand(repo *git.ProdRepo) *cobra.Command {
 		Short:   pushHookDesc,
 		Long:    long(pullBranchDesc, pushHookHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if len(args) > 0 {
-				return setPushHook(args[0], globalFlag, repo)
-			}
-			return printPushHook(globalFlag, repo)
+			return configPushHook(args, globalFlag, repo)
 		},
 	}
 	pushHookCmd.Flags().BoolVar(&globalFlag, "global", false, "Displays or sets the global push hook flag")
 	return &pushHookCmd
+}
+
+func configPushHook(args []string, globalFlag bool, repo *git.ProdRepo) error {
+	if len(args) > 0 {
+		return setPushHook(args[0], globalFlag, repo)
+	}
+	return printPushHook(globalFlag, repo)
 }
 
 func printPushHook(globalFlag bool, repo *git.ProdRepo) error {

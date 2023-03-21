@@ -22,12 +22,16 @@ func pullBranchStrategyCommand(repo *git.ProdRepo) *cobra.Command {
 		Short:   pullBranchDesc,
 		Long:    long(pullBranchDesc, pullBranchHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if len(args) > 0 {
-				return setPullBranchStrategy(args[0], repo)
-			}
-			return displayPullBranchStrategy(repo)
+			return configPullBranchStrategy(args, repo)
 		},
 	}
+}
+
+func configPullBranchStrategy(args []string, repo *git.ProdRepo) error {
+	if len(args) > 0 {
+		return setPullBranchStrategy(args[0], repo)
+	}
+	return displayPullBranchStrategy(repo)
 }
 
 func displayPullBranchStrategy(repo *git.ProdRepo) error {

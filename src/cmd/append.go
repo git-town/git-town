@@ -29,18 +29,22 @@ func appendCmd(repo *git.ProdRepo) *cobra.Command {
 		Short:   appendDesc,
 		Long:    long(appendDesc, appendHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			config, err := determineAppendConfig(args, repo)
-			if err != nil {
-				return err
-			}
-			stepList, err := appendStepList(config, repo)
-			if err != nil {
-				return err
-			}
-			runState := runstate.New("append", stepList)
-			return runstate.Execute(runState, repo, nil)
+			return runAppend(args, repo)
 		},
 	}
+}
+
+func runAppend(args []string, repo *git.ProdRepo) error {
+	config, err := determineAppendConfig(args, repo)
+	if err != nil {
+		return err
+	}
+	stepList, err := appendStepList(config, repo)
+	if err != nil {
+		return err
+	}
+	runState := runstate.New("append", stepList)
+	return runstate.Execute(runState, repo, nil)
 }
 
 type appendConfig struct {

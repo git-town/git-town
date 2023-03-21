@@ -40,25 +40,29 @@ func newPullRequestCommand(repo *git.ProdRepo) *cobra.Command {
 		Short:   newPullRequestDesc,
 		Long:    long(newPullRequestDesc, fmt.Sprintf(newPullRequestHelp, config.CodeHostingDriverKey, config.CodeHostingOriginHostnameKey)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			config, err := determineNewPullRequestConfig(repo)
-			if err != nil {
-				return err
-			}
-			connector, err := hosting.NewConnector(repo.Config, &repo.Silent, cli.PrintConnectorAction)
-			if err != nil {
-				return err
-			}
-			if connector == nil {
-				return hosting.UnsupportedServiceError()
-			}
-			stepList, err := newPullRequestStepList(config, repo)
-			if err != nil {
-				return err
-			}
-			runState := runstate.New("new-pull-request", stepList)
-			return runstate.Execute(runState, repo, connector)
+			return newPullRequest(repo)
 		},
 	}
+}
+
+func newPullRequest(repo *git.ProdRepo) error {
+	config, err := determineNewPullRequestConfig(repo)
+	if err != nil {
+		return err
+	}
+	connector, err := hosting.NewConnector(repo.Config, &repo.Silent, cli.PrintConnectorAction)
+	if err != nil {
+		return err
+	}
+	if connector == nil {
+		return hosting.UnsupportedServiceError()
+	}
+	stepList, err := newPullRequestStepList(config, repo)
+	if err != nil {
+		return err
+	}
+	runState := runstate.New("new-pull-request", stepList)
+	return runstate.Execute(runState, repo, connector)
 }
 
 type newPullRequestConfig struct {

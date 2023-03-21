@@ -38,20 +38,24 @@ func renameBranchCommand(repo *git.ProdRepo) *cobra.Command {
 		Short:   renameBranchDesc,
 		Long:    long(renameBranchDesc, renameBranchHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			config, err := determineRenameBranchConfig(args, forceFlag, repo)
-			if err != nil {
-				return err
-			}
-			stepList, err := renameBranchStepList(config, repo)
-			if err != nil {
-				return err
-			}
-			runState := runstate.New("rename-branch", stepList)
-			return runstate.Execute(runState, repo, nil)
+			return renameBranch(args, forceFlag, repo)
 		},
 	}
 	renameBranchCmd.Flags().BoolVar(&forceFlag, "force", false, "Force rename of perennial branch")
 	return renameBranchCmd
+}
+
+func renameBranch(args []string, forceFlag bool, repo *git.ProdRepo) error {
+	config, err := determineRenameBranchConfig(args, forceFlag, repo)
+	if err != nil {
+		return err
+	}
+	stepList, err := renameBranchStepList(config, repo)
+	if err != nil {
+		return err
+	}
+	runState := runstate.New("rename-branch", stepList)
+	return runstate.Execute(runState, repo, nil)
 }
 
 type renameBranchConfig struct {

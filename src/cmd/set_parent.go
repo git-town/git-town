@@ -19,22 +19,26 @@ func setParentCommand(repo *git.ProdRepo) *cobra.Command {
 		Short:   setParentDesc,
 		Long:    long(setParentDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			currentBranch, err := repo.Silent.CurrentBranch()
-			if err != nil {
-				return err
-			}
-			if !repo.Config.IsFeatureBranch(currentBranch) {
-				return errors.New("only feature branches can have parent branches")
-			}
-			defaultParentBranch := repo.Config.ParentBranch(currentBranch)
-			if defaultParentBranch == "" {
-				defaultParentBranch = repo.Config.MainBranch()
-			}
-			err = repo.Config.RemoveParentBranch(currentBranch)
-			if err != nil {
-				return err
-			}
-			return validate.KnowsBranchAncestry(currentBranch, defaultParentBranch, repo)
+			return setParent(repo)
 		},
 	}
+}
+
+func setParent(repo *git.ProdRepo) error {
+	currentBranch, err := repo.Silent.CurrentBranch()
+	if err != nil {
+		return err
+	}
+	if !repo.Config.IsFeatureBranch(currentBranch) {
+		return errors.New("only feature branches can have parent branches")
+	}
+	defaultParentBranch := repo.Config.ParentBranch(currentBranch)
+	if defaultParentBranch == "" {
+		defaultParentBranch = repo.Config.MainBranch()
+	}
+	err = repo.Config.RemoveParentBranch(currentBranch)
+	if err != nil {
+		return err
+	}
+	return validate.KnowsBranchAncestry(currentBranch, defaultParentBranch, repo)
 }

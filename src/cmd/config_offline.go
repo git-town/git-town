@@ -21,12 +21,16 @@ func offlineCmd(repo *git.ProdRepo) *cobra.Command {
 		Short: offlineDesc,
 		Long:  long(offlineDesc, offlineHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if len(args) > 0 {
-				return setOfflineStatus(args[0], repo)
-			}
-			return displayOfflineStatus(repo)
+			return offline(args, repo)
 		},
 	}
+}
+
+func offline(args []string, repo *git.ProdRepo) error {
+	if len(args) > 0 {
+		return setOfflineStatus(args[0], repo)
+	}
+	return displayOfflineStatus(repo)
 }
 
 func displayOfflineStatus(repo *git.ProdRepo) error {
