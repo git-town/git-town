@@ -102,8 +102,7 @@ func long(summary string, desc ...string) string {
 
 // boolFlag provides access to boolean Cobra command-line flags
 // in a way where Go's usage checker (which produces compilation errors for unused variables)
-// enforces that the flag is guaranteed to be defined and used.
-// This reduces programmer errors while defining and using command-line flags..
+// enforces that the didn't forget to define or read the flag.
 func boolFlag(name, short, desc string) (addFlagFunc, readBoolFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.PersistentFlags().BoolP(name, short, false, desc)
@@ -118,10 +117,9 @@ func boolFlag(name, short, desc string) (addFlagFunc, readBoolFlagFunc) {
 	return addFlag, readFlag
 }
 
-// stringFlag provides access to boolean Cobra command-line flags
+// stringFlag provides access to Cobra command-line flags containing strings
 // in a way where Go's usage checker (which produces compilation errors for unused variables)
-// enforces that the flag is guaranteed to be defined and used.
-// This reduces programmer errors while defining and using command-line flags..
+// enforces that the didn't forget to define or read the flag.
 func stringFlag(name, short, defaultValue, desc string) (addFlagFunc, readStringFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.PersistentFlags().StringP(name, short, defaultValue, desc)
