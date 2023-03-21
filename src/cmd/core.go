@@ -104,7 +104,7 @@ func long(summary string, desc ...string) string {
 // in a way where Go's usage checker (which produces compilation errors for unused variables)
 // enforces that the flag is guaranteed to be defined and used.
 // This reduces programmer errors while defining and using command-line flags..
-func boolFlag(name, short, desc string) (func(*cobra.Command), func(*cobra.Command) bool) {
+func boolFlag(name, short, desc string) (addFlagFunc, readBoolFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.PersistentFlags().BoolP(name, short, false, desc)
 	}
@@ -122,7 +122,7 @@ func boolFlag(name, short, desc string) (func(*cobra.Command), func(*cobra.Comma
 // in a way where Go's usage checker (which produces compilation errors for unused variables)
 // enforces that the flag is guaranteed to be defined and used.
 // This reduces programmer errors while defining and using command-line flags..
-func stringFlag(name, short, defaultValue, desc string) (func(*cobra.Command), func(*cobra.Command) string) {
+func stringFlag(name, short, defaultValue, desc string) (addFlagFunc, readStringFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.PersistentFlags().StringP(name, short, defaultValue, desc)
 	}
@@ -136,11 +136,15 @@ func stringFlag(name, short, defaultValue, desc string) (func(*cobra.Command), f
 	return addFlag, readFlag
 }
 
-func debugFlag() (func(*cobra.Command), func(*cobra.Command) bool) {
+type addFlagFunc func(*cobra.Command)
+type readBoolFlagFunc func(*cobra.Command) bool
+type readStringFlagFunc func(*cobra.Command) string
+
+func debugFlag() (addFlagFunc, readBoolFlagFunc) {
 	return boolFlag("debug", "d", "Print all Git commands run under the hood")
 }
 
-func dryRunFlag() (func(*cobra.Command), func(*cobra.Command) bool) {
+func dryRunFlag() (addFlagFunc, readBoolFlagFunc) {
 	return boolFlag("dry-run", "", "Print but do not run the Git commands")
 }
 
