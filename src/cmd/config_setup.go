@@ -16,11 +16,15 @@ func setupConfigCommand(repo *git.ProdRepo) *cobra.Command {
 		Short:   configSetupDesc,
 		Long:    long(configSetupDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			err := validate.EnterMainBranch(repo)
-			if err != nil {
-				return err
-			}
-			return validate.EnterPerennialBranches(repo)
+			return configSetup(repo)
 		},
 	}
+}
+
+func configSetup(repo *git.ProdRepo) error {
+	err := validate.EnterMainBranch(repo)
+	if err != nil {
+		return err
+	}
+	return validate.EnterPerennialBranches(repo)
 }

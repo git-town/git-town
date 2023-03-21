@@ -21,25 +21,29 @@ func continueCmd(repo *git.ProdRepo) *cobra.Command {
 		Short:   continueDesc,
 		Long:    long(continueDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			runState, err := runstate.Load(repo)
-			if err != nil {
-				return fmt.Errorf("cannot load previous run state: %w", err)
-			}
-			if runState == nil || !runState.IsUnfinished() {
-				return fmt.Errorf("nothing to continue")
-			}
-			hasConflicts, err := repo.Silent.HasConflicts()
-			if err != nil {
-				return err
-			}
-			if hasConflicts {
-				return fmt.Errorf("you must resolve the conflicts before continuing")
-			}
-			connector, err := hosting.NewConnector(repo.Config, &repo.Silent, cli.PrintConnectorAction)
-			if err != nil {
-				return err
-			}
-			return runstate.Execute(runState, repo, connector)
+			return runContinue(repo)
 		},
 	}
+}
+
+func runContinue(repo *git.ProdRepo) error {
+	runState, err := runstate.Load(repo)
+	if err != nil {
+		return fmt.Errorf("cannot load previous run state: %w", err)
+	}
+	if runState == nil || !runState.IsUnfinished() {
+		return fmt.Errorf("nothing to continue")
+	}
+	hasConflicts, err := repo.Silent.HasConflicts()
+	if err != nil {
+		return err
+	}
+	if hasConflicts {
+		return fmt.Errorf("you must resolve the conflicts before continuing")
+	}
+	connector, err := hosting.NewConnector(repo.Config, &repo.Silent, cli.PrintConnectorAction)
+	if err != nil {
+		return err
+	}
+	return runstate.Execute(runState, repo, connector)
 }

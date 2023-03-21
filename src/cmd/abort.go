@@ -21,19 +21,23 @@ func abortCmd(repo *git.ProdRepo) *cobra.Command {
 		Short:   abortDesc,
 		Long:    long(abortDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			runState, err := runstate.Load(repo)
-			if err != nil {
-				return fmt.Errorf("cannot load previous run state: %w", err)
-			}
-			if runState == nil || !runState.IsUnfinished() {
-				return fmt.Errorf("nothing to abort")
-			}
-			abortRunState := runState.CreateAbortRunState()
-			connector, err := hosting.NewConnector(repo.Config, &repo.Silent, cli.PrintConnectorAction)
-			if err != nil {
-				return err
-			}
-			return runstate.Execute(&abortRunState, repo, connector)
+			return abort(repo)
 		},
 	}
+}
+
+func abort(repo *git.ProdRepo) error {
+	runState, err := runstate.Load(repo)
+	if err != nil {
+		return fmt.Errorf("cannot load previous run state: %w", err)
+	}
+	if runState == nil || !runState.IsUnfinished() {
+		return fmt.Errorf("nothing to abort")
+	}
+	abortRunState := runState.CreateAbortRunState()
+	connector, err := hosting.NewConnector(repo.Config, &repo.Silent, cli.PrintConnectorAction)
+	if err != nil {
+		return err
+	}
+	return runstate.Execute(&abortRunState, repo, connector)
 }

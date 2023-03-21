@@ -22,14 +22,18 @@ func syncStrategyCommand(repo *git.ProdRepo) *cobra.Command {
 		Short:   syncStrategyDesc,
 		Long:    long(syncStrategyDesc, syncStrategyHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if len(args) > 0 {
-				return setSyncStrategy(globalFlag, repo, args[0])
-			}
-			return printSyncStrategy(globalFlag, repo)
+			return configSyncStrategy(args, globalFlag, repo)
 		},
 	}
 	syncStrategyCmd.Flags().BoolVar(&globalFlag, "global", false, "Displays or sets the global sync strategy")
 	return &syncStrategyCmd
+}
+
+func configSyncStrategy(args []string, globalFlag bool, repo *git.ProdRepo) error {
+	if len(args) > 0 {
+		return setSyncStrategy(globalFlag, repo, args[0])
+	}
+	return printSyncStrategy(globalFlag, repo)
 }
 
 func printSyncStrategy(globalFlag bool, repo *git.ProdRepo) error {

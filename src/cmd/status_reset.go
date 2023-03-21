@@ -18,12 +18,16 @@ func resetRunstateCommand(repo *git.ProdRepo) *cobra.Command {
 		Short:   statusResetDesc,
 		Long:    long(statusResetDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			err := runstate.Delete(repo)
-			if err != nil {
-				return err
-			}
-			fmt.Println("Runstate file deleted.")
-			return nil
+			return statusReset(repo)
 		},
 	}
+}
+
+func statusReset(repo *git.ProdRepo) error {
+	err := runstate.Delete(repo)
+	if err != nil {
+		return err
+	}
+	fmt.Println("Runstate file deleted.")
+	return nil
 }

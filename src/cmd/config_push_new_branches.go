@@ -24,14 +24,18 @@ func pushNewBranchesCommand(repo *git.ProdRepo) *cobra.Command {
 		Short:   pushNewBranchesDesc,
 		Long:    long(pushNewBranchesDesc, pushNewBranchesHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if len(args) > 0 {
-				return setPushNewBranches(args[0], globalFlag, repo)
-			}
-			return printPushNewBranches(globalFlag, repo)
+			return configPushNewBranches(args, globalFlag, repo)
 		},
 	}
 	pushNewBranchesCmd.Flags().BoolVar(&globalFlag, "global", false, "Displays or sets your global new branch push flag")
 	return &pushNewBranchesCmd
+}
+
+func configPushNewBranches(args []string, globalFlag bool, repo *git.ProdRepo) error {
+	if len(args) > 0 {
+		return setPushNewBranches(args[0], globalFlag, repo)
+	}
+	return printPushNewBranches(globalFlag, repo)
 }
 
 func printPushNewBranches(globalFlag bool, repo *git.ProdRepo) error {

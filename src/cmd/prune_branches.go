@@ -21,18 +21,22 @@ func pruneBranchesCommand(repo *git.ProdRepo) *cobra.Command {
 		Short:   pruneBranchesDesc,
 		Long:    long(pruneBranchesDesc, pruneBranchesHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			config, err := determinePruneBranchesConfig(repo)
-			if err != nil {
-				return err
-			}
-			stepList, err := pruneBranchesStepList(config, repo)
-			if err != nil {
-				return err
-			}
-			runState := runstate.New("prune-branches", stepList)
-			return runstate.Execute(runState, repo, nil)
+			return pruneBranches(repo)
 		},
 	}
+}
+
+func pruneBranches(repo *git.ProdRepo) error {
+	config, err := determinePruneBranchesConfig(repo)
+	if err != nil {
+		return err
+	}
+	stepList, err := pruneBranchesStepList(config, repo)
+	if err != nil {
+		return err
+	}
+	runState := runstate.New("prune-branches", stepList)
+	return runstate.Execute(runState, repo, nil)
 }
 
 type pruneBranchesConfig struct {

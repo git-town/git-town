@@ -24,18 +24,22 @@ func killCommand(repo *git.ProdRepo) *cobra.Command {
 		Short:   killDesc,
 		Long:    long(killDesc, killHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			config, err := determineKillConfig(args, repo)
-			if err != nil {
-				return err
-			}
-			stepList, err := killStepList(config, repo)
-			if err != nil {
-				return err
-			}
-			runState := runstate.New("kill", stepList)
-			return runstate.Execute(runState, repo, nil)
+			return kill(args, repo)
 		},
 	}
+}
+
+func kill(args []string, repo *git.ProdRepo) error {
+	config, err := determineKillConfig(args, repo)
+	if err != nil {
+		return err
+	}
+	stepList, err := killStepList(config, repo)
+	if err != nil {
+		return err
+	}
+	runState := runstate.New("kill", stepList)
+	return runstate.Execute(runState, repo, nil)
 }
 
 type killConfig struct {

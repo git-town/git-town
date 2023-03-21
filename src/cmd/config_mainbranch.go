@@ -21,13 +21,17 @@ func mainbranchConfigCmd(repo *git.ProdRepo) *cobra.Command {
 		Short:   mainbranchDesc,
 		Long:    long(mainbranchDesc, mainBranchHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if len(args) > 0 {
-				return setMainBranch(args[0], repo)
-			}
-			printMainBranch(repo)
-			return nil
+			return configMainBranch(args, repo)
 		},
 	}
+}
+
+func configMainBranch(args []string, repo *git.ProdRepo) error {
+	if len(args) > 0 {
+		return setMainBranch(args[0], repo)
+	}
+	printMainBranch(repo)
+	return nil
 }
 
 func printMainBranch(repo *git.ProdRepo) {

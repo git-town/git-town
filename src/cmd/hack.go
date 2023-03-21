@@ -30,20 +30,24 @@ func hackCmd(repo *git.ProdRepo) *cobra.Command {
 		Short:   hackDesc,
 		Long:    long(hackDesc, hackHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			config, err := determineHackConfig(args, promptForParentFlag, repo)
-			if err != nil {
-				return err
-			}
-			stepList, err := appendStepList(config, repo)
-			if err != nil {
-				return err
-			}
-			runState := runstate.New("hack", stepList)
-			return runstate.Execute(runState, repo, nil)
+			return hack(args, promptForParentFlag, repo)
 		},
 	}
 	hackCmd.Flags().BoolVarP(&promptForParentFlag, "prompt", "p", false, "Prompt for the parent branch")
 	return &hackCmd
+}
+
+func hack(args []string, promptForParentFlag bool, repo *git.ProdRepo) error {
+	config, err := determineHackConfig(args, promptForParentFlag, repo)
+	if err != nil {
+		return err
+	}
+	stepList, err := appendStepList(config, repo)
+	if err != nil {
+		return err
+	}
+	runState := runstate.New("hack", stepList)
+	return runstate.Execute(runState, repo, nil)
 }
 
 func determineHackConfig(args []string, promptForParent bool, repo *git.ProdRepo) (*appendConfig, error) {

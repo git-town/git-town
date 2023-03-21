@@ -52,24 +52,28 @@ func shipCmd(repo *git.ProdRepo) *cobra.Command {
 		Short:   shipDesc,
 		Long:    long(shipDesc, fmt.Sprintf(shipHelp, config.GithubTokenKey, config.ShipDeleteRemoteBranchKey)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			connector, err := hosting.NewConnector(repo.Config, &repo.Silent, cli.PrintConnectorAction)
-			if err != nil {
-				return err
-			}
-			config, err := determineShipConfig(args, connector, repo)
-			if err != nil {
-				return err
-			}
-			stepList, err := shipStepList(config, commitMessage, repo)
-			if err != nil {
-				return err
-			}
-			runState := runstate.New("ship", stepList)
-			return runstate.Execute(runState, repo, connector)
+			return ship(repo, args, commitMessage)
 		},
 	}
 	shipCmd.Flags().StringVarP(&commitMessage, "message", "m", "", "Specify the commit message for the squash commit")
 	return &shipCmd
+}
+
+func ship(repo *git.ProdRepo, args []string, commitMessage string) error {
+	connector, err := hosting.NewConnector(repo.Config, &repo.Silent, cli.PrintConnectorAction)
+	if err != nil {
+		return err
+	}
+	config, err := determineShipConfig(args, connector, repo)
+	if err != nil {
+		return err
+	}
+	stepList, err := shipStepList(config, commitMessage, repo)
+	if err != nil {
+		return err
+	}
+	runState := runstate.New("ship", stepList)
+	return runstate.Execute(runState, repo, connector)
 }
 
 type shipConfig struct {

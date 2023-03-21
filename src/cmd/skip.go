@@ -19,18 +19,22 @@ func skipCmd(repo *git.ProdRepo) *cobra.Command {
 		Short:   skipDesc,
 		Long:    long(skipDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			runState, err := runstate.Load(repo)
-			if err != nil {
-				return fmt.Errorf("cannot load previous run state: %w", err)
-			}
-			if runState == nil || !runState.IsUnfinished() {
-				return fmt.Errorf("nothing to skip")
-			}
-			if !runState.UnfinishedDetails.CanSkip {
-				return fmt.Errorf("cannot skip branch that resulted in conflicts")
-			}
-			skipRunState := runState.CreateSkipRunState()
-			return runstate.Execute(&skipRunState, repo, nil)
+			return skip(repo)
 		},
 	}
+}
+
+func skip(repo *git.ProdRepo) error {
+	runState, err := runstate.Load(repo)
+	if err != nil {
+		return fmt.Errorf("cannot load previous run state: %w", err)
+	}
+	if runState == nil || !runState.IsUnfinished() {
+		return fmt.Errorf("nothing to skip")
+	}
+	if !runState.UnfinishedDetails.CanSkip {
+		return fmt.Errorf("cannot skip branch that resulted in conflicts")
+	}
+	skipRunState := runState.CreateSkipRunState()
+	return runstate.Execute(&skipRunState, repo, nil)
 }

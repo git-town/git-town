@@ -24,13 +24,17 @@ func diffParentCommand(repo *git.ProdRepo) *cobra.Command {
 		Short:   diffParentDesc,
 		Long:    long(diffParentDesc, diffParentHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			config, err := determineDiffParentConfig(args, repo)
-			if err != nil {
-				return err
-			}
-			return repo.Logging.DiffParent(config.branch, config.parentBranch)
+			return diffParent(args, repo)
 		},
 	}
+}
+
+func diffParent(args []string, repo *git.ProdRepo) error {
+	config, err := determineDiffParentConfig(args, repo)
+	if err != nil {
+		return err
+	}
+	return repo.Logging.DiffParent(config.branch, config.parentBranch)
 }
 
 type diffParentConfig struct {

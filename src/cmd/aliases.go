@@ -28,15 +28,19 @@ func aliasCommand(repo *git.ProdRepo) *cobra.Command {
 		Short:   aliasesDesc,
 		Long:    long(aliasesDesc, aliasesHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			switch strings.ToLower(args[0]) {
-			case "add":
-				return addAliases(repo)
-			case "remove":
-				return removeAliases(repo)
-			}
-			return fmt.Errorf(`invalid argument %q. Please provide either "add" or "remove"`, args[0])
+			return alias(args, repo)
 		},
 	}
+}
+
+func alias(args []string, repo *git.ProdRepo) error {
+	switch strings.ToLower(args[0]) {
+	case "add":
+		return addAliases(repo)
+	case "remove":
+		return removeAliases(repo)
+	}
+	return fmt.Errorf(`invalid argument %q. Please provide either "add" or "remove"`, args[0])
 }
 
 func addAliases(repo *git.ProdRepo) error {

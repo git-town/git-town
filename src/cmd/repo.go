@@ -32,15 +32,19 @@ func repoCommand(repo *git.ProdRepo) *cobra.Command {
 		Short:   repoDesc,
 		Long:    long(repoDesc, fmt.Sprintf(repoHelp, config.CodeHostingDriverKey, config.CodeHostingOriginHostnameKey)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			connector, err := hosting.NewConnector(repo.Config, &repo.Silent, cli.PrintConnectorAction)
-			if err != nil {
-				return err
-			}
-			if connector == nil {
-				return hosting.UnsupportedServiceError()
-			}
-			browser.Open(connector.RepositoryURL(), repo.LoggingRunner)
-			return nil
+			return runRepo(repo)
 		},
 	}
+}
+
+func runRepo(repo *git.ProdRepo) error {
+	connector, err := hosting.NewConnector(repo.Config, &repo.Silent, cli.PrintConnectorAction)
+	if err != nil {
+		return err
+	}
+	if connector == nil {
+		return hosting.UnsupportedServiceError()
+	}
+	browser.Open(connector.RepositoryURL(), repo.LoggingRunner)
+	return nil
 }

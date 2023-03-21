@@ -19,15 +19,19 @@ func undoCmd(repo *git.ProdRepo) *cobra.Command {
 		Short:   undoDesc,
 		Long:    long(undoDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			runState, err := runstate.Load(repo)
-			if err != nil {
-				return fmt.Errorf("cannot load previous run state: %w", err)
-			}
-			if runState == nil || runState.IsUnfinished() {
-				return fmt.Errorf("nothing to undo")
-			}
-			undoRunState := runState.CreateUndoRunState()
-			return runstate.Execute(&undoRunState, repo, nil)
+			return undo(repo)
 		},
 	}
+}
+
+func undo(repo *git.ProdRepo) error {
+	runState, err := runstate.Load(repo)
+	if err != nil {
+		return fmt.Errorf("cannot load previous run state: %w", err)
+	}
+	if runState == nil || runState.IsUnfinished() {
+		return fmt.Errorf("nothing to undo")
+	}
+	undoRunState := runState.CreateUndoRunState()
+	return runstate.Execute(&undoRunState, repo, nil)
 }
