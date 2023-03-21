@@ -136,7 +136,7 @@ func debugFlag() (func(*cobra.Command), func(*cobra.Command) bool) {
 }
 
 func dryRunFlag() (func(*cobra.Command), func(*cobra.Command) bool) {
-	return boolFlag("dry-run", "d", "Print but do not run the Git commands")
+	return boolFlag("dry-run", "", "Print but do not run the Git commands")
 }
 
 func LoadPublicRepo(args RepoArgs) (repo git.PublicRepo, exit bool, err error) { //nolint:nonamedreturns // so many return values require names
