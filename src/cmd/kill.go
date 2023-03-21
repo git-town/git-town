@@ -24,14 +24,14 @@ func killCommand() *cobra.Command {
 		Short: killDesc,
 		Long:  long(killDesc, killHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runKill(args, readDebugFlag(cmd))
+			return kill(args, readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func runKill(args []string, debug bool) error {
+func kill(args []string, debug bool) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,
