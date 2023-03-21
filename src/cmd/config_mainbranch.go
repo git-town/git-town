@@ -14,22 +14,24 @@ const configMainbranchDesc = `
 The main branch is the Git branch from which new feature branches are cut.`
 
 func mainbranchConfigCmd() *cobra.Command {
-	debug := false
+	addDebugFlag, readDebugFlag := debugFlag()
 	cmd := cobra.Command{
 		Use:   "main-branch [<branch>]",
 		Args:  cobra.MaximumNArgs(1),
 		Short: configMainbranchSummary,
 		Long:  long(configMainbranchSummary, configMainbranchDesc),
-		RunE:  configureMainBranch,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return configureMainBranch(args, readDebugFlag(cmd))
+		},
 	}
-	debugFlagOld(&cmd, &debug)
+	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func configureMainBranch(cmd *cobra.Command, args []string) error {
+func configureMainBranch(args []string, debug bool) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		omitBranchNames:       true,
-		debug:                 readDebugFlag(cmd),
+		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: false,
 		validateGitversion:    true,

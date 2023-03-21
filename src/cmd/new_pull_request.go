@@ -32,7 +32,7 @@ When using SSH identities, this command needs to be configured with
 where hostname matches what is in your ssh config file.`
 
 func newPullRequestCommand() *cobra.Command {
-	debug := false
+	addDebugFlag, readDebugFlag := debugFlag()
 	cmd := cobra.Command{
 		Use:     "new-pull-request",
 		GroupID: "basic",
@@ -40,10 +40,10 @@ func newPullRequestCommand() *cobra.Command {
 		Short:   newPullRequestSummary,
 		Long:    long(newPullRequestSummary, fmt.Sprintf(newPullRequestDesc, config.CodeHostingDriverKey, config.CodeHostingOriginHostnameKey)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runNewPullRequest(debug)
+			return runNewPullRequest(readDebugFlag(cmd))
 		},
 	}
-	debugFlagOld(&cmd, &debug)
+	addDebugFlag(&cmd)
 	return &cmd
 }
 

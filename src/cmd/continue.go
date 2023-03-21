@@ -12,21 +12,24 @@ import (
 const continueSummary = "Restarts the last run git-town command after having resolved conflicts"
 
 func continueCmd() *cobra.Command {
+	addDebugFlag, readDebugFlag := debugFlag()
 	cmd := cobra.Command{
 		Use:     "continue",
 		GroupID: "errors",
 		Args:    cobra.NoArgs,
 		Short:   continueSummary,
 		Long:    long(continueSummary),
-		RunE:    runContinue,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return runContinue(readDebugFlag(cmd))
+		},
 	}
 	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func runContinue(cmd *cobra.Command, args []string) error {
+func runContinue(debug bool) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
-		debug:                 readDebugFlag(cmd),
+		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: false,
 		validateGitversion:    true,

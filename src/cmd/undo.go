@@ -10,7 +10,7 @@ import (
 const undoSummary = "Undoes the last run git-town command"
 
 func undoCmd() *cobra.Command {
-	debug := false
+	addDebugFlag, readDebugFlag := debugFlag()
 	cmd := cobra.Command{
 		Use:     "undo",
 		GroupID: "errors",
@@ -18,10 +18,10 @@ func undoCmd() *cobra.Command {
 		Short:   undoSummary,
 		Long:    long(undoSummary),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runUndo(debug)
+			return runUndo(readDebugFlag(cmd))
 		},
 	}
-	debugFlagOld(&cmd, &debug)
+	addDebugFlag(&cmd)
 	return &cmd
 }
 

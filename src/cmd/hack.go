@@ -21,22 +21,26 @@ and brings over all uncommitted changes to the new feature branch.
 See "sync" for information regarding upstream remotes.`
 
 func hackCmd() *cobra.Command {
-	promptForParentFlag := false
+	addDebugFlag, readDebugFlag := debugFlag()
+	addPromptFlag, readPromptFlag := boolFlag("prompt", "p", false, "Prompt for the parent branch")
 	cmd := cobra.Command{
 		Use:     "hack <branch>",
 		GroupID: "basic",
 		Args:    cobra.ExactArgs(1),
 		Short:   hackSummary,
 		Long:    long(hackSummary, hackDesc),
-		RunE:    runHack,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return runHack(args, readPromptFlag(cmd), readDebugFlag(cmd))
+		},
 	}
-	cmd.Flags().BoolVarP(&promptForParentFlag, "prompt", "p", false, "Prompt for the parent branch")
+	addDebugFlag(&cmd)
+	addPromptFlag(&cmd)
 	return &cmd
 }
 
-func runHack(cmd *cobra.Command, args []string) error {
+func runHack(args []string, promptForParent, debug bool) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
-		debug:                 readDebugFlag(cmd),
+		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: true,
 		validateGitversion:    true,
@@ -46,7 +50,7 @@ func runHack(cmd *cobra.Command, args []string) error {
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineHackConfig(args, prompt, &repo)
+	config, err := determineHackConfig(args, promptForParent, &repo)
 	if err != nil {
 		return err
 	}

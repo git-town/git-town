@@ -32,9 +32,9 @@ syncs the main branch with its upstream counterpart.
 You can disable this by running "git config %s false".`
 
 func syncCmd() *cobra.Command {
-	debug := false
-	dryRun := false
-	allFlag := false
+	addDebugFlag, readDebugFlag := debugFlag()
+	addDryRunFlag, readDryRunFlag := dryRunFlag()
+	addAllFlag, readAllFlag := boolFlag("all", "a", false, "Sync all local branches")
 	cmd := cobra.Command{
 		Use:     "sync",
 		GroupID: "basic",
@@ -42,12 +42,12 @@ func syncCmd() *cobra.Command {
 		Short:   syncSummary,
 		Long:    long(syncSummary, fmt.Sprintf(syncDesc, config.SyncUpstreamKey)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runSync(allFlag, dryRun, debug)
+			return runSync(readAllFlag(cmd), readDryRunFlag(cmd), readDebugFlag(cmd))
 		},
 	}
-	cmd.Flags().BoolVar(&allFlag, "all", false, "Sync all local branches")
-	debugFlagOld(&cmd, &debug)
-	dryRunFlag(&cmd, &dryRun)
+	addAllFlag(&cmd)
+	addDebugFlag(&cmd)
+	addDryRunFlag(&cmd)
 	return &cmd
 }
 

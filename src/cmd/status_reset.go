@@ -10,17 +10,17 @@ import (
 const statusResetSummary = "Resets the current suspended Git Town command"
 
 func resetRunstateCommand() *cobra.Command {
-	debug := false
+	addDebugFlag, readDebugFlag := debugFlag()
 	cmd := cobra.Command{
 		Use:   "reset",
 		Args:  cobra.NoArgs,
 		Short: statusResetSummary,
 		Long:  long(statusResetSummary),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runStatusReset(debug)
+			return runStatusReset(readDebugFlag(cmd))
 		},
 	}
-	debugFlagOld(&cmd, &debug)
+	addDebugFlag(&cmd)
 	return &cmd
 }
 

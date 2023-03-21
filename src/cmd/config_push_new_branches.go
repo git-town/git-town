@@ -16,23 +16,26 @@ If "push-new-branches" is true, the Git Town commands hack, append, and prepend
 push the new branch to the origin remote.`
 
 func pushNewBranchesCommand() *cobra.Command {
-	globalFlag := false
+	addDebugFlag, readDebugFlag := debugFlag()
+	addGlobalFlag, readGlobalFlag := boolFlag("global", "g", false, "If set, reads or updates the new branch push strategy for all repositories on this machine")
 	cmd := cobra.Command{
 		Use:   "push-new-branches [--global] [(yes | no)]",
 		Args:  cobra.MaximumNArgs(1),
 		Short: configPushNewBranchesSummary,
 		Long:  long(configPushNewBranchesSummary, configPushNewBranchesDesc),
-		RunE:  runConfigPushNewBranches,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return runConfigPushNewBranches(args, readGlobalFlag(cmd), readDebugFlag(cmd))
+		},
 	}
 	addDebugFlag(&cmd)
-	cmd.Flags().BoolVar(&globalFlag, "global", false, "Displays or sets your global new branch push flag")
+	addGlobalFlag(&cmd)
 	return &cmd
 }
 
-func runConfigPushNewBranches(cmd *cobra.Command, args []string) error {
+func runConfigPushNewBranches(args []string, global, debug bool) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		omitBranchNames:       true,
-		debug:                 readDebugFlag(cmd),
+		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: false,
 		validateGitversion:    true,
@@ -41,11 +44,10 @@ func runConfigPushNewBranches(cmd *cobra.Command, args []string) error {
 	if err != nil || exit {
 		return err
 	}
-	globalFlag := readBoolFlag(cmd, globalFlagName)
 	if len(args) > 0 {
-		return setPushNewBranches(args[0], globalFlag, &repo)
+		return setPushNewBranches(args[0], global, &repo)
 	}
-	return printPushNewBranches(globalFlag, &repo)
+	return printPushNewBranches(global, &repo)
 }
 
 func printPushNewBranches(globalFlag bool, repo *git.PublicRepo) error {

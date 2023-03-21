@@ -15,22 +15,24 @@ when merging remote tracking branches into local branches
 for the main branch and perennial branches.`
 
 func pullBranchStrategyCommand() *cobra.Command {
-	debug := false
+	addDebugFlag, readDebugFlag := debugFlag()
 	cmd := cobra.Command{
 		Use:   "pull-branch-strategy [(rebase | merge)]",
 		Args:  cobra.MaximumNArgs(1),
 		Short: configPullBranchSummary,
 		Long:  long(configPullBranchSummary, configPullBranchDesc),
-		RunE:  runConfigurePullBranchStrategy,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return runConfigurePullBranchStrategy(args, readDebugFlag(cmd))
+		},
 	}
-	debugFlagOld(&cmd, &debug)
+	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func runConfigurePullBranchStrategy(cmd *cobra.Command, args []string) error {
+func runConfigurePullBranchStrategy(args []string, debug bool) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		omitBranchNames:       true,
-		debug:                 readDebugFlag(cmd),
+		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: false,
 		validateGitversion:    true,

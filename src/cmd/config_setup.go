@@ -8,21 +8,24 @@ import (
 const setupConfigSummary = "Prompts to setup your Git Town configuration"
 
 func setupConfigCommand() *cobra.Command {
+	addDebugFlag, readDebugFlag := debugFlag()
 	cmd := cobra.Command{
 		Use:   "setup",
 		Args:  cobra.NoArgs,
 		Short: setupConfigSummary,
 		Long:  long(setupConfigSummary),
-		RunE:  runConfigSetup,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return runConfigSetup(readDebugFlag(cmd))
+		},
 	}
 	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func runConfigSetup(cmd *cobra.Command, args []string) error {
+func runConfigSetup(debug bool) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		omitBranchNames:       true,
-		debug:                 readDebugFlag(cmd),
+		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: false,
 		validateGitversion:    true,

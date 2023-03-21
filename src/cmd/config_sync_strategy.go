@@ -14,22 +14,26 @@ The sync strategy specifies what strategy to use
 when merging remote tracking branches into local feature branches.`
 
 func syncStrategyCommand() *cobra.Command {
+	addDebugFlag, readDebugFlag := debugFlag()
+	addGlobalFlag, readGlobalFlag := boolFlag("global", "g", false, "When set, displays or sets the sync strategy for all repos on this machine")
 	cmd := cobra.Command{
 		Use:   "sync-strategy [(merge | rebase)]",
 		Args:  cobra.MaximumNArgs(1),
 		Short: configSyncStrategySummary,
 		Long:  long(configSyncStrategySummary, configSyncStrategyDesc),
-		RunE:  runConfigSyncStrategy,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return runConfigSyncStrategy(args, readGlobalFlag(cmd), readDebugFlag(cmd))
+		},
 	}
 	addDebugFlag(&cmd)
-	cmd.Flags().Bool(globalFlagName, false, "When set, displays or sets the sync strategy for all repos on this machine")
+	addGlobalFlag(&cmd)
 	return &cmd
 }
 
-func runConfigSyncStrategy(cmd *cobra.Command, args []string) error {
+func runConfigSyncStrategy(args []string, global, debug bool) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		omitBranchNames:       true,
-		debug:                 readDebugFlag(cmd),
+		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: false,
 		validateGitversion:    true,
@@ -38,11 +42,10 @@ func runConfigSyncStrategy(cmd *cobra.Command, args []string) error {
 	if err != nil || exit {
 		return err
 	}
-	globalFlag := readBoolFlag(cmd, globalFlagName)
 	if len(args) > 0 {
-		return setSyncStrategy(globalFlag, &repo, args[0])
+		return setSyncStrategy(global, &repo, args[0])
 	}
-	return printSyncStrategy(globalFlag, &repo)
+	return printSyncStrategy(global, &repo)
 }
 
 func printSyncStrategy(globalFlag bool, repo *git.PublicRepo) error {

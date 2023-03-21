@@ -8,38 +8,46 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const configPerennialSummary = "Displays your perennial branches"
+const displayPerennialSummary = "Displays your perennial branches"
 
-const configPerennialDesc = `
+const displayPerennialDesc = `
 Perennial branches are long-lived branches.
 They cannot be shipped.`
 
+const updatePerennialSummary = "Prompts to update your perennial branches"
+
 func perennialBranchesCmd() *cobra.Command {
-	debug := false
+	addDisplayDebugFlag, readDisplayDebugFlag := debugFlag()
 	displayCmd := cobra.Command{
 		Use:   "perennial-branches",
 		Args:  cobra.NoArgs,
-		Short: configPerennialSummary,
-		Long:  long(configPerennialSummary, configPerennialDesc),
-		RunE:  displayPerennialBranches,
+		Short: displayPerennialSummary,
+		Long:  long(displayPerennialSummary, displayPerennialDesc),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return displayPerennialBranches(readDisplayDebugFlag(cmd))
+		},
 	}
-	debugFlagOld(&displayCmd, &debug)
+	addDisplayDebugFlag(&displayCmd)
+
+	addUpdateDebugFlag, readUpdateDebugFlag := debugFlag()
 	updateCmd := cobra.Command{
 		Use:   "update",
-		Short: "Prompts to update your perennial branches",
-		Long:  `Prompts to update your perennial branches`,
-		RunE:  updatePerennialBranches,
 		Args:  cobra.NoArgs,
+		Short: updatePerennialSummary,
+		Long:  long(updatePerennialSummary),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return updatePerennialBranches(readUpdateDebugFlag(cmd))
+		},
 	}
-	debugFlagOld(&updateCmd, &debug)
+	addUpdateDebugFlag(&updateCmd)
 	displayCmd.AddCommand(&updateCmd)
 	return &displayCmd
 }
 
-func displayPerennialBranches(cmd *cobra.Command, args []string) error {
+func displayPerennialBranches(debug bool) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		omitBranchNames:       true,
-		debug:                 readDebugFlag(cmd),
+		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: false,
 		validateGitversion:    true,
@@ -52,10 +60,10 @@ func displayPerennialBranches(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-func updatePerennialBranches(cmd *cobra.Command, args []string) error {
+func updatePerennialBranches(debug bool) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		omitBranchNames:       true,
-		debug:                 readDebugFlag(cmd),
+		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: false,
 		validateGitversion:    true,

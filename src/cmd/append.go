@@ -21,21 +21,24 @@ and brings over all uncommitted changes to the new feature branch.
 See "sync" for information regarding upstream remotes.`
 
 func appendCmd() *cobra.Command {
+	addDebugFlag, readDebugFlag := debugFlag()
 	cmd := cobra.Command{
 		Use:     "append <branch>",
 		GroupID: "lineage",
 		Args:    cobra.ExactArgs(1),
 		Short:   appendSummary,
 		Long:    long(appendSummary, appendDesc),
-		RunE:    runAppend,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return runAppend(args[0], readDebugFlag(cmd))
+		},
 	}
 	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func runAppend(cmd *cobra.Command, args []string) error {
+func runAppend(arg string, debug bool) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
-		debug:                 readDebugFlag(cmd),
+		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: true,
 		validateGitversion:    true,
@@ -45,7 +48,7 @@ func runAppend(cmd *cobra.Command, args []string) error {
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineAppendConfig(args, &repo)
+	config, err := determineAppendConfig(arg, &repo)
 	if err != nil {
 		return err
 	}
@@ -68,7 +71,7 @@ type appendConfig struct {
 	targetBranch        string
 }
 
-func determineAppendConfig(args []string, repo *git.PublicRepo) (*appendConfig, error) {
+func determineAppendConfig(targetBranch string, repo *git.PublicRepo) (*appendConfig, error) {
 	ec := runstate.ErrorChecker{}
 	parentBranch := ec.String(repo.CurrentBranch())
 	hasOrigin := ec.Bool(repo.HasOrigin())
@@ -76,7 +79,6 @@ func determineAppendConfig(args []string, repo *git.PublicRepo) (*appendConfig, 
 	mainBranch := repo.Config.MainBranch()
 	pushHook := ec.Bool(repo.Config.PushHook())
 	shouldNewBranchPush := ec.Bool(repo.Config.ShouldNewBranchPush())
-	targetBranch := args[0]
 	if ec.Err != nil {
 		return nil, ec.Err
 	}

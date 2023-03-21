@@ -7,21 +7,24 @@ import (
 const resetConfigSummary = "Resets your Git Town configuration"
 
 func resetConfigCommand() *cobra.Command {
+	addDebugFlag, readDebugFlag := debugFlag()
 	cmd := cobra.Command{
 		Use:   "reset",
 		Args:  cobra.NoArgs,
 		Short: resetConfigSummary,
 		Long:  long(resetConfigSummary),
-		RunE:  runConfigReset,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return runConfigReset(readDebugFlag(cmd))
+		},
 	}
 	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func runConfigReset(cmd *cobra.Command, args []string) error {
+func runConfigReset(debug bool) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		omitBranchNames:       true,
-		debug:                 readDebugFlag(cmd),
+		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: false,
 		validateGitversion:    true,

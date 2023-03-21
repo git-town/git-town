@@ -31,19 +31,19 @@ When run on a perennial branch
 - registers the new perennial branch name in the local Git Town configuration`
 
 func renameBranchCommand() *cobra.Command {
-	debug := false
-	forceFlag := false
+	addDebugFlag, readDebugFlag := debugFlag()
+	addForceFlag, readForceFlag := boolFlag("force", "f", false, "Force rename of perennial branch")
 	cmd := cobra.Command{
 		Use:   "rename-branch [<old_branch_name>] <new_branch_name>",
 		Args:  cobra.RangeArgs(1, 2),
 		Short: renameBranchSummary,
 		Long:  long(renameBranchSummary, renameBranchDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runRenameBranch(args, forceFlag, debug)
+			return runRenameBranch(args, readForceFlag(cmd), readDebugFlag(cmd))
 		},
 	}
-	cmd.Flags().BoolVar(&forceFlag, "force", false, "Force rename of perennial branch")
-	debugFlagOld(&cmd, &debug)
+	addDebugFlag(&cmd)
+	addForceFlag(&cmd)
 	return &cmd
 }
 

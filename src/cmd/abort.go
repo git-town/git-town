@@ -12,21 +12,24 @@ import (
 const abortSummary = "Aborts the last run git-town command"
 
 func abortCmd() *cobra.Command {
+	addDebugFlag, readDebugFlag := debugFlag()
 	cmd := cobra.Command{
 		Use:     "abort",
 		GroupID: "errors",
 		Args:    cobra.NoArgs,
 		Short:   abortSummary,
 		Long:    long(abortSummary),
-		RunE:    abort,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return abort(readDebugFlag(cmd))
+		},
 	}
 	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func abort(cmd *cobra.Command, args []string) error {
+func abort(debug bool) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
-		debug:                 readDebugFlag(cmd),
+		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: false,
 		validateGitversion:    true,

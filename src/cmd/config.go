@@ -12,13 +12,16 @@ import (
 const configSummary = "Displays your Git Town configuration"
 
 func configCmd() *cobra.Command {
+	addDebugFlag, readDebugFlag := debugFlag()
 	configCmd := cobra.Command{
 		Use:     "config",
 		GroupID: "setup",
 		Args:    cobra.NoArgs,
 		Short:   configSummary,
 		Long:    long(configSummary),
-		RunE:    runConfig,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return runConfig(readDebugFlag(cmd))
+		},
 	}
 	addDebugFlag(&configCmd)
 	configCmd.AddCommand(mainbranchConfigCmd())
@@ -33,10 +36,10 @@ func configCmd() *cobra.Command {
 	return &configCmd
 }
 
-func runConfig(cmd *cobra.Command, args []string) error {
+func runConfig(debug bool) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		omitBranchNames:       true,
-		debug:                 readDebugFlag(cmd),
+		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: false,
 		validateGitversion:    true,

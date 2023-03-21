@@ -24,7 +24,7 @@ See "sync" for upstream remote options.
 `
 
 func prependCommand() *cobra.Command {
-	debug := false
+	addDebugFlag, readDebugFlag := debugFlag()
 	cmd := cobra.Command{
 		Use:     "prepend <branch>",
 		GroupID: "lineage",
@@ -32,10 +32,10 @@ func prependCommand() *cobra.Command {
 		Short:   prependSummary,
 		Long:    long(prependSummary, prependDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runPrepend(args, debug)
+			return runPrepend(args, readDebugFlag(cmd))
 		},
 	}
-	debugFlagOld(&cmd, &debug)
+	addDebugFlag(&cmd)
 	return &cmd
 }
 

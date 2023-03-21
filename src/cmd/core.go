@@ -88,14 +88,6 @@ func Execute() error {
 	return rootCmd.Execute()
 }
 
-func debugFlagOld(cmd *cobra.Command, flag *bool) {
-	cmd.PersistentFlags().BoolVar(flag, "debug", false, "Print all Git commands run under the hood")
-}
-
-func addDebugFlag(cmd *cobra.Command) {
-	cmd.PersistentFlags().BoolP("debug", "d", false, "Print all Git commands run under the hood")
-}
-
 func long(summary string, desc ...string) string {
 	if len(desc) == 1 {
 		return summary + ".\n" + desc[0]
@@ -104,26 +96,48 @@ func long(summary string, desc ...string) string {
 	}
 }
 
-func readDebugFlag(cmd *cobra.Command) bool {
-	value, err := cmd.Flags().GetBool("debug")
-	if err != nil {
-		panic(fmt.Sprintf("command %q does not have a --debug flag", cmd.Name()))
+// boolFlag provides access to boolean Cobra command-line flags
+// in a way where Go's usage checker (which produces compilation errors for unused variables)
+// enforces that the flag is guaranteed to be defined and used.
+// This reduces programmer errors while defining and using command-line flags..
+func boolFlag(name, short string, defaultValue bool, desc string) (func(*cobra.Command), func(*cobra.Command) bool) {
+	addFlag := func(cmd *cobra.Command) {
+		cmd.PersistentFlags().BoolP(name, short, defaultValue, desc)
 	}
-	return value
+	readFlag := func(cmd *cobra.Command) bool {
+		value, err := cmd.Flags().GetBool(name)
+		if err != nil {
+			panic(fmt.Sprintf("command %q does not have a boolean %q flag", cmd.Name(), name))
+		}
+		return value
+	}
+	return addFlag, readFlag
 }
 
-func readBoolFlag(cmd *cobra.Command, name string) bool {
-	value, err := cmd.Flags().GetBool(name)
-	if err != nil {
-		panic(fmt.Sprintf("command %q does not have a %q flag", cmd.Name(), name))
+// stringFlag provides access to boolean Cobra command-line flags
+// in a way where Go's usage checker (which produces compilation errors for unused variables)
+// enforces that the flag is guaranteed to be defined and used.
+// This reduces programmer errors while defining and using command-line flags..
+func stringFlag(name, short, defaultValue, desc string) (func(*cobra.Command), func(*cobra.Command) string) {
+	addFlag := func(cmd *cobra.Command) {
+		cmd.PersistentFlags().StringP(name, short, defaultValue, desc)
 	}
-	return value
+	readFlag := func(cmd *cobra.Command) string {
+		value, err := cmd.Flags().GetString(name)
+		if err != nil {
+			panic(fmt.Sprintf("command %q does not have a string %q flag", cmd.Name(), name))
+		}
+		return value
+	}
+	return addFlag, readFlag
 }
 
-const globalFlagName = "global"
+func debugFlag() (func(*cobra.Command), func(*cobra.Command) bool) {
+	return boolFlag("debug", "d", false, "Print all Git commands run under the hood")
+}
 
-func dryRunFlag(cmd *cobra.Command, flag *bool) {
-	cmd.PersistentFlags().BoolVar(flag, "dry-run", false, "Print but do not run the Git commands")
+func dryRunFlag() (func(*cobra.Command), func(*cobra.Command) bool) {
+	return boolFlag("dry-run", "d", false, "Print but do not run the Git commands")
 }
 
 func LoadPublicRepo(args RepoArgs) (repo git.PublicRepo, exit bool, err error) { //nolint:nonamedreturns // so many return values require names

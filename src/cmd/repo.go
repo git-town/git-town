@@ -25,17 +25,17 @@ When using SSH identities, run
 where HOSTNAME matches what is in your ssh config file.`
 
 func repoCommand() *cobra.Command {
-	debug := false
+	addDebugFlag, readDebugFlag := debugFlag()
 	cmd := cobra.Command{
 		Use:   "repo",
 		Args:  cobra.NoArgs,
 		Short: repoSummary,
 		Long:  long(repoSummary, fmt.Sprintf(repoDesc, config.CodeHostingDriverKey, config.CodeHostingOriginHostnameKey)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runRepo(debug)
+			return runRepo(readDebugFlag(cmd))
 		},
 	}
-	debugFlagOld(&cmd, &debug)
+	addDebugFlag(&cmd)
 	return &cmd
 }
 

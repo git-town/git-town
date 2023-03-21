@@ -18,17 +18,17 @@ Deletes the current or provided branch from the local and origin repositories.
 Does not delete perennial branches nor the main branch.`
 
 func killCommand() *cobra.Command {
-	debug := false
+	addDebugFlag, readDebugFlag := debugFlag()
 	cmd := cobra.Command{
 		Use:   "kill [<branch>]",
 		Args:  cobra.MaximumNArgs(1),
 		Short: killSummary,
 		Long:  long(killSummary, killDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runKill(args, debug)
+			return runKill(args, readDebugFlag(cmd))
 		},
 	}
-	debugFlagOld(&cmd, &debug)
+	addDebugFlag(&cmd)
 	return &cmd
 }
 

@@ -17,21 +17,24 @@ Works on either the current branch or the branch name provided.
 Exits with error code 1 if the given branch is a perennial branch or the main branch.`
 
 func diffParentCommand() *cobra.Command {
+	addDebugFlag, readDebugFlag := debugFlag()
 	cmd := cobra.Command{
 		Use:     "diff-parent [<branch>]",
 		GroupID: "lineage",
 		Args:    cobra.MaximumNArgs(1),
 		Short:   diffParentSummary,
 		Long:    long(diffParentSummary, diffParentDesc),
-		RunE:    runDiffParent,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return runDiffParent(args, readDebugFlag(cmd))
+		},
 	}
 	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func runDiffParent(cmd *cobra.Command, args []string) error {
+func runDiffParent(args []string, debug bool) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
-		debug:                 readDebugFlag(cmd),
+		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: true,
 		validateGitversion:    true,

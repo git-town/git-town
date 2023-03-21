@@ -14,17 +14,17 @@ Deletes branches whose tracking branch no longer exists from the local repositor
 This usually means the branch was shipped or killed on another machine.`
 
 func pruneBranchesCommand() *cobra.Command {
-	debug := false
+	addDebugFlag, readDebugFlag := debugFlag()
 	cmd := cobra.Command{
 		Use:   "prune-branches",
 		Args:  cobra.NoArgs,
 		Short: pruneBranchesSummary,
 		Long:  long(pruneBranchesSummary, pruneBranchesDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runPruneBranches(debug)
+			return runPruneBranches(readDebugFlag(cmd))
 		},
 	}
-	debugFlagOld(&cmd, &debug)
+	addDebugFlag(&cmd)
 	return &cmd
 }
 
