@@ -22,7 +22,7 @@ See "sync" for information regarding upstream remotes.`
 
 func hackCmd() *cobra.Command {
 	addDebugFlag, readDebugFlag := debugFlag()
-	addPromptFlag, readPromptFlag := boolFlag("prompt", "p", false, "Prompt for the parent branch")
+	addPromptFlag, readPromptFlag := boolFlag("prompt", "p", "Prompt for the parent branch")
 	cmd := cobra.Command{
 		Use:     "hack <branch>",
 		GroupID: "basic",
