@@ -10,15 +10,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func prependCommand(repo *git.ProdRepo) *cobra.Command {
-	return &cobra.Command{
-		Use:     "prepend <branch>",
-		GroupID: "lineage",
-		Args:    cobra.ExactArgs(1),
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
-		Short:   "Creates a new feature branch as the parent of the current branch",
-		Long: `Creates a new feature branch as the parent of the current branch
+const prependDesc = "Creates a new feature branch as the parent of the current branch"
 
+const prependHelp = `
 Syncs the parent branch,
 cuts a new feature branch with the given name off the parent branch,
 makes the new branch the parent of the current branch,
@@ -27,7 +21,16 @@ pushes the new feature branch to the origin repository
 and brings over all uncommitted changes to the new feature branch.
 
 See "sync" for upstream remote options.
-`,
+`
+
+func prependCommand(repo *git.ProdRepo) *cobra.Command {
+	return &cobra.Command{
+		Use:     "prepend <branch>",
+		GroupID: "lineage",
+		Args:    cobra.ExactArgs(1),
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
+		Short:   prependDesc,
+		Long:    long(prependDesc, prependHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			config, err := determinePrependConfig(args, repo)
 			if err != nil {

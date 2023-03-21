@@ -11,14 +11,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func repoCommand(repo *git.ProdRepo) *cobra.Command {
-	return &cobra.Command{
-		Use:     "repo",
-		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured, isOnline),
-		Short:   "Opens the repository homepage",
-		Long: fmt.Sprintf(`Opens the repository homepage
+const repoDesc = "Opens the repository homepage"
 
+const repoHelp = `
 Supported for repositories hosted on GitHub, GitLab, Gitea, and Bitbucket.
 Derives the Git provider from the "origin" remote.
 You can override this detection with
@@ -27,7 +22,15 @@ where DRIVER is "github", "gitlab", "gitea", or "bitbucket".
 
 When using SSH identities, run
 "git config %s <HOSTNAME>"
-where HOSTNAME matches what is in your ssh config file.`, config.CodeHostingDriverKey, config.CodeHostingOriginHostnameKey),
+where HOSTNAME matches what is in your ssh config file.`
+
+func repoCommand(repo *git.ProdRepo) *cobra.Command {
+	return &cobra.Command{
+		Use:     "repo",
+		Args:    cobra.NoArgs,
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured, isOnline),
+		Short:   repoDesc,
+		Long:    long(repoDesc, fmt.Sprintf(repoHelp, config.CodeHostingDriverKey, config.CodeHostingOriginHostnameKey)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			connector, err := hosting.NewConnector(repo.Config, &repo.Silent, cli.PrintConnectorAction)
 			if err != nil {

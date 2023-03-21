@@ -9,6 +9,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const hackDesc = "Creates a new feature branch off the main development branch"
+
+const hackHelp = `
+Syncs the main branch,
+forks a new feature branch with the given name off the main branch,
+pushes the new feature branch to origin
+(if and only if "push-new-branches" is true),
+and brings over all uncommitted changes to the new feature branch.
+
+See "sync" for information regarding upstream remotes.`
+
 func hackCmd(repo *git.ProdRepo) *cobra.Command {
 	promptForParentFlag := false
 	hackCmd := cobra.Command{
@@ -16,16 +27,8 @@ func hackCmd(repo *git.ProdRepo) *cobra.Command {
 		GroupID: "basic",
 		Args:    cobra.ExactArgs(1),
 		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
-		Short:   "Creates a new feature branch off the main development branch",
-		Long: `Creates a new feature branch off the main development branch
-
-Syncs the main branch,
-forks a new feature branch with the given name off the main branch,
-pushes the new feature branch to origin
-(if and only if "push-new-branches" is true),
-and brings over all uncommitted changes to the new feature branch.
-
-See "sync" for information regarding upstream remotes.`,
+		Short:   hackDesc,
+		Long:    long(hackDesc, hackHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			config, err := determineHackConfig(args, promptForParentFlag, repo)
 			if err != nil {

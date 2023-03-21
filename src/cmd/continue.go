@@ -10,13 +10,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const continueDesc = "Restarts the last run git-town command after having resolved conflicts"
+
 func continueCmd(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "continue",
 		GroupID: "errors",
 		Args:    cobra.NoArgs,
 		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
-		Short:   "Restarts the last run git-town command after having resolved conflicts",
+		Short:   continueDesc,
+		Long:    long(continueDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			runState, err := runstate.Load(repo)
 			if err != nil {

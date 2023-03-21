@@ -9,14 +9,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const offlineDesc = "Displays or sets offline mode"
+
+const offlineHelp = `
+Git Town avoids network operations in offline mode.`
+
 func offlineCmd(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:   "offline [(yes | no)]",
 		Args:  cobra.MaximumNArgs(1),
-		Short: "Displays or sets offline mode",
-		Long: `Displays or sets offline mode
-
-Git Town avoids network operations in offline mode.`,
+		Short: offlineDesc,
+		Long:  long(offlineDesc, offlineHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {
 				return setOfflineStatus(args[0], repo)

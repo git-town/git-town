@@ -26,6 +26,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const rootDesc = "Generic, high-level Git workflow support"
+
+const rootHelp = `
+Git Town makes software development teams who use Git even more productive and happy.
+
+It adds Git commands that support GitHub Flow, Git Flow, the Nvie model, GitLab Flow, and other workflows more directly,
+and it allows you to perform many common Git operations faster and easier.`
+
 // Execute runs the Cobra stack.
 func Execute() error {
 	debugFlag := false
@@ -40,11 +48,8 @@ func RootCmd(repo *git.ProdRepo, debugFlag *bool) *cobra.Command {
 		Use:           "git-town",
 		SilenceErrors: true,
 		SilenceUsage:  true,
-		Short:         "Generic, high-level Git workflow support",
-		Long: `Git Town makes software development teams who use Git even more productive and happy.
-
-It adds Git commands that support GitHub Flow, Git Flow, the Nvie model, GitLab Flow, and other workflows more directly,
-and it allows you to perform many common Git operations faster and easier.`,
+		Short:         rootDesc,
+		Long:          long(rootDesc, rootHelp),
 	}
 	rootCmd.AddGroup(&cobra.Group{
 		ID:    "basic",
@@ -84,6 +89,13 @@ and it allows you to perform many common Git operations faster and easier.`,
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
 	rootCmd.PersistentFlags().BoolVar(debugFlag, "debug", false, "Print all Git commands run under the hood")
 	return &rootCmd
+}
+
+func long(summary string, desc ...string) string {
+	if len(desc) == 1 {
+		return summary + ".\n" + desc[0]
+	}
+	return summary + "."
 }
 
 var (

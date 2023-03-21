@@ -9,16 +9,19 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const perennialDesc = "Displays your perennial branches"
+
+const perennialHelp = `
+Perennial branches are long-lived branches.
+They cannot be shipped.`
+
 func perennialBranchesCmd(repo *git.ProdRepo) *cobra.Command {
 	perennialBranchesCmd := cobra.Command{
 		Use:     "perennial-branches",
 		Args:    cobra.NoArgs,
 		PreRunE: ensure(repo, isRepository),
-		Short:   "Displays your perennial branches",
-		Long: `Displays your perennial branches
-
-Perennial branches are long-lived branches.
-They cannot be shipped.`,
+		Short:   perennialDesc,
+		Long:    long(perennialDesc, perennialHelp),
 		Run: func(cmd *cobra.Command, args []string) {
 			cli.Println(cli.StringSetting(strings.Join(repo.Config.PerennialBranches(), "\n")))
 		},
