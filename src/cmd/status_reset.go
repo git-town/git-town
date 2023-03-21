@@ -8,12 +8,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const statusResetDesc = "Resets the current suspended Git Town command"
+
 func resetRunstateCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "reset",
 		Args:    cobra.NoArgs,
 		PreRunE: ensure(repo, hasGitVersion, isRepository),
-		Short:   "Resets the current suspended Git Town command",
+		Short:   statusResetDesc,
+		Long:    long(statusResetDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			err := runstate.Delete(repo)
 			if err != nil {

@@ -9,17 +9,21 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const pushNewBranchesDesc = "Displays or changes whether new branches get pushed to origin"
+
+const pushNewBranchesHelp = `Displays or changes whether new branches get pushed to origin.
+
+If "push-new-branches" is true, the Git Town commands hack, append, and prepend
+push the new branch to the origin remote.`
+
 func pushNewBranchesCommand(repo *git.ProdRepo) *cobra.Command {
 	globalFlag := false
 	pushNewBranchesCmd := cobra.Command{
 		Use:     "push-new-branches [--global] [(yes | no)]",
 		Args:    cobra.MaximumNArgs(1),
 		PreRunE: ensure(repo, isRepository),
-		Short:   "Displays or changes whether new branches get pushed to origin",
-		Long: `Displays or changes whether new branches get pushed to origin.
-
-If "push-new-branches" is true, the Git Town commands hack, append, and prepend
-push the new branch to the origin remote.`,
+		Short:   pushNewBranchesDesc,
+		Long:    long(pushNewBranchesDesc, pushNewBranchesHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {
 				return setPushNewBranches(args[0], globalFlag, repo)

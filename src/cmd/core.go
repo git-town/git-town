@@ -86,6 +86,13 @@ and it allows you to perform many common Git operations faster and easier.`,
 	return &rootCmd
 }
 
+func long(summary string, desc ...string) string {
+	if len(desc) == 1 {
+		return summary + ".\n" + desc[0]
+	}
+	return summary + "."
+}
+
 var (
 	ensure        = validate.CobraEnsure   //nolint:gochecknoglobals
 	hasGitVersion = validate.HasGitVersion //nolint:gochecknoglobals

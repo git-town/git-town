@@ -10,6 +10,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const configDesc = "Displays your Git Town configuration"
+
 func configCmd(repo *git.ProdRepo) *cobra.Command {
 	configCmd := &cobra.Command{
 		Use:               "config",
@@ -17,7 +19,8 @@ func configCmd(repo *git.ProdRepo) *cobra.Command {
 		Args:              cobra.NoArgs,
 		PreRunE:           ensure(repo, isRepository),
 		PersistentPreRunE: ensure(repo, hasGitVersion),
-		Short:             "Displays your Git Town configuration",
+		Short:             configDesc,
+		Long:              long(configDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			ec := runstate.ErrorChecker{}
 			pushNewBranches := ec.Bool(repo.Config.ShouldNewBranchPush())

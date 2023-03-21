@@ -8,15 +8,19 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const mainbranchDesc = "Displays or sets your main development branch"
+
+const mainBranchHelp = `Displays or sets your main development branch
+
+The main branch is the Git branch from which new feature branches are cut.`
+
 func mainbranchConfigCmd(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "main-branch [<branch>]",
 		Args:    cobra.MaximumNArgs(1),
 		PreRunE: ensure(repo, isRepository),
-		Short:   "Displays or sets your main development branch",
-		Long: `Displays or sets your main development branch
-
-The main branch is the Git branch from which new feature branches are cut.`,
+		Short:   mainbranchDesc,
+		Long:    long(mainbranchDesc, mainBranchHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {
 				return setMainBranch(args[0], repo)

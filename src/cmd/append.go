@@ -8,14 +8,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func appendCmd(repo *git.ProdRepo) *cobra.Command {
-	return &cobra.Command{
-		Use:     "append <branch>",
-		GroupID: "lineage",
-		Args:    cobra.ExactArgs(1),
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
-		Short:   "Creates a new feature branch as a child of the current branch",
-		Long: `Creates a new feature branch as a direct child of the current branch.
+const appendDesc = "Creates a new feature branch as a child of the current branch"
+
+const appendHelp = `Creates a new feature branch as a direct child of the current branch.
 
 Syncs the current branch,
 forks a new feature branch with the given name off the current branch,
@@ -24,7 +19,16 @@ pushes the new feature branch to the origin repository
 (if and only if "push-new-branches" is true),
 and brings over all uncommitted changes to the new feature branch.
 
-See "sync" for information regarding upstream remotes.`,
+See "sync" for information regarding upstream remotes.`
+
+func appendCmd(repo *git.ProdRepo) *cobra.Command {
+	return &cobra.Command{
+		Use:     "append <branch>",
+		GroupID: "lineage",
+		Args:    cobra.ExactArgs(1),
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
+		Short:   appendDesc,
+		Long:    long(appendDesc, appendHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			config, err := determineAppendConfig(args, repo)
 			if err != nil {

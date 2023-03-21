@@ -7,16 +7,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const pruneBranchesDesc = "Deletes local branches whose tracking branch no longer exists"
+
+const pruneBranchesHelp = `Deletes local branches whose tracking branch no longer exists
+
+Deletes branches whose tracking branch no longer exists from the local repository.
+This usually means the branch was shipped or killed on another machine.`
+
 func pruneBranchesCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "prune-branches",
 		Args:    cobra.NoArgs,
 		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured, isOnline),
-		Short:   "Deletes local branches whose tracking branch no longer exists",
-		Long: `Deletes local branches whose tracking branch no longer exists
-
-Deletes branches whose tracking branch no longer exists from the local repository.
-This usually means the branch was shipped or killed on another machine.`,
+		Short:   pruneBranchesDesc,
+		Long:    long(pruneBranchesDesc, pruneBranchesHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			config, err := determinePruneBranchesConfig(repo)
 			if err != nil {

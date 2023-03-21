@@ -8,13 +8,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const switchDesc = "Displays the local branches visually and allows switching between them"
+
 func switchCmd(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "switch",
 		GroupID: "basic",
 		Args:    cobra.NoArgs,
 		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
-		Short:   "Displays the local branches visually and allows switching between them",
+		Short:   switchDesc,
+		Long:    long(switchDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			currentBranch, err := repo.Silent.CurrentBranch()
 			if err != nil {

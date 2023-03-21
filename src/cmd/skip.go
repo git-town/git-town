@@ -8,13 +8,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const skipDesc = "Restarts the last run git-town command by skipping the current branch"
+
 func skipCmd(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "skip",
 		GroupID: "errors",
 		Args:    cobra.NoArgs,
 		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
-		Short:   "Restarts the last run git-town command by skipping the current branch",
+		Short:   skipDesc,
+		Long:    long(skipDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			runState, err := runstate.Load(repo)
 			if err != nil {

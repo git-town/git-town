@@ -10,13 +10,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const abortDesc = "Aborts the last run git-town command"
+
 func abortCmd(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "abort",
 		GroupID: "errors",
 		Args:    cobra.NoArgs,
 		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
-		Short:   "Aborts the last run git-town command",
+		Short:   abortDesc,
+		Long:    long(abortDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			runState, err := runstate.Load(repo)
 			if err != nil {

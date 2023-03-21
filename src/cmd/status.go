@@ -11,13 +11,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const statusDesc = "Displays or resets the current suspended Git Town command"
+
 func statusCommand(repo *git.ProdRepo) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "status",
 		GroupID: "errors",
 		Args:    cobra.NoArgs,
 		PreRunE: ensure(repo, hasGitVersion, isRepository),
-		Short:   "Displays or resets the current suspended Git Town command",
+		Short:   statusDesc,
+		Long:    long(statusDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			config, err := loadDisplayStatusConfig(repo)
 			if err != nil {

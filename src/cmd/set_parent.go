@@ -8,14 +8,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const setParentDesc = "Prompts to set the parent branch for the current branch"
+
 func setParentCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "set-parent",
 		GroupID: "lineage",
 		Args:    cobra.NoArgs,
 		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
-		Short:   "Prompts to set the parent branch for the current branch",
-		Long:    `Prompts to set the parent branch for the current branch`,
+		Short:   setParentDesc,
+		Long:    long(setParentDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			currentBranch, err := repo.Silent.CurrentBranch()
 			if err != nil {

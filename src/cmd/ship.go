@@ -14,15 +14,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func shipCmd(repo *git.ProdRepo) *cobra.Command {
-	var commitMessage string
-	shipCmd := cobra.Command{
-		Use:     "ship",
-		GroupID: "basic",
-		Args:    cobra.MaximumNArgs(1),
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
-		Short:   "Deliver a completed feature branch",
-		Long: fmt.Sprintf(`Deliver a completed feature branch
+const shipDesc = "Deliver a completed feature branch"
+
+const shipHelp = `Deliver a completed feature branch
 
 Squash-merges the current branch, or <branch_name> if given,
 into the main branch, resulting in linear history on the main branch.
@@ -47,7 +41,17 @@ It will also update the base branch for any pull requests against that branch.
 If your origin server deletes shipped branches, for example
 GitHub's feature to automatically delete head branches,
 run "git config %s false"
-and Git Town will leave it up to your origin server to delete the remote branch.`, config.GithubTokenKey, config.ShipDeleteRemoteBranchKey),
+and Git Town will leave it up to your origin server to delete the remote branch.`
+
+func shipCmd(repo *git.ProdRepo) *cobra.Command {
+	var commitMessage string
+	shipCmd := cobra.Command{
+		Use:     "ship",
+		GroupID: "basic",
+		Args:    cobra.MaximumNArgs(1),
+		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
+		Short:   shipDesc,
+		Long:    long(shipDesc, fmt.Sprintf(shipHelp, config.GithubTokenKey, config.ShipDeleteRemoteBranchKey)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			connector, err := hosting.NewConnector(repo.Config, &repo.Silent, cli.PrintConnectorAction)
 			if err != nil {

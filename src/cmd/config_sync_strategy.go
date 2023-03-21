@@ -7,17 +7,21 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const syncStrategyDesc = "Displays or sets your sync strategy"
+
+const syncStrategyHelp = `Displays or sets your sync strategy
+
+The sync strategy specifies what strategy to use
+when merging remote tracking branches into local feature branches.`
+
 func syncStrategyCommand(repo *git.ProdRepo) *cobra.Command {
 	var globalFlag bool
 	syncStrategyCmd := cobra.Command{
 		Use:     "sync-strategy [(merge | rebase)]",
 		Args:    cobra.MaximumNArgs(1),
 		PreRunE: ensure(repo, isRepository),
-		Short:   "Displays or sets your sync strategy",
-		Long: `Displays or sets your sync strategy
-
-The sync strategy specifies what strategy to use
-when merging remote tracking branches into local feature branches.`,
+		Short:   syncStrategyDesc,
+		Long:    syncStrategyHelp,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {
 				return setSyncStrategy(globalFlag, repo, args[0])

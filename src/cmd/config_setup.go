@@ -6,12 +6,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const configSetupDesc = "Prompts to setup your Git Town configuration"
+
 func setupConfigCommand(repo *git.ProdRepo) *cobra.Command {
 	return &cobra.Command{
 		Use:     "setup",
 		Args:    cobra.NoArgs,
 		PreRunE: ensure(repo, isRepository),
-		Short:   "Prompts to setup your Git Town configuration",
+		Short:   configSetupDesc,
+		Long:    long(configSetupDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			err := validate.EnterMainBranch(repo)
 			if err != nil {
