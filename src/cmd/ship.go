@@ -52,7 +52,7 @@ func shipCmd() *cobra.Command {
 		Short:   shipDesc,
 		Long:    long(shipDesc, fmt.Sprintf(shipHelp, config.GithubTokenKey, config.ShipDeleteRemoteBranchKey)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runShip(args, readMessageFlag(cmd), readDebugFlag(cmd))
+			return ship(args, readMessageFlag(cmd), readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&cmd)
@@ -60,7 +60,7 @@ func shipCmd() *cobra.Command {
 	return &cmd
 }
 
-func runShip(args []string, message string, debug bool) error {
+func ship(args []string, message string, debug bool) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,

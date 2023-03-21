@@ -31,14 +31,14 @@ func repoCommand() *cobra.Command {
 		Short: repoDesc,
 		Long:  long(repoDesc, fmt.Sprintf(repoHelp, config.CodeHostingDriverKey, config.CodeHostingOriginHostnameKey)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runRepo(readDebugFlag(cmd))
+			return repo(readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func runRepo(debug bool) error {
+func repo(debug bool) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,
