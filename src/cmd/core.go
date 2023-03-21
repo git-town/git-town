@@ -23,11 +23,8 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v7/src/cache"
-	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
-	"github.com/git-town/git-town/v7/src/subshell"
 	"github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
@@ -158,8 +155,8 @@ func dryRunFlag() (addFlagFunc, readBoolFlagFunc) {
 }
 
 func LoadPublicRepo(args RepoArgs) (repo git.PublicRepo, exit bool, err error) { //nolint:nonamedreturns // so many return values require names
-	internalRepo := internalRepo(args.debug)
-	repo = publicRepo(args.omitBranchNames, args.dryRun, &internalRepo)
+	internalRepo := git.NewInternalRepo(args.debug)
+	repo = git.NewPublicRepo(args.omitBranchNames, args.dryRun, &internalRepo)
 	if args.validateIsRepository {
 		err := validate.IsRepository(&repo)
 		if err != nil {
@@ -201,43 +198,4 @@ type RepoArgs struct {
 	validateIsRepository  bool `exhaustruct:"optional"`
 	validateIsConfigured  bool `exhaustruct:"optional"`
 	validateIsOnline      bool `exhaustruct:"optional"`
-}
-
-func internalRepo(debug bool) git.InternalRepo {
-	shellRunner := subshell.InternalRunner{Dir: nil}
-	var gitRunner git.InternalRunner
-	if debug {
-		gitRunner = subshell.InternalDebuggingRunner{InternalRunner: shellRunner}
-	} else {
-		gitRunner = shellRunner
-	}
-	return git.InternalRepo{
-		InternalRunner:     gitRunner,
-		Config:             config.NewGitTown(gitRunner),
-		CurrentBranchCache: &cache.String{},
-		DryRun:             false,
-		IsRepoCache:        &cache.Bool{},
-		RemoteBranchCache:  &cache.Strings{},
-		RemotesCache:       &cache.Strings{},
-		RootDirCache:       &cache.String{},
-	}
-}
-
-func publicRepo(omitBranchNames, dryRun bool, internalRepo *git.InternalRepo) git.PublicRepo {
-	var gitRunner git.PublicRunner
-	if dryRun {
-		gitRunner = subshell.PublicDryRunner{
-			CurrentBranch:   internalRepo.CurrentBranchCache,
-			OmitBranchNames: omitBranchNames,
-		}
-	} else {
-		gitRunner = subshell.PublicRunner{
-			CurrentBranch:   internalRepo.CurrentBranchCache,
-			OmitBranchNames: omitBranchNames,
-		}
-	}
-	return git.PublicRepo{
-		Public:       gitRunner,
-		InternalRepo: *internalRepo,
-	}
 }
