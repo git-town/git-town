@@ -16,8 +16,7 @@ import (
 
 const shipDesc = "Deliver a completed feature branch"
 
-const shipHelp = `Deliver a completed feature branch
-
+const shipHelp = `
 Squash-merges the current branch, or <branch_name> if given,
 into the main branch, resulting in linear history on the main branch.
 

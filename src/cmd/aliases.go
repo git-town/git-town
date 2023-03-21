@@ -11,8 +11,7 @@ import (
 
 const aliasesDesc = "Adds or removes default global aliases"
 
-const aliasesHelp = `Adds or removes default global aliases
-
+const aliasesHelp = `
 Global aliases make Git Town commands feel like native Git commands.
 When enabled, you can run "git hack" instead of "git town hack".
 

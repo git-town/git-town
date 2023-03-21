@@ -11,8 +11,7 @@ import (
 
 const hackDesc = "Creates a new feature branch off the main development branch"
 
-const hackHelp = `Creates a new feature branch off the main development branch
-
+const hackHelp = `
 Syncs the main branch,
 forks a new feature branch with the given name off the main branch,
 pushes the new feature branch to origin

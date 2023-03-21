@@ -9,8 +9,7 @@ import (
 
 const pruneBranchesDesc = "Deletes local branches whose tracking branch no longer exists"
 
-const pruneBranchesHelp = `Deletes local branches whose tracking branch no longer exists
-
+const pruneBranchesHelp = `
 Deletes branches whose tracking branch no longer exists from the local repository.
 This usually means the branch was shipped or killed on another machine.`
 

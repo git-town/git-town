@@ -9,8 +9,7 @@ import (
 
 const pullBranchDesc = "Displays or sets your pull branch strategy"
 
-const pullBranchHelp = `Displays or sets your pull branch strategy
-
+const pullBranchHelp = `
 The pull branch strategy specifies what strategy to use
 when merging remote tracking branches into local branches
 for the main branch and perennial branches.`

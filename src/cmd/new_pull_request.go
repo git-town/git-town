@@ -15,8 +15,7 @@ import (
 
 const newPullRequestDesc = "Creates a new pull request"
 
-const newPullRequestHelp = `Creates a new pull request
-
+const newPullRequestHelp = `
 Syncs the current branch
 and opens a browser window to the new pull request page of your repository.
 

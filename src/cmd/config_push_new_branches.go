@@ -11,8 +11,7 @@ import (
 
 const pushNewBranchesDesc = "Displays or changes whether new branches get pushed to origin"
 
-const pushNewBranchesHelp = `Displays or changes whether new branches get pushed to origin.
-
+const pushNewBranchesHelp = `
 If "push-new-branches" is true, the Git Town commands hack, append, and prepend
 push the new branch to the origin remote.`
 

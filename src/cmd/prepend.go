@@ -12,8 +12,7 @@ import (
 
 const prependDesc = "Creates a new feature branch as the parent of the current branch"
 
-const prependHelp = `Creates a new feature branch as the parent of the current branch
-
+const prependHelp = `
 Syncs the parent branch,
 cuts a new feature branch with the given name off the parent branch,
 makes the new branch the parent of the current branch,

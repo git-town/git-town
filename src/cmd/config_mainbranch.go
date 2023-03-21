@@ -10,8 +10,7 @@ import (
 
 const mainbranchDesc = "Displays or sets your main development branch"
 
-const mainBranchHelp = `Displays or sets your main development branch
-
+const mainBranchHelp = `
 The main branch is the Git branch from which new feature branches are cut.`
 
 func mainbranchConfigCmd(repo *git.ProdRepo) *cobra.Command {

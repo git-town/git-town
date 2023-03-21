@@ -10,8 +10,7 @@ import (
 
 const appendDesc = "Creates a new feature branch as a child of the current branch"
 
-const appendHelp = `Creates a new feature branch as a direct child of the current branch.
-
+const appendHelp = `
 Syncs the current branch,
 forks a new feature branch with the given name off the current branch,
 makes the new branch a child of the current branch,

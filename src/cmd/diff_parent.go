@@ -10,8 +10,7 @@ import (
 
 const diffParentDesc = "Shows the changes committed to a feature branch"
 
-const diffParentHelp = `Shows the changes committed to a feature branch
-
+const diffParentHelp = `
 Works on either the current branch or the branch name provided.
 
 Exits with error code 1 if the given branch is a perennial branch or the main branch.`

@@ -11,8 +11,7 @@ import (
 
 const pushHookDesc = "Configures whether Git Town should run Git's pre-push hook."
 
-const pushHookHelp = `Configures whether Git Town should run Git's pre-push hook.
-
+const pushHookHelp = `
 Enabled by default. When disabled, Git Town prevents Git's pre-push hook from running.`
 
 func pushHookCommand(repo *git.ProdRepo) *cobra.Command {

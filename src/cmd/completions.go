@@ -10,7 +10,7 @@ import (
 
 const completionsDesc = "Generates auto-completion for bash, zsh, fish, or PowerShell"
 
-const completionsHelp = `Generates auto-completion for bash, zsh, fish, or PowerShell.
+const completionsHelp = `
 When set up, "git-town <TAB>" will auto-complete Git Town subcommands.
 
 To load autocompletion for Bash, run this command:

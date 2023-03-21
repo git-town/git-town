@@ -9,8 +9,7 @@ import (
 
 const syncStrategyDesc = "Displays or sets your sync strategy"
 
-const syncStrategyHelp = `Displays or sets your sync strategy
-
+const syncStrategyHelp = `
 The sync strategy specifies what strategy to use
 when merging remote tracking branches into local feature branches.`
 

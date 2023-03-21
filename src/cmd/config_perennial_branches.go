@@ -11,8 +11,7 @@ import (
 
 const perennialDesc = "Displays your perennial branches"
 
-const perennialHelp = `Displays your perennial branches
-
+const perennialHelp = `
 Perennial branches are long-lived branches.
 They cannot be shipped.`
 

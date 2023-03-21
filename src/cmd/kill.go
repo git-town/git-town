@@ -12,8 +12,7 @@ import (
 
 const killDesc = "Removes an obsolete feature branch"
 
-const killHelp = `Removes an obsolete feature branch
-
+const killHelp = `
 Deletes the current or provided branch from the local and origin repositories.
 Does not delete perennial branches nor the main branch.`
 

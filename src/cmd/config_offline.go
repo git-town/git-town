@@ -11,8 +11,7 @@ import (
 
 const offlineDesc = "Displays or sets offline mode"
 
-const offlineHelp = `Displays or sets offline mode
-
+const offlineHelp = `
 Git Town avoids network operations in offline mode.`
 
 func offlineCmd(repo *git.ProdRepo) *cobra.Command {
