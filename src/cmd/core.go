@@ -156,7 +156,7 @@ func dryRunFlag() (addFlagFunc, readBoolFlagFunc) {
 
 func LoadPublicRepo(args RepoArgs) (repo git.PublicRepo, exit bool, err error) { //nolint:nonamedreturns // so many return values require names
 	internalRepo := git.NewInternalRepo(args.debug)
-	repo = git.NewPublicRepo(args.omitBranchNames, args.dryRun, &internalRepo)
+	repo = git.NewPublicRepo(args.omitBranchNames, args.dryRun, internalRepo)
 	if args.validateIsRepository {
 		err := validate.IsRepository(&repo)
 		if err != nil {

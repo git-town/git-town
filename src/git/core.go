@@ -29,7 +29,7 @@ func NewInternalRepo(debug bool) InternalRepo {
 }
 
 // NewPublicRepo provides a PublicRepo instance that behaves according to the given configuration and uses the given InternalRepo instance internally.
-func NewPublicRepo(omitBranchNames, dryRun bool, internalRepo *InternalRepo) PublicRepo {
+func NewPublicRepo(omitBranchNames, dryRun bool, internalRepo InternalRepo) PublicRepo {
 	var gitRunner PublicRunner
 	if dryRun {
 		gitRunner = subshell.PublicDryRunner{
@@ -44,6 +44,6 @@ func NewPublicRepo(omitBranchNames, dryRun bool, internalRepo *InternalRepo) Pub
 	}
 	return PublicRepo{
 		Public:       gitRunner,
-		InternalRepo: *internalRepo,
+		InternalRepo: internalRepo,
 	}
 }
