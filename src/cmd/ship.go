@@ -14,9 +14,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const shipSummary = "Deliver a completed feature branch"
+const shipDesc = "Deliver a completed feature branch"
 
-const shipDesc = `Deliver a completed feature branch
+const shipHelp = `Deliver a completed feature branch
 
 Squash-merges the current branch, or <branch_name> if given,
 into the main branch, resulting in linear history on the main branch.
@@ -50,8 +50,8 @@ func shipCmd() *cobra.Command {
 		Use:     "ship",
 		GroupID: "basic",
 		Args:    cobra.MaximumNArgs(1),
-		Short:   shipSummary,
-		Long:    long(shipSummary, fmt.Sprintf(shipDesc, config.GithubTokenKey, config.ShipDeleteRemoteBranchKey)),
+		Short:   shipDesc,
+		Long:    long(shipDesc, fmt.Sprintf(shipHelp, config.GithubTokenKey, config.ShipDeleteRemoteBranchKey)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runShip(args, readMessageFlag(cmd), readDebugFlag(cmd))
 		},

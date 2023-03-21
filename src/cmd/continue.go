@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const continueSummary = "Restarts the last run git-town command after having resolved conflicts"
+const continueDesc = "Restarts the last run git-town command after having resolved conflicts"
 
 func continueCmd() *cobra.Command {
 	addDebugFlag, readDebugFlag := debugFlag()
@@ -17,8 +17,8 @@ func continueCmd() *cobra.Command {
 		Use:     "continue",
 		GroupID: "errors",
 		Args:    cobra.NoArgs,
-		Short:   continueSummary,
-		Long:    long(continueSummary),
+		Short:   continueDesc,
+		Long:    long(continueDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runContinue(readDebugFlag(cmd))
 		},

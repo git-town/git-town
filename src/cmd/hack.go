@@ -9,9 +9,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const hackSummary = "Creates a new feature branch off the main development branch"
+const hackDesc = "Creates a new feature branch off the main development branch"
 
-const hackDesc = `
+const hackHelp = `
 Syncs the main branch,
 forks a new feature branch with the given name off the main branch,
 pushes the new feature branch to origin
@@ -27,8 +27,8 @@ func hackCmd() *cobra.Command {
 		Use:     "hack <branch>",
 		GroupID: "basic",
 		Args:    cobra.ExactArgs(1),
-		Short:   hackSummary,
-		Long:    long(hackSummary, hackDesc),
+		Short:   hackDesc,
+		Long:    long(hackDesc, hackHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runHack(args, readPromptFlag(cmd), readDebugFlag(cmd))
 		},

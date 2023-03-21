@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const configSummary = "Displays your Git Town configuration"
+const configDesc = "Displays your Git Town configuration"
 
 func configCmd() *cobra.Command {
 	addDebugFlag, readDebugFlag := debugFlag()
@@ -17,8 +17,8 @@ func configCmd() *cobra.Command {
 		Use:     "config",
 		GroupID: "setup",
 		Args:    cobra.NoArgs,
-		Short:   configSummary,
-		Long:    long(configSummary),
+		Short:   configDesc,
+		Long:    long(configDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runConfig(readDebugFlag(cmd))
 		},

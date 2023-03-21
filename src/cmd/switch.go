@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const switchSummary = "Displays the local branches visually and allows switching between them"
+const switchDesc = "Displays the local branches visually and allows switching between them"
 
 func switchCmd() *cobra.Command {
 	addDebugFlag, readDebugFlag := debugFlag()
@@ -16,8 +16,8 @@ func switchCmd() *cobra.Command {
 		Use:     "switch",
 		GroupID: "basic",
 		Args:    cobra.NoArgs,
-		Short:   switchSummary,
-		Long:    long(switchSummary),
+		Short:   switchDesc,
+		Long:    long(switchDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runSwitch(readDebugFlag(cmd))
 		},

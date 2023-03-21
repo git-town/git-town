@@ -5,15 +5,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const setupConfigSummary = "Prompts to setup your Git Town configuration"
+const setupConfigDesc = "Prompts to setup your Git Town configuration"
 
 func setupConfigCommand() *cobra.Command {
 	addDebugFlag, readDebugFlag := debugFlag()
 	cmd := cobra.Command{
 		Use:   "setup",
 		Args:  cobra.NoArgs,
-		Short: setupConfigSummary,
-		Long:  long(setupConfigSummary),
+		Short: setupConfigDesc,
+		Long:  long(setupConfigDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runConfigSetup(readDebugFlag(cmd))
 		},

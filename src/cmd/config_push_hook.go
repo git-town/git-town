@@ -9,9 +9,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const configPushHookSummary = "Configures whether Git Town should run Git's pre-push hook."
+const pushHookDesc = "Configures whether Git Town should run Git's pre-push hook."
 
-const configPushHookDesc = `Configures whether Git Town should run Git's pre-push hook.
+const pushHookHelp = `Configures whether Git Town should run Git's pre-push hook.
 
 Enabled by default. When disabled, Git Town prevents Git's pre-push hook from running.`
 
@@ -21,8 +21,8 @@ func pushHookCommand() *cobra.Command {
 	cmd := cobra.Command{
 		Use:   "push-hook [--global] [(yes | no)]",
 		Args:  cobra.MaximumNArgs(1),
-		Short: configPushHookSummary,
-		Long:  long(configPushHookSummary, configPushHookDesc),
+		Short: pushHookDesc,
+		Long:  long(pushHookDesc, pushHookHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runConfigPushHook(args, readGlobalFlag(cmd), readDebugFlag(cmd))
 		},

@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const abortSummary = "Aborts the last run git-town command"
+const abortDesc = "Aborts the last run git-town command"
 
 func abortCmd() *cobra.Command {
 	addDebugFlag, readDebugFlag := debugFlag()
@@ -17,8 +17,8 @@ func abortCmd() *cobra.Command {
 		Use:     "abort",
 		GroupID: "errors",
 		Args:    cobra.NoArgs,
-		Short:   abortSummary,
-		Long:    long(abortSummary),
+		Short:   abortDesc,
+		Long:    long(abortDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return abort(readDebugFlag(cmd))
 		},

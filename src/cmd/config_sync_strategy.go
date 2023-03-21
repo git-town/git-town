@@ -7,9 +7,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const configSyncStrategySummary = "Displays or sets your sync strategy"
+const syncStrategyDesc = "Displays or sets your sync strategy"
 
-const configSyncStrategyDesc = `
+const syncStrategyHelp = `
 The sync strategy specifies what strategy to use
 when merging remote tracking branches into local feature branches.`
 
@@ -19,8 +19,8 @@ func syncStrategyCommand() *cobra.Command {
 	cmd := cobra.Command{
 		Use:   "sync-strategy [(merge | rebase)]",
 		Args:  cobra.MaximumNArgs(1),
-		Short: configSyncStrategySummary,
-		Long:  long(configSyncStrategySummary, configSyncStrategyDesc),
+		Short: syncStrategyDesc,
+		Long:  long(syncStrategyDesc, syncStrategyHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runConfigSyncStrategy(args, readGlobalFlag(cmd), readDebugFlag(cmd))
 		},

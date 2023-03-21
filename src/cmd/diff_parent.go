@@ -8,9 +8,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const diffParentSummary = "Shows the changes committed to a feature branch"
+const diffParentDesc = "Shows the changes committed to a feature branch"
 
-const diffParentDesc = `Shows the changes committed to a feature branch
+const diffParentHelp = `Shows the changes committed to a feature branch
 
 Works on either the current branch or the branch name provided.
 
@@ -22,8 +22,8 @@ func diffParentCommand() *cobra.Command {
 		Use:     "diff-parent [<branch>]",
 		GroupID: "lineage",
 		Args:    cobra.MaximumNArgs(1),
-		Short:   diffParentSummary,
-		Long:    long(diffParentSummary, diffParentDesc),
+		Short:   diffParentDesc,
+		Long:    long(diffParentDesc, diffParentHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runDiffParent(args, readDebugFlag(cmd))
 		},

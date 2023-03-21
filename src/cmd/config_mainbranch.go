@@ -8,9 +8,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const configMainbranchSummary = "Displays or sets your main development branch"
+const configMainbranchDesc = "Displays or sets your main development branch"
 
-const configMainbranchDesc = `
+const configMainbranchHelp = `
 The main branch is the Git branch from which new feature branches are cut.`
 
 func mainbranchConfigCmd() *cobra.Command {
@@ -18,8 +18,8 @@ func mainbranchConfigCmd() *cobra.Command {
 	cmd := cobra.Command{
 		Use:   "main-branch [<branch>]",
 		Args:  cobra.MaximumNArgs(1),
-		Short: configMainbranchSummary,
-		Long:  long(configMainbranchSummary, configMainbranchDesc),
+		Short: configMainbranchDesc,
+		Long:  long(configMainbranchDesc, configMainbranchHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return configureMainBranch(args, readDebugFlag(cmd))
 		},

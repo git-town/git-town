@@ -13,9 +13,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const newPullRequestSummary = "Creates a new pull request"
+const newPullRequestDesc = "Creates a new pull request"
 
-const newPullRequestDesc = `
+const newPullRequestHelp = `
 Syncs the current branch
 and opens a browser window to the new pull request page of your repository.
 
@@ -37,8 +37,8 @@ func newPullRequestCommand() *cobra.Command {
 		Use:     "new-pull-request",
 		GroupID: "basic",
 		Args:    cobra.NoArgs,
-		Short:   newPullRequestSummary,
-		Long:    long(newPullRequestSummary, fmt.Sprintf(newPullRequestDesc, config.CodeHostingDriverKey, config.CodeHostingOriginHostnameKey)),
+		Short:   newPullRequestDesc,
+		Long:    long(newPullRequestDesc, fmt.Sprintf(newPullRequestHelp, config.CodeHostingDriverKey, config.CodeHostingOriginHostnameKey)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runNewPullRequest(readDebugFlag(cmd))
 		},

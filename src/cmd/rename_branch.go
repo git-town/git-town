@@ -9,9 +9,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const renameBranchSummary = "Renames a branch both locally and remotely"
+const renameBranchDesc = "Renames a branch both locally and remotely"
 
-const renameBranchDesc = `Renames a branch both locally and remotely
+const renameBranchHelp = `Renames a branch both locally and remotely
 
 Renames the given branch in the local and origin repository.
 Aborts if the new branch name already exists or the tracking branch is out of sync.
@@ -36,8 +36,8 @@ func renameBranchCommand() *cobra.Command {
 	cmd := cobra.Command{
 		Use:   "rename-branch [<old_branch_name>] <new_branch_name>",
 		Args:  cobra.RangeArgs(1, 2),
-		Short: renameBranchSummary,
-		Long:  long(renameBranchSummary, renameBranchDesc),
+		Short: renameBranchDesc,
+		Long:  long(renameBranchDesc, renameBranchHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runRenameBranch(args, readForceFlag(cmd), readDebugFlag(cmd))
 		},

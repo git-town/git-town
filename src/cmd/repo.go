@@ -10,9 +10,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const repoSummary = "Opens the repository homepage"
+const repoDesc = "Opens the repository homepage"
 
-const repoDesc = `Opens the repository homepage
+const repoHelp = `Opens the repository homepage
 
 Supported for repositories hosted on GitHub, GitLab, Gitea, and Bitbucket.
 Derives the Git provider from the "origin" remote.
@@ -29,8 +29,8 @@ func repoCommand() *cobra.Command {
 	cmd := cobra.Command{
 		Use:   "repo",
 		Args:  cobra.NoArgs,
-		Short: repoSummary,
-		Long:  long(repoSummary, fmt.Sprintf(repoDesc, config.CodeHostingDriverKey, config.CodeHostingOriginHostnameKey)),
+		Short: repoDesc,
+		Long:  long(repoDesc, fmt.Sprintf(repoHelp, config.CodeHostingDriverKey, config.CodeHostingOriginHostnameKey)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runRepo(readDebugFlag(cmd))
 		},

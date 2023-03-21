@@ -7,9 +7,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const configPullBranchSummary = "Displays or sets your pull branch strategy"
+const pullBranchStrategyDesc = "Displays or sets your pull branch strategy"
 
-const configPullBranchDesc = `
+const pullBranchStrategyHelp = `
 The pull branch strategy specifies what strategy to use
 when merging remote tracking branches into local branches
 for the main branch and perennial branches.`
@@ -19,8 +19,8 @@ func pullBranchStrategyCommand() *cobra.Command {
 	cmd := cobra.Command{
 		Use:   "pull-branch-strategy [(rebase | merge)]",
 		Args:  cobra.MaximumNArgs(1),
-		Short: configPullBranchSummary,
-		Long:  long(configPullBranchSummary, configPullBranchDesc),
+		Short: pullBranchStrategyDesc,
+		Long:  long(pullBranchStrategyDesc, pullBranchStrategyHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runConfigurePullBranchStrategy(args, readDebugFlag(cmd))
 		},

@@ -8,9 +8,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const completionsSummary = "Generates auto-completion for bash, zsh, fish, or PowerShell"
+const completionsDesc = "Generates auto-completion for bash, zsh, fish, or PowerShell"
 
-const completionsDesc = `
+const completionsHelp = `
 When set up, "git-town <TAB>" will auto-complete Git Town subcommands.
 
 To load autocompletion for Bash, run this command:
@@ -48,8 +48,8 @@ func completionsCmd(rootCmd *cobra.Command) *cobra.Command {
 		GroupID:               "setup",
 		Args:                  cobra.ExactArgs(1),
 		DisableFlagsInUseLine: true,
-		Short:                 completionsSummary,
-		Long:                  long(completionsSummary, completionsDesc),
+		Short:                 completionsDesc,
+		Long:                  long(completionsDesc, completionsHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return completions(args, completionsNoDescFlag, rootCmd)
 		},

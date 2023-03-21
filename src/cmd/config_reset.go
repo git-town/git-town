@@ -4,15 +4,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const resetConfigSummary = "Resets your Git Town configuration"
+const resetConfigDesc = "Resets your Git Town configuration"
 
 func resetConfigCommand() *cobra.Command {
 	addDebugFlag, readDebugFlag := debugFlag()
 	cmd := cobra.Command{
 		Use:   "reset",
 		Args:  cobra.NoArgs,
-		Short: resetConfigSummary,
-		Long:  long(resetConfigSummary),
+		Short: resetConfigDesc,
+		Long:  long(resetConfigDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runConfigReset(readDebugFlag(cmd))
 		},

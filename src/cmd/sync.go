@@ -11,9 +11,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const syncSummary = "Updates the current branch with all relevant changes"
+const syncDesc = "Updates the current branch with all relevant changes"
 
-const syncDesc = `Updates the current branch with all relevant changes
+const syncHelp = `Updates the current branch with all relevant changes
 
 Synchronizes the current branch with the rest of the world.
 
@@ -39,8 +39,8 @@ func syncCmd() *cobra.Command {
 		Use:     "sync",
 		GroupID: "basic",
 		Args:    cobra.NoArgs,
-		Short:   syncSummary,
-		Long:    long(syncSummary, fmt.Sprintf(syncDesc, config.SyncUpstreamKey)),
+		Short:   syncDesc,
+		Long:    long(syncDesc, fmt.Sprintf(syncHelp, config.SyncUpstreamKey)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runSync(readAllFlag(cmd), readDryRunFlag(cmd), readDebugFlag(cmd))
 		},

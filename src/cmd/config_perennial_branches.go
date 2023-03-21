@@ -8,9 +8,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const displayPerennialSummary = "Displays your perennial branches"
+const perennialDesc = "Displays your perennial branches"
 
-const displayPerennialDesc = `
+const perennialHelp = `
 Perennial branches are long-lived branches.
 They cannot be shipped.`
 
@@ -21,8 +21,8 @@ func perennialBranchesCmd() *cobra.Command {
 	displayCmd := cobra.Command{
 		Use:   "perennial-branches",
 		Args:  cobra.NoArgs,
-		Short: displayPerennialSummary,
-		Long:  long(displayPerennialSummary, displayPerennialDesc),
+		Short: perennialDesc,
+		Long:  long(perennialDesc, perennialHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return displayPerennialBranches(readDisplayDebugFlag(cmd))
 		},

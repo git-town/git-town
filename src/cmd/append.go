@@ -8,9 +8,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const appendSummary = "Creates a new feature branch as a child of the current branch"
+const appendDesc = "Creates a new feature branch as a child of the current branch"
 
-const appendDesc = `
+const appendHelp = `
 Syncs the current branch,
 forks a new feature branch with the given name off the current branch,
 makes the new branch a child of the current branch,
@@ -26,8 +26,8 @@ func appendCmd() *cobra.Command {
 		Use:     "append <branch>",
 		GroupID: "lineage",
 		Args:    cobra.ExactArgs(1),
-		Short:   appendSummary,
-		Long:    long(appendSummary, appendDesc),
+		Short:   appendDesc,
+		Long:    long(appendDesc, appendHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runAppend(args[0], readDebugFlag(cmd))
 		},

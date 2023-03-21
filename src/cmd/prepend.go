@@ -10,9 +10,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const prependSummary = "Creates a new feature branch as the parent of the current branch"
+const prependDesc = "Creates a new feature branch as the parent of the current branch"
 
-const prependDesc = `
+const prependHelp = `
 Syncs the parent branch,
 cuts a new feature branch with the given name off the parent branch,
 makes the new branch the parent of the current branch,
@@ -29,8 +29,8 @@ func prependCommand() *cobra.Command {
 		Use:     "prepend <branch>",
 		GroupID: "lineage",
 		Args:    cobra.ExactArgs(1),
-		Short:   prependSummary,
-		Long:    long(prependSummary, prependDesc),
+		Short:   prependDesc,
+		Long:    long(prependDesc, prependHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runPrepend(args, readDebugFlag(cmd))
 		},
