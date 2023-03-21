@@ -29,7 +29,7 @@ push the new branch to the origin remote.`,
 	return &cmd
 }
 
-func runConfigurePushNewBranches(args []string, global, debug bool) error {
+func runConfigPushNewBranches(args []string, global, debug bool) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
