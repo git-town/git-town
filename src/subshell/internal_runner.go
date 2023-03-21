@@ -10,6 +10,8 @@ import (
 
 // InternalRunner runs internal shell commands in the current working directory.
 type InternalRunner struct {
+	// If set, runs the commands in the given directory.
+	// If not set, runs the commands in the current working directory.
 	Dir *string
 }
 
