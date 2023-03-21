@@ -104,7 +104,7 @@ func long(summary string, desc ...string) string {
 // in a way where Go's usage checker (which produces compilation errors for unused variables)
 // enforces that the flag is guaranteed to be defined and used.
 // This reduces programmer errors while defining and using command-line flags..
-func boolFlag(name, short string, desc string) (func(*cobra.Command), func(*cobra.Command) bool) {
+func boolFlag(name, short, desc string) (func(*cobra.Command), func(*cobra.Command) bool) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.PersistentFlags().BoolP(name, short, false, desc)
 	}
