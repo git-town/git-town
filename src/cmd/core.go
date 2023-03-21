@@ -37,11 +37,8 @@ func rootCmd() cobra.Command {
 		Use:           "git-town",
 		SilenceErrors: true,
 		SilenceUsage:  true,
-		Short:         "Generic, high-level Git workflow support",
-		Long: `Git Town makes software development teams who use Git even more productive and happy.
-
-It adds Git commands that support GitHub Flow, Git Flow, the Nvie model, GitLab Flow, and other workflows more directly,
-and it allows you to perform many common Git operations faster and easier.`,
+		Short:         rootDesc,
+		Long:          long(rootDesc, rootHelp),
 	}
 	rootCmd.AddGroup(&cobra.Group{
 		ID:    "basic",
