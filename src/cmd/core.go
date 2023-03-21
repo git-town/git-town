@@ -36,6 +36,7 @@ const rootDesc = "Generic, high-level Git workflow support"
 
 const rootHelp = `
 Git Town makes software development teams who use Git even more productive and happy.
+
 It adds Git commands that support GitHub Flow, Git Flow, the Nvie model, GitLab Flow, and other workflows more directly,
 and it allows you to perform many common Git operations faster and easier.`
 
