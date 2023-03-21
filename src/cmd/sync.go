@@ -13,8 +13,7 @@ import (
 
 const syncDesc = "Updates the current branch with all relevant changes"
 
-const syncHelp = `Updates the current branch with all relevant changes
-
+const syncHelp = `
 Synchronizes the current branch with the rest of the world.
 
 When run on a feature branch
