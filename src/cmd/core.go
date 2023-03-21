@@ -99,9 +99,9 @@ func long(summary string, desc ...string) string {
 // in a way where Go's usage checker (which produces compilation errors for unused variables)
 // enforces that the flag is guaranteed to be defined and used.
 // This reduces programmer errors while defining and using command-line flags..
-func boolFlag(name, short string, desc string) (func(*cobra.Command), func(*cobra.Command) bool) {
+func boolFlag(name, desc string) (func(*cobra.Command), func(*cobra.Command) bool) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.PersistentFlags().BoolP(name, short, false, desc)
+		cmd.PersistentFlags().Bool(name, false, desc)
 	}
 	readFlag := func(cmd *cobra.Command) bool {
 		value, err := cmd.Flags().GetBool(name)
@@ -117,9 +117,9 @@ func boolFlag(name, short string, desc string) (func(*cobra.Command), func(*cobr
 // in a way where Go's usage checker (which produces compilation errors for unused variables)
 // enforces that the flag is guaranteed to be defined and used.
 // This reduces programmer errors while defining and using command-line flags..
-func stringFlag(name, short, defaultValue, desc string) (func(*cobra.Command), func(*cobra.Command) string) {
+func stringFlag(name, defaultValue, desc string) (func(*cobra.Command), func(*cobra.Command) string) {
 	addFlag := func(cmd *cobra.Command) {
-		cmd.PersistentFlags().StringP(name, short, defaultValue, desc)
+		cmd.PersistentFlags().String(name, defaultValue, desc)
 	}
 	readFlag := func(cmd *cobra.Command) string {
 		value, err := cmd.Flags().GetString(name)
@@ -132,11 +132,11 @@ func stringFlag(name, short, defaultValue, desc string) (func(*cobra.Command), f
 }
 
 func debugFlag() (func(*cobra.Command), func(*cobra.Command) bool) {
-	return boolFlag("debug", "d", "Print all Git commands run under the hood")
+	return boolFlag("debug", "Print all Git commands run under the hood")
 }
 
 func dryRunFlag() (func(*cobra.Command), func(*cobra.Command) bool) {
-	return boolFlag("dry-run", "d", "Print but do not run the Git commands")
+	return boolFlag("dry-run", "Print but do not run the Git commands")
 }
 
 func LoadPublicRepo(args RepoArgs) (repo git.PublicRepo, exit bool, err error) { //nolint:nonamedreturns // so many return values require names

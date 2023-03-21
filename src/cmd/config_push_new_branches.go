@@ -17,7 +17,7 @@ push the new branch to the origin remote.`
 
 func pushNewBranchesCommand() *cobra.Command {
 	addDebugFlag, readDebugFlag := debugFlag()
-	addGlobalFlag, readGlobalFlag := boolFlag("global", "g", "If set, reads or updates the new branch push strategy for all repositories on this machine")
+	addGlobalFlag, readGlobalFlag := boolFlag("global", "If set, reads or updates the new branch push strategy for all repositories on this machine")
 	cmd := cobra.Command{
 		Use:   "push-new-branches [--global] [(yes | no)]",
 		Args:  cobra.MaximumNArgs(1),
