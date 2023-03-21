@@ -9,34 +9,34 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func hackCmd() *cobra.Command {
-	debug := false
-	promptForParentFlag := false
-	cmd := cobra.Command{
-		Use:     "hack <branch>",
-		GroupID: "basic",
-		Args:    cobra.ExactArgs(1),
-		Short:   "Creates a new feature branch off the main development branch",
-		Long: `Creates a new feature branch off the main development branch
+const hackSummary = "Creates a new feature branch off the main development branch"
 
+const hackDesc = `
 Syncs the main branch,
 forks a new feature branch with the given name off the main branch,
 pushes the new feature branch to origin
 (if and only if "push-new-branches" is true),
 and brings over all uncommitted changes to the new feature branch.
 
-See "sync" for information regarding upstream remotes.`,
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return runHack(args, promptForParentFlag, debug)
-		},
+See "sync" for information regarding upstream remotes.`
+
+func hackCmd() *cobra.Command {
+	promptForParentFlag := false
+	cmd := cobra.Command{
+		Use:     "hack <branch>",
+		GroupID: "basic",
+		Args:    cobra.ExactArgs(1),
+		Short:   hackSummary,
+		Long:    long(hackSummary, hackDesc),
+		RunE:    runHack,
 	}
 	cmd.Flags().BoolVarP(&promptForParentFlag, "prompt", "p", false, "Prompt for the parent branch")
 	return &cmd
 }
 
-func runHack(args []string, prompt, debug bool) error {
+func runHack(cmd *cobra.Command, args []string) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
-		debug:                 debug,
+		debug:                 readDebugFlag(cmd),
 		dryRun:                false,
 		handleUnfinishedState: true,
 		validateGitversion:    true,

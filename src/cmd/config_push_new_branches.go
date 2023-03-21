@@ -9,30 +9,30 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const configPushNewBranchesSummary = "Displays or changes whether new branches get pushed to origin"
+
+const configPushNewBranchesDesc = `
+If "push-new-branches" is true, the Git Town commands hack, append, and prepend
+push the new branch to the origin remote.`
+
 func pushNewBranchesCommand() *cobra.Command {
 	globalFlag := false
-	debug := false
 	cmd := cobra.Command{
 		Use:   "push-new-branches [--global] [(yes | no)]",
 		Args:  cobra.MaximumNArgs(1),
-		Short: "Displays or changes whether new branches get pushed to origin",
-		Long: `Displays or changes whether new branches get pushed to origin.
-
-If "push-new-branches" is true, the Git Town commands hack, append, and prepend
-push the new branch to the origin remote.`,
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return runConfigPushNewBranches(args, globalFlag, debug)
-		},
+		Short: configPushNewBranchesSummary,
+		Long:  long(configPushNewBranchesSummary, configPushNewBranchesDesc),
+		RunE:  runConfigPushNewBranches,
 	}
-	debugFlag(&cmd, &debug)
+	addDebugFlag(&cmd)
 	cmd.Flags().BoolVar(&globalFlag, "global", false, "Displays or sets your global new branch push flag")
 	return &cmd
 }
 
-func runConfigPushNewBranches(args []string, global, debug bool) error {
+func runConfigPushNewBranches(cmd *cobra.Command, args []string) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		omitBranchNames:       true,
-		debug:                 debug,
+		debug:                 readDebugFlag(cmd),
 		dryRun:                false,
 		handleUnfinishedState: false,
 		validateGitversion:    true,
@@ -41,10 +41,11 @@ func runConfigPushNewBranches(args []string, global, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
+	globalFlag := readBoolFlag(cmd, globalFlagName)
 	if len(args) > 0 {
-		return setPushNewBranches(args[0], global, &repo)
+		return setPushNewBranches(args[0], globalFlag, &repo)
 	}
-	return printPushNewBranches(global, &repo)
+	return printPushNewBranches(globalFlag, &repo)
 }
 
 func printPushNewBranches(globalFlag bool, repo *git.PublicRepo) error {

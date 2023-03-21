@@ -9,29 +9,29 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const configPushHookSummary = "Configures whether Git Town should run Git's pre-push hook."
+
+const configPushHookDesc = `Configures whether Git Town should run Git's pre-push hook.
+
+Enabled by default. When disabled, Git Town prevents Git's pre-push hook from running.`
+
 func pushHookCommand() *cobra.Command {
-	globalFlag := false
-	debug := false
 	cmd := cobra.Command{
 		Use:   "push-hook [--global] [(yes | no)]",
 		Args:  cobra.MaximumNArgs(1),
-		Short: "Configures whether Git Town should run Git's pre-push hook.",
-		Long: `Configures whether Git Town should run Git's pre-push hook.
-
-Enabled by default. When disabled, Git Town prevents Git's pre-push hook from running.`,
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return runConfigPushHook(args, globalFlag, debug)
-		},
+		Short: configPushHookSummary,
+		Long:  long(configPushHookSummary, configPushHookDesc),
+		RunE:  runConfigPushHook,
 	}
-	debugFlag(&cmd, &debug)
-	cmd.Flags().BoolVar(&globalFlag, "global", false, "Displays or sets your global push hook flag")
+	addDebugFlag(&cmd)
+	cmd.Flags().Bool(globalFlagName, false, "If set, reads or updates the push hook flag for all repos on this machine")
 	return &cmd
 }
 
-func runConfigPushHook(args []string, globalFlag bool, debug bool) error {
+func runConfigPushHook(cmd *cobra.Command, args []string) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		omitBranchNames:       true,
-		debug:                 debug,
+		debug:                 readDebugFlag(cmd),
 		dryRun:                false,
 		handleUnfinishedState: false,
 		validateGitversion:    true,
@@ -40,6 +40,7 @@ func runConfigPushHook(args []string, globalFlag bool, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
+	globalFlag := readBoolFlag(cmd, globalFlagName)
 	if len(args) > 0 {
 		return setPushHook(args[0], globalFlag, &repo)
 	}

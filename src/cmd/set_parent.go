@@ -7,19 +7,21 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const setParentSummary = "Prompts to set the parent branch for the current branch"
+
 func setParentCommand() *cobra.Command {
 	debug := false
 	cmd := cobra.Command{
 		Use:     "set-parent",
 		GroupID: "lineage",
 		Args:    cobra.NoArgs,
-		Short:   "Prompts to set the parent branch for the current branch",
-		Long:    `Prompts to set the parent branch for the current branch`,
+		Short:   setParentSummary,
+		Long:    long(setParentSummary),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runSetParent(debug)
 		},
 	}
-	debugFlag(&cmd, &debug)
+	debugFlagOld(&cmd, &debug)
 	return &cmd
 }
 

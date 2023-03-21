@@ -13,15 +13,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func newPullRequestCommand() *cobra.Command {
-	debug := false
-	cmd := cobra.Command{
-		Use:     "new-pull-request",
-		GroupID: "basic",
-		Args:    cobra.NoArgs,
-		Short:   "Creates a new pull request",
-		Long: fmt.Sprintf(`Creates a new pull request
+const newPullRequestSummary = "Creates a new pull request"
 
+const newPullRequestDesc = `
 Syncs the current branch
 and opens a browser window to the new pull request page of your repository.
 
@@ -35,12 +29,21 @@ When using self-hosted versions this command needs to be configured with
 where driver is "github", "gitlab", "gitea", or "bitbucket".
 When using SSH identities, this command needs to be configured with
 "git config %s <hostname>"
-where hostname matches what is in your ssh config file.`, config.CodeHostingDriverKey, config.CodeHostingOriginHostnameKey),
+where hostname matches what is in your ssh config file.`
+
+func newPullRequestCommand() *cobra.Command {
+	debug := false
+	cmd := cobra.Command{
+		Use:     "new-pull-request",
+		GroupID: "basic",
+		Args:    cobra.NoArgs,
+		Short:   newPullRequestSummary,
+		Long:    long(newPullRequestSummary, fmt.Sprintf(newPullRequestDesc, config.CodeHostingDriverKey, config.CodeHostingOriginHostnameKey)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runNewPullRequest(debug)
 		},
 	}
-	debugFlag(&cmd, &debug)
+	debugFlagOld(&cmd, &debug)
 	return &cmd
 }
 

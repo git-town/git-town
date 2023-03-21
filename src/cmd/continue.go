@@ -9,24 +9,24 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const continueSummary = "Restarts the last run git-town command after having resolved conflicts"
+
 func continueCmd() *cobra.Command {
-	debug := false
 	cmd := cobra.Command{
 		Use:     "continue",
 		GroupID: "errors",
 		Args:    cobra.NoArgs,
-		Short:   "Restarts the last run git-town command after having resolved conflicts",
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return runContinue(debug)
-		},
+		Short:   continueSummary,
+		Long:    long(continueSummary),
+		RunE:    runContinue,
 	}
-	debugFlag(&cmd, &debug)
+	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func runContinue(debug bool) error {
+func runContinue(cmd *cobra.Command, args []string) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
-		debug:                 debug,
+		debug:                 readDebugFlag(cmd),
 		dryRun:                false,
 		handleUnfinishedState: false,
 		validateGitversion:    true,

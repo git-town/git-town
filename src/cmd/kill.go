@@ -10,21 +10,25 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const killSummary = "Removes an obsolete feature branch"
+
+const killDesc = `Removes an obsolete feature branch
+
+Deletes the current or provided branch from the local and origin repositories.
+Does not delete perennial branches nor the main branch.`
+
 func killCommand() *cobra.Command {
 	debug := false
 	cmd := cobra.Command{
 		Use:   "kill [<branch>]",
 		Args:  cobra.MaximumNArgs(1),
-		Short: "Removes an obsolete feature branch",
-		Long: `Removes an obsolete feature branch
-
-Deletes the current or provided branch from the local and origin repositories.
-Does not delete perennial branches nor the main branch.`,
+		Short: killSummary,
+		Long:  long(killSummary, killDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runKill(args, debug)
 		},
 	}
-	debugFlag(&cmd, &debug)
+	debugFlagOld(&cmd, &debug)
 	return &cmd
 }
 

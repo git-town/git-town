@@ -7,29 +7,30 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func pullBranchStrategyCommand() *cobra.Command {
-	debug := false
-	cmd := &cobra.Command{
-		Use:   "pull-branch-strategy [(rebase | merge)]",
-		Args:  cobra.MaximumNArgs(1),
-		Short: "Displays or sets your pull branch strategy",
-		Long: `Displays or sets your pull branch strategy
+const configPullBranchSummary = "Displays or sets your pull branch strategy"
 
+const configPullBranchDesc = `
 The pull branch strategy specifies what strategy to use
 when merging remote tracking branches into local branches
-for the main branch and perennial branches.`,
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return runConfigurePullBranchStrategy(args, debug)
-		},
+for the main branch and perennial branches.`
+
+func pullBranchStrategyCommand() *cobra.Command {
+	debug := false
+	cmd := cobra.Command{
+		Use:   "pull-branch-strategy [(rebase | merge)]",
+		Args:  cobra.MaximumNArgs(1),
+		Short: configPullBranchSummary,
+		Long:  long(configPullBranchSummary, configPullBranchDesc),
+		RunE:  runConfigurePullBranchStrategy,
 	}
-	debugFlag(cmd, &debug)
-	return cmd
+	debugFlagOld(&cmd, &debug)
+	return &cmd
 }
 
-func runConfigurePullBranchStrategy(args []string, debug bool) error {
+func runConfigurePullBranchStrategy(cmd *cobra.Command, args []string) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		omitBranchNames:       true,
-		debug:                 debug,
+		debug:                 readDebugFlag(cmd),
 		dryRun:                false,
 		handleUnfinishedState: false,
 		validateGitversion:    true,

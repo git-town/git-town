@@ -8,29 +8,30 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const diffParentSummary = "Shows the changes committed to a feature branch"
+
+const diffParentDesc = `Shows the changes committed to a feature branch
+
+Works on either the current branch or the branch name provided.
+
+Exits with error code 1 if the given branch is a perennial branch or the main branch.`
+
 func diffParentCommand() *cobra.Command {
-	debug := false
 	cmd := cobra.Command{
 		Use:     "diff-parent [<branch>]",
 		GroupID: "lineage",
 		Args:    cobra.MaximumNArgs(1),
-		Short:   "Shows the changes committed to a feature branch",
-		Long: `Shows the changes committed to a feature branch
-
-Works on either the current branch or the branch name provided.
-
-Exits with error code 1 if the given branch is a perennial branch or the main branch.`,
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return runDiffParent(args, debug)
-		},
+		Short:   diffParentSummary,
+		Long:    long(diffParentSummary, diffParentDesc),
+		RunE:    runDiffParent,
 	}
-	debugFlag(&cmd, &debug)
+	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func runDiffParent(args []string, debug bool) error {
+func runDiffParent(cmd *cobra.Command, args []string) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
-		debug:                 debug,
+		debug:                 readDebugFlag(cmd),
 		dryRun:                false,
 		handleUnfinishedState: true,
 		validateGitversion:    true,

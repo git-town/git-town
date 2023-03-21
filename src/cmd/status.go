@@ -11,13 +11,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const statusSummary = "Displays or resets the current suspended Git Town command"
+
 func statusCommand() *cobra.Command {
 	debug := false
 	cmd := cobra.Command{
 		Use:     "status",
 		GroupID: "errors",
 		Args:    cobra.NoArgs,
-		Short:   "Displays or resets the current suspended Git Town command",
+		Short:   statusSummary,
+		Long:    long(statusSummary),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runStatus(debug)
 		},

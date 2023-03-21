@@ -21,6 +21,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v7/src/cache"
 	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/git"
@@ -62,7 +64,7 @@ and it allows you to perform many common Git operations faster and easier.`,
 func Execute() error {
 	rootCmd := rootCmd()
 	rootCmd.AddCommand(abortCmd())
-	rootCmd.AddCommand(aliasCommand())
+	rootCmd.AddCommand(aliasesCommand())
 	rootCmd.AddCommand(appendCmd())
 	rootCmd.AddCommand(completionsCmd(&rootCmd))
 	rootCmd.AddCommand(configCmd())
@@ -86,9 +88,39 @@ func Execute() error {
 	return rootCmd.Execute()
 }
 
-func debugFlag(cmd *cobra.Command, flag *bool) {
+func debugFlagOld(cmd *cobra.Command, flag *bool) {
 	cmd.PersistentFlags().BoolVar(flag, "debug", false, "Print all Git commands run under the hood")
 }
+
+func addDebugFlag(cmd *cobra.Command) {
+	cmd.PersistentFlags().BoolP("debug", "d", false, "Print all Git commands run under the hood")
+}
+
+func long(summary string, desc ...string) string {
+	if len(desc) == 1 {
+		return summary + ".\n" + desc[0]
+	} else {
+		return summary + "."
+	}
+}
+
+func readDebugFlag(cmd *cobra.Command) bool {
+	value, err := cmd.Flags().GetBool("debug")
+	if err != nil {
+		panic(fmt.Sprintf("command %q does not have a --debug flag", cmd.Name()))
+	}
+	return value
+}
+
+func readBoolFlag(cmd *cobra.Command, name string) bool {
+	value, err := cmd.Flags().GetBool(name)
+	if err != nil {
+		panic(fmt.Sprintf("command %q does not have a %q flag", cmd.Name(), name))
+	}
+	return value
+}
+
+const globalFlagName = "global"
 
 func dryRunFlag(cmd *cobra.Command, flag *bool) {
 	cmd.PersistentFlags().BoolVar(flag, "dry-run", false, "Print but do not run the Git commands")

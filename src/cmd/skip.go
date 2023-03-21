@@ -7,18 +7,21 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const skipSummary = "Restarts the last run git-town command by skipping the current branch"
+
 func skipCmd() *cobra.Command {
 	debug := false
 	cmd := cobra.Command{
 		Use:     "skip",
 		GroupID: "errors",
 		Args:    cobra.NoArgs,
-		Short:   "Restarts the last run git-town command by skipping the current branch",
+		Short:   skipSummary,
+		Long:    long(skipSummary),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runSkip(debug)
 		},
 	}
-	debugFlag(&cmd, &debug)
+	debugFlagOld(&cmd, &debug)
 	return &cmd
 }
 

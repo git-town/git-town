@@ -9,18 +9,18 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const configSummary = "Displays your Git Town configuration"
+
 func configCmd() *cobra.Command {
-	debug := false
 	configCmd := cobra.Command{
 		Use:     "config",
 		GroupID: "setup",
 		Args:    cobra.NoArgs,
-		Short:   "Displays your Git Town configuration",
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return runConfig(debug)
-		},
+		Short:   configSummary,
+		Long:    long(configSummary),
+		RunE:    runConfig,
 	}
-	debugFlag(&configCmd, &debug)
+	addDebugFlag(&configCmd)
 	configCmd.AddCommand(mainbranchConfigCmd())
 	configCmd.AddCommand(offlineCmd())
 	configCmd.AddCommand(perennialBranchesCmd())
@@ -33,10 +33,10 @@ func configCmd() *cobra.Command {
 	return &configCmd
 }
 
-func runConfig(debug bool) error {
+func runConfig(cmd *cobra.Command, args []string) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		omitBranchNames:       true,
-		debug:                 debug,
+		debug:                 readDebugFlag(cmd),
 		dryRun:                false,
 		handleUnfinishedState: false,
 		validateGitversion:    true,

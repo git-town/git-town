@@ -10,13 +10,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func repoCommand() *cobra.Command {
-	debug := false
-	cmd := cobra.Command{
-		Use:   "repo",
-		Args:  cobra.NoArgs,
-		Short: "Opens the repository homepage",
-		Long: fmt.Sprintf(`Opens the repository homepage
+const repoSummary = "Opens the repository homepage"
+
+const repoDesc = `Opens the repository homepage
 
 Supported for repositories hosted on GitHub, GitLab, Gitea, and Bitbucket.
 Derives the Git provider from the "origin" remote.
@@ -26,12 +22,20 @@ where DRIVER is "github", "gitlab", "gitea", or "bitbucket".
 
 When using SSH identities, run
 "git config %s <HOSTNAME>"
-where HOSTNAME matches what is in your ssh config file.`, config.CodeHostingDriverKey, config.CodeHostingOriginHostnameKey),
+where HOSTNAME matches what is in your ssh config file.`
+
+func repoCommand() *cobra.Command {
+	debug := false
+	cmd := cobra.Command{
+		Use:   "repo",
+		Args:  cobra.NoArgs,
+		Short: repoSummary,
+		Long:  long(repoSummary, fmt.Sprintf(repoDesc, config.CodeHostingDriverKey, config.CodeHostingOriginHostnameKey)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runRepo(debug)
 		},
 	}
-	debugFlag(&cmd, &debug)
+	debugFlagOld(&cmd, &debug)
 	return &cmd
 }
 

@@ -8,15 +8,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func appendCmd() *cobra.Command {
-	debug := false
-	cmd := &cobra.Command{
-		Use:     "append <branch>",
-		GroupID: "lineage",
-		Args:    cobra.ExactArgs(1),
-		Short:   "Creates a new feature branch as a child of the current branch",
-		Long: `Creates a new feature branch as a direct child of the current branch.
+const appendSummary = "Creates a new feature branch as a child of the current branch"
 
+const appendDesc = `
 Syncs the current branch,
 forks a new feature branch with the given name off the current branch,
 makes the new branch a child of the current branch,
@@ -24,18 +18,24 @@ pushes the new feature branch to the origin repository
 (if and only if "push-new-branches" is true),
 and brings over all uncommitted changes to the new feature branch.
 
-See "sync" for information regarding upstream remotes.`,
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return runAppend(args, debug)
-		},
+See "sync" for information regarding upstream remotes.`
+
+func appendCmd() *cobra.Command {
+	cmd := cobra.Command{
+		Use:     "append <branch>",
+		GroupID: "lineage",
+		Args:    cobra.ExactArgs(1),
+		Short:   appendSummary,
+		Long:    long(appendSummary, appendDesc),
+		RunE:    runAppend,
 	}
-	debugFlag(cmd, &debug)
-	return cmd
+	addDebugFlag(&cmd)
+	return &cmd
 }
 
-func runAppend(args []string, debug bool) error {
+func runAppend(cmd *cobra.Command, args []string) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
-		debug:                 debug,
+		debug:                 readDebugFlag(cmd),
 		dryRun:                false,
 		handleUnfinishedState: true,
 		validateGitversion:    true,

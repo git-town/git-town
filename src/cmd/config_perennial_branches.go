@@ -8,39 +8,38 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const configPerennialSummary = "Displays your perennial branches"
+
+const configPerennialDesc = `
+Perennial branches are long-lived branches.
+They cannot be shipped.`
+
 func perennialBranchesCmd() *cobra.Command {
 	debug := false
 	displayCmd := cobra.Command{
 		Use:   "perennial-branches",
 		Args:  cobra.NoArgs,
-		Short: "Displays your perennial branches",
-		Long: `Displays your perennial branches
-
-Perennial branches are long-lived branches.
-They cannot be shipped.`,
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return displayPerennialBranches(debug)
-		},
+		Short: configPerennialSummary,
+		Long:  long(configPerennialSummary, configPerennialDesc),
+		RunE:  displayPerennialBranches,
 	}
-	debugFlag(&displayCmd, &debug)
+	debugFlagOld(&displayCmd, &debug)
 	updateCmd := cobra.Command{
 		Use:   "update",
 		Short: "Prompts to update your perennial branches",
 		Long:  `Prompts to update your perennial branches`,
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return updatePerennialBranches(debug)
-		},
-		Args: cobra.NoArgs,
+		RunE:  updatePerennialBranches,
+		Args:  cobra.NoArgs,
 	}
-	debugFlag(&updateCmd, &debug)
+	debugFlagOld(&updateCmd, &debug)
 	displayCmd.AddCommand(&updateCmd)
 	return &displayCmd
 }
 
-func displayPerennialBranches(debug bool) error {
+func displayPerennialBranches(cmd *cobra.Command, args []string) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		omitBranchNames:       true,
-		debug:                 debug,
+		debug:                 readDebugFlag(cmd),
 		dryRun:                false,
 		handleUnfinishedState: false,
 		validateGitversion:    true,
@@ -53,10 +52,10 @@ func displayPerennialBranches(debug bool) error {
 	return nil
 }
 
-func updatePerennialBranches(debug bool) error {
+func updatePerennialBranches(cmd *cobra.Command, args []string) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		omitBranchNames:       true,
-		debug:                 debug,
+		debug:                 readDebugFlag(cmd),
 		dryRun:                false,
 		handleUnfinishedState: false,
 		validateGitversion:    true,

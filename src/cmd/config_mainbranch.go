@@ -8,27 +8,28 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const configMainbranchSummary = "Displays or sets your main development branch"
+
+const configMainbranchDesc = `
+The main branch is the Git branch from which new feature branches are cut.`
+
 func mainbranchConfigCmd() *cobra.Command {
 	debug := false
-	cmd := &cobra.Command{
+	cmd := cobra.Command{
 		Use:   "main-branch [<branch>]",
 		Args:  cobra.MaximumNArgs(1),
-		Short: "Displays or sets your main development branch",
-		Long: `Displays or sets your main development branch
-
-The main branch is the Git branch from which new feature branches are cut.`,
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return runConfigureMainBranch(args, debug)
-		},
+		Short: configMainbranchSummary,
+		Long:  long(configMainbranchSummary, configMainbranchDesc),
+		RunE:  configureMainBranch,
 	}
-	debugFlag(cmd, &debug)
-	return cmd
+	debugFlagOld(&cmd, &debug)
+	return &cmd
 }
 
-func runConfigureMainBranch(args []string, debug bool) error {
+func configureMainBranch(cmd *cobra.Command, args []string) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		omitBranchNames:       true,
-		debug:                 debug,
+		debug:                 readDebugFlag(cmd),
 		dryRun:                false,
 		handleUnfinishedState: false,
 		validateGitversion:    true,

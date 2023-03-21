@@ -7,18 +7,21 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const undoSummary = "Undoes the last run git-town command"
+
 func undoCmd() *cobra.Command {
 	debug := false
 	cmd := cobra.Command{
 		Use:     "undo",
 		GroupID: "errors",
 		Args:    cobra.NoArgs,
-		Short:   "Undoes the last run git-town command",
+		Short:   undoSummary,
+		Long:    long(undoSummary),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runUndo(debug)
 		},
 	}
-	debugFlag(&cmd, &debug)
+	debugFlagOld(&cmd, &debug)
 	return &cmd
 }
 

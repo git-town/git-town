@@ -11,16 +11,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func syncCmd() *cobra.Command {
-	debug := false
-	dryRun := false
-	allFlag := false
-	cmd := cobra.Command{
-		Use:     "sync",
-		GroupID: "basic",
-		Args:    cobra.NoArgs,
-		Short:   "Updates the current branch with all relevant changes",
-		Long: fmt.Sprintf(`Updates the current branch with all relevant changes
+const syncSummary = "Updates the current branch with all relevant changes"
+
+const syncDesc = `Updates the current branch with all relevant changes
 
 Synchronizes the current branch with the rest of the world.
 
@@ -36,13 +29,24 @@ When run on the main branch or a perennial branch
 
 If the repository contains an "upstream" remote,
 syncs the main branch with its upstream counterpart.
-You can disable this by running "git config %s false".`, config.SyncUpstreamKey),
+You can disable this by running "git config %s false".`
+
+func syncCmd() *cobra.Command {
+	debug := false
+	dryRun := false
+	allFlag := false
+	cmd := cobra.Command{
+		Use:     "sync",
+		GroupID: "basic",
+		Args:    cobra.NoArgs,
+		Short:   syncSummary,
+		Long:    long(syncSummary, fmt.Sprintf(syncDesc, config.SyncUpstreamKey)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runSync(allFlag, dryRun, debug)
 		},
 	}
 	cmd.Flags().BoolVar(&allFlag, "all", false, "Sync all local branches")
-	debugFlag(&cmd, &debug)
+	debugFlagOld(&cmd, &debug)
 	dryRunFlag(&cmd, &dryRun)
 	return &cmd
 }

@@ -9,32 +9,32 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func aliasCommand() *cobra.Command {
-	debug := false
-	cmd := cobra.Command{
-		Use:     "aliases (add | remove)",
-		GroupID: "setup",
-		Args:    cobra.ExactArgs(1),
-		Short:   "Adds or removes default global aliases",
-		Long: `Adds or removes default global aliases
+const aliasesSummary = "Adds or removes default global aliases"
 
+const aliasesDesc = `
 Global aliases make Git Town commands feel like native Git commands.
 When enabled, you can run "git hack" instead of "git town hack".
 
 Does not overwrite existing aliases.
 
-This can conflict with other tools that also define Git aliases.`,
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return runAliases(args, debug)
-		},
+This can conflict with other tools that also define Git aliases.`
+
+func aliasesCommand() *cobra.Command {
+	cmd := cobra.Command{
+		Use:     "aliases (add | remove)",
+		GroupID: "setup",
+		Args:    cobra.ExactArgs(1),
+		Short:   aliasesSummary,
+		Long:    long(aliasesSummary, aliasesDesc),
+		RunE:    aliases,
 	}
-	debugFlag(&cmd, &debug)
+	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func runAliases(args []string, debug bool) error {
+func aliases(cmd *cobra.Command, args []string) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
-		debug:                 debug,
+		debug:                 readDebugFlag(cmd),
 		dryRun:                false,
 		omitBranchNames:       true,
 		handleUnfinishedState: false,

@@ -9,27 +9,28 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const configOfflineSummary = "Displays or sets offline mode"
+
+const configOfflineDesc = `
+Git Town avoids network operations in offline mode.`
+
 func offlineCmd() *cobra.Command {
 	debug := false
-	cmd := &cobra.Command{
+	cmd := cobra.Command{
 		Use:   "offline [(yes | no)]",
 		Args:  cobra.MaximumNArgs(1),
-		Short: "Displays or sets offline mode",
-		Long: `Displays or sets offline mode
-
-Git Town avoids network operations in offline mode.`,
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return runConfigureOffline(args, debug)
-		},
+		Short: configOfflineSummary,
+		Long:  long(configOfflineSummary, configOfflineDesc),
+		RunE:  configureOffline,
 	}
-	debugFlag(cmd, &debug)
-	return cmd
+	debugFlagOld(&cmd, &debug)
+	return &cmd
 }
 
-func runConfigureOffline(args []string, debug bool) error {
+func configureOffline(cmd *cobra.Command, args []string) error {
 	repo, exit, err := LoadPublicRepo(RepoArgs{
 		omitBranchNames:       true,
-		debug:                 debug,
+		debug:                 readDebugFlag(cmd),
 		dryRun:                false,
 		handleUnfinishedState: false,
 		validateGitversion:    true,

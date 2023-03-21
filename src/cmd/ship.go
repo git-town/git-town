@@ -14,15 +14,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func shipCmd() *cobra.Command {
-	debug := false
-	commitMessage := ""
-	cmd := cobra.Command{
-		Use:     "ship",
-		GroupID: "basic",
-		Args:    cobra.MaximumNArgs(1),
-		Short:   "Deliver a completed feature branch",
-		Long: fmt.Sprintf(`Deliver a completed feature branch
+const shipSummary = "Deliver a completed feature branch"
+
+const shipDesc = `Deliver a completed feature branch
 
 Squash-merges the current branch, or <branch_name> if given,
 into the main branch, resulting in linear history on the main branch.
@@ -47,13 +41,23 @@ It will also update the base branch for any pull requests against that branch.
 If your origin server deletes shipped branches, for example
 GitHub's feature to automatically delete head branches,
 run "git config %s false"
-and Git Town will leave it up to your origin server to delete the remote branch.`, config.GithubTokenKey, config.ShipDeleteRemoteBranchKey),
+and Git Town will leave it up to your origin server to delete the remote branch.`
+
+func shipCmd() *cobra.Command {
+	debug := false
+	commitMessage := ""
+	cmd := cobra.Command{
+		Use:     "ship",
+		GroupID: "basic",
+		Args:    cobra.MaximumNArgs(1),
+		Short:   shipSummary,
+		Long:    long(shipSummary, fmt.Sprintf(shipDesc, config.GithubTokenKey, config.ShipDeleteRemoteBranchKey)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runShip(args, commitMessage, debug)
 		},
 	}
 	cmd.Flags().StringVarP(&commitMessage, "message", "m", "", "Specify the commit message for the squash commit")
-	debugFlag(&cmd, &debug)
+	debugFlagOld(&cmd, &debug)
 	return &cmd
 }
 

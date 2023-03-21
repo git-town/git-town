@@ -9,14 +9,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func renameBranchCommand() *cobra.Command {
-	debug := false
-	forceFlag := false
-	cmd := cobra.Command{
-		Use:   "rename-branch [<old_branch_name>] <new_branch_name>",
-		Args:  cobra.RangeArgs(1, 2),
-		Short: "Renames a branch both locally and remotely",
-		Long: `Renames a branch both locally and remotely
+const renameBranchSummary = "Renames a branch both locally and remotely"
+
+const renameBranchDesc = `Renames a branch both locally and remotely
 
 Renames the given branch in the local and origin repository.
 Aborts if the new branch name already exists or the tracking branch is out of sync.
@@ -33,13 +28,22 @@ When there is a tracking branch
 
 When run on a perennial branch
 - confirm with the "-f" option
-- registers the new perennial branch name in the local Git Town configuration`,
+- registers the new perennial branch name in the local Git Town configuration`
+
+func renameBranchCommand() *cobra.Command {
+	debug := false
+	forceFlag := false
+	cmd := cobra.Command{
+		Use:   "rename-branch [<old_branch_name>] <new_branch_name>",
+		Args:  cobra.RangeArgs(1, 2),
+		Short: renameBranchSummary,
+		Long:  long(renameBranchSummary, renameBranchDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runRenameBranch(args, forceFlag, debug)
 		},
 	}
 	cmd.Flags().BoolVar(&forceFlag, "force", false, "Force rename of perennial branch")
-	debugFlag(&cmd, &debug)
+	debugFlagOld(&cmd, &debug)
 	return &cmd
 }
 
