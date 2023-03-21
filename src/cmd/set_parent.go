@@ -46,6 +46,7 @@ func setParent(debug bool) error {
 	}
 	existingParent := repo.Config.ParentBranch(currentBranch)
 	if existingParent != "" {
+		// TODO: delete the old parent only when the user has entered a new parent
 		err = repo.Config.RemoveParent(currentBranch)
 		if err != nil {
 			return err
