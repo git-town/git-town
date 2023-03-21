@@ -22,7 +22,7 @@ func perennialBranchesCmd(repo *git.ProdRepo) *cobra.Command {
 		Args:    cobra.NoArgs,
 		PreRunE: ensure(repo, isRepository),
 		Short:   perennialDesc,
-		Long:    perennialHelp,
+		Long:    long(perennialDesc, perennialHelp),
 		Run: func(cmd *cobra.Command, args []string) {
 			cli.Println(cli.StringSetting(strings.Join(repo.Config.PerennialBranches(), "\n")))
 		},

@@ -21,7 +21,7 @@ func syncStrategyCommand(repo *git.ProdRepo) *cobra.Command {
 		Args:    cobra.MaximumNArgs(1),
 		PreRunE: ensure(repo, isRepository),
 		Short:   syncStrategyDesc,
-		Long:    syncStrategyHelp,
+		Long:    long(syncStrategyDesc, syncStrategyHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {
 				return setSyncStrategy(globalFlag, repo, args[0])

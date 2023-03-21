@@ -29,7 +29,7 @@ func hackCmd(repo *git.ProdRepo) *cobra.Command {
 		Args:    cobra.ExactArgs(1),
 		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
 		Short:   hackDesc,
-		Long:    hackHelp,
+		Long:    long(hackDesc, hackHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			config, err := determineHackConfig(args, promptForParentFlag, repo)
 			if err != nil {

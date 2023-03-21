@@ -23,7 +23,7 @@ func diffParentCommand(repo *git.ProdRepo) *cobra.Command {
 		Args:    cobra.MaximumNArgs(1),
 		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
 		Short:   diffParentDesc,
-		Long:    diffParentHelp,
+		Long:    long(diffParentDesc, diffParentHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			config, err := determineDiffParentConfig(args, repo)
 			if err != nil {
