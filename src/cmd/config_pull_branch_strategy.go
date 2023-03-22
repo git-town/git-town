@@ -22,14 +22,14 @@ func pullBranchStrategyCommand() *cobra.Command {
 		Short: pullBranchDesc,
 		Long:  long(pullBranchDesc, pullBranchHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runConfigurePullBranchStrategy(args, readDebugFlag(cmd))
+			return pullBranchStrategy(args, readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func runConfigurePullBranchStrategy(args []string, debug bool) error {
+func pullBranchStrategy(args []string, debug bool) error {
 	repo, exit, err := LoadProdRepo(RepoArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
