@@ -16,11 +16,11 @@ type RepoConfig struct {
 	RootDirCache       *cache.String  // caches the base of the Git directory
 }
 
-func NewRepoConfig(runner InternalRunner, dryRun bool) RepoConfig {
+func NewRepoConfig(runner InternalRunner) RepoConfig {
 	return RepoConfig{
 		GitTown:            config.NewGitTown(runner),
 		CurrentBranchCache: &cache.String{},
-		DryRun:             dryRun,
+		DryRun:             false, // to bootstrap this, DryRun always gets initialized as false and later enabled if needed
 		IsRepoCache:        &cache.Bool{},
 		RemoteBranchCache:  &cache.Strings{},
 		RemotesCache:       &cache.Strings{},
