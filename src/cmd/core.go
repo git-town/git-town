@@ -156,7 +156,7 @@ func dryRunFlag() (addFlagFunc, readBoolFlagFunc) {
 
 func LoadPublicThing(args RepoArgs) (publicThing git.ProdRepo, exit bool, err error) { //nolint:nonamedreturns // so many return values require names
 	internalRunner := git.NewInternalRunner(nil, args.debug)
-	config := git.NewRepoConfig(internalRunner, args.dryRun)
+	config := git.NewRepoConfig(internalRunner, false)
 	internalCommands := git.InternalCommands{
 		InternalRunner: internalRunner,
 		Config:         &config,
