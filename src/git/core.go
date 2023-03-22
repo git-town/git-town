@@ -6,8 +6,8 @@ import (
 	"github.com/git-town/git-town/v7/src/subshell"
 )
 
-func NewInternalRunner(debug bool) InternalRunner {
-	internalRunnerInstance := subshell.InternalRunner{Dir: nil}
+func NewInternalRunner(dir *string, debug bool) InternalRunner {
+	internalRunnerInstance := subshell.InternalRunner{Dir: dir}
 	if debug {
 		return subshell.InternalDebuggingRunner{InternalRunner: internalRunnerInstance}
 	}

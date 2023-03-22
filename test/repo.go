@@ -65,7 +65,7 @@ func newRepo(workingDir, homeDir, binDir string) Repo {
 		RootDirCache:       &cache.String{},
 	}
 	internalCommands := git.InternalCommands{
-		InternalRunner: git.NewInternalRunner(false),
+		InternalRunner: git.NewInternalRunner(&workingDir, false),
 		Config:         &config,
 	}
 	testCommands := testCommands{
