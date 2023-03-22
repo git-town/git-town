@@ -6,9 +6,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// stringFlag provides access to Cobra command-line flags containing strings
-// in a way where Go's usage checker (which produces compilation errors for unused variables)
-// enforces that the programmer didn't forget to define or read the flag.
+// Bool provides mistake-safe access to string Cobra command-line flags.
 func String(name, short, defaultValue, desc string) (AddFunc, readStringFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.PersistentFlags().StringP(name, short, defaultValue, desc)
