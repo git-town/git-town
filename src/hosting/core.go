@@ -108,8 +108,6 @@ type gitCommands interface {
 type logFn func(string, ...interface{})
 
 // NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
-//
-//nolint:ireturn,nolintlint
 func NewConnector(config gitTownConfig, git gitCommands, log logFn) (Connector, error) {
 	githubConnector, err := NewGithubConnector(config, log)
 	if err != nil {
