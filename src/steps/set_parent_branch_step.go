@@ -14,7 +14,7 @@ type SetParentStep struct {
 	previousParent string
 }
 
-func (step *SetParentStep) CreateUndoStep(repo *git.InternalCommands) (Step, error) {
+func (step *SetParentStep) CreateUndoStep(repo *git.BackendCommands) (Step, error) {
 	if step.previousParent == "" {
 		return &DeleteParentBranchStep{Branch: step.Branch}, nil
 	}

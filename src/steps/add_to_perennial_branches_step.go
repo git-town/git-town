@@ -11,7 +11,7 @@ type AddToPerennialBranchesStep struct {
 	Branch string
 }
 
-func (step *AddToPerennialBranchesStep) CreateUndoStep(repo *git.InternalCommands) (Step, error) {
+func (step *AddToPerennialBranchesStep) CreateUndoStep(repo *git.BackendCommands) (Step, error) {
 	return &RemoveFromPerennialBranchesStep{Branch: step.Branch}, nil
 }
 

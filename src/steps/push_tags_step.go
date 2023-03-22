@@ -11,5 +11,5 @@ type PushTagsStep struct {
 }
 
 func (step *PushTagsStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
-	return repo.Public.PushTags()
+	return repo.Frontend.PushTags()
 }

@@ -15,19 +15,19 @@ type DeleteLocalBranchStep struct {
 	branchSha string
 }
 
-func (step *DeleteLocalBranchStep) CreateUndoStep(repo *git.InternalCommands) (Step, error) {
+func (step *DeleteLocalBranchStep) CreateUndoStep(repo *git.BackendCommands) (Step, error) {
 	return &CreateBranchStep{Branch: step.Branch, StartingPoint: step.branchSha}, nil
 }
 
 func (step *DeleteLocalBranchStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
 	var err error
-	step.branchSha, err = repo.Internal.ShaForBranch(step.Branch)
+	step.branchSha, err = repo.Backend.ShaForBranch(step.Branch)
 	if err != nil {
 		return err
 	}
-	hasUnmergedCommits, err := repo.Internal.BranchHasUnmergedCommits(step.Branch, step.Parent)
+	hasUnmergedCommits, err := repo.Backend.BranchHasUnmergedCommits(step.Branch, step.Parent)
 	if err != nil {
 		return err
 	}
-	return repo.Public.DeleteLocalBranch(step.Branch, step.Force || hasUnmergedCommits)
+	return repo.Frontend.DeleteLocalBranch(step.Branch, step.Force || hasUnmergedCommits)
 }

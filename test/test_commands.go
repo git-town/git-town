@@ -15,7 +15,7 @@ import (
 type testCommands struct {
 	MockingRunner
 	config git.RepoConfig
-	*git.InternalCommands
+	*git.BackendCommands
 }
 
 // AddRemote adds a Git remote with the given name and URL to this repository.

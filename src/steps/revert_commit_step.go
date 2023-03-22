@@ -12,5 +12,5 @@ type RevertCommitStep struct {
 }
 
 func (step *RevertCommitStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
-	return repo.Public.RevertCommit(step.Sha)
+	return repo.Frontend.RevertCommit(step.Sha)
 }

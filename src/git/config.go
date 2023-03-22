@@ -16,7 +16,7 @@ type RepoConfig struct {
 	RootDirCache       *cache.String  // caches the base of the Git directory
 }
 
-func NewRepoConfig(runner InternalRunner) RepoConfig {
+func NewRepoConfig(runner BackendRunner) RepoConfig {
 	return RepoConfig{
 		GitTown:            config.NewGitTown(runner),
 		CurrentBranchCache: &cache.String{},

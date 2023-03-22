@@ -36,7 +36,7 @@ func aliasesCommand() *cobra.Command {
 }
 
 func aliases(arg string, debug bool) error {
-	repo, exit, err := LoadPublicThing(RepoArgs{
+	repo, exit, err := LoadProdRepo(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,
 		omitBranchNames:       true,
@@ -58,7 +58,7 @@ func aliases(arg string, debug bool) error {
 
 func addAliases(repo *git.ProdRepo) error {
 	for _, aliasType := range config.AliasTypes() {
-		err := repo.Public.AddGitAlias(aliasType)
+		err := repo.Frontend.AddGitAlias(aliasType)
 		if err != nil {
 			return err
 		}
@@ -70,7 +70,7 @@ func removeAliases(repo *git.ProdRepo) error {
 	for _, aliasType := range config.AliasTypes() {
 		existingAlias := repo.Config.GitAlias(aliasType)
 		if existingAlias == "town "+string(aliasType) {
-			err := repo.Public.RemoveGitAlias(aliasType)
+			err := repo.Frontend.RemoveGitAlias(aliasType)
 			if err != nil {
 				return err
 			}

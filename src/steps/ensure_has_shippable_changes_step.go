@@ -20,7 +20,7 @@ func (step *EnsureHasShippableChangesStep) CreateAutomaticAbortError() error {
 }
 
 func (step *EnsureHasShippableChangesStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
-	hasShippableChanges, err := repo.Internal.HasShippableChanges(step.Branch, step.Parent)
+	hasShippableChanges, err := repo.Backend.HasShippableChanges(step.Branch, step.Parent)
 	if err != nil {
 		return err
 	}

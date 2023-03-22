@@ -12,5 +12,5 @@ type AbortRebaseStep struct {
 }
 
 func (step *AbortRebaseStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
-	return repo.Public.AbortRebase()
+	return repo.Frontend.AbortRebase()
 }

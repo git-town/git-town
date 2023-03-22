@@ -14,7 +14,7 @@ import (
 // Repo provides Git functionality for test code (unit and end-to-end tests).
 type Repo struct {
 	testCommands
-	internal git.InternalCommands
+	backend git.BackendCommands
 }
 
 // CreateRepo creates TestRepo instances.
@@ -64,18 +64,18 @@ func newRepo(workingDir, homeDir, binDir string) Repo {
 		RemotesCache:       &cache.Strings{},
 		RootDirCache:       &cache.String{},
 	}
-	internalCommands := git.InternalCommands{
-		InternalRunner: git.NewInternalRunner(&workingDir, false),
-		Config:         &config,
+	backendCommands := git.BackendCommands{
+		BackendRunner: git.NewBackendRunner(&workingDir, false),
+		Config:        &config,
 	}
 	testCommands := testCommands{
-		MockingRunner:    mockingRunner,
-		config:           config,
-		InternalCommands: &internalCommands,
+		MockingRunner:   mockingRunner,
+		config:          config,
+		BackendCommands: &backendCommands,
 	}
 	return Repo{
 		testCommands: testCommands,
-		internal:     internalCommands,
+		backend:      backendCommands,
 	}
 }
 

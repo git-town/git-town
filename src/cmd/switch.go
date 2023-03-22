@@ -27,7 +27,7 @@ func switchCmd() *cobra.Command {
 }
 
 func runSwitch(debug bool) error {
-	repo, exit, err := LoadPublicThing(RepoArgs{
+	repo, exit, err := LoadProdRepo(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: true,
@@ -38,7 +38,7 @@ func runSwitch(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	currentBranch, err := repo.Internal.CurrentBranch()
+	currentBranch, err := repo.Backend.CurrentBranch()
 	if err != nil {
 		return err
 	}
@@ -47,7 +47,7 @@ func runSwitch(debug bool) error {
 		return err
 	}
 	if newBranch != nil && *newBranch != currentBranch {
-		err = repo.Internal.CheckoutBranch(*newBranch)
+		err = repo.Backend.CheckoutBranch(*newBranch)
 		if err != nil {
 			return err
 		}

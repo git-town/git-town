@@ -17,7 +17,7 @@ type PushBranchStep struct {
 	Undoable       bool
 }
 
-func (step *PushBranchStep) CreateUndoStep(repo *git.InternalCommands) (Step, error) {
+func (step *PushBranchStep) CreateUndoStep(repo *git.BackendCommands) (Step, error) {
 	if step.Undoable {
 		return &PushBranchAfterCurrentBranchSteps{}, nil
 	}
@@ -25,18 +25,18 @@ func (step *PushBranchStep) CreateUndoStep(repo *git.InternalCommands) (Step, er
 }
 
 func (step *PushBranchStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
-	shouldPush, err := repo.Internal.ShouldPushBranch(step.Branch)
+	shouldPush, err := repo.Backend.ShouldPushBranch(step.Branch)
 	if err != nil {
 		return err
 	}
 	if !shouldPush || repo.Config.DryRun {
 		return nil
 	}
-	currentBranch, err := repo.Internal.CurrentBranch()
+	currentBranch, err := repo.Backend.CurrentBranch()
 	if err != nil {
 		return err
 	}
-	return repo.Public.PushBranch(git.PushArgs{
+	return repo.Frontend.PushBranch(git.PushArgs{
 		Branch:         step.Branch,
 		ForceWithLease: step.ForceWithLease,
 		NoPushHook:     step.NoPushHook,

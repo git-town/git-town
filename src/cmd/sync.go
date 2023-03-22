@@ -51,7 +51,7 @@ func syncCmd() *cobra.Command {
 }
 
 func sync(all, dryRun, debug bool) error {
-	repo, exit, err := LoadPublicThing(RepoArgs{
+	repo, exit, err := LoadProdRepo(RepoArgs{
 		debug:                 debug,
 		dryRun:                dryRun,
 		handleUnfinishedState: true,
@@ -84,7 +84,7 @@ type syncConfig struct {
 }
 
 func determineSyncConfig(allFlag bool, repo *git.ProdRepo) (*syncConfig, error) {
-	hasOrigin, err := repo.Internal.HasOrigin()
+	hasOrigin, err := repo.Backend.HasOrigin()
 	if err != nil {
 		return nil, err
 	}
@@ -93,12 +93,12 @@ func determineSyncConfig(allFlag bool, repo *git.ProdRepo) (*syncConfig, error) 
 		return nil, err
 	}
 	if hasOrigin && !isOffline {
-		err := repo.Public.Fetch()
+		err := repo.Frontend.Fetch()
 		if err != nil {
 			return nil, err
 		}
 	}
-	initialBranch, err := repo.Internal.CurrentBranch()
+	initialBranch, err := repo.Backend.CurrentBranch()
 	if err != nil {
 		return nil, err
 	}
@@ -106,18 +106,18 @@ func determineSyncConfig(allFlag bool, repo *git.ProdRepo) (*syncConfig, error) 
 	var branchesToSync []string
 	var shouldPushTags bool
 	if allFlag {
-		branches, err := repo.Internal.LocalBranchesMainFirst(mainBranch)
+		branches, err := repo.Backend.LocalBranchesMainFirst(mainBranch)
 		if err != nil {
 			return nil, err
 		}
-		err = validate.KnowsBranchesAncestry(branches, &repo.Internal)
+		err = validate.KnowsBranchesAncestry(branches, &repo.Backend)
 		if err != nil {
 			return nil, err
 		}
 		branchesToSync = branches
 		shouldPushTags = true
 	} else {
-		err = validate.KnowsBranchAncestry(initialBranch, repo.Config.MainBranch(), &repo.Internal)
+		err = validate.KnowsBranchAncestry(initialBranch, repo.Config.MainBranch(), &repo.Backend)
 		if err != nil {
 			return nil, err
 		}
@@ -144,7 +144,7 @@ func syncBranchesSteps(config *syncConfig, repo *git.ProdRepo) (runstate.StepLis
 	if config.hasOrigin && config.shouldPushTags && !config.isOffline {
 		list.Add(&steps.PushTagsStep{})
 	}
-	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &repo.Internal, config.mainBranch)
+	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &repo.Backend, config.mainBranch)
 	return list.Result()
 }
 
@@ -152,7 +152,7 @@ func syncBranchesSteps(config *syncConfig, repo *git.ProdRepo) (runstate.StepLis
 func updateBranchSteps(list *runstate.StepListBuilder, branch string, pushBranch bool, repo *git.ProdRepo) {
 	isFeatureBranch := repo.Config.IsFeatureBranch(branch)
 	syncStrategy := list.SyncStrategy(repo.Config.SyncStrategy())
-	hasOrigin := list.Bool(repo.Internal.HasOrigin())
+	hasOrigin := list.Bool(repo.Backend.HasOrigin())
 	pushHook := list.Bool(repo.Config.PushHook())
 	if !hasOrigin && !isFeatureBranch {
 		return
@@ -165,7 +165,7 @@ func updateBranchSteps(list *runstate.StepListBuilder, branch string, pushBranch
 	}
 	isOffline := list.Bool(repo.Config.IsOffline())
 	if pushBranch && hasOrigin && !isOffline {
-		hasTrackingBranch := list.Bool(repo.Internal.HasTrackingBranch(branch))
+		hasTrackingBranch := list.Bool(repo.Backend.HasTrackingBranch(branch))
 		if !hasTrackingBranch {
 			list.Add(&steps.CreateTrackingBranchStep{Branch: branch})
 			return
@@ -180,21 +180,21 @@ func updateBranchSteps(list *runstate.StepListBuilder, branch string, pushBranch
 
 func updateFeatureBranchSteps(list *runstate.StepListBuilder, branch string, repo *git.ProdRepo) {
 	syncStrategy := list.SyncStrategy(repo.Config.SyncStrategy())
-	hasTrackingBranch := list.Bool(repo.Internal.HasTrackingBranch(branch))
+	hasTrackingBranch := list.Bool(repo.Backend.HasTrackingBranch(branch))
 	if hasTrackingBranch {
-		syncBranchSteps(list, repo.Internal.TrackingBranch(branch), string(syncStrategy))
+		syncBranchSteps(list, repo.Backend.TrackingBranch(branch), string(syncStrategy))
 	}
 	syncBranchSteps(list, repo.Config.ParentBranch(branch), string(syncStrategy))
 }
 
 func updatePerennialBranchSteps(list *runstate.StepListBuilder, branch string, repo *git.ProdRepo) {
-	hasTrackingBranch := list.Bool(repo.Internal.HasTrackingBranch(branch))
+	hasTrackingBranch := list.Bool(repo.Backend.HasTrackingBranch(branch))
 	if hasTrackingBranch {
 		pullBranchStrategy := list.PullBranchStrategy(repo.Config.PullBranchStrategy())
-		syncBranchSteps(list, repo.Internal.TrackingBranch(branch), string(pullBranchStrategy))
+		syncBranchSteps(list, repo.Backend.TrackingBranch(branch), string(pullBranchStrategy))
 	}
 	mainBranch := repo.Config.MainBranch()
-	hasUpstream := list.Bool(repo.Internal.HasRemote("upstream"))
+	hasUpstream := list.Bool(repo.Backend.HasRemote("upstream"))
 	shouldSyncUpstream := list.Bool(repo.Config.ShouldSyncUpstream())
 	if mainBranch == branch && hasUpstream && shouldSyncUpstream {
 		list.Add(&steps.FetchUpstreamStep{Branch: mainBranch})

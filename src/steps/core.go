@@ -21,7 +21,7 @@ type Step interface {
 	CreateContinueStep() Step
 
 	// CreateUndoStep provides the undo step for this step.
-	CreateUndoStep(*git.InternalCommands) (Step, error)
+	CreateUndoStep(*git.BackendCommands) (Step, error)
 
 	// CreateAutomaticAbortError provides the error message to display when this step
 	// cause the command to automatically abort.

@@ -28,7 +28,7 @@ func abortCmd() *cobra.Command {
 }
 
 func abort(debug bool) error {
-	repo, exit, err := LoadPublicThing(RepoArgs{
+	repo, exit, err := LoadProdRepo(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: false,
@@ -39,7 +39,7 @@ func abort(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	runState, err := runstate.Load(&repo.Internal)
+	runState, err := runstate.Load(&repo.Backend)
 	if err != nil {
 		return fmt.Errorf("cannot load previous run state: %w", err)
 	}
@@ -47,7 +47,7 @@ func abort(debug bool) error {
 		return fmt.Errorf("nothing to abort")
 	}
 	abortRunState := runState.CreateAbortRunState()
-	connector, err := hosting.NewConnector(repo.Config, &repo.Internal, cli.PrintConnectorAction)
+	connector, err := hosting.NewConnector(repo.Config, &repo.Backend, cli.PrintConnectorAction)
 	if err != nil {
 		return err
 	}

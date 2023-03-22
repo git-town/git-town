@@ -47,7 +47,7 @@ func renameBranchCommand() *cobra.Command {
 }
 
 func renameBranch(args []string, force, debug bool) error {
-	repo, exit, err := LoadPublicThing(RepoArgs{
+	repo, exit, err := LoadProdRepo(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: true,
@@ -83,7 +83,7 @@ type renameBranchConfig struct {
 }
 
 func determineRenameBranchConfig(args []string, forceFlag bool, repo *git.ProdRepo) (*renameBranchConfig, error) {
-	initialBranch, err := repo.Internal.CurrentBranch()
+	initialBranch, err := repo.Backend.CurrentBranch()
 	if err != nil {
 		return nil, err
 	}
@@ -117,33 +117,33 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *git.ProdRe
 		return nil, fmt.Errorf("cannot rename branch to current name")
 	}
 	if !isOffline {
-		err := repo.Public.Fetch()
+		err := repo.Frontend.Fetch()
 		if err != nil {
 			return nil, err
 		}
 	}
-	hasOldBranch, err := repo.Internal.HasLocalBranch(oldBranch)
+	hasOldBranch, err := repo.Backend.HasLocalBranch(oldBranch)
 	if err != nil {
 		return nil, err
 	}
 	if !hasOldBranch {
 		return nil, fmt.Errorf("there is no branch named %q", oldBranch)
 	}
-	isBranchInSync, err := repo.Internal.IsBranchInSync(oldBranch)
+	isBranchInSync, err := repo.Backend.IsBranchInSync(oldBranch)
 	if err != nil {
 		return nil, err
 	}
 	if !isBranchInSync {
 		return nil, fmt.Errorf("%q is not in sync with its tracking branch, please sync the branches before renaming", oldBranch)
 	}
-	hasNewBranch, err := repo.Internal.HasLocalOrOriginBranch(newBranch, mainBranch)
+	hasNewBranch, err := repo.Backend.HasLocalOrOriginBranch(newBranch, mainBranch)
 	if err != nil {
 		return nil, err
 	}
 	if hasNewBranch {
 		return nil, fmt.Errorf("a branch named %q already exists", newBranch)
 	}
-	oldBranchHasTrackingBranch, err := repo.Internal.HasTrackingBranch(oldBranch)
+	oldBranchHasTrackingBranch, err := repo.Backend.HasTrackingBranch(oldBranch)
 	if err != nil {
 		return nil, err
 	}
@@ -181,6 +181,6 @@ func renameBranchStepList(config *renameBranchConfig, repo *git.ProdRepo) (runst
 		result.Append(&steps.DeleteOriginBranchStep{Branch: config.oldBranch, IsTracking: true})
 	}
 	result.Append(&steps.DeleteLocalBranchStep{Branch: config.oldBranch, Parent: config.mainBranch})
-	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, &repo.Internal, config.mainBranch)
+	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, &repo.Backend, config.mainBranch)
 	return result, err
 }

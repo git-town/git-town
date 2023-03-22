@@ -12,14 +12,15 @@ import (
 	"github.com/kballard/go-shellquote"
 )
 
-// PublicRunner executes the given shell commands and streams their output to the CLI.
-type PublicRunner struct {
+// FrontendRunner executes shell commands that Git Town runs for the user
+// and streams their output to the CLI.
+type FrontendRunner struct {
 	CurrentBranch   *cache.String
 	OmitBranchNames bool
 }
 
 // Run runs the given command in this ShellRunner's directory.
-func (r PublicRunner) Run(cmd string, args ...string) error {
+func (r FrontendRunner) Run(cmd string, args ...string) error {
 	var branchName string
 	if r.OmitBranchNames {
 		branchName = ""
@@ -44,7 +45,7 @@ func (r PublicRunner) Run(cmd string, args ...string) error {
 // RunMany runs all given commands in current directory.
 // Commands are provided as a list of argv-style strings.
 // Failed commands abort immediately with the encountered error.
-func (r PublicRunner) RunMany(commands [][]string) error {
+func (r FrontendRunner) RunMany(commands [][]string) error {
 	for _, argv := range commands {
 		err := r.Run(argv[0], argv[1:]...)
 		if err != nil {
@@ -55,7 +56,7 @@ func (r PublicRunner) RunMany(commands [][]string) error {
 }
 
 // RunString runs the given command (including possible arguments) in this ShellInDir's directory.
-func (r PublicRunner) RunString(fullCmd string) error {
+func (r FrontendRunner) RunString(fullCmd string) error {
 	parts, err := shellquote.Split(fullCmd)
 	if err != nil {
 		return fmt.Errorf("cannot split command %q: %w", fullCmd, err)

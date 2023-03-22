@@ -61,7 +61,7 @@ func shipCmd() *cobra.Command {
 }
 
 func ship(args []string, message string, debug bool) error {
-	repo, exit, err := LoadPublicThing(RepoArgs{
+	repo, exit, err := LoadProdRepo(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: true,
@@ -72,7 +72,7 @@ func ship(args []string, message string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	connector, err := hosting.NewConnector(repo.Config, &repo.Internal, cli.PrintConnectorAction)
+	connector, err := hosting.NewConnector(repo.Config, &repo.Backend, cli.PrintConnectorAction)
 	if err != nil {
 		return err
 	}
@@ -106,7 +106,7 @@ type shipConfig struct {
 }
 
 func determineShipConfig(args []string, connector hosting.Connector, repo *git.ProdRepo) (*shipConfig, error) {
-	hasOrigin, err := repo.Internal.HasOrigin()
+	hasOrigin, err := repo.Backend.HasOrigin()
 	if err != nil {
 		return nil, err
 	}
@@ -114,7 +114,7 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 	if err != nil {
 		return nil, err
 	}
-	initialBranch, err := repo.Internal.CurrentBranch()
+	initialBranch, err := repo.Backend.CurrentBranch()
 	if err != nil {
 		return nil, err
 	}
@@ -131,7 +131,7 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 	}
 	isShippingInitialBranch := branchToShip == initialBranch
 	if isShippingInitialBranch {
-		hasOpenChanges, err := repo.Internal.HasOpenChanges()
+		hasOpenChanges, err := repo.Backend.HasOpenChanges()
 		if err != nil {
 			return nil, err
 		}
@@ -140,13 +140,13 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 		}
 	}
 	if hasOrigin && !isOffline {
-		err := repo.Public.Fetch()
+		err := repo.Frontend.Fetch()
 		if err != nil {
 			return nil, err
 		}
 	}
 	if !isShippingInitialBranch {
-		hasBranch, err := repo.Internal.HasLocalOrOriginBranch(branchToShip, mainBranch)
+		hasBranch, err := repo.Backend.HasLocalOrOriginBranch(branchToShip, mainBranch)
 		if err != nil {
 			return nil, err
 		}
@@ -157,7 +157,7 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 	if !repo.Config.IsFeatureBranch(branchToShip) {
 		return nil, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can be shipped", branchToShip)
 	}
-	err = validate.KnowsBranchAncestry(branchToShip, mainBranch, &repo.Internal)
+	err = validate.KnowsBranchAncestry(branchToShip, mainBranch, &repo.Backend)
 	if err != nil {
 		return nil, err
 	}
@@ -165,7 +165,7 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 	if err != nil {
 		return nil, err
 	}
-	hasTrackingBranch, err := repo.Internal.HasTrackingBranch(branchToShip)
+	hasTrackingBranch, err := repo.Backend.HasTrackingBranch(branchToShip)
 	if err != nil {
 		return nil, err
 	}
@@ -274,6 +274,6 @@ func shipStepList(config *shipConfig, commitMessage string, repo *git.ProdRepo) 
 		// TODO: check out the main branch here?
 		list.Add(&steps.CheckoutStep{Branch: config.initialBranch})
 	}
-	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: !config.isShippingInitialBranch}, &repo.Internal, config.mainBranch)
+	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: !config.isShippingInitialBranch}, &repo.Backend, config.mainBranch)
 	return list.Result()
 }

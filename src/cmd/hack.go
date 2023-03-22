@@ -39,7 +39,7 @@ func hackCmd() *cobra.Command {
 }
 
 func hack(args []string, promptForParent, debug bool) error {
-	repo, exit, err := LoadPublicThing(RepoArgs{
+	repo, exit, err := LoadProdRepo(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: true,
@@ -66,14 +66,14 @@ func determineHackConfig(args []string, promptForParent bool, repo *git.ProdRepo
 	ec := runstate.ErrorChecker{}
 	targetBranch := args[0]
 	parentBranch := ec.String(determineParentBranch(targetBranch, promptForParent, repo))
-	hasOrigin := ec.Bool(repo.Internal.HasOrigin())
+	hasOrigin := ec.Bool(repo.Backend.HasOrigin())
 	shouldNewBranchPush := ec.Bool(repo.Config.ShouldNewBranchPush())
 	isOffline := ec.Bool(repo.Config.IsOffline())
 	mainBranch := repo.Config.MainBranch()
 	if ec.Err == nil && hasOrigin && !isOffline {
-		ec.Check(repo.Public.Fetch())
+		ec.Check(repo.Frontend.Fetch())
 	}
-	hasBranch := ec.Bool(repo.Internal.HasLocalOrOriginBranch(targetBranch, mainBranch))
+	hasBranch := ec.Bool(repo.Backend.HasLocalOrOriginBranch(targetBranch, mainBranch))
 	pushHook := ec.Bool(repo.Config.PushHook())
 	if hasBranch {
 		return nil, fmt.Errorf("a branch named %q already exists", targetBranch)
@@ -92,11 +92,11 @@ func determineHackConfig(args []string, promptForParent bool, repo *git.ProdRepo
 
 func determineParentBranch(targetBranch string, promptForParent bool, repo *git.ProdRepo) (string, error) {
 	if promptForParent {
-		parentBranch, err := validate.EnterParent(targetBranch, repo.Config.MainBranch(), &repo.Internal)
+		parentBranch, err := validate.EnterParent(targetBranch, repo.Config.MainBranch(), &repo.Backend)
 		if err != nil {
 			return "", err
 		}
-		err = validate.KnowsBranchAncestry(parentBranch, repo.Config.MainBranch(), &repo.Internal)
+		err = validate.KnowsBranchAncestry(parentBranch, repo.Config.MainBranch(), &repo.Backend)
 		if err != nil {
 			return "", err
 		}

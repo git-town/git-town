@@ -8,14 +8,15 @@ import (
 	"github.com/kballard/go-shellquote"
 )
 
-// InternalRunner runs internal shell commands in the current working directory.
-type InternalRunner struct {
+// BackendRunner runs backend shell commands in Git Town's backend (not visible to the end user by default).
+// It returns the output of the commands run so that they can be analyzed.
+type BackendRunner struct {
 	// If set, runs the commands in the given directory.
 	// If not set, runs the commands in the current working directory.
 	Dir *string
 }
 
-func (r InternalRunner) Run(executable string, args ...string) (*Output, error) {
+func (r BackendRunner) Run(executable string, args ...string) (*Output, error) {
 	subProcess := exec.Command(executable, args...) // #nosec
 	if r.Dir != nil {
 		subProcess.Dir = *r.Dir
@@ -30,7 +31,7 @@ func (r InternalRunner) Run(executable string, args ...string) (*Output, error) 
 // RunMany runs all given commands in current directory.
 // Commands are provided as a list of argv-style strings.
 // Failed commands abort immediately with the encountered error.
-func (r InternalRunner) RunMany(commands [][]string) error {
+func (r BackendRunner) RunMany(commands [][]string) error {
 	for _, argv := range commands {
 		_, err := r.Run(argv[0], argv[1:]...)
 		if err != nil {
@@ -40,7 +41,7 @@ func (r InternalRunner) RunMany(commands [][]string) error {
 	return nil
 }
 
-func (r InternalRunner) RunString(fullCmd string) (*Output, error) {
+func (r BackendRunner) RunString(fullCmd string) (*Output, error) {
 	parts, err := shellquote.Split(fullCmd)
 	if err != nil {
 		return nil, fmt.Errorf("cannot split command %q: %w", fullCmd, err)

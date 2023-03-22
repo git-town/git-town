@@ -9,8 +9,8 @@ import (
 // IsRepository verifies that the given folder contains a Git repository.
 // It also navigates to the root directory of that repository.
 func IsRepository(repo *git.ProdRepo) error {
-	if !repo.Internal.IsRepository() {
+	if !repo.Backend.IsRepository() {
 		return errors.New("this is not a Git repository")
 	}
-	return repo.Public.NavigateToRootIfNecessary()
+	return repo.Frontend.NavigateToRootIfNecessary()
 }

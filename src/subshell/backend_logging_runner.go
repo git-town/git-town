@@ -8,13 +8,13 @@ import (
 	"github.com/kballard/go-shellquote"
 )
 
-// InternalDebuggingRunner runs internal shell commands in the given working directory.
-// It logs the executed commands and their output on the CLI.
-type InternalDebuggingRunner struct {
-	InternalRunner
+// BackendLoggingRunner runs backend shell commands.
+// It prints the executed commands and their output on the CLI.
+type BackendLoggingRunner struct {
+	BackendRunner
 }
 
-func (r InternalDebuggingRunner) PrintHeader(cmd string, args ...string) {
+func (r BackendLoggingRunner) PrintHeader(cmd string, args ...string) {
 	text := "\n(debug) " + cmd + " " + strings.Join(args, " ")
 	_, err := color.New(color.Bold).Println(text)
 	if err != nil {
@@ -23,9 +23,9 @@ func (r InternalDebuggingRunner) PrintHeader(cmd string, args ...string) {
 }
 
 // Run runs the given command in this ShellRunner's directory.
-func (r InternalDebuggingRunner) Run(cmd string, args ...string) (*Output, error) {
+func (r BackendLoggingRunner) Run(cmd string, args ...string) (*Output, error) {
 	r.PrintHeader(cmd, args...)
-	output, err := r.InternalRunner.Run(cmd, args...)
+	output, err := r.BackendRunner.Run(cmd, args...)
 	if output != nil {
 		fmt.Println(output.Raw)
 	}
@@ -35,7 +35,7 @@ func (r InternalDebuggingRunner) Run(cmd string, args ...string) (*Output, error
 // RunMany runs all given commands in current directory.
 // Commands are provided as a list of argv-style strings.
 // Failed commands abort immediately with the encountered error.
-func (r InternalDebuggingRunner) RunMany(commands [][]string) error {
+func (r BackendLoggingRunner) RunMany(commands [][]string) error {
 	for _, argv := range commands {
 		_, err := r.Run(argv[0], argv[1:]...)
 		if err != nil {
@@ -46,7 +46,7 @@ func (r InternalDebuggingRunner) RunMany(commands [][]string) error {
 }
 
 // RunString runs the given command (including possible arguments) in this ShellInDir's directory.
-func (r InternalDebuggingRunner) RunString(fullCmd string) (*Output, error) {
+func (r BackendLoggingRunner) RunString(fullCmd string) (*Output, error) {
 	parts, err := shellquote.Split(fullCmd)
 	if err != nil {
 		return nil, fmt.Errorf("cannot split command %q: %w", fullCmd, err)

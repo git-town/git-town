@@ -32,7 +32,7 @@ func killCommand() *cobra.Command {
 }
 
 func kill(args []string, debug bool) error {
-	repo, exit, err := LoadPublicThing(RepoArgs{
+	repo, exit, err := LoadProdRepo(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: false,
@@ -70,7 +70,7 @@ type killConfig struct {
 }
 
 func determineKillConfig(args []string, repo *git.ProdRepo) (*killConfig, error) {
-	initialBranch, err := repo.Internal.CurrentBranch()
+	initialBranch, err := repo.Backend.CurrentBranch()
 	if err != nil {
 		return nil, err
 	}
@@ -84,18 +84,18 @@ func determineKillConfig(args []string, repo *git.ProdRepo) (*killConfig, error)
 	if !repo.Config.IsFeatureBranch(targetBranch) {
 		return nil, fmt.Errorf("you can only kill feature branches")
 	}
-	isTargetBranchLocal, err := repo.Internal.HasLocalBranch(targetBranch)
+	isTargetBranchLocal, err := repo.Backend.HasLocalBranch(targetBranch)
 	if err != nil {
 		return nil, err
 	}
 	if isTargetBranchLocal {
-		err = validate.KnowsBranchAncestry(targetBranch, mainBranch, &repo.Internal)
+		err = validate.KnowsBranchAncestry(targetBranch, mainBranch, &repo.Backend)
 		if err != nil {
 			return nil, err
 		}
 		repo.Config.Reload()
 	}
-	hasOrigin, err := repo.Internal.HasOrigin()
+	hasOrigin, err := repo.Backend.HasOrigin()
 	if err != nil {
 		return nil, err
 	}
@@ -104,13 +104,13 @@ func determineKillConfig(args []string, repo *git.ProdRepo) (*killConfig, error)
 		return nil, err
 	}
 	if hasOrigin && !isOffline {
-		err := repo.Public.Fetch()
+		err := repo.Frontend.Fetch()
 		if err != nil {
 			return nil, err
 		}
 	}
 	if initialBranch != targetBranch {
-		hasTargetBranch, err := repo.Internal.HasLocalOrOriginBranch(targetBranch, mainBranch)
+		hasTargetBranch, err := repo.Backend.HasLocalOrOriginBranch(targetBranch, mainBranch)
 		if err != nil {
 			return nil, err
 		}
@@ -118,15 +118,15 @@ func determineKillConfig(args []string, repo *git.ProdRepo) (*killConfig, error)
 			return nil, fmt.Errorf("there is no branch named %q", targetBranch)
 		}
 	}
-	hasTrackingBranch, err := repo.Internal.HasTrackingBranch(targetBranch)
+	hasTrackingBranch, err := repo.Backend.HasTrackingBranch(targetBranch)
 	if err != nil {
 		return nil, err
 	}
-	previousBranch, err := repo.Internal.PreviouslyCheckedOutBranch()
+	previousBranch, err := repo.Backend.PreviouslyCheckedOutBranch()
 	if err != nil {
 		return nil, err
 	}
-	hasOpenChanges, err := repo.Internal.HasOpenChanges()
+	hasOpenChanges, err := repo.Backend.HasOpenChanges()
 	if err != nil {
 		return nil, err
 	}
@@ -175,6 +175,6 @@ func killStepList(config *killConfig, repo *git.ProdRepo) (runstate.StepList, er
 	err := result.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.initialBranch != config.targetBranch && config.targetBranch == config.previousBranch,
-	}, &repo.Internal, config.mainBranch)
+	}, &repo.Backend, config.mainBranch)
 	return result, err
 }

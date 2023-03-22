@@ -33,7 +33,7 @@ func pushNewBranchesCommand() *cobra.Command {
 }
 
 func runConfigPushNewBranches(args []string, global, debug bool) error {
-	repo, exit, err := LoadPublicThing(RepoArgs{
+	repo, exit, err := LoadProdRepo(RepoArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
 		dryRun:                false,

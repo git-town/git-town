@@ -32,7 +32,7 @@ func diffParentCommand() *cobra.Command {
 }
 
 func diffParent(args []string, debug bool) error {
-	repo, exit, err := LoadPublicThing(RepoArgs{
+	repo, exit, err := LoadProdRepo(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: true,
@@ -47,7 +47,7 @@ func diffParent(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	return repo.Public.DiffParent(config.branch, config.parentBranch)
+	return repo.Frontend.DiffParent(config.branch, config.parentBranch)
 }
 
 type diffParentConfig struct {
@@ -57,7 +57,7 @@ type diffParentConfig struct {
 
 // Does not return error because "Ensure" functions will call exit directly.
 func determineDiffParentConfig(args []string, repo *git.ProdRepo) (*diffParentConfig, error) {
-	initialBranch, err := repo.Internal.CurrentBranch()
+	initialBranch, err := repo.Backend.CurrentBranch()
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +68,7 @@ func determineDiffParentConfig(args []string, repo *git.ProdRepo) (*diffParentCo
 		branch = initialBranch
 	}
 	if initialBranch != branch {
-		hasBranch, err := repo.Internal.HasLocalBranch(branch)
+		hasBranch, err := repo.Backend.HasLocalBranch(branch)
 		if err != nil {
 			return nil, err
 		}
@@ -79,7 +79,7 @@ func determineDiffParentConfig(args []string, repo *git.ProdRepo) (*diffParentCo
 	if !repo.Config.IsFeatureBranch(branch) {
 		return nil, fmt.Errorf("you can only diff-parent feature branches")
 	}
-	err = validate.KnowsBranchAncestry(branch, repo.Config.MainBranch(), &repo.Internal)
+	err = validate.KnowsBranchAncestry(branch, repo.Config.MainBranch(), &repo.Backend)
 	if err != nil {
 		return nil, err
 	}

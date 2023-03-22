@@ -11,5 +11,5 @@ type DiscardOpenChangesStep struct {
 }
 
 func (step *DiscardOpenChangesStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
-	return repo.Public.DiscardOpenChanges()
+	return repo.Frontend.DiscardOpenChanges()
 }

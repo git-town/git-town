@@ -8,23 +8,23 @@ import (
 	"github.com/git-town/git-town/v7/src/config"
 )
 
-type PublicRunner interface {
+type FrontendRunner interface {
 	Run(executable string, args ...string) error
 	RunMany([][]string) error
 }
 
-// PublicCommands are Git commands that Git Town executes in its frontend,
+// FrontendCommands are Git commands that Git Town executes in its frontend,
 // i.e. visible to the user. They change the user's Git repo.
-type PublicCommands struct {
-	Public PublicRunner
-	Config *RepoConfig // the known state of the Git repository
-	// TODO: try to move methods that use this into InternalCommands
-	Internal *InternalCommands // the InternalCommands instance to use
+type FrontendCommands struct {
+	Frontend FrontendRunner
+	Config   *RepoConfig // the known state of the Git repository
+	// TODO: try to move methods that use this into BackendCommands
+	Backend *BackendCommands // the BackendCommands instance to use
 }
 
 // AbortMerge cancels a currently ongoing Git merge operation.
-func (r *PublicCommands) AbortMerge() error {
-	err := r.Public.Run("git", "merge", "--abort")
+func (r *FrontendCommands) AbortMerge() error {
+	err := r.Frontend.Run("git", "merge", "--abort")
 	if err != nil {
 		return fmt.Errorf("cannot abort current merge: %w", err)
 	}
@@ -32,8 +32,8 @@ func (r *PublicCommands) AbortMerge() error {
 }
 
 // AbortRebase cancels a currently ongoing Git rebase operation.
-func (r *PublicCommands) AbortRebase() error {
-	err := r.Public.Run("git", "rebase", "--abort")
+func (r *FrontendCommands) AbortRebase() error {
+	err := r.Frontend.Run("git", "rebase", "--abort")
 	if err != nil {
 		return fmt.Errorf("cannot abort current merge: %w", err)
 	}
@@ -41,13 +41,13 @@ func (r *PublicCommands) AbortRebase() error {
 }
 
 // AddGitAlias sets the given Git alias.
-func (r *PublicCommands) AddGitAlias(aliasType config.AliasType) error {
-	return r.Public.Run("git", "config", "--global", "alias."+string(aliasType), "town "+string(aliasType))
+func (r *FrontendCommands) AddGitAlias(aliasType config.AliasType) error {
+	return r.Frontend.Run("git", "config", "--global", "alias."+string(aliasType), "town "+string(aliasType))
 }
 
 // CheckoutBranch checks out the Git branch with the given name in this repo.
-func (r *PublicCommands) CheckoutBranch(name string) error {
-	err := r.Public.Run("git", "checkout", name)
+func (r *FrontendCommands) CheckoutBranch(name string) error {
+	err := r.Frontend.Run("git", "checkout", name)
 	if err != nil {
 		return fmt.Errorf("cannot check out branch %q: %w", name, err)
 	}
@@ -56,13 +56,13 @@ func (r *PublicCommands) CheckoutBranch(name string) error {
 }
 
 // CreateRemoteBranch creates a remote branch from the given local SHA.
-func (r *PublicCommands) CreateRemoteBranch(localSha, branch string, noPushHook bool) error {
+func (r *FrontendCommands) CreateRemoteBranch(localSha, branch string, noPushHook bool) error {
 	args := []string{"push"}
 	if noPushHook {
 		args = append(args, "--no-verify")
 	}
 	args = append(args, config.OriginRemote, localSha+":refs/heads/"+branch)
-	err := r.Public.Run("git", args...)
+	err := r.Frontend.Run("git", args...)
 	if err != nil {
 		return fmt.Errorf("cannot create remote branch for local SHA %q: %w", localSha, err)
 	}
@@ -70,8 +70,8 @@ func (r *PublicCommands) CreateRemoteBranch(localSha, branch string, noPushHook 
 }
 
 // CommitNoEdit commits all staged files with the default commit message.
-func (r *PublicCommands) CommitNoEdit() error {
-	err := r.Public.Run("git", "commit", "--no-edit")
+func (r *FrontendCommands) CommitNoEdit() error {
+	err := r.Frontend.Run("git", "commit", "--no-edit")
 	if err != nil {
 		return fmt.Errorf("cannot commit files: %w", err)
 	}
@@ -79,12 +79,12 @@ func (r *PublicCommands) CommitNoEdit() error {
 }
 
 // CommitStagedChanges commits the currently staged changes.
-func (r *PublicCommands) CommitStagedChanges(message string) error {
+func (r *FrontendCommands) CommitStagedChanges(message string) error {
 	var err error
 	if message != "" {
-		err = r.Public.Run("git", "commit", "-m", message)
+		err = r.Frontend.Run("git", "commit", "-m", message)
 	} else {
-		err = r.Public.Run("git", "commit", "--no-edit")
+		err = r.Frontend.Run("git", "commit", "--no-edit")
 	}
 	if err != nil {
 		return fmt.Errorf("cannot commit staged changes: %w", err)
@@ -93,7 +93,7 @@ func (r *PublicCommands) CommitStagedChanges(message string) error {
 }
 
 // Commit performs a commit of the staged changes with an optional custom message and author.
-func (r *PublicCommands) Commit(message, author string) error {
+func (r *FrontendCommands) Commit(message, author string) error {
 	gitArgs := []string{"commit"}
 	if message != "" {
 		gitArgs = append(gitArgs, "-m", message)
@@ -101,13 +101,13 @@ func (r *PublicCommands) Commit(message, author string) error {
 	if author != "" {
 		gitArgs = append(gitArgs, "--author", author)
 	}
-	err := r.Public.Run("git", gitArgs...)
+	err := r.Frontend.Run("git", gitArgs...)
 	return err
 }
 
 // ContinueRebase continues the currently ongoing rebase.
-func (r *PublicCommands) ContinueRebase() error {
-	err := r.Public.Run("git", "rebase", "--continue")
+func (r *FrontendCommands) ContinueRebase() error {
+	err := r.Frontend.Run("git", "rebase", "--continue")
 	if err != nil {
 		return fmt.Errorf("cannot continue rebase: %w", err)
 	}
@@ -117,8 +117,8 @@ func (r *PublicCommands) ContinueRebase() error {
 // CreateBranch creates a new branch with the given name.
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
-func (r *PublicCommands) CreateBranch(name, parent string) error {
-	err := r.Public.Run("git", "branch", name, parent)
+func (r *FrontendCommands) CreateBranch(name, parent string) error {
+	err := r.Frontend.Run("git", "branch", name, parent)
 	if err != nil {
 		return fmt.Errorf("cannot create branch %q: %w", name, err)
 	}
@@ -126,8 +126,8 @@ func (r *PublicCommands) CreateBranch(name, parent string) error {
 }
 
 // DeleteLastCommit resets HEAD to the previous commit.
-func (r *PublicCommands) DeleteLastCommit() error {
-	err := r.Public.Run("git", "reset", "--hard", "HEAD~1")
+func (r *FrontendCommands) DeleteLastCommit() error {
+	err := r.Frontend.Run("git", "reset", "--hard", "HEAD~1")
 	if err != nil {
 		return fmt.Errorf("cannot delete last commit: %w", err)
 	}
@@ -135,12 +135,12 @@ func (r *PublicCommands) DeleteLastCommit() error {
 }
 
 // DeleteLocalBranch removes the local branch with the given name.
-func (r *PublicCommands) DeleteLocalBranch(name string, force bool) error {
+func (r *FrontendCommands) DeleteLocalBranch(name string, force bool) error {
 	args := []string{"branch", "-d", name}
 	if force {
 		args[1] = "-D"
 	}
-	err := r.Public.Run("git", args...)
+	err := r.Frontend.Run("git", args...)
 	if err != nil {
 		return fmt.Errorf("cannot delete local branch %q: %w", name, err)
 	}
@@ -148,8 +148,8 @@ func (r *PublicCommands) DeleteLocalBranch(name string, force bool) error {
 }
 
 // DeleteRemoteBranch removes the remote branch of the given local branch.
-func (r *PublicCommands) DeleteRemoteBranch(name string) error {
-	err := r.Public.Run("git", "push", config.OriginRemote, ":"+name)
+func (r *FrontendCommands) DeleteRemoteBranch(name string) error {
+	err := r.Frontend.Run("git", "push", config.OriginRemote, ":"+name)
 	if err != nil {
 		return fmt.Errorf("cannot delete tracking branch for %q: %w", name, err)
 	}
@@ -157,8 +157,8 @@ func (r *PublicCommands) DeleteRemoteBranch(name string) error {
 }
 
 // DiffParent displays the diff between the given branch and its given parent branch.
-func (r *PublicCommands) DiffParent(branch, parentBranch string) error {
-	err := r.Public.Run("git", "diff", parentBranch+".."+branch)
+func (r *FrontendCommands) DiffParent(branch, parentBranch string) error {
+	err := r.Frontend.Run("git", "diff", parentBranch+".."+branch)
 	if err != nil {
 		return fmt.Errorf("cannot diff branch %q with its parent branch %q: %w", branch, parentBranch, err)
 	}
@@ -166,8 +166,8 @@ func (r *PublicCommands) DiffParent(branch, parentBranch string) error {
 }
 
 // DiscardOpenChanges deletes all uncommitted changes.
-func (r *PublicCommands) DiscardOpenChanges() error {
-	err := r.Public.Run("git", "reset", "--hard")
+func (r *FrontendCommands) DiscardOpenChanges() error {
+	err := r.Frontend.Run("git", "reset", "--hard")
 	if err != nil {
 		return fmt.Errorf("cannot discard open changes: %w", err)
 	}
@@ -175,8 +175,8 @@ func (r *PublicCommands) DiscardOpenChanges() error {
 }
 
 // Fetch retrieves the updates from the origin repo.
-func (r *PublicCommands) Fetch() error {
-	err := r.Public.Run("git", "fetch", "--prune", "--tags")
+func (r *FrontendCommands) Fetch() error {
+	err := r.Frontend.Run("git", "fetch", "--prune", "--tags")
 	if err != nil {
 		return fmt.Errorf("cannot fetch: %w", err)
 	}
@@ -184,8 +184,8 @@ func (r *PublicCommands) Fetch() error {
 }
 
 // FetchUpstream fetches updates from the upstream remote.
-func (r *PublicCommands) FetchUpstream(branch string) error {
-	err := r.Public.Run("git", "fetch", "upstream", branch)
+func (r *FrontendCommands) FetchUpstream(branch string) error {
+	err := r.Frontend.Run("git", "fetch", "upstream", branch)
 	if err != nil {
 		return fmt.Errorf("cannot fetch from upstream: %w", err)
 	}
@@ -194,18 +194,18 @@ func (r *PublicCommands) FetchUpstream(branch string) error {
 
 // MergeBranchNoEdit merges the given branch into the current branch,
 // using the default commit message.
-func (r *PublicCommands) MergeBranchNoEdit(branch string) error {
-	err := r.Public.Run("git", "merge", "--no-edit", branch)
+func (r *FrontendCommands) MergeBranchNoEdit(branch string) error {
+	err := r.Frontend.Run("git", "merge", "--no-edit", branch)
 	return err
 }
 
 // NavigateToRootIfNecessary changes into the root directory of the current repository.
-func (r *PublicCommands) NavigateToRootIfNecessary() error {
+func (r *FrontendCommands) NavigateToRootIfNecessary() error {
 	currentDirectory, err := os.Getwd()
 	if err != nil {
 		return fmt.Errorf("cannot get current working directory: %w", err)
 	}
-	gitRootDirectory, err := r.Internal.RootDirectory()
+	gitRootDirectory, err := r.Backend.RootDirectory()
 	if err != nil {
 		return err
 	}
@@ -216,8 +216,8 @@ func (r *PublicCommands) NavigateToRootIfNecessary() error {
 }
 
 // PopStash restores stashed-away changes into the workspace.
-func (r *PublicCommands) PopStash() error {
-	err := r.Public.Run("git", "stash", "pop")
+func (r *FrontendCommands) PopStash() error {
+	err := r.Frontend.Run("git", "stash", "pop")
 	if err != nil {
 		return fmt.Errorf("cannot pop the stash: %w", err)
 	}
@@ -225,8 +225,8 @@ func (r *PublicCommands) PopStash() error {
 }
 
 // Pull fetches updates from origin and updates the currently checked out branch.
-func (r *PublicCommands) Pull() error {
-	err := r.Public.Run("git", "pull")
+func (r *FrontendCommands) Pull() error {
+	err := r.Frontend.Run("git", "pull")
 	if err != nil {
 		return fmt.Errorf("cannot pull updates: %w", err)
 	}
@@ -243,7 +243,7 @@ type PushArgs struct {
 
 // PushBranch pushes the branch with the given name to origin.
 // TODO: remove unused elements from PushArgs.
-func (r *PublicCommands) PushBranch(options ...PushArgs) error {
+func (r *FrontendCommands) PushBranch(options ...PushArgs) error {
 	var option PushArgs
 	if len(options) > 0 {
 		option = options[0]
@@ -268,7 +268,7 @@ func (r *PublicCommands) PushBranch(options ...PushArgs) error {
 	if option.Branch != "" && provideBranch {
 		args = append(args, option.Branch)
 	}
-	err := r.Public.Run("git", args...)
+	err := r.Frontend.Run("git", args...)
 	if err != nil {
 		return fmt.Errorf("cannot push branch to origin: %w", err)
 	}
@@ -276,8 +276,8 @@ func (r *PublicCommands) PushBranch(options ...PushArgs) error {
 }
 
 // PushTags pushes new the Git tags to origin.
-func (r *PublicCommands) PushTags() error {
-	err := r.Public.Run("git", "push", "--tags")
+func (r *FrontendCommands) PushTags() error {
+	err := r.Frontend.Run("git", "push", "--tags")
 	if err != nil {
 		return fmt.Errorf("cannot push branch in repo: %w", err)
 	}
@@ -285,8 +285,8 @@ func (r *PublicCommands) PushTags() error {
 }
 
 // Rebase initiates a Git rebase of the current branch against the given branch.
-func (r *PublicCommands) Rebase(target string) error {
-	err := r.Public.Run("git", "rebase", target)
+func (r *FrontendCommands) Rebase(target string) error {
+	err := r.Frontend.Run("git", "rebase", target)
 	if err != nil {
 		return fmt.Errorf("cannot rebase against branch %q: %w", target, err)
 	}
@@ -294,18 +294,18 @@ func (r *PublicCommands) Rebase(target string) error {
 }
 
 // RemoveGitAlias removes the given Git alias.
-func (r *PublicCommands) RemoveGitAlias(aliasType config.AliasType) error {
-	return r.Public.Run("git", "config", "--global", "--unset", "alias."+string(aliasType))
+func (r *FrontendCommands) RemoveGitAlias(aliasType config.AliasType) error {
+	return r.Frontend.Run("git", "config", "--global", "--unset", "alias."+string(aliasType))
 }
 
 // ResetToSha undoes all commits on the current branch all the way until the given SHA.
-func (r *PublicCommands) ResetToSha(sha string, hard bool) error {
+func (r *FrontendCommands) ResetToSha(sha string, hard bool) error {
 	args := []string{"reset"}
 	if hard {
 		args = append(args, "--hard")
 	}
 	args = append(args, sha)
-	err := r.Public.Run("git", args...)
+	err := r.Frontend.Run("git", args...)
 	if err != nil {
 		return fmt.Errorf("cannot reset to SHA %q: %w", sha, err)
 	}
@@ -313,8 +313,8 @@ func (r *PublicCommands) ResetToSha(sha string, hard bool) error {
 }
 
 // RevertCommit reverts the commit with the given SHA.
-func (r *PublicCommands) RevertCommit(sha string) error {
-	err := r.Public.Run("git", "revert", sha)
+func (r *FrontendCommands) RevertCommit(sha string) error {
+	err := r.Frontend.Run("git", "revert", sha)
 	if err != nil {
 		return fmt.Errorf("cannot revert commit %q: %w", sha, err)
 	}
@@ -322,8 +322,8 @@ func (r *PublicCommands) RevertCommit(sha string) error {
 }
 
 // SquashMerge squash-merges the given branch into the current branch.
-func (r *PublicCommands) SquashMerge(branch string) error {
-	err := r.Public.Run("git", "merge", "--squash", branch)
+func (r *FrontendCommands) SquashMerge(branch string) error {
+	err := r.Frontend.Run("git", "merge", "--squash", branch)
 	if err != nil {
 		return fmt.Errorf("cannot squash-merge branch %q: %w", branch, err)
 	}
@@ -331,8 +331,8 @@ func (r *PublicCommands) SquashMerge(branch string) error {
 }
 
 // Stash adds the current files to the Git stash.
-func (r *PublicCommands) Stash() error {
-	err := r.Public.RunMany([][]string{
+func (r *FrontendCommands) Stash() error {
+	err := r.Frontend.RunMany([][]string{
 		{"git", "add", "-A"},
 		{"git", "stash"},
 	})
@@ -343,9 +343,9 @@ func (r *PublicCommands) Stash() error {
 }
 
 // StageFiles adds the file with the given name to the Git index.
-func (r *PublicCommands) StageFiles(names ...string) error {
+func (r *FrontendCommands) StageFiles(names ...string) error {
 	args := append([]string{"add"}, names...)
-	err := r.Public.Run("git", args...)
+	err := r.Frontend.Run("git", args...)
 	if err != nil {
 		return fmt.Errorf("cannot stage files %s: %w", strings.Join(names, ", "), err)
 	}
@@ -353,8 +353,8 @@ func (r *PublicCommands) StageFiles(names ...string) error {
 }
 
 // StartCommit starts a commit and stops at asking the user for the commit message.
-func (r *PublicCommands) StartCommit() error {
-	err := r.Public.Run("git", "commit")
+func (r *FrontendCommands) StartCommit() error {
+	err := r.Frontend.Run("git", "commit")
 	if err != nil {
 		return fmt.Errorf("cannot start commit: %w", err)
 	}

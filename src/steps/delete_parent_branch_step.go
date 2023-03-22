@@ -12,7 +12,7 @@ type DeleteParentBranchStep struct {
 	previousParent string
 }
 
-func (step *DeleteParentBranchStep) CreateUndoStep(repo *git.InternalCommands) (Step, error) {
+func (step *DeleteParentBranchStep) CreateUndoStep(repo *git.BackendCommands) (Step, error) {
 	if step.previousParent == "" {
 		return &EmptyStep{}, nil
 	}

@@ -37,7 +37,7 @@ func appendCmd() *cobra.Command {
 }
 
 func runAppend(arg string, debug bool) error {
-	repo, exit, err := LoadPublicThing(RepoArgs{
+	repo, exit, err := LoadProdRepo(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: true,
@@ -73,8 +73,8 @@ type appendConfig struct {
 
 func determineAppendConfig(targetBranch string, repo *git.ProdRepo) (*appendConfig, error) {
 	ec := runstate.ErrorChecker{}
-	parentBranch := ec.String(repo.Internal.CurrentBranch())
-	hasOrigin := ec.Bool(repo.Internal.HasOrigin())
+	parentBranch := ec.String(repo.Backend.CurrentBranch())
+	hasOrigin := ec.Bool(repo.Backend.HasOrigin())
 	isOffline := ec.Bool(repo.Config.IsOffline())
 	mainBranch := repo.Config.MainBranch()
 	pushHook := ec.Bool(repo.Config.PushHook())
@@ -83,13 +83,13 @@ func determineAppendConfig(targetBranch string, repo *git.ProdRepo) (*appendConf
 		return nil, ec.Err
 	}
 	if hasOrigin && !isOffline {
-		ec.Check(repo.Public.Fetch())
+		ec.Check(repo.Frontend.Fetch())
 	}
-	hasTargetBranch := ec.Bool(repo.Internal.HasLocalOrOriginBranch(targetBranch, mainBranch))
+	hasTargetBranch := ec.Bool(repo.Backend.HasLocalOrOriginBranch(targetBranch, mainBranch))
 	if hasTargetBranch {
 		ec.Fail("a branch named %q already exists", targetBranch)
 	}
-	ec.Check(validate.KnowsBranchAncestry(parentBranch, repo.Config.MainBranch(), &repo.Internal))
+	ec.Check(validate.KnowsBranchAncestry(parentBranch, repo.Config.MainBranch(), &repo.Backend))
 	ancestorBranches := repo.Config.AncestorBranches(parentBranch)
 	return &appendConfig{
 		ancestorBranches:    ancestorBranches,
@@ -114,6 +114,6 @@ func appendStepList(config *appendConfig, repo *git.ProdRepo) (runstate.StepList
 	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
 		list.Add(&steps.CreateTrackingBranchStep{Branch: config.targetBranch, NoPushHook: config.noPushHook})
 	}
-	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &repo.Internal, config.mainBranch)
+	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &repo.Backend, config.mainBranch)
 	return list.Result()
 }

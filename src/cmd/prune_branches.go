@@ -29,7 +29,7 @@ func pruneBranchesCommand() *cobra.Command {
 }
 
 func pruneBranches(debug bool) error {
-	repo, exit, err := LoadPublicThing(RepoArgs{
+	repo, exit, err := LoadProdRepo(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: true,
@@ -60,21 +60,21 @@ type pruneBranchesConfig struct {
 }
 
 func determinePruneBranchesConfig(repo *git.ProdRepo) (*pruneBranchesConfig, error) {
-	hasOrigin, err := repo.Internal.HasOrigin()
+	hasOrigin, err := repo.Backend.HasOrigin()
 	if err != nil {
 		return nil, err
 	}
 	if hasOrigin {
-		err = repo.Public.Fetch()
+		err = repo.Frontend.Fetch()
 		if err != nil {
 			return nil, err
 		}
 	}
-	initialBranch, err := repo.Internal.CurrentBranch()
+	initialBranch, err := repo.Backend.CurrentBranch()
 	if err != nil {
 		return nil, err
 	}
-	localBranchesWithDeletedTrackingBranches, err := repo.Internal.LocalBranchesWithDeletedTrackingBranches()
+	localBranchesWithDeletedTrackingBranches, err := repo.Backend.LocalBranchesWithDeletedTrackingBranches()
 	if err != nil {
 		return nil, err
 	}
@@ -103,6 +103,6 @@ func pruneBranchesStepList(config *pruneBranchesConfig, repo *git.ProdRepo) (run
 		}
 		result.Append(&steps.DeleteLocalBranchStep{Branch: branchWithDeletedRemote, Parent: config.mainBranch})
 	}
-	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, &repo.Internal, config.mainBranch)
+	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, &repo.Backend, config.mainBranch)
 	return result, err
 }

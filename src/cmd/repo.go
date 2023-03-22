@@ -39,7 +39,7 @@ func repoCommand() *cobra.Command {
 }
 
 func repo(debug bool) error {
-	repo, exit, err := LoadPublicThing(RepoArgs{
+	repo, exit, err := LoadProdRepo(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: false,
@@ -51,13 +51,13 @@ func repo(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	connector, err := hosting.NewConnector(repo.Config, &repo.Internal, cli.PrintConnectorAction)
+	connector, err := hosting.NewConnector(repo.Config, &repo.Backend, cli.PrintConnectorAction)
 	if err != nil {
 		return err
 	}
 	if connector == nil {
 		return hosting.UnsupportedServiceError()
 	}
-	browser.Open(connector.RepositoryURL(), repo.Public.Public, repo.Internal.InternalRunner)
+	browser.Open(connector.RepositoryURL(), repo.Frontend.Frontend, repo.Backend.BackendRunner)
 	return nil
 }

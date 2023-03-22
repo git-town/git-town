@@ -18,6 +18,6 @@ func (step *CreateProposalStep) Run(repo *git.ProdRepo, connector hosting.Connec
 	if err != nil {
 		return err
 	}
-	browser.Open(prURL, repo.Public.Public, repo.Internal)
+	browser.Open(prURL, repo.Frontend.Frontend, repo.Backend)
 	return nil
 }

@@ -14,5 +14,5 @@ type FetchUpstreamStep struct {
 
 // TODO: is this used?
 func (step *FetchUpstreamStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
-	return repo.Public.FetchUpstream(step.Branch)
+	return repo.Frontend.FetchUpstream(step.Branch)
 }

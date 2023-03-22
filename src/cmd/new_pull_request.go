@@ -48,7 +48,7 @@ func newPullRequestCommand() *cobra.Command {
 }
 
 func newPullRequest(debug bool) error {
-	repo, exit, err := LoadPublicThing(RepoArgs{
+	repo, exit, err := LoadProdRepo(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: true,
@@ -64,7 +64,7 @@ func newPullRequest(debug bool) error {
 	if err != nil {
 		return err
 	}
-	connector, err := hosting.NewConnector(repo.Config, &repo.Internal, cli.PrintConnectorAction)
+	connector, err := hosting.NewConnector(repo.Config, &repo.Backend, cli.PrintConnectorAction)
 	if err != nil {
 		return err
 	}
@@ -86,21 +86,21 @@ type newPullRequestConfig struct {
 }
 
 func determineNewPullRequestConfig(repo *git.ProdRepo) (*newPullRequestConfig, error) {
-	hasOrigin, err := repo.Internal.HasOrigin()
+	hasOrigin, err := repo.Backend.HasOrigin()
 	if err != nil {
 		return nil, err
 	}
 	if hasOrigin {
-		err := repo.Public.Fetch()
+		err := repo.Frontend.Fetch()
 		if err != nil {
 			return nil, err
 		}
 	}
-	initialBranch, err := repo.Internal.CurrentBranch()
+	initialBranch, err := repo.Backend.CurrentBranch()
 	if err != nil {
 		return nil, err
 	}
-	err = validate.KnowsBranchAncestry(initialBranch, repo.Config.MainBranch(), &repo.Internal)
+	err = validate.KnowsBranchAncestry(initialBranch, repo.Config.MainBranch(), &repo.Backend)
 	if err != nil {
 		return nil, err
 	}
@@ -116,7 +116,7 @@ func newPullRequestStepList(config *newPullRequestConfig, repo *git.ProdRepo) (r
 	for _, branch := range config.BranchesToSync {
 		updateBranchSteps(&list, branch, true, repo)
 	}
-	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &repo.Internal, config.mainBranch)
+	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &repo.Backend, config.mainBranch)
 	list.Add(&steps.CreateProposalStep{Branch: config.InitialBranch})
 	return list.Result()
 }

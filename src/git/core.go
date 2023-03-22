@@ -6,23 +6,23 @@ import (
 	"github.com/git-town/git-town/v7/src/subshell"
 )
 
-func NewInternalRunner(dir *string, debug bool) InternalRunner {
-	internalRunnerInstance := subshell.InternalRunner{Dir: dir}
+func NewBackendRunner(dir *string, debug bool) BackendRunner {
+	backendRunner := subshell.BackendRunner{Dir: dir}
 	if debug {
-		return subshell.InternalDebuggingRunner{InternalRunner: internalRunnerInstance}
+		return subshell.BackendLoggingRunner{BackendRunner: backendRunner}
 	}
-	return internalRunnerInstance
+	return backendRunner
 }
 
-// NewPublicCommands provides a PublicRepo instance that behaves according to the given configuration and uses the given InternalRepo instance internally.
-func NewPublicRunner(omitBranchNames, dryRun bool, currentBranchCache *cache.String) PublicRunner {
+// NewFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.
+func NewFrontendRunner(omitBranchNames, dryRun bool, currentBranchCache *cache.String) FrontendRunner {
 	if dryRun {
-		return subshell.PublicDryRunner{
+		return subshell.FrontendDryRunner{
 			CurrentBranch:   currentBranchCache,
 			OmitBranchNames: omitBranchNames,
 		}
 	}
-	return subshell.PublicRunner{
+	return subshell.FrontendRunner{
 		CurrentBranch:   currentBranchCache,
 		OmitBranchNames: omitBranchNames,
 	}

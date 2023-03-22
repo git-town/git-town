@@ -12,5 +12,5 @@ type PullBranchStep struct {
 }
 
 func (step *PullBranchStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
-	return repo.Public.Pull()
+	return repo.Frontend.Pull()
 }

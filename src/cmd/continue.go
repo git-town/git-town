@@ -28,7 +28,7 @@ func continueCmd() *cobra.Command {
 }
 
 func runContinue(debug bool) error {
-	repo, exit, err := LoadPublicThing(RepoArgs{
+	repo, exit, err := LoadProdRepo(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: false,
@@ -39,21 +39,21 @@ func runContinue(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	runState, err := runstate.Load(&repo.Internal)
+	runState, err := runstate.Load(&repo.Backend)
 	if err != nil {
 		return fmt.Errorf("cannot load previous run state: %w", err)
 	}
 	if runState == nil || !runState.IsUnfinished() {
 		return fmt.Errorf("nothing to continue")
 	}
-	hasConflicts, err := repo.Internal.HasConflicts()
+	hasConflicts, err := repo.Backend.HasConflicts()
 	if err != nil {
 		return err
 	}
 	if hasConflicts {
 		return fmt.Errorf("you must resolve the conflicts before continuing")
 	}
-	connector, err := hosting.NewConnector(repo.Config, &repo.Internal, cli.PrintConnectorAction)
+	connector, err := hosting.NewConnector(repo.Config, &repo.Backend, cli.PrintConnectorAction)
 	if err != nil {
 		return err
 	}

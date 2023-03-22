@@ -23,7 +23,7 @@ func (step *UpdateProposalTargetStep) CreateAbortStep() Step {
 	return &step.EmptyStep
 }
 
-func (step *UpdateProposalTargetStep) CreateUndoStep(repo *git.InternalCommands) (Step, error) {
+func (step *UpdateProposalTargetStep) CreateUndoStep(repo *git.BackendCommands) (Step, error) {
 	return &UpdateProposalTargetStep{
 		ProposalNumber: step.ProposalNumber,
 		NewTarget:      step.ExistingTarget,

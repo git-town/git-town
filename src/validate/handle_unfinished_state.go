@@ -13,7 +13,7 @@ import (
 //
 //nolint:nonamedreturns  // return value isn't obvious from function name
 func HandleUnfinishedState(repo *git.ProdRepo, connector hosting.Connector) (quit bool, err error) {
-	runState, err := runstate.Load(&repo.Internal)
+	runState, err := runstate.Load(&repo.Backend)
 	if err != nil {
 		return false, fmt.Errorf("cannot load previous run state: %w", err)
 	}
@@ -31,10 +31,10 @@ func HandleUnfinishedState(repo *git.ProdRepo, connector hosting.Connector) (qui
 	}
 	switch response {
 	case dialog.ResponseTypeDiscard:
-		err = runstate.Delete(&repo.Internal)
+		err = runstate.Delete(&repo.Backend)
 		return false, err
 	case dialog.ResponseTypeContinue:
-		hasConflicts, err := repo.Internal.HasConflicts()
+		hasConflicts, err := repo.Backend.HasConflicts()
 		if err != nil {
 			return false, err
 		}

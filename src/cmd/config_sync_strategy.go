@@ -31,7 +31,7 @@ func syncStrategyCommand() *cobra.Command {
 }
 
 func runConfigSyncStrategy(args []string, global, debug bool) error {
-	repo, exit, err := LoadPublicThing(RepoArgs{
+	repo, exit, err := LoadProdRepo(RepoArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
 		dryRun:                false,

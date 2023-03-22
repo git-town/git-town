@@ -32,7 +32,7 @@ func pushHookCommand() *cobra.Command {
 }
 
 func runConfigPushHook(args []string, global, debug bool) error {
-	repo, exit, err := LoadPublicThing(RepoArgs{
+	repo, exit, err := LoadProdRepo(RepoArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
 		dryRun:                false,

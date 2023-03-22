@@ -45,7 +45,7 @@ func perennialBranchesCmd() *cobra.Command {
 }
 
 func displayPerennialBranches(debug bool) error {
-	repo, exit, err := LoadPublicThing(RepoArgs{
+	repo, exit, err := LoadProdRepo(RepoArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
 		dryRun:                false,
@@ -61,7 +61,7 @@ func displayPerennialBranches(debug bool) error {
 }
 
 func updatePerennialBranches(debug bool) error {
-	repo, exit, err := LoadPublicThing(RepoArgs{
+	repo, exit, err := LoadProdRepo(RepoArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
 		dryRun:                false,
@@ -73,5 +73,5 @@ func updatePerennialBranches(debug bool) error {
 		return err
 	}
 	mainBranch := repo.Config.MainBranch()
-	return validate.EnterPerennialBranches(&repo.Internal, mainBranch)
+	return validate.EnterPerennialBranches(&repo.Backend, mainBranch)
 }

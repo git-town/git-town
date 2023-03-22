@@ -11,5 +11,5 @@ type AbortMergeStep struct {
 }
 
 func (step *AbortMergeStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
-	return repo.Public.AbortMerge()
+	return repo.Frontend.AbortMerge()
 }

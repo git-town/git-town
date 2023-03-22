@@ -17,12 +17,12 @@ func Execute(runState *RunState, repo *git.ProdRepo, connector hosting.Connector
 		if step == nil {
 			runState.MarkAsFinished()
 			if runState.IsAbort || runState.isUndo {
-				err := Delete(&repo.Internal)
+				err := Delete(&repo.Backend)
 				if err != nil {
 					return fmt.Errorf("cannot delete previous run state: %w", err)
 				}
 			} else {
-				err := Save(runState, &repo.Internal)
+				err := Save(runState, &repo.Backend)
 				if err != nil {
 					return fmt.Errorf("cannot save run state: %w", err)
 				}
@@ -35,7 +35,7 @@ func Execute(runState *RunState, repo *git.ProdRepo, connector hosting.Connector
 			continue
 		}
 		if typeName(step) == "*PushBranchAfterCurrentBranchSteps" {
-			err := runState.AddPushBranchStepAfterCurrentBranchSteps(&repo.Internal)
+			err := runState.AddPushBranchStepAfterCurrentBranchSteps(&repo.Backend)
 			if err != nil {
 				return err
 			}
@@ -54,22 +54,22 @@ func Execute(runState *RunState, repo *git.ProdRepo, connector hosting.Connector
 				return step.CreateAutomaticAbortError()
 			}
 			runState.RunStepList.Prepend(step.CreateContinueStep())
-			err := runState.MarkAsUnfinished(&repo.Internal)
+			err := runState.MarkAsUnfinished(&repo.Backend)
 			if err != nil {
 				return err
 			}
-			currentBranch, err := repo.Internal.CurrentBranch()
+			currentBranch, err := repo.Backend.CurrentBranch()
 			if err != nil {
 				return err
 			}
-			rebasing, err := repo.Internal.HasRebaseInProgress()
+			rebasing, err := repo.Backend.HasRebaseInProgress()
 			if err != nil {
 				return err
 			}
 			if runState.Command == "sync" && !(rebasing && repo.Config.IsMainBranch(currentBranch)) {
 				runState.UnfinishedDetails.CanSkip = true
 			}
-			err = Save(runState, &repo.Internal)
+			err = Save(runState, &repo.Backend)
 			if err != nil {
 				return fmt.Errorf("cannot save run state: %w", err)
 			}
@@ -84,7 +84,7 @@ To continue after having resolved conflicts, run "git-town continue".
 			message += "\n"
 			return fmt.Errorf(message)
 		}
-		undoStep, err := step.CreateUndoStep(&repo.Internal)
+		undoStep, err := step.CreateUndoStep(&repo.Backend)
 		if err != nil {
 			return fmt.Errorf("cannot create undo step for %q: %w", step, err)
 		}

@@ -154,34 +154,34 @@ func dryRunFlag() (addFlagFunc, readBoolFlagFunc) {
 	return boolFlag("dry-run", "", "Print but do not run the Git commands")
 }
 
-func LoadPublicThing(args RepoArgs) (publicThing git.ProdRepo, exit bool, err error) { //nolint:nonamedreturns // so many return values require names
-	internalRunner := git.NewInternalRunner(nil, args.debug)
-	config := git.NewRepoConfig(internalRunner)
-	internalCommands := git.InternalCommands{
-		InternalRunner: internalRunner,
-		Config:         &config,
+func LoadProdRepo(args RepoArgs) (prodRepo git.ProdRepo, exit bool, err error) { //nolint:nonamedreturns // so many return values require names
+	backendRunner := git.NewBackendRunner(nil, args.debug)
+	config := git.NewRepoConfig(backendRunner)
+	backendCommands := git.BackendCommands{
+		BackendRunner: backendRunner,
+		Config:        &config,
 	}
-	publicRunner := git.NewPublicRunner(args.omitBranchNames, args.dryRun, config.CurrentBranchCache)
-	publicCommands := git.PublicCommands{
-		Public:   publicRunner,
+	frontendRunner := git.NewFrontendRunner(args.omitBranchNames, args.dryRun, config.CurrentBranchCache)
+	frontendCommands := git.FrontendCommands{
+		Frontend: frontendRunner,
 		Config:   &config,
-		Internal: &internalCommands,
+		Backend:  &backendCommands,
 	}
-	publicThing = git.ProdRepo{
+	prodRepo = git.ProdRepo{
 		Config:   config,
-		Internal: internalCommands,
-		Public:   publicCommands,
+		Backend:  backendCommands,
+		Frontend: frontendCommands,
 	}
 	if args.validateIsRepository {
-		err := validate.IsRepository(&publicThing)
+		err := validate.IsRepository(&prodRepo)
 		if err != nil {
-			return publicThing, false, err
+			return prodRepo, false, err
 		}
 	}
 	if !args.omitBranchNames || args.dryRun {
-		currentBranch, err := internalCommands.CurrentBranch()
+		currentBranch, err := backendCommands.CurrentBranch()
 		if err != nil {
-			return publicThing, false, err
+			return prodRepo, false, err
 		}
 		config.CurrentBranchCache.Set(currentBranch)
 	}
@@ -190,18 +190,18 @@ func LoadPublicThing(args RepoArgs) (publicThing git.ProdRepo, exit bool, err er
 	}
 	ec := runstate.ErrorChecker{}
 	if args.validateGitversion {
-		ec.Check(validate.HasGitVersion(&internalCommands))
+		ec.Check(validate.HasGitVersion(&backendCommands))
 	}
 	if args.validateIsConfigured {
-		ec.Check(validate.IsConfigured(&internalCommands))
+		ec.Check(validate.IsConfigured(&backendCommands))
 	}
 	if args.validateIsOnline {
 		ec.Check(validate.IsOnline(&config))
 	}
 	if args.handleUnfinishedState {
-		exit = ec.Bool(validate.HandleUnfinishedState(&publicThing, nil))
+		exit = ec.Bool(validate.HandleUnfinishedState(&prodRepo, nil))
 	}
-	return publicThing, exit, ec.Err
+	return prodRepo, exit, ec.Err
 }
 
 type RepoArgs struct {

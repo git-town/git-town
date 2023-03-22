@@ -12,7 +12,7 @@ import (
 )
 
 // Load loads the run state for the given Git repo from disk. Can return nil if there is no saved runstate.
-func Load(repo *git.InternalCommands) (*RunState, error) {
+func Load(repo *git.BackendCommands) (*RunState, error) {
 	filename, err := PersistenceFilePath(repo)
 	if err != nil {
 		return nil, err
@@ -37,7 +37,7 @@ func Load(repo *git.InternalCommands) (*RunState, error) {
 }
 
 // Delete removes the stored run state from disk.
-func Delete(repo *git.InternalCommands) error {
+func Delete(repo *git.BackendCommands) error {
 	filename, err := PersistenceFilePath(repo)
 	if err != nil {
 		return err
@@ -57,7 +57,7 @@ func Delete(repo *git.InternalCommands) error {
 }
 
 // Save stores the given run state for the given Git repo to disk.
-func Save(runState *RunState, repo *git.InternalCommands) error {
+func Save(runState *RunState, repo *git.BackendCommands) error {
 	content, err := json.MarshalIndent(runState, "", "  ")
 	if err != nil {
 		return fmt.Errorf("cannot encode run-state: %w", err)
@@ -78,7 +78,7 @@ func Save(runState *RunState, repo *git.InternalCommands) error {
 	return nil
 }
 
-func PersistenceFilePath(repo *git.InternalCommands) (string, error) {
+func PersistenceFilePath(repo *git.BackendCommands) (string, error) {
 	configDir, err := os.UserConfigDir()
 	if err != nil {
 		return "", err

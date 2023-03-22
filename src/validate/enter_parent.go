@@ -8,7 +8,7 @@ import (
 )
 
 // EnterParent lets the user select a new parent for the given branch.
-func EnterParent(branch, defaultParent string, repo *git.InternalCommands) (string, error) {
+func EnterParent(branch, defaultParent string, repo *git.BackendCommands) (string, error) {
 	choices, err := repo.LocalBranchesMainFirst(defaultParent)
 	if err != nil {
 		return "", err
