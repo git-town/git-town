@@ -14,14 +14,14 @@ func resetConfigCommand() *cobra.Command {
 		Short: resetConfigDesc,
 		Long:  long(resetConfigDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runConfigReset(readDebugFlag(cmd))
+			return resetStatus(readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func runConfigReset(debug bool) error {
+func resetStatus(debug bool) error {
 	repo, exit, err := LoadProdRepo(RepoArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
