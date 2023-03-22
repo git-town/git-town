@@ -23,7 +23,7 @@ func pushHookCommand() *cobra.Command {
 		Short: pushHookDesc,
 		Long:  long(pushHookDesc, pushHookHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runConfigPushHook(args, readGlobalFlag(cmd), readDebugFlag(cmd))
+			return pushHook(args, readGlobalFlag(cmd), readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&cmd)
@@ -31,7 +31,7 @@ func pushHookCommand() *cobra.Command {
 	return &cmd
 }
 
-func runConfigPushHook(args []string, global, debug bool) error {
+func pushHook(args []string, global, debug bool) error {
 	repo, exit, err := LoadProdRepo(RepoArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
