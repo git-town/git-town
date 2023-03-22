@@ -47,9 +47,9 @@ func CloneGitEnvironment(original GitEnvironment, dir string) (GitEnvironment, e
 	}
 	binDir := filepath.Join(dir, "bin")
 	originDir := filepath.Join(dir, "origin")
-	originRepo := NewRepo(originDir, dir, "")
+	originRepo := newRepo(originDir, dir, "")
 	developerDir := filepath.Join(dir, "developer")
-	devRepo := NewRepo(developerDir, dir, binDir)
+	devRepo := newRepo(developerDir, dir, binDir)
 	result := GitEnvironment{
 		Dir:        dir,
 		DevRepo:    devRepo,
@@ -94,7 +94,7 @@ func NewStandardGitEnvironment(dir string) (GitEnvironment, error) {
 		return gitEnv, fmt.Errorf("cannot create directory %q: %w", gitEnv.originRepoPath(), err)
 	}
 	// initialize the repo in the folder
-	originRepo, err := InitRepo(gitEnv.originRepoPath(), gitEnv.Dir, gitEnv.binPath())
+	originRepo, err := initRepo(gitEnv.originRepoPath(), gitEnv.Dir, gitEnv.binPath())
 	if err != nil {
 		return gitEnv, err
 	}
@@ -132,7 +132,7 @@ func (env *GitEnvironment) AddSubmoduleRepo() error {
 	if err != nil {
 		return fmt.Errorf("cannot create directory %q: %w", env.submoduleRepoPath(), err)
 	}
-	submoduleRepo, err := InitRepo(env.submoduleRepoPath(), env.Dir, env.binPath())
+	submoduleRepo, err := initRepo(env.submoduleRepoPath(), env.Dir, env.binPath())
 	if err != nil {
 		return err
 	}

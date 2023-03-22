@@ -21,7 +21,7 @@ func TestTestRepo(t *testing.T) {
 		workingDir := filepath.Join(dir, "working")
 		homeDir := filepath.Join(dir, "home")
 		binDir := filepath.Join(dir, "bin")
-		repo := NewRepo(workingDir, homeDir, binDir)
+		repo := newRepo(workingDir, homeDir, binDir)
 		assert.Equal(t, workingDir, repo.workingDir)
 		assert.Equal(t, homeDir, repo.homeDir)
 		assert.Equal(t, binDir, repo.binDir)
@@ -89,7 +89,7 @@ func TestTestRepo(t *testing.T) {
 		repoDir := filepath.Join(t.TempDir(), "repo") // need a non-existing directory
 		err := CopyDirectory(origin.workingDir, repoDir)
 		assert.NoError(t, err)
-		repo := NewRepo(repoDir, repoDir, "")
+		repo := newRepo(repoDir, repoDir, "")
 		err = repo.AddRemote(config.OriginRemote, origin.workingDir)
 		assert.NoError(t, err)
 		err = repo.Fetch()

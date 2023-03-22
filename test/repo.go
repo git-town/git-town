@@ -13,7 +13,7 @@ import (
 
 // Repo provides Git functionality for test code (unit and end-to-end tests).
 type Repo struct {
-	TestCommands
+	testCommands
 	internal git.InternalCommands
 }
 
@@ -27,17 +27,17 @@ func CreateRepo(t *testing.T) Repo {
 	homeDir := filepath.Join(dir, "home")
 	err = os.Mkdir(homeDir, 0o744)
 	assert.NoError(t, err)
-	repo, err := InitRepo(workingDir, homeDir, homeDir)
+	repo, err := initRepo(workingDir, homeDir, homeDir)
 	assert.NoError(t, err)
 	_, err = repo.Run("git", "commit", "--allow-empty", "-m", "initial commit")
 	assert.NoError(t, err)
 	return repo
 }
 
-// InitRepo creates a fully functioning test.Repo in the given working directory,
+// initRepo creates a fully functioning test.Repo in the given working directory,
 // including necessary Git configuration to make commits. Creates missing folders as needed.
-func InitRepo(workingDir, homeDir, binDir string) (Repo, error) {
-	result := NewRepo(workingDir, homeDir, binDir)
+func initRepo(workingDir, homeDir, binDir string) (Repo, error) {
+	result := newRepo(workingDir, homeDir, binDir)
 	err := result.RunMany([][]string{
 		{"git", "init", "--initial-branch=initial"},
 		{"git", "config", "--global", "user.name", "user"},
@@ -46,10 +46,10 @@ func InitRepo(workingDir, homeDir, binDir string) (Repo, error) {
 	return result, err
 }
 
-// NewRepo provides a new Repo instance working in the given directory.
+// newRepo provides a new Repo instance working in the given directory.
 // The directory must contain an existing Git repo.
 // TODO: inline this method.
-func NewRepo(workingDir, homeDir, binDir string) Repo {
+func newRepo(workingDir, homeDir, binDir string) Repo {
 	mockingRunner := MockingRunner{
 		workingDir: workingDir,
 		homeDir:    homeDir,
@@ -68,13 +68,13 @@ func NewRepo(workingDir, homeDir, binDir string) Repo {
 		InternalRunner: git.NewInternalRunner(false),
 		Config:         &config,
 	}
-	testCommands := TestCommands{
+	testCommands := testCommands{
 		MockingRunner:    mockingRunner,
 		config:           config,
 		InternalCommands: &internalCommands,
 	}
 	return Repo{
-		TestCommands: testCommands,
+		testCommands: testCommands,
 		internal:     internalCommands,
 	}
 }

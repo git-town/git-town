@@ -12,14 +12,14 @@ import (
 	"github.com/git-town/git-town/v7/src/stringslice"
 )
 
-type TestCommands struct {
+type testCommands struct {
 	MockingRunner
 	config git.RepoConfig
 	*git.InternalCommands
 }
 
 // AddRemote adds a Git remote with the given name and URL to this repository.
-func (r *TestCommands) AddRemote(name, url string) error {
+func (r *testCommands) AddRemote(name, url string) error {
 	_, err := r.Run("git", "remote", "add", name, url)
 	if err != nil {
 		return fmt.Errorf("cannot add remote %q --> %q: %w", name, url, err)
@@ -29,7 +29,7 @@ func (r *TestCommands) AddRemote(name, url string) error {
 }
 
 // AddSubmodule adds a Git submodule with the given URL to this repository.
-func (r *TestCommands) AddSubmodule(url string) error {
+func (r *testCommands) AddSubmodule(url string) error {
 	_, err := r.Run("git", "submodule", "add", url)
 	if err != nil {
 		return err
@@ -39,7 +39,7 @@ func (r *TestCommands) AddSubmodule(url string) error {
 }
 
 // BranchHierarchyTable provides the currently configured branch hierarchy information as a DataTable.
-func (r *TestCommands) BranchHierarchyTable() DataTable {
+func (r *testCommands) BranchHierarchyTable() DataTable {
 	result := DataTable{}
 	r.config.Reload()
 	parentBranchMap := r.config.ParentBranchMap()
@@ -57,16 +57,16 @@ func (r *TestCommands) BranchHierarchyTable() DataTable {
 
 // Clone creates a clone of this Repo into the given directory.
 // The cloned repo uses the same homeDir and binDir as its origin.
-func (r *TestCommands) Clone(targetDir string) (Repo, error) {
+func (r *testCommands) Clone(targetDir string) (Repo, error) {
 	_, err := r.Run("git", "clone", r.workingDir, targetDir)
 	if err != nil {
 		return Repo{}, fmt.Errorf("cannot clone repo %q: %w", r.workingDir, err)
 	}
-	return NewRepo(targetDir, r.homeDir, r.binDir), nil
+	return newRepo(targetDir, r.homeDir, r.binDir), nil
 }
 
 // CheckoutBranch checks out the Git branch with the given name in this repo.
-func (r *TestCommands) CheckoutBranch(name string) error {
+func (r *testCommands) CheckoutBranch(name string) error {
 	_, err := r.Run("git", "checkout", name)
 	if err != nil {
 		return fmt.Errorf("cannot check out branch %q: %w", name, err)
@@ -82,14 +82,14 @@ func (r *TestCommands) CheckoutBranch(name string) error {
 // CreateBranch creates a new branch with the given name.
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
-func (r *TestCommands) CreateBranch(name, parent string) error {
+func (r *testCommands) CreateBranch(name, parent string) error {
 	_, err := r.Run("git", "branch", name, parent)
 	return err
 }
 
 // CreateChildFeatureBranch creates a branch with the given name and parent in this repository.
 // The parent branch must already exist.
-func (r *TestCommands) CreateChildFeatureBranch(name string, parent string) error {
+func (r *testCommands) CreateChildFeatureBranch(name string, parent string) error {
 	err := r.CreateBranch(name, parent)
 	if err != nil {
 		return err
@@ -98,7 +98,7 @@ func (r *TestCommands) CreateChildFeatureBranch(name string, parent string) erro
 }
 
 // CreateCommit creates a commit with the given properties in this Git repo.
-func (r *TestCommands) CreateCommit(commit git.Commit) error {
+func (r *testCommands) CreateCommit(commit git.Commit) error {
 	err := r.CheckoutBranch(commit.Branch)
 	if err != nil {
 		return fmt.Errorf("cannot checkout branch %q: %w", commit.Branch, err)
@@ -123,7 +123,7 @@ func (r *TestCommands) CreateCommit(commit git.Commit) error {
 }
 
 // CreateFile creates a file with the given name and content in this repository.
-func (r *TestCommands) CreateFile(name, content string) error {
+func (r *testCommands) CreateFile(name, content string) error {
 	filePath := filepath.Join(r.workingDir, name)
 	folderPath := filepath.Dir(filePath)
 	err := os.MkdirAll(folderPath, os.ModePerm)
@@ -138,7 +138,7 @@ func (r *TestCommands) CreateFile(name, content string) error {
 }
 
 // CreatePerennialBranches creates perennial branches with the given names in this repository.
-func (r *TestCommands) CreatePerennialBranches(names ...string) error {
+func (r *testCommands) CreatePerennialBranches(names ...string) error {
 	for _, name := range names {
 		err := r.CreateBranch(name, "main")
 		if err != nil {
@@ -149,7 +149,7 @@ func (r *TestCommands) CreatePerennialBranches(names ...string) error {
 }
 
 // CreateStandaloneTag creates a tag not on a branch.
-func (r *TestCommands) CreateStandaloneTag(name string) error {
+func (r *testCommands) CreateStandaloneTag(name string) error {
 	return r.RunMany([][]string{
 		{"git", "checkout", "-b", "temp"},
 		{"touch", "a.txt"},
@@ -162,13 +162,13 @@ func (r *TestCommands) CreateStandaloneTag(name string) error {
 }
 
 // CreateTag creates a tag with the given name.
-func (r *TestCommands) CreateTag(name string) error {
+func (r *testCommands) CreateTag(name string) error {
 	_, err := r.Run("git", "tag", "-a", name, "-m", name)
 	return err
 }
 
 // Commits provides a list of the commits in this Git repository with the given fields.
-func (r *TestCommands) Commits(fields []string, mainBranch string) ([]git.Commit, error) {
+func (r *testCommands) Commits(fields []string, mainBranch string) ([]git.Commit, error) {
 	branches, err := r.LocalBranchesMainFirst(mainBranch)
 	if err != nil {
 		return []git.Commit{}, fmt.Errorf("cannot determine the Git branches: %w", err)
@@ -185,7 +185,7 @@ func (r *TestCommands) Commits(fields []string, mainBranch string) ([]git.Commit
 }
 
 // CommitsInBranch provides all commits in the given Git branch.
-func (r *TestCommands) CommitsInBranch(branch string, fields []string) ([]git.Commit, error) {
+func (r *testCommands) CommitsInBranch(branch string, fields []string) ([]git.Commit, error) {
 	output, err := r.Run("git", "log", branch, "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse")
 	if err != nil {
 		return []git.Commit{}, fmt.Errorf("cannot get commits in branch %q: %w", branch, err)
@@ -217,20 +217,20 @@ func (r *TestCommands) CommitsInBranch(branch string, fields []string) ([]git.Co
 }
 
 // CommitStagedChanges commits the currently staged changes.
-func (r *TestCommands) CommitStagedChanges(message string) error {
+func (r *testCommands) CommitStagedChanges(message string) error {
 	_, err := r.Run("git", "commit", "-m", message)
 	return err
 }
 
 // ConnectTrackingBranch connects the branch with the given name to its counterpart at origin.
 // The branch must exist.
-func (r *TestCommands) ConnectTrackingBranch(name string) error {
+func (r *testCommands) ConnectTrackingBranch(name string) error {
 	_, err := r.Run("git", "branch", "--set-upstream-to=origin/"+name, name)
 	return err
 }
 
 // DeleteMainBranchConfiguration removes the configuration for which branch is the main branch.
-func (r *TestCommands) DeleteMainBranchConfiguration() error {
+func (r *testCommands) DeleteMainBranchConfiguration() error {
 	_, err := r.Run("git", "config", "--unset", config.MainBranchKey)
 	if err != nil {
 		return fmt.Errorf("cannot delete main branch configuration: %w", err)
@@ -239,19 +239,19 @@ func (r *TestCommands) DeleteMainBranchConfiguration() error {
 }
 
 // Fetch retrieves the updates from the origin repo.
-func (r *TestCommands) Fetch() error {
+func (r *testCommands) Fetch() error {
 	_, err := r.Run("git", "fetch", "--prune", "--tags") // TODO: remove --prune or --tags here?
 	return err
 }
 
 // FileContent provides the current content of a file.
-func (r *TestCommands) FileContent(filename string) (string, error) {
+func (r *testCommands) FileContent(filename string) (string, error) {
 	content, err := os.ReadFile(filepath.Join(r.workingDir, filename))
 	return string(content), err
 }
 
 // FileContentInCommit provides the content of the file with the given name in the commit with the given SHA.
-func (r *TestCommands) FileContentInCommit(sha string, filename string) (string, error) {
+func (r *testCommands) FileContentInCommit(sha string, filename string) (string, error) {
 	output, err := r.Run("git", "show", sha+":"+filename)
 	if err != nil {
 		return "", fmt.Errorf("cannot determine the content for file %q in commit %q: %w", filename, sha, err)
@@ -265,7 +265,7 @@ func (r *TestCommands) FileContentInCommit(sha string, filename string) (string,
 }
 
 // FilesInCommit provides the names of the files that the commit with the given SHA changes.
-func (r *TestCommands) FilesInCommit(sha string) ([]string, error) {
+func (r *testCommands) FilesInCommit(sha string) ([]string, error) {
 	output, err := r.Run("git", "diff-tree", "--no-commit-id", "--name-only", "-r", sha)
 	if err != nil {
 		return []string{}, fmt.Errorf("cannot get files for commit %q: %w", sha, err)
@@ -274,7 +274,7 @@ func (r *TestCommands) FilesInCommit(sha string) ([]string, error) {
 }
 
 // FilesInBranch provides the list of the files present in the given branch.
-func (r *TestCommands) FilesInBranch(branch string) ([]string, error) {
+func (r *testCommands) FilesInBranch(branch string) ([]string, error) {
 	output, err := r.Run("git", "ls-tree", "-r", "--name-only", branch)
 	if err != nil {
 		return []string{}, fmt.Errorf("cannot determine files in branch %q in repo %q: %w", branch, r.workingDir, err)
@@ -290,7 +290,7 @@ func (r *TestCommands) FilesInBranch(branch string) ([]string, error) {
 }
 
 // FilesInBranches provides a data table of files and their content in all branches.
-func (r *TestCommands) FilesInBranches(mainBranch string) (DataTable, error) {
+func (r *testCommands) FilesInBranches(mainBranch string) (DataTable, error) {
 	result := DataTable{}
 	result.AddRow("BRANCH", "NAME", "CONTENT")
 	branches, err := r.LocalBranchesMainFirst(mainBranch)
@@ -320,7 +320,7 @@ func (r *TestCommands) FilesInBranches(mainBranch string) (DataTable, error) {
 }
 
 // HasBranchesOutOfSync indicates whether one or more local branches are out of sync with their tracking branch.
-func (r *TestCommands) HasBranchesOutOfSync() (bool, error) {
+func (r *testCommands) HasBranchesOutOfSync() (bool, error) {
 	output, err := r.Run("git", "for-each-ref", "--format=%(refname:short) %(upstream:track)", "refs/heads")
 	if err != nil {
 		return false, fmt.Errorf("cannot determine if branches are out of sync in %q: %w %q", r.workingDir, err, output.Sanitized())
@@ -329,7 +329,7 @@ func (r *TestCommands) HasBranchesOutOfSync() (bool, error) {
 }
 
 // HasFile indicates whether this repository contains a file with the given name and content.
-func (r *TestCommands) HasFile(name, content string) (bool, error) {
+func (r *testCommands) HasFile(name, content string) (bool, error) {
 	rawContent, err := os.ReadFile(filepath.Join(r.workingDir, name))
 	if err != nil {
 		return false, fmt.Errorf("repo doesn't have file %q: %w", name, err)
@@ -342,7 +342,7 @@ func (r *TestCommands) HasFile(name, content string) (bool, error) {
 }
 
 // HasGitTownConfigNow indicates whether this repository contain Git Town specific configuration.
-func (r *TestCommands) HasGitTownConfigNow() bool {
+func (r *testCommands) HasGitTownConfigNow() bool {
 	output, err := r.Run("git", "config", "--local", "--get-regex", "git-town")
 	if err != nil {
 		return false
@@ -350,31 +350,31 @@ func (r *TestCommands) HasGitTownConfigNow() bool {
 	return output.Sanitized() != ""
 }
 
-func (r *TestCommands) PushBranch() error {
+func (r *testCommands) PushBranch() error {
 	_, err := r.Run("git", "push")
 	return err
 }
 
-func (r *TestCommands) PushBranchToRemote(branch, remote string) error {
+func (r *testCommands) PushBranchToRemote(branch, remote string) error {
 	_, err := r.Run("git", "push", "-u", remote, branch)
 	return err
 }
 
 // RemoveBranch deletes the branch with the given name from this repo.
-func (r *TestCommands) RemoveBranch(name string) error {
+func (r *testCommands) RemoveBranch(name string) error {
 	_, err := r.Run("git", "branch", "-D", name)
 	return err
 }
 
 // RemoveRemote deletes the Git remote with the given name.
-func (r *TestCommands) RemoveRemote(name string) error {
+func (r *testCommands) RemoveRemote(name string) error {
 	r.config.RemotesCache.Invalidate()
 	_, err := r.Run("git", "remote", "rm", name)
 	return err
 }
 
 // RemoveUnnecessaryFiles trims all files that aren't necessary in this repo.
-func (r *TestCommands) RemoveUnnecessaryFiles() error {
+func (r *testCommands) RemoveUnnecessaryFiles() error {
 	fullPath := filepath.Join(r.workingDir, ".git", "hooks")
 	err := os.RemoveAll(fullPath)
 	if err != nil {
@@ -386,7 +386,7 @@ func (r *TestCommands) RemoveUnnecessaryFiles() error {
 }
 
 // ShaForCommit provides the SHA for the commit with the given name.
-func (r *TestCommands) ShaForCommit(name string) (string, error) {
+func (r *testCommands) ShaForCommit(name string) (string, error) {
 	output, err := r.Run("git", "log", "--reflog", "--format=%H", "--grep=^"+name+"$")
 	if err != nil {
 		return "", fmt.Errorf("cannot determine the SHA of commit %q: %w", name, err)
@@ -400,14 +400,14 @@ func (r *TestCommands) ShaForCommit(name string) (string, error) {
 }
 
 // StageFiles adds the file with the given name to the Git index.
-func (r *TestCommands) StageFiles(names ...string) error {
+func (r *testCommands) StageFiles(names ...string) error {
 	args := append([]string{"add"}, names...)
 	_, err := r.Run("git", args...)
 	return err
 }
 
 // StashSize provides the number of stashes in this repository.
-func (r *TestCommands) StashSize() (int, error) {
+func (r *testCommands) StashSize() (int, error) {
 	output, err := r.Run("git", "stash", "list")
 	if err != nil {
 		return 0, fmt.Errorf("cannot determine Git stash: %w", err)
@@ -419,7 +419,7 @@ func (r *TestCommands) StashSize() (int, error) {
 }
 
 // Tags provides a list of the tags in this repository.
-func (r *TestCommands) Tags() ([]string, error) {
+func (r *testCommands) Tags() ([]string, error) {
 	output, err := r.Run("git", "tag")
 	if err != nil {
 		return []string{}, fmt.Errorf("cannot determine tags in repo %q: %w", r.workingDir, err)
@@ -432,7 +432,7 @@ func (r *TestCommands) Tags() ([]string, error) {
 }
 
 // UncommittedFiles provides the names of the files not committed into Git.
-func (r *TestCommands) UncommittedFiles() ([]string, error) {
+func (r *testCommands) UncommittedFiles() ([]string, error) {
 	output, err := r.Run("git", "status", "--porcelain", "--untracked-files=all")
 	if err != nil {
 		return []string{}, fmt.Errorf("cannot determine uncommitted files in %q: %w", r.workingDir, err)

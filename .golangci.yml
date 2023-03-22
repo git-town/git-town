@@ -30,6 +30,14 @@ linters:
     - wrapcheck # too many false positives for return values defined in internal packages
     - wsl # this linter creates too many false positives, our policy is to not have any empty lines in code blocks
 
+linters-settings:
+  ireturn:
+    allow:
+      - error
+      - stdlib
+      - github.com/git-town/git-town/v7/src/git.PublicRunner
+      - github.com/git-town/git-town/v7/src/git.InternalRunner
+
 issues:
   # List of regexps of issue texts to exclude, empty list by default.
   # But independently from this option we use default exclude patterns,
