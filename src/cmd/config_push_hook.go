@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/config"
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/spf13/cobra"
 )
@@ -15,8 +16,8 @@ const pushHookHelp = `
 Enabled by default. When disabled, Git Town prevents Git's pre-push hook from running.`
 
 func pushHookCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := debugFlag()
-	addGlobalFlag, readGlobalFlag := boolFlag("global", "g", "If set, reads or updates the push hook flag for all repos on this machine")
+	addDebugFlag, readDebugFlag := flags.Debug()
+	addGlobalFlag, readGlobalFlag := flags.Bool("global", "g", "If set, reads or updates the push hook flag for all repos on this machine")
 	cmd := cobra.Command{
 		Use:   "push-hook [--global] [(yes | no)]",
 		Args:  cobra.MaximumNArgs(1),

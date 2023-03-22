@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/spf13/cobra"
@@ -12,7 +13,7 @@ import (
 const abortDesc = "Aborts the last run git-town command"
 
 func abortCmd() *cobra.Command {
-	addDebugFlag, readDebugFlag := debugFlag()
+	addDebugFlag, readDebugFlag := flags.Debug()
 	cmd := cobra.Command{
 		Use:     "abort",
 		GroupID: "errors",

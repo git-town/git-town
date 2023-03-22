@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/config"
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/spf13/cobra"
 )
@@ -16,8 +17,8 @@ If "push-new-branches" is true, the Git Town commands hack, append, and prepend
 push the new branch to the origin remote.`
 
 func pushNewBranchesCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := debugFlag()
-	addGlobalFlag, readGlobalFlag := boolFlag("global", "g", "If set, reads or updates the new branch push strategy for all repositories on this machine")
+	addDebugFlag, readDebugFlag := flags.Debug()
+	addGlobalFlag, readGlobalFlag := flags.Bool("global", "g", "If set, reads or updates the new branch push strategy for all repositories on this machine")
 	cmd := cobra.Command{
 		Use:   "push-new-branches [--global] [(yes | no)]",
 		Args:  cobra.MaximumNArgs(1),

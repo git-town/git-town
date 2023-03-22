@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/config"
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/git-town/git-town/v7/src/runstate"
@@ -43,8 +44,8 @@ run "git config %s false"
 and Git Town will leave it up to your origin server to delete the remote branch.`
 
 func shipCmd() *cobra.Command {
-	addDebugFlag, readDebugFlag := debugFlag()
-	addMessageFlag, readMessageFlag := stringFlag("message", "m", "", "Specify the commit message for the squash commit")
+	addDebugFlag, readDebugFlag := flags.Debug()
+	addMessageFlag, readMessageFlag := flags.String("message", "m", "", "Specify the commit message for the squash commit")
 	cmd := cobra.Command{
 		Use:     "ship",
 		GroupID: "basic",

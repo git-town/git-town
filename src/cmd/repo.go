@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v7/src/browser"
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/config"
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/spf13/cobra"
 )
@@ -24,7 +25,7 @@ When using SSH identities, run
 where HOSTNAME matches what is in your ssh config file.`
 
 func repoCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := debugFlag()
+	addDebugFlag, readDebugFlag := flags.Debug()
 	cmd := cobra.Command{
 		Use:   "repo",
 		Args:  cobra.NoArgs,

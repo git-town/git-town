@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v7/src/config"
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
@@ -31,9 +32,9 @@ syncs the main branch with its upstream counterpart.
 You can disable this by running "git config %s false".`
 
 func syncCmd() *cobra.Command {
-	addDebugFlag, readDebugFlag := debugFlag()
-	addDryRunFlag, readDryRunFlag := dryRunFlag()
-	addAllFlag, readAllFlag := boolFlag("all", "a", "Sync all local branches")
+	addDebugFlag, readDebugFlag := flags.Debug()
+	addDryRunFlag, readDryRunFlag := flags.DryRun()
+	addAllFlag, readAllFlag := flags.Bool("all", "a", "Sync all local branches")
 	cmd := cobra.Command{
 		Use:     "sync",
 		GroupID: "basic",

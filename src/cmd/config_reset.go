@@ -1,13 +1,14 @@
 package cmd
 
 import (
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/spf13/cobra"
 )
 
 const resetConfigDesc = "Resets your Git Town configuration"
 
 func resetConfigCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := debugFlag()
+	addDebugFlag, readDebugFlag := flags.Debug()
 	cmd := cobra.Command{
 		Use:   "reset",
 		Args:  cobra.NoArgs,

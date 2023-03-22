@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
@@ -24,7 +25,7 @@ See "sync" for upstream remote options.
 `
 
 func prependCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := debugFlag()
+	addDebugFlag, readDebugFlag := flags.Debug()
 	cmd := cobra.Command{
 		Use:     "prepend <branch>",
 		GroupID: "lineage",

@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/validate"
@@ -21,8 +22,8 @@ and brings over all uncommitted changes to the new feature branch.
 See "sync" for information regarding upstream remotes.`
 
 func hackCmd() *cobra.Command {
-	addDebugFlag, readDebugFlag := debugFlag()
-	addPromptFlag, readPromptFlag := boolFlag("prompt", "p", "Prompt for the parent branch")
+	addDebugFlag, readDebugFlag := flags.Debug()
+	addPromptFlag, readPromptFlag := flags.Bool("prompt", "p", "Prompt for the parent branch")
 	cmd := cobra.Command{
 		Use:     "hack <branch>",
 		GroupID: "basic",

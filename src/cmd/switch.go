@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v7/src/dialog"
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/spf13/cobra"
 )
@@ -11,7 +12,7 @@ import (
 const switchDesc = "Displays the local branches visually and allows switching between them"
 
 func switchCmd() *cobra.Command {
-	addDebugFlag, readDebugFlag := debugFlag()
+	addDebugFlag, readDebugFlag := flags.Debug()
 	cmd := cobra.Command{
 		Use:     "switch",
 		GroupID: "basic",

@@ -6,6 +6,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/spf13/cobra"
@@ -14,7 +15,7 @@ import (
 const statusDesc = "Displays or resets the current suspended Git Town command"
 
 func statusCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := debugFlag()
+	addDebugFlag, readDebugFlag := flags.Debug()
 	cmd := cobra.Command{
 		Use:     "status",
 		GroupID: "errors",

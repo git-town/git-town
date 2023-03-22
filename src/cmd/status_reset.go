@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/spf13/cobra"
 )
@@ -10,7 +11,7 @@ import (
 const statusResetDesc = "Resets the current suspended Git Town command"
 
 func resetRunstateCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := debugFlag()
+	addDebugFlag, readDebugFlag := flags.Debug()
 	cmd := cobra.Command{
 		Use:   "reset",
 		Args:  cobra.NoArgs,

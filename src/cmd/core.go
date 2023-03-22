@@ -21,8 +21,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/validate"
@@ -95,63 +93,6 @@ func long(summary string, desc ...string) string {
 		return summary + ".\n" + desc[0]
 	}
 	return summary + "."
-}
-
-// boolFlag provides access to boolean Cobra command-line flags
-// in a way where Go's usage checker (which produces compilation errors for unused variables)
-// enforces that the programmer didn't forget to define or read the flag.
-func boolFlag(name, short, desc string) (addFlagFunc, readBoolFlagFunc) {
-	addFlag := func(cmd *cobra.Command) {
-		cmd.PersistentFlags().BoolP(name, short, false, desc)
-	}
-	readFlag := func(cmd *cobra.Command) bool {
-		value, err := cmd.Flags().GetBool(name)
-		if err != nil {
-			panic(fmt.Sprintf("command %q does not have a boolean %q flag", cmd.Name(), name))
-		}
-		return value
-	}
-	return addFlag, readFlag
-}
-
-// stringFlag provides access to Cobra command-line flags containing strings
-// in a way where Go's usage checker (which produces compilation errors for unused variables)
-// enforces that the programmer didn't forget to define or read the flag.
-func stringFlag(name, short, defaultValue, desc string) (addFlagFunc, readStringFlagFunc) {
-	addFlag := func(cmd *cobra.Command) {
-		cmd.PersistentFlags().StringP(name, short, defaultValue, desc)
-	}
-	readFlag := func(cmd *cobra.Command) string {
-		value, err := cmd.Flags().GetString(name)
-		if err != nil {
-			panic(fmt.Sprintf("command %q does not have a string %q flag", cmd.Name(), name))
-		}
-		return value
-	}
-	return addFlag, readFlag
-}
-
-// addFlagFunc defines the type signature for helper functions that add a CLI flag to a Cobra command.
-type addFlagFunc func(*cobra.Command)
-
-// readBoolFlagFunc defines the type signature for helper functions that provide the value a boolean CLI flag associated with a Cobra command.
-type readBoolFlagFunc func(*cobra.Command) bool
-
-// readStringFlagFunc defines the type signature for helper functions that provide the value a string CLI flag associated with a Cobra command.
-type readStringFlagFunc func(*cobra.Command) string
-
-// debugFlag provides access to the `--debug` flag for Cobra commands
-// in a way where Go's usage checker (which produces compilation errors for unused variables)
-// enforces that the programmer didn't forget to define or read the flag.
-func debugFlag() (addFlagFunc, readBoolFlagFunc) {
-	return boolFlag("debug", "d", "Print all Git commands run under the hood")
-}
-
-// dryRunFlag provides access to the `--dry-run` flag for Cobra commands
-// in a way where Go's usage checker (which produces compilation errors for unused variables)
-// enforces that the programmer didn't forget to define or read the flag.
-func dryRunFlag() (addFlagFunc, readBoolFlagFunc) {
-	return boolFlag("dry-run", "", "Print but do not run the Git commands")
 }
 
 func LoadProdRepo(args RepoArgs) (prodRepo git.ProdRepo, exit bool, err error) { //nolint:nonamedreturns // so many return values require names

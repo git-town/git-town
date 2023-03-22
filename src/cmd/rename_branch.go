@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
@@ -30,8 +31,8 @@ When run on a perennial branch
 - registers the new perennial branch name in the local Git Town configuration`
 
 func renameBranchCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := debugFlag()
-	addForceFlag, readForceFlag := boolFlag("force", "f", "Force rename of perennial branch")
+	addDebugFlag, readDebugFlag := flags.Debug()
+	addForceFlag, readForceFlag := flags.Bool("force", "f", "Force rename of perennial branch")
 	cmd := cobra.Command{
 		Use:   "rename-branch [<old_branch_name>] <new_branch_name>",
 		Args:  cobra.RangeArgs(1, 2),

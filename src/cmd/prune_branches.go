@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
@@ -14,7 +15,7 @@ Deletes branches whose tracking branch no longer exists from the local repositor
 This usually means the branch was shipped or killed on another machine.`
 
 func pruneBranchesCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := debugFlag()
+	addDebugFlag, readDebugFlag := flags.Debug()
 	cmd := cobra.Command{
 		Use:   "prune-branches",
 		Args:  cobra.NoArgs,

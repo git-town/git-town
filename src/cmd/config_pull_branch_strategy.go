@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/config"
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/spf13/cobra"
 )
@@ -15,7 +16,7 @@ when merging remote tracking branches into local branches
 for the main branch and perennial branches.`
 
 func pullBranchStrategyCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := debugFlag()
+	addDebugFlag, readDebugFlag := flags.Debug()
 	cmd := cobra.Command{
 		Use:   "pull-branch-strategy [(rebase | merge)]",
 		Args:  cobra.MaximumNArgs(1),

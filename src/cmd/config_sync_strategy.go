@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/config"
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/spf13/cobra"
 )
@@ -14,8 +15,8 @@ The sync strategy specifies what strategy to use
 when merging remote tracking branches into local feature branches.`
 
 func syncStrategyCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := debugFlag()
-	addGlobalFlag, readGlobalFlag := boolFlag("global", "g", "When set, displays or sets the sync strategy for all repos on this machine")
+	addDebugFlag, readDebugFlag := flags.Debug()
+	addGlobalFlag, readGlobalFlag := flags.Bool("global", "g", "When set, displays or sets the sync strategy for all repos on this machine")
 	cmd := cobra.Command{
 		Use:   "sync-strategy [(merge | rebase)]",
 		Args:  cobra.MaximumNArgs(1),

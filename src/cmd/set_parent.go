@@ -3,6 +3,7 @@ package cmd
 import (
 	"errors"
 
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
@@ -10,7 +11,7 @@ import (
 const setParentDesc = "Prompts to set the parent branch for the current branch"
 
 func setParentCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := debugFlag()
+	addDebugFlag, readDebugFlag := flags.Debug()
 	cmd := cobra.Command{
 		Use:     "set-parent",
 		GroupID: "lineage",

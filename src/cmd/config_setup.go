@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
@@ -8,7 +9,7 @@ import (
 const setupConfigDesc = "Prompts to setup your Git Town configuration"
 
 func setupConfigCommand() *cobra.Command {
-	addDebugFlag, readDebugFlag := debugFlag()
+	addDebugFlag, readDebugFlag := flags.Debug()
 	cmd := cobra.Command{
 		Use:   "setup",
 		Args:  cobra.NoArgs,

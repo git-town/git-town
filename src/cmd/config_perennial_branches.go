@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
 )
@@ -17,7 +18,7 @@ They cannot be shipped.`
 const updatePerennialSummary = "Prompts to update your perennial branches"
 
 func perennialBranchesCmd() *cobra.Command {
-	addDisplayDebugFlag, readDisplayDebugFlag := debugFlag()
+	addDisplayDebugFlag, readDisplayDebugFlag := flags.Debug()
 	displayCmd := cobra.Command{
 		Use:   "perennial-branches",
 		Args:  cobra.NoArgs,
@@ -29,7 +30,7 @@ func perennialBranchesCmd() *cobra.Command {
 	}
 	addDisplayDebugFlag(&displayCmd)
 
-	addUpdateDebugFlag, readUpdateDebugFlag := debugFlag()
+	addUpdateDebugFlag, readUpdateDebugFlag := flags.Debug()
 	updateCmd := cobra.Command{
 		Use:   "update",
 		Args:  cobra.NoArgs,
