@@ -22,14 +22,14 @@ func offlineCmd() *cobra.Command {
 		Short: offlineDesc,
 		Long:  long(offlineDesc, offlineHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return configureOffline(args, readDebugFlag(cmd))
+			return offline(args, readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&cmd)
 	return &cmd
 }
 
-func configureOffline(args []string, debug bool) error {
+func offline(args []string, debug bool) error {
 	repo, exit, err := LoadProdRepo(RepoArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
