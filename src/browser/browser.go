@@ -39,13 +39,13 @@ func OpenBrowserCommand(runner backendRunner) string {
 
 // Open opens a new window/tab in the default browser with the given URL.
 // If no browser is found, it prints the URL.
-func Open(url string, fRunner frontendRunner, bRunner backendRunner) {
-	command := OpenBrowserCommand(bRunner)
+func Open(url string, frontend frontendRunner, backend backendRunner) {
+	command := OpenBrowserCommand(backend)
 	if command == "" {
 		fmt.Println("Please open in a browser: " + url)
 		return
 	}
-	err := fRunner.Run(command, url)
+	err := frontend.Run(command, url)
 	if err != nil {
 		fmt.Println("Please open in a browser: " + url)
 	}
