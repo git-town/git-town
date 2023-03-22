@@ -76,7 +76,7 @@ func (table *DataTable) EqualGherkin(other *messages.PickleStepArgument_PickleTa
 }
 
 // Expand returns a new DataTable instance with the placeholders in this datatable replaced with the given values.
-func (table *DataTable) Expand(localRepo *TestRepo, remoteRepo *TestRepo) (DataTable, error) {
+func (table *DataTable) Expand(localRepo *Repo, remoteRepo *Repo) (DataTable, error) {
 	var templateRE *regexp.Regexp
 	var templateOnce sync.Once
 	result := DataTable{}

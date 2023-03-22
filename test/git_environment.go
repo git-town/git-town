@@ -21,21 +21,21 @@ type GitEnvironment struct {
 	Dir string
 
 	// CoworkerRepo is the optional Git repository that is locally checked out at the coworker machine.
-	CoworkerRepo *TestRepo `exhaustruct:"optional"`
+	CoworkerRepo *Repo `exhaustruct:"optional"`
 
 	// DevRepo is the Git repository that is locally checked out at the developer machine.
-	DevRepo TestRepo `exhaustruct:"optional"`
+	DevRepo Repo `exhaustruct:"optional"`
 
 	// OriginRepo is the Git repository that simulates the origin repo (on GitHub).
 	// If this value is nil, the current test setup has no origin.
-	OriginRepo *TestRepo `exhaustruct:"optional"`
+	OriginRepo *Repo `exhaustruct:"optional"`
 
 	// SubmoduleRepo is the Git repository that simulates an external repo used as a submodule.
 	// If this value is nil, the current test setup uses no submodules.
-	SubmoduleRepo *TestRepo `exhaustruct:"optional"`
+	SubmoduleRepo *Repo `exhaustruct:"optional"`
 
 	// UpstreamRepo is the optional Git repository that contains the upstream for this environment.
-	UpstreamRepo *TestRepo `exhaustruct:"optional"`
+	UpstreamRepo *Repo `exhaustruct:"optional"`
 }
 
 // CloneGitEnvironment provides a GitEnvironment instance in the given directory,
@@ -331,7 +331,7 @@ func (env GitEnvironment) TagTable() (DataTable, error) {
 	return builder.Table(), nil
 }
 
-func (env GitEnvironment) initializeWorkspace(repo *TestRepo) error {
+func (env GitEnvironment) initializeWorkspace(repo *Repo) error {
 	err := repo.Config.SetMainBranch("main")
 	if err != nil {
 		return err

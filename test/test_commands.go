@@ -57,10 +57,10 @@ func (r *TestCommands) BranchHierarchyTable() DataTable {
 
 // Clone creates a clone of this Repo into the given directory.
 // The cloned repo uses the same homeDir and binDir as its origin.
-func (r *TestCommands) Clone(targetDir string) (TestRepo, error) {
+func (r *TestCommands) Clone(targetDir string) (Repo, error) {
 	_, err := r.Run("git", "clone", r.workingDir, targetDir)
 	if err != nil {
-		return TestRepo{}, fmt.Errorf("cannot clone repo %q: %w", r.workingDir, err)
+		return Repo{}, fmt.Errorf("cannot clone repo %q: %w", r.workingDir, err)
 	}
 	return NewRepo(targetDir, r.homeDir, r.binDir), nil
 }

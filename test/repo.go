@@ -11,14 +11,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// TestRepo provides Git functionality for test code (unit and end-to-end tests).
-type TestRepo struct {
+// Repo provides Git functionality for test code (unit and end-to-end tests).
+type Repo struct {
 	TestCommands
 	internal git.InternalCommands
 }
 
 // CreateRepo creates TestRepo instances.
-func CreateRepo(t *testing.T) TestRepo {
+func CreateRepo(t *testing.T) Repo {
 	t.Helper()
 	dir := t.TempDir()
 	workingDir := filepath.Join(dir, "repo")
@@ -36,7 +36,7 @@ func CreateRepo(t *testing.T) TestRepo {
 
 // InitRepo creates a fully functioning test.Repo in the given working directory,
 // including necessary Git configuration to make commits. Creates missing folders as needed.
-func InitRepo(workingDir, homeDir, binDir string) (TestRepo, error) {
+func InitRepo(workingDir, homeDir, binDir string) (Repo, error) {
 	result := NewRepo(workingDir, homeDir, binDir)
 	err := result.RunMany([][]string{
 		{"git", "init", "--initial-branch=initial"},
@@ -49,7 +49,7 @@ func InitRepo(workingDir, homeDir, binDir string) (TestRepo, error) {
 // NewRepo provides a new Repo instance working in the given directory.
 // The directory must contain an existing Git repo.
 // TODO: inline this method.
-func NewRepo(workingDir, homeDir, binDir string) TestRepo {
+func NewRepo(workingDir, homeDir, binDir string) Repo {
 	mockingRunner := MockingRunner{
 		workingDir: workingDir,
 		homeDir:    homeDir,
@@ -73,7 +73,7 @@ func NewRepo(workingDir, homeDir, binDir string) TestRepo {
 		config:           config,
 		InternalCommands: &internalCommands,
 	}
-	return TestRepo{
+	return Repo{
 		TestCommands: testCommands,
 		internal:     internalCommands,
 	}
@@ -81,7 +81,7 @@ func NewRepo(workingDir, homeDir, binDir string) TestRepo {
 
 // CreateTestGitTownRepo creates a GitRepo for use in tests, with a main branch and
 // initial git town configuration.
-func CreateTestGitTownRepo(t *testing.T) TestRepo {
+func CreateTestGitTownRepo(t *testing.T) Repo {
 	t.Helper()
 	repo := CreateRepo(t)
 	err := repo.CreateBranch("main", "initial")
