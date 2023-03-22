@@ -24,7 +24,7 @@ func pushNewBranchesCommand() *cobra.Command {
 		Short: pushNewBranchesDesc,
 		Long:  long(pushNewBranchesDesc, pushNewBranchesHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runConfigPushNewBranches(args, readGlobalFlag(cmd), readDebugFlag(cmd))
+			return pushNewBranches(args, readGlobalFlag(cmd), readDebugFlag(cmd))
 		},
 	}
 	addDebugFlag(&cmd)
@@ -32,7 +32,7 @@ func pushNewBranchesCommand() *cobra.Command {
 	return &cmd
 }
 
-func runConfigPushNewBranches(args []string, global, debug bool) error {
+func pushNewBranches(args []string, global, debug bool) error {
 	repo, exit, err := LoadProdRepo(RepoArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
