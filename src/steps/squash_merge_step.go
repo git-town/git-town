@@ -20,7 +20,7 @@ func (step *SquashMergeStep) CreateAbortStep() Step {
 	return &DiscardOpenChangesStep{}
 }
 
-func (step *SquashMergeStep) CreateUndoStep(repo *git.PublicRepo) (Step, error) {
+func (step *SquashMergeStep) CreateUndoStep(repo *git.InternalCommands) (Step, error) {
 	currentSHA, err := repo.CurrentSha()
 	if err != nil {
 		return nil, err
@@ -32,12 +32,12 @@ func (step *SquashMergeStep) CreateAutomaticAbortError() error {
 	return fmt.Errorf("aborted because commit exited with error")
 }
 
-func (step *SquashMergeStep) Run(repo *git.PublicRepo, connector hosting.Connector) error {
-	err := repo.SquashMerge(step.Branch)
+func (step *SquashMergeStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
+	err := repo.Public.SquashMerge(step.Branch)
 	if err != nil {
 		return err
 	}
-	branchAuthors, err := repo.BranchAuthors(step.Branch, step.Parent)
+	branchAuthors, err := repo.Internal.BranchAuthors(step.Branch, step.Parent)
 	if err != nil {
 		return err
 	}
@@ -45,17 +45,17 @@ func (step *SquashMergeStep) Run(repo *git.PublicRepo, connector hosting.Connect
 	if err != nil {
 		return fmt.Errorf("error getting squash commit author: %w", err)
 	}
-	repoAuthor, err := repo.Author()
+	repoAuthor, err := repo.Internal.Author()
 	if err != nil {
 		return fmt.Errorf("cannot determine repo author: %w", err)
 	}
-	if err = repo.CommentOutSquashCommitMessage(""); err != nil {
+	if err = repo.Internal.CommentOutSquashCommitMessage(""); err != nil {
 		return fmt.Errorf("cannot comment out the squash commit message: %w", err)
 	}
 	if repoAuthor == author {
 		author = ""
 	}
-	return repo.Commit(step.CommitMessage, author)
+	return repo.Public.Commit(step.CommitMessage, author)
 }
 
 func (step *SquashMergeStep) ShouldAutomaticallyAbortOnError() bool {

@@ -33,7 +33,7 @@ func pushNewBranchesCommand() *cobra.Command {
 }
 
 func runConfigPushNewBranches(args []string, global, debug bool) error {
-	repo, exit, err := LoadPublicRepo(RepoArgs{
+	repo, exit, err := LoadPublicThing(RepoArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
 		dryRun:                false,
@@ -50,7 +50,7 @@ func runConfigPushNewBranches(args []string, global, debug bool) error {
 	return printPushNewBranches(global, &repo)
 }
 
-func printPushNewBranches(globalFlag bool, repo *git.PublicRepo) error {
+func printPushNewBranches(globalFlag bool, repo *git.ProdRepo) error {
 	var setting bool
 	var err error
 	if globalFlag {
@@ -65,7 +65,7 @@ func printPushNewBranches(globalFlag bool, repo *git.PublicRepo) error {
 	return nil
 }
 
-func setPushNewBranches(text string, globalFlag bool, repo *git.PublicRepo) error {
+func setPushNewBranches(text string, globalFlag bool, repo *git.ProdRepo) error {
 	value, err := config.ParseBool(text)
 	if err != nil {
 		return fmt.Errorf(`invalid argument: %q. Please provide either "yes" or "no"`, text)

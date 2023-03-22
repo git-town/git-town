@@ -21,14 +21,14 @@ type Step interface {
 	CreateContinueStep() Step
 
 	// CreateUndoStep provides the undo step for this step.
-	CreateUndoStep(*git.PublicRepo) (Step, error)
+	CreateUndoStep(*git.InternalCommands) (Step, error)
 
 	// CreateAutomaticAbortError provides the error message to display when this step
 	// cause the command to automatically abort.
 	CreateAutomaticAbortError() error
 
 	// Run executes this step.
-	Run(repo *git.PublicRepo, connector hosting.Connector) error
+	Run(repo *git.ProdRepo, connector hosting.Connector) error
 
 	// ShouldAutomaticallyAbortOnError indicates whether this step should
 	// cause the command to automatically abort if it errors.

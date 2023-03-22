@@ -13,23 +13,23 @@ type PreserveCheckoutHistoryStep struct {
 	MainBranch                        string
 }
 
-func (step *PreserveCheckoutHistoryStep) Run(repo *git.PublicRepo, connector hosting.Connector) error {
-	expectedPreviouslyCheckedOutBranch, err := repo.ExpectedPreviouslyCheckedOutBranch(step.InitialPreviouslyCheckedOutBranch, step.InitialBranch, step.MainBranch)
+func (step *PreserveCheckoutHistoryStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
+	expectedPreviouslyCheckedOutBranch, err := repo.Internal.ExpectedPreviouslyCheckedOutBranch(step.InitialPreviouslyCheckedOutBranch, step.InitialBranch, step.MainBranch)
 	if err != nil {
 		return err
 	}
 	// NOTE: errors are not a failure condition here --> ignoring them
-	previouslyCheckedOutBranch, _ := repo.PreviouslyCheckedOutBranch()
+	previouslyCheckedOutBranch, _ := repo.Internal.PreviouslyCheckedOutBranch()
 	if expectedPreviouslyCheckedOutBranch == previouslyCheckedOutBranch {
 		return nil
 	}
-	currentBranch, err := repo.CurrentBranch()
+	currentBranch, err := repo.Internal.CurrentBranch()
 	if err != nil {
 		return err
 	}
-	err = repo.InternalRepo.CheckoutBranch(expectedPreviouslyCheckedOutBranch)
+	err = repo.Internal.CheckoutBranch(expectedPreviouslyCheckedOutBranch)
 	if err != nil {
 		return err
 	}
-	return repo.InternalRepo.CheckoutBranch(currentBranch)
+	return repo.Internal.CheckoutBranch(currentBranch)
 }

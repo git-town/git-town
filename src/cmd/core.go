@@ -154,39 +154,54 @@ func dryRunFlag() (addFlagFunc, readBoolFlagFunc) {
 	return boolFlag("dry-run", "", "Print but do not run the Git commands")
 }
 
-func LoadPublicRepo(args RepoArgs) (repo git.PublicRepo, exit bool, err error) { //nolint:nonamedreturns // so many return values require names
-	internalRepo := git.NewInternalRepo(args.debug)
-	repo = git.NewPublicRepo(args.omitBranchNames, args.dryRun, internalRepo)
+func LoadPublicThing(args RepoArgs) (publicThing git.ProdRepo, exit bool, err error) { //nolint:nonamedreturns // so many return values require names
+	internalRunner := git.NewInternalRunner(args.debug)
+	config := git.NewRepoConfig(internalRunner, args.dryRun)
+	internalCommands := git.InternalCommands{
+		InternalRunner: internalRunner,
+		Config:         &config,
+	}
+	publicRunner := git.NewPublicRunner(args.omitBranchNames, args.dryRun, config.CurrentBranchCache)
+	publicCommands := git.PublicCommands{
+		Public:   publicRunner,
+		Config:   &config,
+		Internal: &internalCommands,
+	}
+	publicThing = git.ProdRepo{
+		Config:   config,
+		Internal: internalCommands,
+		Public:   publicCommands,
+	}
 	if args.validateIsRepository {
-		err := validate.IsRepository(&repo)
+		err := validate.IsRepository(&publicThing)
 		if err != nil {
-			return repo, false, err
+			return publicThing, false, err
 		}
 	}
 	if !args.omitBranchNames || args.dryRun {
-		currentBranch, err := internalRepo.CurrentBranch()
+		currentBranch, err := internalCommands.CurrentBranch()
 		if err != nil {
-			return repo, false, err
+			return publicThing, false, err
 		}
-		internalRepo.CurrentBranchCache.Set(currentBranch)
+		config.CurrentBranchCache.Set(currentBranch)
 	}
 	if args.dryRun {
-		internalRepo.DryRun = true
+		config.DryRun = true
 	}
 	ec := runstate.ErrorChecker{}
 	if args.validateGitversion {
-		ec.Check(validate.HasGitVersion(&internalRepo))
+		ec.Check(validate.HasGitVersion(&internalCommands))
 	}
 	if args.validateIsConfigured {
-		ec.Check(validate.IsConfigured(&repo))
+		ec.Check(validate.IsConfigured(&internalCommands))
 	}
 	if args.validateIsOnline {
-		ec.Check(validate.IsOnline(&repo))
+		ec.Check(validate.IsOnline(&config))
 	}
 	if args.handleUnfinishedState {
-		exit = ec.Bool(validate.HandleUnfinishedState(&repo, nil))
+		exit = ec.Bool(validate.HandleUnfinishedState(&publicThing, nil))
 	}
-	return repo, exit, ec.Err
+	return publicThing, exit, ec.Err
 }
 
 type RepoArgs struct {

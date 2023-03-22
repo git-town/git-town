@@ -31,7 +31,7 @@ func statusCommand() *cobra.Command {
 }
 
 func status(debug bool) error {
-	repo, exit, err := LoadPublicRepo(RepoArgs{
+	repo, exit, err := LoadPublicThing(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: false,
@@ -54,12 +54,12 @@ type displayStatusConfig struct {
 	state    *runstate.RunState // content of the runstate file
 }
 
-func loadDisplayStatusConfig(repo *git.PublicRepo) (*displayStatusConfig, error) {
-	filepath, err := runstate.PersistenceFilePath(repo)
+func loadDisplayStatusConfig(repo *git.ProdRepo) (*displayStatusConfig, error) {
+	filepath, err := runstate.PersistenceFilePath(&repo.Internal)
 	if err != nil {
 		return nil, fmt.Errorf("cannot determine the runstate file path: %w", err)
 	}
-	state, err := runstate.Load(repo)
+	state, err := runstate.Load(&repo.Internal)
 	if err != nil {
 		if !errors.Is(err, os.ErrNotExist) {
 			return nil, fmt.Errorf("the runstate file contains invalid content: %w", err)

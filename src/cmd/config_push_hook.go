@@ -32,7 +32,7 @@ func pushHookCommand() *cobra.Command {
 }
 
 func runConfigPushHook(args []string, global, debug bool) error {
-	repo, exit, err := LoadPublicRepo(RepoArgs{
+	repo, exit, err := LoadPublicThing(RepoArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
 		dryRun:                false,
@@ -49,7 +49,7 @@ func runConfigPushHook(args []string, global, debug bool) error {
 	return printPushHook(global, &repo)
 }
 
-func printPushHook(globalFlag bool, repo *git.PublicRepo) error {
+func printPushHook(globalFlag bool, repo *git.ProdRepo) error {
 	var setting bool
 	var err error
 	if globalFlag {
@@ -64,7 +64,7 @@ func printPushHook(globalFlag bool, repo *git.PublicRepo) error {
 	return nil
 }
 
-func setPushHook(text string, global bool, repo *git.PublicRepo) error {
+func setPushHook(text string, global bool, repo *git.ProdRepo) error {
 	value, err := config.ParseBool(text)
 	if err != nil {
 		return fmt.Errorf(`invalid argument: %q. Please provide either "yes" or "no"`, text)

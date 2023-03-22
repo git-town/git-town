@@ -11,18 +11,18 @@ import (
 // Execute runs the commands in the given runstate.
 //
 //nolint:nestif
-func Execute(runState *RunState, repo *git.PublicRepo, connector hosting.Connector) error {
+func Execute(runState *RunState, repo *git.ProdRepo, connector hosting.Connector) error {
 	for {
 		step := runState.RunStepList.Pop()
 		if step == nil {
 			runState.MarkAsFinished()
 			if runState.IsAbort || runState.isUndo {
-				err := Delete(repo)
+				err := Delete(&repo.Internal)
 				if err != nil {
 					return fmt.Errorf("cannot delete previous run state: %w", err)
 				}
 			} else {
-				err := Save(runState, repo)
+				err := Save(runState, &repo.Internal)
 				if err != nil {
 					return fmt.Errorf("cannot save run state: %w", err)
 				}
@@ -35,7 +35,7 @@ func Execute(runState *RunState, repo *git.PublicRepo, connector hosting.Connect
 			continue
 		}
 		if typeName(step) == "*PushBranchAfterCurrentBranchSteps" {
-			err := runState.AddPushBranchStepAfterCurrentBranchSteps(repo)
+			err := runState.AddPushBranchStepAfterCurrentBranchSteps(&repo.Internal)
 			if err != nil {
 				return err
 			}
@@ -54,22 +54,22 @@ func Execute(runState *RunState, repo *git.PublicRepo, connector hosting.Connect
 				return step.CreateAutomaticAbortError()
 			}
 			runState.RunStepList.Prepend(step.CreateContinueStep())
-			err := runState.MarkAsUnfinished(repo)
+			err := runState.MarkAsUnfinished(&repo.Internal)
 			if err != nil {
 				return err
 			}
-			currentBranch, err := repo.CurrentBranch()
+			currentBranch, err := repo.Internal.CurrentBranch()
 			if err != nil {
 				return err
 			}
-			rebasing, err := repo.HasRebaseInProgress()
+			rebasing, err := repo.Internal.HasRebaseInProgress()
 			if err != nil {
 				return err
 			}
 			if runState.Command == "sync" && !(rebasing && repo.Config.IsMainBranch(currentBranch)) {
 				runState.UnfinishedDetails.CanSkip = true
 			}
-			err = Save(runState, repo)
+			err = Save(runState, &repo.Internal)
 			if err != nil {
 				return fmt.Errorf("cannot save run state: %w", err)
 			}
@@ -84,7 +84,7 @@ To continue after having resolved conflicts, run "git-town continue".
 			message += "\n"
 			return fmt.Errorf(message)
 		}
-		undoStep, err := step.CreateUndoStep(repo)
+		undoStep, err := step.CreateUndoStep(&repo.Internal)
 		if err != nil {
 			return fmt.Errorf("cannot create undo step for %q: %w", step, err)
 		}

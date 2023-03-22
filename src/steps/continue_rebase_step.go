@@ -19,13 +19,13 @@ func (step *ContinueRebaseStep) CreateContinueStep() Step {
 	return step
 }
 
-func (step *ContinueRebaseStep) Run(repo *git.PublicRepo, connector hosting.Connector) error {
-	hasRebaseInProgress, err := repo.HasRebaseInProgress()
+func (step *ContinueRebaseStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
+	hasRebaseInProgress, err := repo.Internal.HasRebaseInProgress()
 	if err != nil {
 		return err
 	}
 	if hasRebaseInProgress {
-		return repo.ContinueRebase()
+		return repo.Public.ContinueRebase()
 	}
 	return nil
 }

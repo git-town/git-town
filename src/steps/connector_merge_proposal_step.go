@@ -26,7 +26,7 @@ func (step *ConnectorMergeProposalStep) CreateAbortStep() Step {
 	return nil
 }
 
-func (step *ConnectorMergeProposalStep) CreateUndoStep(repo *git.PublicRepo) (Step, error) {
+func (step *ConnectorMergeProposalStep) CreateUndoStep(repo *git.InternalCommands) (Step, error) {
 	return &RevertCommitStep{Sha: step.mergeSha}, nil
 }
 
@@ -37,30 +37,30 @@ func (step *ConnectorMergeProposalStep) CreateAutomaticAbortError() error {
 	return step.mergeError
 }
 
-func (step *ConnectorMergeProposalStep) Run(repo *git.PublicRepo, connector hosting.Connector) error {
+func (step *ConnectorMergeProposalStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
 	commitMessage := step.CommitMessage
 	//nolint:nestif
 	if commitMessage == "" {
 		// Allow the user to enter the commit message as if shipping without a connector
 		// then revert the commit since merging via the connector will perform the actual squash merge.
 		step.enteredEmptyCommitMessage = true
-		err := repo.SquashMerge(step.Branch)
+		err := repo.Public.SquashMerge(step.Branch)
 		if err != nil {
 			return err
 		}
-		err = repo.CommentOutSquashCommitMessage(step.DefaultProposalMessage + "\n\n")
+		err = repo.Internal.CommentOutSquashCommitMessage(step.DefaultProposalMessage + "\n\n")
 		if err != nil {
 			return fmt.Errorf("cannot comment out the squash commit message: %w", err)
 		}
-		err = repo.StartCommit()
+		err = repo.Public.StartCommit()
 		if err != nil {
 			return err
 		}
-		commitMessage, err = repo.LastCommitMessage()
+		commitMessage, err = repo.Internal.LastCommitMessage()
 		if err != nil {
 			return err
 		}
-		err = repo.DeleteLastCommit()
+		err = repo.Public.DeleteLastCommit()
 		if err != nil {
 			return err
 		}

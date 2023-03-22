@@ -13,12 +13,12 @@ import (
 type BitbucketConnector struct {
 	CommonConfig
 	organization string
-	git          gitRunner
+	git          gitCommands
 }
 
 // NewBitbucketConnector provides a Bitbucket connector instance if the current repo is hosted on Bitbucket,
 // otherwise nil.
-func NewBitbucketConnector(gitConfig gitTownConfig, git gitRunner) (*BitbucketConnector, error) {
+func NewBitbucketConnector(gitConfig gitTownConfig, git gitCommands) (*BitbucketConnector, error) {
 	hostingService, err := gitConfig.HostingService()
 	if err != nil {
 		return nil, err

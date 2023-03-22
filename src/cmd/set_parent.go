@@ -26,7 +26,7 @@ func setParentCommand() *cobra.Command {
 }
 
 func setParent(debug bool) error {
-	repo, exit, err := LoadPublicRepo(RepoArgs{
+	repo, exit, err := LoadPublicThing(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: true,
@@ -37,7 +37,7 @@ func setParent(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	currentBranch, err := repo.CurrentBranch()
+	currentBranch, err := repo.Internal.CurrentBranch()
 	if err != nil {
 		return err
 	}
@@ -54,5 +54,5 @@ func setParent(debug bool) error {
 	} else {
 		existingParent = repo.Config.MainBranch()
 	}
-	return validate.KnowsBranchAncestry(currentBranch, existingParent, &repo)
+	return validate.KnowsBranchAncestry(currentBranch, existingParent, &repo.Internal)
 }

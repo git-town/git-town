@@ -39,7 +39,7 @@ func hackCmd() *cobra.Command {
 }
 
 func hack(args []string, promptForParent, debug bool) error {
-	repo, exit, err := LoadPublicRepo(RepoArgs{
+	repo, exit, err := LoadPublicThing(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: true,
@@ -62,18 +62,18 @@ func hack(args []string, promptForParent, debug bool) error {
 	return runstate.Execute(runState, &repo, nil)
 }
 
-func determineHackConfig(args []string, promptForParent bool, repo *git.PublicRepo) (*appendConfig, error) {
+func determineHackConfig(args []string, promptForParent bool, repo *git.ProdRepo) (*appendConfig, error) {
 	ec := runstate.ErrorChecker{}
 	targetBranch := args[0]
 	parentBranch := ec.String(determineParentBranch(targetBranch, promptForParent, repo))
-	hasOrigin := ec.Bool(repo.HasOrigin())
+	hasOrigin := ec.Bool(repo.Internal.HasOrigin())
 	shouldNewBranchPush := ec.Bool(repo.Config.ShouldNewBranchPush())
 	isOffline := ec.Bool(repo.Config.IsOffline())
 	mainBranch := repo.Config.MainBranch()
 	if ec.Err == nil && hasOrigin && !isOffline {
-		ec.Check(repo.Fetch())
+		ec.Check(repo.Public.Fetch())
 	}
-	hasBranch := ec.Bool(repo.HasLocalOrOriginBranch(targetBranch, mainBranch))
+	hasBranch := ec.Bool(repo.Internal.HasLocalOrOriginBranch(targetBranch, mainBranch))
 	pushHook := ec.Bool(repo.Config.PushHook())
 	if hasBranch {
 		return nil, fmt.Errorf("a branch named %q already exists", targetBranch)
@@ -90,13 +90,13 @@ func determineHackConfig(args []string, promptForParent bool, repo *git.PublicRe
 	}, ec.Err
 }
 
-func determineParentBranch(targetBranch string, promptForParent bool, repo *git.PublicRepo) (string, error) {
+func determineParentBranch(targetBranch string, promptForParent bool, repo *git.ProdRepo) (string, error) {
 	if promptForParent {
-		parentBranch, err := validate.EnterParent(targetBranch, repo.Config.MainBranch(), repo)
+		parentBranch, err := validate.EnterParent(targetBranch, repo.Config.MainBranch(), &repo.Internal)
 		if err != nil {
 			return "", err
 		}
-		err = validate.KnowsBranchAncestry(parentBranch, repo.Config.MainBranch(), repo)
+		err = validate.KnowsBranchAncestry(parentBranch, repo.Config.MainBranch(), &repo.Internal)
 		if err != nil {
 			return "", err
 		}

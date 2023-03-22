@@ -11,6 +11,6 @@ type AbortRebaseStep struct {
 	EmptyStep
 }
 
-func (step *AbortRebaseStep) Run(repo *git.PublicRepo, connector hosting.Connector) error {
-	return repo.AbortRebase()
+func (step *AbortRebaseStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
+	return repo.Public.AbortRebase()
 }

@@ -8,7 +8,7 @@ import (
 // KnowsBranchesAncestry asserts that the entire ancestry for all given branches
 // is known to Git Town.
 // Missing ancestry information is queried from the user.
-func KnowsBranchesAncestry(branches []string, repo *git.PublicRepo) error {
+func KnowsBranchesAncestry(branches []string, repo *git.InternalCommands) error {
 	mainBranch := repo.Config.MainBranch()
 	for _, branch := range branches {
 		err := KnowsBranchAncestry(branch, mainBranch, repo)
@@ -20,7 +20,7 @@ func KnowsBranchesAncestry(branches []string, repo *git.PublicRepo) error {
 }
 
 // KnowsBranchAncestry prompts the user for all unknown ancestors of the given branch.
-func KnowsBranchAncestry(branch, defaultBranch string, repo *git.PublicRepo) (err error) { //nolint:nonamedreturns // return value names are useful here
+func KnowsBranchAncestry(branch, defaultBranch string, repo *git.InternalCommands) (err error) { //nolint:nonamedreturns // return value names are useful here
 	headerShown := false
 	currentBranch := branch
 	if repo.Config.IsMainBranch(branch) || repo.Config.IsPerennialBranch(branch) || repo.Config.HasParentBranch(branch) {
@@ -57,7 +57,7 @@ func KnowsBranchAncestry(branch, defaultBranch string, repo *git.PublicRepo) (er
 	return
 }
 
-func printParentBranchHeader(repo *git.PublicRepo) {
+func printParentBranchHeader(repo *git.InternalCommands) {
 	cli.Printf(parentBranchHeaderTemplate, repo.Config.MainBranch())
 }
 

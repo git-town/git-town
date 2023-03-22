@@ -48,7 +48,7 @@ func newPullRequestCommand() *cobra.Command {
 }
 
 func newPullRequest(debug bool) error {
-	repo, exit, err := LoadPublicRepo(RepoArgs{
+	repo, exit, err := LoadPublicThing(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: true,
@@ -64,7 +64,7 @@ func newPullRequest(debug bool) error {
 	if err != nil {
 		return err
 	}
-	connector, err := hosting.NewConnector(repo.Config, &repo.InternalRepo, cli.PrintConnectorAction)
+	connector, err := hosting.NewConnector(repo.Config, &repo.Internal, cli.PrintConnectorAction)
 	if err != nil {
 		return err
 	}
@@ -85,22 +85,22 @@ type newPullRequestConfig struct {
 	mainBranch     string
 }
 
-func determineNewPullRequestConfig(repo *git.PublicRepo) (*newPullRequestConfig, error) {
-	hasOrigin, err := repo.HasOrigin()
+func determineNewPullRequestConfig(repo *git.ProdRepo) (*newPullRequestConfig, error) {
+	hasOrigin, err := repo.Internal.HasOrigin()
 	if err != nil {
 		return nil, err
 	}
 	if hasOrigin {
-		err := repo.Fetch()
+		err := repo.Public.Fetch()
 		if err != nil {
 			return nil, err
 		}
 	}
-	initialBranch, err := repo.CurrentBranch()
+	initialBranch, err := repo.Internal.CurrentBranch()
 	if err != nil {
 		return nil, err
 	}
-	err = validate.KnowsBranchAncestry(initialBranch, repo.Config.MainBranch(), repo)
+	err = validate.KnowsBranchAncestry(initialBranch, repo.Config.MainBranch(), &repo.Internal)
 	if err != nil {
 		return nil, err
 	}
@@ -111,12 +111,12 @@ func determineNewPullRequestConfig(repo *git.PublicRepo) (*newPullRequestConfig,
 	}, nil
 }
 
-func newPullRequestStepList(config *newPullRequestConfig, repo *git.PublicRepo) (runstate.StepList, error) {
+func newPullRequestStepList(config *newPullRequestConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.BranchesToSync {
 		updateBranchSteps(&list, branch, true, repo)
 	}
-	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &repo.InternalRepo, config.mainBranch)
+	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &repo.Internal, config.mainBranch)
 	list.Add(&steps.CreateProposalStep{Branch: config.InitialBranch})
 	return list.Result()
 }

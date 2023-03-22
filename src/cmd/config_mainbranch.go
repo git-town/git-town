@@ -29,7 +29,7 @@ func mainbranchConfigCmd() *cobra.Command {
 }
 
 func configureMainBranch(args []string, debug bool) error {
-	repo, exit, err := LoadPublicRepo(RepoArgs{
+	repo, exit, err := LoadPublicThing(RepoArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
 		dryRun:                false,
@@ -47,12 +47,12 @@ func configureMainBranch(args []string, debug bool) error {
 	return nil
 }
 
-func printMainBranch(repo *git.PublicRepo) {
+func printMainBranch(repo *git.ProdRepo) {
 	cli.Println(cli.StringSetting(repo.Config.MainBranch()))
 }
 
-func setMainBranch(branch string, repo *git.PublicRepo) error {
-	hasBranch, err := repo.HasLocalBranch(branch)
+func setMainBranch(branch string, repo *git.ProdRepo) error {
+	hasBranch, err := repo.Internal.HasLocalBranch(branch)
 	if err != nil {
 		return err
 	}

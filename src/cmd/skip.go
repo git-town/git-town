@@ -26,7 +26,7 @@ func skipCmd() *cobra.Command {
 }
 
 func skip(debug bool) error {
-	repo, exit, err := LoadPublicRepo(RepoArgs{
+	repo, exit, err := LoadPublicThing(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: false,
@@ -37,7 +37,7 @@ func skip(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	runState, err := runstate.Load(&repo)
+	runState, err := runstate.Load(&repo.Internal)
 	if err != nil {
 		return fmt.Errorf("cannot load previous run state: %w", err)
 	}

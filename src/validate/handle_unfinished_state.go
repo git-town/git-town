@@ -12,8 +12,8 @@ import (
 // HandleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
 //
 //nolint:nonamedreturns  // return value isn't obvious from function name
-func HandleUnfinishedState(repo *git.PublicRepo, connector hosting.Connector) (quit bool, err error) {
-	runState, err := runstate.Load(repo)
+func HandleUnfinishedState(repo *git.ProdRepo, connector hosting.Connector) (quit bool, err error) {
+	runState, err := runstate.Load(&repo.Internal)
 	if err != nil {
 		return false, fmt.Errorf("cannot load previous run state: %w", err)
 	}
@@ -31,10 +31,10 @@ func HandleUnfinishedState(repo *git.PublicRepo, connector hosting.Connector) (q
 	}
 	switch response {
 	case dialog.ResponseTypeDiscard:
-		err = runstate.Delete(repo)
+		err = runstate.Delete(&repo.Internal)
 		return false, err
 	case dialog.ResponseTypeContinue:
-		hasConflicts, err := repo.HasConflicts()
+		hasConflicts, err := repo.Internal.HasConflicts()
 		if err != nil {
 			return false, err
 		}

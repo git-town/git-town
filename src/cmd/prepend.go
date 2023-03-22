@@ -40,7 +40,7 @@ func prependCommand() *cobra.Command {
 }
 
 func prepend(args []string, debug bool) error {
-	repo, exit, err := LoadPublicRepo(RepoArgs{
+	repo, exit, err := LoadPublicThing(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: true,
@@ -75,10 +75,10 @@ type prependConfig struct {
 	targetBranch        string
 }
 
-func determinePrependConfig(args []string, repo *git.PublicRepo) (*prependConfig, error) {
+func determinePrependConfig(args []string, repo *git.ProdRepo) (*prependConfig, error) {
 	ec := runstate.ErrorChecker{}
-	initialBranch := ec.String(repo.CurrentBranch())
-	hasOrigin := ec.Bool(repo.HasOrigin())
+	initialBranch := ec.String(repo.Internal.CurrentBranch())
+	hasOrigin := ec.Bool(repo.Internal.HasOrigin())
 	shouldNewBranchPush := ec.Bool(repo.Config.ShouldNewBranchPush())
 	pushHook := ec.Bool(repo.Config.PushHook())
 	isOffline := ec.Bool(repo.Config.IsOffline())
@@ -87,13 +87,13 @@ func determinePrependConfig(args []string, repo *git.PublicRepo) (*prependConfig
 		return nil, ec.Err
 	}
 	if hasOrigin && !isOffline {
-		err := repo.Fetch()
+		err := repo.Public.Fetch()
 		if err != nil {
 			return nil, err
 		}
 	}
 	targetBranch := args[0]
-	hasBranch, err := repo.HasLocalOrOriginBranch(targetBranch, mainBranch)
+	hasBranch, err := repo.Internal.HasLocalOrOriginBranch(targetBranch, mainBranch)
 	if err != nil {
 		return nil, err
 	}
@@ -103,7 +103,7 @@ func determinePrependConfig(args []string, repo *git.PublicRepo) (*prependConfig
 	if !repo.Config.IsFeatureBranch(initialBranch) {
 		return nil, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can have parent branches", initialBranch)
 	}
-	err = validate.KnowsBranchAncestry(initialBranch, repo.Config.MainBranch(), repo)
+	err = validate.KnowsBranchAncestry(initialBranch, repo.Config.MainBranch(), &repo.Internal)
 	if err != nil {
 		return nil, err
 	}
@@ -120,7 +120,7 @@ func determinePrependConfig(args []string, repo *git.PublicRepo) (*prependConfig
 	}, nil
 }
 
-func prependStepList(config *prependConfig, repo *git.PublicRepo) (runstate.StepList, error) {
+func prependStepList(config *prependConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.ancestorBranches {
 		updateBranchSteps(&list, branch, true, repo)
@@ -132,6 +132,6 @@ func prependStepList(config *prependConfig, repo *git.PublicRepo) (runstate.Step
 	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
 		list.Add(&steps.CreateTrackingBranchStep{Branch: config.targetBranch, NoPushHook: config.noPushHook})
 	}
-	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &repo.InternalRepo, config.mainBranch)
+	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &repo.Internal, config.mainBranch)
 	return list.Result()
 }

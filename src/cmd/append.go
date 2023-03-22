@@ -37,7 +37,7 @@ func appendCmd() *cobra.Command {
 }
 
 func runAppend(arg string, debug bool) error {
-	repo, exit, err := LoadPublicRepo(RepoArgs{
+	repo, exit, err := LoadPublicThing(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: true,
@@ -71,10 +71,10 @@ type appendConfig struct {
 	targetBranch        string
 }
 
-func determineAppendConfig(targetBranch string, repo *git.PublicRepo) (*appendConfig, error) {
+func determineAppendConfig(targetBranch string, repo *git.ProdRepo) (*appendConfig, error) {
 	ec := runstate.ErrorChecker{}
-	parentBranch := ec.String(repo.CurrentBranch())
-	hasOrigin := ec.Bool(repo.HasOrigin())
+	parentBranch := ec.String(repo.Internal.CurrentBranch())
+	hasOrigin := ec.Bool(repo.Internal.HasOrigin())
 	isOffline := ec.Bool(repo.Config.IsOffline())
 	mainBranch := repo.Config.MainBranch()
 	pushHook := ec.Bool(repo.Config.PushHook())
@@ -83,13 +83,13 @@ func determineAppendConfig(targetBranch string, repo *git.PublicRepo) (*appendCo
 		return nil, ec.Err
 	}
 	if hasOrigin && !isOffline {
-		ec.Check(repo.Fetch())
+		ec.Check(repo.Public.Fetch())
 	}
-	hasTargetBranch := ec.Bool(repo.HasLocalOrOriginBranch(targetBranch, mainBranch))
+	hasTargetBranch := ec.Bool(repo.Internal.HasLocalOrOriginBranch(targetBranch, mainBranch))
 	if hasTargetBranch {
 		ec.Fail("a branch named %q already exists", targetBranch)
 	}
-	ec.Check(validate.KnowsBranchAncestry(parentBranch, repo.Config.MainBranch(), repo))
+	ec.Check(validate.KnowsBranchAncestry(parentBranch, repo.Config.MainBranch(), &repo.Internal))
 	ancestorBranches := repo.Config.AncestorBranches(parentBranch)
 	return &appendConfig{
 		ancestorBranches:    ancestorBranches,
@@ -103,7 +103,7 @@ func determineAppendConfig(targetBranch string, repo *git.PublicRepo) (*appendCo
 	}, ec.Err
 }
 
-func appendStepList(config *appendConfig, repo *git.PublicRepo) (runstate.StepList, error) {
+func appendStepList(config *appendConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range append(config.ancestorBranches, config.parentBranch) {
 		updateBranchSteps(&list, branch, true, repo)
@@ -114,6 +114,6 @@ func appendStepList(config *appendConfig, repo *git.PublicRepo) (runstate.StepLi
 	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
 		list.Add(&steps.CreateTrackingBranchStep{Branch: config.targetBranch, NoPushHook: config.noPushHook})
 	}
-	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &repo.InternalRepo, config.mainBranch)
+	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &repo.Internal, config.mainBranch)
 	return list.Result()
 }

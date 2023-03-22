@@ -10,6 +10,6 @@ type AbortMergeStep struct {
 	EmptyStep
 }
 
-func (step *AbortMergeStep) Run(repo *git.PublicRepo, connector hosting.Connector) error {
-	return repo.AbortMerge()
+func (step *AbortMergeStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
+	return repo.Public.AbortMerge()
 }

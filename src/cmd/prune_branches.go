@@ -29,7 +29,7 @@ func pruneBranchesCommand() *cobra.Command {
 }
 
 func pruneBranches(debug bool) error {
-	repo, exit, err := LoadPublicRepo(RepoArgs{
+	repo, exit, err := LoadPublicThing(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: true,
@@ -59,22 +59,22 @@ type pruneBranchesConfig struct {
 	mainBranch                               string
 }
 
-func determinePruneBranchesConfig(repo *git.PublicRepo) (*pruneBranchesConfig, error) {
-	hasOrigin, err := repo.HasOrigin()
+func determinePruneBranchesConfig(repo *git.ProdRepo) (*pruneBranchesConfig, error) {
+	hasOrigin, err := repo.Internal.HasOrigin()
 	if err != nil {
 		return nil, err
 	}
 	if hasOrigin {
-		err = repo.Fetch()
+		err = repo.Public.Fetch()
 		if err != nil {
 			return nil, err
 		}
 	}
-	initialBranch, err := repo.CurrentBranch()
+	initialBranch, err := repo.Internal.CurrentBranch()
 	if err != nil {
 		return nil, err
 	}
-	localBranchesWithDeletedTrackingBranches, err := repo.LocalBranchesWithDeletedTrackingBranches()
+	localBranchesWithDeletedTrackingBranches, err := repo.Internal.LocalBranchesWithDeletedTrackingBranches()
 	if err != nil {
 		return nil, err
 	}
@@ -85,7 +85,7 @@ func determinePruneBranchesConfig(repo *git.PublicRepo) (*pruneBranchesConfig, e
 	}, nil
 }
 
-func pruneBranchesStepList(config *pruneBranchesConfig, repo *git.PublicRepo) (runstate.StepList, error) {
+func pruneBranchesStepList(config *pruneBranchesConfig, repo *git.ProdRepo) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	for _, branchWithDeletedRemote := range config.localBranchesWithDeletedTrackingBranches {
 		if config.initialBranch == branchWithDeletedRemote {
@@ -103,6 +103,6 @@ func pruneBranchesStepList(config *pruneBranchesConfig, repo *git.PublicRepo) (r
 		}
 		result.Append(&steps.DeleteLocalBranchStep{Branch: branchWithDeletedRemote, Parent: config.mainBranch})
 	}
-	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, &repo.InternalRepo, config.mainBranch)
+	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, &repo.Internal, config.mainBranch)
 	return result, err
 }

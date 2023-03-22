@@ -30,7 +30,7 @@ func pullBranchStrategyCommand() *cobra.Command {
 }
 
 func runConfigurePullBranchStrategy(args []string, debug bool) error {
-	repo, exit, err := LoadPublicRepo(RepoArgs{
+	repo, exit, err := LoadPublicThing(RepoArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
 		dryRun:                false,
@@ -47,7 +47,7 @@ func runConfigurePullBranchStrategy(args []string, debug bool) error {
 	return displayPullBranchStrategy(&repo)
 }
 
-func displayPullBranchStrategy(repo *git.PublicRepo) error {
+func displayPullBranchStrategy(repo *git.ProdRepo) error {
 	pullBranchStrategy, err := repo.Config.PullBranchStrategy()
 	if err != nil {
 		return err
@@ -56,7 +56,7 @@ func displayPullBranchStrategy(repo *git.PublicRepo) error {
 	return nil
 }
 
-func setPullBranchStrategy(value string, repo *git.PublicRepo) error {
+func setPullBranchStrategy(value string, repo *git.ProdRepo) error {
 	pullBranchStrategy, err := config.NewPullBranchStrategy(value)
 	if err != nil {
 		return err

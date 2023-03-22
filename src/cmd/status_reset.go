@@ -25,7 +25,7 @@ func resetRunstateCommand() *cobra.Command {
 }
 
 func statusReset(debug bool) error {
-	repo, exit, err := LoadPublicRepo(RepoArgs{
+	repo, exit, err := LoadPublicThing(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: false,
@@ -35,7 +35,7 @@ func statusReset(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	err = runstate.Delete(&repo)
+	err = runstate.Delete(&repo.Internal)
 	if err != nil {
 		return err
 	}

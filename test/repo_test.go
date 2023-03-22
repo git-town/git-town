@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestRepo(t *testing.T) {
+func TestTestRepo(t *testing.T) {
 	t.Parallel()
 	t.Run("NewRepo", func(t *testing.T) {
 		t.Parallel()
@@ -34,7 +34,7 @@ func TestRepo(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, []string{}, remotes)
 		origin := CreateRepo(t)
-		err = repo.AddRemote(config.OriginRemote, origin.Dir)
+		err = repo.AddRemote(config.OriginRemote, origin.workingDir)
 		assert.NoError(t, err)
 		remotes, err = repo.Remotes()
 		assert.NoError(t, err)
@@ -44,10 +44,10 @@ func TestRepo(t *testing.T) {
 	t.Run(".Clone()", func(t *testing.T) {
 		t.Parallel()
 		origin := CreateRepo(t)
-		clonedPath := filepath.Join(origin.Dir, "cloned")
+		clonedPath := filepath.Join(origin.workingDir, "cloned")
 		cloned, err := origin.Clone(clonedPath)
 		assert.NoError(t, err)
-		assert.Equal(t, clonedPath, cloned.Dir)
+		assert.Equal(t, clonedPath, cloned.workingDir)
 		assertIsNormalGitRepo(t, clonedPath)
 	})
 
@@ -87,10 +87,10 @@ func TestRepo(t *testing.T) {
 		// connecting branches of repos with the same commits in them
 		origin := CreateRepo(t)
 		repoDir := filepath.Join(t.TempDir(), "repo") // need a non-existing directory
-		err := CopyDirectory(origin.Dir, repoDir)
+		err := CopyDirectory(origin.workingDir, repoDir)
 		assert.NoError(t, err)
 		repo := NewRepo(repoDir, repoDir, "")
-		err = repo.AddRemote(config.OriginRemote, origin.Dir)
+		err = repo.AddRemote(config.OriginRemote, origin.workingDir)
 		assert.NoError(t, err)
 		err = repo.Fetch()
 		assert.NoError(t, err)
@@ -192,7 +192,7 @@ func TestRepo(t *testing.T) {
 			repo := CreateRepo(t)
 			err := repo.CreateFile("filename", "content")
 			assert.Nil(t, err, "cannot create file in repo")
-			content, err := os.ReadFile(filepath.Join(repo.Dir, "filename"))
+			content, err := os.ReadFile(filepath.Join(repo.workingDir, "filename"))
 			assert.Nil(t, err, "cannot read file")
 			assert.Equal(t, "content", string(content))
 		})
@@ -202,7 +202,7 @@ func TestRepo(t *testing.T) {
 			repo := CreateRepo(t)
 			err := repo.CreateFile("folder/filename", "content")
 			assert.Nil(t, err, "cannot create file in repo")
-			content, err := os.ReadFile(filepath.Join(repo.Dir, "folder/filename"))
+			content, err := os.ReadFile(filepath.Join(repo.workingDir, "folder/filename"))
 			assert.Nil(t, err, "cannot read file")
 			assert.Equal(t, "content", string(content))
 		})
@@ -225,7 +225,7 @@ func TestRepo(t *testing.T) {
 		t.Parallel()
 		repo := CreateRepo(t)
 		origin := CreateRepo(t)
-		err := repo.AddRemote(config.OriginRemote, origin.Dir)
+		err := repo.AddRemote(config.OriginRemote, origin.workingDir)
 		assert.NoError(t, err)
 		err = repo.Fetch()
 		assert.NoError(t, err)
@@ -368,7 +368,7 @@ func TestRepo(t *testing.T) {
 		t.Parallel()
 		repo := CreateRepo(t)
 		origin := CreateRepo(t)
-		err := repo.AddRemote(config.OriginRemote, origin.Dir)
+		err := repo.AddRemote(config.OriginRemote, origin.workingDir)
 		assert.NoError(t, err)
 		err = repo.CreateBranch("b1", "initial")
 		assert.NoError(t, err)
@@ -398,7 +398,7 @@ func TestRepo(t *testing.T) {
 		t.Parallel()
 		repo := CreateRepo(t)
 		origin := CreateRepo(t)
-		err := repo.AddRemote(config.OriginRemote, origin.Dir)
+		err := repo.AddRemote(config.OriginRemote, origin.workingDir)
 		assert.NoError(t, err)
 		err = repo.RemoveRemote(config.OriginRemote)
 		assert.NoError(t, err)

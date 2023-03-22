@@ -14,23 +14,23 @@ type CommitOpenChangesStep struct {
 	previousSha string
 }
 
-func (step *CommitOpenChangesStep) CreateUndoStep(repo *git.PublicRepo) (Step, error) {
+func (step *CommitOpenChangesStep) CreateUndoStep(repo *git.InternalCommands) (Step, error) {
 	return &ResetToShaStep{Sha: step.previousSha}, nil
 }
 
-func (step *CommitOpenChangesStep) Run(repo *git.PublicRepo, connector hosting.Connector) error {
+func (step *CommitOpenChangesStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
 	var err error
-	step.previousSha, err = repo.CurrentSha()
+	step.previousSha, err = repo.Internal.CurrentSha()
 	if err != nil {
 		return err
 	}
-	err = repo.StageFiles("-A")
+	err = repo.Public.StageFiles("-A")
 	if err != nil {
 		return err
 	}
-	currentBranch, err := repo.CurrentBranch()
+	currentBranch, err := repo.Internal.CurrentBranch()
 	if err != nil {
 		return err
 	}
-	return repo.CommitStagedChanges(fmt.Sprintf("WIP on %s", currentBranch))
+	return repo.Public.CommitStagedChanges(fmt.Sprintf("WIP on %s", currentBranch))
 }

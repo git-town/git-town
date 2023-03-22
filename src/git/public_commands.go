@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v7/src/config"
-	"github.com/git-town/git-town/v7/src/stringslice"
 )
 
 type PublicRunner interface {
@@ -14,13 +13,17 @@ type PublicRunner interface {
 	RunMany([][]string) error
 }
 
-type PublicRepo struct {
+// PublicCommands are Git commands that Git Town executes in its frontend,
+// i.e. visible to the user. They change the user's Git repo.
+type PublicCommands struct {
 	Public PublicRunner
-	InternalRepo
+	Config *RepoConfig // the known state of the Git repository
+	// TODO: try to move methods that use this into InternalCommands
+	Internal *InternalCommands // the InternalCommands instance to use
 }
 
 // AbortMerge cancels a currently ongoing Git merge operation.
-func (r *PublicRepo) AbortMerge() error {
+func (r *PublicCommands) AbortMerge() error {
 	err := r.Public.Run("git", "merge", "--abort")
 	if err != nil {
 		return fmt.Errorf("cannot abort current merge: %w", err)
@@ -29,7 +32,7 @@ func (r *PublicRepo) AbortMerge() error {
 }
 
 // AbortRebase cancels a currently ongoing Git rebase operation.
-func (r *PublicRepo) AbortRebase() error {
+func (r *PublicCommands) AbortRebase() error {
 	err := r.Public.Run("git", "rebase", "--abort")
 	if err != nil {
 		return fmt.Errorf("cannot abort current merge: %w", err)
@@ -38,22 +41,22 @@ func (r *PublicRepo) AbortRebase() error {
 }
 
 // AddGitAlias sets the given Git alias.
-func (r *PublicRepo) AddGitAlias(aliasType config.AliasType) error {
+func (r *PublicCommands) AddGitAlias(aliasType config.AliasType) error {
 	return r.Public.Run("git", "config", "--global", "alias."+string(aliasType), "town "+string(aliasType))
 }
 
 // CheckoutBranch checks out the Git branch with the given name in this repo.
-func (r *PublicRepo) CheckoutBranch(name string) error {
+func (r *PublicCommands) CheckoutBranch(name string) error {
 	err := r.Public.Run("git", "checkout", name)
 	if err != nil {
 		return fmt.Errorf("cannot check out branch %q: %w", name, err)
 	}
-	r.CurrentBranchCache.Set(name)
+	r.Config.CurrentBranchCache.Set(name)
 	return nil
 }
 
 // CreateRemoteBranch creates a remote branch from the given local SHA.
-func (r *PublicRepo) CreateRemoteBranch(localSha, branch string, noPushHook bool) error {
+func (r *PublicCommands) CreateRemoteBranch(localSha, branch string, noPushHook bool) error {
 	args := []string{"push"}
 	if noPushHook {
 		args = append(args, "--no-verify")
@@ -67,7 +70,7 @@ func (r *PublicRepo) CreateRemoteBranch(localSha, branch string, noPushHook bool
 }
 
 // CommitNoEdit commits all staged files with the default commit message.
-func (r *PublicRepo) CommitNoEdit() error {
+func (r *PublicCommands) CommitNoEdit() error {
 	err := r.Public.Run("git", "commit", "--no-edit")
 	if err != nil {
 		return fmt.Errorf("cannot commit files: %w", err)
@@ -76,7 +79,7 @@ func (r *PublicRepo) CommitNoEdit() error {
 }
 
 // CommitStagedChanges commits the currently staged changes.
-func (r *PublicRepo) CommitStagedChanges(message string) error {
+func (r *PublicCommands) CommitStagedChanges(message string) error {
 	var err error
 	if message != "" {
 		err = r.Public.Run("git", "commit", "-m", message)
@@ -90,7 +93,7 @@ func (r *PublicRepo) CommitStagedChanges(message string) error {
 }
 
 // Commit performs a commit of the staged changes with an optional custom message and author.
-func (r *PublicRepo) Commit(message, author string) error {
+func (r *PublicCommands) Commit(message, author string) error {
 	gitArgs := []string{"commit"}
 	if message != "" {
 		gitArgs = append(gitArgs, "-m", message)
@@ -103,7 +106,7 @@ func (r *PublicRepo) Commit(message, author string) error {
 }
 
 // ContinueRebase continues the currently ongoing rebase.
-func (r *PublicRepo) ContinueRebase() error {
+func (r *PublicCommands) ContinueRebase() error {
 	err := r.Public.Run("git", "rebase", "--continue")
 	if err != nil {
 		return fmt.Errorf("cannot continue rebase: %w", err)
@@ -114,7 +117,7 @@ func (r *PublicRepo) ContinueRebase() error {
 // CreateBranch creates a new branch with the given name.
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
-func (r *PublicRepo) CreateBranch(name, parent string) error {
+func (r *PublicCommands) CreateBranch(name, parent string) error {
 	err := r.Public.Run("git", "branch", name, parent)
 	if err != nil {
 		return fmt.Errorf("cannot create branch %q: %w", name, err)
@@ -123,7 +126,7 @@ func (r *PublicRepo) CreateBranch(name, parent string) error {
 }
 
 // DeleteLastCommit resets HEAD to the previous commit.
-func (r *PublicRepo) DeleteLastCommit() error {
+func (r *PublicCommands) DeleteLastCommit() error {
 	err := r.Public.Run("git", "reset", "--hard", "HEAD~1")
 	if err != nil {
 		return fmt.Errorf("cannot delete last commit: %w", err)
@@ -132,7 +135,7 @@ func (r *PublicRepo) DeleteLastCommit() error {
 }
 
 // DeleteLocalBranch removes the local branch with the given name.
-func (r *PublicRepo) DeleteLocalBranch(name string, force bool) error {
+func (r *PublicCommands) DeleteLocalBranch(name string, force bool) error {
 	args := []string{"branch", "-d", name}
 	if force {
 		args[1] = "-D"
@@ -145,7 +148,7 @@ func (r *PublicRepo) DeleteLocalBranch(name string, force bool) error {
 }
 
 // DeleteRemoteBranch removes the remote branch of the given local branch.
-func (r *PublicRepo) DeleteRemoteBranch(name string) error {
+func (r *PublicCommands) DeleteRemoteBranch(name string) error {
 	err := r.Public.Run("git", "push", config.OriginRemote, ":"+name)
 	if err != nil {
 		return fmt.Errorf("cannot delete tracking branch for %q: %w", name, err)
@@ -154,7 +157,7 @@ func (r *PublicRepo) DeleteRemoteBranch(name string) error {
 }
 
 // DiffParent displays the diff between the given branch and its given parent branch.
-func (r *PublicRepo) DiffParent(branch, parentBranch string) error {
+func (r *PublicCommands) DiffParent(branch, parentBranch string) error {
 	err := r.Public.Run("git", "diff", parentBranch+".."+branch)
 	if err != nil {
 		return fmt.Errorf("cannot diff branch %q with its parent branch %q: %w", branch, parentBranch, err)
@@ -163,7 +166,7 @@ func (r *PublicRepo) DiffParent(branch, parentBranch string) error {
 }
 
 // DiscardOpenChanges deletes all uncommitted changes.
-func (r *PublicRepo) DiscardOpenChanges() error {
+func (r *PublicCommands) DiscardOpenChanges() error {
 	err := r.Public.Run("git", "reset", "--hard")
 	if err != nil {
 		return fmt.Errorf("cannot discard open changes: %w", err)
@@ -172,7 +175,7 @@ func (r *PublicRepo) DiscardOpenChanges() error {
 }
 
 // Fetch retrieves the updates from the origin repo.
-func (r *PublicRepo) Fetch() error {
+func (r *PublicCommands) Fetch() error {
 	err := r.Public.Run("git", "fetch", "--prune", "--tags")
 	if err != nil {
 		return fmt.Errorf("cannot fetch: %w", err)
@@ -181,7 +184,7 @@ func (r *PublicRepo) Fetch() error {
 }
 
 // FetchUpstream fetches updates from the upstream remote.
-func (r *PublicRepo) FetchUpstream(branch string) error {
+func (r *PublicCommands) FetchUpstream(branch string) error {
 	err := r.Public.Run("git", "fetch", "upstream", branch)
 	if err != nil {
 		return fmt.Errorf("cannot fetch from upstream: %w", err)
@@ -191,18 +194,18 @@ func (r *PublicRepo) FetchUpstream(branch string) error {
 
 // MergeBranchNoEdit merges the given branch into the current branch,
 // using the default commit message.
-func (r *PublicRepo) MergeBranchNoEdit(branch string) error {
+func (r *PublicCommands) MergeBranchNoEdit(branch string) error {
 	err := r.Public.Run("git", "merge", "--no-edit", branch)
 	return err
 }
 
 // NavigateToRootIfNecessary changes into the root directory of the current repository.
-func (r *PublicRepo) NavigateToRootIfNecessary() error {
+func (r *PublicCommands) NavigateToRootIfNecessary() error {
 	currentDirectory, err := os.Getwd()
 	if err != nil {
 		return fmt.Errorf("cannot get current working directory: %w", err)
 	}
-	gitRootDirectory, err := r.RootDirectory()
+	gitRootDirectory, err := r.Internal.RootDirectory()
 	if err != nil {
 		return err
 	}
@@ -213,7 +216,7 @@ func (r *PublicRepo) NavigateToRootIfNecessary() error {
 }
 
 // PopStash restores stashed-away changes into the workspace.
-func (r *PublicRepo) PopStash() error {
+func (r *PublicCommands) PopStash() error {
 	err := r.Public.Run("git", "stash", "pop")
 	if err != nil {
 		return fmt.Errorf("cannot pop the stash: %w", err)
@@ -222,7 +225,7 @@ func (r *PublicRepo) PopStash() error {
 }
 
 // Pull fetches updates from origin and updates the currently checked out branch.
-func (r *PublicRepo) Pull() error {
+func (r *PublicCommands) Pull() error {
 	err := r.Public.Run("git", "pull")
 	if err != nil {
 		return fmt.Errorf("cannot pull updates: %w", err)
@@ -240,7 +243,7 @@ type PushArgs struct {
 
 // PushBranch pushes the branch with the given name to origin.
 // TODO: remove unused elements from PushArgs.
-func (r *PublicRepo) PushBranch(options ...PushArgs) error {
+func (r *PublicCommands) PushBranch(options ...PushArgs) error {
 	var option PushArgs
 	if len(options) > 0 {
 		option = options[0]
@@ -273,7 +276,7 @@ func (r *PublicRepo) PushBranch(options ...PushArgs) error {
 }
 
 // PushTags pushes new the Git tags to origin.
-func (r *PublicRepo) PushTags() error {
+func (r *PublicCommands) PushTags() error {
 	err := r.Public.Run("git", "push", "--tags")
 	if err != nil {
 		return fmt.Errorf("cannot push branch in repo: %w", err)
@@ -282,7 +285,7 @@ func (r *PublicRepo) PushTags() error {
 }
 
 // Rebase initiates a Git rebase of the current branch against the given branch.
-func (r *PublicRepo) Rebase(target string) error {
+func (r *PublicCommands) Rebase(target string) error {
 	err := r.Public.Run("git", "rebase", target)
 	if err != nil {
 		return fmt.Errorf("cannot rebase against branch %q: %w", target, err)
@@ -291,31 +294,12 @@ func (r *PublicRepo) Rebase(target string) error {
 }
 
 // RemoveGitAlias removes the given Git alias.
-func (r *PublicRepo) RemoveGitAlias(aliasType config.AliasType) error {
+func (r *PublicCommands) RemoveGitAlias(aliasType config.AliasType) error {
 	return r.Public.Run("git", "config", "--global", "--unset", "alias."+string(aliasType))
 }
 
-// RemoveOutdatedConfiguration removes outdated Git Town configuration.
-func (r *PublicRepo) RemoveOutdatedConfiguration() error {
-	branches, err := r.LocalAndOriginBranches(r.Config.MainBranch())
-	if err != nil {
-		return err
-	}
-	for child, parent := range r.Config.ParentBranchMap() {
-		hasChildBranch := stringslice.Contains(branches, child)
-		hasParentBranch := stringslice.Contains(branches, parent)
-		if !hasChildBranch || !hasParentBranch {
-			err = r.Config.RemoveParent(child)
-			if err != nil {
-				return err
-			}
-		}
-	}
-	return nil
-}
-
 // ResetToSha undoes all commits on the current branch all the way until the given SHA.
-func (r *PublicRepo) ResetToSha(sha string, hard bool) error {
+func (r *PublicCommands) ResetToSha(sha string, hard bool) error {
 	args := []string{"reset"}
 	if hard {
 		args = append(args, "--hard")
@@ -329,7 +313,7 @@ func (r *PublicRepo) ResetToSha(sha string, hard bool) error {
 }
 
 // RevertCommit reverts the commit with the given SHA.
-func (r *PublicRepo) RevertCommit(sha string) error {
+func (r *PublicCommands) RevertCommit(sha string) error {
 	err := r.Public.Run("git", "revert", sha)
 	if err != nil {
 		return fmt.Errorf("cannot revert commit %q: %w", sha, err)
@@ -338,7 +322,7 @@ func (r *PublicRepo) RevertCommit(sha string) error {
 }
 
 // SquashMerge squash-merges the given branch into the current branch.
-func (r *PublicRepo) SquashMerge(branch string) error {
+func (r *PublicCommands) SquashMerge(branch string) error {
 	err := r.Public.Run("git", "merge", "--squash", branch)
 	if err != nil {
 		return fmt.Errorf("cannot squash-merge branch %q: %w", branch, err)
@@ -347,7 +331,7 @@ func (r *PublicRepo) SquashMerge(branch string) error {
 }
 
 // Stash adds the current files to the Git stash.
-func (r *PublicRepo) Stash() error {
+func (r *PublicCommands) Stash() error {
 	err := r.Public.RunMany([][]string{
 		{"git", "add", "-A"},
 		{"git", "stash"},
@@ -359,7 +343,7 @@ func (r *PublicRepo) Stash() error {
 }
 
 // StageFiles adds the file with the given name to the Git index.
-func (r *PublicRepo) StageFiles(names ...string) error {
+func (r *PublicCommands) StageFiles(names ...string) error {
 	args := append([]string{"add"}, names...)
 	err := r.Public.Run("git", args...)
 	if err != nil {
@@ -369,7 +353,7 @@ func (r *PublicRepo) StageFiles(names ...string) error {
 }
 
 // StartCommit starts a commit and stops at asking the user for the commit message.
-func (r *PublicRepo) StartCommit() error {
+func (r *PublicCommands) StartCommit() error {
 	err := r.Public.Run("git", "commit")
 	if err != nil {
 		return fmt.Errorf("cannot start commit: %w", err)

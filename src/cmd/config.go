@@ -37,7 +37,7 @@ func configCmd() *cobra.Command {
 }
 
 func runConfig(debug bool) error {
-	repo, exit, err := LoadPublicRepo(RepoArgs{
+	repo, exit, err := LoadPublicThing(RepoArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
 		dryRun:                false,

@@ -27,7 +27,7 @@ func switchCmd() *cobra.Command {
 }
 
 func runSwitch(debug bool) error {
-	repo, exit, err := LoadPublicRepo(RepoArgs{
+	repo, exit, err := LoadPublicThing(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: true,
@@ -38,7 +38,7 @@ func runSwitch(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	currentBranch, err := repo.CurrentBranch()
+	currentBranch, err := repo.Internal.CurrentBranch()
 	if err != nil {
 		return err
 	}
@@ -47,7 +47,7 @@ func runSwitch(debug bool) error {
 		return err
 	}
 	if newBranch != nil && *newBranch != currentBranch {
-		err = repo.CheckoutBranch(*newBranch)
+		err = repo.Internal.CheckoutBranch(*newBranch)
 		if err != nil {
 			return err
 		}
@@ -57,7 +57,7 @@ func runSwitch(debug bool) error {
 
 // queryBranch lets the user select a new branch via a visual dialog.
 // Returns the selected branch or nil if the user aborted.
-func queryBranch(currentBranch string, repo *git.PublicRepo) (selection *string, err error) { //nolint:nonamedreturns
+func queryBranch(currentBranch string, repo *git.ProdRepo) (selection *string, err error) { //nolint:nonamedreturns
 	entries, err := createEntries(repo)
 	if err != nil {
 		return nil, err
@@ -66,7 +66,7 @@ func queryBranch(currentBranch string, repo *git.PublicRepo) (selection *string,
 }
 
 // createEntries provides all the entries for the branch dialog.
-func createEntries(repo *git.PublicRepo) (dialog.ModalEntries, error) {
+func createEntries(repo *git.ProdRepo) (dialog.ModalEntries, error) {
 	entries := dialog.ModalEntries{}
 	var err error
 	for _, root := range repo.Config.BranchAncestryRoots() {
@@ -79,7 +79,7 @@ func createEntries(repo *git.PublicRepo) (dialog.ModalEntries, error) {
 }
 
 // addEntryAndChildren adds the given branch and all its child branches to the given entries collection.
-func addEntryAndChildren(entries dialog.ModalEntries, branch string, indent int, repo *git.PublicRepo) (dialog.ModalEntries, error) {
+func addEntryAndChildren(entries dialog.ModalEntries, branch string, indent int, repo *git.ProdRepo) (dialog.ModalEntries, error) {
 	entries = append(entries, dialog.ModalEntry{
 		Text:  strings.Repeat("  ", indent) + branch,
 		Value: branch,
