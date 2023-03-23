@@ -19,7 +19,7 @@ func (step *EmptyStep) CreateContinueStep() Step {
 	return &EmptyStep{}
 }
 
-func (step *EmptyStep) CreateUndoStep(repo *git.BackendCommands) (Step, error) {
+func (step *EmptyStep) CreateUndoStep(backend *git.BackendCommands) (Step, error) {
 	return &EmptyStep{}, nil
 }
 

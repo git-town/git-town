@@ -9,7 +9,7 @@ type StashOpenChangesStep struct {
 	EmptyStep
 }
 
-func (step *StashOpenChangesStep) CreateUndoStep(repo *git.BackendCommands) (Step, error) {
+func (step *StashOpenChangesStep) CreateUndoStep(backend *git.BackendCommands) (Step, error) {
 	return &RestoreOpenChangesStep{}, nil
 }
 

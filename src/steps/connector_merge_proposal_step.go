@@ -26,7 +26,7 @@ func (step *ConnectorMergeProposalStep) CreateAbortStep() Step {
 	return nil
 }
 
-func (step *ConnectorMergeProposalStep) CreateUndoStep(repo *git.BackendCommands) (Step, error) {
+func (step *ConnectorMergeProposalStep) CreateUndoStep(backend *git.BackendCommands) (Step, error) {
 	return &RevertCommitStep{Sha: step.mergeSha}, nil
 }
 

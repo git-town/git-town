@@ -20,7 +20,7 @@ func (step *MergeStep) CreateContinueStep() Step {
 	return &ContinueMergeStep{}
 }
 
-func (step *MergeStep) CreateUndoStep(repo *git.BackendCommands) (Step, error) {
+func (step *MergeStep) CreateUndoStep(backend *git.BackendCommands) (Step, error) {
 	return &ResetToShaStep{Hard: true, Sha: step.previousSha}, nil
 }
 

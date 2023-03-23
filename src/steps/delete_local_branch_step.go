@@ -15,7 +15,7 @@ type DeleteLocalBranchStep struct {
 	branchSha string
 }
 
-func (step *DeleteLocalBranchStep) CreateUndoStep(repo *git.BackendCommands) (Step, error) {
+func (step *DeleteLocalBranchStep) CreateUndoStep(backend *git.BackendCommands) (Step, error) {
 	return &CreateBranchStep{Branch: step.Branch, StartingPoint: step.branchSha}, nil
 }
 

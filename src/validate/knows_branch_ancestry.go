@@ -8,10 +8,10 @@ import (
 // KnowsBranchesAncestry asserts that the entire ancestry for all given branches
 // is known to Git Town.
 // Missing ancestry information is queried from the user.
-func KnowsBranchesAncestry(branches []string, repo *git.BackendCommands) error {
-	mainBranch := repo.Config.MainBranch()
+func KnowsBranchesAncestry(branches []string, backend *git.BackendCommands) error {
+	mainBranch := backend.Config.MainBranch()
 	for _, branch := range branches {
-		err := KnowsBranchAncestry(branch, mainBranch, repo)
+		err := KnowsBranchAncestry(branch, mainBranch, backend)
 		if err != nil {
 			return err
 		}
@@ -20,36 +20,36 @@ func KnowsBranchesAncestry(branches []string, repo *git.BackendCommands) error {
 }
 
 // KnowsBranchAncestry prompts the user for all unknown ancestors of the given branch.
-func KnowsBranchAncestry(branch, defaultBranch string, repo *git.BackendCommands) (err error) { //nolint:nonamedreturns // return value names are useful here
+func KnowsBranchAncestry(branch, defaultBranch string, backend *git.BackendCommands) (err error) { //nolint:nonamedreturns // return value names are useful here
 	headerShown := false
 	currentBranch := branch
-	if repo.Config.IsMainBranch(branch) || repo.Config.IsPerennialBranch(branch) || repo.Config.HasParentBranch(branch) {
+	if backend.Config.IsMainBranch(branch) || backend.Config.IsPerennialBranch(branch) || backend.Config.HasParentBranch(branch) {
 		return nil
 	}
 	for {
-		parent := repo.Config.ParentBranch(currentBranch)
+		parent := backend.Config.ParentBranch(currentBranch)
 		if parent == "" { //nolint:nestif
 			if !headerShown {
-				printParentBranchHeader(repo)
+				printParentBranchHeader(backend)
 				headerShown = true
 			}
-			parent, err = EnterParent(currentBranch, defaultBranch, repo)
+			parent, err = EnterParent(currentBranch, defaultBranch, backend)
 			if err != nil {
 				return
 			}
 			if parent == perennialBranchOption {
-				err = repo.Config.AddToPerennialBranches(currentBranch)
+				err = backend.Config.AddToPerennialBranches(currentBranch)
 				if err != nil {
 					return
 				}
 				break
 			}
-			err = repo.Config.SetParent(currentBranch, parent)
+			err = backend.Config.SetParent(currentBranch, parent)
 			if err != nil {
 				return
 			}
 		}
-		if parent == repo.Config.MainBranch() || repo.Config.IsPerennialBranch(parent) {
+		if parent == backend.Config.MainBranch() || backend.Config.IsPerennialBranch(parent) {
 			break
 		}
 		currentBranch = parent
@@ -57,8 +57,8 @@ func KnowsBranchAncestry(branch, defaultBranch string, repo *git.BackendCommands
 	return
 }
 
-func printParentBranchHeader(repo *git.BackendCommands) {
-	cli.Printf(parentBranchHeaderTemplate, repo.Config.MainBranch())
+func printParentBranchHeader(backend *git.BackendCommands) {
+	cli.Printf(parentBranchHeaderTemplate, backend.Config.MainBranch())
 }
 
 const parentBranchHeaderTemplate string = `

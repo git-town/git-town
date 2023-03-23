@@ -21,7 +21,7 @@ func (step *RebaseBranchStep) CreateContinueStep() Step {
 	return &ContinueRebaseStep{}
 }
 
-func (step *RebaseBranchStep) CreateUndoStep(repo *git.BackendCommands) (Step, error) {
+func (step *RebaseBranchStep) CreateUndoStep(backend *git.BackendCommands) (Step, error) {
 	return &ResetToShaStep{Hard: true, Sha: step.previousSha}, nil
 }
 

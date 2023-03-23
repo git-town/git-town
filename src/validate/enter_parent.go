@@ -8,12 +8,12 @@ import (
 )
 
 // EnterParent lets the user select a new parent for the given branch.
-func EnterParent(branch, defaultParent string, repo *git.BackendCommands) (string, error) {
-	choices, err := repo.LocalBranchesMainFirst(defaultParent)
+func EnterParent(branch, defaultParent string, backend *git.BackendCommands) (string, error) {
+	choices, err := backend.LocalBranchesMainFirst(defaultParent)
 	if err != nil {
 		return "", err
 	}
-	filteredChoices := filterOutSelfAndDescendants(branch, choices, repo.Config)
+	filteredChoices := filterOutSelfAndDescendants(branch, choices, backend.Config)
 	return dialog.Select(dialog.SelectArgs{
 		Options: append([]string{perennialBranchOption}, filteredChoices...),
 		Message: fmt.Sprintf(parentBranchPromptTemplate, branch),

@@ -20,8 +20,8 @@ func (step *SquashMergeStep) CreateAbortStep() Step {
 	return &DiscardOpenChangesStep{}
 }
 
-func (step *SquashMergeStep) CreateUndoStep(repo *git.BackendCommands) (Step, error) {
-	currentSHA, err := repo.CurrentSha()
+func (step *SquashMergeStep) CreateUndoStep(backend *git.BackendCommands) (Step, error) {
+	currentSHA, err := backend.CurrentSha()
 	if err != nil {
 		return nil, err
 	}
