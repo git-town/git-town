@@ -219,7 +219,7 @@ func (r *MockingRunner) RunWith(opts *Options, cmd string, args ...string) (*sub
 		// would introduce substantial amounts of multi-threaded complexity
 		// for not enough gains.
 		// https://github.com/git-town/go-execplus could help make this more robust.
-		time.Sleep(InputDelay)
+		time.Sleep(500 * time.Millisecond)
 		_, err := input.Write([]byte(userInput))
 		if err != nil {
 			return nil, fmt.Errorf("can't write %q to subprocess '%s %s': %w", userInput, cmd, strings.Join(args, " "), err)
@@ -263,6 +263,3 @@ type Options struct {
 	// It is written to the subprocess one element at a time, with a delay defined by command.InputDelay in between.
 	Input []string // input into the subprocess
 }
-
-// InputDelay defines how long to wait before writing the next input string into the subprocess.
-const InputDelay = 500 * time.Millisecond
