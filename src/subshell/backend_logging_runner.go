@@ -8,7 +8,7 @@ import (
 	"github.com/kballard/go-shellquote"
 )
 
-// BackendLoggingRunner runs backend shell commands.
+// BackendLoggingRunner executes backend shell commands.
 // It	logs the executed commands and their output to the CLI.
 type BackendLoggingRunner struct {
 	Runner BackendRunner

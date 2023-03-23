@@ -8,7 +8,7 @@ import (
 	"github.com/kballard/go-shellquote"
 )
 
-// BackendRunner executes backend shell commands.
+// BackendRunner executes backend shell commands without output to the CLI.
 type BackendRunner struct {
 	// If set, runs the commands in the given directory.
 	// If not set, runs the commands in the current working directory.
