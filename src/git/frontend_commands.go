@@ -13,8 +13,9 @@ type FrontendRunner interface {
 	RunMany([][]string) error
 }
 
-// FrontendCommands are Git commands that Git Town executes in its frontend,
-// i.e. visible to the user. They change the user's Git repo.
+// FrontendCommands are Git commands that Git Town executes in its frontend.
+// The Git Town front-end are the activities of Git Town that are visible to the end user.
+// Front-end Git commands are the Git commands that Git Town executes for the user to change the user's Git repo.
 type FrontendCommands struct {
 	Frontend FrontendRunner
 	Config   *RepoConfig // the known state of the Git repository

@@ -19,8 +19,9 @@ type BackendRunner interface {
 	RunMany([][]string) error
 }
 
-// BackendCommands are Git commands that Git Town executes in its backend,
-// i.e. invisible to the user. They determine the state of the repo without changing the repo.
+// BackendCommands are Git commands that Git Town executes in its backend.
+// The Git Town backend are the activities that Git Town executes
+// invisible to the end user to determine which front-end commands to run.
 type BackendCommands struct {
 	BackendRunner             // executes shell commands in the directory of the Git repo
 	Config        *RepoConfig // the known state of the Git repository
