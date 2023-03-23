@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/v7/src/stringslice"
 )
 
+// testCommands defines Git commands used only in test code.
 type testCommands struct {
 	MockingRunner
 	config git.RepoConfig
