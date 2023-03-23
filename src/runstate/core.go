@@ -40,14 +40,14 @@ func New(command string, stepList StepList) *RunState {
 
 // AddPushBranchStepAfterCurrentBranchSteps inserts a PushBranchStep
 // after all the steps for the current branch.
-func (runState *RunState) AddPushBranchStepAfterCurrentBranchSteps(repo *git.BackendCommands) error {
+func (runState *RunState) AddPushBranchStepAfterCurrentBranchSteps(backend *git.BackendCommands) error {
 	popped := StepList{}
 	for {
 		step := runState.RunStepList.Peek()
 		if !isCheckoutStep(step) {
 			popped.Append(runState.RunStepList.Pop())
 		} else {
-			currentBranch, err := repo.CurrentBranch()
+			currentBranch, err := backend.CurrentBranch()
 			if err != nil {
 				return err
 			}
