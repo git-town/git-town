@@ -131,8 +131,8 @@ func (runState *RunState) MarkAsFinished() {
 }
 
 // MarkAsUnfinished updates the run state to be marked as unfinished and populates informational fields.
-func (runState *RunState) MarkAsUnfinished(repo *git.BackendCommands) error {
-	currentBranch, err := repo.CurrentBranch()
+func (runState *RunState) MarkAsUnfinished(backend *git.BackendCommands) error {
+	currentBranch, err := backend.CurrentBranch()
 	if err != nil {
 		return err
 	}
