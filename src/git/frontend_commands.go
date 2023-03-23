@@ -16,7 +16,7 @@ type FrontendRunner interface {
 // FrontendCommands are Git commands that Git Town executes for the user to change the user's repository.
 // They can take a while to execute (fetch, push) and stream their output to the user.
 // Git Town only needs to know the exit code of frontend commands.
-// TODO: add tests for these commands
+// TODO: add tests for these commands.
 type FrontendCommands struct {
 	Frontend FrontendRunner
 	Config   *RepoConfig // the known state of the Git repository
