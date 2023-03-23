@@ -17,7 +17,7 @@ type Runner struct {
 	Backend git.BackendCommands
 }
 
-// CreateRunner creates TestRepo instances.
+// CreateRunner creates test.Runner instances.
 func CreateRunner(t *testing.T) Runner {
 	t.Helper()
 	dir := t.TempDir()
@@ -34,7 +34,7 @@ func CreateRunner(t *testing.T) Runner {
 	return repo
 }
 
-// initRunner creates a fully functioning test.Repo in the given working directory,
+// initRunner creates a fully functioning test.Runner in the given working directory,
 // including necessary Git configuration to make commits. Creates missing folders as needed.
 func initRunner(workingDir, homeDir, binDir string) (Runner, error) {
 	result := newRunner(workingDir, homeDir, binDir)
@@ -46,7 +46,7 @@ func initRunner(workingDir, homeDir, binDir string) (Runner, error) {
 	return result, err
 }
 
-// newRunner provides a new Repo instance working in the given directory.
+// newRunner provides a new test.Runner instance working in the given directory.
 // The directory must contain an existing Git repo.
 // TODO: inline this method.
 func newRunner(workingDir, homeDir, binDir string) Runner {
