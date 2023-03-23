@@ -14,7 +14,7 @@ import (
 // Repo provides Git functionality for test code (unit and end-to-end tests).
 type Repo struct {
 	testCommands
-	backend git.BackendCommands
+	Backend git.BackendCommands
 }
 
 // CreateRepo creates TestRepo instances.
@@ -75,7 +75,7 @@ func newRepo(workingDir, homeDir, binDir string) Repo {
 	}
 	return Repo{
 		testCommands: testCommands,
-		backend:      backendCommands,
+		Backend:      backendCommands,
 	}
 }
 
