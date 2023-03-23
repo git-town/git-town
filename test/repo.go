@@ -27,11 +27,11 @@ func CreateRunner(t *testing.T) Runner {
 	homeDir := filepath.Join(dir, "home")
 	err = os.Mkdir(homeDir, 0o744)
 	assert.NoError(t, err)
-	repo, err := initRunner(workingDir, homeDir, homeDir)
+	runner, err := initRunner(workingDir, homeDir, homeDir)
 	assert.NoError(t, err)
-	_, err = repo.Run("git", "commit", "--allow-empty", "-m", "initial commit")
+	_, err = runner.Run("git", "commit", "--allow-empty", "-m", "initial commit")
 	assert.NoError(t, err)
-	return repo
+	return runner
 }
 
 // initRunner creates a fully functioning test.Runner in the given working directory,
@@ -79,8 +79,8 @@ func newRunner(workingDir, homeDir, binDir string) Runner {
 	}
 }
 
-// CreateTestGitTownRunner creates a GitRepo for use in tests, with a main branch and
-// initial git town configuration.
+// CreateTestGitTownRunner creates a test.Runner for use in tests,
+// with a main branch and initial git town configuration.
 func CreateTestGitTownRunner(t *testing.T) Runner {
 	t.Helper()
 	repo := CreateRunner(t)
