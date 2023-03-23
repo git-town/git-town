@@ -12,8 +12,7 @@ import (
 	"github.com/kballard/go-shellquote"
 )
 
-// FrontendRunner executes shell commands that Git Town runs for the user
-// and streams their output to the CLI.
+// FrontendRunner executes frontend shell commands.
 type FrontendRunner struct {
 	CurrentBranch   *cache.String
 	OmitBranchNames bool

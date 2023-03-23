@@ -8,8 +8,7 @@ import (
 	"github.com/kballard/go-shellquote"
 )
 
-// BackendRunner runs backend shell commands in Git Town's backend (not visible to the end user by default).
-// It returns the output of the commands run so that they can be analyzed.
+// BackendRunner executes backend shell commands.
 type BackendRunner struct {
 	// If set, runs the commands in the given directory.
 	// If not set, runs the commands in the current working directory.
