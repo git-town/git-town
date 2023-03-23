@@ -61,38 +61,38 @@ func long(summary string, desc ...string) string {
 	return summary + "."
 }
 
-func LoadProdRunner(args RunnerArgs) (prodRepo git.ProdRunner, exit bool, err error) { //nolint:nonamedreturns // so many return values require names
-	prodRepo = git.NewProdRunner(args.omitBranchNames, args.dryRun, args.debug)
+func LoadProdRunner(args RunnerArgs) (prodRun git.ProdRunner, exit bool, err error) { //nolint:nonamedreturns // so many return values require names
+	prodRun = git.NewProdRunner(args.omitBranchNames, args.dryRun, args.debug)
 	if args.validateIsRepository {
-		err := validate.IsRepository(&prodRepo)
+		err := validate.IsRepository(&prodRun)
 		if err != nil {
-			return prodRepo, false, err
+			return prodRun, false, err
 		}
 	}
 	if !args.omitBranchNames || args.dryRun {
-		currentBranch, err := prodRepo.Backend.CurrentBranch()
+		currentBranch, err := prodRun.Backend.CurrentBranch()
 		if err != nil {
-			return prodRepo, false, err
+			return prodRun, false, err
 		}
-		prodRepo.Config.CurrentBranchCache.Set(currentBranch)
+		prodRun.Config.CurrentBranchCache.Set(currentBranch)
 	}
 	if args.dryRun {
-		prodRepo.Config.DryRun = true
+		prodRun.Config.DryRun = true
 	}
 	ec := runstate.ErrorChecker{}
 	if args.validateGitversion {
-		ec.Check(validate.HasGitVersion(&prodRepo.Backend))
+		ec.Check(validate.HasGitVersion(&prodRun.Backend))
 	}
 	if args.validateIsConfigured {
-		ec.Check(validate.IsConfigured(&prodRepo.Backend))
+		ec.Check(validate.IsConfigured(&prodRun.Backend))
 	}
 	if args.validateIsOnline {
-		ec.Check(validate.IsOnline(&prodRepo.Config))
+		ec.Check(validate.IsOnline(&prodRun.Config))
 	}
 	if args.handleUnfinishedState {
-		exit = ec.Bool(validate.HandleUnfinishedState(&prodRepo, nil))
+		exit = ec.Bool(validate.HandleUnfinishedState(&prodRun, nil))
 	}
-	return prodRepo, exit, ec.Err
+	return prodRun, exit, ec.Err
 }
 
 type RunnerArgs struct {

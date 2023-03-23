@@ -21,21 +21,21 @@ type GitEnvironment struct {
 	Dir string
 
 	// CoworkerRepo is the optional Git repository that is locally checked out at the coworker machine.
-	CoworkerRepo *Repo `exhaustruct:"optional"`
+	CoworkerRepo *Runner `exhaustruct:"optional"`
 
 	// DevRepo is the Git repository that is locally checked out at the developer machine.
-	DevRepo Repo `exhaustruct:"optional"`
+	DevRepo Runner `exhaustruct:"optional"`
 
 	// OriginRepo is the Git repository that simulates the origin repo (on GitHub).
 	// If this value is nil, the current test setup has no origin.
-	OriginRepo *Repo `exhaustruct:"optional"`
+	OriginRepo *Runner `exhaustruct:"optional"`
 
 	// SubmoduleRepo is the Git repository that simulates an external repo used as a submodule.
 	// If this value is nil, the current test setup uses no submodules.
-	SubmoduleRepo *Repo `exhaustruct:"optional"`
+	SubmoduleRepo *Runner `exhaustruct:"optional"`
 
 	// UpstreamRepo is the optional Git repository that contains the upstream for this environment.
-	UpstreamRepo *Repo `exhaustruct:"optional"`
+	UpstreamRepo *Runner `exhaustruct:"optional"`
 }
 
 // CloneGitEnvironment provides a GitEnvironment instance in the given directory,
@@ -47,9 +47,9 @@ func CloneGitEnvironment(original GitEnvironment, dir string) (GitEnvironment, e
 	}
 	binDir := filepath.Join(dir, "bin")
 	originDir := filepath.Join(dir, "origin")
-	originRepo := newRepo(originDir, dir, "")
+	originRepo := newRunner(originDir, dir, "")
 	developerDir := filepath.Join(dir, "developer")
-	devRepo := newRepo(developerDir, dir, binDir)
+	devRepo := newRunner(developerDir, dir, binDir)
 	result := GitEnvironment{
 		Dir:        dir,
 		DevRepo:    devRepo,
@@ -94,7 +94,7 @@ func NewStandardGitEnvironment(dir string) (GitEnvironment, error) {
 		return gitEnv, fmt.Errorf("cannot create directory %q: %w", gitEnv.originRepoPath(), err)
 	}
 	// initialize the repo in the folder
-	originRepo, err := initRepo(gitEnv.originRepoPath(), gitEnv.Dir, gitEnv.binPath())
+	originRepo, err := initRunner(gitEnv.originRepoPath(), gitEnv.Dir, gitEnv.binPath())
 	if err != nil {
 		return gitEnv, err
 	}
@@ -132,7 +132,7 @@ func (env *GitEnvironment) AddSubmoduleRepo() error {
 	if err != nil {
 		return fmt.Errorf("cannot create directory %q: %w", env.submoduleRepoPath(), err)
 	}
-	submoduleRepo, err := initRepo(env.submoduleRepoPath(), env.Dir, env.binPath())
+	submoduleRepo, err := initRunner(env.submoduleRepoPath(), env.Dir, env.binPath())
 	if err != nil {
 		return err
 	}
@@ -331,7 +331,7 @@ func (env GitEnvironment) TagTable() (DataTable, error) {
 	return builder.Table(), nil
 }
 
-func (env GitEnvironment) initializeWorkspace(repo *Repo) error {
+func (env GitEnvironment) initializeWorkspace(repo *Runner) error {
 	err := repo.Config.SetMainBranch("main")
 	if err != nil {
 		return err

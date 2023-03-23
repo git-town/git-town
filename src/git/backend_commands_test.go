@@ -9,12 +9,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestRepo(t *testing.T) {
+func TestRunner(t *testing.T) {
 	t.Parallel()
 
 	t.Run("BranchAuthors", func(t *testing.T) {
 		t.Parallel()
-		repo := test.CreateRepo(t)
+		repo := test.CreateRunner(t)
 		err := repo.CreateBranch("branch", "initial")
 		assert.NoError(t, err)
 		err = repo.CreateCommit(git.Commit{
@@ -38,7 +38,7 @@ func TestRepo(t *testing.T) {
 
 	t.Run(".CheckoutBranch()", func(t *testing.T) {
 		t.Parallel()
-		repo := test.CreateRepo(t)
+		repo := test.CreateRunner(t)
 		err := repo.CreateBranch("branch1", "initial")
 		assert.NoError(t, err)
 		err = repo.Backend.CheckoutBranch("branch1")
@@ -55,7 +55,7 @@ func TestRepo(t *testing.T) {
 
 	t.Run(".CreateFeatureBranch()", func(t *testing.T) {
 		t.Parallel()
-		repo := test.CreateTestGitTownRepo(t)
+		repo := test.CreateTestGitTownRunner(t)
 		err := repo.Backend.CreateFeatureBranch("f1")
 		assert.NoError(t, err)
 		repo.Config.Reload()
@@ -65,7 +65,7 @@ func TestRepo(t *testing.T) {
 
 	t.Run(".CurrentBranch()", func(t *testing.T) {
 		t.Parallel()
-		repo := test.CreateRepo(t)
+		repo := test.CreateRunner(t)
 		err := repo.CheckoutBranch("initial")
 		assert.NoError(t, err)
 		err = repo.CreateBranch("b1", "initial")
@@ -84,7 +84,7 @@ func TestRepo(t *testing.T) {
 
 	t.Run(".HasLocalBranch()", func(t *testing.T) {
 		t.Parallel()
-		origin := test.CreateRepo(t)
+		origin := test.CreateRunner(t)
 		repoDir := t.TempDir()
 		repo, err := origin.Clone(repoDir)
 		assert.NoError(t, err)
@@ -105,7 +105,7 @@ func TestRepo(t *testing.T) {
 
 	t.Run(".HasOpenChanges()", func(t *testing.T) {
 		t.Parallel()
-		repo := test.CreateRepo(t)
+		repo := test.CreateRunner(t)
 		has, err := repo.Backend.HasOpenChanges()
 		assert.NoError(t, err)
 		assert.False(t, has)
@@ -118,7 +118,7 @@ func TestRepo(t *testing.T) {
 
 	t.Run(".HasRebaseInProgress()", func(t *testing.T) {
 		t.Parallel()
-		repo := test.CreateRepo(t)
+		repo := test.CreateRunner(t)
 		has, err := repo.Backend.HasRebaseInProgress()
 		assert.NoError(t, err)
 		assert.False(t, has)
@@ -126,7 +126,7 @@ func TestRepo(t *testing.T) {
 
 	t.Run(".HasRemote()", func(t *testing.T) {
 		t.Parallel()
-		origin := test.CreateRepo(t)
+		origin := test.CreateRunner(t)
 		repoDir := t.TempDir()
 		repo, err := origin.Clone(repoDir)
 		assert.NoError(t, err)
@@ -140,7 +140,7 @@ func TestRepo(t *testing.T) {
 
 	t.Run(".HasTrackingBranch()", func(t *testing.T) {
 		t.Parallel()
-		origin := test.CreateRepo(t)
+		origin := test.CreateRunner(t)
 		err := origin.CreateBranch("b1", "initial")
 		assert.NoError(t, err)
 		repoDir := t.TempDir()
@@ -163,7 +163,7 @@ func TestRepo(t *testing.T) {
 
 	t.Run(".LocalBranchesMainFirst()", func(t *testing.T) {
 		t.Parallel()
-		origin := test.CreateRepo(t)
+		origin := test.CreateRunner(t)
 		repoDir := t.TempDir()
 		repo, err := origin.Clone(repoDir)
 		assert.NoError(t, err)
@@ -182,7 +182,7 @@ func TestRepo(t *testing.T) {
 
 	t.Run(".LocalAndOriginBranches()", func(t *testing.T) {
 		t.Parallel()
-		origin := test.CreateRepo(t)
+		origin := test.CreateRunner(t)
 		repoDir := t.TempDir()
 		repo, err := origin.Clone(repoDir)
 		assert.NoError(t, err)
@@ -201,7 +201,7 @@ func TestRepo(t *testing.T) {
 
 	t.Run(".PreviouslyCheckedOutBranch()", func(t *testing.T) {
 		t.Parallel()
-		repo := test.CreateRepo(t)
+		repo := test.CreateRunner(t)
 		err := repo.CreateBranch("feature1", "initial")
 		assert.NoError(t, err)
 		err = repo.CreateBranch("feature2", "initial")
@@ -217,7 +217,7 @@ func TestRepo(t *testing.T) {
 
 	t.Run(".RemoteBranches()", func(t *testing.T) {
 		t.Parallel()
-		origin := test.CreateRepo(t)
+		origin := test.CreateRunner(t)
 		repoDir := t.TempDir()
 		repo, err := origin.Clone(repoDir)
 		assert.NoError(t, err)
@@ -236,8 +236,8 @@ func TestRepo(t *testing.T) {
 
 	t.Run(".Remotes()", func(t *testing.T) {
 		t.Parallel()
-		repo := test.CreateRepo(t)
-		origin := test.CreateRepo(t)
+		repo := test.CreateRunner(t)
+		origin := test.CreateRunner(t)
 		err := repo.AddRemote(config.OriginRemote, origin.WorkingDir())
 		assert.NoError(t, err)
 		remotes, err := repo.Backend.Remotes()
