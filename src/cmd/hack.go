@@ -40,7 +40,7 @@ func hackCmd() *cobra.Command {
 }
 
 func hack(args []string, promptForParent, debug bool) error {
-	repo, exit, err := LoadProdRepo(RepoArgs{
+	run, exit, err := LoadProdRunner(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: true,
@@ -51,31 +51,31 @@ func hack(args []string, promptForParent, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineHackConfig(args, promptForParent, &repo)
+	config, err := determineHackConfig(args, promptForParent, &run)
 	if err != nil {
 		return err
 	}
-	stepList, err := appendStepList(config, &repo)
+	stepList, err := appendStepList(config, &run)
 	if err != nil {
 		return err
 	}
 	runState := runstate.New("hack", stepList)
-	return runstate.Execute(runState, &repo, nil)
+	return runstate.Execute(runState, &run, nil)
 }
 
-func determineHackConfig(args []string, promptForParent bool, repo *git.ProdRepo) (*appendConfig, error) {
+func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunner) (*appendConfig, error) {
 	ec := runstate.ErrorChecker{}
 	targetBranch := args[0]
-	parentBranch := ec.String(determineParentBranch(targetBranch, promptForParent, repo))
-	hasOrigin := ec.Bool(repo.Backend.HasOrigin())
-	shouldNewBranchPush := ec.Bool(repo.Config.ShouldNewBranchPush())
-	isOffline := ec.Bool(repo.Config.IsOffline())
-	mainBranch := repo.Config.MainBranch()
+	parentBranch := ec.String(determineParentBranch(targetBranch, promptForParent, run))
+	hasOrigin := ec.Bool(run.Backend.HasOrigin())
+	shouldNewBranchPush := ec.Bool(run.Config.ShouldNewBranchPush())
+	isOffline := ec.Bool(run.Config.IsOffline())
+	mainBranch := run.Config.MainBranch()
 	if ec.Err == nil && hasOrigin && !isOffline {
-		ec.Check(repo.Frontend.Fetch())
+		ec.Check(run.Frontend.Fetch())
 	}
-	hasBranch := ec.Bool(repo.Backend.HasLocalOrOriginBranch(targetBranch, mainBranch))
-	pushHook := ec.Bool(repo.Config.PushHook())
+	hasBranch := ec.Bool(run.Backend.HasLocalOrOriginBranch(targetBranch, mainBranch))
+	pushHook := ec.Bool(run.Config.PushHook())
 	if hasBranch {
 		return nil, fmt.Errorf("a branch named %q already exists", targetBranch)
 	}
@@ -91,17 +91,17 @@ func determineHackConfig(args []string, promptForParent bool, repo *git.ProdRepo
 	}, ec.Err
 }
 
-func determineParentBranch(targetBranch string, promptForParent bool, repo *git.ProdRepo) (string, error) {
+func determineParentBranch(targetBranch string, promptForParent bool, run *git.ProdRunner) (string, error) {
 	if promptForParent {
-		parentBranch, err := validate.EnterParent(targetBranch, repo.Config.MainBranch(), &repo.Backend)
+		parentBranch, err := validate.EnterParent(targetBranch, run.Config.MainBranch(), &run.Backend)
 		if err != nil {
 			return "", err
 		}
-		err = validate.KnowsBranchAncestry(parentBranch, repo.Config.MainBranch(), &repo.Backend)
+		err = validate.KnowsBranchAncestry(parentBranch, run.Config.MainBranch(), &run.Backend)
 		if err != nil {
 			return "", err
 		}
 		return parentBranch, nil
 	}
-	return repo.Config.MainBranch(), nil
+	return run.Config.MainBranch(), nil
 }

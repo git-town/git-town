@@ -34,7 +34,7 @@ func pushNewBranchesCommand() *cobra.Command {
 }
 
 func pushNewBranches(args []string, global, debug bool) error {
-	repo, exit, err := LoadProdRepo(RepoArgs{
+	run, exit, err := LoadProdRunner(RepoArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
 		dryRun:                false,
@@ -46,18 +46,18 @@ func pushNewBranches(args []string, global, debug bool) error {
 		return err
 	}
 	if len(args) > 0 {
-		return setPushNewBranches(args[0], global, &repo)
+		return setPushNewBranches(args[0], global, &run)
 	}
-	return printPushNewBranches(global, &repo)
+	return printPushNewBranches(global, &run)
 }
 
-func printPushNewBranches(globalFlag bool, repo *git.ProdRepo) error {
+func printPushNewBranches(globalFlag bool, run *git.ProdRunner) error {
 	var setting bool
 	var err error
 	if globalFlag {
-		setting, err = repo.Config.ShouldNewBranchPushGlobal()
+		setting, err = run.Config.ShouldNewBranchPushGlobal()
 	} else {
-		setting, err = repo.Config.ShouldNewBranchPush()
+		setting, err = run.Config.ShouldNewBranchPush()
 	}
 	if err != nil {
 		return err
@@ -66,10 +66,10 @@ func printPushNewBranches(globalFlag bool, repo *git.ProdRepo) error {
 	return nil
 }
 
-func setPushNewBranches(text string, globalFlag bool, repo *git.ProdRepo) error {
+func setPushNewBranches(text string, globalFlag bool, run *git.ProdRunner) error {
 	value, err := config.ParseBool(text)
 	if err != nil {
 		return fmt.Errorf(`invalid argument: %q. Please provide either "yes" or "no"`, text)
 	}
-	return repo.Config.SetNewBranchPush(value, globalFlag)
+	return run.Config.SetNewBranchPush(value, globalFlag)
 }

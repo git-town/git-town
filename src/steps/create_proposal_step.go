@@ -12,12 +12,12 @@ type CreateProposalStep struct {
 	Branch string
 }
 
-func (step *CreateProposalStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
-	parentBranch := repo.Config.ParentBranch(step.Branch)
+func (step *CreateProposalStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
+	parentBranch := run.Config.ParentBranch(step.Branch)
 	prURL, err := connector.NewProposalURL(step.Branch, parentBranch)
 	if err != nil {
 		return err
 	}
-	browser.Open(prURL, repo.Frontend.Frontend, repo.Backend)
+	browser.Open(prURL, run.Frontend.Frontend, run.Backend)
 	return nil
 }

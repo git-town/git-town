@@ -31,7 +31,7 @@ func offlineCmd() *cobra.Command {
 }
 
 func offline(args []string, debug bool) error {
-	repo, exit, err := LoadProdRepo(RepoArgs{
+	run, exit, err := LoadProdRunner(RepoArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
 		dryRun:                false,
@@ -42,13 +42,13 @@ func offline(args []string, debug bool) error {
 		return err
 	}
 	if len(args) > 0 {
-		return setOfflineStatus(args[0], &repo)
+		return setOfflineStatus(args[0], &run)
 	}
-	return displayOfflineStatus(&repo)
+	return displayOfflineStatus(&run)
 }
 
-func displayOfflineStatus(repo *git.ProdRepo) error {
-	isOffline, err := repo.Config.IsOffline()
+func displayOfflineStatus(run *git.ProdRunner) error {
+	isOffline, err := run.Config.IsOffline()
 	if err != nil {
 		return err
 	}
@@ -56,10 +56,10 @@ func displayOfflineStatus(repo *git.ProdRepo) error {
 	return nil
 }
 
-func setOfflineStatus(text string, repo *git.ProdRepo) error {
+func setOfflineStatus(text string, run *git.ProdRunner) error {
 	value, err := config.ParseBool(text)
 	if err != nil {
 		return fmt.Errorf(`invalid argument: %q. Please provide either "yes" or "no".\n`, text)
 	}
-	return repo.Config.SetOffline(value)
+	return run.Config.SetOffline(value)
 }

@@ -24,19 +24,19 @@ func (step *PushBranchStep) CreateUndoStep(backend *git.BackendCommands) (Step, 
 	return &SkipCurrentBranchSteps{}, nil
 }
 
-func (step *PushBranchStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
-	shouldPush, err := repo.Backend.ShouldPushBranch(step.Branch)
+func (step *PushBranchStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
+	shouldPush, err := run.Backend.ShouldPushBranch(step.Branch)
 	if err != nil {
 		return err
 	}
-	if !shouldPush || repo.Config.DryRun {
+	if !shouldPush || run.Config.DryRun {
 		return nil
 	}
-	currentBranch, err := repo.Backend.CurrentBranch()
+	currentBranch, err := run.Backend.CurrentBranch()
 	if err != nil {
 		return err
 	}
-	return repo.Frontend.PushBranch(git.PushArgs{
+	return run.Frontend.PushBranch(git.PushArgs{
 		Branch:         step.Branch,
 		ForceWithLease: step.ForceWithLease,
 		NoPushHook:     step.NoPushHook,

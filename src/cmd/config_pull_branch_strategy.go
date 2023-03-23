@@ -31,7 +31,7 @@ func pullBranchStrategyCommand() *cobra.Command {
 }
 
 func pullBranchStrategy(args []string, debug bool) error {
-	repo, exit, err := LoadProdRepo(RepoArgs{
+	run, exit, err := LoadProdRunner(RepoArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
 		dryRun:                false,
@@ -43,13 +43,13 @@ func pullBranchStrategy(args []string, debug bool) error {
 		return err
 	}
 	if len(args) > 0 {
-		return setPullBranchStrategy(args[0], &repo)
+		return setPullBranchStrategy(args[0], &run)
 	}
-	return displayPullBranchStrategy(&repo)
+	return displayPullBranchStrategy(&run)
 }
 
-func displayPullBranchStrategy(repo *git.ProdRepo) error {
-	pullBranchStrategy, err := repo.Config.PullBranchStrategy()
+func displayPullBranchStrategy(run *git.ProdRunner) error {
+	pullBranchStrategy, err := run.Config.PullBranchStrategy()
 	if err != nil {
 		return err
 	}
@@ -57,10 +57,10 @@ func displayPullBranchStrategy(repo *git.ProdRepo) error {
 	return nil
 }
 
-func setPullBranchStrategy(value string, repo *git.ProdRepo) error {
+func setPullBranchStrategy(value string, run *git.ProdRunner) error {
 	pullBranchStrategy, err := config.NewPullBranchStrategy(value)
 	if err != nil {
 		return err
 	}
-	return repo.Config.SetPullBranchStrategy(pullBranchStrategy)
+	return run.Config.SetPullBranchStrategy(pullBranchStrategy)
 }

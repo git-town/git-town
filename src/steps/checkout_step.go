@@ -16,14 +16,14 @@ func (step *CheckoutStep) CreateUndoStep(backend *git.BackendCommands) (Step, er
 	return &CheckoutStep{Branch: step.previousBranch}, nil
 }
 
-func (step *CheckoutStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
+func (step *CheckoutStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
 	var err error
-	step.previousBranch, err = repo.Backend.CurrentBranch()
+	step.previousBranch, err = run.Backend.CurrentBranch()
 	if err != nil {
 		return err
 	}
 	if step.previousBranch != step.Branch {
-		err := repo.Frontend.CheckoutBranch(step.Branch)
+		err := run.Frontend.CheckoutBranch(step.Branch)
 		return err
 	}
 	return nil

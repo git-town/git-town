@@ -37,7 +37,7 @@ func aliasesCommand() *cobra.Command {
 }
 
 func aliases(arg string, debug bool) error {
-	repo, exit, err := LoadProdRepo(RepoArgs{
+	run, exit, err := LoadProdRunner(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,
 		omitBranchNames:       true,
@@ -50,16 +50,16 @@ func aliases(arg string, debug bool) error {
 	switch strings.ToLower(arg) {
 	// TODO: make enum
 	case "add":
-		return addAliases(&repo)
+		return addAliases(&run)
 	case "remove":
-		return removeAliases(&repo)
+		return removeAliases(&run)
 	}
 	return fmt.Errorf(`invalid argument %q. Please provide either "add" or "remove"`, arg)
 }
 
-func addAliases(repo *git.ProdRepo) error {
+func addAliases(run *git.ProdRunner) error {
 	for _, aliasType := range config.AliasTypes() {
-		err := repo.Frontend.AddGitAlias(aliasType)
+		err := run.Frontend.AddGitAlias(aliasType)
 		if err != nil {
 			return err
 		}
@@ -67,11 +67,11 @@ func addAliases(repo *git.ProdRepo) error {
 	return nil
 }
 
-func removeAliases(repo *git.ProdRepo) error {
+func removeAliases(run *git.ProdRunner) error {
 	for _, aliasType := range config.AliasTypes() {
-		existingAlias := repo.Config.GitAlias(aliasType)
+		existingAlias := run.Config.GitAlias(aliasType)
 		if existingAlias == "town "+string(aliasType) {
-			err := repo.Frontend.RemoveGitAlias(aliasType)
+			err := run.Frontend.RemoveGitAlias(aliasType)
 			if err != nil {
 				return err
 			}

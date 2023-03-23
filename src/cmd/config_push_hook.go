@@ -33,7 +33,7 @@ func pushHookCommand() *cobra.Command {
 }
 
 func pushHook(args []string, global, debug bool) error {
-	repo, exit, err := LoadProdRepo(RepoArgs{
+	run, exit, err := LoadProdRunner(RepoArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
 		dryRun:                false,
@@ -45,18 +45,18 @@ func pushHook(args []string, global, debug bool) error {
 		return err
 	}
 	if len(args) > 0 {
-		return setPushHook(args[0], global, &repo)
+		return setPushHook(args[0], global, &run)
 	}
-	return printPushHook(global, &repo)
+	return printPushHook(global, &run)
 }
 
-func printPushHook(globalFlag bool, repo *git.ProdRepo) error {
+func printPushHook(globalFlag bool, run *git.ProdRunner) error {
 	var setting bool
 	var err error
 	if globalFlag {
-		setting, err = repo.Config.PushHookGlobal()
+		setting, err = run.Config.PushHookGlobal()
 	} else {
-		setting, err = repo.Config.PushHook()
+		setting, err = run.Config.PushHook()
 	}
 	if err != nil {
 		return err
@@ -65,13 +65,13 @@ func printPushHook(globalFlag bool, repo *git.ProdRepo) error {
 	return nil
 }
 
-func setPushHook(text string, global bool, repo *git.ProdRepo) error {
+func setPushHook(text string, global bool, run *git.ProdRunner) error {
 	value, err := config.ParseBool(text)
 	if err != nil {
 		return fmt.Errorf(`invalid argument: %q. Please provide either "yes" or "no"`, text)
 	}
 	if global {
-		return repo.Config.SetPushHookGlobally(value)
+		return run.Config.SetPushHookGlobally(value)
 	}
-	return repo.Config.SetPushHookLocally(value)
+	return run.Config.SetPushHookLocally(value)
 }

@@ -21,14 +21,14 @@ func (step *DeleteOriginBranchStep) CreateUndoStep(backend *git.BackendCommands)
 	return &CreateRemoteBranchStep{Branch: step.Branch, Sha: step.branchSha, NoPushHook: step.NoPushHook}, nil
 }
 
-func (step *DeleteOriginBranchStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
+func (step *DeleteOriginBranchStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
 	if !step.IsTracking {
-		trackingBranch := repo.Backend.TrackingBranch(step.Branch)
+		trackingBranch := run.Backend.TrackingBranch(step.Branch)
 		var err error
-		step.branchSha, err = repo.Backend.ShaForBranch(trackingBranch)
+		step.branchSha, err = run.Backend.ShaForBranch(trackingBranch)
 		if err != nil {
 			return err
 		}
 	}
-	return repo.Frontend.DeleteRemoteBranch(step.Branch)
+	return run.Frontend.DeleteRemoteBranch(step.Branch)
 }

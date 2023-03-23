@@ -49,7 +49,7 @@ func newPullRequestCommand() *cobra.Command {
 }
 
 func newPullRequest(debug bool) error {
-	repo, exit, err := LoadProdRepo(RepoArgs{
+	run, exit, err := LoadProdRunner(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: true,
@@ -61,23 +61,23 @@ func newPullRequest(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineNewPullRequestConfig(&repo)
+	config, err := determineNewPullRequestConfig(&run)
 	if err != nil {
 		return err
 	}
-	connector, err := hosting.NewConnector(repo.Config, &repo.Backend, cli.PrintConnectorAction)
+	connector, err := hosting.NewConnector(run.Config, &run.Backend, cli.PrintConnectorAction)
 	if err != nil {
 		return err
 	}
 	if connector == nil {
 		return hosting.UnsupportedServiceError()
 	}
-	stepList, err := newPullRequestStepList(config, &repo)
+	stepList, err := newPullRequestStepList(config, &run)
 	if err != nil {
 		return err
 	}
 	runState := runstate.New("new-pull-request", stepList)
-	return runstate.Execute(runState, &repo, connector)
+	return runstate.Execute(runState, &run, connector)
 }
 
 type newPullRequestConfig struct {
@@ -86,38 +86,38 @@ type newPullRequestConfig struct {
 	mainBranch     string
 }
 
-func determineNewPullRequestConfig(repo *git.ProdRepo) (*newPullRequestConfig, error) {
-	hasOrigin, err := repo.Backend.HasOrigin()
+func determineNewPullRequestConfig(run *git.ProdRunner) (*newPullRequestConfig, error) {
+	hasOrigin, err := run.Backend.HasOrigin()
 	if err != nil {
 		return nil, err
 	}
 	if hasOrigin {
-		err := repo.Frontend.Fetch()
+		err := run.Frontend.Fetch()
 		if err != nil {
 			return nil, err
 		}
 	}
-	initialBranch, err := repo.Backend.CurrentBranch()
+	initialBranch, err := run.Backend.CurrentBranch()
 	if err != nil {
 		return nil, err
 	}
-	err = validate.KnowsBranchAncestry(initialBranch, repo.Config.MainBranch(), &repo.Backend)
+	err = validate.KnowsBranchAncestry(initialBranch, run.Config.MainBranch(), &run.Backend)
 	if err != nil {
 		return nil, err
 	}
 	return &newPullRequestConfig{
 		InitialBranch:  initialBranch,
-		BranchesToSync: append(repo.Config.AncestorBranches(initialBranch), initialBranch),
-		mainBranch:     repo.Config.MainBranch(),
+		BranchesToSync: append(run.Config.AncestorBranches(initialBranch), initialBranch),
+		mainBranch:     run.Config.MainBranch(),
 	}, nil
 }
 
-func newPullRequestStepList(config *newPullRequestConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+func newPullRequestStepList(config *newPullRequestConfig, run *git.ProdRunner) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.BranchesToSync {
-		updateBranchSteps(&list, branch, true, repo)
+		updateBranchSteps(&list, branch, true, run)
 	}
-	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &repo.Backend, config.mainBranch)
+	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &run.Backend, config.mainBranch)
 	list.Add(&steps.CreateProposalStep{Branch: config.InitialBranch})
 	return list.Result()
 }

@@ -37,30 +37,30 @@ func (step *ConnectorMergeProposalStep) CreateAutomaticAbortError() error {
 	return step.mergeError
 }
 
-func (step *ConnectorMergeProposalStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
+func (step *ConnectorMergeProposalStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
 	commitMessage := step.CommitMessage
 	//nolint:nestif
 	if commitMessage == "" {
 		// Allow the user to enter the commit message as if shipping without a connector
 		// then revert the commit since merging via the connector will perform the actual squash merge.
 		step.enteredEmptyCommitMessage = true
-		err := repo.Frontend.SquashMerge(step.Branch)
+		err := run.Frontend.SquashMerge(step.Branch)
 		if err != nil {
 			return err
 		}
-		err = repo.Backend.CommentOutSquashCommitMessage(step.DefaultProposalMessage + "\n\n")
+		err = run.Backend.CommentOutSquashCommitMessage(step.DefaultProposalMessage + "\n\n")
 		if err != nil {
 			return fmt.Errorf("cannot comment out the squash commit message: %w", err)
 		}
-		err = repo.Frontend.StartCommit()
+		err = run.Frontend.StartCommit()
 		if err != nil {
 			return err
 		}
-		commitMessage, err = repo.Backend.LastCommitMessage()
+		commitMessage, err = run.Backend.LastCommitMessage()
 		if err != nil {
 			return err
 		}
-		err = repo.Frontend.DeleteLastCommit()
+		err = run.Frontend.DeleteLastCommit()
 		if err != nil {
 			return err
 		}

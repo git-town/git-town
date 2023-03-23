@@ -32,7 +32,7 @@ func syncStrategyCommand() *cobra.Command {
 }
 
 func syncStrategy(args []string, global, debug bool) error {
-	repo, exit, err := LoadProdRepo(RepoArgs{
+	run, exit, err := LoadProdRunner(RepoArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
 		dryRun:                false,
@@ -44,18 +44,18 @@ func syncStrategy(args []string, global, debug bool) error {
 		return err
 	}
 	if len(args) > 0 {
-		return setSyncStrategy(global, &repo, args[0])
+		return setSyncStrategy(global, &run, args[0])
 	}
-	return printSyncStrategy(global, &repo)
+	return printSyncStrategy(global, &run)
 }
 
-func printSyncStrategy(globalFlag bool, repo *git.ProdRepo) error {
+func printSyncStrategy(globalFlag bool, run *git.ProdRunner) error {
 	var strategy config.SyncStrategy
 	var err error
 	if globalFlag {
-		strategy, err = repo.Config.SyncStrategyGlobal()
+		strategy, err = run.Config.SyncStrategyGlobal()
 	} else {
-		strategy, err = repo.Config.SyncStrategy()
+		strategy, err = run.Config.SyncStrategy()
 	}
 	if err != nil {
 		return err
@@ -64,13 +64,13 @@ func printSyncStrategy(globalFlag bool, repo *git.ProdRepo) error {
 	return nil
 }
 
-func setSyncStrategy(globalFlag bool, repo *git.ProdRepo, value string) error {
+func setSyncStrategy(globalFlag bool, run *git.ProdRunner, value string) error {
 	syncStrategy, err := config.ToSyncStrategy(value)
 	if err != nil {
 		return err
 	}
 	if globalFlag {
-		return repo.Config.SetSyncStrategyGlobal(syncStrategy)
+		return run.Config.SetSyncStrategyGlobal(syncStrategy)
 	}
-	return repo.Config.SetSyncStrategy(syncStrategy)
+	return run.Config.SetSyncStrategy(syncStrategy)
 }

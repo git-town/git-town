@@ -27,7 +27,7 @@ func skipCmd() *cobra.Command {
 }
 
 func skip(debug bool) error {
-	repo, exit, err := LoadProdRepo(RepoArgs{
+	run, exit, err := LoadProdRunner(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: false,
@@ -38,7 +38,7 @@ func skip(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	runState, err := runstate.Load(&repo.Backend)
+	runState, err := runstate.Load(&run.Backend)
 	if err != nil {
 		return fmt.Errorf("cannot load previous run state: %w", err)
 	}
@@ -49,5 +49,5 @@ func skip(debug bool) error {
 		return fmt.Errorf("cannot skip branch that resulted in conflicts")
 	}
 	skipRunState := runState.CreateSkipRunState()
-	return runstate.Execute(&skipRunState, &repo, nil)
+	return runstate.Execute(&skipRunState, &run, nil)
 }

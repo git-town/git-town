@@ -19,15 +19,15 @@ func (step *DeleteLocalBranchStep) CreateUndoStep(backend *git.BackendCommands) 
 	return &CreateBranchStep{Branch: step.Branch, StartingPoint: step.branchSha}, nil
 }
 
-func (step *DeleteLocalBranchStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
+func (step *DeleteLocalBranchStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
 	var err error
-	step.branchSha, err = repo.Backend.ShaForBranch(step.Branch)
+	step.branchSha, err = run.Backend.ShaForBranch(step.Branch)
 	if err != nil {
 		return err
 	}
-	hasUnmergedCommits, err := repo.Backend.BranchHasUnmergedCommits(step.Branch, step.Parent)
+	hasUnmergedCommits, err := run.Backend.BranchHasUnmergedCommits(step.Branch, step.Parent)
 	if err != nil {
 		return err
 	}
-	return repo.Frontend.DeleteLocalBranch(step.Branch, step.Force || hasUnmergedCommits)
+	return run.Frontend.DeleteLocalBranch(step.Branch, step.Force || hasUnmergedCommits)
 }

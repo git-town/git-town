@@ -27,7 +27,7 @@ func undoCmd() *cobra.Command {
 }
 
 func undo(debug bool) error {
-	repo, exit, err := LoadProdRepo(RepoArgs{
+	run, exit, err := LoadProdRunner(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: false,
@@ -38,7 +38,7 @@ func undo(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	runState, err := runstate.Load(&repo.Backend)
+	runState, err := runstate.Load(&run.Backend)
 	if err != nil {
 		return fmt.Errorf("cannot load previous run state: %w", err)
 	}
@@ -46,5 +46,5 @@ func undo(debug bool) error {
 		return fmt.Errorf("nothing to undo")
 	}
 	undoRunState := runState.CreateUndoRunState()
-	return runstate.Execute(&undoRunState, &repo, nil)
+	return runstate.Execute(&undoRunState, &run, nil)
 }

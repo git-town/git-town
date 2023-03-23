@@ -25,15 +25,15 @@ func (step *RebaseBranchStep) CreateUndoStep(backend *git.BackendCommands) (Step
 	return &ResetToShaStep{Hard: true, Sha: step.previousSha}, nil
 }
 
-func (step *RebaseBranchStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
+func (step *RebaseBranchStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
 	var err error
-	step.previousSha, err = repo.Backend.CurrentSha()
+	step.previousSha, err = run.Backend.CurrentSha()
 	if err != nil {
 		return err
 	}
-	err = repo.Frontend.Rebase(step.Branch)
+	err = run.Frontend.Rebase(step.Branch)
 	if err != nil {
-		repo.Config.CurrentBranchCache.Invalidate()
+		run.Config.CurrentBranchCache.Invalidate()
 	}
 	return err
 }

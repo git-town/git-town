@@ -33,7 +33,7 @@ func diffParentCommand() *cobra.Command {
 }
 
 func diffParent(args []string, debug bool) error {
-	repo, exit, err := LoadProdRepo(RepoArgs{
+	run, exit, err := LoadProdRunner(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: true,
@@ -44,11 +44,11 @@ func diffParent(args []string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineDiffParentConfig(args, &repo)
+	config, err := determineDiffParentConfig(args, &run)
 	if err != nil {
 		return err
 	}
-	return repo.Frontend.DiffParent(config.branch, config.parentBranch)
+	return run.Frontend.DiffParent(config.branch, config.parentBranch)
 }
 
 type diffParentConfig struct {
@@ -57,8 +57,8 @@ type diffParentConfig struct {
 }
 
 // Does not return error because "Ensure" functions will call exit directly.
-func determineDiffParentConfig(args []string, repo *git.ProdRepo) (*diffParentConfig, error) {
-	initialBranch, err := repo.Backend.CurrentBranch()
+func determineDiffParentConfig(args []string, run *git.ProdRunner) (*diffParentConfig, error) {
+	initialBranch, err := run.Backend.CurrentBranch()
 	if err != nil {
 		return nil, err
 	}
@@ -69,7 +69,7 @@ func determineDiffParentConfig(args []string, repo *git.ProdRepo) (*diffParentCo
 		branch = initialBranch
 	}
 	if initialBranch != branch {
-		hasBranch, err := repo.Backend.HasLocalBranch(branch)
+		hasBranch, err := run.Backend.HasLocalBranch(branch)
 		if err != nil {
 			return nil, err
 		}
@@ -77,15 +77,15 @@ func determineDiffParentConfig(args []string, repo *git.ProdRepo) (*diffParentCo
 			return nil, fmt.Errorf("there is no local branch named %q", branch)
 		}
 	}
-	if !repo.Config.IsFeatureBranch(branch) {
+	if !run.Config.IsFeatureBranch(branch) {
 		return nil, fmt.Errorf("you can only diff-parent feature branches")
 	}
-	err = validate.KnowsBranchAncestry(branch, repo.Config.MainBranch(), &repo.Backend)
+	err = validate.KnowsBranchAncestry(branch, run.Config.MainBranch(), &run.Backend)
 	if err != nil {
 		return nil, err
 	}
 	return &diffParentConfig{
 		branch:       branch,
-		parentBranch: repo.Config.ParentBranch(branch),
+		parentBranch: run.Config.ParentBranch(branch),
 	}, nil
 }

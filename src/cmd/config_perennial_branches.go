@@ -46,7 +46,7 @@ func perennialBranchesCmd() *cobra.Command {
 }
 
 func displayPerennialBranches(debug bool) error {
-	repo, exit, err := LoadProdRepo(RepoArgs{
+	run, exit, err := LoadProdRunner(RepoArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
 		dryRun:                false,
@@ -57,12 +57,12 @@ func displayPerennialBranches(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	cli.Println(cli.StringSetting(strings.Join(repo.Config.PerennialBranches(), "\n")))
+	cli.Println(cli.StringSetting(strings.Join(run.Config.PerennialBranches(), "\n")))
 	return nil
 }
 
 func updatePerennialBranches(debug bool) error {
-	repo, exit, err := LoadProdRepo(RepoArgs{
+	run, exit, err := LoadProdRunner(RepoArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
 		dryRun:                false,
@@ -73,6 +73,6 @@ func updatePerennialBranches(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	mainBranch := repo.Config.MainBranch()
-	return validate.EnterPerennialBranches(&repo.Backend, mainBranch)
+	mainBranch := run.Config.MainBranch()
+	return validate.EnterPerennialBranches(&run.Backend, mainBranch)
 }

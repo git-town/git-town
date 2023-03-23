@@ -24,7 +24,7 @@ func setupConfigCommand() *cobra.Command {
 }
 
 func setup(debug bool) error {
-	repo, exit, err := LoadProdRepo(RepoArgs{
+	run, exit, err := LoadProdRunner(RepoArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
 		dryRun:                false,
@@ -35,9 +35,9 @@ func setup(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	mainBranch, err := validate.EnterMainBranch(&repo.Backend)
+	mainBranch, err := validate.EnterMainBranch(&run.Backend)
 	if err != nil {
 		return err
 	}
-	return validate.EnterPerennialBranches(&repo.Backend, mainBranch)
+	return validate.EnterPerennialBranches(&run.Backend, mainBranch)
 }

@@ -13,6 +13,6 @@ type FetchUpstreamStep struct {
 }
 
 // TODO: is this used?
-func (step *FetchUpstreamStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
-	return repo.Frontend.FetchUpstream(step.Branch)
+func (step *FetchUpstreamStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
+	return run.Frontend.FetchUpstream(step.Branch)
 }

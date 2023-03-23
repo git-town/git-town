@@ -18,8 +18,8 @@ func (step *CreateTrackingBranchStep) CreateUndoStep(backend *git.BackendCommand
 	return &DeleteOriginBranchStep{Branch: step.Branch}, nil
 }
 
-func (step *CreateTrackingBranchStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
-	return repo.Frontend.PushBranch(git.PushArgs{
+func (step *CreateTrackingBranchStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
+	return run.Frontend.PushBranch(git.PushArgs{
 		Branch:     step.Branch,
 		NoPushHook: step.NoPushHook,
 		Remote:     config.OriginRemote,

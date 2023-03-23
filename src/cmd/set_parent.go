@@ -27,7 +27,7 @@ func setParentCommand() *cobra.Command {
 }
 
 func setParent(debug bool) error {
-	repo, exit, err := LoadProdRepo(RepoArgs{
+	run, exit, err := LoadProdRunner(RepoArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: true,
@@ -38,22 +38,22 @@ func setParent(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	currentBranch, err := repo.Backend.CurrentBranch()
+	currentBranch, err := run.Backend.CurrentBranch()
 	if err != nil {
 		return err
 	}
-	if !repo.Config.IsFeatureBranch(currentBranch) {
+	if !run.Config.IsFeatureBranch(currentBranch) {
 		return errors.New("only feature branches can have parent branches")
 	}
-	existingParent := repo.Config.ParentBranch(currentBranch)
+	existingParent := run.Config.ParentBranch(currentBranch)
 	if existingParent != "" {
 		// TODO: delete the old parent only when the user has entered a new parent
-		err = repo.Config.RemoveParent(currentBranch)
+		err = run.Config.RemoveParent(currentBranch)
 		if err != nil {
 			return err
 		}
 	} else {
-		existingParent = repo.Config.MainBranch()
+		existingParent = run.Config.MainBranch()
 	}
-	return validate.KnowsBranchAncestry(currentBranch, existingParent, &repo.Backend)
+	return validate.KnowsBranchAncestry(currentBranch, existingParent, &run.Backend)
 }

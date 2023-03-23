@@ -28,7 +28,7 @@ type Step interface {
 	CreateAutomaticAbortError() error
 
 	// Run executes this step.
-	Run(repo *git.ProdRepo, connector hosting.Connector) error
+	Run(run *git.ProdRunner, connector hosting.Connector) error
 
 	// ShouldAutomaticallyAbortOnError indicates whether this step should
 	// cause the command to automatically abort if it errors.

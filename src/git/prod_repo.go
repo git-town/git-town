@@ -1,13 +1,13 @@
 package git
 
-// ProdRepo provides Git functionality for production code.
-type ProdRepo struct {
+// ProdRunner provides Git functionality for production code.
+type ProdRunner struct {
 	Config   RepoConfig
 	Backend  BackendCommands
 	Frontend FrontendCommands
 }
 
-func NewProdRepo(omitBranchNames, dryRun, debug bool) ProdRepo {
+func NewProdRunner(omitBranchNames, dryRun, debug bool) ProdRunner {
 	backendRunner := NewBackendRunner(nil, debug)
 	config := NewRepoConfig(backendRunner)
 	backendCommands := BackendCommands{
@@ -20,7 +20,7 @@ func NewProdRepo(omitBranchNames, dryRun, debug bool) ProdRepo {
 		Config:   &config,
 		Backend:  &backendCommands,
 	}
-	return ProdRepo{
+	return ProdRunner{
 		Config:   config,
 		Backend:  backendCommands,
 		Frontend: frontendCommands,

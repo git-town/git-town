@@ -16,8 +16,8 @@ func (step *RestoreOpenChangesStep) CreateUndoStep(backend *git.BackendCommands)
 	return &StashOpenChangesStep{}, nil
 }
 
-func (step *RestoreOpenChangesStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
-	err := repo.Frontend.PopStash()
+func (step *RestoreOpenChangesStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
+	err := run.Frontend.PopStash()
 	if err != nil {
 		return errors.New("conflicts between your uncommmitted changes and the main branch")
 	}

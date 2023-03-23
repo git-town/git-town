@@ -11,18 +11,18 @@ import (
 // Execute runs the commands in the given runstate.
 //
 //nolint:nestif
-func Execute(runState *RunState, repo *git.ProdRepo, connector hosting.Connector) error {
+func Execute(runState *RunState, run *git.ProdRunner, connector hosting.Connector) error {
 	for {
 		step := runState.RunStepList.Pop()
 		if step == nil {
 			runState.MarkAsFinished()
 			if runState.IsAbort || runState.isUndo {
-				err := Delete(&repo.Backend)
+				err := Delete(&run.Backend)
 				if err != nil {
 					return fmt.Errorf("cannot delete previous run state: %w", err)
 				}
 			} else {
-				err := Save(runState, &repo.Backend)
+				err := Save(runState, &run.Backend)
 				if err != nil {
 					return fmt.Errorf("cannot save run state: %w", err)
 				}
@@ -35,41 +35,41 @@ func Execute(runState *RunState, repo *git.ProdRepo, connector hosting.Connector
 			continue
 		}
 		if typeName(step) == "*PushBranchAfterCurrentBranchSteps" {
-			err := runState.AddPushBranchStepAfterCurrentBranchSteps(&repo.Backend)
+			err := runState.AddPushBranchStepAfterCurrentBranchSteps(&run.Backend)
 			if err != nil {
 				return err
 			}
 			continue
 		}
-		runErr := step.Run(repo, connector)
+		runErr := step.Run(run, connector)
 		if runErr != nil {
 			runState.AbortStepList.Append(step.CreateAbortStep())
 			if step.ShouldAutomaticallyAbortOnError() {
 				cli.PrintError(fmt.Errorf(runErr.Error() + "\nAuto-aborting..."))
 				abortRunState := runState.CreateAbortRunState()
-				err := Execute(&abortRunState, repo, connector)
+				err := Execute(&abortRunState, run, connector)
 				if err != nil {
 					return fmt.Errorf("cannot run the abort steps: %w", err)
 				}
 				return step.CreateAutomaticAbortError()
 			}
 			runState.RunStepList.Prepend(step.CreateContinueStep())
-			err := runState.MarkAsUnfinished(&repo.Backend)
+			err := runState.MarkAsUnfinished(&run.Backend)
 			if err != nil {
 				return err
 			}
-			currentBranch, err := repo.Backend.CurrentBranch()
+			currentBranch, err := run.Backend.CurrentBranch()
 			if err != nil {
 				return err
 			}
-			rebasing, err := repo.Backend.HasRebaseInProgress()
+			rebasing, err := run.Backend.HasRebaseInProgress()
 			if err != nil {
 				return err
 			}
-			if runState.Command == "sync" && !(rebasing && repo.Config.IsMainBranch(currentBranch)) {
+			if runState.Command == "sync" && !(rebasing && run.Config.IsMainBranch(currentBranch)) {
 				runState.UnfinishedDetails.CanSkip = true
 			}
-			err = Save(runState, &repo.Backend)
+			err = Save(runState, &run.Backend)
 			if err != nil {
 				return fmt.Errorf("cannot save run state: %w", err)
 			}
@@ -84,7 +84,7 @@ To continue after having resolved conflicts, run "git-town continue".
 			message += "\n"
 			return fmt.Errorf(message)
 		}
-		undoStep, err := step.CreateUndoStep(&repo.Backend)
+		undoStep, err := step.CreateUndoStep(&run.Backend)
 		if err != nil {
 			return fmt.Errorf("cannot create undo step for %q: %w", step, err)
 		}

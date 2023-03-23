@@ -30,7 +30,7 @@ func mainbranchConfigCmd() *cobra.Command {
 }
 
 func configureMainBranch(args []string, debug bool) error {
-	repo, exit, err := LoadProdRepo(RepoArgs{
+	run, exit, err := LoadProdRunner(RepoArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
 		dryRun:                false,
@@ -42,23 +42,23 @@ func configureMainBranch(args []string, debug bool) error {
 		return err
 	}
 	if len(args) > 0 {
-		return setMainBranch(args[0], &repo)
+		return setMainBranch(args[0], &run)
 	}
-	printMainBranch(&repo)
+	printMainBranch(&run)
 	return nil
 }
 
-func printMainBranch(repo *git.ProdRepo) {
-	cli.Println(cli.StringSetting(repo.Config.MainBranch()))
+func printMainBranch(run *git.ProdRunner) {
+	cli.Println(cli.StringSetting(run.Config.MainBranch()))
 }
 
-func setMainBranch(branch string, repo *git.ProdRepo) error {
-	hasBranch, err := repo.Backend.HasLocalBranch(branch)
+func setMainBranch(branch string, run *git.ProdRunner) error {
+	hasBranch, err := run.Backend.HasLocalBranch(branch)
 	if err != nil {
 		return err
 	}
 	if !hasBranch {
 		return fmt.Errorf("there is no branch named %q", branch)
 	}
-	return repo.Config.SetMainBranch(branch)
+	return run.Config.SetMainBranch(branch)
 }
