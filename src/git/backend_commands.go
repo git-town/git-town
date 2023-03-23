@@ -27,13 +27,13 @@ type BackendCommands struct {
 }
 
 // Author provides the locally Git configured user.
-func (r *BackendCommands) Author() (string, error) {
-	out, err := r.Run("git", "config", "user.name")
+func (c *BackendCommands) Author() (string, error) {
+	out, err := c.Run("git", "config", "user.name")
 	if err != nil {
 		return "", err
 	}
 	name := out.Sanitized()
-	out, err = r.Run("git", "config", "user.email")
+	out, err = c.Run("git", "config", "user.email")
 	if err != nil {
 		return "", err
 	}
@@ -43,8 +43,8 @@ func (r *BackendCommands) Author() (string, error) {
 
 // BranchAuthors provides the user accounts that contributed to the given branch.
 // Returns lines of "name <email>".
-func (r *BackendCommands) BranchAuthors(branch, parent string) ([]string, error) {
-	lines, err := r.Run("git", "shortlog", "-s", "-n", "-e", parent+".."+branch)
+func (c *BackendCommands) BranchAuthors(branch, parent string) ([]string, error) {
+	lines, err := c.Run("git", "shortlog", "-s", "-n", "-e", parent+".."+branch)
 	if err != nil {
 		return []string{}, err
 	}
@@ -59,8 +59,8 @@ func (r *BackendCommands) BranchAuthors(branch, parent string) ([]string, error)
 
 // BranchHasUnmergedCommits indicates whether the branch with the given name
 // contains commits that are not merged into the main branch.
-func (r *BackendCommands) BranchHasUnmergedCommits(branch, parent string) (bool, error) {
-	out, err := r.Run("git", "log", parent+".."+branch)
+func (c *BackendCommands) BranchHasUnmergedCommits(branch, parent string) (bool, error) {
+	out, err := c.Run("git", "log", parent+".."+branch)
 	if err != nil {
 		return false, fmt.Errorf("cannot determine if branch %q has unmerged commits: %w", branch, err)
 	}
@@ -68,24 +68,24 @@ func (r *BackendCommands) BranchHasUnmergedCommits(branch, parent string) (bool,
 }
 
 // CheckoutBranch checks out the Git branch with the given name.
-func (r *BackendCommands) CheckoutBranch(name string) error {
-	if !r.Config.DryRun {
-		_, err := r.Run("git", "checkout", name)
+func (c *BackendCommands) CheckoutBranch(name string) error {
+	if !c.Config.DryRun {
+		_, err := c.Run("git", "checkout", name)
 		if err != nil {
 			return fmt.Errorf("cannot check out branch %q: %w", name, err)
 		}
 	}
 	if name != "-" {
-		r.Config.CurrentBranchCache.Set(name)
+		c.Config.CurrentBranchCache.Set(name)
 	} else {
-		r.Config.CurrentBranchCache.Invalidate()
+		c.Config.CurrentBranchCache.Invalidate()
 	}
 	return nil
 }
 
 // CommentOutSquashCommitMessage comments out the message for the current squash merge
 // Adds the given prefix with the newline if provided.
-func (r *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {
+func (c *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {
 	squashMessageFile := ".git/SQUASH_MSG"
 	contentBytes, err := os.ReadFile(squashMessageFile)
 	if err != nil {
@@ -100,8 +100,8 @@ func (r *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {
 }
 
 // CreateFeatureBranch creates a feature branch with the given name in this repository.
-func (r *BackendCommands) CreateFeatureBranch(name string) error {
-	err := r.RunMany([][]string{
+func (c *BackendCommands) CreateFeatureBranch(name string) error {
+	err := c.RunMany([][]string{
 		{"git", "branch", name, "main"},
 		{"git", "config", "git-town-branch." + name + ".parent", "main"},
 	})
@@ -112,35 +112,35 @@ func (r *BackendCommands) CreateFeatureBranch(name string) error {
 }
 
 // CurrentBranch provides the currently checked out branch.
-func (r *BackendCommands) CurrentBranch() (string, error) {
-	if r.Config.DryRun {
-		return r.Config.CurrentBranchCache.Value(), nil
+func (c *BackendCommands) CurrentBranch() (string, error) {
+	if c.Config.DryRun {
+		return c.Config.CurrentBranchCache.Value(), nil
 	}
-	if r.Config.CurrentBranchCache.Initialized() {
-		return r.Config.CurrentBranchCache.Value(), nil
+	if c.Config.CurrentBranchCache.Initialized() {
+		return c.Config.CurrentBranchCache.Value(), nil
 	}
-	rebasing, err := r.HasRebaseInProgress()
+	rebasing, err := c.HasRebaseInProgress()
 	if err != nil {
 		return "", fmt.Errorf("cannot determine current branch: %w", err)
 	}
 	if rebasing {
-		currentBranch, err := r.currentBranchDuringRebase()
+		currentBranch, err := c.currentBranchDuringRebase()
 		if err != nil {
 			return "", err
 		}
-		r.Config.CurrentBranchCache.Set(currentBranch)
+		c.Config.CurrentBranchCache.Set(currentBranch)
 		return currentBranch, nil
 	}
-	output, err := r.Run("git", "rev-parse", "--abbrev-ref", "HEAD")
+	output, err := c.Run("git", "rev-parse", "--abbrev-ref", "HEAD")
 	if err != nil {
 		return "", fmt.Errorf("cannot determine the current branch: %w", err)
 	}
-	r.Config.CurrentBranchCache.Set(output.Sanitized())
-	return r.Config.CurrentBranchCache.Value(), nil
+	c.Config.CurrentBranchCache.Set(output.Sanitized())
+	return c.Config.CurrentBranchCache.Value(), nil
 }
 
-func (r *BackendCommands) currentBranchDuringRebase() (string, error) {
-	rootDir, err := r.RootDirectory()
+func (c *BackendCommands) currentBranchDuringRebase() (string, error) {
+	rootDir, err := c.RootDirectory()
 	if err != nil {
 		return "", err
 	}
@@ -157,23 +157,23 @@ func (r *BackendCommands) currentBranchDuringRebase() (string, error) {
 }
 
 // CurrentSha provides the SHA of the currently checked out branch/commit.
-func (r *BackendCommands) CurrentSha() (string, error) {
-	return r.ShaForBranch("HEAD")
+func (c *BackendCommands) CurrentSha() (string, error) {
+	return c.ShaForBranch("HEAD")
 }
 
 // ExpectedPreviouslyCheckedOutBranch returns what is the expected previously checked out branch
 // given the inputs.
-func (r *BackendCommands) ExpectedPreviouslyCheckedOutBranch(initialPreviouslyCheckedOutBranch, initialBranch, mainBranch string) (string, error) {
-	hasInitialPreviouslyCheckedOutBranch, err := r.HasLocalBranch(initialPreviouslyCheckedOutBranch)
+func (c *BackendCommands) ExpectedPreviouslyCheckedOutBranch(initialPreviouslyCheckedOutBranch, initialBranch, mainBranch string) (string, error) {
+	hasInitialPreviouslyCheckedOutBranch, err := c.HasLocalBranch(initialPreviouslyCheckedOutBranch)
 	if err != nil {
 		return "", err
 	}
 	if hasInitialPreviouslyCheckedOutBranch {
-		currentBranch, err := r.CurrentBranch()
+		currentBranch, err := c.CurrentBranch()
 		if err != nil {
 			return "", err
 		}
-		hasInitialBranch, err := r.HasLocalBranch(initialBranch)
+		hasInitialBranch, err := c.HasLocalBranch(initialBranch)
 		if err != nil {
 			return "", err
 		}
@@ -186,8 +186,8 @@ func (r *BackendCommands) ExpectedPreviouslyCheckedOutBranch(initialPreviouslyCh
 }
 
 // HasConflicts returns whether the local repository currently has unresolved merge conflicts.
-func (r *BackendCommands) HasConflicts() (bool, error) {
-	output, err := r.Run("git", "status")
+func (c *BackendCommands) HasConflicts() (bool, error) {
+	output, err := c.Run("git", "status")
 	if err != nil {
 		return false, fmt.Errorf("cannot determine conflicts: %w", err)
 	}
@@ -195,8 +195,8 @@ func (r *BackendCommands) HasConflicts() (bool, error) {
 }
 
 // HasLocalBranch indicates whether this repo has a local branch with the given name.
-func (r *BackendCommands) HasLocalBranch(name string) (bool, error) {
-	branches, err := r.LocalBranches()
+func (c *BackendCommands) HasLocalBranch(name string) (bool, error) {
+	branches, err := c.LocalBranches()
 	if err != nil {
 		return false, fmt.Errorf("cannot determine whether the local branch %q exists: %w", name, err)
 	}
@@ -204,8 +204,8 @@ func (r *BackendCommands) HasLocalBranch(name string) (bool, error) {
 }
 
 // HasLocalOrRemoteBranch indicates whether this repo or origin have a branch with the given name.
-func (r *BackendCommands) HasLocalOrOriginBranch(name, mainBranch string) (bool, error) {
-	branches, err := r.LocalAndOriginBranches(mainBranch)
+func (c *BackendCommands) HasLocalOrOriginBranch(name, mainBranch string) (bool, error) {
+	branches, err := c.LocalAndOriginBranches(mainBranch)
 	if err != nil {
 		return false, fmt.Errorf("cannot determine whether the local or remote branch %q exists: %w", name, err)
 	}
@@ -213,14 +213,14 @@ func (r *BackendCommands) HasLocalOrOriginBranch(name, mainBranch string) (bool,
 }
 
 // HasMergeInProgress indicates whether this Git repository currently has a merge in progress.
-func (r *BackendCommands) HasMergeInProgress() bool {
-	_, err := r.Run("git", "rev-parse", "-q", "--verify", "MERGE_HEAD")
+func (c *BackendCommands) HasMergeInProgress() bool {
+	_, err := c.Run("git", "rev-parse", "-q", "--verify", "MERGE_HEAD")
 	return err == nil
 }
 
 // HasOpenChanges indicates whether this repo has open changes.
-func (r *BackendCommands) HasOpenChanges() (bool, error) {
-	output, err := r.Run("git", "status", "--porcelain", "--ignore-submodules")
+func (c *BackendCommands) HasOpenChanges() (bool, error) {
+	output, err := c.Run("git", "status", "--porcelain", "--ignore-submodules")
 	if err != nil {
 		return false, fmt.Errorf("cannot determine open changes: %w", err)
 	}
@@ -228,8 +228,8 @@ func (r *BackendCommands) HasOpenChanges() (bool, error) {
 }
 
 // HasRebaseInProgress indicates whether this Git repository currently has a rebase in progress.
-func (r *BackendCommands) HasRebaseInProgress() (bool, error) {
-	output, err := r.Run("git", "status")
+func (c *BackendCommands) HasRebaseInProgress() (bool, error) {
+	output, err := c.Run("git", "status")
 	if err != nil {
 		return false, fmt.Errorf("cannot determine rebase in progress: %w", err)
 	}
@@ -244,13 +244,13 @@ func (r *BackendCommands) HasRebaseInProgress() (bool, error) {
 }
 
 // HasOrigin indicates whether this repo has an origin remote.
-func (r *BackendCommands) HasOrigin() (bool, error) {
-	return r.HasRemote(config.OriginRemote)
+func (c *BackendCommands) HasOrigin() (bool, error) {
+	return c.HasRemote(config.OriginRemote)
 }
 
 // HasRemote indicates whether this repo has a remote with the given name.
-func (r *BackendCommands) HasRemote(name string) (bool, error) {
-	remotes, err := r.Remotes()
+func (c *BackendCommands) HasRemote(name string) (bool, error) {
+	remotes, err := c.Remotes()
 	if err != nil {
 		return false, fmt.Errorf("cannot determine if remote %q exists: %w", name, err)
 	}
@@ -259,8 +259,8 @@ func (r *BackendCommands) HasRemote(name string) (bool, error) {
 
 // HasShippableChanges indicates whether the given branch has changes
 // not currently in the main branch.
-func (r *BackendCommands) HasShippableChanges(branch, mainBranch string) (bool, error) {
-	out, err := r.Run("git", "diff", mainBranch+".."+branch)
+func (c *BackendCommands) HasShippableChanges(branch, mainBranch string) (bool, error) {
+	out, err := c.Run("git", "diff", mainBranch+".."+branch)
 	if err != nil {
 		return false, fmt.Errorf("cannot determine whether branch %q has shippable changes: %w", branch, err)
 	}
@@ -268,9 +268,9 @@ func (r *BackendCommands) HasShippableChanges(branch, mainBranch string) (bool, 
 }
 
 // HasTrackingBranch indicates whether the local branch with the given name has a remote tracking branch.
-func (r *BackendCommands) HasTrackingBranch(name string) (bool, error) {
+func (c *BackendCommands) HasTrackingBranch(name string) (bool, error) {
 	trackingBranch := "origin/" + name
-	remoteBranches, err := r.RemoteBranches()
+	remoteBranches, err := c.RemoteBranches()
 	if err != nil {
 		return false, fmt.Errorf("cannot determine if tracking branch %q exists: %w", name, err)
 	}
@@ -283,34 +283,34 @@ func (r *BackendCommands) HasTrackingBranch(name string) (bool, error) {
 }
 
 // IsBranchInSync returns whether the branch with the given name is in sync with its tracking branch.
-func (r *BackendCommands) IsBranchInSync(branch string) (bool, error) {
-	hasTrackingBranch, err := r.HasTrackingBranch(branch)
+func (c *BackendCommands) IsBranchInSync(branch string) (bool, error) {
+	hasTrackingBranch, err := c.HasTrackingBranch(branch)
 	if err != nil {
 		return false, err
 	}
 	if hasTrackingBranch {
-		localSha, err := r.ShaForBranch(branch)
+		localSha, err := c.ShaForBranch(branch)
 		if err != nil {
 			return false, err
 		}
-		remoteSha, err := r.ShaForBranch(r.TrackingBranch(branch))
+		remoteSha, err := c.ShaForBranch(c.TrackingBranch(branch))
 		return localSha == remoteSha, err
 	}
 	return true, nil
 }
 
 // IsRepository returns whether or not the current directory is in a repository.
-func (r *BackendCommands) IsRepository() bool {
-	if !r.Config.IsRepoCache.Initialized() {
-		_, err := r.Run("git", "rev-parse")
-		r.Config.IsRepoCache.Set(err == nil)
+func (c *BackendCommands) IsRepository() bool {
+	if !c.Config.IsRepoCache.Initialized() {
+		_, err := c.Run("git", "rev-parse")
+		c.Config.IsRepoCache.Set(err == nil)
 	}
-	return r.Config.IsRepoCache.Value()
+	return c.Config.IsRepoCache.Value()
 }
 
 // LastCommitMessage provides the commit message for the last commit.
-func (r *BackendCommands) LastCommitMessage() (string, error) {
-	out, err := r.Run("git", "log", "-1", "--format=%B")
+func (c *BackendCommands) LastCommitMessage() (string, error) {
+	out, err := c.Run("git", "log", "-1", "--format=%B")
 	if err != nil {
 		return "", fmt.Errorf("cannot determine last commit message: %w", err)
 	}
@@ -318,8 +318,8 @@ func (r *BackendCommands) LastCommitMessage() (string, error) {
 }
 
 // LocalAndOriginBranches provides the names of all local branches in this repo.
-func (r *BackendCommands) LocalAndOriginBranches(mainBranch string) ([]string, error) {
-	output, err := r.Run("git", "branch", "-a")
+func (c *BackendCommands) LocalAndOriginBranches(mainBranch string) ([]string, error) {
+	output, err := c.Run("git", "branch", "-a")
 	if err != nil {
 		return []string{}, fmt.Errorf("cannot determine the local branches")
 	}
@@ -342,8 +342,8 @@ func (r *BackendCommands) LocalAndOriginBranches(mainBranch string) ([]string, e
 
 // LocalBranches provides the names of all branches in the local repository,
 // ordered alphabetically.
-func (r *BackendCommands) LocalBranches() ([]string, error) {
-	output, err := r.Run("git", "branch")
+func (c *BackendCommands) LocalBranches() ([]string, error) {
+	output, err := c.Run("git", "branch")
 	if err != nil {
 		return []string{}, err
 	}
@@ -357,8 +357,8 @@ func (r *BackendCommands) LocalBranches() ([]string, error) {
 }
 
 // LocalBranchesMainFirst provides the names of all local branches in this repo.
-func (r *BackendCommands) LocalBranchesMainFirst(mainBranch string) ([]string, error) {
-	branches, err := r.LocalBranches()
+func (c *BackendCommands) LocalBranchesMainFirst(mainBranch string) ([]string, error) {
+	branches, err := c.LocalBranches()
 	if err != nil {
 		return []string{}, err
 	}
@@ -367,8 +367,8 @@ func (r *BackendCommands) LocalBranchesMainFirst(mainBranch string) ([]string, e
 
 // LocalBranchesWithDeletedTrackingBranches provides the names of all branches
 // whose remote tracking branches have been deleted.
-func (r *BackendCommands) LocalBranchesWithDeletedTrackingBranches() ([]string, error) {
-	output, err := r.Run("git", "branch", "-vv")
+func (c *BackendCommands) LocalBranchesWithDeletedTrackingBranches() ([]string, error) {
+	output, err := c.Run("git", "branch", "-vv")
 	if err != nil {
 		return []string{}, err
 	}
@@ -377,7 +377,7 @@ func (r *BackendCommands) LocalBranchesWithDeletedTrackingBranches() ([]string, 
 		line = strings.Trim(line, "* ")
 		parts := strings.SplitN(line, " ", 2)
 		branch := parts[0]
-		deleteTrackingBranchStatus := fmt.Sprintf("[%s: gone]", r.TrackingBranch(branch))
+		deleteTrackingBranchStatus := fmt.Sprintf("[%s: gone]", c.TrackingBranch(branch))
 		if strings.Contains(parts[1], deleteTrackingBranchStatus) {
 			result = append(result, branch)
 		}
@@ -387,8 +387,8 @@ func (r *BackendCommands) LocalBranchesWithDeletedTrackingBranches() ([]string, 
 
 // LocalBranchesWithoutMain provides the names of all branches in the local repository,
 // ordered alphabetically without the main branch.
-func (r *BackendCommands) LocalBranchesWithoutMain(mainBranch string) ([]string, error) {
-	branches, err := r.LocalBranches()
+func (c *BackendCommands) LocalBranchesWithoutMain(mainBranch string) ([]string, error) {
+	branches, err := c.LocalBranches()
 	if err != nil {
 		return []string{}, err
 	}
@@ -402,8 +402,8 @@ func (r *BackendCommands) LocalBranchesWithoutMain(mainBranch string) ([]string,
 }
 
 // PreviouslyCheckedOutBranch provides the name of the branch that was previously checked out in this repo.
-func (r *BackendCommands) PreviouslyCheckedOutBranch() (string, error) {
-	output, err := r.Run("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
+func (c *BackendCommands) PreviouslyCheckedOutBranch() (string, error) {
+	output, err := c.Run("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
 	if err != nil {
 		return "", fmt.Errorf("cannot determine the previously checked out branch: %w", err)
 	}
@@ -411,9 +411,9 @@ func (r *BackendCommands) PreviouslyCheckedOutBranch() (string, error) {
 }
 
 // RemoteBranches provides the names of the remote branches in this repo.
-func (r *BackendCommands) RemoteBranches() ([]string, error) {
-	if !r.Config.RemoteBranchCache.Initialized() {
-		output, err := r.Run("git", "branch", "-r")
+func (c *BackendCommands) RemoteBranches() ([]string, error) {
+	if !c.Config.RemoteBranchCache.Initialized() {
+		output, err := c.Run("git", "branch", "-r")
 		if err != nil {
 			return []string{}, fmt.Errorf("cannot determine remote branches: %w", err)
 		}
@@ -424,38 +424,38 @@ func (r *BackendCommands) RemoteBranches() ([]string, error) {
 				branches = append(branches, strings.TrimSpace(line))
 			}
 		}
-		r.Config.RemoteBranchCache.Set(branches)
+		c.Config.RemoteBranchCache.Set(branches)
 	}
-	return r.Config.RemoteBranchCache.Value(), nil
+	return c.Config.RemoteBranchCache.Value(), nil
 }
 
 // Remotes provides the names of all Git remotes in this repository.
-func (r *BackendCommands) Remotes() ([]string, error) {
-	if !r.Config.RemotesCache.Initialized() {
-		out, err := r.Run("git", "remote")
+func (c *BackendCommands) Remotes() ([]string, error) {
+	if !c.Config.RemotesCache.Initialized() {
+		out, err := c.Run("git", "remote")
 		if err != nil {
 			return []string{}, fmt.Errorf("cannot determine remotes: %w", err)
 		}
 		if out.Sanitized() == "" {
-			r.Config.RemotesCache.Set([]string{})
+			c.Config.RemotesCache.Set([]string{})
 		} else {
-			r.Config.RemotesCache.Set(out.Lines())
+			c.Config.RemotesCache.Set(out.Lines())
 		}
 	}
-	return r.Config.RemotesCache.Value(), nil
+	return c.Config.RemotesCache.Value(), nil
 }
 
 // RemoveOutdatedConfiguration removes outdated Git Town configuration.
-func (r *BackendCommands) RemoveOutdatedConfiguration() error {
-	branches, err := r.LocalAndOriginBranches(r.Config.MainBranch())
+func (c *BackendCommands) RemoveOutdatedConfiguration() error {
+	branches, err := c.LocalAndOriginBranches(c.Config.MainBranch())
 	if err != nil {
 		return err
 	}
-	for child, parent := range r.Config.ParentBranchMap() {
+	for child, parent := range c.Config.ParentBranchMap() {
 		hasChildBranch := stringslice.Contains(branches, child)
 		hasParentBranch := stringslice.Contains(branches, parent)
 		if !hasChildBranch || !hasParentBranch {
-			err = r.Config.RemoveParent(child)
+			err = c.Config.RemoveParent(child)
 			if err != nil {
 				return err
 			}
@@ -466,20 +466,20 @@ func (r *BackendCommands) RemoveOutdatedConfiguration() error {
 
 // RootDirectory provides the path of the rood directory of the current repository,
 // i.e. the directory that contains the ".git" folder.
-func (r *BackendCommands) RootDirectory() (string, error) {
-	if !r.Config.RootDirCache.Initialized() {
-		output, err := r.Run("git", "rev-parse", "--show-toplevel")
+func (c *BackendCommands) RootDirectory() (string, error) {
+	if !c.Config.RootDirCache.Initialized() {
+		output, err := c.Run("git", "rev-parse", "--show-toplevel")
 		if err != nil {
 			return "", fmt.Errorf("cannot determine root directory: %w", err)
 		}
-		r.Config.RootDirCache.Set(filepath.FromSlash(output.Sanitized()))
+		c.Config.RootDirCache.Set(filepath.FromSlash(output.Sanitized()))
 	}
-	return r.Config.RootDirCache.Value(), nil
+	return c.Config.RootDirCache.Value(), nil
 }
 
 // ShaForBranch provides the SHA for the local branch with the given name.
-func (r *BackendCommands) ShaForBranch(name string) (string, error) {
-	output, err := r.Run("git", "rev-parse", name)
+func (c *BackendCommands) ShaForBranch(name string) (string, error) {
+	output, err := c.Run("git", "rev-parse", name)
 	if err != nil {
 		return "", fmt.Errorf("cannot determine SHA of local branch %q: %w", name, err)
 	}
@@ -488,9 +488,9 @@ func (r *BackendCommands) ShaForBranch(name string) (string, error) {
 
 // ShouldPushBranch returns whether the local branch with the given name
 // contains commits that have not been pushed to its tracking branch.
-func (r *BackendCommands) ShouldPushBranch(branch string) (bool, error) {
-	trackingBranch := r.TrackingBranch(branch)
-	out, err := r.Run("git", "rev-list", "--left-right", branch+"..."+trackingBranch)
+func (c *BackendCommands) ShouldPushBranch(branch string) (bool, error) {
+	trackingBranch := c.TrackingBranch(branch)
+	out, err := c.Run("git", "rev-list", "--left-right", branch+"..."+trackingBranch)
 	if err != nil {
 		return false, fmt.Errorf("cannot list diff of %q and %q: %w", branch, trackingBranch, err)
 	}
@@ -498,16 +498,16 @@ func (r *BackendCommands) ShouldPushBranch(branch string) (bool, error) {
 }
 
 // TrackingBranch provides the name of the remote branch tracking the local branch with the given name.
-func (r *BackendCommands) TrackingBranch(branch string) string {
+func (c *BackendCommands) TrackingBranch(branch string) string {
 	return "origin/" + branch
 }
 
 // Version indicates whether the needed Git version is installed.
 //
 //nolint:nonamedreturns  // multiple int return values justify using names for return values
-func (r *BackendCommands) Version() (major int, minor int, err error) {
+func (c *BackendCommands) Version() (major int, minor int, err error) {
 	versionRegexp := regexp.MustCompile(`git version (\d+).(\d+).(\d+)`)
-	output, err := r.Run("git", "version")
+	output, err := c.Run("git", "version")
 	if err != nil {
 		return 0, 0, fmt.Errorf("cannot determine Git version: %w", err)
 	}
