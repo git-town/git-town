@@ -29,7 +29,7 @@ func (step *PushBranchStep) Run(run *git.ProdRunner, connector hosting.Connector
 	if err != nil {
 		return err
 	}
-	if !shouldPush || run.Config.DryRun {
+	if !shouldPush && !run.Config.DryRun {
 		return nil
 	}
 	currentBranch, err := run.Backend.CurrentBranch()
