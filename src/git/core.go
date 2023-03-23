@@ -9,7 +9,7 @@ import (
 func NewBackendRunner(dir *string, debug bool) BackendRunner {
 	backendRunner := subshell.BackendRunner{Dir: dir}
 	if debug {
-		return subshell.BackendLoggingRunner{BackendRunner: backendRunner}
+		return subshell.BackendLoggingRunner{Runner: backendRunner}
 	}
 	return backendRunner
 }
