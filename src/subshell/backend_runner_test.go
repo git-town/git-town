@@ -67,14 +67,4 @@ hi
 		assert.Equal(t, "first", entries[0].Name())
 		assert.Equal(t, "second", entries[1].Name())
 	})
-
-	t.Run(".RunString()", func(t *testing.T) {
-		t.Parallel()
-		tmpDir := t.TempDir()
-		runner := subshell.BackendRunner{Dir: &tmpDir}
-		_, err := runner.RunString("touch first")
-		assert.NoError(t, err)
-		_, err = os.Stat(filepath.Join(tmpDir, "first"))
-		assert.False(t, os.IsNotExist(err))
-	})
 }

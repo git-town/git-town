@@ -9,7 +9,6 @@ import (
 
 	"github.com/fatih/color"
 	"github.com/git-town/git-town/v7/src/cache"
-	"github.com/kballard/go-shellquote"
 )
 
 // FrontendRunner executes frontend shell commands.
@@ -52,16 +51,6 @@ func (r FrontendRunner) RunMany(commands [][]string) error {
 		}
 	}
 	return nil
-}
-
-// RunString runs the given command (including possible arguments) in this ShellInDir's directory.
-func (r FrontendRunner) RunString(fullCmd string) error {
-	parts, err := shellquote.Split(fullCmd)
-	if err != nil {
-		return fmt.Errorf("cannot split command %q: %w", fullCmd, err)
-	}
-	cmd, args := parts[0], parts[1:]
-	return r.Run(cmd, args...)
 }
 
 // PrintCommand prints the given command-line operation on the console.

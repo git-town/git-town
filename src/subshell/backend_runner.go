@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"os/exec"
 	"strings"
-
-	"github.com/kballard/go-shellquote"
 )
 
 // BackendRunner executes backend shell commands without output to the CLI.
@@ -38,15 +36,6 @@ func (r BackendRunner) RunMany(commands [][]string) error {
 		}
 	}
 	return nil
-}
-
-func (r BackendRunner) RunString(fullCmd string) (*Output, error) {
-	parts, err := shellquote.Split(fullCmd)
-	if err != nil {
-		return nil, fmt.Errorf("cannot split command %q: %w", fullCmd, err)
-	}
-	cmd, args := parts[0], parts[1:]
-	return r.Run(cmd, args...)
 }
 
 func ErrorDetails(executable string, args []string, err error, output []byte) error {
