@@ -49,7 +49,7 @@ func newPullRequestCommand() *cobra.Command {
 }
 
 func newPullRequest(debug bool) error {
-	run, exit, err := LoadProdRunner(RepoArgs{
+	run, exit, err := LoadProdRunner(RunnerArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: true,

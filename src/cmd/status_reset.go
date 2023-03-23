@@ -26,7 +26,7 @@ func resetRunstateCommand() *cobra.Command {
 }
 
 func statusReset(debug bool) error {
-	run, exit, err := LoadProdRunner(RepoArgs{
+	run, exit, err := LoadProdRunner(RunnerArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: false,

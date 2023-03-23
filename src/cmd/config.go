@@ -38,7 +38,7 @@ func configCmd() *cobra.Command {
 }
 
 func runConfig(debug bool) error {
-	run, exit, err := LoadProdRunner(RepoArgs{
+	run, exit, err := LoadProdRunner(RunnerArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
 		dryRun:                false,

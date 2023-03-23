@@ -37,7 +37,7 @@ func aliasesCommand() *cobra.Command {
 }
 
 func aliases(arg string, debug bool) error {
-	run, exit, err := LoadProdRunner(RepoArgs{
+	run, exit, err := LoadProdRunner(RunnerArgs{
 		debug:                 debug,
 		dryRun:                false,
 		omitBranchNames:       true,

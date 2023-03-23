@@ -61,7 +61,7 @@ func long(summary string, desc ...string) string {
 	return summary + "."
 }
 
-func LoadProdRunner(args RepoArgs) (prodRepo git.ProdRunner, exit bool, err error) { //nolint:nonamedreturns // so many return values require names
+func LoadProdRunner(args RunnerArgs) (prodRepo git.ProdRunner, exit bool, err error) { //nolint:nonamedreturns // so many return values require names
 	prodRepo = git.NewProdRunner(args.omitBranchNames, args.dryRun, args.debug)
 	if args.validateIsRepository {
 		err := validate.IsRepository(&prodRepo)
@@ -95,7 +95,7 @@ func LoadProdRunner(args RepoArgs) (prodRepo git.ProdRunner, exit bool, err erro
 	return prodRepo, exit, ec.Err
 }
 
-type RepoArgs struct {
+type RunnerArgs struct {
 	debug                 bool
 	dryRun                bool
 	handleUnfinishedState bool

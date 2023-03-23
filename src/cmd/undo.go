@@ -27,7 +27,7 @@ func undoCmd() *cobra.Command {
 }
 
 func undo(debug bool) error {
-	run, exit, err := LoadProdRunner(RepoArgs{
+	run, exit, err := LoadProdRunner(RunnerArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: false,

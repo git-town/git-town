@@ -40,7 +40,7 @@ func hackCmd() *cobra.Command {
 }
 
 func hack(args []string, promptForParent, debug bool) error {
-	run, exit, err := LoadProdRunner(RepoArgs{
+	run, exit, err := LoadProdRunner(RunnerArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: true,
