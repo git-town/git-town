@@ -7,7 +7,7 @@ import (
 	"github.com/kballard/go-shellquote"
 )
 
-// FrontendDryRunner prints the given shell commands to the CLI as if they were executed,
+// FrontendDryRunner prints the given shell commands to the CLI as if they were executed
 // but does not execute them.
 type FrontendDryRunner struct {
 	CurrentBranch   *cache.String
