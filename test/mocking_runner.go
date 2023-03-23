@@ -227,15 +227,7 @@ func (r *MockingRunner) RunWith(opts *Options, cmd string, args ...string) (*sub
 	}
 	err = subProcess.Wait()
 	if err != nil {
-		err = fmt.Errorf(`
-----------------------------------------
-Diagnostic information of failed command
-
-Command: %s %s
-Error: %w
-Output:
-%s
-----------------------------------------`, cmd, strings.Join(args, " "), err, output.String())
+		err = subshell.ErrorDetails(cmd, args, err, output.Bytes())
 	}
 	exitCode := subProcess.ProcessState.ExitCode()
 	if r.Debug {
