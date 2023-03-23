@@ -9,6 +9,7 @@ import (
 )
 
 func TestBool(t *testing.T) {
+	t.Parallel()
 	cmd := cobra.Command{}
 	addFlag, readFlag := flags.Bool("myflag", "m", "desc")
 	addFlag(&cmd)

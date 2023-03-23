@@ -9,6 +9,7 @@ import (
 )
 
 func TestDryRun(t *testing.T) {
+	t.Parallel()
 	cmd := cobra.Command{}
 	addFlag, readFlag := flags.DryRun()
 	addFlag(&cmd)

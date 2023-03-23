@@ -9,6 +9,7 @@ import (
 )
 
 func TestDebug(t *testing.T) {
+	t.Parallel()
 	cmd := cobra.Command{}
 	addFlag, readFlag := flags.Debug()
 	addFlag(&cmd)

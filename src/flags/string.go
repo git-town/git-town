@@ -7,7 +7,7 @@ import (
 )
 
 // Bool provides mistake-safe access to string Cobra command-line flags.
-func String(name, short, defaultValue, desc string) (AddFunc, readStringFlagFunc) {
+func String(name, short, defaultValue, desc string) (AddFunc, ReadStringFlagFunc) {
 	addFlag := func(cmd *cobra.Command) {
 		cmd.PersistentFlags().StringP(name, short, defaultValue, desc)
 	}
@@ -21,5 +21,5 @@ func String(name, short, defaultValue, desc string) (AddFunc, readStringFlagFunc
 	return addFlag, readFlag
 }
 
-// readStringFlagFunc defines the type signature for helper functions that provide the value a string CLI flag associated with a Cobra command.
-type readStringFlagFunc func(*cobra.Command) string
+// ReadStringFlagFunc defines the type signature for helper functions that provide the value a string CLI flag associated with a Cobra command.
+type ReadStringFlagFunc func(*cobra.Command) string

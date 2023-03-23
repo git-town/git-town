@@ -62,23 +62,7 @@ func long(summary string, desc ...string) string {
 }
 
 func LoadProdRepo(args RepoArgs) (prodRepo git.ProdRepo, exit bool, err error) { //nolint:nonamedreturns // so many return values require names
-	backendRunner := git.NewBackendRunner(nil, args.debug)
-	config := git.NewRepoConfig(backendRunner)
-	backendCommands := git.BackendCommands{
-		BackendRunner: backendRunner,
-		Config:        &config,
-	}
-	frontendRunner := git.NewFrontendRunner(args.omitBranchNames, args.dryRun, config.CurrentBranchCache)
-	frontendCommands := git.FrontendCommands{
-		Frontend: frontendRunner,
-		Config:   &config,
-		Backend:  &backendCommands,
-	}
-	prodRepo = git.ProdRepo{
-		Config:   config,
-		Backend:  backendCommands,
-		Frontend: frontendCommands,
-	}
+	prodRepo = git.NewProdRepo(args.omitBranchNames, args.dryRun, args.debug)
 	if args.validateIsRepository {
 		err := validate.IsRepository(&prodRepo)
 		if err != nil {
@@ -86,24 +70,24 @@ func LoadProdRepo(args RepoArgs) (prodRepo git.ProdRepo, exit bool, err error) {
 		}
 	}
 	if !args.omitBranchNames || args.dryRun {
-		currentBranch, err := backendCommands.CurrentBranch()
+		currentBranch, err := prodRepo.Backend.CurrentBranch()
 		if err != nil {
 			return prodRepo, false, err
 		}
-		config.CurrentBranchCache.Set(currentBranch)
+		prodRepo.Config.CurrentBranchCache.Set(currentBranch)
 	}
 	if args.dryRun {
-		config.DryRun = true
+		prodRepo.Config.DryRun = true
 	}
 	ec := runstate.ErrorChecker{}
 	if args.validateGitversion {
-		ec.Check(validate.HasGitVersion(&backendCommands))
+		ec.Check(validate.HasGitVersion(&prodRepo.Backend))
 	}
 	if args.validateIsConfigured {
-		ec.Check(validate.IsConfigured(&backendCommands))
+		ec.Check(validate.IsConfigured(&prodRepo.Backend))
 	}
 	if args.validateIsOnline {
-		ec.Check(validate.IsOnline(&config))
+		ec.Check(validate.IsOnline(&prodRepo.Config))
 	}
 	if args.handleUnfinishedState {
 		exit = ec.Bool(validate.HandleUnfinishedState(&prodRepo, nil))

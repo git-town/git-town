@@ -9,6 +9,7 @@ import (
 )
 
 func TestString(t *testing.T) {
+	t.Parallel()
 	cmd := cobra.Command{}
 	addFlag, readFlag := flags.String("myflag", "m", "default", "desc")
 	addFlag(&cmd)
