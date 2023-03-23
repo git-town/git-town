@@ -9,7 +9,7 @@ import (
 )
 
 // BackendLoggingRunner runs backend shell commands.
-// It	prints the executed commands and their output to the CLI.
+// It	logs the executed commands and their output to the CLI.
 type BackendLoggingRunner struct {
 	BackendRunner
 }
