@@ -28,7 +28,7 @@ func TestMockingRunner(t *testing.T) {
 		res, err := runner.Run("bash", "-c", "foo bar")
 		assert.NoError(t, err)
 		// verify that it called our overridden "foo" command
-		assert.Equal(t, "foo called with: bar", res.Sanitized())
+		assert.Equal(t, "foo called with: bar", res)
 	})
 
 	t.Run(".Run()", func(t *testing.T) {
@@ -40,7 +40,7 @@ func TestMockingRunner(t *testing.T) {
 		}
 		res, err := runner.Run("echo", "hello", "world")
 		assert.NoError(t, err)
-		assert.Equal(t, "hello world", res.Sanitized())
+		assert.Equal(t, "hello world", res)
 	})
 
 	t.Run(".RunMany()", func(t *testing.T) {
@@ -94,7 +94,7 @@ func TestMockingRunner(t *testing.T) {
 			assert.NoError(t, err)
 			res, err := runner.RunWith(&Options{Dir: "subdir"}, toolPath)
 			assert.NoError(t, err)
-			assert.Equal(t, ScriptName("list-dir"), res.Sanitized())
+			assert.Equal(t, ScriptName("list-dir"), res)
 		})
 
 		t.Run("with input", func(t *testing.T) {
@@ -114,7 +114,7 @@ func TestMockingRunner(t *testing.T) {
 			cmd, args := CallScriptArgs(toolPath)
 			res, err := runner.RunWith(&Options{Input: []string{"one\n", "two\n"}}, cmd, args...)
 			assert.NoError(t, err)
-			assert.Contains(t, res.Sanitized(), "You entered one and two")
+			assert.Contains(t, res, "You entered one and two")
 		})
 	})
 }

@@ -11,11 +11,10 @@ import (
 
 	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/stringslice"
-	"github.com/git-town/git-town/v7/src/subshell"
 )
 
 type BackendRunner interface {
-	Run(executable string, args ...string) (*subshell.Output, error)
+	Run(executable string, args ...string) (string, error)
 	RunMany([][]string) error
 }
 
@@ -29,28 +28,27 @@ type BackendCommands struct {
 
 // Author provides the locally Git configured user.
 func (bc *BackendCommands) Author() (string, error) {
-	out, err := bc.Run("git", "config", "user.name")
+	name, err := bc.Run("git", "config", "user.name")
 	if err != nil {
 		return "", err
 	}
-	name := out.Sanitized()
-	out, err = bc.Run("git", "config", "user.email")
+	email, err := bc.Run("git", "config", "user.email")
 	if err != nil {
 		return "", err
 	}
-	email := out.Sanitized()
 	return name + " <" + email + ">", nil
 }
 
 // BranchAuthors provides the user accounts that contributed to the given branch.
 // Returns lines of "name <email>".
 func (bc *BackendCommands) BranchAuthors(branch, parent string) ([]string, error) {
-	lines, err := bc.Run("git", "shortlog", "-s", "-n", "-e", parent+".."+branch)
+	output, err := bc.Run("git", "shortlog", "-s", "-n", "-e", parent+".."+branch)
 	if err != nil {
 		return []string{}, err
 	}
 	result := []string{}
-	for _, line := range lines.Lines() {
+	lines := stringslice.Lines(output)
+	for _, line := range lines {
 		line = strings.TrimSpace(line)
 		parts := strings.Split(line, "\t")
 		result = append(result, parts[1])
@@ -65,7 +63,7 @@ func (bc *BackendCommands) BranchHasUnmergedCommits(branch, parent string) (bool
 	if err != nil {
 		return false, fmt.Errorf("cannot determine if branch %q has unmerged commits: %w", branch, err)
 	}
-	return out.Sanitized() != "", nil
+	return out != "", nil
 }
 
 // CheckoutBranch checks out the Git branch with the given name.
@@ -136,7 +134,7 @@ func (bc *BackendCommands) CurrentBranch() (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("cannot determine the current branch: %w", err)
 	}
-	bc.Config.CurrentBranchCache.Set(output.Sanitized())
+	bc.Config.CurrentBranchCache.Set(output)
 	return bc.Config.CurrentBranchCache.Value(), nil
 }
 
@@ -192,7 +190,7 @@ func (bc *BackendCommands) HasConflicts() (bool, error) {
 	if err != nil {
 		return false, fmt.Errorf("cannot determine conflicts: %w", err)
 	}
-	return output.ContainsText("Unmerged paths"), nil
+	return strings.Contains(output, "Unmerged paths"), nil
 }
 
 // HasLocalBranch indicates whether this repo has a local branch with the given name.
@@ -225,7 +223,7 @@ func (bc *BackendCommands) HasOpenChanges() (bool, error) {
 	if err != nil {
 		return false, fmt.Errorf("cannot determine open changes: %w", err)
 	}
-	return output.Sanitized() != "", nil
+	return output != "", nil
 }
 
 // HasRebaseInProgress indicates whether this Git repository currently has a rebase in progress.
@@ -234,11 +232,10 @@ func (bc *BackendCommands) HasRebaseInProgress() (bool, error) {
 	if err != nil {
 		return false, fmt.Errorf("cannot determine rebase in progress: %w", err)
 	}
-	sanitizedOutput := output.Sanitized()
-	if strings.Contains(sanitizedOutput, "You are currently rebasing") {
+	if strings.Contains(output, "You are currently rebasing") {
 		return true, nil
 	}
-	if strings.Contains(sanitizedOutput, "rebase in progress") {
+	if strings.Contains(output, "rebase in progress") {
 		return true, nil
 	}
 	return false, nil
@@ -265,7 +262,7 @@ func (bc *BackendCommands) HasShippableChanges(branch, mainBranch string) (bool,
 	if err != nil {
 		return false, fmt.Errorf("cannot determine whether branch %q has shippable changes: %w", branch, err)
 	}
-	return out.Sanitized() != "", nil
+	return out != "", nil
 }
 
 // HasTrackingBranch indicates whether the local branch with the given name has a remote tracking branch.
@@ -315,7 +312,7 @@ func (bc *BackendCommands) LastCommitMessage() (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("cannot determine last commit message: %w", err)
 	}
-	return out.Sanitized(), nil
+	return out, nil
 }
 
 // LocalAndOriginBranches provides the names of all local branches in this repo.
@@ -324,9 +321,8 @@ func (bc *BackendCommands) LocalAndOriginBranches(mainBranch string) ([]string, 
 	if err != nil {
 		return []string{}, fmt.Errorf("cannot determine the local branches")
 	}
-	lines := output.Lines()
 	branch := make(map[string]struct{})
-	for _, line := range lines {
+	for _, line := range stringslice.Lines(output) {
 		if !strings.Contains(line, " -> ") {
 			branch[strings.TrimSpace(strings.Replace(strings.Replace(line, "* ", "", 1), "remotes/origin/", "", 1))] = struct{}{}
 		}
@@ -349,7 +345,7 @@ func (bc *BackendCommands) LocalBranches() ([]string, error) {
 		return []string{}, err
 	}
 	result := []string{}
-	for _, line := range output.Lines() {
+	for _, line := range stringslice.Lines(output) {
 		line = strings.Trim(line, "* ")
 		line = strings.TrimSpace(line)
 		result = append(result, line)
@@ -374,7 +370,7 @@ func (bc *BackendCommands) LocalBranchesWithDeletedTrackingBranches() ([]string,
 		return []string{}, err
 	}
 	result := []string{}
-	for _, line := range output.Lines() {
+	for _, line := range stringslice.Lines(output) {
 		line = strings.Trim(line, "* ")
 		parts := strings.SplitN(line, " ", 2)
 		branch := parts[0]
@@ -408,7 +404,7 @@ func (bc *BackendCommands) PreviouslyCheckedOutBranch() (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("cannot determine the previously checked out branch: %w", err)
 	}
-	return output.Sanitized(), nil
+	return output, nil
 }
 
 // RemoteBranches provides the names of the remote branches in this repo.
@@ -418,7 +414,7 @@ func (bc *BackendCommands) RemoteBranches() ([]string, error) {
 		if err != nil {
 			return []string{}, fmt.Errorf("cannot determine remote branches: %w", err)
 		}
-		lines := output.Lines()
+		lines := stringslice.Lines(output)
 		branches := make([]string, 0, len(lines)-1)
 		for _, line := range lines {
 			if !strings.Contains(line, " -> ") {
@@ -437,10 +433,10 @@ func (bc *BackendCommands) Remotes() ([]string, error) {
 		if err != nil {
 			return []string{}, fmt.Errorf("cannot determine remotes: %w", err)
 		}
-		if out.Sanitized() == "" {
+		if out == "" {
 			bc.Config.RemotesCache.Set([]string{})
 		} else {
-			bc.Config.RemotesCache.Set(out.Lines())
+			bc.Config.RemotesCache.Set(stringslice.Lines(out))
 		}
 	}
 	return bc.Config.RemotesCache.Value(), nil
@@ -473,7 +469,7 @@ func (bc *BackendCommands) RootDirectory() (string, error) {
 		if err != nil {
 			return "", fmt.Errorf("cannot determine root directory: %w", err)
 		}
-		bc.Config.RootDirCache.Set(filepath.FromSlash(output.Sanitized()))
+		bc.Config.RootDirCache.Set(filepath.FromSlash(output))
 	}
 	return bc.Config.RootDirCache.Value(), nil
 }
@@ -484,7 +480,7 @@ func (bc *BackendCommands) ShaForBranch(name string) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("cannot determine SHA of local branch %q: %w", name, err)
 	}
-	return output.Sanitized(), nil
+	return output, nil
 }
 
 // ShouldPushBranch returns whether the local branch with the given name
@@ -495,7 +491,7 @@ func (bc *BackendCommands) ShouldPushBranch(branch string) (bool, error) {
 	if err != nil {
 		return false, fmt.Errorf("cannot list diff of %q and %q: %w", branch, trackingBranch, err)
 	}
-	return out.Sanitized() != "", nil
+	return out != "", nil
 }
 
 // TrackingBranch provides the name of the remote branch tracking the local branch with the given name.
@@ -512,9 +508,9 @@ func (bc *BackendCommands) Version() (major int, minor int, err error) {
 	if err != nil {
 		return 0, 0, fmt.Errorf("cannot determine Git version: %w", err)
 	}
-	matches := versionRegexp.FindStringSubmatch(output.Sanitized())
+	matches := versionRegexp.FindStringSubmatch(output)
 	if matches == nil {
-		return 0, 0, fmt.Errorf("'git version' returned unexpected output: %q.\nPlease open an issue and supply the output of running 'git version'", output.Sanitized())
+		return 0, 0, fmt.Errorf("'git version' returned unexpected output: %q.\nPlease open an issue and supply the output of running 'git version'", output)
 	}
 	majorVersion, err := strconv.Atoi(matches[1])
 	if err != nil {

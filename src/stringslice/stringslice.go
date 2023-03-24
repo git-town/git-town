@@ -1,6 +1,8 @@
 // Package stringslice provides helper functions for working with slices of strings.
 package stringslice
 
+import "strings"
+
 // Contains returns whether the given string slice
 // contains the given string.
 func Contains(list []string, value string) bool {
@@ -27,6 +29,10 @@ func Hoist(list []string, element string) []string {
 		result = append([]string{element}, result...)
 	}
 	return result
+}
+
+func Lines(text string) []string {
+	return strings.Split(text, "\n")
 }
 
 // Remove returns a new string slice which is the given string slice

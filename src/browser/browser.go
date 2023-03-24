@@ -4,8 +4,6 @@ package browser
 import (
 	"fmt"
 	"runtime"
-
-	"github.com/git-town/git-town/v7/src/subshell"
 )
 
 // OpenBrowserCommand provides the console command to open the default browser.
@@ -30,7 +28,7 @@ func OpenBrowserCommand(runner backendRunner) string {
 	}
 	for _, browserCommand := range openBrowserCommands {
 		output, err := runner.Run("which", browserCommand)
-		if err == nil && output.Sanitized() != "" {
+		if err == nil && output != "" {
 			return browserCommand
 		}
 	}
@@ -56,5 +54,5 @@ type frontendRunner interface {
 }
 
 type backendRunner interface {
-	Run(executable string, args ...string) (*subshell.Output, error)
+	Run(executable string, args ...string) (string, error)
 }

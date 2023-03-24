@@ -43,6 +43,19 @@ func TestHoist(t *testing.T) {
 	})
 }
 
+func TestLines(t *testing.T) {
+	t.Parallel()
+	tests := map[string][]string{
+		"":                {""},
+		"single line":     {"single line"},
+		"multiple\nlines": {"multiple", "lines"},
+	}
+	for give, want := range tests {
+		have := stringslice.Lines(give)
+		assert.Equal(t, want, have)
+	}
+}
+
 func TestRemove(t *testing.T) {
 	t.Parallel()
 	give := []string{"one", "two", "three"}

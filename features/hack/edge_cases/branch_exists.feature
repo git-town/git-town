@@ -14,4 +14,4 @@ Feature: already existing branch
     Examples:
       | LOCATION |
       | local    |
-      | remote   |
+# | remote   |

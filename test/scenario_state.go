@@ -6,7 +6,6 @@ import (
 
 	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/v7/src/stringslice"
-	"github.com/git-town/git-town/v7/src/subshell"
 )
 
 // ScenarioState constains the state that is shared by all steps within a scenario.
@@ -35,8 +34,11 @@ type ScenarioState struct {
 	// indicates whether the scenario has verified the error
 	runErrChecked bool
 
-	// the outcome of the last run of Git Town
-	runOutput *subshell.Output
+	// the sanitized output of the last run of Git Town
+	runOutput string
+
+	// the raw output of the last run of Git Town
+	runOutputRaw string
 
 	// content of the uncommitted file in the workspace
 	uncommittedContent string
@@ -53,7 +55,8 @@ func (state *ScenarioState) Reset(gitEnv GitEnvironment) {
 	state.initialCommits = nil
 	state.initialBranchHierarchy = DataTable{Cells: [][]string{{"BRANCH", "PARENT"}}}
 	state.initialCurrentBranch = ""
-	state.runOutput = nil
+	state.runOutput = ""
+	state.runOutputRaw = ""
 	state.runErr = nil
 	state.runErrChecked = false
 	state.uncommittedFileName = ""
