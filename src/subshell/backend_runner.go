@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os/exec"
 	"strings"
+
+	"github.com/acarl005/stripansi"
 )
 
 // BackendRunner executes backend shell commands without output to the CLI.
@@ -13,7 +15,7 @@ type BackendRunner struct {
 	Dir *string
 }
 
-func (r BackendRunner) Run(executable string, args ...string) (*Output, error) {
+func (r BackendRunner) Run(executable string, args ...string) (string, error) {
 	subProcess := exec.Command(executable, args...) // #nosec
 	if r.Dir != nil {
 		subProcess.Dir = *r.Dir
@@ -22,7 +24,7 @@ func (r BackendRunner) Run(executable string, args ...string) (*Output, error) {
 	if err != nil {
 		err = ErrorDetails(executable, args, err, output)
 	}
-	return NewOutput(output), err
+	return strings.TrimSpace(stripansi.Strip(string(output))), err
 }
 
 // RunMany runs all given commands in current directory.

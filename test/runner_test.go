@@ -137,9 +137,9 @@ func TestRunner(t *testing.T) {
 		assert.NoError(t, err)
 		output, err := runner.BackendRunner.Run("git-town", "config")
 		assert.NoError(t, err)
-		has := strings.Contains(output.Sanitized(), "Branch Ancestry:\n  main\n    f1\n      f1a")
+		has := strings.Contains(output, "Branch Ancestry:\n  main\n    f1\n      f1a")
 		if !has {
-			fmt.Printf("unexpected output: %s", output.Raw)
+			fmt.Printf("unexpected output: %s", output)
 		}
 		assert.True(t, has)
 	})

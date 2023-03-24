@@ -135,7 +135,7 @@ func (r *MockingRunner) MockNoCommandsInstalled() error {
 
 // Run runs the given command with the given arguments.
 // Overrides will be used and removed when done.
-func (r *MockingRunner) Run(name string, arguments ...string) (*subshell.Output, error) {
+func (r *MockingRunner) Run(name string, arguments ...string) (string, error) {
 	return r.RunWith(&Options{}, name, arguments...)
 }
 
@@ -156,24 +156,24 @@ func (r *MockingRunner) RunMany(commands [][]string) error {
 
 // RunString runs the given command (including possible arguments).
 // Overrides will be used and removed when done.
-func (r *MockingRunner) RunString(fullCmd string) (*subshell.Output, error) {
+func (r *MockingRunner) RunString(fullCmd string) (string, error) {
 	return r.RunStringWith(fullCmd, &Options{})
 }
 
 // RunStringWith runs the given command (including possible arguments) using the given options.
 // opts.Dir is a relative path inside the working directory of this ShellRunner.
 // Overrides will be used and removed when done.
-func (r *MockingRunner) RunStringWith(fullCmd string, opts *Options) (*subshell.Output, error) {
+func (r *MockingRunner) RunStringWith(fullCmd string, opts *Options) (string, error) {
 	parts, err := shellquote.Split(fullCmd)
 	if err != nil {
-		return nil, fmt.Errorf("cannot split command %q: %w", fullCmd, err)
+		return "", fmt.Errorf("cannot split command %q: %w", fullCmd, err)
 	}
 	cmd, args := parts[0], parts[1:]
 	return r.RunWith(opts, cmd, args...)
 }
 
 // RunWith runs the given command with the given options in this ShellRunner's directory.
-func (r *MockingRunner) RunWith(opts *Options, cmd string, args ...string) (*subshell.Output, error) {
+func (r *MockingRunner) RunWith(opts *Options, cmd string, args ...string) (string, error) {
 	// create an environment with the temp Overrides directory added to the PATH
 	if opts.Env == nil {
 		opts.Env = os.Environ()
@@ -207,11 +207,11 @@ func (r *MockingRunner) RunWith(opts *Options, cmd string, args ...string) (*sub
 	subProcess.Stderr = &output
 	input, err := subProcess.StdinPipe()
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 	err = subProcess.Start()
 	if err != nil {
-		return nil, fmt.Errorf("can't start subprocess '%s %s': %w", cmd, strings.Join(args, " "), err)
+		return "", fmt.Errorf("can't start subprocess '%s %s': %w", cmd, strings.Join(args, " "), err)
 	}
 	for _, userInput := range opts.Input {
 		// Here we simply wait for some time until the subProcess needs the input.
@@ -222,7 +222,7 @@ func (r *MockingRunner) RunWith(opts *Options, cmd string, args ...string) (*sub
 		time.Sleep(500 * time.Millisecond)
 		_, err := input.Write([]byte(userInput))
 		if err != nil {
-			return nil, fmt.Errorf("can't write %q to subprocess '%s %s': %w", userInput, cmd, strings.Join(args, " "), err)
+			return "", fmt.Errorf("can't write %q to subprocess '%s %s': %w", userInput, cmd, strings.Join(args, " "), err)
 		}
 	}
 	err = subProcess.Wait()
@@ -241,7 +241,7 @@ func (r *MockingRunner) RunWith(opts *Options, cmd string, args ...string) (*sub
 	if exitCode != 0 {
 		err = fmt.Errorf("process \"%s %s\" failed with code %d, output:\n%s", cmd, strings.Join(args, " "), exitCode, output.String())
 	}
-	return &subshell.Output{Raw: output.String()}, err
+	return strings.TrimSpace(output.String()), err
 }
 
 // SetTestOrigin adds the given environment variable to subsequent runs of commands.
