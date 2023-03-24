@@ -21,8 +21,10 @@
 package cmd
 
 import (
+	"github.com/git-town/git-town/v7/src/cache"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
+	"github.com/git-town/git-town/v7/src/subshell"
 	"github.com/git-town/git-town/v7/src/validate"
 )
 
@@ -61,38 +63,41 @@ func long(summary string, desc ...string) string {
 	return summary + "."
 }
 
-func LoadProdRunner(args RunnerArgs) (prodRun git.ProdRunner, exit bool, err error) { //nolint:nonamedreturns // so many return values require names
-	prodRun = git.NewProdRunner(args.omitBranchNames, args.dryRun, args.debug)
+func LoadProdRunner(args RunnerArgs) (prodRunner git.ProdRunner, exit bool, err error) { //nolint:nonamedreturns // so many return values require names
+	backendRunner := NewBackendRunner(nil, args.debug)
+	config := git.NewRepoConfig(backendRunner)
+	frontendRunner := NewFrontendRunner(args.omitBranchNames, args.dryRun, config.CurrentBranchCache)
+	prodRunner = git.NewProdRunner(backendRunner, frontendRunner, config)
 	if args.validateIsRepository {
-		err := validate.IsRepository(&prodRun)
+		err := validate.IsRepository(&prodRunner)
 		if err != nil {
-			return prodRun, false, err
+			return prodRunner, false, err
 		}
 	}
 	if !args.omitBranchNames || args.dryRun {
-		currentBranch, err := prodRun.Backend.CurrentBranch()
+		currentBranch, err := prodRunner.Backend.CurrentBranch()
 		if err != nil {
-			return prodRun, false, err
+			return prodRunner, false, err
 		}
-		prodRun.Config.CurrentBranchCache.Set(currentBranch)
+		prodRunner.Config.CurrentBranchCache.Set(currentBranch)
 	}
 	if args.dryRun {
-		prodRun.Config.DryRun = true
+		prodRunner.Config.DryRun = true
 	}
 	ec := runstate.ErrorChecker{}
 	if args.validateGitversion {
-		ec.Check(validate.HasGitVersion(&prodRun.Backend))
+		ec.Check(validate.HasGitVersion(&prodRunner.Backend))
 	}
 	if args.validateIsConfigured {
-		ec.Check(validate.IsConfigured(&prodRun.Backend))
+		ec.Check(validate.IsConfigured(&prodRunner.Backend))
 	}
 	if args.validateIsOnline {
-		ec.Check(validate.IsOnline(&prodRun.Config))
+		ec.Check(validate.IsOnline(&prodRunner.Config))
 	}
 	if args.handleUnfinishedState {
-		exit = ec.Bool(validate.HandleUnfinishedState(&prodRun, nil))
+		exit = ec.Bool(validate.HandleUnfinishedState(&prodRunner, nil))
 	}
-	return prodRun, exit, ec.Err
+	return prodRunner, exit, ec.Err
 }
 
 type RunnerArgs struct {
@@ -104,4 +109,26 @@ type RunnerArgs struct {
 	validateIsRepository  bool `exhaustruct:"optional"`
 	validateIsConfigured  bool `exhaustruct:"optional"`
 	validateIsOnline      bool `exhaustruct:"optional"`
+}
+
+func NewBackendRunner(dir *string, debug bool) git.BackendRunner {
+	backendRunner := subshell.BackendRunner{Dir: dir}
+	if debug {
+		return subshell.BackendLoggingRunner{Runner: backendRunner}
+	}
+	return backendRunner
+}
+
+// NewFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.
+func NewFrontendRunner(omitBranchNames, dryRun bool, currentBranchCache *cache.String) git.FrontendRunner {
+	if dryRun {
+		return subshell.FrontendDryRunner{
+			CurrentBranch:   currentBranchCache,
+			OmitBranchNames: omitBranchNames,
+		}
+	}
+	return subshell.FrontendRunner{
+		CurrentBranch:   currentBranchCache,
+		OmitBranchNames: omitBranchNames,
+	}
 }
