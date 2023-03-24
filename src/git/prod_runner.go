@@ -7,14 +7,11 @@ type ProdRunner struct {
 	Frontend FrontendCommands
 }
 
-func NewProdRunner(omitBranchNames, dryRun, debug bool) ProdRunner {
-	backendRunner := NewBackendRunner(nil, debug)
-	config := NewRepoConfig(backendRunner)
+func NewProdRunner(backendRunner BackendRunner, frontendRunner FrontendRunner, config RepoConfig) ProdRunner {
 	backendCommands := BackendCommands{
 		BackendRunner: backendRunner,
 		Config:        &config,
 	}
-	frontendRunner := NewFrontendRunner(omitBranchNames, dryRun, config.CurrentBranchCache)
 	frontendCommands := FrontendCommands{
 		Frontend: frontendRunner,
 		Config:   &config,
