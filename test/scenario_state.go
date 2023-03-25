@@ -34,7 +34,7 @@ type ScenarioState struct {
 	// indicates whether the scenario has verified the error
 	runErrChecked bool
 
-	// the sanitized output of the last run of Git Town
+	// the output of the last run of Git Town
 	runOutput string
 
 	// content of the uncommitted file in the workspace
