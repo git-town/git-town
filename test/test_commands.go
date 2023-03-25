@@ -192,7 +192,7 @@ func (r *testCommands) CommitsInBranch(branch string, fields []string) ([]git.Co
 		return []git.Commit{}, fmt.Errorf("cannot get commits in branch %q: %w", branch, err)
 	}
 	result := []git.Commit{}
-	for _, line := range strings.Split(output.Sanitized(), "\n") {
+	for _, line := range strings.Split(output, "\n") {
 		parts := strings.Split(line, "|")
 		commit := git.Commit{Branch: branch, SHA: parts[0], Message: parts[1], Author: parts[2]}
 		if strings.EqualFold(commit.Message, "initial commit") {
@@ -257,7 +257,7 @@ func (r *testCommands) FileContentInCommit(sha string, filename string) (string,
 	if err != nil {
 		return "", fmt.Errorf("cannot determine the content for file %q in commit %q: %w", filename, sha, err)
 	}
-	result := output.Sanitized()
+	result := output
 	if strings.HasPrefix(result, "tree ") {
 		// merge commits get an empty file content instead of "tree <SHA>"
 		result = ""
@@ -271,7 +271,7 @@ func (r *testCommands) FilesInCommit(sha string) ([]string, error) {
 	if err != nil {
 		return []string{}, fmt.Errorf("cannot get files for commit %q: %w", sha, err)
 	}
-	return strings.Split(output.Sanitized(), "\n"), nil
+	return strings.Split(output, "\n"), nil
 }
 
 // FilesInBranch provides the list of the files present in the given branch.
@@ -281,7 +281,7 @@ func (r *testCommands) FilesInBranch(branch string) ([]string, error) {
 		return []string{}, fmt.Errorf("cannot determine files in branch %q in repo %q: %w", branch, r.workingDir, err)
 	}
 	result := []string{}
-	for _, line := range strings.Split(output.Sanitized(), "\n") {
+	for _, line := range strings.Split(output, "\n") {
 		file := strings.TrimSpace(line)
 		if file != "" {
 			result = append(result, file)
@@ -324,9 +324,9 @@ func (r *testCommands) FilesInBranches(mainBranch string) (DataTable, error) {
 func (r *testCommands) HasBranchesOutOfSync() (bool, error) {
 	output, err := r.Run("git", "for-each-ref", "--format=%(refname:short) %(upstream:track)", "refs/heads")
 	if err != nil {
-		return false, fmt.Errorf("cannot determine if branches are out of sync in %q: %w %q", r.workingDir, err, output.Sanitized())
+		return false, fmt.Errorf("cannot determine if branches are out of sync in %q: %w %q", r.workingDir, err, output)
 	}
-	return output.ContainsText("["), nil
+	return strings.Contains(output, "["), nil
 }
 
 // HasFile indicates whether this repository contains a file with the given name and content.
@@ -348,7 +348,7 @@ func (r *testCommands) HasGitTownConfigNow() bool {
 	if err != nil {
 		return false
 	}
-	return output.Sanitized() != ""
+	return output != ""
 }
 
 func (r *testCommands) PushBranch() error {
@@ -392,7 +392,7 @@ func (r *testCommands) ShaForCommit(name string) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("cannot determine the SHA of commit %q: %w", name, err)
 	}
-	result := output.Sanitized()
+	result := output
 	if result == "" {
 		return "", fmt.Errorf("cannot find the SHA of commit %q", name)
 	}
@@ -413,10 +413,10 @@ func (r *testCommands) StashSize() (int, error) {
 	if err != nil {
 		return 0, fmt.Errorf("cannot determine Git stash: %w", err)
 	}
-	if output.Sanitized() == "" {
+	if output == "" {
 		return 0, nil
 	}
-	return len(output.Lines()), nil
+	return len(stringslice.Lines(output)), nil
 }
 
 // Tags provides a list of the tags in this repository.
@@ -426,7 +426,7 @@ func (r *testCommands) Tags() ([]string, error) {
 		return []string{}, fmt.Errorf("cannot determine tags in repo %q: %w", r.workingDir, err)
 	}
 	result := []string{}
-	for _, line := range strings.Split(output.Sanitized(), "\n") {
+	for _, line := range strings.Split(output, "\n") {
 		result = append(result, strings.TrimSpace(line))
 	}
 	return result, err
@@ -438,9 +438,8 @@ func (r *testCommands) UncommittedFiles() ([]string, error) {
 	if err != nil {
 		return []string{}, fmt.Errorf("cannot determine uncommitted files in %q: %w", r.workingDir, err)
 	}
-	lines := output.Lines()
 	result := []string{}
-	for _, line := range lines {
+	for _, line := range stringslice.Lines(output) {
 		if line == "" {
 			continue
 		}

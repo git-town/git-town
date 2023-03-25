@@ -200,7 +200,7 @@ func (gt *GitTown) OriginURLString() string {
 		return remote
 	}
 	output, _ := gt.Run("git", "remote", "get-url", OriginRemote)
-	return output.Sanitized()
+	return output
 }
 
 // OriginURL provides the URL for the "origin" remote.

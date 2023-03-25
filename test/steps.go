@@ -9,6 +9,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/acarl005/stripansi"
 	"github.com/cucumber/godog"
 	"github.com/cucumber/messages-go/v10"
 	"github.com/eiannone/keyboard"
@@ -238,8 +239,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^I am not prompted for any parent branches$`, func() error {
 		notExpected := "Please specify the parent branch of"
-		if state.runOutput.ContainsText(notExpected) {
-			return fmt.Errorf("text found:\n\nDID NOT EXPECT: %q\n\nACTUAL\n\n%q\n----------------------------", notExpected, state.runOutput.Sanitized())
+		if strings.Contains(state.runOutput, notExpected) {
+			return fmt.Errorf("text found:\n\nDID NOT EXPECT: %q\n\nACTUAL\n\n%q\n----------------------------", notExpected, state.runOutput)
 		}
 		return nil
 	})
@@ -317,7 +318,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^it does not print "(.+)"$`, func(text string) error {
-		if strings.Contains(state.runOutput.Sanitized(), text) {
+		if strings.Contains(stripansi.Strip(state.runOutput), text) {
 			return fmt.Errorf("text found: %q", text)
 		}
 		return nil
@@ -327,14 +328,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if state.runErr != nil {
 			return fmt.Errorf("unexpected error: %w", state.runErr)
 		}
-		if !strings.Contains(state.runOutput.Sanitized(), expected.Content) {
-			return fmt.Errorf("text not found:\n\nEXPECTED:\n\n%q\n\nACTUAL:\n\n%q", expected.Content, state.runOutput.Sanitized())
+		if !strings.Contains(stripansi.Strip(state.runOutput), expected.Content) {
+			return fmt.Errorf("text not found:\n\nEXPECTED:\n\n%q\n\nACTUAL:\n\n%q", expected.Content, state.runOutput)
 		}
 		return nil
 	})
 
 	suite.Step(`^it prints no output$`, func() error {
-		output := state.runOutput.Sanitized()
+		output := state.runOutput
 		if output != "" {
 			return fmt.Errorf("expected no output but found %q", output)
 		}
@@ -343,7 +344,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^it prints something like:$`, func(expected *messages.PickleStepArgument_PickleDocString) error {
 		regex := regexp.MustCompile(expected.Content)
-		have := state.runOutput.Sanitized()
+		have := stripansi.Strip(state.runOutput)
 		if !regex.MatchString(have) {
 			return fmt.Errorf("EXPECTED: content matching %q\nGOT: %q", expected.Content, have)
 		}
@@ -352,8 +353,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^it prints the error:$`, func(expected *messages.PickleStepArgument_PickleDocString) error {
 		state.runErrChecked = true
-		if !strings.Contains(state.runOutput.Sanitized(), expected.Content) {
-			return fmt.Errorf("text not found: %s\n\nactual text:\n%s", expected.Content, state.runOutput.Sanitized())
+		if !strings.Contains(stripansi.Strip(state.runOutput), expected.Content) {
+			return fmt.Errorf("text not found:\n%s\n\nactual text:\n%s", expected.Content, state.runOutput)
 		}
 		if state.runErr == nil {
 			return fmt.Errorf("expected error")
@@ -362,7 +363,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^it runs no commands$`, func() error {
-		commands := GitCommandsInGitTownOutput(state.runOutput.Sanitized())
+		commands := GitCommandsInGitTownOutput(state.runOutput)
 		if len(commands) > 0 {
 			for _, command := range commands {
 				fmt.Println(command)
@@ -373,7 +374,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^it runs the commands$`, func(input *messages.PickleStepArgument_PickleTable) error {
-		commands := GitCommandsInGitTownOutput(state.runOutput.Raw)
+		commands := GitCommandsInGitTownOutput(state.runOutput)
 		table := RenderExecutedGitCommands(commands, input)
 		dataTable := FromGherkin(input)
 		expanded, err := dataTable.Expand(
@@ -403,7 +404,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		want := fmt.Sprintf("%s called with: %s", tool, url.Content)
 		want = strings.ReplaceAll(want, "?", `\?`)
 		regex := regexp.MustCompile(want)
-		have := state.runOutput.Sanitized()
+		have := state.runOutput
 		if !regex.MatchString(have) {
 			return fmt.Errorf("EXPECTED: a regex matching %q\nGOT: %q", want, have)
 		}

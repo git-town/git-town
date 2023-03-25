@@ -23,11 +23,11 @@ func (r BackendLoggingRunner) PrintHeader(cmd string, args ...string) {
 }
 
 // Run runs the given command in this ShellRunner's directory.
-func (r BackendLoggingRunner) Run(cmd string, args ...string) (*Output, error) {
+func (r BackendLoggingRunner) Run(cmd string, args ...string) (string, error) {
 	r.PrintHeader(cmd, args...)
 	output, err := r.Runner.Run(cmd, args...)
-	if output != nil {
-		fmt.Println(output.Raw)
+	if output != "" {
+		fmt.Println(output)
 	}
 	return output, err
 }
@@ -46,10 +46,10 @@ func (r BackendLoggingRunner) RunMany(commands [][]string) error {
 }
 
 // RunString runs the given command (including possible arguments) in this ShellInDir's directory.
-func (r BackendLoggingRunner) RunString(fullCmd string) (*Output, error) {
+func (r BackendLoggingRunner) RunString(fullCmd string) (string, error) {
 	parts, err := shellquote.Split(fullCmd)
 	if err != nil {
-		return nil, fmt.Errorf("cannot split command %q: %w", fullCmd, err)
+		return "", fmt.Errorf("cannot split command %q: %w", fullCmd, err)
 	}
 	cmd, args := parts[0], parts[1:]
 	return r.Run(cmd, args...)

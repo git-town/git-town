@@ -3,8 +3,6 @@ package config
 import (
 	"regexp"
 	"strings"
-
-	"github.com/git-town/git-town/v7/src/subshell"
 )
 
 // Git manages configuration data stored in Git metadata.
@@ -20,7 +18,7 @@ type Git struct {
 }
 
 type runner interface {
-	Run(executable string, args ...string) (*subshell.Output, error)
+	Run(executable string, args ...string) (string, error)
 }
 
 // LoadGit provides the Git configuration from the given directory or the global one if the global flag is set.
@@ -36,10 +34,10 @@ func LoadGit(runner runner, global bool) map[string]string {
 	if err != nil {
 		return result
 	}
-	if output.Raw == "" {
+	if output == "" {
 		return result
 	}
-	for _, line := range strings.Split(output.Sanitized(), "\x00") {
+	for _, line := range strings.Split(output, "\x00") {
 		if len(line) == 0 {
 			continue
 		}
@@ -97,7 +95,7 @@ func (g *Git) Reload() {
 	g.globalConfigCache = LoadGit(g.runner, true)
 }
 
-func (g *Git) RemoveGlobalConfigValue(key string) (*subshell.Output, error) {
+func (g *Git) RemoveGlobalConfigValue(key string) (string, error) {
 	delete(g.globalConfigCache, key)
 	return g.Run("git", "config", "--global", "--unset", key)
 }
@@ -110,13 +108,13 @@ func (g *Git) RemoveLocalConfigValue(key string) error {
 }
 
 // SetGlobalConfigValue sets the given configuration setting in the global Git configuration.
-func (g *Git) SetGlobalConfigValue(key, value string) (*subshell.Output, error) {
+func (g *Git) SetGlobalConfigValue(key, value string) (string, error) {
 	g.globalConfigCache[key] = value
 	return g.runner.Run("git", "config", "--global", key, value)
 }
 
 // SetLocalConfigValue sets the local configuration with the given key to the given value.
-func (g *Git) SetLocalConfigValue(key, value string) (*subshell.Output, error) {
+func (g *Git) SetLocalConfigValue(key, value string) (string, error) {
 	g.localConfigCache[key] = value
 	return g.runner.Run("git", "config", key, value)
 }

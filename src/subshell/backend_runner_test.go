@@ -20,7 +20,7 @@ func TestBackendRunner(t *testing.T) {
 			runner := subshell.BackendRunner{Dir: &tmpDir}
 			output, err := runner.Run("echo", "hello", "world")
 			assert.NoError(t, err)
-			assert.Equal(t, "hello world", output.Sanitized())
+			assert.Equal(t, "hello world", output)
 		})
 
 		t.Run("unknown executable", func(t *testing.T) {
