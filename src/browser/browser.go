@@ -4,7 +4,6 @@ package browser
 import (
 	"fmt"
 	"runtime"
-	"strings"
 )
 
 // OpenBrowserCommand provides the console command to open the default browser.
@@ -29,7 +28,7 @@ func OpenBrowserCommand(runner backendRunner) string {
 	}
 	for _, browserCommand := range openBrowserCommands {
 		output, err := runner.Run("which", browserCommand)
-		if err == nil && strings.TrimSpace(output) != "" {
+		if err == nil && output != "" {
 			return browserCommand
 		}
 	}
