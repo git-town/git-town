@@ -7,8 +7,8 @@ import (
 )
 
 // HasGitVersion verifies that the system has Git of version 2.7 or newer installed.
-func HasGitVersion(repo *git.ProdRepo) error {
-	majorVersion, minorVersion, err := repo.Silent.Version()
+func HasGitVersion(backend *git.BackendCommands) error {
+	majorVersion, minorVersion, err := backend.Version()
 	if err != nil {
 		return err
 	}

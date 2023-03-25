@@ -3,29 +3,42 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/spf13/cobra"
 )
 
 const skipDesc = "Restarts the last run git-town command by skipping the current branch"
 
-func skipCmd(repo *git.ProdRepo) *cobra.Command {
-	return &cobra.Command{
+func skipCmd() *cobra.Command {
+	addDebugFlag, readDebugFlag := flags.Debug()
+	cmd := cobra.Command{
 		Use:     "skip",
 		GroupID: "errors",
 		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
 		Short:   skipDesc,
 		Long:    long(skipDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return skip(repo)
+			return skip(readDebugFlag(cmd))
 		},
 	}
+	addDebugFlag(&cmd)
+	return &cmd
 }
 
-func skip(repo *git.ProdRepo) error {
-	runState, err := runstate.Load(repo)
+func skip(debug bool) error {
+	run, exit, err := LoadProdRunner(RunnerArgs{
+		debug:                 debug,
+		dryRun:                false,
+		handleUnfinishedState: false,
+		validateGitversion:    true,
+		validateIsRepository:  true,
+		validateIsConfigured:  true,
+	})
+	if err != nil || exit {
+		return err
+	}
+	runState, err := runstate.Load(&run.Backend)
 	if err != nil {
 		return fmt.Errorf("cannot load previous run state: %w", err)
 	}
@@ -36,5 +49,5 @@ func skip(repo *git.ProdRepo) error {
 		return fmt.Errorf("cannot skip branch that resulted in conflicts")
 	}
 	skipRunState := runState.CreateSkipRunState()
-	return runstate.Execute(&skipRunState, repo, nil)
+	return runstate.Execute(&skipRunState, &run, nil)
 }

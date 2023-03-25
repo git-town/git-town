@@ -4,37 +4,51 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v7/src/dialog"
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/spf13/cobra"
 )
 
 const switchDesc = "Displays the local branches visually and allows switching between them"
 
-func switchCmd(repo *git.ProdRepo) *cobra.Command {
-	return &cobra.Command{
+func switchCmd() *cobra.Command {
+	addDebugFlag, readDebugFlag := flags.Debug()
+	cmd := cobra.Command{
 		Use:     "switch",
 		GroupID: "basic",
 		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
 		Short:   switchDesc,
 		Long:    long(switchDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runSwitch(repo)
+			return runSwitch(readDebugFlag(cmd))
 		},
 	}
+	addDebugFlag(&cmd)
+	return &cmd
 }
 
-func runSwitch(repo *git.ProdRepo) error {
-	currentBranch, err := repo.Silent.CurrentBranch()
+func runSwitch(debug bool) error {
+	run, exit, err := LoadProdRunner(RunnerArgs{
+		debug:                 debug,
+		dryRun:                false,
+		handleUnfinishedState: true,
+		validateGitversion:    true,
+		validateIsRepository:  true,
+		validateIsConfigured:  true,
+	})
+	if err != nil || exit {
+		return err
+	}
+	currentBranch, err := run.Backend.CurrentBranch()
 	if err != nil {
 		return err
 	}
-	newBranch, err := queryBranch(currentBranch, repo)
+	newBranch, err := queryBranch(currentBranch, &run)
 	if err != nil {
 		return err
 	}
 	if newBranch != nil && *newBranch != currentBranch {
-		err = repo.Silent.CheckoutBranch(*newBranch)
+		err = run.Backend.CheckoutBranch(*newBranch)
 		if err != nil {
 			return err
 		}
@@ -44,8 +58,8 @@ func runSwitch(repo *git.ProdRepo) error {
 
 // queryBranch lets the user select a new branch via a visual dialog.
 // Returns the selected branch or nil if the user aborted.
-func queryBranch(currentBranch string, repo *git.ProdRepo) (selection *string, err error) { //nolint:nonamedreturns
-	entries, err := createEntries(repo)
+func queryBranch(currentBranch string, run *git.ProdRunner) (selection *string, err error) { //nolint:nonamedreturns
+	entries, err := createEntries(run)
 	if err != nil {
 		return nil, err
 	}
@@ -53,11 +67,11 @@ func queryBranch(currentBranch string, repo *git.ProdRepo) (selection *string, e
 }
 
 // createEntries provides all the entries for the branch dialog.
-func createEntries(repo *git.ProdRepo) (dialog.ModalEntries, error) {
+func createEntries(run *git.ProdRunner) (dialog.ModalEntries, error) {
 	entries := dialog.ModalEntries{}
 	var err error
-	for _, root := range repo.Config.BranchAncestryRoots() {
-		entries, err = addEntryAndChildren(entries, root, 0, repo)
+	for _, root := range run.Config.BranchAncestryRoots() {
+		entries, err = addEntryAndChildren(entries, root, 0, run)
 		if err != nil {
 			return nil, err
 		}
@@ -66,14 +80,14 @@ func createEntries(repo *git.ProdRepo) (dialog.ModalEntries, error) {
 }
 
 // addEntryAndChildren adds the given branch and all its child branches to the given entries collection.
-func addEntryAndChildren(entries dialog.ModalEntries, branch string, indent int, repo *git.ProdRepo) (dialog.ModalEntries, error) {
+func addEntryAndChildren(entries dialog.ModalEntries, branch string, indent int, run *git.ProdRunner) (dialog.ModalEntries, error) {
 	entries = append(entries, dialog.ModalEntry{
 		Text:  strings.Repeat("  ", indent) + branch,
 		Value: branch,
 	})
 	var err error
-	for _, child := range repo.Silent.Config.ChildBranches(branch) {
-		entries, err = addEntryAndChildren(entries, child, indent+1, repo)
+	for _, child := range run.Config.ChildBranches(branch) {
+		entries, err = addEntryAndChildren(entries, child, indent+1, run)
 		if err != nil {
 			return entries, err
 		}

@@ -1,7 +1,6 @@
 package test
 
 import (
-	"bufio"
 	"fmt"
 	"log"
 	"os"
@@ -12,11 +11,11 @@ import (
 
 	"github.com/cucumber/godog"
 	"github.com/cucumber/messages-go/v10"
+	"github.com/eiannone/keyboard"
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/stringslice"
-	"github.com/git-town/git-town/v7/src/subshell"
 )
 
 // beforeSuiteMux ensures that we run BeforeSuite only once globally.
@@ -40,7 +39,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		// See main_test.go for additional details.
 		state.Reset(gitEnvironment)
 		if hasTag(scenario, "@debug") {
-			gitEnvironment.DevRunner.Debug = true
+			state.gitEnv.DevRepo.Debug = true
 		}
 	})
 
@@ -93,15 +92,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 		state.initialBranchHierarchy.AddRow(branch, parentBranch)
-		return state.gitEnv.DevRepo.PushBranch(git.PushArgs{Branch: branch, Remote: config.OriginRemote})
+		return state.gitEnv.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
 	})
 
 	suite.Step(`^a merge is now in progress$`, func() error {
-		hasMerge, err := state.gitEnv.DevRepo.HasMergeInProgress()
-		if err != nil {
-			return err
-		}
-		if !hasMerge {
+		if !state.gitEnv.DevRepo.HasMergeInProgress() {
 			return fmt.Errorf("expected merge in progress")
 		}
 		return nil
@@ -117,7 +112,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.initialBranchHierarchy.AddRow(branch, "main")
 		if !isLocal {
 			state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-			return state.gitEnv.DevRepo.PushBranch(git.PushArgs{Branch: branch, Remote: config.OriginRemote})
+			return state.gitEnv.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
 		}
 		return nil
 	})
@@ -129,7 +124,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-		return state.gitEnv.DevRepo.PushBranch(git.PushArgs{Branch: branch, Remote: config.OriginRemote})
+		return state.gitEnv.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
 	})
 
 	suite.Step(`^a rebase is now in progress$`, func() error {
@@ -213,16 +208,12 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^Git has version "([^"]*)"$`, func(version string) error {
-		err := state.gitEnv.DevRunner.MockGit(version)
+		err := state.gitEnv.DevRepo.MockGit(version)
 		return err
 	})
 
 	suite.Step(`^Git Town is no longer configured$`, func() error {
-		res, err := state.gitEnv.DevRepo.HasGitTownConfigNow()
-		if err != nil {
-			return err
-		}
-		if res {
+		if state.gitEnv.DevRepo.HasGitTownConfigNow() {
 			return fmt.Errorf("unexpected Git Town configuration")
 		}
 		return nil
@@ -247,8 +238,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^I am not prompted for any parent branches$`, func() error {
 		notExpected := "Please specify the parent branch of"
-		if state.runRes.OutputContainsText(notExpected) {
-			return fmt.Errorf("text found:\n\nDID NOT EXPECT: %q\n\nACTUAL\n\n%q\n----------------------------", notExpected, state.runRes.Output)
+		if state.runOutput.ContainsText(notExpected) {
+			return fmt.Errorf("text found:\n\nDID NOT EXPECT: %q\n\nACTUAL\n\n%q\n----------------------------", notExpected, state.runOutput.Sanitized())
 		}
 		return nil
 	})
@@ -274,71 +265,76 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I (?:run|ran) "(.+)"$`, func(command string) error {
-		state.runRes, state.runErr = state.gitEnv.DevRunner.RunString(command)
+		state.runOutput, state.runErr = state.gitEnv.DevRepo.RunString(command)
 		return nil
 	})
 
 	suite.Step(`^I (?:run|ran) "([^"]+)" and answer(?:ed)? the prompts:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
-		state.runRes, state.runErr = state.gitEnv.DevRunner.RunStringWith(cmd, &subshell.Options{Input: tableToInput(input)})
+		state.runOutput, state.runErr = state.gitEnv.DevRepo.RunStringWith(cmd, &Options{Input: tableToInput(input)})
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)" and close the editor$`, func(cmd string) error {
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		state.runRes, state.runErr = state.gitEnv.DevRunner.RunStringWith(cmd, &subshell.Options{Env: env})
+		state.runOutput, state.runErr = state.gitEnv.DevRepo.RunStringWith(cmd, &Options{Env: env})
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)" and enter an empty commit message$`, func(cmd string) error {
-		if err := state.gitEnv.DevRunner.MockCommitMessage(""); err != nil {
+		if err := state.gitEnv.DevRepo.MockCommitMessage(""); err != nil {
 			return err
 		}
-		state.runRes, state.runErr = state.gitEnv.DevRunner.RunString(cmd)
+		state.runOutput, state.runErr = state.gitEnv.DevRepo.RunString(cmd)
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)" and enter "([^"]*)" for the commit message$`, func(cmd, message string) error {
-		if err := state.gitEnv.DevRunner.MockCommitMessage(message); err != nil {
+		if err := state.gitEnv.DevRepo.MockCommitMessage(message); err != nil {
 			return err
 		}
-		state.runRes, state.runErr = state.gitEnv.DevRunner.RunString(cmd)
+		state.runOutput, state.runErr = state.gitEnv.DevRepo.RunString(cmd)
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)", answer the prompts, and close the next editor:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		state.runRes, state.runErr = state.gitEnv.DevRunner.RunStringWith(cmd, &subshell.Options{Env: env, Input: tableToInput(input)})
+		state.runOutput, state.runErr = state.gitEnv.DevRepo.RunStringWith(cmd, &Options{Env: env, Input: tableToInput(input)})
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]+)" in the "([^"]+)" folder$`, func(cmd, folderName string) error {
-		state.runRes, state.runErr = state.gitEnv.DevRunner.RunStringWith(cmd, &subshell.Options{Dir: folderName})
+		state.runOutput, state.runErr = state.gitEnv.DevRepo.RunStringWith(cmd, &Options{Dir: folderName})
 		return nil
 	})
 
 	suite.Step(`^inspect the repo$`, func() error {
-		fmt.Println(state.gitEnv.DevRepo.WorkingDir())
-		reader := bufio.NewReader(os.Stdin)
-		_, _ = reader.ReadString('\n')
+		fmt.Printf("\nThe workspace is at %q\n", state.gitEnv.DevRepo.WorkingDir())
+		_, _, err := keyboard.GetSingleKey()
+		if err != nil {
+			return fmt.Errorf("cannot read from os.Stdin: %w", err)
+		}
 		return nil
 	})
 
 	suite.Step(`^it does not print "(.+)"$`, func(text string) error {
-		if strings.Contains(state.runRes.OutputSanitized(), text) {
+		if strings.Contains(state.runOutput.Sanitized(), text) {
 			return fmt.Errorf("text found: %q", text)
 		}
 		return nil
 	})
 
 	suite.Step(`^it prints:$`, func(expected *messages.PickleStepArgument_PickleDocString) error {
-		if !strings.Contains(state.runRes.OutputSanitized(), expected.Content) {
-			return fmt.Errorf("text not found:\n\nEXPECTED:\n\n%q\n\nACTUAL:\n\n%q", expected.Content, state.runRes.OutputSanitized())
+		if state.runErr != nil {
+			return fmt.Errorf("unexpected error: %w", state.runErr)
+		}
+		if !strings.Contains(state.runOutput.Sanitized(), expected.Content) {
+			return fmt.Errorf("text not found:\n\nEXPECTED:\n\n%q\n\nACTUAL:\n\n%q", expected.Content, state.runOutput.Sanitized())
 		}
 		return nil
 	})
 
 	suite.Step(`^it prints no output$`, func() error {
-		output := state.runRes.OutputSanitized()
+		output := state.runOutput.Sanitized()
 		if output != "" {
 			return fmt.Errorf("expected no output but found %q", output)
 		}
@@ -347,7 +343,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^it prints something like:$`, func(expected *messages.PickleStepArgument_PickleDocString) error {
 		regex := regexp.MustCompile(expected.Content)
-		have := state.runRes.OutputSanitized()
+		have := state.runOutput.Sanitized()
 		if !regex.MatchString(have) {
 			return fmt.Errorf("EXPECTED: content matching %q\nGOT: %q", expected.Content, have)
 		}
@@ -356,8 +352,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^it prints the error:$`, func(expected *messages.PickleStepArgument_PickleDocString) error {
 		state.runErrChecked = true
-		if !strings.Contains(state.runRes.OutputSanitized(), expected.Content) {
-			return fmt.Errorf("text not found: %s\n\nactual text:\n%s", expected.Content, state.runRes.OutputSanitized())
+		if !strings.Contains(state.runOutput.Sanitized(), expected.Content) {
+			return fmt.Errorf("text not found: %s\n\nactual text:\n%s", expected.Content, state.runOutput.Sanitized())
 		}
 		if state.runErr == nil {
 			return fmt.Errorf("expected error")
@@ -366,7 +362,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^it runs no commands$`, func() error {
-		commands := GitCommandsInGitTownOutput(state.runRes.Output)
+		commands := GitCommandsInGitTownOutput(state.runOutput.Sanitized())
 		if len(commands) > 0 {
 			for _, command := range commands {
 				fmt.Println(command)
@@ -377,7 +373,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^it runs the commands$`, func(input *messages.PickleStepArgument_PickleTable) error {
-		commands := GitCommandsInGitTownOutput(state.runRes.Output)
+		commands := GitCommandsInGitTownOutput(state.runOutput.Raw)
 		table := RenderExecutedGitCommands(commands, input)
 		dataTable := FromGherkin(input)
 		expanded, err := dataTable.Expand(
@@ -407,7 +403,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		want := fmt.Sprintf("%s called with: %s", tool, url.Content)
 		want = strings.ReplaceAll(want, "?", `\?`)
 		regex := regexp.MustCompile(want)
-		have := state.runRes.OutputSanitized()
+		have := state.runOutput.Sanitized()
 		if !regex.MatchString(have) {
 			return fmt.Errorf("EXPECTED: a regex matching %q\nGOT: %q", want, have)
 		}
@@ -442,11 +438,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^no merge is in progress$`, func() error {
-		hasMerge, err := state.gitEnv.DevRepo.HasMergeInProgress()
-		if err != nil {
-			return err
-		}
-		if hasMerge {
+		if state.gitEnv.DevRepo.HasMergeInProgress() {
 			return fmt.Errorf("expected no merge in progress")
 		}
 		return nil
@@ -464,7 +456,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^no tool to open browsers is installed$`, func() error {
-		return state.gitEnv.DevRunner.MockNoCommandsInstalled()
+		return state.gitEnv.DevRepo.MockNoCommandsInstalled()
 	})
 
 	suite.Step(`^no uncommitted files exist$`, func() error {
@@ -512,18 +504,18 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^(?:local )?setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
-		_, err := state.gitEnv.DevRepo.Config.Storage.SetLocalConfigValue("git-town."+name, value)
+		_, err := state.gitEnv.DevRepo.Config.SetLocalConfigValue("git-town."+name, value)
 		return err
 	})
 
 	suite.Step(`^global setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
-		_, err := state.gitEnv.DevRepo.Config.Storage.SetGlobalConfigValue("git-town."+name, value)
+		_, err := state.gitEnv.DevRepo.Config.SetGlobalConfigValue("git-town."+name, value)
 		return err
 	})
 
 	suite.Step(`^setting "([^"]*)" no longer exists locally$`, func(name string) error {
 		state.gitEnv.DevRepo.Config.Reload()
-		newValue := state.gitEnv.DevRepo.Config.Storage.LocalConfigValue("git-town." + name)
+		newValue := state.gitEnv.DevRepo.Config.LocalConfigValue("git-town." + name)
 		if newValue == "" {
 			return nil
 		}
@@ -532,7 +524,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^global setting "([^"]*)" no longer exists$`, func(name string) error {
 		state.gitEnv.DevRepo.Config.Reload()
-		newValue := state.gitEnv.DevRepo.Config.Storage.GlobalConfigValue("git-town." + name)
+		newValue := state.gitEnv.DevRepo.Config.GlobalConfigValue("git-town." + name)
 		if newValue == "" {
 			return nil
 		}
@@ -541,7 +533,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^setting "([^"]*)" is now "([^"]*)"$`, func(name, want string) error {
 		state.gitEnv.DevRepo.Config.Reload()
-		have := state.gitEnv.DevRepo.Config.Storage.LocalOrGlobalConfigValue("git-town." + name)
+		have := state.gitEnv.DevRepo.Config.LocalOrGlobalConfigValue("git-town." + name)
 		if have != want {
 			return fmt.Errorf("expected setting %q to be %q, but was %q", name, want, have)
 		}
@@ -550,7 +542,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^local setting "([^"]*)" is now "([^"]*)"$`, func(name, want string) error {
 		state.gitEnv.DevRepo.Config.Reload()
-		have := state.gitEnv.DevRepo.Config.Storage.LocalConfigValue("git-town." + name)
+		have := state.gitEnv.DevRepo.Config.LocalConfigValue("git-town." + name)
 		if have != want {
 			return fmt.Errorf("expected local setting %q to be %q, but was %q", name, want, have)
 		}
@@ -559,7 +551,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^global setting "([^"]*)" is (?:now|still) "([^"]*)"$`, func(name, want string) error {
 		state.gitEnv.DevRepo.Config.Reload()
-		have := state.gitEnv.DevRepo.Config.Storage.GlobalConfigValue("git-town." + name)
+		have := state.gitEnv.DevRepo.Config.GlobalConfigValue("git-town." + name)
 		if have != want {
 			return fmt.Errorf("expected global setting %q to be %q, but was %q", name, want, have)
 		}
@@ -606,7 +598,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if state.initialCurrentBranch == "" {
 			return state.gitEnv.DevRepo.CheckoutBranch("main")
 		}
-		if state.gitEnv.DevRepo.CurrentBranchCache.Value() != state.initialCurrentBranch {
+		if state.gitEnv.DevRepo.config.CurrentBranchCache.Value() != state.initialCurrentBranch {
 			return state.gitEnv.DevRepo.CheckoutBranch(state.initialCurrentBranch)
 		}
 		return nil
@@ -621,7 +613,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the coworker runs "([^"]+)"$`, func(command string) error {
-		state.runRes, state.runErr = state.gitEnv.CoworkerRepo.RunString(command)
+		state.runOutput, state.runErr = state.gitEnv.CoworkerRepo.RunString(command)
 		return nil
 	})
 
@@ -671,13 +663,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 		if !isLocal {
 			state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-			err := state.gitEnv.DevRepo.PushBranch(git.PushArgs{Branch: branch, Remote: config.OriginRemote})
+			err := state.gitEnv.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
 			if err != nil {
 				return err
 			}
 		}
 		state.initialCurrentBranch = branch
-		if !state.gitEnv.DevRepo.CurrentBranchCache.Initialized() || state.gitEnv.DevRepo.CurrentBranchCache.Value() != branch {
+		if !state.gitEnv.DevRepo.config.CurrentBranchCache.Initialized() || state.gitEnv.DevRepo.config.CurrentBranchCache.Value() != branch {
 			return state.gitEnv.DevRepo.CheckoutBranch(branch)
 		}
 		return nil
@@ -693,7 +685,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the current branch is (?:now|still) "([^"]*)"$`, func(expected string) error {
-		state.gitEnv.DevRepo.CurrentBranchCache.Invalidate()
+		state.gitEnv.DevRepo.config.CurrentBranchCache.Invalidate()
 		actual, err := state.gitEnv.DevRepo.CurrentBranch()
 		if err != nil {
 			return fmt.Errorf("cannot determine current branch of developer repo: %w", err)
@@ -770,7 +762,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			state.initialBranchHierarchy.AddRow(branch, "main")
 			if !isLocal {
-				err = state.gitEnv.DevRepo.PushBranch(git.PushArgs{Branch: branch, Remote: config.OriginRemote})
+				err = state.gitEnv.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
 				if err != nil {
 					return err
 				}
@@ -790,7 +782,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			state.initialBranchHierarchy.AddRow(branch, "main")
 			if !isLocal {
-				err = state.gitEnv.DevRepo.PushBranch(git.PushArgs{Branch: branch, Remote: config.OriginRemote})
+				err = state.gitEnv.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
 				if err != nil {
 					return err
 				}
@@ -809,11 +801,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.initialLocalBranches = append(state.initialLocalBranches, branch1, branch2)
 		if !isLocal {
 			state.initialRemoteBranches = append(state.initialRemoteBranches, branch1, branch2)
-			err = state.gitEnv.DevRepo.PushBranch(git.PushArgs{Branch: branch1, Remote: config.OriginRemote})
+			err = state.gitEnv.DevRepo.PushBranchToRemote(branch1, config.OriginRemote)
 			if err != nil {
 				return err
 			}
-			return state.gitEnv.DevRepo.PushBranch(git.PushArgs{Branch: branch2, Remote: config.OriginRemote})
+			return state.gitEnv.DevRepo.PushBranchToRemote(branch2, config.OriginRemote)
 		}
 		return nil
 	})
@@ -827,7 +819,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			}
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			if !isLocal {
-				err = state.gitEnv.DevRepo.PushBranch(git.PushArgs{Branch: branch, Remote: config.OriginRemote})
+				err = state.gitEnv.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
 				if err != nil {
 					return fmt.Errorf("cannot push perennial branch upstream: %w", err)
 				}
@@ -855,7 +847,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the origin is "([^"]*)"$`, func(origin string) error {
-		state.gitEnv.DevRunner.SetTestOrigin(origin)
+		state.gitEnv.DevRepo.SetTestOrigin(origin)
 		return nil
 	})
 
@@ -958,7 +950,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^these committed files exist now$`, func(table *messages.PickleStepArgument_PickleTable) error {
-		fileTable, err := state.gitEnv.DevRepo.FilesInBranches()
+		fileTable, err := state.gitEnv.DevRepo.FilesInBranches("main")
 		if err != nil {
 			return fmt.Errorf("cannot determine files in branches in the developer repo: %w", err)
 		}
@@ -997,10 +989,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^tool "([^"]*)" is broken$`, func(name string) error {
-		return state.gitEnv.DevRunner.MockBrokenCommand(name)
+		return state.gitEnv.DevRepo.MockBrokenCommand(name)
 	})
 
 	suite.Step(`^tool "([^"]*)" is installed$`, func(tool string) error {
-		return state.gitEnv.DevRunner.MockCommand(tool)
+		return state.gitEnv.DevRepo.MockCommand(tool)
 	})
 }

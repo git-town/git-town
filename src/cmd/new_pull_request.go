@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/config"
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/git-town/git-town/v7/src/runstate"
@@ -31,76 +32,92 @@ When using SSH identities, this command needs to be configured with
 "git config %s <hostname>"
 where hostname matches what is in your ssh config file.`
 
-func newPullRequestCommand(repo *git.ProdRepo) *cobra.Command {
-	return &cobra.Command{
+func newPullRequestCommand() *cobra.Command {
+	addDebugFlag, readDebugFlag := flags.Debug()
+	cmd := cobra.Command{
 		Use:     "new-pull-request",
 		GroupID: "basic",
 		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured, isOnline),
 		Short:   newPullRequestDesc,
 		Long:    long(newPullRequestDesc, fmt.Sprintf(newPullRequestHelp, config.CodeHostingDriverKey, config.CodeHostingOriginHostnameKey)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return newPullRequest(repo)
+			return newPullRequest(readDebugFlag(cmd))
 		},
 	}
+	addDebugFlag(&cmd)
+	return &cmd
 }
 
-func newPullRequest(repo *git.ProdRepo) error {
-	config, err := determineNewPullRequestConfig(repo)
+func newPullRequest(debug bool) error {
+	run, exit, err := LoadProdRunner(RunnerArgs{
+		debug:                 debug,
+		dryRun:                false,
+		handleUnfinishedState: true,
+		validateGitversion:    true,
+		validateIsRepository:  true,
+		validateIsConfigured:  true,
+		validateIsOnline:      true,
+	})
+	if err != nil || exit {
+		return err
+	}
+	config, err := determineNewPullRequestConfig(&run)
 	if err != nil {
 		return err
 	}
-	connector, err := hosting.NewConnector(repo.Config, &repo.Silent, cli.PrintConnectorAction)
+	connector, err := hosting.NewConnector(run.Config, &run.Backend, cli.PrintConnectorAction)
 	if err != nil {
 		return err
 	}
 	if connector == nil {
 		return hosting.UnsupportedServiceError()
 	}
-	stepList, err := newPullRequestStepList(config, repo)
+	stepList, err := newPullRequestStepList(config, &run)
 	if err != nil {
 		return err
 	}
 	runState := runstate.New("new-pull-request", stepList)
-	return runstate.Execute(runState, repo, connector)
+	return runstate.Execute(runState, &run, connector)
 }
 
 type newPullRequestConfig struct {
 	BranchesToSync []string
 	InitialBranch  string
+	mainBranch     string
 }
 
-func determineNewPullRequestConfig(repo *git.ProdRepo) (*newPullRequestConfig, error) {
-	hasOrigin, err := repo.Silent.HasOrigin()
+func determineNewPullRequestConfig(run *git.ProdRunner) (*newPullRequestConfig, error) {
+	hasOrigin, err := run.Backend.HasOrigin()
 	if err != nil {
 		return nil, err
 	}
 	if hasOrigin {
-		err := repo.Logging.Fetch()
+		err := run.Frontend.Fetch()
 		if err != nil {
 			return nil, err
 		}
 	}
-	initialBranch, err := repo.Silent.CurrentBranch()
+	initialBranch, err := run.Backend.CurrentBranch()
 	if err != nil {
 		return nil, err
 	}
-	err = validate.KnowsBranchAncestry(initialBranch, repo.Config.MainBranch(), repo)
+	err = validate.KnowsBranchAncestry(initialBranch, run.Config.MainBranch(), &run.Backend)
 	if err != nil {
 		return nil, err
 	}
 	return &newPullRequestConfig{
 		InitialBranch:  initialBranch,
-		BranchesToSync: append(repo.Config.AncestorBranches(initialBranch), initialBranch),
+		BranchesToSync: append(run.Config.AncestorBranches(initialBranch), initialBranch),
+		mainBranch:     run.Config.MainBranch(),
 	}, nil
 }
 
-func newPullRequestStepList(config *newPullRequestConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+func newPullRequestStepList(config *newPullRequestConfig, run *git.ProdRunner) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.BranchesToSync {
-		updateBranchSteps(&list, branch, true, repo)
+		updateBranchSteps(&list, branch, true, run)
 	}
-	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
+	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &run.Backend, config.mainBranch)
 	list.Add(&steps.CreateProposalStep{Branch: config.InitialBranch})
 	return list.Result()
 }

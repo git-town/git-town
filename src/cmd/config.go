@@ -5,55 +5,66 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v7/src/cli"
-	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/spf13/cobra"
 )
 
 const configDesc = "Displays your Git Town configuration"
 
-func configCmd(repo *git.ProdRepo) *cobra.Command {
-	configCmd := &cobra.Command{
-		Use:               "config",
-		GroupID:           "setup",
-		Args:              cobra.NoArgs,
-		PreRunE:           ensure(repo, isRepository),
-		PersistentPreRunE: ensure(repo, hasGitVersion),
-		Short:             configDesc,
-		Long:              long(configDesc),
+func configCmd() *cobra.Command {
+	addDebugFlag, readDebugFlag := flags.Debug()
+	configCmd := cobra.Command{
+		Use:     "config",
+		GroupID: "setup",
+		Args:    cobra.NoArgs,
+		Short:   configDesc,
+		Long:    long(configDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runConfig(repo)
+			return runConfig(readDebugFlag(cmd))
 		},
 	}
-	configCmd.AddCommand(mainbranchConfigCmd(repo))
-	configCmd.AddCommand(offlineCmd(repo))
-	configCmd.AddCommand(perennialBranchesCmd(repo))
-	configCmd.AddCommand(pullBranchStrategyCommand(repo))
-	configCmd.AddCommand(pushNewBranchesCommand(repo))
-	configCmd.AddCommand(pushHookCommand(repo))
-	configCmd.AddCommand(resetConfigCommand(repo))
-	configCmd.AddCommand(setupConfigCommand(repo))
-	configCmd.AddCommand(syncStrategyCommand(repo))
-	return configCmd
+	addDebugFlag(&configCmd)
+	configCmd.AddCommand(mainbranchConfigCmd())
+	configCmd.AddCommand(offlineCmd())
+	configCmd.AddCommand(perennialBranchesCmd())
+	configCmd.AddCommand(pullBranchStrategyCommand())
+	configCmd.AddCommand(pushNewBranchesCommand())
+	configCmd.AddCommand(pushHookCommand())
+	configCmd.AddCommand(resetConfigCommand())
+	configCmd.AddCommand(setupConfigCommand())
+	configCmd.AddCommand(syncStrategyCommand())
+	return &configCmd
 }
 
-func runConfig(repo *git.ProdRepo) error {
+func runConfig(debug bool) error {
+	run, exit, err := LoadProdRunner(RunnerArgs{
+		omitBranchNames:       true,
+		debug:                 debug,
+		dryRun:                false,
+		handleUnfinishedState: false,
+		validateGitversion:    true,
+		validateIsRepository:  true,
+	})
+	if err != nil || exit {
+		return err
+	}
 	ec := runstate.ErrorChecker{}
-	pushNewBranches := ec.Bool(repo.Config.ShouldNewBranchPush())
-	pushHook := ec.Bool(repo.Config.PushHook())
-	isOffline := ec.Bool(repo.Config.IsOffline())
-	deleteOrigin := ec.Bool(repo.Config.ShouldShipDeleteOriginBranch())
-	pullBranchStrategy := ec.PullBranchStrategy(repo.Config.PullBranchStrategy())
-	shouldSyncUpstream := ec.Bool(repo.Config.ShouldSyncUpstream())
-	syncStrategy := ec.SyncStrategy(repo.Config.SyncStrategy())
-	hostingService := ec.HostingService(repo.Config.HostingService())
+	pushNewBranches := ec.Bool(run.Config.ShouldNewBranchPush())
+	pushHook := ec.Bool(run.Config.PushHook())
+	isOffline := ec.Bool(run.Config.IsOffline())
+	deleteOrigin := ec.Bool(run.Config.ShouldShipDeleteOriginBranch())
+	pullBranchStrategy := ec.PullBranchStrategy(run.Config.PullBranchStrategy())
+	shouldSyncUpstream := ec.Bool(run.Config.ShouldSyncUpstream())
+	syncStrategy := ec.SyncStrategy(run.Config.SyncStrategy())
+	hostingService := ec.HostingService(run.Config.HostingService())
 	if ec.Err != nil {
 		return ec.Err
 	}
 	fmt.Println()
 	cli.PrintHeader("Branches")
-	cli.PrintEntry("main branch", cli.StringSetting(repo.Config.MainBranch()))
-	cli.PrintEntry("perennial branches", cli.StringSetting(strings.Join(repo.Config.PerennialBranches(), ", ")))
+	cli.PrintEntry("main branch", cli.StringSetting(run.Config.MainBranch()))
+	cli.PrintEntry("perennial branches", cli.StringSetting(strings.Join(run.Config.PerennialBranches(), ", ")))
 	fmt.Println()
 	cli.PrintHeader("Configuration")
 	cli.PrintEntry("offline", cli.BoolSetting(isOffline))
@@ -66,12 +77,12 @@ func runConfig(repo *git.ProdRepo) error {
 	fmt.Println()
 	cli.PrintHeader("Hosting")
 	cli.PrintEntry("hosting service override", cli.StringSetting(string(hostingService)))
-	cli.PrintEntry("GitHub token", cli.StringSetting(repo.Config.GitHubToken()))
-	cli.PrintEntry("GitLab token", cli.StringSetting(repo.Config.GitLabToken()))
-	cli.PrintEntry("Gitea token", cli.StringSetting(repo.Config.GiteaToken()))
+	cli.PrintEntry("GitHub token", cli.StringSetting(run.Config.GitHubToken()))
+	cli.PrintEntry("GitLab token", cli.StringSetting(run.Config.GitLabToken()))
+	cli.PrintEntry("Gitea token", cli.StringSetting(run.Config.GiteaToken()))
 	fmt.Println()
-	if repo.Config.MainBranch() != "" {
-		cli.PrintLabelAndValue("Branch Ancestry", cli.PrintableBranchAncestry(repo.Config))
+	if run.Config.MainBranch() != "" {
+		cli.PrintLabelAndValue("Branch Ancestry", cli.PrintableBranchAncestry(run.Config))
 	}
 	return nil
 }

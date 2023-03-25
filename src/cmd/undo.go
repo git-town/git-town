@@ -3,29 +3,42 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/spf13/cobra"
 )
 
 const undoDesc = "Undoes the last run git-town command"
 
-func undoCmd(repo *git.ProdRepo) *cobra.Command {
-	return &cobra.Command{
+func undoCmd() *cobra.Command {
+	addDebugFlag, readDebugFlag := flags.Debug()
+	cmd := cobra.Command{
 		Use:     "undo",
 		GroupID: "errors",
 		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
 		Short:   undoDesc,
 		Long:    long(undoDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return undo(repo)
+			return undo(readDebugFlag(cmd))
 		},
 	}
+	addDebugFlag(&cmd)
+	return &cmd
 }
 
-func undo(repo *git.ProdRepo) error {
-	runState, err := runstate.Load(repo)
+func undo(debug bool) error {
+	run, exit, err := LoadProdRunner(RunnerArgs{
+		debug:                 debug,
+		dryRun:                false,
+		handleUnfinishedState: false,
+		validateGitversion:    true,
+		validateIsRepository:  true,
+		validateIsConfigured:  true,
+	})
+	if err != nil || exit {
+		return err
+	}
+	runState, err := runstate.Load(&run.Backend)
 	if err != nil {
 		return fmt.Errorf("cannot load previous run state: %w", err)
 	}
@@ -33,5 +46,5 @@ func undo(repo *git.ProdRepo) error {
 		return fmt.Errorf("nothing to undo")
 	}
 	undoRunState := runState.CreateUndoRunState()
-	return runstate.Execute(&undoRunState, repo, nil)
+	return runstate.Execute(&undoRunState, &run, nil)
 }

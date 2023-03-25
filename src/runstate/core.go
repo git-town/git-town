@@ -40,14 +40,14 @@ func New(command string, stepList StepList) *RunState {
 
 // AddPushBranchStepAfterCurrentBranchSteps inserts a PushBranchStep
 // after all the steps for the current branch.
-func (runState *RunState) AddPushBranchStepAfterCurrentBranchSteps(repo *git.ProdRepo) error {
+func (runState *RunState) AddPushBranchStepAfterCurrentBranchSteps(backend *git.BackendCommands) error {
 	popped := StepList{}
 	for {
 		step := runState.RunStepList.Peek()
 		if !isCheckoutStep(step) {
 			popped.Append(runState.RunStepList.Pop())
 		} else {
-			currentBranch, err := repo.Silent.CurrentBranch()
+			currentBranch, err := backend.CurrentBranch()
 			if err != nil {
 				return err
 			}
@@ -131,8 +131,8 @@ func (runState *RunState) MarkAsFinished() {
 }
 
 // MarkAsUnfinished updates the run state to be marked as unfinished and populates informational fields.
-func (runState *RunState) MarkAsUnfinished(repo *git.ProdRepo) error {
-	currentBranch, err := repo.Silent.CurrentBranch()
+func (runState *RunState) MarkAsUnfinished(backend *git.BackendCommands) error {
+	currentBranch, err := backend.CurrentBranch()
 	if err != nil {
 		return err
 	}

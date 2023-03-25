@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v7/src/cli"
-	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/spf13/cobra"
@@ -12,22 +12,35 @@ import (
 
 const abortDesc = "Aborts the last run git-town command"
 
-func abortCmd(repo *git.ProdRepo) *cobra.Command {
-	return &cobra.Command{
+func abortCmd() *cobra.Command {
+	addDebugFlag, readDebugFlag := flags.Debug()
+	cmd := cobra.Command{
 		Use:     "abort",
 		GroupID: "errors",
 		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
 		Short:   abortDesc,
 		Long:    long(abortDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return abort(repo)
+			return abort(readDebugFlag(cmd))
 		},
 	}
+	addDebugFlag(&cmd)
+	return &cmd
 }
 
-func abort(repo *git.ProdRepo) error {
-	runState, err := runstate.Load(repo)
+func abort(debug bool) error {
+	run, exit, err := LoadProdRunner(RunnerArgs{
+		debug:                 debug,
+		dryRun:                false,
+		handleUnfinishedState: false,
+		validateGitversion:    true,
+		validateIsRepository:  true,
+		validateIsConfigured:  true,
+	})
+	if err != nil || exit {
+		return err
+	}
+	runState, err := runstate.Load(&run.Backend)
 	if err != nil {
 		return fmt.Errorf("cannot load previous run state: %w", err)
 	}
@@ -35,9 +48,9 @@ func abort(repo *git.ProdRepo) error {
 		return fmt.Errorf("nothing to abort")
 	}
 	abortRunState := runState.CreateAbortRunState()
-	connector, err := hosting.NewConnector(repo.Config, &repo.Silent, cli.PrintConnectorAction)
+	connector, err := hosting.NewConnector(run.Config, &run.Backend, cli.PrintConnectorAction)
 	if err != nil {
 		return err
 	}
-	return runstate.Execute(&abortRunState, repo, connector)
+	return runstate.Execute(&abortRunState, &run, connector)
 }

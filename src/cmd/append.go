@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
@@ -20,67 +21,82 @@ and brings over all uncommitted changes to the new feature branch.
 
 See "sync" for information regarding upstream remotes.`
 
-func appendCmd(repo *git.ProdRepo) *cobra.Command {
-	return &cobra.Command{
+func appendCmd() *cobra.Command {
+	addDebugFlag, readDebugFlag := flags.Debug()
+	cmd := cobra.Command{
 		Use:     "append <branch>",
 		GroupID: "lineage",
 		Args:    cobra.ExactArgs(1),
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
 		Short:   appendDesc,
 		Long:    long(appendDesc, appendHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runAppend(args, repo)
+			return runAppend(args[0], readDebugFlag(cmd))
 		},
 	}
+	addDebugFlag(&cmd)
+	return &cmd
 }
 
-func runAppend(args []string, repo *git.ProdRepo) error {
-	config, err := determineAppendConfig(args, repo)
+func runAppend(arg string, debug bool) error {
+	run, exit, err := LoadProdRunner(RunnerArgs{
+		debug:                 debug,
+		dryRun:                false,
+		handleUnfinishedState: true,
+		validateGitversion:    true,
+		validateIsRepository:  true,
+		validateIsConfigured:  true,
+	})
+	if err != nil || exit {
+		return err
+	}
+	config, err := determineAppendConfig(arg, &run)
 	if err != nil {
 		return err
 	}
-	stepList, err := appendStepList(config, repo)
+	stepList, err := appendStepList(config, &run)
 	if err != nil {
 		return err
 	}
 	runState := runstate.New("append", stepList)
-	return runstate.Execute(runState, repo, nil)
+	return runstate.Execute(runState, &run, nil)
 }
 
 type appendConfig struct {
 	ancestorBranches    []string
 	hasOrigin           bool
 	isOffline           bool
+	mainBranch          string
 	noPushHook          bool
 	parentBranch        string
 	shouldNewBranchPush bool
 	targetBranch        string
 }
 
-func determineAppendConfig(args []string, repo *git.ProdRepo) (*appendConfig, error) {
+func determineAppendConfig(targetBranch string, run *git.ProdRunner) (*appendConfig, error) {
 	ec := runstate.ErrorChecker{}
-	parentBranch := ec.String(repo.Silent.CurrentBranch())
-	hasOrigin := ec.Bool(repo.Silent.HasOrigin())
-	isOffline := ec.Bool(repo.Config.IsOffline())
-	pushHook := ec.Bool(repo.Config.PushHook())
-	shouldNewBranchPush := ec.Bool(repo.Config.ShouldNewBranchPush())
-	targetBranch := args[0]
+	parentBranch := ec.String(run.Backend.CurrentBranch())
+	hasOrigin := ec.Bool(run.Backend.HasOrigin())
+	isOffline := ec.Bool(run.Config.IsOffline())
+	mainBranch := run.Config.MainBranch()
+	pushHook := ec.Bool(run.Config.PushHook())
+	shouldNewBranchPush := ec.Bool(run.Config.ShouldNewBranchPush())
 	if ec.Err != nil {
 		return nil, ec.Err
 	}
 	if hasOrigin && !isOffline {
-		ec.Check(repo.Logging.Fetch())
+		ec.Check(run.Frontend.Fetch())
 	}
-	hasTargetBranch := ec.Bool(repo.Silent.HasLocalOrOriginBranch(targetBranch))
+	hasTargetBranch := ec.Bool(run.Backend.HasLocalOrOriginBranch(targetBranch, mainBranch))
 	if hasTargetBranch {
 		ec.Fail("a branch named %q already exists", targetBranch)
 	}
-	ec.Check(validate.KnowsBranchAncestry(parentBranch, repo.Config.MainBranch(), repo))
-	ancestorBranches := repo.Config.AncestorBranches(parentBranch)
+	ec.Check(validate.KnowsBranchAncestry(parentBranch, run.Config.MainBranch(), &run.Backend))
+	ancestorBranches := run.Config.AncestorBranches(parentBranch)
 	return &appendConfig{
 		ancestorBranches:    ancestorBranches,
 		isOffline:           isOffline,
 		hasOrigin:           hasOrigin,
+		mainBranch:          mainBranch,
 		noPushHook:          !pushHook,
 		parentBranch:        parentBranch,
 		shouldNewBranchPush: shouldNewBranchPush,
@@ -88,10 +104,10 @@ func determineAppendConfig(args []string, repo *git.ProdRepo) (*appendConfig, er
 	}, ec.Err
 }
 
-func appendStepList(config *appendConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+func appendStepList(config *appendConfig, run *git.ProdRunner) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range append(config.ancestorBranches, config.parentBranch) {
-		updateBranchSteps(&list, branch, true, repo)
+		updateBranchSteps(&list, branch, true, run)
 	}
 	list.Add(&steps.CreateBranchStep{Branch: config.targetBranch, StartingPoint: config.parentBranch})
 	list.Add(&steps.SetParentStep{Branch: config.targetBranch, ParentBranch: config.parentBranch})
@@ -99,6 +115,6 @@ func appendStepList(config *appendConfig, repo *git.ProdRepo) (runstate.StepList
 	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
 		list.Add(&steps.CreateTrackingBranchStep{Branch: config.targetBranch, NoPushHook: config.noPushHook})
 	}
-	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
+	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &run.Backend, config.mainBranch)
 	return list.Result()
 }

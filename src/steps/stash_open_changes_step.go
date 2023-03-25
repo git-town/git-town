@@ -9,10 +9,10 @@ type StashOpenChangesStep struct {
 	EmptyStep
 }
 
-func (step *StashOpenChangesStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+func (step *StashOpenChangesStep) CreateUndoStep(backend *git.BackendCommands) (Step, error) {
 	return &RestoreOpenChangesStep{}, nil
 }
 
-func (step *StashOpenChangesStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
-	return repo.Logging.Stash()
+func (step *StashOpenChangesStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
+	return run.Frontend.Stash()
 }

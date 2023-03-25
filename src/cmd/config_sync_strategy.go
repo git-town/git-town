@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/config"
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/spf13/cobra"
 )
@@ -13,36 +14,48 @@ const syncStrategyHelp = `
 The sync strategy specifies what strategy to use
 when merging remote tracking branches into local feature branches.`
 
-func syncStrategyCommand(repo *git.ProdRepo) *cobra.Command {
-	var globalFlag bool
-	syncStrategyCmd := cobra.Command{
-		Use:     "sync-strategy [(merge | rebase)]",
-		Args:    cobra.MaximumNArgs(1),
-		PreRunE: ensure(repo, isRepository),
-		Short:   syncStrategyDesc,
-		Long:    long(syncStrategyDesc, syncStrategyHelp),
+func syncStrategyCommand() *cobra.Command {
+	addDebugFlag, readDebugFlag := flags.Debug()
+	addGlobalFlag, readGlobalFlag := flags.Bool("global", "g", "When set, displays or sets the sync strategy for all repos on this machine")
+	cmd := cobra.Command{
+		Use:   "sync-strategy [(merge | rebase)]",
+		Args:  cobra.MaximumNArgs(1),
+		Short: syncStrategyDesc,
+		Long:  long(syncStrategyDesc, syncStrategyHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return configSyncStrategy(args, globalFlag, repo)
+			return syncStrategy(args, readGlobalFlag(cmd), readDebugFlag(cmd))
 		},
 	}
-	syncStrategyCmd.Flags().BoolVar(&globalFlag, "global", false, "Displays or sets the global sync strategy")
-	return &syncStrategyCmd
+	addDebugFlag(&cmd)
+	addGlobalFlag(&cmd)
+	return &cmd
 }
 
-func configSyncStrategy(args []string, globalFlag bool, repo *git.ProdRepo) error {
-	if len(args) > 0 {
-		return setSyncStrategy(globalFlag, repo, args[0])
+func syncStrategy(args []string, global, debug bool) error {
+	run, exit, err := LoadProdRunner(RunnerArgs{
+		omitBranchNames:       true,
+		debug:                 debug,
+		dryRun:                false,
+		handleUnfinishedState: false,
+		validateGitversion:    true,
+		validateIsRepository:  true,
+	})
+	if err != nil || exit {
+		return err
 	}
-	return printSyncStrategy(globalFlag, repo)
+	if len(args) > 0 {
+		return setSyncStrategy(global, &run, args[0])
+	}
+	return printSyncStrategy(global, &run)
 }
 
-func printSyncStrategy(globalFlag bool, repo *git.ProdRepo) error {
+func printSyncStrategy(globalFlag bool, run *git.ProdRunner) error {
 	var strategy config.SyncStrategy
 	var err error
 	if globalFlag {
-		strategy, err = repo.Config.SyncStrategyGlobal()
+		strategy, err = run.Config.SyncStrategyGlobal()
 	} else {
-		strategy, err = repo.Config.SyncStrategy()
+		strategy, err = run.Config.SyncStrategy()
 	}
 	if err != nil {
 		return err
@@ -51,13 +64,13 @@ func printSyncStrategy(globalFlag bool, repo *git.ProdRepo) error {
 	return nil
 }
 
-func setSyncStrategy(globalFlag bool, repo *git.ProdRepo, value string) error {
+func setSyncStrategy(globalFlag bool, run *git.ProdRunner, value string) error {
 	syncStrategy, err := config.ToSyncStrategy(value)
 	if err != nil {
 		return err
 	}
 	if globalFlag {
-		return repo.Config.SetSyncStrategyGlobal(syncStrategy)
+		return run.Config.SetSyncStrategyGlobal(syncStrategy)
 	}
-	return repo.Config.SetSyncStrategy(syncStrategy)
+	return run.Config.SetSyncStrategy(syncStrategy)
 }

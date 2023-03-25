@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v7/src/config"
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/spf13/cobra"
 )
@@ -19,55 +20,60 @@ Does not overwrite existing aliases.
 
 This can conflict with other tools that also define Git aliases.`
 
-func aliasCommand(repo *git.ProdRepo) *cobra.Command {
-	return &cobra.Command{
+func aliasesCommand() *cobra.Command {
+	addDebugFlag, readDebugFlag := flags.Debug()
+	cmd := cobra.Command{
 		Use:     "aliases (add | remove)",
 		GroupID: "setup",
 		Args:    cobra.ExactArgs(1),
-		PreRunE: ensure(repo, hasGitVersion),
 		Short:   aliasesDesc,
 		Long:    long(aliasesDesc, aliasesHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return alias(args, repo)
+			return aliases(args[0], readDebugFlag(cmd))
 		},
 	}
+	addDebugFlag(&cmd)
+	return &cmd
 }
 
-func alias(args []string, repo *git.ProdRepo) error {
-	switch strings.ToLower(args[0]) {
-	case "add":
-		return addAliases(repo)
-	case "remove":
-		return removeAliases(repo)
+func aliases(arg string, debug bool) error {
+	run, exit, err := LoadProdRunner(RunnerArgs{
+		debug:                 debug,
+		dryRun:                false,
+		omitBranchNames:       true,
+		handleUnfinishedState: false,
+		validateGitversion:    true,
+	})
+	if err != nil || exit {
+		return err
 	}
-	return fmt.Errorf(`invalid argument %q. Please provide either "add" or "remove"`, args[0])
+	switch strings.ToLower(arg) {
+	// TODO: make enum
+	case "add":
+		return addAliases(&run)
+	case "remove":
+		return removeAliases(&run)
+	}
+	return fmt.Errorf(`invalid argument %q. Please provide either "add" or "remove"`, arg)
 }
 
-func addAliases(repo *git.ProdRepo) error {
+func addAliases(run *git.ProdRunner) error {
 	for _, aliasType := range config.AliasTypes() {
-		result, err1 := repo.Config.AddGitAlias(aliasType)
-		err2 := repo.LoggingRunner.PrintCommandAndOutput(result)
-		if err1 != nil {
-			return err1
-		}
-		if err2 != nil {
-			return err2
+		err := run.Frontend.AddGitAlias(aliasType)
+		if err != nil {
+			return err
 		}
 	}
 	return nil
 }
 
-func removeAliases(repo *git.ProdRepo) error {
+func removeAliases(run *git.ProdRunner) error {
 	for _, aliasType := range config.AliasTypes() {
-		existingAlias := repo.Config.GitAlias(aliasType)
+		existingAlias := run.Config.GitAlias(aliasType)
 		if existingAlias == "town "+string(aliasType) {
-			result, err1 := repo.Config.RemoveGitAlias(string(aliasType))
-			err2 := repo.LoggingRunner.PrintCommandAndOutput(result)
-			if err1 != nil {
-				return err1
-			}
-			if err2 != nil {
-				return err2
+			err := run.Frontend.RemoveGitAlias(aliasType)
+			if err != nil {
+				return err
 			}
 		}
 	}

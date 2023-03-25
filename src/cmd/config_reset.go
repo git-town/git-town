@@ -1,21 +1,38 @@
 package cmd
 
 import (
-	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/spf13/cobra"
 )
 
-const configResetDesc = "Resets your Git Town configuration"
+const resetConfigDesc = "Resets your Git Town configuration"
 
-func resetConfigCommand(repo *git.ProdRepo) *cobra.Command {
-	return &cobra.Command{
-		Use:     "reset",
-		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, isRepository),
-		Short:   configResetDesc,
-		Long:    long(configResetDesc),
+func resetConfigCommand() *cobra.Command {
+	addDebugFlag, readDebugFlag := flags.Debug()
+	cmd := cobra.Command{
+		Use:   "reset",
+		Args:  cobra.NoArgs,
+		Short: resetConfigDesc,
+		Long:  long(resetConfigDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return repo.Config.RemoveLocalGitConfiguration()
+			return resetStatus(readDebugFlag(cmd))
 		},
 	}
+	addDebugFlag(&cmd)
+	return &cmd
+}
+
+func resetStatus(debug bool) error {
+	run, exit, err := LoadProdRunner(RunnerArgs{
+		omitBranchNames:       true,
+		debug:                 debug,
+		dryRun:                false,
+		handleUnfinishedState: false,
+		validateGitversion:    true,
+		validateIsRepository:  true,
+	})
+	if err != nil || exit {
+		return err
+	}
+	return run.Config.RemoveLocalGitConfiguration()
 }

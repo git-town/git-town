@@ -15,16 +15,16 @@ func Contains(list []string, value string) bool {
 // Hoist provides the given list of strings, with the given element moved to the first position.
 func Hoist(list []string, element string) []string {
 	result := make([]string, 0, len(list))
-	hasMain := false
+	hasElement := false
 	for _, input := range list {
 		if input == element {
-			hasMain = true
+			hasElement = true
 		} else {
 			result = append(result, input)
 		}
 	}
-	if hasMain {
-		result = append([]string{"main"}, result...)
+	if hasElement {
+		result = append([]string{element}, result...)
 	}
 	return result
 }

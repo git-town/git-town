@@ -11,6 +11,6 @@ type PullBranchStep struct {
 	Branch string
 }
 
-func (step *PullBranchStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
-	return repo.Logging.Pull()
+func (step *PullBranchStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
+	return run.Frontend.Pull()
 }

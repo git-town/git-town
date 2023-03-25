@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/v7/src/browser"
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/config"
-	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/spf13/cobra"
 )
@@ -24,27 +24,41 @@ When using SSH identities, run
 "git config %s <HOSTNAME>"
 where HOSTNAME matches what is in your ssh config file.`
 
-func repoCommand(repo *git.ProdRepo) *cobra.Command {
-	return &cobra.Command{
-		Use:     "repo",
-		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured, isOnline),
-		Short:   repoDesc,
-		Long:    long(repoDesc, fmt.Sprintf(repoHelp, config.CodeHostingDriverKey, config.CodeHostingOriginHostnameKey)),
+func repoCommand() *cobra.Command {
+	addDebugFlag, readDebugFlag := flags.Debug()
+	cmd := cobra.Command{
+		Use:   "repo",
+		Args:  cobra.NoArgs,
+		Short: repoDesc,
+		Long:  long(repoDesc, fmt.Sprintf(repoHelp, config.CodeHostingDriverKey, config.CodeHostingOriginHostnameKey)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runRepo(repo)
+			return repo(readDebugFlag(cmd))
 		},
 	}
+	addDebugFlag(&cmd)
+	return &cmd
 }
 
-func runRepo(repo *git.ProdRepo) error {
-	connector, err := hosting.NewConnector(repo.Config, &repo.Silent, cli.PrintConnectorAction)
+func repo(debug bool) error {
+	run, exit, err := LoadProdRunner(RunnerArgs{
+		debug:                 debug,
+		dryRun:                false,
+		handleUnfinishedState: false,
+		validateGitversion:    true,
+		validateIsRepository:  true,
+		validateIsConfigured:  true,
+		validateIsOnline:      true,
+	})
+	if err != nil || exit {
+		return err
+	}
+	connector, err := hosting.NewConnector(run.Config, &run.Backend, cli.PrintConnectorAction)
 	if err != nil {
 		return err
 	}
 	if connector == nil {
 		return hosting.UnsupportedServiceError()
 	}
-	browser.Open(connector.RepositoryURL(), repo.LoggingRunner)
+	browser.Open(connector.RepositoryURL(), run.Frontend.Frontend, run.Backend.BackendRunner)
 	return nil
 }
