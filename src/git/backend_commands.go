@@ -9,7 +9,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/acarl005/stripansi"
 	"github.com/git-town/git-town/v7/src/config"
 	"github.com/git-town/git-town/v7/src/stringslice"
 )
@@ -322,7 +321,7 @@ func (bc *BackendCommands) LocalAndOriginBranches(mainBranch string) ([]string, 
 		return []string{}, fmt.Errorf("cannot determine the local branches")
 	}
 	branch := make(map[string]struct{})
-	for _, line := range stringslice.Lines(stripansi.Strip(output)) {
+	for _, line := range stringslice.Lines(output) {
 		if !strings.Contains(line, " -> ") {
 			branch[strings.TrimSpace(strings.Replace(strings.Replace(line, "* ", "", 1), "remotes/origin/", "", 1))] = struct{}{}
 		}
@@ -345,7 +344,7 @@ func (bc *BackendCommands) LocalBranches() ([]string, error) {
 		return []string{}, err
 	}
 	result := []string{}
-	for _, line := range stringslice.Lines(stripansi.Strip(output)) {
+	for _, line := range stringslice.Lines(output) {
 		line = strings.Trim(line, "* ")
 		line = strings.TrimSpace(line)
 		result = append(result, line)
@@ -370,7 +369,7 @@ func (bc *BackendCommands) LocalBranchesWithDeletedTrackingBranches() ([]string,
 		return []string{}, err
 	}
 	result := []string{}
-	for _, line := range stringslice.Lines(stripansi.Strip(output)) {
+	for _, line := range stringslice.Lines(output) {
 		line = strings.Trim(line, "* ")
 		parts := strings.SplitN(line, " ", 2)
 		branch := parts[0]
