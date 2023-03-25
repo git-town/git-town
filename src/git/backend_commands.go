@@ -48,8 +48,7 @@ func (bc *BackendCommands) BranchAuthors(branch, parent string) ([]string, error
 		return []string{}, err
 	}
 	result := []string{}
-	lines := stringslice.Lines(output)
-	for _, line := range lines {
+	for _, line := range stringslice.Lines(output) {
 		line = strings.TrimSpace(line)
 		parts := strings.Split(line, "\t")
 		result = append(result, parts[1])
