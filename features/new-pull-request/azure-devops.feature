@@ -11,12 +11,12 @@ Feature: Azure DevOps support
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:
       """
-      https://dev.azure.com/organization/project/compare/feature?expand=1
+      https://dev.azure.com/organization/project/repository/compare/main...feature?expand=1
       """
 
     Examples:
       | ORIGIN                                                     |
-      | git@ssh.dev.azure.com:v3/organization/project/repository   |
+      | git@dev.azure.com/organization/project/repository          |
       | https://dev.azure.com/organization/project/_git/repository |
 
   Scenario Outline: origin contains path that looks like a URL

@@ -22,6 +22,8 @@ func NewAzureDevopsConnector(gitConfig gitTownConfig) (*AzureDevopsConnector, er
 		return nil, err
 	}
 	url := gitConfig.OriginURL()
+	fmt.Println("11111111111", url)
+	fmt.Println("22222222222", url.Host)
 	if url == nil || (url.Host != "dev.azure.com" && hostingService != config.HostingServiceAzureDevops) {
 		return nil, nil //nolint:nilnil
 	}
@@ -56,14 +58,14 @@ func (c *AzureDevopsConnector) NewProposalURL(branch, parentBranch string) (stri
 }
 
 func (c *AzureDevopsConnector) RepositoryURL() string {
-	return fmt.Sprintf("https://%s/%s/%s", c.Hostname, c.organization, c.Repository)
+	return fmt.Sprintf("https://%s/%s/%s", c.Hostname, c.Organization, c.Repository)
 }
 
 //nolint:nonamedreturns
 func (c *AzureDevopsConnector) SquashMergeProposal(number int, message string) (mergeSHA string, err error) {
-	return "", errors.New("shipping pull requests via the Bitbucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues")
+	return "", errors.New("shipping pull requests via the Azure DevOps API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues")
 }
 
 func (c *AzureDevopsConnector) UpdateProposalTarget(number int, target string) error {
-	return errors.New("shipping pull requests via the Bitbucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues")
+	return errors.New("shipping pull requests via the Azure DevOps API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues")
 }

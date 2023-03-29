@@ -137,6 +137,13 @@ func NewConnector(config gitTownConfig, git gitCommands, log logFn) (Connector, 
 	if giteaConnector != nil {
 		return giteaConnector, nil
 	}
+	azureDevopsConnector, err := NewAzureDevopsConnector(config)
+	if err != nil {
+		return nil, err
+	}
+	if azureDevopsConnector != nil {
+		return azureDevopsConnector, nil
+	}
 	return nil, nil //nolint:nilnil  // "nil, nil" is a legitimate return value here
 }
 
