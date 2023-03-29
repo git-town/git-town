@@ -155,5 +155,6 @@ This command requires hosting on one of these services:
 * Bitbucket
 * GitHub
 * GitLab
-* Gitea`)
+* Gitea
+* Azure DevOps`)
 }
