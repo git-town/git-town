@@ -34,6 +34,7 @@ func NewAzureDevopsConnector(gitConfig gitTownConfig) (*AzureDevopsConnector, er
 			Organization: url.Org,
 			Repository:   url.Repo,
 		},
+		MainBranch: gitConfig.MainBranch(),
 	}, nil
 }
 
