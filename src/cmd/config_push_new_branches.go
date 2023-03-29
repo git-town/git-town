@@ -5,39 +5,59 @@ import (
 
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/config"
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/spf13/cobra"
 )
 
-func pushNewBranchesCommand(repo *git.ProdRepo) *cobra.Command {
-	globalFlag := false
-	pushNewBranchesCmd := cobra.Command{
-		Use:     "push-new-branches [--global] [(yes | no)]",
-		Args:    cobra.MaximumNArgs(1),
-		PreRunE: ensure(repo, isRepository),
-		Short:   "Displays or changes whether new branches get pushed to origin",
-		Long: `Displays or changes whether new branches get pushed to origin.
+const pushNewBranchesDesc = "Displays or changes whether new branches get pushed to origin"
 
+const pushNewBranchesHelp = `
 If "push-new-branches" is true, the Git Town commands hack, append, and prepend
-push the new branch to the origin remote.`,
+push the new branch to the origin remote.`
+
+func pushNewBranchesCommand() *cobra.Command {
+	addDebugFlag, readDebugFlag := flags.Debug()
+	addGlobalFlag, readGlobalFlag := flags.Bool("global", "g", "If set, reads or updates the new branch push strategy for all repositories on this machine")
+	cmd := cobra.Command{
+		Use:   "push-new-branches [--global] [(yes | no)]",
+		Args:  cobra.MaximumNArgs(1),
+		Short: pushNewBranchesDesc,
+		Long:  long(pushNewBranchesDesc, pushNewBranchesHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if len(args) > 0 {
-				return setPushNewBranches(args[0], globalFlag, repo)
-			}
-			return printPushNewBranches(globalFlag, repo)
+			return pushNewBranches(args, readGlobalFlag(cmd), readDebugFlag(cmd))
 		},
 	}
-	pushNewBranchesCmd.Flags().BoolVar(&globalFlag, "global", false, "Displays or sets your global new branch push flag")
-	return &pushNewBranchesCmd
+	addDebugFlag(&cmd)
+	addGlobalFlag(&cmd)
+	return &cmd
 }
 
-func printPushNewBranches(globalFlag bool, repo *git.ProdRepo) error {
+func pushNewBranches(args []string, global, debug bool) error {
+	run, exit, err := LoadProdRunner(RunnerArgs{
+		omitBranchNames:       true,
+		debug:                 debug,
+		dryRun:                false,
+		handleUnfinishedState: false,
+		validateGitversion:    true,
+		validateIsRepository:  true,
+	})
+	if err != nil || exit {
+		return err
+	}
+	if len(args) > 0 {
+		return setPushNewBranches(args[0], global, &run)
+	}
+	return printPushNewBranches(global, &run)
+}
+
+func printPushNewBranches(globalFlag bool, run *git.ProdRunner) error {
 	var setting bool
 	var err error
 	if globalFlag {
-		setting, err = repo.Config.ShouldNewBranchPushGlobal()
+		setting, err = run.Config.ShouldNewBranchPushGlobal()
 	} else {
-		setting, err = repo.Config.ShouldNewBranchPush()
+		setting, err = run.Config.ShouldNewBranchPush()
 	}
 	if err != nil {
 		return err
@@ -46,10 +66,10 @@ func printPushNewBranches(globalFlag bool, repo *git.ProdRepo) error {
 	return nil
 }
 
-func setPushNewBranches(text string, globalFlag bool, repo *git.ProdRepo) error {
+func setPushNewBranches(text string, globalFlag bool, run *git.ProdRunner) error {
 	value, err := config.ParseBool(text)
 	if err != nil {
 		return fmt.Errorf(`invalid argument: %q. Please provide either "yes" or "no"`, text)
 	}
-	return repo.Config.SetNewBranchPush(value, globalFlag)
+	return run.Config.SetNewBranchPush(value, globalFlag)
 }

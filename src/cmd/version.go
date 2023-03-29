@@ -6,6 +6,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const versionDesc = "Displays the version"
+
 // The current Git Town version (set at compile time).
 var version string
 
@@ -18,7 +20,8 @@ func versionCmd() *cobra.Command {
 		Use:     "version",
 		GroupID: "setup",
 		Args:    cobra.NoArgs,
-		Short:   "Displays the version",
+		Short:   versionDesc,
+		Long:    long(versionDesc),
 		Run: func(cmd *cobra.Command, args []string) {
 			fmt.Printf("Git Town %s (%s)\n", version, buildDate)
 		},

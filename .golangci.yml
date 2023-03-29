@@ -30,6 +30,14 @@ linters:
     - wrapcheck # too many false positives for return values defined in internal packages
     - wsl # this linter creates too many false positives, our policy is to not have any empty lines in code blocks
 
+linters-settings:
+  ireturn:
+    allow:
+      - error
+      - stdlib
+      - github.com/git-town/git-town/v7/src/git.FrontendRunner
+      - github.com/git-town/git-town/v7/src/git.BackendRunner
+
 issues:
   # List of regexps of issue texts to exclude, empty list by default.
   # But independently from this option we use default exclude patterns,
@@ -44,7 +52,7 @@ issues:
     - linters:
         - ireturn
       text: (github.com/git-town/git-town/v7/src/hosting.Connector|github.com/git-town/git-town/v7/src/steps.Step)
-    - text: (mockConfig|EmptyStep|Options)
+    - text: (mockConfig|EmptyStep|Options|Cmd)
       linters:
         - exhaustruct
     - path: src/cache/cache.go

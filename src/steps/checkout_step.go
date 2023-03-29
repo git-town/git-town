@@ -12,18 +12,18 @@ type CheckoutStep struct {
 	previousBranch string
 }
 
-func (step *CheckoutStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+func (step *CheckoutStep) CreateUndoStep(backend *git.BackendCommands) (Step, error) {
 	return &CheckoutStep{Branch: step.previousBranch}, nil
 }
 
-func (step *CheckoutStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
+func (step *CheckoutStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
 	var err error
-	step.previousBranch, err = repo.Silent.CurrentBranch()
+	step.previousBranch, err = run.Backend.CurrentBranch()
 	if err != nil {
 		return err
 	}
 	if step.previousBranch != step.Branch {
-		err := repo.Logging.CheckoutBranch(step.Branch)
+		err := run.Frontend.CheckoutBranch(step.Branch)
 		return err
 	}
 	return nil

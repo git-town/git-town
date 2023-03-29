@@ -14,8 +14,8 @@ Feature: update the parent of a feature branch
 
   Scenario: select another branch
     When I run "git-town set-parent" and answer the prompts:
-      | PROMPT                                      | ANSWER      |
-      | Please specify the parent branch of 'child' | [UP][ENTER] |
+      | PROMPT                                      | ANSWER        |
+      | Please specify the parent branch of 'child' | [DOWN][ENTER] |
     Then this branch hierarchy exists now
       | BRANCH | PARENT |
       | child  | main   |
@@ -23,8 +23,8 @@ Feature: update the parent of a feature branch
 
   Scenario: choose "<none> (make a perennial branch)"
     When I run "git-town set-parent" and answer the prompts:
-      | PROMPT                                      | ANSWER          |
-      | Please specify the parent branch of 'child' | [UP][UP][ENTER] |
+      | PROMPT                                      | ANSWER      |
+      | Please specify the parent branch of 'child' | [UP][ENTER] |
     Then the perennial branches are now "child"
     And this branch hierarchy exists now
       | BRANCH | PARENT |

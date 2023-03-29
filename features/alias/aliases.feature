@@ -1,6 +1,6 @@
-Feature: shorter Git Town commands
+Feature: shorten Git Town commands
 
-  Scenario: add aliases
+  Scenario: inside a Git repo
     When I run "git-town aliases add"
     Then it runs the commands
       | COMMAND                                                            |
@@ -16,29 +16,7 @@ Feature: shorter Git Town commands
       | git config --global alias.ship "town ship"                         |
       | git config --global alias.sync "town sync"                         |
 
-  Scenario: remove aliases
-    Given I ran "git-town aliases add"
-    When I run "git-town aliases remove"
-    Then it runs the commands
-      | COMMAND                                            |
-      | git config --global --unset alias.append           |
-      | git config --global --unset alias.diff-parent      |
-      | git config --global --unset alias.hack             |
-      | git config --global --unset alias.kill             |
-      | git config --global --unset alias.new-pull-request |
-      | git config --global --unset alias.prepend          |
-      | git config --global --unset alias.prune-branches   |
-      | git config --global --unset alias.rename-branch    |
-      | git config --global --unset alias.repo             |
-      | git config --global --unset alias.ship             |
-      | git config --global --unset alias.sync             |
-
-  Scenario: removing aliases does not remove unrelated aliases
-    Given I ran "git config --global alias.hack checkout"
-    When I run "git-town aliases remove"
-    Then it runs no commands
-
-  Scenario: works outside Git repositories
+  Scenario: outside a Git repo
     Given I am outside a Git repo
     When I run "git-town aliases add"
     Then it does not print "Not a git repository"

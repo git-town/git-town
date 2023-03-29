@@ -13,7 +13,7 @@ import (
 
 func TestGitEnvironment(t *testing.T) {
 	t.Parallel()
-	t.Run(".CloneGitEnvironment()", func(t *testing.T) {
+	t.Run("CloneGitEnvironment", func(t *testing.T) {
 		t.Parallel()
 		dir := t.TempDir()
 		memoizedGitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
@@ -24,7 +24,7 @@ func TestGitEnvironment(t *testing.T) {
 		assertIsNormalGitRepo(t, filepath.Join(dir, "cloned", "developer"))
 		assertHasGitBranch(t, filepath.Join(dir, "cloned", "developer"), "main")
 		// check pushing
-		err = cloned.DevRepo.PushBranch(git.PushArgs{Branch: "main", Remote: config.OriginRemote})
+		err = cloned.DevRepo.PushBranchToRemote("main", config.OriginRemote)
 		assert.NoError(t, err)
 	})
 
@@ -46,7 +46,7 @@ func TestGitEnvironment(t *testing.T) {
 		assert.Equal(t, "main", branch)
 	})
 
-	t.Run(".Branches()", func(t *testing.T) {
+	t.Run("Branches", func(t *testing.T) {
 		t.Run("different branches in dev and origin repo", func(t *testing.T) {
 			t.Parallel()
 			// create GitEnvironment instance
@@ -128,7 +128,7 @@ func TestGitEnvironment(t *testing.T) {
 		})
 		assert.NoError(t, err)
 		// verify local commits
-		commits, err := cloned.DevRepo.Commits([]string{"FILE NAME", "FILE CONTENT"})
+		commits, err := cloned.DevRepo.Commits([]string{"FILE NAME", "FILE CONTENT"}, "main")
 		assert.NoError(t, err)
 		assert.Len(t, commits, 2)
 		assert.Equal(t, "local commit", commits[0].Message)
@@ -138,7 +138,7 @@ func TestGitEnvironment(t *testing.T) {
 		assert.Equal(t, "loc-rem-file", commits[1].FileName)
 		assert.Equal(t, "lrc", commits[1].FileContent)
 		// verify origin commits
-		commits, err = cloned.OriginRepo.Commits([]string{"FILE NAME", "FILE CONTENT"})
+		commits, err = cloned.OriginRepo.Commits([]string{"FILE NAME", "FILE CONTENT"}, "main")
 		assert.NoError(t, err)
 		assert.Len(t, commits, 2)
 		assert.Equal(t, "origin commit", commits[0].Message)
@@ -165,11 +165,11 @@ func TestGitEnvironment(t *testing.T) {
 		err = cloned.CreateOriginBranch("b1", "main")
 		assert.NoError(t, err)
 		// verify it is in the origin branches
-		branches, err := cloned.OriginRepo.LocalBranchesMainFirst()
+		branches, err := cloned.OriginRepo.LocalBranchesMainFirst("main")
 		assert.NoError(t, err)
 		assert.Contains(t, branches, "b1")
 		// verify it isn't in the local branches
-		branches, err = cloned.DevRepo.LocalBranchesMainFirst()
+		branches, err = cloned.DevRepo.LocalBranchesMainFirst("main")
 		assert.NoError(t, err)
 		assert.NotContains(t, branches, "b1")
 	})
@@ -191,7 +191,7 @@ func TestGitEnvironment(t *testing.T) {
 				Message:     "local-origin",
 			})
 			assert.NoError(t, err)
-			err = cloned.DevRepo.PushBranch(git.PushArgs{Branch: "main", Remote: config.OriginRemote})
+			err = cloned.DevRepo.PushBranchToRemote("main", config.OriginRemote)
 			assert.NoError(t, err)
 			err = cloned.OriginRepo.CreateCommit(git.Commit{
 				Branch:      "main",

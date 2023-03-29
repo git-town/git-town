@@ -21,77 +21,114 @@
 package cmd
 
 import (
-	"github.com/fatih/color"
+	"github.com/git-town/git-town/v7/src/cache"
 	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v7/src/runstate"
+	"github.com/git-town/git-town/v7/src/subshell"
 	"github.com/git-town/git-town/v7/src/validate"
-	"github.com/spf13/cobra"
 )
 
 // Execute runs the Cobra stack.
 func Execute() error {
-	debugFlag := false
-	repo := git.NewProdRepo(&debugFlag)
-	rootCmd := RootCmd(&repo, &debugFlag)
-	color.NoColor = false // Prevent color from auto disable
+	rootCmd := rootCmd()
+	rootCmd.AddCommand(abortCmd())
+	rootCmd.AddCommand(aliasesCommand())
+	rootCmd.AddCommand(appendCmd())
+	rootCmd.AddCommand(completionsCmd(&rootCmd))
+	rootCmd.AddCommand(configCmd())
+	rootCmd.AddCommand(continueCmd())
+	rootCmd.AddCommand(diffParentCommand())
+	rootCmd.AddCommand(hackCmd())
+	rootCmd.AddCommand(killCommand())
+	rootCmd.AddCommand(newPullRequestCommand())
+	rootCmd.AddCommand(prependCommand())
+	rootCmd.AddCommand(pruneBranchesCommand())
+	rootCmd.AddCommand(renameBranchCommand())
+	rootCmd.AddCommand(repoCommand())
+	rootCmd.AddCommand(statusCommand())
+	rootCmd.AddCommand(setParentCommand())
+	rootCmd.AddCommand(shipCmd())
+	rootCmd.AddCommand(skipCmd())
+	rootCmd.AddCommand(switchCmd())
+	rootCmd.AddCommand(syncCmd())
+	rootCmd.AddCommand(undoCmd())
+	rootCmd.AddCommand(versionCmd())
 	return rootCmd.Execute()
 }
 
-// RootCmd is the main Cobra object.
-func RootCmd(repo *git.ProdRepo, debugFlag *bool) *cobra.Command {
-	rootCmd := cobra.Command{
-		Use:           "git-town",
-		SilenceErrors: true,
-		SilenceUsage:  true,
-		Short:         "Generic, high-level Git workflow support",
-		Long: `Git Town makes software development teams who use Git even more productive and happy.
-
-It adds Git commands that support GitHub Flow, Git Flow, the Nvie model, GitLab Flow, and other workflows more directly,
-and it allows you to perform many common Git operations faster and easier.`,
+func long(summary string, desc ...string) string {
+	if len(desc) == 1 {
+		return summary + ".\n" + desc[0]
 	}
-	rootCmd.AddGroup(&cobra.Group{
-		ID:    "basic",
-		Title: "Basic commands:",
-	}, &cobra.Group{
-		ID:    "errors",
-		Title: "Commands to deal with errors:",
-	}, &cobra.Group{
-		ID:    "lineage",
-		Title: "Commands for nested feature branches:",
-	}, &cobra.Group{
-		ID:    "setup",
-		Title: "Commands to set up Git Town on your computer:",
-	})
-	rootCmd.AddCommand(abortCmd(repo))
-	rootCmd.AddCommand(aliasCommand(repo))
-	rootCmd.AddCommand(appendCmd(repo))
-	rootCmd.AddCommand(completionsCmd(&rootCmd))
-	rootCmd.AddCommand(configCmd(repo))
-	rootCmd.AddCommand(continueCmd(repo))
-	rootCmd.AddCommand(diffParentCommand(repo))
-	rootCmd.AddCommand(hackCmd(repo))
-	rootCmd.AddCommand(killCommand(repo))
-	rootCmd.AddCommand(newPullRequestCommand(repo))
-	rootCmd.AddCommand(prependCommand(repo))
-	rootCmd.AddCommand(pruneBranchesCommand(repo))
-	rootCmd.AddCommand(renameBranchCommand(repo))
-	rootCmd.AddCommand(repoCommand(repo))
-	rootCmd.AddCommand(statusCommand(repo))
-	rootCmd.AddCommand(setParentCommand(repo))
-	rootCmd.AddCommand(shipCmd(repo))
-	rootCmd.AddCommand(skipCmd(repo))
-	rootCmd.AddCommand(switchCmd(repo))
-	rootCmd.AddCommand(syncCmd(repo))
-	rootCmd.AddCommand(undoCmd(repo))
-	rootCmd.AddCommand(versionCmd())
-	rootCmd.CompletionOptions.DisableDefaultCmd = true
-	rootCmd.PersistentFlags().BoolVar(debugFlag, "debug", false, "Print all Git commands run under the hood")
-	return &rootCmd
+	return summary + "."
 }
 
-var (
-	ensure        = validate.CobraEnsure   //nolint:gochecknoglobals
-	hasGitVersion = validate.HasGitVersion //nolint:gochecknoglobals
-	isRepository  = validate.IsRepository  //nolint:gochecknoglobals
-	isConfigured  = validate.IsConfigured  //nolint:gochecknoglobals
-	isOnline      = validate.IsOnline      //nolint:gochecknoglobals
-)
+func LoadProdRunner(args RunnerArgs) (prodRunner git.ProdRunner, exit bool, err error) { //nolint:nonamedreturns // so many return values require names
+	backendRunner := NewBackendRunner(nil, args.debug)
+	config := git.NewRepoConfig(backendRunner)
+	frontendRunner := NewFrontendRunner(args.omitBranchNames, args.dryRun, config.CurrentBranchCache)
+	prodRunner = git.NewProdRunner(backendRunner, frontendRunner, config)
+	if args.validateIsRepository {
+		err := validate.IsRepository(&prodRunner)
+		if err != nil {
+			return prodRunner, false, err
+		}
+	}
+	if !args.omitBranchNames || args.dryRun {
+		currentBranch, err := prodRunner.Backend.CurrentBranch()
+		if err != nil {
+			return prodRunner, false, err
+		}
+		prodRunner.Config.CurrentBranchCache.Set(currentBranch)
+	}
+	if args.dryRun {
+		prodRunner.Config.DryRun = true
+	}
+	ec := runstate.ErrorChecker{}
+	if args.validateGitversion {
+		ec.Check(validate.HasGitVersion(&prodRunner.Backend))
+	}
+	if args.validateIsConfigured {
+		ec.Check(validate.IsConfigured(&prodRunner.Backend))
+	}
+	if args.validateIsOnline {
+		ec.Check(validate.IsOnline(&prodRunner.Config))
+	}
+	if args.handleUnfinishedState {
+		exit = ec.Bool(validate.HandleUnfinishedState(&prodRunner, nil))
+	}
+	return prodRunner, exit, ec.Err
+}
+
+type RunnerArgs struct {
+	debug                 bool
+	dryRun                bool
+	handleUnfinishedState bool
+	omitBranchNames       bool `exhaustruct:"optional"`
+	validateGitversion    bool `exhaustruct:"optional"`
+	validateIsRepository  bool `exhaustruct:"optional"`
+	validateIsConfigured  bool `exhaustruct:"optional"`
+	validateIsOnline      bool `exhaustruct:"optional"`
+}
+
+func NewBackendRunner(dir *string, debug bool) git.BackendRunner {
+	backendRunner := subshell.BackendRunner{Dir: dir}
+	if debug {
+		return subshell.BackendLoggingRunner{Runner: backendRunner}
+	}
+	return backendRunner
+}
+
+// NewFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.
+func NewFrontendRunner(omitBranchNames, dryRun bool, currentBranchCache *cache.String) git.FrontendRunner {
+	if dryRun {
+		return subshell.FrontendDryRunner{
+			CurrentBranch:   currentBranchCache,
+			OmitBranchNames: omitBranchNames,
+		}
+	}
+	return subshell.FrontendRunner{
+		CurrentBranch:   currentBranchCache,
+		OmitBranchNames: omitBranchNames,
+	}
+}

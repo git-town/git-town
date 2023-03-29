@@ -14,21 +14,21 @@ type DeleteOriginBranchStep struct {
 	branchSha  string
 }
 
-func (step *DeleteOriginBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+func (step *DeleteOriginBranchStep) CreateUndoStep(backend *git.BackendCommands) (Step, error) {
 	if step.IsTracking {
 		return &CreateTrackingBranchStep{Branch: step.Branch, NoPushHook: step.NoPushHook}, nil
 	}
 	return &CreateRemoteBranchStep{Branch: step.Branch, Sha: step.branchSha, NoPushHook: step.NoPushHook}, nil
 }
 
-func (step *DeleteOriginBranchStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
+func (step *DeleteOriginBranchStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
 	if !step.IsTracking {
-		trackingBranch := repo.Silent.TrackingBranch(step.Branch)
+		trackingBranch := run.Backend.TrackingBranch(step.Branch)
 		var err error
-		step.branchSha, err = repo.Silent.ShaForBranch(trackingBranch)
+		step.branchSha, err = run.Backend.ShaForBranch(trackingBranch)
 		if err != nil {
 			return err
 		}
 	}
-	return repo.Logging.DeleteRemoteBranch(step.Branch)
+	return run.Frontend.DeleteRemoteBranch(step.Branch)
 }
