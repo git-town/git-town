@@ -9,7 +9,7 @@ import (
 type HostingService string
 
 const (
-	HostingServiceAzureDevops HostingService = "azure_devops"
+	HostingServiceAzureDevops HostingService = "azuredevops"
 	HostingServiceBitbucket   HostingService = "bitbucket"
 	HostingServiceGitHub      HostingService = "github"
 	HostingServiceGitLab      HostingService = "gitlab"
@@ -32,6 +32,7 @@ func NewHostingService(text string) (HostingService, error) {
 func hostingServices() []HostingService {
 	return []HostingService{
 		HostingServiceNone,
+		HostingServiceAzureDevops,
 		HostingServiceBitbucket,
 		HostingServiceGitHub,
 		HostingServiceGitLab,

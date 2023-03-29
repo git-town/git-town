@@ -14,7 +14,7 @@ import (
 const repoDesc = "Opens the repository homepage"
 
 const repoHelp = `
-Supported for repositories hosted on GitHub, GitLab, Gitea, and Bitbucket.
+Supported for repositories hosted on GitHub, GitLab, Gitea, Bitbucket, and Azure DevOps.
 Derives the Git provider from the "origin" remote.
 You can override this detection with
 "git config %s <DRIVER>"

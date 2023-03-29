@@ -10,7 +10,8 @@ branch before opening the pull request.
 
 You can create new pull requests for repositories hosted on
 [GitHub](https://github.com/), [GitLab](https://gitlab.com/),
-[Gitea](https://gitea.com/) and [Bitbucket](https://bitbucket.org/). When using
+[Gitea](https://gitea.com/) [Bitbucket](https://bitbucket.org/), and
+[Azure DevOps](https://azure.microsoft.com/en-us/products/devops). When using
 self-hosted versions of these services, you can configure the hosting service
 type with the [code-hosting-driver](../preferences/code-hosting-driver.md)
 setting.

@@ -24,10 +24,10 @@ The form is pre-populated for the current branch
 so that the pull request only shows the changes made
 against the immediate parent branch.
 
-Supported only for repositories hosted on GitHub, GitLab, Gitea and Bitbucket.
+Supported only for repositories hosted on GitHub, GitLab, Gitea, Bitbucket, and Azure DevOps.
 When using self-hosted versions this command needs to be configured with
 "git config %s <driver>"
-where driver is "github", "gitlab", "gitea", or "bitbucket".
+where driver is "github", "gitlab", "gitea", "bitbucket", or "azuredevops.
 When using SSH identities, this command needs to be configured with
 "git config %s <hostname>"
 where hostname matches what is in your ssh config file.`
