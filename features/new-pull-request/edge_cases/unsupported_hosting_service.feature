@@ -1,4 +1,3 @@
-@this
 Feature: unsupported hosting service
 
   Background:
