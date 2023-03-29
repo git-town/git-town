@@ -8,13 +8,13 @@ import (
 	"github.com/git-town/git-town/v7/src/config"
 )
 
-// BitbucketConnector provides access to the API of Bitbucket installations.
+// AzureDevopsConnector provides access to the API of Azure DevOps installations.
 type AzureDevopsConnector struct {
 	CommonConfig
 	MainBranch string
 }
 
-// NewBitbucketConnector provides a Bitbucket connector instance if the current repo is hosted on Bitbucket,
+// NewAzureDevopsConnector provides a AzureDevopsConnector instance if the current repo is hosted on Azure DevOps,
 // otherwise nil.
 func NewAzureDevopsConnector(gitConfig gitTownConfig) (*AzureDevopsConnector, error) {
 	hostingService, err := gitConfig.HostingService()
@@ -22,8 +22,6 @@ func NewAzureDevopsConnector(gitConfig gitTownConfig) (*AzureDevopsConnector, er
 		return nil, err
 	}
 	url := gitConfig.OriginURL()
-	fmt.Println("11111111111", url)
-	fmt.Println("22222222222", url.Host)
 	if url == nil || (url.Host != "dev.azure.com" && hostingService != config.HostingServiceAzureDevops) {
 		return nil, nil //nolint:nilnil
 	}
