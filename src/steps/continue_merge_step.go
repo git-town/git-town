@@ -15,9 +15,9 @@ func (step *ContinueMergeStep) CreateContinueStep() Step {
 	return step
 }
 
-func (step *ContinueMergeStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
-	if repo.Silent.HasMergeInProgress() {
-		return repo.Logging.CommitNoEdit()
+func (step *ContinueMergeStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
+	if run.Backend.HasMergeInProgress() {
+		return run.Frontend.CommitNoEdit()
 	}
 	return nil
 }

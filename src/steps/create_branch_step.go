@@ -13,10 +13,10 @@ type CreateBranchStep struct {
 	StartingPoint string
 }
 
-func (step *CreateBranchStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
-	return &DeleteLocalBranchStep{Branch: step.Branch, Force: true}, nil
+func (step *CreateBranchStep) CreateUndoStep(backend *git.BackendCommands) (Step, error) {
+	return &DeleteLocalBranchStep{Branch: step.Branch, Parent: step.StartingPoint, Force: true}, nil
 }
 
-func (step *CreateBranchStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
-	return repo.Logging.CreateBranch(step.Branch, step.StartingPoint)
+func (step *CreateBranchStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
+	return run.Frontend.CreateBranch(step.Branch, step.StartingPoint)
 }

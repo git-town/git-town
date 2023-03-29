@@ -21,24 +21,21 @@ type GitEnvironment struct {
 	Dir string
 
 	// CoworkerRepo is the optional Git repository that is locally checked out at the coworker machine.
-	CoworkerRepo *Repo `exhaustruct:"optional"`
+	CoworkerRepo *Runner `exhaustruct:"optional"`
 
 	// DevRepo is the Git repository that is locally checked out at the developer machine.
-	DevRepo Repo `exhaustruct:"optional"`
-
-	// DevRunner provides a reference to the MockingRunner instance used in the DeveloperRepo.
-	DevRunner *MockingRunner `exhaustruct:"optional"`
+	DevRepo Runner `exhaustruct:"optional"`
 
 	// OriginRepo is the Git repository that simulates the origin repo (on GitHub).
 	// If this value is nil, the current test setup has no origin.
-	OriginRepo *Repo `exhaustruct:"optional"`
+	OriginRepo *Runner `exhaustruct:"optional"`
 
 	// SubmoduleRepo is the Git repository that simulates an external repo used as a submodule.
 	// If this value is nil, the current test setup uses no submodules.
-	SubmoduleRepo *Repo `exhaustruct:"optional"`
+	SubmoduleRepo *Runner `exhaustruct:"optional"`
 
 	// UpstreamRepo is the optional Git repository that contains the upstream for this environment.
-	UpstreamRepo *Repo `exhaustruct:"optional"`
+	UpstreamRepo *Runner `exhaustruct:"optional"`
 }
 
 // CloneGitEnvironment provides a GitEnvironment instance in the given directory,
@@ -50,18 +47,17 @@ func CloneGitEnvironment(original GitEnvironment, dir string) (GitEnvironment, e
 	}
 	binDir := filepath.Join(dir, "bin")
 	originDir := filepath.Join(dir, "origin")
-	originRepo := NewRepo(originDir, dir, "")
+	originRepo := newRunner(originDir, dir, "")
 	developerDir := filepath.Join(dir, "developer")
-	devRepo := NewRepo(developerDir, dir, binDir)
+	devRepo := newRunner(developerDir, dir, binDir)
 	result := GitEnvironment{
 		Dir:        dir,
 		DevRepo:    devRepo,
-		DevRunner:  &devRepo.runner,
 		OriginRepo: &originRepo,
 	}
 	// Since we copied the files from the memoized directory,
 	// we have to set the "origin" remote to the copied origin repo here.
-	_, err = result.DevRunner.Run("git", "remote", "remove", config.OriginRemote)
+	_, err = result.DevRepo.Run("git", "remote", "remove", config.OriginRemote)
 	if err != nil {
 		return GitEnvironment{}, fmt.Errorf("cannot remove remote: %w", err)
 	}
@@ -98,7 +94,7 @@ func NewStandardGitEnvironment(dir string) (GitEnvironment, error) {
 		return gitEnv, fmt.Errorf("cannot create directory %q: %w", gitEnv.originRepoPath(), err)
 	}
 	// initialize the repo in the folder
-	originRepo, err := InitRepo(gitEnv.originRepoPath(), gitEnv.Dir, gitEnv.binPath())
+	originRepo, err := initRunner(gitEnv.originRepoPath(), gitEnv.Dir, gitEnv.binPath())
 	if err != nil {
 		return gitEnv, err
 	}
@@ -136,7 +132,7 @@ func (env *GitEnvironment) AddSubmoduleRepo() error {
 	if err != nil {
 		return fmt.Errorf("cannot create directory %q: %w", env.submoduleRepoPath(), err)
 	}
-	submoduleRepo, err := InitRepo(env.submoduleRepoPath(), env.Dir, env.binPath())
+	submoduleRepo, err := initRunner(env.submoduleRepoPath(), env.Dir, env.binPath())
 	if err != nil {
 		return err
 	}
@@ -184,7 +180,8 @@ func (env *GitEnvironment) binPath() string {
 func (env *GitEnvironment) Branches() (DataTable, error) {
 	result := DataTable{}
 	result.AddRow("REPOSITORY", "BRANCHES")
-	localBranches, err := env.DevRepo.LocalBranchesMainFirst()
+	mainBranch := env.DevRepo.Config.MainBranch()
+	localBranches, err := env.DevRepo.LocalBranchesMainFirst(mainBranch)
 	if err != nil {
 		return result, fmt.Errorf("cannot determine the developer repo branches of the GitEnvironment: %w", err)
 	}
@@ -194,7 +191,7 @@ func (env *GitEnvironment) Branches() (DataTable, error) {
 		result.AddRow("local", localBranchesJoined)
 		return result, nil
 	}
-	originBranches, err := env.OriginRepo.LocalBranchesMainFirst()
+	originBranches, err := env.OriginRepo.LocalBranchesMainFirst(mainBranch)
 	if err != nil {
 		return result, fmt.Errorf("cannot determine the origin repo branches of the GitEnvironment: %w", err)
 	}
@@ -224,7 +221,7 @@ func (env *GitEnvironment) CreateCommits(commits []git.Commit) error {
 				if err != nil {
 					return fmt.Errorf("cannot create local commit: %w", err)
 				}
-				err = env.DevRepo.PushBranch(git.PushArgs{Branch: commit.Branch, Remote: config.OriginRemote})
+				err = env.DevRepo.PushBranchToRemote(commit.Branch, config.OriginRemote)
 				if err != nil {
 					return fmt.Errorf("cannot push branch %q after creating commit: %w", commit.Branch, err)
 				}
@@ -287,27 +284,27 @@ func (env GitEnvironment) CreateTags(table *messages.PickleStepArgument_PickleTa
 // CommitTable provides a table for all commits in this Git environment containing only the given fields.
 func (env GitEnvironment) CommitTable(fields []string) (DataTable, error) {
 	builder := NewCommitTableBuilder()
-	localCommits, err := env.DevRepo.Commits(fields)
+	localCommits, err := env.DevRepo.Commits(fields, "main")
 	if err != nil {
 		return DataTable{}, fmt.Errorf("cannot determine commits in the developer repo: %w", err)
 	}
 	builder.AddMany(localCommits, "local")
 	if env.CoworkerRepo != nil {
-		coworkerCommits, err := env.CoworkerRepo.Commits(fields)
+		coworkerCommits, err := env.CoworkerRepo.Commits(fields, "main")
 		if err != nil {
 			return DataTable{}, fmt.Errorf("cannot determine commits in the coworker repo: %w", err)
 		}
 		builder.AddMany(coworkerCommits, "coworker")
 	}
 	if env.OriginRepo != nil {
-		originCommits, err := env.OriginRepo.Commits(fields)
+		originCommits, err := env.OriginRepo.Commits(fields, "main")
 		if err != nil {
 			return DataTable{}, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
 		}
 		builder.AddMany(originCommits, config.OriginRemote)
 	}
 	if env.UpstreamRepo != nil {
-		upstreamCommits, err := env.UpstreamRepo.Commits(fields)
+		upstreamCommits, err := env.UpstreamRepo.Commits(fields, "main")
 		if err != nil {
 			return DataTable{}, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
 		}
@@ -334,7 +331,7 @@ func (env GitEnvironment) TagTable() (DataTable, error) {
 	return builder.Table(), nil
 }
 
-func (env GitEnvironment) initializeWorkspace(repo *Repo) error {
+func (env GitEnvironment) initializeWorkspace(repo *Runner) error {
 	err := repo.Config.SetMainBranch("main")
 	if err != nil {
 		return err

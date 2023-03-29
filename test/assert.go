@@ -5,10 +5,10 @@ package test
 
 import (
 	"os"
+	"os/exec"
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/v7/src/subshell"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -35,9 +35,11 @@ func assertFolderExists(t *testing.T, dir string) {
 
 func assertHasGitBranch(t *testing.T, dir, expectedBranch string) {
 	t.Helper()
-	outcome, err := subshell.InDir(dir, "git", "branch")
-	assert.Nilf(t, err, "cannot run 'git status' in %q", dir)
-	assert.Contains(t, outcome.OutputSanitized(), expectedBranch, "doesn't have Git branch")
+	cmd := exec.Command("git", "branch")
+	cmd.Dir = dir
+	output, err := cmd.CombinedOutput()
+	assert.Nilf(t, err, "cannot run 'git branch' in %q", dir)
+	assert.Contains(t, string(output), expectedBranch, "doesn't have Git branch")
 }
 
 func assertHasGlobalGitConfiguration(t *testing.T, dir string) {

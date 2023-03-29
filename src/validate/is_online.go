@@ -7,8 +7,8 @@ import (
 )
 
 // IsOnline verifies that the given Git repository is online.
-func IsOnline(repo *git.ProdRepo) error {
-	isOffline, err := repo.Config.IsOffline()
+func IsOnline(config *git.RepoConfig) error {
+	isOffline, err := config.IsOffline()
 	if err != nil {
 		return err
 	}

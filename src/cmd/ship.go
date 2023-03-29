@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/config"
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/git-town/git-town/v7/src/runstate"
@@ -14,16 +15,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func shipCmd(repo *git.ProdRepo) *cobra.Command {
-	var commitMessage string
-	shipCmd := cobra.Command{
-		Use:     "ship",
-		GroupID: "basic",
-		Args:    cobra.MaximumNArgs(1),
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
-		Short:   "Deliver a completed feature branch",
-		Long: fmt.Sprintf(`Deliver a completed feature branch
+const shipDesc = "Deliver a completed feature branch"
 
+const shipHelp = `
 Squash-merges the current branch, or <branch_name> if given,
 into the main branch, resulting in linear history on the main branch.
 
@@ -47,26 +41,52 @@ It will also update the base branch for any pull requests against that branch.
 If your origin server deletes shipped branches, for example
 GitHub's feature to automatically delete head branches,
 run "git config %s false"
-and Git Town will leave it up to your origin server to delete the remote branch.`, config.GithubTokenKey, config.ShipDeleteRemoteBranchKey),
+and Git Town will leave it up to your origin server to delete the remote branch.`
+
+func shipCmd() *cobra.Command {
+	addDebugFlag, readDebugFlag := flags.Debug()
+	addMessageFlag, readMessageFlag := flags.String("message", "m", "", "Specify the commit message for the squash commit")
+	cmd := cobra.Command{
+		Use:     "ship",
+		GroupID: "basic",
+		Args:    cobra.MaximumNArgs(1),
+		Short:   shipDesc,
+		Long:    long(shipDesc, fmt.Sprintf(shipHelp, config.GithubTokenKey, config.ShipDeleteRemoteBranchKey)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			connector, err := hosting.NewConnector(repo.Config, &repo.Silent, cli.PrintConnectorAction)
-			if err != nil {
-				return err
-			}
-			config, err := determineShipConfig(args, connector, repo)
-			if err != nil {
-				return err
-			}
-			stepList, err := shipStepList(config, commitMessage, repo)
-			if err != nil {
-				return err
-			}
-			runState := runstate.New("ship", stepList)
-			return runstate.Execute(runState, repo, connector)
+			return ship(args, readMessageFlag(cmd), readDebugFlag(cmd))
 		},
 	}
-	shipCmd.Flags().StringVarP(&commitMessage, "message", "m", "", "Specify the commit message for the squash commit")
-	return &shipCmd
+	addDebugFlag(&cmd)
+	addMessageFlag(&cmd)
+	return &cmd
+}
+
+func ship(args []string, message string, debug bool) error {
+	run, exit, err := LoadProdRunner(RunnerArgs{
+		debug:                 debug,
+		dryRun:                false,
+		handleUnfinishedState: true,
+		validateGitversion:    true,
+		validateIsRepository:  true,
+		validateIsConfigured:  true,
+	})
+	if err != nil || exit {
+		return err
+	}
+	connector, err := hosting.NewConnector(run.Config.GitTown, &run.Backend, cli.PrintConnectorAction)
+	if err != nil {
+		return err
+	}
+	config, err := determineShipConfig(args, connector, &run)
+	if err != nil {
+		return err
+	}
+	stepList, err := shipStepList(config, message, &run)
+	if err != nil {
+		return err
+	}
+	runState := runstate.New("ship", stepList)
+	return runstate.Execute(runState, &run, connector)
 }
 
 type shipConfig struct {
@@ -81,27 +101,29 @@ type shipConfig struct {
 	initialBranch            string
 	isShippingInitialBranch  bool
 	isOffline                bool
+	mainBranch               string
 	proposal                 *hosting.Proposal
 	proposalsOfChildBranches []hosting.Proposal
 }
 
-func determineShipConfig(args []string, connector hosting.Connector, repo *git.ProdRepo) (*shipConfig, error) {
-	hasOrigin, err := repo.Silent.HasOrigin()
+func determineShipConfig(args []string, connector hosting.Connector, run *git.ProdRunner) (*shipConfig, error) {
+	hasOrigin, err := run.Backend.HasOrigin()
 	if err != nil {
 		return nil, err
 	}
-	isOffline, err := repo.Config.IsOffline()
+	isOffline, err := run.Config.IsOffline()
 	if err != nil {
 		return nil, err
 	}
-	initialBranch, err := repo.Silent.CurrentBranch()
+	initialBranch, err := run.Backend.CurrentBranch()
 	if err != nil {
 		return nil, err
 	}
-	deleteOrigin, err := repo.Config.ShouldShipDeleteOriginBranch()
+	deleteOrigin, err := run.Config.ShouldShipDeleteOriginBranch()
 	if err != nil {
 		return nil, err
 	}
+	mainBranch := run.Config.MainBranch()
 	var branchToShip string
 	if len(args) > 0 {
 		branchToShip = args[0]
@@ -110,7 +132,7 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 	}
 	isShippingInitialBranch := branchToShip == initialBranch
 	if isShippingInitialBranch {
-		hasOpenChanges, err := repo.Silent.HasOpenChanges()
+		hasOpenChanges, err := run.Backend.HasOpenChanges()
 		if err != nil {
 			return nil, err
 		}
@@ -119,13 +141,13 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 		}
 	}
 	if hasOrigin && !isOffline {
-		err := repo.Logging.Fetch()
+		err := run.Frontend.Fetch()
 		if err != nil {
 			return nil, err
 		}
 	}
 	if !isShippingInitialBranch {
-		hasBranch, err := repo.Silent.HasLocalOrOriginBranch(branchToShip)
+		hasBranch, err := run.Backend.HasLocalOrOriginBranch(branchToShip, mainBranch)
 		if err != nil {
 			return nil, err
 		}
@@ -133,26 +155,26 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 			return nil, fmt.Errorf("there is no branch named %q", branchToShip)
 		}
 	}
-	if !repo.Config.IsFeatureBranch(branchToShip) {
+	if !run.Config.IsFeatureBranch(branchToShip) {
 		return nil, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can be shipped", branchToShip)
 	}
-	err = validate.KnowsBranchAncestry(branchToShip, repo.Config.MainBranch(), repo)
+	err = validate.KnowsBranchAncestry(branchToShip, mainBranch, &run.Backend)
 	if err != nil {
 		return nil, err
 	}
-	err = ensureParentBranchIsMainOrPerennialBranch(branchToShip, repo)
+	err = ensureParentBranchIsMainOrPerennialBranch(branchToShip, run)
 	if err != nil {
 		return nil, err
 	}
-	hasTrackingBranch, err := repo.Silent.HasTrackingBranch(branchToShip)
+	hasTrackingBranch, err := run.Backend.HasTrackingBranch(branchToShip)
 	if err != nil {
 		return nil, err
 	}
-	branchToMergeInto := repo.Config.ParentBranch(branchToShip)
+	branchToMergeInto := run.Config.ParentBranch(branchToShip)
 	canShipViaAPI := false
 	defaultProposalMessage := ""
 	var proposal *hosting.Proposal
-	childBranches := repo.Config.ChildBranches(branchToShip)
+	childBranches := run.Config.ChildBranches(branchToShip)
 	proposalsOfChildBranches := []hosting.Proposal{}
 	if !isOffline && connector != nil {
 		if hasTrackingBranch {
@@ -187,15 +209,16 @@ func determineShipConfig(args []string, connector hosting.Connector, repo *git.P
 		initialBranch:            initialBranch,
 		isOffline:                isOffline,
 		isShippingInitialBranch:  isShippingInitialBranch,
+		mainBranch:               mainBranch,
 		proposal:                 proposal,
 		proposalsOfChildBranches: proposalsOfChildBranches,
 	}, nil
 }
 
-func ensureParentBranchIsMainOrPerennialBranch(branch string, repo *git.ProdRepo) error {
-	parentBranch := repo.Config.ParentBranch(branch)
-	if !repo.Config.IsMainBranch(parentBranch) && !repo.Config.IsPerennialBranch(parentBranch) {
-		ancestors := repo.Config.AncestorBranches(branch)
+func ensureParentBranchIsMainOrPerennialBranch(branch string, run *git.ProdRunner) error {
+	parentBranch := run.Config.ParentBranch(branch)
+	if !run.Config.IsMainBranch(parentBranch) && !run.Config.IsPerennialBranch(parentBranch) {
+		ancestors := run.Config.AncestorBranches(branch)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
 		oldestAncestor := ancestorsWithoutMainOrPerennial[0]
 		return fmt.Errorf(`shipping this branch would ship %q as well,
@@ -204,11 +227,11 @@ please ship %q first`, strings.Join(ancestorsWithoutMainOrPerennial, ", "), olde
 	return nil
 }
 
-func shipStepList(config *shipConfig, commitMessage string, repo *git.ProdRepo) (runstate.StepList, error) {
+func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
-	updateBranchSteps(&list, config.branchToMergeInto, true, repo) // sync the parent branch
-	updateBranchSteps(&list, config.branchToShip, false, repo)     // sync the branch to ship locally only
-	list.Add(&steps.EnsureHasShippableChangesStep{Branch: config.branchToShip})
+	updateBranchSteps(&list, config.branchToMergeInto, true, run) // sync the parent branch
+	updateBranchSteps(&list, config.branchToShip, false, run)     // sync the branch to ship locally only
+	list.Add(&steps.EnsureHasShippableChangesStep{Branch: config.branchToShip, Parent: config.mainBranch})
 	list.Add(&steps.CheckoutStep{Branch: config.branchToMergeInto})
 	if config.canShipViaAPI {
 		// update the proposals of child branches
@@ -243,7 +266,7 @@ func shipStepList(config *shipConfig, commitMessage string, repo *git.ProdRepo) 
 			list.Add(&steps.DeleteOriginBranchStep{Branch: config.branchToShip, IsTracking: true})
 		}
 	}
-	list.Add(&steps.DeleteLocalBranchStep{Branch: config.branchToShip})
+	list.Add(&steps.DeleteLocalBranchStep{Branch: config.branchToShip, Parent: config.mainBranch})
 	list.Add(&steps.DeleteParentBranchStep{Branch: config.branchToShip})
 	for _, child := range config.childBranches {
 		list.Add(&steps.SetParentStep{Branch: child, ParentBranch: config.branchToMergeInto})
@@ -252,6 +275,6 @@ func shipStepList(config *shipConfig, commitMessage string, repo *git.ProdRepo) 
 		// TODO: check out the main branch here?
 		list.Add(&steps.CheckoutStep{Branch: config.initialBranch})
 	}
-	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: !config.isShippingInitialBranch}, repo)
+	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: !config.isShippingInitialBranch}, &run.Backend, config.mainBranch)
 	return list.Result()
 }

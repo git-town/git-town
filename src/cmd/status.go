@@ -6,29 +6,48 @@ import (
 	"os"
 	"time"
 
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/spf13/cobra"
 )
 
-func statusCommand(repo *git.ProdRepo) *cobra.Command {
-	cmd := &cobra.Command{
+const statusDesc = "Displays or resets the current suspended Git Town command"
+
+func statusCommand() *cobra.Command {
+	addDebugFlag, readDebugFlag := flags.Debug()
+	cmd := cobra.Command{
 		Use:     "status",
 		GroupID: "errors",
 		Args:    cobra.NoArgs,
-		PreRunE: ensure(repo, hasGitVersion, isRepository),
-		Short:   "Displays or resets the current suspended Git Town command",
+		Short:   statusDesc,
+		Long:    long(statusDesc),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			config, err := loadDisplayStatusConfig(repo)
-			if err != nil {
-				return err
-			}
-			displayStatus(*config)
-			return nil
+			return status(readDebugFlag(cmd))
 		},
 	}
-	cmd.AddCommand(resetRunstateCommand(repo))
-	return cmd
+	addDebugFlag(&cmd)
+	cmd.AddCommand(resetRunstateCommand())
+	return &cmd
+}
+
+func status(debug bool) error {
+	run, exit, err := LoadProdRunner(RunnerArgs{
+		debug:                 debug,
+		dryRun:                false,
+		handleUnfinishedState: false,
+		validateGitversion:    true,
+		validateIsRepository:  true,
+	})
+	if err != nil || exit {
+		return err
+	}
+	config, err := loadDisplayStatusConfig(&run)
+	if err != nil {
+		return err
+	}
+	displayStatus(*config)
+	return nil
 }
 
 type displayStatusConfig struct {
@@ -36,12 +55,12 @@ type displayStatusConfig struct {
 	state    *runstate.RunState // content of the runstate file
 }
 
-func loadDisplayStatusConfig(repo *git.ProdRepo) (*displayStatusConfig, error) {
-	filepath, err := runstate.PersistenceFilePath(repo)
+func loadDisplayStatusConfig(run *git.ProdRunner) (*displayStatusConfig, error) {
+	filepath, err := runstate.PersistenceFilePath(&run.Backend)
 	if err != nil {
 		return nil, fmt.Errorf("cannot determine the runstate file path: %w", err)
 	}
-	state, err := runstate.Load(repo)
+	state, err := runstate.Load(&run.Backend)
 	if err != nil {
 		if !errors.Is(err, os.ErrNotExist) {
 			return nil, fmt.Errorf("the runstate file contains invalid content: %w", err)

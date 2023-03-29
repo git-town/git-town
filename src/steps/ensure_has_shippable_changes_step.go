@@ -12,14 +12,15 @@ import (
 type EnsureHasShippableChangesStep struct {
 	EmptyStep
 	Branch string
+	Parent string
 }
 
 func (step *EnsureHasShippableChangesStep) CreateAutomaticAbortError() error {
 	return fmt.Errorf("the branch %q has no shippable changes", step.Branch)
 }
 
-func (step *EnsureHasShippableChangesStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
-	hasShippableChanges, err := repo.Silent.HasShippableChanges(step.Branch)
+func (step *EnsureHasShippableChangesStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
+	hasShippableChanges, err := run.Backend.HasShippableChanges(step.Branch, step.Parent)
 	if err != nil {
 		return err
 	}
