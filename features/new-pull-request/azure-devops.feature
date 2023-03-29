@@ -4,7 +4,6 @@ Feature: Azure DevOps support
   Background:
     Given tool "open" is installed
 
-  @this
   Scenario Outline: normal origin
     Given the current branch is a feature branch "feature"
     And the origin is "<ORIGIN>"
@@ -29,17 +28,17 @@ Feature: Azure DevOps support
       """
 
     Examples:
-      | ORIGIN                                              |
-      | http://github.com/git-town/git-town.github.com.git  |
-      | http://github.com/git-town/git-town.github.com      |
-      | https://github.com/git-town/git-town.github.com.git |
-      | https://github.com/git-town/git-town.github.com     |
-      | git@github.com:git-town/git-town.github.com.git     |
-      | git@github.com:git-town/git-town.github.com         |
+      | ORIGIN                                                              |
+      | http://dev.azure.com/organization/repository.hosting.azure.com.git  |
+      | http://dev.azure.com/organization/repository.hosting.azure.com      |
+      | https://dev.azure.com/organization/repository.hosting.azure.com.git |
+      | https://dev.azure.com/organization/repository.hosting.azure.com     |
+      | git@dev.azure.com:organization/repository.hosting.azure.com.git     |
+      | git@dev.azure.com:organization/repository.hosting.azure.com         |
 
   Scenario Outline: proper URL encoding
     Given the current branch is a feature branch "<BRANCH_NAME>"
-    And the origin is "https://github.com/git-town/git-town"
+    And the origin is "https://dev.azure.com/organization/repository"
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:
       """
@@ -47,11 +46,11 @@ Feature: Azure DevOps support
       """
 
     Examples:
-      | BRANCH_NAME    | URL                                                                  |
-      | feature-branch | https://github.com/git-town/git-town/compare/feature-branch?expand=1 |
-      | feature_branch | https://github.com/git-town/git-town/compare/feature_branch?expand=1 |
-      | fix-#2         | https://github.com/git-town/git-town/compare/fix-%232?expand=1       |
-      | test/feature   | https://github.com/git-town/git-town/compare/test%2Ffeature?expand=1 |
+      | BRANCH_NAME    | URL                                                                           |
+      | feature-branch | https://dev.azure.com/organization/repository/compare/feature-branch?expand=1 |
+      | feature_branch | https://dev.azure.com/organization/repository/compare/feature_branch?expand=1 |
+      | fix-#2         | https://dev.azure.com/organization/repository/compare/fix-%232?expand=1       |
+      | test/feature   | https://dev.azure.com/organization/repository/compare/test%2Ffeature?expand=1 |
 
   Scenario: nested feature branch with known parent
     Given a feature branch "parent"
