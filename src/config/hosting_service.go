@@ -9,11 +9,12 @@ import (
 type HostingService string
 
 const (
-	HostingServiceBitbucket HostingService = "bitbucket"
-	HostingServiceGitHub    HostingService = "github"
-	HostingServiceGitLab    HostingService = "gitlab"
-	HostingServiceGitea     HostingService = "gitea"
-	HostingServiceNone      HostingService = ""
+	HostingServiceAzureDevops HostingService = "azure_devops"
+	HostingServiceBitbucket   HostingService = "bitbucket"
+	HostingServiceGitHub      HostingService = "github"
+	HostingServiceGitLab      HostingService = "gitlab"
+	HostingServiceGitea       HostingService = "gitea"
+	HostingServiceNone        HostingService = ""
 )
 
 // NewHostingService provides the HostingService enum matching the given text.
