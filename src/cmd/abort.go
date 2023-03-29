@@ -48,7 +48,7 @@ func abort(debug bool) error {
 		return fmt.Errorf("nothing to abort")
 	}
 	abortRunState := runState.CreateAbortRunState()
-	connector, err := hosting.NewConnector(run.Config, &run.Backend, cli.PrintConnectorAction)
+	connector, err := hosting.NewConnector(run.Config.GitTown, &run.Backend, cli.PrintConnectorAction)
 	if err != nil {
 		return err
 	}

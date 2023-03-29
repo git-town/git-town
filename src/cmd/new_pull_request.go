@@ -65,7 +65,7 @@ func newPullRequest(debug bool) error {
 	if err != nil {
 		return err
 	}
-	connector, err := hosting.NewConnector(run.Config, &run.Backend, cli.PrintConnectorAction)
+	connector, err := hosting.NewConnector(run.Config.GitTown, &run.Backend, cli.PrintConnectorAction)
 	if err != nil {
 		return err
 	}
