@@ -3,21 +3,16 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
 	"github.com/spf13/cobra"
 )
 
-func renameBranchCommand(repo *git.ProdRepo) *cobra.Command {
-	forceFlag := false
-	renameBranchCmd := &cobra.Command{
-		Use:     "rename-branch [<old_branch_name>] <new_branch_name>",
-		Args:    cobra.RangeArgs(1, 2),
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
-		Short:   "Renames a branch both locally and remotely",
-		Long: `Renames a branch both locally and remotely
+const renameBranchDesc = "Renames a branch both locally and remotely"
 
+const renameBranchHelp = `
 Renames the given branch in the local and origin repository.
 Aborts if the new branch name already exists or the tracking branch is out of sync.
 
@@ -33,28 +28,54 @@ When there is a tracking branch
 
 When run on a perennial branch
 - confirm with the "-f" option
-- registers the new perennial branch name in the local Git Town configuration`,
+- registers the new perennial branch name in the local Git Town configuration`
+
+func renameBranchCommand() *cobra.Command {
+	addDebugFlag, readDebugFlag := flags.Debug()
+	addForceFlag, readForceFlag := flags.Bool("force", "f", "Force rename of perennial branch")
+	cmd := cobra.Command{
+		Use:   "rename-branch [<old_branch_name>] <new_branch_name>",
+		Args:  cobra.RangeArgs(1, 2),
+		Short: renameBranchDesc,
+		Long:  long(renameBranchDesc, renameBranchHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			config, err := determineRenameBranchConfig(args, forceFlag, repo)
-			if err != nil {
-				return err
-			}
-			stepList, err := renameBranchStepList(config, repo)
-			if err != nil {
-				return err
-			}
-			runState := runstate.New("rename-branch", stepList)
-			return runstate.Execute(runState, repo, nil)
+			return renameBranch(args, readForceFlag(cmd), readDebugFlag(cmd))
 		},
 	}
-	renameBranchCmd.Flags().BoolVar(&forceFlag, "force", false, "Force rename of perennial branch")
-	return renameBranchCmd
+	addDebugFlag(&cmd)
+	addForceFlag(&cmd)
+	return &cmd
+}
+
+func renameBranch(args []string, force, debug bool) error {
+	run, exit, err := LoadProdRunner(RunnerArgs{
+		debug:                 debug,
+		dryRun:                false,
+		handleUnfinishedState: true,
+		validateGitversion:    true,
+		validateIsRepository:  true,
+		validateIsConfigured:  true,
+	})
+	if err != nil || exit {
+		return err
+	}
+	config, err := determineRenameBranchConfig(args, force, &run)
+	if err != nil {
+		return err
+	}
+	stepList, err := renameBranchStepList(config, &run)
+	if err != nil {
+		return err
+	}
+	runState := runstate.New("rename-branch", stepList)
+	return runstate.Execute(runState, &run, nil)
 }
 
 type renameBranchConfig struct {
 	initialBranch              string
 	isInitialBranchPerennial   bool
 	isOffline                  bool
+	mainBranch                 string
 	newBranch                  string
 	noPushHook                 bool
 	oldBranchChildren          []string
@@ -62,19 +83,20 @@ type renameBranchConfig struct {
 	oldBranch                  string
 }
 
-func determineRenameBranchConfig(args []string, forceFlag bool, repo *git.ProdRepo) (*renameBranchConfig, error) {
-	initialBranch, err := repo.Silent.CurrentBranch()
+func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRunner) (*renameBranchConfig, error) {
+	initialBranch, err := run.Backend.CurrentBranch()
 	if err != nil {
 		return nil, err
 	}
-	isOffline, err := repo.Config.IsOffline()
+	isOffline, err := run.Config.IsOffline()
 	if err != nil {
 		return nil, err
 	}
-	pushHook, err := repo.Config.PushHook()
+	pushHook, err := run.Config.PushHook()
 	if err != nil {
 		return nil, err
 	}
+	mainBranch := run.Config.MainBranch()
 	var oldBranch string
 	var newBranch string
 	if len(args) == 1 {
@@ -84,11 +106,11 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *git.ProdRe
 		oldBranch = args[0]
 		newBranch = args[1]
 	}
-	if repo.Config.IsMainBranch(oldBranch) {
+	if run.Config.IsMainBranch(oldBranch) {
 		return nil, fmt.Errorf("the main branch cannot be renamed")
 	}
 	if !forceFlag {
-		if repo.Config.IsPerennialBranch(oldBranch) {
+		if run.Config.IsPerennialBranch(oldBranch) {
 			return nil, fmt.Errorf("%q is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'", oldBranch)
 		}
 	}
@@ -96,49 +118,50 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *git.ProdRe
 		return nil, fmt.Errorf("cannot rename branch to current name")
 	}
 	if !isOffline {
-		err := repo.Logging.Fetch()
+		err := run.Frontend.Fetch()
 		if err != nil {
 			return nil, err
 		}
 	}
-	hasOldBranch, err := repo.Silent.HasLocalBranch(oldBranch)
+	hasOldBranch, err := run.Backend.HasLocalBranch(oldBranch)
 	if err != nil {
 		return nil, err
 	}
 	if !hasOldBranch {
 		return nil, fmt.Errorf("there is no branch named %q", oldBranch)
 	}
-	isBranchInSync, err := repo.Silent.IsBranchInSync(oldBranch)
+	isBranchInSync, err := run.Backend.IsBranchInSync(oldBranch)
 	if err != nil {
 		return nil, err
 	}
 	if !isBranchInSync {
 		return nil, fmt.Errorf("%q is not in sync with its tracking branch, please sync the branches before renaming", oldBranch)
 	}
-	hasNewBranch, err := repo.Silent.HasLocalOrOriginBranch(newBranch)
+	hasNewBranch, err := run.Backend.HasLocalOrOriginBranch(newBranch, mainBranch)
 	if err != nil {
 		return nil, err
 	}
 	if hasNewBranch {
 		return nil, fmt.Errorf("a branch named %q already exists", newBranch)
 	}
-	oldBranchHasTrackingBranch, err := repo.Silent.HasTrackingBranch(oldBranch)
+	oldBranchHasTrackingBranch, err := run.Backend.HasTrackingBranch(oldBranch)
 	if err != nil {
 		return nil, err
 	}
 	return &renameBranchConfig{
 		initialBranch:              initialBranch,
-		isInitialBranchPerennial:   repo.Config.IsPerennialBranch(initialBranch),
+		isInitialBranchPerennial:   run.Config.IsPerennialBranch(initialBranch),
 		isOffline:                  isOffline,
+		mainBranch:                 mainBranch,
 		newBranch:                  newBranch,
 		noPushHook:                 !pushHook,
 		oldBranch:                  oldBranch,
-		oldBranchChildren:          repo.Config.ChildBranches(oldBranch),
+		oldBranchChildren:          run.Config.ChildBranches(oldBranch),
 		oldBranchHasTrackingBranch: oldBranchHasTrackingBranch,
 	}, err
 }
 
-func renameBranchStepList(config *renameBranchConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+func renameBranchStepList(config *renameBranchConfig, run *git.ProdRunner) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	result.Append(&steps.CreateBranchStep{Branch: config.newBranch, StartingPoint: config.oldBranch})
 	if config.initialBranch == config.oldBranch {
@@ -149,7 +172,7 @@ func renameBranchStepList(config *renameBranchConfig, repo *git.ProdRepo) (runst
 		result.Append(&steps.AddToPerennialBranchesStep{Branch: config.newBranch})
 	} else {
 		result.Append(&steps.DeleteParentBranchStep{Branch: config.oldBranch})
-		result.Append(&steps.SetParentStep{Branch: config.newBranch, ParentBranch: repo.Config.ParentBranch(config.oldBranch)})
+		result.Append(&steps.SetParentStep{Branch: config.newBranch, ParentBranch: run.Config.ParentBranch(config.oldBranch)})
 	}
 	for _, child := range config.oldBranchChildren {
 		result.Append(&steps.SetParentStep{Branch: child, ParentBranch: config.newBranch})
@@ -158,7 +181,7 @@ func renameBranchStepList(config *renameBranchConfig, repo *git.ProdRepo) (runst
 		result.Append(&steps.CreateTrackingBranchStep{Branch: config.newBranch, NoPushHook: config.noPushHook})
 		result.Append(&steps.DeleteOriginBranchStep{Branch: config.oldBranch, IsTracking: true})
 	}
-	result.Append(&steps.DeleteLocalBranchStep{Branch: config.oldBranch})
-	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, repo)
+	result.Append(&steps.DeleteLocalBranchStep{Branch: config.oldBranch, Parent: config.mainBranch})
+	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, &run.Backend, config.mainBranch)
 	return result, err
 }

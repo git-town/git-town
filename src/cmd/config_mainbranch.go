@@ -4,40 +4,61 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/spf13/cobra"
 )
 
-func mainbranchConfigCmd(repo *git.ProdRepo) *cobra.Command {
-	return &cobra.Command{
-		Use:     "main-branch [<branch>]",
-		Args:    cobra.MaximumNArgs(1),
-		PreRunE: ensure(repo, isRepository),
-		Short:   "Displays or sets your main development branch",
-		Long: `Displays or sets your main development branch
+const mainbranchDesc = "Displays or sets your main development branch"
 
-The main branch is the Git branch from which new feature branches are cut.`,
+const mainbranchHelp = `
+The main branch is the Git branch from which new feature branches are cut.`
+
+func mainbranchConfigCmd() *cobra.Command {
+	addDebugFlag, readDebugFlag := flags.Debug()
+	cmd := cobra.Command{
+		Use:   "main-branch [<branch>]",
+		Args:  cobra.MaximumNArgs(1),
+		Short: mainbranchDesc,
+		Long:  long(mainbranchDesc, mainbranchHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if len(args) > 0 {
-				return setMainBranch(args[0], repo)
-			}
-			printMainBranch(repo)
-			return nil
+			return configureMainBranch(args, readDebugFlag(cmd))
 		},
 	}
+	addDebugFlag(&cmd)
+	return &cmd
 }
 
-func printMainBranch(repo *git.ProdRepo) {
-	cli.Println(cli.StringSetting(repo.Config.MainBranch()))
+func configureMainBranch(args []string, debug bool) error {
+	run, exit, err := LoadProdRunner(RunnerArgs{
+		omitBranchNames:       true,
+		debug:                 debug,
+		dryRun:                false,
+		handleUnfinishedState: false,
+		validateGitversion:    true,
+		validateIsRepository:  true,
+	})
+	if err != nil || exit {
+		return err
+	}
+	if len(args) > 0 {
+		return setMainBranch(args[0], &run)
+	}
+	printMainBranch(&run)
+	return nil
 }
 
-func setMainBranch(branch string, repo *git.ProdRepo) error {
-	hasBranch, err := repo.Silent.HasLocalBranch(branch)
+func printMainBranch(run *git.ProdRunner) {
+	cli.Println(cli.StringSetting(run.Config.MainBranch()))
+}
+
+func setMainBranch(branch string, run *git.ProdRunner) error {
+	hasBranch, err := run.Backend.HasLocalBranch(branch)
 	if err != nil {
 		return err
 	}
 	if !hasBranch {
 		return fmt.Errorf("there is no branch named %q", branch)
 	}
-	return repo.Config.SetMainBranch(branch)
+	return run.Config.SetMainBranch(branch)
 }

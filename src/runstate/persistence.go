@@ -12,8 +12,8 @@ import (
 )
 
 // Load loads the run state for the given Git repo from disk. Can return nil if there is no saved runstate.
-func Load(repo *git.ProdRepo) (*RunState, error) {
-	filename, err := PersistenceFilePath(repo)
+func Load(backend *git.BackendCommands) (*RunState, error) {
+	filename, err := PersistenceFilePath(backend)
 	if err != nil {
 		return nil, err
 	}
@@ -37,8 +37,8 @@ func Load(repo *git.ProdRepo) (*RunState, error) {
 }
 
 // Delete removes the stored run state from disk.
-func Delete(repo *git.ProdRepo) error {
-	filename, err := PersistenceFilePath(repo)
+func Delete(backend *git.BackendCommands) error {
+	filename, err := PersistenceFilePath(backend)
 	if err != nil {
 		return err
 	}
@@ -57,12 +57,12 @@ func Delete(repo *git.ProdRepo) error {
 }
 
 // Save stores the given run state for the given Git repo to disk.
-func Save(runState *RunState, repo *git.ProdRepo) error {
+func Save(runState *RunState, backend *git.BackendCommands) error {
 	content, err := json.MarshalIndent(runState, "", "  ")
 	if err != nil {
 		return fmt.Errorf("cannot encode run-state: %w", err)
 	}
-	persistencePath, err := PersistenceFilePath(repo)
+	persistencePath, err := PersistenceFilePath(backend)
 	if err != nil {
 		return err
 	}
@@ -78,13 +78,13 @@ func Save(runState *RunState, repo *git.ProdRepo) error {
 	return nil
 }
 
-func PersistenceFilePath(repo *git.ProdRepo) (string, error) {
+func PersistenceFilePath(backend *git.BackendCommands) (string, error) {
 	configDir, err := os.UserConfigDir()
 	if err != nil {
 		return "", err
 	}
 	persistenceDir := filepath.Join(configDir, "git-town", "runstate")
-	repoDir, err := repo.Silent.RootDirectory()
+	repoDir, err := backend.RootDirectory()
 	if err != nil {
 		return "", err
 	}

@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/steps"
@@ -10,15 +11,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func prependCommand(repo *git.ProdRepo) *cobra.Command {
-	return &cobra.Command{
-		Use:     "prepend <branch>",
-		GroupID: "lineage",
-		Args:    cobra.ExactArgs(1),
-		PreRunE: ensure(repo, hasGitVersion, isRepository, isConfigured),
-		Short:   "Creates a new feature branch as the parent of the current branch",
-		Long: `Creates a new feature branch as the parent of the current branch
+const prependDesc = "Creates a new feature branch as the parent of the current branch"
 
+const prependHelp = `
 Syncs the parent branch,
 cuts a new feature branch with the given name off the parent branch,
 makes the new branch the parent of the current branch,
@@ -27,20 +22,46 @@ pushes the new feature branch to the origin repository
 and brings over all uncommitted changes to the new feature branch.
 
 See "sync" for upstream remote options.
-`,
+`
+
+func prependCommand() *cobra.Command {
+	addDebugFlag, readDebugFlag := flags.Debug()
+	cmd := cobra.Command{
+		Use:     "prepend <branch>",
+		GroupID: "lineage",
+		Args:    cobra.ExactArgs(1),
+		Short:   prependDesc,
+		Long:    long(prependDesc, prependHelp),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			config, err := determinePrependConfig(args, repo)
-			if err != nil {
-				return err
-			}
-			stepList, err := prependStepList(config, repo)
-			if err != nil {
-				return err
-			}
-			runState := runstate.New("prepend", stepList)
-			return runstate.Execute(runState, repo, nil)
+			return prepend(args, readDebugFlag(cmd))
 		},
 	}
+	addDebugFlag(&cmd)
+	return &cmd
+}
+
+func prepend(args []string, debug bool) error {
+	run, exit, err := LoadProdRunner(RunnerArgs{
+		debug:                 debug,
+		dryRun:                false,
+		handleUnfinishedState: true,
+		validateGitversion:    true,
+		validateIsRepository:  true,
+		validateIsConfigured:  true,
+	})
+	if err != nil || exit {
+		return err
+	}
+	config, err := determinePrependConfig(args, &run)
+	if err != nil {
+		return err
+	}
+	stepList, err := prependStepList(config, &run)
+	if err != nil {
+		return err
+	}
+	runState := runstate.New("prepend", stepList)
+	return runstate.Execute(runState, &run, nil)
 }
 
 type prependConfig struct {
@@ -48,40 +69,42 @@ type prependConfig struct {
 	hasOrigin           bool
 	initialBranch       string
 	isOffline           bool
+	mainBranch          string
 	noPushHook          bool
 	parentBranch        string
 	shouldNewBranchPush bool
 	targetBranch        string
 }
 
-func determinePrependConfig(args []string, repo *git.ProdRepo) (*prependConfig, error) {
+func determinePrependConfig(args []string, run *git.ProdRunner) (*prependConfig, error) {
 	ec := runstate.ErrorChecker{}
-	initialBranch := ec.String(repo.Silent.CurrentBranch())
-	hasOrigin := ec.Bool(repo.Silent.HasOrigin())
-	shouldNewBranchPush := ec.Bool(repo.Config.ShouldNewBranchPush())
-	pushHook := ec.Bool(repo.Config.PushHook())
-	isOffline := ec.Bool(repo.Config.IsOffline())
+	initialBranch := ec.String(run.Backend.CurrentBranch())
+	hasOrigin := ec.Bool(run.Backend.HasOrigin())
+	shouldNewBranchPush := ec.Bool(run.Config.ShouldNewBranchPush())
+	pushHook := ec.Bool(run.Config.PushHook())
+	isOffline := ec.Bool(run.Config.IsOffline())
+	mainBranch := run.Config.MainBranch()
 	if ec.Err != nil {
 		return nil, ec.Err
 	}
 	if hasOrigin && !isOffline {
-		err := repo.Logging.Fetch()
+		err := run.Frontend.Fetch()
 		if err != nil {
 			return nil, err
 		}
 	}
 	targetBranch := args[0]
-	hasBranch, err := repo.Silent.HasLocalOrOriginBranch(targetBranch)
+	hasBranch, err := run.Backend.HasLocalOrOriginBranch(targetBranch, mainBranch)
 	if err != nil {
 		return nil, err
 	}
 	if hasBranch {
 		return nil, fmt.Errorf("a branch named %q already exists", targetBranch)
 	}
-	if !repo.Config.IsFeatureBranch(initialBranch) {
+	if !run.Config.IsFeatureBranch(initialBranch) {
 		return nil, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can have parent branches", initialBranch)
 	}
-	err = validate.KnowsBranchAncestry(initialBranch, repo.Config.MainBranch(), repo)
+	err = validate.KnowsBranchAncestry(initialBranch, run.Config.MainBranch(), &run.Backend)
 	if err != nil {
 		return nil, err
 	}
@@ -89,18 +112,19 @@ func determinePrependConfig(args []string, repo *git.ProdRepo) (*prependConfig, 
 		hasOrigin:           hasOrigin,
 		initialBranch:       initialBranch,
 		isOffline:           isOffline,
+		mainBranch:          mainBranch,
 		noPushHook:          !pushHook,
-		parentBranch:        repo.Config.ParentBranch(initialBranch),
-		ancestorBranches:    repo.Config.AncestorBranches(initialBranch),
+		parentBranch:        run.Config.ParentBranch(initialBranch),
+		ancestorBranches:    run.Config.AncestorBranches(initialBranch),
 		shouldNewBranchPush: shouldNewBranchPush,
 		targetBranch:        targetBranch,
 	}, nil
 }
 
-func prependStepList(config *prependConfig, repo *git.ProdRepo) (runstate.StepList, error) {
+func prependStepList(config *prependConfig, run *git.ProdRunner) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.ancestorBranches {
-		updateBranchSteps(&list, branch, true, repo)
+		updateBranchSteps(&list, branch, true, run)
 	}
 	list.Add(&steps.CreateBranchStep{Branch: config.targetBranch, StartingPoint: config.parentBranch})
 	list.Add(&steps.SetParentStep{Branch: config.targetBranch, ParentBranch: config.parentBranch})
@@ -109,6 +133,6 @@ func prependStepList(config *prependConfig, repo *git.ProdRepo) (runstate.StepLi
 	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
 		list.Add(&steps.CreateTrackingBranchStep{Branch: config.targetBranch, NoPushHook: config.noPushHook})
 	}
-	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
+	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &run.Backend, config.mainBranch)
 	return list.Result()
 }

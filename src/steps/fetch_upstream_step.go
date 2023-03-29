@@ -12,6 +12,7 @@ type FetchUpstreamStep struct {
 	Branch string
 }
 
-func (step *FetchUpstreamStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
-	return repo.Logging.FetchUpstream(step.Branch)
+// TODO: is this used?
+func (step *FetchUpstreamStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
+	return run.Frontend.FetchUpstream(step.Branch)
 }

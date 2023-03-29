@@ -15,7 +15,7 @@ type UpdateProposalTargetStep struct {
 	EmptyStep
 }
 
-func (step *UpdateProposalTargetStep) Run(repo *git.ProdRepo, connector hosting.Connector) error {
+func (step *UpdateProposalTargetStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
 	return connector.UpdateProposalTarget(step.ProposalNumber, step.NewTarget)
 }
 
@@ -23,7 +23,7 @@ func (step *UpdateProposalTargetStep) CreateAbortStep() Step {
 	return &step.EmptyStep
 }
 
-func (step *UpdateProposalTargetStep) CreateUndoStep(repo *git.ProdRepo) (Step, error) {
+func (step *UpdateProposalTargetStep) CreateUndoStep(backend *git.BackendCommands) (Step, error) {
 	return &UpdateProposalTargetStep{
 		ProposalNumber: step.ProposalNumber,
 		NewTarget:      step.ExistingTarget,

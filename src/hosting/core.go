@@ -99,8 +99,8 @@ type gitTownConfig interface {
 	OriginURL() *giturl.Parts
 }
 
-// gitRunner defines the Git functionality used by the hosting package.
-type gitRunner interface {
+// gitCommands defines the Git functionality used by the hosting package.
+type gitCommands interface {
 	ShaForBranch(string) (string, error)
 }
 
@@ -108,9 +108,7 @@ type gitRunner interface {
 type logFn func(string, ...interface{})
 
 // NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
-//
-//nolint:ireturn,nolintlint
-func NewConnector(config gitTownConfig, git gitRunner, log logFn) (Connector, error) {
+func NewConnector(config gitTownConfig, git gitCommands, log logFn) (Connector, error) {
 	githubConnector, err := NewGithubConnector(config, log)
 	if err != nil {
 		return nil, err

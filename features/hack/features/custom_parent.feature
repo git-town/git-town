@@ -3,7 +3,7 @@ Feature: customize the parent for the new feature branch
 
   Background:
     Given the current branch is "existing"
-    When I run "git-town hack -p new" and answer the prompts:
+    When I run "git-town hack --prompt new" and answer the prompts:
       | PROMPT                                         | ANSWER        |
       | Please specify the parent branch of 'new'      | [DOWN][ENTER] |
       | Please specify the parent branch of 'existing' | [ENTER]       |
