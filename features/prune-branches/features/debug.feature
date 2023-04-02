@@ -8,12 +8,12 @@ Feature: display debug and performance statistics
       | old    | local, origin | old commit    |
     And origin deletes the "old" branch
     And the current branch is "old"
-    When I run "git-town prune-branches --debug"
 
   Scenario: result
+    When I run "git-town prune-branches --debug"
     Then it prints:
       """
-      Ran 20 shell commands.
+      Ran 23 shell commands.
       """
     And the current branch is now "main"
     And the branches are now
@@ -24,10 +24,11 @@ Feature: display debug and performance statistics
       | active | main   |
 
   Scenario: undo
+    Given I run "git-town prune-branches"
     When I run "git-town undo --debug"
     Then it prints:
       """
-      Ran 9 shell commands.
+      Ran 11 shell commands.
       """
     And the current branch is now "old"
     And the initial branches and hierarchy exist
