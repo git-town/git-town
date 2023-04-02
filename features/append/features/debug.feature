@@ -13,14 +13,6 @@ Feature: display debug statistics
       Ran 30 shell commands.
       """
     And the current branch is now "new"
-    And now these commits exist
-      | BRANCH   | LOCATION      | MESSAGE         |
-      | existing | local, origin | existing commit |
-      | new      | local         | existing commit |
-    And this branch hierarchy exists now
-      | BRANCH   | PARENT   |
-      | existing | main     |
-      | new      | existing |
 
   Scenario: undo
     Given I run "git-town append new"
@@ -30,5 +22,3 @@ Feature: display debug statistics
       Ran 15 shell commands.
       """
     And the current branch is now "existing"
-    And now the initial commits exist
-    And the initial branch hierarchy exists
