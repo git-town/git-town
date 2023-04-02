@@ -14,7 +14,7 @@ Feature: display debug and performance statistics
   Scenario: result
     Then it prints:
       """
-      Ran 23 shell commands in \d+ ms.
+      Executed 20 shell commands.
       """
     And the current branch is now "main"
     And the branches are now
@@ -28,7 +28,7 @@ Feature: display debug and performance statistics
     When I run "git-town undo --debug"
     Then it prints:
       """
-      Ran 23 shell commands in \d+ ms.
+      Executed a total of 23 shell commands.
       """
     And the current branch is now "old"
     And the uncommitted file still exists

@@ -114,9 +114,9 @@ type loadArgs struct {
 func NewBackendRunner(dir *string, debug bool) git.BackendRunner {
 	backendRunner := subshell.BackendRunner{Dir: dir}
 	if debug {
-		return subshell.BackendLoggingRunner{Runner: backendRunner}
+		return &subshell.BackendLoggingRunner{Runner: backendRunner}
 	}
-	return backendRunner
+	return &backendRunner
 }
 
 // NewFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.

@@ -16,6 +16,7 @@ import (
 type BackendRunner interface {
 	Run(executable string, args ...string) (string, error)
 	RunMany([][]string) error
+	Summarize()
 }
 
 // BackendCommands are Git commands that Git Town executes to determine which frontend commands to run.

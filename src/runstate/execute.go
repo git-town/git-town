@@ -28,6 +28,7 @@ func Execute(runState *RunState, run *git.ProdRunner, connector hosting.Connecto
 				}
 			}
 			fmt.Println()
+			run.Backend.BackendRunner.Summarize()
 			return nil
 		}
 		if typeName(step) == "*SkipCurrentBranchSteps" {

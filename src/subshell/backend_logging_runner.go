@@ -11,10 +11,11 @@ import (
 // BackendLoggingRunner executes backend shell commands.
 // It	logs the executed commands and their output to the CLI.
 type BackendLoggingRunner struct {
-	Runner BackendRunner
+	Runner      BackendRunner
+	commandsRun int
 }
 
-func (r BackendLoggingRunner) PrintHeader(cmd string, args ...string) {
+func (r *BackendLoggingRunner) PrintHeader(cmd string, args ...string) {
 	text := "\n(debug) " + cmd + " " + strings.Join(args, " ")
 	_, err := color.New(color.Bold).Println(text)
 	if err != nil {
@@ -23,7 +24,8 @@ func (r BackendLoggingRunner) PrintHeader(cmd string, args ...string) {
 }
 
 // Run runs the given command in this ShellRunner's directory.
-func (r BackendLoggingRunner) Run(cmd string, args ...string) (string, error) {
+func (r *BackendLoggingRunner) Run(cmd string, args ...string) (string, error) {
+	r.commandsRun += 1
 	r.PrintHeader(cmd, args...)
 	output, err := r.Runner.Run(cmd, args...)
 	if output != "" {
@@ -35,7 +37,7 @@ func (r BackendLoggingRunner) Run(cmd string, args ...string) (string, error) {
 // RunMany runs all given commands in current directory.
 // Commands are provided as a list of argv-style strings.
 // Failed commands abort immediately with the encountered error.
-func (r BackendLoggingRunner) RunMany(commands [][]string) error {
+func (r *BackendLoggingRunner) RunMany(commands [][]string) error {
 	for _, argv := range commands {
 		_, err := r.Run(argv[0], argv[1:]...)
 		if err != nil {
@@ -46,11 +48,15 @@ func (r BackendLoggingRunner) RunMany(commands [][]string) error {
 }
 
 // RunString runs the given command (including possible arguments) in this ShellInDir's directory.
-func (r BackendLoggingRunner) RunString(fullCmd string) (string, error) {
+func (r *BackendLoggingRunner) RunString(fullCmd string) (string, error) {
 	parts, err := shellquote.Split(fullCmd)
 	if err != nil {
 		return "", fmt.Errorf("cannot split command %q: %w", fullCmd, err)
 	}
 	cmd, args := parts[0], parts[1:]
 	return r.Run(cmd, args...)
+}
+
+func (r *BackendLoggingRunner) Summarize() {
+	fmt.Printf("Executed %d shell commands.", r.commandsRun)
 }
