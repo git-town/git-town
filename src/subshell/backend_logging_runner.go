@@ -12,7 +12,7 @@ import (
 // It	logs the executed commands and their output to the CLI.
 type BackendLoggingRunner struct {
 	Runner     BackendRunner
-	Statistics *Statistics
+	Statistics Statistics
 }
 
 func (r BackendLoggingRunner) PrintHeader(cmd string, args ...string) {

@@ -128,7 +128,7 @@ type loadArgs struct {
 	validateIsOnline      bool `exhaustruct:"optional"`
 }
 
-func NewBackendRunner(dir *string, debug bool, statistics *subshell.Statistics) git.BackendRunner {
+func NewBackendRunner(dir *string, debug bool, statistics *Statistics) git.BackendRunner {
 	backendRunner := subshell.BackendRunner{Dir: dir, Statistics: statistics}
 	if debug {
 		return subshell.BackendLoggingRunner{Runner: backendRunner, Statistics: statistics}
@@ -137,7 +137,7 @@ func NewBackendRunner(dir *string, debug bool, statistics *subshell.Statistics) 
 }
 
 // NewFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.
-func NewFrontendRunner(omitBranchNames, dryRun bool, currentBranchCache *cache.String, stats *subshell.Statistics) git.FrontendRunner {
+func NewFrontendRunner(omitBranchNames, dryRun bool, currentBranchCache *cache.String, stats *Statistics) git.FrontendRunner {
 	if dryRun {
 		return &subshell.FrontendDryRunner{
 			CurrentBranch:   currentBranchCache,
@@ -150,4 +150,12 @@ func NewFrontendRunner(omitBranchNames, dryRun bool, currentBranchCache *cache.S
 		OmitBranchNames: omitBranchNames,
 		Stats:           stats,
 	}
+}
+
+type Statistics struct {
+	CommandsCount int
+}
+
+func (s *Statistics) RegisterCommandExecution() {
+	s.CommandsCount += 1
 }

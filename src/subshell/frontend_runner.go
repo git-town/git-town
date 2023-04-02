@@ -15,7 +15,7 @@ import (
 type FrontendRunner struct {
 	CurrentBranch   *cache.String
 	OmitBranchNames bool
-	Stats           *Statistics
+	Stats           Statistics
 }
 
 // Run runs the given command in this ShellRunner's directory.
