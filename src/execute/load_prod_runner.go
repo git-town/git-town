@@ -8,14 +8,14 @@ import (
 	"github.com/git-town/git-town/v7/src/validate"
 )
 
-func LoadProdRunner(args loadArgs) (prodRunner git.ProdRunner, exit bool, err error) { //nolint:nonamedreturns // so many return values require names
+func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, exit bool, err error) { //nolint:nonamedreturns // so many return values require names
 	var stats *Statistics
-	if args.debug {
+	if args.Debug {
 		stats = &Statistics{}
 	}
-	backendRunner := NewBackendRunner(nil, args.debug, stats)
+	backendRunner := NewBackendRunner(nil, args.Debug, stats)
 	config := git.NewRepoConfig(backendRunner)
-	frontendRunner := NewFrontendRunner(args.omitBranchNames, args.dryRun, config.CurrentBranchCache, stats)
+	frontendRunner := NewFrontendRunner(args.OmitBranchNames, args.DryRun, config.CurrentBranchCache, stats)
 	backendCommands := git.BackendCommands{
 		BackendRunner: backendRunner,
 		Config:        &config,
@@ -30,47 +30,47 @@ func LoadProdRunner(args loadArgs) (prodRunner git.ProdRunner, exit bool, err er
 		},
 		Stats: stats,
 	}
-	if args.validateIsRepository {
+	if args.ValidateIsRepository {
 		err := validate.IsRepository(&prodRunner)
 		if err != nil {
 			return prodRunner, false, err
 		}
 	}
-	if !args.omitBranchNames || args.dryRun {
+	if !args.OmitBranchNames || args.DryRun {
 		currentBranch, err := prodRunner.Backend.CurrentBranch()
 		if err != nil {
 			return prodRunner, false, err
 		}
 		prodRunner.Config.CurrentBranchCache.Set(currentBranch)
 	}
-	if args.dryRun {
+	if args.DryRun {
 		prodRunner.Config.DryRun = true
 	}
 	ec := runstate.ErrorChecker{}
-	if args.validateGitversion {
+	if args.ValidateGitversion {
 		ec.Check(validate.HasGitVersion(&prodRunner.Backend))
 	}
-	if args.validateIsConfigured {
+	if args.ValidateIsConfigured {
 		ec.Check(validate.IsConfigured(&prodRunner.Backend))
 	}
-	if args.validateIsOnline {
+	if args.ValidateIsOnline {
 		ec.Check(validate.IsOnline(&prodRunner.Config))
 	}
-	if args.handleUnfinishedState {
+	if args.HandleUnfinishedState {
 		exit = ec.Bool(validate.HandleUnfinishedState(&prodRunner, nil))
 	}
 	return prodRunner, exit, ec.Err
 }
 
-type loadArgs struct {
-	debug                 bool
-	dryRun                bool
-	handleUnfinishedState bool
-	omitBranchNames       bool `exhaustruct:"optional"`
-	validateGitversion    bool `exhaustruct:"optional"`
-	validateIsRepository  bool `exhaustruct:"optional"`
-	validateIsConfigured  bool `exhaustruct:"optional"`
-	validateIsOnline      bool `exhaustruct:"optional"`
+type LoadArgs struct {
+	Debug                 bool
+	DryRun                bool
+	HandleUnfinishedState bool
+	OmitBranchNames       bool `exhaustruct:"optional"`
+	ValidateGitversion    bool `exhaustruct:"optional"`
+	ValidateIsRepository  bool `exhaustruct:"optional"`
+	ValidateIsConfigured  bool `exhaustruct:"optional"`
+	ValidateIsOnline      bool `exhaustruct:"optional"`
 }
 
 func NewBackendRunner(dir *string, debug bool, statistics *Statistics) git.BackendRunner {

@@ -7,3 +7,7 @@ type ProdRunner struct {
 	Frontend FrontendCommands
 	Stats    Statistics
 }
+
+type Statistics interface {
+	RunCount() int
+}

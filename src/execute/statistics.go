@@ -7,3 +7,7 @@ type Statistics struct {
 func (s *Statistics) RegisterCommandExecution() {
 	s.CommandsCount += 1
 }
+
+func (s *Statistics) RunCount() int {
+	return s.CommandsCount
+}

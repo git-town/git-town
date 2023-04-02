@@ -29,7 +29,7 @@ func Execute(runState *RunState, run *git.ProdRunner, connector hosting.Connecto
 			}
 			fmt.Println()
 			if run.Stats != nil {
-				fmt.Printf("Ran %d shell commands.\n", run.Stats.CommandsCount)
+				fmt.Printf("Ran %d shell commands.\n", run.Stats.RunCount())
 			}
 			return nil
 		}
