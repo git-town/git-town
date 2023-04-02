@@ -16,7 +16,6 @@ Feature: display debug statistics
       """
     And the current branch is now "main"
 
-  @this
   Scenario: undo
     Given I ran "git-town kill"
     When I run "git-town undo --debug"

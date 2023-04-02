@@ -15,7 +15,6 @@ Feature: display debug statistics
       """
     And the current branch is now "new"
 
-  @this
   Scenario: undo
     Given I ran "git-town rename-branch new"
     When I run "git-town undo --debug"
