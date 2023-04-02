@@ -29,7 +29,7 @@ func abortCmd() *cobra.Command {
 }
 
 func abort(debug bool) error {
-	run, exit, err := LoadProdRunner(RunnerArgs{
+	run, exit, err := LoadProdRunner(loadArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: false,

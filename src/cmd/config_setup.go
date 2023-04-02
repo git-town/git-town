@@ -24,7 +24,7 @@ func setupConfigCommand() *cobra.Command {
 }
 
 func setup(debug bool) error {
-	run, exit, err := LoadProdRunner(RunnerArgs{
+	run, exit, err := LoadProdRunner(loadArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
 		dryRun:                false,
