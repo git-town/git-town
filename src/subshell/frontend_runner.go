@@ -15,10 +15,14 @@ import (
 type FrontendRunner struct {
 	CurrentBranch   *cache.String
 	OmitBranchNames bool
+	Stats           *Statistics
 }
 
 // Run runs the given command in this ShellRunner's directory.
-func (r FrontendRunner) Run(cmd string, args ...string) error {
+func (r *FrontendRunner) Run(cmd string, args ...string) error {
+	if r.Stats != nil {
+		r.Stats.RegisterCommandExecution()
+	}
 	var branchName string
 	if r.OmitBranchNames {
 		branchName = ""
@@ -43,7 +47,7 @@ func (r FrontendRunner) Run(cmd string, args ...string) error {
 // RunMany runs all given commands in current directory.
 // Commands are provided as a list of argv-style strings.
 // Failed commands abort immediately with the encountered error.
-func (r FrontendRunner) RunMany(commands [][]string) error {
+func (r *FrontendRunner) RunMany(commands [][]string) error {
 	for _, argv := range commands {
 		err := r.Run(argv[0], argv[1:]...)
 		if err != nil {

@@ -139,13 +139,15 @@ func NewBackendRunner(dir *string, debug bool, statistics *subshell.Statistics) 
 // NewFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.
 func NewFrontendRunner(omitBranchNames, dryRun bool, currentBranchCache *cache.String, stats *subshell.Statistics) git.FrontendRunner {
 	if dryRun {
-		return subshell.FrontendDryRunner{
+		return &subshell.FrontendDryRunner{
 			CurrentBranch:   currentBranchCache,
 			OmitBranchNames: omitBranchNames,
+			Stats:           stats,
 		}
 	}
-	return subshell.FrontendRunner{
+	return &subshell.FrontendRunner{
 		CurrentBranch:   currentBranchCache,
 		OmitBranchNames: omitBranchNames,
+		Stats:           stats,
 	}
 }
