@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/config"
+	"github.com/git-town/git-town/v7/src/execute"
 	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/hosting"
@@ -62,13 +63,13 @@ func shipCmd() *cobra.Command {
 }
 
 func ship(args []string, message string, debug bool) error {
-	run, exit, err := LoadProdRunner(loadArgs{
-		debug:                 debug,
-		dryRun:                false,
-		handleUnfinishedState: true,
-		validateGitversion:    true,
-		validateIsRepository:  true,
-		validateIsConfigured:  true,
+	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
+		Debug:                 debug,
+		DryRun:                false,
+		HandleUnfinishedState: true,
+		ValidateGitversion:    true,
+		ValidateIsRepository:  true,
+		ValidateIsConfigured:  true,
 	})
 	if err != nil || exit {
 		return err

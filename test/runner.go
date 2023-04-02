@@ -6,8 +6,8 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v7/src/cache"
-	"github.com/git-town/git-town/v7/src/cmd"
 	"github.com/git-town/git-town/v7/src/config"
+	"github.com/git-town/git-town/v7/src/execute"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/stretchr/testify/assert"
 )
@@ -66,7 +66,7 @@ func newRunner(workingDir, homeDir, binDir string) Runner {
 		RootDirCache:       &cache.String{},
 	}
 	backendCommands := git.BackendCommands{
-		BackendRunner: cmd.NewBackendRunner(&workingDir, false, nil),
+		BackendRunner: execute.NewBackendRunner(&workingDir, false, nil),
 		Config:        &config,
 	}
 	testCommands := testCommands{
