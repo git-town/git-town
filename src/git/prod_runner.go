@@ -12,14 +12,13 @@ func NewProdRunner(backendRunner BackendRunner, frontendRunner FrontendRunner, c
 		BackendRunner: backendRunner,
 		Config:        &config,
 	}
-	frontendCommands := FrontendCommands{
-		Frontend: frontendRunner,
-		Config:   &config,
-		Backend:  &backendCommands,
-	}
 	return ProdRunner{
-		Config:   config,
-		Backend:  backendCommands,
-		Frontend: frontendCommands,
+		Config:  config,
+		Backend: backendCommands,
+		Frontend: FrontendCommands{
+			Frontend: frontendRunner,
+			Config:   &config,
+			Backend:  &backendCommands,
+		},
 	}
 }
