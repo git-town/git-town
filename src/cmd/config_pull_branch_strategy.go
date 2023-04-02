@@ -31,7 +31,7 @@ func pullBranchStrategyCommand() *cobra.Command {
 }
 
 func pullBranchStrategy(args []string, debug bool) error {
-	run, exit, err := LoadProdRunner(runnerArgs{
+	run, exit, err := LoadProdRunner(loadArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
 		dryRun:                false,

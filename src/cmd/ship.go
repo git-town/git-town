@@ -62,7 +62,7 @@ func shipCmd() *cobra.Command {
 }
 
 func ship(args []string, message string, debug bool) error {
-	run, exit, err := LoadProdRunner(runnerArgs{
+	run, exit, err := LoadProdRunner(loadArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: true,

@@ -41,7 +41,7 @@ func prependCommand() *cobra.Command {
 }
 
 func prepend(args []string, debug bool) error {
-	run, exit, err := LoadProdRunner(runnerArgs{
+	run, exit, err := LoadProdRunner(loadArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: true,

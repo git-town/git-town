@@ -52,7 +52,7 @@ func syncCmd() *cobra.Command {
 }
 
 func sync(all, dryRun, debug bool) error {
-	run, exit, err := LoadProdRunner(runnerArgs{
+	run, exit, err := LoadProdRunner(loadArgs{
 		debug:                 debug,
 		dryRun:                dryRun,
 		handleUnfinishedState: true,
