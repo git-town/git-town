@@ -73,10 +73,10 @@ type LoadArgs struct {
 	ValidateIsOnline      bool `exhaustruct:"optional"`
 }
 
-func NewBackendRunner(dir *string, debug bool, statistics *Statistics) git.BackendRunner {
-	backendRunner := subshell.BackendRunner{Dir: dir, Statistics: statistics}
+func NewBackendRunner(dir *string, debug bool, stats *Statistics) git.BackendRunner {
+	backendRunner := subshell.BackendRunner{Dir: dir, Statistics: stats}
 	if debug {
-		return subshell.BackendLoggingRunner{Runner: backendRunner, Statistics: statistics}
+		return subshell.BackendLoggingRunner{Runner: backendRunner, Statistics: stats}
 	}
 	return backendRunner
 }
