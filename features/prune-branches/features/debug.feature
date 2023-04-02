@@ -10,11 +10,10 @@ Feature: display debug and performance statistics
     And the current branch is "old"
     When I run "git-town prune-branches --debug"
 
-  @this
   Scenario: result
     Then it prints:
       """
-      Executed 20 shell commands.
+      Ran 20 shell commands.
       """
     And the current branch is now "main"
     And the branches are now
@@ -24,11 +23,12 @@ Feature: display debug and performance statistics
       | BRANCH | PARENT |
       | active | main   |
 
+  @this
   Scenario: undo
     When I run "git-town undo --debug"
     Then it prints:
       """
-      Executed 9 shell commands.
+      Ran 9 shell commands.
       """
     And the current branch is now "old"
     And the initial branches and hierarchy exist

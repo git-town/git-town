@@ -25,7 +25,6 @@ func (r BackendLoggingRunner) PrintHeader(cmd string, args ...string) {
 
 // Run runs the given command in this ShellRunner's directory.
 func (r BackendLoggingRunner) Run(cmd string, args ...string) (string, error) {
-	// fmt.Println("11111111111111", r.Statistics)
 	if r.Statistics != nil {
 		r.Statistics.RegisterCommandExecution()
 	}

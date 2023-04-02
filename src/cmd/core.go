@@ -21,8 +21,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v7/src/cache"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
@@ -67,18 +65,16 @@ func long(summary string, desc ...string) string {
 
 func LoadProdRunner(args loadArgs) (prodRunner git.ProdRunner, exit bool, err error) { //nolint:nonamedreturns // so many return values require names
 	var stats *subshell.Statistics
-	fmt.Println("2222222222222222", args.debug)
 	if args.debug {
 		stats = &subshell.Statistics{}
 	}
 	backendRunner := NewBackendRunner(nil, args.debug, stats)
 	config := git.NewRepoConfig(backendRunner)
-	frontendRunner := NewFrontendRunner(args.omitBranchNames, args.dryRun, config.CurrentBranchCache)
+	frontendRunner := NewFrontendRunner(args.omitBranchNames, args.dryRun, config.CurrentBranchCache, stats)
 	backendCommands := git.BackendCommands{
 		BackendRunner: backendRunner,
 		Config:        &config,
 	}
-	fmt.Println("333333333333333", stats)
 	prodRunner = git.ProdRunner{
 		Config:  config,
 		Backend: backendCommands,
@@ -135,7 +131,7 @@ type loadArgs struct {
 func NewBackendRunner(dir *string, debug bool, statistics *subshell.Statistics) git.BackendRunner {
 	backendRunner := subshell.BackendRunner{Dir: dir, Statistics: statistics}
 	if debug {
-		return subshell.BackendLoggingRunner{Runner: backendRunner}
+		return subshell.BackendLoggingRunner{Runner: backendRunner, Statistics: statistics}
 	}
 	return backendRunner
 }
