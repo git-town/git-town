@@ -20,3 +20,10 @@ Feature: shorten Git Town commands
     Given I am outside a Git repo
     When I run "git-town aliases add"
     Then it does not print "Not a git repository"
+
+  Scenario: debug
+    When I run "git-town aliases add"
+    Then it prints:
+      """
+      Executed 20 shell commands.
+      """
