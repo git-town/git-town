@@ -17,7 +17,7 @@ Feature: display debug statistics
 
   @this
   Scenario: undo
-    Given I run "git-town rename-branch new"
+    Given I ran "git-town rename-branch new"
     When I run "git-town undo --debug"
     Then it prints:
       """

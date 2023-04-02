@@ -16,7 +16,7 @@ Feature: display debug statistics
 
   @this
   Scenario: undo
-    Given I run "git-town hack new"
+    Given I ran "git-town hack new"
     When I run "git town undo --debug"
     Then it prints:
       """

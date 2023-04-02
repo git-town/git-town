@@ -15,7 +15,7 @@ Feature: display debug statistics
     And the current branch is now "new"
 
   Scenario: undo
-    Given I run "git-town append new"
+    Given I ran "git-town append new"
     When I run "git-town undo --debug"
     Then it prints:
       """

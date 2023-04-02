@@ -15,7 +15,7 @@ Feature: display debug statistics
     And the current branch is now "parent"
 
   Scenario: undo
-    Given I run "git-town prepend parent"
+    Given I ran "git-town prepend parent"
     When I run "git-town undo --debug"
     Then it prints:
       """

@@ -15,7 +15,7 @@ Feature: display debug statistics
     And the current branch is now "main"
 
   Scenario: undo
-    Given I run "git-town ship -m done"
+    Given I ran "git-town ship -m done"
     When I run "git-town undo --debug"
     Then it prints:
       """

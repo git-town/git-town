@@ -18,7 +18,7 @@ Feature: display debug statistics
 
   @this
   Scenario: undo
-    Given I run "git-town kill"
+    Given I ran "git-town kill"
     When I run "git-town undo --debug"
     Then it prints:
       """

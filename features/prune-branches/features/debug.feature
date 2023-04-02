@@ -24,7 +24,7 @@ Feature: display debug statistics
       | active | main   |
 
   Scenario: undo
-    Given I run "git-town prune-branches"
+    Given I ran "git-town prune-branches"
     When I run "git-town undo --debug"
     Then it prints:
       """
