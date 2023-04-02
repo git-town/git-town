@@ -6,19 +6,3 @@ type ProdRunner struct {
 	Backend  BackendCommands
 	Frontend FrontendCommands
 }
-
-func NewProdRunner(backendRunner BackendRunner, frontendRunner FrontendRunner, config RepoConfig) ProdRunner {
-	backendCommands := BackendCommands{
-		BackendRunner: backendRunner,
-		Config:        &config,
-	}
-	return ProdRunner{
-		Config:  config,
-		Backend: backendCommands,
-		Frontend: FrontendCommands{
-			Frontend: frontendRunner,
-			Config:   &config,
-			Backend:  &backendCommands,
-		},
-	}
-}
