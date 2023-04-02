@@ -9,22 +9,7 @@ import (
 )
 
 func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, exit bool, err error) { //nolint:nonamedreturns // so many return values require names
-	backendRunner := NewBackendRunner(nil, args.Debug)
-	config := git.NewRepoConfig(backendRunner)
-	frontendRunner := NewFrontendRunner(args.OmitBranchNames, args.DryRun, config.CurrentBranchCache)
-	backendCommands := git.BackendCommands{
-		BackendRunner: backendRunner,
-		Config:        &config,
-	}
-	prodRunner = git.ProdRunner{
-		Config:  config,
-		Backend: backendCommands,
-		Frontend: git.FrontendCommands{
-			Frontend: frontendRunner,
-			Config:   &config,
-			Backend:  &backendCommands,
-		},
-	}
+	prodRunner = newProdRunner(args)
 	if args.ValidateIsRepository {
 		err := validate.IsRepository(&prodRunner)
 		if err != nil {
@@ -66,6 +51,24 @@ type LoadArgs struct {
 	ValidateIsRepository  bool `exhaustruct:"optional"`
 	ValidateIsConfigured  bool `exhaustruct:"optional"`
 	ValidateIsOnline      bool `exhaustruct:"optional"`
+}
+
+func newProdRunner(args LoadArgs) git.ProdRunner {
+	backendRunner := NewBackendRunner(nil, args.Debug)
+	config := git.NewRepoConfig(backendRunner)
+	backendCommands := git.BackendCommands{
+		BackendRunner: backendRunner,
+		Config:        &config,
+	}
+	return git.ProdRunner{
+		Config:  config,
+		Backend: backendCommands,
+		Frontend: git.FrontendCommands{
+			Frontend: NewFrontendRunner(args.OmitBranchNames, args.DryRun, config.CurrentBranchCache),
+			Config:   &config,
+			Backend:  &backendCommands,
+		},
+	}
 }
 
 func NewBackendRunner(dir *string, debug bool) git.BackendRunner {
