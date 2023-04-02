@@ -2,6 +2,7 @@ package runstate
 
 import (
 	"fmt"
+	"reflect"
 
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/git"
@@ -28,7 +29,7 @@ func Execute(runState *RunState, run *git.ProdRunner, connector hosting.Connecto
 				}
 			}
 			fmt.Println()
-			if run.Stats != nil {
+			if run.Stats != nil && !reflect.ValueOf(run.Stats).IsNil() {
 				fmt.Printf("Ran %d shell commands.\n", run.Stats.RunCount())
 			}
 			return nil

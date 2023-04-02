@@ -1,4 +1,4 @@
-Feature: display debug and performance statistics
+Feature: display debug statistics
 
   Background:
     Given the feature branches "active" and "old"

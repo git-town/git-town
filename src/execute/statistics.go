@@ -5,7 +5,9 @@ type Statistics struct {
 }
 
 func (s *Statistics) RegisterRun() {
-	s.CommandsCount += 1
+	if s != nil {
+		s.CommandsCount += 1
+	}
 }
 
 func (s *Statistics) RunCount() int {
