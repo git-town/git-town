@@ -33,7 +33,7 @@ func pushHookCommand() *cobra.Command {
 }
 
 func pushHook(args []string, global, debug bool) error {
-	run, exit, err := LoadProdRunner(RunnerArgs{
+	run, exit, err := LoadProdRunner(loadArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
 		dryRun:                false,
