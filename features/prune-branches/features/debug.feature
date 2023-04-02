@@ -23,7 +23,6 @@ Feature: display debug and performance statistics
       | BRANCH | PARENT |
       | active | main   |
 
-  @this
   Scenario: undo
     When I run "git-town undo --debug"
     Then it prints:
