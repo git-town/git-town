@@ -38,7 +38,7 @@ func appendCmd() *cobra.Command {
 }
 
 func runAppend(arg string, debug bool) error {
-	run, exit, err := LoadProdRunner(RunnerArgs{
+	run, exit, err := LoadProdRunner(loadArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: true,

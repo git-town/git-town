@@ -46,7 +46,7 @@ func perennialBranchesCmd() *cobra.Command {
 }
 
 func displayPerennialBranches(debug bool) error {
-	run, exit, err := LoadProdRunner(RunnerArgs{
+	run, exit, err := LoadProdRunner(loadArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
 		dryRun:                false,
@@ -62,7 +62,7 @@ func displayPerennialBranches(debug bool) error {
 }
 
 func updatePerennialBranches(debug bool) error {
-	run, exit, err := LoadProdRunner(RunnerArgs{
+	run, exit, err := LoadProdRunner(loadArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
 		dryRun:                false,

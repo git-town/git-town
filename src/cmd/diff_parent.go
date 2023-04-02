@@ -33,7 +33,7 @@ func diffParentCommand() *cobra.Command {
 }
 
 func diffParent(args []string, debug bool) error {
-	run, exit, err := LoadProdRunner(RunnerArgs{
+	run, exit, err := LoadProdRunner(loadArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: true,
