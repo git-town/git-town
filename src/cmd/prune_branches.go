@@ -30,7 +30,7 @@ func pruneBranchesCommand() *cobra.Command {
 }
 
 func pruneBranches(debug bool) error {
-	run, exit, err := LoadProdRunner(RunnerArgs{
+	run, exit, err := LoadProdRunner(runnerArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: true,

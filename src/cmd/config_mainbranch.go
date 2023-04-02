@@ -30,7 +30,7 @@ func mainbranchConfigCmd() *cobra.Command {
 }
 
 func configureMainBranch(args []string, debug bool) error {
-	run, exit, err := LoadProdRunner(RunnerArgs{
+	run, exit, err := LoadProdRunner(runnerArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
 		dryRun:                false,

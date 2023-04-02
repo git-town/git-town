@@ -63,7 +63,7 @@ func long(summary string, desc ...string) string {
 	return summary + "."
 }
 
-func LoadProdRunner(args RunnerArgs) (prodRunner git.ProdRunner, exit bool, err error) { //nolint:nonamedreturns // so many return values require names
+func LoadProdRunner(args runnerArgs) (prodRunner git.ProdRunner, exit bool, err error) { //nolint:nonamedreturns // so many return values require names
 	backendRunner := NewBackendRunner(nil, args.debug)
 	config := git.NewRepoConfig(backendRunner)
 	frontendRunner := NewFrontendRunner(args.omitBranchNames, args.dryRun, config.CurrentBranchCache)
@@ -100,7 +100,7 @@ func LoadProdRunner(args RunnerArgs) (prodRunner git.ProdRunner, exit bool, err 
 	return prodRunner, exit, ec.Err
 }
 
-type RunnerArgs struct {
+type runnerArgs struct {
 	debug                 bool
 	dryRun                bool
 	handleUnfinishedState bool

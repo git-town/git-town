@@ -23,7 +23,7 @@ func resetConfigCommand() *cobra.Command {
 }
 
 func resetStatus(debug bool) error {
-	run, exit, err := LoadProdRunner(RunnerArgs{
+	run, exit, err := LoadProdRunner(runnerArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
 		dryRun:                false,

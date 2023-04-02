@@ -34,7 +34,7 @@ func pushNewBranchesCommand() *cobra.Command {
 }
 
 func pushNewBranches(args []string, global, debug bool) error {
-	run, exit, err := LoadProdRunner(RunnerArgs{
+	run, exit, err := LoadProdRunner(runnerArgs{
 		omitBranchNames:       true,
 		debug:                 debug,
 		dryRun:                false,

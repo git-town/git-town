@@ -29,7 +29,7 @@ func continueCmd() *cobra.Command {
 }
 
 func runContinue(debug bool) error {
-	run, exit, err := LoadProdRunner(RunnerArgs{
+	run, exit, err := LoadProdRunner(runnerArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: false,

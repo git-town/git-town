@@ -28,7 +28,7 @@ func switchCmd() *cobra.Command {
 }
 
 func runSwitch(debug bool) error {
-	run, exit, err := LoadProdRunner(RunnerArgs{
+	run, exit, err := LoadProdRunner(runnerArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: true,

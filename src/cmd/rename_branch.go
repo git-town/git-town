@@ -48,7 +48,7 @@ func renameBranchCommand() *cobra.Command {
 }
 
 func renameBranch(args []string, force, debug bool) error {
-	run, exit, err := LoadProdRunner(RunnerArgs{
+	run, exit, err := LoadProdRunner(runnerArgs{
 		debug:                 debug,
 		dryRun:                false,
 		handleUnfinishedState: true,
