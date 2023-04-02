@@ -21,7 +21,7 @@ type FrontendRunner struct {
 // Run runs the given command in this ShellRunner's directory.
 func (r *FrontendRunner) Run(cmd string, args ...string) error {
 	if r.Stats != nil {
-		r.Stats.RegisterCommandExecution()
+		r.Stats.RegisterRun()
 	}
 	var branchName string
 	if r.OmitBranchNames {

@@ -2,5 +2,5 @@
 package subshell
 
 type Statistics interface {
-	RegisterCommandExecution()
+	RegisterRun()
 }

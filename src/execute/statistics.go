@@ -4,7 +4,7 @@ type Statistics struct {
 	CommandsCount int
 }
 
-func (s *Statistics) RegisterCommandExecution() {
+func (s *Statistics) RegisterRun() {
 	s.CommandsCount += 1
 }
 
