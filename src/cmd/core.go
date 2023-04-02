@@ -21,6 +21,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/git-town/git-town/v7/src/cache"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
@@ -64,10 +66,29 @@ func long(summary string, desc ...string) string {
 }
 
 func LoadProdRunner(args loadArgs) (prodRunner git.ProdRunner, exit bool, err error) { //nolint:nonamedreturns // so many return values require names
-	backendRunner := NewBackendRunner(nil, args.debug)
+	var stats *subshell.Statistics
+	fmt.Println("2222222222222222", args.debug)
+	if args.debug {
+		stats = &subshell.Statistics{}
+	}
+	backendRunner := NewBackendRunner(nil, args.debug, stats)
 	config := git.NewRepoConfig(backendRunner)
 	frontendRunner := NewFrontendRunner(args.omitBranchNames, args.dryRun, config.CurrentBranchCache)
-	prodRunner = git.NewProdRunner(backendRunner, frontendRunner, config)
+	backendCommands := git.BackendCommands{
+		BackendRunner: backendRunner,
+		Config:        &config,
+	}
+	fmt.Println("333333333333333", stats)
+	prodRunner = git.ProdRunner{
+		Config:  config,
+		Backend: backendCommands,
+		Frontend: git.FrontendCommands{
+			Frontend: frontendRunner,
+			Config:   &config,
+			Backend:  &backendCommands,
+		},
+		Stats: stats,
+	}
 	if args.validateIsRepository {
 		err := validate.IsRepository(&prodRunner)
 		if err != nil {
@@ -111,16 +132,16 @@ type loadArgs struct {
 	validateIsOnline      bool `exhaustruct:"optional"`
 }
 
-func NewBackendRunner(dir *string, debug bool) git.BackendRunner {
-	backendRunner := subshell.BackendRunner{Dir: dir}
+func NewBackendRunner(dir *string, debug bool, statistics *subshell.Statistics) git.BackendRunner {
+	backendRunner := subshell.BackendRunner{Dir: dir, Statistics: statistics}
 	if debug {
-		return &subshell.BackendLoggingRunner{Runner: backendRunner}
+		return subshell.BackendLoggingRunner{Runner: backendRunner}
 	}
-	return &backendRunner
+	return backendRunner
 }
 
 // NewFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.
-func NewFrontendRunner(omitBranchNames, dryRun bool, currentBranchCache *cache.String) git.FrontendRunner {
+func NewFrontendRunner(omitBranchNames, dryRun bool, currentBranchCache *cache.String, stats *subshell.Statistics) git.FrontendRunner {
 	if dryRun {
 		return subshell.FrontendDryRunner{
 			CurrentBranch:   currentBranchCache,

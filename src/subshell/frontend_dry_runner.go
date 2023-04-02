@@ -12,6 +12,7 @@ import (
 type FrontendDryRunner struct {
 	CurrentBranch   *cache.String
 	OmitBranchNames bool
+	Stats           *subshell.Statistics
 }
 
 // Run runs the given command in this ShellRunner's directory.

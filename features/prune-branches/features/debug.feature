@@ -10,6 +10,7 @@ Feature: display debug and performance statistics
     And the current branch is "old"
     When I run "git-town prune-branches --debug"
 
+  @this
   Scenario: result
     Then it prints:
       """
@@ -23,7 +24,6 @@ Feature: display debug and performance statistics
       | BRANCH | PARENT |
       | active | main   |
 
-  @this
   Scenario: undo
     When I run "git-town undo --debug"
     Then it prints:
