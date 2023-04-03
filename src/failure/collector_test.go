@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestErrorChecker(t *testing.T) {
+func TestCollector(t *testing.T) {
 	t.Parallel()
 	t.Run("Bool", func(t *testing.T) {
 		t.Run("returns the given bool value", func(t *testing.T) {
