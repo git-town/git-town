@@ -15,7 +15,6 @@ func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, exit bool, err er
 	}
 	backendRunner := NewBackendRunner(nil, args.Debug, stats)
 	config := git.NewRepoConfig(backendRunner)
-	frontendRunner := NewFrontendRunner(args.OmitBranchNames, args.DryRun, config.CurrentBranchCache, stats)
 	backendCommands := git.BackendCommands{
 		BackendRunner: backendRunner,
 		Config:        &config,
@@ -24,7 +23,7 @@ func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, exit bool, err er
 		Config:  config,
 		Backend: backendCommands,
 		Frontend: git.FrontendCommands{
-			Frontend: frontendRunner,
+			Frontend: NewFrontendRunner(args.OmitBranchNames, args.DryRun, config.CurrentBranchCache),
 			Config:   &config,
 			Backend:  &backendCommands,
 		},
