@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/git-town/git-town/v7/src/execute"
+	"github.com/git-town/git-town/v7/src/failure"
 	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
@@ -74,24 +75,24 @@ type appendConfig struct {
 }
 
 func determineAppendConfig(targetBranch string, run *git.ProdRunner) (*appendConfig, error) {
-	ec := runstate.ErrorChecker{}
-	parentBranch := ec.String(run.Backend.CurrentBranch())
-	hasOrigin := ec.Bool(run.Backend.HasOrigin())
-	isOffline := ec.Bool(run.Config.IsOffline())
+	fc := failure.Collector{}
+	parentBranch := fc.String(run.Backend.CurrentBranch())
+	hasOrigin := fc.Bool(run.Backend.HasOrigin())
+	isOffline := fc.Bool(run.Config.IsOffline())
 	mainBranch := run.Config.MainBranch()
-	pushHook := ec.Bool(run.Config.PushHook())
-	shouldNewBranchPush := ec.Bool(run.Config.ShouldNewBranchPush())
-	if ec.Err != nil {
-		return nil, ec.Err
+	pushHook := fc.Bool(run.Config.PushHook())
+	shouldNewBranchPush := fc.Bool(run.Config.ShouldNewBranchPush())
+	if fc.Err != nil {
+		return nil, fc.Err
 	}
 	if hasOrigin && !isOffline {
-		ec.Check(run.Frontend.Fetch())
+		fc.Check(run.Frontend.Fetch())
 	}
-	hasTargetBranch := ec.Bool(run.Backend.HasLocalOrOriginBranch(targetBranch, mainBranch))
+	hasTargetBranch := fc.Bool(run.Backend.HasLocalOrOriginBranch(targetBranch, mainBranch))
 	if hasTargetBranch {
-		ec.Fail("a branch named %q already exists", targetBranch)
+		fc.Fail("a branch named %q already exists", targetBranch)
 	}
-	ec.Check(validate.KnowsBranchAncestry(parentBranch, run.Config.MainBranch(), &run.Backend))
+	fc.Check(validate.KnowsBranchAncestry(parentBranch, run.Config.MainBranch(), &run.Backend))
 	ancestorBranches := run.Config.AncestorBranches(parentBranch)
 	return &appendConfig{
 		ancestorBranches:    ancestorBranches,
@@ -102,7 +103,7 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner) (*appendCon
 		parentBranch:        parentBranch,
 		shouldNewBranchPush: shouldNewBranchPush,
 		targetBranch:        targetBranch,
-	}, ec.Err
+	}, fc.Err
 }
 
 func appendStepList(config *appendConfig, run *git.ProdRunner) (runstate.StepList, error) {
