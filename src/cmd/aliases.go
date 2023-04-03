@@ -65,6 +65,7 @@ func addAliases(run *git.ProdRunner) error {
 			return err
 		}
 	}
+	run.Stats.PrintAnalysis()
 	return nil
 }
 

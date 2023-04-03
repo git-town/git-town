@@ -9,5 +9,5 @@ type ProdRunner struct {
 }
 
 type Statistics interface {
-	RunCount() int
+	PrintAnalysis()
 }
