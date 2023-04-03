@@ -23,7 +23,7 @@ func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, exit bool, err er
 		Config:  config,
 		Backend: backendCommands,
 		Frontend: git.FrontendCommands{
-			Frontend: NewFrontendRunner(args.OmitBranchNames, args.DryRun, config.CurrentBranchCache),
+			Frontend: NewFrontendRunner(args.OmitBranchNames, args.DryRun, config.CurrentBranchCache, stats),
 			Config:   &config,
 			Backend:  &backendCommands,
 		},
