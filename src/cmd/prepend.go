@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v7/src/execute"
+	"github.com/git-town/git-town/v7/src/failure"
 	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
@@ -78,15 +79,15 @@ type prependConfig struct {
 }
 
 func determinePrependConfig(args []string, run *git.ProdRunner) (*prependConfig, error) {
-	ec := runstate.ErrorChecker{}
-	initialBranch := ec.String(run.Backend.CurrentBranch())
-	hasOrigin := ec.Bool(run.Backend.HasOrigin())
-	shouldNewBranchPush := ec.Bool(run.Config.ShouldNewBranchPush())
-	pushHook := ec.Bool(run.Config.PushHook())
-	isOffline := ec.Bool(run.Config.IsOffline())
+	fc := failure.Collector{}
+	initialBranch := fc.String(run.Backend.CurrentBranch())
+	hasOrigin := fc.Bool(run.Backend.HasOrigin())
+	shouldNewBranchPush := fc.Bool(run.Config.ShouldNewBranchPush())
+	pushHook := fc.Bool(run.Config.PushHook())
+	isOffline := fc.Bool(run.Config.IsOffline())
 	mainBranch := run.Config.MainBranch()
-	if ec.Err != nil {
-		return nil, ec.Err
+	if fc.Err != nil {
+		return nil, fc.Err
 	}
 	if hasOrigin && !isOffline {
 		err := run.Frontend.Fetch()
