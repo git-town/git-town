@@ -22,8 +22,8 @@ package cmd
 
 import (
 	"github.com/git-town/git-town/v7/src/cache"
+	"github.com/git-town/git-town/v7/src/failure"
 	"github.com/git-town/git-town/v7/src/git"
-	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/git-town/git-town/v7/src/subshell"
 	"github.com/git-town/git-town/v7/src/validate"
 )
@@ -84,20 +84,20 @@ func LoadProdRunner(args loadArgs) (prodRunner git.ProdRunner, exit bool, err er
 	if args.dryRun {
 		prodRunner.Config.DryRun = true
 	}
-	ec := runstate.ErrorChecker{}
+	fc := failure.Collector{}
 	if args.validateGitversion {
-		ec.Check(validate.HasGitVersion(&prodRunner.Backend))
+		fc.Check(validate.HasGitVersion(&prodRunner.Backend))
 	}
 	if args.validateIsConfigured {
-		ec.Check(validate.IsConfigured(&prodRunner.Backend))
+		fc.Check(validate.IsConfigured(&prodRunner.Backend))
 	}
 	if args.validateIsOnline {
-		ec.Check(validate.IsOnline(&prodRunner.Config))
+		fc.Check(validate.IsOnline(&prodRunner.Config))
 	}
 	if args.handleUnfinishedState {
-		exit = ec.Bool(validate.HandleUnfinishedState(&prodRunner, nil))
+		exit = fc.Bool(validate.HandleUnfinishedState(&prodRunner, nil))
 	}
-	return prodRunner, exit, ec.Err
+	return prodRunner, exit, fc.Err
 }
 
 type loadArgs struct {

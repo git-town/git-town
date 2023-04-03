@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/failure"
 	"github.com/git-town/git-town/v7/src/flags"
-	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/spf13/cobra"
 )
 
@@ -49,17 +49,17 @@ func runConfig(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	ec := runstate.ErrorChecker{}
-	pushNewBranches := ec.Bool(run.Config.ShouldNewBranchPush())
-	pushHook := ec.Bool(run.Config.PushHook())
-	isOffline := ec.Bool(run.Config.IsOffline())
-	deleteOrigin := ec.Bool(run.Config.ShouldShipDeleteOriginBranch())
-	pullBranchStrategy := ec.PullBranchStrategy(run.Config.PullBranchStrategy())
-	shouldSyncUpstream := ec.Bool(run.Config.ShouldSyncUpstream())
-	syncStrategy := ec.SyncStrategy(run.Config.SyncStrategy())
-	hostingService := ec.HostingService(run.Config.HostingService())
-	if ec.Err != nil {
-		return ec.Err
+	fc := failure.Collector{}
+	pushNewBranches := fc.Bool(run.Config.ShouldNewBranchPush())
+	pushHook := fc.Bool(run.Config.PushHook())
+	isOffline := fc.Bool(run.Config.IsOffline())
+	deleteOrigin := fc.Bool(run.Config.ShouldShipDeleteOriginBranch())
+	pullBranchStrategy := fc.PullBranchStrategy(run.Config.PullBranchStrategy())
+	shouldSyncUpstream := fc.Bool(run.Config.ShouldSyncUpstream())
+	syncStrategy := fc.SyncStrategy(run.Config.SyncStrategy())
+	hostingService := fc.HostingService(run.Config.HostingService())
+	if fc.Err != nil {
+		return fc.Err
 	}
 	fmt.Println()
 	cli.PrintHeader("Branches")
