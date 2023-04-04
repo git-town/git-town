@@ -49,7 +49,12 @@ func diffParent(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	return run.Frontend.DiffParent(config.branch, config.parentBranch)
+	err = run.Frontend.DiffParent(config.branch, config.parentBranch)
+	if err != nil {
+		return err
+	}
+	run.Stats.PrintAnalysis()
+	return nil
 }
 
 type diffParentConfig struct {
