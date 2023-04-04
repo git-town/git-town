@@ -9,10 +9,7 @@ import (
 )
 
 func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, exit bool, err error) { //nolint:nonamedreturns // so many return values require names
-	var stats *Statistics
-	if args.Debug {
-		stats = &Statistics{}
-	}
+	stats := newStatistics(args.Debug)
 	backendRunner := NewBackendRunner(nil, args.Debug, stats)
 	config := git.NewRepoConfig(backendRunner)
 	backendCommands := git.BackendCommands{
@@ -72,7 +69,7 @@ type LoadArgs struct {
 	ValidateIsOnline      bool `exhaustruct:"optional"`
 }
 
-func NewBackendRunner(dir *string, debug bool, stats *Statistics) git.BackendRunner {
+func NewBackendRunner(dir *string, debug bool, stats Statistics) git.BackendRunner {
 	backendRunner := subshell.BackendRunner{Dir: dir, Statistics: stats}
 	if debug {
 		return subshell.BackendLoggingRunner{Runner: backendRunner, Statistics: stats}
@@ -81,7 +78,7 @@ func NewBackendRunner(dir *string, debug bool, stats *Statistics) git.BackendRun
 }
 
 // NewFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.
-func NewFrontendRunner(omitBranchNames, dryRun bool, currentBranchCache *cache.String, stats *Statistics) git.FrontendRunner {
+func NewFrontendRunner(omitBranchNames, dryRun bool, currentBranchCache *cache.String, stats Statistics) git.FrontendRunner {
 	if dryRun {
 		return &subshell.FrontendDryRunner{
 			CurrentBranch:   currentBranchCache,

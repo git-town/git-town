@@ -2,17 +2,29 @@ package execute
 
 import "fmt"
 
-type Statistics struct {
+type Statistics interface {
+	RegisterRun()
+	PrintAnalysis()
+}
+
+func newStatistics(debug bool) Statistics {
+	if debug {
+		return &CommandsStatistics{}
+	}
+	return &NoStatistics{}
+}
+
+type CommandsStatistics struct {
 	CommandsCount int
 }
 
-func (s *Statistics) RegisterRun() {
+func (s *CommandsStatistics) RegisterRun() {
 	if s != nil {
 		s.CommandsCount += 1
 	}
 }
 
-func (s *Statistics) PrintAnalysis() {
+func (s *CommandsStatistics) PrintAnalysis() {
 	fmt.Printf("Ran %d shell commands.", s.CommandsCount)
 }
 
