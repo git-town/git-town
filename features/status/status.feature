@@ -1,7 +1,7 @@
 Feature: describe the status of the current/last Git Town command
 
   Scenario: Git Town command ran successfully
-    Given I run "git-town sync"
+    Given I ran "git-town sync"
     When I run "git-town status"
     Then it prints:
       """
