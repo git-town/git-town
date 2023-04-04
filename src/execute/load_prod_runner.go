@@ -72,7 +72,7 @@ type LoadArgs struct {
 func NewBackendRunner(dir *string, debug bool, stats Statistics) git.BackendRunner {
 	backendRunner := subshell.BackendRunner{Dir: dir, Stats: stats}
 	if debug {
-		return subshell.BackendLoggingRunner{Runner: backendRunner, Statistics: stats}
+		return subshell.BackendLoggingRunner{Runner: backendRunner}
 	}
 	return backendRunner
 }

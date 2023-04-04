@@ -11,8 +11,7 @@ import (
 // BackendLoggingRunner executes backend shell commands.
 // It	logs the executed commands and their output to the CLI.
 type BackendLoggingRunner struct {
-	Runner     BackendRunner
-	Statistics Statistics
+	Runner BackendRunner
 }
 
 func (r BackendLoggingRunner) PrintHeader(cmd string, args ...string) {
@@ -25,7 +24,6 @@ func (r BackendLoggingRunner) PrintHeader(cmd string, args ...string) {
 
 // Run runs the given command in this ShellRunner's directory.
 func (r BackendLoggingRunner) Run(cmd string, args ...string) (string, error) {
-	r.Statistics.RegisterRun()
 	r.PrintHeader(cmd, args...)
 	output, err := r.Runner.Run(cmd, args...)
 	if output != "" {
