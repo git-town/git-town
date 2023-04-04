@@ -14,6 +14,7 @@ func newStatistics(debug bool) Statistics {
 	return &NoStatistics{}
 }
 
+// CommandsStatistics is a Statistics implementation that counts how many commands were run.
 type CommandsStatistics struct {
 	CommandsCount int
 }
@@ -28,7 +29,7 @@ func (s *CommandsStatistics) PrintAnalysis() {
 	fmt.Printf("Ran %d shell commands.", s.CommandsCount)
 }
 
-// NoStatistics is a mock statistics implementation for situations where no statistics are needed.
+// NoStatistics is a statistics implementation that does nothing.
 type NoStatistics struct{}
 
 func (s *NoStatistics) RegisterRun() {}
