@@ -7,20 +7,13 @@ type Statistics interface {
 	PrintAnalysis()
 }
 
-func newStatistics(debug bool) Statistics {
-	if debug {
-		return &CommandsStatistics{}
-	}
-	return &NoStatistics{}
-}
-
 // CommandsStatistics is a Statistics implementation that counts how many commands were run.
 type CommandsStatistics struct {
 	CommandsCount int
 }
 
 func (s *CommandsStatistics) RegisterRun() {
-	s.CommandsCount += 1
+	s.CommandsCount++
 }
 
 func (s *CommandsStatistics) PrintAnalysis() {

@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/git-town/git-town/v7/src/execute"
 	"github.com/git-town/git-town/v7/src/subshell"
 	"github.com/stretchr/testify/assert"
 )
@@ -17,7 +18,7 @@ func TestBackendRunner(t *testing.T) {
 		t.Parallel()
 		t.Run("happy path", func(t *testing.T) {
 			tmpDir := t.TempDir()
-			runner := subshell.BackendRunner{Dir: &tmpDir}
+			runner := subshell.BackendRunner{Dir: &tmpDir, Stats: &execute.NoStatistics{}}
 			output, err := runner.Run("echo", "hello", "world")
 			assert.NoError(t, err)
 			assert.Equal(t, "hello world", output)
@@ -26,7 +27,7 @@ func TestBackendRunner(t *testing.T) {
 		t.Run("unknown executable", func(t *testing.T) {
 			t.Parallel()
 			tmpDir := t.TempDir()
-			runner := subshell.BackendRunner{Dir: &tmpDir}
+			runner := subshell.BackendRunner{Dir: &tmpDir, Stats: &execute.NoStatistics{}}
 			_, err := runner.Run("zonk")
 			assert.Error(t, err)
 			var execError *exec.Error
@@ -36,7 +37,7 @@ func TestBackendRunner(t *testing.T) {
 		t.Run("non-zero exit code", func(t *testing.T) {
 			t.Parallel()
 			tmpDir := t.TempDir()
-			runner := subshell.BackendRunner{Dir: &tmpDir}
+			runner := subshell.BackendRunner{Dir: &tmpDir, Stats: &execute.NoStatistics{}}
 			_, err := runner.Run("bash", "-c", "echo hi && exit 2")
 			expectedError := `
 ----------------------------------------

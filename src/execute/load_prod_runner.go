@@ -9,7 +9,12 @@ import (
 )
 
 func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, exit bool, err error) { //nolint:nonamedreturns // so many return values require names
-	stats := newStatistics(args.Debug)
+	var stats Statistics
+	if args.Debug {
+		stats = &CommandsStatistics{CommandsCount: 0}
+	} else {
+		stats = &NoStatistics{}
+	}
 	backendRunner := NewBackendRunner(nil, args.Debug, stats)
 	config := git.NewRepoConfig(backendRunner)
 	backendCommands := git.BackendCommands{
