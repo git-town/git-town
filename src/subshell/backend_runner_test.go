@@ -56,7 +56,7 @@ hi
 	t.Run(".RunMany()", func(t *testing.T) {
 		t.Parallel()
 		tmpDir := t.TempDir()
-		runner := subshell.BackendRunner{Dir: &tmpDir}
+		runner := subshell.BackendRunner{Dir: &tmpDir, Stats: &execute.NoStatistics{}}
 		err := runner.RunMany([][]string{
 			{"mkdir", "tmp"},
 			{"touch", "tmp/first"},

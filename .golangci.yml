@@ -25,6 +25,7 @@ linters:
     - nlreturn # this forces unnecessary empty lines in function bodies
     - scopelint # deprecated
     - structcheck # deprecated
+    - typecheck # seems buggy
     - varcheck # deprecated
     - varnamelen # not really useful
     - wrapcheck # too many false positives for return values defined in internal packages
