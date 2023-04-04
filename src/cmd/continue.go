@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v7/src/cli"
+	"github.com/git-town/git-town/v7/src/execute"
 	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/hosting"
 	"github.com/git-town/git-town/v7/src/runstate"
@@ -29,13 +30,13 @@ func continueCmd() *cobra.Command {
 }
 
 func runContinue(debug bool) error {
-	run, exit, err := LoadProdRunner(loadArgs{
-		debug:                 debug,
-		dryRun:                false,
-		handleUnfinishedState: false,
-		validateGitversion:    true,
-		validateIsRepository:  true,
-		validateIsConfigured:  true,
+	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
+		Debug:                 debug,
+		DryRun:                false,
+		HandleUnfinishedState: false,
+		ValidateGitversion:    true,
+		ValidateIsRepository:  true,
+		ValidateIsConfigured:  true,
 	})
 	if err != nil || exit {
 		return err

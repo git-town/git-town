@@ -3,6 +3,7 @@ package cmd
 import (
 	"errors"
 
+	"github.com/git-town/git-town/v7/src/execute"
 	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/validate"
 	"github.com/spf13/cobra"
@@ -27,13 +28,13 @@ func setParentCommand() *cobra.Command {
 }
 
 func setParent(debug bool) error {
-	run, exit, err := LoadProdRunner(loadArgs{
-		debug:                 debug,
-		dryRun:                false,
-		handleUnfinishedState: true,
-		validateGitversion:    true,
-		validateIsRepository:  true,
-		validateIsConfigured:  true,
+	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
+		Debug:                 debug,
+		DryRun:                false,
+		HandleUnfinishedState: true,
+		ValidateGitversion:    true,
+		ValidateIsRepository:  true,
+		ValidateIsConfigured:  true,
 	})
 	if err != nil || exit {
 		return err
@@ -55,5 +56,10 @@ func setParent(debug bool) error {
 	} else {
 		existingParent = run.Config.MainBranch()
 	}
-	return validate.KnowsBranchAncestry(currentBranch, existingParent, &run.Backend)
+	err = validate.KnowsBranchAncestry(currentBranch, existingParent, &run.Backend)
+	if err != nil {
+		return err
+	}
+	run.Stats.PrintAnalysis()
+	return nil
 }

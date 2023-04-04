@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v7/src/execute"
 	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/runstate"
 	"github.com/spf13/cobra"
@@ -26,12 +27,12 @@ func resetRunstateCommand() *cobra.Command {
 }
 
 func statusReset(debug bool) error {
-	run, exit, err := LoadProdRunner(loadArgs{
-		debug:                 debug,
-		dryRun:                false,
-		handleUnfinishedState: false,
-		validateGitversion:    true,
-		validateIsRepository:  true,
+	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
+		Debug:                 debug,
+		DryRun:                false,
+		HandleUnfinishedState: false,
+		ValidateGitversion:    true,
+		ValidateIsRepository:  true,
 	})
 	if err != nil || exit {
 		return err
