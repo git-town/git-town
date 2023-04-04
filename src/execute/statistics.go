@@ -20,9 +20,7 @@ type CommandsStatistics struct {
 }
 
 func (s *CommandsStatistics) RegisterRun() {
-	if s != nil {
-		s.CommandsCount += 1
-	}
+	s.CommandsCount += 1
 }
 
 func (s *CommandsStatistics) PrintAnalysis() {
