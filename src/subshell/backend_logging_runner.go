@@ -25,9 +25,7 @@ func (r BackendLoggingRunner) PrintHeader(cmd string, args ...string) {
 
 // Run runs the given command in this ShellRunner's directory.
 func (r BackendLoggingRunner) Run(cmd string, args ...string) (string, error) {
-	if r.Statistics != nil {
-		r.Statistics.RegisterRun()
-	}
+	r.Statistics.RegisterRun()
 	r.PrintHeader(cmd, args...)
 	output, err := r.Runner.Run(cmd, args...)
 	if output != "" {
