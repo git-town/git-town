@@ -41,6 +41,10 @@ func (r BackendRunner) RunMany(commands [][]string) error {
 	return nil
 }
 
+type Statistics interface {
+	RegisterRun()
+}
+
 func ErrorDetails(executable string, args []string, err error, output []byte) error {
 	return fmt.Errorf(`
 ----------------------------------------
