@@ -5,4 +5,9 @@ type ProdRunner struct {
 	Config   RepoConfig
 	Backend  BackendCommands
 	Frontend FrontendCommands
+	Stats    Statistics
+}
+
+type Statistics interface {
+	PrintAnalysis()
 }

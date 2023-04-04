@@ -9,7 +9,13 @@ import (
 )
 
 func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, exit bool, err error) { //nolint:nonamedreturns // so many return values require names
-	backendRunner := NewBackendRunner(nil, args.Debug)
+	var stats Statistics
+	if args.Debug {
+		stats = &CommandsStatistics{CommandsCount: 0}
+	} else {
+		stats = &NoStatistics{}
+	}
+	backendRunner := NewBackendRunner(nil, args.Debug, stats)
 	config := git.NewRepoConfig(backendRunner)
 	backendCommands := git.BackendCommands{
 		BackendRunner: backendRunner,
@@ -19,10 +25,11 @@ func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, exit bool, err er
 		Config:  config,
 		Backend: backendCommands,
 		Frontend: git.FrontendCommands{
-			Frontend: NewFrontendRunner(args.OmitBranchNames, args.DryRun, config.CurrentBranchCache),
+			Frontend: NewFrontendRunner(args.OmitBranchNames, args.DryRun, config.CurrentBranchCache, stats),
 			Config:   &config,
 			Backend:  &backendCommands,
 		},
+		Stats: stats,
 	}
 	if args.ValidateIsRepository {
 		err := validate.IsRepository(&prodRunner)
@@ -67,8 +74,8 @@ type LoadArgs struct {
 	ValidateIsOnline      bool `exhaustruct:"optional"`
 }
 
-func NewBackendRunner(dir *string, debug bool) git.BackendRunner {
-	backendRunner := subshell.BackendRunner{Dir: dir}
+func NewBackendRunner(dir *string, debug bool, stats Statistics) git.BackendRunner {
+	backendRunner := subshell.BackendRunner{Dir: dir, Stats: stats}
 	if debug {
 		return subshell.BackendLoggingRunner{Runner: backendRunner}
 	}
@@ -76,15 +83,17 @@ func NewBackendRunner(dir *string, debug bool) git.BackendRunner {
 }
 
 // NewFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.
-func NewFrontendRunner(omitBranchNames, dryRun bool, currentBranchCache *cache.String) git.FrontendRunner {
+func NewFrontendRunner(omitBranchNames, dryRun bool, currentBranchCache *cache.String, stats Statistics) git.FrontendRunner {
 	if dryRun {
-		return subshell.FrontendDryRunner{
+		return &subshell.FrontendDryRunner{
 			CurrentBranch:   currentBranchCache,
 			OmitBranchNames: omitBranchNames,
+			Stats:           stats,
 		}
 	}
-	return subshell.FrontendRunner{
+	return &subshell.FrontendRunner{
 		CurrentBranch:   currentBranchCache,
 		OmitBranchNames: omitBranchNames,
+		Stats:           stats,
 	}
 }

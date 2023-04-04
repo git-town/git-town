@@ -48,6 +48,7 @@ func status(debug bool) error {
 		return err
 	}
 	displayStatus(*config)
+	run.Stats.PrintAnalysis()
 	return nil
 }
 
