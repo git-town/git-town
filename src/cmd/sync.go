@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v7/src/config"
+	"github.com/git-town/git-town/v7/src/execute"
 	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
@@ -52,13 +53,13 @@ func syncCmd() *cobra.Command {
 }
 
 func sync(all, dryRun, debug bool) error {
-	run, exit, err := LoadProdRunner(loadArgs{
-		debug:                 debug,
-		dryRun:                dryRun,
-		handleUnfinishedState: true,
-		validateGitversion:    true,
-		validateIsRepository:  true,
-		validateIsConfigured:  true,
+	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
+		Debug:                 debug,
+		DryRun:                dryRun,
+		HandleUnfinishedState: true,
+		ValidateGitversion:    true,
+		ValidateIsRepository:  true,
+		ValidateIsConfigured:  true,
 	})
 	if err != nil || exit {
 		return err
