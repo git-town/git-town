@@ -66,7 +66,7 @@ func newRunner(workingDir, homeDir, binDir string) Runner {
 		RootDirCache:       &cache.String{},
 	}
 	backendCommands := git.BackendCommands{
-		BackendRunner: execute.NewBackendRunner(&workingDir, false, nil),
+		BackendRunner: execute.NewBackendRunner(&workingDir, false, &execute.NoStatistics{}),
 		Config:        &config,
 	}
 	testCommands := testCommands{
