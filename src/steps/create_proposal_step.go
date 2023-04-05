@@ -18,6 +18,6 @@ func (step *CreateProposalStep) Run(run *git.ProdRunner, connector hosting.Conne
 	if err != nil {
 		return err
 	}
-	browser.Open(prURL, run.Frontend.Frontend, run.Backend)
+	browser.Open(prURL, run.Frontend, run.Backend)
 	return nil
 }
