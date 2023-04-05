@@ -60,7 +60,7 @@ func repo(debug bool) error {
 	if connector == nil {
 		return hosting.UnsupportedServiceError()
 	}
-	browser.Open(connector.RepositoryURL(), run.Frontend, run.Backend.BackendRunner)
+	browser.Open(connector.RepositoryURL(), run.Frontend.FrontendRunner, run.Backend.BackendRunner)
 	run.Stats.PrintAnalysis()
 	return nil
 }
