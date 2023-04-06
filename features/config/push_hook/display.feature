@@ -12,7 +12,7 @@ Feature: display the push-hook setting
       | --global |
       |          |
 
-  Scenario Outline: display the local setting
+  Scenario Outline: configured locally
     Given local setting "push-hook" is "<VALUE>"
     When I run "git-town config push-hook"
     Then it prints:
@@ -32,7 +32,7 @@ Feature: display the push-hook setting
       | f     | no     |
       | 0     | no     |
 
-  Scenario Outline: display the global setting
+  Scenario Outline: configured globally
     Given global setting "push-hook" is "<VALUE>"
     When I run "git-town config push-hook --global"
     Then it prints:
