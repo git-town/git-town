@@ -1,6 +1,5 @@
 Feature: automatically upgrade outdated configuration
 
-  @debug @this
   Scenario Outline:
     Given <LOCALITY> setting "push-verify" is "true"
     And the current branch is a feature branch "feature"
