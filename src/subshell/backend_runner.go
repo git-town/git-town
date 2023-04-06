@@ -12,10 +12,12 @@ import (
 type BackendRunner struct {
 	// If set, runs the commands in the given directory.
 	// If not set, runs the commands in the current working directory.
-	Dir *string
+	Dir   *string
+	Stats Statistics
 }
 
 func (r BackendRunner) Run(executable string, args ...string) (string, error) {
+	r.Stats.RegisterRun()
 	subProcess := exec.Command(executable, args...) // #nosec
 	if r.Dir != nil {
 		subProcess.Dir = *r.Dir

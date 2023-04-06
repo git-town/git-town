@@ -12,10 +12,11 @@ import (
 type FrontendDryRunner struct {
 	CurrentBranch   *cache.String
 	OmitBranchNames bool
+	Stats           Statistics
 }
 
 // Run runs the given command in this ShellRunner's directory.
-func (r FrontendDryRunner) Run(executable string, args ...string) error {
+func (r *FrontendDryRunner) Run(executable string, args ...string) error {
 	PrintCommand(r.CurrentBranch.Value(), r.OmitBranchNames, executable, args...)
 	return nil
 }
@@ -23,7 +24,7 @@ func (r FrontendDryRunner) Run(executable string, args ...string) error {
 // RunMany runs all given commands in current directory.
 // Commands are provided as a list of argv-style strings.
 // Failed commands abort immediately with the encountered error.
-func (r FrontendDryRunner) RunMany(commands [][]string) error {
+func (r *FrontendDryRunner) RunMany(commands [][]string) error {
 	for _, argv := range commands {
 		err := r.Run(argv[0], argv[1:]...)
 		if err != nil {
@@ -34,7 +35,7 @@ func (r FrontendDryRunner) RunMany(commands [][]string) error {
 }
 
 // RunString runs the given command (including possible arguments) in this ShellInDir's directory.
-func (r FrontendDryRunner) RunString(fullCmd string) error {
+func (r *FrontendDryRunner) RunString(fullCmd string) error {
 	parts, err := shellquote.Split(fullCmd)
 	if err != nil {
 		return fmt.Errorf("cannot split command %q: %w", fullCmd, err)

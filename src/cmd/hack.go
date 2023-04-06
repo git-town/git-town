@@ -3,6 +3,8 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v7/src/execute"
+	"github.com/git-town/git-town/v7/src/failure"
 	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/runstate"
@@ -40,13 +42,13 @@ func hackCmd() *cobra.Command {
 }
 
 func hack(args []string, promptForParent, debug bool) error {
-	run, exit, err := LoadProdRunner(RunnerArgs{
-		debug:                 debug,
-		dryRun:                false,
-		handleUnfinishedState: true,
-		validateGitversion:    true,
-		validateIsRepository:  true,
-		validateIsConfigured:  true,
+	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
+		Debug:                 debug,
+		DryRun:                false,
+		HandleUnfinishedState: true,
+		ValidateGitversion:    true,
+		ValidateIsRepository:  true,
+		ValidateIsConfigured:  true,
 	})
 	if err != nil || exit {
 		return err
@@ -64,18 +66,18 @@ func hack(args []string, promptForParent, debug bool) error {
 }
 
 func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunner) (*appendConfig, error) {
-	ec := runstate.ErrorChecker{}
+	fc := failure.Collector{}
 	targetBranch := args[0]
-	parentBranch := ec.String(determineParentBranch(targetBranch, promptForParent, run))
-	hasOrigin := ec.Bool(run.Backend.HasOrigin())
-	shouldNewBranchPush := ec.Bool(run.Config.ShouldNewBranchPush())
-	isOffline := ec.Bool(run.Config.IsOffline())
+	parentBranch := fc.String(determineParentBranch(targetBranch, promptForParent, run))
+	hasOrigin := fc.Bool(run.Backend.HasOrigin())
+	shouldNewBranchPush := fc.Bool(run.Config.ShouldNewBranchPush())
+	isOffline := fc.Bool(run.Config.IsOffline())
 	mainBranch := run.Config.MainBranch()
-	if ec.Err == nil && hasOrigin && !isOffline {
-		ec.Check(run.Frontend.Fetch())
+	if fc.Err == nil && hasOrigin && !isOffline {
+		fc.Check(run.Frontend.Fetch())
 	}
-	hasBranch := ec.Bool(run.Backend.HasLocalOrOriginBranch(targetBranch, mainBranch))
-	pushHook := ec.Bool(run.Config.PushHook())
+	hasBranch := fc.Bool(run.Backend.HasLocalOrOriginBranch(targetBranch, mainBranch))
+	pushHook := fc.Bool(run.Config.PushHook())
 	if hasBranch {
 		return nil, fmt.Errorf("a branch named %q already exists", targetBranch)
 	}
@@ -88,7 +90,7 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 		shouldNewBranchPush: shouldNewBranchPush,
 		noPushHook:          !pushHook,
 		isOffline:           isOffline,
-	}, ec.Err
+	}, fc.Err
 }
 
 func determineParentBranch(targetBranch string, promptForParent bool, run *git.ProdRunner) (string, error) {

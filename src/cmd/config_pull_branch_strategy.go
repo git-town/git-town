@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/git-town/git-town/v7/src/cli"
 	"github.com/git-town/git-town/v7/src/config"
+	"github.com/git-town/git-town/v7/src/execute"
 	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/spf13/cobra"
@@ -31,13 +32,13 @@ func pullBranchStrategyCommand() *cobra.Command {
 }
 
 func pullBranchStrategy(args []string, debug bool) error {
-	run, exit, err := LoadProdRunner(RunnerArgs{
-		omitBranchNames:       true,
-		debug:                 debug,
-		dryRun:                false,
-		handleUnfinishedState: false,
-		validateGitversion:    true,
-		validateIsRepository:  true,
+	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
+		OmitBranchNames:       true,
+		Debug:                 debug,
+		DryRun:                false,
+		HandleUnfinishedState: false,
+		ValidateGitversion:    true,
+		ValidateIsRepository:  true,
 	})
 	if err != nil || exit {
 		return err
