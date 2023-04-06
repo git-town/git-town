@@ -15,7 +15,7 @@ type BackendRunner struct {
 	// If not set, runs the commands in the current working directory.
 	Dir   *string
 	Stats Statistics
-	// whether to print the commands run to the CLI
+	// whether to print the executed commands to the CLI
 	Verbose bool
 }
 
