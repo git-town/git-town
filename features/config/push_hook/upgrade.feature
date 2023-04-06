@@ -1,21 +1,21 @@
 Feature: automatically upgrade outdated configuration
 
   Scenario Outline:
-    Given <LOCALITY> setting "push-verify" is "true"
+    Given <LOCATION> setting "push-verify" is "true"
     And the current branch is a feature branch "feature"
     And tool "open" is installed
     And the origin is "git@github.com:git-town/git-town.git"
     When I run "git-town <COMMAND>"
     Then it prints:
       """
-      I found the deprecated <LOCALITY> setting "git-town.push-verify".
+      I found the deprecated <LOCATION> setting "git-town.push-verify".
       I am upgrading this setting to the new format "git-town.push-hook".
       """
-    And <LOCALITY> setting "push-hook" is now "true"
-    And <LOCALITY> setting "push-verify" no longer exists
+    And <LOCATION> setting "push-hook" is now "true"
+    And <LOCATION> setting "push-verify" no longer exists
 
     Examples:
-      | COMMAND           | LOCALITY |
+      | COMMAND           | LOCATION |
       | config            | local    |
       | config            | global   |
       | config push-hook  | local    |
