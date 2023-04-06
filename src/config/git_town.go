@@ -82,11 +82,11 @@ func (gt *GitTown) ChildBranches(branch string) []string {
 }
 
 func (gt *GitTown) DeprecatedNewBranchPushFlagGlobal() string {
-	return gt.globalConfigCache[NewBranchPushFlagKey]
+	return gt.globalConfigCache[DeprecatedNewBranchPushFlagKey]
 }
 
 func (gt *GitTown) DeprecatedNewBranchPushFlagLocal() string {
-	return gt.localConfigCache[NewBranchPushFlagKey]
+	return gt.localConfigCache[DeprecatedNewBranchPushFlagKey]
 }
 
 // GitAlias provides the currently set alias for the given Git Town command.
@@ -428,9 +428,9 @@ func (gt *GitTown) SetTestOrigin(value string) error {
 func (gt *GitTown) ShouldNewBranchPush() (bool, error) {
 	oldLocalConfig := gt.DeprecatedNewBranchPushFlagLocal()
 	if oldLocalConfig != "" {
-		fmt.Printf("I found the deprecated local setting %q.\n", NewBranchPushFlagKey)
+		fmt.Printf("I found the deprecated local setting %q.\n", DeprecatedNewBranchPushFlagKey)
 		fmt.Printf("I am upgrading this setting to the new format %q.\n", PushNewBranchesKey)
-		err := gt.RemoveLocalConfigValue(NewBranchPushFlagKey)
+		err := gt.RemoveLocalConfigValue(DeprecatedNewBranchPushFlagKey)
 		if err != nil {
 			return false, err
 		}
@@ -441,9 +441,9 @@ func (gt *GitTown) ShouldNewBranchPush() (bool, error) {
 	}
 	oldGlobalConfig := gt.DeprecatedNewBranchPushFlagGlobal()
 	if oldGlobalConfig != "" {
-		fmt.Printf("I found the deprecated global setting %q.\n", NewBranchPushFlagKey)
+		fmt.Printf("I found the deprecated global setting %q.\n", DeprecatedNewBranchPushFlagKey)
 		fmt.Printf("I am upgrading this setting to the new format %q.\n", PushNewBranchesKey)
-		_, err := gt.RemoveGlobalConfigValue(NewBranchPushFlagKey)
+		_, err := gt.RemoveGlobalConfigValue(DeprecatedNewBranchPushFlagKey)
 		if err != nil {
 			return false, err
 		}
