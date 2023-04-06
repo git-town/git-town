@@ -17,17 +17,15 @@ func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, exit bool, err er
 	}
 	backendRunner := NewBackendRunner(nil, args.Debug, stats)
 	config := git.NewRepoConfig(backendRunner)
-	backendCommands := git.BackendCommands{
-		BackendRunner: backendRunner,
-		Config:        &config,
-	}
 	prodRunner = git.ProdRunner{
-		Config:  config,
-		Backend: backendCommands,
+		Config: config,
+		Backend: git.BackendCommands{
+			BackendRunner: backendRunner,
+			Config:        &config,
+		},
 		Frontend: git.FrontendCommands{
-			Frontend: NewFrontendRunner(args.OmitBranchNames, args.DryRun, config.CurrentBranchCache, stats),
-			Config:   &config,
-			Backend:  &backendCommands,
+			FrontendRunner: NewFrontendRunner(args.OmitBranchNames, args.DryRun, config.CurrentBranchCache, stats),
+			Config:         &config,
 		},
 		Stats: stats,
 	}
