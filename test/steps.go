@@ -514,7 +514,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return err
 	})
 
-	suite.Step(`^setting "([^"]*)" no longer exists locally$`, func(name string) error {
+	suite.Step(`^local setting "([^"]*)" no longer exists$`, func(name string) error {
 		state.gitEnv.DevRepo.Config.Reload()
 		newValue := state.gitEnv.DevRepo.Config.LocalConfigValue("git-town." + name)
 		if newValue == "" {
