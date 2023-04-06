@@ -1,6 +1,5 @@
 Feature: automatically upgrade outdated configuration
 
-  @debug @this
   Scenario Outline:
     Given <LOCALITY> setting "new-branch-push-flag" is "true"
     And the current branch is a feature branch "feature"
