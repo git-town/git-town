@@ -434,11 +434,7 @@ func (gt *GitTown) ShouldNewBranchPush() (bool, error) {
 		if err != nil {
 			return false, err
 		}
-		parsed, err := ParseBool(oldLocalConfig)
-		if err != nil {
-			return false, err
-		}
-		err = gt.SetNewBranchPush(parsed, false)
+		_, err = gt.SetLocalConfigValue(PushNewBranchesKey, oldLocalConfig)
 		if err != nil {
 			return false, err
 		}
@@ -447,15 +443,11 @@ func (gt *GitTown) ShouldNewBranchPush() (bool, error) {
 	if oldGlobalConfig != "" {
 		fmt.Printf("I found the deprecated global setting %q.\n", NewBranchPushFlagKey)
 		fmt.Printf("I am upgrading this setting to the new format %q.\n", PushNewBranchesKey)
-		_, err := gt.RemoveGlobalConfigValue("git-town.new-branch-push-flag")
+		_, err := gt.RemoveGlobalConfigValue(NewBranchPushFlagKey)
 		if err != nil {
 			return false, err
 		}
-		parsed, err := ParseBool(oldGlobalConfig)
-		if err != nil {
-			return false, err
-		}
-		err = gt.SetNewBranchPush(parsed, true)
+		_, err = gt.SetGlobalConfigValue(PushNewBranchesKey, oldGlobalConfig)
 		if err != nil {
 			return false, err
 		}
