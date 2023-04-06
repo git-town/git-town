@@ -8,7 +8,20 @@ Feature: display the currently configured sync-strategy
       """
 
   Scenario Outline: local setting
-    Given setting "sync-strategy" is "<VALUE>"
+    Given local setting "sync-strategy" is "<VALUE>"
+    When I run "git-town config sync-strategy"
+    Then it prints:
+      """
+      <VALUE>
+      """
+
+    Examples:
+      | VALUE  |
+      | rebase |
+      | merge  |
+
+  Scenario Outline: global setting
+    Given global setting "sync-strategy" is "<VALUE>"
     When I run "git-town config sync-strategy"
     Then it prints:
       """

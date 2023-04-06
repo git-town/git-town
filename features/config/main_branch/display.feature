@@ -15,3 +15,11 @@ Feature: display the main branch configuration
       """
       main
       """
+
+  Scenario: configured globally
+    Given global setting "main-branch-name" is "main"
+    When I run "git-town config main-branch"
+    Then it prints:
+      """
+      main
+      """
