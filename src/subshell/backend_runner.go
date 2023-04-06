@@ -6,27 +6,36 @@ import (
 	"strings"
 
 	"github.com/acarl005/stripansi"
+	"github.com/fatih/color"
 )
 
 // BackendRunner executes backend shell commands without output to the CLI.
 type BackendRunner struct {
 	// If set, runs the commands in the given directory.
 	// If not set, runs the commands in the current working directory.
-	Dir   *string
-	Stats Statistics
+	Dir     *string
+	Stats   Statistics
+	Verbose bool
 }
 
 func (r BackendRunner) Run(executable string, args ...string) (string, error) {
 	r.Stats.RegisterRun()
+	if r.Verbose {
+		PrintHeader(executable, args...)
+	}
 	subProcess := exec.Command(executable, args...) // #nosec
 	if r.Dir != nil {
 		subProcess.Dir = *r.Dir
 	}
-	output, err := subProcess.CombinedOutput()
+	outputBytes, err := subProcess.CombinedOutput()
 	if err != nil {
-		err = ErrorDetails(executable, args, err, output)
+		err = ErrorDetails(executable, args, err, outputBytes)
 	}
-	return strings.TrimSpace(stripansi.Strip(string(output))), err
+	output := string(outputBytes)
+	if r.Verbose && output != "" {
+		fmt.Println(output)
+	}
+	return strings.TrimSpace(stripansi.Strip(output)), err
 }
 
 // RunMany runs all given commands in current directory.
@@ -52,4 +61,12 @@ Error: %w
 Output:
 %s
 ----------------------------------------`, executable, strings.Join(args, " "), err, string(output))
+}
+
+func PrintHeader(cmd string, args ...string) {
+	text := "\n(debug) " + cmd + " " + strings.Join(args, " ")
+	_, err := color.New(color.Bold).Println(text)
+	if err != nil {
+		fmt.Println(text)
+	}
 }
