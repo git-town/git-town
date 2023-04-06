@@ -32,11 +32,11 @@ func (r BackendRunner) Run(executable string, args ...string) (string, error) {
 	if err != nil {
 		err = ErrorDetails(executable, args, err, outputBytes)
 	}
-	output := string(outputBytes)
+	output := strings.TrimSpace(stripansi.Strip(string(outputBytes)))
 	if r.Verbose && output != "" {
 		fmt.Println(output)
 	}
-	return strings.TrimSpace(stripansi.Strip(output)), err
+	return output, err
 }
 
 // RunMany runs all given commands in current directory.
