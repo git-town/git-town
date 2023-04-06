@@ -265,11 +265,7 @@ func (gt *GitTown) PullBranchStrategy() (PullBranchStrategy, error) {
 
 // PushHook provides the currently configured push-hook setting.
 func (gt *GitTown) PushHook() (bool, error) {
-	err := gt.updateDeprecatedGlobalSetting(DeprecatedPushVerifyKey, PushHookKey)
-	if err != nil {
-		return false, err
-	}
-	err = gt.updateDeprecatedLocalSetting(DeprecatedPushVerifyKey, PushHookKey)
+	err := gt.updateDeprecatedSetting(DeprecatedPushVerifyKey, PushHookKey)
 	if err != nil {
 		return false, err
 	}
@@ -446,11 +442,7 @@ func (gt *GitTown) SetTestOrigin(value string) error {
 // ShouldNewBranchPush indicates whether the current repository is configured to push
 // freshly created branches up to origin.
 func (gt *GitTown) ShouldNewBranchPush() (bool, error) {
-	err := gt.updateDeprecatedLocalSetting(DeprecatedNewBranchPushFlagKey, PushNewBranchesKey)
-	if err != nil {
-		return false, err
-	}
-	err = gt.updateDeprecatedGlobalSetting(DeprecatedNewBranchPushFlagKey, PushNewBranchesKey)
+	err := gt.updateDeprecatedSetting(DeprecatedNewBranchPushFlagKey, PushNewBranchesKey)
 	if err != nil {
 		return false, err
 	}
@@ -505,6 +497,14 @@ func (gt *GitTown) SyncStrategy() (SyncStrategy, error) {
 func (gt *GitTown) SyncStrategyGlobal() (SyncStrategy, error) {
 	setting := gt.GlobalConfigValue(SyncStrategyKey)
 	return ToSyncStrategy(setting)
+}
+
+func (gt *GitTown) updateDeprecatedSetting(deprecatedKey, newKey string) error {
+	err := gt.updateDeprecatedLocalSetting(deprecatedKey, newKey)
+	if err != nil {
+		return err
+	}
+	return gt.updateDeprecatedGlobalSetting(deprecatedKey, newKey)
 }
 
 func (gt *GitTown) updateDeprecatedGlobalSetting(deprecatedKey, newKey string) error {
