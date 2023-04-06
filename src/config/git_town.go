@@ -89,6 +89,14 @@ func (gt *GitTown) DeprecatedNewBranchPushFlagLocal() string {
 	return gt.localConfigCache[NewBranchPushFlagKey]
 }
 
+func (gt *GitTown) DeprecatedPushVerifyFlagGlobal() string {
+	return gt.globalConfigCache[DeprecatedPushVerifyKey]
+}
+
+func (gt *GitTown) DeprecatedPushVerifyFlagLocal() string {
+	return gt.localConfigCache[DeprecatedPushVerifyKey]
+}
+
 // GitAlias provides the currently set alias for the given Git Town command.
 func (gt *GitTown) GitAlias(aliasType AliasType) string {
 	return gt.GlobalConfigValue("alias." + string(aliasType))
@@ -257,6 +265,19 @@ func (gt *GitTown) PullBranchStrategy() (PullBranchStrategy, error) {
 
 // PushHook provides the currently configured push-hook setting.
 func (gt *GitTown) PushHook() (bool, error) {
+	deprecatedSetting := gt.DeprecatedPushVerifyFlagLocal()
+	if deprecatedSetting != "" {
+		fmt.Printf("I found the deprecated local setting %q.\n", DeprecatedPushVerifyKey)
+		fmt.Printf("I am upgrading this setting to the new format %q.\n", PushHookKey)
+		err := gt.RemoveLocalConfigValue(DeprecatedPushVerifyKey)
+		if err != nil {
+			return false, err
+		}
+		_, err = gt.SetLocalConfigValue(PushHookKey, deprecatedSetting)
+		if err != nil {
+			return false, err
+		}
+	}
 	setting := gt.LocalOrGlobalConfigValue(PushHookKey)
 	if setting == "" {
 		return true, nil
@@ -270,6 +291,19 @@ func (gt *GitTown) PushHook() (bool, error) {
 
 // PushHook provides the currently configured push-hook setting.
 func (gt *GitTown) PushHookGlobal() (bool, error) {
+	deprecatedSetting := gt.DeprecatedPushVerifyFlagGlobal()
+	if deprecatedSetting != "" {
+		fmt.Printf("I found the deprecated global setting %q.\n", DeprecatedPushVerifyKey)
+		fmt.Printf("I am upgrading this setting to the new format %q.\n", PushHookKey)
+		_, err := gt.RemoveGlobalConfigValue(DeprecatedPushVerifyKey)
+		if err != nil {
+			return false, err
+		}
+		_, err = gt.SetGlobalConfigValue(PushHookKey, deprecatedSetting)
+		if err != nil {
+			return false, err
+		}
+	}
 	setting := gt.GlobalConfigValue(PushHookKey)
 	if setting == "" {
 		return true, nil

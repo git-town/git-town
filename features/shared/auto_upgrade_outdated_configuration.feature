@@ -1,5 +1,6 @@
 Feature: automatically upgrade outdated configuration
 
+  @this
   Scenario Outline:
     Given <LOCALITY> setting "<OLD>" is "<VALUE>"
     And the current branch is a feature branch "feature"
@@ -24,3 +25,5 @@ Feature: automatically upgrade outdated configuration
       | hack foo                 | global   | new-branch-push-flag | push-new-branches | true  |
       | prepend foo              | local    | new-branch-push-flag | push-new-branches | true  |
       | prepend foo              | global   | new-branch-push-flag | push-new-branches | true  |
+      | append foo               | local    | push-verify          | push-hook         | true  |
+      | append foo               | global   | push-verify          | push-hook         | true  |

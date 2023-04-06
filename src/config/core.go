@@ -16,6 +16,7 @@ const (
 	PerennialBranchesKey         = "git-town.perennial-branch-names"
 	PullBranchStrategyKey        = "git-town.pull-branch-strategy"
 	PushHookKey                  = "git-town.push-hook"
+	DeprecatedPushVerifyKey      = "git-town.push-verify"
 	PushNewBranchesKey           = "git-town.push-new-branches"
 	ShipDeleteRemoteBranchKey    = "git-town.ship-delete-remote-branch"
 	SyncUpstreamKey              = "git-town.sync-upstream"
