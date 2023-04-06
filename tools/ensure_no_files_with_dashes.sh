@@ -5,7 +5,7 @@
 
 files_with_dashes=$(find . -name '*-*' | grep -v node_modules | grep -v vendor | grep -v '.git' | grep -v './website' | grep -v 'text-run.yml' | grep -v './.gherkin-*')
 count=$(echo "$files_with_dashes" | wc -l)
-if [ ! "$count" -eq 0 ]; then
+if [ "$count" -gt 0 ]; then
   tput setaf 1
   echo
   echo "ERROR: Found $count files/folders containing dashes:"
