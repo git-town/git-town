@@ -89,6 +89,14 @@ func (gt *GitTown) DeprecatedNewBranchPushFlagLocal() string {
 	return gt.localConfigCache[DeprecatedNewBranchPushFlagKey]
 }
 
+func (gt *GitTown) DeprecatedPushVerifyFlagGlobal() string {
+	return gt.globalConfigCache[DeprecatedPushVerifyKey]
+}
+
+func (gt *GitTown) DeprecatedPushVerifyFlagLocal() string {
+	return gt.localConfigCache[DeprecatedPushVerifyKey]
+}
+
 // GitAlias provides the currently set alias for the given Git Town command.
 func (gt *GitTown) GitAlias(aliasType AliasType) string {
 	return gt.GlobalConfigValue("alias." + string(aliasType))
@@ -257,6 +265,10 @@ func (gt *GitTown) PullBranchStrategy() (PullBranchStrategy, error) {
 
 // PushHook provides the currently configured push-hook setting.
 func (gt *GitTown) PushHook() (bool, error) {
+	err := gt.updateDeprecatedSetting(DeprecatedPushVerifyKey, PushHookKey)
+	if err != nil {
+		return false, err
+	}
 	setting := gt.LocalOrGlobalConfigValue(PushHookKey)
 	if setting == "" {
 		return true, nil
@@ -270,6 +282,10 @@ func (gt *GitTown) PushHook() (bool, error) {
 
 // PushHook provides the currently configured push-hook setting.
 func (gt *GitTown) PushHookGlobal() (bool, error) {
+	err := gt.updateDeprecatedGlobalSetting(DeprecatedPushVerifyKey, PushHookKey)
+	if err != nil {
+		return false, err
+	}
 	setting := gt.GlobalConfigValue(PushHookKey)
 	if setting == "" {
 		return true, nil
@@ -426,31 +442,9 @@ func (gt *GitTown) SetTestOrigin(value string) error {
 // ShouldNewBranchPush indicates whether the current repository is configured to push
 // freshly created branches up to origin.
 func (gt *GitTown) ShouldNewBranchPush() (bool, error) {
-	oldLocalConfig := gt.DeprecatedNewBranchPushFlagLocal()
-	if oldLocalConfig != "" {
-		fmt.Printf("I found the deprecated local setting %q.\n", DeprecatedNewBranchPushFlagKey)
-		fmt.Printf("I am upgrading this setting to the new format %q.\n", PushNewBranchesKey)
-		err := gt.RemoveLocalConfigValue(DeprecatedNewBranchPushFlagKey)
-		if err != nil {
-			return false, err
-		}
-		_, err = gt.SetLocalConfigValue(PushNewBranchesKey, oldLocalConfig)
-		if err != nil {
-			return false, err
-		}
-	}
-	oldGlobalConfig := gt.DeprecatedNewBranchPushFlagGlobal()
-	if oldGlobalConfig != "" {
-		fmt.Printf("I found the deprecated global setting %q.\n", DeprecatedNewBranchPushFlagKey)
-		fmt.Printf("I am upgrading this setting to the new format %q.\n", PushNewBranchesKey)
-		_, err := gt.RemoveGlobalConfigValue(DeprecatedNewBranchPushFlagKey)
-		if err != nil {
-			return false, err
-		}
-		_, err = gt.SetGlobalConfigValue(PushNewBranchesKey, oldGlobalConfig)
-		if err != nil {
-			return false, err
-		}
+	err := gt.updateDeprecatedSetting(DeprecatedNewBranchPushFlagKey, PushNewBranchesKey)
+	if err != nil {
+		return false, err
 	}
 	config := gt.LocalOrGlobalConfigValue(PushNewBranchesKey)
 	if config == "" {
@@ -466,6 +460,10 @@ func (gt *GitTown) ShouldNewBranchPush() (bool, error) {
 // ShouldNewBranchPushGlobal indictes whether the global configuration requires to push
 // freshly created branches to origin.
 func (gt *GitTown) ShouldNewBranchPushGlobal() (bool, error) {
+	err := gt.updateDeprecatedGlobalSetting(DeprecatedNewBranchPushFlagKey, PushNewBranchesKey)
+	if err != nil {
+		return false, err
+	}
 	config := gt.GlobalConfigValue(PushNewBranchesKey)
 	if config == "" {
 		return false, nil
@@ -503,4 +501,42 @@ func (gt *GitTown) SyncStrategy() (SyncStrategy, error) {
 func (gt *GitTown) SyncStrategyGlobal() (SyncStrategy, error) {
 	setting := gt.GlobalConfigValue(SyncStrategyKey)
 	return ToSyncStrategy(setting)
+}
+
+func (gt *GitTown) updateDeprecatedSetting(deprecatedKey, newKey string) error {
+	err := gt.updateDeprecatedLocalSetting(deprecatedKey, newKey)
+	if err != nil {
+		return err
+	}
+	return gt.updateDeprecatedGlobalSetting(deprecatedKey, newKey)
+}
+
+func (gt *GitTown) updateDeprecatedGlobalSetting(deprecatedKey, newKey string) error {
+	deprecatedSetting := gt.GlobalConfigValue(deprecatedKey)
+	if deprecatedSetting != "" {
+		fmt.Printf("I found the deprecated global setting %q.\n", deprecatedKey)
+		fmt.Printf("I am upgrading this setting to the new format %q.\n", newKey)
+		_, err := gt.RemoveGlobalConfigValue(deprecatedKey)
+		if err != nil {
+			return err
+		}
+		_, err = gt.SetGlobalConfigValue(newKey, deprecatedSetting)
+		return err
+	}
+	return nil
+}
+
+func (gt *GitTown) updateDeprecatedLocalSetting(deprecatedKey, newKey string) error {
+	deprecatedSetting := gt.LocalConfigValue(deprecatedKey)
+	if deprecatedSetting != "" {
+		fmt.Printf("I found the deprecated local setting %q.\n", deprecatedKey)
+		fmt.Printf("I am upgrading this setting to the new format %q.\n", newKey)
+		err := gt.RemoveLocalConfigValue(deprecatedKey)
+		if err != nil {
+			return err
+		}
+		_, err = gt.SetLocalConfigValue(newKey, deprecatedSetting)
+		return err
+	}
+	return nil
 }

@@ -8,6 +8,7 @@ const (
 	CodeHostingDriverKey           = "git-town.code-hosting-driver"
 	CodeHostingOriginHostnameKey   = "git-town.code-hosting-origin-hostname"
 	DeprecatedNewBranchPushFlagKey = "git-town.new-branch-push-flag"
+	DeprecatedPushVerifyKey        = "git-town.push-verify"
 	GiteaTokenKey                  = "git-town.gitea-token"  //nolint:gosec
 	GithubTokenKey                 = "git-town.github-token" //nolint:gosec
 	GitlabTokenKey                 = "git-town.gitlab-token" //nolint:gosec
