@@ -830,23 +830,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^the main branch is "([^"]+)"$`, func(name string) error {
-		return state.gitEnv.DevRepo.Config.SetMainBranch(name)
-	})
-
-	suite.Step(`^the main branch is not set$`, func() error {
-		return state.gitEnv.DevRepo.DeleteMainBranchConfiguration()
-	})
-
-	suite.Step(`^the main branch is now "([^"]+)"$`, func(name string) error {
-		state.gitEnv.DevRepo.Config.Reload()
-		actual := state.gitEnv.DevRepo.Config.MainBranch()
-		if actual != name {
-			return fmt.Errorf("expected %q, got %q", name, actual)
-		}
-		return nil
-	})
-
 	suite.Step(`^the origin is "([^"]*)"$`, func(origin string) error {
 		state.gitEnv.DevRepo.SetTestOrigin(origin)
 		return nil
