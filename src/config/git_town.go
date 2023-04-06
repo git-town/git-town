@@ -265,16 +265,28 @@ func (gt *GitTown) PullBranchStrategy() (PullBranchStrategy, error) {
 
 // PushHook provides the currently configured push-hook setting.
 func (gt *GitTown) PushHook() (bool, error) {
-	fmt.Println("1111111111111111111")
-	deprecatedSetting := gt.DeprecatedPushVerifyFlagLocal()
-	if deprecatedSetting != "" {
+	deprecatedLocalSetting := gt.DeprecatedPushVerifyFlagLocal()
+	if deprecatedLocalSetting != "" {
 		fmt.Printf("I found the deprecated local setting %q.\n", DeprecatedPushVerifyKey)
 		fmt.Printf("I am upgrading this setting to the new format %q.\n", PushHookKey)
 		err := gt.RemoveLocalConfigValue(DeprecatedPushVerifyKey)
 		if err != nil {
 			return false, err
 		}
-		_, err = gt.SetLocalConfigValue(PushHookKey, deprecatedSetting)
+		_, err = gt.SetLocalConfigValue(PushHookKey, deprecatedLocalSetting)
+		if err != nil {
+			return false, err
+		}
+	}
+	deprecatedGlobalSetting := gt.DeprecatedPushVerifyFlagGlobal()
+	if deprecatedGlobalSetting != "" {
+		fmt.Printf("I found the deprecated global setting %q.\n", DeprecatedPushVerifyKey)
+		fmt.Printf("I am upgrading this setting to the new format %q.\n", PushHookKey)
+		_, err := gt.RemoveGlobalConfigValue(DeprecatedPushVerifyKey)
+		if err != nil {
+			return false, err
+		}
+		_, err = gt.SetGlobalConfigValue(PushHookKey, deprecatedGlobalSetting)
 		if err != nil {
 			return false, err
 		}
