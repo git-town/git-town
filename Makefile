@@ -42,6 +42,8 @@ fix: tools/golangci-lint-${GOLANGCILINT_VERSION} tools/gofumpt-${GOFUMPT_VERSION
 	tools/shfmt-${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor\/' | xargs tools/shellcheck-${SHELLCHECK_VERSION}
 	${CURDIR}/tools/node_modules/.bin/gherkin-lint
 	tools/golangci-lint-${GOLANGCILINT_VERSION} run
+	find . -name '*-*' | grep -v node_modules | grep -v vendor | grep -v .git
+	tools/ensure_no_files_with_dashes.sh
 
 help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
