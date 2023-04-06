@@ -1,15 +1,15 @@
 Feature: display the main branch configuration
 
   Scenario: not configured
-    Given the main branch is not set
+    Given local setting "main-branch-name" is ""
     When I run "git-town config main-branch"
     Then it prints:
       """
       (not set)
       """
 
-  Scenario: configured
-    Given the main branch is "main"
+  Scenario: configured locally
+    Given local setting "main-branch-name" is "main"
     When I run "git-town config main-branch"
     Then it prints:
       """

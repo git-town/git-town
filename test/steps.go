@@ -514,7 +514,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return err
 	})
 
-	suite.Step(`^setting "([^"]*)" no longer exists locally$`, func(name string) error {
+	suite.Step(`^local setting "([^"]*)" no longer exists$`, func(name string) error {
 		state.gitEnv.DevRepo.Config.Reload()
 		newValue := state.gitEnv.DevRepo.Config.LocalConfigValue("git-town." + name)
 		if newValue == "" {
@@ -832,10 +832,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the main branch is "([^"]+)"$`, func(name string) error {
 		return state.gitEnv.DevRepo.Config.SetMainBranch(name)
-	})
-
-	suite.Step(`^the main branch is not set$`, func() error {
-		return state.gitEnv.DevRepo.DeleteMainBranchConfiguration()
 	})
 
 	suite.Step(`^the main branch is now "([^"]+)"$`, func(name string) error {
