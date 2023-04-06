@@ -15,7 +15,7 @@ func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, exit bool, err er
 	} else {
 		stats = &NoStatistics{}
 	}
-	backendRunner := NewBackendRunner(nil, args.Debug, stats)
+	backendRunner := subshell.BackendRunner{Dir: nil, Verbose: args.Debug, Stats: stats}
 	config := git.NewRepoConfig(backendRunner)
 	prodRunner = git.ProdRunner{
 		Config: config,
@@ -70,14 +70,6 @@ type LoadArgs struct {
 	ValidateIsRepository  bool `exhaustruct:"optional"`
 	ValidateIsConfigured  bool `exhaustruct:"optional"`
 	ValidateIsOnline      bool `exhaustruct:"optional"`
-}
-
-func NewBackendRunner(dir *string, debug bool, stats Statistics) git.BackendRunner {
-	backendRunner := subshell.BackendRunner{Dir: dir, Stats: stats}
-	if debug {
-		return subshell.BackendLoggingRunner{Runner: backendRunner}
-	}
-	return backendRunner
 }
 
 // NewFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.
