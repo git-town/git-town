@@ -13,8 +13,9 @@ import (
 type BackendRunner struct {
 	// If set, runs the commands in the given directory.
 	// If not set, runs the commands in the current working directory.
-	Dir     *string
-	Stats   Statistics
+	Dir   *string
+	Stats Statistics
+	// whether to print the commands run to the CLI
 	Verbose bool
 }
 
