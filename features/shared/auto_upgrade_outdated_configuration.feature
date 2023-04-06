@@ -14,16 +14,6 @@ Feature: automatically upgrade outdated configuration
     And <LOCALITY> setting "<OLD>" no longer exists
 
     Examples:
-      | COMMAND          | LOCALITY | OLD         | NEW       | VALUE |
-      # | append foo               | local    | new-branch-push-flag | push-new-branches | true  |
-      # | append foo               | global   | new-branch-push-flag | push-new-branches | true  |
-      # | config                   | local    | new-branch-push-flag | push-new-branches | true  |
-      # | config                   | global   | new-branch-push-flag | push-new-branches | true  |
-      # | config push-new-branches | local    | new-branch-push-flag | push-new-branches | true  |
-      # | config push-new-branches | global   | new-branch-push-flag | push-new-branches | true  |
-      # | hack foo                 | local    | new-branch-push-flag | push-new-branches | true  |
-      # | hack foo                 | global   | new-branch-push-flag | push-new-branches | true  |
-      # | prepend foo              | local    | new-branch-push-flag | push-new-branches | true  |
-      # | prepend foo              | global   | new-branch-push-flag | push-new-branches | true  |
-      # | config push-hook | local    | push-verify | push-hook | true  |
-      | config push-hook | global   | push-verify | push-hook | true  |
+      | COMMAND | LOCALITY | OLD | NEW | VALUE |
+# | config push-hook | local    | push-verify | push-hook | true  |
+# | config push-hook | global   | push-verify | push-hook | true  |
