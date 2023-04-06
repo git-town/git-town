@@ -3,7 +3,7 @@ git-town_*
 node_modules/
 tools/depth*
 tools/gofumpt*
-tools/golangci-lint*
+tools/golangci_lint*
 tools/scc*
 tools/shellcheck*
 tools/shfmt*
