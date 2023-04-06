@@ -8,7 +8,7 @@ Feature: configure the main branch
 
   Scenario: previously configured
     Given the branches "old" and "new"
-    Given local setting "main-branch-name" is "old"
+    And local setting "main-branch-name" is "old"
     When I run "git-town config main-branch new"
     Then it prints no output
     And local setting "main-branch-name" is now "new"
