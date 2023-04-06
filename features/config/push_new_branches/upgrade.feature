@@ -14,12 +14,12 @@ Feature: automatically upgrade outdated configuration
 
     Examples:
       | COMMAND                  | LOCATION |
-      | append foo               | local    |
-      | append foo               | global   |
       | config                   | local    |
       | config                   | global   |
       | config push-new-branches | local    |
       | config push-new-branches | global   |
+      | append foo               | local    |
+      | append foo               | global   |
       | hack foo                 | local    |
       | hack foo                 | global   |
       | prepend foo              | local    |
