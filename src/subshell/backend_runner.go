@@ -13,8 +13,9 @@ import (
 type BackendRunner struct {
 	// If set, runs the commands in the given directory.
 	// If not set, runs the commands in the current working directory.
-	Dir     *string
-	Stats   Statistics
+	Dir   *string
+	Stats Statistics
+	// whether to print the executed commands to the CLI
 	Verbose bool
 }
 
@@ -35,7 +36,7 @@ func (r BackendRunner) Run(executable string, args ...string) (string, error) {
 	if r.Verbose && output != "" {
 		fmt.Println(output)
 	}
-	return strings.TrimSpace(stripansi.Strip(string(output))), err
+	return strings.TrimSpace(stripansi.Strip(output)), err
 }
 
 // RunMany runs all given commands in current directory.
