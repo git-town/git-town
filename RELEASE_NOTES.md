@@ -2,6 +2,9 @@
 
 ## 8.0.0 (2023-01-08)
 
+If you use the shorter aliases for Git Town commands, please run
+`git town aliases add` after updating to v8.0.
+
 #### BREAKING CHANGES
 
 - rename `new-branch-push-flag` to `push-new-branches`
@@ -20,11 +23,28 @@
   ([#1965](https://github.com/git-town/git-town/pull/1965),
   [#1966](https://github.com/git-town/git-town/pull/1966),
   [#1968](https://github.com/git-town/git-town/pull/1968))
+- renames the `push-verify` configuration option to `push-hook`
+  ([#1989](https://github.com/git-town/git-town/pull/1989))
+- rename `git set-parent-branch` to `git set-parent`
+  ([#2114](https://github.com/git-town/git-town/pull/2114))
+- stores the runstate in `~/.config` instead of the temp dir
+  ([#2126](https://github.com/git-town/git-town/pull/2126))
+
+TODO: auto-update `push-verify` to `push-hook`
 
 #### New Features
 
-- accepts more configuration value formats ("true", "yes", "on", "t", "1", etc)
-- handles wrong configuration values correctly
+- the new `git town switch` command allows switching branches via a UI that
+  visualizes the branch hierarchy
+  ([#2106](https://github.com/git-town/git-town/pull/2106),
+  [#2108](https://github.com/git-town/git-town/pull/2108))
+- aliases `git town diff-parent` to `git diff-parent`
+  ([#2128](https://github.com/git-town/git-town/pull/2128))
+- accepts more configuration value formats like "true", "yes", "on", "t", "1"
+  ([#1978](https://github.com/git-town/git-town/pull/1978),
+  [#1979](https://github.com/git-town/git-town/pull/1979))
+- configuration command to set/display the `push-hook` config setting
+  ([#1991](https://github.com/git-town/git-town/pull/1991))
 
 #### Bug Fixes
 
