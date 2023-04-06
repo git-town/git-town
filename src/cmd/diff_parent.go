@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v7/src/execute"
 	"github.com/git-town/git-town/v7/src/flags"
 	"github.com/git-town/git-town/v7/src/git"
 	"github.com/git-town/git-town/v7/src/validate"
@@ -33,13 +34,13 @@ func diffParentCommand() *cobra.Command {
 }
 
 func diffParent(args []string, debug bool) error {
-	run, exit, err := LoadProdRunner(RunnerArgs{
-		debug:                 debug,
-		dryRun:                false,
-		handleUnfinishedState: true,
-		validateGitversion:    true,
-		validateIsRepository:  true,
-		validateIsConfigured:  true,
+	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
+		Debug:                 debug,
+		DryRun:                false,
+		HandleUnfinishedState: true,
+		ValidateGitversion:    true,
+		ValidateIsRepository:  true,
+		ValidateIsConfigured:  true,
 	})
 	if err != nil || exit {
 		return err
@@ -48,7 +49,12 @@ func diffParent(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	return run.Frontend.DiffParent(config.branch, config.parentBranch)
+	err = run.Frontend.DiffParent(config.branch, config.parentBranch)
+	if err != nil {
+		return err
+	}
+	run.Stats.PrintAnalysis()
+	return nil
 }
 
 type diffParentConfig struct {

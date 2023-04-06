@@ -2,6 +2,8 @@ package validate
 
 import (
 	"errors"
+	"fmt"
+	"os"
 
 	"github.com/git-town/git-town/v7/src/git"
 )
@@ -12,5 +14,16 @@ func IsRepository(run *git.ProdRunner) error {
 	if !run.Backend.IsRepository() {
 		return errors.New("this is not a Git repository")
 	}
-	return run.Frontend.NavigateToRootIfNecessary()
+	currentDirectory, err := os.Getwd()
+	if err != nil {
+		return fmt.Errorf("cannot get current working directory: %w", err)
+	}
+	gitRootDirectory, err := run.Backend.RootDirectory()
+	if err != nil {
+		return err
+	}
+	if currentDirectory != gitRootDirectory {
+		return run.Frontend.NavigateToDir(gitRootDirectory)
+	}
+	return nil
 }
