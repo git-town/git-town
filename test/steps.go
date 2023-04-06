@@ -834,10 +834,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.Config.SetMainBranch(name)
 	})
 
-	suite.Step(`^the main branch is not set$`, func() error {
-		return state.gitEnv.DevRepo.DeleteMainBranchConfiguration()
-	})
-
 	suite.Step(`^the main branch is now "([^"]+)"$`, func(name string) error {
 		state.gitEnv.DevRepo.Config.Reload()
 		actual := state.gitEnv.DevRepo.Config.MainBranch()
