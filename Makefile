@@ -117,7 +117,7 @@ tools/gofumpt_${GOFUMPT_VERSION}:
 	@mv tools/gofumpt tools/gofumpt_${GOFUMPT_VERSION}
 
 tools/golangci_lint_${GOLANGCILINT_VERSION}:
-	@echo "Installing golangci_lint ${GOLANGCILINT_VERSION} ..."
+	@echo "Installing golangci-lint ${GOLANGCILINT_VERSION} ..."
 	@curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b tools v${GOLANGCILINT_VERSION}
 	@mv tools/golangci-lint tools/golangci_lint_${GOLANGCILINT_VERSION}
 
