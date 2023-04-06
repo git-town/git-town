@@ -2,7 +2,7 @@ Feature: automatically upgrade outdated configuration
 
   Scenario Outline:
     Given <LOCALITY> setting "<OLD>" is "<VALUE>"
-    Given the current branch is a feature branch "feature"
+    And the current branch is a feature branch "feature"
     When I run "git-town <COMMAND>"
     Then it prints:
       """
