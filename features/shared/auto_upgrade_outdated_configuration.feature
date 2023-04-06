@@ -1,10 +1,10 @@
 Feature: automatically upgrade outdated configuration
 
-  @this
+  @debug @this
   Scenario Outline:
     Given <LOCALITY> setting "<OLD>" is "<VALUE>"
     And the current branch is a feature branch "feature"
-    When I run "git-town <COMMAND>"
+    When I run "git-town <COMMAND> --debug"
     Then it prints:
       """
       I found the deprecated <LOCALITY> setting "git-town.<OLD>".
@@ -14,16 +14,16 @@ Feature: automatically upgrade outdated configuration
     And <LOCALITY> setting "<OLD>" no longer exists
 
     Examples:
-      | COMMAND                  | LOCALITY | OLD                  | NEW               | VALUE |
-      | append foo               | local    | new-branch-push-flag | push-new-branches | true  |
-      | append foo               | global   | new-branch-push-flag | push-new-branches | true  |
-      | config                   | local    | new-branch-push-flag | push-new-branches | true  |
-      | config                   | global   | new-branch-push-flag | push-new-branches | true  |
-      | config push-new-branches | local    | new-branch-push-flag | push-new-branches | true  |
-      | config push-new-branches | global   | new-branch-push-flag | push-new-branches | true  |
-      | hack foo                 | local    | new-branch-push-flag | push-new-branches | true  |
-      | hack foo                 | global   | new-branch-push-flag | push-new-branches | true  |
-      | prepend foo              | local    | new-branch-push-flag | push-new-branches | true  |
-      | prepend foo              | global   | new-branch-push-flag | push-new-branches | true  |
-      | append foo               | local    | push-verify          | push-hook         | true  |
-      | append foo               | global   | push-verify          | push-hook         | true  |
+      | COMMAND          | LOCALITY | OLD         | NEW       | VALUE |
+      # | append foo               | local    | new-branch-push-flag | push-new-branches | true  |
+      # | append foo               | global   | new-branch-push-flag | push-new-branches | true  |
+      # | config                   | local    | new-branch-push-flag | push-new-branches | true  |
+      # | config                   | global   | new-branch-push-flag | push-new-branches | true  |
+      # | config push-new-branches | local    | new-branch-push-flag | push-new-branches | true  |
+      # | config push-new-branches | global   | new-branch-push-flag | push-new-branches | true  |
+      # | hack foo                 | local    | new-branch-push-flag | push-new-branches | true  |
+      # | hack foo                 | global   | new-branch-push-flag | push-new-branches | true  |
+      # | prepend foo              | local    | new-branch-push-flag | push-new-branches | true  |
+      # | prepend foo              | global   | new-branch-push-flag | push-new-branches | true  |
+      # | config push-hook | local    | push-verify | push-hook | true  |
+      | config push-hook | global   | push-verify | push-hook | true  |

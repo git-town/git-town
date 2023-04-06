@@ -265,6 +265,7 @@ func (gt *GitTown) PullBranchStrategy() (PullBranchStrategy, error) {
 
 // PushHook provides the currently configured push-hook setting.
 func (gt *GitTown) PushHook() (bool, error) {
+	fmt.Println("1111111111111111111")
 	deprecatedSetting := gt.DeprecatedPushVerifyFlagLocal()
 	if deprecatedSetting != "" {
 		fmt.Printf("I found the deprecated local setting %q.\n", DeprecatedPushVerifyKey)
