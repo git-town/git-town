@@ -460,6 +460,7 @@ func (gt *GitTown) ShouldNewBranchPush() (bool, error) {
 // ShouldNewBranchPushGlobal indictes whether the global configuration requires to push
 // freshly created branches to origin.
 func (gt *GitTown) ShouldNewBranchPushGlobal() (bool, error) {
+	gt.updateDeprecatedGlobalSetting(DeprecatedNewBranchPushFlagKey, PushNewBranchesKey)
 	config := gt.GlobalConfigValue(PushNewBranchesKey)
 	if config == "" {
 		return false, nil
