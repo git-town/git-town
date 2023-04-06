@@ -14,12 +14,12 @@ Feature: automatically upgrade outdated configuration
 
     Examples:
       | COMMAND                  | LOCALITY | OLD                  | NEW               | VALUE |
+      | append foo               | local    | new-branch-push-flag | push-new-branches | true  |
+      | append foo               | global   | new-branch-push-flag | push-new-branches | true  |
       | config                   | local    | new-branch-push-flag | push-new-branches | true  |
       | config                   | global   | new-branch-push-flag | push-new-branches | true  |
       | config push-new-branches | local    | new-branch-push-flag | push-new-branches | true  |
       | config push-new-branches | global   | new-branch-push-flag | push-new-branches | true  |
-      | append foo               | local    | new-branch-push-flag | push-new-branches | true  |
-      | append foo               | global   | new-branch-push-flag | push-new-branches | true  |
       | hack foo                 | local    | new-branch-push-flag | push-new-branches | true  |
       | hack foo                 | global   | new-branch-push-flag | push-new-branches | true  |
       | prepend foo              | local    | new-branch-push-flag | push-new-branches | true  |
