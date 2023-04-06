@@ -42,7 +42,6 @@ fix: tools/golangci_lint_${GOLANGCILINT_VERSION} tools/gofumpt_${GOFUMPT_VERSION
 	tools/shfmt_${SHFMT_VERSION} -f . | grep -v tools/node_modules | grep -v '^vendor\/' | xargs tools/shellcheck_${SHELLCHECK_VERSION}
 	${CURDIR}/tools/node_modules/.bin/gherkin-lint
 	tools/golangci_lint_${GOLANGCILINT_VERSION} run
-	find . -name '*-*' | grep -v node_modules | grep -v vendor | grep -v .git
 	tools/ensure_no_files_with_dashes.sh
 
 help:  # prints all available targets
