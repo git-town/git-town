@@ -25,3 +25,4 @@ Feature: automatically upgrade outdated configuration
       | hack foo         | global   |
       | prepend foo      | local    |
       | prepend foo      | global   |
+      | sync             | local    |
