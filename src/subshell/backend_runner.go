@@ -22,7 +22,7 @@ type BackendRunner struct {
 func (r BackendRunner) Run(executable string, args ...string) (string, error) {
 	r.Stats.RegisterRun()
 	if r.Verbose {
-		PrintHeader(executable, args...)
+		printHeader(executable, args...)
 	}
 	subProcess := exec.Command(executable, args...) // #nosec
 	if r.Dir != nil {
@@ -64,7 +64,7 @@ Output:
 ----------------------------------------`, executable, strings.Join(args, " "), err, string(output))
 }
 
-func PrintHeader(cmd string, args ...string) {
+func printHeader(cmd string, args ...string) {
 	text := "\n(debug) " + cmd + " " + strings.Join(args, " ")
 	_, err := color.New(color.Bold).Println(text)
 	if err != nil {
