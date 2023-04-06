@@ -434,11 +434,7 @@ func (gt *GitTown) ShouldNewBranchPush() (bool, error) {
 		if err != nil {
 			return false, err
 		}
-		parsed, err := ParseBool(oldLocalConfig)
-		if err != nil {
-			return false, err
-		}
-		err = gt.SetNewBranchPush(parsed, false)
+		_, err = gt.SetLocalConfigValue(PushNewBranchesKey, oldLocalConfig)
 		if err != nil {
 			return false, err
 		}
@@ -451,11 +447,7 @@ func (gt *GitTown) ShouldNewBranchPush() (bool, error) {
 		if err != nil {
 			return false, err
 		}
-		parsed, err := ParseBool(oldGlobalConfig)
-		if err != nil {
-			return false, err
-		}
-		err = gt.SetNewBranchPush(parsed, true)
+		_, err = gt.SetGlobalConfigValue(PushNewBranchesKey, oldGlobalConfig)
 		if err != nil {
 			return false, err
 		}
