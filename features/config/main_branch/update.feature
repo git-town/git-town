@@ -1,17 +1,17 @@
 Feature: configure the main branch
 
   Scenario: not configured
-    Given the main branch is not set
+    Given local setting "main-branch-name" is ""
     When I run "git-town config main-branch main"
     Then it prints no output
-    And the main branch is now "main"
+    And local setting "main-branch-name" is now "main"
 
-  Scenario: configured
+  Scenario: previously configured
     Given the branches "old" and "new"
-    And the main branch is "old"
+    And local setting "main-branch-name" is "old"
     When I run "git-town config main-branch new"
     Then it prints no output
-    And the main branch is now "new"
+    And local setting "main-branch-name" is now "new"
 
   Scenario: non-existing branch
     When I run "git-town config main-branch non-existing"
