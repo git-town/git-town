@@ -10,7 +10,7 @@ SHFMT_VERSION = 3.6.0
 .DEFAULT_GOAL := help
 TODAY = $(shell date +'%Y-%m-%d')
 DEV_VERSION := $(shell git describe --tags 2> /dev/null || git rev-parse --short HEAD)
-RELEASE_VERSION := $(shell git describe --exact-match --tags 2> /dev/null)
+RELEASE_VERSION := "8.0.0"
 GO_BUILD_ARGS = LANG=C GOGC=off
 
 build:  # builds for the current platform
@@ -58,7 +58,7 @@ release-linux: version_tag_is_up_to_date   # creates a new release
 	goreleaser --rm-dist
 
 	# create GitHub release with files in alphabetical order
-	hub release create --draft --browse --message ${RELEASE_VERSION} \
+	hub release create --draft --browse --message "v${RELEASE_VERSION}" \
 		-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.deb \
 		-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.rpm \
 		-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.tar.gz \
@@ -68,7 +68,7 @@ release-linux: version_tag_is_up_to_date   # creates a new release
 		-a dist/git-town_${RELEASE_VERSION}_macos_intel_64.tar.gz \
 		-a dist/git-town_${RELEASE_VERSION}_macos_arm_64.tar.gz \
 		-a dist/git-town_${RELEASE_VERSION}_windows_intel_64.zip \
-		${RELEASE_VERSION}
+		"v${RELEASE_VERSION}"
 
 release-win: msi version_tag_is_up_to_date  # adds the Windows installer to the release
 	hub release edit --browse --message ${RELEASE_VERSION} \
