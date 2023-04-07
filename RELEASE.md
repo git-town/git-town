@@ -12,7 +12,6 @@ This guide is for maintainers who make releases of Git Town.
 - search-and-replace the old version with the new version
 - if bumping the major version, also update `github.com/git-town/git-town/v8/`
   everywhere in this repo
-- make the GitHub release right after creating the Git tag
 
 ### create a GitHub release
 
