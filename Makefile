@@ -71,9 +71,9 @@ release-linux: version_tag_is_up_to_date   # creates a new release
 		"v${RELEASE_VERSION}"
 
 release-win: msi version_tag_is_up_to_date  # adds the Windows installer to the release
-	hub release edit --browse --message ${RELEASE_VERSION} \
+	hub release edit \
 		-a dist/git-town_${RELEASE_VERSION}_windows_intel_64.msi
-		${RELEASE_VERSION}
+		v${RELEASE_VERSION}
 
 stats: tools/scc_${SCC_VERSION}  # shows code statistics
 	@find . -type f | grep -v './tools/node_modules' | grep -v '\./vendor/' | grep -v '\./.git/' | grep -v './website/book' | xargs tools/scc_${SCC_VERSION}
