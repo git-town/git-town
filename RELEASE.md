@@ -25,6 +25,7 @@ On a Linux machine:
 - this opens a release in draft mode the browser
 - delete the empty release that the script has created
 - copy the release notes into the good release
+- leave the release as a draft for now
 
 On a Windows machine, in Git Bash:
 
