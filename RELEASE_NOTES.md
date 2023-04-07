@@ -42,8 +42,8 @@ updating to v8.0.
   [#2108](https://github.com/git-town/git-town/pull/2108))
 - aliases `git town diff-parent` to `git diff-parent`
   ([#2128](https://github.com/git-town/git-town/pull/2128))
-- accepts more configuration value formats like "true", "yes", "on", "t", "1"
-  ([#1978](https://github.com/git-town/git-town/pull/1978),
+- accepts more formats for configuration values like "true", "yes", "on", "t",
+  "1" ([#1978](https://github.com/git-town/git-town/pull/1978),
   [#1979](https://github.com/git-town/git-town/pull/1979))
 - configuration command to set/display the `push-hook` config setting
   ([#1991](https://github.com/git-town/git-town/pull/1991))
