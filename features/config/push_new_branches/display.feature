@@ -1,21 +1,19 @@
 Feature: display the push-new-branches setting
 
-  Scenario: default local setting
-    When I run "git-town config push-new-branches"
+  Scenario Outline: default setting
+    When I run "git-town config push-new-branches <FLAG>"
     Then it prints:
       """
       no
       """
 
-  Scenario: default global setting
-    When I run "git-town config push-new-branches --global"
-    Then it prints:
-      """
-      no
-      """
+    Examples:
+      | FLAG     |
+      |          |
+      | --global |
 
-  Scenario Outline: local setting
-    Given setting "push-new-branches" is "<VALUE>"
+  Scenario Outline: configured locally
+    Given local setting "push-new-branches" is "<VALUE>"
     When I run "git-town config push-new-branches"
     Then it prints:
       """
@@ -34,7 +32,7 @@ Feature: display the push-new-branches setting
       | f     | no     |
       | 0     | no     |
 
-  Scenario Outline: global setting
+  Scenario Outline: configured globally
     Given global setting "push-new-branches" is "<VALUE>"
     When I run "git-town config push-new-branches --global"
     Then it prints:
