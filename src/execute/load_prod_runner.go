@@ -1,11 +1,11 @@
 package execute
 
 import (
-	"github.com/git-town/git-town/v7/src/cache"
-	"github.com/git-town/git-town/v7/src/failure"
-	"github.com/git-town/git-town/v7/src/git"
-	"github.com/git-town/git-town/v7/src/subshell"
-	"github.com/git-town/git-town/v7/src/validate"
+	"github.com/git-town/git-town/v8/src/cache"
+	"github.com/git-town/git-town/v8/src/failure"
+	"github.com/git-town/git-town/v8/src/git"
+	"github.com/git-town/git-town/v8/src/subshell"
+	"github.com/git-town/git-town/v8/src/validate"
 )
 
 func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, exit bool, err error) { //nolint:nonamedreturns // so many return values require names

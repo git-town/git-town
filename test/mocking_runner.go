@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/git-town/git-town/v7/src/subshell"
+	"github.com/git-town/git-town/v8/src/subshell"
 	"github.com/kballard/go-shellquote"
 )
 

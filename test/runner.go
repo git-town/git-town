@@ -5,11 +5,11 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/v7/src/cache"
-	"github.com/git-town/git-town/v7/src/config"
-	"github.com/git-town/git-town/v7/src/execute"
-	"github.com/git-town/git-town/v7/src/git"
-	"github.com/git-town/git-town/v7/src/subshell"
+	"github.com/git-town/git-town/v8/src/cache"
+	"github.com/git-town/git-town/v8/src/config"
+	"github.com/git-town/git-town/v8/src/execute"
+	"github.com/git-town/git-town/v8/src/git"
+	"github.com/git-town/git-town/v8/src/subshell"
 	"github.com/stretchr/testify/assert"
 )
 

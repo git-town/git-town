@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"code.gitea.io/sdk/gitea"
-	"github.com/git-town/git-town/v7/src/hosting"
+	"github.com/git-town/git-town/v8/src/hosting"
 	"github.com/stretchr/testify/assert"
 )
 

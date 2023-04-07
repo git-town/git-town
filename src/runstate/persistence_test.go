@@ -3,7 +3,7 @@ package runstate_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v7/src/runstate"
+	"github.com/git-town/git-town/v8/src/runstate"
 	"github.com/stretchr/testify/assert"
 )
 

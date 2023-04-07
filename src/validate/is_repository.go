@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v8/src/git"
 )
 
 // IsRepository verifies that the given folder contains a Git repository.

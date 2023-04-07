@@ -1,8 +1,8 @@
 package steps
 
 import (
-	"github.com/git-town/git-town/v7/src/git"
-	"github.com/git-town/git-town/v7/src/hosting"
+	"github.com/git-town/git-town/v8/src/git"
+	"github.com/git-town/git-town/v8/src/hosting"
 )
 
 // DeleteOriginBranchStep deletes the current branch from the origin remote.

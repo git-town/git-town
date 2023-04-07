@@ -3,7 +3,7 @@ package subshell
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v7/src/cache"
+	"github.com/git-town/git-town/v8/src/cache"
 	"github.com/kballard/go-shellquote"
 )
 
