@@ -22,9 +22,9 @@ On a Linux machine:
 - create and push a new Git Tag for the release: `git tag v8.0.0`
 - `env GITHUB_TOKEN=<your Github token> VERSION=8.0.0 make release-linux`
   - or omit the Github token and enter your credentials when asked
-- this opens a release in the browser
-- copy the release notes into it
-- delete the other invalid release that the script has created
+- this opens a release in draft mode the browser
+- delete the empty release that the script has created
+- copy the release notes into the good release
 
 On a Windows machine, in Git Bash:
 
