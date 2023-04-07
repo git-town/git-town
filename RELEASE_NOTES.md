@@ -48,8 +48,6 @@ updating to v8.0.
 - configuration command to set/display the `push-hook` config setting
   ([#1991](https://github.com/git-town/git-town/pull/1991))
 
-#### Bug Fixes
-
 ## 7.9.0 (2023-01-22)
 
 #### New Features
