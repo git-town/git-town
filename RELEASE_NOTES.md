@@ -1,6 +1,6 @@
 # Git Town Release Notes
 
-## 8.0.0 (2023-01-08)
+## 8.0.0 (2023-04-07)
 
 If you use the shorter aliases for Git Town commands, please run
 `git town aliases add` after updating to v8.0.
