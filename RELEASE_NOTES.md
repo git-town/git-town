@@ -7,7 +7,7 @@ If you use the shorter aliases for Git Town commands, please run
 
 #### BREAKING CHANGES
 
-- rename `new-branch-push-flag` to `push-new-branches`
+- rename `new-branch-push-flag` command to `push-new-branches`
   ([#1980](https://github.com/git-town/git-town/pull/1980))
 - all commands that display/update configuration are now subcommands of the
   `config` command ([#1963](https://github.com/git-town/git-town/pull/1963),
@@ -25,9 +25,12 @@ If you use the shorter aliases for Git Town commands, please run
   [#1968](https://github.com/git-town/git-town/pull/1968))
 - renames the `push-verify` configuration option to `push-hook`
   ([#1989](https://github.com/git-town/git-town/pull/1989))
+- automatically renames old `push-verify` configuration settings to the new
+  `push-hook` ([#2209](https://github.com/git-town/git-town/pull/2209))
 - rename `git set-parent-branch` to `git set-parent`
   ([#2114](https://github.com/git-town/git-town/pull/2114))
-- stores the runstate in `~/.config` instead of the temp dir
+- stores the runstate in the platform-specific config directory (`~/.config`)
+  instead of the global temp dir
   ([#2126](https://github.com/git-town/git-town/pull/2126))
 
 TODO: auto-update `push-verify` to `push-hook`
