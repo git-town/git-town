@@ -2,8 +2,9 @@
 
 ## 8.0.0 (2023-04-07)
 
-If you use the shorter aliases for Git Town commands, please run
-`git town aliases add` after updating to v8.0.
+Some smaller breaking changes, hence the major version bump. If you use the
+shorter aliases for Git Town commands, please run `git town aliases add` after
+updating to v8.0.
 
 #### BREAKING CHANGES
 
