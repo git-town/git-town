@@ -34,8 +34,6 @@ updating to v8.0.
   instead of the global temp dir
   ([#2126](https://github.com/git-town/git-town/pull/2126))
 
-TODO: auto-update `push-verify` to `push-hook`
-
 #### New Features
 
 - the new `git town switch` command allows switching branches via a UI that
