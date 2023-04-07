@@ -3,7 +3,7 @@ package giturl_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v7/src/giturl"
+	"github.com/git-town/git-town/v8/src/giturl"
 	"github.com/stretchr/testify/assert"
 )
 

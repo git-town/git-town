@@ -3,7 +3,7 @@ package validate
 import (
 	"errors"
 
-	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v8/src/git"
 )
 
 // IsOnline verifies that the given Git repository is online.

@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/git-town/git-town/v7/src/config"
+	"github.com/git-town/git-town/v8/src/config"
 )
 
 // BitbucketConnector provides access to the API of Bitbucket installations.

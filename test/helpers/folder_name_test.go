@@ -3,7 +3,7 @@ package helpers_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v7/test/helpers"
+	"github.com/git-town/git-town/v8/test/helpers"
 	"github.com/stretchr/testify/assert"
 )
 

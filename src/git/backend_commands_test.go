@@ -3,9 +3,9 @@ package git_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v7/src/config"
-	"github.com/git-town/git-town/v7/src/git"
-	"github.com/git-town/git-town/v7/test"
+	"github.com/git-town/git-town/v8/src/config"
+	"github.com/git-town/git-town/v8/src/git"
+	"github.com/git-town/git-town/v8/test"
 	"github.com/stretchr/testify/assert"
 )
 

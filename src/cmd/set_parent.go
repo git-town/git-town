@@ -3,9 +3,9 @@ package cmd
 import (
 	"errors"
 
-	"github.com/git-town/git-town/v7/src/execute"
-	"github.com/git-town/git-town/v7/src/flags"
-	"github.com/git-town/git-town/v7/src/validate"
+	"github.com/git-town/git-town/v8/src/execute"
+	"github.com/git-town/git-town/v8/src/flags"
+	"github.com/git-town/git-town/v8/src/validate"
 	"github.com/spf13/cobra"
 )
 

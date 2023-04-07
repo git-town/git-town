@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/git-town/git-town/v7/src/config"
+	"github.com/git-town/git-town/v8/src/config"
 )
 
 type FrontendRunner interface {

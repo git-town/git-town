@@ -13,10 +13,10 @@ import (
 	"github.com/cucumber/godog"
 	"github.com/cucumber/messages-go/v10"
 	"github.com/eiannone/keyboard"
-	"github.com/git-town/git-town/v7/src/cli"
-	"github.com/git-town/git-town/v7/src/config"
-	"github.com/git-town/git-town/v7/src/git"
-	"github.com/git-town/git-town/v7/src/stringslice"
+	"github.com/git-town/git-town/v8/src/cli"
+	"github.com/git-town/git-town/v8/src/config"
+	"github.com/git-town/git-town/v8/src/git"
+	"github.com/git-town/git-town/v8/src/stringslice"
 )
 
 // beforeSuiteMux ensures that we run BeforeSuite only once globally.
