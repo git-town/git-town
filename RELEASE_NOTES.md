@@ -1,5 +1,53 @@
 # Git Town Release Notes
 
+## 8.0.0 (2023-04-07)
+
+Some smaller breaking changes, hence the major version bump. If you use the
+shorter aliases for Git Town commands, please run `git town aliases add` after
+updating to v8.0.
+
+#### BREAKING CHANGES
+
+- rename `new-branch-push-flag` command to `push-new-branches`
+  ([#1980](https://github.com/git-town/git-town/pull/1980))
+- all commands that display/update configuration are now subcommands of the
+  `config` command ([#1963](https://github.com/git-town/git-town/pull/1963),
+  [#1976](https://github.com/git-town/git-town/pull/1976))
+- all commands that help install Git Town are now subcommands of the `install`
+  command ([#1969](https://github.com/git-town/git-town/pull/1969))
+- moves the default `git town completion` and `git town completions` commands
+  under `git town install completions`
+  ([#1969](https://github.com/git-town/git-town/pull/1969),
+  [#1970](https://github.com/git-town/git-town/pull/1970))
+- installation of the shorter command aliases changes from `git town alias true`
+  to `git town install aliases add` and `... remove`
+  ([#1965](https://github.com/git-town/git-town/pull/1965),
+  [#1966](https://github.com/git-town/git-town/pull/1966),
+  [#1968](https://github.com/git-town/git-town/pull/1968))
+- renames the `push-verify` configuration option to `push-hook`
+  ([#1989](https://github.com/git-town/git-town/pull/1989))
+- automatically renames old `push-verify` configuration settings to the new
+  `push-hook` ([#2209](https://github.com/git-town/git-town/pull/2209))
+- rename `git set-parent-branch` to `git set-parent`
+  ([#2114](https://github.com/git-town/git-town/pull/2114))
+- stores the runstate in the platform-specific config directory (`~/.config`)
+  instead of the global temp dir
+  ([#2126](https://github.com/git-town/git-town/pull/2126))
+
+#### New Features
+
+- the new `git town switch` command allows switching branches via a UI that
+  visualizes the branch hierarchy
+  ([#2106](https://github.com/git-town/git-town/pull/2106),
+  [#2108](https://github.com/git-town/git-town/pull/2108))
+- aliases `git town diff-parent` to `git diff-parent`
+  ([#2128](https://github.com/git-town/git-town/pull/2128))
+- accepts more formats for boolean configuration values like "true", "yes",
+  "on", "t", "1" ([#1978](https://github.com/git-town/git-town/pull/1978),
+  [#1979](https://github.com/git-town/git-town/pull/1979))
+- configuration command to set/display the `push-hook` config setting
+  ([#1991](https://github.com/git-town/git-town/pull/1991))
+
 ## 7.9.0 (2023-01-22)
 
 #### New Features
