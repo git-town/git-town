@@ -67,8 +67,6 @@ updating to v8.0.
 - support GitLab SaaS repos whose name contains "gitlab"
   ([#1926](https://github.com/git-town/git-town/pull/1926))
 
-> main
-
 ## 7.8.0 (2022-08-07)
 
 #### New Features
