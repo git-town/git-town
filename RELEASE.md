@@ -40,6 +40,7 @@ On a Windows machine, in Git Bash:
 - this opens the release in the browser
 - verify that it added the `.msi` file
 - publish the release
+- merge the `main` branch into the `public` branch
 
 ### create a Homebrew release
 
