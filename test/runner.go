@@ -39,13 +39,13 @@ func CreateRunner(t *testing.T) Runner {
 // initRunner creates a fully functioning test.Runner in the given working directory,
 // including necessary Git configuration to make commits. Creates missing folders as needed.
 func initRunner(workingDir, homeDir, binDir string) (Runner, error) {
-	result := newRunner(workingDir, homeDir, binDir)
-	err := result.RunMany([][]string{
+	runner := newRunner(workingDir, homeDir, binDir)
+	err := runner.RunMany([][]string{
 		{"git", "init", "--initial-branch=initial"},
 		{"git", "config", "--global", "user.name", "user"},
 		{"git", "config", "--global", "user.email", "email@example.com"},
 	})
-	return result, err
+	return runner, err
 }
 
 // newRunner provides a new test.Runner instance working in the given directory.
