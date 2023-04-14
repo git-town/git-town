@@ -99,7 +99,7 @@ func NewGithubConnector(gitConfig gitTownConfig, log logFn) (*GitHubConnector, e
 	if url == nil || (url.Host != "github.com" && hostingService != config.HostingServiceGitHub) {
 		return nil, nil //nolint:nilnil
 	}
-	apiToken := getGitHubApiToken(gitConfig)
+	apiToken := getGitHubAPIToken(gitConfig)
 	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: apiToken})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
 	return &GitHubConnector{
