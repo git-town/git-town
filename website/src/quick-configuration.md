@@ -57,6 +57,3 @@ git config git-town.ship-delete-remote-branch false
 
 Follow the instructions given by `git-town help completions` to install the
 autocompletions for your shell.
-
-```
-```
