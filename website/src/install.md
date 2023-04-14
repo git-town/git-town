@@ -90,15 +90,16 @@ go get github.com/git-town/git-town
 
 ## New releases
 
-Subscribe to our
-[release feed](https://github.com/git-town/git-town/releases.atom) to never miss
-a new release!
+Subscribe to the
+[Git Town release feed](https://github.com/git-town/git-town/releases.atom) to
+get notifications about new releases.
 
 ## Uninstall
 
 To remove Git Town from your system:
 
-1. remove Git Town's aliases: `git town aliases false`
-2. remove the Git Town configuration from your repositories: in each repo, run
+1. Remove Git Town's aliases: `git town aliases false`
+2. Remove the Git Town configuration from your repositories: in each repo, run
    `git town config reset`
-3. uninstall the program or manually delete the binary
+3. If your operating system or package manager provides an uninstaller for Git
+   Town, run it. If you installed Git Town manually, delete the binary.
