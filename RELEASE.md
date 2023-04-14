@@ -10,6 +10,8 @@ This guide is for maintainers who make releases of Git Town.
 ### bump the version
 
 - search-and-replace the old version with the new version
+  - triple-digits: `8.0.0`
+  - double-digits: `8.0`
 - if bumping the major version, also update `github.com/git-town/git-town/v8/`
   everywhere in this repo
 
