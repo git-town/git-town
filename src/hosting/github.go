@@ -119,7 +119,7 @@ func NewGithubConnector(gitConfig gitTownConfig, log logFn) (*GitHubConnector, e
 // It first checks the GITHUB_TOKEN environment variable.
 // If that is not set, it checks the GITHUB_AUTH_TOKEN environment variable.
 // If that is not set, it checks the git config.
-func getGitHubApiToken(gitConfig gitTownConfig) string {
+func getGitHubAPIToken(gitConfig gitTownConfig) string {
 	apiToken := os.ExpandEnv("$GITHUB_TOKEN")
 	if apiToken == "" {
 		apiToken = os.ExpandEnv("$GITHUB_AUTH_TOKEN")
