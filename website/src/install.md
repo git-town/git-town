@@ -90,9 +90,9 @@ go get github.com/git-town/git-town
 
 ## New releases
 
-Subscribe to our
-[release feed](https://github.com/git-town/git-town/releases.atom) to never miss
-a new release!
+Subscribe to the
+[Git Town release feed](https://github.com/git-town/git-town/releases.atom) to
+get notifications about new releases.
 
 ## Uninstall
 
