@@ -8,12 +8,16 @@ branch before opening the pull request.
 
 ### Variations
 
-You can create new pull requests for repositories hosted on
-[GitHub](https://github.com/), [GitLab](https://gitlab.com/),
-[Gitea](https://gitea.com/) and [Bitbucket](https://bitbucket.org/). When using
-self-hosted versions of these services, you can configure the hosting service
-type with the [code-hosting-driver](../preferences/code-hosting-driver.md)
-setting.
+You can create new pull requests for repositories hosted on:
+
+- [Bitbucket](https://bitbucket.org)
+- [Gitea](https://gitea.com)
+- [GitHub](https://github.com)
+- [GitLab](https://gitlab.com)
+
+When using self-hosted versions of these services, you can configure the hosting
+service type with the
+[code-hosting-driver](../preferences/code-hosting-driver.md) setting.
 
 When using SSH identities, this command uses the hostname in the
 [code-hosting-origin-hostname](../preferences/code-hosting-origin-hostname.md)
