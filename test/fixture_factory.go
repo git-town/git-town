@@ -38,8 +38,8 @@ func NewFixtureFactory(dir string) (FixtureFactory, error) {
 	}, nil
 }
 
-// CreateScenarioEnvironment provides a new Fixture for the scenario with the given name.
-func (manager *FixtureFactory) CreateScenarioEnvironment(scenarioName string) (Fixture, error) {
+// CreateFixture provides a new Fixture for the scenario with the given name.
+func (manager *FixtureFactory) CreateFixture(scenarioName string) (Fixture, error) {
 	envDirName := helpers.FolderName(scenarioName) + "_" + manager.counter.ToString()
 	envPath := filepath.Join(manager.dir, envDirName)
 	return CloneFixture(manager.memoized, envPath)

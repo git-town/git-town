@@ -29,7 +29,7 @@ var fixtureFactory *FixtureFactory //nolint:gochecknoglobals
 func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.BeforeScenario(func(scenario *messages.Pickle) {
 		// create a Fixture for the scenario
-		fixture, err := fixtureFactory.CreateScenarioEnvironment(scenario.GetName())
+		fixture, err := fixtureFactory.CreateFixture(scenario.GetName())
 		if err != nil {
 			log.Fatalf("cannot create environment for scenario %q: %s", scenario.GetName(), err)
 		}
