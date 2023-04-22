@@ -5,11 +5,11 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/v7/src/cache"
-	"github.com/git-town/git-town/v7/src/config"
-	"github.com/git-town/git-town/v7/src/execute"
-	"github.com/git-town/git-town/v7/src/git"
-	"github.com/git-town/git-town/v7/src/subshell"
+	"github.com/git-town/git-town/v8/src/cache"
+	"github.com/git-town/git-town/v8/src/config"
+	"github.com/git-town/git-town/v8/src/execute"
+	"github.com/git-town/git-town/v8/src/git"
+	"github.com/git-town/git-town/v8/src/subshell"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -39,13 +39,13 @@ func CreateRunner(t *testing.T) Runner {
 // initRunner creates a fully functioning test.Runner in the given working directory,
 // including necessary Git configuration to make commits. Creates missing folders as needed.
 func initRunner(workingDir, homeDir, binDir string) (Runner, error) {
-	result := newRunner(workingDir, homeDir, binDir)
-	err := result.RunMany([][]string{
+	runner := newRunner(workingDir, homeDir, binDir)
+	err := runner.RunMany([][]string{
 		{"git", "init", "--initial-branch=initial"},
 		{"git", "config", "--global", "user.name", "user"},
 		{"git", "config", "--global", "user.email", "email@example.com"},
 	})
-	return result, err
+	return runner, err
 }
 
 // newRunner provides a new test.Runner instance working in the given directory.

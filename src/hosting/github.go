@@ -4,9 +4,10 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"os"
 	"strings"
 
-	"github.com/git-town/git-town/v7/src/config"
+	"github.com/git-town/git-town/v8/src/config"
 	"github.com/google/go-github/v50/github"
 	"golang.org/x/oauth2"
 )
@@ -98,7 +99,7 @@ func NewGithubConnector(gitConfig gitTownConfig, log logFn) (*GitHubConnector, e
 	if url == nil || (url.Host != "github.com" && hostingService != config.HostingServiceGitHub) {
 		return nil, nil //nolint:nilnil
 	}
-	apiToken := gitConfig.GitHubToken()
+	apiToken := getGitHubAPIToken(gitConfig)
 	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: apiToken})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
 	return &GitHubConnector{
@@ -112,6 +113,21 @@ func NewGithubConnector(gitConfig gitTownConfig, log logFn) (*GitHubConnector, e
 		MainBranch: gitConfig.MainBranch(),
 		log:        log,
 	}, nil
+}
+
+// getGitHubApiToken returns the GitHub API token to use.
+// It first checks the GITHUB_TOKEN environment variable.
+// If that is not set, it checks the GITHUB_AUTH_TOKEN environment variable.
+// If that is not set, it checks the git config.
+func getGitHubAPIToken(gitConfig gitTownConfig) string {
+	apiToken := os.ExpandEnv("$GITHUB_TOKEN")
+	if apiToken == "" {
+		apiToken = os.ExpandEnv("$GITHUB_AUTH_TOKEN")
+	}
+	if apiToken == "" {
+		apiToken = gitConfig.GitHubToken()
+	}
+	return apiToken
 }
 
 // parsePullRequest extracts standardized proposal data from the given GitHub pull-request.

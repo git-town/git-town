@@ -3,7 +3,7 @@ package flags_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v7/src/flags"
+	"github.com/git-town/git-town/v8/src/flags"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 )

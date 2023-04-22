@@ -20,7 +20,7 @@ You can also [install Git Town manually](#manual-installation) or
 ## Windows
 
 The easiest way to install Git Town on Windows is to
-[download the Windows installer](https://github.com/git-town/git-town/releases/download/v7.9.0/git-town_7.9.0_windows_intel_64.msi)
+[download the Windows installer](https://github.com/git-town/git-town/releases/download/v8.0.0/git-town_8.0.0_windows_intel_64.msi)
 and run it. You can also install Git Town via [scoop](https://scoop.sh):
 
 ```
@@ -44,7 +44,7 @@ On Debian-based systems,
 matching your CPU architecture and run:
 
 ```
-sudo apt-get install git-town_7.9.0_linux_intel_64.deb
+sudo apt-get install git-town_8.0.0_linux_intel_64.deb
 ```
 
 On RedHat-based systems
@@ -52,7 +52,7 @@ On RedHat-based systems
 matching your CPU architecture and run
 
 ```
-rpm -i git-town_7.9.0_linux_intel_64.rpm
+rpm -i git-town_8.0.0_linux_intel_64.rpm
 ```
 
 On Arch Linux, install the
@@ -90,15 +90,16 @@ go get github.com/git-town/git-town
 
 ## New releases
 
-Subscribe to our
-[release feed](https://github.com/git-town/git-town/releases.atom) to never miss
-a new release!
+Subscribe to the
+[Git Town release feed](https://github.com/git-town/git-town/releases.atom) to
+get notifications about new releases.
 
 ## Uninstall
 
 To remove Git Town from your system:
 
-1. remove Git Town's aliases: `git town aliases false`
-2. remove the Git Town configuration from your repositories: in each repo, run
+1. Remove Git Town's aliases: `git town aliases false`
+2. Remove the Git Town configuration from your repositories: in each repo, run
    `git town config reset`
-3. uninstall the program or manually delete the binary
+3. If your operating system or package manager provides an uninstaller for Git
+   Town, run it. If you installed Git Town manually, delete the binary.

@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
-	"github.com/git-town/git-town/v7/src/dialog"
-	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v8/src/dialog"
+	"github.com/git-town/git-town/v8/src/git"
 )
 
 // EnterPerennialBranches lets the user update the perennial branches.

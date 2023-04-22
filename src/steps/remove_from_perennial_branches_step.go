@@ -1,8 +1,8 @@
 package steps
 
 import (
-	"github.com/git-town/git-town/v7/src/git"
-	"github.com/git-town/git-town/v7/src/hosting"
+	"github.com/git-town/git-town/v8/src/git"
+	"github.com/git-town/git-town/v8/src/hosting"
 )
 
 // RemoveFromPerennialBranchesStep removes the branch with the given name as a perennial branch.
