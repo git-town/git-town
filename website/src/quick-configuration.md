@@ -26,8 +26,8 @@ for your account at your code hosting provider.
 - [instructions for GitLab](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html)
 - [instructions for Gitea](https://docs.gitea.io/en-us/api-usage)
 
-When you have the token, run one of the following commands inside the folder
-that contains your Git repository to provide this API token to Git Town.
+Provide the token to Git Town as an environment variable with name
+`GITHUB_TOKEN` or `GITHUB_AUTH_TOKEN` or as part of the Git Town configuration:
 
 - GitHub:
 
