@@ -13,10 +13,10 @@ import (
 	"github.com/git-town/git-town/v8/test/helpers"
 )
 
-// GitEnvironment is a complete Git environment for a Cucumber scenario.
-type GitEnvironment struct {
-	// Dir defines the local folder in which this GitEnvironment is stored.
-	// This folder also acts as the HOME directory for tests using this GitEnvironment.
+// Fixture is a complete Git environment for a Cucumber scenario.
+type Fixture struct {
+	// Dir defines the local folder in which this Fixture is stored.
+	// This folder also acts as the HOME directory for tests using this Fixture.
 	// It contains the global Git configuration to use in this test.
 	Dir string
 
@@ -38,19 +38,19 @@ type GitEnvironment struct {
 	UpstreamRepo *Runner `exhaustruct:"optional"`
 }
 
-// CloneGitEnvironment provides a GitEnvironment instance in the given directory,
-// containing a copy of the given GitEnvironment.
-func CloneGitEnvironment(original GitEnvironment, dir string) (GitEnvironment, error) {
+// CloneFixture provides a Fixture instance in the given directory,
+// containing a copy of the given Fixture.
+func CloneFixture(original Fixture, dir string) (Fixture, error) {
 	err := CopyDirectory(original.Dir, dir)
 	if err != nil {
-		return GitEnvironment{}, fmt.Errorf("cannot clone GitEnvironment %q to folder %q: %w", original.Dir, dir, err)
+		return Fixture{}, fmt.Errorf("cannot clone Fixture %q to folder %q: %w", original.Dir, dir, err)
 	}
 	binDir := filepath.Join(dir, "bin")
 	originDir := filepath.Join(dir, "origin")
 	originRepo := newRunner(originDir, dir, "")
 	developerDir := filepath.Join(dir, "developer")
 	devRepo := newRunner(developerDir, dir, binDir)
-	result := GitEnvironment{
+	result := Fixture{
 		Dir:        dir,
 		DevRepo:    devRepo,
 		OriginRepo: &originRepo,
@@ -59,35 +59,35 @@ func CloneGitEnvironment(original GitEnvironment, dir string) (GitEnvironment, e
 	// we have to set the "origin" remote to the copied origin repo here.
 	_, err = result.DevRepo.Run("git", "remote", "remove", config.OriginRemote)
 	if err != nil {
-		return GitEnvironment{}, fmt.Errorf("cannot remove remote: %w", err)
+		return Fixture{}, fmt.Errorf("cannot remove remote: %w", err)
 	}
 	err = result.DevRepo.AddRemote(config.OriginRemote, result.originRepoPath())
 	if err != nil {
-		return GitEnvironment{}, fmt.Errorf("cannot set remote: %w", err)
+		return Fixture{}, fmt.Errorf("cannot set remote: %w", err)
 	}
 	err = result.DevRepo.Fetch()
 	if err != nil {
-		return GitEnvironment{}, fmt.Errorf("cannot fetch: %w", err)
+		return Fixture{}, fmt.Errorf("cannot fetch: %w", err)
 	}
 	// and connect the main branches again
 	err = result.DevRepo.ConnectTrackingBranch("main")
 	if err != nil {
-		return GitEnvironment{}, fmt.Errorf("cannot connect tracking branch: %w", err)
+		return Fixture{}, fmt.Errorf("cannot connect tracking branch: %w", err)
 	}
 	return result, err
 }
 
-// NewStandardGitEnvironment provides a GitEnvironment in the given directory,
+// NewStandardFixture provides a Fixture in the given directory,
 // fully populated as a standardized setup for scenarios.
 //
 // The origin repo has the initial branch checked out.
 // Git repos cannot receive pushes of the currently checked out branch
 // because that will change files in the current workspace.
 // The tests don't use the initial branch.
-func NewStandardGitEnvironment(dir string) (GitEnvironment, error) {
+func NewStandardFixture(dir string) (Fixture, error) {
 	// create the folder
-	// create the GitEnvironment
-	gitEnv := GitEnvironment{Dir: dir}
+	// create the Fixture
+	gitEnv := Fixture{Dir: dir}
 	// create the origin repo
 	err := os.MkdirAll(gitEnv.originRepoPath(), 0o744)
 	if err != nil {
@@ -127,7 +127,7 @@ func NewStandardGitEnvironment(dir string) (GitEnvironment, error) {
 }
 
 // AddSubmodule adds a submodule repository.
-func (env *GitEnvironment) AddSubmoduleRepo() error {
+func (env *Fixture) AddSubmoduleRepo() error {
 	err := os.MkdirAll(env.submoduleRepoPath(), 0o744)
 	if err != nil {
 		return fmt.Errorf("cannot create directory %q: %w", env.submoduleRepoPath(), err)
@@ -148,7 +148,7 @@ func (env *GitEnvironment) AddSubmoduleRepo() error {
 }
 
 // AddUpstream adds an upstream repository.
-func (env *GitEnvironment) AddUpstream() error {
+func (env *Fixture) AddUpstream() error {
 	repo, err := env.DevRepo.Clone(filepath.Join(env.Dir, "upstream"))
 	if err != nil {
 		return fmt.Errorf("cannot clone upstream: %w", err)
@@ -162,7 +162,7 @@ func (env *GitEnvironment) AddUpstream() error {
 }
 
 // AddCoworkerRepo adds a coworker repository.
-func (env *GitEnvironment) AddCoworkerRepo() error {
+func (env *Fixture) AddCoworkerRepo() error {
 	coworkerRepo, err := env.OriginRepo.Clone(env.coworkerRepoPath())
 	if err != nil {
 		return fmt.Errorf("cannot clone coworker: %w", err)
@@ -171,19 +171,19 @@ func (env *GitEnvironment) AddCoworkerRepo() error {
 	return env.initializeWorkspace(env.CoworkerRepo)
 }
 
-// binPath provides the full path of the folder containing the test tools for this GitEnvironment.
-func (env *GitEnvironment) binPath() string {
+// binPath provides the full path of the folder containing the test tools for this Fixture.
+func (env *Fixture) binPath() string {
 	return filepath.Join(env.Dir, "bin")
 }
 
-// Branches provides a tabular list of all branches in this GitEnvironment.
-func (env *GitEnvironment) Branches() (DataTable, error) {
+// Branches provides a tabular list of all branches in this Fixture.
+func (env *Fixture) Branches() (DataTable, error) {
 	result := DataTable{}
 	result.AddRow("REPOSITORY", "BRANCHES")
 	mainBranch := env.DevRepo.Config.MainBranch()
 	localBranches, err := env.DevRepo.LocalBranchesMainFirst(mainBranch)
 	if err != nil {
-		return result, fmt.Errorf("cannot determine the developer repo branches of the GitEnvironment: %w", err)
+		return result, fmt.Errorf("cannot determine the developer repo branches of the Fixture: %w", err)
 	}
 	localBranches = stringslice.Remove(localBranches, "initial")
 	localBranchesJoined := strings.Join(localBranches, ", ")
@@ -193,7 +193,7 @@ func (env *GitEnvironment) Branches() (DataTable, error) {
 	}
 	originBranches, err := env.OriginRepo.LocalBranchesMainFirst(mainBranch)
 	if err != nil {
-		return result, fmt.Errorf("cannot determine the origin repo branches of the GitEnvironment: %w", err)
+		return result, fmt.Errorf("cannot determine the origin repo branches of the Fixture: %w", err)
 	}
 	originBranches = stringslice.Remove(originBranches, "initial")
 	originBranchesJoined := strings.Join(originBranches, ", ")
@@ -207,7 +207,7 @@ func (env *GitEnvironment) Branches() (DataTable, error) {
 }
 
 // CreateCommits creates the commits described by the given Gherkin table in this Git repository.
-func (env *GitEnvironment) CreateCommits(commits []git.Commit) error {
+func (env *Fixture) CreateCommits(commits []git.Commit) error {
 	for _, commit := range commits {
 		var err error
 		for _, location := range commit.Locations {
@@ -248,7 +248,7 @@ func (env *GitEnvironment) CreateCommits(commits []git.Commit) error {
 }
 
 // CreateOriginBranch creates a branch with the given name only in the origin directory.
-func (env GitEnvironment) CreateOriginBranch(name, parent string) error {
+func (env Fixture) CreateOriginBranch(name, parent string) error {
 	err := env.OriginRepo.CreateBranch(name, parent)
 	if err != nil {
 		return fmt.Errorf("cannot create origin branch %q: %w", name, err)
@@ -257,7 +257,7 @@ func (env GitEnvironment) CreateOriginBranch(name, parent string) error {
 }
 
 // CreateTags creates tags from the given gherkin table.
-func (env GitEnvironment) CreateTags(table *messages.PickleStepArgument_PickleTable) error {
+func (env Fixture) CreateTags(table *messages.PickleStepArgument_PickleTable) error {
 	columnNames := helpers.TableFields(table)
 	if columnNames[0] != "NAME" && columnNames[1] != "LOCATION" {
 		return fmt.Errorf("tag table must have columns NAME and LOCATION")
@@ -282,7 +282,7 @@ func (env GitEnvironment) CreateTags(table *messages.PickleStepArgument_PickleTa
 }
 
 // CommitTable provides a table for all commits in this Git environment containing only the given fields.
-func (env GitEnvironment) CommitTable(fields []string) (DataTable, error) {
+func (env Fixture) CommitTable(fields []string) (DataTable, error) {
 	builder := NewCommitTableBuilder()
 	localCommits, err := env.DevRepo.Commits(fields, "main")
 	if err != nil {
@@ -314,7 +314,7 @@ func (env GitEnvironment) CommitTable(fields []string) (DataTable, error) {
 }
 
 // TagTable provides a table for all tags in this Git environment.
-func (env GitEnvironment) TagTable() (DataTable, error) {
+func (env Fixture) TagTable() (DataTable, error) {
 	builder := NewTagTableBuilder()
 	localTags, err := env.DevRepo.Tags()
 	if err != nil {
@@ -331,7 +331,7 @@ func (env GitEnvironment) TagTable() (DataTable, error) {
 	return builder.Table(), nil
 }
 
-func (env GitEnvironment) initializeWorkspace(repo *Runner) error {
+func (env Fixture) initializeWorkspace(repo *Runner) error {
 	err := repo.Config.SetMainBranch("main")
 	if err != nil {
 		return err
@@ -349,26 +349,26 @@ func (env GitEnvironment) initializeWorkspace(repo *Runner) error {
 }
 
 // coworkerRepoPath provides the full path to the Git repository with the given name.
-func (env GitEnvironment) coworkerRepoPath() string {
+func (env Fixture) coworkerRepoPath() string {
 	return filepath.Join(env.Dir, "coworker")
 }
 
 // developerRepoPath provides the full path to the Git repository with the given name.
-func (env GitEnvironment) developerRepoPath() string {
+func (env Fixture) developerRepoPath() string {
 	return filepath.Join(env.Dir, "developer")
 }
 
 // originRepoPath provides the full path to the Git repository with the given name.
-func (env GitEnvironment) originRepoPath() string {
+func (env Fixture) originRepoPath() string {
 	return filepath.Join(env.Dir, config.OriginRemote)
 }
 
 // submoduleRepoPath provides the full path to the Git repository with the given name.
-func (env GitEnvironment) submoduleRepoPath() string {
+func (env Fixture) submoduleRepoPath() string {
 	return filepath.Join(env.Dir, "submodule")
 }
 
-// Remove deletes all files used by this GitEnvironment from disk.
-func (env GitEnvironment) Remove() error {
+// Remove deletes all files used by this Fixture from disk.
+func (env Fixture) Remove() error {
 	return os.RemoveAll(env.Dir)
 }

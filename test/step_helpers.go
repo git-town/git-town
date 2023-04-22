@@ -12,7 +12,7 @@ import (
 // against the given Gherkin table.
 func compareExistingCommits(state *ScenarioState, table *messages.PickleStepArgument_PickleTable) error {
 	fields := helpers.TableFields(table)
-	commitTable, err := state.gitEnv.CommitTable(fields)
+	commitTable, err := state.fixture.CommitTable(fields)
 	if err != nil {
 		return fmt.Errorf("cannot determine commits in the developer repo: %w", err)
 	}

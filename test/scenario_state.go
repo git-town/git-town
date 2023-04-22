@@ -10,8 +10,8 @@ import (
 
 // ScenarioState constains the state that is shared by all steps within a scenario.
 type ScenarioState struct {
-	// the GitEnvironment used in the current scenario
-	gitEnv GitEnvironment
+	// the Fixture used in the current scenario
+	fixture Fixture
 
 	// initialLocalBranches contains the local branches before the WHEN steps run
 	initialLocalBranches []string
@@ -45,8 +45,8 @@ type ScenarioState struct {
 }
 
 // Reset restores the null value of this ScenarioState.
-func (state *ScenarioState) Reset(gitEnv GitEnvironment) {
-	state.gitEnv = gitEnv
+func (state *ScenarioState) Reset(gitEnv Fixture) {
+	state.fixture = gitEnv
 	state.initialLocalBranches = []string{"main"}
 	state.initialRemoteBranches = []string{"main"}
 	state.initialCommits = nil
