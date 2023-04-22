@@ -3,8 +3,8 @@ package steps
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v7/src/git"
-	"github.com/git-town/git-town/v7/src/hosting"
+	"github.com/git-town/git-town/v8/src/git"
+	"github.com/git-town/git-town/v8/src/hosting"
 )
 
 // CommitOpenChangesStep commits all open changes as a new commit.

@@ -6,7 +6,7 @@ import (
 	"net/url"
 
 	"code.gitea.io/sdk/gitea"
-	"github.com/git-town/git-town/v7/src/config"
+	"github.com/git-town/git-town/v8/src/config"
 	"golang.org/x/oauth2"
 )
 

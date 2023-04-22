@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/v7/src/execute"
-	"github.com/git-town/git-town/v7/src/subshell"
+	"github.com/git-town/git-town/v8/src/execute"
+	"github.com/git-town/git-town/v8/src/subshell"
 	"github.com/stretchr/testify/assert"
 )
 

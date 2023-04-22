@@ -3,15 +3,15 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v7/src/cli"
-	"github.com/git-town/git-town/v7/src/config"
-	"github.com/git-town/git-town/v7/src/execute"
-	"github.com/git-town/git-town/v7/src/flags"
-	"github.com/git-town/git-town/v7/src/git"
-	"github.com/git-town/git-town/v7/src/hosting"
-	"github.com/git-town/git-town/v7/src/runstate"
-	"github.com/git-town/git-town/v7/src/steps"
-	"github.com/git-town/git-town/v7/src/validate"
+	"github.com/git-town/git-town/v8/src/cli"
+	"github.com/git-town/git-town/v8/src/config"
+	"github.com/git-town/git-town/v8/src/execute"
+	"github.com/git-town/git-town/v8/src/flags"
+	"github.com/git-town/git-town/v8/src/git"
+	"github.com/git-town/git-town/v8/src/hosting"
+	"github.com/git-town/git-town/v8/src/runstate"
+	"github.com/git-town/git-town/v8/src/steps"
+	"github.com/git-town/git-town/v8/src/validate"
 	"github.com/spf13/cobra"
 )
 
