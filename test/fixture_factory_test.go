@@ -9,12 +9,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGitManager(t *testing.T) {
+func TestFixtureFactory(t *testing.T) {
 	t.Parallel()
-	t.Run("NewGitManager()", func(t *testing.T) {
+	t.Run("NewFixtureFactory()", func(t *testing.T) {
 		t.Parallel()
 		dir := t.TempDir()
-		_, err := NewGitManager(dir)
+		_, err := NewFixtureFactory(dir)
 		assert.Nil(t, err, "creating memoized environment failed")
 		memoizedPath := filepath.Join(dir, "memoized")
 		_, err = os.Stat(memoizedPath)
@@ -24,7 +24,7 @@ func TestGitManager(t *testing.T) {
 	t.Run(".CreateScenarioEnvironment()", func(t *testing.T) {
 		t.Parallel()
 		dir := t.TempDir()
-		gm, err := NewGitManager(dir)
+		gm, err := NewFixtureFactory(dir)
 		assert.Nil(t, err, "creating memoized environment failed")
 		result, err := gm.CreateScenarioEnvironment("foo")
 		assert.Nil(t, err, "cannot create scenario environment")

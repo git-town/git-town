@@ -271,7 +271,7 @@ func TestRunner(t *testing.T) {
 	t.Run(".HasBranchesOutOfSync()", func(t *testing.T) {
 		t.Run("branches are in sync", func(t *testing.T) {
 			t.Parallel()
-			env, err := NewStandardGitEnvironment(t.TempDir())
+			env, err := NewStandardFixture(t.TempDir())
 			assert.NoError(t, err)
 			runner := env.DevRepo
 			err = runner.CreateBranch("branch1", "main")
@@ -293,7 +293,7 @@ func TestRunner(t *testing.T) {
 
 		t.Run("branch is ahead", func(t *testing.T) {
 			t.Parallel()
-			env, err := NewStandardGitEnvironment(t.TempDir())
+			env, err := NewStandardFixture(t.TempDir())
 			assert.NoError(t, err)
 			err = env.DevRepo.CreateBranch("branch1", "main")
 			assert.NoError(t, err)
@@ -312,7 +312,7 @@ func TestRunner(t *testing.T) {
 
 		t.Run("branch is behind", func(t *testing.T) {
 			t.Parallel()
-			env, err := NewStandardGitEnvironment(t.TempDir())
+			env, err := NewStandardFixture(t.TempDir())
 			assert.NoError(t, err)
 			err = env.DevRepo.CreateBranch("branch1", "main")
 			assert.NoError(t, err)
