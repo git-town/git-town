@@ -3,10 +3,10 @@ package validate
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v7/src/dialog"
-	"github.com/git-town/git-town/v7/src/git"
-	"github.com/git-town/git-town/v7/src/hosting"
-	"github.com/git-town/git-town/v7/src/runstate"
+	"github.com/git-town/git-town/v8/src/dialog"
+	"github.com/git-town/git-town/v8/src/git"
+	"github.com/git-town/git-town/v8/src/hosting"
+	"github.com/git-town/git-town/v8/src/runstate"
 )
 
 // HandleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.

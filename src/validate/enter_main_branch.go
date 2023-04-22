@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/fatih/color"
-	"github.com/git-town/git-town/v7/src/dialog"
-	"github.com/git-town/git-town/v7/src/git"
+	"github.com/git-town/git-town/v8/src/dialog"
+	"github.com/git-town/git-town/v8/src/git"
 )
 
 // EnterMainBranch lets the user select a new main branch for this repo.

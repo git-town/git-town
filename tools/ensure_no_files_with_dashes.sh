@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 # This script verifies that there are no files or folders that contain dashes.
 # Git Town uses underscores in file paths.

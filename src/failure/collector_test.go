@@ -4,8 +4,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/git-town/git-town/v7/src/config"
-	"github.com/git-town/git-town/v7/src/failure"
+	"github.com/git-town/git-town/v8/src/config"
+	"github.com/git-town/git-town/v8/src/failure"
 	"github.com/stretchr/testify/assert"
 )
 

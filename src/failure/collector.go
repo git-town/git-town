@@ -3,7 +3,7 @@ package failure
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v7/src/config"
+	"github.com/git-town/git-town/v8/src/config"
 )
 
 // Collector helps avoid excessive error checking

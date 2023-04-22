@@ -1,8 +1,8 @@
 package git
 
 import (
-	"github.com/git-town/git-town/v7/src/cache"
-	"github.com/git-town/git-town/v7/src/config"
+	"github.com/git-town/git-town/v8/src/cache"
+	"github.com/git-town/git-town/v8/src/config"
 )
 
 // RepoConfig represents the known state of a Git repository.

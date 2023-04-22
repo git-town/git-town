@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/git-town/git-town/v7/test/helpers"
+	"github.com/git-town/git-town/v8/test/helpers"
 )
 
 // GitManager manages the Git setup for the entire test suite.
