@@ -9,7 +9,7 @@ import (
 type DeleteParentBranchStep struct {
 	EmptyStep
 	Branch string
-	Parent string // TODO: make public and populate as part of creating this step
+	Parent string
 }
 
 func (step *DeleteParentBranchStep) CreateUndoStep(backend *git.BackendCommands) (Step, error) {

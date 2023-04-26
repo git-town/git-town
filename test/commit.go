@@ -5,7 +5,6 @@ import (
 )
 
 // Commit describes a Git commit.
-// TODO: move into the "test" package.
 type Commit struct {
 	Author      string `exhaustruct:"optional"`
 	Branch      string

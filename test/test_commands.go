@@ -241,7 +241,7 @@ func (r *testCommands) DeleteMainBranchConfiguration() error {
 
 // Fetch retrieves the updates from the origin repo.
 func (r *testCommands) Fetch() error {
-	_, err := r.Run("git", "fetch", "--prune", "--tags") // TODO: remove --prune or --tags here?
+	_, err := r.Run("git", "fetch")
 	return err
 }
 
