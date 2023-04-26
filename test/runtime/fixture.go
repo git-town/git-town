@@ -1,4 +1,4 @@
-package test
+package runtime
 
 import (
 	"fmt"
@@ -48,9 +48,9 @@ func CloneFixture(original Fixture, dir string) (Fixture, error) {
 	}
 	binDir := filepath.Join(dir, "bin")
 	originDir := filepath.Join(dir, "origin")
-	originRepo := newRuntime(originDir, dir, "")
+	originRepo := New(originDir, dir, "")
 	developerDir := filepath.Join(dir, "developer")
-	devRepo := newRuntime(developerDir, dir, binDir)
+	devRepo := New(developerDir, dir, binDir)
 	result := Fixture{
 		Dir:        dir,
 		DevRepo:    devRepo,
@@ -95,7 +95,7 @@ func NewStandardFixture(dir string) (Fixture, error) {
 		return gitEnv, fmt.Errorf("cannot create directory %q: %w", gitEnv.originRepoPath(), err)
 	}
 	// initialize the repo in the folder
-	originRepo, err := initRuntime(gitEnv.originRepoPath(), gitEnv.Dir, gitEnv.binPath())
+	originRepo, err := initialize(gitEnv.originRepoPath(), gitEnv.Dir, gitEnv.binPath())
 	if err != nil {
 		return gitEnv, err
 	}
@@ -133,7 +133,7 @@ func (env *Fixture) AddSubmoduleRepo() error {
 	if err != nil {
 		return fmt.Errorf("cannot create directory %q: %w", env.submoduleRepoPath(), err)
 	}
-	submoduleRepo, err := initRuntime(env.submoduleRepoPath(), env.Dir, env.binPath())
+	submoduleRepo, err := initialize(env.submoduleRepoPath(), env.Dir, env.binPath())
 	if err != nil {
 		return err
 	}

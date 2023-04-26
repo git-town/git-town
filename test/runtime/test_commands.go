@@ -1,4 +1,4 @@
-package test
+package runtime
 
 import (
 	"fmt"
@@ -66,7 +66,7 @@ func (r *testCommands) Clone(targetDir string) (Runtime, error) {
 	if err != nil {
 		return Runtime{}, fmt.Errorf("cannot clone repo %q: %w", r.WorkingDir, err)
 	}
-	return newRuntime(targetDir, r.HomeDir, r.BinDir), nil
+	return New(targetDir, r.HomeDir, r.BinDir), nil
 }
 
 // CheckoutBranch checks out the Git branch with the given name in this repo.

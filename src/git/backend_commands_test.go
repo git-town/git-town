@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v8/src/config"
-	"github.com/git-town/git-town/v8/test"
 	"github.com/git-town/git-town/v8/test/git"
+	testruntime "github.com/git-town/git-town/v8/test/runtime"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -14,7 +14,7 @@ func TestRunner(t *testing.T) {
 
 	t.Run("BranchAuthors", func(t *testing.T) {
 		t.Parallel()
-		runtime := test.CreateRuntime(t)
+		runtime := testruntime.Create(t)
 		err := runtime.CreateBranch("branch", "initial")
 		assert.NoError(t, err)
 		err = runtime.CreateCommit(git.Commit{
@@ -38,7 +38,7 @@ func TestRunner(t *testing.T) {
 
 	t.Run(".CheckoutBranch()", func(t *testing.T) {
 		t.Parallel()
-		runtime := test.CreateRuntime(t)
+		runtime := testruntime.Create(t)
 		err := runtime.CreateBranch("branch1", "initial")
 		assert.NoError(t, err)
 		err = runtime.Backend.CheckoutBranch("branch1")
@@ -55,7 +55,7 @@ func TestRunner(t *testing.T) {
 
 	t.Run(".CreateFeatureBranch()", func(t *testing.T) {
 		t.Parallel()
-		runtime := test.CreateTestGitTownRuntime(t)
+		runtime := testruntime.CreateGitTown(t)
 		err := runtime.Backend.CreateFeatureBranch("f1")
 		assert.NoError(t, err)
 		runtime.Config.Reload()
@@ -65,7 +65,7 @@ func TestRunner(t *testing.T) {
 
 	t.Run(".CurrentBranch()", func(t *testing.T) {
 		t.Parallel()
-		runtime := test.CreateRuntime(t)
+		runtime := testruntime.Create(t)
 		err := runtime.CheckoutBranch("initial")
 		assert.NoError(t, err)
 		err = runtime.CreateBranch("b1", "initial")
@@ -84,7 +84,7 @@ func TestRunner(t *testing.T) {
 
 	t.Run(".HasLocalBranch()", func(t *testing.T) {
 		t.Parallel()
-		origin := test.CreateRuntime(t)
+		origin := testruntime.Create(t)
 		repoDir := t.TempDir()
 		runner, err := origin.Clone(repoDir)
 		assert.NoError(t, err)
@@ -105,7 +105,7 @@ func TestRunner(t *testing.T) {
 
 	t.Run(".HasOpenChanges()", func(t *testing.T) {
 		t.Parallel()
-		runtime := test.CreateRuntime(t)
+		runtime := testruntime.Create(t)
 		has, err := runtime.Backend.HasOpenChanges()
 		assert.NoError(t, err)
 		assert.False(t, has)
@@ -118,7 +118,7 @@ func TestRunner(t *testing.T) {
 
 	t.Run(".HasRebaseInProgress()", func(t *testing.T) {
 		t.Parallel()
-		runtime := test.CreateRuntime(t)
+		runtime := testruntime.Create(t)
 		has, err := runtime.Backend.HasRebaseInProgress()
 		assert.NoError(t, err)
 		assert.False(t, has)
@@ -126,7 +126,7 @@ func TestRunner(t *testing.T) {
 
 	t.Run(".HasRemote()", func(t *testing.T) {
 		t.Parallel()
-		origin := test.CreateRuntime(t)
+		origin := testruntime.Create(t)
 		repoDir := t.TempDir()
 		runner, err := origin.Clone(repoDir)
 		assert.NoError(t, err)
@@ -140,7 +140,7 @@ func TestRunner(t *testing.T) {
 
 	t.Run(".HasTrackingBranch()", func(t *testing.T) {
 		t.Parallel()
-		origin := test.CreateRuntime(t)
+		origin := testruntime.Create(t)
 		err := origin.CreateBranch("b1", "initial")
 		assert.NoError(t, err)
 		repoDir := t.TempDir()
@@ -163,7 +163,7 @@ func TestRunner(t *testing.T) {
 
 	t.Run(".LocalBranchesMainFirst()", func(t *testing.T) {
 		t.Parallel()
-		origin := test.CreateRuntime(t)
+		origin := testruntime.Create(t)
 		repoDir := t.TempDir()
 		runner, err := origin.Clone(repoDir)
 		assert.NoError(t, err)
@@ -182,7 +182,7 @@ func TestRunner(t *testing.T) {
 
 	t.Run(".LocalAndOriginBranches()", func(t *testing.T) {
 		t.Parallel()
-		origin := test.CreateRuntime(t)
+		origin := testruntime.Create(t)
 		repoDir := t.TempDir()
 		runner, err := origin.Clone(repoDir)
 		assert.NoError(t, err)
@@ -201,7 +201,7 @@ func TestRunner(t *testing.T) {
 
 	t.Run(".PreviouslyCheckedOutBranch()", func(t *testing.T) {
 		t.Parallel()
-		runtime := test.CreateRuntime(t)
+		runtime := testruntime.Create(t)
 		err := runtime.CreateBranch("feature1", "initial")
 		assert.NoError(t, err)
 		err = runtime.CreateBranch("feature2", "initial")
@@ -217,7 +217,7 @@ func TestRunner(t *testing.T) {
 
 	t.Run(".RemoteBranches()", func(t *testing.T) {
 		t.Parallel()
-		origin := test.CreateRuntime(t)
+		origin := testruntime.Create(t)
 		repoDir := t.TempDir()
 		runner, err := origin.Clone(repoDir)
 		assert.NoError(t, err)
@@ -236,11 +236,11 @@ func TestRunner(t *testing.T) {
 
 	t.Run(".Remotes()", func(t *testing.T) {
 		t.Parallel()
-		runtime := test.CreateRuntime(t)
-		origin := test.CreateRuntime(t)
-		err := runtime.AddRemote(config.OriginRemote, origin.WorkingDir)
+		repo := testruntime.Create(t)
+		origin := testruntime.Create(t)
+		err := repo.AddRemote(config.OriginRemote, origin.WorkingDir)
 		assert.NoError(t, err)
-		remotes, err := runtime.Backend.Remotes()
+		remotes, err := repo.Backend.Remotes()
 		assert.NoError(t, err)
 		assert.Equal(t, []string{config.OriginRemote}, remotes)
 	})

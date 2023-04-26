@@ -1,4 +1,4 @@
-package test
+package runtime
 
 import (
 	"os"
@@ -20,8 +20,8 @@ type Runtime struct {
 	Backend git.BackendCommands
 }
 
-// CreateRuntime creates test.Runner instances.
-func CreateRuntime(t *testing.T) Runtime {
+// Create creates test.Runner instances.
+func Create(t *testing.T) Runtime {
 	t.Helper()
 	dir := t.TempDir()
 	workingDir := filepath.Join(dir, "repo")
@@ -30,17 +30,17 @@ func CreateRuntime(t *testing.T) Runtime {
 	homeDir := filepath.Join(dir, "home")
 	err = os.Mkdir(homeDir, 0o744)
 	assert.NoError(t, err)
-	runtime, err := initRuntime(workingDir, homeDir, homeDir)
+	runtime, err := initialize(workingDir, homeDir, homeDir)
 	assert.NoError(t, err)
 	_, err = runtime.Run("git", "commit", "--allow-empty", "-m", "initial commit")
 	assert.NoError(t, err)
 	return runtime
 }
 
-// initRuntime creates a fully functioning test.Runner in the given working directory,
+// initialize creates a fully functioning test.Runner in the given working directory,
 // including necessary Git configuration to make commits. Creates missing folders as needed.
-func initRuntime(workingDir, homeDir, binDir string) (Runtime, error) {
-	runtime := newRuntime(workingDir, homeDir, binDir)
+func initialize(workingDir, homeDir, binDir string) (Runtime, error) {
+	runtime := New(workingDir, homeDir, binDir)
 	err := runtime.RunMany([][]string{
 		{"git", "init", "--initial-branch=initial"},
 		{"git", "config", "--global", "user.name", "user"},
@@ -51,7 +51,7 @@ func initRuntime(workingDir, homeDir, binDir string) (Runtime, error) {
 
 // newRuntime provides a new test.Runner instance working in the given directory.
 // The directory must contain an existing Git repo.
-func newRuntime(workingDir, homeDir, binDir string) Runtime {
+func New(workingDir, homeDir, binDir string) Runtime {
 	mockingRunner := subshell_t.Mocking{
 		WorkingDir: workingDir,
 		HomeDir:    homeDir,
@@ -81,11 +81,11 @@ func newRuntime(workingDir, homeDir, binDir string) Runtime {
 	}
 }
 
-// CreateTestGitTownRuntime creates a test.Runtime for use in tests,
+// CreateGitTown creates a test.Runtime for use in tests,
 // with a main branch and initial git town configuration.
-func CreateTestGitTownRuntime(t *testing.T) Runtime {
+func CreateGitTown(t *testing.T) Runtime {
 	t.Helper()
-	repo := CreateRuntime(t)
+	repo := Create(t)
 	err := repo.CreateBranch("main", "initial")
 	assert.NoError(t, err)
 	err = repo.Config.SetMainBranch("main")

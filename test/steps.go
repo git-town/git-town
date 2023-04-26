@@ -20,6 +20,7 @@ import (
 	"github.com/git-town/git-town/v8/test/git"
 	"github.com/git-town/git-town/v8/test/helpers"
 	"github.com/git-town/git-town/v8/test/output"
+	"github.com/git-town/git-town/v8/test/runtime"
 	"github.com/git-town/git-town/v8/test/subshell"
 )
 
@@ -27,7 +28,7 @@ import (
 var beforeSuiteMux sync.Mutex //nolint:gochecknoglobals
 
 // the global FixtureFactory instance.
-var fixtureFactory *FixtureFactory //nolint:gochecknoglobals
+var fixtureFactory *runtime.FixtureFactory //nolint:gochecknoglobals
 
 // Steps defines Cucumber step implementations around Git workspace management.
 func Steps(suite *godog.Suite, state *ScenarioState) {
@@ -62,7 +63,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			if err != nil {
 				log.Fatalf("cannot evaluate symlinks of base directory for feature specs: %s", err)
 			}
-			gm, err := NewFixtureFactory(evalBaseDir)
+			gm, err := runtime.NewFixtureFactory(evalBaseDir)
 			if err != nil {
 				log.Fatalf("Cannot create memoized environment: %s", err)
 			}
@@ -603,7 +604,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if state.initialCurrentBranch == "" {
 			return state.fixture.DevRepo.CheckoutBranch("main")
 		}
-		if state.fixture.DevRepo.config.CurrentBranchCache.Value() != state.initialCurrentBranch {
+		if state.fixture.DevRepo.Config.CurrentBranchCache.Value() != state.initialCurrentBranch {
 			return state.fixture.DevRepo.CheckoutBranch(state.initialCurrentBranch)
 		}
 		return nil
@@ -674,7 +675,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			}
 		}
 		state.initialCurrentBranch = branch
-		if !state.fixture.DevRepo.config.CurrentBranchCache.Initialized() || state.fixture.DevRepo.config.CurrentBranchCache.Value() != branch {
+		if !state.fixture.DevRepo.Config.CurrentBranchCache.Initialized() || state.fixture.DevRepo.Config.CurrentBranchCache.Value() != branch {
 			return state.fixture.DevRepo.CheckoutBranch(branch)
 		}
 		return nil
@@ -690,7 +691,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the current branch is (?:now|still) "([^"]*)"$`, func(expected string) error {
-		state.fixture.DevRepo.config.CurrentBranchCache.Invalidate()
+		state.fixture.DevRepo.Config.CurrentBranchCache.Invalidate()
 		actual, err := state.fixture.DevRepo.CurrentBranch()
 		if err != nil {
 			return fmt.Errorf("cannot determine current branch of developer repo: %w", err)
