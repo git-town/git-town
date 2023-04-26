@@ -12,7 +12,7 @@ type ConnectorMergeProposalStep struct {
 	EmptyStep
 	Branch                    string
 	CommitMessage             string
-	DefaultProposalMessage    string
+	ProposalMessage           string
 	enteredEmptyCommitMessage bool
 	mergeError                error
 	mergeSha                  string
@@ -48,7 +48,7 @@ func (step *ConnectorMergeProposalStep) Run(run *git.ProdRunner, connector hosti
 		if err != nil {
 			return err
 		}
-		err = run.Backend.CommentOutSquashCommitMessage(step.DefaultProposalMessage + "\n\n")
+		err = run.Backend.CommentOutSquashCommitMessage(step.ProposalMessage + "\n\n")
 		if err != nil {
 			return fmt.Errorf("cannot comment out the squash commit message: %w", err)
 		}

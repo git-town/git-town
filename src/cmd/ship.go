@@ -95,7 +95,7 @@ type shipConfig struct {
 	targetBranch             string
 	canShipViaAPI            bool
 	childBranches            []string
-	defaultProposalMessage   string // TODO: rename to proposalMessage
+	proposalMessage          string
 	deleteOriginBranch       bool
 	hasOrigin                bool
 	hasTrackingBranch        bool
@@ -173,7 +173,7 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 	}
 	targetBranch := run.Config.ParentBranch(branchToShip)
 	canShipViaAPI := false
-	defaultProposalMessage := ""
+	proposalMessage := ""
 	var proposal *hosting.Proposal
 	childBranches := run.Config.ChildBranches(branchToShip)
 	proposalsOfChildBranches := []hosting.Proposal{}
@@ -185,7 +185,7 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 			}
 			if proposal != nil {
 				canShipViaAPI = true
-				defaultProposalMessage = connector.DefaultProposalMessage(*proposal)
+				proposalMessage = connector.DefaultProposalMessage(*proposal)
 			}
 		}
 		for _, childBranch := range childBranches {
@@ -203,7 +203,7 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 		branchToShip:             branchToShip,
 		canShipViaAPI:            canShipViaAPI,
 		childBranches:            childBranches,
-		defaultProposalMessage:   defaultProposalMessage,
+		proposalMessage:          proposalMessage,
 		deleteOriginBranch:       deleteOrigin,
 		hasOrigin:                hasOrigin,
 		hasTrackingBranch:        hasTrackingBranch,
@@ -246,10 +246,10 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 		// push
 		list.Add(&steps.PushBranchStep{Branch: config.branchToShip})
 		list.Add(&steps.ConnectorMergeProposalStep{
-			Branch:                 config.branchToShip,
-			ProposalNumber:         config.proposal.Number,
-			CommitMessage:          commitMessage,
-			DefaultProposalMessage: config.defaultProposalMessage,
+			Branch:          config.branchToShip,
+			ProposalNumber:  config.proposal.Number,
+			CommitMessage:   commitMessage,
+			ProposalMessage: config.proposalMessage,
 		})
 		list.Add(&steps.PullBranchStep{})
 	} else {
