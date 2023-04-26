@@ -10,7 +10,7 @@ import (
 	"github.com/git-town/git-town/v8/src/execute"
 	"github.com/git-town/git-town/v8/src/git"
 	"github.com/git-town/git-town/v8/src/subshell"
-	"github.com/git-town/git-town/v8/test/runner"
+	subshell_t "github.com/git-town/git-town/v8/test/subshell"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -30,29 +30,29 @@ func CreateRuntime(t *testing.T) Runtime {
 	homeDir := filepath.Join(dir, "home")
 	err = os.Mkdir(homeDir, 0o744)
 	assert.NoError(t, err)
-	runner, err := initRuntime(workingDir, homeDir, homeDir)
+	runtime, err := initRuntime(workingDir, homeDir, homeDir)
 	assert.NoError(t, err)
-	_, err = runner.Run("git", "commit", "--allow-empty", "-m", "initial commit")
+	_, err = runtime.Run("git", "commit", "--allow-empty", "-m", "initial commit")
 	assert.NoError(t, err)
-	return runner
+	return runtime
 }
 
 // initRuntime creates a fully functioning test.Runner in the given working directory,
 // including necessary Git configuration to make commits. Creates missing folders as needed.
 func initRuntime(workingDir, homeDir, binDir string) (Runtime, error) {
-	runner := newRuntime(workingDir, homeDir, binDir)
-	err := runner.RunMany([][]string{
+	runtime := newRuntime(workingDir, homeDir, binDir)
+	err := runtime.RunMany([][]string{
 		{"git", "init", "--initial-branch=initial"},
 		{"git", "config", "--global", "user.name", "user"},
 		{"git", "config", "--global", "user.email", "email@example.com"},
 	})
-	return runner, err
+	return runtime, err
 }
 
 // newRuntime provides a new test.Runner instance working in the given directory.
 // The directory must contain an existing Git repo.
 func newRuntime(workingDir, homeDir, binDir string) Runtime {
-	mockingRunner := runner.Mocking{
+	mockingRunner := subshell_t.Mocking{
 		WorkingDir: workingDir,
 		HomeDir:    homeDir,
 		BinDir:     binDir,

@@ -20,7 +20,7 @@ import (
 	"github.com/git-town/git-town/v8/test/git"
 	"github.com/git-town/git-town/v8/test/helpers"
 	"github.com/git-town/git-town/v8/test/output"
-	"github.com/git-town/git-town/v8/test/runner"
+	"github.com/git-town/git-town/v8/test/subshell"
 )
 
 // beforeSuiteMux ensures that we run BeforeSuite only once globally.
@@ -275,13 +275,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I (?:run|ran) "([^"]+)" and answer(?:ed)? the prompts:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
-		state.runOutput, state.runErr = state.fixture.DevRepo.RunStringWith(cmd, &runner.Options{Input: helpers.TableToInput(input)})
+		state.runOutput, state.runErr = state.fixture.DevRepo.RunStringWith(cmd, &subshell.Options{Input: helpers.TableToInput(input)})
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)" and close the editor$`, func(cmd string) error {
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		state.runOutput, state.runErr = state.fixture.DevRepo.RunStringWith(cmd, &runner.Options{Env: env})
+		state.runOutput, state.runErr = state.fixture.DevRepo.RunStringWith(cmd, &subshell.Options{Env: env})
 		return nil
 	})
 
@@ -303,12 +303,12 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^I run "([^"]*)", answer the prompts, and close the next editor:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		state.runOutput, state.runErr = state.fixture.DevRepo.RunStringWith(cmd, &runner.Options{Env: env, Input: helpers.TableToInput(input)})
+		state.runOutput, state.runErr = state.fixture.DevRepo.RunStringWith(cmd, &subshell.Options{Env: env, Input: helpers.TableToInput(input)})
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]+)" in the "([^"]+)" folder$`, func(cmd, folderName string) error {
-		state.runOutput, state.runErr = state.fixture.DevRepo.RunStringWith(cmd, &runner.Options{Dir: folderName})
+		state.runOutput, state.runErr = state.fixture.DevRepo.RunStringWith(cmd, &subshell.Options{Dir: folderName})
 		return nil
 	})
 

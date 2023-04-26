@@ -1,4 +1,4 @@
-package runner_test
+package subshell_test
 
 import (
 	"os"
@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v8/test/ostools"
-	"github.com/git-town/git-town/v8/test/runner"
+	"github.com/git-town/git-town/v8/test/subshell"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -18,7 +18,7 @@ func TestMockingRunner(t *testing.T) {
 		devDir := filepath.Join(workDir, "dev")
 		err := os.Mkdir(devDir, 0o744)
 		assert.NoError(t, err)
-		runner := runner.Mocking{
+		runner := subshell.Mocking{
 			WorkingDir: devDir,
 			HomeDir:    workDir,
 			BinDir:     filepath.Join(workDir, "bin"),
@@ -34,7 +34,7 @@ func TestMockingRunner(t *testing.T) {
 
 	t.Run(".Run()", func(t *testing.T) {
 		t.Parallel()
-		runner := runner.Mocking{
+		runner := subshell.Mocking{
 			WorkingDir: t.TempDir(),
 			HomeDir:    t.TempDir(),
 			BinDir:     "",
@@ -47,7 +47,7 @@ func TestMockingRunner(t *testing.T) {
 	t.Run(".RunMany()", func(t *testing.T) {
 		t.Parallel()
 		workDir := t.TempDir()
-		runner := runner.Mocking{
+		runner := subshell.Mocking{
 			WorkingDir: workDir,
 			HomeDir:    t.TempDir(),
 			BinDir:     "",
@@ -67,7 +67,7 @@ func TestMockingRunner(t *testing.T) {
 	t.Run(".RunString()", func(t *testing.T) {
 		t.Parallel()
 		workDir := t.TempDir()
-		runner := runner.Mocking{
+		runner := subshell.Mocking{
 			WorkingDir: workDir,
 			HomeDir:    t.TempDir(),
 			BinDir:     "",
@@ -85,7 +85,7 @@ func TestMockingRunner(t *testing.T) {
 			dir2 := filepath.Join(dir1, "subdir")
 			err := os.Mkdir(dir2, 0o744)
 			assert.NoError(t, err)
-			r := runner.Mocking{
+			r := subshell.Mocking{
 				WorkingDir: dir1,
 				HomeDir:    t.TempDir(),
 				BinDir:     "",
@@ -93,7 +93,7 @@ func TestMockingRunner(t *testing.T) {
 			toolPath := filepath.Join(dir2, "list-dir")
 			err = ostools.CreateLsTool(toolPath)
 			assert.NoError(t, err)
-			res, err := r.RunWith(&runner.Options{Dir: "subdir"}, toolPath)
+			res, err := r.RunWith(&subshell.Options{Dir: "subdir"}, toolPath)
 			assert.NoError(t, err)
 			assert.Equal(t, ostools.ScriptName("list-dir"), res)
 		})
@@ -104,7 +104,7 @@ func TestMockingRunner(t *testing.T) {
 			dir2 := filepath.Join(dir1, "subdir")
 			err := os.Mkdir(dir2, 0o744)
 			assert.NoError(t, err)
-			r := runner.Mocking{
+			r := subshell.Mocking{
 				WorkingDir: dir1,
 				HomeDir:    t.TempDir(),
 				BinDir:     "",
@@ -113,7 +113,7 @@ func TestMockingRunner(t *testing.T) {
 			err = ostools.CreateInputTool(toolPath)
 			assert.NoError(t, err)
 			cmd, args := ostools.CallScriptArgs(toolPath)
-			res, err := r.RunWith(&runner.Options{Input: []string{"one\n", "two\n"}}, cmd, args...)
+			res, err := r.RunWith(&subshell.Options{Input: []string{"one\n", "two\n"}}, cmd, args...)
 			assert.NoError(t, err)
 			assert.Contains(t, res, "You entered one and two")
 		})

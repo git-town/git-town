@@ -12,12 +12,12 @@ import (
 	"github.com/git-town/git-town/v8/src/stringslice"
 	"github.com/git-town/git-town/v8/test/datatable"
 	"github.com/git-town/git-town/v8/test/git"
-	"github.com/git-town/git-town/v8/test/runner"
+	"github.com/git-town/git-town/v8/test/subshell"
 )
 
 // testCommands defines Git commands used only in test code.
 type testCommands struct {
-	runner.Mocking
+	subshell.Mocking
 	config prodgit.RepoConfig
 	*prodgit.BackendCommands
 }
