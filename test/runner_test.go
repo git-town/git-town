@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v8/src/config"
+	"github.com/git-town/git-town/v8/test/asserts"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -47,7 +48,7 @@ func TestRunner(t *testing.T) {
 		cloned, err := origin.Clone(clonedPath)
 		assert.NoError(t, err)
 		assert.Equal(t, clonedPath, cloned.workingDir)
-		assertIsNormalGitRepo(t, clonedPath)
+		asserts.IsGitRepo(t, clonedPath)
 	})
 
 	t.Run(".Commits()", func(t *testing.T) {

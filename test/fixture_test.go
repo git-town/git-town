@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v8/src/config"
+	"github.com/git-town/git-town/v8/test/asserts"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -19,9 +20,9 @@ func TestFixture(t *testing.T) {
 		assert.NoError(t, err)
 		cloned, err := CloneFixture(memoizedGitEnv, filepath.Join(dir, "cloned"))
 		assert.NoError(t, err)
-		assertIsNormalGitRepo(t, filepath.Join(dir, "cloned", "origin"))
-		assertIsNormalGitRepo(t, filepath.Join(dir, "cloned", "developer"))
-		assertHasGitBranch(t, filepath.Join(dir, "cloned", "developer"), "main")
+		asserts.IsGitRepo(t, filepath.Join(dir, "cloned", "origin"))
+		asserts.IsGitRepo(t, filepath.Join(dir, "cloned", "developer"))
+		asserts.BranchExists(t, filepath.Join(dir, "cloned", "developer"), "main")
 		// check pushing
 		err = cloned.DevRepo.PushBranchToRemote("main", config.OriginRemote)
 		assert.NoError(t, err)
@@ -33,13 +34,13 @@ func TestFixture(t *testing.T) {
 		result, err := NewStandardFixture(gitEnvRootDir)
 		assert.NoError(t, err)
 		// verify the origin repo
-		assertIsNormalGitRepo(t, filepath.Join(gitEnvRootDir, "origin"))
+		asserts.IsGitRepo(t, filepath.Join(gitEnvRootDir, "origin"))
 		branch, err := result.OriginRepo.CurrentBranch()
 		assert.NoError(t, err)
 		assert.Equal(t, "initial", branch, "the origin should be at the initial branch so that we can push to it")
 		// verify the developer repo
-		assertIsNormalGitRepo(t, filepath.Join(gitEnvRootDir, "developer"))
-		assertHasGlobalGitConfiguration(t, gitEnvRootDir)
+		asserts.IsGitRepo(t, filepath.Join(gitEnvRootDir, "developer"))
+		asserts.HasGitConfiguration(t, gitEnvRootDir)
 		branch, err = result.DevRepo.CurrentBranch()
 		assert.NoError(t, err)
 		assert.Equal(t, "main", branch)

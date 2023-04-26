@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/git-town/git-town/v8/test/asserts"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -20,9 +21,9 @@ func TestCopyDirectory(t *testing.T) {
 		createFile(t, srcDir, "f2/b.txt")
 		err := CopyDirectory(srcDir, dstDir)
 		assert.NoError(t, err)
-		assertFileExists(t, dstDir, "one.txt")
-		assertFileExists(t, dstDir, "f1/a.txt")
-		assertFileExists(t, dstDir, "f2/b.txt")
+		asserts.FileExists(t, dstDir, "one.txt")
+		asserts.FileExists(t, dstDir, "f1/a.txt")
+		asserts.FileExists(t, dstDir, "f2/b.txt")
 	})
 
 	t.Run("Git repository", func(t *testing.T) {
@@ -32,7 +33,7 @@ func TestCopyDirectory(t *testing.T) {
 		dstDir := filepath.Join(t.TempDir(), "dest")
 		err := CopyDirectory(origin.WorkingDir(), dstDir)
 		assert.NoError(t, err)
-		assertFileExists(t, dstDir, "one.txt")
-		assertFileExistsWithContent(t, dstDir, ".git/HEAD", "ref: refs/heads/initial\n")
+		asserts.FileExists(t, dstDir, "one.txt")
+		asserts.FileHasContent(t, dstDir, ".git/HEAD", "ref: refs/heads/initial\n")
 	})
 }
