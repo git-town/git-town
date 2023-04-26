@@ -475,11 +475,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^now the initial commits exist$`, func() error {
-		return compareExistingCommits(state, state.initialCommits)
+		return state.compareTable(state.initialCommits)
 	})
 
 	suite.Step(`^now these commits exist$`, func(table *messages.PickleStepArgument_PickleTable) error {
-		return compareExistingCommits(state, table)
+		return state.compareTable(table)
 	})
 
 	suite.Step(`^offline mode is disabled$`, func() error {
