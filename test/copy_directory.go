@@ -6,9 +6,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 // CopyDirectory copies all files in the given src directory into the given dst directory.
@@ -42,14 +39,4 @@ func CopyDirectory(src, dst string) error {
 		err = destFile.Close()
 		return err
 	})
-}
-
-// createFile creates a file with the given filename in the given directory.
-func createFile(t *testing.T, dir, filename string) {
-	t.Helper()
-	filePath := filepath.Join(dir, filename)
-	err := os.MkdirAll(filepath.Dir(filePath), 0o744)
-	assert.NoError(t, err)
-	err = os.WriteFile(filePath, []byte(filename+" content"), 0o500)
-	assert.NoError(t, err)
 }
