@@ -87,6 +87,9 @@ test-go: tools/gofumpt_${GOFUMPT_VERSION} tools/golangci_lint_${GOLANGCILINT_VER
 	make --no-print-directory build &
 	tools/golangci_lint_${GOLANGCILINT_VERSION} run
 
+todo:  # displays all TODO items
+	git grep --line-number -C1 TODO ':!vendor'
+
 unit:  # runs only the unit tests for changed code
 	env GOGC=off go test -timeout 30s ./src/... ./test/...
 

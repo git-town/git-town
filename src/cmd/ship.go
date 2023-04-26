@@ -92,10 +92,10 @@ func ship(args []string, message string, debug bool) error {
 
 type shipConfig struct {
 	branchToShip             string
-	branchToMergeInto        string // TODO: rename to parentBranch
+	targetBranch             string
 	canShipViaAPI            bool
 	childBranches            []string
-	defaultProposalMessage   string // TODO: rename to proposalMessage
+	proposalMessage          string
 	deleteOriginBranch       bool
 	hasOrigin                bool
 	hasTrackingBranch        bool
@@ -171,21 +171,21 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 	if err != nil {
 		return nil, err
 	}
-	branchToMergeInto := run.Config.ParentBranch(branchToShip)
+	targetBranch := run.Config.ParentBranch(branchToShip)
 	canShipViaAPI := false
-	defaultProposalMessage := ""
+	proposalMessage := ""
 	var proposal *hosting.Proposal
 	childBranches := run.Config.ChildBranches(branchToShip)
 	proposalsOfChildBranches := []hosting.Proposal{}
 	if !isOffline && connector != nil {
 		if hasTrackingBranch {
-			proposal, err = connector.FindProposal(branchToShip, branchToMergeInto)
+			proposal, err = connector.FindProposal(branchToShip, targetBranch)
 			if err != nil {
 				return nil, err
 			}
 			if proposal != nil {
 				canShipViaAPI = true
-				defaultProposalMessage = connector.DefaultProposalMessage(*proposal)
+				proposalMessage = connector.DefaultProposalMessage(*proposal)
 			}
 		}
 		for _, childBranch := range childBranches {
@@ -199,11 +199,11 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 		}
 	}
 	return &shipConfig{
-		branchToMergeInto:        branchToMergeInto,
+		targetBranch:             targetBranch,
 		branchToShip:             branchToShip,
 		canShipViaAPI:            canShipViaAPI,
 		childBranches:            childBranches,
-		defaultProposalMessage:   defaultProposalMessage,
+		proposalMessage:          proposalMessage,
 		deleteOriginBranch:       deleteOrigin,
 		hasOrigin:                hasOrigin,
 		hasTrackingBranch:        hasTrackingBranch,
@@ -230,33 +230,33 @@ please ship %q first`, strings.Join(ancestorsWithoutMainOrPerennial, ", "), olde
 
 func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
-	updateBranchSteps(&list, config.branchToMergeInto, true, run) // sync the parent branch
-	updateBranchSteps(&list, config.branchToShip, false, run)     // sync the branch to ship locally only
+	updateBranchSteps(&list, config.targetBranch, true, run)  // sync the parent branch
+	updateBranchSteps(&list, config.branchToShip, false, run) // sync the branch to ship locally only
 	list.Add(&steps.EnsureHasShippableChangesStep{Branch: config.branchToShip, Parent: config.mainBranch})
-	list.Add(&steps.CheckoutStep{Branch: config.branchToMergeInto})
+	list.Add(&steps.CheckoutStep{Branch: config.targetBranch})
 	if config.canShipViaAPI {
 		// update the proposals of child branches
 		for _, childProposal := range config.proposalsOfChildBranches {
 			list.Add(&steps.UpdateProposalTargetStep{
 				ProposalNumber: childProposal.Number,
-				NewTarget:      config.branchToMergeInto,
+				NewTarget:      config.targetBranch,
 				ExistingTarget: childProposal.Target,
 			})
 		}
 		// push
 		list.Add(&steps.PushBranchStep{Branch: config.branchToShip})
 		list.Add(&steps.ConnectorMergeProposalStep{
-			Branch:                 config.branchToShip,
-			ProposalNumber:         config.proposal.Number,
-			CommitMessage:          commitMessage,
-			DefaultProposalMessage: config.defaultProposalMessage,
+			Branch:          config.branchToShip,
+			ProposalNumber:  config.proposal.Number,
+			CommitMessage:   commitMessage,
+			ProposalMessage: config.proposalMessage,
 		})
 		list.Add(&steps.PullBranchStep{})
 	} else {
-		list.Add(&steps.SquashMergeStep{Branch: config.branchToShip, CommitMessage: commitMessage, Parent: config.branchToMergeInto})
+		list.Add(&steps.SquashMergeStep{Branch: config.branchToShip, CommitMessage: commitMessage, Parent: config.targetBranch})
 	}
 	if config.hasOrigin && !config.isOffline {
-		list.Add(&steps.PushBranchStep{Branch: config.branchToMergeInto, Undoable: true})
+		list.Add(&steps.PushBranchStep{Branch: config.targetBranch, Undoable: true})
 	}
 	// NOTE: when shipping via API, we can always delete the remote branch because:
 	// - we know we have a tracking branch (otherwise there would be no PR to ship via API)
@@ -268,12 +268,11 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 		}
 	}
 	list.Add(&steps.DeleteLocalBranchStep{Branch: config.branchToShip, Parent: config.mainBranch})
-	list.Add(&steps.DeleteParentBranchStep{Branch: config.branchToShip})
+	list.Add(&steps.DeleteParentBranchStep{Branch: config.branchToShip, Parent: run.Config.ParentBranch(config.branchToShip)})
 	for _, child := range config.childBranches {
-		list.Add(&steps.SetParentStep{Branch: child, ParentBranch: config.branchToMergeInto})
+		list.Add(&steps.SetParentStep{Branch: child, ParentBranch: config.targetBranch})
 	}
 	if !config.isShippingInitialBranch {
-		// TODO: check out the main branch here?
 		list.Add(&steps.CheckoutStep{Branch: config.initialBranch})
 	}
 	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: !config.isShippingInitialBranch}, &run.Backend, config.mainBranch)

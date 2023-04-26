@@ -49,7 +49,6 @@ func aliases(arg string, debug bool) error {
 		return err
 	}
 	switch strings.ToLower(arg) {
-	// TODO: make enum
 	case "add":
 		return addAliases(&run)
 	case "remove":

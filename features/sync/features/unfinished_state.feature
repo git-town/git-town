@@ -1,7 +1,7 @@
 @skipWindows
 Feature: handle previously unfinished Git Town commands
 
-  Background: When a Git Town command stops unfinished
+  Background: a Git Town command stops unfinished
     Given the current branch is a feature branch "feature"
     And the commits
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
@@ -37,10 +37,9 @@ Feature: handle previously unfinished Git Town commands
       """
     And the uncommitted file is stashed
 
-  Scenario: resolve, run a command again, and continue the unfinished command
+  Scenario: resolve and run the command again
     When I resolve the conflict in "conflicting_file"
-    # TODO: run another command like "git-town diff-parent" here to make clear that it runs the previously unfinished command and not the current one
-    And I run "git-town sync", answer the prompts, and close the next editor:
+    And I run "git-town diff-parent", answer the prompts, and close the next editor:
       | PROMPT                       | ANSWER        |
       | Please choose how to proceed | [DOWN][ENTER] |
     Then it runs the commands
@@ -53,6 +52,7 @@ Feature: handle previously unfinished Git Town commands
       |         | git push                           |
       |         | git stash pop                      |
     And all branches are now synchronized
+  # notice how it executes the steps for "git sync" and not the steps for "git diff-parent" here
 
   Scenario: run a command and abort the previously unfinished one
     When I run "git-town sync" and answer the prompts:

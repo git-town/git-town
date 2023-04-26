@@ -8,7 +8,6 @@ import (
 
 	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/v8/src/config"
-	"github.com/git-town/git-town/v8/src/git"
 	"github.com/git-town/git-town/v8/src/stringslice"
 	"github.com/git-town/git-town/v8/test/helpers"
 )
@@ -207,7 +206,7 @@ func (env *Fixture) Branches() (DataTable, error) {
 }
 
 // CreateCommits creates the commits described by the given Gherkin table in this Git repository.
-func (env *Fixture) CreateCommits(commits []git.Commit) error {
+func (env *Fixture) CreateCommits(commits []Commit) error {
 	for _, commit := range commits {
 		var err error
 		for _, location := range commit.Locations {
