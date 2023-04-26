@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/git-town/git-town/v8/test/ostools"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -90,11 +91,11 @@ func TestMockingRunner(t *testing.T) {
 				binDir:     "",
 			}
 			toolPath := filepath.Join(dir2, "list-dir")
-			err = CreateLsTool(toolPath)
+			err = ostools.CreateLsTool(toolPath)
 			assert.NoError(t, err)
 			res, err := runner.RunWith(&Options{Dir: "subdir"}, toolPath)
 			assert.NoError(t, err)
-			assert.Equal(t, ScriptName("list-dir"), res)
+			assert.Equal(t, ostools.ScriptName("list-dir"), res)
 		})
 
 		t.Run("with input", func(t *testing.T) {
@@ -109,9 +110,9 @@ func TestMockingRunner(t *testing.T) {
 				binDir:     "",
 			}
 			toolPath := filepath.Join(dir2, "list-dir")
-			err = CreateInputTool(toolPath)
+			err = ostools.CreateInputTool(toolPath)
 			assert.NoError(t, err)
-			cmd, args := CallScriptArgs(toolPath)
+			cmd, args := ostools.CallScriptArgs(toolPath)
 			res, err := runner.RunWith(&Options{Input: []string{"one\n", "two\n"}}, cmd, args...)
 			assert.NoError(t, err)
 			assert.Contains(t, res, "You entered one and two")
