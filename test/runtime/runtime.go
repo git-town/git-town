@@ -1,6 +1,7 @@
 package runtime
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"testing"
@@ -10,13 +11,14 @@ import (
 	"github.com/git-town/git-town/v8/src/execute"
 	"github.com/git-town/git-town/v8/src/git"
 	"github.com/git-town/git-town/v8/src/subshell"
+	"github.com/git-town/git-town/v8/test/commands"
 	subshell_t "github.com/git-town/git-town/v8/test/subshell"
 	"github.com/stretchr/testify/assert"
 )
 
 // Runtime provides Git functionality for test code (unit and end-to-end tests).
 type Runtime struct {
-	testCommands
+	commands.TestCommands
 	Backend git.BackendCommands
 }
 
@@ -70,13 +72,13 @@ func New(workingDir, homeDir, binDir string) Runtime {
 		BackendRunner: subshell.BackendRunner{Dir: &workingDir, Verbose: false, Stats: &execute.NoStatistics{}},
 		Config:        &config,
 	}
-	testCommands := testCommands{
+	testCommands := commands.TestCommands{
 		Mocking:         mockingRunner,
-		config:          config,
+		Config:          config,
 		BackendCommands: &backendCommands,
 	}
 	return Runtime{
-		testCommands: testCommands,
+		TestCommands: testCommands,
 		Backend:      backendCommands,
 	}
 }
@@ -93,4 +95,14 @@ func CreateGitTown(t *testing.T) Runtime {
 	err = repo.Config.SetPerennialBranches([]string{})
 	assert.NoError(t, err)
 	return repo
+}
+
+// Clone creates a clone of the repository managed by this test.Runner into the given directory.
+// The cloned repo uses the same homeDir and binDir as its origin.
+func Clone(original subshell_t.Mocking, targetDir string) (Runtime, error) {
+	_, err := original.Run("git", "clone", original.WorkingDir, targetDir)
+	if err != nil {
+		return Runtime{}, fmt.Errorf("cannot clone repo %q: %w", original.WorkingDir, err)
+	}
+	return New(targetDir, original.HomeDir, original.BinDir), nil
 }
