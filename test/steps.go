@@ -18,6 +18,7 @@ import (
 	"github.com/git-town/git-town/v8/src/stringslice"
 	"github.com/git-town/git-town/v8/test/gherkin"
 	"github.com/git-town/git-town/v8/test/git"
+	"github.com/git-town/git-town/v8/test/helpers"
 	"github.com/git-town/git-town/v8/test/output"
 )
 
@@ -41,7 +42,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		// only a `FeatureContext` method.
 		// See main_test.go for additional details.
 		state.Reset(fixture)
-		if hasTag(scenario, "@debug") {
+		if helpers.HasTag(scenario, "@debug") {
 			state.fixture.DevRepo.Debug = true
 		}
 	})
@@ -273,7 +274,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I (?:run|ran) "([^"]+)" and answer(?:ed)? the prompts:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
-		state.runOutput, state.runErr = state.fixture.DevRepo.RunStringWith(cmd, &Options{Input: tableToInput(input)})
+		state.runOutput, state.runErr = state.fixture.DevRepo.RunStringWith(cmd, &Options{Input: helpers.TableToInput(input)})
 		return nil
 	})
 
@@ -301,7 +302,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^I run "([^"]*)", answer the prompts, and close the next editor:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		state.runOutput, state.runErr = state.fixture.DevRepo.RunStringWith(cmd, &Options{Env: env, Input: tableToInput(input)})
+		state.runOutput, state.runErr = state.fixture.DevRepo.RunStringWith(cmd, &Options{Env: env, Input: helpers.TableToInput(input)})
 		return nil
 	})
 
