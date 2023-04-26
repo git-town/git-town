@@ -12,7 +12,6 @@ type FetchUpstreamStep struct {
 	Branch string
 }
 
-// TODO: is this used?
 func (step *FetchUpstreamStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
 	return run.Frontend.FetchUpstream(step.Branch)
 }
