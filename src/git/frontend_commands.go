@@ -155,7 +155,6 @@ func (fc *FrontendCommands) Pull() error {
 
 type PushArgs struct {
 	Branch         string
-	Force          bool `exhaustruct:"optional"`
 	ForceWithLease bool `exhaustruct:"optional"`
 	NoPushHook     bool `exhaustruct:"optional"`
 	Remote         string
@@ -172,9 +171,6 @@ func (fc *FrontendCommands) PushBranch(options ...PushArgs) error {
 	}
 	args := []string{"push"}
 	provideBranch := false
-	if option.Force {
-		args = append(args, "-f")
-	}
 	if option.NoPushHook {
 		args = append(args, "--no-verify")
 	}
