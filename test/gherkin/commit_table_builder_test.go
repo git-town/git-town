@@ -1,16 +1,16 @@
-package test_test
+package gherkin_test
 
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v8/test"
+	"github.com/git-town/git-town/v8/test/gherkin"
 	"github.com/git-town/git-town/v8/test/git"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCommitTableBuilder(t *testing.T) {
 	t.Parallel()
-	builder := test.NewCommitTableBuilder()
+	builder := gherkin.NewCommitTableBuilder()
 	commit1 := git.Commit{SHA: "sha1", Branch: "branch1", Message: "commit1"}
 	commit2 := git.Commit{SHA: "sha2", Branch: "main", Message: "commit2"}
 	commit3 := git.Commit{SHA: "sha3", Branch: "main", Message: "commit3"}

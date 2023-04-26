@@ -284,7 +284,7 @@ func (env Fixture) CreateTags(table *messages.PickleStepArgument_PickleTable) er
 
 // CommitTable provides a table for all commits in this Git environment containing only the given fields.
 func (env Fixture) CommitTable(fields []string) (gherkin.DataTable, error) {
-	builder := NewCommitTableBuilder()
+	builder := gherkin.NewCommitTableBuilder()
 	localCommits, err := env.DevRepo.Commits(fields, "main")
 	if err != nil {
 		return gherkin.DataTable{}, fmt.Errorf("cannot determine commits in the developer repo: %w", err)
