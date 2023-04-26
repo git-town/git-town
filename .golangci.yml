@@ -79,7 +79,3 @@ issues:
       text: missing in (MultiSelect|Select)
       linters:
         - exhaustruct
-    # TODO: remove this after the sync refactor ships
-    - text: are missing in syncConfig
-      linters:
-        - exhaustruct
