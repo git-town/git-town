@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v8/src/execute"
 	"github.com/git-town/git-town/v8/src/git"
 	"github.com/git-town/git-town/v8/src/subshell"
+	"github.com/git-town/git-town/v8/test/runner"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -51,10 +52,10 @@ func initRunner(workingDir, homeDir, binDir string) (Runner, error) {
 // newRunner provides a new test.Runner instance working in the given directory.
 // The directory must contain an existing Git repo.
 func newRunner(workingDir, homeDir, binDir string) Runner {
-	mockingRunner := MockingRunner{
-		workingDir: workingDir,
-		homeDir:    homeDir,
-		binDir:     binDir,
+	mockingRunner := runner.MockingRunner{
+		WorkingDir: workingDir,
+		HomeDir:    homeDir,
+		BinDir:     binDir,
 	}
 	config := git.RepoConfig{
 		GitTown:            config.NewGitTown(&mockingRunner),

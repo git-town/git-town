@@ -155,7 +155,7 @@ func (env *Fixture) AddUpstream() error {
 		return fmt.Errorf("cannot clone upstream: %w", err)
 	}
 	env.UpstreamRepo = &repo
-	err = env.DevRepo.AddRemote("upstream", env.UpstreamRepo.WorkingDir())
+	err = env.DevRepo.AddRemote("upstream", env.UpstreamRepo.WorkingDir)
 	if err != nil {
 		return fmt.Errorf("cannot set upstream remote: %w", err)
 	}

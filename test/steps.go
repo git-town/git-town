@@ -20,6 +20,7 @@ import (
 	"github.com/git-town/git-town/v8/test/git"
 	"github.com/git-town/git-town/v8/test/helpers"
 	"github.com/git-town/git-town/v8/test/output"
+	"github.com/git-town/git-town/v8/test/runner"
 )
 
 // beforeSuiteMux ensures that we run BeforeSuite only once globally.
@@ -249,7 +250,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I am outside a Git repo$`, func() error {
-		os.RemoveAll(filepath.Join(state.fixture.DevRepo.WorkingDir(), ".git"))
+		os.RemoveAll(filepath.Join(state.fixture.DevRepo.WorkingDir, ".git"))
 		return nil
 	})
 
@@ -274,13 +275,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I (?:run|ran) "([^"]+)" and answer(?:ed)? the prompts:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
-		state.runOutput, state.runErr = state.fixture.DevRepo.RunStringWith(cmd, &Options{Input: helpers.TableToInput(input)})
+		state.runOutput, state.runErr = state.fixture.DevRepo.RunStringWith(cmd, &runner.Options{Input: helpers.TableToInput(input)})
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)" and close the editor$`, func(cmd string) error {
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		state.runOutput, state.runErr = state.fixture.DevRepo.RunStringWith(cmd, &Options{Env: env})
+		state.runOutput, state.runErr = state.fixture.DevRepo.RunStringWith(cmd, &runner.Options{Env: env})
 		return nil
 	})
 
@@ -302,17 +303,17 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^I run "([^"]*)", answer the prompts, and close the next editor:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		state.runOutput, state.runErr = state.fixture.DevRepo.RunStringWith(cmd, &Options{Env: env, Input: helpers.TableToInput(input)})
+		state.runOutput, state.runErr = state.fixture.DevRepo.RunStringWith(cmd, &runner.Options{Env: env, Input: helpers.TableToInput(input)})
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]+)" in the "([^"]+)" folder$`, func(cmd, folderName string) error {
-		state.runOutput, state.runErr = state.fixture.DevRepo.RunStringWith(cmd, &Options{Dir: folderName})
+		state.runOutput, state.runErr = state.fixture.DevRepo.RunStringWith(cmd, &runner.Options{Dir: folderName})
 		return nil
 	})
 
 	suite.Step(`^inspect the repo$`, func() error {
-		fmt.Printf("\nThe workspace is at %q\n", state.fixture.DevRepo.WorkingDir())
+		fmt.Printf("\nThe workspace is at %q\n", state.fixture.DevRepo.WorkingDir)
 		_, _, err := keyboard.GetSingleKey()
 		if err != nil {
 			return fmt.Errorf("cannot read from os.Stdin: %w", err)
@@ -429,7 +430,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return err
 		}
-		return state.fixture.DevRepo.AddSubmodule(state.fixture.SubmoduleRepo.WorkingDir())
+		return state.fixture.DevRepo.AddSubmodule(state.fixture.SubmoduleRepo.WorkingDir)
 	})
 
 	suite.Step(`^no branch hierarchy exists now$`, func() error {

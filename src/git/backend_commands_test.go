@@ -238,7 +238,7 @@ func TestRunner(t *testing.T) {
 		t.Parallel()
 		runner := test.CreateRunner(t)
 		origin := test.CreateRunner(t)
-		err := runner.AddRemote(config.OriginRemote, origin.WorkingDir())
+		err := runner.AddRemote(config.OriginRemote, origin.WorkingDir)
 		assert.NoError(t, err)
 		remotes, err := runner.Backend.Remotes()
 		assert.NoError(t, err)

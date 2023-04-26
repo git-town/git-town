@@ -1,5 +1,4 @@
-//nolint:testpackage
-package test
+package runner_test
 
 import (
 	"os"
@@ -7,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v8/test/ostools"
+	"github.com/git-town/git-town/v8/test/runner"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -18,10 +18,10 @@ func TestMockingRunner(t *testing.T) {
 		devDir := filepath.Join(workDir, "dev")
 		err := os.Mkdir(devDir, 0o744)
 		assert.NoError(t, err)
-		runner := MockingRunner{
-			workingDir: devDir,
-			homeDir:    workDir,
-			binDir:     filepath.Join(workDir, "bin"),
+		runner := runner.MockingRunner{
+			WorkingDir: devDir,
+			HomeDir:    workDir,
+			BinDir:     filepath.Join(workDir, "bin"),
 		}
 		err = runner.MockCommand("foo")
 		assert.NoError(t, err)
@@ -34,10 +34,10 @@ func TestMockingRunner(t *testing.T) {
 
 	t.Run(".Run()", func(t *testing.T) {
 		t.Parallel()
-		runner := MockingRunner{
-			workingDir: t.TempDir(),
-			homeDir:    t.TempDir(),
-			binDir:     "",
+		runner := runner.MockingRunner{
+			WorkingDir: t.TempDir(),
+			HomeDir:    t.TempDir(),
+			BinDir:     "",
 		}
 		res, err := runner.Run("echo", "hello", "world")
 		assert.NoError(t, err)
@@ -47,10 +47,10 @@ func TestMockingRunner(t *testing.T) {
 	t.Run(".RunMany()", func(t *testing.T) {
 		t.Parallel()
 		workDir := t.TempDir()
-		runner := MockingRunner{
-			workingDir: workDir,
-			homeDir:    t.TempDir(),
-			binDir:     "",
+		runner := runner.MockingRunner{
+			WorkingDir: workDir,
+			HomeDir:    t.TempDir(),
+			BinDir:     "",
 		}
 		err := runner.RunMany([][]string{
 			{"touch", "first"},
@@ -67,10 +67,10 @@ func TestMockingRunner(t *testing.T) {
 	t.Run(".RunString()", func(t *testing.T) {
 		t.Parallel()
 		workDir := t.TempDir()
-		runner := MockingRunner{
-			workingDir: workDir,
-			homeDir:    t.TempDir(),
-			binDir:     "",
+		runner := runner.MockingRunner{
+			WorkingDir: workDir,
+			HomeDir:    t.TempDir(),
+			BinDir:     "",
 		}
 		_, err := runner.RunString("touch first")
 		assert.NoError(t, err)
@@ -85,15 +85,15 @@ func TestMockingRunner(t *testing.T) {
 			dir2 := filepath.Join(dir1, "subdir")
 			err := os.Mkdir(dir2, 0o744)
 			assert.NoError(t, err)
-			runner := MockingRunner{
-				workingDir: dir1,
-				homeDir:    t.TempDir(),
-				binDir:     "",
+			r := runner.MockingRunner{
+				WorkingDir: dir1,
+				HomeDir:    t.TempDir(),
+				BinDir:     "",
 			}
 			toolPath := filepath.Join(dir2, "list-dir")
 			err = ostools.CreateLsTool(toolPath)
 			assert.NoError(t, err)
-			res, err := runner.RunWith(&Options{Dir: "subdir"}, toolPath)
+			res, err := r.RunWith(&runner.Options{Dir: "subdir"}, toolPath)
 			assert.NoError(t, err)
 			assert.Equal(t, ostools.ScriptName("list-dir"), res)
 		})
@@ -104,16 +104,16 @@ func TestMockingRunner(t *testing.T) {
 			dir2 := filepath.Join(dir1, "subdir")
 			err := os.Mkdir(dir2, 0o744)
 			assert.NoError(t, err)
-			runner := MockingRunner{
-				workingDir: dir1,
-				homeDir:    t.TempDir(),
-				binDir:     "",
+			r := runner.MockingRunner{
+				WorkingDir: dir1,
+				HomeDir:    t.TempDir(),
+				BinDir:     "",
 			}
 			toolPath := filepath.Join(dir2, "list-dir")
 			err = ostools.CreateInputTool(toolPath)
 			assert.NoError(t, err)
 			cmd, args := ostools.CallScriptArgs(toolPath)
-			res, err := runner.RunWith(&Options{Input: []string{"one\n", "two\n"}}, cmd, args...)
+			res, err := r.RunWith(&runner.Options{Input: []string{"one\n", "two\n"}}, cmd, args...)
 			assert.NoError(t, err)
 			assert.Contains(t, res, "You entered one and two")
 		})

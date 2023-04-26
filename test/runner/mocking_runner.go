@@ -1,4 +1,4 @@
-package test
+package runner
 
 import (
 	"bytes"
@@ -22,7 +22,7 @@ import (
 //     Temporary mocks are only valid for the next command being run.
 type MockingRunner struct {
 	// the directory that contains mock executables, ignored if empty
-	binDir string
+	BinDir string
 
 	// whether to log the output of subshell commands
 	Debug bool `exhaustruct:"optional"`
@@ -31,7 +31,7 @@ type MockingRunner struct {
 	gitEditor string `exhaustruct:"optional"`
 
 	// the directory that contains the global Git configuration
-	homeDir string
+	HomeDir string
 
 	// optional content of the GIT_TOWN_REMOTE environment variable
 	testOrigin string `exhaustruct:"optional"`
@@ -40,7 +40,7 @@ type MockingRunner struct {
 	usesBinDir bool `exhaustruct:"optional"`
 
 	// the directory in which this runner executes shell commands
-	workingDir string
+	WorkingDir string
 }
 
 // createBinDir creates the directory that contains mock executables.
@@ -50,7 +50,7 @@ func (r *MockingRunner) createBinDir() error {
 		// binDir already created --> nothing to do here
 		return nil
 	}
-	err := os.Mkdir(r.binDir, 0o700)
+	err := os.Mkdir(r.BinDir, 0o700)
 	if err != nil {
 		return fmt.Errorf("cannot create mock bin dir: %w", err)
 	}
@@ -63,22 +63,17 @@ func (r *MockingRunner) createMockBinary(name string, content string) error {
 	if err := r.createBinDir(); err != nil {
 		return err
 	}
-	err := os.WriteFile(filepath.Join(r.binDir, name), []byte(content), 0o500)
+	err := os.WriteFile(filepath.Join(r.BinDir, name), []byte(content), 0o500)
 	if err != nil {
 		return fmt.Errorf("cannot write custom %q command: %w", name, err)
 	}
 	return nil
 }
 
-// WorkingDir provides the directory this MockingRunner operates in.
-func (r *MockingRunner) WorkingDir() string {
-	return r.workingDir
-}
-
 // MockBrokenCommand adds a mock for the given command that returns an error.
 func (r *MockingRunner) MockBrokenCommand(name string) error {
 	// write custom "which" command
-	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" == %q ]; then\n  echo %q\nelse\n  exit 1\nfi", name, filepath.Join(r.binDir, name))
+	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" == %q ]; then\n  echo %q\nelse\n  exit 1\nfi", name, filepath.Join(r.BinDir, name))
 	err := r.createMockBinary("which", content)
 	if err != nil {
 		return err
@@ -91,7 +86,7 @@ func (r *MockingRunner) MockBrokenCommand(name string) error {
 // MockCommand adds a mock for the command with the given name.
 func (r *MockingRunner) MockCommand(name string) error {
 	// write custom "which" command
-	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" == %q ]; then\n  echo %q\nelse\n  exit 1\nfi", name, filepath.Join(r.binDir, name))
+	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" == %q ]; then\n  echo %q\nelse\n  exit 1\nfi", name, filepath.Join(r.BinDir, name))
 	if err := r.createMockBinary("which", content); err != nil {
 		return fmt.Errorf("cannot write custom which command: %w", err)
 	}
@@ -180,21 +175,21 @@ func (r *MockingRunner) RunWith(opts *Options, cmd string, args ...string) (stri
 		opts.Env = os.Environ()
 	}
 	// set HOME to the given global directory so that Git puts the global configuration there.
-	opts.Env = envvars.Replace(opts.Env, "HOME", r.homeDir)
+	opts.Env = envvars.Replace(opts.Env, "HOME", r.HomeDir)
 	// add the custom origin
 	if r.testOrigin != "" {
 		opts.Env = envvars.Replace(opts.Env, "GIT_TOWN_REMOTE", r.testOrigin)
 	}
 	// add the custom bin dir to the PATH
 	if r.usesBinDir {
-		opts.Env = envvars.PrependPath(opts.Env, r.binDir)
+		opts.Env = envvars.PrependPath(opts.Env, r.BinDir)
 	}
 	// add the custom GIT_EDITOR
 	if r.gitEditor != "" {
-		opts.Env = envvars.Replace(opts.Env, "GIT_EDITOR", filepath.Join(r.binDir, "git_editor"))
+		opts.Env = envvars.Replace(opts.Env, "GIT_EDITOR", filepath.Join(r.BinDir, "git_editor"))
 	}
 	// set the working dir
-	opts.Dir = filepath.Join(r.workingDir, opts.Dir)
+	opts.Dir = filepath.Join(r.WorkingDir, opts.Dir)
 	// run the command inside the custom environment
 	subProcess := exec.Command(cmd, args...) // #nosec
 	if opts.Dir != "" {
@@ -232,7 +227,7 @@ func (r *MockingRunner) RunWith(opts *Options, cmd string, args ...string) (stri
 	}
 	exitCode := subProcess.ProcessState.ExitCode()
 	if r.Debug {
-		fmt.Println(filepath.Base(r.workingDir), ">", cmd, strings.Join(args, " "))
+		fmt.Println(filepath.Base(r.WorkingDir), ">", cmd, strings.Join(args, " "))
 		fmt.Println(output.String())
 		if err != nil {
 			fmt.Printf("ERROR: %v\n", err)
