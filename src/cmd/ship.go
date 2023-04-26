@@ -246,10 +246,10 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 		// push
 		list.Add(&steps.PushBranchStep{Branch: config.branchToShip})
 		list.Add(&steps.ConnectorMergeProposalStep{
-			Branch:                 config.branchToShip,
-			ProposalNumber:         config.proposal.Number,
-			CommitMessage:          commitMessage,
-			DefaultProposalMessage: config.proposalMessage,
+			Branch:          config.branchToShip,
+			ProposalNumber:  config.proposal.Number,
+			CommitMessage:   commitMessage,
+			ProposalMessage: config.proposalMessage,
 		})
 		list.Add(&steps.PullBranchStep{})
 	} else {
