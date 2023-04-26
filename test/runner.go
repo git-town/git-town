@@ -52,7 +52,7 @@ func initRunner(workingDir, homeDir, binDir string) (Runner, error) {
 // newRunner provides a new test.Runner instance working in the given directory.
 // The directory must contain an existing Git repo.
 func newRunner(workingDir, homeDir, binDir string) Runner {
-	mockingRunner := runner.MockingRunner{
+	mockingRunner := runner.Mocking{
 		WorkingDir: workingDir,
 		HomeDir:    homeDir,
 		BinDir:     binDir,
@@ -71,7 +71,7 @@ func newRunner(workingDir, homeDir, binDir string) Runner {
 		Config:        &config,
 	}
 	testCommands := testCommands{
-		MockingRunner:   mockingRunner,
+		Mocking:         mockingRunner,
 		config:          config,
 		BackendCommands: &backendCommands,
 	}

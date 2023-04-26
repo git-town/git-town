@@ -17,7 +17,7 @@ import (
 
 // testCommands defines Git commands used only in test code.
 type testCommands struct {
-	runner.MockingRunner
+	runner.Mocking
 	config prodgit.RepoConfig
 	*prodgit.BackendCommands
 }

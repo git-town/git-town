@@ -18,7 +18,7 @@ func TestMockingRunner(t *testing.T) {
 		devDir := filepath.Join(workDir, "dev")
 		err := os.Mkdir(devDir, 0o744)
 		assert.NoError(t, err)
-		runner := runner.MockingRunner{
+		runner := runner.Mocking{
 			WorkingDir: devDir,
 			HomeDir:    workDir,
 			BinDir:     filepath.Join(workDir, "bin"),
@@ -34,7 +34,7 @@ func TestMockingRunner(t *testing.T) {
 
 	t.Run(".Run()", func(t *testing.T) {
 		t.Parallel()
-		runner := runner.MockingRunner{
+		runner := runner.Mocking{
 			WorkingDir: t.TempDir(),
 			HomeDir:    t.TempDir(),
 			BinDir:     "",
@@ -47,7 +47,7 @@ func TestMockingRunner(t *testing.T) {
 	t.Run(".RunMany()", func(t *testing.T) {
 		t.Parallel()
 		workDir := t.TempDir()
-		runner := runner.MockingRunner{
+		runner := runner.Mocking{
 			WorkingDir: workDir,
 			HomeDir:    t.TempDir(),
 			BinDir:     "",
@@ -67,7 +67,7 @@ func TestMockingRunner(t *testing.T) {
 	t.Run(".RunString()", func(t *testing.T) {
 		t.Parallel()
 		workDir := t.TempDir()
-		runner := runner.MockingRunner{
+		runner := runner.Mocking{
 			WorkingDir: workDir,
 			HomeDir:    t.TempDir(),
 			BinDir:     "",
@@ -85,7 +85,7 @@ func TestMockingRunner(t *testing.T) {
 			dir2 := filepath.Join(dir1, "subdir")
 			err := os.Mkdir(dir2, 0o744)
 			assert.NoError(t, err)
-			r := runner.MockingRunner{
+			r := runner.Mocking{
 				WorkingDir: dir1,
 				HomeDir:    t.TempDir(),
 				BinDir:     "",
@@ -104,7 +104,7 @@ func TestMockingRunner(t *testing.T) {
 			dir2 := filepath.Join(dir1, "subdir")
 			err := os.Mkdir(dir2, 0o744)
 			assert.NoError(t, err)
-			r := runner.MockingRunner{
+			r := runner.Mocking{
 				WorkingDir: dir1,
 				HomeDir:    t.TempDir(),
 				BinDir:     "",
