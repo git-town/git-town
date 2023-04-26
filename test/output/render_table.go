@@ -1,0 +1,19 @@
+package output
+
+import (
+	"github.com/cucumber/messages-go/v10"
+	"github.com/git-town/git-town/v8/test/gherkin"
+)
+
+// RenderTable provides the textual Gherkin representation of the given Gherkin table.
+func RenderTable(table *messages.PickleStepArgument_PickleTable) string {
+	result := gherkin.DataTable{}
+	for _, row := range table.Rows {
+		values := []string{}
+		for _, cell := range row.Cells {
+			values = append(values, cell.Value)
+		}
+		result.AddRow(values...)
+	}
+	return result.String()
+}

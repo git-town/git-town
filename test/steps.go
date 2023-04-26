@@ -377,7 +377,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^it runs the commands$`, func(input *messages.PickleStepArgument_PickleTable) error {
 		commands := output.GitCommandsInGitTownOutput(state.runOutput)
-		table := RenderExecutedGitCommands(commands, input)
+		table := output.RenderExecutedGitCommands(commands, input)
 		dataTable := gherkin.FromGherkin(input)
 		expanded, err := dataTable.Expand(
 			&state.fixture.DevRepo,
