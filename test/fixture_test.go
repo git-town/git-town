@@ -7,7 +7,6 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v8/src/config"
-	"github.com/git-town/git-town/v8/src/git"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -103,7 +102,7 @@ func TestFixture(t *testing.T) {
 		cloned, err := CloneFixture(memoizedGitEnv, filepath.Join(dir, "cloned"))
 		assert.NoError(t, err)
 		// create the commits
-		err = cloned.CreateCommits([]git.Commit{
+		err = cloned.CreateCommits([]Commit{
 			{
 				Branch:      "main",
 				FileName:    "local-file",
@@ -184,7 +183,7 @@ func TestFixture(t *testing.T) {
 			cloned, err := CloneFixture(memoizedGitEnv, filepath.Join(dir, "cloned"))
 			assert.NoError(t, err)
 			// create a few commits
-			err = cloned.DevRepo.CreateCommit(git.Commit{
+			err = cloned.DevRepo.CreateCommit(Commit{
 				Branch:      "main",
 				FileName:    "local-origin.md",
 				FileContent: "one",
@@ -193,7 +192,7 @@ func TestFixture(t *testing.T) {
 			assert.NoError(t, err)
 			err = cloned.DevRepo.PushBranchToRemote("main", config.OriginRemote)
 			assert.NoError(t, err)
-			err = cloned.OriginRepo.CreateCommit(git.Commit{
+			err = cloned.OriginRepo.CreateCommit(Commit{
 				Branch:      "main",
 				FileName:    "origin.md",
 				FileContent: "two",
@@ -223,14 +222,14 @@ func TestFixture(t *testing.T) {
 			err = cloned.AddUpstream()
 			assert.NoError(t, err)
 			// create a few commits
-			err = cloned.DevRepo.CreateCommit(git.Commit{
+			err = cloned.DevRepo.CreateCommit(Commit{
 				Branch:      "main",
 				FileName:    "local.md",
 				FileContent: "one",
 				Message:     "local",
 			})
 			assert.NoError(t, err)
-			err = cloned.UpstreamRepo.CreateCommit(git.Commit{
+			err = cloned.UpstreamRepo.CreateCommit(Commit{
 				Branch:      "main",
 				FileName:    "upstream.md",
 				FileContent: "two",

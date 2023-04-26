@@ -5,13 +5,12 @@ import (
 
 	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/v8/src/config"
-	"github.com/git-town/git-town/v8/src/git"
 	"github.com/git-town/git-town/v8/test/helpers"
 )
 
 // DefaultCommit provides a new Commit instance populated with the default values used in the absence of value specified by the test.
-func DefaultCommit(filenameSuffix string) git.Commit {
-	return git.Commit{
+func DefaultCommit(filenameSuffix string) Commit {
+	return Commit{
 		FileName:    "default_file_name_" + filenameSuffix,
 		Message:     "default commit message",
 		Locations:   []string{"local", config.OriginRemote},
@@ -21,11 +20,11 @@ func DefaultCommit(filenameSuffix string) git.Commit {
 }
 
 // FromGherkinTable provides a Commit collection representing the data in the given Gherkin table.
-func FromGherkinTable(table *messages.PickleStepArgument_PickleTable) ([]git.Commit, error) {
+func FromGherkinTable(table *messages.PickleStepArgument_PickleTable) ([]Commit, error) {
 	columnNames := helpers.TableFields(table)
 	lastBranch := ""
 	lastLocationName := ""
-	result := []git.Commit{}
+	result := []Commit{}
 	counter := helpers.Counter{}
 	for _, row := range table.Rows[1:] {
 		commit := DefaultCommit(counter.ToString())
