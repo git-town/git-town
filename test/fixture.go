@@ -316,7 +316,7 @@ func (env Fixture) CommitTable(fields []string) (gherkin.DataTable, error) {
 
 // TagTable provides a table for all tags in this Git environment.
 func (env Fixture) TagTable() (gherkin.DataTable, error) {
-	builder := NewTagTableBuilder()
+	builder := gherkin.NewTagTableBuilder()
 	localTags, err := env.DevRepo.Tags()
 	if err != nil {
 		return gherkin.DataTable{}, err
