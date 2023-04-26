@@ -9,7 +9,7 @@ import (
 	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/v8/src/config"
 	"github.com/git-town/git-town/v8/src/stringslice"
-	"github.com/git-town/git-town/v8/test/gherkin"
+	"github.com/git-town/git-town/v8/test/datatable"
 	"github.com/git-town/git-town/v8/test/git"
 	"github.com/git-town/git-town/v8/test/helpers"
 )
@@ -178,8 +178,8 @@ func (env *Fixture) binPath() string {
 }
 
 // Branches provides a tabular list of all branches in this Fixture.
-func (env *Fixture) Branches() (gherkin.DataTable, error) {
-	result := gherkin.DataTable{}
+func (env *Fixture) Branches() (datatable.DataTable, error) {
+	result := datatable.DataTable{}
 	result.AddRow("REPOSITORY", "BRANCHES")
 	mainBranch := env.DevRepo.Config.MainBranch()
 	localBranches, err := env.DevRepo.LocalBranchesMainFirst(mainBranch)
@@ -283,31 +283,31 @@ func (env Fixture) CreateTags(table *messages.PickleStepArgument_PickleTable) er
 }
 
 // CommitTable provides a table for all commits in this Git environment containing only the given fields.
-func (env Fixture) CommitTable(fields []string) (gherkin.DataTable, error) {
-	builder := gherkin.NewCommitTableBuilder()
+func (env Fixture) CommitTable(fields []string) (datatable.DataTable, error) {
+	builder := datatable.NewCommitTableBuilder()
 	localCommits, err := env.DevRepo.Commits(fields, "main")
 	if err != nil {
-		return gherkin.DataTable{}, fmt.Errorf("cannot determine commits in the developer repo: %w", err)
+		return datatable.DataTable{}, fmt.Errorf("cannot determine commits in the developer repo: %w", err)
 	}
 	builder.AddMany(localCommits, "local")
 	if env.CoworkerRepo != nil {
 		coworkerCommits, err := env.CoworkerRepo.Commits(fields, "main")
 		if err != nil {
-			return gherkin.DataTable{}, fmt.Errorf("cannot determine commits in the coworker repo: %w", err)
+			return datatable.DataTable{}, fmt.Errorf("cannot determine commits in the coworker repo: %w", err)
 		}
 		builder.AddMany(coworkerCommits, "coworker")
 	}
 	if env.OriginRepo != nil {
 		originCommits, err := env.OriginRepo.Commits(fields, "main")
 		if err != nil {
-			return gherkin.DataTable{}, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
+			return datatable.DataTable{}, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
 		}
 		builder.AddMany(originCommits, config.OriginRemote)
 	}
 	if env.UpstreamRepo != nil {
 		upstreamCommits, err := env.UpstreamRepo.Commits(fields, "main")
 		if err != nil {
-			return gherkin.DataTable{}, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
+			return datatable.DataTable{}, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
 		}
 		builder.AddMany(upstreamCommits, "upstream")
 	}
@@ -315,17 +315,17 @@ func (env Fixture) CommitTable(fields []string) (gherkin.DataTable, error) {
 }
 
 // TagTable provides a table for all tags in this Git environment.
-func (env Fixture) TagTable() (gherkin.DataTable, error) {
-	builder := gherkin.NewTagTableBuilder()
+func (env Fixture) TagTable() (datatable.DataTable, error) {
+	builder := datatable.NewTagTableBuilder()
 	localTags, err := env.DevRepo.Tags()
 	if err != nil {
-		return gherkin.DataTable{}, err
+		return datatable.DataTable{}, err
 	}
 	builder.AddMany(localTags, "local")
 	if env.OriginRepo != nil {
 		originTags, err := env.OriginRepo.Tags()
 		if err != nil {
-			return gherkin.DataTable{}, err
+			return datatable.DataTable{}, err
 		}
 		builder.AddMany(originTags, config.OriginRemote)
 	}

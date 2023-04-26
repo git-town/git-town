@@ -16,7 +16,7 @@ import (
 	"github.com/git-town/git-town/v8/src/cli"
 	"github.com/git-town/git-town/v8/src/config"
 	"github.com/git-town/git-town/v8/src/stringslice"
-	"github.com/git-town/git-town/v8/test/gherkin"
+	"github.com/git-town/git-town/v8/test/datatable"
 	"github.com/git-town/git-town/v8/test/git"
 	"github.com/git-town/git-town/v8/test/helpers"
 	"github.com/git-town/git-town/v8/test/output"
@@ -379,7 +379,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^it runs the commands$`, func(input *messages.PickleStepArgument_PickleTable) error {
 		commands := output.GitCommandsInGitTownOutput(state.runOutput)
 		table := output.RenderExecutedGitCommands(commands, input)
-		dataTable := gherkin.FromGherkin(input)
+		dataTable := datatable.FromGherkin(input)
 		expanded, err := dataTable.Expand(
 			&state.fixture.DevRepo,
 			state.fixture.OriginRepo,

@@ -7,7 +7,7 @@ import (
 
 	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/v8/src/stringslice"
-	"github.com/git-town/git-town/v8/test/gherkin"
+	"github.com/git-town/git-town/v8/test/datatable"
 	"github.com/git-town/git-town/v8/test/helpers"
 )
 
@@ -26,7 +26,7 @@ type ScenarioState struct {
 	initialCommits *messages.PickleStepArgument_PickleTable
 
 	// initialBranchHierarchy describes the branch hierarchy before the WHEN steps ran.
-	initialBranchHierarchy gherkin.DataTable
+	initialBranchHierarchy datatable.DataTable
 
 	// initialCurrentBranch contains the name of the branch that was checked out before the WHEN steps ran
 	initialCurrentBranch string
@@ -53,7 +53,7 @@ func (state *ScenarioState) Reset(gitEnv Fixture) {
 	state.initialLocalBranches = []string{"main"}
 	state.initialRemoteBranches = []string{"main"}
 	state.initialCommits = nil
-	state.initialBranchHierarchy = gherkin.DataTable{Cells: [][]string{{"BRANCH", "PARENT"}}}
+	state.initialBranchHierarchy = datatable.DataTable{Cells: [][]string{{"BRANCH", "PARENT"}}}
 	state.initialCurrentBranch = ""
 	state.runOutput = ""
 	state.runErr = nil
@@ -63,8 +63,8 @@ func (state *ScenarioState) Reset(gitEnv Fixture) {
 }
 
 // InitialBranches provides the branches in this Scenario before the WHEN steps ran.
-func (state *ScenarioState) InitialBranches() gherkin.DataTable {
-	result := gherkin.DataTable{}
+func (state *ScenarioState) InitialBranches() datatable.DataTable {
+	result := datatable.DataTable{}
 	result.AddRow("REPOSITORY", "BRANCHES")
 	sort.Strings(state.initialLocalBranches)
 	state.initialLocalBranches = stringslice.Hoist(state.initialLocalBranches, "main")

@@ -1,4 +1,4 @@
-package gherkin
+package datatable
 
 import (
 	"fmt"
