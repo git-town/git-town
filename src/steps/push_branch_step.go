@@ -11,7 +11,6 @@ import (
 type PushBranchStep struct {
 	EmptyStep
 	Branch         string
-	Force          bool
 	ForceWithLease bool
 	NoPushHook     bool
 	Undoable       bool
@@ -40,7 +39,6 @@ func (step *PushBranchStep) Run(run *git.ProdRunner, connector hosting.Connector
 		Branch:         step.Branch,
 		ForceWithLease: step.ForceWithLease,
 		NoPushHook:     step.NoPushHook,
-		Force:          step.Force,
 		Remote:         remoteName(currentBranch, step.Branch),
 	})
 }

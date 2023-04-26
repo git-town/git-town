@@ -9,7 +9,6 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v8/src/config"
-	"github.com/git-town/git-town/v8/src/git"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -54,14 +53,14 @@ func TestRunner(t *testing.T) {
 	t.Run(".Commits()", func(t *testing.T) {
 		t.Parallel()
 		runner := CreateRunner(t)
-		err := runner.CreateCommit(git.Commit{
+		err := runner.CreateCommit(Commit{
 			Branch:      "initial",
 			FileName:    "file1",
 			FileContent: "hello",
 			Message:     "first commit",
 		})
 		assert.NoError(t, err)
-		err = runner.CreateCommit(git.Commit{
+		err = runner.CreateCommit(Commit{
 			Branch:      "initial",
 			FileName:    "file2",
 			FileContent: "hello again",
@@ -148,7 +147,7 @@ func TestRunner(t *testing.T) {
 		t.Run("minimal arguments", func(t *testing.T) {
 			t.Parallel()
 			runner := CreateRunner(t)
-			err := runner.CreateCommit(git.Commit{
+			err := runner.CreateCommit(Commit{
 				Branch:      "initial",
 				FileName:    "hello.txt",
 				FileContent: "hello world",
@@ -167,7 +166,7 @@ func TestRunner(t *testing.T) {
 		t.Run("set the author", func(t *testing.T) {
 			t.Parallel()
 			runner := CreateRunner(t)
-			err := runner.CreateCommit(git.Commit{
+			err := runner.CreateCommit(Commit{
 				Branch:      "initial",
 				FileName:    "hello.txt",
 				FileContent: "hello world",
@@ -234,7 +233,7 @@ func TestRunner(t *testing.T) {
 	t.Run(".FileContentInCommit()", func(t *testing.T) {
 		t.Parallel()
 		runner := CreateRunner(t)
-		err := runner.CreateCommit(git.Commit{
+		err := runner.CreateCommit(Commit{
 			Branch:      "initial",
 			FileName:    "hello.txt",
 			FileContent: "hello world",
@@ -410,7 +409,7 @@ func TestRunner(t *testing.T) {
 	t.Run(".ShaForCommit()", func(t *testing.T) {
 		t.Parallel()
 		runner := CreateRunner(t)
-		err := runner.CreateCommit(git.Commit{Branch: "initial", FileName: "foo", FileContent: "bar", Message: "commit"})
+		err := runner.CreateCommit(Commit{Branch: "initial", FileName: "foo", FileContent: "bar", Message: "commit"})
 		assert.NoError(t, err)
 		sha, err := runner.ShaForCommit("commit")
 		assert.NoError(t, err)

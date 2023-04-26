@@ -50,7 +50,6 @@ func initRunner(workingDir, homeDir, binDir string) (Runner, error) {
 
 // newRunner provides a new test.Runner instance working in the given directory.
 // The directory must contain an existing Git repo.
-// TODO: inline this method.
 func newRunner(workingDir, homeDir, binDir string) Runner {
 	mockingRunner := MockingRunner{
 		workingDir: workingDir,

@@ -1,11 +1,10 @@
-package git
+package test
 
 import (
 	"fmt"
 )
 
 // Commit describes a Git commit.
-// TODO: move into the "test" package.
 type Commit struct {
 	Author      string `exhaustruct:"optional"`
 	Branch      string

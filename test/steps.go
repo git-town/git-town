@@ -15,7 +15,6 @@ import (
 	"github.com/eiannone/keyboard"
 	"github.com/git-town/git-town/v8/src/cli"
 	"github.com/git-town/git-town/v8/src/config"
-	"github.com/git-town/git-town/v8/src/git"
 	"github.com/git-town/git-town/v8/src/stringslice"
 )
 
@@ -229,7 +228,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I add commit "([^"]*)" to the "([^"]*)" branch`, func(message, branch string) error {
-		return state.fixture.DevRepo.CreateCommit(git.Commit{
+		return state.fixture.DevRepo.CreateCommit(Commit{
 			Branch:      branch,
 			FileName:    "new_file",
 			FileContent: "new content",
