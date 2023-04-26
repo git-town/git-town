@@ -17,6 +17,7 @@ import (
 	"github.com/git-town/git-town/v8/src/config"
 	"github.com/git-town/git-town/v8/src/stringslice"
 	"github.com/git-town/git-town/v8/test/git"
+	"github.com/git-town/git-town/v8/test/output"
 )
 
 // beforeSuiteMux ensures that we run BeforeSuite only once globally.
@@ -363,7 +364,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^it runs no commands$`, func() error {
-		commands := GitCommandsInGitTownOutput(state.runOutput)
+		commands := output.GitCommandsInGitTownOutput(state.runOutput)
 		if len(commands) > 0 {
 			for _, command := range commands {
 				fmt.Println(command)
@@ -374,7 +375,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^it runs the commands$`, func(input *messages.PickleStepArgument_PickleTable) error {
-		commands := GitCommandsInGitTownOutput(state.runOutput)
+		commands := output.GitCommandsInGitTownOutput(state.runOutput)
 		table := RenderExecutedGitCommands(commands, input)
 		dataTable := FromGherkin(input)
 		expanded, err := dataTable.Expand(

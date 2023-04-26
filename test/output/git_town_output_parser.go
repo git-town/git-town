@@ -1,4 +1,4 @@
-package test
+package output
 
 import (
 	"strings"

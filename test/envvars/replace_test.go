@@ -8,6 +8,7 @@ import (
 )
 
 func TestReplace(t *testing.T) {
+	t.Parallel()
 	t.Run("contains the given key", func(t *testing.T) {
 		t.Parallel()
 		give := []string{"ONE=1", "TWO=2", "THREE=3"}

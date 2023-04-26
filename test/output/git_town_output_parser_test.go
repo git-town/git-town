@@ -1,15 +1,15 @@
-//nolint:testpackage
-package test
+package output_test
 
 import (
 	"testing"
 
+	"github.com/git-town/git-town/v8/test/output"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestGitCommandsInGitTownOutput(t *testing.T) {
 	t.Parallel()
-	tests := map[string][]ExecutedGitCommand{
+	tests := map[string][]output.ExecutedGitCommand{
 		// simple
 		"\x1b[1m[mybranch] foo bar": {
 			{Command: "foo bar", Branch: "mybranch"},
@@ -25,6 +25,6 @@ func TestGitCommandsInGitTownOutput(t *testing.T) {
 		},
 	}
 	for input, expected := range tests {
-		assert.Equal(t, expected, GitCommandsInGitTownOutput(input), input)
+		assert.Equal(t, expected, output.GitCommandsInGitTownOutput(input), input)
 	}
 }
