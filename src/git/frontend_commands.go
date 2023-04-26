@@ -3,7 +3,6 @@ package git
 import (
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/git-town/git-town/v8/src/config"
 )
@@ -16,7 +15,6 @@ type FrontendRunner interface {
 // FrontendCommands are Git commands that Git Town executes for the user to change the user's repository.
 // They can take a while to execute (fetch, push) and stream their output to the user.
 // Git Town only needs to know the exit code of frontend commands.
-// TODO: add tests for these commands.
 type FrontendCommands struct {
 	FrontendRunner
 	Config *RepoConfig // the known state of the Git repository
@@ -334,18 +332,10 @@ func (fc *FrontendCommands) Stash() error {
 // StageFiles adds the file with the given name to the Git index.
 func (fc *FrontendCommands) StageFiles(names ...string) error {
 	args := append([]string{"add"}, names...)
-	err := fc.Run("git", args...)
-	if err != nil {
-		return fmt.Errorf("cannot stage files %s: %w", strings.Join(names, ", "), err)
-	}
-	return nil
+	return fc.Run("git", args...)
 }
 
 // StartCommit starts a commit and stops at asking the user for the commit message.
 func (fc *FrontendCommands) StartCommit() error {
-	err := fc.Run("git", "commit")
-	if err != nil {
-		return fmt.Errorf("cannot start commit: %w", err)
-	}
-	return nil
+	return fc.Run("git", "commit")
 }
