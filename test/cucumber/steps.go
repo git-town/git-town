@@ -1,4 +1,4 @@
-package test
+package cucumber
 
 import (
 	"fmt"
