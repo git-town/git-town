@@ -4,6 +4,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/git-town/git-town/v8/test/gherkin"
 	"github.com/git-town/git-town/v8/test/helpers"
 )
 
@@ -43,8 +44,8 @@ func (builder *TagTableBuilder) AddMany(tags []string, location string) {
 }
 
 // Table provides the data accumulated by this TagTableBuilder as a DataTable.
-func (builder *TagTableBuilder) Table() DataTable {
-	result := DataTable{}
+func (builder *TagTableBuilder) Table() gherkin.DataTable {
+	result := gherkin.DataTable{}
 	result.AddRow("NAME", "LOCATION")
 	tags := make([]string, len(builder.tagToLocations))
 	index := 0

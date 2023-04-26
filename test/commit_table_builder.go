@@ -4,6 +4,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/git-town/git-town/v8/test/gherkin"
 	"github.com/git-town/git-town/v8/test/git"
 	"github.com/git-town/git-town/v8/test/helpers"
 )
@@ -88,8 +89,8 @@ func (builder *CommitTableBuilder) branches() []string {
 }
 
 // Table provides the data accumulated by this CommitTableBuilder as a DataTable.
-func (builder *CommitTableBuilder) Table(fields []string) DataTable {
-	result := DataTable{}
+func (builder *CommitTableBuilder) Table(fields []string) gherkin.DataTable {
+	result := gherkin.DataTable{}
 	result.AddRow(fields...)
 	lastBranch := ""
 	lastLocation := ""

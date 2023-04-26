@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v8/src/config"
 	prodgit "github.com/git-town/git-town/v8/src/git"
 	"github.com/git-town/git-town/v8/src/stringslice"
+	"github.com/git-town/git-town/v8/test/gherkin"
 	"github.com/git-town/git-town/v8/test/git"
 )
 
@@ -41,8 +42,8 @@ func (r *testCommands) AddSubmodule(url string) error {
 }
 
 // BranchHierarchyTable provides the currently configured branch hierarchy information as a DataTable.
-func (r *testCommands) BranchHierarchyTable() DataTable {
-	result := DataTable{}
+func (r *testCommands) BranchHierarchyTable() gherkin.DataTable {
+	result := gherkin.DataTable{}
 	r.config.Reload()
 	parentBranchMap := r.config.ParentBranchMap()
 	result.AddRow("BRANCH", "PARENT")
@@ -292,23 +293,23 @@ func (r *testCommands) FilesInBranch(branch string) ([]string, error) {
 }
 
 // FilesInBranches provides a data table of files and their content in all branches.
-func (r *testCommands) FilesInBranches(mainBranch string) (DataTable, error) {
-	result := DataTable{}
+func (r *testCommands) FilesInBranches(mainBranch string) (gherkin.DataTable, error) {
+	result := gherkin.DataTable{}
 	result.AddRow("BRANCH", "NAME", "CONTENT")
 	branches, err := r.LocalBranchesMainFirst(mainBranch)
 	if err != nil {
-		return DataTable{}, err
+		return gherkin.DataTable{}, err
 	}
 	lastBranch := ""
 	for _, branch := range branches {
 		files, err := r.FilesInBranch(branch)
 		if err != nil {
-			return DataTable{}, err
+			return gherkin.DataTable{}, err
 		}
 		for _, file := range files {
 			content, err := r.FileContentInCommit(branch, file)
 			if err != nil {
-				return DataTable{}, err
+				return gherkin.DataTable{}, err
 			}
 			if branch == lastBranch {
 				result.AddRow("", file, content)
