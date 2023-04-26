@@ -14,14 +14,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// Runner provides Git functionality for test code (unit and end-to-end tests).
-type Runner struct {
+// Runtime provides Git functionality for test code (unit and end-to-end tests).
+type Runtime struct {
 	testCommands
 	Backend git.BackendCommands
 }
 
-// CreateRunner creates test.Runner instances.
-func CreateRunner(t *testing.T) Runner {
+// CreateRuntime creates test.Runner instances.
+func CreateRuntime(t *testing.T) Runtime {
 	t.Helper()
 	dir := t.TempDir()
 	workingDir := filepath.Join(dir, "repo")
@@ -30,17 +30,17 @@ func CreateRunner(t *testing.T) Runner {
 	homeDir := filepath.Join(dir, "home")
 	err = os.Mkdir(homeDir, 0o744)
 	assert.NoError(t, err)
-	runner, err := initRunner(workingDir, homeDir, homeDir)
+	runner, err := initRuntime(workingDir, homeDir, homeDir)
 	assert.NoError(t, err)
 	_, err = runner.Run("git", "commit", "--allow-empty", "-m", "initial commit")
 	assert.NoError(t, err)
 	return runner
 }
 
-// initRunner creates a fully functioning test.Runner in the given working directory,
+// initRuntime creates a fully functioning test.Runner in the given working directory,
 // including necessary Git configuration to make commits. Creates missing folders as needed.
-func initRunner(workingDir, homeDir, binDir string) (Runner, error) {
-	runner := newRunner(workingDir, homeDir, binDir)
+func initRuntime(workingDir, homeDir, binDir string) (Runtime, error) {
+	runner := newRuntime(workingDir, homeDir, binDir)
 	err := runner.RunMany([][]string{
 		{"git", "init", "--initial-branch=initial"},
 		{"git", "config", "--global", "user.name", "user"},
@@ -49,9 +49,9 @@ func initRunner(workingDir, homeDir, binDir string) (Runner, error) {
 	return runner, err
 }
 
-// newRunner provides a new test.Runner instance working in the given directory.
+// newRuntime provides a new test.Runner instance working in the given directory.
 // The directory must contain an existing Git repo.
-func newRunner(workingDir, homeDir, binDir string) Runner {
+func newRuntime(workingDir, homeDir, binDir string) Runtime {
 	mockingRunner := runner.Mocking{
 		WorkingDir: workingDir,
 		HomeDir:    homeDir,
@@ -75,17 +75,17 @@ func newRunner(workingDir, homeDir, binDir string) Runner {
 		config:          config,
 		BackendCommands: &backendCommands,
 	}
-	return Runner{
+	return Runtime{
 		testCommands: testCommands,
 		Backend:      backendCommands,
 	}
 }
 
-// CreateTestGitTownRunner creates a test.Runner for use in tests,
+// CreateTestGitTownRuntime creates a test.Runtime for use in tests,
 // with a main branch and initial git town configuration.
-func CreateTestGitTownRunner(t *testing.T) Runner {
+func CreateTestGitTownRuntime(t *testing.T) Runtime {
 	t.Helper()
-	repo := CreateRunner(t)
+	repo := CreateRuntime(t)
 	err := repo.CreateBranch("main", "initial")
 	assert.NoError(t, err)
 	err = repo.Config.SetMainBranch("main")

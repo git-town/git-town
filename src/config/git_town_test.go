@@ -22,7 +22,7 @@ func TestGitTown(t *testing.T) {
 			"https://sub.domain.customhost.com/organization/repository.git": {Host: "sub.domain.customhost.com", Org: "organization", Repo: "repository"},
 		}
 		for give, want := range tests {
-			repo := test.CreateTestGitTownRunner(t)
+			repo := test.CreateTestGitTownRuntime(t)
 			os.Setenv("GIT_TOWN_REMOTE", give)
 			defer os.Unsetenv("GIT_TOWN_REMOTE")
 			have := repo.Config.OriginURL()
@@ -32,7 +32,7 @@ func TestGitTown(t *testing.T) {
 
 	t.Run(".SetOffline()", func(t *testing.T) {
 		t.Parallel()
-		repo := test.CreateTestGitTownRunner(t)
+		repo := test.CreateTestGitTownRuntime(t)
 		err := repo.Config.SetOffline(true)
 		assert.NoError(t, err)
 		offline, err := repo.Config.IsOffline()

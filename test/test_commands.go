@@ -61,12 +61,12 @@ func (r *testCommands) BranchHierarchyTable() datatable.DataTable {
 
 // Clone creates a clone of the repository managed by this test.Runner into the given directory.
 // The cloned repo uses the same homeDir and binDir as its origin.
-func (r *testCommands) Clone(targetDir string) (Runner, error) {
+func (r *testCommands) Clone(targetDir string) (Runtime, error) {
 	_, err := r.Run("git", "clone", r.WorkingDir, targetDir)
 	if err != nil {
-		return Runner{}, fmt.Errorf("cannot clone repo %q: %w", r.WorkingDir, err)
+		return Runtime{}, fmt.Errorf("cannot clone repo %q: %w", r.WorkingDir, err)
 	}
-	return newRunner(targetDir, r.HomeDir, r.BinDir), nil
+	return newRuntime(targetDir, r.HomeDir, r.BinDir), nil
 }
 
 // CheckoutBranch checks out the Git branch with the given name in this repo.

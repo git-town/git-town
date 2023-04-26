@@ -29,7 +29,7 @@ func TestCopyDirectory(t *testing.T) {
 
 	t.Run("Git repository", func(t *testing.T) {
 		t.Parallel()
-		origin := CreateRunner(t)
+		origin := CreateRuntime(t)
 		createFile(t, origin.WorkingDir, "one.txt")
 		dstDir := filepath.Join(t.TempDir(), "dest")
 		err := CopyDirectory(origin.WorkingDir, dstDir)

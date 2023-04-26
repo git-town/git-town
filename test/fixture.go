@@ -22,21 +22,21 @@ type Fixture struct {
 	Dir string
 
 	// CoworkerRepo is the optional Git repository that is locally checked out at the coworker machine.
-	CoworkerRepo *Runner `exhaustruct:"optional"`
+	CoworkerRepo *Runtime `exhaustruct:"optional"`
 
 	// DevRepo is the Git repository that is locally checked out at the developer machine.
-	DevRepo Runner `exhaustruct:"optional"`
+	DevRepo Runtime `exhaustruct:"optional"`
 
 	// OriginRepo is the Git repository that simulates the origin repo (on GitHub).
 	// If this value is nil, the current test setup has no origin.
-	OriginRepo *Runner `exhaustruct:"optional"`
+	OriginRepo *Runtime `exhaustruct:"optional"`
 
 	// SubmoduleRepo is the Git repository that simulates an external repo used as a submodule.
 	// If this value is nil, the current test setup uses no submodules.
-	SubmoduleRepo *Runner `exhaustruct:"optional"`
+	SubmoduleRepo *Runtime `exhaustruct:"optional"`
 
 	// UpstreamRepo is the optional Git repository that contains the upstream for this environment.
-	UpstreamRepo *Runner `exhaustruct:"optional"`
+	UpstreamRepo *Runtime `exhaustruct:"optional"`
 }
 
 // CloneFixture provides a Fixture instance in the given directory,
@@ -48,9 +48,9 @@ func CloneFixture(original Fixture, dir string) (Fixture, error) {
 	}
 	binDir := filepath.Join(dir, "bin")
 	originDir := filepath.Join(dir, "origin")
-	originRepo := newRunner(originDir, dir, "")
+	originRepo := newRuntime(originDir, dir, "")
 	developerDir := filepath.Join(dir, "developer")
-	devRepo := newRunner(developerDir, dir, binDir)
+	devRepo := newRuntime(developerDir, dir, binDir)
 	result := Fixture{
 		Dir:        dir,
 		DevRepo:    devRepo,
@@ -95,7 +95,7 @@ func NewStandardFixture(dir string) (Fixture, error) {
 		return gitEnv, fmt.Errorf("cannot create directory %q: %w", gitEnv.originRepoPath(), err)
 	}
 	// initialize the repo in the folder
-	originRepo, err := initRunner(gitEnv.originRepoPath(), gitEnv.Dir, gitEnv.binPath())
+	originRepo, err := initRuntime(gitEnv.originRepoPath(), gitEnv.Dir, gitEnv.binPath())
 	if err != nil {
 		return gitEnv, err
 	}
@@ -133,7 +133,7 @@ func (env *Fixture) AddSubmoduleRepo() error {
 	if err != nil {
 		return fmt.Errorf("cannot create directory %q: %w", env.submoduleRepoPath(), err)
 	}
-	submoduleRepo, err := initRunner(env.submoduleRepoPath(), env.Dir, env.binPath())
+	submoduleRepo, err := initRuntime(env.submoduleRepoPath(), env.Dir, env.binPath())
 	if err != nil {
 		return err
 	}
@@ -332,7 +332,7 @@ func (env Fixture) TagTable() (datatable.DataTable, error) {
 	return builder.Table(), nil
 }
 
-func (env Fixture) initializeWorkspace(repo *Runner) error {
+func (env Fixture) initializeWorkspace(repo *Runtime) error {
 	err := repo.Config.SetMainBranch("main")
 	if err != nil {
 		return err
