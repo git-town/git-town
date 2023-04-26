@@ -16,6 +16,7 @@ import (
 	"github.com/git-town/git-town/v8/src/cli"
 	"github.com/git-town/git-town/v8/src/config"
 	"github.com/git-town/git-town/v8/src/stringslice"
+	"github.com/git-town/git-town/v8/test/git"
 )
 
 // beforeSuiteMux ensures that we run BeforeSuite only once globally.
@@ -228,7 +229,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I add commit "([^"]*)" to the "([^"]*)" branch`, func(message, branch string) error {
-		return state.fixture.DevRepo.CreateCommit(Commit{
+		return state.fixture.DevRepo.CreateCommit(git.Commit{
 			Branch:      branch,
 			FileName:    "new_file",
 			FileContent: "new content",
@@ -586,7 +587,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^the commits$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		state.initialCommits = table
 		// create the commits
-		commits, err := FromGherkinTable(table)
+		commits, err := git.FromGherkinTable(table)
 		if err != nil {
 			return fmt.Errorf("cannot parse Gherkin table: %w", err)
 		}

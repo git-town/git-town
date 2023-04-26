@@ -8,15 +8,16 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v8/src/config"
-	"github.com/git-town/git-town/v8/src/git"
+	prodgit "github.com/git-town/git-town/v8/src/git"
 	"github.com/git-town/git-town/v8/src/stringslice"
+	"github.com/git-town/git-town/v8/test/git"
 )
 
 // testCommands defines Git commands used only in test code.
 type testCommands struct {
 	MockingRunner
-	config git.RepoConfig
-	*git.BackendCommands
+	config prodgit.RepoConfig
+	*prodgit.BackendCommands
 }
 
 // AddRemote adds a Git remote with the given name and URL to this repository.
@@ -99,7 +100,7 @@ func (r *testCommands) CreateChildFeatureBranch(name string, parent string) erro
 }
 
 // CreateCommit creates a commit with the given properties in this Git repo.
-func (r *testCommands) CreateCommit(commit Commit) error {
+func (r *testCommands) CreateCommit(commit git.Commit) error {
 	err := r.CheckoutBranch(commit.Branch)
 	if err != nil {
 		return fmt.Errorf("cannot checkout branch %q: %w", commit.Branch, err)
@@ -169,16 +170,16 @@ func (r *testCommands) CreateTag(name string) error {
 }
 
 // Commits provides a list of the commits in this Git repository with the given fields.
-func (r *testCommands) Commits(fields []string, mainBranch string) ([]Commit, error) {
+func (r *testCommands) Commits(fields []string, mainBranch string) ([]git.Commit, error) {
 	branches, err := r.LocalBranchesMainFirst(mainBranch)
 	if err != nil {
-		return []Commit{}, fmt.Errorf("cannot determine the Git branches: %w", err)
+		return []git.Commit{}, fmt.Errorf("cannot determine the Git branches: %w", err)
 	}
-	result := []Commit{}
+	result := []git.Commit{}
 	for _, branch := range branches {
 		commits, err := r.CommitsInBranch(branch, fields)
 		if err != nil {
-			return []Commit{}, err
+			return []git.Commit{}, err
 		}
 		result = append(result, commits...)
 	}
@@ -186,29 +187,29 @@ func (r *testCommands) Commits(fields []string, mainBranch string) ([]Commit, er
 }
 
 // CommitsInBranch provides all commits in the given Git branch.
-func (r *testCommands) CommitsInBranch(branch string, fields []string) ([]Commit, error) {
+func (r *testCommands) CommitsInBranch(branch string, fields []string) ([]git.Commit, error) {
 	output, err := r.Run("git", "log", branch, "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse")
 	if err != nil {
-		return []Commit{}, fmt.Errorf("cannot get commits in branch %q: %w", branch, err)
+		return []git.Commit{}, fmt.Errorf("cannot get commits in branch %q: %w", branch, err)
 	}
-	result := []Commit{}
+	result := []git.Commit{}
 	for _, line := range strings.Split(output, "\n") {
 		parts := strings.Split(line, "|")
-		commit := Commit{Branch: branch, SHA: parts[0], Message: parts[1], Author: parts[2]}
+		commit := git.Commit{Branch: branch, SHA: parts[0], Message: parts[1], Author: parts[2]}
 		if strings.EqualFold(commit.Message, "initial commit") {
 			continue
 		}
 		if stringslice.Contains(fields, "FILE NAME") {
 			filenames, err := r.FilesInCommit(commit.SHA)
 			if err != nil {
-				return []Commit{}, fmt.Errorf("cannot determine file name for commit %q in branch %q: %w", commit.SHA, branch, err)
+				return []git.Commit{}, fmt.Errorf("cannot determine file name for commit %q in branch %q: %w", commit.SHA, branch, err)
 			}
 			commit.FileName = strings.Join(filenames, ", ")
 		}
 		if stringslice.Contains(fields, "FILE CONTENT") {
 			filecontent, err := r.FileContentInCommit(commit.SHA, commit.FileName)
 			if err != nil {
-				return []Commit{}, fmt.Errorf("cannot determine file content for commit %q in branch %q: %w", commit.SHA, branch, err)
+				return []git.Commit{}, fmt.Errorf("cannot determine file content for commit %q in branch %q: %w", commit.SHA, branch, err)
 			}
 			commit.FileContent = filecontent
 		}
