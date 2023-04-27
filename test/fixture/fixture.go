@@ -9,11 +9,11 @@ import (
 	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/v8/src/config"
 	"github.com/git-town/git-town/v8/src/stringslice"
-	"github.com/git-town/git-town/v8/test/commands"
 	"github.com/git-town/git-town/v8/test/datatable"
 	"github.com/git-town/git-town/v8/test/fs"
 	"github.com/git-town/git-town/v8/test/git"
 	"github.com/git-town/git-town/v8/test/helpers"
+	"github.com/git-town/git-town/v8/test/repo"
 )
 
 // Fixture is a complete Git environment for a Cucumber scenario.
@@ -24,21 +24,21 @@ type Fixture struct {
 	Dir string
 
 	// CoworkerRepo is the optional Git repository that is locally checked out at the coworker machine.
-	CoworkerRepo *commands.Repo `exhaustruct:"optional"`
+	CoworkerRepo *repo.Repo `exhaustruct:"optional"`
 
 	// DevRepo is the Git repository that is locally checked out at the developer machine.
-	DevRepo commands.Repo `exhaustruct:"optional"`
+	DevRepo repo.Repo `exhaustruct:"optional"`
 
 	// OriginRepo is the Git repository that simulates the origin repo (on GitHub).
 	// If this value is nil, the current test setup has no origin.
-	OriginRepo *commands.Repo `exhaustruct:"optional"`
+	OriginRepo *repo.Repo `exhaustruct:"optional"`
 
 	// SubmoduleRepo is the Git repository that simulates an external repo used as a submodule.
 	// If this value is nil, the current test setup uses no submodules.
-	SubmoduleRepo *commands.Repo `exhaustruct:"optional"`
+	SubmoduleRepo *repo.Repo `exhaustruct:"optional"`
 
 	// UpstreamRepo is the optional Git repository that contains the upstream for this environment.
-	UpstreamRepo *commands.Repo `exhaustruct:"optional"`
+	UpstreamRepo *repo.Repo `exhaustruct:"optional"`
 }
 
 // CloneFixture provides a Fixture instance in the given directory,
@@ -50,9 +50,9 @@ func CloneFixture(original Fixture, dir string) (Fixture, error) {
 	}
 	binDir := filepath.Join(dir, "bin")
 	originDir := filepath.Join(dir, "origin")
-	originRepo := commands.New(originDir, dir, "")
+	originRepo := repo.New(originDir, dir, "")
 	developerDir := filepath.Join(dir, "developer")
-	devRepo := commands.New(developerDir, dir, binDir)
+	devRepo := repo.New(developerDir, dir, binDir)
 	result := Fixture{
 		Dir:        dir,
 		DevRepo:    devRepo,
@@ -64,16 +64,16 @@ func CloneFixture(original Fixture, dir string) (Fixture, error) {
 	if err != nil {
 		return Fixture{}, fmt.Errorf("cannot remove remote: %w", err)
 	}
-	err = commands.AddRemote(&result.DevRepo, config.OriginRemote, result.originRepoPath())
+	err = repo.AddRemote(&result.DevRepo, config.OriginRemote, result.originRepoPath())
 	if err != nil {
 		return Fixture{}, fmt.Errorf("cannot set remote: %w", err)
 	}
-	err = commands.Fetch(&result.DevRepo)
+	err = repo.Fetch(&result.DevRepo)
 	if err != nil {
 		return Fixture{}, fmt.Errorf("cannot fetch: %w", err)
 	}
 	// and connect the main branches again
-	err = commands.ConnectTrackingBranch(&result.DevRepo, "main")
+	err = repo.ConnectTrackingBranch(&result.DevRepo, "main")
 	if err != nil {
 		return Fixture{}, fmt.Errorf("cannot connect tracking branch: %w", err)
 	}
@@ -97,7 +97,7 @@ func NewStandardFixture(dir string) (Fixture, error) {
 		return gitEnv, fmt.Errorf("cannot create directory %q: %w", gitEnv.originRepoPath(), err)
 	}
 	// initialize the repo in the folder
-	originRepo, err := commands.Initialize(gitEnv.originRepoPath(), gitEnv.Dir, gitEnv.binPath())
+	originRepo, err := repo.Initialize(gitEnv.originRepoPath(), gitEnv.Dir, gitEnv.binPath())
 	if err != nil {
 		return gitEnv, err
 	}
@@ -110,7 +110,7 @@ func NewStandardFixture(dir string) (Fixture, error) {
 	}
 	gitEnv.OriginRepo = &originRepo
 	// clone the "developer" repo
-	gitEnv.DevRepo, err = commands.Clone(&originRepo, gitEnv.developerRepoPath())
+	gitEnv.DevRepo, err = repo.Clone(&originRepo, gitEnv.developerRepoPath())
 	if err != nil {
 		return gitEnv, fmt.Errorf("cannot clone developer repo %q from origin %q: %w", gitEnv.originRepoPath(), gitEnv.developerRepoPath(), err)
 	}
@@ -135,7 +135,7 @@ func (env *Fixture) AddSubmoduleRepo() error {
 	if err != nil {
 		return fmt.Errorf("cannot create directory %q: %w", env.submoduleRepoPath(), err)
 	}
-	submoduleRepo, err := commands.Initialize(env.submoduleRepoPath(), env.Dir, env.binPath())
+	submoduleRepo, err := repo.Initialize(env.submoduleRepoPath(), env.Dir, env.binPath())
 	if err != nil {
 		return err
 	}
@@ -152,12 +152,12 @@ func (env *Fixture) AddSubmoduleRepo() error {
 
 // AddUpstream adds an upstream repository.
 func (env *Fixture) AddUpstream() error {
-	repo, err := commands.Clone(&env.DevRepo, filepath.Join(env.Dir, "upstream"))
+	upstream, err := repo.Clone(&env.DevRepo, filepath.Join(env.Dir, "upstream"))
 	if err != nil {
 		return fmt.Errorf("cannot clone upstream: %w", err)
 	}
-	env.UpstreamRepo = &repo
-	err = commands.AddRemote(&env.DevRepo, "upstream", env.UpstreamRepo.Dir())
+	env.UpstreamRepo = &upstream
+	err = repo.AddRemote(&env.DevRepo, "upstream", upstream.Dir())
 	if err != nil {
 		return fmt.Errorf("cannot set upstream remote: %w", err)
 	}
@@ -166,7 +166,7 @@ func (env *Fixture) AddUpstream() error {
 
 // AddCoworkerRepo adds a coworker repository.
 func (env *Fixture) AddCoworkerRepo() error {
-	coworkerRepo, err := commands.Clone(env.OriginRepo, env.coworkerRepoPath())
+	coworkerRepo, err := repo.Clone(env.OriginRepo, env.coworkerRepoPath())
 	if err != nil {
 		return fmt.Errorf("cannot clone coworker: %w", err)
 	}
@@ -216,22 +216,22 @@ func (env *Fixture) CreateCommits(commits []git.Commit) error {
 		for _, location := range commit.Locations {
 			switch location {
 			case "coworker":
-				err = commands.CreateCommit(env.CoworkerRepo, commit)
+				err = repo.CreateCommit(env.CoworkerRepo, commit)
 			case "local":
-				err = commands.CreateCommit(&env.DevRepo, commit)
+				err = repo.CreateCommit(&env.DevRepo, commit)
 			case "local, origin":
-				err = commands.CreateCommit(&env.DevRepo, commit)
+				err = repo.CreateCommit(&env.DevRepo, commit)
 				if err != nil {
 					return fmt.Errorf("cannot create local commit: %w", err)
 				}
-				err = commands.PushBranchToRemote(&env.DevRepo, commit.Branch, config.OriginRemote)
+				err = repo.PushBranchToRemote(&env.DevRepo, commit.Branch, config.OriginRemote)
 				if err != nil {
 					return fmt.Errorf("cannot push branch %q after creating commit: %w", commit.Branch, err)
 				}
 			case "origin":
-				err = commands.CreateCommit(env.OriginRepo, commit)
+				err = repo.CreateCommit(env.OriginRepo, commit)
 			case "upstream":
-				err = commands.CreateCommit(env.UpstreamRepo, commit)
+				err = repo.CreateCommit(env.UpstreamRepo, commit)
 			default:
 				return fmt.Errorf("unknown commit location %q", commit.Locations)
 			}
@@ -252,7 +252,7 @@ func (env *Fixture) CreateCommits(commits []git.Commit) error {
 
 // CreateOriginBranch creates a branch with the given name only in the origin directory.
 func (env Fixture) CreateOriginBranch(name, parent string) error {
-	err := commands.CreateBranch(env.OriginRepo, name, parent)
+	err := repo.CreateBranch(env.OriginRepo, name, parent)
 	if err != nil {
 		return fmt.Errorf("cannot create origin branch %q: %w", name, err)
 	}
@@ -271,9 +271,9 @@ func (env Fixture) CreateTags(table *messages.PickleStepArgument_PickleTable) er
 		var err error
 		switch location {
 		case "local":
-			err = commands.CreateTag(&env.DevRepo, name)
+			err = repo.CreateTag(&env.DevRepo, name)
 		case "origin":
-			err = commands.CreateTag(env.OriginRepo, name)
+			err = repo.CreateTag(env.OriginRepo, name)
 		default:
 			err = fmt.Errorf("tag table LOCATION must be 'local' or 'origin'")
 		}
@@ -287,27 +287,27 @@ func (env Fixture) CreateTags(table *messages.PickleStepArgument_PickleTable) er
 // CommitTable provides a table for all commits in this Git environment containing only the given fields.
 func (env Fixture) CommitTable(fields []string) (datatable.DataTable, error) {
 	builder := datatable.NewCommitTableBuilder()
-	localCommits, err := commands.Commits(&env.DevRepo, fields, "main")
+	localCommits, err := repo.Commits(&env.DevRepo, fields, "main")
 	if err != nil {
 		return datatable.DataTable{}, fmt.Errorf("cannot determine commits in the developer repo: %w", err)
 	}
 	builder.AddMany(localCommits, "local")
 	if env.CoworkerRepo != nil {
-		coworkerCommits, err := commands.Commits(env.CoworkerRepo, fields, "main")
+		coworkerCommits, err := repo.Commits(env.CoworkerRepo, fields, "main")
 		if err != nil {
 			return datatable.DataTable{}, fmt.Errorf("cannot determine commits in the coworker repo: %w", err)
 		}
 		builder.AddMany(coworkerCommits, "coworker")
 	}
 	if env.OriginRepo != nil {
-		originCommits, err := commands.Commits(env.OriginRepo, fields, "main")
+		originCommits, err := repo.Commits(env.OriginRepo, fields, "main")
 		if err != nil {
 			return datatable.DataTable{}, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
 		}
 		builder.AddMany(originCommits, config.OriginRemote)
 	}
 	if env.UpstreamRepo != nil {
-		upstreamCommits, err := commands.Commits(env.UpstreamRepo, fields, "main")
+		upstreamCommits, err := repo.Commits(env.UpstreamRepo, fields, "main")
 		if err != nil {
 			return datatable.DataTable{}, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
 		}
@@ -319,13 +319,13 @@ func (env Fixture) CommitTable(fields []string) (datatable.DataTable, error) {
 // TagTable provides a table for all tags in this Git environment.
 func (env Fixture) TagTable() (datatable.DataTable, error) {
 	builder := datatable.NewTagTableBuilder()
-	localTags, err := commands.Tags(&env.DevRepo)
+	localTags, err := repo.Tags(&env.DevRepo)
 	if err != nil {
 		return datatable.DataTable{}, err
 	}
 	builder.AddMany(localTags, "local")
 	if env.OriginRepo != nil {
-		originTags, err := commands.Tags(env.OriginRepo)
+		originTags, err := repo.Tags(env.OriginRepo)
 		if err != nil {
 			return datatable.DataTable{}, err
 		}
@@ -334,7 +334,7 @@ func (env Fixture) TagTable() (datatable.DataTable, error) {
 	return builder.Table(), nil
 }
 
-func (env Fixture) initializeWorkspace(repo *commands.Repo) error {
+func (env Fixture) initializeWorkspace(repo *repo.Repo) error {
 	err := repo.SetMainBranch("main")
 	if err != nil {
 		return err

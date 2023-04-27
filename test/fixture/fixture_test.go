@@ -7,9 +7,9 @@ import (
 
 	"github.com/git-town/git-town/v8/src/config"
 	"github.com/git-town/git-town/v8/test/asserts"
-	"github.com/git-town/git-town/v8/test/commands"
 	"github.com/git-town/git-town/v8/test/fixture"
 	"github.com/git-town/git-town/v8/test/git"
+	"github.com/git-town/git-town/v8/test/repo"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -26,7 +26,7 @@ func TestFixture(t *testing.T) {
 		asserts.IsGitRepo(t, filepath.Join(dir, "cloned", "developer"))
 		asserts.BranchExists(t, filepath.Join(dir, "cloned", "developer"), "main")
 		// check pushing
-		err = commands.PushBranchToRemote(&cloned.DevRepo, "main", config.OriginRemote)
+		err = repo.PushBranchToRemote(&cloned.DevRepo, "main", config.OriginRemote)
 		assert.NoError(t, err)
 	})
 
@@ -56,13 +56,13 @@ func TestFixture(t *testing.T) {
 			gitEnv, err := fixture.NewStandardFixture(filepath.Join(dir, ""))
 			assert.NoError(t, err)
 			// create the branches
-			err = commands.CreateBranch(&gitEnv.DevRepo, "d1", "main")
+			err = repo.CreateBranch(&gitEnv.DevRepo, "d1", "main")
 			assert.NoError(t, err)
-			err = commands.CreateBranch(&gitEnv.DevRepo, "d2", "main")
+			err = repo.CreateBranch(&gitEnv.DevRepo, "d2", "main")
 			assert.NoError(t, err)
-			err = commands.CreateBranch(gitEnv.OriginRepo, "o1", "initial")
+			err = repo.CreateBranch(gitEnv.OriginRepo, "o1", "initial")
 			assert.NoError(t, err)
-			err = commands.CreateBranch(gitEnv.OriginRepo, "o2", "initial")
+			err = repo.CreateBranch(gitEnv.OriginRepo, "o2", "initial")
 			assert.NoError(t, err)
 			// get branches
 			table, err := gitEnv.Branches()
@@ -79,13 +79,13 @@ func TestFixture(t *testing.T) {
 			gitEnv, err := fixture.NewStandardFixture(filepath.Join(dir, ""))
 			assert.NoError(t, err)
 			// create the branches
-			err = commands.CreateBranch(&gitEnv.DevRepo, "b1", "main")
+			err = repo.CreateBranch(&gitEnv.DevRepo, "b1", "main")
 			assert.NoError(t, err)
-			err = commands.CreateBranch(&gitEnv.DevRepo, "b2", "main")
+			err = repo.CreateBranch(&gitEnv.DevRepo, "b2", "main")
 			assert.NoError(t, err)
-			err = commands.CreateBranch(gitEnv.OriginRepo, "b1", "main")
+			err = repo.CreateBranch(gitEnv.OriginRepo, "b1", "main")
 			assert.NoError(t, err)
-			err = commands.CreateBranch(gitEnv.OriginRepo, "b2", "main")
+			err = repo.CreateBranch(gitEnv.OriginRepo, "b2", "main")
 			assert.NoError(t, err)
 			// get branches
 			table, err := gitEnv.Branches()
@@ -130,7 +130,7 @@ func TestFixture(t *testing.T) {
 		})
 		assert.NoError(t, err)
 		// verify local commits
-		commits, err := commands.Commits(&cloned.DevRepo, []string{"FILE NAME", "FILE CONTENT"}, "main")
+		commits, err := repo.Commits(&cloned.DevRepo, []string{"FILE NAME", "FILE CONTENT"}, "main")
 		assert.NoError(t, err)
 		assert.Len(t, commits, 2)
 		assert.Equal(t, "local commit", commits[0].Message)
@@ -140,7 +140,7 @@ func TestFixture(t *testing.T) {
 		assert.Equal(t, "loc-rem-file", commits[1].FileName)
 		assert.Equal(t, "lrc", commits[1].FileContent)
 		// verify origin commits
-		commits, err = commands.Commits(cloned.OriginRepo, []string{"FILE NAME", "FILE CONTENT"}, "main")
+		commits, err = repo.Commits(cloned.OriginRepo, []string{"FILE NAME", "FILE CONTENT"}, "main")
 		assert.NoError(t, err)
 		assert.Len(t, commits, 2)
 		assert.Equal(t, "origin commit", commits[0].Message)
@@ -186,16 +186,16 @@ func TestFixture(t *testing.T) {
 			cloned, err := fixture.CloneFixture(memoizedGitEnv, filepath.Join(dir, "cloned"))
 			assert.NoError(t, err)
 			// create a few commits
-			err = commands.CreateCommit(&cloned.DevRepo, git.Commit{
+			err = repo.CreateCommit(&cloned.DevRepo, git.Commit{
 				Branch:      "main",
 				FileName:    "local-origin.md",
 				FileContent: "one",
 				Message:     "local-origin",
 			})
 			assert.NoError(t, err)
-			err = commands.PushBranchToRemote(&cloned.DevRepo, "main", config.OriginRemote)
+			err = repo.PushBranchToRemote(&cloned.DevRepo, "main", config.OriginRemote)
 			assert.NoError(t, err)
-			err = commands.CreateCommit(cloned.OriginRepo, git.Commit{
+			err = repo.CreateCommit(cloned.OriginRepo, git.Commit{
 				Branch:      "main",
 				FileName:    "origin.md",
 				FileContent: "two",
@@ -225,14 +225,14 @@ func TestFixture(t *testing.T) {
 			err = cloned.AddUpstream()
 			assert.NoError(t, err)
 			// create a few commits
-			err = commands.CreateCommit(&cloned.DevRepo, git.Commit{
+			err = repo.CreateCommit(&cloned.DevRepo, git.Commit{
 				Branch:      "main",
 				FileName:    "local.md",
 				FileContent: "one",
 				Message:     "local",
 			})
 			assert.NoError(t, err)
-			err = commands.CreateCommit(cloned.UpstreamRepo, git.Commit{
+			err = repo.CreateCommit(cloned.UpstreamRepo, git.Commit{
 				Branch:      "main",
 				FileName:    "upstream.md",
 				FileContent: "two",

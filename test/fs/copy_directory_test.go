@@ -6,8 +6,8 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v8/test/asserts"
-	"github.com/git-town/git-town/v8/test/commands"
 	"github.com/git-town/git-town/v8/test/fs"
+	"github.com/git-town/git-town/v8/test/repo"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -30,7 +30,7 @@ func TestCopyDirectory(t *testing.T) {
 
 	t.Run("Git repository", func(t *testing.T) {
 		t.Parallel()
-		origin := commands.Create(t)
+		origin := repo.Create(t)
 		createFile(t, origin.Dir(), "one.txt")
 		dstDir := filepath.Join(t.TempDir(), "dest")
 		err := fs.CopyDirectory(origin.Dir(), dstDir)

@@ -1,4 +1,4 @@
-package fs_test
+package repo_test
 
 import (
 	"testing"
@@ -8,16 +8,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestHasFile(t *testing.T) {
+func TestUncommittedFiles(t *testing.T) {
 	t.Parallel()
 	runtime := repo.Create(t)
 	err := fs.CreateFile(runtime.Dir(), "f1.txt", "one")
 	assert.NoError(t, err)
-	has, err := fs.HasFile(runtime.WorkingDir, "f1.txt", "one")
+	err = fs.CreateFile(runtime.Dir(), "f2.txt", "two")
 	assert.NoError(t, err)
-	assert.True(t, has)
-	_, err = fs.HasFile(runtime.WorkingDir, "f1.txt", "zonk")
-	assert.Error(t, err)
-	_, err = fs.HasFile(runtime.WorkingDir, "zonk.txt", "one")
-	assert.Error(t, err)
+	files, err := repo.UncommittedFiles(&runtime)
+	assert.NoError(t, err)
+	assert.Equal(t, []string{"f1.txt", "f2.txt"}, files)
 }
