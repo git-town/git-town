@@ -930,7 +930,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the uncommitted file still exists$`, func() error {
-		hasFile, err := state.fixture.DevRepo.HasFile(
+		hasFile, err := commands.HasFile(state.fixture.DevRepo.WorkingDir,
 			state.uncommittedFileName,
 			state.uncommittedContent,
 		)

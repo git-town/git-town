@@ -18,19 +18,6 @@ type TestCommands struct {
 	*prodgit.BackendCommands
 }
 
-// HasFile indicates whether this repository contains a file with the given name and content.
-func (r *TestCommands) HasFile(name, content string) (bool, error) {
-	rawContent, err := os.ReadFile(filepath.Join(r.Dir(), name))
-	if err != nil {
-		return false, fmt.Errorf("repo doesn't have file %q: %w", name, err)
-	}
-	actualContent := string(rawContent)
-	if actualContent != content {
-		return false, fmt.Errorf("file %q should have content %q but has %q", name, content, actualContent)
-	}
-	return true, nil
-}
-
 // HasGitTownConfigNow indicates whether this repository contain Git Town specific configuration.
 func (r *TestCommands) HasGitTownConfigNow() bool {
 	output, err := r.Run("git", "config", "--local", "--get-regex", "git-town")
