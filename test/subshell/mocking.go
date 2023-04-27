@@ -259,3 +259,8 @@ type Options struct {
 	// It is written to the subprocess one element at a time, with a delay defined by command.InputDelay in between.
 	Input []string // input into the subprocess
 }
+
+// WorkingDir provides the folder that this shell operates in.
+func (r *Mocking) Dir() string {
+	return r.WorkingDir
+}

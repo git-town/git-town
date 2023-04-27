@@ -168,7 +168,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^an uncommitted file$`, func() error {
 		state.uncommittedFileName = "uncommitted file"
 		state.uncommittedContent = "uncommitted content"
-		return commands.CreateFile(state.fixture.DevRepo.WorkingDir,
+		return commands.CreateFile(state.fixture.DevRepo.Dir(),
 			state.uncommittedFileName,
 			state.uncommittedContent,
 		)
@@ -176,7 +176,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^an uncommitted file in folder "([^"]*)"$`, func(folder string) error {
 		state.uncommittedFileName = fmt.Sprintf("%s/uncommitted file", folder)
-		return commands.CreateFile(state.fixture.DevRepo.WorkingDir,
+		return commands.CreateFile(state.fixture.DevRepo.Dir(),
 			state.uncommittedFileName,
 			state.uncommittedContent,
 		)
@@ -185,7 +185,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^an uncommitted file with name "([^"]+)" and content "([^"]+)"$`, func(name, content string) error {
 		state.uncommittedFileName = name
 		state.uncommittedContent = content
-		return commands.CreateFile(state.fixture.DevRepo.WorkingDir, name, content)
+		return commands.CreateFile(state.fixture.DevRepo.Dir(), name, content)
 	})
 
 	suite.Step(`^an upstream repo$`, func() error {
@@ -193,7 +193,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^file "([^"]+)" still contains unresolved conflicts$`, func(name string) error {
-		content, err := commands.FileContent(state.fixture.DevRepo.WorkingDir, name)
+		content, err := commands.FileContent(state.fixture.DevRepo.Dir(), name)
 		if err != nil {
 			return fmt.Errorf("cannot read file %q: %w", name, err)
 		}
@@ -204,7 +204,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^file "([^"]*)" still has content "([^"]*)"$`, func(file, expectedContent string) error {
-		actualContent, err := commands.FileContent(state.fixture.DevRepo.WorkingDir, file)
+		actualContent, err := commands.FileContent(state.fixture.DevRepo.Dir(), file)
 		if err != nil {
 			return err
 		}
@@ -252,7 +252,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I am outside a Git repo$`, func() error {
-		os.RemoveAll(filepath.Join(state.fixture.DevRepo.WorkingDir, ".git"))
+		os.RemoveAll(filepath.Join(state.fixture.DevRepo.Dir(), ".git"))
 		return nil
 	})
 
@@ -260,7 +260,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if content == "" {
 			content = "resolved content"
 		}
-		err := commands.CreateFile(state.fixture.DevRepo.WorkingDir, filename, content)
+		err := commands.CreateFile(state.fixture.DevRepo.Dir(), filename, content)
 		if err != nil {
 			return err
 		}
@@ -315,7 +315,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^inspect the repo$`, func() error {
-		fmt.Printf("\nThe workspace is at %q\n", state.fixture.DevRepo.WorkingDir)
+		fmt.Printf("\nThe workspace is at %q\n", state.fixture.DevRepo.Dir())
 		_, _, err := keyboard.GetSingleKey()
 		if err != nil {
 			return fmt.Errorf("cannot read from os.Stdin: %w", err)
@@ -432,7 +432,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return err
 		}
-		return commands.AddSubmodule(&state.fixture.DevRepo, state.fixture.SubmoduleRepo.WorkingDir)
+		return commands.AddSubmodule(&state.fixture.DevRepo, state.fixture.SubmoduleRepo.Dir())
 	})
 
 	suite.Step(`^no branch hierarchy exists now$`, func() error {

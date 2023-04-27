@@ -22,7 +22,7 @@ func CommitsInBranch(r *TestCommands, branch string, fields []string) ([]git.Com
 			continue
 		}
 		if stringslice.Contains(fields, "FILE NAME") {
-			filenames, err := r.FilesInCommit(commit.SHA)
+			filenames, err := FilesInCommit(r, commit.SHA)
 			if err != nil {
 				return []git.Commit{}, fmt.Errorf("cannot determine file name for commit %q in branch %q: %w", commit.SHA, branch, err)
 			}

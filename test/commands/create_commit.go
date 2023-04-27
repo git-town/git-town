@@ -12,7 +12,7 @@ func CreateCommit(r *TestCommands, commit git.Commit) error {
 	if err != nil {
 		return fmt.Errorf("cannot checkout branch %q: %w", commit.Branch, err)
 	}
-	err = CreateFile(r.WorkingDir, commit.FileName, commit.FileContent)
+	err = CreateFile(r.Dir(), commit.FileName, commit.FileContent)
 	if err != nil {
 		return fmt.Errorf("cannot create file %q needed for commit: %w", commit.FileName, err)
 	}

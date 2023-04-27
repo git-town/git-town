@@ -28,7 +28,7 @@ func TestFixtureFactory(t *testing.T) {
 		assert.Nil(t, err, "creating memoized environment failed")
 		result, err := gm.CreateFixture("foo")
 		assert.Nil(t, err, "cannot create scenario environment")
-		_, err = os.Stat(result.DevRepo.WorkingDir)
+		_, err = os.Stat(result.DevRepo.Dir())
 		assert.False(t, os.IsNotExist(err), "scenario environment directory %q not found", result.DevRepo.WorkingDir)
 	})
 }

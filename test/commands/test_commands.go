@@ -19,31 +19,6 @@ type TestCommands struct {
 	*prodgit.BackendCommands
 }
 
-// FilesInCommit provides the names of the files that the commit with the given SHA changes.
-func (r *TestCommands) FilesInCommit(sha string) ([]string, error) {
-	output, err := r.Run("git", "diff-tree", "--no-commit-id", "--name-only", "-r", sha)
-	if err != nil {
-		return []string{}, fmt.Errorf("cannot get files for commit %q: %w", sha, err)
-	}
-	return strings.Split(output, "\n"), nil
-}
-
-// FilesInBranch provides the list of the files present in the given branch.
-func (r *TestCommands) FilesInBranch(branch string) ([]string, error) {
-	output, err := r.Run("git", "ls-tree", "-r", "--name-only", branch)
-	if err != nil {
-		return []string{}, fmt.Errorf("cannot determine files in branch %q in repo %q: %w", branch, r.WorkingDir, err)
-	}
-	result := []string{}
-	for _, line := range strings.Split(output, "\n") {
-		file := strings.TrimSpace(line)
-		if file != "" {
-			result = append(result, file)
-		}
-	}
-	return result, err
-}
-
 // FilesInBranches provides a data table of files and their content in all branches.
 func (r *TestCommands) FilesInBranches(mainBranch string) (datatable.DataTable, error) {
 	result := datatable.DataTable{}
@@ -54,7 +29,7 @@ func (r *TestCommands) FilesInBranches(mainBranch string) (datatable.DataTable, 
 	}
 	lastBranch := ""
 	for _, branch := range branches {
-		files, err := r.FilesInBranch(branch)
+		files, err := FilesInBranch(r, branch)
 		if err != nil {
 			return datatable.DataTable{}, err
 		}
@@ -85,7 +60,7 @@ func (r *TestCommands) HasBranchesOutOfSync() (bool, error) {
 
 // HasFile indicates whether this repository contains a file with the given name and content.
 func (r *TestCommands) HasFile(name, content string) (bool, error) {
-	rawContent, err := os.ReadFile(filepath.Join(r.WorkingDir, name))
+	rawContent, err := os.ReadFile(filepath.Join(r.Dir(), name))
 	if err != nil {
 		return false, fmt.Errorf("repo doesn't have file %q: %w", name, err)
 	}
@@ -130,13 +105,13 @@ func (r *TestCommands) RemoveRemote(name string) error {
 
 // RemoveUnnecessaryFiles trims all files that aren't necessary in this repo.
 func (r *TestCommands) RemoveUnnecessaryFiles() error {
-	fullPath := filepath.Join(r.WorkingDir, ".git", "hooks")
+	fullPath := filepath.Join(r.Dir(), ".git", "hooks")
 	err := os.RemoveAll(fullPath)
 	if err != nil {
 		return fmt.Errorf("cannot remove unnecessary files in %q: %w", fullPath, err)
 	}
-	_ = os.Remove(filepath.Join(r.WorkingDir, ".git", "COMMIT_EDITMSG"))
-	_ = os.Remove(filepath.Join(r.WorkingDir, ".git", "description"))
+	_ = os.Remove(filepath.Join(r.Dir(), ".git", "COMMIT_EDITMSG"))
+	_ = os.Remove(filepath.Join(r.Dir(), ".git", "description"))
 	return nil
 }
 
