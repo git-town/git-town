@@ -59,9 +59,9 @@ func TestRunner(t *testing.T) {
 		repo := runtime.CreateGitTown(t)
 		err := repo.CreateFeatureBranch("f1")
 		assert.NoError(t, err)
-		repo.Config.Reload()
-		assert.True(t, repo.Config.IsFeatureBranch("f1"))
-		assert.Equal(t, []string{"main"}, repo.Config.AncestorBranches("f1"))
+		repo.Reload()
+		assert.True(t, repo.IsFeatureBranch("f1"))
+		assert.Equal(t, []string{"main"}, repo.AncestorBranches("f1"))
 	})
 
 	t.Run(".CurrentBranch()", func(t *testing.T) {

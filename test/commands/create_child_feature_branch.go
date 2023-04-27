@@ -7,5 +7,5 @@ func CreateChildFeatureBranch(repo Repo, name string, parent string) error {
 	if err != nil {
 		return err
 	}
-	return repo.Conf().SetParent(name, parent)
+	return repo.Config().SetParent(name, parent)
 }

@@ -8,6 +8,6 @@ type Shell interface {
 	Dir() string
 
 	// TODO: clean this up after extracting production git commands into stand-alone functions
-	Conf() *git.RepoConfig
+	Config() *git.RepoConfig
 	ProdGit() *git.BackendCommands
 }

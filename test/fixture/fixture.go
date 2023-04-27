@@ -184,7 +184,7 @@ func (env *Fixture) binPath() string {
 func (env *Fixture) Branches() (datatable.DataTable, error) {
 	result := datatable.DataTable{}
 	result.AddRow("REPOSITORY", "BRANCHES")
-	mainBranch := env.DevRepo.Config.MainBranch()
+	mainBranch := env.DevRepo.MainBranch()
 	localBranches, err := env.DevRepo.LocalBranchesMainFirst(mainBranch)
 	if err != nil {
 		return result, fmt.Errorf("cannot determine the developer repo branches of the Fixture: %w", err)
@@ -336,11 +336,11 @@ func (env Fixture) TagTable() (datatable.DataTable, error) {
 }
 
 func (env Fixture) initializeWorkspace(repo *runtime.Runtime) error {
-	err := repo.Config.SetMainBranch("main")
+	err := repo.SetMainBranch("main")
 	if err != nil {
 		return err
 	}
-	err = repo.Config.SetPerennialBranches([]string{})
+	err = repo.SetPerennialBranches([]string{})
 	if err != nil {
 		return err
 	}

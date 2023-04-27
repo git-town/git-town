@@ -10,5 +10,5 @@ func CreatePerennialBranches(repo Repo, names ...string) error {
 			return fmt.Errorf("cannot create perennial branch %q in repo %q: %w", name, repo.Dir(), err)
 		}
 	}
-	return repo.Conf().AddToPerennialBranches(names...)
+	return repo.Config().AddToPerennialBranches(names...)
 }

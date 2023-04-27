@@ -19,7 +19,7 @@ import (
 // Runtime provides Git functionality for unit and end-to-end tests.
 type Runtime struct {
 	testshell.Mocking
-	Config git.RepoConfig
+	git.RepoConfig
 	git.BackendCommands
 }
 
@@ -75,7 +75,7 @@ func New(workingDir, homeDir, binDir string) Runtime {
 	}
 	return Runtime{
 		Mocking:         mockingRunner,
-		Config:          config,
+		RepoConfig:      config,
 		BackendCommands: backendCommands,
 	}
 }
@@ -87,9 +87,9 @@ func CreateGitTown(t *testing.T) Runtime {
 	repo := Create(t)
 	err := commands.CreateBranch(&repo, "main", "initial")
 	assert.NoError(t, err)
-	err = repo.Config.SetMainBranch("main")
+	err = repo.SetMainBranch("main")
 	assert.NoError(t, err)
-	err = repo.Config.SetPerennialBranches([]string{})
+	err = repo.SetPerennialBranches([]string{})
 	assert.NoError(t, err)
 	return repo
 }
@@ -108,6 +108,6 @@ func (r *Runtime) ProdGit() *git.BackendCommands {
 	return &r.BackendCommands
 }
 
-func (r *Runtime) Conf() *git.RepoConfig {
-	return &r.Config
+func (r *Runtime) Config() *git.RepoConfig {
+	return &r.RepoConfig
 }

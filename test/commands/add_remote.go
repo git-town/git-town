@@ -10,6 +10,6 @@ func AddRemote(repo Repo, name, url string) error {
 	if err != nil {
 		return fmt.Errorf("cannot add remote %q --> %q: %w", name, url, err)
 	}
-	repo.Conf().RemotesCache.Invalidate()
+	repo.Config().RemotesCache.Invalidate()
 	return nil
 }
