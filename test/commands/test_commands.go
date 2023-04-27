@@ -8,7 +8,6 @@ import (
 
 	prodgit "github.com/git-town/git-town/v8/src/git"
 	"github.com/git-town/git-town/v8/src/stringslice"
-	"github.com/git-town/git-town/v8/test/datatable"
 	"github.com/git-town/git-town/v8/test/subshell"
 )
 
@@ -17,36 +16,6 @@ type TestCommands struct {
 	subshell.Mocking
 	Config prodgit.RepoConfig
 	*prodgit.BackendCommands
-}
-
-// FilesInBranches provides a data table of files and their content in all branches.
-func (r *TestCommands) FilesInBranches(mainBranch string) (datatable.DataTable, error) {
-	result := datatable.DataTable{}
-	result.AddRow("BRANCH", "NAME", "CONTENT")
-	branches, err := r.LocalBranchesMainFirst(mainBranch)
-	if err != nil {
-		return datatable.DataTable{}, err
-	}
-	lastBranch := ""
-	for _, branch := range branches {
-		files, err := FilesInBranch(r, branch)
-		if err != nil {
-			return datatable.DataTable{}, err
-		}
-		for _, file := range files {
-			content, err := FileContentInCommit(r, branch, file)
-			if err != nil {
-				return datatable.DataTable{}, err
-			}
-			if branch == lastBranch {
-				result.AddRow("", file, content)
-			} else {
-				result.AddRow(branch, file, content)
-			}
-			lastBranch = branch
-		}
-	}
-	return result, err
 }
 
 // HasBranchesOutOfSync indicates whether one or more local branches are out of sync with their tracking branch.

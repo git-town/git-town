@@ -953,7 +953,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^these committed files exist now$`, func(table *messages.PickleStepArgument_PickleTable) error {
-		fileTable, err := state.fixture.DevRepo.FilesInBranches("main")
+		fileTable, err := commands.FilesInBranches(&state.fixture.DevRepo.TestCommands, "main")
 		if err != nil {
 			return fmt.Errorf("cannot determine files in branches in the developer repo: %w", err)
 		}
