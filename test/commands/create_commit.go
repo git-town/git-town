@@ -7,16 +7,16 @@ import (
 )
 
 // CreateCommit creates a commit with the given properties in this Git repo.
-func CreateCommit(r *TestCommands, commit git.Commit) error {
-	err := r.CheckoutBranch(commit.Branch)
+func CreateCommit(repo Repo, commit git.Commit) error {
+	err := repo.ProdGit().CheckoutBranch(commit.Branch)
 	if err != nil {
 		return fmt.Errorf("cannot checkout branch %q: %w", commit.Branch, err)
 	}
-	err = CreateFile(r.Dir(), commit.FileName, commit.FileContent)
+	err = CreateFile(repo.Dir(), commit.FileName, commit.FileContent)
 	if err != nil {
 		return fmt.Errorf("cannot create file %q needed for commit: %w", commit.FileName, err)
 	}
-	_, err = r.Run("git", "add", commit.FileName)
+	_, err = repo.Run("git", "add", commit.FileName)
 	if err != nil {
 		return fmt.Errorf("cannot add file to commit: %w", err)
 	}
@@ -24,7 +24,7 @@ func CreateCommit(r *TestCommands, commit git.Commit) error {
 	if commit.Author != "" {
 		commands = append(commands, "--author="+commit.Author)
 	}
-	_, err = r.Run("git", commands...)
+	_, err = repo.Run("git", commands...)
 	if err != nil {
 		return fmt.Errorf("cannot commit: %w", err)
 	}

@@ -1,19 +1,16 @@
 package commands
 
 import (
-	prodgit "github.com/git-town/git-town/v8/src/git"
-	"github.com/git-town/git-town/v8/test/subshell"
+	"github.com/git-town/git-town/v8/src/git"
 )
 
-// TestCommands defines Git commands used only in test code.
-type TestCommands struct {
-	subshell.Mocking
-	Config prodgit.RepoConfig
-	*prodgit.BackendCommands
-}
-
-type Shell interface {
+// Repo is a repository clone on which the test commands execute.
+type Repo interface {
 	Run(string, ...string) (string, error)
 	RunMany([][]string) error
 	Dir() string
+
+	// TODO: clean this up after extracting production git commands into stand-alone functions
+	Conf() *git.RepoConfig
+	ProdGit() *git.BackendCommands
 }

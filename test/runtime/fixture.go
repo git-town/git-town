@@ -63,7 +63,7 @@ func CloneFixture(original Fixture, dir string) (Fixture, error) {
 	if err != nil {
 		return Fixture{}, fmt.Errorf("cannot remove remote: %w", err)
 	}
-	err = commands.AddRemote(result.DevRepo.TestCommands, config.OriginRemote, result.originRepoPath())
+	err = commands.AddRemote(&result.DevRepo, config.OriginRemote, result.originRepoPath())
 	if err != nil {
 		return Fixture{}, fmt.Errorf("cannot set remote: %w", err)
 	}
@@ -156,7 +156,7 @@ func (env *Fixture) AddUpstream() error {
 		return fmt.Errorf("cannot clone upstream: %w", err)
 	}
 	env.UpstreamRepo = &repo
-	err = commands.AddRemote(env.DevRepo.TestCommands, "upstream", env.UpstreamRepo.Dir())
+	err = commands.AddRemote(&env.DevRepo, "upstream", env.UpstreamRepo.Dir())
 	if err != nil {
 		return fmt.Errorf("cannot set upstream remote: %w", err)
 	}
@@ -215,11 +215,11 @@ func (env *Fixture) CreateCommits(commits []git.Commit) error {
 		for _, location := range commit.Locations {
 			switch location {
 			case "coworker":
-				err = commands.CreateCommit(&env.CoworkerRepo.TestCommands, commit)
+				err = commands.CreateCommit(env.CoworkerRepo, commit)
 			case "local":
-				err = commands.CreateCommit(&env.DevRepo.TestCommands, commit)
+				err = commands.CreateCommit(&env.DevRepo, commit)
 			case "local, origin":
-				err = commands.CreateCommit(&env.DevRepo.TestCommands, commit)
+				err = commands.CreateCommit(&env.DevRepo, commit)
 				if err != nil {
 					return fmt.Errorf("cannot create local commit: %w", err)
 				}
@@ -228,9 +228,9 @@ func (env *Fixture) CreateCommits(commits []git.Commit) error {
 					return fmt.Errorf("cannot push branch %q after creating commit: %w", commit.Branch, err)
 				}
 			case "origin":
-				err = commands.CreateCommit(&env.OriginRepo.TestCommands, commit)
+				err = commands.CreateCommit(env.OriginRepo, commit)
 			case "upstream":
-				err = commands.CreateCommit(&env.UpstreamRepo.TestCommands, commit)
+				err = commands.CreateCommit(env.UpstreamRepo, commit)
 			default:
 				return fmt.Errorf("unknown commit location %q", commit.Locations)
 			}
@@ -286,27 +286,27 @@ func (env Fixture) CreateTags(table *messages.PickleStepArgument_PickleTable) er
 // CommitTable provides a table for all commits in this Git environment containing only the given fields.
 func (env Fixture) CommitTable(fields []string) (datatable.DataTable, error) {
 	builder := datatable.NewCommitTableBuilder()
-	localCommits, err := commands.Commits(&env.DevRepo.TestCommands, fields, "main")
+	localCommits, err := commands.Commits(&env.DevRepo, fields, "main")
 	if err != nil {
 		return datatable.DataTable{}, fmt.Errorf("cannot determine commits in the developer repo: %w", err)
 	}
 	builder.AddMany(localCommits, "local")
 	if env.CoworkerRepo != nil {
-		coworkerCommits, err := commands.Commits(&env.CoworkerRepo.TestCommands, fields, "main")
+		coworkerCommits, err := commands.Commits(env.CoworkerRepo, fields, "main")
 		if err != nil {
 			return datatable.DataTable{}, fmt.Errorf("cannot determine commits in the coworker repo: %w", err)
 		}
 		builder.AddMany(coworkerCommits, "coworker")
 	}
 	if env.OriginRepo != nil {
-		originCommits, err := commands.Commits(&env.OriginRepo.TestCommands, fields, "main")
+		originCommits, err := commands.Commits(env.OriginRepo, fields, "main")
 		if err != nil {
 			return datatable.DataTable{}, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
 		}
 		builder.AddMany(originCommits, config.OriginRemote)
 	}
 	if env.UpstreamRepo != nil {
-		upstreamCommits, err := commands.Commits(&env.UpstreamRepo.TestCommands, fields, "main")
+		upstreamCommits, err := commands.Commits(env.UpstreamRepo, fields, "main")
 		if err != nil {
 			return datatable.DataTable{}, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
 		}

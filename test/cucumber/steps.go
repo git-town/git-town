@@ -92,7 +92,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^a feature branch "([^"]+)" as a child of "([^"]+)"$`, func(branch, parentBranch string) error {
-		err := commands.CreateChildFeatureBranch(&state.fixture.DevRepo.TestCommands, branch, parentBranch)
+		err := commands.CreateChildFeatureBranch(&state.fixture.DevRepo, branch, parentBranch)
 		if err != nil {
 			return fmt.Errorf("cannot create feature branch %q: %w", branch, err)
 		}
@@ -125,7 +125,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^a perennial branch "([^"]+)"$`, func(branch string) error {
-		err := commands.CreatePerennialBranches(&state.fixture.DevRepo.TestCommands, branch)
+		err := commands.CreatePerennialBranches(&state.fixture.DevRepo, branch)
 		if err != nil {
 			return fmt.Errorf("cannot create perennial branch: %w", err)
 		}
@@ -235,7 +235,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I add commit "([^"]*)" to the "([^"]*)" branch`, func(message, branch string) error {
-		return commands.CreateCommit(&state.fixture.DevRepo.TestCommands, git.Commit{
+		return commands.CreateCommit(&state.fixture.DevRepo, git.Commit{
 			Branch:      branch,
 			FileName:    "new_file",
 			FileContent: "new content",
@@ -418,7 +418,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^my repo does not have an origin$`, func() error {
-		err := commands.RemoveRemote(&state.fixture.DevRepo.TestCommands, config.OriginRemote)
+		err := commands.RemoveRemote(&state.fixture.DevRepo, config.OriginRemote)
 		if err != nil {
 			return err
 		}
@@ -657,7 +657,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		case "feature":
 			err = state.fixture.DevRepo.CreateFeatureBranch(branch)
 		case "perennial":
-			err = commands.CreatePerennialBranches(&state.fixture.DevRepo.TestCommands, branch)
+			err = commands.CreatePerennialBranches(&state.fixture.DevRepo, branch)
 		default:
 			panic(fmt.Sprintf("unknown branch type: %q", branchType))
 		}
@@ -801,7 +801,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the (local )?perennial branches "([^"]+)" and "([^"]+)"$`, func(localStr, branch1, branch2 string) error {
 		isLocal := localStr != ""
-		err := commands.CreatePerennialBranches(&state.fixture.DevRepo.TestCommands, branch1, branch2)
+		err := commands.CreatePerennialBranches(&state.fixture.DevRepo, branch1, branch2)
 		if err != nil {
 			return fmt.Errorf("cannot create perennial branches: %w", err)
 		}
@@ -820,7 +820,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^the (local )?perennial branches "([^"]+)", "([^"]+)", and "([^"]+)"$`, func(localStr, branch1, branch2, branch3 string) error {
 		isLocal := localStr != ""
 		for _, branch := range []string{branch1, branch2, branch3} {
-			err := commands.CreatePerennialBranches(&state.fixture.DevRepo.TestCommands, branch)
+			err := commands.CreatePerennialBranches(&state.fixture.DevRepo, branch)
 			if err != nil {
 				return fmt.Errorf("cannot create perennial branches: %w", err)
 			}
@@ -953,7 +953,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^these committed files exist now$`, func(table *messages.PickleStepArgument_PickleTable) error {
-		fileTable, err := datatable.FilesInBranches(&state.fixture.DevRepo.TestCommands, "main")
+		fileTable, err := datatable.FilesInBranches(&state.fixture.DevRepo, "main")
 		if err != nil {
 			return fmt.Errorf("cannot determine files in branches in the developer repo: %w", err)
 		}

@@ -9,8 +9,8 @@ import (
 )
 
 // CommitsInBranch provides all commits in the given Git branch.
-func CommitsInBranch(r *TestCommands, branch string, fields []string) ([]git.Commit, error) {
-	output, err := r.Run("git", "log", branch, "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse")
+func CommitsInBranch(repo Repo, branch string, fields []string) ([]git.Commit, error) {
+	output, err := repo.Run("git", "log", branch, "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse")
 	if err != nil {
 		return []git.Commit{}, fmt.Errorf("cannot get commits in branch %q: %w", branch, err)
 	}
@@ -22,14 +22,14 @@ func CommitsInBranch(r *TestCommands, branch string, fields []string) ([]git.Com
 			continue
 		}
 		if stringslice.Contains(fields, "FILE NAME") {
-			filenames, err := FilesInCommit(r, commit.SHA)
+			filenames, err := FilesInCommit(repo, commit.SHA)
 			if err != nil {
 				return []git.Commit{}, fmt.Errorf("cannot determine file name for commit %q in branch %q: %w", commit.SHA, branch, err)
 			}
 			commit.FileName = strings.Join(filenames, ", ")
 		}
 		if stringslice.Contains(fields, "FILE CONTENT") {
-			filecontent, err := FileContentInCommit(r, commit.SHA, commit.FileName)
+			filecontent, err := FileContentInCommit(repo, commit.SHA, commit.FileName)
 			if err != nil {
 				return []git.Commit{}, fmt.Errorf("cannot determine file content for commit %q in branch %q: %w", commit.SHA, branch, err)
 			}

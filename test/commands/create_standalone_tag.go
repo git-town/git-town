@@ -1,8 +1,8 @@
 package commands
 
 // CreateStandaloneTag creates a tag not on a branch.
-func CreateStandaloneTag(shell Shell, name string) error {
-	return shell.RunMany([][]string{
+func CreateStandaloneTag(repo Repo, name string) error {
+	return repo.RunMany([][]string{
 		{"git", "checkout", "-b", "temp"},
 		{"touch", "a.txt"},
 		{"git", "add", "-A"},

@@ -7,8 +7,8 @@ import (
 )
 
 // DeleteMainBranchConfiguration removes the configuration for which branch is the main branch.
-func DeleteMainBranchConfiguration(shell Shell) error {
-	_, err := shell.Run("git", "config", "--unset", config.MainBranchKey)
+func DeleteMainBranchConfiguration(repo Repo) error {
+	_, err := repo.Run("git", "config", "--unset", config.MainBranchKey)
 	if err != nil {
 		return fmt.Errorf("cannot delete main branch configuration: %w", err)
 	}

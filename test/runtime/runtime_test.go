@@ -36,7 +36,7 @@ func TestRunner(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, []string{}, remotes)
 		origin := runtime.Create(t)
-		err = commands.AddRemote(dev.TestCommands, config.OriginRemote, origin.Dir())
+		err = commands.AddRemote(&dev, config.OriginRemote, origin.Dir())
 		assert.NoError(t, err)
 		remotes, err = dev.Remotes()
 		assert.NoError(t, err)
@@ -56,21 +56,21 @@ func TestRunner(t *testing.T) {
 	t.Run(".Commits()", func(t *testing.T) {
 		t.Parallel()
 		runtime := runtime.Create(t)
-		err := commands.CreateCommit(&runtime.TestCommands, git.Commit{
+		err := commands.CreateCommit(&runtime, git.Commit{
 			Branch:      "initial",
 			FileName:    "file1",
 			FileContent: "hello",
 			Message:     "first commit",
 		})
 		assert.NoError(t, err)
-		err = commands.CreateCommit(&runtime.TestCommands, git.Commit{
+		err = commands.CreateCommit(&runtime, git.Commit{
 			Branch:      "initial",
 			FileName:    "file2",
 			FileContent: "hello again",
 			Message:     "second commit",
 		})
 		assert.NoError(t, err)
-		commits, err := commands.Commits(&runtime.TestCommands, []string{"FILE NAME", "FILE CONTENT"}, "initial")
+		commits, err := commands.Commits(&runtime, []string{"FILE NAME", "FILE CONTENT"}, "initial")
 		assert.NoError(t, err)
 		assert.Len(t, commits, 2)
 		assert.Equal(t, "initial", commits[0].Branch)
@@ -92,7 +92,7 @@ func TestRunner(t *testing.T) {
 		err := runtime.CopyDirectory(origin.Dir(), repoDir)
 		assert.NoError(t, err)
 		runtime := runtime.New(repoDir, repoDir, "")
-		err = commands.AddRemote(runtime.TestCommands, config.OriginRemote, origin.Dir())
+		err = commands.AddRemote(&runtime, config.OriginRemote, origin.Dir())
 		assert.NoError(t, err)
 		err = commands.Fetch(&runtime)
 		assert.NoError(t, err)
@@ -135,7 +135,7 @@ func TestRunner(t *testing.T) {
 		runtime := runtime.CreateGitTown(t)
 		err := runtime.CreateFeatureBranch("f1")
 		assert.NoError(t, err)
-		err = commands.CreateChildFeatureBranch(&runtime.TestCommands, "f1a", "f1")
+		err = commands.CreateChildFeatureBranch(&runtime, "f1a", "f1")
 		assert.NoError(t, err)
 		output, err := runtime.BackendRunner.Run("git-town", "config")
 		assert.NoError(t, err)
@@ -150,14 +150,14 @@ func TestRunner(t *testing.T) {
 		t.Run("minimal arguments", func(t *testing.T) {
 			t.Parallel()
 			runtime := runtime.Create(t)
-			err := commands.CreateCommit(&runtime.TestCommands, git.Commit{
+			err := commands.CreateCommit(&runtime, git.Commit{
 				Branch:      "initial",
 				FileName:    "hello.txt",
 				FileContent: "hello world",
 				Message:     "test commit",
 			})
 			assert.NoError(t, err)
-			commits, err := commands.Commits(&runtime.TestCommands, []string{"FILE NAME", "FILE CONTENT"}, "initial")
+			commits, err := commands.Commits(&runtime, []string{"FILE NAME", "FILE CONTENT"}, "initial")
 			assert.NoError(t, err)
 			assert.Len(t, commits, 1)
 			assert.Equal(t, "hello.txt", commits[0].FileName)
@@ -169,7 +169,7 @@ func TestRunner(t *testing.T) {
 		t.Run("set the author", func(t *testing.T) {
 			t.Parallel()
 			runtime := runtime.Create(t)
-			err := commands.CreateCommit(&runtime.TestCommands, git.Commit{
+			err := commands.CreateCommit(&runtime, git.Commit{
 				Branch:      "initial",
 				FileName:    "hello.txt",
 				FileContent: "hello world",
@@ -177,7 +177,7 @@ func TestRunner(t *testing.T) {
 				Author:      "developer <developer@example.com>",
 			})
 			assert.NoError(t, err)
-			commits, err := commands.Commits(&runtime.TestCommands, []string{"FILE NAME", "FILE CONTENT"}, "initial")
+			commits, err := commands.Commits(&runtime, []string{"FILE NAME", "FILE CONTENT"}, "initial")
 			assert.NoError(t, err)
 			assert.Len(t, commits, 1)
 			assert.Equal(t, "hello.txt", commits[0].FileName)
@@ -213,7 +213,7 @@ func TestRunner(t *testing.T) {
 	t.Run(".CreatePerennialBranches()", func(t *testing.T) {
 		t.Parallel()
 		runtime := runtime.CreateGitTown(t)
-		err := commands.CreatePerennialBranches(&runtime.TestCommands, "p1", "p2")
+		err := commands.CreatePerennialBranches(&runtime, "p1", "p2")
 		assert.NoError(t, err)
 		branches, err := runtime.LocalBranchesMainFirst("main")
 		assert.NoError(t, err)
@@ -227,7 +227,7 @@ func TestRunner(t *testing.T) {
 		t.Parallel()
 		repo := runtime.Create(t)
 		origin := runtime.Create(t)
-		err := commands.AddRemote(repo.TestCommands, config.OriginRemote, origin.Dir())
+		err := commands.AddRemote(&repo, config.OriginRemote, origin.Dir())
 		assert.NoError(t, err)
 		err = commands.Fetch(&repo)
 		assert.NoError(t, err)
@@ -236,14 +236,14 @@ func TestRunner(t *testing.T) {
 	t.Run(".FileContentInCommit()", func(t *testing.T) {
 		t.Parallel()
 		runtime := runtime.Create(t)
-		err := commands.CreateCommit(&runtime.TestCommands, git.Commit{
+		err := commands.CreateCommit(&runtime, git.Commit{
 			Branch:      "initial",
 			FileName:    "hello.txt",
 			FileContent: "hello world",
 			Message:     "commit",
 		})
 		assert.NoError(t, err)
-		commits, err := commands.CommitsInBranch(&runtime.TestCommands, "initial", []string{})
+		commits, err := commands.CommitsInBranch(&runtime, "initial", []string{})
 		assert.NoError(t, err)
 		assert.Len(t, commits, 1)
 		content, err := commands.FileContentInCommit(&runtime, commits[0].SHA, "hello.txt")
@@ -262,7 +262,7 @@ func TestRunner(t *testing.T) {
 		assert.NoError(t, err)
 		err = commands.CommitStagedChanges(&runtime, "stuff")
 		assert.NoError(t, err)
-		commits, err := commands.Commits(&runtime.TestCommands, []string{}, "initial")
+		commits, err := commands.Commits(&runtime, []string{}, "initial")
 		assert.NoError(t, err)
 		assert.Len(t, commits, 1)
 		fileNames, err := commands.FilesInCommit(&runtime, commits[0].SHA)
@@ -370,7 +370,7 @@ func TestRunner(t *testing.T) {
 		t.Parallel()
 		dev := runtime.Create(t)
 		origin := runtime.Create(t)
-		err := commands.AddRemote(dev.TestCommands, config.OriginRemote, origin.Dir())
+		err := commands.AddRemote(&dev, config.OriginRemote, origin.Dir())
 		assert.NoError(t, err)
 		err = commands.CreateBranch(&dev, "b1", "initial")
 		assert.NoError(t, err)
@@ -400,9 +400,9 @@ func TestRunner(t *testing.T) {
 		t.Parallel()
 		repo := runtime.Create(t)
 		origin := runtime.Create(t)
-		err := commands.AddRemote(repo.TestCommands, config.OriginRemote, origin.Dir())
+		err := commands.AddRemote(&repo, config.OriginRemote, origin.Dir())
 		assert.NoError(t, err)
-		err = commands.RemoveRemote(&repo.TestCommands, config.OriginRemote)
+		err = commands.RemoveRemote(&repo, config.OriginRemote)
 		assert.NoError(t, err)
 		remotes, err := repo.Remotes()
 		assert.NoError(t, err)
@@ -412,7 +412,7 @@ func TestRunner(t *testing.T) {
 	t.Run(".ShaForCommit()", func(t *testing.T) {
 		t.Parallel()
 		repo := runtime.Create(t)
-		err := commands.CreateCommit(&repo.TestCommands, git.Commit{Branch: "initial", FileName: "foo", FileContent: "bar", Message: "commit"})
+		err := commands.CreateCommit(&repo, git.Commit{Branch: "initial", FileName: "foo", FileContent: "bar", Message: "commit"})
 		assert.NoError(t, err)
 		sha, err := commands.ShaForCommit(&repo, "commit")
 		assert.NoError(t, err)

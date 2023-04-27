@@ -130,7 +130,7 @@ func TestFixture(t *testing.T) {
 		})
 		assert.NoError(t, err)
 		// verify local commits
-		commits, err := commands.Commits(&cloned.DevRepo.TestCommands, []string{"FILE NAME", "FILE CONTENT"}, "main")
+		commits, err := commands.Commits(&cloned.DevRepo, []string{"FILE NAME", "FILE CONTENT"}, "main")
 		assert.NoError(t, err)
 		assert.Len(t, commits, 2)
 		assert.Equal(t, "local commit", commits[0].Message)
@@ -140,7 +140,7 @@ func TestFixture(t *testing.T) {
 		assert.Equal(t, "loc-rem-file", commits[1].FileName)
 		assert.Equal(t, "lrc", commits[1].FileContent)
 		// verify origin commits
-		commits, err = commands.Commits(&cloned.OriginRepo.TestCommands, []string{"FILE NAME", "FILE CONTENT"}, "main")
+		commits, err = commands.Commits(cloned.OriginRepo, []string{"FILE NAME", "FILE CONTENT"}, "main")
 		assert.NoError(t, err)
 		assert.Len(t, commits, 2)
 		assert.Equal(t, "origin commit", commits[0].Message)
@@ -186,7 +186,7 @@ func TestFixture(t *testing.T) {
 			cloned, err := runtime.CloneFixture(memoizedGitEnv, filepath.Join(dir, "cloned"))
 			assert.NoError(t, err)
 			// create a few commits
-			err = commands.CreateCommit(&cloned.DevRepo.TestCommands, git.Commit{
+			err = commands.CreateCommit(&cloned.DevRepo, git.Commit{
 				Branch:      "main",
 				FileName:    "local-origin.md",
 				FileContent: "one",
@@ -195,7 +195,7 @@ func TestFixture(t *testing.T) {
 			assert.NoError(t, err)
 			err = commands.PushBranchToRemote(&cloned.DevRepo, "main", config.OriginRemote)
 			assert.NoError(t, err)
-			err = commands.CreateCommit(&cloned.OriginRepo.TestCommands, git.Commit{
+			err = commands.CreateCommit(cloned.OriginRepo, git.Commit{
 				Branch:      "main",
 				FileName:    "origin.md",
 				FileContent: "two",
@@ -225,14 +225,14 @@ func TestFixture(t *testing.T) {
 			err = cloned.AddUpstream()
 			assert.NoError(t, err)
 			// create a few commits
-			err = commands.CreateCommit(&cloned.DevRepo.TestCommands, git.Commit{
+			err = commands.CreateCommit(&cloned.DevRepo, git.Commit{
 				Branch:      "main",
 				FileName:    "local.md",
 				FileContent: "one",
 				Message:     "local",
 			})
 			assert.NoError(t, err)
-			err = commands.CreateCommit(&cloned.UpstreamRepo.TestCommands, git.Commit{
+			err = commands.CreateCommit(cloned.UpstreamRepo, git.Commit{
 				Branch:      "main",
 				FileName:    "upstream.md",
 				FileContent: "two",

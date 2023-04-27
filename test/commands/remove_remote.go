@@ -1,8 +1,8 @@
 package commands
 
 // RemoveRemote deletes the Git remote with the given name.
-func RemoveRemote(cmds *TestCommands, name string) error {
-	cmds.Config.RemotesCache.Invalidate()
-	_, err := cmds.Run("git", "remote", "rm", name)
+func RemoveRemote(repo Repo, name string) error {
+	repo.Conf().RemotesCache.Invalidate()
+	_, err := repo.Run("git", "remote", "rm", name)
 	return err
 }

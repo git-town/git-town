@@ -1,8 +1,8 @@
 package commands
 
 // HasGitTownConfigNow indicates whether this repository contain Git Town specific configuration.
-func HasGitTownConfigNow(shell Shell) bool {
-	output, err := shell.Run("git", "config", "--local", "--get-regex", "git-town")
+func HasGitTownConfigNow(repo Repo) bool {
+	output, err := repo.Run("git", "config", "--local", "--get-regex", "git-town")
 	if err != nil {
 		return false
 	}
