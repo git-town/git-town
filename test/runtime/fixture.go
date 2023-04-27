@@ -117,11 +117,11 @@ func NewStandardFixture(dir string) (Fixture, error) {
 	if err != nil {
 		return gitEnv, fmt.Errorf("cannot create new standard Git environment: %w", err)
 	}
-	err = gitEnv.DevRepo.RemoveUnnecessaryFiles()
+	err = commands.RemoveUnnecessaryFiles(gitEnv.DevRepo.WorkingDir)
 	if err != nil {
 		return gitEnv, err
 	}
-	err = gitEnv.OriginRepo.RemoveUnnecessaryFiles()
+	err = commands.RemoveUnnecessaryFiles(gitEnv.OriginRepo.WorkingDir)
 	if err != nil {
 		return gitEnv, err
 	}

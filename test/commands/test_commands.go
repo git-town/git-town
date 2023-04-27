@@ -2,8 +2,6 @@ package commands
 
 import (
 	"fmt"
-	"os"
-	"path/filepath"
 	"strings"
 
 	prodgit "github.com/git-town/git-town/v8/src/git"
@@ -16,18 +14,6 @@ type TestCommands struct {
 	subshell.Mocking
 	Config prodgit.RepoConfig
 	*prodgit.BackendCommands
-}
-
-// RemoveUnnecessaryFiles trims all files that aren't necessary in this repo.
-func (r *TestCommands) RemoveUnnecessaryFiles() error {
-	fullPath := filepath.Join(r.Dir(), ".git", "hooks")
-	err := os.RemoveAll(fullPath)
-	if err != nil {
-		return fmt.Errorf("cannot remove unnecessary files in %q: %w", fullPath, err)
-	}
-	_ = os.Remove(filepath.Join(r.Dir(), ".git", "COMMIT_EDITMSG"))
-	_ = os.Remove(filepath.Join(r.Dir(), ".git", "description"))
-	return nil
 }
 
 // ShaForCommit provides the SHA for the commit with the given name.
