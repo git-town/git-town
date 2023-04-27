@@ -155,7 +155,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^all branches are now synchronized$`, func() error {
-		outOfSync, err := commands.HasBranchesOutOfSync(&state.fixture.DevRepo)
+		outOfSync, err := commands.HasUnsyncedBranches(&state.fixture.DevRepo)
 		if err != nil {
 			return err
 		}
@@ -220,7 +220,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^Git Town is no longer configured$`, func() error {
-		if state.fixture.DevRepo.HasGitTownConfigNow() {
+		if commands.HasGitTownConfigNow(&state.fixture.DevRepo) {
 			return fmt.Errorf("unexpected Git Town configuration")
 		}
 		return nil

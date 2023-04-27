@@ -18,15 +18,6 @@ type TestCommands struct {
 	*prodgit.BackendCommands
 }
 
-// HasGitTownConfigNow indicates whether this repository contain Git Town specific configuration.
-func (r *TestCommands) HasGitTownConfigNow() bool {
-	output, err := r.Run("git", "config", "--local", "--get-regex", "git-town")
-	if err != nil {
-		return false
-	}
-	return output != ""
-}
-
 func (r *TestCommands) PushBranch() error {
 	_, err := r.Run("git", "push")
 	return err
