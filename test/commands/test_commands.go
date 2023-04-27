@@ -18,11 +18,6 @@ type TestCommands struct {
 	*prodgit.BackendCommands
 }
 
-func (r *TestCommands) PushBranch() error {
-	_, err := r.Run("git", "push")
-	return err
-}
-
 func (r *TestCommands) PushBranchToRemote(branch, remote string) error {
 	_, err := r.Run("git", "push", "-u", remote, branch)
 	return err
