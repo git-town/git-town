@@ -33,16 +33,16 @@ func Create(t *testing.T) Runtime {
 	homeDir := filepath.Join(dir, "home")
 	err = os.Mkdir(homeDir, 0o744)
 	assert.NoError(t, err)
-	runtime, err := initialize(workingDir, homeDir, homeDir)
+	runtime, err := Initialize(workingDir, homeDir, homeDir)
 	assert.NoError(t, err)
 	_, err = runtime.Run("git", "commit", "--allow-empty", "-m", "initial commit")
 	assert.NoError(t, err)
 	return runtime
 }
 
-// initialize creates a fully functioning test.Runner in the given working directory,
+// Initialize creates a fully functioning test.Runner in the given working directory,
 // including necessary Git configuration to make commits. Creates missing folders as needed.
-func initialize(workingDir, homeDir, binDir string) (Runtime, error) {
+func Initialize(workingDir, homeDir, binDir string) (Runtime, error) {
 	runtime := New(workingDir, homeDir, binDir)
 	err := runtime.RunMany([][]string{
 		{"git", "init", "--initial-branch=initial"},

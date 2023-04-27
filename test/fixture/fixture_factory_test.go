@@ -1,11 +1,11 @@
-package runtime_test
+package fixture_test
 
 import (
 	"os"
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/v8/test/runtime"
+	"github.com/git-town/git-town/v8/test/fixture"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -14,7 +14,7 @@ func TestFixtureFactory(t *testing.T) {
 	t.Run("NewFixtureFactory()", func(t *testing.T) {
 		t.Parallel()
 		dir := t.TempDir()
-		_, err := runtime.NewFixtureFactory(dir)
+		_, err := fixture.NewFixtureFactory(dir)
 		assert.Nil(t, err, "creating memoized environment failed")
 		memoizedPath := filepath.Join(dir, "memoized")
 		_, err = os.Stat(memoizedPath)
@@ -24,7 +24,7 @@ func TestFixtureFactory(t *testing.T) {
 	t.Run(".CreateFixture()", func(t *testing.T) {
 		t.Parallel()
 		dir := t.TempDir()
-		gm, err := runtime.NewFixtureFactory(dir)
+		gm, err := fixture.NewFixtureFactory(dir)
 		assert.Nil(t, err, "creating memoized environment failed")
 		result, err := gm.CreateFixture("foo")
 		assert.Nil(t, err, "cannot create scenario environment")

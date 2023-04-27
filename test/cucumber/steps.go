@@ -18,10 +18,10 @@ import (
 	"github.com/git-town/git-town/v8/src/stringslice"
 	"github.com/git-town/git-town/v8/test/commands"
 	"github.com/git-town/git-town/v8/test/datatable"
+	"github.com/git-town/git-town/v8/test/fixture"
 	"github.com/git-town/git-town/v8/test/git"
 	"github.com/git-town/git-town/v8/test/helpers"
 	"github.com/git-town/git-town/v8/test/output"
-	"github.com/git-town/git-town/v8/test/runtime"
 	"github.com/git-town/git-town/v8/test/subshell"
 )
 
@@ -29,7 +29,7 @@ import (
 var beforeSuiteMux sync.Mutex //nolint:gochecknoglobals
 
 // the global FixtureFactory instance.
-var fixtureFactory *runtime.FixtureFactory //nolint:gochecknoglobals
+var fixtureFactory *fixture.Factory //nolint:gochecknoglobals
 
 // Steps defines Cucumber step implementations around Git workspace management.
 func Steps(suite *godog.Suite, state *ScenarioState) {
@@ -64,7 +64,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			if err != nil {
 				log.Fatalf("cannot evaluate symlinks of base directory for feature specs: %s", err)
 			}
-			gm, err := runtime.NewFixtureFactory(evalBaseDir)
+			gm, err := fixture.NewFixtureFactory(evalBaseDir)
 			if err != nil {
 				log.Fatalf("Cannot create memoized environment: %s", err)
 			}
