@@ -130,7 +130,7 @@ func TestFixture(t *testing.T) {
 		})
 		assert.NoError(t, err)
 		// verify local commits
-		commits, err := cloned.DevRepo.Commits([]string{"FILE NAME", "FILE CONTENT"}, "main")
+		commits, err := commands.Commits(&cloned.DevRepo.TestCommands, []string{"FILE NAME", "FILE CONTENT"}, "main")
 		assert.NoError(t, err)
 		assert.Len(t, commits, 2)
 		assert.Equal(t, "local commit", commits[0].Message)
@@ -140,7 +140,7 @@ func TestFixture(t *testing.T) {
 		assert.Equal(t, "loc-rem-file", commits[1].FileName)
 		assert.Equal(t, "lrc", commits[1].FileContent)
 		// verify origin commits
-		commits, err = cloned.OriginRepo.Commits([]string{"FILE NAME", "FILE CONTENT"}, "main")
+		commits, err = commands.Commits(&cloned.OriginRepo.TestCommands, []string{"FILE NAME", "FILE CONTENT"}, "main")
 		assert.NoError(t, err)
 		assert.Len(t, commits, 2)
 		assert.Equal(t, "origin commit", commits[0].Message)

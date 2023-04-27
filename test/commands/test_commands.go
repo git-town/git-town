@@ -10,7 +10,6 @@ import (
 	prodgit "github.com/git-town/git-town/v8/src/git"
 	"github.com/git-town/git-town/v8/src/stringslice"
 	"github.com/git-town/git-town/v8/test/datatable"
-	"github.com/git-town/git-town/v8/test/git"
 	"github.com/git-town/git-town/v8/test/subshell"
 )
 
@@ -19,106 +18,6 @@ type TestCommands struct {
 	subshell.Mocking
 	Config prodgit.RepoConfig
 	*prodgit.BackendCommands
-}
-
-// CreateFile creates a file with the given name and content in this repository.
-func (r *TestCommands) CreateFile(name, content string) error {
-	filePath := filepath.Join(r.WorkingDir, name)
-	folderPath := filepath.Dir(filePath)
-	err := os.MkdirAll(folderPath, os.ModePerm)
-	if err != nil {
-		return fmt.Errorf("cannot create folder %q: %w", folderPath, err)
-	}
-	err = os.WriteFile(filePath, []byte(content), 0o500)
-	if err != nil {
-		return fmt.Errorf("cannot create file %q: %w", name, err)
-	}
-	return nil
-}
-
-// CreatePerennialBranches creates perennial branches with the given names in this repository.
-func (r *TestCommands) CreatePerennialBranches(names ...string) error {
-	for _, name := range names {
-		err := CreateBranch(r.Mocking, name, "main")
-		if err != nil {
-			return fmt.Errorf("cannot create perennial branch %q in repo %q: %w", name, r.WorkingDir, err)
-		}
-	}
-	return r.Config.AddToPerennialBranches(names...)
-}
-
-// CreateStandaloneTag creates a tag not on a branch.
-func (r *TestCommands) CreateStandaloneTag(name string) error {
-	return r.RunMany([][]string{
-		{"git", "checkout", "-b", "temp"},
-		{"touch", "a.txt"},
-		{"git", "add", "-A"},
-		{"git", "commit", "-m", "temp"},
-		{"git", "tag", "-a", name, "-m", name},
-		{"git", "checkout", "-"},
-		{"git", "branch", "-D", "temp"},
-	})
-}
-
-// CreateTag creates a tag with the given name.
-func (r *TestCommands) CreateTag(name string) error {
-	_, err := r.Run("git", "tag", "-a", name, "-m", name)
-	return err
-}
-
-// Commits provides a list of the commits in this Git repository with the given fields.
-func (r *TestCommands) Commits(fields []string, mainBranch string) ([]git.Commit, error) {
-	branches, err := r.LocalBranchesMainFirst(mainBranch)
-	if err != nil {
-		return []git.Commit{}, fmt.Errorf("cannot determine the Git branches: %w", err)
-	}
-	result := []git.Commit{}
-	for _, branch := range branches {
-		commits, err := r.CommitsInBranch(branch, fields)
-		if err != nil {
-			return []git.Commit{}, err
-		}
-		result = append(result, commits...)
-	}
-	return result, nil
-}
-
-// CommitsInBranch provides all commits in the given Git branch.
-func (r *TestCommands) CommitsInBranch(branch string, fields []string) ([]git.Commit, error) {
-	output, err := r.Run("git", "log", branch, "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse")
-	if err != nil {
-		return []git.Commit{}, fmt.Errorf("cannot get commits in branch %q: %w", branch, err)
-	}
-	result := []git.Commit{}
-	for _, line := range strings.Split(output, "\n") {
-		parts := strings.Split(line, "|")
-		commit := git.Commit{Branch: branch, SHA: parts[0], Message: parts[1], Author: parts[2]}
-		if strings.EqualFold(commit.Message, "initial commit") {
-			continue
-		}
-		if stringslice.Contains(fields, "FILE NAME") {
-			filenames, err := r.FilesInCommit(commit.SHA)
-			if err != nil {
-				return []git.Commit{}, fmt.Errorf("cannot determine file name for commit %q in branch %q: %w", commit.SHA, branch, err)
-			}
-			commit.FileName = strings.Join(filenames, ", ")
-		}
-		if stringslice.Contains(fields, "FILE CONTENT") {
-			filecontent, err := r.FileContentInCommit(commit.SHA, commit.FileName)
-			if err != nil {
-				return []git.Commit{}, fmt.Errorf("cannot determine file content for commit %q in branch %q: %w", commit.SHA, branch, err)
-			}
-			commit.FileContent = filecontent
-		}
-		result = append(result, commit)
-	}
-	return result, nil
-}
-
-// CommitStagedChanges commits the currently staged changes.
-func (r *TestCommands) CommitStagedChanges(message string) error {
-	_, err := r.Run("git", "commit", "-m", message)
-	return err
 }
 
 // ConnectTrackingBranch connects the branch with the given name to its counterpart at origin.

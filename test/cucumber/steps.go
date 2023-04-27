@@ -125,7 +125,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^a perennial branch "([^"]+)"$`, func(branch string) error {
-		err := state.fixture.DevRepo.CreatePerennialBranches(branch)
+		err := commands.CreatePerennialBranches(&state.fixture.DevRepo.TestCommands, branch)
 		if err != nil {
 			return fmt.Errorf("cannot create perennial branch: %w", err)
 		}
@@ -151,7 +151,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^a remote tag "([^"]+)" not on a branch$`, func(name string) error {
-		return state.fixture.OriginRepo.CreateStandaloneTag(name)
+		return commands.CreateStandaloneTag(state.fixture.OriginRepo.Mocking, name)
 	})
 
 	suite.Step(`^all branches are now synchronized$`, func() error {
@@ -657,7 +657,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		case "feature":
 			err = state.fixture.DevRepo.CreateFeatureBranch(branch)
 		case "perennial":
-			err = state.fixture.DevRepo.CreatePerennialBranches(branch)
+			err = commands.CreatePerennialBranches(&state.fixture.DevRepo.TestCommands, branch)
 		default:
 			panic(fmt.Sprintf("unknown branch type: %q", branchType))
 		}
@@ -801,7 +801,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the (local )?perennial branches "([^"]+)" and "([^"]+)"$`, func(localStr, branch1, branch2 string) error {
 		isLocal := localStr != ""
-		err := state.fixture.DevRepo.CreatePerennialBranches(branch1, branch2)
+		err := commands.CreatePerennialBranches(&state.fixture.DevRepo.TestCommands, branch1, branch2)
 		if err != nil {
 			return fmt.Errorf("cannot create perennial branches: %w", err)
 		}
@@ -820,7 +820,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^the (local )?perennial branches "([^"]+)", "([^"]+)", and "([^"]+)"$`, func(localStr, branch1, branch2, branch3 string) error {
 		isLocal := localStr != ""
 		for _, branch := range []string{branch1, branch2, branch3} {
-			err := state.fixture.DevRepo.CreatePerennialBranches(branch)
+			err := commands.CreatePerennialBranches(&state.fixture.DevRepo.TestCommands, branch)
 			if err != nil {
 				return fmt.Errorf("cannot create perennial branches: %w", err)
 			}

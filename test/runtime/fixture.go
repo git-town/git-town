@@ -270,9 +270,9 @@ func (env Fixture) CreateTags(table *messages.PickleStepArgument_PickleTable) er
 		var err error
 		switch location {
 		case "local":
-			err = env.DevRepo.CreateTag(name)
+			err = commands.CreateTag(env.DevRepo.Mocking, name)
 		case "origin":
-			err = env.OriginRepo.CreateTag(name)
+			err = commands.CreateTag(env.OriginRepo.Mocking, name)
 		default:
 			err = fmt.Errorf("tag table LOCATION must be 'local' or 'origin'")
 		}
@@ -286,27 +286,27 @@ func (env Fixture) CreateTags(table *messages.PickleStepArgument_PickleTable) er
 // CommitTable provides a table for all commits in this Git environment containing only the given fields.
 func (env Fixture) CommitTable(fields []string) (datatable.DataTable, error) {
 	builder := datatable.NewCommitTableBuilder()
-	localCommits, err := env.DevRepo.Commits(fields, "main")
+	localCommits, err := commands.Commits(&env.DevRepo.TestCommands, fields, "main")
 	if err != nil {
 		return datatable.DataTable{}, fmt.Errorf("cannot determine commits in the developer repo: %w", err)
 	}
 	builder.AddMany(localCommits, "local")
 	if env.CoworkerRepo != nil {
-		coworkerCommits, err := env.CoworkerRepo.Commits(fields, "main")
+		coworkerCommits, err := commands.Commits(&env.CoworkerRepo.TestCommands, fields, "main")
 		if err != nil {
 			return datatable.DataTable{}, fmt.Errorf("cannot determine commits in the coworker repo: %w", err)
 		}
 		builder.AddMany(coworkerCommits, "coworker")
 	}
 	if env.OriginRepo != nil {
-		originCommits, err := env.OriginRepo.Commits(fields, "main")
+		originCommits, err := commands.Commits(&env.OriginRepo.TestCommands, fields, "main")
 		if err != nil {
 			return datatable.DataTable{}, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
 		}
 		builder.AddMany(originCommits, config.OriginRemote)
 	}
 	if env.UpstreamRepo != nil {
-		upstreamCommits, err := env.UpstreamRepo.Commits(fields, "main")
+		upstreamCommits, err := commands.Commits(&env.UpstreamRepo.TestCommands, fields, "main")
 		if err != nil {
 			return datatable.DataTable{}, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
 		}
