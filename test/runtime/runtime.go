@@ -88,7 +88,7 @@ func New(workingDir, homeDir, binDir string) Runtime {
 func CreateGitTown(t *testing.T) Runtime {
 	t.Helper()
 	repo := Create(t)
-	err := repo.CreateBranch("main", "initial")
+	err := commands.CreateBranch(repo.Mocking, "main", "initial")
 	assert.NoError(t, err)
 	err = repo.Config.SetMainBranch("main")
 	assert.NoError(t, err)

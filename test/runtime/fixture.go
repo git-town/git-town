@@ -9,6 +9,7 @@ import (
 	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/v8/src/config"
 	"github.com/git-town/git-town/v8/src/stringslice"
+	"github.com/git-town/git-town/v8/test/commands"
 	"github.com/git-town/git-town/v8/test/datatable"
 	"github.com/git-town/git-town/v8/test/git"
 	"github.com/git-town/git-town/v8/test/helpers"
@@ -62,7 +63,7 @@ func CloneFixture(original Fixture, dir string) (Fixture, error) {
 	if err != nil {
 		return Fixture{}, fmt.Errorf("cannot remove remote: %w", err)
 	}
-	err = result.DevRepo.AddRemote(config.OriginRemote, result.originRepoPath())
+	err = commands.AddRemote(result.DevRepo.TestCommands, config.OriginRemote, result.originRepoPath())
 	if err != nil {
 		return Fixture{}, fmt.Errorf("cannot set remote: %w", err)
 	}
@@ -155,7 +156,7 @@ func (env *Fixture) AddUpstream() error {
 		return fmt.Errorf("cannot clone upstream: %w", err)
 	}
 	env.UpstreamRepo = &repo
-	err = env.DevRepo.AddRemote("upstream", env.UpstreamRepo.WorkingDir)
+	err = commands.AddRemote(env.DevRepo.TestCommands, "upstream", env.UpstreamRepo.WorkingDir)
 	if err != nil {
 		return fmt.Errorf("cannot set upstream remote: %w", err)
 	}
@@ -214,11 +215,11 @@ func (env *Fixture) CreateCommits(commits []git.Commit) error {
 		for _, location := range commit.Locations {
 			switch location {
 			case "coworker":
-				err = env.CoworkerRepo.CreateCommit(commit)
+				err = commands.CreateCommit(&env.CoworkerRepo.TestCommands, commit)
 			case "local":
-				err = env.DevRepo.CreateCommit(commit)
+				err = commands.CreateCommit(&env.DevRepo.TestCommands, commit)
 			case "local, origin":
-				err = env.DevRepo.CreateCommit(commit)
+				err = commands.CreateCommit(&env.DevRepo.TestCommands, commit)
 				if err != nil {
 					return fmt.Errorf("cannot create local commit: %w", err)
 				}
@@ -227,9 +228,9 @@ func (env *Fixture) CreateCommits(commits []git.Commit) error {
 					return fmt.Errorf("cannot push branch %q after creating commit: %w", commit.Branch, err)
 				}
 			case "origin":
-				err = env.OriginRepo.CreateCommit(commit)
+				err = commands.CreateCommit(&env.OriginRepo.TestCommands, commit)
 			case "upstream":
-				err = env.UpstreamRepo.CreateCommit(commit)
+				err = commands.CreateCommit(&env.UpstreamRepo.TestCommands, commit)
 			default:
 				return fmt.Errorf("unknown commit location %q", commit.Locations)
 			}
@@ -250,7 +251,7 @@ func (env *Fixture) CreateCommits(commits []git.Commit) error {
 
 // CreateOriginBranch creates a branch with the given name only in the origin directory.
 func (env Fixture) CreateOriginBranch(name, parent string) error {
-	err := env.OriginRepo.CreateBranch(name, parent)
+	err := commands.CreateBranch(env.OriginRepo.Mocking, name, parent)
 	if err != nil {
 		return fmt.Errorf("cannot create origin branch %q: %w", name, err)
 	}

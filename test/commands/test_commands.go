@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"sort"
 	"strings"
 
 	"github.com/git-town/git-town/v8/src/config"
@@ -20,100 +19,6 @@ type TestCommands struct {
 	subshell.Mocking
 	Config prodgit.RepoConfig
 	*prodgit.BackendCommands
-}
-
-// AddRemote adds a Git remote with the given name and URL to this repository.
-func (r *TestCommands) AddRemote(name, url string) error {
-	_, err := r.Run("git", "remote", "add", name, url)
-	if err != nil {
-		return fmt.Errorf("cannot add remote %q --> %q: %w", name, url, err)
-	}
-	r.Config.RemotesCache.Invalidate()
-	return nil
-}
-
-// AddSubmodule adds a Git submodule with the given URL to this repository.
-func (r *TestCommands) AddSubmodule(url string) error {
-	_, err := r.Run("git", "submodule", "add", url)
-	if err != nil {
-		return err
-	}
-	_, err = r.Run("git", "commit", "-m", "added submodule")
-	return err
-}
-
-// BranchHierarchyTable provides the currently configured branch hierarchy information as a DataTable.
-func (r *TestCommands) BranchHierarchyTable() datatable.DataTable {
-	result := datatable.DataTable{}
-	r.Config.Reload()
-	parentBranchMap := r.Config.ParentBranchMap()
-	result.AddRow("BRANCH", "PARENT")
-	childBranches := make([]string, 0, len(parentBranchMap))
-	for child := range parentBranchMap {
-		childBranches = append(childBranches, child)
-	}
-	sort.Strings(childBranches)
-	for _, child := range childBranches {
-		result.AddRow(child, parentBranchMap[child])
-	}
-	return result
-}
-
-// CheckoutBranch checks out the Git branch with the given name in this repo.
-func (r *TestCommands) CheckoutBranch(name string) error {
-	_, err := r.Run("git", "checkout", name)
-	if err != nil {
-		return fmt.Errorf("cannot check out branch %q: %w", name, err)
-	}
-	if name != "-" {
-		r.Config.CurrentBranchCache.Set(name)
-	} else {
-		r.Config.CurrentBranchCache.Invalidate()
-	}
-	return nil
-}
-
-// CreateBranch creates a new branch with the given name.
-// The created branch is a normal branch.
-// To create feature branches, use CreateFeatureBranch.
-func (r *TestCommands) CreateBranch(name, parent string) error {
-	_, err := r.Run("git", "branch", name, parent)
-	return err
-}
-
-// CreateChildFeatureBranch creates a branch with the given name and parent in this repository.
-// The parent branch must already exist.
-func (r *TestCommands) CreateChildFeatureBranch(name string, parent string) error {
-	err := r.CreateBranch(name, parent)
-	if err != nil {
-		return err
-	}
-	return r.Config.SetParent(name, parent)
-}
-
-// CreateCommit creates a commit with the given properties in this Git repo.
-func (r *TestCommands) CreateCommit(commit git.Commit) error {
-	err := r.CheckoutBranch(commit.Branch)
-	if err != nil {
-		return fmt.Errorf("cannot checkout branch %q: %w", commit.Branch, err)
-	}
-	err = r.CreateFile(commit.FileName, commit.FileContent)
-	if err != nil {
-		return fmt.Errorf("cannot create file %q needed for commit: %w", commit.FileName, err)
-	}
-	_, err = r.Run("git", "add", commit.FileName)
-	if err != nil {
-		return fmt.Errorf("cannot add file to commit: %w", err)
-	}
-	commands := []string{"commit", "-m", commit.Message}
-	if commit.Author != "" {
-		commands = append(commands, "--author="+commit.Author)
-	}
-	_, err = r.Run("git", commands...)
-	if err != nil {
-		return fmt.Errorf("cannot commit: %w", err)
-	}
-	return nil
 }
 
 // CreateFile creates a file with the given name and content in this repository.
@@ -134,7 +39,7 @@ func (r *TestCommands) CreateFile(name, content string) error {
 // CreatePerennialBranches creates perennial branches with the given names in this repository.
 func (r *TestCommands) CreatePerennialBranches(names ...string) error {
 	for _, name := range names {
-		err := r.CreateBranch(name, "main")
+		err := CreateBranch(r.Mocking, name, "main")
 		if err != nil {
 			return fmt.Errorf("cannot create perennial branch %q in repo %q: %w", name, r.WorkingDir, err)
 		}

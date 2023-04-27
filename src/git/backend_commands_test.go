@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v8/src/config"
+	"github.com/git-town/git-town/v8/test/commands"
 	"github.com/git-town/git-town/v8/test/git"
 	testruntime "github.com/git-town/git-town/v8/test/runtime"
 	"github.com/stretchr/testify/assert"
@@ -15,16 +16,16 @@ func TestRunner(t *testing.T) {
 	t.Run("BranchAuthors", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
-		err := runtime.CreateBranch("branch", "initial")
+		err := commands.CreateBranch(runtime.Mocking, "branch", "initial")
 		assert.NoError(t, err)
-		err = runtime.CreateCommit(git.Commit{
+		err = commands.CreateCommit(&runtime.TestCommands, git.Commit{
 			Branch:      "branch",
 			FileName:    "file1",
 			FileContent: "file1",
 			Message:     "first commit",
 		})
 		assert.NoError(t, err)
-		err = runtime.CreateCommit(git.Commit{
+		err = commands.CreateCommit(&runtime.TestCommands, git.Commit{
 			Branch:      "branch",
 			FileName:    "file2",
 			FileContent: "file2",
@@ -39,7 +40,7 @@ func TestRunner(t *testing.T) {
 	t.Run(".CheckoutBranch()", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
-		err := runtime.CreateBranch("branch1", "initial")
+		err := commands.CreateBranch(runtime.Mocking, "branch1", "initial")
 		assert.NoError(t, err)
 		err = runtime.Backend.CheckoutBranch("branch1")
 		assert.NoError(t, err)
@@ -68,7 +69,7 @@ func TestRunner(t *testing.T) {
 		runtime := testruntime.Create(t)
 		err := runtime.CheckoutBranch("initial")
 		assert.NoError(t, err)
-		err = runtime.CreateBranch("b1", "initial")
+		err = commands.CreateBranch(runtime.Mocking, "b1", "initial")
 		assert.NoError(t, err)
 		err = runtime.CheckoutBranch("b1")
 		assert.NoError(t, err)
@@ -88,9 +89,9 @@ func TestRunner(t *testing.T) {
 		repoDir := t.TempDir()
 		runner, err := testruntime.Clone(origin.Mocking, repoDir)
 		assert.NoError(t, err)
-		err = runner.CreateBranch("b1", "initial")
+		err = commands.CreateBranch(runner.Mocking, "b1", "initial")
 		assert.NoError(t, err)
-		err = runner.CreateBranch("b2", "initial")
+		err = commands.CreateBranch(runner.Mocking, "b2", "initial")
 		assert.NoError(t, err)
 		has, err := runner.Backend.HasLocalBranch("b1")
 		assert.NoError(t, err)
@@ -109,7 +110,7 @@ func TestRunner(t *testing.T) {
 		has, err := runtime.Backend.HasOpenChanges()
 		assert.NoError(t, err)
 		assert.False(t, has)
-		err = runtime.CreateFile("foo", "bar")
+		err = commands.CreateFile(runtime.WorkingDir, "foo", "bar")
 		assert.NoError(t, err)
 		has, err = runtime.Backend.HasOpenChanges()
 		assert.NoError(t, err)
@@ -141,14 +142,14 @@ func TestRunner(t *testing.T) {
 	t.Run(".HasTrackingBranch()", func(t *testing.T) {
 		t.Parallel()
 		origin := testruntime.Create(t)
-		err := origin.CreateBranch("b1", "initial")
+		err := commands.CreateBranch(origin.Mocking, "b1", "initial")
 		assert.NoError(t, err)
 		repoDir := t.TempDir()
 		devRepo, err := testruntime.Clone(origin.Mocking, repoDir)
 		assert.NoError(t, err)
 		err = devRepo.CheckoutBranch("b1")
 		assert.NoError(t, err)
-		err = devRepo.CreateBranch("b2", "initial")
+		err = commands.CreateBranch(devRepo.Mocking, "b2", "initial")
 		assert.NoError(t, err)
 		has, err := devRepo.Backend.HasTrackingBranch("b1")
 		assert.NoError(t, err)
@@ -167,11 +168,11 @@ func TestRunner(t *testing.T) {
 		repoDir := t.TempDir()
 		runner, err := testruntime.Clone(origin.Mocking, repoDir)
 		assert.NoError(t, err)
-		err = runner.CreateBranch("b1", "initial")
+		err = commands.CreateBranch(runner.Mocking, "b1", "initial")
 		assert.NoError(t, err)
-		err = runner.CreateBranch("b2", "initial")
+		err = commands.CreateBranch(runner.Mocking, "b2", "initial")
 		assert.NoError(t, err)
-		err = origin.CreateBranch("b3", "initial")
+		err = commands.CreateBranch(origin.Mocking, "b3", "initial")
 		assert.NoError(t, err)
 		err = runner.Fetch()
 		assert.NoError(t, err)
@@ -186,11 +187,11 @@ func TestRunner(t *testing.T) {
 		repoDir := t.TempDir()
 		runner, err := testruntime.Clone(origin.Mocking, repoDir)
 		assert.NoError(t, err)
-		err = runner.CreateBranch("b1", "initial")
+		err = commands.CreateBranch(runner.Mocking, "b1", "initial")
 		assert.NoError(t, err)
-		err = runner.CreateBranch("b2", "initial")
+		err = commands.CreateBranch(runner.Mocking, "b2", "initial")
 		assert.NoError(t, err)
-		err = origin.CreateBranch("b3", "initial")
+		err = commands.CreateBranch(origin.Mocking, "b3", "initial")
 		assert.NoError(t, err)
 		err = runner.Fetch()
 		assert.NoError(t, err)
@@ -202,9 +203,9 @@ func TestRunner(t *testing.T) {
 	t.Run(".PreviouslyCheckedOutBranch()", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
-		err := runtime.CreateBranch("feature1", "initial")
+		err := commands.CreateBranch(runtime.Mocking, "feature1", "initial")
 		assert.NoError(t, err)
-		err = runtime.CreateBranch("feature2", "initial")
+		err = commands.CreateBranch(runtime.Mocking, "feature2", "initial")
 		assert.NoError(t, err)
 		err = runtime.CheckoutBranch("feature1")
 		assert.NoError(t, err)
@@ -221,11 +222,11 @@ func TestRunner(t *testing.T) {
 		repoDir := t.TempDir()
 		runner, err := testruntime.Clone(origin.Mocking, repoDir)
 		assert.NoError(t, err)
-		err = runner.CreateBranch("b1", "initial")
+		err = commands.CreateBranch(runner.Mocking, "b1", "initial")
 		assert.NoError(t, err)
-		err = runner.CreateBranch("b2", "initial")
+		err = commands.CreateBranch(runner.Mocking, "b2", "initial")
 		assert.NoError(t, err)
-		err = origin.CreateBranch("b3", "initial")
+		err = commands.CreateBranch(origin.Mocking, "b3", "initial")
 		assert.NoError(t, err)
 		err = runner.Fetch()
 		assert.NoError(t, err)
@@ -238,7 +239,7 @@ func TestRunner(t *testing.T) {
 		t.Parallel()
 		repo := testruntime.Create(t)
 		origin := testruntime.Create(t)
-		err := repo.AddRemote(config.OriginRemote, origin.WorkingDir)
+		err := commands.AddRemote(repo.TestCommands, config.OriginRemote, origin.WorkingDir)
 		assert.NoError(t, err)
 		remotes, err := repo.Backend.Remotes()
 		assert.NoError(t, err)

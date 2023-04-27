@@ -16,6 +16,7 @@ import (
 	"github.com/git-town/git-town/v8/src/cli"
 	"github.com/git-town/git-town/v8/src/config"
 	"github.com/git-town/git-town/v8/src/stringslice"
+	"github.com/git-town/git-town/v8/test/commands"
 	"github.com/git-town/git-town/v8/test/datatable"
 	"github.com/git-town/git-town/v8/test/git"
 	"github.com/git-town/git-town/v8/test/helpers"
@@ -83,7 +84,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^a branch "([^"]*)"$`, func(branch string) error {
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
-		return state.fixture.DevRepo.CreateBranch(branch, "main")
+		return commands.CreateBranch(state.fixture.DevRepo.Mocking, branch, "main")
 	})
 
 	suite.Step(`^a coworker clones the repository$`, func() error {
@@ -91,7 +92,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^a feature branch "([^"]+)" as a child of "([^"]+)"$`, func(branch, parentBranch string) error {
-		err := state.fixture.DevRepo.CreateChildFeatureBranch(branch, parentBranch)
+		err := commands.CreateChildFeatureBranch(&state.fixture.DevRepo.TestCommands, branch, parentBranch)
 		if err != nil {
 			return fmt.Errorf("cannot create feature branch %q: %w", branch, err)
 		}
@@ -146,7 +147,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^a remote feature branch "([^"]*)"$`, func(branch string) error {
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-		return state.fixture.OriginRepo.CreateBranch(branch, "main")
+		return commands.CreateBranch(state.fixture.OriginRepo.Mocking, branch, "main")
 	})
 
 	suite.Step(`^a remote tag "([^"]+)" not on a branch$`, func(name string) error {
@@ -167,7 +168,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^an uncommitted file$`, func() error {
 		state.uncommittedFileName = "uncommitted file"
 		state.uncommittedContent = "uncommitted content"
-		return state.fixture.DevRepo.CreateFile(
+		return commands.CreateFile(state.fixture.DevRepo.WorkingDir,
 			state.uncommittedFileName,
 			state.uncommittedContent,
 		)
@@ -175,7 +176,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^an uncommitted file in folder "([^"]*)"$`, func(folder string) error {
 		state.uncommittedFileName = fmt.Sprintf("%s/uncommitted file", folder)
-		return state.fixture.DevRepo.CreateFile(
+		return commands.CreateFile(state.fixture.DevRepo.WorkingDir,
 			state.uncommittedFileName,
 			state.uncommittedContent,
 		)
@@ -184,7 +185,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^an uncommitted file with name "([^"]+)" and content "([^"]+)"$`, func(name, content string) error {
 		state.uncommittedFileName = name
 		state.uncommittedContent = content
-		return state.fixture.DevRepo.CreateFile(name, content)
+		return commands.CreateFile(state.fixture.DevRepo.WorkingDir, name, content)
 	})
 
 	suite.Step(`^an upstream repo$`, func() error {
@@ -234,7 +235,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I add commit "([^"]*)" to the "([^"]*)" branch`, func(message, branch string) error {
-		return state.fixture.DevRepo.CreateCommit(git.Commit{
+		return commands.CreateCommit(&state.fixture.DevRepo.TestCommands, git.Commit{
 			Branch:      branch,
 			FileName:    "new_file",
 			FileContent: "new content",
@@ -259,7 +260,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if content == "" {
 			content = "resolved content"
 		}
-		err := state.fixture.DevRepo.CreateFile(filename, content)
+		err := commands.CreateFile(state.fixture.DevRepo.WorkingDir, filename, content)
 		if err != nil {
 			return err
 		}
@@ -431,7 +432,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return err
 		}
-		return state.fixture.DevRepo.AddSubmodule(state.fixture.SubmoduleRepo.WorkingDir)
+		return commands.AddSubmodule(state.fixture.DevRepo.Mocking, state.fixture.SubmoduleRepo.WorkingDir)
 	})
 
 	suite.Step(`^no branch hierarchy exists now$`, func() error {
@@ -566,7 +567,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
 		for _, branch := range []string{branch1, branch2} {
-			err := state.fixture.DevRepo.CreateBranch(branch, "main")
+			err := commands.CreateBranch(state.fixture.DevRepo.Mocking, branch, "main")
 			if err != nil {
 				return err
 			}
@@ -641,7 +642,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.initialCurrentBranch = name
 		if !stringslice.Contains(state.initialLocalBranches, name) {
 			state.initialLocalBranches = append(state.initialLocalBranches, name)
-			err := state.fixture.DevRepo.CreateBranch(name, "main")
+			err := commands.CreateBranch(state.fixture.DevRepo.Mocking, name, "main")
 			if err != nil {
 				return err
 			}
@@ -703,7 +704,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the initial branch hierarchy exists$`, func() error {
-		have := state.fixture.DevRepo.BranchHierarchyTable()
+		have := commands.BranchHierarchyTable(&state.fixture.DevRepo.Config)
 		state.initialBranchHierarchy.Sort()
 		diff, errCnt := have.EqualDataTable(state.initialBranchHierarchy)
 		if errCnt > 0 {
@@ -731,7 +732,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 		// verify initial branch hierarchy
 		state.initialBranchHierarchy.Sort()
-		have = state.fixture.DevRepo.BranchHierarchyTable()
+		have = commands.BranchHierarchyTable(&state.fixture.DevRepo.Config)
 		diff, errCnt := have.EqualDataTable(state.initialBranchHierarchy)
 		if errCnt > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the branch hierarchy\n\n", errCnt)
@@ -980,7 +981,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^this branch hierarchy exists now$`, func(input *messages.PickleStepArgument_PickleTable) error {
-		table := state.fixture.DevRepo.BranchHierarchyTable()
+		table := commands.BranchHierarchyTable(&state.fixture.DevRepo.Config)
 		diff, errCount := table.EqualGherkin(input)
 		if errCount > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the branch hierarchy\n\n", errCount)
