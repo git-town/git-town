@@ -16,25 +16,6 @@ type TestCommands struct {
 	*prodgit.BackendCommands
 }
 
-// StageFiles adds the file with the given name to the Git index.
-func (r *TestCommands) StageFiles(names ...string) error {
-	args := append([]string{"add"}, names...)
-	_, err := r.Run("git", args...)
-	return err
-}
-
-// StashSize provides the number of stashes in this repository.
-func (r *TestCommands) StashSize() (int, error) {
-	output, err := r.Run("git", "stash", "list")
-	if err != nil {
-		return 0, fmt.Errorf("cannot determine Git stash: %w", err)
-	}
-	if output == "" {
-		return 0, nil
-	}
-	return len(stringslice.Lines(output)), nil
-}
-
 // Tags provides a list of the tags in this repository.
 func (r *TestCommands) Tags() ([]string, error) {
 	output, err := r.Run("git", "tag")
