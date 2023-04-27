@@ -503,7 +503,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^origin deletes the "([^"]*)" branch$`, func(name string) error {
 		state.initialRemoteBranches = stringslice.Remove(state.initialRemoteBranches, name)
-		return state.fixture.OriginRepo.RemoveBranch(name)
+		return commands.RemoveBranch(state.fixture.OriginRepo, name)
 	})
 
 	suite.Step(`^Git setting "color.ui" is "([^"]*)"$`, func(value string) error {

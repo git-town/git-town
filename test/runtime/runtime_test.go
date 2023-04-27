@@ -389,7 +389,7 @@ func TestRunner(t *testing.T) {
 		branches, err := runtime.LocalBranchesMainFirst("initial")
 		assert.NoError(t, err)
 		assert.Equal(t, []string{"initial", "b1"}, branches)
-		err = runtime.RemoveBranch("b1")
+		err = commands.RemoveBranch(&runtime, "b1")
 		assert.NoError(t, err)
 		branches, err = runtime.LocalBranchesMainFirst("initial")
 		assert.NoError(t, err)

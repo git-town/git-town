@@ -18,12 +18,6 @@ type TestCommands struct {
 	*prodgit.BackendCommands
 }
 
-// RemoveBranch deletes the branch with the given name from this repo.
-func (r *TestCommands) RemoveBranch(name string) error {
-	_, err := r.Run("git", "branch", "-D", name)
-	return err
-}
-
 // RemoveRemote deletes the Git remote with the given name.
 func (r *TestCommands) RemoveRemote(name string) error {
 	r.Config.RemotesCache.Invalidate()
