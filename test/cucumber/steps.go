@@ -418,7 +418,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^my repo does not have an origin$`, func() error {
-		err := state.fixture.DevRepo.RemoveRemote(config.OriginRemote)
+		err := commands.RemoveRemote(&state.fixture.DevRepo.TestCommands, config.OriginRemote)
 		if err != nil {
 			return err
 		}

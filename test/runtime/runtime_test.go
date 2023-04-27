@@ -402,7 +402,7 @@ func TestRunner(t *testing.T) {
 		origin := runtime.Create(t)
 		err := commands.AddRemote(repo.TestCommands, config.OriginRemote, origin.Dir())
 		assert.NoError(t, err)
-		err = repo.RemoveRemote(config.OriginRemote)
+		err = commands.RemoveRemote(&repo.TestCommands, config.OriginRemote)
 		assert.NoError(t, err)
 		remotes, err := repo.Remotes()
 		assert.NoError(t, err)

@@ -18,13 +18,6 @@ type TestCommands struct {
 	*prodgit.BackendCommands
 }
 
-// RemoveRemote deletes the Git remote with the given name.
-func (r *TestCommands) RemoveRemote(name string) error {
-	r.Config.RemotesCache.Invalidate()
-	_, err := r.Run("git", "remote", "rm", name)
-	return err
-}
-
 // RemoveUnnecessaryFiles trims all files that aren't necessary in this repo.
 func (r *TestCommands) RemoveUnnecessaryFiles() error {
 	fullPath := filepath.Join(r.Dir(), ".git", "hooks")
