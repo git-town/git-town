@@ -426,7 +426,7 @@ func TestRunner(t *testing.T) {
 		assert.NoError(t, err)
 		err = commands.CreateFile(runtime.Dir(), "f2.txt", "two")
 		assert.NoError(t, err)
-		files, err := runtime.UncommittedFiles()
+		files, err := commands.UncommittedFiles(&runtime)
 		assert.NoError(t, err)
 		assert.Equal(t, []string{"f1.txt", "f2.txt"}, files)
 	})

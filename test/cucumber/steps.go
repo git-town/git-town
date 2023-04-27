@@ -467,7 +467,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^no uncommitted files exist$`, func() error {
-		files, err := state.fixture.DevRepo.UncommittedFiles()
+		files, err := commands.UncommittedFiles(&state.fixture.DevRepo)
 		if err != nil {
 			return fmt.Errorf("cannot determine uncommitted files: %w", err)
 		}
@@ -910,7 +910,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the uncommitted file is stashed$`, func() error {
-		uncommittedFiles, err := state.fixture.DevRepo.UncommittedFiles()
+		uncommittedFiles, err := commands.UncommittedFiles(&state.fixture.DevRepo)
 		if err != nil {
 			return err
 		}
