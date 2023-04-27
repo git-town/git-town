@@ -19,20 +19,6 @@ type TestCommands struct {
 	*prodgit.BackendCommands
 }
 
-// FileContentInCommit provides the content of the file with the given name in the commit with the given SHA.
-func (r *TestCommands) FileContentInCommit(sha string, filename string) (string, error) {
-	output, err := r.Run("git", "show", sha+":"+filename)
-	if err != nil {
-		return "", fmt.Errorf("cannot determine the content for file %q in commit %q: %w", filename, sha, err)
-	}
-	result := output
-	if strings.HasPrefix(result, "tree ") {
-		// merge commits get an empty file content instead of "tree <SHA>"
-		result = ""
-	}
-	return result, nil
-}
-
 // FilesInCommit provides the names of the files that the commit with the given SHA changes.
 func (r *TestCommands) FilesInCommit(sha string) ([]string, error) {
 	output, err := r.Run("git", "diff-tree", "--no-commit-id", "--name-only", "-r", sha)
@@ -73,7 +59,7 @@ func (r *TestCommands) FilesInBranches(mainBranch string) (datatable.DataTable, 
 			return datatable.DataTable{}, err
 		}
 		for _, file := range files {
-			content, err := r.FileContentInCommit(branch, file)
+			content, err := FileContentInCommit(r, branch, file)
 			if err != nil {
 				return datatable.DataTable{}, err
 			}

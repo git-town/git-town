@@ -246,7 +246,7 @@ func TestRunner(t *testing.T) {
 		commits, err := commands.CommitsInBranch(&runtime.TestCommands, "initial", []string{})
 		assert.NoError(t, err)
 		assert.Len(t, commits, 1)
-		content, err := runtime.FileContentInCommit(commits[0].SHA, "hello.txt")
+		content, err := commands.FileContentInCommit(&runtime, commits[0].SHA, "hello.txt")
 		assert.NoError(t, err)
 		assert.Equal(t, "hello world", content)
 	})

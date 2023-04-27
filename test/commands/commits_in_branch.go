@@ -29,7 +29,7 @@ func CommitsInBranch(r *TestCommands, branch string, fields []string) ([]git.Com
 			commit.FileName = strings.Join(filenames, ", ")
 		}
 		if stringslice.Contains(fields, "FILE CONTENT") {
-			filecontent, err := r.FileContentInCommit(commit.SHA, commit.FileName)
+			filecontent, err := FileContentInCommit(r, commit.SHA, commit.FileName)
 			if err != nil {
 				return []git.Commit{}, fmt.Errorf("cannot determine file content for commit %q in branch %q: %w", commit.SHA, branch, err)
 			}
