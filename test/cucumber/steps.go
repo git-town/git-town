@@ -84,7 +84,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^a branch "([^"]*)"$`, func(branch string) error {
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
-		return commands.CreateBranch(state.fixture.DevRepo.Mocking, branch, "main")
+		return commands.CreateBranch(&state.fixture.DevRepo, branch, "main")
 	})
 
 	suite.Step(`^a coworker clones the repository$`, func() error {
@@ -147,11 +147,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^a remote feature branch "([^"]*)"$`, func(branch string) error {
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-		return commands.CreateBranch(state.fixture.OriginRepo.Mocking, branch, "main")
+		return commands.CreateBranch(state.fixture.OriginRepo, branch, "main")
 	})
 
 	suite.Step(`^a remote tag "([^"]+)" not on a branch$`, func(name string) error {
-		return commands.CreateStandaloneTag(state.fixture.OriginRepo.Mocking, name)
+		return commands.CreateStandaloneTag(state.fixture.OriginRepo, name)
 	})
 
 	suite.Step(`^all branches are now synchronized$`, func() error {
@@ -193,7 +193,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^file "([^"]+)" still contains unresolved conflicts$`, func(name string) error {
-		content, err := state.fixture.DevRepo.FileContent(name)
+		content, err := commands.FileContent(state.fixture.DevRepo.WorkingDir, name)
 		if err != nil {
 			return fmt.Errorf("cannot read file %q: %w", name, err)
 		}
@@ -204,7 +204,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^file "([^"]*)" still has content "([^"]*)"$`, func(file, expectedContent string) error {
-		actualContent, err := state.fixture.DevRepo.FileContent(file)
+		actualContent, err := commands.FileContent(state.fixture.DevRepo.WorkingDir, file)
 		if err != nil {
 			return err
 		}
@@ -231,7 +231,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return err
 		}
-		return state.fixture.DevRepo.DeleteMainBranchConfiguration()
+		return commands.DeleteMainBranchConfiguration(&state.fixture.DevRepo)
 	})
 
 	suite.Step(`^I add commit "([^"]*)" to the "([^"]*)" branch`, func(message, branch string) error {
@@ -432,7 +432,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return err
 		}
-		return commands.AddSubmodule(state.fixture.DevRepo.Mocking, state.fixture.SubmoduleRepo.WorkingDir)
+		return commands.AddSubmodule(&state.fixture.DevRepo, state.fixture.SubmoduleRepo.WorkingDir)
 	})
 
 	suite.Step(`^no branch hierarchy exists now$`, func() error {
@@ -567,7 +567,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
 		for _, branch := range []string{branch1, branch2} {
-			err := commands.CreateBranch(state.fixture.DevRepo.Mocking, branch, "main")
+			err := commands.CreateBranch(&state.fixture.DevRepo, branch, "main")
 			if err != nil {
 				return err
 			}
@@ -612,7 +612,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the coworker fetches updates$`, func() error {
-		return state.fixture.CoworkerRepo.Fetch()
+		return commands.Fetch(state.fixture.CoworkerRepo)
 	})
 
 	suite.Step(`^the coworker is on the "([^"]*)" branch$`, func(branch string) error {
@@ -642,7 +642,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.initialCurrentBranch = name
 		if !stringslice.Contains(state.initialLocalBranches, name) {
 			state.initialLocalBranches = append(state.initialLocalBranches, name)
-			err := commands.CreateBranch(state.fixture.DevRepo.Mocking, name, "main")
+			err := commands.CreateBranch(&state.fixture.DevRepo, name, "main")
 			if err != nil {
 				return err
 			}

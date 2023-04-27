@@ -67,12 +67,12 @@ func CloneFixture(original Fixture, dir string) (Fixture, error) {
 	if err != nil {
 		return Fixture{}, fmt.Errorf("cannot set remote: %w", err)
 	}
-	err = result.DevRepo.Fetch()
+	err = commands.Fetch(&result.DevRepo)
 	if err != nil {
 		return Fixture{}, fmt.Errorf("cannot fetch: %w", err)
 	}
 	// and connect the main branches again
-	err = result.DevRepo.ConnectTrackingBranch("main")
+	err = commands.ConnectTrackingBranch(&result.DevRepo, "main")
 	if err != nil {
 		return Fixture{}, fmt.Errorf("cannot connect tracking branch: %w", err)
 	}
@@ -251,7 +251,7 @@ func (env *Fixture) CreateCommits(commits []git.Commit) error {
 
 // CreateOriginBranch creates a branch with the given name only in the origin directory.
 func (env Fixture) CreateOriginBranch(name, parent string) error {
-	err := commands.CreateBranch(env.OriginRepo.Mocking, name, parent)
+	err := commands.CreateBranch(env.OriginRepo, name, parent)
 	if err != nil {
 		return fmt.Errorf("cannot create origin branch %q: %w", name, err)
 	}
@@ -270,9 +270,9 @@ func (env Fixture) CreateTags(table *messages.PickleStepArgument_PickleTable) er
 		var err error
 		switch location {
 		case "local":
-			err = commands.CreateTag(env.DevRepo.Mocking, name)
+			err = commands.CreateTag(&env.DevRepo, name)
 		case "origin":
-			err = commands.CreateTag(env.OriginRepo.Mocking, name)
+			err = commands.CreateTag(env.OriginRepo, name)
 		default:
 			err = fmt.Errorf("tag table LOCATION must be 'local' or 'origin'")
 		}

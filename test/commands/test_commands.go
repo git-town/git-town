@@ -6,7 +6,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/git-town/git-town/v8/src/config"
 	prodgit "github.com/git-town/git-town/v8/src/git"
 	"github.com/git-town/git-town/v8/src/stringslice"
 	"github.com/git-town/git-town/v8/test/datatable"
@@ -18,34 +17,6 @@ type TestCommands struct {
 	subshell.Mocking
 	Config prodgit.RepoConfig
 	*prodgit.BackendCommands
-}
-
-// ConnectTrackingBranch connects the branch with the given name to its counterpart at origin.
-// The branch must exist.
-func (r *TestCommands) ConnectTrackingBranch(name string) error {
-	_, err := r.Run("git", "branch", "--set-upstream-to=origin/"+name, name)
-	return err
-}
-
-// DeleteMainBranchConfiguration removes the configuration for which branch is the main branch.
-func (r *TestCommands) DeleteMainBranchConfiguration() error {
-	_, err := r.Run("git", "config", "--unset", config.MainBranchKey)
-	if err != nil {
-		return fmt.Errorf("cannot delete main branch configuration: %w", err)
-	}
-	return nil
-}
-
-// Fetch retrieves the updates from the origin repo.
-func (r *TestCommands) Fetch() error {
-	_, err := r.Run("git", "fetch")
-	return err
-}
-
-// FileContent provides the current content of a file.
-func (r *TestCommands) FileContent(filename string) (string, error) {
-	content, err := os.ReadFile(filepath.Join(r.WorkingDir, filename))
-	return string(content), err
 }
 
 // FileContentInCommit provides the content of the file with the given name in the commit with the given SHA.
