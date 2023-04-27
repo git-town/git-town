@@ -1,4 +1,4 @@
-package runtime_test
+package commands_test
 
 import (
 	"os"
@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v8/test/asserts"
+	"github.com/git-town/git-town/v8/test/commands"
 	"github.com/git-town/git-town/v8/test/runtime"
 	"github.com/stretchr/testify/assert"
 )
@@ -20,7 +21,7 @@ func TestCopyDirectory(t *testing.T) {
 		createFile(t, srcDir, "one.txt")
 		createFile(t, srcDir, "f1/a.txt")
 		createFile(t, srcDir, "f2/b.txt")
-		err := runtime.CopyDirectory(srcDir, dstDir)
+		err := commands.CopyDirectory(srcDir, dstDir)
 		assert.NoError(t, err)
 		asserts.FileExists(t, dstDir, "one.txt")
 		asserts.FileExists(t, dstDir, "f1/a.txt")
@@ -32,7 +33,7 @@ func TestCopyDirectory(t *testing.T) {
 		origin := runtime.Create(t)
 		createFile(t, origin.Dir(), "one.txt")
 		dstDir := filepath.Join(t.TempDir(), "dest")
-		err := runtime.CopyDirectory(origin.Dir(), dstDir)
+		err := commands.CopyDirectory(origin.Dir(), dstDir)
 		assert.NoError(t, err)
 		asserts.FileExists(t, dstDir, "one.txt")
 		asserts.FileHasContent(t, dstDir, ".git/HEAD", "ref: refs/heads/initial\n")

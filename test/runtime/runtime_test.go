@@ -89,7 +89,7 @@ func TestRunner(t *testing.T) {
 		// connecting branches of repos with the same commits in them
 		origin := runtime.Create(t)
 		repoDir := filepath.Join(t.TempDir(), "repo") // need a non-existing directory
-		err := runtime.CopyDirectory(origin.Dir(), repoDir)
+		err := commands.CopyDirectory(origin.Dir(), repoDir)
 		assert.NoError(t, err)
 		runtime := runtime.New(repoDir, repoDir, "")
 		err = commands.AddRemote(&runtime, config.OriginRemote, origin.Dir())
