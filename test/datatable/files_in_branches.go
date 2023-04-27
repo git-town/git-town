@@ -1,25 +1,25 @@
-package commands
+package datatable
 
-import "github.com/git-town/git-town/v8/test/datatable"
+import "github.com/git-town/git-town/v8/test/commands"
 
 // FilesInBranches provides a data table of files and their content in all branches.
-func FilesInBranches(cmds *TestCommands, mainBranch string) (datatable.DataTable, error) {
-	result := datatable.DataTable{}
+func FilesInBranches(cmds *commands.TestCommands, mainBranch string) (DataTable, error) {
+	result := DataTable{}
 	result.AddRow("BRANCH", "NAME", "CONTENT")
 	branches, err := cmds.LocalBranchesMainFirst(mainBranch)
 	if err != nil {
-		return datatable.DataTable{}, err
+		return DataTable{}, err
 	}
 	lastBranch := ""
 	for _, branch := range branches {
-		files, err := FilesInBranch(cmds, branch)
+		files, err := commands.FilesInBranch(cmds, branch)
 		if err != nil {
-			return datatable.DataTable{}, err
+			return DataTable{}, err
 		}
 		for _, file := range files {
-			content, err := FileContentInCommit(cmds, branch, file)
+			content, err := commands.FileContentInCommit(cmds, branch, file)
 			if err != nil {
-				return datatable.DataTable{}, err
+				return DataTable{}, err
 			}
 			if branch == lastBranch {
 				result.AddRow("", file, content)

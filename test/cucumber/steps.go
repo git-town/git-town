@@ -704,7 +704,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the initial branch hierarchy exists$`, func() error {
-		have := commands.BranchHierarchyTable(&state.fixture.DevRepo.Config)
+		have := datatable.BranchHierarchyTable(&state.fixture.DevRepo.Config)
 		state.initialBranchHierarchy.Sort()
 		diff, errCnt := have.EqualDataTable(state.initialBranchHierarchy)
 		if errCnt > 0 {
@@ -732,7 +732,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 		// verify initial branch hierarchy
 		state.initialBranchHierarchy.Sort()
-		have = commands.BranchHierarchyTable(&state.fixture.DevRepo.Config)
+		have = datatable.BranchHierarchyTable(&state.fixture.DevRepo.Config)
 		diff, errCnt := have.EqualDataTable(state.initialBranchHierarchy)
 		if errCnt > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the branch hierarchy\n\n", errCnt)
@@ -953,7 +953,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^these committed files exist now$`, func(table *messages.PickleStepArgument_PickleTable) error {
-		fileTable, err := commands.FilesInBranches(&state.fixture.DevRepo.TestCommands, "main")
+		fileTable, err := datatable.FilesInBranches(&state.fixture.DevRepo.TestCommands, "main")
 		if err != nil {
 			return fmt.Errorf("cannot determine files in branches in the developer repo: %w", err)
 		}
@@ -981,7 +981,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^this branch hierarchy exists now$`, func(input *messages.PickleStepArgument_PickleTable) error {
-		table := commands.BranchHierarchyTable(&state.fixture.DevRepo.Config)
+		table := datatable.BranchHierarchyTable(&state.fixture.DevRepo.Config)
 		diff, errCount := table.EqualGherkin(input)
 		if errCount > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the branch hierarchy\n\n", errCount)

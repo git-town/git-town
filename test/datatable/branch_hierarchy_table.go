@@ -1,15 +1,14 @@
-package commands
+package datatable
 
 import (
 	"sort"
 
 	prodgit "github.com/git-town/git-town/v8/src/git"
-	"github.com/git-town/git-town/v8/test/datatable"
 )
 
 // BranchHierarchyTable provides the currently configured branch hierarchy information as a DataTable.
-func BranchHierarchyTable(config *prodgit.RepoConfig) datatable.DataTable {
-	result := datatable.DataTable{}
+func BranchHierarchyTable(config *prodgit.RepoConfig) DataTable {
+	result := DataTable{}
 	config.Reload()
 	parentBranchMap := config.ParentBranchMap()
 	result.AddRow("BRANCH", "PARENT")

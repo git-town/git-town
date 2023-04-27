@@ -1,5 +1,7 @@
 package datatable
 
-type Runner interface {
-	ShaForCommit(string) (string, error)
+type Shell interface {
+	Run(string, ...string) (string, error)
+	RunMany([][]string) error
+	Dir() string
 }
