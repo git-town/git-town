@@ -264,7 +264,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return err
 		}
-		err = state.fixture.DevRepo.StageFiles(filename)
+		err = commands.StageFiles(&state.fixture.DevRepo, filename)
 		if err != nil {
 			return err
 		}
