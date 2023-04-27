@@ -96,7 +96,7 @@ func CreateGitTown(t *testing.T) Runtime {
 
 // Clone creates a clone of the repository managed by this test.Runner into the given directory.
 // The cloned repo uses the same homeDir and binDir as its origin.
-func Clone(original testshell.Mocking, targetDir string) (Runtime, error) {
+func Clone(original *Runtime, targetDir string) (Runtime, error) {
 	_, err := original.Run("git", "clone", original.WorkingDir, targetDir)
 	if err != nil {
 		return Runtime{}, fmt.Errorf("cannot clone repo %q: %w", original.WorkingDir, err)
