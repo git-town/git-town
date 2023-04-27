@@ -3,7 +3,7 @@ package commands
 import "fmt"
 
 // CreatePerennialBranches creates perennial branches with the given names in this repository.
-func CreatePerennialBranches(repo Repo, names ...string) error {
+func CreatePerennialBranches(repo *Repo, names ...string) error {
 	for _, name := range names {
 		err := CreateBranch(repo, name, "main")
 		if err != nil {

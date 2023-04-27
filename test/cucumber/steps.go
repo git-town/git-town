@@ -169,7 +169,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^an uncommitted file$`, func() error {
 		state.uncommittedFileName = "uncommitted file"
 		state.uncommittedContent = "uncommitted content"
-		return commands.CreateFile(state.fixture.DevRepo.Dir(),
+		return fs.CreateFile(state.fixture.DevRepo.Dir(),
 			state.uncommittedFileName,
 			state.uncommittedContent,
 		)
@@ -177,7 +177,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^an uncommitted file in folder "([^"]*)"$`, func(folder string) error {
 		state.uncommittedFileName = fmt.Sprintf("%s/uncommitted file", folder)
-		return commands.CreateFile(state.fixture.DevRepo.Dir(),
+		return fs.CreateFile(state.fixture.DevRepo.Dir(),
 			state.uncommittedFileName,
 			state.uncommittedContent,
 		)
@@ -186,7 +186,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^an uncommitted file with name "([^"]+)" and content "([^"]+)"$`, func(name, content string) error {
 		state.uncommittedFileName = name
 		state.uncommittedContent = content
-		return commands.CreateFile(state.fixture.DevRepo.Dir(), name, content)
+		return fs.CreateFile(state.fixture.DevRepo.Dir(), name, content)
 	})
 
 	suite.Step(`^an upstream repo$`, func() error {
@@ -261,7 +261,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if content == "" {
 			content = "resolved content"
 		}
-		err := commands.CreateFile(state.fixture.DevRepo.Dir(), filename, content)
+		err := fs.CreateFile(state.fixture.DevRepo.Dir(), filename, content)
 		if err != nil {
 			return err
 		}

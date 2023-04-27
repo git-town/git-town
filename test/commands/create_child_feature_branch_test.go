@@ -6,13 +6,12 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v8/test/commands"
-	"github.com/git-town/git-town/v8/test/runtime"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCreateChildFeatureBranch(t *testing.T) {
 	t.Parallel()
-	runtime := runtime.CreateGitTown(t)
+	runtime := commands.CreateGitTown(t)
 	err := runtime.CreateFeatureBranch("f1")
 	assert.NoError(t, err)
 	err = commands.CreateChildFeatureBranch(&runtime, "f1a", "f1")

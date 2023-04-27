@@ -9,7 +9,7 @@ import (
 )
 
 // CommitsInBranch provides all commits in the given Git branch.
-func CommitsInBranch(repo Repo, branch string, fields []string) ([]git.Commit, error) {
+func CommitsInBranch(repo *Repo, branch string, fields []string) ([]git.Commit, error) {
 	output, err := repo.Run("git", "log", branch, "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse")
 	if err != nil {
 		return []git.Commit{}, fmt.Errorf("cannot get commits in branch %q: %w", branch, err)

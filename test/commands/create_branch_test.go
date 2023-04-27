@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v8/test/commands"
-	"github.com/git-town/git-town/v8/test/runtime"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -12,7 +11,7 @@ func TestCreateBranch(t *testing.T) {
 	t.Parallel()
 	t.Run("simple branch name", func(t *testing.T) {
 		t.Parallel()
-		runtime := runtime.Create(t)
+		runtime := commands.Create(t)
 		err := commands.CreateBranch(&runtime, "branch1", "initial")
 		assert.NoError(t, err)
 		currentBranch, err := runtime.CurrentBranch()
@@ -25,7 +24,7 @@ func TestCreateBranch(t *testing.T) {
 
 	t.Run("branch name with slashes", func(t *testing.T) {
 		t.Parallel()
-		runtime := runtime.Create(t)
+		runtime := commands.Create(t)
 		err := commands.CreateBranch(&runtime, "my/feature", "initial")
 		assert.NoError(t, err)
 		currentBranch, err := runtime.CurrentBranch()

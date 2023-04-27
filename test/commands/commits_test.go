@@ -5,28 +5,27 @@ import (
 
 	"github.com/git-town/git-town/v8/test/commands"
 	"github.com/git-town/git-town/v8/test/git"
-	"github.com/git-town/git-town/v8/test/runtime"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCommits(t *testing.T) {
 	t.Parallel()
-	runtime := runtime.Create(t)
-	err := commands.CreateCommit(&runtime, git.Commit{
+	repo := commands.Create(t)
+	err := commands.CreateCommit(&repo, git.Commit{
 		Branch:      "initial",
 		FileName:    "file1",
 		FileContent: "hello",
 		Message:     "first commit",
 	})
 	assert.NoError(t, err)
-	err = commands.CreateCommit(&runtime, git.Commit{
+	err = commands.CreateCommit(&repo, git.Commit{
 		Branch:      "initial",
 		FileName:    "file2",
 		FileContent: "hello again",
 		Message:     "second commit",
 	})
 	assert.NoError(t, err)
-	commits, err := commands.Commits(&runtime, []string{"FILE NAME", "FILE CONTENT"}, "initial")
+	commits, err := commands.Commits(&repo, []string{"FILE NAME", "FILE CONTENT"}, "initial")
 	assert.NoError(t, err)
 	assert.Len(t, commits, 2)
 	assert.Equal(t, "initial", commits[0].Branch)

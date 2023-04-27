@@ -8,7 +8,7 @@ import (
 )
 
 // UncommittedFiles provides the names of the files not committed into Git.
-func UncommittedFiles(repo Repo) ([]string, error) {
+func UncommittedFiles(repo *Repo) ([]string, error) {
 	output, err := repo.Run("git", "status", "--porcelain", "--untracked-files=all")
 	if err != nil {
 		return []string{}, fmt.Errorf("cannot determine uncommitted files in %q: %w", repo.Dir(), err)

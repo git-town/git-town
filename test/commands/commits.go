@@ -7,7 +7,7 @@ import (
 )
 
 // Commits provides a list of the commits in this Git repository with the given fields.
-func Commits(repo Repo, fields []string, mainBranch string) ([]git.Commit, error) {
+func Commits(repo *Repo, fields []string, mainBranch string) ([]git.Commit, error) {
 	branches, err := repo.ProdGit().LocalBranchesMainFirst(mainBranch)
 	if err != nil {
 		return []git.Commit{}, fmt.Errorf("cannot determine the Git branches: %w", err)

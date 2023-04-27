@@ -5,7 +5,6 @@ import (
 
 	"github.com/git-town/git-town/v8/test/commands"
 	"github.com/git-town/git-town/v8/test/git"
-	"github.com/git-town/git-town/v8/test/runtime"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -13,7 +12,7 @@ func TestCreateCommit(t *testing.T) {
 	t.Parallel()
 	t.Run("minimal arguments", func(t *testing.T) {
 		t.Parallel()
-		runtime := runtime.Create(t)
+		runtime := commands.Create(t)
 		err := commands.CreateCommit(&runtime, git.Commit{
 			Branch:      "initial",
 			FileName:    "hello.txt",
@@ -32,7 +31,7 @@ func TestCreateCommit(t *testing.T) {
 
 	t.Run("set the author", func(t *testing.T) {
 		t.Parallel()
-		runtime := runtime.Create(t)
+		runtime := commands.Create(t)
 		err := commands.CreateCommit(&runtime, git.Commit{
 			Branch:      "initial",
 			FileName:    "hello.txt",

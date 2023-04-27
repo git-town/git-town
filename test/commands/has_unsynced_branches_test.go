@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v8/src/config"
 	"github.com/git-town/git-town/v8/test/commands"
 	"github.com/git-town/git-town/v8/test/fixture"
+	"github.com/git-town/git-town/v8/test/fs"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -20,7 +21,7 @@ func TestHasUnsyncedBranches(t *testing.T) {
 		assert.NoError(t, err)
 		err = runner.CheckoutBranch("branch1")
 		assert.NoError(t, err)
-		err = commands.CreateFile(runner.Dir(), "file1", "content")
+		err = fs.CreateFile(runner.Dir(), "file1", "content")
 		assert.NoError(t, err)
 		err = commands.StageFiles(&runner, "file1")
 		assert.NoError(t, err)
@@ -41,7 +42,7 @@ func TestHasUnsyncedBranches(t *testing.T) {
 		assert.NoError(t, err)
 		err = commands.PushBranch(&env.DevRepo)
 		assert.NoError(t, err)
-		err = commands.CreateFile(env.DevRepo.Dir(), "file1", "content")
+		err = fs.CreateFile(env.DevRepo.Dir(), "file1", "content")
 		assert.NoError(t, err)
 		err = commands.StageFiles(&env.DevRepo, "file1")
 		assert.NoError(t, err)
@@ -62,7 +63,7 @@ func TestHasUnsyncedBranches(t *testing.T) {
 		assert.NoError(t, err)
 		err = env.OriginRepo.CheckoutBranch("main")
 		assert.NoError(t, err)
-		err = commands.CreateFile(env.OriginRepo.Dir(), "file1", "content")
+		err = fs.CreateFile(env.OriginRepo.Dir(), "file1", "content")
 		assert.NoError(t, err)
 		err = commands.StageFiles(env.OriginRepo, "file1")
 		assert.NoError(t, err)

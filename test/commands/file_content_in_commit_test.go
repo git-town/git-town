@@ -5,13 +5,12 @@ import (
 
 	"github.com/git-town/git-town/v8/test/commands"
 	"github.com/git-town/git-town/v8/test/git"
-	"github.com/git-town/git-town/v8/test/runtime"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestFileContentInCommit(t *testing.T) {
 	t.Parallel()
-	runtime := runtime.Create(t)
+	runtime := commands.Create(t)
 	err := commands.CreateCommit(&runtime, git.Commit{
 		Branch:      "initial",
 		FileName:    "hello.txt",

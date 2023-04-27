@@ -4,13 +4,12 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v8/test/commands"
-	"github.com/git-town/git-town/v8/test/runtime"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestRemoveBranch(t *testing.T) {
 	t.Parallel()
-	runtime := runtime.Create(t)
+	runtime := commands.Create(t)
 	err := commands.CreateBranch(&runtime, "b1", "initial")
 	assert.NoError(t, err)
 	branches, err := runtime.LocalBranchesMainFirst("initial")

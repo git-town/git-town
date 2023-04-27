@@ -4,13 +4,12 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v8/test/commands"
-	"github.com/git-town/git-town/v8/test/runtime"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCreatePerennialBranches(t *testing.T) {
 	t.Parallel()
-	runtime := runtime.CreateGitTown(t)
+	runtime := commands.CreateGitTown(t)
 	err := commands.CreatePerennialBranches(&runtime, "p1", "p2")
 	assert.NoError(t, err)
 	branches, err := runtime.LocalBranchesMainFirst("main")
