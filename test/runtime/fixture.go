@@ -223,7 +223,7 @@ func (env *Fixture) CreateCommits(commits []git.Commit) error {
 				if err != nil {
 					return fmt.Errorf("cannot create local commit: %w", err)
 				}
-				err = env.DevRepo.PushBranchToRemote(commit.Branch, config.OriginRemote)
+				err = commands.PushBranchToRemote(&env.DevRepo, commit.Branch, config.OriginRemote)
 				if err != nil {
 					return fmt.Errorf("cannot push branch %q after creating commit: %w", commit.Branch, err)
 				}

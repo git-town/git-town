@@ -18,11 +18,6 @@ type TestCommands struct {
 	*prodgit.BackendCommands
 }
 
-func (r *TestCommands) PushBranchToRemote(branch, remote string) error {
-	_, err := r.Run("git", "push", "-u", remote, branch)
-	return err
-}
-
 // RemoveBranch deletes the branch with the given name from this repo.
 func (r *TestCommands) RemoveBranch(name string) error {
 	_, err := r.Run("git", "branch", "-D", name)
