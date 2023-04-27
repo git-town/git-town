@@ -1,4 +1,4 @@
-package commands
+package git
 
 import (
 	"fmt"

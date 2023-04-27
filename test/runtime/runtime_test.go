@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v8/test/asserts"
 	"github.com/git-town/git-town/v8/test/commands"
 	"github.com/git-town/git-town/v8/test/fixture"
+	"github.com/git-town/git-town/v8/test/fs"
 	"github.com/git-town/git-town/v8/test/git"
 	"github.com/git-town/git-town/v8/test/runtime"
 	"github.com/stretchr/testify/assert"
@@ -90,7 +91,7 @@ func TestRunner(t *testing.T) {
 		// connecting branches of repos with the same commits in them
 		origin := runtime.Create(t)
 		repoDir := filepath.Join(t.TempDir(), "repo") // need a non-existing directory
-		err := commands.CopyDirectory(origin.Dir(), repoDir)
+		err := fs.CopyDirectory(origin.Dir(), repoDir)
 		assert.NoError(t, err)
 		runtime := runtime.New(repoDir, repoDir, "")
 		err = commands.AddRemote(&runtime, config.OriginRemote, origin.Dir())
@@ -344,12 +345,12 @@ func TestRunner(t *testing.T) {
 		runtime := runtime.Create(t)
 		err := commands.CreateFile(runtime.Dir(), "f1.txt", "one")
 		assert.NoError(t, err)
-		has, err := commands.HasFile(runtime.WorkingDir, "f1.txt", "one")
+		has, err := fs.HasFile(runtime.WorkingDir, "f1.txt", "one")
 		assert.NoError(t, err)
 		assert.True(t, has)
-		_, err = commands.HasFile(runtime.WorkingDir, "f1.txt", "zonk")
+		_, err = fs.HasFile(runtime.WorkingDir, "f1.txt", "zonk")
 		assert.Error(t, err)
-		_, err = commands.HasFile(runtime.WorkingDir, "zonk.txt", "one")
+		_, err = fs.HasFile(runtime.WorkingDir, "zonk.txt", "one")
 		assert.Error(t, err)
 	})
 

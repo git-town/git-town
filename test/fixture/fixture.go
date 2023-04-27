@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v8/src/stringslice"
 	"github.com/git-town/git-town/v8/test/commands"
 	"github.com/git-town/git-town/v8/test/datatable"
+	"github.com/git-town/git-town/v8/test/fs"
 	"github.com/git-town/git-town/v8/test/git"
 	"github.com/git-town/git-town/v8/test/helpers"
 	"github.com/git-town/git-town/v8/test/runtime"
@@ -44,7 +45,7 @@ type Fixture struct {
 // CloneFixture provides a Fixture instance in the given directory,
 // containing a copy of the given Fixture.
 func CloneFixture(original Fixture, dir string) (Fixture, error) {
-	err := commands.CopyDirectory(original.Dir, dir)
+	err := fs.CopyDirectory(original.Dir, dir)
 	if err != nil {
 		return Fixture{}, fmt.Errorf("cannot clone Fixture %q to folder %q: %w", original.Dir, dir, err)
 	}
@@ -118,11 +119,11 @@ func NewStandardFixture(dir string) (Fixture, error) {
 	if err != nil {
 		return gitEnv, fmt.Errorf("cannot create new standard Git environment: %w", err)
 	}
-	err = commands.RemoveUnnecessaryFiles(gitEnv.DevRepo.WorkingDir)
+	err = git.RemoveUnnecessaryFiles(gitEnv.DevRepo.WorkingDir)
 	if err != nil {
 		return gitEnv, err
 	}
-	err = commands.RemoveUnnecessaryFiles(gitEnv.OriginRepo.WorkingDir)
+	err = git.RemoveUnnecessaryFiles(gitEnv.OriginRepo.WorkingDir)
 	if err != nil {
 		return gitEnv, err
 	}

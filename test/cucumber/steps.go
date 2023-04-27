@@ -19,6 +19,7 @@ import (
 	"github.com/git-town/git-town/v8/test/commands"
 	"github.com/git-town/git-town/v8/test/datatable"
 	"github.com/git-town/git-town/v8/test/fixture"
+	"github.com/git-town/git-town/v8/test/fs"
 	"github.com/git-town/git-town/v8/test/git"
 	"github.com/git-town/git-town/v8/test/helpers"
 	"github.com/git-town/git-town/v8/test/output"
@@ -193,7 +194,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^file "([^"]+)" still contains unresolved conflicts$`, func(name string) error {
-		content, err := commands.FileContent(state.fixture.DevRepo.Dir(), name)
+		content, err := fs.FileContent(state.fixture.DevRepo.Dir(), name)
 		if err != nil {
 			return fmt.Errorf("cannot read file %q: %w", name, err)
 		}
@@ -204,7 +205,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^file "([^"]*)" still has content "([^"]*)"$`, func(file, expectedContent string) error {
-		actualContent, err := commands.FileContent(state.fixture.DevRepo.Dir(), file)
+		actualContent, err := fs.FileContent(state.fixture.DevRepo.Dir(), file)
 		if err != nil {
 			return err
 		}
@@ -930,7 +931,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the uncommitted file still exists$`, func() error {
-		hasFile, err := commands.HasFile(state.fixture.DevRepo.WorkingDir,
+		hasFile, err := fs.HasFile(state.fixture.DevRepo.WorkingDir,
 			state.uncommittedFileName,
 			state.uncommittedContent,
 		)
