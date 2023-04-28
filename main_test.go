@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/cucumber/godog"
-	"github.com/git-town/git-town/v8/test"
+	"github.com/git-town/git-town/v8/test/cucumber"
 )
 
 func FeatureContext(suite *godog.Suite) {
@@ -15,8 +15,8 @@ func FeatureContext(suite *godog.Suite) {
 	// Hence we have to register the scenario state here (and reuse it for all scenarios in a feature)
 	// and register the steps here.
 	// It is initialized in SuiteSteps.BeforeScenario.
-	state := test.ScenarioState{}
-	test.Steps(suite, &state)
+	state := cucumber.ScenarioState{}
+	cucumber.Steps(suite, &state)
 }
 
 //nolint:paralleltest
