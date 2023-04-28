@@ -15,7 +15,7 @@ import (
 // testCommands defines Git commands used only in test code.
 type testCommands struct {
 	MockingRunner
-	config git.RepoConfig
+	*git.RepoConfig
 	*git.BackendCommands
 }
 
@@ -25,7 +25,7 @@ func (r *testCommands) AddRemote(name, url string) error {
 	if err != nil {
 		return fmt.Errorf("cannot add remote %q --> %q: %w", name, url, err)
 	}
-	r.config.RemotesCache.Invalidate()
+	r.RemotesCache.Invalidate()
 	return nil
 }
 
@@ -42,8 +42,8 @@ func (r *testCommands) AddSubmodule(url string) error {
 // BranchHierarchyTable provides the currently configured branch hierarchy information as a DataTable.
 func (r *testCommands) BranchHierarchyTable() DataTable {
 	result := DataTable{}
-	r.config.Reload()
-	parentBranchMap := r.config.ParentBranchMap()
+	r.Reload()
+	parentBranchMap := r.ParentBranchMap()
 	result.AddRow("BRANCH", "PARENT")
 	childBranches := make([]string, 0, len(parentBranchMap))
 	for child := range parentBranchMap {
@@ -73,9 +73,9 @@ func (r *testCommands) CheckoutBranch(name string) error {
 		return fmt.Errorf("cannot check out branch %q: %w", name, err)
 	}
 	if name != "-" {
-		r.config.CurrentBranchCache.Set(name)
+		r.CurrentBranchCache.Set(name)
 	} else {
-		r.config.CurrentBranchCache.Invalidate()
+		r.CurrentBranchCache.Invalidate()
 	}
 	return nil
 }
@@ -95,7 +95,7 @@ func (r *testCommands) CreateChildFeatureBranch(name string, parent string) erro
 	if err != nil {
 		return err
 	}
-	return r.config.SetParent(name, parent)
+	return r.SetParent(name, parent)
 }
 
 // CreateCommit creates a commit with the given properties in this Git repo.
@@ -146,7 +146,7 @@ func (r *testCommands) CreatePerennialBranches(names ...string) error {
 			return fmt.Errorf("cannot create perennial branch %q in repo %q: %w", name, r.workingDir, err)
 		}
 	}
-	return r.config.AddToPerennialBranches(names...)
+	return r.AddToPerennialBranches(names...)
 }
 
 // CreateStandaloneTag creates a tag not on a branch.
@@ -369,7 +369,7 @@ func (r *testCommands) RemoveBranch(name string) error {
 
 // RemoveRemote deletes the Git remote with the given name.
 func (r *testCommands) RemoveRemote(name string) error {
-	r.config.RemotesCache.Invalidate()
+	r.RemotesCache.Invalidate()
 	_, err := r.Run("git", "remote", "rm", name)
 	return err
 }

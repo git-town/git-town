@@ -71,7 +71,7 @@ func newRunner(workingDir, homeDir, binDir string) Runner {
 	}
 	testCommands := testCommands{
 		MockingRunner:   mockingRunner,
-		config:          config,
+		RepoConfig:      &config,
 		BackendCommands: &backendCommands,
 	}
 	return Runner{
