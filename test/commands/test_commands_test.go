@@ -11,7 +11,7 @@ import (
 	"github.com/git-town/git-town/v8/test/fixture"
 	"github.com/git-town/git-town/v8/test/git"
 	"github.com/git-town/git-town/v8/test/helpers"
-	"github.com/git-town/git-town/v8/test/runtime"
+	"github.com/git-town/git-town/v8/test/testruntime"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -20,11 +20,11 @@ func TestTestCommands(t *testing.T) {
 
 	t.Run(".AddRemote()", func(t *testing.T) {
 		t.Parallel()
-		dev := runtime.Create(t)
+		dev := testruntime.Create(t)
 		remotes, err := dev.Remotes()
 		assert.NoError(t, err)
 		assert.Equal(t, []string{}, remotes)
-		origin := runtime.Create(t)
+		origin := testruntime.Create(t)
 		err = dev.AddRemote(config.OriginRemote, origin.WorkingDir)
 		assert.NoError(t, err)
 		remotes, err = dev.Remotes()
@@ -34,7 +34,7 @@ func TestTestCommands(t *testing.T) {
 
 	t.Run(".Commits()", func(t *testing.T) {
 		t.Parallel()
-		runtime := runtime.Create(t)
+		runtime := testruntime.Create(t)
 		err := runtime.CreateCommit(git.Commit{
 			Branch:      "initial",
 			FileName:    "file1",
@@ -66,11 +66,11 @@ func TestTestCommands(t *testing.T) {
 		t.Parallel()
 		// replicating the situation this is used in,
 		// connecting branches of repos with the same commits in them
-		origin := runtime.Create(t)
+		origin := testruntime.Create(t)
 		repoDir := filepath.Join(t.TempDir(), "repo") // need a non-existing directory
 		err := helpers.CopyDirectory(origin.WorkingDir, repoDir)
 		assert.NoError(t, err)
-		runtime := runtime.New(repoDir, repoDir, "")
+		runtime := testruntime.New(repoDir, repoDir, "")
 		err = runtime.AddRemote(config.OriginRemote, origin.WorkingDir)
 		assert.NoError(t, err)
 		err = runtime.Fetch()
@@ -84,7 +84,7 @@ func TestTestCommands(t *testing.T) {
 	t.Run(".CreateBranch()", func(t *testing.T) {
 		t.Run("simple branch name", func(t *testing.T) {
 			t.Parallel()
-			runtime := runtime.Create(t)
+			runtime := testruntime.Create(t)
 			err := runtime.CreateBranch("branch1", "initial")
 			assert.NoError(t, err)
 			currentBranch, err := runtime.CurrentBranch()
@@ -97,7 +97,7 @@ func TestTestCommands(t *testing.T) {
 
 		t.Run("branch name with slashes", func(t *testing.T) {
 			t.Parallel()
-			runtime := runtime.Create(t)
+			runtime := testruntime.Create(t)
 			err := runtime.CreateBranch("my/feature", "initial")
 			assert.NoError(t, err)
 			currentBranch, err := runtime.CurrentBranch()
@@ -111,7 +111,7 @@ func TestTestCommands(t *testing.T) {
 
 	t.Run(".CreateChildFeatureBranch()", func(t *testing.T) {
 		t.Parallel()
-		runtime := runtime.CreateGitTown(t)
+		runtime := testruntime.CreateGitTown(t)
 		err := runtime.CreateFeatureBranch("f1")
 		assert.NoError(t, err)
 		err = runtime.CreateChildFeatureBranch("f1a", "f1")
@@ -128,7 +128,7 @@ func TestTestCommands(t *testing.T) {
 	t.Run(".CreateCommit()", func(t *testing.T) {
 		t.Run("minimal arguments", func(t *testing.T) {
 			t.Parallel()
-			runtime := runtime.Create(t)
+			runtime := testruntime.Create(t)
 			err := runtime.CreateCommit(git.Commit{
 				Branch:      "initial",
 				FileName:    "hello.txt",
@@ -147,7 +147,7 @@ func TestTestCommands(t *testing.T) {
 
 		t.Run("set the author", func(t *testing.T) {
 			t.Parallel()
-			runtime := runtime.Create(t)
+			runtime := testruntime.Create(t)
 			err := runtime.CreateCommit(git.Commit{
 				Branch:      "initial",
 				FileName:    "hello.txt",
@@ -170,7 +170,7 @@ func TestTestCommands(t *testing.T) {
 	t.Run(".CreateFile()", func(t *testing.T) {
 		t.Run("simple example", func(t *testing.T) {
 			t.Parallel()
-			runtime := runtime.Create(t)
+			runtime := testruntime.Create(t)
 			err := runtime.CreateFile("filename", "content")
 			assert.Nil(t, err, "cannot create file in repo")
 			content, err := os.ReadFile(filepath.Join(runtime.WorkingDir, "filename"))
@@ -180,7 +180,7 @@ func TestTestCommands(t *testing.T) {
 
 		t.Run("create file in subfolder", func(t *testing.T) {
 			t.Parallel()
-			runtime := runtime.Create(t)
+			runtime := testruntime.Create(t)
 			err := runtime.CreateFile("folder/filename", "content")
 			assert.Nil(t, err, "cannot create file in repo")
 			content, err := os.ReadFile(filepath.Join(runtime.WorkingDir, "folder/filename"))
@@ -191,7 +191,7 @@ func TestTestCommands(t *testing.T) {
 
 	t.Run(".CreatePerennialBranches()", func(t *testing.T) {
 		t.Parallel()
-		runtime := runtime.CreateGitTown(t)
+		runtime := testruntime.CreateGitTown(t)
 		err := runtime.CreatePerennialBranches("p1", "p2")
 		assert.NoError(t, err)
 		branches, err := runtime.LocalBranchesMainFirst("main")
@@ -204,8 +204,8 @@ func TestTestCommands(t *testing.T) {
 
 	t.Run(".Fetch()", func(t *testing.T) {
 		t.Parallel()
-		repo := runtime.Create(t)
-		origin := runtime.Create(t)
+		repo := testruntime.Create(t)
+		origin := testruntime.Create(t)
 		err := repo.AddRemote(config.OriginRemote, origin.WorkingDir)
 		assert.NoError(t, err)
 		err = repo.Fetch()
@@ -214,7 +214,7 @@ func TestTestCommands(t *testing.T) {
 
 	t.Run(".FileContentInCommit()", func(t *testing.T) {
 		t.Parallel()
-		runtime := runtime.Create(t)
+		runtime := testruntime.Create(t)
 		err := runtime.CreateCommit(git.Commit{
 			Branch:      "initial",
 			FileName:    "hello.txt",
@@ -232,7 +232,7 @@ func TestTestCommands(t *testing.T) {
 
 	t.Run(".FilesInCommit()", func(t *testing.T) {
 		t.Parallel()
-		runtime := runtime.Create(t)
+		runtime := testruntime.Create(t)
 		err := runtime.CreateFile("f1.txt", "one")
 		assert.NoError(t, err)
 		err = runtime.CreateFile("f2.txt", "two")
@@ -319,7 +319,7 @@ func TestTestCommands(t *testing.T) {
 
 	t.Run(".HasFile()", func(t *testing.T) {
 		t.Parallel()
-		runtime := runtime.Create(t)
+		runtime := testruntime.Create(t)
 		err := runtime.CreateFile("f1.txt", "one")
 		assert.NoError(t, err)
 		has, err := runtime.HasFile("f1.txt", "one")
@@ -333,7 +333,7 @@ func TestTestCommands(t *testing.T) {
 
 	t.Run(".HasGitTownConfigNow()", func(t *testing.T) {
 		t.Parallel()
-		runtime := runtime.Create(t)
+		runtime := testruntime.Create(t)
 		res := runtime.HasGitTownConfigNow()
 		assert.False(t, res)
 		err := runtime.CreateBranch("main", "initial")
@@ -347,8 +347,8 @@ func TestTestCommands(t *testing.T) {
 
 	t.Run(".PushBranchToRemote()", func(t *testing.T) {
 		t.Parallel()
-		dev := runtime.Create(t)
-		origin := runtime.Create(t)
+		dev := testruntime.Create(t)
+		origin := testruntime.Create(t)
 		err := dev.AddRemote(config.OriginRemote, origin.WorkingDir)
 		assert.NoError(t, err)
 		err = dev.CreateBranch("b1", "initial")
@@ -362,7 +362,7 @@ func TestTestCommands(t *testing.T) {
 
 	t.Run(".RemoveBranch()", func(t *testing.T) {
 		t.Parallel()
-		runtime := runtime.Create(t)
+		runtime := testruntime.Create(t)
 		err := runtime.CreateBranch("b1", "initial")
 		assert.NoError(t, err)
 		branches, err := runtime.LocalBranchesMainFirst("initial")
@@ -377,8 +377,8 @@ func TestTestCommands(t *testing.T) {
 
 	t.Run(".RemoveRemote()", func(t *testing.T) {
 		t.Parallel()
-		repo := runtime.Create(t)
-		origin := runtime.Create(t)
+		repo := testruntime.Create(t)
+		origin := testruntime.Create(t)
 		err := repo.AddRemote(config.OriginRemote, origin.WorkingDir)
 		assert.NoError(t, err)
 		err = repo.RemoveRemote(config.OriginRemote)
@@ -390,7 +390,7 @@ func TestTestCommands(t *testing.T) {
 
 	t.Run(".ShaForCommit()", func(t *testing.T) {
 		t.Parallel()
-		repo := runtime.Create(t)
+		repo := testruntime.Create(t)
 		err := repo.CreateCommit(git.Commit{Branch: "initial", FileName: "foo", FileContent: "bar", Message: "commit"})
 		assert.NoError(t, err)
 		sha, err := repo.ShaForCommit("commit")
@@ -400,7 +400,7 @@ func TestTestCommands(t *testing.T) {
 
 	t.Run(".UncommittedFiles()", func(t *testing.T) {
 		t.Parallel()
-		runtime := runtime.Create(t)
+		runtime := testruntime.Create(t)
 		err := runtime.CreateFile("f1.txt", "one")
 		assert.NoError(t, err)
 		err = runtime.CreateFile("f2.txt", "two")

@@ -12,7 +12,7 @@ import (
 	"github.com/git-town/git-town/v8/test/datatable"
 	"github.com/git-town/git-town/v8/test/git"
 	"github.com/git-town/git-town/v8/test/helpers"
-	"github.com/git-town/git-town/v8/test/runtime"
+	"github.com/git-town/git-town/v8/test/testruntime"
 )
 
 // Fixture is a complete Git environment for a Cucumber scenario.
@@ -23,21 +23,21 @@ type Fixture struct {
 	Dir string
 
 	// CoworkerRepo is the optional Git repository that is locally checked out at the coworker machine.
-	CoworkerRepo *runtime.TestRuntime `exhaustruct:"optional"`
+	CoworkerRepo *testruntime.TestRuntime `exhaustruct:"optional"`
 
 	// DevRepo is the Git repository that is locally checked out at the developer machine.
-	DevRepo runtime.TestRuntime `exhaustruct:"optional"`
+	DevRepo testruntime.TestRuntime `exhaustruct:"optional"`
 
 	// OriginRepo is the Git repository that simulates the origin repo (on GitHub).
 	// If this value is nil, the current test setup has no origin.
-	OriginRepo *runtime.TestRuntime `exhaustruct:"optional"`
+	OriginRepo *testruntime.TestRuntime `exhaustruct:"optional"`
 
 	// SubmoduleRepo is the Git repository that simulates an external repo used as a submodule.
 	// If this value is nil, the current test setup uses no submodules.
-	SubmoduleRepo *runtime.TestRuntime `exhaustruct:"optional"`
+	SubmoduleRepo *testruntime.TestRuntime `exhaustruct:"optional"`
 
 	// UpstreamRepo is the optional Git repository that contains the upstream for this environment.
-	UpstreamRepo *runtime.TestRuntime `exhaustruct:"optional"`
+	UpstreamRepo *testruntime.TestRuntime `exhaustruct:"optional"`
 }
 
 // CloneFixture provides a Fixture instance in the given directory,
@@ -49,9 +49,9 @@ func CloneFixture(original Fixture, dir string) (Fixture, error) {
 	}
 	binDir := filepath.Join(dir, "bin")
 	originDir := filepath.Join(dir, "origin")
-	originRepo := runtime.New(originDir, dir, "")
+	originRepo := testruntime.New(originDir, dir, "")
 	developerDir := filepath.Join(dir, "developer")
-	devRepo := runtime.New(developerDir, dir, binDir)
+	devRepo := testruntime.New(developerDir, dir, binDir)
 	result := Fixture{
 		Dir:        dir,
 		DevRepo:    devRepo,
@@ -96,7 +96,7 @@ func NewStandardFixture(dir string) (Fixture, error) {
 		return gitEnv, fmt.Errorf("cannot create directory %q: %w", gitEnv.originRepoPath(), err)
 	}
 	// initialize the repo in the folder
-	originRepo, err := runtime.Initialize(gitEnv.originRepoPath(), gitEnv.Dir, gitEnv.binPath())
+	originRepo, err := testruntime.Initialize(gitEnv.originRepoPath(), gitEnv.Dir, gitEnv.binPath())
 	if err != nil {
 		return gitEnv, err
 	}
@@ -109,7 +109,7 @@ func NewStandardFixture(dir string) (Fixture, error) {
 	}
 	gitEnv.OriginRepo = &originRepo
 	// clone the "developer" repo
-	gitEnv.DevRepo, err = runtime.Clone(originRepo.Mocking, gitEnv.developerRepoPath())
+	gitEnv.DevRepo, err = testruntime.Clone(originRepo.Mocking, gitEnv.developerRepoPath())
 	if err != nil {
 		return gitEnv, fmt.Errorf("cannot clone developer repo %q from origin %q: %w", gitEnv.originRepoPath(), gitEnv.developerRepoPath(), err)
 	}
@@ -134,7 +134,7 @@ func (env *Fixture) AddSubmoduleRepo() error {
 	if err != nil {
 		return fmt.Errorf("cannot create directory %q: %w", env.submoduleRepoPath(), err)
 	}
-	submoduleRepo, err := runtime.Initialize(env.submoduleRepoPath(), env.Dir, env.binPath())
+	submoduleRepo, err := testruntime.Initialize(env.submoduleRepoPath(), env.Dir, env.binPath())
 	if err != nil {
 		return err
 	}
@@ -151,7 +151,7 @@ func (env *Fixture) AddSubmoduleRepo() error {
 
 // AddUpstream adds an upstream repository.
 func (env *Fixture) AddUpstream() error {
-	repo, err := runtime.Clone(env.DevRepo.Mocking, filepath.Join(env.Dir, "upstream"))
+	repo, err := testruntime.Clone(env.DevRepo.Mocking, filepath.Join(env.Dir, "upstream"))
 	if err != nil {
 		return fmt.Errorf("cannot clone upstream: %w", err)
 	}
@@ -165,7 +165,7 @@ func (env *Fixture) AddUpstream() error {
 
 // AddCoworkerRepo adds a coworker repository.
 func (env *Fixture) AddCoworkerRepo() error {
-	coworkerRepo, err := runtime.Clone(env.OriginRepo.Mocking, env.coworkerRepoPath())
+	coworkerRepo, err := testruntime.Clone(env.OriginRepo.Mocking, env.coworkerRepoPath())
 	if err != nil {
 		return fmt.Errorf("cannot clone coworker: %w", err)
 	}
@@ -333,7 +333,7 @@ func (env Fixture) TagTable() (datatable.DataTable, error) {
 	return builder.Table(), nil
 }
 
-func (env Fixture) initializeWorkspace(repo *runtime.TestRuntime) error {
+func (env Fixture) initializeWorkspace(repo *testruntime.TestRuntime) error {
 	err := repo.Config.SetMainBranch("main")
 	if err != nil {
 		return err
