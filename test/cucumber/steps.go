@@ -226,7 +226,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^Git Town is not configured$`, func() error {
-		err := state.fixture.DevRepo.RemovePerennialBranchConfiguration()
+		err := state.fixture.DevRepo.Config.RemovePerennialBranchConfiguration()
 		if err != nil {
 			return err
 		}
@@ -435,9 +435,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^no branch hierarchy exists now$`, func() error {
-		state.fixture.DevRepo.Reload()
-		if state.fixture.DevRepo.HasBranchInformation() {
-			branchInfo := state.fixture.DevRepo.ParentBranchMap()
+		state.fixture.DevRepo.Config.Reload()
+		if state.fixture.DevRepo.Config.HasBranchInformation() {
+			branchInfo := state.fixture.DevRepo.Config.ParentBranchMap()
 			return fmt.Errorf("unexpected Git Town branch hierarchy information: %+v", branchInfo)
 		}
 		return nil
@@ -485,8 +485,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^offline mode is disabled$`, func() error {
-		state.fixture.DevRepo.Reload()
-		isOffline, err := state.fixture.DevRepo.IsOffline()
+		state.fixture.DevRepo.Config.Reload()
+		isOffline, err := state.fixture.DevRepo.Config.IsOffline()
 		if err != nil {
 			return err
 		}
@@ -497,7 +497,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^offline mode is enabled$`, func() error {
-		return state.fixture.DevRepo.SetOffline(true)
+		return state.fixture.DevRepo.Config.SetOffline(true)
 	})
 
 	suite.Step(`^origin deletes the "([^"]*)" branch$`, func(name string) error {
@@ -506,22 +506,22 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^Git setting "color.ui" is "([^"]*)"$`, func(value string) error {
-		return state.fixture.DevRepo.SetColorUI(value)
+		return state.fixture.DevRepo.Config.SetColorUI(value)
 	})
 
 	suite.Step(`^(?:local )?setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
-		_, err := state.fixture.DevRepo.SetLocalConfigValue("git-town."+name, value)
+		_, err := state.fixture.DevRepo.Config.SetLocalConfigValue("git-town."+name, value)
 		return err
 	})
 
 	suite.Step(`^global setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
-		_, err := state.fixture.DevRepo.SetGlobalConfigValue("git-town."+name, value)
+		_, err := state.fixture.DevRepo.Config.SetGlobalConfigValue("git-town."+name, value)
 		return err
 	})
 
 	suite.Step(`^local setting "([^"]*)" no longer exists$`, func(name string) error {
-		state.fixture.DevRepo.Reload()
-		newValue := state.fixture.DevRepo.LocalConfigValue("git-town." + name)
+		state.fixture.DevRepo.Config.Reload()
+		newValue := state.fixture.DevRepo.Config.LocalConfigValue("git-town." + name)
 		if newValue == "" {
 			return nil
 		}
@@ -529,8 +529,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^global setting "([^"]*)" no longer exists$`, func(name string) error {
-		state.fixture.DevRepo.Reload()
-		newValue := state.fixture.DevRepo.GlobalConfigValue("git-town." + name)
+		state.fixture.DevRepo.Config.Reload()
+		newValue := state.fixture.DevRepo.Config.GlobalConfigValue("git-town." + name)
 		if newValue == "" {
 			return nil
 		}
@@ -538,8 +538,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^setting "([^"]*)" is now "([^"]*)"$`, func(name, want string) error {
-		state.fixture.DevRepo.Reload()
-		have := state.fixture.DevRepo.LocalOrGlobalConfigValue("git-town." + name)
+		state.fixture.DevRepo.Config.Reload()
+		have := state.fixture.DevRepo.Config.LocalOrGlobalConfigValue("git-town." + name)
 		if have != want {
 			return fmt.Errorf("expected setting %q to be %q, but was %q", name, want, have)
 		}
@@ -547,8 +547,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^local setting "([^"]*)" is now "([^"]*)"$`, func(name, want string) error {
-		state.fixture.DevRepo.Reload()
-		have := state.fixture.DevRepo.LocalConfigValue("git-town." + name)
+		state.fixture.DevRepo.Config.Reload()
+		have := state.fixture.DevRepo.Config.LocalConfigValue("git-town." + name)
 		if have != want {
 			return fmt.Errorf("expected local setting %q to be %q, but was %q", name, want, have)
 		}
@@ -556,8 +556,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^global setting "([^"]*)" is (?:now|still) "([^"]*)"$`, func(name, want string) error {
-		state.fixture.DevRepo.Reload()
-		have := state.fixture.DevRepo.GlobalConfigValue("git-town." + name)
+		state.fixture.DevRepo.Config.Reload()
+		have := state.fixture.DevRepo.Config.GlobalConfigValue("git-town." + name)
 		if have != want {
 			return fmt.Errorf("expected global setting %q to be %q, but was %q", name, want, have)
 		}
@@ -604,7 +604,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if state.initialCurrentBranch == "" {
 			return state.fixture.DevRepo.CheckoutBranch("main")
 		}
-		if state.fixture.DevRepo.CurrentBranchCache.Value() != state.initialCurrentBranch {
+		if state.fixture.DevRepo.Config.CurrentBranchCache.Value() != state.initialCurrentBranch {
 			return state.fixture.DevRepo.CheckoutBranch(state.initialCurrentBranch)
 		}
 		return nil
@@ -624,7 +624,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the coworker sets the parent branch of "([^"]*)" as "([^"]*)"$`, func(childBranch, parentBranch string) error {
-		_ = state.fixture.CoworkerRepo.SetParent(childBranch, parentBranch)
+		_ = state.fixture.CoworkerRepo.Config.SetParent(childBranch, parentBranch)
 		return nil
 	})
 
@@ -633,7 +633,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return err
 		}
-		_ = state.fixture.CoworkerRepo.SetSyncStrategy(syncStrategy)
+		_ = state.fixture.CoworkerRepo.Config.SetSyncStrategy(syncStrategy)
 		return nil
 	})
 
@@ -675,7 +675,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			}
 		}
 		state.initialCurrentBranch = branch
-		if !state.fixture.DevRepo.CurrentBranchCache.Initialized() || state.fixture.DevRepo.CurrentBranchCache.Value() != branch {
+		if !state.fixture.DevRepo.Config.CurrentBranchCache.Initialized() || state.fixture.DevRepo.Config.CurrentBranchCache.Value() != branch {
 			return state.fixture.DevRepo.CheckoutBranch(branch)
 		}
 		return nil
@@ -691,7 +691,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the current branch is (?:now|still) "([^"]*)"$`, func(expected string) error {
-		state.fixture.DevRepo.CurrentBranchCache.Invalidate()
+		state.fixture.DevRepo.Config.CurrentBranchCache.Invalidate()
 		actual, err := state.fixture.DevRepo.CurrentBranch()
 		if err != nil {
 			return fmt.Errorf("cannot determine current branch of developer repo: %w", err)
@@ -836,12 +836,12 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the main branch is "([^"]+)"$`, func(name string) error {
-		return state.fixture.DevRepo.SetMainBranch(name)
+		return state.fixture.DevRepo.Config.SetMainBranch(name)
 	})
 
 	suite.Step(`^the main branch is now "([^"]+)"$`, func(name string) error {
-		state.fixture.DevRepo.Reload()
-		actual := state.fixture.DevRepo.MainBranch()
+		state.fixture.DevRepo.Config.Reload()
+		actual := state.fixture.DevRepo.Config.MainBranch()
 		if actual != name {
 			return fmt.Errorf("expected %q, got %q", name, actual)
 		}
@@ -854,20 +854,20 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the perennial branches are "([^"]+)"$`, func(name string) error {
-		return state.fixture.DevRepo.AddToPerennialBranches(name)
+		return state.fixture.DevRepo.Config.AddToPerennialBranches(name)
 	})
 
 	suite.Step(`^the perennial branches are "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
-		return state.fixture.DevRepo.AddToPerennialBranches(branch1, branch2)
+		return state.fixture.DevRepo.Config.AddToPerennialBranches(branch1, branch2)
 	})
 
 	suite.Step(`^the perennial branches are not configured$`, func() error {
-		return state.fixture.DevRepo.RemovePerennialBranchConfiguration()
+		return state.fixture.DevRepo.Config.RemovePerennialBranchConfiguration()
 	})
 
 	suite.Step(`^the perennial branches are now "([^"]+)"$`, func(name string) error {
-		state.fixture.DevRepo.Reload()
-		actual := state.fixture.DevRepo.PerennialBranches()
+		state.fixture.DevRepo.Config.Reload()
+		actual := state.fixture.DevRepo.Config.PerennialBranches()
 		if len(actual) != 1 {
 			return fmt.Errorf("expected 1 perennial branch, got %q", actual)
 		}
@@ -878,8 +878,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the perennial branches are now "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
-		state.fixture.DevRepo.Reload()
-		actual := state.fixture.DevRepo.PerennialBranches()
+		state.fixture.DevRepo.Config.Reload()
+		actual := state.fixture.DevRepo.Config.PerennialBranches()
 		if len(actual) != 2 {
 			return fmt.Errorf("expected 2 perennial branches, got %q", actual)
 		}
@@ -943,8 +943,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^there are still no perennial branches$`, func() error {
-		state.fixture.DevRepo.Reload()
-		branches := state.fixture.DevRepo.PerennialBranches()
+		state.fixture.DevRepo.Config.Reload()
+		branches := state.fixture.DevRepo.Config.PerennialBranches()
 		if len(branches) > 0 {
 			return fmt.Errorf("expected no perennial branches, got %q", branches)
 		}

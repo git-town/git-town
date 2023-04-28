@@ -70,7 +70,7 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 	}
 	backendCommands := git.BackendCommands{
 		BackendRunner: prodshell.BackendRunner{Dir: &workingDir, Verbose: false, Stats: &execute.NoStatistics{}},
-		RepoConfig:    &config,
+		Config:        &config,
 	}
 	testCommands := commands.TestCommands{
 		Mocking:         mockingRunner,
@@ -89,9 +89,9 @@ func CreateGitTown(t *testing.T) TestRuntime {
 	repo := Create(t)
 	err := repo.CreateBranch("main", "initial")
 	assert.NoError(t, err)
-	err = repo.SetMainBranch("main")
+	err = repo.Config.SetMainBranch("main")
 	assert.NoError(t, err)
-	err = repo.SetPerennialBranches([]string{})
+	err = repo.Config.SetPerennialBranches([]string{})
 	assert.NoError(t, err)
 	return repo
 }

@@ -21,7 +21,7 @@ func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, exit bool, err er
 		Config: config,
 		Backend: git.BackendCommands{
 			BackendRunner: backendRunner,
-			RepoConfig:    &config,
+			Config:        &config,
 		},
 		Frontend: git.FrontendCommands{
 			FrontendRunner: NewFrontendRunner(args.OmitBranchNames, args.DryRun, config.CurrentBranchCache, stats),

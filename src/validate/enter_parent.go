@@ -13,7 +13,7 @@ func EnterParent(branch, defaultParent string, backend *git.BackendCommands) (st
 	if err != nil {
 		return "", err
 	}
-	filteredChoices := filterOutSelfAndDescendants(branch, choices, backend.RepoConfig)
+	filteredChoices := filterOutSelfAndDescendants(branch, choices, backend.Config)
 	return dialog.Select(dialog.SelectArgs{
 		Options: append([]string{perennialBranchOption}, filteredChoices...),
 		Message: fmt.Sprintf(parentBranchPromptTemplate, branch),

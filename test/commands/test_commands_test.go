@@ -197,9 +197,9 @@ func TestTestCommands(t *testing.T) {
 		branches, err := runtime.LocalBranchesMainFirst("main")
 		assert.NoError(t, err)
 		assert.Equal(t, []string{"main", "initial", "p1", "p2"}, branches)
-		runtime.Reload()
-		assert.True(t, runtime.IsPerennialBranch("p1"))
-		assert.True(t, runtime.IsPerennialBranch("p2"))
+		runtime.Config.Reload()
+		assert.True(t, runtime.Config.IsPerennialBranch("p1"))
+		assert.True(t, runtime.Config.IsPerennialBranch("p2"))
 	})
 
 	t.Run(".Fetch()", func(t *testing.T) {
