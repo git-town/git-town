@@ -18,7 +18,6 @@ import (
 // TestCommands defines Git commands used only in test code.
 type TestCommands struct {
 	subshell.Mocking
-	Config *prodgit.RepoConfig
 	*prodgit.BackendCommands
 }
 
