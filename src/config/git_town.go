@@ -304,7 +304,7 @@ func (gt *GitTown) RemoveFromPerennialBranches(branch string) error {
 
 // RemoveLocalGitConfiguration removes all Git Town configuration.
 func (gt *GitTown) RemoveLocalGitConfiguration() error {
-	_, err := gt.Query("git", "config", "--remove-section", "git-town")
+	err := gt.Run("git", "config", "--remove-section", "git-town")
 	if err != nil {
 		var exitErr *exec.ExitError
 		if errors.As(err, &exitErr) {
@@ -338,20 +338,20 @@ func (gt *GitTown) RemovePerennialBranchConfiguration() error {
 // SetCodeHostingDriver sets the "github.code-hosting-driver" setting.
 func (gt *GitTown) SetCodeHostingDriver(value string) error {
 	gt.localConfigCache[CodeHostingDriverKey] = value
-	_, err := gt.Query("git", "config", CodeHostingDriverKey, value)
+	err := gt.Run("git", "config", CodeHostingDriverKey, value)
 	return err
 }
 
 // SetCodeHostingOriginHostname sets the "github.code-hosting-driver" setting.
 func (gt *GitTown) SetCodeHostingOriginHostname(value string) error {
 	gt.localConfigCache[CodeHostingOriginHostnameKey] = value
-	_, err := gt.Query("git", "config", CodeHostingOriginHostnameKey, value)
+	err := gt.Run("git", "config", CodeHostingOriginHostnameKey, value)
 	return err
 }
 
 // SetColorUI configures whether Git output contains color codes.
 func (gt *GitTown) SetColorUI(value string) error {
-	_, err := gt.Query("git", "config", "color.ui", value)
+	err := gt.Run("git", "config", "color.ui", value)
 	return err
 }
 
