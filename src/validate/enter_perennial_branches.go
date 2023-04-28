@@ -16,7 +16,7 @@ func EnterPerennialBranches(backend *git.BackendCommands, mainBranch string) err
 	if err != nil {
 		return err
 	}
-	oldPerennialBranches := backend.Config.PerennialBranches()
+	oldPerennialBranches := backend.PerennialBranches()
 	newPerennialBranches, err := dialog.MultiSelect(dialog.MultiSelectArgs{
 		Options:  localBranchesWithoutMain,
 		Defaults: oldPerennialBranches,
@@ -25,7 +25,7 @@ func EnterPerennialBranches(backend *git.BackendCommands, mainBranch string) err
 	if err != nil {
 		return err
 	}
-	return backend.Config.SetPerennialBranches(newPerennialBranches)
+	return backend.SetPerennialBranches(newPerennialBranches)
 }
 
 func perennialBranchesPrompt(perennialBranches []string) string {

@@ -15,7 +15,7 @@ func EnterMainBranch(backend *git.BackendCommands) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	oldMainBranch := backend.Config.MainBranch()
+	oldMainBranch := backend.MainBranch()
 	newMainBranch, err := dialog.Select(dialog.SelectArgs{
 		Options: localBranches,
 		Message: mainBranchPrompt(oldMainBranch),
@@ -24,7 +24,7 @@ func EnterMainBranch(backend *git.BackendCommands) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return newMainBranch, backend.Config.SetMainBranch(newMainBranch)
+	return newMainBranch, backend.SetMainBranch(newMainBranch)
 }
 
 func mainBranchPrompt(mainBranch string) string {

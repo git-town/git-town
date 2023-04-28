@@ -22,8 +22,8 @@ type BackendRunner interface {
 // They don't change the user's repo, execute instantaneously, and Git Town needs to know their output.
 // They are invisible to the end user unless the "debug" option is set.
 type BackendCommands struct {
-	BackendRunner             // executes shell commands in the directory of the Git repo
-	Config        *RepoConfig // the known state of the Git repository
+	BackendRunner // executes shell commands in the directory of the Git repo
+	*RepoConfig   // the known state of the Git repository
 }
 
 // Author provides the locally Git configured user.
@@ -67,16 +67,16 @@ func (bc *BackendCommands) BranchHasUnmergedCommits(branch, parent string) (bool
 
 // CheckoutBranch checks out the Git branch with the given name.
 func (bc *BackendCommands) CheckoutBranch(name string) error {
-	if !bc.Config.DryRun {
+	if !bc.DryRun {
 		_, err := bc.Run("git", "checkout", name)
 		if err != nil {
 			return fmt.Errorf("cannot check out branch %q: %w", name, err)
 		}
 	}
 	if name != "-" {
-		bc.Config.CurrentBranchCache.Set(name)
+		bc.CurrentBranchCache.Set(name)
 	} else {
-		bc.Config.CurrentBranchCache.Invalidate()
+		bc.CurrentBranchCache.Invalidate()
 	}
 	return nil
 }
@@ -111,11 +111,11 @@ func (bc *BackendCommands) CreateFeatureBranch(name string) error {
 
 // CurrentBranch provides the currently checked out branch.
 func (bc *BackendCommands) CurrentBranch() (string, error) {
-	if bc.Config.DryRun {
-		return bc.Config.CurrentBranchCache.Value(), nil
+	if bc.DryRun {
+		return bc.CurrentBranchCache.Value(), nil
 	}
-	if bc.Config.CurrentBranchCache.Initialized() {
-		return bc.Config.CurrentBranchCache.Value(), nil
+	if bc.CurrentBranchCache.Initialized() {
+		return bc.CurrentBranchCache.Value(), nil
 	}
 	rebasing, err := bc.HasRebaseInProgress()
 	if err != nil {
@@ -126,15 +126,15 @@ func (bc *BackendCommands) CurrentBranch() (string, error) {
 		if err != nil {
 			return "", err
 		}
-		bc.Config.CurrentBranchCache.Set(currentBranch)
+		bc.CurrentBranchCache.Set(currentBranch)
 		return currentBranch, nil
 	}
 	output, err := bc.Run("git", "rev-parse", "--abbrev-ref", "HEAD")
 	if err != nil {
 		return "", fmt.Errorf("cannot determine the current branch: %w", err)
 	}
-	bc.Config.CurrentBranchCache.Set(output)
-	return bc.Config.CurrentBranchCache.Value(), nil
+	bc.CurrentBranchCache.Set(output)
+	return bc.CurrentBranchCache.Value(), nil
 }
 
 func (bc *BackendCommands) currentBranchDuringRebase() (string, error) {
@@ -298,11 +298,11 @@ func (bc *BackendCommands) IsBranchInSync(branch string) (bool, error) {
 
 // IsRepository returns whether or not the current directory is in a repository.
 func (bc *BackendCommands) IsRepository() bool {
-	if !bc.Config.IsRepoCache.Initialized() {
+	if !bc.IsRepoCache.Initialized() {
 		_, err := bc.Run("git", "rev-parse")
-		bc.Config.IsRepoCache.Set(err == nil)
+		bc.IsRepoCache.Set(err == nil)
 	}
-	return bc.Config.IsRepoCache.Value()
+	return bc.IsRepoCache.Value()
 }
 
 // LastCommitMessage provides the commit message for the last commit.
@@ -408,7 +408,7 @@ func (bc *BackendCommands) PreviouslyCheckedOutBranch() (string, error) {
 
 // RemoteBranches provides the names of the remote branches in this repo.
 func (bc *BackendCommands) RemoteBranches() ([]string, error) {
-	if !bc.Config.RemoteBranchCache.Initialized() {
+	if !bc.RemoteBranchCache.Initialized() {
 		output, err := bc.Run("git", "branch", "-r")
 		if err != nil {
 			return []string{}, fmt.Errorf("cannot determine remote branches: %w", err)
@@ -420,38 +420,38 @@ func (bc *BackendCommands) RemoteBranches() ([]string, error) {
 				branches = append(branches, strings.TrimSpace(line))
 			}
 		}
-		bc.Config.RemoteBranchCache.Set(branches)
+		bc.RemoteBranchCache.Set(branches)
 	}
-	return bc.Config.RemoteBranchCache.Value(), nil
+	return bc.RemoteBranchCache.Value(), nil
 }
 
 // Remotes provides the names of all Git remotes in this repository.
 func (bc *BackendCommands) Remotes() ([]string, error) {
-	if !bc.Config.RemotesCache.Initialized() {
+	if !bc.RemotesCache.Initialized() {
 		out, err := bc.Run("git", "remote")
 		if err != nil {
 			return []string{}, fmt.Errorf("cannot determine remotes: %w", err)
 		}
 		if out == "" {
-			bc.Config.RemotesCache.Set([]string{})
+			bc.RemotesCache.Set([]string{})
 		} else {
-			bc.Config.RemotesCache.Set(stringslice.Lines(out))
+			bc.RemotesCache.Set(stringslice.Lines(out))
 		}
 	}
-	return bc.Config.RemotesCache.Value(), nil
+	return bc.RemotesCache.Value(), nil
 }
 
 // RemoveOutdatedConfiguration removes outdated Git Town configuration.
 func (bc *BackendCommands) RemoveOutdatedConfiguration() error {
-	branches, err := bc.LocalAndOriginBranches(bc.Config.MainBranch())
+	branches, err := bc.LocalAndOriginBranches(bc.MainBranch())
 	if err != nil {
 		return err
 	}
-	for child, parent := range bc.Config.ParentBranchMap() {
+	for child, parent := range bc.ParentBranchMap() {
 		hasChildBranch := stringslice.Contains(branches, child)
 		hasParentBranch := stringslice.Contains(branches, parent)
 		if !hasChildBranch || !hasParentBranch {
-			err = bc.Config.RemoveParent(child)
+			err = bc.RemoveParent(child)
 			if err != nil {
 				return err
 			}
@@ -463,14 +463,14 @@ func (bc *BackendCommands) RemoveOutdatedConfiguration() error {
 // RootDirectory provides the path of the rood directory of the current repository,
 // i.e. the directory that contains the ".git" folder.
 func (bc *BackendCommands) RootDirectory() (string, error) {
-	if !bc.Config.RootDirCache.Initialized() {
+	if !bc.RootDirCache.Initialized() {
 		output, err := bc.Run("git", "rev-parse", "--show-toplevel")
 		if err != nil {
 			return "", fmt.Errorf("cannot determine root directory: %w", err)
 		}
-		bc.Config.RootDirCache.Set(filepath.FromSlash(output))
+		bc.RootDirCache.Set(filepath.FromSlash(output))
 	}
-	return bc.Config.RootDirCache.Value(), nil
+	return bc.RootDirCache.Value(), nil
 }
 
 // ShaForBranch provides the SHA for the local branch with the given name.

@@ -27,7 +27,7 @@ func (r *TestCommands) AddRemote(name, url string) error {
 	if err != nil {
 		return fmt.Errorf("cannot add remote %q --> %q: %w", name, url, err)
 	}
-	r.Config.RemotesCache.Invalidate()
+	r.RemotesCache.Invalidate()
 	return nil
 }
 
@@ -44,8 +44,8 @@ func (r *TestCommands) AddSubmodule(url string) error {
 // BranchHierarchyTable provides the currently configured branch hierarchy information as a DataTable.
 func (r *TestCommands) BranchHierarchyTable() datatable.DataTable {
 	result := datatable.DataTable{}
-	r.Config.Reload()
-	parentBranchMap := r.Config.ParentBranchMap()
+	r.Reload()
+	parentBranchMap := r.ParentBranchMap()
 	result.AddRow("BRANCH", "PARENT")
 	childBranches := make([]string, 0, len(parentBranchMap))
 	for child := range parentBranchMap {
@@ -65,9 +65,9 @@ func (r *TestCommands) CheckoutBranch(name string) error {
 		return fmt.Errorf("cannot check out branch %q: %w", name, err)
 	}
 	if name != "-" {
-		r.Config.CurrentBranchCache.Set(name)
+		r.CurrentBranchCache.Set(name)
 	} else {
-		r.Config.CurrentBranchCache.Invalidate()
+		r.CurrentBranchCache.Invalidate()
 	}
 	return nil
 }
@@ -87,7 +87,7 @@ func (r *TestCommands) CreateChildFeatureBranch(name string, parent string) erro
 	if err != nil {
 		return err
 	}
-	return r.Config.SetParent(name, parent)
+	return r.SetParent(name, parent)
 }
 
 // CreateCommit creates a commit with the given properties in this Git repo.
@@ -138,7 +138,7 @@ func (r *TestCommands) CreatePerennialBranches(names ...string) error {
 			return fmt.Errorf("cannot create perennial branch %q in repo %q: %w", name, r.WorkingDir, err)
 		}
 	}
-	return r.Config.AddToPerennialBranches(names...)
+	return r.AddToPerennialBranches(names...)
 }
 
 // CreateStandaloneTag creates a tag not on a branch.
@@ -361,7 +361,7 @@ func (r *TestCommands) RemoveBranch(name string) error {
 
 // RemoveRemote deletes the Git remote with the given name.
 func (r *TestCommands) RemoveRemote(name string) error {
-	r.Config.RemotesCache.Invalidate()
+	r.RemotesCache.Invalidate()
 	_, err := r.Run("git", "remote", "rm", name)
 	return err
 }

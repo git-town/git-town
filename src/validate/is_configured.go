@@ -8,7 +8,7 @@ import (
 
 // IsConfigured verifies that the given Git repo contains necessary Git Town configuration.
 func IsConfigured(backend *git.BackendCommands) error {
-	mainBranch := backend.Config.MainBranch()
+	mainBranch := backend.MainBranch()
 	if mainBranch == "" {
 		fmt.Print("Git Town needs to be configured\n\n")
 		mainBranch, err := EnterMainBranch(backend)
