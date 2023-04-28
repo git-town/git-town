@@ -10,9 +10,9 @@ import (
 	"github.com/git-town/git-town/v8/src/config"
 	"github.com/git-town/git-town/v8/src/execute"
 	"github.com/git-town/git-town/v8/src/git"
-	"github.com/git-town/git-town/v8/src/subshell"
+	prodshell "github.com/git-town/git-town/v8/src/subshell"
 	"github.com/git-town/git-town/v8/test/commands"
-	subshell_t "github.com/git-town/git-town/v8/test/subshell"
+	testshell "github.com/git-town/git-town/v8/test/subshell"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -54,7 +54,7 @@ func Initialize(workingDir, homeDir, binDir string) (Runtime, error) {
 // newRuntime provides a new test.Runner instance working in the given directory.
 // The directory must contain an existing Git repo.
 func New(workingDir, homeDir, binDir string) Runtime {
-	mockingRunner := subshell_t.Mocking{
+	mockingRunner := testshell.Mocking{
 		WorkingDir: workingDir,
 		HomeDir:    homeDir,
 		BinDir:     binDir,
@@ -69,7 +69,7 @@ func New(workingDir, homeDir, binDir string) Runtime {
 		RootDirCache:       &cache.String{},
 	}
 	backendCommands := git.BackendCommands{
-		BackendRunner: subshell.BackendRunner{Dir: &workingDir, Verbose: false, Stats: &execute.NoStatistics{}},
+		BackendRunner: prodshell.BackendRunner{Dir: &workingDir, Verbose: false, Stats: &execute.NoStatistics{}},
 		RepoConfig:    &config,
 	}
 	testCommands := commands.TestCommands{
@@ -98,7 +98,7 @@ func CreateGitTown(t *testing.T) Runtime {
 
 // Clone creates a clone of the repository managed by this test.Runner into the given directory.
 // The cloned repo uses the same homeDir and binDir as its origin.
-func Clone(original subshell_t.Mocking, targetDir string) (Runtime, error) {
+func Clone(original testshell.Mocking, targetDir string) (Runtime, error) {
 	_, err := original.Run("git", "clone", original.WorkingDir, targetDir)
 	if err != nil {
 		return Runtime{}, fmt.Errorf("cannot clone repo %q: %w", original.WorkingDir, err)
