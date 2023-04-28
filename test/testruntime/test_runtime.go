@@ -54,7 +54,7 @@ func Initialize(workingDir, homeDir, binDir string) (TestRuntime, error) {
 // newRuntime provides a new test.Runner instance working in the given directory.
 // The directory must contain an existing Git repo.
 func New(workingDir, homeDir, binDir string) TestRuntime {
-	mockingRunner := testshell.Mocking{
+	mockingRunner := testshell.TestRunner{
 		WorkingDir: workingDir,
 		HomeDir:    homeDir,
 		BinDir:     binDir,
@@ -73,7 +73,7 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 		Config:        &config,
 	}
 	testCommands := commands.TestCommands{
-		Mocking:         mockingRunner,
+		TestRunner:      mockingRunner,
 		BackendCommands: &backendCommands,
 	}
 	return TestRuntime{
@@ -98,7 +98,7 @@ func CreateGitTown(t *testing.T) TestRuntime {
 
 // Clone creates a clone of the repository managed by this test.Runner into the given directory.
 // The cloned repo uses the same homeDir and binDir as its origin.
-func Clone(original testshell.Mocking, targetDir string) (TestRuntime, error) {
+func Clone(original testshell.TestRunner, targetDir string) (TestRuntime, error) {
 	_, err := original.Run("git", "clone", original.WorkingDir, targetDir)
 	if err != nil {
 		return TestRuntime{}, fmt.Errorf("cannot clone repo %q: %w", original.WorkingDir, err)

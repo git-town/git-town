@@ -27,7 +27,7 @@ func TestRunner(t *testing.T) {
 		t.Parallel()
 		origin := testruntime.Create(t)
 		clonedPath := filepath.Join(origin.WorkingDir, "cloned")
-		cloned, err := testruntime.Clone(origin.Mocking, clonedPath)
+		cloned, err := testruntime.Clone(origin.TestRunner, clonedPath)
 		assert.NoError(t, err)
 		assert.Equal(t, clonedPath, cloned.WorkingDir)
 		asserts.IsGitRepo(t, clonedPath)
