@@ -59,7 +59,7 @@ func CloneFixture(original Fixture, dir string) (Fixture, error) {
 	}
 	// Since we copied the files from the memoized directory,
 	// we have to set the "origin" remote to the copied origin repo here.
-	_, err = result.DevRepo.Run("git", "remote", "remove", config.OriginRemote)
+	err = result.DevRepo.Run("git", "remote", "remove", config.OriginRemote)
 	if err != nil {
 		return Fixture{}, fmt.Errorf("cannot remove remote: %w", err)
 	}

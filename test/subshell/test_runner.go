@@ -149,8 +149,15 @@ func (r *TestRunner) MustRunWith(opts *Options, cmd string, args ...string) stri
 
 // Run runs the given command with the given arguments.
 // Overrides will be used and removed when done.
-func (r *TestRunner) Run(name string, arguments ...string) (string, int) {
-	return r.RunWith(&Options{}, name, arguments...)
+func (r *TestRunner) Query(name string, arguments ...string) (string, error) {
+	return r.QueryWith(&Options{}, name, arguments...)
+}
+
+// Run runs the given command with the given arguments.
+// Overrides will be used and removed when done.
+func (r *TestRunner) Run(name string, arguments ...string) error {
+	_, err := r.QueryWith(&Options{IgnoreOutput: true}, name, arguments...)
+	return err
 }
 
 // RunMany runs all given commands.
@@ -160,31 +167,31 @@ func (r *TestRunner) Run(name string, arguments ...string) (string, int) {
 func (r *TestRunner) RunMany(commands [][]string) {
 	for _, argv := range commands {
 		command, args := argv[0], argv[1:]
-		_, exitcode := r.Run(command, args...)
+		exitcode := r.Run(command, args...)
 		if exitcode != 0 {
 			panic(fmt.Sprintf("process %v returned exit code %d", argv, exitcode))
 		}
 	}
 }
 
-// RunString runs the given command (including possible arguments).
+// QueryString runs the given command (including possible arguments).
 // Overrides will be used and removed when done.
-func (r *TestRunner) RunString(fullCmd string) (string, int) {
-	return r.RunStringWith(fullCmd, &Options{})
+func (r *TestRunner) QueryString(fullCmd string) (string, error) {
+	return r.QueryStringWith(fullCmd, &Options{})
 }
 
-// RunStringWith runs the given command (including possible arguments) using the given options.
+// QueryStringWith runs the given command (including possible arguments) using the given options.
 // opts.Dir is a relative path inside the working directory of this ShellRunner.
 // Overrides will be used and removed when done.
-func (r *TestRunner) RunStringWith(fullCmd string, opts *Options) (string, int) {
+func (r *TestRunner) QueryStringWith(fullCmd string, opts *Options) (string, error) {
 	parts, err := shellquote.Split(fullCmd)
 	asserts.NoError(err)
 	cmd, args := parts[0], parts[1:]
-	return r.RunWith(opts, cmd, args...)
+	return r.QueryWith(opts, cmd, args...)
 }
 
-// RunWith runs the given command with the given options in this ShellRunner's directory.
-func (r *TestRunner) RunWith(opts *Options, cmd string, args ...string) (string, int) {
+// QueryWith runs the given command with the given options in this ShellRunner's directory.
+func (r *TestRunner) QueryWith(opts *Options, cmd string, args ...string) (string, error) {
 	// create an environment with the temp Overrides directory added to the PATH
 	if opts.Env == nil {
 		opts.Env = os.Environ()
@@ -242,7 +249,13 @@ func (r *TestRunner) RunWith(opts *Options, cmd string, args ...string) (string,
 			fmt.Printf("ERROR: %v\n", err)
 		}
 	}
-	return strings.TrimSpace(output.String()), exitCode
+	if exitCode != 0 {
+		err = fmt.Errorf("process \"%s %s\" failed with code %d, output:\n%s", cmd, strings.Join(args, " "), exitCode, output.String())
+	}
+	if opts.IgnoreOutput {
+		return "", err
+	}
+	return strings.TrimSpace(output.String()), err
 }
 
 // SetTestOrigin adds the given environment variable to subsequent runs of commands.
@@ -263,4 +276,7 @@ type Options struct {
 	// Input contains the user input to enter into the running command.
 	// It is written to the subprocess one element at a time, with a delay defined by command.InputDelay in between.
 	Input []string // input into the subprocess
+
+	// when set, captures the output and returns it
+	IgnoreOutput bool
 }

@@ -207,7 +207,7 @@ func (gt *GitTown) OriginURLString() string {
 	if remote != "" {
 		return remote
 	}
-	output, _ := gt.Run("git", "remote", "get-url", OriginRemote)
+	output, _ := gt.Query("git", "remote", "get-url", OriginRemote)
 	return output
 }
 
@@ -304,7 +304,7 @@ func (gt *GitTown) RemoveFromPerennialBranches(branch string) error {
 
 // RemoveLocalGitConfiguration removes all Git Town configuration.
 func (gt *GitTown) RemoveLocalGitConfiguration() error {
-	_, err := gt.Run("git", "config", "--remove-section", "git-town")
+	err := gt.Run("git", "config", "--remove-section", "git-town")
 	if err != nil {
 		var exitErr *exec.ExitError
 		if errors.As(err, &exitErr) {
@@ -338,27 +338,27 @@ func (gt *GitTown) RemovePerennialBranchConfiguration() error {
 // SetCodeHostingDriver sets the "github.code-hosting-driver" setting.
 func (gt *GitTown) SetCodeHostingDriver(value string) error {
 	gt.localConfigCache[CodeHostingDriverKey] = value
-	_, err := gt.Run("git", "config", CodeHostingDriverKey, value)
+	err := gt.Run("git", "config", CodeHostingDriverKey, value)
 	return err
 }
 
 // SetCodeHostingOriginHostname sets the "github.code-hosting-driver" setting.
 func (gt *GitTown) SetCodeHostingOriginHostname(value string) error {
 	gt.localConfigCache[CodeHostingOriginHostnameKey] = value
-	_, err := gt.Run("git", "config", CodeHostingOriginHostnameKey, value)
+	err := gt.Run("git", "config", CodeHostingOriginHostnameKey, value)
 	return err
 }
 
 // SetColorUI configures whether Git output contains color codes.
 func (gt *GitTown) SetColorUI(value string) error {
-	_, err := gt.Run("git", "config", "color.ui", value)
+	err := gt.Run("git", "config", "color.ui", value)
 	return err
 }
 
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
 func (gt *GitTown) SetMainBranch(branch string) error {
-	_, err := gt.SetLocalConfigValue(MainBranchKey, branch)
+	err := gt.SetLocalConfigValue(MainBranchKey, branch)
 	return err
 }
 
@@ -370,7 +370,7 @@ func (gt *GitTown) SetNewBranchPush(value bool, global bool) error {
 		_, err := gt.SetGlobalConfigValue(PushNewBranchesKey, setting)
 		return err
 	}
-	_, err := gt.SetLocalConfigValue(PushNewBranchesKey, setting)
+	err := gt.SetLocalConfigValue(PushNewBranchesKey, setting)
 	return err
 }
 
@@ -383,25 +383,25 @@ func (gt *GitTown) SetOffline(value bool) error {
 // SetParent marks the given branch as the direct parent of the other given branch
 // in the Git Town configuration.
 func (gt *GitTown) SetParent(branch, parentBranch string) error {
-	_, err := gt.SetLocalConfigValue("git-town-branch."+branch+".parent", parentBranch)
+	err := gt.SetLocalConfigValue("git-town-branch."+branch+".parent", parentBranch)
 	return err
 }
 
 // SetPerennialBranches marks the given branches as perennial branches.
 func (gt *GitTown) SetPerennialBranches(branch []string) error {
-	_, err := gt.SetLocalConfigValue(PerennialBranchesKey, strings.Join(branch, " "))
+	err := gt.SetLocalConfigValue(PerennialBranchesKey, strings.Join(branch, " "))
 	return err
 }
 
 // SetPullBranchStrategy updates the configured pull branch strategy.
 func (gt *GitTown) SetPullBranchStrategy(strategy PullBranchStrategy) error {
-	_, err := gt.SetLocalConfigValue(PullBranchStrategyKey, string(strategy))
+	err := gt.SetLocalConfigValue(PullBranchStrategyKey, string(strategy))
 	return err
 }
 
 // SetPushHookLocally updates the configured pull branch strategy.
 func (gt *GitTown) SetPushHookLocally(value bool) error {
-	_, err := gt.SetLocalConfigValue(PushHookKey, strconv.FormatBool(value))
+	err := gt.SetLocalConfigValue(PushHookKey, strconv.FormatBool(value))
 	return err
 }
 
@@ -413,18 +413,18 @@ func (gt *GitTown) SetPushHookGlobally(value bool) error {
 
 // SetShouldShipDeleteRemoteBranch updates the configured pull branch strategy.
 func (gt *GitTown) SetShouldShipDeleteRemoteBranch(value bool) error {
-	_, err := gt.SetLocalConfigValue(ShipDeleteRemoteBranchKey, strconv.FormatBool(value))
+	err := gt.SetLocalConfigValue(ShipDeleteRemoteBranchKey, strconv.FormatBool(value))
 	return err
 }
 
 // SetShouldSyncUpstream updates the configured pull branch strategy.
 func (gt *GitTown) SetShouldSyncUpstream(value bool) error {
-	_, err := gt.SetLocalConfigValue(SyncUpstreamKey, strconv.FormatBool(value))
+	err := gt.SetLocalConfigValue(SyncUpstreamKey, strconv.FormatBool(value))
 	return err
 }
 
 func (gt *GitTown) SetSyncStrategy(value SyncStrategy) error {
-	_, err := gt.SetLocalConfigValue(SyncStrategyKey, string(value))
+	err := gt.SetLocalConfigValue(SyncStrategyKey, string(value))
 	return err
 }
 
@@ -435,7 +435,7 @@ func (gt *GitTown) SetSyncStrategyGlobal(value SyncStrategy) error {
 
 // SetTestOrigin sets the origin to be used for testing.
 func (gt *GitTown) SetTestOrigin(value string) error {
-	_, err := gt.SetLocalConfigValue(TestingRemoteURLKey, value)
+	err := gt.SetLocalConfigValue(TestingRemoteURLKey, value)
 	return err
 }
 
@@ -535,7 +535,7 @@ func (gt *GitTown) updateDeprecatedLocalSetting(deprecatedKey, newKey string) er
 		if err != nil {
 			return err
 		}
-		_, err = gt.SetLocalConfigValue(newKey, deprecatedSetting)
+		err = gt.SetLocalConfigValue(newKey, deprecatedSetting)
 		return err
 	}
 	return nil

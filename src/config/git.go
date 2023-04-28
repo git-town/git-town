@@ -18,7 +18,8 @@ type Git struct {
 }
 
 type runner interface {
-	Run(executable string, args ...string) (string, error)
+	Query(executable string, args ...string) (string, error)
+	Run(executable string, args ...string) error
 }
 
 // LoadGit provides the Git configuration from the given directory or the global one if the global flag is set.
@@ -30,7 +31,7 @@ func LoadGit(runner runner, global bool) map[string]string {
 	} else {
 		cmdArgs = append(cmdArgs, "--local")
 	}
-	output, err := runner.Run("git", cmdArgs...)
+	output, err := runner.Query("git", cmdArgs...)
 	if err != nil {
 		return result
 	}
@@ -97,24 +98,24 @@ func (g *Git) Reload() {
 
 func (g *Git) RemoveGlobalConfigValue(key string) (string, error) {
 	delete(g.globalConfigCache, key)
-	return g.Run("git", "config", "--global", "--unset", key)
+	return g.Query("git", "config", "--global", "--unset", key)
 }
 
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
 func (g *Git) RemoveLocalConfigValue(key string) error {
 	delete(g.localConfigCache, key)
-	_, err := g.runner.Run("git", "config", "--unset", key)
+	err := g.runner.Run("git", "config", "--unset", key)
 	return err
 }
 
 // SetGlobalConfigValue sets the given configuration setting in the global Git configuration.
 func (g *Git) SetGlobalConfigValue(key, value string) (string, error) {
 	g.globalConfigCache[key] = value
-	return g.runner.Run("git", "config", "--global", key, value)
+	return g.runner.Query("git", "config", "--global", key, value)
 }
 
 // SetLocalConfigValue sets the local configuration with the given key to the given value.
-func (g *Git) SetLocalConfigValue(key, value string) (string, error) {
+func (g *Git) SetLocalConfigValue(key, value string) error {
 	g.localConfigCache[key] = value
 	return g.runner.Run("git", "config", key, value)
 }
