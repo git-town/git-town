@@ -23,21 +23,21 @@ type Fixture struct {
 	Dir string
 
 	// CoworkerRepo is the optional Git repository that is locally checked out at the coworker machine.
-	CoworkerRepo *runtime.Runtime `exhaustruct:"optional"`
+	CoworkerRepo *runtime.TestRuntime `exhaustruct:"optional"`
 
 	// DevRepo is the Git repository that is locally checked out at the developer machine.
-	DevRepo runtime.Runtime `exhaustruct:"optional"`
+	DevRepo runtime.TestRuntime `exhaustruct:"optional"`
 
 	// OriginRepo is the Git repository that simulates the origin repo (on GitHub).
 	// If this value is nil, the current test setup has no origin.
-	OriginRepo *runtime.Runtime `exhaustruct:"optional"`
+	OriginRepo *runtime.TestRuntime `exhaustruct:"optional"`
 
 	// SubmoduleRepo is the Git repository that simulates an external repo used as a submodule.
 	// If this value is nil, the current test setup uses no submodules.
-	SubmoduleRepo *runtime.Runtime `exhaustruct:"optional"`
+	SubmoduleRepo *runtime.TestRuntime `exhaustruct:"optional"`
 
 	// UpstreamRepo is the optional Git repository that contains the upstream for this environment.
-	UpstreamRepo *runtime.Runtime `exhaustruct:"optional"`
+	UpstreamRepo *runtime.TestRuntime `exhaustruct:"optional"`
 }
 
 // CloneFixture provides a Fixture instance in the given directory,
@@ -333,7 +333,7 @@ func (env Fixture) TagTable() (datatable.DataTable, error) {
 	return builder.Table(), nil
 }
 
-func (env Fixture) initializeWorkspace(repo *runtime.Runtime) error {
+func (env Fixture) initializeWorkspace(repo *runtime.TestRuntime) error {
 	err := repo.SetMainBranch("main")
 	if err != nil {
 		return err

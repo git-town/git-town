@@ -16,14 +16,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// Runtime provides Git functionality for test code (unit and end-to-end tests).
-type Runtime struct {
+// TestRuntime provides Git functionality for test code (unit and end-to-end tests).
+type TestRuntime struct {
 	commands.TestCommands
 	Backend git.BackendCommands
 }
 
 // Create creates test.Runner instances.
-func Create(t *testing.T) Runtime {
+func Create(t *testing.T) TestRuntime {
 	t.Helper()
 	dir := t.TempDir()
 	workingDir := filepath.Join(dir, "repo")
@@ -41,7 +41,7 @@ func Create(t *testing.T) Runtime {
 
 // initialize creates a fully functioning test.Runner in the given working directory,
 // including necessary Git configuration to make commits. Creates missing folders as needed.
-func Initialize(workingDir, homeDir, binDir string) (Runtime, error) {
+func Initialize(workingDir, homeDir, binDir string) (TestRuntime, error) {
 	runtime := New(workingDir, homeDir, binDir)
 	err := runtime.RunMany([][]string{
 		{"git", "init", "--initial-branch=initial"},
@@ -53,7 +53,7 @@ func Initialize(workingDir, homeDir, binDir string) (Runtime, error) {
 
 // newRuntime provides a new test.Runner instance working in the given directory.
 // The directory must contain an existing Git repo.
-func New(workingDir, homeDir, binDir string) Runtime {
+func New(workingDir, homeDir, binDir string) TestRuntime {
 	mockingRunner := testshell.Mocking{
 		WorkingDir: workingDir,
 		HomeDir:    homeDir,
@@ -76,7 +76,7 @@ func New(workingDir, homeDir, binDir string) Runtime {
 		Mocking:         mockingRunner,
 		BackendCommands: &backendCommands,
 	}
-	return Runtime{
+	return TestRuntime{
 		TestCommands: testCommands,
 		Backend:      backendCommands,
 	}
@@ -84,7 +84,7 @@ func New(workingDir, homeDir, binDir string) Runtime {
 
 // CreateGitTown creates a test.Runtime for use in tests,
 // with a main branch and initial git town configuration.
-func CreateGitTown(t *testing.T) Runtime {
+func CreateGitTown(t *testing.T) TestRuntime {
 	t.Helper()
 	repo := Create(t)
 	err := repo.CreateBranch("main", "initial")
@@ -98,10 +98,10 @@ func CreateGitTown(t *testing.T) Runtime {
 
 // Clone creates a clone of the repository managed by this test.Runner into the given directory.
 // The cloned repo uses the same homeDir and binDir as its origin.
-func Clone(original testshell.Mocking, targetDir string) (Runtime, error) {
+func Clone(original testshell.Mocking, targetDir string) (TestRuntime, error) {
 	_, err := original.Run("git", "clone", original.WorkingDir, targetDir)
 	if err != nil {
-		return Runtime{}, fmt.Errorf("cannot clone repo %q: %w", original.WorkingDir, err)
+		return TestRuntime{}, fmt.Errorf("cannot clone repo %q: %w", original.WorkingDir, err)
 	}
 	return New(targetDir, original.HomeDir, original.BinDir), nil
 }
