@@ -34,7 +34,7 @@ func Create(t *testing.T) TestRuntime {
 	assert.NoError(t, err)
 	runtime, err := Initialize(workingDir, homeDir, homeDir)
 	assert.NoError(t, err)
-	_, err = runtime.Run("git", "commit", "--allow-empty", "-m", "initial commit")
+	err = runtime.Run("git", "commit", "--allow-empty", "-m", "initial commit")
 	assert.NoError(t, err)
 	return runtime
 }
@@ -99,7 +99,7 @@ func CreateGitTown(t *testing.T) TestRuntime {
 // Clone creates a clone of the repository managed by this test.Runner into the given directory.
 // The cloned repo uses the same homeDir and binDir as its origin.
 func Clone(original testshell.TestRunner, targetDir string) (TestRuntime, error) {
-	_, err := original.Run("git", "clone", original.WorkingDir, targetDir)
+	err := original.Run("git", "clone", original.WorkingDir, targetDir)
 	if err != nil {
 		return TestRuntime{}, fmt.Errorf("cannot clone repo %q: %w", original.WorkingDir, err)
 	}

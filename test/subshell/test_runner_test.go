@@ -26,7 +26,7 @@ func TestMockingRunner(t *testing.T) {
 		err = runner.MockCommand("foo")
 		assert.NoError(t, err)
 		// run a program that calls the mocked command
-		res, err := runner.Run("bash", "-c", "foo bar")
+		res, err := runner.Query("bash", "-c", "foo bar")
 		assert.NoError(t, err)
 		// verify that it called our overridden "foo" command
 		assert.Equal(t, "foo called with: bar", res)
@@ -39,7 +39,7 @@ func TestMockingRunner(t *testing.T) {
 			HomeDir:    t.TempDir(),
 			BinDir:     "",
 		}
-		res, err := runner.Run("echo", "hello", "world")
+		res, err := runner.Query("echo", "hello", "world")
 		assert.NoError(t, err)
 		assert.Equal(t, "hello world", res)
 	})

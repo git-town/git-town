@@ -131,8 +131,15 @@ func (r *TestRunner) MockNoCommandsInstalled() error {
 
 // Run runs the given command with the given arguments.
 // Overrides will be used and removed when done.
-func (r *TestRunner) Run(name string, arguments ...string) (string, error) {
+func (r *TestRunner) Query(name string, arguments ...string) (string, error) {
 	return r.RunWith(&Options{}, name, arguments...)
+}
+
+// Run runs the given command with the given arguments.
+// Overrides will be used and removed when done.
+func (r *TestRunner) Run(name string, arguments ...string) error {
+	_, err := r.RunWith(&Options{}, name, arguments...)
+	return err
 }
 
 // RunMany runs all given commands.
@@ -142,7 +149,7 @@ func (r *TestRunner) Run(name string, arguments ...string) (string, error) {
 func (r *TestRunner) RunMany(commands [][]string) error {
 	for _, argv := range commands {
 		command, args := argv[0], argv[1:]
-		_, err := r.Run(command, args...)
+		err := r.Run(command, args...)
 		if err != nil {
 			return fmt.Errorf("error running command %q: %w", argv, err)
 		}

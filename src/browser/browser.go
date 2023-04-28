@@ -27,7 +27,7 @@ func OpenBrowserCommand(runner backendRunner) string {
 		"netscape",
 	}
 	for _, browserCommand := range openBrowserCommands {
-		output, err := runner.Run("which", browserCommand)
+		output, err := runner.Query("which", browserCommand)
 		if err == nil && output != "" {
 			return browserCommand
 		}
@@ -54,5 +54,5 @@ type frontendRunner interface {
 }
 
 type backendRunner interface {
-	Run(executable string, args ...string) (string, error)
+	Query(executable string, args ...string) (string, error)
 }

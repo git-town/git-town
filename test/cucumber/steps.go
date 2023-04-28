@@ -510,7 +510,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^(?:local )?setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
-		_, err := state.fixture.DevRepo.Config.SetLocalConfigValue("git-town."+name, value)
+		err := state.fixture.DevRepo.Config.SetLocalConfigValue("git-town."+name, value)
 		return err
 	})
 
