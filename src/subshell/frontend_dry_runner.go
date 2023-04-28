@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v8/src/cache"
-	"github.com/kballard/go-shellquote"
 )
 
 // FrontendDryRunner prints the given shell commands to the CLI as if they were executed
@@ -32,14 +31,4 @@ func (r *FrontendDryRunner) RunMany(commands [][]string) error {
 		}
 	}
 	return nil
-}
-
-// RunString runs the given command (including possible arguments) in this ShellInDir's directory.
-func (r *FrontendDryRunner) RunString(fullCmd string) error {
-	parts, err := shellquote.Split(fullCmd)
-	if err != nil {
-		return fmt.Errorf("cannot split command %q: %w", fullCmd, err)
-	}
-	cmd, args := parts[0], parts[1:]
-	return r.Run(cmd, args...)
 }
