@@ -72,13 +72,13 @@ func TestMockingRunner(t *testing.T) {
 			HomeDir:    t.TempDir(),
 			BinDir:     "",
 		}
-		_, err := runner.QueryString("touch first")
+		err := runner.Run("touch", "first")
 		assert.NoError(t, err)
 		_, err = os.Stat(filepath.Join(workDir, "first"))
 		assert.False(t, os.IsNotExist(err))
 	})
 
-	t.Run(".RunStringWith", func(t *testing.T) {
+	t.Run(".Execute", func(t *testing.T) {
 		t.Run("without input", func(t *testing.T) {
 			t.Parallel()
 			dir1 := t.TempDir()
@@ -93,7 +93,7 @@ func TestMockingRunner(t *testing.T) {
 			toolPath := filepath.Join(dir2, "list-dir")
 			err = ostools.CreateLsTool(toolPath)
 			assert.NoError(t, err)
-			res, err := r.QueryWith(&subshell.Options{Dir: "subdir"}, toolPath)
+			res, err := r.Execute(&subshell.Options{Dir: "subdir"}, toolPath)
 			assert.NoError(t, err)
 			assert.Equal(t, ostools.ScriptName("list-dir"), res)
 		})
@@ -113,7 +113,7 @@ func TestMockingRunner(t *testing.T) {
 			err = ostools.CreateInputTool(toolPath)
 			assert.NoError(t, err)
 			cmd, args := ostools.CallScriptArgs(toolPath)
-			res, err := r.QueryWith(&subshell.Options{Input: []string{"one\n", "two\n"}}, cmd, args...)
+			res, err := r.Execute(&subshell.Options{Input: []string{"one\n", "two\n"}}, cmd, args...)
 			assert.NoError(t, err)
 			assert.Contains(t, res, "You entered one and two")
 		})

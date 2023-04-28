@@ -2,6 +2,7 @@ package subshell
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
 	"strings"
 
@@ -32,15 +33,25 @@ func (r BackendRunner) Query(executable string, args ...string) (string, error) 
 	if err != nil {
 		err = ErrorDetails(executable, args, err, outputBytes)
 	}
-	output := strings.TrimSpace(stripansi.Strip(string(outputBytes)))
-	if r.Verbose && output != "" {
-		fmt.Println(output)
+	if r.Verbose && len(outputBytes) > 0 {
+		os.Stdout.Write(outputBytes)
 	}
-	return output, err
+	return strings.TrimSpace(stripansi.Strip(string(outputBytes))), err
 }
 
 func (r BackendRunner) Run(executable string, args ...string) error {
-	_, err := r.Query(executable, args...)
+	r.Stats.RegisterRun()
+	if r.Verbose {
+		printHeader(executable, args...)
+	}
+	subProcess := exec.Command(executable, args...) // #nosec
+	if r.Dir != nil {
+		subProcess.Dir = *r.Dir
+	}
+	outputBytes, err := subProcess.CombinedOutput()
+	if r.Verbose && len(outputBytes) > 0 {
+		os.Stdout.Write(outputBytes)
+	}
 	return err
 }
 

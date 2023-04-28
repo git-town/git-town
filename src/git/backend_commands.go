@@ -69,7 +69,7 @@ func (bc *BackendCommands) BranchHasUnmergedCommits(branch, parent string) (bool
 // CheckoutBranch checks out the Git branch with the given name.
 func (bc *BackendCommands) CheckoutBranch(name string) error {
 	if !bc.Config.DryRun {
-		_, err := bc.Query("git", "checkout", name)
+		err := bc.Run("git", "checkout", name)
 		if err != nil {
 			return fmt.Errorf("cannot check out branch %q: %w", name, err)
 		}
@@ -300,7 +300,7 @@ func (bc *BackendCommands) IsBranchInSync(branch string) (bool, error) {
 // IsRepository returns whether or not the current directory is in a repository.
 func (bc *BackendCommands) IsRepository() bool {
 	if !bc.Config.IsRepoCache.Initialized() {
-		_, err := bc.Query("git", "rev-parse")
+		err := bc.Run("git", "rev-parse")
 		bc.Config.IsRepoCache.Set(err == nil)
 	}
 	return bc.Config.IsRepoCache.Value()

@@ -132,13 +132,13 @@ func (r *TestRunner) MockNoCommandsInstalled() error {
 // Run runs the given command with the given arguments.
 // Overrides will be used and removed when done.
 func (r *TestRunner) Query(name string, arguments ...string) (string, error) {
-	return r.QueryWith(&Options{}, name, arguments...)
+	return r.Execute(&Options{}, name, arguments...)
 }
 
 // Run runs the given command with the given arguments.
 // Overrides will be used and removed when done.
 func (r *TestRunner) Run(name string, arguments ...string) error {
-	_, err := r.QueryWith(&Options{}, name, arguments...)
+	_, err := r.Execute(&Options{IgnoreOutput: true}, name, arguments...)
 	return err
 }
 
@@ -172,11 +172,11 @@ func (r *TestRunner) QueryStringWith(fullCmd string, opts *Options) (string, err
 		return "", fmt.Errorf("cannot split command %q: %w", fullCmd, err)
 	}
 	cmd, args := parts[0], parts[1:]
-	return r.QueryWith(opts, cmd, args...)
+	return r.Execute(opts, cmd, args...)
 }
 
-// QueryWith runs the given command with the given options in this ShellRunner's directory.
-func (r *TestRunner) QueryWith(opts *Options, cmd string, args ...string) (string, error) {
+// Execute runs the given command with the given options in this ShellRunner's directory.
+func (r *TestRunner) Execute(opts *Options, cmd string, args ...string) (string, error) {
 	// create an environment with the temp Overrides directory added to the PATH
 	if opts.Env == nil {
 		opts.Env = os.Environ()
@@ -244,6 +244,9 @@ func (r *TestRunner) QueryWith(opts *Options, cmd string, args ...string) (strin
 	if exitCode != 0 {
 		err = fmt.Errorf("process \"%s %s\" failed with code %d, output:\n%s", cmd, strings.Join(args, " "), exitCode, output.String())
 	}
+	if opts.IgnoreOutput {
+		return "", err
+	}
 	return strings.TrimSpace(output.String()), err
 }
 
@@ -265,4 +268,7 @@ type Options struct {
 	// Input contains the user input to enter into the running command.
 	// It is written to the subprocess one element at a time, with a delay defined by command.InputDelay in between.
 	Input []string // input into the subprocess
+
+	// when set, captures the output and returns it
+	IgnoreOutput bool
 }
