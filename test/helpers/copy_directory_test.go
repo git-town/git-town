@@ -1,11 +1,11 @@
 package helpers_test
 
 import (
-	"os"
 	"path/filepath"
 	"testing"
 
 	"github.com/git-town/git-town/v8/test/asserts"
+	"github.com/git-town/git-town/v8/test/filesystem"
 	"github.com/git-town/git-town/v8/test/helpers"
 	"github.com/git-town/git-town/v8/test/testruntime"
 	"github.com/stretchr/testify/assert"
@@ -18,9 +18,9 @@ func TestCopyDirectory(t *testing.T) {
 		tmpDir := t.TempDir()
 		srcDir := filepath.Join(tmpDir, "src")
 		dstDir := filepath.Join(tmpDir, "dst")
-		createFile(t, srcDir, "one.txt")
-		createFile(t, srcDir, "f1/a.txt")
-		createFile(t, srcDir, "f2/b.txt")
+		filesystem.CreateFile(t, srcDir, "one.txt")
+		filesystem.CreateFile(t, srcDir, "f1/a.txt")
+		filesystem.CreateFile(t, srcDir, "f2/b.txt")
 		err := helpers.CopyDirectory(srcDir, dstDir)
 		assert.NoError(t, err)
 		asserts.FileExists(t, dstDir, "one.txt")
@@ -31,21 +31,11 @@ func TestCopyDirectory(t *testing.T) {
 	t.Run("Git repository", func(t *testing.T) {
 		t.Parallel()
 		origin := testruntime.Create(t)
-		createFile(t, origin.WorkingDir, "one.txt")
+		filesystem.CreateFile(t, origin.WorkingDir, "one.txt")
 		dstDir := filepath.Join(t.TempDir(), "dest")
 		err := helpers.CopyDirectory(origin.WorkingDir, dstDir)
 		assert.NoError(t, err)
 		asserts.FileExists(t, dstDir, "one.txt")
 		asserts.FileHasContent(t, dstDir, ".git/HEAD", "ref: refs/heads/initial\n")
 	})
-}
-
-// createFile creates a file with the given filename in the given directory.
-func createFile(t *testing.T, dir, filename string) {
-	t.Helper()
-	filePath := filepath.Join(dir, filename)
-	err := os.MkdirAll(filepath.Dir(filePath), 0o744)
-	assert.NoError(t, err)
-	err = os.WriteFile(filePath, []byte(filename+" content"), 0o500)
-	assert.NoError(t, err)
 }
