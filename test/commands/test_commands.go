@@ -10,7 +10,6 @@ import (
 	"github.com/git-town/git-town/v8/src/config"
 	prodgit "github.com/git-town/git-town/v8/src/git"
 	"github.com/git-town/git-town/v8/src/stringslice"
-	"github.com/git-town/git-town/v8/test/asserts"
 	"github.com/git-town/git-town/v8/test/datatable"
 	"github.com/git-town/git-town/v8/test/git"
 	"github.com/git-town/git-town/v8/test/subshell"
@@ -24,19 +23,14 @@ type TestCommands struct {
 
 // AddRemote adds a Git remote with the given name and URL to this repository.
 func (r *TestCommands) AddRemote(name, url string) {
-	_, err := r.Run("git", "remote", "add", name, url)
-	asserts.NoError(err)
+	_ = r.MustRun("git", "remote", "add", name, url)
 	r.Config.RemotesCache.Invalidate()
 }
 
 // AddSubmodule adds a Git submodule with the given URL to this repository.
-func (r *TestCommands) AddSubmodule(url string) error {
-	_, err := r.Run("git", "submodule", "add", url)
-	if err != nil {
-		return err
-	}
-	_, err = r.Run("git", "commit", "-m", "added submodule")
-	return err
+func (r *TestCommands) AddSubmodule(url string) {
+	_ = r.MustRun("git", "submodule", "add", url)
+	_ = r.MustRun("git", "commit", "-m", "added submodule")
 }
 
 // BranchHierarchyTable provides the currently configured branch hierarchy information as a DataTable.
@@ -58,7 +52,7 @@ func (r *TestCommands) BranchHierarchyTable() datatable.DataTable {
 
 // CheckoutBranch checks out the Git branch with the given name in this repo.
 func (r *TestCommands) CheckoutBranch(name string) error {
-	_, err := r.Run("git", "checkout", name)
+	_ := r.MustRun("git", "checkout", name)
 	if err != nil {
 		return fmt.Errorf("cannot check out branch %q: %w", name, err)
 	}

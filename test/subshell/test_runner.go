@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/git-town/git-town/v8/src/subshell"
+	"github.com/git-town/git-town/v8/test/asserts"
 	"github.com/git-town/git-town/v8/test/envvars"
 	"github.com/kballard/go-shellquote"
 )
@@ -129,9 +130,26 @@ func (r *TestRunner) MockNoCommandsInstalled() error {
 	return r.createMockBinary("which", content)
 }
 
+func (r *TestRunner) MustRun(name string, arguments ...string) string {
+	output, exitcode := r.RunWith(&Options{}, name, arguments...)
+	if exitcode != 0 {
+		panic(fmt.Sprintf("process %v %v returned exit code %v", name, arguments, exitcode))
+	}
+	return output
+
+}
+
+func (r *TestRunner) MustRunWith(opts *Options, cmd string, args ...string) string {
+	output, exitcode := r.RunWith(opts, cmd, args...)
+	if exitcode != 0 {
+		panic(fmt.Sprintf("process %v %v returned exit code %v", cmd, args, exitcode))
+	}
+	return output
+}
+
 // Run runs the given command with the given arguments.
 // Overrides will be used and removed when done.
-func (r *TestRunner) Run(name string, arguments ...string) (string, error) {
+func (r *TestRunner) Run(name string, arguments ...string) (string, int) {
 	return r.RunWith(&Options{}, name, arguments...)
 }
 
@@ -139,37 +157,34 @@ func (r *TestRunner) Run(name string, arguments ...string) (string, error) {
 // Commands are provided as a list of argv-style strings.
 // Overrides apply for the first command only.
 // Failed commands abort immediately with the encountered error.
-func (r *TestRunner) RunMany(commands [][]string) error {
+func (r *TestRunner) RunMany(commands [][]string) {
 	for _, argv := range commands {
 		command, args := argv[0], argv[1:]
-		_, err := r.Run(command, args...)
-		if err != nil {
-			return fmt.Errorf("error running command %q: %w", argv, err)
+		_, exitcode := r.Run(command, args...)
+		if exitcode != 0 {
+			panic(fmt.Sprintf("process %v returned exit code %d", argv, exitcode))
 		}
 	}
-	return nil
 }
 
 // RunString runs the given command (including possible arguments).
 // Overrides will be used and removed when done.
-func (r *TestRunner) RunString(fullCmd string) (string, error) {
+func (r *TestRunner) RunString(fullCmd string) (string, int) {
 	return r.RunStringWith(fullCmd, &Options{})
 }
 
 // RunStringWith runs the given command (including possible arguments) using the given options.
 // opts.Dir is a relative path inside the working directory of this ShellRunner.
 // Overrides will be used and removed when done.
-func (r *TestRunner) RunStringWith(fullCmd string, opts *Options) (string, error) {
+func (r *TestRunner) RunStringWith(fullCmd string, opts *Options) (string, int) {
 	parts, err := shellquote.Split(fullCmd)
-	if err != nil {
-		return "", fmt.Errorf("cannot split command %q: %w", fullCmd, err)
-	}
+	asserts.NoError(err)
 	cmd, args := parts[0], parts[1:]
 	return r.RunWith(opts, cmd, args...)
 }
 
 // RunWith runs the given command with the given options in this ShellRunner's directory.
-func (r *TestRunner) RunWith(opts *Options, cmd string, args ...string) (string, error) {
+func (r *TestRunner) RunWith(opts *Options, cmd string, args ...string) (string, int) {
 	// create an environment with the temp Overrides directory added to the PATH
 	if opts.Env == nil {
 		opts.Env = os.Environ()
@@ -202,13 +217,9 @@ func (r *TestRunner) RunWith(opts *Options, cmd string, args ...string) (string,
 	subProcess.Stdout = &output
 	subProcess.Stderr = &output
 	input, err := subProcess.StdinPipe()
-	if err != nil {
-		return "", err
-	}
+	asserts.NoError(err)
 	err = subProcess.Start()
-	if err != nil {
-		return "", fmt.Errorf("can't start subprocess '%s %s': %w", cmd, strings.Join(args, " "), err)
-	}
+	asserts.NoError(err)
 	for _, userInput := range opts.Input {
 		// Here we simply wait for some time until the subProcess needs the input.
 		// Capturing the output and scanning for the actual content needed
@@ -217,9 +228,7 @@ func (r *TestRunner) RunWith(opts *Options, cmd string, args ...string) (string,
 		// https://github.com/git-town/go-execplus could help make this more robust.
 		time.Sleep(500 * time.Millisecond)
 		_, err := input.Write([]byte(userInput))
-		if err != nil {
-			return "", fmt.Errorf("can't write %q to subprocess '%s %s': %w", userInput, cmd, strings.Join(args, " "), err)
-		}
+		asserts.NoError(err)
 	}
 	err = subProcess.Wait()
 	if err != nil {
@@ -233,11 +242,7 @@ func (r *TestRunner) RunWith(opts *Options, cmd string, args ...string) (string,
 			fmt.Printf("ERROR: %v\n", err)
 		}
 	}
-
-	if exitCode != 0 {
-		err = fmt.Errorf("process \"%s %s\" failed with code %d, output:\n%s", cmd, strings.Join(args, " "), exitCode, output.String())
-	}
-	return strings.TrimSpace(output.String()), err
+	return strings.TrimSpace(output.String()), exitCode
 }
 
 // SetTestOrigin adds the given environment variable to subsequent runs of commands.
