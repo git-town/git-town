@@ -19,7 +19,7 @@ func TestBackendRunner(t *testing.T) {
 		t.Run("happy path", func(t *testing.T) {
 			tmpDir := t.TempDir()
 			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, Stats: &execute.NoStatistics{}}
-			output, err := runner.Run("echo", "hello", "world")
+			output, err := runner.Query("echo", "hello", "world")
 			assert.NoError(t, err)
 			assert.Equal(t, "hello world", output)
 		})
@@ -28,7 +28,7 @@ func TestBackendRunner(t *testing.T) {
 			t.Parallel()
 			tmpDir := t.TempDir()
 			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, Stats: &execute.NoStatistics{}}
-			_, err := runner.Run("zonk")
+			err := runner.Run("zonk")
 			assert.Error(t, err)
 			var execError *exec.Error
 			assert.True(t, errors.As(err, &execError))
@@ -38,7 +38,7 @@ func TestBackendRunner(t *testing.T) {
 			t.Parallel()
 			tmpDir := t.TempDir()
 			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, Stats: &execute.NoStatistics{}}
-			_, err := runner.Run("bash", "-c", "echo hi && exit 2")
+			err := runner.Run("bash", "-c", "echo hi && exit 2")
 			expectedError := `
 ----------------------------------------
 Diagnostic information of failed command
