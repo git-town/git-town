@@ -1,5 +1,5 @@
 package datatable
 
-type Runner interface {
+type runner interface {
 	ShaForCommit(string) (string, error)
 }
