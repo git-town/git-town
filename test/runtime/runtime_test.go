@@ -9,6 +9,7 @@ import (
 
 	"github.com/git-town/git-town/v8/src/config"
 	"github.com/git-town/git-town/v8/test/asserts"
+	"github.com/git-town/git-town/v8/test/fixture"
 	"github.com/git-town/git-town/v8/test/git"
 	"github.com/git-town/git-town/v8/test/helpers"
 	"github.com/git-town/git-town/v8/test/runtime"
@@ -273,7 +274,7 @@ func TestRunner(t *testing.T) {
 	t.Run(".HasBranchesOutOfSync()", func(t *testing.T) {
 		t.Run("branches are in sync", func(t *testing.T) {
 			t.Parallel()
-			env, err := runtime.NewStandardFixture(t.TempDir())
+			env, err := fixture.NewStandardFixture(t.TempDir())
 			assert.NoError(t, err)
 			runner := env.DevRepo
 			err = runner.CreateBranch("branch1", "main")
@@ -295,7 +296,7 @@ func TestRunner(t *testing.T) {
 
 		t.Run("branch is ahead", func(t *testing.T) {
 			t.Parallel()
-			env, err := runtime.NewStandardFixture(t.TempDir())
+			env, err := fixture.NewStandardFixture(t.TempDir())
 			assert.NoError(t, err)
 			err = env.DevRepo.CreateBranch("branch1", "main")
 			assert.NoError(t, err)
@@ -314,7 +315,7 @@ func TestRunner(t *testing.T) {
 
 		t.Run("branch is behind", func(t *testing.T) {
 			t.Parallel()
-			env, err := runtime.NewStandardFixture(t.TempDir())
+			env, err := fixture.NewStandardFixture(t.TempDir())
 			assert.NoError(t, err)
 			err = env.DevRepo.CreateBranch("branch1", "main")
 			assert.NoError(t, err)

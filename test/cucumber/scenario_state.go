@@ -8,14 +8,14 @@ import (
 	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/v8/src/stringslice"
 	"github.com/git-town/git-town/v8/test/datatable"
+	"github.com/git-town/git-town/v8/test/fixture"
 	"github.com/git-town/git-town/v8/test/helpers"
-	"github.com/git-town/git-town/v8/test/runtime"
 )
 
 // ScenarioState constains the state that is shared by all steps within a scenario.
 type ScenarioState struct {
 	// the Fixture used in the current scenario
-	fixture runtime.Fixture
+	fixture fixture.Fixture
 
 	// initialLocalBranches contains the local branches before the WHEN steps run
 	initialLocalBranches []string
@@ -49,7 +49,7 @@ type ScenarioState struct {
 }
 
 // Reset restores the null value of this ScenarioState.
-func (state *ScenarioState) Reset(gitEnv runtime.Fixture) {
+func (state *ScenarioState) Reset(gitEnv fixture.Fixture) {
 	state.fixture = gitEnv
 	state.initialLocalBranches = []string{"main"}
 	state.initialRemoteBranches = []string{"main"}
