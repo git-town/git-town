@@ -20,7 +20,17 @@ type BackendRunner struct {
 	Verbose bool
 }
 
-func (r BackendRunner) Run(executable string, args ...string) (string, error) {
+func (r BackendRunner) Query(executable string, args ...string) (string, error) {
+	output, err := r.execute(executable, args...)
+	return strings.TrimSpace(stripansi.Strip(string(output))), err
+}
+
+func (r BackendRunner) Run(executable string, args ...string) error {
+	_, err := r.execute(executable, args...)
+	return err
+}
+
+func (r BackendRunner) execute(executable string, args ...string) ([]byte, error) {
 	r.Stats.RegisterRun()
 	if r.Verbose {
 		printHeader(executable, args...)
@@ -36,7 +46,7 @@ func (r BackendRunner) Run(executable string, args ...string) (string, error) {
 	if r.Verbose && len(outputBytes) > 0 {
 		os.Stdout.Write(outputBytes)
 	}
-	return strings.TrimSpace(stripansi.Strip(string(outputBytes))), err
+	return outputBytes, err
 }
 
 // RunMany runs all given commands in current directory.
@@ -44,7 +54,7 @@ func (r BackendRunner) Run(executable string, args ...string) (string, error) {
 // Failed commands abort immediately with the encountered error.
 func (r BackendRunner) RunMany(commands [][]string) error {
 	for _, argv := range commands {
-		_, err := r.Run(argv[0], argv[1:]...)
+		err := r.Run(argv[0], argv[1:]...)
 		if err != nil {
 			return fmt.Errorf("error running command %q: %w", argv, err)
 		}
