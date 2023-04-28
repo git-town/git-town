@@ -236,11 +236,11 @@ func TestRunner(t *testing.T) {
 
 	t.Run(".Remotes()", func(t *testing.T) {
 		t.Parallel()
-		repo := testruntime.Create(t)
+		runtime := testruntime.Create(t)
 		origin := testruntime.Create(t)
-		err := repo.AddRemote(config.OriginRemote, origin.WorkingDir)
+		err := runtime.AddRemote(config.OriginRemote, origin.WorkingDir)
 		assert.NoError(t, err)
-		remotes, err := repo.Backend.Remotes()
+		remotes, err := runtime.Backend.Remotes()
 		assert.NoError(t, err)
 		assert.Equal(t, []string{config.OriginRemote}, remotes)
 	})
