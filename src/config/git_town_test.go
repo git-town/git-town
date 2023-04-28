@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v8/src/giturl"
-	"github.com/git-town/git-town/v8/test"
+	"github.com/git-town/git-town/v8/test/testruntime"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -23,7 +23,7 @@ func TestGitTown(t *testing.T) {
 			"https://dev.azure.com/organization/repository":                 {Host: "dev.azure.com", Org: "organization", Repo: "repository"},
 		}
 		for give, want := range tests {
-			repo := test.CreateTestGitTownRunner(t)
+			repo := testruntime.CreateGitTown(t)
 			os.Setenv("GIT_TOWN_REMOTE", give)
 			defer os.Unsetenv("GIT_TOWN_REMOTE")
 			have := repo.Config.OriginURL()
@@ -33,7 +33,7 @@ func TestGitTown(t *testing.T) {
 
 	t.Run(".SetOffline()", func(t *testing.T) {
 		t.Parallel()
-		repo := test.CreateTestGitTownRunner(t)
+		repo := testruntime.CreateGitTown(t)
 		err := repo.Config.SetOffline(true)
 		assert.NoError(t, err)
 		offline, err := repo.Config.IsOffline()
