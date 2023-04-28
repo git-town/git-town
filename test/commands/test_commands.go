@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v8/src/config"
 	prodgit "github.com/git-town/git-town/v8/src/git"
 	"github.com/git-town/git-town/v8/src/stringslice"
+	"github.com/git-town/git-town/v8/test/asserts"
 	"github.com/git-town/git-town/v8/test/datatable"
 	"github.com/git-town/git-town/v8/test/git"
 	"github.com/git-town/git-town/v8/test/subshell"
@@ -22,13 +23,10 @@ type TestCommands struct {
 }
 
 // AddRemote adds a Git remote with the given name and URL to this repository.
-func (r *TestCommands) AddRemote(name, url string) error {
+func (r *TestCommands) AddRemote(name, url string) {
 	_, err := r.Run("git", "remote", "add", name, url)
-	if err != nil {
-		return fmt.Errorf("cannot add remote %q --> %q: %w", name, url, err)
-	}
+	asserts.NoError(err)
 	r.Config.RemotesCache.Invalidate()
-	return nil
 }
 
 // AddSubmodule adds a Git submodule with the given URL to this repository.

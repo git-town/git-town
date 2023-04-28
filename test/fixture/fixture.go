@@ -63,10 +63,7 @@ func CloneFixture(original Fixture, dir string) (Fixture, error) {
 	if err != nil {
 		return Fixture{}, fmt.Errorf("cannot remove remote: %w", err)
 	}
-	err = result.DevRepo.AddRemote(config.OriginRemote, result.originRepoPath())
-	if err != nil {
-		return Fixture{}, fmt.Errorf("cannot set remote: %w", err)
-	}
+	result.DevRepo.AddRemote(config.OriginRemote, result.originRepoPath())
 	err = result.DevRepo.Fetch()
 	if err != nil {
 		return Fixture{}, fmt.Errorf("cannot fetch: %w", err)
@@ -156,10 +153,7 @@ func (env *Fixture) AddUpstream() error {
 		return fmt.Errorf("cannot clone upstream: %w", err)
 	}
 	env.UpstreamRepo = &repo
-	err = env.DevRepo.AddRemote("upstream", env.UpstreamRepo.WorkingDir)
-	if err != nil {
-		return fmt.Errorf("cannot set upstream remote: %w", err)
-	}
+	env.DevRepo.AddRemote("upstream", env.UpstreamRepo.WorkingDir)
 	return nil
 }
 
