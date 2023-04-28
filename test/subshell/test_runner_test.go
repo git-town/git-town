@@ -64,6 +64,20 @@ func TestMockingRunner(t *testing.T) {
 		assert.Equal(t, "second", entries[1].Name())
 	})
 
+	t.Run(".QueryString()", func(t *testing.T) {
+		t.Parallel()
+		workDir := t.TempDir()
+		runner := subshell.TestRunner{
+			WorkingDir: workDir,
+			HomeDir:    t.TempDir(),
+			BinDir:     "",
+		}
+		_, err := runner.QueryString("touch first")
+		assert.NoError(t, err)
+		_, err = os.Stat(filepath.Join(workDir, "first"))
+		assert.False(t, os.IsNotExist(err))
+	})
+
 	t.Run(".QueryWith", func(t *testing.T) {
 		t.Run("without input", func(t *testing.T) {
 			t.Parallel()
