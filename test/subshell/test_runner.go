@@ -235,12 +235,11 @@ func (r *TestRunner) Execute(opts *Options, cmd string, args ...string) (string,
 	exitCode := subProcess.ProcessState.ExitCode()
 	if r.Debug {
 		fmt.Println(filepath.Base(r.WorkingDir), ">", cmd, strings.Join(args, " "))
-		fmt.Println(output.String())
+		os.Stdout.Write(output.Bytes())
 		if err != nil {
 			fmt.Printf("ERROR: %v\n", err)
 		}
 	}
-
 	if exitCode != 0 {
 		err = fmt.Errorf("process \"%s %s\" failed with code %d, output:\n%s", cmd, strings.Join(args, " "), exitCode, output.String())
 	}
