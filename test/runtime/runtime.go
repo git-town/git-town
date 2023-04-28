@@ -74,7 +74,7 @@ func New(workingDir, homeDir, binDir string) Runtime {
 	}
 	testCommands := commands.TestCommands{
 		Mocking:         mockingRunner,
-		Config:          config,
+		Config:          &config,
 		BackendCommands: &backendCommands,
 	}
 	return Runtime{
