@@ -49,6 +49,9 @@ func (r BackendRunner) Run(executable string, args ...string) error {
 		subProcess.Dir = *r.Dir
 	}
 	outputBytes, err := subProcess.CombinedOutput()
+	if err != nil {
+		err = ErrorDetails(executable, args, err, outputBytes)
+	}
 	if r.Verbose && len(outputBytes) > 0 {
 		os.Stdout.Write(outputBytes)
 	}
