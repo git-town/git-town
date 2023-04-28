@@ -21,25 +21,16 @@ type BackendRunner struct {
 }
 
 func (r BackendRunner) Query(executable string, args ...string) (string, error) {
-	r.Stats.RegisterRun()
-	if r.Verbose {
-		printHeader(executable, args...)
-	}
-	subProcess := exec.Command(executable, args...) // #nosec
-	if r.Dir != nil {
-		subProcess.Dir = *r.Dir
-	}
-	outputBytes, err := subProcess.CombinedOutput()
-	if err != nil {
-		err = ErrorDetails(executable, args, err, outputBytes)
-	}
-	if r.Verbose && len(outputBytes) > 0 {
-		os.Stdout.Write(outputBytes)
-	}
-	return strings.TrimSpace(stripansi.Strip(string(outputBytes))), err
+	output, err := r.execute(executable, args...)
+	return strings.TrimSpace(stripansi.Strip(string(output))), err
 }
 
 func (r BackendRunner) Run(executable string, args ...string) error {
+	_, err := r.execute(executable, args...)
+	return err
+}
+
+func (r BackendRunner) execute(executable string, args ...string) ([]byte, error) {
 	r.Stats.RegisterRun()
 	if r.Verbose {
 		printHeader(executable, args...)
@@ -55,7 +46,7 @@ func (r BackendRunner) Run(executable string, args ...string) error {
 	if r.Verbose && len(outputBytes) > 0 {
 		os.Stdout.Write(outputBytes)
 	}
-	return err
+	return outputBytes, err
 }
 
 // RunMany runs all given commands in current directory.
