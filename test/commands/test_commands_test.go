@@ -116,7 +116,7 @@ func TestTestCommands(t *testing.T) {
 		assert.NoError(t, err)
 		err = runtime.CreateChildFeatureBranch("f1a", "f1")
 		assert.NoError(t, err)
-		output, err := runtime.BackendRunner.Run("git-town", "config")
+		output, err := runtime.BackendRunner.Query("git-town", "config")
 		assert.NoError(t, err)
 		has := strings.Contains(output, "Branch Ancestry:\n  main\n    f1\n      f1a")
 		if !has {
