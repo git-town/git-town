@@ -42,7 +42,7 @@ type Fixture struct {
 // CloneFixture provides a Fixture instance in the given directory,
 // containing a copy of the given Fixture.
 func CloneFixture(original Fixture, dir string) (Fixture, error) {
-	err := CopyDirectory(original.Dir, dir)
+	err := helpers.CopyDirectory(original.Dir, dir)
 	if err != nil {
 		return Fixture{}, fmt.Errorf("cannot clone Fixture %q to folder %q: %w", original.Dir, dir, err)
 	}

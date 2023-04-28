@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v8/src/config"
 	"github.com/git-town/git-town/v8/test/asserts"
 	"github.com/git-town/git-town/v8/test/git"
+	"github.com/git-town/git-town/v8/test/helpers"
 	"github.com/git-town/git-town/v8/test/runtime"
 	"github.com/stretchr/testify/assert"
 )
@@ -88,7 +89,7 @@ func TestRunner(t *testing.T) {
 		// connecting branches of repos with the same commits in them
 		origin := runtime.Create(t)
 		repoDir := filepath.Join(t.TempDir(), "repo") // need a non-existing directory
-		err := runtime.CopyDirectory(origin.WorkingDir, repoDir)
+		err := helpers.CopyDirectory(origin.WorkingDir, repoDir)
 		assert.NoError(t, err)
 		runtime := runtime.New(repoDir, repoDir, "")
 		err = runtime.AddRemote(config.OriginRemote, origin.WorkingDir)
