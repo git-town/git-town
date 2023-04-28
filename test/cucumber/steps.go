@@ -63,7 +63,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			if err != nil {
 				log.Fatalf("cannot evaluate symlinks of base directory for feature specs: %s", err)
 			}
-			gm, err := fixture.NewFixtureFactory(evalBaseDir)
+			gm, err := fixture.NewFactory(evalBaseDir)
 			if err != nil {
 				log.Fatalf("Cannot create memoized environment: %s", err)
 			}

@@ -25,8 +25,8 @@ type Factory struct {
 	memoized Fixture
 }
 
-// NewFixtureFactory provides a new FixtureFactory instance operating in the given directory.
-func NewFixtureFactory(dir string) (Factory, error) {
+// NewFactory provides a new FixtureFactory instance operating in the given directory.
+func NewFactory(dir string) (Factory, error) {
 	memoized, err := NewStandardFixture(filepath.Join(dir, "memoized"))
 	if err != nil {
 		return Factory{}, fmt.Errorf("cannot create memoized environment: %w", err)

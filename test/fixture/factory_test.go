@@ -14,7 +14,7 @@ func TestFixtureFactory(t *testing.T) {
 	t.Run("NewFixtureFactory()", func(t *testing.T) {
 		t.Parallel()
 		dir := t.TempDir()
-		_, err := fixture.NewFixtureFactory(dir)
+		_, err := fixture.NewFactory(dir)
 		assert.Nil(t, err, "creating memoized environment failed")
 		memoizedPath := filepath.Join(dir, "memoized")
 		_, err = os.Stat(memoizedPath)
@@ -24,7 +24,7 @@ func TestFixtureFactory(t *testing.T) {
 	t.Run(".CreateFixture()", func(t *testing.T) {
 		t.Parallel()
 		dir := t.TempDir()
-		gm, err := fixture.NewFixtureFactory(dir)
+		gm, err := fixture.NewFactory(dir)
 		assert.Nil(t, err, "creating memoized environment failed")
 		result, err := gm.CreateFixture("foo")
 		assert.Nil(t, err, "cannot create scenario environment")
