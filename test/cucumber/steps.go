@@ -271,18 +271,18 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I (?:run|ran) "(.+)"$`, func(command string) error {
-		state.runOutput, state.runErr = state.fixture.DevRepo.RunString(command)
+		state.runOutput, state.runErr = state.fixture.DevRepo.QueryString(command)
 		return nil
 	})
 
 	suite.Step(`^I (?:run|ran) "([^"]+)" and answer(?:ed)? the prompts:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
-		state.runOutput, state.runErr = state.fixture.DevRepo.RunStringWith(cmd, &subshell.Options{Input: helpers.TableToInput(input)})
+		state.runOutput, state.runErr = state.fixture.DevRepo.QueryStringWith(cmd, &subshell.Options{Input: helpers.TableToInput(input)})
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)" and close the editor$`, func(cmd string) error {
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		state.runOutput, state.runErr = state.fixture.DevRepo.RunStringWith(cmd, &subshell.Options{Env: env})
+		state.runOutput, state.runErr = state.fixture.DevRepo.QueryStringWith(cmd, &subshell.Options{Env: env})
 		return nil
 	})
 
@@ -290,7 +290,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err := state.fixture.DevRepo.MockCommitMessage(""); err != nil {
 			return err
 		}
-		state.runOutput, state.runErr = state.fixture.DevRepo.RunString(cmd)
+		state.runOutput, state.runErr = state.fixture.DevRepo.QueryString(cmd)
 		return nil
 	})
 
@@ -298,18 +298,18 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err := state.fixture.DevRepo.MockCommitMessage(message); err != nil {
 			return err
 		}
-		state.runOutput, state.runErr = state.fixture.DevRepo.RunString(cmd)
+		state.runOutput, state.runErr = state.fixture.DevRepo.QueryString(cmd)
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)", answer the prompts, and close the next editor:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		state.runOutput, state.runErr = state.fixture.DevRepo.RunStringWith(cmd, &subshell.Options{Env: env, Input: helpers.TableToInput(input)})
+		state.runOutput, state.runErr = state.fixture.DevRepo.QueryStringWith(cmd, &subshell.Options{Env: env, Input: helpers.TableToInput(input)})
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]+)" in the "([^"]+)" folder$`, func(cmd, folderName string) error {
-		state.runOutput, state.runErr = state.fixture.DevRepo.RunStringWith(cmd, &subshell.Options{Dir: folderName})
+		state.runOutput, state.runErr = state.fixture.DevRepo.QueryStringWith(cmd, &subshell.Options{Dir: folderName})
 		return nil
 	})
 
@@ -619,7 +619,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the coworker runs "([^"]+)"$`, func(command string) error {
-		state.runOutput, state.runErr = state.fixture.CoworkerRepo.RunString(command)
+		state.runOutput, state.runErr = state.fixture.CoworkerRepo.QueryString(command)
 		return nil
 	})
 

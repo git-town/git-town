@@ -132,13 +132,13 @@ func (r *TestRunner) MockNoCommandsInstalled() error {
 // Run runs the given command with the given arguments.
 // Overrides will be used and removed when done.
 func (r *TestRunner) Query(name string, arguments ...string) (string, error) {
-	return r.RunWith(&Options{}, name, arguments...)
+	return r.QueryWith(&Options{}, name, arguments...)
 }
 
 // Run runs the given command with the given arguments.
 // Overrides will be used and removed when done.
 func (r *TestRunner) Run(name string, arguments ...string) error {
-	_, err := r.RunWith(&Options{}, name, arguments...)
+	_, err := r.QueryWith(&Options{}, name, arguments...)
 	return err
 }
 
@@ -157,26 +157,26 @@ func (r *TestRunner) RunMany(commands [][]string) error {
 	return nil
 }
 
-// RunString runs the given command (including possible arguments).
+// QueryString runs the given command (including possible arguments).
 // Overrides will be used and removed when done.
-func (r *TestRunner) RunString(fullCmd string) (string, error) {
-	return r.RunStringWith(fullCmd, &Options{})
+func (r *TestRunner) QueryString(fullCmd string) (string, error) {
+	return r.QueryStringWith(fullCmd, &Options{})
 }
 
-// RunStringWith runs the given command (including possible arguments) using the given options.
+// QueryStringWith runs the given command (including possible arguments) using the given options.
 // opts.Dir is a relative path inside the working directory of this ShellRunner.
 // Overrides will be used and removed when done.
-func (r *TestRunner) RunStringWith(fullCmd string, opts *Options) (string, error) {
+func (r *TestRunner) QueryStringWith(fullCmd string, opts *Options) (string, error) {
 	parts, err := shellquote.Split(fullCmd)
 	if err != nil {
 		return "", fmt.Errorf("cannot split command %q: %w", fullCmd, err)
 	}
 	cmd, args := parts[0], parts[1:]
-	return r.RunWith(opts, cmd, args...)
+	return r.QueryWith(opts, cmd, args...)
 }
 
-// RunWith runs the given command with the given options in this ShellRunner's directory.
-func (r *TestRunner) RunWith(opts *Options, cmd string, args ...string) (string, error) {
+// QueryWith runs the given command with the given options in this ShellRunner's directory.
+func (r *TestRunner) QueryWith(opts *Options, cmd string, args ...string) (string, error) {
 	// create an environment with the temp Overrides directory added to the PATH
 	if opts.Env == nil {
 		opts.Env = os.Environ()
