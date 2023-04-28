@@ -18,7 +18,7 @@ import (
 // TestCommands defines Git commands used only in test code.
 type TestCommands struct {
 	subshell.Mocking
-	*prodgit.BackendCommands
+	*prodgit.BackendCommands // TODO: remove this dependency on BackendCommands
 }
 
 // AddRemote adds a Git remote with the given name and URL to this repository.
