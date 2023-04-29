@@ -131,7 +131,7 @@ func (r *TestRunner) MockNoCommandsInstalled() error {
 }
 
 func (r *TestRunner) MustRun(name string, arguments ...string) string {
-	output, exitcode := r.RunWith(&Options{}, name, arguments...)
+	output, exitcode := r.QueryWith(&Options{}, name, arguments...)
 	if exitcode != 0 {
 		panic(fmt.Sprintf("process %v %v returned exit code %v", name, arguments, exitcode))
 	}
@@ -140,7 +140,7 @@ func (r *TestRunner) MustRun(name string, arguments ...string) string {
 }
 
 func (r *TestRunner) MustRunWith(opts *Options, cmd string, args ...string) string {
-	output, exitcode := r.RunWith(opts, cmd, args...)
+	output, exitcode := r.QueryWith(opts, cmd, args...)
 	if exitcode != 0 {
 		panic(fmt.Sprintf("process %v %v returned exit code %v", cmd, args, exitcode))
 	}
