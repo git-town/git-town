@@ -43,11 +43,12 @@ func TestBackendRunner(t *testing.T) {
 ----------------------------------------
 Diagnostic information of failed command
 
-Command: bash -c echo hi && exit 2
-Error: exit status 2
-Output:
+COMMAND: bash -c echo hi && exit 2
+ERROR: exit status 2
+OUTPUT START
 hi
 
+OUTPUT END
 ----------------------------------------`
 			assert.Equal(t, expectedError, err.Error())
 		})

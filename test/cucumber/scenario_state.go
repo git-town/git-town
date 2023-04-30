@@ -33,10 +33,10 @@ type ScenarioState struct {
 	initialCurrentBranch string
 
 	// the error of the last run of Git Town
-	runErr error
+	runExitCode int
 
 	// indicates whether the scenario has verified the error
-	runErrChecked bool
+	runExitCodeChecked bool
 
 	// the output of the last run of Git Town
 	runOutput string
@@ -57,8 +57,8 @@ func (state *ScenarioState) Reset(gitEnv fixture.Fixture) {
 	state.initialBranchHierarchy = datatable.DataTable{Cells: [][]string{{"BRANCH", "PARENT"}}}
 	state.initialCurrentBranch = ""
 	state.runOutput = ""
-	state.runErr = nil
-	state.runErrChecked = false
+	state.runExitCode = 0
+	state.runExitCodeChecked = false
 	state.uncommittedFileName = ""
 	state.uncommittedContent = ""
 }
