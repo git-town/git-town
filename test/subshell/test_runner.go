@@ -2,6 +2,7 @@ package subshell
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -130,21 +131,17 @@ func (r *TestRunner) MockNoCommandsInstalled() error {
 	return r.createMockBinary("which", content)
 }
 
-func (r *TestRunner) MustRun(name string, arguments ...string) string {
-	output, exitcode := r.QueryWith(&Options{}, name, arguments...)
-	if exitcode != 0 {
-		panic(fmt.Sprintf("process %v %v returned exit code %v", name, arguments, exitcode))
-	}
-	return output
-
+func (r *TestRunner) MustQueryStringCode(fullCmd string) (string, int) {
+	return r.MustQueryStringCodeWith(fullCmd, &Options{})
 }
 
-func (r *TestRunner) MustRunWith(opts *Options, cmd string, args ...string) string {
-	output, exitcode := r.QueryWith(opts, cmd, args...)
-	if exitcode != 0 {
-		panic(fmt.Sprintf("process %v %v returned exit code %v", cmd, args, exitcode))
-	}
-	return output
+func (r *TestRunner) MustQueryStringCodeWith(fullCmd string, opts *Options) (string, int) {
+	parts, err := shellquote.Split(fullCmd)
+	asserts.NoError(err)
+	cmd, args := parts[0], parts[1:]
+	output, exitCode, err := r.QueryWithCode(opts, cmd, args...)
+	asserts.NoError(err)
+	return output, exitCode
 }
 
 // Run runs the given command with the given arguments.
@@ -190,8 +187,16 @@ func (r *TestRunner) QueryStringWith(fullCmd string, opts *Options) (string, err
 	return r.QueryWith(opts, cmd, args...)
 }
 
-// QueryWith runs the given command with the given options in this ShellRunner's directory.
 func (r *TestRunner) QueryWith(opts *Options, cmd string, args ...string) (string, error) {
+	output, exitCode, err := r.QueryWithCode(opts, cmd, args...)
+	if exitCode != 0 {
+		err = fmt.Errorf("process \"%s %s\" failed with code %d, output:\n%s", cmd, strings.Join(args, " "), exitCode, output)
+	}
+	return output, err
+}
+
+// QueryWith runs the given command with the given options in this ShellRunner's directory.
+func (r *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string) (string, int, error) {
 	// create an environment with the temp Overrides directory added to the PATH
 	if opts.Env == nil {
 		opts.Env = os.Environ()
@@ -238,10 +243,16 @@ func (r *TestRunner) QueryWith(opts *Options, cmd string, args ...string) (strin
 		asserts.NoError(err)
 	}
 	err = subProcess.Wait()
+	var exitCode int
 	if err != nil {
-		err = subshell.ErrorDetails(cmd, args, err, output.Bytes())
+		var exitErr *exec.ExitError
+		if errors.As(err, &exitErr) {
+			exitCode = exitErr.ExitCode()
+			err = nil
+		} else {
+			err = subshell.ErrorDetails(cmd, args, err, output.Bytes())
+		}
 	}
-	exitCode := subProcess.ProcessState.ExitCode()
 	if r.Debug {
 		fmt.Println(filepath.Base(r.WorkingDir), ">", cmd, strings.Join(args, " "))
 		os.Stdout.Write(output.Bytes())
@@ -249,13 +260,10 @@ func (r *TestRunner) QueryWith(opts *Options, cmd string, args ...string) (strin
 			fmt.Printf("ERROR: %v\n", err)
 		}
 	}
-	if exitCode != 0 {
-		err = fmt.Errorf("process \"%s %s\" failed with code %d, output:\n%s", cmd, strings.Join(args, " "), exitCode, output.String())
-	}
 	if opts.IgnoreOutput {
-		return "", err
+		return "", 0, err
 	}
-	return strings.TrimSpace(output.String()), err
+	return strings.TrimSpace(output.String()), exitCode, err
 }
 
 // SetTestOrigin adds the given environment variable to subsequent runs of commands.
