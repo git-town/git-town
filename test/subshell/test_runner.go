@@ -262,7 +262,6 @@ func (r *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string) (s
 			err = subshell.ErrorDetails(cmd, args, err, output.Bytes())
 		}
 	}
-	// exitCode = subProcess.ProcessState.ExitCode()
 	if r.Debug {
 		fmt.Println(filepath.Base(r.WorkingDir), ">", cmd, strings.Join(args, " "))
 		os.Stdout.Write(output.Bytes())
