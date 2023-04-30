@@ -67,10 +67,11 @@ func ErrorDetails(executable string, args []string, err error, output []byte) er
 ----------------------------------------
 Diagnostic information of failed command
 
-Command: %s %v
-Error: %w
-Output:
+COMMAND: %s %v
+ERROR: %w
+OUTPUT START
 %s
+OUTPUT END
 ----------------------------------------`, executable, strings.Join(args, " "), err, string(output))
 }
 
