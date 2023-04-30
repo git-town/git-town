@@ -118,4 +118,21 @@ func TestMockingRunner(t *testing.T) {
 			assert.Contains(t, res, "You entered one and two")
 		})
 	})
+
+	t.Run(".QueryWithCode", func(t *testing.T) {
+		t.Parallel()
+		t.Run("exit code 0", func(t *testing.T) {})
+		t.Run("exit code 1", func(t *testing.T) {
+			r := subshell.TestRunner{
+				BinDir:     "",
+				Debug:      false,
+				HomeDir:    "",
+				WorkingDir: "",
+			}
+			output, exitCode, err := r.QueryWithCode(&subshell.Options{}, "bash", "-c", "echo hello && exit 1")
+			assert.Equal(t, "hello", output)
+			assert.Equal(t, 1, exitCode)
+			assert.NoError(t, err)
+		})
+	})
 }
