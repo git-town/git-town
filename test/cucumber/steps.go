@@ -75,8 +75,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if e != nil {
 			fmt.Printf("failed scenario, investigate state in %q\n", state.fixture.Dir)
 		}
-		if state.runErr != nil && !state.runErrChecked {
-			cli.PrintError(fmt.Errorf("%s - scenario %q doesn't document error %w", scenario.GetUri(), scenario.GetName(), state.runErr))
+		if state.runExitCode != 0 && !state.runExitCodeChecked {
+			cli.PrintError(fmt.Errorf("%s - scenario %q doesn't document exit code %d", scenario.GetUri(), scenario.GetName(), state.runExitCode))
 			os.Exit(1)
 		}
 	})
@@ -271,18 +271,18 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I (?:run|ran) "(.+)"$`, func(command string) error {
-		state.runOutput, state.runErr = state.fixture.DevRepo.QueryString(command)
+		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(command)
 		return nil
 	})
 
 	suite.Step(`^I (?:run|ran) "([^"]+)" and answer(?:ed)? the prompts:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
-		state.runOutput, state.runErr = state.fixture.DevRepo.QueryStringWith(cmd, &subshell.Options{Input: helpers.TableToInput(input)})
+		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Input: helpers.TableToInput(input)})
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)" and close the editor$`, func(cmd string) error {
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		state.runOutput, state.runErr = state.fixture.DevRepo.QueryStringWith(cmd, &subshell.Options{Env: env})
+		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
 		return nil
 	})
 
@@ -290,7 +290,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err := state.fixture.DevRepo.MockCommitMessage(""); err != nil {
 			return err
 		}
-		state.runOutput, state.runErr = state.fixture.DevRepo.QueryString(cmd)
+		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(cmd)
 		return nil
 	})
 
@@ -298,18 +298,18 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err := state.fixture.DevRepo.MockCommitMessage(message); err != nil {
 			return err
 		}
-		state.runOutput, state.runErr = state.fixture.DevRepo.QueryString(cmd)
+		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(cmd)
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)", answer the prompts, and close the next editor:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		state.runOutput, state.runErr = state.fixture.DevRepo.QueryStringWith(cmd, &subshell.Options{Env: env, Input: helpers.TableToInput(input)})
+		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env, Input: helpers.TableToInput(input)})
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]+)" in the "([^"]+)" folder$`, func(cmd, folderName string) error {
-		state.runOutput, state.runErr = state.fixture.DevRepo.QueryStringWith(cmd, &subshell.Options{Dir: folderName})
+		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Dir: folderName})
 		return nil
 	})
 
@@ -330,8 +330,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^it prints:$`, func(expected *messages.PickleStepArgument_PickleDocString) error {
-		if state.runErr != nil {
-			return fmt.Errorf("unexpected error: %w", state.runErr)
+		if state.runExitCode != 0 {
+			return fmt.Errorf("unexpected exit code %d", state.runExitCode)
 		}
 		if !strings.Contains(stripansi.Strip(state.runOutput), expected.Content) {
 			return fmt.Errorf("text not found:\n\nEXPECTED:\n\n%q\n\nACTUAL:\n\n%q", expected.Content, state.runOutput)
@@ -357,12 +357,12 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^it prints the error:$`, func(expected *messages.PickleStepArgument_PickleDocString) error {
-		state.runErrChecked = true
+		state.runExitCodeChecked = true
 		if !strings.Contains(stripansi.Strip(state.runOutput), expected.Content) {
 			return fmt.Errorf("text not found:\n%s\n\nactual text:\n%s", expected.Content, state.runOutput)
 		}
-		if state.runErr == nil {
-			return fmt.Errorf("expected error")
+		if state.runExitCode == 0 {
+			return fmt.Errorf("expected exit code %d", state.runExitCode)
 		}
 		return nil
 	})
@@ -399,8 +399,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^it runs without error$`, func() error {
-		if state.runErr != nil {
-			return fmt.Errorf("did not expect the Git Town command to produce an error: %w", state.runErr)
+		if state.runExitCode != 0 {
+			return fmt.Errorf("did not expect the Git Town command to produce an exit code: %d", state.runExitCode)
 		}
 		return nil
 	})
@@ -619,7 +619,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the coworker runs "([^"]+)"$`, func(command string) error {
-		state.runOutput, state.runErr = state.fixture.CoworkerRepo.QueryString(command)
+		state.runOutput, state.runExitCode = state.fixture.CoworkerRepo.MustQueryStringCode(command)
 		return nil
 	})
 
