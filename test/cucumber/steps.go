@@ -75,7 +75,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if e != nil {
 			fmt.Printf("failed scenario, investigate state in %q\n", state.fixture.Dir)
 		}
-		if state.runExitCode != 0 && !state.runErrChecked {
+		if state.runExitCode != 0 && !state.runExitCodeChecked {
 			cli.PrintError(fmt.Errorf("%s - scenario %q doesn't document exit code %d", scenario.GetUri(), scenario.GetName(), state.runExitCode))
 			os.Exit(1)
 		}
@@ -357,7 +357,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^it prints the error:$`, func(expected *messages.PickleStepArgument_PickleDocString) error {
-		state.runErrChecked = true
+		state.runExitCodeChecked = true
 		if !strings.Contains(stripansi.Strip(state.runOutput), expected.Content) {
 			return fmt.Errorf("text not found:\n%s\n\nactual text:\n%s", expected.Content, state.runOutput)
 		}

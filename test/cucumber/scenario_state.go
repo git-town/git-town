@@ -36,7 +36,7 @@ type ScenarioState struct {
 	runExitCode int
 
 	// indicates whether the scenario has verified the error
-	runErrChecked bool
+	runExitCodeChecked bool
 
 	// the output of the last run of Git Town
 	runOutput string
@@ -58,7 +58,7 @@ func (state *ScenarioState) Reset(gitEnv fixture.Fixture) {
 	state.initialCurrentBranch = ""
 	state.runOutput = ""
 	state.runExitCode = 0
-	state.runErrChecked = false
+	state.runExitCodeChecked = false
 	state.uncommittedFileName = ""
 	state.uncommittedContent = ""
 }
