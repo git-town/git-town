@@ -121,7 +121,18 @@ func TestMockingRunner(t *testing.T) {
 
 	t.Run(".QueryWithCode", func(t *testing.T) {
 		t.Parallel()
-		t.Run("exit code 0", func(t *testing.T) {})
+		t.Run("exit code 0", func(t *testing.T) {
+			r := subshell.TestRunner{
+				BinDir:     "",
+				Debug:      false,
+				HomeDir:    "",
+				WorkingDir: "",
+			}
+			output, exitCode, err := r.QueryWithCode(&subshell.Options{}, "echo", "hello")
+			assert.Equal(t, "hello", output)
+			assert.Equal(t, 0, exitCode)
+			assert.NoError(t, err)
+		})
 		t.Run("exit code 1", func(t *testing.T) {
 			r := subshell.TestRunner{
 				BinDir:     "",
