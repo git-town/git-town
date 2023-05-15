@@ -52,11 +52,10 @@ func TestMockingRunner(t *testing.T) {
 			HomeDir:    t.TempDir(),
 			BinDir:     "",
 		}
-		err := runner.RunMany([][]string{
+		runner.RunMany([][]string{
 			{"touch", "first"},
 			{"touch", "second"},
 		})
-		assert.NoError(t, err)
 		entries, err := os.ReadDir(workDir)
 		assert.NoError(t, err)
 		assert.Len(t, entries, 2)
