@@ -131,8 +131,8 @@ func (r *TestCommands) CreatePerennialBranches(names ...string) error {
 }
 
 // CreateStandaloneTag creates a tag not on a branch.
-func (r *TestCommands) CreateStandaloneTag(name string) error {
-	return r.RunMany([][]string{
+func (r *TestCommands) CreateStandaloneTag(name string) {
+	r.RunMany([][]string{
 		{"git", "checkout", "-b", "temp"},
 		{"touch", "a.txt"},
 		{"git", "add", "-A"},

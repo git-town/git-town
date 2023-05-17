@@ -146,29 +146,26 @@ func (r *TestRunner) MustQueryStringCodeWith(fullCmd string, opts *Options) (str
 
 // Run runs the given command with the given arguments.
 // Overrides will be used and removed when done.
-func (r *TestRunner) Query(name string, arguments ...string) (string, error) {
-	return r.QueryWith(&Options{}, name, arguments...)
-}
-
-// Run runs the given command with the given arguments.
-// Overrides will be used and removed when done.
-func (r *TestRunner) Run(name string, arguments ...string) error {
-	_, err := r.QueryWith(&Options{IgnoreOutput: true}, name, arguments...)
-	return err
+func (r *TestRunner) MustRun(name string, arguments ...string) {
+	err := r.Run(name, arguments...)
+	asserts.NoError(err)
 }
 
 // RunMany runs all given commands.
 // Commands are provided as a list of argv-style strings.
 // Overrides apply for the first command only.
 // Failed commands abort immediately with the encountered error.
-func (r *TestRunner) RunMany(commands [][]string) {
+func (r *TestRunner) MustRunMany(commands [][]string) {
 	for _, argv := range commands {
 		command, args := argv[0], argv[1:]
-		exitcode := r.Run(command, args...)
-		if exitcode != 0 {
-			panic(fmt.Sprintf("process %v returned exit code %d", argv, exitcode))
-		}
+		r.MustRun(command, args...)
 	}
+}
+
+// Run runs the given command with the given arguments.
+// Overrides will be used and removed when done.
+func (r *TestRunner) Query(name string, arguments ...string) (string, error) {
+	return r.QueryWith(&Options{}, name, arguments...)
 }
 
 // QueryString runs the given command (including possible arguments).
@@ -264,6 +261,13 @@ func (r *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string) (s
 		return "", 0, err
 	}
 	return strings.TrimSpace(output.String()), exitCode, err
+}
+
+// Run runs the given command with the given arguments.
+// Overrides will be used and removed when done.
+func (r *TestRunner) Run(name string, arguments ...string) error {
+	_, err := r.QueryWith(&Options{IgnoreOutput: true}, name, arguments...)
+	return err
 }
 
 // SetTestOrigin adds the given environment variable to subsequent runs of commands.

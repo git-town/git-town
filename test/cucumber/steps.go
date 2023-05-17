@@ -149,8 +149,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.fixture.OriginRepo.CreateBranch(branch, "main")
 	})
 
-	suite.Step(`^a remote tag "([^"]+)" not on a branch$`, func(name string) error {
-		return state.fixture.OriginRepo.CreateStandaloneTag(name)
+	suite.Step(`^a remote tag "([^"]+)" not on a branch$`, func(name string) {
+		state.fixture.OriginRepo.CreateStandaloneTag(name)
 	})
 
 	suite.Step(`^all branches are now synchronized$`, func() error {
@@ -431,7 +431,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return err
 		}
-		return state.fixture.DevRepo.AddSubmodule(state.fixture.SubmoduleRepo.WorkingDir)
+		state.fixture.DevRepo.AddSubmodule(state.fixture.SubmoduleRepo.WorkingDir)
+		return nil
 	})
 
 	suite.Step(`^no branch hierarchy exists now$`, func() error {

@@ -52,7 +52,7 @@ func TestMockingRunner(t *testing.T) {
 			HomeDir:    t.TempDir(),
 			BinDir:     "",
 		}
-		runner.RunMany([][]string{
+		runner.MustRunMany([][]string{
 			{"touch", "first"},
 			{"touch", "second"},
 		})
