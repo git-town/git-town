@@ -97,6 +97,12 @@ func (r *TestRunner) MockCommand(name string) error {
 	return r.createMockBinary(name, content)
 }
 
+// MockCommitMessage sets up this runner with an editor that enters the given commit message.
+func (r *TestRunner) MockCommitMessage(message string) error {
+	r.gitEditor = "git_editor"
+	return r.createMockBinary(r.gitEditor, fmt.Sprintf("#!/usr/bin/env bash\n\necho %q > $1", message))
+}
+
 // MockGit pretends that this repo has Git in the given version installed.
 func (r *TestRunner) MockGit(version string) error {
 	if runtime.GOOS == "windows" {
@@ -117,12 +123,6 @@ fi`
 	}
 	content := fmt.Sprintf(mockGit, version, gitPath)
 	return r.createMockBinary("git", content)
-}
-
-// MockCommitMessage sets up this runner with an editor that enters the given commit message.
-func (r *TestRunner) MockCommitMessage(message string) error {
-	r.gitEditor = "git_editor"
-	return r.createMockBinary(r.gitEditor, fmt.Sprintf("#!/usr/bin/env bash\n\necho %q > $1", message))
 }
 
 // MockNoCommandsInstalled pretends that no commands are installed.
