@@ -20,7 +20,7 @@ You can also [install Git Town manually](#manual-installation) or
 ## Windows
 
 The easiest way to install Git Town on Windows is to
-[download the Windows installer](https://github.com/git-town/git-town/releases/download/v8.0.0/git-town_8.0.0_windows_intel_64.msi)
+[download the Windows installer](https://github.com/git-town/git-town/releases/download/v9.0.0/git-town_8.0.0_windows_intel_64.msi)
 and run it. You can also install Git Town via [scoop](https://scoop.sh):
 
 ```
