@@ -61,6 +61,17 @@ Flag the package out of date on the right hand side menu of
 [Git Town's AUR page](https://aur.archlinux.org/packages/git-town/).
 [allonsy](https://github.com/allonsy) will update the package.
 
+### update the website
+
+The website publishes from the `public` branch to avoid listing unreleased
+features to the public.
+
+```
+git checkout public
+git merge main
+git push
+```
+
 ### debugging
 
 To test the goreleaser setup:
