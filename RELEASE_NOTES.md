@@ -1,5 +1,14 @@
 # Git Town Release Notes
 
+## 9.0.0 (2023-04-07)
+
+#### New Features
+
+- read the token to use for the GitHub API from environment variables
+  `GITHUB_TOKEN` or `GITHUB_AUTH_TOKEN` in addition to the already existing
+  option to store it in the Git configuration
+  ([#2217](https://github.com/git-town/git-town/pull/2217))
+
 ## 8.0.0 (2023-04-07)
 
 Some ergonomics improvements that change existing command names, hence the major
