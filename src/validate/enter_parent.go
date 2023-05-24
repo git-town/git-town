@@ -3,8 +3,8 @@ package validate
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v8/src/dialog"
-	"github.com/git-town/git-town/v8/src/git"
+	"github.com/git-town/git-town/v9/src/dialog"
+	"github.com/git-town/git-town/v9/src/git"
 )
 
 // EnterParent lets the user select a new parent for the given branch.

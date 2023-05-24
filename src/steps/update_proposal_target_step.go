@@ -3,8 +3,8 @@ package steps
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v8/src/git"
-	"github.com/git-town/git-town/v8/src/hosting"
+	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/hosting"
 )
 
 // SquashMergeStep squash merges the branch with the given name into the current branch.

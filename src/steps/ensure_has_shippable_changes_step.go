@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/git-town/git-town/v8/src/git"
-	"github.com/git-town/git-town/v8/src/hosting"
+	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/hosting"
 )
 
 // EnsureHasShippableChangesStep asserts that the branch has unique changes not on the main branch.

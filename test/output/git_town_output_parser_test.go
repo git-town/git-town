@@ -3,7 +3,7 @@ package output_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v8/test/output"
+	"github.com/git-town/git-town/v9/test/output"
 	"github.com/stretchr/testify/assert"
 )
 

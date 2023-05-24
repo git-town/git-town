@@ -4,8 +4,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/git-town/git-town/v8/test/git"
-	"github.com/git-town/git-town/v8/test/helpers"
+	"github.com/git-town/git-town/v9/test/git"
+	"github.com/git-town/git-town/v9/test/helpers"
 )
 
 // CommitTableBuilder collects data about commits in Git repositories

@@ -1,8 +1,8 @@
 package validate
 
 import (
-	"github.com/git-town/git-town/v8/src/cli"
-	"github.com/git-town/git-town/v8/src/git"
+	"github.com/git-town/git-town/v9/src/cli"
+	"github.com/git-town/git-town/v9/src/git"
 )
 
 // KnowsBranchesAncestry asserts that the entire ancestry for all given branches

@@ -4,7 +4,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/git-town/git-town/v8/test/helpers"
+	"github.com/git-town/git-town/v9/test/helpers"
 )
 
 // TagTableBuilder collects data about tags in Git repositories

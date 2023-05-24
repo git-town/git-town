@@ -1,8 +1,8 @@
 package steps
 
 import (
-	"github.com/git-town/git-town/v8/src/git"
-	"github.com/git-town/git-town/v8/src/hosting"
+	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/hosting"
 )
 
 // RevertCommitStep reverts the commit with the given sha.

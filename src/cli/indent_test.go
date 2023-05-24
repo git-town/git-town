@@ -3,7 +3,7 @@ package cli_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v8/src/cli"
+	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/stretchr/testify/assert"
 )
 
