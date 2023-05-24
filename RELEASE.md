@@ -12,8 +12,9 @@ This guide is for maintainers who make releases of Git Town.
 - search-and-replace the old version with the new version
   - triple-digits: `8.0.0`
   - double-digits: `8.0`
-- if bumping the major version, also update `github.com/git-town/git-town/v8/`
-  everywhere in this repo
+- if bumping the major version:
+  - update `github.com/git-town/git-town/v8/` everywhere in this repo
+  - update `github.com/git-town/git-town/v8`
 
 ### create a GitHub release
 
