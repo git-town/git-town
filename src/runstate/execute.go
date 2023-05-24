@@ -3,9 +3,9 @@ package runstate
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v8/src/cli"
-	"github.com/git-town/git-town/v8/src/git"
-	"github.com/git-town/git-town/v8/src/hosting"
+	"github.com/git-town/git-town/v9/src/cli"
+	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/hosting"
 )
 
 // Execute runs the commands in the given runstate.

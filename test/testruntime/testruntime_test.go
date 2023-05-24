@@ -4,8 +4,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/v8/test/asserts"
-	"github.com/git-town/git-town/v8/test/testruntime"
+	"github.com/git-town/git-town/v9/test/asserts"
+	"github.com/git-town/git-town/v9/test/testruntime"
 	"github.com/stretchr/testify/assert"
 )
 

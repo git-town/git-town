@@ -9,9 +9,9 @@ import (
 	"os"
 
 	"github.com/fatih/color"
-	"github.com/git-town/git-town/v8/src/cli"
-	"github.com/git-town/git-town/v8/src/cmd"
-	"github.com/git-town/git-town/v8/src/dialog"
+	"github.com/git-town/git-town/v9/src/cli"
+	"github.com/git-town/git-town/v9/src/cmd"
+	"github.com/git-town/git-town/v9/src/dialog"
 )
 
 func main() {

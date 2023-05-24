@@ -6,13 +6,13 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/v8/src/cache"
-	"github.com/git-town/git-town/v8/src/config"
-	"github.com/git-town/git-town/v8/src/execute"
-	"github.com/git-town/git-town/v8/src/git"
-	prodshell "github.com/git-town/git-town/v8/src/subshell"
-	"github.com/git-town/git-town/v8/test/commands"
-	testshell "github.com/git-town/git-town/v8/test/subshell"
+	"github.com/git-town/git-town/v9/src/cache"
+	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/execute"
+	"github.com/git-town/git-town/v9/src/git"
+	prodshell "github.com/git-town/git-town/v9/src/subshell"
+	"github.com/git-town/git-town/v9/test/commands"
+	testshell "github.com/git-town/git-town/v9/test/subshell"
 	"github.com/stretchr/testify/assert"
 )
 
