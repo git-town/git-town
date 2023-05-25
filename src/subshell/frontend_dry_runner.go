@@ -3,7 +3,7 @@ package subshell
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v8/src/cache"
+	"github.com/git-town/git-town/v9/src/cache"
 )
 
 // FrontendDryRunner prints the given shell commands to the CLI as if they were executed

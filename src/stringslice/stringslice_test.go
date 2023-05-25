@@ -3,7 +3,7 @@ package stringslice_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v8/src/stringslice"
+	"github.com/git-town/git-town/v9/src/stringslice"
 	"github.com/stretchr/testify/assert"
 )
 

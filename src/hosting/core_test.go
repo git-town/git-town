@@ -1,8 +1,8 @@
 package hosting_test
 
 import (
-	"github.com/git-town/git-town/v8/src/config"
-	"github.com/git-town/git-town/v8/src/giturl"
+	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/giturl"
 )
 
 type mockRepoConfig struct {

@@ -3,9 +3,9 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v8/src/execute"
-	"github.com/git-town/git-town/v8/src/flags"
-	"github.com/git-town/git-town/v8/src/runstate"
+	"github.com/git-town/git-town/v9/src/execute"
+	"github.com/git-town/git-town/v9/src/flags"
+	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/spf13/cobra"
 )
 

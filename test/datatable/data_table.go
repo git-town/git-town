@@ -8,7 +8,7 @@ import (
 	"sync"
 
 	"github.com/cucumber/messages-go/v10"
-	"github.com/git-town/git-town/v8/test/helpers"
+	"github.com/git-town/git-town/v9/test/helpers"
 	"github.com/sergi/go-diff/diffmatchpatch"
 )
 

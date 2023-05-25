@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/git-town/git-town/v8/src/config"
+	"github.com/git-town/git-town/v9/src/config"
 	"github.com/xanzy/go-gitlab"
 )
 
@@ -127,7 +127,7 @@ func (c *GitLabConfig) NewProposalURL(branch, parentBranch string) (string, erro
 	query := url.Values{}
 	query.Add("merge_request[source_branch]", branch)
 	query.Add("merge_request[target_branch]", parentBranch)
-	return fmt.Sprintf("%s/merge_requests/new?%s", c.RepositoryURL(), query.Encode()), nil
+	return fmt.Sprintf("%s/-/merge_requests/new?%s", c.RepositoryURL(), query.Encode()), nil
 }
 
 func (c *GitLabConfig) RepositoryURL() string {

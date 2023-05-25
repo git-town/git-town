@@ -1,9 +1,9 @@
 package runstate
 
 import (
-	"github.com/git-town/git-town/v8/src/failure"
-	"github.com/git-town/git-town/v8/src/git"
-	"github.com/git-town/git-town/v8/src/steps"
+	"github.com/git-town/git-town/v9/src/failure"
+	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/steps"
 )
 
 // StepListBuilder allows populating StepList instances

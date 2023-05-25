@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/git-town/git-town/v8/src/cli"
-	"github.com/git-town/git-town/v8/src/execute"
-	"github.com/git-town/git-town/v8/src/failure"
-	"github.com/git-town/git-town/v8/src/flags"
+	"github.com/git-town/git-town/v9/src/cli"
+	"github.com/git-town/git-town/v9/src/execute"
+	"github.com/git-town/git-town/v9/src/failure"
+	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/spf13/cobra"
 )
 
