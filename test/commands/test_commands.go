@@ -7,12 +7,12 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/git-town/git-town/v8/src/config"
-	prodgit "github.com/git-town/git-town/v8/src/git"
-	"github.com/git-town/git-town/v8/src/stringslice"
-	"github.com/git-town/git-town/v8/test/datatable"
-	"github.com/git-town/git-town/v8/test/git"
-	"github.com/git-town/git-town/v8/test/subshell"
+	"github.com/git-town/git-town/v9/src/config"
+	prodgit "github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/stringslice"
+	"github.com/git-town/git-town/v9/test/datatable"
+	"github.com/git-town/git-town/v9/test/git"
+	"github.com/git-town/git-town/v9/test/subshell"
 )
 
 // TestCommands defines Git commands used only in test code.

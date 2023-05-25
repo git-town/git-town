@@ -3,10 +3,10 @@ package cmd
 import (
 	"strings"
 
-	"github.com/git-town/git-town/v8/src/cli"
-	"github.com/git-town/git-town/v8/src/execute"
-	"github.com/git-town/git-town/v8/src/flags"
-	"github.com/git-town/git-town/v8/src/validate"
+	"github.com/git-town/git-town/v9/src/cli"
+	"github.com/git-town/git-town/v9/src/execute"
+	"github.com/git-town/git-town/v9/src/flags"
+	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/spf13/cobra"
 )
 

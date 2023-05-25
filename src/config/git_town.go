@@ -9,8 +9,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/git-town/git-town/v8/src/giturl"
-	"github.com/git-town/git-town/v8/src/stringslice"
+	"github.com/git-town/git-town/v9/src/giturl"
+	"github.com/git-town/git-town/v9/src/stringslice"
 )
 
 // GitTown provides type-safe access to Git Town configuration settings

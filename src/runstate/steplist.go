@@ -3,8 +3,8 @@ package runstate
 import (
 	"encoding/json"
 
-	"github.com/git-town/git-town/v8/src/git"
-	"github.com/git-town/git-town/v8/src/steps"
+	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/steps"
 )
 
 // StepList is a fifo containing Step instances.

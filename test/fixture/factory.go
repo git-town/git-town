@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/git-town/git-town/v8/test/helpers"
+	"github.com/git-town/git-town/v9/test/helpers"
 )
 
 // Factory manages the Git setup for the entire test suite.

@@ -7,12 +7,12 @@ import (
 	"strings"
 
 	"github.com/cucumber/messages-go/v10"
-	"github.com/git-town/git-town/v8/src/config"
-	"github.com/git-town/git-town/v8/src/stringslice"
-	"github.com/git-town/git-town/v8/test/datatable"
-	"github.com/git-town/git-town/v8/test/git"
-	"github.com/git-town/git-town/v8/test/helpers"
-	"github.com/git-town/git-town/v8/test/testruntime"
+	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/stringslice"
+	"github.com/git-town/git-town/v9/test/datatable"
+	"github.com/git-town/git-town/v9/test/git"
+	"github.com/git-town/git-town/v9/test/helpers"
+	"github.com/git-town/git-town/v9/test/testruntime"
 )
 
 // Fixture is a complete Git environment for a Cucumber scenario.

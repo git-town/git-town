@@ -3,7 +3,7 @@ package envvars_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v8/test/envvars"
+	"github.com/git-town/git-town/v9/test/envvars"
 	"github.com/stretchr/testify/assert"
 )
 

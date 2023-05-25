@@ -8,7 +8,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/git-town/git-town/v8/src/git"
+	"github.com/git-town/git-town/v9/src/git"
 )
 
 // Load loads the run state for the given Git repo from disk. Can return nil if there is no saved runstate.

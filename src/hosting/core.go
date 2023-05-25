@@ -7,8 +7,8 @@ package hosting
 import (
 	"errors"
 
-	"github.com/git-town/git-town/v8/src/config"
-	"github.com/git-town/git-town/v8/src/giturl"
+	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/giturl"
 )
 
 // Connector describes the activities that Git Town performs on code hosting platforms via their API.

@@ -3,7 +3,7 @@ package subshell_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v8/src/subshell"
+	"github.com/git-town/git-town/v9/src/subshell"
 	"github.com/stretchr/testify/assert"
 )
 
