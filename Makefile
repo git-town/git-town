@@ -22,12 +22,12 @@ cuke: build   # runs all end-to-end tests
 cukethis: build   # runs the end-to-end tests that have a @this tag
 	@env $(GO_BUILD_ARGS) cukethis=1 go test . -v -count=1
 
-cuke-prof: build  # creates a flamegraph
+cuke-prof: build  # creates a flamegraph for the end-to-end tests
 	env $(GO_BUILD_ARGS) go test . -v -cpuprofile=godog.out
 	@rm git-town.test
 	@echo Please open https://www.speedscope.app and load the file godog.out
 
-dependencies: tools/depth_${DEPTH_VERSION}  # prints the dependencies between packages as a tree
+dependencies: tools/depth_${DEPTH_VERSION}  # prints the dependencies between the internal Go packages as a tree
 	@tools/depth_${DEPTH_VERSION} . | grep git-town
 
 docs: build tools/node_modules  # tests the documentation
@@ -56,7 +56,6 @@ msi: version_tag_is_up_to_date  # compiles the MSI installer for Windows
 release-linux: version_tag_is_up_to_date   # creates a new release
 	# cross-compile the binaries
 	goreleaser --rm-dist
-
 	# create GitHub release with files in alphabetical order
 	hub release create --draft --browse --message "v${RELEASE_VERSION}" \
 		-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.deb \
