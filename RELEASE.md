@@ -12,6 +12,7 @@ This guide is for maintainers who make releases of Git Town.
 - search-and-replace the old version with the new version
   - triple-digits: `9.0.0`
   - double-digits: `9.0`
+  - double-digits with v: `v9.0`
 - if bumping the major version:
   - update `github.com/git-town/git-town/v9/` everywhere in this repo
   - update `github.com/git-town/git-town/v9` (without trailing slash)
@@ -22,7 +23,7 @@ On a Linux machine:
 
 - install [hub](https://github.com/github/hub#installation)
 - install [goreleaser](https://goreleaser.com/install)
-- create and push a new Git Tag for the release: `git tag v8.0.0`
+- create and push a new Git Tag for the release: `git tag v9.0.0`
 - `env GITHUB_TOKEN=<your Github token> VERSION=9.0.0 make release-linux`
   - or omit the Github token and enter your credentials when asked
 - this opens a release in draft mode the browser
