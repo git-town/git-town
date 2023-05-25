@@ -72,7 +72,7 @@ release-linux: version_tag_is_up_to_date   # creates a new release
 
 release-win: msi version_tag_is_up_to_date  # adds the Windows installer to the release
 	hub release edit \
-		-a dist/git-town_${RELEASE_VERSION}_windows_intel_64.msi
+		-a dist/git-town_${RELEASE_VERSION}_windows_intel_64.msi \
 		v${RELEASE_VERSION}
 
 stats: tools/scc_${SCC_VERSION}  # shows code statistics
