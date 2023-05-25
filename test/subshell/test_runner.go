@@ -11,9 +11,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/git-town/git-town/v8/src/subshell"
-	"github.com/git-town/git-town/v8/test/asserts"
-	"github.com/git-town/git-town/v8/test/envvars"
+	"github.com/git-town/git-town/v9/src/subshell"
+	"github.com/git-town/git-town/v9/test/asserts"
+	"github.com/git-town/git-town/v9/test/envvars"
 	"github.com/kballard/go-shellquote"
 )
 
@@ -97,6 +97,12 @@ func (r *TestRunner) MockCommand(name string) error {
 	return r.createMockBinary(name, content)
 }
 
+// MockCommitMessage sets up this runner with an editor that enters the given commit message.
+func (r *TestRunner) MockCommitMessage(message string) error {
+	r.gitEditor = "git_editor"
+	return r.createMockBinary(r.gitEditor, fmt.Sprintf("#!/usr/bin/env bash\n\necho %q > $1", message))
+}
+
 // MockGit pretends that this repo has Git in the given version installed.
 func (r *TestRunner) MockGit(version string) error {
 	if runtime.GOOS == "windows" {
@@ -117,12 +123,6 @@ fi`
 	}
 	content := fmt.Sprintf(mockGit, version, gitPath)
 	return r.createMockBinary("git", content)
-}
-
-// MockCommitMessage sets up this runner with an editor that enters the given commit message.
-func (r *TestRunner) MockCommitMessage(message string) error {
-	r.gitEditor = "git_editor"
-	return r.createMockBinary(r.gitEditor, fmt.Sprintf("#!/usr/bin/env bash\n\necho %q > $1", message))
 }
 
 // MockNoCommandsInstalled pretends that no commands are installed.
@@ -148,28 +148,6 @@ func (r *TestRunner) MustQueryStringCodeWith(fullCmd string, opts *Options) (str
 // Overrides will be used and removed when done.
 func (r *TestRunner) Query(name string, arguments ...string) (string, error) {
 	return r.QueryWith(&Options{}, name, arguments...)
-}
-
-// Run runs the given command with the given arguments.
-// Overrides will be used and removed when done.
-func (r *TestRunner) Run(name string, arguments ...string) error {
-	_, err := r.QueryWith(&Options{IgnoreOutput: true}, name, arguments...)
-	return err
-}
-
-// RunMany runs all given commands.
-// Commands are provided as a list of argv-style strings.
-// Overrides apply for the first command only.
-// Failed commands abort immediately with the encountered error.
-func (r *TestRunner) RunMany(commands [][]string) error {
-	for _, argv := range commands {
-		command, args := argv[0], argv[1:]
-		err := r.Run(command, args...)
-		if err != nil {
-			return fmt.Errorf("error running command %q: %w", argv, err)
-		}
-	}
-	return nil
 }
 
 // QueryString runs the given command (including possible arguments).
@@ -273,6 +251,28 @@ func (r *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string) (s
 		return "", 0, err
 	}
 	return strings.TrimSpace(output.String()), exitCode, err
+}
+
+// Run runs the given command with the given arguments.
+// Overrides will be used and removed when done.
+func (r *TestRunner) Run(name string, arguments ...string) error {
+	_, err := r.QueryWith(&Options{IgnoreOutput: true}, name, arguments...)
+	return err
+}
+
+// RunMany runs all given commands.
+// Commands are provided as a list of argv-style strings.
+// Overrides apply for the first command only.
+// Failed commands abort immediately with the encountered error.
+func (r *TestRunner) RunMany(commands [][]string) error {
+	for _, argv := range commands {
+		command, args := argv[0], argv[1:]
+		err := r.Run(command, args...)
+		if err != nil {
+			return fmt.Errorf("error running command %q: %w", argv, err)
+		}
+	}
+	return nil
 }
 
 // SetTestOrigin adds the given environment variable to subsequent runs of commands.

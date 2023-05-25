@@ -3,7 +3,7 @@ package datatable_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v8/test/datatable"
+	"github.com/git-town/git-town/v9/test/datatable"
 	"github.com/stretchr/testify/assert"
 )
 

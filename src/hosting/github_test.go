@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/git-town/git-town/v8/src/hosting"
+	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/stretchr/testify/assert"
 )
 

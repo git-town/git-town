@@ -1,9 +1,9 @@
 package steps
 
 import (
-	"github.com/git-town/git-town/v8/src/config"
-	"github.com/git-town/git-town/v8/src/git"
-	"github.com/git-town/git-town/v8/src/hosting"
+	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/hosting"
 )
 
 // PushBranchStep pushes the branch with the given name to the origin remote.

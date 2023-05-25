@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/git-town/git-town/v8/src/steps"
+	"github.com/git-town/git-town/v9/src/steps"
 )
 
 // JSONStep is used to store a step in JSON.

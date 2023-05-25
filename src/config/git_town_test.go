@@ -4,8 +4,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/git-town/git-town/v8/src/giturl"
-	"github.com/git-town/git-town/v8/test/testruntime"
+	"github.com/git-town/git-town/v9/src/giturl"
+	"github.com/git-town/git-town/v9/test/testruntime"
 	"github.com/stretchr/testify/assert"
 )
 

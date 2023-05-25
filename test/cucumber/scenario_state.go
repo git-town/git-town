@@ -6,10 +6,10 @@ import (
 	"strings"
 
 	"github.com/cucumber/messages-go/v10"
-	"github.com/git-town/git-town/v8/src/stringslice"
-	"github.com/git-town/git-town/v8/test/datatable"
-	"github.com/git-town/git-town/v8/test/fixture"
-	"github.com/git-town/git-town/v8/test/helpers"
+	"github.com/git-town/git-town/v9/src/stringslice"
+	"github.com/git-town/git-town/v9/test/datatable"
+	"github.com/git-town/git-town/v9/test/fixture"
+	"github.com/git-town/git-town/v9/test/helpers"
 )
 
 // ScenarioState constains the state that is shared by all steps within a scenario.

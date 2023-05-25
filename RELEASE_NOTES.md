@@ -1,5 +1,21 @@
 # Git Town Release Notes
 
+## 9.0.0 (2023-04-07)
+
+#### BREAKING CHANGES
+
+Git Town 9.0 supports the new API URLs that become official in GitLab v16. If
+you use an older version of GitLab, Git Town's integration with GitLab's API
+might no longer work. The fix is to update your GitLab installation to at least
+v15 ([#2249](https://github.com/git-town/git-town/pull/2249))
+
+#### New Features
+
+- read the token to use for the GitHub API from environment variables
+  `GITHUB_TOKEN` or `GITHUB_AUTH_TOKEN` in addition to the already existing
+  option to store it in the Git configuration
+  ([#2217](https://github.com/git-town/git-town/pull/2217))
+
 ## 8.0.0 (2023-04-07)
 
 Some ergonomics improvements that change existing command names, hence the major
