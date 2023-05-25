@@ -10,11 +10,11 @@ SHFMT_VERSION = 3.6.0
 .DEFAULT_GOAL := help
 TODAY = $(shell date +'%Y-%m-%d')
 DEV_VERSION := $(shell git describe --tags 2> /dev/null || git rev-parse --short HEAD)
-RELEASE_VERSION := "8.0.0"
+RELEASE_VERSION := "9.0.0"
 GO_BUILD_ARGS = LANG=C GOGC=off
 
 build:  # builds for the current platform
-	go install -ldflags "-X github.com/git-town/git-town/v8/src/cmd.version=${DEV_VERSION}-dev -X github.com/git-town/git-town/v8/src/cmd.buildDate=${TODAY}"
+	go install -ldflags "-X github.com/git-town/git-town/v9/src/cmd.version=${DEV_VERSION}-dev -X github.com/git-town/git-town/v9/src/cmd.buildDate=${TODAY}"
 
 cuke: build   # runs all end-to-end tests
 	@env $(GO_BUILD_ARGS) go test . -v -count=1

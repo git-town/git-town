@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/git-town/git-town/v8/src/runstate"
-	"github.com/git-town/git-town/v8/src/steps"
+	"github.com/git-town/git-town/v9/src/runstate"
+	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/stretchr/testify/assert"
 )
 

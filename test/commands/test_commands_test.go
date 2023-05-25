@@ -7,11 +7,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/git-town/git-town/v8/src/config"
-	"github.com/git-town/git-town/v8/test/fixture"
-	"github.com/git-town/git-town/v8/test/git"
-	"github.com/git-town/git-town/v8/test/helpers"
-	"github.com/git-town/git-town/v8/test/testruntime"
+	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/test/fixture"
+	"github.com/git-town/git-town/v9/test/git"
+	"github.com/git-town/git-town/v9/test/helpers"
+	"github.com/git-town/git-town/v9/test/testruntime"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -1,4 +1,4 @@
-module github.com/git-town/git-town/v8
+module github.com/git-town/git-town/v9
 
 go 1.19
 

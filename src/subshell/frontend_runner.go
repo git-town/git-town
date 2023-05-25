@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
-	"github.com/git-town/git-town/v8/src/cache"
+	"github.com/git-town/git-town/v9/src/cache"
 )
 
 // FrontendRunner executes frontend shell commands.
