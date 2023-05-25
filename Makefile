@@ -47,17 +47,17 @@ fix: tools/golangci_lint_${GOLANGCILINT_VERSION} tools/gofumpt_${GOFUMPT_VERSION
 help:  # prints all available targets
 	@grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-msi: version_tag_is_up_to_date  # compiles the MSI installer for Windows
+msi:  # compiles the MSI installer for Windows
 	rm -f git-town*.msi
-	go build -trimpath -ldflags "-X github.com/git-town/git-town/src/cmd.version=${RELEASE_VERSION} -X github.com/git-town/git-town/src/cmd.buildDate=${TODAY}"
-	go-msi make --msi dist/git-town_${RELEASE_VERSION}_windows_intel_64.msi --version ${RELEASE_VERSION} --src installer/templates/ --path installer/wix.json
+	env VERSION=${RELEASE_VERSION} go build -trimpath -ldflags "-X github.com/git-town/git-town/src/cmd.version=${RELEASE_VERSION} -X github.com/git-town/git-town/src/cmd.buildDate=${TODAY}"
+	env VERSION=${RELEASE_VERSION} go-msi make --msi dist/git-town_${RELEASE_VERSION}_windows_intel_64.msi --version ${RELEASE_VERSION} --src installer/templates/ --path installer/wix.json
 	@rm git-town.exe
 
-release-linux: version_tag_is_up_to_date   # creates a new release
+release-linux:  # creates a new release
 	# cross-compile the binaries
 	goreleaser --rm-dist
 	# create GitHub release with files in alphabetical order
-	hub release create --draft --browse --message "v${RELEASE_VERSION}" \
+	env VERSION=${RELEASE_VERSION} hub release create --draft --browse --message "v${RELEASE_VERSION}" \
 		-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.deb \
 		-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.rpm \
 		-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.tar.gz \
@@ -69,8 +69,8 @@ release-linux: version_tag_is_up_to_date   # creates a new release
 		-a dist/git-town_${RELEASE_VERSION}_windows_intel_64.zip \
 		"v${RELEASE_VERSION}"
 
-release-win: msi version_tag_is_up_to_date  # adds the Windows installer to the release
-	hub release edit \
+release-win: msi  # adds the Windows installer to the release
+	env VERSION=${RELEASE_VERSION} hub release edit \
 		-a dist/git-town_${RELEASE_VERSION}_windows_intel_64.msi \
 		v${RELEASE_VERSION}
 
@@ -143,7 +143,3 @@ tools/shfmt_${SHFMT_VERSION}:
 	@echo installing Shellfmt ${SHFMT_VERSION} ...
 	@env GOBIN="$(CURDIR)/tools" go install mvdan.cc/sh/v3/cmd/shfmt@v${SHFMT_VERSION}
 	@mv tools/shfmt tools/shfmt_${SHFMT_VERSION}
-
-# verifies that the latest commit in the repo has a Git tag
-version_tag_is_up_to_date:
-	@[ ! -z "$(RELEASE_VERSION)" ] || (echo "Please add an up-to-date Git tag for the release"; exit 5)
