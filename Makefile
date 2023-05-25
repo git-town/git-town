@@ -55,9 +55,9 @@ msi:  # compiles the MSI installer for Windows
 
 release-linux:  # creates a new release
 	# cross-compile the binaries
-	goreleaser --rm-dist
+	env VERSION=${RELEASE_VERSION} goreleaser --rm-dist
 	# create GitHub release with files in alphabetical order
-	env VERSION=${RELEASE_VERSION} hub release create --draft --browse --message "v${RELEASE_VERSION}" \
+	hub release create --draft --browse --message "v${RELEASE_VERSION}" \
 		-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.deb \
 		-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.rpm \
 		-a dist/git-town_${RELEASE_VERSION}_linux_intel_64.tar.gz \
