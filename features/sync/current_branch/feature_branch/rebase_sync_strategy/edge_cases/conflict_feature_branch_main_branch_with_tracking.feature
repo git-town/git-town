@@ -4,10 +4,10 @@ Feature: handle conflicts between the current feature branch and the main branch
     Given setting "sync-strategy" is "rebase"
     And the current branch is a feature branch "feature"
     And the commits
-      | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
-      | main    | local    | conflicting main commit    | conflicting_file | main content    |
-      | feature | local    | conflicting feature commit | conflicting_file | feature content |
-      |         | origin   | feature commit             | feature_file     | feature content |
+      | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
+      | main    | local         | conflicting main commit    | conflicting_file | main content    |
+      | feature | local, origin | conflicting feature commit | conflicting_file | feature content |
+      |         | origin        | feature commit             | feature_file     | feature content |
     And an uncommitted file
     When I run "git-town sync"
 
@@ -36,19 +36,19 @@ Feature: handle conflicts between the current feature branch and the main branch
   Scenario: abort
     When I run "git-town abort"
     Then it runs the commands
-      | BRANCH  | COMMAND                                                 |
-      | feature | git rebase --abort                                      |
-      |         | git reset --hard {{ sha 'conflicting feature commit' }} |
-      |         | git checkout main                                       |
-      | main    | git checkout feature                                    |
-      | feature | git stash pop                                           |
+      | BRANCH  | COMMAND                                                           |
+      | feature | git rebase --abort                                                |
+      |         | git reset --hard {{ sha-in-origin 'conflicting feature commit' }} |
+      |         | git checkout main                                                 |
+      | main    | git checkout feature                                              |
+      | feature | git stash pop                                                     |
     And the current branch is still "feature"
     And the uncommitted file still exists
     And no rebase is in progress
     And now these commits exist
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local, origin | conflicting main commit    | conflicting_file | main content    |
-      | feature | local         | conflicting feature commit | conflicting_file | feature content |
+      | feature | local, origin | conflicting feature commit | conflicting_file | feature content |
       |         | origin        | feature commit             | feature_file     | feature content |
 
   Scenario: continue with unresolved conflict
