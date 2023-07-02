@@ -3,7 +3,7 @@ package dialog
 import (
 	"fmt"
 
-	survey "gopkg.in/AlecAivazis/survey.v1"
+	survey "github.com/AlecAivazis/survey/v2"
 )
 
 // Select displays a visual dialog that allows the user to select one of the given options.

@@ -1,6 +1,6 @@
 package dialog
 
-import survey "gopkg.in/AlecAivazis/survey.v1"
+import survey "github.com/AlecAivazis/survey/v2"
 
 // MultiSelect displays a visual dialog that allows the user to select multiple entries amongst the given options.
 func MultiSelect(args MultiSelectArgs) ([]string, error) {

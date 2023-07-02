@@ -3,8 +3,8 @@ package dialog
 import (
 	"fmt"
 
+	survey "github.com/AlecAivazis/survey/v2"
 	"github.com/git-town/git-town/v9/src/cli"
-	survey "gopkg.in/AlecAivazis/survey.v1"
 )
 
 // SelectSquashCommitAuthor allows the user to select an author amongst a given list of authors.
