@@ -14,7 +14,6 @@ import (
 )
 
 func main() {
-	// dialog.Initialize()
 	color.NoColor = false // Prevent color from auto disable
 	err := cmd.Execute()
 	if err != nil {
