@@ -13,6 +13,7 @@ This guide is for maintainers who make releases of Git Town.
   - triple-digits: `9.0.0`
   - double-digits: `9.0`
   - double-digits with v: `v9.0`
+  - don't change existing version numbers in RELEASE_NOTES.md
 - if bumping the major version:
   - update `github.com/git-town/git-town/v9/` everywhere in this repo
   - update `github.com/git-town/git-town/v9` (without trailing slash)
