@@ -66,6 +66,34 @@ func (bc *BackendCommands) BranchHasUnmergedCommits(branch, parent string) (bool
 	return out != "", nil
 }
 
+func (bc *BackendCommands) BranchInfos() (branchInfos BranchInfos, currentBranch string, err error) {
+	output, err := bc.Query("git", "branch", "-vva")
+	if err != nil {
+		return []BranchInfo{}, "", err
+	}
+	branchInfos, currentBranch = ParseVerboseBranchesOutput(output)
+	branchInfos = branchInfos.OrderedHierarchically()
+	return
+}
+
+func ParseVerboseBranchesOutput(output string) (branchInfos BranchInfos, currentBranch string) {
+	for _, line := range stringslice.Lines(output) {
+		parts := strings.SplitN(line[2:], " ", 3)
+		branch := parts[0]
+		remoteText := parts[2]
+		if line[0] == '*' {
+			currentBranch = branch
+		}
+		if remoteText[0] == '[' {
+			// deleteTrackingBranchStatus := fmt.Sprintf("[%s: gone]", bc.TrackingBranch(branch))
+			// if strings.Contains(parts[1], deleteTrackingBranchStatus) {
+			// 	remotes = append(remotes, branch)
+			// }
+		}
+	}
+	return
+}
+
 // CheckoutBranch checks out the Git branch with the given name.
 func (bc *BackendCommands) CheckoutBranch(name string) error {
 	if !bc.Config.DryRun {
