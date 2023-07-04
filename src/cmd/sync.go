@@ -77,12 +77,18 @@ func sync(all, dryRun, debug bool) error {
 }
 
 type syncConfig struct {
-	branchesToSync []string
+	branchesToSync []branchSyncInfo
 	hasOrigin      bool
 	initialBranch  string
 	isOffline      bool
 	mainBranch     string
 	shouldPushTags bool
+}
+
+// branchSyncInfo describes a branch that should be synced
+type branchSyncInfo struct {
+	name   string
+	parent string
 }
 
 func determineSyncConfig(allFlag bool, run *git.ProdRunner) (*syncConfig, error) {
@@ -105,7 +111,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner) (*syncConfig, error)
 		return nil, err
 	}
 	mainBranch := run.Config.MainBranch()
-	var branchesToSync []string
+	var branchesToSync []branchSyncInfo
 	var shouldPushTags bool
 	if allFlag {
 		branches, err := run.Backend.LocalBranchesMainFirst(mainBranch)
