@@ -117,11 +117,10 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner) (*syncConfig, error)
 	var shouldPushTags bool
 	if allFlag {
 		branchNames := branchInfos.BranchNames()
-		err = validate.KnowsBranchesAncestry(branchNames, mainmainBranch, &run.Backend)
+		err = validate.KnowsBranchesAncestry(branchNames, mainBranch, &run.Backend)
 		if err != nil {
 			return nil, err
 		}
-		branchesToSync = branches
 		branchesToSync = make([]branchSyncInfo, len(branchInfos))
 		for b, branchInfo := range branchInfos {
 			branchesToSync[b] = branchSyncInfo{
@@ -137,7 +136,30 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner) (*syncConfig, error)
 		if err != nil {
 			return nil, err
 		}
-		branchesToSync = append(run.Config.AncestorBranches(initialBranch), initialBranch)
+		ancestorBranches := run.Config.AncestorBranches(initialBranch)
+		branchesToSync = make([]branchSyncInfo, len(ancestorBranches)+1)
+		for ab, ancestorBranch := range ancestorBranches {
+			ancestorInfo := branchInfos.Lookup(ancestorBranch)
+			if ancestorInfo == nil {
+				return nil, fmt.Errorf("didn't load branch info for ancestor brach %q", ancestorBranch)
+			}
+			branchesToSync[ab] = branchSyncInfo{
+				name:       ancestorBranch,
+				parent:     run.Config.ParentBranch(ancestorBranch),
+				remote:     ancestorInfo.Location,
+				syncStatus: ancestorInfo.SyncStatus,
+			}
+		}
+		initialBranchInfo := branchInfos.Lookup(initialBranch)
+		if initialBranchInfo == nil {
+			return nil, fmt.Errorf("didn't load branch info for initial brach %q", initialBranch)
+		}
+		branchesToSync[len(ancestorBranches)] = branchSyncInfo{
+			name:       initialBranch,
+			parent:     run.Config.ParentBranch(initialBranch),
+			remote:     initialBranchInfo.Location,
+			syncStatus: initialBranchInfo.SyncStatus,
+		}
 		shouldPushTags = !run.Config.IsFeatureBranch(initialBranch)
 	}
 	return &syncConfig{
@@ -154,7 +176,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner) (*syncConfig, error)
 func syncBranchesSteps(config *syncConfig, run *git.ProdRunner) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.branchesToSync {
-		updateBranchSteps(&list, branch, true, run)
+		updateBranchSteps(&list, branch.name, true, run)
 	}
 	list.Add(&steps.CheckoutStep{Branch: config.initialBranch})
 	if config.hasOrigin && config.shouldPushTags && !config.isOffline {

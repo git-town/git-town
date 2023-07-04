@@ -44,14 +44,22 @@ func (bi BranchInfos) BranchNames() []string {
 }
 
 // OrderedHierarchically sorts the given BranchInfo list so that ancestor branches come before their descendants and everything is sorted alphabetically.
-func (bi BranchInfos) OrderedHierarchically() []BranchInfo {
+func (bi BranchInfos) OrderedHierarchically(parentBranches map[string]string) []BranchInfo {
 	// for now we just put the main branch first
 	// TODO: sort this better by putting all the parent branches first
 	result := make([]BranchInfo, len(bi))
+	// for b, branchInfo := range bi {
+	// 	// result[b] =
+	// }
 	return result
 }
 
 // IndexOfBranch returns the zero-based index of the branch with the given name.
 func (bi BranchInfos) IndexOfBranch(branch string) (pos int, found bool) {
-	panic("implement this")
+	for b, branchInfo := range bi {
+		if branchInfo.Name == branch {
+			return b, true
+		}
+	}
+	return 0, false
 }

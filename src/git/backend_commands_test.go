@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/test/git"
+	testgit "github.com/git-town/git-town/v9/test/git"
 	"github.com/git-town/git-town/v9/test/testruntime"
 	"github.com/stretchr/testify/assert"
 )
@@ -17,14 +17,14 @@ func TestRunner(t *testing.T) {
 		runtime := testruntime.Create(t)
 		err := runtime.CreateBranch("branch", "initial")
 		assert.NoError(t, err)
-		err = runtime.CreateCommit(git.Commit{
+		err = runtime.CreateCommit(testgit.Commit{
 			Branch:      "branch",
 			FileName:    "file1",
 			FileContent: "file1",
 			Message:     "first commit",
 		})
 		assert.NoError(t, err)
-		err = runtime.CreateCommit(git.Commit{
+		err = runtime.CreateCommit(testgit.Commit{
 			Branch:      "branch",
 			FileName:    "file2",
 			FileContent: "file2",
