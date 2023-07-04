@@ -163,7 +163,8 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 	if err != nil {
 		return nil, err
 	}
-	err = ensureParentBranchIsMainOrPerennialBranch(branchToShip, run)
+	branchParents := run.Config.ParentBranchMap()
+	err = ensureParentBranchIsMainOrPerennialBranch(branchToShip, run, branchParents)
 	if err != nil {
 		return nil, err
 	}
@@ -216,10 +217,10 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 	}, nil
 }
 
-func ensureParentBranchIsMainOrPerennialBranch(branch string, run *git.ProdRunner) error {
+func ensureParentBranchIsMainOrPerennialBranch(branch string, run *git.ProdRunner, branchParents config.BranchParents) error {
 	parentBranch := run.Config.ParentBranch(branch)
 	if !run.Config.IsMainBranch(parentBranch) && !run.Config.IsPerennialBranch(parentBranch) {
-		ancestors := run.Config.AncestorBranches(branch)
+		ancestors := run.Config.AncestorBranches(branch, branchParents)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
 		oldestAncestor := ancestorsWithoutMainOrPerennial[0]
 		return fmt.Errorf(`shipping this branch would ship %q as well,

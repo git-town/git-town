@@ -3,17 +3,20 @@ package cli
 import (
 	"sort"
 	"strings"
+
+	"github.com/git-town/git-town/v9/src/config"
 )
 
 // BranchAncestryConfig defines the configuration values needed by the `cli` package.
 type BranchAncestryConfig interface {
-	BranchAncestryRoots() []string
+	BranchAncestryRoots(config.BranchParents) []string
 	ChildBranches(string) []string
+	ParentBranchMap() config.BranchParents
 }
 
 // PrintableBranchAncestry provides the branch ancestry in CLI printable format.
 func PrintableBranchAncestry(config BranchAncestryConfig) string {
-	roots := config.BranchAncestryRoots()
+	roots := config.BranchAncestryRoots(config.ParentBranchMap())
 	trees := make([]string, len(roots))
 	for r, root := range roots {
 		trees[r] = PrintableBranchTree(root, config)

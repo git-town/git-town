@@ -110,6 +110,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner) (*prependConfig,
 	if err != nil {
 		return nil, err
 	}
+	branchParents := run.Config.ParentBranchMap()
 	return &prependConfig{
 		hasOrigin:           hasOrigin,
 		initialBranch:       initialBranch,
@@ -117,7 +118,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner) (*prependConfig,
 		mainBranch:          mainBranch,
 		noPushHook:          !pushHook,
 		parentBranch:        run.Config.ParentBranch(initialBranch),
-		ancestorBranches:    run.Config.AncestorBranches(initialBranch),
+		ancestorBranches:    run.Config.AncestorBranches(initialBranch, branchParents),
 		shouldNewBranchPush: shouldNewBranchPush,
 		targetBranch:        targetBranch,
 	}, nil

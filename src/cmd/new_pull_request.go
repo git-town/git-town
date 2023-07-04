@@ -106,9 +106,10 @@ func determineNewPullRequestConfig(run *git.ProdRunner) (*newPullRequestConfig, 
 	if err != nil {
 		return nil, err
 	}
+	branchParents := run.Config.ParentBranchMap()
 	return &newPullRequestConfig{
 		InitialBranch:  initialBranch,
-		BranchesToSync: append(run.Config.AncestorBranches(initialBranch), initialBranch),
+		BranchesToSync: append(run.Config.AncestorBranches(initialBranch, branchParents), initialBranch),
 		mainBranch:     run.Config.MainBranch(),
 	}, nil
 }
