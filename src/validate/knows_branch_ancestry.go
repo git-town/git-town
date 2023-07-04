@@ -8,8 +8,7 @@ import (
 // KnowsBranchesAncestry asserts that the entire ancestry for all given branches
 // is known to Git Town.
 // Missing ancestry information is queried from the user.
-func KnowsBranchesAncestry(branches []string, backend *git.BackendCommands) error {
-	mainBranch := backend.Config.MainBranch()
+func KnowsBranchesAncestry(branches []string, mainBranch string, backend *git.BackendCommands) error {
 	for _, branch := range branches {
 		err := KnowsBranchAncestry(branch, mainBranch, backend)
 		if err != nil {

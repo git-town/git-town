@@ -117,7 +117,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner) (*syncConfig, error)
 	var shouldPushTags bool
 	if allFlag {
 		branchNames := branchInfos.BranchNames()
-		err = validate.KnowsBranchesAncestry(branchNames, &run.Backend)
+		err = validate.KnowsBranchesAncestry(branchNames, mainmainBranch, &run.Backend)
 		if err != nil {
 			return nil, err
 		}
