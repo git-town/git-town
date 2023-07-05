@@ -21,9 +21,11 @@ type GitTown struct {
 }
 
 func NewGitTown(runner runner) *GitTown {
+	git := NewGit(runner)
 	return &GitTown{
-		Git:            NewGit(runner),
+		Git:            git,
 		originURLCache: map[string]*giturl.Parts{},
+		Ancestry:       LoadAncestry(git),
 	}
 }
 
@@ -173,17 +175,6 @@ func (gt *GitTown) OriginURL() *giturl.Parts {
 	return url
 }
 
-// ParentBranchMap returns a map from branch name to its parent branch.
-func (gt *GitTown) LoadAncestry() Ancestry {
-	parents := map[string]string{}
-	for _, key := range gt.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
-		child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
-		parent := gt.LocalConfigValue(key)
-		parents[child] = parent
-	}
-	return Ancestry{parents}
-}
-
 // PerennialBranches returns all branches that are marked as perennial.
 func (gt *GitTown) PerennialBranches() []string {
 	result := gt.LocalOrGlobalConfigValue(PerennialBranchesKey)
@@ -231,6 +222,10 @@ func (gt *GitTown) PushHookGlobal() (bool, error) {
 		return false, fmt.Errorf("invalid value for global %s: %q. Please provide either \"true\" or \"false\"", PushHookKey, setting)
 	}
 	return result, nil
+}
+
+func (gc *GitTown) Reload() {
+	gc.Git.Reload()
 }
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.

@@ -2,6 +2,7 @@ package config
 
 import (
 	"sort"
+	"strings"
 
 	"github.com/git-town/git-town/v9/src/stringslice"
 )
@@ -10,6 +11,17 @@ import (
 type Ancestry struct {
 	// branch --> its parent
 	entries map[string]string
+}
+
+// ParentBranchMap returns a map from branch name to its parent branch.
+func LoadAncestry(git Git) Ancestry {
+	parents := map[string]string{}
+	for _, key := range git.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
+		child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
+		parent := git.LocalConfigValue(key)
+		parents[child] = parent
+	}
+	return Ancestry{parents}
 }
 
 func (a *Ancestry) AddParent(branch, parent string) {
