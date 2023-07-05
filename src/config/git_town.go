@@ -226,6 +226,7 @@ func (gt *GitTown) PushHookGlobal() (bool, error) {
 
 func (gc *GitTown) Reload() {
 	gc.Git.Reload()
+	gc.Ancestry = LoadAncestry(gc.Git)
 }
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
