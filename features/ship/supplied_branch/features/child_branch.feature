@@ -17,7 +17,7 @@ Feature: does not ship a child branch
       | alpha  | git fetch --prune --tags |
     And it prints the error:
       """
-      shipping this branch would ship "alpha, beta" as well,
+      shipping this branch would ship "alpha" and "beta" as well,
       please ship "alpha" first
       """
     And the current branch is now "alpha"

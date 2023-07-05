@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/config"
@@ -12,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
+	"github.com/git-town/git-town/v9/src/stringslice"
 	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/spf13/cobra"
 )
@@ -223,8 +223,8 @@ func ensureParentBranchIsMainOrPerennialBranch(branch string, run *git.ProdRunne
 		ancestors := run.Config.AncestorBranches(branch, branchParents)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
 		oldestAncestor := ancestorsWithoutMainOrPerennial[0]
-		return fmt.Errorf(`shipping this branch would ship %q as well,
-please ship %q first`, strings.Join(ancestorsWithoutMainOrPerennial, ", "), oldestAncestor)
+		return fmt.Errorf(`shipping this branch would ship %s as well,
+please ship %q first`, stringslice.Connect(ancestorsWithoutMainOrPerennial), oldestAncestor)
 	}
 	return nil
 }

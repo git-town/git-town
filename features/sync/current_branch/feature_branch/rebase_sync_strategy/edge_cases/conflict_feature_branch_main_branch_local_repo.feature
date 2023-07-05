@@ -19,6 +19,10 @@ Feature: handle conflicts between the current feature branch and the main branch
       |         | git rebase main |
     And it prints the error:
       """
+      CONFLICT (add/add): Merge conflict in conflicting_file
+      """
+    And it prints the error:
+      """
       To abort, run "git-town abort".
       To continue after having resolved conflicts, run "git-town continue".
       To continue by skipping the current branch, run "git-town skip".
