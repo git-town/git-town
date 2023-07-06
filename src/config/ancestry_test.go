@@ -42,22 +42,24 @@ func TestAncestry(t *testing.T) {
 
 	t.Run("Roots", func(t *testing.T) {
 		t.Parallel()
-		t.Run("multiple roots", func(t *testing.T) {
+		t.Run("multiple roots with nested child branches", func(t *testing.T) {
 			ancestry := config.NewAncestry("main")
 			ancestry.AddParent("two", "one")
 			ancestry.AddParent("one", "main")
 			ancestry.AddParent("beta", "alpha")
 			ancestry.AddParent("alpha", "main")
+			ancestry.AddParent("hotfix1", "prod")
+			ancestry.AddParent("hotfix2", "prod")
 			have := ancestry.Roots()
-			want := []string{"alpha", "one"}
+			want := []string{"main", "prod"}
 			assert.Equal(t, want, have)
 		})
-		t.Run("feature branch without children", func(t *testing.T) {
+		t.Run("no nested branches", func(t *testing.T) {
 			ancestry := config.NewAncestry("main")
 			ancestry.AddParent("one", "main")
 			ancestry.AddParent("alpha", "main")
 			have := ancestry.Roots()
-			want := []string{}
+			want := []string{"main"}
 			assert.Equal(t, want, have)
 		})
 		t.Run("empty", func(t *testing.T) {

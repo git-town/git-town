@@ -474,7 +474,7 @@ func (gt *GitTown) updateDeprecatedLocalSetting(deprecatedKey, newKey string) er
 	return nil
 }
 
-// MainBranch provides the name of the main branch.
+// MainBranch provides the name of the main branch in the given Git repo.
 func mainBranch(git *Git) string {
 	return git.LocalOrGlobalConfigValue(MainBranchKey)
 }
