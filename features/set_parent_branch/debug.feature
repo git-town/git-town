@@ -11,7 +11,7 @@ Feature: display debug statistics
       """
       Ran 11 shell commands.
       """
-    And this branch hierarchy exists now
+    And this branch lineage exists now
       | BRANCH | PARENT |
       | child  | main   |
       | parent | main   |

@@ -32,7 +32,7 @@ Feature: rename a perennial branch
       | BRANCH | LOCATION      | MESSAGE           |
       | hotfix | local, origin | hotfix commit     |
       | new    | local, origin | production commit |
-    And this branch hierarchy exists now
+    And this branch lineage exists now
       | BRANCH | PARENT |
       | hotfix | new    |
 

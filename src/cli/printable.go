@@ -5,15 +5,15 @@ import (
 	"strings"
 )
 
-// BranchAncestryConfig defines the configuration values needed by the `cli` package.
-type BranchAncestryConfig interface {
-	BranchAncestryRoots() []string
+// BranchLineageConfig defines the configuration values needed by the `cli` package.
+type BranchLineageConfig interface {
+	BranchLineageRoots() []string
 	ChildBranches(string) []string
 }
 
-// PrintableBranchAncestry provides the branch ancestry in CLI printable format.
-func PrintableBranchAncestry(config BranchAncestryConfig) string {
-	roots := config.BranchAncestryRoots()
+// PrintableBranchLineage provides the branch lineage in CLI printable format.
+func PrintableBranchLineage(config BranchLineageConfig) string {
+	roots := config.BranchLineageRoots()
 	trees := make([]string, len(roots))
 	for r, root := range roots {
 		trees[r] = PrintableBranchTree(root, config)
@@ -22,7 +22,7 @@ func PrintableBranchAncestry(config BranchAncestryConfig) string {
 }
 
 // PrintableBranchTree returns a user printable branch tree.
-func PrintableBranchTree(branch string, config BranchAncestryConfig) string {
+func PrintableBranchTree(branch string, config BranchLineageConfig) string {
 	result := branch
 	childBranches := config.ChildBranches(branch)
 	sort.Strings(childBranches)

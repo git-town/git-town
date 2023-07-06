@@ -272,17 +272,20 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^I (?:run|ran) "(.+)"$`, func(command string) error {
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(command)
+		state.fixture.DevRepo.Config.Reload()
 		return nil
 	})
 
 	suite.Step(`^I (?:run|ran) "([^"]+)" and answer(?:ed)? the prompts:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Input: helpers.TableToInput(input)})
+		state.fixture.DevRepo.Config.Reload()
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)" and close the editor$`, func(cmd string) error {
 		env := append(os.Environ(), "GIT_EDITOR=true")
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
+		state.fixture.DevRepo.Config.Reload()
 		return nil
 	})
 
@@ -291,6 +294,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return err
 		}
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(cmd)
+		state.fixture.DevRepo.Config.Reload()
 		return nil
 	})
 
@@ -299,17 +303,20 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return err
 		}
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(cmd)
+		state.fixture.DevRepo.Config.Reload()
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)", answer the prompts, and close the next editor:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
 		env := append(os.Environ(), "GIT_EDITOR=true")
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env, Input: helpers.TableToInput(input)})
+		state.fixture.DevRepo.Config.Reload()
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]+)" in the "([^"]+)" folder$`, func(cmd, folderName string) error {
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Dir: folderName})
+		state.fixture.DevRepo.Config.Reload()
 		return nil
 	})
 
@@ -436,7 +443,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^no branch hierarchy exists now$`, func() error {
-		state.fixture.DevRepo.Config.Reload()
 		if state.fixture.DevRepo.Config.HasBranchInformation() {
 			branchInfo := state.fixture.DevRepo.Config.ParentBranchMap()
 			return fmt.Errorf("unexpected Git Town branch hierarchy information: %+v", branchInfo)
@@ -486,7 +492,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^offline mode is disabled$`, func() error {
-		state.fixture.DevRepo.Config.Reload()
 		isOffline, err := state.fixture.DevRepo.Config.IsOffline()
 		if err != nil {
 			return err
@@ -521,7 +526,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^local setting "([^"]*)" no longer exists$`, func(name string) error {
-		state.fixture.DevRepo.Config.Reload()
 		newValue := state.fixture.DevRepo.Config.LocalConfigValue("git-town." + name)
 		if newValue == "" {
 			return nil
@@ -530,7 +534,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^global setting "([^"]*)" no longer exists$`, func(name string) error {
-		state.fixture.DevRepo.Config.Reload()
 		newValue := state.fixture.DevRepo.Config.GlobalConfigValue("git-town." + name)
 		if newValue == "" {
 			return nil
@@ -539,7 +542,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^setting "([^"]*)" is now "([^"]*)"$`, func(name, want string) error {
-		state.fixture.DevRepo.Config.Reload()
 		have := state.fixture.DevRepo.Config.LocalOrGlobalConfigValue("git-town." + name)
 		if have != want {
 			return fmt.Errorf("expected setting %q to be %q, but was %q", name, want, have)
@@ -548,7 +550,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^local setting "([^"]*)" is now "([^"]*)"$`, func(name, want string) error {
-		state.fixture.DevRepo.Config.Reload()
 		have := state.fixture.DevRepo.Config.LocalConfigValue("git-town." + name)
 		if have != want {
 			return fmt.Errorf("expected local setting %q to be %q, but was %q", name, want, have)
@@ -557,7 +558,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^global setting "([^"]*)" is (?:now|still) "([^"]*)"$`, func(name, want string) error {
-		state.fixture.DevRepo.Config.Reload()
 		have := state.fixture.DevRepo.Config.GlobalConfigValue("git-town." + name)
 		if have != want {
 			return fmt.Errorf("expected global setting %q to be %q, but was %q", name, want, have)
@@ -841,7 +841,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the main branch is now "([^"]+)"$`, func(name string) error {
-		state.fixture.DevRepo.Config.Reload()
 		actual := state.fixture.DevRepo.Config.MainBranch()
 		if actual != name {
 			return fmt.Errorf("expected %q, got %q", name, actual)
@@ -867,7 +866,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the perennial branches are now "([^"]+)"$`, func(name string) error {
-		state.fixture.DevRepo.Config.Reload()
 		actual := state.fixture.DevRepo.Config.PerennialBranches()
 		if len(actual) != 1 {
 			return fmt.Errorf("expected 1 perennial branch, got %q", actual)
@@ -879,7 +877,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the perennial branches are now "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
-		state.fixture.DevRepo.Config.Reload()
 		actual := state.fixture.DevRepo.Config.PerennialBranches()
 		if len(actual) != 2 {
 			return fmt.Errorf("expected 2 perennial branches, got %q", actual)
@@ -944,7 +941,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^there are still no perennial branches$`, func() error {
-		state.fixture.DevRepo.Config.Reload()
 		branches := state.fixture.DevRepo.Config.PerennialBranches()
 		if len(branches) > 0 {
 			return fmt.Errorf("expected no perennial branches, got %q", branches)
@@ -980,7 +976,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^this branch hierarchy exists now$`, func(input *messages.PickleStepArgument_PickleTable) error {
+	suite.Step(`^this branch lineage exists now$`, func(input *messages.PickleStepArgument_PickleTable) error {
 		table := state.fixture.DevRepo.BranchHierarchyTable()
 		diff, errCount := table.EqualGherkin(input)
 		if errCount > 0 {
