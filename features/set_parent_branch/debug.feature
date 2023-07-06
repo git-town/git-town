@@ -1,5 +1,6 @@
 Feature: display debug statistics
 
+  @debug @this
   Scenario: select another branch
     Given a feature branch "parent"
     And a feature branch "child" as a child of "parent"
