@@ -53,8 +53,8 @@ func (gt *GitTown) AncestorBranches(branch string) []string {
 	}
 }
 
-// BranchAncestryRoots provides the branches with children and no parents.
-func (gt *GitTown) BranchAncestryRoots() []string {
+// BranchLineageRoots provides the branches with children and no parents.
+func (gt *GitTown) BranchLineageRoots() []string {
 	parentMap := gt.ParentBranchMap()
 	roots := []string{}
 	for _, parent := range parentMap {

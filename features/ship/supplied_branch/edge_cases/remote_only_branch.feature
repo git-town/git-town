@@ -39,7 +39,7 @@ Feature: ship a branch that exists only on origin
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      |
       | main   | local, origin | feature done |
-    And this branch hierarchy exists now
+    And this branch lineage exists now
       | BRANCH | PARENT |
       | other  | main   |
 
@@ -67,7 +67,7 @@ Feature: ship a branch that exists only on origin
     And the branches are now
       | REPOSITORY    | BRANCHES             |
       | local, origin | main, feature, other |
-    And this branch hierarchy exists now
+    And this branch lineage exists now
       | BRANCH  | PARENT |
       | feature | main   |
       | other   | main   |

@@ -19,7 +19,7 @@ Feature: offline mode
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
-    And this branch hierarchy exists now
+    And this branch lineage exists now
       | BRANCH | PARENT |
       | new    | main   |
       | old    | new    |

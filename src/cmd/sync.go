@@ -121,6 +121,10 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner) (*syncConfig, error)
 		if err != nil {
 			return nil, err
 		}
+		err = validate.KnowsBranchesAncestors(branches, &run.Backend)
+		if err != nil {
+			return nil, err
+		}
 		branchesToSync = make([]branchSyncInfo, len(branchInfos))
 		for b, branchInfo := range branchInfos {
 			branchesToSync[b] = branchSyncInfo{
@@ -132,7 +136,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner) (*syncConfig, error)
 		}
 		shouldPushTags = true
 	} else {
-		err = validate.KnowsBranchAncestry(initialBranch, run.Config.MainBranch(), &run.Backend)
+		err = validate.KnowsBranchAncestors(initialBranch, run.Config.MainBranch(), &run.Backend)
 		if err != nil {
 			return nil, err
 		}
