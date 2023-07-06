@@ -11,6 +11,6 @@ type RevertCommitStep struct {
 	Sha string
 }
 
-func (step *RevertCommitStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
+func (step *RevertCommitStep) Run(run *git.ProdRunner, _connector hosting.Connector) error {
 	return run.Frontend.RevertCommit(step.Sha)
 }

@@ -38,6 +38,12 @@ linters-settings:
       - stdlib
       - github.com/git-town/git-town/v9/src/git.FrontendRunner
       - github.com/git-town/git-town/v9/src/git.BackendRunner
+  tagliatelle:
+    case:
+      use-field-name: true
+      rules:
+        json: pascal
+
 
 issues:
   # List of regexps of issue texts to exclude, empty list by default.
