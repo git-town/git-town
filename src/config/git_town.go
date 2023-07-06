@@ -22,11 +22,10 @@ type GitTown struct {
 
 func NewGitTown(runner runner) *GitTown {
 	git := NewGit(runner)
-	mainBranch := mainBranch(&git)
 	return &GitTown{
 		Git:            git,
 		originURLCache: map[string]*giturl.Parts{},
-		Lineage:        LoadLineage(git, mainBranch),
+		Lineage:        LoadLineage(git, mainBranch(&git)),
 	}
 }
 
