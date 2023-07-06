@@ -226,7 +226,7 @@ func (gt *GitTown) PushHookGlobal() (bool, error) {
 
 func (gc *GitTown) Reload() {
 	gc.Git.Reload()
-	gc.Lineage = LoadLineage(gc.Git, mainBranch(&gc.Git))
+	gc.loadLineage()
 }
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
@@ -316,6 +316,7 @@ func (gt *GitTown) SetOffline(value bool) error {
 // in the Git Town configuration.
 func (gt *GitTown) SetParent(branch, parentBranch string) error {
 	err := gt.SetLocalConfigValue("git-town-branch."+branch+".parent", parentBranch)
+	gt.loadLineage()
 	return err
 }
 
@@ -471,6 +472,10 @@ func (gt *GitTown) updateDeprecatedLocalSetting(deprecatedKey, newKey string) er
 		return err
 	}
 	return nil
+}
+
+func (gc *GitTown) loadLineage() {
+	gc.Lineage = LoadLineage(gc.Git, mainBranch(&gc.Git))
 }
 
 // MainBranch provides the name of the main branch in the given Git repo.
