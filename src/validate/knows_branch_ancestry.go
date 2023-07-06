@@ -5,10 +5,10 @@ import (
 	"github.com/git-town/git-town/v9/src/git"
 )
 
-// KnowsBranchesAncestry asserts that the entire ancestry for all given branches
+// KnowsBranchesAncestors asserts that the entire lineage for all given branches
 // is known to Git Town.
-// Missing ancestry information is queried from the user.
-func KnowsBranchesAncestry(branches []string, backend *git.BackendCommands) error {
+// Prompts missing lineage information from the user.
+func KnowsBranchesAncestors(branches []string, backend *git.BackendCommands) error {
 	mainBranch := backend.Config.MainBranch()
 	for _, branch := range branches {
 		err := KnowsBranchAncestors(branch, mainBranch, backend)

@@ -11,7 +11,7 @@ type Lineage interface {
 	Children(string) []string
 }
 
-// PrintableBranchLineage provides the branch ancestry in CLI printable format.
+// PrintableBranchLineage provides the branch lineage in CLI printable format.
 func PrintableBranchLineage(lineage Lineage) string {
 	roots := lineage.Roots()
 	trees := make([]string, len(roots))

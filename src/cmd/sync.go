@@ -112,7 +112,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner) (*syncConfig, error)
 		if err != nil {
 			return nil, err
 		}
-		err = validate.KnowsBranchesAncestry(branches, &run.Backend)
+		err = validate.KnowsBranchesAncestors(branches, &run.Backend)
 		if err != nil {
 			return nil, err
 		}
