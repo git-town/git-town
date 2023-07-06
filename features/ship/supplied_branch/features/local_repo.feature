@@ -31,7 +31,7 @@ Feature: ship the supplied feature branch in a local repo
     And now these commits exist
       | BRANCH | LOCATION | MESSAGE      |
       | main   | local    | feature done |
-    And this branch hierarchy exists now
+    And this branch lineage exists now
       | BRANCH | PARENT |
       | other  | main   |
 

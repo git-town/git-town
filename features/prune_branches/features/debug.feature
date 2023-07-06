@@ -19,7 +19,7 @@ Feature: display debug statistics
     And the branches are now
       | REPOSITORY    | BRANCHES     |
       | local, origin | main, active |
-    And this branch hierarchy exists now
+    And this branch lineage exists now
       | BRANCH | PARENT |
       | active | main   |
 

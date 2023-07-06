@@ -6,7 +6,7 @@ Feature: ask for missing parent branch information
     When I run "git-town append new" and answer the prompts:
       | PROMPT                                        | ANSWER  |
       | Please specify the parent branch of 'feature' | [ENTER] |
-    Then this branch hierarchy exists now
+    Then this branch lineage exists now
       | BRANCH  | PARENT  |
       | feature | main    |
       | new     | feature |

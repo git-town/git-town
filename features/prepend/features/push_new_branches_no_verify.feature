@@ -22,7 +22,7 @@ Feature: auto-push new branches
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE        |
       | old    | local, origin | feature commit |
-    And this branch hierarchy exists now
+    And this branch lineage exists now
       | BRANCH | PARENT |
       | new    | main   |
       | old    | new    |
@@ -42,7 +42,7 @@ Feature: auto-push new branches
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE        |
       | old    | local, origin | feature commit |
-    And this branch hierarchy exists now
+    And this branch lineage exists now
       | BRANCH | PARENT |
       | new    | main   |
       | old    | new    |
