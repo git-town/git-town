@@ -99,7 +99,7 @@ func determineParentBranch(targetBranch string, promptForParent bool, run *git.P
 		if err != nil {
 			return "", err
 		}
-		err = validate.KnowsBranchAncestry(parentBranch, run.Config.MainBranch(), &run.Backend)
+		err = validate.KnowsBranchAncestors(parentBranch, run.Config.MainBranch(), &run.Backend)
 		if err != nil {
 			return "", err
 		}

@@ -91,7 +91,7 @@ func determineKillConfig(args []string, run *git.ProdRunner) (*killConfig, error
 		return nil, err
 	}
 	if isTargetBranchLocal {
-		err = validate.KnowsBranchAncestry(targetBranch, mainBranch, &run.Backend)
+		err = validate.KnowsBranchAncestors(targetBranch, mainBranch, &run.Backend)
 		if err != nil {
 			return nil, err
 		}
