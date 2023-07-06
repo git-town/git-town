@@ -37,7 +37,7 @@ func NewBitbucketConnector(gitConfig gitTownConfig, git gitCommands) (*Bitbucket
 	}, nil
 }
 
-func (c *BitbucketConnector) FindProposal(_, target string) (*Proposal, error) {
+func (c *BitbucketConnector) FindProposal(_, _ string) (*Proposal, error) {
 	return nil, fmt.Errorf("BitBucket API functionality isn't implemented yet")
 }
 
@@ -65,7 +65,7 @@ func (c *BitbucketConnector) RepositoryURL() string {
 }
 
 //nolint:nonamedreturns
-func (c *BitbucketConnector) SquashMergeProposal(_ int, message string) (mergeSHA string, err error) {
+func (c *BitbucketConnector) SquashMergeProposal(_ int, _ string) (mergeSHA string, err error) {
 	return "", errors.New("shipping pull requests via the Bitbucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues")
 }
 

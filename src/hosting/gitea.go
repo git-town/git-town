@@ -80,7 +80,7 @@ func (c *GiteaConnector) SquashMergeProposal(number int, message string) (mergeS
 	return *pullRequest.MergedCommitID, nil
 }
 
-func (c *GiteaConnector) UpdateProposalTarget(_ int, target string) error {
+func (c *GiteaConnector) UpdateProposalTarget(_ int, _ string) error {
 	// TODO: update the client and uncomment
 	// if c.log != nil {
 	// 	c.log("Gitea API: Updating base branch for PR #%d to #%s", number, target)

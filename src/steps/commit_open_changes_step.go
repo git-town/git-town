@@ -18,7 +18,7 @@ func (step *CommitOpenChangesStep) CreateUndoStep(_ *git.BackendCommands) (Step,
 	return &ResetToShaStep{Sha: step.previousSha}, nil
 }
 
-func (step *CommitOpenChangesStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
+func (step *CommitOpenChangesStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
 	var err error
 	step.previousSha, err = run.Backend.CurrentSha()
 	if err != nil {

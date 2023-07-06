@@ -23,7 +23,7 @@ func (step *PushBranchStep) CreateUndoStep(_ *git.BackendCommands) (Step, error)
 	return &SkipCurrentBranchSteps{}, nil
 }
 
-func (step *PushBranchStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
+func (step *PushBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
 	shouldPush, err := run.Backend.ShouldPushBranch(step.Branch)
 	if err != nil {
 		return err

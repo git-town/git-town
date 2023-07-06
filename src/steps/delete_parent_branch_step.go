@@ -19,6 +19,6 @@ func (step *DeleteParentBranchStep) CreateUndoStep(_ *git.BackendCommands) (Step
 	return &SetParentStep{Branch: step.Branch, ParentBranch: step.Parent}, nil
 }
 
-func (step *DeleteParentBranchStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
+func (step *DeleteParentBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
 	return run.Config.RemoveParent(step.Branch)
 }
