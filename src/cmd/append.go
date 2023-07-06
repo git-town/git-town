@@ -92,8 +92,8 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner) (*appendCon
 	if hasTargetBranch {
 		fc.Fail("a branch named %q already exists", targetBranch)
 	}
-	fc.Check(validate.KnowsBranchAncestry(parentBranch, run.Config.MainBranch(), &run.Backend))
-	ancestorBranches := run.Config.Ancestry.Ancestors(parentBranch)
+	fc.Check(validate.KnowsBranchAncestors(parentBranch, run.Config.MainBranch(), &run.Backend))
+	ancestorBranches := run.Config.Lineage.Ancestors(parentBranch)
 	return &appendConfig{
 		ancestorBranches:    ancestorBranches,
 		isOffline:           isOffline,

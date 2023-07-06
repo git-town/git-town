@@ -159,7 +159,7 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 	if !run.Config.IsFeatureBranch(branchToShip) {
 		return nil, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can be shipped", branchToShip)
 	}
-	err = validate.KnowsBranchAncestry(branchToShip, mainBranch, &run.Backend)
+	err = validate.KnowsBranchAncestors(branchToShip, mainBranch, &run.Backend)
 	if err != nil {
 		return nil, err
 	}
@@ -171,11 +171,11 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 	if err != nil {
 		return nil, err
 	}
-	targetBranch := run.Config.Ancestry.Parent(branchToShip)
+	targetBranch := run.Config.Lineage.Parent(branchToShip)
 	canShipViaAPI := false
 	proposalMessage := ""
 	var proposal *hosting.Proposal
-	childBranches := run.Config.Ancestry.Children(branchToShip)
+	childBranches := run.Config.Lineage.Children(branchToShip)
 	proposalsOfChildBranches := []hosting.Proposal{}
 	if !isOffline && connector != nil {
 		if hasTrackingBranch {
@@ -217,9 +217,9 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 }
 
 func ensureParentBranchIsMainOrPerennialBranch(branch string, run *git.ProdRunner) error {
-	parentBranch := run.Config.Ancestry.Parent(branch)
+	parentBranch := run.Config.Lineage.Parent(branch)
 	if !run.Config.IsMainBranch(parentBranch) && !run.Config.IsPerennialBranch(parentBranch) {
-		ancestors := run.Config.Ancestry.Ancestors(branch)
+		ancestors := run.Config.Lineage.Ancestors(branch)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
 		oldestAncestor := ancestorsWithoutMainOrPerennial[0]
 		return fmt.Errorf(`shipping this branch would ship %s as well,
@@ -268,7 +268,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 		}
 	}
 	list.Add(&steps.DeleteLocalBranchStep{Branch: config.branchToShip, Parent: config.mainBranch})
-	list.Add(&steps.DeleteParentBranchStep{Branch: config.branchToShip, Parent: run.Config.Ancestry.Parent(config.branchToShip)})
+	list.Add(&steps.DeleteParentBranchStep{Branch: config.branchToShip, Parent: run.Config.Lineage.Parent(config.branchToShip)})
 	for _, child := range config.childBranches {
 		list.Add(&steps.SetParentStep{Branch: child, ParentBranch: config.targetBranch})
 	}

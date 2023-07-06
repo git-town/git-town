@@ -24,7 +24,7 @@ func EnterParent(branch, defaultParent string, backend *git.BackendCommands) (st
 func filterOutSelfAndDescendants(branch string, choices []string, config *git.RepoConfig) []string {
 	result := []string{}
 	for _, choice := range choices {
-		if choice == branch || config.Ancestry.IsAncestor(choice, branch) {
+		if choice == branch || config.Lineage.IsAncestor(choice, branch) {
 			continue
 		}
 		result = append(result, choice)

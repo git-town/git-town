@@ -106,7 +106,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner) (*prependConfig,
 	if !run.Config.IsFeatureBranch(initialBranch) {
 		return nil, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can have parent branches", initialBranch)
 	}
-	err = validate.KnowsBranchAncestry(initialBranch, run.Config.MainBranch(), &run.Backend)
+	err = validate.KnowsBranchAncestors(initialBranch, run.Config.MainBranch(), &run.Backend)
 	if err != nil {
 		return nil, err
 	}
@@ -116,8 +116,8 @@ func determinePrependConfig(args []string, run *git.ProdRunner) (*prependConfig,
 		isOffline:           isOffline,
 		mainBranch:          mainBranch,
 		noPushHook:          !pushHook,
-		parentBranch:        run.Config.Ancestry.Parent(initialBranch),
-		ancestorBranches:    run.Config.Ancestry.Ancestors(initialBranch),
+		parentBranch:        run.Config.Lineage.Parent(initialBranch),
+		ancestorBranches:    run.Config.Lineage.Ancestors(initialBranch),
 		shouldNewBranchPush: shouldNewBranchPush,
 		targetBranch:        targetBranch,
 	}, nil

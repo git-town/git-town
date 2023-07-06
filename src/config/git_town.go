@@ -17,7 +17,7 @@ import (
 type GitTown struct {
 	Git
 	originURLCache map[string]*giturl.Parts
-	Ancestry       Ancestry
+	Lineage        Lineage
 }
 
 func NewGitTown(runner runner) *GitTown {
@@ -26,7 +26,7 @@ func NewGitTown(runner runner) *GitTown {
 	return &GitTown{
 		Git:            git,
 		originURLCache: map[string]*giturl.Parts{},
-		Ancestry:       LoadAncestry(git, mainBranch),
+		Lineage:        LoadLineage(git, mainBranch),
 	}
 }
 
@@ -227,7 +227,7 @@ func (gt *GitTown) PushHookGlobal() (bool, error) {
 
 func (gc *GitTown) Reload() {
 	gc.Git.Reload()
-	gc.Ancestry = LoadAncestry(gc.Git, mainBranch(&gc.Git))
+	gc.Lineage = LoadLineage(gc.Git, mainBranch(&gc.Git))
 }
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.

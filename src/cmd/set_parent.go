@@ -46,7 +46,7 @@ func setParent(debug bool) error {
 	if !run.Config.IsFeatureBranch(currentBranch) {
 		return errors.New("only feature branches can have parent branches")
 	}
-	existingParent := run.Config.Ancestry.Parent(currentBranch)
+	existingParent := run.Config.Lineage.Parent(currentBranch)
 	if existingParent != "" {
 		// TODO: delete the old parent only when the user has entered a new parent
 		err = run.Config.RemoveParent(currentBranch)
@@ -56,7 +56,7 @@ func setParent(debug bool) error {
 	} else {
 		existingParent = run.Config.MainBranch()
 	}
-	err = validate.KnowsBranchAncestry(currentBranch, existingParent, &run.Backend)
+	err = validate.KnowsBranchAncestors(currentBranch, existingParent, &run.Backend)
 	if err != nil {
 		return err
 	}

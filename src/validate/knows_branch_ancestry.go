@@ -11,7 +11,7 @@ import (
 func KnowsBranchesAncestry(branches []string, backend *git.BackendCommands) error {
 	mainBranch := backend.Config.MainBranch()
 	for _, branch := range branches {
-		err := KnowsBranchAncestry(branch, mainBranch, backend)
+		err := KnowsBranchAncestors(branch, mainBranch, backend)
 		if err != nil {
 			return err
 		}
@@ -19,15 +19,15 @@ func KnowsBranchesAncestry(branches []string, backend *git.BackendCommands) erro
 	return nil
 }
 
-// KnowsBranchAncestry prompts the user for all unknown ancestors of the given branch.
-func KnowsBranchAncestry(branch, defaultBranch string, backend *git.BackendCommands) (err error) { //nolint:nonamedreturns // return value names are useful here
+// KnowsBranchAncestors prompts the user for all unknown ancestors of the given branch.
+func KnowsBranchAncestors(branch, defaultBranch string, backend *git.BackendCommands) (err error) { //nolint:nonamedreturns // return value names are useful here
 	headerShown := false
 	currentBranch := branch
-	if backend.Config.IsMainBranch(branch) || backend.Config.IsPerennialBranch(branch) || backend.Config.Ancestry.HasParent(branch) {
+	if backend.Config.IsMainBranch(branch) || backend.Config.IsPerennialBranch(branch) || backend.Config.Lineage.HasParents(branch) {
 		return nil
 	}
 	for {
-		parent := backend.Config.Ancestry.Parent(currentBranch)
+		parent := backend.Config.Lineage.Parent(currentBranch)
 		if parent == "" { //nolint:nestif
 			if !headerShown {
 				printParentBranchHeader(backend)

@@ -86,12 +86,12 @@ func determineDiffParentConfig(args []string, run *git.ProdRunner) (*diffParentC
 	if !run.Config.IsFeatureBranch(branch) {
 		return nil, fmt.Errorf("you can only diff-parent feature branches")
 	}
-	err = validate.KnowsBranchAncestry(branch, run.Config.MainBranch(), &run.Backend)
+	err = validate.KnowsBranchAncestors(branch, run.Config.MainBranch(), &run.Backend)
 	if err != nil {
 		return nil, err
 	}
 	return &diffParentConfig{
 		branch:       branch,
-		parentBranch: run.Config.Ancestry.Parent(branch),
+		parentBranch: run.Config.Lineage.Parent(branch),
 	}, nil
 }
