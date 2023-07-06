@@ -22,7 +22,7 @@ Feature: delete branches that were shipped or removed on another machine
     And the branches are now
       | REPOSITORY    | BRANCHES     |
       | local, origin | main, active |
-    And this branch hierarchy exists now
+    And this branch lineage exists now
       | BRANCH | PARENT |
       | active | main   |
 
