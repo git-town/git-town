@@ -27,7 +27,7 @@ func (step *EmptyStep) CreateAutomaticAbortError() error {
 	return errors.New("")
 }
 
-func (step *EmptyStep) Run(_ *git.ProdRunner, connector hosting.Connector) error {
+func (step *EmptyStep) Run(_ *git.ProdRunner, _ hosting.Connector) error {
 	return nil
 }
 
