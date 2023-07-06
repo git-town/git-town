@@ -112,7 +112,8 @@ func (r *TestCommands) CreateFile(name, content string) error {
 	if err != nil {
 		return fmt.Errorf("cannot create folder %q: %w", folderPath, err)
 	}
-	err = os.WriteFile(filePath, []byte(content), 0o500)
+	//nolint:gosec // need permission 700 here in order for tests to work
+	err = os.WriteFile(filePath, []byte(content), 0x700)
 	if err != nil {
 		return fmt.Errorf("cannot create file %q: %w", name, err)
 	}

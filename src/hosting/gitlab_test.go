@@ -7,16 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const (
-	projectPathEnc  = `git-town%2Fgit-town`
-	gitlabRoot      = "https://gitlab.com/api/v4"
-	gitlabCurrOpen  = gitlabRoot + "/projects/" + projectPathEnc + "/-/merge_requests?source_branch=feature&state=opened&target_branch=main"
-	gitlabChildOpen = gitlabRoot + "/projects/" + projectPathEnc + "/-/merge_requests?state=opened&target_branch=feature"
-	gitlabMR2       = gitlabRoot + "/projects/" + projectPathEnc + "/-/merge_requests/2"
-	gitlabMR3       = gitlabRoot + "/projects/" + projectPathEnc + "/-/merge_requests/3"
-	gitlabMR1Merge  = gitlabRoot + "/projects/" + projectPathEnc + "/-/merge_requests/1/merge"
-)
-
 func TestNewGitlabConnector(t *testing.T) {
 	t.Parallel()
 	t.Run("GitLab handbook repo on gitlab.com", func(t *testing.T) {
