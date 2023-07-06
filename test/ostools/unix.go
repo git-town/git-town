@@ -16,11 +16,12 @@ func CallScriptArgs(toolPath string) (cmd string, args []string) {
 
 // CreateInputTool creates a tool that reads two inputs from STDIN and prints them back to the user.
 func CreateInputTool(toolPath string) error {
+	//nolint:gosec // intentionally creating an executable here
 	return os.WriteFile(toolPath, []byte(`#!/usr/bin/env bash
 read i1
 read i2
 echo You entered $i1 and $i2
-`), 0o500)
+`), 0x744)
 }
 
 // CreateLsTool creates a tool in the given folder that lists all files in its current folder.
