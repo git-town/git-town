@@ -19,7 +19,7 @@ func (step *EnsureHasShippableChangesStep) CreateAutomaticAbortError() error {
 	return fmt.Errorf("the branch %q has no shippable changes", step.Branch)
 }
 
-func (step *EnsureHasShippableChangesStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
+func (step *EnsureHasShippableChangesStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
 	hasShippableChanges, err := run.Backend.HasShippableChanges(step.Branch, step.Parent)
 	if err != nil {
 		return err

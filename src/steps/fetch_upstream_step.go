@@ -12,6 +12,6 @@ type FetchUpstreamStep struct {
 	Branch string
 }
 
-func (step *FetchUpstreamStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
+func (step *FetchUpstreamStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
 	return run.Frontend.FetchUpstream(step.Branch)
 }

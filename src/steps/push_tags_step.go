@@ -10,6 +10,6 @@ type PushTagsStep struct {
 	EmptyStep
 }
 
-func (step *PushTagsStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
+func (step *PushTagsStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
 	return run.Frontend.PushTags()
 }
