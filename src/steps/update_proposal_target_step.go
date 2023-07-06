@@ -15,7 +15,7 @@ type UpdateProposalTargetStep struct {
 	EmptyStep
 }
 
-func (step *UpdateProposalTargetStep) Run(_run *git.ProdRunner, connector hosting.Connector) error {
+func (step *UpdateProposalTargetStep) Run(_ *git.ProdRunner, connector hosting.Connector) error {
 	return connector.UpdateProposalTarget(step.ProposalNumber, step.NewTarget)
 }
 

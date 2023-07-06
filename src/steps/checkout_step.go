@@ -12,7 +12,7 @@ type CheckoutStep struct {
 	previousBranch string
 }
 
-func (step *CheckoutStep) CreateUndoStep(_backend *git.BackendCommands) (Step, error) {
+func (step *CheckoutStep) CreateUndoStep(_ *git.BackendCommands) (Step, error) {
 	return &CheckoutStep{Branch: step.previousBranch}, nil
 }
 

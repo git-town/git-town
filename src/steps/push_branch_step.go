@@ -16,7 +16,7 @@ type PushBranchStep struct {
 	Undoable       bool
 }
 
-func (step *PushBranchStep) CreateUndoStep(backend *git.BackendCommands) (Step, error) {
+func (step *PushBranchStep) CreateUndoStep(_ *git.BackendCommands) (Step, error) {
 	if step.Undoable {
 		return &PushBranchAfterCurrentBranchSteps{}, nil
 	}
