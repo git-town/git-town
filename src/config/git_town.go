@@ -22,10 +22,11 @@ type GitTown struct {
 
 func NewGitTown(runner runner) *GitTown {
 	git := NewGit(runner)
+	mainBranch := mainBranch(&git)
 	return &GitTown{
 		Git:            git,
 		originURLCache: map[string]*giturl.Parts{},
-		Ancestry:       LoadAncestry(git),
+		Ancestry:       LoadAncestry(git, mainBranch),
 	}
 }
 
@@ -126,7 +127,7 @@ func (gt *GitTown) IsPerennialBranch(branch string) bool {
 
 // MainBranch provides the name of the main branch.
 func (gt *GitTown) MainBranch() string {
-	return gt.LocalOrGlobalConfigValue(MainBranchKey)
+	return mainBranch(&gt.Git)
 }
 
 // MainBranch provides the name of the main branch, or the given default value if none is configured.
@@ -226,7 +227,7 @@ func (gt *GitTown) PushHookGlobal() (bool, error) {
 
 func (gc *GitTown) Reload() {
 	gc.Git.Reload()
-	gc.Ancestry = LoadAncestry(gc.Git)
+	gc.Ancestry = LoadAncestry(gc.Git, mainBranch(&gc.Git))
 }
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
@@ -471,4 +472,9 @@ func (gt *GitTown) updateDeprecatedLocalSetting(deprecatedKey, newKey string) er
 		return err
 	}
 	return nil
+}
+
+// MainBranch provides the name of the main branch.
+func mainBranch(git *Git) string {
+	return git.LocalOrGlobalConfigValue(MainBranchKey)
 }

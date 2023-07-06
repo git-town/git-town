@@ -3,7 +3,6 @@ package cmd
 import (
 	"strings"
 
-	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/dialog"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
@@ -45,8 +44,7 @@ func runSwitch(debug bool) error {
 	if err != nil {
 		return err
 	}
-	branchParents := run.Config.ParentBranchMap()
-	newBranch, err := queryBranch(currentBranch, branchParents, &run)
+	newBranch, err := queryBranch(currentBranch, &run)
 	if err != nil {
 		return err
 	}
@@ -61,8 +59,8 @@ func runSwitch(debug bool) error {
 
 // queryBranch lets the user select a new branch via a visual dialog.
 // Returns the selected branch or nil if the user aborted.
-func queryBranch(currentBranch string, branchParents config.BranchParents, run *git.ProdRunner) (selection *string, err error) { //nolint:nonamedreturns
-	entries, err := createEntries(branchParents, run)
+func queryBranch(currentBranch string, run *git.ProdRunner) (selection *string, err error) { //nolint:nonamedreturns
+	entries, err := createEntries(run)
 	if err != nil {
 		return nil, err
 	}
@@ -70,10 +68,10 @@ func queryBranch(currentBranch string, branchParents config.BranchParents, run *
 }
 
 // createEntries provides all the entries for the branch dialog.
-func createEntries(branchParents config.BranchParents, run *git.ProdRunner) (dialog.ModalEntries, error) {
+func createEntries(run *git.ProdRunner) (dialog.ModalEntries, error) {
 	entries := dialog.ModalEntries{}
 	var err error
-	for _, root := range run.Config.BranchAncestryRoots(branchParents) {
+	for _, root := range run.Config.Ancestry.Roots() {
 		entries, err = addEntryAndChildren(entries, root, 0, run)
 		if err != nil {
 			return nil, err
@@ -89,7 +87,7 @@ func addEntryAndChildren(entries dialog.ModalEntries, branch string, indent int,
 		Value: branch,
 	})
 	var err error
-	for _, child := range run.Config.ChildBranches(branch) {
+	for _, child := range run.Config.Ancestry.Children(branch) {
 		entries, err = addEntryAndChildren(entries, child, indent+1, run)
 		if err != nil {
 			return entries, err

@@ -10,18 +10,23 @@ import (
 // Ancestry encapsulates all data and functionality around parent branches.
 type Ancestry struct {
 	// branch --> its parent
-	entries map[string]string
+	entries    map[string]string
+	mainBranch string
+}
+
+func NewAncestry(mainBranch string) Ancestry {
+	return Ancestry{map[string]string{}, mainBranch}
 }
 
 // ParentBranchMap returns a map from branch name to its parent branch.
-func LoadAncestry(git Git) Ancestry {
+func LoadAncestry(git Git, mainBranch string) Ancestry {
 	parents := map[string]string{}
 	for _, key := range git.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
 		child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
 		parent := git.LocalConfigValue(key)
 		parents[child] = parent
 	}
-	return Ancestry{parents}
+	return Ancestry{parents, mainBranch}
 }
 
 func (a *Ancestry) AddParent(branch, parent string) {
@@ -48,7 +53,7 @@ func (a *Ancestry) Ancestors(branch string) []string {
 // Children provides the names of all branches that have the given branch as their parent.
 func (a *Ancestry) Children(branch string) []string {
 	result := []string{}
-	for parent, child := range a.entries {
+	for child, parent := range a.entries {
 		if parent == branch {
 			result = append(result, child)
 		}
@@ -58,13 +63,13 @@ func (a *Ancestry) Children(branch string) []string {
 }
 
 // branch --> its parent
-func (a *Ancestry) Entries() *map[string]string {
-	return &a.entries
+func (a *Ancestry) Entries() map[string]string {
+	return a.entries
 }
 
 // HasParent returns whether or not the given branch has a parent.
 func (a *Ancestry) HasParent(branch string) bool {
-	for _, child := range a.entries {
+	for child := range a.entries {
 		if child == branch {
 			return true
 		}
@@ -80,7 +85,7 @@ func (a *Ancestry) IsAncestor(branch, ancestor string) bool {
 
 // Parent provides the name of the parent branch for the given branch or nil if the branch has no parent.
 func (a *Ancestry) Parent(branch string) string {
-	for parent, child := range a.entries {
+	for child, parent := range a.entries {
 		if child == branch {
 			return parent
 		}

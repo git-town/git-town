@@ -45,7 +45,7 @@ func (r *TestCommands) AddSubmodule(url string) error {
 func (r *TestCommands) BranchHierarchyTable() datatable.DataTable {
 	result := datatable.DataTable{}
 	r.Config.Reload()
-	parentBranchMap := r.Config.ParentBranchMap()
+	parentBranchMap := r.Config.Ancestry.Entries()
 	result.AddRow("BRANCH", "PARENT")
 	childBranches := make([]string, 0, len(parentBranchMap))
 	for child := range parentBranchMap {
@@ -53,7 +53,7 @@ func (r *TestCommands) BranchHierarchyTable() datatable.DataTable {
 	}
 	sort.Strings(childBranches)
 	for _, child := range childBranches {
-		result.AddRow(child, parentBranchMap[child])
+		result.AddRow(child, (parentBranchMap)[child])
 	}
 	return result
 }

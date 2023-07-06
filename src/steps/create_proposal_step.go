@@ -13,7 +13,7 @@ type CreateProposalStep struct {
 }
 
 func (step *CreateProposalStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
-	parentBranch := run.Config.ParentBranch(step.Branch)
+	parentBranch := run.Config.Ancestry.Parent(step.Branch)
 	prURL, err := connector.NewProposalURL(step.Branch, parentBranch)
 	if err != nil {
 		return err

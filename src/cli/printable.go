@@ -3,34 +3,31 @@ package cli
 import (
 	"sort"
 	"strings"
-
-	"github.com/git-town/git-town/v9/src/config"
 )
 
 // BranchAncestryConfig defines the configuration values needed by the `cli` package.
-type BranchAncestryConfig interface {
-	BranchAncestryRoots(config.BranchParents) []string
-	ChildBranches(string) []string
-	ParentBranchMap() config.BranchParents
+type Ancestry interface {
+	Roots() []string
+	Children(string) []string
 }
 
 // PrintableBranchAncestry provides the branch ancestry in CLI printable format.
-func PrintableBranchAncestry(config BranchAncestryConfig) string {
-	roots := config.BranchAncestryRoots(config.ParentBranchMap())
+func PrintableBranchAncestry(ancestry Ancestry) string {
+	roots := ancestry.Roots()
 	trees := make([]string, len(roots))
 	for r, root := range roots {
-		trees[r] = PrintableBranchTree(root, config)
+		trees[r] = PrintableBranchTree(root, ancestry)
 	}
 	return strings.Join(trees, "\n\n")
 }
 
 // PrintableBranchTree returns a user printable branch tree.
-func PrintableBranchTree(branch string, config BranchAncestryConfig) string {
+func PrintableBranchTree(branch string, ancestry Ancestry) string {
 	result := branch
-	childBranches := config.ChildBranches(branch)
+	childBranches := ancestry.Children(branch)
 	sort.Strings(childBranches)
 	for _, childBranch := range childBranches {
-		result += "\n" + Indent(PrintableBranchTree(childBranch, config))
+		result += "\n" + Indent(PrintableBranchTree(childBranch, ancestry))
 	}
 	return result
 }
