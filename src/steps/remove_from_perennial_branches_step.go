@@ -11,10 +11,10 @@ type RemoveFromPerennialBranchesStep struct {
 	Branch string
 }
 
-func (step *RemoveFromPerennialBranchesStep) CreateUndoStep(backend *git.BackendCommands) (Step, error) {
+func (step *RemoveFromPerennialBranchesStep) CreateUndoStep(_ *git.BackendCommands) (Step, error) {
 	return &AddToPerennialBranchesStep{Branch: step.Branch}, nil
 }
 
-func (step *RemoveFromPerennialBranchesStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
+func (step *RemoveFromPerennialBranchesStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
 	return run.Config.RemoveFromPerennialBranches(step.Branch)
 }

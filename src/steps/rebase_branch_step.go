@@ -21,11 +21,11 @@ func (step *RebaseBranchStep) CreateContinueStep() Step {
 	return &ContinueRebaseStep{}
 }
 
-func (step *RebaseBranchStep) CreateUndoStep(backend *git.BackendCommands) (Step, error) {
+func (step *RebaseBranchStep) CreateUndoStep(_ *git.BackendCommands) (Step, error) {
 	return &ResetToShaStep{Hard: true, Sha: step.previousSha}, nil
 }
 
-func (step *RebaseBranchStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
+func (step *RebaseBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
 	var err error
 	step.previousSha, err = run.Backend.CurrentSha()
 	if err != nil {
