@@ -56,7 +56,7 @@ func setParent(debug bool) error {
 	} else {
 		existingParent = run.Config.MainBranch()
 	}
-	err = validate.KnowsBranchAncestry(currentBranch, existingParent, &run.Backend)
+	err = validate.KnowsBranchAncestors(currentBranch, existingParent, &run.Backend)
 	if err != nil {
 		return err
 	}

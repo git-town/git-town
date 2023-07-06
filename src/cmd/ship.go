@@ -159,7 +159,7 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 	if !run.Config.IsFeatureBranch(branchToShip) {
 		return nil, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can be shipped", branchToShip)
 	}
-	err = validate.KnowsBranchAncestry(branchToShip, mainBranch, &run.Backend)
+	err = validate.KnowsBranchAncestors(branchToShip, mainBranch, &run.Backend)
 	if err != nil {
 		return nil, err
 	}
