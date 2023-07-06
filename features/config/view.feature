@@ -53,7 +53,7 @@ Feature: show the configuration
         GitLab token: (not set)
         Gitea token: (not set)
 
-      Branch Ancestry:
+      Branch Lineage:
         main
           alpha
             child

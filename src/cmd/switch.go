@@ -71,7 +71,7 @@ func queryBranch(currentBranch string, run *git.ProdRunner) (selection *string, 
 func createEntries(run *git.ProdRunner) (dialog.ModalEntries, error) {
 	entries := dialog.ModalEntries{}
 	var err error
-	for _, root := range run.Config.BranchAncestryRoots() {
+	for _, root := range run.Config.BranchLineageRoots() {
 		entries, err = addEntryAndChildren(entries, root, 0, run)
 		if err != nil {
 			return nil, err

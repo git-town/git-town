@@ -22,7 +22,7 @@ Feature: in a local repo
     And now these commits exist
       | BRANCH   | LOCATION | MESSAGE         |
       | existing | local    | existing commit |
-    And this branch hierarchy exists now
+    And this branch lineage exists now
       | BRANCH   | PARENT |
       | existing | main   |
       | new      | main   |
