@@ -8,6 +8,8 @@ import (
 )
 
 // StepList is a fifo containing Step instances.
+//
+//nolint:musttag // StepList is manually serialized, see the `MarshalJSON` method below
 type StepList struct {
 	List []steps.Step `exhaustruct:"optional"`
 }

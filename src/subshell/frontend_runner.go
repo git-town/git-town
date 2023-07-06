@@ -66,7 +66,7 @@ func PrintCommand(branch string, omitBranch bool, cmd string, args ...string) {
 }
 
 func FormatCommand(currentBranch string, omitBranch bool, executable string, args ...string) string {
-	result := ""
+	var result string
 	if executable == "git" && !omitBranch {
 		result = "[" + currentBranch + "] git "
 	} else {

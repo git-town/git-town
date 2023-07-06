@@ -12,11 +12,11 @@ type RestoreOpenChangesStep struct {
 	EmptyStep
 }
 
-func (step *RestoreOpenChangesStep) CreateUndoStep(backend *git.BackendCommands) (Step, error) {
+func (step *RestoreOpenChangesStep) CreateUndoStep(_ *git.BackendCommands) (Step, error) {
 	return &StashOpenChangesStep{}, nil
 }
 
-func (step *RestoreOpenChangesStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
+func (step *RestoreOpenChangesStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
 	err := run.Frontend.PopStash()
 	if err != nil {
 		return errors.New("conflicts between your uncommmitted changes and the main branch")

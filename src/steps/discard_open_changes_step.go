@@ -10,6 +10,6 @@ type DiscardOpenChangesStep struct {
 	EmptyStep
 }
 
-func (step *DiscardOpenChangesStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
+func (step *DiscardOpenChangesStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
 	return run.Frontend.DiscardOpenChanges()
 }
