@@ -43,7 +43,7 @@ linters-settings:
     case:
       use-field-name: true
       rules:
-        json: pascal
+        json: pascal  # set to pascal to maintain backwards compatibility
 
 
 issues:
