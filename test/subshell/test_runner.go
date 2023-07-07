@@ -261,7 +261,7 @@ func (r *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string) (s
 		}
 	}
 	if opts.IgnoreOutput {
-		return "", 0, err
+		return "", exitCode, err
 	}
 	return strings.TrimSpace(output.String()), exitCode, err
 }
