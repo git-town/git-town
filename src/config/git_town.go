@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"sort"
 	"strconv"
 	"strings"
 
@@ -31,54 +30,6 @@ func NewGitTown(runner runner) *GitTown {
 // The branches must exist.
 func (gt *GitTown) AddToPerennialBranches(branches ...string) error {
 	return gt.SetPerennialBranches(append(gt.PerennialBranches(), branches...))
-}
-
-// AncestorBranches provides the names of all parent branches for the given branch,
-// This information is read from the cache in the Git config,
-// so might be out of date when the branch hierarchy has been modified.
-func (gt *GitTown) AncestorBranches(branch string) []string {
-	parentBranchMap := gt.ParentBranchMap()
-	current := branch
-	result := []string{}
-	for {
-		if gt.IsMainBranch(current) || gt.IsPerennialBranch(current) {
-			return result
-		}
-		parent := parentBranchMap[current]
-		if parent == "" {
-			return result
-		}
-		result = append([]string{parent}, result...)
-		current = parent
-	}
-}
-
-// BranchLineageRoots provides the branches with children and no parents.
-func (gt *GitTown) BranchLineageRoots() []string {
-	parentMap := gt.ParentBranchMap()
-	roots := []string{}
-	for _, parent := range parentMap {
-		if _, ok := parentMap[parent]; !ok && !stringslice.Contains(roots, parent) {
-			roots = append(roots, parent)
-		}
-	}
-	sort.Strings(roots)
-	return roots
-}
-
-// ChildBranches provides the names of all branches for which the given branch
-// is a parent.
-func (gt *GitTown) ChildBranches(branch string) []string {
-	result := []string{}
-	for _, key := range gt.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
-		parent := gt.LocalConfigValue(key)
-		if parent == branch {
-			child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
-			result = append(result, child)
-		}
-	}
-	sort.Strings(result)
-	return result
 }
 
 func (gt *GitTown) DeprecatedNewBranchPushFlagGlobal() string {
@@ -127,11 +78,6 @@ func (gt *GitTown) HasBranchInformation() bool {
 	return false
 }
 
-// HasParentBranch returns whether or not the given branch has a parent.
-func (gt *GitTown) HasParentBranch(branch string) bool {
-	return gt.ParentBranch(branch) != ""
-}
-
 // HostingServiceName provides the name of the code hosting connector to use.
 func (gt *GitTown) HostingServiceName() string {
 	return gt.LocalOrGlobalConfigValue(CodeHostingDriverKey)
@@ -141,12 +87,6 @@ func (gt *GitTown) HostingServiceName() string {
 // This function caches its result and can be queried repeatedly.
 func (gt *GitTown) HostingService() (HostingService, error) {
 	return NewHostingService(gt.HostingServiceName())
-}
-
-// IsAncestorBranch indicates whether the given branch is an ancestor of the other given branch.
-func (gt *GitTown) IsAncestorBranch(branch, ancestorBranch string) bool {
-	ancestorBranches := gt.AncestorBranches(branch)
-	return stringslice.Contains(ancestorBranches, ancestorBranch)
 }
 
 // IsFeatureBranch indicates whether the branch with the given name is
@@ -179,6 +119,17 @@ func (gt *GitTown) IsOffline() (bool, error) {
 func (gt *GitTown) IsPerennialBranch(branch string) bool {
 	perennialBranches := gt.PerennialBranches()
 	return stringslice.Contains(perennialBranches, branch)
+}
+
+// LoadLineage provides the Lineage for the given Git repo.
+func (gt *GitTown) Lineage() *Lineage {
+	parents := map[string]string{}
+	for _, key := range gt.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
+		child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
+		parent := gt.LocalConfigValue(key)
+		parents[child] = parent
+	}
+	return &Lineage{parents, gt.MainBranch()}
 }
 
 // MainBranch provides the name of the main branch.
@@ -230,22 +181,6 @@ func (gt *GitTown) OriginURL() *giturl.Parts {
 	}
 	gt.originURLCache[text] = url
 	return url
-}
-
-// ParentBranchMap returns a map from branch name to its parent branch.
-func (gt *GitTown) ParentBranchMap() map[string]string {
-	result := map[string]string{}
-	for _, key := range gt.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
-		child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
-		parent := gt.LocalConfigValue(key)
-		result[child] = parent
-	}
-	return result
-}
-
-// ParentBranch provides the name of the parent branch of the given branch.
-func (gt *GitTown) ParentBranch(branch string) string {
-	return gt.LocalConfigValue("git-town-branch." + branch + ".parent")
 }
 
 // PerennialBranches returns all branches that are marked as perennial.

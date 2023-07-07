@@ -110,14 +110,15 @@ func determinePrependConfig(args []string, run *git.ProdRunner) (*prependConfig,
 	if err != nil {
 		return nil, err
 	}
+	lineage := run.Config.Lineage()
 	return &prependConfig{
 		hasOrigin:           hasOrigin,
 		initialBranch:       initialBranch,
 		isOffline:           isOffline,
 		mainBranch:          mainBranch,
 		noPushHook:          !pushHook,
-		parentBranch:        run.Config.ParentBranch(initialBranch),
-		ancestorBranches:    run.Config.AncestorBranches(initialBranch),
+		parentBranch:        lineage.Parent(initialBranch),
+		ancestorBranches:    lineage.Ancestors(initialBranch),
 		shouldNewBranchPush: shouldNewBranchPush,
 		targetBranch:        targetBranch,
 	}, nil

@@ -157,7 +157,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 		newBranch:                  newBranch,
 		noPushHook:                 !pushHook,
 		oldBranch:                  oldBranch,
-		oldBranchChildren:          run.Config.ChildBranches(oldBranch),
+		oldBranchChildren:          run.Config.Lineage().Children(oldBranch),
 		oldBranchHasTrackingBranch: oldBranchHasTrackingBranch,
 	}, err
 }
@@ -172,8 +172,9 @@ func renameBranchStepList(config *renameBranchConfig, run *git.ProdRunner) (runs
 		result.Append(&steps.RemoveFromPerennialBranchesStep{Branch: config.oldBranch})
 		result.Append(&steps.AddToPerennialBranchesStep{Branch: config.newBranch})
 	} else {
-		result.Append(&steps.DeleteParentBranchStep{Branch: config.oldBranch, Parent: run.Config.ParentBranch(config.oldBranch)})
-		result.Append(&steps.SetParentStep{Branch: config.newBranch, ParentBranch: run.Config.ParentBranch(config.oldBranch)})
+		lineage := run.Config.Lineage()
+		result.Append(&steps.DeleteParentBranchStep{Branch: config.oldBranch, Parent: lineage.Parent(config.oldBranch)})
+		result.Append(&steps.SetParentStep{Branch: config.newBranch, ParentBranch: lineage.Parent(config.oldBranch)})
 	}
 	for _, child := range config.oldBranchChildren {
 		result.Append(&steps.SetParentStep{Branch: child, ParentBranch: config.newBranch})
