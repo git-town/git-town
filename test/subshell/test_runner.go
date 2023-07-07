@@ -273,6 +273,16 @@ func (r *TestRunner) Run(name string, arguments ...string) error {
 	return err
 }
 
+func (r *TestRunner) RunMany(commands [][]string) error {
+	for _, argv := range commands {
+		err := r.Run(argv[0], argv[1:]...)
+		if err != nil {
+			return fmt.Errorf("error running command %q: %w", argv, err)
+		}
+	}
+	return nil
+}
+
 // SetTestOrigin adds the given environment variable to subsequent runs of commands.
 func (r *TestRunner) SetTestOrigin(content string) {
 	r.testOrigin = content
