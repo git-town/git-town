@@ -20,9 +20,8 @@ type GitTown struct {
 }
 
 func NewGitTown(runner runner) *GitTown {
-	git := NewGit(runner)
 	return &GitTown{
-		Git:            git,
+		Git:            NewGit(runner),
 		originURLCache: map[string]*giturl.Parts{},
 	}
 }
