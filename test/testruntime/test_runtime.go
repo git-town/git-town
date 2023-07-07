@@ -8,9 +8,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/cache"
 	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/git"
-	prodshell "github.com/git-town/git-town/v9/src/subshell"
 	"github.com/git-town/git-town/v9/test/commands"
 	testshell "github.com/git-town/git-town/v9/test/subshell"
 	"github.com/stretchr/testify/assert"
@@ -69,7 +67,7 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 		RootDirCache:       &cache.String{},
 	}
 	backendCommands := git.BackendCommands{
-		BackendRunner: prodshell.BackendRunner{Dir: &workingDir, Verbose: false, Stats: &execute.NoStatistics{}},
+		BackendRunner: &mockingRunner,
 		Config:        &config,
 	}
 	testCommands := commands.TestCommands{
