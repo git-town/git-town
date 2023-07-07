@@ -11,6 +11,166 @@ import (
 
 func TestGitTown(t *testing.T) {
 	t.Parallel()
+
+	t.Run("SetParent and AncestorBranches", func(t *testing.T) {
+		t.Parallel()
+		t.Run("multiple ancestors", func(t *testing.T) {
+			t.Parallel()
+			repo := testruntime.CreateGitTown(t)
+			err := repo.Config.SetParent("three", "two")
+			assert.NoError(t, err)
+			err = repo.Config.SetParent("two", "one")
+			assert.NoError(t, err)
+			err = repo.Config.SetParent("one", "main")
+			assert.NoError(t, err)
+			have := repo.Config.AncestorBranches("three")
+			want := []string{"main", "one", "two"}
+			assert.Equal(t, want, have)
+		})
+		t.Run("one ancestor", func(t *testing.T) {
+			t.Parallel()
+			repo := testruntime.CreateGitTown(t)
+			err := repo.Config.SetParent("one", "main")
+			assert.NoError(t, err)
+			have := repo.Config.AncestorBranches("one")
+			want := []string{"main"}
+			assert.Equal(t, want, have)
+		})
+		t.Run("no ancestors", func(t *testing.T) {
+			t.Parallel()
+			repo := testruntime.CreateGitTown(t)
+			err := repo.Config.SetParent("one", "main")
+			assert.NoError(t, err)
+			have := repo.Config.AncestorBranches("two")
+			want := []string{}
+			assert.Equal(t, want, have)
+		})
+	})
+
+	t.Run("BranchLineageRoots", func(t *testing.T) {
+		t.Parallel()
+		t.Run("multiple roots with nested child branches", func(t *testing.T) {
+			t.Parallel()
+			repo := testruntime.CreateGitTown(t)
+			err := repo.Config.SetParent("two", "one")
+			assert.NoError(t, err)
+			err = repo.Config.SetParent("one", "main")
+			assert.NoError(t, err)
+			err = repo.Config.SetParent("beta", "alpha")
+			assert.NoError(t, err)
+			err = repo.Config.SetParent("alpha", "main")
+			assert.NoError(t, err)
+			err = repo.Config.SetParent("hotfix1", "prod")
+			assert.NoError(t, err)
+			err = repo.Config.SetParent("hotfix2", "prod")
+			assert.NoError(t, err)
+			have := repo.Config.BranchLineageRoots()
+			want := []string{"main", "prod"}
+			assert.Equal(t, want, have)
+		})
+		t.Run("no nested branches", func(t *testing.T) {
+			t.Parallel()
+			repo := testruntime.CreateGitTown(t)
+			err := repo.Config.SetParent("one", "main")
+			assert.NoError(t, err)
+			err = repo.Config.SetParent("alpha", "main")
+			assert.NoError(t, err)
+			have := repo.Config.BranchLineageRoots()
+			want := []string{"main"}
+			assert.Equal(t, want, have)
+		})
+		t.Run("empty", func(t *testing.T) {
+			t.Parallel()
+			repo := testruntime.CreateGitTown(t)
+			have := repo.Config.BranchLineageRoots()
+			want := []string{}
+			assert.Equal(t, want, have)
+		})
+	})
+
+	t.Run("ChildBranches", func(t *testing.T) {
+		t.Run("multiple children", func(t *testing.T) {
+			t.Parallel()
+			repo := testruntime.CreateGitTown(t)
+			err := repo.Config.SetParent("beta1", "alpha")
+			assert.NoError(t, err)
+			err = repo.Config.SetParent("beta2", "alpha")
+			assert.NoError(t, err)
+			have := repo.Config.ChildBranches("alpha")
+			want := []string{"beta1", "beta2"}
+			assert.Equal(t, want, have)
+		})
+		t.Run("child has children", func(t *testing.T) {
+			t.Parallel()
+			repo := testruntime.CreateGitTown(t)
+			err := repo.Config.SetParent("beta", "alpha")
+			assert.NoError(t, err)
+			err = repo.Config.SetParent("gamma", "beta")
+			assert.NoError(t, err)
+			have := repo.Config.ChildBranches("alpha")
+			want := []string{"beta"}
+			assert.Equal(t, want, have)
+		})
+		t.Run("empty", func(t *testing.T) {
+			t.Parallel()
+			repo := testruntime.CreateGitTown(t)
+			have := repo.Config.ChildBranches("alpha")
+			want := []string{}
+			assert.Equal(t, want, have)
+		})
+	})
+
+	t.Run("HasParentBranch", func(t *testing.T) {
+		t.Run("has a parent", func(t *testing.T) {
+			t.Parallel()
+			repo := testruntime.CreateGitTown(t)
+			err := repo.Config.SetParent("beta", "alpha")
+			assert.NoError(t, err)
+			assert.True(t, repo.Config.HasParentBranch("beta"))
+		})
+		t.Run("has no parent", func(t *testing.T) {
+			t.Parallel()
+			repo := testruntime.CreateGitTown(t)
+			assert.False(t, repo.Config.HasParentBranch("foo"))
+		})
+	})
+
+	t.Run("IsAncestorBranch", func(t *testing.T) {
+		t.Run("greatgrandparent", func(t *testing.T) {
+			t.Parallel()
+			repo := testruntime.CreateGitTown(t)
+			err := repo.Config.SetParent("four", "three")
+			assert.NoError(t, err)
+			err = repo.Config.SetParent("three", "two")
+			assert.NoError(t, err)
+			err = repo.Config.SetParent("two", "one")
+			assert.NoError(t, err)
+			assert.True(t, repo.Config.IsAncestorBranch("four", "one"))
+		})
+		t.Run("direct parent", func(t *testing.T) {
+			t.Parallel()
+			repo := testruntime.CreateGitTown(t)
+			err := repo.Config.SetParent("two", "one")
+			assert.NoError(t, err)
+			assert.True(t, repo.Config.IsAncestorBranch("two", "one"))
+		})
+	})
+
+	t.Run("ParentBranch", func(t *testing.T) {
+		t.Run("has parent", func(t *testing.T) {
+			t.Parallel()
+			repo := testruntime.CreateGitTown(t)
+			err := repo.Config.SetParent("two", "one")
+			assert.NoError(t, err)
+			assert.Equal(t, "one", repo.Config.ParentBranch("two"))
+		})
+		t.Run("has no parent", func(t *testing.T) {
+			t.Parallel()
+			repo := testruntime.CreateGitTown(t)
+			assert.Equal(t, "", repo.Config.ParentBranch("foo"))
+		})
+	})
+
 	t.Run("OriginURL()", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]giturl.Parts{
