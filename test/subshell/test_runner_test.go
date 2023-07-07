@@ -44,25 +44,6 @@ func TestMockingRunner(t *testing.T) {
 		assert.Equal(t, "hello world", res)
 	})
 
-	t.Run(".RunMany()", func(t *testing.T) {
-		t.Parallel()
-		workDir := t.TempDir()
-		runner := subshell.TestRunner{
-			WorkingDir: workDir,
-			HomeDir:    t.TempDir(),
-			BinDir:     "",
-		}
-		runner.MustRunMany([][]string{
-			{"touch", "first"},
-			{"touch", "second"},
-		})
-		entries, err := os.ReadDir(workDir)
-		assert.NoError(t, err)
-		assert.Len(t, entries, 2)
-		assert.Equal(t, "first", entries[0].Name())
-		assert.Equal(t, "second", entries[1].Name())
-	})
-
 	t.Run(".QueryString()", func(t *testing.T) {
 		t.Parallel()
 		workDir := t.TempDir()

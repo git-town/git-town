@@ -154,17 +154,6 @@ func (r *TestRunner) MustRun(name string, arguments ...string) {
 	}
 }
 
-// RunMany runs all given commands.
-// Commands are provided as a list of argv-style strings.
-// Overrides apply for the first command only.
-// Failed commands abort immediately with the encountered error.
-func (r *TestRunner) MustRunMany(commands [][]string) {
-	for _, argv := range commands {
-		command, args := argv[0], argv[1:]
-		r.MustRun(command, args...)
-	}
-}
-
 // Run runs the given command with the given arguments.
 // Overrides will be used and removed when done.
 func (r *TestRunner) Query(name string, arguments ...string) (string, error) {

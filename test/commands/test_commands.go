@@ -133,15 +133,13 @@ func (r *TestCommands) CreatePerennialBranches(names ...string) error {
 
 // CreateStandaloneTag creates a tag not on a branch.
 func (r *TestCommands) CreateStandaloneTag(name string) {
-	r.MustRunMany([][]string{
-		{"git", "checkout", "-b", "temp"},
-		{"touch", "a.txt"},
-		{"git", "add", "-A"},
-		{"git", "commit", "-m", "temp"},
-		{"git", "tag", "-a", name, "-m", name},
-		{"git", "checkout", "-"},
-		{"git", "branch", "-D", "temp"},
-	})
+	r.MustRun("git", "checkout", "-b", "temp")
+	r.MustRun("touch", "a.txt")
+	r.MustRun("git", "add", "-A")
+	r.MustRun("git", "commit", "-m", "temp")
+	r.MustRun("git", "tag", "-a", name, "-m", name)
+	r.MustRun("git", "checkout", "-")
+	r.MustRun("git", "branch", "-D", "temp")
 }
 
 // CreateTag creates a tag with the given name.

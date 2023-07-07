@@ -149,8 +149,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.fixture.OriginRepo.CreateBranch(branch, "main")
 	})
 
-	suite.Step(`^a remote tag "([^"]+)" not on a branch$`, func(name string) {
+	suite.Step(`^a remote tag "([^"]+)" not on a branch$`, func(name string) error {
 		state.fixture.OriginRepo.CreateStandaloneTag(name)
+		return nil
 	})
 
 	suite.Step(`^all branches are now synchronized$`, func() error {
