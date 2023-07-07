@@ -83,7 +83,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^a branch "([^"]*)"$`, func(branch string) error {
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
-		return state.fixture.DevRepo.CreateBranch(branch, "main")
+		state.fixture.DevRepo.CreateBranch(branch, "main")
+		return nil
 	})
 
 	suite.Step(`^a coworker clones the repository$`, func() error {
@@ -146,7 +147,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^a remote feature branch "([^"]*)"$`, func(branch string) error {
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-		return state.fixture.OriginRepo.CreateBranch(branch, "main")
+		state.fixture.OriginRepo.CreateBranch(branch, "main")
+		return nil
 	})
 
 	suite.Step(`^a remote tag "([^"]+)" not on a branch$`, func(name string) error {
@@ -568,10 +570,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
 		for _, branch := range []string{branch1, branch2} {
-			err := state.fixture.DevRepo.CreateBranch(branch, "main")
-			if err != nil {
-				return err
-			}
+			state.fixture.DevRepo.CreateBranch(branch, "main")
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		}
 		return nil
@@ -643,10 +642,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.initialCurrentBranch = name
 		if !stringslice.Contains(state.initialLocalBranches, name) {
 			state.initialLocalBranches = append(state.initialLocalBranches, name)
-			err := state.fixture.DevRepo.CreateBranch(name, "main")
-			if err != nil {
-				return err
-			}
+			state.fixture.DevRepo.CreateBranch(name, "main")
 		}
 		return state.fixture.DevRepo.CheckoutBranch(name)
 	})

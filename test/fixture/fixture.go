@@ -245,10 +245,7 @@ func (env *Fixture) CreateCommits(commits []git.Commit) error {
 
 // CreateOriginBranch creates a branch with the given name only in the origin directory.
 func (env Fixture) CreateOriginBranch(name, parent string) error {
-	err := env.OriginRepo.CreateBranch(name, parent)
-	if err != nil {
-		return fmt.Errorf("cannot create origin branch %q: %w", name, err)
-	}
+	env.OriginRepo.CreateBranch(name, parent)
 	return nil
 }
 

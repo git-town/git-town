@@ -64,18 +64,14 @@ func (r *TestCommands) CheckoutBranch(name string) error {
 // CreateBranch creates a new branch with the given name.
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
-func (r *TestCommands) CreateBranch(name, parent string) error {
-	err := r.Run("git", "branch", name, parent)
-	return err
+func (r *TestCommands) CreateBranch(name, parent string) {
+	r.MustRun("git", "branch", name, parent)
 }
 
 // CreateChildFeatureBranch creates a branch with the given name and parent in this repository.
 // The parent branch must already exist.
 func (r *TestCommands) CreateChildFeatureBranch(name string, parent string) error {
-	err := r.CreateBranch(name, parent)
-	if err != nil {
-		return err
-	}
+	r.CreateBranch(name, parent)
 	return r.Config.SetParent(name, parent)
 }
 
@@ -123,10 +119,7 @@ func (r *TestCommands) CreateFile(name, content string) error {
 // CreatePerennialBranches creates perennial branches with the given names in this repository.
 func (r *TestCommands) CreatePerennialBranches(names ...string) error {
 	for _, name := range names {
-		err := r.CreateBranch(name, "main")
-		if err != nil {
-			return fmt.Errorf("cannot create perennial branch %q in repo %q: %w", name, r.WorkingDir, err)
-		}
+		r.CreateBranch(name, "main")
 	}
 	return r.Config.AddToPerennialBranches(names...)
 }
