@@ -52,13 +52,13 @@ func Initialize(workingDir, homeDir, binDir string) (TestRuntime, error) {
 // newRuntime provides a new test.Runner instance working in the given directory.
 // The directory must contain an existing Git repo.
 func New(workingDir, homeDir, binDir string) TestRuntime {
-	mockingRunner := testshell.TestRunner{
+	runner := testshell.TestRunner{
 		WorkingDir: workingDir,
 		HomeDir:    homeDir,
 		BinDir:     binDir,
 	}
 	config := git.RepoConfig{
-		GitTown:            config.NewGitTown(&mockingRunner),
+		GitTown:            config.NewGitTown(&runner),
 		CurrentBranchCache: &cache.String{},
 		DryRun:             false,
 		IsRepoCache:        &cache.Bool{},
@@ -67,11 +67,11 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 		RootDirCache:       &cache.String{},
 	}
 	backendCommands := git.BackendCommands{
-		BackendRunner: &mockingRunner,
+		BackendRunner: &runner,
 		Config:        &config,
 	}
 	testCommands := commands.TestCommands{
-		TestRunner:      mockingRunner,
+		TestRunner:      runner,
 		BackendCommands: &backendCommands,
 	}
 	return TestRuntime{

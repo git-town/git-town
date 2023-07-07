@@ -7,6 +7,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/acarl005/stripansi"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/test/fixture"
 	"github.com/git-town/git-town/v9/test/git"
@@ -116,6 +117,7 @@ func TestTestCommands(t *testing.T) {
 		assert.NoError(t, err)
 		output, err := runtime.BackendRunner.Query("git-town", "config")
 		assert.NoError(t, err)
+		output = stripansi.Strip(output)
 		has := strings.Contains(output, "Branch Lineage:\n  main\n    f1\n      f1a")
 		if !has {
 			fmt.Printf("unexpected output: %s", output)
