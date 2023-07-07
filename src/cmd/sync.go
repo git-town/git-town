@@ -140,7 +140,8 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner) (*syncConfig, error)
 		if err != nil {
 			return nil, err
 		}
-		ancestorBranches := run.Config.AncestorBranches(initialBranch)
+		lineage := run.Config.Lineage()
+		ancestorBranches := lineage.Ancestors(initialBranch)
 		branchesToSync = make([]branchSyncInfo, len(ancestorBranches)+1)
 		for ab, ancestorBranch := range ancestorBranches {
 			ancestorInfo := branchInfos.Lookup(ancestorBranch)
@@ -149,7 +150,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner) (*syncConfig, error)
 			}
 			branchesToSync[ab] = branchSyncInfo{
 				name:       ancestorBranch,
-				parent:     run.Config.ParentBranch(ancestorBranch),
+				parent:     lineage.Parent(ancestorBranch),
 				remote:     ancestorInfo.Location,
 				syncStatus: ancestorInfo.SyncStatus,
 			}
@@ -160,7 +161,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner) (*syncConfig, error)
 		}
 		branchesToSync[len(ancestorBranches)] = branchSyncInfo{
 			name:       initialBranch,
-			parent:     run.Config.ParentBranch(initialBranch),
+			parent:     lineage.Parent(initialBranch),
 			remote:     initialBranchInfo.Location,
 			syncStatus: initialBranchInfo.SyncStatus,
 		}
@@ -226,7 +227,7 @@ func updateFeatureBranchSteps(list *runstate.StepListBuilder, branch string, run
 	if hasTrackingBranch {
 		syncBranchSteps(list, run.Backend.TrackingBranch(branch), string(syncStrategy))
 	}
-	syncBranchSteps(list, run.Config.ParentBranch(branch), string(syncStrategy))
+	syncBranchSteps(list, run.Config.Lineage().Parent(branch), string(syncStrategy))
 }
 
 func updatePerennialBranchSteps(list *runstate.StepListBuilder, branch string, run *git.ProdRunner) {

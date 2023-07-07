@@ -476,7 +476,7 @@ func (bc *BackendCommands) RemoveOutdatedConfiguration() error {
 	if err != nil {
 		return err
 	}
-	for child, parent := range bc.Config.ParentBranchMap() {
+	for child, parent := range bc.Config.Lineage().Entries {
 		hasChildBranch := stringslice.Contains(branches, child)
 		hasParentBranch := stringslice.Contains(branches, parent)
 		if !hasChildBranch || !hasParentBranch {
