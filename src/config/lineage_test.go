@@ -19,9 +19,9 @@ func TestAncestry(t *testing.T) {
 		t.Run("multiple ancestors", func(t *testing.T) {
 			t.Parallel()
 			ancestry := newLineage("main")
-			ancestry.AddParent("three", "two")
-			ancestry.AddParent("two", "one")
-			ancestry.AddParent("one", "main")
+			ancestry.SetParent("three", "two")
+			ancestry.SetParent("two", "one")
+			ancestry.SetParent("one", "main")
 			have := ancestry.Ancestors("three")
 			want := []string{"main", "one", "two"}
 			assert.Equal(t, want, have)
@@ -29,7 +29,7 @@ func TestAncestry(t *testing.T) {
 		t.Run("one ancestor", func(t *testing.T) {
 			t.Parallel()
 			ancestry := newLineage("main")
-			ancestry.AddParent("one", "main")
+			ancestry.SetParent("one", "main")
 			have := ancestry.Ancestors("one")
 			want := []string{"main"}
 			assert.Equal(t, want, have)
@@ -37,7 +37,7 @@ func TestAncestry(t *testing.T) {
 		t.Run("no ancestors", func(t *testing.T) {
 			t.Parallel()
 			ancestry := newLineage("main")
-			ancestry.AddParent("one", "main")
+			ancestry.SetParent("one", "main")
 			have := ancestry.Ancestors("two")
 			want := []string{}
 			assert.Equal(t, want, have)
@@ -49,12 +49,12 @@ func TestAncestry(t *testing.T) {
 		t.Run("multiple roots with nested child branches", func(t *testing.T) {
 			t.Parallel()
 			ancestry := newLineage("main")
-			ancestry.AddParent("two", "one")
-			ancestry.AddParent("one", "main")
-			ancestry.AddParent("beta", "alpha")
-			ancestry.AddParent("alpha", "main")
-			ancestry.AddParent("hotfix1", "prod")
-			ancestry.AddParent("hotfix2", "prod")
+			ancestry.SetParent("two", "one")
+			ancestry.SetParent("one", "main")
+			ancestry.SetParent("beta", "alpha")
+			ancestry.SetParent("alpha", "main")
+			ancestry.SetParent("hotfix1", "prod")
+			ancestry.SetParent("hotfix2", "prod")
 			have := ancestry.Roots()
 			want := []string{"main", "prod"}
 			assert.Equal(t, want, have)
@@ -62,8 +62,8 @@ func TestAncestry(t *testing.T) {
 		t.Run("no nested branches", func(t *testing.T) {
 			t.Parallel()
 			ancestry := newLineage("main")
-			ancestry.AddParent("one", "main")
-			ancestry.AddParent("alpha", "main")
+			ancestry.SetParent("one", "main")
+			ancestry.SetParent("alpha", "main")
 			have := ancestry.Roots()
 			want := []string{"main"}
 			assert.Equal(t, want, have)
@@ -82,8 +82,8 @@ func TestAncestry(t *testing.T) {
 		t.Run("multiple children", func(t *testing.T) {
 			t.Parallel()
 			ancestry := newLineage("main")
-			ancestry.AddParent("beta1", "alpha")
-			ancestry.AddParent("beta2", "alpha")
+			ancestry.SetParent("beta1", "alpha")
+			ancestry.SetParent("beta2", "alpha")
 			have := ancestry.Children("alpha")
 			want := []string{"beta1", "beta2"}
 			assert.Equal(t, want, have)
@@ -91,8 +91,8 @@ func TestAncestry(t *testing.T) {
 		t.Run("child has children", func(t *testing.T) {
 			t.Parallel()
 			ancestry := newLineage("main")
-			ancestry.AddParent("beta", "alpha")
-			ancestry.AddParent("gamma", "beta")
+			ancestry.SetParent("beta", "alpha")
+			ancestry.SetParent("gamma", "beta")
 			have := ancestry.Children("alpha")
 			want := []string{"beta"}
 			assert.Equal(t, want, have)
@@ -111,7 +111,7 @@ func TestAncestry(t *testing.T) {
 		t.Run("has a parent", func(t *testing.T) {
 			t.Parallel()
 			ancestry := newLineage("main")
-			ancestry.AddParent("beta", "alpha")
+			ancestry.SetParent("beta", "alpha")
 			assert.True(t, ancestry.HasParents("beta"))
 		})
 		t.Run("has no parent", func(t *testing.T) {
@@ -125,15 +125,15 @@ func TestAncestry(t *testing.T) {
 		t.Run("greatgrandparent", func(t *testing.T) {
 			t.Parallel()
 			ancestry := newLineage("main")
-			ancestry.AddParent("four", "three")
-			ancestry.AddParent("three", "two")
-			ancestry.AddParent("two", "one")
+			ancestry.SetParent("four", "three")
+			ancestry.SetParent("three", "two")
+			ancestry.SetParent("two", "one")
 			assert.True(t, ancestry.IsAncestor("four", "one"))
 		})
 		t.Run("direct parent", func(t *testing.T) {
 			t.Parallel()
 			ancestry := newLineage("main")
-			ancestry.AddParent("two", "one")
+			ancestry.SetParent("two", "one")
 			assert.True(t, ancestry.IsAncestor("two", "one"))
 		})
 	})
@@ -143,7 +143,7 @@ func TestAncestry(t *testing.T) {
 		t.Run("has parent", func(t *testing.T) {
 			t.Parallel()
 			ancestry := newLineage("main")
-			ancestry.AddParent("two", "one")
+			ancestry.SetParent("two", "one")
 			assert.Equal(t, "one", ancestry.Parent("two"))
 		})
 		t.Run("has no parent", func(t *testing.T) {

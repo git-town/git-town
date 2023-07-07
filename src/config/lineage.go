@@ -13,10 +13,6 @@ type Lineage struct {
 	MainBranch string
 }
 
-func (l *Lineage) AddParent(branch, parent string) {
-	l.Entries[branch] = parent
-}
-
 // Ancestors provides the names of all parent branches for the given branch,
 // This information is read from the cache in the Git config,
 // so might be out of date when the branch hierarchy has been modified.
@@ -82,4 +78,8 @@ func (l *Lineage) Roots() []string {
 	}
 	sort.Strings(roots)
 	return roots
+}
+
+func (l *Lineage) SetParent(branch, parent string) {
+	l.Entries[branch] = parent
 }
