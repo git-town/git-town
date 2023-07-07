@@ -149,7 +149,9 @@ func (r *TestRunner) MustQueryStringCodeWith(fullCmd string, opts *Options) (str
 // Overrides will be used and removed when done.
 func (r *TestRunner) MustRun(name string, arguments ...string) {
 	err := r.Run(name, arguments...)
-	asserts.NoError(err)
+	if err != nil {
+		panic(fmt.Sprintf("Error executing \"%s %v\": %v", name, arguments, err))
+	}
 }
 
 // RunMany runs all given commands.
