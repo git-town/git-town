@@ -9,16 +9,12 @@ import (
 // Lineage encapsulates all data and functionality around parent branches.
 type Lineage struct {
 	// branch --> its parent
-	entries    map[string]string
-	mainBranch string
-}
-
-func NewLineage(mainBranch string) Lineage {
-	return Lineage{map[string]string{}, mainBranch}
+	Entries    map[string]string
+	MainBranch string
 }
 
 func (l *Lineage) AddParent(branch, parent string) {
-	l.entries[branch] = parent
+	l.Entries[branch] = parent
 }
 
 // Ancestors provides the names of all parent branches for the given branch,
@@ -28,7 +24,7 @@ func (l *Lineage) Ancestors(branch string) []string {
 	current := branch
 	result := []string{}
 	for {
-		parent, found := l.entries[current]
+		parent, found := l.Entries[current]
 		if !found {
 			return result
 		}
@@ -40,7 +36,7 @@ func (l *Lineage) Ancestors(branch string) []string {
 // Children provides the names of all branches that have the given branch as their parent.
 func (l *Lineage) Children(branch string) []string {
 	result := []string{}
-	for child, parent := range l.entries {
+	for child, parent := range l.Entries {
 		if parent == branch {
 			result = append(result, child)
 		}
@@ -49,14 +45,9 @@ func (l *Lineage) Children(branch string) []string {
 	return result
 }
 
-// branch --> its parent.
-func (l *Lineage) Entries() map[string]string {
-	return l.entries
-}
-
 // HasParents returns whether or not the given branch has at least one parent.
 func (l *Lineage) HasParents(branch string) bool {
-	for child := range l.entries {
+	for child := range l.Entries {
 		if child == branch {
 			return true
 		}
@@ -72,7 +63,7 @@ func (l *Lineage) IsAncestor(branch, ancestor string) bool {
 
 // Parent provides the name of the parent branch for the given branch or nil if the branch has no parent.
 func (l *Lineage) Parent(branch string) string {
-	for child, parent := range l.entries {
+	for child, parent := range l.Entries {
 		if child == branch {
 			return parent
 		}
@@ -83,8 +74,8 @@ func (l *Lineage) Parent(branch string) string {
 // Roots provides the branches with children and no parents.
 func (l *Lineage) Roots() []string {
 	roots := []string{}
-	for _, parent := range l.entries {
-		_, ok := l.entries[parent]
+	for _, parent := range l.Entries {
+		_, ok := l.Entries[parent]
 		if !ok && !stringslice.Contains(roots, parent) {
 			roots = append(roots, parent)
 		}
