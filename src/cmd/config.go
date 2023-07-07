@@ -83,7 +83,7 @@ func runConfig(debug bool) error {
 	cli.PrintEntry("Gitea token", cli.StringSetting(run.Config.GiteaToken()))
 	fmt.Println()
 	if run.Config.MainBranch() != "" {
-		cli.PrintLabelAndValue("Branch Lineage", cli.PrintableBranchLineage(&run.Config.Lineage))
+		cli.PrintLabelAndValue("Branch Lineage", cli.PrintableBranchLineage(run.Config.Lineage()))
 	}
 	return nil
 }

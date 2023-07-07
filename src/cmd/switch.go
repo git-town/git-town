@@ -71,7 +71,7 @@ func queryBranch(currentBranch string, run *git.ProdRunner) (selection *string, 
 func createEntries(run *git.ProdRunner) (dialog.ModalEntries, error) {
 	entries := dialog.ModalEntries{}
 	var err error
-	for _, root := range run.Config.Lineage.Roots() {
+	for _, root := range run.Config.Lineage().Roots() {
 		entries, err = addEntryAndChildren(entries, root, 0, run)
 		if err != nil {
 			return nil, err
@@ -87,7 +87,7 @@ func addEntryAndChildren(entries dialog.ModalEntries, branch string, indent int,
 		Value: branch,
 	})
 	var err error
-	for _, child := range run.Config.Lineage.Children(branch) {
+	for _, child := range run.Config.Lineage().Children(branch) {
 		entries, err = addEntryAndChildren(entries, child, indent+1, run)
 		if err != nil {
 			return entries, err

@@ -17,7 +17,6 @@ import (
 type GitTown struct {
 	Git
 	originURLCache map[string]*giturl.Parts
-	Lineage        Lineage
 }
 
 func NewGitTown(runner runner) *GitTown {
@@ -25,7 +24,6 @@ func NewGitTown(runner runner) *GitTown {
 	return &GitTown{
 		Git:            git,
 		originURLCache: map[string]*giturl.Parts{},
-		Lineage:        LoadLineage(git, mainBranch(&git)),
 	}
 }
 
@@ -124,9 +122,20 @@ func (gt *GitTown) IsPerennialBranch(branch string) bool {
 	return stringslice.Contains(perennialBranches, branch)
 }
 
+// LoadLineage provides the Lineage for the given Git repo.
+func (gt *GitTown) Lineage() *Lineage {
+	parents := map[string]string{}
+	for _, key := range gt.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
+		child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
+		parent := gt.LocalConfigValue(key)
+		parents[child] = parent
+	}
+	return &Lineage{parents, gt.MainBranch()}
+}
+
 // MainBranch provides the name of the main branch.
 func (gt *GitTown) MainBranch() string {
-	return mainBranch(&gt.Git)
+	return gt.LocalOrGlobalConfigValue(MainBranchKey)
 }
 
 // MainBranch provides the name of the main branch, or the given default value if none is configured.
@@ -224,11 +233,6 @@ func (gt *GitTown) PushHookGlobal() (bool, error) {
 	return result, nil
 }
 
-func (gc *GitTown) Reload() {
-	gc.Git.Reload()
-	gc.loadLineage()
-}
-
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
 func (gt *GitTown) RemoveFromPerennialBranches(branch string) error {
 	return gt.SetPerennialBranches(stringslice.Remove(gt.PerennialBranches(), branch))
@@ -316,7 +320,6 @@ func (gt *GitTown) SetOffline(value bool) error {
 // in the Git Town configuration.
 func (gt *GitTown) SetParent(branch, parentBranch string) error {
 	err := gt.SetLocalConfigValue("git-town-branch."+branch+".parent", parentBranch)
-	gt.loadLineage()
 	return err
 }
 
@@ -472,13 +475,4 @@ func (gt *GitTown) updateDeprecatedLocalSetting(deprecatedKey, newKey string) er
 		return err
 	}
 	return nil
-}
-
-func (gc *GitTown) loadLineage() {
-	gc.Lineage = LoadLineage(gc.Git, mainBranch(&gc.Git))
-}
-
-// MainBranch provides the name of the main branch in the given Git repo.
-func mainBranch(git *Git) string {
-	return git.LocalOrGlobalConfigValue(MainBranchKey)
 }

@@ -108,7 +108,7 @@ func determineNewPullRequestConfig(run *git.ProdRunner) (*newPullRequestConfig, 
 	}
 	return &newPullRequestConfig{
 		InitialBranch:  initialBranch,
-		BranchesToSync: append(run.Config.Lineage.Ancestors(initialBranch), initialBranch),
+		BranchesToSync: append(run.Config.Lineage().Ancestors(initialBranch), initialBranch),
 		mainBranch:     run.Config.MainBranch(),
 	}, nil
 }

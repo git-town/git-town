@@ -171,11 +171,12 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 	if err != nil {
 		return nil, err
 	}
-	targetBranch := run.Config.Lineage.Parent(branchToShip)
+	lineage := run.Config.Lineage()
+	targetBranch := lineage.Parent(branchToShip)
 	canShipViaAPI := false
 	proposalMessage := ""
 	var proposal *hosting.Proposal
-	childBranches := run.Config.Lineage.Children(branchToShip)
+	childBranches := lineage.Children(branchToShip)
 	proposalsOfChildBranches := []hosting.Proposal{}
 	if !isOffline && connector != nil {
 		if hasTrackingBranch {
@@ -217,9 +218,10 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 }
 
 func ensureParentBranchIsMainOrPerennialBranch(branch string, run *git.ProdRunner) error {
-	parentBranch := run.Config.Lineage.Parent(branch)
+	lineage := run.Config.Lineage()
+	parentBranch := lineage.Parent(branch)
 	if !run.Config.IsMainBranch(parentBranch) && !run.Config.IsPerennialBranch(parentBranch) {
-		ancestors := run.Config.Lineage.Ancestors(branch)
+		ancestors := lineage.Ancestors(branch)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
 		oldestAncestor := ancestorsWithoutMainOrPerennial[0]
 		return fmt.Errorf(`shipping this branch would ship %s as well,
@@ -268,7 +270,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 		}
 	}
 	list.Add(&steps.DeleteLocalBranchStep{Branch: config.branchToShip, Parent: config.mainBranch})
-	list.Add(&steps.DeleteParentBranchStep{Branch: config.branchToShip, Parent: run.Config.Lineage.Parent(config.branchToShip)})
+	list.Add(&steps.DeleteParentBranchStep{Branch: config.branchToShip, Parent: run.Config.Lineage().Parent(config.branchToShip)})
 	for _, child := range config.childBranches {
 		list.Add(&steps.SetParentStep{Branch: child, ParentBranch: config.targetBranch})
 	}

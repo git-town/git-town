@@ -60,7 +60,7 @@ func TestRunner(t *testing.T) {
 		assert.NoError(t, err)
 		runtime.Config.Reload()
 		assert.True(t, runtime.Config.IsFeatureBranch("f1"))
-		assert.Equal(t, []string{"main"}, runtime.Config.Lineage.Ancestors("f1"))
+		assert.Equal(t, []string{"main"}, runtime.Config.Lineage().Ancestors("f1"))
 	})
 
 	t.Run(".CurrentBranch()", func(t *testing.T) {

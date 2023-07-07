@@ -123,7 +123,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner) (*syncConfig, error)
 		if err != nil {
 			return nil, err
 		}
-		branchesToSync = append(run.Config.Lineage.Ancestors(initialBranch), initialBranch)
+		branchesToSync = append(run.Config.Lineage().Ancestors(initialBranch), initialBranch)
 		shouldPushTags = !run.Config.IsFeatureBranch(initialBranch)
 	}
 	return &syncConfig{
@@ -186,7 +186,7 @@ func updateFeatureBranchSteps(list *runstate.StepListBuilder, branch string, run
 	if hasTrackingBranch {
 		syncBranchSteps(list, run.Backend.TrackingBranch(branch), string(syncStrategy))
 	}
-	syncBranchSteps(list, run.Config.Lineage.Parent(branch), string(syncStrategy))
+	syncBranchSteps(list, run.Config.Lineage().Parent(branch), string(syncStrategy))
 }
 
 func updatePerennialBranchSteps(list *runstate.StepListBuilder, branch string, run *git.ProdRunner) {

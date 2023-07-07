@@ -443,7 +443,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^no branch hierarchy exists now$`, func() error {
 		if state.fixture.DevRepo.Config.HasBranchInformation() {
-			branchInfo := state.fixture.DevRepo.Config.Lineage.Entries()
+			branchInfo := state.fixture.DevRepo.Config.Lineage().Entries()
 			return fmt.Errorf("unexpected Git Town branch hierarchy information: %+v", branchInfo)
 		}
 		return nil

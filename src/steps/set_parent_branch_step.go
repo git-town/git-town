@@ -22,6 +22,6 @@ func (step *SetParentStep) CreateUndoStep(_ *git.BackendCommands) (Step, error) 
 }
 
 func (step *SetParentStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
-	step.previousParent = run.Config.Lineage.Parent(step.Branch)
+	step.previousParent = run.Config.Lineage().Parent(step.Branch)
 	return run.Config.SetParent(step.Branch, step.ParentBranch)
 }

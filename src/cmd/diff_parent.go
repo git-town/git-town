@@ -92,6 +92,6 @@ func determineDiffParentConfig(args []string, run *git.ProdRunner) (*diffParentC
 	}
 	return &diffParentConfig{
 		branch:       branch,
-		parentBranch: run.Config.Lineage.Parent(branch),
+		parentBranch: run.Config.Lineage().Parent(branch),
 	}, nil
 }

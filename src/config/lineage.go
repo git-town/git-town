@@ -2,7 +2,6 @@ package config
 
 import (
 	"sort"
-	"strings"
 
 	"github.com/git-town/git-town/v9/src/stringslice"
 )
@@ -18,17 +17,6 @@ func NewLineage(mainBranch string) Lineage {
 	return Lineage{map[string]string{}, mainBranch}
 }
 
-// LoadLineage provides the Lineage for the given Git repo.
-func LoadLineage(git Git, mainBranch string) Lineage {
-	parents := map[string]string{}
-	for _, key := range git.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
-		child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
-		parent := git.LocalConfigValue(key)
-		parents[child] = parent
-	}
-	return Lineage{parents, mainBranch}
-}
-
 func (l *Lineage) AddParent(branch, parent string) {
 	l.entries[branch] = parent
 }
@@ -36,7 +24,6 @@ func (l *Lineage) AddParent(branch, parent string) {
 // Ancestors provides the names of all parent branches for the given branch,
 // This information is read from the cache in the Git config,
 // so might be out of date when the branch hierarchy has been modified.
-// TODO: rename to Ancestors
 func (l *Lineage) Ancestors(branch string) []string {
 	current := branch
 	result := []string{}
@@ -62,14 +49,14 @@ func (l *Lineage) Children(branch string) []string {
 	return result
 }
 
-// branch --> its parent
+// branch --> its parent.
 func (l *Lineage) Entries() map[string]string {
 	return l.entries
 }
 
 // HasParents returns whether or not the given branch has at least one parent.
-func (a *Lineage) HasParents(branch string) bool {
-	for child := range a.entries {
+func (l *Lineage) HasParents(branch string) bool {
+	for child := range l.entries {
 		if child == branch {
 			return true
 		}
