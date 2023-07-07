@@ -85,7 +85,7 @@ func CloneFixture(original Fixture, dir string) (Fixture, error) {
 // The tests don't use the initial branch.
 func NewStandardFixture(dir string) (Fixture, error) {
 	// create the folder
-	// create the Fixture
+	// create the fixture
 	gitEnv := Fixture{Dir: dir}
 	// create the origin repo
 	err := os.MkdirAll(gitEnv.originRepoPath(), 0o744)
