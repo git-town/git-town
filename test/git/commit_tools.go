@@ -1,8 +1,6 @@
 package git
 
 import (
-	"fmt"
-
 	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/test/helpers"
@@ -45,10 +43,7 @@ func FromGherkinTable(table *messages.PickleStepArgument_PickleTable) ([]Commit,
 					lastLocationName = cellValue
 				}
 			}
-			err := commit.Set(columnName, cellValue)
-			if err != nil {
-				return result, fmt.Errorf("cannot set property %q to %q: %w", columnNames[cellNo], cell.Value, err)
-			}
+			commit.Set(columnName, cellValue)
 		}
 		result = append(result, commit)
 	}
