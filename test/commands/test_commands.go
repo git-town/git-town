@@ -202,11 +202,8 @@ func (r *TestCommands) FilesInCommit(sha string) []string {
 }
 
 // FilesInBranch provides the list of the files present in the given branch.
-func (r *TestCommands) FilesInBranch(branch string) ([]string, error) {
-	output, err := r.Query("git", "ls-tree", "-r", "--name-only", branch)
-	if err != nil {
-		return []string{}, fmt.Errorf("cannot determine files in branch %q in repo %q: %w", branch, r.WorkingDir, err)
-	}
+func (r *TestCommands) FilesInBranch(branch string) []string {
+	output := r.MustQuery("git", "ls-tree", "-r", "--name-only", branch)
 	result := []string{}
 	for _, line := range strings.Split(output, "\n") {
 		file := strings.TrimSpace(line)
@@ -214,7 +211,7 @@ func (r *TestCommands) FilesInBranch(branch string) ([]string, error) {
 			result = append(result, file)
 		}
 	}
-	return result, err
+	return result
 }
 
 // FilesInBranches provides a data table of files and their content in all branches.
@@ -227,10 +224,7 @@ func (r *TestCommands) FilesInBranches(mainBranch string) (datatable.DataTable, 
 	}
 	lastBranch := ""
 	for _, branch := range branches {
-		files, err := r.FilesInBranch(branch)
-		if err != nil {
-			return datatable.DataTable{}, err
-		}
+		files := r.FilesInBranch(branch)
 		for _, file := range files {
 			content := r.FileContentInCommit(branch, file)
 			if branch == lastBranch {
