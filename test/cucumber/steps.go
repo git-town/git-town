@@ -879,10 +879,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^these tags exist$`, func(table *messages.PickleStepArgument_PickleTable) error {
-		tagTable, err := state.fixture.TagTable()
-		if err != nil {
-			return err
-		}
+		tagTable := state.fixture.TagTable()
 		diff, errorCount := tagTable.EqualGherkin(table)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing tags\n\n", errorCount)
