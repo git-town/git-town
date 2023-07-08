@@ -198,7 +198,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^Git has version "([^"]*)"$`, func(version string) error {
-		return state.fixture.DevRepo.MockGit(version)
+		state.fixture.DevRepo.MockGit(version)
+		return nil
 	})
 
 	suite.Step(`^Git Town is no longer configured$`, func() error {

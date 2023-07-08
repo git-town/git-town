@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -90,12 +91,12 @@ func (r *TestRunner) MockCommitMessage(message string) {
 }
 
 // MockGit pretends that this repo has Git in the given version installed.
-func (r *TestRunner) MockGit(version string) error {
+func (r *TestRunner) MockGit(version string) {
 	if runtime.GOOS == "windows" {
 		// create Windows binary
 		content := fmt.Sprintf("echo git version %s\n", version)
 		r.createMockBinary("git.cmd", content)
-		return nil
+		return
 	}
 	// create Unix binary
 	mockGit := `#!/usr/bin/env bash
@@ -106,11 +107,10 @@ else
 fi`
 	gitPath, err := exec.LookPath("git")
 	if err != nil {
-		return fmt.Errorf("cannot locate the git executable: %w", err)
+		log.Fatalf("cannot locate the git executable: %v", err)
 	}
 	content := fmt.Sprintf(mockGit, version, gitPath)
 	r.createMockBinary("git", content)
-	return nil
 }
 
 // MockNoCommandsInstalled pretends that no commands are installed.
