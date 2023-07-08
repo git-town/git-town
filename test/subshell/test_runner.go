@@ -224,8 +224,7 @@ func (r *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string) (s
 	subProcess.Stderr = &output
 	input, err := subProcess.StdinPipe()
 	asserts.NoError(err)
-	err = subProcess.Start()
-	asserts.NoError(err)
+	asserts.NoError(subProcess.Start())
 	for _, userInput := range opts.Input {
 		// Here we simply wait for some time until the subProcess needs the input.
 		// Capturing the output and scanning for the actual content needed

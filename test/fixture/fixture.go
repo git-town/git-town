@@ -243,10 +243,8 @@ func (env Fixture) TagTable() datatable.DataTable {
 }
 
 func (env Fixture) initializeWorkspace(repo *testruntime.TestRuntime) {
-	err := repo.Config.SetMainBranch("main")
-	asserts.NoError(err)
-	err = repo.Config.SetPerennialBranches([]string{})
-	asserts.NoError(err)
+	asserts.NoError(repo.Config.SetMainBranch("main"))
+	asserts.NoError(repo.Config.SetPerennialBranches([]string{}))
 	repo.MustRunMany([][]string{
 		{"git", "checkout", "main"},
 		// NOTE: the developer repos receives the initial branch from origin
