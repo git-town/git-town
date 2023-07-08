@@ -1,7 +1,6 @@
 package fixture
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -195,28 +194,23 @@ func (env Fixture) CreateOriginBranch(name, parent string) {
 }
 
 // CreateTags creates tags from the given gherkin table.
-func (env Fixture) CreateTags(table *messages.PickleStepArgument_PickleTable) error {
+func (env Fixture) CreateTags(table *messages.PickleStepArgument_PickleTable) {
 	columnNames := helpers.TableFields(table)
 	if columnNames[0] != "NAME" && columnNames[1] != "LOCATION" {
-		return fmt.Errorf("tag table must have columns NAME and LOCATION")
+		log.Fatalf("tag table must have columns NAME and LOCATION")
 	}
 	for _, row := range table.Rows[1:] {
 		name := row.Cells[0].Value
 		location := row.Cells[1].Value
-		var err error
 		switch location {
 		case "local":
 			env.DevRepo.CreateTag(name)
 		case "origin":
 			env.OriginRepo.CreateTag(name)
 		default:
-			err = fmt.Errorf("tag table LOCATION must be 'local' or 'origin'")
-		}
-		if err != nil {
-			return err
+			log.Fatalf("tag table LOCATION must be 'local' or 'origin'")
 		}
 	}
-	return nil
 }
 
 // CommitTable provides a table for all commits in this Git environment containing only the given fields.

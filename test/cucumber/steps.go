@@ -830,7 +830,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the tags$`, func(table *messages.PickleStepArgument_PickleTable) error {
-		return state.fixture.CreateTags(table)
+		state.fixture.CreateTags(table)
+		return nil
 	})
 
 	suite.Step(`^the uncommitted file is stashed$`, func() error {
