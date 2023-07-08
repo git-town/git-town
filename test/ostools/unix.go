@@ -3,7 +3,11 @@
 
 package ostools
 
-import "os"
+import (
+	"os"
+
+	"github.com/git-town/git-town/v9/test/asserts"
+)
 
 // This package contains platform-specific testing tool implementations for Unix-like platforms.
 
@@ -15,13 +19,13 @@ func CallScriptArgs(toolPath string) (cmd string, args []string) {
 }
 
 // CreateInputTool creates a tool that reads two inputs from STDIN and prints them back to the user.
-func CreateInputTool(toolPath string) error {
+func CreateInputTool(toolPath string) {
 	//nolint:gosec // intentionally creating an executable here
-	return os.WriteFile(toolPath, []byte(`#!/usr/bin/env bash
+	asserts.NoError(os.WriteFile(toolPath, []byte(`#!/usr/bin/env bash
 read i1
 read i2
 echo You entered $i1 and $i2
-`), 0x744)
+`), 0x744))
 }
 
 // CreateLsTool creates a tool in the given folder that lists all files in its current folder.

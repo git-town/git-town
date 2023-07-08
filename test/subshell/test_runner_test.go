@@ -89,8 +89,7 @@ func TestMockingRunner(t *testing.T) {
 				BinDir:     "",
 			}
 			toolPath := filepath.Join(dir2, "list-dir")
-			err = ostools.CreateInputTool(toolPath)
-			assert.NoError(t, err)
+			ostools.CreateInputTool(toolPath)
 			cmd, args := ostools.CallScriptArgs(toolPath)
 			res, err := r.QueryWith(&subshell.Options{Input: []string{"one\n", "two\n"}}, cmd, args...)
 			assert.NoError(t, err)

@@ -13,12 +13,12 @@ func CallScriptArgs(toolPath string) (cmd string, args []string) {
 }
 
 // CreateInputTool creates a tool that reads two inputs from STDIN and prints them back to the user.
-func CreateInputTool(toolPath string) error {
-	return os.WriteFile(ScriptName(toolPath), []byte(`
+func CreateInputTool(toolPath string) {
+	asserts.NoError(os.WriteFile(ScriptName(toolPath), []byte(`
 set /p i1=""
 set /p i2=""
 echo You entered %i1% and %i2%
-`), 0o744)
+`), 0o744))
 }
 
 // CreateLsTool creates a tool in the given folder that lists all files in its current folder.
