@@ -119,8 +119,7 @@ func TestTestCommands(t *testing.T) {
 		output, err := runtime.BackendRunner.Query("git-town", "config")
 		assert.NoError(t, err)
 		output = stripansi.Strip(output)
-		has := strings.Contains(output, "Branch Lineage:\n  main\n    f1\n      f1a")
-		if !has {
+		if !strings.Contains(output, "Branch Lineage:\n  main\n    f1\n      f1a") {
 			t.Fatalf("unexpected output: %s", output)
 		}
 	})
