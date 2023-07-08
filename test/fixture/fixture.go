@@ -137,24 +137,20 @@ func (env *Fixture) binPath() string {
 }
 
 // Branches provides a tabular list of all branches in this Fixture.
-func (env *Fixture) Branches() (datatable.DataTable, error) {
+func (env *Fixture) Branches() datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow("REPOSITORY", "BRANCHES")
 	mainBranch := env.DevRepo.Config.MainBranch()
 	localBranches, err := env.DevRepo.LocalBranchesMainFirst(mainBranch)
-	if err != nil {
-		return result, fmt.Errorf("cannot determine the developer repo branches of the Fixture: %w", err)
-	}
+	asserts.NoError(err)
 	localBranches = stringslice.Remove(localBranches, "initial")
 	localBranchesJoined := strings.Join(localBranches, ", ")
 	if env.OriginRepo == nil {
 		result.AddRow("local", localBranchesJoined)
-		return result, nil
+		return result
 	}
 	originBranches, err := env.OriginRepo.LocalBranchesMainFirst(mainBranch)
-	if err != nil {
-		return result, fmt.Errorf("cannot determine the origin repo branches of the Fixture: %w", err)
-	}
+	asserts.NoError(err)
 	originBranches = stringslice.Remove(originBranches, "initial")
 	originBranchesJoined := strings.Join(originBranches, ", ")
 	if localBranchesJoined == originBranchesJoined {
@@ -163,7 +159,7 @@ func (env *Fixture) Branches() (datatable.DataTable, error) {
 		result.AddRow("local", localBranchesJoined)
 		result.AddRow("origin", originBranchesJoined)
 	}
-	return result, nil
+	return result
 }
 
 // CreateCommits creates the commits described by the given Gherkin table in this Git repository.

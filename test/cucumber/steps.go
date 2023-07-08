@@ -542,10 +542,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the branches are now$`, func(table *messages.PickleStepArgument_PickleTable) error {
-		existing, err := state.fixture.Branches()
-		if err != nil {
-			return err
-		}
+		existing := state.fixture.Branches()
 		diff, errCount := existing.EqualGherkin(table)
 		if errCount > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the branches\n\n", errCount)
@@ -678,10 +675,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the initial branches and hierarchy exist$`, func() error {
 		// verify initial branches
-		have, err := state.fixture.Branches()
-		if err != nil {
-			return err
-		}
+		have := state.fixture.Branches()
 		want := state.InitialBranches()
 		diff, errorCount := have.EqualDataTable(want)
 		if errorCount != 0 {
@@ -702,10 +696,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the initial branches exist$`, func() error {
-		have, err := state.fixture.Branches()
-		if err != nil {
-			return err
-		}
+		have := state.fixture.Branches()
 		want := state.InitialBranches()
 		// fmt.Printf("HAVE:\n%s\n", have.String())
 		// fmt.Printf("WANT:\n%s\n", want.String())

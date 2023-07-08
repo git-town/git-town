@@ -55,8 +55,7 @@ func TestFixture(t *testing.T) {
 			gitEnv.OriginRepo.CreateBranch("o1", "initial")
 			gitEnv.OriginRepo.CreateBranch("o2", "initial")
 			// get branches
-			table, err := gitEnv.Branches()
-			assert.NoError(t, err)
+			table := gitEnv.Branches()
 			// verify
 			expected := "| REPOSITORY | BRANCHES     |\n| local      | main, d1, d2 |\n| origin     | main, o1, o2 |\n"
 			assert.Equal(t, expected, table.String())
@@ -73,8 +72,7 @@ func TestFixture(t *testing.T) {
 			gitEnv.OriginRepo.CreateBranch("b1", "main")
 			gitEnv.OriginRepo.CreateBranch("b2", "main")
 			// get branches
-			table, err := gitEnv.Branches()
-			assert.NoError(t, err)
+			table := gitEnv.Branches()
 			// verify
 			expected := "| REPOSITORY    | BRANCHES     |\n| local, origin | main, b1, b2 |\n"
 			assert.Equal(t, expected, table.String())
