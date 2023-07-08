@@ -8,14 +8,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const (
-	giteaRoot     = "https://gitea.com/api/v1"
-	giteaVersion  = giteaRoot + "/version"
-	giteaCurrOpen = giteaRoot + "/repos/git-town/git-town/pulls?limit=50&page=0&state=open"
-	giteaPR1      = giteaRoot + "/repos/git-town/git-town/pulls/1"
-	giteaPR1Merge = giteaRoot + "/repos/git-town/git-town/pulls/1/merge"
-)
-
 func TestNewGiteaConnector(t *testing.T) {
 	t.Parallel()
 	t.Run("normal repo", func(t *testing.T) {

@@ -117,7 +117,7 @@ git sync
 ```
 
 Because we created the branches with `git append`, Git Town knows about the
-branch ancestry and [git sync](commands/sync.md) can update all branches in the
+branch lineage and [git sync](commands/sync.md) can update all branches in the
 right order. It updates the `main` branch, merges `main` into branch 1. Then it
 merges branch 1 into branch 2 and branch 2 into branch 3.
 
