@@ -155,10 +155,7 @@ func (r *TestCommands) CommitsInBranch(branch string, fields []string) ([]git.Co
 			commit.FileName = strings.Join(filenames, ", ")
 		}
 		if stringslice.Contains(fields, "FILE CONTENT") {
-			filecontent, err := r.FileContentInCommit(commit.SHA, commit.FileName)
-			if err != nil {
-				return []git.Commit{}, fmt.Errorf("cannot determine file content for commit %q in branch %q: %w", commit.SHA, branch, err)
-			}
+			filecontent := r.FileContentInCommit(commit.SHA, commit.FileName)
 			commit.FileContent = filecontent
 		}
 		result = append(result, commit)
@@ -195,17 +192,14 @@ func (r *TestCommands) FileContent(filename string) string {
 }
 
 // FileContentInCommit provides the content of the file with the given name in the commit with the given SHA.
-func (r *TestCommands) FileContentInCommit(sha string, filename string) (string, error) {
-	output, err := r.Query("git", "show", sha+":"+filename)
-	if err != nil {
-		return "", fmt.Errorf("cannot determine the content for file %q in commit %q: %w", filename, sha, err)
-	}
+func (r *TestCommands) FileContentInCommit(sha string, filename string) string {
+	output := r.MustQuery("git", "show", sha+":"+filename)
 	result := output
 	if strings.HasPrefix(result, "tree ") {
 		// merge commits get an empty file content instead of "tree <SHA>"
 		result = ""
 	}
-	return result, nil
+	return result
 }
 
 // FilesInCommit provides the names of the files that the commit with the given SHA changes.
@@ -245,10 +239,7 @@ func (r *TestCommands) FilesInBranches(mainBranch string) (datatable.DataTable, 
 			return datatable.DataTable{}, err
 		}
 		for _, file := range files {
-			content, err := r.FileContentInCommit(branch, file)
-			if err != nil {
-				return datatable.DataTable{}, err
-			}
+			content := r.FileContentInCommit(branch, file)
 			if branch == lastBranch {
 				result.AddRow("", file, content)
 			} else {
