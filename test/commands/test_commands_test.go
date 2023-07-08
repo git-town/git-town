@@ -1,7 +1,6 @@
 package commands_test
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -113,11 +112,9 @@ func TestTestCommands(t *testing.T) {
 		output, err := runtime.BackendRunner.Query("git-town", "config")
 		assert.NoError(t, err)
 		output = stripansi.Strip(output)
-		has := strings.Contains(output, "Branch Lineage:\n  main\n    f1\n      f1a")
-		if !has {
-			fmt.Printf("unexpected output: %s", output)
+		if !strings.Contains(output, "Branch Lineage:\n  main\n    f1\n      f1a") {
+			t.Fatalf("unexpected output: %s", output)
 		}
-		assert.True(t, has)
 	})
 
 	t.Run(".CreateCommit()", func(t *testing.T) {
