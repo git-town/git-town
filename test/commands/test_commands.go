@@ -294,10 +294,9 @@ func (r *TestCommands) RemoveBranch(name string) {
 }
 
 // RemoveRemote deletes the Git remote with the given name.
-func (r *TestCommands) RemoveRemote(name string) error {
+func (r *TestCommands) RemoveRemote(name string) {
 	r.Config.RemotesCache.Invalidate()
-	err := r.Run("git", "remote", "rm", name)
-	return err
+	r.MustRun("git", "remote", "rm", name)
 }
 
 // RemoveUnnecessaryFiles trims all files that aren't necessary in this repo.

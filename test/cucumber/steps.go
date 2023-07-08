@@ -417,10 +417,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^my repo does not have an origin$`, func() error {
-		err := state.fixture.DevRepo.RemoveRemote(config.OriginRemote)
-		if err != nil {
-			return err
-		}
+		state.fixture.DevRepo.RemoveRemote(config.OriginRemote)
 		state.initialRemoteBranches = []string{}
 		state.fixture.OriginRepo = nil
 		return nil
