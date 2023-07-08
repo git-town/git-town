@@ -167,9 +167,8 @@ func (r *TestCommands) CommitsInBranch(branch string, fields []string) ([]git.Co
 }
 
 // CommitStagedChanges commits the currently staged changes.
-func (r *TestCommands) CommitStagedChanges(message string) error {
-	err := r.Run("git", "commit", "-m", message)
-	return err
+func (r *TestCommands) CommitStagedChanges(message string) {
+	r.MustRun("git", "commit", "-m", message)
 }
 
 // ConnectTrackingBranch connects the branch with the given name to its counterpart at origin.
