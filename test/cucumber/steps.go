@@ -97,7 +97,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 		state.initialBranchHierarchy.AddRow(branch, parentBranch)
-		return state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
+		state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
+		return nil
 	})
 
 	suite.Step(`^a merge is now in progress$`, func() error {
@@ -117,7 +118,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.initialBranchHierarchy.AddRow(branch, "main")
 		if !isLocal {
 			state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-			return state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
+			state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
+			return nil
 		}
 		return nil
 	})
@@ -126,7 +128,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.fixture.DevRepo.CreatePerennialBranches(branch)
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-		return state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
+		state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
+		return nil
 	})
 
 	suite.Step(`^a rebase is now in progress$`, func() error {
@@ -659,10 +662,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 		if !isLocal {
 			state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-			err := state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
-			if err != nil {
-				return err
-			}
+			state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
 		}
 		state.initialCurrentBranch = branch
 		if !state.fixture.DevRepo.Config.CurrentBranchCache.Initialized() || state.fixture.DevRepo.Config.CurrentBranchCache.Value() != branch {
@@ -756,10 +756,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			state.initialBranchHierarchy.AddRow(branch, "main")
 			if !isLocal {
-				err = state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
-				if err != nil {
-					return err
-				}
+				state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
 				state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 			}
 		}
@@ -776,10 +773,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			state.initialBranchHierarchy.AddRow(branch, "main")
 			if !isLocal {
-				err = state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
-				if err != nil {
-					return err
-				}
+				state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
 				state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 			}
 		}
@@ -792,11 +786,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.initialLocalBranches = append(state.initialLocalBranches, branch1, branch2)
 		if !isLocal {
 			state.initialRemoteBranches = append(state.initialRemoteBranches, branch1, branch2)
-			err := state.fixture.DevRepo.PushBranchToRemote(branch1, config.OriginRemote)
-			if err != nil {
-				return err
-			}
-			return state.fixture.DevRepo.PushBranchToRemote(branch2, config.OriginRemote)
+			state.fixture.DevRepo.PushBranchToRemote(branch1, config.OriginRemote)
+			state.fixture.DevRepo.PushBranchToRemote(branch2, config.OriginRemote)
 		}
 		return nil
 	})
@@ -807,10 +798,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.fixture.DevRepo.CreatePerennialBranches(branch)
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			if !isLocal {
-				err := state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
-				if err != nil {
-					return fmt.Errorf("cannot push perennial branch upstream: %w", err)
-				}
+				state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
 				state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 			}
 		}

@@ -25,8 +25,7 @@ func TestFixture(t *testing.T) {
 		asserts.IsGitRepo(t, filepath.Join(dir, "cloned", "developer"))
 		asserts.BranchExists(t, filepath.Join(dir, "cloned", "developer"), "main")
 		// check pushing
-		err = cloned.DevRepo.PushBranchToRemote("main", config.OriginRemote)
-		assert.NoError(t, err)
+		cloned.DevRepo.PushBranchToRemote("main", config.OriginRemote)
 	})
 
 	t.Run(".NewStandardFixture()", func(t *testing.T) {
@@ -183,8 +182,7 @@ func TestFixture(t *testing.T) {
 				FileContent: "one",
 				Message:     "local-origin",
 			})
-			err = cloned.DevRepo.PushBranchToRemote("main", config.OriginRemote)
-			assert.NoError(t, err)
+			cloned.DevRepo.PushBranchToRemote("main", config.OriginRemote)
 			cloned.OriginRepo.CreateCommit(git.Commit{
 				Branch:      "main",
 				FileName:    "origin.md",

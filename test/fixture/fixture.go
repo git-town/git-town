@@ -211,10 +211,7 @@ func (env *Fixture) CreateCommits(commits []git.Commit) error {
 				if err != nil {
 					return fmt.Errorf("cannot create local commit: %w", err)
 				}
-				err = env.DevRepo.PushBranchToRemote(commit.Branch, config.OriginRemote)
-				if err != nil {
-					return fmt.Errorf("cannot push branch %q after creating commit: %w", commit.Branch, err)
-				}
+				env.DevRepo.PushBranchToRemote(commit.Branch, config.OriginRemote)
 			case "origin":
 				env.OriginRepo.CreateCommit(commit)
 			case "upstream":

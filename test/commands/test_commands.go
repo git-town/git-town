@@ -284,9 +284,8 @@ func (r *TestCommands) PushBranch() {
 	r.MustRun("git", "push")
 }
 
-func (r *TestCommands) PushBranchToRemote(branch, remote string) error {
-	err := r.Run("git", "push", "-u", remote, branch)
-	return err
+func (r *TestCommands) PushBranchToRemote(branch, remote string) {
+	r.MustRun("git", "push", "-u", remote, branch)
 }
 
 // RemoveBranch deletes the branch with the given name from this repo.
