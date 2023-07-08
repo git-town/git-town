@@ -57,45 +57,39 @@ func (r *TestRunner) createBinDir() {
 }
 
 // createMockBinary creates an executable with the given name and content in ms.binDir.
-func (r *TestRunner) createMockBinary(name string, content string) error {
+func (r *TestRunner) createMockBinary(name string, content string) {
 	r.createBinDir()
 	//nolint:gosec // intentionally creating an executable here
-	err := os.WriteFile(filepath.Join(r.BinDir, name), []byte(content), 0x744)
-	if err != nil {
-		return fmt.Errorf("cannot write custom %q command: %w", name, err)
-	}
-	return nil
+	asserts.NoError(os.WriteFile(filepath.Join(r.BinDir, name), []byte(content), 0x744))
 }
 
 // MockBrokenCommand adds a mock for the given command that returns an error.
 func (r *TestRunner) MockBrokenCommand(name string) error {
 	// write custom "which" command
 	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" == %q ]; then\n  echo %q\nelse\n  exit 1\nfi", name, filepath.Join(r.BinDir, name))
-	err := r.createMockBinary("which", content)
-	if err != nil {
-		return err
-	}
+	r.createMockBinary("which", content)
 	// write custom command
 	content = "#!/usr/bin/env bash\n\nexit 1"
-	return r.createMockBinary(name, content)
+	r.createMockBinary(name, content)
+	return nil
 }
 
 // MockCommand adds a mock for the command with the given name.
 func (r *TestRunner) MockCommand(name string) error {
 	// write custom "which" command
 	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" == %q ]; then\n  echo %q\nelse\n  exit 1\nfi", name, filepath.Join(r.BinDir, name))
-	if err := r.createMockBinary("which", content); err != nil {
-		return fmt.Errorf("cannot write custom which command: %w", err)
-	}
+	r.createMockBinary("which", content)
 	// write custom command
 	content = fmt.Sprintf("#!/usr/bin/env bash\n\necho %s called with: \"$@\"\n", name)
-	return r.createMockBinary(name, content)
+	r.createMockBinary(name, content)
+	return nil
 }
 
 // MockCommitMessage sets up this runner with an editor that enters the given commit message.
 func (r *TestRunner) MockCommitMessage(message string) error {
 	r.gitEditor = "git_editor"
-	return r.createMockBinary(r.gitEditor, fmt.Sprintf("#!/usr/bin/env bash\n\necho %q > $1", message))
+	r.createMockBinary(r.gitEditor, fmt.Sprintf("#!/usr/bin/env bash\n\necho %q > $1", message))
+	return nil
 }
 
 // MockGit pretends that this repo has Git in the given version installed.
@@ -103,7 +97,8 @@ func (r *TestRunner) MockGit(version string) error {
 	if runtime.GOOS == "windows" {
 		// create Windows binary
 		content := fmt.Sprintf("echo git version %s\n", version)
-		return r.createMockBinary("git.cmd", content)
+		r.createMockBinary("git.cmd", content)
+		return nil
 	}
 	// create Unix binary
 	mockGit := `#!/usr/bin/env bash
@@ -117,13 +112,15 @@ fi`
 		return fmt.Errorf("cannot locate the git executable: %w", err)
 	}
 	content := fmt.Sprintf(mockGit, version, gitPath)
-	return r.createMockBinary("git", content)
+	r.createMockBinary("git", content)
+	return nil
 }
 
 // MockNoCommandsInstalled pretends that no commands are installed.
 func (r *TestRunner) MockNoCommandsInstalled() error {
 	content := "#!/usr/bin/env bash\n\nexit 1\n"
-	return r.createMockBinary("which", content)
+	r.createMockBinary("which", content)
+	return nil
 }
 
 // MustQuery provides the output of the given command with the given arguments.
