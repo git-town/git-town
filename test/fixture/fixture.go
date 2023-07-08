@@ -103,21 +103,17 @@ func NewStandardFixture(dir string) Fixture {
 }
 
 // AddSubmodule adds a submodule repository.
-func (env *Fixture) AddSubmoduleRepo() error {
+func (env *Fixture) AddSubmoduleRepo() {
 	err := os.MkdirAll(env.submoduleRepoPath(), 0o744)
 	if err != nil {
-		return fmt.Errorf("cannot create directory %q: %w", env.submoduleRepoPath(), err)
+		log.Fatalf("cannot create directory %q: %v", env.submoduleRepoPath(), err)
 	}
 	submoduleRepo := testruntime.Initialize(env.submoduleRepoPath(), env.Dir, env.binPath())
-	err = submoduleRepo.RunMany([][]string{
+	submoduleRepo.MustRunMany([][]string{
 		{"git", "config", "--global", "protocol.file.allow", "always"},
 		{"git", "commit", "--allow-empty", "-m", "Initial commit"},
 	})
-	if err != nil {
-		return fmt.Errorf("cannot initialize submodule directory at %q: %w", env.originRepoPath(), err)
-	}
 	env.SubmoduleRepo = &submoduleRepo
-	return nil
 }
 
 // AddUpstream adds an upstream repository.

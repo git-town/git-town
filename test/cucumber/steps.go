@@ -404,10 +404,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^my repo has a Git submodule$`, func() error {
-		err := state.fixture.AddSubmoduleRepo()
-		if err != nil {
-			return err
-		}
+		state.fixture.AddSubmoduleRepo()
 		state.fixture.DevRepo.AddSubmodule(state.fixture.SubmoduleRepo.WorkingDir)
 		return nil
 	})
