@@ -27,7 +27,7 @@ Feature: delete the current branch
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE      |
       | other  | local, origin | other commit |
-    And this branch hierarchy exists now
+    And this branch lineage exists now
       | BRANCH | PARENT |
       | other  | main   |
 

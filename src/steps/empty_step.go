@@ -19,7 +19,7 @@ func (step *EmptyStep) CreateContinueStep() Step {
 	return &EmptyStep{}
 }
 
-func (step *EmptyStep) CreateUndoStep(backend *git.BackendCommands) (Step, error) {
+func (step *EmptyStep) CreateUndoStep(_ *git.BackendCommands) (Step, error) {
 	return &EmptyStep{}, nil
 }
 
@@ -27,7 +27,7 @@ func (step *EmptyStep) CreateAutomaticAbortError() error {
 	return errors.New("")
 }
 
-func (step *EmptyStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
+func (step *EmptyStep) Run(_ *git.ProdRunner, _ hosting.Connector) error {
 	return nil
 }
 

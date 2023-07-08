@@ -21,6 +21,10 @@ Feature: handle conflicts between the main branch and its tracking branch
       | main   | git rebase origin/main   |
     And it prints the error:
       """
+      CONFLICT (add/add): Merge conflict in conflicting_file
+      """
+    And it prints the error:
+      """
       To abort, run "git-town abort".
       To continue after having resolved conflicts, run "git-town continue".
       """
@@ -68,7 +72,7 @@ Feature: handle conflicts between the main branch and its tracking branch
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
-    And this branch hierarchy exists now
+    And this branch lineage exists now
       | BRANCH | PARENT |
       | other  | main   |
 

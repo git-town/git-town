@@ -16,7 +16,7 @@ Feature: update the parent of a feature branch
     When I run "git-town set-parent" and answer the prompts:
       | PROMPT                                      | ANSWER        |
       | Please specify the parent branch of 'child' | [DOWN][ENTER] |
-    Then this branch hierarchy exists now
+    Then this branch lineage exists now
       | BRANCH | PARENT |
       | child  | main   |
       | parent | main   |
@@ -26,6 +26,6 @@ Feature: update the parent of a feature branch
       | PROMPT                                      | ANSWER      |
       | Please specify the parent branch of 'child' | [UP][ENTER] |
     Then the perennial branches are now "child"
-    And this branch hierarchy exists now
+    And this branch lineage exists now
       | BRANCH | PARENT |
       | parent | main   |

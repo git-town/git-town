@@ -10,6 +10,6 @@ Feature: ask for missing parent
     Then it runs the commands
       | BRANCH | COMMAND                |
       | main   | git diff main..feature |
-    And this branch hierarchy exists now
+    And this branch lineage exists now
       | BRANCH  | PARENT |
       | feature | main   |

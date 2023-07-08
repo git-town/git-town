@@ -12,7 +12,7 @@ Feature: ask for missing parent information
       | main   | git rebase origin/main   |
       |        | git branch new main      |
       |        | git checkout new         |
-    And this branch hierarchy exists now
+    And this branch lineage exists now
       | BRANCH | PARENT |
       | new    | main   |
       | old    | new    |

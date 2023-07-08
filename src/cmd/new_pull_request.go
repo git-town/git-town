@@ -102,13 +102,13 @@ func determineNewPullRequestConfig(run *git.ProdRunner) (*newPullRequestConfig, 
 	if err != nil {
 		return nil, err
 	}
-	err = validate.KnowsBranchAncestry(initialBranch, run.Config.MainBranch(), &run.Backend)
+	err = validate.KnowsBranchAncestors(initialBranch, run.Config.MainBranch(), &run.Backend)
 	if err != nil {
 		return nil, err
 	}
 	return &newPullRequestConfig{
 		InitialBranch:  initialBranch,
-		BranchesToSync: append(run.Config.AncestorBranches(initialBranch), initialBranch),
+		BranchesToSync: append(run.Config.Lineage().Ancestors(initialBranch), initialBranch),
 		mainBranch:     run.Config.MainBranch(),
 	}, nil
 }

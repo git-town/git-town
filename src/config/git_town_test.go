@@ -11,6 +11,7 @@ import (
 
 func TestGitTown(t *testing.T) {
 	t.Parallel()
+
 	t.Run("OriginURL()", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]giturl.Parts{

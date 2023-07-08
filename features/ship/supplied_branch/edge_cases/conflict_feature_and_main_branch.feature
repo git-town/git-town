@@ -24,6 +24,10 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       |         | git merge --no-edit main           |
     And it prints the error:
       """
+      CONFLICT (add/add): Merge conflict in conflicting_file
+      """
+    And it prints the error:
+      """
       To abort, run "git-town abort".
       To continue after having resolved conflicts, run "git-town continue".
       """
@@ -71,7 +75,7 @@ Feature: handle conflicts between the supplied feature branch and the main branc
       | BRANCH | LOCATION      | MESSAGE                 | FILE NAME        | FILE CONTENT     |
       | main   | local, origin | conflicting main commit | conflicting_file | main content     |
       |        |               | feature done            | conflicting_file | resolved content |
-    And this branch hierarchy exists now
+    And this branch lineage exists now
       | BRANCH | PARENT |
       | other  | main   |
 

@@ -13,7 +13,7 @@ type PreserveCheckoutHistoryStep struct {
 	MainBranch                        string
 }
 
-func (step *PreserveCheckoutHistoryStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
+func (step *PreserveCheckoutHistoryStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
 	expectedPreviouslyCheckedOutBranch, err := run.Backend.ExpectedPreviouslyCheckedOutBranch(step.InitialPreviouslyCheckedOutBranch, step.InitialBranch, step.MainBranch)
 	if err != nil {
 		return err

@@ -65,7 +65,8 @@ func (r *TestRunner) createMockBinary(name string, content string) error {
 	if err := r.createBinDir(); err != nil {
 		return err
 	}
-	err := os.WriteFile(filepath.Join(r.BinDir, name), []byte(content), 0o500)
+	//nolint:gosec // intentionally creating an executable here
+	err := os.WriteFile(filepath.Join(r.BinDir, name), []byte(content), 0x744)
 	if err != nil {
 		return fmt.Errorf("cannot write custom %q command: %w", name, err)
 	}
@@ -248,7 +249,7 @@ func (r *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string) (s
 		}
 	}
 	if opts.IgnoreOutput {
-		return "", 0, err
+		return "", exitCode, err
 	}
 	return strings.TrimSpace(output.String()), exitCode, err
 }
