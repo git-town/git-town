@@ -258,9 +258,9 @@ func (env Fixture) CreateTags(table *messages.PickleStepArgument_PickleTable) er
 		var err error
 		switch location {
 		case "local":
-			err = env.DevRepo.CreateTag(name)
+			env.DevRepo.CreateTag(name)
 		case "origin":
-			err = env.OriginRepo.CreateTag(name)
+			env.OriginRepo.CreateTag(name)
 		default:
 			err = fmt.Errorf("tag table LOCATION must be 'local' or 'origin'")
 		}

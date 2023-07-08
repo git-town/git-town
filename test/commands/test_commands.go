@@ -116,9 +116,8 @@ func (r *TestCommands) CreateStandaloneTag(name string) {
 }
 
 // CreateTag creates a tag with the given name.
-func (r *TestCommands) CreateTag(name string) error {
-	err := r.Run("git", "tag", "-a", name, "-m", name)
-	return err
+func (r *TestCommands) CreateTag(name string) {
+	r.MustRun("git", "tag", "-a", name, "-m", name)
 }
 
 // Commits provides a list of the commits in this Git repository with the given fields.
