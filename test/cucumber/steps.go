@@ -192,10 +192,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^file "([^"]+)" still contains unresolved conflicts$`, func(name string) error {
-		content, err := state.fixture.DevRepo.FileContent(name)
-		if err != nil {
-			return fmt.Errorf("cannot read file %q: %w", name, err)
-		}
+		content := state.fixture.DevRepo.FileContent(name)
 		if !strings.Contains(content, "<<<<<<<") {
 			return fmt.Errorf("file %q does not contain unresolved conflicts", name)
 		}
@@ -203,10 +200,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^file "([^"]*)" still has content "([^"]*)"$`, func(file, expectedContent string) error {
-		actualContent, err := state.fixture.DevRepo.FileContent(file)
-		if err != nil {
-			return err
-		}
+		actualContent := state.fixture.DevRepo.FileContent(file)
 		if expectedContent != actualContent {
 			return fmt.Errorf("file content does not match\n\nEXPECTED: %q\n\nACTUAL:\n\n%q\n----------------------------", expectedContent, actualContent)
 		}

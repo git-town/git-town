@@ -188,9 +188,10 @@ func (r *TestCommands) Fetch() {
 }
 
 // FileContent provides the current content of a file.
-func (r *TestCommands) FileContent(filename string) (string, error) {
+func (r *TestCommands) FileContent(filename string) string {
 	content, err := os.ReadFile(filepath.Join(r.WorkingDir, filename))
-	return string(content), err
+	asserts.NoError(err)
+	return string(content)
 }
 
 // FileContentInCommit provides the content of the file with the given name in the commit with the given SHA.
