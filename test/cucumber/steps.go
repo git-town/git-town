@@ -610,7 +610,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the coworker fetches updates$`, func() error {
-		return state.fixture.CoworkerRepo.Fetch()
+		state.fixture.CoworkerRepo.Fetch()
+		return nil
 	})
 
 	suite.Step(`^the coworker is on the "([^"]*)" branch$`, func(branch string) error {

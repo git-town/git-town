@@ -183,9 +183,8 @@ func (r *TestCommands) DeleteMainBranchConfiguration() {
 }
 
 // Fetch retrieves the updates from the origin repo.
-func (r *TestCommands) Fetch() error {
-	err := r.Run("git", "fetch")
-	return err
+func (r *TestCommands) Fetch() {
+	r.MustRun("git", "fetch")
 }
 
 // FileContent provides the current content of a file.

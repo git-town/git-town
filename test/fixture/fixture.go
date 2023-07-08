@@ -64,10 +64,7 @@ func CloneFixture(original Fixture, dir string) (Fixture, error) {
 		return Fixture{}, fmt.Errorf("cannot remove remote: %w", err)
 	}
 	result.DevRepo.AddRemote(config.OriginRemote, result.originRepoPath())
-	err = result.DevRepo.Fetch()
-	if err != nil {
-		return Fixture{}, fmt.Errorf("cannot fetch: %w", err)
-	}
+	result.DevRepo.Fetch()
 	// and connect the main branches again
 	result.DevRepo.ConnectTrackingBranch("main")
 	return result, err
