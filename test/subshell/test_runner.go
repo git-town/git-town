@@ -169,6 +169,7 @@ func (r *TestRunner) QueryStringWith(fullCmd string, opts *Options) (string, err
 	return r.QueryWith(opts, cmd, args...)
 }
 
+// QueryWith provides the output of the given command and ensures it exited with code 0.
 func (r *TestRunner) QueryWith(opts *Options, cmd string, args ...string) (string, error) {
 	output, exitCode, err := r.QueryWithCode(opts, cmd, args...)
 	if exitCode != 0 {
