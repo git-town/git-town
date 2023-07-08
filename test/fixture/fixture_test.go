@@ -194,8 +194,7 @@ func TestFixture(t *testing.T) {
 			dir := t.TempDir()
 			memoizedGitEnv := fixture.NewStandardFixture(filepath.Join(dir, "memoized"))
 			cloned := fixture.CloneFixture(memoizedGitEnv, filepath.Join(dir, "cloned"))
-			err := cloned.AddUpstream()
-			assert.NoError(t, err)
+			cloned.AddUpstream()
 			// create a few commits
 			cloned.DevRepo.CreateCommit(git.Commit{
 				Branch:      "main",

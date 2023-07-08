@@ -117,11 +117,10 @@ func (env *Fixture) AddSubmoduleRepo() {
 }
 
 // AddUpstream adds an upstream repository.
-func (env *Fixture) AddUpstream() error {
+func (env *Fixture) AddUpstream() {
 	repo := testruntime.Clone(env.DevRepo.TestRunner, filepath.Join(env.Dir, "upstream"))
 	env.UpstreamRepo = &repo
 	env.DevRepo.AddRemote("upstream", env.UpstreamRepo.WorkingDir)
-	return nil
 }
 
 // AddCoworkerRepo adds a coworker repository.

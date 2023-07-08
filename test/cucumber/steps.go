@@ -178,7 +178,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^an upstream repo$`, func() error {
-		return state.fixture.AddUpstream()
+		state.fixture.AddUpstream()
+		return nil
 	})
 
 	suite.Step(`^file "([^"]+)" still contains unresolved conflicts$`, func(name string) error {
