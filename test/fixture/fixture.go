@@ -10,7 +10,6 @@ import (
 	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/stringslice"
-	"github.com/git-town/git-town/v9/test/asserts"
 	"github.com/git-town/git-town/v9/test/datatable"
 	"github.com/git-town/git-town/v9/test/git"
 	"github.com/git-town/git-town/v9/test/helpers"
@@ -45,7 +44,7 @@ type Fixture struct {
 // CloneFixture provides a Fixture instance in the given directory,
 // containing a copy of the given Fixture.
 func CloneFixture(original Fixture, dir string) Fixture {
-	asserts.NoError(helpers.CopyDirectory(original.Dir, dir))
+	helpers.CopyDirectory(original.Dir, dir)
 	binDir := filepath.Join(dir, "bin")
 	originDir := filepath.Join(dir, "origin")
 	originRepo := testruntime.New(originDir, dir, "")
