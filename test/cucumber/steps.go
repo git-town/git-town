@@ -230,7 +230,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return err
 		}
-		return state.fixture.DevRepo.DeleteMainBranchConfiguration()
+		state.fixture.DevRepo.DeleteMainBranchConfiguration()
+		return nil
 	})
 
 	suite.Step(`^I add commit "([^"]*)" to the "([^"]*)" branch`, func(message, branch string) error {

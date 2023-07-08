@@ -178,12 +178,8 @@ func (r *TestCommands) ConnectTrackingBranch(name string) {
 }
 
 // DeleteMainBranchConfiguration removes the configuration for which branch is the main branch.
-func (r *TestCommands) DeleteMainBranchConfiguration() error {
-	err := r.Run("git", "config", "--unset", config.MainBranchKey)
-	if err != nil {
-		return fmt.Errorf("cannot delete main branch configuration: %w", err)
-	}
-	return nil
+func (r *TestCommands) DeleteMainBranchConfiguration() {
+	r.MustRun("git", "config", "--unset", config.MainBranchKey)
 }
 
 // Fetch retrieves the updates from the origin repo.
