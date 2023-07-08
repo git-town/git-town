@@ -222,10 +222,9 @@ func TestFixture(t *testing.T) {
 		memoizedGitEnv := fixture.NewStandardFixture(filepath.Join(dir, "memoized"))
 		cloned := fixture.CloneFixture(memoizedGitEnv, filepath.Join(dir, "cloned"))
 		// remove it
-		err := cloned.Remove()
-		assert.NoError(t, err)
+		cloned.Remove()
 		// verify
-		_, err = os.Stat(cloned.Dir)
+		_, err := os.Stat(cloned.Dir)
 		assert.True(t, os.IsNotExist(err))
 	})
 }

@@ -276,6 +276,6 @@ func (env Fixture) submoduleRepoPath() string {
 }
 
 // Remove deletes all files used by this Fixture from disk.
-func (env Fixture) Remove() error {
-	return os.RemoveAll(env.Dir)
+func (env Fixture) Remove() {
+	asserts.NoError(os.RemoveAll(env.Dir))
 }
