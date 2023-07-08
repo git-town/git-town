@@ -187,12 +187,11 @@ func (r *TestCommands) FileContentX(filename string) string {
 // FileContentInCommitX provides the content of the file with the given name in the commit with the given SHA.
 func (r *TestCommands) FileContentInCommitX(sha string, filename string) string {
 	output := r.MustQuery("git", "show", sha+":"+filename)
-	result := output
-	if strings.HasPrefix(result, "tree ") {
+	if strings.HasPrefix(output, "tree ") {
 		// merge commits get an empty file content instead of "tree <SHA>"
-		result = ""
+		return ""
 	}
-	return result
+	return output
 }
 
 // FilesInCommitX provides the names of the files that the commit with the given SHA changes.
