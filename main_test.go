@@ -32,7 +32,7 @@ func TestGodog(t *testing.T) {
 		FeatureContext(s)
 	}, godog.Options{
 		Format:      "progress",
-		Concurrency: runtime.NumCPU(),
+		Concurrency: runtime.NumCPU() * 4,
 		Strict:      true,
 		Paths:       []string{"features/"},
 		Tags:        tags,
