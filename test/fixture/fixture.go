@@ -93,10 +93,7 @@ func NewStandardFixture(dir string) Fixture {
 	gitEnv.OriginRepo = &originRepo
 	// clone the "developer" repo
 	gitEnv.DevRepo = testruntime.Clone(originRepo.TestRunner, gitEnv.developerRepoPath())
-	err = gitEnv.initializeWorkspace(&gitEnv.DevRepo)
-	if err != nil {
-		log.Fatalf("cannot create new standard Git environment: %v", err)
-	}
+	gitEnv.initializeWorkspace(&gitEnv.DevRepo)
 	gitEnv.DevRepo.RemoveUnnecessaryFiles()
 	gitEnv.OriginRepo.RemoveUnnecessaryFiles()
 	return gitEnv
@@ -127,7 +124,7 @@ func (env *Fixture) AddUpstream() {
 func (env *Fixture) AddCoworkerRepo() {
 	coworkerRepo := testruntime.Clone(env.OriginRepo.TestRunner, env.coworkerRepoPath())
 	env.CoworkerRepo = &coworkerRepo
-	asserts.NoError(env.initializeWorkspace(env.CoworkerRepo))
+	env.initializeWorkspace(env.CoworkerRepo)
 }
 
 // binPath provides the full path of the folder containing the test tools for this Fixture.
@@ -245,16 +242,12 @@ func (env Fixture) TagTable() datatable.DataTable {
 	return builder.Table()
 }
 
-func (env Fixture) initializeWorkspace(repo *testruntime.TestRuntime) error {
+func (env Fixture) initializeWorkspace(repo *testruntime.TestRuntime) {
 	err := repo.Config.SetMainBranch("main")
-	if err != nil {
-		return err
-	}
+	asserts.NoError(err)
 	err = repo.Config.SetPerennialBranches([]string{})
-	if err != nil {
-		return err
-	}
-	return repo.RunMany([][]string{
+	asserts.NoError(err)
+	repo.MustRunMany([][]string{
 		{"git", "checkout", "main"},
 		// NOTE: the developer repos receives the initial branch from origin
 		//       but we don't want it here because it isn't used in tests.
