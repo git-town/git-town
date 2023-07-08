@@ -899,10 +899,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^these committed files exist now$`, func(table *messages.PickleStepArgument_PickleTable) error {
-		fileTable, err := state.fixture.DevRepo.FilesInBranches("main")
-		if err != nil {
-			return fmt.Errorf("cannot determine files in branches in the developer repo: %w", err)
-		}
+		fileTable := state.fixture.DevRepo.FilesInBranches("main")
 		diff, errorCount := fileTable.EqualGherkin(table)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing files\n\n", errorCount)

@@ -46,8 +46,7 @@ func TestTestCommands(t *testing.T) {
 			FileContent: "hello again",
 			Message:     "second commit",
 		})
-		commits, err := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, "initial")
-		assert.NoError(t, err)
+		commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, "initial")
 		assert.Len(t, commits, 2)
 		assert.Equal(t, "initial", commits[0].Branch)
 		assert.Equal(t, "file1", commits[0].FileName)
@@ -124,8 +123,7 @@ func TestTestCommands(t *testing.T) {
 				FileContent: "hello world",
 				Message:     "test commit",
 			})
-			commits, err := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, "initial")
-			assert.NoError(t, err)
+			commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, "initial")
 			assert.Len(t, commits, 1)
 			assert.Equal(t, "hello.txt", commits[0].FileName)
 			assert.Equal(t, "hello world", commits[0].FileContent)
@@ -143,8 +141,7 @@ func TestTestCommands(t *testing.T) {
 				Message:     "test commit",
 				Author:      "developer <developer@example.com>",
 			})
-			commits, err := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, "initial")
-			assert.NoError(t, err)
+			commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, "initial")
 			assert.Len(t, commits, 1)
 			assert.Equal(t, "hello.txt", commits[0].FileName)
 			assert.Equal(t, "hello world", commits[0].FileContent)
@@ -216,8 +213,7 @@ func TestTestCommands(t *testing.T) {
 		runtime.CreateFile("f2.txt", "two")
 		runtime.StageFiles("f1.txt", "f2.txt")
 		runtime.CommitStagedChanges("stuff")
-		commits, err := runtime.Commits([]string{}, "initial")
-		assert.NoError(t, err)
+		commits := runtime.Commits([]string{}, "initial")
 		assert.Len(t, commits, 1)
 		fileNames := runtime.FilesInCommit(commits[0].SHA)
 		assert.Equal(t, []string{"f1.txt", "f2.txt"}, fileNames)

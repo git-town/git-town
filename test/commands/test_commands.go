@@ -122,7 +122,7 @@ func (r *TestCommands) CreateTag(name string) {
 }
 
 // Commits provides a list of the commits in this Git repository with the given fields.
-func (r *TestCommands) Commits(fields []string, mainBranch string) ([]git.Commit, error) {
+func (r *TestCommands) Commits(fields []string, mainBranch string) []git.Commit {
 	branches, err := r.LocalBranchesMainFirst(mainBranch)
 	asserts.NoError(err)
 	result := []git.Commit{}
@@ -130,7 +130,7 @@ func (r *TestCommands) Commits(fields []string, mainBranch string) ([]git.Commit
 		commits := r.CommitsInBranch(branch, fields)
 		result = append(result, commits...)
 	}
-	return result, nil
+	return result
 }
 
 // CommitsInBranch provides all commits in the given Git branch.
@@ -215,13 +215,11 @@ func (r *TestCommands) FilesInBranch(branch string) []string {
 }
 
 // FilesInBranches provides a data table of files and their content in all branches.
-func (r *TestCommands) FilesInBranches(mainBranch string) (datatable.DataTable, error) {
+func (r *TestCommands) FilesInBranches(mainBranch string) datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow("BRANCH", "NAME", "CONTENT")
 	branches, err := r.LocalBranchesMainFirst(mainBranch)
-	if err != nil {
-		return datatable.DataTable{}, err
-	}
+	asserts.NoError(err)
 	lastBranch := ""
 	for _, branch := range branches {
 		files := r.FilesInBranch(branch)
@@ -235,7 +233,7 @@ func (r *TestCommands) FilesInBranches(mainBranch string) (datatable.DataTable, 
 			lastBranch = branch
 		}
 	}
-	return result, err
+	return result
 }
 
 // HasBranchesOutOfSync indicates whether one or more local branches are out of sync with their tracking branch.

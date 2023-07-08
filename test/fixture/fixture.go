@@ -259,30 +259,18 @@ func (env Fixture) CreateTags(table *messages.PickleStepArgument_PickleTable) er
 // CommitTable provides a table for all commits in this Git environment containing only the given fields.
 func (env Fixture) CommitTable(fields []string) (datatable.DataTable, error) {
 	builder := datatable.NewCommitTableBuilder()
-	localCommits, err := env.DevRepo.Commits(fields, "main")
-	if err != nil {
-		return datatable.DataTable{}, fmt.Errorf("cannot determine commits in the developer repo: %w", err)
-	}
+	localCommits := env.DevRepo.Commits(fields, "main")
 	builder.AddMany(localCommits, "local")
 	if env.CoworkerRepo != nil {
-		coworkerCommits, err := env.CoworkerRepo.Commits(fields, "main")
-		if err != nil {
-			return datatable.DataTable{}, fmt.Errorf("cannot determine commits in the coworker repo: %w", err)
-		}
+		coworkerCommits := env.CoworkerRepo.Commits(fields, "main")
 		builder.AddMany(coworkerCommits, "coworker")
 	}
 	if env.OriginRepo != nil {
-		originCommits, err := env.OriginRepo.Commits(fields, "main")
-		if err != nil {
-			return datatable.DataTable{}, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
-		}
+		originCommits := env.OriginRepo.Commits(fields, "main")
 		builder.AddMany(originCommits, config.OriginRemote)
 	}
 	if env.UpstreamRepo != nil {
-		upstreamCommits, err := env.UpstreamRepo.Commits(fields, "main")
-		if err != nil {
-			return datatable.DataTable{}, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
-		}
+		upstreamCommits := env.UpstreamRepo.Commits(fields, "main")
 		builder.AddMany(upstreamCommits, "upstream")
 	}
 	return builder.Table(fields), nil
