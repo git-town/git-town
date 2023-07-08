@@ -91,9 +91,9 @@ func CreateGitTown(t *testing.T) TestRuntime {
 	return repo
 }
 
-// Clone creates a clone of the repository managed by this test.Runner into the given directory.
+// CloneX creates a clone of the repository managed by this test.Runner into the given directory.
 // The cloned repo uses the same homeDir and binDir as its origin.
-func Clone(original testshell.TestRunner, targetDir string) TestRuntime {
+func CloneX(original testshell.TestRunner, targetDir string) TestRuntime {
 	original.MustRun("git", "clone", original.WorkingDir, targetDir)
 	return New(targetDir, original.HomeDir, original.BinDir)
 }

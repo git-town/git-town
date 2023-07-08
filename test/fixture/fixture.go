@@ -92,7 +92,7 @@ func NewStandardFixture(dir string) Fixture {
 	}
 	gitEnv.OriginRepo = &originRepo
 	// clone the "developer" repo
-	gitEnv.DevRepo = testruntime.Clone(originRepo.TestRunner, gitEnv.developerRepoPath())
+	gitEnv.DevRepo = testruntime.CloneX(originRepo.TestRunner, gitEnv.developerRepoPath())
 	gitEnv.initializeWorkspace(&gitEnv.DevRepo)
 	gitEnv.DevRepo.RemoveUnnecessaryFilesX()
 	gitEnv.OriginRepo.RemoveUnnecessaryFilesX()
@@ -115,14 +115,14 @@ func (env *Fixture) AddSubmoduleRepo() {
 
 // AddUpstream adds an upstream repository.
 func (env *Fixture) AddUpstream() {
-	repo := testruntime.Clone(env.DevRepo.TestRunner, filepath.Join(env.Dir, "upstream"))
+	repo := testruntime.CloneX(env.DevRepo.TestRunner, filepath.Join(env.Dir, "upstream"))
 	env.UpstreamRepo = &repo
 	env.DevRepo.AddRemoteX("upstream", env.UpstreamRepo.WorkingDir)
 }
 
 // AddCoworkerRepo adds a coworker repository.
 func (env *Fixture) AddCoworkerRepo() {
-	coworkerRepo := testruntime.Clone(env.OriginRepo.TestRunner, env.coworkerRepoPath())
+	coworkerRepo := testruntime.CloneX(env.OriginRepo.TestRunner, env.coworkerRepoPath())
 	env.CoworkerRepo = &coworkerRepo
 	env.initializeWorkspace(env.CoworkerRepo)
 }
