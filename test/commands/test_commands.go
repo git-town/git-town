@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v9/src/config"
 	prodgit "github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/stringslice"
+	"github.com/git-town/git-town/v9/test/asserts"
 	"github.com/git-town/git-town/v9/test/datatable"
 	"github.com/git-town/git-town/v9/test/git"
 	"github.com/git-town/git-town/v9/test/subshell"
@@ -69,9 +70,10 @@ func (r *TestCommands) CreateBranch(name, parent string) {
 
 // CreateChildFeatureBranch creates a branch with the given name and parent in this repository.
 // The parent branch must already exist.
-func (r *TestCommands) CreateChildFeatureBranch(name string, parent string) error {
+func (r *TestCommands) CreateChildFeatureBranch(name string, parent string) {
 	r.CreateBranch(name, parent)
-	return r.Config.SetParent(name, parent)
+	err := r.Config.SetParent(name, parent)
+	asserts.NoError(err)
 }
 
 // CreateCommit creates a commit with the given properties in this Git repo.

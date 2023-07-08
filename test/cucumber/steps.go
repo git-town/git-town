@@ -92,10 +92,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^a feature branch "([^"]+)" as a child of "([^"]+)"$`, func(branch, parentBranch string) error {
-		err := state.fixture.DevRepo.CreateChildFeatureBranch(branch, parentBranch)
-		if err != nil {
-			return fmt.Errorf("cannot create feature branch %q: %w", branch, err)
-		}
+		state.fixture.DevRepo.CreateChildFeatureBranch(branch, parentBranch)
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 		state.initialBranchHierarchy.AddRow(branch, parentBranch)
