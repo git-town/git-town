@@ -47,24 +47,18 @@ type TestRunner struct {
 
 // createBinDir creates the directory that contains mock executables.
 // This method is idempotent.
-func (r *TestRunner) createBinDir() error {
+func (r *TestRunner) createBinDir() {
 	if r.usesBinDir {
 		// binDir already created --> nothing to do here
-		return nil
+		return
 	}
-	err := os.Mkdir(r.BinDir, 0o700)
-	if err != nil {
-		return fmt.Errorf("cannot create mock bin dir: %w", err)
-	}
+	asserts.NoError(os.Mkdir(r.BinDir, 0o700))
 	r.usesBinDir = true
-	return nil
 }
 
 // createMockBinary creates an executable with the given name and content in ms.binDir.
 func (r *TestRunner) createMockBinary(name string, content string) error {
-	if err := r.createBinDir(); err != nil {
-		return err
-	}
+	r.createBinDir()
 	//nolint:gosec // intentionally creating an executable here
 	err := os.WriteFile(filepath.Join(r.BinDir, name), []byte(content), 0x744)
 	if err != nil {
