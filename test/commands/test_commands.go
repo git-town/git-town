@@ -23,14 +23,14 @@ type TestCommands struct {
 	*prodgit.BackendCommands // TODO: remove this dependency on BackendCommands
 }
 
-// AddRemoteX adds a Git remote with the given name and URL to this repository.
-func (r *TestCommands) AddRemoteX(name, url string) {
+// AddRemote adds a Git remote with the given name and URL to this repository.
+func (r *TestCommands) AddRemote(name, url string) {
 	r.MustRun("git", "remote", "add", name, url)
 	r.Config.RemotesCache.Invalidate()
 }
 
-// AddSubmoduleX adds a Git submodule with the given URL to this repository.
-func (r *TestCommands) AddSubmoduleX(url string) {
+// AddSubmodule adds a Git submodule with the given URL to this repository.
+func (r *TestCommands) AddSubmodule(url string) {
 	r.MustRun("git", "submodule", "add", url)
 	r.MustRun("git", "commit", "-m", "added submodule")
 }
@@ -52,8 +52,8 @@ func (r *TestCommands) BranchHierarchyTable() datatable.DataTable {
 	return result
 }
 
-// CheckoutBranchX checks out the Git branch with the given name in this repo.
-func (r *TestCommands) CheckoutBranchX(name string) {
+// .CheckoutBranch checks out the Git branch with the given name in this repo.
+func (r *TestCommands) CheckoutBranch(name string) {
 	r.MustRun("git", "checkout", name)
 	if name != "-" {
 		r.Config.CurrentBranchCache.Set(name)
@@ -62,24 +62,24 @@ func (r *TestCommands) CheckoutBranchX(name string) {
 	}
 }
 
-// CreateBranchX creates a new branch with the given name.
+// CreateBranch creates a new branch with the given name.
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
-func (r *TestCommands) CreateBranchX(name, parent string) {
+func (r *TestCommands) CreateBranch(name, parent string) {
 	r.MustRun("git", "branch", name, parent)
 }
 
-// CreateChildFeatureBranchX creates a branch with the given name and parent in this repository.
+// CreateChildFeatureBranch creates a branch with the given name and parent in this repository.
 // The parent branch must already exist.
-func (r *TestCommands) CreateChildFeatureBranchX(name string, parent string) {
-	r.CreateBranchX(name, parent)
+func (r *TestCommands) CreateChildFeatureBranch(name string, parent string) {
+	r.CreateBranch(name, parent)
 	asserts.NoError(r.Config.SetParent(name, parent))
 }
 
 // CreateCommit creates a commit with the given properties in this Git repo.
-func (r *TestCommands) CreateCommitX(commit git.Commit) {
-	r.CheckoutBranchX(commit.Branch)
-	r.CreateFileX(commit.FileName, commit.FileContent)
+func (r *TestCommands) CreateCommit(commit git.Commit) {
+	r.CheckoutBranch(commit.Branch)
+	r.CreateFile(commit.FileName, commit.FileContent)
 	r.MustRun("git", "add", commit.FileName)
 	commands := []string{"commit", "-m", commit.Message}
 	if commit.Author != "" {
@@ -88,8 +88,8 @@ func (r *TestCommands) CreateCommitX(commit git.Commit) {
 	r.MustRun("git", commands...)
 }
 
-// CreateFileX creates a file with the given name and content in this repository.
-func (r *TestCommands) CreateFileX(name, content string) {
+// CreateFile creates a file with the given name and content in this repository.
+func (r *TestCommands) CreateFile(name, content string) {
 	filePath := filepath.Join(r.WorkingDir, name)
 	folderPath := filepath.Dir(filePath)
 	asserts.NoError(os.MkdirAll(folderPath, os.ModePerm))
@@ -97,16 +97,16 @@ func (r *TestCommands) CreateFileX(name, content string) {
 	asserts.NoError(os.WriteFile(filePath, []byte(content), 0x700))
 }
 
-// CreatePerennialBranchesX creates perennial branches with the given names in this repository.
-func (r *TestCommands) CreatePerennialBranchesX(names ...string) {
+// CreatePerennialBranches creates perennial branches with the given names in this repository.
+func (r *TestCommands) CreatePerennialBranches(names ...string) {
 	for _, name := range names {
-		r.CreateBranchX(name, "main")
+		r.CreateBranch(name, "main")
 	}
 	asserts.NoError(r.Config.AddToPerennialBranches(names...))
 }
 
-// CreateStandaloneTagX creates a tag not on a branch.
-func (r *TestCommands) CreateStandaloneTagX(name string) {
+// CreateStandaloneTag creates a tag not on a branch.
+func (r *TestCommands) CreateStandaloneTag(name string) {
 	r.MustRun("git", "checkout", "-b", "temp")
 	r.MustRun("touch", "a.txt")
 	r.MustRun("git", "add", "-A")
@@ -116,25 +116,25 @@ func (r *TestCommands) CreateStandaloneTagX(name string) {
 	r.MustRun("git", "branch", "-D", "temp")
 }
 
-// CreateTagX creates a tag with the given name.
-func (r *TestCommands) CreateTagX(name string) {
+// CreateTag creates a tag with the given name.
+func (r *TestCommands) CreateTag(name string) {
 	r.MustRun("git", "tag", "-a", name, "-m", name)
 }
 
-// CommitsX provides a list of the commits in this Git repository with the given fields.
-func (r *TestCommands) CommitsX(fields []string, mainBranch string) []git.Commit {
+// Commits provides a list of the commits in this Git repository with the given fields.
+func (r *TestCommands) Commits(fields []string, mainBranch string) []git.Commit {
 	branches, err := r.LocalBranchesMainFirst(mainBranch)
 	asserts.NoError(err)
 	result := []git.Commit{}
 	for _, branch := range branches {
-		commits := r.CommitsInBranchX(branch, fields)
+		commits := r.CommitsInBranch(branch, fields)
 		result = append(result, commits...)
 	}
 	return result
 }
 
-// CommitsInBranchX provides all commits in the given Git branch.
-func (r *TestCommands) CommitsInBranchX(branch string, fields []string) []git.Commit {
+// CommitsInBranch provides all commits in the given Git branch.
+func (r *TestCommands) CommitsInBranch(branch string, fields []string) []git.Commit {
 	output := r.MustQuery("git", "log", branch, "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse")
 	result := []git.Commit{}
 	for _, line := range strings.Split(output, "\n") {
@@ -144,11 +144,11 @@ func (r *TestCommands) CommitsInBranchX(branch string, fields []string) []git.Co
 			continue
 		}
 		if stringslice.Contains(fields, "FILE NAME") {
-			filenames := r.FilesInCommitX(commit.SHA)
+			filenames := r.FilesInCommit(commit.SHA)
 			commit.FileName = strings.Join(filenames, ", ")
 		}
 		if stringslice.Contains(fields, "FILE CONTENT") {
-			filecontent := r.FileContentInCommitX(commit.SHA, commit.FileName)
+			filecontent := r.FileContentInCommit(commit.SHA, commit.FileName)
 			commit.FileContent = filecontent
 		}
 		result = append(result, commit)
@@ -156,36 +156,36 @@ func (r *TestCommands) CommitsInBranchX(branch string, fields []string) []git.Co
 	return result
 }
 
-// CommitStagedChangesX commits the currently staged changes.
-func (r *TestCommands) CommitStagedChangesX(message string) {
+// CommitStagedChanges commits the currently staged changes.
+func (r *TestCommands) CommitStagedChanges(message string) {
 	r.MustRun("git", "commit", "-m", message)
 }
 
-// ConnectTrackingBranchX connects the branch with the given name to its counterpart at origin.
+// ConnectTrackingBranch connects the branch with the given name to its counterpart at origin.
 // The branch must exist.
-func (r *TestCommands) ConnectTrackingBranchX(name string) {
+func (r *TestCommands) ConnectTrackingBranch(name string) {
 	r.MustRun("git", "branch", "--set-upstream-to=origin/"+name, name)
 }
 
-// DeleteMainBranchConfigurationX removes the configuration for which branch is the main branch.
-func (r *TestCommands) DeleteMainBranchConfigurationX() {
+// DeleteMainBranchConfiguration removes the configuration for which branch is the main branch.
+func (r *TestCommands) DeleteMainBranchConfiguration() {
 	r.MustRun("git", "config", "--unset", config.MainBranchKey)
 }
 
-// FetchX retrieves the updates from the origin repo.
-func (r *TestCommands) FetchX() {
+// Fetch retrieves the updates from the origin repo.
+func (r *TestCommands) Fetch() {
 	r.MustRun("git", "fetch")
 }
 
-// FileContentX provides the current content of a file.
-func (r *TestCommands) FileContentX(filename string) string {
+// FileContent provides the current content of a file.
+func (r *TestCommands) FileContent(filename string) string {
 	content, err := os.ReadFile(filepath.Join(r.WorkingDir, filename))
 	asserts.NoError(err)
 	return string(content)
 }
 
-// FileContentInCommitX provides the content of the file with the given name in the commit with the given SHA.
-func (r *TestCommands) FileContentInCommitX(sha string, filename string) string {
+// FileContentInCommit provides the content of the file with the given name in the commit with the given SHA.
+func (r *TestCommands) FileContentInCommit(sha string, filename string) string {
 	output := r.MustQuery("git", "show", sha+":"+filename)
 	if strings.HasPrefix(output, "tree ") {
 		// merge commits get an empty file content instead of "tree <SHA>"
@@ -194,14 +194,14 @@ func (r *TestCommands) FileContentInCommitX(sha string, filename string) string 
 	return output
 }
 
-// FilesInCommitX provides the names of the files that the commit with the given SHA changes.
-func (r *TestCommands) FilesInCommitX(sha string) []string {
+// FilesInCommit provides the names of the files that the commit with the given SHA changes.
+func (r *TestCommands) FilesInCommit(sha string) []string {
 	output := r.MustQuery("git", "diff-tree", "--no-commit-id", "--name-only", "-r", sha)
 	return strings.Split(output, "\n")
 }
 
-// FilesInBranchX provides the list of the files present in the given branch.
-func (r *TestCommands) FilesInBranchX(branch string) []string {
+// FilesInBranch provides the list of the files present in the given branch.
+func (r *TestCommands) FilesInBranch(branch string) []string {
 	output := r.MustQuery("git", "ls-tree", "-r", "--name-only", branch)
 	result := []string{}
 	for _, line := range strings.Split(output, "\n") {
@@ -213,17 +213,17 @@ func (r *TestCommands) FilesInBranchX(branch string) []string {
 	return result
 }
 
-// FilesInBranchesX provides a data table of files and their content in all branches.
-func (r *TestCommands) FilesInBranchesX(mainBranch string) datatable.DataTable {
+// FilesInBranches provides a data table of files and their content in all branches.
+func (r *TestCommands) FilesInBranches(mainBranch string) datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow("BRANCH", "NAME", "CONTENT")
 	branches, err := r.LocalBranchesMainFirst(mainBranch)
 	asserts.NoError(err)
 	lastBranch := ""
 	for _, branch := range branches {
-		files := r.FilesInBranchX(branch)
+		files := r.FilesInBranch(branch)
 		for _, file := range files {
-			content := r.FileContentInCommitX(branch, file)
+			content := r.FileContentInCommit(branch, file)
 			if branch == lastBranch {
 				result.AddRow("", file, content)
 			} else {
@@ -235,8 +235,8 @@ func (r *TestCommands) FilesInBranchesX(mainBranch string) datatable.DataTable {
 	return result
 }
 
-// HasBranchesOutOfSyncX indicates whether one or more local branches are out of sync with their tracking branch.
-func (r *TestCommands) HasBranchesOutOfSyncX() bool {
+// HasBranchesOutOfSync indicates whether one or more local branches are out of sync with their tracking branch.
+func (r *TestCommands) HasBranchesOutOfSync() bool {
 	output := r.MustQuery("git", "for-each-ref", "--format=%(refname:short) %(upstream:track)", "refs/heads")
 	return strings.Contains(output, "[")
 }
@@ -264,27 +264,27 @@ func (r *TestCommands) HasGitTownConfigNow() bool {
 	return output != ""
 }
 
-func (r *TestCommands) PushBranchX() {
+func (r *TestCommands) PushBranch() {
 	r.MustRun("git", "push")
 }
 
-func (r *TestCommands) PushBranchToRemoteX(branch, remote string) {
+func (r *TestCommands) PushBranchToRemote(branch, remote string) {
 	r.MustRun("git", "push", "-u", remote, branch)
 }
 
-// RemoveBranchX deletes the branch with the given name from this repo.
-func (r *TestCommands) RemoveBranchX(name string) {
+// RemoveBranch deletes the branch with the given name from this repo.
+func (r *TestCommands) RemoveBranch(name string) {
 	r.MustRun("git", "branch", "-D", name)
 }
 
-// RemoveRemoteX deletes the Git remote with the given name.
-func (r *TestCommands) RemoveRemoteX(name string) {
+// RemoveRemote deletes the Git remote with the given name.
+func (r *TestCommands) RemoveRemote(name string) {
 	r.Config.RemotesCache.Invalidate()
 	r.MustRun("git", "remote", "rm", name)
 }
 
-// RemoveUnnecessaryFilesX trims all files that aren't necessary in this repo.
-func (r *TestCommands) RemoveUnnecessaryFilesX() {
+// RemoveUnnecessaryFiles trims all files that aren't necessary in this repo.
+func (r *TestCommands) RemoveUnnecessaryFiles() {
 	fullPath := filepath.Join(r.WorkingDir, ".git", "hooks")
 	asserts.NoError(os.RemoveAll(fullPath))
 	_ = os.Remove(filepath.Join(r.WorkingDir, ".git", "COMMIT_EDITMSG"))
@@ -292,7 +292,7 @@ func (r *TestCommands) RemoveUnnecessaryFilesX() {
 }
 
 // ShaForCommit provides the SHA for the commit with the given name.
-func (r *TestCommands) ShaForCommitX(name string) string {
+func (r *TestCommands) ShaForCommit(name string) string {
 	output := r.MustQuery("git", "log", "--reflog", "--format=%H", "--grep=^"+name+"$")
 	if output == "" {
 		log.Fatalf("cannot find the SHA of commit %q", name)
@@ -300,14 +300,14 @@ func (r *TestCommands) ShaForCommitX(name string) string {
 	return strings.Split(output, "\n")[0]
 }
 
-// StageFilesX adds the file with the given name to the Git index.
-func (r *TestCommands) StageFilesX(names ...string) {
+// StageFiles adds the file with the given name to the Git index.
+func (r *TestCommands) StageFiles(names ...string) {
 	args := append([]string{"add"}, names...)
 	r.MustRun("git", args...)
 }
 
-// StashSizeX provides the number of stashes in this repository.
-func (r *TestCommands) StashSizeX() int {
+// StashSize provides the number of stashes in this repository.
+func (r *TestCommands) StashSize() int {
 	output := r.MustQuery("git", "stash", "list")
 	if output == "" {
 		return 0
@@ -315,8 +315,8 @@ func (r *TestCommands) StashSizeX() int {
 	return len(stringslice.Lines(output))
 }
 
-// TagsX provides a list of the tags in this repository.
-func (r *TestCommands) TagsX() []string {
+// Tags provides a list of the tags in this repository.
+func (r *TestCommands) Tags() []string {
 	output := r.MustQuery("git", "tag")
 	result := []string{}
 	for _, line := range strings.Split(output, "\n") {
@@ -325,8 +325,8 @@ func (r *TestCommands) TagsX() []string {
 	return result
 }
 
-// UncommittedFilesX provides the names of the files not committed into Git.
-func (r *TestCommands) UncommittedFilesX() []string {
+// UncommittedFiles provides the names of the files not committed into Git.
+func (r *TestCommands) UncommittedFiles() []string {
 	output := r.MustQuery("git", "status", "--porcelain", "--untracked-files=all")
 	result := []string{}
 	for _, line := range stringslice.Lines(output) {

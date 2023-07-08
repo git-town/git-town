@@ -83,7 +83,7 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 func CreateGitTown(t *testing.T) TestRuntime {
 	t.Helper()
 	repo := Create(t)
-	repo.CreateBranchX("main", "initial")
+	repo.CreateBranch("main", "initial")
 	err := repo.Config.SetMainBranch("main")
 	assert.NoError(t, err)
 	err = repo.Config.SetPerennialBranches([]string{})
@@ -91,9 +91,9 @@ func CreateGitTown(t *testing.T) TestRuntime {
 	return repo
 }
 
-// CloneX creates a clone of the repository managed by this test.Runner into the given directory.
+// Clone creates a clone of the repository managed by this test.Runner into the given directory.
 // The cloned repo uses the same homeDir and binDir as its origin.
-func CloneX(original testshell.TestRunner, targetDir string) TestRuntime {
+func Clone(original testshell.TestRunner, targetDir string) TestRuntime {
 	original.MustRun("git", "clone", original.WorkingDir, targetDir)
 	return New(targetDir, original.HomeDir, original.BinDir)
 }

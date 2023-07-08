@@ -58,10 +58,10 @@ func CloneFixture(original Fixture, dir string) Fixture {
 	// Since we copied the files from the memoized directory,
 	// we have to set the "origin" remote to the copied origin repo here.
 	result.DevRepo.MustRun("git", "remote", "remove", config.OriginRemote)
-	result.DevRepo.AddRemoteX(config.OriginRemote, result.originRepoPath())
-	result.DevRepo.FetchX()
+	result.DevRepo.AddRemote(config.OriginRemote, result.originRepoPath())
+	result.DevRepo.Fetch()
 	// and connect the main branches again
-	result.DevRepo.ConnectTrackingBranchX("main")
+	result.DevRepo.ConnectTrackingBranch("main")
 	return result
 }
 
@@ -92,10 +92,10 @@ func NewStandardFixture(dir string) Fixture {
 	}
 	gitEnv.OriginRepo = &originRepo
 	// clone the "developer" repo
-	gitEnv.DevRepo = testruntime.CloneX(originRepo.TestRunner, gitEnv.developerRepoPath())
+	gitEnv.DevRepo = testruntime.Clone(originRepo.TestRunner, gitEnv.developerRepoPath())
 	gitEnv.initializeWorkspace(&gitEnv.DevRepo)
-	gitEnv.DevRepo.RemoveUnnecessaryFilesX()
-	gitEnv.OriginRepo.RemoveUnnecessaryFilesX()
+	gitEnv.DevRepo.RemoveUnnecessaryFiles()
+	gitEnv.OriginRepo.RemoveUnnecessaryFiles()
 	return gitEnv
 }
 
@@ -115,14 +115,14 @@ func (env *Fixture) AddSubmoduleRepo() {
 
 // AddUpstream adds an upstream repository.
 func (env *Fixture) AddUpstream() {
-	repo := testruntime.CloneX(env.DevRepo.TestRunner, filepath.Join(env.Dir, "upstream"))
+	repo := testruntime.Clone(env.DevRepo.TestRunner, filepath.Join(env.Dir, "upstream"))
 	env.UpstreamRepo = &repo
-	env.DevRepo.AddRemoteX("upstream", env.UpstreamRepo.WorkingDir)
+	env.DevRepo.AddRemote("upstream", env.UpstreamRepo.WorkingDir)
 }
 
 // AddCoworkerRepo adds a coworker repository.
 func (env *Fixture) AddCoworkerRepo() {
-	coworkerRepo := testruntime.CloneX(env.OriginRepo.TestRunner, env.coworkerRepoPath())
+	coworkerRepo := testruntime.Clone(env.OriginRepo.TestRunner, env.coworkerRepoPath())
 	env.CoworkerRepo = &coworkerRepo
 	env.initializeWorkspace(env.CoworkerRepo)
 }
@@ -164,16 +164,16 @@ func (env *Fixture) CreateCommits(commits []git.Commit) {
 		for _, location := range commit.Locations {
 			switch location {
 			case "coworker":
-				env.CoworkerRepo.CreateCommitX(commit)
+				env.CoworkerRepo.CreateCommit(commit)
 			case "local":
-				env.DevRepo.CreateCommitX(commit)
+				env.DevRepo.CreateCommit(commit)
 			case "local, origin":
-				env.DevRepo.CreateCommitX(commit)
-				env.DevRepo.PushBranchToRemoteX(commit.Branch, config.OriginRemote)
+				env.DevRepo.CreateCommit(commit)
+				env.DevRepo.PushBranchToRemote(commit.Branch, config.OriginRemote)
 			case "origin":
-				env.OriginRepo.CreateCommitX(commit)
+				env.OriginRepo.CreateCommit(commit)
 			case "upstream":
-				env.UpstreamRepo.CreateCommitX(commit)
+				env.UpstreamRepo.CreateCommit(commit)
 			default:
 				log.Fatalf("unknown commit location %q", commit.Locations)
 			}
@@ -181,13 +181,13 @@ func (env *Fixture) CreateCommits(commits []git.Commit) {
 	}
 	// after setting up the commits, check out the "initial" branch in the origin repo so that we can git-push to it.
 	if env.OriginRepo != nil {
-		env.OriginRepo.CheckoutBranchX("initial")
+		env.OriginRepo.CheckoutBranch("initial")
 	}
 }
 
 // CreateOriginBranch creates a branch with the given name only in the origin directory.
 func (env Fixture) CreateOriginBranch(name, parent string) {
-	env.OriginRepo.CreateBranchX(name, parent)
+	env.OriginRepo.CreateBranch(name, parent)
 }
 
 // CreateTags creates tags from the given gherkin table.
@@ -201,9 +201,9 @@ func (env Fixture) CreateTags(table *messages.PickleStepArgument_PickleTable) {
 		location := row.Cells[1].Value
 		switch location {
 		case "local":
-			env.DevRepo.CreateTagX(name)
+			env.DevRepo.CreateTag(name)
 		case "origin":
-			env.OriginRepo.CreateTagX(name)
+			env.OriginRepo.CreateTag(name)
 		default:
 			log.Fatalf("tag table LOCATION must be 'local' or 'origin'")
 		}
@@ -213,18 +213,18 @@ func (env Fixture) CreateTags(table *messages.PickleStepArgument_PickleTable) {
 // CommitTable provides a table for all commits in this Git environment containing only the given fields.
 func (env Fixture) CommitTable(fields []string) datatable.DataTable {
 	builder := datatable.NewCommitTableBuilder()
-	localCommits := env.DevRepo.CommitsX(fields, "main")
+	localCommits := env.DevRepo.Commits(fields, "main")
 	builder.AddMany(localCommits, "local")
 	if env.CoworkerRepo != nil {
-		coworkerCommits := env.CoworkerRepo.CommitsX(fields, "main")
+		coworkerCommits := env.CoworkerRepo.Commits(fields, "main")
 		builder.AddMany(coworkerCommits, "coworker")
 	}
 	if env.OriginRepo != nil {
-		originCommits := env.OriginRepo.CommitsX(fields, "main")
+		originCommits := env.OriginRepo.Commits(fields, "main")
 		builder.AddMany(originCommits, config.OriginRemote)
 	}
 	if env.UpstreamRepo != nil {
-		upstreamCommits := env.UpstreamRepo.CommitsX(fields, "main")
+		upstreamCommits := env.UpstreamRepo.Commits(fields, "main")
 		builder.AddMany(upstreamCommits, "upstream")
 	}
 	return builder.Table(fields)
@@ -233,10 +233,10 @@ func (env Fixture) CommitTable(fields []string) datatable.DataTable {
 // TagTable provides a table for all tags in this Git environment.
 func (env Fixture) TagTable() datatable.DataTable {
 	builder := datatable.NewTagTableBuilder()
-	localTags := env.DevRepo.TagsX()
+	localTags := env.DevRepo.Tags()
 	builder.AddMany(localTags, "local")
 	if env.OriginRepo != nil {
-		originTags := env.OriginRepo.TagsX()
+		originTags := env.OriginRepo.Tags()
 		builder.AddMany(originTags, config.OriginRemote)
 	}
 	return builder.Table()
