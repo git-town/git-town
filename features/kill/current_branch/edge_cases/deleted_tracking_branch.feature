@@ -27,7 +27,7 @@ Feature: the branch to kill has a deleted tracking branch
     And the branches are now
       | REPOSITORY    | BRANCHES    |
       | local, origin | main, other |
-    And this branch hierarchy exists now
+    And this branch lineage exists now
       | BRANCH | PARENT |
       | other  | main   |
 

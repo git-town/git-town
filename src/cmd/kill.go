@@ -91,7 +91,7 @@ func determineKillConfig(args []string, run *git.ProdRunner) (*killConfig, error
 		return nil, err
 	}
 	if isTargetBranchLocal {
-		err = validate.KnowsBranchAncestry(targetBranch, mainBranch, &run.Backend)
+		err = validate.KnowsBranchAncestors(targetBranch, mainBranch, &run.Backend)
 		if err != nil {
 			return nil, err
 		}
@@ -137,7 +137,7 @@ func determineKillConfig(args []string, run *git.ProdRunner) (*killConfig, error
 		return nil, err
 	}
 	return &killConfig{
-		childBranches:       run.Config.ChildBranches(targetBranch),
+		childBranches:       run.Config.Lineage().Children(targetBranch),
 		hasOpenChanges:      hasOpenChanges,
 		hasTrackingBranch:   hasTrackingBranch,
 		initialBranch:       initialBranch,
@@ -147,7 +147,7 @@ func determineKillConfig(args []string, run *git.ProdRunner) (*killConfig, error
 		noPushHook:          !pushHook,
 		previousBranch:      previousBranch,
 		targetBranch:        targetBranch,
-		targetBranchParent:  run.Config.ParentBranch(targetBranch),
+		targetBranchParent:  run.Config.Lineage().Parent(targetBranch),
 	}, nil
 }
 
@@ -168,7 +168,7 @@ func killStepList(config *killConfig, run *git.ProdRunner) (runstate.StepList, e
 		for _, child := range config.childBranches {
 			result.Append(&steps.SetParentStep{Branch: child, ParentBranch: config.targetBranchParent})
 		}
-		result.Append(&steps.DeleteParentBranchStep{Branch: config.targetBranch, Parent: run.Config.ParentBranch(config.targetBranch)})
+		result.Append(&steps.DeleteParentBranchStep{Branch: config.targetBranch, Parent: run.Config.Lineage().Parent(config.targetBranch)})
 	case !config.isOffline:
 		result.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch, IsTracking: false, NoPushHook: config.noPushHook})
 	default:

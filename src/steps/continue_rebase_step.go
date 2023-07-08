@@ -19,7 +19,7 @@ func (step *ContinueRebaseStep) CreateContinueStep() Step {
 	return step
 }
 
-func (step *ContinueRebaseStep) Run(run *git.ProdRunner, connector hosting.Connector) error {
+func (step *ContinueRebaseStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
 	hasRebaseInProgress, err := run.Backend.HasRebaseInProgress()
 	if err != nil {
 		return err
