@@ -2,6 +2,7 @@ package commands
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"sort"
@@ -308,17 +309,12 @@ func (r *TestCommands) RemoveUnnecessaryFiles() {
 }
 
 // ShaForCommit provides the SHA for the commit with the given name.
-func (r *TestCommands) ShaForCommit(name string) (string, error) {
-	output, err := r.Query("git", "log", "--reflog", "--format=%H", "--grep=^"+name+"$")
-	if err != nil {
-		return "", fmt.Errorf("cannot determine the SHA of commit %q: %w", name, err)
+func (r *TestCommands) ShaForCommit(name string) string {
+	output := r.MustQuery("git", "log", "--reflog", "--format=%H", "--grep=^"+name+"$")
+	if output == "" {
+		log.Fatalf("cannot find the SHA of commit %q", name)
 	}
-	result := output
-	if result == "" {
-		return "", fmt.Errorf("cannot find the SHA of commit %q", name)
-	}
-	result = strings.Split(result, "\n")[0]
-	return result, nil
+	return strings.Split(output, "\n")[0]
 }
 
 // StageFiles adds the file with the given name to the Git index.

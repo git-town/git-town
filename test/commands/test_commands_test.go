@@ -349,8 +349,7 @@ func TestTestCommands(t *testing.T) {
 		t.Parallel()
 		repo := testruntime.Create(t)
 		repo.CreateCommit(git.Commit{Branch: "initial", FileName: "foo", FileContent: "bar", Message: "commit"})
-		sha, err := repo.ShaForCommit("commit")
-		assert.NoError(t, err)
+		sha := repo.ShaForCommit("commit")
 		assert.Len(t, sha, 40)
 	})
 

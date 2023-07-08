@@ -90,17 +90,11 @@ func (table *DataTable) Expand(localRepo runner, remoteRepo runner) (DataTable, 
 				switch {
 				case strings.HasPrefix(match, "{{ sha "):
 					commitName := match[8 : len(match)-4]
-					sha, err := localRepo.ShaForCommit(commitName)
-					if err != nil {
-						return DataTable{}, fmt.Errorf("cannot determine SHA: %w", err)
-					}
+					sha := localRepo.ShaForCommit(commitName)
 					cell = strings.Replace(cell, match, sha, 1)
 				case strings.HasPrefix(match, "{{ sha-in-origin "):
 					commitName := match[18 : len(match)-4]
-					sha, err := remoteRepo.ShaForCommit(commitName)
-					if err != nil {
-						return DataTable{}, fmt.Errorf("cannot determine SHA in remote: %w", err)
-					}
+					sha := remoteRepo.ShaForCommit(commitName)
 					cell = strings.Replace(cell, match, sha, 1)
 				default:
 					return DataTable{}, fmt.Errorf("DataTable.Expand: unknown template expression %q", cell)
