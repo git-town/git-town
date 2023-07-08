@@ -10,6 +10,7 @@ import (
 	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/stringslice"
+	"github.com/git-town/git-town/v9/test/asserts"
 	"github.com/git-town/git-town/v9/test/datatable"
 	"github.com/git-town/git-town/v9/test/git"
 	"github.com/git-town/git-town/v9/test/helpers"
@@ -124,10 +125,10 @@ func (env *Fixture) AddUpstream() {
 }
 
 // AddCoworkerRepo adds a coworker repository.
-func (env *Fixture) AddCoworkerRepo() error {
+func (env *Fixture) AddCoworkerRepo() {
 	coworkerRepo := testruntime.Clone(env.OriginRepo.TestRunner, env.coworkerRepoPath())
 	env.CoworkerRepo = &coworkerRepo
-	return env.initializeWorkspace(env.CoworkerRepo)
+	asserts.NoError(env.initializeWorkspace(env.CoworkerRepo))
 }
 
 // binPath provides the full path of the folder containing the test tools for this Fixture.

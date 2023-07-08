@@ -84,7 +84,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^a coworker clones the repository$`, func() error {
-		return state.fixture.AddCoworkerRepo()
+		state.fixture.AddCoworkerRepo()
+		return nil
 	})
 
 	suite.Step(`^a feature branch "([^"]+)" as a child of "([^"]+)"$`, func(branch, parentBranch string) error {
