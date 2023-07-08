@@ -2,7 +2,6 @@ package commands
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 	"sort"
@@ -92,15 +91,9 @@ func (r *TestCommands) CreateCommit(commit git.Commit) {
 func (r *TestCommands) CreateFile(name, content string) {
 	filePath := filepath.Join(r.WorkingDir, name)
 	folderPath := filepath.Dir(filePath)
-	err := os.MkdirAll(folderPath, os.ModePerm)
-	if err != nil {
-		log.Fatalf("cannot create folder %q: %v", folderPath, err)
-	}
+	asserts.NoError(os.MkdirAll(folderPath, os.ModePerm))
 	//nolint:gosec // need permission 700 here in order for tests to work
-	err = os.WriteFile(filePath, []byte(content), 0x700)
-	if err != nil {
-		log.Fatalf("cannot create file %q: %v", name, err)
-	}
+	asserts.NoError(os.WriteFile(filePath, []byte(content), 0x700))
 }
 
 // CreatePerennialBranches creates perennial branches with the given names in this repository.
