@@ -73,12 +73,11 @@ func (r *TestCommands) CreateBranch(name, parent string) {
 // The parent branch must already exist.
 func (r *TestCommands) CreateChildFeatureBranch(name string, parent string) {
 	r.CreateBranch(name, parent)
-	err := r.Config.SetParent(name, parent)
-	asserts.NoError(err)
+	asserts.NoError(r.Config.SetParent(name, parent))
 }
 
 // CreateCommit creates a commit with the given properties in this Git repo.
-func (r *TestCommands) CreateCommit(commit git.Commit) error {
+func (r *TestCommands) CreateCommit(commit git.Commit) {
 	r.CheckoutBranch(commit.Branch)
 	r.CreateFile(commit.FileName, commit.FileContent)
 	r.MustRun("git", "add", commit.FileName)
@@ -87,7 +86,6 @@ func (r *TestCommands) CreateCommit(commit git.Commit) error {
 		commands = append(commands, "--author="+commit.Author)
 	}
 	r.MustRun("git", commands...)
-	return nil
 }
 
 // CreateFile creates a file with the given name and content in this repository.

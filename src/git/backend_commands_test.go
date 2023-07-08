@@ -16,20 +16,18 @@ func TestRunner(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		runtime.CreateBranch("branch", "initial")
-		err := runtime.CreateCommit(git.Commit{
+		runtime.CreateCommit(git.Commit{
 			Branch:      "branch",
 			FileName:    "file1",
 			FileContent: "file1",
 			Message:     "first commit",
 		})
-		assert.NoError(t, err)
-		err = runtime.CreateCommit(git.Commit{
+		runtime.CreateCommit(git.Commit{
 			Branch:      "branch",
 			FileName:    "file2",
 			FileContent: "file2",
 			Message:     "second commit",
 		})
-		assert.NoError(t, err)
 		authors, err := runtime.Backend.BranchAuthors("branch", "initial")
 		assert.NoError(t, err)
 		assert.Equal(t, []string{"user <email@example.com>"}, authors)

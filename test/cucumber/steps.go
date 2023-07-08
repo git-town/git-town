@@ -237,12 +237,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I add commit "([^"]*)" to the "([^"]*)" branch`, func(message, branch string) error {
-		return state.fixture.DevRepo.CreateCommit(git.Commit{
+		state.fixture.DevRepo.CreateCommit(git.Commit{
 			Branch:      branch,
 			FileName:    "new_file",
 			FileContent: "new content",
 			Message:     message,
 		})
+		return nil
 	})
 
 	suite.Step(`^I am not prompted for any parent branches$`, func() error {

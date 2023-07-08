@@ -177,22 +177,20 @@ func TestFixture(t *testing.T) {
 			cloned, err := fixture.CloneFixture(memoizedGitEnv, filepath.Join(dir, "cloned"))
 			assert.NoError(t, err)
 			// create a few commits
-			err = cloned.DevRepo.CreateCommit(git.Commit{
+			cloned.DevRepo.CreateCommit(git.Commit{
 				Branch:      "main",
 				FileName:    "local-origin.md",
 				FileContent: "one",
 				Message:     "local-origin",
 			})
-			assert.NoError(t, err)
 			err = cloned.DevRepo.PushBranchToRemote("main", config.OriginRemote)
 			assert.NoError(t, err)
-			err = cloned.OriginRepo.CreateCommit(git.Commit{
+			cloned.OriginRepo.CreateCommit(git.Commit{
 				Branch:      "main",
 				FileName:    "origin.md",
 				FileContent: "two",
 				Message:     "2",
 			})
-			assert.NoError(t, err)
 			// get the CommitTable
 			table, err := cloned.CommitTable([]string{"LOCATION", "FILE NAME", "FILE CONTENT"})
 			assert.NoError(t, err)
@@ -216,20 +214,18 @@ func TestFixture(t *testing.T) {
 			err = cloned.AddUpstream()
 			assert.NoError(t, err)
 			// create a few commits
-			err = cloned.DevRepo.CreateCommit(git.Commit{
+			cloned.DevRepo.CreateCommit(git.Commit{
 				Branch:      "main",
 				FileName:    "local.md",
 				FileContent: "one",
 				Message:     "local",
 			})
-			assert.NoError(t, err)
-			err = cloned.UpstreamRepo.CreateCommit(git.Commit{
+			cloned.UpstreamRepo.CreateCommit(git.Commit{
 				Branch:      "main",
 				FileName:    "upstream.md",
 				FileContent: "two",
 				Message:     "2",
 			})
-			assert.NoError(t, err)
 			// get the CommitTable
 			table, err := cloned.CommitTable([]string{"LOCATION", "FILE NAME", "FILE CONTENT"})
 			assert.NoError(t, err)

@@ -209,11 +209,11 @@ func (env *Fixture) CreateCommits(commits []git.Commit) error {
 		for _, location := range commit.Locations {
 			switch location {
 			case "coworker":
-				err = env.CoworkerRepo.CreateCommit(commit)
+				env.CoworkerRepo.CreateCommit(commit)
 			case "local":
-				err = env.DevRepo.CreateCommit(commit)
+				env.DevRepo.CreateCommit(commit)
 			case "local, origin":
-				err = env.DevRepo.CreateCommit(commit)
+				env.DevRepo.CreateCommit(commit)
 				if err != nil {
 					return fmt.Errorf("cannot create local commit: %w", err)
 				}
@@ -222,9 +222,9 @@ func (env *Fixture) CreateCommits(commits []git.Commit) error {
 					return fmt.Errorf("cannot push branch %q after creating commit: %w", commit.Branch, err)
 				}
 			case "origin":
-				err = env.OriginRepo.CreateCommit(commit)
+				env.OriginRepo.CreateCommit(commit)
 			case "upstream":
-				err = env.UpstreamRepo.CreateCommit(commit)
+				env.UpstreamRepo.CreateCommit(commit)
 			default:
 				return fmt.Errorf("unknown commit location %q", commit.Locations)
 			}

@@ -35,20 +35,18 @@ func TestTestCommands(t *testing.T) {
 	t.Run(".Commits()", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
-		err := runtime.CreateCommit(git.Commit{
+		runtime.CreateCommit(git.Commit{
 			Branch:      "initial",
 			FileName:    "file1",
 			FileContent: "hello",
 			Message:     "first commit",
 		})
-		assert.NoError(t, err)
-		err = runtime.CreateCommit(git.Commit{
+		runtime.CreateCommit(git.Commit{
 			Branch:      "initial",
 			FileName:    "file2",
 			FileContent: "hello again",
 			Message:     "second commit",
 		})
-		assert.NoError(t, err)
 		commits, err := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, "initial")
 		assert.NoError(t, err)
 		assert.Len(t, commits, 2)
@@ -126,13 +124,12 @@ func TestTestCommands(t *testing.T) {
 		t.Run("minimal arguments", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			err := runtime.CreateCommit(git.Commit{
+			runtime.CreateCommit(git.Commit{
 				Branch:      "initial",
 				FileName:    "hello.txt",
 				FileContent: "hello world",
 				Message:     "test commit",
 			})
-			assert.NoError(t, err)
 			commits, err := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, "initial")
 			assert.NoError(t, err)
 			assert.Len(t, commits, 1)
@@ -145,14 +142,13 @@ func TestTestCommands(t *testing.T) {
 		t.Run("set the author", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			err := runtime.CreateCommit(git.Commit{
+			runtime.CreateCommit(git.Commit{
 				Branch:      "initial",
 				FileName:    "hello.txt",
 				FileContent: "hello world",
 				Message:     "test commit",
 				Author:      "developer <developer@example.com>",
 			})
-			assert.NoError(t, err)
 			commits, err := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, "initial")
 			assert.NoError(t, err)
 			assert.Len(t, commits, 1)
@@ -209,13 +205,12 @@ func TestTestCommands(t *testing.T) {
 	t.Run(".FileContentInCommit()", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
-		err := runtime.CreateCommit(git.Commit{
+		runtime.CreateCommit(git.Commit{
 			Branch:      "initial",
 			FileName:    "hello.txt",
 			FileContent: "hello world",
 			Message:     "commit",
 		})
-		assert.NoError(t, err)
 		commits, err := runtime.CommitsInBranch("initial", []string{})
 		assert.NoError(t, err)
 		assert.Len(t, commits, 1)
@@ -368,8 +363,7 @@ func TestTestCommands(t *testing.T) {
 	t.Run(".ShaForCommit()", func(t *testing.T) {
 		t.Parallel()
 		repo := testruntime.Create(t)
-		err := repo.CreateCommit(git.Commit{Branch: "initial", FileName: "foo", FileContent: "bar", Message: "commit"})
-		assert.NoError(t, err)
+		repo.CreateCommit(git.Commit{Branch: "initial", FileName: "foo", FileContent: "bar", Message: "commit"})
 		sha, err := repo.ShaForCommit("commit")
 		assert.NoError(t, err)
 		assert.Len(t, sha, 40)
