@@ -1,6 +1,7 @@
 package cucumber
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -905,15 +906,12 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the uncommitted file still exists$`, func() error {
-		hasFile, err := state.fixture.DevRepo.HasFile(
+		hasFile := state.fixture.DevRepo.HasFile(
 			state.uncommittedFileName,
 			state.uncommittedContent,
 		)
-		if err != nil {
-			return err
-		}
-		if !hasFile {
-			return fmt.Errorf("expected file %q but didn't find it", state.uncommittedFileName)
+		if hasFile != "" {
+			return errors.New(hasFile)
 		}
 		return nil
 	})

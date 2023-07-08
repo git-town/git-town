@@ -280,15 +280,24 @@ func TestTestCommands(t *testing.T) {
 
 	t.Run(".HasFile()", func(t *testing.T) {
 		t.Parallel()
-		runtime := testruntime.Create(t)
-		runtime.CreateFile("f1.txt", "one")
-		has, err := runtime.HasFile("f1.txt", "one")
-		assert.NoError(t, err)
-		assert.True(t, has)
-		_, err = runtime.HasFile("f1.txt", "zonk")
-		assert.Error(t, err)
-		_, err = runtime.HasFile("zonk.txt", "one")
-		assert.Error(t, err)
+		t.Run("filename and content match", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			runtime.CreateFile("f1.txt", "one")
+			assert.Equal(t, "", runtime.HasFile("f1.txt", "one"))
+		})
+		t.Run("filename matches, content doesn't match", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			runtime.CreateFile("f1.txt", "one")
+			assert.Equal(t, "file \"f1.txt\" should have content \"zonk\" but has \"one\"", runtime.HasFile("f1.txt", "zonk"))
+		})
+		t.Run("filename doesn't match but content matches", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			runtime.CreateFile("f1.txt", "one")
+			assert.Equal(t, "repo doesn't have file \"zonk.txt\"", runtime.HasFile("zonk.txt", "one"))
+		})
 	})
 
 	t.Run(".HasGitTownConfigNow()", func(t *testing.T) {

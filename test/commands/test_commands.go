@@ -258,16 +258,17 @@ func (r *TestCommands) HasBranchesOutOfSync() bool {
 }
 
 // HasFile indicates whether this repository contains a file with the given name and content.
-func (r *TestCommands) HasFile(name, content string) (bool, error) {
+// An empty error message means a file with the given name and content exists.
+func (r *TestCommands) HasFile(name, content string) string {
 	rawContent, err := os.ReadFile(filepath.Join(r.WorkingDir, name))
 	if err != nil {
-		return false, fmt.Errorf("repo doesn't have file %q: %w", name, err)
+		return fmt.Sprintf("repo doesn't have file %q", name)
 	}
 	actualContent := string(rawContent)
 	if actualContent != content {
-		return false, fmt.Errorf("file %q should have content %q but has %q", name, content, actualContent)
+		return fmt.Sprintf("file %q should have content %q but has %q", name, content, actualContent)
 	}
-	return true, nil
+	return ""
 }
 
 // HasGitTownConfigNow indicates whether this repository contain Git Town specific configuration.
