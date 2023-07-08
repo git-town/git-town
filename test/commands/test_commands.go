@@ -124,26 +124,18 @@ func (r *TestCommands) CreateTag(name string) {
 // Commits provides a list of the commits in this Git repository with the given fields.
 func (r *TestCommands) Commits(fields []string, mainBranch string) ([]git.Commit, error) {
 	branches, err := r.LocalBranchesMainFirst(mainBranch)
-	if err != nil {
-		return []git.Commit{}, fmt.Errorf("cannot determine the Git branches: %w", err)
-	}
+	asserts.NoError(err)
 	result := []git.Commit{}
 	for _, branch := range branches {
-		commits, err := r.CommitsInBranch(branch, fields)
-		if err != nil {
-			return []git.Commit{}, err
-		}
+		commits := r.CommitsInBranch(branch, fields)
 		result = append(result, commits...)
 	}
 	return result, nil
 }
 
 // CommitsInBranch provides all commits in the given Git branch.
-func (r *TestCommands) CommitsInBranch(branch string, fields []string) ([]git.Commit, error) {
-	output, err := r.Query("git", "log", branch, "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse")
-	if err != nil {
-		return []git.Commit{}, fmt.Errorf("cannot get commits in branch %q: %w", branch, err)
-	}
+func (r *TestCommands) CommitsInBranch(branch string, fields []string) []git.Commit {
+	output := r.MustQuery("git", "log", branch, "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse")
 	result := []git.Commit{}
 	for _, line := range strings.Split(output, "\n") {
 		parts := strings.Split(line, "|")
@@ -161,7 +153,7 @@ func (r *TestCommands) CommitsInBranch(branch string, fields []string) ([]git.Co
 		}
 		result = append(result, commit)
 	}
-	return result, nil
+	return result
 }
 
 // CommitStagedChanges commits the currently staged changes.
