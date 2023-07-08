@@ -151,10 +151,7 @@ func (r *TestCommands) CommitsInBranch(branch string, fields []string) ([]git.Co
 			continue
 		}
 		if stringslice.Contains(fields, "FILE NAME") {
-			filenames, err := r.FilesInCommit(commit.SHA)
-			if err != nil {
-				return []git.Commit{}, fmt.Errorf("cannot determine file name for commit %q in branch %q: %w", commit.SHA, branch, err)
-			}
+			filenames := r.FilesInCommit(commit.SHA)
 			commit.FileName = strings.Join(filenames, ", ")
 		}
 		if stringslice.Contains(fields, "FILE CONTENT") {
@@ -218,12 +215,9 @@ func (r *TestCommands) FileContentInCommit(sha string, filename string) (string,
 }
 
 // FilesInCommit provides the names of the files that the commit with the given SHA changes.
-func (r *TestCommands) FilesInCommit(sha string) ([]string, error) {
-	output, err := r.Query("git", "diff-tree", "--no-commit-id", "--name-only", "-r", sha)
-	if err != nil {
-		return []string{}, fmt.Errorf("cannot get files for commit %q: %w", sha, err)
-	}
-	return strings.Split(output, "\n"), nil
+func (r *TestCommands) FilesInCommit(sha string) []string {
+	output := r.MustQuery("git", "diff-tree", "--no-commit-id", "--name-only", "-r", sha)
+	return strings.Split(output, "\n")
 }
 
 // FilesInBranch provides the list of the files present in the given branch.

@@ -132,6 +132,12 @@ func (r *TestRunner) MockNoCommandsInstalled() error {
 	return r.createMockBinary("which", content)
 }
 
+// MustQuery provides the output of the given command with the given arguments.
+// Overrides will be used and removed when done.
+func (r *TestRunner) MustQuery(name string, arguments ...string) string {
+	return r.MustQueryWith(&Options{}, name, arguments...)
+}
+
 func (r *TestRunner) MustQueryStringCode(fullCmd string) (string, int) {
 	return r.MustQueryStringCodeWith(fullCmd, &Options{})
 }
@@ -143,6 +149,13 @@ func (r *TestRunner) MustQueryStringCodeWith(fullCmd string, opts *Options) (str
 	output, exitCode, err := r.QueryWithCode(opts, cmd, args...)
 	asserts.NoError(err)
 	return output, exitCode
+}
+
+// MustQueryWith provides the output of the given command and didn't encounter any form of error.
+func (r *TestRunner) MustQueryWith(opts *Options, cmd string, args ...string) string {
+	output, err := r.QueryWith(opts, cmd, args...)
+	asserts.NoError(err)
+	return output
 }
 
 // Run runs the given command with the given arguments.

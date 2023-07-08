@@ -230,8 +230,7 @@ func TestTestCommands(t *testing.T) {
 		commits, err := runtime.Commits([]string{}, "initial")
 		assert.NoError(t, err)
 		assert.Len(t, commits, 1)
-		fileNames, err := runtime.FilesInCommit(commits[0].SHA)
-		assert.NoError(t, err)
+		fileNames := runtime.FilesInCommit(commits[0].SHA)
 		assert.Equal(t, []string{"f1.txt", "f2.txt"}, fileNames)
 	})
 
