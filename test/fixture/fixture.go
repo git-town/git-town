@@ -93,10 +93,7 @@ func NewStandardFixture(dir string) Fixture {
 	}
 	gitEnv.OriginRepo = &originRepo
 	// clone the "developer" repo
-	gitEnv.DevRepo, err = testruntime.Clone(originRepo.TestRunner, gitEnv.developerRepoPath())
-	if err != nil {
-		log.Fatalf("cannot clone developer repo %q from origin %q: %v", gitEnv.originRepoPath(), gitEnv.developerRepoPath(), err)
-	}
+	gitEnv.DevRepo = testruntime.Clone(originRepo.TestRunner, gitEnv.developerRepoPath())
 	err = gitEnv.initializeWorkspace(&gitEnv.DevRepo)
 	if err != nil {
 		log.Fatalf("cannot create new standard Git environment: %v", err)
@@ -126,10 +123,7 @@ func (env *Fixture) AddSubmoduleRepo() error {
 
 // AddUpstream adds an upstream repository.
 func (env *Fixture) AddUpstream() error {
-	repo, err := testruntime.Clone(env.DevRepo.TestRunner, filepath.Join(env.Dir, "upstream"))
-	if err != nil {
-		return fmt.Errorf("cannot clone upstream: %w", err)
-	}
+	repo := testruntime.Clone(env.DevRepo.TestRunner, filepath.Join(env.Dir, "upstream"))
 	env.UpstreamRepo = &repo
 	env.DevRepo.AddRemote("upstream", env.UpstreamRepo.WorkingDir)
 	return nil
@@ -137,10 +131,7 @@ func (env *Fixture) AddUpstream() error {
 
 // AddCoworkerRepo adds a coworker repository.
 func (env *Fixture) AddCoworkerRepo() error {
-	coworkerRepo, err := testruntime.Clone(env.OriginRepo.TestRunner, env.coworkerRepoPath())
-	if err != nil {
-		return fmt.Errorf("cannot clone coworker: %w", err)
-	}
+	coworkerRepo := testruntime.Clone(env.OriginRepo.TestRunner, env.coworkerRepoPath())
 	env.CoworkerRepo = &coworkerRepo
 	return env.initializeWorkspace(env.CoworkerRepo)
 }
