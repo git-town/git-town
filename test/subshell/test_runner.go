@@ -64,14 +64,13 @@ func (r *TestRunner) createMockBinary(name string, content string) {
 }
 
 // MockBrokenCommand adds a mock for the given command that returns an error.
-func (r *TestRunner) MockBrokenCommand(name string) error {
+func (r *TestRunner) MockBrokenCommand(name string) {
 	// write custom "which" command
 	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" == %q ]; then\n  echo %q\nelse\n  exit 1\nfi", name, filepath.Join(r.BinDir, name))
 	r.createMockBinary("which", content)
 	// write custom command
 	content = "#!/usr/bin/env bash\n\nexit 1"
 	r.createMockBinary(name, content)
-	return nil
 }
 
 // MockCommand adds a mock for the command with the given name.
