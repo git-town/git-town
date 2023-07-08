@@ -2,6 +2,7 @@ package commands
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"sort"
@@ -79,36 +80,29 @@ func (r *TestCommands) CreateChildFeatureBranch(name string, parent string) {
 // CreateCommit creates a commit with the given properties in this Git repo.
 func (r *TestCommands) CreateCommit(commit git.Commit) error {
 	r.CheckoutBranch(commit.Branch)
-	err := r.CreateFile(commit.FileName, commit.FileContent)
-	if err != nil {
-		return fmt.Errorf("cannot create file %q needed for commit: %w", commit.FileName, err)
-	}
+	r.CreateFile(commit.FileName, commit.FileContent)
 	r.MustRun("git", "add", commit.FileName)
 	commands := []string{"commit", "-m", commit.Message}
 	if commit.Author != "" {
 		commands = append(commands, "--author="+commit.Author)
 	}
-	err = r.Run("git", commands...)
-	if err != nil {
-		return fmt.Errorf("cannot commit: %w", err)
-	}
+	r.MustRun("git", commands...)
 	return nil
 }
 
 // CreateFile creates a file with the given name and content in this repository.
-func (r *TestCommands) CreateFile(name, content string) error {
+func (r *TestCommands) CreateFile(name, content string) {
 	filePath := filepath.Join(r.WorkingDir, name)
 	folderPath := filepath.Dir(filePath)
 	err := os.MkdirAll(folderPath, os.ModePerm)
 	if err != nil {
-		return fmt.Errorf("cannot create folder %q: %w", folderPath, err)
+		log.Fatalf("cannot create folder %q: %v", folderPath, err)
 	}
 	//nolint:gosec // need permission 700 here in order for tests to work
 	err = os.WriteFile(filePath, []byte(content), 0x700)
 	if err != nil {
-		return fmt.Errorf("cannot create file %q: %w", name, err)
+		log.Fatalf("cannot create file %q: %v", name, err)
 	}
-	return nil
 }
 
 // CreatePerennialBranches creates perennial branches with the given names in this repository.
