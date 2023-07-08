@@ -173,8 +173,7 @@ func TestFixture(t *testing.T) {
 				Message:     "2",
 			})
 			// get the CommitTable
-			table, err := cloned.CommitTable([]string{"LOCATION", "FILE NAME", "FILE CONTENT"})
-			assert.NoError(t, err)
+			table := cloned.CommitTable([]string{"LOCATION", "FILE NAME", "FILE CONTENT"})
 			assert.Len(t, table.Cells, 3)
 			assert.Equal(t, table.Cells[1][0], "local, origin")
 			assert.Equal(t, table.Cells[1][1], "local-origin.md")
@@ -205,8 +204,7 @@ func TestFixture(t *testing.T) {
 				Message:     "2",
 			})
 			// get the CommitTable
-			table, err := cloned.CommitTable([]string{"LOCATION", "FILE NAME", "FILE CONTENT"})
-			assert.NoError(t, err)
+			table := cloned.CommitTable([]string{"LOCATION", "FILE NAME", "FILE CONTENT"})
 			assert.Len(t, table.Cells, 3)
 			assert.Equal(t, table.Cells[1][0], "local")
 			assert.Equal(t, table.Cells[1][1], "local.md")

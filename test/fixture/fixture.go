@@ -214,7 +214,7 @@ func (env Fixture) CreateTags(table *messages.PickleStepArgument_PickleTable) {
 }
 
 // CommitTable provides a table for all commits in this Git environment containing only the given fields.
-func (env Fixture) CommitTable(fields []string) (datatable.DataTable, error) {
+func (env Fixture) CommitTable(fields []string) datatable.DataTable {
 	builder := datatable.NewCommitTableBuilder()
 	localCommits := env.DevRepo.Commits(fields, "main")
 	builder.AddMany(localCommits, "local")
@@ -230,7 +230,7 @@ func (env Fixture) CommitTable(fields []string) (datatable.DataTable, error) {
 		upstreamCommits := env.UpstreamRepo.Commits(fields, "main")
 		builder.AddMany(upstreamCommits, "upstream")
 	}
-	return builder.Table(fields), nil
+	return builder.Table(fields)
 }
 
 // TagTable provides a table for all tags in this Git environment.
