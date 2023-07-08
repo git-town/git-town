@@ -163,9 +163,8 @@ func (env *Fixture) Branches() datatable.DataTable {
 }
 
 // CreateCommits creates the commits described by the given Gherkin table in this Git repository.
-func (env *Fixture) CreateCommits(commits []git.Commit) error {
+func (env *Fixture) CreateCommits(commits []git.Commit) {
 	for _, commit := range commits {
-		var err error
 		for _, location := range commit.Locations {
 			switch location {
 			case "coworker":
@@ -174,27 +173,20 @@ func (env *Fixture) CreateCommits(commits []git.Commit) error {
 				env.DevRepo.CreateCommit(commit)
 			case "local, origin":
 				env.DevRepo.CreateCommit(commit)
-				if err != nil {
-					return fmt.Errorf("cannot create local commit: %w", err)
-				}
 				env.DevRepo.PushBranchToRemote(commit.Branch, config.OriginRemote)
 			case "origin":
 				env.OriginRepo.CreateCommit(commit)
 			case "upstream":
 				env.UpstreamRepo.CreateCommit(commit)
 			default:
-				return fmt.Errorf("unknown commit location %q", commit.Locations)
+				log.Fatalf("unknown commit location %q", commit.Locations)
 			}
-		}
-		if err != nil {
-			return err
 		}
 	}
 	// after setting up the commits, check out the "initial" branch in the origin repo so that we can git-push to it.
 	if env.OriginRepo != nil {
 		env.OriginRepo.CheckoutBranch("initial")
 	}
-	return nil
 }
 
 // CreateOriginBranch creates a branch with the given name only in the origin directory.

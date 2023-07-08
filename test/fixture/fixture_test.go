@@ -86,7 +86,7 @@ func TestFixture(t *testing.T) {
 		memoizedGitEnv := fixture.NewStandardFixture(filepath.Join(dir, "memoized"))
 		cloned := fixture.CloneFixture(memoizedGitEnv, filepath.Join(dir, "cloned"))
 		// create the commits
-		err := cloned.CreateCommits([]git.Commit{
+		cloned.CreateCommits([]git.Commit{
 			{
 				Branch:      "main",
 				FileName:    "local-file",
@@ -109,7 +109,6 @@ func TestFixture(t *testing.T) {
 				Message:     "local and origin commit",
 			},
 		})
-		assert.NoError(t, err)
 		// verify local commits
 		commits := cloned.DevRepo.Commits([]string{"FILE NAME", "FILE CONTENT"}, "main")
 		assert.Len(t, commits, 2)

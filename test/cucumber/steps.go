@@ -556,10 +556,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.initialCommits = table
 		// create the commits
 		commits := git.FromGherkinTable(table)
-		err := state.fixture.CreateCommits(commits)
-		if err != nil {
-			return fmt.Errorf("cannot create commits: %w", err)
-		}
+		state.fixture.CreateCommits(commits)
 		// restore the initial branch
 		if state.initialCurrentBranch == "" {
 			state.fixture.DevRepo.CheckoutBranch("main")
