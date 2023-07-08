@@ -222,8 +222,7 @@ func TestTestCommands(t *testing.T) {
 	t.Run(".HasBranchesOutOfSync()", func(t *testing.T) {
 		t.Run("branches are in sync", func(t *testing.T) {
 			t.Parallel()
-			env, err := fixture.NewStandardFixture(t.TempDir())
-			assert.NoError(t, err)
+			env := fixture.NewStandardFixture(t.TempDir())
 			runner := env.DevRepo
 			runner.CreateBranch("branch1", "main")
 			runner.CheckoutBranch("branch1")
@@ -237,8 +236,7 @@ func TestTestCommands(t *testing.T) {
 
 		t.Run("branch is ahead", func(t *testing.T) {
 			t.Parallel()
-			env, err := fixture.NewStandardFixture(t.TempDir())
-			assert.NoError(t, err)
+			env := fixture.NewStandardFixture(t.TempDir())
 			env.DevRepo.CreateBranch("branch1", "main")
 			env.DevRepo.PushBranch()
 			env.DevRepo.CreateFile("file1", "content")
@@ -250,8 +248,7 @@ func TestTestCommands(t *testing.T) {
 
 		t.Run("branch is behind", func(t *testing.T) {
 			t.Parallel()
-			env, err := fixture.NewStandardFixture(t.TempDir())
-			assert.NoError(t, err)
+			env := fixture.NewStandardFixture(t.TempDir())
 			env.DevRepo.CreateBranch("branch1", "main")
 			env.DevRepo.PushBranch()
 			env.OriginRepo.CheckoutBranch("main")

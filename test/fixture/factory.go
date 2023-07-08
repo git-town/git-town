@@ -3,7 +3,6 @@ package fixture
 import (
 	"path/filepath"
 
-	"github.com/git-town/git-town/v9/test/asserts"
 	"github.com/git-town/git-town/v9/test/helpers"
 )
 
@@ -27,12 +26,10 @@ type Factory struct {
 
 // NewFactory provides a new FixtureFactory instance operating in the given directory.
 func NewFactory(dir string) Factory {
-	memoized, err := NewStandardFixture(filepath.Join(dir, "memoized"))
-	asserts.NoError(err)
 	return Factory{
 		counter:  helpers.Counter{},
 		dir:      dir,
-		memoized: memoized,
+		memoized: NewStandardFixture(filepath.Join(dir, "memoized")),
 	}
 }
 

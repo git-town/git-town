@@ -2,6 +2,7 @@ package fixture
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -72,40 +73,38 @@ func CloneFixture(original Fixture, dir string) Fixture {
 // Git repos cannot receive pushes of the currently checked out branch
 // because that will change files in the current workspace.
 // The tests don't use the initial branch.
-func NewStandardFixture(dir string) (Fixture, error) {
+func NewStandardFixture(dir string) Fixture {
 	// create the folder
 	// create the fixture
 	gitEnv := Fixture{Dir: dir}
 	// create the origin repo
 	err := os.MkdirAll(gitEnv.originRepoPath(), 0o744)
 	if err != nil {
-		return gitEnv, fmt.Errorf("cannot create directory %q: %w", gitEnv.originRepoPath(), err)
+		log.Fatalf("cannot create directory %q: %v", gitEnv.originRepoPath(), err)
 	}
 	// initialize the repo in the folder
 	originRepo, err := testruntime.Initialize(gitEnv.originRepoPath(), gitEnv.Dir, gitEnv.binPath())
-	if err != nil {
-		return gitEnv, err
-	}
+	asserts.NoError(err)
 	err = originRepo.RunMany([][]string{
 		{"git", "commit", "--allow-empty", "-m", "Initial commit"},
 		{"git", "branch", "main", "initial"},
 	})
 	if err != nil {
-		return gitEnv, fmt.Errorf("cannot initialize origin directory at %q: %w", gitEnv.originRepoPath(), err)
+		log.Fatalf("cannot initialize origin directory at %q: %v", gitEnv.originRepoPath(), err)
 	}
 	gitEnv.OriginRepo = &originRepo
 	// clone the "developer" repo
 	gitEnv.DevRepo, err = testruntime.Clone(originRepo.TestRunner, gitEnv.developerRepoPath())
 	if err != nil {
-		return gitEnv, fmt.Errorf("cannot clone developer repo %q from origin %q: %w", gitEnv.originRepoPath(), gitEnv.developerRepoPath(), err)
+		log.Fatalf("cannot clone developer repo %q from origin %q: %v", gitEnv.originRepoPath(), gitEnv.developerRepoPath(), err)
 	}
 	err = gitEnv.initializeWorkspace(&gitEnv.DevRepo)
 	if err != nil {
-		return gitEnv, fmt.Errorf("cannot create new standard Git environment: %w", err)
+		log.Fatalf("cannot create new standard Git environment: %v", err)
 	}
 	gitEnv.DevRepo.RemoveUnnecessaryFiles()
 	gitEnv.OriginRepo.RemoveUnnecessaryFiles()
-	return gitEnv, nil
+	return gitEnv
 }
 
 // AddSubmodule adds a submodule repository.
