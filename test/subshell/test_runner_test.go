@@ -23,8 +23,7 @@ func TestMockingRunner(t *testing.T) {
 			HomeDir:    workDir,
 			BinDir:     filepath.Join(workDir, "bin"),
 		}
-		err = runner.MockCommand("foo")
-		assert.NoError(t, err)
+		runner.MockCommand("foo")
 		// run a program that calls the mocked command
 		res, err := runner.Query("bash", "-c", "foo bar")
 		assert.NoError(t, err)

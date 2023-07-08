@@ -926,6 +926,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^tool "([^"]*)" is installed$`, func(tool string) error {
-		return state.fixture.DevRepo.MockCommand(tool)
+		state.fixture.DevRepo.MockCommand(tool)
+		return nil
 	})
 }
