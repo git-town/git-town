@@ -2,6 +2,7 @@ package datatable
 
 import (
 	"fmt"
+	"log"
 	"regexp"
 	"sort"
 	"strings"
@@ -76,7 +77,7 @@ func (table *DataTable) EqualGherkin(other *messages.PickleStepArgument_PickleTa
 }
 
 // Expand returns a new DataTable instance with the placeholders in this datatable replaced with the given values.
-func (table *DataTable) Expand(localRepo runner, remoteRepo runner) (DataTable, error) {
+func (table *DataTable) Expand(localRepo runner, remoteRepo runner) DataTable {
 	var templateRE *regexp.Regexp
 	var templateOnce sync.Once
 	result := DataTable{}
@@ -97,14 +98,14 @@ func (table *DataTable) Expand(localRepo runner, remoteRepo runner) (DataTable, 
 					sha := remoteRepo.ShaForCommit(commitName)
 					cell = strings.Replace(cell, match, sha, 1)
 				default:
-					return DataTable{}, fmt.Errorf("DataTable.Expand: unknown template expression %q", cell)
+					log.Fatalf("DataTable.Expand: unknown template expression %q", cell)
 				}
 			}
 			cells = append(cells, cell)
 		}
 		result.AddRow(cells...)
 	}
-	return result, nil
+	return result
 }
 
 // RemoveText deletes the given text from each cell.
