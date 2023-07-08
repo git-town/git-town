@@ -36,10 +36,7 @@ var fixtureFactory *fixture.Factory //nolint:gochecknoglobals
 func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.BeforeScenario(func(scenario *messages.Pickle) {
 		// create a Fixture for the scenario
-		fixture, err := fixtureFactory.CreateFixture(scenario.GetName())
-		if err != nil {
-			log.Fatalf("cannot create environment for scenario %q: %s", scenario.GetName(), err)
-		}
+		fixture := fixtureFactory.CreateFixture(scenario.GetName())
 		// Godog only provides state for the entire feature.
 		// We want state to be scenario-specific, hence we reset the shared state before each scenario.
 		// This is a limitation of the current Godog implementation, which doesn't have a `ScenarioContext` method,

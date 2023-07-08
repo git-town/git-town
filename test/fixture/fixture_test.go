@@ -19,8 +19,7 @@ func TestFixture(t *testing.T) {
 		dir := t.TempDir()
 		memoizedGitEnv, err := fixture.NewStandardFixture(filepath.Join(dir, "memoized"))
 		assert.NoError(t, err)
-		cloned, err := fixture.CloneFixture(memoizedGitEnv, filepath.Join(dir, "cloned"))
-		assert.NoError(t, err)
+		cloned := fixture.CloneFixture(memoizedGitEnv, filepath.Join(dir, "cloned"))
 		asserts.IsGitRepo(t, filepath.Join(dir, "cloned", "origin"))
 		asserts.IsGitRepo(t, filepath.Join(dir, "cloned", "developer"))
 		asserts.BranchExists(t, filepath.Join(dir, "cloned", "developer"), "main")
@@ -92,8 +91,7 @@ func TestFixture(t *testing.T) {
 		dir := t.TempDir()
 		memoizedGitEnv, err := fixture.NewStandardFixture(filepath.Join(dir, "memoized"))
 		assert.NoError(t, err)
-		cloned, err := fixture.CloneFixture(memoizedGitEnv, filepath.Join(dir, "cloned"))
-		assert.NoError(t, err)
+		cloned := fixture.CloneFixture(memoizedGitEnv, filepath.Join(dir, "cloned"))
 		// create the commits
 		err = cloned.CreateCommits([]git.Commit{
 			{
@@ -149,8 +147,7 @@ func TestFixture(t *testing.T) {
 		dir := t.TempDir()
 		memoizedGitEnv, err := fixture.NewStandardFixture(filepath.Join(dir, "memoized"))
 		assert.NoError(t, err)
-		cloned, err := fixture.CloneFixture(memoizedGitEnv, filepath.Join(dir, "cloned"))
-		assert.NoError(t, err)
+		cloned := fixture.CloneFixture(memoizedGitEnv, filepath.Join(dir, "cloned"))
 		// create the origin branch
 		err = cloned.CreateOriginBranch("b1", "main")
 		assert.NoError(t, err)
@@ -171,8 +168,7 @@ func TestFixture(t *testing.T) {
 			dir := t.TempDir()
 			memoizedGitEnv, err := fixture.NewStandardFixture(filepath.Join(dir, "memoized"))
 			assert.NoError(t, err)
-			cloned, err := fixture.CloneFixture(memoizedGitEnv, filepath.Join(dir, "cloned"))
-			assert.NoError(t, err)
+			cloned := fixture.CloneFixture(memoizedGitEnv, filepath.Join(dir, "cloned"))
 			// create a few commits
 			cloned.DevRepo.CreateCommit(git.Commit{
 				Branch:      "main",
@@ -205,8 +201,7 @@ func TestFixture(t *testing.T) {
 			dir := t.TempDir()
 			memoizedGitEnv, err := fixture.NewStandardFixture(filepath.Join(dir, "memoized"))
 			assert.NoError(t, err)
-			cloned, err := fixture.CloneFixture(memoizedGitEnv, filepath.Join(dir, "cloned"))
-			assert.NoError(t, err)
+			cloned := fixture.CloneFixture(memoizedGitEnv, filepath.Join(dir, "cloned"))
 			err = cloned.AddUpstream()
 			assert.NoError(t, err)
 			// create a few commits
@@ -241,8 +236,7 @@ func TestFixture(t *testing.T) {
 		dir := t.TempDir()
 		memoizedGitEnv, err := fixture.NewStandardFixture(filepath.Join(dir, "memoized"))
 		assert.NoError(t, err)
-		cloned, err := fixture.CloneFixture(memoizedGitEnv, filepath.Join(dir, "cloned"))
-		assert.NoError(t, err)
+		cloned := fixture.CloneFixture(memoizedGitEnv, filepath.Join(dir, "cloned"))
 		// remove it
 		err = cloned.Remove()
 		assert.NoError(t, err)

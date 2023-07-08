@@ -24,9 +24,8 @@ func TestFixtureFactory(t *testing.T) {
 		t.Parallel()
 		dir := t.TempDir()
 		gm := fixture.NewFactory(dir)
-		result, err := gm.CreateFixture("foo")
-		assert.Nil(t, err, "cannot create scenario environment")
-		_, err = os.Stat(result.DevRepo.WorkingDir)
+		result := gm.CreateFixture("foo")
+		_, err := os.Stat(result.DevRepo.WorkingDir)
 		assert.False(t, os.IsNotExist(err), "scenario environment directory %q not found", result.DevRepo.WorkingDir)
 	})
 }

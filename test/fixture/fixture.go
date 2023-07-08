@@ -9,6 +9,7 @@ import (
 	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/stringslice"
+	"github.com/git-town/git-town/v9/test/asserts"
 	"github.com/git-town/git-town/v9/test/datatable"
 	"github.com/git-town/git-town/v9/test/git"
 	"github.com/git-town/git-town/v9/test/helpers"
@@ -42,11 +43,8 @@ type Fixture struct {
 
 // CloneFixture provides a Fixture instance in the given directory,
 // containing a copy of the given Fixture.
-func CloneFixture(original Fixture, dir string) (Fixture, error) {
-	err := helpers.CopyDirectory(original.Dir, dir)
-	if err != nil {
-		return Fixture{}, fmt.Errorf("cannot clone Fixture %q to folder %q: %w", original.Dir, dir, err)
-	}
+func CloneFixture(original Fixture, dir string) Fixture {
+	asserts.NoError(helpers.CopyDirectory(original.Dir, dir))
 	binDir := filepath.Join(dir, "bin")
 	originDir := filepath.Join(dir, "origin")
 	originRepo := testruntime.New(originDir, dir, "")
@@ -59,15 +57,12 @@ func CloneFixture(original Fixture, dir string) (Fixture, error) {
 	}
 	// Since we copied the files from the memoized directory,
 	// we have to set the "origin" remote to the copied origin repo here.
-	err = result.DevRepo.Run("git", "remote", "remove", config.OriginRemote)
-	if err != nil {
-		return Fixture{}, fmt.Errorf("cannot remove remote: %w", err)
-	}
+	result.DevRepo.MustRun("git", "remote", "remove", config.OriginRemote)
 	result.DevRepo.AddRemote(config.OriginRemote, result.originRepoPath())
 	result.DevRepo.Fetch()
 	// and connect the main branches again
 	result.DevRepo.ConnectTrackingBranch("main")
-	return result, err
+	return result
 }
 
 // NewStandardFixture provides a Fixture in the given directory,
