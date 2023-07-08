@@ -51,14 +51,13 @@ func (r *TestCommands) BranchHierarchyTable() datatable.DataTable {
 }
 
 // CheckoutBranch checks out the Git branch with the given name in this repo.
-func (r *TestCommands) CheckoutBranch(name string) error {
+func (r *TestCommands) CheckoutBranch(name string) {
 	r.MustRun("git", "checkout", name)
 	if name != "-" {
 		r.Config.CurrentBranchCache.Set(name)
 	} else {
 		r.Config.CurrentBranchCache.Invalidate()
 	}
-	return nil
 }
 
 // CreateBranch creates a new branch with the given name.
@@ -77,18 +76,12 @@ func (r *TestCommands) CreateChildFeatureBranch(name string, parent string) erro
 
 // CreateCommit creates a commit with the given properties in this Git repo.
 func (r *TestCommands) CreateCommit(commit git.Commit) error {
-	err := r.CheckoutBranch(commit.Branch)
-	if err != nil {
-		return fmt.Errorf("cannot checkout branch %q: %w", commit.Branch, err)
-	}
-	err = r.CreateFile(commit.FileName, commit.FileContent)
+	r.CheckoutBranch(commit.Branch)
+	err := r.CreateFile(commit.FileName, commit.FileContent)
 	if err != nil {
 		return fmt.Errorf("cannot create file %q needed for commit: %w", commit.FileName, err)
 	}
-	err = r.Run("git", "add", commit.FileName)
-	if err != nil {
-		return fmt.Errorf("cannot add file to commit: %w", err)
-	}
+	r.MustRun("git", "add", commit.FileName)
 	commands := []string{"commit", "-m", commit.Message}
 	if commit.Author != "" {
 		commands = append(commands, "--author="+commit.Author)

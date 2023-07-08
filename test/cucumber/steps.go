@@ -603,10 +603,12 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 		// restore the initial branch
 		if state.initialCurrentBranch == "" {
-			return state.fixture.DevRepo.CheckoutBranch("main")
+			state.fixture.DevRepo.CheckoutBranch("main")
+			return nil
 		}
 		if state.fixture.DevRepo.Config.CurrentBranchCache.Value() != state.initialCurrentBranch {
-			return state.fixture.DevRepo.CheckoutBranch(state.initialCurrentBranch)
+			state.fixture.DevRepo.CheckoutBranch(state.initialCurrentBranch)
+			return nil
 		}
 		return nil
 	})
@@ -616,7 +618,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the coworker is on the "([^"]*)" branch$`, func(branch string) error {
-		return state.fixture.CoworkerRepo.CheckoutBranch(branch)
+		state.fixture.CoworkerRepo.CheckoutBranch(branch)
+		return nil
 	})
 
 	suite.Step(`^the coworker runs "([^"]+)"$`, func(command string) error {
@@ -644,7 +647,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.initialLocalBranches = append(state.initialLocalBranches, name)
 			state.fixture.DevRepo.CreateBranch(name, "main")
 		}
-		return state.fixture.DevRepo.CheckoutBranch(name)
+		state.fixture.DevRepo.CheckoutBranch(name)
+		return nil
 	})
 
 	suite.Step(`^the current branch is a (local )?(feature|perennial) branch "([^"]*)"$`, func(localStr, branchType, branch string) error {
@@ -674,18 +678,16 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 		state.initialCurrentBranch = branch
 		if !state.fixture.DevRepo.Config.CurrentBranchCache.Initialized() || state.fixture.DevRepo.Config.CurrentBranchCache.Value() != branch {
-			return state.fixture.DevRepo.CheckoutBranch(branch)
+			state.fixture.DevRepo.CheckoutBranch(branch)
 		}
 		return nil
 	})
 
 	suite.Step(`^the current branch is "([^"]*)" and the previous branch is "([^"]*)"$`, func(current, previous string) error {
 		state.initialCurrentBranch = current
-		err := state.fixture.DevRepo.CheckoutBranch(previous)
-		if err != nil {
-			return err
-		}
-		return state.fixture.DevRepo.CheckoutBranch(current)
+		state.fixture.DevRepo.CheckoutBranch(previous)
+		state.fixture.DevRepo.CheckoutBranch(current)
+		return nil
 	})
 
 	suite.Step(`^the current branch is (?:now|still) "([^"]*)"$`, func(expected string) error {
@@ -885,10 +887,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the previous Git branch is (?:now|still) "([^"]*)"$`, func(want string) error {
-		err := state.fixture.DevRepo.CheckoutBranch("-")
-		if err != nil {
-			return err
-		}
+		state.fixture.DevRepo.CheckoutBranch("-")
 		have, err := state.fixture.DevRepo.CurrentBranch()
 		if err != nil {
 			return err
@@ -896,7 +895,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if have != want {
 			return fmt.Errorf("expected previous branch %q but got %q", want, have)
 		}
-		return state.fixture.DevRepo.CheckoutBranch("-")
+		state.fixture.DevRepo.CheckoutBranch("-")
+		return nil
 	})
 
 	suite.Step(`^the tags$`, func(table *messages.PickleStepArgument_PickleTable) error {

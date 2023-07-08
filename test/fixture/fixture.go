@@ -235,10 +235,7 @@ func (env *Fixture) CreateCommits(commits []git.Commit) error {
 	}
 	// after setting up the commits, check out the "initial" branch in the origin repo so that we can git-push to it.
 	if env.OriginRepo != nil {
-		err := env.OriginRepo.CheckoutBranch("initial")
-		if err != nil {
-			return fmt.Errorf("cannot change origin repo back to initial: %w", err)
-		}
+		env.OriginRepo.CheckoutBranch("initial")
 	}
 	return nil
 }
