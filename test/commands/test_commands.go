@@ -324,15 +324,12 @@ func (r *TestCommands) StageFiles(names ...string) {
 }
 
 // StashSize provides the number of stashes in this repository.
-func (r *TestCommands) StashSize() (int, error) {
-	output, err := r.Query("git", "stash", "list")
-	if err != nil {
-		return 0, fmt.Errorf("cannot determine Git stash: %w", err)
-	}
+func (r *TestCommands) StashSize() int {
+	output := r.MustQuery("git", "stash", "list")
 	if output == "" {
-		return 0, nil
+		return 0
 	}
-	return len(stringslice.Lines(output)), nil
+	return len(stringslice.Lines(output))
 }
 
 // Tags provides a list of the tags in this repository.
