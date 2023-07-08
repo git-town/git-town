@@ -1,9 +1,9 @@
 package fixture
 
 import (
-	"fmt"
 	"path/filepath"
 
+	"github.com/git-town/git-town/v9/test/asserts"
 	"github.com/git-town/git-town/v9/test/helpers"
 )
 
@@ -26,16 +26,14 @@ type Factory struct {
 }
 
 // NewFactory provides a new FixtureFactory instance operating in the given directory.
-func NewFactory(dir string) (Factory, error) {
+func NewFactory(dir string) Factory {
 	memoized, err := NewStandardFixture(filepath.Join(dir, "memoized"))
-	if err != nil {
-		return Factory{}, fmt.Errorf("cannot create memoized environment: %w", err)
-	}
+	asserts.NoError(err)
 	return Factory{
 		counter:  helpers.Counter{},
 		dir:      dir,
 		memoized: memoized,
-	}, nil
+	}
 }
 
 // CreateFixture provides a new Fixture for the scenario with the given name.
