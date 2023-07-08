@@ -233,7 +233,9 @@ func (r *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string) (s
 		// https://github.com/git-town/go-execplus could help make this more robust.
 		time.Sleep(500 * time.Millisecond)
 		_, err := input.Write([]byte(userInput))
-		asserts.NoError(err)
+		if err != nil {
+			log.Fatalf("can't write %q to subprocess '%s %s': %v", userInput, cmd, strings.Join(args, " "), err)
+		}
 	}
 	err = subProcess.Wait()
 	var exitCode int
