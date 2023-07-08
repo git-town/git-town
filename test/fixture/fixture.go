@@ -190,9 +190,8 @@ func (env *Fixture) CreateCommits(commits []git.Commit) {
 }
 
 // CreateOriginBranch creates a branch with the given name only in the origin directory.
-func (env Fixture) CreateOriginBranch(name, parent string) error {
+func (env Fixture) CreateOriginBranch(name, parent string) {
 	env.OriginRepo.CreateBranch(name, parent)
-	return nil
 }
 
 // CreateTags creates tags from the given gherkin table.
