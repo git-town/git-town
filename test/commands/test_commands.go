@@ -300,15 +300,11 @@ func (r *TestCommands) RemoveRemote(name string) {
 }
 
 // RemoveUnnecessaryFiles trims all files that aren't necessary in this repo.
-func (r *TestCommands) RemoveUnnecessaryFiles() error {
+func (r *TestCommands) RemoveUnnecessaryFiles() {
 	fullPath := filepath.Join(r.WorkingDir, ".git", "hooks")
-	err := os.RemoveAll(fullPath)
-	if err != nil {
-		return fmt.Errorf("cannot remove unnecessary files in %q: %w", fullPath, err)
-	}
+	asserts.NoError(os.RemoveAll(fullPath))
 	_ = os.Remove(filepath.Join(r.WorkingDir, ".git", "COMMIT_EDITMSG"))
 	_ = os.Remove(filepath.Join(r.WorkingDir, ".git", "description"))
-	return nil
 }
 
 // ShaForCommit provides the SHA for the commit with the given name.
