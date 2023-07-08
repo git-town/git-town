@@ -252,12 +252,9 @@ func (r *TestCommands) FilesInBranches(mainBranch string) (datatable.DataTable, 
 }
 
 // HasBranchesOutOfSync indicates whether one or more local branches are out of sync with their tracking branch.
-func (r *TestCommands) HasBranchesOutOfSync() (bool, error) {
-	output, err := r.Query("git", "for-each-ref", "--format=%(refname:short) %(upstream:track)", "refs/heads")
-	if err != nil {
-		return false, fmt.Errorf("cannot determine if branches are out of sync in %q: %w %q", r.WorkingDir, err, output)
-	}
-	return strings.Contains(output, "["), nil
+func (r *TestCommands) HasBranchesOutOfSync() bool {
+	output := r.MustQuery("git", "for-each-ref", "--format=%(refname:short) %(upstream:track)", "refs/heads")
+	return strings.Contains(output, "[")
 }
 
 // HasFile indicates whether this repository contains a file with the given name and content.
