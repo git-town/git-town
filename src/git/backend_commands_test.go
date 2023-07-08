@@ -33,15 +33,15 @@ func TestRunner(t *testing.T) {
 		assert.Equal(t, []string{"user <email@example.com>"}, authors)
 	})
 
-	t.Run(".CheckoutBranchX()", func(t *testing.T) {
+	t.Run(".CheckoutBranch()", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		runtime.CreateBranchX("branch1", "initial")
-		runtime.CheckoutBranchX("branch1")
+		assert.NoError(t, runtime.Backend.CheckoutBranch("branch1"))
 		currentBranch, err := runtime.CurrentBranch()
 		assert.NoError(t, err)
 		assert.Equal(t, "branch1", currentBranch)
-		runtime.CheckoutBranchX("initial")
+		assert.NoError(t, runtime.CheckoutBranch("initial"))
 		currentBranch, err = runtime.CurrentBranch()
 		assert.NoError(t, err)
 		assert.Equal(t, "initial", currentBranch)
