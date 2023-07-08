@@ -318,10 +318,9 @@ func (r *TestCommands) ShaForCommit(name string) string {
 }
 
 // StageFiles adds the file with the given name to the Git index.
-func (r *TestCommands) StageFiles(names ...string) error {
+func (r *TestCommands) StageFiles(names ...string) {
 	args := append([]string{"add"}, names...)
-	err := r.Run("git", args...)
-	return err
+	r.MustRun("git", args...)
 }
 
 // StashSize provides the number of stashes in this repository.

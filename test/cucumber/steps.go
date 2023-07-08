@@ -256,10 +256,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			content = "resolved content"
 		}
 		state.fixture.DevRepo.CreateFile(filename, content)
-		err := state.fixture.DevRepo.StageFiles(filename)
-		if err != nil {
-			return err
-		}
+		state.fixture.DevRepo.StageFiles(filename)
 		return nil
 	})
 
