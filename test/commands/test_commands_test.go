@@ -1,7 +1,6 @@
 package commands_test
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -122,9 +121,8 @@ func TestTestCommands(t *testing.T) {
 		output = stripansi.Strip(output)
 		has := strings.Contains(output, "Branch Lineage:\n  main\n    f1\n      f1a")
 		if !has {
-			fmt.Printf("unexpected output: %s", output)
+			t.Fatalf("unexpected output: %s", output)
 		}
-		assert.True(t, has)
 	})
 
 	t.Run(".CreateCommit()", func(t *testing.T) {
