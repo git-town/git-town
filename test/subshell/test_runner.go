@@ -154,7 +154,7 @@ func (r *TestRunner) MustRun(name string, arguments ...string) {
 	}
 }
 
-// Run runs the given command with the given arguments.
+// Query provides the output of the given command.
 // Overrides will be used and removed when done.
 func (r *TestRunner) Query(name string, arguments ...string) (string, error) {
 	return r.QueryWith(&Options{}, name, arguments...)
