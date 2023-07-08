@@ -114,10 +114,9 @@ fi`
 }
 
 // MockNoCommandsInstalled pretends that no commands are installed.
-func (r *TestRunner) MockNoCommandsInstalled() error {
+func (r *TestRunner) MockNoCommandsInstalled() {
 	content := "#!/usr/bin/env bash\n\nexit 1\n"
 	r.createMockBinary("which", content)
-	return nil
 }
 
 // MustQuery provides the output of the given command with the given arguments.

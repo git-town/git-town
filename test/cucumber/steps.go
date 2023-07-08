@@ -439,7 +439,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^no tool to open browsers is installed$`, func() error {
-		return state.fixture.DevRepo.MockNoCommandsInstalled()
+		state.fixture.DevRepo.MockNoCommandsInstalled()
+		return nil
 	})
 
 	suite.Step(`^no uncommitted files exist$`, func() error {
