@@ -343,11 +343,8 @@ func (r *TestCommands) Tags() []string {
 }
 
 // UncommittedFiles provides the names of the files not committed into Git.
-func (r *TestCommands) UncommittedFiles() ([]string, error) {
-	output, err := r.Query("git", "status", "--porcelain", "--untracked-files=all")
-	if err != nil {
-		return []string{}, fmt.Errorf("cannot determine uncommitted files in %q: %w", r.WorkingDir, err)
-	}
+func (r *TestCommands) UncommittedFiles() []string {
+	output := r.MustQuery("git", "status", "--porcelain", "--untracked-files=all")
 	result := []string{}
 	for _, line := range stringslice.Lines(output) {
 		if line == "" {
@@ -356,5 +353,5 @@ func (r *TestCommands) UncommittedFiles() ([]string, error) {
 		parts := strings.Split(line, " ")
 		result = append(result, parts[1])
 	}
-	return result, nil
+	return result
 }

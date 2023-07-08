@@ -354,8 +354,7 @@ func TestTestCommands(t *testing.T) {
 		runtime := testruntime.Create(t)
 		runtime.CreateFile("f1.txt", "one")
 		runtime.CreateFile("f2.txt", "two")
-		files, err := runtime.UncommittedFiles()
-		assert.NoError(t, err)
+		files := runtime.UncommittedFiles()
 		assert.Equal(t, []string{"f1.txt", "f2.txt"}, files)
 	})
 }
