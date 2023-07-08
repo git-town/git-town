@@ -280,9 +280,8 @@ func (r *TestCommands) HasGitTownConfigNow() bool {
 	return output != ""
 }
 
-func (r *TestCommands) PushBranch() error {
-	err := r.Run("git", "push")
-	return err
+func (r *TestCommands) PushBranch() {
+	r.MustRun("git", "push")
 }
 
 func (r *TestCommands) PushBranchToRemote(branch, remote string) error {
