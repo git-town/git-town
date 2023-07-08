@@ -559,11 +559,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^the commits$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		state.initialCommits = table
 		// create the commits
-		commits, err := git.FromGherkinTable(table)
-		if err != nil {
-			return fmt.Errorf("cannot parse Gherkin table: %w", err)
-		}
-		err = state.fixture.CreateCommits(commits)
+		commits := git.FromGherkinTable(table)
+		err := state.fixture.CreateCommits(commits)
 		if err != nil {
 			return fmt.Errorf("cannot create commits: %w", err)
 		}

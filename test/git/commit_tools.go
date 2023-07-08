@@ -18,7 +18,7 @@ func DefaultCommit(filenameSuffix string) Commit {
 }
 
 // FromGherkinTable provides a Commit collection representing the data in the given Gherkin table.
-func FromGherkinTable(table *messages.PickleStepArgument_PickleTable) ([]Commit, error) {
+func FromGherkinTable(table *messages.PickleStepArgument_PickleTable) []Commit {
 	columnNames := helpers.TableFields(table)
 	lastBranch := ""
 	lastLocationName := ""
@@ -47,5 +47,5 @@ func FromGherkinTable(table *messages.PickleStepArgument_PickleTable) ([]Commit,
 		}
 		result = append(result, commit)
 	}
-	return result, nil
+	return result
 }
