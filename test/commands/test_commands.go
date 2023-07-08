@@ -23,18 +23,6 @@ type TestCommands struct {
 	*prodgit.BackendCommands // TODO: remove this dependency on BackendCommands
 }
 
-// AddRemote adds a Git remote with the given name and URL to this repository.
-func (r *TestCommands) AddRemote(name, url string) {
-	r.MustRun("git", "remote", "add", name, url)
-	r.Config.RemotesCache.Invalidate()
-}
-
-// AddSubmodule adds a Git submodule with the given URL to this repository.
-func (r *TestCommands) AddSubmodule(url string) {
-	r.MustRun("git", "submodule", "add", url)
-	r.MustRun("git", "commit", "-m", "added submodule")
-}
-
 // BranchHierarchyTable provides the currently configured branch hierarchy information as a DataTable.
 func (r *TestCommands) BranchHierarchyTable() datatable.DataTable {
 	result := datatable.DataTable{}
@@ -62,22 +50,22 @@ func (r *TestCommands) CheckoutBranch(name string) {
 	}
 }
 
-// CreateBranch creates a new branch with the given name.
+// MustCreateBranch creates a new branch with the given name.
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
-func (r *TestCommands) CreateBranch(name, parent string) {
+func (r *TestCommands) MustCreateBranch(name, parent string) {
 	r.MustRun("git", "branch", name, parent)
 }
 
-// CreateChildFeatureBranch creates a branch with the given name and parent in this repository.
+// MustCreateChildFeatureBranch creates a branch with the given name and parent in this repository.
 // The parent branch must already exist.
-func (r *TestCommands) CreateChildFeatureBranch(name string, parent string) {
-	r.CreateBranch(name, parent)
+func (r *TestCommands) MustCreateChildFeatureBranch(name string, parent string) {
+	r.MustCreateBranch(name, parent)
 	asserts.NoError(r.Config.SetParent(name, parent))
 }
 
 // CreateCommit creates a commit with the given properties in this Git repo.
-func (r *TestCommands) CreateCommit(commit git.Commit) {
+func (r *TestCommands) MustCreateCommit(commit git.Commit) {
 	r.CheckoutBranch(commit.Branch)
 	r.CreateFile(commit.FileName, commit.FileContent)
 	r.MustRun("git", "add", commit.FileName)
@@ -100,7 +88,7 @@ func (r *TestCommands) CreateFile(name, content string) {
 // CreatePerennialBranches creates perennial branches with the given names in this repository.
 func (r *TestCommands) CreatePerennialBranches(names ...string) {
 	for _, name := range names {
-		r.CreateBranch(name, "main")
+		r.MustCreateBranch(name, "main")
 	}
 	asserts.NoError(r.Config.AddToPerennialBranches(names...))
 }
@@ -263,6 +251,18 @@ func (r *TestCommands) HasGitTownConfigNow() bool {
 		return false
 	}
 	return output != ""
+}
+
+// MustAddRemote adds a Git remote with the given name and URL to this repository.
+func (r *TestCommands) MustAddRemote(name, url string) {
+	r.MustRun("git", "remote", "add", name, url)
+	r.Config.RemotesCache.Invalidate()
+}
+
+// MustAddSubmodule adds a Git submodule with the given URL to this repository.
+func (r *TestCommands) MustAddSubmodule(url string) {
+	r.MustRun("git", "submodule", "add", url)
+	r.MustRun("git", "commit", "-m", "added submodule")
 }
 
 func (r *TestCommands) PushBranch() {

@@ -15,14 +15,14 @@ func TestRunner(t *testing.T) {
 	t.Run("BranchAuthors", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
-		runtime.CreateBranch("branch", "initial")
-		runtime.CreateCommit(git.Commit{
+		runtime.MustCreateBranch("branch", "initial")
+		runtime.MustCreateCommit(git.Commit{
 			Branch:      "branch",
 			FileName:    "file1",
 			FileContent: "file1",
 			Message:     "first commit",
 		})
-		runtime.CreateCommit(git.Commit{
+		runtime.MustCreateCommit(git.Commit{
 			Branch:      "branch",
 			FileName:    "file2",
 			FileContent: "file2",
@@ -36,7 +36,7 @@ func TestRunner(t *testing.T) {
 	t.Run(".CheckoutBranch()", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
-		runtime.CreateBranch("branch1", "initial")
+		runtime.MustCreateBranch("branch1", "initial")
 		assert.NoError(t, runtime.Backend.CheckoutBranch("branch1"))
 		currentBranch, err := runtime.CurrentBranch()
 		assert.NoError(t, err)
@@ -61,7 +61,7 @@ func TestRunner(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		runtime.CheckoutBranch("initial")
-		runtime.CreateBranch("b1", "initial")
+		runtime.MustCreateBranch("b1", "initial")
 		runtime.CheckoutBranch("b1")
 		branch, err := runtime.Backend.CurrentBranch()
 		assert.NoError(t, err)
@@ -77,8 +77,8 @@ func TestRunner(t *testing.T) {
 		origin := testruntime.Create(t)
 		repoDir := t.TempDir()
 		runner := testruntime.Clone(origin.TestRunner, repoDir)
-		runner.CreateBranch("b1", "initial")
-		runner.CreateBranch("b2", "initial")
+		runner.MustCreateBranch("b1", "initial")
+		runner.MustCreateBranch("b2", "initial")
 		has, err := runner.Backend.HasLocalBranch("b1")
 		assert.NoError(t, err)
 		assert.True(t, has)
@@ -126,11 +126,11 @@ func TestRunner(t *testing.T) {
 	t.Run(".HasTrackingBranch()", func(t *testing.T) {
 		t.Parallel()
 		origin := testruntime.Create(t)
-		origin.CreateBranch("b1", "initial")
+		origin.MustCreateBranch("b1", "initial")
 		repoDir := t.TempDir()
 		devRepo := testruntime.Clone(origin.TestRunner, repoDir)
 		devRepo.CheckoutBranch("b1")
-		devRepo.CreateBranch("b2", "initial")
+		devRepo.MustCreateBranch("b2", "initial")
 		has, err := devRepo.Backend.HasTrackingBranch("b1")
 		assert.NoError(t, err)
 		assert.True(t, has)
@@ -147,9 +147,9 @@ func TestRunner(t *testing.T) {
 		origin := testruntime.Create(t)
 		repoDir := t.TempDir()
 		runner := testruntime.Clone(origin.TestRunner, repoDir)
-		runner.CreateBranch("b1", "initial")
-		runner.CreateBranch("b2", "initial")
-		origin.CreateBranch("b3", "initial")
+		runner.MustCreateBranch("b1", "initial")
+		runner.MustCreateBranch("b2", "initial")
+		origin.MustCreateBranch("b3", "initial")
 		runner.Fetch()
 		branches, err := runner.Backend.LocalBranchesMainFirst("initial")
 		assert.NoError(t, err)
@@ -161,9 +161,9 @@ func TestRunner(t *testing.T) {
 		origin := testruntime.Create(t)
 		repoDir := t.TempDir()
 		runner := testruntime.Clone(origin.TestRunner, repoDir)
-		runner.CreateBranch("b1", "initial")
-		runner.CreateBranch("b2", "initial")
-		origin.CreateBranch("b3", "initial")
+		runner.MustCreateBranch("b1", "initial")
+		runner.MustCreateBranch("b2", "initial")
+		origin.MustCreateBranch("b3", "initial")
 		runner.Fetch()
 		branches, err := runner.Backend.LocalAndOriginBranches("initial")
 		assert.NoError(t, err)
@@ -173,8 +173,8 @@ func TestRunner(t *testing.T) {
 	t.Run(".PreviouslyCheckedOutBranch()", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
-		runtime.CreateBranch("feature1", "initial")
-		runtime.CreateBranch("feature2", "initial")
+		runtime.MustCreateBranch("feature1", "initial")
+		runtime.MustCreateBranch("feature2", "initial")
 		runtime.CheckoutBranch("feature1")
 		runtime.CheckoutBranch("feature2")
 		have, err := runtime.Backend.PreviouslyCheckedOutBranch()
@@ -187,9 +187,9 @@ func TestRunner(t *testing.T) {
 		origin := testruntime.Create(t)
 		repoDir := t.TempDir()
 		runner := testruntime.Clone(origin.TestRunner, repoDir)
-		runner.CreateBranch("b1", "initial")
-		runner.CreateBranch("b2", "initial")
-		origin.CreateBranch("b3", "initial")
+		runner.MustCreateBranch("b1", "initial")
+		runner.MustCreateBranch("b2", "initial")
+		origin.MustCreateBranch("b3", "initial")
 		runner.Fetch()
 		branches, err := runner.Backend.RemoteBranches()
 		assert.NoError(t, err)
@@ -200,7 +200,7 @@ func TestRunner(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		origin := testruntime.Create(t)
-		runtime.AddRemote(config.OriginRemote, origin.WorkingDir)
+		runtime.MustAddRemote(config.OriginRemote, origin.WorkingDir)
 		remotes, err := runtime.Backend.Remotes()
 		assert.NoError(t, err)
 		assert.Equal(t, []string{config.OriginRemote}, remotes)

@@ -25,7 +25,7 @@ func TestTestCommands(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, []string{}, remotes)
 		origin := testruntime.Create(t)
-		dev.AddRemote(config.OriginRemote, origin.WorkingDir)
+		dev.MustAddRemote(config.OriginRemote, origin.WorkingDir)
 		remotes, err = dev.Remotes()
 		assert.NoError(t, err)
 		assert.Equal(t, []string{"origin"}, remotes)
@@ -34,13 +34,13 @@ func TestTestCommands(t *testing.T) {
 	t.Run(".Commits()", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
-		runtime.CreateCommit(git.Commit{
+		runtime.MustCreateCommit(git.Commit{
 			Branch:      "initial",
 			FileName:    "file1",
 			FileContent: "hello",
 			Message:     "first commit",
 		})
-		runtime.CreateCommit(git.Commit{
+		runtime.MustCreateCommit(git.Commit{
 			Branch:      "initial",
 			FileName:    "file2",
 			FileContent: "hello again",
@@ -66,7 +66,7 @@ func TestTestCommands(t *testing.T) {
 		repoDir := filepath.Join(t.TempDir(), "repo") // need a non-existing directory
 		helpers.CopyDirectory(origin.WorkingDir, repoDir)
 		runtime := testruntime.New(repoDir, repoDir, "")
-		runtime.AddRemote(config.OriginRemote, origin.WorkingDir)
+		runtime.MustAddRemote(config.OriginRemote, origin.WorkingDir)
 		runtime.Fetch()
 		runtime.ConnectTrackingBranch("initial")
 		runtime.PushBranch()
@@ -76,7 +76,7 @@ func TestTestCommands(t *testing.T) {
 		t.Run("simple branch name", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			runtime.CreateBranch("branch1", "initial")
+			runtime.MustCreateBranch("branch1", "initial")
 			currentBranch, err := runtime.CurrentBranch()
 			assert.NoError(t, err)
 			assert.Equal(t, "initial", currentBranch)
@@ -88,7 +88,7 @@ func TestTestCommands(t *testing.T) {
 		t.Run("branch name with slashes", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			runtime.CreateBranch("my/feature", "initial")
+			runtime.MustCreateBranch("my/feature", "initial")
 			currentBranch, err := runtime.CurrentBranch()
 			assert.NoError(t, err)
 			assert.Equal(t, "initial", currentBranch)
@@ -103,7 +103,7 @@ func TestTestCommands(t *testing.T) {
 		runtime := testruntime.CreateGitTown(t)
 		err := runtime.CreateFeatureBranch("f1")
 		assert.NoError(t, err)
-		runtime.CreateChildFeatureBranch("f1a", "f1")
+		runtime.MustCreateChildFeatureBranch("f1a", "f1")
 		output, err := runtime.BackendRunner.Query("git-town", "config")
 		assert.NoError(t, err)
 		output = stripansi.Strip(output)
@@ -116,7 +116,7 @@ func TestTestCommands(t *testing.T) {
 		t.Run("minimal arguments", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			runtime.CreateCommit(git.Commit{
+			runtime.MustCreateCommit(git.Commit{
 				Branch:      "initial",
 				FileName:    "hello.txt",
 				FileContent: "hello world",
@@ -133,7 +133,7 @@ func TestTestCommands(t *testing.T) {
 		t.Run("set the author", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			runtime.CreateCommit(git.Commit{
+			runtime.MustCreateCommit(git.Commit{
 				Branch:      "initial",
 				FileName:    "hello.txt",
 				FileContent: "hello world",
@@ -186,14 +186,14 @@ func TestTestCommands(t *testing.T) {
 		t.Parallel()
 		repo := testruntime.Create(t)
 		origin := testruntime.Create(t)
-		repo.AddRemote(config.OriginRemote, origin.WorkingDir)
+		repo.MustAddRemote(config.OriginRemote, origin.WorkingDir)
 		repo.Fetch()
 	})
 
 	t.Run(".FileContentInCommit()", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
-		runtime.CreateCommit(git.Commit{
+		runtime.MustCreateCommit(git.Commit{
 			Branch:      "initial",
 			FileName:    "hello.txt",
 			FileContent: "hello world",
@@ -223,7 +223,7 @@ func TestTestCommands(t *testing.T) {
 			t.Parallel()
 			env := fixture.NewStandardFixture(t.TempDir())
 			runner := env.DevRepo
-			runner.CreateBranch("branch1", "main")
+			runner.MustCreateBranch("branch1", "main")
 			runner.CheckoutBranch("branch1")
 			runner.CreateFile("file1", "content")
 			runner.StageFiles("file1")
@@ -236,7 +236,7 @@ func TestTestCommands(t *testing.T) {
 		t.Run("branch is ahead", func(t *testing.T) {
 			t.Parallel()
 			env := fixture.NewStandardFixture(t.TempDir())
-			env.DevRepo.CreateBranch("branch1", "main")
+			env.DevRepo.MustCreateBranch("branch1", "main")
 			env.DevRepo.PushBranch()
 			env.DevRepo.CreateFile("file1", "content")
 			env.DevRepo.StageFiles("file1")
@@ -248,7 +248,7 @@ func TestTestCommands(t *testing.T) {
 		t.Run("branch is behind", func(t *testing.T) {
 			t.Parallel()
 			env := fixture.NewStandardFixture(t.TempDir())
-			env.DevRepo.CreateBranch("branch1", "main")
+			env.DevRepo.MustCreateBranch("branch1", "main")
 			env.DevRepo.PushBranch()
 			env.OriginRepo.CheckoutBranch("main")
 			env.OriginRepo.CreateFile("file1", "content")
@@ -288,7 +288,7 @@ func TestTestCommands(t *testing.T) {
 		runtime := testruntime.Create(t)
 		res := runtime.HasGitTownConfigNow()
 		assert.False(t, res)
-		runtime.CreateBranch("main", "initial")
+		runtime.MustCreateBranch("main", "initial")
 		err := runtime.CreateFeatureBranch("foo")
 		assert.NoError(t, err)
 		res = runtime.HasGitTownConfigNow()
@@ -300,8 +300,8 @@ func TestTestCommands(t *testing.T) {
 		t.Parallel()
 		dev := testruntime.Create(t)
 		origin := testruntime.Create(t)
-		dev.AddRemote(config.OriginRemote, origin.WorkingDir)
-		dev.CreateBranch("b1", "initial")
+		dev.MustAddRemote(config.OriginRemote, origin.WorkingDir)
+		dev.MustCreateBranch("b1", "initial")
 		dev.PushBranchToRemote("b1", config.OriginRemote)
 		branches, err := origin.LocalBranchesMainFirst("initial")
 		assert.NoError(t, err)
@@ -311,7 +311,7 @@ func TestTestCommands(t *testing.T) {
 	t.Run(".RemoveBranch()", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
-		runtime.CreateBranch("b1", "initial")
+		runtime.MustCreateBranch("b1", "initial")
 		branches, err := runtime.LocalBranchesMainFirst("initial")
 		assert.NoError(t, err)
 		assert.Equal(t, []string{"initial", "b1"}, branches)
@@ -325,7 +325,7 @@ func TestTestCommands(t *testing.T) {
 		t.Parallel()
 		repo := testruntime.Create(t)
 		origin := testruntime.Create(t)
-		repo.AddRemote(config.OriginRemote, origin.WorkingDir)
+		repo.MustAddRemote(config.OriginRemote, origin.WorkingDir)
 		repo.RemoveRemote(config.OriginRemote)
 		remotes, err := repo.Remotes()
 		assert.NoError(t, err)
@@ -335,7 +335,7 @@ func TestTestCommands(t *testing.T) {
 	t.Run(".ShaForCommit()", func(t *testing.T) {
 		t.Parallel()
 		repo := testruntime.Create(t)
-		repo.CreateCommit(git.Commit{Branch: "initial", FileName: "foo", FileContent: "bar", Message: "commit"})
+		repo.MustCreateCommit(git.Commit{Branch: "initial", FileName: "foo", FileContent: "bar", Message: "commit"})
 		sha := repo.ShaForCommit("commit")
 		assert.Len(t, sha, 40)
 	})

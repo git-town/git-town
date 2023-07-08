@@ -58,7 +58,7 @@ func CloneFixture(original Fixture, dir string) Fixture {
 	// Since we copied the files from the memoized directory,
 	// we have to set the "origin" remote to the copied origin repo here.
 	result.DevRepo.MustRun("git", "remote", "remove", config.OriginRemote)
-	result.DevRepo.AddRemote(config.OriginRemote, result.originRepoPath())
+	result.DevRepo.MustAddRemote(config.OriginRemote, result.originRepoPath())
 	result.DevRepo.Fetch()
 	// and connect the main branches again
 	result.DevRepo.ConnectTrackingBranch("main")
@@ -117,7 +117,7 @@ func (env *Fixture) AddSubmoduleRepo() {
 func (env *Fixture) AddUpstream() {
 	repo := testruntime.Clone(env.DevRepo.TestRunner, filepath.Join(env.Dir, "upstream"))
 	env.UpstreamRepo = &repo
-	env.DevRepo.AddRemote("upstream", env.UpstreamRepo.WorkingDir)
+	env.DevRepo.MustAddRemote("upstream", env.UpstreamRepo.WorkingDir)
 }
 
 // AddCoworkerRepo adds a coworker repository.
@@ -164,16 +164,16 @@ func (env *Fixture) CreateCommits(commits []git.Commit) {
 		for _, location := range commit.Locations {
 			switch location {
 			case "coworker":
-				env.CoworkerRepo.CreateCommit(commit)
+				env.CoworkerRepo.MustCreateCommit(commit)
 			case "local":
-				env.DevRepo.CreateCommit(commit)
+				env.DevRepo.MustCreateCommit(commit)
 			case "local, origin":
-				env.DevRepo.CreateCommit(commit)
+				env.DevRepo.MustCreateCommit(commit)
 				env.DevRepo.PushBranchToRemote(commit.Branch, config.OriginRemote)
 			case "origin":
-				env.OriginRepo.CreateCommit(commit)
+				env.OriginRepo.MustCreateCommit(commit)
 			case "upstream":
-				env.UpstreamRepo.CreateCommit(commit)
+				env.UpstreamRepo.MustCreateCommit(commit)
 			default:
 				log.Fatalf("unknown commit location %q", commit.Locations)
 			}
@@ -187,7 +187,7 @@ func (env *Fixture) CreateCommits(commits []git.Commit) {
 
 // CreateOriginBranch creates a branch with the given name only in the origin directory.
 func (env Fixture) CreateOriginBranch(name, parent string) {
-	env.OriginRepo.CreateBranch(name, parent)
+	env.OriginRepo.MustCreateBranch(name, parent)
 }
 
 // CreateTags creates tags from the given gherkin table.

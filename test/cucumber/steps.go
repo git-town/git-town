@@ -79,7 +79,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^a branch "([^"]*)"$`, func(branch string) error {
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
-		state.fixture.DevRepo.CreateBranch(branch, "main")
+		state.fixture.DevRepo.MustCreateBranch(branch, "main")
 		return nil
 	})
 
@@ -89,7 +89,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^a feature branch "([^"]+)" as a child of "([^"]+)"$`, func(branch, parentBranch string) error {
-		state.fixture.DevRepo.CreateChildFeatureBranch(branch, parentBranch)
+		state.fixture.DevRepo.MustCreateChildFeatureBranch(branch, parentBranch)
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 		state.initialBranchHierarchy.AddRow(branch, parentBranch)
@@ -136,7 +136,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^a remote feature branch "([^"]*)"$`, func(branch string) error {
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-		state.fixture.OriginRepo.CreateBranch(branch, "main")
+		state.fixture.OriginRepo.MustCreateBranch(branch, "main")
 		return nil
 	})
 
@@ -221,7 +221,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I add commit "([^"]*)" to the "([^"]*)" branch`, func(message, branch string) error {
-		state.fixture.DevRepo.CreateCommit(git.Commit{
+		state.fixture.DevRepo.MustCreateCommit(git.Commit{
 			Branch:      branch,
 			FileName:    "new_file",
 			FileContent: "new content",
@@ -407,7 +407,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^my repo has a Git submodule$`, func() error {
 		state.fixture.AddSubmoduleRepo()
-		state.fixture.DevRepo.AddSubmodule(state.fixture.SubmoduleRepo.WorkingDir)
+		state.fixture.DevRepo.MustAddSubmodule(state.fixture.SubmoduleRepo.WorkingDir)
 		return nil
 	})
 
@@ -535,7 +535,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
 		for _, branch := range []string{branch1, branch2} {
-			state.fixture.DevRepo.CreateBranch(branch, "main")
+			state.fixture.DevRepo.MustCreateBranch(branch, "main")
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		}
 		return nil
@@ -602,7 +602,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.initialCurrentBranch = name
 		if !stringslice.Contains(state.initialLocalBranches, name) {
 			state.initialLocalBranches = append(state.initialLocalBranches, name)
-			state.fixture.DevRepo.CreateBranch(name, "main")
+			state.fixture.DevRepo.MustCreateBranch(name, "main")
 		}
 		state.fixture.DevRepo.CheckoutBranch(name)
 		return nil

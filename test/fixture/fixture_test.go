@@ -50,10 +50,10 @@ func TestFixture(t *testing.T) {
 			dir := t.TempDir()
 			gitEnv := fixture.NewStandardFixture(filepath.Join(dir, ""))
 			// create the branches
-			gitEnv.DevRepo.CreateBranch("d1", "main")
-			gitEnv.DevRepo.CreateBranch("d2", "main")
-			gitEnv.OriginRepo.CreateBranch("o1", "initial")
-			gitEnv.OriginRepo.CreateBranch("o2", "initial")
+			gitEnv.DevRepo.MustCreateBranch("d1", "main")
+			gitEnv.DevRepo.MustCreateBranch("d2", "main")
+			gitEnv.OriginRepo.MustCreateBranch("o1", "initial")
+			gitEnv.OriginRepo.MustCreateBranch("o2", "initial")
 			// get branches
 			table := gitEnv.Branches()
 			// verify
@@ -67,10 +67,10 @@ func TestFixture(t *testing.T) {
 			dir := t.TempDir()
 			gitEnv := fixture.NewStandardFixture(filepath.Join(dir, ""))
 			// create the branches
-			gitEnv.DevRepo.CreateBranch("b1", "main")
-			gitEnv.DevRepo.CreateBranch("b2", "main")
-			gitEnv.OriginRepo.CreateBranch("b1", "main")
-			gitEnv.OriginRepo.CreateBranch("b2", "main")
+			gitEnv.DevRepo.MustCreateBranch("b1", "main")
+			gitEnv.DevRepo.MustCreateBranch("b2", "main")
+			gitEnv.OriginRepo.MustCreateBranch("b1", "main")
+			gitEnv.OriginRepo.MustCreateBranch("b2", "main")
 			// get branches
 			table := gitEnv.Branches()
 			// verify
@@ -159,14 +159,14 @@ func TestFixture(t *testing.T) {
 			memoizedGitEnv := fixture.NewStandardFixture(filepath.Join(dir, "memoized"))
 			cloned := fixture.CloneFixture(memoizedGitEnv, filepath.Join(dir, "cloned"))
 			// create a few commits
-			cloned.DevRepo.CreateCommit(git.Commit{
+			cloned.DevRepo.MustCreateCommit(git.Commit{
 				Branch:      "main",
 				FileName:    "local-origin.md",
 				FileContent: "one",
 				Message:     "local-origin",
 			})
 			cloned.DevRepo.PushBranchToRemote("main", config.OriginRemote)
-			cloned.OriginRepo.CreateCommit(git.Commit{
+			cloned.OriginRepo.MustCreateCommit(git.Commit{
 				Branch:      "main",
 				FileName:    "origin.md",
 				FileContent: "two",
@@ -191,13 +191,13 @@ func TestFixture(t *testing.T) {
 			cloned := fixture.CloneFixture(memoizedGitEnv, filepath.Join(dir, "cloned"))
 			cloned.AddUpstream()
 			// create a few commits
-			cloned.DevRepo.CreateCommit(git.Commit{
+			cloned.DevRepo.MustCreateCommit(git.Commit{
 				Branch:      "main",
 				FileName:    "local.md",
 				FileContent: "one",
 				Message:     "local",
 			})
-			cloned.UpstreamRepo.CreateCommit(git.Commit{
+			cloned.UpstreamRepo.MustCreateCommit(git.Commit{
 				Branch:      "main",
 				FileName:    "upstream.md",
 				FileContent: "two",
