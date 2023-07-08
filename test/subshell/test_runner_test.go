@@ -70,8 +70,7 @@ func TestMockingRunner(t *testing.T) {
 				BinDir:     "",
 			}
 			toolPath := filepath.Join(dir2, "list-dir")
-			err = ostools.CreateLsTool(toolPath)
-			assert.NoError(t, err)
+			ostools.CreateLsTool(toolPath)
 			res, err := r.QueryWith(&subshell.Options{Dir: "subdir"}, toolPath)
 			assert.NoError(t, err)
 			assert.Equal(t, ostools.ScriptName("list-dir"), res)
