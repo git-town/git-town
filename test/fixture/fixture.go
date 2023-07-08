@@ -83,8 +83,7 @@ func NewStandardFixture(dir string) Fixture {
 		log.Fatalf("cannot create directory %q: %v", gitEnv.originRepoPath(), err)
 	}
 	// initialize the repo in the folder
-	originRepo, err := testruntime.Initialize(gitEnv.originRepoPath(), gitEnv.Dir, gitEnv.binPath())
-	asserts.NoError(err)
+	originRepo := testruntime.Initialize(gitEnv.originRepoPath(), gitEnv.Dir, gitEnv.binPath())
 	err = originRepo.RunMany([][]string{
 		{"git", "commit", "--allow-empty", "-m", "Initial commit"},
 		{"git", "branch", "main", "initial"},
@@ -113,10 +112,7 @@ func (env *Fixture) AddSubmoduleRepo() error {
 	if err != nil {
 		return fmt.Errorf("cannot create directory %q: %w", env.submoduleRepoPath(), err)
 	}
-	submoduleRepo, err := testruntime.Initialize(env.submoduleRepoPath(), env.Dir, env.binPath())
-	if err != nil {
-		return err
-	}
+	submoduleRepo := testruntime.Initialize(env.submoduleRepoPath(), env.Dir, env.binPath())
 	err = submoduleRepo.RunMany([][]string{
 		{"git", "config", "--global", "protocol.file.allow", "always"},
 		{"git", "commit", "--allow-empty", "-m", "Initial commit"},

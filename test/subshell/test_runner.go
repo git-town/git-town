@@ -154,6 +154,10 @@ func (r *TestRunner) MustRun(name string, arguments ...string) {
 	}
 }
 
+func (r *TestRunner) MustRunMany(commands [][]string) {
+	asserts.NoError(r.RunMany(commands))
+}
+
 // Query provides the output of the given command.
 // Overrides will be used and removed when done.
 func (r *TestRunner) Query(name string, arguments ...string) (string, error) {
