@@ -173,9 +173,8 @@ func (r *TestCommands) CommitStagedChanges(message string) {
 
 // ConnectTrackingBranch connects the branch with the given name to its counterpart at origin.
 // The branch must exist.
-func (r *TestCommands) ConnectTrackingBranch(name string) error {
-	err := r.Run("git", "branch", "--set-upstream-to=origin/"+name, name)
-	return err
+func (r *TestCommands) ConnectTrackingBranch(name string) {
+	r.MustRun("git", "branch", "--set-upstream-to=origin/"+name, name)
 }
 
 // DeleteMainBranchConfiguration removes the configuration for which branch is the main branch.

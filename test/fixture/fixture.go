@@ -69,10 +69,7 @@ func CloneFixture(original Fixture, dir string) (Fixture, error) {
 		return Fixture{}, fmt.Errorf("cannot fetch: %w", err)
 	}
 	// and connect the main branches again
-	err = result.DevRepo.ConnectTrackingBranch("main")
-	if err != nil {
-		return Fixture{}, fmt.Errorf("cannot connect tracking branch: %w", err)
-	}
+	result.DevRepo.ConnectTrackingBranch("main")
 	return result, err
 }
 
