@@ -17,6 +17,7 @@ import (
 	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/stringslice"
+	"github.com/git-town/git-town/v9/test/asserts"
 	"github.com/git-town/git-town/v9/test/datatable"
 	"github.com/git-town/git-town/v9/test/fixture"
 	"github.com/git-town/git-town/v9/test/git"
@@ -110,10 +111,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^a (local )?feature branch "([^"]*)"$`, func(localStr, branch string) error {
 		isLocal := localStr != ""
-		err := state.fixture.DevRepo.CreateFeatureBranch(branch)
-		if err != nil {
-			return err
-		}
+		asserts.NoError(state.fixture.DevRepo.CreateFeatureBranch(branch))
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		state.initialBranchHierarchy.AddRow(branch, "main")
 		if !isLocal {
@@ -134,9 +132,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^a rebase is now in progress$`, func() error {
 		hasRebase, err := state.fixture.DevRepo.HasRebaseInProgress()
-		if err != nil {
-			return err
-		}
+		asserts.NoError(err)
 		if !hasRebase {
 			return fmt.Errorf("expected rebase in progress")
 		}
@@ -208,8 +204,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^Git has version "([^"]*)"$`, func(version string) error {
-		err := state.fixture.DevRepo.MockGit(version)
-		return err
+		return state.fixture.DevRepo.MockGit(version)
 	})
 
 	suite.Step(`^Git Town is no longer configured$`, func() error {
