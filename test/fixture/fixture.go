@@ -291,16 +291,10 @@ func (env Fixture) CommitTable(fields []string) (datatable.DataTable, error) {
 // TagTable provides a table for all tags in this Git environment.
 func (env Fixture) TagTable() (datatable.DataTable, error) {
 	builder := datatable.NewTagTableBuilder()
-	localTags, err := env.DevRepo.Tags()
-	if err != nil {
-		return datatable.DataTable{}, err
-	}
+	localTags := env.DevRepo.Tags()
 	builder.AddMany(localTags, "local")
 	if env.OriginRepo != nil {
-		originTags, err := env.OriginRepo.Tags()
-		if err != nil {
-			return datatable.DataTable{}, err
-		}
+		originTags := env.OriginRepo.Tags()
 		builder.AddMany(originTags, config.OriginRemote)
 	}
 	return builder.Table(), nil

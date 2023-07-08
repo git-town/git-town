@@ -333,16 +333,13 @@ func (r *TestCommands) StashSize() int {
 }
 
 // Tags provides a list of the tags in this repository.
-func (r *TestCommands) Tags() ([]string, error) {
-	output, err := r.Query("git", "tag")
-	if err != nil {
-		return []string{}, fmt.Errorf("cannot determine tags in repo %q: %w", r.WorkingDir, err)
-	}
+func (r *TestCommands) Tags() []string {
+	output := r.MustQuery("git", "tag")
 	result := []string{}
 	for _, line := range strings.Split(output, "\n") {
 		result = append(result, strings.TrimSpace(line))
 	}
-	return result, err
+	return result
 }
 
 // UncommittedFiles provides the names of the files not committed into Git.
