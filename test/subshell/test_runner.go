@@ -84,10 +84,9 @@ func (r *TestRunner) MockCommand(name string) {
 }
 
 // MockCommitMessage sets up this runner with an editor that enters the given commit message.
-func (r *TestRunner) MockCommitMessage(message string) error {
+func (r *TestRunner) MockCommitMessage(message string) {
 	r.gitEditor = "git_editor"
 	r.createMockBinary(r.gitEditor, fmt.Sprintf("#!/usr/bin/env bash\n\necho %q > $1", message))
-	return nil
 }
 
 // MockGit pretends that this repo has Git in the given version installed.

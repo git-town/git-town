@@ -269,18 +269,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I run "([^"]*)" and enter an empty commit message$`, func(cmd string) error {
-		if err := state.fixture.DevRepo.MockCommitMessage(""); err != nil {
-			return err
-		}
+		state.fixture.DevRepo.MockCommitMessage("")
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(cmd)
 		state.fixture.DevRepo.Config.Reload()
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)" and enter "([^"]*)" for the commit message$`, func(cmd, message string) error {
-		if err := state.fixture.DevRepo.MockCommitMessage(message); err != nil {
-			return err
-		}
+		state.fixture.DevRepo.MockCommitMessage(message)
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(cmd)
 		state.fixture.DevRepo.Config.Reload()
 		return nil
