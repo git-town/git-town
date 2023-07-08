@@ -97,11 +97,11 @@ func (r *TestCommands) CreateFile(name, content string) {
 }
 
 // CreatePerennialBranches creates perennial branches with the given names in this repository.
-func (r *TestCommands) CreatePerennialBranches(names ...string) error {
+func (r *TestCommands) CreatePerennialBranches(names ...string) {
 	for _, name := range names {
 		r.CreateBranch(name, "main")
 	}
-	return r.Config.AddToPerennialBranches(names...)
+	asserts.NoError(r.Config.AddToPerennialBranches(names...))
 }
 
 // CreateStandaloneTag creates a tag not on a branch.

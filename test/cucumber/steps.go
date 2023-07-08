@@ -122,10 +122,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^a perennial branch "([^"]+)"$`, func(branch string) error {
-		err := state.fixture.DevRepo.CreatePerennialBranches(branch)
-		if err != nil {
-			return fmt.Errorf("cannot create perennial branch: %w", err)
-		}
+		state.fixture.DevRepo.CreatePerennialBranches(branch)
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 		return state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
@@ -656,7 +653,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		case "feature":
 			err = state.fixture.DevRepo.CreateFeatureBranch(branch)
 		case "perennial":
-			err = state.fixture.DevRepo.CreatePerennialBranches(branch)
+			state.fixture.DevRepo.CreatePerennialBranches(branch)
 		default:
 			panic(fmt.Sprintf("unknown branch type: %q", branchType))
 		}
@@ -798,14 +795,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the (local )?perennial branches "([^"]+)" and "([^"]+)"$`, func(localStr, branch1, branch2 string) error {
 		isLocal := localStr != ""
-		err := state.fixture.DevRepo.CreatePerennialBranches(branch1, branch2)
-		if err != nil {
-			return fmt.Errorf("cannot create perennial branches: %w", err)
-		}
+		state.fixture.DevRepo.CreatePerennialBranches(branch1, branch2)
 		state.initialLocalBranches = append(state.initialLocalBranches, branch1, branch2)
 		if !isLocal {
 			state.initialRemoteBranches = append(state.initialRemoteBranches, branch1, branch2)
-			err = state.fixture.DevRepo.PushBranchToRemote(branch1, config.OriginRemote)
+			err := state.fixture.DevRepo.PushBranchToRemote(branch1, config.OriginRemote)
 			if err != nil {
 				return err
 			}
@@ -817,13 +811,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^the (local )?perennial branches "([^"]+)", "([^"]+)", and "([^"]+)"$`, func(localStr, branch1, branch2, branch3 string) error {
 		isLocal := localStr != ""
 		for _, branch := range []string{branch1, branch2, branch3} {
-			err := state.fixture.DevRepo.CreatePerennialBranches(branch)
-			if err != nil {
-				return fmt.Errorf("cannot create perennial branches: %w", err)
-			}
+			state.fixture.DevRepo.CreatePerennialBranches(branch)
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			if !isLocal {
-				err = state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
+				err := state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
 				if err != nil {
 					return fmt.Errorf("cannot push perennial branch upstream: %w", err)
 				}

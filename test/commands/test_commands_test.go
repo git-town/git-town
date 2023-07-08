@@ -183,8 +183,7 @@ func TestTestCommands(t *testing.T) {
 	t.Run(".CreatePerennialBranches()", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.CreateGitTown(t)
-		err := runtime.CreatePerennialBranches("p1", "p2")
-		assert.NoError(t, err)
+		runtime.CreatePerennialBranches("p1", "p2")
 		branches, err := runtime.LocalBranchesMainFirst("main")
 		assert.NoError(t, err)
 		assert.Equal(t, []string{"main", "initial", "p1", "p2"}, branches)
