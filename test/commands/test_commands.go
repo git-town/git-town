@@ -54,12 +54,7 @@ func (r *TestCommands) BranchHierarchyTable() datatable.DataTable {
 
 // .CheckoutBranch checks out the Git branch with the given name in this repo.
 func (r *TestCommands) CheckoutBranch(name string) {
-	r.MustRun("git", "checkout", name)
-	if name != "-" {
-		r.Config.CurrentBranchCache.Set(name)
-	} else {
-		r.Config.CurrentBranchCache.Invalidate()
-	}
+	asserts.NoError(r.BackendCommands.CheckoutBranch(name))
 }
 
 // CreateBranch creates a new branch with the given name.
