@@ -1,6 +1,7 @@
 package testruntime_test
 
 import (
+	"os"
 	"path/filepath"
 	"testing"
 
@@ -15,6 +16,8 @@ func TestRunner(t *testing.T) {
 		t.Parallel()
 		dir := t.TempDir()
 		workingDir := filepath.Join(dir, "working")
+		err := os.Mkdir(workingDir, 0x744)
+		assert.NoError(t, err)
 		homeDir := filepath.Join(dir, "home")
 		binDir := filepath.Join(dir, "bin")
 		runtime := testruntime.New(workingDir, homeDir, binDir)
@@ -27,8 +30,7 @@ func TestRunner(t *testing.T) {
 		t.Parallel()
 		origin := testruntime.Create(t)
 		clonedPath := filepath.Join(origin.WorkingDir, "cloned")
-		cloned, err := testruntime.Clone(origin.TestRunner, clonedPath)
-		assert.NoError(t, err)
+		cloned := testruntime.Clone(origin.TestRunner, clonedPath)
 		assert.Equal(t, clonedPath, cloned.WorkingDir)
 		asserts.IsGitRepo(t, clonedPath)
 	})

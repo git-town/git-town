@@ -88,10 +88,7 @@ func (state *ScenarioState) InitialBranches() datatable.DataTable {
 // against the given Gherkin table.
 func (state *ScenarioState) compareTable(table *messages.PickleStepArgument_PickleTable) error {
 	fields := helpers.TableFields(table)
-	commitTable, err := state.fixture.CommitTable(fields)
-	if err != nil {
-		return fmt.Errorf("cannot determine commits in the developer repo: %w", err)
-	}
+	commitTable := state.fixture.CommitTable(fields)
 	diff, errorCount := commitTable.EqualGherkin(table)
 	if errorCount != 0 {
 		fmt.Printf("\nERROR! Found %d differences in the existing commits\n\n", errorCount)
