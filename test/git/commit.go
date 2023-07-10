@@ -1,8 +1,6 @@
 package git
 
-import (
-	"fmt"
-)
+import "log"
 
 // Commit describes a Git commit.
 type Commit struct {
@@ -16,7 +14,7 @@ type Commit struct {
 }
 
 // Set assigns the given value to the property with the given Gherkin table name.
-func (commit *Commit) Set(name, value string) error {
+func (commit *Commit) Set(name, value string) {
 	switch name {
 	case "BRANCH":
 		commit.Branch = value
@@ -31,7 +29,6 @@ func (commit *Commit) Set(name, value string) error {
 	case "AUTHOR":
 		commit.Author = value
 	default:
-		return fmt.Errorf("unknown Commit property: %s", name)
+		log.Fatalf("unknown Commit property: %s", name)
 	}
-	return nil
 }

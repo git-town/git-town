@@ -23,8 +23,7 @@ func TestMockingRunner(t *testing.T) {
 			HomeDir:    workDir,
 			BinDir:     filepath.Join(workDir, "bin"),
 		}
-		err = runner.MockCommand("foo")
-		assert.NoError(t, err)
+		runner.MockCommand("foo")
 		// run a program that calls the mocked command
 		res, err := runner.Query("bash", "-c", "foo bar")
 		assert.NoError(t, err)
@@ -42,26 +41,6 @@ func TestMockingRunner(t *testing.T) {
 		res, err := runner.Query("echo", "hello", "world")
 		assert.NoError(t, err)
 		assert.Equal(t, "hello world", res)
-	})
-
-	t.Run(".RunMany()", func(t *testing.T) {
-		t.Parallel()
-		workDir := t.TempDir()
-		runner := subshell.TestRunner{
-			WorkingDir: workDir,
-			HomeDir:    t.TempDir(),
-			BinDir:     "",
-		}
-		err := runner.RunMany([][]string{
-			{"touch", "first"},
-			{"touch", "second"},
-		})
-		assert.NoError(t, err)
-		entries, err := os.ReadDir(workDir)
-		assert.NoError(t, err)
-		assert.Len(t, entries, 2)
-		assert.Equal(t, "first", entries[0].Name())
-		assert.Equal(t, "second", entries[1].Name())
 	})
 
 	t.Run(".QueryString()", func(t *testing.T) {
@@ -91,8 +70,7 @@ func TestMockingRunner(t *testing.T) {
 				BinDir:     "",
 			}
 			toolPath := filepath.Join(dir2, "list-dir")
-			err = ostools.CreateLsTool(toolPath)
-			assert.NoError(t, err)
+			ostools.CreateLsTool(toolPath)
 			res, err := r.QueryWith(&subshell.Options{Dir: "subdir"}, toolPath)
 			assert.NoError(t, err)
 			assert.Equal(t, ostools.ScriptName("list-dir"), res)
@@ -110,8 +88,7 @@ func TestMockingRunner(t *testing.T) {
 				BinDir:     "",
 			}
 			toolPath := filepath.Join(dir2, "list-dir")
-			err = ostools.CreateInputTool(toolPath)
-			assert.NoError(t, err)
+			ostools.CreateInputTool(toolPath)
 			cmd, args := ostools.CallScriptArgs(toolPath)
 			res, err := r.QueryWith(&subshell.Options{Input: []string{"one\n", "two\n"}}, cmd, args...)
 			assert.NoError(t, err)
