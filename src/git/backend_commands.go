@@ -458,17 +458,25 @@ func (bc *BackendCommands) RemoteBranches() ([]string, error) {
 }
 
 // Remotes provides the names of all Git remotes in this repository.
+func (bc *BackendCommands) RemotesUncached() ([]string, error) {
+	out, err := bc.Query("git", "remote")
+	if err != nil {
+		return []string{}, fmt.Errorf("cannot determine remotes: %w", err)
+	}
+	if out == "" {
+		return []string{}, nil
+	}
+	return stringslice.Lines(out), nil
+}
+
+// Remotes provides the names of all Git remotes in this repository.
 func (bc *BackendCommands) Remotes() ([]string, error) {
 	if !bc.Config.RemotesCache.Initialized() {
-		out, err := bc.Query("git", "remote")
+		remotes, err := bc.RemotesUncached()
 		if err != nil {
-			return []string{}, fmt.Errorf("cannot determine remotes: %w", err)
+			return remotes, err
 		}
-		if out == "" {
-			bc.Config.RemotesCache.Set([]string{})
-		} else {
-			bc.Config.RemotesCache.Set(stringslice.Lines(out))
-		}
+		bc.Config.RemotesCache.Set(remotes)
 	}
 	return bc.Config.RemotesCache.Value(), nil
 }
@@ -494,13 +502,23 @@ func (bc *BackendCommands) RemoveOutdatedConfiguration() error {
 
 // RootDirectory provides the path of the rood directory of the current repository,
 // i.e. the directory that contains the ".git" folder.
+func (bc *BackendCommands) RootDirectoryUncached() (string, error) {
+	output, err := bc.Query("git", "rev-parse", "--show-toplevel")
+	if err != nil {
+		return "", fmt.Errorf("cannot determine root directory: %w", err)
+	}
+	return filepath.FromSlash(output), nil
+}
+
+// RootDirectory provides the path of the rood directory of the current repository,
+// i.e. the directory that contains the ".git" folder.
 func (bc *BackendCommands) RootDirectory() (string, error) {
 	if !bc.Config.RootDirCache.Initialized() {
-		output, err := bc.Query("git", "rev-parse", "--show-toplevel")
+		rootDir, err := bc.RootDirectoryUncached()
 		if err != nil {
-			return "", fmt.Errorf("cannot determine root directory: %w", err)
+			return rootDir, err
 		}
-		bc.Config.RootDirCache.Set(filepath.FromSlash(output))
+		bc.Config.RootDirCache.Set(rootDir)
 	}
 	return bc.Config.RootDirCache.Value(), nil
 }
