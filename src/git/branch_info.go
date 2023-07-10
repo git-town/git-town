@@ -1,5 +1,6 @@
 package git
 
+// BranchInfo contains information about the sync status of a Git branch.
 type BranchInfo struct {
 	Name       string
 	Location   BranchLocation
@@ -44,9 +45,9 @@ func (bi BranchInfos) BranchNames() []string {
 }
 
 // OrderedHierarchically sorts the given BranchInfo list so that ancestor branches come before their descendants and everything is sorted alphabetically.
-func (bi BranchInfos) OrderedHierarchically(parentBranches map[string]string) []BranchInfo {
+func (bi BranchInfos) OrderedHierarchically() []BranchInfo {
 	// for now we just put the main branch first
-	// TODO: sort this better by putting all the parent branches first
+	// TODO: sort this better by putting parent branches before child branches
 	result := make([]BranchInfo, len(bi))
 	// for b, branchInfo := range bi {
 	// 	// result[b] =

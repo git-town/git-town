@@ -1,6 +1,6 @@
 package git
 
-// BranchLocation encodes the various places that a branch can exist at.
+// BranchLocation encodes the places a branch can exist at.
 type BranchLocation int
 
 const (
