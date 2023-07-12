@@ -125,7 +125,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner) (*syncConfig, error)
 		for a, ancestor := range ancestors {
 			ancestorInfo := branchInfos.Lookup(ancestor)
 			if ancestorInfo == nil {
-				return nil, fmt.Errorf("didn't load branch info for ancestor brach %q", ancestor)
+				return nil, fmt.Errorf("didn't load branch info for ancestor branch %q", ancestor)
 			}
 			branchesToSync[a] = git.BranchInfo{
 				Name:       ancestor,
@@ -135,7 +135,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner) (*syncConfig, error)
 		}
 		initialBranchInfo := branchInfos.Lookup(initialBranch)
 		if initialBranchInfo == nil {
-			return nil, fmt.Errorf("didn't load branch info for initial brach %q", initialBranch)
+			return nil, fmt.Errorf("didn't load branch info for initial branch %q", initialBranch)
 		}
 		branchesToSync[len(ancestors)] = git.BranchInfo{
 			Name:       initialBranch,
