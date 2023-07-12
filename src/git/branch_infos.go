@@ -66,16 +66,6 @@ func (bi BranchInfos) OrderedHierarchically() BranchInfos {
 	return result
 }
 
-// IndexOfBranch returns the zero-based index of the branch with the given name.
-func (bi BranchInfos) IndexOfBranch(branch string) (pos int, found bool) {
-	for b, branchInfo := range bi {
-		if branchInfo.Name == branch {
-			return b, true
-		}
-	}
-	return 0, false
-}
-
 // provides a Lineage instance for these branches
 func (bi BranchInfos) lineage() config.Lineage {
 	parents := map[string]string{}
