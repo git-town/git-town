@@ -44,39 +44,6 @@ func TestAncestry(t *testing.T) {
 		})
 	})
 
-	t.Run("Roots", func(t *testing.T) {
-		t.Parallel()
-		t.Run("multiple roots with nested child branches", func(t *testing.T) {
-			t.Parallel()
-			ancestry := newLineage()
-			ancestry.SetParent("two", "one")
-			ancestry.SetParent("one", "main")
-			ancestry.SetParent("beta", "alpha")
-			ancestry.SetParent("alpha", "main")
-			ancestry.SetParent("hotfix1", "prod")
-			ancestry.SetParent("hotfix2", "prod")
-			have := ancestry.Roots()
-			want := []string{"main", "prod"}
-			assert.Equal(t, want, have)
-		})
-		t.Run("no nested branches", func(t *testing.T) {
-			t.Parallel()
-			ancestry := newLineage()
-			ancestry.SetParent("one", "main")
-			ancestry.SetParent("alpha", "main")
-			have := ancestry.Roots()
-			want := []string{"main"}
-			assert.Equal(t, want, have)
-		})
-		t.Run("empty", func(t *testing.T) {
-			t.Parallel()
-			ancestry := newLineage()
-			have := ancestry.Roots()
-			want := []string{}
-			assert.Equal(t, want, have)
-		})
-	})
-
 	t.Run("Children", func(t *testing.T) {
 		t.Parallel()
 		t.Run("multiple children", func(t *testing.T) {
@@ -150,6 +117,39 @@ func TestAncestry(t *testing.T) {
 			t.Parallel()
 			ancestry := newLineage()
 			assert.Equal(t, "", ancestry.Parent("foo"))
+		})
+	})
+
+	t.Run("Roots", func(t *testing.T) {
+		t.Parallel()
+		t.Run("multiple roots with nested child branches", func(t *testing.T) {
+			t.Parallel()
+			ancestry := newLineage()
+			ancestry.SetParent("two", "one")
+			ancestry.SetParent("one", "main")
+			ancestry.SetParent("beta", "alpha")
+			ancestry.SetParent("alpha", "main")
+			ancestry.SetParent("hotfix1", "prod")
+			ancestry.SetParent("hotfix2", "prod")
+			have := ancestry.Roots()
+			want := []string{"main", "prod"}
+			assert.Equal(t, want, have)
+		})
+		t.Run("no nested branches", func(t *testing.T) {
+			t.Parallel()
+			ancestry := newLineage()
+			ancestry.SetParent("one", "main")
+			ancestry.SetParent("alpha", "main")
+			have := ancestry.Roots()
+			want := []string{"main"}
+			assert.Equal(t, want, have)
+		})
+		t.Run("empty", func(t *testing.T) {
+			t.Parallel()
+			ancestry := newLineage()
+			have := ancestry.Roots()
+			want := []string{}
+			assert.Equal(t, want, have)
 		})
 	})
 }
