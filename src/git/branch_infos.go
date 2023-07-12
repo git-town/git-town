@@ -38,8 +38,8 @@ func (bi BranchInfos) LocalBranches() BranchInfos {
 }
 
 func (bi BranchInfos) Lookup(branch string) *BranchInfo {
-	for b := range bi {
-		if bi[b].Name == branch {
+	for b, branchInfo := range bi {
+		if branchInfo.Name == branch {
 			return &bi[b]
 		}
 	}
