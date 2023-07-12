@@ -120,24 +120,20 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner) (*syncConfig, error)
 			return nil, err
 		}
 		lineage := run.Config.Lineage()
-		ancestors := lineage.Ancestors(initialBranch)
-		branchesToSync = make(git.BranchInfos, len(ancestors)+1)
-		for a, ancestor := range ancestors {
-			ancestorInfo := branchInfos.Lookup(ancestor)
+		ancestorsNames := lineage.Ancestors(initialBranch)
+		branchesToSync = make(git.BranchInfos, len(ancestorsNames)+1)
+		for a, ancestorName := range ancestorsNames {
+			ancestorInfo := branchInfos.Lookup(ancestorName)
 			if ancestorInfo == nil {
-				return nil, fmt.Errorf("didn't load branch info for ancestor branch %q", ancestor)
+				return nil, fmt.Errorf("didn't load branch info for ancestor branch %q", ancestorName)
 			}
-			branchesToSync[a] = git.BranchInfo{
-				Name:       ancestor,
-				Parent:     lineage.Parent(ancestor),
-				SyncStatus: ancestorInfo.SyncStatus,
-			}
+			branchesToSync[a] = *ancestorInfo
 		}
 		initialBranchInfo := branchInfos.Lookup(initialBranch)
 		if initialBranchInfo == nil {
 			return nil, fmt.Errorf("didn't load branch info for initial branch %q", initialBranch)
 		}
-		branchesToSync[len(ancestors)] = git.BranchInfo{
+		branchesToSync[len(ancestorsNames)] = git.BranchInfo{
 			Name:       initialBranch,
 			Parent:     lineage.Parent(initialBranch),
 			SyncStatus: initialBranchInfo.SyncStatus,
