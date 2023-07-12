@@ -50,7 +50,7 @@ func (l *Lineage) HasParents(branch string) bool {
 }
 
 // IsAncestor indicates whether the given branch is an ancestor of the other given branch.
-func (l *Lineage) IsAncestor(branch, ancestor string) bool {
+func (l *Lineage) IsAncestor(ancestor, branch string) bool {
 	current := branch
 	for {
 		parent, found := l.Entries[current]
