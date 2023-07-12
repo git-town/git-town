@@ -77,20 +77,12 @@ func sync(all, dryRun, debug bool) error {
 }
 
 type syncConfig struct {
-	branchesToSync []branchSyncInfo
+	branchesToSync git.BranchInfos
 	hasOrigin      bool
 	initialBranch  string
 	isOffline      bool
 	mainBranch     string
 	shouldPushTags bool
-}
-
-// branchSyncInfo describes a branch that should be synced
-type branchSyncInfo struct {
-	name       string
-	parent     string
-	remote     git.BranchLocation
-	syncStatus git.SyncStatus
 }
 
 func determineSyncConfig(allFlag bool, run *git.ProdRunner) (*syncConfig, error) {
@@ -113,26 +105,13 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner) (*syncConfig, error)
 		return nil, err
 	}
 	mainBranch := run.Config.MainBranch()
-	var branchesToSync []branchSyncInfo
+	var branchesToSync git.BranchInfos
 	var shouldPushTags bool
 	if allFlag {
 		branchNames := branchInfos.BranchNames()
-		err = validate.KnowsBranchesAncestry(branchNames, mainBranch, &run.Backend)
+		err = validate.KnowsBranchesAncestors(branchNames, mainBranch, &run.Backend)
 		if err != nil {
 			return nil, err
-		}
-		err = validate.KnowsBranchesAncestors(branches, &run.Backend)
-		if err != nil {
-			return nil, err
-		}
-		branchesToSync = make([]branchSyncInfo, len(branchInfos))
-		for b, branchInfo := range branchInfos {
-			branchesToSync[b] = branchSyncInfo{
-				name:       branchInfo.Name,
-				parent:     run.Config.ParentBranch(branchInfo.Name),
-				remote:     branchInfo.Location,
-				syncStatus: branchInfo.SyncStatus,
-			}
 		}
 		shouldPushTags = true
 	} else {
@@ -142,7 +121,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner) (*syncConfig, error)
 		}
 		lineage := run.Config.Lineage()
 		ancestorBranches := lineage.Ancestors(initialBranch)
-		branchesToSync = make([]branchSyncInfo, len(ancestorBranches)+1)
+		branchesToSync = make(git.BranchInfos, len(ancestorBranches)+1)
 		for ab, ancestorBranch := range ancestorBranches {
 			ancestorInfo := branchInfos.Lookup(ancestorBranch)
 			if ancestorInfo == nil {

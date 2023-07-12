@@ -35,11 +35,23 @@ func TestBranchInfos(t *testing.T) {
 	t.Run("OrderedHierarchically", func(t *testing.T) {
 		t.Parallel()
 		bi := git.BranchInfos{
-			{Name: "branch-1"},
+			{Name: "branch-1", Parent: "main"},
+			{Name: "branch-1a", Parent: "branch-1"},
+			{Name: "branch-1b", Parent: "branch-1"},
+			{Name: "branch-1a1", Parent: "branch-1a"},
+			{Name: "branch-1a1a", Parent: "branch-1a1"},
+			{Name: "branch-2", Parent: "main"},
+			{Name: "main", Parent: ""},
 		}
-		have := bi.OrderedHierarchically()
+		have := bi.OrderedHierarchically("main")
 		want := git.BranchInfos{
-			{Name: "branch-1"},
+			{Name: "main", Parent: ""},
+			{Name: "branch-1", Parent: "main"},
+			{Name: "branch-2", Parent: "main"},
+			{Name: "branch-1a", Parent: "branch-1"},
+			{Name: "branch-1b", Parent: "branch-1"},
+			{Name: "branch-1a1", Parent: "branch-1a"},
+			{Name: "branch-1a1a", Parent: "branch-1a1"},
 		}
 		assert.Equal(t, want, have)
 	})

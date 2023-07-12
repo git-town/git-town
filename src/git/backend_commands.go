@@ -66,13 +66,14 @@ func (bc *BackendCommands) BranchHasUnmergedCommits(branch, parent string) (bool
 	return out != "", nil
 }
 
+// BranchInfos provides detailed information about the sync status of all branches.
 func (bc *BackendCommands) BranchInfos() (branchInfos BranchInfos, currentBranch string, err error) {
 	output, err := bc.Query("git", "branch", "-vva")
 	if err != nil {
 		return []BranchInfo{}, "", err
 	}
 	branchInfos, currentBranch = ParseVerboseBranchesOutput(output)
-	branchInfos = branchInfos.OrderedHierarchically()
+	branchInfos = branchInfos.OrderedHierarchically(bc.Config.MainBranch())
 	return
 }
 

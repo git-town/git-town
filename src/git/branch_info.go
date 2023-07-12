@@ -1,9 +1,16 @@
 package git
 
+import (
+	"fmt"
+	"sort"
+
+	"github.com/git-town/git-town/v9/src/config"
+)
+
 // BranchInfo contains information about the sync status of a Git branch.
 type BranchInfo struct {
 	Name       string
-	Location   BranchLocation
+	Parent     string
 	SyncStatus SyncStatus
 }
 
@@ -14,10 +21,10 @@ func (bi BranchInfos) LocalBranches() BranchInfos {
 	result := BranchInfos{}
 	for _, branchInfo := range bi {
 		var isLocalBranch bool
-		switch branchInfo.Location {
-		case BranchLocationLocalOnly, BranchLocationLocalAndRemote, BranchLocationDeletedAtRemote:
+		switch branchInfo.SyncStatus {
+		case SyncStatusLocalOnly, SyncStatusUpToDate, SyncStatusAhead, SyncStatusBehind:
 			isLocalBranch = true
-		case BranchLocationRemoteOnly:
+		case SyncStatusRemoteOnly, SyncStatusDeletedAtRemote:
 			isLocalBranch = false
 		}
 		if isLocalBranch {
@@ -45,13 +52,35 @@ func (bi BranchInfos) BranchNames() []string {
 }
 
 // OrderedHierarchically sorts the given BranchInfo list so that ancestor branches come before their descendants and everything is sorted alphabetically.
-func (bi BranchInfos) OrderedHierarchically() []BranchInfo {
+func (bi BranchInfos) OrderedHierarchically(lineage *config.Lineage) []BranchInfo {
 	// for now we just put the main branch first
 	// TODO: sort this better by putting parent branches before child branches
 	result := make([]BranchInfo, len(bi))
-	// for b, branchInfo := range bi {
-	// 	// result[b] =
-	// }
+	copy(result, bi)
+	sort.Slice(result, func(a, b int) bool {
+		ap := result[a].Parent
+		bp := result[b].Parent
+		fmt.Printf("COMPARING %s with %s ...", ap, bp)
+		if ap == "" {
+			fmt.Println("true")
+			return true
+		}
+		if bp == "" {
+			fmt.Println("false")
+			return false
+		}
+		if ap == mainBranch {
+			fmt.Println("true")
+			return true
+		}
+		if bp == mainBranch {
+			fmt.Println("false")
+			return false
+		}
+		result := ap < bp
+		fmt.Printf("%v\n", result)
+		return result
+	})
 	return result
 }
 
