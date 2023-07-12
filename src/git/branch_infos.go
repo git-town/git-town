@@ -57,18 +57,11 @@ func (bi BranchInfos) BranchNames() []string {
 // OrderedHierarchically sorts the given BranchInfos so that ancestor branches come before their descendants
 // and everything is sorted alphabetically.
 func (bi BranchInfos) OrderedHierarchically() BranchInfos {
-	// for now we just put the main branch first
-	// TODO: sort this better by putting parent branches before child branches
 	result := make(BranchInfos, len(bi))
 	copy(result, bi)
 	lineage := bi.lineage()
 	sort.Slice(result, func(a, b int) bool {
-		ap := result[a].Parent
-		bp := result[b].Parent
-		fmt.Printf("COMPARING %s with %s ...", ap, bp)
-		isLess := lineage.IsAncestor(ap, bp)
-		fmt.Printf("%v\n", isLess)
-		return isLess
+		return lineage.IsAncestor(result[a].Parent, result[b].Parent)
 	})
 	return result
 }
