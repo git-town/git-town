@@ -14,20 +14,23 @@ type BranchInfo struct {
 	SyncStatus SyncStatus
 }
 
+func (bi BranchInfo) IsLocalBranch() bool {
+	switch bi.SyncStatus {
+	case SyncStatusLocalOnly, SyncStatusUpToDate, SyncStatusAhead, SyncStatusBehind:
+		return true
+	case SyncStatusRemoteOnly, SyncStatusDeletedAtRemote:
+		return false
+	}
+	panic(fmt.Sprintf("uncaptured sync status: %v", bi.SyncStatus))
+}
+
 type BranchInfos []BranchInfo
 
 // LocalBranches provides only the branches that exist on the local machine.
 func (bi BranchInfos) LocalBranches() BranchInfos {
 	result := BranchInfos{}
 	for _, branchInfo := range bi {
-		var isLocalBranch bool
-		switch branchInfo.SyncStatus {
-		case SyncStatusLocalOnly, SyncStatusUpToDate, SyncStatusAhead, SyncStatusBehind:
-			isLocalBranch = true
-		case SyncStatusRemoteOnly, SyncStatusDeletedAtRemote:
-			isLocalBranch = false
-		}
-		if isLocalBranch {
+		if branchInfo.IsLocalBranch() {
 			result = append(result, branchInfo)
 		}
 	}
