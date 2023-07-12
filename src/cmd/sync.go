@@ -122,12 +122,12 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner) (*syncConfig, error)
 		lineage := run.Config.Lineage()
 		ancestors := lineage.Ancestors(initialBranch)
 		branchesToSync = make(git.BranchInfos, len(ancestors)+1)
-		for ab, ancestor := range ancestors {
+		for a, ancestor := range ancestors {
 			ancestorInfo := branchInfos.Lookup(ancestor)
 			if ancestorInfo == nil {
 				return nil, fmt.Errorf("didn't load branch info for ancestor brach %q", ancestor)
 			}
-			branchesToSync[ab] = git.BranchInfo{
+			branchesToSync[a] = git.BranchInfo{
 				Name:       ancestor,
 				Parent:     lineage.Parent(ancestor),
 				SyncStatus: ancestorInfo.SyncStatus,
