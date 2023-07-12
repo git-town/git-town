@@ -51,8 +51,8 @@ func (l *Lineage) HasParents(branch string) bool {
 	return false
 }
 
-// IsAncestor indicates whether the given branch is an ancestor of the other given branch.
-func (l *Lineage) IsAncestor(branch, ancestor string) bool {
+// IsAncestor indicates whether the given ancestor branch is indeed an ancestor of the other given branch.
+func (l *Lineage) IsAncestor(ancestor, branch string) bool {
 	ancestors := l.Ancestors(branch)
 	return stringslice.Contains(ancestors, ancestor)
 }
