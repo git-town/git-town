@@ -25,7 +25,7 @@ func filterOutSelfAndDescendants(branch string, choices []string, config *git.Re
 	result := []string{}
 	lineage := config.Lineage()
 	for _, choice := range choices {
-		if choice == branch || lineage.IsAncestor(choice, branch) {
+		if choice == branch || lineage.IsAncestor(branch, choice) {
 			continue
 		}
 		result = append(result, choice)
