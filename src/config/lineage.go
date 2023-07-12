@@ -9,8 +9,7 @@ import (
 // Lineage encapsulates all data and functionality around parent branches.
 type Lineage struct {
 	// branch --> its parent
-	Entries    map[string]string
-	MainBranch string
+	Entries map[string]string
 }
 
 // Ancestors provides the names of all parent branches of the branch with the given name.
