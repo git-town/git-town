@@ -89,11 +89,11 @@ func determinePruneBranchesConfig(run *git.ProdRunner) (*pruneBranchesConfig, er
 
 func pruneBranchesStepList(config *pruneBranchesConfig, run *git.ProdRunner) (runstate.StepList, error) {
 	result := runstate.StepList{}
+	lineage := run.Config.Lineage()
 	for _, branchWithDeletedRemote := range config.localBranchesWithDeletedTrackingBranches {
 		if config.initialBranch == branchWithDeletedRemote {
 			result.Append(&steps.CheckoutStep{Branch: config.mainBranch})
 		}
-		lineage := run.Config.Lineage()
 		parent := lineage.Parent(branchWithDeletedRemote)
 		if parent != "" {
 			for _, child := range lineage.Children(branchWithDeletedRemote) {

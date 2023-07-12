@@ -136,8 +136,9 @@ func determineKillConfig(args []string, run *git.ProdRunner) (*killConfig, error
 	if err != nil {
 		return nil, err
 	}
+	lineage := run.Config.Lineage()
 	return &killConfig{
-		childBranches:       run.Config.Lineage().Children(targetBranch),
+		childBranches:       lineage.Children(targetBranch),
 		hasOpenChanges:      hasOpenChanges,
 		hasTrackingBranch:   hasTrackingBranch,
 		initialBranch:       initialBranch,
@@ -147,7 +148,7 @@ func determineKillConfig(args []string, run *git.ProdRunner) (*killConfig, error
 		noPushHook:          !pushHook,
 		previousBranch:      previousBranch,
 		targetBranch:        targetBranch,
-		targetBranchParent:  run.Config.Lineage().Parent(targetBranch),
+		targetBranchParent:  lineage.Parent(targetBranch),
 	}, nil
 }
 
