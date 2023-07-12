@@ -13,9 +13,7 @@ type Lineage struct {
 	MainBranch string
 }
 
-// Ancestors provides the names of all parent branches for the given branch,
-// This information is read from the cache in the Git config,
-// so might be out of date when the branch hierarchy has been modified.
+// Ancestors provides the names of all parent branches of the branch with the given name.
 func (l *Lineage) Ancestors(branch string) []string {
 	current := branch
 	result := []string{}
@@ -51,10 +49,19 @@ func (l *Lineage) HasParents(branch string) bool {
 	return false
 }
 
-// IsAncestor indicates whether the given ancestor branch is indeed an ancestor of the other given branch.
-func (l *Lineage) IsAncestor(ancestor, branch string) bool {
-	ancestors := l.Ancestors(branch)
-	return stringslice.Contains(ancestors, ancestor)
+// IsAncestor indicates whether the given branch is an ancestor of the other given branch.
+func (l *Lineage) IsAncestor(ancestor, other string) bool {
+	current := other
+	for {
+		parent, found := l.Entries[current]
+		if !found {
+			return false
+		}
+		if parent == ancestor {
+			return true
+		}
+		current = parent
+	}
 }
 
 // Parent provides the name of the parent branch for the given branch or nil if the branch has no parent.
