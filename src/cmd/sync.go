@@ -161,6 +161,7 @@ func syncBranchesSteps(config *syncConfig, run *git.ProdRunner) (runstate.StepLi
 }
 
 // updateBranchSteps provides the steps to sync a particular branch.
+// TODO: change the `branch` argument from `string` to `BranchInfo`
 func updateBranchSteps(list *runstate.StepListBuilder, branch string, pushBranch bool, run *git.ProdRunner) {
 	isFeatureBranch := run.Config.IsFeatureBranch(branch)
 	syncStrategy := list.SyncStrategy(run.Config.SyncStrategy())
