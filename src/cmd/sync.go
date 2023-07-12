@@ -133,11 +133,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner) (*syncConfig, error)
 		if initialBranchInfo == nil {
 			return nil, fmt.Errorf("didn't load branch info for initial branch %q", initialBranch)
 		}
-		branchesToSync[len(ancestorsNames)] = git.BranchInfo{
-			Name:       initialBranch,
-			Parent:     lineage.Parent(initialBranch),
-			SyncStatus: initialBranchInfo.SyncStatus,
-		}
+		branchesToSync[len(ancestorsNames)] = *initialBranchInfo
 		shouldPushTags = !run.Config.IsFeatureBranch(initialBranch)
 	}
 	return &syncConfig{
