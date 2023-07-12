@@ -73,7 +73,7 @@ func (bc *BackendCommands) BranchInfos() (branchInfos BranchInfos, currentBranch
 		return []BranchInfo{}, "", err
 	}
 	branchInfos, currentBranch = ParseVerboseBranchesOutput(output)
-	branchInfos = branchInfos.OrderedHierarchically(bc.Config.MainBranch())
+	branchInfos = branchInfos.OrderedHierarchically()
 	return
 }
 

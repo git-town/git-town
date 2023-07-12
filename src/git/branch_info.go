@@ -3,7 +3,6 @@ package git
 import (
 	"fmt"
 	"sort"
-	"strings"
 
 	"github.com/git-town/git-town/v9/src/config"
 )
@@ -54,34 +53,19 @@ func (bi BranchInfos) BranchNames() []string {
 
 // OrderedHierarchically sorts the given BranchInfos so that ancestor branches come before their descendants
 // and everything is sorted alphabetically.
-func (bi BranchInfos) OrderedHierarchically() []BranchInfo {
+func (bi BranchInfos) OrderedHierarchically() BranchInfos {
 	// for now we just put the main branch first
 	// TODO: sort this better by putting parent branches before child branches
-	result := make([]BranchInfo, len(bi))
+	result := make(BranchInfos, len(bi))
 	copy(result, bi)
+	lineage := bi.lineage()
 	sort.Slice(result, func(a, b int) bool {
 		ap := result[a].Parent
 		bp := result[b].Parent
 		fmt.Printf("COMPARING %s with %s ...", ap, bp)
-		if ap == "" {
-			fmt.Println("true")
-			return true
-		}
-		if bp == "" {
-			fmt.Println("false")
-			return false
-		}
-		if ap == mainBranch {
-			fmt.Println("true")
-			return true
-		}
-		if bp == mainBranch {
-			fmt.Println("false")
-			return false
-		}
-		result := ap < bp
-		fmt.Printf("%v\n", result)
-		return result
+		isLess := lineage.IsAncestor(ap, bp)
+		fmt.Printf("%v\n", isLess)
+		return isLess
 	})
 	return result
 }
@@ -99,10 +83,8 @@ func (bi BranchInfos) IndexOfBranch(branch string) (pos int, found bool) {
 // provides a Lineage instance for these branches
 func (bi BranchInfos) lineage() config.Lineage {
 	parents := map[string]string{}
-	for _, key := range gt.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
-		child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
-		parent := gt.LocalConfigValue(key)
-		parents[child] = parent
+	for _, branchInfo := range bi {
+		parents[branchInfo.Name] = branchInfo.Parent
 	}
-	return config.Lineage{parents, gt.MainBranch()}
+	return config.Lineage{Entries: parents}
 }
