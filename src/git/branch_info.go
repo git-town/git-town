@@ -3,6 +3,7 @@ package git
 import (
 	"fmt"
 	"sort"
+	"strings"
 
 	"github.com/git-town/git-town/v9/src/config"
 )
@@ -51,8 +52,9 @@ func (bi BranchInfos) BranchNames() []string {
 	return result
 }
 
-// OrderedHierarchically sorts the given BranchInfo list so that ancestor branches come before their descendants and everything is sorted alphabetically.
-func (bi BranchInfos) OrderedHierarchically(lineage *config.Lineage) []BranchInfo {
+// OrderedHierarchically sorts the given BranchInfos so that ancestor branches come before their descendants
+// and everything is sorted alphabetically.
+func (bi BranchInfos) OrderedHierarchically() []BranchInfo {
 	// for now we just put the main branch first
 	// TODO: sort this better by putting parent branches before child branches
 	result := make([]BranchInfo, len(bi))
@@ -92,4 +94,15 @@ func (bi BranchInfos) IndexOfBranch(branch string) (pos int, found bool) {
 		}
 	}
 	return 0, false
+}
+
+// provides a Lineage instance for these branches
+func (bi BranchInfos) lineage() config.Lineage {
+	parents := map[string]string{}
+	for _, key := range gt.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
+		child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
+		parent := gt.LocalConfigValue(key)
+		parents[child] = parent
+	}
+	return config.Lineage{parents, gt.MainBranch()}
 }

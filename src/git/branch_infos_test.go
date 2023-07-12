@@ -43,7 +43,7 @@ func TestBranchInfos(t *testing.T) {
 			{Name: "branch-2", Parent: "main"},
 			{Name: "main", Parent: ""},
 		}
-		have := bi.OrderedHierarchically("main")
+		have := bi.OrderedHierarchically()
 		want := git.BranchInfos{
 			{Name: "main", Parent: ""},
 			{Name: "branch-1", Parent: "main"},
