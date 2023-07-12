@@ -127,22 +127,20 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner) (*syncConfig, error)
 			if ancestorInfo == nil {
 				return nil, fmt.Errorf("didn't load branch info for ancestor brach %q", ancestorBranch)
 			}
-			branchesToSync[ab] = branchSyncInfo{
-				name:       ancestorBranch,
-				parent:     lineage.Parent(ancestorBranch),
-				remote:     ancestorInfo.Location,
-				syncStatus: ancestorInfo.SyncStatus,
+			branchesToSync[ab] = git.BranchInfo{
+				Name:       ancestorBranch,
+				Parent:     lineage.Parent(ancestorBranch),
+				SyncStatus: ancestorInfo.SyncStatus,
 			}
 		}
 		initialBranchInfo := branchInfos.Lookup(initialBranch)
 		if initialBranchInfo == nil {
 			return nil, fmt.Errorf("didn't load branch info for initial brach %q", initialBranch)
 		}
-		branchesToSync[len(ancestorBranches)] = branchSyncInfo{
-			name:       initialBranch,
-			parent:     lineage.Parent(initialBranch),
-			remote:     initialBranchInfo.Location,
-			syncStatus: initialBranchInfo.SyncStatus,
+		branchesToSync[len(ancestorBranches)] = git.BranchInfo{
+			Name:       initialBranch,
+			Parent:     lineage.Parent(initialBranch),
+			SyncStatus: initialBranchInfo.SyncStatus,
 		}
 		shouldPushTags = !run.Config.IsFeatureBranch(initialBranch)
 	}
@@ -160,7 +158,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner) (*syncConfig, error)
 func syncBranchesSteps(config *syncConfig, run *git.ProdRunner) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.branchesToSync {
-		updateBranchSteps(&list, branch.name, true, run)
+		updateBranchSteps(&list, branch.Name, true, run)
 	}
 	list.Add(&steps.CheckoutStep{Branch: config.initialBranch})
 	if config.hasOrigin && config.shouldPushTags && !config.isOffline {
