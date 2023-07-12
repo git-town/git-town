@@ -112,8 +112,8 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner) (*syncConfig, error)
 		if err != nil {
 			return nil, err
 		}
-		shouldPushTags = true
 		branchesToSync = branchInfos.OrderedHierarchically()
+		shouldPushTags = true
 	} else {
 		err = validate.KnowsBranchAncestors(initialBranch, run.Config.MainBranch(), &run.Backend)
 		if err != nil {
