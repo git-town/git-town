@@ -129,7 +129,7 @@ func (gt *GitTown) Lineage() *Lineage {
 		parent := gt.LocalConfigValue(key)
 		parents[child] = parent
 	}
-	return &Lineage{parents, gt.MainBranch()}
+	return &Lineage{parents}
 }
 
 // MainBranch provides the name of the main branch.
