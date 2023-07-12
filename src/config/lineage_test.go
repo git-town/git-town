@@ -103,6 +103,12 @@ func TestAncestry(t *testing.T) {
 			ancestry.SetParent("two", "one")
 			assert.True(t, ancestry.IsAncestor("one", "two"))
 		})
+		t.Run("child", func(t *testing.T) {
+			t.Parallel()
+			ancestry := newLineage()
+			ancestry.SetParent("two", "one")
+			assert.False(t, ancestry.IsAncestor("two", "one"))
+		})
 	})
 
 	t.Run("Parent", func(t *testing.T) {
