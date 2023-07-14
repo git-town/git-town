@@ -121,15 +121,24 @@ func (gt *GitTown) IsPerennialBranch(branch string) bool {
 	return stringslice.Contains(perennialBranches, branch)
 }
 
-// LoadLineage provides the Lineage for the given Git repo.
-func (gt *GitTown) Lineage() *Lineage {
-	parents := map[string]string{}
+// Lineage provides the configured ancestry information for this Git repo.
+func (gt *GitTown) Lineage() []Lineage {
+	result := []Lineage{}
 	for _, key := range gt.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
 		child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
 		parent := gt.LocalConfigValue(key)
-		parents[child] = parent
+		result = append(result, Lineage{
+			Name:   child,
+			Parent: parent,
+		})
 	}
-	return &Lineage{parents}
+	return result
+}
+
+// Lineage contains the configured ancestry information.
+type Lineage struct {
+	Name   string
+	Parent string
 }
 
 // MainBranch provides the name of the main branch.

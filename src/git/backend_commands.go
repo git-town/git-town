@@ -67,17 +67,17 @@ func (bc *BackendCommands) BranchHasUnmergedCommits(branch, parent string) (bool
 }
 
 // BranchInfos provides detailed information about the sync status of all branches.
-func (bc *BackendCommands) BranchInfos() (branchInfos BranchInfos, currentBranch string, err error) {
+func (bc *BackendCommands) Branches(lineage config.Lineage) (branches Branches, currentBranch string, err error) {
 	output, err := bc.Query("git", "branch", "-vva")
 	if err != nil {
-		return []BranchInfo{}, "", err
+		return []Branch{}, "", err
 	}
-	branchInfos, currentBranch = ParseVerboseBranchesOutput(output)
-	branchInfos = branchInfos.OrderedHierarchically()
+	branches, currentBranch = ParseVerboseBranchesOutput(output, lineage)
+	branches = branches.OrderedHierarchically()
 	return
 }
 
-func ParseVerboseBranchesOutput(output string) (branchInfos BranchInfos, currentBranch string) {
+func ParseVerboseBranchesOutput(output string, lineage config.Lineage) (branches Branches, currentBranch string) {
 	for _, line := range stringslice.Lines(output) {
 		parts := strings.SplitN(line[2:], " ", 3)
 		branch := parts[0]
@@ -86,6 +86,7 @@ func ParseVerboseBranchesOutput(output string) (branchInfos BranchInfos, current
 			currentBranch = branch
 		}
 		if remoteText[0] == '[' {
+			// TODO: uncomment this
 			// deleteTrackingBranchStatus := fmt.Sprintf("[%s: gone]", bc.TrackingBranch(branch))
 			// if strings.Contains(parts[1], deleteTrackingBranchStatus) {
 			// 	remotes = append(remotes, branch)
@@ -511,12 +512,8 @@ func (bc *BackendCommands) Remotes() ([]string, error) {
 }
 
 // RemoveOutdatedConfiguration removes outdated Git Town configuration.
-func (bc *BackendCommands) RemoveOutdatedConfiguration() error {
-	branches, err := bc.LocalAndOriginBranches(bc.Config.MainBranch())
-	if err != nil {
-		return err
-	}
-	for child, parent := range bc.Config.Lineage().Entries {
+func (bc *BackendCommands) RemoveOutdatedConfiguration(branches Branches) error {
+	for child, parent := range bc.Config.Lineage() {
 		hasChildBranch := stringslice.Contains(branches, child)
 		hasParentBranch := stringslice.Contains(branches, parent)
 		if !hasChildBranch || !hasParentBranch {

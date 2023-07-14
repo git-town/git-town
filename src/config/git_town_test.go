@@ -12,6 +12,10 @@ import (
 func TestGitTown(t *testing.T) {
 	t.Parallel()
 
+	t.Run("Lineage", func(t *testing.T) {
+		// TODO: add tests
+	})
+
 	t.Run("OriginURL()", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]giturl.Parts{
