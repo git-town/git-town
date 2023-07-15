@@ -22,11 +22,11 @@ func KnowsBranchesAncestors(branches []string, mainBranch string, backend *git.B
 func KnowsBranchAncestors(branch, defaultBranch string, backend *git.BackendCommands) (err error) { //nolint:nonamedreturns // return value names are useful here
 	headerShown := false
 	currentBranch := branch
-	if backend.Config.IsMainBranch(branch) || backend.Config.IsPerennialBranch(branch) || backend.Config.Lineage().HasParents(branch) {
+	if backend.Config.IsMainBranch(branch) || backend.Config.IsPerennialBranch(branch) || backend.Config.Lineage().HasParent(branch) {
 		return nil
 	}
 	for {
-		parent := backend.Config.Lineage().Parent(currentBranch)
+		parent := backend.Config.Lineage().Lookup(currentBranch).Parent
 		if parent == "" { //nolint:nestif
 			if !headerShown {
 				printParentBranchHeader(backend)

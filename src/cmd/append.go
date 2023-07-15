@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/flags"
@@ -64,19 +65,21 @@ func runAppend(arg string, debug bool) error {
 }
 
 type appendConfig struct {
-	ancestorBranches    []string
+	ancestorBranches    config.Lineage
 	hasOrigin           bool
 	isOffline           bool
 	mainBranch          string
 	noPushHook          bool
-	parentBranch        string
+	parentBranch        config.BranchWithParent
 	shouldNewBranchPush bool
 	targetBranch        string
 }
 
 func determineAppendConfig(targetBranch string, run *git.ProdRunner) (*appendConfig, error) {
 	fc := failure.Collector{}
-	parentBranch := fc.String(run.Backend.CurrentBranch())
+	lineage := run.Config.Lineage()
+	parentBranchName := fc.String(run.Backend.CurrentBranch())
+	parentBranch := lineage.Lookup(parentBranchName)
 	hasOrigin := fc.Bool(run.Backend.HasOrigin())
 	isOffline := fc.Bool(run.Config.IsOffline())
 	mainBranch := run.Config.MainBranch()
@@ -93,7 +96,7 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner) (*appendCon
 		fc.Fail("a branch named %q already exists", targetBranch)
 	}
 	fc.Check(validate.KnowsBranchAncestors(parentBranch, run.Config.MainBranch(), &run.Backend))
-	ancestorBranches := run.Config.Lineage().Ancestors(parentBranch)
+	ancestorBranches := lineage.Ancestors(parentBranch)
 	return &appendConfig{
 		ancestorBranches:    ancestorBranches,
 		isOffline:           isOffline,
