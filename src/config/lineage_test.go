@@ -42,9 +42,12 @@ func TestLineage(t *testing.T) {
 		t.Run("no ancestors", func(t *testing.T) {
 			t.Parallel()
 			lineage := config.Lineage{
-				""
+				config.BranchWithParent{
+					Name:   "main",
+					Parent: "",
+				},
 			}
-			have := lineage.Ancestors("foo")
+			have := lineage.Ancestors("main")
 			want := config.Lineage{}
 			assert.Equal(t, want, have)
 		})
@@ -201,7 +204,7 @@ func TestLineage(t *testing.T) {
 			},
 			config.BranchWithParent{
 				Name:   "1B",
-				Parent: "one",
+				Parent: "1",
 			},
 			config.BranchWithParent{
 				Name:   "1A1",
