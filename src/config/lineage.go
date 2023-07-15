@@ -1,7 +1,9 @@
 package config
 
 import (
+	"fmt"
 	"sort"
+	"strings"
 )
 
 type BranchWithParent struct {
@@ -11,28 +13,16 @@ type BranchWithParent struct {
 
 type Lineage []BranchWithParent
 
-func (l Lineage) Lookup(name string) *BranchWithParent {
-	for b, branchWithParent := range l {
-		if branchWithParent.Name == name {
-			return &l[b]
-		}
-	}
-	return nil
-}
-
 // Ancestors provides all branches that are (great)(grand)parents of the branch with the given name.
 func (l Lineage) Ancestors(branch string) Lineage {
 	result := Lineage{}
 	current := l.Lookup(branch)
-	if current == nil {
-		return result
-	}
 	for {
-		parent := l.Lookup(current.Parent)
-		if parent == nil {
+		if current.Parent == "" {
 			return result
 		}
-		result = append(Lineage{*parent}, result...)
+		parent := l.Lookup(current.Parent)
+		result = append(Lineage{parent}, result...)
 		current = parent
 	}
 }
@@ -71,19 +61,26 @@ func (l Lineage) Contains(branchName string) bool {
 // IsAncestor indicates whether the given branch is an ancestor of the other given branch.
 func (l Lineage) IsAncestor(ancestor, other string) bool {
 	current := l.Lookup(other)
-	if current == nil {
-		return false
-	}
 	for {
-		parent := l.Lookup(current.Parent)
-		if parent == nil {
+		if current.Parent == "" {
 			return false
 		}
+		parent := l.Lookup(current.Parent)
 		if parent.Name == ancestor {
 			return true
 		}
 		current = parent
 	}
+}
+
+// Lookup provides a copy of the lineage entry with the given name.
+func (l Lineage) Lookup(name string) BranchWithParent {
+	for _, branchWithParent := range l {
+		if branchWithParent.Name == name {
+			return branchWithParent
+		}
+	}
+	panic(fmt.Sprintf("didn't find a lineage entry with name %q, lineage is %q", name, strings.Join(l.BranchNames(), ", ")))
 }
 
 // Roots provides the branches without parents, i.e. branches that start a branch lineage.

@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/failure"
@@ -82,9 +80,6 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner) (*appendCon
 	lineage := run.Config.Lineage()
 	parentBranchName := fc.String(run.Backend.CurrentBranch())
 	parentBranch := lineage.Lookup(parentBranchName)
-	if parentBranch == nil {
-		return nil, fmt.Errorf("cannot find current branch %q in lineage", parentBranchName)
-	}
 	hasOrigin := fc.Bool(run.Backend.HasOrigin())
 	isOffline := fc.Bool(run.Config.IsOffline())
 	mainBranch := run.Config.MainBranch()
@@ -108,7 +103,7 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner) (*appendCon
 		hasOrigin:           hasOrigin,
 		mainBranch:          mainBranch,
 		noPushHook:          !pushHook,
-		parentBranch:        *parentBranch,
+		parentBranch:        parentBranch,
 		shouldNewBranchPush: shouldNewBranchPush,
 		targetBranch:        targetBranch,
 	}, fc.Err
