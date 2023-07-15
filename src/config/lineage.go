@@ -12,9 +12,9 @@ type BranchWithParent struct {
 type Lineage []BranchWithParent
 
 // Ancestors provides all branches that are (great)(grand)parents of the branch with the given name.
-func (l Lineage) Ancestors(branch string) Lineage {
+func (l Lineage) Ancestors(branchName string) Lineage {
 	result := Lineage{}
-	current := l.Lookup(branch)
+	current := l.Lookup(branchName)
 	for {
 		if current.Parent == "" {
 			return result
@@ -25,7 +25,6 @@ func (l Lineage) Ancestors(branch string) Lineage {
 	}
 }
 
-// TODO: rename to Names
 func (l Lineage) BranchNames() []string {
 	result := make([]string, len(l))
 	for b, branchInfo := range l {
@@ -56,18 +55,19 @@ func (l Lineage) Contains(branchName string) bool {
 	return false
 }
 
-// IsAncestor indicates whether the given branch is an ancestor of the other given branch.
-func (l Lineage) IsAncestor(ancestor, other string) bool {
-	current := l.Lookup(other)
+// IsAncestor indicates whether the branch with the given ancestor name is indeed an ancestor
+// of the other branch with the given name.
+func (l Lineage) IsAncestor(ancestorName, branchName string) bool {
+	current := l.Lookup(branchName)
 	for {
-		if current == nil {
-			return false
-		}
-		if current.Parent == "" {
+		if current == nil || current.Parent == "" {
 			return false
 		}
 		parent := l.Lookup(current.Parent)
-		if parent.Name == ancestor {
+		if parent == nil {
+			return false
+		}
+		if parent.Name == ancestorName {
 			return true
 		}
 		current = parent
