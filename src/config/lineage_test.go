@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/git"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -44,7 +43,7 @@ func TestLineage(t *testing.T) {
 			t.Parallel()
 			lineage := config.Lineage{}
 			have := lineage.Ancestors("foo")
-			want := git.BranchesWithParentAndSyncStatus{}
+			want := config.Lineage{}
 			assert.Equal(t, want, have)
 		})
 	})
