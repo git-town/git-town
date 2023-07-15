@@ -174,8 +174,8 @@ func renameBranchStepList(config *renameBranchConfig, run *git.ProdRunner) (runs
 		result.Append(&steps.AddToPerennialBranchesStep{Branch: config.newBranch})
 	} else {
 		lineage := run.Config.Lineage()
-		result.Append(&steps.DeleteParentBranchStep{Branch: config.oldBranch, Parent: lineage.Lookup(config.oldBranch).Parent})
-		result.Append(&steps.SetParentStep{Branch: config.newBranch, ParentBranch: lineage.Lookup(config.oldBranch).Parent})
+		result.Append(&steps.DeleteParentBranchStep{Branch: config.oldBranch, Parent: lineage.Parent(config.oldBranch)})
+		result.Append(&steps.SetParentStep{Branch: config.newBranch, ParentBranch: lineage.Parent(config.oldBranch)})
 	}
 	for _, child := range config.oldBranchChildren {
 		result.Append(&steps.SetParentStep{Branch: child.Name, ParentBranch: config.newBranch})

@@ -148,7 +148,7 @@ func determineKillConfig(args []string, run *git.ProdRunner) (*killConfig, error
 		noPushHook:          !pushHook,
 		previousBranch:      previousBranch,
 		targetBranch:        targetBranch,
-		targetBranchParent:  lineage.Lookup(targetBranch).Parent,
+		targetBranchParent:  lineage.Parent(targetBranch),
 	}, nil
 }
 
@@ -169,7 +169,7 @@ func killStepList(config *killConfig, run *git.ProdRunner) (runstate.StepList, e
 		for _, child := range config.childBranches {
 			result.Append(&steps.SetParentStep{Branch: child, ParentBranch: config.targetBranchParent})
 		}
-		result.Append(&steps.DeleteParentBranchStep{Branch: config.targetBranch, Parent: run.Config.Lineage().Lookup(config.targetBranch).Parent})
+		result.Append(&steps.DeleteParentBranchStep{Branch: config.targetBranch, Parent: run.Config.Lineage().Parent(config.targetBranch)})
 	case !config.isOffline:
 		result.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch, IsTracking: false, NoPushHook: config.noPushHook})
 	default:

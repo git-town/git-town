@@ -172,7 +172,7 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 		return nil, err
 	}
 	lineage := run.Config.Lineage()
-	targetBranch := lineage.Lookup(branchToShip).Parent
+	targetBranch := lineage.Parent(branchToShip)
 	canShipViaAPI := false
 	proposalMessage := ""
 	var proposal *hosting.Proposal
@@ -219,7 +219,7 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 
 func ensureParentBranchIsMainOrPerennialBranch(branch string, run *git.ProdRunner) error {
 	lineage := run.Config.Lineage()
-	parentBranch := lineage.Lookup(branch).Parent
+	parentBranch := lineage.Parent(branch)
 	if !run.Config.IsMainBranch(parentBranch) && !run.Config.IsPerennialBranch(parentBranch) {
 		ancestors := lineage.Ancestors(branch)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
@@ -270,7 +270,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 		}
 	}
 	list.Add(&steps.DeleteLocalBranchStep{Branch: config.branchToShip, Parent: config.mainBranch})
-	list.Add(&steps.DeleteParentBranchStep{Branch: config.branchToShip, Parent: run.Config.Lineage().Lookup(config.branchToShip).Parent})
+	list.Add(&steps.DeleteParentBranchStep{Branch: config.branchToShip, Parent: run.Config.Lineage().Parent(config.branchToShip)})
 	for _, child := range config.childBranches {
 		list.Add(&steps.SetParentStep{Branch: child.Name, ParentBranch: config.targetBranch})
 	}

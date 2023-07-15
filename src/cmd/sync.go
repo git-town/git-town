@@ -186,7 +186,7 @@ func updateFeatureBranchSteps(list *runstate.StepListBuilder, branch string, run
 	if hasTrackingBranch {
 		syncBranchSteps(list, run.Backend.TrackingBranch(branch), string(syncStrategy))
 	}
-	syncBranchSteps(list, run.Config.Lineage().Lookup(branch).Parent, string(syncStrategy))
+	syncBranchSteps(list, run.Config.Lineage().Parent(branch), string(syncStrategy))
 }
 
 func updatePerennialBranchSteps(list *runstate.StepListBuilder, branch string, run *git.ProdRunner) {

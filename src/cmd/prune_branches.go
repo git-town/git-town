@@ -94,12 +94,12 @@ func pruneBranchesStepList(config *pruneBranchesConfig, run *git.ProdRunner) (ru
 		if config.initialBranch == branchWithDeletedRemote {
 			result.Append(&steps.CheckoutStep{Branch: config.mainBranch})
 		}
-		parent := lineage.Lookup(branchWithDeletedRemote).Parent
+		parent := lineage.Parent(branchWithDeletedRemote)
 		if parent != "" {
 			for _, child := range lineage.Children(branchWithDeletedRemote) {
 				result.Append(&steps.SetParentStep{Branch: child.Name, ParentBranch: parent})
 			}
-			result.Append(&steps.DeleteParentBranchStep{Branch: branchWithDeletedRemote, Parent: lineage.Lookup(branchWithDeletedRemote).Parent})
+			result.Append(&steps.DeleteParentBranchStep{Branch: branchWithDeletedRemote, Parent: lineage.Parent(branchWithDeletedRemote)})
 		}
 		if run.Config.IsPerennialBranch(branchWithDeletedRemote) {
 			result.Append(&steps.RemoveFromPerennialBranchesStep{Branch: branchWithDeletedRemote})

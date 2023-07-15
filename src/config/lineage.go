@@ -1,9 +1,7 @@
 package config
 
 import (
-	"fmt"
 	"sort"
-	"strings"
 )
 
 type BranchWithParent struct {
@@ -22,7 +20,7 @@ func (l Lineage) Ancestors(branch string) Lineage {
 			return result
 		}
 		parent := l.Lookup(current.Parent)
-		result = append(Lineage{parent}, result...)
+		result = append(Lineage{*parent}, result...)
 		current = parent
 	}
 }
@@ -62,6 +60,9 @@ func (l Lineage) Contains(branchName string) bool {
 func (l Lineage) IsAncestor(ancestor, other string) bool {
 	current := l.Lookup(other)
 	for {
+		if current == nil {
+			return false
+		}
 		if current.Parent == "" {
 			return false
 		}
@@ -74,13 +75,21 @@ func (l Lineage) IsAncestor(ancestor, other string) bool {
 }
 
 // Lookup provides a copy of the lineage entry with the given name.
-func (l Lineage) Lookup(name string) BranchWithParent {
-	for _, branchWithParent := range l {
+func (l Lineage) Lookup(name string) *BranchWithParent {
+	for b, branchWithParent := range l {
 		if branchWithParent.Name == name {
-			return branchWithParent
+			return &l[b]
 		}
 	}
-	panic(fmt.Sprintf("didn't find a lineage entry with name %q, lineage is %q", name, strings.Join(l.BranchNames(), ", ")))
+	return nil
+}
+
+func (l Lineage) Parent(branchName string) string {
+	parentBranch := l.Lookup(branchName)
+	if parentBranch == nil {
+		return ""
+	}
+	return parentBranch.Parent
 }
 
 // Roots provides the branches without parents, i.e. branches that start a branch lineage.

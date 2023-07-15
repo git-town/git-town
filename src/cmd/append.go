@@ -103,7 +103,7 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner) (*appendCon
 		hasOrigin:           hasOrigin,
 		mainBranch:          mainBranch,
 		noPushHook:          !pushHook,
-		parentBranch:        parentBranch,
+		parentBranch:        *parentBranch,
 		shouldNewBranchPush: shouldNewBranchPush,
 		targetBranch:        targetBranch,
 	}, fc.Err

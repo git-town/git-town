@@ -106,8 +106,8 @@ func determineParentBranch(targetBranch string, promptForParent bool, run *git.P
 			return config.BranchWithParent{}, err
 		}
 		parentBranch := lineage.Lookup(parentBranchName)
-		return parentBranch, nil
+		return *parentBranch, nil
 	}
 	mainbranch := lineage.Lookup(run.Config.MainBranch())
-	return mainbranch, nil
+	return *mainbranch, nil
 }
