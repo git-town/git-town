@@ -18,6 +18,13 @@ type Collector struct {
 	Err error `exhaustruct:"optional"`
 }
 
+// BranchWithParent provides the BranchWithParent part of the given fallible function result
+// while registering the given error.
+func (ec *Collector) BranchWithParent(value config.BranchWithParent, err error) config.BranchWithParent {
+	ec.Check(err)
+	return value
+}
+
 // Check registers the given error and indicates
 // whether this ErrorChecker contains an error now.
 func (ec *Collector) Check(err error) bool {

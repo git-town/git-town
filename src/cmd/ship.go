@@ -94,7 +94,7 @@ type shipConfig struct {
 	branchToShip             string
 	targetBranch             string
 	canShipViaAPI            bool
-	childBranches            []string
+	childBranches            config.Lineage
 	proposalMessage          string
 	deleteOriginBranch       bool
 	hasOrigin                bool
@@ -172,7 +172,7 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 		return nil, err
 	}
 	lineage := run.Config.Lineage()
-	targetBranch := lineage.Parent(branchToShip)
+	targetBranch := lineage.Lookup(branchToShip).Parent
 	canShipViaAPI := false
 	proposalMessage := ""
 	var proposal *hosting.Proposal
@@ -190,7 +190,7 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 			}
 		}
 		for _, childBranch := range childBranches {
-			childProposal, err := connector.FindProposal(childBranch, branchToShip)
+			childProposal, err := connector.FindProposal(childBranch.Name, branchToShip)
 			if err != nil {
 				return nil, fmt.Errorf("cannot determine proposal for branch %q: %w", branchToShip, err)
 			}
@@ -219,13 +219,13 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 
 func ensureParentBranchIsMainOrPerennialBranch(branch string, run *git.ProdRunner) error {
 	lineage := run.Config.Lineage()
-	parentBranch := lineage.Parent(branch)
+	parentBranch := lineage.Lookup(branch).Parent
 	if !run.Config.IsMainBranch(parentBranch) && !run.Config.IsPerennialBranch(parentBranch) {
 		ancestors := lineage.Ancestors(branch)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
 		oldestAncestor := ancestorsWithoutMainOrPerennial[0]
 		return fmt.Errorf(`shipping this branch would ship %s as well,
-please ship %q first`, stringslice.Connect(ancestorsWithoutMainOrPerennial), oldestAncestor)
+please ship %q first`, stringslice.Connect(ancestorsWithoutMainOrPerennial.BranchNames()), oldestAncestor)
 	}
 	return nil
 }
@@ -270,9 +270,9 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 		}
 	}
 	list.Add(&steps.DeleteLocalBranchStep{Branch: config.branchToShip, Parent: config.mainBranch})
-	list.Add(&steps.DeleteParentBranchStep{Branch: config.branchToShip, Parent: run.Config.Lineage().Parent(config.branchToShip)})
+	list.Add(&steps.DeleteParentBranchStep{Branch: config.branchToShip, Parent: run.Config.Lineage().Lookup(config.branchToShip).Parent})
 	for _, child := range config.childBranches {
-		list.Add(&steps.SetParentStep{Branch: child, ParentBranch: config.targetBranch})
+		list.Add(&steps.SetParentStep{Branch: child.Name, ParentBranch: config.targetBranch})
 	}
 	if !config.isShippingInitialBranch {
 		list.Add(&steps.CheckoutStep{Branch: config.initialBranch})

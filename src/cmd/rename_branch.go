@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/git"
@@ -79,7 +80,7 @@ type renameBranchConfig struct {
 	mainBranch                 string
 	newBranch                  string
 	noPushHook                 bool
-	oldBranchChildren          []string
+	oldBranchChildren          config.Lineage
 	oldBranchHasTrackingBranch bool
 	oldBranch                  string
 }
@@ -173,11 +174,11 @@ func renameBranchStepList(config *renameBranchConfig, run *git.ProdRunner) (runs
 		result.Append(&steps.AddToPerennialBranchesStep{Branch: config.newBranch})
 	} else {
 		lineage := run.Config.Lineage()
-		result.Append(&steps.DeleteParentBranchStep{Branch: config.oldBranch, Parent: lineage.Parent(config.oldBranch)})
-		result.Append(&steps.SetParentStep{Branch: config.newBranch, ParentBranch: lineage.Parent(config.oldBranch)})
+		result.Append(&steps.DeleteParentBranchStep{Branch: config.oldBranch, Parent: lineage.Lookup(config.oldBranch).Parent})
+		result.Append(&steps.SetParentStep{Branch: config.newBranch, ParentBranch: lineage.Lookup(config.oldBranch).Parent})
 	}
 	for _, child := range config.oldBranchChildren {
-		result.Append(&steps.SetParentStep{Branch: child, ParentBranch: config.newBranch})
+		result.Append(&steps.SetParentStep{Branch: child.Name, ParentBranch: config.newBranch})
 	}
 	if config.oldBranchHasTrackingBranch && !config.isOffline {
 		result.Append(&steps.CreateTrackingBranchStep{Branch: config.newBranch, NoPushHook: config.noPushHook})

@@ -35,6 +35,7 @@ func (l Lineage) Ancestors(branch string) Lineage {
 	}
 }
 
+// TODO: rename to Names
 func (l Lineage) BranchNames() []string {
 	result := make([]string, len(l))
 	for b, branchInfo := range l {

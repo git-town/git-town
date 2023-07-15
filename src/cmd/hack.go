@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/flags"
@@ -68,7 +69,7 @@ func hack(args []string, promptForParent, debug bool) error {
 func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunner) (*appendConfig, error) {
 	fc := failure.Collector{}
 	targetBranch := args[0]
-	parentBranch := fc.String(determineParentBranch(targetBranch, promptForParent, run))
+	parentBranch := fc.BranchWithParent(determineParentBranch(targetBranch, promptForParent, run))
 	hasOrigin := fc.Bool(run.Backend.HasOrigin())
 	shouldNewBranchPush := fc.Bool(run.Config.ShouldNewBranchPush())
 	isOffline := fc.Bool(run.Config.IsOffline())
@@ -82,7 +83,7 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 		return nil, fmt.Errorf("a branch named %q already exists", targetBranch)
 	}
 	return &appendConfig{
-		ancestorBranches:    []string{},
+		ancestorBranches:    config.Lineage{},
 		targetBranch:        targetBranch,
 		parentBranch:        parentBranch,
 		hasOrigin:           hasOrigin,
@@ -93,17 +94,20 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 	}, fc.Err
 }
 
-func determineParentBranch(targetBranch string, promptForParent bool, run *git.ProdRunner) (string, error) {
+func determineParentBranch(targetBranch string, promptForParent bool, run *git.ProdRunner) (config.BranchWithParent, error) {
+	lineage := run.Config.Lineage()
 	if promptForParent {
-		parentBranch, err := validate.EnterParent(targetBranch, run.Config.MainBranch(), &run.Backend)
+		parentBranchName, err := validate.EnterParent(targetBranch, run.Config.MainBranch(), &run.Backend)
 		if err != nil {
-			return "", err
+			return config.BranchWithParent{}, err
 		}
-		err = validate.KnowsBranchAncestors(parentBranch, run.Config.MainBranch(), &run.Backend)
+		err = validate.KnowsBranchAncestors(parentBranchName, run.Config.MainBranch(), &run.Backend)
 		if err != nil {
-			return "", err
+			return config.BranchWithParent{}, err
 		}
-		return parentBranch, nil
+		parentBranch := lineage.Lookup(parentBranchName)
+		return *parentBranch, nil
 	}
-	return run.Config.MainBranch(), nil
+	mainbranch := lineage.Lookup(run.Config.MainBranch())
+	return *mainbranch, nil
 }
