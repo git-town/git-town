@@ -1,6 +1,8 @@
 package config
 
-import "sort"
+import (
+	"sort"
+)
 
 type BranchWithParent struct {
 	Name   string
@@ -104,7 +106,8 @@ func (l Lineage) OrderedHierarchically() Lineage {
 	result := make(Lineage, len(l))
 	copy(result, l)
 	sort.Slice(result, func(x, y int) bool {
-		return l.IsAncestor(result[x].Parent, result[y].Parent)
+		return l.IsAncestor(result[x].Name, result[y].Name)
+		// fmt.Printf("%s %s %v", result[x].Name)
 	})
 	return result
 }

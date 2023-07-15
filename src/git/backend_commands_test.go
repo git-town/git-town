@@ -54,18 +54,14 @@ func TestRunner(t *testing.T) {
 		assert.NoError(t, err)
 		runtime.Config.Reload()
 		assert.True(t, runtime.Config.IsFeatureBranch("f1"))
-		branchesHave := runtime.Config.Lineage()
-		branchesWant := config.Lineage{
-			config.BranchWithParent{
-				Name:   "main",
-				Parent: "",
-			},
+		lineageHave := runtime.Config.Lineage()
+		lineageWant := config.Lineage{
 			config.BranchWithParent{
 				Name:   "f1",
 				Parent: "main",
 			},
 		}
-		assert.Equal(t, branchesWant, branchesHave)
+		assert.Equal(t, lineageWant, lineageHave)
 	})
 
 	t.Run(".CurrentBranch()", func(t *testing.T) {

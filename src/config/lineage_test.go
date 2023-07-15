@@ -35,8 +35,8 @@ func TestLineage(t *testing.T) {
 					Parent: "one",
 				},
 			}
-			want := []string{"main", "one", "two", "three"}
 			have := lineage.Ancestors("three").BranchNames()
+			want := []string{"main", "one", "two"}
 			assert.Equal(t, want, have)
 		})
 		t.Run("no ancestors", func(t *testing.T) {
@@ -214,7 +214,7 @@ func TestLineage(t *testing.T) {
 				Parent: "main",
 			},
 		}
-		want := []string{"main", "1", "2", "1A", "1B", "1A1", "1A2"}
+		want := []string{"main", "1", "1A", "1B", "1A1", "1A2", "2"}
 		have := lineage.OrderedHierarchically().BranchNames()
 		assert.Equal(t, want, have)
 	})
