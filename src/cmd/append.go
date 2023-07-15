@@ -70,7 +70,7 @@ type appendConfig struct {
 	isOffline           bool
 	mainBranch          string
 	noPushHook          bool
-	parentBranch        config.BranchWithParent
+	parentBranch        string
 	shouldNewBranchPush bool
 	targetBranch        string
 }
@@ -78,8 +78,7 @@ type appendConfig struct {
 func determineAppendConfig(targetBranch string, run *git.ProdRunner) (*appendConfig, error) {
 	fc := failure.Collector{}
 	lineage := run.Config.Lineage()
-	parentBranchName := fc.String(run.Backend.CurrentBranch())
-	parentBranch := lineage.Lookup(parentBranchName)
+	parentBranch := fc.String(run.Backend.CurrentBranch())
 	hasOrigin := fc.Bool(run.Backend.HasOrigin())
 	isOffline := fc.Bool(run.Config.IsOffline())
 	mainBranch := run.Config.MainBranch()
@@ -95,15 +94,15 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner) (*appendCon
 	if hasTargetBranch {
 		fc.Fail("a branch named %q already exists", targetBranch)
 	}
-	fc.Check(validate.KnowsBranchAncestors(parentBranchName, run.Config.MainBranch(), &run.Backend))
-	ancestorBranches := lineage.Ancestors(parentBranchName)
+	fc.Check(validate.KnowsBranchAncestors(parentBranch, run.Config.MainBranch(), &run.Backend))
+	ancestorBranches := lineage.Ancestors(parentBranch)
 	return &appendConfig{
 		ancestorBranches:    ancestorBranches,
 		isOffline:           isOffline,
 		hasOrigin:           hasOrigin,
 		mainBranch:          mainBranch,
 		noPushHook:          !pushHook,
-		parentBranch:        *parentBranch,
+		parentBranch:        parentBranch,
 		shouldNewBranchPush: shouldNewBranchPush,
 		targetBranch:        targetBranch,
 	}, fc.Err
@@ -111,11 +110,11 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner) (*appendCon
 
 func appendStepList(config *appendConfig, run *git.ProdRunner) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
-	for _, branch := range append(config.ancestorBranches, config.parentBranch) {
-		updateBranchSteps(&list, branch.Name, true, run)
+	for _, branch := range append(config.ancestorBranches.BranchNames(), config.parentBranch) {
+		updateBranchSteps(&list, branch, true, run)
 	}
-	list.Add(&steps.CreateBranchStep{Branch: config.targetBranch, StartingPoint: config.parentBranch.Name})
-	list.Add(&steps.SetParentStep{Branch: config.targetBranch, ParentBranch: config.parentBranch.Name})
+	list.Add(&steps.CreateBranchStep{Branch: config.targetBranch, StartingPoint: config.parentBranch})
+	list.Add(&steps.SetParentStep{Branch: config.targetBranch, ParentBranch: config.parentBranch})
 	list.Add(&steps.CheckoutStep{Branch: config.targetBranch})
 	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
 		list.Add(&steps.CreateTrackingBranchStep{Branch: config.targetBranch, NoPushHook: config.noPushHook})

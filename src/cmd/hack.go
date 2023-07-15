@@ -69,7 +69,7 @@ func hack(args []string, promptForParent, debug bool) error {
 func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunner) (*appendConfig, error) {
 	fc := failure.Collector{}
 	targetBranch := args[0]
-	parentBranch := fc.BranchWithParent(determineParentBranch(targetBranch, promptForParent, run))
+	parentBranch := fc.String(determineParentBranch(targetBranch, promptForParent, run))
 	hasOrigin := fc.Bool(run.Backend.HasOrigin())
 	shouldNewBranchPush := fc.Bool(run.Config.ShouldNewBranchPush())
 	isOffline := fc.Bool(run.Config.IsOffline())
@@ -94,20 +94,20 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 	}, fc.Err
 }
 
-func determineParentBranch(targetBranch string, promptForParent bool, run *git.ProdRunner) (config.BranchWithParent, error) {
+func determineParentBranch(targetBranch string, promptForParent bool, run *git.ProdRunner) (string, error) {
 	lineage := run.Config.Lineage()
 	if promptForParent {
 		parentBranchName, err := validate.EnterParent(targetBranch, run.Config.MainBranch(), &run.Backend)
 		if err != nil {
-			return config.BranchWithParent{}, err
+			return "", err
 		}
 		err = validate.KnowsBranchAncestors(parentBranchName, run.Config.MainBranch(), &run.Backend)
 		if err != nil {
-			return config.BranchWithParent{}, err
+			return "", err
 		}
 		parentBranch := lineage.Lookup(parentBranchName)
-		return *parentBranch, nil
+		return parentBranch.Name, nil
 	}
 	mainbranch := lineage.Lookup(run.Config.MainBranch())
-	return *mainbranch, nil
+	return mainbranch.Name, nil
 }
