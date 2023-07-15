@@ -16,7 +16,7 @@ func (l Lineage) Ancestors(branchName string) Lineage {
 	result := Lineage{}
 	current := l.Lookup(branchName)
 	for {
-		if current.Parent == "" {
+		if current == nil || current.Parent == "" {
 			return result
 		}
 		parent := l.Lookup(current.Parent)
