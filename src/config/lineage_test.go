@@ -109,7 +109,7 @@ func TestLineage(t *testing.T) {
 			t.Parallel()
 			lineage := config.Lineage{}
 			have := lineage.Children("alpha")
-			want := []string{}
+			want := config.Lineage{}
 			assert.Equal(t, want, have)
 		})
 	})
@@ -123,22 +123,6 @@ func TestLineage(t *testing.T) {
 		assert.True(t, lineage.Contains("one"))
 		assert.True(t, lineage.Contains("two"))
 		assert.False(t, lineage.Contains("zonk"))
-	})
-
-	t.Run("HasParent", func(t *testing.T) {
-		t.Parallel()
-		lineage := config.Lineage{
-			config.BranchWithParent{
-				Name:   "one",
-				Parent: "",
-			},
-			config.BranchWithParent{
-				Name:   "two",
-				Parent: "one",
-			},
-		}
-		assert.True(t, lineage.HasParent("two"))
-		assert.False(t, lineage.HasParent("one"))
 	})
 
 	t.Run("IsAncestor", func(t *testing.T) {
@@ -277,7 +261,7 @@ func TestLineage(t *testing.T) {
 			t.Parallel()
 			lineage := config.Lineage{}
 			have := lineage.Roots()
-			want := []string{}
+			want := config.Lineage{}
 			assert.Equal(t, want, have)
 		})
 	})

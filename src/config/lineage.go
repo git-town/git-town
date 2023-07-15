@@ -66,16 +66,6 @@ func (l Lineage) Contains(branchName string) bool {
 	return false
 }
 
-// HasParents returns whether or not the given branch has at least one parent.
-func (l Lineage) HasParent(branch string) bool {
-	for _, branchInfo := range l {
-		if branchInfo.Parent == branch {
-			return true
-		}
-	}
-	return false
-}
-
 // IsAncestor indicates whether the given branch is an ancestor of the other given branch.
 func (l Lineage) IsAncestor(ancestor, other string) bool {
 	current := l.Lookup(other)
