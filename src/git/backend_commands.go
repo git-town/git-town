@@ -66,18 +66,17 @@ func (bc *BackendCommands) BranchHasUnmergedCommits(branch, parent string) (bool
 	return out != "", nil
 }
 
-// BranchInfos provides detailed information about the sync status of all branches.
-func (bc *BackendCommands) Branches(lineage config.Lineage) (branches Branches, currentBranch string, err error) {
+// BranchesWithSyncStatus provides detailed information about the sync status of all branches.
+func (bc *BackendCommands) BranchesWithSyncStatus() (branches BranchesWithSyncStatus, currentBranch string, err error) {
 	output, err := bc.Query("git", "branch", "-vva")
 	if err != nil {
-		return []Branch{}, "", err
+		return []BranchWithSyncStatus{}, "", err
 	}
-	branches, currentBranch = ParseVerboseBranchesOutput(output, lineage)
-	branches = branches.OrderedHierarchically()
-	return
+	branches, currentBranch = ParseVerboseBranchesOutput(output)
+	return branches, currentBranch, nil
 }
 
-func ParseVerboseBranchesOutput(output string, lineage config.Lineage) (branches Branches, currentBranch string) {
+func ParseVerboseBranchesOutput(output string) (branches BranchesWithSyncStatus, currentBranch string) {
 	for _, line := range stringslice.Lines(output) {
 		parts := strings.SplitN(line[2:], " ", 3)
 		branch := parts[0]
@@ -512,15 +511,11 @@ func (bc *BackendCommands) Remotes() ([]string, error) {
 }
 
 // RemoveOutdatedConfiguration removes outdated Git Town configuration.
-func (bc *BackendCommands) RemoveOutdatedConfiguration(branches Branches) error {
-	for child, parent := range bc.Config.Lineage() {
-		hasChildBranch := stringslice.Contains(branches, child)
-		hasParentBranch := stringslice.Contains(branches, parent)
-		if !hasChildBranch || !hasParentBranch {
-			err = bc.Config.RemoveParent(child)
-			if err != nil {
-				return err
-			}
+func (bc *BackendCommands) RemoveOutdatedConfiguration(unuseds []string) error {
+	for _, unused := range unuseds {
+		err := bc.Config.RemoveParent(unused)
+		if err != nil {
+			return err
 		}
 	}
 	return nil

@@ -1,5 +1,7 @@
 package git
 
+import "fmt"
+
 // SyncStatus encodes the places a branch can exist at.
 type SyncStatus int
 
@@ -11,3 +13,14 @@ const (
 	SyncStatusRemoteOnly                        // the branch exists only at the remote
 	SyncStatusDeletedAtRemote                   // the branch was deleted on the remote
 )
+
+// IsLocal indicates whether a branch with this SyncStatus exists in the local repo.
+func (s SyncStatus) IsLocal() bool {
+	switch s {
+	case SyncStatusLocalOnly, SyncStatusUpToDate, SyncStatusAhead, SyncStatusBehind:
+		return true
+	case SyncStatusRemoteOnly, SyncStatusDeletedAtRemote:
+		return false
+	}
+	panic(fmt.Sprintf("uncaptured sync status: %v", s))
+}

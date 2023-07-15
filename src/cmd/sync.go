@@ -100,7 +100,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner) (*syncConfig, error)
 			return nil, err
 		}
 	}
-	branchInfos, initialBranch, err := run.Backend.BranchInfos()
+	branchInfos, initialBranch, err := run.Backend.Branches()
 	if err != nil {
 		return nil, err
 	}
