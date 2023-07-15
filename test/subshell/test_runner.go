@@ -234,7 +234,9 @@ func (r *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string) (s
 		time.Sleep(500 * time.Millisecond)
 		_, err := input.Write([]byte(userInput))
 		if err != nil {
-			log.Fatalf("can't write %q to subprocess '%s %s': %v", userInput, cmd, strings.Join(args, " "), err)
+			fmt.Printf("\nERROR: can't write %q to subprocess '%s %s': %v\n\n", userInput, cmd, strings.Join(args, " "), err)
+			fmt.Printf("OUTPUT: %s\n", output.String())
+			return "", 0, errors.New("subprocess crashed")
 		}
 	}
 	err = subProcess.Wait()
