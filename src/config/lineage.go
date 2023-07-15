@@ -19,14 +19,14 @@ func (l Lineage) Lookup(name string) *BranchWithParent {
 }
 
 // Ancestors provides all branches that are (great)(grand)parents of the branch with the given name.
-func (bs Lineage) Ancestors(branch string) Lineage {
+func (l Lineage) Ancestors(branch string) Lineage {
 	result := Lineage{}
-	current := bs.Lookup(branch)
+	current := l.Lookup(branch)
 	if current == nil {
 		return result
 	}
 	for {
-		parent := bs.Lookup(current.Parent)
+		parent := l.Lookup(current.Parent)
 		if parent == nil {
 			return result
 		}
@@ -44,9 +44,9 @@ func (l Lineage) BranchNames() []string {
 }
 
 // Children provides all branches that have the branch with the given name as their parent.
-func (bs Lineage) Children(branchName string) Lineage {
+func (l Lineage) Children(branchName string) Lineage {
 	result := Lineage{}
-	for _, b := range bs {
+	for _, b := range l {
 		if b.Parent == branchName {
 			result = append(result, b)
 		}
@@ -66,8 +66,8 @@ func (l Lineage) Contains(branchName string) bool {
 }
 
 // HasParents returns whether or not the given branch has at least one parent.
-func (bs Lineage) HasParent(branch string) bool {
-	for _, branchInfo := range bs {
+func (l Lineage) HasParent(branch string) bool {
+	for _, branchInfo := range l {
 		if branchInfo.Parent == branch {
 			return true
 		}
@@ -109,11 +109,11 @@ func (l Lineage) Roots() Lineage {
 
 // OrderedHierarchically sorts the given BranchInfos so that ancestor branches come before their descendants
 // and everything is sorted alphabetically.
-func (bs Lineage) OrderedHierarchically() Lineage {
-	result := make(Lineage, len(bs))
-	copy(result, bs)
+func (l Lineage) OrderedHierarchically() Lineage {
+	result := make(Lineage, len(l))
+	copy(result, l)
 	sort.Slice(result, func(x, y int) bool {
-		return bs.IsAncestor(result[x].Parent, result[y].Parent)
+		return l.IsAncestor(result[x].Parent, result[y].Parent)
 	})
 	return result
 }
