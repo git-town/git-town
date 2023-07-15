@@ -132,6 +132,16 @@ func (gt *GitTown) Lineage() Lineage {
 			Parent: parent,
 		})
 	}
+	result = append(result, BranchWithParent{
+		Name:   gt.MainBranch(),
+		Parent: "",
+	})
+	for _, perennial := range gt.PerennialBranches() {
+		result = append(result, BranchWithParent{
+			Name:   perennial,
+			Parent: "",
+		})
+	}
 	return result
 }
 

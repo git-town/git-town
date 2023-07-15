@@ -1,7 +1,9 @@
 package config
 
 import (
+	"fmt"
 	"sort"
+	"strings"
 )
 
 type BranchWithParent struct {
@@ -20,6 +22,8 @@ func (l Lineage) Ancestors(branchName string) Lineage {
 			return result
 		}
 		parent := l.Lookup(current.Parent)
+		fmt.Printf("LOOKING UP PARENT BRANCH %q\n", current.Parent)
+		fmt.Printf("LINEAGE IS %q\n", strings.Join(l.BranchNames(), ", "))
 		result = append(Lineage{*parent}, result...)
 		current = parent
 	}

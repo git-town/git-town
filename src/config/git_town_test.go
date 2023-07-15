@@ -4,6 +4,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/test/testruntime"
 	"github.com/stretchr/testify/assert"
@@ -13,7 +14,59 @@ func TestGitTown(t *testing.T) {
 	t.Parallel()
 
 	t.Run("Lineage", func(t *testing.T) {
-		// TODO: add tests
+		t.Run("contains the feature branches", func(t *testing.T) {
+			repo := testruntime.CreateGitTown(t)
+			repo.CreateFeatureBranch("feature1")
+			repo.CreateFeatureBranch("feature2")
+			repo.Config.Reload()
+			have := repo.Config.Lineage()
+			want := config.Lineage{
+				config.BranchWithParent{
+					Name:   "feature1",
+					Parent: "main",
+				},
+				config.BranchWithParent{
+					Name:   "feature2",
+					Parent: "main",
+				},
+				config.BranchWithParent{
+					Name:   "main",
+					Parent: "",
+				},
+			}
+			assert.Equal(t, want, have)
+		})
+		t.Run("contains the main branch", func(t *testing.T) {
+			repo := testruntime.CreateGitTown(t)
+			have := repo.Config.Lineage()
+			want := config.Lineage{
+				config.BranchWithParent{
+					Name:   "main",
+					Parent: "",
+				},
+			}
+			assert.Equal(t, want, have)
+		})
+		t.Run("contains perennial branches", func(t *testing.T) {
+			repo := testruntime.CreateGitTown(t)
+			repo.Config.AddToPerennialBranches("perennial1", "perennial2")
+			have := repo.Config.Lineage()
+			want := config.Lineage{
+				config.BranchWithParent{
+					Name:   "main",
+					Parent: "",
+				},
+				config.BranchWithParent{
+					Name:   "perennial1",
+					Parent: "",
+				},
+				config.BranchWithParent{
+					Name:   "perennial2",
+					Parent: "",
+				},
+			}
+			assert.Equal(t, want, have)
+		})
 	})
 
 	t.Run("OriginURL()", func(t *testing.T) {
