@@ -83,7 +83,3 @@ func (l *Lineage) Roots() []string {
 	sort.Strings(roots)
 	return roots
 }
-
-func (l *Lineage) SetParent(branch, parent string) {
-	(*l)[branch] = parent
-}
