@@ -95,7 +95,6 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 }
 
 func determineParentBranch(targetBranch string, promptForParent bool, run *git.ProdRunner) (string, error) {
-	lineage := run.Config.Lineage()
 	if promptForParent {
 		parentBranchName, err := validate.EnterParent(targetBranch, run.Config.MainBranch(), &run.Backend)
 		if err != nil {
@@ -105,8 +104,7 @@ func determineParentBranch(targetBranch string, promptForParent bool, run *git.P
 		if err != nil {
 			return "", err
 		}
-		parentBranch := lineage.Lookup(parentBranchName)
-		return parentBranch.Name, nil
+		return parentBranchName, nil
 	}
 	return run.Config.MainBranch(), nil
 }
