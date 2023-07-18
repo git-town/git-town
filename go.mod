@@ -22,6 +22,8 @@ require (
 	gopkg.in/AlecAivazis/survey.v1 v1.8.8
 )
 
+require golang.org/x/exp v0.0.0-20230713183714-613f0c0eb8a1
+
 require (
 	github.com/cucumber/gherkin-go/v11 v11.0.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect

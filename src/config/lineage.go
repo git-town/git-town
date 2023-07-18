@@ -4,6 +4,7 @@ import (
 	"sort"
 
 	"github.com/git-town/git-town/v9/src/stringslice"
+	"golang.org/x/exp/maps"
 )
 
 // Lineage encapsulates all data and functionality around parent branches.
@@ -82,4 +83,14 @@ func (l Lineage) Roots() []string {
 	}
 	sort.Strings(roots)
 	return roots
+}
+
+// OrderedHierarchically provides the branches in this Lineage ordered so that ancestor branches come before their descendants
+// and everything is sorted alphabetically.
+func (l Lineage) OrderedHierarchically() []string {
+	result := maps.Keys(l)
+	sort.Slice(result, func(x, y int) bool {
+		return l.IsAncestor(result[x], result[y])
+	})
+	return result
 }
