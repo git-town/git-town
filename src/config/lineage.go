@@ -7,7 +7,7 @@ import (
 )
 
 // Lineage encapsulates all data and functionality around parent branches.
-// branch --> its parent
+// branch --> its parent.
 type Lineage map[string]string
 
 // Ancestors provides the names of all parent branches of the branch with the given name.
