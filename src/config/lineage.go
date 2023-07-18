@@ -19,23 +19,23 @@ type Lineage struct {
 
 // Ancestors provides all branches that are (great)(grand)parents of the branch with the given name.
 func (l Lineage) Ancestors(branchName string) Lineage {
-	result := Lineage{}
+	entries := []BranchWithParent{}
 	current := l.Lookup(branchName)
 	for {
 		if current == nil || current.Parent == "" {
-			return result
+			return Lineage{entries: entries}
 		}
 		parent := l.Lookup(current.Parent)
 		fmt.Printf("LOOKING UP PARENT BRANCH %q\n", current.Parent)
 		fmt.Printf("LINEAGE IS %q\n", strings.Join(l.BranchNames(), ", "))
-		result = append(Lineage{*parent}, result...)
+		entries = append([]BranchWithParent{*parent}, entries...)
 		current = parent
 	}
 }
 
 func (l Lineage) BranchNames() []string {
-	result := make([]string, len(l))
-	for b, branchInfo := range l {
+	result := make([]string, len(l.entries))
+	for b, branchInfo := range l.entries {
 		result[b] = branchInfo.Name
 	}
 	return result
@@ -43,19 +43,19 @@ func (l Lineage) BranchNames() []string {
 
 // Children provides all branches that have the branch with the given name as their parent.
 func (l Lineage) Children(branchName string) Lineage {
-	result := Lineage{}
-	for _, b := range l {
+	entries := []BranchWithParent{}
+	for _, b := range l.entries {
 		if b.Parent == branchName {
-			result = append(result, b)
+			entries = append(entries, b)
 		}
 	}
-	sort.Slice(result, func(a, b int) bool { return result[a].Name < result[b].Name })
-	return result
+	sort.Slice(entries, func(a, b int) bool { return entries[a].Name < entries[b].Name })
+	return Lineage{entries: entries}
 }
 
 // Contains indicates whether this Lineage contains a branch with the given name
 func (l Lineage) Contains(branchName string) bool {
-	for _, branch := range l {
+	for _, branch := range l.entries {
 		if branch.Name == branchName {
 			return true
 		}
@@ -84,7 +84,7 @@ func (l Lineage) IsAncestor(ancestorName, branchName string) bool {
 
 // Lookup provides a copy of the lineage entry with the given name.
 func (l Lineage) Lookup(name string) *BranchWithParent {
-	for b, branchWithParent := range l {
+	for b, branchWithParent := range l.entries {
 		if branchWithParent.Name == name {
 			return &l[b]
 		}
