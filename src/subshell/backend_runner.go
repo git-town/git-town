@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"runtime/debug"
 	"strings"
 
 	"github.com/acarl005/stripansi"
@@ -42,6 +43,7 @@ func (r BackendRunner) execute(executable string, args ...string) ([]byte, error
 	outputBytes, err := subProcess.CombinedOutput()
 	if err != nil {
 		err = ErrorDetails(executable, args, err, outputBytes)
+		debug.PrintStack()
 	}
 	if r.Verbose && len(outputBytes) > 0 {
 		os.Stdout.Write(outputBytes)

@@ -11,7 +11,11 @@ type BranchWithParent struct {
 	Parent string
 }
 
-type Lineage []BranchWithParent
+type Lineage struct {
+	entries           []BranchWithParent
+	mainBranch        string
+	perennialBranches []string
+}
 
 // Ancestors provides all branches that are (great)(grand)parents of the branch with the given name.
 func (l Lineage) Ancestors(branchName string) Lineage {
