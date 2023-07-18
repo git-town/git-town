@@ -17,12 +17,11 @@ require (
 	github.com/spf13/cobra v1.6.1
 	github.com/stretchr/testify v1.8.1
 	github.com/xanzy/go-gitlab v0.78.0
+	golang.org/x/exp v0.0.0-20230713183714-613f0c0eb8a1
 	golang.org/x/oauth2 v0.4.0
 	// NOTE: updating to v2 makes the integration tests slow
 	gopkg.in/AlecAivazis/survey.v1 v1.8.8
 )
-
-require golang.org/x/exp v0.0.0-20230713183714-613f0c0eb8a1
 
 require (
 	github.com/cucumber/gherkin-go/v11 v11.0.0 // indirect
