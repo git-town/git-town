@@ -79,9 +79,15 @@ func (l Lineage) OrderedHierarchically() []string {
 	sort.Slice(result, func(x, y int) bool {
 		first := result[x]
 		second := result[y]
+		if first == "" {
+			return true
+		}
+		if second == "" {
+			return false
+		}
 		isAncestor := l.IsAncestor(first, second)
 		if isAncestor {
-			return false
+			return true
 		}
 		return first < second
 	})

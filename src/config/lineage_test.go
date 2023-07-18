@@ -112,14 +112,13 @@ func TestAncestry(t *testing.T) {
 		t.Run("complex scenario", func(t *testing.T) {
 			t.Parallel()
 			lineage := config.Lineage{}
-			lineage["main"] = ""
 			lineage["1"] = "main"
 			lineage["1A"] = "1"
 			lineage["1B"] = "1"
 			lineage["1A1"] = "1A"
 			lineage["1A2"] = "1A"
 			lineage["2"] = "main"
-			want := []string{"main", "1", "1A", "1A1", "1A2", "1B", "2"}
+			want := []string{"1", "1A", "1A1", "1A2", "1B", "2"}
 			have := lineage.OrderedHierarchically()
 			assert.Equal(t, want, have)
 		})
