@@ -6,16 +6,13 @@ import (
 	"strings"
 )
 
+// TODO: rename to LineageEntry
 type BranchWithParent struct {
 	Name   string
 	Parent string
 }
 
-type Lineage struct {
-	entries           []BranchWithParent
-	mainBranch        string
-	perennialBranches []string
-}
+type Lineage []BranchWithParent
 
 // Ancestors provides all branches that are (great)(grand)parents of the branch with the given name.
 func (l Lineage) Ancestors(branchName string) Lineage {
