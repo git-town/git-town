@@ -14,9 +14,10 @@ func TestGitTown(t *testing.T) {
 	t.Parallel()
 
 	t.Run("Lineage", func(t *testing.T) {
+		t.Parallel()
 		repo := testruntime.CreateGitTown(t)
-		repo.CreateFeatureBranch("feature1")
-		repo.CreateFeatureBranch("feature2")
+		assert.NoError(t, repo.CreateFeatureBranch("feature1"))
+		assert.NoError(t, repo.CreateFeatureBranch("feature2"))
 		repo.Config.Reload()
 		have := repo.Config.Lineage()
 		want := config.Lineage{}
