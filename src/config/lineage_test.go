@@ -78,17 +78,6 @@ func TestLineage(t *testing.T) {
 
 	t.Run("Contains", func(t *testing.T) {
 		t.Parallel()
-		lineage := config.Lineage{
-			config.BranchWithParent{Name: "one"},
-			config.BranchWithParent{Name: "two"},
-		}
-		assert.True(t, lineage.Contains("one"))
-		assert.True(t, lineage.Contains("two"))
-		assert.False(t, lineage.Contains("zonk"))
-	})
-
-	t.Run("HasParent", func(t *testing.T) {
-		t.Parallel()
 		t.Run("has a parent", func(t *testing.T) {
 			t.Parallel()
 			lineage := config.Lineage{}
@@ -133,21 +122,20 @@ func TestLineage(t *testing.T) {
 	})
 
 	t.Run("OrderedHierarchically", func(t *testing.T) {
-		t.Run("has parent", func(t *testing.T) {
+		t.Run("complex scenario", func(t *testing.T) {
 			t.Parallel()
 			lineage := config.Lineage{}
-			lineage["main"] = ""
 			lineage["1"] = "main"
 			lineage["1A"] = "1"
-			lineage["1B"] = "one"
+			lineage["1B"] = "1"
 			lineage["1A1"] = "1A"
 			lineage["1A2"] = "1A"
 			lineage["2"] = "main"
-			want := []string{"main", "1", "2", "1A", "1B", "1A1", "1A2"}
-			have := lineage.OrderedHierarchically().BranchNames()
+			want := []string{"1", "1A", "1A1", "1A2", "1B", "2"}
+			have := lineage.OrderedHierarchically()
 			assert.Equal(t, want, have)
 		})
-		t.Run("has no parent", func(t *testing.T) {
+		t.Run("empty", func(t *testing.T) {
 			t.Parallel()
 			lineage := config.Lineage{}
 			assert.Equal(t, "", lineage.Parent("foo"))
