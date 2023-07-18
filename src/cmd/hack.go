@@ -96,15 +96,15 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 
 func determineParentBranch(targetBranch string, promptForParent bool, run *git.ProdRunner) (string, error) {
 	if promptForParent {
-		parentBranchName, err := validate.EnterParent(targetBranch, run.Config.MainBranch(), &run.Backend)
+		parentBranch, err := validate.EnterParent(targetBranch, run.Config.MainBranch(), &run.Backend)
 		if err != nil {
 			return "", err
 		}
-		err = validate.KnowsBranchAncestors(parentBranchName, run.Config.MainBranch(), &run.Backend)
+		err = validate.KnowsBranchAncestors(parentBranch, run.Config.MainBranch(), &run.Backend)
 		if err != nil {
 			return "", err
 		}
-		return parentBranchName, nil
+		return parentBranch, nil
 	}
 	return run.Config.MainBranch(), nil
 }
