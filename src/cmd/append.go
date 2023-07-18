@@ -79,7 +79,6 @@ type appendConfig struct {
 
 func determineAppendConfig(targetBranch string, run *git.ProdRunner) (*appendConfig, error) {
 	fc := failure.Collector{}
-	lineage := run.Config.Lineage()
 	parentBranch := fc.String(run.Backend.CurrentBranch())
 	hasOrigin := fc.Bool(run.Backend.HasOrigin())
 	isOffline := fc.Bool(run.Config.IsOffline())
@@ -97,7 +96,7 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner) (*appendCon
 		fc.Fail("a branch named %q already exists", targetBranch)
 	}
 	fc.Check(validate.KnowsBranchAncestors(parentBranch, run.Config.MainBranch(), &run.Backend))
-	ancestorBranches := lineage.Ancestors(parentBranch)
+	ancestorBranches := run.Config.Lineage().Ancestors(parentBranch)
 	return &appendConfig{
 		ancestorBranches:    ancestorBranches,
 		isOffline:           isOffline,
