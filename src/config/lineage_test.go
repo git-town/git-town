@@ -123,7 +123,7 @@ func TestAncestry(t *testing.T) {
 			have := lineage.OrderedHierarchically()
 			assert.Equal(t, want, have)
 		})
-		t.Run("has no parent", func(t *testing.T) {
+		t.Run("empty", func(t *testing.T) {
 			t.Parallel()
 			lineage := config.Lineage{}
 			assert.Equal(t, "", lineage.Parent("foo"))
