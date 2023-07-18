@@ -39,15 +39,15 @@ func (r *TestCommands) AddSubmodule(url string) {
 func (r *TestCommands) BranchHierarchyTable() datatable.DataTable {
 	result := datatable.DataTable{}
 	r.Config.Reload()
-	parentBranchMap := r.Config.Lineage().Entries
+	parentBranchMap := r.Config.Lineage()
 	result.AddRow("BRANCH", "PARENT")
-	childBranches := make([]string, 0, len(parentBranchMap))
-	for child := range parentBranchMap {
+	childBranches := make([]string, 0, len(*parentBranchMap))
+	for child := range *parentBranchMap {
 		childBranches = append(childBranches, child)
 	}
 	sort.Strings(childBranches)
 	for _, child := range childBranches {
-		result.AddRow(child, parentBranchMap[child])
+		result.AddRow(child, (*parentBranchMap)[child])
 	}
 	return result
 }

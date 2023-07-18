@@ -8,7 +8,7 @@ import (
 )
 
 func newLineage() config.Lineage {
-	return config.Lineage{map[string]string{}}
+	return config.Lineage{}
 }
 
 func TestAncestry(t *testing.T) {
