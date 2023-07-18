@@ -8,62 +8,34 @@ import (
 )
 
 func TestLineage(t *testing.T) {
+	t.Parallel()
 
 	t.Run("Ancestors", func(t *testing.T) {
 		t.Parallel()
 		t.Run("provides all ancestor branches, oldest first", func(t *testing.T) {
 			t.Parallel()
-			lineage := config.Lineage{
-				config.BranchWithParent{
-					Name:   "three",
-					Parent: "two",
-				},
-				config.BranchWithParent{
-					Name:   "two",
-					Parent: "one",
-				},
-				config.BranchWithParent{
-					Name:   "one",
-					Parent: "main",
-				},
-				config.BranchWithParent{
-					Name:   "main",
-					Parent: "",
-				},
-				config.BranchWithParent{
-					Name:   "other",
-					Parent: "one",
-				},
-			}
-			have := lineage.Ancestors("three").BranchNames()
+			ancestry := config.Lineage{}
+			ancestry["three"] = "two"
+			ancestry["two"] = "one"
+			ancestry["one"] = "main"
+			have := ancestry.Ancestors("three")
 			want := []string{"main", "one", "two"}
+			assert.Equal(t, want, have)
+		})
+		t.Run("one ancestor", func(t *testing.T) {
+			t.Parallel()
+			ancestry := config.Lineage{}
+			ancestry["one"] = "main"
+			have := ancestry.Ancestors("one")
+			want := []string{"main"}
 			assert.Equal(t, want, have)
 		})
 		t.Run("no ancestors", func(t *testing.T) {
 			t.Parallel()
-			lineage := config.Lineage{
-				config.BranchWithParent{
-					Name:   "main",
-					Parent: "",
-				},
-			}
-			have := lineage.Ancestors("main")
-			want := config.Lineage{}
-			assert.Equal(t, want, have)
-		})
-	})
-
-	t.Run("BranchNames", func(t *testing.T) {
-		t.Parallel()
-		t.Run("returns the names of all branches in this collection, ordered the same as the collection", func(t *testing.T) {
-			t.Parallel()
-			lineage := config.Lineage{
-				config.BranchWithParent{Name: "one"},
-				config.BranchWithParent{Name: "two"},
-				config.BranchWithParent{Name: "three"},
-			}
-			want := []string{"one", "two", "three"}
-			have := lineage.BranchNames()
+			ancestry := config.Lineage{}
+			ancestry["one"] = "main"
+			have := ancestry.Ancestors("two")
+			want := []string{}
 			assert.Equal(t, want, have)
 		})
 	})
@@ -72,201 +44,127 @@ func TestLineage(t *testing.T) {
 		t.Parallel()
 		t.Run("provides all children of the given branch, ordered alphabetically", func(t *testing.T) {
 			t.Parallel()
-			lineage := config.Lineage{
-				config.BranchWithParent{
-					Name:   "alpha",
-					Parent: "",
-				},
-				config.BranchWithParent{
-					Name:   "beta2",
-					Parent: "alpha",
-				},
-				config.BranchWithParent{
-					Name:   "beta1",
-					Parent: "alpha",
-				},
-			}
-			have := lineage.Children("alpha").BranchNames()
+			ancestry := config.Lineage{}
+			ancestry["beta1"] = "alpha"
+			ancestry["beta2"] = "alpha"
+			have := ancestry.Children("alpha")
 			want := []string{"beta1", "beta2"}
 			assert.Equal(t, want, have)
 		})
 		t.Run("provides only the immediate children, i.e. no grandchildren", func(t *testing.T) {
 			t.Parallel()
-			lineage := config.Lineage{
-				config.BranchWithParent{
-					Name:   "one",
-					Parent: "",
-				},
-				config.BranchWithParent{
-					Name:   "two",
-					Parent: "one",
-				},
-				config.BranchWithParent{
-					Name:   "three",
-					Parent: "two",
-				},
-			}
-			have := lineage.Children("one").BranchNames()
-			want := []string{"two"}
+			ancestry := config.Lineage{}
+			ancestry["beta"] = "alpha"
+			ancestry["gamma"] = "beta"
+			have := ancestry.Children("alpha")
+			want := []string{"beta"}
 			assert.Equal(t, want, have)
 		})
 		t.Run("empty", func(t *testing.T) {
 			t.Parallel()
-			lineage := config.Lineage{}
-			have := lineage.Children("alpha")
-			want := config.Lineage{}
+			ancestry := config.Lineage{}
+			have := ancestry.Children("alpha")
+			want := []string{}
 			assert.Equal(t, want, have)
 		})
 	})
 
 	t.Run("Contains", func(t *testing.T) {
 		t.Parallel()
-		lineage := config.Lineage{
-			config.BranchWithParent{Name: "one"},
-			config.BranchWithParent{Name: "two"},
-		}
-		assert.True(t, lineage.Contains("one"))
-		assert.True(t, lineage.Contains("two"))
-		assert.False(t, lineage.Contains("zonk"))
+		t.Run("has a parent", func(t *testing.T) {
+			t.Parallel()
+			ancestry := config.Lineage{}
+			ancestry["beta"] = "alpha"
+			assert.True(t, ancestry.HasParents("beta"))
+		})
+		t.Run("has no parent", func(t *testing.T) {
+			t.Parallel()
+			ancestry := config.Lineage{}
+			assert.False(t, ancestry.HasParents("foo"))
+		})
 	})
 
 	t.Run("IsAncestor", func(t *testing.T) {
 		t.Run("recognizes greatgrandparent", func(t *testing.T) {
 			t.Parallel()
-			lineage := config.Lineage{
-				config.BranchWithParent{
-					Name:   "one",
-					Parent: "",
-				},
-				config.BranchWithParent{
-					Name:   "two",
-					Parent: "one",
-				},
-				config.BranchWithParent{
-					Name:   "three",
-					Parent: "two",
-				},
-				config.BranchWithParent{
-					Name:   "four",
-					Parent: "three",
-				},
-			}
-			assert.True(t, lineage.IsAncestor("one", "four"))
+			ancestry := config.Lineage{}
+			ancestry["four"] = "three"
+			ancestry["three"] = "two"
+			ancestry["two"] = "one"
+			assert.True(t, ancestry.IsAncestor("one", "four"))
 		})
 		t.Run("child branches are not ancestors", func(t *testing.T) {
 			t.Parallel()
-			lineage := config.Lineage{
-				config.BranchWithParent{
-					Name:   "one",
-					Parent: "",
-				},
-				config.BranchWithParent{
-					Name:   "two",
-					Parent: "one",
-				},
-			}
-			assert.False(t, lineage.IsAncestor("two", "one"))
+			ancestry := config.Lineage{}
+			ancestry["two"] = "one"
+			assert.True(t, ancestry.IsAncestor("one", "two"))
 		})
 		t.Run("unrelated branches are not ancestors", func(t *testing.T) {
 			t.Parallel()
-			lineage := config.Lineage{
-				config.BranchWithParent{
-					Name:   "one",
-					Parent: "",
-				},
-				config.BranchWithParent{
-					Name:   "two",
-					Parent: "one",
-				},
-				config.BranchWithParent{
-					Name:   "three",
-					Parent: "one",
-				},
-			}
-			assert.False(t, lineage.IsAncestor("two", "three"))
+			ancestry := config.Lineage{}
+			ancestry["two"] = "one"
+			assert.False(t, ancestry.IsAncestor("two", "one"))
+		})
+		t.Run("not related", func(t *testing.T) {
+			t.Parallel()
+			ancestry := config.Lineage{}
+			ancestry["two"] = "one"
+			ancestry["three"] = "one"
+			assert.False(t, ancestry.IsAncestor("two", "three"))
 		})
 	})
 
 	t.Run("OrderedHierarchically", func(t *testing.T) {
-		t.Parallel()
-		lineage := config.Lineage{
-			config.BranchWithParent{
-				Name:   "main",
-				Parent: "",
-			},
-			config.BranchWithParent{
-				Name:   "1",
-				Parent: "main",
-			},
-			config.BranchWithParent{
-				Name:   "1A",
-				Parent: "1",
-			},
-			config.BranchWithParent{
-				Name:   "1B",
-				Parent: "1",
-			},
-			config.BranchWithParent{
-				Name:   "1A1",
-				Parent: "1A",
-			},
-			config.BranchWithParent{
-				Name:   "1A2",
-				Parent: "1A",
-			},
-			config.BranchWithParent{
-				Name:   "2",
-				Parent: "main",
-			},
-		}
-		want := []string{"main", "1", "1A", "1B", "1A1", "1A2", "2"}
-		have := lineage.OrderedHierarchically().BranchNames()
-		assert.Equal(t, want, have)
+		t.Run("complex scenario", func(t *testing.T) {
+			t.Parallel()
+			lineage := config.Lineage{}
+			lineage["main"] = ""
+			lineage["1"] = "main"
+			lineage["1A"] = "1"
+			lineage["1B"] = "1"
+			lineage["1A1"] = "1A"
+			lineage["1A2"] = "1A"
+			lineage["2"] = "main"
+			want := []string{"main", "1", "1A", "1B", "1A1", "1A2", "2"}
+			have := lineage.OrderedHierarchically().BranchNames()
+			assert.Equal(t, want, have)
+		})
+		t.Run("has no parent", func(t *testing.T) {
+			t.Parallel()
+			ancestry := config.Lineage{}
+			assert.Equal(t, "", ancestry.Parent("foo"))
+		})
 	})
 
 	t.Run("Roots", func(t *testing.T) {
 		t.Parallel()
 		t.Run("multiple roots with nested child branches", func(t *testing.T) {
 			t.Parallel()
-			lineage := config.Lineage{
-				config.BranchWithParent{
-					Name:   "main",
-					Parent: "",
-				},
-				config.BranchWithParent{
-					Name:   "one",
-					Parent: "main",
-				},
-				config.BranchWithParent{
-					Name:   "two",
-					Parent: "one",
-				},
-				config.BranchWithParent{
-					Name:   "alpha",
-					Parent: "main",
-				},
-				config.BranchWithParent{
-					Name:   "beta",
-					Parent: "alpha",
-				},
-				config.BranchWithParent{
-					Name:   "prod",
-					Parent: "",
-				},
-				config.BranchWithParent{
-					Name:   "hotfix1",
-					Parent: "prod",
-				},
-			}
+			ancestry := config.Lineage{}
+			ancestry["two"] = "one"
+			ancestry["one"] = "main"
+			ancestry["beta"] = "alpha"
+			ancestry["alpha"] = "main"
+			ancestry["hotfix1"] = "prod"
+			ancestry["hotfix2"] = "prod"
+			have := ancestry.Roots()
 			want := []string{"main", "prod"}
-			have := lineage.Roots().BranchNames()
+			assert.Equal(t, want, have)
+		})
+		t.Run("no nested branches", func(t *testing.T) {
+			t.Parallel()
+			ancestry := config.Lineage{}
+			ancestry["one"] = "main"
+			ancestry["alpha"] = "main"
+			have := ancestry.Roots()
+			want := []string{"main"}
 			assert.Equal(t, want, have)
 		})
 		t.Run("empty", func(t *testing.T) {
 			t.Parallel()
-			lineage := config.Lineage{}
-			have := lineage.Roots()
-			want := config.Lineage{}
+			ancestry := config.Lineage{}
+			have := ancestry.Roots()
+			want := []string{}
 			assert.Equal(t, want, have)
 		})
 	})

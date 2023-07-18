@@ -487,12 +487,9 @@ func (bc *BackendCommands) RemoveOutdatedConfiguration() error {
 	if err != nil {
 		return err
 	}
-	for _, entry := range bc.Config.Lineage() {
-		if entry.Parent == "" {
-			continue
-		}
-		hasChildBranch := stringslice.Contains(branches, entry.Name)
-		hasParentBranch := stringslice.Contains(branches, entry.Parent)
+	for child, parent := range bc.Config.Lineage() {
+		hasChildBranch := stringslice.Contains(branches, child)
+		hasParentBranch := stringslice.Contains(branches, parent)
 		if !hasChildBranch || !hasParentBranch {
 			err = bc.Config.RemoveParent(entry.Name)
 			if err != nil {
