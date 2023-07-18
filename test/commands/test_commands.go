@@ -47,7 +47,7 @@ func (r *TestCommands) BranchHierarchyTable() datatable.DataTable {
 	}
 	sort.Strings(childBranches)
 	for _, child := range childBranches {
-		result.AddRow(child, (parentBranchMap)[child])
+		result.AddRow(child, parentBranchMap[child])
 	}
 	return result
 }
