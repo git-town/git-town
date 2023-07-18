@@ -511,11 +511,19 @@ func (bc *BackendCommands) Remotes() ([]string, error) {
 }
 
 // RemoveOutdatedConfiguration removes outdated Git Town configuration.
-func (bc *BackendCommands) RemoveOutdatedConfiguration(unuseds []string) error {
-	for _, unused := range unuseds {
-		err := bc.Config.RemoveParent(unused)
-		if err != nil {
-			return err
+func (bc *BackendCommands) RemoveOutdatedConfiguration() error {
+	branches, err := bc.LocalAndOriginBranches(bc.Config.MainBranch())
+	if err != nil {
+		return err
+	}
+	for child, parent := range bc.Config.Lineage() {
+		hasChildBranch := stringslice.Contains(branches, child)
+		hasParentBranch := stringslice.Contains(branches, parent)
+		if !hasChildBranch || !hasParentBranch {
+			err = bc.Config.RemoveParent(child)
+			if err != nil {
+				return err
+			}
 		}
 	}
 	return nil
