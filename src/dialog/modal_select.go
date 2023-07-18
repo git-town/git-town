@@ -15,7 +15,7 @@ import (
 func ModalSelect(entries ModalEntries, initialValue string) (*string, error) {
 	initialPos := entries.IndexOfValue(initialValue)
 	if initialPos == nil {
-		return nil, fmt.Errorf("given initial value %q not in given entries", initialValue)
+		return nil, fmt.Errorf("given initial value %q not in given entries (%s)", initialValue, strings.Join(entries.Texts(), ", "))
 	}
 	input := modalSelect{
 		entries:       entries,
@@ -137,6 +137,14 @@ func (mes ModalEntries) IndexOfValue(value string) *int {
 		}
 	}
 	return nil
+}
+
+func (mes ModalEntries) Texts() []string {
+	result := make([]string, len(mes))
+	for e, entry := range mes {
+		result[e] = entry.Text
+	}
+	return result
 }
 
 // modalSelectStatus represents the different states that a modalSelect instance can be in.
