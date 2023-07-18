@@ -31,6 +31,7 @@ type RunState struct {
 }
 
 // New constructs a RunState instance with the given values.
+// TODO: remove this unnecessary constructor function.
 func New(command string, stepList StepList) *RunState {
 	return &RunState{
 		Command:     command,
