@@ -69,6 +69,18 @@ func (l Lineage) IsAncestor(ancestor, other string) bool {
 	}
 }
 
+// OrderedHierarchically sorts the given BranchInfos so that ancestor branches come before their descendants
+// and everything is sorted alphabetically.
+func (l Lineage) OrderedHierarchically() Lineage {
+	result := make(Lineage, len(l))
+	copy(result, l)
+	sort.Slice(result, func(x, y int) bool {
+		return l.IsAncestor(result[x].Name, result[y].Name)
+		// fmt.Printf("%s %s %v", result[x].Name)
+	})
+	return result
+}
+
 // Roots provides the branches with children and no parents.
 func (l Lineage) Roots() []string {
 	roots := []string{}
@@ -82,16 +94,4 @@ func (l Lineage) Roots() []string {
 		return roots[a].Name < roots[b].Name
 	})
 	return roots
-}
-
-// OrderedHierarchically sorts the given BranchInfos so that ancestor branches come before their descendants
-// and everything is sorted alphabetically.
-func (l Lineage) OrderedHierarchically() Lineage {
-	result := make(Lineage, len(l))
-	copy(result, l)
-	sort.Slice(result, func(x, y int) bool {
-		return l.IsAncestor(result[x].Name, result[y].Name)
-		// fmt.Printf("%s %s %v", result[x].Name)
-	})
-	return result
 }
