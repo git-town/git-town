@@ -72,6 +72,22 @@ func (l Lineage) Parent(branch string) string {
 	return ""
 }
 
+// OrderedHierarchically provides the branches in this Lineage ordered so that ancestor branches come before their descendants
+// and everything is sorted alphabetically.
+func (l Lineage) OrderedHierarchically() []string {
+	result := maps.Keys(l)
+	sort.Slice(result, func(x, y int) bool {
+		first := result[x]
+		second := result[y]
+		isAncestor := l.IsAncestor(first, second)
+		if isAncestor {
+			return false
+		}
+		return first < second
+	})
+	return result
+}
+
 // Roots provides the branches with children and no parents.
 func (l Lineage) Roots() []string {
 	roots := []string{}
@@ -83,14 +99,4 @@ func (l Lineage) Roots() []string {
 	}
 	sort.Strings(roots)
 	return roots
-}
-
-// OrderedHierarchically provides the branches in this Lineage ordered so that ancestor branches come before their descendants
-// and everything is sorted alphabetically.
-func (l Lineage) OrderedHierarchically() []string {
-	result := maps.Keys(l)
-	sort.Slice(result, func(x, y int) bool {
-		return l.IsAncestor(result[x], result[y])
-	})
-	return result
 }
