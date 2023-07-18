@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/flags"
@@ -68,12 +67,12 @@ func runAppend(arg string, debug bool) error {
 }
 
 type appendConfig struct {
-	ancestorBranches    config.Lineage
+	ancestorBranches    []string
 	hasOrigin           bool
 	isOffline           bool
 	mainBranch          string
 	noPushHook          bool
-	parentBranch        config.BranchWithParent
+	parentBranch        string
 	shouldNewBranchPush bool
 	targetBranch        string
 }
@@ -81,8 +80,7 @@ type appendConfig struct {
 func determineAppendConfig(targetBranch string, run *git.ProdRunner) (*appendConfig, error) {
 	fc := failure.Collector{}
 	lineage := run.Config.Lineage()
-	parentBranchName := fc.String(run.Backend.CurrentBranch())
-	parentBranch := lineage.Lookup(parentBranchName)
+	parentBranch := fc.String(run.Backend.CurrentBranch())
 	hasOrigin := fc.Bool(run.Backend.HasOrigin())
 	isOffline := fc.Bool(run.Config.IsOffline())
 	mainBranch := run.Config.MainBranch()
