@@ -108,6 +108,8 @@ func determineStep(stepType string) steps.Step {
 		return &steps.SkipCurrentBranchSteps{}
 	case "*StashOpenChangesStep":
 		return &steps.StashOpenChangesStep{}
+	case "*UpdateProposalTargetStep":
+		return &steps.UpdateProposalTargetStep{}
 	}
 	return nil
 }
