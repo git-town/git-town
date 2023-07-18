@@ -44,8 +44,7 @@ func runSwitch(debug bool) error {
 	if err != nil {
 		return err
 	}
-	lineage := run.Config.Lineage()
-	newBranch, err := queryBranch(currentBranch, lineage)
+	newBranch, err := queryBranch(currentBranch, run.Config.Lineage())
 	if err != nil {
 		return err
 	}
@@ -73,7 +72,7 @@ func createEntries(lineage config.Lineage) (dialog.ModalEntries, error) {
 	entries := dialog.ModalEntries{}
 	var err error
 	for _, root := range lineage.Roots() {
-		entries, err = addEntryAndChildren(entries, root.Name, 0, lineage)
+		entries, err = addEntryAndChildren(entries, root, 0, lineage)
 		if err != nil {
 			return nil, err
 		}
@@ -89,7 +88,7 @@ func addEntryAndChildren(entries dialog.ModalEntries, branch string, indent int,
 	})
 	var err error
 	for _, child := range lineage.Children(branch) {
-		entries, err = addEntryAndChildren(entries, child.Name, indent+1, lineage)
+		entries, err = addEntryAndChildren(entries, child, indent+1, lineage)
 		if err != nil {
 			return entries, err
 		}

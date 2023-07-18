@@ -62,8 +62,11 @@ func hack(args []string, promptForParent, debug bool) error {
 	if err != nil {
 		return err
 	}
-	runState := runstate.New("hack", stepList)
-	return runstate.Execute(runState, &run, nil)
+	runState := runstate.RunState{
+		Command:     "hack",
+		RunStepList: stepList,
+	}
+	return runstate.Execute(&runState, &run, nil)
 }
 
 func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunner) (*appendConfig, error) {

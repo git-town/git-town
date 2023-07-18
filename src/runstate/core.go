@@ -30,15 +30,6 @@ type RunState struct {
 	UnfinishedDetails *UnfinishedRunStateDetails `exhaustruct:"optional" json:"UnfinishedDetails"`
 }
 
-// New constructs a RunState instance with the given values.
-// TODO: remove this unnecessary constructor function.
-func New(command string, stepList StepList) *RunState {
-	return &RunState{
-		Command:     command,
-		RunStepList: stepList,
-	}
-}
-
 // AddPushBranchStepAfterCurrentBranchSteps inserts a PushBranchStep
 // after all the steps for the current branch.
 func (runState *RunState) AddPushBranchStepAfterCurrentBranchSteps(backend *git.BackendCommands) error {

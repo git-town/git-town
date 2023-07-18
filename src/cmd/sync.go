@@ -72,8 +72,11 @@ func sync(all, dryRun, debug bool) error {
 	if err != nil {
 		return err
 	}
-	runState := runstate.New("sync", stepList)
-	return runstate.Execute(runState, &run, nil)
+	runState := runstate.RunState{
+		Command:     "sync",
+		RunStepList: stepList,
+	}
+	return runstate.Execute(&runState, &run, nil)
 }
 
 type syncConfig struct {

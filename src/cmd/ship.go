@@ -86,8 +86,11 @@ func ship(args []string, message string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	runState := runstate.New("ship", stepList)
-	return runstate.Execute(runState, &run, connector)
+	runState := runstate.RunState{
+		Command:     "ship",
+		RunStepList: stepList,
+	}
+	return runstate.Execute(&runState, &run, connector)
 }
 
 type shipConfig struct {

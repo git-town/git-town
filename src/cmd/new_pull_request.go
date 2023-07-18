@@ -77,8 +77,11 @@ func newPullRequest(debug bool) error {
 	if err != nil {
 		return err
 	}
-	runState := runstate.New("new-pull-request", stepList)
-	return runstate.Execute(runState, &run, connector)
+	runState := runstate.RunState{
+		Command:     "new-pull-request",
+		RunStepList: stepList,
+	}
+	return runstate.Execute(&runState, &run, connector)
 }
 
 type newPullRequestConfig struct {

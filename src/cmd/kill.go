@@ -53,8 +53,11 @@ func kill(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	runState := runstate.New("kill", stepList)
-	return runstate.Execute(runState, &run, nil)
+	runState := runstate.RunState{
+		Command:     "kill",
+		RunStepList: stepList,
+	}
+	return runstate.Execute(&runState, &run, nil)
 }
 
 type killConfig struct {

@@ -69,8 +69,11 @@ func renameBranch(args []string, force, debug bool) error {
 	if err != nil {
 		return err
 	}
-	runState := runstate.New("rename-branch", stepList)
-	return runstate.Execute(runState, &run, nil)
+	runState := runstate.RunState{
+		Command:     "rename-branch",
+		RunStepList: stepList,
+	}
+	return runstate.Execute(&runState, &run, nil)
 }
 
 type renameBranchConfig struct {
