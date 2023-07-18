@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestAncestry(t *testing.T) {
+func TestLineage(t *testing.T) {
 	t.Parallel()
 
 	t.Run("Ancestors", func(t *testing.T) {
