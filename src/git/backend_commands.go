@@ -92,55 +92,44 @@ func ParseVerboseBranchesOutput(output string) (BranchesWithSyncStatus, string) 
 		if line[0] == '*' {
 			currentBranch = branchName
 		}
-		if remoteText[0] == '[' {
-			closingBracketPos := strings.IndexRune(remoteText, ']')
-			insideBrackets := remoteText[1:closingBracketPos]
-			remoteParts := strings.SplitN(insideBrackets, ":", 2)
-			if len(remoteParts) == 1 {
-				result = append(result, BranchWithSyncStatus{
-					Name:       branchName,
-					SyncStatus: SyncStatusUpToDate,
-				})
-				continue
-			}
-			remoteStatus := strings.TrimSpace(remoteParts[1])
-			if remoteStatus == "gone" {
-				result = append(result, BranchWithSyncStatus{
-					Name:       branchName,
-					SyncStatus: SyncStatusDeletedAtRemote,
-				})
-				continue
-			}
-			if strings.HasPrefix(remoteStatus, "ahead ") {
-				result = append(result, BranchWithSyncStatus{
-					Name:       branchName,
-					SyncStatus: SyncStatusAhead,
-				})
-				continue
-			}
-			if strings.HasPrefix(remoteStatus, "behind ") {
-				result = append(result, BranchWithSyncStatus{
-					Name:       branchName,
-					SyncStatus: SyncStatusBehind,
-				})
-				continue
-			}
-		} else {
-			if strings.HasPrefix(branchName, "remotes/origin/") {
-				result = append(result, BranchWithSyncStatus{
-					Name:       branchName[15:],
-					SyncStatus: SyncStatusRemoteOnly,
-				})
-				continue
-			} else {
-				result = append(result, BranchWithSyncStatus{
-					Name:       branchName,
-					SyncStatus: SyncStatusLocalOnly,
-				})
-			}
+		syncStatus := GetSyncStatus(branchName, remoteText)
+		if strings.HasPrefix(branchName, "remotes/origin/") {
+			branchName = branchName[15:]
 		}
+		result = append(result, BranchWithSyncStatus{
+			Name:       branchName,
+			SyncStatus: syncStatus,
+		})
 	}
 	return result, currentBranch
+}
+
+func GetSyncStatus(branchName, remoteText string) SyncStatus {
+	if remoteText[0] == '[' {
+		closingBracketPos := strings.IndexRune(remoteText, ']')
+		insideBrackets := remoteText[1:closingBracketPos]
+		remoteParts := strings.SplitN(insideBrackets, ":", 2)
+		if len(remoteParts) == 1 {
+			return SyncStatusUpToDate
+		}
+		remoteStatus := strings.TrimSpace(remoteParts[1])
+		if remoteStatus == "gone" {
+			return SyncStatusDeletedAtRemote
+		}
+		if strings.HasPrefix(remoteStatus, "ahead ") {
+			return SyncStatusAhead
+		}
+		if strings.HasPrefix(remoteStatus, "behind ") {
+			return SyncStatusBehind
+		}
+	} else {
+		if strings.HasPrefix(branchName, "remotes/origin/") {
+			return SyncStatusRemoteOnly
+		} else {
+			return SyncStatusLocalOnly
+		}
+	}
+	panic(fmt.Sprintf("cannot determine the sync status for Git remote %q and branch name %q", remoteText, branchName))
 }
 
 // CheckoutBranch checks out the Git branch with the given name.
