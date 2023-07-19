@@ -40,6 +40,17 @@ func TestLineage(t *testing.T) {
 		})
 	})
 
+	t.Run("BranchNames", func(t *testing.T) {
+		t.Parallel()
+		lineage := config.Lineage{}
+		lineage["one"] = "1"
+		lineage["two"] = "2"
+		lineage["three"] = "3"
+		have := lineage.BranchNames()
+		want := []string{"one", "three", "two"}
+		assert.Equal(t, want, have)
+	})
+
 	t.Run("Children", func(t *testing.T) {
 		t.Parallel()
 		t.Run("provides all children of the given branch, ordered alphabetically", func(t *testing.T) {
