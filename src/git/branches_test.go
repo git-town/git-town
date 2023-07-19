@@ -12,28 +12,28 @@ func TestAncestry(t *testing.T) {
 
 	t.Run("LocalBranches", func(t *testing.T) {
 		t.Parallel()
-		bs := git.BranchesWithParentAndSyncStatus{
-			git.BranchWithParentAndSyncStatus{
+		bs := git.BranchesWithSyncStatus{
+			git.BranchWithSyncStatus{
 				Name:       "up-to-date",
 				SyncStatus: git.SyncStatusUpToDate,
 			},
-			git.BranchWithParentAndSyncStatus{
+			git.BranchWithSyncStatus{
 				Name:       "ahead",
 				SyncStatus: git.SyncStatusAhead,
 			},
-			git.BranchWithParentAndSyncStatus{
+			git.BranchWithSyncStatus{
 				Name:       "behind",
 				SyncStatus: git.SyncStatusBehind,
 			},
-			git.BranchWithParentAndSyncStatus{
+			git.BranchWithSyncStatus{
 				Name:       "local-only",
 				SyncStatus: git.SyncStatusLocalOnly,
 			},
-			git.BranchWithParentAndSyncStatus{
+			git.BranchWithSyncStatus{
 				Name:       "remote-only",
 				SyncStatus: git.SyncStatusRemoteOnly,
 			},
-			git.BranchWithParentAndSyncStatus{
+			git.BranchWithSyncStatus{
 				Name:       "deleted-at-remote",
 				SyncStatus: git.SyncStatusDeletedAtRemote,
 			},
@@ -45,11 +45,11 @@ func TestAncestry(t *testing.T) {
 
 	t.Run("Lookup", func(t *testing.T) {
 		t.Parallel()
-		bs := git.BranchesWithParentAndSyncStatus{
-			git.BranchWithParentAndSyncStatus{
+		bs := git.BranchesWithSyncStatus{
+			git.BranchWithSyncStatus{
 				Name: "one",
 			},
-			git.BranchWithParentAndSyncStatus{
+			git.BranchWithSyncStatus{
 				Name: "two",
 			},
 		}
