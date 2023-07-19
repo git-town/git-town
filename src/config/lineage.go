@@ -51,8 +51,8 @@ func (l Lineage) HasParents(branch string) bool {
 func (l Lineage) IsAncestor(ancestor, other string) bool {
 	current := other
 	for {
-		parent, found := l[current]
-		if !found {
+		parent := l[current]
+		if parent == "" {
 			return false
 		}
 		if parent == ancestor {
