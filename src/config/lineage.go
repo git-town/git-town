@@ -25,6 +25,13 @@ func (l Lineage) Ancestors(branch string) []string {
 	}
 }
 
+// BranchNames provides the names of all branches in this Lineage, sorted alphabetically.
+func (l Lineage) BranchNames() []string {
+	result := maps.Keys(l)
+	sort.Strings(result)
+	return result
+}
+
 // Children provides the names of all branches that have the given branch as their parent.
 func (l Lineage) Children(branch string) []string {
 	result := []string{}

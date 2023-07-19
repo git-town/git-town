@@ -80,7 +80,7 @@ func sync(all, dryRun, debug bool) error {
 }
 
 type syncConfig struct {
-	branchesToSync git.BranchInfos
+	branchesToSync git.BranchesWithSyncStatus
 	hasOrigin      bool
 	initialBranch  string
 	isOffline      bool
@@ -103,12 +103,12 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner) (*syncConfig, error)
 			return nil, err
 		}
 	}
-	branchInfos, initialBranch, err := run.Backend.Branches()
+	branchInfos, initialBranch, err := run.Backend.BranchesWithSyncStatus()
 	if err != nil {
 		return nil, err
 	}
 	mainBranch := run.Config.MainBranch()
-	var branchesToSync git.BranchInfos
+	var branchesToSync git.BranchesWithSyncStatus
 	var shouldPushTags bool
 	if allFlag {
 		err = validate.KnowsBranchesAncestors(branchInfos.BranchNames(), mainBranch, &run.Backend)
@@ -124,7 +124,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner) (*syncConfig, error)
 		}
 		lineage := run.Config.Lineage()
 		ancestorsNames := lineage.Ancestors(initialBranch)
-		branchesToSync = make(git.BranchInfos, len(ancestorsNames)+1)
+		branchesToSync = make(git.BranchesWithSyncStatus, len(ancestorsNames)+1)
 		for a, ancestorName := range ancestorsNames {
 			ancestorInfo := branchInfos.Lookup(ancestorName)
 			if ancestorInfo == nil {

@@ -26,7 +26,7 @@ func KnowsBranchAncestors(branch, defaultBranch string, backend *git.BackendComm
 		return nil
 	}
 	for {
-		parent := backend.Config.Lineage().Lookup(currentBranch).Parent
+		parent := backend.Config.Lineage()[currentBranch]
 		if parent == "" { //nolint:nestif
 			if !headerShown {
 				printParentBranchHeader(backend)

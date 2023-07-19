@@ -56,7 +56,6 @@ func TestRunner(t *testing.T) {
 		assert.True(t, runtime.Config.IsFeatureBranch("f1"))
 		lineageHave := runtime.Config.Lineage()
 		lineageWant := config.Lineage{}
-		lineageWant["main"] = " "
 		lineageWant["f1"] = "main"
 		assert.Equal(t, lineageWant, lineageHave)
 	})
