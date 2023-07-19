@@ -22,27 +22,20 @@ func TestLineage(t *testing.T) {
 			want := []string{"main", "one", "two"}
 			assert.Equal(t, want, have)
 		})
+		t.Run("one ancestor", func(t *testing.T) {
+			t.Parallel()
+			lineage := config.Lineage{}
+			lineage["one"] = "main"
+			have := lineage.Ancestors("one")
+			want := []string{"main"}
+			assert.Equal(t, want, have)
+		})
 		t.Run("no ancestors", func(t *testing.T) {
 			t.Parallel()
 			lineage := config.Lineage{}
 			lineage["one"] = "main"
 			have := lineage.Ancestors("two")
 			want := []string{}
-			assert.Equal(t, want, have)
-		})
-	})
-
-	t.Run("BranchNames", func(t *testing.T) {
-		t.Parallel()
-		t.Run("returns the names of all branches in this collection, ordered the same as the collection", func(t *testing.T) {
-			t.Parallel()
-			lineage := config.Lineage{
-				config.BranchWithParent{Name: "one"},
-				config.BranchWithParent{Name: "two"},
-				config.BranchWithParent{Name: "three"},
-			}
-			want := []string{"one", "two", "three"}
-			have := lineage.BranchNames()
 			assert.Equal(t, want, have)
 		})
 	})
@@ -107,12 +100,6 @@ func TestLineage(t *testing.T) {
 			assert.True(t, lineage.IsAncestor("one", "two"))
 		})
 		t.Run("unrelated branches are not ancestors", func(t *testing.T) {
-			t.Parallel()
-			lineage := config.Lineage{}
-			lineage["two"] = "one"
-			assert.False(t, lineage.IsAncestor("two", "one"))
-		})
-		t.Run("not related", func(t *testing.T) {
 			t.Parallel()
 			lineage := config.Lineage{}
 			lineage["two"] = "one"

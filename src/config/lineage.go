@@ -20,20 +20,12 @@ func (l Lineage) Ancestors(branch string) []string {
 		if parent == "" {
 			return result
 		}
-		result = append(Lineage{*parent}, result...)
+		result = append([]string{parent}, result...)
 		current = parent
 	}
 }
 
-func (l Lineage) BranchNames() []string {
-	result := make([]string, len(l))
-	for b, branchInfo := range l {
-		result[b] = branchInfo.Name
-	}
-	return result
-}
-
-// Children provides the names of all direct children of the given branch.
+// Children provides the names of all branches that have the given branch as their parent.
 func (l Lineage) Children(branch string) []string {
 	result := []string{}
 	for child, parent := range l {
@@ -41,19 +33,18 @@ func (l Lineage) Children(branch string) []string {
 			result = append(result, child)
 		}
 	}
+	sort.Strings(result)
 	return result
 }
 
-// Contains indicates whether this Lineage contains a branch with the given name
-func (l Lineage) Contains(branchName string) bool {
-	_, ok := l[branchName]
-	return ok
-}
-
-// HasParent returns whether or not the given branch has at least one parent.
-func (l Lineage) HasParent(branch string) bool {
-	parent, ok := l[branch]
-	return parent != ""
+// HasParents returns whether or not the given branch has at least one parent.
+func (l Lineage) HasParents(branch string) bool {
+	for child := range l {
+		if child == branch {
+			return true
+		}
+	}
+	return false
 }
 
 // IsAncestor indicates whether the given branch is an ancestor of the other given branch.
@@ -64,22 +55,21 @@ func (l Lineage) IsAncestor(ancestor, other string) bool {
 		if parent == "" {
 			return false
 		}
-		if parent.Name == ancestor {
+		if parent == ancestor {
 			return true
 		}
 		current = parent
 	}
 }
 
-// OrderedHierarchically sorts the given BranchInfos so that ancestor branches come before their descendants
-// and everything is sorted alphabetically.
-func (l Lineage) OrderedHierarchically() Lineage {
-	result := make(Lineage, len(l))
-	copy(result, l)
-	sort.Slice(result, func(x, y int) bool {
-		return l.IsAncestor(result[x].Parent, result[y].Parent)
-	})
-	return result
+// Parent provides the name of the parent branch for the given branch or nil if the branch has no parent.
+func (l Lineage) Parent(branch string) string {
+	for child, parent := range l {
+		if child == branch {
+			return parent
+		}
+	}
+	return ""
 }
 
 // OrderedHierarchically provides the branches in this Lineage ordered so that ancestor branches come before their descendants
