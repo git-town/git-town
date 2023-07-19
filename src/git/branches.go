@@ -5,6 +5,11 @@ type BranchWithSyncStatus struct {
 	SyncStatus SyncStatus
 }
 
+// IsLocalBranch indicates whether this branch exists in the local repo that Git Town is running in.
+func (bi BranchWithSyncStatus) IsLocal() bool {
+	return bi.SyncStatus.IsLocal()
+}
+
 type BranchesWithSyncStatus []BranchWithSyncStatus
 
 func (bs BranchesWithSyncStatus) BranchNames() []string {
@@ -13,11 +18,6 @@ func (bs BranchesWithSyncStatus) BranchNames() []string {
 		result[b] = branchInfo.Name
 	}
 	return result
-}
-
-// IsLocalBranch indicates whether this branch exists in the local repo that Git Town is running in.
-func (bi BranchWithSyncStatus) IsLocal() bool {
-	return bi.SyncStatus.IsLocal()
 }
 
 // LocalBranches provides only the branches that exist on the local machine.
@@ -31,9 +31,9 @@ func (bs BranchesWithSyncStatus) LocalBranches() BranchesWithSyncStatus {
 	return result
 }
 
-func (bs BranchesWithSyncStatus) Lookup(branch string) *BranchWithSyncStatus {
+func (bs BranchesWithSyncStatus) Lookup(branchName string) *BranchWithSyncStatus {
 	for bi, branchInfo := range bs {
-		if branchInfo.Name == branch {
+		if branchInfo.Name == branchName {
 			return &bs[bi]
 		}
 	}
