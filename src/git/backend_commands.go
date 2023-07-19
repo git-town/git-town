@@ -81,9 +81,12 @@ func ParseVerboseBranchesOutput(output string) (BranchesWithSyncStatus, string) 
 	spaceRE := regexp.MustCompile("[ ]+")
 	bracketsRE := regexp.MustCompile("\\[(.*)\\]")
 	lines := stringslice.Lines(output)
-	result := make(BranchesWithSyncStatus, len(lines))
+	result := BranchesWithSyncStatus{}
 	currentBranch := ""
-	for l, line := range lines {
+	for _, line := range lines {
+		if line == "" {
+			continue
+		}
 		parts := spaceRE.Split(line[2:], 3)
 		branchName := parts[0]
 		remoteText := parts[2]
@@ -91,35 +94,49 @@ func ParseVerboseBranchesOutput(output string) (BranchesWithSyncStatus, string) 
 			currentBranch = branchName
 		}
 		if remoteText[0] == '[' {
-			insideBrackets := bracketsRE.FindAllStringSubmatch(remoteText, -1)
-			remoteParts := strings.SplitN(insideBrackets[0][0], ":", 2)
+			insideBrackets := bracketsRE.FindStringSubmatch(remoteText)
+			remoteParts := strings.SplitN(insideBrackets[1], ":", 2)
 			if len(remoteParts) == 1 {
-				result[l] = BranchWithSyncStatus{
+				result = append(result, BranchWithSyncStatus{
 					Name:       branchName,
 					SyncStatus: SyncStatusUpToDate,
-				}
+				})
+				continue
 			}
-			remoteStatus := remoteParts[1]
+			remoteStatus := strings.TrimSpace(remoteParts[1])
 			if remoteStatus == "gone" {
-				result[l] = BranchWithSyncStatus{
+				result = append(result, BranchWithSyncStatus{
 					Name:       branchName,
 					SyncStatus: SyncStatusDeletedAtRemote,
-				}
+				})
 				continue
 			}
 			if strings.HasPrefix(remoteStatus, "ahead ") {
-				result[l] = BranchWithSyncStatus{
+				result = append(result, BranchWithSyncStatus{
 					Name:       branchName,
 					SyncStatus: SyncStatusAhead,
-				}
+				})
 				continue
 			}
 			if strings.HasPrefix(remoteStatus, "behind ") {
-				result[l] = BranchWithSyncStatus{
+				result = append(result, BranchWithSyncStatus{
 					Name:       branchName,
 					SyncStatus: SyncStatusBehind,
-				}
+				})
 				continue
+			}
+		} else {
+			if strings.HasPrefix(branchName, "remotes/origin/") {
+				result = append(result, BranchWithSyncStatus{
+					Name:       branchName[15:],
+					SyncStatus: SyncStatusRemoteOnly,
+				})
+				continue
+			} else {
+				result = append(result, BranchWithSyncStatus{
+					Name:       branchName,
+					SyncStatus: SyncStatusLocalOnly,
+				})
 			}
 		}
 	}

@@ -221,7 +221,7 @@ func TestBackendCommands(t *testing.T) {
 		})
 		t.Run("recognizes remote-only branches", func(t *testing.T) {
 			give := strings.TrimPrefix(`
-* remotes/origin/branch-1                     01a7eded Commit message 1
+  remotes/origin/branch-1                     01a7eded Commit message 1
 `, "\n")
 			want := git.BranchesWithSyncStatus{
 				git.BranchWithSyncStatus{
@@ -231,7 +231,7 @@ func TestBackendCommands(t *testing.T) {
 			}
 			have, currentBranch := git.ParseVerboseBranchesOutput(give)
 			assert.Equal(t, want, have)
-			assert.Equal(t, "branch-1", currentBranch)
+			assert.Equal(t, "", currentBranch)
 		})
 		t.Run("recognizes local-only branches", func(t *testing.T) {
 			give := strings.TrimPrefix(`
