@@ -76,24 +76,54 @@ func (bc *BackendCommands) BranchesWithSyncStatus() (branches BranchesWithSyncSt
 	return branches, currentBranch, nil
 }
 
-func ParseVerboseBranchesOutput(output string) (branches BranchesWithSyncStatus, currentBranch string) {
+// ParseVerboseBranchesOutput provides the branches in the given Git output as well as the name of the currently checked out branch.
+func ParseVerboseBranchesOutput(output string) (BranchesWithSyncStatus, string) {
 	spaceRE := regexp.MustCompile("[ ]+")
-	for _, line := range stringslice.Lines(output) {
+	bracketsRE := regexp.MustCompile("\\[(.*)\\]")
+	lines := stringslice.Lines(output)
+	result := make(BranchesWithSyncStatus, len(lines))
+	currentBranch := ""
+	for l, line := range lines {
 		parts := spaceRE.Split(line[2:], 3)
-		branch := parts[0]
+		branchName := parts[0]
 		remoteText := parts[2]
 		if line[0] == '*' {
-			currentBranch = branch
+			currentBranch = branchName
 		}
 		if remoteText[0] == '[' {
-			// TODO: uncomment this
-			// deleteTrackingBranchStatus := fmt.Sprintf("[%s: gone]", bc.TrackingBranch(branch))
-			// if strings.Contains(parts[1], deleteTrackingBranchStatus) {
-			// 	remotes = append(remotes, branch)
-			// }
+			insideBrackets := bracketsRE.FindAllStringSubmatch(remoteText, -1)
+			remoteParts := strings.SplitN(insideBrackets[0][0], ":", 2)
+			if len(remoteParts) == 1 {
+				result[l] = BranchWithSyncStatus{
+					Name:       branchName,
+					SyncStatus: SyncStatusUpToDate,
+				}
+			}
+			remoteStatus := remoteParts[1]
+			if remoteStatus == "gone" {
+				result[l] = BranchWithSyncStatus{
+					Name:       branchName,
+					SyncStatus: SyncStatusDeletedAtRemote,
+				}
+				continue
+			}
+			if strings.HasPrefix(remoteStatus, "ahead ") {
+				result[l] = BranchWithSyncStatus{
+					Name:       branchName,
+					SyncStatus: SyncStatusAhead,
+				}
+				continue
+			}
+			if strings.HasPrefix(remoteStatus, "behind ") {
+				result[l] = BranchWithSyncStatus{
+					Name:       branchName,
+					SyncStatus: SyncStatusBehind,
+				}
+				continue
+			}
 		}
 	}
-	return
+	return result, currentBranch
 }
 
 // CheckoutBranch checks out the Git branch with the given name.

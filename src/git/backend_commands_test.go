@@ -249,12 +249,12 @@ func TestBackendCommands(t *testing.T) {
 		})
 		t.Run("recognizes branches that got deleted at the remote", func(t *testing.T) {
 			give := strings.TrimPrefix(`
-* branch-1                     01a7eded Commit message 1
+* branch-1                     01a7eded [origin/branch-1: gone] Commit message 1
 `, "\n")
 			want := git.BranchesWithSyncStatus{
 				git.BranchWithSyncStatus{
 					Name:       "branch-1",
-					SyncStatus: git.SyncStatusLocalOnly,
+					SyncStatus: git.SyncStatusDeletedAtRemote,
 				},
 			}
 			have, currentBranch := git.ParseVerboseBranchesOutput(give)
@@ -267,10 +267,35 @@ func TestBackendCommands(t *testing.T) {
   branch-2                     da796a69 [origin/branch-2] Commit message 2
   branch-3                     f4ebec0a [origin/branch-3: behind 2] Commit message 3
   main                         024df944 [origin/main] Commit message on main (#1234)
-  remotes/origin/branch-4      e4d6bc09 Commit message 4
+  branch-4                     e4d6bc09 [origin/branch-4: gone] Commit message 4
   remotes/origin/branch-5      307a7bf4 Commit message 5
 `, "\n")
-			want := git.BranchesWithSyncStatus{}
+			want := git.BranchesWithSyncStatus{
+				git.BranchWithSyncStatus{
+					Name:       "branch-1",
+					SyncStatus: git.SyncStatusAhead,
+				},
+				git.BranchWithSyncStatus{
+					Name:       "branch-2",
+					SyncStatus: git.SyncStatusUpToDate,
+				},
+				git.BranchWithSyncStatus{
+					Name:       "branch-3",
+					SyncStatus: git.SyncStatusBehind,
+				},
+				git.BranchWithSyncStatus{
+					Name:       "main",
+					SyncStatus: git.SyncStatusUpToDate,
+				},
+				git.BranchWithSyncStatus{
+					Name:       "branch-4",
+					SyncStatus: git.SyncStatusDeletedAtRemote,
+				},
+				git.BranchWithSyncStatus{
+					Name:       "branch-5",
+					SyncStatus: git.SyncStatusRemoteOnly,
+				},
+			}
 			have, currentBranch := git.ParseVerboseBranchesOutput(give)
 			assert.Equal(t, want, have)
 			assert.Equal(t, "branch-1", currentBranch)
