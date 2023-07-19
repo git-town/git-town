@@ -16,8 +16,8 @@ func (l Lineage) Ancestors(branch string) []string {
 	current := branch
 	result := []string{}
 	for {
-		parent, found := l[current]
-		if !found {
+		parent := l[current]
+		if parent == "" {
 			return result
 		}
 		result = append([]string{parent}, result...)
