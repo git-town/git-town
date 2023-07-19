@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestRunner(t *testing.T) {
+func TestBackendCommands(t *testing.T) {
 	t.Parallel()
 
 	t.Run("BranchAuthors", func(t *testing.T) {
