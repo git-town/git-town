@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"sort"
 	"strings"
 
 	"github.com/git-town/git-town/v9/src/config"
@@ -41,9 +40,7 @@ func (r *TestCommands) BranchHierarchyTable() datatable.DataTable {
 	r.Config.Reload()
 	lineage := r.Config.Lineage()
 	result.AddRow("BRANCH", "PARENT")
-	branchNames := lineage.BranchNames()
-	sort.Strings(branchNames)
-	for _, branchName := range branchNames {
+	for _, branchName := range lineage.BranchNames() {
 		result.AddRow(branchName, lineage[branchName])
 	}
 	return result
