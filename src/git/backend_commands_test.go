@@ -1,10 +1,12 @@
 package git_test
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/test/git"
+	"github.com/git-town/git-town/v9/src/git"
+	testgit "github.com/git-town/git-town/v9/test/git"
 	"github.com/git-town/git-town/v9/test/testruntime"
 	"github.com/stretchr/testify/assert"
 )
@@ -16,13 +18,13 @@ func TestBackendCommands(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		runtime.CreateBranch("branch", "initial")
-		runtime.CreateCommit(git.Commit{
+		runtime.CreateCommit(testgit.Commit{
 			Branch:      "branch",
 			FileName:    "file1",
 			FileContent: "file1",
 			Message:     "first commit",
 		})
-		runtime.CreateCommit(git.Commit{
+		runtime.CreateCommit(testgit.Commit{
 			Branch:      "branch",
 			FileName:    "file2",
 			FileContent: "file2",
@@ -175,16 +177,103 @@ func TestBackendCommands(t *testing.T) {
 
 	t.Run("ParseVerboseBranchesOutput", func(t *testing.T) {
 		t.Parallel()
+		t.Run("recognizes branches that are ahead of their remote branch", func(t *testing.T) {
+			give := strings.TrimPrefix(`
+* branch-1                     01a7eded [origin/branch-1: ahead 1] Commit message 1
+`, "\n")
+			want := git.BranchesWithSyncStatus{
+				git.BranchWithSyncStatus{
+					Name:       "branch-1",
+					SyncStatus: git.SyncStatusAhead,
+				},
+			}
+			have, currentBranch := git.ParseVerboseBranchesOutput(give)
+			assert.Equal(t, want, have)
+			assert.Equal(t, "branch-1", currentBranch)
+		})
+		t.Run("recognizes branches that are behind their remote branch", func(t *testing.T) {
+			give := strings.TrimPrefix(`
+* branch-1                     01a7eded [origin/branch-1: behind 2] Commit message 1
+`, "\n")
+			want := git.BranchesWithSyncStatus{
+				git.BranchWithSyncStatus{
+					Name:       "branch-1",
+					SyncStatus: git.SyncStatusBehind,
+				},
+			}
+			have, currentBranch := git.ParseVerboseBranchesOutput(give)
+			assert.Equal(t, want, have)
+			assert.Equal(t, "branch-1", currentBranch)
+		})
+		t.Run("recognizes branches that are in sync with their remote branch", func(t *testing.T) {
+			give := strings.TrimPrefix(`
+* branch-1                     01a7eded [origin/branch-1] Commit message 1
+`, "\n")
+			want := git.BranchesWithSyncStatus{
+				git.BranchWithSyncStatus{
+					Name:       "branch-1",
+					SyncStatus: git.SyncStatusUpToDate,
+				},
+			}
+			have, currentBranch := git.ParseVerboseBranchesOutput(give)
+			assert.Equal(t, want, have)
+			assert.Equal(t, "branch-1", currentBranch)
+		})
+		t.Run("recognizes remote-only branches", func(t *testing.T) {
+			give := strings.TrimPrefix(`
+* remotes/origin/branch-1                     01a7eded Commit message 1
+`, "\n")
+			want := git.BranchesWithSyncStatus{
+				git.BranchWithSyncStatus{
+					Name:       "branch-1",
+					SyncStatus: git.SyncStatusRemoteOnly,
+				},
+			}
+			have, currentBranch := git.ParseVerboseBranchesOutput(give)
+			assert.Equal(t, want, have)
+			assert.Equal(t, "branch-1", currentBranch)
+		})
+		t.Run("recognizes local-only branches", func(t *testing.T) {
+			give := strings.TrimPrefix(`
+* branch-1                     01a7eded Commit message 1
+`, "\n")
+			want := git.BranchesWithSyncStatus{
+				git.BranchWithSyncStatus{
+					Name:       "branch-1",
+					SyncStatus: git.SyncStatusLocalOnly,
+				},
+			}
+			have, currentBranch := git.ParseVerboseBranchesOutput(give)
+			assert.Equal(t, want, have)
+			assert.Equal(t, "branch-1", currentBranch)
+		})
+		t.Run("recognizes branches that got deleted at the remote", func(t *testing.T) {
+			give := strings.TrimPrefix(`
+* branch-1                     01a7eded Commit message 1
+`, "\n")
+			want := git.BranchesWithSyncStatus{
+				git.BranchWithSyncStatus{
+					Name:       "branch-1",
+					SyncStatus: git.SyncStatusLocalOnly,
+				},
+			}
+			have, currentBranch := git.ParseVerboseBranchesOutput(give)
+			assert.Equal(t, want, have)
+			assert.Equal(t, "branch-1", currentBranch)
+		})
 		t.Run("complex example", func(t *testing.T) {
-			give := `\
-* branch-1                     01a7eded [origin/branch-1: ahead 1] commit message 1
-  branch-2                     da796a69 [origin/branch-2] commit message 2
-  main                                    f4ebec0a [origin/main] Lineage branch names method (#2301)
-  remotes/origin/HEAD                     -> origin/main
-  remotes/origin/cr-fixCd                 024df944 refactor
-  remotes/origin/cr-gitlock               e4d6bc09 Simplify code (#1782)
-  remotes/origin/cr-sample                307a7bf4 update
-`
+			give := strings.TrimPrefix(`
+* branch-1                     01a7eded [origin/branch-1: ahead 1] Commit message 1
+  branch-2                     da796a69 [origin/branch-2] Commit message 2
+  branch-3                     f4ebec0a [origin/branch-3: behind 2] Commit message 3
+  main                         024df944 [origin/main] Commit message on main (#1234)
+  remotes/origin/branch-4      e4d6bc09 Commit message 4
+  remotes/origin/branch-5      307a7bf4 Commit message 5
+`, "\n")
+			want := git.BranchesWithSyncStatus{}
+			have, currentBranch := git.ParseVerboseBranchesOutput(give)
+			assert.Equal(t, want, have)
+			assert.Equal(t, "branch-1", currentBranch)
 		})
 	})
 

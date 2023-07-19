@@ -77,8 +77,9 @@ func (bc *BackendCommands) BranchesWithSyncStatus() (branches BranchesWithSyncSt
 }
 
 func ParseVerboseBranchesOutput(output string) (branches BranchesWithSyncStatus, currentBranch string) {
+	spaceRE := regexp.MustCompile("[ ]+")
 	for _, line := range stringslice.Lines(output) {
-		parts := strings.SplitN(line[2:], " ", 3)
+		parts := spaceRE.Split(line[2:], 3)
 		branch := parts[0]
 		remoteText := parts[2]
 		if line[0] == '*' {
