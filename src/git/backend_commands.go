@@ -79,7 +79,6 @@ func (bc *BackendCommands) BranchesWithSyncStatus() (branches BranchesWithSyncSt
 // ParseVerboseBranchesOutput provides the branches in the given Git output as well as the name of the currently checked out branch.
 func ParseVerboseBranchesOutput(output string) (BranchesWithSyncStatus, string) {
 	spaceRE := regexp.MustCompile("[ ]+")
-	bracketsRE := regexp.MustCompile("\\[(.*)\\]")
 	lines := stringslice.Lines(output)
 	result := BranchesWithSyncStatus{}
 	currentBranch := ""
@@ -94,8 +93,9 @@ func ParseVerboseBranchesOutput(output string) (BranchesWithSyncStatus, string) 
 			currentBranch = branchName
 		}
 		if remoteText[0] == '[' {
-			insideBrackets := bracketsRE.FindStringSubmatch(remoteText)
-			remoteParts := strings.SplitN(insideBrackets[1], ":", 2)
+			closingBracketPos := strings.IndexRune(remoteText, ']')
+			insideBrackets := remoteText[1:closingBracketPos]
+			remoteParts := strings.SplitN(insideBrackets, ":", 2)
 			if len(remoteParts) == 1 {
 				result = append(result, BranchWithSyncStatus{
 					Name:       branchName,
