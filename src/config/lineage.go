@@ -98,8 +98,8 @@ func (l Lineage) OrderedHierarchically() []string {
 func (l Lineage) Roots() []string {
 	roots := []string{}
 	for _, parent := range l {
-		_, ok := l[parent]
-		if !ok && !stringslice.Contains(roots, parent) {
+		_, found := l[parent]
+		if !found && !stringslice.Contains(roots, parent) {
 			roots = append(roots, parent)
 		}
 	}
