@@ -173,6 +173,21 @@ func TestBackendCommands(t *testing.T) {
 		assert.Equal(t, []string{"initial", "b1", "b2", "b3"}, branches)
 	})
 
+	t.Run("ParseVerboseBranchesOutput", func(t *testing.T) {
+		t.Parallel()
+		t.Run("complex example", func(t *testing.T) {
+			give := `\
+* branch-1                     01a7eded [origin/branch-1: ahead 1] commit message 1
+  branch-2                     da796a69 [origin/branch-2] commit message 2
+  main                                    f4ebec0a [origin/main] Lineage branch names method (#2301)
+  remotes/origin/HEAD                     -> origin/main
+  remotes/origin/cr-fixCd                 024df944 refactor
+  remotes/origin/cr-gitlock               e4d6bc09 Simplify code (#1782)
+  remotes/origin/cr-sample                307a7bf4 update
+`
+		})
+	})
+
 	t.Run(".PreviouslyCheckedOutBranch()", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
