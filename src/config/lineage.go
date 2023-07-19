@@ -16,8 +16,8 @@ func (l Lineage) Ancestors(branch string) []string {
 	current := branch
 	result := []string{}
 	for {
-		parent, found := l[current]
-		if !found {
+		parent := l[current]
+		if parent == "" {
 			return result
 		}
 		result = append(Lineage{*parent}, result...)
@@ -60,8 +60,8 @@ func (l Lineage) HasParent(branch string) bool {
 func (l Lineage) IsAncestor(ancestor, other string) bool {
 	current := other
 	for {
-		parent, found := l[current]
-		if !found {
+		parent := l[current]
+		if parent == "" {
 			return false
 		}
 		if parent.Name == ancestor {
@@ -108,8 +108,8 @@ func (l Lineage) OrderedHierarchically() []string {
 func (l Lineage) Roots() []string {
 	roots := []string{}
 	for _, parent := range l {
-		_, ok := l[parent]
-		if !ok && !stringslice.Contains(roots, parent) {
+		_, found := l[parent]
+		if !found && !stringslice.Contains(roots, parent) {
 			roots = append(roots, parent)
 		}
 	}
