@@ -73,7 +73,6 @@ func (bc *BackendCommands) BranchesSyncStatus() (branches BranchesSyncStatus, cu
 	if err != nil {
 		return []BranchSyncStatus{}, "", err
 	}
-	fmt.Println("2222222222\n", output)
 	branches, currentBranch = ParseVerboseBranchesOutput(output)
 	return branches, currentBranch, nil
 }
