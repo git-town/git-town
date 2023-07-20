@@ -83,7 +83,8 @@ type prependConfig struct {
 
 func determinePrependConfig(args []string, run *git.ProdRunner) (*prependConfig, error) {
 	fc := failure.Collector{}
-	initialBranch := fc.String(run.Backend.CurrentBranch())
+	branchesSyncStatus, initialBranch, err := run.Backend.BranchesSyncStatus()
+	fc.Check(err)
 	hasOrigin := fc.Bool(run.Backend.HasOrigin())
 	shouldNewBranchPush := fc.Bool(run.Config.ShouldNewBranchPush())
 	pushHook := fc.Bool(run.Config.PushHook())
@@ -99,11 +100,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner) (*prependConfig,
 		}
 	}
 	targetBranch := args[0]
-	hasBranch, err := run.Backend.HasLocalOrOriginBranch(targetBranch, mainBranch)
-	if err != nil {
-		return nil, err
-	}
-	if hasBranch {
+	if branchesSyncStatus.Contains(targetBranch) {
 		return nil, fmt.Errorf("a branch named %q already exists", targetBranch)
 	}
 	if !run.Config.IsFeatureBranch(initialBranch) {

@@ -18,6 +18,8 @@ Feature: destination branch exists
     And the current branch is still "alpha"
     And the initial branches and hierarchy exist
 
+  @debug
+  @this
   Scenario: destination branch exists in origin
     Given the current branch is a feature branch "alpha"
     And a remote feature branch "beta"

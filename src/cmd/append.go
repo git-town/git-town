@@ -79,7 +79,6 @@ type appendConfig struct {
 
 func determineAppendConfig(targetBranch string, run *git.ProdRunner) (*appendConfig, error) {
 	fc := failure.Collector{}
-	parentBranch := fc.String(run.Backend.CurrentBranch())
 	hasOrigin := fc.Bool(run.Backend.HasOrigin())
 	isOffline := fc.Bool(run.Config.IsOffline())
 	mainBranch := run.Config.MainBranch()
@@ -91,8 +90,9 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner) (*appendCon
 	if hasOrigin && !isOffline {
 		fc.Check(run.Frontend.Fetch())
 	}
-	hasTargetBranch := fc.Bool(run.Backend.HasLocalOrOriginBranch(targetBranch, mainBranch))
-	if hasTargetBranch {
+	branchesSyncStatus, parentBranch, err := run.Backend.BranchesSyncStatus()
+	fc.Check(err)
+	if branchesSyncStatus.Contains(targetBranch) {
 		fc.Fail("a branch named %q already exists", targetBranch)
 	}
 	fc.Check(validate.KnowsBranchAncestors(parentBranch, run.Config.MainBranch(), &run.Backend))

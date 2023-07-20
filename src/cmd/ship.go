@@ -119,7 +119,7 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 	if err != nil {
 		return nil, err
 	}
-	initialBranch, err := run.Backend.CurrentBranch()
+	branchesSyncStatus, initialBranch, err := run.Backend.BranchesSyncStatus()
 	if err != nil {
 		return nil, err
 	}
@@ -151,11 +151,7 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 		}
 	}
 	if !isShippingInitialBranch {
-		hasBranch, err := run.Backend.HasLocalOrOriginBranch(branchToShip, mainBranch)
-		if err != nil {
-			return nil, err
-		}
-		if !hasBranch {
+		if !branchesSyncStatus.Contains(branchToShip) {
 			return nil, fmt.Errorf("there is no branch named %q", branchToShip)
 		}
 	}

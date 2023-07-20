@@ -88,7 +88,7 @@ type renameBranchConfig struct {
 }
 
 func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRunner) (*renameBranchConfig, error) {
-	initialBranch, err := run.Backend.CurrentBranch()
+	branchesSyncStatus, initialBranch, err := run.Backend.BranchesSyncStatus()
 	if err != nil {
 		return nil, err
 	}
@@ -141,11 +141,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 	if !isBranchInSync {
 		return nil, fmt.Errorf("%q is not in sync with its tracking branch, please sync the branches before renaming", oldBranch)
 	}
-	hasNewBranch, err := run.Backend.HasLocalOrOriginBranch(newBranch, mainBranch)
-	if err != nil {
-		return nil, err
-	}
-	if hasNewBranch {
+	if branchesSyncStatus.Contains(newBranch) {
 		return nil, fmt.Errorf("a branch named %q already exists", newBranch)
 	}
 	oldBranchHasTrackingBranch, err := run.Backend.HasTrackingBranch(oldBranch)

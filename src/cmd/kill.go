@@ -75,7 +75,7 @@ type killConfig struct {
 }
 
 func determineKillConfig(args []string, run *git.ProdRunner) (*killConfig, error) {
-	initialBranch, err := run.Backend.CurrentBranch()
+	branchesSyncStatus, initialBranch, err := run.Backend.BranchesSyncStatus()
 	if err != nil {
 		return nil, err
 	}
@@ -115,11 +115,7 @@ func determineKillConfig(args []string, run *git.ProdRunner) (*killConfig, error
 		}
 	}
 	if initialBranch != targetBranch {
-		hasTargetBranch, err := run.Backend.HasLocalOrOriginBranch(targetBranch, mainBranch)
-		if err != nil {
-			return nil, err
-		}
-		if !hasTargetBranch {
+		if !branchesSyncStatus.Contains(targetBranch) {
 			return nil, fmt.Errorf("there is no branch named %q", targetBranch)
 		}
 	}

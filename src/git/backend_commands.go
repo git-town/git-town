@@ -285,15 +285,6 @@ func (bc *BackendCommands) HasLocalBranch(name string) (bool, error) {
 	return stringslice.Contains(branches, name), nil
 }
 
-// HasLocalOrRemoteBranch indicates whether this repo or origin have a branch with the given name.
-func (bc *BackendCommands) HasLocalOrOriginBranch(name, mainBranch string) (bool, error) {
-	branches, err := bc.LocalAndOriginBranches(mainBranch)
-	if err != nil {
-		return false, fmt.Errorf("cannot determine whether the local or remote branch %q exists: %w", name, err)
-	}
-	return stringslice.Contains(branches, name), nil
-}
-
 // HasMergeInProgress indicates whether this Git repository currently has a merge in progress.
 func (bc *BackendCommands) HasMergeInProgress() bool {
 	err := bc.Run("git", "rev-parse", "-q", "--verify", "MERGE_HEAD")

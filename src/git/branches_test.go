@@ -10,6 +10,23 @@ import (
 func TestAncestry(t *testing.T) {
 	t.Parallel()
 
+	t.Run("Contains", func(t *testing.T) {
+		t.Parallel()
+		bs := git.BranchesSyncStatus{
+			git.BranchSyncStatus{
+				Name:       "one",
+				SyncStatus: git.SyncStatusUpToDate,
+			},
+			git.BranchSyncStatus{
+				Name:       "two",
+				SyncStatus: git.SyncStatusAhead,
+			},
+		}
+		assert.True(t, bs.Contains("one"))
+		assert.True(t, bs.Contains("two"))
+		assert.False(t, bs.Contains("zonk"))
+	})
+
 	t.Run("LocalBranches", func(t *testing.T) {
 		t.Parallel()
 		bs := git.BranchesSyncStatus{

@@ -79,7 +79,10 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 	if fc.Err == nil && hasOrigin && !isOffline {
 		fc.Check(run.Frontend.Fetch())
 	}
-	hasBranch := fc.Bool(run.Backend.HasLocalOrOriginBranch(targetBranch, mainBranch))
+	branchesSyncStatus, _, err := run.Backend.BranchesSyncStatus()
+	fc.Check(err)
+	// TODO: inline this variable?
+	hasBranch := branchesSyncStatus.Contains(targetBranch)
 	pushHook := fc.Bool(run.Config.PushHook())
 	if hasBranch {
 		return nil, fmt.Errorf("a branch named %q already exists", targetBranch)
