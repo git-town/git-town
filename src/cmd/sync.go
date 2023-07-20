@@ -128,13 +128,13 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner) (*syncConfig, error)
 		for a, ancestorName := range ancestorsNames {
 			ancestorInfo := allBranchesSyncStatus.Lookup(ancestorName)
 			if ancestorInfo == nil {
-				return nil, fmt.Errorf("didn't load branch info for ancestor branch %q", ancestorName)
+				return nil, fmt.Errorf("didn't load branch sync status for ancestor branch %q", ancestorName)
 			}
 			branchesToSync[a] = *ancestorInfo
 		}
 		initialBranchInfo := allBranchesSyncStatus.Lookup(initialBranch)
 		if initialBranchInfo == nil {
-			return nil, fmt.Errorf("didn't load branch info for initial branch %q", initialBranch)
+			return nil, fmt.Errorf("didn't load branch sync status for initial branch %q", initialBranch)
 		}
 		branchesToSync[len(ancestorsNames)] = *initialBranchInfo
 		shouldPushTags = !run.Config.IsFeatureBranch(initialBranch)

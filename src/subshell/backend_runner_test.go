@@ -14,14 +14,14 @@ import (
 
 func TestBackendRunner(t *testing.T) {
 	t.Parallel()
-	t.Run("Run", func(t *testing.T) {
+	t.Run("Query", func(t *testing.T) {
 		t.Parallel()
 		t.Run("happy path", func(t *testing.T) {
 			tmpDir := t.TempDir()
 			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, Stats: &execute.NoStatistics{}}
-			output, err := runner.Query("echo", "hello", "world")
+			output, err := runner.Query("echo", "hello", "world  ")
 			assert.NoError(t, err)
-			assert.Equal(t, "hello world", output)
+			assert.Equal(t, "hello world  \n", output)
 		})
 
 		t.Run("unknown executable", func(t *testing.T) {
@@ -51,6 +51,16 @@ hi
 OUTPUT END
 ----------------------------------------`
 			assert.Equal(t, expectedError, err.Error())
+		})
+	})
+	t.Run("QueryTrim", func(t *testing.T) {
+		t.Parallel()
+		t.Run("trims whitespace", func(t *testing.T) {
+			tmpDir := t.TempDir()
+			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, Stats: &execute.NoStatistics{}}
+			output, err := runner.QueryTrim("echo", "hello", "world  ")
+			assert.NoError(t, err)
+			assert.Equal(t, "hello world", output)
 		})
 	})
 

@@ -1,7 +1,6 @@
 package git_test
 
 import (
-	"strings"
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/config"
@@ -178,9 +177,7 @@ func TestBackendCommands(t *testing.T) {
 	t.Run("ParseVerboseBranchesOutput", func(t *testing.T) {
 		t.Parallel()
 		t.Run("recognizes branches that are ahead of their remote branch", func(t *testing.T) {
-			give := strings.TrimPrefix(`
-* branch-1                     01a7eded [origin/branch-1: ahead 1] Commit message 1
-`, "\n")
+			give := `* branch-1                     01a7eded [origin/branch-1: ahead 1] Commit message 1`
 			want := git.BranchesSyncStatus{
 				git.BranchSyncStatus{
 					Name:       "branch-1",
@@ -192,9 +189,7 @@ func TestBackendCommands(t *testing.T) {
 			assert.Equal(t, "branch-1", currentBranch)
 		})
 		t.Run("recognizes branches that are behind their remote branch", func(t *testing.T) {
-			give := strings.TrimPrefix(`
-* branch-1                     01a7eded [origin/branch-1: behind 2] Commit message 1
-`, "\n")
+			give := `* branch-1                     01a7eded [origin/branch-1: behind 2] Commit message 1`
 			want := git.BranchesSyncStatus{
 				git.BranchSyncStatus{
 					Name:       "branch-1",
@@ -206,9 +201,7 @@ func TestBackendCommands(t *testing.T) {
 			assert.Equal(t, "branch-1", currentBranch)
 		})
 		t.Run("recognizes branches that are in sync with their remote branch", func(t *testing.T) {
-			give := strings.TrimPrefix(`
-* branch-1                     01a7eded [origin/branch-1] Commit message 1
-`, "\n")
+			give := `* branch-1                     01a7eded [origin/branch-1] Commit message 1`
 			want := git.BranchesSyncStatus{
 				git.BranchSyncStatus{
 					Name:       "branch-1",
@@ -220,9 +213,7 @@ func TestBackendCommands(t *testing.T) {
 			assert.Equal(t, "branch-1", currentBranch)
 		})
 		t.Run("recognizes remote-only branches", func(t *testing.T) {
-			give := strings.TrimPrefix(`
-  remotes/origin/branch-1                     01a7eded Commit message 1
-`, "\n")
+			give := `  remotes/origin/branch-1                     01a7eded Commit message 1`
 			want := git.BranchesSyncStatus{
 				git.BranchSyncStatus{
 					Name:       "branch-1",
@@ -234,9 +225,7 @@ func TestBackendCommands(t *testing.T) {
 			assert.Equal(t, "", currentBranch)
 		})
 		t.Run("recognizes local-only branches", func(t *testing.T) {
-			give := strings.TrimPrefix(`
-* branch-1                     01a7eded Commit message 1
-`, "\n")
+			give := `* branch-1                     01a7eded Commit message 1`
 			want := git.BranchesSyncStatus{
 				git.BranchSyncStatus{
 					Name:       "branch-1",
@@ -248,9 +237,7 @@ func TestBackendCommands(t *testing.T) {
 			assert.Equal(t, "branch-1", currentBranch)
 		})
 		t.Run("recognizes branches that got deleted at the remote", func(t *testing.T) {
-			give := strings.TrimPrefix(`
-* branch-1                     01a7eded [origin/branch-1: gone] Commit message 1
-`, "\n")
+			give := `* branch-1                     01a7eded [origin/branch-1: gone] Commit message 1`
 			want := git.BranchesSyncStatus{
 				git.BranchSyncStatus{
 					Name:       "branch-1",
@@ -262,14 +249,14 @@ func TestBackendCommands(t *testing.T) {
 			assert.Equal(t, "branch-1", currentBranch)
 		})
 		t.Run("complex example", func(t *testing.T) {
-			give := strings.TrimPrefix(`
-* branch-1                     01a7eded [origin/branch-1: ahead 1] Commit message 1
-  branch-2                     da796a69 [origin/branch-2] Commit message 2
+			give := `
+  branch-1                     01a7eded [origin/branch-1: ahead 1] Commit message 1
+* branch-2                     da796a69 [origin/branch-2] Commit message 2
   branch-3                     f4ebec0a [origin/branch-3: behind 2] Commit message 3
   main                         024df944 [origin/main] Commit message on main (#1234)
   branch-4                     e4d6bc09 [origin/branch-4: gone] Commit message 4
   remotes/origin/branch-5      307a7bf4 Commit message 5
-`, "\n")
+`[1:]
 			want := git.BranchesSyncStatus{
 				git.BranchSyncStatus{
 					Name:       "branch-1",
@@ -298,7 +285,7 @@ func TestBackendCommands(t *testing.T) {
 			}
 			have, currentBranch := git.ParseVerboseBranchesOutput(give)
 			assert.Equal(t, want, have)
-			assert.Equal(t, "branch-1", currentBranch)
+			assert.Equal(t, "branch-2", currentBranch)
 		})
 	})
 

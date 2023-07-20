@@ -15,6 +15,7 @@ import (
 
 type BackendRunner interface {
 	Query(executable string, args ...string) (string, error)
+	QueryTrim(executable string, args ...string) (string, error)
 	Run(executable string, args ...string) error
 	RunMany([][]string) error
 }
@@ -29,11 +30,11 @@ type BackendCommands struct {
 
 // Author provides the locally Git configured user.
 func (bc *BackendCommands) Author() (string, error) {
-	name, err := bc.Query("git", "config", "user.name")
+	name, err := bc.QueryTrim("git", "config", "user.name")
 	if err != nil {
 		return "", err
 	}
-	email, err := bc.Query("git", "config", "user.email")
+	email, err := bc.QueryTrim("git", "config", "user.email")
 	if err != nil {
 		return "", err
 	}
@@ -43,7 +44,7 @@ func (bc *BackendCommands) Author() (string, error) {
 // BranchAuthors provides the user accounts that contributed to the given branch.
 // Returns lines of "name <email>".
 func (bc *BackendCommands) BranchAuthors(branch, parent string) ([]string, error) {
-	output, err := bc.Query("git", "shortlog", "-s", "-n", "-e", parent+".."+branch)
+	output, err := bc.QueryTrim("git", "shortlog", "-s", "-n", "-e", parent+".."+branch)
 	if err != nil {
 		return []string{}, err
 	}
@@ -59,7 +60,7 @@ func (bc *BackendCommands) BranchAuthors(branch, parent string) ([]string, error
 // BranchHasUnmergedCommits indicates whether the branch with the given name
 // contains commits that are not merged into the main branch.
 func (bc *BackendCommands) BranchHasUnmergedCommits(branch, parent string) (bool, error) {
-	out, err := bc.Query("git", "log", parent+".."+branch)
+	out, err := bc.QueryTrim("git", "log", parent+".."+branch)
 	if err != nil {
 		return false, fmt.Errorf("cannot determine if branch %q has unmerged commits: %w", branch, err)
 	}
@@ -198,7 +199,7 @@ func (bc *BackendCommands) CurrentBranchUncached() (string, error) {
 		}
 		return currentBranch, nil
 	}
-	output, err := bc.Query("git", "rev-parse", "--abbrev-ref", "HEAD")
+	output, err := bc.QueryTrim("git", "rev-parse", "--abbrev-ref", "HEAD")
 	if err != nil {
 		return "", fmt.Errorf("cannot determine the current branch: %w", err)
 	}
@@ -268,7 +269,7 @@ func (bc *BackendCommands) ExpectedPreviouslyCheckedOutBranch(initialPreviouslyC
 
 // HasConflicts returns whether the local repository currently has unresolved merge conflicts.
 func (bc *BackendCommands) HasConflicts() (bool, error) {
-	output, err := bc.Query("git", "status")
+	output, err := bc.QueryTrim("git", "status")
 	if err != nil {
 		return false, fmt.Errorf("cannot determine conflicts: %w", err)
 	}
@@ -301,7 +302,7 @@ func (bc *BackendCommands) HasMergeInProgress() bool {
 
 // HasOpenChanges indicates whether this repo has open changes.
 func (bc *BackendCommands) HasOpenChanges() (bool, error) {
-	output, err := bc.Query("git", "status", "--porcelain", "--ignore-submodules")
+	output, err := bc.QueryTrim("git", "status", "--porcelain", "--ignore-submodules")
 	if err != nil {
 		return false, fmt.Errorf("cannot determine open changes: %w", err)
 	}
@@ -310,7 +311,7 @@ func (bc *BackendCommands) HasOpenChanges() (bool, error) {
 
 // HasRebaseInProgress indicates whether this Git repository currently has a rebase in progress.
 func (bc *BackendCommands) HasRebaseInProgress() (bool, error) {
-	output, err := bc.Query("git", "status")
+	output, err := bc.QueryTrim("git", "status")
 	if err != nil {
 		return false, fmt.Errorf("cannot determine rebase in progress: %w", err)
 	}
@@ -340,7 +341,7 @@ func (bc *BackendCommands) HasRemote(name string) (bool, error) {
 // HasShippableChanges indicates whether the given branch has changes
 // not currently in the main branch.
 func (bc *BackendCommands) HasShippableChanges(branch, mainBranch string) (bool, error) {
-	out, err := bc.Query("git", "diff", mainBranch+".."+branch)
+	out, err := bc.QueryTrim("git", "diff", mainBranch+".."+branch)
 	if err != nil {
 		return false, fmt.Errorf("cannot determine whether branch %q has shippable changes: %w", branch, err)
 	}
@@ -396,7 +397,7 @@ func (bc *BackendCommands) IsRepository() bool {
 
 // LastCommitMessage provides the commit message for the last commit.
 func (bc *BackendCommands) LastCommitMessage() (string, error) {
-	out, err := bc.Query("git", "log", "-1", "--format=%B")
+	out, err := bc.QueryTrim("git", "log", "-1", "--format=%B")
 	if err != nil {
 		return "", fmt.Errorf("cannot determine last commit message: %w", err)
 	}
@@ -404,8 +405,9 @@ func (bc *BackendCommands) LastCommitMessage() (string, error) {
 }
 
 // LocalAndOriginBranches provides the names of all local branches in this repo.
+// TODO: can we derive this info from allBranchesSyncStatus?
 func (bc *BackendCommands) LocalAndOriginBranches(mainBranch string) ([]string, error) {
-	output, err := bc.Query("git", "branch", "-a")
+	output, err := bc.QueryTrim("git", "branch", "-a")
 	if err != nil {
 		return []string{}, fmt.Errorf("cannot determine the local branches")
 	}
@@ -427,8 +429,9 @@ func (bc *BackendCommands) LocalAndOriginBranches(mainBranch string) ([]string, 
 
 // LocalBranches provides the names of all branches in the local repository,
 // ordered alphabetically.
+// TODO: can we derive this info from allBranchesSyncStatus?
 func (bc *BackendCommands) LocalBranches() ([]string, error) {
-	output, err := bc.Query("git", "branch")
+	output, err := bc.QueryTrim("git", "branch")
 	if err != nil {
 		return []string{}, err
 	}
@@ -452,8 +455,9 @@ func (bc *BackendCommands) LocalBranchesMainFirst(mainBranch string) ([]string, 
 
 // LocalBranchesWithDeletedTrackingBranches provides the names of all branches
 // whose remote tracking branches have been deleted.
+// TODO: can we derive this info from allBranchesSyncStatus?
 func (bc *BackendCommands) LocalBranchesWithDeletedTrackingBranches() ([]string, error) {
-	output, err := bc.Query("git", "branch", "-vv")
+	output, err := bc.QueryTrim("git", "branch", "-vv")
 	if err != nil {
 		return []string{}, err
 	}
@@ -472,6 +476,7 @@ func (bc *BackendCommands) LocalBranchesWithDeletedTrackingBranches() ([]string,
 
 // LocalBranchesWithoutMain provides the names of all branches in the local repository,
 // ordered alphabetically without the main branch.
+// TODO: can we derive this info from allBranchesSyncStatus?
 func (bc *BackendCommands) LocalBranchesWithoutMain(mainBranch string) ([]string, error) {
 	branches, err := bc.LocalBranches()
 	if err != nil {
@@ -488,7 +493,7 @@ func (bc *BackendCommands) LocalBranchesWithoutMain(mainBranch string) ([]string
 
 // PreviouslyCheckedOutBranch provides the name of the branch that was previously checked out in this repo.
 func (bc *BackendCommands) PreviouslyCheckedOutBranch() (string, error) {
-	output, err := bc.Query("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
+	output, err := bc.QueryTrim("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
 	if err != nil {
 		return "", fmt.Errorf("cannot determine the previously checked out branch: %w", err)
 	}
@@ -496,8 +501,9 @@ func (bc *BackendCommands) PreviouslyCheckedOutBranch() (string, error) {
 }
 
 // RemoteBranches provides the names of the remote branches in this repo.
+// TODO: can we derive this info from allBranchesSyncStatus?
 func (bc *BackendCommands) RemoteBranchesUncached() ([]string, error) {
-	output, err := bc.Query("git", "branch", "-r")
+	output, err := bc.QueryTrim("git", "branch", "-r")
 	if err != nil {
 		return []string{}, fmt.Errorf("cannot determine remote branches: %w", err)
 	}
@@ -525,7 +531,7 @@ func (bc *BackendCommands) RemoteBranches() ([]string, error) {
 
 // Remotes provides the names of all Git remotes in this repository.
 func (bc *BackendCommands) RemotesUncached() ([]string, error) {
-	out, err := bc.Query("git", "remote")
+	out, err := bc.QueryTrim("git", "remote")
 	if err != nil {
 		return []string{}, fmt.Errorf("cannot determine remotes: %w", err)
 	}
@@ -569,7 +575,7 @@ func (bc *BackendCommands) RemoveOutdatedConfiguration() error {
 // RootDirectory provides the path of the rood directory of the current repository,
 // i.e. the directory that contains the ".git" folder.
 func (bc *BackendCommands) RootDirectoryUncached() (string, error) {
-	output, err := bc.Query("git", "rev-parse", "--show-toplevel")
+	output, err := bc.QueryTrim("git", "rev-parse", "--show-toplevel")
 	if err != nil {
 		return "", fmt.Errorf("cannot determine root directory: %w", err)
 	}
@@ -591,7 +597,7 @@ func (bc *BackendCommands) RootDirectory() (string, error) {
 
 // ShaForBranch provides the SHA for the local branch with the given name.
 func (bc *BackendCommands) ShaForBranch(name string) (string, error) {
-	output, err := bc.Query("git", "rev-parse", name)
+	output, err := bc.QueryTrim("git", "rev-parse", name)
 	if err != nil {
 		return "", fmt.Errorf("cannot determine SHA of local branch %q: %w", name, err)
 	}
@@ -602,7 +608,7 @@ func (bc *BackendCommands) ShaForBranch(name string) (string, error) {
 // contains commits that have not been pushed to its tracking branch.
 func (bc *BackendCommands) ShouldPushBranch(branch string) (bool, error) {
 	trackingBranch := bc.TrackingBranch(branch)
-	out, err := bc.Query("git", "rev-list", "--left-right", branch+"..."+trackingBranch)
+	out, err := bc.QueryTrim("git", "rev-list", "--left-right", branch+"..."+trackingBranch)
 	if err != nil {
 		return false, fmt.Errorf("cannot list diff of %q and %q: %w", branch, trackingBranch, err)
 	}
@@ -619,7 +625,7 @@ func (bc *BackendCommands) TrackingBranch(branch string) string {
 //nolint:nonamedreturns  // multiple int return values justify using names for return values
 func (bc *BackendCommands) Version() (major int, minor int, err error) {
 	versionRegexp := regexp.MustCompile(`git version (\d+).(\d+).(\d+)`)
-	output, err := bc.Query("git", "version")
+	output, err := bc.QueryTrim("git", "version")
 	if err != nil {
 		return 0, 0, fmt.Errorf("cannot determine Git version: %w", err)
 	}
