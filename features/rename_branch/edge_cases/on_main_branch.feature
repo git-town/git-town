@@ -5,7 +5,10 @@ Feature: does not rename the main branch
 
   Scenario: try to rename
     When I run "git-town rename-branch main new"
-    Then it runs no commands
+    Then it runs the commands
+      | BRANCH | COMMAND                  |
+      | main   | git fetch --prune --tags |
+
     And it prints the error:
       """
       the main branch cannot be renamed

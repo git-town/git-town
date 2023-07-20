@@ -102,7 +102,6 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("111111111111", branchesSyncStatus)
 	pushHook, err := run.Config.PushHook()
 	if err != nil {
 		return nil, err
