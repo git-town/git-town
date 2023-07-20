@@ -13,6 +13,8 @@ Feature: enter a parent branch name when prompted
       | BRANCH | PARENT |
       | beta   | main   |
 
+  @debug
+  @this
   Scenario: choose other branches
     When I run "git-town sync" and answer the prompts:
       | PROMPT                                      | ANSWER        |

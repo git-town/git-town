@@ -181,8 +181,8 @@ func TestBackendCommands(t *testing.T) {
 			give := strings.TrimPrefix(`
 * branch-1                     01a7eded [origin/branch-1: ahead 1] Commit message 1
 `, "\n")
-			want := git.BranchesWithSyncStatus{
-				git.BranchWithSyncStatus{
+			want := git.BranchesSyncStatus{
+				git.BranchSyncStatus{
 					Name:       "branch-1",
 					SyncStatus: git.SyncStatusAhead,
 				},
@@ -195,8 +195,8 @@ func TestBackendCommands(t *testing.T) {
 			give := strings.TrimPrefix(`
 * branch-1                     01a7eded [origin/branch-1: behind 2] Commit message 1
 `, "\n")
-			want := git.BranchesWithSyncStatus{
-				git.BranchWithSyncStatus{
+			want := git.BranchesSyncStatus{
+				git.BranchSyncStatus{
 					Name:       "branch-1",
 					SyncStatus: git.SyncStatusBehind,
 				},
@@ -209,8 +209,8 @@ func TestBackendCommands(t *testing.T) {
 			give := strings.TrimPrefix(`
 * branch-1                     01a7eded [origin/branch-1] Commit message 1
 `, "\n")
-			want := git.BranchesWithSyncStatus{
-				git.BranchWithSyncStatus{
+			want := git.BranchesSyncStatus{
+				git.BranchSyncStatus{
 					Name:       "branch-1",
 					SyncStatus: git.SyncStatusUpToDate,
 				},
@@ -223,8 +223,8 @@ func TestBackendCommands(t *testing.T) {
 			give := strings.TrimPrefix(`
   remotes/origin/branch-1                     01a7eded Commit message 1
 `, "\n")
-			want := git.BranchesWithSyncStatus{
-				git.BranchWithSyncStatus{
+			want := git.BranchesSyncStatus{
+				git.BranchSyncStatus{
 					Name:       "branch-1",
 					SyncStatus: git.SyncStatusRemoteOnly,
 				},
@@ -237,8 +237,8 @@ func TestBackendCommands(t *testing.T) {
 			give := strings.TrimPrefix(`
 * branch-1                     01a7eded Commit message 1
 `, "\n")
-			want := git.BranchesWithSyncStatus{
-				git.BranchWithSyncStatus{
+			want := git.BranchesSyncStatus{
+				git.BranchSyncStatus{
 					Name:       "branch-1",
 					SyncStatus: git.SyncStatusLocalOnly,
 				},
@@ -251,8 +251,8 @@ func TestBackendCommands(t *testing.T) {
 			give := strings.TrimPrefix(`
 * branch-1                     01a7eded [origin/branch-1: gone] Commit message 1
 `, "\n")
-			want := git.BranchesWithSyncStatus{
-				git.BranchWithSyncStatus{
+			want := git.BranchesSyncStatus{
+				git.BranchSyncStatus{
 					Name:       "branch-1",
 					SyncStatus: git.SyncStatusDeletedAtRemote,
 				},
@@ -270,28 +270,28 @@ func TestBackendCommands(t *testing.T) {
   branch-4                     e4d6bc09 [origin/branch-4: gone] Commit message 4
   remotes/origin/branch-5      307a7bf4 Commit message 5
 `, "\n")
-			want := git.BranchesWithSyncStatus{
-				git.BranchWithSyncStatus{
+			want := git.BranchesSyncStatus{
+				git.BranchSyncStatus{
 					Name:       "branch-1",
 					SyncStatus: git.SyncStatusAhead,
 				},
-				git.BranchWithSyncStatus{
+				git.BranchSyncStatus{
 					Name:       "branch-2",
 					SyncStatus: git.SyncStatusUpToDate,
 				},
-				git.BranchWithSyncStatus{
+				git.BranchSyncStatus{
 					Name:       "branch-3",
 					SyncStatus: git.SyncStatusBehind,
 				},
-				git.BranchWithSyncStatus{
+				git.BranchSyncStatus{
 					Name:       "main",
 					SyncStatus: git.SyncStatusUpToDate,
 				},
-				git.BranchWithSyncStatus{
+				git.BranchSyncStatus{
 					Name:       "branch-4",
 					SyncStatus: git.SyncStatusDeletedAtRemote,
 				},
-				git.BranchWithSyncStatus{
+				git.BranchSyncStatus{
 					Name:       "branch-5",
 					SyncStatus: git.SyncStatusRemoteOnly,
 				},
