@@ -250,12 +250,14 @@ func TestBackendCommands(t *testing.T) {
 		})
 		t.Run("complex example", func(t *testing.T) {
 			give := `
-  branch-1                     01a7eded [origin/branch-1: ahead 1] Commit message 1
+  branch-1                     01a7eded [origin/branch-1: ahead 1] Commit message 1a
 * branch-2                     da796a69 [origin/branch-2] Commit message 2
-  branch-3                     f4ebec0a [origin/branch-3: behind 2] Commit message 3
+  branch-3                     f4ebec0a [origin/branch-3: behind 2] Commit message 3a
   main                         024df944 [origin/main] Commit message on main (#1234)
   branch-4                     e4d6bc09 [origin/branch-4: gone] Commit message 4
-  remotes/origin/branch-5      307a7bf4 Commit message 5
+  remotes/origin/branch-1      307a7bf4 Commit message 1b
+  remotes/origin/branch-2      da796a69 Commit message 2
+  remotes/origin/branch-3      bc39378a Commit message 3b
 `[1:]
 			want := git.BranchesSyncStatus{
 				git.BranchSyncStatus{
@@ -277,10 +279,6 @@ func TestBackendCommands(t *testing.T) {
 				git.BranchSyncStatus{
 					Name:       "branch-4",
 					SyncStatus: git.SyncStatusDeletedAtRemote,
-				},
-				git.BranchSyncStatus{
-					Name:       "branch-5",
-					SyncStatus: git.SyncStatusRemoteOnly,
 				},
 			}
 			have, currentBranch := git.ParseVerboseBranchesOutput(give)

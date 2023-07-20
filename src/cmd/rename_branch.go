@@ -88,14 +88,21 @@ type renameBranchConfig struct {
 }
 
 func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRunner) (*renameBranchConfig, error) {
-	branchesSyncStatus, initialBranch, err := run.Backend.BranchesSyncStatus()
-	if err != nil {
-		return nil, err
-	}
 	isOffline, err := run.Config.IsOffline()
 	if err != nil {
 		return nil, err
 	}
+	if !isOffline {
+		err := run.Frontend.Fetch()
+		if err != nil {
+			return nil, err
+		}
+	}
+	branchesSyncStatus, initialBranch, err := run.Backend.BranchesSyncStatus()
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println("111111111111", branchesSyncStatus)
 	pushHook, err := run.Config.PushHook()
 	if err != nil {
 		return nil, err
@@ -120,12 +127,6 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 	}
 	if oldBranch == newBranch {
 		return nil, fmt.Errorf("cannot rename branch to current name")
-	}
-	if !isOffline {
-		err := run.Frontend.Fetch()
-		if err != nil {
-			return nil, err
-		}
 	}
 	hasOldBranch, err := run.Backend.HasLocalBranch(oldBranch)
 	if err != nil {

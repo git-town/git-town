@@ -73,6 +73,7 @@ func (bc *BackendCommands) BranchesSyncStatus() (branches BranchesSyncStatus, cu
 	if err != nil {
 		return []BranchSyncStatus{}, "", err
 	}
+	fmt.Println("2222222222\n", output)
 	branches, currentBranch = ParseVerboseBranchesOutput(output)
 	return branches, currentBranch, nil
 }
@@ -97,10 +98,12 @@ func ParseVerboseBranchesOutput(output string) (BranchesSyncStatus, string) {
 		if strings.HasPrefix(branchName, "remotes/origin/") {
 			branchName = branchName[15:]
 		}
-		result = append(result, BranchSyncStatus{
-			Name:       branchName,
-			SyncStatus: syncStatus,
-		})
+		if !result.Contains(branchName) {
+			result = append(result, BranchSyncStatus{
+				Name:       branchName,
+				SyncStatus: syncStatus,
+			})
+		}
 	}
 	return result, checkedoutBranch
 }
