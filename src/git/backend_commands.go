@@ -66,8 +66,8 @@ func (bc *BackendCommands) BranchHasUnmergedCommits(branch, parent string) (bool
 	return out != "", nil
 }
 
-// BranchesWithSyncStatus provides detailed information about the sync status of all branches.
-func (bc *BackendCommands) BranchesWithSyncStatus() (branches BranchesSyncStatus, currentBranch string, err error) {
+// BranchesSyncStatus provides detailed information about the sync status of all branches.
+func (bc *BackendCommands) BranchesSyncStatus() (branches BranchesSyncStatus, currentBranch string, err error) {
 	output, err := bc.Query("git", "branch", "-vva")
 	if err != nil {
 		return []BranchSyncStatus{}, "", err
