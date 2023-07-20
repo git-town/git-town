@@ -92,7 +92,7 @@ func ParseVerboseBranchesOutput(output string) (BranchesWithSyncStatus, string) 
 		if line[0] == '*' {
 			checkedoutBranch = branchName
 		}
-		syncStatus := GetSyncStatus(branchName, remoteText)
+		syncStatus := determineSyncStatus(branchName, remoteText)
 		if strings.HasPrefix(branchName, "remotes/origin/") {
 			branchName = branchName[15:]
 		}
@@ -104,11 +104,11 @@ func ParseVerboseBranchesOutput(output string) (BranchesWithSyncStatus, string) 
 	return result, checkedoutBranch
 }
 
-func GetSyncStatus(branchName, remoteText string) SyncStatus {
+func determineSyncStatus(branchName, remoteText string) SyncStatus {
 	if remoteText[0] == '[' {
 		closingBracketPos := strings.IndexRune(remoteText, ']')
-		insideBrackets := remoteText[1:closingBracketPos]
-		remoteParts := strings.SplitN(insideBrackets, ":", 2)
+		textInBrackets := remoteText[1:closingBracketPos]
+		remoteParts := strings.SplitN(textInBrackets, ":", 2)
 		if len(remoteParts) == 1 {
 			return SyncStatusUpToDate
 		}
@@ -122,6 +122,7 @@ func GetSyncStatus(branchName, remoteText string) SyncStatus {
 		if strings.HasPrefix(remoteStatus, "behind ") {
 			return SyncStatusBehind
 		}
+		panic(fmt.Sprintf("cannot determine the sync status for Git remote %q and branch name %q", remoteText, branchName))
 	} else {
 		if strings.HasPrefix(branchName, "remotes/origin/") {
 			return SyncStatusRemoteOnly
@@ -129,7 +130,6 @@ func GetSyncStatus(branchName, remoteText string) SyncStatus {
 			return SyncStatusLocalOnly
 		}
 	}
-	panic(fmt.Sprintf("cannot determine the sync status for Git remote %q and branch name %q", remoteText, branchName))
 }
 
 // CheckoutBranch checks out the Git branch with the given name.
