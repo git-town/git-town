@@ -103,7 +103,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner) (*syncConfig, error)
 			return nil, err
 		}
 	}
-	branchesSyncStatus, initialBranch, err := run.Backend.BranchesSyncStatus()
+	allBranchesSyncStatus, initialBranch, err := run.Backend.BranchesSyncStatus()
 	if err != nil {
 		return nil, err
 	}
@@ -111,11 +111,11 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner) (*syncConfig, error)
 	var branchesToSync git.BranchesSyncStatus
 	var shouldPushTags bool
 	if allFlag {
-		err = validate.KnowsBranchesAncestors(branchesSyncStatus.BranchNames(), mainBranch, &run.Backend)
+		err = validate.KnowsBranchesAncestors(allBranchesSyncStatus.BranchNames(), mainBranch, &run.Backend)
 		if err != nil {
 			return nil, err
 		}
-		branchesToSync = branchesSyncStatus
+		branchesToSync = allBranchesSyncStatus
 		shouldPushTags = true
 	} else {
 		err = validate.KnowsBranchAncestors(initialBranch, run.Config.MainBranch(), &run.Backend)
@@ -126,13 +126,13 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner) (*syncConfig, error)
 		ancestorsNames := lineage.Ancestors(initialBranch)
 		branchesToSync = make(git.BranchesSyncStatus, len(ancestorsNames)+1)
 		for a, ancestorName := range ancestorsNames {
-			ancestorInfo := branchesSyncStatus.Lookup(ancestorName)
+			ancestorInfo := allBranchesSyncStatus.Lookup(ancestorName)
 			if ancestorInfo == nil {
 				return nil, fmt.Errorf("didn't load branch info for ancestor branch %q", ancestorName)
 			}
 			branchesToSync[a] = *ancestorInfo
 		}
-		initialBranchInfo := branchesSyncStatus.Lookup(initialBranch)
+		initialBranchInfo := allBranchesSyncStatus.Lookup(initialBranch)
 		if initialBranchInfo == nil {
 			return nil, fmt.Errorf("didn't load branch info for initial branch %q", initialBranch)
 		}
