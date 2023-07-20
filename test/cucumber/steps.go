@@ -355,9 +355,12 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^it runs no commands$`, func() error {
 		commands := output.GitCommandsInGitTownOutput(state.runOutput)
 		if len(commands) > 0 {
+			fmt.Println("\n\nERROR: Unexpected commands run!")
 			for _, command := range commands {
-				fmt.Println(command)
+				fmt.Printf("%s > %s\n", command.Branch, command.Command)
 			}
+			fmt.Println()
+			fmt.Println()
 			return fmt.Errorf("expected no commands but found %d commands", len(commands))
 		}
 		return nil
