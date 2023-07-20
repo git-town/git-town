@@ -69,7 +69,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.AfterScenario(func(scenario *messages.Pickle, e error) {
 		if e != nil {
-			fmt.Printf("failed scenario %q in %q, investigate state in %q\n", scenario.GetName(), scenario.GetUri(), state.fixture.Dir)
+			fmt.Printf("failed scenario %q in %q, investigate state in %s\n", scenario.GetName(), scenario.GetUri(), state.fixture.Dir)
 		}
 		if state.runExitCode != 0 && !state.runExitCodeChecked {
 			cli.PrintError(fmt.Errorf("%s - scenario %q doesn't document exit code %d", scenario.GetUri(), scenario.GetName(), state.runExitCode))
@@ -413,7 +413,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^no branch hierarchy exists now$`, func() error {
 		if state.fixture.DevRepo.Config.HasBranchInformation() {
-			branchInfo := state.fixture.DevRepo.Config.Lineage().Entries
+			branchInfo := state.fixture.DevRepo.Config.Lineage()
 			return fmt.Errorf("unexpected Git Town branch hierarchy information: %+v", branchInfo)
 		}
 		return nil

@@ -62,8 +62,11 @@ func prepend(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	runState := runstate.New("prepend", stepList)
-	return runstate.Execute(runState, &run, nil)
+	runState := runstate.RunState{
+		Command:     "prepend",
+		RunStepList: stepList,
+	}
+	return runstate.Execute(&runState, &run, nil)
 }
 
 type prependConfig struct {

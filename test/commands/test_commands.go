@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"sort"
 	"strings"
 
 	"github.com/git-town/git-town/v9/src/config"
@@ -39,15 +38,10 @@ func (r *TestCommands) AddSubmodule(url string) {
 func (r *TestCommands) BranchHierarchyTable() datatable.DataTable {
 	result := datatable.DataTable{}
 	r.Config.Reload()
-	parentBranchMap := r.Config.Lineage().Entries
+	lineage := r.Config.Lineage()
 	result.AddRow("BRANCH", "PARENT")
-	childBranches := make([]string, 0, len(parentBranchMap))
-	for child := range parentBranchMap {
-		childBranches = append(childBranches, child)
-	}
-	sort.Strings(childBranches)
-	for _, child := range childBranches {
-		result.AddRow(child, parentBranchMap[child])
+	for _, branchName := range lineage.BranchNames() {
+		result.AddRow(branchName, lineage[branchName])
 	}
 	return result
 }

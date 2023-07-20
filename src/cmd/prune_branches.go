@@ -51,8 +51,11 @@ func pruneBranches(debug bool) error {
 	if err != nil {
 		return err
 	}
-	runState := runstate.New("prune-branches", stepList)
-	return runstate.Execute(runState, &run, nil)
+	runState := runstate.RunState{
+		Command:     "prune-branches",
+		RunStepList: stepList,
+	}
+	return runstate.Execute(&runState, &run, nil)
 }
 
 type pruneBranchesConfig struct {
