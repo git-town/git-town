@@ -69,7 +69,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.AfterScenario(func(scenario *messages.Pickle, e error) {
 		if e != nil {
-			fmt.Printf("failed scenario %q in %q, investigate state in %s\n", scenario.GetName(), scenario.GetUri(), state.fixture.Dir)
+			fmt.Printf("failed scenario %q in %s - investigate state in %s\n", scenario.GetName(), scenario.GetUri(), state.fixture.Dir)
 		}
 		if state.runExitCode != 0 && !state.runExitCodeChecked {
 			cli.PrintError(fmt.Errorf("%s - scenario %q doesn't document exit code %d", scenario.GetUri(), scenario.GetName(), state.runExitCode))
