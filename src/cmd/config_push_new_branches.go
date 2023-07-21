@@ -47,7 +47,6 @@ func pushNewBranches(args []string, global, debug bool) error {
 		HandleUnfinishedState: false,
 		ValidateIsConfigured:  false,
 		ValidateIsOnline:      false,
-		ValidateIsRepository:  true,
 	})
 	if err != nil || exit {
 		return err

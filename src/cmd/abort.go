@@ -41,7 +41,6 @@ func abort(debug bool) error {
 	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,
-		ValidateIsRepository:  true,
 		HandleUnfinishedState: false,
 	})
 	if err != nil || exit {

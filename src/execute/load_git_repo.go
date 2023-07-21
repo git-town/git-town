@@ -42,6 +42,5 @@ func LoadGitRepo(pr *git.ProdRunner, args LoadGitArgs) (branchesSyncStatus git.B
 type LoadGitArgs struct {
 	ValidateIsConfigured  bool
 	ValidateIsOnline      bool
-	ValidateIsRepository  bool // TODO: remove this, it's implicit when loading a Git repo
 	HandleUnfinishedState bool
 }

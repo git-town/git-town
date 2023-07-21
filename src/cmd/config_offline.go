@@ -40,15 +40,6 @@ func offline(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
-		HandleUnfinishedState: false,
-		ValidateIsConfigured:  false,
-		ValidateIsOnline:      false,
-		ValidateIsRepository:  false,
-	})
-	if err != nil || exit {
-		return err
-	}
 	if len(args) > 0 {
 		return setOfflineStatus(args[0], &run)
 	}

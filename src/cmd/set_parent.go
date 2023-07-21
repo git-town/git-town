@@ -39,7 +39,6 @@ func setParent(debug bool) error {
 	_, currentBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
-		ValidateIsRepository:  true,
 		ValidateIsOnline:      false,
 	})
 	if err != nil || exit {

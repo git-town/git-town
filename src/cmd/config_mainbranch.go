@@ -39,12 +39,10 @@ func configureMainBranch(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	// TODO: remove this once ValidateGitversion and ValidateIsRepository are deleted
 	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		HandleUnfinishedState: false,
 		ValidateIsConfigured:  false,
 		ValidateIsOnline:      false,
-		ValidateIsRepository:  true,
 	})
 	if err != nil || exit {
 		return err
