@@ -1,8 +1,6 @@
 package git
 
 import (
-	"fmt"
-
 	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/test/helpers"
@@ -20,7 +18,7 @@ func DefaultCommit(filenameSuffix string) Commit {
 }
 
 // FromGherkinTable provides a Commit collection representing the data in the given Gherkin table.
-func FromGherkinTable(table *messages.PickleStepArgument_PickleTable) ([]Commit, error) {
+func FromGherkinTable(table *messages.PickleStepArgument_PickleTable) []Commit {
 	columnNames := helpers.TableFields(table)
 	lastBranch := ""
 	lastLocationName := ""
@@ -45,12 +43,9 @@ func FromGherkinTable(table *messages.PickleStepArgument_PickleTable) ([]Commit,
 					lastLocationName = cellValue
 				}
 			}
-			err := commit.Set(columnName, cellValue)
-			if err != nil {
-				return result, fmt.Errorf("cannot set property %q to %q: %w", columnNames[cellNo], cell.Value, err)
-			}
+			commit.Set(columnName, cellValue)
 		}
 		result = append(result, commit)
 	}
-	return result, nil
+	return result
 }

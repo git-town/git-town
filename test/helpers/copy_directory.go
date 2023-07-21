@@ -6,12 +6,14 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/git-town/git-town/v9/test/asserts"
 )
 
 // CopyDirectory copies all files in the given src directory into the given dst directory.
 // Both the source and the destination directory must exist.
-func CopyDirectory(src, dst string) error {
-	return filepath.Walk(src, func(srcPath string, fileInfo os.FileInfo, e error) error {
+func CopyDirectory(src, dst string) {
+	asserts.NoError(filepath.Walk(src, func(srcPath string, fileInfo os.FileInfo, e error) error {
 		dstPath := strings.Replace(srcPath, src, dst, 1)
 		if fileInfo.IsDir() {
 			err := os.Mkdir(dstPath, fileInfo.Mode())
@@ -38,5 +40,5 @@ func CopyDirectory(src, dst string) error {
 		}
 		err = destFile.Close()
 		return err
-	})
+	}))
 }

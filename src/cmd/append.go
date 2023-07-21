@@ -59,8 +59,11 @@ func runAppend(arg string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	runState := runstate.New("append", stepList)
-	return runstate.Execute(runState, &run, nil)
+	runState := runstate.RunState{
+		Command:     "append",
+		RunStepList: stepList,
+	}
+	return runstate.Execute(&runState, &run, nil)
 }
 
 type appendConfig struct {

@@ -3,10 +3,10 @@ package cmd
 import (
 	"strings"
 
+	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/dialog"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/git"
 	"github.com/spf13/cobra"
 )
 
@@ -45,7 +45,7 @@ func runSwitch(debug bool) error {
 	if err != nil {
 		return err
 	}
-	newBranch, err := queryBranch(currentBranch, &run)
+	newBranch, err := queryBranch(currentBranch, run.Config.Lineage())
 	if err != nil {
 		return err
 	}
@@ -60,8 +60,8 @@ func runSwitch(debug bool) error {
 
 // queryBranch lets the user select a new branch via a visual dialog.
 // Returns the selected branch or nil if the user aborted.
-func queryBranch(currentBranch string, run *git.ProdRunner) (selection *string, err error) { //nolint:nonamedreturns
-	entries, err := createEntries(run)
+func queryBranch(currentBranch string, lineage config.Lineage) (selection *string, err error) { //nolint:nonamedreturns
+	entries, err := createEntries(lineage)
 	if err != nil {
 		return nil, err
 	}
@@ -69,11 +69,11 @@ func queryBranch(currentBranch string, run *git.ProdRunner) (selection *string, 
 }
 
 // createEntries provides all the entries for the branch dialog.
-func createEntries(run *git.ProdRunner) (dialog.ModalEntries, error) {
+func createEntries(lineage config.Lineage) (dialog.ModalEntries, error) {
 	entries := dialog.ModalEntries{}
 	var err error
-	for _, root := range run.Config.Lineage().Roots() {
-		entries, err = addEntryAndChildren(entries, root, 0, run)
+	for _, root := range lineage.Roots() {
+		entries, err = addEntryAndChildren(entries, root, 0, lineage)
 		if err != nil {
 			return nil, err
 		}
@@ -82,14 +82,14 @@ func createEntries(run *git.ProdRunner) (dialog.ModalEntries, error) {
 }
 
 // addEntryAndChildren adds the given branch and all its child branches to the given entries collection.
-func addEntryAndChildren(entries dialog.ModalEntries, branch string, indent int, run *git.ProdRunner) (dialog.ModalEntries, error) {
+func addEntryAndChildren(entries dialog.ModalEntries, branch string, indent int, lineage config.Lineage) (dialog.ModalEntries, error) {
 	entries = append(entries, dialog.ModalEntry{
 		Text:  strings.Repeat("  ", indent) + branch,
 		Value: branch,
 	})
 	var err error
-	for _, child := range run.Config.Lineage().Children(branch) {
-		entries, err = addEntryAndChildren(entries, child, indent+1, run)
+	for _, child := range lineage.Children(branch) {
+		entries, err = addEntryAndChildren(entries, child, indent+1, lineage)
 		if err != nil {
 			return entries, err
 		}

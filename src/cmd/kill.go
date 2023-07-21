@@ -53,8 +53,11 @@ func kill(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	runState := runstate.New("kill", stepList)
-	return runstate.Execute(runState, &run, nil)
+	runState := runstate.RunState{
+		Command:     "kill",
+		RunStepList: stepList,
+	}
+	return runstate.Execute(&runState, &run, nil)
 }
 
 type killConfig struct {
@@ -136,8 +139,9 @@ func determineKillConfig(args []string, run *git.ProdRunner) (*killConfig, error
 	if err != nil {
 		return nil, err
 	}
+	lineage := run.Config.Lineage()
 	return &killConfig{
-		childBranches:       run.Config.Lineage().Children(targetBranch),
+		childBranches:       lineage.Children(targetBranch),
 		hasOpenChanges:      hasOpenChanges,
 		hasTrackingBranch:   hasTrackingBranch,
 		initialBranch:       initialBranch,
@@ -147,7 +151,7 @@ func determineKillConfig(args []string, run *git.ProdRunner) (*killConfig, error
 		noPushHook:          !pushHook,
 		previousBranch:      previousBranch,
 		targetBranch:        targetBranch,
-		targetBranchParent:  run.Config.Lineage().Parent(targetBranch),
+		targetBranchParent:  lineage.Parent(targetBranch),
 	}, nil
 }
 

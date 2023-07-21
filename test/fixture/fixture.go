@@ -1,7 +1,7 @@
 package fixture
 
 import (
-	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -9,6 +9,7 @@ import (
 	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/stringslice"
+	"github.com/git-town/git-town/v9/test/asserts"
 	"github.com/git-town/git-town/v9/test/datatable"
 	"github.com/git-town/git-town/v9/test/git"
 	"github.com/git-town/git-town/v9/test/helpers"
@@ -42,11 +43,8 @@ type Fixture struct {
 
 // CloneFixture provides a Fixture instance in the given directory,
 // containing a copy of the given Fixture.
-func CloneFixture(original Fixture, dir string) (Fixture, error) {
-	err := helpers.CopyDirectory(original.Dir, dir)
-	if err != nil {
-		return Fixture{}, fmt.Errorf("cannot clone Fixture %q to folder %q: %w", original.Dir, dir, err)
-	}
+func CloneFixture(original Fixture, dir string) Fixture {
+	helpers.CopyDirectory(original.Dir, dir)
 	binDir := filepath.Join(dir, "bin")
 	originDir := filepath.Join(dir, "origin")
 	originRepo := testruntime.New(originDir, dir, "")
@@ -59,24 +57,12 @@ func CloneFixture(original Fixture, dir string) (Fixture, error) {
 	}
 	// Since we copied the files from the memoized directory,
 	// we have to set the "origin" remote to the copied origin repo here.
-	err = result.DevRepo.Run("git", "remote", "remove", config.OriginRemote)
-	if err != nil {
-		return Fixture{}, fmt.Errorf("cannot remove remote: %w", err)
-	}
-	err = result.DevRepo.AddRemote(config.OriginRemote, result.originRepoPath())
-	if err != nil {
-		return Fixture{}, fmt.Errorf("cannot set remote: %w", err)
-	}
-	err = result.DevRepo.Fetch()
-	if err != nil {
-		return Fixture{}, fmt.Errorf("cannot fetch: %w", err)
-	}
+	result.DevRepo.MustRun("git", "remote", "remove", config.OriginRemote)
+	result.DevRepo.AddRemote(config.OriginRemote, result.originRepoPath())
+	result.DevRepo.Fetch()
 	// and connect the main branches again
-	err = result.DevRepo.ConnectTrackingBranch("main")
-	if err != nil {
-		return Fixture{}, fmt.Errorf("cannot connect tracking branch: %w", err)
-	}
-	return result, err
+	result.DevRepo.ConnectTrackingBranch("main")
+	return result
 }
 
 // NewStandardFixture provides a Fixture in the given directory,
@@ -86,91 +72,59 @@ func CloneFixture(original Fixture, dir string) (Fixture, error) {
 // Git repos cannot receive pushes of the currently checked out branch
 // because that will change files in the current workspace.
 // The tests don't use the initial branch.
-func NewStandardFixture(dir string) (Fixture, error) {
+func NewStandardFixture(dir string) Fixture {
 	// create the folder
-	// create the Fixture
+	// create the fixture
 	gitEnv := Fixture{Dir: dir}
 	// create the origin repo
 	err := os.MkdirAll(gitEnv.originRepoPath(), 0o744)
 	if err != nil {
-		return gitEnv, fmt.Errorf("cannot create directory %q: %w", gitEnv.originRepoPath(), err)
+		log.Fatalf("cannot create directory %q: %v", gitEnv.originRepoPath(), err)
 	}
 	// initialize the repo in the folder
-	originRepo, err := testruntime.Initialize(gitEnv.originRepoPath(), gitEnv.Dir, gitEnv.binPath())
-	if err != nil {
-		return gitEnv, err
-	}
+	originRepo := testruntime.Initialize(gitEnv.originRepoPath(), gitEnv.Dir, gitEnv.binPath())
 	err = originRepo.RunMany([][]string{
 		{"git", "commit", "--allow-empty", "-m", "Initial commit"},
 		{"git", "branch", "main", "initial"},
 	})
 	if err != nil {
-		return gitEnv, fmt.Errorf("cannot initialize origin directory at %q: %w", gitEnv.originRepoPath(), err)
+		log.Fatalf("cannot initialize origin directory at %q: %v", gitEnv.originRepoPath(), err)
 	}
 	gitEnv.OriginRepo = &originRepo
 	// clone the "developer" repo
-	gitEnv.DevRepo, err = testruntime.Clone(originRepo.TestRunner, gitEnv.developerRepoPath())
-	if err != nil {
-		return gitEnv, fmt.Errorf("cannot clone developer repo %q from origin %q: %w", gitEnv.originRepoPath(), gitEnv.developerRepoPath(), err)
-	}
-	err = gitEnv.initializeWorkspace(&gitEnv.DevRepo)
-	if err != nil {
-		return gitEnv, fmt.Errorf("cannot create new standard Git environment: %w", err)
-	}
-	err = gitEnv.DevRepo.RemoveUnnecessaryFiles()
-	if err != nil {
-		return gitEnv, err
-	}
-	err = gitEnv.OriginRepo.RemoveUnnecessaryFiles()
-	if err != nil {
-		return gitEnv, err
-	}
-	return gitEnv, nil
+	gitEnv.DevRepo = testruntime.Clone(originRepo.TestRunner, gitEnv.developerRepoPath())
+	gitEnv.initializeWorkspace(&gitEnv.DevRepo)
+	gitEnv.DevRepo.RemoveUnnecessaryFiles()
+	gitEnv.OriginRepo.RemoveUnnecessaryFiles()
+	return gitEnv
 }
 
 // AddSubmodule adds a submodule repository.
-func (env *Fixture) AddSubmoduleRepo() error {
+func (env *Fixture) AddSubmoduleRepo() {
 	err := os.MkdirAll(env.submoduleRepoPath(), 0o744)
 	if err != nil {
-		return fmt.Errorf("cannot create directory %q: %w", env.submoduleRepoPath(), err)
+		log.Fatalf("cannot create directory %q: %v", env.submoduleRepoPath(), err)
 	}
-	submoduleRepo, err := testruntime.Initialize(env.submoduleRepoPath(), env.Dir, env.binPath())
-	if err != nil {
-		return err
-	}
-	err = submoduleRepo.RunMany([][]string{
+	submoduleRepo := testruntime.Initialize(env.submoduleRepoPath(), env.Dir, env.binPath())
+	submoduleRepo.MustRunMany([][]string{
 		{"git", "config", "--global", "protocol.file.allow", "always"},
 		{"git", "commit", "--allow-empty", "-m", "Initial commit"},
 	})
-	if err != nil {
-		return fmt.Errorf("cannot initialize submodule directory at %q: %w", env.originRepoPath(), err)
-	}
 	env.SubmoduleRepo = &submoduleRepo
-	return nil
 }
 
 // AddUpstream adds an upstream repository.
-func (env *Fixture) AddUpstream() error {
-	repo, err := testruntime.Clone(env.DevRepo.TestRunner, filepath.Join(env.Dir, "upstream"))
-	if err != nil {
-		return fmt.Errorf("cannot clone upstream: %w", err)
-	}
+func (env *Fixture) AddUpstream() {
+	repo := testruntime.Clone(env.DevRepo.TestRunner, filepath.Join(env.Dir, "upstream"))
 	env.UpstreamRepo = &repo
-	err = env.DevRepo.AddRemote("upstream", env.UpstreamRepo.WorkingDir)
-	if err != nil {
-		return fmt.Errorf("cannot set upstream remote: %w", err)
-	}
-	return nil
+	env.DevRepo.AddRemote("upstream", env.UpstreamRepo.WorkingDir)
 }
 
 // AddCoworkerRepo adds a coworker repository.
-func (env *Fixture) AddCoworkerRepo() error {
-	coworkerRepo, err := testruntime.Clone(env.OriginRepo.TestRunner, env.coworkerRepoPath())
-	if err != nil {
-		return fmt.Errorf("cannot clone coworker: %w", err)
-	}
+func (env *Fixture) AddCoworkerRepo() {
+	coworkerRepo := testruntime.Clone(env.OriginRepo.TestRunner, env.coworkerRepoPath())
 	env.CoworkerRepo = &coworkerRepo
-	return env.initializeWorkspace(env.CoworkerRepo)
+	env.initializeWorkspace(env.CoworkerRepo)
 }
 
 // binPath provides the full path of the folder containing the test tools for this Fixture.
@@ -179,24 +133,20 @@ func (env *Fixture) binPath() string {
 }
 
 // Branches provides a tabular list of all branches in this Fixture.
-func (env *Fixture) Branches() (datatable.DataTable, error) {
+func (env *Fixture) Branches() datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow("REPOSITORY", "BRANCHES")
 	mainBranch := env.DevRepo.Config.MainBranch()
 	localBranches, err := env.DevRepo.LocalBranchesMainFirst(mainBranch)
-	if err != nil {
-		return result, fmt.Errorf("cannot determine the developer repo branches of the Fixture: %w", err)
-	}
+	asserts.NoError(err)
 	localBranches = stringslice.Remove(localBranches, "initial")
 	localBranchesJoined := strings.Join(localBranches, ", ")
 	if env.OriginRepo == nil {
 		result.AddRow("local", localBranchesJoined)
-		return result, nil
+		return result
 	}
 	originBranches, err := env.OriginRepo.LocalBranchesMainFirst(mainBranch)
-	if err != nil {
-		return result, fmt.Errorf("cannot determine the origin repo branches of the Fixture: %w", err)
-	}
+	asserts.NoError(err)
 	originBranches = stringslice.Remove(originBranches, "initial")
 	originBranchesJoined := strings.Join(originBranches, ", ")
 	if localBranchesJoined == originBranchesJoined {
@@ -205,144 +155,97 @@ func (env *Fixture) Branches() (datatable.DataTable, error) {
 		result.AddRow("local", localBranchesJoined)
 		result.AddRow("origin", originBranchesJoined)
 	}
-	return result, nil
+	return result
 }
 
 // CreateCommits creates the commits described by the given Gherkin table in this Git repository.
-func (env *Fixture) CreateCommits(commits []git.Commit) error {
+func (env *Fixture) CreateCommits(commits []git.Commit) {
 	for _, commit := range commits {
-		var err error
 		for _, location := range commit.Locations {
 			switch location {
 			case "coworker":
-				err = env.CoworkerRepo.CreateCommit(commit)
+				env.CoworkerRepo.CreateCommit(commit)
 			case "local":
-				err = env.DevRepo.CreateCommit(commit)
+				env.DevRepo.CreateCommit(commit)
 			case "local, origin":
-				err = env.DevRepo.CreateCommit(commit)
-				if err != nil {
-					return fmt.Errorf("cannot create local commit: %w", err)
-				}
-				err = env.DevRepo.PushBranchToRemote(commit.Branch, config.OriginRemote)
-				if err != nil {
-					return fmt.Errorf("cannot push branch %q after creating commit: %w", commit.Branch, err)
-				}
+				env.DevRepo.CreateCommit(commit)
+				env.DevRepo.PushBranchToRemote(commit.Branch, config.OriginRemote)
 			case "origin":
-				err = env.OriginRepo.CreateCommit(commit)
+				env.OriginRepo.CreateCommit(commit)
 			case "upstream":
-				err = env.UpstreamRepo.CreateCommit(commit)
+				env.UpstreamRepo.CreateCommit(commit)
 			default:
-				return fmt.Errorf("unknown commit location %q", commit.Locations)
+				log.Fatalf("unknown commit location %q", commit.Locations)
 			}
-		}
-		if err != nil {
-			return err
 		}
 	}
 	// after setting up the commits, check out the "initial" branch in the origin repo so that we can git-push to it.
 	if env.OriginRepo != nil {
-		err := env.OriginRepo.CheckoutBranch("initial")
-		if err != nil {
-			return fmt.Errorf("cannot change origin repo back to initial: %w", err)
-		}
+		env.OriginRepo.CheckoutBranch("initial")
 	}
-	return nil
 }
 
 // CreateOriginBranch creates a branch with the given name only in the origin directory.
-func (env Fixture) CreateOriginBranch(name, parent string) error {
-	err := env.OriginRepo.CreateBranch(name, parent)
-	if err != nil {
-		return fmt.Errorf("cannot create origin branch %q: %w", name, err)
-	}
-	return nil
+func (env Fixture) CreateOriginBranch(name, parent string) {
+	env.OriginRepo.CreateBranch(name, parent)
 }
 
 // CreateTags creates tags from the given gherkin table.
-func (env Fixture) CreateTags(table *messages.PickleStepArgument_PickleTable) error {
+func (env Fixture) CreateTags(table *messages.PickleStepArgument_PickleTable) {
 	columnNames := helpers.TableFields(table)
 	if columnNames[0] != "NAME" && columnNames[1] != "LOCATION" {
-		return fmt.Errorf("tag table must have columns NAME and LOCATION")
+		log.Fatalf("tag table must have columns NAME and LOCATION")
 	}
 	for _, row := range table.Rows[1:] {
 		name := row.Cells[0].Value
 		location := row.Cells[1].Value
-		var err error
 		switch location {
 		case "local":
-			err = env.DevRepo.CreateTag(name)
+			env.DevRepo.CreateTag(name)
 		case "origin":
-			err = env.OriginRepo.CreateTag(name)
+			env.OriginRepo.CreateTag(name)
 		default:
-			err = fmt.Errorf("tag table LOCATION must be 'local' or 'origin'")
-		}
-		if err != nil {
-			return err
+			log.Fatalf("tag table LOCATION must be 'local' or 'origin'")
 		}
 	}
-	return nil
 }
 
 // CommitTable provides a table for all commits in this Git environment containing only the given fields.
-func (env Fixture) CommitTable(fields []string) (datatable.DataTable, error) {
+func (env Fixture) CommitTable(fields []string) datatable.DataTable {
 	builder := datatable.NewCommitTableBuilder()
-	localCommits, err := env.DevRepo.Commits(fields, "main")
-	if err != nil {
-		return datatable.DataTable{}, fmt.Errorf("cannot determine commits in the developer repo: %w", err)
-	}
+	localCommits := env.DevRepo.Commits(fields, "main")
 	builder.AddMany(localCommits, "local")
 	if env.CoworkerRepo != nil {
-		coworkerCommits, err := env.CoworkerRepo.Commits(fields, "main")
-		if err != nil {
-			return datatable.DataTable{}, fmt.Errorf("cannot determine commits in the coworker repo: %w", err)
-		}
+		coworkerCommits := env.CoworkerRepo.Commits(fields, "main")
 		builder.AddMany(coworkerCommits, "coworker")
 	}
 	if env.OriginRepo != nil {
-		originCommits, err := env.OriginRepo.Commits(fields, "main")
-		if err != nil {
-			return datatable.DataTable{}, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
-		}
+		originCommits := env.OriginRepo.Commits(fields, "main")
 		builder.AddMany(originCommits, config.OriginRemote)
 	}
 	if env.UpstreamRepo != nil {
-		upstreamCommits, err := env.UpstreamRepo.Commits(fields, "main")
-		if err != nil {
-			return datatable.DataTable{}, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
-		}
+		upstreamCommits := env.UpstreamRepo.Commits(fields, "main")
 		builder.AddMany(upstreamCommits, "upstream")
 	}
-	return builder.Table(fields), nil
+	return builder.Table(fields)
 }
 
 // TagTable provides a table for all tags in this Git environment.
-func (env Fixture) TagTable() (datatable.DataTable, error) {
+func (env Fixture) TagTable() datatable.DataTable {
 	builder := datatable.NewTagTableBuilder()
-	localTags, err := env.DevRepo.Tags()
-	if err != nil {
-		return datatable.DataTable{}, err
-	}
+	localTags := env.DevRepo.Tags()
 	builder.AddMany(localTags, "local")
 	if env.OriginRepo != nil {
-		originTags, err := env.OriginRepo.Tags()
-		if err != nil {
-			return datatable.DataTable{}, err
-		}
+		originTags := env.OriginRepo.Tags()
 		builder.AddMany(originTags, config.OriginRemote)
 	}
-	return builder.Table(), nil
+	return builder.Table()
 }
 
-func (env Fixture) initializeWorkspace(repo *testruntime.TestRuntime) error {
-	err := repo.Config.SetMainBranch("main")
-	if err != nil {
-		return err
-	}
-	err = repo.Config.SetPerennialBranches([]string{})
-	if err != nil {
-		return err
-	}
-	return repo.RunMany([][]string{
+func (env Fixture) initializeWorkspace(repo *testruntime.TestRuntime) {
+	asserts.NoError(repo.Config.SetMainBranch("main"))
+	asserts.NoError(repo.Config.SetPerennialBranches([]string{}))
+	repo.MustRunMany([][]string{
 		{"git", "checkout", "main"},
 		// NOTE: the developer repos receives the initial branch from origin
 		//       but we don't want it here because it isn't used in tests.
@@ -371,6 +274,6 @@ func (env Fixture) submoduleRepoPath() string {
 }
 
 // Remove deletes all files used by this Fixture from disk.
-func (env Fixture) Remove() error {
-	return os.RemoveAll(env.Dir)
+func (env Fixture) Remove() {
+	asserts.NoError(os.RemoveAll(env.Dir))
 }
