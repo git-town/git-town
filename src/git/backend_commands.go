@@ -67,11 +67,20 @@ func (bc *BackendCommands) BranchHasUnmergedCommits(branch, parent string) (bool
 }
 
 // CheckoutBranch checks out the Git branch with the given name.
+func (bc *BackendCommands) CheckoutBranchUncached(name string) error {
+	err := bc.Run("git", "checkout", name)
+	if err != nil {
+		return fmt.Errorf("cannot check out branch %q: %w", name, err)
+	}
+	return nil
+}
+
+// CheckoutBranch checks out the Git branch with the given name.
 func (bc *BackendCommands) CheckoutBranch(name string) error {
 	if !bc.Config.DryRun {
-		err := bc.Run("git", "checkout", name)
+		err := bc.CheckoutBranchUncached(name)
 		if err != nil {
-			return fmt.Errorf("cannot check out branch %q: %w", name, err)
+			return err
 		}
 	}
 	if name != "-" {
@@ -111,13 +120,7 @@ func (bc *BackendCommands) CreateFeatureBranch(name string) error {
 }
 
 // CurrentBranch provides the currently checked out branch.
-func (bc *BackendCommands) CurrentBranch() (string, error) {
-	if bc.Config.DryRun {
-		return bc.Config.CurrentBranchCache.Value(), nil
-	}
-	if bc.Config.CurrentBranchCache.Initialized() {
-		return bc.Config.CurrentBranchCache.Value(), nil
-	}
+func (bc *BackendCommands) CurrentBranchUncached() (string, error) {
 	rebasing, err := bc.HasRebaseInProgress()
 	if err != nil {
 		return "", fmt.Errorf("cannot determine current branch: %w", err)
@@ -127,14 +130,27 @@ func (bc *BackendCommands) CurrentBranch() (string, error) {
 		if err != nil {
 			return "", err
 		}
-		bc.Config.CurrentBranchCache.Set(currentBranch)
 		return currentBranch, nil
 	}
 	output, err := bc.Query("git", "rev-parse", "--abbrev-ref", "HEAD")
 	if err != nil {
 		return "", fmt.Errorf("cannot determine the current branch: %w", err)
 	}
-	bc.Config.CurrentBranchCache.Set(output)
+	return output, nil
+}
+
+// CurrentBranch provides the currently checked out branch.
+func (bc *BackendCommands) CurrentBranch() (string, error) {
+	if bc.Config.DryRun {
+		return bc.Config.CurrentBranchCache.Value(), nil
+	}
+	if !bc.Config.CurrentBranchCache.Initialized() {
+		currentBranch, err := bc.CurrentBranchUncached()
+		if err != nil {
+			return currentBranch, err
+		}
+		bc.Config.CurrentBranchCache.Set(currentBranch)
+	}
 	return bc.Config.CurrentBranchCache.Value(), nil
 }
 
@@ -298,10 +314,16 @@ func (bc *BackendCommands) IsBranchInSync(branch string) (bool, error) {
 }
 
 // IsRepository returns whether or not the current directory is in a repository.
+func (bc *BackendCommands) IsRepositoryUncached() bool {
+	err := bc.Run("git", "rev-parse")
+	return err == nil
+}
+
+// IsRepository returns whether or not the current directory is in a repository.
 func (bc *BackendCommands) IsRepository() bool {
 	if !bc.Config.IsRepoCache.Initialized() {
-		err := bc.Run("git", "rev-parse")
-		bc.Config.IsRepoCache.Set(err == nil)
+		isRepo := bc.IsRepositoryUncached()
+		bc.Config.IsRepoCache.Set(isRepo)
 	}
 	return bc.Config.IsRepoCache.Value()
 }
@@ -408,36 +430,53 @@ func (bc *BackendCommands) PreviouslyCheckedOutBranch() (string, error) {
 }
 
 // RemoteBranches provides the names of the remote branches in this repo.
+func (bc *BackendCommands) RemoteBranchesUncached() ([]string, error) {
+	output, err := bc.Query("git", "branch", "-r")
+	if err != nil {
+		return []string{}, fmt.Errorf("cannot determine remote branches: %w", err)
+	}
+	lines := stringslice.Lines(output)
+	branches := make([]string, 0, len(lines)-1)
+	for _, line := range lines {
+		if !strings.Contains(line, " -> ") {
+			branches = append(branches, strings.TrimSpace(line))
+		}
+	}
+	return branches, nil
+}
+
+// RemoteBranches provides the names of the remote branches in this repo.
 func (bc *BackendCommands) RemoteBranches() ([]string, error) {
 	if !bc.Config.RemoteBranchCache.Initialized() {
-		output, err := bc.Query("git", "branch", "-r")
+		remoteBranches, err := bc.RemoteBranchesUncached()
 		if err != nil {
-			return []string{}, fmt.Errorf("cannot determine remote branches: %w", err)
+			return remoteBranches, err
 		}
-		lines := stringslice.Lines(output)
-		branches := make([]string, 0, len(lines)-1)
-		for _, line := range lines {
-			if !strings.Contains(line, " -> ") {
-				branches = append(branches, strings.TrimSpace(line))
-			}
-		}
-		bc.Config.RemoteBranchCache.Set(branches)
+		bc.Config.RemoteBranchCache.Set(remoteBranches)
 	}
 	return bc.Config.RemoteBranchCache.Value(), nil
 }
 
 // Remotes provides the names of all Git remotes in this repository.
+func (bc *BackendCommands) RemotesUncached() ([]string, error) {
+	out, err := bc.Query("git", "remote")
+	if err != nil {
+		return []string{}, fmt.Errorf("cannot determine remotes: %w", err)
+	}
+	if out == "" {
+		return []string{}, nil
+	}
+	return stringslice.Lines(out), nil
+}
+
+// Remotes provides the names of all Git remotes in this repository.
 func (bc *BackendCommands) Remotes() ([]string, error) {
 	if !bc.Config.RemotesCache.Initialized() {
-		out, err := bc.Query("git", "remote")
+		remotes, err := bc.RemotesUncached()
 		if err != nil {
-			return []string{}, fmt.Errorf("cannot determine remotes: %w", err)
+			return remotes, err
 		}
-		if out == "" {
-			bc.Config.RemotesCache.Set([]string{})
-		} else {
-			bc.Config.RemotesCache.Set(stringslice.Lines(out))
-		}
+		bc.Config.RemotesCache.Set(remotes)
 	}
 	return bc.Config.RemotesCache.Value(), nil
 }
@@ -448,7 +487,7 @@ func (bc *BackendCommands) RemoveOutdatedConfiguration() error {
 	if err != nil {
 		return err
 	}
-	for child, parent := range bc.Config.Lineage().Entries {
+	for child, parent := range bc.Config.Lineage() {
 		hasChildBranch := stringslice.Contains(branches, child)
 		hasParentBranch := stringslice.Contains(branches, parent)
 		if !hasChildBranch || !hasParentBranch {
@@ -463,13 +502,23 @@ func (bc *BackendCommands) RemoveOutdatedConfiguration() error {
 
 // RootDirectory provides the path of the rood directory of the current repository,
 // i.e. the directory that contains the ".git" folder.
+func (bc *BackendCommands) RootDirectoryUncached() (string, error) {
+	output, err := bc.Query("git", "rev-parse", "--show-toplevel")
+	if err != nil {
+		return "", fmt.Errorf("cannot determine root directory: %w", err)
+	}
+	return filepath.FromSlash(output), nil
+}
+
+// RootDirectory provides the path of the rood directory of the current repository,
+// i.e. the directory that contains the ".git" folder.
 func (bc *BackendCommands) RootDirectory() (string, error) {
 	if !bc.Config.RootDirCache.Initialized() {
-		output, err := bc.Query("git", "rev-parse", "--show-toplevel")
+		rootDir, err := bc.RootDirectoryUncached()
 		if err != nil {
-			return "", fmt.Errorf("cannot determine root directory: %w", err)
+			return rootDir, err
 		}
-		bc.Config.RootDirCache.Set(filepath.FromSlash(output))
+		bc.Config.RootDirCache.Set(rootDir)
 	}
 	return bc.Config.RootDirCache.Value(), nil
 }

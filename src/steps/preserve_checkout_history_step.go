@@ -27,9 +27,9 @@ func (step *PreserveCheckoutHistoryStep) Run(run *git.ProdRunner, _ hosting.Conn
 	if err != nil {
 		return err
 	}
-	err = run.Backend.CheckoutBranch(expectedPreviouslyCheckedOutBranch)
+	err = run.Backend.CheckoutBranchUncached(expectedPreviouslyCheckedOutBranch)
 	if err != nil {
 		return err
 	}
-	return run.Backend.CheckoutBranch(currentBranch)
+	return run.Backend.CheckoutBranchUncached(currentBranch)
 }

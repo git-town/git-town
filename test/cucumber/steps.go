@@ -1,6 +1,7 @@
 package cucumber
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -16,6 +17,7 @@ import (
 	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/stringslice"
+	"github.com/git-town/git-town/v9/test/asserts"
 	"github.com/git-town/git-town/v9/test/datatable"
 	"github.com/git-town/git-town/v9/test/fixture"
 	"github.com/git-town/git-town/v9/test/git"
@@ -34,10 +36,7 @@ var fixtureFactory *fixture.Factory //nolint:gochecknoglobals
 func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.BeforeScenario(func(scenario *messages.Pickle) {
 		// create a Fixture for the scenario
-		fixture, err := fixtureFactory.CreateFixture(scenario.GetName())
-		if err != nil {
-			log.Fatalf("cannot create environment for scenario %q: %s", scenario.GetName(), err)
-		}
+		fixture := fixtureFactory.CreateFixture(scenario.GetName())
 		// Godog only provides state for the entire feature.
 		// We want state to be scenario-specific, hence we reset the shared state before each scenario.
 		// This is a limitation of the current Godog implementation, which doesn't have a `ScenarioContext` method,
@@ -63,17 +62,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			if err != nil {
 				log.Fatalf("cannot evaluate symlinks of base directory for feature specs: %s", err)
 			}
-			gm, err := fixture.NewFactory(evalBaseDir)
-			if err != nil {
-				log.Fatalf("Cannot create memoized environment: %s", err)
-			}
+			gm := fixture.NewFactory(evalBaseDir)
 			fixtureFactory = &gm
 		}
 	})
 
 	suite.AfterScenario(func(scenario *messages.Pickle, e error) {
 		if e != nil {
-			fmt.Printf("failed scenario %q in %q, investigate state in %q\n", scenario.GetName(), scenario.GetUri(), state.fixture.Dir)
+			fmt.Printf("failed scenario %q in %q, investigate state in %s\n", scenario.GetName(), scenario.GetUri(), state.fixture.Dir)
 		}
 		if state.runExitCode != 0 && !state.runExitCodeChecked {
 			cli.PrintError(fmt.Errorf("%s - scenario %q doesn't document exit code %d", scenario.GetUri(), scenario.GetName(), state.runExitCode))
@@ -83,22 +79,22 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^a branch "([^"]*)"$`, func(branch string) error {
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
-		return state.fixture.DevRepo.CreateBranch(branch, "main")
+		state.fixture.DevRepo.CreateBranch(branch, "main")
+		return nil
 	})
 
 	suite.Step(`^a coworker clones the repository$`, func() error {
-		return state.fixture.AddCoworkerRepo()
+		state.fixture.AddCoworkerRepo()
+		return nil
 	})
 
 	suite.Step(`^a feature branch "([^"]+)" as a child of "([^"]+)"$`, func(branch, parentBranch string) error {
-		err := state.fixture.DevRepo.CreateChildFeatureBranch(branch, parentBranch)
-		if err != nil {
-			return fmt.Errorf("cannot create feature branch %q: %w", branch, err)
-		}
+		state.fixture.DevRepo.CreateChildFeatureBranch(branch, parentBranch)
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 		state.initialBranchHierarchy.AddRow(branch, parentBranch)
-		return state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
+		state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
+		return nil
 	})
 
 	suite.Step(`^a merge is now in progress$`, func() error {
@@ -110,34 +106,28 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^a (local )?feature branch "([^"]*)"$`, func(localStr, branch string) error {
 		isLocal := localStr != ""
-		err := state.fixture.DevRepo.CreateFeatureBranch(branch)
-		if err != nil {
-			return err
-		}
+		asserts.NoError(state.fixture.DevRepo.CreateFeatureBranch(branch))
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		state.initialBranchHierarchy.AddRow(branch, "main")
 		if !isLocal {
 			state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-			return state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
+			state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
+			return nil
 		}
 		return nil
 	})
 
 	suite.Step(`^a perennial branch "([^"]+)"$`, func(branch string) error {
-		err := state.fixture.DevRepo.CreatePerennialBranches(branch)
-		if err != nil {
-			return fmt.Errorf("cannot create perennial branch: %w", err)
-		}
+		state.fixture.DevRepo.CreatePerennialBranches(branch)
 		state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-		return state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
+		state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
+		return nil
 	})
 
 	suite.Step(`^a rebase is now in progress$`, func() error {
 		hasRebase, err := state.fixture.DevRepo.HasRebaseInProgress()
-		if err != nil {
-			return err
-		}
+		asserts.NoError(err)
 		if !hasRebase {
 			return fmt.Errorf("expected rebase in progress")
 		}
@@ -146,19 +136,17 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^a remote feature branch "([^"]*)"$`, func(branch string) error {
 		state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-		return state.fixture.OriginRepo.CreateBranch(branch, "main")
+		state.fixture.OriginRepo.CreateBranch(branch, "main")
+		return nil
 	})
 
 	suite.Step(`^a remote tag "([^"]+)" not on a branch$`, func(name string) error {
-		return state.fixture.OriginRepo.CreateStandaloneTag(name)
+		state.fixture.OriginRepo.CreateStandaloneTag(name)
+		return nil
 	})
 
 	suite.Step(`^all branches are now synchronized$`, func() error {
-		outOfSync, err := state.fixture.DevRepo.HasBranchesOutOfSync()
-		if err != nil {
-			return err
-		}
-		if outOfSync {
+		if state.fixture.DevRepo.HasBranchesOutOfSync() {
 			return fmt.Errorf("expected no branches out of sync")
 		}
 		return nil
@@ -167,35 +155,36 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^an uncommitted file$`, func() error {
 		state.uncommittedFileName = "uncommitted file"
 		state.uncommittedContent = "uncommitted content"
-		return state.fixture.DevRepo.CreateFile(
+		state.fixture.DevRepo.CreateFile(
 			state.uncommittedFileName,
 			state.uncommittedContent,
 		)
+		return nil
 	})
 
 	suite.Step(`^an uncommitted file in folder "([^"]*)"$`, func(folder string) error {
 		state.uncommittedFileName = fmt.Sprintf("%s/uncommitted file", folder)
-		return state.fixture.DevRepo.CreateFile(
+		state.fixture.DevRepo.CreateFile(
 			state.uncommittedFileName,
 			state.uncommittedContent,
 		)
+		return nil
 	})
 
 	suite.Step(`^an uncommitted file with name "([^"]+)" and content "([^"]+)"$`, func(name, content string) error {
 		state.uncommittedFileName = name
 		state.uncommittedContent = content
-		return state.fixture.DevRepo.CreateFile(name, content)
+		state.fixture.DevRepo.CreateFile(name, content)
+		return nil
 	})
 
 	suite.Step(`^an upstream repo$`, func() error {
-		return state.fixture.AddUpstream()
+		state.fixture.AddUpstream()
+		return nil
 	})
 
 	suite.Step(`^file "([^"]+)" still contains unresolved conflicts$`, func(name string) error {
-		content, err := state.fixture.DevRepo.FileContent(name)
-		if err != nil {
-			return fmt.Errorf("cannot read file %q: %w", name, err)
-		}
+		content := state.fixture.DevRepo.FileContent(name)
 		if !strings.Contains(content, "<<<<<<<") {
 			return fmt.Errorf("file %q does not contain unresolved conflicts", name)
 		}
@@ -203,10 +192,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^file "([^"]*)" still has content "([^"]*)"$`, func(file, expectedContent string) error {
-		actualContent, err := state.fixture.DevRepo.FileContent(file)
-		if err != nil {
-			return err
-		}
+		actualContent := state.fixture.DevRepo.FileContent(file)
 		if expectedContent != actualContent {
 			return fmt.Errorf("file content does not match\n\nEXPECTED: %q\n\nACTUAL:\n\n%q\n----------------------------", expectedContent, actualContent)
 		}
@@ -214,8 +200,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^Git has version "([^"]*)"$`, func(version string) error {
-		err := state.fixture.DevRepo.MockGit(version)
-		return err
+		state.fixture.DevRepo.MockGit(version)
+		return nil
 	})
 
 	suite.Step(`^Git Town is no longer configured$`, func() error {
@@ -230,16 +216,18 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return err
 		}
-		return state.fixture.DevRepo.DeleteMainBranchConfiguration()
+		state.fixture.DevRepo.DeleteMainBranchConfiguration()
+		return nil
 	})
 
 	suite.Step(`^I add commit "([^"]*)" to the "([^"]*)" branch`, func(message, branch string) error {
-		return state.fixture.DevRepo.CreateCommit(git.Commit{
+		state.fixture.DevRepo.CreateCommit(git.Commit{
 			Branch:      branch,
 			FileName:    "new_file",
 			FileContent: "new content",
 			Message:     message,
 		})
+		return nil
 	})
 
 	suite.Step(`^I am not prompted for any parent branches$`, func() error {
@@ -259,14 +247,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if content == "" {
 			content = "resolved content"
 		}
-		err := state.fixture.DevRepo.CreateFile(filename, content)
-		if err != nil {
-			return err
-		}
-		err = state.fixture.DevRepo.StageFiles(filename)
-		if err != nil {
-			return err
-		}
+		state.fixture.DevRepo.CreateFile(filename, content)
+		state.fixture.DevRepo.StageFiles(filename)
 		return nil
 	})
 
@@ -290,18 +272,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^I run "([^"]*)" and enter an empty commit message$`, func(cmd string) error {
-		if err := state.fixture.DevRepo.MockCommitMessage(""); err != nil {
-			return err
-		}
+		state.fixture.DevRepo.MockCommitMessage("")
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(cmd)
 		state.fixture.DevRepo.Config.Reload()
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)" and enter "([^"]*)" for the commit message$`, func(cmd, message string) error {
-		if err := state.fixture.DevRepo.MockCommitMessage(message); err != nil {
-			return err
-		}
+		state.fixture.DevRepo.MockCommitMessage(message)
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(cmd)
 		state.fixture.DevRepo.Config.Reload()
 		return nil
@@ -341,7 +319,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return fmt.Errorf("unexpected exit code %d", state.runExitCode)
 		}
 		if !strings.Contains(stripansi.Strip(state.runOutput), expected.Content) {
-			return fmt.Errorf("text not found:\n\nEXPECTED:\n\n%q\n\nACTUAL:\n\n%q", expected.Content, state.runOutput)
+			fmt.Println("ERROR: text not found:")
+			fmt.Println("\nEXPECTED:\n", expected.Content)
+			fmt.Println("\n==================================================================\nACTUAL OUTPUT START ==============================================\n==================================================================\n", state.runOutput, "ACTUAL:\n==================================================================\nACTUAL OUTPUT END ================================================\n==================================================================")
+			fmt.Println()
+			return fmt.Errorf("expected text not found")
 		}
 		return nil
 	})
@@ -377,9 +359,12 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^it runs no commands$`, func() error {
 		commands := output.GitCommandsInGitTownOutput(state.runOutput)
 		if len(commands) > 0 {
+			fmt.Println("\n\nERROR: Unexpected commands run!")
 			for _, command := range commands {
-				fmt.Println(command)
+				fmt.Printf("%s > %s\n", command.Branch, command.Command)
 			}
+			fmt.Println()
+			fmt.Println()
 			return fmt.Errorf("expected no commands but found %d commands", len(commands))
 		}
 		return nil
@@ -389,13 +374,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		commands := output.GitCommandsInGitTownOutput(state.runOutput)
 		table := output.RenderExecutedGitCommands(commands, input)
 		dataTable := datatable.FromGherkin(input)
-		expanded, err := dataTable.Expand(
+		expanded := dataTable.Expand(
 			&state.fixture.DevRepo,
 			state.fixture.OriginRepo,
 		)
-		if err != nil {
-			return err
-		}
 		diff, errorCount := table.EqualDataTable(expanded)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the commands run\n\n", errorCount)
@@ -424,26 +406,21 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^my repo does not have an origin$`, func() error {
-		err := state.fixture.DevRepo.RemoveRemote(config.OriginRemote)
-		if err != nil {
-			return err
-		}
+		state.fixture.DevRepo.RemoveRemote(config.OriginRemote)
 		state.initialRemoteBranches = []string{}
 		state.fixture.OriginRepo = nil
 		return nil
 	})
 
 	suite.Step(`^my repo has a Git submodule$`, func() error {
-		err := state.fixture.AddSubmoduleRepo()
-		if err != nil {
-			return err
-		}
-		return state.fixture.DevRepo.AddSubmodule(state.fixture.SubmoduleRepo.WorkingDir)
+		state.fixture.AddSubmoduleRepo()
+		state.fixture.DevRepo.AddSubmodule(state.fixture.SubmoduleRepo.WorkingDir)
+		return nil
 	})
 
 	suite.Step(`^no branch hierarchy exists now$`, func() error {
 		if state.fixture.DevRepo.Config.HasBranchInformation() {
-			branchInfo := state.fixture.DevRepo.Config.Lineage().Entries
+			branchInfo := state.fixture.DevRepo.Config.Lineage()
 			return fmt.Errorf("unexpected Git Town branch hierarchy information: %+v", branchInfo)
 		}
 		return nil
@@ -468,14 +445,12 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^no tool to open browsers is installed$`, func() error {
-		return state.fixture.DevRepo.MockNoCommandsInstalled()
+		state.fixture.DevRepo.MockNoCommandsInstalled()
+		return nil
 	})
 
 	suite.Step(`^no uncommitted files exist$`, func() error {
-		files, err := state.fixture.DevRepo.UncommittedFiles()
-		if err != nil {
-			return fmt.Errorf("cannot determine uncommitted files: %w", err)
-		}
+		files := state.fixture.DevRepo.UncommittedFiles()
 		if len(files) > 0 {
 			return fmt.Errorf("unexpected uncommitted files: %s", files)
 		}
@@ -507,7 +482,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^origin deletes the "([^"]*)" branch$`, func(name string) error {
 		state.initialRemoteBranches = stringslice.Remove(state.initialRemoteBranches, name)
-		return state.fixture.OriginRepo.RemoveBranch(name)
+		state.fixture.OriginRepo.RemoveBranch(name)
+		return nil
 	})
 
 	suite.Step(`^Git setting "color.ui" is "([^"]*)"$`, func(value string) error {
@@ -566,20 +542,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
 		for _, branch := range []string{branch1, branch2} {
-			err := state.fixture.DevRepo.CreateBranch(branch, "main")
-			if err != nil {
-				return err
-			}
+			state.fixture.DevRepo.CreateBranch(branch, "main")
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 		}
 		return nil
 	})
 
 	suite.Step(`^the branches are now$`, func(table *messages.PickleStepArgument_PickleTable) error {
-		existing, err := state.fixture.Branches()
-		if err != nil {
-			return err
-		}
+		existing := state.fixture.Branches()
 		diff, errCount := existing.EqualGherkin(table)
 		if errCount > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the branches\n\n", errCount)
@@ -592,30 +562,28 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^the commits$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		state.initialCommits = table
 		// create the commits
-		commits, err := git.FromGherkinTable(table)
-		if err != nil {
-			return fmt.Errorf("cannot parse Gherkin table: %w", err)
-		}
-		err = state.fixture.CreateCommits(commits)
-		if err != nil {
-			return fmt.Errorf("cannot create commits: %w", err)
-		}
+		commits := git.FromGherkinTable(table)
+		state.fixture.CreateCommits(commits)
 		// restore the initial branch
 		if state.initialCurrentBranch == "" {
-			return state.fixture.DevRepo.CheckoutBranch("main")
+			state.fixture.DevRepo.CheckoutBranch("main")
+			return nil
 		}
 		if state.fixture.DevRepo.Config.CurrentBranchCache.Value() != state.initialCurrentBranch {
-			return state.fixture.DevRepo.CheckoutBranch(state.initialCurrentBranch)
+			state.fixture.DevRepo.CheckoutBranch(state.initialCurrentBranch)
+			return nil
 		}
 		return nil
 	})
 
 	suite.Step(`^the coworker fetches updates$`, func() error {
-		return state.fixture.CoworkerRepo.Fetch()
+		state.fixture.CoworkerRepo.Fetch()
+		return nil
 	})
 
 	suite.Step(`^the coworker is on the "([^"]*)" branch$`, func(branch string) error {
-		return state.fixture.CoworkerRepo.CheckoutBranch(branch)
+		state.fixture.CoworkerRepo.CheckoutBranch(branch)
+		return nil
 	})
 
 	suite.Step(`^the coworker runs "([^"]+)"$`, func(command string) error {
@@ -641,12 +609,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		state.initialCurrentBranch = name
 		if !stringslice.Contains(state.initialLocalBranches, name) {
 			state.initialLocalBranches = append(state.initialLocalBranches, name)
-			err := state.fixture.DevRepo.CreateBranch(name, "main")
-			if err != nil {
-				return err
-			}
+			state.fixture.DevRepo.CreateBranch(name, "main")
 		}
-		return state.fixture.DevRepo.CheckoutBranch(name)
+		state.fixture.DevRepo.CheckoutBranch(name)
+		return nil
 	})
 
 	suite.Step(`^the current branch is a (local )?(feature|perennial) branch "([^"]*)"$`, func(localStr, branchType, branch string) error {
@@ -656,7 +622,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		case "feature":
 			err = state.fixture.DevRepo.CreateFeatureBranch(branch)
 		case "perennial":
-			err = state.fixture.DevRepo.CreatePerennialBranches(branch)
+			state.fixture.DevRepo.CreatePerennialBranches(branch)
 		default:
 			panic(fmt.Sprintf("unknown branch type: %q", branchType))
 		}
@@ -669,25 +635,20 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		}
 		if !isLocal {
 			state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
-			err := state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
-			if err != nil {
-				return err
-			}
+			state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
 		}
 		state.initialCurrentBranch = branch
 		if !state.fixture.DevRepo.Config.CurrentBranchCache.Initialized() || state.fixture.DevRepo.Config.CurrentBranchCache.Value() != branch {
-			return state.fixture.DevRepo.CheckoutBranch(branch)
+			state.fixture.DevRepo.CheckoutBranch(branch)
 		}
 		return nil
 	})
 
 	suite.Step(`^the current branch is "([^"]*)" and the previous branch is "([^"]*)"$`, func(current, previous string) error {
 		state.initialCurrentBranch = current
-		err := state.fixture.DevRepo.CheckoutBranch(previous)
-		if err != nil {
-			return err
-		}
-		return state.fixture.DevRepo.CheckoutBranch(current)
+		state.fixture.DevRepo.CheckoutBranch(previous)
+		state.fixture.DevRepo.CheckoutBranch(current)
+		return nil
 	})
 
 	suite.Step(`^the current branch is (?:now|still) "([^"]*)"$`, func(expected string) error {
@@ -718,10 +679,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the initial branches and hierarchy exist$`, func() error {
 		// verify initial branches
-		have, err := state.fixture.Branches()
-		if err != nil {
-			return err
-		}
+		have := state.fixture.Branches()
 		want := state.InitialBranches()
 		diff, errorCount := have.EqualDataTable(want)
 		if errorCount != 0 {
@@ -742,10 +700,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the initial branches exist$`, func() error {
-		have, err := state.fixture.Branches()
-		if err != nil {
-			return err
-		}
+		have := state.fixture.Branches()
 		want := state.InitialBranches()
 		// fmt.Printf("HAVE:\n%s\n", have.String())
 		// fmt.Printf("WANT:\n%s\n", want.String())
@@ -768,10 +723,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			state.initialBranchHierarchy.AddRow(branch, "main")
 			if !isLocal {
-				err = state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
-				if err != nil {
-					return err
-				}
+				state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
 				state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 			}
 		}
@@ -788,10 +740,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			state.initialBranchHierarchy.AddRow(branch, "main")
 			if !isLocal {
-				err = state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
-				if err != nil {
-					return err
-				}
+				state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
 				state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 			}
 		}
@@ -800,18 +749,12 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the (local )?perennial branches "([^"]+)" and "([^"]+)"$`, func(localStr, branch1, branch2 string) error {
 		isLocal := localStr != ""
-		err := state.fixture.DevRepo.CreatePerennialBranches(branch1, branch2)
-		if err != nil {
-			return fmt.Errorf("cannot create perennial branches: %w", err)
-		}
+		state.fixture.DevRepo.CreatePerennialBranches(branch1, branch2)
 		state.initialLocalBranches = append(state.initialLocalBranches, branch1, branch2)
 		if !isLocal {
 			state.initialRemoteBranches = append(state.initialRemoteBranches, branch1, branch2)
-			err = state.fixture.DevRepo.PushBranchToRemote(branch1, config.OriginRemote)
-			if err != nil {
-				return err
-			}
-			return state.fixture.DevRepo.PushBranchToRemote(branch2, config.OriginRemote)
+			state.fixture.DevRepo.PushBranchToRemote(branch1, config.OriginRemote)
+			state.fixture.DevRepo.PushBranchToRemote(branch2, config.OriginRemote)
 		}
 		return nil
 	})
@@ -819,16 +762,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^the (local )?perennial branches "([^"]+)", "([^"]+)", and "([^"]+)"$`, func(localStr, branch1, branch2, branch3 string) error {
 		isLocal := localStr != ""
 		for _, branch := range []string{branch1, branch2, branch3} {
-			err := state.fixture.DevRepo.CreatePerennialBranches(branch)
-			if err != nil {
-				return fmt.Errorf("cannot create perennial branches: %w", err)
-			}
+			state.fixture.DevRepo.CreatePerennialBranches(branch)
 			state.initialLocalBranches = append(state.initialLocalBranches, branch)
 			if !isLocal {
-				err = state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
-				if err != nil {
-					return fmt.Errorf("cannot push perennial branch upstream: %w", err)
-				}
+				state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
 				state.initialRemoteBranches = append(state.initialRemoteBranches, branch)
 			}
 		}
@@ -887,10 +824,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the previous Git branch is (?:now|still) "([^"]*)"$`, func(want string) error {
-		err := state.fixture.DevRepo.CheckoutBranch("-")
-		if err != nil {
-			return err
-		}
+		state.fixture.DevRepo.CheckoutBranch("-")
 		have, err := state.fixture.DevRepo.CurrentBranch()
 		if err != nil {
 			return err
@@ -898,27 +832,23 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if have != want {
 			return fmt.Errorf("expected previous branch %q but got %q", want, have)
 		}
-		return state.fixture.DevRepo.CheckoutBranch("-")
+		state.fixture.DevRepo.CheckoutBranch("-")
+		return nil
 	})
 
 	suite.Step(`^the tags$`, func(table *messages.PickleStepArgument_PickleTable) error {
-		return state.fixture.CreateTags(table)
+		state.fixture.CreateTags(table)
+		return nil
 	})
 
 	suite.Step(`^the uncommitted file is stashed$`, func() error {
-		uncommittedFiles, err := state.fixture.DevRepo.UncommittedFiles()
-		if err != nil {
-			return err
-		}
+		uncommittedFiles := state.fixture.DevRepo.UncommittedFiles()
 		for _, ucf := range uncommittedFiles {
 			if ucf == state.uncommittedFileName {
 				return fmt.Errorf("expected file %q to be stashed but it is still uncommitted", state.uncommittedFileName)
 			}
 		}
-		stashSize, err := state.fixture.DevRepo.StashSize()
-		if err != nil {
-			return err
-		}
+		stashSize := state.fixture.DevRepo.StashSize()
 		if stashSize != 1 {
 			return fmt.Errorf("expected 1 stash but found %d", stashSize)
 		}
@@ -926,15 +856,12 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the uncommitted file still exists$`, func() error {
-		hasFile, err := state.fixture.DevRepo.HasFile(
+		hasFile := state.fixture.DevRepo.HasFile(
 			state.uncommittedFileName,
 			state.uncommittedContent,
 		)
-		if err != nil {
-			return err
-		}
-		if !hasFile {
-			return fmt.Errorf("expected file %q but didn't find it", state.uncommittedFileName)
+		if hasFile != "" {
+			return errors.New(hasFile)
 		}
 		return nil
 	})
@@ -948,10 +875,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^these committed files exist now$`, func(table *messages.PickleStepArgument_PickleTable) error {
-		fileTable, err := state.fixture.DevRepo.FilesInBranches("main")
-		if err != nil {
-			return fmt.Errorf("cannot determine files in branches in the developer repo: %w", err)
-		}
+		fileTable := state.fixture.DevRepo.FilesInBranches("main")
 		diff, errorCount := fileTable.EqualGherkin(table)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing files\n\n", errorCount)
@@ -962,10 +886,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^these tags exist$`, func(table *messages.PickleStepArgument_PickleTable) error {
-		tagTable, err := state.fixture.TagTable()
-		if err != nil {
-			return err
-		}
+		tagTable := state.fixture.TagTable()
 		diff, errorCount := tagTable.EqualGherkin(table)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the existing tags\n\n", errorCount)
@@ -987,10 +908,12 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^tool "([^"]*)" is broken$`, func(name string) error {
-		return state.fixture.DevRepo.MockBrokenCommand(name)
+		state.fixture.DevRepo.MockBrokenCommand(name)
+		return nil
 	})
 
 	suite.Step(`^tool "([^"]*)" is installed$`, func(tool string) error {
-		return state.fixture.DevRepo.MockCommand(tool)
+		state.fixture.DevRepo.MockCommand(tool)
+		return nil
 	})
 }
