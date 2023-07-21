@@ -31,6 +31,8 @@ func setup(debug bool) error {
 		DryRun:                false,
 		HandleUnfinishedState: false,
 		ValidateGitversion:    true,
+		ValidateIsConfigured:  false,
+		ValidateIsOnline:      false,
 		ValidateIsRepository:  true,
 	})
 	if err != nil || exit {

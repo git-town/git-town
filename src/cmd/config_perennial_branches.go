@@ -53,6 +53,8 @@ func displayPerennialBranches(debug bool) error {
 		DryRun:                false,
 		HandleUnfinishedState: false,
 		ValidateGitversion:    true,
+		ValidateIsConfigured:  false,
+		ValidateIsOnline:      false,
 		ValidateIsRepository:  true,
 	})
 	if err != nil || exit {
@@ -69,6 +71,8 @@ func updatePerennialBranches(debug bool) error {
 		DryRun:                false,
 		HandleUnfinishedState: false,
 		ValidateGitversion:    true,
+		ValidateIsConfigured:  false,
+		ValidateIsOnline:      false,
 		ValidateIsRepository:  true,
 	})
 	if err != nil || exit {

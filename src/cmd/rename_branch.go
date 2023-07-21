@@ -53,9 +53,11 @@ func renameBranch(args []string, force, debug bool) error {
 		Debug:                 debug,
 		DryRun:                false,
 		HandleUnfinishedState: true,
+		OmitBranchNames:       false,
 		ValidateGitversion:    true,
-		ValidateIsRepository:  true,
+		ValidateIsOnline:      false,
 		ValidateIsConfigured:  true,
+		ValidateIsRepository:  true,
 	})
 	if err != nil || exit {
 		return err

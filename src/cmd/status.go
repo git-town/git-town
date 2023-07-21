@@ -37,7 +37,10 @@ func status(debug bool) error {
 		Debug:                 debug,
 		DryRun:                false,
 		HandleUnfinishedState: false,
+		OmitBranchNames:       false,
 		ValidateGitversion:    true,
+		ValidateIsConfigured:  false,
+		ValidateIsOnline:      false,
 		ValidateIsRepository:  true,
 	})
 	if err != nil || exit {

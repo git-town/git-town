@@ -45,6 +45,7 @@ func repo(debug bool) error {
 		Debug:                 debug,
 		DryRun:                false,
 		HandleUnfinishedState: false,
+		OmitBranchNames:       false,
 		ValidateGitversion:    true,
 		ValidateIsRepository:  true,
 		ValidateIsConfigured:  true,
