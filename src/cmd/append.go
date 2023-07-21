@@ -93,9 +93,6 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner, branchesSyn
 	if fc.Err != nil {
 		return nil, fc.Err
 	}
-	if hasOrigin && !isOffline {
-		fc.Check(run.Frontend.Fetch())
-	}
 	if branchesSyncStatus.Contains(targetBranch) {
 		fc.Fail("a branch named %q already exists", targetBranch)
 	}
