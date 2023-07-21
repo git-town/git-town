@@ -27,9 +27,6 @@ func LoadGitRepo(pr *git.ProdRunner, args LoadGitArgs) (branchesSyncStatus git.B
 		err = pr.Frontend.NavigateToDir(gitRootDirectory)
 	}
 	fc := failure.Collector{}
-	if args.ValidateGitversion {
-		fc.Check(validate.HasGitVersion(&pr.Backend))
-	}
 	if args.ValidateIsConfigured {
 		fc.Check(validate.IsConfigured(&pr.Backend))
 	}
@@ -43,7 +40,6 @@ func LoadGitRepo(pr *git.ProdRunner, args LoadGitArgs) (branchesSyncStatus git.B
 }
 
 type LoadGitArgs struct {
-	ValidateGitversion    bool // TODO: remove this, we always need the correct Git version when loading a Git repo
 	ValidateIsConfigured  bool
 	ValidateIsOnline      bool
 	ValidateIsRepository  bool // TODO: remove this, it's implicit when loading a Git repo

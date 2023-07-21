@@ -53,7 +53,6 @@ func prepend(args []string, debug bool) error {
 	}
 	branchesSyncStatus, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		HandleUnfinishedState: true,
-		ValidateGitversion:    true,
 		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,
 		ValidateIsRepository:  true,

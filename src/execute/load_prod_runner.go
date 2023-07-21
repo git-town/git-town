@@ -4,6 +4,7 @@ import (
 	"github.com/git-town/git-town/v9/src/cache"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/subshell"
+	"github.com/git-town/git-town/v9/src/validate"
 )
 
 func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, err error) { //nolint:nonamedreturns // so many return values require names
@@ -26,6 +27,10 @@ func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, err error) { //no
 			Config:         &config,
 		},
 		Stats: stats,
+	}
+	err = validate.HasGitVersion(&prodRunner.Backend)
+	if err != nil {
+		return prodRunner, err
 	}
 	if !args.OmitBranchNames || args.DryRun {
 		currentBranch, err := prodRunner.Backend.CurrentBranch()

@@ -52,7 +52,6 @@ func hack(args []string, promptForParent, debug bool) error {
 	}
 	branchesSyncStatus, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		HandleUnfinishedState: true,
-		ValidateGitversion:    true,
 		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,
 		ValidateIsRepository:  true,

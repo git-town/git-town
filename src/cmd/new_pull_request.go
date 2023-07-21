@@ -60,7 +60,6 @@ func newPullRequest(debug bool) error {
 	}
 	_, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		HandleUnfinishedState: true,
-		ValidateGitversion:    true,
 		ValidateIsRepository:  true,
 		ValidateIsConfigured:  true,
 		ValidateIsOnline:      true,

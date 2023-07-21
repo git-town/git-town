@@ -50,7 +50,6 @@ func runAppend(arg string, debug bool) error {
 	}
 	branchesSyncStatus, currentBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		HandleUnfinishedState: true,
-		ValidateGitversion:    true,
 		ValidateIsRepository:  true,
 		ValidateIsOnline:      false,
 		ValidateIsConfigured:  true,
