@@ -33,8 +33,9 @@ func skip(debug bool) error {
 		DryRun:                false,
 		HandleUnfinishedState: false,
 		ValidateGitversion:    true,
-		ValidateIsRepository:  true,
 		ValidateIsConfigured:  true,
+		ValidateIsOnline:      false,
+		ValidateIsRepository:  true,
 	})
 	if err != nil || exit {
 		return err

@@ -39,6 +39,7 @@ func pullBranchStrategy(args []string, debug bool) error {
 		HandleUnfinishedState: false,
 		ValidateGitversion:    true,
 		ValidateIsConfigured:  false,
+		ValidateIsOnline:      false,
 		ValidateIsRepository:  true,
 	})
 	if err != nil || exit {

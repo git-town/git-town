@@ -69,7 +69,7 @@ type LoadArgs struct {
 	ValidateGitversion    bool `exhaustruct:"optional"`
 	ValidateIsRepository  bool
 	ValidateIsConfigured  bool
-	ValidateIsOnline      bool `exhaustruct:"optional"`
+	ValidateIsOnline      bool
 }
 
 // NewFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.

@@ -46,6 +46,7 @@ func runAppend(arg string, debug bool) error {
 		HandleUnfinishedState: true,
 		ValidateGitversion:    true,
 		ValidateIsRepository:  true,
+		ValidateIsOnline:      false,
 		ValidateIsConfigured:  true,
 	})
 	if err != nil || exit {

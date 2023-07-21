@@ -33,8 +33,9 @@ func setParent(debug bool) error {
 		DryRun:                false,
 		HandleUnfinishedState: true,
 		ValidateGitversion:    true,
-		ValidateIsRepository:  true,
 		ValidateIsConfigured:  true,
+		ValidateIsRepository:  true,
+		ValidateIsOnline:      false,
 	})
 	if err != nil || exit {
 		return err

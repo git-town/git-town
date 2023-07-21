@@ -40,6 +40,7 @@ func syncStrategy(args []string, global, debug bool) error {
 		HandleUnfinishedState: false,
 		ValidateGitversion:    true,
 		ValidateIsConfigured:  false,
+		ValidateIsOnline:      false,
 		ValidateIsRepository:  true,
 	})
 	if err != nil || exit {

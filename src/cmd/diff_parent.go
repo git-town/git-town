@@ -39,8 +39,9 @@ func diffParent(args []string, debug bool) error {
 		DryRun:                false,
 		HandleUnfinishedState: true,
 		ValidateGitversion:    true,
-		ValidateIsRepository:  true,
 		ValidateIsConfigured:  true,
+		ValidateIsOnline:      false,
+		ValidateIsRepository:  true,
 	})
 	if err != nil || exit {
 		return err
