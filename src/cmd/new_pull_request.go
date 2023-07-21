@@ -55,7 +55,6 @@ func newPullRequest(debug bool) error {
 		DryRun:                false,
 		HandleUnfinishedState: true,
 		ValidateGitversion:    true,
-		ValidateIsRepository:  true,
 		ValidateIsConfigured:  true,
 		ValidateIsOnline:      true,
 	})

@@ -46,7 +46,6 @@ func repo(debug bool) error {
 		DryRun:                false,
 		HandleUnfinishedState: false,
 		ValidateGitversion:    true,
-		ValidateIsRepository:  true,
 		ValidateIsConfigured:  true,
 		ValidateIsOnline:      true,
 	})

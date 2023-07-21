@@ -58,7 +58,6 @@ func sync(all, dryRun, debug bool) error {
 		DryRun:                dryRun,
 		HandleUnfinishedState: true,
 		ValidateGitversion:    true,
-		ValidateIsRepository:  true,
 		ValidateIsConfigured:  true,
 	})
 	if err != nil || exit {

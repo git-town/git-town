@@ -29,12 +29,6 @@ func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, exit bool, err er
 		},
 		Stats: stats,
 	}
-	if args.ValidateIsRepository {
-		err := validate.IsRepository(&prodRunner)
-		if err != nil {
-			return prodRunner, false, err
-		}
-	}
 	if !args.OmitBranchNames || args.DryRun {
 		currentBranch, err := prodRunner.Backend.CurrentBranch()
 		if err != nil {
@@ -67,7 +61,6 @@ type LoadArgs struct {
 	HandleUnfinishedState bool
 	OmitBranchNames       bool `exhaustruct:"optional"`
 	ValidateGitversion    bool `exhaustruct:"optional"`
-	ValidateIsRepository  bool `exhaustruct:"optional"`
 	ValidateIsConfigured  bool `exhaustruct:"optional"`
 	ValidateIsOnline      bool `exhaustruct:"optional"`
 }
