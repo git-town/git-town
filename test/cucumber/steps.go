@@ -321,7 +321,15 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if !strings.Contains(stripansi.Strip(state.runOutput), expected.Content) {
 			fmt.Println("ERROR: text not found:")
 			fmt.Println("\nEXPECTED:\n", expected.Content)
-			fmt.Println("\n==================================================================\nACTUAL OUTPUT START ==============================================\n==================================================================\n", state.runOutput, "ACTUAL:\n==================================================================\nACTUAL OUTPUT END ================================================\n==================================================================")
+			fmt.Println("\n==================================================================")
+			fmt.Println("\nACTUAL OUTPUT START ==============================================")
+			fmt.Println("\n==================================================================")
+			fmt.Println()
+			fmt.Println(state.runOutput)
+			fmt.Println("ACTUAL:")
+			fmt.Println("\n==================================================================")
+			fmt.Println("\nACTUAL OUTPUT END ================================================")
+			fmt.Println("\n==================================================================")
 			fmt.Println()
 			return fmt.Errorf("expected text not found")
 		}
