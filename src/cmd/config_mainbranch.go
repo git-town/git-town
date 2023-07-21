@@ -37,6 +37,7 @@ func configureMainBranch(args []string, debug bool) error {
 		DryRun:                false,
 		HandleUnfinishedState: false,
 		ValidateGitversion:    true,
+		ValidateIsConfigured:  false,
 		ValidateIsRepository:  true,
 	})
 	if err != nil || exit {
