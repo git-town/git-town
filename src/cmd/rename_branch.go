@@ -58,6 +58,7 @@ func renameBranch(args []string, force, debug bool) error {
 		return err
 	}
 	branchesSyncStatus, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+		Fetch:                 true,
 		HandleUnfinishedState: true,
 		ValidateIsOnline:      false,
 		ValidateIsConfigured:  true,

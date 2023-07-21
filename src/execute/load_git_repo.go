@@ -10,7 +10,15 @@ import (
 	"github.com/git-town/git-town/v9/src/validate"
 )
 
-func LoadGitRepo(pr *git.ProdRunner, args LoadGitArgs) (branchesSyncStatus git.BranchesSyncStatus, currentBranch string, exit bool, err error) {
+func LoadGitRepo(pr *git.ProdRunner, args LoadGitArgs) (branchesSyncStatus git.BranchesSyncStatus, currentBranch string, exit bool, err error) { //nolint:nonamedreturns
+	fc := failure.Collector{}
+	if args.Fetch {
+		hasOrigin := fc.Bool(pr.Backend.HasOrigin())
+		isOffline := fc.Bool(pr.Config.IsOffline())
+		if fc.Err == nil && hasOrigin && !isOffline {
+			fc.Check(pr.Frontend.Fetch())
+		}
+	}
 	branchesSyncStatus, currentBranch, err = pr.Backend.BranchesSyncStatus()
 	if err != nil {
 		return branchesSyncStatus, currentBranch, false, errors.New("this is not a Git repository")
@@ -26,7 +34,6 @@ func LoadGitRepo(pr *git.ProdRunner, args LoadGitArgs) (branchesSyncStatus git.B
 	if currentDirectory != gitRootDirectory {
 		err = pr.Frontend.NavigateToDir(gitRootDirectory)
 	}
-	fc := failure.Collector{}
 	if args.ValidateIsConfigured {
 		fc.Check(validate.IsConfigured(&pr.Backend))
 	}
@@ -40,6 +47,7 @@ func LoadGitRepo(pr *git.ProdRunner, args LoadGitArgs) (branchesSyncStatus git.B
 }
 
 type LoadGitArgs struct {
+	Fetch                 bool
 	ValidateIsConfigured  bool
 	ValidateIsOnline      bool
 	HandleUnfinishedState bool

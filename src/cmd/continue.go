@@ -39,6 +39,7 @@ func runContinue(debug bool) error {
 		return err
 	}
 	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+		Fetch:                 false,
 		HandleUnfinishedState: false,
 		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,

@@ -38,6 +38,7 @@ func runSwitch(debug bool) error {
 		return err
 	}
 	_, currentBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+		Fetch:                 false,
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,

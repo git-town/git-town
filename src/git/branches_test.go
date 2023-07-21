@@ -64,15 +64,16 @@ func TestAncestry(t *testing.T) {
 		t.Parallel()
 		bs := git.BranchesSyncStatus{
 			git.BranchSyncStatus{
-				Name: "one",
+				Name:       "one",
+				SyncStatus: git.SyncStatusUpToDate,
 			},
 			git.BranchSyncStatus{
-				Name: "two",
+				Name:       "two",
+				SyncStatus: git.SyncStatusUpToDate,
 			},
 		}
 		assert.Equal(t, "one", bs.Lookup("one").Name)
 		assert.Equal(t, "two", bs.Lookup("two").Name)
 		assert.Nil(t, bs.Lookup("zonk"))
 	})
-
 }

@@ -51,6 +51,7 @@ func hack(args []string, promptForParent, debug bool) error {
 		return err
 	}
 	branchesSyncStatus, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+		Fetch:                 true,
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,
@@ -81,10 +82,9 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 	shouldNewBranchPush := fc.Bool(run.Config.ShouldNewBranchPush())
 	isOffline := fc.Bool(run.Config.IsOffline())
 	mainBranch := run.Config.MainBranch()
-	if fc.Err == nil && hasOrigin && !isOffline {
-		fc.Check(run.Frontend.Fetch())
-	}
 	// TODO: inline this variable?
+	fmt.Println("11111111111")
+	fmt.Println(branchesSyncStatus)
 	hasBranch := branchesSyncStatus.Contains(targetBranch)
 	pushHook := fc.Bool(run.Config.PushHook())
 	if hasBranch {

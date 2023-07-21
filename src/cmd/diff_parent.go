@@ -43,6 +43,7 @@ func diffParent(args []string, debug bool) error {
 		return err
 	}
 	_, currentBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+		Fetch:                 true,
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,

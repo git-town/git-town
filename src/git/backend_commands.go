@@ -68,7 +68,7 @@ func (bc *BackendCommands) BranchHasUnmergedCommits(branch, parent string) (bool
 }
 
 // BranchesSyncStatus provides detailed information about the sync status of all branches.
-func (bc *BackendCommands) BranchesSyncStatus() (branches BranchesSyncStatus, currentBranch string, err error) {
+func (bc *BackendCommands) BranchesSyncStatus() (branches BranchesSyncStatus, currentBranch string, err error) { //nolint:nonamedreturns
 	output, err := bc.Query("git", "branch", "-vva")
 	if err != nil {
 		return []BranchSyncStatus{}, "", err
@@ -94,9 +94,7 @@ func ParseVerboseBranchesOutput(output string) (BranchesSyncStatus, string) {
 			checkedoutBranch = branchName
 		}
 		syncStatus := determineSyncStatus(branchName, remoteText)
-		if strings.HasPrefix(branchName, "remotes/origin/") {
-			branchName = branchName[15:]
-		}
+		branchName = strings.TrimPrefix(branchName, "remotes/origin/")
 		if !result.Contains(branchName) {
 			result = append(result, BranchSyncStatus{
 				Name:       branchName,
@@ -129,9 +127,8 @@ func determineSyncStatus(branchName, remoteText string) SyncStatus {
 	} else {
 		if strings.HasPrefix(branchName, "remotes/origin/") {
 			return SyncStatusRemoteOnly
-		} else {
-			return SyncStatusLocalOnly
 		}
+		return SyncStatusLocalOnly
 	}
 }
 

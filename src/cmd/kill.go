@@ -43,6 +43,7 @@ func kill(args []string, debug bool) error {
 		return err
 	}
 	branchesSyncStatus, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+		Fetch:                 true,
 		HandleUnfinishedState: false,
 		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,

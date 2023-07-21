@@ -62,6 +62,7 @@ func sync(all, dryRun, debug bool) error {
 		return err
 	}
 	branchesSyncStatus, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+		Fetch:                 true,
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,
@@ -165,7 +166,7 @@ func syncBranchesSteps(config *syncConfig, run *git.ProdRunner) (runstate.StepLi
 }
 
 // updateBranchSteps provides the steps to sync a particular branch.
-// TODO: change the `branch` argument from `string` to `BranchInfo`
+// TODO: change the `branch` argument from `string` to `BranchInfo`.
 func updateBranchSteps(list *runstate.StepListBuilder, branch string, pushBranch bool, run *git.ProdRunner) {
 	isFeatureBranch := run.Config.IsFeatureBranch(branch)
 	syncStrategy := list.SyncStrategy(run.Config.SyncStrategy())

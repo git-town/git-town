@@ -40,6 +40,7 @@ func pruneBranches(debug bool) error {
 		return err
 	}
 	_, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+		Fetch:                 true,
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
 		ValidateIsOnline:      true,

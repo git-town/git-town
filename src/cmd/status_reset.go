@@ -37,6 +37,7 @@ func statusReset(debug bool) error {
 	}
 	// TODO: delete after Validate Git version and repo is deleted?
 	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+		Fetch:                 false,
 		HandleUnfinishedState: false,
 		ValidateIsConfigured:  false,
 		ValidateIsOnline:      false,
