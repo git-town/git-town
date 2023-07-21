@@ -38,6 +38,9 @@ func offline(args []string, debug bool) error {
 		DryRun:                false,
 		HandleUnfinishedState: false,
 		ValidateGitversion:    true,
+		ValidateIsConfigured:  false,
+		ValidateIsOnline:      false,
+		ValidateIsRepository:  false,
 	})
 	if err != nil || exit {
 		return err
