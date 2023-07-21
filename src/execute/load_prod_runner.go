@@ -67,7 +67,7 @@ type LoadArgs struct {
 	HandleUnfinishedState bool
 	OmitBranchNames       bool `exhaustruct:"optional"`
 	ValidateGitversion    bool `exhaustruct:"optional"`
-	ValidateIsRepository  bool `exhaustruct:"optional"`
+	ValidateIsRepository  bool
 	ValidateIsConfigured  bool `exhaustruct:"optional"`
 	ValidateIsOnline      bool `exhaustruct:"optional"`
 }

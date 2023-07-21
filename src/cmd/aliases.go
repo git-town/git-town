@@ -44,6 +44,7 @@ func aliases(arg string, debug bool) error {
 		OmitBranchNames:       true,
 		HandleUnfinishedState: false,
 		ValidateGitversion:    true,
+		ValidateIsRepository:  false,
 	})
 	if err != nil || exit {
 		return err
