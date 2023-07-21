@@ -1,7 +1,6 @@
 Feature: already existing branch
 
 
-  @debug @this
   Scenario Outline:
     Given a <LOCATION> feature branch "existing"
     When I run "git-town hack existing"
@@ -15,5 +14,5 @@ Feature: already existing branch
 
     Examples:
       | LOCATION |
-      # | local    |
+      | local    |
       | remote   |
