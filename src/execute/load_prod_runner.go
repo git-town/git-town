@@ -69,11 +69,11 @@ type LoadArgs struct {
 	Debug                 bool
 	DryRun                bool
 	HandleUnfinishedState bool
-	OmitBranchNames       bool `exhaustruct:"optional"`
-	ValidateGitversion    bool `exhaustruct:"optional"`
-	ValidateIsRepository  bool `exhaustruct:"optional"`
-	ValidateIsConfigured  bool `exhaustruct:"optional"`
-	ValidateIsOnline      bool `exhaustruct:"optional"`
+	OmitBranchNames       bool
+	ValidateGitversion    bool
+	ValidateIsRepository  bool
+	ValidateIsConfigured  bool
+	ValidateIsOnline      bool
 }
 
 // NewFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.

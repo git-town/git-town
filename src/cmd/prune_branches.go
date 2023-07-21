@@ -35,6 +35,7 @@ func pruneBranches(debug bool) error {
 		Debug:                 debug,
 		DryRun:                false,
 		HandleUnfinishedState: true,
+		OmitBranchNames:       false,
 		ValidateGitversion:    true,
 		ValidateIsRepository:  true,
 		ValidateIsConfigured:  true,
