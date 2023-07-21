@@ -319,7 +319,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return fmt.Errorf("unexpected exit code %d", state.runExitCode)
 		}
 		if !strings.Contains(stripansi.Strip(state.runOutput), expected.Content) {
-			return fmt.Errorf("text not found:\n\nEXPECTED:\n\n%q\n\nACTUAL:\n\n%q", expected.Content, state.runOutput)
+			fmt.Println("ERROR: text not found:")
+			fmt.Println("\nEXPECTED:\n", expected.Content)
+			fmt.Println("\n==================================================================\nACTUAL OUTPUT START ==============================================\n==================================================================\n", state.runOutput, "ACTUAL:\n==================================================================\nACTUAL OUTPUT END ================================================\n==================================================================")
+			fmt.Println()
+			return fmt.Errorf("expected text not found")
 		}
 		return nil
 	})
