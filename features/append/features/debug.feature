@@ -10,7 +10,7 @@ Feature: display debug statistics
     When I run "git-town append new --debug"
     Then it prints:
       """
-      Ran 30 shell commands.
+      Ran 29 shell commands.
       """
     And the current branch is now "new"
 
