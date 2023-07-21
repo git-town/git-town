@@ -31,6 +31,7 @@ func statusReset(debug bool) error {
 		Debug:                 debug,
 		DryRun:                false,
 		HandleUnfinishedState: false,
+		OmitBranchNames:       false,
 		ValidateGitversion:    true,
 		ValidateIsConfigured:  false,
 		ValidateIsOnline:      false,

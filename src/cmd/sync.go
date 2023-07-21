@@ -57,6 +57,7 @@ func sync(all, dryRun, debug bool) error {
 		Debug:                 debug,
 		DryRun:                dryRun,
 		HandleUnfinishedState: true,
+		OmitBranchNames:       false,
 		ValidateGitversion:    true,
 		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,

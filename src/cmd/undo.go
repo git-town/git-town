@@ -32,6 +32,7 @@ func undo(debug bool) error {
 		Debug:                 debug,
 		DryRun:                false,
 		HandleUnfinishedState: false,
+		OmitBranchNames:       false,
 		ValidateGitversion:    true,
 		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,

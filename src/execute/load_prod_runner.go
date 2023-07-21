@@ -65,7 +65,7 @@ type LoadArgs struct {
 	Debug                 bool
 	DryRun                bool
 	HandleUnfinishedState bool
-	OmitBranchNames       bool `exhaustruct:"optional"`
+	OmitBranchNames       bool
 	ValidateGitversion    bool
 	ValidateIsRepository  bool
 	ValidateIsConfigured  bool

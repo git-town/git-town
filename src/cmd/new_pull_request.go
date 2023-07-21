@@ -53,6 +53,7 @@ func newPullRequest(debug bool) error {
 	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
 		Debug:                 debug,
 		DryRun:                false,
+		OmitBranchNames:       false,
 		HandleUnfinishedState: true,
 		ValidateGitversion:    true,
 		ValidateIsRepository:  true,

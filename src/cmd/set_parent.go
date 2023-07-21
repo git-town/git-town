@@ -32,6 +32,7 @@ func setParent(debug bool) error {
 		Debug:                 debug,
 		DryRun:                false,
 		HandleUnfinishedState: true,
+		OmitBranchNames:       false,
 		ValidateGitversion:    true,
 		ValidateIsConfigured:  true,
 		ValidateIsRepository:  true,
