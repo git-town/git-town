@@ -32,9 +32,11 @@ func setParent(debug bool) error {
 		Debug:                 debug,
 		DryRun:                false,
 		HandleUnfinishedState: true,
+		OmitBranchNames:       false,
 		ValidateGitversion:    true,
-		ValidateIsRepository:  true,
 		ValidateIsConfigured:  true,
+		ValidateIsRepository:  true,
+		ValidateIsOnline:      false,
 	})
 	if err != nil || exit {
 		return err
