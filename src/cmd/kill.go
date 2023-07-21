@@ -34,7 +34,7 @@ func killCommand() *cobra.Command {
 }
 
 func kill(args []string, debug bool) error {
-	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
+	run, exit, branchesSyncStatus, initialBranch, err := execute.LoadProdRunner(execute.LoadArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		HandleUnfinishedState: false,
@@ -75,10 +75,6 @@ type killConfig struct {
 }
 
 func determineKillConfig(args []string, run *git.ProdRunner) (*killConfig, error) {
-	branchesSyncStatus, initialBranch, err := run.Backend.BranchesSyncStatus()
-	if err != nil {
-		return nil, err
-	}
 	mainBranch := run.Config.MainBranch()
 	var targetBranch string
 	if len(args) > 0 {

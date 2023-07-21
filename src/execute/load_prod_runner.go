@@ -8,7 +8,7 @@ import (
 	"github.com/git-town/git-town/v9/src/validate"
 )
 
-func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, exit bool, err error) { //nolint:nonamedreturns // so many return values require names
+func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, exit bool, branchesSyncStatus git.BranchesSyncStatus, currentBranch string, err error) { //nolint:nonamedreturns // so many return values require names
 	var stats Statistics
 	if args.Debug {
 		stats = &CommandsStatistics{CommandsCount: 0}
@@ -28,6 +28,10 @@ func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, exit bool, err er
 			Config:         &config,
 		},
 		Stats: stats,
+	}
+	branchesSyncStatus, initialBranch, err := prodRunner.Backend.BranchesSyncStatus()
+	if err != nil {
+		return prodRunner, true, branchesSyncStatus, currentBranch, err
 	}
 	if args.ValidateIsRepository {
 		err := validate.IsRepository(&prodRunner)
