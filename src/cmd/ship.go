@@ -63,11 +63,16 @@ func shipCmd() *cobra.Command {
 }
 
 func ship(args []string, message string, debug bool) error {
-	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:                 debug,
-		DryRun:                false,
+	run, err := execute.LoadProdRunner(execute.LoadArgs{
+		Debug:           debug,
+		DryRun:          false,
+		OmitBranchNames: false,
+	})
+	if err != nil {
+		return err
+	}
+	branchesSyncStatus, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		HandleUnfinishedState: true,
-		OmitBranchNames:       false,
 		ValidateGitversion:    true,
 		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,
@@ -80,7 +85,7 @@ func ship(args []string, message string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, err := determineShipConfig(args, connector, &run)
+	config, err := determineShipConfig(args, connector, &run, branchesSyncStatus, initialBranch)
 	if err != nil {
 		return err
 	}
@@ -112,16 +117,12 @@ type shipConfig struct {
 	proposalsOfChildBranches []hosting.Proposal
 }
 
-func determineShipConfig(args []string, connector hosting.Connector, run *git.ProdRunner) (*shipConfig, error) {
+func determineShipConfig(args []string, connector hosting.Connector, run *git.ProdRunner, branchesSyncStatus git.BranchesSyncStatus, initialBranch string) (*shipConfig, error) {
 	hasOrigin, err := run.Backend.HasOrigin()
 	if err != nil {
 		return nil, err
 	}
 	isOffline, err := run.Config.IsOffline()
-	if err != nil {
-		return nil, err
-	}
-	branchesSyncStatus, initialBranch, err := run.Backend.BranchesSyncStatus()
 	if err != nil {
 		return nil, err
 	}

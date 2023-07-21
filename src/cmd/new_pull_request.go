@@ -50,10 +50,15 @@ func newPullRequestCommand() *cobra.Command {
 }
 
 func newPullRequest(debug bool) error {
-	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:                 debug,
-		DryRun:                false,
-		OmitBranchNames:       false,
+	run, err := execute.LoadProdRunner(execute.LoadArgs{
+		Debug:           debug,
+		DryRun:          false,
+		OmitBranchNames: false,
+	})
+	if err != nil {
+		return err
+	}
+	_, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		HandleUnfinishedState: true,
 		ValidateGitversion:    true,
 		ValidateIsRepository:  true,
@@ -63,7 +68,7 @@ func newPullRequest(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineNewPullRequestConfig(&run)
+	config, err := determineNewPullRequestConfig(&run, initialBranch)
 	if err != nil {
 		return err
 	}
@@ -91,7 +96,7 @@ type newPullRequestConfig struct {
 	mainBranch     string
 }
 
-func determineNewPullRequestConfig(run *git.ProdRunner) (*newPullRequestConfig, error) {
+func determineNewPullRequestConfig(run *git.ProdRunner, initialBranch string) (*newPullRequestConfig, error) {
 	hasOrigin, err := run.Backend.HasOrigin()
 	if err != nil {
 		return nil, err
@@ -101,10 +106,6 @@ func determineNewPullRequestConfig(run *git.ProdRunner) (*newPullRequestConfig, 
 		if err != nil {
 			return nil, err
 		}
-	}
-	initialBranch, err := run.Backend.CurrentBranch()
-	if err != nil {
-		return nil, err
 	}
 	err = validate.KnowsBranchAncestors(initialBranch, run.Config.MainBranch(), &run.Backend)
 	if err != nil {

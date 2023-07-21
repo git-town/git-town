@@ -42,11 +42,16 @@ func hackCmd() *cobra.Command {
 }
 
 func hack(args []string, promptForParent, debug bool) error {
-	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:                 debug,
-		DryRun:                false,
+	run, err := execute.LoadProdRunner(execute.LoadArgs{
+		Debug:           debug,
+		DryRun:          false,
+		OmitBranchNames: false,
+	})
+	if err != nil {
+		return err
+	}
+	branchesSyncStatus, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		HandleUnfinishedState: true,
-		OmitBranchNames:       false,
 		ValidateGitversion:    true,
 		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,
@@ -55,7 +60,7 @@ func hack(args []string, promptForParent, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineHackConfig(args, promptForParent, &run)
+	config, err := determineHackConfig(args, promptForParent, &run, branchesSyncStatus)
 	if err != nil {
 		return err
 	}
@@ -70,7 +75,7 @@ func hack(args []string, promptForParent, debug bool) error {
 	return runstate.Execute(&runState, &run, nil)
 }
 
-func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunner) (*appendConfig, error) {
+func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunner, branchesSyncStatus git.BranchesSyncStatus) (*appendConfig, error) {
 	fc := failure.Collector{}
 	targetBranch := args[0]
 	parentBranch := fc.String(determineParentBranch(targetBranch, promptForParent, run))
@@ -81,8 +86,6 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 	if fc.Err == nil && hasOrigin && !isOffline {
 		fc.Check(run.Frontend.Fetch())
 	}
-	branchesSyncStatus, _, err := run.Backend.BranchesSyncStatus()
-	fc.Check(err)
 	// TODO: inline this variable?
 	hasBranch := branchesSyncStatus.Contains(targetBranch)
 	pushHook := fc.Bool(run.Config.PushHook())

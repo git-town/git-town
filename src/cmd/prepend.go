@@ -43,11 +43,16 @@ func prependCommand() *cobra.Command {
 }
 
 func prepend(args []string, debug bool) error {
-	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:                 debug,
-		DryRun:                false,
+	run, err := execute.LoadProdRunner(execute.LoadArgs{
+		Debug:           debug,
+		DryRun:          false,
+		OmitBranchNames: false,
+	})
+	if err != nil {
+		return err
+	}
+	branchesSyncStatus, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		HandleUnfinishedState: true,
-		OmitBranchNames:       false,
 		ValidateGitversion:    true,
 		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,
@@ -56,7 +61,7 @@ func prepend(args []string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	config, err := determinePrependConfig(args, &run)
+	config, err := determinePrependConfig(args, &run, branchesSyncStatus, initialBranch)
 	if err != nil {
 		return err
 	}
@@ -83,10 +88,8 @@ type prependConfig struct {
 	targetBranch        string
 }
 
-func determinePrependConfig(args []string, run *git.ProdRunner) (*prependConfig, error) {
+func determinePrependConfig(args []string, run *git.ProdRunner, branchesSyncStatus git.BranchesSyncStatus, initialBranch string) (*prependConfig, error) {
 	fc := failure.Collector{}
-	branchesSyncStatus, initialBranch, err := run.Backend.BranchesSyncStatus()
-	fc.Check(err)
 	hasOrigin := fc.Bool(run.Backend.HasOrigin())
 	shouldNewBranchPush := fc.Bool(run.Config.ShouldNewBranchPush())
 	pushHook := fc.Bool(run.Config.PushHook())
@@ -108,7 +111,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner) (*prependConfig,
 	if !run.Config.IsFeatureBranch(initialBranch) {
 		return nil, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can have parent branches", initialBranch)
 	}
-	err = validate.KnowsBranchAncestors(initialBranch, run.Config.MainBranch(), &run.Backend)
+	err := validate.KnowsBranchAncestors(initialBranch, run.Config.MainBranch(), &run.Backend)
 	if err != nil {
 		return nil, err
 	}

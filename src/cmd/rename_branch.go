@@ -49,11 +49,16 @@ func renameBranchCommand() *cobra.Command {
 }
 
 func renameBranch(args []string, force, debug bool) error {
-	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:                 debug,
-		DryRun:                false,
+	run, err := execute.LoadProdRunner(execute.LoadArgs{
+		Debug:           debug,
+		DryRun:          false,
+		OmitBranchNames: false,
+	})
+	if err != nil {
+		return err
+	}
+	branchesSyncStatus, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		HandleUnfinishedState: true,
-		OmitBranchNames:       false,
 		ValidateGitversion:    true,
 		ValidateIsOnline:      false,
 		ValidateIsConfigured:  true,
@@ -62,7 +67,7 @@ func renameBranch(args []string, force, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineRenameBranchConfig(args, force, &run)
+	config, err := determineRenameBranchConfig(args, force, &run, branchesSyncStatus, initialBranch)
 	if err != nil {
 		return err
 	}
@@ -89,7 +94,7 @@ type renameBranchConfig struct {
 	oldBranch                  string
 }
 
-func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRunner) (*renameBranchConfig, error) {
+func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRunner, branchesSyncStatus git.BranchesSyncStatus, initialBranch string) (*renameBranchConfig, error) {
 	isOffline, err := run.Config.IsOffline()
 	if err != nil {
 		return nil, err
@@ -99,10 +104,6 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 		if err != nil {
 			return nil, err
 		}
-	}
-	branchesSyncStatus, initialBranch, err := run.Backend.BranchesSyncStatus()
-	if err != nil {
-		return nil, err
 	}
 	pushHook, err := run.Config.PushHook()
 	if err != nil {

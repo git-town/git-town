@@ -40,11 +40,16 @@ func appendCmd() *cobra.Command {
 }
 
 func runAppend(arg string, debug bool) error {
-	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:                 debug,
-		DryRun:                false,
+	run, err := execute.LoadProdRunner(execute.LoadArgs{
+		Debug:           debug,
+		DryRun:          false,
+		OmitBranchNames: false,
+	})
+	if err != nil {
+		return err
+	}
+	branchesSyncStatus, currentBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		HandleUnfinishedState: true,
-		OmitBranchNames:       false,
 		ValidateGitversion:    true,
 		ValidateIsRepository:  true,
 		ValidateIsOnline:      false,
@@ -53,7 +58,7 @@ func runAppend(arg string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineAppendConfig(arg, &run)
+	config, err := determineAppendConfig(arg, &run, branchesSyncStatus, currentBranch)
 	if err != nil {
 		return err
 	}
@@ -79,7 +84,7 @@ type appendConfig struct {
 	targetBranch        string
 }
 
-func determineAppendConfig(targetBranch string, run *git.ProdRunner) (*appendConfig, error) {
+func determineAppendConfig(targetBranch string, run *git.ProdRunner, branchesSyncStatus git.BranchesSyncStatus, currentBranch string) (*appendConfig, error) {
 	fc := failure.Collector{}
 	hasOrigin := fc.Bool(run.Backend.HasOrigin())
 	isOffline := fc.Bool(run.Config.IsOffline())
@@ -92,20 +97,18 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner) (*appendCon
 	if hasOrigin && !isOffline {
 		fc.Check(run.Frontend.Fetch())
 	}
-	branchesSyncStatus, parentBranch, err := run.Backend.BranchesSyncStatus()
-	fc.Check(err)
 	if branchesSyncStatus.Contains(targetBranch) {
 		fc.Fail("a branch named %q already exists", targetBranch)
 	}
-	fc.Check(validate.KnowsBranchAncestors(parentBranch, run.Config.MainBranch(), &run.Backend))
-	ancestorBranches := run.Config.Lineage().Ancestors(parentBranch)
+	fc.Check(validate.KnowsBranchAncestors(currentBranch, run.Config.MainBranch(), &run.Backend))
+	ancestorBranches := run.Config.Lineage().Ancestors(currentBranch)
 	return &appendConfig{
 		ancestorBranches:    ancestorBranches,
 		isOffline:           isOffline,
 		hasOrigin:           hasOrigin,
 		mainBranch:          mainBranch,
 		noPushHook:          !pushHook,
-		parentBranch:        parentBranch,
+		parentBranch:        currentBranch,
 		shouldNewBranchPush: shouldNewBranchPush,
 		targetBranch:        targetBranch,
 	}, fc.Err

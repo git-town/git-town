@@ -2,13 +2,11 @@ package execute
 
 import (
 	"github.com/git-town/git-town/v9/src/cache"
-	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/subshell"
-	"github.com/git-town/git-town/v9/src/validate"
 )
 
-func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, exit bool, branchesSyncStatus git.BranchesSyncStatus, currentBranch string, err error) { //nolint:nonamedreturns // so many return values require names
+func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, err error) { //nolint:nonamedreturns // so many return values require names
 	var stats Statistics
 	if args.Debug {
 		stats = &CommandsStatistics{CommandsCount: 0}
@@ -29,51 +27,23 @@ func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, exit bool, branch
 		},
 		Stats: stats,
 	}
-	branchesSyncStatus, initialBranch, err := prodRunner.Backend.BranchesSyncStatus()
-	if err != nil {
-		return prodRunner, true, branchesSyncStatus, currentBranch, err
-	}
-	if args.ValidateIsRepository {
-		err := validate.IsRepository(&prodRunner)
-		if err != nil {
-			return prodRunner, false, err
-		}
-	}
 	if !args.OmitBranchNames || args.DryRun {
 		currentBranch, err := prodRunner.Backend.CurrentBranch()
 		if err != nil {
-			return prodRunner, false, err
+			return prodRunner, err
 		}
 		prodRunner.Config.CurrentBranchCache.Set(currentBranch)
 	}
 	if args.DryRun {
 		prodRunner.Config.DryRun = true
 	}
-	fc := failure.Collector{}
-	if args.ValidateGitversion {
-		fc.Check(validate.HasGitVersion(&prodRunner.Backend))
-	}
-	if args.ValidateIsConfigured {
-		fc.Check(validate.IsConfigured(&prodRunner.Backend))
-	}
-	if args.ValidateIsOnline {
-		fc.Check(validate.IsOnline(&prodRunner.Config))
-	}
-	if args.HandleUnfinishedState {
-		exit = fc.Bool(validate.HandleUnfinishedState(&prodRunner, nil))
-	}
-	return prodRunner, exit, fc.Err
+	return prodRunner, nil
 }
 
 type LoadArgs struct {
-	Debug                 bool
-	DryRun                bool
-	HandleUnfinishedState bool
-	OmitBranchNames       bool
-	ValidateGitversion    bool
-	ValidateIsRepository  bool
-	ValidateIsConfigured  bool
-	ValidateIsOnline      bool
+	Debug           bool
+	DryRun          bool
+	OmitBranchNames bool
 }
 
 // NewFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.

@@ -34,11 +34,16 @@ func killCommand() *cobra.Command {
 }
 
 func kill(args []string, debug bool) error {
-	run, exit, branchesSyncStatus, initialBranch, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:                 debug,
-		DryRun:                false,
+	run, err := execute.LoadProdRunner(execute.LoadArgs{
+		Debug:           debug,
+		DryRun:          false,
+		OmitBranchNames: false,
+	})
+	if err != nil {
+		return err
+	}
+	branchesSyncStatus, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		HandleUnfinishedState: false,
-		OmitBranchNames:       false,
 		ValidateGitversion:    true,
 		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,
@@ -47,7 +52,7 @@ func kill(args []string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineKillConfig(args, &run)
+	config, err := determineKillConfig(args, &run, branchesSyncStatus, initialBranch)
 	if err != nil {
 		return err
 	}
@@ -76,7 +81,7 @@ type killConfig struct {
 	targetBranch        string
 }
 
-func determineKillConfig(args []string, run *git.ProdRunner) (*killConfig, error) {
+func determineKillConfig(args []string, run *git.ProdRunner, branchesSyncStatus git.BranchesSyncStatus, initialBranch string) (*killConfig, error) {
 	mainBranch := run.Config.MainBranch()
 	var targetBranch string
 	if len(args) > 0 {

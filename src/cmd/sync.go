@@ -53,11 +53,16 @@ func syncCmd() *cobra.Command {
 }
 
 func sync(all, dryRun, debug bool) error {
-	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:                 debug,
-		DryRun:                dryRun,
+	run, err := execute.LoadProdRunner(execute.LoadArgs{
+		Debug:           debug,
+		DryRun:          dryRun,
+		OmitBranchNames: false,
+	})
+	if err != nil {
+		return err
+	}
+	branchesSyncStatus, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		HandleUnfinishedState: true,
-		OmitBranchNames:       false,
 		ValidateGitversion:    true,
 		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,
@@ -66,7 +71,7 @@ func sync(all, dryRun, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineSyncConfig(all, &run)
+	config, err := determineSyncConfig(all, &run, branchesSyncStatus, initialBranch)
 	if err != nil {
 		return err
 	}
@@ -90,7 +95,7 @@ type syncConfig struct {
 	shouldPushTags bool
 }
 
-func determineSyncConfig(allFlag bool, run *git.ProdRunner) (*syncConfig, error) {
+func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranchesSyncStatus git.BranchesSyncStatus, initialBranch string) (*syncConfig, error) {
 	hasOrigin, err := run.Backend.HasOrigin()
 	if err != nil {
 		return nil, err
@@ -104,10 +109,6 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner) (*syncConfig, error)
 		if err != nil {
 			return nil, err
 		}
-	}
-	allBranchesSyncStatus, initialBranch, err := run.Backend.BranchesSyncStatus()
-	if err != nil {
-		return nil, err
 	}
 	mainBranch := run.Config.MainBranch()
 	var branchesToSync git.BranchesSyncStatus

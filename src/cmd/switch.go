@@ -29,21 +29,22 @@ func switchCmd() *cobra.Command {
 }
 
 func runSwitch(debug bool) error {
-	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:                 debug,
-		DryRun:                false,
+	run, err := execute.LoadProdRunner(execute.LoadArgs{
+		Debug:           debug,
+		DryRun:          false,
+		OmitBranchNames: false,
+	})
+	if err != nil {
+		return err
+	}
+	_, currentBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		HandleUnfinishedState: true,
-		OmitBranchNames:       false,
 		ValidateGitversion:    true,
 		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,
 		ValidateIsRepository:  true,
 	})
 	if err != nil || exit {
-		return err
-	}
-	currentBranch, err := run.Backend.CurrentBranch()
-	if err != nil {
 		return err
 	}
 	newBranch, err := queryBranch(currentBranch, run.Config.Lineage())

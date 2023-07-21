@@ -31,11 +31,16 @@ func pruneBranchesCommand() *cobra.Command {
 }
 
 func pruneBranches(debug bool) error {
-	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:                 debug,
-		DryRun:                false,
+	run, err := execute.LoadProdRunner(execute.LoadArgs{
+		Debug:           debug,
+		DryRun:          false,
+		OmitBranchNames: false,
+	})
+	if err != nil {
+		return err
+	}
+	_, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		HandleUnfinishedState: true,
-		OmitBranchNames:       false,
 		ValidateGitversion:    true,
 		ValidateIsRepository:  true,
 		ValidateIsConfigured:  true,
@@ -44,7 +49,7 @@ func pruneBranches(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	config, err := determinePruneBranchesConfig(&run)
+	config, err := determinePruneBranchesConfig(&run, initialBranch)
 	if err != nil {
 		return err
 	}
@@ -65,7 +70,7 @@ type pruneBranchesConfig struct {
 	mainBranch                               string
 }
 
-func determinePruneBranchesConfig(run *git.ProdRunner) (*pruneBranchesConfig, error) {
+func determinePruneBranchesConfig(run *git.ProdRunner, initialBranch string) (*pruneBranchesConfig, error) {
 	hasOrigin, err := run.Backend.HasOrigin()
 	if err != nil {
 		return nil, err
@@ -75,10 +80,6 @@ func determinePruneBranchesConfig(run *git.ProdRunner) (*pruneBranchesConfig, er
 		if err != nil {
 			return nil, err
 		}
-	}
-	initialBranch, err := run.Backend.CurrentBranch()
-	if err != nil {
-		return nil, err
 	}
 	localBranchesWithDeletedTrackingBranches, err := run.Backend.LocalBranchesWithDeletedTrackingBranches()
 	if err != nil {
