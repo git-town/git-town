@@ -5,5 +5,5 @@ Feature: display debug statistics
     When I run "git-town diff-parent --debug"
     Then it prints:
       """
-      Ran 9 shell commands.
+      Ran 8 shell commands.
       """
