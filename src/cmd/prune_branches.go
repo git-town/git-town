@@ -51,8 +51,11 @@ func pruneBranches(debug bool) error {
 	if err != nil {
 		return err
 	}
-	runState := runstate.New("prune-branches", stepList)
-	return runstate.Execute(runState, &run, nil)
+	runState := runstate.RunState{
+		Command:     "prune-branches",
+		RunStepList: stepList,
+	}
+	return runstate.Execute(&runState, &run, nil)
 }
 
 type pruneBranchesConfig struct {
@@ -89,11 +92,11 @@ func determinePruneBranchesConfig(run *git.ProdRunner) (*pruneBranchesConfig, er
 
 func pruneBranchesStepList(config *pruneBranchesConfig, run *git.ProdRunner) (runstate.StepList, error) {
 	result := runstate.StepList{}
+	lineage := run.Config.Lineage()
 	for _, branchWithDeletedRemote := range config.localBranchesWithDeletedTrackingBranches {
 		if config.initialBranch == branchWithDeletedRemote {
 			result.Append(&steps.CheckoutStep{Branch: config.mainBranch})
 		}
-		lineage := run.Config.Lineage()
 		parent := lineage.Parent(branchWithDeletedRemote)
 		if parent != "" {
 			for _, child := range lineage.Children(branchWithDeletedRemote) {

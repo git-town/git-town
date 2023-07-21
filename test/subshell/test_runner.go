@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -47,69 +48,55 @@ type TestRunner struct {
 
 // createBinDir creates the directory that contains mock executables.
 // This method is idempotent.
-func (r *TestRunner) createBinDir() error {
+func (r *TestRunner) createBinDir() {
 	if r.usesBinDir {
 		// binDir already created --> nothing to do here
-		return nil
+		return
 	}
-	err := os.Mkdir(r.BinDir, 0o700)
-	if err != nil {
-		return fmt.Errorf("cannot create mock bin dir: %w", err)
-	}
+	asserts.NoError(os.Mkdir(r.BinDir, 0o700))
 	r.usesBinDir = true
-	return nil
 }
 
 // createMockBinary creates an executable with the given name and content in ms.binDir.
-func (r *TestRunner) createMockBinary(name string, content string) error {
-	if err := r.createBinDir(); err != nil {
-		return err
-	}
+func (r *TestRunner) createMockBinary(name string, content string) {
+	r.createBinDir()
 	//nolint:gosec // intentionally creating an executable here
-	err := os.WriteFile(filepath.Join(r.BinDir, name), []byte(content), 0x744)
-	if err != nil {
-		return fmt.Errorf("cannot write custom %q command: %w", name, err)
-	}
-	return nil
+	asserts.NoError(os.WriteFile(filepath.Join(r.BinDir, name), []byte(content), 0x744))
 }
 
 // MockBrokenCommand adds a mock for the given command that returns an error.
-func (r *TestRunner) MockBrokenCommand(name string) error {
+func (r *TestRunner) MockBrokenCommand(name string) {
 	// write custom "which" command
 	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" == %q ]; then\n  echo %q\nelse\n  exit 1\nfi", name, filepath.Join(r.BinDir, name))
-	err := r.createMockBinary("which", content)
-	if err != nil {
-		return err
-	}
+	r.createMockBinary("which", content)
 	// write custom command
 	content = "#!/usr/bin/env bash\n\nexit 1"
-	return r.createMockBinary(name, content)
+	r.createMockBinary(name, content)
 }
 
 // MockCommand adds a mock for the command with the given name.
-func (r *TestRunner) MockCommand(name string) error {
+func (r *TestRunner) MockCommand(name string) {
 	// write custom "which" command
 	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" == %q ]; then\n  echo %q\nelse\n  exit 1\nfi", name, filepath.Join(r.BinDir, name))
-	if err := r.createMockBinary("which", content); err != nil {
-		return fmt.Errorf("cannot write custom which command: %w", err)
-	}
+	r.createMockBinary("which", content)
 	// write custom command
 	content = fmt.Sprintf("#!/usr/bin/env bash\n\necho %s called with: \"$@\"\n", name)
-	return r.createMockBinary(name, content)
+	r.createMockBinary(name, content)
 }
 
 // MockCommitMessage sets up this runner with an editor that enters the given commit message.
-func (r *TestRunner) MockCommitMessage(message string) error {
+func (r *TestRunner) MockCommitMessage(message string) {
 	r.gitEditor = "git_editor"
-	return r.createMockBinary(r.gitEditor, fmt.Sprintf("#!/usr/bin/env bash\n\necho %q > $1", message))
+	r.createMockBinary(r.gitEditor, fmt.Sprintf("#!/usr/bin/env bash\n\necho %q > $1", message))
 }
 
 // MockGit pretends that this repo has Git in the given version installed.
-func (r *TestRunner) MockGit(version string) error {
+func (r *TestRunner) MockGit(version string) {
 	if runtime.GOOS == "windows" {
 		// create Windows binary
 		content := fmt.Sprintf("echo git version %s\n", version)
-		return r.createMockBinary("git.cmd", content)
+		r.createMockBinary("git.cmd", content)
+		return
 	}
 	// create Unix binary
 	mockGit := `#!/usr/bin/env bash
@@ -120,16 +107,22 @@ else
 fi`
 	gitPath, err := exec.LookPath("git")
 	if err != nil {
-		return fmt.Errorf("cannot locate the git executable: %w", err)
+		log.Fatalf("cannot locate the git executable: %v", err)
 	}
 	content := fmt.Sprintf(mockGit, version, gitPath)
-	return r.createMockBinary("git", content)
+	r.createMockBinary("git", content)
 }
 
 // MockNoCommandsInstalled pretends that no commands are installed.
-func (r *TestRunner) MockNoCommandsInstalled() error {
+func (r *TestRunner) MockNoCommandsInstalled() {
 	content := "#!/usr/bin/env bash\n\nexit 1\n"
-	return r.createMockBinary("which", content)
+	r.createMockBinary("which", content)
+}
+
+// MustQuery provides the output of the given command with the given arguments.
+// Overrides will be used and removed when done.
+func (r *TestRunner) MustQuery(name string, arguments ...string) string {
+	return r.MustQueryWith(&Options{}, name, arguments...)
 }
 
 func (r *TestRunner) MustQueryStringCode(fullCmd string) (string, int) {
@@ -145,7 +138,27 @@ func (r *TestRunner) MustQueryStringCodeWith(fullCmd string, opts *Options) (str
 	return output, exitCode
 }
 
+// MustQueryWith provides the output of the given command and didn't encounter any form of error.
+func (r *TestRunner) MustQueryWith(opts *Options, cmd string, args ...string) string {
+	output, err := r.QueryWith(opts, cmd, args...)
+	asserts.NoError(err)
+	return output
+}
+
 // Run runs the given command with the given arguments.
+// Overrides will be used and removed when done.
+func (r *TestRunner) MustRun(name string, arguments ...string) {
+	err := r.Run(name, arguments...)
+	if err != nil {
+		panic(fmt.Sprintf("Error executing \"%s %v\": %v", name, arguments, err))
+	}
+}
+
+func (r *TestRunner) MustRunMany(commands [][]string) {
+	asserts.NoError(r.RunMany(commands))
+}
+
+// Query provides the output of the given command.
 // Overrides will be used and removed when done.
 func (r *TestRunner) Query(name string, arguments ...string) (string, error) {
 	return r.QueryWith(&Options{}, name, arguments...)
@@ -162,9 +175,7 @@ func (r *TestRunner) QueryString(fullCmd string) (string, error) {
 // Overrides will be used and removed when done.
 func (r *TestRunner) QueryStringWith(fullCmd string, opts *Options) (string, error) {
 	parts, err := shellquote.Split(fullCmd)
-	if err != nil {
-		return "", fmt.Errorf("cannot split command %q: %w", fullCmd, err)
-	}
+	asserts.NoError(err)
 	cmd, args := parts[0], parts[1:]
 	return r.QueryWith(opts, cmd, args...)
 }
@@ -212,13 +223,8 @@ func (r *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string) (s
 	subProcess.Stdout = &output
 	subProcess.Stderr = &output
 	input, err := subProcess.StdinPipe()
-	if err != nil {
-		return "", 0, err
-	}
-	err = subProcess.Start()
-	if err != nil {
-		return "", 0, fmt.Errorf("can't start subprocess '%s %s': %w", cmd, strings.Join(args, " "), err)
-	}
+	asserts.NoError(err)
+	asserts.NoError(subProcess.Start())
 	for _, userInput := range opts.Input {
 		// Here we simply wait for some time until the subProcess needs the input.
 		// Capturing the output and scanning for the actual content needed
@@ -228,7 +234,9 @@ func (r *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string) (s
 		time.Sleep(500 * time.Millisecond)
 		_, err := input.Write([]byte(userInput))
 		if err != nil {
-			return "", 0, fmt.Errorf("can't write %q to subprocess '%s %s': %w", userInput, cmd, strings.Join(args, " "), err)
+			fmt.Printf("\nERROR: can't write %q to subprocess '%s %s': %v\n\n", userInput, cmd, strings.Join(args, " "), err)
+			fmt.Printf("OUTPUT: %s\n", output.String())
+			return "", 0, errors.New("subprocess crashed")
 		}
 	}
 	err = subProcess.Wait()
@@ -262,14 +270,9 @@ func (r *TestRunner) Run(name string, arguments ...string) error {
 	return err
 }
 
-// RunMany runs all given commands.
-// Commands are provided as a list of argv-style strings.
-// Overrides apply for the first command only.
-// Failed commands abort immediately with the encountered error.
 func (r *TestRunner) RunMany(commands [][]string) error {
 	for _, argv := range commands {
-		command, args := argv[0], argv[1:]
-		err := r.Run(command, args...)
+		err := r.Run(argv[0], argv[1:]...)
 		if err != nil {
 			return fmt.Errorf("error running command %q: %w", argv, err)
 		}

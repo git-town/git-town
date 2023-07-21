@@ -4,6 +4,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/test/testruntime"
 	"github.com/stretchr/testify/assert"
@@ -11,6 +12,19 @@ import (
 
 func TestGitTown(t *testing.T) {
 	t.Parallel()
+
+	t.Run("Lineage", func(t *testing.T) {
+		t.Parallel()
+		repo := testruntime.CreateGitTown(t)
+		assert.NoError(t, repo.CreateFeatureBranch("feature1"))
+		assert.NoError(t, repo.CreateFeatureBranch("feature2"))
+		repo.Config.Reload()
+		have := repo.Config.Lineage()
+		want := config.Lineage{}
+		want["feature1"] = "main"
+		want["feature2"] = "main"
+		assert.Equal(t, want, have)
+	})
 
 	t.Run("OriginURL()", func(t *testing.T) {
 		t.Parallel()

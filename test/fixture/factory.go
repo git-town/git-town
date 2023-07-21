@@ -1,7 +1,6 @@
 package fixture
 
 import (
-	"fmt"
 	"path/filepath"
 
 	"github.com/git-town/git-town/v9/test/helpers"
@@ -26,20 +25,16 @@ type Factory struct {
 }
 
 // NewFactory provides a new FixtureFactory instance operating in the given directory.
-func NewFactory(dir string) (Factory, error) {
-	memoized, err := NewStandardFixture(filepath.Join(dir, "memoized"))
-	if err != nil {
-		return Factory{}, fmt.Errorf("cannot create memoized environment: %w", err)
-	}
+func NewFactory(dir string) Factory {
 	return Factory{
 		counter:  helpers.Counter{},
 		dir:      dir,
-		memoized: memoized,
-	}, nil
+		memoized: NewStandardFixture(filepath.Join(dir, "memoized")),
+	}
 }
 
 // CreateFixture provides a new Fixture for the scenario with the given name.
-func (manager *Factory) CreateFixture(scenarioName string) (Fixture, error) {
+func (manager *Factory) CreateFixture(scenarioName string) Fixture {
 	envDirName := helpers.FolderName(scenarioName) + "_" + manager.counter.ToString()
 	envPath := filepath.Join(manager.dir, envDirName)
 	return CloneFixture(manager.memoized, envPath)
