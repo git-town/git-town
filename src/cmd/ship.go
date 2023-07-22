@@ -146,12 +146,6 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 			return nil, fmt.Errorf("you have uncommitted changes. Did you mean to commit them before shipping?")
 		}
 	}
-	if hasOrigin && !isOffline {
-		err := run.Frontend.Fetch()
-		if err != nil {
-			return nil, err
-		}
-	}
 	if !isShippingInitialBranch {
 		if !branchesSyncStatus.Contains(branchToShip) {
 			return nil, fmt.Errorf("there is no branch named %q", branchToShip)
