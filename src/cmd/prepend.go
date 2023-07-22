@@ -97,12 +97,6 @@ func determinePrependConfig(args []string, run *git.ProdRunner, branchesSyncStat
 	if fc.Err != nil {
 		return nil, fc.Err
 	}
-	if hasOrigin && !isOffline {
-		err := run.Frontend.Fetch()
-		if err != nil {
-			return nil, err
-		}
-	}
 	targetBranch := args[0]
 	if branchesSyncStatus.Contains(targetBranch) {
 		return nil, fmt.Errorf("a branch named %q already exists", targetBranch)
