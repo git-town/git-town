@@ -60,7 +60,6 @@ func (c *GitHubConnector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", c.Hostname, c.Organization, c.Repository)
 }
 
-//nolint:nonamedreturns
 func (c *GitHubConnector) SquashMergeProposal(number int, message string) (mergeSHA string, err error) {
 	if number <= 0 {
 		return "", fmt.Errorf("no pull request number given")
@@ -140,7 +139,6 @@ func parsePullRequest(pullRequest *github.PullRequest) Proposal {
 	}
 }
 
-//nolint:nonamedreturns
 func ParseCommitMessage(message string) (title, body string) {
 	parts := strings.SplitN(message, "\n", 2)
 	title = parts[0]
