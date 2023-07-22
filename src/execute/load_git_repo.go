@@ -41,6 +41,12 @@ func LoadGitRepo(pr *git.ProdRunner, args LoadGitArgs) (branchesSyncStatus git.B
 			return
 		}
 		if hasOrigin && !isOffline {
+			if !pr.Config.CurrentBranchCache.Initialized() {
+				_, err = pr.Backend.CurrentBranch()
+				if err != nil {
+					return
+				}
+			}
 			err = pr.Frontend.Fetch()
 			if err != nil {
 				return
