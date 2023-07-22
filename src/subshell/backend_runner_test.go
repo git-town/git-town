@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/v9/src/execute"
+	"github.com/git-town/git-town/v9/src/statistics"
 	"github.com/git-town/git-town/v9/src/subshell"
 	"github.com/stretchr/testify/assert"
 )
@@ -18,7 +18,7 @@ func TestBackendRunner(t *testing.T) {
 		t.Parallel()
 		t.Run("happy path", func(t *testing.T) {
 			tmpDir := t.TempDir()
-			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, Stats: &execute.NoStatistics{}}
+			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, Stats: &statistics.NoStatistics{}}
 			output, err := runner.Query("echo", "hello", "world  ")
 			assert.NoError(t, err)
 			assert.Equal(t, "hello world  \n", output)
@@ -27,7 +27,7 @@ func TestBackendRunner(t *testing.T) {
 		t.Run("unknown executable", func(t *testing.T) {
 			t.Parallel()
 			tmpDir := t.TempDir()
-			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, Stats: &execute.NoStatistics{}}
+			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, Stats: &statistics.NoStatistics{}}
 			err := runner.Run("zonk")
 			assert.Error(t, err)
 			var execError *exec.Error
@@ -37,7 +37,7 @@ func TestBackendRunner(t *testing.T) {
 		t.Run("non-zero exit code", func(t *testing.T) {
 			t.Parallel()
 			tmpDir := t.TempDir()
-			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, Stats: &execute.NoStatistics{}}
+			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, Stats: &statistics.NoStatistics{}}
 			err := runner.Run("bash", "-c", "echo hi && exit 2")
 			expectedError := `
 ----------------------------------------
@@ -57,7 +57,7 @@ OUTPUT END
 		t.Parallel()
 		t.Run("trims whitespace", func(t *testing.T) {
 			tmpDir := t.TempDir()
-			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, Stats: &execute.NoStatistics{}}
+			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, Stats: &statistics.NoStatistics{}}
 			output, err := runner.QueryTrim("echo", "hello", "world  ")
 			assert.NoError(t, err)
 			assert.Equal(t, "hello world", output)
@@ -67,7 +67,7 @@ OUTPUT END
 	t.Run(".RunMany()", func(t *testing.T) {
 		t.Parallel()
 		tmpDir := t.TempDir()
-		runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, Stats: &execute.NoStatistics{}}
+		runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, Stats: &statistics.NoStatistics{}}
 		err := runner.RunMany([][]string{
 			{"mkdir", "tmp"},
 			{"touch", "tmp/first"},

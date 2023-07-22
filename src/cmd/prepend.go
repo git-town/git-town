@@ -44,10 +44,9 @@ func prependCommand() *cobra.Command {
 
 func prepend(args []string, debug bool) error {
 	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:                debug,
-		DryRun:               false,
-		OmitBranchNames:      false,
-		ValidateIsConfigured: true,
+		Debug:           debug,
+		DryRun:          false,
+		OmitBranchNames: false,
 	})
 	if err != nil {
 		return err
@@ -55,6 +54,7 @@ func prepend(args []string, debug bool) error {
 	branchesSyncStatus, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 true,
 		HandleUnfinishedState: true,
+		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,
 	})
 	if err != nil || exit {

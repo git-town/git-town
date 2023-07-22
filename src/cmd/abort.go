@@ -31,10 +31,9 @@ func abortCmd() *cobra.Command {
 
 func abort(debug bool) error {
 	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:                debug,
-		DryRun:               false,
-		OmitBranchNames:      false,
-		ValidateIsConfigured: true,
+		Debug:           debug,
+		DryRun:          false,
+		OmitBranchNames: false,
 	})
 	if err != nil {
 		return err
@@ -42,6 +41,7 @@ func abort(debug bool) error {
 	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 false,
 		ValidateIsOnline:      false,
+		ValidateIsConfigured:  true,
 		HandleUnfinishedState: false,
 	})
 	if err != nil || exit {

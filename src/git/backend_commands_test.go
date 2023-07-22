@@ -5,6 +5,8 @@ import (
 
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/statistics"
+	"github.com/git-town/git-town/v9/src/subshell"
 	testgit "github.com/git-town/git-town/v9/test/git"
 	"github.com/git-town/git-town/v9/test/testruntime"
 	"github.com/stretchr/testify/assert"
@@ -144,6 +146,31 @@ func TestBackendCommands(t *testing.T) {
 		has, err = devRepo.Backend.HasTrackingBranch("b3")
 		assert.NoError(t, err)
 		assert.False(t, has)
+	})
+
+	t.Run(".IsRepositoryUncached", func(t *testing.T) {
+		t.Run("inside a Git repo", func(t *testing.T) {
+			t.Parallel()
+			origin := testruntime.Create(t)
+			isRepo, topLevel := origin.IsRepositoryUncached()
+			assert.True(t, isRepo)
+			assert.NotEmpty(t, topLevel)
+		})
+		t.Run("outside a repo", func(t *testing.T) {
+			t.Parallel()
+			dir := t.TempDir()
+			runner := subshell.BackendRunner{
+				Dir:     &dir,
+				Verbose: false,
+				Stats:   &statistics.NoStatistics{},
+			}
+			cmds := git.BackendCommands{
+				BackendRunner: runner,
+			}
+			isRepo, topLevel := cmds.IsRepositoryUncached()
+			assert.False(t, isRepo)
+			assert.Empty(t, topLevel)
+		})
 	})
 
 	t.Run(".LocalBranchesMainFirst()", func(t *testing.T) {

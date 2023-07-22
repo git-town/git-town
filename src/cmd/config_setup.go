@@ -26,10 +26,9 @@ func setupConfigCommand() *cobra.Command {
 
 func setup(debug bool) error {
 	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:                debug,
-		DryRun:               false,
-		OmitBranchNames:      true,
-		ValidateIsConfigured: false,
+		Debug:           debug,
+		DryRun:          false,
+		OmitBranchNames: true,
 	})
 	if err != nil {
 		return err
@@ -37,6 +36,7 @@ func setup(debug bool) error {
 	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 false,
 		HandleUnfinishedState: false,
+		ValidateIsConfigured:  false,
 		ValidateIsOnline:      false,
 	})
 	if err != nil || exit {

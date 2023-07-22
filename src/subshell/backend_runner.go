@@ -37,6 +37,7 @@ func (r BackendRunner) Run(executable string, args ...string) error {
 
 func (r BackendRunner) execute(executable string, args ...string) ([]byte, error) {
 	r.Stats.RegisterRun()
+	fmt.Println("1111111111111", r)
 	if r.Verbose {
 		printHeader(executable, args...)
 	}

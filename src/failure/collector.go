@@ -55,7 +55,7 @@ func (ec *Collector) PullBranchStrategy(value config.PullBranchStrategy, err err
 
 // String provides the string part of the given fallible function result
 // while registering the given error.
-func (ec *Collector) String(value string, err error) string {
+func (ec *Collector) String(value string, err error, desc ...string) string {
 	ec.Check(err)
 	return value
 }

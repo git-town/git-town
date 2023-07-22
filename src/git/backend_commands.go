@@ -371,15 +371,18 @@ func (bc *BackendCommands) IsBranchInSync(branch string) (bool, error) {
 }
 
 // IsRepository returns whether or not the current directory is in a repository.
-func (bc *BackendCommands) IsRepositoryUncached() bool {
-	err := bc.Run("git", "rev-parse")
-	return err == nil
+func (bc *BackendCommands) IsRepositoryUncached() (isRepo bool, topLevel string) {
+	output, err := bc.Query("git", "rev-parse", "--show-toplevel")
+	if err != nil {
+		return false, ""
+	}
+	return true, output
 }
 
 // IsRepository returns whether or not the current directory is in a repository.
 func (bc *BackendCommands) IsRepository() bool {
 	if !bc.Config.IsRepoCache.Initialized() {
-		isRepo := bc.IsRepositoryUncached()
+		isRepo, _ := bc.IsRepositoryUncached()
 		bc.Config.IsRepoCache.Set(isRepo)
 	}
 	return bc.Config.IsRepoCache.Value()

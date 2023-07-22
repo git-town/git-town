@@ -5,46 +5,73 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/validate"
 )
 
 func LoadGitRepo(pr *git.ProdRunner, args LoadGitArgs) (branchesSyncStatus git.BranchesSyncStatus, currentBranch string, exit bool, err error) { //nolint:nonamedreturns
-	fc := failure.Collector{}
+	rootDir, err := pr.Backend.RootDirectoryUncached()
+	fmt.Println("4444444444", rootDir)
+	fmt.Println("5555555555", err)
+	if err != nil {
+		return
+	}
+	if rootDir == "" {
+		err = errors.New("this is not a Git repository")
+		return
+	}
+	isOffline, err := pr.Config.IsOffline()
+	if err != nil {
+		return
+	}
+	if args.ValidateIsOnline && isOffline {
+		err = errors.New("this command requires an active internet connection")
+		return
+	}
 	if args.Fetch {
-		hasOrigin := fc.Bool(pr.Backend.HasOrigin())
-		isOffline := fc.Bool(pr.Config.IsOffline())
-		if fc.Err == nil && hasOrigin && !isOffline {
-			fc.Check(pr.Frontend.Fetch())
+		var hasOrigin bool
+		hasOrigin, err = pr.Backend.HasOrigin()
+		if err != nil {
+			return
+		}
+		if hasOrigin && !isOffline {
+			err = pr.Frontend.Fetch()
+			if err != nil {
+				return
+			}
 		}
 	}
 	branchesSyncStatus, currentBranch, err = pr.Backend.BranchesSyncStatus()
 	if err != nil {
-		return branchesSyncStatus, currentBranch, false, errors.New("this is not a Git repository")
+		return
+	}
+	pr.Config.CurrentBranchCache.Set(currentBranch)
+	if args.ValidateIsConfigured {
+		err = validate.IsConfigured(&pr.Backend)
+		if err != nil {
+			return
+		}
 	}
 	currentDirectory, err := os.Getwd()
 	if err != nil {
-		return branchesSyncStatus, currentBranch, false, fmt.Errorf("cannot get current working directory: %w", err)
+		err = errors.New("cannot determine the current directory")
+		return
 	}
-	gitRootDirectory, err := pr.Backend.RootDirectory()
-	if err != nil {
-		return branchesSyncStatus, currentBranch, false, err
-	}
-	if currentDirectory != gitRootDirectory {
-		err = pr.Frontend.NavigateToDir(gitRootDirectory)
-	}
-	if args.ValidateIsOnline {
-		fc.Check(validate.IsOnline(&pr.Config))
+	if currentDirectory != rootDir {
+		err = pr.Frontend.NavigateToDir(rootDir)
+		if err != nil {
+			return
+		}
 	}
 	if args.HandleUnfinishedState {
-		exit = fc.Bool(validate.HandleUnfinishedState(pr, nil))
+		exit, err = validate.HandleUnfinishedState(pr, nil)
 	}
-	return branchesSyncStatus, currentBranch, exit, fc.Err
+	return
 }
 
 type LoadGitArgs struct {
 	Fetch                 bool
 	ValidateIsOnline      bool
 	HandleUnfinishedState bool
+	ValidateIsConfigured  bool
 }

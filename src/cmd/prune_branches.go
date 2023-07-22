@@ -32,10 +32,9 @@ func pruneBranchesCommand() *cobra.Command {
 
 func pruneBranches(debug bool) error {
 	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:                debug,
-		DryRun:               false,
-		OmitBranchNames:      false,
-		ValidateIsConfigured: true,
+		Debug:           debug,
+		DryRun:          false,
+		OmitBranchNames: false,
 	})
 	if err != nil {
 		return err
@@ -43,6 +42,7 @@ func pruneBranches(debug bool) error {
 	_, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 true,
 		HandleUnfinishedState: true,
+		ValidateIsConfigured:  true,
 		ValidateIsOnline:      true,
 	})
 	if err != nil || exit {

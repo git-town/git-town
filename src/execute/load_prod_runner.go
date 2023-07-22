@@ -3,6 +3,7 @@ package execute
 import (
 	"github.com/git-town/git-town/v9/src/cache"
 	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/statistics"
 	"github.com/git-town/git-town/v9/src/subshell"
 	"github.com/git-town/git-town/v9/src/validate"
 )
@@ -10,9 +11,9 @@ import (
 func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, err error) { //nolint:nonamedreturns // so many return values require names
 	var stats Statistics
 	if args.Debug {
-		stats = &CommandsStatistics{CommandsCount: 0}
+		stats = &statistics.CommandsStatistics{CommandsCount: 0}
 	} else {
-		stats = &NoStatistics{}
+		stats = &statistics.NoStatistics{}
 	}
 	backendRunner := subshell.BackendRunner{Dir: nil, Verbose: args.Debug, Stats: stats}
 	config := git.NewRepoConfig(backendRunner)
@@ -32,19 +33,6 @@ func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, err error) { //no
 	if err != nil {
 		return prodRunner, err
 	}
-	if args.ValidateIsConfigured {
-		err = validate.IsConfigured(&prodRunner.Backend)
-		if err != nil {
-			return prodRunner, err
-		}
-	}
-	if !args.OmitBranchNames || args.DryRun {
-		currentBranch, err := prodRunner.Backend.CurrentBranch()
-		if err != nil {
-			return prodRunner, err
-		}
-		prodRunner.Config.CurrentBranchCache.Set(currentBranch)
-	}
 	if args.DryRun {
 		prodRunner.Config.DryRun = true
 	}
@@ -52,10 +40,9 @@ func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, err error) { //no
 }
 
 type LoadArgs struct {
-	Debug                bool
-	DryRun               bool
-	OmitBranchNames      bool
-	ValidateIsConfigured bool
+	Debug           bool
+	DryRun          bool
+	OmitBranchNames bool
 }
 
 // NewFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.

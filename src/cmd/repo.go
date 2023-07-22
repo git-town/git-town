@@ -42,10 +42,9 @@ func repoCommand() *cobra.Command {
 
 func repo(debug bool) error {
 	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:                debug,
-		DryRun:               false,
-		OmitBranchNames:      false,
-		ValidateIsConfigured: true,
+		Debug:           debug,
+		DryRun:          false,
+		OmitBranchNames: false,
 	})
 	if err != nil {
 		return err
@@ -53,6 +52,7 @@ func repo(debug bool) error {
 	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 false,
 		HandleUnfinishedState: false,
+		ValidateIsConfigured:  true,
 		ValidateIsOnline:      true,
 	})
 	if err != nil || exit {

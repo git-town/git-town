@@ -28,10 +28,9 @@ func resetRunstateCommand() *cobra.Command {
 
 func statusReset(debug bool) error {
 	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:                debug,
-		DryRun:               false,
-		OmitBranchNames:      false,
-		ValidateIsConfigured: false,
+		Debug:           debug,
+		DryRun:          false,
+		OmitBranchNames: false,
 	})
 	if err != nil {
 		return err
@@ -40,6 +39,7 @@ func statusReset(debug bool) error {
 	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 false,
 		HandleUnfinishedState: false,
+		ValidateIsConfigured:  false,
 		ValidateIsOnline:      false,
 	})
 	if err != nil || exit {

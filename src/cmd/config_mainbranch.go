@@ -32,10 +32,9 @@ func mainbranchConfigCmd() *cobra.Command {
 
 func configureMainBranch(args []string, debug bool) error {
 	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		OmitBranchNames:      true,
-		Debug:                debug,
-		DryRun:               false,
-		ValidateIsConfigured: false,
+		OmitBranchNames: true,
+		Debug:           debug,
+		DryRun:          false,
 	})
 	if err != nil {
 		return err
@@ -43,6 +42,7 @@ func configureMainBranch(args []string, debug bool) error {
 	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 false,
 		HandleUnfinishedState: false,
+		ValidateIsConfigured:  false,
 		ValidateIsOnline:      false,
 	})
 	if err != nil || exit {

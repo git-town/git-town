@@ -30,10 +30,9 @@ func switchCmd() *cobra.Command {
 
 func runSwitch(debug bool) error {
 	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:                debug,
-		DryRun:               false,
-		OmitBranchNames:      false,
-		ValidateIsConfigured: true,
+		Debug:           debug,
+		DryRun:          false,
+		OmitBranchNames: false,
 	})
 	if err != nil {
 		return err
@@ -41,6 +40,7 @@ func runSwitch(debug bool) error {
 	_, currentBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 false,
 		HandleUnfinishedState: true,
+		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,
 	})
 	if err != nil || exit {
