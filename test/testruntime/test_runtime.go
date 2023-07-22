@@ -56,10 +56,9 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 		BinDir:     binDir,
 	}
 	config := git.RepoConfig{
-		GitTown:      config.NewGitTown(&runner),
-		DryRun:       false,
-		IsRepoCache:  &cache.Bool{},
-		RootDirCache: &cache.String{},
+		GitTown:     config.NewGitTown(&runner),
+		DryRun:      false,
+		IsRepoCache: &cache.Bool{},
 	}
 	backendCommands := git.BackendCommands{
 		BackendRunner:      &runner,
@@ -67,6 +66,7 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 		CurrentBranchCache: &cache.String{},
 		RemoteBranchCache:  &cache.Strings{},
 		RemotesCache:       &cache.Strings{},
+		RootDirCache:       &cache.String{},
 	}
 	testCommands := commands.TestCommands{
 		TestRunner:      runner,

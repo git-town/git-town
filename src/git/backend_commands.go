@@ -29,6 +29,7 @@ type BackendCommands struct {
 	CurrentBranchCache *cache.String  // caches the currently checked out Git branch
 	RemoteBranchCache  *cache.Strings // caches the remote branches of this Git repo
 	RemotesCache       *cache.Strings // caches Git remotes
+	RootDirCache       *cache.String  // caches the base of the Git directory
 }
 
 // Author provides the locally Git configured user.
@@ -517,14 +518,14 @@ func (bc *BackendCommands) RootDirectoryUncached() (string, error) {
 // RootDirectory provides the path of the rood directory of the current repository,
 // i.e. the directory that contains the ".git" folder.
 func (bc *BackendCommands) RootDirectory() (string, error) {
-	if !bc.Config.RootDirCache.Initialized() {
+	if !bc.RootDirCache.Initialized() {
 		rootDir, err := bc.RootDirectoryUncached()
 		if err != nil {
 			return rootDir, err
 		}
-		bc.Config.RootDirCache.Set(rootDir)
+		bc.RootDirCache.Set(rootDir)
 	}
-	return bc.Config.RootDirCache.Value(), nil
+	return bc.RootDirCache.Value(), nil
 }
 
 // ShaForBranch provides the SHA for the local branch with the given name.
