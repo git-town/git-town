@@ -578,6 +578,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.fixture.DevRepo.CheckoutBranch("main")
 			return nil
 		}
+		// NOTE: reading the cached value here to keep the test suite fast by avoiding unnecessary disk access
 		if state.fixture.DevRepo.CurrentBranchCache.Value() != state.initialCurrentBranch {
 			state.fixture.DevRepo.CheckoutBranch(state.initialCurrentBranch)
 			return nil
@@ -647,6 +648,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
 		}
 		state.initialCurrentBranch = branch
+		// NOTE: reading the cached value here to keep the test suite fast by avoiding unnecessary disk access
 		if !state.fixture.DevRepo.CurrentBranchCache.Initialized() || state.fixture.DevRepo.CurrentBranchCache.Value() != branch {
 			state.fixture.DevRepo.CheckoutBranch(branch)
 		}
