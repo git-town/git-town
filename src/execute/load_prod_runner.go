@@ -9,6 +9,11 @@ import (
 	"github.com/git-town/git-town/v9/src/validate"
 )
 
+type Statistics interface {
+	RegisterRun()
+	PrintAnalysis()
+}
+
 func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, exit bool, err error) { //nolint:nonamedreturns // so many return values require names
 	var stats Statistics
 	if args.Debug {
