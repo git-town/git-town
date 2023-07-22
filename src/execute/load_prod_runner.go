@@ -4,6 +4,7 @@ import (
 	"github.com/git-town/git-town/v9/src/cache"
 	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/statistics"
 	"github.com/git-town/git-town/v9/src/subshell"
 	"github.com/git-town/git-town/v9/src/validate"
 )
@@ -11,9 +12,9 @@ import (
 func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, exit bool, err error) { //nolint:nonamedreturns // so many return values require names
 	var stats Statistics
 	if args.Debug {
-		stats = &CommandsStatistics{CommandsCount: 0}
+		stats = &statistics.CommandsStatistics{CommandsCount: 0}
 	} else {
-		stats = &NoStatistics{}
+		stats = &statistics.NoStatistics{}
 	}
 	backendRunner := subshell.BackendRunner{Dir: nil, Verbose: args.Debug, Stats: stats}
 	config := git.NewRepoConfig(backendRunner)
