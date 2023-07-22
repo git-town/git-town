@@ -1,7 +1,6 @@
 package execute
 
 import (
-	"github.com/git-town/git-town/v9/src/cache"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/statistics"
 	"github.com/git-town/git-town/v9/src/subshell"
@@ -29,7 +28,7 @@ func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, err error) { //no
 			Config:        &config,
 		},
 		Frontend: git.FrontendCommands{
-			FrontendRunner: NewFrontendRunner(args.OmitBranchNames, args.DryRun, config.CurrentBranchCache, stats),
+			FrontendRunner: NewFrontendRunner(args.OmitBranchNames, args.DryRun, prodRunner.Backend.CurrentBranch, stats),
 			Config:         &config,
 		},
 		Stats: stats,
@@ -37,6 +36,12 @@ func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, err error) { //no
 	err = validate.HasGitVersion(&prodRunner.Backend)
 	if err != nil {
 		return prodRunner, err
+	}
+	if args.ValidateIsRepository {
+		err := validate.IsRepository(&prodRunner)
+		if err != nil {
+			return prodRunner, false, err
+		}
 	}
 	if args.DryRun {
 		prodRunner.Config.DryRun = true
@@ -51,17 +56,17 @@ type LoadArgs struct {
 }
 
 // NewFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.
-func NewFrontendRunner(omitBranchNames, dryRun bool, currentBranchCache *cache.String, stats Statistics) git.FrontendRunner {
+func NewFrontendRunner(omitBranchNames, dryRun bool, getCurrentBranch subshell.GetCurrentBranchFunc, stats Statistics) git.FrontendRunner {
 	if dryRun {
 		return &subshell.FrontendDryRunner{
-			CurrentBranch:   currentBranchCache,
-			OmitBranchNames: omitBranchNames,
-			Stats:           stats,
+			GetCurrentBranch: getCurrentBranch,
+			OmitBranchNames:  omitBranchNames,
+			Stats:            stats,
 		}
 	}
 	return &subshell.FrontendRunner{
-		CurrentBranch:   currentBranchCache,
-		OmitBranchNames: omitBranchNames,
-		Stats:           stats,
+		GetCurrentBranch: getCurrentBranch,
+		OmitBranchNames:  omitBranchNames,
+		Stats:            stats,
 	}
 }

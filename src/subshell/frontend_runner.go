@@ -8,15 +8,16 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
-	"github.com/git-town/git-town/v9/src/cache"
 )
 
 // FrontendRunner executes frontend shell commands.
 type FrontendRunner struct {
-	CurrentBranch   *cache.String
-	OmitBranchNames bool
-	Stats           Statistics
+	GetCurrentBranch GetCurrentBranchFunc
+	OmitBranchNames  bool
+	Stats            Statistics
 }
+
+type GetCurrentBranchFunc func() (string, error)
 
 // Run runs the given command in this ShellRunner's directory.
 func (r *FrontendRunner) Run(cmd string, args ...string) error {
@@ -25,7 +26,11 @@ func (r *FrontendRunner) Run(cmd string, args ...string) error {
 	if r.OmitBranchNames {
 		branchName = ""
 	} else {
-		branchName = r.CurrentBranch.Value()
+		var err error
+		branchName, err = r.GetCurrentBranch()
+		if err != nil {
+			return err
+		}
 	}
 	PrintCommand(branchName, r.OmitBranchNames, cmd, args...)
 	// Windows commands run inside CMD
