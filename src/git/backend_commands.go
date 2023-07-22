@@ -549,8 +549,6 @@ func (bc *BackendCommands) TrackingBranch(branch string) string {
 }
 
 // Version indicates whether the needed Git version is installed.
-//
-//nolint:nonamedreturns  // multiple int return values justify using names for return values
 func (bc *BackendCommands) Version() (major int, minor int, err error) {
 	versionRegexp := regexp.MustCompile(`git version (\d+).(\d+).(\d+)`)
 	output, err := bc.Query("git", "version")

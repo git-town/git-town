@@ -37,7 +37,6 @@ func (c *GitLabConnector) FindProposal(branch, target string) (*Proposal, error)
 	return &proposal, nil
 }
 
-//nolint:nonamedreturns  // return value isn't obvious from function name
 func (c *GitLabConnector) SquashMergeProposal(number int, message string) (mergeSHA string, err error) {
 	if number <= 0 {
 		return "", fmt.Errorf("no merge request number given")
