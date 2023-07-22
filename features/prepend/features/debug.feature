@@ -10,7 +10,7 @@ Feature: display debug statistics
     When I run "git-town prepend parent --debug"
     Then it prints:
       """
-      Ran 27 shell commands.
+      Ran 26 shell commands.
       """
     And the current branch is now "parent"
 
