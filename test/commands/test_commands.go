@@ -25,7 +25,7 @@ type TestCommands struct {
 // AddRemote adds a Git remote with the given name and URL to this repository.
 func (r *TestCommands) AddRemote(name, url string) {
 	r.MustRun("git", "remote", "add", name, url)
-	r.Config.RemotesCache.Invalidate()
+	r.RemotesCache.Invalidate()
 }
 
 // AddSubmodule adds a Git submodule with the given URL to this repository.
@@ -268,7 +268,7 @@ func (r *TestCommands) RemoveBranch(name string) {
 
 // RemoveRemote deletes the Git remote with the given name.
 func (r *TestCommands) RemoveRemote(name string) {
-	r.Config.RemotesCache.Invalidate()
+	r.RemotesCache.Invalidate()
 	r.MustRun("git", "remote", "rm", name)
 }
 

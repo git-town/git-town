@@ -20,13 +20,10 @@ type FrontendRunner struct {
 type GetCurrentBranchFunc func() (string, error)
 
 // Run runs the given command in this ShellRunner's directory.
-func (r *FrontendRunner) Run(cmd string, args ...string) error {
+func (r *FrontendRunner) Run(cmd string, args ...string) (err error) {
 	r.Stats.RegisterRun()
 	var branchName string
-	if r.OmitBranchNames {
-		branchName = ""
-	} else {
-		var err error
+	if !r.OmitBranchNames {
 		branchName, err = r.GetCurrentBranch()
 		if err != nil {
 			return err

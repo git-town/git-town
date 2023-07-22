@@ -1,6 +1,8 @@
 package execute
 
 import (
+	"github.com/git-town/git-town/v9/src/cache"
+	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/statistics"
 	"github.com/git-town/git-town/v9/src/subshell"
@@ -20,16 +22,25 @@ func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, exit bool, err er
 		stats = &statistics.None{}
 	}
 	backendRunner := subshell.BackendRunner{Dir: nil, Verbose: args.Debug, Stats: stats}
-	config := git.NewRepoConfig(backendRunner)
+	config := git.RepoConfig{
+		GitTown: config.NewGitTown(backendRunner),
+		DryRun:  false, // to bootstrap this, DryRun always gets initialized as false and later enabled if needed
+	}
+	backendCommands := git.BackendCommands{
+		BackendRunner:      backendRunner,
+		Config:             &config,
+		CurrentBranchCache: &cache.String{},
+		IsRepoCache:        &cache.Bool{},
+		RemoteBranchCache:  &cache.Strings{},
+		RemotesCache:       &cache.Strings{},
+		RootDirCache:       &cache.String{},
+	}
 	prodRunner = git.ProdRunner{
-		Config: config,
-		Backend: git.BackendCommands{
-			BackendRunner: backendRunner,
-			Config:        &config,
-		},
+		Config:  config,
+		Backend: backendCommands,
 		Frontend: git.FrontendCommands{
-			FrontendRunner: NewFrontendRunner(args.OmitBranchNames, args.DryRun, prodRunner.Backend.CurrentBranch, stats),
-			Config:         &config,
+			FrontendRunner:         NewFrontendRunner(args.OmitBranchNames, args.DryRun, prodRunner.Backend.CurrentBranch, stats),
+			SetCachedCurrentBranch: backendCommands.CurrentBranchCache.Set,
 		},
 		Stats: stats,
 	}
