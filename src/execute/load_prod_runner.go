@@ -40,13 +40,6 @@ func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, exit bool, err er
 			return prodRunner, false, err
 		}
 	}
-	if !args.OmitBranchNames || args.DryRun {
-		currentBranch, err := prodRunner.Backend.CurrentBranch()
-		if err != nil {
-			return prodRunner, false, err
-		}
-		prodRunner.Config.CurrentBranchCache.Set(currentBranch)
-	}
 	if args.DryRun {
 		prodRunner.Config.DryRun = true
 	}
