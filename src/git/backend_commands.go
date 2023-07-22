@@ -24,9 +24,10 @@ type BackendRunner interface {
 // They don't change the user's repo, execute instantaneously, and Git Town needs to know their output.
 // They are invisible to the end user unless the "debug" option is set.
 type BackendCommands struct {
-	BackendRunner                    // executes shell commands in the directory of the Git repo
-	Config             *RepoConfig   // the known state of the Git repository
-	CurrentBranchCache *cache.String // caches the currently checked out Git branch
+	BackendRunner                     // executes shell commands in the directory of the Git repo
+	Config             *RepoConfig    // the known state of the Git repository
+	CurrentBranchCache *cache.String  // caches the currently checked out Git branch
+	RemoteBranchCache  *cache.Strings // caches the remote branches of this Git repo
 }
 
 // Author provides the locally Git configured user.
@@ -449,14 +450,14 @@ func (bc *BackendCommands) RemoteBranchesUncached() ([]string, error) {
 
 // RemoteBranches provides the names of the remote branches in this repo.
 func (bc *BackendCommands) RemoteBranches() ([]string, error) {
-	if !bc.Config.RemoteBranchCache.Initialized() {
+	if !bc.RemoteBranchCache.Initialized() {
 		remoteBranches, err := bc.RemoteBranchesUncached()
 		if err != nil {
 			return remoteBranches, err
 		}
-		bc.Config.RemoteBranchCache.Set(remoteBranches)
+		bc.RemoteBranchCache.Set(remoteBranches)
 	}
-	return bc.Config.RemoteBranchCache.Value(), nil
+	return bc.RemoteBranchCache.Value(), nil
 }
 
 // Remotes provides the names of all Git remotes in this repository.
