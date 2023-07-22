@@ -40,7 +40,7 @@ func LoadGitRepo(pr *git.ProdRunner, args LoadGitArgs) (branchesSyncStatus git.B
 	if args.HandleUnfinishedState {
 		exit = fc.Bool(validate.HandleUnfinishedState(pr, nil))
 	}
-	return branchesSyncStatus, currentBranch, exit, err
+	return branchesSyncStatus, currentBranch, exit, fc.Err
 }
 
 type LoadGitArgs struct {
