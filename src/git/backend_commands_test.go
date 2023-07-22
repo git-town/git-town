@@ -166,6 +166,7 @@ func TestBackendCommands(t *testing.T) {
 			}
 			cmds := git.BackendCommands{
 				BackendRunner: runner,
+				Config:        nil,
 			}
 			isRepo, topLevel := cmds.IsRepositoryUncached()
 			assert.False(t, isRepo)
