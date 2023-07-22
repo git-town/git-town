@@ -12,7 +12,7 @@ type Statistics interface {
 	PrintAnalysis()
 }
 
-func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, err error) { //nolint:nonamedreturns // so many return values require names
+func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, exit bool, err error) {
 	var stats Statistics
 	if args.Debug {
 		stats = &statistics.CommandsRun{CommandsCount: 0}

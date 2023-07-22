@@ -10,8 +10,6 @@ import (
 )
 
 // HandleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
-//
-//nolint:nonamedreturns  // return value isn't obvious from function name
 func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector) (quit bool, err error) {
 	runState, err := runstate.Load(&run.Backend)
 	if err != nil {

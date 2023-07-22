@@ -19,7 +19,7 @@ func KnowsBranchesAncestors(branches []string, mainBranch string, backend *git.B
 }
 
 // KnowsBranchAncestors prompts the user for all unknown ancestors of the given branch.
-func KnowsBranchAncestors(branch, defaultBranch string, backend *git.BackendCommands) (err error) { //nolint:nonamedreturns // return value names are useful here
+func KnowsBranchAncestors(branch, defaultBranch string, backend *git.BackendCommands) (err error) {
 	headerShown := false
 	currentBranch := branch
 	if backend.Config.IsMainBranch(branch) || backend.Config.IsPerennialBranch(branch) {

@@ -62,7 +62,7 @@ func runSwitch(debug bool) error {
 
 // queryBranch lets the user select a new branch via a visual dialog.
 // Returns the selected branch or nil if the user aborted.
-func queryBranch(currentBranch string, lineage config.Lineage) (selection *string, err error) { //nolint:nonamedreturns
+func queryBranch(currentBranch string, lineage config.Lineage) (selection *string, err error) {
 	entries, err := createEntries(lineage)
 	if err != nil {
 		return nil, err
