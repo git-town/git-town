@@ -98,12 +98,6 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 	if err != nil {
 		return nil, err
 	}
-	if !isOffline {
-		err := run.Frontend.Fetch()
-		if err != nil {
-			return nil, err
-		}
-	}
 	pushHook, err := run.Config.PushHook()
 	if err != nil {
 		return nil, err
