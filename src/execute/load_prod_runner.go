@@ -2,6 +2,7 @@ package execute
 
 import (
 	"github.com/git-town/git-town/v9/src/cache"
+	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/statistics"
@@ -22,16 +23,25 @@ func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, exit bool, err er
 		stats = &statistics.None{}
 	}
 	backendRunner := subshell.BackendRunner{Dir: nil, Verbose: args.Debug, Stats: stats}
-	config := git.NewRepoConfig(backendRunner)
+	config := git.RepoConfig{
+		GitTown: config.NewGitTown(backendRunner),
+		DryRun:  false, // to bootstrap this, DryRun always gets initialized as false and later enabled if needed
+	}
+	backendCommands := git.BackendCommands{
+		BackendRunner:      backendRunner,
+		Config:             &config,
+		CurrentBranchCache: &cache.String{},
+		IsRepoCache:        &cache.Bool{},
+		RemoteBranchCache:  &cache.Strings{},
+		RemotesCache:       &cache.Strings{},
+		RootDirCache:       &cache.String{},
+	}
 	prodRunner = git.ProdRunner{
-		Config: config,
-		Backend: git.BackendCommands{
-			BackendRunner: backendRunner,
-			Config:        &config,
-		},
+		Config:  config,
+		Backend: backendCommands,
 		Frontend: git.FrontendCommands{
-			FrontendRunner: NewFrontendRunner(args.OmitBranchNames, args.DryRun, config.CurrentBranchCache, stats),
-			Config:         &config,
+			FrontendRunner:         NewFrontendRunner(args.OmitBranchNames, args.DryRun, prodRunner.Backend.CurrentBranch, stats),
+			SetCachedCurrentBranch: backendCommands.CurrentBranchCache.Set,
 		},
 		Stats: stats,
 	}
@@ -40,13 +50,6 @@ func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, exit bool, err er
 		if err != nil {
 			return prodRunner, false, err
 		}
-	}
-	if !args.OmitBranchNames || args.DryRun {
-		currentBranch, err := prodRunner.Backend.CurrentBranch()
-		if err != nil {
-			return prodRunner, false, err
-		}
-		prodRunner.Config.CurrentBranchCache.Set(currentBranch)
 	}
 	if args.DryRun {
 		prodRunner.Config.DryRun = true
@@ -79,17 +82,17 @@ type LoadArgs struct {
 }
 
 // NewFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.
-func NewFrontendRunner(omitBranchNames, dryRun bool, currentBranchCache *cache.String, stats Statistics) git.FrontendRunner {
+func NewFrontendRunner(omitBranchNames, dryRun bool, getCurrentBranch subshell.GetCurrentBranchFunc, stats Statistics) git.FrontendRunner {
 	if dryRun {
 		return &subshell.FrontendDryRunner{
-			CurrentBranch:   currentBranchCache,
-			OmitBranchNames: omitBranchNames,
-			Stats:           stats,
+			GetCurrentBranch: getCurrentBranch,
+			OmitBranchNames:  omitBranchNames,
+			Stats:            stats,
 		}
 	}
 	return &subshell.FrontendRunner{
-		CurrentBranch:   currentBranchCache,
-		OmitBranchNames: omitBranchNames,
-		Stats:           stats,
+		GetCurrentBranch: getCurrentBranch,
+		OmitBranchNames:  omitBranchNames,
+		Stats:            stats,
 	}
 }
