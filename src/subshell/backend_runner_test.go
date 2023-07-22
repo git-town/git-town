@@ -19,7 +19,7 @@ func TestBackendRunner(t *testing.T) {
 		t.Run("happy path", func(t *testing.T) {
 			tmpDir := t.TempDir()
 			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, Stats: &statistics.None{}}
-			output, err := runner.Query("echo", "hello", "world")
+			output, err := runner.Query("echo", "hello", "world  ")
 			assert.NoError(t, err)
 			assert.Equal(t, "hello world  \n", output)
 		})
