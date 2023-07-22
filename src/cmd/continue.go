@@ -43,6 +43,7 @@ func runContinue(debug bool) error {
 		HandleUnfinishedState: false,
 		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,
+		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err

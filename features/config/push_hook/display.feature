@@ -1,5 +1,7 @@
 Feature: display the push-hook setting
 
+  @debug
+  @this
   Scenario Outline: default settings
     When I run "git-town config push-hook <SWITCH>"
     Then it prints:

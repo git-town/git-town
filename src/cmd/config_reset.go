@@ -37,6 +37,7 @@ func resetStatus(debug bool) error {
 		HandleUnfinishedState: false,
 		ValidateIsConfigured:  false,
 		ValidateIsOnline:      false,
+		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err

@@ -47,6 +47,7 @@ func diffParent(args []string, debug bool) error {
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,
+		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err

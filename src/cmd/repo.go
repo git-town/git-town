@@ -54,6 +54,7 @@ func repo(debug bool) error {
 		HandleUnfinishedState: false,
 		ValidateIsConfigured:  true,
 		ValidateIsOnline:      true,
+		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err

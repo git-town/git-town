@@ -63,6 +63,7 @@ func newPullRequest(debug bool) error {
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
 		ValidateIsOnline:      true,
+		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
