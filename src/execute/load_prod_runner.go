@@ -2,6 +2,7 @@ package execute
 
 import (
 	"github.com/git-town/git-town/v9/src/cache"
+	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/statistics"
@@ -22,7 +23,10 @@ func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, exit bool, err er
 		stats = &statistics.None{}
 	}
 	backendRunner := subshell.BackendRunner{Dir: nil, Verbose: args.Debug, Stats: stats}
-	config := git.NewRepoConfig(backendRunner)
+	config := git.RepoConfig{
+		GitTown: config.NewGitTown(backendRunner),
+		DryRun:  false, // to bootstrap this, DryRun always gets initialized as false and later enabled if needed
+	}
 	backendCommands := git.BackendCommands{
 		BackendRunner:      backendRunner,
 		Config:             &config,
