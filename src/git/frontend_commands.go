@@ -17,8 +17,10 @@ type FrontendRunner interface {
 // Git Town only needs to know the exit code of frontend commands.
 type FrontendCommands struct {
 	FrontendRunner
-	Config *RepoConfig // the known state of the Git repository
+	SetCachedCurrentBranch SetCachedCurrentBranchFunc
 }
+
+type SetCachedCurrentBranchFunc func(string)
 
 // AbortMerge cancels a currently ongoing Git merge operation.
 func (fc *FrontendCommands) AbortMerge() error {
@@ -41,7 +43,7 @@ func (fc *FrontendCommands) CheckoutBranch(name string) error {
 	if err != nil {
 		return fmt.Errorf("cannot check out branch %q: %w", name, err)
 	}
-	fc.Config.CurrentBranchCache.Set(name)
+	fc.SetCachedCurrentBranch(name)
 	return nil
 }
 
