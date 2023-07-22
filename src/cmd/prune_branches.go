@@ -70,16 +70,6 @@ type pruneBranchesConfig struct {
 }
 
 func determinePruneBranchesConfig(run *git.ProdRunner, initialBranch string) (*pruneBranchesConfig, error) {
-	hasOrigin, err := run.Backend.HasOrigin()
-	if err != nil {
-		return nil, err
-	}
-	if hasOrigin {
-		err = run.Frontend.Fetch()
-		if err != nil {
-			return nil, err
-		}
-	}
 	localBranchesWithDeletedTrackingBranches, err := run.Backend.LocalBranchesWithDeletedTrackingBranches()
 	if err != nil {
 		return nil, err
