@@ -27,6 +27,7 @@ type BackendCommands struct {
 	BackendRunner                     // executes shell commands in the directory of the Git repo
 	Config             *RepoConfig    // the known state of the Git repository
 	CurrentBranchCache *cache.String  // caches the currently checked out Git branch
+	IsRepoCache        *cache.Bool    // caches whether the current directory is a Git repo
 	RemoteBranchCache  *cache.Strings // caches the remote branches of this Git repo
 	RemotesCache       *cache.Strings // caches Git remotes
 	RootDirCache       *cache.String  // caches the base of the Git directory
@@ -326,11 +327,11 @@ func (bc *BackendCommands) IsRepositoryUncached() bool {
 
 // IsRepository returns whether or not the current directory is in a repository.
 func (bc *BackendCommands) IsRepository() bool {
-	if !bc.Config.IsRepoCache.Initialized() {
+	if !bc.IsRepoCache.Initialized() {
 		isRepo := bc.IsRepositoryUncached()
-		bc.Config.IsRepoCache.Set(isRepo)
+		bc.IsRepoCache.Set(isRepo)
 	}
-	return bc.Config.IsRepoCache.Value()
+	return bc.IsRepoCache.Value()
 }
 
 // LastCommitMessage provides the commit message for the last commit.
