@@ -10,15 +10,21 @@ import (
 )
 
 func LoadGitRepo(pr *git.ProdRunner, args LoadGitArgs) (branchesSyncStatus git.BranchesSyncStatus, currentBranch string, exit bool, err error) { //nolint:nonamedreturns
-	rootDir, err := pr.Backend.RootDirectoryUncached()
-	fmt.Println("4444444444", rootDir)
-	fmt.Println("5555555555", err)
-	if err != nil {
-		return
-	}
-	if rootDir == "" {
+	isRepo, rootDir := pr.Backend.IsRepositoryUncached()
+	if !isRepo {
 		err = errors.New("this is not a Git repository")
 		return
+	}
+	if args.ValidateNoOpenChanges {
+		var hasOpenChanges bool
+		hasOpenChanges, err = pr.Backend.HasOpenChanges()
+		if err != nil {
+			return
+		}
+		if hasOpenChanges {
+			err = fmt.Errorf("you have uncommitted changes. Did you mean to commit them before shipping?")
+			return
+		}
 	}
 	isOffline, err := pr.Config.IsOffline()
 	if err != nil {
@@ -74,4 +80,5 @@ type LoadGitArgs struct {
 	ValidateIsOnline      bool
 	HandleUnfinishedState bool
 	ValidateIsConfigured  bool
+	ValidateNoOpenChanges bool
 }

@@ -47,7 +47,6 @@ func hack(args []string, promptForParent, debug bool) error {
 		DryRun:          false,
 		OmitBranchNames: false,
 	})
-	fmt.Println("33333333333333", err)
 	if err != nil {
 		return err
 	}
@@ -84,8 +83,6 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 	isOffline := fc.Bool(run.Config.IsOffline())
 	mainBranch := run.Config.MainBranch()
 	// TODO: inline this variable?
-	fmt.Println("11111111111")
-	fmt.Println(branchesSyncStatus)
 	hasBranch := branchesSyncStatus.Contains(targetBranch)
 	pushHook := fc.Bool(run.Config.PushHook())
 	if hasBranch {

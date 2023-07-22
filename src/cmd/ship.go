@@ -71,20 +71,12 @@ func ship(args []string, message string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	if len(args) == 0 {
-		hasOpenChanges, err := run.Backend.HasOpenChanges()
-		if err != nil {
-			return err
-		}
-		if hasOpenChanges {
-			return fmt.Errorf("you have uncommitted changes. Did you mean to commit them before shipping?")
-		}
-	}
 	branchesSyncStatus, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,
+		ValidateNoOpenChanges: len(args) == 0,
 	})
 	if err != nil || exit {
 		return err
