@@ -59,7 +59,6 @@ func (c *GiteaConnector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", c.Hostname, c.Organization, c.Repository)
 }
 
-//nolint:nonamedreturns  // return value isn't obvious from function name
 func (c *GiteaConnector) SquashMergeProposal(number int, message string) (mergeSha string, err error) {
 	if number <= 0 {
 		return "", fmt.Errorf("no pull request number given")
