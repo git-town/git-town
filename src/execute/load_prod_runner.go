@@ -28,6 +28,7 @@ func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, exit bool, err er
 		Config:             &config,
 		CurrentBranchCache: &cache.String{},
 		RemoteBranchCache:  &cache.Strings{},
+		RemotesCache:       &cache.Strings{},
 	}
 	prodRunner = git.ProdRunner{
 		Config:  config,

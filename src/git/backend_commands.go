@@ -28,6 +28,7 @@ type BackendCommands struct {
 	Config             *RepoConfig    // the known state of the Git repository
 	CurrentBranchCache *cache.String  // caches the currently checked out Git branch
 	RemoteBranchCache  *cache.Strings // caches the remote branches of this Git repo
+	RemotesCache       *cache.Strings // caches Git remotes
 }
 
 // Author provides the locally Git configured user.
@@ -474,14 +475,14 @@ func (bc *BackendCommands) RemotesUncached() ([]string, error) {
 
 // Remotes provides the names of all Git remotes in this repository.
 func (bc *BackendCommands) Remotes() ([]string, error) {
-	if !bc.Config.RemotesCache.Initialized() {
+	if !bc.RemotesCache.Initialized() {
 		remotes, err := bc.RemotesUncached()
 		if err != nil {
 			return remotes, err
 		}
-		bc.Config.RemotesCache.Set(remotes)
+		bc.RemotesCache.Set(remotes)
 	}
-	return bc.Config.RemotesCache.Value(), nil
+	return bc.RemotesCache.Value(), nil
 }
 
 // RemoveOutdatedConfiguration removes outdated Git Town configuration.
