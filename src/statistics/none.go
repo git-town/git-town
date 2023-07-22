@@ -1,8 +1,8 @@
 package statistics
 
-// NoStatistics is a statistics implementation that does nothing.
-type NoStatistics struct{}
+// None is a statistics implementation that does nothing.
+type None struct{}
 
-func (s *NoStatistics) RegisterRun() {}
+func (s *None) RegisterRun() {}
 
-func (s *NoStatistics) PrintAnalysis() {}
+func (s *None) PrintAnalysis() {}
