@@ -162,7 +162,7 @@ func TestBackendCommands(t *testing.T) {
 			runner := subshell.BackendRunner{
 				Dir:     &dir,
 				Verbose: false,
-				Stats:   &statistics.NoStatistics{},
+				Stats:   &statistics.None{},
 			}
 			cmds := git.BackendCommands{
 				BackendRunner: runner,

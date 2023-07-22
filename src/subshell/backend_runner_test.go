@@ -57,7 +57,7 @@ OUTPUT END
 		t.Parallel()
 		t.Run("trims whitespace", func(t *testing.T) {
 			tmpDir := t.TempDir()
-			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, Stats: &statistics.NoStatistics{}}
+			runner := subshell.BackendRunner{Dir: &tmpDir, Verbose: false, Stats: &statistics.None{}}
 			output, err := runner.QueryTrim("echo", "hello", "world  ")
 			assert.NoError(t, err)
 			assert.Equal(t, "hello world", output)
