@@ -36,9 +36,10 @@ func pushNewBranchesCommand() *cobra.Command {
 
 func pushNewBranches(args []string, global, debug bool) error {
 	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		OmitBranchNames: true,
-		Debug:           debug,
-		DryRun:          false,
+		Debug:                debug,
+		DryRun:               false,
+		OmitBranchNames:      true,
+		ValidateIsConfigured: false,
 	})
 	if err != nil {
 		return err
@@ -46,7 +47,6 @@ func pushNewBranches(args []string, global, debug bool) error {
 	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 false,
 		HandleUnfinishedState: false,
-		ValidateIsConfigured:  false,
 		ValidateIsOnline:      false,
 	})
 	if err != nil || exit {

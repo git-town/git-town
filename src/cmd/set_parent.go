@@ -29,9 +29,10 @@ func setParentCommand() *cobra.Command {
 
 func setParent(debug bool) error {
 	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:           debug,
-		DryRun:          false,
-		OmitBranchNames: false,
+		Debug:                debug,
+		DryRun:               false,
+		OmitBranchNames:      false,
+		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
@@ -39,7 +40,6 @@ func setParent(debug bool) error {
 	_, currentBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 true,
 		HandleUnfinishedState: true,
-		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,
 	})
 	if err != nil || exit {

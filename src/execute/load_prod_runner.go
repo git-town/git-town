@@ -32,6 +32,12 @@ func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, err error) { //no
 	if err != nil {
 		return prodRunner, err
 	}
+	if args.ValidateIsConfigured {
+		err = validate.IsConfigured(&prodRunner.Backend)
+		if err != nil {
+			return prodRunner, err
+		}
+	}
 	if !args.OmitBranchNames || args.DryRun {
 		currentBranch, err := prodRunner.Backend.CurrentBranch()
 		if err != nil {
@@ -46,9 +52,10 @@ func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, err error) { //no
 }
 
 type LoadArgs struct {
-	Debug           bool
-	DryRun          bool
-	OmitBranchNames bool
+	Debug                bool
+	DryRun               bool
+	OmitBranchNames      bool
+	ValidateIsConfigured bool
 }
 
 // NewFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.

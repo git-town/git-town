@@ -40,9 +40,10 @@ func configCmd() *cobra.Command {
 
 func runConfig(debug bool) error {
 	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		OmitBranchNames: true,
-		Debug:           debug,
-		DryRun:          false,
+		OmitBranchNames:      true,
+		Debug:                debug,
+		DryRun:               false,
+		ValidateIsConfigured: false,
 	})
 	if err != nil {
 		return err
@@ -50,7 +51,6 @@ func runConfig(debug bool) error {
 	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 false,
 		HandleUnfinishedState: false,
-		ValidateIsConfigured:  false,
 		ValidateIsOnline:      false,
 	})
 	if err != nil || exit {

@@ -54,9 +54,10 @@ func syncCmd() *cobra.Command {
 
 func sync(all, dryRun, debug bool) error {
 	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:           debug,
-		DryRun:          dryRun,
-		OmitBranchNames: false,
+		Debug:                debug,
+		DryRun:               dryRun,
+		OmitBranchNames:      false,
+		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
@@ -64,7 +65,6 @@ func sync(all, dryRun, debug bool) error {
 	branchesSyncStatus, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 true,
 		HandleUnfinishedState: true,
-		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,
 	})
 	if err != nil || exit {

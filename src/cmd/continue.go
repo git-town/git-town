@@ -31,9 +31,10 @@ func continueCmd() *cobra.Command {
 
 func runContinue(debug bool) error {
 	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:           debug,
-		DryRun:          false,
-		OmitBranchNames: false,
+		Debug:                debug,
+		DryRun:               false,
+		OmitBranchNames:      false,
+		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
@@ -41,7 +42,6 @@ func runContinue(debug bool) error {
 	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 false,
 		HandleUnfinishedState: false,
-		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,
 	})
 	if err != nil || exit {

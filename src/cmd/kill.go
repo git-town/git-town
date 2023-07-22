@@ -35,9 +35,10 @@ func killCommand() *cobra.Command {
 
 func kill(args []string, debug bool) error {
 	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:           debug,
-		DryRun:          false,
-		OmitBranchNames: false,
+		Debug:                debug,
+		DryRun:               false,
+		OmitBranchNames:      false,
+		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
@@ -45,7 +46,6 @@ func kill(args []string, debug bool) error {
 	branchesSyncStatus, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 true,
 		HandleUnfinishedState: false,
-		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,
 	})
 	if err != nil || exit {

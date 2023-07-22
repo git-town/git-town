@@ -50,9 +50,10 @@ func renameBranchCommand() *cobra.Command {
 
 func renameBranch(args []string, force, debug bool) error {
 	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:           debug,
-		DryRun:          false,
-		OmitBranchNames: false,
+		Debug:                debug,
+		DryRun:               false,
+		OmitBranchNames:      false,
+		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
@@ -61,7 +62,6 @@ func renameBranch(args []string, force, debug bool) error {
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		ValidateIsOnline:      false,
-		ValidateIsConfigured:  true,
 	})
 	if err != nil || exit {
 		return err

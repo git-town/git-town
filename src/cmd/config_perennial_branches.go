@@ -48,9 +48,10 @@ func perennialBranchesCmd() *cobra.Command {
 
 func displayPerennialBranches(debug bool) error {
 	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		OmitBranchNames: true,
-		Debug:           debug,
-		DryRun:          false,
+		Debug:                debug,
+		DryRun:               false,
+		OmitBranchNames:      true,
+		ValidateIsConfigured: false,
 	})
 	if err != nil {
 		return err
@@ -58,7 +59,6 @@ func displayPerennialBranches(debug bool) error {
 	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 false,
 		HandleUnfinishedState: false,
-		ValidateIsConfigured:  false,
 		ValidateIsOnline:      false,
 	})
 	if err != nil || exit {
@@ -70,9 +70,10 @@ func displayPerennialBranches(debug bool) error {
 
 func updatePerennialBranches(debug bool) error {
 	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		OmitBranchNames: true,
-		Debug:           debug,
-		DryRun:          false,
+		Debug:                debug,
+		DryRun:               false,
+		OmitBranchNames:      true,
+		ValidateIsConfigured: false,
 	})
 	if err != nil {
 		return err
@@ -80,7 +81,6 @@ func updatePerennialBranches(debug bool) error {
 	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 false,
 		HandleUnfinishedState: false,
-		ValidateIsConfigured:  false,
 		ValidateIsOnline:      false,
 	})
 	if err != nil || exit {

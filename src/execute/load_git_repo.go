@@ -34,9 +34,6 @@ func LoadGitRepo(pr *git.ProdRunner, args LoadGitArgs) (branchesSyncStatus git.B
 	if currentDirectory != gitRootDirectory {
 		err = pr.Frontend.NavigateToDir(gitRootDirectory)
 	}
-	if args.ValidateIsConfigured {
-		fc.Check(validate.IsConfigured(&pr.Backend))
-	}
 	if args.ValidateIsOnline {
 		fc.Check(validate.IsOnline(&pr.Config))
 	}
@@ -48,7 +45,6 @@ func LoadGitRepo(pr *git.ProdRunner, args LoadGitArgs) (branchesSyncStatus git.B
 
 type LoadGitArgs struct {
 	Fetch                 bool
-	ValidateIsConfigured  bool
 	ValidateIsOnline      bool
 	HandleUnfinishedState bool
 }
