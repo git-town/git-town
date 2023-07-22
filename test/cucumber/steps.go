@@ -578,7 +578,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.fixture.DevRepo.CheckoutBranch("main")
 			return nil
 		}
-		if state.fixture.DevRepo.Config.CurrentBranchCache.Value() != state.initialCurrentBranch {
+		if state.fixture.DevRepo.Backend.CurrentBranchCache.Value() != state.initialCurrentBranch {
 			state.fixture.DevRepo.CheckoutBranch(state.initialCurrentBranch)
 			return nil
 		}
@@ -647,7 +647,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.fixture.DevRepo.PushBranchToRemote(branch, config.OriginRemote)
 		}
 		state.initialCurrentBranch = branch
-		if !state.fixture.DevRepo.Config.CurrentBranchCache.Initialized() || state.fixture.DevRepo.Config.CurrentBranchCache.Value() != branch {
+		if !state.fixture.DevRepo.Backend.CurrentBranchCache.Initialized() || state.fixture.DevRepo.Backend.CurrentBranchCache.Value() != branch {
 			state.fixture.DevRepo.CheckoutBranch(branch)
 		}
 		return nil
@@ -661,7 +661,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the current branch is (?:now|still) "([^"]*)"$`, func(expected string) error {
-		state.fixture.DevRepo.Config.CurrentBranchCache.Invalidate()
+		state.fixture.DevRepo.Backend.CurrentBranchCache.Invalidate()
 		actual, err := state.fixture.DevRepo.CurrentBranch()
 		if err != nil {
 			return fmt.Errorf("cannot determine current branch of developer repo: %w", err)

@@ -33,7 +33,7 @@ func (step *RebaseBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) erro
 	}
 	err = run.Frontend.Rebase(step.Branch)
 	if err != nil {
-		run.Config.CurrentBranchCache.Invalidate()
+		run.Backend.CurrentBranchCache.Invalidate()
 	}
 	return err
 }

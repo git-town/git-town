@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/git-town/git-town/v9/src/cache"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/stringslice"
 )
@@ -23,8 +24,9 @@ type BackendRunner interface {
 // They don't change the user's repo, execute instantaneously, and Git Town needs to know their output.
 // They are invisible to the end user unless the "debug" option is set.
 type BackendCommands struct {
-	BackendRunner             // executes shell commands in the directory of the Git repo
-	Config        *RepoConfig // the known state of the Git repository
+	BackendRunner                    // executes shell commands in the directory of the Git repo
+	Config             *RepoConfig   // the known state of the Git repository
+	CurrentBranchCache *cache.String // caches the currently checked out Git branch
 }
 
 // Author provides the locally Git configured user.
@@ -84,9 +86,9 @@ func (bc *BackendCommands) CheckoutBranch(name string) error {
 		}
 	}
 	if name != "-" {
-		bc.Config.CurrentBranchCache.Set(name)
+		bc.CurrentBranchCache.Set(name)
 	} else {
-		bc.Config.CurrentBranchCache.Invalidate()
+		bc.CurrentBranchCache.Invalidate()
 	}
 	return nil
 }
@@ -142,16 +144,16 @@ func (bc *BackendCommands) CurrentBranchUncached() (string, error) {
 // CurrentBranch provides the currently checked out branch.
 func (bc *BackendCommands) CurrentBranch() (string, error) {
 	if bc.Config.DryRun {
-		return bc.Config.CurrentBranchCache.Value(), nil
+		return bc.CurrentBranchCache.Value(), nil
 	}
-	if !bc.Config.CurrentBranchCache.Initialized() {
+	if !bc.CurrentBranchCache.Initialized() {
 		currentBranch, err := bc.CurrentBranchUncached()
 		if err != nil {
 			return currentBranch, err
 		}
-		bc.Config.CurrentBranchCache.Set(currentBranch)
+		bc.CurrentBranchCache.Set(currentBranch)
 	}
-	return bc.Config.CurrentBranchCache.Value(), nil
+	return bc.CurrentBranchCache.Value(), nil
 }
 
 func (bc *BackendCommands) currentBranchDuringRebase() (string, error) {

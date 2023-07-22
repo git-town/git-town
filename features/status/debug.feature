@@ -5,5 +5,5 @@ Feature: display debug statistics
     When I run "git-town status --debug"
     Then it prints:
       """
-      Ran 7 shell commands.
+      Ran 5 shell commands.
       """

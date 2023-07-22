@@ -1,6 +1,7 @@
 package execute
 
 import (
+	"github.com/git-town/git-town/v9/src/cache"
 	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/statistics"
@@ -22,15 +23,17 @@ func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, exit bool, err er
 	}
 	backendRunner := subshell.BackendRunner{Dir: nil, Verbose: args.Debug, Stats: stats}
 	config := git.NewRepoConfig(backendRunner)
+	backendCommands := git.BackendCommands{
+		BackendRunner:      backendRunner,
+		Config:             &config,
+		CurrentBranchCache: &cache.String{},
+	}
 	prodRunner = git.ProdRunner{
-		Config: config,
-		Backend: git.BackendCommands{
-			BackendRunner: backendRunner,
-			Config:        &config,
-		},
+		Config:  config,
+		Backend: backendCommands,
 		Frontend: git.FrontendCommands{
 			FrontendRunner:         NewFrontendRunner(args.OmitBranchNames, args.DryRun, prodRunner.Backend.CurrentBranch, stats),
-			SetCachedCurrentBranch: config.CurrentBranchCache.Set,
+			SetCachedCurrentBranch: backendCommands.CurrentBranchCache.Set,
 		},
 		Stats: stats,
 	}
@@ -39,13 +42,6 @@ func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, exit bool, err er
 		if err != nil {
 			return prodRunner, false, err
 		}
-	}
-	if !args.OmitBranchNames || args.DryRun {
-		currentBranch, err := prodRunner.Backend.CurrentBranch()
-		if err != nil {
-			return prodRunner, false, err
-		}
-		prodRunner.Config.CurrentBranchCache.Set(currentBranch)
 	}
 	if args.DryRun {
 		prodRunner.Config.DryRun = true
