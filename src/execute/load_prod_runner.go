@@ -8,12 +8,17 @@ import (
 	"github.com/git-town/git-town/v9/src/validate"
 )
 
+type Statistics interface {
+	RegisterRun()
+	PrintAnalysis()
+}
+
 func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, err error) { //nolint:nonamedreturns // so many return values require names
 	var stats Statistics
 	if args.Debug {
-		stats = &statistics.CommandsStatistics{CommandsCount: 0}
+		stats = &statistics.CommandsRun{CommandsCount: 0}
 	} else {
-		stats = &statistics.NoStatistics{}
+		stats = &statistics.None{}
 	}
 	backendRunner := subshell.BackendRunner{Dir: nil, Verbose: args.Debug, Stats: stats}
 	config := git.NewRepoConfig(backendRunner)
