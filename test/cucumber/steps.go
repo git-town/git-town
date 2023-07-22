@@ -578,7 +578,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			state.fixture.DevRepo.CheckoutBranch("main")
 			return nil
 		}
-		if state.fixture.DevRepo.Backend.CurrentBranchCache.Value() != state.initialCurrentBranch {
+		currentBranch, err := state.fixture.DevRepo.Backend.CurrentBranch()
+		if err != nil {
+			return err
+		}
+		if currentBranch != state.initialCurrentBranch {
 			state.fixture.DevRepo.CheckoutBranch(state.initialCurrentBranch)
 			return nil
 		}
