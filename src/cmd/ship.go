@@ -72,6 +72,15 @@ func ship(args []string, message string, debug bool) error {
 	if err != nil {
 		return err
 	}
+	if len(args) == 0 {
+		hasOpenChanges, err := run.Backend.HasOpenChanges()
+		if err != nil {
+			return err
+		}
+		if hasOpenChanges {
+			return fmt.Errorf("you have uncommitted changes. Did you mean to commit them before shipping?")
+		}
+	}
 	branchesSyncStatus, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 true,
 		HandleUnfinishedState: true,
@@ -137,15 +146,6 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 		branchToShip = initialBranch
 	}
 	isShippingInitialBranch := branchToShip == initialBranch
-	if isShippingInitialBranch {
-		hasOpenChanges, err := run.Backend.HasOpenChanges()
-		if err != nil {
-			return nil, err
-		}
-		if hasOpenChanges {
-			return nil, fmt.Errorf("you have uncommitted changes. Did you mean to commit them before shipping?")
-		}
-	}
 	if !isShippingInitialBranch {
 		if !branchesSyncStatus.Contains(branchToShip) {
 			return nil, fmt.Errorf("there is no branch named %q", branchToShip)
