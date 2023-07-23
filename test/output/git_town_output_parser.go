@@ -45,5 +45,5 @@ func parseLine(line string) ExecutedGitCommand {
 		branch = line[1:closingParent]
 		line = line[closingParent+2:]
 	}
-	return ExecutedGitCommand{Command: strings.TrimSpace(line), Branch: branch}
+	return ExecutedGitCommand{Command: line, Branch: branch}
 }
