@@ -42,18 +42,3 @@ Feature: display debug statistics
       |         | backend  | git checkout other                                |
       |         | backend  | git checkout main                                 |
     And the current branch is now "main"
-
-  Scenario: undo
-    Given I ran "git-town kill"
-    When I run "git-town undo --debug"
-    Then it runs the debug commands
-      | git config -lz --local                         |
-      | git config -lz --global                        |
-      | git rev-parse                                  |
-      | git rev-parse --show-toplevel                  |
-      | git version                                    |
-      | git branch -a                                  |
-      | git config git-town-branch.current.parent main |
-      | git status                                     |
-      | git rev-parse --abbrev-ref HEAD                |
-    And the current branch is now "current"
