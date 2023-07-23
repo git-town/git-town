@@ -6,9 +6,11 @@ Feature: display debug statistics
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
 
+  @debug @this
   Scenario: result
     When I run "git-town append new --debug"
-    Then it prints:
+    Then it runs 29 debug commands:
+      | git config -lz |
       """
       Ran 30 shell commands.
       """
