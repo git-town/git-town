@@ -18,9 +18,6 @@ func GitCommandsInGitTownOutput(output string) []ExecutedGitCommand {
 	result := []ExecutedGitCommand{}
 	for _, line := range strings.Split(output, "\n") {
 		line = strings.TrimSpace(line)
-		if line == "" {
-			continue
-		}
 		if lineContainsGitTownCommand(line) {
 			result = append(result, parseLine(line))
 		}
