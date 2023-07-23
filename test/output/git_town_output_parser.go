@@ -34,8 +34,6 @@ func lineContainsGitTownCommand(line string) bool {
 
 // parseLine provides the Git Town command and branch name in the given line.
 func parseLine(line string) ExecutedGitCommand {
-	// NOTE: implementing this without regex because the regex has gotten very complex and hard to maintain
-	// remove the color codes at the beginning
 	line = strings.TrimPrefix(line, gitCommandLineBeginning)
 	// extract branch name if it exists
 	branch := ""
