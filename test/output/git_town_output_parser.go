@@ -41,10 +41,9 @@ func parseLine(line string) ExecutedGitCommand {
 	branch := ""
 	if line[0] == '[' {
 		// line contains a branch name
-		line = line[1:] // remove the leading "["
-		parts := strings.SplitN(line, "]", 2)
-		branch = parts[0]
-		line = parts[1]
+		closingParent := strings.IndexRune(line, ']')
+		branch = line[1:closingParent]
+		line = line[closingParent+1:]
 	}
 	return ExecutedGitCommand{Command: strings.TrimSpace(line), Branch: branch}
 }
