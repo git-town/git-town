@@ -3,6 +3,7 @@ package git_test
 import (
 	"testing"
 
+	"github.com/git-town/git-town/v9/src/cache"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/statistics"
@@ -165,8 +166,13 @@ func TestBackendCommands(t *testing.T) {
 				Stats:   &statistics.None{},
 			}
 			cmds := git.BackendCommands{
-				BackendRunner: runner,
-				Config:        nil,
+				BackendRunner:      runner,
+				Config:             nil,
+				CurrentBranchCache: &cache.String{},
+				IsRepoCache:        &cache.Bool{},
+				RemoteBranchCache:  &cache.Strings{},
+				RemotesCache:       &cache.Strings{},
+				RootDirCache:       &cache.String{},
 			}
 			isRepo, topLevel := cmds.IsRepositoryUncached()
 			assert.False(t, isRepo)
