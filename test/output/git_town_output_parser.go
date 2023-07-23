@@ -43,7 +43,7 @@ func parseLine(line string) ExecutedGitCommand {
 		// line contains a branch name
 		closingParent := strings.IndexRune(line, ']')
 		branch = line[1:closingParent]
-		line = line[closingParent+1:]
+		line = line[closingParent+2:]
 	}
 	return ExecutedGitCommand{Command: strings.TrimSpace(line), Branch: branch}
 }
