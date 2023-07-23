@@ -365,9 +365,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^it runs \d+ debug commands$`, func(total int, input *messages.PickleStepArgument_PickleTable) error {
-		commands := output.GitCommandsInGitTownOutput(state.runOutput)
-		table := output.RenderExecutedGitCommands(commands, input)
+	suite.Step(`^it runs (\d+) debug commands$`, func(total int, input *messages.PickleStepArgument_PickleTable) error {
+		commands := output.DebugCommandsInGitTownOutput(state.runOutput)
+		table := output.RenderExecutedDebugCommands(commands)
 		dataTable := datatable.FromGherkin(input)
 		expanded := dataTable.Expand(
 			&state.fixture.DevRepo,

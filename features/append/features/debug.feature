@@ -9,11 +9,8 @@ Feature: display debug statistics
   @debug @this
   Scenario: result
     When I run "git-town append new --debug"
-    Then it runs 29 debug commands:
+    Then it runs 29 debug commands
       | git config -lz |
-      """
-      Ran 30 shell commands.
-      """
     And the current branch is now "new"
 
   Scenario: undo
