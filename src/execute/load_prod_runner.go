@@ -14,7 +14,7 @@ type Statistics interface {
 	PrintAnalysis()
 }
 
-func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, exit bool, err error) {
+func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, err error) {
 	var stats Statistics
 	if args.Debug {
 		stats = &statistics.CommandsRun{CommandsCount: 0}
@@ -47,12 +47,6 @@ func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, exit bool, err er
 	err = validate.HasGitVersion(&prodRunner.Backend)
 	if err != nil {
 		return prodRunner, err
-	}
-	if args.ValidateIsRepository {
-		err := validate.IsRepository(&prodRunner)
-		if err != nil {
-			return prodRunner, false, err
-		}
 	}
 	if args.DryRun {
 		prodRunner.Config.DryRun = true

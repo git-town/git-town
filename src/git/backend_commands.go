@@ -385,15 +385,6 @@ func (bc *BackendCommands) IsRepositoryUncached() (isRepo bool, topLevel string)
 	return true, output
 }
 
-// IsRepository returns whether or not the current directory is in a repository.
-func (bc *BackendCommands) IsRepository() bool {
-	if !bc.IsRepoCache.Initialized() {
-		isRepo := bc.IsRepositoryUncached()
-		bc.IsRepoCache.Set(isRepo)
-	}
-	return bc.IsRepoCache.Value()
-}
-
 // LastCommitMessage provides the commit message for the last commit.
 func (bc *BackendCommands) LastCommitMessage() (string, error) {
 	out, err := bc.QueryTrim("git", "log", "-1", "--format=%B")
