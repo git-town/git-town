@@ -1,5 +1,6 @@
 Feature: display debug statistics
 
+  @this
   Background:
     Given the current branch is a feature branch "current"
     And a feature branch "other"

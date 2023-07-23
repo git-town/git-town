@@ -6,7 +6,6 @@ Feature: display debug statistics
       | main   | origin   | main commit |
     And the current branch is "main"
 
-  @debug @this
   Scenario: result
     When I run "git-town hack new --debug"
     Then it runs the debug commands
