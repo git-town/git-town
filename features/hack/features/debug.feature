@@ -8,27 +8,31 @@ Feature: display debug statistics
 
   Scenario: result
     When I run "git-town hack new --debug"
-    Then it runs the debug commands
-      | git config -lz --local                       |
-      | git config -lz --global                      |
-      | git rev-parse                                |
-      | git rev-parse --show-toplevel                |
-      | git version                                  |
-      | git branch -a                                |
-      | git remote                                   |
-      | git status                                   |
-      | git rev-parse --abbrev-ref HEAD              |
-      | git branch -a                                |
-      | git branch -r                                |
-      | git rev-parse --verify --abbrev-ref @{-1}    |
-      | git status --porcelain --ignore-submodules   |
-      | git rev-parse HEAD                           |
-      | git rev-list --left-right main...origin/main |
-      | git config git-town-branch.new.parent main   |
-      | git branch                                   |
-      | git branch                                   |
-      | git rev-parse --verify --abbrev-ref @{-1}    |
-
+    Then it runs the commands
+      | BRANCH | TYPE     | COMMAND                                      |
+      |        | backend  | git config -lz --local                       |
+      |        | backend  | git config -lz --global                      |
+      |        | backend  | git rev-parse                                |
+      |        | backend  | git rev-parse --show-toplevel                |
+      |        | backend  | git version                                  |
+      |        | backend  | git branch -a                                |
+      |        | backend  | git remote                                   |
+      |        | backend  | git status                                   |
+      |        | backend  | git rev-parse --abbrev-ref HEAD              |
+      | main   | frontend | git fetch --prune --tags                     |
+      |        | backend  | git branch -a                                |
+      |        | backend  | git branch -r                                |
+      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}    |
+      |        | backend  | git status --porcelain --ignore-submodules   |
+      |        | backend  | git rev-parse HEAD                           |
+      | main   | frontend | git rebase origin/main                       |
+      |        | backend  | git rev-list --left-right main...origin/main |
+      | main   | frontend | git branch new main                          |
+      |        | backend  | git config git-town-branch.new.parent main   |
+      | main   | frontend | git checkout new                             |
+      |        | backend  | git branch                                   |
+      |        | backend  | git branch                                   |
+      |        | backend  | git rev-parse --verify --abbrev-ref @{-1}    |
     And the current branch is now "new"
 
   Scenario: undo

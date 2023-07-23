@@ -379,23 +379,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^it runs the debug commands$`, func(input *messages.PickleStepArgument_PickleTable) error {
-		commands := output.DebugCommandsInGitTownOutput(state.runOutput)
-		table := output.RenderExecutedDebugCommands(commands)
-		dataTable := datatable.FromGherkin(input)
-		expanded := dataTable.Expand(
-			&state.fixture.DevRepo,
-			state.fixture.OriginRepo,
-		)
-		diff, errorCount := table.EqualDataTable(expanded)
-		if errorCount != 0 {
-			fmt.Printf("\nERROR! Found %d differences in the commands run\n\n", errorCount)
-			fmt.Println(diff)
-			return fmt.Errorf("mismatching commands run, see diff above")
-		}
-		return nil
-	})
-
 	suite.Step(`^it runs the commands$`, func(input *messages.PickleStepArgument_PickleTable) error {
 		commands := output.GitCommandsInGitTownOutput(state.runOutput)
 		table := output.RenderExecutedGitCommands(commands, input)
