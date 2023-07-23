@@ -8,6 +8,7 @@ Feature: append a new feature branch to an existing feature branch
     And an uncommitted file
     When I run "git-town append new"
 
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH   | COMMAND                             |
