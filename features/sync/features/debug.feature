@@ -11,7 +11,7 @@ Feature: display debug statistics
 
   Scenario: result
     When I run "git-town sync --debug"
-    Then it runs the debug commands
+    Then it runs the commands
       | git config -lz --local                             |
       | git config -lz --global                            |
       | git rev-parse                                      |

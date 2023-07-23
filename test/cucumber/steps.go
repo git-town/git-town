@@ -365,6 +365,20 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^it runs no commands$`, func() error {
+		commands := output.GitCommandsInGitTownOutput(state.runOutput)
+		if len(commands) > 0 {
+			fmt.Println("\n\nERROR: Unexpected commands run!")
+			for _, command := range commands {
+				fmt.Printf("%s > %s\n", command.Branch, command.Command)
+			}
+			fmt.Println()
+			fmt.Println()
+			return fmt.Errorf("expected no commands but found %d commands", len(commands))
+		}
+		return nil
+	})
+
 	suite.Step(`^it runs the debug commands$`, func(input *messages.PickleStepArgument_PickleTable) error {
 		commands := output.DebugCommandsInGitTownOutput(state.runOutput)
 		table := output.RenderExecutedDebugCommands(commands)
@@ -378,20 +392,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			fmt.Printf("\nERROR! Found %d differences in the commands run\n\n", errorCount)
 			fmt.Println(diff)
 			return fmt.Errorf("mismatching commands run, see diff above")
-		}
-		return nil
-	})
-
-	suite.Step(`^it runs no commands$`, func() error {
-		commands := output.GitCommandsInGitTownOutput(state.runOutput)
-		if len(commands) > 0 {
-			fmt.Println("\n\nERROR: Unexpected commands run!")
-			for _, command := range commands {
-				fmt.Printf("%s > %s\n", command.Branch, command.Command)
-			}
-			fmt.Println()
-			fmt.Println()
-			return fmt.Errorf("expected no commands but found %d commands", len(commands))
 		}
 		return nil
 	})
