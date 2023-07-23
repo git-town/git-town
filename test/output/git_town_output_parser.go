@@ -17,10 +17,6 @@ type ExecutedGitCommand struct {
 func GitCommandsInGitTownOutput(output string) []ExecutedGitCommand {
 	result := []ExecutedGitCommand{}
 	for _, line := range strings.Split(output, "\n") {
-		line = strings.TrimSpace(line)
-		if line == "" {
-			continue
-		}
 		if lineContainsGitTownCommand(line) {
 			result = append(result, parseLine(line))
 		}
@@ -38,17 +34,14 @@ func lineContainsGitTownCommand(line string) bool {
 
 // parseLine provides the Git Town command and branch name in the given line.
 func parseLine(line string) ExecutedGitCommand {
-	// NOTE: implementing this without regex because the regex has gotten very complex and hard to maintain
-	// remove the color codes at the beginning
-	line = strings.Replace(line, gitCommandLineBeginning, "", 1)
+	line = strings.TrimPrefix(line, gitCommandLineBeginning)
 	// extract branch name if it exists
 	branch := ""
 	if line[0] == '[' {
 		// line contains a branch name
-		line = line[1:] // remove the leading "["
-		parts := strings.SplitN(line, "]", 2)
-		branch = parts[0]
-		line = parts[1]
+		closingParent := strings.IndexRune(line, ']')
+		branch = line[1:closingParent]
+		line = line[closingParent+2:]
 	}
-	return ExecutedGitCommand{Command: strings.TrimSpace(line), Branch: branch}
+	return ExecutedGitCommand{Command: line, Branch: branch}
 }
