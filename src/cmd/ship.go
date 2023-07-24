@@ -76,7 +76,7 @@ func ship(args []string, message string, debug bool) error {
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,
-		ValidateNoOpenChanges: true,
+		ValidateNoOpenChanges: len(args) == 0,
 	})
 	if err != nil || exit {
 		return err
@@ -88,6 +88,9 @@ func ship(args []string, message string, debug bool) error {
 	config, err := determineShipConfig(args, connector, &run, branchesSyncStatus, initialBranch)
 	if err != nil {
 		return err
+	}
+	if config.branchToShip == initialBranch {
+		// err = validate.
 	}
 	stepList, err := shipStepList(config, message, &run)
 	if err != nil {
