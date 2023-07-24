@@ -35,7 +35,7 @@ Feature: display debug statistics
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}    |
     And it prints:
       """
-      Ran 22 shell commands.
+      Ran 23 shell commands.
       """
     And the current branch is now "new"
 

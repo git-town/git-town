@@ -39,7 +39,7 @@ Feature: display debug statistics
       |        | backend  | git checkout parent                           |
     And it prints:
       """
-      Ran 26 shell commands.
+      Ran 27 shell commands.
       """
     And the current branch is now "parent"
 
