@@ -76,7 +76,7 @@ func ship(args []string, message string, debug bool) error {
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,
-		ValidateNoOpenChanges: len(args) == 0,
+		ValidateNoOpenChanges: true,
 	})
 	if err != nil || exit {
 		return err
