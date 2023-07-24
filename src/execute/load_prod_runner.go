@@ -9,18 +9,12 @@ import (
 	"github.com/git-town/git-town/v9/src/validate"
 )
 
-type Statistics interface {
-	RegisterRun()
-	PrintAnalysis()
-}
-
 func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, err error) {
-	var stats Statistics
-	if args.Debug {
-		stats = &statistics.CommandsRun{CommandsCount: 0}
-	} else {
-		stats = &statistics.None{}
+	err = validate.HasGitVersion(&prodRunner.Backend)
+	if err != nil {
+		return
 	}
+	stats := loadStatistics(args.Debug)
 	backendRunner := subshell.BackendRunner{Dir: nil, Verbose: args.Debug, Stats: stats}
 	config := git.RepoConfig{
 		GitTown: config.NewGitTown(backendRunner),
@@ -43,10 +37,6 @@ func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, err error) {
 			SetCachedCurrentBranch: backendCommands.CurrentBranchCache.Set,
 		},
 		Stats: stats,
-	}
-	err = validate.HasGitVersion(&prodRunner.Backend)
-	if err != nil {
-		return prodRunner, err
 	}
 	if args.DryRun {
 		prodRunner.Config.DryRun = true
@@ -73,5 +63,18 @@ func NewFrontendRunner(omitBranchNames, dryRun bool, getCurrentBranch subshell.G
 		GetCurrentBranch: getCurrentBranch,
 		OmitBranchNames:  omitBranchNames,
 		Stats:            stats,
+	}
+}
+
+type Statistics interface {
+	RegisterRun()
+	PrintAnalysis()
+}
+
+func loadStatistics(debug bool) Statistics {
+	if debug {
+		return &statistics.CommandsRun{CommandsCount: 0}
+	} else {
+		return &statistics.None{}
 	}
 }
