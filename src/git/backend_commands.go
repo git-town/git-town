@@ -28,7 +28,6 @@ type BackendCommands struct {
 	BackendRunner                     // executes shell commands in the directory of the Git repo
 	Config             *RepoConfig    // the known state of the Git repository
 	CurrentBranchCache *cache.String  // caches the currently checked out Git branch
-	IsRepoCache        *cache.Bool    // caches whether the current directory is a Git repo
 	RemoteBranchCache  *cache.Strings // caches the remote branches of this Git repo
 	RemotesCache       *cache.Strings // caches Git remotes
 	RootDirCache       *cache.String  // caches the base of the Git directory
@@ -230,10 +229,7 @@ func (bc *BackendCommands) CurrentBranch() (string, error) {
 }
 
 func (bc *BackendCommands) currentBranchDuringRebase() (string, error) {
-	rootDir, err := bc.RootDirectory()
-	if err != nil {
-		return "", err
-	}
+	rootDir := bc.RootDirectory()
 	rawContent, err := os.ReadFile(fmt.Sprintf("%s/.git/rebase-apply/head-name", rootDir))
 	if err != nil {
 		// Git 2.26 introduces a new rebase backend, see https://github.com/git/git/blob/master/Documentation/RelNotes/2.26.0.txt
@@ -567,25 +563,23 @@ func (bc *BackendCommands) RemoveOutdatedConfiguration() error {
 
 // RootDirectory provides the path of the rood directory of the current repository,
 // i.e. the directory that contains the ".git" folder.
-func (bc *BackendCommands) RootDirectoryUncached() (string, error) {
+func (bc *BackendCommands) RootDirectoryUncached() string {
 	output, err := bc.QueryTrim("git", "rev-parse", "--show-toplevel")
 	if err != nil {
-		return "", fmt.Errorf("cannot determine root directory: %w", err)
+		return ""
 	}
-	return filepath.FromSlash(output), nil
+	return filepath.FromSlash(output)
 }
 
-// RootDirectory provides the path of the rood directory of the current repository,
+// RootDirectory provides the path of the root directory of the current repository,
 // i.e. the directory that contains the ".git" folder.
-func (bc *BackendCommands) RootDirectory() (string, error) {
+// An empty string indicates no Git repo.
+func (bc *BackendCommands) RootDirectory() string {
 	if !bc.RootDirCache.Initialized() {
-		rootDir, err := bc.RootDirectoryUncached()
-		if err != nil {
-			return rootDir, err
-		}
+		rootDir := bc.RootDirectoryUncached()
 		bc.RootDirCache.Set(rootDir)
 	}
-	return bc.RootDirCache.Value(), nil
+	return bc.RootDirCache.Value()
 }
 
 // ShaForBranch provides the SHA for the local branch with the given name.

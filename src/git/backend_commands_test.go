@@ -169,7 +169,6 @@ func TestBackendCommands(t *testing.T) {
 				BackendRunner:      runner,
 				Config:             nil,
 				CurrentBranchCache: &cache.String{},
-				IsRepoCache:        &cache.Bool{},
 				RemoteBranchCache:  &cache.Strings{},
 				RemotesCache:       &cache.Strings{},
 				RootDirCache:       &cache.String{},
@@ -355,5 +354,34 @@ func TestBackendCommands(t *testing.T) {
 		remotes, err := runtime.Backend.Remotes()
 		assert.NoError(t, err)
 		assert.Equal(t, []string{config.OriginRemote}, remotes)
+	})
+
+	t.Run(".RootDirectory", func(t *testing.T) {
+		t.Parallel()
+		t.Run("inside a Git repo", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			have := runtime.BackendCommands.RootDirectory()
+			assert.Positive(t, len(have))
+		})
+		t.Run("outside a Git repo", func(t *testing.T) {
+			t.Parallel()
+			dir := t.TempDir()
+			runner := subshell.BackendRunner{
+				Dir:     &dir,
+				Verbose: false,
+				Stats:   &statistics.None{},
+			}
+			cmds := git.BackendCommands{
+				BackendRunner:      runner,
+				Config:             nil,
+				CurrentBranchCache: &cache.String{},
+				RemoteBranchCache:  &cache.Strings{},
+				RemotesCache:       &cache.Strings{},
+				RootDirCache:       &cache.String{},
+			}
+			have := cmds.RootDirectory()
+			assert.Empty(t, have)
+		})
 	})
 }

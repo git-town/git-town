@@ -25,7 +25,6 @@ func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, err error) {
 		BackendRunner:      backendRunner,
 		Config:             nil, // NOTE: initializing to nil here to validate the Git version before running any Git commands
 		CurrentBranchCache: &cache.String{},
-		IsRepoCache:        &cache.Bool{},
 		RemoteBranchCache:  &cache.Strings{},
 		RemotesCache:       &cache.Strings{},
 		RootDirCache:       &cache.String{},

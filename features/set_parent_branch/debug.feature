@@ -13,7 +13,6 @@ Feature: display debug statistics
       |        | backend | git config -lz --local                          |
       |        | backend | git config -lz --global                         |
       |        | backend | git rev-parse --show-toplevel                   |
-      |        | backend | git rev-parse --show-toplevel                   |
       |        | backend | git branch -vva                                 |
       |        | backend | git branch -a                                   |
       |        | backend | git config --unset git-town-branch.child.parent |
@@ -21,7 +20,7 @@ Feature: display debug statistics
       |        | backend | git config git-town-branch.child.parent main    |
     And it prints:
       """
-      Ran 10 shell commands.
+      Ran 9 shell commands.
       """
     And this branch lineage exists now
       | BRANCH | PARENT |

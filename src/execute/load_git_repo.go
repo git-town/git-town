@@ -9,8 +9,8 @@ import (
 )
 
 func LoadGitRepo(pr *git.ProdRunner, args LoadGitArgs) (branchesSyncStatus git.BranchesSyncStatus, currentBranch string, exit bool, err error) { //nolint:nonamedreturns
-	isRepo, rootDir := pr.Backend.IsRepositoryUncached()
-	if !isRepo {
+	rootDir := pr.Backend.RootDirectory()
+	if rootDir == "" {
 		err = errors.New("this is not a Git repository")
 		return
 	}

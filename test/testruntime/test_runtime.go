@@ -63,7 +63,6 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 		BackendRunner:      &runner,
 		Config:             &config,
 		CurrentBranchCache: &cache.String{},
-		IsRepoCache:        &cache.Bool{},
 		RemoteBranchCache:  &cache.Strings{},
 		RemotesCache:       &cache.Strings{},
 		RootDirCache:       &cache.String{},
