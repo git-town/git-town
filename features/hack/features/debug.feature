@@ -44,6 +44,6 @@ Feature: display debug statistics
     When I run "git town undo --debug"
     Then it prints:
       """
-      Ran 13 shell commands.
+      Ran 12 shell commands.
       """
     And the current branch is now "main"
