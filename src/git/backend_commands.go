@@ -80,6 +80,7 @@ func (bc *BackendCommands) BranchesSyncStatus() (branches BranchesSyncStatus, cu
 		return []BranchSyncStatus{}, "", err
 	}
 	branches, currentBranch = ParseVerboseBranchesOutput(output)
+	bc.CurrentBranchCache.Set(currentBranch)
 	return branches, currentBranch, nil
 }
 
@@ -96,7 +97,7 @@ func ParseVerboseBranchesOutput(output string) (BranchesSyncStatus, string) {
 		parts := spaceRE.Split(line[2:], 3)
 		branchName := parts[0]
 		remoteText := parts[2]
-		if line[0] == '*' {
+		if line[0] == '*' && branchName != "(no" {
 			checkedoutBranch = branchName
 		}
 		syncStatus := determineSyncStatus(branchName, remoteText)
