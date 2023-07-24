@@ -10,25 +10,29 @@ import (
 )
 
 func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, err error) {
-	err = validate.HasGitVersion(&prodRunner.Backend)
-	if err != nil {
-		return
-	}
-	stats := loadStatistics(args.Debug)
-	backendRunner := subshell.BackendRunner{Dir: nil, Verbose: args.Debug, Stats: stats}
-	config := git.RepoConfig{
-		GitTown: config.NewGitTown(backendRunner),
-		DryRun:  false, // to bootstrap this, DryRun always gets initialized as false and later enabled if needed
+	backendRunner := subshell.BackendRunner{
+		Dir:     nil,
+		Stats:   loadStatistics(args.Debug),
+		Verbose: args.Debug,
 	}
 	backendCommands := git.BackendCommands{
 		BackendRunner:      backendRunner,
-		Config:             &config,
+		Config:             nil, // NOTE: initializing to nil here to validate the Git version before running any Git commands
 		CurrentBranchCache: &cache.String{},
 		IsRepoCache:        &cache.Bool{},
 		RemoteBranchCache:  &cache.Strings{},
 		RemotesCache:       &cache.Strings{},
 		RootDirCache:       &cache.String{},
 	}
+	err = validate.HasGitVersion(&backendCommands)
+	if err != nil {
+		return
+	}
+	config := git.RepoConfig{
+		GitTown: config.NewGitTown(backendRunner),
+		DryRun:  false, // to bootstrap this, DryRun always gets initialized as false and later enabled if needed
+	}
+	backendCommands.Config = &config
 	prodRunner = git.ProdRunner{
 		Config:  config,
 		Backend: backendCommands,

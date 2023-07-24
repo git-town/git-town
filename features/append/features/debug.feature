@@ -6,14 +6,13 @@ Feature: display debug statistics
       | BRANCH   | LOCATION      | MESSAGE         |
       | existing | local, origin | existing commit |
 
-  @this
   Scenario: result
     When I run "git-town append new --debug"
     Then it runs the commands
       | BRANCH   | TYPE     | COMMAND                                              |
+      |          | backend  | git version                                          |
       |          | backend  | git config -lz --local                               |
       |          | backend  | git config -lz --global                              |
-      |          | backend  | git version                                          |
       |          | backend  | git rev-parse --show-toplevel                        |
       |          | backend  | git remote                                           |
       |          | backend  | git status                                           |
@@ -43,7 +42,7 @@ Feature: display debug statistics
       |          | backend  | git rev-parse --verify --abbrev-ref @{-1}            |
     And it prints:
       """
-      Ran 29 shell commands.
+      Ran 30 shell commands.
       """
     And the current branch is now "new"
 
