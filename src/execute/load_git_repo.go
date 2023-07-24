@@ -2,7 +2,6 @@ package execute
 
 import (
 	"errors"
-	"fmt"
 	"os"
 
 	"github.com/git-town/git-town/v9/src/git"
@@ -16,13 +15,8 @@ func LoadGitRepo(pr *git.ProdRunner, args LoadGitArgs) (branchesSyncStatus git.B
 		return
 	}
 	if args.ValidateNoOpenChanges {
-		var hasOpenChanges bool
-		hasOpenChanges, err = pr.Backend.HasOpenChanges()
+		err = validate.NoOpenChanges(pr.Backend)
 		if err != nil {
-			return
-		}
-		if hasOpenChanges {
-			err = fmt.Errorf("you have uncommitted changes. Did you mean to commit them before shipping?")
 			return
 		}
 	}

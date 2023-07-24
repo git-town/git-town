@@ -1,14 +1,18 @@
 package validate
 
-import "fmt"
+import (
+	"fmt"
 
-func NoOpenChanges() error {
-	hasOpenChanges, err := pr.Backend.HasOpenChanges()
+	"github.com/git-town/git-town/v9/src/git"
+)
+
+func NoOpenChanges(backend git.BackendCommands) error {
+	hasOpenChanges, err := backend.HasOpenChanges()
 	if err != nil {
 		return err
 	}
 	if hasOpenChanges {
-		err = fmt.Errorf("you have uncommitted changes. Did you mean to commit them before shipping?")
-		return
+		return fmt.Errorf("you have uncommitted changes. Did you mean to commit them before shipping?")
 	}
+	return nil
 }

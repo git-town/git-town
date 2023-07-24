@@ -90,7 +90,10 @@ func ship(args []string, message string, debug bool) error {
 		return err
 	}
 	if config.branchToShip == initialBranch {
-		// err = validate.
+		err = validate.NoOpenChanges(run.Backend)
+		if err != nil {
+			return err
+		}
 	}
 	stepList, err := shipStepList(config, message, &run)
 	if err != nil {
