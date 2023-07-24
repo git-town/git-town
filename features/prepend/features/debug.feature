@@ -48,14 +48,13 @@ Feature: display debug statistics
     When I run "git-town undo --debug"
     Then it runs the commands
       | BRANCH | TYPE     | COMMAND                                          |
+      |        | backend  | git version                                      |
       |        | backend  | git config -lz --local                           |
       |        | backend  | git config -lz --global                          |
-      |        | backend  | git rev-parse                                    |
       |        | backend  | git rev-parse --show-toplevel                    |
-      |        | backend  | git version                                      |
+      |        | backend  | git branch -vva                                  |
       |        | backend  | git branch -a                                    |
-      |        | backend  | git status                                       |
-      |        | backend  | git rev-parse --abbrev-ref HEAD                  |
+      |        | backend  | git rev-parse --show-toplevel                    |
       | parent | frontend | git checkout main                                |
       |        | backend  | git config git-town-branch.old.parent main       |
       |        | backend  | git config --unset git-town-branch.parent.parent |
@@ -65,6 +64,6 @@ Feature: display debug statistics
       |        | frontend | git checkout old                                 |
     And it prints:
       """
-      Ran 15 shell commands.
+      Ran 14 shell commands.
       """
     And the current branch is now "old"
