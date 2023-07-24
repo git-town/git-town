@@ -10,8 +10,10 @@ Feature: handle merge conflicts between feature branch and main branch
       | gamma  | local, origin | gamma commit | feature2_file    | gamma content |
     And the current branch is "main"
     And an uncommitted file
+    And inspect the repo
     When I run "git-town sync --all"
 
+  @debug @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                          |
