@@ -76,4 +76,40 @@ func TestAncestry(t *testing.T) {
 		assert.Equal(t, "two", bs.Lookup("two").Name)
 		assert.Nil(t, bs.Lookup("zonk"))
 	})
+
+	t.Run("Select", func(t *testing.T) {
+		t.Parallel()
+		bs := git.BranchesSyncStatus{
+			git.BranchSyncStatus{
+				Name:       "one",
+				SyncStatus: git.SyncStatusUpToDate,
+			},
+			git.BranchSyncStatus{
+				Name:       "two",
+				SyncStatus: git.SyncStatusUpToDate,
+			},
+			git.BranchSyncStatus{
+				Name:       "three",
+				SyncStatus: git.SyncStatusUpToDate,
+			},
+			git.BranchSyncStatus{
+				Name:       "four",
+				SyncStatus: git.SyncStatusUpToDate,
+			},
+		}
+		give := []string{"one", "three"}
+		have, err := bs.Select(give)
+		want := git.BranchesSyncStatus{
+			git.BranchSyncStatus{
+				Name:       "one",
+				SyncStatus: git.SyncStatusUpToDate,
+			},
+			git.BranchSyncStatus{
+				Name:       "three",
+				SyncStatus: git.SyncStatusUpToDate,
+			},
+		}
+		assert.NoError(t, err)
+		assert.Equal(t, have, want)
+	})
 }

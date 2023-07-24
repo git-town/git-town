@@ -10,6 +10,18 @@ import (
 func TestLineage(t *testing.T) {
 	t.Parallel()
 
+	t.Run("AddAncestors", func(t *testing.T) {
+		t.Parallel()
+		t.Run("single branch", func(t *testing.T) {
+			lineage := config.Lineage{}
+			lineage["one"] = "main"
+			give := []string{"one"}
+			have := lineage.AddAncestors(give)
+			want := []string{"main", "one"}
+			assert.Equal(t, want, have)
+		})
+	})
+
 	t.Run("Ancestors", func(t *testing.T) {
 		t.Parallel()
 		t.Run("provides all ancestor branches, oldest first", func(t *testing.T) {
@@ -130,7 +142,8 @@ func TestLineage(t *testing.T) {
 			lineage["1A2"] = "1A"
 			lineage["2"] = "main"
 			want := []string{"1", "1A", "1A1", "1A2", "1B", "2"}
-			have := lineage.OrderedHierarchically()
+			have := lineage.BranchNames()
+			lineage.OrderHierarchically(have)
 			assert.Equal(t, want, have)
 		})
 		t.Run("empty", func(t *testing.T) {

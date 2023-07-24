@@ -1,5 +1,7 @@
 package git
 
+import "fmt"
+
 type BranchSyncStatus struct {
 	Name       string
 	SyncStatus SyncStatus
@@ -47,4 +49,16 @@ func (bs BranchesSyncStatus) Lookup(branchName string) *BranchSyncStatus {
 		}
 	}
 	return nil
+}
+
+func (bs BranchesSyncStatus) Select(names []string) (BranchesSyncStatus, error) {
+	result := make(BranchesSyncStatus, len(names))
+	for n, name := range names {
+		branch := bs.Lookup(name)
+		if branch == nil {
+			return result, fmt.Errorf("cannot find branch %q", name)
+		}
+		result[n] = *branch
+	}
+	return result, nil
 }

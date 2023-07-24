@@ -11,6 +11,16 @@ import (
 // branch --> its parent.
 type Lineage map[string]string
 
+func (l Lineage) AddAncestors(branchNames []string) []string {
+	result := branchNames
+	for _, branchName := range branchNames {
+		ancestors := l.Ancestors(branchName)
+		result = stringslice.AppendAllMissing(result, ancestors)
+	}
+	l.OrderHierarchically(result)
+	return result
+}
+
 // Ancestors provides the names of all parent branches of the branch with the given name.
 func (l Lineage) Ancestors(branch string) []string {
 	current := branch
@@ -79,13 +89,12 @@ func (l Lineage) Parent(branch string) string {
 	return ""
 }
 
-// OrderedHierarchically provides the branches in this Lineage ordered so that ancestor branches come before their descendants
+// OrderHierarchically sorts the given branches so that ancestor branches come before their descendants
 // and everything is sorted alphabetically.
-func (l Lineage) OrderedHierarchically() []string {
-	result := maps.Keys(l)
-	sort.Slice(result, func(x, y int) bool {
-		first := result[x]
-		second := result[y]
+func (l Lineage) OrderHierarchically(branches []string) {
+	sort.Slice(branches, func(x, y int) bool {
+		first := branches[x]
+		second := branches[y]
 		if first == "" {
 			return true
 		}
@@ -98,7 +107,6 @@ func (l Lineage) OrderedHierarchically() []string {
 		}
 		return first < second
 	})
-	return result
 }
 
 // Roots provides the branches with children and no parents.

@@ -105,37 +105,34 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranchesSyncStatu
 		return nil, err
 	}
 	mainBranch := run.Config.MainBranch()
-	var branchesToSync git.BranchesSyncStatus
+	lineage := run.Config.Lineage()
+	var branchNamesToSync []string
 	var shouldPushTags bool
 	if allFlag {
-		err = validate.KnowsBranchesAncestors(allBranchesSyncStatus.BranchNames(), mainBranch, &run.Backend)
+		localBranches := allBranchesSyncStatus.LocalBranches()
+		err = validate.KnowsBranchesAncestors(localBranches.BranchNames(), mainBranch, &run.Backend)
 		if err != nil {
 			return nil, err
 		}
-		branchesToSync = allBranchesSyncStatus
+		branchNamesToSync = localBranches.BranchNames()
 		shouldPushTags = true
 	} else {
 		err = validate.KnowsBranchAncestors(initialBranch, run.Config.MainBranch(), &run.Backend)
 		if err != nil {
 			return nil, err
 		}
-		lineage := run.Config.Lineage()
-		ancestorsNames := lineage.Ancestors(initialBranch)
-		branchesToSync = make(git.BranchesSyncStatus, len(ancestorsNames)+1)
-		for a, ancestorName := range ancestorsNames {
-			ancestorInfo := allBranchesSyncStatus.Lookup(ancestorName)
-			if ancestorInfo == nil {
-				return nil, fmt.Errorf("didn't load branch sync status for ancestor branch %q", ancestorName)
-			}
-			branchesToSync[a] = *ancestorInfo
-		}
-		initialBranchInfo := allBranchesSyncStatus.Lookup(initialBranch)
-		if initialBranchInfo == nil {
-			return nil, fmt.Errorf("didn't load branch sync status for initial branch %q", initialBranch)
-		}
-		branchesToSync[len(ancestorsNames)] = *initialBranchInfo
+		branchNamesToSync = []string{initialBranch}
 		shouldPushTags = !run.Config.IsFeatureBranch(initialBranch)
 	}
+	fmt.Printf("22222222 LINEAGE: %#v\n", lineage)
+	fmt.Println("33333333 BRANCH NAMES TO SYNC", branchNamesToSync)
+	branchNamesWithAncestors := lineage.AddAncestors(branchNamesToSync)
+	fmt.Println("44444444 BRANCH NAMES+ANCESTORS TO SYNC", branchNamesWithAncestors)
+	branchesToSync, err := allBranchesSyncStatus.Select(branchNamesWithAncestors)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Printf("55555555 BRANCHES TO SYNC: %#v\n", branchesToSync)
 	return &syncConfig{
 		branchesToSync: branchesToSync,
 		hasOrigin:      hasOrigin,

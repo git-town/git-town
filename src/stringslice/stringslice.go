@@ -6,6 +6,16 @@ import (
 	"strings"
 )
 
+func AppendAllMissing(list []string, elements []string) []string {
+	for _, element := range elements {
+		if !Contains(list, element) {
+			list = append(list, element)
+		}
+	}
+	return list
+}
+
+// Connect provides a human-readable serialization of the given strings list.
 func Connect(list []string) string {
 	count := len(list)
 	if count == 0 {
