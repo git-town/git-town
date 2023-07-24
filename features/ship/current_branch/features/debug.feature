@@ -56,6 +56,10 @@ Feature: display debug statistics
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}         |
       |         | backend  | git checkout main                                 |
       |         | backend  | git checkout main                                 |
+    And it prints:
+      """
+      Ran 46 shell commands.
+      """
     And the current branch is now "main"
 
   Scenario: undo
@@ -82,4 +86,8 @@ Feature: display debug statistics
       |         | backend  | git rev-parse HEAD                             |
       | feature | frontend | git checkout main                              |
       | main    | frontend | git checkout feature                           |
+    And it prints:
+      """
+      Ran 19 shell commands.
+      """
     And the current branch is now "feature"

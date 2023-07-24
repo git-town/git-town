@@ -41,6 +41,10 @@ Feature: display debug statistics
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
       |        | backend  | git checkout main                             |
       |        | backend  | git checkout new                              |
+    And it prints:
+      """
+      Ran 30 shell commands.
+      """
     And the current branch is now "new"
 
   Scenario: undo
@@ -66,4 +70,8 @@ Feature: display debug statistics
       |        | backend  | git rev-parse new                             |
       |        | backend  | git log old..new                              |
       | old    | frontend | git branch -D new                             |
+    And it prints:
+      """
+      Ran 18 shell commands.
+      """
     And the current branch is now "old"

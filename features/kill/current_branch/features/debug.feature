@@ -41,4 +41,8 @@ Feature: display debug statistics
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}         |
       |         | backend  | git checkout other                                |
       |         | backend  | git checkout main                                 |
+    And it prints:
+      """
+      Ran 29 shell commands.
+      """
     And the current branch is now "main"
