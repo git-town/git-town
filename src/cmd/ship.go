@@ -138,12 +138,9 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 	}
 	isShippingInitialBranch := branchToShip == initialBranch
 	if isShippingInitialBranch {
-		hasOpenChanges, err := run.Backend.HasOpenChanges()
+		err := validate.NoOpenChanges(run.Backend)
 		if err != nil {
 			return nil, err
-		}
-		if hasOpenChanges {
-			return nil, fmt.Errorf("you have uncommitted changes. Did you mean to commit them before shipping?")
 		}
 	}
 	if hasOrigin && !isOffline {
