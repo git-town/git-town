@@ -40,6 +40,10 @@ Feature: display debug statistics
       |          | backend  | git branch                                           |
       |          | backend  | git branch                                           |
       |          | backend  | git rev-parse --verify --abbrev-ref @{-1}            |
+    And it prints:
+      """
+      Ran 29 shell commands.
+      """
     And the current branch is now "new"
 
   Scenario: undo

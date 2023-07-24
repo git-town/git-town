@@ -19,6 +19,10 @@ Feature: display debug statistics
       |        | backend  | git status                                |
       |        | backend  | git rev-parse --abbrev-ref HEAD           |
       | <none> | frontend | open https://github.com/git-town/git-town |
+    And it prints:
+      """
+      Ran 13 shell commands.
+      """
     And "open" launches a new pull request with this url in my browser:
       """
       https://github.com/git-town/git-town
