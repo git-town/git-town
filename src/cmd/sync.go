@@ -104,12 +104,6 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranchesSyncStatu
 	if err != nil {
 		return nil, err
 	}
-	if hasOrigin && !isOffline {
-		err := run.Frontend.Fetch()
-		if err != nil {
-			return nil, err
-		}
-	}
 	mainBranch := run.Config.MainBranch()
 	var branchesToSync git.BranchesSyncStatus
 	var shouldPushTags bool
