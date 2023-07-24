@@ -68,15 +68,14 @@ Feature: display debug statistics
     When I run "git-town undo --debug"
     Then it runs the commands
       | BRANCH  | TYPE     | COMMAND                                        |
+      |         | backend  | git version                                    |
       |         | backend  | git config -lz --local                         |
       |         | backend  | git config -lz --global                        |
-      |         | backend  | git rev-parse                                  |
       |         | backend  | git rev-parse --show-toplevel                  |
-      |         | backend  | git version                                    |
+      |         | backend  | git branch -vva                                |
       |         | backend  | git branch -a                                  |
+      |         | backend  | git rev-parse --show-toplevel                  |
       |         | backend  | git config git-town-branch.feature.parent main |
-      |         | backend  | git status                                     |
-      |         | backend  | git rev-parse --abbrev-ref HEAD                |
       | main    | frontend | git branch feature {{ sha 'feature commit' }}  |
       |         | frontend | git push -u origin feature                     |
       |         | frontend | git revert {{ sha 'done' }}                    |
@@ -89,6 +88,6 @@ Feature: display debug statistics
       | main    | frontend | git checkout feature                           |
     And it prints:
       """
-      Ran 19 shell commands.
+      Ran 18 shell commands.
       """
     And the current branch is now "feature"
