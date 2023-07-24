@@ -377,7 +377,7 @@ func (bc *BackendCommands) IsBranchInSync(branch string) (bool, error) {
 }
 
 // IsRepository returns whether or not the current directory is in a repository.
-func (bc *BackendCommands) IsRepositoryUncached() (isRepo bool, topLevel string) { //nolint:nonamedreturns
+func (bc *BackendCommands) IsRepositoryUncached() (isRepo bool, repoDir string) { //nolint:nonamedreturns
 	output, err := bc.QueryTrim("git", "rev-parse", "--show-toplevel")
 	if err != nil {
 		return false, ""
