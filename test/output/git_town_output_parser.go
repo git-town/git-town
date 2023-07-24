@@ -62,14 +62,18 @@ func parseFrontendLine(line string) *ExecutedGitCommand {
 		branch = line[1:closingParent]
 		line = line[closingParent+2:]
 	}
-	return &ExecutedGitCommand{Command: line, Branch: branch, CommandType: CommandTypeFrontend}
+	return &ExecutedGitCommand{
+		Command:     line,
+		CommandType: CommandTypeFrontend,
+		Branch:      branch,
+	}
 }
 
 func parseBackendLine(line string) ExecutedGitCommand {
 	command := strings.TrimPrefix(line, backendCommandLineBeginning)
 	return ExecutedGitCommand{
-		Branch:      "",
-		CommandType: CommandTypeBackend,
 		Command:     command,
+		CommandType: CommandTypeBackend,
+		Branch:      "",
 	}
 }
