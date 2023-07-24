@@ -10,7 +10,12 @@ import (
 )
 
 func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, err error) {
-	stats := loadStatistics(args.Debug)
+	var stats Statistics
+	if args.Debug {
+		stats = &statistics.CommandsRun{CommandsCount: 0}
+	} else {
+		stats = &statistics.None{}
+	}
 	backendRunner := subshell.BackendRunner{
 		Dir:     nil,
 		Stats:   stats,
@@ -74,12 +79,4 @@ func NewFrontendRunner(omitBranchNames, dryRun bool, getCurrentBranch subshell.G
 type Statistics interface {
 	RegisterRun()
 	PrintAnalysis()
-}
-
-func loadStatistics(debug bool) Statistics {
-	if debug {
-		return &statistics.CommandsRun{CommandsCount: 0}
-	} else {
-		return &statistics.None{}
-	}
 }

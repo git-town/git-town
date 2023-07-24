@@ -1,6 +1,5 @@
 Feature: already existing branch
 
-
   Scenario Outline:
     Given a <LOCATION> feature branch "existing"
     When I run "git-town hack existing"

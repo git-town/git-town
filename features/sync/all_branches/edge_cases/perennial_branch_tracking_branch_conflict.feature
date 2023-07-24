@@ -37,7 +37,6 @@ Feature: handle rebase conflicts between perennial branch and its tracking branc
     And the uncommitted file is stashed
     And a rebase is now in progress
 
-  @this
   Scenario: abort
     When I run "git-town abort"
     Then it runs the commands
