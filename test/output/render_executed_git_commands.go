@@ -27,14 +27,8 @@ func RenderExecutedGitCommands(commands []ExecutedGitCommand, table *messages.Pi
 				branch := branchForTableWithTypes(cmd, lastBranch)
 				result.AddRow(branch, string(cmd.CommandType), cmd.Command)
 			} else {
-				switch {
-				case cmd.Branch == lastBranch:
-					result.AddRow("", cmd.Command)
-				case cmd.Branch == "":
-					result.AddRow("<none>", cmd.Command)
-				default:
-					result.AddRow(cmd.Branch, cmd.Command)
-				}
+				branch := branchForTableWithoutTypes(cmd, lastBranch)
+				result.AddRow(branch, cmd.Command)
 			}
 		} else {
 			result.AddRow(cmd.Command)
@@ -55,4 +49,16 @@ func branchForTableWithTypes(cmd ExecutedGitCommand, lastBranch string) string {
 	default:
 		return cmd.Branch
 	}
+}
+
+func branchForTableWithoutTypes(cmd ExecutedGitCommand, lastBranch string) string {
+	switch {
+	case cmd.Branch == lastBranch:
+		return ""
+	case cmd.Branch == "":
+		return "<none>"
+	default:
+		return cmd.Branch
+	}
+
 }
