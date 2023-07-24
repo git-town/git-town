@@ -60,5 +60,4 @@ func branchForTableWithoutTypes(cmd ExecutedGitCommand, lastBranch string) strin
 	default:
 		return cmd.Branch
 	}
-
 }

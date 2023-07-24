@@ -38,6 +38,7 @@ func TestGitCommandsInGitTownOutput(t *testing.T) {
 		assert.Equal(t, want, have)
 	})
 	t.Run("single debug line", func(t *testing.T) {
+		t.Parallel()
 		give := "(debug) foo bar"
 		want := []output.ExecutedGitCommand{
 			{Command: "foo bar", CommandType: output.CommandTypeBackend, Branch: ""},
@@ -46,6 +47,7 @@ func TestGitCommandsInGitTownOutput(t *testing.T) {
 		assert.Equal(t, want, have)
 	})
 	t.Run("multiple debug lines", func(t *testing.T) {
+		t.Parallel()
 		give := "(debug) command one\n\n(debug) command two\n\n"
 		want := []output.ExecutedGitCommand{
 			{Command: "command one", CommandType: output.CommandTypeBackend, Branch: ""},
@@ -55,6 +57,7 @@ func TestGitCommandsInGitTownOutput(t *testing.T) {
 		assert.Equal(t, want, have)
 	})
 	t.Run("line withouth a command", func(t *testing.T) {
+		t.Parallel()
 		give := "hello world"
 		want := []output.ExecutedGitCommand{}
 		have := output.GitCommandsInGitTownOutput(give)
