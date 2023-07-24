@@ -16,6 +16,7 @@ import (
 
 type BackendRunner interface {
 	Query(executable string, args ...string) (string, error)
+	QueryTrim(executable string, args ...string) (string, error)
 	Run(executable string, args ...string) error
 	RunMany([][]string) error
 }
@@ -320,18 +321,22 @@ func (bc *BackendCommands) IsBranchInSync(branch string) (bool, error) {
 }
 
 // IsRepository returns whether or not the current directory is in a repository.
-func (bc *BackendCommands) IsRepositoryUncached() bool {
-	err := bc.Run("git", "rev-parse")
-	return err == nil
+func (bc *BackendCommands) IsRepositoryUncached() (isRepo bool, repoDir string) { //nolint:nonamedreturns
+	output, err := bc.QueryTrim("git", "rev-parse", "--show-toplevel")
+	if err != nil {
+		return false, ""
+	}
+	return true, output
 }
 
 // IsRepository returns whether or not the current directory is in a repository.
-func (bc *BackendCommands) IsRepository() bool {
-	if !bc.IsRepoCache.Initialized() {
-		isRepo := bc.IsRepositoryUncached()
+func (bc *BackendCommands) IsRepository() (isRepo bool, repoDir string) {
+	if !bc.IsRepoCache.Initialized() || !bc.RootDirCache.Initialized() {
+		isRepo, repoDir := bc.IsRepositoryUncached()
 		bc.IsRepoCache.Set(isRepo)
+		bc.RootDirCache.Set(repoDir)
 	}
-	return bc.IsRepoCache.Value()
+	return bc.IsRepoCache.Value(), bc.RootDirCache.Value()
 }
 
 // LastCommitMessage provides the commit message for the last commit.
@@ -516,15 +521,13 @@ func (bc *BackendCommands) RootDirectoryUncached() (string, error) {
 	return filepath.FromSlash(output), nil
 }
 
-// RootDirectory provides the path of the rood directory of the current repository,
+// RootDirectory provides the path of the root directory of the current repository,
 // i.e. the directory that contains the ".git" folder.
 func (bc *BackendCommands) RootDirectory() (string, error) {
 	if !bc.RootDirCache.Initialized() {
-		rootDir, err := bc.RootDirectoryUncached()
-		if err != nil {
-			return rootDir, err
-		}
-		bc.RootDirCache.Set(rootDir)
+		isRepo, repoDir := bc.IsRepositoryUncached()
+		bc.IsRepoCache.Set(isRepo)
+		bc.RootDirCache.Set(repoDir)
 	}
 	return bc.RootDirCache.Value(), nil
 }
