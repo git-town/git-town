@@ -11,30 +11,51 @@ type ExecutedGitCommand struct {
 
 	// Command contains the command executed.
 	Command string
+
+	// frontend or backend
+	CommandType CommandType
 }
+
+type CommandType string
+
+const (
+	CommandTypeFrontend = "frontend"
+	CommandTypeBackend  = "backend"
+)
 
 // GitCommandsInGitTownOutput provides the Git commands mentioned in the given Git Town output.
 func GitCommandsInGitTownOutput(output string) []ExecutedGitCommand {
 	result := []ExecutedGitCommand{}
 	for _, line := range strings.Split(output, "\n") {
-		if lineContainsGitTownCommand(line) {
-			result = append(result, parseLine(line))
+		if lineContainsFrontendCommand(line) {
+			line := parseFrontendLine(line)
+			if line != nil {
+				result = append(result, *line)
+			}
+		} else if lineContainsBackendCommand(line) {
+			result = append(result, parseBackendLine(line))
 		}
 	}
 	return result
 }
 
-// gitCommandLineBeginning contains the first few characters of lines containing Git commands in Git Town output.
-const gitCommandLineBeginning = "\x1b[1m" // "\e[1m"
+const frontendCommandLineBeginning = "\x1b[1m" // "\e[1m"
 
-// lineContainsGitTownCommand indicates whether the given line contains a Git Town command.
-func lineContainsGitTownCommand(line string) bool {
-	return strings.HasPrefix(line, gitCommandLineBeginning)
+func lineContainsFrontendCommand(line string) bool {
+	return strings.HasPrefix(line, frontendCommandLineBeginning)
 }
 
-// parseLine provides the Git Town command and branch name in the given line.
-func parseLine(line string) ExecutedGitCommand {
-	line = strings.TrimPrefix(line, gitCommandLineBeginning)
+const backendCommandLineBeginning = "(debug) " // "\e[1m"
+
+func lineContainsBackendCommand(line string) bool {
+	return strings.HasPrefix(line, backendCommandLineBeginning)
+}
+
+func parseFrontendLine(line string) *ExecutedGitCommand {
+	line = strings.TrimPrefix(line, frontendCommandLineBeginning)
+	if line == "" {
+		return nil
+	}
 	// extract branch name if it exists
 	branch := ""
 	if line[0] == '[' {
@@ -43,5 +64,18 @@ func parseLine(line string) ExecutedGitCommand {
 		branch = line[1:closingParent]
 		line = line[closingParent+2:]
 	}
-	return ExecutedGitCommand{Command: line, Branch: branch}
+	return &ExecutedGitCommand{
+		Command:     line,
+		CommandType: CommandTypeFrontend,
+		Branch:      branch,
+	}
+}
+
+func parseBackendLine(line string) ExecutedGitCommand {
+	command := strings.TrimPrefix(line, backendCommandLineBeginning)
+	return ExecutedGitCommand{
+		Command:     command,
+		CommandType: CommandTypeBackend,
+		Branch:      "",
+	}
 }

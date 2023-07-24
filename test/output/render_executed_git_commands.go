@@ -9,22 +9,26 @@ import (
 // The DataTable table matches the structure of the given Gherkin table.
 func RenderExecutedGitCommands(commands []ExecutedGitCommand, table *messages.PickleStepArgument_PickleTable) datatable.DataTable {
 	tableHasBranches := table.Rows[0].Cells[0].Value == "BRANCH"
+	tableHasType := len(table.Rows[0].Cells) > 1 && table.Rows[0].Cells[1].Value == "TYPE"
 	result := datatable.DataTable{}
 	if tableHasBranches {
-		result.AddRow("BRANCH", "COMMAND")
+		if tableHasType {
+			result.AddRow("BRANCH", "TYPE", "COMMAND")
+		} else {
+			result.AddRow("BRANCH", "COMMAND")
+		}
 	} else {
 		result.AddRow("COMMAND")
 	}
 	lastBranch := ""
 	for _, cmd := range commands {
 		if tableHasBranches {
-			switch {
-			case cmd.Branch == lastBranch:
-				result.AddRow("", cmd.Command)
-			case cmd.Branch == "":
-				result.AddRow("<none>", cmd.Command)
-			default:
-				result.AddRow(cmd.Branch, cmd.Command)
+			if tableHasType {
+				branch := branchForTableWithTypes(cmd, lastBranch)
+				result.AddRow(branch, string(cmd.CommandType), cmd.Command)
+			} else {
+				branch := branchForTableWithoutTypes(cmd, lastBranch)
+				result.AddRow(branch, cmd.Command)
 			}
 		} else {
 			result.AddRow(cmd.Command)
@@ -32,4 +36,28 @@ func RenderExecutedGitCommands(commands []ExecutedGitCommand, table *messages.Pi
 		lastBranch = cmd.Branch
 	}
 	return result
+}
+
+func branchForTableWithTypes(cmd ExecutedGitCommand, lastBranch string) string {
+	switch {
+	case cmd.Branch == "" && cmd.CommandType == CommandTypeFrontend:
+		return "<none>"
+	case cmd.Branch == lastBranch:
+		return ""
+	case cmd.Branch == "":
+		return ""
+	default:
+		return cmd.Branch
+	}
+}
+
+func branchForTableWithoutTypes(cmd ExecutedGitCommand, lastBranch string) string {
+	switch {
+	case cmd.Branch == lastBranch:
+		return ""
+	case cmd.Branch == "":
+		return "<none>"
+	default:
+		return cmd.Branch
+	}
 }
