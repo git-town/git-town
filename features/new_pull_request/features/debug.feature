@@ -12,9 +12,9 @@ Feature: display debug statistics
       |         | backend  | git config -lz --local                                             |
       |         | backend  | git config -lz --global                                            |
       |         | backend  | git rev-parse --show-toplevel                                      |
+      |         | backend  | git rev-parse --show-toplevel                                      |
       |         | backend  | git branch -vva                                                    |
       |         | backend  | git branch -a                                                      |
-      |         | backend  | git rev-parse --show-toplevel                                      |
       |         | backend  | git remote                                                         |
       | feature | frontend | git fetch --prune --tags                                           |
       |         | backend  | git branch -r                                                      |

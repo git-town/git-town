@@ -14,6 +14,7 @@ Feature: display debug statistics
       |         | backend  | git config -lz --local                            |
       |         | backend  | git config -lz --global                           |
       |         | backend  | git rev-parse --show-toplevel                     |
+      |         | backend  | git rev-parse --show-toplevel                     |
       |         | backend  | git status --porcelain --ignore-submodules        |
       |         | backend  | git remote                                        |
       |         | backend  | git status                                        |
@@ -21,7 +22,6 @@ Feature: display debug statistics
       | feature | frontend | git fetch --prune --tags                          |
       |         | backend  | git branch -vva                                   |
       |         | backend  | git branch -a                                     |
-      |         | backend  | git rev-parse --show-toplevel                     |
       |         | backend  | git remote get-url origin                         |
       |         | backend  | git remote get-url origin                         |
       |         | backend  | git remote get-url origin                         |

@@ -13,9 +13,9 @@ Feature: display debug statistics
       |        | backend | git config -lz --local                          |
       |        | backend | git config -lz --global                         |
       |        | backend | git rev-parse --show-toplevel                   |
+      |        | backend | git rev-parse --show-toplevel                   |
       |        | backend | git branch -vva                                 |
       |        | backend | git branch -a                                   |
-      |        | backend | git rev-parse --show-toplevel                   |
       |        | backend | git config --unset git-town-branch.child.parent |
       |        | backend | git branch                                      |
       |        | backend | git config git-town-branch.child.parent main    |

@@ -9,16 +9,16 @@ import (
 )
 
 func LoadGitRepo(pr *git.ProdRunner, args LoadGitArgs) (branchesSyncStatus git.BranchesSyncStatus, currentBranch string, exit bool, err error) { //nolint:nonamedreturns
+	isRepo, rootDir := pr.Backend.IsRepositoryUncached()
+	if !isRepo {
+		err = errors.New("this is not a Git repository")
+		return
+	}
 	if args.HandleUnfinishedState {
 		exit, err = validate.HandleUnfinishedState(pr, nil)
 		if err != nil || exit {
 			return
 		}
-	}
-	isRepo, rootDir := pr.Backend.IsRepositoryUncached()
-	if !isRepo {
-		err = errors.New("this is not a Git repository")
-		return
 	}
 	if args.ValidateNoOpenChanges {
 		err = validate.NoOpenChanges(pr.Backend)
