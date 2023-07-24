@@ -10,9 +10,10 @@ import (
 )
 
 func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, err error) {
+	stats := loadStatistics(args.Debug)
 	backendRunner := subshell.BackendRunner{
 		Dir:     nil,
-		Stats:   loadStatistics(args.Debug),
+		Stats:   stats,
 		Verbose: args.Debug,
 	}
 	backendCommands := git.BackendCommands{
