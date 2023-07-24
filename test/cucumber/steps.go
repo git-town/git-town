@@ -299,7 +299,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^inspect the repo$`, func() error {
-		fmt.Printf("\nThe workspace is at %q\n", state.fixture.DevRepo.WorkingDir)
+		fmt.Printf("\nThe workspace is at %s\n", state.fixture.DevRepo.WorkingDir)
 		_, _, err := keyboard.GetSingleKey()
 		if err != nil {
 			return fmt.Errorf("cannot read from os.Stdin: %w", err)
