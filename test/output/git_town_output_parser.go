@@ -13,13 +13,13 @@ type ExecutedGitCommand struct {
 	Command string
 
 	// frontend or backend
-	CommandType commandType
+	CommandType CommandType
 }
 
-type commandType string
+type CommandType string
 
-const commandTypeFrontend = "frontend"
-const commandTypeBackend = "backend"
+const CommandTypeFrontend = "frontend"
+const CommandTypeBackend = "backend"
 
 // GitCommandsInGitTownOutput provides the Git commands mentioned in the given Git Town output.
 func GitCommandsInGitTownOutput(output string) []ExecutedGitCommand {
@@ -62,14 +62,14 @@ func parseFrontendLine(line string) *ExecutedGitCommand {
 		branch = line[1:closingParent]
 		line = line[closingParent+2:]
 	}
-	return &ExecutedGitCommand{Command: line, Branch: branch, CommandType: commandTypeFrontend}
+	return &ExecutedGitCommand{Command: line, Branch: branch, CommandType: CommandTypeFrontend}
 }
 
 func parseBackendLine(line string) ExecutedGitCommand {
 	command := strings.TrimPrefix(line, backendCommandLineBeginning)
 	return ExecutedGitCommand{
 		Branch:      "",
-		CommandType: commandTypeBackend,
+		CommandType: CommandTypeBackend,
 		Command:     command,
 	}
 }

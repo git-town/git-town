@@ -25,7 +25,7 @@ func RenderExecutedGitCommands(commands []ExecutedGitCommand, table *messages.Pi
 		if tableHasBranches {
 			if tableHasType {
 				branch := ""
-				if cmd.Branch == "" && cmd.CommandType == commandTypeFrontend {
+				if cmd.Branch == "" && cmd.CommandType == CommandTypeFrontend {
 					branch = "<none>"
 				}
 				switch {
