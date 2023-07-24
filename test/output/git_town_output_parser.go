@@ -37,23 +37,18 @@ func GitCommandsInGitTownOutput(output string) []ExecutedGitCommand {
 	return result
 }
 
-// frontendCommandLineBeginning contains the first few characters of lines containing Git commands in Git Town output.
 const frontendCommandLineBeginning = "\x1b[1m" // "\e[1m"
 
-// gitCommandLineBeginning contains the first few characters of lines containing Git commands in Git Town output.
-const backendCommandLineBeginning = "(debug) " // "\e[1m"
-
-// lineContainsFrontendCommand indicates whether the given line contains a Git Town command.
 func lineContainsFrontendCommand(line string) bool {
 	return strings.HasPrefix(line, frontendCommandLineBeginning)
 }
 
-// lineContainsGitTownCommand indicates whether the given line contains a Git Town command.
+const backendCommandLineBeginning = "(debug) " // "\e[1m"
+
 func lineContainsBackendCommand(line string) bool {
 	return strings.HasPrefix(line, backendCommandLineBeginning)
 }
 
-// parseFrontendLine provides the Git Town command and branch name in the given line.
 func parseFrontendLine(line string) *ExecutedGitCommand {
 	line = strings.TrimPrefix(line, frontendCommandLineBeginning)
 	if line == "" {
@@ -70,7 +65,6 @@ func parseFrontendLine(line string) *ExecutedGitCommand {
 	return &ExecutedGitCommand{Command: line, Branch: branch, CommandType: commandTypeFrontend}
 }
 
-// parseLine provides the Git Town command and branch name in the given line.
 func parseBackendLine(line string) ExecutedGitCommand {
 	command := strings.TrimPrefix(line, backendCommandLineBeginning)
 	return ExecutedGitCommand{
