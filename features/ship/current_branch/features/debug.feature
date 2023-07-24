@@ -6,7 +6,6 @@ Feature: display debug statistics
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
 
-  @this
   Scenario: result
     When I run "git-town ship -m done --debug"
     Then it runs the commands
