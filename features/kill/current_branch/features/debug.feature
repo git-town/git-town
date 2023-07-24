@@ -12,14 +12,12 @@ Feature: display debug statistics
     When I run "git-town kill --debug"
     Then it runs the commands
       | BRANCH  | TYPE     | COMMAND                                           |
+      |         | backend  | git version                                       |
       |         | backend  | git config -lz --local                            |
       |         | backend  | git config -lz --global                           |
-      |         | backend  | git rev-parse                                     |
       |         | backend  | git rev-parse --show-toplevel                     |
-      |         | backend  | git version                                       |
+      |         | backend  | git branch -vva                                   |
       |         | backend  | git branch -a                                     |
-      |         | backend  | git status                                        |
-      |         | backend  | git rev-parse --abbrev-ref HEAD                   |
       |         | backend  | git branch                                        |
       |         | backend  | git config -lz --local                            |
       |         | backend  | git config -lz --global                           |
@@ -41,8 +39,9 @@ Feature: display debug statistics
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}         |
       |         | backend  | git checkout other                                |
       |         | backend  | git checkout main                                 |
+      |         | backend  | git rev-parse --show-toplevel                     |
     And it prints:
       """
-      Ran 29 shell commands.
+      Ran 28 shell commands.
       """
     And the current branch is now "main"
