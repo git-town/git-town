@@ -39,6 +39,10 @@ Feature: display debug statistics
       |         | backend  | which xdg-open                                                     |
       |         | backend  | which open                                                         |
       | <none>  | frontend | open https://github.com/git-town/git-town/compare/feature?expand=1 |
+    And it prints:
+      """
+      Ran 31 shell commands.
+      """
     And "open" launches a new pull request with this url in my browser:
       """
       https://github.com/git-town/git-town/compare/feature?expand=1

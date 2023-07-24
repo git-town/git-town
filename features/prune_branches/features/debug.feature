@@ -36,6 +36,10 @@ Feature: display debug statistics
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
       |        | backend  | git checkout main                             |
       |        | backend  | git checkout main                             |
+    And it prints:
+      """
+      Ran 23 shell commands.
+      """
     And the current branch is now "main"
     And the branches are now
       | REPOSITORY    | BRANCHES     |
@@ -60,5 +64,9 @@ Feature: display debug statistics
       | main   | frontend | git branch old {{ sha 'old commit' }}      |
       |        | backend  | git config git-town-branch.old.parent main |
       | main   | frontend | git checkout old                           |
+    And it prints:
+      """
+      Ran 11 shell commands.
+      """
     And the current branch is now "old"
     And the initial branches and hierarchy exist

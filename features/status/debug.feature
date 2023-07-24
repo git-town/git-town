@@ -10,3 +10,7 @@ Feature: display debug statistics
       |        | backend | git rev-parse                 |
       |        | backend | git rev-parse --show-toplevel |
       |        | backend | git version                   |
+    And it prints:
+      """
+      Ran 5 shell commands.
+      """
