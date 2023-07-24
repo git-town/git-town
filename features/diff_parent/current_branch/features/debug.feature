@@ -14,3 +14,7 @@ Feature: display debug statistics
       |         | backend  | git status                      |
       |         | backend  | git rev-parse --abbrev-ref HEAD |
       | feature | frontend | git diff main..feature          |
+    And it prints:
+      """
+      Ran 9 shell commands.
+      """
