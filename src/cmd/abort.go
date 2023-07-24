@@ -43,7 +43,7 @@ func abort(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	runState, err := runstate.Load(&run.Backend)
+	runState, err := runstate.Load(rootDir)
 	if err != nil {
 		return fmt.Errorf("cannot load previous run state: %w", err)
 	}
