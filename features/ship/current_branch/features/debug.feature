@@ -10,21 +10,22 @@ Feature: display debug statistics
     When I run "git-town ship -m done --debug"
     Then it runs the commands
       | BRANCH  | TYPE     | COMMAND                                           |
+      |         | backend  | git version                                       |
       |         | backend  | git config -lz --local                            |
       |         | backend  | git config -lz --global                           |
-      |         | backend  | git rev-parse                                     |
       |         | backend  | git rev-parse --show-toplevel                     |
-      |         | backend  | git version                                       |
-      |         | backend  | git branch -a                                     |
-      |         | backend  | git remote get-url origin                         |
-      |         | backend  | git remote get-url origin                         |
-      |         | backend  | git remote get-url origin                         |
-      |         | backend  | git remote get-url origin                         |
+      |         | backend  | git status --porcelain --ignore-submodules        |
       |         | backend  | git remote                                        |
       |         | backend  | git status                                        |
       |         | backend  | git rev-parse --abbrev-ref HEAD                   |
-      |         | backend  | git status --porcelain --ignore-submodules        |
       | feature | frontend | git fetch --prune --tags                          |
+      |         | backend  | git branch -vva                                   |
+      |         | backend  | git branch -a                                     |
+      |         | backend  | git rev-parse --show-toplevel                     |
+      |         | backend  | git remote get-url origin                         |
+      |         | backend  | git remote get-url origin                         |
+      |         | backend  | git remote get-url origin                         |
+      |         | backend  | git remote get-url origin                         |
       |         | backend  | git branch -r                                     |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}         |
       |         | backend  | git status --porcelain --ignore-submodules        |
@@ -58,7 +59,7 @@ Feature: display debug statistics
       |         | backend  | git checkout main                                 |
     And it prints:
       """
-      Ran 46 shell commands.
+      Ran 47 shell commands.
       """
     And the current branch is now "main"
 
