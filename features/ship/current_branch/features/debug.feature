@@ -14,7 +14,6 @@ Feature: display debug statistics
       |         | backend  | git config -lz --local                            |
       |         | backend  | git config -lz --global                           |
       |         | backend  | git rev-parse --show-toplevel                     |
-      |         | backend  | git rev-parse --show-toplevel                     |
       |         | backend  | git status --porcelain --ignore-submodules        |
       |         | backend  | git remote                                        |
       |         | backend  | git status                                        |
@@ -60,7 +59,7 @@ Feature: display debug statistics
       |         | backend  | git checkout main                                 |
     And it prints:
       """
-      Ran 48 shell commands.
+      Ran 47 shell commands.
       """
     And the current branch is now "main"
 
@@ -75,7 +74,6 @@ Feature: display debug statistics
       |         | backend  | git rev-parse --show-toplevel                  |
       |         | backend  | git branch -vva                                |
       |         | backend  | git branch -a                                  |
-      |         | backend  | git rev-parse --show-toplevel                  |
       |         | backend  | git config git-town-branch.feature.parent main |
       | main    | frontend | git branch feature {{ sha 'feature commit' }}  |
       |         | frontend | git push -u origin feature                     |
@@ -89,6 +87,6 @@ Feature: display debug statistics
       | main    | frontend | git checkout feature                           |
     And it prints:
       """
-      Ran 18 shell commands.
+      Ran 17 shell commands.
       """
     And the current branch is now "feature"
