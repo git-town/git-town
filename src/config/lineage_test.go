@@ -10,7 +10,7 @@ import (
 func TestLineage(t *testing.T) {
 	t.Parallel()
 
-	t.Run("AddAncestorsForMany", func(t *testing.T) {
+	t.Run("BranchesAndAncestors", func(t *testing.T) {
 		t.Parallel()
 		t.Run("single branch", func(t *testing.T) {
 			t.Parallel()
@@ -33,7 +33,7 @@ func TestLineage(t *testing.T) {
 		})
 	})
 
-	t.Run("AddAncestorsForOne", func(t *testing.T) {
+	t.Run("BranchAndAncestors", func(t *testing.T) {
 		t.Parallel()
 		lineage := config.Lineage{}
 		lineage["one"] = "main"
