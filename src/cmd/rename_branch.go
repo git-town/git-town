@@ -126,6 +126,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 	}
 	oldBranch := allBranches.Lookup(oldBranchName)
 	if oldBranch == nil {
+		// TODO: extract these error messages to constants because this one here is reused in several places
 		return nil, fmt.Errorf("there is no branch %q", oldBranchName)
 	}
 	if oldBranch.SyncStatus != git.SyncStatusUpToDate {
