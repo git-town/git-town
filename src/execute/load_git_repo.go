@@ -47,6 +47,7 @@ func LoadGitRepo(pr *git.ProdRunner, args LoadGitArgs) (allBranches git.Branches
 			}
 		}
 	}
+	// TODO: load this separate from LoadGitRepo
 	allBranches, currentBranch, err = pr.Backend.BranchesSyncStatus()
 	if err != nil {
 		return
