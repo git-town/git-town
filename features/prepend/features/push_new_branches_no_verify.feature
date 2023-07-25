@@ -15,6 +15,9 @@ Feature: auto-push new branches
       | old    | git fetch --prune --tags           |
       |        | git checkout main                  |
       | main   | git rebase origin/main             |
+      |        | git checkout old                   |
+      | old    | git merge --no-edit origin/old     |
+      |        | git merge --no-edit main           |
       |        | git branch new main                |
       |        | git checkout new                   |
       | new    | git push --no-verify -u origin new |
@@ -31,13 +34,16 @@ Feature: auto-push new branches
     Given setting "push-hook" is "true"
     When I run "git-town prepend new"
     Then it runs the commands
-      | BRANCH | COMMAND                  |
-      | old    | git fetch --prune --tags |
-      |        | git checkout main        |
-      | main   | git rebase origin/main   |
-      |        | git branch new main      |
-      |        | git checkout new         |
-      | new    | git push -u origin new   |
+      | BRANCH | COMMAND                        |
+      | old    | git fetch --prune --tags       |
+      |        | git checkout main              |
+      | main   | git rebase origin/main         |
+      |        | git checkout old               |
+      | old    | git merge --no-edit origin/old |
+      |        | git merge --no-edit main       |
+      |        | git branch new main            |
+      |        | git checkout new               |
+      | new    | git push -u origin new         |
     And the current branch is now "new"
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE        |

@@ -21,10 +21,6 @@ Feature: display debug statistics
       | old    | frontend | git fetch --prune --tags                      |
       |        | backend  | git branch -vva                               |
       |        | backend  | git branch -a                                 |
-      |        | backend  | git branch                                    |
-      |        | backend  | git branch -r                                 |
-      |        | backend  | git rev-parse old                             |
-      |        | backend  | git rev-parse origin/old                      |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
       |        | backend  | git status --porcelain --ignore-submodules    |
       | old    | frontend | git branch new old                            |
