@@ -8,6 +8,7 @@ Feature: display debug statistics
       | current | local, origin | current commit |
       | other   | local, origin | other commit   |
 
+  @this
   Scenario: result
     When I run "git-town kill --debug"
     Then it runs the commands
@@ -16,14 +17,14 @@ Feature: display debug statistics
       |         | backend  | git config -lz --local                            |
       |         | backend  | git config -lz --global                           |
       |         | backend  | git rev-parse --show-toplevel                     |
+      |         | backend  | git remote                                        |
+      |         | backend  | git status                                        |
+      |         | backend  | git rev-parse --abbrev-ref HEAD                   |
+      | current | frontend | git fetch --prune --tags                          |
       |         | backend  | git branch -vva                                   |
       |         | backend  | git branch -a                                     |
-      |         | backend  | git branch                                        |
       |         | backend  | git config -lz --local                            |
       |         | backend  | git config -lz --global                           |
-      |         | backend  | git remote                                        |
-      | current | frontend | git fetch --prune --tags                          |
-      |         | backend  | git branch -r                                     |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}         |
       |         | backend  | git status --porcelain --ignore-submodules        |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}         |
