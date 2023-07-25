@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/spf13/cobra"
 )
 
@@ -76,7 +77,7 @@ func completions(args []string, completionsNoDescFlag bool, rootCmd *cobra.Comma
 	case CompletionTypePowershell:
 		return rootCmd.GenPowerShellCompletion(os.Stdout)
 	}
-	return fmt.Errorf("unknown argument: %q", args[0])
+	return fmt.Errorf(messages.UnknownArgument, args[0])
 }
 
 // CompletionType defines the valid shells for which Git Town can create auto-completions.
@@ -106,5 +107,5 @@ func NewCompletionType(text string) (CompletionType, error) {
 			return completionType, nil
 		}
 	}
-	return CompletionTypeBash, fmt.Errorf("unknown completion type: %q", text)
+	return CompletionTypeBash, fmt.Errorf(messages.UnknownCompletionType, text)
 }

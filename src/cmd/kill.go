@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/git-town/git-town/v9/src/validate"
@@ -86,11 +87,11 @@ func determineKillConfig(args []string, run *git.ProdRunner, allBranches git.Bra
 		targetBranchName = args[0]
 	}
 	if !run.Config.IsFeatureBranch(targetBranchName) {
-		return nil, fmt.Errorf("you can only kill feature branches")
+		return nil, fmt.Errorf(messages.CanOnlyKillFeatureBranches)
 	}
 	targetBranch := allBranches.Lookup(targetBranchName)
 	if targetBranch == nil {
-		return nil, fmt.Errorf("there is no branch %q", targetBranchName)
+		return nil, fmt.Errorf(messages.BranchNotFound, targetBranchName)
 	}
 	if targetBranch.IsLocal() {
 		err := validate.KnowsBranchAncestors(targetBranchName, mainBranch, &run.Backend)
@@ -150,7 +151,7 @@ func killStepList(config *killConfig, run *git.ProdRunner) (runstate.StepList, e
 	case !config.isOffline:
 		result.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch.Name, IsTracking: false, NoPushHook: config.noPushHook})
 	default:
-		return runstate.StepList{}, fmt.Errorf("cannot delete remote branch %q in offline mode", config.targetBranch.Name)
+		return runstate.StepList{}, fmt.Errorf(messages.CannotDeleteRemoteBranchWhenOffline, config.targetBranch.Name)
 	}
 	err := result.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     true,

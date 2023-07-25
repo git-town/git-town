@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/spf13/cobra"
 )
 
@@ -66,7 +67,7 @@ func setMainBranch(branch string, run *git.ProdRunner) error {
 		return err
 	}
 	if !hasBranch {
-		return fmt.Errorf("there is no branch named %q", branch)
+		return fmt.Errorf(messages.BranchNotFound, branch)
 	}
 	return run.Config.SetMainBranch(branch)
 }

@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/spf13/cobra"
@@ -114,27 +115,26 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 		newBranchName = args[1]
 	}
 	if run.Config.IsMainBranch(oldBranchName) {
-		return nil, fmt.Errorf("the main branch cannot be renamed")
+		return nil, fmt.Errorf(messages.CannotRenameMainBranch)
 	}
 	if !forceFlag {
 		if run.Config.IsPerennialBranch(oldBranchName) {
-			return nil, fmt.Errorf("%q is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'", oldBranchName)
+			return nil, fmt.Errorf(messages.WarnRenamePerennialBranch, oldBranchName)
 		}
 	}
 	if oldBranchName == newBranchName {
-		return nil, fmt.Errorf("cannot rename branch to current name")
+		return nil, fmt.Errorf(messages.RenameToSameName)
 	}
 	oldBranch := allBranches.Lookup(oldBranchName)
 	if oldBranch == nil {
 		// TODO: extract these error messages to constants because this one here is reused in several places
-		return nil, fmt.Errorf("there is no branch %q", oldBranchName)
+		return nil, fmt.Errorf(messages.BranchNotFound, oldBranchName)
 	}
 	if oldBranch.SyncStatus != git.SyncStatusUpToDate {
-		return nil, fmt.Errorf("%q is not in sync with its tracking branch, please sync the branches before renaming", oldBranchName)
+		return nil, fmt.Errorf(messages.BranchNotInSync, oldBranchName)
 	}
 	if allBranches.Contains(newBranchName) {
-		// TODO: rename to "there is already a branch %q"
-		return nil, fmt.Errorf("a branch named %q already exists", newBranchName)
+		return nil, fmt.Errorf(messages.BranchAlreadyExists, newBranchName)
 	}
 	return &renameBranchConfig{
 		initialBranch:              initialBranch,
