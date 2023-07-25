@@ -11,6 +11,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/cache"
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/stringslice"
 )
 
@@ -67,7 +68,7 @@ func (bc *BackendCommands) BranchAuthors(branch, parent string) ([]string, error
 func (bc *BackendCommands) BranchHasUnmergedCommits(branch, parent string) (bool, error) {
 	out, err := bc.QueryTrim("git", "log", parent+".."+branch)
 	if err != nil {
-		return false, fmt.Errorf("cannot determine if branch %q has unmerged commits: %w", branch, err)
+		return false, fmt.Errorf(messages.BranchContentProblem, branch, err)
 	}
 	return out != "", nil
 }
@@ -143,7 +144,7 @@ func determineSyncStatus(branchName, remoteText string) SyncStatus {
 func (bc *BackendCommands) CheckoutBranchUncached(name string) error {
 	err := bc.Run("git", "checkout", name)
 	if err != nil {
-		return fmt.Errorf("cannot check out branch %q: %w", name, err)
+		return fmt.Errorf(messages.BranchCheckoutProblem, name, err)
 	}
 	return nil
 }
@@ -170,7 +171,7 @@ func (bc *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {
 	squashMessageFile := ".git/SQUASH_MSG"
 	contentBytes, err := os.ReadFile(squashMessageFile)
 	if err != nil {
-		return fmt.Errorf("cannot read squash message file %q: %w", squashMessageFile, err)
+		return fmt.Errorf(messages.SquashCannotReadFile, squashMessageFile, err)
 	}
 	content := string(contentBytes)
 	if prefix != "" {
@@ -187,7 +188,7 @@ func (bc *BackendCommands) CreateFeatureBranch(name string) error {
 		{"git", "config", "git-town-branch." + name + ".parent", "main"},
 	})
 	if err != nil {
-		return fmt.Errorf("cannot create feature branch %q: %w", name, err)
+		return fmt.Errorf(messages.BranchFeatureCannotCreate, name, err)
 	}
 	return nil
 }
@@ -196,7 +197,7 @@ func (bc *BackendCommands) CreateFeatureBranch(name string) error {
 func (bc *BackendCommands) CurrentBranchUncached() (string, error) {
 	rebasing, err := bc.HasRebaseInProgress()
 	if err != nil {
-		return "", fmt.Errorf("cannot determine current branch: %w", err)
+		return "", fmt.Errorf(messages.BranchCurrentProblem, err)
 	}
 	if rebasing {
 		currentBranch, err := bc.currentBranchDuringRebase()
@@ -207,7 +208,7 @@ func (bc *BackendCommands) CurrentBranchUncached() (string, error) {
 	}
 	output, err := bc.QueryTrim("git", "rev-parse", "--abbrev-ref", "HEAD")
 	if err != nil {
-		return "", fmt.Errorf("cannot determine the current branch: %w", err)
+		return "", fmt.Errorf(messages.BranchCurrentProblem, err)
 	}
 	return output, nil
 }
@@ -274,7 +275,7 @@ func (bc *BackendCommands) ExpectedPreviouslyCheckedOutBranch(initialPreviouslyC
 func (bc *BackendCommands) HasConflicts() (bool, error) {
 	output, err := bc.QueryTrim("git", "status")
 	if err != nil {
-		return false, fmt.Errorf("cannot determine conflicts: %w", err)
+		return false, fmt.Errorf(messages.ConflictsProblem, err)
 	}
 	return strings.Contains(output, "Unmerged paths"), nil
 }
@@ -283,7 +284,7 @@ func (bc *BackendCommands) HasConflicts() (bool, error) {
 func (bc *BackendCommands) HasLocalBranch(name string) (bool, error) {
 	branches, err := bc.LocalBranches()
 	if err != nil {
-		return false, fmt.Errorf("cannot determine whether the local branch %q exists: %w", name, err)
+		return false, fmt.Errorf(messages.BranchLocalProblem, name, err)
 	}
 	return stringslice.Contains(branches, name), nil
 }
@@ -298,7 +299,7 @@ func (bc *BackendCommands) HasMergeInProgress() bool {
 func (bc *BackendCommands) HasOpenChanges() (bool, error) {
 	output, err := bc.QueryTrim("git", "status", "--porcelain", "--ignore-submodules")
 	if err != nil {
-		return false, fmt.Errorf("cannot determine open changes: %w", err)
+		return false, fmt.Errorf(messages.OpenChangesProblem, err)
 	}
 	return output != "", nil
 }
@@ -307,7 +308,7 @@ func (bc *BackendCommands) HasOpenChanges() (bool, error) {
 func (bc *BackendCommands) HasRebaseInProgress() (bool, error) {
 	output, err := bc.QueryTrim("git", "status")
 	if err != nil {
-		return false, fmt.Errorf("cannot determine rebase in progress: %w", err)
+		return false, fmt.Errorf(messages.RebaseProblem, err)
 	}
 	if strings.Contains(output, "You are currently rebasing") {
 		return true, nil
@@ -327,7 +328,7 @@ func (bc *BackendCommands) HasOrigin() (bool, error) {
 func (bc *BackendCommands) HasRemote(name string) (bool, error) {
 	remotes, err := bc.Remotes()
 	if err != nil {
-		return false, fmt.Errorf("cannot determine if remote %q exists: %w", name, err)
+		return false, fmt.Errorf(messages.RemoteExistsProblem, name, err)
 	}
 	return stringslice.Contains(remotes, name), nil
 }
@@ -337,7 +338,7 @@ func (bc *BackendCommands) HasRemote(name string) (bool, error) {
 func (bc *BackendCommands) HasShippableChanges(branch, mainBranch string) (bool, error) {
 	out, err := bc.QueryTrim("git", "diff", mainBranch+".."+branch)
 	if err != nil {
-		return false, fmt.Errorf("cannot determine whether branch %q has shippable changes: %w", branch, err)
+		return false, fmt.Errorf(messages.ShippableChangesProblem, branch, err)
 	}
 	return out != "", nil
 }
@@ -346,7 +347,7 @@ func (bc *BackendCommands) HasShippableChanges(branch, mainBranch string) (bool,
 func (bc *BackendCommands) LastCommitMessage() (string, error) {
 	out, err := bc.QueryTrim("git", "log", "-1", "--format=%B")
 	if err != nil {
-		return "", fmt.Errorf("cannot determine last commit message: %w", err)
+		return "", fmt.Errorf(messages.CommitMessageLastProblem, err)
 	}
 	return out, nil
 }
@@ -381,7 +382,7 @@ func (bc *BackendCommands) LocalBranchesMainFirst(mainBranch string) ([]string, 
 func (bc *BackendCommands) PreviouslyCheckedOutBranch() (string, error) {
 	output, err := bc.QueryTrim("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
 	if err != nil {
-		return "", fmt.Errorf("cannot determine the previously checked out branch: %w", err)
+		return "", fmt.Errorf(messages.BranchCheckedOutPreviousProblem, err)
 	}
 	return output, nil
 }
@@ -390,7 +391,7 @@ func (bc *BackendCommands) PreviouslyCheckedOutBranch() (string, error) {
 func (bc *BackendCommands) RemotesUncached() ([]string, error) {
 	out, err := bc.QueryTrim("git", "remote")
 	if err != nil {
-		return []string{}, fmt.Errorf("cannot determine remotes: %w", err)
+		return []string{}, fmt.Errorf(messages.RemotesProblem, err)
 	}
 	if out == "" {
 		return []string{}, nil
@@ -451,7 +452,7 @@ func (bc *BackendCommands) RootDirectory() string {
 func (bc *BackendCommands) ShaForBranch(name string) (string, error) {
 	output, err := bc.QueryTrim("git", "rev-parse", name)
 	if err != nil {
-		return "", fmt.Errorf("cannot determine SHA of local branch %q: %w", name, err)
+		return "", fmt.Errorf(messages.BranchLocalShaProblem, name, err)
 	}
 	return output, nil
 }
@@ -462,7 +463,7 @@ func (bc *BackendCommands) ShouldPushBranch(branch string) (bool, error) {
 	trackingBranch := bc.TrackingBranch(branch)
 	out, err := bc.QueryTrim("git", "rev-list", "--left-right", branch+"..."+trackingBranch)
 	if err != nil {
-		return false, fmt.Errorf("cannot list diff of %q and %q: %w", branch, trackingBranch, err)
+		return false, fmt.Errorf(messages.DiffProblem, branch, trackingBranch, err)
 	}
 	return out != "", nil
 }
@@ -477,19 +478,19 @@ func (bc *BackendCommands) Version() (major int, minor int, err error) {
 	versionRegexp := regexp.MustCompile(`git version (\d+).(\d+).(\d+)`)
 	output, err := bc.QueryTrim("git", "version")
 	if err != nil {
-		return 0, 0, fmt.Errorf("cannot determine Git version: %w", err)
+		return 0, 0, fmt.Errorf(messages.GitVersionProblem, err)
 	}
 	matches := versionRegexp.FindStringSubmatch(output)
 	if matches == nil {
-		return 0, 0, fmt.Errorf("'git version' returned unexpected output: %q.\nPlease open an issue and supply the output of running 'git version'", output)
+		return 0, 0, fmt.Errorf(messages.GitVersionUnexpectedOutput, output)
 	}
 	majorVersion, err := strconv.Atoi(matches[1])
 	if err != nil {
-		return 0, 0, fmt.Errorf("cannot convert major version %q to int: %w", matches[1], err)
+		return 0, 0, fmt.Errorf(messages.GitVersionMajorNotNumber, matches[1], err)
 	}
 	minorVersion, err := strconv.Atoi(matches[2])
 	if err != nil {
-		return 0, 0, fmt.Errorf("cannot convert minor version %q to int: %w", matches[2], err)
+		return 0, 0, fmt.Errorf(messages.GitVersionMinorNotNumber, matches[2], err)
 	}
 	return majorVersion, minorVersion, nil
 }

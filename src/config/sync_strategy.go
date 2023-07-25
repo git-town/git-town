@@ -1,6 +1,10 @@
 package config
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/git-town/git-town/v9/src/messages"
+)
 
 // SyncStrategy defines legal values for the "sync-strategy" configuration setting.
 type SyncStrategy string
@@ -17,6 +21,6 @@ func ToSyncStrategy(text string) (SyncStrategy, error) {
 	case "rebase":
 		return SyncStrategyRebase, nil
 	default:
-		return SyncStrategyMerge, fmt.Errorf("unknown sync strategy: %q", text)
+		return SyncStrategyMerge, fmt.Errorf(messages.ConfigSyncStrategyUnknown, text)
 	}
 }

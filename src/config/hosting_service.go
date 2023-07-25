@@ -3,6 +3,8 @@ package config
 import (
 	"fmt"
 	"strings"
+
+	"github.com/git-town/git-town/v9/src/messages"
 )
 
 // HostingService defines legal values for the "git-town.code-hosting-driver" config setting.
@@ -24,7 +26,7 @@ func NewHostingService(text string) (HostingService, error) {
 			return hostingService, nil
 		}
 	}
-	return HostingServiceNone, fmt.Errorf("unknown alias type: %q", text)
+	return HostingServiceNone, fmt.Errorf(messages.HostingServiceUnknownName, text)
 }
 
 // hostingServices provides all legal values for HostingService.

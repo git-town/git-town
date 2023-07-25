@@ -7,6 +7,7 @@ import (
 	"atomicgo.dev/cursor"
 	"github.com/eiannone/keyboard"
 	"github.com/fatih/color"
+	"github.com/git-town/git-town/v9/src/messages"
 )
 
 // ModalSelect allows the user to select a value from the given entries.
@@ -15,7 +16,7 @@ import (
 func ModalSelect(entries ModalEntries, initialValue string) (*string, error) {
 	initialPos := entries.IndexOfValue(initialValue)
 	if initialPos == nil {
-		return nil, fmt.Errorf("given initial value %q not in given entries", initialValue)
+		return nil, fmt.Errorf(messages.DialogOptionNotFound, initialValue)
 	}
 	input := modalSelect{
 		entries:       entries,

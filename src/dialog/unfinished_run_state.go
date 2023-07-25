@@ -5,6 +5,7 @@ import (
 	"time"
 
 	humanize "github.com/dustin/go-humanize"
+	"github.com/git-town/git-town/v9/src/messages"
 	survey "gopkg.in/AlecAivazis/survey.v1"
 )
 
@@ -46,12 +47,12 @@ func AskHowToHandleUnfinishedRunState(command, endBranch string, endTime time.Ti
 	result := ""
 	err := survey.AskOne(prompt, &result, nil)
 	if err != nil {
-		return "", fmt.Errorf("cannot read user answer from CLI: %w", err)
+		return "", fmt.Errorf(messages.DialogCannotReadAnswer, err)
 	}
 	for responseType, formattedResponseType := range formattedOptions {
 		if formattedResponseType == result {
 			return responseType, nil
 		}
 	}
-	return "", fmt.Errorf("unexpected response: %s", result)
+	return "", fmt.Errorf(messages.DialogUnexpectedResponse, result)
 }
