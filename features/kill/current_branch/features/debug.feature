@@ -8,6 +8,7 @@ Feature: display debug statistics
       | current | local, origin | current commit |
       | other   | local, origin | other commit   |
 
+  # TODO: remove redundant "git config -lz --local"
   Scenario: result
     When I run "git-town kill --debug"
     Then it runs the commands
