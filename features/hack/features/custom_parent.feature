@@ -32,6 +32,8 @@ Feature: customize the parent for the new feature branch
       | new      | git checkout existing     |
       | existing | git branch -D new         |
       |          | git push origin :existing |
+      |          | git checkout main         |
+      | main     | git checkout existing     |
     And the current branch is now "existing"
     And this branch lineage exists now
       | BRANCH   | PARENT |
