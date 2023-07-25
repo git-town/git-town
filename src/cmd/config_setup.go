@@ -33,7 +33,7 @@ func setup(debug bool) error {
 	if err != nil {
 		return err
 	}
-	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	allBranches, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 false,
 		HandleUnfinishedState: false,
 		ValidateIsConfigured:  false,
@@ -47,5 +47,5 @@ func setup(debug bool) error {
 	if err != nil {
 		return err
 	}
-	return validate.EnterPerennialBranches(&run.Backend, mainBranch)
+	return validate.EnterPerennialBranches(&run.Backend, allBranches, mainBranch)
 }

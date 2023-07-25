@@ -14,7 +14,7 @@ func IsConfigured(backend *git.BackendCommands, allBranches git.BranchesSyncStat
 		if err != nil {
 			return err
 		}
-		return EnterPerennialBranches(backend, mainBranch)
+		return EnterPerennialBranches(backend, allBranches, mainBranch)
 	}
 	return backend.RemoveOutdatedConfiguration(allBranches)
 }

@@ -78,7 +78,7 @@ func updatePerennialBranches(debug bool) error {
 	if err != nil {
 		return err
 	}
-	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	allBranches, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 false,
 		HandleUnfinishedState: false,
 		ValidateIsConfigured:  false,
@@ -89,5 +89,5 @@ func updatePerennialBranches(debug bool) error {
 		return err
 	}
 	mainBranch := run.Config.MainBranch()
-	return validate.EnterPerennialBranches(&run.Backend, mainBranch)
+	return validate.EnterPerennialBranches(&run.Backend, allBranches, mainBranch)
 }

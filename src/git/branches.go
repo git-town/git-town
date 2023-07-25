@@ -72,6 +72,16 @@ func (bs BranchesSyncStatus) Lookup(branchName string) *BranchSyncStatus {
 	return nil
 }
 
+func (bs BranchesSyncStatus) Remove(branchName string) BranchesSyncStatus {
+	result := BranchesSyncStatus{}
+	for _, branch := range bs {
+		if branch.Name != branchName {
+			result = append(result, branch)
+		}
+	}
+	return result
+}
+
 func (bs BranchesSyncStatus) Select(names []string) (BranchesSyncStatus, error) {
 	result := make(BranchesSyncStatus, len(names))
 	for n, name := range names {

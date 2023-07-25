@@ -377,23 +377,6 @@ func (bc *BackendCommands) LocalBranchesMainFirst(mainBranch string) ([]string, 
 	return stringslice.Hoist(sort.StringSlice(branches), mainBranch), nil
 }
 
-// LocalBranchesWithoutMain provides the names of all branches in the local repository,
-// ordered alphabetically without the main branch.
-// TODO: can we derive this info from allBranchesSyncStatus?
-func (bc *BackendCommands) LocalBranchesWithoutMain(mainBranch string) ([]string, error) {
-	branches, err := bc.LocalBranches()
-	if err != nil {
-		return []string{}, err
-	}
-	result := []string{}
-	for _, branch := range branches {
-		if branch != mainBranch {
-			result = append(result, branch)
-		}
-	}
-	return result, nil
-}
-
 // PreviouslyCheckedOutBranch provides the name of the branch that was previously checked out in this repo.
 func (bc *BackendCommands) PreviouslyCheckedOutBranch() (string, error) {
 	output, err := bc.QueryTrim("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
