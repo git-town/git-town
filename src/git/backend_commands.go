@@ -342,15 +342,6 @@ func (bc *BackendCommands) HasShippableChanges(branch, mainBranch string) (bool,
 	return out != "", nil
 }
 
-// IsRepository returns whether or not the current directory is in a repository.
-func (bc *BackendCommands) IsRepositoryUncached() (isRepo bool, repoDir string) { //nolint:nonamedreturns
-	output, err := bc.QueryTrim("git", "rev-parse", "--show-toplevel")
-	if err != nil {
-		return false, ""
-	}
-	return true, output
-}
-
 // LastCommitMessage provides the commit message for the last commit.
 func (bc *BackendCommands) LastCommitMessage() (string, error) {
 	out, err := bc.QueryTrim("git", "log", "-1", "--format=%B")

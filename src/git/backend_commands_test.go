@@ -130,36 +130,6 @@ func TestBackendCommands(t *testing.T) {
 		assert.False(t, has)
 	})
 
-	t.Run(".IsRepositoryUncached", func(t *testing.T) {
-		t.Run("inside a Git repo", func(t *testing.T) {
-			t.Parallel()
-			origin := testruntime.Create(t)
-			isRepo, topLevel := origin.IsRepositoryUncached()
-			assert.True(t, isRepo)
-			assert.NotEmpty(t, topLevel)
-		})
-		t.Run("outside a repo", func(t *testing.T) {
-			t.Parallel()
-			dir := t.TempDir()
-			runner := subshell.BackendRunner{
-				Dir:     &dir,
-				Verbose: false,
-				Stats:   &statistics.None{},
-			}
-			cmds := git.BackendCommands{
-				BackendRunner:      runner,
-				Config:             nil,
-				CurrentBranchCache: &cache.String{},
-				RemoteBranchCache:  &cache.Strings{},
-				RemotesCache:       &cache.Strings{},
-				RootDirCache:       &cache.String{},
-			}
-			isRepo, topLevel := cmds.IsRepositoryUncached()
-			assert.False(t, isRepo)
-			assert.Empty(t, topLevel)
-		})
-	})
-
 	t.Run(".LocalBranchesMainFirst()", func(t *testing.T) {
 		t.Parallel()
 		origin := testruntime.Create(t)
