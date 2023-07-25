@@ -22,7 +22,6 @@ Feature: display debug statistics
       |        | backend  | git rev-parse --abbrev-ref HEAD               |
       | old    | frontend | git fetch --prune --tags                      |
       |        | backend  | git branch -vva                               |
-      |        | backend  | git branch -a                                 |
       |        | backend  | git branch -vv                                |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
       |        | backend  | git status --porcelain --ignore-submodules    |
@@ -38,7 +37,7 @@ Feature: display debug statistics
       |        | backend  | git checkout main                             |
     And it prints:
       """
-      Ran 23 shell commands.
+      Ran 22 shell commands.
       """
     And the current branch is now "main"
     And the branches are now
@@ -58,13 +57,12 @@ Feature: display debug statistics
       |        | backend  | git config -lz --global                    |
       |        | backend  | git rev-parse --show-toplevel              |
       |        | backend  | git branch -vva                            |
-      |        | backend  | git branch -a                              |
       | main   | frontend | git branch old {{ sha 'old commit' }}      |
       |        | backend  | git config git-town-branch.old.parent main |
       | main   | frontend | git checkout old                           |
     And it prints:
       """
-      Ran 9 shell commands.
+      Ran 8 shell commands.
       """
     And the current branch is now "old"
     And the initial branches and hierarchy exist

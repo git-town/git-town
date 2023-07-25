@@ -52,7 +52,7 @@ func LoadGitRepo(pr *git.ProdRunner, args LoadGitArgs) (branchesSyncStatus git.B
 		return
 	}
 	if args.ValidateIsConfigured {
-		err = validate.IsConfigured(&pr.Backend)
+		err = validate.IsConfigured(&pr.Backend, branchesSyncStatus)
 		if err != nil {
 			return
 		}

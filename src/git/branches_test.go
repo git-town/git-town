@@ -55,7 +55,7 @@ func TestAncestry(t *testing.T) {
 				SyncStatus: git.SyncStatusDeletedAtRemote,
 			},
 		}
-		want := []string{"up-to-date", "ahead", "behind", "local-only"}
+		want := []string{"up-to-date", "ahead", "behind", "local-only", "deleted-at-remote"}
 		have := bs.LocalBranches().BranchNames()
 		assert.Equal(t, want, have)
 	})

@@ -361,29 +361,6 @@ func (bc *BackendCommands) LastCommitMessage() (string, error) {
 	return out, nil
 }
 
-// LocalAndOriginBranches provides the names of all local branches in this repo.
-// TODO: can we derive this info from allBranchesSyncStatus?
-func (bc *BackendCommands) LocalAndOriginBranches(mainBranch string) ([]string, error) {
-	output, err := bc.QueryTrim("git", "branch", "-a")
-	if err != nil {
-		return []string{}, fmt.Errorf("cannot determine the local branches")
-	}
-	branch := make(map[string]struct{})
-	for _, line := range stringslice.Lines(output) {
-		if !strings.Contains(line, " -> ") {
-			branch[strings.TrimSpace(strings.Replace(strings.Replace(line, "* ", "", 1), "remotes/origin/", "", 1))] = struct{}{}
-		}
-	}
-	result := make([]string, len(branch))
-	i := 0
-	for branch := range branch {
-		result[i] = branch
-		i++
-	}
-	sort.Strings(result)
-	return stringslice.Hoist(result, mainBranch), nil
-}
-
 // LocalBranches provides the names of all branches in the local repository,
 // ordered alphabetically.
 // TODO: can we derive this info from allBranchesSyncStatus?
@@ -482,16 +459,13 @@ func (bc *BackendCommands) Remotes() ([]string, error) {
 }
 
 // RemoveOutdatedConfiguration removes outdated Git Town configuration.
-func (bc *BackendCommands) RemoveOutdatedConfiguration() error {
-	branches, err := bc.LocalAndOriginBranches(bc.Config.MainBranch())
-	if err != nil {
-		return err
-	}
+func (bc *BackendCommands) RemoveOutdatedConfiguration(allBranches BranchesSyncStatus) error {
 	for child, parent := range bc.Config.Lineage() {
-		hasChildBranch := stringslice.Contains(branches, child)
-		hasParentBranch := stringslice.Contains(branches, parent)
+		hasChildBranch := allBranches.Contains(child)
+		hasParentBranch := allBranches.Contains(parent)
 		if !hasChildBranch || !hasParentBranch {
-			err = bc.Config.RemoveParent(child)
+			// TODO
+			err := bc.Config.RemoveParent(child)
 			if err != nil {
 				return err
 			}

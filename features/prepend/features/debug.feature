@@ -19,7 +19,6 @@ Feature: display debug statistics
       |        | backend  | git rev-parse --abbrev-ref HEAD               |
       | old    | frontend | git fetch --prune --tags                      |
       |        | backend  | git branch -vva                               |
-      |        | backend  | git branch -a                                 |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
       |        | backend  | git status --porcelain --ignore-submodules    |
       | old    | frontend | git checkout main                             |
@@ -41,7 +40,7 @@ Feature: display debug statistics
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
     And it prints:
       """
-      Ran 29 shell commands.
+      Ran 28 shell commands.
       """
     And the current branch is now "parent"
 
@@ -55,7 +54,6 @@ Feature: display debug statistics
       |        | backend  | git config -lz --global                          |
       |        | backend  | git rev-parse --show-toplevel                    |
       |        | backend  | git branch -vva                                  |
-      |        | backend  | git branch -a                                    |
       | parent | frontend | git checkout old                                 |
       |        | backend  | git config git-town-branch.old.parent main       |
       |        | backend  | git config --unset git-town-branch.parent.parent |
@@ -66,6 +64,6 @@ Feature: display debug statistics
       | main   | frontend | git checkout old                                 |
     And it prints:
       """
-      Ran 14 shell commands.
+      Ran 13 shell commands.
       """
     And the current branch is now "old"

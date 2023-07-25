@@ -22,7 +22,6 @@ Feature: display debug statistics
       |         | backend  | git rev-parse --abbrev-ref HEAD                    |
       | feature | frontend | git fetch --prune --tags                           |
       |         | backend  | git branch -vva                                    |
-      |         | backend  | git branch -a                                      |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}          |
       |         | backend  | git status --porcelain --ignore-submodules         |
       | feature | frontend | git checkout main                                  |
@@ -42,6 +41,6 @@ Feature: display debug statistics
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}          |
     And it prints:
       """
-      Ran 27 shell commands.
+      Ran 26 shell commands.
       """
     And all branches are now synchronized

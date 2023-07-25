@@ -20,7 +20,6 @@ Feature: display debug statistics
       |         | backend  | git rev-parse --abbrev-ref HEAD                   |
       | feature | frontend | git fetch --prune --tags                          |
       |         | backend  | git branch -vva                                   |
-      |         | backend  | git branch -a                                     |
       |         | backend  | git remote get-url origin                         |
       |         | backend  | git remote get-url origin                         |
       |         | backend  | git remote get-url origin                         |
@@ -58,7 +57,7 @@ Feature: display debug statistics
       |         | backend  | git checkout main                                 |
     And it prints:
       """
-      Ran 46 shell commands.
+      Ran 45 shell commands.
       """
     And the current branch is now "main"
 
@@ -72,7 +71,6 @@ Feature: display debug statistics
       |         | backend  | git config -lz --global                        |
       |         | backend  | git rev-parse --show-toplevel                  |
       |         | backend  | git branch -vva                                |
-      |         | backend  | git branch -a                                  |
       |         | backend  | git config git-town-branch.feature.parent main |
       | main    | frontend | git branch feature {{ sha 'feature commit' }}  |
       |         | frontend | git push -u origin feature                     |
@@ -86,6 +84,6 @@ Feature: display debug statistics
       | main    | frontend | git checkout feature                           |
     And it prints:
       """
-      Ran 17 shell commands.
+      Ran 16 shell commands.
       """
     And the current branch is now "feature"

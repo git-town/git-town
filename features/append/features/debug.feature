@@ -19,7 +19,6 @@ Feature: display debug statistics
       |          | backend  | git rev-parse --abbrev-ref HEAD                      |
       | existing | frontend | git fetch --prune --tags                             |
       |          | backend  | git branch -vva                                      |
-      |          | backend  | git branch -a                                        |
       |          | backend  | git rev-parse --verify --abbrev-ref @{-1}            |
       |          | backend  | git status --porcelain --ignore-submodules           |
       | existing | frontend | git checkout main                                    |
@@ -40,7 +39,7 @@ Feature: display debug statistics
       |          | backend  | git rev-parse --verify --abbrev-ref @{-1}            |
     And it prints:
       """
-      Ran 28 shell commands.
+      Ran 27 shell commands.
       """
     And the current branch is now "new"
 
@@ -49,6 +48,6 @@ Feature: display debug statistics
     When I run "git-town undo --debug"
     Then it prints:
       """
-      Ran 13 shell commands.
+      Ran 12 shell commands.
       """
     And the current branch is now "existing"

@@ -174,20 +174,6 @@ func TestBackendCommands(t *testing.T) {
 		assert.Equal(t, []string{"initial", "b1", "b2"}, branches)
 	})
 
-	t.Run(".LocalAndOriginBranches()", func(t *testing.T) {
-		t.Parallel()
-		origin := testruntime.Create(t)
-		repoDir := t.TempDir()
-		runner := testruntime.Clone(origin.TestRunner, repoDir)
-		runner.CreateBranch("b1", "initial")
-		runner.CreateBranch("b2", "initial")
-		origin.CreateBranch("b3", "initial")
-		runner.Fetch()
-		branches, err := runner.Backend.LocalAndOriginBranches("initial")
-		assert.NoError(t, err)
-		assert.Equal(t, []string{"initial", "b1", "b2", "b3"}, branches)
-	})
-
 	t.Run("ParseVerboseBranchesOutput", func(t *testing.T) {
 		t.Parallel()
 		t.Run("recognizes branches that are ahead of their remote branch", func(t *testing.T) {

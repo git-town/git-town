@@ -11,7 +11,6 @@ Feature: display debug statistics
       |        | backend  | git config -lz --global                   |
       |        | backend  | git rev-parse --show-toplevel             |
       |        | backend  | git branch -vva                           |
-      |        | backend  | git branch -a                             |
       |        | backend  | which wsl-open                            |
       |        | backend  | which garcon-url-handler                  |
       |        | backend  | which xdg-open                            |
@@ -19,7 +18,7 @@ Feature: display debug statistics
       | <none> | frontend | open https://github.com/git-town/git-town |
     And it prints:
       """
-      Ran 11 shell commands.
+      Ran 10 shell commands.
       """
     And "open" launches a new pull request with this url in my browser:
       """

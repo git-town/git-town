@@ -7,7 +7,7 @@ import (
 )
 
 // IsConfigured verifies that the given Git repo contains necessary Git Town configuration.
-func IsConfigured(backend *git.BackendCommands) error {
+func IsConfigured(backend *git.BackendCommands, allBranches git.BranchesSyncStatus) error {
 	if backend.Config.MainBranch() == "" {
 		fmt.Print("Git Town needs to be configured\n\n")
 		mainBranch, err := EnterMainBranch(backend)
@@ -16,5 +16,5 @@ func IsConfigured(backend *git.BackendCommands) error {
 		}
 		return EnterPerennialBranches(backend, mainBranch)
 	}
-	return backend.RemoveOutdatedConfiguration()
+	return backend.RemoveOutdatedConfiguration(allBranches)
 }
