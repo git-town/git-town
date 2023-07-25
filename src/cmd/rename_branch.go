@@ -57,7 +57,7 @@ func renameBranch(args []string, force, debug bool) error {
 	if err != nil {
 		return err
 	}
-	branchesSyncStatus, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	allBranches, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
@@ -67,7 +67,7 @@ func renameBranch(args []string, force, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineRenameBranchConfig(args, force, &run, branchesSyncStatus, initialBranch)
+	config, err := determineRenameBranchConfig(args, force, &run, allBranches, initialBranch)
 	if err != nil {
 		return err
 	}
@@ -94,7 +94,7 @@ type renameBranchConfig struct {
 	oldBranch                  string
 }
 
-func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRunner, branchesSyncStatus git.BranchesSyncStatus, initialBranch string) (*renameBranchConfig, error) {
+func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string) (*renameBranchConfig, error) {
 	isOffline, err := run.Config.IsOffline()
 	if err != nil {
 		return nil, err
@@ -124,14 +124,14 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 	if oldBranchName == newBranchName {
 		return nil, fmt.Errorf("cannot rename branch to current name")
 	}
-	oldBranch := branchesSyncStatus.Lookup(oldBranchName)
+	oldBranch := allBranches.Lookup(oldBranchName)
 	if oldBranch == nil {
 		return nil, fmt.Errorf("there is no branch named %q", oldBranchName)
 	}
 	if oldBranch.SyncStatus != git.SyncStatusUpToDate {
 		return nil, fmt.Errorf("%q is not in sync with its tracking branch, please sync the branches before renaming", oldBranchName)
 	}
-	if branchesSyncStatus.Contains(newBranchName) {
+	if allBranches.Contains(newBranchName) {
 		return nil, fmt.Errorf("a branch named %q already exists", newBranchName)
 	}
 	oldBranchHasTrackingBranch := oldBranch.HasTrackingBranch()

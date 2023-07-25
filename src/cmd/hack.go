@@ -50,7 +50,7 @@ func hack(args []string, promptForParent, debug bool) error {
 	if err != nil {
 		return err
 	}
-	branchesSyncStatus, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	allBranches, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
@@ -60,7 +60,7 @@ func hack(args []string, promptForParent, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineHackConfig(args, promptForParent, &run, branchesSyncStatus)
+	config, err := determineHackConfig(args, promptForParent, &run, allBranches)
 	if err != nil {
 		return err
 	}

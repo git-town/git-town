@@ -42,7 +42,7 @@ func kill(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	branchesSyncStatus, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	allBranches, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 true,
 		HandleUnfinishedState: false,
 		ValidateIsConfigured:  true,
@@ -52,7 +52,7 @@ func kill(args []string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineKillConfig(args, &run, branchesSyncStatus, initialBranch)
+	config, err := determineKillConfig(args, &run, allBranches, initialBranch)
 	if err != nil {
 		return err
 	}
@@ -79,7 +79,7 @@ type killConfig struct {
 	targetBranch       git.BranchSyncStatus
 }
 
-func determineKillConfig(args []string, run *git.ProdRunner, branchesSyncStatus git.BranchesSyncStatus, initialBranch string) (*killConfig, error) {
+func determineKillConfig(args []string, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string) (*killConfig, error) {
 	mainBranch := run.Config.MainBranch()
 	targetBranchName := initialBranch
 	if len(args) > 0 {
@@ -88,7 +88,7 @@ func determineKillConfig(args []string, run *git.ProdRunner, branchesSyncStatus 
 	if !run.Config.IsFeatureBranch(targetBranchName) {
 		return nil, fmt.Errorf("you can only kill feature branches")
 	}
-	targetBranch := branchesSyncStatus.Lookup(targetBranchName)
+	targetBranch := allBranches.Lookup(targetBranchName)
 	if targetBranch == nil {
 		return nil, fmt.Errorf("branch %q does not exist", targetBranchName)
 	}

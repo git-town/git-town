@@ -48,7 +48,7 @@ func runAppend(arg string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	branchesSyncStatus, currentBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	allBranches, currentBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
@@ -58,7 +58,7 @@ func runAppend(arg string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineAppendConfig(arg, &run, branchesSyncStatus, currentBranch)
+	config, err := determineAppendConfig(arg, &run, allBranches, currentBranch)
 	if err != nil {
 		return err
 	}

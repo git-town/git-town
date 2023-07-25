@@ -71,7 +71,7 @@ func ship(args []string, message string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	branchesSyncStatus, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	allBranches, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
@@ -85,7 +85,7 @@ func ship(args []string, message string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, err := determineShipConfig(args, connector, &run, branchesSyncStatus, initialBranch)
+	config, err := determineShipConfig(args, connector, &run, allBranches, initialBranch)
 	if err != nil {
 		return err
 	}
@@ -122,7 +122,7 @@ type shipConfig struct {
 	proposalsOfChildBranches []hosting.Proposal
 }
 
-func determineShipConfig(args []string, connector hosting.Connector, run *git.ProdRunner, branchesSyncStatus git.BranchesSyncStatus, initialBranch string) (*shipConfig, error) {
+func determineShipConfig(args []string, connector hosting.Connector, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string) (*shipConfig, error) {
 	hasOrigin, err := run.Backend.HasOrigin()
 	if err != nil {
 		return nil, err
@@ -137,7 +137,7 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 	}
 	mainBranch := run.Config.MainBranch()
 	branchNameToShip := determineBranchToShip(args, initialBranch)
-	branchToShip := branchesSyncStatus.Lookup(branchNameToShip)
+	branchToShip := allBranches.Lookup(branchNameToShip)
 	isShippingInitialBranch := branchNameToShip == initialBranch
 	if !isShippingInitialBranch {
 		if branchToShip == nil {
@@ -160,7 +160,7 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 	}
 	lineage := run.Config.Lineage()
 	targetBranchName := lineage.Parent(branchNameToShip)
-	targetBranch := branchesSyncStatus.Lookup(targetBranchName)
+	targetBranch := allBranches.Lookup(targetBranchName)
 	if targetBranch == nil {
 		return nil, fmt.Errorf("cannot find branch %q", targetBranchName)
 	}

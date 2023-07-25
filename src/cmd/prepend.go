@@ -51,7 +51,7 @@ func prepend(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	branchesSyncStatus, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	allBranches, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
@@ -61,7 +61,7 @@ func prepend(args []string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	config, err := determinePrependConfig(args, &run, branchesSyncStatus, initialBranch)
+	config, err := determinePrependConfig(args, &run, allBranches, initialBranch)
 	if err != nil {
 		return err
 	}
