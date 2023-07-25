@@ -42,6 +42,6 @@ Feature: display debug statistics
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}          |
     And it prints:
       """
-      Ran 28 shell commands.
+      Ran 27 shell commands.
       """
     And all branches are now synchronized
