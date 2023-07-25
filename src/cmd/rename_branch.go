@@ -104,44 +104,37 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 		return nil, err
 	}
 	mainBranch := run.Config.MainBranch()
-	var oldBranch string
-	var newBranch string
+	var oldBranchName string
+	var newBranchName string
 	if len(args) == 1 {
-		oldBranch = initialBranch
-		newBranch = args[0]
+		oldBranchName = initialBranch
+		newBranchName = args[0]
 	} else {
-		oldBranch = args[0]
-		newBranch = args[1]
+		oldBranchName = args[0]
+		newBranchName = args[1]
 	}
-	if run.Config.IsMainBranch(oldBranch) {
+	if run.Config.IsMainBranch(oldBranchName) {
 		return nil, fmt.Errorf("the main branch cannot be renamed")
 	}
 	if !forceFlag {
-		if run.Config.IsPerennialBranch(oldBranch) {
-			return nil, fmt.Errorf("%q is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'", oldBranch)
+		if run.Config.IsPerennialBranch(oldBranchName) {
+			return nil, fmt.Errorf("%q is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'", oldBranchName)
 		}
 	}
-	if oldBranch == newBranch {
+	if oldBranchName == newBranchName {
 		return nil, fmt.Errorf("cannot rename branch to current name")
 	}
-	hasOldBranch, err := run.Backend.HasLocalBranch(oldBranch)
-	if err != nil {
-		return nil, err
+	oldBranch := branchesSyncStatus.Lookup(oldBranchName)
+	if oldBranch == nil {
+		return nil, fmt.Errorf("there is no branch named %q", oldBranchName)
 	}
-	if !hasOldBranch {
-		return nil, fmt.Errorf("there is no branch named %q", oldBranch)
+	if oldBranch.SyncStatus != git.SyncStatusUpToDate {
+		return nil, fmt.Errorf("%q is not in sync with its tracking branch, please sync the branches before renaming", oldBranchName)
 	}
-	isBranchInSync, err := run.Backend.IsBranchInSync(oldBranch)
-	if err != nil {
-		return nil, err
+	if branchesSyncStatus.Contains(newBranchName) {
+		return nil, fmt.Errorf("a branch named %q already exists", newBranchName)
 	}
-	if !isBranchInSync {
-		return nil, fmt.Errorf("%q is not in sync with its tracking branch, please sync the branches before renaming", oldBranch)
-	}
-	if branchesSyncStatus.Contains(newBranch) {
-		return nil, fmt.Errorf("a branch named %q already exists", newBranch)
-	}
-	oldBranchHasTrackingBranch, err := run.Backend.HasTrackingBranch(oldBranch)
+	oldBranchHasTrackingBranch := oldBranch.HasTrackingBranch()
 	if err != nil {
 		return nil, err
 	}
@@ -150,10 +143,10 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 		isInitialBranchPerennial:   run.Config.IsPerennialBranch(initialBranch),
 		isOffline:                  isOffline,
 		mainBranch:                 mainBranch,
-		newBranch:                  newBranch,
+		newBranch:                  newBranchName,
 		noPushHook:                 !pushHook,
-		oldBranch:                  oldBranch,
-		oldBranchChildren:          run.Config.Lineage().Children(oldBranch),
+		oldBranch:                  oldBranchName,
+		oldBranchChildren:          run.Config.Lineage().Children(oldBranchName),
 		oldBranchHasTrackingBranch: oldBranchHasTrackingBranch,
 	}, err
 }

@@ -43,7 +43,7 @@ func kill(args []string, debug bool) error {
 		return err
 	}
 	branchesSyncStatus, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
-		Fetch:                 false,
+		Fetch:                 true,
 		HandleUnfinishedState: false,
 		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,
@@ -68,63 +68,45 @@ func kill(args []string, debug bool) error {
 }
 
 type killConfig struct {
-	childBranches       []string
-	hasOpenChanges      bool
-	hasTrackingBranch   bool
-	initialBranch       string
-	isOffline           bool
-	isTargetBranchLocal bool
-	mainBranch          string
-	noPushHook          bool
-	previousBranch      string
-	targetBranchParent  string
-	targetBranch        string
+	childBranches      []string
+	hasOpenChanges     bool
+	initialBranch      string
+	isOffline          bool
+	mainBranch         string
+	noPushHook         bool
+	previousBranch     string
+	targetBranchParent string
+	targetBranch       git.BranchSyncStatus
 }
 
 func determineKillConfig(args []string, run *git.ProdRunner, branchesSyncStatus git.BranchesSyncStatus, initialBranch string) (*killConfig, error) {
 	mainBranch := run.Config.MainBranch()
-	var targetBranch string
+	targetBranchName := initialBranch
 	if len(args) > 0 {
-		targetBranch = args[0]
-	} else {
-		targetBranch = initialBranch
+		targetBranchName = args[0]
 	}
-	if !run.Config.IsFeatureBranch(targetBranch) {
+	if !run.Config.IsFeatureBranch(targetBranchName) {
 		return nil, fmt.Errorf("you can only kill feature branches")
 	}
-	isTargetBranchLocal, err := run.Backend.HasLocalBranch(targetBranch)
-	if err != nil {
-		return nil, err
+	targetBranch := branchesSyncStatus.Lookup(targetBranchName)
+	if targetBranch == nil {
+		return nil, fmt.Errorf("branch %q does not exist", targetBranchName)
 	}
-	if isTargetBranchLocal {
-		err = validate.KnowsBranchAncestors(targetBranch, mainBranch, &run.Backend)
+	if targetBranch.IsLocal() {
+		err := validate.KnowsBranchAncestors(targetBranchName, mainBranch, &run.Backend)
 		if err != nil {
 			return nil, err
 		}
 		run.Config.Reload()
 	}
-	hasOrigin, err := run.Backend.HasOrigin()
-	if err != nil {
-		return nil, err
-	}
 	isOffline, err := run.Config.IsOffline()
 	if err != nil {
 		return nil, err
 	}
-	if hasOrigin && !isOffline {
-		err := run.Frontend.Fetch()
-		if err != nil {
-			return nil, err
+	if initialBranch != targetBranchName {
+		if !branchesSyncStatus.Contains(targetBranchName) {
+			return nil, fmt.Errorf("there is no branch named %q", targetBranchName)
 		}
-	}
-	if initialBranch != targetBranch {
-		if !branchesSyncStatus.Contains(targetBranch) {
-			return nil, fmt.Errorf("there is no branch named %q", targetBranch)
-		}
-	}
-	hasTrackingBranch, err := run.Backend.HasTrackingBranch(targetBranch)
-	if err != nil {
-		return nil, err
 	}
 	previousBranch, err := run.Backend.PreviouslyCheckedOutBranch()
 	if err != nil {
@@ -140,46 +122,44 @@ func determineKillConfig(args []string, run *git.ProdRunner, branchesSyncStatus 
 	}
 	lineage := run.Config.Lineage()
 	return &killConfig{
-		childBranches:       lineage.Children(targetBranch),
-		hasOpenChanges:      hasOpenChanges,
-		hasTrackingBranch:   hasTrackingBranch,
-		initialBranch:       initialBranch,
-		isOffline:           isOffline,
-		isTargetBranchLocal: isTargetBranchLocal,
-		mainBranch:          mainBranch,
-		noPushHook:          !pushHook,
-		previousBranch:      previousBranch,
-		targetBranch:        targetBranch,
-		targetBranchParent:  lineage.Parent(targetBranch),
+		childBranches:      lineage.Children(targetBranchName),
+		hasOpenChanges:     hasOpenChanges,
+		initialBranch:      initialBranch,
+		isOffline:          isOffline,
+		mainBranch:         mainBranch,
+		noPushHook:         !pushHook,
+		previousBranch:     previousBranch,
+		targetBranch:       *targetBranch,
+		targetBranchParent: lineage.Parent(targetBranchName),
 	}, nil
 }
 
 func killStepList(config *killConfig, run *git.ProdRunner) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	switch {
-	case config.isTargetBranchLocal:
-		if config.hasTrackingBranch && !config.isOffline {
-			result.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch, IsTracking: true, NoPushHook: config.noPushHook})
+	case config.targetBranch.IsLocal():
+		if config.targetBranch.HasTrackingBranch() && !config.isOffline {
+			result.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch.Name, IsTracking: true, NoPushHook: config.noPushHook})
 		}
-		if config.initialBranch == config.targetBranch {
+		if config.initialBranch == config.targetBranch.Name {
 			if config.hasOpenChanges {
 				result.Append(&steps.CommitOpenChangesStep{})
 			}
 			result.Append(&steps.CheckoutStep{Branch: config.targetBranchParent})
 		}
-		result.Append(&steps.DeleteLocalBranchStep{Branch: config.targetBranch, Parent: config.mainBranch, Force: true})
+		result.Append(&steps.DeleteLocalBranchStep{Branch: config.targetBranch.Name, Parent: config.mainBranch, Force: true})
 		for _, child := range config.childBranches {
 			result.Append(&steps.SetParentStep{Branch: child, ParentBranch: config.targetBranchParent})
 		}
-		result.Append(&steps.DeleteParentBranchStep{Branch: config.targetBranch, Parent: run.Config.Lineage().Parent(config.targetBranch)})
+		result.Append(&steps.DeleteParentBranchStep{Branch: config.targetBranch.Name, Parent: config.targetBranchParent})
 	case !config.isOffline:
-		result.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch, IsTracking: false, NoPushHook: config.noPushHook})
+		result.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch.Name, IsTracking: false, NoPushHook: config.noPushHook})
 	default:
 		return runstate.StepList{}, fmt.Errorf("cannot delete remote branch %q in offline mode", config.targetBranch)
 	}
 	err := result.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     true,
-		StashOpenChanges: config.initialBranch != config.targetBranch && config.targetBranch == config.previousBranch,
+		StashOpenChanges: config.initialBranch != config.targetBranch.Name && config.targetBranch.Name == config.previousBranch,
 	}, &run.Backend, config.mainBranch)
 	return result, err
 }

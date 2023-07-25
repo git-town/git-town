@@ -17,9 +17,9 @@ const (
 // IsLocal indicates whether a branch with this SyncStatus exists in the local repo.
 func (s SyncStatus) IsLocal() bool {
 	switch s {
-	case SyncStatusLocalOnly, SyncStatusUpToDate, SyncStatusAhead, SyncStatusBehind:
+	case SyncStatusLocalOnly, SyncStatusUpToDate, SyncStatusAhead, SyncStatusBehind, SyncStatusDeletedAtRemote:
 		return true
-	case SyncStatusRemoteOnly, SyncStatusDeletedAtRemote:
+	case SyncStatusRemoteOnly:
 		return false
 	}
 	panic(fmt.Sprintf("uncaptured sync status: %v", s))

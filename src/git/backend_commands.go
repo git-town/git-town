@@ -343,38 +343,6 @@ func (bc *BackendCommands) HasShippableChanges(branch, mainBranch string) (bool,
 	return out != "", nil
 }
 
-// HasTrackingBranch indicates whether the local branch with the given name has a remote tracking branch.
-func (bc *BackendCommands) HasTrackingBranch(name string) (bool, error) {
-	trackingBranch := "origin/" + name
-	remoteBranches, err := bc.RemoteBranches()
-	if err != nil {
-		return false, fmt.Errorf("cannot determine if tracking branch %q exists: %w", name, err)
-	}
-	for _, line := range remoteBranches {
-		if strings.TrimSpace(line) == trackingBranch {
-			return true, nil
-		}
-	}
-	return false, nil
-}
-
-// IsBranchInSync returns whether the branch with the given name is in sync with its tracking branch.
-func (bc *BackendCommands) IsBranchInSync(branch string) (bool, error) {
-	hasTrackingBranch, err := bc.HasTrackingBranch(branch)
-	if err != nil {
-		return false, err
-	}
-	if hasTrackingBranch {
-		localSha, err := bc.ShaForBranch(branch)
-		if err != nil {
-			return false, err
-		}
-		remoteSha, err := bc.ShaForBranch(bc.TrackingBranch(branch))
-		return localSha == remoteSha, err
-	}
-	return true, nil
-}
-
 // IsRepository returns whether or not the current directory is in a repository.
 func (bc *BackendCommands) IsRepositoryUncached() (isRepo bool, repoDir string) { //nolint:nonamedreturns
 	output, err := bc.QueryTrim("git", "rev-parse", "--show-toplevel")
@@ -487,35 +455,6 @@ func (bc *BackendCommands) PreviouslyCheckedOutBranch() (string, error) {
 		return "", fmt.Errorf("cannot determine the previously checked out branch: %w", err)
 	}
 	return output, nil
-}
-
-// RemoteBranches provides the names of the remote branches in this repo.
-// TODO: can we derive this info from allBranchesSyncStatus?
-func (bc *BackendCommands) RemoteBranchesUncached() ([]string, error) {
-	output, err := bc.QueryTrim("git", "branch", "-r")
-	if err != nil {
-		return []string{}, fmt.Errorf("cannot determine remote branches: %w", err)
-	}
-	lines := stringslice.Lines(output)
-	branches := make([]string, 0, len(lines)-1)
-	for _, line := range lines {
-		if !strings.Contains(line, " -> ") {
-			branches = append(branches, strings.TrimSpace(line))
-		}
-	}
-	return branches, nil
-}
-
-// RemoteBranches provides the names of the remote branches in this repo.
-func (bc *BackendCommands) RemoteBranches() ([]string, error) {
-	if !bc.RemoteBranchCache.Initialized() {
-		remoteBranches, err := bc.RemoteBranchesUncached()
-		if err != nil {
-			return remoteBranches, err
-		}
-		bc.RemoteBranchCache.Set(remoteBranches)
-	}
-	return bc.RemoteBranchCache.Value(), nil
 }
 
 // Remotes provides the names of all Git remotes in this repository.

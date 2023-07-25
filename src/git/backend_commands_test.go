@@ -130,25 +130,6 @@ func TestBackendCommands(t *testing.T) {
 		assert.False(t, has)
 	})
 
-	t.Run(".HasTrackingBranch()", func(t *testing.T) {
-		t.Parallel()
-		origin := testruntime.Create(t)
-		origin.CreateBranch("b1", "initial")
-		repoDir := t.TempDir()
-		devRepo := testruntime.Clone(origin.TestRunner, repoDir)
-		devRepo.CheckoutBranch("b1")
-		devRepo.CreateBranch("b2", "initial")
-		has, err := devRepo.Backend.HasTrackingBranch("b1")
-		assert.NoError(t, err)
-		assert.True(t, has)
-		has, err = devRepo.Backend.HasTrackingBranch("b2")
-		assert.NoError(t, err)
-		assert.False(t, has)
-		has, err = devRepo.Backend.HasTrackingBranch("b3")
-		assert.NoError(t, err)
-		assert.False(t, has)
-	})
-
 	t.Run(".IsRepositoryUncached", func(t *testing.T) {
 		t.Run("inside a Git repo", func(t *testing.T) {
 			t.Parallel()
@@ -330,20 +311,6 @@ func TestBackendCommands(t *testing.T) {
 		have, err := runtime.Backend.PreviouslyCheckedOutBranch()
 		assert.NoError(t, err)
 		assert.Equal(t, "feature1", have)
-	})
-
-	t.Run(".RemoteBranches()", func(t *testing.T) {
-		t.Parallel()
-		origin := testruntime.Create(t)
-		repoDir := t.TempDir()
-		runner := testruntime.Clone(origin.TestRunner, repoDir)
-		runner.CreateBranch("b1", "initial")
-		runner.CreateBranch("b2", "initial")
-		origin.CreateBranch("b3", "initial")
-		runner.Fetch()
-		branches, err := runner.Backend.RemoteBranches()
-		assert.NoError(t, err)
-		assert.Equal(t, []string{"origin/b3", "origin/initial"}, branches)
 	})
 
 	t.Run(".Remotes()", func(t *testing.T) {
