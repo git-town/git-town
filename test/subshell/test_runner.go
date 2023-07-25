@@ -164,6 +164,13 @@ func (r *TestRunner) Query(name string, arguments ...string) (string, error) {
 	return r.QueryWith(&Options{}, name, arguments...)
 }
 
+// Query provides the output of the given command.
+// Overrides will be used and removed when done.
+func (r *TestRunner) QueryTrim(name string, arguments ...string) (string, error) {
+	output, err := r.QueryWith(&Options{}, name, arguments...)
+	return strings.TrimSpace(output), err
+}
+
 // QueryString runs the given command (including possible arguments).
 // Overrides will be used and removed when done.
 func (r *TestRunner) QueryString(fullCmd string) (string, error) {

@@ -104,7 +104,7 @@ func TestTestCommands(t *testing.T) {
 		err := runtime.CreateFeatureBranch("f1")
 		assert.NoError(t, err)
 		runtime.CreateChildFeatureBranch("f1a", "f1")
-		output, err := runtime.BackendRunner.Query("git-town", "config")
+		output, err := runtime.BackendRunner.QueryTrim("git-town", "config")
 		assert.NoError(t, err)
 		output = stripansi.Strip(output)
 		if !strings.Contains(output, "Branch Lineage:\n  main\n    f1\n      f1a") {

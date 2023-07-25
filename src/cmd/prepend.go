@@ -43,20 +43,25 @@ func prependCommand() *cobra.Command {
 }
 
 func prepend(args []string, debug bool) error {
-	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:                 debug,
-		DryRun:                false,
+	run, err := execute.LoadProdRunner(execute.LoadArgs{
+		Debug:           debug,
+		DryRun:          false,
+		OmitBranchNames: false,
+	})
+	if err != nil {
+		return err
+	}
+	allBranches, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+		Fetch:                 true,
 		HandleUnfinishedState: true,
-		OmitBranchNames:       false,
-		ValidateGitversion:    true,
 		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,
-		ValidateIsRepository:  true,
+		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
 	}
-	config, err := determinePrependConfig(args, &run)
+	config, err := determinePrependConfig(args, &run, allBranches, initialBranch)
 	if err != nil {
 		return err
 	}
@@ -72,7 +77,7 @@ func prepend(args []string, debug bool) error {
 }
 
 type prependConfig struct {
-	ancestorBranches    []string
+	branchesToSync      git.BranchesSyncStatus
 	hasOrigin           bool
 	initialBranch       string
 	isOffline           bool
@@ -83,9 +88,8 @@ type prependConfig struct {
 	targetBranch        string
 }
 
-func determinePrependConfig(args []string, run *git.ProdRunner) (*prependConfig, error) {
+func determinePrependConfig(args []string, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string) (*prependConfig, error) {
 	fc := failure.Collector{}
-	initialBranch := fc.String(run.Backend.CurrentBranch())
 	hasOrigin := fc.Bool(run.Backend.HasOrigin())
 	shouldNewBranchPush := fc.Bool(run.Config.ShouldNewBranchPush())
 	pushHook := fc.Bool(run.Config.PushHook())
@@ -94,45 +98,37 @@ func determinePrependConfig(args []string, run *git.ProdRunner) (*prependConfig,
 	if fc.Err != nil {
 		return nil, fc.Err
 	}
-	if hasOrigin && !isOffline {
-		err := run.Frontend.Fetch()
-		if err != nil {
-			return nil, err
-		}
-	}
 	targetBranch := args[0]
-	hasBranch, err := run.Backend.HasLocalOrOriginBranch(targetBranch, mainBranch)
-	if err != nil {
-		return nil, err
-	}
-	if hasBranch {
+	if allBranches.Contains(targetBranch) {
 		return nil, fmt.Errorf("a branch named %q already exists", targetBranch)
 	}
 	if !run.Config.IsFeatureBranch(initialBranch) {
 		return nil, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can have parent branches", initialBranch)
 	}
-	err = validate.KnowsBranchAncestors(initialBranch, run.Config.MainBranch(), &run.Backend)
+	err := validate.KnowsBranchAncestors(initialBranch, run.Config.MainBranch(), &run.Backend)
 	if err != nil {
 		return nil, err
 	}
 	lineage := run.Config.Lineage()
+	branchNamesToSync := lineage.BranchAndAncestors(initialBranch)
+	branchesToSync, err := allBranches.Select(branchNamesToSync)
 	return &prependConfig{
+		branchesToSync:      branchesToSync,
 		hasOrigin:           hasOrigin,
 		initialBranch:       initialBranch,
 		isOffline:           isOffline,
 		mainBranch:          mainBranch,
 		noPushHook:          !pushHook,
 		parentBranch:        lineage.Parent(initialBranch),
-		ancestorBranches:    lineage.Ancestors(initialBranch),
 		shouldNewBranchPush: shouldNewBranchPush,
 		targetBranch:        targetBranch,
-	}, nil
+	}, err
 }
 
 func prependStepList(config *prependConfig, run *git.ProdRunner) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
-	for _, branch := range config.ancestorBranches {
-		updateBranchSteps(&list, branch, true, run)
+	for _, branchToSync := range config.branchesToSync {
+		updateBranchSteps(&list, branchToSync, true, config.isOffline, run)
 	}
 	list.Add(&steps.CreateBranchStep{Branch: config.targetBranch, StartingPoint: config.parentBranch})
 	list.Add(&steps.SetParentStep{Branch: config.targetBranch, ParentBranch: config.parentBranch})

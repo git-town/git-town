@@ -11,6 +11,6 @@ Feature: branch does not exist
       | main   | git fetch --prune --tags |
     And it prints the error:
       """
-      there is no branch named "non-existing"
+      there is no branch "non-existing"
       """
     And the current branch is still "main"
