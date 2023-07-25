@@ -133,6 +133,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 		return nil, fmt.Errorf("%q is not in sync with its tracking branch, please sync the branches before renaming", oldBranchName)
 	}
 	if allBranches.Contains(newBranchName) {
+		// TODO: rename to "there is already a branch %q"
 		return nil, fmt.Errorf("a branch named %q already exists", newBranchName)
 	}
 	oldBranchHasTrackingBranch := oldBranch.HasTrackingBranch()
