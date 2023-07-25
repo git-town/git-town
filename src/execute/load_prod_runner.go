@@ -23,7 +23,7 @@ func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, err error) {
 	}
 	backendCommands := git.BackendCommands{
 		BackendRunner:      backendRunner,
-		Config:             nil, // NOTE: initializing to nil here to validate the Git version before running any Git commands
+		Config:             nil, // NOTE: initializing to nil here to validate the Git version before running any Git commands, setting to the correct value after that is done
 		CurrentBranchCache: &cache.String{},
 		RemoteBranchCache:  &cache.Strings{},
 		RemotesCache:       &cache.Strings{},
