@@ -67,7 +67,7 @@ func setMainBranch(branch string, run *git.ProdRunner) error {
 		return err
 	}
 	if !hasBranch {
-		return fmt.Errorf(messages.BranchNotFound, branch)
+		return fmt.Errorf(messages.BranchDoesntExist, branch)
 	}
 	return run.Config.SetMainBranch(branch)
 }

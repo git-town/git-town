@@ -42,12 +42,12 @@ func OpenBrowserCommand(runner backendRunner) string {
 func Open(url string, frontend frontendRunner, backend backendRunner) {
 	command := OpenBrowserCommand(backend)
 	if command == "" {
-		fmt.Printf(messages.OpenInBrowser, url)
+		fmt.Printf(messages.BrowserOpen, url)
 		return
 	}
 	err := frontend.Run(command, url)
 	if err != nil {
-		fmt.Printf(messages.OpenInBrowser, url)
+		fmt.Printf(messages.BrowserOpen, url)
 	}
 }
 

@@ -77,7 +77,7 @@ func printPushHook(globalFlag bool, run *git.ProdRunner) error {
 func setPushHook(text string, global bool, run *git.ProdRunner) error {
 	value, err := config.ParseBool(text)
 	if err != nil {
-		return fmt.Errorf(messages.YesOrNo, text)
+		return fmt.Errorf(messages.InputYesOrNo, text)
 	}
 	if global {
 		return run.Config.SetPushHookGlobally(value)

@@ -87,11 +87,11 @@ func determineKillConfig(args []string, run *git.ProdRunner, allBranches git.Bra
 		targetBranchName = args[0]
 	}
 	if !run.Config.IsFeatureBranch(targetBranchName) {
-		return nil, fmt.Errorf(messages.CanOnlyKillFeatureBranches)
+		return nil, fmt.Errorf(messages.KillOnlyFeatureBranches)
 	}
 	targetBranch := allBranches.Lookup(targetBranchName)
 	if targetBranch == nil {
-		return nil, fmt.Errorf(messages.BranchNotFound, targetBranchName)
+		return nil, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
 	if targetBranch.IsLocal() {
 		err := validate.KnowsBranchAncestors(targetBranchName, mainBranch, &run.Backend)
@@ -151,7 +151,7 @@ func killStepList(config *killConfig, run *git.ProdRunner) (runstate.StepList, e
 	case !config.isOffline:
 		result.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch.Name, IsTracking: false, NoPushHook: config.noPushHook})
 	default:
-		return runstate.StepList{}, fmt.Errorf(messages.CannotDeleteRemoteBranchWhenOffline, config.targetBranch.Name)
+		return runstate.StepList{}, fmt.Errorf(messages.DeleteRemoteBranchCannotWhenOffline, config.targetBranch.Name)
 	}
 	err := result.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     true,

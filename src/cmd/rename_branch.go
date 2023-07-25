@@ -115,11 +115,11 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 		newBranchName = args[1]
 	}
 	if run.Config.IsMainBranch(oldBranchName) {
-		return nil, fmt.Errorf(messages.CannotRenameMainBranch)
+		return nil, fmt.Errorf(messages.RenameMainBranch)
 	}
 	if !forceFlag {
 		if run.Config.IsPerennialBranch(oldBranchName) {
-			return nil, fmt.Errorf(messages.WarnRenamePerennialBranch, oldBranchName)
+			return nil, fmt.Errorf(messages.RenamePerennialBranchWarning, oldBranchName)
 		}
 	}
 	if oldBranchName == newBranchName {
@@ -128,10 +128,10 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 	oldBranch := allBranches.Lookup(oldBranchName)
 	if oldBranch == nil {
 		// TODO: extract these error messages to constants because this one here is reused in several places
-		return nil, fmt.Errorf(messages.BranchNotFound, oldBranchName)
+		return nil, fmt.Errorf(messages.BranchDoesntExist, oldBranchName)
 	}
 	if oldBranch.SyncStatus != git.SyncStatusUpToDate {
-		return nil, fmt.Errorf(messages.BranchNotInSync, oldBranchName)
+		return nil, fmt.Errorf(messages.RenameBranchNotInSync, oldBranchName)
 	}
 	if allBranches.Contains(newBranchName) {
 		return nil, fmt.Errorf(messages.BranchAlreadyExists, newBranchName)

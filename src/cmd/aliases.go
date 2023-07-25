@@ -53,7 +53,7 @@ func aliases(arg string, debug bool) error {
 	case "remove":
 		return removeAliases(&run)
 	}
-	return fmt.Errorf(messages.AddOrRemove, arg)
+	return fmt.Errorf(messages.InputAddOrRemove, arg)
 }
 
 func addAliases(run *git.ProdRunner) error {

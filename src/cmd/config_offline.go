@@ -59,7 +59,7 @@ func displayOfflineStatus(run *git.ProdRunner) error {
 func setOfflineStatus(text string, run *git.ProdRunner) error {
 	value, err := config.ParseBool(text)
 	if err != nil {
-		return fmt.Errorf(messages.YesOrNo, text)
+		return fmt.Errorf(messages.InputYesOrNo, text)
 	}
 	return run.Config.SetOffline(value)
 }

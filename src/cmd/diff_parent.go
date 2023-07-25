@@ -84,11 +84,11 @@ func determineDiffParentConfig(args []string, run *git.ProdRunner, initialBranch
 			return nil, err
 		}
 		if !hasBranch {
-			return nil, fmt.Errorf(messages.BranchNotFound, branch)
+			return nil, fmt.Errorf(messages.BranchDoesntExist, branch)
 		}
 	}
 	if !run.Config.IsFeatureBranch(branch) {
-		return nil, fmt.Errorf(messages.CanOnlyDiffFeatureBranches)
+		return nil, fmt.Errorf(messages.DiffNoFeatureBranch)
 	}
 	err := validate.KnowsBranchAncestors(branch, run.Config.MainBranch(), &run.Backend)
 	if err != nil {

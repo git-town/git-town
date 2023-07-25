@@ -78,7 +78,7 @@ func printPushNewBranches(globalFlag bool, run *git.ProdRunner) error {
 func setPushNewBranches(text string, globalFlag bool, run *git.ProdRunner) error {
 	value, err := config.ParseBool(text)
 	if err != nil {
-		return fmt.Errorf(messages.YesOrNo, text)
+		return fmt.Errorf(messages.InputYesOrNo, text)
 	}
 	return run.Config.SetNewBranchPush(value, globalFlag)
 }

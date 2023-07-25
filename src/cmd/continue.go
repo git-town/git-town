@@ -51,17 +51,17 @@ func runContinue(debug bool) error {
 	}
 	runState, err := runstate.Load(&run.Backend)
 	if err != nil {
-		return fmt.Errorf(messages.CannotLoadRunstate, err)
+		return fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
 	if runState == nil || !runState.IsUnfinished() {
-		return fmt.Errorf(messages.CannotContinue)
+		return fmt.Errorf(messages.ContinueNothingToDo)
 	}
 	hasConflicts, err := run.Backend.HasConflicts()
 	if err != nil {
 		return err
 	}
 	if hasConflicts {
-		return fmt.Errorf(messages.ResolveConflictsBeforeContinuing)
+		return fmt.Errorf(messages.ContinueUnresolvedConflicts)
 	}
 	connector, err := hosting.NewConnector(run.Config.GitTown, &run.Backend, cli.PrintConnectorAction)
 	if err != nil {

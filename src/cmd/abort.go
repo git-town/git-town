@@ -51,10 +51,10 @@ func abort(debug bool) error {
 	}
 	runState, err := runstate.Load(&run.Backend)
 	if err != nil {
-		return fmt.Errorf(messages.CannotLoadRunstate, err)
+		return fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
 	if runState == nil || !runState.IsUnfinished() {
-		return fmt.Errorf(messages.NothingToAbort)
+		return fmt.Errorf(messages.AbortNothingToDo)
 	}
 	abortRunState := runState.CreateAbortRunState()
 	connector, err := hosting.NewConnector(run.Config.GitTown, &run.Backend, cli.PrintConnectorAction)
