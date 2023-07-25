@@ -113,13 +113,13 @@ func determinePrependConfig(args []string, run *git.ProdRunner, allBranches git.
 	branchNamesToSync := lineage.BranchAndAncestors(initialBranch)
 	branchesToSync, err := allBranches.Select(branchNamesToSync)
 	return &prependConfig{
+		branchesToSync:      branchesToSync,
 		hasOrigin:           hasOrigin,
 		initialBranch:       initialBranch,
 		isOffline:           isOffline,
 		mainBranch:          mainBranch,
 		noPushHook:          !pushHook,
 		parentBranch:        lineage.Parent(initialBranch),
-		branchesToSync:      branchesToSync,
 		shouldNewBranchPush: shouldNewBranchPush,
 		targetBranch:        targetBranch,
 	}, err
