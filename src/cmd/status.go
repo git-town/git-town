@@ -41,7 +41,6 @@ func status(debug bool) error {
 	if err != nil {
 		return err
 	}
-	// TODO: delete after the cleanup?
 	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 false,
 		HandleUnfinishedState: false,
