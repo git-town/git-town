@@ -76,7 +76,7 @@ func (bc *BackendCommands) BranchHasUnmergedCommits(branch, parent string) (bool
 func (bc *BackendCommands) BranchesSyncStatus() (branches BranchesSyncStatus, currentBranch string, err error) { //nolint:nonamedreturns
 	output, err := bc.Query("git", "branch", "-vva")
 	if err != nil {
-		return []BranchSyncStatus{}, "", err
+		return
 	}
 	branches, currentBranch = ParseVerboseBranchesOutput(output)
 	if currentBranch != "" {
