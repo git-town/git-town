@@ -34,7 +34,7 @@ Feature: offline mode
       | new    | git checkout old  |
       | old    | git branch -D new |
       |        | git checkout main |
-      |        | git checkout old  |
+      | main   | git checkout old  |
     And the current branch is now "old"
     And now the initial commits exist
     And the initial branch hierarchy exists

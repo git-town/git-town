@@ -114,7 +114,6 @@ type shipConfig struct {
 	proposalMessage          string
 	deleteOriginBranch       bool
 	hasOrigin                bool
-	hasTrackingBranch        bool
 	initialBranch            string
 	isShippingInitialBranch  bool
 	isOffline                bool
@@ -170,9 +169,8 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 	var proposal *hosting.Proposal
 	childBranches := lineage.Children(branchNameToShip)
 	proposalsOfChildBranches := []hosting.Proposal{}
-	hasTrackingBranch := branchToShip.HasTrackingBranch()
 	if !isOffline && connector != nil {
-		if hasTrackingBranch {
+		if branchToShip.HasTrackingBranch() {
 			proposal, err = connector.FindProposal(branchNameToShip, targetBranchName)
 			if err != nil {
 				return nil, err
@@ -200,7 +198,6 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 		proposalMessage:          proposalMessage,
 		deleteOriginBranch:       deleteOrigin,
 		hasOrigin:                hasOrigin,
-		hasTrackingBranch:        hasTrackingBranch,
 		initialBranch:            initialBranch,
 		isOffline:                isOffline,
 		isShippingInitialBranch:  isShippingInitialBranch,
@@ -257,7 +254,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 	// - we know we have a tracking branch (otherwise there would be no PR to ship via API)
 	// - we have updated the PRs of all child branches (because we have API access)
 	// - we know we are online
-	if config.canShipViaAPI || (config.hasTrackingBranch && len(config.childBranches) == 0 && !config.isOffline) {
+	if config.canShipViaAPI || (config.branchToShip.HasTrackingBranch() && len(config.childBranches) == 0 && !config.isOffline) {
 		if config.deleteOriginBranch {
 			list.Add(&steps.DeleteOriginBranchStep{Branch: config.branchToShip.Name, IsTracking: true})
 		}

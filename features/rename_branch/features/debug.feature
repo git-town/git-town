@@ -39,7 +39,7 @@ Feature: display debug statistics
       |        | backend  | git checkout new                              |
     And it prints:
       """
-      Ran 30 shell commands.
+      Ran 26 shell commands.
       """
     And the current branch is now "new"
 

@@ -25,7 +25,6 @@ Feature: display debug statistics
       |         | backend  | git remote get-url origin                         |
       |         | backend  | git remote get-url origin                         |
       |         | backend  | git remote get-url origin                         |
-      |         | backend  | git branch -r                                     |
       |         | backend  | git status --porcelain --ignore-submodules        |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}         |
       |         | backend  | git status --porcelain --ignore-submodules        |
@@ -59,7 +58,7 @@ Feature: display debug statistics
       |         | backend  | git checkout main                                 |
     And it prints:
       """
-      Ran 47 shell commands.
+      Ran 46 shell commands.
       """
     And the current branch is now "main"
 

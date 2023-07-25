@@ -9,9 +9,9 @@ type BranchSyncStatus struct {
 
 func (bi BranchSyncStatus) HasTrackingBranch() bool {
 	switch bi.SyncStatus {
-	case SyncStatusAhead, SyncStatusBehind, SyncStatusUpToDate:
+	case SyncStatusAhead, SyncStatusBehind, SyncStatusUpToDate, SyncStatusRemoteOnly:
 		return true
-	case SyncStatusLocalOnly, SyncStatusDeletedAtRemote, SyncStatusRemoteOnly:
+	case SyncStatusLocalOnly, SyncStatusDeletedAtRemote:
 		return false
 	}
 	panic(fmt.Sprintf("unknown sync status: %v", bi.SyncStatus))

@@ -34,8 +34,9 @@ Feature: auto-push new branches
     Then it runs the commands
       | BRANCH | COMMAND              |
       | new    | git push origin :new |
+      |        | git checkout old     |
+      | old    | git branch -D new    |
       |        | git checkout main    |
-      | main   | git branch -D new    |
       |        | git checkout old     |
     And the current branch is now "old"
     And now the initial commits exist
