@@ -151,6 +151,7 @@ func TestBranches(t *testing.T) {
 		})
 	})
 	t.Run("does not contain the removed element", func(t *testing.T) {
+		t.Parallel()
 		bs := git.BranchesSyncStatus{
 			git.BranchSyncStatus{
 				Name:       "one",
