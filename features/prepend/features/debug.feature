@@ -6,6 +6,7 @@ Feature: display debug statistics
       | BRANCH | LOCATION      | MESSAGE    |
       | old    | local, origin | old commit |
 
+  # TODO: eliminate redundant "git rev-parse HEAD"
   Scenario: result
     When I run "git-town prepend parent --debug"
     Then it runs the commands
