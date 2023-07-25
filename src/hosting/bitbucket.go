@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/messages"
 )
 
 // BitbucketConnector provides access to the API of Bitbucket installations.
@@ -65,9 +66,9 @@ func (c *BitbucketConnector) RepositoryURL() string {
 }
 
 func (c *BitbucketConnector) SquashMergeProposal(_ int, _ string) (mergeSHA string, err error) {
-	return "", errors.New("shipping pull requests via the Bitbucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues")
+	return "", errors.New(messages.BitBucketNotImplemented)
 }
 
 func (c *BitbucketConnector) UpdateProposalTarget(_ int, _ string) error {
-	return errors.New("shipping pull requests via the Bitbucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues")
+	return errors.New(messages.BitBucketNotImplemented)
 }

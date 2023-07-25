@@ -5,13 +5,14 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/validate"
 )
 
 func LoadGitRepo(pr *git.ProdRunner, args LoadGitArgs) (allBranches git.BranchesSyncStatus, currentBranch string, exit bool, err error) { //nolint:nonamedreturns
 	rootDir := pr.Backend.RootDirectory()
 	if rootDir == "" {
-		err = errors.New("this is not a Git repository")
+		err = errors.New(messages.RepoNot)
 		return
 	}
 	if args.HandleUnfinishedState {
@@ -31,7 +32,7 @@ func LoadGitRepo(pr *git.ProdRunner, args LoadGitArgs) (allBranches git.Branches
 		return
 	}
 	if args.ValidateIsOnline && isOffline {
-		err = errors.New("this command requires an active internet connection")
+		err = errors.New(messages.OfflineNotAllowed)
 		return
 	}
 	if args.Fetch {
@@ -60,7 +61,7 @@ func LoadGitRepo(pr *git.ProdRunner, args LoadGitArgs) (allBranches git.Branches
 	}
 	currentDirectory, err := os.Getwd()
 	if err != nil {
-		err = errors.New("cannot determine the current directory")
+		err = errors.New(messages.CurrentDirProblem)
 		return
 	}
 	if currentDirectory != rootDir {

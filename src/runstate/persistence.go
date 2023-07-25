@@ -81,7 +81,7 @@ func Save(runState *RunState, backend *git.BackendCommands) error {
 func PersistenceFilePath(backend *git.BackendCommands) (string, error) {
 	configDir, err := os.UserConfigDir()
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("cannot determine the runstate file path: %w", err)
 	}
 	persistenceDir := filepath.Join(configDir, "git-town", "runstate")
 	repoDir := backend.RootDirectory()

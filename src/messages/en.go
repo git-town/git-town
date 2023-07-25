@@ -1,11 +1,9 @@
 package messages
 
 const (
-	InputAddOrRemove = `invalid argument %q. Please provide either "add" or "remove"`
-	InputYesOrNo     = `invalid argument: %q. Please provide either "yes" or "no".\n`
-
 	AbortNothingToDo                    = "nothing to abort"
 	ArgumentUnknown                     = "unknown argument: %q"
+	BitBucketNotImplemented             = "shipping pull requests via the Bitbucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues"
 	BranchAlreadyExists                 = "there is already a branch %q"
 	BranchDoesntExist                   = "there is no branch %q"
 	BrowserOpen                         = "Please open in a browser: %s\n"
@@ -13,13 +11,25 @@ const (
 	CompletionTypeUnknown               = "unknown completion type: %q"
 	ContinueNothingToDo                 = "nothing to continue"
 	ContinueUnresolvedConflicts         = "you must resolve the conflicts before continuing"
+	CurrentDirProblem                   = "cannot determine the current directory"
 	DiffNoFeatureBranch                 = "you can only diff-parent feature branches"
 	DeleteRemoteBranchCannotWhenOffline = "cannot delete remote branch %q in offline mode"
+	GitVersionTooLow                    = "this app requires Git 2.7.0 or higher"
+	InputAddOrRemove                    = `invalid argument %q. Please provide either "add" or "remove"`
+	InputYesOrNo                        = `invalid argument: %q. Please provide either "yes" or "no".\n`
 	KillOnlyFeatureBranches             = "you can only kill feature branches"
+	OfflineNotAllowed                   = "this command requires an active internet connection"
+	ProposalNotFoundForBranch           = "cannot determine proposal for branch %q: %w"
 	RenameBranchNotInSync               = "%q is not in sync with its tracking branch, please sync the branches before renaming"
 	RenameMainBranch                    = "the main branch cannot be renamed"
 	RenameToSameName                    = "cannot rename branch to current name"
+	RepoNot                             = "this is not a Git repository"
 	RunstateLoadProblem                 = "cannot load previous run state: %w"
 	SetParentNoFeatureBranch            = "the branch %q is not a feature branch. Only feature branches can have parent branches"
+	ShipNoFeatureBranch                 = "the branch %q is not a feature branch. Only feature branches can be shipped"
+	ShipNothingToDo                     = "no shippable changes"
+	SkipBranchHasConflicts              = "cannot skip branch that resulted in conflicts"
+	SkipNothingToDo                     = "nothing to skip"
+	UnstashConflictWithMain             = "conflicts between your uncommmitted changes and the main branch"
 	RenamePerennialBranchWarning        = "%q is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'"
 )

@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
+	"github.com/git-town/git-town/v9/src/messages"
 )
 
 // EnsureHasShippableChangesStep asserts that the branch has unique changes not on the main branch.
@@ -25,7 +26,7 @@ func (step *EnsureHasShippableChangesStep) Run(run *git.ProdRunner, _ hosting.Co
 		return err
 	}
 	if !hasShippableChanges {
-		return errors.New("no shippable changes")
+		return errors.New(messages.ShipNothingToDo)
 	}
 	return nil
 }
