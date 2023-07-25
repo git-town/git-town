@@ -136,10 +136,6 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 		// TODO: rename to "there is already a branch %q"
 		return nil, fmt.Errorf("a branch named %q already exists", newBranchName)
 	}
-	oldBranchHasTrackingBranch := oldBranch.HasTrackingBranch()
-	if err != nil {
-		return nil, err
-	}
 	return &renameBranchConfig{
 		initialBranch:              initialBranch,
 		isInitialBranchPerennial:   run.Config.IsPerennialBranch(initialBranch),
@@ -149,7 +145,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 		noPushHook:                 !pushHook,
 		oldBranch:                  oldBranchName,
 		oldBranchChildren:          run.Config.Lineage().Children(oldBranchName),
-		oldBranchHasTrackingBranch: oldBranchHasTrackingBranch,
+		oldBranchHasTrackingBranch: oldBranch.HasTrackingBranch(),
 	}, err
 }
 
