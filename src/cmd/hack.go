@@ -75,7 +75,7 @@ func hack(args []string, promptForParent, debug bool) error {
 	return runstate.Execute(&runState, &run, nil)
 }
 
-func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunner, branchesSyncStatus git.BranchesSyncStatus, initialBranch string) (*appendConfig, error) {
+func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string) (*appendConfig, error) {
 	fc := failure.Collector{}
 	targetBranch := args[0]
 	parentBranch := fc.String(determineParentBranch(targetBranch, promptForParent, run))
@@ -84,12 +84,14 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 	isOffline := fc.Bool(run.Config.IsOffline())
 	mainBranch := run.Config.MainBranch()
 	// TODO: inline this variable?
-	hasBranch := branchesSyncStatus.Contains(targetBranch)
+	hasBranch := allBranches.Contains(targetBranch)
 	pushHook := fc.Bool(run.Config.PushHook())
 	if hasBranch {
 		return nil, fmt.Errorf("a branch named %q already exists", targetBranch)
 	}
-	branchesToSync := git.BranchesSyncStatus{*branchesSyncStatus.Lookup(mainBranch)}
+	lineage := run.Config.Lineage()
+	branchNamesToSync := lineage.AddAncestorsForMany([]string{parentBranch})
+	branchesToSync := fc.BranchesSyncStatus(allBranches.Select(branchNamesToSync))
 	return &appendConfig{
 		branchesToSync:      branchesToSync,
 		targetBranch:        targetBranch,
