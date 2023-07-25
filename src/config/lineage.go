@@ -11,7 +11,11 @@ import (
 // branch --> its parent.
 type Lineage map[string]string
 
-func (l Lineage) AddAncestors(branchNames []string) []string {
+func (l Lineage) AddAncestorsForOne(branchName string) []string {
+	return append(l.Ancestors(branchName), branchName)
+}
+
+func (l Lineage) AddAncestorsForMany(branchNames []string) []string {
 	result := branchNames
 	for _, branchName := range branchNames {
 		ancestors := l.Ancestors(branchName)

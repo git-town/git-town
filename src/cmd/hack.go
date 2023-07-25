@@ -50,7 +50,7 @@ func hack(args []string, promptForParent, debug bool) error {
 	if err != nil {
 		return err
 	}
-	branchesSyncStatus, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	branchesSyncStatus, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
@@ -60,7 +60,7 @@ func hack(args []string, promptForParent, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineHackConfig(args, promptForParent, &run, branchesSyncStatus)
+	config, err := determineHackConfig(args, promptForParent, &run, branchesSyncStatus, initialBranch)
 	if err != nil {
 		return err
 	}
@@ -75,7 +75,7 @@ func hack(args []string, promptForParent, debug bool) error {
 	return runstate.Execute(&runState, &run, nil)
 }
 
-func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunner, branchesSyncStatus git.BranchesSyncStatus) (*appendConfig, error) {
+func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunner, branchesSyncStatus git.BranchesSyncStatus, initialBranch string) (*appendConfig, error) {
 	fc := failure.Collector{}
 	targetBranch := args[0]
 	parentBranch := fc.String(determineParentBranch(targetBranch, promptForParent, run))
@@ -89,8 +89,9 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 	if hasBranch {
 		return nil, fmt.Errorf("a branch named %q already exists", targetBranch)
 	}
+	branchesToSync := git.BranchesSyncStatus{*branchesSyncStatus.Lookup(mainBranch)}
 	return &appendConfig{
-		ancestorBranches:    []string{},
+		branchesToSync:      branchesToSync,
 		targetBranch:        targetBranch,
 		parentBranch:        parentBranch,
 		hasOrigin:           hasOrigin,

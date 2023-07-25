@@ -74,7 +74,7 @@ func runAppend(arg string, debug bool) error {
 }
 
 type appendConfig struct {
-	ancestorBranches    []string
+	branchesToSync      git.BranchesSyncStatus
 	hasOrigin           bool
 	isOffline           bool
 	mainBranch          string
@@ -84,7 +84,7 @@ type appendConfig struct {
 	targetBranch        string
 }
 
-func determineAppendConfig(targetBranch string, run *git.ProdRunner, branchesSyncStatus git.BranchesSyncStatus, currentBranch string) (*appendConfig, error) {
+func determineAppendConfig(targetBranch string, run *git.ProdRunner, allBranches git.BranchesSyncStatus, currentBranchName string) (*appendConfig, error) {
 	fc := failure.Collector{}
 	hasOrigin := fc.Bool(run.Backend.HasOrigin())
 	isOffline := fc.Bool(run.Config.IsOffline())
@@ -94,18 +94,20 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner, branchesSyn
 	if fc.Err != nil {
 		return nil, fc.Err
 	}
-	if branchesSyncStatus.Contains(targetBranch) {
+	if allBranches.Contains(targetBranch) {
 		fc.Fail("a branch named %q already exists", targetBranch)
 	}
-	fc.Check(validate.KnowsBranchAncestors(currentBranch, run.Config.MainBranch(), &run.Backend))
-	ancestorBranches := run.Config.Lineage().Ancestors(currentBranch)
+	fc.Check(validate.KnowsBranchAncestors(currentBranchName, run.Config.MainBranch(), &run.Backend))
+	lineage := run.Config.Lineage()
+	branchNamesToSync := lineage.AddAncestorsForOne(currentBranchName)
+	branchesToSync := fc.BranchesSyncStatus(allBranches.Select(branchNamesToSync))
 	return &appendConfig{
-		ancestorBranches:    ancestorBranches,
+		branchesToSync:      branchesToSync,
 		isOffline:           isOffline,
 		hasOrigin:           hasOrigin,
 		mainBranch:          mainBranch,
 		noPushHook:          !pushHook,
-		parentBranch:        currentBranch,
+		parentBranch:        currentBranchName,
 		shouldNewBranchPush: shouldNewBranchPush,
 		targetBranch:        targetBranch,
 	}, fc.Err
@@ -113,7 +115,7 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner, branchesSyn
 
 func appendStepList(config *appendConfig, run *git.ProdRunner) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
-	for _, branch := range append(config.ancestorBranches, config.parentBranch) {
+	for _, branch := range config.branchesToSync {
 		updateBranchSteps(&list, branch, true, config.isOffline, run)
 	}
 	list.Add(&steps.CreateBranchStep{Branch: config.targetBranch, StartingPoint: config.parentBranch})

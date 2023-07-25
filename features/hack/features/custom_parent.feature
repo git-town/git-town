@@ -8,6 +8,7 @@ Feature: customize the parent for the new feature branch
       | Please specify the parent branch of 'new'      | [DOWN][ENTER] |
       | Please specify the parent branch of 'existing' | [ENTER]       |
 
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH   | COMMAND                     |

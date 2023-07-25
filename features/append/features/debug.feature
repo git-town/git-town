@@ -20,7 +20,6 @@ Feature: display debug statistics
       | existing | frontend | git fetch --prune --tags                             |
       |          | backend  | git branch -vva                                      |
       |          | backend  | git branch -a                                        |
-      |          | backend  | git branch -r                                        |
       |          | backend  | git rev-parse --verify --abbrev-ref @{-1}            |
       |          | backend  | git status --porcelain --ignore-submodules           |
       | existing | frontend | git checkout main                                    |
@@ -41,7 +40,7 @@ Feature: display debug statistics
       |          | backend  | git rev-parse --verify --abbrev-ref @{-1}            |
     And it prints:
       """
-      Ran 29 shell commands.
+      Ran 28 shell commands.
       """
     And the current branch is now "new"
 

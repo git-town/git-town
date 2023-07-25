@@ -10,16 +10,36 @@ import (
 func TestLineage(t *testing.T) {
 	t.Parallel()
 
-	t.Run("AddAncestors", func(t *testing.T) {
+	t.Run("AddAncestorsForMany", func(t *testing.T) {
 		t.Parallel()
 		t.Run("single branch", func(t *testing.T) {
+			t.Parallel()
 			lineage := config.Lineage{}
 			lineage["one"] = "main"
 			give := []string{"one"}
-			have := lineage.AddAncestors(give)
+			have := lineage.AddAncestorsForMany(give)
 			want := []string{"main", "one"}
 			assert.Equal(t, want, have)
 		})
+		t.Run("many branches", func(t *testing.T) {
+			t.Parallel()
+			lineage := config.Lineage{}
+			lineage["one"] = "main"
+			lineage["two"] = "one"
+			give := []string{"two", "one"}
+			have := lineage.AddAncestorsForMany(give)
+			want := []string{"main", "one", "two"}
+			assert.Equal(t, want, have)
+		})
+	})
+
+	t.Run("AddAncestorsForOne", func(t *testing.T) {
+		t.Parallel()
+		lineage := config.Lineage{}
+		lineage["one"] = "main"
+		have := lineage.AddAncestorsForOne("one")
+		want := []string{"main", "one"}
+		assert.Equal(t, want, have)
 	})
 
 	t.Run("Ancestors", func(t *testing.T) {

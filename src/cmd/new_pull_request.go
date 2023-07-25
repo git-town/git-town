@@ -58,7 +58,7 @@ func newPullRequest(debug bool) error {
 	if err != nil {
 		return err
 	}
-	_, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	allBranches, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 false,
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
@@ -68,7 +68,7 @@ func newPullRequest(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineNewPullRequestConfig(&run, initialBranch)
+	config, err := determineNewPullRequestConfig(&run, allBranches, initialBranch)
 	if err != nil {
 		return err
 	}
@@ -91,13 +91,13 @@ func newPullRequest(debug bool) error {
 }
 
 type newPullRequestConfig struct {
-	BranchesToSync []string
+	BranchesToSync git.BranchesSyncStatus
 	InitialBranch  string
 	isOffline      bool
 	mainBranch     string
 }
 
-func determineNewPullRequestConfig(run *git.ProdRunner, initialBranch string) (*newPullRequestConfig, error) {
+func determineNewPullRequestConfig(run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string) (*newPullRequestConfig, error) {
 	hasOrigin, err := run.Backend.HasOrigin()
 	if err != nil {
 		return nil, err
@@ -116,12 +116,15 @@ func determineNewPullRequestConfig(run *git.ProdRunner, initialBranch string) (*
 	if err != nil {
 		return nil, err
 	}
+	lineage := run.Config.Lineage()
+	branchNamesToSync := lineage.AddAncestorsForOne(initialBranch)
+	branchesToSync, err := allBranches.Select(branchNamesToSync)
 	return &newPullRequestConfig{
-		BranchesToSync: append(run.Config.Lineage().Ancestors(initialBranch), initialBranch),
+		BranchesToSync: branchesToSync,
 		InitialBranch:  initialBranch,
 		isOffline:      isOffline,
 		mainBranch:     run.Config.MainBranch(),
-	}, nil
+	}, err
 }
 
 func newPullRequestStepList(config *newPullRequestConfig, run *git.ProdRunner) (runstate.StepList, error) {

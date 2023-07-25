@@ -6,6 +6,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/failure"
+	"github.com/git-town/git-town/v9/src/git"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -20,6 +21,39 @@ func TestCollector(t *testing.T) {
 			err := errors.New("test error")
 			assert.True(t, fc.Bool(true, err))
 			assert.False(t, fc.Bool(false, err))
+		})
+
+		t.Run("captures the first error it receives", func(t *testing.T) {
+			t.Parallel()
+			fc := failure.Collector{}
+			fc.Bool(true, nil)
+			fc.Bool(false, nil)
+			assert.Nil(t, fc.Err)
+			fc.Bool(true, errors.New("first"))
+			fc.Bool(false, errors.New("second"))
+			assert.Error(t, fc.Err, "first")
+		})
+	})
+
+	t.Run("BranchSyncStatus", func(t *testing.T) {
+		t.Run("returns the given value", func(t *testing.T) {
+			t.Parallel()
+			fc := failure.Collector{}
+			syncStatuses := git.BranchesSyncStatus{
+				{
+					Name:       "branch1",
+					SyncStatus: git.SyncStatusUpToDate,
+				},
+				{
+					Name:       "branch2",
+					SyncStatus: git.SyncStatusUpToDate,
+				},
+			}
+			have := fc.BranchesSyncStatus(syncStatuses, nil)
+			assert.Equal(t, syncStatuses, have)
+			err := errors.New("test error")
+			have = fc.BranchesSyncStatus(syncStatuses, err)
+			assert.Equal(t, syncStatuses, have)
 		})
 
 		t.Run("captures the first error it receives", func(t *testing.T) {

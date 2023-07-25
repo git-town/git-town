@@ -7,6 +7,16 @@ type BranchSyncStatus struct {
 	SyncStatus SyncStatus
 }
 
+func (bi BranchSyncStatus) HasTrackingBranch() bool {
+	switch bi.SyncStatus {
+	case SyncStatusAhead, SyncStatusBehind, SyncStatusUpToDate:
+		return true
+	case SyncStatusLocalOnly, SyncStatusDeletedAtRemote, SyncStatusRemoteOnly:
+		return false
+	}
+	panic(fmt.Sprintf("unknown sync status: %v", bi.SyncStatus))
+}
+
 // IsLocalBranch indicates whether this branch exists in the local repo that Git Town is running in.
 func (bi BranchSyncStatus) IsLocal() bool {
 	return bi.SyncStatus.IsLocal()

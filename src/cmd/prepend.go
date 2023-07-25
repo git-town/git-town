@@ -77,7 +77,7 @@ func prepend(args []string, debug bool) error {
 }
 
 type prependConfig struct {
-	ancestorBranches    []string
+	branchesToSync      git.BranchesSyncStatus
 	hasOrigin           bool
 	initialBranch       string
 	isOffline           bool
@@ -88,7 +88,7 @@ type prependConfig struct {
 	targetBranch        string
 }
 
-func determinePrependConfig(args []string, run *git.ProdRunner, branchesSyncStatus git.BranchesSyncStatus, initialBranch string) (*prependConfig, error) {
+func determinePrependConfig(args []string, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string) (*prependConfig, error) {
 	fc := failure.Collector{}
 	hasOrigin := fc.Bool(run.Backend.HasOrigin())
 	shouldNewBranchPush := fc.Bool(run.Config.ShouldNewBranchPush())
@@ -99,7 +99,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner, branchesSyncStat
 		return nil, fc.Err
 	}
 	targetBranch := args[0]
-	if branchesSyncStatus.Contains(targetBranch) {
+	if allBranches.Contains(targetBranch) {
 		return nil, fmt.Errorf("a branch named %q already exists", targetBranch)
 	}
 	if !run.Config.IsFeatureBranch(initialBranch) {
@@ -110,6 +110,8 @@ func determinePrependConfig(args []string, run *git.ProdRunner, branchesSyncStat
 		return nil, err
 	}
 	lineage := run.Config.Lineage()
+	branchNamesToSync := lineage.AddAncestorsForOne(initialBranch)
+	branchesToSync, err := allBranches.Select(branchNamesToSync)
 	return &prependConfig{
 		hasOrigin:           hasOrigin,
 		initialBranch:       initialBranch,
@@ -117,16 +119,16 @@ func determinePrependConfig(args []string, run *git.ProdRunner, branchesSyncStat
 		mainBranch:          mainBranch,
 		noPushHook:          !pushHook,
 		parentBranch:        lineage.Parent(initialBranch),
-		ancestorBranches:    lineage.Ancestors(initialBranch),
+		branchesToSync:      branchesToSync,
 		shouldNewBranchPush: shouldNewBranchPush,
 		targetBranch:        targetBranch,
-	}, nil
+	}, err
 }
 
 func prependStepList(config *prependConfig, run *git.ProdRunner) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
-	for _, branch := range config.ancestorBranches {
-		updateBranchSteps(&list, branch, true, config.isOffline, run)
+	for _, branchToSync := range config.branchesToSync {
+		updateBranchSteps(&list, branchToSync, true, config.isOffline, run)
 	}
 	list.Add(&steps.CreateBranchStep{Branch: config.targetBranch, StartingPoint: config.parentBranch})
 	list.Add(&steps.SetParentStep{Branch: config.targetBranch, ParentBranch: config.parentBranch})
