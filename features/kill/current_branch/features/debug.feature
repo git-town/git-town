@@ -8,7 +8,6 @@ Feature: display debug statistics
       | current | local, origin | current commit |
       | other   | local, origin | other commit   |
 
-  @this
   Scenario: result
     When I run "git-town kill --debug"
     Then it runs the commands
