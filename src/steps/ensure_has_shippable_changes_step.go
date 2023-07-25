@@ -17,7 +17,7 @@ type EnsureHasShippableChangesStep struct {
 }
 
 func (step *EnsureHasShippableChangesStep) CreateAutomaticAbortError() error {
-	return fmt.Errorf("the branch %q has no shippable changes", step.Branch)
+	return fmt.Errorf(messages.ShipBranchNothingToDo, step.Branch)
 }
 
 func (step *EnsureHasShippableChangesStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
