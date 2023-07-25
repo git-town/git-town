@@ -16,7 +16,6 @@ Feature: display debug statistics
       |         | backend  | git branch -a                                                      |
       |         | backend  | git remote                                                         |
       | feature | frontend | git fetch --prune --tags                                           |
-      |         | backend  | git branch -r                                                      |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}                          |
       |         | backend  | git status --porcelain --ignore-submodules                         |
       | feature | frontend | git checkout main                                                  |
@@ -39,7 +38,7 @@ Feature: display debug statistics
       | <none>  | frontend | open https://github.com/git-town/git-town/compare/feature?expand=1 |
     And it prints:
       """
-      Ran 29 shell commands.
+      Ran 28 shell commands.
       """
     And "open" launches a new pull request with this url in my browser:
       """
