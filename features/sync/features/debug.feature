@@ -23,7 +23,6 @@ Feature: display debug statistics
       | feature | frontend | git fetch --prune --tags                           |
       |         | backend  | git branch -vva                                    |
       |         | backend  | git branch -a                                      |
-      |         | backend  | git branch -r                                      |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}          |
       |         | backend  | git status --porcelain --ignore-submodules         |
       | feature | frontend | git checkout main                                  |
