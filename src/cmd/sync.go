@@ -124,7 +124,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranchesSyncStatu
 		branchNamesToSync = []string{initialBranch}
 		shouldPushTags = !run.Config.IsFeatureBranch(initialBranch)
 	}
-	allBranchNamesToSync := lineage.AddAncestorsForMany(branchNamesToSync)
+	allBranchNamesToSync := lineage.BranchesAndAncestors(branchNamesToSync)
 	branchesToSync, err := allBranchesSyncStatus.Select(allBranchNamesToSync)
 	return &syncConfig{
 		branchesToSync: branchesToSync,

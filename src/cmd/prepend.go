@@ -110,7 +110,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner, allBranches git.
 		return nil, err
 	}
 	lineage := run.Config.Lineage()
-	branchNamesToSync := lineage.AddAncestorsForOne(initialBranch)
+	branchNamesToSync := lineage.BranchAndAncestors(initialBranch)
 	branchesToSync, err := allBranches.Select(branchNamesToSync)
 	return &prependConfig{
 		hasOrigin:           hasOrigin,

@@ -17,7 +17,7 @@ func TestLineage(t *testing.T) {
 			lineage := config.Lineage{}
 			lineage["one"] = "main"
 			give := []string{"one"}
-			have := lineage.AddAncestorsForMany(give)
+			have := lineage.BranchesAndAncestors(give)
 			want := []string{"main", "one"}
 			assert.Equal(t, want, have)
 		})
@@ -27,7 +27,7 @@ func TestLineage(t *testing.T) {
 			lineage["one"] = "main"
 			lineage["two"] = "one"
 			give := []string{"two", "one"}
-			have := lineage.AddAncestorsForMany(give)
+			have := lineage.BranchesAndAncestors(give)
 			want := []string{"main", "one", "two"}
 			assert.Equal(t, want, have)
 		})
@@ -37,7 +37,7 @@ func TestLineage(t *testing.T) {
 		t.Parallel()
 		lineage := config.Lineage{}
 		lineage["one"] = "main"
-		have := lineage.AddAncestorsForOne("one")
+		have := lineage.BranchAndAncestors("one")
 		want := []string{"main", "one"}
 		assert.Equal(t, want, have)
 	})

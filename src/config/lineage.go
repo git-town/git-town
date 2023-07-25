@@ -11,11 +11,15 @@ import (
 // branch --> its parent.
 type Lineage map[string]string
 
-func (l Lineage) AddAncestorsForOne(branchName string) []string {
+// BranchAndAncestors provides the full lineage for the branch with the given name,
+// including the branch.
+func (l Lineage) BranchAndAncestors(branchName string) []string {
 	return append(l.Ancestors(branchName), branchName)
 }
 
-func (l Lineage) AddAncestorsForMany(branchNames []string) []string {
+// BranchesAndAncestors provides the full lineage for the branches with the given names,
+// including the branches themselves.
+func (l Lineage) BranchesAndAncestors(branchNames []string) []string {
 	result := branchNames
 	for _, branchName := range branchNames {
 		ancestors := l.Ancestors(branchName)

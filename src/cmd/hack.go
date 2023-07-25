@@ -90,7 +90,7 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 		return nil, fmt.Errorf("a branch named %q already exists", targetBranch)
 	}
 	lineage := run.Config.Lineage()
-	branchNamesToSync := lineage.AddAncestorsForMany([]string{parentBranch})
+	branchNamesToSync := lineage.BranchesAndAncestors([]string{parentBranch})
 	branchesToSync := fc.BranchesSyncStatus(allBranches.Select(branchNamesToSync))
 	return &appendConfig{
 		branchesToSync:      branchesToSync,

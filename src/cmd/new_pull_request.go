@@ -117,7 +117,7 @@ func determineNewPullRequestConfig(run *git.ProdRunner, allBranches git.Branches
 		return nil, err
 	}
 	lineage := run.Config.Lineage()
-	branchNamesToSync := lineage.AddAncestorsForOne(initialBranch)
+	branchNamesToSync := lineage.BranchAndAncestors(initialBranch)
 	branchesToSync, err := allBranches.Select(branchNamesToSync)
 	return &newPullRequestConfig{
 		BranchesToSync: branchesToSync,

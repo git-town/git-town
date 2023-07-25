@@ -99,7 +99,7 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner, allBranches
 	}
 	fc.Check(validate.KnowsBranchAncestors(currentBranchName, run.Config.MainBranch(), &run.Backend))
 	lineage := run.Config.Lineage()
-	branchNamesToSync := lineage.AddAncestorsForOne(currentBranchName)
+	branchNamesToSync := lineage.BranchAndAncestors(currentBranchName)
 	branchesToSync := fc.BranchesSyncStatus(allBranches.Select(branchNamesToSync))
 	return &appendConfig{
 		branchesToSync:      branchesToSync,
