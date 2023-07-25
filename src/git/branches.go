@@ -52,6 +52,17 @@ func (bs BranchesSyncStatus) LocalBranches() BranchesSyncStatus {
 	return result
 }
 
+// LocalBranchesWithDeletedTrackingBranches provides only the branches that exist locally and have a deleted tracking branch.
+func (bs BranchesSyncStatus) LocalBranchesWithDeletedTrackingBranches() BranchesSyncStatus {
+	result := BranchesSyncStatus{}
+	for _, branch := range bs {
+		if branch.SyncStatus == SyncStatusDeletedAtRemote {
+			result = append(result, branch)
+		}
+	}
+	return result
+}
+
 func (bs BranchesSyncStatus) Lookup(branchName string) *BranchSyncStatus {
 	for bi, branch := range bs {
 		if branch.Name == branchName {

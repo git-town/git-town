@@ -387,27 +387,6 @@ func (bc *BackendCommands) LocalBranchesMainFirst(mainBranch string) ([]string, 
 	return stringslice.Hoist(sort.StringSlice(branches), mainBranch), nil
 }
 
-// LocalBranchesWithDeletedTrackingBranches provides the names of all branches
-// whose remote tracking branches have been deleted.
-// TODO: can we derive this info from allBranchesSyncStatus?
-func (bc *BackendCommands) LocalBranchesWithDeletedTrackingBranches() ([]string, error) {
-	output, err := bc.QueryTrim("git", "branch", "-vv")
-	if err != nil {
-		return []string{}, err
-	}
-	result := []string{}
-	for _, line := range stringslice.Lines(output) {
-		line = strings.Trim(line, "* ")
-		parts := strings.SplitN(line, " ", 2)
-		branch := parts[0]
-		deleteTrackingBranchStatus := fmt.Sprintf("[%s: gone]", bc.TrackingBranch(branch))
-		if strings.Contains(parts[1], deleteTrackingBranchStatus) {
-			result = append(result, branch)
-		}
-	}
-	return result, nil
-}
-
 // LocalBranchesWithoutMain provides the names of all branches in the local repository,
 // ordered alphabetically without the main branch.
 // TODO: can we derive this info from allBranchesSyncStatus?

@@ -39,7 +39,7 @@ func pruneBranches(debug bool) error {
 	if err != nil {
 		return err
 	}
-	_, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	allBranches, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
@@ -49,10 +49,7 @@ func pruneBranches(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	config, err := determinePruneBranchesConfig(&run, initialBranch)
-	if err != nil {
-		return err
-	}
+	config := determinePruneBranchesConfig(&run, allBranches, initialBranch)
 	stepList, err := pruneBranchesStepList(config, &run)
 	if err != nil {
 		return err
@@ -70,16 +67,12 @@ type pruneBranchesConfig struct {
 	mainBranch                               string
 }
 
-func determinePruneBranchesConfig(run *git.ProdRunner, initialBranch string) (*pruneBranchesConfig, error) {
-	localBranchesWithDeletedTrackingBranches, err := run.Backend.LocalBranchesWithDeletedTrackingBranches()
-	if err != nil {
-		return nil, err
-	}
+func determinePruneBranchesConfig(run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string) *pruneBranchesConfig {
 	return &pruneBranchesConfig{
 		initialBranch:                            initialBranch,
-		localBranchesWithDeletedTrackingBranches: localBranchesWithDeletedTrackingBranches,
+		localBranchesWithDeletedTrackingBranches: allBranches.LocalBranchesWithDeletedTrackingBranches().BranchNames(),
 		mainBranch:                               run.Config.MainBranch(),
-	}, nil
+	}
 }
 
 func pruneBranchesStepList(config *pruneBranchesConfig, run *git.ProdRunner) (runstate.StepList, error) {

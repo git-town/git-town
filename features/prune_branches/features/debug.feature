@@ -22,7 +22,6 @@ Feature: display debug statistics
       |        | backend  | git rev-parse --abbrev-ref HEAD               |
       | old    | frontend | git fetch --prune --tags                      |
       |        | backend  | git branch -vva                               |
-      |        | backend  | git branch -vv                                |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
       |        | backend  | git status --porcelain --ignore-submodules    |
       | old    | frontend | git checkout main                             |
@@ -37,7 +36,7 @@ Feature: display debug statistics
       |        | backend  | git checkout main                             |
     And it prints:
       """
-      Ran 22 shell commands.
+      Ran 21 shell commands.
       """
     And the current branch is now "main"
     And the branches are now
