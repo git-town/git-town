@@ -150,7 +150,7 @@ func killStepList(config *killConfig, run *git.ProdRunner) (runstate.StepList, e
 	case !config.isOffline:
 		result.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch.Name, IsTracking: false, NoPushHook: config.noPushHook})
 	default:
-		return runstate.StepList{}, fmt.Errorf("cannot delete remote branch %q in offline mode", config.targetBranch)
+		return runstate.StepList{}, fmt.Errorf("cannot delete remote branch %q in offline mode", config.targetBranch.Name)
 	}
 	err := result.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     true,
