@@ -117,11 +117,10 @@ func determineSyncStatus(branchName, remoteText string) SyncStatus {
 	if remoteText[0] == '[' {
 		closingBracketPos := strings.IndexRune(remoteText, ']')
 		textInBrackets := remoteText[1:closingBracketPos]
-		remoteParts := strings.SplitN(textInBrackets, ":", 2)
-		if len(remoteParts) == 1 {
+		_, remoteStatus, _ := strings.Cut(textInBrackets, ": ")
+		if remoteStatus == "" {
 			return SyncStatusUpToDate
 		}
-		remoteStatus := strings.TrimSpace(remoteParts[1])
 		if remoteStatus == "gone" {
 			return SyncStatusDeletedAtRemote
 		}
