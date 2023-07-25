@@ -1,5 +1,6 @@
 Feature: non-existing branch
 
+  @debug @this
   Scenario:
     Given the current branch is "main"
     And an uncommitted file
@@ -9,7 +10,7 @@ Feature: non-existing branch
       | main   | git fetch --prune --tags |
     And it prints the error:
       """
-      there is no branch named "non-existing"
+      branch "non-existing" does not exist
       """
     And the current branch is now "main"
     And the uncommitted file still exists

@@ -103,11 +103,6 @@ func determineKillConfig(args []string, run *git.ProdRunner, branchesSyncStatus 
 	if err != nil {
 		return nil, err
 	}
-	if initialBranch != targetBranchName {
-		if !branchesSyncStatus.Contains(targetBranchName) {
-			return nil, fmt.Errorf("there is no branch named %q", targetBranchName)
-		}
-	}
 	previousBranch, err := run.Backend.PreviouslyCheckedOutBranch()
 	if err != nil {
 		return nil, err
