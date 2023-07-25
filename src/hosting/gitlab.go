@@ -6,6 +6,7 @@ import (
 	"net/url"
 
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/xanzy/go-gitlab"
 )
 
@@ -31,7 +32,7 @@ func (c *GitLabConnector) FindProposal(branch, target string) (*Proposal, error)
 		return nil, nil //nolint:nilnil
 	}
 	if len(mergeRequests) > 1 {
-		return nil, fmt.Errorf("found %d merge requests for branch %q", len(mergeRequests), branch)
+		return nil, fmt.Errorf(messages.ProposalMultipleFound, len(mergeRequests), branch)
 	}
 	proposal := parseGitLabMergeRequest(mergeRequests[0])
 	return &proposal, nil
@@ -39,7 +40,7 @@ func (c *GitLabConnector) FindProposal(branch, target string) (*Proposal, error)
 
 func (c *GitLabConnector) SquashMergeProposal(number int, message string) (mergeSHA string, err error) {
 	if number <= 0 {
-		return "", fmt.Errorf("no merge request number given")
+		return "", fmt.Errorf(messages.ProposalNoNumberGiven)
 	}
 	if c.log != nil {
 		c.log("GitLab API: Merging MR !%d\n", number)

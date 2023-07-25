@@ -3,7 +3,6 @@ package messages
 const (
 	AbortNothingToDo                    = "nothing to abort"
 	ArgumentUnknown                     = "unknown argument: %q"
-	BitBucketNotImplemented             = "shipping pull requests via the Bitbucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues"
 	BranchAlreadyExists                 = "there is already a branch %q"
 	BranchDoesntExist                   = "there is no branch %q"
 	BranchCheckedOutPreviousProblem     = "cannot determine the previously checked out branch: %w"
@@ -39,6 +38,8 @@ const (
 	GitVersionProblem                   = "cannot determine Git version: %w"
 	GitVersionUnexpectedOutput          = "'git version' returned unexpected output: %q.\nPlease open an issue and supply the output of running 'git version'"
 	GitVersionTooLow                    = "this app requires Git 2.7.0 or higher"
+	HostingBitBucketNotImplemented      = "shipping pull requests via the Bitbucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues"
+	HostingGiteaNotImplemented          = "shipping pull requests via the Gitea API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues"
 	HostingServiceUnknownName           = "unknown hosting service: %q"
 	InputAddOrRemove                    = `invalid argument %q. Please provide either "add" or "remove"`
 	InputOfflineInvalidValue            = `invalid value for git-town.offline: %q. Please provide either "yes" or "no".\n`
@@ -46,7 +47,10 @@ const (
 	KillOnlyFeatureBranches             = "you can only kill feature branches"
 	OfflineNotAllowed                   = "this command requires an active internet connection"
 	OpenChangesProblem                  = "cannot determine open changes: %w"
+	ProposalMultipleFound               = "found %d proposals for branch %q"
+	ProposalNoNumberGiven               = "no pull request number given"
 	ProposalNotFoundForBranch           = "cannot determine proposal for branch %q: %w"
+	ProposalUrlProblem                  = "cannot determine proposal URL from %q to %q: %w"
 	RebaseProblem                       = "cannot determine rebase in progress: %w"
 	RemoteExistsProblem                 = "cannot determine if remote %q exists: %w"
 	RemotesProblem                      = "cannot determine remotes: %w"

@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/messages"
 )
 
 type FrontendRunner interface {
@@ -41,7 +42,7 @@ func (fc *FrontendCommands) AddGitAlias(aliasType config.AliasType) error {
 func (fc *FrontendCommands) CheckoutBranch(name string) error {
 	err := fc.Run("git", "checkout", name)
 	if err != nil {
-		return fmt.Errorf("cannot check out branch %q: %w", name, err)
+		return fmt.Errorf(messages.BranchCheckoutProblem, name, err)
 	}
 	fc.SetCachedCurrentBranch(name)
 	return nil

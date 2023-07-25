@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/google/go-github/v50/github"
 	"golang.org/x/oauth2"
 )
@@ -34,7 +35,7 @@ func (c *GitHubConnector) FindProposal(branch, target string) (*Proposal, error)
 		return nil, nil //nolint:nilnil
 	}
 	if len(pullRequests) > 1 {
-		return nil, fmt.Errorf("found %d pull requests from branch %q into branch %q", len(pullRequests), branch, target)
+		return nil, fmt.Errorf(messages.ProposalMultipleFound, len(pullRequests), branch, target)
 	}
 	proposal := parsePullRequest(pullRequests[0])
 	return &proposal, nil
@@ -62,9 +63,10 @@ func (c *GitHubConnector) RepositoryURL() string {
 
 func (c *GitHubConnector) SquashMergeProposal(number int, message string) (mergeSHA string, err error) {
 	if number <= 0 {
-		return "", fmt.Errorf("no pull request number given")
+		return "", fmt.Errorf(messages.ProposalNoNumberGiven)
 	}
 	if c.log != nil {
+		// TODO: convert to const in messages.go
 		c.log("GitHub API: merging PR #%d\n", number)
 	}
 	title, body := ParseCommitMessage(message)
