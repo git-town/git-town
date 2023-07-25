@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/messages"
 )
 
 // Load loads the run state for the given Git repo from disk. Can return nil if there is no saved runstate.
@@ -22,16 +23,16 @@ func Load(backend *git.BackendCommands) (*RunState, error) {
 		if os.IsNotExist(err) {
 			return nil, nil //nolint:nilnil
 		}
-		return nil, fmt.Errorf("cannot check file %q: %w", filename, err)
+		return nil, fmt.Errorf(messages.FileStatProblem, filename, err)
 	}
 	var runState RunState
 	content, err := os.ReadFile(filename)
 	if err != nil {
-		return nil, fmt.Errorf("cannot read file %q: %w", filename, err)
+		return nil, fmt.Errorf(messages.FileReadProblem, filename, err)
 	}
 	err = json.Unmarshal(content, &runState)
 	if err != nil {
-		return nil, fmt.Errorf("cannot parse content of file %q: %w", filename, err)
+		return nil, fmt.Errorf(messages.FileContentNotJson, filename, err)
 	}
 	return &runState, nil
 }
@@ -47,11 +48,11 @@ func Delete(backend *git.BackendCommands) error {
 		if os.IsNotExist(err) {
 			return nil
 		}
-		return fmt.Errorf("cannot check file %q: %w", filename, err)
+		return fmt.Errorf(messages.FileStatProblem, filename, err)
 	}
 	err = os.Remove(filename)
 	if err != nil {
-		return fmt.Errorf("cannot delete file %q: %w", filename, err)
+		return fmt.Errorf(messages.FileDeleteProblem, filename, err)
 	}
 	return nil
 }
@@ -60,7 +61,7 @@ func Delete(backend *git.BackendCommands) error {
 func Save(runState *RunState, backend *git.BackendCommands) error {
 	content, err := json.MarshalIndent(runState, "", "  ")
 	if err != nil {
-		return fmt.Errorf("cannot encode run-state: %w", err)
+		return fmt.Errorf(messages.RunstateMarshalProblem, err)
 	}
 	persistencePath, err := PersistenceFilePath(backend)
 	if err != nil {
@@ -73,7 +74,7 @@ func Save(runState *RunState, backend *git.BackendCommands) error {
 	}
 	err = os.WriteFile(persistencePath, content, 0o600)
 	if err != nil {
-		return fmt.Errorf("cannot write file %q: %w", persistencePath, err)
+		return fmt.Errorf(messages.FileWriteProblem, persistencePath, err)
 	}
 	return nil
 }
@@ -81,7 +82,7 @@ func Save(runState *RunState, backend *git.BackendCommands) error {
 func PersistenceFilePath(backend *git.BackendCommands) (string, error) {
 	configDir, err := os.UserConfigDir()
 	if err != nil {
-		return "", fmt.Errorf("cannot determine the runstate file path: %w", err)
+		return "", fmt.Errorf(messages.RunstatePathProblem, err)
 	}
 	persistenceDir := filepath.Join(configDir, "git-town", "runstate")
 	repoDir := backend.RootDirectory()
