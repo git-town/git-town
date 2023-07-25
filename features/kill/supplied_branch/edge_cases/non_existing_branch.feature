@@ -1,6 +1,5 @@
 Feature: non-existing branch
 
-  @debug @this
   Scenario:
     Given the current branch is "main"
     And an uncommitted file
