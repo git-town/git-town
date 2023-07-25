@@ -140,7 +140,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranchesSyncStatu
 func syncBranchesSteps(config *syncConfig, run *git.ProdRunner) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.branchesToSync {
-		updateBranchSteps(&list, branch.Name, true, run)
+		updateBranchSteps(&list, branch.Name, true, config.isOffline, run)
 	}
 	list.Add(&steps.CheckoutStep{Branch: config.initialBranch})
 	if config.hasOrigin && config.shouldPushTags && !config.isOffline {
@@ -152,7 +152,7 @@ func syncBranchesSteps(config *syncConfig, run *git.ProdRunner) (runstate.StepLi
 
 // updateBranchSteps provides the steps to sync a particular branch.
 // TODO: change the `branch` argument from `string` to `BranchInfo`.
-func updateBranchSteps(list *runstate.StepListBuilder, branch string, pushBranch bool, run *git.ProdRunner) {
+func updateBranchSteps(list *runstate.StepListBuilder, branch string, pushBranch bool, isOffline bool, run *git.ProdRunner) {
 	isFeatureBranch := run.Config.IsFeatureBranch(branch)
 	syncStrategy := list.SyncStrategy(run.Config.SyncStrategy())
 	hasOrigin := list.Bool(run.Backend.HasOrigin())
@@ -166,7 +166,6 @@ func updateBranchSteps(list *runstate.StepListBuilder, branch string, pushBranch
 	} else {
 		updatePerennialBranchSteps(list, branch, run)
 	}
-	isOffline := list.Bool(run.Config.IsOffline())
 	if pushBranch && hasOrigin && !isOffline {
 		hasTrackingBranch := list.Bool(run.Backend.HasTrackingBranch(branch))
 		if !hasTrackingBranch {

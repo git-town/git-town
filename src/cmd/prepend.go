@@ -126,7 +126,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner, branchesSyncStat
 func prependStepList(config *prependConfig, run *git.ProdRunner) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.ancestorBranches {
-		updateBranchSteps(&list, branch, true, run)
+		updateBranchSteps(&list, branch, true, config.isOffline, run)
 	}
 	list.Add(&steps.CreateBranchStep{Branch: config.targetBranch, StartingPoint: config.parentBranch})
 	list.Add(&steps.SetParentStep{Branch: config.targetBranch, ParentBranch: config.parentBranch})
