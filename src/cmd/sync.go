@@ -124,15 +124,8 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranchesSyncStatu
 		branchNamesToSync = []string{initialBranch}
 		shouldPushTags = !run.Config.IsFeatureBranch(initialBranch)
 	}
-	fmt.Printf("22222222 LINEAGE: %#v\n", lineage)
-	fmt.Println("33333333 BRANCH NAMES TO SYNC", branchNamesToSync)
-	branchNamesWithAncestors := lineage.AddAncestors(branchNamesToSync)
-	fmt.Println("44444444 BRANCH NAMES+ANCESTORS TO SYNC", branchNamesWithAncestors)
-	branchesToSync, err := allBranchesSyncStatus.Select(branchNamesWithAncestors)
-	if err != nil {
-		return nil, err
-	}
-	fmt.Printf("55555555 BRANCHES TO SYNC: %#v\n", branchesToSync)
+	allBranchNamesToSync := lineage.AddAncestors(branchNamesToSync)
+	branchesToSync, err := allBranchesSyncStatus.Select(allBranchNamesToSync)
 	return &syncConfig{
 		branchesToSync: branchesToSync,
 		hasOrigin:      hasOrigin,
@@ -140,7 +133,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranchesSyncStatu
 		isOffline:      isOffline,
 		mainBranch:     mainBranch,
 		shouldPushTags: shouldPushTags,
-	}, nil
+	}, err
 }
 
 // syncBranchesSteps provides the step list for the "git sync" command.
