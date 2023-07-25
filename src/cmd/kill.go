@@ -90,7 +90,7 @@ func determineKillConfig(args []string, run *git.ProdRunner, allBranches git.Bra
 	}
 	targetBranch := allBranches.Lookup(targetBranchName)
 	if targetBranch == nil {
-		return nil, fmt.Errorf("branch %q does not exist", targetBranchName)
+		return nil, fmt.Errorf("there is no branch %q", targetBranchName)
 	}
 	if targetBranch.IsLocal() {
 		err := validate.KnowsBranchAncestors(targetBranchName, mainBranch, &run.Backend)
