@@ -19,4 +19,4 @@ Feature: shorten Git Town commands
   Scenario: outside a Git repo
     Given I am outside a Git repo
     When I run "git-town aliases add"
-    Then it does not print "Not a git repository"
+    Then it does not print "not a git repository"
