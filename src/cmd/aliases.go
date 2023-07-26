@@ -77,5 +77,6 @@ func removeAliases(run *git.ProdRunner) error {
 			}
 		}
 	}
+	run.Stats.PrintAnalysis()
 	return nil
 }
