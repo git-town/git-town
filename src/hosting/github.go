@@ -95,7 +95,6 @@ func NewGithubConnector(gitConfig gitTownConfig, log logFn) (*GitHubConnector, e
 		return nil, err
 	}
 	url := gitConfig.OriginURL()
-	fmt.Println("222222222222", url)
 	if url == nil || (url.Host != "github.com" && hostingService != config.HostingServiceGitHub) {
 		return nil, nil //nolint:nilnil
 	}
