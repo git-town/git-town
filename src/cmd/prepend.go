@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/flags"
@@ -87,6 +88,7 @@ type prependConfig struct {
 	noPushHook          bool
 	parentBranch        string
 	shouldNewBranchPush bool
+	syncStrategy        config.SyncStrategy
 	targetBranch        string
 }
 
@@ -96,6 +98,8 @@ func determinePrependConfig(args []string, run *git.ProdRunner, allBranches git.
 	shouldNewBranchPush := fc.Bool(run.Config.ShouldNewBranchPush())
 	pushHook := fc.Bool(run.Config.PushHook())
 	mainBranch := run.Config.MainBranch()
+	syncStrategy := fc.SyncStrategy(run.Config.SyncStrategy())
+	// TODO: use fc all the way to the end
 	if fc.Err != nil {
 		return nil, fc.Err
 	}
@@ -122,6 +126,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner, allBranches git.
 		noPushHook:          !pushHook,
 		parentBranch:        lineage.Parent(initialBranch),
 		shouldNewBranchPush: shouldNewBranchPush,
+		syncStrategy:        syncStrategy,
 		targetBranch:        targetBranch,
 	}, err
 }
@@ -130,11 +135,12 @@ func prependStepList(config *prependConfig, run *git.ProdRunner) (runstate.StepL
 	list := runstate.StepListBuilder{}
 	for _, branchToSync := range config.branchesToSync {
 		updateBranchSteps(&list, updateBranchStepsArgs{
-			branch:     branchToSync,
-			isOffline:  config.isOffline,
-			mainBranch: config.mainBranch,
-			pushBranch: true,
-			run:        run,
+			branch:       branchToSync,
+			isOffline:    config.isOffline,
+			mainBranch:   config.mainBranch,
+			pushBranch:   true,
+			run:          run,
+			syncStrategy: config.syncStrategy,
 		})
 	}
 	list.Add(&steps.CreateBranchStep{Branch: config.targetBranch, StartingPoint: config.parentBranch})

@@ -101,6 +101,7 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 		shouldNewBranchPush: shouldNewBranchPush,
 		noPushHook:          !pushHook,
 		isOffline:           isOffline,
+		syncStrategy:        fc.SyncStrategy(run.Config.SyncStrategy()),
 	}, fc.Err
 }
 

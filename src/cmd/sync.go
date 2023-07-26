@@ -94,6 +94,7 @@ type syncConfig struct {
 	isOffline      bool
 	mainBranch     string
 	shouldPushTags bool
+	syncStrategy   config.SyncStrategy
 }
 
 func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranchesSyncStatus git.BranchesSyncStatus, initialBranch string, isOffline bool) (*syncConfig, error) {
@@ -122,6 +123,10 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranchesSyncStatu
 		shouldPushTags = !run.Config.IsFeatureBranch(initialBranch)
 	}
 	allBranchNamesToSync := lineage.BranchesAndAncestors(branchNamesToSync)
+	syncStrategy, err := run.Config.SyncStrategy()
+	if err != nil {
+		return nil, err
+	}
 	branchesToSync, err := allBranchesSyncStatus.Select(allBranchNamesToSync)
 	return &syncConfig{
 		branchesToSync: branchesToSync,
@@ -130,6 +135,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranchesSyncStatu
 		isOffline:      isOffline,
 		mainBranch:     mainBranch,
 		shouldPushTags: shouldPushTags,
+		syncStrategy:   syncStrategy,
 	}, err
 }
 
@@ -138,11 +144,12 @@ func syncBranchesSteps(config *syncConfig, run *git.ProdRunner) (runstate.StepLi
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.branchesToSync {
 		updateBranchSteps(&list, updateBranchStepsArgs{
-			branch:     branch,
-			isOffline:  config.isOffline,
-			mainBranch: config.mainBranch,
-			run:        run,
-			pushBranch: true,
+			branch:       branch,
+			isOffline:    config.isOffline,
+			mainBranch:   config.mainBranch,
+			run:          run,
+			pushBranch:   true,
+			syncStrategy: config.syncStrategy,
 		})
 	}
 	list.Add(&steps.CheckoutStep{Branch: config.initialBranch})
@@ -156,7 +163,6 @@ func syncBranchesSteps(config *syncConfig, run *git.ProdRunner) (runstate.StepLi
 // updateBranchSteps provides the steps to sync a particular branch.
 func updateBranchSteps(list *runstate.StepListBuilder, args updateBranchStepsArgs) {
 	isFeatureBranch := args.run.Config.IsFeatureBranch(args.branch.Name)
-	syncStrategy := list.SyncStrategy(args.run.Config.SyncStrategy())
 	hasOrigin := list.Bool(args.run.Backend.HasOrigin())
 	pushHook := list.Bool(args.run.Config.PushHook())
 	if !hasOrigin && !isFeatureBranch {
@@ -177,16 +183,17 @@ func updateBranchSteps(list *runstate.StepListBuilder, args updateBranchStepsArg
 			list.Add(&steps.PushBranchStep{Branch: args.branch.Name})
 			return
 		}
-		pushFeatureBranchSteps(list, args.branch.Name, syncStrategy, pushHook)
+		pushFeatureBranchSteps(list, args.branch.Name, args.syncStrategy, pushHook)
 	}
 }
 
 type updateBranchStepsArgs struct {
-	branch     git.BranchSyncStatus
-	isOffline  bool
-	mainBranch string
-	pushBranch bool
-	run        *git.ProdRunner
+	branch       git.BranchSyncStatus
+	isOffline    bool
+	mainBranch   string
+	pushBranch   bool
+	run          *git.ProdRunner
+	syncStrategy config.SyncStrategy
 }
 
 func updateFeatureBranchSteps(list *runstate.StepListBuilder, branch git.BranchSyncStatus, run *git.ProdRunner) {

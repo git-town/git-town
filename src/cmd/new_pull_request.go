@@ -96,6 +96,7 @@ type newPullRequestConfig struct {
 	InitialBranch  string
 	isOffline      bool
 	mainBranch     string
+	syncStrategy   config.SyncStrategy
 }
 
 func determineNewPullRequestConfig(run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string, isOffline bool) (*newPullRequestConfig, error) {
@@ -114,6 +115,10 @@ func determineNewPullRequestConfig(run *git.ProdRunner, allBranches git.Branches
 	if err != nil {
 		return nil, err
 	}
+	syncStrategy, err := run.Config.SyncStrategy()
+	if err != nil {
+		return nil, err
+	}
 	lineage := run.Config.Lineage()
 	branchNamesToSync := lineage.BranchAndAncestors(initialBranch)
 	branchesToSync, err := allBranches.Select(branchNamesToSync)
@@ -122,6 +127,7 @@ func determineNewPullRequestConfig(run *git.ProdRunner, allBranches git.Branches
 		InitialBranch:  initialBranch,
 		isOffline:      isOffline,
 		mainBranch:     mainBranch,
+		syncStrategy:   syncStrategy,
 	}, err
 }
 
@@ -129,11 +135,12 @@ func newPullRequestStepList(config *newPullRequestConfig, run *git.ProdRunner) (
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.BranchesToSync {
 		updateBranchSteps(&list, updateBranchStepsArgs{
-			branch:     branch,
-			isOffline:  config.isOffline,
-			mainBranch: config.mainBranch,
-			pushBranch: true,
-			run:        run,
+			branch:       branch,
+			isOffline:    config.isOffline,
+			mainBranch:   config.mainBranch,
+			pushBranch:   true,
+			run:          run,
+			syncStrategy: config.syncStrategy,
 		})
 	}
 	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &run.Backend, config.mainBranch)
