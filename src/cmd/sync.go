@@ -214,14 +214,14 @@ type updateBranchStepsArgs struct {
 
 func updateFeatureBranchSteps(list *runstate.StepListBuilder, branch git.BranchSyncStatus, run *git.ProdRunner, syncStrategy config.SyncStrategy) {
 	if branch.HasTrackingBranch() {
-		syncBranchSteps(list, run.Backend.TrackingBranch(branch.Name), string(syncStrategy))
+		syncBranchSteps(list, branch.TrackingBranch(), string(syncStrategy))
 	}
 	syncBranchSteps(list, run.Config.Lineage().Parent(branch.Name), string(syncStrategy))
 }
 
 func updatePerennialBranchSteps(list *runstate.StepListBuilder, branch git.BranchSyncStatus, run *git.ProdRunner, mainBranch string, pullBranchStrategy config.PullBranchStrategy) {
 	if branch.HasTrackingBranch() {
-		syncBranchSteps(list, run.Backend.TrackingBranch(branch.Name), string(pullBranchStrategy))
+		syncBranchSteps(list, branch.TrackingBranch(), string(pullBranchStrategy))
 	}
 	hasUpstream := list.Bool(run.Backend.HasRemote("upstream"))
 	shouldSyncUpstream := list.Bool(run.Config.ShouldSyncUpstream())

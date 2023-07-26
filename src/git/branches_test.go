@@ -7,6 +7,27 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestTrackingBranch(t *testing.T) {
+	t.Parallel()
+	give := "branch1"
+	have := git.TrackingBranch(give)
+	want := "origin/branch1"
+	assert.Equal(t, want, have)
+}
+
+func TestBranch(t *testing.T) {
+	t.Parallel()
+	t.Run("TrackingBranch", func(t *testing.T) {
+		give := git.BranchSyncStatus{
+			Name:       "branch1",
+			SyncStatus: git.SyncStatusUpToDate,
+		}
+		have := give.TrackingBranch()
+		want := "origin/branch1"
+		assert.Equal(t, want, have)
+	})
+}
+
 func TestBranches(t *testing.T) {
 	t.Parallel()
 

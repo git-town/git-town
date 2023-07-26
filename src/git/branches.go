@@ -21,6 +21,16 @@ func (bi BranchSyncStatus) HasTrackingBranch() bool {
 	panic(fmt.Sprintf("unknown sync status: %v", bi.SyncStatus))
 }
 
+// TrackingBranch provides the name of the remote branch tracking the local branch with the given name.
+func (bi BranchSyncStatus) TrackingBranch() string {
+	return TrackingBranch(bi.Name)
+}
+
+// TrackingBranch provides the name of the remote branch for the given branch.
+func TrackingBranch(branch string) string {
+	return "origin/" + branch
+}
+
 // IsLocalBranch indicates whether this branch exists in the local repo that Git Town is running in.
 func (bi BranchSyncStatus) IsLocal() bool {
 	return bi.SyncStatus.IsLocal()

@@ -460,17 +460,12 @@ func (bc *BackendCommands) ShaForBranch(name string) (string, error) {
 // ShouldPushBranch returns whether the local branch with the given name
 // contains commits that have not been pushed to its tracking branch.
 func (bc *BackendCommands) ShouldPushBranch(branch string) (bool, error) {
-	trackingBranch := bc.TrackingBranch(branch)
+	trackingBranch := TrackingBranch(branch)
 	out, err := bc.QueryTrim("git", "rev-list", "--left-right", branch+"..."+trackingBranch)
 	if err != nil {
 		return false, fmt.Errorf(messages.DiffProblem, branch, trackingBranch, err)
 	}
 	return out != "", nil
-}
-
-// TrackingBranch provides the name of the remote branch tracking the local branch with the given name.
-func (bc *BackendCommands) TrackingBranch(branch string) string {
-	return "origin/" + branch
 }
 
 // Version indicates whether the needed Git version is installed.
