@@ -124,6 +124,7 @@ type shipConfig struct {
 	proposalsOfChildBranches []hosting.Proposal
 	pullBranchStrategy       config.PullBranchStrategy
 	pushHook                 bool
+	shouldSyncUpstream       bool
 	syncStrategy             config.SyncStrategy
 }
 
@@ -145,6 +146,10 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 		return nil, err
 	}
 	pullBranchStrategy, err := run.Config.PullBranchStrategy()
+	if err != nil {
+		return nil, err
+	}
+	shouldSyncUpstream, err := run.Config.ShouldSyncUpstream()
 	if err != nil {
 		return nil, err
 	}
@@ -216,6 +221,7 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 		proposalsOfChildBranches: proposalsOfChildBranches,
 		pullBranchStrategy:       pullBranchStrategy,
 		pushHook:                 pushHook,
+		shouldSyncUpstream:       shouldSyncUpstream,
 		syncStrategy:             syncStrategy,
 	}, nil
 }
@@ -245,6 +251,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 		pushBranch:         true,
 		pushHook:           config.pushHook,
 		run:                run,
+		shouldSyncUpstream: config.shouldSyncUpstream,
 		syncStrategy:       config.syncStrategy,
 	})
 	// sync the branch to ship locally only
@@ -257,6 +264,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 		pushBranch:         false,
 		pushHook:           config.pushHook,
 		run:                run,
+		shouldSyncUpstream: config.shouldSyncUpstream,
 		syncStrategy:       config.syncStrategy,
 	})
 	list.Add(&steps.EnsureHasShippableChangesStep{Branch: config.branchToShip.Name, Parent: config.mainBranch})

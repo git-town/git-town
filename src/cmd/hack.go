@@ -92,6 +92,7 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 	lineage := run.Config.Lineage()
 	branchNamesToSync := lineage.BranchesAndAncestors([]string{parentBranch})
 	branchesToSync := fc.BranchesSyncStatus(allBranches.Select(branchNamesToSync))
+	shouldSyncUpstream := fc.Bool(run.Config.ShouldSyncUpstream())
 	return &appendConfig{
 		branchesToSync:      branchesToSync,
 		targetBranch:        targetBranch,
@@ -102,6 +103,7 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 		pullBranchStrategy:  fc.PullBranchStrategy(run.Config.PullBranchStrategy()),
 		pushHook:            pushHook,
 		isOffline:           isOffline,
+		shouldSyncUpstream:  shouldSyncUpstream,
 		syncStrategy:        fc.SyncStrategy(run.Config.SyncStrategy()),
 	}, fc.Err
 }

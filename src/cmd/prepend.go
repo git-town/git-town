@@ -88,6 +88,7 @@ type prependConfig struct {
 	pullBranchStrategy  config.PullBranchStrategy
 	pushHook            bool
 	parentBranch        string
+	shouldSyncUpstream  bool
 	shouldNewBranchPush bool
 	syncStrategy        config.SyncStrategy
 	targetBranch        string
@@ -101,6 +102,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner, allBranches git.
 	mainBranch := run.Config.MainBranch()
 	syncStrategy := fc.SyncStrategy(run.Config.SyncStrategy())
 	pullBranchStrategy := fc.PullBranchStrategy(run.Config.PullBranchStrategy())
+	shouldSyncUpstream := fc.Bool(run.Config.ShouldSyncUpstream())
 	// TODO: use fc all the way to the end
 	if fc.Err != nil {
 		return nil, fc.Err
@@ -129,6 +131,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner, allBranches git.
 		pushHook:            pushHook,
 		parentBranch:        lineage.Parent(initialBranch),
 		shouldNewBranchPush: shouldNewBranchPush,
+		shouldSyncUpstream:  shouldSyncUpstream,
 		syncStrategy:        syncStrategy,
 		targetBranch:        targetBranch,
 	}, err
@@ -146,6 +149,7 @@ func prependStepList(config *prependConfig, run *git.ProdRunner) (runstate.StepL
 			pushBranch:         true,
 			pushHook:           config.pushHook,
 			run:                run,
+			shouldSyncUpstream: config.shouldSyncUpstream,
 			syncStrategy:       config.syncStrategy,
 		})
 	}

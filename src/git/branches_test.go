@@ -18,6 +18,7 @@ func TestTrackingBranch(t *testing.T) {
 func TestBranch(t *testing.T) {
 	t.Parallel()
 	t.Run("TrackingBranch", func(t *testing.T) {
+		t.Parallel()
 		give := git.BranchSyncStatus{
 			Name:       "branch1",
 			SyncStatus: git.SyncStatusUpToDate,

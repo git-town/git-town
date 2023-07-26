@@ -85,6 +85,7 @@ type appendConfig struct {
 	parentBranch        string
 	pullBranchStrategy  config.PullBranchStrategy
 	shouldNewBranchPush bool
+	shouldSyncUpstream  bool
 	syncStrategy        config.SyncStrategy
 	targetBranch        string
 }
@@ -107,6 +108,7 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner, allBranches
 	branchNamesToSync := lineage.BranchAndAncestors(currentBranchName)
 	branchesToSync := fc.BranchesSyncStatus(allBranches.Select(branchNamesToSync))
 	syncStrategy := fc.SyncStrategy(run.Config.SyncStrategy())
+	shouldSyncUpstream := fc.Bool(run.Config.ShouldSyncUpstream())
 	return &appendConfig{
 		branchesToSync:      branchesToSync,
 		isOffline:           isOffline,
@@ -116,6 +118,7 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner, allBranches
 		parentBranch:        currentBranchName,
 		pullBranchStrategy:  pullBranchStrategy,
 		shouldNewBranchPush: shouldNewBranchPush,
+		shouldSyncUpstream:  shouldSyncUpstream,
 		syncStrategy:        syncStrategy,
 		targetBranch:        targetBranch,
 	}, fc.Err
@@ -133,6 +136,7 @@ func appendStepList(config *appendConfig, run *git.ProdRunner) (runstate.StepLis
 			pushBranch:         true,
 			pushHook:           config.pushHook,
 			run:                run,
+			shouldSyncUpstream: config.shouldSyncUpstream,
 			syncStrategy:       config.syncStrategy,
 		})
 	}

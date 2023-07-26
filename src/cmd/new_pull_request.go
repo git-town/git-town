@@ -99,6 +99,7 @@ type newPullRequestConfig struct {
 	mainBranch         string
 	pullBranchStrategy config.PullBranchStrategy
 	pushHook           bool
+	shouldSyncUpstream bool
 	syncStrategy       config.SyncStrategy
 }
 
@@ -130,6 +131,10 @@ func determineNewPullRequestConfig(run *git.ProdRunner, allBranches git.Branches
 	if err != nil {
 		return nil, err
 	}
+	shouldSyncUpstream, err := run.Config.ShouldSyncUpstream()
+	if err != nil {
+		return nil, err
+	}
 	lineage := run.Config.Lineage()
 	branchNamesToSync := lineage.BranchAndAncestors(initialBranch)
 	branchesToSync, err := allBranches.Select(branchNamesToSync)
@@ -141,6 +146,7 @@ func determineNewPullRequestConfig(run *git.ProdRunner, allBranches git.Branches
 		mainBranch:         mainBranch,
 		pullBranchStrategy: pullBranchStrategy,
 		pushHook:           pushHook,
+		shouldSyncUpstream: shouldSyncUpstream,
 		syncStrategy:       syncStrategy,
 	}, err
 }
@@ -157,6 +163,7 @@ func newPullRequestStepList(config *newPullRequestConfig, run *git.ProdRunner) (
 			pushBranch:         true,
 			pushHook:           config.pushHook,
 			run:                run,
+			shouldSyncUpstream: config.shouldSyncUpstream,
 			syncStrategy:       config.syncStrategy,
 		})
 	}
