@@ -124,6 +124,7 @@ func appendStepList(config *appendConfig, run *git.ProdRunner) (runstate.StepLis
 		updateBranchSteps(&list, updateBranchStepsArgs{
 			branch:       branch,
 			isOffline:    config.isOffline,
+			hasOrigin:    config.hasOrigin,
 			mainBranch:   config.mainBranch,
 			pushBranch:   true,
 			run:          run,

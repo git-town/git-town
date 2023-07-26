@@ -229,6 +229,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 	// sync the parent branch
 	updateBranchSteps(&list, updateBranchStepsArgs{
 		branch:       config.targetBranch,
+		hasOrigin:    config.hasOrigin,
 		isOffline:    config.isOffline,
 		mainBranch:   config.mainBranch,
 		pushBranch:   true,
@@ -238,6 +239,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 	// sync the branch to ship locally only
 	updateBranchSteps(&list, updateBranchStepsArgs{
 		branch:       config.branchToShip,
+		hasOrigin:    config.hasOrigin,
 		isOffline:    config.isOffline,
 		mainBranch:   config.mainBranch,
 		pushBranch:   false,

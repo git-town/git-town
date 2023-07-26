@@ -136,6 +136,7 @@ func prependStepList(config *prependConfig, run *git.ProdRunner) (runstate.StepL
 	for _, branchToSync := range config.branchesToSync {
 		updateBranchSteps(&list, updateBranchStepsArgs{
 			branch:       branchToSync,
+			hasOrigin:    config.hasOrigin,
 			isOffline:    config.isOffline,
 			mainBranch:   config.mainBranch,
 			pushBranch:   true,

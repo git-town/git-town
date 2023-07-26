@@ -145,6 +145,7 @@ func syncBranchesSteps(config *syncConfig, run *git.ProdRunner) (runstate.StepLi
 	for _, branch := range config.branchesToSync {
 		updateBranchSteps(&list, updateBranchStepsArgs{
 			branch:       branch,
+			hasOrigin:    config.hasOrigin,
 			isOffline:    config.isOffline,
 			mainBranch:   config.mainBranch,
 			run:          run,
@@ -163,9 +164,8 @@ func syncBranchesSteps(config *syncConfig, run *git.ProdRunner) (runstate.StepLi
 // updateBranchSteps provides the steps to sync a particular branch.
 func updateBranchSteps(list *runstate.StepListBuilder, args updateBranchStepsArgs) {
 	isFeatureBranch := args.run.Config.IsFeatureBranch(args.branch.Name)
-	hasOrigin := list.Bool(args.run.Backend.HasOrigin())
 	pushHook := list.Bool(args.run.Config.PushHook())
-	if !hasOrigin && !isFeatureBranch {
+	if !args.hasOrigin && !isFeatureBranch {
 		return
 	}
 	list.Add(&steps.CheckoutStep{Branch: args.branch.Name})
@@ -174,7 +174,7 @@ func updateBranchSteps(list *runstate.StepListBuilder, args updateBranchStepsArg
 	} else {
 		updatePerennialBranchSteps(list, args.branch, args.run, args.mainBranch)
 	}
-	if args.pushBranch && hasOrigin && !args.isOffline {
+	if args.pushBranch && args.hasOrigin && !args.isOffline {
 		if !args.branch.HasTrackingBranch() {
 			list.Add(&steps.CreateTrackingBranchStep{Branch: args.branch.Name})
 			return
@@ -189,6 +189,7 @@ func updateBranchSteps(list *runstate.StepListBuilder, args updateBranchStepsArg
 
 type updateBranchStepsArgs struct {
 	branch       git.BranchSyncStatus
+	hasOrigin    bool
 	isOffline    bool
 	mainBranch   string
 	pushBranch   bool
