@@ -6,6 +6,7 @@ package hosting
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/giturl"
@@ -109,6 +110,7 @@ type logFn func(string, ...interface{})
 
 // NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
 func NewConnector(config gitTownConfig, git gitCommands, log logFn) (Connector, error) {
+	fmt.Println("111111111111")
 	githubConnector, err := NewGithubConnector(config, log)
 	if err != nil {
 		return nil, err
