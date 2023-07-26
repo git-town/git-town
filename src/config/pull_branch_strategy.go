@@ -3,6 +3,8 @@ package config
 import (
 	"fmt"
 	"strings"
+
+	"github.com/git-town/git-town/v9/src/messages"
 )
 
 // PullBranchStrategy defines legal values for the "pull-branch-strategy" configuration setting.
@@ -20,7 +22,7 @@ func NewPullBranchStrategy(text string) (PullBranchStrategy, error) {
 	case "rebase", "":
 		return PullBranchStrategyRebase, nil
 	default:
-		return PullBranchStrategyMerge, fmt.Errorf("unknown pull branch strategy: %q", text)
+		return PullBranchStrategyMerge, fmt.Errorf(messages.ConfigPullbranchStrategyUnknown, text)
 	}
 }
 

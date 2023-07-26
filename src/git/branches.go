@@ -1,6 +1,10 @@
 package git
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/git-town/git-town/v9/src/messages"
+)
 
 type BranchSyncStatus struct {
 	Name       string
@@ -87,7 +91,7 @@ func (bs BranchesSyncStatus) Select(names []string) (BranchesSyncStatus, error) 
 	for n, name := range names {
 		branch := bs.Lookup(name)
 		if branch == nil {
-			return result, fmt.Errorf("cannot find branch %q", name)
+			return result, fmt.Errorf(messages.BranchDoesntExist, name)
 		}
 		result[n] = *branch
 	}

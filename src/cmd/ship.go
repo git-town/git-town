@@ -9,6 +9,7 @@ import (
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
+	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/git-town/git-town/v9/src/stringslice"
@@ -141,11 +142,11 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 	isShippingInitialBranch := branchNameToShip == initialBranch
 	if !isShippingInitialBranch {
 		if branchToShip == nil {
-			return nil, fmt.Errorf("there is no branch named %q", branchNameToShip)
+			return nil, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
 		}
 	}
 	if !run.Config.IsFeatureBranch(branchNameToShip) {
-		return nil, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can be shipped", branchNameToShip)
+		return nil, fmt.Errorf(messages.ShipNoFeatureBranch, branchNameToShip)
 	}
 	err = validate.KnowsBranchAncestors(branchNameToShip, mainBranch, &run.Backend)
 	if err != nil {
@@ -162,7 +163,7 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 	targetBranchName := lineage.Parent(branchNameToShip)
 	targetBranch := allBranches.Lookup(targetBranchName)
 	if targetBranch == nil {
-		return nil, fmt.Errorf("cannot find branch %q", targetBranchName)
+		return nil, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
 	canShipViaAPI := false
 	proposalMessage := ""
@@ -183,7 +184,7 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 		for _, childBranch := range childBranches {
 			childProposal, err := connector.FindProposal(childBranch, branchNameToShip)
 			if err != nil {
-				return nil, fmt.Errorf("cannot determine proposal for branch %q: %w", branchNameToShip, err)
+				return nil, fmt.Errorf(messages.ProposalNotFoundForBranch, branchNameToShip, err)
 			}
 			if childProposal != nil {
 				proposalsOfChildBranches = append(proposalsOfChildBranches, *childProposal)

@@ -1,9 +1,7 @@
 package cmd
 
 import (
-	"errors"
 	"fmt"
-	"os"
 	"time"
 
 	"github.com/git-town/git-town/v9/src/execute"
@@ -68,13 +66,11 @@ type displayStatusConfig struct {
 func loadDisplayStatusConfig(run *git.ProdRunner) (*displayStatusConfig, error) {
 	filepath, err := runstate.PersistenceFilePath(&run.Backend)
 	if err != nil {
-		return nil, fmt.Errorf("cannot determine the runstate file path: %w", err)
+		return nil, err
 	}
 	state, err := runstate.Load(&run.Backend)
 	if err != nil {
-		if !errors.Is(err, os.ErrNotExist) {
-			return nil, fmt.Errorf("the runstate file contains invalid content: %w", err)
-		}
+		return nil, err
 	}
 	return &displayStatusConfig{
 		filepath: filepath,

@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v9/src/giturl"
+	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/stringslice"
 )
 
@@ -109,7 +110,7 @@ func (gt *GitTown) IsOffline() (bool, error) {
 	}
 	result, err := ParseBool(config)
 	if err != nil {
-		return false, fmt.Errorf("invalid value for %s: %q. Please provide either \"true\" or \"false\"", OfflineKey, config)
+		return false, fmt.Errorf(messages.ValueInvalid, OfflineKey, config)
 	}
 	return result, nil
 }
@@ -210,7 +211,7 @@ func (gt *GitTown) PushHook() (bool, error) {
 	}
 	result, err := ParseBool(setting)
 	if err != nil {
-		return false, fmt.Errorf("invalid value for %s: %q. Please provide either \"true\" or \"false\"", PushHookKey, setting)
+		return false, fmt.Errorf(messages.ValueInvalid, PushHookKey, setting)
 	}
 	return result, nil
 }
@@ -227,7 +228,7 @@ func (gt *GitTown) PushHookGlobal() (bool, error) {
 	}
 	result, err := ParseBool(setting)
 	if err != nil {
-		return false, fmt.Errorf("invalid value for global %s: %q. Please provide either \"true\" or \"false\"", PushHookKey, setting)
+		return false, fmt.Errorf(messages.ValueGlobalInvalid, PushHookKey, setting)
 	}
 	return result, nil
 }
@@ -249,7 +250,7 @@ func (gt *GitTown) RemoveLocalGitConfiguration() error {
 				return nil
 			}
 		}
-		return fmt.Errorf("unexpected error while removing the 'git-town' section from the Git configuration: %w", err)
+		return fmt.Errorf(messages.ConfigRemoveError, err)
 	}
 	return nil
 }
@@ -387,7 +388,7 @@ func (gt *GitTown) ShouldNewBranchPush() (bool, error) {
 	}
 	value, err := ParseBool(config)
 	if err != nil {
-		return false, fmt.Errorf("invalid value for %s: %q. Please provide either \"yes\" or \"no\"", PushNewBranchesKey, config)
+		return false, fmt.Errorf(messages.ValueInvalid, PushNewBranchesKey, config)
 	}
 	return value, nil
 }
@@ -414,7 +415,7 @@ func (gt *GitTown) ShouldShipDeleteOriginBranch() (bool, error) {
 	}
 	result, err := strconv.ParseBool(setting)
 	if err != nil {
-		return true, fmt.Errorf("invalid value for %s: %q. Please provide either \"true\" or \"false\"", ShipDeleteRemoteBranchKey, setting)
+		return true, fmt.Errorf(messages.ValueInvalid, ShipDeleteRemoteBranchKey, setting)
 	}
 	return result, nil
 }

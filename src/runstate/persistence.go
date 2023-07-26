@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+
+	"github.com/git-town/git-town/v9/src/messages"
 )
 
 // Load loads the run state for the given Git repo from disk. Can return nil if there is no saved runstate.
@@ -20,16 +22,16 @@ func Load(repoDir string) (*RunState, error) {
 		if os.IsNotExist(err) {
 			return nil, nil //nolint:nilnil
 		}
-		return nil, fmt.Errorf("cannot check file %q: %w", filename, err)
+		return nil, fmt.Errorf(messages.FileStatProblem, filename, err)
 	}
 	var runState RunState
 	content, err := os.ReadFile(filename)
 	if err != nil {
-		return nil, fmt.Errorf("cannot read file %q: %w", filename, err)
+		return nil, fmt.Errorf(messages.FileReadProblem, filename, err)
 	}
 	err = json.Unmarshal(content, &runState)
 	if err != nil {
-		return nil, fmt.Errorf("cannot parse content of file %q: %w", filename, err)
+		return nil, fmt.Errorf(messages.FileContentInvalidJSON, filename, err)
 	}
 	return &runState, nil
 }
@@ -45,11 +47,11 @@ func Delete(repoDir string) error {
 		if os.IsNotExist(err) {
 			return nil
 		}
-		return fmt.Errorf("cannot check file %q: %w", filename, err)
+		return fmt.Errorf(messages.FileStatProblem, filename, err)
 	}
 	err = os.Remove(filename)
 	if err != nil {
-		return fmt.Errorf("cannot delete file %q: %w", filename, err)
+		return fmt.Errorf(messages.FileDeleteProblem, filename, err)
 	}
 	return nil
 }
@@ -58,7 +60,7 @@ func Delete(repoDir string) error {
 func Save(runState *RunState, repoDir string) error {
 	content, err := json.MarshalIndent(runState, "", "  ")
 	if err != nil {
-		return fmt.Errorf("cannot encode run-state: %w", err)
+		return fmt.Errorf(messages.RunstateSerializeProblem, err)
 	}
 	persistencePath, err := PersistenceFilePath(repoDir)
 	if err != nil {
@@ -71,7 +73,7 @@ func Save(runState *RunState, repoDir string) error {
 	}
 	err = os.WriteFile(persistencePath, content, 0o600)
 	if err != nil {
-		return fmt.Errorf("cannot write file %q: %w", persistencePath, err)
+		return fmt.Errorf(messages.FileWriteProblem, persistencePath, err)
 	}
 	return nil
 }
@@ -79,7 +81,7 @@ func Save(runState *RunState, repoDir string) error {
 func PersistenceFilePath(repoDir string) (string, error) {
 	configDir, err := os.UserConfigDir()
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf(messages.RunstatePathProblem, err)
 	}
 	persistenceDir := filepath.Join(configDir, "git-town", "runstate")
 	filename := SanitizePath(repoDir)

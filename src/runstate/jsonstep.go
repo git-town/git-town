@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"reflect"
 
+	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/steps"
 )
 
@@ -35,7 +36,7 @@ func (j *JSONStep) UnmarshalJSON(b []byte) error {
 	}
 	j.Step = determineStep(stepType)
 	if j.Step == nil {
-		return fmt.Errorf("unknown step type: %q, run \"git town config runstate reset\" to reset it", stepType)
+		return fmt.Errorf(messages.RunstateStepUnknown, stepType)
 	}
 	return json.Unmarshal(*mapping["data"], &j.Step)
 }

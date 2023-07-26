@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
+	"github.com/git-town/git-town/v9/src/messages"
 )
 
 // Execute runs the commands in the given runstate.
@@ -19,12 +20,12 @@ func Execute(runState *RunState, run *git.ProdRunner, connector hosting.Connecto
 			if runState.IsAbort || runState.isUndo {
 				err := Delete(&run.Backend)
 				if err != nil {
-					return fmt.Errorf("cannot delete previous run state: %w", err)
+					return fmt.Errorf(messages.RunstateDeleteProblem, err)
 				}
 			} else {
 				err := Save(runState, &run.Backend)
 				if err != nil {
-					return fmt.Errorf("cannot save run state: %w", err)
+					return fmt.Errorf(messages.RunstateSaveProblem, err)
 				}
 			}
 			fmt.Println()
@@ -50,7 +51,7 @@ func Execute(runState *RunState, run *git.ProdRunner, connector hosting.Connecto
 				abortRunState := runState.CreateAbortRunState()
 				err := Execute(&abortRunState, run, connector)
 				if err != nil {
-					return fmt.Errorf("cannot run the abort steps: %w", err)
+					return fmt.Errorf(messages.RunstateAbortStepProblem, err)
 				}
 				return step.CreateAutomaticAbortError()
 			}
@@ -72,7 +73,7 @@ func Execute(runState *RunState, run *git.ProdRunner, connector hosting.Connecto
 			}
 			err = Save(runState, &run.Backend)
 			if err != nil {
-				return fmt.Errorf("cannot save run state: %w", err)
+				return fmt.Errorf(messages.RunstateSaveProblem, err)
 			}
 			message := runErr.Error() + `
 
@@ -87,7 +88,7 @@ To continue after having resolved conflicts, run "git-town continue".
 		}
 		undoStep, err := step.CreateUndoStep(&run.Backend)
 		if err != nil {
-			return fmt.Errorf("cannot create undo step for %q: %w", step, err)
+			return fmt.Errorf(messages.UndoCreateStepProblem, step, err)
 		}
 		runState.UndoStepList.Prepend(undoStep)
 	}

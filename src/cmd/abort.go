@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/hosting"
+	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/spf13/cobra"
 )
@@ -50,10 +51,10 @@ func abort(debug bool) error {
 	}
 	runState, err := runstate.Load(rootDir)
 	if err != nil {
-		return fmt.Errorf("cannot load previous run state: %w", err)
+		return fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
 	if runState == nil || !runState.IsUnfinished() {
-		return fmt.Errorf("nothing to abort")
+		return fmt.Errorf(messages.AbortNothingToDo)
 	}
 	abortRunState := runState.CreateAbortRunState()
 	connector, err := hosting.NewConnector(run.Config.GitTown, &run.Backend, cli.PrintConnectorAction)
