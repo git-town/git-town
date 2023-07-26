@@ -85,7 +85,7 @@ type prependConfig struct {
 	initialBranch       string
 	isOffline           bool
 	mainBranch          string
-	noPushHook          bool
+	pushHook            bool
 	parentBranch        string
 	shouldNewBranchPush bool
 	syncStrategy        config.SyncStrategy
@@ -123,7 +123,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner, allBranches git.
 		initialBranch:       initialBranch,
 		isOffline:           isOffline,
 		mainBranch:          mainBranch,
-		noPushHook:          !pushHook,
+		pushHook:            pushHook,
 		parentBranch:        lineage.Parent(initialBranch),
 		shouldNewBranchPush: shouldNewBranchPush,
 		syncStrategy:        syncStrategy,
@@ -140,6 +140,7 @@ func prependStepList(config *prependConfig, run *git.ProdRunner) (runstate.StepL
 			isOffline:    config.isOffline,
 			mainBranch:   config.mainBranch,
 			pushBranch:   true,
+			pushHook:     config.pushHook,
 			run:          run,
 			syncStrategy: config.syncStrategy,
 		})
@@ -149,7 +150,7 @@ func prependStepList(config *prependConfig, run *git.ProdRunner) (runstate.StepL
 	list.Add(&steps.SetParentStep{Branch: config.initialBranch, ParentBranch: config.targetBranch})
 	list.Add(&steps.CheckoutStep{Branch: config.targetBranch})
 	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
-		list.Add(&steps.CreateTrackingBranchStep{Branch: config.targetBranch, NoPushHook: config.noPushHook})
+		list.Add(&steps.CreateTrackingBranchStep{Branch: config.targetBranch, NoPushHook: !config.pushHook})
 	}
 	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &run.Backend, config.mainBranch)
 	return list.Result()

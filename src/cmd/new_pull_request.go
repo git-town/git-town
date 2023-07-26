@@ -97,6 +97,7 @@ type newPullRequestConfig struct {
 	InitialBranch  string
 	isOffline      bool
 	mainBranch     string
+	pushHook       bool
 	syncStrategy   config.SyncStrategy
 }
 
@@ -120,6 +121,10 @@ func determineNewPullRequestConfig(run *git.ProdRunner, allBranches git.Branches
 	if err != nil {
 		return nil, err
 	}
+	pushHook, err := run.Config.PushHook()
+	if err != nil {
+		return nil, err
+	}
 	lineage := run.Config.Lineage()
 	branchNamesToSync := lineage.BranchAndAncestors(initialBranch)
 	branchesToSync, err := allBranches.Select(branchNamesToSync)
@@ -129,6 +134,7 @@ func determineNewPullRequestConfig(run *git.ProdRunner, allBranches git.Branches
 		InitialBranch:  initialBranch,
 		isOffline:      isOffline,
 		mainBranch:     mainBranch,
+		pushHook:       pushHook,
 		syncStrategy:   syncStrategy,
 	}, err
 }
@@ -142,6 +148,7 @@ func newPullRequestStepList(config *newPullRequestConfig, run *git.ProdRunner) (
 			isOffline:    config.isOffline,
 			mainBranch:   config.mainBranch,
 			pushBranch:   true,
+			pushHook:     config.pushHook,
 			run:          run,
 			syncStrategy: config.syncStrategy,
 		})

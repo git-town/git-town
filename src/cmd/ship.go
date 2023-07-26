@@ -122,6 +122,7 @@ type shipConfig struct {
 	mainBranch               string
 	proposal                 *hosting.Proposal
 	proposalsOfChildBranches []hosting.Proposal
+	pushHook                 bool
 	syncStrategy             config.SyncStrategy
 }
 
@@ -158,9 +159,6 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 	if err != nil {
 		return nil, err
 	}
-	if err != nil {
-		return nil, err
-	}
 	lineage := run.Config.Lineage()
 	targetBranchName := lineage.Parent(branchNameToShip)
 	targetBranch := allBranches.Lookup(targetBranchName)
@@ -172,6 +170,10 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 	var proposal *hosting.Proposal
 	childBranches := lineage.Children(branchNameToShip)
 	proposalsOfChildBranches := []hosting.Proposal{}
+	pushHook, err := run.Config.PushHook()
+	if err != nil {
+		return nil, err
+	}
 	if !isOffline && connector != nil {
 		if branchToShip.HasTrackingBranch() {
 			proposal, err = connector.FindProposal(branchNameToShip, targetBranchName)
@@ -207,6 +209,7 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 		mainBranch:               mainBranch,
 		proposal:                 proposal,
 		proposalsOfChildBranches: proposalsOfChildBranches,
+		pushHook:                 pushHook,
 		syncStrategy:             syncStrategy,
 	}, nil
 }
@@ -233,6 +236,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 		isOffline:    config.isOffline,
 		mainBranch:   config.mainBranch,
 		pushBranch:   true,
+		pushHook:     config.pushHook,
 		run:          run,
 		syncStrategy: config.syncStrategy,
 	})
@@ -243,6 +247,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 		isOffline:    config.isOffline,
 		mainBranch:   config.mainBranch,
 		pushBranch:   false,
+		pushHook:     config.pushHook,
 		run:          run,
 		syncStrategy: config.syncStrategy,
 	})

@@ -93,6 +93,7 @@ type syncConfig struct {
 	initialBranch  string
 	isOffline      bool
 	mainBranch     string
+	pushHook       bool
 	shouldPushTags bool
 	syncStrategy   config.SyncStrategy
 }
@@ -127,6 +128,10 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranchesSyncStatu
 	if err != nil {
 		return nil, err
 	}
+	pushHook, err := run.Config.PushHook()
+	if err != nil {
+		return nil, err
+	}
 	branchesToSync, err := allBranchesSyncStatus.Select(allBranchNamesToSync)
 	return &syncConfig{
 		branchesToSync: branchesToSync,
@@ -134,6 +139,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranchesSyncStatu
 		initialBranch:  initialBranch,
 		isOffline:      isOffline,
 		mainBranch:     mainBranch,
+		pushHook:       pushHook,
 		shouldPushTags: shouldPushTags,
 		syncStrategy:   syncStrategy,
 	}, err
@@ -150,6 +156,7 @@ func syncBranchesSteps(config *syncConfig, run *git.ProdRunner) (runstate.StepLi
 			mainBranch:   config.mainBranch,
 			run:          run,
 			pushBranch:   true,
+			pushHook:     config.pushHook,
 			syncStrategy: config.syncStrategy,
 		})
 	}
@@ -192,7 +199,7 @@ type updateBranchStepsArgs struct {
 	isOffline    bool
 	mainBranch   string
 	pushBranch   bool
-	noPushHook   bool
+	pushHook     bool
 	run          *git.ProdRunner
 	syncStrategy config.SyncStrategy
 }
