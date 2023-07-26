@@ -100,6 +100,7 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 		parentBranch:        parentBranch,
 		hasOrigin:           hasOrigin,
 		hasUpstream:         hasUpstream,
+		lineage:             lineage,
 		mainBranch:          mainBranch,
 		shouldNewBranchPush: shouldNewBranchPush,
 		pullBranchStrategy:  fc.PullBranchStrategy(run.Config.PullBranchStrategy()),

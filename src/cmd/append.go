@@ -81,6 +81,7 @@ type appendConfig struct {
 	hasOrigin           bool
 	hasUpstream         bool
 	isOffline           bool
+	lineage             config.Lineage
 	mainBranch          string
 	pushHook            bool
 	parentBranch        string
@@ -116,6 +117,7 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner, allBranches
 		hasOrigin:           hasOrigin,
 		hasUpstream:         hasUpstream,
 		isOffline:           isOffline,
+		lineage:             lineage,
 		mainBranch:          mainBranch,
 		pushHook:            pushHook,
 		parentBranch:        currentBranchName,
@@ -133,6 +135,7 @@ func appendStepList(config *appendConfig, run *git.ProdRunner) (runstate.StepLis
 		updateBranchSteps(&list, updateBranchStepsArgs{
 			branch:             branch,
 			isOffline:          config.isOffline,
+			lineage:            config.lineage,
 			hasOrigin:          config.hasOrigin,
 			hasUpstream:        config.hasUpstream,
 			mainBranch:         config.mainBranch,

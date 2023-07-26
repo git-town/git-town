@@ -85,6 +85,7 @@ type prependConfig struct {
 	hasUpstream         bool
 	initialBranch       string
 	isOffline           bool
+	lineage             config.Lineage
 	mainBranch          string
 	pullBranchStrategy  config.PullBranchStrategy
 	pushHook            bool
@@ -129,6 +130,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner, allBranches git.
 		hasUpstream:         hasUpstream,
 		initialBranch:       initialBranch,
 		isOffline:           isOffline,
+		lineage:             lineage,
 		mainBranch:          mainBranch,
 		pullBranchStrategy:  pullBranchStrategy,
 		pushHook:            pushHook,
@@ -148,6 +150,7 @@ func prependStepList(config *prependConfig, run *git.ProdRunner) (runstate.StepL
 			hasOrigin:          config.hasOrigin,
 			hasUpstream:        config.hasUpstream,
 			isOffline:          config.isOffline,
+			lineage:            config.lineage,
 			mainBranch:         config.mainBranch,
 			pullBranchStrategy: config.pullBranchStrategy,
 			pushBranch:         true,

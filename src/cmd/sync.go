@@ -93,6 +93,7 @@ type syncConfig struct {
 	hasUpstream        bool
 	initialBranch      string
 	isOffline          bool
+	lineage            config.Lineage
 	mainBranch         string
 	pullBranchStrategy config.PullBranchStrategy
 	pushHook           bool
@@ -107,7 +108,6 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranchesSyncStatu
 		return nil, err
 	}
 	mainBranch := run.Config.MainBranch()
-	lineage := run.Config.Lineage()
 	var branchNamesToSync []string
 	var shouldPushTags bool
 	if allFlag {
@@ -126,6 +126,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranchesSyncStatu
 		branchNamesToSync = []string{initialBranch}
 		shouldPushTags = !run.Config.IsFeatureBranch(initialBranch)
 	}
+	lineage := run.Config.Lineage()
 	allBranchNamesToSync := lineage.BranchesAndAncestors(branchNamesToSync)
 	syncStrategy, err := run.Config.SyncStrategy()
 	if err != nil {
@@ -154,6 +155,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranchesSyncStatu
 		hasUpstream:        hasUpstream,
 		initialBranch:      initialBranch,
 		isOffline:          isOffline,
+		lineage:            lineage,
 		mainBranch:         mainBranch,
 		pullBranchStrategy: pullBranchStrategy,
 		pushHook:           pushHook,
@@ -172,6 +174,7 @@ func syncBranchesSteps(config *syncConfig, run *git.ProdRunner) (runstate.StepLi
 			hasOrigin:          config.hasOrigin,
 			hasUpstream:        config.hasUpstream,
 			isOffline:          config.isOffline,
+			lineage:            config.lineage,
 			mainBranch:         config.mainBranch,
 			run:                run,
 			pullBranchStrategy: config.pullBranchStrategy,
@@ -197,7 +200,7 @@ func updateBranchSteps(list *runstate.StepListBuilder, args updateBranchStepsArg
 	}
 	list.Add(&steps.CheckoutStep{Branch: args.branch.Name})
 	if isFeatureBranch {
-		updateFeatureBranchSteps(list, args.branch, args.run, args.syncStrategy)
+		updateFeatureBranchSteps(list, args.branch, args.lineage, args.syncStrategy)
 	} else {
 		updatePerennialBranchSteps(list, updatePerennialBranchStepsArgs{
 			branch:             args.branch,
@@ -225,6 +228,7 @@ type updateBranchStepsArgs struct {
 	hasOrigin          bool
 	hasUpstream        bool
 	isOffline          bool
+	lineage            config.Lineage
 	mainBranch         string
 	pullBranchStrategy config.PullBranchStrategy
 	pushBranch         bool
@@ -234,11 +238,11 @@ type updateBranchStepsArgs struct {
 	syncStrategy       config.SyncStrategy
 }
 
-func updateFeatureBranchSteps(list *runstate.StepListBuilder, branch git.BranchSyncStatus, run *git.ProdRunner, syncStrategy config.SyncStrategy) {
+func updateFeatureBranchSteps(list *runstate.StepListBuilder, branch git.BranchSyncStatus, lineage config.Lineage, syncStrategy config.SyncStrategy) {
 	if branch.HasTrackingBranch() {
 		syncBranchSteps(list, branch.TrackingBranch(), string(syncStrategy))
 	}
-	syncBranchSteps(list, run.Config.Lineage().Parent(branch.Name), string(syncStrategy))
+	syncBranchSteps(list, lineage.Parent(branch.Name), string(syncStrategy))
 }
 
 func updatePerennialBranchSteps(list *runstate.StepListBuilder, args updatePerennialBranchStepsArgs) {

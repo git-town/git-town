@@ -97,6 +97,7 @@ type newPullRequestConfig struct {
 	hasUpstream        bool
 	InitialBranch      string
 	isOffline          bool
+	lineage            config.Lineage
 	mainBranch         string
 	pullBranchStrategy config.PullBranchStrategy
 	pushHook           bool
@@ -149,6 +150,7 @@ func determineNewPullRequestConfig(run *git.ProdRunner, allBranches git.Branches
 		hasUpstream:        hasUpstream,
 		InitialBranch:      initialBranch,
 		isOffline:          isOffline,
+		lineage:            lineage,
 		mainBranch:         mainBranch,
 		pullBranchStrategy: pullBranchStrategy,
 		pushHook:           pushHook,
@@ -165,6 +167,7 @@ func newPullRequestStepList(config *newPullRequestConfig, run *git.ProdRunner) (
 			hasOrigin:          config.hasOrigin,
 			hasUpstream:        config.hasUpstream,
 			isOffline:          config.isOffline,
+			lineage:            config.lineage,
 			mainBranch:         config.mainBranch,
 			pullBranchStrategy: config.pullBranchStrategy,
 			pushBranch:         true,

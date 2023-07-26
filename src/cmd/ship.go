@@ -120,6 +120,7 @@ type shipConfig struct {
 	initialBranch            string
 	isShippingInitialBranch  bool
 	isOffline                bool
+	lineage                  config.Lineage
 	mainBranch               string
 	proposal                 *hosting.Proposal
 	proposalsOfChildBranches []hosting.Proposal
@@ -222,6 +223,7 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 		initialBranch:            initialBranch,
 		isOffline:                isOffline,
 		isShippingInitialBranch:  isShippingInitialBranch,
+		lineage:                  lineage,
 		mainBranch:               mainBranch,
 		proposal:                 proposal,
 		proposalsOfChildBranches: proposalsOfChildBranches,
@@ -253,6 +255,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 		hasOrigin:          config.hasOrigin,
 		hasUpstream:        config.hasUpstream,
 		isOffline:          config.isOffline,
+		lineage:            config.lineage,
 		mainBranch:         config.mainBranch,
 		pullBranchStrategy: config.pullBranchStrategy,
 		pushBranch:         true,
@@ -267,6 +270,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 		hasOrigin:          config.hasOrigin,
 		hasUpstream:        config.hasUpstream,
 		isOffline:          config.isOffline,
+		lineage:            config.lineage,
 		mainBranch:         config.mainBranch,
 		pullBranchStrategy: config.pullBranchStrategy,
 		pushBranch:         false,
