@@ -80,6 +80,7 @@ func hack(args []string, promptForParent, debug bool) error {
 func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string) (*appendConfig, error) {
 	fc := failure.Collector{}
 	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
+	hasOpenChanges := fc.Bool(run.Backend.HasOpenChanges())
 	targetBranch := args[0]
 	mainBranch := run.Config.MainBranch()
 	parentBranch := fc.String(determineParentBranch(targetBranch, promptForParent, run, mainBranch))
@@ -99,6 +100,7 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 		branchesToSync:      branchesToSync,
 		targetBranch:        targetBranch,
 		parentBranch:        parentBranch,
+		hasOpenChanges:      hasOpenChanges,
 		hasOrigin:           hasOrigin,
 		hasUpstream:         hasUpstream,
 		initialBranch:       initialBranch,

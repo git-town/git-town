@@ -177,6 +177,6 @@ func renameBranchStepList(config *renameBranchConfig, run *git.ProdRunner) (runs
 		MainBranch:       config.mainBranch,
 		InitialBranch:    config.initialBranch,
 		PreviousBranch:   config.previousBranch,
-	}, &run.Backend)
+	})
 	return result, err
 }

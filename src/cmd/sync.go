@@ -89,6 +89,7 @@ func sync(all, dryRun, debug bool) error {
 
 type syncConfig struct {
 	branchesToSync     git.BranchesSyncStatus
+	hasOpenChanges     bool
 	hasOrigin          bool
 	hasUpstream        bool
 	initialBranch      string
@@ -105,6 +106,10 @@ type syncConfig struct {
 
 func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranchesSyncStatus git.BranchesSyncStatus, initialBranch string, isOffline bool) (*syncConfig, error) {
 	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
+	hasOpenChanges, err := run.Backend.HasOpenChanges()
+	if err != nil {
+		return nil, err
+	}
 	hasOrigin, err := run.Backend.HasOrigin()
 	if err != nil {
 		return nil, err
@@ -153,6 +158,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranchesSyncStatu
 	branchesToSync, err := allBranchesSyncStatus.Select(allBranchNamesToSync)
 	return &syncConfig{
 		branchesToSync:     branchesToSync,
+		hasOpenChanges:     hasOpenChanges,
 		hasOrigin:          hasOrigin,
 		hasUpstream:        hasUpstream,
 		initialBranch:      initialBranch,
@@ -193,11 +199,11 @@ func syncBranchesSteps(config *syncConfig, run *git.ProdRunner) (runstate.StepLi
 	}
 	list.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     true,
-		StashOpenChanges: true,
+		StashOpenChanges: config.hasOpenChanges,
 		MainBranch:       config.mainBranch,
 		InitialBranch:    config.initialBranch,
 		PreviousBranch:   config.previousBranch,
-	}, &run.Backend)
+	})
 	return list.Result()
 }
 

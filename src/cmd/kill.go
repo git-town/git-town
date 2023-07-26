@@ -58,7 +58,7 @@ func kill(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	stepList, err := killStepList(config, &repo.Runner)
+	stepList, err := killStepList(config)
 	if err != nil {
 		return err
 	}
@@ -124,7 +124,7 @@ func determineKillConfig(args []string, run *git.ProdRunner, allBranches git.Bra
 	}, nil
 }
 
-func killStepList(config *killConfig, run *git.ProdRunner) (runstate.StepList, error) {
+func killStepList(config *killConfig) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	switch {
 	case config.targetBranch.IsLocal():
@@ -149,10 +149,10 @@ func killStepList(config *killConfig, run *git.ProdRunner) (runstate.StepList, e
 	}
 	err := result.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     true,
-		StashOpenChanges: config.initialBranch != config.targetBranch.Name && config.targetBranch.Name == config.previousBranch,
+		StashOpenChanges: config.initialBranch != config.targetBranch.Name && config.targetBranch.Name == config.previousBranch && config.hasOpenChanges,
 		MainBranch:       config.mainBranch,
 		InitialBranch:    config.initialBranch,
 		PreviousBranch:   config.previousBranch,
-	}, &run.Backend)
+	})
 	return result, err
 }

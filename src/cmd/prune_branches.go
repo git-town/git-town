@@ -103,6 +103,6 @@ func pruneBranchesStepList(config *pruneBranchesConfig, run *git.ProdRunner) (ru
 		MainBranch:       config.mainBranch,
 		InitialBranch:    config.initialBranch,
 		PreviousBranch:   config.previousBranch,
-	}, &run.Backend)
+	})
 	return result, err
 }

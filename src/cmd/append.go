@@ -78,6 +78,7 @@ func runAppend(arg string, debug bool) error {
 
 type appendConfig struct {
 	branchesToSync      git.BranchesSyncStatus
+	hasOpenChanges      bool
 	hasOrigin           bool
 	hasUpstream         bool
 	initialBranch       string
@@ -102,6 +103,7 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner, allBranches
 	pushHook := fc.Bool(run.Config.PushHook())
 	hasUpstream := fc.Bool(run.Backend.HasUpstream())
 	pullBranchStrategy := fc.PullBranchStrategy(run.Config.PullBranchStrategy())
+	hasOpenChanges := fc.Bool(run.Backend.HasOpenChanges())
 	shouldNewBranchPush := fc.Bool(run.Config.ShouldNewBranchPush())
 	if fc.Err != nil {
 		return nil, fc.Err
@@ -117,6 +119,7 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner, allBranches
 	shouldSyncUpstream := fc.Bool(run.Config.ShouldSyncUpstream())
 	return &appendConfig{
 		branchesToSync:      branchesToSync,
+		hasOpenChanges:      hasOpenChanges,
 		hasOrigin:           hasOrigin,
 		hasUpstream:         hasUpstream,
 		initialBranch:       initialBranch,
@@ -160,10 +163,10 @@ func appendStepList(config *appendConfig, run *git.ProdRunner) (runstate.StepLis
 	}
 	list.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     true,
-		StashOpenChanges: true,
+		StashOpenChanges: config.hasOpenChanges,
 		MainBranch:       config.mainBranch,
 		InitialBranch:    config.initialBranch,
 		PreviousBranch:   config.previousBranch,
-	}, &run.Backend)
+	})
 	return list.Result()
 }

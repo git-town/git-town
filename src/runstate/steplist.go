@@ -3,7 +3,6 @@ package runstate
 import (
 	"encoding/json"
 
-	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/steps"
 )
 
@@ -75,7 +74,7 @@ type WrapOptions struct {
 
 // Wrap wraps the list with steps that
 // change to the Git root directory or stash away open changes.
-func (stepList *StepList) Wrap(options WrapOptions, backend *git.BackendCommands) error {
+func (stepList *StepList) Wrap(options WrapOptions) error {
 	if options.PreviousBranch != "" {
 		stepList.Append(&steps.PreserveCheckoutHistoryStep{
 			InitialBranch:                     options.InitialBranch,
@@ -83,11 +82,7 @@ func (stepList *StepList) Wrap(options WrapOptions, backend *git.BackendCommands
 			MainBranch:                        options.MainBranch,
 		})
 	}
-	hasOpenChanges, err := backend.HasOpenChanges()
-	if err != nil {
-		return err
-	}
-	if options.StashOpenChanges && hasOpenChanges {
+	if options.StashOpenChanges {
 		stepList.Prepend(&steps.StashOpenChangesStep{})
 		stepList.Append(&steps.RestoreOpenChangesStep{})
 	}

@@ -81,6 +81,7 @@ func prepend(args []string, debug bool) error {
 
 type prependConfig struct {
 	branchesToSync      git.BranchesSyncStatus
+	hasOpenChanges      bool
 	hasOrigin           bool
 	hasUpstream         bool
 	initialBranch       string
@@ -100,6 +101,7 @@ type prependConfig struct {
 func determinePrependConfig(args []string, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string, isOffline bool) (*prependConfig, error) {
 	fc := failure.Collector{}
 	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
+	hasOpenChanges := fc.Bool(run.Backend.HasOpenChanges())
 	hasOrigin := fc.Bool(run.Backend.HasOrigin())
 	shouldNewBranchPush := fc.Bool(run.Config.ShouldNewBranchPush())
 	pushHook := fc.Bool(run.Config.PushHook())
@@ -128,6 +130,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner, allBranches git.
 	branchesToSync, err := allBranches.Select(branchNamesToSync)
 	return &prependConfig{
 		branchesToSync:      branchesToSync,
+		hasOpenChanges:      hasOpenChanges,
 		hasOrigin:           hasOrigin,
 		hasUpstream:         hasUpstream,
 		initialBranch:       initialBranch,
@@ -172,10 +175,10 @@ func prependStepList(config *prependConfig, run *git.ProdRunner) (runstate.StepL
 	}
 	list.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     true,
-		StashOpenChanges: true,
+		StashOpenChanges: config.hasOpenChanges,
 		MainBranch:       config.mainBranch,
 		InitialBranch:    config.initialBranch,
 		PreviousBranch:   config.previousBranch,
-	}, &run.Backend)
+	})
 	return list.Result()
 }
