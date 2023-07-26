@@ -34,20 +34,25 @@ func diffParentCommand() *cobra.Command {
 }
 
 func diffParent(args []string, debug bool) error {
-	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:                 debug,
-		DryRun:                false,
+	run, err := execute.LoadProdRunner(execute.LoadArgs{
+		Debug:           debug,
+		DryRun:          false,
+		OmitBranchNames: false,
+	})
+	if err != nil {
+		return err
+	}
+	_, currentBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+		Fetch:                 false,
 		HandleUnfinishedState: true,
-		OmitBranchNames:       false,
-		ValidateGitversion:    true,
 		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,
-		ValidateIsRepository:  true,
+		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineDiffParentConfig(args, &run)
+	config, err := determineDiffParentConfig(args, &run, currentBranch)
 	if err != nil {
 		return err
 	}
@@ -65,11 +70,7 @@ type diffParentConfig struct {
 }
 
 // Does not return error because "Ensure" functions will call exit directly.
-func determineDiffParentConfig(args []string, run *git.ProdRunner) (*diffParentConfig, error) {
-	initialBranch, err := run.Backend.CurrentBranch()
-	if err != nil {
-		return nil, err
-	}
+func determineDiffParentConfig(args []string, run *git.ProdRunner, initialBranch string) (*diffParentConfig, error) {
 	var branch string
 	if len(args) > 0 {
 		branch = args[0]
@@ -88,12 +89,13 @@ func determineDiffParentConfig(args []string, run *git.ProdRunner) (*diffParentC
 	if !run.Config.IsFeatureBranch(branch) {
 		return nil, fmt.Errorf("you can only diff-parent feature branches")
 	}
-	err = validate.KnowsBranchAncestors(branch, run.Config.MainBranch(), &run.Backend)
+	err := validate.KnowsBranchAncestors(branch, run.Config.MainBranch(), &run.Backend)
 	if err != nil {
 		return nil, err
 	}
+	lineage := run.Config.Lineage()
 	return &diffParentConfig{
 		branch:       branch,
-		parentBranch: run.Config.Lineage().Parent(branch),
+		parentBranch: lineage.Parent(branch),
 	}, nil
 }

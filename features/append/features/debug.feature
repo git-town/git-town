@@ -10,18 +10,15 @@ Feature: display debug statistics
     When I run "git-town append new --debug"
     Then it runs the commands
       | BRANCH   | TYPE     | COMMAND                                              |
+      |          | backend  | git version                                          |
       |          | backend  | git config -lz --local                               |
       |          | backend  | git config -lz --global                              |
-      |          | backend  | git rev-parse                                        |
       |          | backend  | git rev-parse --show-toplevel                        |
-      |          | backend  | git version                                          |
-      |          | backend  | git branch -a                                        |
+      |          | backend  | git remote                                           |
       |          | backend  | git status                                           |
       |          | backend  | git rev-parse --abbrev-ref HEAD                      |
-      |          | backend  | git remote                                           |
       | existing | frontend | git fetch --prune --tags                             |
-      |          | backend  | git branch -a                                        |
-      |          | backend  | git branch -r                                        |
+      |          | backend  | git branch -vva                                      |
       |          | backend  | git rev-parse --verify --abbrev-ref @{-1}            |
       |          | backend  | git status --porcelain --ignore-submodules           |
       | existing | frontend | git checkout main                                    |
@@ -42,7 +39,7 @@ Feature: display debug statistics
       |          | backend  | git rev-parse --verify --abbrev-ref @{-1}            |
     And it prints:
       """
-      Ran 30 shell commands.
+      Ran 27 shell commands.
       """
     And the current branch is now "new"
 
@@ -51,6 +48,6 @@ Feature: display debug statistics
     When I run "git-town undo --debug"
     Then it prints:
       """
-      Ran 15 shell commands.
+      Ran 12 shell commands.
       """
     And the current branch is now "existing"

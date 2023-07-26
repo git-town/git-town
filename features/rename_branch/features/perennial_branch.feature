@@ -10,7 +10,9 @@ Feature: rename a perennial branch
 
   Scenario: normal rename fails
     When I run "git-town rename-branch production new"
-    Then it runs no commands
+    Then it runs the commands
+      | BRANCH     | COMMAND                  |
+      | production | git fetch --prune --tags |
     And it prints the error:
       """
       "production" is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'

@@ -3,39 +3,41 @@ package execute
 import (
 	"github.com/git-town/git-town/v9/src/cache"
 	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/statistics"
 	"github.com/git-town/git-town/v9/src/subshell"
 	"github.com/git-town/git-town/v9/src/validate"
 )
 
-type Statistics interface {
-	RegisterRun()
-	PrintAnalysis()
-}
-
-func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, exit bool, err error) {
+func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, err error) {
 	var stats Statistics
 	if args.Debug {
 		stats = &statistics.CommandsRun{CommandsCount: 0}
 	} else {
 		stats = &statistics.None{}
 	}
-	backendRunner := subshell.BackendRunner{Dir: nil, Verbose: args.Debug, Stats: stats}
-	config := git.RepoConfig{
-		GitTown: config.NewGitTown(backendRunner),
-		DryRun:  false, // to bootstrap this, DryRun always gets initialized as false and later enabled if needed
+	backendRunner := subshell.BackendRunner{
+		Dir:     nil,
+		Stats:   stats,
+		Verbose: args.Debug,
 	}
 	backendCommands := git.BackendCommands{
 		BackendRunner:      backendRunner,
-		Config:             &config,
+		Config:             nil, // NOTE: initializing to nil here to validate the Git version before running any Git commands, setting to the correct value after that is done
 		CurrentBranchCache: &cache.String{},
-		IsRepoCache:        &cache.Bool{},
 		RemoteBranchCache:  &cache.Strings{},
 		RemotesCache:       &cache.Strings{},
 		RootDirCache:       &cache.String{},
 	}
+	err = validate.HasGitVersion(&backendCommands)
+	if err != nil {
+		return
+	}
+	config := git.RepoConfig{
+		GitTown: config.NewGitTown(backendRunner),
+		DryRun:  false, // to bootstrap this, DryRun always gets initialized as false and later enabled if needed
+	}
+	backendCommands.Config = &config
 	prodRunner = git.ProdRunner{
 		Config:  config,
 		Backend: backendCommands,
@@ -45,40 +47,16 @@ func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, exit bool, err er
 		},
 		Stats: stats,
 	}
-	if args.ValidateIsRepository {
-		err := validate.IsRepository(&prodRunner)
-		if err != nil {
-			return prodRunner, false, err
-		}
-	}
 	if args.DryRun {
 		prodRunner.Config.DryRun = true
 	}
-	fc := failure.Collector{}
-	if args.ValidateGitversion {
-		fc.Check(validate.HasGitVersion(&prodRunner.Backend))
-	}
-	if args.ValidateIsConfigured {
-		fc.Check(validate.IsConfigured(&prodRunner.Backend))
-	}
-	if args.ValidateIsOnline {
-		fc.Check(validate.IsOnline(&prodRunner.Config))
-	}
-	if args.HandleUnfinishedState {
-		exit = fc.Bool(validate.HandleUnfinishedState(&prodRunner, nil))
-	}
-	return prodRunner, exit, fc.Err
+	return prodRunner, nil
 }
 
 type LoadArgs struct {
-	Debug                 bool
-	DryRun                bool
-	HandleUnfinishedState bool
-	OmitBranchNames       bool
-	ValidateGitversion    bool
-	ValidateIsRepository  bool
-	ValidateIsConfigured  bool
-	ValidateIsOnline      bool
+	Debug           bool
+	DryRun          bool
+	OmitBranchNames bool
 }
 
 // NewFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.
@@ -95,4 +73,9 @@ func NewFrontendRunner(omitBranchNames, dryRun bool, getCurrentBranch subshell.G
 		OmitBranchNames:  omitBranchNames,
 		Stats:            stats,
 	}
+}
+
+type Statistics interface {
+	RegisterRun()
+	PrintAnalysis()
 }

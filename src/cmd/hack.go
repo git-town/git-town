@@ -42,20 +42,25 @@ func hackCmd() *cobra.Command {
 }
 
 func hack(args []string, promptForParent, debug bool) error {
-	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:                 debug,
-		DryRun:                false,
+	run, err := execute.LoadProdRunner(execute.LoadArgs{
+		Debug:           debug,
+		DryRun:          false,
+		OmitBranchNames: false,
+	})
+	if err != nil {
+		return err
+	}
+	allBranches, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+		Fetch:                 true,
 		HandleUnfinishedState: true,
-		OmitBranchNames:       false,
-		ValidateGitversion:    true,
 		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,
-		ValidateIsRepository:  true,
+		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineHackConfig(args, promptForParent, &run)
+	config, err := determineHackConfig(args, promptForParent, &run, allBranches)
 	if err != nil {
 		return err
 	}
@@ -70,7 +75,7 @@ func hack(args []string, promptForParent, debug bool) error {
 	return runstate.Execute(&runState, &run, nil)
 }
 
-func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunner) (*appendConfig, error) {
+func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunner, allBranches git.BranchesSyncStatus) (*appendConfig, error) {
 	fc := failure.Collector{}
 	targetBranch := args[0]
 	parentBranch := fc.String(determineParentBranch(targetBranch, promptForParent, run))
@@ -78,16 +83,15 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 	shouldNewBranchPush := fc.Bool(run.Config.ShouldNewBranchPush())
 	isOffline := fc.Bool(run.Config.IsOffline())
 	mainBranch := run.Config.MainBranch()
-	if fc.Err == nil && hasOrigin && !isOffline {
-		fc.Check(run.Frontend.Fetch())
-	}
-	hasBranch := fc.Bool(run.Backend.HasLocalOrOriginBranch(targetBranch, mainBranch))
 	pushHook := fc.Bool(run.Config.PushHook())
-	if hasBranch {
+	if allBranches.Contains(targetBranch) {
 		return nil, fmt.Errorf("a branch named %q already exists", targetBranch)
 	}
+	lineage := run.Config.Lineage()
+	branchNamesToSync := lineage.BranchesAndAncestors([]string{parentBranch})
+	branchesToSync := fc.BranchesSyncStatus(allBranches.Select(branchNamesToSync))
 	return &appendConfig{
-		ancestorBranches:    []string{},
+		branchesToSync:      branchesToSync,
 		targetBranch:        targetBranch,
 		parentBranch:        parentBranch,
 		hasOrigin:           hasOrigin,

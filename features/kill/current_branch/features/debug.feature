@@ -8,24 +8,22 @@ Feature: display debug statistics
       | current | local, origin | current commit |
       | other   | local, origin | other commit   |
 
+  # TODO: remove redundant "git config -lz --local"
   Scenario: result
     When I run "git-town kill --debug"
     Then it runs the commands
       | BRANCH  | TYPE     | COMMAND                                           |
+      |         | backend  | git version                                       |
       |         | backend  | git config -lz --local                            |
       |         | backend  | git config -lz --global                           |
-      |         | backend  | git rev-parse                                     |
       |         | backend  | git rev-parse --show-toplevel                     |
-      |         | backend  | git version                                       |
-      |         | backend  | git branch -a                                     |
+      |         | backend  | git remote                                        |
       |         | backend  | git status                                        |
       |         | backend  | git rev-parse --abbrev-ref HEAD                   |
-      |         | backend  | git branch                                        |
+      | current | frontend | git fetch --prune --tags                          |
+      |         | backend  | git branch -vva                                   |
       |         | backend  | git config -lz --local                            |
       |         | backend  | git config -lz --global                           |
-      |         | backend  | git remote                                        |
-      | current | frontend | git fetch --prune --tags                          |
-      |         | backend  | git branch -r                                     |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}         |
       |         | backend  | git status --porcelain --ignore-submodules        |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}         |
@@ -43,6 +41,6 @@ Feature: display debug statistics
       |         | backend  | git checkout main                                 |
     And it prints:
       """
-      Ran 29 shell commands.
+      Ran 26 shell commands.
       """
     And the current branch is now "main"

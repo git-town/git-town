@@ -25,15 +25,20 @@ func setupConfigCommand() *cobra.Command {
 }
 
 func setup(debug bool) error {
-	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
-		OmitBranchNames:       true,
-		Debug:                 debug,
-		DryRun:                false,
+	run, err := execute.LoadProdRunner(execute.LoadArgs{
+		Debug:           debug,
+		DryRun:          false,
+		OmitBranchNames: true,
+	})
+	if err != nil {
+		return err
+	}
+	allBranches, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+		Fetch:                 false,
 		HandleUnfinishedState: false,
-		ValidateGitversion:    true,
 		ValidateIsConfigured:  false,
 		ValidateIsOnline:      false,
-		ValidateIsRepository:  true,
+		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
@@ -42,5 +47,5 @@ func setup(debug bool) error {
 	if err != nil {
 		return err
 	}
-	return validate.EnterPerennialBranches(&run.Backend, mainBranch)
+	return validate.EnterPerennialBranches(&run.Backend, allBranches, mainBranch)
 }

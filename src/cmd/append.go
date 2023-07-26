@@ -40,20 +40,25 @@ func appendCmd() *cobra.Command {
 }
 
 func runAppend(arg string, debug bool) error {
-	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:                 debug,
-		DryRun:                false,
+	run, err := execute.LoadProdRunner(execute.LoadArgs{
+		Debug:           debug,
+		DryRun:          false,
+		OmitBranchNames: false,
+	})
+	if err != nil {
+		return err
+	}
+	allBranches, currentBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+		Fetch:                 true,
 		HandleUnfinishedState: true,
-		OmitBranchNames:       false,
-		ValidateGitversion:    true,
-		ValidateIsRepository:  true,
-		ValidateIsOnline:      false,
 		ValidateIsConfigured:  true,
+		ValidateIsOnline:      false,
+		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineAppendConfig(arg, &run)
+	config, err := determineAppendConfig(arg, &run, allBranches, currentBranch)
 	if err != nil {
 		return err
 	}
@@ -69,7 +74,7 @@ func runAppend(arg string, debug bool) error {
 }
 
 type appendConfig struct {
-	ancestorBranches    []string
+	branchesToSync      git.BranchesSyncStatus
 	hasOrigin           bool
 	isOffline           bool
 	mainBranch          string
@@ -79,9 +84,8 @@ type appendConfig struct {
 	targetBranch        string
 }
 
-func determineAppendConfig(targetBranch string, run *git.ProdRunner) (*appendConfig, error) {
+func determineAppendConfig(targetBranch string, run *git.ProdRunner, allBranches git.BranchesSyncStatus, currentBranchName string) (*appendConfig, error) {
 	fc := failure.Collector{}
-	parentBranch := fc.String(run.Backend.CurrentBranch())
 	hasOrigin := fc.Bool(run.Backend.HasOrigin())
 	isOffline := fc.Bool(run.Config.IsOffline())
 	mainBranch := run.Config.MainBranch()
@@ -90,22 +94,20 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner) (*appendCon
 	if fc.Err != nil {
 		return nil, fc.Err
 	}
-	if hasOrigin && !isOffline {
-		fc.Check(run.Frontend.Fetch())
-	}
-	hasTargetBranch := fc.Bool(run.Backend.HasLocalOrOriginBranch(targetBranch, mainBranch))
-	if hasTargetBranch {
+	if allBranches.Contains(targetBranch) {
 		fc.Fail("a branch named %q already exists", targetBranch)
 	}
-	fc.Check(validate.KnowsBranchAncestors(parentBranch, run.Config.MainBranch(), &run.Backend))
-	ancestorBranches := run.Config.Lineage().Ancestors(parentBranch)
+	fc.Check(validate.KnowsBranchAncestors(currentBranchName, run.Config.MainBranch(), &run.Backend))
+	lineage := run.Config.Lineage()
+	branchNamesToSync := lineage.BranchAndAncestors(currentBranchName)
+	branchesToSync := fc.BranchesSyncStatus(allBranches.Select(branchNamesToSync))
 	return &appendConfig{
-		ancestorBranches:    ancestorBranches,
+		branchesToSync:      branchesToSync,
 		isOffline:           isOffline,
 		hasOrigin:           hasOrigin,
 		mainBranch:          mainBranch,
 		noPushHook:          !pushHook,
-		parentBranch:        parentBranch,
+		parentBranch:        currentBranchName,
 		shouldNewBranchPush: shouldNewBranchPush,
 		targetBranch:        targetBranch,
 	}, fc.Err
@@ -113,8 +115,8 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner) (*appendCon
 
 func appendStepList(config *appendConfig, run *git.ProdRunner) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
-	for _, branch := range append(config.ancestorBranches, config.parentBranch) {
-		updateBranchSteps(&list, branch, true, run)
+	for _, branch := range config.branchesToSync {
+		updateBranchSteps(&list, branch, true, config.isOffline, run)
 	}
 	list.Add(&steps.CreateBranchStep{Branch: config.targetBranch, StartingPoint: config.parentBranch})
 	list.Add(&steps.SetParentStep{Branch: config.targetBranch, ParentBranch: config.parentBranch})

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/git"
 )
 
 // Collector helps avoid excessive error checking
@@ -35,6 +36,11 @@ func (ec *Collector) Fail(format string, a ...any) {
 // Bool provides the bool part of the given fallible function result
 // while registering the given error.
 func (ec *Collector) Bool(value bool, err error) bool {
+	ec.Check(err)
+	return value
+}
+
+func (ec *Collector) BranchesSyncStatus(value git.BranchesSyncStatus, err error) git.BranchesSyncStatus {
 	ec.Check(err)
 	return value
 }

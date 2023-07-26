@@ -22,6 +22,11 @@ type BackendRunner struct {
 
 func (r BackendRunner) Query(executable string, args ...string) (string, error) {
 	output, err := r.execute(executable, args...)
+	return string(output), err
+}
+
+func (r BackendRunner) QueryTrim(executable string, args ...string) (string, error) {
+	output, err := r.execute(executable, args...)
 	return strings.TrimSpace(stripansi.Strip(string(output))), err
 }
 
