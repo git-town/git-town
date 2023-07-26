@@ -37,14 +37,19 @@ func setParent(debug bool) error {
 	if err != nil {
 		return err
 	}
-	_, currentBranch, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 false,
 		HandleUnfinishedState: true,
-		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
+		return err
+	}
+	_, currentBranch, err := execute.LoadBranches(&run, execute.LoadBranchesArgs{
+		ValidateIsConfigured: true,
+	})
+	if err != nil {
 		return err
 	}
 	if !run.Config.IsFeatureBranch(currentBranch) {

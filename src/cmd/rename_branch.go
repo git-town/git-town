@@ -58,17 +58,22 @@ func renameBranch(args []string, force, debug bool) error {
 	if err != nil {
 		return err
 	}
-	allBranches, initialBranch, rootDir, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	rootDir, isOffline, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 true,
 		HandleUnfinishedState: true,
-		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineRenameBranchConfig(args, force, &run, allBranches, initialBranch)
+	allBranches, initialBranch, err := execute.LoadBranches(&run, execute.LoadBranchesArgs{
+		ValidateIsConfigured: true,
+	})
+	if err != nil {
+		return err
+	}
+	config, err := determineRenameBranchConfig(args, force, &run, allBranches, initialBranch, isOffline)
 	if err != nil {
 		return err
 	}
@@ -95,11 +100,7 @@ type renameBranchConfig struct {
 	oldBranch                  string
 }
 
-func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string) (*renameBranchConfig, error) {
-	isOffline, err := run.Config.IsOffline()
-	if err != nil {
-		return nil, err
-	}
+func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string, isOffline bool) (*renameBranchConfig, error) {
 	pushHook, err := run.Config.PushHook()
 	if err != nil {
 		return nil, err

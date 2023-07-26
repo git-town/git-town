@@ -58,17 +58,22 @@ func newPullRequest(debug bool) error {
 	if err != nil {
 		return err
 	}
-	allBranches, initialBranch, rootDir, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	rootDir, isOffline, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 false,
 		HandleUnfinishedState: true,
-		ValidateIsConfigured:  true,
 		ValidateIsOnline:      true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineNewPullRequestConfig(&run, allBranches, initialBranch)
+	allBranches, initialBranch, err := execute.LoadBranches(&run, execute.LoadBranchesArgs{
+		ValidateIsConfigured: true,
+	})
+	if err != nil {
+		return err
+	}
+	config, err := determineNewPullRequestConfig(&run, allBranches, initialBranch, isOffline)
 	if err != nil {
 		return err
 	}
@@ -97,7 +102,7 @@ type newPullRequestConfig struct {
 	mainBranch     string
 }
 
-func determineNewPullRequestConfig(run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string) (*newPullRequestConfig, error) {
+func determineNewPullRequestConfig(run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string, isOffline bool) (*newPullRequestConfig, error) {
 	hasOrigin, err := run.Backend.HasOrigin()
 	if err != nil {
 		return nil, err
@@ -109,10 +114,6 @@ func determineNewPullRequestConfig(run *git.ProdRunner, allBranches git.Branches
 		}
 	}
 	err = validate.KnowsBranchAncestors(initialBranch, run.Config.MainBranch(), &run.Backend)
-	if err != nil {
-		return nil, err
-	}
-	isOffline, err := run.Config.IsOffline()
 	if err != nil {
 		return nil, err
 	}

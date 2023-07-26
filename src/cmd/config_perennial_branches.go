@@ -55,7 +55,7 @@ func displayPerennialBranches(debug bool) error {
 	if err != nil {
 		return err
 	}
-	_, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 false,
 		HandleUnfinishedState: false,
 		ValidateIsOnline:      false,
@@ -77,7 +77,7 @@ func updatePerennialBranches(debug bool) error {
 	if err != nil {
 		return err
 	}
-	_, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 false,
 		HandleUnfinishedState: false,
 		ValidateIsOnline:      false,
@@ -89,6 +89,9 @@ func updatePerennialBranches(debug bool) error {
 	allBranches, _, err := execute.LoadBranches(&run, execute.LoadBranchesArgs{
 		ValidateIsConfigured: false,
 	})
+	if err != nil {
+		return err
+	}
 	mainBranch := run.Config.MainBranch()
 	return validate.EnterPerennialBranches(&run.Backend, allBranches, mainBranch)
 }

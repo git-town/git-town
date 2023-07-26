@@ -49,7 +49,7 @@ func runAppend(arg string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	rootDir, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	rootDir, isOffline, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		ValidateIsOnline:      false,
@@ -61,7 +61,10 @@ func runAppend(arg string, debug bool) error {
 	allBranches, currentBranch, err := execute.LoadBranches(&run, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
-	config, err := determineAppendConfig(arg, &run, allBranches, currentBranch)
+	if err != nil {
+		return err
+	}
+	config, err := determineAppendConfig(arg, &run, allBranches, currentBranch, isOffline)
 	if err != nil {
 		return err
 	}
@@ -87,10 +90,9 @@ type appendConfig struct {
 	targetBranch        string
 }
 
-func determineAppendConfig(targetBranch string, run *git.ProdRunner, allBranches git.BranchesSyncStatus, currentBranchName string) (*appendConfig, error) {
+func determineAppendConfig(targetBranch string, run *git.ProdRunner, allBranches git.BranchesSyncStatus, currentBranchName string, isOffline bool) (*appendConfig, error) {
 	fc := failure.Collector{}
 	hasOrigin := fc.Bool(run.Backend.HasOrigin())
-	isOffline := fc.Bool(run.Config.IsOffline())
 	mainBranch := run.Config.MainBranch()
 	pushHook := fc.Bool(run.Config.PushHook())
 	shouldNewBranchPush := fc.Bool(run.Config.ShouldNewBranchPush())

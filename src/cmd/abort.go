@@ -39,7 +39,7 @@ func abort(debug bool) error {
 	if err != nil {
 		return err
 	}
-	rootDir, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	rootDir, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 false,
 		HandleUnfinishedState: false,
 		ValidateIsOnline:      false,

@@ -51,7 +51,7 @@ func hack(args []string, promptForParent, debug bool) error {
 	if err != nil {
 		return err
 	}
-	rootDir, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	rootDir, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		ValidateIsOnline:      false,

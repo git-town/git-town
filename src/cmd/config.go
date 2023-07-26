@@ -47,7 +47,7 @@ func runConfig(debug bool) error {
 	if err != nil {
 		return err
 	}
-	_, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 false,
 		HandleUnfinishedState: false,
 		ValidateIsOnline:      false,

@@ -49,14 +49,19 @@ func repo(debug bool) error {
 	if err != nil {
 		return err
 	}
-	_, _, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 false,
 		HandleUnfinishedState: false,
-		ValidateIsConfigured:  true,
 		ValidateIsOnline:      true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
+		return err
+	}
+	_, _, err = execute.LoadBranches(&run, execute.LoadBranchesArgs{
+		ValidateIsConfigured: true,
+	})
+	if err != nil {
 		return err
 	}
 	connector, err := hosting.NewConnector(run.Config.GitTown, &run.Backend, cli.PrintConnectorAction)

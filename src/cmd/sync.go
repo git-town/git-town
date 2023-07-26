@@ -61,17 +61,22 @@ func sync(all, dryRun, debug bool) error {
 	if err != nil {
 		return err
 	}
-	allBranches, initialBranch, rootDir, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	rootDir, isOffline, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 true,
 		HandleUnfinishedState: true,
-		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineSyncConfig(all, &run, allBranches, initialBranch)
+	allBranches, initialBranch, err := execute.LoadBranches(&run, execute.LoadBranchesArgs{
+		ValidateIsConfigured: true,
+	})
+	if err != nil {
+		return err
+	}
+	config, err := determineSyncConfig(all, &run, allBranches, initialBranch, isOffline)
 	if err != nil {
 		return err
 	}
@@ -95,12 +100,8 @@ type syncConfig struct {
 	shouldPushTags bool
 }
 
-func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranchesSyncStatus git.BranchesSyncStatus, initialBranch string) (*syncConfig, error) {
+func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranchesSyncStatus git.BranchesSyncStatus, initialBranch string, isOffline bool) (*syncConfig, error) {
 	hasOrigin, err := run.Backend.HasOrigin()
-	if err != nil {
-		return nil, err
-	}
-	isOffline, err := run.Config.IsOffline()
 	if err != nil {
 		return nil, err
 	}

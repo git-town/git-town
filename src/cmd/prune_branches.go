@@ -39,14 +39,19 @@ func pruneBranches(debug bool) error {
 	if err != nil {
 		return err
 	}
-	allBranches, initialBranch, rootDir, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	rootDir, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 true,
 		HandleUnfinishedState: true,
-		ValidateIsConfigured:  true,
 		ValidateIsOnline:      true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
+		return err
+	}
+	allBranches, initialBranch, err := execute.LoadBranches(&run, execute.LoadBranchesArgs{
+		ValidateIsConfigured: true,
+	})
+	if err != nil {
 		return err
 	}
 	config := determinePruneBranchesConfig(&run, allBranches, initialBranch)

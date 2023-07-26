@@ -52,17 +52,22 @@ func prepend(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	allBranches, initialBranch, rootDir, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	rootDir, isOffline, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 true,
 		HandleUnfinishedState: true,
-		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
 	}
-	config, err := determinePrependConfig(args, &run, allBranches, initialBranch)
+	allBranches, initialBranch, err := execute.LoadBranches(&run, execute.LoadBranchesArgs{
+		ValidateIsConfigured: true,
+	})
+	if err != nil {
+		return err
+	}
+	config, err := determinePrependConfig(args, &run, allBranches, initialBranch, isOffline)
 	if err != nil {
 		return err
 	}
@@ -89,12 +94,11 @@ type prependConfig struct {
 	targetBranch        string
 }
 
-func determinePrependConfig(args []string, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string) (*prependConfig, error) {
+func determinePrependConfig(args []string, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string, isOffline bool) (*prependConfig, error) {
 	fc := failure.Collector{}
 	hasOrigin := fc.Bool(run.Backend.HasOrigin())
 	shouldNewBranchPush := fc.Bool(run.Config.ShouldNewBranchPush())
 	pushHook := fc.Bool(run.Config.PushHook())
-	isOffline := fc.Bool(run.Config.IsOffline())
 	mainBranch := run.Config.MainBranch()
 	if fc.Err != nil {
 		return nil, fc.Err

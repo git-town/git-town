@@ -43,17 +43,22 @@ func kill(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	allBranches, initialBranch, rootDir, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	rootDir, isOffline, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 true,
 		HandleUnfinishedState: false,
-		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineKillConfig(args, &run, allBranches, initialBranch)
+	allBranches, initialBranch, err := execute.LoadBranches(&run, execute.LoadBranchesArgs{
+		ValidateIsConfigured: true,
+	})
+	if err != nil {
+		return err
+	}
+	config, err := determineKillConfig(args, &run, allBranches, initialBranch, isOffline)
 	if err != nil {
 		return err
 	}
@@ -80,7 +85,7 @@ type killConfig struct {
 	targetBranch       git.BranchSyncStatus
 }
 
-func determineKillConfig(args []string, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string) (*killConfig, error) {
+func determineKillConfig(args []string, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string, isOffline bool) (*killConfig, error) {
 	mainBranch := run.Config.MainBranch()
 	targetBranchName := initialBranch
 	if len(args) > 0 {
@@ -99,10 +104,6 @@ func determineKillConfig(args []string, run *git.ProdRunner, allBranches git.Bra
 			return nil, err
 		}
 		run.Config.Reload()
-	}
-	isOffline, err := run.Config.IsOffline()
-	if err != nil {
-		return nil, err
 	}
 	previousBranch, err := run.Backend.PreviouslyCheckedOutBranch()
 	if err != nil {

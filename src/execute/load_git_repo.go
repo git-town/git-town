@@ -9,7 +9,7 @@ import (
 	"github.com/git-town/git-town/v9/src/validate"
 )
 
-func LoadGitRepo(pr *git.ProdRunner, args LoadGitArgs) (rootDir string, exit bool, err error) { //nolint:nonamedreturns
+func LoadGitRepo(pr *git.ProdRunner, args LoadGitArgs) (rootDir string, isOffline bool, exit bool, err error) { //nolint:nonamedreturns
 	rootDir = pr.Backend.RootDirectory()
 	if rootDir == "" {
 		err = errors.New(messages.RepoOutside)
@@ -27,7 +27,7 @@ func LoadGitRepo(pr *git.ProdRunner, args LoadGitArgs) (rootDir string, exit boo
 			return
 		}
 	}
-	isOffline, err := pr.Config.IsOffline()
+	isOffline, err = pr.Config.IsOffline()
 	if err != nil {
 		return
 	}
