@@ -66,8 +66,7 @@ func (c *GitHubConnector) SquashMergeProposal(number int, message string) (merge
 		return "", fmt.Errorf(messages.ProposalNoNumberGiven)
 	}
 	if c.log != nil {
-		// TODO: convert to const in messages.go
-		c.log("GitHub API: merging PR #%d\n", number)
+		c.log(messages.HostingGithubMergingViaAPI, number)
 	}
 	title, body := ParseCommitMessage(message)
 	result, _, err := c.client.PullRequests.Merge(context.Background(), c.Organization, c.Repository, number, body, &github.PullRequestOptions{
@@ -79,7 +78,7 @@ func (c *GitHubConnector) SquashMergeProposal(number int, message string) (merge
 
 func (c *GitHubConnector) UpdateProposalTarget(number int, target string) error {
 	if c.log != nil {
-		c.log("GitHub API: updating base branch for PR #%d\n", number)
+		c.log(messages.HostingGithubUpdateBasebranchViaAPI, number)
 	}
 	_, _, err := c.client.PullRequests.Edit(context.Background(), c.Organization, c.Repository, number, &github.PullRequest{
 		Base: &github.PullRequestBranch{

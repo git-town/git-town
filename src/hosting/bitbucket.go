@@ -54,7 +54,7 @@ func (c *BitbucketConnector) NewProposalURL(branch, parentBranch string) (string
 	query := url.Values{}
 	branchSha, err := c.git.ShaForBranch(branch)
 	if err != nil {
-		return "", fmt.Errorf(messages.ProposalUrlProblem, branch, parentBranch, err)
+		return "", fmt.Errorf(messages.ProposalURLProblem, branch, parentBranch, err)
 	}
 	query.Add("source", strings.Join([]string{c.Organization + "/" + c.Repository, branchSha[0:12], branch}, ":"))
 	query.Add("dest", strings.Join([]string{c.Organization + "/" + c.Repository, "", parentBranch}, ":"))

@@ -32,7 +32,7 @@ func (c *GitLabConnector) FindProposal(branch, target string) (*Proposal, error)
 		return nil, nil //nolint:nilnil
 	}
 	if len(mergeRequests) > 1 {
-		return nil, fmt.Errorf(messages.ProposalMultipleFound, len(mergeRequests), branch)
+		return nil, fmt.Errorf(messages.ProposalMultipleFound, len(mergeRequests), branch, target)
 	}
 	proposal := parseGitLabMergeRequest(mergeRequests[0])
 	return &proposal, nil
@@ -43,7 +43,7 @@ func (c *GitLabConnector) SquashMergeProposal(number int, message string) (merge
 		return "", fmt.Errorf(messages.ProposalNoNumberGiven)
 	}
 	if c.log != nil {
-		c.log("GitLab API: Merging MR !%d\n", number)
+		c.log(messages.HostingGitlabMergingViaAPI, number)
 	}
 	// the GitLab API wants the full commit message in the body
 	result, _, err := c.client.MergeRequests.AcceptMergeRequest(c.projectPath(), number, &gitlab.AcceptMergeRequestOptions{
@@ -60,7 +60,7 @@ func (c *GitLabConnector) SquashMergeProposal(number int, message string) (merge
 
 func (c *GitLabConnector) UpdateProposalTarget(number int, target string) error {
 	if c.log != nil {
-		c.log("GitLab API: Updating target branch for MR !%d to %q\n", number, target)
+		c.log(messages.HostingGitlabUpdateBaseBranchViaAPI, number, target)
 	}
 	_, _, err := c.client.MergeRequests.UpdateMergeRequest(c.projectPath(), number, &gitlab.UpdateMergeRequestOptions{
 		TargetBranch: gitlab.String(target),

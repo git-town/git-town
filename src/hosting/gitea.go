@@ -32,7 +32,7 @@ func (c *GiteaConnector) FindProposal(branch, target string) (*Proposal, error) 
 		return nil, nil //nolint:nilnil
 	}
 	if len(pullRequests) > 1 {
-		return nil, fmt.Errorf(messages.ProposalMultipleFound, len(pullRequests), branch)
+		return nil, fmt.Errorf(messages.ProposalMultipleFound, len(pullRequests), branch, target)
 	}
 	pullRequest := pullRequests[0]
 	return &Proposal{
@@ -83,7 +83,7 @@ func (c *GiteaConnector) SquashMergeProposal(number int, message string) (mergeS
 func (c *GiteaConnector) UpdateProposalTarget(_ int, _ string) error {
 	// TODO: update the client and uncomment
 	// if c.log != nil {
-	// 	c.log("Gitea API: Updating base branch for PR #%d to #%s", number, target)
+	// 	c.log(message.HostingGiteaUpdateBasebranchViaAPI, number, target)
 	// }
 	// _, err := c.client.EditPullRequest(c.owner, c.repository, int64(number), gitea.EditPullRequestOption{
 	// 	Base: newBaseName,
