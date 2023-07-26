@@ -176,7 +176,7 @@ func updateBranchSteps(list *runstate.StepListBuilder, args updateBranchStepsArg
 	}
 	list.Add(&steps.CheckoutStep{Branch: args.branch.Name})
 	if isFeatureBranch {
-		updateFeatureBranchSteps(list, args.branch, args.run)
+		updateFeatureBranchSteps(list, args.branch, args.run, args.syncStrategy)
 	} else {
 		updatePerennialBranchSteps(list, args.branch, args.run, args.mainBranch)
 	}
@@ -204,8 +204,7 @@ type updateBranchStepsArgs struct {
 	syncStrategy config.SyncStrategy
 }
 
-func updateFeatureBranchSteps(list *runstate.StepListBuilder, branch git.BranchSyncStatus, run *git.ProdRunner) {
-	syncStrategy := list.SyncStrategy(run.Config.SyncStrategy())
+func updateFeatureBranchSteps(list *runstate.StepListBuilder, branch git.BranchSyncStatus, run *git.ProdRunner, syncStrategy config.SyncStrategy) {
 	if branch.HasTrackingBranch() {
 		syncBranchSteps(list, run.Backend.TrackingBranch(branch.Name), string(syncStrategy))
 	}
