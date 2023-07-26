@@ -80,5 +80,5 @@ Feature: display the push-hook setting
     When I run "git-town config push-hook"
     Then it prints the error:
       """
-      Error: invalid value for git-town.push-hook: "zonk". Please provide either "true" or "false"
+      Error: invalid value for git-town.push-hook: "zonk". Please provide either "yes" or "no"
       """
