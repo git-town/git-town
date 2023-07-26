@@ -90,6 +90,7 @@ func sync(all, dryRun, debug bool) error {
 type syncConfig struct {
 	branchesToSync     git.BranchesSyncStatus
 	hasOrigin          bool
+	hasUpstream        bool
 	initialBranch      string
 	isOffline          bool
 	mainBranch         string
@@ -142,10 +143,15 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranchesSyncStatu
 	if err != nil {
 		return nil, err
 	}
+	hasUpstream, err := run.Backend.HasUpstream()
+	if err != nil {
+		return nil, err
+	}
 	branchesToSync, err := allBranchesSyncStatus.Select(allBranchNamesToSync)
 	return &syncConfig{
 		branchesToSync:     branchesToSync,
 		hasOrigin:          hasOrigin,
+		hasUpstream:        hasUpstream,
 		initialBranch:      initialBranch,
 		isOffline:          isOffline,
 		mainBranch:         mainBranch,
@@ -164,6 +170,7 @@ func syncBranchesSteps(config *syncConfig, run *git.ProdRunner) (runstate.StepLi
 		updateBranchSteps(&list, updateBranchStepsArgs{
 			branch:             branch,
 			hasOrigin:          config.hasOrigin,
+			hasUpstream:        config.hasUpstream,
 			isOffline:          config.isOffline,
 			mainBranch:         config.mainBranch,
 			run:                run,
@@ -192,7 +199,7 @@ func updateBranchSteps(list *runstate.StepListBuilder, args updateBranchStepsArg
 	if isFeatureBranch {
 		updateFeatureBranchSteps(list, args.branch, args.run, args.syncStrategy)
 	} else {
-		updatePerennialBranchSteps(list, args.branch, args.run, args.mainBranch, args.pullBranchStrategy, args.shouldSyncUpstream)
+		updatePerennialBranchSteps(list, args.branch, args.mainBranch, args.pullBranchStrategy, args.shouldSyncUpstream, args.hasUpstream)
 	}
 	if args.pushBranch && args.hasOrigin && !args.isOffline {
 		if !args.branch.HasTrackingBranch() {
@@ -210,6 +217,7 @@ func updateBranchSteps(list *runstate.StepListBuilder, args updateBranchStepsArg
 type updateBranchStepsArgs struct {
 	branch             git.BranchSyncStatus
 	hasOrigin          bool
+	hasUpstream        bool
 	isOffline          bool
 	mainBranch         string
 	pullBranchStrategy config.PullBranchStrategy
@@ -227,11 +235,10 @@ func updateFeatureBranchSteps(list *runstate.StepListBuilder, branch git.BranchS
 	syncBranchSteps(list, run.Config.Lineage().Parent(branch.Name), string(syncStrategy))
 }
 
-func updatePerennialBranchSteps(list *runstate.StepListBuilder, branch git.BranchSyncStatus, run *git.ProdRunner, mainBranch string, pullBranchStrategy config.PullBranchStrategy, shouldSyncUpstream bool) {
+func updatePerennialBranchSteps(list *runstate.StepListBuilder, branch git.BranchSyncStatus, mainBranch string, pullBranchStrategy config.PullBranchStrategy, shouldSyncUpstream bool, hasUpstream bool) {
 	if branch.HasTrackingBranch() {
 		syncBranchSteps(list, branch.TrackingBranch(), string(pullBranchStrategy))
 	}
-	hasUpstream := list.Bool(run.Backend.HasRemote("upstream"))
 	if mainBranch == branch.Name && hasUpstream && shouldSyncUpstream {
 		list.Add(&steps.FetchUpstreamStep{Branch: mainBranch})
 		list.Add(&steps.RebaseBranchStep{Branch: fmt.Sprintf("upstream/%s", mainBranch)})

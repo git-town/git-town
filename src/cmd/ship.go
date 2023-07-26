@@ -116,6 +116,7 @@ type shipConfig struct {
 	proposalMessage          string
 	deleteOriginBranch       bool
 	hasOrigin                bool
+	hasUpstream              bool
 	initialBranch            string
 	isShippingInitialBranch  bool
 	isOffline                bool
@@ -169,6 +170,10 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 	if err != nil {
 		return nil, err
 	}
+	hasUpstream, err := run.Backend.HasUpstream()
+	if err != nil {
+		return nil, err
+	}
 	lineage := run.Config.Lineage()
 	targetBranchName := lineage.Parent(branchNameToShip)
 	targetBranch := allBranches.Lookup(targetBranchName)
@@ -213,6 +218,7 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 		proposalMessage:          proposalMessage,
 		deleteOriginBranch:       deleteOrigin,
 		hasOrigin:                hasOrigin,
+		hasUpstream:              hasUpstream,
 		initialBranch:            initialBranch,
 		isOffline:                isOffline,
 		isShippingInitialBranch:  isShippingInitialBranch,
@@ -245,6 +251,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 	updateBranchSteps(&list, updateBranchStepsArgs{
 		branch:             config.targetBranch,
 		hasOrigin:          config.hasOrigin,
+		hasUpstream:        config.hasUpstream,
 		isOffline:          config.isOffline,
 		mainBranch:         config.mainBranch,
 		pullBranchStrategy: config.pullBranchStrategy,
@@ -258,6 +265,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 	updateBranchSteps(&list, updateBranchStepsArgs{
 		branch:             config.branchToShip,
 		hasOrigin:          config.hasOrigin,
+		hasUpstream:        config.hasUpstream,
 		isOffline:          config.isOffline,
 		mainBranch:         config.mainBranch,
 		pullBranchStrategy: config.pullBranchStrategy,

@@ -82,6 +82,7 @@ func prepend(args []string, debug bool) error {
 type prependConfig struct {
 	branchesToSync      git.BranchesSyncStatus
 	hasOrigin           bool
+	hasUpstream         bool
 	initialBranch       string
 	isOffline           bool
 	mainBranch          string
@@ -101,6 +102,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner, allBranches git.
 	pushHook := fc.Bool(run.Config.PushHook())
 	mainBranch := run.Config.MainBranch()
 	syncStrategy := fc.SyncStrategy(run.Config.SyncStrategy())
+	hasUpstream := fc.Bool(run.Backend.HasUpstream())
 	pullBranchStrategy := fc.PullBranchStrategy(run.Config.PullBranchStrategy())
 	shouldSyncUpstream := fc.Bool(run.Config.ShouldSyncUpstream())
 	// TODO: use fc all the way to the end
@@ -124,6 +126,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner, allBranches git.
 	return &prependConfig{
 		branchesToSync:      branchesToSync,
 		hasOrigin:           hasOrigin,
+		hasUpstream:         hasUpstream,
 		initialBranch:       initialBranch,
 		isOffline:           isOffline,
 		mainBranch:          mainBranch,
@@ -143,6 +146,7 @@ func prependStepList(config *prependConfig, run *git.ProdRunner) (runstate.StepL
 		updateBranchSteps(&list, updateBranchStepsArgs{
 			branch:             branchToSync,
 			hasOrigin:          config.hasOrigin,
+			hasUpstream:        config.hasUpstream,
 			isOffline:          config.isOffline,
 			mainBranch:         config.mainBranch,
 			pullBranchStrategy: config.pullBranchStrategy,

@@ -79,6 +79,7 @@ func runAppend(arg string, debug bool) error {
 type appendConfig struct {
 	branchesToSync      git.BranchesSyncStatus
 	hasOrigin           bool
+	hasUpstream         bool
 	isOffline           bool
 	mainBranch          string
 	pushHook            bool
@@ -95,6 +96,7 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner, allBranches
 	hasOrigin := fc.Bool(run.Backend.HasOrigin())
 	mainBranch := run.Config.MainBranch()
 	pushHook := fc.Bool(run.Config.PushHook())
+	hasUpstream := fc.Bool(run.Backend.HasUpstream())
 	pullBranchStrategy := fc.PullBranchStrategy(run.Config.PullBranchStrategy())
 	shouldNewBranchPush := fc.Bool(run.Config.ShouldNewBranchPush())
 	if fc.Err != nil {
@@ -111,8 +113,9 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner, allBranches
 	shouldSyncUpstream := fc.Bool(run.Config.ShouldSyncUpstream())
 	return &appendConfig{
 		branchesToSync:      branchesToSync,
-		isOffline:           isOffline,
 		hasOrigin:           hasOrigin,
+		hasUpstream:         hasUpstream,
+		isOffline:           isOffline,
 		mainBranch:          mainBranch,
 		pushHook:            pushHook,
 		parentBranch:        currentBranchName,
@@ -131,6 +134,7 @@ func appendStepList(config *appendConfig, run *git.ProdRunner) (runstate.StepLis
 			branch:             branch,
 			isOffline:          config.isOffline,
 			hasOrigin:          config.hasOrigin,
+			hasUpstream:        config.hasUpstream,
 			mainBranch:         config.mainBranch,
 			pullBranchStrategy: config.pullBranchStrategy,
 			pushBranch:         true,
