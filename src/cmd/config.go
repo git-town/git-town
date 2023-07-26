@@ -60,12 +60,13 @@ func runConfig(debug bool) error {
 	shouldSyncUpstream := fc.Bool(repo.Runner.Config.ShouldSyncUpstream())
 	syncStrategy := fc.SyncStrategy(repo.Runner.Config.SyncStrategy())
 	hostingService := fc.HostingService(repo.Runner.Config.HostingService())
+	mainBranch := repo.Runner.Config.MainBranch()
 	if fc.Err != nil {
 		return fc.Err
 	}
 	fmt.Println()
 	cli.PrintHeader("Branches")
-	cli.PrintEntry("main branch", cli.StringSetting(repo.Runner.Config.MainBranch()))
+	cli.PrintEntry("main branch", cli.StringSetting(mainBranch))
 	cli.PrintEntry("perennial branches", cli.StringSetting(strings.Join(repo.Runner.Config.PerennialBranches(), ", ")))
 	fmt.Println()
 	cli.PrintHeader("Configuration")
@@ -83,7 +84,7 @@ func runConfig(debug bool) error {
 	cli.PrintEntry("GitLab token", cli.StringSetting(repo.Runner.Config.GitLabToken()))
 	cli.PrintEntry("Gitea token", cli.StringSetting(repo.Runner.Config.GiteaToken()))
 	fmt.Println()
-	if repo.Runner.Config.MainBranch() != "" {
+	if mainBranch != "" {
 		cli.PrintLabelAndValue("Branch Lineage", cli.PrintableBranchLineage(repo.Runner.Config.Lineage()))
 	}
 	return nil
