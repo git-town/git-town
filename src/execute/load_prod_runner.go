@@ -54,10 +54,12 @@ func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, rootDir string, i
 	if args.DryRun {
 		prodRunner.Config.DryRun = true
 	}
-	if args.ValidateGitRepo && rootDir == "" {
+	if args.ValidateGitRepo {
 		rootDir = backendCommands.RootDirectory()
-		err = errors.New(messages.RepoOutside)
-		return
+		if rootDir == "" {
+			err = errors.New(messages.RepoOutside)
+			return
+		}
 	}
 	if args.HandleUnfinishedState {
 		exit, err = validate.HandleUnfinishedState(&prodRunner, nil, rootDir)
