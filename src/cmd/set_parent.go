@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
+	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/spf13/cobra"
 )
@@ -47,7 +48,7 @@ func setParent(debug bool) error {
 		return err
 	}
 	if !run.Config.IsFeatureBranch(currentBranch) {
-		return errors.New("only feature branches can have parent branches")
+		return errors.New(messages.SetParentNoFeatureBranch)
 	}
 	existingParent := run.Config.Lineage().Parent(currentBranch)
 	if existingParent != "" {

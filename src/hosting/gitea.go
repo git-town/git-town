@@ -7,6 +7,7 @@ import (
 
 	"code.gitea.io/sdk/gitea"
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/messages"
 	"golang.org/x/oauth2"
 )
 
@@ -31,7 +32,7 @@ func (c *GiteaConnector) FindProposal(branch, target string) (*Proposal, error) 
 		return nil, nil //nolint:nilnil
 	}
 	if len(pullRequests) > 1 {
-		return nil, fmt.Errorf("found %d pull requests for branch %q", len(pullRequests), branch)
+		return nil, fmt.Errorf(messages.ProposalMultipleFound, len(pullRequests), branch, target)
 	}
 	pullRequest := pullRequests[0]
 	return &Proposal{
@@ -61,7 +62,7 @@ func (c *GiteaConnector) RepositoryURL() string {
 
 func (c *GiteaConnector) SquashMergeProposal(number int, message string) (mergeSha string, err error) {
 	if number <= 0 {
-		return "", fmt.Errorf("no pull request number given")
+		return "", fmt.Errorf(messages.ProposalNoNumberGiven)
 	}
 	title, body := ParseCommitMessage(message)
 	_, err = c.client.MergePullRequest(c.Organization, c.Repository, int64(number), gitea.MergePullRequestOption{
@@ -82,13 +83,13 @@ func (c *GiteaConnector) SquashMergeProposal(number int, message string) (mergeS
 func (c *GiteaConnector) UpdateProposalTarget(_ int, _ string) error {
 	// TODO: update the client and uncomment
 	// if c.log != nil {
-	// 	c.log("Gitea API: Updating base branch for PR #%d to #%s", number, target)
+	// 	c.log(message.HostingGiteaUpdateBasebranchViaAPI, number, target)
 	// }
 	// _, err := c.client.EditPullRequest(c.owner, c.repository, int64(number), gitea.EditPullRequestOption{
 	// 	Base: newBaseName,
 	// })
 	// return err
-	return fmt.Errorf("updating Gitea pull requests is currently not supported")
+	return fmt.Errorf(messages.HostingGiteaNotImplemented)
 }
 
 // NewGiteaConfig provides Gitea configuration data if the current repo is hosted on Gitea,

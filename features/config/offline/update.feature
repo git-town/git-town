@@ -22,6 +22,6 @@ Feature: change offline mode
     When I run "git-town config offline zonk"
     Then it prints the error:
       """
-      invalid argument: "zonk". Please provide either "yes" or "no"
+      invalid value for git-town.offline: "zonk". Please provide either "yes" or "no"
       """
     And global setting "offline" is still "false"

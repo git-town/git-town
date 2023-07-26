@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/spf13/cobra"
 )
@@ -83,11 +84,11 @@ func determineDiffParentConfig(args []string, run *git.ProdRunner, initialBranch
 			return nil, err
 		}
 		if !hasBranch {
-			return nil, fmt.Errorf("there is no local branch named %q", branch)
+			return nil, fmt.Errorf(messages.BranchDoesntExist, branch)
 		}
 	}
 	if !run.Config.IsFeatureBranch(branch) {
-		return nil, fmt.Errorf("you can only diff-parent feature branches")
+		return nil, fmt.Errorf(messages.DiffParentNoFeatureBranch)
 	}
 	err := validate.KnowsBranchAncestors(branch, run.Config.MainBranch(), &run.Backend)
 	if err != nil {
