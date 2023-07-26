@@ -27,7 +27,7 @@ func resetRunstateCommand() *cobra.Command {
 }
 
 func statusReset(debug bool) error {
-	_, rootDir, _, exit, err := execute.LoadProdRunner(execute.LoadArgs{
+	_, rootDir, _, exit, err := execute.OpenShell(execute.LoadArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 false,

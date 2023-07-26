@@ -13,7 +13,7 @@ import (
 	"github.com/git-town/git-town/v9/src/validate"
 )
 
-func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, rootDir string, isOffline bool, exit bool, err error) {
+func OpenShell(args LoadArgs) (prodRunner git.ProdRunner, rootDir string, isOffline bool, exit bool, err error) {
 	var stats Statistics
 	if args.Debug {
 		stats = &statistics.CommandsRun{CommandsCount: 0}

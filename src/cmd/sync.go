@@ -53,7 +53,7 @@ func syncCmd() *cobra.Command {
 }
 
 func sync(all, dryRun, debug bool) error {
-	run, rootDir, isOffline, exit, err := execute.LoadProdRunner(execute.LoadArgs{
+	run, rootDir, isOffline, exit, err := execute.OpenShell(execute.LoadArgs{
 		Debug:                 debug,
 		DryRun:                dryRun,
 		Fetch:                 true,

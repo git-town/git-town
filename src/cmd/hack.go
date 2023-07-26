@@ -43,7 +43,7 @@ func hackCmd() *cobra.Command {
 }
 
 func hack(args []string, promptForParent, debug bool) error {
-	run, rootDir, _, exit, err := execute.LoadProdRunner(execute.LoadArgs{
+	run, rootDir, _, exit, err := execute.OpenShell(execute.LoadArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 true,

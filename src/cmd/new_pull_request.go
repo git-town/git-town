@@ -50,7 +50,7 @@ func newPullRequestCommand() *cobra.Command {
 }
 
 func newPullRequest(debug bool) error {
-	run, rootDir, isOffline, exit, err := execute.LoadProdRunner(execute.LoadArgs{
+	run, rootDir, isOffline, exit, err := execute.OpenShell(execute.LoadArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 false,

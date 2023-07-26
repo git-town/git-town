@@ -29,7 +29,7 @@ func undoCmd() *cobra.Command {
 }
 
 func undo(debug bool) error {
-	run, rootDir, _, exit, err := execute.LoadProdRunner(execute.LoadArgs{
+	run, rootDir, _, exit, err := execute.OpenShell(execute.LoadArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 false,

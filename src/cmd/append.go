@@ -41,7 +41,7 @@ func appendCmd() *cobra.Command {
 }
 
 func runAppend(arg string, debug bool) error {
-	run, rootDir, isOffline, exit, err := execute.LoadProdRunner(execute.LoadArgs{
+	run, rootDir, isOffline, exit, err := execute.OpenShell(execute.LoadArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 true,
