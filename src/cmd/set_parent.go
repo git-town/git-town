@@ -42,29 +42,29 @@ func setParent(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	_, currentBranch, err := execute.LoadBranches(&repo.ProdRunner, execute.LoadBranchesArgs{
+	_, currentBranch, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	if !repo.ProdRunner.Config.IsFeatureBranch(currentBranch) {
+	if !repo.Runner.Config.IsFeatureBranch(currentBranch) {
 		return errors.New(messages.SetParentNoFeatureBranch)
 	}
-	existingParent := repo.ProdRunner.Config.Lineage().Parent(currentBranch)
+	existingParent := repo.Runner.Config.Lineage().Parent(currentBranch)
 	if existingParent != "" {
 		// TODO: delete the old parent only when the user has entered a new parent
-		err = repo.ProdRunner.Config.RemoveParent(currentBranch)
+		err = repo.Runner.Config.RemoveParent(currentBranch)
 		if err != nil {
 			return err
 		}
 	} else {
-		existingParent = repo.ProdRunner.Config.MainBranch()
+		existingParent = repo.Runner.Config.MainBranch()
 	}
-	err = validate.KnowsBranchAncestors(currentBranch, existingParent, &repo.ProdRunner.Backend)
+	err = validate.KnowsBranchAncestors(currentBranch, existingParent, &repo.Runner.Backend)
 	if err != nil {
 		return err
 	}
-	repo.ProdRunner.Stats.PrintAnalysis()
+	repo.Runner.Stats.PrintAnalysis()
 	return nil
 }

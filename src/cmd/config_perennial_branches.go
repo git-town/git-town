@@ -60,7 +60,7 @@ func displayPerennialBranches(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	cli.Println(cli.StringSetting(strings.Join(repo.ProdRunner.Config.PerennialBranches(), "\n")))
+	cli.Println(cli.StringSetting(strings.Join(repo.Runner.Config.PerennialBranches(), "\n")))
 	return nil
 }
 
@@ -78,12 +78,12 @@ func updatePerennialBranches(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	allBranches, _, err := execute.LoadBranches(&repo.ProdRunner, execute.LoadBranchesArgs{
+	allBranches, _, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: false,
 	})
 	if err != nil {
 		return err
 	}
-	mainBranch := repo.ProdRunner.Config.MainBranch()
-	return validate.EnterPerennialBranches(&repo.ProdRunner.Backend, allBranches, mainBranch)
+	mainBranch := repo.Runner.Config.MainBranch()
+	return validate.EnterPerennialBranches(&repo.Runner.Backend, allBranches, mainBranch)
 }

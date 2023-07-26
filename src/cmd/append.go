@@ -54,17 +54,17 @@ func runAppend(arg string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	allBranches, currentBranch, err := execute.LoadBranches(&repo.ProdRunner, execute.LoadBranchesArgs{
+	allBranches, currentBranch, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	config, err := determineAppendConfig(arg, &repo.ProdRunner, allBranches, currentBranch, repo.IsOffline)
+	config, err := determineAppendConfig(arg, &repo.Runner, allBranches, currentBranch, repo.IsOffline)
 	if err != nil {
 		return err
 	}
-	stepList, err := appendStepList(config, &repo.ProdRunner)
+	stepList, err := appendStepList(config, &repo.Runner)
 	if err != nil {
 		return err
 	}
@@ -72,7 +72,7 @@ func runAppend(arg string, debug bool) error {
 		Command:     "append",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(&runState, &repo.ProdRunner, nil, repo.RootDir)
+	return runstate.Execute(&runState, &repo.Runner, nil, repo.RootDir)
 }
 
 type appendConfig struct {

@@ -44,14 +44,14 @@ func pruneBranches(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	allBranches, initialBranch, err := execute.LoadBranches(&repo.ProdRunner, execute.LoadBranchesArgs{
+	allBranches, initialBranch, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	config := determinePruneBranchesConfig(&repo.ProdRunner, allBranches, initialBranch)
-	stepList, err := pruneBranchesStepList(config, &repo.ProdRunner)
+	config := determinePruneBranchesConfig(&repo.Runner, allBranches, initialBranch)
+	stepList, err := pruneBranchesStepList(config, &repo.Runner)
 	if err != nil {
 		return err
 	}
@@ -59,7 +59,7 @@ func pruneBranches(debug bool) error {
 		Command:     "prune-branches",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(&runState, &repo.ProdRunner, nil, repo.RootDir)
+	return runstate.Execute(&runState, &repo.Runner, nil, repo.RootDir)
 }
 
 type pruneBranchesConfig struct {

@@ -77,27 +77,27 @@ func ship(args []string, message string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	allBranches, initialBranch, err := execute.LoadBranches(&repo.ProdRunner, execute.LoadBranchesArgs{
+	allBranches, initialBranch, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	connector, err := hosting.NewConnector(repo.ProdRunner.Config.GitTown, &repo.ProdRunner.Backend, cli.PrintConnectorAction)
+	connector, err := hosting.NewConnector(repo.Runner.Config.GitTown, &repo.Runner.Backend, cli.PrintConnectorAction)
 	if err != nil {
 		return err
 	}
-	config, err := determineShipConfig(args, connector, &repo.ProdRunner, allBranches, initialBranch, repo.IsOffline)
+	config, err := determineShipConfig(args, connector, &repo.Runner, allBranches, initialBranch, repo.IsOffline)
 	if err != nil {
 		return err
 	}
 	if config.branchToShip.Name == initialBranch {
-		err = validate.NoOpenChanges(&repo.ProdRunner.Backend)
+		err = validate.NoOpenChanges(&repo.Runner.Backend)
 		if err != nil {
 			return err
 		}
 	}
-	stepList, err := shipStepList(config, message, &repo.ProdRunner)
+	stepList, err := shipStepList(config, message, &repo.Runner)
 	if err != nil {
 		return err
 	}
@@ -105,7 +105,7 @@ func ship(args []string, message string, debug bool) error {
 		Command:     "ship",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(&runState, &repo.ProdRunner, connector, repo.RootDir)
+	return runstate.Execute(&runState, &repo.Runner, connector, repo.RootDir)
 }
 
 type shipConfig struct {

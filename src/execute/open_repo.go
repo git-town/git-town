@@ -108,9 +108,9 @@ func OpenRepo(args OpenShellArgs) (result OpenShellResult, exit bool, err error)
 		}
 	}
 	return OpenShellResult{
-		ProdRunner: prodRunner,
-		RootDir:    backendCommands.RootDirectory(),
-		IsOffline:  isOffline,
+		Runner:    prodRunner,
+		RootDir:   backendCommands.RootDirectory(),
+		IsOffline: isOffline,
 	}, false, err
 }
 
@@ -126,9 +126,9 @@ type OpenShellArgs struct {
 }
 
 type OpenShellResult struct {
-	ProdRunner git.ProdRunner
-	RootDir    string
-	IsOffline  bool
+	Runner    git.ProdRunner
+	RootDir   string
+	IsOffline bool
 }
 
 // NewFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.

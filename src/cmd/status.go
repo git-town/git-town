@@ -48,7 +48,7 @@ func status(debug bool) error {
 		return err
 	}
 	displayStatus(*config)
-	repo.ProdRunner.Stats.PrintAnalysis()
+	repo.Runner.Stats.PrintAnalysis()
 	return nil
 }
 

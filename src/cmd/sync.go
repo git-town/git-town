@@ -66,17 +66,17 @@ func sync(all, dryRun, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	allBranches, initialBranch, err := execute.LoadBranches(&repo.ProdRunner, execute.LoadBranchesArgs{
+	allBranches, initialBranch, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	config, err := determineSyncConfig(all, &repo.ProdRunner, allBranches, initialBranch, repo.IsOffline)
+	config, err := determineSyncConfig(all, &repo.Runner, allBranches, initialBranch, repo.IsOffline)
 	if err != nil {
 		return err
 	}
-	stepList, err := syncBranchesSteps(config, &repo.ProdRunner)
+	stepList, err := syncBranchesSteps(config, &repo.Runner)
 	if err != nil {
 		return err
 	}
@@ -84,7 +84,7 @@ func sync(all, dryRun, debug bool) error {
 		Command:     "sync",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(&runState, &repo.ProdRunner, nil, repo.RootDir)
+	return runstate.Execute(&runState, &repo.Runner, nil, repo.RootDir)
 }
 
 type syncConfig struct {

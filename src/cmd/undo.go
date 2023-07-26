@@ -42,7 +42,7 @@ func undo(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	_, _, err = execute.LoadBranches(&repo.ProdRunner, execute.LoadBranchesArgs{
+	_, _, err = execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
@@ -56,5 +56,5 @@ func undo(debug bool) error {
 		return fmt.Errorf(messages.UndoNothingToDo)
 	}
 	undoRunState := runState.CreateUndoRunState()
-	return runstate.Execute(&undoRunState, &repo.ProdRunner, nil, repo.RootDir)
+	return runstate.Execute(&undoRunState, &repo.Runner, nil, repo.RootDir)
 }

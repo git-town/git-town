@@ -56,17 +56,17 @@ func hack(args []string, promptForParent, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	allBranches, _, err := execute.LoadBranches(&repo.ProdRunner, execute.LoadBranchesArgs{
+	allBranches, _, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	config, err := determineHackConfig(args, promptForParent, &repo.ProdRunner, allBranches)
+	config, err := determineHackConfig(args, promptForParent, &repo.Runner, allBranches)
 	if err != nil {
 		return err
 	}
-	stepList, err := appendStepList(config, &repo.ProdRunner)
+	stepList, err := appendStepList(config, &repo.Runner)
 	if err != nil {
 		return err
 	}
@@ -74,7 +74,7 @@ func hack(args []string, promptForParent, debug bool) error {
 		Command:     "hack",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(&runState, &repo.ProdRunner, nil, repo.RootDir)
+	return runstate.Execute(&runState, &repo.Runner, nil, repo.RootDir)
 }
 
 func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunner, allBranches git.BranchesSyncStatus) (*appendConfig, error) {

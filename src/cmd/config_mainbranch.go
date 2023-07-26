@@ -46,9 +46,9 @@ func configureMainBranch(args []string, debug bool) error {
 		return err
 	}
 	if len(args) > 0 {
-		return setMainBranch(args[0], &repo.ProdRunner)
+		return setMainBranch(args[0], &repo.Runner)
 	}
-	printMainBranch(&repo.ProdRunner)
+	printMainBranch(&repo.Runner)
 	return nil
 }
 

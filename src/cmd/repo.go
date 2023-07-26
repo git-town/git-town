@@ -54,20 +54,20 @@ func repo(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	_, _, err = execute.LoadBranches(&repo.ProdRunner, execute.LoadBranchesArgs{
+	_, _, err = execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	connector, err := hosting.NewConnector(repo.ProdRunner.Config.GitTown, &repo.ProdRunner.Backend, cli.PrintConnectorAction)
+	connector, err := hosting.NewConnector(repo.Runner.Config.GitTown, &repo.Runner.Backend, cli.PrintConnectorAction)
 	if err != nil {
 		return err
 	}
 	if connector == nil {
 		return hosting.UnsupportedServiceError()
 	}
-	browser.Open(connector.RepositoryURL(), repo.ProdRunner.Frontend.FrontendRunner, repo.ProdRunner.Backend.BackendRunner)
-	repo.ProdRunner.Stats.PrintAnalysis()
+	browser.Open(connector.RepositoryURL(), repo.Runner.Frontend.FrontendRunner, repo.Runner.Backend.BackendRunner)
+	repo.Runner.Stats.PrintAnalysis()
 	return nil
 }

@@ -44,7 +44,7 @@ func runContinue(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	_, _, err = execute.LoadBranches(&repo.ProdRunner, execute.LoadBranchesArgs{
+	_, _, err = execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
@@ -57,16 +57,16 @@ func runContinue(debug bool) error {
 	if runState == nil || !runState.IsUnfinished() {
 		return fmt.Errorf(messages.ContinueNothingToDo)
 	}
-	hasConflicts, err := repo.ProdRunner.Backend.HasConflicts()
+	hasConflicts, err := repo.Runner.Backend.HasConflicts()
 	if err != nil {
 		return err
 	}
 	if hasConflicts {
 		return fmt.Errorf(messages.ContinueUnresolvedConflicts)
 	}
-	connector, err := hosting.NewConnector(repo.ProdRunner.Config.GitTown, &repo.ProdRunner.Backend, cli.PrintConnectorAction)
+	connector, err := hosting.NewConnector(repo.Runner.Config.GitTown, &repo.Runner.Backend, cli.PrintConnectorAction)
 	if err != nil {
 		return err
 	}
-	return runstate.Execute(runState, &repo.ProdRunner, connector, repo.RootDir)
+	return runstate.Execute(runState, &repo.Runner, connector, repo.RootDir)
 }

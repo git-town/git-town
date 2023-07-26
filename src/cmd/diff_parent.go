@@ -48,21 +48,21 @@ func diffParent(args []string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	_, currentBranch, err := execute.LoadBranches(&repo.ProdRunner, execute.LoadBranchesArgs{
+	_, currentBranch, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	config, err := determineDiffParentConfig(args, &repo.ProdRunner, currentBranch)
+	config, err := determineDiffParentConfig(args, &repo.Runner, currentBranch)
 	if err != nil {
 		return err
 	}
-	err = repo.ProdRunner.Frontend.DiffParent(config.branch, config.parentBranch)
+	err = repo.Runner.Frontend.DiffParent(config.branch, config.parentBranch)
 	if err != nil {
 		return err
 	}
-	repo.ProdRunner.Stats.PrintAnalysis()
+	repo.Runner.Stats.PrintAnalysis()
 	return nil
 }
 

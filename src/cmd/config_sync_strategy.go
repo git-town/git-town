@@ -47,9 +47,9 @@ func syncStrategy(args []string, global, debug bool) error {
 		return err
 	}
 	if len(args) > 0 {
-		return setSyncStrategy(global, &repo.ProdRunner, args[0])
+		return setSyncStrategy(global, &repo.Runner, args[0])
 	}
-	return printSyncStrategy(global, &repo.ProdRunner)
+	return printSyncStrategy(global, &repo.Runner)
 }
 
 func printSyncStrategy(globalFlag bool, run *git.ProdRunner) error {

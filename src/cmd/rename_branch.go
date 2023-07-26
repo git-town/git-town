@@ -63,17 +63,17 @@ func renameBranch(args []string, force, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	allBranches, initialBranch, err := execute.LoadBranches(&repo.ProdRunner, execute.LoadBranchesArgs{
+	allBranches, initialBranch, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	config, err := determineRenameBranchConfig(args, force, &repo.ProdRunner, allBranches, initialBranch, repo.IsOffline)
+	config, err := determineRenameBranchConfig(args, force, &repo.Runner, allBranches, initialBranch, repo.IsOffline)
 	if err != nil {
 		return err
 	}
-	stepList, err := renameBranchStepList(config, &repo.ProdRunner)
+	stepList, err := renameBranchStepList(config, &repo.Runner)
 	if err != nil {
 		return err
 	}
@@ -81,7 +81,7 @@ func renameBranch(args []string, force, debug bool) error {
 		Command:     "rename-branch",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(&runState, &repo.ProdRunner, nil, repo.RootDir)
+	return runstate.Execute(&runState, &repo.Runner, nil, repo.RootDir)
 }
 
 type renameBranchConfig struct {

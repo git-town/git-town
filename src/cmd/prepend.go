@@ -57,17 +57,17 @@ func prepend(args []string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	allBranches, initialBranch, err := execute.LoadBranches(&repo.ProdRunner, execute.LoadBranchesArgs{
+	allBranches, initialBranch, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	config, err := determinePrependConfig(args, &repo.ProdRunner, allBranches, initialBranch, repo.IsOffline)
+	config, err := determinePrependConfig(args, &repo.Runner, allBranches, initialBranch, repo.IsOffline)
 	if err != nil {
 		return err
 	}
-	stepList, err := prependStepList(config, &repo.ProdRunner)
+	stepList, err := prependStepList(config, &repo.Runner)
 	if err != nil {
 		return err
 	}
@@ -75,7 +75,7 @@ func prepend(args []string, debug bool) error {
 		Command:     "prepend",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(&runState, &repo.ProdRunner, nil, repo.RootDir)
+	return runstate.Execute(&runState, &repo.Runner, nil, repo.RootDir)
 }
 
 type prependConfig struct {

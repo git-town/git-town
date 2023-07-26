@@ -52,9 +52,9 @@ func abort(debug bool) error {
 		return fmt.Errorf(messages.AbortNothingToDo)
 	}
 	abortRunState := runState.CreateAbortRunState()
-	connector, err := hosting.NewConnector(repo.ProdRunner.Config.GitTown, &repo.ProdRunner.Backend, cli.PrintConnectorAction)
+	connector, err := hosting.NewConnector(repo.Runner.Config.GitTown, &repo.Runner.Backend, cli.PrintConnectorAction)
 	if err != nil {
 		return err
 	}
-	return runstate.Execute(&abortRunState, &repo.ProdRunner, connector, repo.RootDir)
+	return runstate.Execute(&abortRunState, &repo.Runner, connector, repo.RootDir)
 }

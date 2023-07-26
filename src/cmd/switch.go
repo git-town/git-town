@@ -42,18 +42,18 @@ func runSwitch(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	_, currentBranch, err := execute.LoadBranches(&repo.ProdRunner, execute.LoadBranchesArgs{
+	_, currentBranch, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	newBranch, err := queryBranch(currentBranch, repo.ProdRunner.Config.Lineage())
+	newBranch, err := queryBranch(currentBranch, repo.Runner.Config.Lineage())
 	if err != nil {
 		return err
 	}
 	if newBranch != nil && *newBranch != currentBranch {
-		err = repo.ProdRunner.Backend.CheckoutBranch(*newBranch)
+		err = repo.Runner.Backend.CheckoutBranch(*newBranch)
 		if err != nil {
 			return err
 		}

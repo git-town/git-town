@@ -53,21 +53,21 @@ func runConfig(debug bool) error {
 		return err
 	}
 	fc := failure.Collector{}
-	pushNewBranches := fc.Bool(repo.ProdRunner.Config.ShouldNewBranchPush())
-	pushHook := fc.Bool(repo.ProdRunner.Config.PushHook())
-	isOffline := fc.Bool(repo.ProdRunner.Config.IsOffline())
-	deleteOrigin := fc.Bool(repo.ProdRunner.Config.ShouldShipDeleteOriginBranch())
-	pullBranchStrategy := fc.PullBranchStrategy(repo.ProdRunner.Config.PullBranchStrategy())
-	shouldSyncUpstream := fc.Bool(repo.ProdRunner.Config.ShouldSyncUpstream())
-	syncStrategy := fc.SyncStrategy(repo.ProdRunner.Config.SyncStrategy())
-	hostingService := fc.HostingService(repo.ProdRunner.Config.HostingService())
+	pushNewBranches := fc.Bool(repo.Runner.Config.ShouldNewBranchPush())
+	pushHook := fc.Bool(repo.Runner.Config.PushHook())
+	isOffline := fc.Bool(repo.Runner.Config.IsOffline())
+	deleteOrigin := fc.Bool(repo.Runner.Config.ShouldShipDeleteOriginBranch())
+	pullBranchStrategy := fc.PullBranchStrategy(repo.Runner.Config.PullBranchStrategy())
+	shouldSyncUpstream := fc.Bool(repo.Runner.Config.ShouldSyncUpstream())
+	syncStrategy := fc.SyncStrategy(repo.Runner.Config.SyncStrategy())
+	hostingService := fc.HostingService(repo.Runner.Config.HostingService())
 	if fc.Err != nil {
 		return fc.Err
 	}
 	fmt.Println()
 	cli.PrintHeader("Branches")
-	cli.PrintEntry("main branch", cli.StringSetting(repo.ProdRunner.Config.MainBranch()))
-	cli.PrintEntry("perennial branches", cli.StringSetting(strings.Join(repo.ProdRunner.Config.PerennialBranches(), ", ")))
+	cli.PrintEntry("main branch", cli.StringSetting(repo.Runner.Config.MainBranch()))
+	cli.PrintEntry("perennial branches", cli.StringSetting(strings.Join(repo.Runner.Config.PerennialBranches(), ", ")))
 	fmt.Println()
 	cli.PrintHeader("Configuration")
 	cli.PrintEntry("offline", cli.BoolSetting(isOffline))
@@ -80,12 +80,12 @@ func runConfig(debug bool) error {
 	fmt.Println()
 	cli.PrintHeader("Hosting")
 	cli.PrintEntry("hosting service override", cli.StringSetting(string(hostingService)))
-	cli.PrintEntry("GitHub token", cli.StringSetting(repo.ProdRunner.Config.GitHubToken()))
-	cli.PrintEntry("GitLab token", cli.StringSetting(repo.ProdRunner.Config.GitLabToken()))
-	cli.PrintEntry("Gitea token", cli.StringSetting(repo.ProdRunner.Config.GiteaToken()))
+	cli.PrintEntry("GitHub token", cli.StringSetting(repo.Runner.Config.GitHubToken()))
+	cli.PrintEntry("GitLab token", cli.StringSetting(repo.Runner.Config.GitLabToken()))
+	cli.PrintEntry("Gitea token", cli.StringSetting(repo.Runner.Config.GiteaToken()))
 	fmt.Println()
-	if repo.ProdRunner.Config.MainBranch() != "" {
-		cli.PrintLabelAndValue("Branch Lineage", cli.PrintableBranchLineage(repo.ProdRunner.Config.Lineage()))
+	if repo.Runner.Config.MainBranch() != "" {
+		cli.PrintLabelAndValue("Branch Lineage", cli.PrintableBranchLineage(repo.Runner.Config.Lineage()))
 	}
 	return nil
 }

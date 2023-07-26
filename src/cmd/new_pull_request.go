@@ -63,24 +63,24 @@ func newPullRequest(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	allBranches, initialBranch, err := execute.LoadBranches(&repo.ProdRunner, execute.LoadBranchesArgs{
+	allBranches, initialBranch, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	config, err := determineNewPullRequestConfig(&repo.ProdRunner, allBranches, initialBranch, repo.IsOffline)
+	config, err := determineNewPullRequestConfig(&repo.Runner, allBranches, initialBranch, repo.IsOffline)
 	if err != nil {
 		return err
 	}
-	connector, err := hosting.NewConnector(repo.ProdRunner.Config.GitTown, &repo.ProdRunner.Backend, cli.PrintConnectorAction)
+	connector, err := hosting.NewConnector(repo.Runner.Config.GitTown, &repo.Runner.Backend, cli.PrintConnectorAction)
 	if err != nil {
 		return err
 	}
 	if connector == nil {
 		return hosting.UnsupportedServiceError()
 	}
-	stepList, err := newPullRequestStepList(config, &repo.ProdRunner)
+	stepList, err := newPullRequestStepList(config, &repo.Runner)
 	if err != nil {
 		return err
 	}
@@ -88,7 +88,7 @@ func newPullRequest(debug bool) error {
 		Command:     "new-pull-request",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(&runState, &repo.ProdRunner, connector, repo.RootDir)
+	return runstate.Execute(&runState, &repo.Runner, connector, repo.RootDir)
 }
 
 type newPullRequestConfig struct {

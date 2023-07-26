@@ -46,9 +46,9 @@ func pullBranchStrategy(args []string, debug bool) error {
 		return err
 	}
 	if len(args) > 0 {
-		return setPullBranchStrategy(args[0], &repo.ProdRunner)
+		return setPullBranchStrategy(args[0], &repo.Runner)
 	}
-	return displayPullBranchStrategy(&repo.ProdRunner)
+	return displayPullBranchStrategy(&repo.Runner)
 }
 
 func displayPullBranchStrategy(run *git.ProdRunner) error {

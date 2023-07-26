@@ -37,5 +37,5 @@ func resetStatus(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	return repo.ProdRunner.Config.RemoveLocalGitConfiguration()
+	return repo.Runner.Config.RemoveLocalGitConfiguration()
 }

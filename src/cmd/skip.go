@@ -42,7 +42,7 @@ func skip(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	_, _, err = execute.LoadBranches(&repo.ProdRunner, execute.LoadBranchesArgs{
+	_, _, err = execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
@@ -59,5 +59,5 @@ func skip(debug bool) error {
 		return fmt.Errorf(messages.SkipBranchHasConflicts)
 	}
 	skipRunState := runState.CreateSkipRunState()
-	return runstate.Execute(&skipRunState, &repo.ProdRunner, nil, repo.RootDir)
+	return runstate.Execute(&skipRunState, &repo.Runner, nil, repo.RootDir)
 }

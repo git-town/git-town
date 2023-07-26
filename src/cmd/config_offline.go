@@ -47,9 +47,9 @@ func offline(args []string, debug bool) error {
 		return err
 	}
 	if len(args) > 0 {
-		return setOfflineStatus(args[0], &repo.ProdRunner)
+		return setOfflineStatus(args[0], &repo.Runner)
 	}
-	return displayOfflineStatus(&repo.ProdRunner)
+	return displayOfflineStatus(&repo.Runner)
 }
 
 func displayOfflineStatus(run *git.ProdRunner) error {

@@ -48,17 +48,17 @@ func kill(args []string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	allBranches, initialBranch, err := execute.LoadBranches(&repo.ProdRunner, execute.LoadBranchesArgs{
+	allBranches, initialBranch, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	config, err := determineKillConfig(args, &repo.ProdRunner, allBranches, initialBranch, repo.IsOffline)
+	config, err := determineKillConfig(args, &repo.Runner, allBranches, initialBranch, repo.IsOffline)
 	if err != nil {
 		return err
 	}
-	stepList, err := killStepList(config, &repo.ProdRunner)
+	stepList, err := killStepList(config, &repo.Runner)
 	if err != nil {
 		return err
 	}
@@ -66,7 +66,7 @@ func kill(args []string, debug bool) error {
 		Command:     "kill",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(&runState, &repo.ProdRunner, nil, repo.RootDir)
+	return runstate.Execute(&runState, &repo.Runner, nil, repo.RootDir)
 }
 
 type killConfig struct {
