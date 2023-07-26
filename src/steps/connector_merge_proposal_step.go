@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
+	"github.com/git-town/git-town/v9/src/messages"
 )
 
 // ConnectorMergeProposalStep squash merges the branch with the given name into the current branch.
@@ -32,7 +33,7 @@ func (step *ConnectorMergeProposalStep) CreateUndoStep(_ *git.BackendCommands) (
 
 func (step *ConnectorMergeProposalStep) CreateAutomaticAbortError() error {
 	if step.enteredEmptyCommitMessage {
-		return fmt.Errorf("aborted because commit exited with error")
+		return fmt.Errorf(messages.ShipAbortedMergeError)
 	}
 	return step.mergeError
 }
@@ -50,7 +51,7 @@ func (step *ConnectorMergeProposalStep) Run(run *git.ProdRunner, connector hosti
 		}
 		err = run.Backend.CommentOutSquashCommitMessage(step.ProposalMessage + "\n\n")
 		if err != nil {
-			return fmt.Errorf("cannot comment out the squash commit message: %w", err)
+			return fmt.Errorf(messages.SquashMessageProblem, err)
 		}
 		err = run.Frontend.StartCommit()
 		if err != nil {

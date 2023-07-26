@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/spf13/cobra"
@@ -85,7 +86,7 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 	mainBranch := run.Config.MainBranch()
 	pushHook := fc.Bool(run.Config.PushHook())
 	if allBranches.Contains(targetBranch) {
-		return nil, fmt.Errorf("a branch named %q already exists", targetBranch)
+		return nil, fmt.Errorf(messages.BranchAlreadyExists, targetBranch)
 	}
 	lineage := run.Config.Lineage()
 	branchNamesToSync := lineage.BranchesAndAncestors([]string{parentBranch})

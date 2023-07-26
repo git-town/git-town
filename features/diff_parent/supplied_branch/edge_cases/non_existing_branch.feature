@@ -5,5 +5,5 @@ Feature: does not diff non-existing branch
     Then it runs no commands
     And it prints the error:
       """
-      there is no local branch named "non-existing"
+      there is no branch "non-existing"
       """

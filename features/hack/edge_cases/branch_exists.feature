@@ -8,7 +8,7 @@ Feature: already existing branch
       | main   | git fetch --prune --tags |
     And it prints the error:
       """
-      a branch named "existing" already exists
+      there is already a branch "existing"
       """
 
     Examples:

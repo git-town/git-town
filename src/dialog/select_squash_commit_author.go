@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v9/src/cli"
+	"github.com/git-town/git-town/v9/src/messages"
 	survey "gopkg.in/AlecAivazis/survey.v1"
 )
 
@@ -21,7 +22,7 @@ func SelectSquashCommitAuthor(branch string, authors []string) (string, error) {
 	}
 	err := survey.AskOne(prompt, &result, nil)
 	if err != nil {
-		return result, fmt.Errorf("cannot read author from CLI: %w", err)
+		return result, fmt.Errorf(messages.DialogCannotReadAuthor, err)
 	}
 	return result, nil
 }

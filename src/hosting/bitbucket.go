@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/messages"
 )
 
 // BitbucketConnector provides access to the API of Bitbucket installations.
@@ -38,7 +39,7 @@ func NewBitbucketConnector(gitConfig gitTownConfig, git gitCommands) (*Bitbucket
 }
 
 func (c *BitbucketConnector) FindProposal(_, _ string) (*Proposal, error) {
-	return nil, fmt.Errorf("BitBucket API functionality isn't implemented yet")
+	return nil, fmt.Errorf(messages.HostingBitBucketNotImplemented)
 }
 
 func (c *BitbucketConnector) DefaultProposalMessage(proposal Proposal) string {
@@ -53,7 +54,7 @@ func (c *BitbucketConnector) NewProposalURL(branch, parentBranch string) (string
 	query := url.Values{}
 	branchSha, err := c.git.ShaForBranch(branch)
 	if err != nil {
-		return "", fmt.Errorf("cannot determine pull request URL from %q to %q: %w", branch, parentBranch, err)
+		return "", fmt.Errorf(messages.ProposalURLProblem, branch, parentBranch, err)
 	}
 	query.Add("source", strings.Join([]string{c.Organization + "/" + c.Repository, branchSha[0:12], branch}, ":"))
 	query.Add("dest", strings.Join([]string{c.Organization + "/" + c.Repository, "", parentBranch}, ":"))
@@ -65,9 +66,9 @@ func (c *BitbucketConnector) RepositoryURL() string {
 }
 
 func (c *BitbucketConnector) SquashMergeProposal(_ int, _ string) (mergeSHA string, err error) {
-	return "", errors.New("shipping pull requests via the Bitbucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues")
+	return "", errors.New(messages.HostingBitBucketNotImplemented)
 }
 
 func (c *BitbucketConnector) UpdateProposalTarget(_ int, _ string) error {
-	return errors.New("shipping pull requests via the Bitbucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues")
+	return errors.New(messages.HostingBitBucketNotImplemented)
 }

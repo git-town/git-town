@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/git-town/git-town/v9/src/validate"
@@ -100,10 +101,10 @@ func determinePrependConfig(args []string, run *git.ProdRunner, allBranches git.
 	}
 	targetBranch := args[0]
 	if allBranches.Contains(targetBranch) {
-		return nil, fmt.Errorf("a branch named %q already exists", targetBranch)
+		return nil, fmt.Errorf(messages.BranchAlreadyExists, targetBranch)
 	}
 	if !run.Config.IsFeatureBranch(initialBranch) {
-		return nil, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can have parent branches", initialBranch)
+		return nil, fmt.Errorf(messages.SetParentNoFeatureBranch, initialBranch)
 	}
 	err := validate.KnowsBranchAncestors(initialBranch, run.Config.MainBranch(), &run.Backend)
 	if err != nil {

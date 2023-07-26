@@ -7,6 +7,7 @@ import (
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/hosting"
+	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/spf13/cobra"
 )
@@ -50,17 +51,17 @@ func runContinue(debug bool) error {
 	}
 	runState, err := runstate.Load(&run.Backend)
 	if err != nil {
-		return fmt.Errorf("cannot load previous run state: %w", err)
+		return fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
 	if runState == nil || !runState.IsUnfinished() {
-		return fmt.Errorf("nothing to continue")
+		return fmt.Errorf(messages.ContinueNothingToDo)
 	}
 	hasConflicts, err := run.Backend.HasConflicts()
 	if err != nil {
 		return err
 	}
 	if hasConflicts {
-		return fmt.Errorf("you must resolve the conflicts before continuing")
+		return fmt.Errorf(messages.ContinueUnresolvedConflicts)
 	}
 	connector, err := hosting.NewConnector(run.Config.GitTown, &run.Backend, cli.PrintConnectorAction)
 	if err != nil {

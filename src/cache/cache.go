@@ -1,5 +1,7 @@
 package cache
 
+import "github.com/git-town/git-town/v9/src/messages"
+
 // Cache is a cache implementation for arbitrary data structures that ensures it is initialized.
 // The zero value is an empty cache.
 type Cache[T any] struct {
@@ -16,7 +18,7 @@ func (c *Cache[T]) Set(newValue T) {
 // Value provides the current value.
 func (c *Cache[T]) Value() T {
 	if !c.initialized {
-		panic("using a cached value before initialization")
+		panic(messages.CacheUnitialized)
 	}
 	return c.value
 }

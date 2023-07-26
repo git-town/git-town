@@ -4,6 +4,8 @@ package browser
 import (
 	"fmt"
 	"runtime"
+
+	"github.com/git-town/git-town/v9/src/messages"
 )
 
 // OpenBrowserCommand provides the console command to open the default browser.
@@ -40,12 +42,12 @@ func OpenBrowserCommand(runner backendRunner) string {
 func Open(url string, frontend frontendRunner, backend backendRunner) {
 	command := OpenBrowserCommand(backend)
 	if command == "" {
-		fmt.Println("Please open in a browser: " + url)
+		fmt.Printf(messages.BrowserOpen, url)
 		return
 	}
 	err := frontend.Run(command, url)
 	if err != nil {
-		fmt.Println("Please open in a browser: " + url)
+		fmt.Printf(messages.BrowserOpen, url)
 	}
 }
 

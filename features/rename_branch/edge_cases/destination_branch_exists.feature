@@ -13,7 +13,7 @@ Feature: destination branch exists
       | alpha  | git fetch --prune --tags |
     And it prints the error:
       """
-      a branch named "beta" already exists
+      there is already a branch "beta"
       """
     And the current branch is still "alpha"
     And the initial branches and hierarchy exist
@@ -31,7 +31,7 @@ Feature: destination branch exists
       | alpha  | git fetch --prune --tags |
     And it prints the error:
       """
-      a branch named "beta" already exists
+      there is already a branch "beta"
       """
     And the current branch is still "alpha"
     And the initial branches and hierarchy exist
