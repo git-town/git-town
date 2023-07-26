@@ -62,7 +62,7 @@ func (r BackendRunner) RunMany(commands [][]string) error {
 	for _, argv := range commands {
 		err := r.Run(argv[0], argv[1:]...)
 		if err != nil {
-			return fmt.Errorf(messages.RunProblem, argv, err)
+			return fmt.Errorf(messages.RunCommandProblem, argv, err)
 		}
 	}
 	return nil

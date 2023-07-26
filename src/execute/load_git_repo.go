@@ -12,7 +12,7 @@ import (
 func LoadGitRepo(pr *git.ProdRunner, args LoadGitArgs) (allBranches git.BranchesSyncStatus, currentBranch string, exit bool, err error) { //nolint:nonamedreturns
 	rootDir := pr.Backend.RootDirectory()
 	if rootDir == "" {
-		err = errors.New(messages.RepoNot)
+		err = errors.New(messages.RepoOutside)
 		return
 	}
 	if args.HandleUnfinishedState {

@@ -1,7 +1,6 @@
 package steps
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/git-town/git-town/v9/src/git"
@@ -26,7 +25,7 @@ func (step *EnsureHasShippableChangesStep) Run(run *git.ProdRunner, _ hosting.Co
 		return err
 	}
 	if !hasShippableChanges {
-		return errors.New(messages.ShipNothingToDo)
+		return fmt.Errorf(messages.ShipBranchNothingToDo, step.Branch)
 	}
 	return nil
 }

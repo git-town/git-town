@@ -61,7 +61,7 @@ func Delete(backend *git.BackendCommands) error {
 func Save(runState *RunState, backend *git.BackendCommands) error {
 	content, err := json.MarshalIndent(runState, "", "  ")
 	if err != nil {
-		return fmt.Errorf(messages.RunstateMarshalProblem, err)
+		return fmt.Errorf(messages.RunstateSerializeProblem, err)
 	}
 	persistencePath, err := PersistenceFilePath(backend)
 	if err != nil {
