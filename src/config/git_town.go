@@ -159,7 +159,7 @@ func (gt *GitTown) OriginURLString() string {
 	if remote != "" {
 		return remote
 	}
-	output, _ := gt.Query("git", "remote", "get-url", OriginRemote)
+	output, _ := gt.QueryTrim("git", "remote", "get-url", OriginRemote)
 	return output
 }
 
