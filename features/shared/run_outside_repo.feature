@@ -1,6 +1,5 @@
 Feature: require a Git repository
 
-  @this
   Scenario Outline:
     Given I am outside a Git repo
     When I run "<COMMAND>"
