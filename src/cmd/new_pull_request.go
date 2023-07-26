@@ -183,7 +183,13 @@ func newPullRequestStepList(config *newPullRequestConfig, run *git.ProdRunner) (
 			syncStrategy:       config.syncStrategy,
 		})
 	}
-	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &run.Backend, config.mainBranch, config.initialBranch, config.previousBranch)
+	list.Wrap(runstate.WrapOptions{
+		RunInGitRoot:     true,
+		StashOpenChanges: true,
+		MainBranch:       config.mainBranch,
+		InitialBranch:    config.initialBranch,
+		PreviousBranch:   config.previousBranch,
+	}, &run.Backend)
 	list.Add(&steps.CreateProposalStep{Branch: config.initialBranch})
 	return list.Result()
 }

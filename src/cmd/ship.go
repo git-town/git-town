@@ -325,7 +325,13 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 	if !config.isShippingInitialBranch {
 		list.Add(&steps.CheckoutStep{Branch: config.initialBranch})
 	}
-	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: !config.isShippingInitialBranch}, &run.Backend, config.mainBranch, config.initialBranch, config.previousBranch)
+	list.Wrap(runstate.WrapOptions{
+		RunInGitRoot:     true,
+		StashOpenChanges: !config.isShippingInitialBranch,
+		MainBranch:       config.mainBranch,
+		InitialBranch:    config.initialBranch,
+		PreviousBranch:   config.previousBranch,
+	}, &run.Backend)
 	return list.Result()
 }
 

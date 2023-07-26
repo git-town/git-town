@@ -68,16 +68,19 @@ func (stepList *StepList) PrependList(otherList StepList) {
 type WrapOptions struct {
 	RunInGitRoot     bool
 	StashOpenChanges bool
+	MainBranch       string
+	InitialBranch    string
+	PreviousBranch   string
 }
 
 // Wrap wraps the list with steps that
 // change to the Git root directory or stash away open changes.
-func (stepList *StepList) Wrap(options WrapOptions, backend *git.BackendCommands, mainBranch, initialBranch, previousBranch string) error {
-	if previousBranch != "" {
+func (stepList *StepList) Wrap(options WrapOptions, backend *git.BackendCommands) error {
+	if options.PreviousBranch != "" {
 		stepList.Append(&steps.PreserveCheckoutHistoryStep{
-			InitialBranch:                     initialBranch,
-			InitialPreviouslyCheckedOutBranch: previousBranch,
-			MainBranch:                        mainBranch,
+			InitialBranch:                     options.InitialBranch,
+			InitialPreviouslyCheckedOutBranch: options.PreviousBranch,
+			MainBranch:                        options.MainBranch,
 		})
 	}
 	hasOpenChanges, err := backend.HasOpenChanges()

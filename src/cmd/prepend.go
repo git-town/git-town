@@ -170,6 +170,12 @@ func prependStepList(config *prependConfig, run *git.ProdRunner) (runstate.StepL
 	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
 		list.Add(&steps.CreateTrackingBranchStep{Branch: config.targetBranch, NoPushHook: !config.pushHook})
 	}
-	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &run.Backend, config.mainBranch, config.initialBranch, config.previousBranch)
+	list.Wrap(runstate.WrapOptions{
+		RunInGitRoot:     true,
+		StashOpenChanges: true,
+		MainBranch:       config.mainBranch,
+		InitialBranch:    config.initialBranch,
+		PreviousBranch:   config.previousBranch,
+	}, &run.Backend)
 	return list.Result()
 }
