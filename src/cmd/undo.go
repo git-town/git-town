@@ -29,17 +29,12 @@ func undoCmd() *cobra.Command {
 }
 
 func undo(debug bool) error {
-	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:           debug,
-		DryRun:          false,
-		OmitBranchNames: false,
-	})
-	if err != nil {
-		return err
-	}
-	rootDir, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	run, rootDir, _, exit, err := execute.LoadProdRunner(execute.LoadArgs{
+		Debug:                 debug,
+		DryRun:                false,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
+		OmitBranchNames:       false,
 		ValidateIsOnline:      false,
 		ValidateNoOpenChanges: false,
 	})

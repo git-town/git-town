@@ -43,17 +43,12 @@ func hackCmd() *cobra.Command {
 }
 
 func hack(args []string, promptForParent, debug bool) error {
-	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:           debug,
-		DryRun:          false,
-		OmitBranchNames: false,
-	})
-	if err != nil {
-		return err
-	}
-	rootDir, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	run, rootDir, _, exit, err := execute.LoadProdRunner(execute.LoadArgs{
+		Debug:                 debug,
+		DryRun:                false,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
+		OmitBranchNames:       false,
 		ValidateIsOnline:      false,
 		ValidateNoOpenChanges: false,
 	})

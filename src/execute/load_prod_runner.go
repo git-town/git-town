@@ -1,15 +1,19 @@
 package execute
 
 import (
+	"errors"
+	"os"
+
 	"github.com/git-town/git-town/v9/src/cache"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/statistics"
 	"github.com/git-town/git-town/v9/src/subshell"
 	"github.com/git-town/git-town/v9/src/validate"
 )
 
-func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, err error) {
+func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, rootDir string, isOffline bool, exit bool, err error) {
 	var stats Statistics
 	if args.Debug {
 		stats = &statistics.CommandsRun{CommandsCount: 0}
@@ -50,13 +54,66 @@ func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, err error) {
 	if args.DryRun {
 		prodRunner.Config.DryRun = true
 	}
-	return prodRunner, nil
+	rootDir = backendCommands.RootDirectory()
+	if rootDir == "" {
+		err = errors.New(messages.RepoOutside)
+		return
+	}
+	if args.HandleUnfinishedState {
+		exit, err = validate.HandleUnfinishedState(&prodRunner, nil, rootDir)
+		if err != nil || exit {
+			return
+		}
+	}
+	if args.ValidateNoOpenChanges {
+		err = validate.NoOpenChanges(&prodRunner.Backend)
+		if err != nil {
+			return
+		}
+	}
+	isOffline, err = config.IsOffline()
+	if err != nil {
+		return
+	}
+	if args.ValidateIsOnline && isOffline {
+		err = errors.New(messages.OfflineNotAllowed)
+		return
+	}
+	if args.Fetch {
+		var hasOrigin bool
+		hasOrigin, err = backendCommands.HasOrigin()
+		if err != nil {
+			return
+		}
+		if hasOrigin && !isOffline {
+			err = prodRunner.Frontend.Fetch()
+			if err != nil {
+				return
+			}
+		}
+	}
+	currentDirectory, err := os.Getwd()
+	if err != nil {
+		err = errors.New(messages.DirCurrentProblem)
+		return
+	}
+	if currentDirectory != rootDir {
+		err = prodRunner.Frontend.NavigateToDir(rootDir)
+		if err != nil {
+			return
+		}
+	}
+	return
 }
 
 type LoadArgs struct {
-	Debug           bool
-	DryRun          bool
-	OmitBranchNames bool
+	Debug                 bool
+	DryRun                bool
+	Fetch                 bool
+	HandleUnfinishedState bool
+	OmitBranchNames       bool
+	ValidateIsOnline      bool
+	ValidateNoOpenChanges bool
 }
 
 // NewFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.

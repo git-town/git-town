@@ -33,12 +33,16 @@ func offlineCmd() *cobra.Command {
 }
 
 func offline(args []string, debug bool) error {
-	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		OmitBranchNames: true,
-		Debug:           debug,
-		DryRun:          false,
+	run, _, _, exit, err := execute.LoadProdRunner(execute.LoadArgs{
+		Debug:                 debug,
+		DryRun:                false,
+		Fetch:                 false,
+		OmitBranchNames:       true,
+		HandleUnfinishedState: false,
+		ValidateIsOnline:      false,
+		ValidateNoOpenChanges: false,
 	})
-	if err != nil {
+	if err != nil || exit {
 		return err
 	}
 	if len(args) > 0 {

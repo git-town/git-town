@@ -39,12 +39,12 @@ func aliasesCommand() *cobra.Command {
 }
 
 func aliases(arg string, debug bool) error {
-	run, err := execute.LoadProdRunner(execute.LoadArgs{
+	run, _, _, exit, err := execute.LoadProdRunner(execute.LoadArgs{
 		Debug:           debug,
 		DryRun:          false,
 		OmitBranchNames: true,
 	})
-	if err != nil {
+	if err != nil || exit {
 		return err
 	}
 	switch strings.ToLower(arg) {
@@ -77,5 +77,6 @@ func removeAliases(run *git.ProdRunner) error {
 			}
 		}
 	}
+	run.Stats.PrintAnalysis()
 	return nil
 }

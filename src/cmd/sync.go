@@ -53,17 +53,12 @@ func syncCmd() *cobra.Command {
 }
 
 func sync(all, dryRun, debug bool) error {
-	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:           debug,
-		DryRun:          dryRun,
-		OmitBranchNames: false,
-	})
-	if err != nil {
-		return err
-	}
-	rootDir, isOffline, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	run, rootDir, isOffline, exit, err := execute.LoadProdRunner(execute.LoadArgs{
+		Debug:                 debug,
+		DryRun:                dryRun,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
+		OmitBranchNames:       false,
 		ValidateIsOnline:      false,
 		ValidateNoOpenChanges: false,
 	})

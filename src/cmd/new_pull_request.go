@@ -50,17 +50,12 @@ func newPullRequestCommand() *cobra.Command {
 }
 
 func newPullRequest(debug bool) error {
-	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:           debug,
-		DryRun:          false,
-		OmitBranchNames: false,
-	})
-	if err != nil {
-		return err
-	}
-	rootDir, isOffline, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	run, rootDir, isOffline, exit, err := execute.LoadProdRunner(execute.LoadArgs{
+		Debug:                 debug,
+		DryRun:                false,
 		Fetch:                 false,
 		HandleUnfinishedState: true,
+		OmitBranchNames:       false,
 		ValidateIsOnline:      true,
 		ValidateNoOpenChanges: false,
 	})

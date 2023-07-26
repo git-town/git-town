@@ -64,17 +64,12 @@ func shipCmd() *cobra.Command {
 }
 
 func ship(args []string, message string, debug bool) error {
-	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:           debug,
-		DryRun:          false,
-		OmitBranchNames: false,
-	})
-	if err != nil {
-		return err
-	}
-	rootDir, isOffline, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	run, rootDir, isOffline, exit, err := execute.LoadProdRunner(execute.LoadArgs{
+		Debug:                 debug,
+		DryRun:                false,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
+		OmitBranchNames:       false,
 		ValidateIsOnline:      false,
 		ValidateNoOpenChanges: len(args) == 0,
 	})
@@ -96,7 +91,7 @@ func ship(args []string, message string, debug bool) error {
 		return err
 	}
 	if config.branchToShip.Name == initialBranch {
-		err = validate.NoOpenChanges(run.Backend)
+		err = validate.NoOpenChanges(&run.Backend)
 		if err != nil {
 			return err
 		}

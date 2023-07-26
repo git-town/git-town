@@ -39,17 +39,12 @@ func configCmd() *cobra.Command {
 }
 
 func runConfig(debug bool) error {
-	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		OmitBranchNames: true,
-		Debug:           debug,
-		DryRun:          false,
-	})
-	if err != nil {
-		return err
-	}
-	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	run, _, _, exit, err := execute.LoadProdRunner(execute.LoadArgs{
+		Debug:                 debug,
+		DryRun:                false,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
+		OmitBranchNames:       true,
 		ValidateIsOnline:      false,
 		ValidateNoOpenChanges: false,
 	})
