@@ -101,10 +101,7 @@ func determineKillConfig(args []string, run *git.ProdRunner, allBranches git.Bra
 		}
 		run.Config.Reload()
 	}
-	previousBranch, err := run.Backend.PreviouslyCheckedOutBranch()
-	if err != nil {
-		return nil, err
-	}
+	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
 	hasOpenChanges, err := run.Backend.HasOpenChanges()
 	if err != nil {
 		return nil, err
@@ -153,6 +150,6 @@ func killStepList(config *killConfig, run *git.ProdRunner) (runstate.StepList, e
 	err := result.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.initialBranch != config.targetBranch.Name && config.targetBranch.Name == config.previousBranch,
-	}, &run.Backend, config.mainBranch, config.initialBranch)
+	}, &run.Backend, config.mainBranch, config.initialBranch, config.previousBranch)
 	return result, err
 }

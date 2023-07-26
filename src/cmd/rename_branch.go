@@ -94,9 +94,11 @@ type renameBranchConfig struct {
 	oldBranchChildren          []string
 	oldBranchHasTrackingBranch bool
 	oldBranch                  string
+	previousBranch             string
 }
 
 func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string, isOffline bool) (*renameBranchConfig, error) {
+	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
 	pushHook, err := run.Config.PushHook()
 	if err != nil {
 		return nil, err
@@ -143,6 +145,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 		oldBranch:                  oldBranchName,
 		oldBranchChildren:          run.Config.Lineage().Children(oldBranchName),
 		oldBranchHasTrackingBranch: oldBranch.HasTrackingBranch(),
+		previousBranch:             previousBranch,
 	}, err
 }
 
@@ -168,6 +171,6 @@ func renameBranchStepList(config *renameBranchConfig, run *git.ProdRunner) (runs
 		result.Append(&steps.DeleteOriginBranchStep{Branch: config.oldBranch, IsTracking: true})
 	}
 	result.Append(&steps.DeleteLocalBranchStep{Branch: config.oldBranch, Parent: config.mainBranch})
-	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, &run.Backend, config.mainBranch, config.initialBranch)
+	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, &run.Backend, config.mainBranch, config.initialBranch, config.previousBranch)
 	return result, err
 }

@@ -25,8 +25,8 @@ Feature: display debug statistics
       |         | backend  | git remote get-url origin                         |
       |         | backend  | git remote get-url origin                         |
       |         | backend  | git remote get-url origin                         |
-      |         | backend  | git status --porcelain --ignore-submodules        |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}         |
+      |         | backend  | git status --porcelain --ignore-submodules        |
       |         | backend  | git status --porcelain --ignore-submodules        |
       | feature | frontend | git checkout main                                 |
       |         | backend  | git rev-parse HEAD                                |

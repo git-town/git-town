@@ -87,6 +87,7 @@ type prependConfig struct {
 	isOffline           bool
 	lineage             config.Lineage
 	mainBranch          string
+	previousBranch      string
 	pullBranchStrategy  config.PullBranchStrategy
 	pushHook            bool
 	parentBranch        string
@@ -98,6 +99,7 @@ type prependConfig struct {
 
 func determinePrependConfig(args []string, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string, isOffline bool) (*prependConfig, error) {
 	fc := failure.Collector{}
+	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
 	hasOrigin := fc.Bool(run.Backend.HasOrigin())
 	shouldNewBranchPush := fc.Bool(run.Config.ShouldNewBranchPush())
 	pushHook := fc.Bool(run.Config.PushHook())
@@ -132,6 +134,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner, allBranches git.
 		isOffline:           isOffline,
 		lineage:             lineage,
 		mainBranch:          mainBranch,
+		previousBranch:      previousBranch,
 		pullBranchStrategy:  pullBranchStrategy,
 		pushHook:            pushHook,
 		parentBranch:        lineage.Parent(initialBranch),
@@ -167,6 +170,6 @@ func prependStepList(config *prependConfig, run *git.ProdRunner) (runstate.StepL
 	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
 		list.Add(&steps.CreateTrackingBranchStep{Branch: config.targetBranch, NoPushHook: !config.pushHook})
 	}
-	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &run.Backend, config.mainBranch, config.initialBranch)
+	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &run.Backend, config.mainBranch, config.initialBranch, config.previousBranch)
 	return list.Result()
 }

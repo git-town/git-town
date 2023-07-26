@@ -26,7 +26,6 @@ Feature: display debug statistics
       |         | backend  | git config -lz --global                           |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}         |
       |         | backend  | git status --porcelain --ignore-submodules        |
-      |         | backend  | git rev-parse --verify --abbrev-ref @{-1}         |
       |         | backend  | git status --porcelain --ignore-submodules        |
       | current | frontend | git push origin :current                          |
       |         | frontend | git checkout main                                 |
@@ -41,6 +40,6 @@ Feature: display debug statistics
       |         | backend  | git checkout main                                 |
     And it prints:
       """
-      Ran 26 shell commands.
+      Ran 25 shell commands.
       """
     And the current branch is now "main"

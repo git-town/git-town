@@ -79,6 +79,7 @@ func hack(args []string, promptForParent, debug bool) error {
 
 func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string) (*appendConfig, error) {
 	fc := failure.Collector{}
+	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
 	targetBranch := args[0]
 	mainBranch := run.Config.MainBranch()
 	parentBranch := fc.String(determineParentBranch(targetBranch, promptForParent, run, mainBranch))
@@ -104,6 +105,7 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 		lineage:             lineage,
 		mainBranch:          mainBranch,
 		shouldNewBranchPush: shouldNewBranchPush,
+		previousBranch:      previousBranch,
 		pullBranchStrategy:  fc.PullBranchStrategy(run.Config.PullBranchStrategy()),
 		pushHook:            pushHook,
 		isOffline:           isOffline,

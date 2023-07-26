@@ -122,6 +122,7 @@ type shipConfig struct {
 	isOffline                bool
 	lineage                  config.Lineage
 	mainBranch               string
+	previousBranch           string
 	proposal                 *hosting.Proposal
 	proposalsOfChildBranches []hosting.Proposal
 	pullBranchStrategy       config.PullBranchStrategy
@@ -131,6 +132,7 @@ type shipConfig struct {
 }
 
 func determineShipConfig(args []string, connector hosting.Connector, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string, isOffline bool) (*shipConfig, error) {
+	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
 	hasOrigin, err := run.Backend.HasOrigin()
 	if err != nil {
 		return nil, err
@@ -225,6 +227,7 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 		isShippingInitialBranch:  isShippingInitialBranch,
 		lineage:                  lineage,
 		mainBranch:               mainBranch,
+		previousBranch:           previousBranch,
 		proposal:                 proposal,
 		proposalsOfChildBranches: proposalsOfChildBranches,
 		pullBranchStrategy:       pullBranchStrategy,
@@ -322,7 +325,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 	if !config.isShippingInitialBranch {
 		list.Add(&steps.CheckoutStep{Branch: config.initialBranch})
 	}
-	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: !config.isShippingInitialBranch}, &run.Backend, config.mainBranch, config.initialBranch)
+	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: !config.isShippingInitialBranch}, &run.Backend, config.mainBranch, config.initialBranch, config.previousBranch)
 	return list.Result()
 }
 

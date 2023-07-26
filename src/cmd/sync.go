@@ -95,6 +95,7 @@ type syncConfig struct {
 	isOffline          bool
 	lineage            config.Lineage
 	mainBranch         string
+	previousBranch     string
 	pullBranchStrategy config.PullBranchStrategy
 	pushHook           bool
 	shouldPushTags     bool
@@ -103,6 +104,7 @@ type syncConfig struct {
 }
 
 func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranchesSyncStatus git.BranchesSyncStatus, initialBranch string, isOffline bool) (*syncConfig, error) {
+	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
 	hasOrigin, err := run.Backend.HasOrigin()
 	if err != nil {
 		return nil, err
@@ -157,6 +159,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranchesSyncStatu
 		isOffline:          isOffline,
 		lineage:            lineage,
 		mainBranch:         mainBranch,
+		previousBranch:     previousBranch,
 		pullBranchStrategy: pullBranchStrategy,
 		pushHook:           pushHook,
 		shouldPushTags:     shouldPushTags,
@@ -188,7 +191,7 @@ func syncBranchesSteps(config *syncConfig, run *git.ProdRunner) (runstate.StepLi
 	if config.hasOrigin && config.shouldPushTags && !config.isOffline {
 		list.Add(&steps.PushTagsStep{})
 	}
-	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &run.Backend, config.mainBranch, config.initialBranch)
+	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &run.Backend, config.mainBranch, config.initialBranch, config.previousBranch)
 	return list.Result()
 }
 

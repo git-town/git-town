@@ -86,6 +86,7 @@ type appendConfig struct {
 	mainBranch          string
 	pushHook            bool
 	parentBranch        string
+	previousBranch      string
 	pullBranchStrategy  config.PullBranchStrategy
 	shouldNewBranchPush bool
 	shouldSyncUpstream  bool
@@ -94,6 +95,7 @@ type appendConfig struct {
 }
 
 func determineAppendConfig(targetBranch string, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string, isOffline bool) (*appendConfig, error) {
+	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
 	fc := failure.Collector{}
 	hasOrigin := fc.Bool(run.Backend.HasOrigin())
 	mainBranch := run.Config.MainBranch()
@@ -123,6 +125,7 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner, allBranches
 		mainBranch:          mainBranch,
 		pushHook:            pushHook,
 		parentBranch:        initialBranch,
+		previousBranch:      previousBranch,
 		pullBranchStrategy:  pullBranchStrategy,
 		shouldNewBranchPush: shouldNewBranchPush,
 		shouldSyncUpstream:  shouldSyncUpstream,
@@ -155,6 +158,6 @@ func appendStepList(config *appendConfig, run *git.ProdRunner) (runstate.StepLis
 	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
 		list.Add(&steps.CreateTrackingBranchStep{Branch: config.targetBranch, NoPushHook: !config.pushHook})
 	}
-	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &run.Backend, config.mainBranch, config.initialBranch)
+	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &run.Backend, config.mainBranch, config.initialBranch, config.previousBranch)
 	return list.Result()
 }

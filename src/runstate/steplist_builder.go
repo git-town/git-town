@@ -25,8 +25,8 @@ func (slb *StepListBuilder) AddE(step steps.Step, err error) {
 	}
 }
 
-func (slb *StepListBuilder) Wrap(options WrapOptions, backend *git.BackendCommands, mainBranch string, initialBranch string) {
-	slb.Check(slb.StepList.Wrap(options, backend, mainBranch, initialBranch))
+func (slb *StepListBuilder) Wrap(options WrapOptions, backend *git.BackendCommands, mainBranch, initialBranch, previousBranch string) {
+	slb.Check(slb.StepList.Wrap(options, backend, mainBranch, initialBranch, previousBranch))
 }
 
 func (slb *StepListBuilder) Result() (StepList, error) {

@@ -384,12 +384,12 @@ func (bc *BackendCommands) LocalBranchesMainFirst(mainBranch string) ([]string, 
 }
 
 // PreviouslyCheckedOutBranch provides the name of the branch that was previously checked out in this repo.
-func (bc *BackendCommands) PreviouslyCheckedOutBranch() (string, error) {
+func (bc *BackendCommands) PreviouslyCheckedOutBranch() string {
 	output, err := bc.QueryTrim("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
 	if err != nil {
-		return "", fmt.Errorf(messages.BranchPreviouslyCheckedOutProblem, err)
+		return ""
 	}
-	return output, nil
+	return output
 }
 
 // Remotes provides the names of all Git remotes in this repository.

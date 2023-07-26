@@ -264,8 +264,7 @@ func TestBackendCommands(t *testing.T) {
 		runtime.CreateBranch("feature2", "initial")
 		runtime.CheckoutBranch("feature1")
 		runtime.CheckoutBranch("feature2")
-		have, err := runtime.Backend.PreviouslyCheckedOutBranch()
-		assert.NoError(t, err)
+		have := runtime.Backend.PreviouslyCheckedOutBranch()
 		assert.Equal(t, "feature1", have)
 	})
 

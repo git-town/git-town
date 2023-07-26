@@ -66,6 +66,7 @@ type pruneBranchesConfig struct {
 	initialBranch                            string
 	localBranchesWithDeletedTrackingBranches []string
 	mainBranch                               string
+	previousBranch                           string
 }
 
 func determinePruneBranchesConfig(run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string) *pruneBranchesConfig {
@@ -73,6 +74,7 @@ func determinePruneBranchesConfig(run *git.ProdRunner, allBranches git.BranchesS
 		initialBranch:                            initialBranch,
 		localBranchesWithDeletedTrackingBranches: allBranches.LocalBranchesWithDeletedTrackingBranches().BranchNames(),
 		mainBranch:                               run.Config.MainBranch(),
+		previousBranch:                           run.Backend.PreviouslyCheckedOutBranch(),
 	}
 }
 
@@ -95,6 +97,6 @@ func pruneBranchesStepList(config *pruneBranchesConfig, run *git.ProdRunner) (ru
 		}
 		result.Append(&steps.DeleteLocalBranchStep{Branch: branchWithDeletedRemote, Parent: config.mainBranch})
 	}
-	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, &run.Backend, config.mainBranch, config.initialBranch)
+	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, &run.Backend, config.mainBranch, config.initialBranch, config.previousBranch)
 	return result, err
 }
