@@ -78,7 +78,7 @@ func (c *GitHubConnector) SquashMergeProposal(number int, message string) (merge
 
 func (c *GitHubConnector) UpdateProposalTarget(number int, target string) error {
 	if c.log != nil {
-		c.log(messages.HostingGithubUpdateBasebranchViaAPI, number)
+		c.log(messages.HostingGithubUpdatePRViaAPI, number)
 	}
 	_, _, err := c.client.PullRequests.Edit(context.Background(), c.Organization, c.Repository, number, &github.PullRequest{
 		Base: &github.PullRequestBranch{

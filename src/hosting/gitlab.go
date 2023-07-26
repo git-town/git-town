@@ -60,7 +60,7 @@ func (c *GitLabConnector) SquashMergeProposal(number int, message string) (merge
 
 func (c *GitLabConnector) UpdateProposalTarget(number int, target string) error {
 	if c.log != nil {
-		c.log(messages.HostingGitlabUpdateBaseBranchViaAPI, number, target)
+		c.log(messages.HostingGitlabUpdateMRViaAPI, number, target)
 	}
 	_, _, err := c.client.MergeRequests.UpdateMergeRequest(c.projectPath(), number, &gitlab.UpdateMergeRequestOptions{
 		TargetBranch: gitlab.String(target),

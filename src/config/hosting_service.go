@@ -26,7 +26,7 @@ func NewHostingService(text string) (HostingService, error) {
 			return hostingService, nil
 		}
 	}
-	return HostingServiceNone, fmt.Errorf(messages.HostingServiceUnknownName, text)
+	return HostingServiceNone, fmt.Errorf(messages.HostingServiceUnknown, text)
 }
 
 // hostingServices provides all legal values for HostingService.

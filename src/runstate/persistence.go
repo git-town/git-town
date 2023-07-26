@@ -32,7 +32,7 @@ func Load(backend *git.BackendCommands) (*RunState, error) {
 	}
 	err = json.Unmarshal(content, &runState)
 	if err != nil {
-		return nil, fmt.Errorf(messages.FileContentNotJSON, filename, err)
+		return nil, fmt.Errorf(messages.FileContentInvalidJSON, filename, err)
 	}
 	return &runState, nil
 }

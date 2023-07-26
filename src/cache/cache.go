@@ -18,7 +18,7 @@ func (c *Cache[T]) Set(newValue T) {
 // Value provides the current value.
 func (c *Cache[T]) Value() T {
 	if !c.initialized {
-		panic(messages.CacheUsedUnitialized)
+		panic(messages.CacheUnitialized)
 	}
 	return c.value
 }

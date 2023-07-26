@@ -68,7 +68,7 @@ func (bc *BackendCommands) BranchAuthors(branch, parent string) ([]string, error
 func (bc *BackendCommands) BranchHasUnmergedCommits(branch, parent string) (bool, error) {
 	out, err := bc.QueryTrim("git", "log", parent+".."+branch)
 	if err != nil {
-		return false, fmt.Errorf(messages.BranchContentProblem, branch, err)
+		return false, fmt.Errorf(messages.BranchDiffProblem, branch, err)
 	}
 	return out != "", nil
 }
@@ -275,7 +275,7 @@ func (bc *BackendCommands) ExpectedPreviouslyCheckedOutBranch(initialPreviouslyC
 func (bc *BackendCommands) HasConflicts() (bool, error) {
 	output, err := bc.QueryTrim("git", "status")
 	if err != nil {
-		return false, fmt.Errorf(messages.ConflictsProblem, err)
+		return false, fmt.Errorf(messages.ConflictDetectionProblem, err)
 	}
 	return strings.Contains(output, "Unmerged paths"), nil
 }
@@ -347,7 +347,7 @@ func (bc *BackendCommands) HasShippableChanges(branch, mainBranch string) (bool,
 func (bc *BackendCommands) LastCommitMessage() (string, error) {
 	out, err := bc.QueryTrim("git", "log", "-1", "--format=%B")
 	if err != nil {
-		return "", fmt.Errorf(messages.CommitMessageLastProblem, err)
+		return "", fmt.Errorf(messages.CommitMessageProblem, err)
 	}
 	return out, nil
 }
@@ -382,7 +382,7 @@ func (bc *BackendCommands) LocalBranchesMainFirst(mainBranch string) ([]string, 
 func (bc *BackendCommands) PreviouslyCheckedOutBranch() (string, error) {
 	output, err := bc.QueryTrim("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
 	if err != nil {
-		return "", fmt.Errorf(messages.BranchCheckedOutPreviousProblem, err)
+		return "", fmt.Errorf(messages.BranchPreviouslyCheckedOutProblem, err)
 	}
 	return output, nil
 }

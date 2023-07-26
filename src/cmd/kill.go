@@ -151,7 +151,7 @@ func killStepList(config *killConfig, run *git.ProdRunner) (runstate.StepList, e
 	case !config.isOffline:
 		result.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch.Name, IsTracking: false, NoPushHook: config.noPushHook})
 	default:
-		return runstate.StepList{}, fmt.Errorf(messages.DeleteRemoteBranchCannotWhenOffline, config.targetBranch.Name)
+		return runstate.StepList{}, fmt.Errorf(messages.DeleteRemoteBranchOffline, config.targetBranch.Name)
 	}
 	err := result.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     true,

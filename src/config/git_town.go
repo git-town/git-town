@@ -110,7 +110,7 @@ func (gt *GitTown) IsOffline() (bool, error) {
 	}
 	result, err := ParseBool(config)
 	if err != nil {
-		return false, fmt.Errorf(messages.InputOfflineInvalidValue, config)
+		return false, fmt.Errorf(messages.ValueInvalid, OfflineKey, config)
 	}
 	return result, nil
 }
@@ -211,7 +211,7 @@ func (gt *GitTown) PushHook() (bool, error) {
 	}
 	result, err := ParseBool(setting)
 	if err != nil {
-		return false, fmt.Errorf(messages.ConfigSettingInvalidValue, PushHookKey, setting)
+		return false, fmt.Errorf(messages.ValueInvalid, PushHookKey, setting)
 	}
 	return result, nil
 }
@@ -228,7 +228,7 @@ func (gt *GitTown) PushHookGlobal() (bool, error) {
 	}
 	result, err := ParseBool(setting)
 	if err != nil {
-		return false, fmt.Errorf(messages.ConfigSettingGlobalInvalidValue, PushHookKey, setting)
+		return false, fmt.Errorf(messages.ValueGlobalInvalid, PushHookKey, setting)
 	}
 	return result, nil
 }
@@ -388,7 +388,7 @@ func (gt *GitTown) ShouldNewBranchPush() (bool, error) {
 	}
 	value, err := ParseBool(config)
 	if err != nil {
-		return false, fmt.Errorf(messages.ConfigSettingInvalidValue, PushNewBranchesKey, config)
+		return false, fmt.Errorf(messages.ValueInvalid, PushNewBranchesKey, config)
 	}
 	return value, nil
 }
@@ -415,7 +415,7 @@ func (gt *GitTown) ShouldShipDeleteOriginBranch() (bool, error) {
 	}
 	result, err := strconv.ParseBool(setting)
 	if err != nil {
-		return true, fmt.Errorf(messages.ConfigSettingInvalidValue, ShipDeleteRemoteBranchKey, setting)
+		return true, fmt.Errorf(messages.ValueInvalid, ShipDeleteRemoteBranchKey, setting)
 	}
 	return result, nil
 }

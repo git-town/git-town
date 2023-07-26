@@ -61,7 +61,7 @@ func LoadGitRepo(pr *git.ProdRunner, args LoadGitArgs) (allBranches git.Branches
 	}
 	currentDirectory, err := os.Getwd()
 	if err != nil {
-		err = errors.New(messages.CurrentDirProblem)
+		err = errors.New(messages.DirCurrentProblem)
 		return
 	}
 	if currentDirectory != rootDir {
