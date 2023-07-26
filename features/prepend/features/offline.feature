@@ -10,11 +10,14 @@ Feature: offline mode
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                |
-      | old    | git checkout main      |
-      | main   | git rebase origin/main |
-      |        | git branch new main    |
-      |        | git checkout new       |
+      | BRANCH | COMMAND                        |
+      | old    | git checkout main              |
+      | main   | git rebase origin/main         |
+      |        | git checkout old               |
+      | old    | git merge --no-edit origin/old |
+      |        | git merge --no-edit main       |
+      |        | git branch new main            |
+      |        | git checkout new               |
     And the current branch is now "new"
     And now these commits exist
       | BRANCH | LOCATION      | MESSAGE    |
@@ -28,9 +31,10 @@ Feature: offline mode
     When I run "git-town undo"
     Then it runs the commands
       | BRANCH | COMMAND           |
-      | new    | git checkout main |
-      | main   | git branch -D new |
-      |        | git checkout old  |
+      | new    | git checkout old  |
+      | old    | git branch -D new |
+      |        | git checkout main |
+      | main   | git checkout old  |
     And the current branch is now "old"
     And now the initial commits exist
     And the initial branch hierarchy exists

@@ -8,8 +8,7 @@ import (
 // KnowsBranchesAncestors asserts that the entire lineage for all given branches
 // is known to Git Town.
 // Prompts missing lineage information from the user.
-func KnowsBranchesAncestors(branches []string, backend *git.BackendCommands) error {
-	mainBranch := backend.Config.MainBranch()
+func KnowsBranchesAncestors(branches []string, mainBranch string, backend *git.BackendCommands) error {
 	for _, branch := range branches {
 		err := KnowsBranchAncestors(branch, mainBranch, backend)
 		if err != nil {
@@ -27,7 +26,7 @@ func KnowsBranchAncestors(branch, defaultBranch string, backend *git.BackendComm
 		return nil
 	}
 	for {
-		parent := backend.Config.Lineage().Parent(currentBranch)
+		parent := backend.Config.Lineage()[currentBranch]
 		if parent == "" { //nolint:nestif
 			if !headerShown {
 				printParentBranchHeader(backend)

@@ -50,20 +50,25 @@ func newPullRequestCommand() *cobra.Command {
 }
 
 func newPullRequest(debug bool) error {
-	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:                 debug,
-		DryRun:                false,
-		OmitBranchNames:       false,
+	run, err := execute.LoadProdRunner(execute.LoadArgs{
+		Debug:           debug,
+		DryRun:          false,
+		OmitBranchNames: false,
+	})
+	if err != nil {
+		return err
+	}
+	allBranches, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+		Fetch:                 false,
 		HandleUnfinishedState: true,
-		ValidateGitversion:    true,
-		ValidateIsRepository:  true,
 		ValidateIsConfigured:  true,
 		ValidateIsOnline:      true,
+		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineNewPullRequestConfig(&run)
+	config, err := determineNewPullRequestConfig(&run, allBranches, initialBranch)
 	if err != nil {
 		return err
 	}
@@ -86,12 +91,13 @@ func newPullRequest(debug bool) error {
 }
 
 type newPullRequestConfig struct {
-	BranchesToSync []string
+	BranchesToSync git.BranchesSyncStatus
 	InitialBranch  string
+	isOffline      bool
 	mainBranch     string
 }
 
-func determineNewPullRequestConfig(run *git.ProdRunner) (*newPullRequestConfig, error) {
+func determineNewPullRequestConfig(run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string) (*newPullRequestConfig, error) {
 	hasOrigin, err := run.Backend.HasOrigin()
 	if err != nil {
 		return nil, err
@@ -102,25 +108,29 @@ func determineNewPullRequestConfig(run *git.ProdRunner) (*newPullRequestConfig, 
 			return nil, err
 		}
 	}
-	initialBranch, err := run.Backend.CurrentBranch()
-	if err != nil {
-		return nil, err
-	}
 	err = validate.KnowsBranchAncestors(initialBranch, run.Config.MainBranch(), &run.Backend)
 	if err != nil {
 		return nil, err
 	}
+	isOffline, err := run.Config.IsOffline()
+	if err != nil {
+		return nil, err
+	}
+	lineage := run.Config.Lineage()
+	branchNamesToSync := lineage.BranchAndAncestors(initialBranch)
+	branchesToSync, err := allBranches.Select(branchNamesToSync)
 	return &newPullRequestConfig{
+		BranchesToSync: branchesToSync,
 		InitialBranch:  initialBranch,
-		BranchesToSync: append(run.Config.Lineage().Ancestors(initialBranch), initialBranch),
+		isOffline:      isOffline,
 		mainBranch:     run.Config.MainBranch(),
-	}, nil
+	}, err
 }
 
 func newPullRequestStepList(config *newPullRequestConfig, run *git.ProdRunner) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.BranchesToSync {
-		updateBranchSteps(&list, branch, true, run)
+		updateBranchSteps(&list, branch, true, config.isOffline, run)
 	}
 	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &run.Backend, config.mainBranch)
 	list.Add(&steps.CreateProposalStep{Branch: config.InitialBranch})

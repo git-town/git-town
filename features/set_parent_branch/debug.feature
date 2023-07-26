@@ -9,20 +9,17 @@ Feature: display debug statistics
       | Please specify the parent branch of 'child' | [DOWN][ENTER] |
     Then it runs the commands
       | BRANCH | TYPE    | COMMAND                                         |
+      |        | backend | git version                                     |
       |        | backend | git config -lz --local                          |
       |        | backend | git config -lz --global                         |
-      |        | backend | git rev-parse                                   |
       |        | backend | git rev-parse --show-toplevel                   |
-      |        | backend | git version                                     |
-      |        | backend | git branch -a                                   |
-      |        | backend | git status                                      |
-      |        | backend | git rev-parse --abbrev-ref HEAD                 |
+      |        | backend | git branch -vva                                 |
       |        | backend | git config --unset git-town-branch.child.parent |
       |        | backend | git branch                                      |
       |        | backend | git config git-town-branch.child.parent main    |
     And it prints:
       """
-      Ran 11 shell commands.
+      Ran 8 shell commands.
       """
     And this branch lineage exists now
       | BRANCH | PARENT |
