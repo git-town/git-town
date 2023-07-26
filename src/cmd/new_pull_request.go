@@ -58,7 +58,7 @@ func newPullRequest(debug bool) error {
 	if err != nil {
 		return err
 	}
-	allBranches, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	allBranches, initialBranch, rootDir, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 false,
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
@@ -87,7 +87,7 @@ func newPullRequest(debug bool) error {
 		Command:     "new-pull-request",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(&runState, &run, connector)
+	return runstate.Execute(&runState, &run, connector, rootDir)
 }
 
 type newPullRequestConfig struct {

@@ -72,7 +72,7 @@ func ship(args []string, message string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	allBranches, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	allBranches, initialBranch, rootDir, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
@@ -104,7 +104,7 @@ func ship(args []string, message string, debug bool) error {
 		Command:     "ship",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(&runState, &run, connector)
+	return runstate.Execute(&runState, &run, connector, rootDir)
 }
 
 type shipConfig struct {

@@ -12,18 +12,18 @@ import (
 // Execute runs the commands in the given runstate.
 //
 //nolint:nestif
-func Execute(runState *RunState, run *git.ProdRunner, connector hosting.Connector) error {
+func Execute(runState *RunState, run *git.ProdRunner, connector hosting.Connector, rootDir string) error {
 	for {
 		step := runState.RunStepList.Pop()
 		if step == nil {
 			runState.MarkAsFinished()
 			if runState.IsAbort || runState.isUndo {
-				err := Delete(&run.Backend)
+				err := Delete(rootDir)
 				if err != nil {
 					return fmt.Errorf(messages.RunstateDeleteProblem, err)
 				}
 			} else {
-				err := Save(runState, &run.Backend)
+				err := Save(runState, rootDir)
 				if err != nil {
 					return fmt.Errorf(messages.RunstateSaveProblem, err)
 				}
@@ -49,7 +49,7 @@ func Execute(runState *RunState, run *git.ProdRunner, connector hosting.Connecto
 			if step.ShouldAutomaticallyAbortOnError() {
 				cli.PrintError(fmt.Errorf(runErr.Error() + "\nAuto-aborting..."))
 				abortRunState := runState.CreateAbortRunState()
-				err := Execute(&abortRunState, run, connector)
+				err := Execute(&abortRunState, run, connector, rootDir)
 				if err != nil {
 					return fmt.Errorf(messages.RunstateAbortStepProblem, err)
 				}
@@ -71,7 +71,7 @@ func Execute(runState *RunState, run *git.ProdRunner, connector hosting.Connecto
 			if runState.Command == "sync" && !(rebasing && run.Config.IsMainBranch(currentBranch)) {
 				runState.UnfinishedDetails.CanSkip = true
 			}
-			err = Save(runState, &run.Backend)
+			err = Save(runState, rootDir)
 			if err != nil {
 				return fmt.Errorf(messages.RunstateSaveProblem, err)
 			}

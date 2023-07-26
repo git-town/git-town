@@ -35,7 +35,7 @@ func statusReset(debug bool) error {
 	if err != nil {
 		return err
 	}
-	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	_, _, rootDir, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 false,
 		HandleUnfinishedState: false,
 		ValidateIsConfigured:  false,
@@ -45,7 +45,7 @@ func statusReset(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	err = runstate.Delete(&run.Backend)
+	err = runstate.Delete(rootDir)
 	if err != nil {
 		return err
 	}

@@ -9,14 +9,14 @@ import (
 	"github.com/git-town/git-town/v9/src/validate"
 )
 
-func LoadGitRepo(pr *git.ProdRunner, args LoadGitArgs) (allBranches git.BranchesSyncStatus, currentBranch string, exit bool, err error) { //nolint:nonamedreturns
-	rootDir := pr.Backend.RootDirectory()
+func LoadGitRepo(pr *git.ProdRunner, args LoadGitArgs) (allBranches git.BranchesSyncStatus, currentBranch string, rootDir string, exit bool, err error) { //nolint:nonamedreturns
+	rootDir = pr.Backend.RootDirectory()
 	if rootDir == "" {
 		err = errors.New(messages.RepoOutside)
 		return
 	}
 	if args.HandleUnfinishedState {
-		exit, err = validate.HandleUnfinishedState(pr, nil)
+		exit, err = validate.HandleUnfinishedState(pr, nil, rootDir)
 		if err != nil || exit {
 			return
 		}

@@ -11,8 +11,8 @@ import (
 )
 
 // HandleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
-func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector) (quit bool, err error) {
-	runState, err := runstate.Load(&run.Backend)
+func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, rootDir string) (quit bool, err error) {
+	runState, err := runstate.Load(rootDir)
 	if err != nil {
 		return false, fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
@@ -30,7 +30,7 @@ func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector) (qu
 	}
 	switch response {
 	case dialog.ResponseTypeDiscard:
-		err = runstate.Delete(&run.Backend)
+		err = runstate.Delete(rootDir)
 		return false, err
 	case dialog.ResponseTypeContinue:
 		hasConflicts, err := run.Backend.HasConflicts()
@@ -40,13 +40,13 @@ func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector) (qu
 		if hasConflicts {
 			return false, fmt.Errorf(messages.ContinueUnresolvedConflicts)
 		}
-		return true, runstate.Execute(runState, run, connector)
+		return true, runstate.Execute(runState, run, connector, rootDir)
 	case dialog.ResponseTypeAbort:
 		abortRunState := runState.CreateAbortRunState()
-		return true, runstate.Execute(&abortRunState, run, connector)
+		return true, runstate.Execute(&abortRunState, run, connector, rootDir)
 	case dialog.ResponseTypeSkip:
 		skipRunState := runState.CreateSkipRunState()
-		return true, runstate.Execute(&skipRunState, run, connector)
+		return true, runstate.Execute(&skipRunState, run, connector, rootDir)
 	case dialog.ResponseTypeQuit:
 		return true, nil
 	default:

@@ -61,7 +61,7 @@ func sync(all, dryRun, debug bool) error {
 	if err != nil {
 		return err
 	}
-	allBranches, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	allBranches, initialBranch, rootDir, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
@@ -83,7 +83,7 @@ func sync(all, dryRun, debug bool) error {
 		Command:     "sync",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(&runState, &run, nil)
+	return runstate.Execute(&runState, &run, nil, rootDir)
 }
 
 type syncConfig struct {

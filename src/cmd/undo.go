@@ -37,7 +37,7 @@ func undo(debug bool) error {
 	if err != nil {
 		return err
 	}
-	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	_, _, rootDir, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 false,
 		HandleUnfinishedState: false,
 		ValidateIsConfigured:  true,
@@ -47,7 +47,7 @@ func undo(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	runState, err := runstate.Load(&run.Backend)
+	runState, err := runstate.Load(rootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
@@ -55,5 +55,5 @@ func undo(debug bool) error {
 		return fmt.Errorf(messages.UndoNothingToDo)
 	}
 	undoRunState := runState.CreateUndoRunState()
-	return runstate.Execute(&undoRunState, &run, nil)
+	return runstate.Execute(&undoRunState, &run, nil, rootDir)
 }

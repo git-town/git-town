@@ -43,7 +43,7 @@ func kill(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	allBranches, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	allBranches, initialBranch, rootDir, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 true,
 		HandleUnfinishedState: false,
 		ValidateIsConfigured:  true,
@@ -65,7 +65,7 @@ func kill(args []string, debug bool) error {
 		Command:     "kill",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(&runState, &run, nil)
+	return runstate.Execute(&runState, &run, nil, rootDir)
 }
 
 type killConfig struct {

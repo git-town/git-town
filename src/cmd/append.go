@@ -49,7 +49,7 @@ func runAppend(arg string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	allBranches, currentBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	allBranches, currentBranch, rootDir, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
@@ -71,7 +71,7 @@ func runAppend(arg string, debug bool) error {
 		Command:     "append",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(&runState, &run, nil)
+	return runstate.Execute(&runState, &run, nil, rootDir)
 }
 
 type appendConfig struct {

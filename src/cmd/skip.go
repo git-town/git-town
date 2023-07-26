@@ -37,7 +37,7 @@ func skip(debug bool) error {
 	if err != nil {
 		return err
 	}
-	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	_, _, rootDir, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 false,
 		HandleUnfinishedState: false,
 		ValidateIsConfigured:  true,
@@ -47,7 +47,7 @@ func skip(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	runState, err := runstate.Load(&run.Backend)
+	runState, err := runstate.Load(rootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
@@ -58,5 +58,5 @@ func skip(debug bool) error {
 		return fmt.Errorf(messages.SkipBranchHasConflicts)
 	}
 	skipRunState := runState.CreateSkipRunState()
-	return runstate.Execute(&skipRunState, &run, nil)
+	return runstate.Execute(&skipRunState, &run, nil, rootDir)
 }
