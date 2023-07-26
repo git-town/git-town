@@ -64,7 +64,7 @@ func shipCmd() *cobra.Command {
 }
 
 func ship(args []string, message string, debug bool) error {
-	run, rootDir, isOffline, exit, err := execute.OpenShell(execute.LoadArgs{
+	run, rootDir, isOffline, exit, err := execute.OpenShell(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 true,

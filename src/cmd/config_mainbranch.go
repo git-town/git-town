@@ -32,7 +32,7 @@ func mainbranchConfigCmd() *cobra.Command {
 }
 
 func configureMainBranch(args []string, debug bool) error {
-	run, _, _, exit, err := execute.OpenShell(execute.LoadArgs{
+	run, _, _, exit, err := execute.OpenShell(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 false,

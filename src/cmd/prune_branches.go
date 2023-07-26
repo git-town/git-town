@@ -31,7 +31,7 @@ func pruneBranchesCommand() *cobra.Command {
 }
 
 func pruneBranches(debug bool) error {
-	run, rootDir, _, exit, err := execute.OpenShell(execute.LoadArgs{
+	run, rootDir, _, exit, err := execute.OpenShell(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 true,
