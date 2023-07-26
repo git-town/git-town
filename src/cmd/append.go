@@ -81,7 +81,7 @@ type appendConfig struct {
 	hasOrigin           bool
 	isOffline           bool
 	mainBranch          string
-	noPushHook          bool
+	pushHook            bool
 	parentBranch        string
 	shouldNewBranchPush bool
 	syncStrategy        config.SyncStrategy
@@ -110,7 +110,7 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner, allBranches
 		isOffline:           isOffline,
 		hasOrigin:           hasOrigin,
 		mainBranch:          mainBranch,
-		noPushHook:          !pushHook,
+		pushHook:            pushHook,
 		parentBranch:        currentBranchName,
 		shouldNewBranchPush: shouldNewBranchPush,
 		syncStrategy:        syncStrategy,
@@ -136,7 +136,7 @@ func appendStepList(config *appendConfig, run *git.ProdRunner) (runstate.StepLis
 	list.Add(&steps.SetParentStep{Branch: config.targetBranch, ParentBranch: config.parentBranch})
 	list.Add(&steps.CheckoutStep{Branch: config.targetBranch})
 	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
-		list.Add(&steps.CreateTrackingBranchStep{Branch: config.targetBranch, NoPushHook: config.noPushHook})
+		list.Add(&steps.CreateTrackingBranchStep{Branch: config.targetBranch, NoPushHook: !config.pushHook})
 	}
 	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &run.Backend, config.mainBranch)
 	return list.Result()
