@@ -72,15 +72,11 @@ type WrapOptions struct {
 
 // Wrap wraps the list with steps that
 // change to the Git root directory or stash away open changes.
-func (stepList *StepList) Wrap(options WrapOptions, backend *git.BackendCommands, mainBranch string) error {
+func (stepList *StepList) Wrap(options WrapOptions, backend *git.BackendCommands, mainBranch string, initialBranch string) error {
 	previousBranch, err := backend.PreviouslyCheckedOutBranch()
 	if err == nil {
-		currentBranch, err := backend.CurrentBranch()
-		if err != nil {
-			return err
-		}
 		stepList.Append(&steps.PreserveCheckoutHistoryStep{
-			InitialBranch:                     currentBranch,
+			InitialBranch:                     initialBranch,
 			InitialPreviouslyCheckedOutBranch: previousBranch,
 			MainBranch:                        mainBranch,
 		})

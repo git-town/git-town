@@ -188,7 +188,7 @@ func syncBranchesSteps(config *syncConfig, run *git.ProdRunner) (runstate.StepLi
 	if config.hasOrigin && config.shouldPushTags && !config.isOffline {
 		list.Add(&steps.PushTagsStep{})
 	}
-	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &run.Backend, config.mainBranch)
+	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &run.Backend, config.mainBranch, config.initialBranch)
 	return list.Result()
 }
 

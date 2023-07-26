@@ -95,6 +95,6 @@ func pruneBranchesStepList(config *pruneBranchesConfig, run *git.ProdRunner) (ru
 		}
 		result.Append(&steps.DeleteLocalBranchStep{Branch: branchWithDeletedRemote, Parent: config.mainBranch})
 	}
-	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, &run.Backend, config.mainBranch)
+	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, &run.Backend, config.mainBranch, config.initialBranch)
 	return result, err
 }

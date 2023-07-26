@@ -153,6 +153,6 @@ func killStepList(config *killConfig, run *git.ProdRunner) (runstate.StepList, e
 	err := result.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.initialBranch != config.targetBranch.Name && config.targetBranch.Name == config.previousBranch,
-	}, &run.Backend, config.mainBranch)
+	}, &run.Backend, config.mainBranch, config.initialBranch)
 	return result, err
 }

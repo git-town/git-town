@@ -95,7 +95,7 @@ type newPullRequestConfig struct {
 	BranchesToSync     git.BranchesSyncStatus
 	hasOrigin          bool
 	hasUpstream        bool
-	InitialBranch      string
+	initialBranch      string
 	isOffline          bool
 	lineage            config.Lineage
 	mainBranch         string
@@ -148,7 +148,7 @@ func determineNewPullRequestConfig(run *git.ProdRunner, allBranches git.Branches
 		BranchesToSync:     branchesToSync,
 		hasOrigin:          hasOrigin,
 		hasUpstream:        hasUpstream,
-		InitialBranch:      initialBranch,
+		initialBranch:      initialBranch,
 		isOffline:          isOffline,
 		lineage:            lineage,
 		mainBranch:         mainBranch,
@@ -177,7 +177,7 @@ func newPullRequestStepList(config *newPullRequestConfig, run *git.ProdRunner) (
 			syncStrategy:       config.syncStrategy,
 		})
 	}
-	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &run.Backend, config.mainBranch)
-	list.Add(&steps.CreateProposalStep{Branch: config.InitialBranch})
+	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &run.Backend, config.mainBranch, config.initialBranch)
+	list.Add(&steps.CreateProposalStep{Branch: config.initialBranch})
 	return list.Result()
 }

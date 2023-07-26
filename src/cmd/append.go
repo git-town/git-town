@@ -80,6 +80,7 @@ type appendConfig struct {
 	branchesToSync      git.BranchesSyncStatus
 	hasOrigin           bool
 	hasUpstream         bool
+	initialBranch       string
 	isOffline           bool
 	lineage             config.Lineage
 	mainBranch          string
@@ -92,7 +93,7 @@ type appendConfig struct {
 	targetBranch        string
 }
 
-func determineAppendConfig(targetBranch string, run *git.ProdRunner, allBranches git.BranchesSyncStatus, currentBranchName string, isOffline bool) (*appendConfig, error) {
+func determineAppendConfig(targetBranch string, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string, isOffline bool) (*appendConfig, error) {
 	fc := failure.Collector{}
 	hasOrigin := fc.Bool(run.Backend.HasOrigin())
 	mainBranch := run.Config.MainBranch()
@@ -106,9 +107,9 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner, allBranches
 	if allBranches.Contains(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExists, targetBranch)
 	}
-	fc.Check(validate.KnowsBranchAncestors(currentBranchName, mainBranch, &run.Backend))
+	fc.Check(validate.KnowsBranchAncestors(initialBranch, mainBranch, &run.Backend))
 	lineage := run.Config.Lineage()
-	branchNamesToSync := lineage.BranchAndAncestors(currentBranchName)
+	branchNamesToSync := lineage.BranchAndAncestors(initialBranch)
 	branchesToSync := fc.BranchesSyncStatus(allBranches.Select(branchNamesToSync))
 	syncStrategy := fc.SyncStrategy(run.Config.SyncStrategy())
 	shouldSyncUpstream := fc.Bool(run.Config.ShouldSyncUpstream())
@@ -116,11 +117,12 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner, allBranches
 		branchesToSync:      branchesToSync,
 		hasOrigin:           hasOrigin,
 		hasUpstream:         hasUpstream,
+		initialBranch:       initialBranch,
 		isOffline:           isOffline,
 		lineage:             lineage,
 		mainBranch:          mainBranch,
 		pushHook:            pushHook,
-		parentBranch:        currentBranchName,
+		parentBranch:        initialBranch,
 		pullBranchStrategy:  pullBranchStrategy,
 		shouldNewBranchPush: shouldNewBranchPush,
 		shouldSyncUpstream:  shouldSyncUpstream,
@@ -153,6 +155,6 @@ func appendStepList(config *appendConfig, run *git.ProdRunner) (runstate.StepLis
 	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
 		list.Add(&steps.CreateTrackingBranchStep{Branch: config.targetBranch, NoPushHook: !config.pushHook})
 	}
-	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &run.Backend, config.mainBranch)
+	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &run.Backend, config.mainBranch, config.initialBranch)
 	return list.Result()
 }

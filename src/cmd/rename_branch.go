@@ -168,6 +168,6 @@ func renameBranchStepList(config *renameBranchConfig, run *git.ProdRunner) (runs
 		result.Append(&steps.DeleteOriginBranchStep{Branch: config.oldBranch, IsTracking: true})
 	}
 	result.Append(&steps.DeleteLocalBranchStep{Branch: config.oldBranch, Parent: config.mainBranch})
-	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, &run.Backend, config.mainBranch)
+	err := result.Wrap(runstate.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, &run.Backend, config.mainBranch, config.initialBranch)
 	return result, err
 }
