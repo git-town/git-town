@@ -9,7 +9,7 @@ import (
 	"github.com/git-town/git-town/v9/src/validate"
 )
 
-func LoadGitRepo(pr *git.ProdRunner, args LoadGitArgs) (allBranches git.BranchesSyncStatus, currentBranch string, rootDir string, exit bool, err error) { //nolint:nonamedreturns
+func LoadGitRepo(pr *git.ProdRunner, args LoadGitArgs) (rootDir string, exit bool, err error) { //nolint:nonamedreturns
 	rootDir = pr.Backend.RootDirectory()
 	if rootDir == "" {
 		err = errors.New(messages.RepoOutside)
@@ -48,17 +48,6 @@ func LoadGitRepo(pr *git.ProdRunner, args LoadGitArgs) (allBranches git.Branches
 			}
 		}
 	}
-	// TODO: load this separate from LoadGitRepo
-	allBranches, currentBranch, err = pr.Backend.BranchesSyncStatus()
-	if err != nil {
-		return
-	}
-	if args.ValidateIsConfigured {
-		err = validate.IsConfigured(&pr.Backend, allBranches)
-		if err != nil {
-			return
-		}
-	}
 	currentDirectory, err := os.Getwd()
 	if err != nil {
 		err = errors.New(messages.DirCurrentProblem)
@@ -77,6 +66,5 @@ type LoadGitArgs struct {
 	Fetch                 bool
 	ValidateIsOnline      bool
 	HandleUnfinishedState bool
-	ValidateIsConfigured  bool
 	ValidateNoOpenChanges bool
 }

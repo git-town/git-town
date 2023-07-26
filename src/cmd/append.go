@@ -49,16 +49,18 @@ func runAppend(arg string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	allBranches, currentBranch, rootDir, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	rootDir, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 true,
 		HandleUnfinishedState: true,
-		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
 	}
+	allBranches, currentBranch, err := execute.LoadBranches(&run, execute.LoadBranchesArgs{
+		ValidateIsConfigured: true,
+	})
 	config, err := determineAppendConfig(arg, &run, allBranches, currentBranch)
 	if err != nil {
 		return err

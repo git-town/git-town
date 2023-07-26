@@ -51,14 +51,19 @@ func hack(args []string, promptForParent, debug bool) error {
 	if err != nil {
 		return err
 	}
-	allBranches, _, rootDir, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	rootDir, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 true,
 		HandleUnfinishedState: true,
-		ValidateIsConfigured:  true,
 		ValidateIsOnline:      false,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
+		return err
+	}
+	allBranches, _, err := execute.LoadBranches(&run, execute.LoadBranchesArgs{
+		ValidateIsConfigured: true,
+	})
+	if err != nil {
 		return err
 	}
 	config, err := determineHackConfig(args, promptForParent, &run, allBranches)
