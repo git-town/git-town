@@ -199,7 +199,13 @@ func updateBranchSteps(list *runstate.StepListBuilder, args updateBranchStepsArg
 	if isFeatureBranch {
 		updateFeatureBranchSteps(list, args.branch, args.run, args.syncStrategy)
 	} else {
-		updatePerennialBranchSteps(list, args.branch, args.mainBranch, args.pullBranchStrategy, args.shouldSyncUpstream, args.hasUpstream)
+		updatePerennialBranchSteps(list, updatePerennialBranchStepsArgs{
+			branch:             args.branch,
+			mainBranch:         args.mainBranch,
+			pullBranchStrategy: args.pullBranchStrategy,
+			shouldSyncUpstream: args.shouldSyncUpstream,
+			hasUpstream:        args.hasUpstream,
+		})
 	}
 	if args.pushBranch && args.hasOrigin && !args.isOffline {
 		if !args.branch.HasTrackingBranch() {
@@ -235,14 +241,22 @@ func updateFeatureBranchSteps(list *runstate.StepListBuilder, branch git.BranchS
 	syncBranchSteps(list, run.Config.Lineage().Parent(branch.Name), string(syncStrategy))
 }
 
-func updatePerennialBranchSteps(list *runstate.StepListBuilder, branch git.BranchSyncStatus, mainBranch string, pullBranchStrategy config.PullBranchStrategy, shouldSyncUpstream bool, hasUpstream bool) {
-	if branch.HasTrackingBranch() {
-		syncBranchSteps(list, branch.TrackingBranch(), string(pullBranchStrategy))
+func updatePerennialBranchSteps(list *runstate.StepListBuilder, args updatePerennialBranchStepsArgs) {
+	if args.branch.HasTrackingBranch() {
+		syncBranchSteps(list, args.branch.TrackingBranch(), string(args.pullBranchStrategy))
 	}
-	if mainBranch == branch.Name && hasUpstream && shouldSyncUpstream {
-		list.Add(&steps.FetchUpstreamStep{Branch: mainBranch})
-		list.Add(&steps.RebaseBranchStep{Branch: fmt.Sprintf("upstream/%s", mainBranch)})
+	if args.mainBranch == args.branch.Name && args.hasUpstream && args.shouldSyncUpstream {
+		list.Add(&steps.FetchUpstreamStep{Branch: args.mainBranch})
+		list.Add(&steps.RebaseBranchStep{Branch: fmt.Sprintf("upstream/%s", args.mainBranch)})
 	}
+}
+
+type updatePerennialBranchStepsArgs struct {
+	branch             git.BranchSyncStatus
+	mainBranch         string
+	pullBranchStrategy config.PullBranchStrategy
+	shouldSyncUpstream bool
+	hasUpstream        bool
 }
 
 // syncBranchStep provides the steps to sync the given tracking branch into the current branch.
