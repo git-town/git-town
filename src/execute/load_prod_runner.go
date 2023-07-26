@@ -54,8 +54,8 @@ func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, rootDir string, i
 	if args.DryRun {
 		prodRunner.Config.DryRun = true
 	}
-	rootDir = backendCommands.RootDirectory()
-	if rootDir == "" {
+	if args.ValidateGitRepo && rootDir == "" {
+		rootDir = backendCommands.RootDirectory()
 		err = errors.New(messages.RepoOutside)
 		return
 	}
@@ -97,7 +97,7 @@ func LoadProdRunner(args LoadArgs) (prodRunner git.ProdRunner, rootDir string, i
 		err = errors.New(messages.DirCurrentProblem)
 		return
 	}
-	if currentDirectory != rootDir {
+	if args.ValidateGitRepo && currentDirectory != rootDir {
 		err = prodRunner.Frontend.NavigateToDir(rootDir)
 		if err != nil {
 			return
@@ -112,6 +112,7 @@ type LoadArgs struct {
 	Fetch                 bool
 	HandleUnfinishedState bool
 	OmitBranchNames       bool
+	ValidateGitRepo       bool
 	ValidateIsOnline      bool
 	ValidateNoOpenChanges bool
 }

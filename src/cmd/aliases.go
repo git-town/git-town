@@ -40,9 +40,14 @@ func aliasesCommand() *cobra.Command {
 
 func aliases(arg string, debug bool) error {
 	run, _, _, exit, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:           debug,
-		DryRun:          false,
-		OmitBranchNames: true,
+		Debug:                 debug,
+		DryRun:                false,
+		Fetch:                 false,
+		HandleUnfinishedState: false,
+		OmitBranchNames:       true,
+		ValidateIsOnline:      false,
+		ValidateGitRepo:       false,
+		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
