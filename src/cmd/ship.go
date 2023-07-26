@@ -252,6 +252,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 	// sync the parent branch
 	updateBranchSteps(&list, updateBranchStepsArgs{
 		branch:             config.targetBranch,
+		config:             &run.Config,
 		hasOrigin:          config.hasOrigin,
 		hasUpstream:        config.hasUpstream,
 		isOffline:          config.isOffline,
@@ -260,13 +261,13 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 		pullBranchStrategy: config.pullBranchStrategy,
 		pushBranch:         true,
 		pushHook:           config.pushHook,
-		run:                run,
 		shouldSyncUpstream: config.shouldSyncUpstream,
 		syncStrategy:       config.syncStrategy,
 	})
 	// sync the branch to ship locally only
 	updateBranchSteps(&list, updateBranchStepsArgs{
 		branch:             config.branchToShip,
+		config:             &run.Config,
 		hasOrigin:          config.hasOrigin,
 		hasUpstream:        config.hasUpstream,
 		isOffline:          config.isOffline,
@@ -275,7 +276,6 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 		pullBranchStrategy: config.pullBranchStrategy,
 		pushBranch:         false,
 		pushHook:           config.pushHook,
-		run:                run,
 		shouldSyncUpstream: config.shouldSyncUpstream,
 		syncStrategy:       config.syncStrategy,
 	})

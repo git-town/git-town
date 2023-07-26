@@ -171,12 +171,12 @@ func syncBranchesSteps(config *syncConfig, run *git.ProdRunner) (runstate.StepLi
 	for _, branch := range config.branchesToSync {
 		updateBranchSteps(&list, updateBranchStepsArgs{
 			branch:             branch,
+			config:             &run.Config,
 			hasOrigin:          config.hasOrigin,
 			hasUpstream:        config.hasUpstream,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
 			mainBranch:         config.mainBranch,
-			run:                run,
 			pullBranchStrategy: config.pullBranchStrategy,
 			pushBranch:         true,
 			pushHook:           config.pushHook,
@@ -194,7 +194,7 @@ func syncBranchesSteps(config *syncConfig, run *git.ProdRunner) (runstate.StepLi
 
 // updateBranchSteps provides the steps to sync a particular branch.
 func updateBranchSteps(list *runstate.StepListBuilder, args updateBranchStepsArgs) {
-	isFeatureBranch := args.run.Config.IsFeatureBranch(args.branch.Name)
+	isFeatureBranch := args.config.IsFeatureBranch(args.branch.Name)
 	if !args.hasOrigin && !isFeatureBranch {
 		return
 	}
@@ -225,6 +225,7 @@ func updateBranchSteps(list *runstate.StepListBuilder, args updateBranchStepsArg
 
 type updateBranchStepsArgs struct {
 	branch             git.BranchSyncStatus
+	config             *git.RepoConfig
 	hasOrigin          bool
 	hasUpstream        bool
 	isOffline          bool
@@ -233,7 +234,6 @@ type updateBranchStepsArgs struct {
 	pullBranchStrategy config.PullBranchStrategy
 	pushBranch         bool
 	pushHook           bool
-	run                *git.ProdRunner
 	shouldSyncUpstream bool
 	syncStrategy       config.SyncStrategy
 }

@@ -164,6 +164,7 @@ func newPullRequestStepList(config *newPullRequestConfig, run *git.ProdRunner) (
 	for _, branch := range config.BranchesToSync {
 		updateBranchSteps(&list, updateBranchStepsArgs{
 			branch:             branch,
+			config:             &run.Config,
 			hasOrigin:          config.hasOrigin,
 			hasUpstream:        config.hasUpstream,
 			isOffline:          config.isOffline,
@@ -172,7 +173,6 @@ func newPullRequestStepList(config *newPullRequestConfig, run *git.ProdRunner) (
 			pullBranchStrategy: config.pullBranchStrategy,
 			pushBranch:         true,
 			pushHook:           config.pushHook,
-			run:                run,
 			shouldSyncUpstream: config.shouldSyncUpstream,
 			syncStrategy:       config.syncStrategy,
 		})

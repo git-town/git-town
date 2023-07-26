@@ -134,6 +134,7 @@ func appendStepList(config *appendConfig, run *git.ProdRunner) (runstate.StepLis
 	for _, branch := range config.branchesToSync {
 		updateBranchSteps(&list, updateBranchStepsArgs{
 			branch:             branch,
+			config:             &run.Config,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
 			hasOrigin:          config.hasOrigin,
@@ -142,7 +143,6 @@ func appendStepList(config *appendConfig, run *git.ProdRunner) (runstate.StepLis
 			pullBranchStrategy: config.pullBranchStrategy,
 			pushBranch:         true,
 			pushHook:           config.pushHook,
-			run:                run,
 			shouldSyncUpstream: config.shouldSyncUpstream,
 			syncStrategy:       config.syncStrategy,
 		})
