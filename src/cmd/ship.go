@@ -71,6 +71,7 @@ func ship(args []string, message string, debug bool) error {
 		HandleUnfinishedState: true,
 		OmitBranchNames:       false,
 		ValidateIsOnline:      false,
+		ValidateGitRepo:       true,
 		ValidateNoOpenChanges: len(args) == 0,
 	})
 	if err != nil || exit {

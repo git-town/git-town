@@ -31,6 +31,7 @@ func resetStatus(debug bool) error {
 		HandleUnfinishedState: false,
 		OmitBranchNames:       true,
 		ValidateIsOnline:      false,
+		ValidateGitRepo:       true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {

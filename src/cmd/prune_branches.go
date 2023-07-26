@@ -38,6 +38,7 @@ func pruneBranches(debug bool) error {
 		HandleUnfinishedState: true,
 		OmitBranchNames:       false,
 		ValidateIsOnline:      true,
+		ValidateGitRepo:       true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {

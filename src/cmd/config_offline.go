@@ -40,6 +40,7 @@ func offline(args []string, debug bool) error {
 		OmitBranchNames:       true,
 		HandleUnfinishedState: false,
 		ValidateIsOnline:      false,
+		ValidateGitRepo:       false,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {

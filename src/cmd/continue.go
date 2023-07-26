@@ -38,6 +38,7 @@ func runContinue(debug bool) error {
 		HandleUnfinishedState: false,
 		OmitBranchNames:       false,
 		ValidateIsOnline:      false,
+		ValidateGitRepo:       true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {

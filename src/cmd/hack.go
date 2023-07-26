@@ -50,6 +50,7 @@ func hack(args []string, promptForParent, debug bool) error {
 		HandleUnfinishedState: true,
 		OmitBranchNames:       false,
 		ValidateIsOnline:      false,
+		ValidateGitRepo:       true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {

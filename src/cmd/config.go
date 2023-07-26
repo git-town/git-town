@@ -46,6 +46,7 @@ func runConfig(debug bool) error {
 		HandleUnfinishedState: false,
 		OmitBranchNames:       true,
 		ValidateIsOnline:      false,
+		ValidateGitRepo:       false,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {

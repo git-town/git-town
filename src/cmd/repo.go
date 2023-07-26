@@ -48,6 +48,7 @@ func repo(debug bool) error {
 		HandleUnfinishedState: false,
 		OmitBranchNames:       false,
 		ValidateIsOnline:      true,
+		ValidateGitRepo:       true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
