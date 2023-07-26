@@ -117,7 +117,13 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner, allBranches
 func appendStepList(config *appendConfig, run *git.ProdRunner) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.branchesToSync {
-		updateBranchSteps(&list, branch, true, config.isOffline, run)
+		updateBranchSteps(&list, updateBranchStepsArgs{
+			branch:     branch,
+			isOffline:  config.isOffline,
+			mainBranch: config.mainBranch,
+			pushBranch: true,
+			run:        run,
+		})
 	}
 	list.Add(&steps.CreateBranchStep{Branch: config.targetBranch, StartingPoint: config.parentBranch})
 	list.Add(&steps.SetParentStep{Branch: config.targetBranch, ParentBranch: config.parentBranch})

@@ -106,7 +106,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner, allBranches git.
 	if !run.Config.IsFeatureBranch(initialBranch) {
 		return nil, fmt.Errorf(messages.SetParentNoFeatureBranch, initialBranch)
 	}
-	err := validate.KnowsBranchAncestors(initialBranch, run.Config.MainBranch(), &run.Backend)
+	err := validate.KnowsBranchAncestors(initialBranch, mainBranch, &run.Backend)
 	if err != nil {
 		return nil, err
 	}
@@ -129,7 +129,13 @@ func determinePrependConfig(args []string, run *git.ProdRunner, allBranches git.
 func prependStepList(config *prependConfig, run *git.ProdRunner) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branchToSync := range config.branchesToSync {
-		updateBranchSteps(&list, branchToSync, true, config.isOffline, run)
+		updateBranchSteps(&list, updateBranchStepsArgs{
+			branch:     branchToSync,
+			isOffline:  config.isOffline,
+			mainBranch: config.mainBranch,
+			pushBranch: true,
+			run:        run,
+		})
 	}
 	list.Add(&steps.CreateBranchStep{Branch: config.targetBranch, StartingPoint: config.parentBranch})
 	list.Add(&steps.SetParentStep{Branch: config.targetBranch, ParentBranch: config.parentBranch})

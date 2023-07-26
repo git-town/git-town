@@ -114,7 +114,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranchesSyncStatu
 		branchNamesToSync = localBranches
 		shouldPushTags = true
 	} else {
-		err = validate.KnowsBranchAncestors(initialBranch, run.Config.MainBranch(), &run.Backend)
+		err = validate.KnowsBranchAncestors(initialBranch, mainBranch, &run.Backend)
 		if err != nil {
 			return nil, err
 		}
@@ -137,7 +137,13 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranchesSyncStatu
 func syncBranchesSteps(config *syncConfig, run *git.ProdRunner) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.branchesToSync {
-		updateBranchSteps(&list, branch, true, config.isOffline, run)
+		updateBranchSteps(&list, updateBranchStepsArgs{
+			branch:     branch,
+			isOffline:  config.isOffline,
+			mainBranch: config.mainBranch,
+			run:        run,
+			pushBranch: true,
+		})
 	}
 	list.Add(&steps.CheckoutStep{Branch: config.initialBranch})
 	if config.hasOrigin && config.shouldPushTags && !config.isOffline {
@@ -148,32 +154,39 @@ func syncBranchesSteps(config *syncConfig, run *git.ProdRunner) (runstate.StepLi
 }
 
 // updateBranchSteps provides the steps to sync a particular branch.
-// TODO: change the `branch` argument from `string` to `BranchInfo`.
-func updateBranchSteps(list *runstate.StepListBuilder, branch git.BranchSyncStatus, pushBranch bool, isOffline bool, run *git.ProdRunner) {
-	isFeatureBranch := run.Config.IsFeatureBranch(branch.Name)
-	syncStrategy := list.SyncStrategy(run.Config.SyncStrategy())
-	hasOrigin := list.Bool(run.Backend.HasOrigin())
-	pushHook := list.Bool(run.Config.PushHook())
+func updateBranchSteps(list *runstate.StepListBuilder, args updateBranchStepsArgs) {
+	isFeatureBranch := args.run.Config.IsFeatureBranch(args.branch.Name)
+	syncStrategy := list.SyncStrategy(args.run.Config.SyncStrategy())
+	hasOrigin := list.Bool(args.run.Backend.HasOrigin())
+	pushHook := list.Bool(args.run.Config.PushHook())
 	if !hasOrigin && !isFeatureBranch {
 		return
 	}
-	list.Add(&steps.CheckoutStep{Branch: branch.Name})
+	list.Add(&steps.CheckoutStep{Branch: args.branch.Name})
 	if isFeatureBranch {
-		updateFeatureBranchSteps(list, branch, run)
+		updateFeatureBranchSteps(list, args.branch, args.run)
 	} else {
-		updatePerennialBranchSteps(list, branch, run)
+		updatePerennialBranchSteps(list, args.branch, args.run, args.mainBranch)
 	}
-	if pushBranch && hasOrigin && !isOffline {
-		if !branch.HasTrackingBranch() {
-			list.Add(&steps.CreateTrackingBranchStep{Branch: branch.Name})
+	if args.pushBranch && hasOrigin && !args.isOffline {
+		if !args.branch.HasTrackingBranch() {
+			list.Add(&steps.CreateTrackingBranchStep{Branch: args.branch.Name})
 			return
 		}
 		if !isFeatureBranch {
-			list.Add(&steps.PushBranchStep{Branch: branch.Name})
+			list.Add(&steps.PushBranchStep{Branch: args.branch.Name})
 			return
 		}
-		pushFeatureBranchSteps(list, branch.Name, syncStrategy, pushHook)
+		pushFeatureBranchSteps(list, args.branch.Name, syncStrategy, pushHook)
 	}
+}
+
+type updateBranchStepsArgs struct {
+	branch     git.BranchSyncStatus
+	isOffline  bool
+	mainBranch string
+	pushBranch bool
+	run        *git.ProdRunner
 }
 
 func updateFeatureBranchSteps(list *runstate.StepListBuilder, branch git.BranchSyncStatus, run *git.ProdRunner) {
@@ -184,12 +197,11 @@ func updateFeatureBranchSteps(list *runstate.StepListBuilder, branch git.BranchS
 	syncBranchSteps(list, run.Config.Lineage().Parent(branch.Name), string(syncStrategy))
 }
 
-func updatePerennialBranchSteps(list *runstate.StepListBuilder, branch git.BranchSyncStatus, run *git.ProdRunner) {
+func updatePerennialBranchSteps(list *runstate.StepListBuilder, branch git.BranchSyncStatus, run *git.ProdRunner, mainBranch string) {
 	if branch.HasTrackingBranch() {
 		pullBranchStrategy := list.PullBranchStrategy(run.Config.PullBranchStrategy())
 		syncBranchSteps(list, run.Backend.TrackingBranch(branch.Name), string(pullBranchStrategy))
 	}
-	mainBranch := run.Config.MainBranch()
 	hasUpstream := list.Bool(run.Backend.HasRemote("upstream"))
 	shouldSyncUpstream := list.Bool(run.Config.ShouldSyncUpstream())
 	if mainBranch == branch.Name && hasUpstream && shouldSyncUpstream {

@@ -220,8 +220,22 @@ please ship %q first`, stringslice.Connect(ancestorsWithoutMainOrPerennial), old
 
 func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
-	updateBranchSteps(&list, config.targetBranch, true, config.isOffline, run)  // sync the parent branch
-	updateBranchSteps(&list, config.branchToShip, false, config.isOffline, run) // sync the branch to ship locally only
+	// sync the parent branch
+	updateBranchSteps(&list, updateBranchStepsArgs{
+		branch:     config.targetBranch,
+		isOffline:  config.isOffline,
+		mainBranch: config.mainBranch,
+		pushBranch: true,
+		run:        run,
+	})
+	// sync the branch to ship locally only
+	updateBranchSteps(&list, updateBranchStepsArgs{
+		branch:     config.branchToShip,
+		isOffline:  config.isOffline,
+		mainBranch: config.mainBranch,
+		pushBranch: false,
+		run:        run,
+	})
 	list.Add(&steps.EnsureHasShippableChangesStep{Branch: config.branchToShip.Name, Parent: config.mainBranch})
 	list.Add(&steps.CheckoutStep{Branch: config.targetBranch.Name})
 	if config.canShipViaAPI {
