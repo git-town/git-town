@@ -55,7 +55,6 @@ func runConfig(debug bool) error {
 	fc := failure.Collector{}
 	pushNewBranches := fc.Bool(repo.Runner.Config.ShouldNewBranchPush())
 	pushHook := fc.Bool(repo.Runner.Config.PushHook())
-	isOffline := fc.Bool(repo.Runner.Config.IsOffline())
 	deleteOrigin := fc.Bool(repo.Runner.Config.ShouldShipDeleteOriginBranch())
 	pullBranchStrategy := fc.PullBranchStrategy(repo.Runner.Config.PullBranchStrategy())
 	shouldSyncUpstream := fc.Bool(repo.Runner.Config.ShouldSyncUpstream())
@@ -70,7 +69,7 @@ func runConfig(debug bool) error {
 	cli.PrintEntry("perennial branches", cli.StringSetting(strings.Join(repo.Runner.Config.PerennialBranches(), ", ")))
 	fmt.Println()
 	cli.PrintHeader("Configuration")
-	cli.PrintEntry("offline", cli.BoolSetting(isOffline))
+	cli.PrintEntry("offline", cli.BoolSetting(repo.IsOffline))
 	cli.PrintEntry("pull branch strategy", string(pullBranchStrategy))
 	cli.PrintEntry("run pre-push hook", cli.BoolSetting(pushHook))
 	cli.PrintEntry("push new branches", cli.BoolSetting(pushNewBranches))
