@@ -164,7 +164,6 @@ func syncBranchesSteps(config *syncConfig, run *git.ProdRunner) (runstate.StepLi
 // updateBranchSteps provides the steps to sync a particular branch.
 func updateBranchSteps(list *runstate.StepListBuilder, args updateBranchStepsArgs) {
 	isFeatureBranch := args.run.Config.IsFeatureBranch(args.branch.Name)
-	pushHook := list.Bool(args.run.Config.PushHook())
 	if !args.hasOrigin && !isFeatureBranch {
 		return
 	}
@@ -183,7 +182,7 @@ func updateBranchSteps(list *runstate.StepListBuilder, args updateBranchStepsArg
 			list.Add(&steps.PushBranchStep{Branch: args.branch.Name})
 			return
 		}
-		pushFeatureBranchSteps(list, args.branch.Name, args.syncStrategy, pushHook)
+		pushFeatureBranchSteps(list, args.branch.Name, args.syncStrategy, args.pushHook)
 	}
 }
 
@@ -193,6 +192,7 @@ type updateBranchStepsArgs struct {
 	isOffline    bool
 	mainBranch   string
 	pushBranch   bool
+	noPushHook   bool
 	run          *git.ProdRunner
 	syncStrategy config.SyncStrategy
 }

@@ -127,6 +127,7 @@ func appendStepList(config *appendConfig, run *git.ProdRunner) (runstate.StepLis
 			hasOrigin:    config.hasOrigin,
 			mainBranch:   config.mainBranch,
 			pushBranch:   true,
+			pushHook:     config.pushHook,
 			run:          run,
 			syncStrategy: config.syncStrategy,
 		})
