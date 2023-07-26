@@ -85,6 +85,7 @@ type prependConfig struct {
 	initialBranch       string
 	isOffline           bool
 	mainBranch          string
+	pullBranchStrategy  config.PullBranchStrategy
 	pushHook            bool
 	parentBranch        string
 	shouldNewBranchPush bool
@@ -99,6 +100,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner, allBranches git.
 	pushHook := fc.Bool(run.Config.PushHook())
 	mainBranch := run.Config.MainBranch()
 	syncStrategy := fc.SyncStrategy(run.Config.SyncStrategy())
+	pullBranchStrategy := fc.PullBranchStrategy(run.Config.PullBranchStrategy())
 	// TODO: use fc all the way to the end
 	if fc.Err != nil {
 		return nil, fc.Err
@@ -123,6 +125,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner, allBranches git.
 		initialBranch:       initialBranch,
 		isOffline:           isOffline,
 		mainBranch:          mainBranch,
+		pullBranchStrategy:  pullBranchStrategy,
 		pushHook:            pushHook,
 		parentBranch:        lineage.Parent(initialBranch),
 		shouldNewBranchPush: shouldNewBranchPush,
@@ -135,14 +138,15 @@ func prependStepList(config *prependConfig, run *git.ProdRunner) (runstate.StepL
 	list := runstate.StepListBuilder{}
 	for _, branchToSync := range config.branchesToSync {
 		updateBranchSteps(&list, updateBranchStepsArgs{
-			branch:       branchToSync,
-			hasOrigin:    config.hasOrigin,
-			isOffline:    config.isOffline,
-			mainBranch:   config.mainBranch,
-			pushBranch:   true,
-			pushHook:     config.pushHook,
-			run:          run,
-			syncStrategy: config.syncStrategy,
+			branch:             branchToSync,
+			hasOrigin:          config.hasOrigin,
+			isOffline:          config.isOffline,
+			mainBranch:         config.mainBranch,
+			pullBranchStrategy: config.pullBranchStrategy,
+			pushBranch:         true,
+			pushHook:           config.pushHook,
+			run:                run,
+			syncStrategy:       config.syncStrategy,
 		})
 	}
 	list.Add(&steps.CreateBranchStep{Branch: config.targetBranch, StartingPoint: config.parentBranch})

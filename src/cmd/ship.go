@@ -122,6 +122,7 @@ type shipConfig struct {
 	mainBranch               string
 	proposal                 *hosting.Proposal
 	proposalsOfChildBranches []hosting.Proposal
+	pullBranchStrategy       config.PullBranchStrategy
 	pushHook                 bool
 	syncStrategy             config.SyncStrategy
 }
@@ -140,6 +141,10 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 	branchToShip := allBranches.Lookup(branchNameToShip)
 	isShippingInitialBranch := branchNameToShip == initialBranch
 	syncStrategy, err := run.Config.SyncStrategy()
+	if err != nil {
+		return nil, err
+	}
+	pullBranchStrategy, err := run.Config.PullBranchStrategy()
 	if err != nil {
 		return nil, err
 	}
@@ -209,6 +214,7 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 		mainBranch:               mainBranch,
 		proposal:                 proposal,
 		proposalsOfChildBranches: proposalsOfChildBranches,
+		pullBranchStrategy:       pullBranchStrategy,
 		pushHook:                 pushHook,
 		syncStrategy:             syncStrategy,
 	}, nil
@@ -231,25 +237,27 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 	list := runstate.StepListBuilder{}
 	// sync the parent branch
 	updateBranchSteps(&list, updateBranchStepsArgs{
-		branch:       config.targetBranch,
-		hasOrigin:    config.hasOrigin,
-		isOffline:    config.isOffline,
-		mainBranch:   config.mainBranch,
-		pushBranch:   true,
-		pushHook:     config.pushHook,
-		run:          run,
-		syncStrategy: config.syncStrategy,
+		branch:             config.targetBranch,
+		hasOrigin:          config.hasOrigin,
+		isOffline:          config.isOffline,
+		mainBranch:         config.mainBranch,
+		pullBranchStrategy: config.pullBranchStrategy,
+		pushBranch:         true,
+		pushHook:           config.pushHook,
+		run:                run,
+		syncStrategy:       config.syncStrategy,
 	})
 	// sync the branch to ship locally only
 	updateBranchSteps(&list, updateBranchStepsArgs{
-		branch:       config.branchToShip,
-		hasOrigin:    config.hasOrigin,
-		isOffline:    config.isOffline,
-		mainBranch:   config.mainBranch,
-		pushBranch:   false,
-		pushHook:     config.pushHook,
-		run:          run,
-		syncStrategy: config.syncStrategy,
+		branch:             config.branchToShip,
+		hasOrigin:          config.hasOrigin,
+		isOffline:          config.isOffline,
+		mainBranch:         config.mainBranch,
+		pullBranchStrategy: config.pullBranchStrategy,
+		pushBranch:         false,
+		pushHook:           config.pushHook,
+		run:                run,
+		syncStrategy:       config.syncStrategy,
 	})
 	list.Add(&steps.EnsureHasShippableChangesStep{Branch: config.branchToShip.Name, Parent: config.mainBranch})
 	list.Add(&steps.CheckoutStep{Branch: config.targetBranch.Name})

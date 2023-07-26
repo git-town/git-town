@@ -92,13 +92,14 @@ func newPullRequest(debug bool) error {
 }
 
 type newPullRequestConfig struct {
-	BranchesToSync git.BranchesSyncStatus
-	hasOrigin      bool
-	InitialBranch  string
-	isOffline      bool
-	mainBranch     string
-	pushHook       bool
-	syncStrategy   config.SyncStrategy
+	BranchesToSync     git.BranchesSyncStatus
+	hasOrigin          bool
+	InitialBranch      string
+	isOffline          bool
+	mainBranch         string
+	pullBranchStrategy config.PullBranchStrategy
+	pushHook           bool
+	syncStrategy       config.SyncStrategy
 }
 
 func determineNewPullRequestConfig(run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string, isOffline bool) (*newPullRequestConfig, error) {
@@ -125,17 +126,22 @@ func determineNewPullRequestConfig(run *git.ProdRunner, allBranches git.Branches
 	if err != nil {
 		return nil, err
 	}
+	pullBranchStrategy, err := run.Config.PullBranchStrategy()
+	if err != nil {
+		return nil, err
+	}
 	lineage := run.Config.Lineage()
 	branchNamesToSync := lineage.BranchAndAncestors(initialBranch)
 	branchesToSync, err := allBranches.Select(branchNamesToSync)
 	return &newPullRequestConfig{
-		BranchesToSync: branchesToSync,
-		hasOrigin:      hasOrigin,
-		InitialBranch:  initialBranch,
-		isOffline:      isOffline,
-		mainBranch:     mainBranch,
-		pushHook:       pushHook,
-		syncStrategy:   syncStrategy,
+		BranchesToSync:     branchesToSync,
+		hasOrigin:          hasOrigin,
+		InitialBranch:      initialBranch,
+		isOffline:          isOffline,
+		mainBranch:         mainBranch,
+		pullBranchStrategy: pullBranchStrategy,
+		pushHook:           pushHook,
+		syncStrategy:       syncStrategy,
 	}, err
 }
 
@@ -143,14 +149,15 @@ func newPullRequestStepList(config *newPullRequestConfig, run *git.ProdRunner) (
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.BranchesToSync {
 		updateBranchSteps(&list, updateBranchStepsArgs{
-			branch:       branch,
-			hasOrigin:    config.hasOrigin,
-			isOffline:    config.isOffline,
-			mainBranch:   config.mainBranch,
-			pushBranch:   true,
-			pushHook:     config.pushHook,
-			run:          run,
-			syncStrategy: config.syncStrategy,
+			branch:             branch,
+			hasOrigin:          config.hasOrigin,
+			isOffline:          config.isOffline,
+			mainBranch:         config.mainBranch,
+			pullBranchStrategy: config.pullBranchStrategy,
+			pushBranch:         true,
+			pushHook:           config.pushHook,
+			run:                run,
+			syncStrategy:       config.syncStrategy,
 		})
 	}
 	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &run.Backend, config.mainBranch)
