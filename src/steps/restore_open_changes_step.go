@@ -20,7 +20,7 @@ func (step *RestoreOpenChangesStep) CreateUndoStep(_ *git.BackendCommands) (Step
 func (step *RestoreOpenChangesStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
 	err := run.Frontend.PopStash()
 	if err != nil {
-		return errors.New(messages.UnstashConflictWithMain)
+		return errors.New(messages.DiffConflictWithMain)
 	}
 	return nil
 }

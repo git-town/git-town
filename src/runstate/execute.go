@@ -88,7 +88,7 @@ To continue after having resolved conflicts, run "git-town continue".
 		}
 		undoStep, err := step.CreateUndoStep(&run.Backend)
 		if err != nil {
-			return fmt.Errorf(messages.UndoCreateProblem, step, err)
+			return fmt.Errorf(messages.UndoCreateStepProblem, step, err)
 		}
 		runState.UndoStepList.Prepend(undoStep)
 	}
