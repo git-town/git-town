@@ -20,7 +20,7 @@ func Execute(runState *RunState, run *git.ProdRunner, connector hosting.Connecto
 			if runState.IsAbort || runState.isUndo {
 				err := Delete(&run.Backend)
 				if err != nil {
-					return fmt.Errorf(messages.RunStateDeleteProblem, err)
+					return fmt.Errorf(messages.RunstateDeleteProblem, err)
 				}
 			} else {
 				err := Save(runState, &run.Backend)

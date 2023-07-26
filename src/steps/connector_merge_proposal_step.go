@@ -51,7 +51,7 @@ func (step *ConnectorMergeProposalStep) Run(run *git.ProdRunner, connector hosti
 		}
 		err = run.Backend.CommentOutSquashCommitMessage(step.ProposalMessage + "\n\n")
 		if err != nil {
-			return fmt.Errorf(messages.ShipAbortedSquashMessageProblem, err)
+			return fmt.Errorf(messages.SquashMessageProblem, err)
 		}
 		err = run.Frontend.StartCommit()
 		if err != nil {

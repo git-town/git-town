@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
+	"github.com/git-town/git-town/v9/src/messages"
 )
 
 // FrontendRunner executes frontend shell commands.
@@ -51,7 +52,7 @@ func (r *FrontendRunner) RunMany(commands [][]string) error {
 	for _, argv := range commands {
 		err := r.Run(argv[0], argv[1:]...)
 		if err != nil {
-			return fmt.Errorf("error running command %q: %w", argv, err)
+			return fmt.Errorf(messages.RunProblem, argv, err)
 		}
 	}
 	return nil

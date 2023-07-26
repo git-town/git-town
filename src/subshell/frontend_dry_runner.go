@@ -2,6 +2,8 @@ package subshell
 
 import (
 	"fmt"
+
+	"github.com/git-town/git-town/v9/src/messages"
 )
 
 // FrontendDryRunner prints the given shell commands to the CLI as if they were executed
@@ -29,7 +31,7 @@ func (r *FrontendDryRunner) RunMany(commands [][]string) error {
 	for _, argv := range commands {
 		err := r.Run(argv[0], argv[1:]...)
 		if err != nil {
-			return fmt.Errorf("error running command %q: %w", argv, err)
+			return fmt.Errorf(messages.RunProblem, argv, err)
 		}
 	}
 	return nil
