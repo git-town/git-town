@@ -50,7 +50,7 @@ func newPullRequestCommand() *cobra.Command {
 }
 
 func newPullRequest(debug bool) error {
-	run, rootDir, isOffline, exit, err := execute.OpenShell(execute.OpenShellArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 false,
@@ -63,24 +63,24 @@ func newPullRequest(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	allBranches, initialBranch, err := execute.LoadBranches(&run, execute.LoadBranchesArgs{
+	allBranches, initialBranch, err := execute.LoadBranches(&repo.ProdRunner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	config, err := determineNewPullRequestConfig(&run, allBranches, initialBranch, isOffline)
+	config, err := determineNewPullRequestConfig(&repo.ProdRunner, allBranches, initialBranch, repo.IsOffline)
 	if err != nil {
 		return err
 	}
-	connector, err := hosting.NewConnector(run.Config.GitTown, &run.Backend, cli.PrintConnectorAction)
+	connector, err := hosting.NewConnector(repo.ProdRunner.Config.GitTown, &repo.ProdRunner.Backend, cli.PrintConnectorAction)
 	if err != nil {
 		return err
 	}
 	if connector == nil {
 		return hosting.UnsupportedServiceError()
 	}
-	stepList, err := newPullRequestStepList(config, &run)
+	stepList, err := newPullRequestStepList(config, &repo.ProdRunner)
 	if err != nil {
 		return err
 	}
@@ -88,7 +88,7 @@ func newPullRequest(debug bool) error {
 		Command:     "new-pull-request",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(&runState, &run, connector, rootDir)
+	return runstate.Execute(&runState, &repo.ProdRunner, connector, repo.RootDir)
 }
 
 type newPullRequestConfig struct {

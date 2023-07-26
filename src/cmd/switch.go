@@ -29,7 +29,7 @@ func switchCmd() *cobra.Command {
 }
 
 func runSwitch(debug bool) error {
-	run, _, _, exit, err := execute.OpenShell(execute.OpenShellArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 false,
@@ -42,18 +42,18 @@ func runSwitch(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	_, currentBranch, err := execute.LoadBranches(&run, execute.LoadBranchesArgs{
+	_, currentBranch, err := execute.LoadBranches(&repo.ProdRunner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	newBranch, err := queryBranch(currentBranch, run.Config.Lineage())
+	newBranch, err := queryBranch(currentBranch, repo.ProdRunner.Config.Lineage())
 	if err != nil {
 		return err
 	}
 	if newBranch != nil && *newBranch != currentBranch {
-		err = run.Backend.CheckoutBranch(*newBranch)
+		err = repo.ProdRunner.Backend.CheckoutBranch(*newBranch)
 		if err != nil {
 			return err
 		}

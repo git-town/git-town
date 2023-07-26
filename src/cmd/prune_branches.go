@@ -31,7 +31,7 @@ func pruneBranchesCommand() *cobra.Command {
 }
 
 func pruneBranches(debug bool) error {
-	run, rootDir, _, exit, err := execute.OpenShell(execute.OpenShellArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 true,
@@ -44,14 +44,14 @@ func pruneBranches(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	allBranches, initialBranch, err := execute.LoadBranches(&run, execute.LoadBranchesArgs{
+	allBranches, initialBranch, err := execute.LoadBranches(&repo.ProdRunner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	config := determinePruneBranchesConfig(&run, allBranches, initialBranch)
-	stepList, err := pruneBranchesStepList(config, &run)
+	config := determinePruneBranchesConfig(&repo.ProdRunner, allBranches, initialBranch)
+	stepList, err := pruneBranchesStepList(config, &repo.ProdRunner)
 	if err != nil {
 		return err
 	}
@@ -59,7 +59,7 @@ func pruneBranches(debug bool) error {
 		Command:     "prune-branches",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(&runState, &run, nil, rootDir)
+	return runstate.Execute(&runState, &repo.ProdRunner, nil, repo.RootDir)
 }
 
 type pruneBranchesConfig struct {

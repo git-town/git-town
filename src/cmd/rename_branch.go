@@ -50,7 +50,7 @@ func renameBranchCommand() *cobra.Command {
 }
 
 func renameBranch(args []string, force, debug bool) error {
-	run, rootDir, isOffline, exit, err := execute.OpenShell(execute.OpenShellArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 true,
@@ -63,17 +63,17 @@ func renameBranch(args []string, force, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	allBranches, initialBranch, err := execute.LoadBranches(&run, execute.LoadBranchesArgs{
+	allBranches, initialBranch, err := execute.LoadBranches(&repo.ProdRunner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	config, err := determineRenameBranchConfig(args, force, &run, allBranches, initialBranch, isOffline)
+	config, err := determineRenameBranchConfig(args, force, &repo.ProdRunner, allBranches, initialBranch, repo.IsOffline)
 	if err != nil {
 		return err
 	}
-	stepList, err := renameBranchStepList(config, &run)
+	stepList, err := renameBranchStepList(config, &repo.ProdRunner)
 	if err != nil {
 		return err
 	}
@@ -81,7 +81,7 @@ func renameBranch(args []string, force, debug bool) error {
 		Command:     "rename-branch",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(&runState, &run, nil, rootDir)
+	return runstate.Execute(&runState, &repo.ProdRunner, nil, repo.RootDir)
 }
 
 type renameBranchConfig struct {

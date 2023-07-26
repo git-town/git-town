@@ -53,7 +53,7 @@ func syncCmd() *cobra.Command {
 }
 
 func sync(all, dryRun, debug bool) error {
-	run, rootDir, isOffline, exit, err := execute.OpenShell(execute.OpenShellArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                dryRun,
 		Fetch:                 true,
@@ -66,17 +66,17 @@ func sync(all, dryRun, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	allBranches, initialBranch, err := execute.LoadBranches(&run, execute.LoadBranchesArgs{
+	allBranches, initialBranch, err := execute.LoadBranches(&repo.ProdRunner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	config, err := determineSyncConfig(all, &run, allBranches, initialBranch, isOffline)
+	config, err := determineSyncConfig(all, &repo.ProdRunner, allBranches, initialBranch, repo.IsOffline)
 	if err != nil {
 		return err
 	}
-	stepList, err := syncBranchesSteps(config, &run)
+	stepList, err := syncBranchesSteps(config, &repo.ProdRunner)
 	if err != nil {
 		return err
 	}
@@ -84,7 +84,7 @@ func sync(all, dryRun, debug bool) error {
 		Command:     "sync",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(&runState, &run, nil, rootDir)
+	return runstate.Execute(&runState, &repo.ProdRunner, nil, repo.RootDir)
 }
 
 type syncConfig struct {

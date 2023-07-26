@@ -31,7 +31,7 @@ func continueCmd() *cobra.Command {
 }
 
 func runContinue(debug bool) error {
-	run, rootDir, _, exit, err := execute.OpenShell(execute.OpenShellArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 false,
@@ -44,29 +44,29 @@ func runContinue(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	_, _, err = execute.LoadBranches(&run, execute.LoadBranchesArgs{
+	_, _, err = execute.LoadBranches(&repo.ProdRunner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	runState, err := runstate.Load(rootDir)
+	runState, err := runstate.Load(repo.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
 	if runState == nil || !runState.IsUnfinished() {
 		return fmt.Errorf(messages.ContinueNothingToDo)
 	}
-	hasConflicts, err := run.Backend.HasConflicts()
+	hasConflicts, err := repo.ProdRunner.Backend.HasConflicts()
 	if err != nil {
 		return err
 	}
 	if hasConflicts {
 		return fmt.Errorf(messages.ContinueUnresolvedConflicts)
 	}
-	connector, err := hosting.NewConnector(run.Config.GitTown, &run.Backend, cli.PrintConnectorAction)
+	connector, err := hosting.NewConnector(repo.ProdRunner.Config.GitTown, &repo.ProdRunner.Backend, cli.PrintConnectorAction)
 	if err != nil {
 		return err
 	}
-	return runstate.Execute(runState, &run, connector, rootDir)
+	return runstate.Execute(runState, &repo.ProdRunner, connector, repo.RootDir)
 }

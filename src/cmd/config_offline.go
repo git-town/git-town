@@ -33,7 +33,7 @@ func offlineCmd() *cobra.Command {
 }
 
 func offline(args []string, debug bool) error {
-	run, _, _, exit, err := execute.OpenShell(execute.OpenShellArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 false,
@@ -47,9 +47,9 @@ func offline(args []string, debug bool) error {
 		return err
 	}
 	if len(args) > 0 {
-		return setOfflineStatus(args[0], &run)
+		return setOfflineStatus(args[0], &repo.ProdRunner)
 	}
-	return displayOfflineStatus(&run)
+	return displayOfflineStatus(&repo.ProdRunner)
 }
 
 func displayOfflineStatus(run *git.ProdRunner) error {

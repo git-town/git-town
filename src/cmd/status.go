@@ -30,7 +30,7 @@ func statusCommand() *cobra.Command {
 }
 
 func status(debug bool) error {
-	run, rootDir, _, exit, err := execute.OpenShell(execute.OpenShellArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 false,
@@ -43,12 +43,12 @@ func status(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	config, err := loadDisplayStatusConfig(rootDir)
+	config, err := loadDisplayStatusConfig(repo.RootDir)
 	if err != nil {
 		return err
 	}
 	displayStatus(*config)
-	run.Stats.PrintAnalysis()
+	repo.ProdRunner.Stats.PrintAnalysis()
 	return nil
 }
 

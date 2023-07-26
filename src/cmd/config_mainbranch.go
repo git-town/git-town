@@ -32,7 +32,7 @@ func mainbranchConfigCmd() *cobra.Command {
 }
 
 func configureMainBranch(args []string, debug bool) error {
-	run, _, _, exit, err := execute.OpenShell(execute.OpenShellArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 false,
@@ -46,9 +46,9 @@ func configureMainBranch(args []string, debug bool) error {
 		return err
 	}
 	if len(args) > 0 {
-		return setMainBranch(args[0], &run)
+		return setMainBranch(args[0], &repo.ProdRunner)
 	}
-	printMainBranch(&run)
+	printMainBranch(&repo.ProdRunner)
 	return nil
 }
 

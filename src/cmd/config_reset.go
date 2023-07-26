@@ -24,7 +24,7 @@ func resetConfigCommand() *cobra.Command {
 }
 
 func resetStatus(debug bool) error {
-	run, _, _, exit, err := execute.OpenShell(execute.OpenShellArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 false,
@@ -37,5 +37,5 @@ func resetStatus(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	return run.Config.RemoveLocalGitConfiguration()
+	return repo.ProdRunner.Config.RemoveLocalGitConfiguration()
 }

@@ -36,7 +36,7 @@ func pushNewBranchesCommand() *cobra.Command {
 }
 
 func pushNewBranches(args []string, global, debug bool) error {
-	run, _, _, exit, err := execute.OpenShell(execute.OpenShellArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 false,
@@ -50,9 +50,9 @@ func pushNewBranches(args []string, global, debug bool) error {
 		return err
 	}
 	if len(args) > 0 {
-		return setPushNewBranches(args[0], global, &run)
+		return setPushNewBranches(args[0], global, &repo.ProdRunner)
 	}
-	return printPushNewBranches(global, &run)
+	return printPushNewBranches(global, &repo.ProdRunner)
 }
 
 func printPushNewBranches(globalFlag bool, run *git.ProdRunner) error {

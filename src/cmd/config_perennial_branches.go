@@ -47,7 +47,7 @@ func perennialBranchesCmd() *cobra.Command {
 }
 
 func displayPerennialBranches(debug bool) error {
-	run, _, _, exit, err := execute.OpenShell(execute.OpenShellArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 false,
@@ -60,12 +60,12 @@ func displayPerennialBranches(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	cli.Println(cli.StringSetting(strings.Join(run.Config.PerennialBranches(), "\n")))
+	cli.Println(cli.StringSetting(strings.Join(repo.ProdRunner.Config.PerennialBranches(), "\n")))
 	return nil
 }
 
 func updatePerennialBranches(debug bool) error {
-	run, _, _, exit, err := execute.OpenShell(execute.OpenShellArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 false,
@@ -78,12 +78,12 @@ func updatePerennialBranches(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	allBranches, _, err := execute.LoadBranches(&run, execute.LoadBranchesArgs{
+	allBranches, _, err := execute.LoadBranches(&repo.ProdRunner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: false,
 	})
 	if err != nil {
 		return err
 	}
-	mainBranch := run.Config.MainBranch()
-	return validate.EnterPerennialBranches(&run.Backend, allBranches, mainBranch)
+	mainBranch := repo.ProdRunner.Config.MainBranch()
+	return validate.EnterPerennialBranches(&repo.ProdRunner.Backend, allBranches, mainBranch)
 }

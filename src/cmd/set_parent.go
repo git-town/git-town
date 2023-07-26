@@ -29,7 +29,7 @@ func setParentCommand() *cobra.Command {
 }
 
 func setParent(debug bool) error {
-	run, _, _, exit, err := execute.OpenShell(execute.OpenShellArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 false,
@@ -42,29 +42,29 @@ func setParent(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	_, currentBranch, err := execute.LoadBranches(&run, execute.LoadBranchesArgs{
+	_, currentBranch, err := execute.LoadBranches(&repo.ProdRunner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	if !run.Config.IsFeatureBranch(currentBranch) {
+	if !repo.ProdRunner.Config.IsFeatureBranch(currentBranch) {
 		return errors.New(messages.SetParentNoFeatureBranch)
 	}
-	existingParent := run.Config.Lineage().Parent(currentBranch)
+	existingParent := repo.ProdRunner.Config.Lineage().Parent(currentBranch)
 	if existingParent != "" {
 		// TODO: delete the old parent only when the user has entered a new parent
-		err = run.Config.RemoveParent(currentBranch)
+		err = repo.ProdRunner.Config.RemoveParent(currentBranch)
 		if err != nil {
 			return err
 		}
 	} else {
-		existingParent = run.Config.MainBranch()
+		existingParent = repo.ProdRunner.Config.MainBranch()
 	}
-	err = validate.KnowsBranchAncestors(currentBranch, existingParent, &run.Backend)
+	err = validate.KnowsBranchAncestors(currentBranch, existingParent, &repo.ProdRunner.Backend)
 	if err != nil {
 		return err
 	}
-	run.Stats.PrintAnalysis()
+	repo.ProdRunner.Stats.PrintAnalysis()
 	return nil
 }

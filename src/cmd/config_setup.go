@@ -25,7 +25,7 @@ func setupConfigCommand() *cobra.Command {
 }
 
 func setup(debug bool) error {
-	run, _, _, exit, err := execute.OpenShell(execute.OpenShellArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 false,
@@ -38,15 +38,15 @@ func setup(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	allBranches, _, err := execute.LoadBranches(&run, execute.LoadBranchesArgs{
+	allBranches, _, err := execute.LoadBranches(&repo.ProdRunner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: false,
 	})
 	if err != nil {
 		return err
 	}
-	mainBranch, err := validate.EnterMainBranch(&run.Backend)
+	mainBranch, err := validate.EnterMainBranch(&repo.ProdRunner.Backend)
 	if err != nil {
 		return err
 	}
-	return validate.EnterPerennialBranches(&run.Backend, allBranches, mainBranch)
+	return validate.EnterPerennialBranches(&repo.ProdRunner.Backend, allBranches, mainBranch)
 }

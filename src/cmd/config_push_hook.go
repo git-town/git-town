@@ -35,7 +35,7 @@ func pushHookCommand() *cobra.Command {
 }
 
 func pushHook(args []string, global, debug bool) error {
-	run, _, _, exit, err := execute.OpenShell(execute.OpenShellArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 false,
@@ -49,9 +49,9 @@ func pushHook(args []string, global, debug bool) error {
 		return err
 	}
 	if len(args) > 0 {
-		return setPushHook(args[0], global, &run)
+		return setPushHook(args[0], global, &repo.ProdRunner)
 	}
-	return printPushHook(global, &run)
+	return printPushHook(global, &repo.ProdRunner)
 }
 
 func printPushHook(globalFlag bool, run *git.ProdRunner) error {

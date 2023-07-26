@@ -32,7 +32,7 @@ func pullBranchStrategyCommand() *cobra.Command {
 }
 
 func pullBranchStrategy(args []string, debug bool) error {
-	run, _, _, exit, err := execute.OpenShell(execute.OpenShellArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 false,
@@ -46,9 +46,9 @@ func pullBranchStrategy(args []string, debug bool) error {
 		return err
 	}
 	if len(args) > 0 {
-		return setPullBranchStrategy(args[0], &run)
+		return setPullBranchStrategy(args[0], &repo.ProdRunner)
 	}
-	return displayPullBranchStrategy(&run)
+	return displayPullBranchStrategy(&repo.ProdRunner)
 }
 
 func displayPullBranchStrategy(run *git.ProdRunner) error {

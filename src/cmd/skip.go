@@ -29,7 +29,7 @@ func skipCmd() *cobra.Command {
 }
 
 func skip(debug bool) error {
-	run, rootDir, _, exit, err := execute.OpenShell(execute.OpenShellArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 false,
@@ -42,13 +42,13 @@ func skip(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	_, _, err = execute.LoadBranches(&run, execute.LoadBranchesArgs{
+	_, _, err = execute.LoadBranches(&repo.ProdRunner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	runState, err := runstate.Load(rootDir)
+	runState, err := runstate.Load(repo.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
@@ -59,5 +59,5 @@ func skip(debug bool) error {
 		return fmt.Errorf(messages.SkipBranchHasConflicts)
 	}
 	skipRunState := runState.CreateSkipRunState()
-	return runstate.Execute(&skipRunState, &run, nil, rootDir)
+	return runstate.Execute(&skipRunState, &repo.ProdRunner, nil, repo.RootDir)
 }

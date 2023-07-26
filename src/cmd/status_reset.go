@@ -27,7 +27,7 @@ func resetRunstateCommand() *cobra.Command {
 }
 
 func statusReset(debug bool) error {
-	_, rootDir, _, exit, err := execute.OpenShell(execute.OpenShellArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 false,
@@ -40,7 +40,7 @@ func statusReset(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	err = runstate.Delete(rootDir)
+	err = runstate.Delete(repo.RootDir)
 	if err != nil {
 		return err
 	}

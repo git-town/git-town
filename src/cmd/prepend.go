@@ -44,7 +44,7 @@ func prependCommand() *cobra.Command {
 }
 
 func prepend(args []string, debug bool) error {
-	run, rootDir, isOffline, exit, err := execute.OpenShell(execute.OpenShellArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 true,
@@ -57,17 +57,17 @@ func prepend(args []string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	allBranches, initialBranch, err := execute.LoadBranches(&run, execute.LoadBranchesArgs{
+	allBranches, initialBranch, err := execute.LoadBranches(&repo.ProdRunner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	config, err := determinePrependConfig(args, &run, allBranches, initialBranch, isOffline)
+	config, err := determinePrependConfig(args, &repo.ProdRunner, allBranches, initialBranch, repo.IsOffline)
 	if err != nil {
 		return err
 	}
-	stepList, err := prependStepList(config, &run)
+	stepList, err := prependStepList(config, &repo.ProdRunner)
 	if err != nil {
 		return err
 	}
@@ -75,7 +75,7 @@ func prepend(args []string, debug bool) error {
 		Command:     "prepend",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(&runState, &run, nil, rootDir)
+	return runstate.Execute(&runState, &repo.ProdRunner, nil, repo.RootDir)
 }
 
 type prependConfig struct {

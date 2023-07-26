@@ -64,7 +64,7 @@ func shipCmd() *cobra.Command {
 }
 
 func ship(args []string, message string, debug bool) error {
-	run, rootDir, isOffline, exit, err := execute.OpenShell(execute.OpenShellArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 true,
@@ -77,27 +77,27 @@ func ship(args []string, message string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	allBranches, initialBranch, err := execute.LoadBranches(&run, execute.LoadBranchesArgs{
+	allBranches, initialBranch, err := execute.LoadBranches(&repo.ProdRunner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	connector, err := hosting.NewConnector(run.Config.GitTown, &run.Backend, cli.PrintConnectorAction)
+	connector, err := hosting.NewConnector(repo.ProdRunner.Config.GitTown, &repo.ProdRunner.Backend, cli.PrintConnectorAction)
 	if err != nil {
 		return err
 	}
-	config, err := determineShipConfig(args, connector, &run, allBranches, initialBranch, isOffline)
+	config, err := determineShipConfig(args, connector, &repo.ProdRunner, allBranches, initialBranch, repo.IsOffline)
 	if err != nil {
 		return err
 	}
 	if config.branchToShip.Name == initialBranch {
-		err = validate.NoOpenChanges(&run.Backend)
+		err = validate.NoOpenChanges(&repo.ProdRunner.Backend)
 		if err != nil {
 			return err
 		}
 	}
-	stepList, err := shipStepList(config, message, &run)
+	stepList, err := shipStepList(config, message, &repo.ProdRunner)
 	if err != nil {
 		return err
 	}
@@ -105,7 +105,7 @@ func ship(args []string, message string, debug bool) error {
 		Command:     "ship",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(&runState, &run, connector, rootDir)
+	return runstate.Execute(&runState, &repo.ProdRunner, connector, repo.RootDir)
 }
 
 type shipConfig struct {

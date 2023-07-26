@@ -41,7 +41,7 @@ func repoCommand() *cobra.Command {
 }
 
 func repo(debug bool) error {
-	run, _, _, exit, err := execute.OpenShell(execute.OpenShellArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 false,
@@ -54,20 +54,20 @@ func repo(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	_, _, err = execute.LoadBranches(&run, execute.LoadBranchesArgs{
+	_, _, err = execute.LoadBranches(&repo.ProdRunner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	connector, err := hosting.NewConnector(run.Config.GitTown, &run.Backend, cli.PrintConnectorAction)
+	connector, err := hosting.NewConnector(repo.ProdRunner.Config.GitTown, &repo.ProdRunner.Backend, cli.PrintConnectorAction)
 	if err != nil {
 		return err
 	}
 	if connector == nil {
 		return hosting.UnsupportedServiceError()
 	}
-	browser.Open(connector.RepositoryURL(), run.Frontend.FrontendRunner, run.Backend.BackendRunner)
-	run.Stats.PrintAnalysis()
+	browser.Open(connector.RepositoryURL(), repo.ProdRunner.Frontend.FrontendRunner, repo.ProdRunner.Backend.BackendRunner)
+	repo.ProdRunner.Stats.PrintAnalysis()
 	return nil
 }

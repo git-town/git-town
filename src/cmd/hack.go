@@ -43,7 +43,7 @@ func hackCmd() *cobra.Command {
 }
 
 func hack(args []string, promptForParent, debug bool) error {
-	run, rootDir, _, exit, err := execute.OpenShell(execute.OpenShellArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 true,
@@ -56,17 +56,17 @@ func hack(args []string, promptForParent, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	allBranches, _, err := execute.LoadBranches(&run, execute.LoadBranchesArgs{
+	allBranches, _, err := execute.LoadBranches(&repo.ProdRunner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	config, err := determineHackConfig(args, promptForParent, &run, allBranches)
+	config, err := determineHackConfig(args, promptForParent, &repo.ProdRunner, allBranches)
 	if err != nil {
 		return err
 	}
-	stepList, err := appendStepList(config, &run)
+	stepList, err := appendStepList(config, &repo.ProdRunner)
 	if err != nil {
 		return err
 	}
@@ -74,7 +74,7 @@ func hack(args []string, promptForParent, debug bool) error {
 		Command:     "hack",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(&runState, &run, nil, rootDir)
+	return runstate.Execute(&runState, &repo.ProdRunner, nil, repo.RootDir)
 }
 
 func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunner, allBranches git.BranchesSyncStatus) (*appendConfig, error) {

@@ -33,7 +33,7 @@ func syncStrategyCommand() *cobra.Command {
 }
 
 func syncStrategy(args []string, global, debug bool) error {
-	run, _, _, exit, err := execute.OpenShell(execute.OpenShellArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 false,
@@ -47,9 +47,9 @@ func syncStrategy(args []string, global, debug bool) error {
 		return err
 	}
 	if len(args) > 0 {
-		return setSyncStrategy(global, &run, args[0])
+		return setSyncStrategy(global, &repo.ProdRunner, args[0])
 	}
-	return printSyncStrategy(global, &run)
+	return printSyncStrategy(global, &repo.ProdRunner)
 }
 
 func printSyncStrategy(globalFlag bool, run *git.ProdRunner) error {

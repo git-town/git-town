@@ -41,7 +41,7 @@ func appendCmd() *cobra.Command {
 }
 
 func runAppend(arg string, debug bool) error {
-	run, rootDir, isOffline, exit, err := execute.OpenShell(execute.OpenShellArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 true,
@@ -54,17 +54,17 @@ func runAppend(arg string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	allBranches, currentBranch, err := execute.LoadBranches(&run, execute.LoadBranchesArgs{
+	allBranches, currentBranch, err := execute.LoadBranches(&repo.ProdRunner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	config, err := determineAppendConfig(arg, &run, allBranches, currentBranch, isOffline)
+	config, err := determineAppendConfig(arg, &repo.ProdRunner, allBranches, currentBranch, repo.IsOffline)
 	if err != nil {
 		return err
 	}
-	stepList, err := appendStepList(config, &run)
+	stepList, err := appendStepList(config, &repo.ProdRunner)
 	if err != nil {
 		return err
 	}
@@ -72,7 +72,7 @@ func runAppend(arg string, debug bool) error {
 		Command:     "append",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(&runState, &run, nil, rootDir)
+	return runstate.Execute(&runState, &repo.ProdRunner, nil, repo.RootDir)
 }
 
 type appendConfig struct {

@@ -13,7 +13,7 @@ import (
 	"github.com/git-town/git-town/v9/src/validate"
 )
 
-func OpenShell(args OpenShellArgs) (prodRunner git.ProdRunner, rootDir string, isOffline bool, exit bool, err error) {
+func OpenRepo(args OpenShellArgs) (result OpenShellResult, exit bool, err error) {
 	var stats Statistics
 	if args.Debug {
 		stats = &statistics.CommandsRun{CommandsCount: 0}
@@ -42,11 +42,11 @@ func OpenShell(args OpenShellArgs) (prodRunner git.ProdRunner, rootDir string, i
 		DryRun:  false, // to bootstrap this, DryRun always gets initialized as false and later enabled if needed
 	}
 	backendCommands.Config = &config
-	prodRunner = git.ProdRunner{
+	prodRunner := git.ProdRunner{
 		Config:  config,
 		Backend: backendCommands,
 		Frontend: git.FrontendCommands{
-			FrontendRunner:         NewFrontendRunner(args.OmitBranchNames, args.DryRun, prodRunner.Backend.CurrentBranch, stats),
+			FrontendRunner:         NewFrontendRunner(args.OmitBranchNames, args.DryRun, backendCommands.CurrentBranch, stats),
 			SetCachedCurrentBranch: backendCommands.CurrentBranchCache.Set,
 		},
 		Stats: stats,
@@ -55,13 +55,14 @@ func OpenShell(args OpenShellArgs) (prodRunner git.ProdRunner, rootDir string, i
 		prodRunner.Config.DryRun = true
 	}
 	if args.ValidateGitRepo {
-		rootDir = backendCommands.RootDirectory()
+		rootDir := backendCommands.RootDirectory()
 		if rootDir == "" {
 			err = errors.New(messages.RepoOutside)
 			return
 		}
 	}
 	if args.HandleUnfinishedState {
+		rootDir := backendCommands.RootDirectory()
 		exit, err = validate.HandleUnfinishedState(&prodRunner, nil, rootDir)
 		if err != nil || exit {
 			return
@@ -73,7 +74,7 @@ func OpenShell(args OpenShellArgs) (prodRunner git.ProdRunner, rootDir string, i
 			return
 		}
 	}
-	isOffline, err = config.IsOffline()
+	isOffline, err := config.IsOffline()
 	if err != nil {
 		return
 	}
@@ -94,18 +95,23 @@ func OpenShell(args OpenShellArgs) (prodRunner git.ProdRunner, rootDir string, i
 			}
 		}
 	}
-	currentDirectory, err := os.Getwd()
-	if err != nil {
-		err = errors.New(messages.DirCurrentProblem)
-		return
-	}
-	if args.ValidateGitRepo && currentDirectory != rootDir {
-		err = prodRunner.Frontend.NavigateToDir(rootDir)
+	if args.ValidateGitRepo {
+		var currentDirectory string
+		currentDirectory, err = os.Getwd()
 		if err != nil {
+			err = errors.New(messages.DirCurrentProblem)
 			return
 		}
+		rootDir := backendCommands.RootDirectory()
+		if currentDirectory != rootDir {
+			err = prodRunner.Frontend.NavigateToDir(rootDir)
+		}
 	}
-	return
+	return OpenShellResult{
+		ProdRunner: prodRunner,
+		RootDir:    backendCommands.RootDirectory(),
+		IsOffline:  isOffline,
+	}, false, err
 }
 
 type OpenShellArgs struct {
@@ -117,6 +123,12 @@ type OpenShellArgs struct {
 	ValidateGitRepo       bool
 	ValidateIsOnline      bool
 	ValidateNoOpenChanges bool
+}
+
+type OpenShellResult struct {
+	ProdRunner git.ProdRunner
+	RootDir    string
+	IsOffline  bool
 }
 
 // NewFrontendRunner provides a FrontendRunner instance that behaves according to the given configuration.
