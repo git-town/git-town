@@ -76,7 +76,7 @@ func sync(all, dryRun, debug bool) error {
 	if err != nil {
 		return err
 	}
-	stepList, err := syncBranchesSteps(config, &repo.Runner)
+	stepList, err := syncBranchesSteps(config, &repo.Runner.Config)
 	if err != nil {
 		return err
 	}
@@ -175,12 +175,12 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranchesSyncStatu
 }
 
 // syncBranchesSteps provides the step list for the "git sync" command.
-func syncBranchesSteps(config *syncConfig, run *git.ProdRunner) (runstate.StepList, error) {
+func syncBranchesSteps(config *syncConfig, repoConfig *git.RepoConfig) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.branchesToSync {
 		updateBranchSteps(&list, updateBranchStepsArgs{
 			branch:             branch,
-			config:             &run.Config,
+			config:             repoConfig,
 			hasOrigin:          config.hasOrigin,
 			hasUpstream:        config.hasUpstream,
 			isOffline:          config.isOffline,
