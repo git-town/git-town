@@ -3,6 +3,7 @@ package dialog
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v9/src/messages"
 	survey "gopkg.in/AlecAivazis/survey.v1"
 )
 
@@ -16,7 +17,7 @@ func Select(opts SelectArgs) (string, error) {
 	}
 	err := survey.AskOne(prompt, &result, nil)
 	if err != nil {
-		return result, fmt.Errorf("cannot read branch from CLI: %w", err)
+		return result, fmt.Errorf(messages.DialogCannotReadBranch, err)
 	}
 	return result, nil
 }

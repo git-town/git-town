@@ -32,5 +32,5 @@ Feature: display the current offline status
     When I run "git-town config offline"
     Then it prints the error:
       """
-      invalid value for git-town.offline: "zonk". Please provide either "true" or "false"
+      invalid value for git-town.offline: "zonk". Please provide either "yes" or "no"
       """

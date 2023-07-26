@@ -5,6 +5,7 @@ import (
 	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/git-town/git-town/v9/src/validate"
@@ -95,7 +96,7 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner, allBranches
 		return nil, fc.Err
 	}
 	if allBranches.Contains(targetBranch) {
-		fc.Fail("a branch named %q already exists", targetBranch)
+		fc.Fail(messages.BranchAlreadyExists, targetBranch)
 	}
 	fc.Check(validate.KnowsBranchAncestors(currentBranchName, run.Config.MainBranch(), &run.Backend))
 	lineage := run.Config.Lineage()

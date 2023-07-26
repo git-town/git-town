@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v9/src/dialog"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
+	"github.com/git-town/git-town/v9/src/messages"
 )
 
 // SquashMergeStep squash merges the branch with the given name into the current branch.
@@ -29,7 +30,7 @@ func (step *SquashMergeStep) CreateUndoStep(backend *git.BackendCommands) (Step,
 }
 
 func (step *SquashMergeStep) CreateAutomaticAbortError() error {
-	return fmt.Errorf("aborted because commit exited with error")
+	return fmt.Errorf(messages.ShipAbortedMergeError)
 }
 
 func (step *SquashMergeStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
@@ -43,14 +44,14 @@ func (step *SquashMergeStep) Run(run *git.ProdRunner, _ hosting.Connector) error
 	}
 	author, err := dialog.SelectSquashCommitAuthor(step.Branch, branchAuthors)
 	if err != nil {
-		return fmt.Errorf("error getting squash commit author: %w", err)
+		return fmt.Errorf(messages.SquashCommitAuthorProblem, err)
 	}
 	repoAuthor, err := run.Backend.Author()
 	if err != nil {
-		return fmt.Errorf("cannot determine repo author: %w", err)
+		return fmt.Errorf(messages.GitUserProblem, err)
 	}
 	if err = run.Backend.CommentOutSquashCommitMessage(""); err != nil {
-		return fmt.Errorf("cannot comment out the squash commit message: %w", err)
+		return fmt.Errorf(messages.SquashMessageProblem, err)
 	}
 	if repoAuthor == author {
 		author = ""

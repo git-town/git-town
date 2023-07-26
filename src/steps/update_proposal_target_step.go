@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
+	"github.com/git-town/git-town/v9/src/messages"
 )
 
 // SquashMergeStep squash merges the branch with the given name into the current branch.
@@ -36,5 +37,5 @@ func (step *UpdateProposalTargetStep) ShouldAutomaticallyAbortOnError() bool {
 }
 
 func (step *UpdateProposalTargetStep) CreateAutomaticAbortError() error {
-	return fmt.Errorf("cannot update the target branch of proposal %d via the API", step.ProposalNumber)
+	return fmt.Errorf(messages.ProposalTargetBranchUpdateProblem, step.ProposalNumber)
 }

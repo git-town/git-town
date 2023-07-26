@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/spf13/cobra"
 )
 
@@ -52,7 +53,7 @@ func aliases(arg string, debug bool) error {
 	case "remove":
 		return removeAliases(&run)
 	}
-	return fmt.Errorf(`invalid argument %q. Please provide either "add" or "remove"`, arg)
+	return fmt.Errorf(messages.InputAddOrRemove, arg)
 }
 
 func addAliases(run *git.ProdRunner) error {

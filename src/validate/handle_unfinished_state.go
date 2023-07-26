@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v9/src/dialog"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
+	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
 )
 
@@ -13,7 +14,7 @@ import (
 func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector) (quit bool, err error) {
 	runState, err := runstate.Load(&run.Backend)
 	if err != nil {
-		return false, fmt.Errorf("cannot load previous run state: %w", err)
+		return false, fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
 	if runState == nil || !runState.IsUnfinished() {
 		return false, nil
@@ -37,7 +38,7 @@ func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector) (qu
 			return false, err
 		}
 		if hasConflicts {
-			return false, fmt.Errorf("you must resolve the conflicts before continuing")
+			return false, fmt.Errorf(messages.ContinueUnresolvedConflicts)
 		}
 		return true, runstate.Execute(runState, run, connector)
 	case dialog.ResponseTypeAbort:
@@ -49,6 +50,6 @@ func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector) (qu
 	case dialog.ResponseTypeQuit:
 		return true, nil
 	default:
-		return false, fmt.Errorf("unknown response: %s", response)
+		return false, fmt.Errorf(messages.DialogUnexpectedResponse, response)
 	}
 }

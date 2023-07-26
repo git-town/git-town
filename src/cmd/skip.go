@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
+	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/spf13/cobra"
 )
@@ -48,13 +49,13 @@ func skip(debug bool) error {
 	}
 	runState, err := runstate.Load(&run.Backend)
 	if err != nil {
-		return fmt.Errorf("cannot load previous run state: %w", err)
+		return fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
 	if runState == nil || !runState.IsUnfinished() {
-		return fmt.Errorf("nothing to skip")
+		return fmt.Errorf(messages.SkipNothingToDo)
 	}
 	if !runState.UnfinishedDetails.CanSkip {
-		return fmt.Errorf("cannot skip branch that resulted in conflicts")
+		return fmt.Errorf(messages.SkipBranchHasConflicts)
 	}
 	skipRunState := runState.CreateSkipRunState()
 	return runstate.Execute(&skipRunState, &run, nil)
