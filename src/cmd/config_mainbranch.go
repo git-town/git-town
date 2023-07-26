@@ -40,10 +40,9 @@ func configureMainBranch(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 false,
 		HandleUnfinishedState: false,
-		ValidateIsConfigured:  false,
 		ValidateIsOnline:      false,
 		ValidateNoOpenChanges: false,
 	})

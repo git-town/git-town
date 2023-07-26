@@ -33,16 +33,18 @@ func setup(debug bool) error {
 	if err != nil {
 		return err
 	}
-	allBranches, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
 		Fetch:                 false,
 		HandleUnfinishedState: false,
-		ValidateIsConfigured:  false,
 		ValidateIsOnline:      false,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
 	}
+	allBranches, _, err := execute.LoadBranches(&run, execute.LoadBranchesArgs{
+		ValidateIsConfigured: false,
+	})
 	mainBranch, err := validate.EnterMainBranch(&run.Backend)
 	if err != nil {
 		return err
