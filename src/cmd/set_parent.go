@@ -28,21 +28,22 @@ func setParentCommand() *cobra.Command {
 }
 
 func setParent(debug bool) error {
-	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:                 debug,
-		DryRun:                false,
-		HandleUnfinishedState: true,
-		OmitBranchNames:       false,
-		ValidateGitversion:    true,
-		ValidateIsConfigured:  true,
-		ValidateIsRepository:  true,
-		ValidateIsOnline:      false,
+	run, err := execute.LoadProdRunner(execute.LoadArgs{
+		Debug:           debug,
+		DryRun:          false,
+		OmitBranchNames: false,
 	})
-	if err != nil || exit {
+	if err != nil {
 		return err
 	}
-	currentBranch, err := run.Backend.CurrentBranch()
-	if err != nil {
+	_, currentBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+		Fetch:                 false,
+		HandleUnfinishedState: true,
+		ValidateIsConfigured:  true,
+		ValidateIsOnline:      false,
+		ValidateNoOpenChanges: false,
+	})
+	if err != nil || exit {
 		return err
 	}
 	if !run.Config.IsFeatureBranch(currentBranch) {

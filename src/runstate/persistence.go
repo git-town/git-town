@@ -83,10 +83,7 @@ func PersistenceFilePath(repoDir string) (string, error) {
 	}
 	persistenceDir := filepath.Join(configDir, "git-town", "runstate")
 	filename := SanitizePath(repoDir)
-	if err != nil {
-		return "", err
-	}
-	return filepath.Join(persistenceDir, filename+".json"), nil
+	return filepath.Join(persistenceDir, filename+".json"), err
 }
 
 func SanitizePath(dir string) string {

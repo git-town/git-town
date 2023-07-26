@@ -3,7 +3,7 @@ Feature: customize the parent for the new feature branch
 
   Background:
     Given the current branch is "existing"
-    When I run "git-town hack --prompt new" and answer the prompts:
+    When I run "git-town hack new --prompt" and answer the prompts:
       | PROMPT                                         | ANSWER        |
       | Please specify the parent branch of 'new'      | [DOWN][ENTER] |
       | Please specify the parent branch of 'existing' | [ENTER]       |
@@ -12,7 +12,10 @@ Feature: customize the parent for the new feature branch
     Then it runs the commands
       | BRANCH   | COMMAND                     |
       | existing | git fetch --prune --tags    |
-      |          | git merge --no-edit main    |
+      |          | git checkout main           |
+      | main     | git rebase origin/main      |
+      |          | git checkout existing       |
+      | existing | git merge --no-edit main    |
       |          | git push -u origin existing |
       |          | git branch new existing     |
       |          | git checkout new            |
@@ -29,6 +32,8 @@ Feature: customize the parent for the new feature branch
       | new      | git checkout existing     |
       | existing | git branch -D new         |
       |          | git push origin :existing |
+      |          | git checkout main         |
+      | main     | git checkout existing     |
     And the current branch is now "existing"
     And this branch lineage exists now
       | BRANCH   | PARENT |

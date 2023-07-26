@@ -109,7 +109,7 @@ func NewGithubConnector(gitConfig gitTownConfig, log logFn) (*GitHubConnector, e
 			Organization: url.Org,
 			Repository:   url.Repo,
 		},
-		MainBranch: gitConfig.MainBranch(),
+		MainBranch: gitConfig.MainBranch(), // TODO: inject mainBranch as argument
 		log:        log,
 	}, nil
 }

@@ -47,15 +47,20 @@ func perennialBranchesCmd() *cobra.Command {
 }
 
 func displayPerennialBranches(debug bool) error {
-	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
-		OmitBranchNames:       true,
-		Debug:                 debug,
-		DryRun:                false,
+	run, err := execute.LoadProdRunner(execute.LoadArgs{
+		Debug:           debug,
+		DryRun:          false,
+		OmitBranchNames: true,
+	})
+	if err != nil {
+		return err
+	}
+	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+		Fetch:                 false,
 		HandleUnfinishedState: false,
-		ValidateGitversion:    true,
 		ValidateIsConfigured:  false,
 		ValidateIsOnline:      false,
-		ValidateIsRepository:  true,
+		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
@@ -65,19 +70,24 @@ func displayPerennialBranches(debug bool) error {
 }
 
 func updatePerennialBranches(debug bool) error {
-	run, exit, err := execute.LoadProdRunner(execute.LoadArgs{
-		OmitBranchNames:       true,
-		Debug:                 debug,
-		DryRun:                false,
+	run, err := execute.LoadProdRunner(execute.LoadArgs{
+		Debug:           debug,
+		DryRun:          false,
+		OmitBranchNames: true,
+	})
+	if err != nil {
+		return err
+	}
+	allBranches, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+		Fetch:                 false,
 		HandleUnfinishedState: false,
-		ValidateGitversion:    true,
 		ValidateIsConfigured:  false,
 		ValidateIsOnline:      false,
-		ValidateIsRepository:  true,
+		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
 	}
 	mainBranch := run.Config.MainBranch()
-	return validate.EnterPerennialBranches(&run.Backend, mainBranch)
+	return validate.EnterPerennialBranches(&run.Backend, allBranches, mainBranch)
 }

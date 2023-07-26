@@ -3,26 +3,30 @@ package git_test
 import (
 	"testing"
 
+	"github.com/git-town/git-town/v9/src/cache"
 	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/test/git"
+	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/statistics"
+	"github.com/git-town/git-town/v9/src/subshell"
+	testgit "github.com/git-town/git-town/v9/test/git"
 	"github.com/git-town/git-town/v9/test/testruntime"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestRunner(t *testing.T) {
+func TestBackendCommands(t *testing.T) {
 	t.Parallel()
 
 	t.Run("BranchAuthors", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		runtime.CreateBranch("branch", "initial")
-		runtime.CreateCommit(git.Commit{
+		runtime.CreateCommit(testgit.Commit{
 			Branch:      "branch",
 			FileName:    "file1",
 			FileContent: "file1",
 			Message:     "first commit",
 		})
-		runtime.CreateCommit(git.Commit{
+		runtime.CreateCommit(testgit.Commit{
 			Branch:      "branch",
 			FileName:    "file2",
 			FileContent: "file2",
@@ -54,7 +58,10 @@ func TestRunner(t *testing.T) {
 		assert.NoError(t, err)
 		runtime.Config.Reload()
 		assert.True(t, runtime.Config.IsFeatureBranch("f1"))
-		assert.Equal(t, []string{"main"}, runtime.Config.Lineage().Ancestors("f1"))
+		lineageHave := runtime.Config.Lineage()
+		lineageWant := config.Lineage{}
+		lineageWant["f1"] = "main"
+		assert.Equal(t, lineageWant, lineageHave)
 	})
 
 	t.Run(".CurrentBranch()", func(t *testing.T) {
@@ -123,25 +130,6 @@ func TestRunner(t *testing.T) {
 		assert.False(t, has)
 	})
 
-	t.Run(".HasTrackingBranch()", func(t *testing.T) {
-		t.Parallel()
-		origin := testruntime.Create(t)
-		origin.CreateBranch("b1", "initial")
-		repoDir := t.TempDir()
-		devRepo := testruntime.Clone(origin.TestRunner, repoDir)
-		devRepo.CheckoutBranch("b1")
-		devRepo.CreateBranch("b2", "initial")
-		has, err := devRepo.Backend.HasTrackingBranch("b1")
-		assert.NoError(t, err)
-		assert.True(t, has)
-		has, err = devRepo.Backend.HasTrackingBranch("b2")
-		assert.NoError(t, err)
-		assert.False(t, has)
-		has, err = devRepo.Backend.HasTrackingBranch("b3")
-		assert.NoError(t, err)
-		assert.False(t, has)
-	})
-
 	t.Run(".LocalBranchesMainFirst()", func(t *testing.T) {
 		t.Parallel()
 		origin := testruntime.Create(t)
@@ -156,18 +144,117 @@ func TestRunner(t *testing.T) {
 		assert.Equal(t, []string{"initial", "b1", "b2"}, branches)
 	})
 
-	t.Run(".LocalAndOriginBranches()", func(t *testing.T) {
+	t.Run("ParseVerboseBranchesOutput", func(t *testing.T) {
 		t.Parallel()
-		origin := testruntime.Create(t)
-		repoDir := t.TempDir()
-		runner := testruntime.Clone(origin.TestRunner, repoDir)
-		runner.CreateBranch("b1", "initial")
-		runner.CreateBranch("b2", "initial")
-		origin.CreateBranch("b3", "initial")
-		runner.Fetch()
-		branches, err := runner.Backend.LocalAndOriginBranches("initial")
-		assert.NoError(t, err)
-		assert.Equal(t, []string{"initial", "b1", "b2", "b3"}, branches)
+		t.Run("recognizes branches that are ahead of their remote branch", func(t *testing.T) {
+			give := `* branch-1                     01a7eded [origin/branch-1: ahead 1] Commit message 1`
+			want := git.BranchesSyncStatus{
+				git.BranchSyncStatus{
+					Name:       "branch-1",
+					SyncStatus: git.SyncStatusAhead,
+				},
+			}
+			have, currentBranch := git.ParseVerboseBranchesOutput(give)
+			assert.Equal(t, want, have)
+			assert.Equal(t, "branch-1", currentBranch)
+		})
+		t.Run("recognizes branches that are behind their remote branch", func(t *testing.T) {
+			give := `* branch-1                     01a7eded [origin/branch-1: behind 2] Commit message 1`
+			want := git.BranchesSyncStatus{
+				git.BranchSyncStatus{
+					Name:       "branch-1",
+					SyncStatus: git.SyncStatusBehind,
+				},
+			}
+			have, currentBranch := git.ParseVerboseBranchesOutput(give)
+			assert.Equal(t, want, have)
+			assert.Equal(t, "branch-1", currentBranch)
+		})
+		t.Run("recognizes branches that are in sync with their remote branch", func(t *testing.T) {
+			give := `* branch-1                     01a7eded [origin/branch-1] Commit message 1`
+			want := git.BranchesSyncStatus{
+				git.BranchSyncStatus{
+					Name:       "branch-1",
+					SyncStatus: git.SyncStatusUpToDate,
+				},
+			}
+			have, currentBranch := git.ParseVerboseBranchesOutput(give)
+			assert.Equal(t, want, have)
+			assert.Equal(t, "branch-1", currentBranch)
+		})
+		t.Run("recognizes remote-only branches", func(t *testing.T) {
+			give := `  remotes/origin/branch-1                     01a7eded Commit message 1`
+			want := git.BranchesSyncStatus{
+				git.BranchSyncStatus{
+					Name:       "branch-1",
+					SyncStatus: git.SyncStatusRemoteOnly,
+				},
+			}
+			have, currentBranch := git.ParseVerboseBranchesOutput(give)
+			assert.Equal(t, want, have)
+			assert.Equal(t, "", currentBranch)
+		})
+		t.Run("recognizes local-only branches", func(t *testing.T) {
+			give := `* branch-1                     01a7eded Commit message 1`
+			want := git.BranchesSyncStatus{
+				git.BranchSyncStatus{
+					Name:       "branch-1",
+					SyncStatus: git.SyncStatusLocalOnly,
+				},
+			}
+			have, currentBranch := git.ParseVerboseBranchesOutput(give)
+			assert.Equal(t, want, have)
+			assert.Equal(t, "branch-1", currentBranch)
+		})
+		t.Run("recognizes branches that got deleted at the remote", func(t *testing.T) {
+			give := `* branch-1                     01a7eded [origin/branch-1: gone] Commit message 1`
+			want := git.BranchesSyncStatus{
+				git.BranchSyncStatus{
+					Name:       "branch-1",
+					SyncStatus: git.SyncStatusDeletedAtRemote,
+				},
+			}
+			have, currentBranch := git.ParseVerboseBranchesOutput(give)
+			assert.Equal(t, want, have)
+			assert.Equal(t, "branch-1", currentBranch)
+		})
+		t.Run("complex example", func(t *testing.T) {
+			give := `
+  branch-1                     01a7eded [origin/branch-1: ahead 1] Commit message 1a
+* branch-2                     da796a69 [origin/branch-2] Commit message 2
+  branch-3                     f4ebec0a [origin/branch-3: behind 2] Commit message 3a
+  main                         024df944 [origin/main] Commit message on main (#1234)
+  branch-4                     e4d6bc09 [origin/branch-4: gone] Commit message 4
+  remotes/origin/branch-1      307a7bf4 Commit message 1b
+  remotes/origin/branch-2      da796a69 Commit message 2
+  remotes/origin/branch-3      bc39378a Commit message 3b
+`[1:]
+			want := git.BranchesSyncStatus{
+				git.BranchSyncStatus{
+					Name:       "branch-1",
+					SyncStatus: git.SyncStatusAhead,
+				},
+				git.BranchSyncStatus{
+					Name:       "branch-2",
+					SyncStatus: git.SyncStatusUpToDate,
+				},
+				git.BranchSyncStatus{
+					Name:       "branch-3",
+					SyncStatus: git.SyncStatusBehind,
+				},
+				git.BranchSyncStatus{
+					Name:       "main",
+					SyncStatus: git.SyncStatusUpToDate,
+				},
+				git.BranchSyncStatus{
+					Name:       "branch-4",
+					SyncStatus: git.SyncStatusDeletedAtRemote,
+				},
+			}
+			have, currentBranch := git.ParseVerboseBranchesOutput(give)
+			assert.Equal(t, want, have)
+			assert.Equal(t, "branch-2", currentBranch)
+		})
 	})
 
 	t.Run(".PreviouslyCheckedOutBranch()", func(t *testing.T) {
@@ -182,20 +269,6 @@ func TestRunner(t *testing.T) {
 		assert.Equal(t, "feature1", have)
 	})
 
-	t.Run(".RemoteBranches()", func(t *testing.T) {
-		t.Parallel()
-		origin := testruntime.Create(t)
-		repoDir := t.TempDir()
-		runner := testruntime.Clone(origin.TestRunner, repoDir)
-		runner.CreateBranch("b1", "initial")
-		runner.CreateBranch("b2", "initial")
-		origin.CreateBranch("b3", "initial")
-		runner.Fetch()
-		branches, err := runner.Backend.RemoteBranches()
-		assert.NoError(t, err)
-		assert.Equal(t, []string{"origin/b3", "origin/initial"}, branches)
-	})
-
 	t.Run(".Remotes()", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
@@ -204,5 +277,34 @@ func TestRunner(t *testing.T) {
 		remotes, err := runtime.Backend.Remotes()
 		assert.NoError(t, err)
 		assert.Equal(t, []string{config.OriginRemote}, remotes)
+	})
+
+	t.Run(".RootDirectory", func(t *testing.T) {
+		t.Parallel()
+		t.Run("inside a Git repo", func(t *testing.T) {
+			t.Parallel()
+			runtime := testruntime.Create(t)
+			have := runtime.BackendCommands.RootDirectory()
+			assert.Positive(t, len(have))
+		})
+		t.Run("outside a Git repo", func(t *testing.T) {
+			t.Parallel()
+			dir := t.TempDir()
+			runner := subshell.BackendRunner{
+				Dir:     &dir,
+				Verbose: false,
+				Stats:   &statistics.None{},
+			}
+			cmds := git.BackendCommands{
+				BackendRunner:      runner,
+				Config:             nil,
+				CurrentBranchCache: &cache.String{},
+				RemoteBranchCache:  &cache.Strings{},
+				RemotesCache:       &cache.Strings{},
+				RootDirCache:       &cache.String{},
+			}
+			have := cmds.RootDirectory()
+			assert.Empty(t, have)
+		})
 	})
 }

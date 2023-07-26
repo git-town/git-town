@@ -10,6 +10,9 @@ Feature: ask for missing parent information
       | old    | git fetch --prune --tags |
       |        | git checkout main        |
       | main   | git rebase origin/main   |
+      |        | git checkout old         |
+      | old    | git merge --no-edit main |
+      |        | git push -u origin old   |
       |        | git branch new main      |
       |        | git checkout new         |
     And this branch lineage exists now

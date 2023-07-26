@@ -11,11 +11,8 @@ import (
 
 // EnterPerennialBranches lets the user update the perennial branches.
 // This includes asking the user and updating the respective settings based on the user selection.
-func EnterPerennialBranches(backend *git.BackendCommands, mainBranch string) error {
-	localBranchesWithoutMain, err := backend.LocalBranchesWithoutMain(mainBranch)
-	if err != nil {
-		return err
-	}
+func EnterPerennialBranches(backend *git.BackendCommands, allBranches git.BranchesSyncStatus, mainBranch string) error {
+	localBranchesWithoutMain := allBranches.LocalBranches().Remove(mainBranch).BranchNames()
 	oldPerennialBranches := backend.Config.PerennialBranches()
 	newPerennialBranches, err := dialog.MultiSelect(dialog.MultiSelectArgs{
 		Options:  localBranchesWithoutMain,

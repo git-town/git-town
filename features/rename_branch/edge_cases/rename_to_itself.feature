@@ -5,7 +5,9 @@ Feature: rename a branch to itself
 
   Scenario: without force
     When I run "git-town rename-branch old"
-    Then it runs no commands
+    Then it runs the commands
+      | BRANCH | COMMAND                  |
+      | old    | git fetch --prune --tags |
     And it prints the error:
       """
       cannot rename branch to current name
@@ -13,7 +15,9 @@ Feature: rename a branch to itself
 
   Scenario: with force
     When I run "git-town rename-branch --force old"
-    Then it runs no commands
+    Then it runs the commands
+      | BRANCH | COMMAND                  |
+      | old    | git fetch --prune --tags |
     And it prints the error:
       """
       cannot rename branch to current name
