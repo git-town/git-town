@@ -87,7 +87,8 @@ func determineKillConfig(args []string, run *git.ProdRunner, allBranches git.Bra
 	if len(args) > 0 {
 		targetBranchName = args[0]
 	}
-	if !run.Config.IsFeatureBranch(targetBranchName) {
+	branchDurations := run.Config.BranchDurations()
+	if !branchDurations.IsFeatureBranch(targetBranchName) {
 		return nil, fmt.Errorf(messages.KillOnlyFeatureBranches)
 	}
 	targetBranch := allBranches.Lookup(targetBranchName)
@@ -95,7 +96,7 @@ func determineKillConfig(args []string, run *git.ProdRunner, allBranches git.Bra
 		return nil, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
 	if targetBranch.IsLocal() {
-		err := validate.KnowsBranchAncestors(targetBranchName, mainBranch, &run.Backend, allBranches, run.Config.Lineage())
+		err := validate.KnowsBranchAncestors(targetBranchName, mainBranch, &run.Backend, allBranches, run.Config.Lineage(), branchDurations)
 		if err != nil {
 			return nil, err
 		}

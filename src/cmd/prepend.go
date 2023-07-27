@@ -68,7 +68,7 @@ func prepend(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	stepList, err := prependStepList(config, &repo.Runner.Config)
+	stepList, err := prependStepList(config)
 	if err != nil {
 		return err
 	}
@@ -80,6 +80,7 @@ func prepend(args []string, debug bool) error {
 }
 
 type prependConfig struct {
+	branchDurations     config.BranchDurations
 	branchesToSync      git.BranchesSyncStatus
 	hasOpenChanges      bool
 	hasOrigin           bool
@@ -118,10 +119,11 @@ func determinePrependConfig(args []string, run *git.ProdRunner, allBranches git.
 	if allBranches.Contains(targetBranch) {
 		return nil, fmt.Errorf(messages.BranchAlreadyExists, targetBranch)
 	}
-	if !run.Config.IsFeatureBranch(initialBranch) {
+	branchDurations := run.Config.BranchDurations()
+	if !branchDurations.IsFeatureBranch(initialBranch) {
 		return nil, fmt.Errorf(messages.SetParentNoFeatureBranch, initialBranch)
 	}
-	err := validate.KnowsBranchAncestors(initialBranch, mainBranch, &run.Backend, allBranches, run.Config.Lineage())
+	err := validate.KnowsBranchAncestors(initialBranch, mainBranch, &run.Backend, allBranches, run.Config.Lineage(), branchDurations)
 	if err != nil {
 		return nil, err
 	}
@@ -129,6 +131,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner, allBranches git.
 	branchNamesToSync := lineage.BranchAndAncestors(initialBranch)
 	branchesToSync, err := allBranches.Select(branchNamesToSync)
 	return &prependConfig{
+		branchDurations:     branchDurations,
 		branchesToSync:      branchesToSync,
 		hasOpenChanges:      hasOpenChanges,
 		hasOrigin:           hasOrigin,
@@ -148,12 +151,12 @@ func determinePrependConfig(args []string, run *git.ProdRunner, allBranches git.
 	}, err
 }
 
-func prependStepList(config *prependConfig, repoConfig *git.RepoConfig) (runstate.StepList, error) {
+func prependStepList(config *prependConfig) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branchToSync := range config.branchesToSync {
 		updateBranchSteps(&list, updateBranchStepsArgs{
 			branch:             branchToSync,
-			config:             repoConfig,
+			branchDurations:    config.branchDurations,
 			hasOrigin:          config.hasOrigin,
 			hasUpstream:        config.hasUpstream,
 			isOffline:          config.isOffline,

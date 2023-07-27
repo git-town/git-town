@@ -67,7 +67,7 @@ func hack(args []string, promptForParent, debug bool) error {
 	if err != nil {
 		return err
 	}
-	stepList, err := appendStepList(config, &repo.Runner.Config)
+	stepList, err := appendStepList(config)
 	if err != nil {
 		return err
 	}
@@ -84,7 +84,8 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 	hasOpenChanges := fc.Bool(run.Backend.HasOpenChanges())
 	targetBranch := args[0]
 	mainBranch := run.Config.MainBranch()
-	parentBranch := fc.String(determineParentBranch(targetBranch, promptForParent, run, mainBranch, allBranches, run.Config.Lineage()))
+	branchDurations := run.Config.BranchDurations()
+	parentBranch := fc.String(determineParentBranch(targetBranch, promptForParent, run, mainBranch, allBranches, run.Config.Lineage(), branchDurations))
 	hasOrigin := fc.Bool(run.Backend.HasOrigin())
 	shouldNewBranchPush := fc.Bool(run.Config.ShouldNewBranchPush())
 	isOffline := fc.Bool(run.Config.IsOffline())
@@ -98,6 +99,7 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 	shouldSyncUpstream := fc.Bool(run.Config.ShouldSyncUpstream())
 	hasUpstream := fc.Bool(run.Backend.HasUpstream())
 	return &appendConfig{
+		branchDurations:     branchDurations,
 		branchesToSync:      branchesToSync,
 		targetBranch:        targetBranch,
 		parentBranch:        parentBranch,
@@ -117,13 +119,13 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 	}, fc.Err
 }
 
-func determineParentBranch(targetBranch string, promptForParent bool, run *git.ProdRunner, mainBranch string, allBranches git.BranchesSyncStatus, lineage config.Lineage) (string, error) {
+func determineParentBranch(targetBranch string, promptForParent bool, run *git.ProdRunner, mainBranch string, allBranches git.BranchesSyncStatus, lineage config.Lineage, branchDurations config.BranchDurations) (string, error) {
 	if promptForParent {
 		parentBranch, err := validate.EnterParent(targetBranch, mainBranch, lineage, allBranches)
 		if err != nil {
 			return "", err
 		}
-		err = validate.KnowsBranchAncestors(parentBranch, mainBranch, &run.Backend, allBranches, lineage)
+		err = validate.KnowsBranchAncestors(parentBranch, mainBranch, &run.Backend, allBranches, lineage, branchDurations)
 		if err != nil {
 			return "", err
 		}

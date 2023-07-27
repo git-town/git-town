@@ -80,7 +80,7 @@ func newPullRequest(debug bool) error {
 	if connector == nil {
 		return hosting.UnsupportedServiceError()
 	}
-	stepList, err := newPullRequestStepList(config, &repo.Runner.Config)
+	stepList, err := newPullRequestStepList(config)
 	if err != nil {
 		return err
 	}
@@ -92,7 +92,8 @@ func newPullRequest(debug bool) error {
 }
 
 type newPullRequestConfig struct {
-	BranchesToSync     git.BranchesSyncStatus
+	branchesToSync     git.BranchesSyncStatus
+	branchDurations    config.BranchDurations
 	hasOpenChanges     bool
 	hasOrigin          bool
 	hasUpstream        bool
@@ -128,7 +129,8 @@ func determineNewPullRequestConfig(run *git.ProdRunner, allBranches git.Branches
 	}
 	mainBranch := run.Config.MainBranch()
 	lineage := run.Config.Lineage()
-	err = validate.KnowsBranchAncestors(initialBranch, mainBranch, &run.Backend, allBranches, lineage)
+	branchDurations := run.Config.BranchDurations()
+	err = validate.KnowsBranchAncestors(initialBranch, mainBranch, &run.Backend, allBranches, lineage, branchDurations)
 	if err != nil {
 		return nil, err
 	}
@@ -155,7 +157,8 @@ func determineNewPullRequestConfig(run *git.ProdRunner, allBranches git.Branches
 	branchNamesToSync := lineage.BranchAndAncestors(initialBranch)
 	branchesToSync, err := allBranches.Select(branchNamesToSync)
 	return &newPullRequestConfig{
-		BranchesToSync:     branchesToSync,
+		branchDurations:    branchDurations,
+		branchesToSync:     branchesToSync,
 		hasOpenChanges:     hasOpenChanges,
 		hasOrigin:          hasOrigin,
 		hasUpstream:        hasUpstream,
@@ -171,12 +174,12 @@ func determineNewPullRequestConfig(run *git.ProdRunner, allBranches git.Branches
 	}, err
 }
 
-func newPullRequestStepList(config *newPullRequestConfig, repoConfig *git.RepoConfig) (runstate.StepList, error) {
+func newPullRequestStepList(config *newPullRequestConfig) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
-	for _, branch := range config.BranchesToSync {
+	for _, branch := range config.branchesToSync {
 		updateBranchSteps(&list, updateBranchStepsArgs{
 			branch:             branch,
-			config:             repoConfig,
+			branchDurations:    config.branchDurations,
 			hasOrigin:          config.hasOrigin,
 			hasUpstream:        config.hasUpstream,
 			isOffline:          config.isOffline,

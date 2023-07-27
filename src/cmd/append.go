@@ -65,7 +65,7 @@ func runAppend(arg string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	stepList, err := appendStepList(config, &repo.Runner.Config)
+	stepList, err := appendStepList(config)
 	if err != nil {
 		return err
 	}
@@ -77,6 +77,7 @@ func runAppend(arg string, debug bool) error {
 }
 
 type appendConfig struct {
+	branchDurations     config.BranchDurations
 	branchesToSync      git.BranchesSyncStatus
 	hasOpenChanges      bool
 	hasOrigin           bool
@@ -111,13 +112,15 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner, allBranches
 	if allBranches.Contains(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExists, targetBranch)
 	}
-	fc.Check(validate.KnowsBranchAncestors(initialBranch, mainBranch, &run.Backend, allBranches, run.Config.Lineage()))
+	branchDurations := run.Config.BranchDurations()
+	fc.Check(validate.KnowsBranchAncestors(initialBranch, mainBranch, &run.Backend, allBranches, run.Config.Lineage(), branchDurations))
 	lineage := run.Config.Lineage() // refresh lineage after ancestry changes
 	branchNamesToSync := lineage.BranchAndAncestors(initialBranch)
 	branchesToSync := fc.BranchesSyncStatus(allBranches.Select(branchNamesToSync))
 	syncStrategy := fc.SyncStrategy(run.Config.SyncStrategy())
 	shouldSyncUpstream := fc.Bool(run.Config.ShouldSyncUpstream())
 	return &appendConfig{
+		branchDurations:     branchDurations,
 		branchesToSync:      branchesToSync,
 		hasOpenChanges:      hasOpenChanges,
 		hasOrigin:           hasOrigin,
@@ -137,12 +140,12 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner, allBranches
 	}, fc.Err
 }
 
-func appendStepList(config *appendConfig, repoConfig *git.RepoConfig) (runstate.StepList, error) {
+func appendStepList(config *appendConfig) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.branchesToSync {
 		updateBranchSteps(&list, updateBranchStepsArgs{
 			branch:             branch,
-			config:             repoConfig,
+			branchDurations:    config.branchDurations,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
 			hasOrigin:          config.hasOrigin,

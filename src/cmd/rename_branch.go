@@ -86,15 +86,15 @@ func renameBranch(args []string, force, debug bool) error {
 }
 
 type renameBranchConfig struct {
-	initialBranch            string
-	isInitialBranchPerennial bool
-	isOffline                bool
-	lineage                  config.Lineage
-	mainBranch               string
-	newBranch                string
-	noPushHook               bool
-	oldBranch                git.BranchSyncStatus
-	previousBranch           string
+	branchDurations config.BranchDurations
+	initialBranch   string
+	isOffline       bool
+	lineage         config.Lineage
+	mainBranch      string
+	newBranch       string
+	noPushHook      bool
+	oldBranch       git.BranchSyncStatus
+	previousBranch  string
 }
 
 func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string, isOffline bool) (*renameBranchConfig, error) {
@@ -116,8 +116,9 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 	if run.Config.IsMainBranch(oldBranchName) {
 		return nil, fmt.Errorf(messages.RenameMainBranch)
 	}
+	branchDurations := run.Config.BranchDurations()
 	if !forceFlag {
-		if run.Config.IsPerennialBranch(oldBranchName) {
+		if branchDurations.IsPerennialBranch(oldBranchName) {
 			return nil, fmt.Errorf(messages.RenamePerennialBranchWarning, oldBranchName)
 		}
 	}
@@ -137,15 +138,15 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 	}
 	lineage := run.Config.Lineage()
 	return &renameBranchConfig{
-		initialBranch:            initialBranch,
-		isInitialBranchPerennial: run.Config.IsPerennialBranch(initialBranch),
-		isOffline:                isOffline,
-		lineage:                  lineage,
-		mainBranch:               mainBranch,
-		newBranch:                newBranchName,
-		noPushHook:               !pushHook,
-		oldBranch:                *oldBranch,
-		previousBranch:           previousBranch,
+		branchDurations: branchDurations,
+		initialBranch:   initialBranch,
+		isOffline:       isOffline,
+		lineage:         lineage,
+		mainBranch:      mainBranch,
+		newBranch:       newBranchName,
+		noPushHook:      !pushHook,
+		oldBranch:       *oldBranch,
+		previousBranch:  previousBranch,
 	}, err
 }
 
@@ -155,7 +156,7 @@ func renameBranchStepList(config *renameBranchConfig) (runstate.StepList, error)
 	if config.initialBranch == config.oldBranch.Name {
 		result.Append(&steps.CheckoutStep{Branch: config.newBranch})
 	}
-	if config.isInitialBranchPerennial {
+	if config.branchDurations.IsPerennialBranch(config.initialBranch) {
 		result.Append(&steps.RemoveFromPerennialBranchesStep{Branch: config.oldBranch.Name})
 		result.Append(&steps.AddToPerennialBranchesStep{Branch: config.newBranch})
 	} else {

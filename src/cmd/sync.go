@@ -76,7 +76,7 @@ func sync(all, dryRun, debug bool) error {
 	if err != nil {
 		return err
 	}
-	stepList, err := syncBranchesSteps(config, &repo.Runner.Config)
+	stepList, err := syncBranchesSteps(config)
 	if err != nil {
 		return err
 	}
@@ -88,6 +88,7 @@ func sync(all, dryRun, debug bool) error {
 }
 
 type syncConfig struct {
+	branchDurations    config.BranchDurations
 	branchesToSync     git.BranchesSyncStatus
 	hasOpenChanges     bool
 	hasOrigin          bool
@@ -118,21 +119,24 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranches git.Bran
 	var branchNamesToSync []string
 	var shouldPushTags bool
 	lineage := run.Config.Lineage()
+	branchDurations := run.Config.BranchDurations()
 	if allFlag {
 		localBranches := allBranches.LocalBranches()
-		err = validate.KnowsBranchesAncestors(localBranches, mainBranch, &run.Backend, lineage)
+		err = validate.KnowsBranchesAncestors(localBranches, mainBranch, &run.Backend, lineage, branchDurations)
 		if err != nil {
 			return nil, err
 		}
+		branchDurations = run.Config.BranchDurations()
 		branchNamesToSync = localBranches.BranchNames()
 		shouldPushTags = true
 	} else {
-		err = validate.KnowsBranchAncestors(initialBranch, mainBranch, &run.Backend, allBranches, lineage)
+		err = validate.KnowsBranchAncestors(initialBranch, mainBranch, &run.Backend, allBranches, lineage, branchDurations)
 		if err != nil {
 			return nil, err
 		}
 		branchNamesToSync = []string{initialBranch}
-		shouldPushTags = !run.Config.IsFeatureBranch(initialBranch)
+		branchDurations = run.Config.BranchDurations()
+		shouldPushTags = !branchDurations.IsFeatureBranch(initialBranch)
 	}
 	lineage = run.Config.Lineage() // reload after ancestry change
 	allBranchNamesToSync := lineage.BranchesAndAncestors(branchNamesToSync)
@@ -158,6 +162,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranches git.Bran
 	}
 	branchesToSync, err := allBranches.Select(allBranchNamesToSync)
 	return &syncConfig{
+		branchDurations:    branchDurations,
 		branchesToSync:     branchesToSync,
 		hasOpenChanges:     hasOpenChanges,
 		hasOrigin:          hasOrigin,
@@ -176,12 +181,12 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranches git.Bran
 }
 
 // syncBranchesSteps provides the step list for the "git sync" command.
-func syncBranchesSteps(config *syncConfig, repoConfig *git.RepoConfig) (runstate.StepList, error) {
+func syncBranchesSteps(config *syncConfig) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.branchesToSync {
 		updateBranchSteps(&list, updateBranchStepsArgs{
 			branch:             branch,
-			config:             repoConfig,
+			branchDurations:    config.branchDurations,
 			hasOrigin:          config.hasOrigin,
 			hasUpstream:        config.hasUpstream,
 			isOffline:          config.isOffline,
@@ -210,7 +215,7 @@ func syncBranchesSteps(config *syncConfig, repoConfig *git.RepoConfig) (runstate
 
 // updateBranchSteps provides the steps to sync a particular branch.
 func updateBranchSteps(list *runstate.StepListBuilder, args updateBranchStepsArgs) {
-	isFeatureBranch := args.config.IsFeatureBranch(args.branch.Name)
+	isFeatureBranch := args.branchDurations.IsFeatureBranch(args.branch.Name)
 	if !args.hasOrigin && !isFeatureBranch {
 		return
 	}
@@ -241,7 +246,7 @@ func updateBranchSteps(list *runstate.StepListBuilder, args updateBranchStepsArg
 
 type updateBranchStepsArgs struct {
 	branch             git.BranchSyncStatus
-	config             *git.RepoConfig
+	branchDurations    config.BranchDurations
 	hasOrigin          bool
 	hasUpstream        bool
 	isOffline          bool

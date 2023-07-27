@@ -109,6 +109,7 @@ func ship(args []string, message string, debug bool) error {
 }
 
 type shipConfig struct {
+	branchDurations          config.BranchDurations
 	branchToShip             git.BranchSyncStatus
 	targetBranch             git.BranchSyncStatus
 	canShipViaAPI            bool
@@ -167,15 +168,16 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 			return nil, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
 		}
 	}
-	if !run.Config.IsFeatureBranch(branchNameToShip) {
+	branchDurations := run.Config.BranchDurations()
+	if !branchDurations.IsFeatureBranch(branchNameToShip) {
 		return nil, fmt.Errorf(messages.ShipNoFeatureBranch, branchNameToShip)
 	}
-	err = validate.KnowsBranchAncestors(branchNameToShip, mainBranch, &run.Backend, allBranches, run.Config.Lineage())
+	err = validate.KnowsBranchAncestors(branchNameToShip, mainBranch, &run.Backend, allBranches, run.Config.Lineage(), branchDurations)
 	if err != nil {
 		return nil, err
 	}
 	lineage := run.Config.Lineage()
-	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, &run.Config, lineage)
+	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, branchDurations, lineage)
 	if err != nil {
 		return nil, err
 	}
@@ -219,6 +221,7 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 		}
 	}
 	return &shipConfig{
+		branchDurations:          branchDurations,
 		targetBranch:             *targetBranch,
 		branchToShip:             *branchToShip,
 		canShipViaAPI:            canShipViaAPI,
@@ -243,9 +246,9 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 	}, nil
 }
 
-func ensureParentBranchIsMainOrPerennialBranch(branch string, config *git.RepoConfig, lineage config.Lineage) error {
+func ensureParentBranchIsMainOrPerennialBranch(branch string, branchDurations config.BranchDurations, lineage config.Lineage) error {
 	parentBranch := lineage.Parent(branch)
-	if !config.IsMainBranch(parentBranch) && !config.IsPerennialBranch(parentBranch) {
+	if !branchDurations.IsMainBranch(parentBranch) && !branchDurations.IsPerennialBranch(parentBranch) {
 		ancestors := lineage.Ancestors(branch)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
 		oldestAncestor := ancestorsWithoutMainOrPerennial[0]
@@ -260,7 +263,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 	// sync the parent branch
 	updateBranchSteps(&list, updateBranchStepsArgs{
 		branch:             config.targetBranch,
-		config:             &run.Config,
+		branchDurations:    config.branchDurations,
 		hasOrigin:          config.hasOrigin,
 		hasUpstream:        config.hasUpstream,
 		isOffline:          config.isOffline,
@@ -275,7 +278,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 	// sync the branch to ship locally only
 	updateBranchSteps(&list, updateBranchStepsArgs{
 		branch:             config.branchToShip,
-		config:             &run.Config,
+		branchDurations:    config.branchDurations,
 		hasOrigin:          config.hasOrigin,
 		hasUpstream:        config.hasUpstream,
 		isOffline:          config.isOffline,
