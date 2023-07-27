@@ -101,7 +101,7 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 	shouldSyncUpstream := fc.Bool(run.Config.ShouldSyncUpstream())
 	hasUpstream := fc.Bool(run.Backend.HasUpstream())
 	return &appendConfig{
-		branchDurations:     branches.Durations,
+		durations:           branches.Durations,
 		branchesToSync:      branchesToSync,
 		targetBranch:        targetBranch,
 		parentBranch:        parentBranch,

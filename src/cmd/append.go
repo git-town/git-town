@@ -61,7 +61,7 @@ func runAppend(arg string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, err := determineAppendConfig(arg, &repo.Runner, branches.All, branches.Initial, repo.IsOffline, branches.Durations)
+	config, err := determineAppendConfig(arg, &repo.Runner, branches, repo.IsOffline)
 	if err != nil {
 		return err
 	}
@@ -77,7 +77,7 @@ func runAppend(arg string, debug bool) error {
 }
 
 type appendConfig struct {
-	branchDurations     config.BranchDurations
+	durations           config.BranchDurations
 	branchesToSync      git.BranchesSyncStatus
 	hasOpenChanges      bool
 	hasOrigin           bool
@@ -96,7 +96,7 @@ type appendConfig struct {
 	targetBranch        string
 }
 
-func determineAppendConfig(targetBranch string, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string, isOffline bool, branchDurations config.BranchDurations) (*appendConfig, error) {
+func determineAppendConfig(targetBranch string, run *git.ProdRunner, branches execute.Branches, isOffline bool) (*appendConfig, error) {
 	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
 	fc := failure.Collector{}
 	hasOrigin := fc.Bool(run.Backend.HasOrigin())
@@ -109,16 +109,16 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner, allBranches
 	if fc.Err != nil {
 		return nil, fc.Err
 	}
-	if allBranches.Contains(targetBranch) {
+	if branches.All.Contains(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExists, targetBranch)
 	}
 	lineage := run.Config.Lineage()
-	updated, err := validate.KnowsBranchAncestors(initialBranch, validate.KnowsBranchAncestorsArgs{
+	updated, err := validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
 		DefaultBranch:   mainBranch,
 		Backend:         &run.Backend,
-		AllBranches:     allBranches,
+		AllBranches:     branches.All,
 		Lineage:         lineage,
-		BranchDurations: branchDurations,
+		BranchDurations: branches.Durations,
 		MainBranch:      mainBranch,
 	})
 	if err != nil {
@@ -127,22 +127,22 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner, allBranches
 	if updated {
 		lineage = run.Config.Lineage() // refresh lineage after ancestry changes
 	}
-	branchNamesToSync := lineage.BranchAndAncestors(initialBranch)
-	branchesToSync := fc.BranchesSyncStatus(allBranches.Select(branchNamesToSync))
+	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
+	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
 	syncStrategy := fc.SyncStrategy(run.Config.SyncStrategy())
 	shouldSyncUpstream := fc.Bool(run.Config.ShouldSyncUpstream())
 	return &appendConfig{
-		branchDurations:     branchDurations,
+		durations:           branches.Durations,
 		branchesToSync:      branchesToSync,
 		hasOpenChanges:      hasOpenChanges,
 		hasOrigin:           hasOrigin,
 		hasUpstream:         hasUpstream,
-		initialBranch:       initialBranch,
+		initialBranch:       branches.Initial,
 		isOffline:           isOffline,
 		lineage:             lineage,
 		mainBranch:          mainBranch,
 		pushHook:            pushHook,
-		parentBranch:        initialBranch,
+		parentBranch:        branches.Initial,
 		previousBranch:      previousBranch,
 		pullBranchStrategy:  pullBranchStrategy,
 		shouldNewBranchPush: shouldNewBranchPush,
@@ -157,7 +157,7 @@ func appendStepList(config *appendConfig) (runstate.StepList, error) {
 	for _, branch := range config.branchesToSync {
 		updateBranchSteps(&list, updateBranchStepsArgs{
 			branch:             branch,
-			branchDurations:    config.branchDurations,
+			branchDurations:    config.durations,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
 			hasOrigin:          config.hasOrigin,
