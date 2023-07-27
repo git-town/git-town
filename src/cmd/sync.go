@@ -130,7 +130,14 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranches git.Bran
 		branchNamesToSync = localBranches.BranchNames()
 		shouldPushTags = true
 	} else {
-		err = validate.KnowsBranchAncestors(initialBranch, mainBranch, &run.Backend, allBranches, lineage, branchDurations, mainBranch)
+		err = validate.KnowsBranchAncestors(initialBranch, validate.KnowsBranchAncestorsArgs{
+			DefaultBranch:   mainBranch,
+			Backend:         &run.Backend,
+			AllBranches:     allBranches,
+			Lineage:         lineage,
+			BranchDurations: branchDurations,
+			MainBranch:      mainBranch,
+		})
 		if err != nil {
 			return nil, err
 		}

@@ -11,7 +11,14 @@ import (
 // Prompts missing lineage information from the user.
 func KnowsBranchesAncestors(branches git.BranchesSyncStatus, mainBranch string, backend *git.BackendCommands, lineage config.Lineage, branchDurations config.BranchDurations) error {
 	for _, branch := range branches {
-		err := KnowsBranchAncestors(branch.Name, mainBranch, backend, branches, lineage, branchDurations, mainBranch)
+		err := KnowsBranchAncestors(branch.Name, KnowsBranchAncestorsArgs{
+			DefaultBranch:   mainBranch,
+			Backend:         backend,
+			AllBranches:     branches,
+			Lineage:         lineage,
+			BranchDurations: branchDurations,
+			MainBranch:      mainBranch,
+		})
 		if err != nil {
 			return err
 		}
@@ -21,41 +28,50 @@ func KnowsBranchesAncestors(branches git.BranchesSyncStatus, mainBranch string, 
 
 // KnowsBranchAncestors prompts the user for all unknown ancestors of the given branch.
 // TODO: inject all dependencies.
-func KnowsBranchAncestors(branch, defaultBranch string, backend *git.BackendCommands, branches git.BranchesSyncStatus, lineage config.Lineage, branchDurations config.BranchDurations, mainBranch string) (err error) {
+func KnowsBranchAncestors(branch string, args KnowsBranchAncestorsArgs) (err error) {
 	headerShown := false
 	currentBranch := branch
-	if branchDurations.IsMainBranch(branch) || branchDurations.IsPerennialBranch(branch) {
+	if args.BranchDurations.IsMainBranch(branch) || args.BranchDurations.IsPerennialBranch(branch) {
 		return nil
 	}
 	for {
-		parent := backend.Config.Lineage()[currentBranch]
-		if parent == "" { //nolint:nestif
+		parent := args.Backend.Config.Lineage()[currentBranch] // need to reload the lineage here because ancestry data was changed
+		if parent == "" {                                      //nolint:nestif
 			if !headerShown {
-				printParentBranchHeader(mainBranch)
+				printParentBranchHeader(args.MainBranch)
 				headerShown = true
 			}
-			parent, err = EnterParent(currentBranch, defaultBranch, lineage, branches)
+			parent, err = EnterParent(currentBranch, args.DefaultBranch, args.Lineage, args.AllBranches)
 			if err != nil {
 				return
 			}
 			if parent == perennialBranchOption {
-				err = backend.Config.AddToPerennialBranches(currentBranch)
+				err = args.Backend.Config.AddToPerennialBranches(currentBranch)
 				if err != nil {
 					return
 				}
 				break
 			}
-			err = backend.Config.SetParent(currentBranch, parent)
+			err = args.Backend.Config.SetParent(currentBranch, parent)
 			if err != nil {
 				return
 			}
 		}
-		if !branchDurations.IsFeatureBranch(parent) {
+		if !args.BranchDurations.IsFeatureBranch(parent) {
 			break
 		}
 		currentBranch = parent
 	}
 	return
+}
+
+type KnowsBranchAncestorsArgs struct {
+	AllBranches     git.BranchesSyncStatus
+	Backend         *git.BackendCommands
+	BranchDurations config.BranchDurations
+	DefaultBranch   string
+	Lineage         config.Lineage
+	MainBranch      string
 }
 
 func printParentBranchHeader(mainBranch string) {
