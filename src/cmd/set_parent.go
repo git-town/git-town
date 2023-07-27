@@ -42,21 +42,20 @@ func setParent(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	allBranches, currentBranch, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
+	branches, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	branchDurations := repo.Runner.Config.BranchDurations()
-	if !branchDurations.IsFeatureBranch(currentBranch) {
+	if !branches.Durations.IsFeatureBranch(branches.Initial) {
 		return errors.New(messages.SetParentNoFeatureBranch)
 	}
 	lineage := repo.Runner.Config.Lineage()
-	existingParent := lineage.Parent(currentBranch)
+	existingParent := lineage.Parent(branches.Initial)
 	if existingParent != "" {
 		// TODO: delete the old parent only when the user has entered a new parent
-		err = repo.Runner.Config.RemoveParent(currentBranch)
+		err = repo.Runner.Config.RemoveParent(branches.Initial)
 		if err != nil {
 			return err
 		}
@@ -64,12 +63,12 @@ func setParent(debug bool) error {
 		existingParent = repo.Runner.Config.MainBranch()
 	}
 	mainBranch := repo.Runner.Config.MainBranch()
-	err = validate.KnowsBranchAncestors(currentBranch, validate.KnowsBranchAncestorsArgs{
+	_, err = validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
 		DefaultBranch:   existingParent,
 		Backend:         &repo.Runner.Backend,
-		AllBranches:     allBranches,
+		AllBranches:     branches.All,
 		Lineage:         lineage,
-		BranchDurations: branchDurations,
+		BranchDurations: branches.Durations,
 		MainBranch:      mainBranch,
 	})
 	if err != nil {

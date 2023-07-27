@@ -77,7 +77,7 @@ func ship(args []string, message string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	allBranches, initialBranch, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
+	branches, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
@@ -87,11 +87,11 @@ func ship(args []string, message string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, err := determineShipConfig(args, connector, &repo.Runner, allBranches, initialBranch, repo.IsOffline)
+	config, err := determineShipConfig(args, connector, &repo.Runner, branches.All, branches.Initial, repo.IsOffline, branches.Durations)
 	if err != nil {
 		return err
 	}
-	if config.branchToShip.Name == initialBranch {
+	if config.branchToShip.Name == branches.Initial {
 		err = validate.NoOpenChanges(&repo.Runner.Backend)
 		if err != nil {
 			return err
@@ -133,7 +133,7 @@ type shipConfig struct {
 	syncStrategy             config.SyncStrategy
 }
 
-func determineShipConfig(args []string, connector hosting.Connector, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string, isOffline bool) (*shipConfig, error) {
+func determineShipConfig(args []string, connector hosting.Connector, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string, isOffline bool, branchDurations config.BranchDurations) (*shipConfig, error) {
 	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
 	hasOpenChanges, err := run.Backend.HasOpenChanges()
 	if err != nil {
@@ -168,22 +168,24 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 			return nil, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
 		}
 	}
-	branchDurations := run.Config.BranchDurations()
 	if !branchDurations.IsFeatureBranch(branchNameToShip) {
 		return nil, fmt.Errorf(messages.ShipNoFeatureBranch, branchNameToShip)
 	}
-	err = validate.KnowsBranchAncestors(branchNameToShip, validate.KnowsBranchAncestorsArgs{
+	lineage := run.Config.Lineage()
+	updated, err := validate.KnowsBranchAncestors(branchNameToShip, validate.KnowsBranchAncestorsArgs{
 		DefaultBranch:   mainBranch,
 		Backend:         &run.Backend,
 		AllBranches:     allBranches,
-		Lineage:         run.Config.Lineage(),
+		Lineage:         lineage,
 		BranchDurations: branchDurations,
 		MainBranch:      mainBranch,
 	})
 	if err != nil {
 		return nil, err
 	}
-	lineage := run.Config.Lineage()
+	if updated {
+		lineage = run.Config.Lineage()
+	}
 	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, branchDurations, lineage)
 	if err != nil {
 		return nil, err

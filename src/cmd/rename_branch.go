@@ -64,13 +64,13 @@ func renameBranch(args []string, force, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	allBranches, initialBranch, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
+	branches, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	config, err := determineRenameBranchConfig(args, force, &repo.Runner, allBranches, initialBranch, repo.IsOffline)
+	config, err := determineRenameBranchConfig(args, force, &repo.Runner, branches.All, branches.Initial, repo.IsOffline, branches.Durations)
 	if err != nil {
 		return err
 	}
@@ -97,7 +97,7 @@ type renameBranchConfig struct {
 	previousBranch  string
 }
 
-func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string, isOffline bool) (*renameBranchConfig, error) {
+func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string, isOffline bool, branchDurations config.BranchDurations) (*renameBranchConfig, error) {
 	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
 	pushHook, err := run.Config.PushHook()
 	if err != nil {
@@ -116,7 +116,6 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 	if run.Config.IsMainBranch(oldBranchName) {
 		return nil, fmt.Errorf(messages.RenameMainBranch)
 	}
-	branchDurations := run.Config.BranchDurations()
 	if !forceFlag {
 		if branchDurations.IsPerennialBranch(oldBranchName) {
 			return nil, fmt.Errorf(messages.RenamePerennialBranchWarning, oldBranchName)

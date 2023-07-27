@@ -55,13 +55,13 @@ func runAppend(arg string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	allBranches, currentBranch, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
+	branches, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	config, err := determineAppendConfig(arg, &repo.Runner, allBranches, currentBranch, repo.IsOffline)
+	config, err := determineAppendConfig(arg, &repo.Runner, branches.All, branches.Initial, repo.IsOffline, branches.Durations)
 	if err != nil {
 		return err
 	}
@@ -96,7 +96,7 @@ type appendConfig struct {
 	targetBranch        string
 }
 
-func determineAppendConfig(targetBranch string, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string, isOffline bool) (*appendConfig, error) {
+func determineAppendConfig(targetBranch string, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string, isOffline bool, branchDurations config.BranchDurations) (*appendConfig, error) {
 	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
 	fc := failure.Collector{}
 	hasOrigin := fc.Bool(run.Backend.HasOrigin())
@@ -112,16 +112,21 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner, allBranches
 	if allBranches.Contains(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExists, targetBranch)
 	}
-	branchDurations := run.Config.BranchDurations()
-	fc.Check(validate.KnowsBranchAncestors(initialBranch, validate.KnowsBranchAncestorsArgs{
+	lineage := run.Config.Lineage()
+	updated, err := validate.KnowsBranchAncestors(initialBranch, validate.KnowsBranchAncestorsArgs{
 		DefaultBranch:   mainBranch,
 		Backend:         &run.Backend,
 		AllBranches:     allBranches,
-		Lineage:         run.Config.Lineage(),
+		Lineage:         lineage,
 		BranchDurations: branchDurations,
 		MainBranch:      mainBranch,
-	}))
-	lineage := run.Config.Lineage() // refresh lineage after ancestry changes
+	})
+	if err != nil {
+		return nil, err
+	}
+	if updated {
+		lineage = run.Config.Lineage() // refresh lineage after ancestry changes
+	}
 	branchNamesToSync := lineage.BranchAndAncestors(initialBranch)
 	branchesToSync := fc.BranchesSyncStatus(allBranches.Select(branchNamesToSync))
 	syncStrategy := fc.SyncStrategy(run.Config.SyncStrategy())

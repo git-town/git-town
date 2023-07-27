@@ -78,12 +78,12 @@ func updatePerennialBranches(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	allBranches, _, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
+	branches, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: false,
 	})
 	if err != nil {
 		return err
 	}
-	mainBranch := repo.Runner.Config.MainBranch()
-	return validate.EnterPerennialBranches(&repo.Runner.Backend, allBranches, mainBranch)
+	_, err = validate.EnterPerennialBranches(&repo.Runner.Backend, branches.All, branches.Durations)
+	return err
 }

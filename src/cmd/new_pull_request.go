@@ -63,13 +63,13 @@ func newPullRequest(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	allBranches, initialBranch, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
+	branches, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	config, err := determineNewPullRequestConfig(&repo.Runner, allBranches, initialBranch, repo.IsOffline)
+	config, err := determineNewPullRequestConfig(&repo.Runner, *branches, repo.IsOffline)
 	if err != nil {
 		return err
 	}
@@ -108,7 +108,7 @@ type newPullRequestConfig struct {
 	syncStrategy       config.SyncStrategy
 }
 
-func determineNewPullRequestConfig(run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string, isOffline bool) (*newPullRequestConfig, error) {
+func determineNewPullRequestConfig(run *git.ProdRunner, branches execute.Branches, isOffline bool) (*newPullRequestConfig, error) {
 	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
 	hasOpenChanges, err := run.Backend.HasOpenChanges()
 	if err != nil {
@@ -128,19 +128,21 @@ func determineNewPullRequestConfig(run *git.ProdRunner, allBranches git.Branches
 		}
 	}
 	mainBranch := run.Config.MainBranch()
-	branchDurations := run.Config.BranchDurations()
-	err = validate.KnowsBranchAncestors(initialBranch, validate.KnowsBranchAncestorsArgs{
+	lineage := run.Config.Lineage()
+	updated, err := validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
 		DefaultBranch:   mainBranch,
 		Backend:         &run.Backend,
-		AllBranches:     allBranches,
-		Lineage:         run.Config.Lineage(),
-		BranchDurations: branchDurations,
+		AllBranches:     branches.All,
+		Lineage:         lineage,
+		BranchDurations: branches.Durations,
 		MainBranch:      mainBranch,
 	})
 	if err != nil {
 		return nil, err
 	}
-	lineage := run.Config.Lineage()
+	if updated {
+		lineage = run.Config.Lineage()
+	}
 	syncStrategy, err := run.Config.SyncStrategy()
 	if err != nil {
 		return nil, err
@@ -161,15 +163,15 @@ func determineNewPullRequestConfig(run *git.ProdRunner, allBranches git.Branches
 	if err != nil {
 		return nil, err
 	}
-	branchNamesToSync := lineage.BranchAndAncestors(initialBranch)
-	branchesToSync, err := allBranches.Select(branchNamesToSync)
+	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
+	branchesToSync, err := branches.All.Select(branchNamesToSync)
 	return &newPullRequestConfig{
-		branchDurations:    branchDurations,
+		branchDurations:    branches.Durations,
 		branchesToSync:     branchesToSync,
 		hasOpenChanges:     hasOpenChanges,
 		hasOrigin:          hasOrigin,
 		hasUpstream:        hasUpstream,
-		initialBranch:      initialBranch,
+		initialBranch:      branches.Initial,
 		isOffline:          isOffline,
 		lineage:            lineage,
 		mainBranch:         mainBranch,

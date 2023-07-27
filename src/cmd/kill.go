@@ -48,13 +48,13 @@ func kill(args []string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	allBranches, initialBranch, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
+	branches, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	config, err := determineKillConfig(args, &repo.Runner, allBranches, initialBranch, repo.IsOffline)
+	config, err := determineKillConfig(args, &repo.Runner, *branches, repo.IsOffline)
 	if err != nil {
 		return err
 	}
@@ -81,33 +81,36 @@ type killConfig struct {
 	targetBranch       git.BranchSyncStatus
 }
 
-func determineKillConfig(args []string, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string, isOffline bool) (*killConfig, error) {
+func determineKillConfig(args []string, run *git.ProdRunner, branches execute.Branches, isOffline bool) (*killConfig, error) {
 	mainBranch := run.Config.MainBranch()
-	targetBranchName := initialBranch
+	targetBranchName := branches.Initial
 	if len(args) > 0 {
 		targetBranchName = args[0]
 	}
-	branchDurations := run.Config.BranchDurations()
-	if !branchDurations.IsFeatureBranch(targetBranchName) {
+	if !branches.Durations.IsFeatureBranch(targetBranchName) {
 		return nil, fmt.Errorf(messages.KillOnlyFeatureBranches)
 	}
-	targetBranch := allBranches.Lookup(targetBranchName)
+	targetBranch := branches.All.Lookup(targetBranchName)
 	if targetBranch == nil {
 		return nil, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
+	lineage := run.Config.Lineage()
 	if targetBranch.IsLocal() {
-		err := validate.KnowsBranchAncestors(targetBranchName, validate.KnowsBranchAncestorsArgs{
+		updated, err := validate.KnowsBranchAncestors(targetBranchName, validate.KnowsBranchAncestorsArgs{
 			DefaultBranch:   mainBranch,
 			Backend:         &run.Backend,
-			AllBranches:     allBranches,
-			Lineage:         run.Config.Lineage(),
-			BranchDurations: branchDurations,
+			AllBranches:     branches.All,
+			Lineage:         lineage,
+			BranchDurations: branches.Durations,
 			MainBranch:      mainBranch,
 		})
 		if err != nil {
 			return nil, err
 		}
-		run.Config.Reload()
+		if updated {
+			run.Config.Reload()
+			lineage = run.Config.Lineage()
+		}
 	}
 	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
 	hasOpenChanges, err := run.Backend.HasOpenChanges()
@@ -118,11 +121,10 @@ func determineKillConfig(args []string, run *git.ProdRunner, allBranches git.Bra
 	if err != nil {
 		return nil, err
 	}
-	lineage := run.Config.Lineage()
 	return &killConfig{
 		childBranches:      lineage.Children(targetBranchName),
 		hasOpenChanges:     hasOpenChanges,
-		initialBranch:      initialBranch,
+		initialBranch:      branches.Initial,
 		isOffline:          isOffline,
 		mainBranch:         mainBranch,
 		noPushHook:         !pushHook,

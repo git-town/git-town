@@ -48,13 +48,13 @@ func diffParent(args []string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	allBranches, currentBranch, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
+	branches, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	config, err := determineDiffParentConfig(args, &repo.Runner, currentBranch, allBranches)
+	config, err := determineDiffParentConfig(args, &repo.Runner, branches.Initial, branches.All)
 	if err != nil {
 		return err
 	}
@@ -93,18 +93,21 @@ func determineDiffParentConfig(args []string, run *git.ProdRunner, initialBranch
 		return nil, fmt.Errorf(messages.DiffParentNoFeatureBranch)
 	}
 	mainBranch := run.Config.MainBranch()
-	err := validate.KnowsBranchAncestors(branch, validate.KnowsBranchAncestorsArgs{
+	lineage := run.Config.Lineage()
+	updated, err := validate.KnowsBranchAncestors(branch, validate.KnowsBranchAncestorsArgs{
 		DefaultBranch:   mainBranch,
 		Backend:         &run.Backend,
 		AllBranches:     allBranches,
-		Lineage:         run.Config.Lineage(),
+		Lineage:         lineage,
 		BranchDurations: branchDurations,
 		MainBranch:      mainBranch,
 	})
 	if err != nil {
 		return nil, err
 	}
-	lineage := run.Config.Lineage()
+	if updated {
+		lineage = run.Config.Lineage()
+	}
 	return &diffParentConfig{
 		branch:       branch,
 		parentBranch: lineage.Parent(branch),

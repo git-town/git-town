@@ -57,13 +57,13 @@ func hack(args []string, promptForParent, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	allBranches, initialBranch, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
+	branches, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	config, err := determineHackConfig(args, promptForParent, &repo.Runner, allBranches, initialBranch)
+	config, err := determineHackConfig(args, promptForParent, &repo.Runner, *branches)
 	if err != nil {
 		return err
 	}
@@ -78,35 +78,37 @@ func hack(args []string, promptForParent, debug bool) error {
 	return runstate.Execute(&runState, &repo.Runner, nil, repo.RootDir)
 }
 
-func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string) (*appendConfig, error) {
+func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunner, branches execute.Branches) (*appendConfig, error) {
 	fc := failure.Collector{}
 	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
 	hasOpenChanges := fc.Bool(run.Backend.HasOpenChanges())
 	targetBranch := args[0]
 	mainBranch := run.Config.MainBranch()
-	branchDurations := run.Config.BranchDurations()
-	parentBranch := fc.String(determineParentBranch(targetBranch, promptForParent, run, mainBranch, allBranches, run.Config.Lineage(), branchDurations))
+	parentBranch, _, err := determineParentBranch(targetBranch, promptForParent, run, mainBranch, branches, run.Config.Lineage())
+	if err != nil {
+		return nil, err
+	}
 	hasOrigin := fc.Bool(run.Backend.HasOrigin())
 	shouldNewBranchPush := fc.Bool(run.Config.ShouldNewBranchPush())
 	isOffline := fc.Bool(run.Config.IsOffline())
 	pushHook := fc.Bool(run.Config.PushHook())
-	if allBranches.Contains(targetBranch) {
+	if branches.All.Contains(targetBranch) {
 		return nil, fmt.Errorf(messages.BranchAlreadyExists, targetBranch)
 	}
 	lineage := run.Config.Lineage()
 	branchNamesToSync := lineage.BranchesAndAncestors([]string{parentBranch})
-	branchesToSync := fc.BranchesSyncStatus(allBranches.Select(branchNamesToSync))
+	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
 	shouldSyncUpstream := fc.Bool(run.Config.ShouldSyncUpstream())
 	hasUpstream := fc.Bool(run.Backend.HasUpstream())
 	return &appendConfig{
-		branchDurations:     branchDurations,
+		branchDurations:     branches.Durations,
 		branchesToSync:      branchesToSync,
 		targetBranch:        targetBranch,
 		parentBranch:        parentBranch,
 		hasOpenChanges:      hasOpenChanges,
 		hasOrigin:           hasOrigin,
 		hasUpstream:         hasUpstream,
-		initialBranch:       initialBranch,
+		initialBranch:       branches.Initial,
 		lineage:             lineage,
 		mainBranch:          mainBranch,
 		shouldNewBranchPush: shouldNewBranchPush,
@@ -119,24 +121,24 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 	}, fc.Err
 }
 
-func determineParentBranch(targetBranch string, promptForParent bool, run *git.ProdRunner, mainBranch string, allBranches git.BranchesSyncStatus, lineage config.Lineage, branchDurations config.BranchDurations) (string, error) {
+func determineParentBranch(targetBranch string, promptForParent bool, run *git.ProdRunner, mainBranch string, branches execute.Branches, lineage config.Lineage) (string, bool, error) {
 	if promptForParent {
-		parentBranch, err := validate.EnterParent(targetBranch, mainBranch, lineage, allBranches)
+		parentBranch, err := validate.EnterParent(targetBranch, mainBranch, lineage, branches.All)
 		if err != nil {
-			return "", err
+			return "", true, err
 		}
-		err = validate.KnowsBranchAncestors(parentBranch, validate.KnowsBranchAncestorsArgs{
+		_, err = validate.KnowsBranchAncestors(parentBranch, validate.KnowsBranchAncestorsArgs{
 			DefaultBranch:   mainBranch,
 			Backend:         &run.Backend,
-			AllBranches:     allBranches,
+			AllBranches:     branches.All,
 			Lineage:         lineage,
-			BranchDurations: branchDurations,
+			BranchDurations: branches.Durations,
 			MainBranch:      mainBranch,
 		})
 		if err != nil {
-			return "", err
+			return "", true, err
 		}
-		return parentBranch, nil
+		return parentBranch, true, nil
 	}
-	return mainBranch, nil
+	return mainBranch, false, nil
 }

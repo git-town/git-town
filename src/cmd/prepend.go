@@ -58,13 +58,13 @@ func prepend(args []string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	allBranches, initialBranch, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
+	branches, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	config, err := determinePrependConfig(args, &repo.Runner, allBranches, initialBranch, repo.IsOffline)
+	config, err := determinePrependConfig(args, &repo.Runner, *branches, repo.IsOffline)
 	if err != nil {
 		return err
 	}
@@ -99,7 +99,7 @@ type prependConfig struct {
 	targetBranch        string
 }
 
-func determinePrependConfig(args []string, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string, isOffline bool) (*prependConfig, error) {
+func determinePrependConfig(args []string, run *git.ProdRunner, branches execute.Branches, isOffline bool) (*prependConfig, error) {
 	fc := failure.Collector{}
 	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
 	hasOpenChanges := fc.Bool(run.Backend.HasOpenChanges())
@@ -116,41 +116,43 @@ func determinePrependConfig(args []string, run *git.ProdRunner, allBranches git.
 		return nil, fc.Err
 	}
 	targetBranch := args[0]
-	if allBranches.Contains(targetBranch) {
+	if branches.All.Contains(targetBranch) {
 		return nil, fmt.Errorf(messages.BranchAlreadyExists, targetBranch)
 	}
-	branchDurations := run.Config.BranchDurations()
-	if !branchDurations.IsFeatureBranch(initialBranch) {
-		return nil, fmt.Errorf(messages.SetParentNoFeatureBranch, initialBranch)
+	if !branches.Durations.IsFeatureBranch(branches.Initial) {
+		return nil, fmt.Errorf(messages.SetParentNoFeatureBranch, branches.Initial)
 	}
-	err := validate.KnowsBranchAncestors(initialBranch, validate.KnowsBranchAncestorsArgs{
+	lineage := run.Config.Lineage()
+	updated, err := validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
 		DefaultBranch:   mainBranch,
 		Backend:         &run.Backend,
-		AllBranches:     allBranches,
-		Lineage:         run.Config.Lineage(),
-		BranchDurations: branchDurations,
+		AllBranches:     branches.All,
+		Lineage:         lineage,
+		BranchDurations: branches.Durations,
 		MainBranch:      mainBranch,
 	})
 	if err != nil {
 		return nil, err
 	}
-	lineage := run.Config.Lineage()
-	branchNamesToSync := lineage.BranchAndAncestors(initialBranch)
-	branchesToSync, err := allBranches.Select(branchNamesToSync)
+	if updated {
+		lineage = run.Config.Lineage()
+	}
+	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
+	branchesToSync, err := branches.All.Select(branchNamesToSync)
 	return &prependConfig{
-		branchDurations:     branchDurations,
+		branchDurations:     branches.Durations,
 		branchesToSync:      branchesToSync,
 		hasOpenChanges:      hasOpenChanges,
 		hasOrigin:           hasOrigin,
 		hasUpstream:         hasUpstream,
-		initialBranch:       initialBranch,
+		initialBranch:       branches.Initial,
 		isOffline:           isOffline,
 		lineage:             lineage,
 		mainBranch:          mainBranch,
 		previousBranch:      previousBranch,
 		pullBranchStrategy:  pullBranchStrategy,
 		pushHook:            pushHook,
-		parentBranch:        lineage.Parent(initialBranch),
+		parentBranch:        lineage.Parent(branches.Initial),
 		shouldNewBranchPush: shouldNewBranchPush,
 		shouldSyncUpstream:  shouldSyncUpstream,
 		syncStrategy:        syncStrategy,

@@ -38,16 +38,17 @@ func setup(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	allBranches, _, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
+	branches, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: false,
 	})
 	if err != nil {
 		return err
 	}
-	oldMainBranch := repo.Runner.Config.MainBranch()
-	mainBranch, err := validate.EnterMainBranch(oldMainBranch, &repo.Runner.Backend)
+	newMainBranch, err := validate.EnterMainBranch(branches.Durations.MainBranch, &repo.Runner.Backend)
 	if err != nil {
 		return err
 	}
-	return validate.EnterPerennialBranches(&repo.Runner.Backend, allBranches, mainBranch)
+	branches.Durations.MainBranch = newMainBranch
+	_, err = validate.EnterPerennialBranches(&repo.Runner.Backend, branches.All, branches.Durations)
+	return err
 }

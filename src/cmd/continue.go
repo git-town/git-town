@@ -44,7 +44,7 @@ func runContinue(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	_, _, err = execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
+	_, err = execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {

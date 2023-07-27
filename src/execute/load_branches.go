@@ -1,24 +1,33 @@
 package execute
 
 import (
+	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/validate"
 )
 
-func LoadBranches(pr *git.ProdRunner, args LoadBranchesArgs) (allBranches git.BranchesSyncStatus, currentBranch string, err error) {
-	allBranches, currentBranch, err = pr.Backend.BranchesSyncStatus()
+func LoadBranches(pr *git.ProdRunner, args LoadBranchesArgs) (*Branches, error) {
+	allBranches, initialBranch, err := pr.Backend.BranchesSyncStatus()
 	if err != nil {
-		return
+		return nil, err
 	}
+	branchDurations := pr.Config.BranchDurations()
 	if args.ValidateIsConfigured {
-		err = validate.IsConfigured(&pr.Backend, allBranches)
-		if err != nil {
-			return
-		}
+		branchDurations, err = validate.IsConfigured(&pr.Backend, allBranches, branchDurations)
 	}
-	return
+	return &Branches{
+		All:       allBranches,
+		Durations: branchDurations,
+		Initial:   initialBranch,
+	}, err
 }
 
 type LoadBranchesArgs struct {
 	ValidateIsConfigured bool
+}
+
+type Branches struct {
+	All       git.BranchesSyncStatus
+	Durations config.BranchDurations
+	Initial   string
 }

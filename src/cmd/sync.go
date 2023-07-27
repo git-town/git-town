@@ -66,13 +66,13 @@ func sync(all, dryRun, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	allBranches, initialBranch, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
+	branches, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	config, err := determineSyncConfig(all, &repo.Runner, allBranches, initialBranch, repo.IsOffline)
+	config, err := determineSyncConfig(all, &repo.Runner, *branches, repo.IsOffline)
 	if err != nil {
 		return err
 	}
@@ -105,7 +105,7 @@ type syncConfig struct {
 	syncStrategy       config.SyncStrategy
 }
 
-func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string, isOffline bool) (*syncConfig, error) {
+func determineSyncConfig(allFlag bool, run *git.ProdRunner, branches execute.Branches, isOffline bool) (*syncConfig, error) {
 	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
 	hasOpenChanges, err := run.Backend.HasOpenChanges()
 	if err != nil {
@@ -119,33 +119,41 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranches git.Bran
 	var branchNamesToSync []string
 	var shouldPushTags bool
 	lineage := run.Config.Lineage()
-	branchDurations := run.Config.BranchDurations()
+	var configUpdated bool
+	branchDurations := branches.Durations
 	if allFlag {
-		localBranches := allBranches.LocalBranches()
-		err = validate.KnowsBranchesAncestors(localBranches, mainBranch, &run.Backend, lineage, branchDurations)
+		localBranches := branches.All.LocalBranches()
+		configUpdated, err = validate.KnowsBranchesAncestors(localBranches, mainBranch, &run.Backend, lineage, branchDurations)
 		if err != nil {
 			return nil, err
 		}
-		branchDurations = run.Config.BranchDurations()
 		branchNamesToSync = localBranches.BranchNames()
 		shouldPushTags = true
 	} else {
-		err = validate.KnowsBranchAncestors(initialBranch, validate.KnowsBranchAncestorsArgs{
+		configUpdated, err = validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
 			DefaultBranch:   mainBranch,
 			Backend:         &run.Backend,
-			AllBranches:     allBranches,
+			AllBranches:     branches.All,
 			Lineage:         lineage,
-			BranchDurations: branchDurations,
+			BranchDurations: branches.Durations,
 			MainBranch:      mainBranch,
 		})
 		if err != nil {
 			return nil, err
 		}
-		branchNamesToSync = []string{initialBranch}
-		branchDurations = run.Config.BranchDurations()
-		shouldPushTags = !branchDurations.IsFeatureBranch(initialBranch)
 	}
-	lineage = run.Config.Lineage() // reload after ancestry change
+	if configUpdated {
+		lineage = run.Config.Lineage() // reload after ancestry change
+		branchDurations = run.Config.BranchDurations()
+	}
+	if !allFlag {
+		branchNamesToSync = []string{branches.Initial}
+		if configUpdated {
+			run.Config.Reload()
+			branchDurations = run.Config.BranchDurations()
+		}
+		shouldPushTags = !branchDurations.IsFeatureBranch(branches.Initial)
+	}
 	allBranchNamesToSync := lineage.BranchesAndAncestors(branchNamesToSync)
 	syncStrategy, err := run.Config.SyncStrategy()
 	if err != nil {
@@ -167,14 +175,14 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranches git.Bran
 	if err != nil {
 		return nil, err
 	}
-	branchesToSync, err := allBranches.Select(allBranchNamesToSync)
+	branchesToSync, err := branches.All.Select(allBranchNamesToSync)
 	return &syncConfig{
 		branchDurations:    branchDurations,
 		branchesToSync:     branchesToSync,
 		hasOpenChanges:     hasOpenChanges,
 		hasOrigin:          hasOrigin,
 		hasUpstream:        hasUpstream,
-		initialBranch:      initialBranch,
+		initialBranch:      branches.Initial,
 		isOffline:          isOffline,
 		lineage:            lineage,
 		mainBranch:         mainBranch,
