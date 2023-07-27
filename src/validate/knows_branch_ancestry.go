@@ -32,12 +32,13 @@ func KnowsBranchesAncestors(branches git.BranchesSyncStatus, mainBranch string, 
 }
 
 // KnowsBranchAncestors prompts the user for all unknown ancestors of the given branch.
-func KnowsBranchAncestors(branch string, args KnowsBranchAncestorsArgs) (updated bool, err error) {
+func KnowsBranchAncestors(branch string, args KnowsBranchAncestorsArgs) (bool, error) {
 	headerShown := false
 	currentBranch := branch
 	if !args.BranchDurations.IsFeatureBranch(branch) {
 		return false, nil
 	}
+	updated := false
 	for {
 		// TODO: reload the lineage at the end of the loop
 		parent := args.Backend.Config.Lineage()[currentBranch] // need to reload the lineage here because ancestry data was changed
@@ -49,19 +50,19 @@ func KnowsBranchAncestors(branch string, args KnowsBranchAncestorsArgs) (updated
 			}
 			parent, err = EnterParent(currentBranch, args.DefaultBranch, args.Lineage, args.AllBranches)
 			if err != nil {
-				return updated, err
+				return false, err
 			}
 			if parent == perennialBranchOption {
 				err = args.Backend.Config.AddToPerennialBranches(currentBranch)
 				if err != nil {
-					return updated, err
+					return false, err
 				}
 				updated = true
 				break
 			}
 			err = args.Backend.Config.SetParent(currentBranch, parent)
 			if err != nil {
-				return updated, err
+				return false, err
 			}
 			updated = true
 		}
@@ -70,7 +71,6 @@ func KnowsBranchAncestors(branch string, args KnowsBranchAncestorsArgs) (updated
 		}
 		currentBranch = parent
 	}
-
 	return updated, nil
 }
 

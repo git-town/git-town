@@ -12,19 +12,19 @@ import (
 
 // EnterPerennialBranches lets the user update the perennial branches.
 // This includes asking the user and updating the respective settings based on the user selection.
-func EnterPerennialBranches(backend *git.BackendCommands, allBranches git.BranchesSyncStatus, oldBranches config.BranchDurations) (config.BranchDurations, error) {
-	localBranchesWithoutMain := allBranches.LocalBranches().Remove(oldBranches.MainBranch).BranchNames()
+func EnterPerennialBranches(backend *git.BackendCommands, allBranches git.BranchesSyncStatus, branches config.BranchDurations) (config.BranchDurations, error) {
+	localBranchesWithoutMain := allBranches.LocalBranches().Remove(branches.MainBranch).BranchNames()
 	newPerennialBranches, err := dialog.MultiSelect(dialog.MultiSelectArgs{
 		Options:  localBranchesWithoutMain,
-		Defaults: oldBranches.PerennialBranches,
-		Message:  perennialBranchesPrompt(oldBranches.PerennialBranches),
+		Defaults: branches.PerennialBranches,
+		Message:  perennialBranchesPrompt(branches.PerennialBranches),
 	})
 	if err != nil {
-		return oldBranches, err
+		return branches, err
 	}
-	oldBranches.PerennialBranches = newPerennialBranches
+	branches.PerennialBranches = newPerennialBranches
 	err = backend.Config.SetPerennialBranches(newPerennialBranches)
-	return oldBranches, err
+	return branches, err
 }
 
 func perennialBranchesPrompt(perennialBranches []string) string {
