@@ -54,7 +54,7 @@ func kill(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, err := determineKillConfig(args, &repo.Runner, *branches, repo.IsOffline)
+	config, err := determineKillConfig(args, &repo.Runner, branches, repo.IsOffline)
 	if err != nil {
 		return err
 	}

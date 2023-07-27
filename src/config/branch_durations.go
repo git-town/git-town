@@ -18,3 +18,10 @@ func (pb BranchDurations) IsMainBranch(branch string) bool {
 func (pb BranchDurations) IsPerennialBranch(branch string) bool {
 	return stringslice.Contains(pb.PerennialBranches, branch)
 }
+
+func EmptyBranchDurations() BranchDurations {
+	return BranchDurations{
+		MainBranch:        "",
+		PerennialBranches: []string{},
+	}
+}

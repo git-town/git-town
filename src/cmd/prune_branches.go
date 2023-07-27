@@ -51,7 +51,7 @@ func pruneBranches(debug bool) error {
 	if err != nil {
 		return err
 	}
-	config := determinePruneBranchesConfig(&repo.Runner, *branches)
+	config := determinePruneBranchesConfig(&repo.Runner, branches)
 	stepList, err := pruneBranchesStepList(config)
 	if err != nil {
 		return err

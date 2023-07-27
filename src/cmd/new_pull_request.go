@@ -69,7 +69,7 @@ func newPullRequest(debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, err := determineNewPullRequestConfig(&repo.Runner, *branches, repo.IsOffline)
+	config, err := determineNewPullRequestConfig(&repo.Runner, branches, repo.IsOffline)
 	if err != nil {
 		return err
 	}

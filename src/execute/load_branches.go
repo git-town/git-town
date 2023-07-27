@@ -6,16 +6,16 @@ import (
 	"github.com/git-town/git-town/v9/src/validate"
 )
 
-func LoadBranches(pr *git.ProdRunner, args LoadBranchesArgs) (*Branches, error) {
+func LoadBranches(pr *git.ProdRunner, args LoadBranchesArgs) (Branches, error) {
 	allBranches, initialBranch, err := pr.Backend.BranchesSyncStatus()
 	if err != nil {
-		return nil, err
+		return NullBranches(), err
 	}
 	branchDurations := pr.Config.BranchDurations()
 	if args.ValidateIsConfigured {
 		branchDurations, err = validate.IsConfigured(&pr.Backend, allBranches, branchDurations)
 	}
-	return &Branches{
+	return Branches{
 		All:       allBranches,
 		Durations: branchDurations,
 		Initial:   initialBranch,
@@ -30,4 +30,13 @@ type Branches struct {
 	All       git.BranchesSyncStatus
 	Durations config.BranchDurations
 	Initial   string
+}
+
+// NullBranches provides the zero value for Branches.
+func NullBranches() Branches {
+	return Branches{
+		All:       git.BranchesSyncStatus{},
+		Durations: config.EmptyBranchDurations(),
+		Initial:   "",
+	}
 }

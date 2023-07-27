@@ -63,7 +63,7 @@ func hack(args []string, promptForParent, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, err := determineHackConfig(args, promptForParent, &repo.Runner, *branches)
+	config, err := determineHackConfig(args, promptForParent, &repo.Runner, branches)
 	if err != nil {
 		return err
 	}

@@ -64,7 +64,7 @@ func prepend(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	config, err := determinePrependConfig(args, &repo.Runner, *branches, repo.IsOffline)
+	config, err := determinePrependConfig(args, &repo.Runner, branches, repo.IsOffline)
 	if err != nil {
 		return err
 	}
