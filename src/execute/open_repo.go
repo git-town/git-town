@@ -13,7 +13,7 @@ import (
 	"github.com/git-town/git-town/v9/src/validate"
 )
 
-func OpenRepo(args OpenShellArgs) (result OpenRepoResult, exit bool, err error) {
+func OpenRepo(args OpenShellArgs) (result RepoData, exit bool, err error) {
 	var stats Statistics
 	if args.Debug {
 		stats = &statistics.CommandsRun{CommandsCount: 0}
@@ -107,7 +107,7 @@ func OpenRepo(args OpenShellArgs) (result OpenRepoResult, exit bool, err error) 
 			err = prodRunner.Frontend.NavigateToDir(rootDir)
 		}
 	}
-	return OpenRepoResult{
+	return RepoData{
 		Runner:    prodRunner,
 		RootDir:   backendCommands.RootDirectory(),
 		IsOffline: isOffline,
@@ -125,7 +125,7 @@ type OpenShellArgs struct {
 	ValidateNoOpenChanges bool
 }
 
-type OpenRepoResult struct {
+type RepoData struct {
 	Runner    git.ProdRunner
 	RootDir   string
 	IsOffline bool
