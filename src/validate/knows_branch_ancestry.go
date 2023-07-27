@@ -2,15 +2,16 @@ package validate
 
 import (
 	"github.com/git-town/git-town/v9/src/cli"
+	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/git"
 )
 
 // KnowsBranchesAncestors asserts that the entire lineage for all given branches
 // is known to Git Town.
 // Prompts missing lineage information from the user.
-func KnowsBranchesAncestors(branches git.BranchesSyncStatus, mainBranch string, backend *git.BackendCommands) error {
+func KnowsBranchesAncestors(branches git.BranchesSyncStatus, mainBranch string, backend *git.BackendCommands, lineage config.Lineage) error {
 	for _, branch := range branches {
-		err := KnowsBranchAncestors(branch.Name, mainBranch, backend, branches)
+		err := KnowsBranchAncestors(branch.Name, mainBranch, backend, branches, lineage)
 		if err != nil {
 			return err
 		}
@@ -19,7 +20,7 @@ func KnowsBranchesAncestors(branches git.BranchesSyncStatus, mainBranch string, 
 }
 
 // KnowsBranchAncestors prompts the user for all unknown ancestors of the given branch.
-func KnowsBranchAncestors(branch, defaultBranch string, backend *git.BackendCommands, branches git.BranchesSyncStatus) (err error) {
+func KnowsBranchAncestors(branch, defaultBranch string, backend *git.BackendCommands, branches git.BranchesSyncStatus, lineage config.Lineage) (err error) {
 	headerShown := false
 	currentBranch := branch
 	if backend.Config.IsMainBranch(branch) || backend.Config.IsPerennialBranch(branch) {
@@ -32,7 +33,7 @@ func KnowsBranchAncestors(branch, defaultBranch string, backend *git.BackendComm
 				printParentBranchHeader(backend)
 				headerShown = true
 			}
-			parent, err = EnterParent(currentBranch, defaultBranch, backend, branches)
+			parent, err = EnterParent(currentBranch, defaultBranch, lineage, branches)
 			if err != nil {
 				return
 			}

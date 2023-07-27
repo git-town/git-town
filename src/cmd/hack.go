@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/flags"
@@ -83,7 +84,7 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 	hasOpenChanges := fc.Bool(run.Backend.HasOpenChanges())
 	targetBranch := args[0]
 	mainBranch := run.Config.MainBranch()
-	parentBranch := fc.String(determineParentBranch(targetBranch, promptForParent, run, mainBranch, allBranches))
+	parentBranch := fc.String(determineParentBranch(targetBranch, promptForParent, run, mainBranch, allBranches, run.Config.Lineage()))
 	hasOrigin := fc.Bool(run.Backend.HasOrigin())
 	shouldNewBranchPush := fc.Bool(run.Config.ShouldNewBranchPush())
 	isOffline := fc.Bool(run.Config.IsOffline())
@@ -116,13 +117,13 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 	}, fc.Err
 }
 
-func determineParentBranch(targetBranch string, promptForParent bool, run *git.ProdRunner, mainBranch string, allBranches git.BranchesSyncStatus) (string, error) {
+func determineParentBranch(targetBranch string, promptForParent bool, run *git.ProdRunner, mainBranch string, allBranches git.BranchesSyncStatus, lineage config.Lineage) (string, error) {
 	if promptForParent {
-		parentBranch, err := validate.EnterParent(targetBranch, mainBranch, &run.Backend, allBranches)
+		parentBranch, err := validate.EnterParent(targetBranch, mainBranch, lineage, allBranches)
 		if err != nil {
 			return "", err
 		}
-		err = validate.KnowsBranchAncestors(parentBranch, mainBranch, &run.Backend, allBranches)
+		err = validate.KnowsBranchAncestors(parentBranch, mainBranch, &run.Backend, allBranches, lineage)
 		if err != nil {
 			return "", err
 		}

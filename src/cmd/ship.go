@@ -170,7 +170,7 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 	if !run.Config.IsFeatureBranch(branchNameToShip) {
 		return nil, fmt.Errorf(messages.ShipNoFeatureBranch, branchNameToShip)
 	}
-	err = validate.KnowsBranchAncestors(branchNameToShip, mainBranch, &run.Backend, allBranches)
+	err = validate.KnowsBranchAncestors(branchNameToShip, mainBranch, &run.Backend, allBranches, run.Config.Lineage())
 	if err != nil {
 		return nil, err
 	}

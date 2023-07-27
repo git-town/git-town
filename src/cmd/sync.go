@@ -117,23 +117,24 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranches git.Bran
 	mainBranch := run.Config.MainBranch()
 	var branchNamesToSync []string
 	var shouldPushTags bool
+	lineage := run.Config.Lineage()
 	if allFlag {
 		localBranches := allBranches.LocalBranches()
-		err = validate.KnowsBranchesAncestors(localBranches, mainBranch, &run.Backend)
+		err = validate.KnowsBranchesAncestors(localBranches, mainBranch, &run.Backend, lineage)
 		if err != nil {
 			return nil, err
 		}
 		branchNamesToSync = localBranches.BranchNames()
 		shouldPushTags = true
 	} else {
-		err = validate.KnowsBranchAncestors(initialBranch, mainBranch, &run.Backend, allBranches)
+		err = validate.KnowsBranchAncestors(initialBranch, mainBranch, &run.Backend, allBranches, lineage)
 		if err != nil {
 			return nil, err
 		}
 		branchNamesToSync = []string{initialBranch}
 		shouldPushTags = !run.Config.IsFeatureBranch(initialBranch)
 	}
-	lineage := run.Config.Lineage()
+	lineage = run.Config.Lineage() // reload after ancestry change
 	allBranchNamesToSync := lineage.BranchesAndAncestors(branchNamesToSync)
 	syncStrategy, err := run.Config.SyncStrategy()
 	if err != nil {
