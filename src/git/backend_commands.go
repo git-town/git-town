@@ -31,7 +31,6 @@ type BackendCommands struct {
 	CurrentBranchCache *cache.String  // caches the currently checked out Git branch
 	RemoteBranchCache  *cache.Strings // caches the remote branches of this Git repo
 	RemotesCache       *cache.Strings // caches Git remotes
-	RootDirCache       *cache.String  // caches the base of the Git directory
 }
 
 // Author provides the locally Git configured user.
@@ -434,23 +433,12 @@ func (bc *BackendCommands) RemoveOutdatedConfiguration(allBranches BranchesSyncS
 
 // RootDirectory provides the path of the rood directory of the current repository,
 // i.e. the directory that contains the ".git" folder.
-func (bc *BackendCommands) RootDirectoryUncached() string {
+func (bc *BackendCommands) RootDirectory() string {
 	output, err := bc.QueryTrim("git", "rev-parse", "--show-toplevel")
 	if err != nil {
 		return ""
 	}
 	return filepath.FromSlash(output)
-}
-
-// RootDirectory provides the path of the root directory of the current repository,
-// i.e. the directory that contains the ".git" folder.
-// An empty string indicates no Git repo.
-func (bc *BackendCommands) RootDirectory() string {
-	if !bc.RootDirCache.Initialized() {
-		rootDir := bc.RootDirectoryUncached()
-		bc.RootDirCache.Set(rootDir)
-	}
-	return bc.RootDirCache.Value()
 }
 
 // ShaForBranch provides the SHA for the local branch with the given name.

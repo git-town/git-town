@@ -300,7 +300,6 @@ func TestBackendCommands(t *testing.T) {
 				CurrentBranchCache: &cache.String{},
 				RemoteBranchCache:  &cache.Strings{},
 				RemotesCache:       &cache.Strings{},
-				RootDirCache:       &cache.String{},
 			}
 			have := cmds.RootDirectory()
 			assert.Empty(t, have)

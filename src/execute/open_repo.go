@@ -31,7 +31,6 @@ func OpenRepo(args OpenShellArgs) (result RepoData, exit bool, err error) {
 		CurrentBranchCache: &cache.String{},
 		RemoteBranchCache:  &cache.Strings{},
 		RemotesCache:       &cache.Strings{},
-		RootDirCache:       &cache.String{},
 	}
 	err = validate.HasGitVersion(&backendCommands)
 	if err != nil {
