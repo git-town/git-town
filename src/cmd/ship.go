@@ -174,7 +174,8 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 	if err != nil {
 		return nil, err
 	}
-	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, run)
+	lineage := run.Config.Lineage()
+	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, &run.Config, lineage)
 	if err != nil {
 		return nil, err
 	}
@@ -182,7 +183,6 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 	if err != nil {
 		return nil, err
 	}
-	lineage := run.Config.Lineage()
 	targetBranchName := lineage.Parent(branchNameToShip)
 	targetBranch := allBranches.Lookup(targetBranchName)
 	if targetBranch == nil {
@@ -243,10 +243,9 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 	}, nil
 }
 
-func ensureParentBranchIsMainOrPerennialBranch(branch string, run *git.ProdRunner) error {
-	lineage := run.Config.Lineage()
+func ensureParentBranchIsMainOrPerennialBranch(branch string, config *git.RepoConfig, lineage config.Lineage) error {
 	parentBranch := lineage.Parent(branch)
-	if !run.Config.IsMainBranch(parentBranch) && !run.Config.IsPerennialBranch(parentBranch) {
+	if !config.IsMainBranch(parentBranch) && !config.IsPerennialBranch(parentBranch) {
 		ancestors := lineage.Ancestors(branch)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
 		oldestAncestor := ancestorsWithoutMainOrPerennial[0]
