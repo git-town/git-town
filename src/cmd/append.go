@@ -113,7 +113,7 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner, allBranches
 		fc.Fail(messages.BranchAlreadyExists, targetBranch)
 	}
 	branchDurations := run.Config.BranchDurations()
-	fc.Check(validate.KnowsBranchAncestors(initialBranch, mainBranch, &run.Backend, allBranches, run.Config.Lineage(), branchDurations))
+	fc.Check(validate.KnowsBranchAncestors(initialBranch, mainBranch, &run.Backend, allBranches, run.Config.Lineage(), branchDurations, mainBranch))
 	lineage := run.Config.Lineage() // refresh lineage after ancestry changes
 	branchNamesToSync := lineage.BranchAndAncestors(initialBranch)
 	branchesToSync := fc.BranchesSyncStatus(allBranches.Select(branchNamesToSync))

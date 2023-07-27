@@ -123,7 +123,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner, allBranches git.
 	if !branchDurations.IsFeatureBranch(initialBranch) {
 		return nil, fmt.Errorf(messages.SetParentNoFeatureBranch, initialBranch)
 	}
-	err := validate.KnowsBranchAncestors(initialBranch, mainBranch, &run.Backend, allBranches, run.Config.Lineage(), branchDurations)
+	err := validate.KnowsBranchAncestors(initialBranch, mainBranch, &run.Backend, allBranches, run.Config.Lineage(), branchDurations, mainBranch)
 	if err != nil {
 		return nil, err
 	}

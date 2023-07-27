@@ -125,7 +125,7 @@ func determineParentBranch(targetBranch string, promptForParent bool, run *git.P
 		if err != nil {
 			return "", err
 		}
-		err = validate.KnowsBranchAncestors(parentBranch, mainBranch, &run.Backend, allBranches, lineage, branchDurations)
+		err = validate.KnowsBranchAncestors(parentBranch, mainBranch, &run.Backend, allBranches, lineage, branchDurations, mainBranch)
 		if err != nil {
 			return "", err
 		}

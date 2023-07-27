@@ -130,7 +130,7 @@ func determineNewPullRequestConfig(run *git.ProdRunner, allBranches git.Branches
 	mainBranch := run.Config.MainBranch()
 	lineage := run.Config.Lineage()
 	branchDurations := run.Config.BranchDurations()
-	err = validate.KnowsBranchAncestors(initialBranch, mainBranch, &run.Backend, allBranches, lineage, branchDurations)
+	err = validate.KnowsBranchAncestors(initialBranch, mainBranch, &run.Backend, allBranches, lineage, branchDurations, mainBranch)
 	if err != nil {
 		return nil, err
 	}

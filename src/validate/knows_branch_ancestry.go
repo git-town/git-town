@@ -11,7 +11,7 @@ import (
 // Prompts missing lineage information from the user.
 func KnowsBranchesAncestors(branches git.BranchesSyncStatus, mainBranch string, backend *git.BackendCommands, lineage config.Lineage, branchDurations config.BranchDurations) error {
 	for _, branch := range branches {
-		err := KnowsBranchAncestors(branch.Name, mainBranch, backend, branches, lineage, branchDurations)
+		err := KnowsBranchAncestors(branch.Name, mainBranch, backend, branches, lineage, branchDurations, mainBranch)
 		if err != nil {
 			return err
 		}
@@ -20,7 +20,8 @@ func KnowsBranchesAncestors(branches git.BranchesSyncStatus, mainBranch string, 
 }
 
 // KnowsBranchAncestors prompts the user for all unknown ancestors of the given branch.
-func KnowsBranchAncestors(branch, defaultBranch string, backend *git.BackendCommands, branches git.BranchesSyncStatus, lineage config.Lineage, branchDurations config.BranchDurations) (err error) {
+// TODO: inject all dependencies.
+func KnowsBranchAncestors(branch, defaultBranch string, backend *git.BackendCommands, branches git.BranchesSyncStatus, lineage config.Lineage, branchDurations config.BranchDurations, mainBranch string) (err error) {
 	headerShown := false
 	currentBranch := branch
 	if branchDurations.IsMainBranch(branch) || branchDurations.IsPerennialBranch(branch) {
@@ -30,7 +31,7 @@ func KnowsBranchAncestors(branch, defaultBranch string, backend *git.BackendComm
 		parent := backend.Config.Lineage()[currentBranch]
 		if parent == "" { //nolint:nestif
 			if !headerShown {
-				printParentBranchHeader(backend)
+				printParentBranchHeader(mainBranch)
 				headerShown = true
 			}
 			parent, err = EnterParent(currentBranch, defaultBranch, lineage, branches)
@@ -57,8 +58,8 @@ func KnowsBranchAncestors(branch, defaultBranch string, backend *git.BackendComm
 	return
 }
 
-func printParentBranchHeader(backend *git.BackendCommands) {
-	cli.Printf(parentBranchHeaderTemplate, backend.Config.MainBranch())
+func printParentBranchHeader(mainBranch string) {
+	cli.Printf(parentBranchHeaderTemplate, mainBranch)
 }
 
 const parentBranchHeaderTemplate string = `
