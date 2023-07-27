@@ -9,7 +9,7 @@ import (
 func LoadBranches(pr *git.ProdRunner, args LoadBranchesArgs) (Branches, error) {
 	allBranches, initialBranch, err := pr.Backend.BranchesSyncStatus()
 	if err != nil {
-		return NullBranches(), err
+		return EmptyBranches(), err
 	}
 	branchDurations := pr.Config.BranchDurations()
 	if args.ValidateIsConfigured {
@@ -32,8 +32,8 @@ type Branches struct {
 	Initial   string
 }
 
-// NullBranches provides the zero value for Branches.
-func NullBranches() Branches {
+// EmptyBranches provides the zero value for Branches.
+func EmptyBranches() Branches {
 	return Branches{
 		All:       git.BranchesSyncStatus{},
 		Durations: config.EmptyBranchDurations(),
