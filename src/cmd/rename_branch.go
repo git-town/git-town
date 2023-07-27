@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/git"
@@ -73,7 +74,7 @@ func renameBranch(args []string, force, debug bool) error {
 	if err != nil {
 		return err
 	}
-	stepList, err := renameBranchStepList(config, &repo.Runner)
+	stepList, err := renameBranchStepList(config)
 	if err != nil {
 		return err
 	}
@@ -85,16 +86,15 @@ func renameBranch(args []string, force, debug bool) error {
 }
 
 type renameBranchConfig struct {
-	initialBranch              string
-	isInitialBranchPerennial   bool
-	isOffline                  bool
-	mainBranch                 string
-	newBranch                  string
-	noPushHook                 bool
-	oldBranchChildren          []string
-	oldBranchHasTrackingBranch bool
-	oldBranch                  string
-	previousBranch             string
+	initialBranch            string
+	isInitialBranchPerennial bool
+	isOffline                bool
+	lineage                  config.Lineage
+	mainBranch               string
+	newBranch                string
+	noPushHook               bool
+	oldBranch                git.BranchSyncStatus
+	previousBranch           string
 }
 
 func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string, isOffline bool) (*renameBranchConfig, error) {
@@ -135,42 +135,42 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 	if allBranches.Contains(newBranchName) {
 		return nil, fmt.Errorf(messages.BranchAlreadyExists, newBranchName)
 	}
+	lineage := run.Config.Lineage()
 	return &renameBranchConfig{
-		initialBranch:              initialBranch,
-		isInitialBranchPerennial:   run.Config.IsPerennialBranch(initialBranch),
-		isOffline:                  isOffline,
-		mainBranch:                 mainBranch,
-		newBranch:                  newBranchName,
-		noPushHook:                 !pushHook,
-		oldBranch:                  oldBranchName,
-		oldBranchChildren:          run.Config.Lineage().Children(oldBranchName),
-		oldBranchHasTrackingBranch: oldBranch.HasTrackingBranch(),
-		previousBranch:             previousBranch,
+		initialBranch:            initialBranch,
+		isInitialBranchPerennial: run.Config.IsPerennialBranch(initialBranch),
+		isOffline:                isOffline,
+		lineage:                  lineage,
+		mainBranch:               mainBranch,
+		newBranch:                newBranchName,
+		noPushHook:               !pushHook,
+		oldBranch:                *oldBranch,
+		previousBranch:           previousBranch,
 	}, err
 }
 
-func renameBranchStepList(config *renameBranchConfig, run *git.ProdRunner) (runstate.StepList, error) {
+func renameBranchStepList(config *renameBranchConfig) (runstate.StepList, error) {
 	result := runstate.StepList{}
-	result.Append(&steps.CreateBranchStep{Branch: config.newBranch, StartingPoint: config.oldBranch})
-	if config.initialBranch == config.oldBranch {
+	result.Append(&steps.CreateBranchStep{Branch: config.newBranch, StartingPoint: config.oldBranch.Name})
+	if config.initialBranch == config.oldBranch.Name {
 		result.Append(&steps.CheckoutStep{Branch: config.newBranch})
 	}
 	if config.isInitialBranchPerennial {
-		result.Append(&steps.RemoveFromPerennialBranchesStep{Branch: config.oldBranch})
+		result.Append(&steps.RemoveFromPerennialBranchesStep{Branch: config.oldBranch.Name})
 		result.Append(&steps.AddToPerennialBranchesStep{Branch: config.newBranch})
 	} else {
-		lineage := run.Config.Lineage()
-		result.Append(&steps.DeleteParentBranchStep{Branch: config.oldBranch, Parent: lineage.Parent(config.oldBranch)})
-		result.Append(&steps.SetParentStep{Branch: config.newBranch, ParentBranch: lineage.Parent(config.oldBranch)})
+		lineage := config.lineage
+		result.Append(&steps.DeleteParentBranchStep{Branch: config.oldBranch.Name, Parent: lineage.Parent(config.oldBranch.Name)})
+		result.Append(&steps.SetParentStep{Branch: config.newBranch, ParentBranch: lineage.Parent(config.oldBranch.Name)})
 	}
-	for _, child := range config.oldBranchChildren {
+	for _, child := range config.lineage.Children(config.oldBranch.Name) {
 		result.Append(&steps.SetParentStep{Branch: child, ParentBranch: config.newBranch})
 	}
-	if config.oldBranchHasTrackingBranch && !config.isOffline {
+	if config.oldBranch.HasTrackingBranch() && !config.isOffline {
 		result.Append(&steps.CreateTrackingBranchStep{Branch: config.newBranch, NoPushHook: config.noPushHook})
-		result.Append(&steps.DeleteOriginBranchStep{Branch: config.oldBranch, IsTracking: true})
+		result.Append(&steps.DeleteOriginBranchStep{Branch: config.oldBranch.Name, IsTracking: true})
 	}
-	result.Append(&steps.DeleteLocalBranchStep{Branch: config.oldBranch, Parent: config.mainBranch})
+	result.Append(&steps.DeleteLocalBranchStep{Branch: config.oldBranch.Name, Parent: config.mainBranch})
 	err := result.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     false,
 		StashOpenChanges: false,
