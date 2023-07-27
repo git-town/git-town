@@ -68,7 +68,7 @@ func prepend(args []string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	stepList, err := prependStepList(config, &repo.Runner)
+	stepList, err := prependStepList(config, &repo.Runner.Config)
 	if err != nil {
 		return err
 	}
@@ -148,12 +148,12 @@ func determinePrependConfig(args []string, run *git.ProdRunner, allBranches git.
 	}, err
 }
 
-func prependStepList(config *prependConfig, run *git.ProdRunner) (runstate.StepList, error) {
+func prependStepList(config *prependConfig, repoConfig *git.RepoConfig) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branchToSync := range config.branchesToSync {
 		updateBranchSteps(&list, updateBranchStepsArgs{
 			branch:             branchToSync,
-			config:             &run.Config,
+			config:             repoConfig,
 			hasOrigin:          config.hasOrigin,
 			hasUpstream:        config.hasUpstream,
 			isOffline:          config.isOffline,
