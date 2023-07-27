@@ -54,15 +54,14 @@ func OpenRepo(args OpenShellArgs) (result RepoData, exit bool, err error) {
 	if args.DryRun {
 		prodRunner.Config.DryRun = true
 	}
+	rootDir := backendCommands.RootDirectory()
 	if args.ValidateGitRepo {
-		rootDir := backendCommands.RootDirectory()
 		if rootDir == "" {
 			err = errors.New(messages.RepoOutside)
 			return
 		}
 	}
 	if args.HandleUnfinishedState {
-		rootDir := backendCommands.RootDirectory()
 		exit, err = validate.HandleUnfinishedState(&prodRunner, nil, rootDir)
 		if err != nil || exit {
 			return
@@ -102,14 +101,13 @@ func OpenRepo(args OpenShellArgs) (result RepoData, exit bool, err error) {
 			err = errors.New(messages.DirCurrentProblem)
 			return
 		}
-		rootDir := backendCommands.RootDirectory()
 		if currentDirectory != rootDir {
 			err = prodRunner.Frontend.NavigateToDir(rootDir)
 		}
 	}
 	return RepoData{
 		Runner:    prodRunner,
-		RootDir:   backendCommands.RootDirectory(),
+		RootDir:   rootDir,
 		IsOffline: isOffline,
 	}, false, err
 }
