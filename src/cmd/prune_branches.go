@@ -52,7 +52,7 @@ func pruneBranches(debug bool) error {
 		return err
 	}
 	config := determinePruneBranchesConfig(&repo.Runner, allBranches, initialBranch)
-	stepList, err := pruneBranchesStepList(config, &repo.Runner)
+	stepList, err := pruneBranchesStepList(config, &repo.Runner.Config)
 	if err != nil {
 		return err
 	}
@@ -81,7 +81,7 @@ func determinePruneBranchesConfig(run *git.ProdRunner, allBranches git.BranchesS
 	}
 }
 
-func pruneBranchesStepList(config *pruneBranchesConfig, run *git.ProdRunner) (runstate.StepList, error) {
+func pruneBranchesStepList(config *pruneBranchesConfig, repoConfig *git.RepoConfig) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	for _, branchWithDeletedRemote := range config.localBranchesWithDeletedTrackingBranches {
 		if config.initialBranch == branchWithDeletedRemote {
@@ -94,7 +94,7 @@ func pruneBranchesStepList(config *pruneBranchesConfig, run *git.ProdRunner) (ru
 			}
 			result.Append(&steps.DeleteParentBranchStep{Branch: branchWithDeletedRemote, Parent: config.lineage.Parent(branchWithDeletedRemote)})
 		}
-		if run.Config.IsPerennialBranch(branchWithDeletedRemote) {
+		if repoConfig.IsPerennialBranch(branchWithDeletedRemote) {
 			result.Append(&steps.RemoveFromPerennialBranchesStep{Branch: branchWithDeletedRemote})
 		}
 		result.Append(&steps.DeleteLocalBranchStep{Branch: branchWithDeletedRemote, Parent: config.mainBranch})
