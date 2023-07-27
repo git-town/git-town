@@ -7,6 +7,8 @@ import (
 	"github.com/git-town/git-town/v9/src/git"
 )
 
+// TODO: rename this package to `collector` and this class to Failure
+
 // Collector helps avoid excessive error checking
 // while gathering a larger number of values through fallible operations.
 //
