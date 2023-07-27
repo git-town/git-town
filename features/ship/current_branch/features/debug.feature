@@ -6,7 +6,7 @@ Feature: display debug statistics
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
 
-  # TODO: remove the redundant calls to "git status --porcelain --ignore-submodules"
+  # TODO: remove the duplicate calls
   Scenario: result
     When I run "git-town ship -m done --debug"
     Then it runs the commands
