@@ -80,7 +80,7 @@ func newPullRequest(debug bool) error {
 	if connector == nil {
 		return hosting.UnsupportedServiceError()
 	}
-	stepList, err := newPullRequestStepList(config, &repo.Runner)
+	stepList, err := newPullRequestStepList(config, &repo.Runner.Config)
 	if err != nil {
 		return err
 	}
@@ -171,12 +171,12 @@ func determineNewPullRequestConfig(run *git.ProdRunner, allBranches git.Branches
 	}, err
 }
 
-func newPullRequestStepList(config *newPullRequestConfig, run *git.ProdRunner) (runstate.StepList, error) {
+func newPullRequestStepList(config *newPullRequestConfig, repoConfig *git.RepoConfig) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.BranchesToSync {
 		updateBranchSteps(&list, updateBranchStepsArgs{
 			branch:             branch,
-			config:             &run.Config,
+			config:             repoConfig,
 			hasOrigin:          config.hasOrigin,
 			hasUpstream:        config.hasUpstream,
 			isOffline:          config.isOffline,
