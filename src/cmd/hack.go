@@ -66,7 +66,7 @@ func hack(args []string, promptForParent, debug bool) error {
 	if err != nil {
 		return err
 	}
-	stepList, err := appendStepList(config, &repo.Runner)
+	stepList, err := appendStepList(config, &repo.Runner.Config)
 	if err != nil {
 		return err
 	}
@@ -83,7 +83,7 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 	hasOpenChanges := fc.Bool(run.Backend.HasOpenChanges())
 	targetBranch := args[0]
 	mainBranch := run.Config.MainBranch()
-	parentBranch := fc.String(determineParentBranch(targetBranch, promptForParent, run, mainBranch))
+	parentBranch := fc.String(determineParentBranch(targetBranch, promptForParent, run, mainBranch, allBranches))
 	hasOrigin := fc.Bool(run.Backend.HasOrigin())
 	shouldNewBranchPush := fc.Bool(run.Config.ShouldNewBranchPush())
 	isOffline := fc.Bool(run.Config.IsOffline())
@@ -116,13 +116,13 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 	}, fc.Err
 }
 
-func determineParentBranch(targetBranch string, promptForParent bool, run *git.ProdRunner, mainBranch string) (string, error) {
+func determineParentBranch(targetBranch string, promptForParent bool, run *git.ProdRunner, mainBranch string, allBranches git.BranchesSyncStatus) (string, error) {
 	if promptForParent {
-		parentBranch, err := validate.EnterParent(targetBranch, mainBranch, &run.Backend)
+		parentBranch, err := validate.EnterParent(targetBranch, mainBranch, &run.Backend, allBranches)
 		if err != nil {
 			return "", err
 		}
-		err = validate.KnowsBranchAncestors(parentBranch, mainBranch, &run.Backend)
+		err = validate.KnowsBranchAncestors(parentBranch, mainBranch, &run.Backend, allBranches)
 		if err != nil {
 			return "", err
 		}

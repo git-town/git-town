@@ -42,7 +42,7 @@ func setParent(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	_, currentBranch, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
+	allBranches, currentBranch, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
@@ -61,7 +61,7 @@ func setParent(debug bool) error {
 	} else {
 		existingParent = repo.Runner.Config.MainBranch()
 	}
-	err = validate.KnowsBranchAncestors(currentBranch, existingParent, &repo.Runner.Backend)
+	err = validate.KnowsBranchAncestors(currentBranch, existingParent, &repo.Runner.Backend, allBranches)
 	if err != nil {
 		return err
 	}

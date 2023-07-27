@@ -65,7 +65,7 @@ func runAppend(arg string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	stepList, err := appendStepList(config, &repo.Runner)
+	stepList, err := appendStepList(config, &repo.Runner.Config)
 	if err != nil {
 		return err
 	}
@@ -111,7 +111,7 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner, allBranches
 	if allBranches.Contains(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExists, targetBranch)
 	}
-	fc.Check(validate.KnowsBranchAncestors(initialBranch, mainBranch, &run.Backend))
+	fc.Check(validate.KnowsBranchAncestors(initialBranch, mainBranch, &run.Backend, allBranches))
 	lineage := run.Config.Lineage()
 	branchNamesToSync := lineage.BranchAndAncestors(initialBranch)
 	branchesToSync := fc.BranchesSyncStatus(allBranches.Select(branchNamesToSync))
@@ -137,12 +137,12 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner, allBranches
 	}, fc.Err
 }
 
-func appendStepList(config *appendConfig, run *git.ProdRunner) (runstate.StepList, error) {
+func appendStepList(config *appendConfig, repoConfig *git.RepoConfig) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.branchesToSync {
 		updateBranchSteps(&list, updateBranchStepsArgs{
 			branch:             branch,
-			config:             &run.Config,
+			config:             repoConfig,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
 			hasOrigin:          config.hasOrigin,

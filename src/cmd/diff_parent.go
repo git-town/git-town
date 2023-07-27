@@ -48,13 +48,13 @@ func diffParent(args []string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	_, currentBranch, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
+	allBranches, currentBranch, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
 		return err
 	}
-	config, err := determineDiffParentConfig(args, &repo.Runner, currentBranch)
+	config, err := determineDiffParentConfig(args, &repo.Runner, currentBranch, allBranches)
 	if err != nil {
 		return err
 	}
@@ -72,7 +72,7 @@ type diffParentConfig struct {
 }
 
 // Does not return error because "Ensure" functions will call exit directly.
-func determineDiffParentConfig(args []string, run *git.ProdRunner, initialBranch string) (*diffParentConfig, error) {
+func determineDiffParentConfig(args []string, run *git.ProdRunner, initialBranch string, allBranches git.BranchesSyncStatus) (*diffParentConfig, error) {
 	var branch string
 	if len(args) > 0 {
 		branch = args[0]
@@ -91,7 +91,7 @@ func determineDiffParentConfig(args []string, run *git.ProdRunner, initialBranch
 	if !run.Config.IsFeatureBranch(branch) {
 		return nil, fmt.Errorf(messages.DiffParentNoFeatureBranch)
 	}
-	err := validate.KnowsBranchAncestors(branch, run.Config.MainBranch(), &run.Backend)
+	err := validate.KnowsBranchAncestors(branch, run.Config.MainBranch(), &run.Backend, allBranches)
 	if err != nil {
 		return nil, err
 	}

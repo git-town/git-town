@@ -14,10 +14,10 @@ Feature: display debug statistics
       |         | backend  | git rev-parse --show-toplevel                                      |
       |         | backend  | git branch -vva                                                    |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}                          |
+      |         | backend  | git status --porcelain --ignore-submodules                         |
       |         | backend  | git remote                                                         |
       | feature | frontend | git fetch --prune --tags                                           |
-      |         | backend  | git status --porcelain --ignore-submodules                         |
-      | feature | frontend | git checkout main                                                  |
+      |         | frontend | git checkout main                                                  |
       |         | backend  | git rev-parse HEAD                                                 |
       | main    | frontend | git rebase origin/main                                             |
       |         | backend  | git rev-list --left-right main...origin/main                       |

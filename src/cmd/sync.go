@@ -104,7 +104,7 @@ type syncConfig struct {
 	syncStrategy       config.SyncStrategy
 }
 
-func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranchesSyncStatus git.BranchesSyncStatus, initialBranch string, isOffline bool) (*syncConfig, error) {
+func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string, isOffline bool) (*syncConfig, error) {
 	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
 	hasOpenChanges, err := run.Backend.HasOpenChanges()
 	if err != nil {
@@ -118,15 +118,15 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranchesSyncStatu
 	var branchNamesToSync []string
 	var shouldPushTags bool
 	if allFlag {
-		localBranches := allBranchesSyncStatus.LocalBranches().BranchNames()
+		localBranches := allBranches.LocalBranches()
 		err = validate.KnowsBranchesAncestors(localBranches, mainBranch, &run.Backend)
 		if err != nil {
 			return nil, err
 		}
-		branchNamesToSync = localBranches
+		branchNamesToSync = localBranches.BranchNames()
 		shouldPushTags = true
 	} else {
-		err = validate.KnowsBranchAncestors(initialBranch, mainBranch, &run.Backend)
+		err = validate.KnowsBranchAncestors(initialBranch, mainBranch, &run.Backend, allBranches)
 		if err != nil {
 			return nil, err
 		}
@@ -155,7 +155,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranchesSyncStatu
 	if err != nil {
 		return nil, err
 	}
-	branchesToSync, err := allBranchesSyncStatus.Select(allBranchNamesToSync)
+	branchesToSync, err := allBranches.Select(allBranchNamesToSync)
 	return &syncConfig{
 		branchesToSync:     branchesToSync,
 		hasOpenChanges:     hasOpenChanges,
