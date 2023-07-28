@@ -1,4 +1,4 @@
-package validate
+package dialog
 
 import (
 	"fmt"
@@ -6,7 +6,6 @@ import (
 
 	"github.com/fatih/color"
 	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/dialog"
 	"github.com/git-town/git-town/v9/src/git"
 )
 
@@ -14,7 +13,7 @@ import (
 // This includes asking the user and updating the respective settings based on the user selection.
 func EnterPerennialBranches(backend *git.BackendCommands, allBranches git.BranchesSyncStatus, branches config.BranchDurations) (config.BranchDurations, error) {
 	localBranchesWithoutMain := allBranches.LocalBranches().Remove(branches.MainBranch).BranchNames()
-	newPerennialBranches, err := dialog.MultiSelect(dialog.MultiSelectArgs{
+	newPerennialBranches, err := MultiSelect(MultiSelectArgs{
 		Options:  localBranchesWithoutMain,
 		Defaults: branches.PerennialBranches,
 		Message:  perennialBranchesPrompt(branches.PerennialBranches),

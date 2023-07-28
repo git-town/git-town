@@ -3,6 +3,7 @@ package validate
 import (
 	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/dialog"
 	"github.com/git-town/git-town/v9/src/git"
 )
 
@@ -56,11 +57,11 @@ func KnowsBranchAncestors(branch string, args KnowsBranchAncestorsArgs) (bool, e
 				printParentBranchHeader(args.MainBranch)
 				headerShown = true
 			}
-			parent, err = EnterParent(currentBranch, args.DefaultBranch, args.Lineage, args.AllBranches)
+			parent, err = dialog.EnterParent(currentBranch, args.DefaultBranch, args.Lineage, args.AllBranches)
 			if err != nil {
 				return false, err
 			}
-			if parent == perennialBranchOption {
+			if parent == dialog.PerennialBranchOption {
 				err = args.Backend.Config.AddToPerennialBranches(currentBranch)
 				if err != nil {
 					return false, err
