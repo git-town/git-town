@@ -92,7 +92,11 @@ func ship(args []string, message string, debug bool) error {
 		return err
 	}
 	if config.branchToShip.Name == branches.Initial {
-		err = validate.NoOpenChanges(&repo.Runner.Backend)
+		hasOpenChanges, err := repo.Runner.Backend.HasOpenChanges()
+		if err != nil {
+			return err
+		}
+		err = validate.NoOpenChanges(hasOpenChanges)
 		if err != nil {
 			return err
 		}
