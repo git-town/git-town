@@ -77,21 +77,15 @@ func ship(args []string, message string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	branches, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
-		ValidateIsConfigured: true,
-	})
-	if err != nil {
-		return err
-	}
 	connector, err := hosting.NewConnector(repo.Runner.Config.GitTown, &repo.Runner.Backend, cli.PrintConnectorAction)
 	if err != nil {
 		return err
 	}
-	config, err := determineShipConfig(args, connector, &repo.Runner, branches.All, branches.Initial, repo.IsOffline, branches.Durations)
+	config, err := determineShipConfig(args, connector, &repo.Runner, repo.IsOffline)
 	if err != nil {
 		return err
 	}
-	if config.branchToShip.Name == branches.Initial {
+	if config.branchToShip.Name == config.initialBranch {
 		hasOpenChanges, err := repo.Runner.Backend.HasOpenChanges()
 		if err != nil {
 			return err
@@ -141,7 +135,13 @@ type shipConfig struct {
 	syncStrategy             config.SyncStrategy
 }
 
-func determineShipConfig(args []string, connector hosting.Connector, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string, isOffline bool, branchDurations config.BranchDurations) (*shipConfig, error) {
+func determineShipConfig(args []string, connector hosting.Connector, run *git.ProdRunner, isOffline bool) (*shipConfig, error) {
+	branches, err := execute.LoadBranches(run, execute.LoadBranchesArgs{
+		ValidateIsConfigured: true,
+	})
+	if err != nil {
+		return nil, err
+	}
 	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
 	hasOpenChanges, err := run.Backend.HasOpenChanges()
 	if err != nil {
@@ -156,9 +156,9 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 		return nil, err
 	}
 	mainBranch := run.Config.MainBranch()
-	branchNameToShip := determineBranchToShip(args, initialBranch)
-	branchToShip := allBranches.Lookup(branchNameToShip)
-	isShippingInitialBranch := branchNameToShip == initialBranch
+	branchNameToShip := determineBranchToShip(args, branches.Initial)
+	branchToShip := branches.All.Lookup(branchNameToShip)
+	isShippingInitialBranch := branchNameToShip == branches.Initial
 	syncStrategy, err := run.Config.SyncStrategy()
 	if err != nil {
 		return nil, err
@@ -176,16 +176,16 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 			return nil, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
 		}
 	}
-	if !branchDurations.IsFeatureBranch(branchNameToShip) {
+	if !branches.Durations.IsFeatureBranch(branchNameToShip) {
 		return nil, fmt.Errorf(messages.ShipNoFeatureBranch, branchNameToShip)
 	}
 	lineage := run.Config.Lineage()
 	updated, err := validate.KnowsBranchAncestors(branchNameToShip, validate.KnowsBranchAncestorsArgs{
 		DefaultBranch:   mainBranch,
 		Backend:         &run.Backend,
-		AllBranches:     allBranches,
+		AllBranches:     branches.All,
 		Lineage:         lineage,
-		BranchDurations: branchDurations,
+		BranchDurations: branches.Durations,
 		MainBranch:      mainBranch,
 	})
 	if err != nil {
@@ -194,12 +194,12 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 	if updated {
 		lineage = run.Config.Lineage()
 	}
-	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, branchDurations, lineage)
+	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, branches.Durations, lineage)
 	if err != nil {
 		return nil, err
 	}
 	targetBranchName := lineage.Parent(branchNameToShip)
-	targetBranch := allBranches.Lookup(targetBranchName)
+	targetBranch := branches.All.Lookup(targetBranchName)
 	if targetBranch == nil {
 		return nil, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
@@ -234,7 +234,7 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 		}
 	}
 	return &shipConfig{
-		branchDurations:          branchDurations,
+		branchDurations:          branches.Durations,
 		targetBranch:             *targetBranch,
 		branchToShip:             *branchToShip,
 		canShipViaAPI:            canShipViaAPI,
@@ -243,7 +243,7 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 		deleteOriginBranch:       deleteOrigin,
 		hasOpenChanges:           hasOpenChanges,
 		remotes:                  remotes,
-		initialBranch:            initialBranch,
+		initialBranch:            branches.Initial,
 		isOffline:                isOffline,
 		isShippingInitialBranch:  isShippingInitialBranch,
 		lineage:                  lineage,
