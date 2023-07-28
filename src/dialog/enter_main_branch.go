@@ -1,17 +1,16 @@
-package validate
+package dialog
 
 import (
 	"fmt"
 
 	"github.com/fatih/color"
-	"github.com/git-town/git-town/v9/src/dialog"
 	"github.com/git-town/git-town/v9/src/git"
 )
 
 // EnterMainBranch lets the user select a new main branch for this repo.
 // This includes asking the user and updating the respective setting.
 func EnterMainBranch(localBranches []string, oldMainBranch string, backend *git.BackendCommands) (string, error) {
-	newMainBranch, err := dialog.Select(dialog.SelectArgs{
+	newMainBranch, err := Select(SelectArgs{
 		Options: localBranches,
 		Message: mainBranchPrompt(oldMainBranch),
 		Default: oldMainBranch,
