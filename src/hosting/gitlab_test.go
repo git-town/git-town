@@ -3,60 +3,74 @@ package hosting_test
 import (
 	"testing"
 
+	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNewGitlabConnector(t *testing.T) {
 	t.Parallel()
-	t.Run("GitLab handbook repo on gitlab.com", func(t *testing.T) {
+	t.Run("GitLab SaaS", func(t *testing.T) {
 		t.Parallel()
-		repoConfig := mockRepoConfig{
-			originURL: "git@gitlab.com:gitlab-com/www-gitlab-com.git",
-		}
-		connector, err := hosting.NewGitlabConnector(repoConfig, nil)
+		have, err := hosting.NewGitlabConnector(hosting.NewGitlabConnectorArgs{
+			HostingService: config.HostingServiceNone,
+			OriginURL:      giturl.Parse("git@gitlab.com:git-town/docs.git"),
+			APIToken:       "apiToken",
+			Log:            nil,
+		})
 		assert.NoError(t, err)
-		assert.NotNil(t, connector)
-		assert.Equal(t, "GitLab", connector.HostingServiceName())
-		assert.Equal(t, "https://gitlab.com/gitlab-com/www-gitlab-com", connector.RepositoryURL())
+		wantConfig := hosting.GitLabConfig{
+			CommonConfig: hosting.CommonConfig{
+				APIToken:     "apiToken",
+				Hostname:     "gitlab.com",
+				Organization: "git-town",
+				Repository:   "docs",
+			},
+		}
+		assert.Equal(t, wantConfig, have.GitLabConfig)
 	})
-
-	t.Run("repository nested inside a group", func(t *testing.T) {
+	t.Run("hosted service type provided manually", func(t *testing.T) {
 		t.Parallel()
-		repoConfig := mockRepoConfig{
-			originURL: "git@gitlab.com:gitlab-org/quality/triage-ops.git",
-		}
-		connector, err := hosting.NewGitlabConnector(repoConfig, nil)
+		have, err := hosting.NewGitlabConnector(hosting.NewGitlabConnectorArgs{
+			HostingService: config.HostingServiceGitLab,
+			OriginURL:      giturl.Parse("git@custom-url.com:git-town/docs.git"),
+			APIToken:       "apiToken",
+			Log:            nil,
+		})
 		assert.NoError(t, err)
-		assert.NotNil(t, connector)
-		assert.Equal(t, "GitLab", connector.HostingServiceName())
-		assert.Equal(t, "https://gitlab.com/gitlab-org/quality/triage-ops", connector.RepositoryURL())
+		wantConfig := hosting.GitLabConfig{
+			CommonConfig: hosting.CommonConfig{
+				APIToken:     "apiToken",
+				Hostname:     "custom-url.com",
+				Organization: "git-town",
+				Repository:   "docs",
+			},
+		}
+		assert.Equal(t, wantConfig, have.GitLabConfig)
 	})
-
-	t.Run("self-hosted GitLab server", func(t *testing.T) {
+	t.Run("repo is hosted by another hosting service --> no connector", func(t *testing.T) {
 		t.Parallel()
-		repoConfig := mockRepoConfig{
-			hostingService: "gitlab",
-			originURL:      "git@self-hosted-gitlab.com:git-town/git-town.git",
-		}
-		connector, err := hosting.NewGitlabConnector(repoConfig, nil)
+		have, err := hosting.NewGitlabConnector(hosting.NewGitlabConnectorArgs{
+			HostingService: config.HostingServiceNone,
+			OriginURL:      giturl.Parse("git@github.com:git-town/git-town.git"),
+			APIToken:       "",
+			Log:            nil,
+		})
+		assert.Nil(t, have)
 		assert.NoError(t, err)
-		assert.NotNil(t, connector)
-		assert.Equal(t, "GitLab", connector.HostingServiceName())
-		assert.Equal(t, "https://self-hosted-gitlab.com/git-town/git-town", connector.RepositoryURL())
 	})
-
-	t.Run("custom SSH identity with hostname override", func(t *testing.T) {
+	t.Run("no origin remote --> no connector", func(t *testing.T) {
 		t.Parallel()
-		repoConfig := mockRepoConfig{
-			originURL:      "git@my-ssh-identity.com:git-town/git-town.git",
-			originOverride: "gitlab.com",
-		}
-		connector, err := hosting.NewGitlabConnector(repoConfig, nil)
+		var originURL *giturl.Parts
+		have, err := hosting.NewGitlabConnector(hosting.NewGitlabConnectorArgs{
+			HostingService: config.HostingServiceNone,
+			OriginURL:      originURL,
+			APIToken:       "",
+			Log:            nil,
+		})
+		assert.Nil(t, have)
 		assert.NoError(t, err)
-		assert.NotNil(t, connector)
-		assert.Equal(t, "GitLab", connector.HostingServiceName())
-		assert.Equal(t, "https://gitlab.com/git-town/git-town", connector.RepositoryURL())
 	})
 }
 

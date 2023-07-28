@@ -32,7 +32,11 @@ func OpenRepo(args OpenShellArgs) (result RepoData, exit bool, err error) {
 		RemoteBranchCache:  &cache.Strings{},
 		RemotesCache:       &cache.Strings{},
 	}
-	err = validate.HasGitVersion(&backendCommands)
+	majorVersion, minorVersion, err := backendCommands.Version()
+	if err != nil {
+		return result, false, err
+	}
+	err = validate.HasGitVersion(majorVersion, minorVersion)
 	if err != nil {
 		return
 	}
@@ -67,9 +71,13 @@ func OpenRepo(args OpenShellArgs) (result RepoData, exit bool, err error) {
 		}
 	}
 	if args.ValidateNoOpenChanges {
-		err = validate.NoOpenChanges(&prodRunner.Backend)
+		hasOpenChanges, err := prodRunner.Backend.HasOpenChanges()
 		if err != nil {
-			return
+			return result, false, err
+		}
+		err = validate.NoOpenChanges(hasOpenChanges)
+		if err != nil {
+			return result, false, err
 		}
 	}
 	isOffline, err := repoConfig.IsOffline()

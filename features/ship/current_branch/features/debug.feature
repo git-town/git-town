@@ -21,12 +21,9 @@ Feature: display debug statistics
       |         | backend  | git rev-parse --abbrev-ref HEAD                   |
       | feature | frontend | git fetch --prune --tags                          |
       |         | backend  | git branch -vva                                   |
-      |         | backend  | git remote get-url origin                         |
-      |         | backend  | git remote get-url origin                         |
-      |         | backend  | git remote get-url origin                         |
-      |         | backend  | git remote get-url origin                         |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}         |
       |         | backend  | git status --porcelain --ignore-submodules        |
+      |         | backend  | git remote get-url origin                         |
       |         | backend  | git status --porcelain --ignore-submodules        |
       | feature | frontend | git checkout main                                 |
       |         | backend  | git rev-parse HEAD                                |
@@ -58,7 +55,7 @@ Feature: display debug statistics
       |         | backend  | git checkout main                                 |
     And it prints:
       """
-      Ran 45 shell commands.
+      Ran 42 shell commands.
       """
     And the current branch is now "main"
 

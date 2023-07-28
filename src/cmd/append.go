@@ -55,13 +55,7 @@ func runAppend(arg string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	branches, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
-		ValidateIsConfigured: true,
-	})
-	if err != nil {
-		return err
-	}
-	config, err := determineAppendConfig(arg, &repo.Runner, branches, repo.IsOffline)
+	config, err := determineAppendConfig(arg, &repo.Runner, repo.IsOffline)
 	if err != nil {
 		return err
 	}
@@ -100,7 +94,13 @@ type appendConfig struct {
 	targetBranch        string
 }
 
-func determineAppendConfig(targetBranch string, run *git.ProdRunner, branches execute.Branches, isOffline bool) (*appendConfig, error) {
+func determineAppendConfig(targetBranch string, run *git.ProdRunner, isOffline bool) (*appendConfig, error) {
+	branches, err := execute.LoadBranches(run, execute.LoadBranchesArgs{
+		ValidateIsConfigured: true,
+	})
+	if err != nil {
+		return nil, err
+	}
 	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
 	fc := failure.Collector{}
 	remotes := fc.Strings(run.Backend.Remotes())

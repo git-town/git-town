@@ -17,15 +17,17 @@ import (
 // stored in the local and global Git configuration.
 type GitTown struct {
 	Git
-	originURLCache map[string]*giturl.Parts
+	originURLCache OriginURLCache
 }
 
 func NewGitTown(runner runner) *GitTown {
 	return &GitTown{
 		Git:            NewGit(runner),
-		originURLCache: map[string]*giturl.Parts{},
+		originURLCache: OriginURLCache{},
 	}
 }
+
+type OriginURLCache map[string]*giturl.Parts
 
 // AddToPerennialBranches registers the given branch names as perennial branches.
 // The branches must exist.
@@ -165,16 +167,19 @@ func (gt *GitTown) OriginURL() *giturl.Parts {
 	if text == "" {
 		return nil
 	}
-	cached, has := gt.originURLCache[text]
+	return DetermineOriginURL(text, gt.OriginOverride(), gt.originURLCache)
+}
+
+func DetermineOriginURL(originURL, originOverride string, originURLCache OriginURLCache) *giturl.Parts {
+	cached, has := originURLCache[originURL]
 	if has {
 		return cached
 	}
-	url := giturl.Parse(text)
-	originOverride := gt.OriginOverride()
+	url := giturl.Parse(originURL)
 	if originOverride != "" {
 		url.Host = originOverride
 	}
-	gt.originURLCache[text] = url
+	originURLCache[originURL] = url
 	return url
 }
 

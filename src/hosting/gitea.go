@@ -7,6 +7,7 @@ import (
 
 	"code.gitea.io/sdk/gitea"
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/messages"
 	"golang.org/x/oauth2"
 )
@@ -94,30 +95,30 @@ func (c *GiteaConnector) UpdateProposalTarget(_ int, _ string) error {
 
 // NewGiteaConfig provides Gitea configuration data if the current repo is hosted on Gitea,
 // otherwise nil.
-func NewGiteaConnector(gitConfig gitTownConfig, log logFn) (*GiteaConnector, error) {
-	hostingService, err := gitConfig.HostingService()
-	if err != nil {
-		return nil, err
-	}
-	url := gitConfig.OriginURL()
-	if url == nil || (url.Host != "gitea.com" && hostingService != config.HostingServiceGitea) {
+func NewGiteaConnector(args NewGiteaConnectorArgs) (*GiteaConnector, error) {
+	if args.OriginURL == nil || (args.OriginURL.Host != "gitea.com" && args.HostingService != config.HostingServiceGitea) {
 		return nil, nil //nolint:nilnil
 	}
-	apiToken := gitConfig.GiteaToken()
-	hostname := url.Host
-	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: apiToken})
+	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: args.APIToken})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
-	giteaClient := gitea.NewClientWithHTTP(fmt.Sprintf("https://%s", hostname), httpClient)
+	giteaClient := gitea.NewClientWithHTTP(fmt.Sprintf("https://%s", args.OriginURL.Host), httpClient)
 	return &GiteaConnector{
 		client: giteaClient,
 		CommonConfig: CommonConfig{
-			APIToken:     apiToken,
-			Hostname:     hostname,
-			Organization: url.Org,
-			Repository:   url.Repo,
+			APIToken:     args.APIToken,
+			Hostname:     args.OriginURL.Host,
+			Organization: args.OriginURL.Org,
+			Repository:   args.OriginURL.Repo,
 		},
-		log: log,
+		log: args.Log,
 	}, nil
+}
+
+type NewGiteaConnectorArgs struct {
+	OriginURL      *giturl.Parts
+	HostingService config.HostingService
+	APIToken       string
+	Log            logFn
 }
 
 func FilterGiteaPullRequests(pullRequests []*gitea.PullRequest, organization, branch, target string) []*gitea.PullRequest {
