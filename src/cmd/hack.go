@@ -89,9 +89,20 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 	hasOpenChanges := fc.Bool(run.Backend.HasOpenChanges())
 	targetBranch := args[0]
 	mainBranch := run.Config.MainBranch()
-	parentBranch, _, err := determineParentBranch(targetBranch, promptForParent, run, mainBranch, branches, run.Config.Lineage())
+	lineage := run.Config.Lineage()
+	parentBranch, updated, err := determineParentBranch(determineParentBranchArgs{
+		backend:         &run.Backend,
+		branches:        branches,
+		lineage:         lineage,
+		mainBranch:      mainBranch,
+		promptForParent: promptForParent,
+		targetBranch:    targetBranch,
+	})
 	if err != nil {
 		return nil, err
+	}
+	if updated {
+		lineage = run.Config.Lineage()
 	}
 	remotes := fc.Strings(run.Backend.Remotes())
 	shouldNewBranchPush := fc.Bool(run.Config.ShouldNewBranchPush())
@@ -100,7 +111,6 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 	if branches.All.Contains(targetBranch) {
 		return nil, fmt.Errorf(messages.BranchAlreadyExists, targetBranch)
 	}
-	lineage := run.Config.Lineage()
 	branchNamesToSync := lineage.BranchesAndAncestors([]string{parentBranch})
 	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
 	shouldSyncUpstream := fc.Bool(run.Config.ShouldSyncUpstream())
@@ -124,24 +134,33 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 	}, fc.Err
 }
 
-func determineParentBranch(targetBranch string, promptForParent bool, run *git.ProdRunner, mainBranch string, branches execute.Branches, lineage config.Lineage) (string, bool, error) {
-	if promptForParent {
-		parentBranch, err := validate.EnterParent(targetBranch, mainBranch, lineage, branches.All)
-		if err != nil {
-			return "", true, err
-		}
-		_, err = validate.KnowsBranchAncestors(parentBranch, validate.KnowsBranchAncestorsArgs{
-			DefaultBranch:   mainBranch,
-			Backend:         &run.Backend,
-			AllBranches:     branches.All,
-			Lineage:         lineage,
-			BranchDurations: branches.Durations,
-			MainBranch:      mainBranch,
-		})
-		if err != nil {
-			return "", true, err
-		}
-		return parentBranch, true, nil
+func determineParentBranch(args determineParentBranchArgs) (parentBranch string, updated bool, err error) {
+	if !args.promptForParent {
+		return args.mainBranch, false, nil
 	}
-	return mainBranch, false, nil
+	parentBranch, err = validate.EnterParent(args.targetBranch, args.mainBranch, args.lineage, args.branches.All)
+	if err != nil {
+		return "", true, err
+	}
+	_, err = validate.KnowsBranchAncestors(parentBranch, validate.KnowsBranchAncestorsArgs{
+		DefaultBranch:   args.mainBranch,
+		Backend:         args.backend,
+		AllBranches:     args.branches.All,
+		Lineage:         args.lineage,
+		BranchDurations: args.branches.Durations,
+		MainBranch:      args.mainBranch,
+	})
+	if err != nil {
+		return "", true, err
+	}
+	return parentBranch, true, nil
+}
+
+type determineParentBranchArgs struct {
+	backend         *git.BackendCommands
+	branches        execute.Branches
+	lineage         config.Lineage
+	mainBranch      string
+	promptForParent bool
+	targetBranch    string
 }
