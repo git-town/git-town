@@ -10,16 +10,16 @@ import (
 // is known to Git Town.
 // Prompts missing lineage information from the user.
 // Indicates if the user made any changes to the ancestry.
-func KnowsBranchesAncestors(branches git.BranchesSyncStatus, mainBranch string, backend *git.BackendCommands, lineage config.Lineage, branchDurations config.BranchDurations) (bool, error) {
+func KnowsBranchesAncestors(args KnowsBranchesAncestorsArgs) (bool, error) {
 	updated := false
-	for _, branch := range branches {
+	for _, branch := range args.AllBranches {
 		branchUpdated, err := KnowsBranchAncestors(branch.Name, KnowsBranchAncestorsArgs{
-			DefaultBranch:   mainBranch,
-			Backend:         backend,
-			AllBranches:     branches,
-			Lineage:         lineage,
-			BranchDurations: branchDurations,
-			MainBranch:      mainBranch,
+			DefaultBranch:   args.MainBranch,
+			Backend:         args.Backend,
+			AllBranches:     args.AllBranches,
+			Lineage:         args.Lineage,
+			BranchDurations: args.BranchDurations,
+			MainBranch:      args.MainBranch,
 		})
 		if err != nil {
 			return updated, err
@@ -29,6 +29,14 @@ func KnowsBranchesAncestors(branches git.BranchesSyncStatus, mainBranch string, 
 		}
 	}
 	return updated, nil
+}
+
+type KnowsBranchesAncestorsArgs struct {
+	AllBranches     git.BranchesSyncStatus
+	Backend         *git.BackendCommands
+	BranchDurations config.BranchDurations
+	Lineage         config.Lineage
+	MainBranch      string
 }
 
 // KnowsBranchAncestors prompts the user for all unknown ancestors of the given branch.

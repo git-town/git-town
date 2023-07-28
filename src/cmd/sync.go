@@ -127,7 +127,13 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, branches execute.Bra
 	branchDurations := branches.Durations
 	if allFlag {
 		localBranches := branches.All.LocalBranches()
-		configUpdated, err = validate.KnowsBranchesAncestors(localBranches, mainBranch, &run.Backend, lineage, branchDurations)
+		configUpdated, err = validate.KnowsBranchesAncestors(validate.KnowsBranchesAncestorsArgs{
+			AllBranches:     localBranches,
+			Backend:         &run.Backend,
+			BranchDurations: branchDurations,
+			Lineage:         lineage,
+			MainBranch:      mainBranch,
+		})
 		if err != nil {
 			return nil, err
 		}
@@ -135,11 +141,11 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, branches execute.Bra
 		shouldPushTags = true
 	} else {
 		configUpdated, err = validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
-			DefaultBranch:   mainBranch,
-			Backend:         &run.Backend,
 			AllBranches:     branches.All,
-			Lineage:         lineage,
+			Backend:         &run.Backend,
 			BranchDurations: branches.Durations,
+			DefaultBranch:   mainBranch,
+			Lineage:         lineage,
 			MainBranch:      mainBranch,
 		})
 		if err != nil {
