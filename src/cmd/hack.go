@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/dialog"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/flags"
@@ -140,7 +141,7 @@ func determineParentBranch(args determineParentBranchArgs) (parentBranch string,
 	if !args.promptForParent {
 		return args.mainBranch, false, nil
 	}
-	parentBranch, err = validate.EnterParent(args.targetBranch, args.mainBranch, args.lineage, args.branches.All)
+	parentBranch, err = dialog.EnterParent(args.targetBranch, args.mainBranch, args.lineage, args.branches.All)
 	if err != nil {
 		return "", true, err
 	}
