@@ -6,7 +6,7 @@ Feature: display debug statistics
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
 
-  # TODO: remove the redundant calls to "git status --porcelain --ignore-submodules"
+  # TODO: remove the duplicate calls
   Scenario: result
     When I run "git-town ship -m done --debug"
     Then it runs the commands
@@ -25,8 +25,8 @@ Feature: display debug statistics
       |         | backend  | git remote get-url origin                         |
       |         | backend  | git remote get-url origin                         |
       |         | backend  | git remote get-url origin                         |
-      |         | backend  | git status --porcelain --ignore-submodules        |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}         |
+      |         | backend  | git status --porcelain --ignore-submodules        |
       |         | backend  | git status --porcelain --ignore-submodules        |
       | feature | frontend | git checkout main                                 |
       |         | backend  | git rev-parse HEAD                                |

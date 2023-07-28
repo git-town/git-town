@@ -35,33 +35,34 @@ func diffParentCommand() *cobra.Command {
 }
 
 func diffParent(args []string, debug bool) error {
-	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:           debug,
-		DryRun:          false,
-		OmitBranchNames: false,
-	})
-	if err != nil {
-		return err
-	}
-	_, currentBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
+		Debug:                 debug,
+		DryRun:                false,
 		Fetch:                 false,
 		HandleUnfinishedState: true,
-		ValidateIsConfigured:  true,
+		OmitBranchNames:       false,
 		ValidateIsOnline:      false,
+		ValidateGitRepo:       true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineDiffParentConfig(args, &run, currentBranch)
+	branches, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
+		ValidateIsConfigured: true,
+	})
 	if err != nil {
 		return err
 	}
-	err = run.Frontend.DiffParent(config.branch, config.parentBranch)
+	config, err := determineDiffParentConfig(args, &repo.Runner, branches.Initial, branches.All)
 	if err != nil {
 		return err
 	}
-	run.Stats.PrintAnalysis()
+	err = repo.Runner.Frontend.DiffParent(config.branch, config.parentBranch)
+	if err != nil {
+		return err
+	}
+	repo.Runner.Stats.PrintAnalysis()
 	return nil
 }
 
@@ -71,7 +72,7 @@ type diffParentConfig struct {
 }
 
 // Does not return error because "Ensure" functions will call exit directly.
-func determineDiffParentConfig(args []string, run *git.ProdRunner, initialBranch string) (*diffParentConfig, error) {
+func determineDiffParentConfig(args []string, run *git.ProdRunner, initialBranch string, allBranches git.BranchesSyncStatus) (*diffParentConfig, error) {
 	var branch string
 	if len(args) > 0 {
 		branch = args[0]
@@ -87,14 +88,26 @@ func determineDiffParentConfig(args []string, run *git.ProdRunner, initialBranch
 			return nil, fmt.Errorf(messages.BranchDoesntExist, branch)
 		}
 	}
-	if !run.Config.IsFeatureBranch(branch) {
+	branchDurations := run.Config.BranchDurations()
+	if !branchDurations.IsFeatureBranch(branch) {
 		return nil, fmt.Errorf(messages.DiffParentNoFeatureBranch)
 	}
-	err := validate.KnowsBranchAncestors(branch, run.Config.MainBranch(), &run.Backend)
+	mainBranch := run.Config.MainBranch()
+	lineage := run.Config.Lineage()
+	updated, err := validate.KnowsBranchAncestors(branch, validate.KnowsBranchAncestorsArgs{
+		DefaultBranch:   mainBranch,
+		Backend:         &run.Backend,
+		AllBranches:     allBranches,
+		Lineage:         lineage,
+		BranchDurations: branchDurations,
+		MainBranch:      mainBranch,
+	})
 	if err != nil {
 		return nil, err
 	}
-	lineage := run.Config.Lineage()
+	if updated {
+		lineage = run.Config.Lineage()
+	}
 	return &diffParentConfig{
 		branch:       branch,
 		parentBranch: lineage.Parent(branch),

@@ -12,66 +12,71 @@ import (
 // Execute runs the commands in the given runstate.
 //
 //nolint:nestif
-func Execute(runState *RunState, run *git.ProdRunner, connector hosting.Connector) error {
+func Execute(args ExecuteArgs) error {
 	for {
-		step := runState.RunStepList.Pop()
+		step := args.RunState.RunStepList.Pop()
 		if step == nil {
-			runState.MarkAsFinished()
-			if runState.IsAbort || runState.isUndo {
-				err := Delete(&run.Backend)
+			args.RunState.MarkAsFinished()
+			if args.RunState.IsAbort || args.RunState.isUndo {
+				err := Delete(args.RootDir)
 				if err != nil {
 					return fmt.Errorf(messages.RunstateDeleteProblem, err)
 				}
 			} else {
-				err := Save(runState, &run.Backend)
+				err := Save(args.RunState, args.RootDir)
 				if err != nil {
 					return fmt.Errorf(messages.RunstateSaveProblem, err)
 				}
 			}
 			fmt.Println()
-			run.Stats.PrintAnalysis()
+			args.Run.Stats.PrintAnalysis()
 			return nil
 		}
 		if typeName(step) == "*SkipCurrentBranchSteps" {
-			runState.SkipCurrentBranchSteps()
+			args.RunState.SkipCurrentBranchSteps()
 			continue
 		}
 		if typeName(step) == "*PushBranchAfterCurrentBranchSteps" {
-			err := runState.AddPushBranchStepAfterCurrentBranchSteps(&run.Backend)
+			err := args.RunState.AddPushBranchStepAfterCurrentBranchSteps(&args.Run.Backend)
 			if err != nil {
 				return err
 			}
 			continue
 		}
-		runErr := step.Run(run, connector)
+		runErr := step.Run(args.Run, args.Connector)
 		if runErr != nil {
-			runState.AbortStepList.Append(step.CreateAbortStep())
+			args.RunState.AbortStepList.Append(step.CreateAbortStep())
 			if step.ShouldAutomaticallyAbortOnError() {
 				cli.PrintError(fmt.Errorf(runErr.Error() + "\nAuto-aborting..."))
-				abortRunState := runState.CreateAbortRunState()
-				err := Execute(&abortRunState, run, connector)
+				abortRunState := args.RunState.CreateAbortRunState()
+				err := Execute(ExecuteArgs{
+					RunState:  &abortRunState,
+					Run:       args.Run,
+					Connector: args.Connector,
+					RootDir:   args.RootDir,
+				})
 				if err != nil {
 					return fmt.Errorf(messages.RunstateAbortStepProblem, err)
 				}
 				return step.CreateAutomaticAbortError()
 			}
-			runState.RunStepList.Prepend(step.CreateContinueStep())
-			err := runState.MarkAsUnfinished(&run.Backend)
+			args.RunState.RunStepList.Prepend(step.CreateContinueStep())
+			err := args.RunState.MarkAsUnfinished(&args.Run.Backend)
 			if err != nil {
 				return err
 			}
-			currentBranch, err := run.Backend.CurrentBranch()
+			currentBranch, err := args.Run.Backend.CurrentBranch()
 			if err != nil {
 				return err
 			}
-			rebasing, err := run.Backend.HasRebaseInProgress()
+			rebasing, err := args.Run.Backend.HasRebaseInProgress()
 			if err != nil {
 				return err
 			}
-			if runState.Command == "sync" && !(rebasing && run.Config.IsMainBranch(currentBranch)) {
-				runState.UnfinishedDetails.CanSkip = true
+			if args.RunState.Command == "sync" && !(rebasing && args.Run.Config.IsMainBranch(currentBranch)) {
+				args.RunState.UnfinishedDetails.CanSkip = true
 			}
-			err = Save(runState, &run.Backend)
+			err = Save(args.RunState, args.RootDir)
 			if err != nil {
 				return fmt.Errorf(messages.RunstateSaveProblem, err)
 			}
@@ -80,16 +85,23 @@ func Execute(runState *RunState, run *git.ProdRunner, connector hosting.Connecto
 To abort, run "git-town abort".
 To continue after having resolved conflicts, run "git-town continue".
 `
-			if runState.UnfinishedDetails.CanSkip {
+			if args.RunState.UnfinishedDetails.CanSkip {
 				message += `To continue by skipping the current branch, run "git-town skip".`
 			}
 			message += "\n"
 			return fmt.Errorf(message)
 		}
-		undoStep, err := step.CreateUndoStep(&run.Backend)
+		undoStep, err := step.CreateUndoStep(&args.Run.Backend)
 		if err != nil {
 			return fmt.Errorf(messages.UndoCreateStepProblem, step, err)
 		}
-		runState.UndoStepList.Prepend(undoStep)
+		args.RunState.UndoStepList.Prepend(undoStep)
 	}
+}
+
+type ExecuteArgs struct {
+	RunState  *RunState
+	Run       *git.ProdRunner
+	Connector hosting.Connector
+	RootDir   string
 }

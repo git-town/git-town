@@ -33,6 +33,13 @@ func (gt *GitTown) AddToPerennialBranches(branches ...string) error {
 	return gt.SetPerennialBranches(append(gt.PerennialBranches(), branches...))
 }
 
+func (gt *GitTown) BranchDurations() BranchDurations {
+	return BranchDurations{
+		MainBranch:        gt.MainBranch(),
+		PerennialBranches: gt.PerennialBranches(),
+	}
+}
+
 func (gt *GitTown) DeprecatedNewBranchPushFlagGlobal() string {
 	return gt.globalConfigCache[DeprecatedNewBranchPushFlagKey]
 }
@@ -90,12 +97,6 @@ func (gt *GitTown) HostingService() (HostingService, error) {
 	return NewHostingService(gt.HostingServiceName())
 }
 
-// IsFeatureBranch indicates whether the branch with the given name is
-// a feature branch.
-func (gt *GitTown) IsFeatureBranch(branch string) bool {
-	return !gt.IsMainBranch(branch) && !gt.IsPerennialBranch(branch)
-}
-
 // IsMainBranch indicates whether the branch with the given name
 // is the main branch of the repository.
 func (gt *GitTown) IsMainBranch(branch string) bool {
@@ -113,13 +114,6 @@ func (gt *GitTown) IsOffline() (bool, error) {
 		return false, fmt.Errorf(messages.ValueInvalid, OfflineKey, config)
 	}
 	return result, nil
-}
-
-// IsPerennialBranch indicates whether the branch with the given name is
-// a perennial branch.
-func (gt *GitTown) IsPerennialBranch(branch string) bool {
-	perennialBranches := gt.PerennialBranches()
-	return stringslice.Contains(perennialBranches, branch)
 }
 
 // Lineage provides the configured ancestry information for this Git repo.

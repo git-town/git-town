@@ -5,7 +5,6 @@ const (
 	ArgumentUnknown                   = "unknown argument: %q"
 	BranchAlreadyExists               = "there is already a branch %q"
 	BranchDoesntExist                 = "there is no branch %q"
-	BranchPreviouslyCheckedOutProblem = "cannot determine the previously checked out branch: %w"
 	BranchCheckoutProblem             = "cannot check out branch %q: %w"
 	BranchCurrentProblem              = "cannot determine current branch: %w"
 	BranchDiffProblem                 = "cannot determine if branch %q has unmerged commits: %w"

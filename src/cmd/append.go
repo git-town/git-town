@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/flags"
@@ -41,29 +42,30 @@ func appendCmd() *cobra.Command {
 }
 
 func runAppend(arg string, debug bool) error {
-	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:           debug,
-		DryRun:          false,
-		OmitBranchNames: false,
-	})
-	if err != nil {
-		return err
-	}
-	allBranches, currentBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
+		Debug:                 debug,
+		DryRun:                false,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
-		ValidateIsConfigured:  true,
+		OmitBranchNames:       false,
 		ValidateIsOnline:      false,
+		ValidateGitRepo:       true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineAppendConfig(arg, &run, allBranches, currentBranch)
+	branches, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
+		ValidateIsConfigured: true,
+	})
 	if err != nil {
 		return err
 	}
-	stepList, err := appendStepList(config, &run)
+	config, err := determineAppendConfig(arg, &repo.Runner, branches, repo.IsOffline)
+	if err != nil {
+		return err
+	}
+	stepList, err := appendStepList(config)
 	if err != nil {
 		return err
 	}
@@ -71,60 +73,116 @@ func runAppend(arg string, debug bool) error {
 		Command:     "append",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(&runState, &run, nil)
+	return runstate.Execute(runstate.ExecuteArgs{
+		RunState:  &runState,
+		Run:       &repo.Runner,
+		Connector: nil,
+		RootDir:   repo.RootDir,
+	})
 }
 
 type appendConfig struct {
+	durations           config.BranchDurations
 	branchesToSync      git.BranchesSyncStatus
-	hasOrigin           bool
+	hasOpenChanges      bool
+	remotes             config.Remotes
+	initialBranch       string
 	isOffline           bool
+	lineage             config.Lineage
 	mainBranch          string
 	pushHook            bool
 	parentBranch        string
+	previousBranch      string
+	pullBranchStrategy  config.PullBranchStrategy
 	shouldNewBranchPush bool
+	shouldSyncUpstream  bool
+	syncStrategy        config.SyncStrategy
 	targetBranch        string
 }
 
-func determineAppendConfig(targetBranch string, run *git.ProdRunner, allBranches git.BranchesSyncStatus, currentBranchName string) (*appendConfig, error) {
+func determineAppendConfig(targetBranch string, run *git.ProdRunner, branches execute.Branches, isOffline bool) (*appendConfig, error) {
+	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
 	fc := failure.Collector{}
-	hasOrigin := fc.Bool(run.Backend.HasOrigin())
-	isOffline := fc.Bool(run.Config.IsOffline())
+	remotes := fc.Strings(run.Backend.Remotes())
 	mainBranch := run.Config.MainBranch()
 	pushHook := fc.Bool(run.Config.PushHook())
+	pullBranchStrategy := fc.PullBranchStrategy(run.Config.PullBranchStrategy())
+	hasOpenChanges := fc.Bool(run.Backend.HasOpenChanges())
 	shouldNewBranchPush := fc.Bool(run.Config.ShouldNewBranchPush())
 	if fc.Err != nil {
 		return nil, fc.Err
 	}
-	if allBranches.Contains(targetBranch) {
+	if branches.All.Contains(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExists, targetBranch)
 	}
-	fc.Check(validate.KnowsBranchAncestors(currentBranchName, run.Config.MainBranch(), &run.Backend))
 	lineage := run.Config.Lineage()
-	branchNamesToSync := lineage.BranchAndAncestors(currentBranchName)
-	branchesToSync := fc.BranchesSyncStatus(allBranches.Select(branchNamesToSync))
+	updated, err := validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
+		DefaultBranch:   mainBranch,
+		Backend:         &run.Backend,
+		AllBranches:     branches.All,
+		Lineage:         lineage,
+		BranchDurations: branches.Durations,
+		MainBranch:      mainBranch,
+	})
+	if err != nil {
+		return nil, err
+	}
+	if updated {
+		lineage = run.Config.Lineage() // refresh lineage after ancestry changes
+	}
+	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
+	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
+	syncStrategy := fc.SyncStrategy(run.Config.SyncStrategy())
+	shouldSyncUpstream := fc.Bool(run.Config.ShouldSyncUpstream())
 	return &appendConfig{
+		durations:           branches.Durations,
 		branchesToSync:      branchesToSync,
+		hasOpenChanges:      hasOpenChanges,
+		remotes:             remotes,
+		initialBranch:       branches.Initial,
 		isOffline:           isOffline,
-		hasOrigin:           hasOrigin,
+		lineage:             lineage,
 		mainBranch:          mainBranch,
 		pushHook:            pushHook,
-		parentBranch:        currentBranchName,
+		parentBranch:        branches.Initial,
+		previousBranch:      previousBranch,
+		pullBranchStrategy:  pullBranchStrategy,
 		shouldNewBranchPush: shouldNewBranchPush,
+		shouldSyncUpstream:  shouldSyncUpstream,
+		syncStrategy:        syncStrategy,
 		targetBranch:        targetBranch,
 	}, fc.Err
 }
 
-func appendStepList(config *appendConfig, run *git.ProdRunner) (runstate.StepList, error) {
+func appendStepList(config *appendConfig) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.branchesToSync {
-		updateBranchSteps(&list, branch, true, config.isOffline, run)
+		updateBranchSteps(&list, updateBranchStepsArgs{
+			branch:             branch,
+			branchDurations:    config.durations,
+			isOffline:          config.isOffline,
+			lineage:            config.lineage,
+			remotes:            config.remotes,
+			mainBranch:         config.mainBranch,
+			pullBranchStrategy: config.pullBranchStrategy,
+			pushBranch:         true,
+			pushHook:           config.pushHook,
+			shouldSyncUpstream: config.shouldSyncUpstream,
+			syncStrategy:       config.syncStrategy,
+		})
 	}
 	list.Add(&steps.CreateBranchStep{Branch: config.targetBranch, StartingPoint: config.parentBranch})
 	list.Add(&steps.SetParentStep{Branch: config.targetBranch, ParentBranch: config.parentBranch})
 	list.Add(&steps.CheckoutStep{Branch: config.targetBranch})
-	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
+	if config.remotes.HasOrigin() && config.shouldNewBranchPush && !config.isOffline {
 		list.Add(&steps.CreateTrackingBranchStep{Branch: config.targetBranch, NoPushHook: !config.pushHook})
 	}
-	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &run.Backend, config.mainBranch)
+	list.Wrap(runstate.WrapOptions{
+		RunInGitRoot:     true,
+		StashOpenChanges: config.hasOpenChanges,
+		MainBranch:       config.mainBranch,
+		InitialBranch:    config.initialBranch,
+		PreviousBranch:   config.previousBranch,
+	})
 	return list.Result()
 }

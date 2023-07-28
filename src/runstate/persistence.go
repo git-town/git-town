@@ -8,13 +8,12 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/messages"
 )
 
 // Load loads the run state for the given Git repo from disk. Can return nil if there is no saved runstate.
-func Load(backend *git.BackendCommands) (*RunState, error) {
-	filename, err := PersistenceFilePath(backend)
+func Load(repoDir string) (*RunState, error) {
+	filename, err := PersistenceFilePath(repoDir)
 	if err != nil {
 		return nil, err
 	}
@@ -38,8 +37,8 @@ func Load(backend *git.BackendCommands) (*RunState, error) {
 }
 
 // Delete removes the stored run state from disk.
-func Delete(backend *git.BackendCommands) error {
-	filename, err := PersistenceFilePath(backend)
+func Delete(repoDir string) error {
+	filename, err := PersistenceFilePath(repoDir)
 	if err != nil {
 		return err
 	}
@@ -58,12 +57,12 @@ func Delete(backend *git.BackendCommands) error {
 }
 
 // Save stores the given run state for the given Git repo to disk.
-func Save(runState *RunState, backend *git.BackendCommands) error {
+func Save(runState *RunState, repoDir string) error {
 	content, err := json.MarshalIndent(runState, "", "  ")
 	if err != nil {
 		return fmt.Errorf(messages.RunstateSerializeProblem, err)
 	}
-	persistencePath, err := PersistenceFilePath(backend)
+	persistencePath, err := PersistenceFilePath(repoDir)
 	if err != nil {
 		return err
 	}
@@ -79,13 +78,12 @@ func Save(runState *RunState, backend *git.BackendCommands) error {
 	return nil
 }
 
-func PersistenceFilePath(backend *git.BackendCommands) (string, error) {
+func PersistenceFilePath(repoDir string) (string, error) {
 	configDir, err := os.UserConfigDir()
 	if err != nil {
 		return "", fmt.Errorf(messages.RunstatePathProblem, err)
 	}
 	persistenceDir := filepath.Join(configDir, "git-town", "runstate")
-	repoDir := backend.RootDirectory()
 	filename := SanitizePath(repoDir)
 	return filepath.Join(persistenceDir, filename+".json"), err
 }

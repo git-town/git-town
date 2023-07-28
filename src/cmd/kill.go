@@ -35,29 +35,30 @@ func killCommand() *cobra.Command {
 }
 
 func kill(args []string, debug bool) error {
-	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:           debug,
-		DryRun:          false,
-		OmitBranchNames: false,
-	})
-	if err != nil {
-		return err
-	}
-	allBranches, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
+		Debug:                 debug,
+		DryRun:                false,
 		Fetch:                 true,
 		HandleUnfinishedState: false,
-		ValidateIsConfigured:  true,
+		OmitBranchNames:       false,
 		ValidateIsOnline:      false,
+		ValidateGitRepo:       true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineKillConfig(args, &run, allBranches, initialBranch)
+	branches, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
+		ValidateIsConfigured: true,
+	})
 	if err != nil {
 		return err
 	}
-	stepList, err := killStepList(config, &run)
+	config, err := determineKillConfig(args, &repo.Runner, branches, repo.IsOffline)
+	if err != nil {
+		return err
+	}
+	stepList, err := killStepList(config)
 	if err != nil {
 		return err
 	}
@@ -65,7 +66,12 @@ func kill(args []string, debug bool) error {
 		Command:     "kill",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(&runState, &run, nil)
+	return runstate.Execute(runstate.ExecuteArgs{
+		RunState:  &runState,
+		Run:       &repo.Runner,
+		Connector: nil,
+		RootDir:   repo.RootDir,
+	})
 }
 
 type killConfig struct {
@@ -80,34 +86,38 @@ type killConfig struct {
 	targetBranch       git.BranchSyncStatus
 }
 
-func determineKillConfig(args []string, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string) (*killConfig, error) {
+func determineKillConfig(args []string, run *git.ProdRunner, branches execute.Branches, isOffline bool) (*killConfig, error) {
 	mainBranch := run.Config.MainBranch()
-	targetBranchName := initialBranch
+	targetBranchName := branches.Initial
 	if len(args) > 0 {
 		targetBranchName = args[0]
 	}
-	if !run.Config.IsFeatureBranch(targetBranchName) {
+	if !branches.Durations.IsFeatureBranch(targetBranchName) {
 		return nil, fmt.Errorf(messages.KillOnlyFeatureBranches)
 	}
-	targetBranch := allBranches.Lookup(targetBranchName)
+	targetBranch := branches.All.Lookup(targetBranchName)
 	if targetBranch == nil {
 		return nil, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
+	lineage := run.Config.Lineage()
 	if targetBranch.IsLocal() {
-		err := validate.KnowsBranchAncestors(targetBranchName, mainBranch, &run.Backend)
+		updated, err := validate.KnowsBranchAncestors(targetBranchName, validate.KnowsBranchAncestorsArgs{
+			DefaultBranch:   mainBranch,
+			Backend:         &run.Backend,
+			AllBranches:     branches.All,
+			Lineage:         lineage,
+			BranchDurations: branches.Durations,
+			MainBranch:      mainBranch,
+		})
 		if err != nil {
 			return nil, err
 		}
-		run.Config.Reload()
+		if updated {
+			run.Config.Reload()
+			lineage = run.Config.Lineage()
+		}
 	}
-	isOffline, err := run.Config.IsOffline()
-	if err != nil {
-		return nil, err
-	}
-	previousBranch, err := run.Backend.PreviouslyCheckedOutBranch()
-	if err != nil {
-		return nil, err
-	}
+	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
 	hasOpenChanges, err := run.Backend.HasOpenChanges()
 	if err != nil {
 		return nil, err
@@ -116,11 +126,10 @@ func determineKillConfig(args []string, run *git.ProdRunner, allBranches git.Bra
 	if err != nil {
 		return nil, err
 	}
-	lineage := run.Config.Lineage()
 	return &killConfig{
 		childBranches:      lineage.Children(targetBranchName),
 		hasOpenChanges:     hasOpenChanges,
-		initialBranch:      initialBranch,
+		initialBranch:      branches.Initial,
 		isOffline:          isOffline,
 		mainBranch:         mainBranch,
 		noPushHook:         !pushHook,
@@ -130,7 +139,7 @@ func determineKillConfig(args []string, run *git.ProdRunner, allBranches git.Bra
 	}, nil
 }
 
-func killStepList(config *killConfig, run *git.ProdRunner) (runstate.StepList, error) {
+func killStepList(config *killConfig) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	switch {
 	case config.targetBranch.IsLocal():
@@ -155,7 +164,10 @@ func killStepList(config *killConfig, run *git.ProdRunner) (runstate.StepList, e
 	}
 	err := result.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     true,
-		StashOpenChanges: config.initialBranch != config.targetBranch.Name && config.targetBranch.Name == config.previousBranch,
-	}, &run.Backend, config.mainBranch)
+		StashOpenChanges: config.initialBranch != config.targetBranch.Name && config.targetBranch.Name == config.previousBranch && config.hasOpenChanges,
+		MainBranch:       config.mainBranch,
+		InitialBranch:    config.initialBranch,
+		PreviousBranch:   config.previousBranch,
+	})
 	return result, err
 }

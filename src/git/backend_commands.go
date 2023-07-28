@@ -31,7 +31,6 @@ type BackendCommands struct {
 	CurrentBranchCache *cache.String  // caches the currently checked out Git branch
 	RemoteBranchCache  *cache.Strings // caches the remote branches of this Git repo
 	RemotesCache       *cache.Strings // caches Git remotes
-	RootDirCache       *cache.String  // caches the base of the Git directory
 }
 
 // Author provides the locally Git configured user.
@@ -319,20 +318,6 @@ func (bc *BackendCommands) HasRebaseInProgress() (bool, error) {
 	return false, nil
 }
 
-// HasOrigin indicates whether this repo has an origin remote.
-func (bc *BackendCommands) HasOrigin() (bool, error) {
-	return bc.HasRemote(config.OriginRemote)
-}
-
-// HasRemote indicates whether this repo has a remote with the given name.
-func (bc *BackendCommands) HasRemote(name string) (bool, error) {
-	remotes, err := bc.Remotes()
-	if err != nil {
-		return false, fmt.Errorf(messages.RemoteExistsProblem, name, err)
-	}
-	return stringslice.Contains(remotes, name), nil
-}
-
 // HasShippableChanges indicates whether the given branch has changes
 // not currently in the main branch.
 func (bc *BackendCommands) HasShippableChanges(branch, mainBranch string) (bool, error) {
@@ -379,12 +364,12 @@ func (bc *BackendCommands) LocalBranchesMainFirst(mainBranch string) ([]string, 
 }
 
 // PreviouslyCheckedOutBranch provides the name of the branch that was previously checked out in this repo.
-func (bc *BackendCommands) PreviouslyCheckedOutBranch() (string, error) {
+func (bc *BackendCommands) PreviouslyCheckedOutBranch() string {
 	output, err := bc.QueryTrim("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
 	if err != nil {
-		return "", fmt.Errorf(messages.BranchPreviouslyCheckedOutProblem, err)
+		return ""
 	}
-	return output, nil
+	return output
 }
 
 // Remotes provides the names of all Git remotes in this repository.
@@ -400,7 +385,7 @@ func (bc *BackendCommands) RemotesUncached() ([]string, error) {
 }
 
 // Remotes provides the names of all Git remotes in this repository.
-func (bc *BackendCommands) Remotes() ([]string, error) {
+func (bc *BackendCommands) Remotes() (config.Remotes, error) {
 	if !bc.RemotesCache.Initialized() {
 		remotes, err := bc.RemotesUncached()
 		if err != nil {
@@ -429,23 +414,12 @@ func (bc *BackendCommands) RemoveOutdatedConfiguration(allBranches BranchesSyncS
 
 // RootDirectory provides the path of the rood directory of the current repository,
 // i.e. the directory that contains the ".git" folder.
-func (bc *BackendCommands) RootDirectoryUncached() string {
+func (bc *BackendCommands) RootDirectory() string {
 	output, err := bc.QueryTrim("git", "rev-parse", "--show-toplevel")
 	if err != nil {
 		return ""
 	}
 	return filepath.FromSlash(output)
-}
-
-// RootDirectory provides the path of the root directory of the current repository,
-// i.e. the directory that contains the ".git" folder.
-// An empty string indicates no Git repo.
-func (bc *BackendCommands) RootDirectory() string {
-	if !bc.RootDirCache.Initialized() {
-		rootDir := bc.RootDirectoryUncached()
-		bc.RootDirCache.Set(rootDir)
-	}
-	return bc.RootDirCache.Value()
 }
 
 // ShaForBranch provides the SHA for the local branch with the given name.
@@ -460,17 +434,12 @@ func (bc *BackendCommands) ShaForBranch(name string) (string, error) {
 // ShouldPushBranch returns whether the local branch with the given name
 // contains commits that have not been pushed to its tracking branch.
 func (bc *BackendCommands) ShouldPushBranch(branch string) (bool, error) {
-	trackingBranch := bc.TrackingBranch(branch)
+	trackingBranch := TrackingBranchName(branch)
 	out, err := bc.QueryTrim("git", "rev-list", "--left-right", branch+"..."+trackingBranch)
 	if err != nil {
 		return false, fmt.Errorf(messages.DiffProblem, branch, trackingBranch, err)
 	}
 	return out != "", nil
-}
-
-// TrackingBranch provides the name of the remote branch tracking the local branch with the given name.
-func (bc *BackendCommands) TrackingBranch(branch string) string {
-	return "origin/" + branch
 }
 
 // Version indicates whether the needed Git version is installed.
