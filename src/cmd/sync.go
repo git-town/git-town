@@ -84,7 +84,12 @@ func sync(all, dryRun, debug bool) error {
 		Command:     "sync",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(&runState, &repo.Runner, nil, repo.RootDir)
+	return runstate.Execute(runstate.ExecuteArgs{
+		RunState:  &runState,
+		Run:       &repo.Runner,
+		Connector: nil,
+		RootDir:   repo.RootDir,
+	})
 }
 
 type syncConfig struct {

@@ -56,5 +56,10 @@ func undo(debug bool) error {
 		return fmt.Errorf(messages.UndoNothingToDo)
 	}
 	undoRunState := runState.CreateUndoRunState()
-	return runstate.Execute(&undoRunState, &repo.Runner, nil, repo.RootDir)
+	return runstate.Execute(runstate.ExecuteArgs{
+		RunState:  &undoRunState,
+		Run:       &repo.Runner,
+		Connector: nil,
+		RootDir:   repo.RootDir,
+	})
 }

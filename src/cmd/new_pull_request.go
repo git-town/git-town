@@ -88,7 +88,12 @@ func newPullRequest(debug bool) error {
 		Command:     "new-pull-request",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(&runState, &repo.Runner, connector, repo.RootDir)
+	return runstate.Execute(runstate.ExecuteArgs{
+		RunState:  &runState,
+		Run:       &repo.Runner,
+		Connector: connector,
+		RootDir:   repo.RootDir,
+	})
 }
 
 type newPullRequestConfig struct {

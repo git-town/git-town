@@ -76,7 +76,12 @@ func prepend(args []string, debug bool) error {
 		Command:     "prepend",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(&runState, &repo.Runner, nil, repo.RootDir)
+	return runstate.Execute(runstate.ExecuteArgs{
+		RunState:  &runState,
+		Run:       &repo.Runner,
+		Connector: nil,
+		RootDir:   repo.RootDir,
+	})
 }
 
 type prependConfig struct {

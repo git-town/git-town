@@ -75,7 +75,12 @@ func hack(args []string, promptForParent, debug bool) error {
 		Command:     "hack",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(&runState, &repo.Runner, nil, repo.RootDir)
+	return runstate.Execute(runstate.ExecuteArgs{
+		RunState:  &runState,
+		Run:       &repo.Runner,
+		Connector: nil,
+		RootDir:   repo.RootDir,
+	})
 }
 
 func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunner, branches execute.Branches) (*appendConfig, error) {

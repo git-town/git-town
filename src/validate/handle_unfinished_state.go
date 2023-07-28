@@ -40,13 +40,28 @@ func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, roo
 		if hasConflicts {
 			return false, fmt.Errorf(messages.ContinueUnresolvedConflicts)
 		}
-		return true, runstate.Execute(runState, run, connector, rootDir)
+		return true, runstate.Execute(runstate.ExecuteArgs{
+			RunState:  runState,
+			Run:       run,
+			Connector: connector,
+			RootDir:   rootDir,
+		})
 	case dialog.ResponseTypeAbort:
 		abortRunState := runState.CreateAbortRunState()
-		return true, runstate.Execute(&abortRunState, run, connector, rootDir)
+		return true, runstate.Execute(runstate.ExecuteArgs{
+			RunState:  &abortRunState,
+			Run:       run,
+			Connector: connector,
+			RootDir:   rootDir,
+		})
 	case dialog.ResponseTypeSkip:
 		skipRunState := runState.CreateSkipRunState()
-		return true, runstate.Execute(&skipRunState, run, connector, rootDir)
+		return true, runstate.Execute(runstate.ExecuteArgs{
+			RunState:  &skipRunState,
+			Run:       run,
+			Connector: connector,
+			RootDir:   rootDir,
+		})
 	case dialog.ResponseTypeQuit:
 		return true, nil
 	default:

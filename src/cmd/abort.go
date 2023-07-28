@@ -56,5 +56,10 @@ func abort(debug bool) error {
 	if err != nil {
 		return err
 	}
-	return runstate.Execute(&abortRunState, &repo.Runner, connector, repo.RootDir)
+	return runstate.Execute(runstate.ExecuteArgs{
+		RunState:  &abortRunState,
+		Run:       &repo.Runner,
+		Connector: connector,
+		RootDir:   repo.RootDir,
+	})
 }

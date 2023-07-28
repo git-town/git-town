@@ -73,7 +73,12 @@ func runAppend(arg string, debug bool) error {
 		Command:     "append",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(&runState, &repo.Runner, nil, repo.RootDir)
+	return runstate.Execute(runstate.ExecuteArgs{
+		RunState:  &runState,
+		Run:       &repo.Runner,
+		Connector: nil,
+		RootDir:   repo.RootDir,
+	})
 }
 
 type appendConfig struct {

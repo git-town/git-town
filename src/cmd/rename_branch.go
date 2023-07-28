@@ -82,7 +82,12 @@ func renameBranch(args []string, force, debug bool) error {
 		Command:     "rename-branch",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(&runState, &repo.Runner, nil, repo.RootDir)
+	return runstate.Execute(runstate.ExecuteArgs{
+		RunState:  &runState,
+		Run:       &repo.Runner,
+		Connector: nil,
+		RootDir:   repo.RootDir,
+	})
 }
 
 type renameBranchConfig struct {

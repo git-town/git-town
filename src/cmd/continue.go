@@ -68,5 +68,10 @@ func runContinue(debug bool) error {
 	if err != nil {
 		return err
 	}
-	return runstate.Execute(runState, &repo.Runner, connector, repo.RootDir)
+	return runstate.Execute(runstate.ExecuteArgs{
+		RunState:  runState,
+		Run:       &repo.Runner,
+		Connector: connector,
+		RootDir:   repo.RootDir,
+	})
 }

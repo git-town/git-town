@@ -105,7 +105,12 @@ func ship(args []string, message string, debug bool) error {
 		Command:     "ship",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(&runState, &repo.Runner, connector, repo.RootDir)
+	return runstate.Execute(runstate.ExecuteArgs{
+		RunState:  &runState,
+		Run:       &repo.Runner,
+		Connector: connector,
+		RootDir:   repo.RootDir,
+	})
 }
 
 type shipConfig struct {
