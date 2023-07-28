@@ -86,7 +86,7 @@ type killConfig struct {
 	targetBranch       git.BranchSyncStatus
 }
 
-func determineKillConfig(args []string, run *git.ProdRunner, branches execute.Branches, isOffline bool) (*killConfig, error) {
+func determineKillConfig(args []string, run *git.ProdRunner, branches git.Branches, isOffline bool) (*killConfig, error) {
 	mainBranch := run.Config.MainBranch()
 	targetBranchName := branches.Initial
 	if len(args) > 0 {

@@ -103,7 +103,7 @@ type prependConfig struct {
 	targetBranch        string
 }
 
-func determinePrependConfig(args []string, run *git.ProdRunner, branches execute.Branches, isOffline bool) (*prependConfig, error) {
+func determinePrependConfig(args []string, run *git.ProdRunner, branches git.Branches, isOffline bool) (*prependConfig, error) {
 	fc := failure.Collector{}
 	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
 	hasOpenChanges := fc.Bool(run.Backend.HasOpenChanges())

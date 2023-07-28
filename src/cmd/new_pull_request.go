@@ -112,7 +112,7 @@ type newPullRequestConfig struct {
 	syncStrategy       config.SyncStrategy
 }
 
-func determineNewPullRequestConfig(run *git.ProdRunner, branches execute.Branches, isOffline bool) (*newPullRequestConfig, error) {
+func determineNewPullRequestConfig(run *git.ProdRunner, branches git.Branches, isOffline bool) (*newPullRequestConfig, error) {
 	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
 	hasOpenChanges, err := run.Backend.HasOpenChanges()
 	if err != nil {

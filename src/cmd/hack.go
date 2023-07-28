@@ -58,13 +58,7 @@ func hack(args []string, promptForParent, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	branches, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
-		ValidateIsConfigured: true,
-	})
-	if err != nil {
-		return err
-	}
-	config, err := determineHackConfig(args, promptForParent, &repo.Runner, branches)
+	config, err := determineHackConfig(args, promptForParent, &repo.Runner)
 	if err != nil {
 		return err
 	}
@@ -84,8 +78,11 @@ func hack(args []string, promptForParent, debug bool) error {
 	})
 }
 
-func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunner, branches execute.Branches) (*appendConfig, error) {
+func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunner) (*appendConfig, error) {
 	fc := failure.Collector{}
+	branches := fc.Branches(execute.LoadBranches(run, execute.LoadBranchesArgs{
+		ValidateIsConfigured: true,
+	}))
 	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
 	hasOpenChanges := fc.Bool(run.Backend.HasOpenChanges())
 	targetBranch := args[0]
@@ -161,7 +158,7 @@ func determineParentBranch(args determineParentBranchArgs) (parentBranch string,
 
 type determineParentBranchArgs struct {
 	backend         *git.BackendCommands
-	branches        execute.Branches
+	branches        git.Branches
 	lineage         config.Lineage
 	mainBranch      string
 	promptForParent bool

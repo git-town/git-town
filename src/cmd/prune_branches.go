@@ -77,7 +77,7 @@ type pruneBranchesConfig struct {
 	previousBranch                           string
 }
 
-func determinePruneBranchesConfig(run *git.ProdRunner, branches execute.Branches) *pruneBranchesConfig {
+func determinePruneBranchesConfig(run *git.ProdRunner, branches git.Branches) *pruneBranchesConfig {
 	return &pruneBranchesConfig{
 		branchDurations:                          branches.Durations,
 		initialBranch:                            branches.Initial,

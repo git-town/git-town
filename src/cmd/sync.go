@@ -109,7 +109,7 @@ type syncConfig struct {
 	syncStrategy       config.SyncStrategy
 }
 
-func determineSyncConfig(allFlag bool, run *git.ProdRunner, branches execute.Branches, isOffline bool) (*syncConfig, error) {
+func determineSyncConfig(allFlag bool, run *git.ProdRunner, branches git.Branches, isOffline bool) (*syncConfig, error) {
 	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
 	hasOpenChanges, err := run.Backend.HasOpenChanges()
 	if err != nil {

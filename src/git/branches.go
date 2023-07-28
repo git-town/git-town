@@ -3,6 +3,7 @@ package git
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/messages"
 )
 
@@ -106,4 +107,19 @@ func (bs BranchesSyncStatus) Select(names []string) (BranchesSyncStatus, error) 
 		result[n] = *branch
 	}
 	return result, nil
+}
+
+type Branches struct {
+	All       BranchesSyncStatus
+	Durations config.BranchDurations
+	Initial   string
+}
+
+// EmptyBranches provides the zero value for Branches.
+func EmptyBranches() Branches {
+	return Branches{
+		All:       BranchesSyncStatus{},
+		Durations: config.EmptyBranchDurations(),
+		Initial:   "",
+	}
 }
