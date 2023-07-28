@@ -2,7 +2,7 @@ package config
 
 import "github.com/git-town/git-town/v9/src/stringslice"
 
-// Remotes contains the name of the remotes that are set up in the Git repo.
+// Remotes answers questions which Git remotes a repo has.
 type Remotes []string
 
 func (r Remotes) HasOrigin() bool {
