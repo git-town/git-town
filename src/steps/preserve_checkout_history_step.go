@@ -18,9 +18,7 @@ func (step *PreserveCheckoutHistoryStep) Run(run *git.ProdRunner, _ hosting.Conn
 	if err != nil {
 		return err
 	}
-	// NOTE: errors are not a failure condition here --> ignoring them
-	previouslyCheckedOutBranch, _ := run.Backend.PreviouslyCheckedOutBranch()
-	if expectedPreviouslyCheckedOutBranch == previouslyCheckedOutBranch {
+	if expectedPreviouslyCheckedOutBranch == run.Backend.PreviouslyCheckedOutBranch() {
 		return nil
 	}
 	currentBranch, err := run.Backend.CurrentBranch()

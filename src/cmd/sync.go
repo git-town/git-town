@@ -53,29 +53,30 @@ func syncCmd() *cobra.Command {
 }
 
 func sync(all, dryRun, debug bool) error {
-	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:           debug,
-		DryRun:          dryRun,
-		OmitBranchNames: false,
-	})
-	if err != nil {
-		return err
-	}
-	allBranches, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
+		Debug:                 debug,
+		DryRun:                dryRun,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
-		ValidateIsConfigured:  true,
+		OmitBranchNames:       false,
 		ValidateIsOnline:      false,
+		ValidateGitRepo:       true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineSyncConfig(all, &run, allBranches, initialBranch)
+	branches, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
+		ValidateIsConfigured: true,
+	})
 	if err != nil {
 		return err
 	}
-	stepList, err := syncBranchesSteps(config, &run)
+	config, err := determineSyncConfig(all, &repo.Runner, branches, repo.IsOffline)
+	if err != nil {
+		return err
+	}
+	stepList, err := syncBranchesSteps(config)
 	if err != nil {
 		return err
 	}
@@ -83,122 +84,222 @@ func sync(all, dryRun, debug bool) error {
 		Command:     "sync",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(&runState, &run, nil)
+	return runstate.Execute(runstate.ExecuteArgs{
+		RunState:  &runState,
+		Run:       &repo.Runner,
+		Connector: nil,
+		RootDir:   repo.RootDir,
+	})
 }
 
 type syncConfig struct {
-	branchesToSync git.BranchesSyncStatus
-	hasOrigin      bool
-	initialBranch  string
-	isOffline      bool
-	mainBranch     string
-	shouldPushTags bool
+	branchDurations    config.BranchDurations
+	branchesToSync     git.BranchesSyncStatus
+	hasOpenChanges     bool
+	remotes            config.Remotes
+	initialBranch      string
+	isOffline          bool
+	lineage            config.Lineage
+	mainBranch         string
+	previousBranch     string
+	pullBranchStrategy config.PullBranchStrategy
+	pushHook           bool
+	shouldPushTags     bool
+	shouldSyncUpstream bool
+	syncStrategy       config.SyncStrategy
 }
 
-func determineSyncConfig(allFlag bool, run *git.ProdRunner, allBranchesSyncStatus git.BranchesSyncStatus, initialBranch string) (*syncConfig, error) {
-	hasOrigin, err := run.Backend.HasOrigin()
+func determineSyncConfig(allFlag bool, run *git.ProdRunner, branches execute.Branches, isOffline bool) (*syncConfig, error) {
+	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
+	hasOpenChanges, err := run.Backend.HasOpenChanges()
 	if err != nil {
 		return nil, err
 	}
-	isOffline, err := run.Config.IsOffline()
+	remotes, err := run.Backend.Remotes()
 	if err != nil {
 		return nil, err
 	}
 	mainBranch := run.Config.MainBranch()
-	lineage := run.Config.Lineage()
 	var branchNamesToSync []string
 	var shouldPushTags bool
+	lineage := run.Config.Lineage()
+	var configUpdated bool
+	branchDurations := branches.Durations
 	if allFlag {
-		localBranches := allBranchesSyncStatus.LocalBranches().BranchNames()
-		err = validate.KnowsBranchesAncestors(localBranches, mainBranch, &run.Backend)
+		localBranches := branches.All.LocalBranches()
+		configUpdated, err = validate.KnowsBranchesAncestors(validate.KnowsBranchesAncestorsArgs{
+			AllBranches:     localBranches,
+			Backend:         &run.Backend,
+			BranchDurations: branchDurations,
+			Lineage:         lineage,
+			MainBranch:      mainBranch,
+		})
 		if err != nil {
 			return nil, err
 		}
-		branchNamesToSync = localBranches
+		branchNamesToSync = localBranches.BranchNames()
 		shouldPushTags = true
 	} else {
-		err = validate.KnowsBranchAncestors(initialBranch, run.Config.MainBranch(), &run.Backend)
+		configUpdated, err = validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
+			AllBranches:     branches.All,
+			Backend:         &run.Backend,
+			BranchDurations: branches.Durations,
+			DefaultBranch:   mainBranch,
+			Lineage:         lineage,
+			MainBranch:      mainBranch,
+		})
 		if err != nil {
 			return nil, err
 		}
-		branchNamesToSync = []string{initialBranch}
-		shouldPushTags = !run.Config.IsFeatureBranch(initialBranch)
+	}
+	if configUpdated {
+		lineage = run.Config.Lineage() // reload after ancestry change
+		branchDurations = run.Config.BranchDurations()
+	}
+	if !allFlag {
+		branchNamesToSync = []string{branches.Initial}
+		if configUpdated {
+			run.Config.Reload()
+			branchDurations = run.Config.BranchDurations()
+		}
+		shouldPushTags = !branchDurations.IsFeatureBranch(branches.Initial)
 	}
 	allBranchNamesToSync := lineage.BranchesAndAncestors(branchNamesToSync)
-	branchesToSync, err := allBranchesSyncStatus.Select(allBranchNamesToSync)
+	syncStrategy, err := run.Config.SyncStrategy()
+	if err != nil {
+		return nil, err
+	}
+	pushHook, err := run.Config.PushHook()
+	if err != nil {
+		return nil, err
+	}
+	pullBranchStrategy, err := run.Config.PullBranchStrategy()
+	if err != nil {
+		return nil, err
+	}
+	shouldSyncUpstream, err := run.Config.ShouldSyncUpstream()
+	if err != nil {
+		return nil, err
+	}
+	branchesToSync, err := branches.All.Select(allBranchNamesToSync)
 	return &syncConfig{
-		branchesToSync: branchesToSync,
-		hasOrigin:      hasOrigin,
-		initialBranch:  initialBranch,
-		isOffline:      isOffline,
-		mainBranch:     mainBranch,
-		shouldPushTags: shouldPushTags,
+		branchDurations:    branchDurations,
+		branchesToSync:     branchesToSync,
+		hasOpenChanges:     hasOpenChanges,
+		remotes:            remotes,
+		initialBranch:      branches.Initial,
+		isOffline:          isOffline,
+		lineage:            lineage,
+		mainBranch:         mainBranch,
+		previousBranch:     previousBranch,
+		pullBranchStrategy: pullBranchStrategy,
+		pushHook:           pushHook,
+		shouldPushTags:     shouldPushTags,
+		shouldSyncUpstream: shouldSyncUpstream,
+		syncStrategy:       syncStrategy,
 	}, err
 }
 
 // syncBranchesSteps provides the step list for the "git sync" command.
-func syncBranchesSteps(config *syncConfig, run *git.ProdRunner) (runstate.StepList, error) {
+func syncBranchesSteps(config *syncConfig) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.branchesToSync {
-		updateBranchSteps(&list, branch, true, config.isOffline, run)
+		updateBranchSteps(&list, updateBranchStepsArgs{
+			branch:             branch,
+			branchDurations:    config.branchDurations,
+			remotes:            config.remotes,
+			isOffline:          config.isOffline,
+			lineage:            config.lineage,
+			mainBranch:         config.mainBranch,
+			pullBranchStrategy: config.pullBranchStrategy,
+			pushBranch:         true,
+			pushHook:           config.pushHook,
+			shouldSyncUpstream: config.shouldSyncUpstream,
+			syncStrategy:       config.syncStrategy,
+		})
 	}
 	list.Add(&steps.CheckoutStep{Branch: config.initialBranch})
-	if config.hasOrigin && config.shouldPushTags && !config.isOffline {
+	if config.remotes.HasOrigin() && config.shouldPushTags && !config.isOffline {
 		list.Add(&steps.PushTagsStep{})
 	}
-	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &run.Backend, config.mainBranch)
+	list.Wrap(runstate.WrapOptions{
+		RunInGitRoot:     true,
+		StashOpenChanges: config.hasOpenChanges,
+		MainBranch:       config.mainBranch,
+		InitialBranch:    config.initialBranch,
+		PreviousBranch:   config.previousBranch,
+	})
 	return list.Result()
 }
 
 // updateBranchSteps provides the steps to sync a particular branch.
-// TODO: change the `branch` argument from `string` to `BranchInfo`.
-func updateBranchSteps(list *runstate.StepListBuilder, branch git.BranchSyncStatus, pushBranch bool, isOffline bool, run *git.ProdRunner) {
-	isFeatureBranch := run.Config.IsFeatureBranch(branch.Name)
-	syncStrategy := list.SyncStrategy(run.Config.SyncStrategy())
-	hasOrigin := list.Bool(run.Backend.HasOrigin())
-	pushHook := list.Bool(run.Config.PushHook())
-	if !hasOrigin && !isFeatureBranch {
+func updateBranchSteps(list *runstate.StepListBuilder, args updateBranchStepsArgs) {
+	isFeatureBranch := args.branchDurations.IsFeatureBranch(args.branch.Name)
+	if !args.remotes.HasOrigin() && !isFeatureBranch {
 		return
 	}
-	list.Add(&steps.CheckoutStep{Branch: branch.Name})
+	list.Add(&steps.CheckoutStep{Branch: args.branch.Name})
 	if isFeatureBranch {
-		updateFeatureBranchSteps(list, branch, run)
+		updateFeatureBranchSteps(list, args.branch, args.lineage, args.syncStrategy)
 	} else {
-		updatePerennialBranchSteps(list, branch, run)
+		updatePerennialBranchSteps(list, updatePerennialBranchStepsArgs{
+			branch:             args.branch,
+			mainBranch:         args.mainBranch,
+			pullBranchStrategy: args.pullBranchStrategy,
+			shouldSyncUpstream: args.shouldSyncUpstream,
+			hasUpstream:        args.remotes.HasUpstream(),
+		})
 	}
-	if pushBranch && hasOrigin && !isOffline {
-		if !branch.HasTrackingBranch() {
-			list.Add(&steps.CreateTrackingBranchStep{Branch: branch.Name})
+	if args.pushBranch && args.remotes.HasOrigin() && !args.isOffline {
+		if !args.branch.HasTrackingBranch() {
+			list.Add(&steps.CreateTrackingBranchStep{Branch: args.branch.Name})
 			return
 		}
 		if !isFeatureBranch {
-			list.Add(&steps.PushBranchStep{Branch: branch.Name})
+			list.Add(&steps.PushBranchStep{Branch: args.branch.Name})
 			return
 		}
-		pushFeatureBranchSteps(list, branch.Name, syncStrategy, pushHook)
+		pushFeatureBranchSteps(list, args.branch.Name, args.syncStrategy, args.pushHook)
 	}
 }
 
-func updateFeatureBranchSteps(list *runstate.StepListBuilder, branch git.BranchSyncStatus, run *git.ProdRunner) {
-	syncStrategy := list.SyncStrategy(run.Config.SyncStrategy())
-	if branch.HasTrackingBranch() {
-		syncBranchSteps(list, run.Backend.TrackingBranch(branch.Name), string(syncStrategy))
-	}
-	syncBranchSteps(list, run.Config.Lineage().Parent(branch.Name), string(syncStrategy))
+type updateBranchStepsArgs struct {
+	branch             git.BranchSyncStatus
+	branchDurations    config.BranchDurations
+	remotes            config.Remotes
+	isOffline          bool
+	lineage            config.Lineage
+	mainBranch         string
+	pullBranchStrategy config.PullBranchStrategy
+	pushBranch         bool
+	pushHook           bool
+	shouldSyncUpstream bool
+	syncStrategy       config.SyncStrategy
 }
 
-func updatePerennialBranchSteps(list *runstate.StepListBuilder, branch git.BranchSyncStatus, run *git.ProdRunner) {
+func updateFeatureBranchSteps(list *runstate.StepListBuilder, branch git.BranchSyncStatus, lineage config.Lineage, syncStrategy config.SyncStrategy) {
 	if branch.HasTrackingBranch() {
-		pullBranchStrategy := list.PullBranchStrategy(run.Config.PullBranchStrategy())
-		syncBranchSteps(list, run.Backend.TrackingBranch(branch.Name), string(pullBranchStrategy))
+		syncBranchSteps(list, branch.TrackingBranch(), string(syncStrategy))
 	}
-	mainBranch := run.Config.MainBranch()
-	hasUpstream := list.Bool(run.Backend.HasRemote("upstream"))
-	shouldSyncUpstream := list.Bool(run.Config.ShouldSyncUpstream())
-	if mainBranch == branch.Name && hasUpstream && shouldSyncUpstream {
-		list.Add(&steps.FetchUpstreamStep{Branch: mainBranch})
-		list.Add(&steps.RebaseBranchStep{Branch: fmt.Sprintf("upstream/%s", mainBranch)})
+	syncBranchSteps(list, lineage.Parent(branch.Name), string(syncStrategy))
+}
+
+func updatePerennialBranchSteps(list *runstate.StepListBuilder, args updatePerennialBranchStepsArgs) {
+	if args.branch.HasTrackingBranch() {
+		syncBranchSteps(list, args.branch.TrackingBranch(), string(args.pullBranchStrategy))
 	}
+	if args.mainBranch == args.branch.Name && args.hasUpstream && args.shouldSyncUpstream {
+		list.Add(&steps.FetchUpstreamStep{Branch: args.mainBranch})
+		list.Add(&steps.RebaseBranchStep{Branch: fmt.Sprintf("upstream/%s", args.mainBranch)})
+	}
+}
+
+type updatePerennialBranchStepsArgs struct {
+	branch             git.BranchSyncStatus
+	mainBranch         string
+	pullBranchStrategy config.PullBranchStrategy
+	shouldSyncUpstream bool
+	hasUpstream        bool
 }
 
 // syncBranchStep provides the steps to sync the given tracking branch into the current branch.

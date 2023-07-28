@@ -35,28 +35,23 @@ func pushHookCommand() *cobra.Command {
 }
 
 func pushHook(args []string, global, debug bool) error {
-	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:           debug,
-		DryRun:          false,
-		OmitBranchNames: true,
-	})
-	if err != nil {
-		return err
-	}
-	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
+		Debug:                 debug,
+		DryRun:                false,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
-		ValidateIsConfigured:  false,
+		OmitBranchNames:       true,
 		ValidateIsOnline:      false,
+		ValidateGitRepo:       false,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
 	}
 	if len(args) > 0 {
-		return setPushHook(args[0], global, &run)
+		return setPushHook(args[0], global, &repo.Runner)
 	}
-	return printPushHook(global, &run)
+	return printPushHook(global, &repo.Runner)
 }
 
 func printPushHook(globalFlag bool, run *git.ProdRunner) error {

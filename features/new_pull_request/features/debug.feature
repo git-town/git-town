@@ -13,11 +13,11 @@ Feature: display debug statistics
       |         | backend  | git config -lz --global                                            |
       |         | backend  | git rev-parse --show-toplevel                                      |
       |         | backend  | git branch -vva                                                    |
-      |         | backend  | git remote                                                         |
-      | feature | frontend | git fetch --prune --tags                                           |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}                          |
       |         | backend  | git status --porcelain --ignore-submodules                         |
-      | feature | frontend | git checkout main                                                  |
+      |         | backend  | git remote                                                         |
+      | feature | frontend | git fetch --prune --tags                                           |
+      |         | frontend | git checkout main                                                  |
       |         | backend  | git rev-parse HEAD                                                 |
       | main    | frontend | git rebase origin/main                                             |
       |         | backend  | git rev-list --left-right main...origin/main                       |
