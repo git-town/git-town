@@ -2,6 +2,7 @@ package config
 
 import "github.com/git-town/git-town/v9/src/stringslice"
 
+// BranchDurations answers questions about whether branches are long-lived or not.
 type BranchDurations struct {
 	MainBranch        string
 	PerennialBranches []string
