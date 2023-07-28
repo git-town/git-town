@@ -404,7 +404,7 @@ func (bc *BackendCommands) RemotesUncached() ([]string, error) {
 }
 
 // Remotes provides the names of all Git remotes in this repository.
-func (bc *BackendCommands) Remotes() ([]string, error) {
+func (bc *BackendCommands) Remotes() (config.Remotes, error) {
 	if !bc.RemotesCache.Initialized() {
 		remotes, err := bc.RemotesUncached()
 		if err != nil {

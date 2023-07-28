@@ -95,8 +95,7 @@ type newPullRequestConfig struct {
 	branchesToSync     git.BranchesSyncStatus
 	branchDurations    config.BranchDurations
 	hasOpenChanges     bool
-	hasOrigin          bool
-	hasUpstream        bool
+	remotes            config.Remotes
 	initialBranch      string
 	isOffline          bool
 	lineage            config.Lineage
@@ -114,14 +113,11 @@ func determineNewPullRequestConfig(run *git.ProdRunner, branches execute.Branche
 	if err != nil {
 		return nil, err
 	}
-	hasOrigin, err := run.Backend.HasOrigin()
+	remotes, err := run.Backend.Remotes()
 	if err != nil {
 		return nil, err
 	}
-	if err != nil {
-		return nil, err
-	}
-	if hasOrigin {
+	if remotes.HasOrigin() {
 		err := run.Frontend.Fetch()
 		if err != nil {
 			return nil, err
@@ -159,18 +155,13 @@ func determineNewPullRequestConfig(run *git.ProdRunner, branches execute.Branche
 	if err != nil {
 		return nil, err
 	}
-	hasUpstream, err := run.Backend.HasUpstream()
-	if err != nil {
-		return nil, err
-	}
 	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
 	branchesToSync, err := branches.All.Select(branchNamesToSync)
 	return &newPullRequestConfig{
 		branchDurations:    branches.Durations,
 		branchesToSync:     branchesToSync,
 		hasOpenChanges:     hasOpenChanges,
-		hasOrigin:          hasOrigin,
-		hasUpstream:        hasUpstream,
+		remotes:            remotes,
 		initialBranch:      branches.Initial,
 		isOffline:          isOffline,
 		lineage:            lineage,
@@ -189,8 +180,7 @@ func newPullRequestStepList(config *newPullRequestConfig) (runstate.StepList, er
 		updateBranchSteps(&list, updateBranchStepsArgs{
 			branch:             branch,
 			branchDurations:    config.branchDurations,
-			hasOrigin:          config.hasOrigin,
-			hasUpstream:        config.hasUpstream,
+			remotes:            config.remotes,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
 			mainBranch:         config.mainBranch,

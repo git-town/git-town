@@ -117,8 +117,7 @@ type shipConfig struct {
 	proposalMessage          string
 	deleteOriginBranch       bool
 	hasOpenChanges           bool
-	hasOrigin                bool
-	hasUpstream              bool
+	remotes                  config.Remotes
 	initialBranch            string
 	isShippingInitialBranch  bool
 	isOffline                bool
@@ -139,7 +138,7 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 	if err != nil {
 		return nil, err
 	}
-	hasOrigin, err := run.Backend.HasOrigin()
+	remotes, err := run.Backend.Remotes()
 	if err != nil {
 		return nil, err
 	}
@@ -190,10 +189,6 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 	if err != nil {
 		return nil, err
 	}
-	hasUpstream, err := run.Backend.HasUpstream()
-	if err != nil {
-		return nil, err
-	}
 	targetBranchName := lineage.Parent(branchNameToShip)
 	targetBranch := allBranches.Lookup(targetBranchName)
 	if targetBranch == nil {
@@ -238,8 +233,7 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 		proposalMessage:          proposalMessage,
 		deleteOriginBranch:       deleteOrigin,
 		hasOpenChanges:           hasOpenChanges,
-		hasOrigin:                hasOrigin,
-		hasUpstream:              hasUpstream,
+		remotes:                  remotes,
 		initialBranch:            initialBranch,
 		isOffline:                isOffline,
 		isShippingInitialBranch:  isShippingInitialBranch,
@@ -273,8 +267,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 	updateBranchSteps(&list, updateBranchStepsArgs{
 		branch:             config.targetBranch,
 		branchDurations:    config.branchDurations,
-		hasOrigin:          config.hasOrigin,
-		hasUpstream:        config.hasUpstream,
+		remotes:            config.remotes,
 		isOffline:          config.isOffline,
 		lineage:            config.lineage,
 		mainBranch:         config.mainBranch,
@@ -288,8 +281,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 	updateBranchSteps(&list, updateBranchStepsArgs{
 		branch:             config.branchToShip,
 		branchDurations:    config.branchDurations,
-		hasOrigin:          config.hasOrigin,
-		hasUpstream:        config.hasUpstream,
+		remotes:            config.remotes,
 		isOffline:          config.isOffline,
 		lineage:            config.lineage,
 		mainBranch:         config.mainBranch,
@@ -322,7 +314,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 	} else {
 		list.Add(&steps.SquashMergeStep{Branch: config.branchToShip.Name, CommitMessage: commitMessage, Parent: config.targetBranch.Name})
 	}
-	if config.hasOrigin && !config.isOffline {
+	if config.remotes.HasOrigin() && !config.isOffline {
 		list.Add(&steps.PushBranchStep{Branch: config.targetBranch.Name, Undoable: true})
 	}
 	// NOTE: when shipping via API, we can always delete the remote branch because:

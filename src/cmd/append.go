@@ -80,8 +80,7 @@ type appendConfig struct {
 	durations           config.BranchDurations
 	branchesToSync      git.BranchesSyncStatus
 	hasOpenChanges      bool
-	hasOrigin           bool
-	hasUpstream         bool
+	remotes             config.Remotes
 	initialBranch       string
 	isOffline           bool
 	lineage             config.Lineage
@@ -99,10 +98,9 @@ type appendConfig struct {
 func determineAppendConfig(targetBranch string, run *git.ProdRunner, branches execute.Branches, isOffline bool) (*appendConfig, error) {
 	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
 	fc := failure.Collector{}
-	hasOrigin := fc.Bool(run.Backend.HasOrigin())
+	remotes := fc.Strings(run.Backend.Remotes())
 	mainBranch := run.Config.MainBranch()
 	pushHook := fc.Bool(run.Config.PushHook())
-	hasUpstream := fc.Bool(run.Backend.HasUpstream())
 	pullBranchStrategy := fc.PullBranchStrategy(run.Config.PullBranchStrategy())
 	hasOpenChanges := fc.Bool(run.Backend.HasOpenChanges())
 	shouldNewBranchPush := fc.Bool(run.Config.ShouldNewBranchPush())
@@ -135,8 +133,7 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner, branches ex
 		durations:           branches.Durations,
 		branchesToSync:      branchesToSync,
 		hasOpenChanges:      hasOpenChanges,
-		hasOrigin:           hasOrigin,
-		hasUpstream:         hasUpstream,
+		remotes:             remotes,
 		initialBranch:       branches.Initial,
 		isOffline:           isOffline,
 		lineage:             lineage,
@@ -160,8 +157,7 @@ func appendStepList(config *appendConfig) (runstate.StepList, error) {
 			branchDurations:    config.durations,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
-			hasOrigin:          config.hasOrigin,
-			hasUpstream:        config.hasUpstream,
+			remotes:            config.remotes,
 			mainBranch:         config.mainBranch,
 			pullBranchStrategy: config.pullBranchStrategy,
 			pushBranch:         true,
@@ -173,7 +169,7 @@ func appendStepList(config *appendConfig) (runstate.StepList, error) {
 	list.Add(&steps.CreateBranchStep{Branch: config.targetBranch, StartingPoint: config.parentBranch})
 	list.Add(&steps.SetParentStep{Branch: config.targetBranch, ParentBranch: config.parentBranch})
 	list.Add(&steps.CheckoutStep{Branch: config.targetBranch})
-	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
+	if config.remotes.HasOrigin() && config.shouldNewBranchPush && !config.isOffline {
 		list.Add(&steps.CreateTrackingBranchStep{Branch: config.targetBranch, NoPushHook: !config.pushHook})
 	}
 	list.Wrap(runstate.WrapOptions{

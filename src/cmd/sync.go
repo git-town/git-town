@@ -91,8 +91,7 @@ type syncConfig struct {
 	branchDurations    config.BranchDurations
 	branchesToSync     git.BranchesSyncStatus
 	hasOpenChanges     bool
-	hasOrigin          bool
-	hasUpstream        bool
+	remotes            config.Remotes
 	initialBranch      string
 	isOffline          bool
 	lineage            config.Lineage
@@ -111,7 +110,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, branches execute.Bra
 	if err != nil {
 		return nil, err
 	}
-	hasOrigin, err := run.Backend.HasOrigin()
+	remotes, err := run.Backend.Remotes()
 	if err != nil {
 		return nil, err
 	}
@@ -171,17 +170,12 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, branches execute.Bra
 	if err != nil {
 		return nil, err
 	}
-	hasUpstream, err := run.Backend.HasUpstream()
-	if err != nil {
-		return nil, err
-	}
 	branchesToSync, err := branches.All.Select(allBranchNamesToSync)
 	return &syncConfig{
 		branchDurations:    branchDurations,
 		branchesToSync:     branchesToSync,
 		hasOpenChanges:     hasOpenChanges,
-		hasOrigin:          hasOrigin,
-		hasUpstream:        hasUpstream,
+		remotes:            remotes,
 		initialBranch:      branches.Initial,
 		isOffline:          isOffline,
 		lineage:            lineage,
@@ -202,8 +196,7 @@ func syncBranchesSteps(config *syncConfig) (runstate.StepList, error) {
 		updateBranchSteps(&list, updateBranchStepsArgs{
 			branch:             branch,
 			branchDurations:    config.branchDurations,
-			hasOrigin:          config.hasOrigin,
-			hasUpstream:        config.hasUpstream,
+			remotes:            config.remotes,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
 			mainBranch:         config.mainBranch,
@@ -215,7 +208,7 @@ func syncBranchesSteps(config *syncConfig) (runstate.StepList, error) {
 		})
 	}
 	list.Add(&steps.CheckoutStep{Branch: config.initialBranch})
-	if config.hasOrigin && config.shouldPushTags && !config.isOffline {
+	if config.remotes.HasOrigin() && config.shouldPushTags && !config.isOffline {
 		list.Add(&steps.PushTagsStep{})
 	}
 	list.Wrap(runstate.WrapOptions{
@@ -231,7 +224,7 @@ func syncBranchesSteps(config *syncConfig) (runstate.StepList, error) {
 // updateBranchSteps provides the steps to sync a particular branch.
 func updateBranchSteps(list *runstate.StepListBuilder, args updateBranchStepsArgs) {
 	isFeatureBranch := args.branchDurations.IsFeatureBranch(args.branch.Name)
-	if !args.hasOrigin && !isFeatureBranch {
+	if !args.remotes.HasOrigin() && !isFeatureBranch {
 		return
 	}
 	list.Add(&steps.CheckoutStep{Branch: args.branch.Name})
@@ -243,10 +236,10 @@ func updateBranchSteps(list *runstate.StepListBuilder, args updateBranchStepsArg
 			mainBranch:         args.mainBranch,
 			pullBranchStrategy: args.pullBranchStrategy,
 			shouldSyncUpstream: args.shouldSyncUpstream,
-			hasUpstream:        args.hasUpstream,
+			hasUpstream:        args.remotes.HasUpstream(),
 		})
 	}
-	if args.pushBranch && args.hasOrigin && !args.isOffline {
+	if args.pushBranch && args.remotes.HasOrigin() && !args.isOffline {
 		if !args.branch.HasTrackingBranch() {
 			list.Add(&steps.CreateTrackingBranchStep{Branch: args.branch.Name})
 			return
@@ -262,8 +255,7 @@ func updateBranchSteps(list *runstate.StepListBuilder, args updateBranchStepsArg
 type updateBranchStepsArgs struct {
 	branch             git.BranchSyncStatus
 	branchDurations    config.BranchDurations
-	hasOrigin          bool
-	hasUpstream        bool
+	remotes            config.Remotes
 	isOffline          bool
 	lineage            config.Lineage
 	mainBranch         string

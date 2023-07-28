@@ -275,7 +275,7 @@ func TestBackendCommands(t *testing.T) {
 		runtime.AddRemote(config.OriginRemote, origin.WorkingDir)
 		remotes, err := runtime.Backend.Remotes()
 		assert.NoError(t, err)
-		assert.Equal(t, []string{config.OriginRemote}, remotes)
+		assert.Equal(t, config.Remotes{config.OriginRemote}, remotes)
 	})
 
 	t.Run(".RootDirectory", func(t *testing.T) {

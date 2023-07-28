@@ -23,12 +23,12 @@ func TestTestCommands(t *testing.T) {
 		dev := testruntime.Create(t)
 		remotes, err := dev.Remotes()
 		assert.NoError(t, err)
-		assert.Equal(t, []string{}, remotes)
+		assert.Equal(t, config.Remotes{}, remotes)
 		origin := testruntime.Create(t)
 		dev.AddRemote(config.OriginRemote, origin.WorkingDir)
 		remotes, err = dev.Remotes()
 		assert.NoError(t, err)
-		assert.Equal(t, []string{"origin"}, remotes)
+		assert.Equal(t, config.Remotes{"origin"}, remotes)
 	})
 
 	t.Run(".Commits()", func(t *testing.T) {

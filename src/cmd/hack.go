@@ -88,7 +88,7 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 	if err != nil {
 		return nil, err
 	}
-	hasOrigin := fc.Bool(run.Backend.HasOrigin())
+	remotes := fc.Strings(run.Backend.Remotes())
 	shouldNewBranchPush := fc.Bool(run.Config.ShouldNewBranchPush())
 	isOffline := fc.Bool(run.Config.IsOffline())
 	pushHook := fc.Bool(run.Config.PushHook())
@@ -99,15 +99,13 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 	branchNamesToSync := lineage.BranchesAndAncestors([]string{parentBranch})
 	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
 	shouldSyncUpstream := fc.Bool(run.Config.ShouldSyncUpstream())
-	hasUpstream := fc.Bool(run.Backend.HasUpstream())
 	return &appendConfig{
 		durations:           branches.Durations,
 		branchesToSync:      branchesToSync,
 		targetBranch:        targetBranch,
 		parentBranch:        parentBranch,
 		hasOpenChanges:      hasOpenChanges,
-		hasOrigin:           hasOrigin,
-		hasUpstream:         hasUpstream,
+		remotes:             remotes,
 		initialBranch:       branches.Initial,
 		lineage:             lineage,
 		mainBranch:          mainBranch,

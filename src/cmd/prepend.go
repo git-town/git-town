@@ -83,8 +83,7 @@ type prependConfig struct {
 	branchDurations     config.BranchDurations
 	branchesToSync      git.BranchesSyncStatus
 	hasOpenChanges      bool
-	hasOrigin           bool
-	hasUpstream         bool
+	remotes             config.Remotes
 	initialBranch       string
 	isOffline           bool
 	lineage             config.Lineage
@@ -103,12 +102,11 @@ func determinePrependConfig(args []string, run *git.ProdRunner, branches execute
 	fc := failure.Collector{}
 	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
 	hasOpenChanges := fc.Bool(run.Backend.HasOpenChanges())
-	hasOrigin := fc.Bool(run.Backend.HasOrigin())
+	remotes := fc.Strings(run.Backend.Remotes())
 	shouldNewBranchPush := fc.Bool(run.Config.ShouldNewBranchPush())
 	pushHook := fc.Bool(run.Config.PushHook())
 	mainBranch := run.Config.MainBranch()
 	syncStrategy := fc.SyncStrategy(run.Config.SyncStrategy())
-	hasUpstream := fc.Bool(run.Backend.HasUpstream())
 	pullBranchStrategy := fc.PullBranchStrategy(run.Config.PullBranchStrategy())
 	shouldSyncUpstream := fc.Bool(run.Config.ShouldSyncUpstream())
 	// TODO: use fc all the way to the end
@@ -143,8 +141,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner, branches execute
 		branchDurations:     branches.Durations,
 		branchesToSync:      branchesToSync,
 		hasOpenChanges:      hasOpenChanges,
-		hasOrigin:           hasOrigin,
-		hasUpstream:         hasUpstream,
+		remotes:             remotes,
 		initialBranch:       branches.Initial,
 		isOffline:           isOffline,
 		lineage:             lineage,
@@ -166,8 +163,7 @@ func prependStepList(config *prependConfig) (runstate.StepList, error) {
 		updateBranchSteps(&list, updateBranchStepsArgs{
 			branch:             branchToSync,
 			branchDurations:    config.branchDurations,
-			hasOrigin:          config.hasOrigin,
-			hasUpstream:        config.hasUpstream,
+			remotes:            config.remotes,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
 			mainBranch:         config.mainBranch,
@@ -182,7 +178,7 @@ func prependStepList(config *prependConfig) (runstate.StepList, error) {
 	list.Add(&steps.SetParentStep{Branch: config.targetBranch, ParentBranch: config.parentBranch})
 	list.Add(&steps.SetParentStep{Branch: config.initialBranch, ParentBranch: config.targetBranch})
 	list.Add(&steps.CheckoutStep{Branch: config.targetBranch})
-	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
+	if config.remotes.HasOrigin() && config.shouldNewBranchPush && !config.isOffline {
 		list.Add(&steps.CreateTrackingBranchStep{Branch: config.targetBranch, NoPushHook: !config.pushHook})
 	}
 	list.Wrap(runstate.WrapOptions{
