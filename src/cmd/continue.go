@@ -45,12 +45,6 @@ func runContinue(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	_, err = execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
-		ValidateIsConfigured: true,
-	})
-	if err != nil {
-		return err
-	}
 	runState, err := runstate.Load(repo.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateLoadProblem, err)
@@ -71,6 +65,12 @@ func runContinue(debug bool) error {
 }
 
 func determineContinueConfig(run *git.ProdRunner) (*continueConfig, error) {
+	_, err := execute.LoadBranches(run, execute.LoadBranchesArgs{
+		ValidateIsConfigured: true,
+	})
+	if err != nil {
+		return nil, err
+	}
 	hasConflicts, err := run.Backend.HasConflicts()
 	if err != nil {
 		return nil, err
