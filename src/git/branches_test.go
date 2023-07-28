@@ -10,7 +10,7 @@ import (
 func TestTrackingBranch(t *testing.T) {
 	t.Parallel()
 	give := "branch1"
-	have := git.TrackingBranch(give)
+	have := git.TrackingBranchName(give)
 	want := "origin/branch1"
 	assert.Equal(t, want, have)
 }

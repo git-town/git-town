@@ -23,7 +23,7 @@ func (step *DeleteOriginBranchStep) CreateUndoStep(_ *git.BackendCommands) (Step
 
 func (step *DeleteOriginBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
 	if !step.IsTracking {
-		trackingBranch := git.TrackingBranch(step.Branch)
+		trackingBranch := git.TrackingBranchName(step.Branch)
 		var err error
 		step.branchSha, err = run.Backend.ShaForBranch(trackingBranch)
 		if err != nil {

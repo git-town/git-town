@@ -23,11 +23,11 @@ func (bi BranchSyncStatus) HasTrackingBranch() bool {
 
 // TrackingBranch provides the name of the remote branch tracking the local branch with the given name.
 func (bi BranchSyncStatus) TrackingBranch() string {
-	return TrackingBranch(bi.Name)
+	return TrackingBranchName(bi.Name)
 }
 
-// TrackingBranch provides the name of the remote branch for the given branch.
-func TrackingBranch(branch string) string {
+// TrackingBranchName provides the name of the remote branch for the given branch.
+func TrackingBranchName(branch string) string {
 	return "origin/" + branch
 }
 
