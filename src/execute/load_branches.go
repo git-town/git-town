@@ -6,6 +6,7 @@ import (
 	"github.com/git-town/git-town/v9/src/validate"
 )
 
+// LoadBranches loads the typically used information about Git branches using a single Git command.
 func LoadBranches(pr *git.ProdRunner, args LoadBranchesArgs) (Branches, error) {
 	allBranches, initialBranch, err := pr.Backend.BranchesSyncStatus()
 	if err != nil {
