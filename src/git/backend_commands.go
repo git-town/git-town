@@ -342,11 +342,6 @@ func (bc *BackendCommands) HasShippableChanges(branch, mainBranch string) (bool,
 	return out != "", nil
 }
 
-// HasUpstream indicates whether this repo has an upstream remote.
-func (bc *BackendCommands) HasUpstream() (bool, error) {
-	return bc.HasRemote("upstream")
-}
-
 // LastCommitMessage provides the commit message for the last commit.
 func (bc *BackendCommands) LastCommitMessage() (string, error) {
 	out, err := bc.QueryTrim("git", "log", "-1", "--format=%B")
