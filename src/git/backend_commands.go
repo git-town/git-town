@@ -318,20 +318,6 @@ func (bc *BackendCommands) HasRebaseInProgress() (bool, error) {
 	return false, nil
 }
 
-// HasOrigin indicates whether this repo has an origin remote.
-func (bc *BackendCommands) HasOrigin() (bool, error) {
-	return bc.HasRemote(config.OriginRemote)
-}
-
-// HasRemote indicates whether this repo has a remote with the given name.
-func (bc *BackendCommands) HasRemote(name string) (bool, error) {
-	remotes, err := bc.Remotes()
-	if err != nil {
-		return false, fmt.Errorf(messages.RemoteExistsProblem, name, err)
-	}
-	return stringslice.Contains(remotes, name), nil
-}
-
 // HasShippableChanges indicates whether the given branch has changes
 // not currently in the main branch.
 func (bc *BackendCommands) HasShippableChanges(branch, mainBranch string) (bool, error) {

@@ -36,13 +36,13 @@ func OpenRepo(args OpenShellArgs) (result RepoData, exit bool, err error) {
 	if err != nil {
 		return
 	}
-	config := git.RepoConfig{
+	repoConfig := git.RepoConfig{
 		GitTown: config.NewGitTown(backendRunner),
 		DryRun:  false, // to bootstrap this, DryRun always gets initialized as false and later enabled if needed
 	}
-	backendCommands.Config = &config
+	backendCommands.Config = &repoConfig
 	prodRunner := git.ProdRunner{
-		Config:  config,
+		Config:  repoConfig,
 		Backend: backendCommands,
 		Frontend: git.FrontendCommands{
 			FrontendRunner:         NewFrontendRunner(args.OmitBranchNames, args.DryRun, backendCommands.CurrentBranch, stats),
@@ -72,7 +72,7 @@ func OpenRepo(args OpenShellArgs) (result RepoData, exit bool, err error) {
 			return
 		}
 	}
-	isOffline, err := config.IsOffline()
+	isOffline, err := repoConfig.IsOffline()
 	if err != nil {
 		return
 	}
@@ -81,12 +81,12 @@ func OpenRepo(args OpenShellArgs) (result RepoData, exit bool, err error) {
 		return
 	}
 	if args.Fetch {
-		var hasOrigin bool
-		hasOrigin, err = backendCommands.HasOrigin()
+		var remotes config.Remotes
+		remotes, err = backendCommands.Remotes()
 		if err != nil {
 			return
 		}
-		if hasOrigin && !isOffline {
+		if remotes.HasOrigin() && !isOffline {
 			err = prodRunner.Frontend.Fetch()
 			if err != nil {
 				return

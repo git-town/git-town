@@ -117,19 +117,6 @@ func TestBackendCommands(t *testing.T) {
 		assert.False(t, has)
 	})
 
-	t.Run(".HasRemote()", func(t *testing.T) {
-		t.Parallel()
-		origin := testruntime.Create(t)
-		repoDir := t.TempDir()
-		runner := testruntime.Clone(origin.TestRunner, repoDir)
-		has, err := runner.HasOrigin()
-		assert.NoError(t, err)
-		assert.True(t, has)
-		has, err = runner.Backend.HasRemote("zonk")
-		assert.NoError(t, err)
-		assert.False(t, has)
-	})
-
 	t.Run(".LocalBranchesMainFirst()", func(t *testing.T) {
 		t.Parallel()
 		origin := testruntime.Create(t)
