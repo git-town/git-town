@@ -99,38 +99,55 @@ type gitTownConfig interface {
 	OriginURL() *giturl.Parts
 }
 
-// gitCommands defines the Git functionality used by the hosting package.
-type gitCommands interface {
-	ShaForBranch(string) (string, error)
-}
+type ShaForBranchFunc func(string) (string, error)
 
 // logFn defines a function with fmt.Printf API that Connector instances can use to give updates on activities they do.
 type logFn func(string, ...interface{})
 
 // NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
-func NewConnector(config gitTownConfig, git gitCommands, log logFn) (Connector, error) {
-	githubConnector, err := NewGithubConnector(config, log)
+func NewConnector(args NewConnectorArgs) (Connector, error) {
+	githubConnector, err := NewGithubConnector(NewGithubConnectorArgs{
+		HostingService: args.HostingService,
+		APIToken:       args.GithubAPIToken,
+		MainBranch:     args.MainBranch,
+		OriginURL:      args.OriginURL,
+		Log:            args.Log,
+	})
 	if err != nil {
 		return nil, err
 	}
 	if githubConnector != nil {
 		return githubConnector, nil
 	}
-	gitlabConnector, err := NewGitlabConnector(config, log)
+	gitlabConnector, err := NewGitlabConnector(NewGitlabConnectorArgs{
+		HostingService: args.HostingService,
+		OriginURL:      args.OriginURL,
+		APIToken:       args.GitlabAPIToken,
+		Log:            args.Log,
+	})
 	if err != nil {
 		return nil, err
 	}
 	if gitlabConnector != nil {
 		return gitlabConnector, nil
 	}
-	bitbucketConnector, err := NewBitbucketConnector(config, git)
+	bitbucketConnector, err := NewBitbucketConnector(NewBitbucketConnectorArgs{
+		OriginURL:       args.OriginURL,
+		HostingService:  args.HostingService,
+		GetShaForBranch: args.GetShaForBranch,
+	})
 	if err != nil {
 		return nil, err
 	}
 	if bitbucketConnector != nil {
 		return bitbucketConnector, nil
 	}
-	giteaConnector, err := NewGiteaConnector(config, log)
+	giteaConnector, err := NewGiteaConnector(NewGiteaConnectorArgs{
+		OriginURL:      args.OriginURL,
+		HostingService: args.HostingService,
+		APIToken:       args.GiteaAPIToken,
+		Log:            args.Log,
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -138,6 +155,17 @@ func NewConnector(config gitTownConfig, git gitCommands, log logFn) (Connector, 
 		return giteaConnector, nil
 	}
 	return nil, nil //nolint:nilnil  // "nil, nil" is a legitimate return value here
+}
+
+type NewConnectorArgs struct {
+	HostingService  config.HostingService
+	OriginURL       *giturl.Parts
+	GetShaForBranch ShaForBranchFunc
+	GiteaAPIToken   string
+	GithubAPIToken  string
+	GitlabAPIToken  string
+	MainBranch      string
+	Log             logFn
 }
 
 // UnsupportedServiceError communicates that the origin remote runs an unknown code hosting service.

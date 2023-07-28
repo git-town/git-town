@@ -77,11 +77,7 @@ func ship(args []string, message string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	connector, err := hosting.NewConnector(repo.Runner.Config.GitTown, &repo.Runner.Backend, cli.PrintConnectorAction)
-	if err != nil {
-		return err
-	}
-	config, err := determineShipConfig(args, connector, &repo.Runner, repo.IsOffline)
+	config, err := determineShipConfig(args, &repo.Runner, repo.IsOffline)
 	if err != nil {
 		return err
 	}
@@ -106,7 +102,7 @@ func ship(args []string, message string, debug bool) error {
 	return runstate.Execute(runstate.ExecuteArgs{
 		RunState:  &runState,
 		Run:       &repo.Runner,
-		Connector: connector,
+		Connector: config.connector,
 		RootDir:   repo.RootDir,
 	})
 }
@@ -114,6 +110,7 @@ func ship(args []string, message string, debug bool) error {
 type shipConfig struct {
 	branchDurations          config.BranchDurations
 	branchToShip             git.BranchSyncStatus
+	connector                hosting.Connector
 	targetBranch             git.BranchSyncStatus
 	canShipViaAPI            bool
 	childBranches            []string
@@ -135,7 +132,7 @@ type shipConfig struct {
 	syncStrategy             config.SyncStrategy
 }
 
-func determineShipConfig(args []string, connector hosting.Connector, run *git.ProdRunner, isOffline bool) (*shipConfig, error) {
+func determineShipConfig(args []string, run *git.ProdRunner, isOffline bool) (*shipConfig, error) {
 	branches, err := execute.LoadBranches(run, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
@@ -212,6 +209,24 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 	if err != nil {
 		return nil, err
 	}
+	originURL := run.Config.OriginURL()
+	hostingService, err := run.Config.HostingService()
+	if err != nil {
+		return nil, err
+	}
+	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
+		HostingService:  hostingService,
+		GetShaForBranch: run.Backend.ShaForBranch,
+		OriginURL:       originURL,
+		GiteaAPIToken:   run.Config.GiteaToken(),
+		GithubAPIToken:  run.Config.GitHubToken(),
+		GitlabAPIToken:  run.Config.GitLabToken(),
+		MainBranch:      mainBranch,
+		Log:             cli.PrintConnectorAction,
+	})
+	if err != nil {
+		return nil, err
+	}
 	if !isOffline && connector != nil {
 		if branchToShip.HasTrackingBranch() {
 			proposal, err = connector.FindProposal(branchNameToShip, targetBranchName)
@@ -235,6 +250,7 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 	}
 	return &shipConfig{
 		branchDurations:          branches.Durations,
+		connector:                connector,
 		targetBranch:             *targetBranch,
 		branchToShip:             *branchToShip,
 		canShipViaAPI:            canShipViaAPI,

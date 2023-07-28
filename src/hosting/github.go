@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/google/go-github/v50/github"
 	"golang.org/x/oauth2"
@@ -90,36 +91,38 @@ func (c *GitHubConnector) UpdateProposalTarget(number int, target string) error 
 
 // NewGithubConnector provides a fully configured GithubConnector instance
 // if the current repo is hosted on Github, otherwise nil.
-func NewGithubConnector(gitConfig gitTownConfig, log logFn) (*GitHubConnector, error) {
-	hostingService, err := gitConfig.HostingService()
-	if err != nil {
-		return nil, err
-	}
-	url := gitConfig.OriginURL()
-	if url == nil || (url.Host != "github.com" && hostingService != config.HostingServiceGitHub) {
+func NewGithubConnector(args NewGithubConnectorArgs) (*GitHubConnector, error) {
+	if args.OriginURL == nil || (args.OriginURL.Host != "github.com" && args.HostingService != config.HostingServiceGitHub) {
 		return nil, nil //nolint:nilnil
 	}
-	apiToken := getGitHubAPIToken(gitConfig)
-	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: apiToken})
+	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: args.APIToken})
 	httpClient := oauth2.NewClient(context.Background(), tokenSource)
 	return &GitHubConnector{
 		client: github.NewClient(httpClient),
 		CommonConfig: CommonConfig{
-			APIToken:     apiToken,
-			Hostname:     url.Host,
-			Organization: url.Org,
-			Repository:   url.Repo,
+			APIToken:     args.APIToken,
+			Hostname:     args.OriginURL.Host,
+			Organization: args.OriginURL.Org,
+			Repository:   args.OriginURL.Repo,
 		},
-		MainBranch: gitConfig.MainBranch(), // TODO: inject mainBranch as argument
-		log:        log,
+		MainBranch: args.MainBranch,
+		log:        args.Log,
 	}, nil
+}
+
+type NewGithubConnectorArgs struct {
+	HostingService config.HostingService
+	OriginURL      *giturl.Parts
+	APIToken       string
+	MainBranch     string
+	Log            logFn
 }
 
 // getGitHubApiToken returns the GitHub API token to use.
 // It first checks the GITHUB_TOKEN environment variable.
 // If that is not set, it checks the GITHUB_AUTH_TOKEN environment variable.
 // If that is not set, it checks the git config.
-func getGitHubAPIToken(gitConfig gitTownConfig) string {
+func GetGitHubAPIToken(gitConfig gitTownConfig) string {
 	apiToken := os.ExpandEnv("$GITHUB_TOKEN")
 	if apiToken == "" {
 		apiToken = os.ExpandEnv("$GITHUB_AUTH_TOKEN")

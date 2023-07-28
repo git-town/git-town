@@ -67,12 +67,8 @@ func newPullRequest(debug bool) error {
 	if err != nil {
 		return err
 	}
-	connector, err := hosting.NewConnector(repo.Runner.Config.GitTown, &repo.Runner.Backend, cli.PrintConnectorAction)
 	if err != nil {
 		return err
-	}
-	if connector == nil {
-		return hosting.UnsupportedServiceError()
 	}
 	stepList, err := newPullRequestStepList(config)
 	if err != nil {
@@ -85,7 +81,7 @@ func newPullRequest(debug bool) error {
 	return runstate.Execute(runstate.ExecuteArgs{
 		RunState:  &runState,
 		Run:       &repo.Runner,
-		Connector: connector,
+		Connector: config.connector,
 		RootDir:   repo.RootDir,
 	})
 }
@@ -93,6 +89,7 @@ func newPullRequest(debug bool) error {
 type newPullRequestConfig struct {
 	branchesToSync     git.BranchesSyncStatus
 	branchDurations    config.BranchDurations
+	connector          hosting.Connector
 	hasOpenChanges     bool
 	remotes            config.Remotes
 	initialBranch      string
@@ -160,11 +157,33 @@ func determineNewPullRequestConfig(run *git.ProdRunner, isOffline bool) (*newPul
 	if err != nil {
 		return nil, err
 	}
+	originURL := run.Config.OriginURL()
+	hostingService, err := run.Config.HostingService()
+	if err != nil {
+		return nil, err
+	}
+	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
+		HostingService:  hostingService,
+		GetShaForBranch: run.Backend.ShaForBranch,
+		OriginURL:       originURL,
+		GiteaAPIToken:   run.Config.GiteaToken(),
+		GithubAPIToken:  run.Config.GitHubToken(),
+		GitlabAPIToken:  run.Config.GitLabToken(),
+		MainBranch:      mainBranch,
+		Log:             cli.PrintConnectorAction,
+	})
+	if err != nil {
+		return nil, err
+	}
+	if connector == nil {
+		return nil, hosting.UnsupportedServiceError()
+	}
 	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
 	branchesToSync, err := branches.All.Select(branchNamesToSync)
 	return &newPullRequestConfig{
 		branchDurations:    branches.Durations,
 		branchesToSync:     branchesToSync,
+		connector:          connector,
 		hasOpenChanges:     hasOpenChanges,
 		remotes:            remotes,
 		initialBranch:      branches.Initial,

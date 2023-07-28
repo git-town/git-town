@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
+	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/spf13/cobra"
 )
@@ -54,20 +55,49 @@ func repo(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	_, err = execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
+	config, err := determineRepoConfig(&repo.Runner)
+	if err != nil {
+		return err
+	}
+	browser.Open(config.connector.RepositoryURL(), repo.Runner.Frontend.FrontendRunner, repo.Runner.Backend.BackendRunner)
+	repo.Runner.Stats.PrintAnalysis()
+	return nil
+}
+
+func determineRepoConfig(run *git.ProdRunner) (*repoConfig, error) {
+	_, err := execute.LoadBranches(run, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
-	connector, err := hosting.NewConnector(repo.Runner.Config.GitTown, &repo.Runner.Backend, cli.PrintConnectorAction)
+	originURL := run.Config.OriginURL()
+	hostingService, err := run.Config.HostingService()
 	if err != nil {
-		return err
+		return nil, err
+	}
+	mainBranch := run.Config.MainBranch()
+	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
+		HostingService:  hostingService,
+		GetShaForBranch: run.Backend.ShaForBranch,
+		OriginURL:       originURL,
+		GiteaAPIToken:   run.Config.GiteaToken(),
+		GithubAPIToken:  run.Config.GitHubToken(),
+		GitlabAPIToken:  run.Config.GitLabToken(),
+		MainBranch:      mainBranch,
+		Log:             cli.PrintConnectorAction,
+	})
+	if err != nil {
+		return nil, err
 	}
 	if connector == nil {
-		return hosting.UnsupportedServiceError()
+		return nil, hosting.UnsupportedServiceError()
 	}
-	browser.Open(connector.RepositoryURL(), repo.Runner.Frontend.FrontendRunner, repo.Runner.Backend.BackendRunner)
-	repo.Runner.Stats.PrintAnalysis()
-	return nil
+	return &repoConfig{
+		connector: connector,
+	}, err
+}
+
+type repoConfig struct {
+	connector hosting.Connector
 }

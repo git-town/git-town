@@ -6,6 +6,7 @@ import (
 	"net/url"
 
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/xanzy/go-gitlab"
 )
@@ -70,20 +71,15 @@ func (c *GitLabConnector) UpdateProposalTarget(number int, target string) error 
 
 // NewGitlabConfig provides GitLab configuration data if the current repo is hosted on GitLab,
 // otherwise nil.
-func NewGitlabConnector(gitConfig gitTownConfig, log logFn) (*GitLabConnector, error) {
-	hostingService, err := gitConfig.HostingService()
-	if err != nil {
-		return nil, err
-	}
-	url := gitConfig.OriginURL()
-	if url == nil || (url.Host != "gitlab.com" && hostingService != config.HostingServiceGitLab) {
+func NewGitlabConnector(args NewGitlabConnectorArgs) (*GitLabConnector, error) {
+	if args.OriginURL == nil || (args.OriginURL.Host != "gitlab.com" && args.HostingService != config.HostingServiceGitLab) {
 		return nil, nil //nolint:nilnil
 	}
 	gitlabConfig := GitLabConfig{CommonConfig{
-		APIToken:     gitConfig.GitLabToken(),
-		Hostname:     url.Host,
-		Organization: url.Org,
-		Repository:   url.Repo,
+		APIToken:     args.APIToken,
+		Hostname:     args.OriginURL.Host,
+		Organization: args.OriginURL.Org,
+		Repository:   args.OriginURL.Repo,
 	}}
 	clientOptFunc := gitlab.WithBaseURL(gitlabConfig.baseURL())
 	httpClient := gitlab.WithHTTPClient(&http.Client{})
@@ -94,9 +90,16 @@ func NewGitlabConnector(gitConfig gitTownConfig, log logFn) (*GitLabConnector, e
 	connector := GitLabConnector{
 		client:       client,
 		GitLabConfig: gitlabConfig,
-		log:          log,
+		log:          args.Log,
 	}
 	return &connector, nil
+}
+
+type NewGitlabConnectorArgs struct {
+	HostingService config.HostingService
+	OriginURL      *giturl.Parts
+	APIToken       string
+	Log            logFn
 }
 
 // *************************************
