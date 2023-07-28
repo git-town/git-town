@@ -44,7 +44,7 @@ func setup(debug bool) error {
 	if err != nil {
 		return err
 	}
-	newMainBranch, err := validate.EnterMainBranch(branches.Durations.MainBranch, &repo.Runner.Backend)
+	newMainBranch, err := validate.EnterMainBranch(branches.All.LocalBranches().BranchNames(), branches.Durations.MainBranch, &repo.Runner.Backend)
 	if err != nil {
 		return err
 	}

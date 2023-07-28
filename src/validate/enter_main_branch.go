@@ -10,11 +10,7 @@ import (
 
 // EnterMainBranch lets the user select a new main branch for this repo.
 // This includes asking the user and updating the respective setting.
-func EnterMainBranch(oldMainBranch string, backend *git.BackendCommands) (string, error) {
-	localBranches, err := backend.LocalBranches()
-	if err != nil {
-		return "", err
-	}
+func EnterMainBranch(localBranches []string, oldMainBranch string, backend *git.BackendCommands) (string, error) {
 	newMainBranch, err := dialog.Select(dialog.SelectArgs{
 		Options: localBranches,
 		Message: mainBranchPrompt(oldMainBranch),
