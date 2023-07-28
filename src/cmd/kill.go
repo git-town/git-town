@@ -48,13 +48,7 @@ func kill(args []string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	branches, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
-		ValidateIsConfigured: true,
-	})
-	if err != nil {
-		return err
-	}
-	config, err := determineKillConfig(args, &repo.Runner, branches, repo.IsOffline)
+	config, err := determineKillConfig(args, &repo.Runner, repo.IsOffline)
 	if err != nil {
 		return err
 	}
@@ -86,7 +80,13 @@ type killConfig struct {
 	targetBranch       git.BranchSyncStatus
 }
 
-func determineKillConfig(args []string, run *git.ProdRunner, branches git.Branches, isOffline bool) (*killConfig, error) {
+func determineKillConfig(args []string, run *git.ProdRunner, isOffline bool) (*killConfig, error) {
+	branches, err := execute.LoadBranches(run, execute.LoadBranchesArgs{
+		ValidateIsConfigured: true,
+	})
+	if err != nil {
+		return nil, err
+	}
 	mainBranch := run.Config.MainBranch()
 	targetBranchName := branches.Initial
 	if len(args) > 0 {

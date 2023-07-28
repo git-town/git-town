@@ -63,13 +63,7 @@ func newPullRequest(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	branches, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
-		ValidateIsConfigured: true,
-	})
-	if err != nil {
-		return err
-	}
-	config, err := determineNewPullRequestConfig(&repo.Runner, branches, repo.IsOffline)
+	config, err := determineNewPullRequestConfig(&repo.Runner, repo.IsOffline)
 	if err != nil {
 		return err
 	}
@@ -112,7 +106,13 @@ type newPullRequestConfig struct {
 	syncStrategy       config.SyncStrategy
 }
 
-func determineNewPullRequestConfig(run *git.ProdRunner, branches git.Branches, isOffline bool) (*newPullRequestConfig, error) {
+func determineNewPullRequestConfig(run *git.ProdRunner, isOffline bool) (*newPullRequestConfig, error) {
+	branches, err := execute.LoadBranches(run, execute.LoadBranchesArgs{
+		ValidateIsConfigured: true,
+	})
+	if err != nil {
+		return nil, err
+	}
 	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
 	hasOpenChanges, err := run.Backend.HasOpenChanges()
 	if err != nil {
