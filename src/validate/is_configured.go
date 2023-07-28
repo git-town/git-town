@@ -18,7 +18,7 @@ func IsConfigured(backend *git.BackendCommands, allBranches git.BranchesSyncStat
 			return branchDurations, err
 		}
 		branchDurations.MainBranch = newMainBranch
-		return EnterPerennialBranches(backend, allBranches, branchDurations)
+		return dialog.EnterPerennialBranches(backend, allBranches, branchDurations)
 	}
 	return branchDurations, backend.RemoveOutdatedConfiguration(allBranches)
 }

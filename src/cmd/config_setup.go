@@ -4,7 +4,6 @@ import (
 	"github.com/git-town/git-town/v9/src/dialog"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -50,6 +49,6 @@ func setup(debug bool) error {
 		return err
 	}
 	branches.Durations.MainBranch = newMainBranch
-	_, err = validate.EnterPerennialBranches(&repo.Runner.Backend, branches.All, branches.Durations)
+	_, err = dialog.EnterPerennialBranches(&repo.Runner.Backend, branches.All, branches.Durations)
 	return err
 }
