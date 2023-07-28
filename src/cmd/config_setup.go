@@ -25,27 +25,30 @@ func setupConfigCommand() *cobra.Command {
 }
 
 func setup(debug bool) error {
-	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:           debug,
-		DryRun:          false,
-		OmitBranchNames: true,
-	})
-	if err != nil {
-		return err
-	}
-	allBranches, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
+		Debug:                 debug,
+		DryRun:                false,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
-		ValidateIsConfigured:  false,
+		OmitBranchNames:       true,
 		ValidateIsOnline:      false,
+		ValidateGitRepo:       true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
 	}
-	mainBranch, err := validate.EnterMainBranch(&run.Backend)
+	branches, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
+		ValidateIsConfigured: false,
+	})
 	if err != nil {
 		return err
 	}
-	return validate.EnterPerennialBranches(&run.Backend, allBranches, mainBranch)
+	newMainBranch, err := validate.EnterMainBranch(branches.All.LocalBranches().BranchNames(), branches.Durations.MainBranch, &repo.Runner.Backend)
+	if err != nil {
+		return err
+	}
+	branches.Durations.MainBranch = newMainBranch
+	_, err = validate.EnterPerennialBranches(&repo.Runner.Backend, branches.All, branches.Durations)
+	return err
 }

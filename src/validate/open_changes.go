@@ -7,7 +7,7 @@ import (
 	"github.com/git-town/git-town/v9/src/messages"
 )
 
-func NoOpenChanges(backend git.BackendCommands) error {
+func NoOpenChanges(backend *git.BackendCommands) error {
 	hasOpenChanges, err := backend.HasOpenChanges()
 	if err != nil {
 		return err

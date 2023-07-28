@@ -32,28 +32,23 @@ func pullBranchStrategyCommand() *cobra.Command {
 }
 
 func pullBranchStrategy(args []string, debug bool) error {
-	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:           debug,
-		DryRun:          false,
-		OmitBranchNames: true,
-	})
-	if err != nil {
-		return err
-	}
-	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
+		Debug:                 debug,
+		DryRun:                false,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
-		ValidateIsConfigured:  false,
+		OmitBranchNames:       true,
 		ValidateIsOnline:      false,
+		ValidateGitRepo:       false,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
 	}
 	if len(args) > 0 {
-		return setPullBranchStrategy(args[0], &run)
+		return setPullBranchStrategy(args[0], &repo.Runner)
 	}
-	return displayPullBranchStrategy(&run)
+	return displayPullBranchStrategy(&repo.Runner)
 }
 
 func displayPullBranchStrategy(run *git.ProdRunner) error {

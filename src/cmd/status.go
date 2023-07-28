@@ -6,7 +6,6 @@ import (
 
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/spf13/cobra"
 )
@@ -31,30 +30,25 @@ func statusCommand() *cobra.Command {
 }
 
 func status(debug bool) error {
-	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:           debug,
-		DryRun:          false,
-		OmitBranchNames: false,
-	})
-	if err != nil {
-		return err
-	}
-	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
+		Debug:                 debug,
+		DryRun:                false,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
-		ValidateIsConfigured:  false,
+		OmitBranchNames:       false,
 		ValidateIsOnline:      false,
+		ValidateGitRepo:       true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
 	}
-	config, err := loadDisplayStatusConfig(&run)
+	config, err := loadDisplayStatusConfig(repo.RootDir)
 	if err != nil {
 		return err
 	}
 	displayStatus(*config)
-	run.Stats.PrintAnalysis()
+	repo.Runner.Stats.PrintAnalysis()
 	return nil
 }
 
@@ -63,12 +57,12 @@ type displayStatusConfig struct {
 	state    *runstate.RunState // content of the runstate file
 }
 
-func loadDisplayStatusConfig(run *git.ProdRunner) (*displayStatusConfig, error) {
-	filepath, err := runstate.PersistenceFilePath(&run.Backend)
+func loadDisplayStatusConfig(rootDir string) (*displayStatusConfig, error) {
+	filepath, err := runstate.PersistenceFilePath(rootDir)
 	if err != nil {
 		return nil, err
 	}
-	state, err := runstate.Load(&run.Backend)
+	state, err := runstate.Load(rootDir)
 	if err != nil {
 		return nil, err
 	}

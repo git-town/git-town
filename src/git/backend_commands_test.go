@@ -57,7 +57,7 @@ func TestBackendCommands(t *testing.T) {
 		err := runtime.Backend.CreateFeatureBranch("f1")
 		assert.NoError(t, err)
 		runtime.Config.Reload()
-		assert.True(t, runtime.Config.IsFeatureBranch("f1"))
+		assert.True(t, runtime.Config.BranchDurations().IsFeatureBranch("f1"))
 		lineageHave := runtime.Config.Lineage()
 		lineageWant := config.Lineage{}
 		lineageWant["f1"] = "main"
@@ -113,19 +113,6 @@ func TestBackendCommands(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		has, err := runtime.Backend.HasRebaseInProgress()
-		assert.NoError(t, err)
-		assert.False(t, has)
-	})
-
-	t.Run(".HasRemote()", func(t *testing.T) {
-		t.Parallel()
-		origin := testruntime.Create(t)
-		repoDir := t.TempDir()
-		runner := testruntime.Clone(origin.TestRunner, repoDir)
-		has, err := runner.HasOrigin()
-		assert.NoError(t, err)
-		assert.True(t, has)
-		has, err = runner.Backend.HasRemote("zonk")
 		assert.NoError(t, err)
 		assert.False(t, has)
 	})
@@ -264,8 +251,7 @@ func TestBackendCommands(t *testing.T) {
 		runtime.CreateBranch("feature2", "initial")
 		runtime.CheckoutBranch("feature1")
 		runtime.CheckoutBranch("feature2")
-		have, err := runtime.Backend.PreviouslyCheckedOutBranch()
-		assert.NoError(t, err)
+		have := runtime.Backend.PreviouslyCheckedOutBranch()
 		assert.Equal(t, "feature1", have)
 	})
 
@@ -276,7 +262,7 @@ func TestBackendCommands(t *testing.T) {
 		runtime.AddRemote(config.OriginRemote, origin.WorkingDir)
 		remotes, err := runtime.Backend.Remotes()
 		assert.NoError(t, err)
-		assert.Equal(t, []string{config.OriginRemote}, remotes)
+		assert.Equal(t, config.Remotes{config.OriginRemote}, remotes)
 	})
 
 	t.Run(".RootDirectory", func(t *testing.T) {
@@ -301,7 +287,6 @@ func TestBackendCommands(t *testing.T) {
 				CurrentBranchCache: &cache.String{},
 				RemoteBranchCache:  &cache.Strings{},
 				RemotesCache:       &cache.Strings{},
-				RootDirCache:       &cache.String{},
 			}
 			have := cmds.RootDirectory()
 			assert.Empty(t, have)

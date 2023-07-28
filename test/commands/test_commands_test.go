@@ -23,12 +23,12 @@ func TestTestCommands(t *testing.T) {
 		dev := testruntime.Create(t)
 		remotes, err := dev.Remotes()
 		assert.NoError(t, err)
-		assert.Equal(t, []string{}, remotes)
+		assert.Equal(t, config.Remotes{}, remotes)
 		origin := testruntime.Create(t)
 		dev.AddRemote(config.OriginRemote, origin.WorkingDir)
 		remotes, err = dev.Remotes()
 		assert.NoError(t, err)
-		assert.Equal(t, []string{"origin"}, remotes)
+		assert.Equal(t, config.Remotes{"origin"}, remotes)
 	})
 
 	t.Run(".Commits()", func(t *testing.T) {
@@ -178,8 +178,8 @@ func TestTestCommands(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, []string{"main", "initial", "p1", "p2"}, branches)
 		runtime.Config.Reload()
-		assert.True(t, runtime.Config.IsPerennialBranch("p1"))
-		assert.True(t, runtime.Config.IsPerennialBranch("p2"))
+		assert.True(t, runtime.Config.BranchDurations().IsPerennialBranch("p1"))
+		assert.True(t, runtime.Config.BranchDurations().IsPerennialBranch("p2"))
 	})
 
 	t.Run(".Fetch()", func(t *testing.T) {

@@ -29,25 +29,26 @@ func undoCmd() *cobra.Command {
 }
 
 func undo(debug bool) error {
-	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:           debug,
-		DryRun:          false,
-		OmitBranchNames: false,
-	})
-	if err != nil {
-		return err
-	}
-	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
+		Debug:                 debug,
+		DryRun:                false,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
-		ValidateIsConfigured:  true,
+		OmitBranchNames:       false,
 		ValidateIsOnline:      false,
+		ValidateGitRepo:       true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
 	}
-	runState, err := runstate.Load(&run.Backend)
+	_, err = execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
+		ValidateIsConfigured: true,
+	})
+	if err != nil {
+		return err
+	}
+	runState, err := runstate.Load(repo.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
@@ -55,5 +56,10 @@ func undo(debug bool) error {
 		return fmt.Errorf(messages.UndoNothingToDo)
 	}
 	undoRunState := runState.CreateUndoRunState()
-	return runstate.Execute(&undoRunState, &run, nil)
+	return runstate.Execute(runstate.ExecuteArgs{
+		RunState:  &undoRunState,
+		Run:       &repo.Runner,
+		Connector: nil,
+		RootDir:   repo.RootDir,
+	})
 }

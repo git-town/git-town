@@ -29,41 +29,51 @@ func setParentCommand() *cobra.Command {
 }
 
 func setParent(debug bool) error {
-	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:           debug,
-		DryRun:          false,
-		OmitBranchNames: false,
-	})
-	if err != nil {
-		return err
-	}
-	_, currentBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
+		Debug:                 debug,
+		DryRun:                false,
 		Fetch:                 false,
 		HandleUnfinishedState: true,
-		ValidateIsConfigured:  true,
+		OmitBranchNames:       false,
 		ValidateIsOnline:      false,
+		ValidateGitRepo:       true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
 	}
-	if !run.Config.IsFeatureBranch(currentBranch) {
+	branches, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
+		ValidateIsConfigured: true,
+	})
+	if err != nil {
+		return err
+	}
+	if !branches.Durations.IsFeatureBranch(branches.Initial) {
 		return errors.New(messages.SetParentNoFeatureBranch)
 	}
-	existingParent := run.Config.Lineage().Parent(currentBranch)
+	lineage := repo.Runner.Config.Lineage()
+	existingParent := lineage.Parent(branches.Initial)
 	if existingParent != "" {
 		// TODO: delete the old parent only when the user has entered a new parent
-		err = run.Config.RemoveParent(currentBranch)
+		err = repo.Runner.Config.RemoveParent(branches.Initial)
 		if err != nil {
 			return err
 		}
 	} else {
-		existingParent = run.Config.MainBranch()
+		existingParent = repo.Runner.Config.MainBranch()
 	}
-	err = validate.KnowsBranchAncestors(currentBranch, existingParent, &run.Backend)
+	mainBranch := repo.Runner.Config.MainBranch()
+	_, err = validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
+		DefaultBranch:   existingParent,
+		Backend:         &repo.Runner.Backend,
+		AllBranches:     branches.All,
+		Lineage:         lineage,
+		BranchDurations: branches.Durations,
+		MainBranch:      mainBranch,
+	})
 	if err != nil {
 		return err
 	}
-	run.Stats.PrintAnalysis()
+	repo.Runner.Stats.PrintAnalysis()
 	return nil
 }

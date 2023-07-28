@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/flags"
@@ -43,29 +44,30 @@ func hackCmd() *cobra.Command {
 }
 
 func hack(args []string, promptForParent, debug bool) error {
-	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:           debug,
-		DryRun:          false,
-		OmitBranchNames: false,
-	})
-	if err != nil {
-		return err
-	}
-	allBranches, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
+		Debug:                 debug,
+		DryRun:                false,
 		Fetch:                 true,
 		HandleUnfinishedState: true,
-		ValidateIsConfigured:  true,
+		OmitBranchNames:       false,
 		ValidateIsOnline:      false,
+		ValidateGitRepo:       true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineHackConfig(args, promptForParent, &run, allBranches)
+	branches, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
+		ValidateIsConfigured: true,
+	})
 	if err != nil {
 		return err
 	}
-	stepList, err := appendStepList(config, &run)
+	config, err := determineHackConfig(args, promptForParent, &repo.Runner, branches)
+	if err != nil {
+		return err
+	}
+	stepList, err := appendStepList(config)
 	if err != nil {
 		return err
 	}
@@ -73,47 +75,94 @@ func hack(args []string, promptForParent, debug bool) error {
 		Command:     "hack",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(&runState, &run, nil)
+	return runstate.Execute(runstate.ExecuteArgs{
+		RunState:  &runState,
+		Run:       &repo.Runner,
+		Connector: nil,
+		RootDir:   repo.RootDir,
+	})
 }
 
-func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunner, allBranches git.BranchesSyncStatus) (*appendConfig, error) {
+func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunner, branches execute.Branches) (*appendConfig, error) {
 	fc := failure.Collector{}
+	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
+	hasOpenChanges := fc.Bool(run.Backend.HasOpenChanges())
 	targetBranch := args[0]
-	parentBranch := fc.String(determineParentBranch(targetBranch, promptForParent, run))
-	hasOrigin := fc.Bool(run.Backend.HasOrigin())
+	mainBranch := run.Config.MainBranch()
+	lineage := run.Config.Lineage()
+	parentBranch, updated, err := determineParentBranch(determineParentBranchArgs{
+		backend:         &run.Backend,
+		branches:        branches,
+		lineage:         lineage,
+		mainBranch:      mainBranch,
+		promptForParent: promptForParent,
+		targetBranch:    targetBranch,
+	})
+	if err != nil {
+		return nil, err
+	}
+	if updated {
+		lineage = run.Config.Lineage()
+	}
+	remotes := fc.Strings(run.Backend.Remotes())
 	shouldNewBranchPush := fc.Bool(run.Config.ShouldNewBranchPush())
 	isOffline := fc.Bool(run.Config.IsOffline())
-	mainBranch := run.Config.MainBranch()
 	pushHook := fc.Bool(run.Config.PushHook())
-	if allBranches.Contains(targetBranch) {
+	if branches.All.Contains(targetBranch) {
 		return nil, fmt.Errorf(messages.BranchAlreadyExists, targetBranch)
 	}
-	lineage := run.Config.Lineage()
 	branchNamesToSync := lineage.BranchesAndAncestors([]string{parentBranch})
-	branchesToSync := fc.BranchesSyncStatus(allBranches.Select(branchNamesToSync))
+	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
+	shouldSyncUpstream := fc.Bool(run.Config.ShouldSyncUpstream())
+	pullBranchStrategy := fc.PullBranchStrategy(run.Config.PullBranchStrategy())
+	syncStrategy := fc.SyncStrategy(run.Config.SyncStrategy())
 	return &appendConfig{
+		durations:           branches.Durations,
 		branchesToSync:      branchesToSync,
 		targetBranch:        targetBranch,
 		parentBranch:        parentBranch,
-		hasOrigin:           hasOrigin,
+		hasOpenChanges:      hasOpenChanges,
+		remotes:             remotes,
+		initialBranch:       branches.Initial,
+		lineage:             lineage,
 		mainBranch:          mainBranch,
 		shouldNewBranchPush: shouldNewBranchPush,
+		previousBranch:      previousBranch,
+		pullBranchStrategy:  pullBranchStrategy,
 		pushHook:            pushHook,
 		isOffline:           isOffline,
+		shouldSyncUpstream:  shouldSyncUpstream,
+		syncStrategy:        syncStrategy,
 	}, fc.Err
 }
 
-func determineParentBranch(targetBranch string, promptForParent bool, run *git.ProdRunner) (string, error) {
-	if promptForParent {
-		parentBranch, err := validate.EnterParent(targetBranch, run.Config.MainBranch(), &run.Backend)
-		if err != nil {
-			return "", err
-		}
-		err = validate.KnowsBranchAncestors(parentBranch, run.Config.MainBranch(), &run.Backend)
-		if err != nil {
-			return "", err
-		}
-		return parentBranch, nil
+func determineParentBranch(args determineParentBranchArgs) (parentBranch string, updated bool, err error) {
+	if !args.promptForParent {
+		return args.mainBranch, false, nil
 	}
-	return run.Config.MainBranch(), nil
+	parentBranch, err = validate.EnterParent(args.targetBranch, args.mainBranch, args.lineage, args.branches.All)
+	if err != nil {
+		return "", true, err
+	}
+	_, err = validate.KnowsBranchAncestors(parentBranch, validate.KnowsBranchAncestorsArgs{
+		AllBranches:     args.branches.All,
+		Backend:         args.backend,
+		BranchDurations: args.branches.Durations,
+		DefaultBranch:   args.mainBranch,
+		Lineage:         args.lineage,
+		MainBranch:      args.mainBranch,
+	})
+	if err != nil {
+		return "", true, err
+	}
+	return parentBranch, true, nil
+}
+
+type determineParentBranchArgs struct {
+	backend         *git.BackendCommands
+	branches        execute.Branches
+	lineage         config.Lineage
+	mainBranch      string
+	promptForParent bool
+	targetBranch    string
 }

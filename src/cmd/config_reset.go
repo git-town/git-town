@@ -24,23 +24,18 @@ func resetConfigCommand() *cobra.Command {
 }
 
 func resetStatus(debug bool) error {
-	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:           debug,
-		DryRun:          false,
-		OmitBranchNames: true,
-	})
-	if err != nil {
-		return err
-	}
-	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
+		Debug:                 debug,
+		DryRun:                false,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
-		ValidateIsConfigured:  false,
+		OmitBranchNames:       true,
 		ValidateIsOnline:      false,
+		ValidateGitRepo:       true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
 	}
-	return run.Config.RemoveLocalGitConfiguration()
+	return repo.Runner.Config.RemoveLocalGitConfiguration()
 }

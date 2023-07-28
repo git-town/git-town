@@ -39,19 +39,24 @@ func aliasesCommand() *cobra.Command {
 }
 
 func aliases(arg string, debug bool) error {
-	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:           debug,
-		DryRun:          false,
-		OmitBranchNames: true,
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
+		Debug:                 debug,
+		DryRun:                false,
+		Fetch:                 false,
+		HandleUnfinishedState: false,
+		OmitBranchNames:       true,
+		ValidateIsOnline:      false,
+		ValidateGitRepo:       false,
+		ValidateNoOpenChanges: false,
 	})
-	if err != nil {
+	if err != nil || exit {
 		return err
 	}
 	switch strings.ToLower(arg) {
 	case "add":
-		return addAliases(&run)
+		return addAliases(&repo.Runner)
 	case "remove":
-		return removeAliases(&run)
+		return removeAliases(&repo.Runner)
 	}
 	return fmt.Errorf(messages.InputAddOrRemove, arg)
 }

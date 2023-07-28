@@ -50,36 +50,37 @@ func newPullRequestCommand() *cobra.Command {
 }
 
 func newPullRequest(debug bool) error {
-	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:           debug,
-		DryRun:          false,
-		OmitBranchNames: false,
-	})
-	if err != nil {
-		return err
-	}
-	allBranches, initialBranch, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
+		Debug:                 debug,
+		DryRun:                false,
 		Fetch:                 false,
 		HandleUnfinishedState: true,
-		ValidateIsConfigured:  true,
+		OmitBranchNames:       false,
 		ValidateIsOnline:      true,
+		ValidateGitRepo:       true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineNewPullRequestConfig(&run, allBranches, initialBranch)
+	branches, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
+		ValidateIsConfigured: true,
+	})
 	if err != nil {
 		return err
 	}
-	connector, err := hosting.NewConnector(run.Config.GitTown, &run.Backend, cli.PrintConnectorAction)
+	config, err := determineNewPullRequestConfig(&repo.Runner, branches, repo.IsOffline)
+	if err != nil {
+		return err
+	}
+	connector, err := hosting.NewConnector(repo.Runner.Config.GitTown, &repo.Runner.Backend, cli.PrintConnectorAction)
 	if err != nil {
 		return err
 	}
 	if connector == nil {
 		return hosting.UnsupportedServiceError()
 	}
-	stepList, err := newPullRequestStepList(config, &run)
+	stepList, err := newPullRequestStepList(config)
 	if err != nil {
 		return err
 	}
@@ -87,52 +88,121 @@ func newPullRequest(debug bool) error {
 		Command:     "new-pull-request",
 		RunStepList: stepList,
 	}
-	return runstate.Execute(&runState, &run, connector)
+	return runstate.Execute(runstate.ExecuteArgs{
+		RunState:  &runState,
+		Run:       &repo.Runner,
+		Connector: connector,
+		RootDir:   repo.RootDir,
+	})
 }
 
 type newPullRequestConfig struct {
-	BranchesToSync git.BranchesSyncStatus
-	InitialBranch  string
-	isOffline      bool
-	mainBranch     string
+	branchesToSync     git.BranchesSyncStatus
+	branchDurations    config.BranchDurations
+	hasOpenChanges     bool
+	remotes            config.Remotes
+	initialBranch      string
+	isOffline          bool
+	lineage            config.Lineage
+	mainBranch         string
+	previousBranch     string
+	pullBranchStrategy config.PullBranchStrategy
+	pushHook           bool
+	shouldSyncUpstream bool
+	syncStrategy       config.SyncStrategy
 }
 
-func determineNewPullRequestConfig(run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string) (*newPullRequestConfig, error) {
-	hasOrigin, err := run.Backend.HasOrigin()
+func determineNewPullRequestConfig(run *git.ProdRunner, branches execute.Branches, isOffline bool) (*newPullRequestConfig, error) {
+	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
+	hasOpenChanges, err := run.Backend.HasOpenChanges()
 	if err != nil {
 		return nil, err
 	}
-	if hasOrigin {
+	remotes, err := run.Backend.Remotes()
+	if err != nil {
+		return nil, err
+	}
+	if remotes.HasOrigin() {
 		err := run.Frontend.Fetch()
 		if err != nil {
 			return nil, err
 		}
 	}
-	err = validate.KnowsBranchAncestors(initialBranch, run.Config.MainBranch(), &run.Backend)
-	if err != nil {
-		return nil, err
-	}
-	isOffline, err := run.Config.IsOffline()
-	if err != nil {
-		return nil, err
-	}
+	mainBranch := run.Config.MainBranch()
 	lineage := run.Config.Lineage()
-	branchNamesToSync := lineage.BranchAndAncestors(initialBranch)
-	branchesToSync, err := allBranches.Select(branchNamesToSync)
+	updated, err := validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
+		DefaultBranch:   mainBranch,
+		Backend:         &run.Backend,
+		AllBranches:     branches.All,
+		Lineage:         lineage,
+		BranchDurations: branches.Durations,
+		MainBranch:      mainBranch,
+	})
+	if err != nil {
+		return nil, err
+	}
+	if updated {
+		lineage = run.Config.Lineage()
+	}
+	syncStrategy, err := run.Config.SyncStrategy()
+	if err != nil {
+		return nil, err
+	}
+	pushHook, err := run.Config.PushHook()
+	if err != nil {
+		return nil, err
+	}
+	pullBranchStrategy, err := run.Config.PullBranchStrategy()
+	if err != nil {
+		return nil, err
+	}
+	shouldSyncUpstream, err := run.Config.ShouldSyncUpstream()
+	if err != nil {
+		return nil, err
+	}
+	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
+	branchesToSync, err := branches.All.Select(branchNamesToSync)
 	return &newPullRequestConfig{
-		BranchesToSync: branchesToSync,
-		InitialBranch:  initialBranch,
-		isOffline:      isOffline,
-		mainBranch:     run.Config.MainBranch(),
+		branchDurations:    branches.Durations,
+		branchesToSync:     branchesToSync,
+		hasOpenChanges:     hasOpenChanges,
+		remotes:            remotes,
+		initialBranch:      branches.Initial,
+		isOffline:          isOffline,
+		lineage:            lineage,
+		mainBranch:         mainBranch,
+		previousBranch:     previousBranch,
+		pullBranchStrategy: pullBranchStrategy,
+		pushHook:           pushHook,
+		shouldSyncUpstream: shouldSyncUpstream,
+		syncStrategy:       syncStrategy,
 	}, err
 }
 
-func newPullRequestStepList(config *newPullRequestConfig, run *git.ProdRunner) (runstate.StepList, error) {
+func newPullRequestStepList(config *newPullRequestConfig) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
-	for _, branch := range config.BranchesToSync {
-		updateBranchSteps(&list, branch, true, config.isOffline, run)
+	for _, branch := range config.branchesToSync {
+		updateBranchSteps(&list, updateBranchStepsArgs{
+			branch:             branch,
+			branchDurations:    config.branchDurations,
+			remotes:            config.remotes,
+			isOffline:          config.isOffline,
+			lineage:            config.lineage,
+			mainBranch:         config.mainBranch,
+			pullBranchStrategy: config.pullBranchStrategy,
+			pushBranch:         true,
+			pushHook:           config.pushHook,
+			shouldSyncUpstream: config.shouldSyncUpstream,
+			syncStrategy:       config.syncStrategy,
+		})
 	}
-	list.Wrap(runstate.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, &run.Backend, config.mainBranch)
-	list.Add(&steps.CreateProposalStep{Branch: config.InitialBranch})
+	list.Wrap(runstate.WrapOptions{
+		RunInGitRoot:     true,
+		StashOpenChanges: config.hasOpenChanges,
+		MainBranch:       config.mainBranch,
+		InitialBranch:    config.initialBranch,
+		PreviousBranch:   config.previousBranch,
+	})
+	list.Add(&steps.CreateProposalStep{Branch: config.initialBranch})
 	return list.Result()
 }

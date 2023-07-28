@@ -47,47 +47,43 @@ func perennialBranchesCmd() *cobra.Command {
 }
 
 func displayPerennialBranches(debug bool) error {
-	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:           debug,
-		DryRun:          false,
-		OmitBranchNames: true,
-	})
-	if err != nil {
-		return err
-	}
-	_, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
+		Debug:                 debug,
+		DryRun:                false,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
-		ValidateIsConfigured:  false,
+		OmitBranchNames:       true,
 		ValidateIsOnline:      false,
+		ValidateGitRepo:       true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
 	}
-	cli.Println(cli.StringSetting(strings.Join(run.Config.PerennialBranches(), "\n")))
+	cli.Println(cli.StringSetting(strings.Join(repo.Runner.Config.PerennialBranches(), "\n")))
 	return nil
 }
 
 func updatePerennialBranches(debug bool) error {
-	run, err := execute.LoadProdRunner(execute.LoadArgs{
-		Debug:           debug,
-		DryRun:          false,
-		OmitBranchNames: true,
-	})
-	if err != nil {
-		return err
-	}
-	allBranches, _, exit, err := execute.LoadGitRepo(&run, execute.LoadGitArgs{
+	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
+		Debug:                 debug,
+		DryRun:                false,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
-		ValidateIsConfigured:  false,
+		OmitBranchNames:       true,
 		ValidateIsOnline:      false,
+		ValidateGitRepo:       true,
 		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err
 	}
-	mainBranch := run.Config.MainBranch()
-	return validate.EnterPerennialBranches(&run.Backend, allBranches, mainBranch)
+	branches, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
+		ValidateIsConfigured: false,
+	})
+	if err != nil {
+		return err
+	}
+	_, err = validate.EnterPerennialBranches(&repo.Runner.Backend, branches.All, branches.Durations)
+	return err
 }
