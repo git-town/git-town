@@ -45,13 +45,10 @@ func pruneBranches(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	branches, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
-		ValidateIsConfigured: true,
-	})
+	config, err := determinePruneBranchesConfig(&repo.Runner)
 	if err != nil {
 		return err
 	}
-	config := determinePruneBranchesConfig(&repo.Runner, branches)
 	stepList, err := pruneBranchesStepList(config)
 	if err != nil {
 		return err
@@ -77,7 +74,10 @@ type pruneBranchesConfig struct {
 	previousBranch                           string
 }
 
-func determinePruneBranchesConfig(run *git.ProdRunner, branches git.Branches) *pruneBranchesConfig {
+func determinePruneBranchesConfig(run *git.ProdRunner) (*pruneBranchesConfig, error) {
+	branches, err := execute.LoadBranches(run, execute.LoadBranchesArgs{
+		ValidateIsConfigured: true,
+	})
 	return &pruneBranchesConfig{
 		branchDurations:                          branches.Durations,
 		initialBranch:                            branches.Initial,
@@ -85,7 +85,7 @@ func determinePruneBranchesConfig(run *git.ProdRunner, branches git.Branches) *p
 		localBranchesWithDeletedTrackingBranches: branches.All.LocalBranchesWithDeletedTrackingBranches().BranchNames(),
 		mainBranch:                               run.Config.MainBranch(),
 		previousBranch:                           run.Backend.PreviouslyCheckedOutBranch(),
-	}
+	}, err
 }
 
 func pruneBranchesStepList(config *pruneBranchesConfig) (runstate.StepList, error) {
