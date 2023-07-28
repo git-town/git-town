@@ -3,48 +3,65 @@ package hosting_test
 import (
 	"testing"
 
+	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNewBitbucketConnector(t *testing.T) {
 	t.Parallel()
-	t.Run("normal example", func(t *testing.T) {
+	t.Run("Bitbucket SaaS", func(t *testing.T) {
 		t.Parallel()
-		repoConfig := mockRepoConfig{
-			hostingService: "bitbucket",
-			originURL:      "git@self-hosted-bitbucket.com:git-town/git-town.git",
+		have, err := hosting.NewBitbucketConnector(hosting.NewBitbucketConnectorArgs{
+			HostingService:  config.HostingServiceNone,
+			OriginURL:       giturl.Parse("username@bitbucket.org:git-town/docs.git"),
+			GetShaForBranch: emptyShaForBranch,
+		})
+		assert.NoError(t, err)
+		wantConfig := hosting.CommonConfig{
+			APIToken:     "",
+			Hostname:     "bitbucket.org",
+			Organization: "git-town",
+			Repository:   "docs",
 		}
-		connector, err := hosting.NewBitbucketConnector(repoConfig, nil)
-		assert.Nil(t, err)
-		assert.NotNil(t, connector)
-		assert.Equal(t, "Bitbucket", connector.HostingServiceName())
-		assert.Equal(t, "https://self-hosted-bitbucket.com/git-town/git-town", connector.RepositoryURL())
+		assert.Equal(t, wantConfig, have.CommonConfig)
 	})
-
-	t.Run("custom hostname", func(t *testing.T) {
+	t.Run("hosted service type provided manually", func(t *testing.T) {
 		t.Parallel()
-		repoConfig := mockRepoConfig{
-			originURL:      "git@my-ssh-identity.com:git-town/git-town.git",
-			originOverride: "bitbucket.org",
+		have, err := hosting.NewBitbucketConnector(hosting.NewBitbucketConnectorArgs{
+			HostingService:  config.HostingServiceBitbucket,
+			OriginURL:       giturl.Parse("git@custom-url.com:git-town/docs.git"),
+			GetShaForBranch: emptyShaForBranch,
+		})
+		assert.NoError(t, err)
+		wantConfig := hosting.CommonConfig{
+			APIToken:     "",
+			Hostname:     "custom-url.com",
+			Organization: "git-town",
+			Repository:   "docs",
 		}
-		connector, err := hosting.NewBitbucketConnector(repoConfig, nil)
-		assert.Nil(t, err)
-		assert.NotNil(t, connector)
-		assert.Equal(t, "Bitbucket", connector.HostingServiceName())
-		assert.Equal(t, "https://bitbucket.org/git-town/git-town", connector.RepositoryURL())
+		assert.Equal(t, wantConfig, have.CommonConfig)
 	})
-
-	t.Run("custom username", func(t *testing.T) {
+	t.Run("repo is hosted by another hosting service --> no connector", func(t *testing.T) {
 		t.Parallel()
-		repoConfig := mockRepoConfig{
-			hostingService: "bitbucket",
-			originURL:      "username@bitbucket.org:git-town/git-town.git",
-		}
-		connector, err := hosting.NewBitbucketConnector(repoConfig, nil)
-		assert.Nil(t, err)
-		assert.NotNil(t, connector)
-		assert.Equal(t, "Bitbucket", connector.HostingServiceName())
-		assert.Equal(t, "https://bitbucket.org/git-town/git-town", connector.RepositoryURL())
+		have, err := hosting.NewBitbucketConnector(hosting.NewBitbucketConnectorArgs{
+			HostingService:  config.HostingServiceNone,
+			OriginURL:       giturl.Parse("git@github.com:git-town/git-town.git"),
+			GetShaForBranch: emptyShaForBranch,
+		})
+		assert.Nil(t, have)
+		assert.NoError(t, err)
+	})
+	t.Run("no origin remote --> no connector", func(t *testing.T) {
+		t.Parallel()
+		var originURL *giturl.Parts
+		have, err := hosting.NewBitbucketConnector(hosting.NewBitbucketConnectorArgs{
+			HostingService:  config.HostingServiceNone,
+			OriginURL:       originURL,
+			GetShaForBranch: emptyShaForBranch,
+		})
+		assert.Nil(t, have)
+		assert.NoError(t, err)
 	})
 }
