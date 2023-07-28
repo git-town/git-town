@@ -145,11 +145,11 @@ func determineParentBranch(args determineParentBranchArgs) (parentBranch string,
 		return "", true, err
 	}
 	_, err = validate.KnowsBranchAncestors(parentBranch, validate.KnowsBranchAncestorsArgs{
-		DefaultBranch:   args.mainBranch,
-		Backend:         args.backend,
 		AllBranches:     args.branches.All,
-		Lineage:         args.lineage,
+		Backend:         args.backend,
 		BranchDurations: args.branches.Durations,
+		DefaultBranch:   args.mainBranch,
+		Lineage:         args.lineage,
 		MainBranch:      args.mainBranch,
 	})
 	if err != nil {
