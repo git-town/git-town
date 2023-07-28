@@ -4,36 +4,53 @@ import (
 	"testing"
 
 	"code.gitea.io/sdk/gitea"
+	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNewGiteaConnector(t *testing.T) {
 	t.Parallel()
-	t.Run("normal repo", func(t *testing.T) {
+	t.Run("hosted service type provided manually", func(t *testing.T) {
 		t.Parallel()
-		repoConfig := mockRepoConfig{
-			hostingService: "gitea",
-			originURL:      "git@self-hosted-gitea.com:git-town/git-town.git",
+		have, err := hosting.NewGiteaConnector(hosting.NewGiteaConnectorArgs{
+			HostingService: config.HostingServiceGitea,
+			OriginURL:      giturl.Parse("git@custom-url.com:git-town/docs.git"),
+			APIToken:       "apiToken",
+			Log:            nil,
+		})
+		assert.NoError(t, err)
+		wantConfig := hosting.CommonConfig{
+			APIToken:     "apiToken",
+			Hostname:     "custom-url.com",
+			Organization: "git-town",
+			Repository:   "docs",
 		}
-		connector, err := hosting.NewGiteaConnector(repoConfig, nil)
-		assert.Nil(t, err)
-		assert.NotNil(t, connector)
-		assert.Equal(t, "Gitea", connector.HostingServiceName())
-		assert.Equal(t, "https://self-hosted-gitea.com/git-town/git-town", connector.RepositoryURL())
+		assert.Equal(t, wantConfig, have.CommonConfig)
 	})
-
-	t.Run("custom hostname", func(t *testing.T) {
+	t.Run("repo is hosted by another hosting service --> no connector", func(t *testing.T) {
 		t.Parallel()
-		repoConfig := mockRepoConfig{
-			originURL:      "git@my-ssh-identity.com:git-town/git-town.git",
-			originOverride: "gitea.com",
-		}
-		connector, err := hosting.NewGiteaConnector(repoConfig, nil)
-		assert.Nil(t, err)
-		assert.NotNil(t, connector)
-		assert.Equal(t, "Gitea", connector.HostingServiceName())
-		assert.Equal(t, "https://gitea.com/git-town/git-town", connector.RepositoryURL())
+		have, err := hosting.NewGiteaConnector(hosting.NewGiteaConnectorArgs{
+			HostingService: config.HostingServiceNone,
+			OriginURL:      giturl.Parse("git@github.com:git-town/git-town.git"),
+			APIToken:       "",
+			Log:            nil,
+		})
+		assert.Nil(t, have)
+		assert.NoError(t, err)
+	})
+	t.Run("no origin remote --> no connector", func(t *testing.T) {
+		t.Parallel()
+		var originURL *giturl.Parts
+		have, err := hosting.NewGiteaConnector(hosting.NewGiteaConnectorArgs{
+			HostingService: config.HostingServiceNone,
+			OriginURL:      originURL,
+			APIToken:       "",
+			Log:            nil,
+		})
+		assert.Nil(t, have)
+		assert.NoError(t, err)
 	})
 }
 
@@ -50,23 +67,27 @@ func TestGitea(t *testing.T) {
 		assert.Equal(t, have, want)
 	})
 	t.Run("NewProposalURL", func(t *testing.T) {
-		repoConfig := mockRepoConfig{
-			originURL: "git@gitea.com:git-town/git-town.git",
-		}
-		connector, err := hosting.NewGiteaConnector(repoConfig, nil)
+		connector, err := hosting.NewGiteaConnector(hosting.NewGiteaConnectorArgs{
+			HostingService: config.HostingServiceGitea,
+			OriginURL:      giturl.Parse("git@gitea.com:git-town/docs.git"),
+			APIToken:       "",
+			Log:            nil,
+		})
 		assert.Nil(t, err)
 		have, err := connector.NewProposalURL("feature", "parent")
 		assert.Nil(t, err)
-		assert.Equal(t, have, "https://gitea.com/git-town/git-town/compare/parent...feature")
+		assert.Equal(t, have, "https://gitea.com/git-town/docs/compare/parent...feature")
 	})
 	t.Run("RepositoryURL", func(t *testing.T) {
-		repoConfig := mockRepoConfig{
-			originURL: "git@gitea.com:git-town/git-town.git",
-		}
-		connector, err := hosting.NewGiteaConnector(repoConfig, nil)
+		connector, err := hosting.NewGiteaConnector(hosting.NewGiteaConnectorArgs{
+			HostingService: config.HostingServiceGitea,
+			OriginURL:      giturl.Parse("git@gitea.com:git-town/docs.git"),
+			APIToken:       "",
+			Log:            nil,
+		})
 		assert.Nil(t, err)
 		have := connector.RepositoryURL()
-		assert.Equal(t, have, "https://gitea.com/git-town/git-town")
+		assert.Equal(t, have, "https://gitea.com/git-town/docs")
 	})
 }
 

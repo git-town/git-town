@@ -4,6 +4,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/stretchr/testify/assert"
 )
@@ -12,40 +14,65 @@ func TestNewGithubConnector(t *testing.T) {
 	t.Parallel()
 	t.Run("GitHub SaaS", func(t *testing.T) {
 		t.Parallel()
-		repoConfig := mockRepoConfig{
-			originURL: "git@github.com:git-town/git-town.git",
+		have, err := hosting.NewGithubConnector(hosting.NewGithubConnectorArgs{
+			HostingService: config.HostingServiceNone,
+			OriginURL:      giturl.Parse("git@github.com:git-town/docs.git"),
+			APIToken:       "apiToken",
+			MainBranch:     "mainBranch",
+			Log:            nil,
+		})
+		assert.NoError(t, err)
+		wantConfig := hosting.CommonConfig{
+			APIToken:     "apiToken",
+			Hostname:     "github.com",
+			Organization: "git-town",
+			Repository:   "docs",
 		}
-		connector, err := hosting.NewGithubConnector(repoConfig, nil)
-		assert.Nil(t, err)
-		assert.NotNil(t, connector)
-		assert.Equal(t, "GitHub", connector.HostingServiceName())
-		assert.Equal(t, "https://github.com/git-town/git-town", connector.RepositoryURL())
+		assert.Equal(t, wantConfig, have.CommonConfig)
 	})
 
-	t.Run("self-hosted GitHub instance", func(t *testing.T) {
+	t.Run("hosted service type provided manually", func(t *testing.T) {
 		t.Parallel()
-		repoConfig := mockRepoConfig{
-			hostingService: "github",
-			originURL:      "git@self-hosted-github.com:git-town/git-town.git",
+		have, err := hosting.NewGithubConnector(hosting.NewGithubConnectorArgs{
+			HostingService: config.HostingServiceGitHub,
+			OriginURL:      giturl.Parse("git@custom-url.com:git-town/docs.git"),
+			APIToken:       "apiToken",
+			MainBranch:     "mainBranch",
+			Log:            nil,
+		})
+		assert.NoError(t, err)
+		wantConfig := hosting.CommonConfig{
+			APIToken:     "apiToken",
+			Hostname:     "custom-url.com",
+			Organization: "git-town",
+			Repository:   "docs",
 		}
-		connector, err := hosting.NewGithubConnector(repoConfig, nil)
-		assert.Nil(t, err)
-		assert.NotNil(t, connector)
-		assert.Equal(t, "GitHub", connector.HostingServiceName())
-		assert.Equal(t, "https://self-hosted-github.com/git-town/git-town", connector.RepositoryURL())
+		assert.Equal(t, wantConfig, have.CommonConfig)
 	})
-
-	t.Run("custom hostname override", func(t *testing.T) {
+	t.Run("repo is hosted by another hosting service --> no connector", func(t *testing.T) {
 		t.Parallel()
-		repoConfig := mockRepoConfig{
-			originURL:      "git@my-ssh-identity.com:git-town/git-town.git",
-			originOverride: "github.com",
-		}
-		connector, err := hosting.NewGithubConnector(repoConfig, nil)
-		assert.Nil(t, err)
-		assert.NotNil(t, connector)
-		assert.Equal(t, "GitHub", connector.HostingServiceName())
-		assert.Equal(t, "https://github.com/git-town/git-town", connector.RepositoryURL())
+		have, err := hosting.NewGithubConnector(hosting.NewGithubConnectorArgs{
+			HostingService: config.HostingServiceNone,
+			OriginURL:      giturl.Parse("git@gitlab.com:git-town/git-town.git"),
+			APIToken:       "",
+			MainBranch:     "mainBranch",
+			Log:            nil,
+		})
+		assert.Nil(t, have)
+		assert.NoError(t, err)
+	})
+	t.Run("no origin remote --> no connector", func(t *testing.T) {
+		t.Parallel()
+		var originURL *giturl.Parts
+		have, err := hosting.NewGithubConnector(hosting.NewGithubConnectorArgs{
+			HostingService: config.HostingServiceNone,
+			OriginURL:      originURL,
+			APIToken:       "",
+			MainBranch:     "mainBranch",
+			Log:            nil,
+		})
+		assert.Nil(t, have)
+		assert.NoError(t, err)
 	})
 }
 

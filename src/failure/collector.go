@@ -42,6 +42,11 @@ func (ec *Collector) Bool(value bool, err error) bool {
 	return value
 }
 
+func (ec *Collector) Branches(value git.Branches, err error) git.Branches {
+	ec.Check(err)
+	return value
+}
+
 func (ec *Collector) BranchesSyncStatus(value git.BranchesSyncStatus, err error) git.BranchesSyncStatus {
 	ec.Check(err)
 	return value

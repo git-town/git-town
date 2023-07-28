@@ -58,13 +58,7 @@ func prepend(args []string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	branches, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
-		ValidateIsConfigured: true,
-	})
-	if err != nil {
-		return err
-	}
-	config, err := determinePrependConfig(args, &repo.Runner, branches, repo.IsOffline)
+	config, err := determinePrependConfig(args, &repo.Runner, repo.IsOffline)
 	if err != nil {
 		return err
 	}
@@ -103,8 +97,11 @@ type prependConfig struct {
 	targetBranch        string
 }
 
-func determinePrependConfig(args []string, run *git.ProdRunner, branches execute.Branches, isOffline bool) (*prependConfig, error) {
+func determinePrependConfig(args []string, run *git.ProdRunner, isOffline bool) (*prependConfig, error) {
 	fc := failure.Collector{}
+	branches := fc.Branches(execute.LoadBranches(run, execute.LoadBranchesArgs{
+		ValidateIsConfigured: true,
+	}))
 	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
 	hasOpenChanges := fc.Bool(run.Backend.HasOpenChanges())
 	remotes := fc.Strings(run.Backend.Remotes())

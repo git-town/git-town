@@ -13,6 +13,87 @@ import (
 func TestGitTown(t *testing.T) {
 	t.Parallel()
 
+	t.Run("DetermineOriginURL", func(t *testing.T) {
+		t.Parallel()
+		t.Run("SSH URL", func(t *testing.T) {
+			t.Parallel()
+			have := config.DetermineOriginURL("git@github.com:git-town/docs.git", "", config.OriginURLCache{})
+			want := &giturl.Parts{
+				Host: "github.com",
+				Org:  "git-town",
+				Repo: "docs",
+				User: "git",
+			}
+			assert.Equal(t, want, have)
+		})
+		t.Run("HTTPS URL", func(t *testing.T) {
+			t.Parallel()
+			have := config.DetermineOriginURL("https://github.com/git-town/docs.git", "", config.OriginURLCache{})
+			want := &giturl.Parts{
+				Host: "github.com",
+				Org:  "git-town",
+				Repo: "docs",
+				User: "",
+			}
+			assert.Equal(t, want, have)
+		})
+		t.Run("GitLab handbook repo on gitlab.com", func(t *testing.T) {
+			t.Parallel()
+			have := config.DetermineOriginURL("git@gitlab.com:gitlab-com/www-gitlab-com.git", "", config.OriginURLCache{})
+			want := &giturl.Parts{
+				Host: "gitlab.com",
+				Org:  "gitlab-com",
+				Repo: "www-gitlab-com",
+				User: "git",
+			}
+			assert.Equal(t, want, have)
+		})
+		t.Run("GitLab repository nested inside a group", func(t *testing.T) {
+			t.Parallel()
+			have := config.DetermineOriginURL("git@gitlab.com:gitlab-org/quality/triage-ops.git", "", config.OriginURLCache{})
+			want := &giturl.Parts{
+				Host: "gitlab.com",
+				Org:  "gitlab-org/quality",
+				Repo: "triage-ops",
+				User: "git",
+			}
+			assert.Equal(t, want, have)
+		})
+		t.Run("self-hosted GitLab server without URL override", func(t *testing.T) {
+			t.Parallel()
+			have := config.DetermineOriginURL("git@self-hosted-gitlab.com:git-town/git-town.git", "", config.OriginURLCache{})
+			want := &giturl.Parts{
+				Host: "self-hosted-gitlab.com",
+				Org:  "git-town",
+				Repo: "git-town",
+				User: "git",
+			}
+			assert.Equal(t, want, have)
+		})
+		t.Run("self-hosted GitLab server with URL override", func(t *testing.T) {
+			t.Parallel()
+			have := config.DetermineOriginURL("git@self-hosted-gitlab.com:git-town/git-town.git", "override.com", config.OriginURLCache{})
+			want := &giturl.Parts{
+				Host: "override.com",
+				Org:  "git-town",
+				Repo: "git-town",
+				User: "git",
+			}
+			assert.Equal(t, want, have)
+		})
+		t.Run("custom SSH identity with hostname override", func(t *testing.T) {
+			t.Parallel()
+			have := config.DetermineOriginURL("git@my-ssh-identity.com:git-town/git-town.git", "gitlab.com", config.OriginURLCache{})
+			want := &giturl.Parts{
+				Host: "gitlab.com",
+				Org:  "git-town",
+				Repo: "git-town",
+				User: "git",
+			}
+			assert.Equal(t, want, have)
+		})
+	})
+
 	t.Run("Lineage", func(t *testing.T) {
 		t.Parallel()
 		repo := testruntime.CreateGitTown(t)

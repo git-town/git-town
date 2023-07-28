@@ -7,35 +7,37 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/messages"
 )
 
 // BitbucketConnector provides access to the API of Bitbucket installations.
 type BitbucketConnector struct {
 	CommonConfig
-	git gitCommands
+	getShaForBranch ShaForBranchFunc
 }
 
 // NewBitbucketConnector provides a Bitbucket connector instance if the current repo is hosted on Bitbucket,
 // otherwise nil.
-func NewBitbucketConnector(gitConfig gitTownConfig, git gitCommands) (*BitbucketConnector, error) {
-	hostingService, err := gitConfig.HostingService()
-	if err != nil {
-		return nil, err
-	}
-	url := gitConfig.OriginURL()
-	if url == nil || (url.Host != "bitbucket.org" && hostingService != config.HostingServiceBitbucket) {
+func NewBitbucketConnector(args NewBitbucketConnectorArgs) (*BitbucketConnector, error) {
+	if args.OriginURL == nil || (args.OriginURL.Host != "bitbucket.org" && args.HostingService != config.HostingServiceBitbucket) {
 		return nil, nil //nolint:nilnil
 	}
 	return &BitbucketConnector{
 		CommonConfig: CommonConfig{
 			APIToken:     "",
-			Hostname:     url.Host,
-			Organization: url.Org,
-			Repository:   url.Repo,
+			Hostname:     args.OriginURL.Host,
+			Organization: args.OriginURL.Org,
+			Repository:   args.OriginURL.Repo,
 		},
-		git: git,
+		getShaForBranch: args.GetShaForBranch,
 	}, nil
+}
+
+type NewBitbucketConnectorArgs struct {
+	OriginURL       *giturl.Parts
+	HostingService  config.HostingService
+	GetShaForBranch ShaForBranchFunc
 }
 
 func (c *BitbucketConnector) FindProposal(_, _ string) (*Proposal, error) {
@@ -52,7 +54,7 @@ func (c *BitbucketConnector) HostingServiceName() string {
 
 func (c *BitbucketConnector) NewProposalURL(branch, parentBranch string) (string, error) {
 	query := url.Values{}
-	branchSha, err := c.git.ShaForBranch(branch)
+	branchSha, err := c.getShaForBranch(branch)
 	if err != nil {
 		return "", fmt.Errorf(messages.ProposalURLProblem, branch, parentBranch, err)
 	}

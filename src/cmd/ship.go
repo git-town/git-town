@@ -77,22 +77,16 @@ func ship(args []string, message string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	branches, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
-		ValidateIsConfigured: true,
-	})
+	config, err := determineShipConfig(args, &repo.Runner, repo.IsOffline)
 	if err != nil {
 		return err
 	}
-	connector, err := hosting.NewConnector(repo.Runner.Config.GitTown, &repo.Runner.Backend, cli.PrintConnectorAction)
-	if err != nil {
-		return err
-	}
-	config, err := determineShipConfig(args, connector, &repo.Runner, branches.All, branches.Initial, repo.IsOffline, branches.Durations)
-	if err != nil {
-		return err
-	}
-	if config.branchToShip.Name == branches.Initial {
-		err = validate.NoOpenChanges(&repo.Runner.Backend)
+	if config.branchToShip.Name == config.initialBranch {
+		hasOpenChanges, err := repo.Runner.Backend.HasOpenChanges()
+		if err != nil {
+			return err
+		}
+		err = validate.NoOpenChanges(hasOpenChanges)
 		if err != nil {
 			return err
 		}
@@ -108,7 +102,7 @@ func ship(args []string, message string, debug bool) error {
 	return runstate.Execute(runstate.ExecuteArgs{
 		RunState:  &runState,
 		Run:       &repo.Runner,
-		Connector: connector,
+		Connector: config.connector,
 		RootDir:   repo.RootDir,
 	})
 }
@@ -116,6 +110,7 @@ func ship(args []string, message string, debug bool) error {
 type shipConfig struct {
 	branchDurations          config.BranchDurations
 	branchToShip             git.BranchSyncStatus
+	connector                hosting.Connector
 	targetBranch             git.BranchSyncStatus
 	canShipViaAPI            bool
 	childBranches            []string
@@ -137,7 +132,13 @@ type shipConfig struct {
 	syncStrategy             config.SyncStrategy
 }
 
-func determineShipConfig(args []string, connector hosting.Connector, run *git.ProdRunner, allBranches git.BranchesSyncStatus, initialBranch string, isOffline bool, branchDurations config.BranchDurations) (*shipConfig, error) {
+func determineShipConfig(args []string, run *git.ProdRunner, isOffline bool) (*shipConfig, error) {
+	branches, err := execute.LoadBranches(run, execute.LoadBranchesArgs{
+		ValidateIsConfigured: true,
+	})
+	if err != nil {
+		return nil, err
+	}
 	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
 	hasOpenChanges, err := run.Backend.HasOpenChanges()
 	if err != nil {
@@ -152,9 +153,9 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 		return nil, err
 	}
 	mainBranch := run.Config.MainBranch()
-	branchNameToShip := determineBranchToShip(args, initialBranch)
-	branchToShip := allBranches.Lookup(branchNameToShip)
-	isShippingInitialBranch := branchNameToShip == initialBranch
+	branchNameToShip := determineBranchToShip(args, branches.Initial)
+	branchToShip := branches.All.Lookup(branchNameToShip)
+	isShippingInitialBranch := branchNameToShip == branches.Initial
 	syncStrategy, err := run.Config.SyncStrategy()
 	if err != nil {
 		return nil, err
@@ -172,16 +173,16 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 			return nil, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
 		}
 	}
-	if !branchDurations.IsFeatureBranch(branchNameToShip) {
+	if !branches.Durations.IsFeatureBranch(branchNameToShip) {
 		return nil, fmt.Errorf(messages.ShipNoFeatureBranch, branchNameToShip)
 	}
 	lineage := run.Config.Lineage()
 	updated, err := validate.KnowsBranchAncestors(branchNameToShip, validate.KnowsBranchAncestorsArgs{
 		DefaultBranch:   mainBranch,
 		Backend:         &run.Backend,
-		AllBranches:     allBranches,
+		AllBranches:     branches.All,
 		Lineage:         lineage,
-		BranchDurations: branchDurations,
+		BranchDurations: branches.Durations,
 		MainBranch:      mainBranch,
 	})
 	if err != nil {
@@ -190,12 +191,12 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 	if updated {
 		lineage = run.Config.Lineage()
 	}
-	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, branchDurations, lineage)
+	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, branches.Durations, lineage)
 	if err != nil {
 		return nil, err
 	}
 	targetBranchName := lineage.Parent(branchNameToShip)
-	targetBranch := allBranches.Lookup(targetBranchName)
+	targetBranch := branches.All.Lookup(targetBranchName)
 	if targetBranch == nil {
 		return nil, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
@@ -205,6 +206,24 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 	childBranches := lineage.Children(branchNameToShip)
 	proposalsOfChildBranches := []hosting.Proposal{}
 	pushHook, err := run.Config.PushHook()
+	if err != nil {
+		return nil, err
+	}
+	originURL := run.Config.OriginURL()
+	hostingService, err := run.Config.HostingService()
+	if err != nil {
+		return nil, err
+	}
+	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
+		HostingService:  hostingService,
+		GetShaForBranch: run.Backend.ShaForBranch,
+		OriginURL:       originURL,
+		GiteaAPIToken:   run.Config.GiteaToken(),
+		GithubAPIToken:  run.Config.GitHubToken(),
+		GitlabAPIToken:  run.Config.GitLabToken(),
+		MainBranch:      mainBranch,
+		Log:             cli.PrintConnectorAction,
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -230,7 +249,8 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 		}
 	}
 	return &shipConfig{
-		branchDurations:          branchDurations,
+		branchDurations:          branches.Durations,
+		connector:                connector,
 		targetBranch:             *targetBranch,
 		branchToShip:             *branchToShip,
 		canShipViaAPI:            canShipViaAPI,
@@ -239,7 +259,7 @@ func determineShipConfig(args []string, connector hosting.Connector, run *git.Pr
 		deleteOriginBranch:       deleteOrigin,
 		hasOpenChanges:           hasOpenChanges,
 		remotes:                  remotes,
-		initialBranch:            initialBranch,
+		initialBranch:            branches.Initial,
 		isOffline:                isOffline,
 		isShippingInitialBranch:  isShippingInitialBranch,
 		lineage:                  lineage,
