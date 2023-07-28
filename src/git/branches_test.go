@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestTrackingBranch(t *testing.T) {
+func TestTrackingBranchName(t *testing.T) {
 	t.Parallel()
 	give := "branch1"
 	have := git.TrackingBranchName(give)
