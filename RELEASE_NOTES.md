@@ -2,12 +2,15 @@
 
 ## 9.0.1 (2023-07-29)
 
-Git Town should now run a bit faster because it runs fewer Git commands under the hood.
+Git Town should now run a bit faster because it runs fewer Git commands under
+the hood.
 
 #### Bug Fixes
 
-- Fix for missing `UpdateProposalTargetStep` ([#2288](https://github.com/git-town/git-town/pull/2288))
-- Print statistics when removing aliases ([#2325](https://github.com/git-town/git-town/pull/2325))
+- Fix for missing `UpdateProposalTargetStep`
+  ([#2288](https://github.com/git-town/git-town/pull/2288))
+- Print statistics when removing aliases
+  ([#2325](https://github.com/git-town/git-town/pull/2325))
 
 ## 9.0.0 (2023-04-07)
 
