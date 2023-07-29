@@ -11,6 +11,8 @@ the hood.
   ([#2288](https://github.com/git-town/git-town/pull/2288))
 - Print statistics when removing aliases
   ([#2325](https://github.com/git-town/git-town/pull/2325))
+- Fix broken version information in release binaries
+  ([#2333](https://github.com/git-town/git-town/pull/2333))
 
 ## 9.0.0 (2023-04-07)
 
