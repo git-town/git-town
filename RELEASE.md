@@ -38,10 +38,8 @@ On a Windows machine, in Git Bash:
 - install [go-msi](https://github.com/mh-cbon/go-msi#install)
 - install [wix](https://wixtoolset.org/releases)
 - optionally install
-  [.NET 3.5](https://dotnet.microsoft.com/download/dotnet-framework) <<<<<<<
-  HEAD
-- `make msi` to create the Windows installer =======
-- `env VERSION=9.0.1 make msi` to create the Windows installer >>>>>>> main
+  [.NET 3.5](https://dotnet.microsoft.com/download/dotnet-framework)
+- `make msi` to create the Windows installer
 - test the created Windows installer in the `dist` directory
 - `env GITHUB_TOKEN=<your Github token> VERSION=9.0.1 make release-win`
 - this opens the release in the browser
