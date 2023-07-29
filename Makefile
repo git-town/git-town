@@ -49,7 +49,7 @@ help:  # prints all available targets
 
 msi:  # compiles the MSI installer for Windows
 	rm -f git-town*.msi
-	go build -trimpath -ldflags "-X github.com/git-town/git-town/src/cmd.version=${RELEASE_VERSION} -X github.com/git-town/git-town/src/cmd.buildDate=${TODAY}"
+	go build -trimpath -ldflags "-X github.com/git-town/git-town/v9/src/cmd.version=${RELEASE_VERSION} -X github.com/git-town/git-town/v9/src/cmd.buildDate=${TODAY}"
 	go-msi make --msi dist/git-town_${RELEASE_VERSION}_windows_intel_64.msi --version ${RELEASE_VERSION} --src installer/templates/ --path installer/wix.json
 	@rm git-town.exe
 
