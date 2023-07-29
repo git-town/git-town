@@ -10,7 +10,7 @@ SHFMT_VERSION = 3.6.0
 .DEFAULT_GOAL := help
 TODAY = $(shell date +'%Y-%m-%d')
 DEV_VERSION := $(shell git describe --tags 2> /dev/null || git rev-parse --short HEAD)
-RELEASE_VERSION := "9.0.0"
+RELEASE_VERSION := "9.0.1"
 GO_BUILD_ARGS = LANG=C GOGC=off
 
 build:  # builds for the current platform

@@ -10,7 +10,7 @@ This guide is for maintainers who make releases of Git Town.
 ### bump the version
 
 - search-and-replace the old version with the new version
-  - triple-digits: `9.0.0`
+  - triple-digits: `9.0.1`
   - double-digits: `9.0`
   - double-digits with v: `v9.0`
   - don't change existing version numbers in RELEASE_NOTES.md
@@ -24,7 +24,8 @@ On a Linux machine:
 
 - install [hub](https://github.com/github/hub#installation)
 - install [goreleaser](https://goreleaser.com/install)
-- `env GITHUB_TOKEN=<your Github token> make release-linux`
+- create and push a new Git Tag for the release: `git tag v9.0.1`
+- `env GITHUB_TOKEN=<your Github token> VERSION=9.0.1 make release-linux`
   - or omit the Github token and enter your credentials when asked
 - this opens a release in draft mode the browser
 - delete the empty release that the script has created
@@ -38,9 +39,9 @@ On a Windows machine, in Git Bash:
 - install [wix](https://wixtoolset.org/releases)
 - optionally install
   [.NET 3.5](https://dotnet.microsoft.com/download/dotnet-framework)
-- `make msi` to create the Windows installer
+- `env VERSION=9.0.1 make msi` to create the Windows installer
 - test the created Windows installer in the `dist` directory
-- `env GITHUB_TOKEN=<your Github token> VERSION=9.0.0 make release-win`
+- `env GITHUB_TOKEN=<your Github token> VERSION=9.0.1 make release-win`
 - this opens the release in the browser
 - verify that it added the `.msi` file
 - publish the release
