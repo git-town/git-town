@@ -138,11 +138,15 @@ func determineKillConfig(args []string, run *git.ProdRunner, isOffline bool) (*k
 	}, nil
 }
 
+func (kc killConfig) isOnline() bool {
+	return !kc.isOffline
+}
+
 func killStepList(config *killConfig) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	switch {
 	case config.targetBranch.IsLocal():
-		if config.targetBranch.HasTrackingBranch() && !config.isOffline {
+		if config.targetBranch.HasTrackingBranch() && config.isOnline() {
 			result.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch.Name, IsTracking: true, NoPushHook: config.noPushHook})
 		}
 		parent := config.lineage.Parent(config.targetBranch.Name)
@@ -158,7 +162,7 @@ func killStepList(config *killConfig) (runstate.StepList, error) {
 			result.Append(&steps.SetParentStep{Branch: child, ParentBranch: parent})
 		}
 		result.Append(&steps.DeleteParentBranchStep{Branch: config.targetBranch.Name, Parent: parent})
-	case !config.isOffline:
+	case config.isOnline():
 		result.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch.Name, IsTracking: false, NoPushHook: config.noPushHook})
 	default:
 		return runstate.StepList{}, fmt.Errorf(messages.DeleteRemoteBranchOffline, config.targetBranch.Name)
