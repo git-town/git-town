@@ -66,12 +66,12 @@ func pruneBranches(debug bool) error {
 }
 
 type pruneBranchesConfig struct {
-	branchDurations                          config.BranchDurations
-	initialBranch                            string
-	lineage                                  config.Lineage
-	localBranchesWithDeletedTrackingBranches []string
-	mainBranch                               string
-	previousBranch                           string
+	branchDurations  config.BranchDurations
+	initialBranch    string
+	lineage          config.Lineage
+	branchesToDelete []string
+	mainBranch       string
+	previousBranch   string
 }
 
 func determinePruneBranchesConfig(run *git.ProdRunner) (*pruneBranchesConfig, error) {
@@ -79,18 +79,18 @@ func determinePruneBranchesConfig(run *git.ProdRunner) (*pruneBranchesConfig, er
 		ValidateIsConfigured: true,
 	})
 	return &pruneBranchesConfig{
-		branchDurations:                          branches.Durations,
-		initialBranch:                            branches.Initial,
-		lineage:                                  run.Config.Lineage(),
-		localBranchesWithDeletedTrackingBranches: branches.All.LocalBranchesWithDeletedTrackingBranches().BranchNames(),
-		mainBranch:                               run.Config.MainBranch(),
-		previousBranch:                           run.Backend.PreviouslyCheckedOutBranch(),
+		branchDurations:  branches.Durations,
+		initialBranch:    branches.Initial,
+		lineage:          run.Config.Lineage(),
+		branchesToDelete: branches.All.LocalBranchesWithDeletedTrackingBranches().BranchNames(),
+		mainBranch:       run.Config.MainBranch(),
+		previousBranch:   run.Backend.PreviouslyCheckedOutBranch(),
 	}, err
 }
 
 func pruneBranchesStepList(config *pruneBranchesConfig) (runstate.StepList, error) {
 	result := runstate.StepList{}
-	for _, branchWithDeletedRemote := range config.localBranchesWithDeletedTrackingBranches {
+	for _, branchWithDeletedRemote := range config.branchesToDelete {
 		if config.initialBranch == branchWithDeletedRemote {
 			result.Append(&steps.CheckoutStep{Branch: config.mainBranch})
 		}
