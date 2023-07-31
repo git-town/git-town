@@ -153,21 +153,7 @@ func (kc killConfig) targetBranchParent() string {
 func killStepList(config *killConfig) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	if config.targetBranch.IsLocal() {
-		if config.shouldKillBranchEverywhere() {
-			result.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch.Name, IsTracking: true, NoPushHook: config.noPushHook})
-		}
-		if config.initialBranch == config.targetBranch.Name {
-			if config.hasOpenChanges {
-				result.Append(&steps.CommitOpenChangesStep{})
-			}
-			result.Append(&steps.CheckoutStep{Branch: config.targetBranchParent()})
-		}
-		result.Append(&steps.DeleteLocalBranchStep{Branch: config.targetBranch.Name, Parent: config.mainBranch, Force: true})
-		childBranches := config.lineage.Children(config.targetBranch.Name)
-		for _, child := range childBranches {
-			result.Append(&steps.SetParentStep{Branch: child, ParentBranch: config.targetBranchParent()})
-		}
-		result.Append(&steps.DeleteParentBranchStep{Branch: config.targetBranch.Name, Parent: config.targetBranchParent()})
+		killFeatureBranchEverywhere(&result, *config)
 	} else if config.isOnline() {
 		result.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch.Name, IsTracking: false, NoPushHook: config.noPushHook})
 	} else {
@@ -181,4 +167,22 @@ func killStepList(config *killConfig) (runstate.StepList, error) {
 		PreviousBranch:   config.previousBranch,
 	})
 	return result, err
+}
+
+func killFeatureBranchEverywhere(list *runstate.StepList, config killConfig) {
+	if config.shouldKillBranchEverywhere() {
+		list.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch.Name, IsTracking: true, NoPushHook: config.noPushHook})
+	}
+	if config.initialBranch == config.targetBranch.Name {
+		if config.hasOpenChanges {
+			list.Append(&steps.CommitOpenChangesStep{})
+		}
+		list.Append(&steps.CheckoutStep{Branch: config.targetBranchParent()})
+	}
+	list.Append(&steps.DeleteLocalBranchStep{Branch: config.targetBranch.Name, Parent: config.mainBranch, Force: true})
+	childBranches := config.lineage.Children(config.targetBranch.Name)
+	for _, child := range childBranches {
+		list.Append(&steps.SetParentStep{Branch: child, ParentBranch: config.targetBranchParent()})
+	}
+	list.Append(&steps.DeleteParentBranchStep{Branch: config.targetBranch.Name, Parent: config.targetBranchParent()})
 }
