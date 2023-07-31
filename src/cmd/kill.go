@@ -70,7 +70,6 @@ func kill(args []string, debug bool) error {
 }
 
 type killConfig struct {
-	childBranches  []string
 	hasOpenChanges bool
 	initialBranch  string
 	isOffline      bool
@@ -128,7 +127,6 @@ func determineKillConfig(args []string, run *git.ProdRunner, isOffline bool) (*k
 		return nil, err
 	}
 	return &killConfig{
-		childBranches:  lineage.Children(targetBranchName),
 		hasOpenChanges: hasOpenChanges,
 		initialBranch:  branches.Initial,
 		isOffline:      isOffline,
@@ -155,7 +153,8 @@ func killStepList(config *killConfig) (runstate.StepList, error) {
 			result.Append(&steps.CheckoutStep{Branch: parent})
 		}
 		result.Append(&steps.DeleteLocalBranchStep{Branch: config.targetBranch.Name, Parent: config.mainBranch, Force: true})
-		for _, child := range config.childBranches {
+		childBranches := config.lineage.Children(config.targetBranch.Name)
+		for _, child := range childBranches {
 			result.Append(&steps.SetParentStep{Branch: child, ParentBranch: parent})
 		}
 		result.Append(&steps.DeleteParentBranchStep{Branch: config.targetBranch.Name, Parent: parent})
