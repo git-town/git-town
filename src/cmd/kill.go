@@ -148,12 +148,13 @@ func (kc killConfig) targetBranchParent() string {
 
 func killStepList(config *killConfig) (runstate.StepList, error) {
 	result := runstate.StepList{}
-	if config.targetBranch.IsLocal() {
+	switch {
+	case config.targetBranch.IsLocal():
 		killFeatureBranch(&result, *config)
-	} else if config.isOnline() {
+	case config.isOnline():
 		// user wants us to kill a remote branch and we are online
 		result.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch.Name, IsTracking: false, NoPushHook: config.noPushHook})
-	} else {
+	default:
 		// user wants us to kill a remote branch and we are offline
 		return runstate.StepList{}, fmt.Errorf(messages.DeleteRemoteBranchOffline, config.targetBranch.Name)
 	}
@@ -167,7 +168,7 @@ func killStepList(config *killConfig) (runstate.StepList, error) {
 	return result, err
 }
 
-// killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely)
+// killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
 func killFeatureBranch(list *runstate.StepList, config killConfig) {
 	if config.targetBranch.HasTrackingBranch() && config.isOnline() {
 		list.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch.Name, IsTracking: true, NoPushHook: config.noPushHook})
