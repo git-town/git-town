@@ -243,7 +243,7 @@ func syncBranchSteps(list *runstate.StepListBuilder, args syncBranchStepsArgs) {
 	if isFeatureBranch {
 		syncFeatureBranchSteps(list, args.branch, args.lineage, args.syncStrategy)
 	} else {
-		syncPerennialBranchSteps(list, updatePerennialBranchStepsArgs{
+		syncPerennialBranchSteps(list, syncPerennialBranchStepsArgs{
 			branch:             args.branch,
 			mainBranch:         args.mainBranch,
 			pullBranchStrategy: args.pullBranchStrategy,
@@ -285,7 +285,7 @@ func syncFeatureBranchSteps(list *runstate.StepListBuilder, branch git.BranchSyn
 	updateCurrentFeatureBranchStep(list, lineage.Parent(branch.Name), syncStrategy)
 }
 
-func syncPerennialBranchSteps(list *runstate.StepListBuilder, args updatePerennialBranchStepsArgs) {
+func syncPerennialBranchSteps(list *runstate.StepListBuilder, args syncPerennialBranchStepsArgs) {
 	if args.branch.HasTrackingBranch() {
 		updateCurrentPerennialBranchStep(list, args.branch.TrackingBranch(), args.pullBranchStrategy)
 	}
@@ -295,7 +295,7 @@ func syncPerennialBranchSteps(list *runstate.StepListBuilder, args updatePerenni
 	}
 }
 
-type updatePerennialBranchStepsArgs struct {
+type syncPerennialBranchStepsArgs struct {
 	branch             git.BranchSyncStatus
 	mainBranch         string
 	pullBranchStrategy config.PullBranchStrategy
