@@ -142,10 +142,6 @@ func (kc killConfig) isOnline() bool {
 	return !kc.isOffline
 }
 
-func (kc killConfig) shouldKillBranchEverywhere() bool {
-	return kc.targetBranch.HasTrackingBranch() && kc.isOnline()
-}
-
 func (kc killConfig) targetBranchParent() string {
 	return kc.lineage.Parent(kc.targetBranch.Name)
 }
@@ -170,7 +166,7 @@ func killStepList(config *killConfig) (runstate.StepList, error) {
 }
 
 func killFeatureBranchEverywhere(list *runstate.StepList, config killConfig) {
-	if config.shouldKillBranchEverywhere() {
+	if config.targetBranch.HasTrackingBranch() && config.isOnline() {
 		list.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch.Name, IsTracking: true, NoPushHook: config.noPushHook})
 	}
 	if config.initialBranch == config.targetBranch.Name {
