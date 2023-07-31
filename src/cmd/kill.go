@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/git"
@@ -69,15 +70,14 @@ func kill(args []string, debug bool) error {
 }
 
 type killConfig struct {
-	childBranches      []string
-	hasOpenChanges     bool
-	initialBranch      string
-	isOffline          bool
-	mainBranch         string
-	noPushHook         bool
-	previousBranch     string
-	targetBranchParent string
-	targetBranch       git.BranchSyncStatus
+	hasOpenChanges bool
+	initialBranch  string
+	isOffline      bool
+	lineage        config.Lineage
+	mainBranch     string
+	noPushHook     bool
+	previousBranch string
+	targetBranch   git.BranchSyncStatus
 }
 
 func determineKillConfig(args []string, run *git.ProdRunner, isOffline bool) (*killConfig, error) {
@@ -127,39 +127,35 @@ func determineKillConfig(args []string, run *git.ProdRunner, isOffline bool) (*k
 		return nil, err
 	}
 	return &killConfig{
-		childBranches:      lineage.Children(targetBranchName),
-		hasOpenChanges:     hasOpenChanges,
-		initialBranch:      branches.Initial,
-		isOffline:          isOffline,
-		mainBranch:         mainBranch,
-		noPushHook:         !pushHook,
-		previousBranch:     previousBranch,
-		targetBranch:       *targetBranch,
-		targetBranchParent: lineage.Parent(targetBranchName),
+		hasOpenChanges: hasOpenChanges,
+		initialBranch:  branches.Initial,
+		isOffline:      isOffline,
+		lineage:        lineage,
+		mainBranch:     mainBranch,
+		noPushHook:     !pushHook,
+		previousBranch: previousBranch,
+		targetBranch:   *targetBranch,
 	}, nil
+}
+
+func (kc killConfig) isOnline() bool {
+	return !kc.isOffline
+}
+
+func (kc killConfig) targetBranchParent() string {
+	return kc.lineage.Parent(kc.targetBranch.Name)
 }
 
 func killStepList(config *killConfig) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	switch {
 	case config.targetBranch.IsLocal():
-		if config.targetBranch.HasTrackingBranch() && !config.isOffline {
-			result.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch.Name, IsTracking: true, NoPushHook: config.noPushHook})
-		}
-		if config.initialBranch == config.targetBranch.Name {
-			if config.hasOpenChanges {
-				result.Append(&steps.CommitOpenChangesStep{})
-			}
-			result.Append(&steps.CheckoutStep{Branch: config.targetBranchParent})
-		}
-		result.Append(&steps.DeleteLocalBranchStep{Branch: config.targetBranch.Name, Parent: config.mainBranch, Force: true})
-		for _, child := range config.childBranches {
-			result.Append(&steps.SetParentStep{Branch: child, ParentBranch: config.targetBranchParent})
-		}
-		result.Append(&steps.DeleteParentBranchStep{Branch: config.targetBranch.Name, Parent: config.targetBranchParent})
-	case !config.isOffline:
+		killFeatureBranch(&result, *config)
+	case config.isOnline():
+		// user wants us to kill a remote branch and we are online
 		result.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch.Name, IsTracking: false, NoPushHook: config.noPushHook})
 	default:
+		// user wants us to kill a remote branch and we are offline
 		return runstate.StepList{}, fmt.Errorf(messages.DeleteRemoteBranchOffline, config.targetBranch.Name)
 	}
 	err := result.Wrap(runstate.WrapOptions{
@@ -170,4 +166,23 @@ func killStepList(config *killConfig) (runstate.StepList, error) {
 		PreviousBranch:   config.previousBranch,
 	})
 	return result, err
+}
+
+// killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
+func killFeatureBranch(list *runstate.StepList, config killConfig) {
+	if config.targetBranch.HasTrackingBranch() && config.isOnline() {
+		list.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch.Name, IsTracking: true, NoPushHook: config.noPushHook})
+	}
+	if config.initialBranch == config.targetBranch.Name {
+		if config.hasOpenChanges {
+			list.Append(&steps.CommitOpenChangesStep{})
+		}
+		list.Append(&steps.CheckoutStep{Branch: config.targetBranchParent()})
+	}
+	list.Append(&steps.DeleteLocalBranchStep{Branch: config.targetBranch.Name, Parent: config.mainBranch, Force: true})
+	childBranches := config.lineage.Children(config.targetBranch.Name)
+	for _, child := range childBranches {
+		list.Append(&steps.SetParentStep{Branch: child, ParentBranch: config.targetBranchParent()})
+	}
+	list.Append(&steps.DeleteParentBranchStep{Branch: config.targetBranch.Name, Parent: config.targetBranchParent()})
 }
