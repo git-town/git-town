@@ -157,7 +157,7 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner, isOffline b
 func appendStepList(config *appendConfig) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.branchesToSync {
-		updateBranchSteps(&list, updateBranchStepsArgs{
+		syncBranchSteps(&list, syncBranchStepsArgs{
 			branch:             branch,
 			branchDurations:    config.durations,
 			isOffline:          config.isOffline,
