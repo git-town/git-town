@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/git"
@@ -69,15 +70,15 @@ func kill(args []string, debug bool) error {
 }
 
 type killConfig struct {
-	childBranches      []string
-	hasOpenChanges     bool
-	initialBranch      string
-	isOffline          bool
-	mainBranch         string
-	noPushHook         bool
-	previousBranch     string
-	targetBranchParent string
-	targetBranch       git.BranchSyncStatus
+	childBranches  []string
+	hasOpenChanges bool
+	initialBranch  string
+	isOffline      bool
+	lineage        config.Lineage
+	mainBranch     string
+	noPushHook     bool
+	previousBranch string
+	targetBranch   git.BranchSyncStatus
 }
 
 func determineKillConfig(args []string, run *git.ProdRunner, isOffline bool) (*killConfig, error) {
@@ -127,15 +128,15 @@ func determineKillConfig(args []string, run *git.ProdRunner, isOffline bool) (*k
 		return nil, err
 	}
 	return &killConfig{
-		childBranches:      lineage.Children(targetBranchName),
-		hasOpenChanges:     hasOpenChanges,
-		initialBranch:      branches.Initial,
-		isOffline:          isOffline,
-		mainBranch:         mainBranch,
-		noPushHook:         !pushHook,
-		previousBranch:     previousBranch,
-		targetBranch:       *targetBranch,
-		targetBranchParent: lineage.Parent(targetBranchName),
+		childBranches:  lineage.Children(targetBranchName),
+		hasOpenChanges: hasOpenChanges,
+		initialBranch:  branches.Initial,
+		isOffline:      isOffline,
+		lineage:        lineage,
+		mainBranch:     mainBranch,
+		noPushHook:     !pushHook,
+		previousBranch: previousBranch,
+		targetBranch:   *targetBranch,
 	}, nil
 }
 
@@ -146,17 +147,18 @@ func killStepList(config *killConfig) (runstate.StepList, error) {
 		if config.targetBranch.HasTrackingBranch() && !config.isOffline {
 			result.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch.Name, IsTracking: true, NoPushHook: config.noPushHook})
 		}
+		parent := config.lineage.Parent(config.targetBranch.Name)
 		if config.initialBranch == config.targetBranch.Name {
 			if config.hasOpenChanges {
 				result.Append(&steps.CommitOpenChangesStep{})
 			}
-			result.Append(&steps.CheckoutStep{Branch: config.targetBranchParent})
+			result.Append(&steps.CheckoutStep{Branch: parent})
 		}
 		result.Append(&steps.DeleteLocalBranchStep{Branch: config.targetBranch.Name, Parent: config.mainBranch, Force: true})
 		for _, child := range config.childBranches {
-			result.Append(&steps.SetParentStep{Branch: child, ParentBranch: config.targetBranchParent})
+			result.Append(&steps.SetParentStep{Branch: child, ParentBranch: parent})
 		}
-		result.Append(&steps.DeleteParentBranchStep{Branch: config.targetBranch.Name, Parent: config.targetBranchParent})
+		result.Append(&steps.DeleteParentBranchStep{Branch: config.targetBranch.Name, Parent: parent})
 	case !config.isOffline:
 		result.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch.Name, IsTracking: false, NoPushHook: config.noPushHook})
 	default:
