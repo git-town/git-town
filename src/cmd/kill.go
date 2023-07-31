@@ -146,6 +146,10 @@ func (kc killConfig) shouldKillBranchEverywhere() bool {
 	return kc.targetBranch.HasTrackingBranch() && kc.isOnline()
 }
 
+func (kc killConfig) targetBranchParent() string {
+	return kc.lineage.Parent(kc.targetBranch.Name)
+}
+
 func killStepList(config *killConfig) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	switch {
@@ -153,19 +157,18 @@ func killStepList(config *killConfig) (runstate.StepList, error) {
 		if config.shouldKillBranchEverywhere() {
 			result.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch.Name, IsTracking: true, NoPushHook: config.noPushHook})
 		}
-		parent := config.lineage.Parent(config.targetBranch.Name)
 		if config.initialBranch == config.targetBranch.Name {
 			if config.hasOpenChanges {
 				result.Append(&steps.CommitOpenChangesStep{})
 			}
-			result.Append(&steps.CheckoutStep{Branch: parent})
+			result.Append(&steps.CheckoutStep{Branch: config.targetBranchParent()})
 		}
 		result.Append(&steps.DeleteLocalBranchStep{Branch: config.targetBranch.Name, Parent: config.mainBranch, Force: true})
 		childBranches := config.lineage.Children(config.targetBranch.Name)
 		for _, child := range childBranches {
-			result.Append(&steps.SetParentStep{Branch: child, ParentBranch: parent})
+			result.Append(&steps.SetParentStep{Branch: child, ParentBranch: config.targetBranchParent()})
 		}
-		result.Append(&steps.DeleteParentBranchStep{Branch: config.targetBranch.Name, Parent: parent})
+		result.Append(&steps.DeleteParentBranchStep{Branch: config.targetBranch.Name, Parent: config.targetBranchParent()})
 	case config.isOnline():
 		result.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch.Name, IsTracking: false, NoPushHook: config.noPushHook})
 	default:
