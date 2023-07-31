@@ -235,7 +235,8 @@ func syncBranchesSteps(config *syncConfig) (runstate.StepList, error) {
 // syncBranchSteps provides the steps to sync a particular branch.
 func syncBranchSteps(list *runstate.StepListBuilder, args syncBranchStepsArgs) {
 	isFeatureBranch := args.branchDurations.IsFeatureBranch(args.branch.Name)
-	if !args.remotes.HasOrigin() && !isFeatureBranch {
+	if !isFeatureBranch && !args.remotes.HasOrigin() {
+		// perennial branch but no remote --> nothing to sync here
 		return
 	}
 	list.Add(&steps.CheckoutStep{Branch: args.branch.Name})
