@@ -204,7 +204,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, isOffline bool) (*sy
 func syncBranchesSteps(config *syncConfig) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.branchesToSync {
-		updateBranchSteps(&list, updateBranchStepsArgs{
+		syncBranchSteps(&list, syncBranchStepsArgs{
 			branch:             branch,
 			branchDurations:    config.branchDurations,
 			remotes:            config.remotes,
@@ -232,8 +232,8 @@ func syncBranchesSteps(config *syncConfig) (runstate.StepList, error) {
 	return list.Result()
 }
 
-// updateBranchSteps provides the steps to sync a particular branch.
-func updateBranchSteps(list *runstate.StepListBuilder, args updateBranchStepsArgs) {
+// syncBranchSteps provides the steps to sync a particular branch.
+func syncBranchSteps(list *runstate.StepListBuilder, args syncBranchStepsArgs) {
 	isFeatureBranch := args.branchDurations.IsFeatureBranch(args.branch.Name)
 	if !args.remotes.HasOrigin() && !isFeatureBranch {
 		return
@@ -263,7 +263,7 @@ func updateBranchSteps(list *runstate.StepListBuilder, args updateBranchStepsArg
 	}
 }
 
-type updateBranchStepsArgs struct {
+type syncBranchStepsArgs struct {
 	branch             git.BranchSyncStatus
 	branchDurations    config.BranchDurations
 	remotes            config.Remotes
@@ -302,7 +302,7 @@ type updatePerennialBranchStepsArgs struct {
 	hasUpstream        bool
 }
 
-// updateFeatureBranchStep provides the step to update the given tracking branch into the current branch.
+// updateFeatureBranchStep provides the step to update the current feature branch with changes from the given other branch.
 func updateFeatureBranchStep(list *runstate.StepListBuilder, otherBranch string, strategy config.SyncStrategy) {
 	switch strategy {
 	case config.SyncStrategyMerge:
@@ -314,7 +314,7 @@ func updateFeatureBranchStep(list *runstate.StepListBuilder, otherBranch string,
 	}
 }
 
-// updateFeatureBranchSteps provides the steps to sync the given tracking branch into the current branch.
+// updatePerennialBranchStep provides the steps to update the current perennial branch with changes from the given other branch.
 func updatePerennialBranchStep(list *runstate.StepListBuilder, otherBranch string, strategy config.PullBranchStrategy) {
 	switch strategy {
 	case config.PullBranchStrategyMerge:

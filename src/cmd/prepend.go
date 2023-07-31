@@ -162,7 +162,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner, isOffline bool) 
 func prependStepList(config *prependConfig) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branchToSync := range config.branchesToSync {
-		updateBranchSteps(&list, updateBranchStepsArgs{
+		syncBranchSteps(&list, syncBranchStepsArgs{
 			branch:             branchToSync,
 			branchDurations:    config.branchDurations,
 			remotes:            config.remotes,
