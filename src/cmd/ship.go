@@ -289,7 +289,7 @@ please ship %q first`, stringslice.Connect(ancestorsWithoutMainOrPerennial), old
 func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	// sync the parent branch
-	updateBranchSteps(&list, updateBranchStepsArgs{
+	syncBranchSteps(&list, syncBranchStepsArgs{
 		branch:             config.targetBranch,
 		branchDurations:    config.branchDurations,
 		remotes:            config.remotes,
@@ -303,7 +303,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 		syncStrategy:       config.syncStrategy,
 	})
 	// sync the branch to ship locally only
-	updateBranchSteps(&list, updateBranchStepsArgs{
+	syncBranchSteps(&list, syncBranchStepsArgs{
 		branch:             config.branchToShip,
 		branchDurations:    config.branchDurations,
 		remotes:            config.remotes,

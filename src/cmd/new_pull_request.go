@@ -201,7 +201,7 @@ func determineNewPullRequestConfig(run *git.ProdRunner, isOffline bool) (*newPul
 func newPullRequestStepList(config *newPullRequestConfig) (runstate.StepList, error) {
 	list := runstate.StepListBuilder{}
 	for _, branch := range config.branchesToSync {
-		updateBranchSteps(&list, updateBranchStepsArgs{
+		syncBranchSteps(&list, syncBranchStepsArgs{
 			branch:             branch,
 			branchDurations:    config.branchDurations,
 			remotes:            config.remotes,
