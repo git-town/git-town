@@ -16,11 +16,11 @@ type PushBranchStep struct {
 	Undoable       bool
 }
 
-func (step *PushBranchStep) CreateUndoStep(_ *git.BackendCommands) (Step, error) {
+func (step *PushBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
 	if step.Undoable {
-		return &PushBranchAfterCurrentBranchSteps{}, nil
+		return []Step{&PushBranchAfterCurrentBranchSteps{}}, nil
 	}
-	return &SkipCurrentBranchSteps{}, nil
+	return []Step{&SkipCurrentBranchSteps{}}, nil
 }
 
 func (step *PushBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {

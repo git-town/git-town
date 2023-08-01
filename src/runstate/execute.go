@@ -91,11 +91,11 @@ To continue after having resolved conflicts, run "git-town continue".
 			message += "\n"
 			return fmt.Errorf(message)
 		}
-		undoStep, err := step.CreateUndoStep(&args.Run.Backend)
+		undoSteps, err := step.CreateUndoSteps(&args.Run.Backend)
 		if err != nil {
 			return fmt.Errorf(messages.UndoCreateStepProblem, step, err)
 		}
-		args.RunState.UndoStepList.Prepend(undoStep)
+		args.RunState.UndoStepList.Prepend(undoSteps...)
 	}
 }
 

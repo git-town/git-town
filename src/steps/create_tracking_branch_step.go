@@ -14,8 +14,8 @@ type CreateTrackingBranchStep struct {
 	NoPushHook bool
 }
 
-func (step *CreateTrackingBranchStep) CreateUndoStep(_ *git.BackendCommands) (Step, error) {
-	return &DeleteOriginBranchStep{Branch: step.Branch}, nil
+func (step *CreateTrackingBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
+	return []Step{&DeleteOriginBranchStep{Branch: step.Branch}}, nil
 }
 
 func (step *CreateTrackingBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
