@@ -14,11 +14,11 @@ type SetParentStep struct {
 	previousParent string
 }
 
-func (step *SetParentStep) CreateUndoStep(_ *git.BackendCommands) (Step, error) {
+func (step *SetParentStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
 	if step.previousParent == "" {
-		return &DeleteParentBranchStep{Branch: step.Branch, Parent: step.previousParent}, nil
+		return []Step{&DeleteParentBranchStep{Branch: step.Branch, Parent: step.previousParent}}, nil
 	}
-	return &SetParentStep{Branch: step.Branch, ParentBranch: step.previousParent}, nil
+	return []Step{&SetParentStep{Branch: step.Branch, ParentBranch: step.previousParent}}, nil
 }
 
 func (step *SetParentStep) Run(run *git.ProdRunner, _ hosting.Connector) error {

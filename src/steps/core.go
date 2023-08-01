@@ -20,8 +20,8 @@ type Step interface {
 	// CreateContinueStep provides the continue step for this step.
 	CreateContinueStep() Step
 
-	// CreateUndoStep provides the undo step for this step.
-	CreateUndoStep(*git.BackendCommands) (Step, error)
+	// CreateUndoSteps provides the undo step for this step.
+	CreateUndoSteps(*git.BackendCommands) ([]Step, error)
 
 	// CreateAutomaticAbortError provides the error message to display when this step
 	// cause the command to automatically abort.

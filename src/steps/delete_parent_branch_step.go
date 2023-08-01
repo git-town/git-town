@@ -12,11 +12,11 @@ type DeleteParentBranchStep struct {
 	Parent string
 }
 
-func (step *DeleteParentBranchStep) CreateUndoStep(_ *git.BackendCommands) (Step, error) {
+func (step *DeleteParentBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
 	if step.Parent == "" {
-		return &EmptyStep{}, nil
+		return []Step{}, nil
 	}
-	return &SetParentStep{Branch: step.Branch, ParentBranch: step.Parent}, nil
+	return []Step{&SetParentStep{Branch: step.Branch, ParentBranch: step.Parent}}, nil
 }
 
 func (step *DeleteParentBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {

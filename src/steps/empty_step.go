@@ -19,8 +19,8 @@ func (step *EmptyStep) CreateContinueStep() Step {
 	return &EmptyStep{}
 }
 
-func (step *EmptyStep) CreateUndoStep(_ *git.BackendCommands) (Step, error) {
-	return &EmptyStep{}, nil
+func (step *EmptyStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
+	return []Step{}, nil
 }
 
 func (step *EmptyStep) CreateAutomaticAbortError() error {

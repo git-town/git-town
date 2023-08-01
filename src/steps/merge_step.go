@@ -20,8 +20,8 @@ func (step *MergeStep) CreateContinueStep() Step {
 	return &ContinueMergeStep{}
 }
 
-func (step *MergeStep) CreateUndoStep(_ *git.BackendCommands) (Step, error) {
-	return &ResetToShaStep{Hard: true, Sha: step.previousSha}, nil
+func (step *MergeStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
+	return []Step{&ResetToShaStep{Hard: true, Sha: step.previousSha}}, nil
 }
 
 func (step *MergeStep) Run(run *git.ProdRunner, _ hosting.Connector) error {

@@ -24,12 +24,12 @@ func (step *UpdateProposalTargetStep) CreateAbortStep() Step {
 	return &step.EmptyStep
 }
 
-func (step *UpdateProposalTargetStep) CreateUndoStep(_ *git.BackendCommands) (Step, error) {
-	return &UpdateProposalTargetStep{
+func (step *UpdateProposalTargetStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
+	return []Step{&UpdateProposalTargetStep{
 		ProposalNumber: step.ProposalNumber,
 		NewTarget:      step.ExistingTarget,
 		ExistingTarget: step.NewTarget,
-	}, nil
+	}}, nil
 }
 
 func (step *UpdateProposalTargetStep) ShouldAutomaticallyAbortOnError() bool {
