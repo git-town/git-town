@@ -21,12 +21,12 @@ func (step *SquashMergeStep) CreateAbortStep() Step {
 	return &DiscardOpenChangesStep{}
 }
 
-func (step *SquashMergeStep) CreateUndoStep(backend *git.BackendCommands) (Step, error) {
+func (step *SquashMergeStep) CreateUndoSteps(backend *git.BackendCommands) ([]Step, error) {
 	currentSHA, err := backend.CurrentSha()
 	if err != nil {
-		return nil, err
+		return []Step{}, err
 	}
-	return &RevertCommitStep{Sha: currentSHA}, nil
+	return []Step{&RevertCommitStep{Sha: currentSHA}}, nil
 }
 
 func (step *SquashMergeStep) CreateAutomaticAbortError() error {

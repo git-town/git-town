@@ -14,8 +14,8 @@ type CommitOpenChangesStep struct {
 	previousSha string
 }
 
-func (step *CommitOpenChangesStep) CreateUndoStep(_ *git.BackendCommands) (Step, error) {
-	return &ResetToShaStep{Sha: step.previousSha}, nil
+func (step *CommitOpenChangesStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
+	return []Step{&ResetToShaStep{Sha: step.previousSha}}, nil
 }
 
 func (step *CommitOpenChangesStep) Run(run *git.ProdRunner, _ hosting.Connector) error {

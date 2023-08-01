@@ -14,11 +14,11 @@ type DeleteOriginBranchStep struct {
 	branchSha  string
 }
 
-func (step *DeleteOriginBranchStep) CreateUndoStep(_ *git.BackendCommands) (Step, error) {
+func (step *DeleteOriginBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
 	if step.IsTracking {
-		return &CreateTrackingBranchStep{Branch: step.Branch, NoPushHook: step.NoPushHook}, nil
+		return []Step{&CreateTrackingBranchStep{Branch: step.Branch, NoPushHook: step.NoPushHook}}, nil
 	}
-	return &CreateRemoteBranchStep{Branch: step.Branch, Sha: step.branchSha, NoPushHook: step.NoPushHook}, nil
+	return []Step{&CreateRemoteBranchStep{Branch: step.Branch, Sha: step.branchSha, NoPushHook: step.NoPushHook}}, nil
 }
 
 func (step *DeleteOriginBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
