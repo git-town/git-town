@@ -74,8 +74,8 @@ func PrintConnectorAction(template string, messages ...interface{}) {
 }
 
 func StringSetting(text string) string {
-	if text != "" {
-		return text
+	if text == "" {
+		return "(not set)"
 	}
-	return "(not set)"
+	return text
 }
