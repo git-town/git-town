@@ -99,7 +99,5 @@ func (p LoggingPrinter) Failed(failure error) {
 type SilentPrinter struct{}
 
 func (p SilentPrinter) Start(string, ...interface{}) {}
-
-func (p SilentPrinter) Success() {}
-
-func (p SilentPrinter) Failed(error) {}
+func (p SilentPrinter) Success()                     {}
+func (p SilentPrinter) Failed(error)                 {}
