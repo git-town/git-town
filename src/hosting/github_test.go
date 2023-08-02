@@ -4,6 +4,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/hosting"
@@ -19,7 +20,7 @@ func TestNewGithubConnector(t *testing.T) {
 			OriginURL:      giturl.Parse("git@github.com:git-town/docs.git"),
 			APIToken:       "apiToken",
 			MainBranch:     "mainBranch",
-			Log:            nil,
+			Log:            cli.SilentLog{},
 		})
 		assert.NoError(t, err)
 		wantConfig := hosting.CommonConfig{
@@ -38,7 +39,7 @@ func TestNewGithubConnector(t *testing.T) {
 			OriginURL:      giturl.Parse("git@custom-url.com:git-town/docs.git"),
 			APIToken:       "apiToken",
 			MainBranch:     "mainBranch",
-			Log:            nil,
+			Log:            cli.SilentLog{},
 		})
 		assert.NoError(t, err)
 		wantConfig := hosting.CommonConfig{
@@ -56,7 +57,7 @@ func TestNewGithubConnector(t *testing.T) {
 			OriginURL:      giturl.Parse("git@gitlab.com:git-town/git-town.git"),
 			APIToken:       "",
 			MainBranch:     "mainBranch",
-			Log:            nil,
+			Log:            cli.SilentLog{},
 		})
 		assert.Nil(t, have)
 		assert.NoError(t, err)
@@ -69,7 +70,7 @@ func TestNewGithubConnector(t *testing.T) {
 			OriginURL:      originURL,
 			APIToken:       "",
 			MainBranch:     "mainBranch",
-			Log:            nil,
+			Log:            cli.SilentLog{},
 		})
 		assert.Nil(t, have)
 		assert.NoError(t, err)
