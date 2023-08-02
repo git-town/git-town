@@ -16,7 +16,7 @@ import (
 type GitLabConnector struct {
 	client *gitlab.Client
 	GitLabConfig
-	log Printer
+	log Log
 }
 
 func (c *GitLabConnector) FindProposal(branch, target string) (*Proposal, error) {
@@ -102,7 +102,7 @@ type NewGitlabConnectorArgs struct {
 	HostingService config.HostingService
 	OriginURL      *giturl.Parts
 	APIToken       string
-	Log            Printer
+	Log            Log
 }
 
 // *************************************

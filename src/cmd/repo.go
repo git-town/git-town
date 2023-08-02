@@ -85,7 +85,7 @@ func determineRepoConfig(run *git.ProdRunner) (*repoConfig, error) {
 		GithubAPIToken:  run.Config.GitHubToken(),
 		GitlabAPIToken:  run.Config.GitLabToken(),
 		MainBranch:      mainBranch,
-		Printer:         cli.LoggingPrinter{},
+		Log:             cli.PrintingLog{},
 	})
 	if err != nil {
 		return nil, err

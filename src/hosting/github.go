@@ -20,7 +20,7 @@ type GitHubConnector struct {
 	client *github.Client
 	CommonConfig
 	MainBranch string
-	log        Printer
+	log        Log
 }
 
 func (c *GitHubConnector) FindProposal(branch, target string) (*Proposal, error) {
@@ -122,7 +122,7 @@ type NewGithubConnectorArgs struct {
 	OriginURL      *giturl.Parts
 	APIToken       string
 	MainBranch     string
-	Log            Printer
+	Log            Log
 }
 
 // getGitHubApiToken returns the GitHub API token to use.

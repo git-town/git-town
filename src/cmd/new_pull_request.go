@@ -170,7 +170,7 @@ func determineNewPullRequestConfig(run *git.ProdRunner, isOffline bool) (*newPul
 		GithubAPIToken:  run.Config.GitHubToken(),
 		GitlabAPIToken:  run.Config.GitLabToken(),
 		MainBranch:      mainBranch,
-		Printer:         cli.LoggingPrinter{},
+		Log:             cli.PrintingLog{},
 	})
 	if err != nil {
 		return nil, err

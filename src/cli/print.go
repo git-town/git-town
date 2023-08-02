@@ -71,10 +71,10 @@ func StringSetting(text string) string {
 	return "(not set)"
 }
 
-// LoggingPrinter logs activities of a particular component on the CLI.
-type LoggingPrinter struct{}
+// PrintingLog logs activities of a particular component on the CLI.
+type PrintingLog struct{}
 
-func (p LoggingPrinter) Start(template string, messages ...interface{}) {
+func (l PrintingLog) Start(template string, messages ...interface{}) {
 	fmt.Println()
 	_, err := color.New(color.Bold).Printf(template, messages...)
 	if err != nil {
@@ -82,22 +82,22 @@ func (p LoggingPrinter) Start(template string, messages ...interface{}) {
 	}
 }
 
-func (p LoggingPrinter) Success() {
+func (l PrintingLog) Success() {
 	_, err := color.New(color.Bold, color.FgGreen).Printf("ok\n")
 	if err != nil {
 		fmt.Println("ok")
 	}
 }
 
-func (p LoggingPrinter) Failed(failure error) {
+func (l PrintingLog) Failed(failure error) {
 	_, err := color.New(color.Bold, color.FgRed).Printf("FAILED: %v\n", failure)
 	if err != nil {
 		fmt.Printf("FAILED: %v\n", err)
 	}
 }
 
-type SilentPrinter struct{}
+type SilentLog struct{}
 
-func (p SilentPrinter) Start(string, ...interface{}) {}
-func (p SilentPrinter) Success()                     {}
-func (p SilentPrinter) Failed(error)                 {}
+func (p SilentLog) Start(string, ...interface{}) {}
+func (p SilentLog) Success()                     {}
+func (p SilentLog) Failed(error)                 {}

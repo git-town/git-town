@@ -19,7 +19,7 @@ func TestNewGiteaConnector(t *testing.T) {
 			HostingService: config.HostingServiceGitea,
 			OriginURL:      giturl.Parse("git@custom-url.com:git-town/docs.git"),
 			APIToken:       "apiToken",
-			Log:            cli.SilentPrinter{},
+			Log:            cli.SilentLog{},
 		})
 		assert.NoError(t, err)
 		wantConfig := hosting.CommonConfig{
@@ -36,7 +36,7 @@ func TestNewGiteaConnector(t *testing.T) {
 			HostingService: config.HostingServiceNone,
 			OriginURL:      giturl.Parse("git@github.com:git-town/git-town.git"),
 			APIToken:       "",
-			Log:            cli.SilentPrinter{},
+			Log:            cli.SilentLog{},
 		})
 		assert.Nil(t, have)
 		assert.NoError(t, err)
@@ -48,7 +48,7 @@ func TestNewGiteaConnector(t *testing.T) {
 			HostingService: config.HostingServiceNone,
 			OriginURL:      originURL,
 			APIToken:       "",
-			Log:            cli.SilentPrinter{},
+			Log:            cli.SilentLog{},
 		})
 		assert.Nil(t, have)
 		assert.NoError(t, err)
@@ -72,7 +72,7 @@ func TestGitea(t *testing.T) {
 			HostingService: config.HostingServiceGitea,
 			OriginURL:      giturl.Parse("git@gitea.com:git-town/docs.git"),
 			APIToken:       "",
-			Log:            cli.SilentPrinter{},
+			Log:            cli.SilentLog{},
 		})
 		assert.Nil(t, err)
 		have, err := connector.NewProposalURL("feature", "parent")
@@ -84,7 +84,7 @@ func TestGitea(t *testing.T) {
 			HostingService: config.HostingServiceGitea,
 			OriginURL:      giturl.Parse("git@gitea.com:git-town/docs.git"),
 			APIToken:       "",
-			Log:            cli.SilentPrinter{},
+			Log:            cli.SilentLog{},
 		})
 		assert.Nil(t, err)
 		have := connector.RepositoryURL()

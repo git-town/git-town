@@ -108,7 +108,7 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 		APIToken:       args.GithubAPIToken,
 		MainBranch:     args.MainBranch,
 		OriginURL:      args.OriginURL,
-		Log:            args.Printer,
+		Log:            args.Log,
 	})
 	if err != nil {
 		return nil, err
@@ -120,7 +120,7 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 		HostingService: args.HostingService,
 		OriginURL:      args.OriginURL,
 		APIToken:       args.GitlabAPIToken,
-		Log:            args.Printer,
+		Log:            args.Log,
 	})
 	if err != nil {
 		return nil, err
@@ -143,7 +143,7 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 		OriginURL:      args.OriginURL,
 		HostingService: args.HostingService,
 		APIToken:       args.GiteaAPIToken,
-		Log:            args.Printer,
+		Log:            args.Log,
 	})
 	if err != nil {
 		return nil, err
@@ -162,7 +162,7 @@ type NewConnectorArgs struct {
 	GithubAPIToken  string
 	GitlabAPIToken  string
 	MainBranch      string
-	Printer         Printer
+	Log             Log
 }
 
 // UnsupportedServiceError communicates that the origin remote runs an unknown code hosting service.
@@ -176,7 +176,7 @@ This command requires hosting on one of these services:
 * Gitea`)
 }
 
-type Printer interface {
+type Log interface {
 	Start(string, ...interface{})
 	Success()
 	Failed(error)
