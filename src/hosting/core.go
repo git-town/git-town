@@ -101,9 +101,6 @@ type gitTownConfig interface {
 
 type ShaForBranchFunc func(string) (string, error)
 
-// logFn defines a function with fmt.Printf API that Connector instances can use to give updates on activities they do.
-type logFn func(string, ...interface{})
-
 // NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
 func NewConnector(args NewConnectorArgs) (Connector, error) {
 	githubConnector, err := NewGithubConnector(NewGithubConnectorArgs{
@@ -165,7 +162,7 @@ type NewConnectorArgs struct {
 	GithubAPIToken  string
 	GitlabAPIToken  string
 	MainBranch      string
-	Log             logFn
+	Log             Log
 }
 
 // UnsupportedServiceError communicates that the origin remote runs an unknown code hosting service.
@@ -177,4 +174,11 @@ This command requires hosting on one of these services:
 * GitHub
 * GitLab
 * Gitea`)
+}
+
+// Log allows hosting adapters to print network operations to the CLI.
+type Log interface {
+	Start(string, ...interface{})
+	Success()
+	Failed(error)
 }

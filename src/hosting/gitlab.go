@@ -16,7 +16,7 @@ import (
 type GitLabConnector struct {
 	client *gitlab.Client
 	GitLabConfig
-	log logFn
+	log Log
 }
 
 func (c *GitLabConnector) FindProposal(branch, target string) (*Proposal, error) {
@@ -43,9 +43,7 @@ func (c *GitLabConnector) SquashMergeProposal(number int, message string) (merge
 	if number <= 0 {
 		return "", fmt.Errorf(messages.ProposalNoNumberGiven)
 	}
-	if c.log != nil {
-		c.log(messages.HostingGitlabMergingViaAPI, number)
-	}
+	c.log.Start(messages.HostingGitlabMergingViaAPI, number)
 	// the GitLab API wants the full commit message in the body
 	result, _, err := c.client.MergeRequests.AcceptMergeRequest(c.projectPath(), number, &gitlab.AcceptMergeRequestOptions{
 		SquashCommitMessage: gitlab.String(message),
@@ -54,19 +52,24 @@ func (c *GitLabConnector) SquashMergeProposal(number int, message string) (merge
 		ShouldRemoveSourceBranch: gitlab.Bool(false),
 	})
 	if err != nil {
+		c.log.Failed(err)
 		return "", err
 	}
+	c.log.Success()
 	return result.SHA, nil
 }
 
 func (c *GitLabConnector) UpdateProposalTarget(number int, target string) error {
-	if c.log != nil {
-		c.log(messages.HostingGitlabUpdateMRViaAPI, number, target)
-	}
+	c.log.Start(messages.HostingGitlabUpdateMRViaAPI, number, target)
 	_, _, err := c.client.MergeRequests.UpdateMergeRequest(c.projectPath(), number, &gitlab.UpdateMergeRequestOptions{
 		TargetBranch: gitlab.String(target),
 	})
-	return err
+	if err != nil {
+		c.log.Failed(err)
+		return err
+	}
+	c.log.Success()
+	return nil
 }
 
 // NewGitlabConfig provides GitLab configuration data if the current repo is hosted on GitLab,
@@ -99,7 +102,7 @@ type NewGitlabConnectorArgs struct {
 	HostingService config.HostingService
 	OriginURL      *giturl.Parts
 	APIToken       string
-	Log            logFn
+	Log            Log
 }
 
 // *************************************

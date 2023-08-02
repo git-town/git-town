@@ -45,12 +45,12 @@ const (
 	GitVersionUnexpectedOutput        = "'git version' returned unexpected output: %q.\nPlease open an issue and supply the output of running 'git version'"
 	GitVersionTooLow                  = "this app requires Git 2.7.0 or higher"
 	HostingBitBucketNotImplemented    = "shipping pull requests via the Bitbucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues"
-	HostingGitlabMergingViaAPI        = "GitLab API: Merging MR !%d\n"
-	HostingGitlabUpdateMRViaAPI       = "GitLab API: Updating target branch for MR !%d to %q\n"
+	HostingGitlabMergingViaAPI        = "GitLab API: Merging MR !%d ... "
+	HostingGitlabUpdateMRViaAPI       = "GitLab API: Updating target branch for MR !%d to %q ... "
 	HostingGiteaNotImplemented        = "shipping pull requests via the Gitea API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues"
 	HostingGiteaUpdatePRViaAPI        = "Gitea API: Updating base branch for PR #%d to #%s"
-	HostingGithubMergingViaAPI        = "GitHub API: merging PR #%d\n"
-	HostingGithubUpdatePRViaAPI       = "GitHub API: updating base branch for PR #%d\n"
+	HostingGithubMergingViaAPI        = "GitHub API: merging PR #%d ... "
+	HostingGithubUpdatePRViaAPI       = "GitHub API: updating base branch for PR #%d ... "
 	HostingServiceUnknown             = "unknown hosting service: %q"
 	InputAddOrRemove                  = `invalid argument %q. Please provide either "add" or "remove"`
 	InputYesOrNo                      = `invalid argument: %q. Please provide either "yes" or "no".\n`

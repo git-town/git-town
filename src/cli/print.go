@@ -64,8 +64,17 @@ func PrintLabelAndValue(label, value string) {
 	fmt.Println()
 }
 
-// PrintConnectorAction logs activities from a code hosting connector on the CLI.
-func PrintConnectorAction(template string, messages ...interface{}) {
+func StringSetting(text string) string {
+	if text == "" {
+		return "(not set)"
+	}
+	return text
+}
+
+// PrintingLog logs activities of a particular component on the CLI.
+type PrintingLog struct{}
+
+func (l PrintingLog) Start(template string, messages ...interface{}) {
 	fmt.Println()
 	_, err := color.New(color.Bold).Printf(template, messages...)
 	if err != nil {
@@ -73,9 +82,22 @@ func PrintConnectorAction(template string, messages ...interface{}) {
 	}
 }
 
-func StringSetting(text string) string {
-	if text == "" {
-		return "(not set)"
+func (l PrintingLog) Success() {
+	_, err := color.New(color.Bold, color.FgGreen).Printf("ok\n")
+	if err != nil {
+		fmt.Println("ok")
 	}
-	return text
 }
+
+func (l PrintingLog) Failed(failure error) {
+	_, err := color.New(color.Bold, color.FgRed).Printf("FAILED: %v\n", failure)
+	if err != nil {
+		fmt.Printf("FAILED: %v\n", err)
+	}
+}
+
+type SilentLog struct{}
+
+func (p SilentLog) Start(string, ...interface{}) {}
+func (p SilentLog) Success()                     {}
+func (p SilentLog) Failed(error)                 {}
