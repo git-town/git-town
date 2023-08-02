@@ -176,6 +176,7 @@ This command requires hosting on one of these services:
 * Gitea`)
 }
 
+// Log allows hosting adapters to print network operations to the CLI.
 type Log interface {
 	Start(string, ...interface{})
 	Success()
