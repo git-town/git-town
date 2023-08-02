@@ -64,16 +64,8 @@ func PrintLabelAndValue(label, value string) {
 	fmt.Println()
 }
 
-// PrintConnectorAction logs activities from a code hosting connector on the CLI.
-func PrintConnectorAction(template string, messages ...interface{}) {
-	fmt.Println()
-	_, err := color.New(color.Bold).Printf(template, messages...)
-	if err != nil {
-		fmt.Printf(template, messages...)
-	}
-}
-
 func StringSetting(text string) string {
+	// TODO: use == here
 	if text != "" {
 		return text
 	}

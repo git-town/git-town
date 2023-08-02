@@ -15,7 +15,7 @@ import (
 type GiteaConnector struct {
 	client *gitea.Client
 	CommonConfig
-	log logFn
+	log Printer
 }
 
 func (c *GiteaConnector) FindProposal(branch, target string) (*Proposal, error) {
@@ -118,7 +118,7 @@ type NewGiteaConnectorArgs struct {
 	OriginURL      *giturl.Parts
 	HostingService config.HostingService
 	APIToken       string
-	Log            logFn
+	Log            Printer
 }
 
 func FilterGiteaPullRequests(pullRequests []*gitea.PullRequest, organization, branch, target string) []*gitea.PullRequest {

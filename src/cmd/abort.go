@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/git"
@@ -83,7 +82,6 @@ func determineAbortConfig(run *git.ProdRunner) (*abortConfig, error) {
 		GithubAPIToken:  hosting.GetGitHubAPIToken(run.Config),
 		GitlabAPIToken:  run.Config.GitLabToken(),
 		MainBranch:      mainBranch,
-		Log:             cli.PrintConnectorAction,
 	})
 	return &abortConfig{
 		connector: connector,

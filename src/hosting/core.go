@@ -6,7 +6,9 @@ package hosting
 
 import (
 	"errors"
+	"fmt"
 
+	"github.com/fatih/color"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/giturl"
 )
@@ -101,9 +103,6 @@ type gitTownConfig interface {
 
 type ShaForBranchFunc func(string) (string, error)
 
-// logFn defines a function with fmt.Printf API that Connector instances can use to give updates on activities they do.
-type logFn func(string, ...interface{})
-
 // NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
 func NewConnector(args NewConnectorArgs) (Connector, error) {
 	githubConnector, err := NewGithubConnector(NewGithubConnectorArgs{
@@ -111,7 +110,9 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 		APIToken:       args.GithubAPIToken,
 		MainBranch:     args.MainBranch,
 		OriginURL:      args.OriginURL,
-		Log:            args.Log,
+		Log: LoggingPrinter{
+			Component: "GitHub",
+		},
 	})
 	if err != nil {
 		return nil, err
@@ -123,7 +124,9 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 		HostingService: args.HostingService,
 		OriginURL:      args.OriginURL,
 		APIToken:       args.GitlabAPIToken,
-		Log:            args.Log,
+		Log: LoggingPrinter{
+			Component: "GitLab",
+		},
 	})
 	if err != nil {
 		return nil, err
@@ -146,7 +149,9 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 		OriginURL:      args.OriginURL,
 		HostingService: args.HostingService,
 		APIToken:       args.GiteaAPIToken,
-		Log:            args.Log,
+		Log: LoggingPrinter{
+			Component: "Gitea",
+		},
 	})
 	if err != nil {
 		return nil, err
@@ -165,7 +170,6 @@ type NewConnectorArgs struct {
 	GithubAPIToken  string
 	GitlabAPIToken  string
 	MainBranch      string
-	Log             logFn
 }
 
 // UnsupportedServiceError communicates that the origin remote runs an unknown code hosting service.
@@ -178,3 +182,44 @@ This command requires hosting on one of these services:
 * GitLab
 * Gitea`)
 }
+
+type Printer interface {
+	Start(string, ...interface{})
+	Success()
+	Failed(error)
+}
+
+// LoggingPrinter logs activities of a particular component on the CLI.
+type LoggingPrinter struct {
+	Component string
+}
+
+func (p LoggingPrinter) Start(template string, messages ...interface{}) {
+	fmt.Println()
+	_, err := color.New(color.Bold).Printf(template, messages...)
+	if err != nil {
+		fmt.Printf(template, messages...)
+	}
+}
+
+func (p LoggingPrinter) Success() {
+	_, err := color.New(color.Bold, color.FgGreen).Printf("ok\n")
+	if err != nil {
+		fmt.Println("ok")
+	}
+}
+
+func (p LoggingPrinter) Failed(failure error) {
+	_, err := color.New(color.Bold, color.FgRed).Printf("FAILED: %v\n", failure)
+	if err != nil {
+		fmt.Printf("FAILED: %v\n", err)
+	}
+}
+
+type SilentPrinter struct{}
+
+func (p SilentPrinter) Start(string, ...interface{}) {}
+
+func (p SilentPrinter) Success() {}
+
+func (p SilentPrinter) Failed(error) {}

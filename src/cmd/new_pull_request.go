@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
@@ -170,7 +169,6 @@ func determineNewPullRequestConfig(run *git.ProdRunner, isOffline bool) (*newPul
 		GithubAPIToken:  run.Config.GitHubToken(),
 		GitlabAPIToken:  run.Config.GitLabToken(),
 		MainBranch:      mainBranch,
-		Log:             cli.PrintConnectorAction,
 	})
 	if err != nil {
 		return nil, err
