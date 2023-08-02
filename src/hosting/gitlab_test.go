@@ -3,6 +3,7 @@ package hosting_test
 import (
 	"testing"
 
+	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/hosting"
@@ -17,7 +18,7 @@ func TestNewGitlabConnector(t *testing.T) {
 			HostingService: config.HostingServiceNone,
 			OriginURL:      giturl.Parse("git@gitlab.com:git-town/docs.git"),
 			APIToken:       "apiToken",
-			Log:            nil,
+			Log:            cli.SilentLog{},
 		})
 		assert.NoError(t, err)
 		wantConfig := hosting.GitLabConfig{
@@ -36,7 +37,7 @@ func TestNewGitlabConnector(t *testing.T) {
 			HostingService: config.HostingServiceGitLab,
 			OriginURL:      giturl.Parse("git@custom-url.com:git-town/docs.git"),
 			APIToken:       "apiToken",
-			Log:            nil,
+			Log:            cli.SilentLog{},
 		})
 		assert.NoError(t, err)
 		wantConfig := hosting.GitLabConfig{
@@ -55,7 +56,7 @@ func TestNewGitlabConnector(t *testing.T) {
 			HostingService: config.HostingServiceNone,
 			OriginURL:      giturl.Parse("git@github.com:git-town/git-town.git"),
 			APIToken:       "",
-			Log:            nil,
+			Log:            cli.SilentLog{},
 		})
 		assert.Nil(t, have)
 		assert.NoError(t, err)
@@ -67,7 +68,7 @@ func TestNewGitlabConnector(t *testing.T) {
 			HostingService: config.HostingServiceNone,
 			OriginURL:      originURL,
 			APIToken:       "",
-			Log:            nil,
+			Log:            cli.SilentLog{},
 		})
 		assert.Nil(t, have)
 		assert.NoError(t, err)

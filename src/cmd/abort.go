@@ -83,7 +83,7 @@ func determineAbortConfig(run *git.ProdRunner) (*abortConfig, error) {
 		GithubAPIToken:  hosting.GetGitHubAPIToken(run.Config),
 		GitlabAPIToken:  run.Config.GitLabToken(),
 		MainBranch:      mainBranch,
-		Log:             cli.PrintConnectorAction,
+		Log:             cli.PrintingLog{},
 	})
 	return &abortConfig{
 		connector: connector,

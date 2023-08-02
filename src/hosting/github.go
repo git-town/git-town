@@ -20,7 +20,7 @@ type GitHubConnector struct {
 	client *github.Client
 	CommonConfig
 	MainBranch string
-	log        logFn
+	log        Log
 }
 
 func (c *GitHubConnector) FindProposal(branch, target string) (*Proposal, error) {
@@ -66,27 +66,34 @@ func (c *GitHubConnector) SquashMergeProposal(number int, message string) (merge
 	if number <= 0 {
 		return "", fmt.Errorf(messages.ProposalNoNumberGiven)
 	}
-	if c.log != nil {
-		c.log(messages.HostingGithubMergingViaAPI, number)
-	}
+	c.log.Start(messages.HostingGithubMergingViaAPI, number)
 	title, body := ParseCommitMessage(message)
 	result, _, err := c.client.PullRequests.Merge(context.Background(), c.Organization, c.Repository, number, body, &github.PullRequestOptions{
 		MergeMethod: "squash",
 		CommitTitle: title,
 	})
-	return result.GetSHA(), err
+	sha := result.GetSHA()
+	if err != nil {
+		c.log.Failed(err)
+		return sha, err
+	}
+	c.log.Success()
+	return sha, nil
 }
 
 func (c *GitHubConnector) UpdateProposalTarget(number int, target string) error {
-	if c.log != nil {
-		c.log(messages.HostingGithubUpdatePRViaAPI, number)
-	}
+	c.log.Start(messages.HostingGithubUpdatePRViaAPI, number)
 	_, _, err := c.client.PullRequests.Edit(context.Background(), c.Organization, c.Repository, number, &github.PullRequest{
 		Base: &github.PullRequestBranch{
 			Ref: &target,
 		},
 	})
-	return err
+	if err != nil {
+		c.log.Failed(err)
+		return err
+	}
+	c.log.Success()
+	return nil
 }
 
 // NewGithubConnector provides a fully configured GithubConnector instance
@@ -115,7 +122,7 @@ type NewGithubConnectorArgs struct {
 	OriginURL      *giturl.Parts
 	APIToken       string
 	MainBranch     string
-	Log            logFn
+	Log            Log
 }
 
 // getGitHubApiToken returns the GitHub API token to use.

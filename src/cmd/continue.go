@@ -92,7 +92,7 @@ func determineContinueConfig(run *git.ProdRunner) (*continueConfig, error) {
 		GithubAPIToken:  run.Config.GitHubToken(),
 		GitlabAPIToken:  run.Config.GitLabToken(),
 		MainBranch:      mainBranch,
-		Log:             cli.PrintConnectorAction,
+		Log:             cli.PrintingLog{},
 	})
 	return &continueConfig{
 		connector: connector,
