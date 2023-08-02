@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
@@ -221,6 +222,7 @@ func determineShipConfig(args []string, run *git.ProdRunner, isOffline bool) (*s
 		GithubAPIToken:  run.Config.GitHubToken(),
 		GitlabAPIToken:  run.Config.GitLabToken(),
 		MainBranch:      mainBranch,
+		Printer:         cli.LoggingPrinter{},
 	})
 	if err != nil {
 		return nil, err

@@ -7,7 +7,6 @@ package hosting
 import (
 	"errors"
 
-	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/giturl"
 )
@@ -109,9 +108,7 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 		APIToken:       args.GithubAPIToken,
 		MainBranch:     args.MainBranch,
 		OriginURL:      args.OriginURL,
-		Log: cli.LoggingPrinter{
-			Component: "GitHub",
-		},
+		Log:            args.Printer,
 	})
 	if err != nil {
 		return nil, err
@@ -123,9 +120,7 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 		HostingService: args.HostingService,
 		OriginURL:      args.OriginURL,
 		APIToken:       args.GitlabAPIToken,
-		Log: cli.LoggingPrinter{
-			Component: "GitLab",
-		},
+		Log:            args.Printer,
 	})
 	if err != nil {
 		return nil, err
@@ -148,9 +143,7 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 		OriginURL:      args.OriginURL,
 		HostingService: args.HostingService,
 		APIToken:       args.GiteaAPIToken,
-		Log: cli.LoggingPrinter{
-			Component: "Gitea",
-		},
+		Log:            args.Printer,
 	})
 	if err != nil {
 		return nil, err
@@ -169,6 +162,7 @@ type NewConnectorArgs struct {
 	GithubAPIToken  string
 	GitlabAPIToken  string
 	MainBranch      string
+	Printer         Printer
 }
 
 // UnsupportedServiceError communicates that the origin remote runs an unknown code hosting service.

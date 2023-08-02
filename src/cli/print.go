@@ -72,9 +72,7 @@ func StringSetting(text string) string {
 }
 
 // LoggingPrinter logs activities of a particular component on the CLI.
-type LoggingPrinter struct {
-	Component string
-}
+type LoggingPrinter struct{}
 
 func (p LoggingPrinter) Start(template string, messages ...interface{}) {
 	fmt.Println()
