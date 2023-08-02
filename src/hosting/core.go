@@ -6,9 +6,8 @@ package hosting
 
 import (
 	"errors"
-	"fmt"
 
-	"github.com/fatih/color"
+	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/giturl"
 )
@@ -110,7 +109,7 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 		APIToken:       args.GithubAPIToken,
 		MainBranch:     args.MainBranch,
 		OriginURL:      args.OriginURL,
-		Log: LoggingPrinter{
+		Log: cli.LoggingPrinter{
 			Component: "GitHub",
 		},
 	})
@@ -124,7 +123,7 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 		HostingService: args.HostingService,
 		OriginURL:      args.OriginURL,
 		APIToken:       args.GitlabAPIToken,
-		Log: LoggingPrinter{
+		Log: cli.LoggingPrinter{
 			Component: "GitLab",
 		},
 	})
@@ -149,7 +148,7 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 		OriginURL:      args.OriginURL,
 		HostingService: args.HostingService,
 		APIToken:       args.GiteaAPIToken,
-		Log: LoggingPrinter{
+		Log: cli.LoggingPrinter{
 			Component: "Gitea",
 		},
 	})
@@ -188,38 +187,3 @@ type Printer interface {
 	Success()
 	Failed(error)
 }
-
-// LoggingPrinter logs activities of a particular component on the CLI.
-type LoggingPrinter struct {
-	Component string
-}
-
-func (p LoggingPrinter) Start(template string, messages ...interface{}) {
-	fmt.Println()
-	_, err := color.New(color.Bold).Printf(template, messages...)
-	if err != nil {
-		fmt.Printf(template, messages...)
-	}
-}
-
-func (p LoggingPrinter) Success() {
-	_, err := color.New(color.Bold, color.FgGreen).Printf("ok\n")
-	if err != nil {
-		fmt.Println("ok")
-	}
-}
-
-func (p LoggingPrinter) Failed(failure error) {
-	_, err := color.New(color.Bold, color.FgRed).Printf("FAILED: %v\n", failure)
-	if err != nil {
-		fmt.Printf("FAILED: %v\n", err)
-	}
-}
-
-type SilentPrinter struct{}
-
-func (p SilentPrinter) Start(string, ...interface{}) {}
-
-func (p SilentPrinter) Success() {}
-
-func (p SilentPrinter) Failed(error) {}
