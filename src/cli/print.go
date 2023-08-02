@@ -65,10 +65,10 @@ func PrintLabelAndValue(label, value string) {
 }
 
 func StringSetting(text string) string {
-	if text != "" {
-		return text
+	if text == "" {
+		return "(not set)"
 	}
-	return "(not set)"
+	return text
 }
 
 // PrintingLog logs activities of a particular component on the CLI.
