@@ -65,7 +65,6 @@ func PrintLabelAndValue(label, value string) {
 }
 
 func StringSetting(text string) string {
-	// TODO: use == here
 	if text != "" {
 		return text
 	}
