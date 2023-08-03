@@ -252,15 +252,14 @@ func syncBranchSteps(list *runstate.StepListBuilder, args syncBranchStepsArgs) {
 		})
 	}
 	if args.pushBranch && args.remotes.HasOrigin() && !args.isOffline {
-		if !args.branch.HasTrackingBranch() {
+		switch {
+		case !args.branch.HasTrackingBranch():
 			list.Add(&steps.CreateTrackingBranchStep{Branch: args.branch.Name})
-			return
-		}
-		if !isFeatureBranch {
+		case !isFeatureBranch:
 			list.Add(&steps.PushBranchStep{Branch: args.branch.Name})
-			return
+		default:
+			pushFeatureBranchSteps(list, args.branch.Name, args.syncStrategy, args.pushHook)
 		}
-		pushFeatureBranchSteps(list, args.branch.Name, args.syncStrategy, args.pushHook)
 	}
 }
 
