@@ -12,11 +12,12 @@ func TestNewHostingService(t *testing.T) {
 	t.Run("valid content", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]config.HostingService{
-			"bitbucket": config.HostingServiceBitbucket,
-			"github":    config.HostingServiceGitHub,
-			"gitlab":    config.HostingServiceGitLab,
-			"gitea":     config.HostingServiceGitea,
-			"":          config.HostingServiceNone,
+			"bitbucket":   config.HostingServiceBitbucket,
+			"github":      config.HostingServiceGitHub,
+			"gitlab":      config.HostingServiceGitLab,
+			"gitea":       config.HostingServiceGitea,
+			"azuredevops": config.HostingServiceAzureDevops,
+			"":            config.HostingServiceNone,
 		}
 		for give, want := range tests {
 			have, err := config.NewHostingService(give)

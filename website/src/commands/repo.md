@@ -3,7 +3,8 @@
 The _repo_ command ("show the repository") opens the homepage of the current
 repository in your default browser. Git Town can display repositories hosted on
 [GitHub](https://github.com), [GitLab](https://gitlab.com),
-[Gitea](https://gitea.com), and [Bitbucket](https://bitbucket.org).
+[Gitea](https://gitea.com), [Bitbucket](https://bitbucket.org), and
+[Azure DevOps](https://azure.microsoft.com/en-us/products/devops).
 
 ### Variations
 

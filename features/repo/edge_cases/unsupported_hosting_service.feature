@@ -11,4 +11,5 @@ Feature: unsupported hosting service
       * GitHub
       * GitLab
       * Gitea
+      * Azure DevOps
       """

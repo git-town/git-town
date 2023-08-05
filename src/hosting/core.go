@@ -1,6 +1,6 @@
 // Package hosting provides support for interacting with code hosting services.
 // Commands like "new-pull-request", "repo", and "ship" use this package
-// to know how to perform Git Town operations on GitHub, Gitlab, Bitbucket, etc.
+// to know how to perform Git Town operations on GitHub, Gitlab, Bitbucket, Azure DevOps, etc.
 // Implementations of connectors for particular code hosting platforms conform to the Connector interface.
 package hosting
 
@@ -151,6 +151,13 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 	if giteaConnector != nil {
 		return giteaConnector, nil
 	}
+	azureDevopsConnector, err := NewAzureDevopsConnector(config)
+	if err != nil {
+		return nil, err
+	}
+	if azureDevopsConnector != nil {
+		return azureDevopsConnector, nil
+	}
 	return nil, nil //nolint:nilnil  // "nil, nil" is a legitimate return value here
 }
 
@@ -173,7 +180,8 @@ This command requires hosting on one of these services:
 * Bitbucket
 * GitHub
 * GitLab
-* Gitea`)
+* Gitea
+* Azure DevOps`)
 }
 
 // Log allows hosting adapters to print network operations to the CLI.

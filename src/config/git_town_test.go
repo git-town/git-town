@@ -116,6 +116,7 @@ func TestGitTown(t *testing.T) {
 			"https://github.com/organization/repository.git":                {Host: "github.com", Org: "organization", Repo: "repository"},
 			"https://sub.domain.customhost.com/organization/repository":     {Host: "sub.domain.customhost.com", Org: "organization", Repo: "repository"},
 			"https://sub.domain.customhost.com/organization/repository.git": {Host: "sub.domain.customhost.com", Org: "organization", Repo: "repository"},
+			"https://dev.azure.com/organization/repository":                 {Host: "dev.azure.com", Org: "organization", Repo: "repository"},
 		}
 		for give, want := range tests {
 			repo := testruntime.CreateGitTown(t)

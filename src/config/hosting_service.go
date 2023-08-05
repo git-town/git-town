@@ -11,11 +11,12 @@ import (
 type HostingService string
 
 const (
-	HostingServiceBitbucket HostingService = "bitbucket"
-	HostingServiceGitHub    HostingService = "github"
-	HostingServiceGitLab    HostingService = "gitlab"
-	HostingServiceGitea     HostingService = "gitea"
-	HostingServiceNone      HostingService = ""
+	HostingServiceAzureDevops HostingService = "azuredevops"
+	HostingServiceBitbucket   HostingService = "bitbucket"
+	HostingServiceGitHub      HostingService = "github"
+	HostingServiceGitLab      HostingService = "gitlab"
+	HostingServiceGitea       HostingService = "gitea"
+	HostingServiceNone        HostingService = ""
 )
 
 // NewHostingService provides the HostingService enum matching the given text.
@@ -33,6 +34,7 @@ func NewHostingService(text string) (HostingService, error) {
 func hostingServices() []HostingService {
 	return []HostingService{
 		HostingServiceNone,
+		HostingServiceAzureDevops,
 		HostingServiceBitbucket,
 		HostingServiceGitHub,
 		HostingServiceGitLab,
