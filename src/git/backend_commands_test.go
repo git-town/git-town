@@ -215,27 +215,39 @@ func TestBackendCommands(t *testing.T) {
   remotes/origin/branch-1      307a7bf4 Commit message 1b
   remotes/origin/branch-2      da796a69 Commit message 2
   remotes/origin/branch-3      bc39378a Commit message 3b
+	remotes/origin/main          024df944 Commit message on main (#1234)
+	remotes/origin/branch-5      73837e8a Commit message 5
 `[1:]
 			want := git.BranchesSyncStatus{
 				git.BranchSyncStatus{
 					Name:       "branch-1",
 					SyncStatus: git.SyncStatusAhead,
+					LocalSHA:   "01a7eded",
+					RemoteSHA:  "307a7bf4",
 				},
 				git.BranchSyncStatus{
 					Name:       "branch-2",
 					SyncStatus: git.SyncStatusUpToDate,
+					LocalSHA:   "da796a69",
+					RemoteSHA:  "da796a69",
 				},
 				git.BranchSyncStatus{
 					Name:       "branch-3",
 					SyncStatus: git.SyncStatusBehind,
+					LocalSHA:   "f4ebec0a",
+					RemoteSHA:  "bc39378a",
 				},
 				git.BranchSyncStatus{
 					Name:       "main",
 					SyncStatus: git.SyncStatusUpToDate,
+					LocalSHA:   "024df944",
+					RemoteSHA:  "024df944",
 				},
 				git.BranchSyncStatus{
 					Name:       "branch-4",
 					SyncStatus: git.SyncStatusDeletedAtRemote,
+					LocalSHA:   "e4d6bc09",
+					RemoteSHA:  "",
 				},
 			}
 			have, currentBranch := git.ParseVerboseBranchesOutput(give)

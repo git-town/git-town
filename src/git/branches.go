@@ -8,8 +8,11 @@ import (
 )
 
 type BranchSyncStatus struct {
-	Name       string
+	LocalName  string
+	RemoteName string
 	SyncStatus SyncStatus
+	LocalSHA   string // the SHA that the local branch had before the Git Town command ran
+	RemoteSHA  string // the SHA that the remote branch had before the Git Town command ran
 }
 
 func (bi BranchSyncStatus) HasTrackingBranch() bool {
