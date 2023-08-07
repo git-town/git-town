@@ -106,7 +106,7 @@ func ParseVerboseBranchesOutput(output string) (BranchesSyncStatus, string) {
 		branchName = strings.TrimPrefix(branchName, "remotes/origin/")
 		if !result.Contains(branchName) {
 			result = append(result, BranchSyncStatus{
-				Name:       branchName,
+				LocalName:  branchName,
 				SyncStatus: syncStatus,
 			})
 		}

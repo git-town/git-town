@@ -27,7 +27,7 @@ func (bi BranchSyncStatus) HasTrackingBranch() bool {
 
 // TrackingBranch provides the name of the remote branch tracking the local branch with the given name.
 func (bi BranchSyncStatus) TrackingBranch() string {
-	return TrackingBranchName(bi.Name)
+	return TrackingBranchName(bi.LocalName)
 }
 
 // TrackingBranchName provides the name of the remote branch for the given branch.
@@ -45,14 +45,14 @@ type BranchesSyncStatus []BranchSyncStatus
 func (bs BranchesSyncStatus) BranchNames() []string {
 	result := make([]string, len(bs))
 	for b, branch := range bs {
-		result[b] = branch.Name
+		result[b] = branch.LocalName
 	}
 	return result
 }
 
 func (bs BranchesSyncStatus) Contains(branchName string) bool {
 	for _, branch := range bs {
-		if branch.Name == branchName {
+		if branch.LocalName == branchName {
 			return true
 		}
 	}
@@ -83,7 +83,7 @@ func (bs BranchesSyncStatus) LocalBranchesWithDeletedTrackingBranches() Branches
 
 func (bs BranchesSyncStatus) Lookup(branchName string) *BranchSyncStatus {
 	for bi, branch := range bs {
-		if branch.Name == branchName {
+		if branch.LocalName == branchName {
 			return &bs[bi]
 		}
 	}
@@ -93,7 +93,7 @@ func (bs BranchesSyncStatus) Lookup(branchName string) *BranchSyncStatus {
 func (bs BranchesSyncStatus) Remove(branchName string) BranchesSyncStatus {
 	result := BranchesSyncStatus{}
 	for _, branch := range bs {
-		if branch.Name != branchName {
+		if branch.LocalName != branchName {
 			result = append(result, branch)
 		}
 	}

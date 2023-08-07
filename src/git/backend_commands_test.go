@@ -137,7 +137,7 @@ func TestBackendCommands(t *testing.T) {
 			give := `* branch-1                     01a7eded [origin/branch-1: ahead 1] Commit message 1`
 			want := git.BranchesSyncStatus{
 				git.BranchSyncStatus{
-					Name:       "branch-1",
+					LocalName:  "branch-1",
 					SyncStatus: git.SyncStatusAhead,
 				},
 			}
@@ -149,7 +149,7 @@ func TestBackendCommands(t *testing.T) {
 			give := `* branch-1                     01a7eded [origin/branch-1: behind 2] Commit message 1`
 			want := git.BranchesSyncStatus{
 				git.BranchSyncStatus{
-					Name:       "branch-1",
+					LocalName:  "branch-1",
 					SyncStatus: git.SyncStatusBehind,
 				},
 			}
@@ -161,7 +161,7 @@ func TestBackendCommands(t *testing.T) {
 			give := `* branch-1                     01a7eded [origin/branch-1] Commit message 1`
 			want := git.BranchesSyncStatus{
 				git.BranchSyncStatus{
-					Name:       "branch-1",
+					LocalName:  "branch-1",
 					SyncStatus: git.SyncStatusUpToDate,
 				},
 			}
@@ -173,7 +173,7 @@ func TestBackendCommands(t *testing.T) {
 			give := `  remotes/origin/branch-1                     01a7eded Commit message 1`
 			want := git.BranchesSyncStatus{
 				git.BranchSyncStatus{
-					Name:       "branch-1",
+					LocalName:  "branch-1",
 					SyncStatus: git.SyncStatusRemoteOnly,
 				},
 			}
@@ -185,7 +185,7 @@ func TestBackendCommands(t *testing.T) {
 			give := `* branch-1                     01a7eded Commit message 1`
 			want := git.BranchesSyncStatus{
 				git.BranchSyncStatus{
-					Name:       "branch-1",
+					LocalName:  "branch-1",
 					SyncStatus: git.SyncStatusLocalOnly,
 				},
 			}
@@ -197,7 +197,7 @@ func TestBackendCommands(t *testing.T) {
 			give := `* branch-1                     01a7eded [origin/branch-1: gone] Commit message 1`
 			want := git.BranchesSyncStatus{
 				git.BranchSyncStatus{
-					Name:       "branch-1",
+					LocalName:  "branch-1",
 					SyncStatus: git.SyncStatusDeletedAtRemote,
 				},
 			}
@@ -210,43 +210,55 @@ func TestBackendCommands(t *testing.T) {
   branch-1                     01a7eded [origin/branch-1: ahead 1] Commit message 1a
 * branch-2                     da796a69 [origin/branch-2] Commit message 2
   branch-3                     f4ebec0a [origin/branch-3: behind 2] Commit message 3a
+	branch-4                     2417dac3 [origin/branch-4: ahead 1, behind 31] Commit message 4a
   main                         024df944 [origin/main] Commit message on main (#1234)
-  branch-4                     e4d6bc09 [origin/branch-4: gone] Commit message 4
+  branch-5                     e4d6bc09 [origin/branch-5: gone] Commit message 5
   remotes/origin/branch-1      307a7bf4 Commit message 1b
   remotes/origin/branch-2      da796a69 Commit message 2
   remotes/origin/branch-3      bc39378a Commit message 3b
-	remotes/origin/main          024df944 Commit message on main (#1234)
-	remotes/origin/branch-5      73837e8a Commit message 5
+	remotes/origin/branch-4      ec643bcd Commit message 4b
 `[1:]
 			want := git.BranchesSyncStatus{
 				git.BranchSyncStatus{
-					Name:       "branch-1",
+					LocalName:  "branch-1",
+					RemoteName: "",
 					SyncStatus: git.SyncStatusAhead,
-					LocalSHA:   "01a7eded",
-					RemoteSHA:  "307a7bf4",
+					LocalSHA:   "",
+					RemoteSHA:  "",
 				},
 				git.BranchSyncStatus{
-					Name:       "branch-2",
+					LocalName:  "branch-2",
+					RemoteName: "",
 					SyncStatus: git.SyncStatusUpToDate,
-					LocalSHA:   "da796a69",
-					RemoteSHA:  "da796a69",
+					LocalSHA:   "",
+					RemoteSHA:  "",
 				},
 				git.BranchSyncStatus{
-					Name:       "branch-3",
+					LocalName:  "branch-3",
+					RemoteName: "",
 					SyncStatus: git.SyncStatusBehind,
-					LocalSHA:   "f4ebec0a",
-					RemoteSHA:  "bc39378a",
+					LocalSHA:   "",
+					RemoteSHA:  "",
 				},
 				git.BranchSyncStatus{
-					Name:       "main",
+					LocalName:  "branch-4",
+					RemoteName: "",
+					SyncStatus: git.SyncStatusAheadAndBehind,
+					LocalSHA:   "",
+					RemoteSHA:  "",
+				},
+				git.BranchSyncStatus{
+					LocalName:  "main",
+					RemoteName: "",
 					SyncStatus: git.SyncStatusUpToDate,
-					LocalSHA:   "024df944",
-					RemoteSHA:  "024df944",
+					LocalSHA:   "",
+					RemoteSHA:  "",
 				},
 				git.BranchSyncStatus{
-					Name:       "branch-4",
+					LocalName:  "branch-4",
+					RemoteName: "",
 					SyncStatus: git.SyncStatusDeletedAtRemote,
-					LocalSHA:   "e4d6bc09",
+					LocalSHA:   "",
 					RemoteSHA:  "",
 				},
 			}
