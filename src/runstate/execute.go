@@ -32,17 +32,6 @@ func Execute(args ExecuteArgs) error {
 			args.Run.Stats.PrintAnalysis()
 			return nil
 		}
-		if typeName(step) == "*SkipCurrentBranchSteps" {
-			args.RunState.SkipCurrentBranchSteps()
-			continue
-		}
-		if typeName(step) == "*PushBranchAfterCurrentBranchSteps" {
-			err := args.RunState.AddPushBranchStepAfterCurrentBranchSteps(&args.Run.Backend)
-			if err != nil {
-				return err
-			}
-			continue
-		}
 		runErr := step.Run(args.Run, args.Connector)
 		if runErr != nil {
 			args.RunState.AbortStepList.Append(step.CreateAbortStep())
