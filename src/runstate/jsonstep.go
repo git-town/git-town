@@ -105,8 +105,6 @@ func determineStep(stepType string) steps.Step {
 		return &steps.SetParentStep{}
 	case "*SquashMergeStep":
 		return &steps.SquashMergeStep{}
-	case "*SkipCurrentBranchSteps":
-		return &steps.SkipCurrentBranchSteps{}
 	case "*StashOpenChangesStep":
 		return &steps.StashOpenChangesStep{}
 	case "*UpdateProposalTargetStep":
