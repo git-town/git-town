@@ -10,10 +10,11 @@ import (
 // Optionally with force.
 type PushBranchStep struct {
 	EmptyStep
-	Branch         string
-	ForceWithLease bool
-	NoPushHook     bool
-	Undoable       bool
+	Branch            string
+	ForceWithLease    bool
+	NoPushHook        bool
+	OriginalRemoteSHA string // SHA of the remote branch before the push
+	Undoable          bool
 }
 
 func (step *PushBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
