@@ -8,7 +8,9 @@ import (
 )
 
 // Hosting defines legal values for the "git-town.code-hosting-driver" config setting.
-type Hosting string
+type Hosting struct {
+	name string
+}
 
 const (
 	HostingBitbucket Hosting = "bitbucket"
