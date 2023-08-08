@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"regexp"
 	"strings"
 )
@@ -73,7 +72,6 @@ func (g *Git) LocalConfigKeysMatching(toMatch string) []Key {
 	result := []Key{}
 	re := regexp.MustCompile(toMatch)
 	for key := range g.localConfigCache {
-		fmt.Println("77777777777", key.name)
 		if re.MatchString(key.String()) {
 			result = append(result, key)
 		}
