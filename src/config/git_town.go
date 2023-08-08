@@ -359,12 +359,12 @@ func (gt *GitTown) SetShouldSyncUpstream(value bool) error {
 }
 
 func (gt *GitTown) SetSyncStrategy(value SyncStrategy) error {
-	err := gt.SetLocalConfigValue(SyncStrategyKey, string(value))
+	err := gt.SetLocalConfigValue(SyncStrategyKey, value.name)
 	return err
 }
 
 func (gt *GitTown) SetSyncStrategyGlobal(value SyncStrategy) error {
-	_, err := gt.SetGlobalConfigValue(SyncStrategyKey, string(value))
+	_, err := gt.SetGlobalConfigValue(SyncStrategyKey, value.name)
 	return err
 }
 

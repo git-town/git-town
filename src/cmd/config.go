@@ -122,7 +122,7 @@ func printConfig(config ConfigConfig) {
 	cli.PrintEntry("run pre-push hook", cli.BoolSetting(config.pushHook))
 	cli.PrintEntry("push new branches", cli.BoolSetting(config.pushNewBranches))
 	cli.PrintEntry("ship removes the remote branch", cli.BoolSetting(config.deleteOrigin))
-	cli.PrintEntry("sync strategy", string(config.syncStrategy))
+	cli.PrintEntry("sync strategy", config.syncStrategy.String())
 	cli.PrintEntry("sync with upstream", cli.BoolSetting(config.shouldSyncUpstream))
 	fmt.Println()
 	cli.PrintHeader("Hosting")

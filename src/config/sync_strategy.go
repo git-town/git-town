@@ -7,11 +7,15 @@ import (
 )
 
 // SyncStrategy defines legal values for the "sync-strategy" configuration setting.
-type SyncStrategy string
+type SyncStrategy struct {
+	name string
+}
 
-const (
-	SyncStrategyMerge  SyncStrategy = "merge"
-	SyncStrategyRebase SyncStrategy = "rebase"
+func (s SyncStrategy) String() string { return s.name }
+
+var (
+	SyncStrategyMerge  = SyncStrategy{"merge"}
+	SyncStrategyRebase = SyncStrategy{"rebase"}
 )
 
 func ToSyncStrategy(text string) (SyncStrategy, error) {
