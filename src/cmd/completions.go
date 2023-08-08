@@ -81,6 +81,7 @@ func completions(args []string, completionsNoDescFlag bool, rootCmd *cobra.Comma
 }
 
 // CompletionType defines the valid shells for which Git Town can create auto-completions.
+// This is a type-safe enum, see https://npf.io/2022/05/safer-enums.
 type CompletionType struct {
 	name string
 }
