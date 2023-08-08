@@ -59,8 +59,8 @@ func (gt *GitTown) DeprecatedPushVerifyFlagLocal() string {
 }
 
 // GitAlias provides the currently set alias for the given Git Town command.
-func (gt *GitTown) GitAlias(aliasType Alias) string {
-	return gt.GlobalConfigValue("alias." + string(aliasType))
+func (gt *GitTown) GitAlias(alias Alias) string {
+	return gt.GlobalConfigValue("alias." + alias.name)
 }
 
 // GitHubToken provides the content of the GitHub API token stored in the local or global Git Town configuration.
