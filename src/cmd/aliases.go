@@ -62,7 +62,7 @@ func aliases(arg string, debug bool) error {
 }
 
 func addAliases(run *git.ProdRunner) error {
-	for _, aliasType := range config.AliasTypes() {
+	for _, aliasType := range config.Aliases() {
 		err := run.Frontend.AddGitAlias(aliasType)
 		if err != nil {
 			return err
@@ -73,7 +73,7 @@ func addAliases(run *git.ProdRunner) error {
 }
 
 func removeAliases(run *git.ProdRunner) error {
-	for _, aliasType := range config.AliasTypes() {
+	for _, aliasType := range config.Aliases() {
 		existingAlias := run.Config.GitAlias(aliasType)
 		if existingAlias == "town "+string(aliasType) {
 			err := run.Frontend.RemoveGitAlias(aliasType)

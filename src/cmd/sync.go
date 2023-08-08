@@ -41,7 +41,7 @@ func syncCmd() *cobra.Command {
 		GroupID: "basic",
 		Args:    cobra.NoArgs,
 		Short:   syncDesc,
-		Long:    long(syncDesc, fmt.Sprintf(syncHelp, config.SyncUpstreamKey)),
+		Long:    long(syncDesc, fmt.Sprintf(syncHelp, config.KeySyncUpstream)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return sync(readAllFlag(cmd), readDryRunFlag(cmd), readDebugFlag(cmd))
 		},
