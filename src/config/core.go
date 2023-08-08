@@ -72,7 +72,7 @@ func NewKey(key string) *Key {
 			return &configKey
 		}
 	}
-	// TODO: the key might be a git-town.XXX.parent setting
+	// TODO: try to parse a "git-town.XXX.parent" setting
 	return nil
 }
 
