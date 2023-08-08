@@ -8,21 +8,25 @@ import (
 )
 
 // HostingService defines legal values for the "git-town.code-hosting-driver" config setting.
-type HostingService string
+type HostingService struct {
+	name string
+}
 
-const (
-	HostingServiceBitbucket HostingService = "bitbucket"
-	HostingServiceGitHub    HostingService = "github"
-	HostingServiceGitLab    HostingService = "gitlab"
-	HostingServiceGitea     HostingService = "gitea"
-	HostingServiceNone      HostingService = ""
+func (h HostingService) String() string { return h.name }
+
+var (
+	HostingServiceBitbucket = HostingService{"bitbucket"}
+	HostingServiceGitHub    = HostingService{"github"}
+	HostingServiceGitLab    = HostingService{"gitlab"}
+	HostingServiceGitea     = HostingService{"gitea"}
+	HostingServiceNone      = HostingService{""}
 )
 
 // NewHostingService provides the HostingService enum matching the given text.
 func NewHostingService(text string) (HostingService, error) {
 	text = strings.ToLower(text)
 	for _, hostingService := range hostingServices() {
-		if string(hostingService) == text {
+		if hostingService.name == text {
 			return hostingService, nil
 		}
 	}

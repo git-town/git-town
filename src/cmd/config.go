@@ -126,7 +126,7 @@ func printConfig(config ConfigConfig) {
 	cli.PrintEntry("sync with upstream", cli.BoolSetting(config.shouldSyncUpstream))
 	fmt.Println()
 	cli.PrintHeader("Hosting")
-	cli.PrintEntry("hosting service override", cli.StringSetting(string(config.hostingService)))
+	cli.PrintEntry("hosting service override", cli.StringSetting(config.hostingService.String()))
 	cli.PrintEntry("GitHub token", cli.StringSetting(config.githubToken))
 	cli.PrintEntry("GitLab token", cli.StringSetting(config.gitlabToken))
 	cli.PrintEntry("Gitea token", cli.StringSetting(config.giteaToken))
