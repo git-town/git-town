@@ -29,10 +29,10 @@ func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, roo
 		return quit, err
 	}
 	switch response {
-	case dialog.ResponseTypeDiscard:
+	case dialog.ResponseDiscard:
 		err = runstate.Delete(rootDir)
 		return false, err
-	case dialog.ResponseTypeContinue:
+	case dialog.ResponseContinue:
 		hasConflicts, err := run.Backend.HasConflicts()
 		if err != nil {
 			return false, err
@@ -46,7 +46,7 @@ func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, roo
 			Connector: connector,
 			RootDir:   rootDir,
 		})
-	case dialog.ResponseTypeAbort:
+	case dialog.ResponseAbort:
 		abortRunState := runState.CreateAbortRunState()
 		return true, runstate.Execute(runstate.ExecuteArgs{
 			RunState:  &abortRunState,
@@ -54,7 +54,7 @@ func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, roo
 			Connector: connector,
 			RootDir:   rootDir,
 		})
-	case dialog.ResponseTypeSkip:
+	case dialog.ResponseSkip:
 		skipRunState := runState.CreateSkipRunState()
 		return true, runstate.Execute(runstate.ExecuteArgs{
 			RunState:  &skipRunState,
@@ -62,7 +62,7 @@ func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, roo
 			Connector: connector,
 			RootDir:   rootDir,
 		})
-	case dialog.ResponseTypeQuit:
+	case dialog.ResponseQuit:
 		return true, nil
 	default:
 		return false, fmt.Errorf(messages.DialogUnexpectedResponse, response)

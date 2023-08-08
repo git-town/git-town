@@ -96,7 +96,7 @@ func (c *GiteaConnector) UpdateProposalTarget(_ int, _ string) error {
 // NewGiteaConfig provides Gitea configuration data if the current repo is hosted on Gitea,
 // otherwise nil.
 func NewGiteaConnector(args NewGiteaConnectorArgs) (*GiteaConnector, error) {
-	if args.OriginURL == nil || (args.OriginURL.Host != "gitea.com" && args.HostingService != config.HostingServiceGitea) {
+	if args.OriginURL == nil || (args.OriginURL.Host != "gitea.com" && args.HostingService != config.HostingGitea) {
 		return nil, nil //nolint:nilnil
 	}
 	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: args.APIToken})
@@ -116,7 +116,7 @@ func NewGiteaConnector(args NewGiteaConnectorArgs) (*GiteaConnector, error) {
 
 type NewGiteaConnectorArgs struct {
 	OriginURL      *giturl.Parts
-	HostingService config.HostingService
+	HostingService config.Hosting
 	APIToken       string
 	Log            Log
 }

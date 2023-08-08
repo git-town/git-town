@@ -1,35 +1,35 @@
 package config
 
-// AliasType defines Git Town commands that can be aliased.
-type AliasType string
+// Alias defines Git Town commands that can be aliased.
+type Alias string
 
 const (
-	AliasTypeAppend         AliasType = "append"
-	AliasTypeDiffParent     AliasType = "diff-parent"
-	AliasTypeHack           AliasType = "hack"
-	AliasTypeKill           AliasType = "kill"
-	AliasTypeNewPullRequest AliasType = "new-pull-request"
-	AliasTypePrepend        AliasType = "prepend"
-	AliasTypePruneBranches  AliasType = "prune-branches"
-	AliasTypeRenameBranch   AliasType = "rename-branch"
-	AliasTypeRepo           AliasType = "repo"
-	AliasTypeShip           AliasType = "ship"
-	AliasTypeSync           AliasType = "sync"
+	AliasAppend         Alias = "append"
+	AliasDiffParent     Alias = "diff-parent"
+	AliasHack           Alias = "hack"
+	AliasKill           Alias = "kill"
+	AliasNewPullRequest Alias = "new-pull-request"
+	AliasPrepend        Alias = "prepend"
+	AliasPruneBranches  Alias = "prune-branches"
+	AliasRenameBranch   Alias = "rename-branch"
+	AliasRepo           Alias = "repo"
+	AliasShip           Alias = "ship"
+	AliasSync           Alias = "sync"
 )
 
-// AliasTypes provides all AliasType values.
-func AliasTypes() []AliasType {
-	return []AliasType{
-		AliasTypeAppend,
-		AliasTypeDiffParent,
-		AliasTypeHack,
-		AliasTypeKill,
-		AliasTypeNewPullRequest,
-		AliasTypePrepend,
-		AliasTypePruneBranches,
-		AliasTypeRenameBranch,
-		AliasTypeRepo,
-		AliasTypeShip,
-		AliasTypeSync,
+// Aliases provides all AliasType values.
+func Aliases() []Alias {
+	return []Alias{
+		AliasAppend,
+		AliasDiffParent,
+		AliasHack,
+		AliasKill,
+		AliasNewPullRequest,
+		AliasPrepend,
+		AliasPruneBranches,
+		AliasRenameBranch,
+		AliasRepo,
+		AliasShip,
+		AliasSync,
 	}
 }

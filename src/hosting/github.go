@@ -99,7 +99,7 @@ func (c *GitHubConnector) UpdateProposalTarget(number int, target string) error 
 // NewGithubConnector provides a fully configured GithubConnector instance
 // if the current repo is hosted on Github, otherwise nil.
 func NewGithubConnector(args NewGithubConnectorArgs) (*GitHubConnector, error) {
-	if args.OriginURL == nil || (args.OriginURL.Host != "github.com" && args.HostingService != config.HostingServiceGitHub) {
+	if args.OriginURL == nil || (args.OriginURL.Host != "github.com" && args.HostingService != config.HostingGitHub) {
 		return nil, nil //nolint:nilnil
 	}
 	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: args.APIToken})
@@ -118,7 +118,7 @@ func NewGithubConnector(args NewGithubConnectorArgs) (*GitHubConnector, error) {
 }
 
 type NewGithubConnectorArgs struct {
-	HostingService config.HostingService
+	HostingService config.Hosting
 	OriginURL      *giturl.Parts
 	APIToken       string
 	MainBranch     string
