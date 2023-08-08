@@ -80,7 +80,7 @@ func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 	return ConfigConfig{
 		branchDurations:    branchDurations,
 		deleteOrigin:       deleteOrigin,
-		hostingService:     hostingService,
+		hosting:            hostingService,
 		giteaToken:         giteaToken,
 		githubToken:        githubToken,
 		gitlabToken:        gitlabToken,
@@ -100,7 +100,7 @@ type ConfigConfig struct {
 	giteaToken         string
 	githubToken        string
 	gitlabToken        string
-	hostingService     config.Hosting
+	hosting            config.Hosting
 	isOffline          bool
 	lineage            config.Lineage
 	pullBranchStrategy config.PullBranchStrategy
@@ -126,7 +126,7 @@ func printConfig(config ConfigConfig) {
 	cli.PrintEntry("sync with upstream", cli.BoolSetting(config.shouldSyncUpstream))
 	fmt.Println()
 	cli.PrintHeader("Hosting")
-	cli.PrintEntry("hosting service override", cli.StringSetting(string(config.hostingService)))
+	cli.PrintEntry("hosting service override", cli.StringSetting(string(config.hosting)))
 	cli.PrintEntry("GitHub token", cli.StringSetting(config.githubToken))
 	cli.PrintEntry("GitLab token", cli.StringSetting(config.gitlabToken))
 	cli.PrintEntry("Gitea token", cli.StringSetting(config.giteaToken))
