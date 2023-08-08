@@ -18,7 +18,7 @@ func (c Key) String() string { return c.name }
 
 var (
 	KeyAliasAppend                 = Key{"alias." + AliasAppend.name}             //nolint:gochecknoglobals
-	KeyAliasTypeParent             = Key{"alias." + AliasDiffParent.name}         //nolint:gochecknoglobals
+	KeyAliasDiffParent             = Key{"alias." + AliasDiffParent.name}         //nolint:gochecknoglobals
 	KeyAliasHack                   = Key{"alias." + AliasHack.name}               //nolint:gochecknoglobals
 	KeyAliasKill                   = Key{"alias." + AliasKill.name}               //nolint:gochecknoglobals
 	KeyAliasNewPullRequest         = Key{"alias." + AliasNewPullRequest.name}     //nolint:gochecknoglobals
@@ -103,7 +103,7 @@ func NewAliasKey(aliasType Alias) Key {
 	case AliasAppend:
 		return KeyAliasAppend
 	case AliasDiffParent:
-		return KeyAliasTypeParent
+		return KeyAliasDiffParent
 	case AliasHack:
 		return KeyAliasHack
 	case AliasKill:
