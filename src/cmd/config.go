@@ -69,7 +69,7 @@ func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 	giteaToken := run.Config.GiteaToken()
 	githubToken := run.Config.GitHubToken()
 	gitlabToken := run.Config.GitLabToken()
-	hostingService := fc.HostingService(run.Config.HostingService())
+	hosting := fc.Hosting(run.Config.HostingService())
 	isOffline := fc.Bool(run.Config.IsOffline())
 	lineage := run.Config.Lineage()
 	pullBranchStrategy := fc.PullBranchStrategy(run.Config.PullBranchStrategy())
@@ -80,7 +80,7 @@ func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 	return ConfigConfig{
 		branchDurations:    branchDurations,
 		deleteOrigin:       deleteOrigin,
-		hosting:            hostingService,
+		hosting:            hosting,
 		giteaToken:         giteaToken,
 		githubToken:        githubToken,
 		gitlabToken:        gitlabToken,

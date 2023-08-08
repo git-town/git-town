@@ -100,16 +100,16 @@ func TestCollector(t *testing.T) {
 		t.Run("returns the given HostingService value", func(t *testing.T) {
 			t.Parallel()
 			fc := failure.Collector{}
-			assert.Equal(t, config.HostingGitHub, fc.HostingService(config.HostingGitHub, nil))
-			assert.Equal(t, config.HostingGitLab, fc.HostingService(config.HostingGitLab, errors.New("")))
+			assert.Equal(t, config.HostingGitHub, fc.Hosting(config.HostingGitHub, nil))
+			assert.Equal(t, config.HostingGitLab, fc.Hosting(config.HostingGitLab, errors.New("")))
 		})
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()
 			fc := failure.Collector{}
-			fc.HostingService(config.HostingNone, nil)
+			fc.Hosting(config.HostingNone, nil)
 			assert.Nil(t, fc.Err)
-			fc.HostingService(config.HostingGitHub, errors.New("first"))
-			fc.HostingService(config.HostingGitHub, errors.New("second"))
+			fc.Hosting(config.HostingGitHub, errors.New("first"))
+			fc.Hosting(config.HostingGitHub, errors.New("second"))
 			assert.Error(t, fc.Err, "first")
 		})
 	})
