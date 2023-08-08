@@ -34,7 +34,7 @@ func (fc *FrontendCommands) AbortRebase() error {
 }
 
 // AddGitAlias sets the given Git alias.
-func (fc *FrontendCommands) AddGitAlias(aliasType config.AliasType) error {
+func (fc *FrontendCommands) AddGitAlias(aliasType config.Alias) error {
 	return fc.Run("git", "config", "--global", "alias."+aliasType.String(), "town "+aliasType.String())
 }
 
@@ -200,7 +200,7 @@ func (fc *FrontendCommands) Rebase(target string) error {
 }
 
 // RemoveGitAlias removes the given Git alias.
-func (fc *FrontendCommands) RemoveGitAlias(aliasType config.AliasType) error {
+func (fc *FrontendCommands) RemoveGitAlias(aliasType config.Alias) error {
 	return fc.Run("git", "config", "--global", "--unset", "alias."+aliasType.String())
 }
 

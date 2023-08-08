@@ -17,17 +17,17 @@ type Key struct {
 func (c Key) String() string { return c.name }
 
 var (
-	KeyAliasTypeAppend             = Key{"git-town.alias." + AliasTypeAppend.name}
-	KeyAliasTypeDiffParent         = Key{"git-town.alias." + AliasTypeDiffParent.name}
-	KeyAliasTypeHack               = Key{"git-town.alias." + AliasTypeHack.name}
-	KeyAliasTypeKill               = Key{"git-town.alias." + AliasTypeKill.name}
-	KeyAliasTypeNewPullRequest     = Key{"git-town.alias." + AliasTypeNewPullRequest.name}
-	KeyAliasTypePrepend            = Key{"git-town.alias." + AliasTypePrepend.name}
-	KeyAliasTypePruneBranches      = Key{"git-town.alias." + AliasTypePruneBranches.name}
-	KeyAliasTypeRenameBranch       = Key{"git-town.alias." + AliasTypeRenameBranch.name}
-	KeyAliasTypeRepo               = Key{"git-town.alias." + AliasTypeRepo.name}
-	KeyAliasTypeShip               = Key{"git-town.alias." + AliasTypeShip.name}
-	KeyAliasTypeSync               = Key{"git-town.alias." + AliasTypeSync.name}
+	KeyAliasTypeAppend             = Key{"git-town.alias." + AliasAppend.name}
+	KeyAliasTypeDiffParent         = Key{"git-town.alias." + AliasDiffParent.name}
+	KeyAliasTypeHack               = Key{"git-town.alias." + AliasHack.name}
+	KeyAliasTypeKill               = Key{"git-town.alias." + AliasKill.name}
+	KeyAliasTypeNewPullRequest     = Key{"git-town.alias." + AliasNewPullRequest.name}
+	KeyAliasTypePrepend            = Key{"git-town.alias." + AliasPrepend.name}
+	KeyAliasTypePruneBranches      = Key{"git-town.alias." + AliasPruneBranches.name}
+	KeyAliasTypeRenameBranch       = Key{"git-town.alias." + AliasRenameBranch.name}
+	KeyAliasTypeRepo               = Key{"git-town.alias." + AliasRepo.name}
+	KeyAliasTypeShip               = Key{"git-town.alias." + AliasShip.name}
+	KeyAliasTypeSync               = Key{"git-town.alias." + AliasSync.name}
 	KeyCodeHostingDriver           = Key{"git-town.code-hosting-driver"}
 	KeyCodeHostingOriginHostname   = Key{"git-town.code-hosting-origin-hostname"}
 	KeyDeprecatedNewBranchPushFlag = Key{"git-town.new-branch-push-flag"}
@@ -76,29 +76,29 @@ func NewKey(value string) (Key, error) {
 	return KeyOffline, fmt.Errorf(messages.ConfigKeyUnknown, value)
 }
 
-func NewAliasKey(aliasType AliasType) Key {
+func NewAliasKey(aliasType Alias) Key {
 	switch aliasType {
-	case AliasTypeAppend:
+	case AliasAppend:
 		return KeyAliasTypeAppend
-	case AliasTypeDiffParent:
+	case AliasDiffParent:
 		return KeyAliasTypeDiffParent
-	case AliasTypeHack:
+	case AliasHack:
 		return KeyAliasTypeHack
-	case AliasTypeKill:
+	case AliasKill:
 		return KeyAliasTypeKill
-	case AliasTypeNewPullRequest:
+	case AliasNewPullRequest:
 		return KeyAliasTypeNewPullRequest
-	case AliasTypePrepend:
+	case AliasPrepend:
 		return KeyAliasTypePrepend
-	case AliasTypePruneBranches:
+	case AliasPruneBranches:
 		return KeyAliasTypePrepend
-	case AliasTypeRenameBranch:
+	case AliasRenameBranch:
 		return KeyAliasTypePruneBranches
-	case AliasTypeRepo:
+	case AliasRepo:
 		return KeyAliasTypeRepo
-	case AliasTypeShip:
+	case AliasShip:
 		return KeyAliasTypeShip
-	case AliasTypeSync:
+	case AliasSync:
 		return KeyAliasTypeSync
 	}
 	panic(fmt.Sprintf("don't know how to convert alias type %q into a config key", aliasType))
