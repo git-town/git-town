@@ -8,11 +8,15 @@ import (
 )
 
 // PullBranchStrategy defines legal values for the "pull-branch-strategy" configuration setting.
-type PullBranchStrategy string
+type PullBranchStrategy struct {
+	name string
+}
 
-const (
-	PullBranchStrategyMerge  PullBranchStrategy = "merge"
-	PullBranchStrategyRebase PullBranchStrategy = "rebase"
+func (p PullBranchStrategy) String() string { return p.name }
+
+var (
+	PullBranchStrategyMerge  = PullBranchStrategy{"merge"}  //nolint:gochecknoglobals
+	PullBranchStrategyRebase = PullBranchStrategy{"rebase"} //nolint:gochecknoglobals
 )
 
 func NewPullBranchStrategy(text string) (PullBranchStrategy, error) {
@@ -24,8 +28,4 @@ func NewPullBranchStrategy(text string) (PullBranchStrategy, error) {
 	default:
 		return PullBranchStrategyMerge, fmt.Errorf(messages.ConfigPullbranchStrategyUnknown, text)
 	}
-}
-
-func (pbs PullBranchStrategy) String() string {
-	return string(pbs)
 }
