@@ -146,6 +146,8 @@ type modalSelectStatus struct {
 	name string
 }
 
+func (m modalSelectStatus) String() string { return m.name }
+
 var (
 	modalSelectStatusNew       = modalSelectStatus{"new"}
 	modalSelectStatusSelecting = modalSelectStatus{"selecting"}

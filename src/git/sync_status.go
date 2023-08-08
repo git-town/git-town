@@ -10,6 +10,8 @@ type SyncStatus struct {
 	name string
 }
 
+func (s SyncStatus) String() string { return s.name }
+
 var (
 	SyncStatusUpToDate        = SyncStatus{"up to date"}        // the branch exists locally and remotely, the local branch is up to date
 	SyncStatusBehind          = SyncStatus{"behind"}            // the branch exists locally and remotely, the local branch is behind the remote tracking branch
