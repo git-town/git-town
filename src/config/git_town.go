@@ -20,12 +20,12 @@ type GitTown struct {
 	originURLCache OriginURLCache
 }
 
-func NewGitTown(runner runner) (*GitTown, error) {
-	git, err := NewGit(runner)
+func NewGitTown(runner runner) *GitTown {
+	git := NewGit(runner)
 	return &GitTown{
 		Git:            git,
 		originURLCache: OriginURLCache{},
-	}, err
+	}
 }
 
 type OriginURLCache map[string]*giturl.Parts

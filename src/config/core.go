@@ -6,8 +6,6 @@ package config
 
 import (
 	"fmt"
-
-	"github.com/git-town/git-town/v9/src/messages"
 )
 
 // Key contains all the keys used in Git Town configuration.
@@ -68,13 +66,13 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyTestingRemoteURL,
 }
 
-func NewKey(value string) (Key, error) {
+func NewKey(value string) *Key {
 	for _, configKey := range keys {
 		if configKey.name == value {
-			return configKey, nil
+			return &configKey
 		}
 	}
-	return KeyOffline, fmt.Errorf(messages.ConfigKeyUnknown, value)
+	return nil
 }
 
 func NewAliasKey(aliasType Alias) Key {

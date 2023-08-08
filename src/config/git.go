@@ -18,7 +18,7 @@ type Git struct {
 }
 
 // LoadGit provides the Git configuration from the given directory or the global one if the global flag is set.
-func LoadGit(runner runner, global bool) (map[Key]string, error) {
+func LoadGit(runner runner, global bool) map[Key]string {
 	result := map[Key]string{}
 	cmdArgs := []string{"config", "-lz"}
 	if global {
@@ -28,10 +28,10 @@ func LoadGit(runner runner, global bool) (map[Key]string, error) {
 	}
 	output, err := runner.Query("git", cmdArgs...)
 	if err != nil {
-		return result, err
+		return result
 	}
 	if output == "" {
-		return result, nil
+		return result
 	}
 	for _, line := range strings.Split(output, "\x00") {
 		if len(line) == 0 {
@@ -39,30 +39,21 @@ func LoadGit(runner runner, global bool) (map[Key]string, error) {
 		}
 		parts := strings.SplitN(line, "\n", 2)
 		key, value := parts[0], parts[1]
-		configKey, err := NewKey(key)
-		if err != nil {
-			return result, err
+		configKey := NewKey(key)
+		if configKey != nil {
+			result[*configKey] = value
 		}
-		result[configKey] = value
 	}
-	return result, nil
+	return result
 }
 
 // NewConfiguration provides a Configuration instance reflecting the configuration values in the given directory.
-func NewGit(runner runner) (Git, error) {
-	localConfig, err := LoadGit(runner, false)
-	if err != nil {
-		return EmptyGit(), err
-	}
-	globalConfig, err := LoadGit(runner, true)
-	if err != nil {
-		return EmptyGit(), err
-	}
+func NewGit(runner runner) Git {
 	return Git{
-		localConfigCache:  localConfig,
-		globalConfigCache: globalConfig,
+		localConfigCache:  LoadGit(runner, false),
+		globalConfigCache: LoadGit(runner, true),
 		runner:            runner,
-	}, nil
+	}
 }
 
 // GlobalConfigValue provides the configuration value with the given key from the local Git configuration.
@@ -98,18 +89,9 @@ func (g *Git) LocalOrGlobalConfigValue(key Key) string {
 }
 
 // Reload refreshes the cached configuration information.
-func (g *Git) Reload() error {
-	localConfig, err := LoadGit(g.runner, false)
-	if err != nil {
-		return err
-	}
-	globalConfig, err := LoadGit(g.runner, true)
-	if err != nil {
-		return err
-	}
-	g.localConfigCache = localConfig
-	g.globalConfigCache = globalConfig
-	return nil
+func (g *Git) Reload() {
+	g.localConfigCache = LoadGit(g.runner, false)
+	g.globalConfigCache = LoadGit(g.runner, true)
 }
 
 func (g *Git) RemoveGlobalConfigValue(key Key) (string, error) {

@@ -37,8 +37,7 @@ func (r *TestCommands) AddSubmodule(url string) {
 // BranchHierarchyTable provides the currently configured branch hierarchy information as a DataTable.
 func (r *TestCommands) BranchHierarchyTable() datatable.DataTable {
 	result := datatable.DataTable{}
-	err := r.Config.Reload()
-	asserts.NoError(err)
+	r.Config.Reload()
 	lineage := r.Config.Lineage()
 	result.AddRow("BRANCH", "PARENT")
 	for _, branchName := range lineage.BranchNames() {

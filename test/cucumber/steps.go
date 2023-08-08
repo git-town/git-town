@@ -254,41 +254,48 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^I (?:run|ran) "(.+)"$`, func(command string) error {
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(command)
-		return state.fixture.DevRepo.Config.Reload()
+		state.fixture.DevRepo.Config.Reload()
+		return nil
 	})
 
 	suite.Step(`^I (?:run|ran) "([^"]+)" and answer(?:ed)? the prompts:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Input: helpers.TableToInput(input)})
-		return state.fixture.DevRepo.Config.Reload()
+		state.fixture.DevRepo.Config.Reload()
+		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)" and close the editor$`, func(cmd string) error {
 		env := append(os.Environ(), "GIT_EDITOR=true")
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
-		return state.fixture.DevRepo.Config.Reload()
+		state.fixture.DevRepo.Config.Reload()
+		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)" and enter an empty commit message$`, func(cmd string) error {
 		state.fixture.DevRepo.MockCommitMessage("")
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(cmd)
-		return state.fixture.DevRepo.Config.Reload()
+		state.fixture.DevRepo.Config.Reload()
+		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)" and enter "([^"]*)" for the commit message$`, func(cmd, message string) error {
 		state.fixture.DevRepo.MockCommitMessage(message)
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(cmd)
-		return state.fixture.DevRepo.Config.Reload()
+		state.fixture.DevRepo.Config.Reload()
+		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)", answer the prompts, and close the next editor:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
 		env := append(os.Environ(), "GIT_EDITOR=true")
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env, Input: helpers.TableToInput(input)})
-		return state.fixture.DevRepo.Config.Reload()
+		state.fixture.DevRepo.Config.Reload()
+		return nil
 	})
 
 	suite.Step(`^I run "([^"]+)" in the "([^"]+)" folder$`, func(cmd, folderName string) error {
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Dir: folderName})
-		return state.fixture.DevRepo.Config.Reload()
+		state.fixture.DevRepo.Config.Reload()
+		return nil
 	})
 
 	suite.Step(`^inspect the repo$`, func() error {
@@ -493,28 +500,19 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^(?:local )?setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
-		configKey, err := config.NewKey("git-town." + name)
-		if err != nil {
-			return err
-		}
-		return state.fixture.DevRepo.Config.SetLocalConfigValue(configKey, value)
+		configKey := config.NewKey("git-town." + name)
+		return state.fixture.DevRepo.Config.SetLocalConfigValue(*configKey, value)
 	})
 
 	suite.Step(`^global setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
-		configKey, err := config.NewKey("git-town." + name)
-		if err != nil {
-			return err
-		}
-		_, err = state.fixture.DevRepo.Config.SetGlobalConfigValue(configKey, value)
+		configKey := config.NewKey("git-town." + name)
+		_, err := state.fixture.DevRepo.Config.SetGlobalConfigValue(*configKey, value)
 		return err
 	})
 
 	suite.Step(`^local setting "([^"]*)" no longer exists$`, func(name string) error {
-		configKey, err := config.NewKey("git-town." + name)
-		if err != nil {
-			return err
-		}
-		newValue := state.fixture.DevRepo.Config.LocalConfigValue(configKey)
+		configKey := config.NewKey("git-town." + name)
+		newValue := state.fixture.DevRepo.Config.LocalConfigValue(*configKey)
 		if newValue == "" {
 			return nil
 		}
@@ -522,11 +520,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^global setting "([^"]*)" no longer exists$`, func(name string) error {
-		configKey, err := config.NewKey("git-town." + name)
-		if err != nil {
-			return err
-		}
-		newValue := state.fixture.DevRepo.Config.GlobalConfigValue(configKey)
+		configKey := config.NewKey("git-town." + name)
+		newValue := state.fixture.DevRepo.Config.GlobalConfigValue(*configKey)
 		if newValue == "" {
 			return nil
 		}
@@ -534,11 +529,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^setting "([^"]*)" is now "([^"]*)"$`, func(name, want string) error {
-		configKey, err := config.NewKey("git-town." + name)
-		if err != nil {
-			return err
-		}
-		have := state.fixture.DevRepo.Config.LocalOrGlobalConfigValue(configKey)
+		configKey := config.NewKey("git-town." + name)
+		have := state.fixture.DevRepo.Config.LocalOrGlobalConfigValue(*configKey)
 		if have != want {
 			return fmt.Errorf("expected setting %q to be %q, but was %q", name, want, have)
 		}
@@ -546,11 +538,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^local setting "([^"]*)" is now "([^"]*)"$`, func(name, want string) error {
-		configKey, err := config.NewKey("git-town." + name)
-		if err != nil {
-			return err
-		}
-		have := state.fixture.DevRepo.Config.LocalConfigValue(configKey)
+		configKey := config.NewKey("git-town." + name)
+		have := state.fixture.DevRepo.Config.LocalConfigValue(*configKey)
 		if have != want {
 			return fmt.Errorf("expected local setting %q to be %q, but was %q", name, want, have)
 		}
@@ -558,11 +547,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^global setting "([^"]*)" is (?:now|still) "([^"]*)"$`, func(name, want string) error {
-		configKey, err := config.NewKey("git-town." + name)
-		if err != nil {
-			return err
-		}
-		have := state.fixture.DevRepo.Config.GlobalConfigValue(configKey)
+		configKey := config.NewKey("git-town." + name)
+		have := state.fixture.DevRepo.Config.GlobalConfigValue(*configKey)
 		if have != want {
 			return fmt.Errorf("expected global setting %q to be %q, but was %q", name, want, have)
 		}

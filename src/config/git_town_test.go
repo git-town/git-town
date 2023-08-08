@@ -99,7 +99,7 @@ func TestGitTown(t *testing.T) {
 		repo := testruntime.CreateGitTown(t)
 		assert.NoError(t, repo.CreateFeatureBranch("feature1"))
 		assert.NoError(t, repo.CreateFeatureBranch("feature2"))
-		assert.NoError(t, repo.Config.Reload())
+		repo.Config.Reload()
 		have := repo.Config.Lineage()
 		want := config.Lineage{}
 		want["feature1"] = "main"

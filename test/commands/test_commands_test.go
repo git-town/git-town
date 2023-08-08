@@ -177,7 +177,7 @@ func TestTestCommands(t *testing.T) {
 		branches, err := runtime.LocalBranchesMainFirst("main")
 		assert.NoError(t, err)
 		assert.Equal(t, []string{"main", "initial", "p1", "p2"}, branches)
-		assert.NoError(t, runtime.Config.Reload())
+		runtime.Config.Reload()
 		durations := runtime.Config.BranchDurations()
 		assert.True(t, durations.IsPerennialBranch("p1"))
 		assert.True(t, durations.IsPerennialBranch("p2"))

@@ -56,7 +56,7 @@ func TestBackendCommands(t *testing.T) {
 		runtime := testruntime.CreateGitTown(t)
 		err := runtime.Backend.CreateFeatureBranch("f1")
 		assert.NoError(t, err)
-		assert.NoError(t, runtime.Config.Reload())
+		runtime.Config.Reload()
 		assert.True(t, runtime.Config.BranchDurations().IsFeatureBranch("f1"))
 		lineageHave := runtime.Config.Lineage()
 		lineageWant := config.Lineage{}
