@@ -55,9 +55,8 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 		HomeDir:    homeDir,
 		BinDir:     binDir,
 	}
-	gitTown := config.NewGitTown(&runner)
 	config := git.RepoConfig{
-		GitTown: gitTown,
+		GitTown: config.NewGitTown(&runner),
 		DryRun:  false,
 	}
 	backendCommands := git.BackendCommands{
