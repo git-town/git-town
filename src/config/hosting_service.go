@@ -7,39 +7,39 @@ import (
 	"github.com/git-town/git-town/v9/src/messages"
 )
 
-// HostingService defines legal values for the "git-town.code-hosting-driver" config setting.
-type HostingService struct {
+// Hosting defines legal values for the "git-town.code-hosting-driver" config setting.
+type Hosting struct {
 	name string
 }
 
-func (h HostingService) String() string { return h.name }
+func (h Hosting) String() string { return h.name }
 
 var (
-	HostingServiceBitbucket = HostingService{"bitbucket"} //nolint:gochecknoglobals
-	HostingServiceGitHub    = HostingService{"github"}    //nolint:gochecknoglobals
-	HostingServiceGitLab    = HostingService{"gitlab"}    //nolint:gochecknoglobals
-	HostingServiceGitea     = HostingService{"gitea"}     //nolint:gochecknoglobals
-	HostingServiceNone      = HostingService{""}          //nolint:gochecknoglobals
+	HostingBitbucket = Hosting{"bitbucket"} //nolint:gochecknoglobals
+	HostingGitHub    = Hosting{"github"}    //nolint:gochecknoglobals
+	HostingGitLab    = Hosting{"gitlab"}    //nolint:gochecknoglobals
+	HostingGitea     = Hosting{"gitea"}     //nolint:gochecknoglobals
+	HostingNone      = Hosting{""}          //nolint:gochecknoglobals
 )
 
-// NewHostingService provides the HostingService enum matching the given text.
-func NewHostingService(text string) (HostingService, error) {
+// NewHosting provides the HostingService enum matching the given text.
+func NewHosting(text string) (Hosting, error) {
 	text = strings.ToLower(text)
 	for _, hostingService := range hostingServices() {
 		if hostingService.name == text {
 			return hostingService, nil
 		}
 	}
-	return HostingServiceNone, fmt.Errorf(messages.HostingServiceUnknown, text)
+	return HostingNone, fmt.Errorf(messages.HostingServiceUnknown, text)
 }
 
-// hostingServices provides all legal values for HostingService.
-func hostingServices() []HostingService {
-	return []HostingService{
-		HostingServiceNone,
-		HostingServiceBitbucket,
-		HostingServiceGitHub,
-		HostingServiceGitLab,
-		HostingServiceGitea,
+// hostings provides all legal values for HostingService.
+func hostings() []Hosting {
+	return []Hosting{
+		HostingNone,
+		HostingBitbucket,
+		HostingGitHub,
+		HostingGitLab,
+		HostingGitea,
 	}
 }

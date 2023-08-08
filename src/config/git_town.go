@@ -96,8 +96,8 @@ func (gt *GitTown) HostingServiceName() string {
 
 // HostingService provides the type-safe name of the code hosting connector to use.
 // This function caches its result and can be queried repeatedly.
-func (gt *GitTown) HostingService() (HostingService, error) {
-	return NewHostingService(gt.HostingServiceName())
+func (gt *GitTown) HostingService() (Hosting, error) {
+	return NewHosting(gt.HostingServiceName())
 }
 
 // IsMainBranch indicates whether the branch with the given name
