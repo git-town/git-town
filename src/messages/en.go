@@ -15,6 +15,7 @@ const (
 	CacheUnitialized                  = "using a cached value before initialization"
 	CommitMessageProblem              = "cannot determine last commit message: %w"
 	CompletionTypeUnknown             = "unknown completion type: %q"
+	ConfigKeyUnknown                  = "known configuration key: %q"
 	ConfigPullbranchStrategyUnknown   = "unknown pull branch strategy: %q"
 	ConfigSyncStrategyUnknown         = "unknown sync strategy: %q"
 	ConfigRemoveError                 = "unexpected error while removing the 'git-town' section from the Git configuration: %w"

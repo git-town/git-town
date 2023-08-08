@@ -32,7 +32,7 @@ func repoCommand() *cobra.Command {
 		Use:   "repo",
 		Args:  cobra.NoArgs,
 		Short: repoDesc,
-		Long:  long(repoDesc, fmt.Sprintf(repoHelp, config.CodeHostingDriverKey, config.CodeHostingOriginHostnameKey)),
+		Long:  long(repoDesc, fmt.Sprintf(repoHelp, config.ConfigKeyCodeHostingDriver, config.ConfigKeyCodeHostingOriginHostname)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return repo(readDebugFlag(cmd))
 		},
