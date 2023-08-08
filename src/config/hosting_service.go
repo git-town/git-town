@@ -12,19 +12,21 @@ type Hosting struct {
 	name string
 }
 
-const (
-	HostingBitbucket Hosting = "bitbucket"
-	HostingGitHub    Hosting = "github"
-	HostingGitLab    Hosting = "gitlab"
-	HostingGitea     Hosting = "gitea"
-	HostingNone      Hosting = ""
+func (h Hosting) String() string { return h.name }
+
+var (
+	HostingBitbucket = Hosting{"bitbucket"} //nolint:gochecknoglobals
+	HostingGitHub    = Hosting{"github"}    //nolint:gochecknoglobals
+	HostingGitLab    = Hosting{"gitlab"}    //nolint:gochecknoglobals
+	HostingGitea     = Hosting{"gitea"}     //nolint:gochecknoglobals
+	HostingNone      = Hosting{""}          //nolint:gochecknoglobals
 )
 
 // NewHosting provides the HostingService enum matching the given text.
 func NewHosting(text string) (Hosting, error) {
 	text = strings.ToLower(text)
 	for _, hostingService := range hostings() {
-		if string(hostingService) == text {
+		if hostingService.name == text {
 			return hostingService, nil
 		}
 	}
