@@ -10,39 +10,39 @@ import (
 )
 
 const (
-	// ResponseTypeAbort stands for the user choosing to abort the unfinished run state.
-	ResponseTypeAbort = "abort"
-	// ResponseTypeContinue stands for the user choosing to continue the unfinished run state.
-	ResponseTypeContinue = "continue"
-	// ResponseTypeDiscard stands for the user choosing to discard the unfinished run state.
-	ResponseTypeDiscard = "discard"
-	// ResponseTypeQuit stands for the user choosing to quit the program.
-	ResponseTypeQuit = "quit"
-	// ResponseTypeSkip stands for the user choosing to continue the unfinished run state by skipping the current branch.
-	ResponseTypeSkip = "skip"
+	// ResponseAbort stands for the user choosing to abort the unfinished run state.
+	ResponseAbort = "abort"
+	// ResponseContinue stands for the user choosing to continue the unfinished run state.
+	ResponseContinue = "continue"
+	// ResponseDiscard stands for the user choosing to discard the unfinished run state.
+	ResponseDiscard = "discard"
+	// ResponseQuit stands for the user choosing to quit the program.
+	ResponseQuit = "quit"
+	// ResponseSkip stands for the user choosing to continue the unfinished run state by skipping the current branch.
+	ResponseSkip = "skip"
 )
 
 // AskHowToHandleUnfinishedRunState prompts the user for how to handle the unfinished run state.
 func AskHowToHandleUnfinishedRunState(command, endBranch string, endTime time.Time, canSkip bool) (string, error) {
 	formattedOptions := map[string]string{
-		ResponseTypeAbort:    fmt.Sprintf("Abort the `%s` command", command),
-		ResponseTypeContinue: fmt.Sprintf("Restart the `%s` command after having resolved conflicts", command),
-		ResponseTypeDiscard:  "Discard the unfinished state and run the new command",
-		ResponseTypeQuit:     "Quit without running anything",
-		ResponseTypeSkip:     fmt.Sprintf("Restart the `%s` command by skipping the current branch", command),
+		ResponseAbort:    fmt.Sprintf("Abort the `%s` command", command),
+		ResponseContinue: fmt.Sprintf("Restart the `%s` command after having resolved conflicts", command),
+		ResponseDiscard:  "Discard the unfinished state and run the new command",
+		ResponseQuit:     "Quit without running anything",
+		ResponseSkip:     fmt.Sprintf("Restart the `%s` command by skipping the current branch", command),
 	}
 	options := []string{
-		formattedOptions[ResponseTypeQuit],
-		formattedOptions[ResponseTypeContinue],
+		formattedOptions[ResponseQuit],
+		formattedOptions[ResponseContinue],
 	}
 	if canSkip {
-		options = append(options, formattedOptions[ResponseTypeSkip])
+		options = append(options, formattedOptions[ResponseSkip])
 	}
-	options = append(options, formattedOptions[ResponseTypeAbort], formattedOptions[ResponseTypeDiscard])
+	options = append(options, formattedOptions[ResponseAbort], formattedOptions[ResponseDiscard])
 	prompt := &survey.Select{
 		Message: fmt.Sprintf("You have an unfinished `%s` command that ended on the `%s` branch %s. Please choose how to proceed", command, endBranch, humanize.Time(endTime)),
 		Options: options,
-		Default: formattedOptions[ResponseTypeQuit],
+		Default: formattedOptions[ResponseQuit],
 	}
 	result := ""
 	err := survey.AskOne(prompt, &result, nil)

@@ -11,15 +11,15 @@ func TestNewHostingService(t *testing.T) {
 	t.Parallel()
 	t.Run("valid content", func(t *testing.T) {
 		t.Parallel()
-		tests := map[string]config.HostingService{
-			"bitbucket": config.HostingServiceBitbucket,
-			"github":    config.HostingServiceGitHub,
-			"gitlab":    config.HostingServiceGitLab,
-			"gitea":     config.HostingServiceGitea,
-			"":          config.HostingServiceNone,
+		tests := map[string]config.Hosting{
+			"bitbucket": config.HostingBitbucket,
+			"github":    config.HostingGitHub,
+			"gitlab":    config.HostingGitLab,
+			"gitea":     config.HostingGitea,
+			"":          config.HostingNone,
 		}
 		for give, want := range tests {
-			have, err := config.NewHostingService(give)
+			have, err := config.NewHosting(give)
 			assert.Nil(t, err)
 			assert.Equal(t, want, have)
 		}
@@ -28,15 +28,15 @@ func TestNewHostingService(t *testing.T) {
 	t.Run("case insensitive", func(t *testing.T) {
 		t.Parallel()
 		for _, give := range []string{"github", "GitHub", "GITHUB"} {
-			have, err := config.NewHostingService(give)
+			have, err := config.NewHosting(give)
 			assert.Nil(t, err)
-			assert.Equal(t, config.HostingServiceGitHub, have)
+			assert.Equal(t, config.HostingGitHub, have)
 		}
 	})
 
 	t.Run("invalid content", func(t *testing.T) {
 		t.Parallel()
-		_, err := config.NewHostingService("zonk")
+		_, err := config.NewHosting("zonk")
 		assert.Error(t, err)
 	})
 }
