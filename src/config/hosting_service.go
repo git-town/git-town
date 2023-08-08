@@ -15,11 +15,11 @@ type HostingService struct {
 func (h HostingService) String() string { return h.name }
 
 var (
-	HostingServiceBitbucket = HostingService{"bitbucket"}
-	HostingServiceGitHub    = HostingService{"github"}
-	HostingServiceGitLab    = HostingService{"gitlab"}
-	HostingServiceGitea     = HostingService{"gitea"}
-	HostingServiceNone      = HostingService{""}
+	HostingServiceBitbucket = HostingService{"bitbucket"} //nolint:gochecknoglobals
+	HostingServiceGitHub    = HostingService{"github"}    //nolint:gochecknoglobals
+	HostingServiceGitLab    = HostingService{"gitlab"}    //nolint:gochecknoglobals
+	HostingServiceGitea     = HostingService{"gitea"}     //nolint:gochecknoglobals
+	HostingServiceNone      = HostingService{""}          //nolint:gochecknoglobals
 )
 
 // NewHostingService provides the HostingService enum matching the given text.

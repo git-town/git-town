@@ -25,7 +25,7 @@ func RenderExecutedGitCommands(commands []ExecutedGitCommand, table *messages.Pi
 		if tableHasBranches {
 			if tableHasType {
 				branch := branchForTableWithTypes(cmd, lastBranch)
-				result.AddRow(branch, string(cmd.CommandType), cmd.Command)
+				result.AddRow(branch, cmd.CommandType.String(), cmd.Command)
 			} else {
 				branch := branchForTableWithoutTypes(cmd, lastBranch)
 				result.AddRow(branch, cmd.Command)

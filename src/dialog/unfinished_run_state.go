@@ -9,22 +9,28 @@ import (
 	survey "gopkg.in/AlecAivazis/survey.v1"
 )
 
-const (
+type ResponseType struct {
+	name string
+}
+
+func (r ResponseType) String() string { return r.name }
+
+var (
 	// ResponseTypeAbort stands for the user choosing to abort the unfinished run state.
-	ResponseTypeAbort = "abort"
+	ResponseTypeAbort = ResponseType{"abort"} //nolint:gochecknoglobals
 	// ResponseTypeContinue stands for the user choosing to continue the unfinished run state.
-	ResponseTypeContinue = "continue"
+	ResponseTypeContinue = ResponseType{"continue"} //nolint:gochecknoglobals
 	// ResponseTypeDiscard stands for the user choosing to discard the unfinished run state.
-	ResponseTypeDiscard = "discard"
+	ResponseTypeDiscard = ResponseType{"discard"} //nolint:gochecknoglobals
 	// ResponseTypeQuit stands for the user choosing to quit the program.
-	ResponseTypeQuit = "quit"
+	ResponseTypeQuit = ResponseType{"quit"} //nolint:gochecknoglobals
 	// ResponseTypeSkip stands for the user choosing to continue the unfinished run state by skipping the current branch.
-	ResponseTypeSkip = "skip"
+	ResponseTypeSkip = ResponseType{"skip"} //nolint:gochecknoglobals
 )
 
 // AskHowToHandleUnfinishedRunState prompts the user for how to handle the unfinished run state.
-func AskHowToHandleUnfinishedRunState(command, endBranch string, endTime time.Time, canSkip bool) (string, error) {
-	formattedOptions := map[string]string{
+func AskHowToHandleUnfinishedRunState(command, endBranch string, endTime time.Time, canSkip bool) (ResponseType, error) {
+	formattedOptions := map[ResponseType]string{
 		ResponseTypeAbort:    fmt.Sprintf("Abort the `%s` command", command),
 		ResponseTypeContinue: fmt.Sprintf("Restart the `%s` command after having resolved conflicts", command),
 		ResponseTypeDiscard:  "Discard the unfinished state and run the new command",
@@ -47,12 +53,12 @@ func AskHowToHandleUnfinishedRunState(command, endBranch string, endTime time.Ti
 	result := ""
 	err := survey.AskOne(prompt, &result, nil)
 	if err != nil {
-		return "", fmt.Errorf(messages.DialogCannotReadAnswer, err)
+		return ResponseTypeAbort, fmt.Errorf(messages.DialogCannotReadAnswer, err)
 	}
 	for responseType, formattedResponseType := range formattedOptions {
 		if formattedResponseType == result {
 			return responseType, nil
 		}
 	}
-	return "", fmt.Errorf(messages.DialogUnexpectedResponse, result)
+	return ResponseTypeAbort, fmt.Errorf(messages.DialogUnexpectedResponse, result)
 }

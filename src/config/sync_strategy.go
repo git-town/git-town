@@ -14,8 +14,8 @@ type SyncStrategy struct {
 func (s SyncStrategy) String() string { return s.name }
 
 var (
-	SyncStrategyMerge  = SyncStrategy{"merge"}
-	SyncStrategyRebase = SyncStrategy{"rebase"}
+	SyncStrategyMerge  = SyncStrategy{"merge"}  //nolint:gochecknoglobals
+	SyncStrategyRebase = SyncStrategy{"rebase"} //nolint:gochecknoglobals
 )
 
 func ToSyncStrategy(text string) (SyncStrategy, error) {

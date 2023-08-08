@@ -16,12 +16,16 @@ type ExecutedGitCommand struct {
 	CommandType CommandType
 }
 
-type CommandType string
+type CommandType struct {
+	name string
+}
 
-const (
-	CommandTypeFrontend = "frontend"
-	CommandTypeBackend  = "backend"
+var (
+	CommandTypeFrontend = CommandType{"frontend"}
+	CommandTypeBackend  = CommandType{"backend"}
 )
+
+func (c CommandType) String() string { return c.name }
 
 // GitCommandsInGitTownOutput provides the Git commands mentioned in the given Git Town output.
 func GitCommandsInGitTownOutput(output string) []ExecutedGitCommand {
