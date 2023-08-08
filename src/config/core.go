@@ -66,12 +66,13 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyTestingRemoteURL,
 }
 
-func NewKey(value string) *Key {
+func NewKey(key string) *Key {
 	for _, configKey := range keys {
-		if configKey.name == value {
+		if configKey.name == key {
 			return &configKey
 		}
 	}
+	// TODO: the key might be a git-town.XXX.parent setting
 	return nil
 }
 
