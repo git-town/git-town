@@ -90,16 +90,13 @@ func ParseAliasKey(key string) *Key {
 }
 
 func ParseLineageKey(key string) *Key {
-	if !strings.HasPrefix(key, lineageKeyPrefix) || !strings.HasSuffix(key, lineageKeySuffix) {
+	if !strings.HasPrefix(key, "git-town-branch.") || !strings.HasSuffix(key, ".parent") {
 		return nil
 	}
 	return &Key{
 		name: key,
 	}
 }
-
-const lineageKeyPrefix = "git-town-branch."
-const lineageKeySuffix = ".parent"
 
 func NewAliasKey(aliasType Alias) Key {
 	switch aliasType {
