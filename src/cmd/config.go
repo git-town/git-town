@@ -100,7 +100,7 @@ type ConfigConfig struct {
 	giteaToken         string
 	githubToken        string
 	gitlabToken        string
-	hostingService     config.HostingService
+	hostingService     config.Hosting
 	isOffline          bool
 	lineage            config.Lineage
 	pullBranchStrategy config.PullBranchStrategy

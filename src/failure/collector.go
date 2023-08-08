@@ -54,7 +54,7 @@ func (ec *Collector) BranchesSyncStatus(value git.BranchesSyncStatus, err error)
 
 // HostingService provides the config.HostingService part of the given fallible function result
 // while registering the given error.
-func (ec *Collector) HostingService(value config.HostingService, err error) config.HostingService {
+func (ec *Collector) HostingService(value config.Hosting, err error) config.Hosting {
 	ec.Check(err)
 	return value
 }
