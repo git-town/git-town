@@ -25,7 +25,7 @@ var (
 // NewHosting provides the HostingService enum matching the given text.
 func NewHosting(text string) (Hosting, error) {
 	text = strings.ToLower(text)
-	for _, hostingService := range hostingServices() {
+	for _, hostingService := range hostings() {
 		if hostingService.name == text {
 			return hostingService, nil
 		}
