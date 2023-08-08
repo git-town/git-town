@@ -5,21 +5,21 @@
 package config
 
 const (
-	CodeHostingDriverKey           = "git-town.code-hosting-driver"
-	CodeHostingOriginHostnameKey   = "git-town.code-hosting-origin-hostname"
-	DeprecatedNewBranchPushFlagKey = "git-town.new-branch-push-flag"
-	DeprecatedPushVerifyKey        = "git-town.push-verify"
-	GiteaTokenKey                  = "git-town.gitea-token"  //nolint:gosec
-	GithubTokenKey                 = "git-town.github-token" //nolint:gosec
-	GitlabTokenKey                 = "git-town.gitlab-token" //nolint:gosec
-	MainBranchKey                  = "git-town.main-branch-name"
-	OfflineKey                     = "git-town.offline"
-	PerennialBranchesKey           = "git-town.perennial-branch-names"
-	PullBranchStrategyKey          = "git-town.pull-branch-strategy"
-	PushHookKey                    = "git-town.push-hook"
-	PushNewBranchesKey             = "git-town.push-new-branches"
-	ShipDeleteRemoteBranchKey      = "git-town.ship-delete-remote-branch"
-	SyncUpstreamKey                = "git-town.sync-upstream"
-	SyncStrategyKey                = "git-town.sync-strategy"
-	TestingRemoteURLKey            = "git-town.testing.remote-url"
+	KeyCodeHostingDriver           = "git-town.code-hosting-driver"
+	KeyCodeHostingOriginHostname   = "git-town.code-hosting-origin-hostname"
+	KeyDeprecatedNewBranchPushFlag = "git-town.new-branch-push-flag"
+	KeyDeprecatedPushVerify        = "git-town.push-verify"
+	KeyGiteaToken                  = "git-town.gitea-token"  //nolint:gosec
+	KeyGithubToken                 = "git-town.github-token" //nolint:gosec
+	KeyGitlabToken                 = "git-town.gitlab-token" //nolint:gosec
+	KeyMainBranch                  = "git-town.main-branch-name"
+	KeyOffline                     = "git-town.offline"
+	KeyPerennialBranches           = "git-town.perennial-branch-names"
+	KeyPullBranchStrategy          = "git-town.pull-branch-strategy"
+	KeyPushHook                    = "git-town.push-hook"
+	KeyPushNewBranches             = "git-town.push-new-branches"
+	KeyShipDeleteRemoteBranch      = "git-town.ship-delete-remote-branch"
+	KeySyncUpstream                = "git-town.sync-upstream"
+	KeySyncStrategy                = "git-town.sync-strategy"
+	KeyTestingRemoteURL            = "git-town.testing.remote-url"
 )

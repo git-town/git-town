@@ -41,7 +41,7 @@ func syncCmd() *cobra.Command {
 		GroupID: "basic",
 		Args:    cobra.NoArgs,
 		Short:   syncDesc,
-		Long:    long(syncDesc, fmt.Sprintf(syncHelp, config.SyncUpstreamKey)),
+		Long:    long(syncDesc, fmt.Sprintf(syncHelp, config.KeySyncUpstream)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return sync(readAllFlag(cmd), readDryRunFlag(cmd), readDebugFlag(cmd))
 		},
@@ -252,15 +252,14 @@ func syncBranchSteps(list *runstate.StepListBuilder, args syncBranchStepsArgs) {
 		})
 	}
 	if args.pushBranch && args.remotes.HasOrigin() && !args.isOffline {
-		if !args.branch.HasTrackingBranch() {
+		switch {
+		case !args.branch.HasTrackingBranch():
 			list.Add(&steps.CreateTrackingBranchStep{Branch: args.branch.Name})
-			return
-		}
-		if !isFeatureBranch {
+		case !isFeatureBranch:
 			list.Add(&steps.PushBranchStep{Branch: args.branch.Name})
-			return
+		default:
+			pushFeatureBranchSteps(list, args.branch.Name, args.syncStrategy, args.pushHook)
 		}
-		pushFeatureBranchSteps(list, args.branch.Name, args.syncStrategy, args.pushHook)
 	}
 }
 
