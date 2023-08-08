@@ -158,7 +158,7 @@ func (r *TestCommands) ConnectTrackingBranch(name string) {
 
 // DeleteMainBranchConfiguration removes the configuration for which branch is the main branch.
 func (r *TestCommands) DeleteMainBranchConfiguration() {
-	r.MustRun("git", "config", "--unset", config.ConfigKeyMainBranch.String())
+	r.MustRun("git", "config", "--unset", config.KeyMainBranch.String())
 }
 
 // Fetch retrieves the updates from the origin repo.

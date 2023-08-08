@@ -500,7 +500,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^(?:local )?setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
-		configKey, err := config.NewConfigKey("git-town." + name)
+		configKey, err := config.NewKey("git-town." + name)
 		if err != nil {
 			return err
 		}
@@ -508,7 +508,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^global setting "([^"]*)" is "([^"]*)"$`, func(name, value string) error {
-		configKey, err := config.NewConfigKey("git-town." + name)
+		configKey, err := config.NewKey("git-town." + name)
 		if err != nil {
 			return err
 		}
@@ -517,7 +517,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^local setting "([^"]*)" no longer exists$`, func(name string) error {
-		configKey, err := config.NewConfigKey("git-town." + name)
+		configKey, err := config.NewKey("git-town." + name)
 		if err != nil {
 			return err
 		}
@@ -529,7 +529,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^global setting "([^"]*)" no longer exists$`, func(name string) error {
-		configKey, err := config.NewConfigKey("git-town." + name)
+		configKey, err := config.NewKey("git-town." + name)
 		if err != nil {
 			return err
 		}
@@ -541,7 +541,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^setting "([^"]*)" is now "([^"]*)"$`, func(name, want string) error {
-		configKey, err := config.NewConfigKey("git-town." + name)
+		configKey, err := config.NewKey("git-town." + name)
 		if err != nil {
 			return err
 		}
@@ -553,7 +553,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^local setting "([^"]*)" is now "([^"]*)"$`, func(name, want string) error {
-		configKey, err := config.NewConfigKey("git-town." + name)
+		configKey, err := config.NewKey("git-town." + name)
 		if err != nil {
 			return err
 		}
@@ -565,7 +565,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^global setting "([^"]*)" is (?:now|still) "([^"]*)"$`, func(name, want string) error {
-		configKey, err := config.NewConfigKey("git-town." + name)
+		configKey, err := config.NewKey("git-town." + name)
 		if err != nil {
 			return err
 		}

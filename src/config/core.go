@@ -10,96 +10,96 @@ import (
 	"github.com/git-town/git-town/v9/src/messages"
 )
 
-type ConfigKey struct {
+type Key struct {
 	name string
 }
 
-func (c ConfigKey) String() string { return c.name }
+func (c Key) String() string { return c.name }
 
 var (
-	ConfigKeyAliasTypeAppend             = ConfigKey{"git-town.alias." + AliasTypeAppend.name}
-	ConfigKeyAliasTypeDiffParent         = ConfigKey{"git-town.alias." + AliasTypeDiffParent.name}
-	ConfigKeyAliasTypeHack               = ConfigKey{"git-town.alias." + AliasTypeHack.name}
-	ConfigKeyAliasTypeKill               = ConfigKey{"git-town.alias." + AliasTypeKill.name}
-	ConfigKeyAliasTypeNewPullRequest     = ConfigKey{"git-town.alias." + AliasTypeNewPullRequest.name}
-	ConfigKeyAliasTypePrepend            = ConfigKey{"git-town.alias." + AliasTypePrepend.name}
-	ConfigKeyAliasTypePruneBranches      = ConfigKey{"git-town.alias." + AliasTypePruneBranches.name}
-	ConfigKeyAliasTypeRenameBranch       = ConfigKey{"git-town.alias." + AliasTypeRenameBranch.name}
-	ConfigKeyAliasTypeRepo               = ConfigKey{"git-town.alias." + AliasTypeRepo.name}
-	ConfigKeyAliasTypeShip               = ConfigKey{"git-town.alias." + AliasTypeShip.name}
-	ConfigKeyAliasTypeSync               = ConfigKey{"git-town.alias." + AliasTypeSync.name}
-	ConfigKeyCodeHostingDriver           = ConfigKey{"git-town.code-hosting-driver"}
-	ConfigKeyCodeHostingOriginHostname   = ConfigKey{"git-town.code-hosting-origin-hostname"}
-	ConfigKeyDeprecatedNewBranchPushFlag = ConfigKey{"git-town.new-branch-push-flag"}
-	ConfigKeyDeprecatedPushVerify        = ConfigKey{"git-town.push-verify"}
-	ConfigKeyGiteaToken                  = ConfigKey{"git-town.gitea-token"}  //nolint:gosec
-	ConfigKeyGithubToken                 = ConfigKey{"git-town.github-token"} //nolint:gosec
-	ConfigKeyGitlabToken                 = ConfigKey{"git-town.gitlab-token"} //nolint:gosec
-	ConfigKeyMainBranch                  = ConfigKey{"git-town.main-branch-name"}
-	ConfigKeyOffline                     = ConfigKey{"git-town.offline"}
-	ConfigKeyPerennialBranches           = ConfigKey{"git-town.perennial-branch-names"}
-	ConfigKeyPullBranchStrategy          = ConfigKey{"git-town.pull-branch-strategy"}
-	ConfigKeyPushHook                    = ConfigKey{"git-town.push-hook"}
-	ConfigKeyPushNewBranches             = ConfigKey{"git-town.push-new-branches"}
-	ConfigKeyShipDeleteRemoteBranch      = ConfigKey{"git-town.ship-delete-remote-branch"}
-	ConfigKeySyncUpstream                = ConfigKey{"git-town.sync-upstream"}
-	ConfigKeySyncStrategy                = ConfigKey{"git-town.sync-strategy"}
-	ConfigKeyTestingRemoteURL            = ConfigKey{"git-town.testing.remote-url"}
+	KeyAliasTypeAppend             = Key{"git-town.alias." + AliasTypeAppend.name}
+	KeyAliasTypeDiffParent         = Key{"git-town.alias." + AliasTypeDiffParent.name}
+	KeyAliasTypeHack               = Key{"git-town.alias." + AliasTypeHack.name}
+	KeyAliasTypeKill               = Key{"git-town.alias." + AliasTypeKill.name}
+	KeyAliasTypeNewPullRequest     = Key{"git-town.alias." + AliasTypeNewPullRequest.name}
+	KeyAliasTypePrepend            = Key{"git-town.alias." + AliasTypePrepend.name}
+	KeyAliasTypePruneBranches      = Key{"git-town.alias." + AliasTypePruneBranches.name}
+	KeyAliasTypeRenameBranch       = Key{"git-town.alias." + AliasTypeRenameBranch.name}
+	KeyAliasTypeRepo               = Key{"git-town.alias." + AliasTypeRepo.name}
+	KeyAliasTypeShip               = Key{"git-town.alias." + AliasTypeShip.name}
+	KeyAliasTypeSync               = Key{"git-town.alias." + AliasTypeSync.name}
+	KeyCodeHostingDriver           = Key{"git-town.code-hosting-driver"}
+	KeyCodeHostingOriginHostname   = Key{"git-town.code-hosting-origin-hostname"}
+	KeyDeprecatedNewBranchPushFlag = Key{"git-town.new-branch-push-flag"}
+	KeyDeprecatedPushVerify        = Key{"git-town.push-verify"}
+	KeyGiteaToken                  = Key{"git-town.gitea-token"}  //nolint:gosec
+	KeyGithubToken                 = Key{"git-town.github-token"} //nolint:gosec
+	KeyGitlabToken                 = Key{"git-town.gitlab-token"} //nolint:gosec
+	KeyMainBranch                  = Key{"git-town.main-branch-name"}
+	KeyOffline                     = Key{"git-town.offline"}
+	KeyPerennialBranches           = Key{"git-town.perennial-branch-names"}
+	KeyPullBranchStrategy          = Key{"git-town.pull-branch-strategy"}
+	KeyPushHook                    = Key{"git-town.push-hook"}
+	KeyPushNewBranches             = Key{"git-town.push-new-branches"}
+	KeyShipDeleteRemoteBranch      = Key{"git-town.ship-delete-remote-branch"}
+	KeySyncUpstream                = Key{"git-town.sync-upstream"}
+	KeySyncStrategy                = Key{"git-town.sync-strategy"}
+	KeyTestingRemoteURL            = Key{"git-town.testing.remote-url"}
 )
 
-var configKeys = []ConfigKey{
-	ConfigKeyCodeHostingDriver,
-	ConfigKeyCodeHostingOriginHostname,
-	ConfigKeyDeprecatedNewBranchPushFlag,
-	ConfigKeyDeprecatedPushVerify,
-	ConfigKeyGiteaToken,
-	ConfigKeyGithubToken,
-	ConfigKeyGitlabToken,
-	ConfigKeyMainBranch,
-	ConfigKeyOffline,
-	ConfigKeyPerennialBranches,
-	ConfigKeyPullBranchStrategy,
-	ConfigKeyPushHook,
-	ConfigKeyPushNewBranches,
-	ConfigKeyShipDeleteRemoteBranch,
-	ConfigKeySyncUpstream,
-	ConfigKeySyncStrategy,
-	ConfigKeyTestingRemoteURL,
+var keys = []Key{
+	KeyCodeHostingDriver,
+	KeyCodeHostingOriginHostname,
+	KeyDeprecatedNewBranchPushFlag,
+	KeyDeprecatedPushVerify,
+	KeyGiteaToken,
+	KeyGithubToken,
+	KeyGitlabToken,
+	KeyMainBranch,
+	KeyOffline,
+	KeyPerennialBranches,
+	KeyPullBranchStrategy,
+	KeyPushHook,
+	KeyPushNewBranches,
+	KeyShipDeleteRemoteBranch,
+	KeySyncUpstream,
+	KeySyncStrategy,
+	KeyTestingRemoteURL,
 }
 
-func NewConfigKey(value string) (ConfigKey, error) {
-	for _, configKey := range configKeys {
+func NewKey(value string) (Key, error) {
+	for _, configKey := range keys {
 		if configKey.name == value {
 			return configKey, nil
 		}
 	}
-	return ConfigKeyOffline, fmt.Errorf(messages.ConfigKeyUnknown, value)
+	return KeyOffline, fmt.Errorf(messages.ConfigKeyUnknown, value)
 }
 
-func NewAliasConfigKey(aliasType AliasType) ConfigKey {
+func NewAliasKey(aliasType AliasType) Key {
 	switch aliasType {
 	case AliasTypeAppend:
-		return ConfigKeyAliasTypeAppend
+		return KeyAliasTypeAppend
 	case AliasTypeDiffParent:
-		return ConfigKeyAliasTypeDiffParent
+		return KeyAliasTypeDiffParent
 	case AliasTypeHack:
-		return ConfigKeyAliasTypeHack
+		return KeyAliasTypeHack
 	case AliasTypeKill:
-		return ConfigKeyAliasTypeKill
+		return KeyAliasTypeKill
 	case AliasTypeNewPullRequest:
-		return ConfigKeyAliasTypeNewPullRequest
+		return KeyAliasTypeNewPullRequest
 	case AliasTypePrepend:
-		return ConfigKeyAliasTypePrepend
+		return KeyAliasTypePrepend
 	case AliasTypePruneBranches:
-		return ConfigKeyAliasTypePrepend
+		return KeyAliasTypePrepend
 	case AliasTypeRenameBranch:
-		return ConfigKeyAliasTypePruneBranches
+		return KeyAliasTypePruneBranches
 	case AliasTypeRepo:
-		return ConfigKeyAliasTypeRepo
+		return KeyAliasTypeRepo
 	case AliasTypeShip:
-		return ConfigKeyAliasTypeShip
+		return KeyAliasTypeShip
 	case AliasTypeSync:
-		return ConfigKeyAliasTypeSync
+		return KeyAliasTypeSync
 	}
 	panic(fmt.Sprintf("don't know how to convert alias type %q into a config key", aliasType))
 }

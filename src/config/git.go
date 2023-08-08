@@ -11,15 +11,15 @@ type Git struct {
 	runner
 
 	// globalConfigCache is a cache of the global Git configuration.
-	globalConfigCache map[ConfigKey]string
+	globalConfigCache map[Key]string
 
 	// localConfigCache is a cache of the Git configuration in the local Git repo.
-	localConfigCache map[ConfigKey]string
+	localConfigCache map[Key]string
 }
 
 // LoadGit provides the Git configuration from the given directory or the global one if the global flag is set.
-func LoadGit(runner runner, global bool) (map[ConfigKey]string, error) {
-	result := map[ConfigKey]string{}
+func LoadGit(runner runner, global bool) (map[Key]string, error) {
+	result := map[Key]string{}
 	cmdArgs := []string{"config", "-lz"}
 	if global {
 		cmdArgs = append(cmdArgs, "--global")
@@ -39,7 +39,7 @@ func LoadGit(runner runner, global bool) (map[ConfigKey]string, error) {
 		}
 		parts := strings.SplitN(line, "\n", 2)
 		key, value := parts[0], parts[1]
-		configKey, err := NewConfigKey(key)
+		configKey, err := NewKey(key)
 		if err != nil {
 			return result, err
 		}
@@ -66,13 +66,13 @@ func NewGit(runner runner) (Git, error) {
 }
 
 // GlobalConfigValue provides the configuration value with the given key from the local Git configuration.
-func (g *Git) GlobalConfigValue(key ConfigKey) string {
+func (g *Git) GlobalConfigValue(key Key) string {
 	return g.globalConfigCache[key]
 }
 
 // LocalConfigKeysMatching provides the names of the Git Town configuration keys matching the given RegExp string.
-func (g *Git) LocalConfigKeysMatching(toMatch string) []ConfigKey {
-	result := []ConfigKey{}
+func (g *Git) LocalConfigKeysMatching(toMatch string) []Key {
+	result := []Key{}
 	re := regexp.MustCompile(toMatch)
 	for key := range g.localConfigCache {
 		if re.MatchString(key.String()) {
@@ -83,13 +83,13 @@ func (g *Git) LocalConfigKeysMatching(toMatch string) []ConfigKey {
 }
 
 // LocalConfigValue provides the configuration value with the given key from the local Git configuration.
-func (g *Git) LocalConfigValue(key ConfigKey) string {
+func (g *Git) LocalConfigValue(key Key) string {
 	return g.localConfigCache[key]
 }
 
 // LocalOrGlobalConfigValue provides the configuration value with the given key from the local and global Git configuration.
 // Local configuration takes precedence.
-func (g *Git) LocalOrGlobalConfigValue(key ConfigKey) string {
+func (g *Git) LocalOrGlobalConfigValue(key Key) string {
 	local := g.LocalConfigValue(key)
 	if local != "" {
 		return local
@@ -112,26 +112,26 @@ func (g *Git) Reload() error {
 	return nil
 }
 
-func (g *Git) RemoveGlobalConfigValue(key ConfigKey) (string, error) {
+func (g *Git) RemoveGlobalConfigValue(key Key) (string, error) {
 	delete(g.globalConfigCache, key)
 	return g.Query("git", "config", "--global", "--unset", key.String())
 }
 
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
-func (g *Git) RemoveLocalConfigValue(key ConfigKey) error {
+func (g *Git) RemoveLocalConfigValue(key Key) error {
 	delete(g.localConfigCache, key)
 	err := g.runner.Run("git", "config", "--unset", key.String())
 	return err
 }
 
 // SetGlobalConfigValue sets the given configuration setting in the global Git configuration.
-func (g *Git) SetGlobalConfigValue(key ConfigKey, value string) (string, error) {
+func (g *Git) SetGlobalConfigValue(key Key, value string) (string, error) {
 	g.globalConfigCache[key] = value
 	return g.runner.Query("git", "config", "--global", key.String(), value)
 }
 
 // SetLocalConfigValue sets the local configuration with the given key to the given value.
-func (g *Git) SetLocalConfigValue(key ConfigKey, value string) error {
+func (g *Git) SetLocalConfigValue(key Key, value string) error {
 	g.localConfigCache[key] = value
 	return g.runner.Run("git", "config", key.String(), value)
 }

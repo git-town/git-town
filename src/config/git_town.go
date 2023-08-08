@@ -44,39 +44,39 @@ func (gt *GitTown) BranchDurations() BranchDurations {
 }
 
 func (gt *GitTown) DeprecatedNewBranchPushFlagGlobal() string {
-	return gt.globalConfigCache[ConfigKeyDeprecatedNewBranchPushFlag]
+	return gt.globalConfigCache[KeyDeprecatedNewBranchPushFlag]
 }
 
 func (gt *GitTown) DeprecatedNewBranchPushFlagLocal() string {
-	return gt.localConfigCache[ConfigKeyDeprecatedNewBranchPushFlag]
+	return gt.localConfigCache[KeyDeprecatedNewBranchPushFlag]
 }
 
 func (gt *GitTown) DeprecatedPushVerifyFlagGlobal() string {
-	return gt.globalConfigCache[ConfigKeyDeprecatedPushVerify]
+	return gt.globalConfigCache[KeyDeprecatedPushVerify]
 }
 
 func (gt *GitTown) DeprecatedPushVerifyFlagLocal() string {
-	return gt.localConfigCache[ConfigKeyDeprecatedPushVerify]
+	return gt.localConfigCache[KeyDeprecatedPushVerify]
 }
 
 // GitAlias provides the currently set alias for the given Git Town command.
 func (gt *GitTown) GitAlias(aliasType AliasType) string {
-	return gt.GlobalConfigValue(NewAliasConfigKey(aliasType))
+	return gt.GlobalConfigValue(NewAliasKey(aliasType))
 }
 
 // GitHubToken provides the content of the GitHub API token stored in the local or global Git Town configuration.
 func (gt *GitTown) GitHubToken() string {
-	return gt.LocalOrGlobalConfigValue(ConfigKeyGithubToken)
+	return gt.LocalOrGlobalConfigValue(KeyGithubToken)
 }
 
 // GitLabToken provides the content of the GitLab API token stored in the local or global Git Town configuration.
 func (gt *GitTown) GitLabToken() string {
-	return gt.LocalOrGlobalConfigValue(ConfigKeyGitlabToken)
+	return gt.LocalOrGlobalConfigValue(KeyGitlabToken)
 }
 
 // GiteaToken provides the content of the Gitea API token stored in the local or global Git Town configuration.
 func (gt *GitTown) GiteaToken() string {
-	return gt.LocalOrGlobalConfigValue(ConfigKeyGiteaToken)
+	return gt.LocalOrGlobalConfigValue(KeyGiteaToken)
 }
 
 // HasBranchInformation indicates whether this configuration contains any branch hierarchy entries.
@@ -91,7 +91,7 @@ func (gt *GitTown) HasBranchInformation() bool {
 
 // HostingServiceName provides the name of the code hosting connector to use.
 func (gt *GitTown) HostingServiceName() string {
-	return gt.LocalOrGlobalConfigValue(ConfigKeyCodeHostingDriver)
+	return gt.LocalOrGlobalConfigValue(KeyCodeHostingDriver)
 }
 
 // HostingService provides the type-safe name of the code hosting connector to use.
@@ -108,13 +108,13 @@ func (gt *GitTown) IsMainBranch(branch string) bool {
 
 // IsOffline indicates whether Git Town is currently in offline mode.
 func (gt *GitTown) IsOffline() (bool, error) {
-	config := gt.GlobalConfigValue(ConfigKeyOffline)
+	config := gt.GlobalConfigValue(KeyOffline)
 	if config == "" {
 		return false, nil
 	}
 	result, err := ParseBool(config)
 	if err != nil {
-		return false, fmt.Errorf(messages.ValueInvalid, ConfigKeyOffline, config)
+		return false, fmt.Errorf(messages.ValueInvalid, KeyOffline, config)
 	}
 	return result, nil
 }
@@ -132,12 +132,12 @@ func (gt *GitTown) Lineage() Lineage {
 
 // MainBranch provides the name of the main branch.
 func (gt *GitTown) MainBranch() string {
-	return gt.LocalOrGlobalConfigValue(ConfigKeyMainBranch)
+	return gt.LocalOrGlobalConfigValue(KeyMainBranch)
 }
 
 // MainBranch provides the name of the main branch, or the given default value if none is configured.
 func (gt *GitTown) MainBranchOr(defaultValue string) string {
-	configured := gt.LocalOrGlobalConfigValue(ConfigKeyMainBranch)
+	configured := gt.LocalOrGlobalConfigValue(KeyMainBranch)
 	if configured != "" {
 		return configured
 	}
@@ -146,7 +146,7 @@ func (gt *GitTown) MainBranchOr(defaultValue string) string {
 
 // OriginOverride provides the override for the origin hostname from the Git Town configuration.
 func (gt *GitTown) OriginOverride() string {
-	return gt.LocalConfigValue(ConfigKeyCodeHostingOriginHostname)
+	return gt.LocalConfigValue(KeyCodeHostingOriginHostname)
 }
 
 // OriginURLString provides the URL for the "origin" remote.
@@ -186,7 +186,7 @@ func DetermineOriginURL(originURL, originOverride string, originURLCache OriginU
 
 // PerennialBranches returns all branches that are marked as perennial.
 func (gt *GitTown) PerennialBranches() []string {
-	result := gt.LocalOrGlobalConfigValue(ConfigKeyPerennialBranches)
+	result := gt.LocalOrGlobalConfigValue(KeyPerennialBranches)
 	if result == "" {
 		return []string{}
 	}
@@ -195,40 +195,40 @@ func (gt *GitTown) PerennialBranches() []string {
 
 // PullBranchStrategy provides the currently configured pull branch strategy.
 func (gt *GitTown) PullBranchStrategy() (PullBranchStrategy, error) {
-	text := gt.LocalOrGlobalConfigValue(ConfigKeyPullBranchStrategy)
+	text := gt.LocalOrGlobalConfigValue(KeyPullBranchStrategy)
 	return NewPullBranchStrategy(text)
 }
 
 // PushHook provides the currently configured push-hook setting.
 func (gt *GitTown) PushHook() (bool, error) {
-	err := gt.updateDeprecatedSetting(ConfigKeyDeprecatedPushVerify, ConfigKeyPushHook)
+	err := gt.updateDeprecatedSetting(KeyDeprecatedPushVerify, KeyPushHook)
 	if err != nil {
 		return false, err
 	}
-	setting := gt.LocalOrGlobalConfigValue(ConfigKeyPushHook)
+	setting := gt.LocalOrGlobalConfigValue(KeyPushHook)
 	if setting == "" {
 		return true, nil
 	}
 	result, err := ParseBool(setting)
 	if err != nil {
-		return false, fmt.Errorf(messages.ValueInvalid, ConfigKeyPushHook, setting)
+		return false, fmt.Errorf(messages.ValueInvalid, KeyPushHook, setting)
 	}
 	return result, nil
 }
 
 // PushHook provides the currently configured push-hook setting.
 func (gt *GitTown) PushHookGlobal() (bool, error) {
-	err := gt.updateDeprecatedGlobalSetting(ConfigKeyDeprecatedPushVerify, ConfigKeyPushHook)
+	err := gt.updateDeprecatedGlobalSetting(KeyDeprecatedPushVerify, KeyPushHook)
 	if err != nil {
 		return false, err
 	}
-	setting := gt.GlobalConfigValue(ConfigKeyPushHook)
+	setting := gt.GlobalConfigValue(KeyPushHook)
 	if setting == "" {
 		return true, nil
 	}
 	result, err := ParseBool(setting)
 	if err != nil {
-		return false, fmt.Errorf(messages.ValueGlobalInvalid, ConfigKeyPushHook, setting)
+		return false, fmt.Errorf(messages.ValueGlobalInvalid, KeyPushHook, setting)
 	}
 	return result, nil
 }
@@ -257,7 +257,7 @@ func (gt *GitTown) RemoveLocalGitConfiguration() error {
 
 // RemoveMainBranchConfiguration removes the configuration entry for the main branch name.
 func (gt *GitTown) RemoveMainBranchConfiguration() error {
-	return gt.RemoveLocalConfigValue(ConfigKeyMainBranch)
+	return gt.RemoveLocalConfigValue(KeyMainBranch)
 }
 
 // RemoveParent removes the parent branch entry for the given branch
@@ -268,20 +268,20 @@ func (gt *GitTown) RemoveParent(branch string) error {
 
 // RemovePerennialBranchConfiguration removes the configuration entry for the perennial branches.
 func (gt *GitTown) RemovePerennialBranchConfiguration() error {
-	return gt.RemoveLocalConfigValue(ConfigKeyPerennialBranches)
+	return gt.RemoveLocalConfigValue(KeyPerennialBranches)
 }
 
 // SetCodeHostingDriver sets the "github.code-hosting-driver" setting.
 func (gt *GitTown) SetCodeHostingDriver(value string) error {
-	gt.localConfigCache[ConfigKeyCodeHostingDriver] = value
-	err := gt.Run("git", "config", ConfigKeyCodeHostingDriver.String(), value)
+	gt.localConfigCache[KeyCodeHostingDriver] = value
+	err := gt.Run("git", "config", KeyCodeHostingDriver.String(), value)
 	return err
 }
 
 // SetCodeHostingOriginHostname sets the "github.code-hosting-driver" setting.
 func (gt *GitTown) SetCodeHostingOriginHostname(value string) error {
-	gt.localConfigCache[ConfigKeyCodeHostingOriginHostname] = value
-	err := gt.Run("git", "config", ConfigKeyCodeHostingOriginHostname.String(), value)
+	gt.localConfigCache[KeyCodeHostingOriginHostname] = value
+	err := gt.Run("git", "config", KeyCodeHostingOriginHostname.String(), value)
 	return err
 }
 
@@ -294,7 +294,7 @@ func (gt *GitTown) SetColorUI(value string) error {
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
 func (gt *GitTown) SetMainBranch(branch string) error {
-	err := gt.SetLocalConfigValue(ConfigKeyMainBranch, branch)
+	err := gt.SetLocalConfigValue(KeyMainBranch, branch)
 	return err
 }
 
@@ -303,16 +303,16 @@ func (gt *GitTown) SetMainBranch(branch string) error {
 func (gt *GitTown) SetNewBranchPush(value bool, global bool) error {
 	setting := strconv.FormatBool(value)
 	if global {
-		_, err := gt.SetGlobalConfigValue(ConfigKeyPushNewBranches, setting)
+		_, err := gt.SetGlobalConfigValue(KeyPushNewBranches, setting)
 		return err
 	}
-	err := gt.SetLocalConfigValue(ConfigKeyPushNewBranches, setting)
+	err := gt.SetLocalConfigValue(KeyPushNewBranches, setting)
 	return err
 }
 
 // SetOffline updates whether Git Town is in offline mode.
 func (gt *GitTown) SetOffline(value bool) error {
-	_, err := gt.SetGlobalConfigValue(ConfigKeyOffline, strconv.FormatBool(value))
+	_, err := gt.SetGlobalConfigValue(KeyOffline, strconv.FormatBool(value))
 	return err
 }
 
@@ -325,70 +325,70 @@ func (gt *GitTown) SetParent(branch, parentBranch string) error {
 
 // SetPerennialBranches marks the given branches as perennial branches.
 func (gt *GitTown) SetPerennialBranches(branch []string) error {
-	err := gt.SetLocalConfigValue(ConfigKeyPerennialBranches, strings.Join(branch, " "))
+	err := gt.SetLocalConfigValue(KeyPerennialBranches, strings.Join(branch, " "))
 	return err
 }
 
 // SetPullBranchStrategy updates the configured pull branch strategy.
 func (gt *GitTown) SetPullBranchStrategy(strategy PullBranchStrategy) error {
-	err := gt.SetLocalConfigValue(ConfigKeyPullBranchStrategy, strategy.String())
+	err := gt.SetLocalConfigValue(KeyPullBranchStrategy, strategy.String())
 	return err
 }
 
 // SetPushHookLocally updates the configured pull branch strategy.
 func (gt *GitTown) SetPushHookLocally(value bool) error {
-	err := gt.SetLocalConfigValue(ConfigKeyPushHook, strconv.FormatBool(value))
+	err := gt.SetLocalConfigValue(KeyPushHook, strconv.FormatBool(value))
 	return err
 }
 
 // SetPushHook updates the configured pull branch strategy.
 func (gt *GitTown) SetPushHookGlobally(value bool) error {
-	_, err := gt.SetGlobalConfigValue(ConfigKeyPushHook, strconv.FormatBool(value))
+	_, err := gt.SetGlobalConfigValue(KeyPushHook, strconv.FormatBool(value))
 	return err
 }
 
 // SetShouldShipDeleteRemoteBranch updates the configured pull branch strategy.
 func (gt *GitTown) SetShouldShipDeleteRemoteBranch(value bool) error {
-	err := gt.SetLocalConfigValue(ConfigKeyShipDeleteRemoteBranch, strconv.FormatBool(value))
+	err := gt.SetLocalConfigValue(KeyShipDeleteRemoteBranch, strconv.FormatBool(value))
 	return err
 }
 
 // SetShouldSyncUpstream updates the configured pull branch strategy.
 func (gt *GitTown) SetShouldSyncUpstream(value bool) error {
-	err := gt.SetLocalConfigValue(ConfigKeySyncUpstream, strconv.FormatBool(value))
+	err := gt.SetLocalConfigValue(KeySyncUpstream, strconv.FormatBool(value))
 	return err
 }
 
 func (gt *GitTown) SetSyncStrategy(value SyncStrategy) error {
-	err := gt.SetLocalConfigValue(ConfigKeySyncStrategy, value.name)
+	err := gt.SetLocalConfigValue(KeySyncStrategy, value.name)
 	return err
 }
 
 func (gt *GitTown) SetSyncStrategyGlobal(value SyncStrategy) error {
-	_, err := gt.SetGlobalConfigValue(ConfigKeySyncStrategy, value.name)
+	_, err := gt.SetGlobalConfigValue(KeySyncStrategy, value.name)
 	return err
 }
 
 // SetTestOrigin sets the origin to be used for testing.
 func (gt *GitTown) SetTestOrigin(value string) error {
-	err := gt.SetLocalConfigValue(ConfigKeyTestingRemoteURL, value)
+	err := gt.SetLocalConfigValue(KeyTestingRemoteURL, value)
 	return err
 }
 
 // ShouldNewBranchPush indicates whether the current repository is configured to push
 // freshly created branches up to origin.
 func (gt *GitTown) ShouldNewBranchPush() (bool, error) {
-	err := gt.updateDeprecatedSetting(ConfigKeyDeprecatedNewBranchPushFlag, ConfigKeyPushNewBranches)
+	err := gt.updateDeprecatedSetting(KeyDeprecatedNewBranchPushFlag, KeyPushNewBranches)
 	if err != nil {
 		return false, err
 	}
-	config := gt.LocalOrGlobalConfigValue(ConfigKeyPushNewBranches)
+	config := gt.LocalOrGlobalConfigValue(KeyPushNewBranches)
 	if config == "" {
 		return false, nil
 	}
 	value, err := ParseBool(config)
 	if err != nil {
-		return false, fmt.Errorf(messages.ValueInvalid, ConfigKeyPushNewBranches, config)
+		return false, fmt.Errorf(messages.ValueInvalid, KeyPushNewBranches, config)
 	}
 	return value, nil
 }
@@ -396,11 +396,11 @@ func (gt *GitTown) ShouldNewBranchPush() (bool, error) {
 // ShouldNewBranchPushGlobal indictes whether the global configuration requires to push
 // freshly created branches to origin.
 func (gt *GitTown) ShouldNewBranchPushGlobal() (bool, error) {
-	err := gt.updateDeprecatedGlobalSetting(ConfigKeyDeprecatedNewBranchPushFlag, ConfigKeyPushNewBranches)
+	err := gt.updateDeprecatedGlobalSetting(KeyDeprecatedNewBranchPushFlag, KeyPushNewBranches)
 	if err != nil {
 		return false, err
 	}
-	config := gt.GlobalConfigValue(ConfigKeyPushNewBranches)
+	config := gt.GlobalConfigValue(KeyPushNewBranches)
 	if config == "" {
 		return false, nil
 	}
@@ -409,20 +409,20 @@ func (gt *GitTown) ShouldNewBranchPushGlobal() (bool, error) {
 
 // ShouldShipDeleteOriginBranch indicates whether to delete the remote branch after shipping.
 func (gt *GitTown) ShouldShipDeleteOriginBranch() (bool, error) {
-	setting := gt.LocalOrGlobalConfigValue(ConfigKeyShipDeleteRemoteBranch)
+	setting := gt.LocalOrGlobalConfigValue(KeyShipDeleteRemoteBranch)
 	if setting == "" {
 		return true, nil
 	}
 	result, err := strconv.ParseBool(setting)
 	if err != nil {
-		return true, fmt.Errorf(messages.ValueInvalid, ConfigKeyShipDeleteRemoteBranch, setting)
+		return true, fmt.Errorf(messages.ValueInvalid, KeyShipDeleteRemoteBranch, setting)
 	}
 	return result, nil
 }
 
 // ShouldSyncUpstream indicates whether this repo should sync with its upstream.
 func (gt *GitTown) ShouldSyncUpstream() (bool, error) {
-	text := gt.LocalOrGlobalConfigValue(ConfigKeySyncUpstream)
+	text := gt.LocalOrGlobalConfigValue(KeySyncUpstream)
 	if text == "" {
 		return true, nil
 	}
@@ -430,16 +430,16 @@ func (gt *GitTown) ShouldSyncUpstream() (bool, error) {
 }
 
 func (gt *GitTown) SyncStrategy() (SyncStrategy, error) {
-	text := gt.LocalOrGlobalConfigValue(ConfigKeySyncStrategy)
+	text := gt.LocalOrGlobalConfigValue(KeySyncStrategy)
 	return ToSyncStrategy(text)
 }
 
 func (gt *GitTown) SyncStrategyGlobal() (SyncStrategy, error) {
-	setting := gt.GlobalConfigValue(ConfigKeySyncStrategy)
+	setting := gt.GlobalConfigValue(KeySyncStrategy)
 	return ToSyncStrategy(setting)
 }
 
-func (gt *GitTown) updateDeprecatedSetting(deprecatedKey, newKey ConfigKey) error {
+func (gt *GitTown) updateDeprecatedSetting(deprecatedKey, newKey Key) error {
 	err := gt.updateDeprecatedLocalSetting(deprecatedKey, newKey)
 	if err != nil {
 		return err
@@ -447,7 +447,7 @@ func (gt *GitTown) updateDeprecatedSetting(deprecatedKey, newKey ConfigKey) erro
 	return gt.updateDeprecatedGlobalSetting(deprecatedKey, newKey)
 }
 
-func (gt *GitTown) updateDeprecatedGlobalSetting(deprecatedKey, newKey ConfigKey) error {
+func (gt *GitTown) updateDeprecatedGlobalSetting(deprecatedKey, newKey Key) error {
 	deprecatedSetting := gt.GlobalConfigValue(deprecatedKey)
 	if deprecatedSetting != "" {
 		fmt.Printf("I found the deprecated global setting %q.\n", deprecatedKey)
@@ -462,7 +462,7 @@ func (gt *GitTown) updateDeprecatedGlobalSetting(deprecatedKey, newKey ConfigKey
 	return nil
 }
 
-func (gt *GitTown) updateDeprecatedLocalSetting(deprecatedKey, newKey ConfigKey) error {
+func (gt *GitTown) updateDeprecatedLocalSetting(deprecatedKey, newKey Key) error {
 	deprecatedSetting := gt.LocalConfigValue(deprecatedKey)
 	if deprecatedSetting != "" {
 		fmt.Printf("I found the deprecated local setting %q.\n", deprecatedKey)

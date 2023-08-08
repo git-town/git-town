@@ -53,7 +53,7 @@ func shipCmd() *cobra.Command {
 		GroupID: "basic",
 		Args:    cobra.MaximumNArgs(1),
 		Short:   shipDesc,
-		Long:    long(shipDesc, fmt.Sprintf(shipHelp, config.ConfigKeyGithubToken, config.ConfigKeyShipDeleteRemoteBranch)),
+		Long:    long(shipDesc, fmt.Sprintf(shipHelp, config.KeyGithubToken, config.KeyShipDeleteRemoteBranch)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return ship(args, readMessageFlag(cmd), readDebugFlag(cmd))
 		},
