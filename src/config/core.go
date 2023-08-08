@@ -83,8 +83,6 @@ func ParseLineageKey(key string) *Key {
 	if !strings.HasPrefix(key, lineageKeyPrefix) || !strings.HasSuffix(key, lineageKeySuffix) {
 		return nil
 	}
-	key = strings.TrimPrefix(key, lineageKeyPrefix)
-	key = strings.TrimSuffix(key, lineageKeySuffix)
 	return &Key{
 		name: key,
 	}

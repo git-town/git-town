@@ -122,9 +122,7 @@ func (gt *GitTown) IsOffline() (bool, error) {
 // Lineage provides the configured ancestry information for this Git repo.
 func (gt *GitTown) Lineage() Lineage {
 	lineage := Lineage{}
-	fmt.Println("555555555555")
 	for _, key := range gt.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
-		fmt.Println("666666666666", key)
 		child := strings.TrimSuffix(strings.TrimPrefix(key.name, "git-town-branch."), ".parent")
 		parent := gt.LocalConfigValue(key)
 		lineage[child] = parent

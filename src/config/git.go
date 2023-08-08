@@ -37,9 +37,6 @@ func LoadGit(runner runner, global bool) map[Key]string {
 	if err != nil {
 		return result
 	}
-	fmt.Println("8888888888888")
-	fmt.Println(output)
-	fmt.Println("9999999999999")
 	if output == "" {
 		return result
 	}
