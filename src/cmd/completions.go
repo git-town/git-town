@@ -85,11 +85,13 @@ type CompletionType struct {
 	name string
 }
 
+func (c CompletionType) String() string { return c.name }
+
 var (
-	CompletionTypeBash       = CompletionType{"bash"}
-	CompletionTypeZsh        = CompletionType{"zsh"}
-	CompletionTypeFish       = CompletionType{"fish"}
-	CompletionTypePowershell = CompletionType{"powershell"}
+	CompletionTypeBash       = CompletionType{"bash"}       //nolint:gochecknoglobals
+	CompletionTypeZsh        = CompletionType{"zsh"}        //nolint:gochecknoglobals
+	CompletionTypeFish       = CompletionType{"fish"}       //nolint:gochecknoglobals
+	CompletionTypePowershell = CompletionType{"powershell"} //nolint:gochecknoglobals
 )
 
 // completionTypes provides all CompletionType values.

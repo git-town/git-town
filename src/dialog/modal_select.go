@@ -149,8 +149,8 @@ type modalSelectStatus struct {
 func (m modalSelectStatus) String() string { return m.name }
 
 var (
-	modalSelectStatusNew       = modalSelectStatus{"new"}
-	modalSelectStatusSelecting = modalSelectStatus{"selecting"}
-	modalSelectStatusSelected  = modalSelectStatus{"selected"}
-	modalSelectStatusAborted   = modalSelectStatus{"aborted"}
+	modalSelectStatusNew       = modalSelectStatus{"new"}       //nolint:gochecknoglobals
+	modalSelectStatusSelecting = modalSelectStatus{"selecting"} //nolint:gochecknoglobals
+	modalSelectStatusSelected  = modalSelectStatus{"selected"}  //nolint:gochecknoglobals
+	modalSelectStatusAborted   = modalSelectStatus{"aborted"}   //nolint:gochecknoglobals
 )
