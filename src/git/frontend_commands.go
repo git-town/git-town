@@ -34,8 +34,8 @@ func (fc *FrontendCommands) AbortRebase() error {
 }
 
 // AddGitAlias sets the given Git alias.
-func (fc *FrontendCommands) AddGitAlias(aliasType config.Alias) error {
-	return fc.Run("git", "config", "--global", "alias."+aliasType.String(), "town "+aliasType.String())
+func (fc *FrontendCommands) AddGitAlias(alias config.Alias) error {
+	return fc.Run("git", "config", "--global", "alias."+alias.String(), "town "+alias.String())
 }
 
 // CheckoutBranch checks out the Git branch with the given name in this repo.
@@ -200,8 +200,8 @@ func (fc *FrontendCommands) Rebase(target string) error {
 }
 
 // RemoveGitAlias removes the given Git alias.
-func (fc *FrontendCommands) RemoveGitAlias(aliasType config.Alias) error {
-	return fc.Run("git", "config", "--global", "--unset", "alias."+aliasType.String())
+func (fc *FrontendCommands) RemoveGitAlias(alias config.Alias) error {
+	return fc.Run("git", "config", "--global", "--unset", "alias."+alias.String())
 }
 
 // ResetToSha undoes all commits on the current branch all the way until the given SHA.

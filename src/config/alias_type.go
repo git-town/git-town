@@ -1,6 +1,7 @@
 package config
 
 // Alias defines Git Town commands that can be aliased.
+// This is a type-safe enum, see https://npf.io/2022/05/safer-enums.
 type Alias struct {
 	name string
 }
