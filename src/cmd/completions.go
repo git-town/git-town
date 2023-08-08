@@ -81,13 +81,15 @@ func completions(args []string, completionsNoDescFlag bool, rootCmd *cobra.Comma
 }
 
 // CompletionType defines the valid shells for which Git Town can create auto-completions.
-type CompletionType string
+type CompletionType struct {
+	name string
+}
 
-const (
-	CompletionTypeBash       CompletionType = "bash"
-	CompletionTypeZsh        CompletionType = "zsh"
-	CompletionTypeFish       CompletionType = "fish"
-	CompletionTypePowershell CompletionType = "powershell"
+var (
+	CompletionTypeBash       = CompletionType{"bash"}
+	CompletionTypeZsh        = CompletionType{"zsh"}
+	CompletionTypeFish       = CompletionType{"fish"}
+	CompletionTypePowershell = CompletionType{"powershell"}
 )
 
 // completionTypes provides all CompletionType values.
@@ -103,7 +105,7 @@ func completionTypes() []CompletionType {
 func NewCompletionType(text string) (CompletionType, error) {
 	text = strings.ToLower(text)
 	for _, completionType := range completionTypes() {
-		if text == string(completionType) {
+		if text == completionType.name {
 			return completionType, nil
 		}
 	}
