@@ -81,7 +81,7 @@ type gitTownConfig interface {
 	OriginOverride() string
 
 	// HostingService provides the name of the hosting service that runs at the origin remote.
-	HostingService() (config.HostingService, error)
+	HostingService() (config.Hosting, error)
 
 	// GiteaToken provides the personal access token for Gitea stored in the Git configuration.
 	GiteaToken() string
@@ -155,7 +155,7 @@ func NewConnector(args NewConnectorArgs) (Connector, error) {
 }
 
 type NewConnectorArgs struct {
-	HostingService  config.HostingService
+	HostingService  config.Hosting
 	OriginURL       *giturl.Parts
 	GetShaForBranch ShaForBranchFunc
 	GiteaAPIToken   string

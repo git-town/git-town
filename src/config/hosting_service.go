@@ -7,35 +7,35 @@ import (
 	"github.com/git-town/git-town/v9/src/messages"
 )
 
-// HostingService defines legal values for the "git-town.code-hosting-driver" config setting.
-type HostingService string
+// Hosting defines legal values for the "git-town.code-hosting-driver" config setting.
+type Hosting string
 
 const (
-	HostingServiceBitbucket HostingService = "bitbucket"
-	HostingServiceGitHub    HostingService = "github"
-	HostingServiceGitLab    HostingService = "gitlab"
-	HostingServiceGitea     HostingService = "gitea"
-	HostingServiceNone      HostingService = ""
+	HostingBitbucket Hosting = "bitbucket"
+	HostingGitHub    Hosting = "github"
+	HostingGitLab    Hosting = "gitlab"
+	HostingGitea     Hosting = "gitea"
+	HostingNone      Hosting = ""
 )
 
-// NewHostingService provides the HostingService enum matching the given text.
-func NewHostingService(text string) (HostingService, error) {
+// NewHosting provides the HostingService enum matching the given text.
+func NewHosting(text string) (Hosting, error) {
 	text = strings.ToLower(text)
-	for _, hostingService := range hostingServices() {
+	for _, hostingService := range hostings() {
 		if string(hostingService) == text {
 			return hostingService, nil
 		}
 	}
-	return HostingServiceNone, fmt.Errorf(messages.HostingServiceUnknown, text)
+	return HostingNone, fmt.Errorf(messages.HostingServiceUnknown, text)
 }
 
-// hostingServices provides all legal values for HostingService.
-func hostingServices() []HostingService {
-	return []HostingService{
-		HostingServiceNone,
-		HostingServiceBitbucket,
-		HostingServiceGitHub,
-		HostingServiceGitLab,
-		HostingServiceGitea,
+// hostings provides all legal values for HostingService.
+func hostings() []Hosting {
+	return []Hosting{
+		HostingNone,
+		HostingBitbucket,
+		HostingGitHub,
+		HostingGitLab,
+		HostingGitea,
 	}
 }

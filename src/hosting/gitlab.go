@@ -75,7 +75,7 @@ func (c *GitLabConnector) UpdateProposalTarget(number int, target string) error 
 // NewGitlabConfig provides GitLab configuration data if the current repo is hosted on GitLab,
 // otherwise nil.
 func NewGitlabConnector(args NewGitlabConnectorArgs) (*GitLabConnector, error) {
-	if args.OriginURL == nil || (args.OriginURL.Host != "gitlab.com" && args.HostingService != config.HostingServiceGitLab) {
+	if args.OriginURL == nil || (args.OriginURL.Host != "gitlab.com" && args.HostingService != config.HostingGitLab) {
 		return nil, nil //nolint:nilnil
 	}
 	gitlabConfig := GitLabConfig{CommonConfig{
@@ -99,7 +99,7 @@ func NewGitlabConnector(args NewGitlabConnectorArgs) (*GitLabConnector, error) {
 }
 
 type NewGitlabConnectorArgs struct {
-	HostingService config.HostingService
+	HostingService config.Hosting
 	OriginURL      *giturl.Parts
 	APIToken       string
 	Log            Log

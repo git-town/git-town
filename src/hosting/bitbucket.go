@@ -20,7 +20,7 @@ type BitbucketConnector struct {
 // NewBitbucketConnector provides a Bitbucket connector instance if the current repo is hosted on Bitbucket,
 // otherwise nil.
 func NewBitbucketConnector(args NewBitbucketConnectorArgs) (*BitbucketConnector, error) {
-	if args.OriginURL == nil || (args.OriginURL.Host != "bitbucket.org" && args.HostingService != config.HostingServiceBitbucket) {
+	if args.OriginURL == nil || (args.OriginURL.Host != "bitbucket.org" && args.HostingService != config.HostingBitbucket) {
 		return nil, nil //nolint:nilnil
 	}
 	return &BitbucketConnector{
@@ -36,7 +36,7 @@ func NewBitbucketConnector(args NewBitbucketConnectorArgs) (*BitbucketConnector,
 
 type NewBitbucketConnectorArgs struct {
 	OriginURL       *giturl.Parts
-	HostingService  config.HostingService
+	HostingService  config.Hosting
 	GetShaForBranch ShaForBranchFunc
 }
 
