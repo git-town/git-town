@@ -18,6 +18,12 @@ type Git struct {
 	localConfigCache map[Key]string
 }
 
+type runner interface {
+	Query(executable string, args ...string) (string, error)
+	QueryTrim(executable string, args ...string) (string, error)
+	Run(executable string, args ...string) error
+}
+
 // LoadGit provides the Git configuration from the given directory or the global one if the global flag is set.
 func LoadGit(runner runner, global bool) map[Key]string {
 	result := map[Key]string{}
@@ -121,10 +127,4 @@ func (g *Git) SetGlobalConfigValue(key Key, value string) (string, error) {
 func (g *Git) SetLocalConfigValue(key Key, value string) error {
 	g.localConfigCache[key] = value
 	return g.runner.Run("git", "config", key.String(), value)
-}
-
-type runner interface {
-	Query(executable string, args ...string) (string, error)
-	QueryTrim(executable string, args ...string) (string, error)
-	Run(executable string, args ...string) error
 }
