@@ -116,8 +116,8 @@ func NewAliasKey(aliasType Alias) Key {
 	panic(fmt.Sprintf("don't know how to convert alias type %q into a config key", aliasType))
 }
 
-func NewParentKey(parent string) Key {
+func NewParentKey(branch string) Key {
 	return Key{
-		name: fmt.Sprintf("git-town.%s.parent", parent),
+		name: fmt.Sprintf("git-town-branch.%s.parent", branch),
 	}
 }
