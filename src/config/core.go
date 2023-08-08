@@ -73,11 +73,11 @@ func ParseKey(key string) *Key {
 			return &configKey
 		}
 	}
-	aliasKey := ParseAliasKey(key)
-	if aliasKey != nil {
-		return aliasKey
+	lineageKey := ParseLineageKey(key)
+	if lineageKey != nil {
+		return lineageKey
 	}
-	return ParseLineageKey(key)
+	return ParseAliasKey(key)
 }
 
 func ParseAliasKey(key string) *Key {
