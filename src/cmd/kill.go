@@ -113,7 +113,10 @@ func determineKillConfig(args []string, run *git.ProdRunner, isOffline bool) (*k
 			return nil, err
 		}
 		if updated {
-			run.Config.Reload()
+			err = run.Config.Reload()
+			if err != nil {
+				return nil, err
+			}
 			lineage = run.Config.Lineage()
 		}
 	}

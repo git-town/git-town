@@ -138,7 +138,9 @@ func (g *Git) SetLocalConfigValue(key Key, value string) error {
 
 func EmptyGit() Git {
 	return Git{
-		runner: emptyRunner{},
+		runner:            emptyRunner{},
+		globalConfigCache: map[Key]string{},
+		localConfigCache:  map[Key]string{},
 	}
 }
 

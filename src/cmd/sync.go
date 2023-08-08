@@ -159,7 +159,10 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, isOffline bool) (*sy
 	if !allFlag {
 		branchNamesToSync = []string{branches.Initial}
 		if configUpdated {
-			run.Config.Reload()
+			err = run.Config.Reload()
+			if err != nil {
+				return nil, err
+			}
 			branchDurations = run.Config.BranchDurations()
 		}
 		shouldPushTags = !branchDurations.IsFeatureBranch(branches.Initial)

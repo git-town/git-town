@@ -263,7 +263,7 @@ func (gt *GitTown) RemoveMainBranchConfiguration() error {
 // RemoveParent removes the parent branch entry for the given branch
 // from the Git configuration.
 func (gt *GitTown) RemoveParent(branch string) error {
-	return gt.RemoveLocalConfigValue("git-town-branch." + branch + ".parent")
+	return gt.RemoveLocalConfigValue(NewParentKey(branch))
 }
 
 // RemovePerennialBranchConfiguration removes the configuration entry for the perennial branches.
@@ -319,7 +319,7 @@ func (gt *GitTown) SetOffline(value bool) error {
 // SetParent marks the given branch as the direct parent of the other given branch
 // in the Git Town configuration.
 func (gt *GitTown) SetParent(branch, parentBranch string) error {
-	err := gt.SetLocalConfigValue("git-town-branch."+branch+".parent", parentBranch)
+	err := gt.SetLocalConfigValue(NewParentKey(branch), parentBranch)
 	return err
 }
 

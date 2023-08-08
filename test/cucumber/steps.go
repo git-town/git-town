@@ -254,48 +254,41 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^I (?:run|ran) "(.+)"$`, func(command string) error {
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(command)
-		state.fixture.DevRepo.Config.Reload()
-		return nil
+		return state.fixture.DevRepo.Config.Reload()
 	})
 
 	suite.Step(`^I (?:run|ran) "([^"]+)" and answer(?:ed)? the prompts:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Input: helpers.TableToInput(input)})
-		state.fixture.DevRepo.Config.Reload()
-		return nil
+		return state.fixture.DevRepo.Config.Reload()
 	})
 
 	suite.Step(`^I run "([^"]*)" and close the editor$`, func(cmd string) error {
 		env := append(os.Environ(), "GIT_EDITOR=true")
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env})
-		state.fixture.DevRepo.Config.Reload()
-		return nil
+		return state.fixture.DevRepo.Config.Reload()
 	})
 
 	suite.Step(`^I run "([^"]*)" and enter an empty commit message$`, func(cmd string) error {
 		state.fixture.DevRepo.MockCommitMessage("")
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(cmd)
-		state.fixture.DevRepo.Config.Reload()
-		return nil
+		return state.fixture.DevRepo.Config.Reload()
 	})
 
 	suite.Step(`^I run "([^"]*)" and enter "([^"]*)" for the commit message$`, func(cmd, message string) error {
 		state.fixture.DevRepo.MockCommitMessage(message)
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCode(cmd)
-		state.fixture.DevRepo.Config.Reload()
-		return nil
+		return state.fixture.DevRepo.Config.Reload()
 	})
 
 	suite.Step(`^I run "([^"]*)", answer the prompts, and close the next editor:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
 		env := append(os.Environ(), "GIT_EDITOR=true")
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Env: env, Input: helpers.TableToInput(input)})
-		state.fixture.DevRepo.Config.Reload()
-		return nil
+		return state.fixture.DevRepo.Config.Reload()
 	})
 
 	suite.Step(`^I run "([^"]+)" in the "([^"]+)" folder$`, func(cmd, folderName string) error {
 		state.runOutput, state.runExitCode = state.fixture.DevRepo.MustQueryStringCodeWith(cmd, &subshell.Options{Dir: folderName})
-		state.fixture.DevRepo.Config.Reload()
-		return nil
+		return state.fixture.DevRepo.Config.Reload()
 	})
 
 	suite.Step(`^inspect the repo$`, func() error {

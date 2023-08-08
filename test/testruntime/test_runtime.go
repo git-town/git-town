@@ -55,10 +55,7 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 		HomeDir:    homeDir,
 		BinDir:     binDir,
 	}
-	gitTown, err := config.NewGitTown(&runner)
-	if err != nil {
-		panic(err)
-	}
+	gitTown, _ := config.NewGitTown(&runner)
 	config := git.RepoConfig{
 		GitTown: gitTown,
 		DryRun:  false,
