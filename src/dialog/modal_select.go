@@ -141,11 +141,14 @@ func (mes ModalEntries) IndexOfValue(value string) *int {
 }
 
 // modalSelectStatus represents the different states that a modalSelect instance can be in.
-type modalSelectStatus int
+// This is a type-safe enum, see https://npf.io/2022/05/safer-enums.
+type modalSelectStatus struct {
+	name string
+}
 
-const (
-	modalSelectStatusNew modalSelectStatus = iota
-	modalSelectStatusSelecting
-	modalSelectStatusSelected
-	modalSelectStatusAborted
+var (
+	modalSelectStatusNew       = modalSelectStatus{"new"}
+	modalSelectStatusSelecting = modalSelectStatus{"selecting"}
+	modalSelectStatusSelected  = modalSelectStatus{"selected"}
+	modalSelectStatusAborted   = modalSelectStatus{"aborted"}
 )
