@@ -40,9 +40,8 @@ func OpenRepo(args OpenShellArgs) (result RepoData, exit bool, err error) {
 	if err != nil {
 		return
 	}
-	gitTown := config.NewGitTown(backendRunner)
 	repoConfig := git.RepoConfig{
-		GitTown: gitTown,
+		GitTown: config.NewGitTown(backendRunner),
 		DryRun:  false, // to bootstrap this, DryRun always gets initialized as false and later enabled if needed
 	}
 	backendCommands.Config = &repoConfig
