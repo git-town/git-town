@@ -21,8 +21,8 @@ type CommandType struct {
 }
 
 var (
-	CommandTypeFrontend = CommandType{"frontend"}
-	CommandTypeBackend  = CommandType{"backend"}
+	CommandTypeFrontend = CommandType{"frontend"} //nolint:gochecknoglobals
+	CommandTypeBackend  = CommandType{"backend"}  //nolint:gochecknoglobals
 )
 
 func (c CommandType) String() string { return c.name }

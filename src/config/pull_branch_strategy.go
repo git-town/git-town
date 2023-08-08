@@ -15,8 +15,8 @@ type PullBranchStrategy struct {
 func (p PullBranchStrategy) String() string { return p.name }
 
 var (
-	PullBranchStrategyMerge  = PullBranchStrategy{"merge"}
-	PullBranchStrategyRebase = PullBranchStrategy{"rebase"}
+	PullBranchStrategyMerge  = PullBranchStrategy{"merge"}  //nolint:gochecknoglobals
+	PullBranchStrategyRebase = PullBranchStrategy{"rebase"} //nolint:gochecknoglobals
 )
 
 func NewPullBranchStrategy(text string) (PullBranchStrategy, error) {
