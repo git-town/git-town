@@ -6,6 +6,7 @@ package config
 
 import (
 	"fmt"
+	"strings"
 )
 
 // Key contains all the keys used in Git Town configuration.
@@ -66,14 +67,27 @@ var keys = []Key{ //nolint:gochecknoglobals
 	KeyTestingRemoteURL,
 }
 
-func NewKey(key string) *Key {
+func ParseKey(key string) *Key {
 	for _, configKey := range keys {
 		if configKey.name == key {
 			return &configKey
 		}
 	}
-	// TODO: try to parse a "git-town.XXX.parent" setting
-	return nil
+	return ParseLineageKey(key)
+}
+
+const lineageKeyPrefix = "git-town-branch."
+const lineageKeySuffix = ".parent"
+
+func ParseLineageKey(key string) *Key {
+	if !strings.HasPrefix(key, lineageKeyPrefix) || !strings.HasSuffix(key, lineageKeySuffix) {
+		return nil
+	}
+	key = strings.TrimPrefix(key, lineageKeyPrefix)
+	key = strings.TrimSuffix(key, lineageKeySuffix)
+	return &Key{
+		name: key,
+	}
 }
 
 func NewAliasKey(aliasType Alias) Key {

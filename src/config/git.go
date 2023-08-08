@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"regexp"
 	"strings"
 )
@@ -30,6 +31,9 @@ func LoadGit(runner runner, global bool) map[Key]string {
 	if err != nil {
 		return result
 	}
+	fmt.Println("8888888888888")
+	fmt.Println(output)
+	fmt.Println("9999999999999")
 	if output == "" {
 		return result
 	}
@@ -39,7 +43,7 @@ func LoadGit(runner runner, global bool) map[Key]string {
 		}
 		parts := strings.SplitN(line, "\n", 2)
 		key, value := parts[0], parts[1]
-		configKey := NewKey(key)
+		configKey := ParseKey(key)
 		if configKey != nil {
 			result[*configKey] = value
 		}
@@ -66,6 +70,7 @@ func (g *Git) LocalConfigKeysMatching(toMatch string) []Key {
 	result := []Key{}
 	re := regexp.MustCompile(toMatch)
 	for key := range g.localConfigCache {
+		fmt.Println("77777777777", key.name)
 		if re.MatchString(key.String()) {
 			result = append(result, key)
 		}
@@ -118,30 +123,8 @@ func (g *Git) SetLocalConfigValue(key Key, value string) error {
 	return g.runner.Run("git", "config", key.String(), value)
 }
 
-func EmptyGit() Git {
-	return Git{
-		runner:            emptyRunner{},
-		globalConfigCache: map[Key]string{},
-		localConfigCache:  map[Key]string{},
-	}
-}
-
 type runner interface {
 	Query(executable string, args ...string) (string, error)
 	QueryTrim(executable string, args ...string) (string, error)
 	Run(executable string, args ...string) error
-}
-
-type emptyRunner struct{}
-
-func (e emptyRunner) Query(string, ...string) (string, error) {
-	return "", nil
-}
-
-func (e emptyRunner) QueryTrim(string, ...string) (string, error) {
-	return "", nil
-}
-
-func (e emptyRunner) Run(string, ...string) error {
-	return nil
 }
