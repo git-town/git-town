@@ -118,7 +118,7 @@ func printConfig(config ConfigConfig) {
 	fmt.Println()
 	cli.PrintHeader("Configuration")
 	cli.PrintEntry("offline", cli.BoolSetting(config.isOffline))
-	cli.PrintEntry("pull branch strategy", string(config.pullBranchStrategy))
+	cli.PrintEntry("pull branch strategy", config.pullBranchStrategy.String())
 	cli.PrintEntry("run pre-push hook", cli.BoolSetting(config.pushHook))
 	cli.PrintEntry("push new branches", cli.BoolSetting(config.pushNewBranches))
 	cli.PrintEntry("ship removes the remote branch", cli.BoolSetting(config.deleteOrigin))
