@@ -10,6 +10,7 @@ Feature: does not kill a remote branch in offline mode
     And the current branch is "main"
     When I run "git-town kill feature"
 
+  @result
   Scenario: result
     Then it runs no commands
     And it prints the error:

@@ -2,6 +2,7 @@ package git
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/messages"
@@ -30,6 +31,9 @@ func (bi BranchSyncStatus) TrackingBranch() string {
 
 // TrackingBranchName provides the name of the remote branch for the given branch.
 func TrackingBranchName(branch string) string {
+	if strings.HasPrefix(branch, "origin/") {
+		return branch
+	}
 	return "origin/" + branch
 }
 
