@@ -10,6 +10,7 @@ import (
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
+	"github.com/git-town/git-town/v9/src/stringslice"
 	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/spf13/cobra"
 )
@@ -88,10 +89,7 @@ func determineKillConfig(args []string, run *git.ProdRunner, isOffline bool) (*k
 		return nil, err
 	}
 	mainBranch := run.Config.MainBranch()
-	targetBranchName := branches.Initial
-	if len(args) > 0 {
-		targetBranchName = args[0]
-	}
+	targetBranchName := stringslice.FirstElementOr(args, branches.Initial)
 	if !branches.Durations.IsFeatureBranch(targetBranchName) {
 		return nil, fmt.Errorf(messages.KillOnlyFeatureBranches)
 	}

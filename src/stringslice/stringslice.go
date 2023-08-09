@@ -52,6 +52,13 @@ func Contains(list []string, value string) bool {
 	return false
 }
 
+func FirstElementOr(list []string, alternative string) string {
+	if len(list) > 0 {
+		return list[0]
+	}
+	return alternative
+}
+
 // Hoist provides the given list of strings, with the given element moved to the first position.
 func Hoist(list []string, element string) []string {
 	result := make([]string, 0, len(list))
