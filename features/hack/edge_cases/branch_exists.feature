@@ -21,8 +21,3 @@ Feature: already existing branch
       """
       there is already a branch "existing" at the "origin" remote
       """
-
-    Examples:
-      | LOCATION |
-      # | local    |
-      | remote   |
