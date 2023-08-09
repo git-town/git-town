@@ -9,7 +9,7 @@ Feature: delete a remote only branch
     And I run "git-town sync"
     When I run "git-town kill feature"
 
-  @this
+  @debug @this
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                  |

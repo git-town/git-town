@@ -80,8 +80,9 @@ func (bs BranchesSyncStatus) LocalBranchesWithDeletedTrackingBranches() Branches
 }
 
 func (bs BranchesSyncStatus) Lookup(branchName string) *BranchSyncStatus {
+	remoteName := "origin/" + branchName
 	for bi, branch := range bs {
-		if branch.Name == branchName {
+		if branch.Name == branchName || branch.Name == remoteName {
 			return &bs[bi]
 		}
 	}
