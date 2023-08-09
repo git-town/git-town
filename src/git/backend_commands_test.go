@@ -250,6 +250,19 @@ func TestBackendCommands(t *testing.T) {
 				have, _ := git.ParseVerboseBranchesOutput(give)
 				assert.Equal(t, want, have)
 			})
+			t.Run("branch is ahead and behind its remote branch", func(t *testing.T) {
+				give := `
+  branch-1                     11111111 [origin/branch-1: ahead 31, behind 2] Commit message 1a
+  remotes/origin/branch-1      22222222 Commit message 1b`
+				want := git.BranchesSyncStatus{
+					git.BranchSyncStatus{
+						Name:       "branch-1",
+						SyncStatus: git.SyncStatusAheadAndBehind,
+					},
+				}
+				have, _ := git.ParseVerboseBranchesOutput(give)
+				assert.Equal(t, want, have)
+			})
 			t.Run("branch is in sync with its remote branch", func(t *testing.T) {
 				give := `
   branch-1                     11111111 [origin/branch-1] Commit message 1
