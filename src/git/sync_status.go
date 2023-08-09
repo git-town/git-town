@@ -25,7 +25,7 @@ var (
 // IsLocal indicates whether a branch with this SyncStatus exists in the local repo.
 func (s SyncStatus) IsLocal() bool {
 	switch s {
-	case SyncStatusLocalOnly, SyncStatusUpToDate, SyncStatusAhead, SyncStatusBehind, SyncStatusDeletedAtRemote:
+	case SyncStatusLocalOnly, SyncStatusUpToDate, SyncStatusAhead, SyncStatusBehind, SyncStatusAheadAndBehind, SyncStatusDeletedAtRemote:
 		return true
 	case SyncStatusRemoteOnly:
 		return false
