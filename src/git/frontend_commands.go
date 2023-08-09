@@ -35,7 +35,8 @@ func (fc *FrontendCommands) AbortRebase() error {
 
 // AddGitAlias sets the given Git alias.
 func (fc *FrontendCommands) AddGitAlias(alias config.Alias) error {
-	return fc.Run("git", "config", "--global", "alias."+alias.String(), "town "+alias.String())
+	aliasKey := config.NewAliasKey(alias)
+	return fc.Run("git", "config", "--global", aliasKey.String(), "town "+alias.String())
 }
 
 // CheckoutBranch checks out the Git branch with the given name in this repo.
