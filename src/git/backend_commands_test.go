@@ -159,6 +159,7 @@ func TestBackendCommands(t *testing.T) {
 				assert.Equal(t, "branch-3", currentBranch)
 			})
 		})
+
 		t.Run("recognizes the branch sync status", func(t *testing.T) {
 			t.Run("branch is ahead of its remote branch", func(t *testing.T) {
 				give := `
@@ -189,7 +190,7 @@ func TestBackendCommands(t *testing.T) {
 			t.Run("branch is ahead and behind its remote branch", func(t *testing.T) {
 				give := `
   branch-1                     11111111 [origin/branch-1: ahead 31, behind 2] Commit message 1a
-  remotes/origin/branch-1      22222222 Commit message 1b`
+  remotes/origin/branch-1      22222222 Commit message 1b`[1:]
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
 						Name:       "branch-1",
@@ -202,7 +203,7 @@ func TestBackendCommands(t *testing.T) {
 			t.Run("branch is in sync with its remote branch", func(t *testing.T) {
 				give := `
   branch-1                     11111111 [origin/branch-1] Commit message 1
-  remotes/origin/branch-1      11111111 Commit message 1`
+  remotes/origin/branch-1      11111111 Commit message 1`[1:]
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
 						Name:       "branch-1",
@@ -214,7 +215,7 @@ func TestBackendCommands(t *testing.T) {
 			})
 			t.Run("remote-only branch", func(t *testing.T) {
 				give := `
-  remotes/origin/branch-1    22222222 Commit message 2`
+  remotes/origin/branch-1    22222222 Commit message 2`[1:]
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
 						Name:       "branch-1",
@@ -247,6 +248,7 @@ func TestBackendCommands(t *testing.T) {
 				assert.Equal(t, want, have)
 			})
 		})
+
 		t.Run("complex example", func(t *testing.T) {
 			give := `
   branch-1                     01a7eded [origin/branch-1: ahead 1] Commit message 1a
