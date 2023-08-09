@@ -124,6 +124,9 @@ func determineSyncStatus(branchName, remoteText string) SyncStatus {
 		if remoteStatus == "gone" {
 			return SyncStatusDeletedAtRemote
 		}
+		if strings.Contains(remoteStatus, ", behind ") {
+			return SyncStatusAheadAndBehind
+		}
 		if strings.HasPrefix(remoteStatus, "ahead ") {
 			return SyncStatusAhead
 		}
