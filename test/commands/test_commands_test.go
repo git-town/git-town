@@ -108,7 +108,7 @@ func TestTestCommands(t *testing.T) {
 		assert.NoError(t, err)
 		output = stripansi.Strip(output)
 		if !strings.Contains(output, "Branch Lineage:\n  main\n    f1\n      f1a") {
-			t.Fatalf("unexpected output: %s", output)
+			t.Fatalf("unexpected output:\n%s", output)
 		}
 	})
 
