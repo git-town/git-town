@@ -153,7 +153,7 @@ func determineShipConfig(args []string, run *git.ProdRunner, isOffline bool) (*s
 		return nil, err
 	}
 	mainBranch := run.Config.MainBranch()
-	branchNameToShip := determineBranchToShip(args, branches.Initial)
+	branchNameToShip := stringslice.FirstElementOr(args, branches.Initial)
 	branchToShip := branches.All.Lookup(branchNameToShip)
 	isShippingInitialBranch := branchNameToShip == branches.Initial
 	syncStrategy, err := run.Config.SyncStrategy()
@@ -367,11 +367,4 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 		PreviousBranch:   config.previousBranch,
 	})
 	return list.Result()
-}
-
-func determineBranchToShip(args []string, initialBranch string) string {
-	if len(args) > 0 {
-		return args[0]
-	}
-	return initialBranch
 }
