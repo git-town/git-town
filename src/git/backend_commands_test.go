@@ -254,7 +254,7 @@ func TestBackendCommands(t *testing.T) {
 				give := `
   branch-1                     11111111 [origin/branch-2] Commit message 1
   remotes/origin/branch-1      22222222 Commit message 2
-  remotes/origin/branch-2      11111111 Commit message 1`
+  remotes/origin/branch-2      11111111 Commit message 1`[1:]
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
 						Name:       "branch-1",

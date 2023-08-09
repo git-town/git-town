@@ -101,7 +101,7 @@ func ParseVerboseBranchesOutput(output string) (BranchesSyncStatus, string) {
 		if line[0] == '*' && branchName != "(no" { // "(no" is what we get when a rebase is active, in which case no branch is checked out
 			checkedoutBranch = branchName
 		}
-		syncStatus := determineSyncStatus(branchName, remoteText)
+		syncStatus, trackingBranchName := determineSyncStatus(branchName, remoteText)
 		branchName = strings.TrimPrefix(branchName, "remotes/origin/")
 		if !result.Contains(branchName) {
 			result = append(result, BranchSyncStatus{
@@ -113,32 +113,32 @@ func ParseVerboseBranchesOutput(output string) (BranchesSyncStatus, string) {
 	return result, checkedoutBranch
 }
 
-func determineSyncStatus(branchName, remoteText string) SyncStatus {
+func determineSyncStatus(branchName, remoteText string) (SyncStatus, string) {
 	if remoteText[0] == '[' {
 		closingBracketPos := strings.IndexRune(remoteText, ']')
 		textInBrackets := remoteText[1:closingBracketPos]
-		_, remoteStatus, _ := strings.Cut(textInBrackets, ": ")
+		trackingBranchName, remoteStatus, _ := strings.Cut(textInBrackets, ": ")
 		if remoteStatus == "" {
-			return SyncStatusUpToDate
+			return SyncStatusUpToDate, trackingBranchName
 		}
 		if remoteStatus == "gone" {
-			return SyncStatusDeletedAtRemote
+			return SyncStatusDeletedAtRemote, trackingBranchName
 		}
 		if strings.Contains(remoteStatus, ", behind ") {
-			return SyncStatusAheadAndBehind
+			return SyncStatusAheadAndBehind, trackingBranchName
 		}
 		if strings.HasPrefix(remoteStatus, "ahead ") {
-			return SyncStatusAhead
+			return SyncStatusAhead, trackingBranchName
 		}
 		if strings.HasPrefix(remoteStatus, "behind ") {
-			return SyncStatusBehind
+			return SyncStatusBehind, trackingBranchName
 		}
-		panic(fmt.Sprintf("cannot determine the sync status for Git remote %q and branch name %q", remoteText, branchName))
+		panic(fmt.Sprintf("cannot determine the sync status for Git remote %q and branch name %q", remoteText, trackingBranchName))
 	} else {
 		if strings.HasPrefix(branchName, "remotes/origin/") {
-			return SyncStatusRemoteOnly
+			return SyncStatusRemoteOnly, ""
 		}
-		return SyncStatusLocalOnly
+		return SyncStatusLocalOnly, ""
 	}
 }
 
