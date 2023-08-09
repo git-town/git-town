@@ -200,7 +200,8 @@ func TestBackendCommands(t *testing.T) {
 				assert.Equal(t, want, have)
 			})
 			t.Run("recognizes remote-only branches", func(t *testing.T) {
-				give := `  remotes/origin/branch-1                     01a7eded Commit message 1`
+				give := `
+  remotes/origin/branch-1    22222222 Commit message 2`
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
 						Name:       "branch-1",
