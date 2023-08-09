@@ -215,20 +215,20 @@ func TestBackendCommands(t *testing.T) {
 			t.Run("branch is ahead of its remote branch", func(t *testing.T) {
 				give := `
   branch-1                     11111111 [origin/branch-1: ahead 1] Commit message 1a
-	remotes/origin/branch-1      22222222 Commit message 1b`[1:]
+  remotes/origin/branch-1      22222222 Commit message 1b`[1:]
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
-						LocalName:  "branch-1",
+						Name:       "branch-1",
 						SyncStatus: git.SyncStatusAhead,
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
 				assert.Equal(t, want, have)
 			})
-			t.Run("recognizes branches that are behind their remote branch", func(t *testing.T) {
+			t.Run("branch is behind its remote branch", func(t *testing.T) {
 				give := `
   branch-1                     11111111 [origin/branch-1: behind 2] Commit message 1
-	remotes/origin/branch-1      22222222 Commit message 1b`[1:]
+  remotes/origin/branch-1      22222222 Commit message 1b`[1:]
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
 						LocalName:  "branch-1",
@@ -250,19 +250,22 @@ func TestBackendCommands(t *testing.T) {
 				have, _ := git.ParseVerboseBranchesOutput(give)
 				assert.Equal(t, want, have)
 			})
-			t.Run("recognizes branches that are in sync with their remote branch", func(t *testing.T) {
-				give := `  branch-1                     01a7eded [origin/branch-1] Commit message 1`
+			t.Run("branch is in sync with its remote branch", func(t *testing.T) {
+				give := `
+  branch-1                     11111111 [origin/branch-1] Commit message 1
+  remotes/origin/branch-1      11111111 Commit message 1`
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
-						LocalName:  "branch-1",
+						Name:       "branch-1",
 						SyncStatus: git.SyncStatusUpToDate,
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
 				assert.Equal(t, want, have)
 			})
-			t.Run("recognizes remote-only branches", func(t *testing.T) {
-				give := `  remotes/origin/branch-1                     01a7eded Commit message 1`
+			t.Run("remote-only branch", func(t *testing.T) {
+				give := `
+  remotes/origin/branch-1    22222222 Commit message 2`
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
 						LocalName:  "branch-1",
@@ -272,7 +275,7 @@ func TestBackendCommands(t *testing.T) {
 				have, _ := git.ParseVerboseBranchesOutput(give)
 				assert.Equal(t, want, have)
 			})
-			t.Run("recognizes local-only branches", func(t *testing.T) {
+			t.Run("local-only branch", func(t *testing.T) {
 				give := `  branch-1                     01a7eded Commit message 1`
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
@@ -283,7 +286,7 @@ func TestBackendCommands(t *testing.T) {
 				have, _ := git.ParseVerboseBranchesOutput(give)
 				assert.Equal(t, want, have)
 			})
-			t.Run("recognizes branches that got deleted at the remote", func(t *testing.T) {
+			t.Run("branch is deleted at the remote", func(t *testing.T) {
 				give := `  branch-1                     01a7eded [origin/branch-1: gone] Commit message 1`
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
