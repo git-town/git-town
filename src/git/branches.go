@@ -14,7 +14,7 @@ type BranchSyncStatus struct {
 
 func (bi BranchSyncStatus) HasTrackingBranch() bool {
 	switch bi.SyncStatus {
-	case SyncStatusAhead, SyncStatusBehind, SyncStatusUpToDate, SyncStatusRemoteOnly:
+	case SyncStatusAhead, SyncStatusBehind, SyncStatusAheadAndBehind, SyncStatusUpToDate, SyncStatusRemoteOnly:
 		return true
 	case SyncStatusLocalOnly, SyncStatusDeletedAtRemote:
 		return false
