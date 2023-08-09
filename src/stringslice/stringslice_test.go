@@ -69,6 +69,24 @@ func TestStringSlice(t *testing.T) {
 		assert.False(t, stringslice.Contains(give, "three"))
 	})
 
+	t.Run("FirstElementOr", func(t *testing.T) {
+		t.Parallel()
+		t.Run("list contains an element", func(t *testing.T) {
+			t.Parallel()
+			list := []string{"one"}
+			have := stringslice.FirstElementOr(list, "other")
+			want := "one"
+			assert.Equal(t, want, have)
+		})
+		t.Run("list is empty", func(t *testing.T) {
+			t.Parallel()
+			list := []string{}
+			have := stringslice.FirstElementOr(list, "other")
+			want := "other"
+			assert.Equal(t, want, have)
+		})
+	})
+
 	t.Run("Hoist", func(t *testing.T) {
 		t.Parallel()
 
