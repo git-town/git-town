@@ -187,7 +187,9 @@ func TestBackendCommands(t *testing.T) {
 				assert.Equal(t, want, have)
 			})
 			t.Run("recognizes branches that are in sync with their remote branch", func(t *testing.T) {
-				give := `  branch-1                     01a7eded [origin/branch-1] Commit message 1`
+				give := `
+  branch-1                     11111111 [origin/branch-1] Commit message 1
+  remotes/origin/branch-1      11111111 Commit message 1`
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
 						Name:       "branch-1",
