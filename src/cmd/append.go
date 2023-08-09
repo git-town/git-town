@@ -113,7 +113,7 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner, isOffline b
 		return nil, fc.Err
 	}
 	if branches.All.Contains(targetBranch) {
-		fc.Fail(messages.BranchAlreadyExists, targetBranch)
+		fc.Fail(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
 	lineage := run.Config.Lineage()
 	updated, err := validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{

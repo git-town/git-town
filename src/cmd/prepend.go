@@ -117,7 +117,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner, isOffline bool) 
 	}
 	targetBranch := args[0]
 	if branches.All.Contains(targetBranch) {
-		return nil, fmt.Errorf(messages.BranchAlreadyExists, targetBranch)
+		return nil, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
 	if !branches.Durations.IsFeatureBranch(branches.Initial) {
 		return nil, fmt.Errorf(messages.SetParentNoFeatureBranch, branches.Initial)

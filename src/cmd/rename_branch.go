@@ -138,7 +138,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 		return nil, fmt.Errorf(messages.RenameBranchNotInSync, oldBranchName)
 	}
 	if branches.All.Contains(newBranchName) {
-		return nil, fmt.Errorf(messages.BranchAlreadyExists, newBranchName)
+		return nil, fmt.Errorf(messages.BranchAlreadyExistsLocally, newBranchName)
 	}
 	lineage := run.Config.Lineage()
 	return &renameBranchConfig{
