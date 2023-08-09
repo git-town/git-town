@@ -167,8 +167,9 @@ func TestBackendCommands(t *testing.T) {
   remotes/origin/branch-1      22222222 Commit message 1b`[1:]
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
-						Name:       "branch-1",
-						SyncStatus: git.SyncStatusAhead,
+						Name:               "branch-1",
+						SyncStatus:         git.SyncStatusAhead,
+						TrackingBranchName: "origin/branch-1",
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
@@ -261,7 +262,7 @@ func TestBackendCommands(t *testing.T) {
 						SyncStatus: git.SyncStatusUpToDate,
 					},
 					git.BranchSyncStatus{
-						Name:       "branch-1",
+						Name:       "origin/branch-1",
 						SyncStatus: git.SyncStatusRemoteOnly,
 					},
 				}

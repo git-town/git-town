@@ -8,8 +8,9 @@ import (
 )
 
 type BranchSyncStatus struct {
-	Name       string
-	SyncStatus SyncStatus
+	Name               string
+	SyncStatus         SyncStatus
+	TrackingBranchName string
 }
 
 func (bi BranchSyncStatus) HasTrackingBranch() bool {
@@ -49,7 +50,7 @@ func (bs BranchesSyncStatus) BranchNames() []string {
 
 func (bs BranchesSyncStatus) Contains(branchName string) bool {
 	for _, branch := range bs {
-		if branch.Name == branchName {
+		if branch.Name == branchName || branch.TrackingBranchName == branchName {
 			return true
 		}
 	}

@@ -51,19 +51,32 @@ func TestBranches(t *testing.T) {
 
 	t.Run("Contains", func(t *testing.T) {
 		t.Parallel()
-		bs := git.BranchesSyncStatus{
-			git.BranchSyncStatus{
-				Name:       "one",
-				SyncStatus: git.SyncStatusUpToDate,
-			},
-			git.BranchSyncStatus{
-				Name:       "two",
-				SyncStatus: git.SyncStatusAhead,
-			},
-		}
-		assert.True(t, bs.Contains("one"))
-		assert.True(t, bs.Contains("two"))
-		assert.False(t, bs.Contains("zonk"))
+		t.Run("contains the branch directly", func(t *testing.T) {
+			bs := git.BranchesSyncStatus{
+				git.BranchSyncStatus{
+					Name:       "one",
+					SyncStatus: git.SyncStatusUpToDate,
+				},
+				git.BranchSyncStatus{
+					Name:       "two",
+					SyncStatus: git.SyncStatusAhead,
+				},
+			}
+			assert.True(t, bs.Contains("one"))
+			assert.True(t, bs.Contains("two"))
+			assert.False(t, bs.Contains("zonk"))
+		})
+		t.Run("contains a branch that has this branch as the tracking branch", func(t *testing.T) {
+			bs := git.BranchesSyncStatus{
+				git.BranchSyncStatus{
+					Name:               "one",
+					SyncStatus:         git.SyncStatusUpToDate,
+					TrackingBranchName: "origin/two",
+				},
+			}
+			assert.True(t, bs.Contains("origin/two"))
+			assert.False(t, bs.Contains("zonk"))
+		})
 	})
 
 	t.Run("LocalBranches", func(t *testing.T) {
