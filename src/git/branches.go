@@ -9,7 +9,7 @@ import (
 )
 
 type BranchSyncStatus struct {
-	Name               string
+	Name               string // fully qualified name of the branch, i.e. "foo" for local branches and "origin/foo" for remote-only branches
 	SyncStatus         SyncStatus
 	TrackingBranchName string
 }
@@ -24,6 +24,13 @@ func (bi BranchSyncStatus) HasTrackingBranch() bool {
 	panic(fmt.Sprintf("unknown sync status: %v", bi.SyncStatus))
 }
 
+func (bi BranchSyncStatus) NameWithoutRemote() string {
+	if bi.SyncStatus == SyncStatusRemoteOnly {
+		return strings.TrimPrefix(bi.Name, "origin/")
+	}
+	return bi.Name
+}
+
 // TrackingBranch provides the name of the remote branch tracking the local branch with the given name.
 func (bi BranchSyncStatus) TrackingBranch() string {
 	return TrackingBranchName(bi.Name)
@@ -31,9 +38,6 @@ func (bi BranchSyncStatus) TrackingBranch() string {
 
 // TrackingBranchName provides the name of the remote branch for the given branch.
 func TrackingBranchName(branch string) string {
-	if strings.HasPrefix(branch, "origin/") {
-		return branch
-	}
 	return "origin/" + branch
 }
 
