@@ -115,6 +115,9 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner, isOffline b
 	if branches.All.Contains(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
+	if branches.All.Contains("origin/" + targetBranch) {
+		fc.Fail(messages.BranchAlreadyExistsRemotely, targetBranch)
+	}
 	lineage := run.Config.Lineage()
 	updated, err := validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
 		DefaultBranch:   mainBranch,
