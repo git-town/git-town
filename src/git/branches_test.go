@@ -59,9 +59,9 @@ func TestBranch(t *testing.T) {
 		})
 		t.Run("local branch with tracking branch", func(t *testing.T) {
 			give := git.BranchSyncStatus{
-				Name:               "branch1",
-				SyncStatus:         git.SyncStatusUpToDate,
-				TrackingBranchName: "origin/branch-2",
+				Name:           "branch1",
+				SyncStatus:     git.SyncStatusUpToDate,
+				TrackingBranch: "origin/branch-2",
 			}
 			have := give.RemoteBranch()
 			want := "origin/branch-2"
@@ -110,9 +110,9 @@ func TestBranches(t *testing.T) {
 		t.Run("contains a branch that has this branch as the tracking branch", func(t *testing.T) {
 			bs := git.BranchesSyncStatus{
 				git.BranchSyncStatus{
-					Name:               "one",
-					SyncStatus:         git.SyncStatusUpToDate,
-					TrackingBranchName: "origin/two",
+					Name:           "one",
+					SyncStatus:     git.SyncStatusUpToDate,
+					TrackingBranch: "origin/two",
 				},
 			}
 			assert.True(t, bs.Contains("origin/two"))

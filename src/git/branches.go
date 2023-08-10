@@ -17,8 +17,8 @@ type BranchSyncStatus struct {
 	// SyncStatus of the branch
 	SyncStatus SyncStatus
 
-	// TrackingBranchName contains the fully qualified name of the tracking branch, i.e. "origin/foo".
-	TrackingBranchName string
+	// TrackingBranch contains the fully qualified name of the tracking branch, i.e. "origin/foo".
+	TrackingBranch string
 }
 
 func (bi BranchSyncStatus) HasTrackingBranch() bool {
@@ -53,7 +53,7 @@ func (bi BranchSyncStatus) RemoteBranch() string {
 	if bi.SyncStatus == SyncStatusRemoteOnly {
 		return bi.Name
 	}
-	return bi.TrackingBranchName
+	return bi.TrackingBranch
 }
 
 // BranchesSyncStatus contains the BranchesSyncStatus for all branches in a repo.
@@ -71,7 +71,7 @@ func (bs BranchesSyncStatus) BranchNames() []string {
 
 func (bs BranchesSyncStatus) Contains(branchName string) bool {
 	for _, branch := range bs {
-		if branch.Name == branchName || branch.TrackingBranchName == branchName {
+		if branch.Name == branchName || branch.TrackingBranch == branchName {
 			return true
 		}
 	}
