@@ -134,7 +134,7 @@ func determineSyncStatus(branchName, remoteText string) (syncStatus SyncStatus, 
 		if strings.HasPrefix(remoteStatus, "behind ") {
 			return SyncStatusBehind, trackingBranchName
 		}
-		panic(fmt.Sprintf("cannot determine the sync status for Git remote %q and branch name %q", remoteText, trackingBranchName))
+		panic(fmt.Sprintf("cannot determine the sync status for Git remote %q and branch name %q", remoteText, branchName))
 	} else {
 		if strings.HasPrefix(branchName, "remotes/origin/") {
 			return SyncStatusRemoteOnly, ""
