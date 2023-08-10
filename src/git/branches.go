@@ -31,6 +31,7 @@ func (bi BranchSyncStatus) HasTrackingBranch() bool {
 	panic(fmt.Sprintf("unknown sync status: %v", bi.SyncStatus))
 }
 
+// NameWithoutRemote provides the pure name of the branch, i.e. "foo" when the branch name is "origin/foo".
 func (bi BranchSyncStatus) NameWithoutRemote() string {
 	if bi.SyncStatus == SyncStatusRemoteOnly {
 		return strings.TrimPrefix(bi.Name, "origin/")
