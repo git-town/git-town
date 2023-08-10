@@ -12,7 +12,6 @@ Feature: ship a branch that exists only on origin
       | PROMPT                                        | ANSWER  |
       | Please specify the parent branch of 'feature' | [ENTER] |
 
-  @debug @this
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                            |

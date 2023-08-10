@@ -40,7 +40,7 @@ func (bi BranchSyncStatus) NameWithoutRemote() string {
 
 // TrackingBranch provides the name of the remote branch tracking the local branch with the given name.
 func (bi BranchSyncStatus) TrackingBranch() string {
-	return TrackingBranchName(bi.Name)
+	return "origin/" + bi.NameWithoutRemote()
 }
 
 // TrackingBranchName provides the name of the remote branch for the given branch.
