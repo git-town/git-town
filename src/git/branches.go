@@ -8,9 +8,16 @@ import (
 	"github.com/git-town/git-town/v9/src/messages"
 )
 
+// BranchSyncStatus describes the sync status of a branch in relation to its tracking branch.
 type BranchSyncStatus struct {
-	Name               string // fully qualified name of the branch, i.e. "foo" for local branches and "origin/foo" for remote-only branches
-	SyncStatus         SyncStatus
+	// Name contains the fully qualified name of the branch,
+	// i.e. "foo" for a local branch and "origin/foo" for a remote branch.
+	Name string
+
+	// SyncStatus of the branch
+	SyncStatus SyncStatus
+
+	// TrackingBranchName contains the fully qualified name of the tracking branch, i.e. "origin/foo".
 	TrackingBranchName string
 }
 
@@ -46,6 +53,9 @@ func (bi BranchSyncStatus) IsLocal() bool {
 	return bi.SyncStatus.IsLocal()
 }
 
+// BranchesSyncStatus contains the BranchesSyncStatus for all branches in a repo.
+// Tracking branches on the origin remote don't get their own entry.
+// They are listed in the `TrackingBranch` property of the branch they track.
 type BranchesSyncStatus []BranchSyncStatus
 
 func (bs BranchesSyncStatus) BranchNames() []string {
