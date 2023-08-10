@@ -279,14 +279,14 @@ type syncBranchStepsArgs struct {
 
 func syncFeatureBranchSteps(list *runstate.StepListBuilder, branch git.BranchSyncStatus, lineage config.Lineage, syncStrategy config.SyncStrategy) {
 	if branch.HasTrackingBranch() {
-		updateCurrentFeatureBranchStep(list, branch.TrackingBranch(), syncStrategy)
+		updateCurrentFeatureBranchStep(list, branch.RemoteBranch(), syncStrategy)
 	}
 	updateCurrentFeatureBranchStep(list, lineage.Parent(branch.NameWithoutRemote()), syncStrategy)
 }
 
 func syncPerennialBranchSteps(list *runstate.StepListBuilder, args syncPerennialBranchStepsArgs) {
 	if args.branch.HasTrackingBranch() {
-		updateCurrentPerennialBranchStep(list, args.branch.TrackingBranch(), args.pullBranchStrategy)
+		updateCurrentPerennialBranchStep(list, args.branch.TrackingBranchName, args.pullBranchStrategy)
 	}
 	if args.branch.Name == args.mainBranch && args.hasUpstream && args.shouldSyncUpstream {
 		list.Add(&steps.FetchUpstreamStep{Branch: args.mainBranch})

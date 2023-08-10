@@ -302,7 +302,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 		shouldSyncUpstream: config.shouldSyncUpstream,
 		syncStrategy:       config.syncStrategy,
 	})
-	// sync the branch to ship locally only
+	// sync the branch to ship (local sync only)
 	syncBranchSteps(&list, syncBranchStepsArgs{
 		branch:             config.branchToShip,
 		branchDurations:    config.branchDurations,
