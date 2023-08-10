@@ -62,8 +62,6 @@ func kill(args []string, debug bool) error {
 		Command:     "kill",
 		RunStepList: stepList,
 	}
-	fmt.Println("333333333333")
-	fmt.Printf("%#v", stepList)
 	return runstate.Execute(runstate.ExecuteArgs{
 		RunState:  &runState,
 		Run:       &repo.Runner,
