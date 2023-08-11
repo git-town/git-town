@@ -100,9 +100,9 @@ func TestBranches(t *testing.T) {
 		assert.Equal(t, want, have)
 	})
 
-	t.Run("Contains", func(t *testing.T) {
+	t.Run("IsKnown", func(t *testing.T) {
 		t.Parallel()
-		t.Run("contains the branch directly", func(t *testing.T) {
+		t.Run("the branch in question is a local branch", func(t *testing.T) {
 			bs := git.BranchesSyncStatus{
 				git.BranchSyncStatus{
 					Name:         "one",
@@ -115,11 +115,11 @@ func TestBranches(t *testing.T) {
 					TrackingName: "",
 				},
 			}
-			assert.True(t, bs.Contains("one"))
-			assert.True(t, bs.Contains("two"))
-			assert.False(t, bs.Contains("zonk"))
+			assert.True(t, bs.IsKnown("one"))
+			assert.True(t, bs.IsKnown("two"))
+			assert.False(t, bs.IsKnown("zonk"))
 		})
-		t.Run("contains a branch that has this branch as the tracking branch", func(t *testing.T) {
+		t.Run("the branch in question is a tracking branch of an already known local branch", func(t *testing.T) {
 			bs := git.BranchesSyncStatus{
 				git.BranchSyncStatus{
 					Name:         "one",
@@ -127,8 +127,8 @@ func TestBranches(t *testing.T) {
 					TrackingName: "origin/two",
 				},
 			}
-			assert.True(t, bs.Contains("origin/two"))
-			assert.False(t, bs.Contains("zonk"))
+			assert.True(t, bs.IsKnown("origin/two"))
+			assert.False(t, bs.IsKnown("zonk"))
 		})
 	})
 
