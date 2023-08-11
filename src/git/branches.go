@@ -49,6 +49,7 @@ func TrackingBranchName(branch string) string {
 	return "origin/" + branch
 }
 
+// RemoteBranch provides the name of the branch at the remote for this BranchSyncStatus.
 func (bi BranchSyncStatus) RemoteBranch() string {
 	if bi.SyncStatus == SyncStatusRemoteOnly {
 		return bi.Name
