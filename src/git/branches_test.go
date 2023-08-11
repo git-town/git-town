@@ -21,9 +21,9 @@ func TestBranch(t *testing.T) {
 		t.Parallel()
 		t.Run("local branch", func(t *testing.T) {
 			give := git.BranchSyncStatus{
-				Name:           "branch1",
-				SyncStatus:     git.SyncStatusLocalOnly,
-				TrackingBranch: "",
+				Name:         "branch1",
+				SyncStatus:   git.SyncStatusLocalOnly,
+				TrackingName: "",
 			}
 			have := give.NameWithoutRemote()
 			want := "branch1"
@@ -31,9 +31,9 @@ func TestBranch(t *testing.T) {
 		})
 		t.Run("remote branch", func(t *testing.T) {
 			give := git.BranchSyncStatus{
-				Name:           "origin/branch1",
-				SyncStatus:     git.SyncStatusRemoteOnly,
-				TrackingBranch: "",
+				Name:         "origin/branch1",
+				SyncStatus:   git.SyncStatusRemoteOnly,
+				TrackingName: "",
 			}
 			have := give.NameWithoutRemote()
 			want := "branch1"
@@ -45,9 +45,9 @@ func TestBranch(t *testing.T) {
 		t.Run("remote-only branch", func(t *testing.T) {
 			t.Parallel()
 			give := git.BranchSyncStatus{
-				Name:           "origin/branch1",
-				SyncStatus:     git.SyncStatusRemoteOnly,
-				TrackingBranch: "",
+				Name:         "origin/branch1",
+				SyncStatus:   git.SyncStatusRemoteOnly,
+				TrackingName: "",
 			}
 			have := give.RemoteBranch()
 			want := "origin/branch1"
@@ -56,9 +56,9 @@ func TestBranch(t *testing.T) {
 		t.Run("local-only branch", func(t *testing.T) {
 			t.Parallel()
 			give := git.BranchSyncStatus{
-				Name:           "branch1",
-				SyncStatus:     git.SyncStatusLocalOnly,
-				TrackingBranch: "",
+				Name:         "branch1",
+				SyncStatus:   git.SyncStatusLocalOnly,
+				TrackingName: "",
 			}
 			have := give.RemoteBranch()
 			want := ""
@@ -67,9 +67,9 @@ func TestBranch(t *testing.T) {
 		t.Run("local branch with tracking branch", func(t *testing.T) {
 			t.Parallel()
 			give := git.BranchSyncStatus{
-				Name:           "branch1",
-				SyncStatus:     git.SyncStatusUpToDate,
-				TrackingBranch: "origin/branch-2",
+				Name:         "branch1",
+				SyncStatus:   git.SyncStatusUpToDate,
+				TrackingName: "origin/branch-2",
 			}
 			have := give.RemoteBranch()
 			want := "origin/branch-2"
@@ -85,14 +85,14 @@ func TestBranches(t *testing.T) {
 		t.Parallel()
 		bs := git.BranchesSyncStatus{
 			git.BranchSyncStatus{
-				Name:           "one",
-				SyncStatus:     git.SyncStatusLocalOnly,
-				TrackingBranch: "",
+				Name:         "one",
+				SyncStatus:   git.SyncStatusLocalOnly,
+				TrackingName: "",
 			},
 			git.BranchSyncStatus{
-				Name:           "two",
-				SyncStatus:     git.SyncStatusLocalOnly,
-				TrackingBranch: "",
+				Name:         "two",
+				SyncStatus:   git.SyncStatusLocalOnly,
+				TrackingName: "",
 			},
 		}
 		have := bs.BranchNames()
@@ -105,14 +105,14 @@ func TestBranches(t *testing.T) {
 		t.Run("contains the branch directly", func(t *testing.T) {
 			bs := git.BranchesSyncStatus{
 				git.BranchSyncStatus{
-					Name:           "one",
-					SyncStatus:     git.SyncStatusLocalOnly,
-					TrackingBranch: "",
+					Name:         "one",
+					SyncStatus:   git.SyncStatusLocalOnly,
+					TrackingName: "",
 				},
 				git.BranchSyncStatus{
-					Name:           "two",
-					SyncStatus:     git.SyncStatusLocalOnly,
-					TrackingBranch: "",
+					Name:         "two",
+					SyncStatus:   git.SyncStatusLocalOnly,
+					TrackingName: "",
 				},
 			}
 			assert.True(t, bs.Contains("one"))
@@ -122,9 +122,9 @@ func TestBranches(t *testing.T) {
 		t.Run("contains a branch that has this branch as the tracking branch", func(t *testing.T) {
 			bs := git.BranchesSyncStatus{
 				git.BranchSyncStatus{
-					Name:           "one",
-					SyncStatus:     git.SyncStatusUpToDate,
-					TrackingBranch: "origin/two",
+					Name:         "one",
+					SyncStatus:   git.SyncStatusUpToDate,
+					TrackingName: "origin/two",
 				},
 			}
 			assert.True(t, bs.Contains("origin/two"))
@@ -136,34 +136,34 @@ func TestBranches(t *testing.T) {
 		t.Parallel()
 		bs := git.BranchesSyncStatus{
 			git.BranchSyncStatus{
-				Name:           "up-to-date",
-				SyncStatus:     git.SyncStatusUpToDate,
-				TrackingBranch: "origin/up-to-date",
+				Name:         "up-to-date",
+				SyncStatus:   git.SyncStatusUpToDate,
+				TrackingName: "origin/up-to-date",
 			},
 			git.BranchSyncStatus{
-				Name:           "ahead",
-				SyncStatus:     git.SyncStatusAhead,
-				TrackingBranch: "origin/ahead",
+				Name:         "ahead",
+				SyncStatus:   git.SyncStatusAhead,
+				TrackingName: "origin/ahead",
 			},
 			git.BranchSyncStatus{
-				Name:           "behind",
-				SyncStatus:     git.SyncStatusBehind,
-				TrackingBranch: "origin/behind",
+				Name:         "behind",
+				SyncStatus:   git.SyncStatusBehind,
+				TrackingName: "origin/behind",
 			},
 			git.BranchSyncStatus{
-				Name:           "local-only",
-				SyncStatus:     git.SyncStatusLocalOnly,
-				TrackingBranch: "",
+				Name:         "local-only",
+				SyncStatus:   git.SyncStatusLocalOnly,
+				TrackingName: "",
 			},
 			git.BranchSyncStatus{
-				Name:           "remote-only",
-				SyncStatus:     git.SyncStatusRemoteOnly,
-				TrackingBranch: "",
+				Name:         "remote-only",
+				SyncStatus:   git.SyncStatusRemoteOnly,
+				TrackingName: "",
 			},
 			git.BranchSyncStatus{
-				Name:           "deleted-at-remote",
-				SyncStatus:     git.SyncStatusDeletedAtRemote,
-				TrackingBranch: "",
+				Name:         "deleted-at-remote",
+				SyncStatus:   git.SyncStatusDeletedAtRemote,
+				TrackingName: "",
 			},
 		}
 		want := []string{"up-to-date", "ahead", "behind", "local-only", "deleted-at-remote"}
@@ -175,34 +175,34 @@ func TestBranches(t *testing.T) {
 		t.Parallel()
 		bs := git.BranchesSyncStatus{
 			git.BranchSyncStatus{
-				Name:           "up-to-date",
-				SyncStatus:     git.SyncStatusUpToDate,
-				TrackingBranch: "origin/up-to-date",
+				Name:         "up-to-date",
+				SyncStatus:   git.SyncStatusUpToDate,
+				TrackingName: "origin/up-to-date",
 			},
 			git.BranchSyncStatus{
-				Name:           "ahead",
-				SyncStatus:     git.SyncStatusAhead,
-				TrackingBranch: "origin/ahead",
+				Name:         "ahead",
+				SyncStatus:   git.SyncStatusAhead,
+				TrackingName: "origin/ahead",
 			},
 			git.BranchSyncStatus{
-				Name:           "behind",
-				SyncStatus:     git.SyncStatusBehind,
-				TrackingBranch: "origin/behind",
+				Name:         "behind",
+				SyncStatus:   git.SyncStatusBehind,
+				TrackingName: "origin/behind",
 			},
 			git.BranchSyncStatus{
-				Name:           "local-only",
-				SyncStatus:     git.SyncStatusLocalOnly,
-				TrackingBranch: "",
+				Name:         "local-only",
+				SyncStatus:   git.SyncStatusLocalOnly,
+				TrackingName: "",
 			},
 			git.BranchSyncStatus{
-				Name:           "remote-only",
-				SyncStatus:     git.SyncStatusRemoteOnly,
-				TrackingBranch: "",
+				Name:         "remote-only",
+				SyncStatus:   git.SyncStatusRemoteOnly,
+				TrackingName: "",
 			},
 			git.BranchSyncStatus{
-				Name:           "deleted-at-remote",
-				SyncStatus:     git.SyncStatusDeletedAtRemote,
-				TrackingBranch: "",
+				Name:         "deleted-at-remote",
+				SyncStatus:   git.SyncStatusDeletedAtRemote,
+				TrackingName: "",
 			},
 		}
 		have := bs.LocalBranchesWithDeletedTrackingBranches().BranchNames()
@@ -214,14 +214,14 @@ func TestBranches(t *testing.T) {
 		t.Parallel()
 		bs := git.BranchesSyncStatus{
 			git.BranchSyncStatus{
-				Name:           "one",
-				SyncStatus:     git.SyncStatusLocalOnly,
-				TrackingBranch: "",
+				Name:         "one",
+				SyncStatus:   git.SyncStatusLocalOnly,
+				TrackingName: "",
 			},
 			git.BranchSyncStatus{
-				Name:           "two",
-				SyncStatus:     git.SyncStatusLocalOnly,
-				TrackingBranch: "",
+				Name:         "two",
+				SyncStatus:   git.SyncStatusLocalOnly,
+				TrackingName: "",
 			},
 		}
 		assert.Equal(t, "one", bs.Lookup("one").Name)
@@ -234,22 +234,22 @@ func TestBranches(t *testing.T) {
 		t.Run("contains the removed element", func(t *testing.T) {
 			bs := git.BranchesSyncStatus{
 				git.BranchSyncStatus{
-					Name:           "one",
-					SyncStatus:     git.SyncStatusLocalOnly,
-					TrackingBranch: "",
+					Name:         "one",
+					SyncStatus:   git.SyncStatusLocalOnly,
+					TrackingName: "",
 				},
 				git.BranchSyncStatus{
-					Name:           "two",
-					SyncStatus:     git.SyncStatusLocalOnly,
-					TrackingBranch: "",
+					Name:         "two",
+					SyncStatus:   git.SyncStatusLocalOnly,
+					TrackingName: "",
 				},
 			}
 			have := bs.Remove("two")
 			want := git.BranchesSyncStatus{
 				git.BranchSyncStatus{
-					Name:           "one",
-					SyncStatus:     git.SyncStatusLocalOnly,
-					TrackingBranch: "",
+					Name:         "one",
+					SyncStatus:   git.SyncStatusLocalOnly,
+					TrackingName: "",
 				},
 			}
 			assert.Equal(t, want, have)
@@ -259,27 +259,27 @@ func TestBranches(t *testing.T) {
 		t.Parallel()
 		bs := git.BranchesSyncStatus{
 			git.BranchSyncStatus{
-				Name:           "one",
-				SyncStatus:     git.SyncStatusLocalOnly,
-				TrackingBranch: "",
+				Name:         "one",
+				SyncStatus:   git.SyncStatusLocalOnly,
+				TrackingName: "",
 			},
 			git.BranchSyncStatus{
-				Name:           "two",
-				SyncStatus:     git.SyncStatusLocalOnly,
-				TrackingBranch: "",
+				Name:         "two",
+				SyncStatus:   git.SyncStatusLocalOnly,
+				TrackingName: "",
 			},
 		}
 		have := bs.Remove("zonk")
 		want := git.BranchesSyncStatus{
 			git.BranchSyncStatus{
-				Name:           "one",
-				SyncStatus:     git.SyncStatusLocalOnly,
-				TrackingBranch: "",
+				Name:         "one",
+				SyncStatus:   git.SyncStatusLocalOnly,
+				TrackingName: "",
 			},
 			git.BranchSyncStatus{
-				Name:           "two",
-				SyncStatus:     git.SyncStatusLocalOnly,
-				TrackingBranch: "",
+				Name:         "two",
+				SyncStatus:   git.SyncStatusLocalOnly,
+				TrackingName: "",
 			},
 		}
 		assert.Equal(t, want, have)
@@ -289,37 +289,37 @@ func TestBranches(t *testing.T) {
 		t.Parallel()
 		bs := git.BranchesSyncStatus{
 			git.BranchSyncStatus{
-				Name:           "one",
-				SyncStatus:     git.SyncStatusLocalOnly,
-				TrackingBranch: "",
+				Name:         "one",
+				SyncStatus:   git.SyncStatusLocalOnly,
+				TrackingName: "",
 			},
 			git.BranchSyncStatus{
-				Name:           "two",
-				SyncStatus:     git.SyncStatusLocalOnly,
-				TrackingBranch: "",
+				Name:         "two",
+				SyncStatus:   git.SyncStatusLocalOnly,
+				TrackingName: "",
 			},
 			git.BranchSyncStatus{
-				Name:           "three",
-				SyncStatus:     git.SyncStatusLocalOnly,
-				TrackingBranch: "",
+				Name:         "three",
+				SyncStatus:   git.SyncStatusLocalOnly,
+				TrackingName: "",
 			},
 			git.BranchSyncStatus{
-				Name:           "four",
-				SyncStatus:     git.SyncStatusLocalOnly,
-				TrackingBranch: "",
+				Name:         "four",
+				SyncStatus:   git.SyncStatusLocalOnly,
+				TrackingName: "",
 			},
 		}
 		have, err := bs.Select([]string{"one", "three"})
 		want := git.BranchesSyncStatus{
 			git.BranchSyncStatus{
-				Name:           "one",
-				SyncStatus:     git.SyncStatusLocalOnly,
-				TrackingBranch: "",
+				Name:         "one",
+				SyncStatus:   git.SyncStatusLocalOnly,
+				TrackingName: "",
 			},
 			git.BranchSyncStatus{
-				Name:           "three",
-				SyncStatus:     git.SyncStatusLocalOnly,
-				TrackingBranch: "",
+				Name:         "three",
+				SyncStatus:   git.SyncStatusLocalOnly,
+				TrackingName: "",
 			},
 		}
 		assert.NoError(t, err)

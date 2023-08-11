@@ -97,6 +97,7 @@ func ParseVerboseBranchesOutput(output string) (BranchesSyncStatus, string) {
 		}
 		parts := spaceRE.Split(line[2:], 3)
 		branchName := parts[0]
+		sha := parts[1]
 		remoteText := parts[2]
 		if line[0] == '*' && branchName != "(no" { // "(no" is what we get when a rebase is active, in which case no branch is checked out
 			checkedoutBranch = branchName
@@ -105,9 +106,9 @@ func ParseVerboseBranchesOutput(output string) (BranchesSyncStatus, string) {
 		branchName = strings.TrimPrefix(branchName, "remotes/")
 		if !result.Contains(branchName) {
 			result = append(result, BranchSyncStatus{
-				Name:           branchName,
-				SyncStatus:     syncStatus,
-				TrackingBranch: trackingBranchName,
+				Name:         branchName,
+				SyncStatus:   syncStatus,
+				TrackingName: trackingBranchName,
 			})
 		}
 	}

@@ -286,7 +286,7 @@ func syncFeatureBranchSteps(list *runstate.StepListBuilder, branch git.BranchSyn
 
 func syncPerennialBranchSteps(list *runstate.StepListBuilder, args syncPerennialBranchStepsArgs) {
 	if args.branch.HasTrackingBranch() {
-		updateCurrentPerennialBranchStep(list, args.branch.TrackingBranch, args.pullBranchStrategy)
+		updateCurrentPerennialBranchStep(list, args.branch.TrackingName, args.pullBranchStrategy)
 	}
 	if args.branch.Name == args.mainBranch && args.hasUpstream && args.shouldSyncUpstream {
 		list.Add(&steps.FetchUpstreamStep{Branch: args.mainBranch})

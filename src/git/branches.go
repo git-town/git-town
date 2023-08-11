@@ -14,11 +14,17 @@ type BranchSyncStatus struct {
 	// i.e. "foo" for a local branch and "origin/foo" for a remote branch.
 	Name string
 
+	// InitialSHA contains the SHA that this branch had before Git Town ran.
+	InitialSHA string
+
 	// SyncStatus of the branch
 	SyncStatus SyncStatus
 
-	// TrackingBranch contains the fully qualified name of the tracking branch, i.e. "origin/foo".
-	TrackingBranch string
+	// TrackingName contains the fully qualified name of the tracking branch, i.e. "origin/foo".
+	TrackingName string
+
+	// TrackingSHA contains the initial SHA of the tracking branch.
+	TrackingSHA string
 }
 
 func (bi BranchSyncStatus) HasTrackingBranch() bool {
@@ -54,7 +60,7 @@ func (bi BranchSyncStatus) RemoteBranch() string {
 	if bi.SyncStatus == SyncStatusRemoteOnly {
 		return bi.Name
 	}
-	return bi.TrackingBranch
+	return bi.TrackingName
 }
 
 // BranchesSyncStatus contains the BranchesSyncStatus for all branches in a repo.
@@ -72,7 +78,7 @@ func (bs BranchesSyncStatus) BranchNames() []string {
 
 func (bs BranchesSyncStatus) Contains(branchName string) bool {
 	for _, branch := range bs {
-		if branch.Name == branchName || branch.TrackingBranch == branchName {
+		if branch.Name == branchName || branch.TrackingName == branchName {
 			return true
 		}
 	}

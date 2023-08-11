@@ -169,9 +169,9 @@ func TestBackendCommands(t *testing.T) {
   remotes/origin/branch-1      22222222 Commit message 1b`[1:]
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
-						Name:           "branch-1",
-						SyncStatus:     git.SyncStatusAhead,
-						TrackingBranch: "origin/branch-1",
+						Name:         "branch-1",
+						SyncStatus:   git.SyncStatusAhead,
+						TrackingName: "origin/branch-1",
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
@@ -184,9 +184,9 @@ func TestBackendCommands(t *testing.T) {
   remotes/origin/branch-1      22222222 Commit message 1b`[1:]
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
-						Name:           "branch-1",
-						SyncStatus:     git.SyncStatusBehind,
-						TrackingBranch: "origin/branch-1",
+						Name:         "branch-1",
+						SyncStatus:   git.SyncStatusBehind,
+						TrackingName: "origin/branch-1",
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
@@ -199,9 +199,9 @@ func TestBackendCommands(t *testing.T) {
   remotes/origin/branch-1      22222222 Commit message 1b`[1:]
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
-						Name:           "branch-1",
-						SyncStatus:     git.SyncStatusAheadAndBehind,
-						TrackingBranch: "origin/branch-1",
+						Name:         "branch-1",
+						SyncStatus:   git.SyncStatusAheadAndBehind,
+						TrackingName: "origin/branch-1",
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
@@ -214,9 +214,9 @@ func TestBackendCommands(t *testing.T) {
   remotes/origin/branch-1      11111111 Commit message 1`[1:]
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
-						Name:           "branch-1",
-						SyncStatus:     git.SyncStatusUpToDate,
-						TrackingBranch: "origin/branch-1",
+						Name:         "branch-1",
+						SyncStatus:   git.SyncStatusUpToDate,
+						TrackingName: "origin/branch-1",
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
@@ -228,9 +228,9 @@ func TestBackendCommands(t *testing.T) {
   remotes/origin/branch-1    22222222 Commit message 2`[1:]
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
-						Name:           "origin/branch-1",
-						SyncStatus:     git.SyncStatusRemoteOnly,
-						TrackingBranch: "",
+						Name:         "origin/branch-1",
+						SyncStatus:   git.SyncStatusRemoteOnly,
+						TrackingName: "",
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
@@ -241,9 +241,9 @@ func TestBackendCommands(t *testing.T) {
 				give := `  branch-1                     01a7eded Commit message 1`
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
-						Name:           "branch-1",
-						SyncStatus:     git.SyncStatusLocalOnly,
-						TrackingBranch: "",
+						Name:         "branch-1",
+						SyncStatus:   git.SyncStatusLocalOnly,
+						TrackingName: "",
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
@@ -254,9 +254,9 @@ func TestBackendCommands(t *testing.T) {
 				give := `  branch-1                     01a7eded [origin/branch-1: gone] Commit message 1`
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
-						Name:           "branch-1",
-						SyncStatus:     git.SyncStatusDeletedAtRemote,
-						TrackingBranch: "origin/branch-1",
+						Name:         "branch-1",
+						SyncStatus:   git.SyncStatusDeletedAtRemote,
+						TrackingName: "origin/branch-1",
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
@@ -272,14 +272,14 @@ func TestBackendCommands(t *testing.T) {
   remotes/origin/branch-2      11111111 Commit message 1`[1:]
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
-						Name:           "branch-1",
-						SyncStatus:     git.SyncStatusUpToDate,
-						TrackingBranch: "origin/branch-2",
+						Name:         "branch-1",
+						SyncStatus:   git.SyncStatusUpToDate,
+						TrackingName: "origin/branch-2",
 					},
 					git.BranchSyncStatus{
-						Name:           "origin/branch-1",
-						SyncStatus:     git.SyncStatusRemoteOnly,
-						TrackingBranch: "",
+						Name:         "origin/branch-1",
+						SyncStatus:   git.SyncStatusRemoteOnly,
+						TrackingName: "",
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
@@ -297,32 +297,43 @@ func TestBackendCommands(t *testing.T) {
   remotes/origin/branch-1      307a7bf4 Commit message 1b
   remotes/origin/branch-2      da796a69 Commit message 2
   remotes/origin/branch-3      bc39378a Commit message 3b
+	remotes/origin/main          024df944 Commit message on main (#1234)
 `[1:]
 			want := git.BranchesSyncStatus{
 				git.BranchSyncStatus{
-					Name:           "branch-1",
-					SyncStatus:     git.SyncStatusAhead,
-					TrackingBranch: "origin/branch-1",
+					Name:         "branch-1",
+					InitialSHA:   "01a7eded",
+					SyncStatus:   git.SyncStatusAhead,
+					TrackingName: "origin/branch-1",
+					TrackingSHA:  "307a7bf4",
 				},
 				git.BranchSyncStatus{
-					Name:           "branch-2",
-					SyncStatus:     git.SyncStatusUpToDate,
-					TrackingBranch: "origin/branch-2",
+					Name:         "branch-2",
+					InitialSHA:   "da796a69",
+					SyncStatus:   git.SyncStatusUpToDate,
+					TrackingName: "origin/branch-2",
+					TrackingSHA:  "da796a69",
 				},
 				git.BranchSyncStatus{
-					Name:           "branch-3",
-					SyncStatus:     git.SyncStatusBehind,
-					TrackingBranch: "origin/branch-3",
+					Name:         "branch-3",
+					InitialSHA:   "f4ebec0a",
+					SyncStatus:   git.SyncStatusBehind,
+					TrackingName: "origin/branch-3",
+					TrackingSHA:  "bc39378a",
 				},
 				git.BranchSyncStatus{
-					Name:           "main",
-					SyncStatus:     git.SyncStatusUpToDate,
-					TrackingBranch: "origin/main",
+					Name:         "main",
+					InitialSHA:   "024df944",
+					SyncStatus:   git.SyncStatusUpToDate,
+					TrackingName: "origin/main",
+					TrackingSHA:  "024df944",
 				},
 				git.BranchSyncStatus{
-					Name:           "branch-4",
-					SyncStatus:     git.SyncStatusDeletedAtRemote,
-					TrackingBranch: "origin/branch-4",
+					Name:         "branch-4",
+					InitialSHA:   "e4d6bc09",
+					SyncStatus:   git.SyncStatusDeletedAtRemote,
+					TrackingName: "origin/branch-4",
+					TrackingSHA:  "",
 				},
 			}
 			have, currentBranch := git.ParseVerboseBranchesOutput(give)
