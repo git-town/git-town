@@ -277,8 +277,9 @@ func TestBackendCommands(t *testing.T) {
 						TrackingBranch: "origin/branch-2",
 					},
 					git.BranchSyncStatus{
-						Name:       "origin/branch-1",
-						SyncStatus: git.SyncStatusRemoteOnly,
+						Name:           "origin/branch-1",
+						SyncStatus:     git.SyncStatusRemoteOnly,
+						TrackingBranch: "",
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
