@@ -70,7 +70,9 @@ func (bs BranchesSyncStatus) BranchNames() []string {
 	return result
 }
 
-func (bs BranchesSyncStatus) Contains(branchName string) bool {
+// IsKnown indicates whether the given branch is already known to this BranchesSyncStatus instance,
+// either as a branch or the tracking branch of an already known branch.
+func (bs BranchesSyncStatus) IsKnown(branchName string) bool {
 	for _, branch := range bs {
 		if branch.Name == branchName || branch.TrackingBranch == branchName {
 			return true
@@ -101,6 +103,8 @@ func (bs BranchesSyncStatus) LocalBranchesWithDeletedTrackingBranches() Branches
 	return result
 }
 
+// Lookup provides the branch with the given name if one exists.
+// The branch can be either local or remote.
 func (bs BranchesSyncStatus) Lookup(branchName string) *BranchSyncStatus {
 	remoteName := TrackingBranchName(branchName)
 	for bi, branch := range bs {

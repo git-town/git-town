@@ -103,7 +103,7 @@ func ParseVerboseBranchesOutput(output string) (BranchesSyncStatus, string) {
 		}
 		syncStatus, trackingBranchName := determineSyncStatus(branchName, remoteText)
 		branchName = strings.TrimPrefix(branchName, "remotes/")
-		if !result.Contains(branchName) {
+		if !result.IsKnown(branchName) {
 			result = append(result, BranchSyncStatus{
 				Name:           branchName,
 				SyncStatus:     syncStatus,
@@ -403,8 +403,8 @@ func (bc *BackendCommands) Remotes() (config.Remotes, error) {
 // RemoveOutdatedConfiguration removes outdated Git Town configuration.
 func (bc *BackendCommands) RemoveOutdatedConfiguration(allBranches BranchesSyncStatus) error {
 	for child, parent := range bc.Config.Lineage() {
-		hasChildBranch := allBranches.Contains(child)
-		hasParentBranch := allBranches.Contains(parent)
+		hasChildBranch := allBranches.IsKnown(child)
+		hasParentBranch := allBranches.IsKnown(parent)
 		if !hasChildBranch || !hasParentBranch {
 			// TODO
 			err := bc.Config.RemoveParent(child)
