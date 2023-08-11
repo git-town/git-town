@@ -41,7 +41,9 @@ func TestBranch(t *testing.T) {
 		})
 	})
 	t.Run("RemoteBranch", func(t *testing.T) {
+		t.Parallel()
 		t.Run("remote-only branch", func(t *testing.T) {
+			t.Parallel()
 			give := git.BranchSyncStatus{
 				Name:           "origin/branch1",
 				SyncStatus:     git.SyncStatusRemoteOnly,
@@ -52,6 +54,7 @@ func TestBranch(t *testing.T) {
 			assert.Equal(t, want, have)
 		})
 		t.Run("local-only branch", func(t *testing.T) {
+			t.Parallel()
 			give := git.BranchSyncStatus{
 				Name:           "branch1",
 				SyncStatus:     git.SyncStatusLocalOnly,
@@ -62,6 +65,7 @@ func TestBranch(t *testing.T) {
 			assert.Equal(t, want, have)
 		})
 		t.Run("local branch with tracking branch", func(t *testing.T) {
+			t.Parallel()
 			give := git.BranchSyncStatus{
 				Name:           "branch1",
 				SyncStatus:     git.SyncStatusUpToDate,
@@ -285,31 +289,37 @@ func TestBranches(t *testing.T) {
 		t.Parallel()
 		bs := git.BranchesSyncStatus{
 			git.BranchSyncStatus{
-				Name:       "one",
-				SyncStatus: git.SyncStatusUpToDate,
+				Name:           "one",
+				SyncStatus:     git.SyncStatusLocalOnly,
+				TrackingBranch: "",
 			},
 			git.BranchSyncStatus{
-				Name:       "two",
-				SyncStatus: git.SyncStatusUpToDate,
+				Name:           "two",
+				SyncStatus:     git.SyncStatusLocalOnly,
+				TrackingBranch: "",
 			},
 			git.BranchSyncStatus{
-				Name:       "three",
-				SyncStatus: git.SyncStatusUpToDate,
+				Name:           "three",
+				SyncStatus:     git.SyncStatusLocalOnly,
+				TrackingBranch: "",
 			},
 			git.BranchSyncStatus{
-				Name:       "four",
-				SyncStatus: git.SyncStatusUpToDate,
+				Name:           "four",
+				SyncStatus:     git.SyncStatusLocalOnly,
+				TrackingBranch: "",
 			},
 		}
 		have, err := bs.Select([]string{"one", "three"})
 		want := git.BranchesSyncStatus{
 			git.BranchSyncStatus{
-				Name:       "one",
-				SyncStatus: git.SyncStatusUpToDate,
+				Name:           "one",
+				SyncStatus:     git.SyncStatusLocalOnly,
+				TrackingBranch: "",
 			},
 			git.BranchSyncStatus{
-				Name:       "three",
-				SyncStatus: git.SyncStatusUpToDate,
+				Name:           "three",
+				SyncStatus:     git.SyncStatusLocalOnly,
+				TrackingBranch: "",
 			},
 		}
 		assert.NoError(t, err)
