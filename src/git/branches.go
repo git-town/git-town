@@ -87,6 +87,16 @@ func (bs BranchesSyncStatus) IsKnown(branchName string) bool {
 	return false
 }
 
+// HasLocalBranch indicates whether a local branc with the given name already exists.
+func (bs BranchesSyncStatus) HasLocalBranch(name string) bool {
+	for _, branch := range bs {
+		if branch.Name == name {
+			return true
+		}
+	}
+	return false
+}
+
 // LocalBranches provides only the branches that exist on the local machine.
 func (bs BranchesSyncStatus) LocalBranches() BranchesSyncStatus {
 	result := BranchesSyncStatus{}
@@ -116,6 +126,17 @@ func (bs BranchesSyncStatus) Lookup(branchName string) *BranchSyncStatus {
 	for bi, branch := range bs {
 		if branch.Name == branchName || branch.Name == remoteName {
 			return &bs[bi]
+		}
+	}
+	return nil
+}
+
+// LookupLocalBranchWithTracking provides the local branch that has the given branch as its tracking branch
+// or nil if no such branch exists.
+func (bs BranchesSyncStatus) LookupLocalBranchWithTracking(trackingBranch string) *BranchSyncStatus {
+	for b, branch := range bs {
+		if branch.TrackingName == trackingBranch {
+			return &bs[b]
 		}
 	}
 	return nil
