@@ -21,8 +21,9 @@ func TestBranch(t *testing.T) {
 		t.Parallel()
 		t.Run("local branch", func(t *testing.T) {
 			give := git.BranchSyncStatus{
-				Name:       "branch1",
-				SyncStatus: git.SyncStatusUpToDate,
+				Name:           "branch1",
+				SyncStatus:     git.SyncStatusLocalOnly,
+				TrackingBranch: "",
 			}
 			have := give.NameWithoutRemote()
 			want := "branch1"
@@ -30,8 +31,9 @@ func TestBranch(t *testing.T) {
 		})
 		t.Run("remote branch", func(t *testing.T) {
 			give := git.BranchSyncStatus{
-				Name:       "origin/branch1",
-				SyncStatus: git.SyncStatusRemoteOnly,
+				Name:           "origin/branch1",
+				SyncStatus:     git.SyncStatusRemoteOnly,
+				TrackingBranch: "",
 			}
 			have := give.NameWithoutRemote()
 			want := "branch1"
@@ -41,8 +43,9 @@ func TestBranch(t *testing.T) {
 	t.Run("RemoteBranch", func(t *testing.T) {
 		t.Run("remote-only branch", func(t *testing.T) {
 			give := git.BranchSyncStatus{
-				Name:       "origin/branch1",
-				SyncStatus: git.SyncStatusRemoteOnly,
+				Name:           "origin/branch1",
+				SyncStatus:     git.SyncStatusRemoteOnly,
+				TrackingBranch: "",
 			}
 			have := give.RemoteBranch()
 			want := "origin/branch1"
@@ -50,8 +53,9 @@ func TestBranch(t *testing.T) {
 		})
 		t.Run("local-only branch", func(t *testing.T) {
 			give := git.BranchSyncStatus{
-				Name:       "branch1",
-				SyncStatus: git.SyncStatusLocalOnly,
+				Name:           "branch1",
+				SyncStatus:     git.SyncStatusLocalOnly,
+				TrackingBranch: "",
 			}
 			have := give.RemoteBranch()
 			want := ""
