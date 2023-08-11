@@ -41,12 +41,14 @@ func TestCollector(t *testing.T) {
 			fc := failure.Collector{}
 			syncStatuses := git.BranchesSyncStatus{
 				{
-					Name:       "branch1",
-					SyncStatus: git.SyncStatusUpToDate,
+					Name:           "branch1",
+					SyncStatus:     git.SyncStatusLocalOnly,
+					TrackingBranch: "",
 				},
 				{
-					Name:       "branch2",
-					SyncStatus: git.SyncStatusUpToDate,
+					Name:           "branch2",
+					SyncStatus:     git.SyncStatusLocalOnly,
+					TrackingBranch: "",
 				},
 			}
 			have := fc.BranchesSyncStatus(syncStatuses, nil)

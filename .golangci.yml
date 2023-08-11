@@ -86,3 +86,24 @@ issues:
       text: missing in (MultiSelect|Select)
       linters:
         - exhaustruct
+    - linters:
+        - exhaustruct
+      text: survey.MultiSelect is missing fields
+    - linters:
+        - exhaustruct
+      text: survey.Select is missing fields
+    - linters:
+        - exhaustruct
+      text: gitea.PRBranchInfo is missing fields
+    - linters:
+        - exhaustruct
+      text: github.PullRequest is missing fields
+    - linters:
+        - exhaustruct
+      text: github.PullRequestBranch is missing fields
+    - linters:
+        - exhaustruct
+      text: oauth2.Token is missing fields
+    - linters:
+        - exhaustruct
+      text: http.Client is missing fields
