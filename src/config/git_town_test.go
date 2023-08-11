@@ -110,12 +110,12 @@ func TestGitTown(t *testing.T) {
 	t.Run("OriginURL()", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]giturl.Parts{
-			"http://github.com/organization/repository":                     {Host: "github.com", Org: "organization", Repo: "repository"},
-			"http://github.com/organization/repository.git":                 {Host: "github.com", Org: "organization", Repo: "repository"},
-			"https://github.com/organization/repository":                    {Host: "github.com", Org: "organization", Repo: "repository"},
-			"https://github.com/organization/repository.git":                {Host: "github.com", Org: "organization", Repo: "repository"},
-			"https://sub.domain.customhost.com/organization/repository":     {Host: "sub.domain.customhost.com", Org: "organization", Repo: "repository"},
-			"https://sub.domain.customhost.com/organization/repository.git": {Host: "sub.domain.customhost.com", Org: "organization", Repo: "repository"},
+			"http://github.com/organization/repository":                     {Host: "github.com", Org: "organization", Repo: "repository", User: ""},
+			"http://github.com/organization/repository.git":                 {Host: "github.com", Org: "organization", Repo: "repository", User: ""},
+			"https://github.com/organization/repository":                    {Host: "github.com", Org: "organization", Repo: "repository", User: ""},
+			"https://github.com/organization/repository.git":                {Host: "github.com", Org: "organization", Repo: "repository", User: ""},
+			"https://sub.domain.customhost.com/organization/repository":     {Host: "sub.domain.customhost.com", Org: "organization", Repo: "repository", User: ""},
+			"https://sub.domain.customhost.com/organization/repository.git": {Host: "sub.domain.customhost.com", Org: "organization", Repo: "repository", User: ""},
 		}
 		for give, want := range tests {
 			repo := testruntime.CreateGitTown(t)

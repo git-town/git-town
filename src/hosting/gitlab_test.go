@@ -79,11 +79,19 @@ func TestGitlabConnector(t *testing.T) {
 	t.Parallel()
 	t.Run("DefaultProposalMessage", func(t *testing.T) {
 		t.Parallel()
-		config := hosting.GitLabConfig{}
+		config := hosting.GitLabConfig{
+			CommonConfig: hosting.CommonConfig{
+				APIToken:     "",
+				Hostname:     "",
+				Organization: "",
+				Repository:   "",
+			},
+		}
 		give := hosting.Proposal{
 			Number:          1,
 			Title:           "my title",
 			CanMergeWithAPI: true,
+			Target:          "",
 		}
 		want := "my title (!1)"
 		have := config.DefaultProposalMessage(give)
@@ -120,6 +128,7 @@ func TestGitlabConnector(t *testing.T) {
 							Hostname:     "gitlab.com",
 							Organization: "organization",
 							Repository:   "repo",
+							APIToken:     "",
 						},
 					},
 				}
