@@ -14,7 +14,7 @@ Feature: does not kill a remote branch in offline mode
     Then it runs no commands
     And it prints the error:
       """
-      cannot delete remote branch "feature" in offline mode
+      cannot delete remote branch "origin/feature" in offline mode
       """
     And the current branch is still "main"
     And no branch hierarchy exists now

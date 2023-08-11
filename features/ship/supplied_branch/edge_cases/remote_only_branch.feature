@@ -68,6 +68,5 @@ Feature: ship a branch that exists only on origin
       | REPOSITORY    | BRANCHES             |
       | local, origin | main, feature, other |
     And this branch lineage exists now
-      | BRANCH  | PARENT |
-      | feature | main   |
-      | other   | main   |
+      | BRANCH | PARENT |
+      | other  | main   |

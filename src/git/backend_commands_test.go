@@ -161,87 +161,125 @@ func TestBackendCommands(t *testing.T) {
 		})
 
 		t.Run("recognizes the branch sync status", func(t *testing.T) {
+			t.Parallel()
 			t.Run("branch is ahead of its remote branch", func(t *testing.T) {
+				t.Parallel()
 				give := `
   branch-1                     11111111 [origin/branch-1: ahead 1] Commit message 1a
   remotes/origin/branch-1      22222222 Commit message 1b`[1:]
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
-						Name:       "branch-1",
-						SyncStatus: git.SyncStatusAhead,
+						Name:           "branch-1",
+						SyncStatus:     git.SyncStatusAhead,
+						TrackingBranch: "origin/branch-1",
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
 				assert.Equal(t, want, have)
 			})
 			t.Run("branch is behind its remote branch", func(t *testing.T) {
+				t.Parallel()
 				give := `
   branch-1                     11111111 [origin/branch-1: behind 2] Commit message 1
   remotes/origin/branch-1      22222222 Commit message 1b`[1:]
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
-						Name:       "branch-1",
-						SyncStatus: git.SyncStatusBehind,
+						Name:           "branch-1",
+						SyncStatus:     git.SyncStatusBehind,
+						TrackingBranch: "origin/branch-1",
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
 				assert.Equal(t, want, have)
 			})
 			t.Run("branch is ahead and behind its remote branch", func(t *testing.T) {
+				t.Parallel()
 				give := `
   branch-1                     11111111 [origin/branch-1: ahead 31, behind 2] Commit message 1a
   remotes/origin/branch-1      22222222 Commit message 1b`[1:]
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
-						Name:       "branch-1",
-						SyncStatus: git.SyncStatusAheadAndBehind,
+						Name:           "branch-1",
+						SyncStatus:     git.SyncStatusAheadAndBehind,
+						TrackingBranch: "origin/branch-1",
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
 				assert.Equal(t, want, have)
 			})
 			t.Run("branch is in sync with its remote branch", func(t *testing.T) {
+				t.Parallel()
 				give := `
   branch-1                     11111111 [origin/branch-1] Commit message 1
   remotes/origin/branch-1      11111111 Commit message 1`[1:]
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
-						Name:       "branch-1",
-						SyncStatus: git.SyncStatusUpToDate,
+						Name:           "branch-1",
+						SyncStatus:     git.SyncStatusUpToDate,
+						TrackingBranch: "origin/branch-1",
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
 				assert.Equal(t, want, have)
 			})
 			t.Run("remote-only branch", func(t *testing.T) {
+				t.Parallel()
 				give := `
   remotes/origin/branch-1    22222222 Commit message 2`[1:]
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
-						Name:       "branch-1",
-						SyncStatus: git.SyncStatusRemoteOnly,
+						Name:           "origin/branch-1",
+						SyncStatus:     git.SyncStatusRemoteOnly,
+						TrackingBranch: "",
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
 				assert.Equal(t, want, have)
 			})
 			t.Run("local-only branch", func(t *testing.T) {
+				t.Parallel()
 				give := `  branch-1                     01a7eded Commit message 1`
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
-						Name:       "branch-1",
-						SyncStatus: git.SyncStatusLocalOnly,
+						Name:           "branch-1",
+						SyncStatus:     git.SyncStatusLocalOnly,
+						TrackingBranch: "",
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
 				assert.Equal(t, want, have)
 			})
 			t.Run("branch is deleted at the remote", func(t *testing.T) {
+				t.Parallel()
 				give := `  branch-1                     01a7eded [origin/branch-1: gone] Commit message 1`
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
-						Name:       "branch-1",
-						SyncStatus: git.SyncStatusDeletedAtRemote,
+						Name:           "branch-1",
+						SyncStatus:     git.SyncStatusDeletedAtRemote,
+						TrackingBranch: "origin/branch-1",
+					},
+				}
+				have, _ := git.ParseVerboseBranchesOutput(give)
+				assert.Equal(t, want, have)
+			})
+		})
+
+		t.Run("uses the tracking branch name provided by Git", func(t *testing.T) {
+			t.Run("a branch uses a differently named tracking branch", func(t *testing.T) {
+				give := `
+  branch-1                     11111111 [origin/branch-2] Commit message 1
+  remotes/origin/branch-1      22222222 Commit message 2
+  remotes/origin/branch-2      11111111 Commit message 1`[1:]
+				want := git.BranchesSyncStatus{
+					git.BranchSyncStatus{
+						Name:           "branch-1",
+						SyncStatus:     git.SyncStatusUpToDate,
+						TrackingBranch: "origin/branch-2",
+					},
+					git.BranchSyncStatus{
+						Name:           "origin/branch-1",
+						SyncStatus:     git.SyncStatusRemoteOnly,
+						TrackingBranch: "",
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
@@ -262,24 +300,29 @@ func TestBackendCommands(t *testing.T) {
 `[1:]
 			want := git.BranchesSyncStatus{
 				git.BranchSyncStatus{
-					Name:       "branch-1",
-					SyncStatus: git.SyncStatusAhead,
+					Name:           "branch-1",
+					SyncStatus:     git.SyncStatusAhead,
+					TrackingBranch: "origin/branch-1",
 				},
 				git.BranchSyncStatus{
-					Name:       "branch-2",
-					SyncStatus: git.SyncStatusUpToDate,
+					Name:           "branch-2",
+					SyncStatus:     git.SyncStatusUpToDate,
+					TrackingBranch: "origin/branch-2",
 				},
 				git.BranchSyncStatus{
-					Name:       "branch-3",
-					SyncStatus: git.SyncStatusBehind,
+					Name:           "branch-3",
+					SyncStatus:     git.SyncStatusBehind,
+					TrackingBranch: "origin/branch-3",
 				},
 				git.BranchSyncStatus{
-					Name:       "main",
-					SyncStatus: git.SyncStatusUpToDate,
+					Name:           "main",
+					SyncStatus:     git.SyncStatusUpToDate,
+					TrackingBranch: "origin/main",
 				},
 				git.BranchSyncStatus{
-					Name:       "branch-4",
-					SyncStatus: git.SyncStatusDeletedAtRemote,
+					Name:           "branch-4",
+					SyncStatus:     git.SyncStatusDeletedAtRemote,
+					TrackingBranch: "origin/branch-4",
 				},
 			}
 			have, currentBranch := git.ParseVerboseBranchesOutput(give)

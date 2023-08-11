@@ -3,7 +3,8 @@ package messages
 const (
 	AbortNothingToDo                  = "nothing to abort"
 	ArgumentUnknown                   = "unknown argument: %q"
-	BranchAlreadyExists               = "there is already a branch %q"
+	BranchAlreadyExistsLocally        = "there is already a branch %q"
+	BranchAlreadyExistsRemotely       = "there is already a branch %q at the \"origin\" remote"
 	BranchDoesntExist                 = "there is no branch %q"
 	BranchCheckoutProblem             = "cannot check out branch %q: %w"
 	BranchCurrentProblem              = "cannot determine current branch: %w"

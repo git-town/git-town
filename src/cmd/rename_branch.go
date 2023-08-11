@@ -138,7 +138,10 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 		return nil, fmt.Errorf(messages.RenameBranchNotInSync, oldBranchName)
 	}
 	if branches.All.Contains(newBranchName) {
-		return nil, fmt.Errorf(messages.BranchAlreadyExists, newBranchName)
+		return nil, fmt.Errorf(messages.BranchAlreadyExistsLocally, newBranchName)
+	}
+	if branches.All.Contains(git.TrackingBranchName(newBranchName)) {
+		return nil, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
 	lineage := run.Config.Lineage()
 	return &renameBranchConfig{
@@ -173,7 +176,7 @@ func renameBranchStepList(config *renameBranchConfig) (runstate.StepList, error)
 	}
 	if config.oldBranch.HasTrackingBranch() && !config.isOffline {
 		result.Append(&steps.CreateTrackingBranchStep{Branch: config.newBranch, NoPushHook: config.noPushHook})
-		result.Append(&steps.DeleteOriginBranchStep{Branch: config.oldBranch.Name, IsTracking: true})
+		result.Append(&steps.DeleteOriginBranchStep{Branch: config.oldBranch.NameWithoutRemote(), IsTracking: true})
 	}
 	result.Append(&steps.DeleteLocalBranchStep{Branch: config.oldBranch.Name, Parent: config.mainBranch})
 	err := result.Wrap(runstate.WrapOptions{

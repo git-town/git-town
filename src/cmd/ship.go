@@ -302,7 +302,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 		shouldSyncUpstream: config.shouldSyncUpstream,
 		syncStrategy:       config.syncStrategy,
 	})
-	// sync the branch to ship locally only
+	// sync the branch to ship (local sync only)
 	syncBranchSteps(&list, syncBranchStepsArgs{
 		branch:             config.branchToShip,
 		branchDurations:    config.branchDurations,
@@ -317,7 +317,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 		syncStrategy:       config.syncStrategy,
 	})
 	list.Add(&steps.EnsureHasShippableChangesStep{Branch: config.branchToShip.Name, Parent: config.mainBranch})
-	list.Add(&steps.CheckoutStep{Branch: config.targetBranch.Name})
+	list.Add(&steps.CheckoutStep{Branch: config.targetBranch.NameWithoutRemote()})
 	if config.canShipViaAPI {
 		// update the proposals of child branches
 		for _, childProposal := range config.proposalsOfChildBranches {
@@ -337,7 +337,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 		})
 		list.Add(&steps.PullBranchStep{})
 	} else {
-		list.Add(&steps.SquashMergeStep{Branch: config.branchToShip.Name, CommitMessage: commitMessage, Parent: config.targetBranch.Name})
+		list.Add(&steps.SquashMergeStep{Branch: config.branchToShip.NameWithoutRemote(), CommitMessage: commitMessage, Parent: config.targetBranch.Name})
 	}
 	if config.remotes.HasOrigin() && !config.isOffline {
 		list.Add(&steps.PushBranchStep{Branch: config.targetBranch.Name, Undoable: true})
@@ -348,11 +348,11 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 	// - we know we are online
 	if config.canShipViaAPI || (config.branchToShip.HasTrackingBranch() && len(config.childBranches) == 0 && !config.isOffline) {
 		if config.deleteOriginBranch {
-			list.Add(&steps.DeleteOriginBranchStep{Branch: config.branchToShip.Name, IsTracking: true})
+			list.Add(&steps.DeleteOriginBranchStep{Branch: config.branchToShip.NameWithoutRemote(), IsTracking: true})
 		}
 	}
-	list.Add(&steps.DeleteLocalBranchStep{Branch: config.branchToShip.Name, Parent: config.mainBranch})
-	list.Add(&steps.DeleteParentBranchStep{Branch: config.branchToShip.Name, Parent: run.Config.Lineage().Parent(config.branchToShip.Name)})
+	list.Add(&steps.DeleteLocalBranchStep{Branch: config.branchToShip.NameWithoutRemote(), Parent: config.mainBranch})
+	list.Add(&steps.DeleteParentBranchStep{Branch: config.branchToShip.NameWithoutRemote(), Parent: run.Config.Lineage().Parent(config.branchToShip.Name)})
 	for _, child := range config.childBranches {
 		list.Add(&steps.SetParentStep{Branch: child, ParentBranch: config.targetBranch.Name})
 	}

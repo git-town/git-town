@@ -2,7 +2,7 @@ Feature: already existing branch
 
   Scenario: the branch to create already exists locally
     Given a local feature branch "existing"
-    When I run "git-town hack existing"
+    When I run "git-town append existing"
     Then it runs the commands
       | BRANCH | COMMAND                  |
       | main   | git fetch --prune --tags |
@@ -13,7 +13,7 @@ Feature: already existing branch
 
   Scenario: the branch to create already exists at the origin remote
     Given a remote feature branch "existing"
-    When I run "git-town hack existing"
+    When I run "git-town append existing"
     Then it runs the commands
       | BRANCH | COMMAND                  |
       | main   | git fetch --prune --tags |

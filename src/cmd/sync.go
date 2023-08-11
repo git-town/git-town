@@ -239,7 +239,7 @@ func syncBranchSteps(list *runstate.StepListBuilder, args syncBranchStepsArgs) {
 		// perennial branch but no remote --> this branch cannot be synced
 		return
 	}
-	list.Add(&steps.CheckoutStep{Branch: args.branch.Name})
+	list.Add(&steps.CheckoutStep{Branch: args.branch.NameWithoutRemote()})
 	if isFeatureBranch {
 		syncFeatureBranchSteps(list, args.branch, args.lineage, args.syncStrategy)
 	} else {
@@ -279,14 +279,14 @@ type syncBranchStepsArgs struct {
 
 func syncFeatureBranchSteps(list *runstate.StepListBuilder, branch git.BranchSyncStatus, lineage config.Lineage, syncStrategy config.SyncStrategy) {
 	if branch.HasTrackingBranch() {
-		updateCurrentFeatureBranchStep(list, branch.TrackingBranch(), syncStrategy)
+		updateCurrentFeatureBranchStep(list, branch.RemoteBranch(), syncStrategy)
 	}
-	updateCurrentFeatureBranchStep(list, lineage.Parent(branch.Name), syncStrategy)
+	updateCurrentFeatureBranchStep(list, lineage.Parent(branch.NameWithoutRemote()), syncStrategy)
 }
 
 func syncPerennialBranchSteps(list *runstate.StepListBuilder, args syncPerennialBranchStepsArgs) {
 	if args.branch.HasTrackingBranch() {
-		updateCurrentPerennialBranchStep(list, args.branch.TrackingBranch(), args.pullBranchStrategy)
+		updateCurrentPerennialBranchStep(list, args.branch.TrackingBranch, args.pullBranchStrategy)
 	}
 	if args.branch.Name == args.mainBranch && args.hasUpstream && args.shouldSyncUpstream {
 		list.Add(&steps.FetchUpstreamStep{Branch: args.mainBranch})

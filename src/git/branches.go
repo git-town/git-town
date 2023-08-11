@@ -2,14 +2,23 @@ package git
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/messages"
 )
 
+// BranchSyncStatus describes the sync status of a branch in relation to its tracking branch.
 type BranchSyncStatus struct {
-	Name       string
+	// Name contains the fully qualified name of the branch,
+	// i.e. "foo" for a local branch and "origin/foo" for a remote branch.
+	Name string
+
+	// SyncStatus of the branch
 	SyncStatus SyncStatus
+
+	// TrackingBranch contains the fully qualified name of the tracking branch, i.e. "origin/foo".
+	TrackingBranch string
 }
 
 func (bi BranchSyncStatus) HasTrackingBranch() bool {
@@ -22,9 +31,17 @@ func (bi BranchSyncStatus) HasTrackingBranch() bool {
 	panic(fmt.Sprintf("unknown sync status: %v", bi.SyncStatus))
 }
 
-// TrackingBranch provides the name of the remote branch tracking the local branch with the given name.
-func (bi BranchSyncStatus) TrackingBranch() string {
-	return TrackingBranchName(bi.Name)
+// IsLocalBranch indicates whether this branch exists in the local repo that Git Town is running in.
+func (bi BranchSyncStatus) IsLocal() bool {
+	return bi.SyncStatus.IsLocal()
+}
+
+// NameWithoutRemote provides the pure name of the branch, i.e. "foo" when the branch name is "origin/foo".
+func (bi BranchSyncStatus) NameWithoutRemote() string {
+	if bi.SyncStatus == SyncStatusRemoteOnly {
+		return strings.TrimPrefix(bi.Name, "origin/")
+	}
+	return bi.Name
 }
 
 // TrackingBranchName provides the name of the remote branch for the given branch.
@@ -32,11 +49,17 @@ func TrackingBranchName(branch string) string {
 	return "origin/" + branch
 }
 
-// IsLocalBranch indicates whether this branch exists in the local repo that Git Town is running in.
-func (bi BranchSyncStatus) IsLocal() bool {
-	return bi.SyncStatus.IsLocal()
+// RemoteBranch provides the name of the branch at the remote for this BranchSyncStatus.
+func (bi BranchSyncStatus) RemoteBranch() string {
+	if bi.SyncStatus == SyncStatusRemoteOnly {
+		return bi.Name
+	}
+	return bi.TrackingBranch
 }
 
+// BranchesSyncStatus contains the BranchesSyncStatus for all branches in a repo.
+// Tracking branches on the origin remote don't get their own entry,
+// they are listed in the `TrackingBranch` property of the local branch they track.
 type BranchesSyncStatus []BranchSyncStatus
 
 func (bs BranchesSyncStatus) BranchNames() []string {
@@ -49,7 +72,7 @@ func (bs BranchesSyncStatus) BranchNames() []string {
 
 func (bs BranchesSyncStatus) Contains(branchName string) bool {
 	for _, branch := range bs {
-		if branch.Name == branchName {
+		if branch.Name == branchName || branch.TrackingBranch == branchName {
 			return true
 		}
 	}
@@ -79,8 +102,9 @@ func (bs BranchesSyncStatus) LocalBranchesWithDeletedTrackingBranches() Branches
 }
 
 func (bs BranchesSyncStatus) Lookup(branchName string) *BranchSyncStatus {
+	remoteName := TrackingBranchName(branchName)
 	for bi, branch := range bs {
-		if branch.Name == branchName {
+		if branch.Name == branchName || branch.Name == remoteName {
 			return &bs[bi]
 		}
 	}
