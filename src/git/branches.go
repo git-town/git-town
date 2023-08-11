@@ -58,8 +58,8 @@ func (bi BranchSyncStatus) RemoteBranch() string {
 }
 
 // BranchesSyncStatus contains the BranchesSyncStatus for all branches in a repo.
-// Tracking branches on the origin remote don't get their own entry.
-// They are listed in the `TrackingBranch` property of the branch they track.
+// Tracking branches on the origin remote don't get their own entry,
+// they are listed in the `TrackingBranch` property of the local branch they track.
 type BranchesSyncStatus []BranchSyncStatus
 
 func (bs BranchesSyncStatus) BranchNames() []string {
