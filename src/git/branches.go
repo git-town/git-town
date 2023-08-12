@@ -14,11 +14,17 @@ type BranchSyncStatus struct {
 	// i.e. "foo" for a local branch and "origin/foo" for a remote branch.
 	Name string
 
+	// InitialSHA contains the SHA that this branch had before Git Town ran.
+	InitialSHA string
+
 	// SyncStatus of the branch
 	SyncStatus SyncStatus
 
-	// TrackingBranch contains the fully qualified name of the tracking branch, i.e. "origin/foo".
-	TrackingBranch string
+	// TrackingName contains the fully qualified name of the tracking branch, i.e. "origin/foo".
+	TrackingName string
+
+	// TrackingSHA contains the SHA of the tracking branch before Git Town ran.
+	TrackingSHA string
 }
 
 func (bi BranchSyncStatus) HasTrackingBranch() bool {
@@ -54,7 +60,7 @@ func (bi BranchSyncStatus) RemoteBranch() string {
 	if bi.SyncStatus == SyncStatusRemoteOnly {
 		return bi.Name
 	}
-	return bi.TrackingBranch
+	return bi.TrackingName
 }
 
 // BranchesSyncStatus contains the BranchesSyncStatus for all branches in a repo.
@@ -74,7 +80,17 @@ func (bs BranchesSyncStatus) BranchNames() []string {
 // either as a branch or the tracking branch of an already known branch.
 func (bs BranchesSyncStatus) IsKnown(branchName string) bool {
 	for _, branch := range bs {
-		if branch.Name == branchName || branch.TrackingBranch == branchName {
+		if branch.Name == branchName || branch.TrackingName == branchName {
+			return true
+		}
+	}
+	return false
+}
+
+// HasLocalBranch indicates whether a local branc with the given name already exists.
+func (bs BranchesSyncStatus) HasLocalBranch(name string) bool {
+	for _, branch := range bs {
+		if branch.Name == name {
 			return true
 		}
 	}
@@ -110,6 +126,17 @@ func (bs BranchesSyncStatus) Lookup(branchName string) *BranchSyncStatus {
 	for bi, branch := range bs {
 		if branch.Name == branchName || branch.Name == remoteName {
 			return &bs[bi]
+		}
+	}
+	return nil
+}
+
+// LookupLocalBranchWithTracking provides the local branch that has the given branch as its tracking branch
+// or nil if no such branch exists.
+func (bs BranchesSyncStatus) LookupLocalBranchWithTracking(trackingBranch string) *BranchSyncStatus {
+	for b, branch := range bs {
+		if branch.TrackingName == trackingBranch {
+			return &bs[b]
 		}
 	}
 	return nil

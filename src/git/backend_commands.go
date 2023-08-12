@@ -97,17 +97,23 @@ func ParseVerboseBranchesOutput(output string) (BranchesSyncStatus, string) {
 		}
 		parts := spaceRE.Split(line[2:], 3)
 		branchName := parts[0]
+		sha := parts[1]
 		remoteText := parts[2]
 		if line[0] == '*' && branchName != "(no" { // "(no" is what we get when a rebase is active, in which case no branch is checked out
 			checkedoutBranch = branchName
 		}
 		syncStatus, trackingBranchName := determineSyncStatus(branchName, remoteText)
 		branchName = strings.TrimPrefix(branchName, "remotes/")
-		if !result.IsKnown(branchName) {
+		existingBranchWithTracking := result.LookupLocalBranchWithTracking(branchName)
+		if existingBranchWithTracking != nil {
+			existingBranchWithTracking.TrackingSHA = sha
+		} else if !result.HasLocalBranch(branchName) {
 			result = append(result, BranchSyncStatus{
-				Name:           branchName,
-				SyncStatus:     syncStatus,
-				TrackingBranch: trackingBranchName,
+				Name:         branchName,
+				InitialSHA:   sha,
+				SyncStatus:   syncStatus,
+				TrackingName: trackingBranchName,
+				TrackingSHA:  "", // will be added later
 			})
 		}
 	}
