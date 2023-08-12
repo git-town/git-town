@@ -114,6 +114,49 @@ func TestBranches(t *testing.T) {
 		assert.Equal(t, want, have)
 	})
 
+	t.Run("HasLocalBranch", func(t *testing.T) {
+		t.Parallel()
+		t.Run("has a matching local branch", func(t *testing.T) {
+			t.Parallel()
+			bs := git.BranchesSyncStatus{
+				git.BranchSyncStatus{
+					Name:         "one",
+					InitialSHA:   "",
+					SyncStatus:   git.SyncStatusLocalOnly,
+					TrackingName: "",
+					TrackingSHA:  "",
+				},
+			}
+			assert.True(t, bs.HasLocalBranch("one"))
+		})
+		t.Run("has a remote branch with that name", func(t *testing.T) {
+			t.Parallel()
+			bs := git.BranchesSyncStatus{
+				git.BranchSyncStatus{
+					Name:         "origin/one",
+					InitialSHA:   "",
+					SyncStatus:   git.SyncStatusLocalOnly,
+					TrackingName: "",
+					TrackingSHA:  "",
+				},
+			}
+			assert.False(t, bs.HasLocalBranch("one"))
+		})
+		t.Run("has a local branch with a matching tracking branch", func(t *testing.T) {
+			t.Parallel()
+			bs := git.BranchesSyncStatus{
+				git.BranchSyncStatus{
+					Name:         "two",
+					InitialSHA:   "",
+					SyncStatus:   git.SyncStatusLocalOnly,
+					TrackingName: "origin/one",
+					TrackingSHA:  "",
+				},
+			}
+			assert.False(t, bs.HasLocalBranch("one"))
+		})
+	})
+
 	t.Run("IsKnown", func(t *testing.T) {
 		t.Parallel()
 		t.Run("the branch in question is a local branch", func(t *testing.T) {
@@ -275,6 +318,33 @@ func TestBranches(t *testing.T) {
 		assert.Equal(t, "one", bs.Lookup("one").Name)
 		assert.Equal(t, "two", bs.Lookup("two").Name)
 		assert.Nil(t, bs.Lookup("zonk"))
+	})
+
+	t.Run("LookupLocalBranchWithTracking", func(t *testing.T) {
+		t.Parallel()
+		t.Run("has a local branch with matching tracking branch", func(t *testing.T) {
+			branch := git.BranchSyncStatus{
+				Name:         "one",
+				InitialSHA:   "",
+				SyncStatus:   git.SyncStatusLocalOnly,
+				TrackingName: "origin/two",
+				TrackingSHA:  "",
+			}
+			bs := git.BranchesSyncStatus{branch}
+			have := bs.LookupLocalBranchWithTracking("origin/two")
+			assert.Equal(t, &branch, have)
+		})
+		t.Run("has a local branch with the given name", func(t *testing.T) {
+			bs := git.BranchesSyncStatus{git.BranchSyncStatus{
+				Name:         "one",
+				InitialSHA:   "",
+				SyncStatus:   git.SyncStatusLocalOnly,
+				TrackingName: "",
+				TrackingSHA:  "",
+			}}
+			have := bs.LookupLocalBranchWithTracking("one")
+			assert.Nil(t, have)
+		})
 	})
 
 	t.Run("Remove", func(t *testing.T) {
