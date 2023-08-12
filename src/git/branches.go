@@ -23,7 +23,7 @@ type BranchSyncStatus struct {
 	// TrackingName contains the fully qualified name of the tracking branch, i.e. "origin/foo".
 	TrackingName string
 
-	// TrackingSHA contains the initial SHA of the tracking branch.
+	// TrackingSHA contains the SHA of the tracking branch before Git Town ran.
 	TrackingSHA string
 }
 
