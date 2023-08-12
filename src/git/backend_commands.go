@@ -107,9 +107,7 @@ func ParseVerboseBranchesOutput(output string) (BranchesSyncStatus, string) {
 		existingBranchWithTracking := result.LookupLocalBranchWithTracking(branchName)
 		if existingBranchWithTracking != nil {
 			existingBranchWithTracking.TrackingSHA = sha
-			continue
-		}
-		if !result.HasLocalBranch(branchName) {
+		} else if !result.HasLocalBranch(branchName) {
 			result = append(result, BranchSyncStatus{
 				Name:         branchName,
 				InitialSHA:   sha,
@@ -117,7 +115,6 @@ func ParseVerboseBranchesOutput(output string) (BranchesSyncStatus, string) {
 				TrackingName: trackingBranchName,
 				TrackingSHA:  "", // will be added later
 			})
-			continue
 		}
 	}
 	return result, checkedoutBranch
