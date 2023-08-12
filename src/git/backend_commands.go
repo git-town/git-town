@@ -106,7 +106,7 @@ func ParseVerboseBranchesOutput(output string) (BranchesSyncStatus, string) {
 		branchName = strings.TrimPrefix(branchName, "remotes/")
 		existingBranchWithTracking := result.LookupLocalBranchWithTracking(branchName)
 		if existingBranchWithTracking != nil {
-			(*existingBranchWithTracking).TrackingSHA = sha
+			existingBranchWithTracking.TrackingSHA = sha
 			continue
 		}
 		if !result.HasLocalBranch(branchName) {
