@@ -1,12 +1,13 @@
 package slice
 
-func AppendAllMissing[C comparable](list []C, elements []C) []C {
-	for _, element := range elements {
-		if !Contains(list, element) {
-			list = append(list, element)
+// AppendAllMissing appends all elements of `new` that aren't inside `existing` to `existing`.
+func AppendAllMissing[C comparable](existing []C, new []C) []C {
+	for _, element := range new {
+		if !Contains(existing, element) {
+			existing = append(existing, element)
 		}
 	}
-	return list
+	return existing
 }
 
 // Contains returns whether the given string slice
