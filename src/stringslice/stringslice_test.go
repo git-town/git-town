@@ -64,5 +64,4 @@ func TestStringSlice(t *testing.T) {
 			assert.Equal(t, want, have)
 		}
 	})
-
 }
