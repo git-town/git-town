@@ -7,7 +7,7 @@ import (
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/messages"
-	"github.com/git-town/git-town/v9/src/stringslice"
+	"github.com/git-town/git-town/v9/src/slice"
 	"github.com/git-town/git-town/v9/src/validate"
 	"github.com/spf13/cobra"
 )
@@ -74,7 +74,7 @@ func determineDiffParentConfig(args []string, run *git.ProdRunner) (*diffParentC
 	if err != nil {
 		return nil, err
 	}
-	branch := stringslice.FirstElementOr(args, branches.Initial)
+	branch := slice.FirstElementOr(args, branches.Initial)
 	if branch != branches.Initial {
 		hasBranch, err := run.Backend.HasLocalBranch(branch)
 		if err != nil {

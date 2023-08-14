@@ -5,12 +5,12 @@ import (
 
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/git"
-	"github.com/git-town/git-town/v9/src/stringslice"
+	"github.com/git-town/git-town/v9/src/slice"
 )
 
 // EnterParent lets the user select a new parent for the given branch.
 func EnterParent(branch, defaultParent string, lineage config.Lineage, branches git.BranchesSyncStatus) (string, error) {
-	choices := stringslice.Hoist(branches.LocalBranches().BranchNames(), defaultParent)
+	choices := slice.Hoist(branches.LocalBranches().BranchNames(), defaultParent)
 	filteredChoices := filterOutSelfAndDescendants(branch, choices, lineage)
 	return Select(SelectArgs{
 		Options: append([]string{PerennialBranchOption}, filteredChoices...),

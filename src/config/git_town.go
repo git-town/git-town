@@ -10,7 +10,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/messages"
-	"github.com/git-town/git-town/v9/src/stringslice"
+	"github.com/git-town/git-town/v9/src/slice"
 )
 
 // GitTown provides type-safe access to Git Town configuration settings
@@ -234,7 +234,7 @@ func (gt *GitTown) PushHookGlobal() (bool, error) {
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
 func (gt *GitTown) RemoveFromPerennialBranches(branch string) error {
-	return gt.SetPerennialBranches(stringslice.Remove(gt.PerennialBranches(), branch))
+	return gt.SetPerennialBranches(slice.Remove(gt.PerennialBranches(), branch))
 }
 
 // RemoveLocalGitConfiguration removes all Git Town configuration.

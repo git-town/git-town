@@ -11,6 +11,7 @@ import (
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
+	"github.com/git-town/git-town/v9/src/slice"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/git-town/git-town/v9/src/stringslice"
 	"github.com/git-town/git-town/v9/src/validate"
@@ -153,7 +154,7 @@ func determineShipConfig(args []string, run *git.ProdRunner, isOffline bool) (*s
 		return nil, err
 	}
 	mainBranch := run.Config.MainBranch()
-	branchNameToShip := stringslice.FirstElementOr(args, branches.Initial)
+	branchNameToShip := slice.FirstElementOr(args, branches.Initial)
 	branchToShip := branches.All.Lookup(branchNameToShip)
 	isShippingInitialBranch := branchNameToShip == branches.Initial
 	syncStrategy, err := run.Config.SyncStrategy()
