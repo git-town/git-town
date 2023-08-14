@@ -3,7 +3,7 @@ package slice_test
 import (
 	"testing"
 
-	slice "github.com/git-town/git-town/v9/src/slice"
+	"github.com/git-town/git-town/v9/src/slice"
 	"github.com/stretchr/testify/assert"
 )
 
