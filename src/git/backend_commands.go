@@ -11,6 +11,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/cache"
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/genericslice"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/stringslice"
 )
@@ -295,7 +296,7 @@ func (bc *BackendCommands) HasLocalBranch(name string) (bool, error) {
 	if err != nil {
 		return false, fmt.Errorf(messages.BranchLocalProblem, name, err)
 	}
-	return stringslice.Contains(branches, name), nil
+	return genericslice.Contains(branches, name), nil
 }
 
 // HasMergeInProgress indicates whether this Git repository currently has a merge in progress.
@@ -370,7 +371,7 @@ func (bc *BackendCommands) LocalBranchesMainFirst(mainBranch string) ([]string, 
 	if err != nil {
 		return []string{}, err
 	}
-	return stringslice.Hoist(sort.StringSlice(branches), mainBranch), nil
+	return genericslice.Hoist(sort.StringSlice(branches), mainBranch), nil
 }
 
 // PreviouslyCheckedOutBranch provides the name of the branch that was previously checked out in this repo.

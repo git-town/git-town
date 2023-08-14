@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/cucumber/messages-go/v10"
-	"github.com/git-town/git-town/v9/src/stringslice"
+	"github.com/git-town/git-town/v9/src/genericslice"
 	"github.com/git-town/git-town/v9/test/datatable"
 	"github.com/git-town/git-town/v9/test/fixture"
 	"github.com/git-town/git-town/v9/test/helpers"
@@ -68,9 +68,9 @@ func (state *ScenarioState) InitialBranches() datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow("REPOSITORY", "BRANCHES")
 	sort.Strings(state.initialLocalBranches)
-	state.initialLocalBranches = stringslice.Hoist(state.initialLocalBranches, "main")
+	state.initialLocalBranches = genericslice.Hoist(state.initialLocalBranches, "main")
 	sort.Strings(state.initialRemoteBranches)
-	state.initialRemoteBranches = stringslice.Hoist(state.initialRemoteBranches, "main")
+	state.initialRemoteBranches = genericslice.Hoist(state.initialRemoteBranches, "main")
 	localBranchesJoined := strings.Join(state.initialLocalBranches, ", ")
 	remoteBranchesJoined := strings.Join(state.initialRemoteBranches, ", ")
 	if localBranchesJoined == remoteBranchesJoined {

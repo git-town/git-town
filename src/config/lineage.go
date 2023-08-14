@@ -3,7 +3,7 @@ package config
 import (
 	"sort"
 
-	"github.com/git-town/git-town/v9/src/stringslice"
+	"github.com/git-town/git-town/v9/src/genericslice"
 	"golang.org/x/exp/maps"
 )
 
@@ -23,7 +23,7 @@ func (l Lineage) BranchesAndAncestors(branchNames []string) []string {
 	result := branchNames
 	for _, branchName := range branchNames {
 		ancestors := l.Ancestors(branchName)
-		result = stringslice.AppendAllMissing(result, ancestors)
+		result = genericslice.AppendAllMissing(result, ancestors)
 	}
 	l.OrderHierarchically(result)
 	return result
@@ -122,7 +122,7 @@ func (l Lineage) Roots() []string {
 	roots := []string{}
 	for _, parent := range l {
 		_, found := l[parent]
-		if !found && !stringslice.Contains(roots, parent) {
+		if !found && !genericslice.Contains(roots, parent) {
 			roots = append(roots, parent)
 		}
 	}

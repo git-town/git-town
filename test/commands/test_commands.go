@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/genericslice"
 	prodgit "github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/stringslice"
 	"github.com/git-town/git-town/v9/test/asserts"
@@ -132,11 +133,11 @@ func (r *TestCommands) CommitsInBranch(branch string, fields []string) []git.Com
 		if strings.EqualFold(commit.Message, "initial commit") {
 			continue
 		}
-		if stringslice.Contains(fields, "FILE NAME") {
+		if genericslice.Contains(fields, "FILE NAME") {
 			filenames := r.FilesInCommit(commit.SHA)
 			commit.FileName = strings.Join(filenames, ", ")
 		}
-		if stringslice.Contains(fields, "FILE CONTENT") {
+		if genericslice.Contains(fields, "FILE CONTENT") {
 			filecontent := r.FileContentInCommit(commit.SHA, commit.FileName)
 			commit.FileContent = filecontent
 		}

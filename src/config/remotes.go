@@ -1,16 +1,18 @@
 package config
 
-import "github.com/git-town/git-town/v9/src/stringslice"
+import (
+	"github.com/git-town/git-town/v9/src/genericslice"
+)
 
 // Remotes answers questions which Git remotes a repo has.
 type Remotes []string
 
 func (r Remotes) HasOrigin() bool {
-	return stringslice.Contains(r, OriginRemote)
+	return genericslice.Contains(r, OriginRemote)
 }
 
 func (r Remotes) HasUpstream() bool {
-	return stringslice.Contains(r, UpstreamRemote)
+	return genericslice.Contains(r, UpstreamRemote)
 }
 
 // OriginRemote contains the name of the "origin" remote.
