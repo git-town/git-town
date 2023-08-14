@@ -2,19 +2,18 @@ package slice
 
 // AppendAllMissing appends all elements of `new` that aren't inside `existing` to `existing`.
 func AppendAllMissing[C comparable](existing []C, new []C) []C {
-	for _, element := range new {
-		if !Contains(existing, element) {
-			existing = append(existing, element)
+	for n := range new {
+		if !Contains(existing, new[n]) {
+			existing = append(existing, new[n])
 		}
 	}
 	return existing
 }
 
-// Contains returns whether the given string slice
-// contains the given string.
+// Contains returns whether the given slice contains the given element.
 func Contains[C comparable](list []C, value C) bool {
-	for _, element := range list {
-		if element == value {
+	for l := range list {
+		if list[l] == value {
 			return true
 		}
 	}
@@ -29,30 +28,29 @@ func FirstElementOr[C comparable](list []C, alternative C) C {
 	return alternative
 }
 
-// Hoist provides the given list of strings, with the given element moved to the first position.
+// Hoist provides the given slice with the given element moved to the first position.
 func Hoist[C comparable](list []C, element C) []C {
 	result := make([]C, 0, len(list))
 	hasElement := false
-	for _, input := range list {
-		if input == element {
+	for l := range list {
+		if list[l] == element {
 			hasElement = true
 		} else {
-			result = append(result, input)
+			result = append(result, list[l])
 		}
 	}
-	if hasElement {
-		result = append([]C{element}, result...)
+	if !hasElement {
+		return result
 	}
-	return result
+	return append([]C{element}, result...)
 }
 
-// Remove returns a new string slice which is the given string slice
-// with the given string removed.
+// Remove returns a new slice which is the given slice with the given element removed.
 func Remove[C comparable](list []C, value C) []C {
 	result := make([]C, 0, len(list)-1)
-	for _, element := range list {
-		if element != value {
-			result = append(result, element)
+	for l := range list {
+		if list[l] != value {
+			result = append(result, list[l])
 		}
 	}
 	return result
