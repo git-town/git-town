@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestStringSlice(t *testing.T) {
+func TestSlice(t *testing.T) {
 	t.Parallel()
 
 	t.Run("AppendAllMissing", func(t *testing.T) {
