@@ -167,7 +167,10 @@ type PushArgs struct {
 
 // PushBranch pushes the branch with the given name to origin.
 func (fc *FrontendCommands) PushBranch(options ...PushArgs) error {
-	option := slice.FirstElementOr(options, PushArgs{})
+	option := slice.FirstElementOr(options, PushArgs{
+		Branch: "",
+		Remote: "",
+	})
 	args := []string{"push"}
 	provideBranch := false
 	if option.NoPushHook {

@@ -1,10 +1,10 @@
 package slice
 
-// AppendAllMissing appends all elements of `new` that aren't inside `existing` to `existing`.
-func AppendAllMissing[C comparable](existing []C, new []C) []C {
-	for n := range new {
-		if !Contains(existing, new[n]) {
-			existing = append(existing, new[n])
+// AppendAllMissing appends all elements of `additional` that aren't contained in `existing` to `existing`.
+func AppendAllMissing[C comparable](existing []C, additional []C) []C {
+	for a := range additional {
+		if !Contains(existing, additional[a]) {
+			existing = append(existing, additional[a])
 		}
 	}
 	return existing
