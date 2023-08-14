@@ -21,7 +21,7 @@ func Contains[C comparable](list []C, value C) bool {
 }
 
 // FirstElementOr provides the first element of the given list or the given alternative if the list is empty.
-func FirstElementOr[C comparable](list []C, alternative C) C {
+func FirstElementOr[C comparable](list []C, alternative C) C { //nolint:ireturn // there should never be any nil values here
 	if len(list) > 0 {
 		return list[0]
 	}
