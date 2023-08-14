@@ -1,9 +1,9 @@
-package genericslice_test
+package slice_test
 
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v9/src/genericslice"
+	slice "github.com/git-town/git-town/v9/src/slice"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -15,16 +15,16 @@ func TestStringSlice(t *testing.T) {
 		list := []string{"one", "two", "three"}
 		give := []string{"two", "four", "five"}
 		want := []string{"one", "two", "three", "four", "five"}
-		have := genericslice.AppendAllMissing(list, give)
+		have := slice.AppendAllMissing(list, give)
 		assert.Equal(t, want, have)
 	})
 
 	t.Run("Contains", func(t *testing.T) {
 		t.Parallel()
 		give := []string{"one", "two"}
-		assert.True(t, genericslice.Contains(give, "one"))
-		assert.True(t, genericslice.Contains(give, "two"))
-		assert.False(t, genericslice.Contains(give, "three"))
+		assert.True(t, slice.Contains(give, "one"))
+		assert.True(t, slice.Contains(give, "two"))
+		assert.False(t, slice.Contains(give, "three"))
 	})
 
 	t.Run("FirstElementOr", func(t *testing.T) {
@@ -32,14 +32,14 @@ func TestStringSlice(t *testing.T) {
 		t.Run("list contains an element", func(t *testing.T) {
 			t.Parallel()
 			list := []string{"one"}
-			have := genericslice.FirstElementOr(list, "other")
+			have := slice.FirstElementOr(list, "other")
 			want := "one"
 			assert.Equal(t, want, have)
 		})
 		t.Run("list is empty", func(t *testing.T) {
 			t.Parallel()
 			list := []string{}
-			have := genericslice.FirstElementOr(list, "other")
+			have := slice.FirstElementOr(list, "other")
 			want := "other"
 			assert.Equal(t, want, have)
 		})
@@ -52,7 +52,7 @@ func TestStringSlice(t *testing.T) {
 			t.Parallel()
 			give := []string{"initial", "one", "two"}
 			want := []string{"initial", "one", "two"}
-			have := genericslice.Hoist(give, "initial")
+			have := slice.Hoist(give, "initial")
 			assert.Equal(t, want, have)
 		})
 
@@ -60,7 +60,7 @@ func TestStringSlice(t *testing.T) {
 			t.Parallel()
 			give := []string{"alpha", "initial", "omega"}
 			want := []string{"initial", "alpha", "omega"}
-			have := genericslice.Hoist(give, "initial")
+			have := slice.Hoist(give, "initial")
 			assert.Equal(t, want, have)
 		})
 
@@ -68,7 +68,7 @@ func TestStringSlice(t *testing.T) {
 			t.Parallel()
 			give := []string{}
 			want := []string{}
-			have := genericslice.Hoist(give, "initial")
+			have := slice.Hoist(give, "initial")
 			assert.Equal(t, want, have)
 		})
 	})
@@ -76,7 +76,7 @@ func TestStringSlice(t *testing.T) {
 	t.Run("Remove", func(t *testing.T) {
 		t.Parallel()
 		give := []string{"one", "two", "three"}
-		have := genericslice.Remove(give, "two")
+		have := slice.Remove(give, "two")
 		want := []string{"one", "three"}
 		assert.Equal(t, have, want)
 	})

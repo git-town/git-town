@@ -1,4 +1,4 @@
-package genericslice
+package slice
 
 func AppendAllMissing[C comparable](list []C, elements []C) []C {
 	for _, element := range elements {

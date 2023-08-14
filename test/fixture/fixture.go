@@ -8,7 +8,7 @@ import (
 
 	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/genericslice"
+	"github.com/git-town/git-town/v9/src/slice"
 	"github.com/git-town/git-town/v9/test/asserts"
 	"github.com/git-town/git-town/v9/test/datatable"
 	"github.com/git-town/git-town/v9/test/git"
@@ -139,7 +139,7 @@ func (env *Fixture) Branches() datatable.DataTable {
 	mainBranch := env.DevRepo.Config.MainBranch()
 	localBranches, err := env.DevRepo.LocalBranchesMainFirst(mainBranch)
 	asserts.NoError(err)
-	localBranches = genericslice.Remove(localBranches, "initial")
+	localBranches = slice.Remove(localBranches, "initial")
 	localBranchesJoined := strings.Join(localBranches, ", ")
 	if env.OriginRepo == nil {
 		result.AddRow("local", localBranchesJoined)
@@ -147,7 +147,7 @@ func (env *Fixture) Branches() datatable.DataTable {
 	}
 	originBranches, err := env.OriginRepo.LocalBranchesMainFirst(mainBranch)
 	asserts.NoError(err)
-	originBranches = genericslice.Remove(originBranches, "initial")
+	originBranches = slice.Remove(originBranches, "initial")
 	originBranchesJoined := strings.Join(originBranches, ", ")
 	if localBranchesJoined == originBranchesJoined {
 		result.AddRow("local, origin", localBranchesJoined)

@@ -16,7 +16,7 @@ import (
 	"github.com/eiannone/keyboard"
 	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/genericslice"
+	"github.com/git-town/git-town/v9/src/slice"
 	"github.com/git-town/git-town/v9/test/asserts"
 	"github.com/git-town/git-town/v9/test/datatable"
 	"github.com/git-town/git-town/v9/test/fixture"
@@ -490,7 +490,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^origin deletes the "([^"]*)" branch$`, func(name string) error {
-		state.initialRemoteBranches = genericslice.Remove(state.initialRemoteBranches, name)
+		state.initialRemoteBranches = slice.Remove(state.initialRemoteBranches, name)
 		state.fixture.OriginRepo.RemoveBranch(name)
 		return nil
 	})
@@ -623,7 +623,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^the current branch is "([^"]*)"$`, func(name string) error {
 		state.initialCurrentBranch = name
-		if !genericslice.Contains(state.initialLocalBranches, name) {
+		if !slice.Contains(state.initialLocalBranches, name) {
 			state.initialLocalBranches = append(state.initialLocalBranches, name)
 			state.fixture.DevRepo.CreateBranch(name, "main")
 		}

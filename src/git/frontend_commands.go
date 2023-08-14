@@ -5,8 +5,8 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/genericslice"
 	"github.com/git-town/git-town/v9/src/messages"
+	"github.com/git-town/git-town/v9/src/slice"
 )
 
 type FrontendRunner interface {
@@ -167,7 +167,7 @@ type PushArgs struct {
 
 // PushBranch pushes the branch with the given name to origin.
 func (fc *FrontendCommands) PushBranch(options ...PushArgs) error {
-	option := genericslice.FirstElementOr(options, PushArgs{})
+	option := slice.FirstElementOr(options, PushArgs{})
 	args := []string{"push"}
 	provideBranch := false
 	if option.NoPushHook {

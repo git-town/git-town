@@ -1,7 +1,7 @@
 package config
 
 import (
-	"github.com/git-town/git-town/v9/src/genericslice"
+	"github.com/git-town/git-town/v9/src/slice"
 )
 
 // BranchDurations answers questions about whether branches are long-lived or not.
@@ -11,7 +11,7 @@ type BranchDurations struct {
 }
 
 func (pb BranchDurations) IsFeatureBranch(branch string) bool {
-	return branch != pb.MainBranch && !genericslice.Contains(pb.PerennialBranches, branch)
+	return branch != pb.MainBranch && !slice.Contains(pb.PerennialBranches, branch)
 }
 
 func (pb BranchDurations) IsMainBranch(branch string) bool {
@@ -19,7 +19,7 @@ func (pb BranchDurations) IsMainBranch(branch string) bool {
 }
 
 func (pb BranchDurations) IsPerennialBranch(branch string) bool {
-	return genericslice.Contains(pb.PerennialBranches, branch)
+	return slice.Contains(pb.PerennialBranches, branch)
 }
 
 func EmptyBranchDurations() BranchDurations {
