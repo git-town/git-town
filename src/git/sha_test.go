@@ -18,7 +18,7 @@ func TestSHA(t *testing.T) {
 	t.Parallel()
 	t.Run("NewSHA", func(t *testing.T) {
 		t.Parallel()
-		t.Run("allows hex characters", func(t *testing.T) {
+		t.Run("allows lowercase hex characters", func(t *testing.T) {
 			t.Parallel()
 			text := "1234567890abcdef"
 			git.NewSHA(text) // should not panic
