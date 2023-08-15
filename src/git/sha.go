@@ -55,6 +55,6 @@ func (s *SHA) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
-	*s = SHA{t}
+	*&s.content = t
 	return nil
 }
