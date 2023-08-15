@@ -22,13 +22,17 @@ func NewSHA(content string) SHA {
 
 // validateSHA indicates whether the given SHA content is a valid Git SHA.
 func validateSHA(content string) bool {
-	if len(content) == 0 {
+	if len(content) < 6 {
 		return false
 	}
 	for _, c := range content {
-		if c < '0' || c > 'f' {
-			return false
+		if c >= '0' && c <= '9' {
+			continue
 		}
+		if c >= 'a' && c <= 'f' {
+			continue
+		}
+		return false
 	}
 	return true
 }
