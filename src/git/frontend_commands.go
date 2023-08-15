@@ -56,7 +56,7 @@ func (fc *FrontendCommands) CreateRemoteBranch(localSha SHA, branch string, noPu
 	if noPushHook {
 		args = append(args, "--no-verify")
 	}
-	args = append(args, config.OriginRemote, localSha.Content+":refs/heads/"+branch)
+	args = append(args, config.OriginRemote, localSha.String()+":refs/heads/"+branch)
 	return fc.Run("git", args...)
 }
 
@@ -207,13 +207,13 @@ func (fc *FrontendCommands) ResetToSha(sha SHA, hard bool) error {
 	if hard {
 		args = append(args, "--hard")
 	}
-	args = append(args, sha.Content)
+	args = append(args, sha.String())
 	return fc.Run("git", args...)
 }
 
 // RevertCommit reverts the commit with the given SHA.
 func (fc *FrontendCommands) RevertCommit(sha SHA) error {
-	return fc.Run("git", "revert", sha.Content)
+	return fc.Run("git", "revert", sha.String())
 }
 
 // SquashMerge squash-merges the given branch into the current branch.

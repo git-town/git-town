@@ -1,6 +1,7 @@
 package git
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -11,7 +12,7 @@ import (
 // SHA represents a Git SHA as a dedicated data type.
 // This helps avoid stringly-typed code.
 type SHA struct {
-	Content string
+	content string
 }
 
 // NewSHA creates a new SHA instance with the given value.
@@ -42,12 +43,26 @@ func ErrorSHA() SHA {
 	return SHA{""}
 }
 
+func (s SHA) MarshalJSON() ([]byte, error) {
+	return json.Marshal(s.content)
+}
+
 // Implements the fmt.Stringer interface for Git SHAs.
-func (s SHA) String() string { return s.Content }
+func (s SHA) String() string { return s.content }
 
 // TruncateTo provides a new SHA instance that contains a shorter checksum.
 func (s SHA) TruncateTo(newLength int) SHA {
-	return SHA{s.Content[0:newLength]}
+	return SHA{s.content[0:newLength]}
+}
+
+func (s *SHA) UnmarshalJSON(b []byte) error {
+	var t string
+	err := json.Unmarshal(b, &t)
+	if err != nil {
+		return err
+	}
+	*s = SHA{t}
+	return nil
 }
 
 // BranchSyncStatus describes the sync status of a branch in relation to its tracking branch.

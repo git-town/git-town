@@ -170,10 +170,10 @@ func TestBackendCommands(t *testing.T) {
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
 						Name:         "branch-1",
-						InitialSHA:   git.SHA{"11111111"},
+						InitialSHA:   git.NewSHA("11111111"),
 						SyncStatus:   git.SyncStatusAhead,
 						TrackingName: "origin/branch-1",
-						TrackingSHA:  git.SHA{"22222222"},
+						TrackingSHA:  git.NewSHA("22222222"),
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
@@ -187,10 +187,10 @@ func TestBackendCommands(t *testing.T) {
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
 						Name:         "branch-1",
-						InitialSHA:   git.SHA{"11111111"},
+						InitialSHA:   git.NewSHA("11111111"),
 						SyncStatus:   git.SyncStatusBehind,
 						TrackingName: "origin/branch-1",
-						TrackingSHA:  git.SHA{"22222222"},
+						TrackingSHA:  git.NewSHA("22222222"),
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
@@ -204,10 +204,10 @@ func TestBackendCommands(t *testing.T) {
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
 						Name:         "branch-1",
-						InitialSHA:   git.SHA{"11111111"},
+						InitialSHA:   git.NewSHA("11111111"),
 						SyncStatus:   git.SyncStatusAheadAndBehind,
 						TrackingName: "origin/branch-1",
-						TrackingSHA:  git.SHA{"22222222"},
+						TrackingSHA:  git.NewSHA("22222222"),
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
@@ -221,10 +221,10 @@ func TestBackendCommands(t *testing.T) {
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
 						Name:         "branch-1",
-						InitialSHA:   git.SHA{"11111111"},
+						InitialSHA:   git.NewSHA("11111111"),
 						SyncStatus:   git.SyncStatusUpToDate,
 						TrackingName: "origin/branch-1",
-						TrackingSHA:  git.SHA{"11111111"},
+						TrackingSHA:  git.NewSHA("11111111"),
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
@@ -237,10 +237,10 @@ func TestBackendCommands(t *testing.T) {
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
 						Name:         "origin/branch-1",
-						InitialSHA:   git.SHA{"22222222"},
+						InitialSHA:   git.NewSHA("22222222"),
 						SyncStatus:   git.SyncStatusRemoteOnly,
 						TrackingName: "",
-						TrackingSHA:  git.SHA{""},
+						TrackingSHA:  testgit.ZeroValueSHA(),
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
@@ -252,10 +252,10 @@ func TestBackendCommands(t *testing.T) {
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
 						Name:         "branch-1",
-						InitialSHA:   git.SHA{"01a7eded"},
+						InitialSHA:   git.NewSHA("01a7eded"),
 						SyncStatus:   git.SyncStatusLocalOnly,
 						TrackingName: "",
-						TrackingSHA:  git.SHA{""},
+						TrackingSHA:  testgit.ZeroValueSHA(),
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
@@ -267,10 +267,10 @@ func TestBackendCommands(t *testing.T) {
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
 						Name:         "branch-1",
-						InitialSHA:   git.SHA{"01a7eded"},
+						InitialSHA:   git.NewSHA("01a7eded"),
 						SyncStatus:   git.SyncStatusDeletedAtRemote,
 						TrackingName: "origin/branch-1",
-						TrackingSHA:  git.SHA{""},
+						TrackingSHA:  testgit.ZeroValueSHA(),
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
@@ -287,17 +287,17 @@ func TestBackendCommands(t *testing.T) {
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
 						Name:         "branch-1",
-						InitialSHA:   git.SHA{"11111111"},
+						InitialSHA:   git.NewSHA("11111111"),
 						SyncStatus:   git.SyncStatusUpToDate,
 						TrackingName: "origin/branch-2",
-						TrackingSHA:  git.SHA{"11111111"},
+						TrackingSHA:  git.NewSHA("11111111"),
 					},
 					git.BranchSyncStatus{
 						Name:         "origin/branch-1",
-						InitialSHA:   git.SHA{"22222222"},
+						InitialSHA:   git.NewSHA("22222222"),
 						SyncStatus:   git.SyncStatusRemoteOnly,
 						TrackingName: "",
-						TrackingSHA:  git.SHA{""},
+						TrackingSHA:  testgit.ZeroValueSHA(),
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
@@ -320,38 +320,38 @@ func TestBackendCommands(t *testing.T) {
 			want := git.BranchesSyncStatus{
 				git.BranchSyncStatus{
 					Name:         "branch-1",
-					InitialSHA:   git.SHA{"01a7eded"},
+					InitialSHA:   git.NewSHA("01a7eded"),
 					SyncStatus:   git.SyncStatusAhead,
 					TrackingName: "origin/branch-1",
-					TrackingSHA:  git.SHA{"307a7bf4"},
+					TrackingSHA:  git.NewSHA("307a7bf4"),
 				},
 				git.BranchSyncStatus{
 					Name:         "branch-2",
-					InitialSHA:   git.SHA{"da796a69"},
+					InitialSHA:   git.NewSHA("da796a69"),
 					SyncStatus:   git.SyncStatusUpToDate,
 					TrackingName: "origin/branch-2",
-					TrackingSHA:  git.SHA{"da796a69"},
+					TrackingSHA:  git.NewSHA("da796a69"),
 				},
 				git.BranchSyncStatus{
 					Name:         "branch-3",
-					InitialSHA:   git.SHA{"f4ebec0a"},
+					InitialSHA:   git.NewSHA("f4ebec0a"),
 					SyncStatus:   git.SyncStatusBehind,
 					TrackingName: "origin/branch-3",
-					TrackingSHA:  git.SHA{"bc39378a"},
+					TrackingSHA:  git.NewSHA("bc39378a"),
 				},
 				git.BranchSyncStatus{
 					Name:         "main",
-					InitialSHA:   git.SHA{"024df944"},
+					InitialSHA:   git.NewSHA("024df944"),
 					SyncStatus:   git.SyncStatusUpToDate,
 					TrackingName: "origin/main",
-					TrackingSHA:  git.SHA{"024df944"},
+					TrackingSHA:  git.NewSHA("024df944"),
 				},
 				git.BranchSyncStatus{
 					Name:         "branch-4",
-					InitialSHA:   git.SHA{"e4d6bc09"},
+					InitialSHA:   git.NewSHA("e4d6bc09"),
 					SyncStatus:   git.SyncStatusDeletedAtRemote,
 					TrackingName: "origin/branch-4",
-					TrackingSHA:  git.SHA{""},
+					TrackingSHA:  testgit.ZeroValueSHA(),
 				},
 			}
 			have, currentBranch := git.ParseVerboseBranchesOutput(give)
