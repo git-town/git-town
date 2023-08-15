@@ -45,7 +45,7 @@ func TestSHA(t *testing.T) {
 		})
 	})
 
-	t.Run("Stringer interface", func(t *testing.T) {
+	t.Run("implements the Stringer interface", func(t *testing.T) {
 		t.Parallel()
 		sha := git.NewSHA("abcdef")
 		assert.Equal(t, "abcdef", sha.String())
