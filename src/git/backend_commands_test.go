@@ -240,7 +240,7 @@ func TestBackendCommands(t *testing.T) {
 						InitialSHA:   git.NewSHA("22222222"),
 						SyncStatus:   git.SyncStatusRemoteOnly,
 						TrackingName: "",
-						TrackingSHA:  testgit.ZeroValueSHA(),
+						TrackingSHA:  git.SHA{},
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
@@ -255,7 +255,7 @@ func TestBackendCommands(t *testing.T) {
 						InitialSHA:   git.NewSHA("01a7eded"),
 						SyncStatus:   git.SyncStatusLocalOnly,
 						TrackingName: "",
-						TrackingSHA:  testgit.ZeroValueSHA(),
+						TrackingSHA:  git.SHA{},
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
@@ -270,7 +270,7 @@ func TestBackendCommands(t *testing.T) {
 						InitialSHA:   git.NewSHA("01a7eded"),
 						SyncStatus:   git.SyncStatusDeletedAtRemote,
 						TrackingName: "origin/branch-1",
-						TrackingSHA:  testgit.ZeroValueSHA(),
+						TrackingSHA:  git.SHA{},
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
@@ -297,7 +297,7 @@ func TestBackendCommands(t *testing.T) {
 						InitialSHA:   git.NewSHA("22222222"),
 						SyncStatus:   git.SyncStatusRemoteOnly,
 						TrackingName: "",
-						TrackingSHA:  testgit.ZeroValueSHA(),
+						TrackingSHA:  git.SHA{},
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
@@ -351,7 +351,7 @@ func TestBackendCommands(t *testing.T) {
 					InitialSHA:   git.NewSHA("e4d6bc09"),
 					SyncStatus:   git.SyncStatusDeletedAtRemote,
 					TrackingName: "origin/branch-4",
-					TrackingSHA:  testgit.ZeroValueSHA(),
+					TrackingSHA:  git.SHA{},
 				},
 			}
 			have, currentBranch := git.ParseVerboseBranchesOutput(give)

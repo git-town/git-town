@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/git"
-	testgit "github.com/git-town/git-town/v9/test/git"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -23,10 +22,10 @@ func TestBranch(t *testing.T) {
 		t.Run("local branch", func(t *testing.T) {
 			give := git.BranchSyncStatus{
 				Name:         "branch1",
-				InitialSHA:   testgit.ZeroValueSHA(),
+				InitialSHA:   git.SHA{},
 				SyncStatus:   git.SyncStatusLocalOnly,
 				TrackingName: "",
-				TrackingSHA:  testgit.ZeroValueSHA(),
+				TrackingSHA:  git.SHA{},
 			}
 			have := give.NameWithoutRemote()
 			want := "branch1"
@@ -35,10 +34,10 @@ func TestBranch(t *testing.T) {
 		t.Run("remote branch", func(t *testing.T) {
 			give := git.BranchSyncStatus{
 				Name:         "origin/branch1",
-				InitialSHA:   testgit.ZeroValueSHA(),
+				InitialSHA:   git.SHA{},
 				SyncStatus:   git.SyncStatusRemoteOnly,
 				TrackingName: "",
-				TrackingSHA:  testgit.ZeroValueSHA(),
+				TrackingSHA:  git.SHA{},
 			}
 			have := give.NameWithoutRemote()
 			want := "branch1"
@@ -51,10 +50,10 @@ func TestBranch(t *testing.T) {
 			t.Parallel()
 			give := git.BranchSyncStatus{
 				Name:         "origin/branch1",
-				InitialSHA:   testgit.ZeroValueSHA(),
+				InitialSHA:   git.SHA{},
 				SyncStatus:   git.SyncStatusRemoteOnly,
 				TrackingName: "",
-				TrackingSHA:  testgit.ZeroValueSHA(),
+				TrackingSHA:  git.SHA{},
 			}
 			have := give.RemoteBranch()
 			want := "origin/branch1"
@@ -64,10 +63,10 @@ func TestBranch(t *testing.T) {
 			t.Parallel()
 			give := git.BranchSyncStatus{
 				Name:         "branch1",
-				InitialSHA:   testgit.ZeroValueSHA(),
+				InitialSHA:   git.SHA{},
 				SyncStatus:   git.SyncStatusLocalOnly,
 				TrackingName: "",
-				TrackingSHA:  testgit.ZeroValueSHA(),
+				TrackingSHA:  git.SHA{},
 			}
 			have := give.RemoteBranch()
 			want := ""
@@ -77,10 +76,10 @@ func TestBranch(t *testing.T) {
 			t.Parallel()
 			give := git.BranchSyncStatus{
 				Name:         "branch1",
-				InitialSHA:   testgit.ZeroValueSHA(),
+				InitialSHA:   git.SHA{},
 				SyncStatus:   git.SyncStatusUpToDate,
 				TrackingName: "origin/branch-2",
-				TrackingSHA:  testgit.ZeroValueSHA(),
+				TrackingSHA:  git.SHA{},
 			}
 			have := give.RemoteBranch()
 			want := "origin/branch-2"
@@ -97,17 +96,17 @@ func TestBranches(t *testing.T) {
 		bs := git.BranchesSyncStatus{
 			git.BranchSyncStatus{
 				Name:         "one",
-				InitialSHA:   testgit.ZeroValueSHA(),
+				InitialSHA:   git.SHA{},
 				SyncStatus:   git.SyncStatusLocalOnly,
 				TrackingName: "",
-				TrackingSHA:  testgit.ZeroValueSHA(),
+				TrackingSHA:  git.SHA{},
 			},
 			git.BranchSyncStatus{
 				Name:         "two",
-				InitialSHA:   testgit.ZeroValueSHA(),
+				InitialSHA:   git.SHA{},
 				SyncStatus:   git.SyncStatusLocalOnly,
 				TrackingName: "",
-				TrackingSHA:  testgit.ZeroValueSHA(),
+				TrackingSHA:  git.SHA{},
 			},
 		}
 		have := bs.BranchNames()
@@ -122,10 +121,10 @@ func TestBranches(t *testing.T) {
 			bs := git.BranchesSyncStatus{
 				git.BranchSyncStatus{
 					Name:         "one",
-					InitialSHA:   testgit.ZeroValueSHA(),
+					InitialSHA:   git.SHA{},
 					SyncStatus:   git.SyncStatusLocalOnly,
 					TrackingName: "",
-					TrackingSHA:  testgit.ZeroValueSHA(),
+					TrackingSHA:  git.SHA{},
 				},
 			}
 			assert.True(t, bs.HasLocalBranch("one"))
@@ -135,10 +134,10 @@ func TestBranches(t *testing.T) {
 			bs := git.BranchesSyncStatus{
 				git.BranchSyncStatus{
 					Name:         "origin/one",
-					InitialSHA:   testgit.ZeroValueSHA(),
+					InitialSHA:   git.SHA{},
 					SyncStatus:   git.SyncStatusLocalOnly,
 					TrackingName: "",
-					TrackingSHA:  testgit.ZeroValueSHA(),
+					TrackingSHA:  git.SHA{},
 				},
 			}
 			assert.False(t, bs.HasLocalBranch("one"))
@@ -148,10 +147,10 @@ func TestBranches(t *testing.T) {
 			bs := git.BranchesSyncStatus{
 				git.BranchSyncStatus{
 					Name:         "two",
-					InitialSHA:   testgit.ZeroValueSHA(),
+					InitialSHA:   git.SHA{},
 					SyncStatus:   git.SyncStatusLocalOnly,
 					TrackingName: "origin/one",
-					TrackingSHA:  testgit.ZeroValueSHA(),
+					TrackingSHA:  git.SHA{},
 				},
 			}
 			assert.False(t, bs.HasLocalBranch("one"))
@@ -164,17 +163,17 @@ func TestBranches(t *testing.T) {
 			bs := git.BranchesSyncStatus{
 				git.BranchSyncStatus{
 					Name:         "one",
-					InitialSHA:   testgit.ZeroValueSHA(),
+					InitialSHA:   git.SHA{},
 					SyncStatus:   git.SyncStatusLocalOnly,
 					TrackingName: "",
-					TrackingSHA:  testgit.ZeroValueSHA(),
+					TrackingSHA:  git.SHA{},
 				},
 				git.BranchSyncStatus{
 					Name:         "two",
-					InitialSHA:   testgit.ZeroValueSHA(),
+					InitialSHA:   git.SHA{},
 					SyncStatus:   git.SyncStatusLocalOnly,
 					TrackingName: "",
-					TrackingSHA:  testgit.ZeroValueSHA(),
+					TrackingSHA:  git.SHA{},
 				},
 			}
 			assert.True(t, bs.IsKnown("one"))
@@ -185,10 +184,10 @@ func TestBranches(t *testing.T) {
 			bs := git.BranchesSyncStatus{
 				git.BranchSyncStatus{
 					Name:         "one",
-					InitialSHA:   testgit.ZeroValueSHA(),
+					InitialSHA:   git.SHA{},
 					SyncStatus:   git.SyncStatusUpToDate,
 					TrackingName: "origin/two",
-					TrackingSHA:  testgit.ZeroValueSHA(),
+					TrackingSHA:  git.SHA{},
 				},
 			}
 			assert.True(t, bs.IsKnown("origin/two"))
@@ -225,21 +224,21 @@ func TestBranches(t *testing.T) {
 				InitialSHA:   git.NewSHA("11111111"),
 				SyncStatus:   git.SyncStatusLocalOnly,
 				TrackingName: "",
-				TrackingSHA:  testgit.ZeroValueSHA(),
+				TrackingSHA:  git.SHA{},
 			},
 			git.BranchSyncStatus{
 				Name:         "remote-only",
-				InitialSHA:   testgit.ZeroValueSHA(),
+				InitialSHA:   git.SHA{},
 				SyncStatus:   git.SyncStatusRemoteOnly,
 				TrackingName: "",
-				TrackingSHA:  testgit.ZeroValueSHA(),
+				TrackingSHA:  git.SHA{},
 			},
 			git.BranchSyncStatus{
 				Name:         "deleted-at-remote",
 				InitialSHA:   git.NewSHA("11111111111"),
 				SyncStatus:   git.SyncStatusDeletedAtRemote,
 				TrackingName: "",
-				TrackingSHA:  testgit.ZeroValueSHA(),
+				TrackingSHA:  git.SHA{},
 			},
 		}
 		want := []string{"up-to-date", "ahead", "behind", "local-only", "deleted-at-remote"}
@@ -259,38 +258,38 @@ func TestBranches(t *testing.T) {
 			},
 			git.BranchSyncStatus{
 				Name:         "ahead",
-				InitialSHA:   testgit.ZeroValueSHA(),
+				InitialSHA:   git.SHA{},
 				SyncStatus:   git.SyncStatusAhead,
 				TrackingName: "origin/ahead",
-				TrackingSHA:  testgit.ZeroValueSHA(),
+				TrackingSHA:  git.SHA{},
 			},
 			git.BranchSyncStatus{
 				Name:         "behind",
-				InitialSHA:   testgit.ZeroValueSHA(),
+				InitialSHA:   git.SHA{},
 				SyncStatus:   git.SyncStatusBehind,
 				TrackingName: "origin/behind",
-				TrackingSHA:  testgit.ZeroValueSHA(),
+				TrackingSHA:  git.SHA{},
 			},
 			git.BranchSyncStatus{
 				Name:         "local-only",
-				InitialSHA:   testgit.ZeroValueSHA(),
+				InitialSHA:   git.SHA{},
 				SyncStatus:   git.SyncStatusLocalOnly,
 				TrackingName: "",
-				TrackingSHA:  testgit.ZeroValueSHA(),
+				TrackingSHA:  git.SHA{},
 			},
 			git.BranchSyncStatus{
 				Name:         "remote-only",
-				InitialSHA:   testgit.ZeroValueSHA(),
+				InitialSHA:   git.SHA{},
 				SyncStatus:   git.SyncStatusRemoteOnly,
 				TrackingName: "",
-				TrackingSHA:  testgit.ZeroValueSHA(),
+				TrackingSHA:  git.SHA{},
 			},
 			git.BranchSyncStatus{
 				Name:         "deleted-at-remote",
-				InitialSHA:   testgit.ZeroValueSHA(),
+				InitialSHA:   git.SHA{},
 				SyncStatus:   git.SyncStatusDeletedAtRemote,
 				TrackingName: "",
-				TrackingSHA:  testgit.ZeroValueSHA(),
+				TrackingSHA:  git.SHA{},
 			},
 		}
 		have := bs.LocalBranchesWithDeletedTrackingBranches().BranchNames()
@@ -303,17 +302,17 @@ func TestBranches(t *testing.T) {
 		bs := git.BranchesSyncStatus{
 			git.BranchSyncStatus{
 				Name:         "one",
-				InitialSHA:   testgit.ZeroValueSHA(),
+				InitialSHA:   git.SHA{},
 				SyncStatus:   git.SyncStatusLocalOnly,
 				TrackingName: "",
-				TrackingSHA:  testgit.ZeroValueSHA(),
+				TrackingSHA:  git.SHA{},
 			},
 			git.BranchSyncStatus{
 				Name:         "two",
-				InitialSHA:   testgit.ZeroValueSHA(),
+				InitialSHA:   git.SHA{},
 				SyncStatus:   git.SyncStatusLocalOnly,
 				TrackingName: "",
-				TrackingSHA:  testgit.ZeroValueSHA(),
+				TrackingSHA:  git.SHA{},
 			},
 		}
 		assert.Equal(t, "one", bs.Lookup("one").Name)
@@ -326,10 +325,10 @@ func TestBranches(t *testing.T) {
 		t.Run("has a local branch with matching tracking branch", func(t *testing.T) {
 			branch := git.BranchSyncStatus{
 				Name:         "one",
-				InitialSHA:   testgit.ZeroValueSHA(),
+				InitialSHA:   git.SHA{},
 				SyncStatus:   git.SyncStatusLocalOnly,
 				TrackingName: "origin/two",
-				TrackingSHA:  testgit.ZeroValueSHA(),
+				TrackingSHA:  git.SHA{},
 			}
 			bs := git.BranchesSyncStatus{branch}
 			have := bs.LookupLocalBranchWithTracking("origin/two")
@@ -338,10 +337,10 @@ func TestBranches(t *testing.T) {
 		t.Run("has a local branch with the given name", func(t *testing.T) {
 			bs := git.BranchesSyncStatus{git.BranchSyncStatus{
 				Name:         "one",
-				InitialSHA:   testgit.ZeroValueSHA(),
+				InitialSHA:   git.SHA{},
 				SyncStatus:   git.SyncStatusLocalOnly,
 				TrackingName: "",
-				TrackingSHA:  testgit.ZeroValueSHA(),
+				TrackingSHA:  git.SHA{},
 			}}
 			have := bs.LookupLocalBranchWithTracking("one")
 			assert.Nil(t, have)
@@ -354,27 +353,27 @@ func TestBranches(t *testing.T) {
 			bs := git.BranchesSyncStatus{
 				git.BranchSyncStatus{
 					Name:         "one",
-					InitialSHA:   testgit.ZeroValueSHA(),
+					InitialSHA:   git.SHA{},
 					SyncStatus:   git.SyncStatusLocalOnly,
 					TrackingName: "",
-					TrackingSHA:  testgit.ZeroValueSHA(),
+					TrackingSHA:  git.SHA{},
 				},
 				git.BranchSyncStatus{
 					Name:         "two",
-					InitialSHA:   testgit.ZeroValueSHA(),
+					InitialSHA:   git.SHA{},
 					SyncStatus:   git.SyncStatusLocalOnly,
 					TrackingName: "",
-					TrackingSHA:  testgit.ZeroValueSHA(),
+					TrackingSHA:  git.SHA{},
 				},
 			}
 			have := bs.Remove("two")
 			want := git.BranchesSyncStatus{
 				git.BranchSyncStatus{
 					Name:         "one",
-					InitialSHA:   testgit.ZeroValueSHA(),
+					InitialSHA:   git.SHA{},
 					SyncStatus:   git.SyncStatusLocalOnly,
 					TrackingName: "",
-					TrackingSHA:  testgit.ZeroValueSHA(),
+					TrackingSHA:  git.SHA{},
 				},
 			}
 			assert.Equal(t, want, have)
@@ -385,34 +384,34 @@ func TestBranches(t *testing.T) {
 		bs := git.BranchesSyncStatus{
 			git.BranchSyncStatus{
 				Name:         "one",
-				InitialSHA:   testgit.ZeroValueSHA(),
+				InitialSHA:   git.SHA{},
 				SyncStatus:   git.SyncStatusLocalOnly,
 				TrackingName: "",
-				TrackingSHA:  testgit.ZeroValueSHA(),
+				TrackingSHA:  git.SHA{},
 			},
 			git.BranchSyncStatus{
 				Name:         "two",
-				InitialSHA:   testgit.ZeroValueSHA(),
+				InitialSHA:   git.SHA{},
 				SyncStatus:   git.SyncStatusLocalOnly,
 				TrackingName: "",
-				TrackingSHA:  testgit.ZeroValueSHA(),
+				TrackingSHA:  git.SHA{},
 			},
 		}
 		have := bs.Remove("zonk")
 		want := git.BranchesSyncStatus{
 			git.BranchSyncStatus{
 				Name:         "one",
-				InitialSHA:   testgit.ZeroValueSHA(),
+				InitialSHA:   git.SHA{},
 				SyncStatus:   git.SyncStatusLocalOnly,
 				TrackingName: "",
-				TrackingSHA:  testgit.ZeroValueSHA(),
+				TrackingSHA:  git.SHA{},
 			},
 			git.BranchSyncStatus{
 				Name:         "two",
-				InitialSHA:   testgit.ZeroValueSHA(),
+				InitialSHA:   git.SHA{},
 				SyncStatus:   git.SyncStatusLocalOnly,
 				TrackingName: "",
-				TrackingSHA:  testgit.ZeroValueSHA(),
+				TrackingSHA:  git.SHA{},
 			},
 		}
 		assert.Equal(t, want, have)
@@ -423,48 +422,48 @@ func TestBranches(t *testing.T) {
 		bs := git.BranchesSyncStatus{
 			git.BranchSyncStatus{
 				Name:         "one",
-				InitialSHA:   testgit.ZeroValueSHA(),
+				InitialSHA:   git.SHA{},
 				SyncStatus:   git.SyncStatusLocalOnly,
 				TrackingName: "",
-				TrackingSHA:  testgit.ZeroValueSHA(),
+				TrackingSHA:  git.SHA{},
 			},
 			git.BranchSyncStatus{
 				Name:         "two",
-				InitialSHA:   testgit.ZeroValueSHA(),
+				InitialSHA:   git.SHA{},
 				SyncStatus:   git.SyncStatusLocalOnly,
 				TrackingName: "",
-				TrackingSHA:  testgit.ZeroValueSHA(),
+				TrackingSHA:  git.SHA{},
 			},
 			git.BranchSyncStatus{
 				Name:         "three",
-				InitialSHA:   testgit.ZeroValueSHA(),
+				InitialSHA:   git.SHA{},
 				SyncStatus:   git.SyncStatusLocalOnly,
 				TrackingName: "",
-				TrackingSHA:  testgit.ZeroValueSHA(),
+				TrackingSHA:  git.SHA{},
 			},
 			git.BranchSyncStatus{
 				Name:         "four",
-				InitialSHA:   testgit.ZeroValueSHA(),
+				InitialSHA:   git.SHA{},
 				SyncStatus:   git.SyncStatusLocalOnly,
 				TrackingName: "",
-				TrackingSHA:  testgit.ZeroValueSHA(),
+				TrackingSHA:  git.SHA{},
 			},
 		}
 		have, err := bs.Select([]string{"one", "three"})
 		want := git.BranchesSyncStatus{
 			git.BranchSyncStatus{
 				Name:         "one",
-				InitialSHA:   testgit.ZeroValueSHA(),
+				InitialSHA:   git.SHA{},
 				SyncStatus:   git.SyncStatusLocalOnly,
 				TrackingName: "",
-				TrackingSHA:  testgit.ZeroValueSHA(),
+				TrackingSHA:  git.SHA{},
 			},
 			git.BranchSyncStatus{
 				Name:         "three",
-				InitialSHA:   testgit.ZeroValueSHA(),
+				InitialSHA:   git.SHA{},
 				SyncStatus:   git.SyncStatusLocalOnly,
 				TrackingName: "",
-				TrackingSHA:  testgit.ZeroValueSHA(),
+				TrackingSHA:  git.SHA{},
 			},
 		}
 		assert.NoError(t, err)

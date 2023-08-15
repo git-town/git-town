@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/git"
-	testgit "github.com/git-town/git-town/v9/test/git"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -43,17 +42,17 @@ func TestCollector(t *testing.T) {
 			syncStatuses := git.BranchesSyncStatus{
 				{
 					Name:         "branch1",
-					InitialSHA:   testgit.ZeroValueSHA(),
+					InitialSHA:   git.SHA{},
 					SyncStatus:   git.SyncStatusLocalOnly,
 					TrackingName: "",
-					TrackingSHA:  testgit.ZeroValueSHA(),
+					TrackingSHA:  git.SHA{},
 				},
 				{
 					Name:         "branch2",
-					InitialSHA:   testgit.ZeroValueSHA(),
+					InitialSHA:   git.SHA{},
 					SyncStatus:   git.SyncStatusLocalOnly,
 					TrackingName: "",
-					TrackingSHA:  testgit.ZeroValueSHA(),
+					TrackingSHA:  git.SHA{},
 				},
 			}
 			have := fc.BranchesSyncStatus(syncStatuses, nil)
