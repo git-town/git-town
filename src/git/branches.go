@@ -15,7 +15,7 @@ type BranchSyncStatus struct {
 	Name string
 
 	// InitialSHA contains the SHA that this branch had before Git Town ran.
-	InitialSHA string
+	InitialSHA SHA
 
 	// SyncStatus of the branch
 	SyncStatus SyncStatus
@@ -24,7 +24,7 @@ type BranchSyncStatus struct {
 	TrackingName string
 
 	// TrackingSHA contains the SHA of the tracking branch before Git Town ran.
-	TrackingSHA string
+	TrackingSHA SHA
 }
 
 func (bi BranchSyncStatus) HasTrackingBranch() bool {

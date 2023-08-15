@@ -42,17 +42,17 @@ func TestCollector(t *testing.T) {
 			syncStatuses := git.BranchesSyncStatus{
 				{
 					Name:         "branch1",
-					InitialSHA:   "",
+					InitialSHA:   git.SHA{},
 					SyncStatus:   git.SyncStatusLocalOnly,
 					TrackingName: "",
-					TrackingSHA:  "",
+					TrackingSHA:  git.SHA{},
 				},
 				{
 					Name:         "branch2",
-					InitialSHA:   "",
+					InitialSHA:   git.SHA{},
 					SyncStatus:   git.SyncStatusLocalOnly,
 					TrackingName: "",
-					TrackingSHA:  "",
+					TrackingSHA:  git.SHA{},
 				},
 			}
 			have := fc.BranchesSyncStatus(syncStatuses, nil)

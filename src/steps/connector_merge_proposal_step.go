@@ -16,7 +16,7 @@ type ConnectorMergeProposalStep struct {
 	ProposalMessage           string
 	enteredEmptyCommitMessage bool
 	mergeError                error
-	mergeSha                  string
+	mergeSha                  git.SHA
 	ProposalNumber            int
 }
 

@@ -12,11 +12,11 @@ type DeleteLocalBranchStep struct {
 	Branch    string
 	Parent    string
 	Force     bool
-	branchSha string
+	branchSha git.SHA
 }
 
 func (step *DeleteLocalBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
-	return []Step{&CreateBranchStep{Branch: step.Branch, StartingPoint: step.branchSha}}, nil
+	return []Step{&CreateBranchStep{Branch: step.Branch, StartingPoint: step.branchSha.String()}}, nil
 }
 
 func (step *DeleteLocalBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {

@@ -10,7 +10,7 @@ type CreateRemoteBranchStep struct {
 	EmptyStep
 	Branch     string
 	NoPushHook bool
-	Sha        string
+	Sha        git.SHA
 }
 
 func (step *CreateRemoteBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {

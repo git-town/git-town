@@ -11,7 +11,7 @@ type DeleteOriginBranchStep struct {
 	Branch     string // name of the branch to delete without the remote name, i.e. "foo" instead of "origin/foo"
 	IsTracking bool
 	NoPushHook bool
-	branchSha  string
+	branchSha  git.SHA
 }
 
 func (step *DeleteOriginBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {

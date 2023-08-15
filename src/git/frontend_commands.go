@@ -51,12 +51,12 @@ func (fc *FrontendCommands) CheckoutBranch(name string) error {
 }
 
 // CreateRemoteBranch creates a remote branch from the given local SHA.
-func (fc *FrontendCommands) CreateRemoteBranch(localSha, branch string, noPushHook bool) error {
+func (fc *FrontendCommands) CreateRemoteBranch(localSha SHA, branch string, noPushHook bool) error {
 	args := []string{"push"}
 	if noPushHook {
 		args = append(args, "--no-verify")
 	}
-	args = append(args, config.OriginRemote, localSha+":refs/heads/"+branch)
+	args = append(args, config.OriginRemote, localSha.String()+":refs/heads/"+branch)
 	return fc.Run("git", args...)
 }
 
@@ -202,18 +202,18 @@ func (fc *FrontendCommands) RemoveGitAlias(alias config.Alias) error {
 }
 
 // ResetToSha undoes all commits on the current branch all the way until the given SHA.
-func (fc *FrontendCommands) ResetToSha(sha string, hard bool) error {
+func (fc *FrontendCommands) ResetToSha(sha SHA, hard bool) error {
 	args := []string{"reset"}
 	if hard {
 		args = append(args, "--hard")
 	}
-	args = append(args, sha)
+	args = append(args, sha.String())
 	return fc.Run("git", args...)
 }
 
 // RevertCommit reverts the commit with the given SHA.
-func (fc *FrontendCommands) RevertCommit(sha string) error {
-	return fc.Run("git", "revert", sha)
+func (fc *FrontendCommands) RevertCommit(sha SHA) error {
+	return fc.Run("git", "revert", sha.String())
 }
 
 // SquashMerge squash-merges the given branch into the current branch.

@@ -10,7 +10,7 @@ import (
 type RebaseBranchStep struct {
 	EmptyStep
 	Branch      string
-	previousSha string
+	previousSha git.SHA
 }
 
 func (step *RebaseBranchStep) CreateAbortStep() Step {
