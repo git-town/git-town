@@ -6,6 +6,7 @@ import (
 	"net/url"
 
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/xanzy/go-gitlab"
@@ -39,9 +40,9 @@ func (c *GitLabConnector) FindProposal(branch, target string) (*Proposal, error)
 	return &proposal, nil
 }
 
-func (c *GitLabConnector) SquashMergeProposal(number int, message string) (mergeSHA string, err error) {
+func (c *GitLabConnector) SquashMergeProposal(number int, message string) (mergeSHA git.SHA, err error) {
 	if number <= 0 {
-		return "", fmt.Errorf(messages.ProposalNoNumberGiven)
+		return git.ErrorSHA(), fmt.Errorf(messages.ProposalNoNumberGiven)
 	}
 	c.log.Start(messages.HostingGitlabMergingViaAPI, number)
 	// the GitLab API wants the full commit message in the body
@@ -53,10 +54,10 @@ func (c *GitLabConnector) SquashMergeProposal(number int, message string) (merge
 	})
 	if err != nil {
 		c.log.Failed(err)
-		return "", err
+		return git.ErrorSHA(), err
 	}
 	c.log.Success()
-	return result.SHA, nil
+	return git.NewSHA(result.SHA), nil
 }
 
 func (c *GitLabConnector) UpdateProposalTarget(number int, target string) error {

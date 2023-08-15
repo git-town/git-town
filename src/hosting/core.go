@@ -8,6 +8,7 @@ import (
 	"errors"
 
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/giturl"
 )
 
@@ -29,7 +30,7 @@ type Connector interface {
 
 	// SquashMergeProposal squash-merges the proposal with the given number
 	// using the given commit message.
-	SquashMergeProposal(number int, message string) (mergeSHA string, err error)
+	SquashMergeProposal(number int, message string) (mergeSHA git.SHA, err error)
 
 	// NewProposalURL provides the URL of the page
 	// to create a new proposal online.
@@ -99,7 +100,7 @@ type gitTownConfig interface {
 	OriginURL() *giturl.Parts
 }
 
-type ShaForBranchFunc func(string) (string, error)
+type ShaForBranchFunc func(string) (git.SHA, error)
 
 // NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
 func NewConnector(args NewConnectorArgs) (Connector, error) {

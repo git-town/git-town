@@ -8,6 +8,43 @@ import (
 	"github.com/git-town/git-town/v9/src/messages"
 )
 
+type SHA struct {
+	Content string
+}
+
+func NewSHA(content string) SHA {
+	if !validateSHA(content) {
+		panic(fmt.Sprintf("%q is not a valid Git SHA", content))
+	}
+	return SHA{content}
+}
+
+func validateSHA(content string) bool {
+	if len(content) == 0 {
+		return false
+	}
+	for _, c := range content {
+		if c < '0' || c > 'f' {
+			return false
+		}
+	}
+	return true
+}
+
+// ErrorSHA provides the zero value for a SHA, to be used only when returning a SHA that should be ignored because it is returned as part of an error.
+// This is needed because Go chooses to implement multiple return values instead of sum types.
+func ErrorSHA() SHA {
+	return SHA{""}
+}
+
+// Implements the fmt.Stringer interface.
+func (s SHA) String() string { return s.Content }
+
+// TruncateTo reduces the length of this SHA.
+func (s SHA) TruncateTo(newLength int) SHA {
+	return SHA{s.Content[0:newLength]}
+}
+
 // BranchSyncStatus describes the sync status of a branch in relation to its tracking branch.
 type BranchSyncStatus struct {
 	// Name contains the fully qualified name of the branch,
@@ -15,7 +52,7 @@ type BranchSyncStatus struct {
 	Name string
 
 	// InitialSHA contains the SHA that this branch had before Git Town ran.
-	InitialSHA string
+	InitialSHA SHA
 
 	// SyncStatus of the branch
 	SyncStatus SyncStatus
@@ -24,7 +61,7 @@ type BranchSyncStatus struct {
 	TrackingName string
 
 	// TrackingSHA contains the SHA of the tracking branch before Git Town ran.
-	TrackingSHA string
+	TrackingSHA SHA
 }
 
 func (bi BranchSyncStatus) HasTrackingBranch() bool {

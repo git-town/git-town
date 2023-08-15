@@ -9,7 +9,7 @@ import (
 type MergeStep struct {
 	EmptyStep
 	Branch      string
-	previousSha string
+	previousSha git.SHA
 }
 
 func (step *MergeStep) CreateAbortStep() Step {

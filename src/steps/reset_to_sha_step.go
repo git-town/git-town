@@ -10,7 +10,7 @@ import (
 type ResetToShaStep struct {
 	EmptyStep
 	Hard bool
-	Sha  string
+	Sha  git.SHA
 }
 
 func (step *ResetToShaStep) Run(run *git.ProdRunner, _ hosting.Connector) error {

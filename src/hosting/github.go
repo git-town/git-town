@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/google/go-github/v50/github"
@@ -62,9 +63,9 @@ func (c *GitHubConnector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", c.Hostname, c.Organization, c.Repository)
 }
 
-func (c *GitHubConnector) SquashMergeProposal(number int, message string) (mergeSHA string, err error) {
+func (c *GitHubConnector) SquashMergeProposal(number int, message string) (mergeSHA git.SHA, err error) {
 	if number <= 0 {
-		return "", fmt.Errorf(messages.ProposalNoNumberGiven)
+		return git.ErrorSHA(), fmt.Errorf(messages.ProposalNoNumberGiven)
 	}
 	c.log.Start(messages.HostingGithubMergingViaAPI, number)
 	title, body := ParseCommitMessage(message)
@@ -72,7 +73,7 @@ func (c *GitHubConnector) SquashMergeProposal(number int, message string) (merge
 		MergeMethod: "squash",
 		CommitTitle: title,
 	})
-	sha := result.GetSHA()
+	sha := git.NewSHA(result.GetSHA())
 	if err != nil {
 		c.log.Failed(err)
 		return sha, err

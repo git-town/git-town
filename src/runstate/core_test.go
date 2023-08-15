@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/stretchr/testify/assert"
@@ -15,14 +16,14 @@ func TestRunState(t *testing.T) {
 		t.Parallel()
 		runState := &runstate.RunState{
 			AbortStepList: runstate.StepList{
-				List: []steps.Step{&steps.ResetToShaStep{Sha: "abc"}},
+				List: []steps.Step{&steps.ResetToShaStep{Sha: git.NewSHA("abcdef")}},
 			},
 			Command: "sync",
 			RunStepList: runstate.StepList{
-				List: []steps.Step{&steps.ResetToShaStep{Sha: "abc"}},
+				List: []steps.Step{&steps.ResetToShaStep{Sha: git.NewSHA("abcdef")}},
 			},
 			UndoStepList: runstate.StepList{
-				List: []steps.Step{&steps.ResetToShaStep{Sha: "abc"}},
+				List: []steps.Step{&steps.ResetToShaStep{Sha: git.NewSHA("abcdef")}},
 			},
 		}
 		data, err := json.Marshal(runState)

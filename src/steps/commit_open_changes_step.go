@@ -11,7 +11,7 @@ import (
 // It does not ask the user for a commit message, but chooses one automatically.
 type CommitOpenChangesStep struct {
 	EmptyStep
-	previousSha string
+	previousSha git.SHA
 }
 
 func (step *CommitOpenChangesStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {

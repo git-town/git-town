@@ -98,7 +98,7 @@ func ParseVerboseBranchesOutput(output string) (BranchesSyncStatus, string) {
 		}
 		parts := spaceRE.Split(line[2:], 3)
 		branchName := parts[0]
-		sha := parts[1]
+		sha := SHA{parts[1]}
 		remoteText := parts[2]
 		if line[0] == '*' && branchName != "(no" { // "(no" is what we get when a rebase is active, in which case no branch is checked out
 			checkedoutBranch = branchName
@@ -114,7 +114,7 @@ func ParseVerboseBranchesOutput(output string) (BranchesSyncStatus, string) {
 				InitialSHA:   sha,
 				SyncStatus:   syncStatus,
 				TrackingName: trackingBranchName,
-				TrackingSHA:  "", // will be added later
+				TrackingSHA:  SHA{""}, // will be added later
 			})
 		}
 	}
@@ -253,7 +253,7 @@ func (bc *BackendCommands) currentBranchDuringRebase() (string, error) {
 }
 
 // CurrentSha provides the SHA of the currently checked out branch/commit.
-func (bc *BackendCommands) CurrentSha() (string, error) {
+func (bc *BackendCommands) CurrentSha() (SHA, error) {
 	return bc.ShaForBranch("HEAD")
 }
 
@@ -434,12 +434,12 @@ func (bc *BackendCommands) RootDirectory() string {
 }
 
 // ShaForBranch provides the SHA for the local branch with the given name.
-func (bc *BackendCommands) ShaForBranch(name string) (string, error) {
+func (bc *BackendCommands) ShaForBranch(name string) (SHA, error) {
 	output, err := bc.QueryTrim("git", "rev-parse", name)
 	if err != nil {
-		return "", fmt.Errorf(messages.BranchLocalShaProblem, name, err)
+		return SHA{""}, fmt.Errorf(messages.BranchLocalShaProblem, name, err)
 	}
-	return output, nil
+	return SHA{output}, nil
 }
 
 // ShouldPushBranch returns whether the local branch with the given name
