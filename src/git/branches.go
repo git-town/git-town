@@ -8,10 +8,14 @@ import (
 	"github.com/git-town/git-town/v9/src/messages"
 )
 
+// SHA represents a Git SHA as a dedicated data type.
+// This helps avoid stringly-typed code.
 type SHA struct {
 	Content string
 }
 
+// NewSHA creates a new SHA instance with the given value.
+// The value is verified for correctness.
 func NewSHA(content string) SHA {
 	if !validateSHA(content) {
 		panic(fmt.Sprintf("%q is not a valid Git SHA", content))
@@ -19,6 +23,7 @@ func NewSHA(content string) SHA {
 	return SHA{content}
 }
 
+// validateSHA indicates whether the given SHA content is a valid Git SHA.
 func validateSHA(content string) bool {
 	if len(content) == 0 {
 		return false
@@ -31,16 +36,16 @@ func validateSHA(content string) bool {
 	return true
 }
 
-// ErrorSHA provides the zero value for a SHA, to be used only when returning a SHA that should be ignored because it is returned as part of an error.
-// This is needed because Go chooses to implement multiple return values instead of sum types.
+// ErrorSHA provides the zero value for a Git SHA, to be used only when returning a SHA that should be ignored because it is returned as part of an error.
+// This is needed because we need to return invalid SHAs from functions that return an error.
 func ErrorSHA() SHA {
 	return SHA{""}
 }
 
-// Implements the fmt.Stringer interface.
+// Implements the fmt.Stringer interface for Git SHAs.
 func (s SHA) String() string { return s.Content }
 
-// TruncateTo reduces the length of this SHA.
+// TruncateTo provides a new SHA instance that contains a shorter checksum.
 func (s SHA) TruncateTo(newLength int) SHA {
 	return SHA{s.Content[0:newLength]}
 }
