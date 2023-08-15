@@ -28,10 +28,20 @@ func TestSHA(t *testing.T) {
 			defer ensureDidPanic(t)
 			git.NewSHA("")
 		})
-		t.Run("does not allow non-SHA characters", func(t *testing.T) {
+		t.Run("does not allow spaces", func(t *testing.T) {
 			t.Parallel()
 			defer ensureDidPanic(t)
 			git.NewSHA("abc def")
+		})
+		t.Run("does not allow uppercase characters", func(t *testing.T) {
+			t.Parallel()
+			defer ensureDidPanic(t)
+			git.NewSHA("ABCDEF")
+		})
+		t.Run("does not allow non-hex characters", func(t *testing.T) {
+			t.Parallel()
+			defer ensureDidPanic(t)
+			git.NewSHA("abcdefg")
 		})
 	})
 
