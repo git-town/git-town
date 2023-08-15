@@ -64,7 +64,7 @@ func (c *GiteaConnector) RepositoryURL() string {
 
 func (c *GiteaConnector) SquashMergeProposal(number int, message string) (mergeSha git.SHA, err error) {
 	if number <= 0 {
-		return git.ErrorSHA(), fmt.Errorf(messages.ProposalNoNumberGiven)
+		return git.SHA{}, fmt.Errorf(messages.ProposalNoNumberGiven)
 	}
 	title, body := ParseCommitMessage(message)
 	_, err = c.client.MergePullRequest(c.Organization, c.Repository, int64(number), gitea.MergePullRequestOption{
@@ -73,11 +73,11 @@ func (c *GiteaConnector) SquashMergeProposal(number int, message string) (mergeS
 		Message: body,
 	})
 	if err != nil {
-		return git.ErrorSHA(), err
+		return git.SHA{}, err
 	}
 	pullRequest, err := c.client.GetPullRequest(c.Organization, c.Repository, int64(number))
 	if err != nil {
-		return git.ErrorSHA(), err
+		return git.SHA{}, err
 	}
 	return git.NewSHA(*pullRequest.MergedCommitID), nil
 }

@@ -37,12 +37,6 @@ func validateSHA(content string) bool {
 	return true
 }
 
-// ErrorSHA provides the zero value for a Git SHA, to be used only when returning a SHA that should be ignored because it is returned as part of an error.
-// This is needed because we need to return invalid SHAs from functions that return an error.
-func ErrorSHA() SHA {
-	return SHA{""}
-}
-
 func (s SHA) MarshalJSON() ([]byte, error) {
 	return json.Marshal(s.content)
 }

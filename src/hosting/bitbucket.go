@@ -69,7 +69,7 @@ func (c *BitbucketConnector) RepositoryURL() string {
 }
 
 func (c *BitbucketConnector) SquashMergeProposal(_ int, _ string) (mergeSHA git.SHA, err error) {
-	return git.ErrorSHA(), errors.New(messages.HostingBitBucketNotImplemented)
+	return git.SHA{}, errors.New(messages.HostingBitBucketNotImplemented)
 }
 
 func (c *BitbucketConnector) UpdateProposalTarget(_ int, _ string) error {

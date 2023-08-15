@@ -437,7 +437,7 @@ func (bc *BackendCommands) RootDirectory() string {
 func (bc *BackendCommands) ShaForBranch(name string) (SHA, error) {
 	output, err := bc.QueryTrim("git", "rev-parse", name)
 	if err != nil {
-		return ErrorSHA(), fmt.Errorf(messages.BranchLocalShaProblem, name, err)
+		return SHA{}, fmt.Errorf(messages.BranchLocalShaProblem, name, err)
 	}
 	return SHA{output}, nil
 }

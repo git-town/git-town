@@ -65,7 +65,7 @@ func (c *GitHubConnector) RepositoryURL() string {
 
 func (c *GitHubConnector) SquashMergeProposal(number int, message string) (mergeSHA git.SHA, err error) {
 	if number <= 0 {
-		return git.ErrorSHA(), fmt.Errorf(messages.ProposalNoNumberGiven)
+		return git.SHA{}, fmt.Errorf(messages.ProposalNoNumberGiven)
 	}
 	c.log.Start(messages.HostingGithubMergingViaAPI, number)
 	title, body := ParseCommitMessage(message)
