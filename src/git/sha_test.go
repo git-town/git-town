@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func ensurePanic(t *testing.T) {
+func ensureDidPanic(t *testing.T) {
 	t.Helper()
 	if r := recover(); r == nil {
 		t.Errorf("The code did not panic")
@@ -25,12 +25,12 @@ func TestSHA(t *testing.T) {
 		})
 		t.Run("does not allow empty values", func(t *testing.T) {
 			t.Parallel()
-			defer ensurePanic(t)
+			defer ensureDidPanic(t)
 			git.NewSHA("")
 		})
 		t.Run("does not allow non-SHA characters", func(t *testing.T) {
 			t.Parallel()
-			defer ensurePanic(t)
+			defer ensureDidPanic(t)
 			git.NewSHA("abc def")
 		})
 	})
