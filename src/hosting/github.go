@@ -24,10 +24,10 @@ type GitHubConnector struct {
 	log        Log
 }
 
-func (c *GitHubConnector) FindProposal(branch, target string) (*Proposal, error) {
+func (c *GitHubConnector) FindProposal(branch, target domain.LocalBranchName) (*Proposal, error) {
 	pullRequests, _, err := c.client.PullRequests.List(context.Background(), c.Organization, c.Repository, &github.PullRequestListOptions{
-		Head:  c.Organization + ":" + branch,
-		Base:  target,
+		Head:  c.Organization + ":" + branch.String(),
+		Base:  target.String(),
 		State: "open",
 	})
 	if err != nil {
@@ -82,11 +82,12 @@ func (c *GitHubConnector) SquashMergeProposal(number int, message string) (merge
 	return sha, nil
 }
 
-func (c *GitHubConnector) UpdateProposalTarget(number int, target string) error {
+func (c *GitHubConnector) UpdateProposalTarget(number int, target domain.LocalBranchName) error {
 	c.log.Start(messages.HostingGithubUpdatePRViaAPI, number)
+	targetName := target.String()
 	_, _, err := c.client.PullRequests.Edit(context.Background(), c.Organization, c.Repository, number, &github.PullRequest{
 		Base: &github.PullRequestBranch{
-			Ref: &target,
+			Ref: &(targetName),
 		},
 	})
 	if err != nil {

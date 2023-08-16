@@ -20,11 +20,11 @@ type GitLabConnector struct {
 	log Log
 }
 
-func (c *GitLabConnector) FindProposal(branch, target string) (*Proposal, error) {
+func (c *GitLabConnector) FindProposal(branch, target domain.LocalBranchName) (*Proposal, error) {
 	opts := &gitlab.ListProjectMergeRequestsOptions{
 		State:        gitlab.String("opened"),
-		SourceBranch: gitlab.String(branch),
-		TargetBranch: gitlab.String(target),
+		SourceBranch: gitlab.String(branch.String()),
+		TargetBranch: gitlab.String(target.String()),
 	}
 	mergeRequests, _, err := c.client.MergeRequests.ListProjectMergeRequests(c.projectPath(), opts)
 	if err != nil {
@@ -60,10 +60,10 @@ func (c *GitLabConnector) SquashMergeProposal(number int, message string) (merge
 	return domain.NewSHA(result.SHA), nil
 }
 
-func (c *GitLabConnector) UpdateProposalTarget(number int, target string) error {
+func (c *GitLabConnector) UpdateProposalTarget(number int, target domain.LocalBranchName) error {
 	c.log.Start(messages.HostingGitlabUpdateMRViaAPI, number, target)
 	_, _, err := c.client.MergeRequests.UpdateMergeRequest(c.projectPath(), number, &gitlab.UpdateMergeRequestOptions{
-		TargetBranch: gitlab.String(target),
+		TargetBranch: gitlab.String(target.String()),
 	})
 	if err != nil {
 		c.log.Failed(err)
@@ -130,10 +130,10 @@ func (c *GitLabConfig) HostingServiceName() string {
 	return "GitLab"
 }
 
-func (c *GitLabConfig) NewProposalURL(branch, parentBranch string) (string, error) {
+func (c *GitLabConfig) NewProposalURL(branch, parentBranch domain.LocalBranchName) (string, error) {
 	query := url.Values{}
-	query.Add("merge_request[source_branch]", branch)
-	query.Add("merge_request[target_branch]", parentBranch)
+	query.Add("merge_request[source_branch]", branch.String())
+	query.Add("merge_request[target_branch]", parentBranch.String())
 	return fmt.Sprintf("%s/-/merge_requests/new?%s", c.RepositoryURL(), query.Encode()), nil
 }
 

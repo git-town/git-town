@@ -22,7 +22,7 @@ type Connector interface {
 
 	// FindProposal provides details about the proposal for the given branch into the given target branch.
 	// Returns nil if no proposal exists.
-	FindProposal(branch, target string) (*Proposal, error)
+	FindProposal(branch, target domain.LocalBranchName) (*Proposal, error)
 
 	// HostingServiceName provides the name of the code hosting service
 	// supported by the respective connector implementation.
@@ -40,7 +40,7 @@ type Connector interface {
 	RepositoryURL() string
 
 	// UpdateProposalTarget updates the target branch of the given proposal.
-	UpdateProposalTarget(number int, target string) error
+	UpdateProposalTarget(number int, target domain.LocalBranchName) error
 }
 
 // CommonConfig contains data needed by all platform connectors.
@@ -100,7 +100,7 @@ type gitTownConfig interface {
 	OriginURL() *giturl.Parts
 }
 
-type ShaForBranchFunc func(string) (domain.SHA, error)
+type ShaForBranchFunc func(domain.LocalBranchName) (domain.SHA, error)
 
 // NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
 func NewConnector(args NewConnectorArgs) (Connector, error) {
