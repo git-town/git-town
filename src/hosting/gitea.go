@@ -7,7 +7,7 @@ import (
 
 	"code.gitea.io/sdk/gitea"
 	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/messages"
 	"golang.org/x/oauth2"
@@ -62,9 +62,9 @@ func (c *GiteaConnector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", c.Hostname, c.Organization, c.Repository)
 }
 
-func (c *GiteaConnector) SquashMergeProposal(number int, message string) (mergeSha git.SHA, err error) {
+func (c *GiteaConnector) SquashMergeProposal(number int, message string) (mergeSha domain.SHA, err error) {
 	if number <= 0 {
-		return git.SHA{}, fmt.Errorf(messages.ProposalNoNumberGiven)
+		return domain.SHA{}, fmt.Errorf(messages.ProposalNoNumberGiven)
 	}
 	title, body := ParseCommitMessage(message)
 	_, err = c.client.MergePullRequest(c.Organization, c.Repository, int64(number), gitea.MergePullRequestOption{
@@ -73,13 +73,13 @@ func (c *GiteaConnector) SquashMergeProposal(number int, message string) (mergeS
 		Message: body,
 	})
 	if err != nil {
-		return git.SHA{}, err
+		return domain.SHA{}, err
 	}
 	pullRequest, err := c.client.GetPullRequest(c.Organization, c.Repository, int64(number))
 	if err != nil {
-		return git.SHA{}, err
+		return domain.SHA{}, err
 	}
-	return git.NewSHA(*pullRequest.MergedCommitID), nil
+	return domain.NewSHA(*pullRequest.MergedCommitID), nil
 }
 
 func (c *GiteaConnector) UpdateProposalTarget(_ int, _ string) error {

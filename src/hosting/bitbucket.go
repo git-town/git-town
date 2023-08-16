@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/messages"
 )
@@ -68,8 +68,8 @@ func (c *BitbucketConnector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", c.Hostname, c.Organization, c.Repository)
 }
 
-func (c *BitbucketConnector) SquashMergeProposal(_ int, _ string) (mergeSHA git.SHA, err error) {
-	return git.SHA{}, errors.New(messages.HostingBitBucketNotImplemented)
+func (c *BitbucketConnector) SquashMergeProposal(_ int, _ string) (mergeSHA domain.SHA, err error) {
+	return domain.SHA{}, errors.New(messages.HostingBitBucketNotImplemented)
 }
 
 func (c *BitbucketConnector) UpdateProposalTarget(_ int, _ string) error {

@@ -2,6 +2,7 @@ package steps
 
 import (
 	"github.com/git-town/git-town/v9/src/browser"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 )
@@ -9,7 +10,7 @@ import (
 // CreateProposalStep creates a new pull request for the current branch.
 type CreateProposalStep struct {
 	EmptyStep
-	Branch string
+	Branch domain.LocalBranchName
 }
 
 func (step *CreateProposalStep) Run(run *git.ProdRunner, connector hosting.Connector) error {

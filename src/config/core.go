@@ -7,6 +7,8 @@ package config
 import (
 	"fmt"
 	"strings"
+
+	"github.com/git-town/git-town/v9/src/domain"
 )
 
 // Key contains all the keys used in Git Town configuration.
@@ -126,7 +128,7 @@ func NewAliasKey(aliasType Alias) Key {
 	panic(fmt.Sprintf("don't know how to convert alias type %q into a config key", aliasType))
 }
 
-func NewParentKey(branch string) Key {
+func NewParentKey(branch domain.LocalBranchName) Key {
 	return Key{
 		name: fmt.Sprintf("git-town-branch.%s.parent", branch),
 	}

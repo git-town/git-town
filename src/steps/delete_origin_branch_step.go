@@ -1,6 +1,7 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 )
@@ -11,7 +12,7 @@ type DeleteOriginBranchStep struct {
 	Branch     string // name of the branch to delete without the remote name, i.e. "foo" instead of "origin/foo"
 	IsTracking bool
 	NoPushHook bool
-	branchSha  git.SHA
+	branchSha  domain.SHA
 }
 
 func (step *DeleteOriginBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {

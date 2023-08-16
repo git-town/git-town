@@ -1,6 +1,7 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 )
@@ -10,7 +11,7 @@ import (
 type RebaseBranchStep struct {
 	EmptyStep
 	Branch      string
-	previousSha git.SHA
+	previousSha domain.SHA
 }
 
 func (step *RebaseBranchStep) CreateAbortStep() Step {

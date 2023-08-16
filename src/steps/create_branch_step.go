@@ -1,16 +1,16 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 )
 
-// CreateBranchStep creates a new branch
-// but leaves the current branch unchanged.
+// CreateBranchStep creates a new branch but leaves the current branch unchanged.
 type CreateBranchStep struct {
 	EmptyStep
-	Branch        string
-	StartingPoint string
+	Branch        domain.LocalBranchName
+	StartingPoint domain.Location
 }
 
 func (step *CreateBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {

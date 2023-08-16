@@ -3,23 +3,24 @@ package config
 import (
 	"sort"
 
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/slice"
 	"golang.org/x/exp/maps"
 )
 
 // Lineage encapsulates all data and functionality around parent branches.
 // branch --> its parent.
-type Lineage map[string]string
+type Lineage map[domain.LocalBranchName]domain.LocalBranchName
 
 // BranchAndAncestors provides the full lineage for the branch with the given name,
 // including the branch.
-func (l Lineage) BranchAndAncestors(branchName string) []string {
+func (l Lineage) BranchAndAncestors(branchName domain.LocalBranchName) domain.LocalBranchNames {
 	return append(l.Ancestors(branchName), branchName)
 }
 
 // BranchesAndAncestors provides the full lineage for the branches with the given names,
 // including the branches themselves.
-func (l Lineage) BranchesAndAncestors(branchNames []string) []string {
+func (l Lineage) BranchesAndAncestors(branchNames domain.LocalBranchNames) domain.LocalBranchNames {
 	result := branchNames
 	for _, branchName := range branchNames {
 		ancestors := l.Ancestors(branchName)
@@ -30,40 +31,40 @@ func (l Lineage) BranchesAndAncestors(branchNames []string) []string {
 }
 
 // Ancestors provides the names of all parent branches of the branch with the given name.
-func (l Lineage) Ancestors(branch string) []string {
+func (l Lineage) Ancestors(branch domain.LocalBranchName) domain.LocalBranchNames {
 	current := branch
-	result := []string{}
+	result := domain.LocalBranchNames{}
 	for {
-		parent := l[current]
-		if parent == "" {
+		parent, found := l[current]
+		if !found {
 			return result
 		}
-		result = append([]string{parent}, result...)
+		result = append(domain.LocalBranchNames{parent}, result...)
 		current = parent
 	}
 }
 
 // BranchNames provides the names of all branches in this Lineage, sorted alphabetically.
-func (l Lineage) BranchNames() []string {
-	result := maps.Keys(l)
-	sort.Strings(result)
+func (l Lineage) BranchNames() domain.LocalBranchNames {
+	result := domain.LocalBranchNames(maps.Keys(l))
+	result.Sort()
 	return result
 }
 
 // Children provides the names of all branches that have the given branch as their parent.
-func (l Lineage) Children(branch string) []string {
-	result := []string{}
+func (l Lineage) Children(branch domain.LocalBranchName) domain.LocalBranchNames {
+	result := domain.LocalBranchNames{}
 	for child, parent := range l {
 		if parent == branch {
 			result = append(result, child)
 		}
 	}
-	sort.Strings(result)
+	result.Sort()
 	return result
 }
 
 // HasParents returns whether or not the given branch has at least one parent.
-func (l Lineage) HasParents(branch string) bool {
+func (l Lineage) HasParents(branch domain.LocalBranchName) bool {
 	for child := range l {
 		if child == branch {
 			return true
@@ -73,11 +74,11 @@ func (l Lineage) HasParents(branch string) bool {
 }
 
 // IsAncestor indicates whether the given branch is an ancestor of the other given branch.
-func (l Lineage) IsAncestor(ancestor, other string) bool {
+func (l Lineage) IsAncestor(ancestor, other domain.LocalBranchName) bool {
 	current := other
 	for {
-		parent := l[current]
-		if parent == "" {
+		parent, found := l[current]
+		if !found {
 			return false
 		}
 		if parent == ancestor {
@@ -88,44 +89,44 @@ func (l Lineage) IsAncestor(ancestor, other string) bool {
 }
 
 // Parent provides the name of the parent branch for the given branch or nil if the branch has no parent.
-func (l Lineage) Parent(branch string) string {
+func (l Lineage) Parent(branch domain.LocalBranchName) *domain.LocalBranchName {
 	for child, parent := range l {
 		if child == branch {
-			return parent
+			return &parent
 		}
 	}
-	return ""
+	return nil
 }
 
 // OrderHierarchically sorts the given branches so that ancestor branches come before their descendants
 // and everything is sorted alphabetically.
-func (l Lineage) OrderHierarchically(branches []string) {
+func (l Lineage) OrderHierarchically(branches domain.LocalBranchNames) {
 	sort.Slice(branches, func(x, y int) bool {
 		first := branches[x]
 		second := branches[y]
-		if first == "" {
+		if first.String() == "" {
 			return true
 		}
-		if second == "" {
+		if second.String() == "" {
 			return false
 		}
 		isAncestor := l.IsAncestor(first, second)
 		if isAncestor {
 			return true
 		}
-		return first < second
+		return first.String() < second.String()
 	})
 }
 
 // Roots provides the branches with children and no parents.
-func (l Lineage) Roots() []string {
-	roots := []string{}
+func (l Lineage) Roots() domain.LocalBranchNames {
+	roots := domain.LocalBranchNames{}
 	for _, parent := range l {
 		_, found := l[parent]
 		if !found && !slice.Contains(roots, parent) {
 			roots = append(roots, parent)
 		}
 	}
-	sort.Strings(roots)
+	roots.Sort()
 	return roots
 }

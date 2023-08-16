@@ -1,6 +1,7 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 )
@@ -8,8 +9,8 @@ import (
 // CheckoutStep checks out a new branch.
 type CheckoutStep struct {
 	EmptyStep
-	Branch         string
-	previousBranch string
+	Branch         domain.LocalBranchName
+	previousBranch domain.LocalBranchName
 }
 
 func (step *CheckoutStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {

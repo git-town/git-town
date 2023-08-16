@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/cache"
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/statistics"
 	"github.com/git-town/git-town/v9/src/subshell"
@@ -41,7 +42,7 @@ func TestBackendCommands(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		runtime.CreateBranch("branch1", "initial")
-		assert.NoError(t, runtime.Backend.CheckoutBranch("branch1"))
+		assert.NoError(t, runtime.Backend.CheckoutBranch(domain.NewLocalBranchName("branch1")))
 		currentBranch, err := runtime.CurrentBranch()
 		assert.NoError(t, err)
 		assert.Equal(t, "branch1", currentBranch)
@@ -57,10 +58,10 @@ func TestBackendCommands(t *testing.T) {
 		err := runtime.Backend.CreateFeatureBranch("f1")
 		assert.NoError(t, err)
 		runtime.Config.Reload()
-		assert.True(t, runtime.Config.BranchDurations().IsFeatureBranch("f1"))
+		assert.True(t, runtime.Config.BranchDurations().IsFeatureBranch(domain.NewLocalBranchName("f1")))
 		lineageHave := runtime.Config.Lineage()
 		lineageWant := config.Lineage{}
-		lineageWant["f1"] = "main"
+		lineageWant[domain.NewLocalBranchName("f1")] = domain.NewLocalBranchName("main")
 		assert.Equal(t, lineageWant, lineageHave)
 	})
 
@@ -86,13 +87,13 @@ func TestBackendCommands(t *testing.T) {
 		runner := testruntime.Clone(origin.TestRunner, repoDir)
 		runner.CreateBranch("b1", "initial")
 		runner.CreateBranch("b2", "initial")
-		has, err := runner.Backend.HasLocalBranch("b1")
+		has, err := runner.Backend.HasLocalBranch(domain.NewLocalBranchName("b1"))
 		assert.NoError(t, err)
 		assert.True(t, has)
-		has, err = runner.Backend.HasLocalBranch("b2")
+		has, err = runner.Backend.HasLocalBranch(domain.NewLocalBranchName("b2"))
 		assert.NoError(t, err)
 		assert.True(t, has)
-		has, err = runner.Backend.HasLocalBranch("b3")
+		has, err = runner.Backend.HasLocalBranch(domain.NewLocalBranchName("b3"))
 		assert.NoError(t, err)
 		assert.False(t, has)
 	})
@@ -126,7 +127,7 @@ func TestBackendCommands(t *testing.T) {
 		runner.CreateBranch("b2", "initial")
 		origin.CreateBranch("b3", "initial")
 		runner.Fetch()
-		branches, err := runner.Backend.LocalBranchesMainFirst("initial")
+		branches, err := runner.Backend.LocalBranchesMainFirst(domain.NewLocalBranchName("initial"))
 		assert.NoError(t, err)
 		assert.Equal(t, []string{"initial", "b1", "b2"}, branches)
 	})
@@ -169,16 +170,17 @@ func TestBackendCommands(t *testing.T) {
   remotes/origin/branch-1      22222222 Commit message 1b`[1:]
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
-						Name:         "branch-1",
-						InitialSHA:   git.NewSHA("11111111"),
+						Name:         domain.NewLocalBranchName("branch-1"),
+						InitialSHA:   domain.NewSHA("11111111"),
 						SyncStatus:   git.SyncStatusAhead,
-						TrackingName: "origin/branch-1",
-						TrackingSHA:  git.NewSHA("22222222"),
+						TrackingName: domain.NewRemoteBranchName("origin/branch-1"),
+						TrackingSHA:  domain.NewSHA("22222222"),
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
 				assert.Equal(t, want, have)
 			})
+
 			t.Run("branch is behind its remote branch", func(t *testing.T) {
 				t.Parallel()
 				give := `
@@ -186,16 +188,17 @@ func TestBackendCommands(t *testing.T) {
   remotes/origin/branch-1      22222222 Commit message 1b`[1:]
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
-						Name:         "branch-1",
-						InitialSHA:   git.NewSHA("11111111"),
+						Name:         domain.NewLocalBranchName("branch-1"),
+						InitialSHA:   domain.NewSHA("11111111"),
 						SyncStatus:   git.SyncStatusBehind,
-						TrackingName: "origin/branch-1",
-						TrackingSHA:  git.NewSHA("22222222"),
+						TrackingName: domain.NewRemoteBranchName("origin/branch-1"),
+						TrackingSHA:  domain.NewSHA("22222222"),
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
 				assert.Equal(t, want, have)
 			})
+
 			t.Run("branch is ahead and behind its remote branch", func(t *testing.T) {
 				t.Parallel()
 				give := `
@@ -203,16 +206,17 @@ func TestBackendCommands(t *testing.T) {
   remotes/origin/branch-1      22222222 Commit message 1b`[1:]
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
-						Name:         "branch-1",
-						InitialSHA:   git.NewSHA("11111111"),
+						Name:         domain.NewLocalBranchName("branch-1"),
+						InitialSHA:   domain.NewSHA("11111111"),
 						SyncStatus:   git.SyncStatusAheadAndBehind,
-						TrackingName: "origin/branch-1",
-						TrackingSHA:  git.NewSHA("22222222"),
+						TrackingName: domain.NewRemoteBranchName("origin/branch-1"),
+						TrackingSHA:  domain.NewSHA("22222222"),
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
 				assert.Equal(t, want, have)
 			})
+
 			t.Run("branch is in sync with its remote branch", func(t *testing.T) {
 				t.Parallel()
 				give := `
@@ -220,57 +224,52 @@ func TestBackendCommands(t *testing.T) {
   remotes/origin/branch-1      11111111 Commit message 1`[1:]
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
-						Name:         "branch-1",
-						InitialSHA:   git.NewSHA("11111111"),
+						Name:         domain.NewLocalBranchName("branch-1"),
+						InitialSHA:   domain.NewSHA("11111111"),
 						SyncStatus:   git.SyncStatusUpToDate,
-						TrackingName: "origin/branch-1",
-						TrackingSHA:  git.NewSHA("11111111"),
+						TrackingName: domain.NewRemoteBranchName("origin/branch-1"),
+						TrackingSHA:  domain.NewSHA("11111111"),
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
 				assert.Equal(t, want, have)
 			})
+
 			t.Run("remote-only branch", func(t *testing.T) {
 				t.Parallel()
 				give := `
   remotes/origin/branch-1    22222222 Commit message 2`[1:]
-				want := git.BranchesSyncStatus{
-					git.BranchSyncStatus{
-						Name:         "origin/branch-1",
-						InitialSHA:   git.NewSHA("22222222"),
-						SyncStatus:   git.SyncStatusRemoteOnly,
-						TrackingName: "",
-						TrackingSHA:  git.SHA{},
-					},
-				}
+				want := git.BranchesSyncStatus{}
 				have, _ := git.ParseVerboseBranchesOutput(give)
 				assert.Equal(t, want, have)
 			})
+
 			t.Run("local-only branch", func(t *testing.T) {
 				t.Parallel()
 				give := `  branch-1                     01a7eded Commit message 1`
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
-						Name:         "branch-1",
-						InitialSHA:   git.NewSHA("01a7eded"),
+						Name:         domain.NewLocalBranchName("branch-1"),
+						InitialSHA:   domain.NewSHA("01a7eded"),
 						SyncStatus:   git.SyncStatusLocalOnly,
-						TrackingName: "",
-						TrackingSHA:  git.SHA{},
+						TrackingName: domain.RemoteBranchName{},
+						TrackingSHA:  domain.SHA{},
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
 				assert.Equal(t, want, have)
 			})
+
 			t.Run("branch is deleted at the remote", func(t *testing.T) {
 				t.Parallel()
 				give := `  branch-1                     01a7eded [origin/branch-1: gone] Commit message 1`
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
-						Name:         "branch-1",
-						InitialSHA:   git.NewSHA("01a7eded"),
+						Name:         domain.NewLocalBranchName("branch-1"),
+						InitialSHA:   domain.NewSHA("01a7eded"),
 						SyncStatus:   git.SyncStatusDeletedAtRemote,
-						TrackingName: "origin/branch-1",
-						TrackingSHA:  git.SHA{},
+						TrackingName: domain.NewRemoteBranchName("origin/branch-1"),
+						TrackingSHA:  domain.SHA{},
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
@@ -278,7 +277,7 @@ func TestBackendCommands(t *testing.T) {
 			})
 		})
 
-		t.Run("uses the tracking branch name provided by Git", func(t *testing.T) {
+		t.Run("branch with a different tracking branch name", func(t *testing.T) {
 			t.Run("a branch uses a differently named tracking branch", func(t *testing.T) {
 				give := `
   branch-1                     11111111 [origin/branch-2] Commit message 1
@@ -286,18 +285,11 @@ func TestBackendCommands(t *testing.T) {
   remotes/origin/branch-2      11111111 Commit message 1`[1:]
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
-						Name:         "branch-1",
-						InitialSHA:   git.NewSHA("11111111"),
+						Name:         domain.NewLocalBranchName("branch-1"),
+						InitialSHA:   domain.NewSHA("11111111"),
 						SyncStatus:   git.SyncStatusUpToDate,
-						TrackingName: "origin/branch-2",
-						TrackingSHA:  git.NewSHA("11111111"),
-					},
-					git.BranchSyncStatus{
-						Name:         "origin/branch-1",
-						InitialSHA:   git.NewSHA("22222222"),
-						SyncStatus:   git.SyncStatusRemoteOnly,
-						TrackingName: "",
-						TrackingSHA:  git.SHA{},
+						TrackingName: domain.NewRemoteBranchName("origin/branch-2"),
+						TrackingSHA:  domain.NewSHA("11111111"),
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
@@ -319,39 +311,39 @@ func TestBackendCommands(t *testing.T) {
 `[1:]
 			want := git.BranchesSyncStatus{
 				git.BranchSyncStatus{
-					Name:         "branch-1",
-					InitialSHA:   git.NewSHA("01a7eded"),
+					Name:         domain.NewLocalBranchName("branch-1"),
+					InitialSHA:   domain.NewSHA("01a7eded"),
 					SyncStatus:   git.SyncStatusAhead,
-					TrackingName: "origin/branch-1",
-					TrackingSHA:  git.NewSHA("307a7bf4"),
+					TrackingName: domain.NewRemoteBranchName("origin/branch-1"),
+					TrackingSHA:  domain.NewSHA("307a7bf4"),
 				},
 				git.BranchSyncStatus{
-					Name:         "branch-2",
-					InitialSHA:   git.NewSHA("da796a69"),
+					Name:         domain.NewLocalBranchName("branch-2"),
+					InitialSHA:   domain.NewSHA("da796a69"),
 					SyncStatus:   git.SyncStatusUpToDate,
-					TrackingName: "origin/branch-2",
-					TrackingSHA:  git.NewSHA("da796a69"),
+					TrackingName: domain.NewRemoteBranchName("origin/branch-2"),
+					TrackingSHA:  domain.NewSHA("da796a69"),
 				},
 				git.BranchSyncStatus{
-					Name:         "branch-3",
-					InitialSHA:   git.NewSHA("f4ebec0a"),
+					Name:         domain.NewLocalBranchName("branch-3"),
+					InitialSHA:   domain.NewSHA("f4ebec0a"),
 					SyncStatus:   git.SyncStatusBehind,
-					TrackingName: "origin/branch-3",
-					TrackingSHA:  git.NewSHA("bc39378a"),
+					TrackingName: domain.NewRemoteBranchName("origin/branch-3"),
+					TrackingSHA:  domain.NewSHA("bc39378a"),
 				},
 				git.BranchSyncStatus{
-					Name:         "main",
-					InitialSHA:   git.NewSHA("024df944"),
+					Name:         domain.NewLocalBranchName("main"),
+					InitialSHA:   domain.NewSHA("024df944"),
 					SyncStatus:   git.SyncStatusUpToDate,
-					TrackingName: "origin/main",
-					TrackingSHA:  git.NewSHA("024df944"),
+					TrackingName: domain.NewRemoteBranchName("origin/main"),
+					TrackingSHA:  domain.NewSHA("024df944"),
 				},
 				git.BranchSyncStatus{
-					Name:         "branch-4",
-					InitialSHA:   git.NewSHA("e4d6bc09"),
+					Name:         domain.NewLocalBranchName("branch-4"),
+					InitialSHA:   domain.NewSHA("e4d6bc09"),
 					SyncStatus:   git.SyncStatusDeletedAtRemote,
-					TrackingName: "origin/branch-4",
-					TrackingSHA:  git.SHA{},
+					TrackingName: domain.NewRemoteBranchName("origin/branch-4"),
+					TrackingSHA:  domain.SHA{},
 				},
 			}
 			have, currentBranch := git.ParseVerboseBranchesOutput(give)
@@ -400,8 +392,8 @@ func TestBackendCommands(t *testing.T) {
 			cmds := git.BackendCommands{
 				BackendRunner:      runner,
 				Config:             nil,
-				CurrentBranchCache: &cache.String{},
-				RemoteBranchCache:  &cache.Strings{},
+				CurrentBranchCache: &cache.LocalBranch{},
+				RemoteBranchCache:  &cache.RemoteBranch{},
 				RemotesCache:       &cache.Strings{},
 			}
 			have := cmds.RootDirectory()

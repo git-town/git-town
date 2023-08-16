@@ -1,6 +1,7 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 )
@@ -8,7 +9,7 @@ import (
 // AddToPerennialBranchesStep adds the branch with the given name as a perennial branch.
 type AddToPerennialBranchesStep struct {
 	EmptyStep
-	Branch string
+	Branch domain.LocalBranchName
 }
 
 func (step *AddToPerennialBranchesStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {

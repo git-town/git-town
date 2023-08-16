@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/messages"
 )
 
@@ -18,12 +19,12 @@ type FrontendRunner struct {
 	Stats            Statistics
 }
 
-type GetCurrentBranchFunc func() (string, error)
+type GetCurrentBranchFunc func() (domain.LocalBranchName, error)
 
 // Run runs the given command in this ShellRunner's directory.
 func (r *FrontendRunner) Run(cmd string, args ...string) (err error) {
 	r.Stats.RegisterRun()
-	var branchName string
+	var branchName domain.LocalBranchName
 	if !r.OmitBranchNames {
 		branchName, err = r.GetCurrentBranch()
 		if err != nil {
@@ -59,7 +60,7 @@ func (r *FrontendRunner) RunMany(commands [][]string) error {
 }
 
 // PrintCommand prints the given command-line operation on the console.
-func PrintCommand(branch string, omitBranch bool, cmd string, args ...string) {
+func PrintCommand(branch domain.LocalBranchName, omitBranch bool, cmd string, args ...string) {
 	header := FormatCommand(branch, omitBranch, cmd, args...)
 	fmt.Println()
 	_, err := color.New(color.Bold).Println(header)
@@ -68,10 +69,10 @@ func PrintCommand(branch string, omitBranch bool, cmd string, args ...string) {
 	}
 }
 
-func FormatCommand(currentBranch string, omitBranch bool, executable string, args ...string) string {
+func FormatCommand(currentBranch domain.LocalBranchName, omitBranch bool, executable string, args ...string) string {
 	var result string
 	if executable == "git" && !omitBranch {
-		result = "[" + currentBranch + "] git "
+		result = "[" + currentBranch.String() + "] git "
 	} else {
 		result = executable + " "
 	}

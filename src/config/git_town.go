@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/slice"
@@ -31,7 +32,7 @@ type OriginURLCache map[string]*giturl.Parts
 
 // AddToPerennialBranches registers the given branch names as perennial branches.
 // The branches must exist.
-func (gt *GitTown) AddToPerennialBranches(branches ...string) error {
+func (gt *GitTown) AddToPerennialBranches(branches ...domain.LocalBranchName) error {
 	return gt.SetPerennialBranches(append(gt.PerennialBranches(), branches...))
 }
 
@@ -101,7 +102,7 @@ func (gt *GitTown) HostingService() (Hosting, error) {
 
 // IsMainBranch indicates whether the branch with the given name
 // is the main branch of the repository.
-func (gt *GitTown) IsMainBranch(branch string) bool {
+func (gt *GitTown) IsMainBranch(branch domain.LocalBranchName) bool {
 	return branch == gt.MainBranch()
 }
 
@@ -122,16 +123,16 @@ func (gt *GitTown) IsOffline() (bool, error) {
 func (gt *GitTown) Lineage() Lineage {
 	lineage := Lineage{}
 	for _, key := range gt.LocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
-		child := strings.TrimSuffix(strings.TrimPrefix(key.name, "git-town-branch."), ".parent")
-		parent := gt.LocalConfigValue(key)
+		child := domain.NewLocalBranchName(strings.TrimSuffix(strings.TrimPrefix(key.name, "git-town-branch."), ".parent"))
+		parent := domain.NewLocalBranchName(gt.LocalConfigValue(key))
 		lineage[child] = parent
 	}
 	return lineage
 }
 
 // MainBranch provides the name of the main branch.
-func (gt *GitTown) MainBranch() string {
-	return gt.LocalOrGlobalConfigValue(KeyMainBranch)
+func (gt *GitTown) MainBranch() domain.LocalBranchName {
+	return domain.NewLocalBranchName(gt.LocalOrGlobalConfigValue(KeyMainBranch))
 }
 
 // MainBranch provides the name of the main branch, or the given default value if none is configured.
@@ -184,12 +185,12 @@ func DetermineOriginURL(originURL, originOverride string, originURLCache OriginU
 }
 
 // PerennialBranches returns all branches that are marked as perennial.
-func (gt *GitTown) PerennialBranches() []string {
+func (gt *GitTown) PerennialBranches() domain.LocalBranchNames {
 	result := gt.LocalOrGlobalConfigValue(KeyPerennialBranches)
 	if result == "" {
-		return []string{}
+		return domain.LocalBranchNames{}
 	}
-	return strings.Split(result, " ")
+	return domain.LocalBranchNamesFrom(strings.Split(result, " "))
 }
 
 // PullBranchStrategy provides the currently configured pull branch strategy.
@@ -233,7 +234,7 @@ func (gt *GitTown) PushHookGlobal() (bool, error) {
 }
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch.
-func (gt *GitTown) RemoveFromPerennialBranches(branch string) error {
+func (gt *GitTown) RemoveFromPerennialBranches(branch domain.LocalBranchName) error {
 	return gt.SetPerennialBranches(slice.Remove(gt.PerennialBranches(), branch))
 }
 
@@ -261,7 +262,7 @@ func (gt *GitTown) RemoveMainBranchConfiguration() error {
 
 // RemoveParent removes the parent branch entry for the given branch
 // from the Git configuration.
-func (gt *GitTown) RemoveParent(branch string) error {
+func (gt *GitTown) RemoveParent(branch domain.LocalBranchName) error {
 	return gt.RemoveLocalConfigValue(NewParentKey(branch))
 }
 
@@ -317,14 +318,14 @@ func (gt *GitTown) SetOffline(value bool) error {
 
 // SetParent marks the given branch as the direct parent of the other given branch
 // in the Git Town configuration.
-func (gt *GitTown) SetParent(branch, parentBranch string) error {
-	err := gt.SetLocalConfigValue(NewParentKey(branch), parentBranch)
+func (gt *GitTown) SetParent(branch, parentBranch domain.LocalBranchName) error {
+	err := gt.SetLocalConfigValue(NewParentKey(branch), parentBranch.String())
 	return err
 }
 
 // SetPerennialBranches marks the given branches as perennial branches.
-func (gt *GitTown) SetPerennialBranches(branch []string) error {
-	err := gt.SetLocalConfigValue(KeyPerennialBranches, strings.Join(branch, " "))
+func (gt *GitTown) SetPerennialBranches(branches domain.LocalBranchNames) error {
+	err := gt.SetLocalConfigValue(KeyPerennialBranches, branches.Join(" "))
 	return err
 }
 

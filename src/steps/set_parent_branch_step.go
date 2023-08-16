@@ -1,6 +1,7 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 )
@@ -9,13 +10,13 @@ import (
 // of the branch with the other given name.
 type SetParentStep struct {
 	EmptyStep
-	Branch         string
-	ParentBranch   string
-	previousParent string
+	Branch         domain.LocalBranchName
+	ParentBranch   domain.LocalBranchName
+	previousParent domain.LocalBranchName
 }
 
 func (step *SetParentStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
-	if step.previousParent == "" {
+	if step.previousParent.IsEmpty() {
 		return []Step{&DeleteParentBranchStep{Branch: step.Branch, Parent: step.previousParent}}, nil
 	}
 	return []Step{&SetParentStep{Branch: step.Branch, ParentBranch: step.previousParent}}, nil

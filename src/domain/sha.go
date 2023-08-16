@@ -1,4 +1,4 @@
-package git
+package domain
 
 import (
 	"encoding/json"
@@ -8,16 +8,16 @@ import (
 // SHA represents a Git SHA as a dedicated data type.
 // This helps avoid stringly-typed code.
 type SHA struct {
-	content string
+	Location
 }
 
 // NewSHA creates a new SHA instance with the given value.
 // The value is verified for correctness.
-func NewSHA(content string) SHA {
-	if !validateSHA(content) {
-		panic(fmt.Sprintf("%q is not a valid Git SHA", content))
+func NewSHA(id string) SHA {
+	if !validateSHA(id) {
+		panic(fmt.Sprintf("%q is not a valid Git SHA", id))
 	}
-	return SHA{content}
+	return SHA{Location{id}}
 }
 
 // validateSHA indicates whether the given SHA content is a valid Git SHA.
@@ -38,15 +38,15 @@ func validateSHA(content string) bool {
 }
 
 func (s SHA) MarshalJSON() ([]byte, error) {
-	return json.Marshal(s.content)
+	return json.Marshal(s.value)
 }
 
 // Implements the fmt.Stringer interface.
-func (s SHA) String() string { return s.content }
+func (s SHA) String() string { return s.value }
 
 // TruncateTo provides a new SHA instance that contains a shorter checksum.
 func (s SHA) TruncateTo(newLength int) SHA {
-	return SHA{s.content[0:newLength]}
+	return NewSHA(s.value[0:newLength])
 }
 
 func (s *SHA) UnmarshalJSON(b []byte) error {
@@ -55,6 +55,6 @@ func (s *SHA) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
-	s.content = t
+	s.value = t
 	return nil
 }

@@ -8,7 +8,7 @@ import (
 	"errors"
 
 	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/giturl"
 )
 
@@ -30,11 +30,11 @@ type Connector interface {
 
 	// SquashMergeProposal squash-merges the proposal with the given number
 	// using the given commit message.
-	SquashMergeProposal(number int, message string) (mergeSHA git.SHA, err error)
+	SquashMergeProposal(number int, message string) (mergeSHA domain.SHA, err error)
 
 	// NewProposalURL provides the URL of the page
 	// to create a new proposal online.
-	NewProposalURL(branch, parentBranch string) (string, error)
+	NewProposalURL(branch, parentBranch domain.LocalBranchName) (string, error)
 
 	// RepositoryURL provides the URL where the current repository can be found online.
 	RepositoryURL() string
@@ -100,7 +100,7 @@ type gitTownConfig interface {
 	OriginURL() *giturl.Parts
 }
 
-type ShaForBranchFunc func(string) (git.SHA, error)
+type ShaForBranchFunc func(string) (domain.SHA, error)
 
 // NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
 func NewConnector(args NewConnectorArgs) (Connector, error) {
@@ -162,7 +162,7 @@ type NewConnectorArgs struct {
 	GiteaAPIToken   string
 	GithubAPIToken  string
 	GitlabAPIToken  string
-	MainBranch      string
+	MainBranch      domain.LocalBranchName
 	Log             Log
 }
 

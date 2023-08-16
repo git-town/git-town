@@ -28,8 +28,8 @@ func OpenRepo(args OpenShellArgs) (result RepoData, exit bool, err error) {
 	backendCommands := git.BackendCommands{
 		BackendRunner:      backendRunner,
 		Config:             nil, // NOTE: initializing to nil here to validate the Git version before running any Git commands, setting to the correct value after that is done
-		CurrentBranchCache: &cache.String{},
-		RemoteBranchCache:  &cache.Strings{},
+		CurrentBranchCache: &cache.LocalBranch{},
+		RemoteBranchCache:  &cache.RemoteBranch{},
 		RemotesCache:       &cache.Strings{},
 	}
 	majorVersion, minorVersion, err := backendCommands.Version()
