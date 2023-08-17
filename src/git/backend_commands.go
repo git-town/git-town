@@ -98,9 +98,15 @@ func ParseVerboseBranchesOutput(output string) (BranchesSyncStatus, domain.Local
 		}
 		parts := spaceRE.Split(line[2:], 3)
 		branchName := parts[0]
-		sha := domain.NewSHA(parts[1])
+		var sha domain.SHA
+		if parts[1] != "branch," {
+			sha = domain.NewSHA(parts[1])
+		} else {
+			// we are rebasing and don't need the SHA
+			sha = domain.SHA{}
+		}
 		remoteText := parts[2]
-		if line[0] == '*' && branchName != "(no" { // "(no" is what we get when a rebase is active, in which case no branch is checked out
+		if line[0] == '*' && branchName != "(no" { // "(no" as in "(no branch, rebasing main)" is what we get when a rebase is active, in which case no branch is checked out
 			checkedoutBranch = domain.NewLocalBranchName(branchName)
 		}
 		syncStatus, trackingBranchName := determineSyncStatus(branchName, remoteText)
