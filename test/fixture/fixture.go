@@ -125,6 +125,7 @@ func (env *Fixture) AddCoworkerRepo() {
 	coworkerRepo := testruntime.Clone(env.OriginRepo.TestRunner, env.coworkerRepoPath())
 	env.CoworkerRepo = &coworkerRepo
 	env.initializeWorkspace(env.CoworkerRepo)
+	env.CoworkerRepo.Debug = env.DevRepo.Debug
 }
 
 // binPath provides the full path of the folder containing the test tools for this Fixture.
