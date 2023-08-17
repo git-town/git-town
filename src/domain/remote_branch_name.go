@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 )
@@ -31,25 +32,19 @@ func (r RemoteBranchName) LocalBranchName() LocalBranchName {
 	return NewLocalBranchName(strings.TrimPrefix(r.value, "origin/"))
 }
 
+func (r RemoteBranchName) MarshalJSON() ([]byte, error) {
+	return json.Marshal(r.value)
+}
+
 // Implements the fmt.Stringer interface.
 func (r RemoteBranchName) String() string { return r.value }
 
-// type RemoteBranchNames []RemoteBranchName
-
-// func (r RemoteBranchNames) Join(sep string) string {
-// 	return strings.Join(r.Strings(), sep)
-// }
-
-// func (r RemoteBranchNames) Sort() {
-// 	sort.Slice(r, func(i, j int) bool {
-// 		return r[i].value < r[j].value
-// 	})
-// }
-
-// func (r RemoteBranchNames) Strings() []string {
-// 	result := make([]string, len(r))
-// 	for b, branch := range r {
-// 		result[b] = branch.String()
-// 	}
-// 	return result
-// }
+func (r RemoteBranchName) UnmarshalJSON(b []byte) error {
+	var t string
+	err := json.Unmarshal(b, &t)
+	if err != nil {
+		return err
+	}
+	r.value = t
+	return nil
+}
