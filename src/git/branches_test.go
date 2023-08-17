@@ -166,28 +166,28 @@ func TestBranches(t *testing.T) {
 		bs := git.BranchesSyncStatus{
 			git.BranchSyncStatus{
 				Name:         domain.NewLocalBranchName("up-to-date"),
-				InitialSHA:   domain.NewSHA("11111111"),
+				InitialSHA:   domain.NewSHA("111111"),
 				SyncStatus:   git.SyncStatusUpToDate,
 				TrackingName: domain.NewRemoteBranchName("origin/up-to-date"),
-				TrackingSHA:  domain.NewSHA("11111111"),
+				TrackingSHA:  domain.NewSHA("111111"),
 			},
 			git.BranchSyncStatus{
 				Name:         domain.NewLocalBranchName("ahead"),
-				InitialSHA:   domain.NewSHA("11111111"),
+				InitialSHA:   domain.NewSHA("111111"),
 				SyncStatus:   git.SyncStatusAhead,
 				TrackingName: domain.NewRemoteBranchName("origin/ahead"),
-				TrackingSHA:  domain.NewSHA("22222222"),
+				TrackingSHA:  domain.NewSHA("222222"),
 			},
 			git.BranchSyncStatus{
 				Name:         domain.NewLocalBranchName("behind"),
-				InitialSHA:   domain.NewSHA("111111111"),
+				InitialSHA:   domain.NewSHA("111111"),
 				SyncStatus:   git.SyncStatusBehind,
 				TrackingName: domain.NewRemoteBranchName("origin/behind"),
-				TrackingSHA:  domain.NewSHA("222222222"),
+				TrackingSHA:  domain.NewSHA("222222"),
 			},
 			git.BranchSyncStatus{
 				Name:         domain.NewLocalBranchName("local-only"),
-				InitialSHA:   domain.NewSHA("11111111"),
+				InitialSHA:   domain.NewSHA("111111"),
 				SyncStatus:   git.SyncStatusLocalOnly,
 				TrackingName: domain.RemoteBranchName{},
 				TrackingSHA:  domain.SHA{},
@@ -201,7 +201,7 @@ func TestBranches(t *testing.T) {
 			},
 			git.BranchSyncStatus{
 				Name:         domain.NewLocalBranchName("deleted-at-remote"),
-				InitialSHA:   domain.NewSHA("11111111111"),
+				InitialSHA:   domain.NewSHA("111111"),
 				SyncStatus:   git.SyncStatusDeletedAtRemote,
 				TrackingName: domain.RemoteBranchName{},
 				TrackingSHA:  domain.SHA{},
@@ -217,10 +217,10 @@ func TestBranches(t *testing.T) {
 		bs := git.BranchesSyncStatus{
 			git.BranchSyncStatus{
 				Name:         domain.NewLocalBranchName("up-to-date"),
-				InitialSHA:   domain.NewSHA("1111111111"),
+				InitialSHA:   domain.NewSHA("111111"),
 				SyncStatus:   git.SyncStatusUpToDate,
 				TrackingName: domain.NewRemoteBranchName("origin/up-to-date"),
-				TrackingSHA:  domain.NewSHA("1111111111"),
+				TrackingSHA:  domain.NewSHA("111111"),
 			},
 			git.BranchSyncStatus{
 				Name:         domain.NewLocalBranchName("ahead"),
