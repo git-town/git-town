@@ -45,11 +45,11 @@ func TestBackendCommands(t *testing.T) {
 		assert.NoError(t, runtime.Backend.CheckoutBranch(domain.NewLocalBranchName("branch1")))
 		currentBranch, err := runtime.CurrentBranch()
 		assert.NoError(t, err)
-		assert.Equal(t, "branch1", currentBranch)
+		assert.Equal(t, domain.NewLocalBranchName("branch1"), currentBranch)
 		runtime.CheckoutBranch(domain.NewLocalBranchName("initial"))
 		currentBranch, err = runtime.CurrentBranch()
 		assert.NoError(t, err)
-		assert.Equal(t, "initial", currentBranch)
+		assert.Equal(t, domain.NewLocalBranchName("initial"), currentBranch)
 	})
 
 	t.Run(".CreateFeatureBranch()", func(t *testing.T) {
@@ -73,11 +73,11 @@ func TestBackendCommands(t *testing.T) {
 		runtime.CheckoutBranch(domain.NewLocalBranchName("b1"))
 		branch, err := runtime.Backend.CurrentBranch()
 		assert.NoError(t, err)
-		assert.Equal(t, "b1", branch)
+		assert.Equal(t, domain.NewLocalBranchName("b1"), branch)
 		runtime.CheckoutBranch(domain.NewLocalBranchName("initial"))
 		branch, err = runtime.Backend.CurrentBranch()
 		assert.NoError(t, err)
-		assert.Equal(t, "initial", branch)
+		assert.Equal(t, domain.NewLocalBranchName("initial"), branch)
 	})
 
 	t.Run(".HasLocalBranch()", func(t *testing.T) {
@@ -129,7 +129,8 @@ func TestBackendCommands(t *testing.T) {
 		runner.Fetch()
 		branches, err := runner.Backend.LocalBranchesMainFirst(domain.NewLocalBranchName("initial"))
 		assert.NoError(t, err)
-		assert.Equal(t, []string{"initial", "b1", "b2"}, branches)
+		want := domain.LocalBranchNamesFrom("initial", "b1", "b2")
+		assert.Equal(t, want, branches)
 	})
 
 	t.Run("ParseVerboseBranchesOutput", func(t *testing.T) {
@@ -141,7 +142,7 @@ func TestBackendCommands(t *testing.T) {
   branch-2                     da796a69 [origin/branch-2] Commit message 2
   branch-3                     f4ebec0a [origin/branch-3: behind 2] Commit message 3a`[1:]
 				_, currentBranch := git.ParseVerboseBranchesOutput(give)
-				assert.Equal(t, "branch-1", currentBranch)
+				assert.Equal(t, domain.NewLocalBranchName("branch-1"), currentBranch)
 			})
 			t.Run("marker is at the middle entry", func(t *testing.T) {
 				give := `
@@ -149,7 +150,7 @@ func TestBackendCommands(t *testing.T) {
 * branch-2                     da796a69 [origin/branch-2] Commit message 2
   branch-3                     f4ebec0a [origin/branch-3: behind 2] Commit message 3a`[1:]
 				_, currentBranch := git.ParseVerboseBranchesOutput(give)
-				assert.Equal(t, "branch-2", currentBranch)
+				assert.Equal(t, domain.NewLocalBranchName("branch-2"), currentBranch)
 			})
 			t.Run("marker is at the last entry", func(t *testing.T) {
 				give := `
@@ -157,7 +158,7 @@ func TestBackendCommands(t *testing.T) {
   branch-2                     da796a69 [origin/branch-2] Commit message 2
 * branch-3                     f4ebec0a [origin/branch-3: behind 2] Commit message 3a`[1:]
 				_, currentBranch := git.ParseVerboseBranchesOutput(give)
-				assert.Equal(t, "branch-3", currentBranch)
+				assert.Equal(t, domain.NewLocalBranchName("branch-3"), currentBranch)
 			})
 		})
 
@@ -348,7 +349,7 @@ func TestBackendCommands(t *testing.T) {
 			}
 			have, currentBranch := git.ParseVerboseBranchesOutput(give)
 			assert.Equal(t, want, have)
-			assert.Equal(t, "branch-2", currentBranch)
+			assert.Equal(t, domain.NewLocalBranchName("branch-2"), currentBranch)
 		})
 	})
 
@@ -360,7 +361,7 @@ func TestBackendCommands(t *testing.T) {
 		runtime.CheckoutBranch(domain.NewLocalBranchName("feature1"))
 		runtime.CheckoutBranch(domain.NewLocalBranchName("feature2"))
 		have := runtime.Backend.PreviouslyCheckedOutBranch()
-		assert.Equal(t, "feature1", have)
+		assert.Equal(t, domain.NewLocalBranchName("feature1"), have)
 	})
 
 	t.Run(".Remotes()", func(t *testing.T) {

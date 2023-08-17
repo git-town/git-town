@@ -190,7 +190,7 @@ func (gt *GitTown) PerennialBranches() domain.LocalBranchNames {
 	if result == "" {
 		return domain.LocalBranchNames{}
 	}
-	return domain.LocalBranchNamesFrom(strings.Split(result, " "))
+	return domain.LocalBranchNamesFrom(strings.Split(result, " ")...)
 }
 
 // PullBranchStrategy provides the currently configured pull branch strategy.

@@ -82,7 +82,7 @@ func (builder *CommitTableBuilder) branches() domain.LocalBranchNames {
 	}
 	result.Sort()
 	if hasMain {
-		return append(domain.LocalBranchNames{domain.NewLocalBranchName("main")}, result...)
+		return append(domain.LocalBranchNamesFrom("main"), result...)
 	}
 	return result
 }

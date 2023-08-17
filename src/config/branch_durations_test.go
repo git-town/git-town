@@ -14,7 +14,7 @@ func TestBranchDurations(t *testing.T) {
 		t.Parallel()
 		bd := config.BranchDurations{
 			MainBranch:        domain.NewLocalBranchName("main"),
-			PerennialBranches: domain.LocalBranchNames{domain.NewLocalBranchName("peren1"), domain.NewLocalBranchName("peren2")},
+			PerennialBranches: domain.LocalBranchNamesFrom("peren1", "peren2"),
 		}
 		assert.True(t, bd.IsFeatureBranch(domain.NewLocalBranchName("feature")))
 		assert.False(t, bd.IsFeatureBranch(domain.NewLocalBranchName("main")))
@@ -25,7 +25,7 @@ func TestBranchDurations(t *testing.T) {
 		t.Parallel()
 		bd := config.BranchDurations{
 			MainBranch:        domain.NewLocalBranchName("main"),
-			PerennialBranches: domain.LocalBranchNames{domain.NewLocalBranchName("peren1"), domain.NewLocalBranchName("peren2")},
+			PerennialBranches: domain.LocalBranchNamesFrom("peren1", "peren2"),
 		}
 		assert.False(t, bd.IsMainBranch(domain.NewLocalBranchName("feature")))
 		assert.True(t, bd.IsMainBranch(domain.NewLocalBranchName("main")))
@@ -36,7 +36,7 @@ func TestBranchDurations(t *testing.T) {
 		t.Parallel()
 		bd := config.BranchDurations{
 			MainBranch:        domain.NewLocalBranchName("main"),
-			PerennialBranches: domain.LocalBranchNames{domain.NewLocalBranchName("peren1"), domain.NewLocalBranchName("peren2")},
+			PerennialBranches: domain.LocalBranchNamesFrom("peren1", "peren2"),
 		}
 		assert.False(t, bd.IsPerennialBranch(domain.NewLocalBranchName("feature")))
 		assert.False(t, bd.IsPerennialBranch(domain.NewLocalBranchName("main")))

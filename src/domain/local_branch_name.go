@@ -63,7 +63,7 @@ func (l LocalBranchNames) Strings() []string {
 	return result
 }
 
-func LocalBranchNamesFrom(names []string) LocalBranchNames {
+func LocalBranchNamesFrom(names ...string) LocalBranchNames {
 	result := make(LocalBranchNames, len(names))
 	for n, name := range names {
 		result[n] = NewLocalBranchName(name)

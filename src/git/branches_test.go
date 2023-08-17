@@ -22,7 +22,7 @@ func TestBranch(t *testing.T) {
 				TrackingSHA:  domain.SHA{},
 			}
 			have := give.RemoteBranch()
-			want := "origin/branch1"
+			want := domain.NewRemoteBranchName("origin/branch1")
 			assert.Equal(t, want, have)
 		})
 		t.Run("local-only branch", func(t *testing.T) {
@@ -35,7 +35,7 @@ func TestBranch(t *testing.T) {
 				TrackingSHA:  domain.SHA{},
 			}
 			have := give.RemoteBranch()
-			want := ""
+			want := domain.RemoteBranchName{}
 			assert.Equal(t, want, have)
 		})
 		t.Run("local branch with tracking branch", func(t *testing.T) {
@@ -48,7 +48,7 @@ func TestBranch(t *testing.T) {
 				TrackingSHA:  domain.SHA{},
 			}
 			have := give.RemoteBranch()
-			want := "origin/branch-2"
+			want := domain.NewRemoteBranchName("origin/branch-2")
 			assert.Equal(t, want, have)
 		})
 	})
@@ -207,7 +207,7 @@ func TestBranches(t *testing.T) {
 				TrackingSHA:  domain.SHA{},
 			},
 		}
-		want := []string{"up-to-date", "ahead", "behind", "local-only", "deleted-at-remote"}
+		want := domain.LocalBranchNamesFrom("up-to-date", "ahead", "behind", "local-only", "deleted-at-remote")
 		have := bs.LocalBranches().LocalBranchNames()
 		assert.Equal(t, want, have)
 	})
@@ -259,36 +259,39 @@ func TestBranches(t *testing.T) {
 			},
 		}
 		have := bs.LocalBranchesWithDeletedTrackingBranches().LocalBranchNames()
-		want := []string{"deleted-at-remote"}
+		want := domain.LocalBranchNamesFrom("deleted-at-remote")
 		assert.Equal(t, want, have)
 	})
 
 	t.Run("Lookup", func(t *testing.T) {
 		t.Parallel()
+		branchOne := domain.NewLocalBranchName("one")
+		branchTwo := domain.NewLocalBranchName("two")
 		bs := git.BranchesSyncStatus{
 			git.BranchSyncStatus{
-				Name:         domain.NewLocalBranchName("one"),
+				Name:         branchOne,
 				InitialSHA:   domain.SHA{},
 				SyncStatus:   git.SyncStatusLocalOnly,
 				TrackingName: domain.RemoteBranchName{},
 				TrackingSHA:  domain.SHA{},
 			},
 			git.BranchSyncStatus{
-				Name:         domain.NewLocalBranchName("two"),
+				Name:         branchTwo,
 				InitialSHA:   domain.SHA{},
 				SyncStatus:   git.SyncStatusLocalOnly,
 				TrackingName: domain.RemoteBranchName{},
 				TrackingSHA:  domain.SHA{},
 			},
 		}
-		assert.Equal(t, "one", bs.Lookup(domain.NewLocalBranchName("one")).Name)
-		assert.Equal(t, "two", bs.Lookup(domain.NewLocalBranchName("two")).Name)
+		assert.Equal(t, branchOne, bs.Lookup(branchOne).Name)
+		assert.Equal(t, branchTwo, bs.Lookup(branchTwo).Name)
 		assert.Nil(t, bs.Lookup(domain.NewLocalBranchName("zonk")))
 	})
 
 	t.Run("LookupLocalBranchWithTracking", func(t *testing.T) {
 		t.Parallel()
 		t.Run("has a local branch with matching tracking branch", func(t *testing.T) {
+			t.Parallel()
 			branch := git.BranchSyncStatus{
 				Name:         domain.NewLocalBranchName("one"),
 				InitialSHA:   domain.SHA{},
@@ -301,14 +304,15 @@ func TestBranches(t *testing.T) {
 			assert.Equal(t, &branch, have)
 		})
 		t.Run("has a local branch with the given name", func(t *testing.T) {
+			t.Parallel()
 			bs := git.BranchesSyncStatus{git.BranchSyncStatus{
-				Name:         domain.NewLocalBranchName("one"),
+				Name:         domain.NewLocalBranchName("kg/one"),
 				InitialSHA:   domain.SHA{},
 				SyncStatus:   git.SyncStatusLocalOnly,
 				TrackingName: domain.RemoteBranchName{},
 				TrackingSHA:  domain.SHA{},
 			}}
-			have := bs.LookupLocalBranchWithTracking(domain.NewRemoteBranchName("one"))
+			have := bs.LookupLocalBranchWithTracking(domain.NewRemoteBranchName("kg/one"))
 			assert.Nil(t, have)
 		})
 	})
