@@ -40,10 +40,7 @@ func NewBranchName(value string) BranchName {
 }
 
 func isValidBranchName(value string) bool {
-	if len(value) == 0 {
-		return false
-	}
-	return true
+	return len(value) != 0
 }
 
 type BranchNames []BranchName

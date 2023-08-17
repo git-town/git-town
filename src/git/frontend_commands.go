@@ -113,7 +113,7 @@ func (fc *FrontendCommands) DeleteLocalBranch(name domain.LocalBranchName, force
 }
 
 // DeleteRemoteBranch removes the remote branch of the given local branch.
-// TODO: provide the actual domain.RemoteBranchName here and delete that branch instead of "origin/<localbranch>"
+// TODO: provide the actual domain.RemoteBranchName here and delete that branch instead of "origin/<localbranch>".
 func (fc *FrontendCommands) DeleteRemoteBranch(name domain.LocalBranchName) error {
 	return fc.Run("git", "push", config.OriginRemote, ":"+name.String())
 }

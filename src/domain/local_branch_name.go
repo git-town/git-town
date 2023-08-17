@@ -21,7 +21,7 @@ func (p LocalBranchName) RemoteName() RemoteBranchName {
 }
 
 // Implements the fmt.Stringer interface.
-func (c LocalBranchName) String() string { return c.value }
+func (p LocalBranchName) String() string { return p.value }
 
 func NewLocalBranchName(value string) LocalBranchName {
 	if !isValidPlainBranchName(value) {
@@ -32,10 +32,7 @@ func NewLocalBranchName(value string) LocalBranchName {
 
 // isValidBranchName indicates whether the given branch name is a valid plain Git branch name.
 func isValidPlainBranchName(value string) bool {
-	if len(value) == 0 {
-		return false
-	}
-	return true
+	return len(value) != 0
 }
 
 type LocalBranchNames []LocalBranchName

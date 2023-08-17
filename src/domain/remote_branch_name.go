@@ -5,9 +5,7 @@ import (
 	"strings"
 )
 
-// RemoteBranchName is the name of a remote branch.
-// Examples:
-// - the local branch `foo` has the RemoteBranchName `origin/foo`
+// RemoteBranchName is the name of a remote branch, e.g. `origin/foo`.
 type RemoteBranchName struct {
 	BranchName
 }

@@ -49,12 +49,12 @@ func runSwitch(debug bool) error {
 	if err != nil {
 		return err
 	}
-	newBranch, err := queryBranch(branches.Initial, repo.Runner.Config.Lineage())
+	newBranch, validChoice, err := queryBranch(branches.Initial, repo.Runner.Config.Lineage())
 	if err != nil {
 		return err
 	}
-	if newBranch != nil && *newBranch != branches.Initial {
-		err = repo.Runner.Backend.CheckoutBranch(*newBranch)
+	if validChoice && newBranch != branches.Initial {
+		err = repo.Runner.Backend.CheckoutBranch(newBranch)
 		if err != nil {
 			return err
 		}
@@ -63,21 +63,21 @@ func runSwitch(debug bool) error {
 }
 
 // queryBranch lets the user select a new branch via a visual dialog.
-// Returns the selected branch or nil if the user aborted.
-func queryBranch(currentBranch domain.LocalBranchName, lineage config.Lineage) (selection *domain.LocalBranchName, err error) {
+// Indicates via `validSelection` whether the user made a valid selection.
+func queryBranch(currentBranch domain.LocalBranchName, lineage config.Lineage) (selection domain.LocalBranchName, validSelection bool, err error) {
 	entries, err := createEntries(lineage)
 	if err != nil {
-		return nil, err
+		return domain.LocalBranchName{}, false, err
 	}
 	choice, err := dialog.ModalSelect(entries, currentBranch.String())
 	if err != nil {
-		return nil, err
+		return domain.LocalBranchName{}, false, err
 	}
 	if choice == nil {
-		return nil, nil
+		return domain.LocalBranchName{}, false, nil
 	}
 	branch := domain.NewLocalBranchName(*choice)
-	return &branch, nil
+	return branch, true, nil
 }
 
 // createEntries provides all the entries for the branch dialog.

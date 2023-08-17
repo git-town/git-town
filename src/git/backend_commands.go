@@ -104,13 +104,18 @@ func ParseVerboseBranchesOutput(output string) (BranchesSyncStatus, domain.Local
 			checkedoutBranch = domain.NewLocalBranchName(branchName)
 		}
 		syncStatus, trackingBranchName := determineSyncStatus(branchName, remoteText)
-		branchName2 := domain.NewRemoteBranchName(strings.TrimPrefix(branchName, "remotes/"))
-		existingBranchWithTracking := result.LookupLocalBranchWithTracking(branchName2)
-		if existingBranchWithTracking != nil {
-			existingBranchWithTracking.TrackingSHA = sha
-		} else if !result.ContainsLocalBranch(branchName2.LocalBranchName()) {
+		if strings.HasPrefix(branchName, "remotes/") {
+			// branch is remote
+			branchName2 := domain.NewRemoteBranchName(strings.TrimPrefix(branchName, "remotes/"))
+			existingBranchWithTracking := result.LookupLocalBranchWithTracking(branchName2)
+			if existingBranchWithTracking != nil {
+				existingBranchWithTracking.TrackingSHA = sha
+			}
+		} else {
+			// branch is local
+			branchName2 := domain.NewLocalBranchName(branchName)
 			result = append(result, BranchSyncStatus{
-				Name:         branchName2.LocalBranchName(),
+				Name:         branchName2,
 				InitialSHA:   sha,
 				SyncStatus:   syncStatus,
 				TrackingName: trackingBranchName,
@@ -445,7 +450,7 @@ func (bc *BackendCommands) ShaForLocalBranch(name domain.LocalBranchName) (domai
 }
 
 // ShaForBranch provides the SHA for the local branch with the given name.
-// TODO: replace usages of this function with git.Branches
+// TODO: replace usages of this function with git.Branches.
 func (bc *BackendCommands) ShaForRemoteBranch(name domain.RemoteBranchName) (domain.SHA, error) {
 	output, err := bc.QueryTrim("git", "rev-parse", name.String())
 	if err != nil {
