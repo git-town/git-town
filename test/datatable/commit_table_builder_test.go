@@ -12,10 +12,10 @@ import (
 func TestCommitTableBuilder(t *testing.T) {
 	t.Parallel()
 	builder := datatable.NewCommitTableBuilder()
-	commit1 := git.Commit{SHA: domain.NewSHA("sha1"), Branch: domain.NewLocalBranchName("branch1"), Message: "commit1"}
-	commit2 := git.Commit{SHA: domain.NewSHA("sha2"), Branch: domain.NewLocalBranchName("main"), Message: "commit2"}
-	commit3 := git.Commit{SHA: domain.NewSHA("sha3"), Branch: domain.NewLocalBranchName("main"), Message: "commit3"}
-	commit4 := git.Commit{SHA: domain.NewSHA("sha4"), Branch: domain.NewLocalBranchName("branch3"), Message: "commit4"}
+	commit1 := git.Commit{SHA: domain.NewSHA("111111"), Branch: domain.NewLocalBranchName("branch1"), Message: "commit1"}
+	commit2 := git.Commit{SHA: domain.NewSHA("222222"), Branch: domain.NewLocalBranchName("main"), Message: "commit2"}
+	commit3 := git.Commit{SHA: domain.NewSHA("333333"), Branch: domain.NewLocalBranchName("main"), Message: "commit3"}
+	commit4 := git.Commit{SHA: domain.NewSHA("444444"), Branch: domain.NewLocalBranchName("branch3"), Message: "commit4"}
 	builder.Add(commit1, "local")
 	builder.Add(commit1, "origin")
 	builder.Add(commit2, "local")

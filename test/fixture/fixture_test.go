@@ -35,13 +35,13 @@ func TestFixture(t *testing.T) {
 		asserts.IsGitRepo(t, filepath.Join(gitEnvRootDir, "origin"))
 		branch, err := result.OriginRepo.CurrentBranch()
 		assert.NoError(t, err)
-		assert.Equal(t, "initial", branch, "the origin should be at the initial branch so that we can push to it")
+		assert.Equal(t, domain.NewLocalBranchName("initial"), branch, "the origin should be at the initial branch so that we can push to it")
 		// verify the developer repo
 		asserts.IsGitRepo(t, filepath.Join(gitEnvRootDir, "developer"))
 		asserts.HasGitConfiguration(t, gitEnvRootDir)
 		branch, err = result.DevRepo.CurrentBranch()
 		assert.NoError(t, err)
-		assert.Equal(t, "main", branch)
+		assert.Equal(t, domain.NewLocalBranchName("main"), branch)
 	})
 
 	t.Run("Branches", func(t *testing.T) {
@@ -131,7 +131,7 @@ func TestFixture(t *testing.T) {
 		// verify origin is at "initial" branch
 		branch, err := cloned.OriginRepo.CurrentBranch()
 		assert.NoError(t, err)
-		assert.Equal(t, "initial", branch)
+		assert.Equal(t, domain.NewLocalBranchName("initial"), branch)
 	})
 
 	t.Run(".CreateOriginBranch()", func(t *testing.T) {
@@ -145,7 +145,7 @@ func TestFixture(t *testing.T) {
 		// verify it is in the origin branches
 		branches, err := cloned.OriginRepo.LocalBranchesMainFirst(domain.NewLocalBranchName("main"))
 		assert.NoError(t, err)
-		assert.Contains(t, branches, "b1")
+		assert.Contains(t, branches, domain.NewLocalBranchName("b1"))
 		// verify it isn't in the local branches
 		branches, err = cloned.DevRepo.LocalBranchesMainFirst(domain.NewLocalBranchName("main"))
 		assert.NoError(t, err)
