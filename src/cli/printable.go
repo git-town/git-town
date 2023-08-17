@@ -1,14 +1,15 @@
 package cli
 
 import (
-	"sort"
 	"strings"
+
+	"github.com/git-town/git-town/v9/src/domain"
 )
 
 // Lineage defines the configuration values needed by the `cli` package.
 type Lineage interface {
-	Roots() []string
-	Children(string) []string
+	Roots() domain.LocalBranchNames
+	Children(domain.LocalBranchName) domain.LocalBranchNames
 }
 
 // PrintableBranchLineage provides the branch lineage in CLI printable format.
@@ -22,10 +23,10 @@ func PrintableBranchLineage(lineage Lineage) string {
 }
 
 // PrintableBranchTree returns a user printable branch tree.
-func PrintableBranchTree(branch string, lineage Lineage) string {
-	result := branch
+func PrintableBranchTree(branch domain.LocalBranchName, lineage Lineage) string {
+	result := branch.String()
 	childBranches := lineage.Children(branch)
-	sort.Strings(childBranches)
+	childBranches.Sort()
 	for _, childBranch := range childBranches {
 		result += "\n" + Indent(PrintableBranchTree(childBranch, lineage))
 	}

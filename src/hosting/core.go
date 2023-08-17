@@ -94,7 +94,7 @@ type gitTownConfig interface {
 	GitLabToken() string
 
 	// MainBranch provides the name of the main branch.
-	MainBranch() string
+	MainBranch() domain.LocalBranchName
 
 	// OriginURL provides the URL of the origin remote.
 	OriginURL() *giturl.Parts

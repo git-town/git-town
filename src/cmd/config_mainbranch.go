@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v9/src/cli"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/git"
@@ -46,17 +47,18 @@ func configureMainBranch(args []string, debug bool) error {
 		return err
 	}
 	if len(args) > 0 {
-		return setMainBranch(args[0], &repo.Runner)
+		newMainBranch := domain.NewLocalBranchName(args[0])
+		return setMainBranch(newMainBranch, &repo.Runner)
 	}
 	printMainBranch(&repo.Runner)
 	return nil
 }
 
 func printMainBranch(run *git.ProdRunner) {
-	cli.Println(cli.StringSetting(run.Config.MainBranch()))
+	cli.Println(cli.StringSetting(run.Config.MainBranch().String()))
 }
 
-func setMainBranch(branch string, run *git.ProdRunner) error {
+func setMainBranch(branch domain.LocalBranchName, run *git.ProdRunner) error {
 	hasBranch, err := run.Backend.HasLocalBranch(branch)
 	if err != nil {
 		return err

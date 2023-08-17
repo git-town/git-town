@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/dialog"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/flags"
@@ -85,7 +86,7 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 	}))
 	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
 	hasOpenChanges := fc.Bool(run.Backend.HasOpenChanges())
-	targetBranch := args[0]
+	targetBranch := domain.NewLocalBranchName(args[0])
 	mainBranch := run.Config.MainBranch()
 	lineage := run.Config.Lineage()
 	parentBranch, updated, err := determineParentBranch(determineParentBranchArgs{
@@ -106,13 +107,13 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 	shouldNewBranchPush := fc.Bool(run.Config.ShouldNewBranchPush())
 	isOffline := fc.Bool(run.Config.IsOffline())
 	pushHook := fc.Bool(run.Config.PushHook())
-	if branches.All.IsKnown(targetBranch) {
+	if branches.All.ContainsLocalBranch(targetBranch) {
 		return nil, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
-	if branches.All.IsKnown(git.TrackingBranchName(targetBranch)) {
+	if branches.All.KnowsRemoteBranch(targetBranch.RemoteName()) {
 		return nil, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
-	branchNamesToSync := lineage.BranchesAndAncestors([]string{parentBranch})
+	branchNamesToSync := lineage.BranchesAndAncestors(domain.LocalBranchNames{parentBranch})
 	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
 	shouldSyncUpstream := fc.Bool(run.Config.ShouldSyncUpstream())
 	pullBranchStrategy := fc.PullBranchStrategy(run.Config.PullBranchStrategy())
@@ -137,13 +138,13 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 	}, fc.Err
 }
 
-func determineParentBranch(args determineParentBranchArgs) (parentBranch string, updated bool, err error) {
+func determineParentBranch(args determineParentBranchArgs) (parentBranch domain.LocalBranchName, updated bool, err error) {
 	if !args.promptForParent {
 		return args.mainBranch, false, nil
 	}
 	parentBranch, err = dialog.EnterParent(args.targetBranch, args.mainBranch, args.lineage, args.branches.All)
 	if err != nil {
-		return "", true, err
+		return domain.LocalBranchName{}, true, err
 	}
 	_, err = validate.KnowsBranchAncestors(parentBranch, validate.KnowsBranchAncestorsArgs{
 		AllBranches:     args.branches.All,
@@ -154,7 +155,7 @@ func determineParentBranch(args determineParentBranchArgs) (parentBranch string,
 		MainBranch:      args.mainBranch,
 	})
 	if err != nil {
-		return "", true, err
+		return domain.LocalBranchName{}, true, err
 	}
 	return parentBranch, true, nil
 }
@@ -163,7 +164,7 @@ type determineParentBranchArgs struct {
 	backend         *git.BackendCommands
 	branches        git.Branches
 	lineage         config.Lineage
-	mainBranch      string
+	mainBranch      domain.LocalBranchName
 	promptForParent bool
-	targetBranch    string
+	targetBranch    domain.LocalBranchName
 }

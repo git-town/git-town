@@ -1,6 +1,7 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 )
@@ -8,9 +9,9 @@ import (
 // PreserveCheckoutHistoryStep does stuff.
 type PreserveCheckoutHistoryStep struct {
 	EmptyStep
-	InitialBranch                     string
-	InitialPreviouslyCheckedOutBranch string
-	MainBranch                        string
+	InitialBranch                     domain.LocalBranchName
+	InitialPreviouslyCheckedOutBranch domain.LocalBranchName
+	MainBranch                        domain.LocalBranchName
 }
 
 func (step *PreserveCheckoutHistoryStep) Run(run *git.ProdRunner, _ hosting.Connector) error {

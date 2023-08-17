@@ -293,8 +293,8 @@ func (gt *GitTown) SetColorUI(value string) error {
 
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
-func (gt *GitTown) SetMainBranch(branch string) error {
-	err := gt.SetLocalConfigValue(KeyMainBranch, branch)
+func (gt *GitTown) SetMainBranch(branch domain.LocalBranchName) error {
+	err := gt.SetLocalConfigValue(KeyMainBranch, branch.String())
 	return err
 }
 

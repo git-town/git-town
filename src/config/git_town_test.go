@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/test/testruntime"
 	"github.com/stretchr/testify/assert"
@@ -102,8 +103,8 @@ func TestGitTown(t *testing.T) {
 		repo.Config.Reload()
 		have := repo.Config.Lineage()
 		want := config.Lineage{}
-		want["feature1"] = "main"
-		want["feature2"] = "main"
+		want[domain.NewLocalBranchName("feature1")] = domain.NewLocalBranchName("main")
+		want[domain.NewLocalBranchName("feature2")] = domain.NewLocalBranchName("main")
 		assert.Equal(t, want, have)
 	})
 

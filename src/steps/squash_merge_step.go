@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v9/src/dialog"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
@@ -12,9 +13,9 @@ import (
 // SquashMergeStep squash merges the branch with the given name into the current branch.
 type SquashMergeStep struct {
 	EmptyStep
-	Branch        string
+	Branch        domain.LocalBranchName
 	CommitMessage string
-	Parent        string
+	Parent        domain.LocalBranchName
 }
 
 func (step *SquashMergeStep) CreateAbortStep() Step {

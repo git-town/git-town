@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/git"
@@ -62,8 +63,8 @@ func diffParent(args []string, debug bool) error {
 }
 
 type diffParentConfig struct {
-	branch       string
-	parentBranch string
+	branch       domain.LocalBranchName
+	parentBranch domain.LocalBranchName
 }
 
 // Does not return error because "Ensure" functions will call exit directly.
@@ -74,7 +75,7 @@ func determineDiffParentConfig(args []string, run *git.ProdRunner) (*diffParentC
 	if err != nil {
 		return nil, err
 	}
-	branch := slice.FirstElementOr(args, branches.Initial)
+	branch := domain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
 	if branch != branches.Initial {
 		hasBranch, err := run.Backend.HasLocalBranch(branch)
 		if err != nil {
@@ -106,6 +107,6 @@ func determineDiffParentConfig(args []string, run *git.ProdRunner) (*diffParentC
 	}
 	return &diffParentConfig{
 		branch:       branch,
-		parentBranch: lineage.Parent(branch),
+		parentBranch: *lineage.Parent(branch),
 	}, nil
 }

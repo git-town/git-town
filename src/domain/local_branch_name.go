@@ -6,10 +6,7 @@ import (
 	"strings"
 )
 
-// LocalBranchName is just the name of a Git branch, without any remotes.
-// Examples:
-// - local branch: `foo`
-// - remote branch with CompleteBranchName `origin/foo`: `foo`
+// LocalBranchName is a dedicated type that represents the name of a Git branch in the local repo.
 type LocalBranchName struct {
 	BranchName
 }

@@ -49,8 +49,8 @@ func (bc *BackendCommands) Author() (string, error) {
 
 // BranchAuthors provides the user accounts that contributed to the given branch.
 // Returns lines of "name <email>".
-func (bc *BackendCommands) BranchAuthors(branch, parent string) ([]string, error) {
-	output, err := bc.QueryTrim("git", "shortlog", "-s", "-n", "-e", parent+".."+branch)
+func (bc *BackendCommands) BranchAuthors(branch, parent domain.LocalBranchName) ([]string, error) {
+	output, err := bc.QueryTrim("git", "shortlog", "-s", "-n", "-e", parent.String()+".."+branch.String())
 	if err != nil {
 		return []string{}, err
 	}
@@ -255,7 +255,7 @@ func (bc *BackendCommands) currentBranchDuringRebase() (domain.LocalBranchName, 
 
 // CurrentSha provides the SHA of the currently checked out branch/commit.
 func (bc *BackendCommands) CurrentSha() (domain.SHA, error) {
-	return bc.ShaForBranch(domain.NewLocalBranchName("HEAD"))
+	return bc.ShaForLocalBranch(domain.NewLocalBranchName("HEAD"))
 }
 
 // ExpectedPreviouslyCheckedOutBranch returns what is the expected previously checked out branch
@@ -332,8 +332,8 @@ func (bc *BackendCommands) HasRebaseInProgress() (bool, error) {
 
 // HasShippableChanges indicates whether the given branch has changes
 // not currently in the main branch.
-func (bc *BackendCommands) HasShippableChanges(branch, mainBranch string) (bool, error) {
-	out, err := bc.QueryTrim("git", "diff", mainBranch+".."+branch)
+func (bc *BackendCommands) HasShippableChanges(branch, mainBranch domain.LocalBranchName) (bool, error) {
+	out, err := bc.QueryTrim("git", "diff", mainBranch.String()+".."+branch.String())
 	if err != nil {
 		return false, fmt.Errorf(messages.ShippableChangesProblem, branch, err)
 	}
@@ -436,7 +436,17 @@ func (bc *BackendCommands) RootDirectory() string {
 }
 
 // ShaForBranch provides the SHA for the local branch with the given name.
-func (bc *BackendCommands) ShaForBranch(name domain.LocalBranchName) (domain.SHA, error) {
+func (bc *BackendCommands) ShaForLocalBranch(name domain.LocalBranchName) (domain.SHA, error) {
+	output, err := bc.QueryTrim("git", "rev-parse", name.String())
+	if err != nil {
+		return domain.SHA{}, fmt.Errorf(messages.BranchLocalShaProblem, name, err)
+	}
+	return domain.NewSHA(output), nil
+}
+
+// ShaForBranch provides the SHA for the local branch with the given name.
+// TODO: replace usages of this function with git.Branches
+func (bc *BackendCommands) ShaForRemoteBranch(name domain.RemoteBranchName) (domain.SHA, error) {
 	output, err := bc.QueryTrim("git", "rev-parse", name.String())
 	if err != nil {
 		return domain.SHA{}, fmt.Errorf(messages.BranchLocalShaProblem, name, err)
@@ -446,10 +456,10 @@ func (bc *BackendCommands) ShaForBranch(name domain.LocalBranchName) (domain.SHA
 
 // ShouldPushBranch returns whether the local branch with the given name
 // contains commits that have not been pushed to its tracking branch.
-func (bc *BackendCommands) ShouldPushBranch(branch BranchSyncStatus) (bool, error) {
-	out, err := bc.QueryTrim("git", "rev-list", "--left-right", branch.Name.String()+"..."+branch.TrackingName.String())
+func (bc *BackendCommands) ShouldPushBranch(branch domain.LocalBranchName, trackingBranch domain.RemoteBranchName) (bool, error) {
+	out, err := bc.QueryTrim("git", "rev-list", "--left-right", branch.String()+"..."+trackingBranch.String())
 	if err != nil {
-		return false, fmt.Errorf(messages.DiffProblem, branch, branch.TrackingName, err)
+		return false, fmt.Errorf(messages.DiffProblem, branch, branch, err)
 	}
 	return out != "", nil
 }

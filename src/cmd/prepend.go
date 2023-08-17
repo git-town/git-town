@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/flags"
@@ -83,18 +84,18 @@ type prependConfig struct {
 	branchesToSync      git.BranchesSyncStatus
 	hasOpenChanges      bool
 	remotes             config.Remotes
-	initialBranch       string
+	initialBranch       domain.LocalBranchName
 	isOffline           bool
 	lineage             config.Lineage
-	mainBranch          string
-	previousBranch      string
+	mainBranch          domain.LocalBranchName
+	previousBranch      domain.LocalBranchName
 	pullBranchStrategy  config.PullBranchStrategy
 	pushHook            bool
-	parentBranch        string
+	parentBranch        domain.LocalBranchName
 	shouldSyncUpstream  bool
 	shouldNewBranchPush bool
 	syncStrategy        config.SyncStrategy
-	targetBranch        string
+	targetBranch        domain.LocalBranchName
 }
 
 func determinePrependConfig(args []string, run *git.ProdRunner, isOffline bool) (*prependConfig, error) {
@@ -115,11 +116,11 @@ func determinePrependConfig(args []string, run *git.ProdRunner, isOffline bool) 
 	if fc.Err != nil {
 		return nil, fc.Err
 	}
-	targetBranch := args[0]
-	if branches.All.IsKnown(targetBranch) {
+	targetBranch := domain.NewLocalBranchName(args[0])
+	if branches.All.ContainsLocalBranch(targetBranch) {
 		return nil, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
-	if branches.All.IsKnown(git.TrackingBranchName(targetBranch)) {
+	if branches.All.KnowsRemoteBranch(targetBranch.RemoteName()) {
 		return nil, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	if !branches.Durations.IsFeatureBranch(branches.Initial) {
@@ -154,7 +155,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner, isOffline bool) 
 		previousBranch:      previousBranch,
 		pullBranchStrategy:  pullBranchStrategy,
 		pushHook:            pushHook,
-		parentBranch:        lineage.Parent(branches.Initial),
+		parentBranch:        *lineage.Parent(branches.Initial),
 		shouldNewBranchPush: shouldNewBranchPush,
 		shouldSyncUpstream:  shouldSyncUpstream,
 		syncStrategy:        syncStrategy,
@@ -179,7 +180,7 @@ func prependStepList(config *prependConfig) (runstate.StepList, error) {
 			syncStrategy:       config.syncStrategy,
 		})
 	}
-	list.Add(&steps.CreateBranchStep{Branch: config.targetBranch, StartingPoint: config.parentBranch})
+	list.Add(&steps.CreateBranchStep{Branch: config.targetBranch, StartingPoint: config.parentBranch.Location})
 	list.Add(&steps.SetParentStep{Branch: config.targetBranch, ParentBranch: config.parentBranch})
 	list.Add(&steps.SetParentStep{Branch: config.initialBranch, ParentBranch: config.targetBranch})
 	list.Add(&steps.CheckoutStep{Branch: config.targetBranch})

@@ -9,7 +9,7 @@ import (
 // CreateRemoteBranchStep pushes the current branch up to origin.
 type CreateRemoteBranchStep struct {
 	EmptyStep
-	Branch     string
+	Branch     domain.LocalBranchName
 	NoPushHook bool
 	Sha        domain.SHA
 }

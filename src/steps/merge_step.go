@@ -9,7 +9,7 @@ import (
 // MergeStep merges the branch with the given name into the current branch.
 type MergeStep struct {
 	EmptyStep
-	Branch      string
+	Branch      domain.BranchName
 	previousSha domain.SHA
 }
 

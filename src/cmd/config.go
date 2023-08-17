@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/config"
@@ -113,8 +112,8 @@ type ConfigConfig struct {
 func printConfig(config ConfigConfig) {
 	fmt.Println()
 	cli.PrintHeader("Branches")
-	cli.PrintEntry("main branch", cli.StringSetting(config.branchDurations.MainBranch))
-	cli.PrintEntry("perennial branches", cli.StringSetting(strings.Join(config.branchDurations.PerennialBranches, ", ")))
+	cli.PrintEntry("main branch", cli.StringSetting(config.branchDurations.MainBranch.String()))
+	cli.PrintEntry("perennial branches", cli.StringSetting((config.branchDurations.PerennialBranches.Join(", "))))
 	fmt.Println()
 	cli.PrintHeader("Configuration")
 	cli.PrintEntry("offline", cli.BoolSetting(config.isOffline))
@@ -131,7 +130,7 @@ func printConfig(config ConfigConfig) {
 	cli.PrintEntry("GitLab token", cli.StringSetting(config.gitlabToken))
 	cli.PrintEntry("Gitea token", cli.StringSetting(config.giteaToken))
 	fmt.Println()
-	if config.branchDurations.MainBranch != "" {
+	if !config.branchDurations.MainBranch.IsEmpty() {
 		cli.PrintLabelAndValue("Branch Lineage", cli.PrintableBranchLineage(config.lineage))
 	}
 }

@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	prodgit "github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/slice"
 	"github.com/git-town/git-town/v9/src/stringslice"
@@ -42,28 +43,31 @@ func (r *TestCommands) BranchHierarchyTable() datatable.DataTable {
 	lineage := r.Config.Lineage()
 	result.AddRow("BRANCH", "PARENT")
 	for _, branchName := range lineage.BranchNames() {
-		result.AddRow(branchName, lineage[branchName])
+		result.AddRow(branchName.String(), lineage[branchName].String())
 	}
 	return result
 }
 
 // .CheckoutBranch checks out the Git branch with the given name in this repo.
-func (r *TestCommands) CheckoutBranch(name string) {
-	asserts.NoError(r.BackendCommands.CheckoutBranch(name))
+func (r *TestCommands) CheckoutBranch(branchName string) {
+	branch := domain.NewLocalBranchName(branchName)
+	asserts.NoError(r.BackendCommands.CheckoutBranch(branch))
 }
 
 // CreateBranch creates a new branch with the given name.
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
-func (r *TestCommands) CreateBranch(name, parent string) {
-	r.MustRun("git", "branch", name, parent)
+func (r *TestCommands) CreateBranch(name, parent domain.LocalBranchName) {
+	r.MustRun("git", "branch", name.String(), parent.String())
 }
 
 // CreateChildFeatureBranch creates a branch with the given name and parent in this repository.
 // The parent branch must already exist.
-func (r *TestCommands) CreateChildFeatureBranch(name string, parent string) {
-	r.CreateBranch(name, parent)
-	asserts.NoError(r.Config.SetParent(name, parent))
+func (r *TestCommands) CreateChildFeatureBranch(branchName string, parentName string) {
+	branch := domain.NewLocalBranchName(branchName)
+	parent := domain.NewLocalBranchName(parentName)
+	r.CreateBranch(branch, parent)
+	asserts.NoError(r.Config.SetParent(branch, parent))
 }
 
 // CreateCommit creates a commit with the given properties in this Git repo.
@@ -90,9 +94,10 @@ func (r *TestCommands) CreateFile(name, content string) {
 // CreatePerennialBranches creates perennial branches with the given names in this repository.
 func (r *TestCommands) CreatePerennialBranches(names ...string) {
 	for _, name := range names {
-		r.CreateBranch(name, "main")
+		branch := domain.NewLocalBranchName(name)
+		r.CreateBranch(branch, domain.NewLocalBranchName("main"))
+		asserts.NoError(r.Config.AddToPerennialBranches(branch))
 	}
-	asserts.NoError(r.Config.AddToPerennialBranches(names...))
 }
 
 // CreateStandaloneTag creates a tag not on a branch.

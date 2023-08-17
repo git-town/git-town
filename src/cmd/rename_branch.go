@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/git"
@@ -86,14 +87,14 @@ func renameBranch(args []string, force, debug bool) error {
 
 type renameBranchConfig struct {
 	branchDurations config.BranchDurations
-	initialBranch   string
+	initialBranch   domain.LocalBranchName
 	isOffline       bool
 	lineage         config.Lineage
-	mainBranch      string
-	newBranch       string
+	mainBranch      domain.LocalBranchName
+	newBranch       domain.LocalBranchName
 	noPushHook      bool
 	oldBranch       git.BranchSyncStatus
-	previousBranch  string
+	previousBranch  domain.LocalBranchName
 }
 
 func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRunner, isOffline bool) (*renameBranchConfig, error) {
@@ -109,14 +110,14 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 		return nil, err
 	}
 	mainBranch := run.Config.MainBranch()
-	var oldBranchName string
-	var newBranchName string
+	var oldBranchName domain.LocalBranchName
+	var newBranchName domain.LocalBranchName
 	if len(args) == 1 {
 		oldBranchName = branches.Initial
-		newBranchName = args[0]
+		newBranchName = domain.NewLocalBranchName(args[0])
 	} else {
-		oldBranchName = args[0]
-		newBranchName = args[1]
+		oldBranchName = domain.NewLocalBranchName(args[0])
+		newBranchName = domain.NewLocalBranchName(args[1])
 	}
 	if run.Config.IsMainBranch(oldBranchName) {
 		return nil, fmt.Errorf(messages.RenameMainBranch)
@@ -137,10 +138,10 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 	if oldBranch.SyncStatus != git.SyncStatusUpToDate {
 		return nil, fmt.Errorf(messages.RenameBranchNotInSync, oldBranchName)
 	}
-	if branches.All.IsKnown(newBranchName) {
+	if branches.All.ContainsLocalBranch(newBranchName) {
 		return nil, fmt.Errorf(messages.BranchAlreadyExistsLocally, newBranchName)
 	}
-	if branches.All.IsKnown(git.TrackingBranchName(newBranchName)) {
+	if branches.All.KnowsRemoteBranch(newBranchName.RemoteName()) {
 		return nil, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
 	lineage := run.Config.Lineage()
@@ -159,7 +160,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 
 func renameBranchStepList(config *renameBranchConfig) (runstate.StepList, error) {
 	result := runstate.StepList{}
-	result.Append(&steps.CreateBranchStep{Branch: config.newBranch, StartingPoint: config.oldBranch.Name})
+	result.Append(&steps.CreateBranchStep{Branch: config.newBranch, StartingPoint: config.oldBranch.Name.Location})
 	if config.initialBranch == config.oldBranch.Name {
 		result.Append(&steps.CheckoutStep{Branch: config.newBranch})
 	}
@@ -168,17 +169,17 @@ func renameBranchStepList(config *renameBranchConfig) (runstate.StepList, error)
 		result.Append(&steps.AddToPerennialBranchesStep{Branch: config.newBranch})
 	} else {
 		lineage := config.lineage
-		result.Append(&steps.DeleteParentBranchStep{Branch: config.oldBranch.Name, Parent: lineage.Parent(config.oldBranch.Name)})
-		result.Append(&steps.SetParentStep{Branch: config.newBranch, ParentBranch: lineage.Parent(config.oldBranch.Name)})
+		result.Append(&steps.DeleteParentBranchStep{Branch: config.oldBranch.Name, Parent: *lineage.Parent(config.oldBranch.Name)})
+		result.Append(&steps.SetParentStep{Branch: config.newBranch, ParentBranch: *lineage.Parent(config.oldBranch.Name)})
 	}
 	for _, child := range config.lineage.Children(config.oldBranch.Name) {
 		result.Append(&steps.SetParentStep{Branch: child, ParentBranch: config.newBranch})
 	}
 	if config.oldBranch.HasTrackingBranch() && !config.isOffline {
 		result.Append(&steps.CreateTrackingBranchStep{Branch: config.newBranch, NoPushHook: config.noPushHook})
-		result.Append(&steps.DeleteOriginBranchStep{Branch: config.oldBranch.NameWithoutRemote(), IsTracking: true})
+		result.Append(&steps.DeleteOriginBranchStep{Branch: config.oldBranch.Name, IsTracking: true})
 	}
-	result.Append(&steps.DeleteLocalBranchStep{Branch: config.oldBranch.Name, Parent: config.mainBranch})
+	result.Append(&steps.DeleteLocalBranchStep{Branch: config.oldBranch.Name, Parent: config.mainBranch.Location})
 	err := result.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     false,
 		StashOpenChanges: false,

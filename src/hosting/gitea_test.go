@@ -143,6 +143,6 @@ func TestFilterGiteaPullRequests(t *testing.T) {
 			},
 		},
 	}
-	have := hosting.FilterGiteaPullRequests(give, "organization", "branch", "target")
+	have := hosting.FilterGiteaPullRequests(give, "organization", domain.NewLocalBranchName("branch"), domain.NewLocalBranchName("target"))
 	assert.Equal(t, want, have)
 }

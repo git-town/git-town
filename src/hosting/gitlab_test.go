@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/stretchr/testify/assert"
@@ -100,23 +101,23 @@ func TestGitlabConnector(t *testing.T) {
 	t.Run("NewProposalURL", func(t *testing.T) {
 		t.Parallel()
 		tests := map[string]struct {
-			branch string
-			parent string
+			branch domain.LocalBranchName
+			parent domain.LocalBranchName
 			want   string
 		}{
 			"top-level branch": {
-				branch: "feature",
-				parent: "main",
+				branch: domain.NewLocalBranchName("feature"),
+				parent: domain.NewLocalBranchName("main"),
 				want:   "https://gitlab.com/organization/repo/-/merge_requests/new?merge_request%5Bsource_branch%5D=feature&merge_request%5Btarget_branch%5D=main",
 			},
 			"nested branch": {
-				branch: "feature-3",
-				parent: "feature-2",
+				branch: domain.NewLocalBranchName("feature-3"),
+				parent: domain.NewLocalBranchName("feature-2"),
 				want:   "https://gitlab.com/organization/repo/-/merge_requests/new?merge_request%5Bsource_branch%5D=feature-3&merge_request%5Btarget_branch%5D=feature-2",
 			},
 			"special characters in branch name": {
-				branch: "feature-#",
-				parent: "main",
+				branch: domain.NewLocalBranchName("feature-#"),
+				parent: domain.NewLocalBranchName("main"),
 				want:   "https://gitlab.com/organization/repo/-/merge_requests/new?merge_request%5Bsource_branch%5D=feature-%23&merge_request%5Btarget_branch%5D=main",
 			},
 		}

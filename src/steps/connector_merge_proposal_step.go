@@ -12,7 +12,7 @@ import (
 // ConnectorMergeProposalStep squash merges the branch with the given name into the current branch.
 type ConnectorMergeProposalStep struct {
 	EmptyStep
-	Branch                    string
+	Branch                    domain.LocalBranchName
 	CommitMessage             string
 	ProposalMessage           string
 	enteredEmptyCommitMessage bool

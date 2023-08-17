@@ -2,6 +2,7 @@ package steps
 
 import (
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 )
@@ -10,7 +11,7 @@ import (
 // and marks it as tracking the current branch.
 type CreateTrackingBranchStep struct {
 	EmptyStep
-	Branch     string
+	Branch     domain.LocalBranchName
 	NoPushHook bool
 }
 

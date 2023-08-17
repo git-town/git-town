@@ -10,7 +10,7 @@ import (
 // against the branch with the given name.
 type RebaseBranchStep struct {
 	EmptyStep
-	Branch      string
+	Branch      domain.BranchName
 	previousSha domain.SHA
 }
 

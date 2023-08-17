@@ -33,7 +33,7 @@ func TestBackendCommands(t *testing.T) {
 			FileContent: "file2",
 			Message:     "second commit",
 		})
-		authors, err := runtime.Backend.BranchAuthors("branch", "initial")
+		authors, err := runtime.Backend.BranchAuthors(domain.NewLocalBranchName("branch"), domain.NewLocalBranchName("initial"))
 		assert.NoError(t, err)
 		assert.Equal(t, []string{"user <email@example.com>"}, authors)
 	})
