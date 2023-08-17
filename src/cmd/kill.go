@@ -94,6 +94,9 @@ func determineKillConfig(args []string, run *git.ProdRunner, isOffline bool) (*k
 	if !branches.Durations.IsFeatureBranch(targetBranchName) {
 		return nil, fmt.Errorf(messages.KillOnlyFeatureBranches)
 	}
+	if branches.All.KnowsRemoteBranch(targetBranchName) && isOffline {
+		return nil, fmt.Errorf(messages.DeleteRemoteBranchOffline, targetBranchName.RemoteName())
+	}
 	targetBranch := branches.All.Lookup(targetBranchName)
 	if targetBranch == nil {
 		return nil, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
@@ -147,15 +150,11 @@ func (kc killConfig) targetBranchParent() domain.LocalBranchName {
 
 func killStepList(config *killConfig) (runstate.StepList, error) {
 	result := runstate.StepList{}
-	switch {
-	case config.targetBranch.IsLocal():
+	if config.targetBranch.IsLocal() {
 		killFeatureBranch(&result, *config)
-	case config.isOnline():
-		// user wants us to kill a remote branch and we are online
+	} else {
+		// user wants us to kill a remote branch
 		result.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch.Name, IsTracking: false, NoPushHook: config.noPushHook})
-	default:
-		// user wants us to kill a remote branch and we are offline
-		return runstate.StepList{}, fmt.Errorf(messages.DeleteRemoteBranchOffline, config.targetBranch.Name)
 	}
 	err := result.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     true,
