@@ -239,8 +239,16 @@ func TestBackendCommands(t *testing.T) {
 			t.Run("remote-only branch", func(t *testing.T) {
 				t.Parallel()
 				give := `
-  remotes/origin/branch-1    22222222 Commit message 2`[1:]
-				want := git.BranchesSyncStatus{}
+  remotes/origin/branch-1    222222 Commit message 2`[1:]
+				want := git.BranchesSyncStatus{
+					git.BranchSyncStatus{
+						Name:         domain.LocalBranchName{},
+						InitialSHA:   domain.SHA{},
+						SyncStatus:   git.SyncStatusRemoteOnly,
+						TrackingName: domain.NewRemoteBranchName("origin/branch-1"),
+						TrackingSHA:  domain.NewSHA("222222"),
+					},
+				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
 				assert.Equal(t, want, have)
 			})
@@ -281,16 +289,23 @@ func TestBackendCommands(t *testing.T) {
 		t.Run("branch with a different tracking branch name", func(t *testing.T) {
 			t.Run("a branch uses a differently named tracking branch", func(t *testing.T) {
 				give := `
-  branch-1                     11111111 [origin/branch-2] Commit message 1
-  remotes/origin/branch-1      22222222 Commit message 2
-  remotes/origin/branch-2      11111111 Commit message 1`[1:]
+  branch-1                     111111 [origin/branch-2] Commit message 1
+  remotes/origin/branch-1      222222 Commit message 2
+  remotes/origin/branch-2      111111 Commit message 1`[1:]
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
 						Name:         domain.NewLocalBranchName("branch-1"),
-						InitialSHA:   domain.NewSHA("11111111"),
+						InitialSHA:   domain.NewSHA("111111"),
 						SyncStatus:   git.SyncStatusUpToDate,
 						TrackingName: domain.NewRemoteBranchName("origin/branch-2"),
-						TrackingSHA:  domain.NewSHA("11111111"),
+						TrackingSHA:  domain.NewSHA("111111"),
+					},
+					git.BranchSyncStatus{
+						Name:         domain.LocalBranchName{},
+						InitialSHA:   domain.SHA{},
+						SyncStatus:   git.SyncStatusRemoteOnly,
+						TrackingName: domain.NewRemoteBranchName("origin/branch-1"),
+						TrackingSHA:  domain.NewSHA("222222"),
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)

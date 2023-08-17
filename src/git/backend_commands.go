@@ -104,15 +104,7 @@ func ParseVerboseBranchesOutput(output string) (BranchesSyncStatus, domain.Local
 			checkedoutBranch = domain.NewLocalBranchName(branchName)
 		}
 		syncStatus, trackingBranchName := determineSyncStatus(branchName, remoteText)
-		if strings.HasPrefix(branchName, "remotes/") {
-			// branch is remote
-			branchName2 := domain.NewRemoteBranchName(strings.TrimPrefix(branchName, "remotes/"))
-			existingBranchWithTracking := result.LookupLocalBranchWithTracking(branchName2)
-			if existingBranchWithTracking != nil {
-				existingBranchWithTracking.TrackingSHA = sha
-			}
-		} else {
-			// branch is local
+		if isLocalBranchName(branchName) {
 			branchName2 := domain.NewLocalBranchName(branchName)
 			result = append(result, BranchSyncStatus{
 				Name:         branchName2,
@@ -121,6 +113,20 @@ func ParseVerboseBranchesOutput(output string) (BranchesSyncStatus, domain.Local
 				TrackingName: trackingBranchName,
 				TrackingSHA:  domain.SHA{}, // will be added later
 			})
+		} else {
+			remoteBranchName := domain.NewRemoteBranchName(strings.TrimPrefix(branchName, "remotes/"))
+			existingBranchWithTracking := result.LookupLocalBranchWithTracking(remoteBranchName)
+			if existingBranchWithTracking != nil {
+				existingBranchWithTracking.TrackingSHA = sha
+			} else {
+				result = append(result, BranchSyncStatus{
+					Name:         domain.LocalBranchName{},
+					InitialSHA:   domain.SHA{},
+					SyncStatus:   SyncStatusRemoteOnly,
+					TrackingName: remoteBranchName,
+					TrackingSHA:  sha,
+				})
+			}
 		}
 	}
 	return result, checkedoutBranch
@@ -154,6 +160,11 @@ func determineSyncStatus(branchName, remoteText string) (syncStatus SyncStatus, 
 		}
 		return SyncStatusLocalOnly, domain.RemoteBranchName{}
 	}
+}
+
+// isLocalBranchName indicates whether the branch with the given Git ref is local or remote.
+func isLocalBranchName(branch string) bool {
+	return !strings.HasPrefix(branch, "remotes/")
 }
 
 // CheckoutBranch checks out the Git branch with the given name.

@@ -116,7 +116,7 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, run *git.ProdRun
 	if branches.All.ContainsLocalBranch(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
-	if branches.All.KnowsRemoteBranch(targetBranch.RemoteName()) {
+	if branches.All.KnowsRemoteBranch(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	lineage := run.Config.Lineage()

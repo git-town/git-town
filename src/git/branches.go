@@ -73,11 +73,11 @@ func (bs BranchesSyncStatus) ContainsLocalBranch(localBranch domain.LocalBranchN
 	return false
 }
 
-// IsKnown indicates whether the given branch is already known to this BranchesSyncStatus instance,
-// either as a local or tracking branch.
-func (bs BranchesSyncStatus) KnowsRemoteBranch(branchName domain.RemoteBranchName) bool {
+// IsKnown indicates whether the given local branch is already known on the remote.
+func (bs BranchesSyncStatus) KnowsRemoteBranch(branchName domain.LocalBranchName) bool {
+	remoteName := branchName.RemoteName()
 	for _, branch := range bs {
-		if branch.TrackingName == branchName {
+		if branch.TrackingName == remoteName {
 			return true
 		}
 	}
