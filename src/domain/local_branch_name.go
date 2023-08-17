@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"encoding/json"
 	"sort"
 	"strings"
 )
@@ -14,6 +15,10 @@ func (p LocalBranchName) IsEmpty() bool {
 	return len(p.value) == 0
 }
 
+func (p LocalBranchName) MarshalJSON() ([]byte, error) {
+	return json.Marshal(p.value)
+}
+
 // RemoteName provides the name of the tracking branch for this local branch.
 func (p LocalBranchName) RemoteName() RemoteBranchName {
 	return NewRemoteBranchName("origin/" + p.value)
@@ -24,6 +29,16 @@ func (p LocalBranchName) String() string { return p.value }
 
 func NewLocalBranchName(value string) LocalBranchName {
 	return LocalBranchName{BranchName{Location{value}}}
+}
+
+func (p *LocalBranchName) UnmarshalJSON(b []byte) error {
+	var t string
+	err := json.Unmarshal(b, &t)
+	if err != nil {
+		return err
+	}
+	p.value = t
+	return nil
 }
 
 type LocalBranchNames []LocalBranchName
