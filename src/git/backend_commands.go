@@ -97,6 +97,9 @@ func ParseVerboseBranchesOutput(output string) (BranchesSyncStatus, domain.Local
 			continue
 		}
 		parts := spaceRE.Split(line[2:], 3)
+		if parts[0] == "remotes/origin/HEAD" {
+			continue
+		}
 		branchName := parts[0]
 		var sha domain.SHA
 		if parts[1] != "branch," {

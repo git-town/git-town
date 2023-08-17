@@ -167,15 +167,15 @@ func TestBackendCommands(t *testing.T) {
 			t.Run("branch is ahead of its remote branch", func(t *testing.T) {
 				t.Parallel()
 				give := `
-  branch-1                     11111111 [origin/branch-1: ahead 1] Commit message 1a
-  remotes/origin/branch-1      22222222 Commit message 1b`[1:]
+  branch-1                     111111 [origin/branch-1: ahead 1] Commit message 1a
+  remotes/origin/branch-1      222222 Commit message 1b`[1:]
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
 						Name:         domain.NewLocalBranchName("branch-1"),
-						InitialSHA:   domain.NewSHA("11111111"),
+						InitialSHA:   domain.NewSHA("111111"),
 						SyncStatus:   git.SyncStatusAhead,
 						TrackingName: domain.NewRemoteBranchName("origin/branch-1"),
-						TrackingSHA:  domain.NewSHA("22222222"),
+						TrackingSHA:  domain.NewSHA("222222"),
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
@@ -185,15 +185,15 @@ func TestBackendCommands(t *testing.T) {
 			t.Run("branch is behind its remote branch", func(t *testing.T) {
 				t.Parallel()
 				give := `
-  branch-1                     11111111 [origin/branch-1: behind 2] Commit message 1
-  remotes/origin/branch-1      22222222 Commit message 1b`[1:]
+  branch-1                     111111 [origin/branch-1: behind 2] Commit message 1
+  remotes/origin/branch-1      222222 Commit message 1b`[1:]
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
 						Name:         domain.NewLocalBranchName("branch-1"),
-						InitialSHA:   domain.NewSHA("11111111"),
+						InitialSHA:   domain.NewSHA("111111"),
 						SyncStatus:   git.SyncStatusBehind,
 						TrackingName: domain.NewRemoteBranchName("origin/branch-1"),
-						TrackingSHA:  domain.NewSHA("22222222"),
+						TrackingSHA:  domain.NewSHA("222222"),
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
@@ -203,15 +203,15 @@ func TestBackendCommands(t *testing.T) {
 			t.Run("branch is ahead and behind its remote branch", func(t *testing.T) {
 				t.Parallel()
 				give := `
-  branch-1                     11111111 [origin/branch-1: ahead 31, behind 2] Commit message 1a
-  remotes/origin/branch-1      22222222 Commit message 1b`[1:]
+  branch-1                     111111 [origin/branch-1: ahead 31, behind 2] Commit message 1a
+  remotes/origin/branch-1      222222 Commit message 1b`[1:]
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
 						Name:         domain.NewLocalBranchName("branch-1"),
-						InitialSHA:   domain.NewSHA("11111111"),
+						InitialSHA:   domain.NewSHA("111111"),
 						SyncStatus:   git.SyncStatusAheadAndBehind,
 						TrackingName: domain.NewRemoteBranchName("origin/branch-1"),
-						TrackingSHA:  domain.NewSHA("22222222"),
+						TrackingSHA:  domain.NewSHA("222222"),
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
@@ -221,15 +221,15 @@ func TestBackendCommands(t *testing.T) {
 			t.Run("branch is in sync with its remote branch", func(t *testing.T) {
 				t.Parallel()
 				give := `
-  branch-1                     11111111 [origin/branch-1] Commit message 1
-  remotes/origin/branch-1      11111111 Commit message 1`[1:]
+  branch-1                     111111 [origin/branch-1] Commit message 1
+  remotes/origin/branch-1      111111 Commit message 1`[1:]
 				want := git.BranchesSyncStatus{
 					git.BranchSyncStatus{
 						Name:         domain.NewLocalBranchName("branch-1"),
-						InitialSHA:   domain.NewSHA("11111111"),
+						InitialSHA:   domain.NewSHA("111111"),
 						SyncStatus:   git.SyncStatusUpToDate,
 						TrackingName: domain.NewRemoteBranchName("origin/branch-1"),
-						TrackingSHA:  domain.NewSHA("11111111"),
+						TrackingSHA:  domain.NewSHA("111111"),
 					},
 				}
 				have, _ := git.ParseVerboseBranchesOutput(give)
@@ -323,6 +323,7 @@ func TestBackendCommands(t *testing.T) {
   remotes/origin/branch-1      307a7bf4 Commit message 1b
   remotes/origin/branch-2      da796a69 Commit message 2
   remotes/origin/branch-3      bc39378a Commit message 3b
+  remotes/origin/HEAD          -> origin/initial
   remotes/origin/main          024df944 Commit message on main (#1234)
 `[1:]
 			want := git.BranchesSyncStatus{
