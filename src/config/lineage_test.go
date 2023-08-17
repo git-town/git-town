@@ -44,7 +44,7 @@ func TestLineage(t *testing.T) {
 		lineage := config.Lineage{}
 		lineage[one] = main
 		have := lineage.BranchAndAncestors(one)
-		want := []string{"main", "one"}
+		want := domain.LocalBranchNames{domain.NewLocalBranchName("main"), domain.NewLocalBranchName("one")}
 		assert.Equal(t, want, have)
 	})
 
@@ -73,7 +73,7 @@ func TestLineage(t *testing.T) {
 			lineage := config.Lineage{}
 			lineage[one] = main
 			have := lineage.Ancestors(two)
-			want := []string{}
+			want := domain.LocalBranchNames{}
 			assert.Equal(t, want, have)
 		})
 	})
@@ -113,7 +113,7 @@ func TestLineage(t *testing.T) {
 			t.Parallel()
 			lineage := config.Lineage{}
 			have := lineage.Children(one)
-			want := []string{}
+			want := domain.LocalBranchNames{}
 			assert.Equal(t, want, have)
 		})
 	})
@@ -175,7 +175,8 @@ func TestLineage(t *testing.T) {
 		t.Run("empty", func(t *testing.T) {
 			t.Parallel()
 			lineage := config.Lineage{}
-			assert.Equal(t, nil, lineage.Parent(main))
+			have := lineage.Parent(main)
+			assert.Nil(t, have)
 		})
 	})
 
@@ -204,7 +205,7 @@ func TestLineage(t *testing.T) {
 			t.Parallel()
 			lineage := config.Lineage{}
 			have := lineage.Roots()
-			want := []string{}
+			want := domain.LocalBranchNames{}
 			assert.Equal(t, want, have)
 		})
 	})

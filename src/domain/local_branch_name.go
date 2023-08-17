@@ -27,7 +27,7 @@ func NewLocalBranchName(value string) LocalBranchName {
 	if !isValidPlainBranchName(value) {
 		panic(fmt.Sprintf("%q is not a valid Git branch name", value))
 	}
-	return NewLocalBranchName(value)
+	return LocalBranchName{BranchName{Location{value}}}
 }
 
 // isValidBranchName indicates whether the given branch name is a valid plain Git branch name.
