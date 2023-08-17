@@ -155,7 +155,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner, isOffline bool) 
 		previousBranch:      previousBranch,
 		pullBranchStrategy:  pullBranchStrategy,
 		pushHook:            pushHook,
-		parentBranch:        *lineage.Parent(branches.Initial),
+		parentBranch:        lineage.Parent(branches.Initial),
 		shouldNewBranchPush: shouldNewBranchPush,
 		shouldSyncUpstream:  shouldSyncUpstream,
 		syncStrategy:        syncStrategy,

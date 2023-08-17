@@ -98,9 +98,9 @@ func pruneBranchesStepList(config *pruneBranchesConfig) (runstate.StepList, erro
 		parent := config.lineage.Parent(branchWithDeletedRemote)
 		if !parent.IsEmpty() {
 			for _, child := range config.lineage.Children(branchWithDeletedRemote) {
-				result.Append(&steps.SetParentStep{Branch: child, ParentBranch: *parent})
+				result.Append(&steps.SetParentStep{Branch: child, ParentBranch: parent})
 			}
-			result.Append(&steps.DeleteParentBranchStep{Branch: branchWithDeletedRemote, Parent: *config.lineage.Parent(branchWithDeletedRemote)})
+			result.Append(&steps.DeleteParentBranchStep{Branch: branchWithDeletedRemote, Parent: config.lineage.Parent(branchWithDeletedRemote)})
 		}
 		if config.branchDurations.IsPerennialBranch(branchWithDeletedRemote) {
 			result.Append(&steps.RemoveFromPerennialBranchesStep{Branch: branchWithDeletedRemote})

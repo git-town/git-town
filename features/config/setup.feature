@@ -12,6 +12,7 @@ Feature: enter Git Town configuration
     Then the main branch is now "main"
     And the perennial branches are now "production"
 
+  @debug @this
   Scenario: unconfigured
     Given the branches "dev" and "production"
     And Git Town is not configured

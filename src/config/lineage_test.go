@@ -176,7 +176,7 @@ func TestLineage(t *testing.T) {
 			t.Parallel()
 			lineage := config.Lineage{}
 			have := lineage.Parent(main)
-			assert.Nil(t, have)
+			assert.True(t, have.IsEmpty())
 		})
 	})
 

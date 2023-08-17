@@ -12,7 +12,7 @@ type BranchDurations struct {
 }
 
 func (pb BranchDurations) IsFeatureBranch(branch domain.LocalBranchName) bool {
-	return branch != pb.MainBranch && !slice.Contains(pb.PerennialBranches, branch)
+	return !pb.IsMainBranch(branch) && !pb.IsPerennialBranch(branch)
 }
 
 func (pb BranchDurations) IsMainBranch(branch domain.LocalBranchName) bool {

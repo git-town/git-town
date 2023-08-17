@@ -198,10 +198,10 @@ func determineShipConfig(args []string, run *git.ProdRunner, isOffline bool) (*s
 		return nil, err
 	}
 	targetBranchName := lineage.Parent(branchNameToShip)
-	if targetBranchName == nil {
+	if targetBranchName.IsEmpty() {
 		panic(fmt.Sprintf("branch %q unexpectedly has no parent", targetBranchName))
 	}
-	targetBranch := branches.All.Lookup(*targetBranchName)
+	targetBranch := branches.All.Lookup(targetBranchName)
 	if targetBranch == nil {
 		return nil, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
@@ -234,7 +234,7 @@ func determineShipConfig(args []string, run *git.ProdRunner, isOffline bool) (*s
 	}
 	if !isOffline && connector != nil {
 		if branchToShip.HasTrackingBranch() {
-			proposal, err = connector.FindProposal(branchNameToShip, *targetBranchName)
+			proposal, err = connector.FindProposal(branchNameToShip, targetBranchName)
 			if err != nil {
 				return nil, err
 			}
@@ -281,10 +281,10 @@ func determineShipConfig(args []string, run *git.ProdRunner, isOffline bool) (*s
 
 func ensureParentBranchIsMainOrPerennialBranch(branch domain.LocalBranchName, branchDurations config.BranchDurations, lineage config.Lineage) error {
 	parentBranch := lineage.Parent(branch)
-	if parentBranch == nil {
+	if parentBranch.IsEmpty() {
 		panic(fmt.Sprintf("branch %q surprisingly has no parent", branch))
 	}
-	if !branchDurations.IsMainBranch(*parentBranch) && !branchDurations.IsPerennialBranch(*parentBranch) {
+	if !branchDurations.IsMainBranch(parentBranch) && !branchDurations.IsPerennialBranch(parentBranch) {
 		ancestors := lineage.Ancestors(branch)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
 		oldestAncestor := ancestorsWithoutMainOrPerennial[0]
@@ -360,7 +360,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 		}
 	}
 	list.Add(&steps.DeleteLocalBranchStep{Branch: config.branchToShip.Name, Parent: config.mainBranch.Location})
-	list.Add(&steps.DeleteParentBranchStep{Branch: config.branchToShip.Name, Parent: *run.Config.Lineage().Parent(config.branchToShip.Name)})
+	list.Add(&steps.DeleteParentBranchStep{Branch: config.branchToShip.Name, Parent: run.Config.Lineage().Parent(config.branchToShip.Name)})
 	for _, child := range config.childBranches {
 		list.Add(&steps.SetParentStep{Branch: child, ParentBranch: config.targetBranch.Name})
 	}

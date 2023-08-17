@@ -1,7 +1,6 @@
 package domain
 
 import (
-	"fmt"
 	"sort"
 	"strings"
 )
@@ -24,15 +23,7 @@ func (p LocalBranchName) RemoteName() RemoteBranchName {
 func (p LocalBranchName) String() string { return p.value }
 
 func NewLocalBranchName(value string) LocalBranchName {
-	if !isValidPlainBranchName(value) {
-		panic(fmt.Sprintf("%q is not a valid Git branch name", value))
-	}
 	return LocalBranchName{BranchName{Location{value}}}
-}
-
-// isValidBranchName indicates whether the given branch name is a valid plain Git branch name.
-func isValidPlainBranchName(value string) bool {
-	return len(value) != 0
 }
 
 type LocalBranchNames []LocalBranchName
@@ -63,6 +54,7 @@ func (l LocalBranchNames) Strings() []string {
 	return result
 }
 
+// TODO: rename to NewLocalBranchNames.
 func LocalBranchNamesFrom(names ...string) LocalBranchNames {
 	result := make(LocalBranchNames, len(names))
 	for n, name := range names {

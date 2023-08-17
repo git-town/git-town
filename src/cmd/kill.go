@@ -142,7 +142,7 @@ func (kc killConfig) isOnline() bool {
 }
 
 func (kc killConfig) targetBranchParent() domain.LocalBranchName {
-	return *kc.lineage.Parent(kc.targetBranch.Name)
+	return kc.lineage.Parent(kc.targetBranch.Name)
 }
 
 func killStepList(config *killConfig) (runstate.StepList, error) {
