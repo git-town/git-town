@@ -7,6 +7,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/cache"
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/test/commands"
 	testshell "github.com/git-town/git-town/v9/test/subshell"
@@ -62,8 +63,8 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 	backendCommands := git.BackendCommands{
 		BackendRunner:      &runner,
 		Config:             &config,
-		CurrentBranchCache: &cache.String{},
-		RemoteBranchCache:  &cache.Strings{},
+		CurrentBranchCache: &cache.LocalBranch{},
+		RemoteBranchCache:  &cache.RemoteBranch{}, // TODO: remove this? Seems unused...
 		RemotesCache:       &cache.Strings{},
 	}
 	testCommands := commands.TestCommands{
@@ -81,10 +82,10 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 func CreateGitTown(t *testing.T) TestRuntime {
 	t.Helper()
 	repo := Create(t)
-	repo.CreateBranch("main", "initial")
-	err := repo.Config.SetMainBranch("main")
+	repo.CreateBranch(domain.NewLocalBranchName("main"), domain.NewLocalBranchName("initial"))
+	err := repo.Config.SetMainBranch(domain.NewLocalBranchName("main"))
 	assert.NoError(t, err)
-	err = repo.Config.SetPerennialBranches([]string{})
+	err = repo.Config.SetPerennialBranches(domain.LocalBranchNames{})
 	assert.NoError(t, err)
 	return repo
 }

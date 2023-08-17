@@ -193,10 +193,10 @@ func (bc *BackendCommands) CommentOutSquashCommitMessage(prefix string) error {
 }
 
 // CreateFeatureBranch creates a feature branch with the given name in this repository.
-func (bc *BackendCommands) CreateFeatureBranch(name string) error {
+func (bc *BackendCommands) CreateFeatureBranch(name domain.LocalBranchName) error {
 	err := bc.RunMany([][]string{
-		{"git", "branch", name, "main"},
-		{"git", "config", "git-town-branch." + name + ".parent", "main"},
+		{"git", "branch", name.String(), "main"},
+		{"git", "config", "git-town-branch." + name.String() + ".parent", "main"},
 	})
 	if err != nil {
 		return fmt.Errorf(messages.BranchFeatureCannotCreate, name, err)

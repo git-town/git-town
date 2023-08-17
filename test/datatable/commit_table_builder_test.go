@@ -3,6 +3,7 @@ package datatable_test
 import (
 	"testing"
 
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/test/datatable"
 	"github.com/git-town/git-town/v9/test/git"
 	"github.com/stretchr/testify/assert"
@@ -11,10 +12,10 @@ import (
 func TestCommitTableBuilder(t *testing.T) {
 	t.Parallel()
 	builder := datatable.NewCommitTableBuilder()
-	commit1 := git.Commit{SHA: "sha1", Branch: "branch1", Message: "commit1"}
-	commit2 := git.Commit{SHA: "sha2", Branch: "main", Message: "commit2"}
-	commit3 := git.Commit{SHA: "sha3", Branch: "main", Message: "commit3"}
-	commit4 := git.Commit{SHA: "sha4", Branch: "branch3", Message: "commit4"}
+	commit1 := git.Commit{SHA: domain.NewSHA("sha1"), Branch: domain.NewLocalBranchName("branch1"), Message: "commit1"}
+	commit2 := git.Commit{SHA: domain.NewSHA("sha2"), Branch: domain.NewLocalBranchName("main"), Message: "commit2"}
+	commit3 := git.Commit{SHA: domain.NewSHA("sha3"), Branch: domain.NewLocalBranchName("main"), Message: "commit3"}
+	commit4 := git.Commit{SHA: domain.NewSHA("sha4"), Branch: domain.NewLocalBranchName("branch3"), Message: "commit4"}
 	builder.Add(commit1, "local")
 	builder.Add(commit1, "origin")
 	builder.Add(commit2, "local")

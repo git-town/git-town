@@ -34,4 +34,24 @@ func (r RemoteBranchName) LocalBranchName() LocalBranchName {
 }
 
 // Implements the fmt.Stringer interface.
-func (c RemoteBranchName) String() string { return c.value }
+func (r RemoteBranchName) String() string { return r.value }
+
+// type RemoteBranchNames []RemoteBranchName
+
+// func (r RemoteBranchNames) Join(sep string) string {
+// 	return strings.Join(r.Strings(), sep)
+// }
+
+// func (r RemoteBranchNames) Sort() {
+// 	sort.Slice(r, func(i, j int) bool {
+// 		return r[i].value < r[j].value
+// 	})
+// }
+
+// func (r RemoteBranchNames) Strings() []string {
+// 	result := make([]string, len(r))
+// 	for b, branch := range r {
+// 		result[b] = branch.String()
+// 	}
+// 	return result
+// }
