@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v9/src/cli"
+	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
@@ -55,7 +56,7 @@ func configureMainBranch(args []string, debug bool) error {
 }
 
 func printMainBranch(run *git.ProdRunner) {
-	cli.Println(cli.StringSetting(run.Config.MainBranch().String()))
+	cli.Println(cli.StringSetting(run.Config.LocalOrGlobalConfigValue(config.KeyMainBranch)))
 }
 
 func setMainBranch(branch domain.LocalBranchName, run *git.ProdRunner) error {
