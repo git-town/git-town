@@ -76,8 +76,7 @@ func queryBranch(currentBranch domain.LocalBranchName, lineage config.Lineage) (
 	if choice == nil {
 		return domain.LocalBranchName{}, false, nil
 	}
-	branch := domain.NewLocalBranchName(*choice)
-	return branch, true, nil
+	return domain.NewLocalBranchName(*choice), true, nil
 }
 
 // createEntries provides all the entries for the branch dialog.
