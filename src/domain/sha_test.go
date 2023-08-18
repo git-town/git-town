@@ -10,12 +10,13 @@ import (
 
 func TestSHA(t *testing.T) {
 	t.Parallel()
-	t.Run("NewSHA", func(t *testing.T) {
+	t.Run("NewSHA and String", func(t *testing.T) {
 		t.Parallel()
 		t.Run("allows lowercase hex characters", func(t *testing.T) {
 			t.Parallel()
 			text := "1234567890abcdef"
-			domain.NewSHA(text) // should not panic
+			sha := domain.NewSHA(text)
+			assert.Equal(t, text, sha.String())
 		})
 		t.Run("does not allow empty values", func(t *testing.T) {
 			t.Parallel()
@@ -39,9 +40,12 @@ func TestSHA(t *testing.T) {
 		})
 	})
 
-	t.Run("implements the Stringer interface", func(t *testing.T) {
-		t.Parallel()
-		sha := domain.NewSHA("abcdef")
-		assert.Equal(t, "abcdef", sha.String())
+	t.Run("TruncateTo", func(t *testing.T) {
+		t.Run("SHA is longer than the new length", func(t *testing.T) {
+			sha := domain.NewSHA("123456789abcdef")
+			have := sha.TruncateTo(8)
+			want := domain.NewSHA("12345678")
+			assert.Equal(t, want, have)
+		})
 	})
 }
