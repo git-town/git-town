@@ -37,6 +37,7 @@ func validateSHA(content string) bool {
 	return true
 }
 
+// Location widens the type of this SHA to a more generic Location.
 func (s SHA) Location() Location {
 	return Location(s)
 }

@@ -28,6 +28,7 @@ func isValidRemoteBranchName(value string) bool {
 	return true
 }
 
+// BranchName widens the type of this RemoteBranchName to a more generic BranchName.
 func (r RemoteBranchName) BranchName() BranchName {
 	return BranchName(r)
 }

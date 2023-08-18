@@ -17,6 +17,7 @@ func NewLocalBranchName(id string) LocalBranchName {
 	return LocalBranchName{id}
 }
 
+// BranchName widens the type of this LocalBranchName to a more generic BranchName.
 func (p LocalBranchName) BranchName() BranchName {
 	return BranchName(p)
 }
@@ -26,6 +27,7 @@ func (p LocalBranchName) IsEmpty() bool {
 	return len(p.id) == 0
 }
 
+// Location widens the type of this LocalBranchName to a more generic Location.
 func (p LocalBranchName) Location() Location {
 	return Location(p)
 }
