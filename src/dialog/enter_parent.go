@@ -11,7 +11,7 @@ import (
 
 // EnterParent lets the user select a new parent for the given branch.
 func EnterParent(branch, defaultParent domain.LocalBranchName, lineage config.Lineage, branches git.BranchesSyncStatus) (domain.LocalBranchName, error) {
-	choices := slice.Hoist(branches.LocalBranches().LocalBranchNames(), defaultParent)
+	choices := slice.Hoist(branches.LocalBranches().Names(), defaultParent)
 	filteredChoices := filterOutSelfAndDescendants(branch, choices, lineage)
 	choice, err := Select(SelectArgs{
 		Options: append([]string{PerennialBranchOption}, filteredChoices.Strings()...),

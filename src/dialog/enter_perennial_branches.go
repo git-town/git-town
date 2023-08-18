@@ -14,7 +14,7 @@ import (
 func EnterPerennialBranches(backend *git.BackendCommands, allBranches git.BranchesSyncStatus, branches config.BranchDurations) (config.BranchDurations, error) {
 	localBranchesWithoutMain := allBranches.LocalBranches().Remove(branches.MainBranch)
 	newPerennialBranchNames, err := MultiSelect(MultiSelectArgs{
-		Options:  localBranchesWithoutMain.LocalBranchNames().Strings(),
+		Options:  localBranchesWithoutMain.Names().Strings(),
 		Defaults: branches.PerennialBranches.Strings(),
 		Message:  perennialBranchesPrompt(branches.PerennialBranches),
 	})

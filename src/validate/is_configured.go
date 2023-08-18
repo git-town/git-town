@@ -13,7 +13,7 @@ func IsConfigured(backend *git.BackendCommands, allBranches git.BranchesSyncStat
 	mainBranch := backend.Config.MainBranch()
 	if mainBranch.IsEmpty() {
 		fmt.Print("Git Town needs to be configured\n\n")
-		newMainBranch, err := dialog.EnterMainBranch(allBranches.LocalBranches().LocalBranchNames(), mainBranch, backend)
+		newMainBranch, err := dialog.EnterMainBranch(allBranches.LocalBranches().Names(), mainBranch, backend)
 		if err != nil {
 			return branchDurations, err
 		}

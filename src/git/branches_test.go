@@ -208,7 +208,7 @@ func TestBranches(t *testing.T) {
 			},
 		}
 		want := domain.LocalBranchNamesFrom("up-to-date", "ahead", "behind", "local-only", "deleted-at-remote")
-		have := bs.LocalBranches().LocalBranchNames()
+		have := bs.LocalBranches().Names()
 		assert.Equal(t, want, have)
 	})
 
@@ -258,7 +258,7 @@ func TestBranches(t *testing.T) {
 				TrackingSHA:  domain.SHA{},
 			},
 		}
-		have := bs.LocalBranchesWithDeletedTrackingBranches().LocalBranchNames()
+		have := bs.LocalBranchesWithDeletedTrackingBranches().Names()
 		want := domain.LocalBranchNamesFrom("deleted-at-remote")
 		assert.Equal(t, want, have)
 	})

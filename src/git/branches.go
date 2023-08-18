@@ -106,7 +106,8 @@ func (bs BranchesSyncStatus) LocalBranches() BranchesSyncStatus {
 	return result
 }
 
-func (bs BranchesSyncStatus) LocalBranchNames() domain.LocalBranchNames {
+// Names provides the names of all branches in this BranchesSyncStatus instance.
+func (bs BranchesSyncStatus) Names() domain.LocalBranchNames {
 	result := make(domain.LocalBranchNames, len(bs))
 	for b, branchSyncStatus := range bs {
 		result[b] = branchSyncStatus.Name

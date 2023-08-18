@@ -83,7 +83,7 @@ func determinePruneBranchesConfig(run *git.ProdRunner) (*pruneBranchesConfig, er
 		branchDurations:  branches.Durations,
 		initialBranch:    branches.Initial,
 		lineage:          run.Config.Lineage(),
-		branchesToDelete: branches.All.LocalBranchesWithDeletedTrackingBranches().LocalBranchNames(),
+		branchesToDelete: branches.All.LocalBranchesWithDeletedTrackingBranches().Names(),
 		mainBranch:       run.Config.MainBranch(),
 		previousBranch:   run.Backend.PreviouslyCheckedOutBranch(),
 	}, err

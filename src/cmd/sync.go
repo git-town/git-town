@@ -138,7 +138,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, isOffline bool) (*sy
 		if err != nil {
 			return nil, err
 		}
-		branchNamesToSync = localBranches.LocalBranchNames()
+		branchNamesToSync = localBranches.Names()
 		shouldPushTags = true
 	} else {
 		configUpdated, err = validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
