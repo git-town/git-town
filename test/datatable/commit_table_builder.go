@@ -1,8 +1,6 @@
 package datatable
 
 import (
-	"strings"
-
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/test/git"
 	"github.com/git-town/git-town/v9/test/helpers"
@@ -95,7 +93,7 @@ func (builder *CommitTableBuilder) Table(fields []string) DataTable {
 	lastLocation := ""
 	for _, branch := range builder.branches() {
 		SHAs := builder.commitsInBranch[branch]
-		for _, SHA := range SHAs.Slice() {
+		for _, SHA := range SHAs.Elements() {
 			commit := builder.commits[SHA]
 			row := []string{}
 			for _, field := range fields {
@@ -107,7 +105,7 @@ func (builder *CommitTableBuilder) Table(fields []string) DataTable {
 						row = append(row, branch.String())
 					}
 				case "LOCATION":
-					locations := strings.Join(builder.locations[SHA.String()+branch.String()].Slice(), ", ")
+					locations := builder.locations[SHA.String()+branch.String()].Join(", ")
 					if locations == lastLocation && branch == lastBranch {
 						row = append(row, "")
 					} else {

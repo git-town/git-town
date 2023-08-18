@@ -34,8 +34,8 @@ func (set OrderedSet[T]) Contains(element T) bool {
 	return false
 }
 
-// Slice provides the elements of this set in the order they were received.
-func (set OrderedSet[T]) Slice() []T {
+// Elements provides the elements of this set in the order they were received.
+func (set OrderedSet[T]) Elements() []T {
 	return set.elements
 }
 
