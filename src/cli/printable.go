@@ -1,7 +1,6 @@
 package cli
 
 import (
-	"sort"
 	"strings"
 )
 
@@ -25,7 +24,6 @@ func PrintableBranchLineage(lineage Lineage) string {
 func PrintableBranchTree(branch string, lineage Lineage) string {
 	result := branch
 	childBranches := lineage.Children(branch)
-	sort.Strings(childBranches)
 	for _, childBranch := range childBranches {
 		result += "\n" + Indent(PrintableBranchTree(childBranch, lineage))
 	}
