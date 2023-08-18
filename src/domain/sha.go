@@ -8,7 +8,7 @@ import (
 // SHA represents a Git SHA as a dedicated data type.
 // This helps avoid stringly-typed code.
 type SHA struct {
-	Location
+	Location // a SHA is a type of location
 }
 
 // NewSHA creates a new SHA instance with the given value.

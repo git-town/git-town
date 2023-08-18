@@ -8,7 +8,7 @@ import (
 
 // LocalBranchName is a dedicated type that represents the name of a Git branch in the local repo.
 type LocalBranchName struct {
-	BranchName
+	BranchName // a LocalBranchName is a special form of BranchName
 }
 
 func (p LocalBranchName) IsEmpty() bool {
