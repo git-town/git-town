@@ -112,7 +112,6 @@ func determinePrependConfig(args []string, run *git.ProdRunner, isOffline bool) 
 	syncStrategy := fc.SyncStrategy(run.Config.SyncStrategy())
 	pullBranchStrategy := fc.PullBranchStrategy(run.Config.PullBranchStrategy())
 	shouldSyncUpstream := fc.Bool(run.Config.ShouldSyncUpstream())
-	lineage := run.Config.Lineage()
 	targetBranch := domain.NewLocalBranchName(args[0])
 	if branches.All.HasLocalBranch(targetBranch) {
 		return nil, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
@@ -123,6 +122,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner, isOffline bool) 
 	if !branches.Durations.IsFeatureBranch(branches.Initial) {
 		return nil, fmt.Errorf(messages.SetParentNoFeatureBranch, branches.Initial)
 	}
+	lineage := run.Config.Lineage()
 	updated := fc.Bool(validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
 		DefaultBranch:   mainBranch,
 		Backend:         &run.Backend,
