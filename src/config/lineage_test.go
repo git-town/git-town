@@ -12,18 +12,8 @@ func TestLineage(t *testing.T) {
 	t.Parallel()
 	main := domain.NewLocalBranchName("main")
 	one := domain.NewLocalBranchName("one")
-	oneA := domain.NewLocalBranchName("oneA")
-	oneA1 := domain.NewLocalBranchName("oneA1")
-	oneA2 := domain.NewLocalBranchName("oneA2")
-	oneB := domain.NewLocalBranchName("oneB")
 	two := domain.NewLocalBranchName("two")
-	twoA := domain.NewLocalBranchName("twoA")
-	twoB := domain.NewLocalBranchName("twoB")
 	three := domain.NewLocalBranchName("three")
-	four := domain.NewLocalBranchName("four")
-	prod := domain.NewLocalBranchName("prod")
-	hotfix1 := domain.NewLocalBranchName("hotfix1")
-	hotfix2 := domain.NewLocalBranchName("hotfix2")
 
 	t.Run("BranchesAndAncestors", func(t *testing.T) {
 		t.Parallel()
@@ -93,6 +83,8 @@ func TestLineage(t *testing.T) {
 		t.Parallel()
 		t.Run("provides all children of the given branch, ordered alphabetically", func(t *testing.T) {
 			t.Parallel()
+			twoA := domain.NewLocalBranchName("twoA")
+			twoB := domain.NewLocalBranchName("twoB")
 			lineage := config.Lineage{}
 			lineage[twoA] = one
 			lineage[twoB] = one
@@ -136,6 +128,7 @@ func TestLineage(t *testing.T) {
 	t.Run("IsAncestor", func(t *testing.T) {
 		t.Run("recognizes greatgrandparent", func(t *testing.T) {
 			t.Parallel()
+			four := domain.NewLocalBranchName("four")
 			lineage := config.Lineage{}
 			lineage[four] = three
 			lineage[three] = two
@@ -160,6 +153,10 @@ func TestLineage(t *testing.T) {
 	t.Run("OrderedHierarchically", func(t *testing.T) {
 		t.Run("complex scenario", func(t *testing.T) {
 			t.Parallel()
+			oneA := domain.NewLocalBranchName("oneA")
+			oneA1 := domain.NewLocalBranchName("oneA1")
+			oneA2 := domain.NewLocalBranchName("oneA2")
+			oneB := domain.NewLocalBranchName("oneB")
 			lineage := config.Lineage{}
 			lineage[one] = main
 			lineage[oneA] = one
@@ -184,6 +181,9 @@ func TestLineage(t *testing.T) {
 		t.Parallel()
 		t.Run("multiple roots with nested child branches", func(t *testing.T) {
 			t.Parallel()
+			prod := domain.NewLocalBranchName("prod")
+			hotfix1 := domain.NewLocalBranchName("hotfix1")
+			hotfix2 := domain.NewLocalBranchName("hotfix2")
 			lineage := config.Lineage{}
 			lineage[two] = one
 			lineage[one] = main
