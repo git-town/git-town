@@ -26,7 +26,6 @@ func PrintableBranchLineage(lineage Lineage) string {
 func PrintableBranchTree(branch domain.LocalBranchName, lineage Lineage) string {
 	result := branch.String()
 	childBranches := lineage.Children(branch)
-	childBranches.Sort()
 	for _, childBranch := range childBranches {
 		result += "\n" + Indent(PrintableBranchTree(childBranch, lineage))
 	}
