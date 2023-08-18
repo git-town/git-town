@@ -258,6 +258,28 @@ func TestBranches(t *testing.T) {
 		})
 	})
 
+	t.Run("Names", func(t *testing.T) {
+		bs := git.BranchesSyncStatus{
+			git.BranchSyncStatus{
+				Name:       domain.NewLocalBranchName("one"),
+				InitialSHA: domain.SHA{},
+				SyncStatus: git.SyncStatusLocalOnly,
+				RemoteName: domain.RemoteBranchName{},
+				RemoteSHA:  domain.SHA{},
+			},
+			git.BranchSyncStatus{
+				Name:       domain.NewLocalBranchName("two"),
+				InitialSHA: domain.SHA{},
+				SyncStatus: git.SyncStatusLocalOnly,
+				RemoteName: domain.RemoteBranchName{},
+				RemoteSHA:  domain.SHA{},
+			},
+		}
+		have := bs.Names()
+		want := domain.NewLocalBranchNames("one", "two")
+		assert.Equal(t, want, have)
+	})
+
 	t.Run("Remove", func(t *testing.T) {
 		t.Parallel()
 		t.Run("contains the removed element", func(t *testing.T) {
