@@ -28,6 +28,7 @@ func TestOrderedSet(t *testing.T) {
 	})
 
 	t.Run("Contains", func(t *testing.T) {
+		t.Parallel()
 		set := helpers.NewOrderedSet("one", "two")
 		assert.True(t, set.Contains("one"))
 		assert.True(t, set.Contains("two"))
@@ -35,6 +36,7 @@ func TestOrderedSet(t *testing.T) {
 	})
 
 	t.Run("Elements", func(t *testing.T) {
+		t.Parallel()
 		set := helpers.NewOrderedSet("one", "two")
 		have := set.Elements()
 		want := []string{"one", "two"}
@@ -42,10 +44,10 @@ func TestOrderedSet(t *testing.T) {
 	})
 
 	t.Run("Join", func(t *testing.T) {
+		t.Parallel()
 		set := helpers.NewOrderedSet("one", "two", "three")
 		have := set.Join(", ")
 		want := "one, two, three"
 		assert.Equal(t, want, have)
-
 	})
 }
