@@ -12,7 +12,7 @@ type OrderedSet[T comparable] struct {
 
 // NewOrderedSet provides instances of OrderedSet populated with the given elements.
 func NewOrderedSet[T comparable](elements ...T) OrderedSet[T] {
-	return OrderedSet[T]{elements: elements}
+	return OrderedSet[T]{elements}
 }
 
 // Add adds the given element to this set if the set doesn't contain this element yet.
