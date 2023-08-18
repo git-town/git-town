@@ -16,24 +16,26 @@ import (
 
 func TestBackendCommands(t *testing.T) {
 	t.Parallel()
+	initial := domain.NewLocalBranchName("initial")
 
 	t.Run("BranchAuthors", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
-		runtime.CreateBranch(domain.NewLocalBranchName("branch"), domain.NewLocalBranchName("initial"))
+		branch := domain.NewLocalBranchName("branch")
+		runtime.CreateBranch(branch, initial)
 		runtime.CreateCommit(testgit.Commit{
-			Branch:      domain.NewLocalBranchName("branch"),
+			Branch:      branch,
 			FileName:    "file1",
 			FileContent: "file1",
 			Message:     "first commit",
 		})
 		runtime.CreateCommit(testgit.Commit{
-			Branch:      domain.NewLocalBranchName("branch"),
+			Branch:      branch,
 			FileName:    "file2",
 			FileContent: "file2",
 			Message:     "second commit",
 		})
-		authors, err := runtime.Backend.BranchAuthors(domain.NewLocalBranchName("branch"), domain.NewLocalBranchName("initial"))
+		authors, err := runtime.Backend.BranchAuthors(branch, initial)
 		assert.NoError(t, err)
 		assert.Equal(t, []string{"user <email@example.com>"}, authors)
 	})
@@ -41,15 +43,15 @@ func TestBackendCommands(t *testing.T) {
 	t.Run(".CheckoutBranch()", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
-		runtime.CreateBranch(domain.NewLocalBranchName("branch1"), domain.NewLocalBranchName("initial"))
+		runtime.CreateBranch(domain.NewLocalBranchName("branch1"), initial)
 		assert.NoError(t, runtime.Backend.CheckoutBranch(domain.NewLocalBranchName("branch1")))
 		currentBranch, err := runtime.CurrentBranch()
 		assert.NoError(t, err)
 		assert.Equal(t, domain.NewLocalBranchName("branch1"), currentBranch)
-		runtime.CheckoutBranch(domain.NewLocalBranchName("initial"))
+		runtime.CheckoutBranch(initial)
 		currentBranch, err = runtime.CurrentBranch()
 		assert.NoError(t, err)
-		assert.Equal(t, domain.NewLocalBranchName("initial"), currentBranch)
+		assert.Equal(t, initial, currentBranch)
 	})
 
 	t.Run(".CreateFeatureBranch()", func(t *testing.T) {
@@ -68,16 +70,16 @@ func TestBackendCommands(t *testing.T) {
 	t.Run(".CurrentBranch()", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
-		runtime.CheckoutBranch(domain.NewLocalBranchName("initial"))
-		runtime.CreateBranch(domain.NewLocalBranchName("b1"), domain.NewLocalBranchName("initial"))
+		runtime.CheckoutBranch(initial)
+		runtime.CreateBranch(domain.NewLocalBranchName("b1"), initial)
 		runtime.CheckoutBranch(domain.NewLocalBranchName("b1"))
 		branch, err := runtime.Backend.CurrentBranch()
 		assert.NoError(t, err)
 		assert.Equal(t, domain.NewLocalBranchName("b1"), branch)
-		runtime.CheckoutBranch(domain.NewLocalBranchName("initial"))
+		runtime.CheckoutBranch(initial)
 		branch, err = runtime.Backend.CurrentBranch()
 		assert.NoError(t, err)
-		assert.Equal(t, domain.NewLocalBranchName("initial"), branch)
+		assert.Equal(t, initial, branch)
 	})
 
 	t.Run(".HasLocalBranch()", func(t *testing.T) {
@@ -85,8 +87,8 @@ func TestBackendCommands(t *testing.T) {
 		origin := testruntime.Create(t)
 		repoDir := t.TempDir()
 		runner := testruntime.Clone(origin.TestRunner, repoDir)
-		runner.CreateBranch(domain.NewLocalBranchName("b1"), domain.NewLocalBranchName("initial"))
-		runner.CreateBranch(domain.NewLocalBranchName("b2"), domain.NewLocalBranchName("initial"))
+		runner.CreateBranch(domain.NewLocalBranchName("b1"), initial)
+		runner.CreateBranch(domain.NewLocalBranchName("b2"), initial)
 		has, err := runner.Backend.HasLocalBranch(domain.NewLocalBranchName("b1"))
 		assert.NoError(t, err)
 		assert.True(t, has)
@@ -123,11 +125,11 @@ func TestBackendCommands(t *testing.T) {
 		origin := testruntime.Create(t)
 		repoDir := t.TempDir()
 		runner := testruntime.Clone(origin.TestRunner, repoDir)
-		runner.CreateBranch(domain.NewLocalBranchName("b1"), domain.NewLocalBranchName("initial"))
-		runner.CreateBranch(domain.NewLocalBranchName("b2"), domain.NewLocalBranchName("initial"))
-		origin.CreateBranch(domain.NewLocalBranchName("b3"), domain.NewLocalBranchName("initial"))
+		runner.CreateBranch(domain.NewLocalBranchName("b1"), initial)
+		runner.CreateBranch(domain.NewLocalBranchName("b2"), initial)
+		origin.CreateBranch(domain.NewLocalBranchName("b3"), initial)
 		runner.Fetch()
-		branches, err := runner.Backend.LocalBranchesMainFirst(domain.NewLocalBranchName("initial"))
+		branches, err := runner.Backend.LocalBranchesMainFirst(initial)
 		assert.NoError(t, err)
 		want := domain.NewLocalBranchNames("initial", "b1", "b2")
 		assert.Equal(t, want, branches)
@@ -372,8 +374,8 @@ func TestBackendCommands(t *testing.T) {
 	t.Run(".PreviouslyCheckedOutBranch()", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
-		runtime.CreateBranch(domain.NewLocalBranchName("feature1"), domain.NewLocalBranchName("initial"))
-		runtime.CreateBranch(domain.NewLocalBranchName("feature2"), domain.NewLocalBranchName("initial"))
+		runtime.CreateBranch(domain.NewLocalBranchName("feature1"), initial)
+		runtime.CreateBranch(domain.NewLocalBranchName("feature2"), initial)
 		runtime.CheckoutBranch(domain.NewLocalBranchName("feature1"))
 		runtime.CheckoutBranch(domain.NewLocalBranchName("feature2"))
 		have := runtime.Backend.PreviouslyCheckedOutBranch()
