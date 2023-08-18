@@ -280,7 +280,7 @@ type syncBranchStepsArgs struct {
 
 func syncFeatureBranchSteps(list *runstate.StepListBuilder, branch git.BranchSyncStatus, lineage config.Lineage, syncStrategy config.SyncStrategy) {
 	if branch.HasTrackingBranch() {
-		updateCurrentFeatureBranchStep(list, branch.RemoteBranch().BranchName, syncStrategy)
+		updateCurrentFeatureBranchStep(list, branch.RemoteName.BranchName, syncStrategy)
 	}
 	updateCurrentFeatureBranchStep(list, lineage.Parent(branch.Name).BranchName, syncStrategy)
 }

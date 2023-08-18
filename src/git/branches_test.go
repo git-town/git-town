@@ -8,77 +8,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestBranch(t *testing.T) {
-	t.Parallel()
-	t.Run("RemoteBranch", func(t *testing.T) {
-		t.Parallel()
-		t.Run("remote-only branch", func(t *testing.T) {
-			t.Parallel()
-			give := git.BranchSyncStatus{
-				Name:       domain.NewLocalBranchName("origin/branch1"),
-				InitialSHA: domain.SHA{},
-				SyncStatus: git.SyncStatusRemoteOnly,
-				RemoteName: domain.RemoteBranchName{},
-				RemoteSHA:  domain.SHA{},
-			}
-			have := give.RemoteBranch()
-			want := domain.NewRemoteBranchName("origin/branch1")
-			assert.Equal(t, want, have)
-		})
-		t.Run("local-only branch", func(t *testing.T) {
-			t.Parallel()
-			give := git.BranchSyncStatus{
-				Name:       domain.NewLocalBranchName("branch1"),
-				InitialSHA: domain.SHA{},
-				SyncStatus: git.SyncStatusLocalOnly,
-				RemoteName: domain.RemoteBranchName{},
-				RemoteSHA:  domain.SHA{},
-			}
-			have := give.RemoteBranch()
-			want := domain.RemoteBranchName{}
-			assert.Equal(t, want, have)
-		})
-		t.Run("local branch with tracking branch", func(t *testing.T) {
-			t.Parallel()
-			give := git.BranchSyncStatus{
-				Name:       domain.NewLocalBranchName("branch1"),
-				InitialSHA: domain.SHA{},
-				SyncStatus: git.SyncStatusUpToDate,
-				RemoteName: domain.NewRemoteBranchName("origin/branch-2"),
-				RemoteSHA:  domain.SHA{},
-			}
-			have := give.RemoteBranch()
-			want := domain.NewRemoteBranchName("origin/branch-2")
-			assert.Equal(t, want, have)
-		})
-	})
-}
-
 func TestBranches(t *testing.T) {
 	t.Parallel()
-
-	// t.Run("BranchNames", func(t *testing.T) {
-	// 	t.Parallel()
-	// 	bs := git.BranchesSyncStatus{
-	// 		git.BranchSyncStatus{
-	// 			Name:         domain.NewLocalBranchName("one"),
-	// 			InitialSHA:   domain.SHA{},
-	// 			SyncStatus:   git.SyncStatusLocalOnly,
-	// 			TrackingName: domain.RemoteBranchName{},
-	// 			TrackingSHA:  domain.SHA{},
-	// 		},
-	// 		git.BranchSyncStatus{
-	// 			Name:         domain.NewLocalBranchName("two"),
-	// 			InitialSHA:   domain.SHA{},
-	// 			SyncStatus:   git.SyncStatusLocalOnly,
-	// 			TrackingName: domain.RemoteBranchName{},
-	// 			TrackingSHA:  domain.SHA{},
-	// 		},
-	// 	}
-	// 	have := bs.Branch
-	// 	want := []string{"one", "two"}
-	// 	assert.Equal(t, want, have)
-	// })
 
 	t.Run("HasLocalBranch", func(t *testing.T) {
 		t.Parallel()

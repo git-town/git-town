@@ -41,23 +41,10 @@ func (bi BranchSyncStatus) IsLocal() bool {
 	return bi.SyncStatus.IsLocal()
 }
 
-// RemoteBranch provides the name of the branch at the remote for this BranchSyncStatus.
-func (bi BranchSyncStatus) RemoteBranch() domain.RemoteBranchName {
-	return bi.RemoteName
-}
-
 // BranchesSyncStatus contains the BranchesSyncStatus for all branches in a repo.
 // Tracking branches on the origin remote don't get their own entry,
 // they are listed in the `TrackingBranch` property of the local branch they track.
 type BranchesSyncStatus []BranchSyncStatus
-
-// func (bs BranchesSyncStatus) BranchNames() domain.BranchNames {
-// 	result := make([]domain.BranchName, len(bs))
-// 	for b, branch := range bs {
-// 		result[b] = branch.Name
-// 	}
-// 	return result
-// }
 
 // IsKnown indicates whether the given branch is already known to this BranchesSyncStatus instance,
 // either as a local or tracking branch.
