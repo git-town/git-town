@@ -47,8 +47,7 @@ func (bi BranchSyncStatus) IsLocal() bool {
 // they are listed in the `TrackingBranch` property of the local branch they track.
 type BranchesSyncStatus []BranchSyncStatus
 
-// IsKnown indicates whether the given branch is already known to this BranchesSyncStatus instance,
-// either as a local or tracking branch.
+// IsKnown indicates whether the given local branch is already known to this BranchesSyncStatus instance.
 func (bs BranchesSyncStatus) HasLocalBranch(localBranch domain.LocalBranchName) bool {
 	for _, branch := range bs {
 		if branch.Name == localBranch {
@@ -58,8 +57,8 @@ func (bs BranchesSyncStatus) HasLocalBranch(localBranch domain.LocalBranchName) 
 	return false
 }
 
-// HasRemoteBranchFor indicates whether there is already a remote branch matching the given local branch.
-func (bs BranchesSyncStatus) HasRemoteBranchFor(localBranch domain.LocalBranchName) bool {
+// HasMatchingRemoteBranch indicates whether there is already a remote branch matching the given local branch.
+func (bs BranchesSyncStatus) HasMatchingRemoteBranch(localBranch domain.LocalBranchName) bool {
 	remoteName := localBranch.RemoteName()
 	for _, branch := range bs {
 		if branch.RemoteName == remoteName {
