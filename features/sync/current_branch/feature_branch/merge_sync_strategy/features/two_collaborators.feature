@@ -1,6 +1,6 @@
 Feature: collaborative feature branch syncing
 
-  Scenario:
+  Scenario: Scenario: two computers work on a feature branch
     Given a coworker clones the repository
     And the current branch is a feature branch "feature"
     And the coworker fetches updates
