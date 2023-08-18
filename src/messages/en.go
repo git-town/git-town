@@ -33,7 +33,6 @@ const (
 	DiffParentNoFeatureBranch         = "you can only diff-parent feature branches"
 	DiffProblem                       = "cannot list diff of %q and %q: %w"
 	DirCurrentProblem                 = "cannot determine the current directory"
-	DeleteRemoteBranchOffline         = "cannot delete remote branch %q in offline mode"
 	FileContentInvalidJSON            = "cannot parse JSON content of file %q: %w"
 	FileDeleteProblem                 = "cannot delete file %q: %w"
 	FileReadProblem                   = "cannot read file %q: %w"
