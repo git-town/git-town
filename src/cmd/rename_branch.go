@@ -160,7 +160,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 
 func renameBranchStepList(config *renameBranchConfig) (runstate.StepList, error) {
 	result := runstate.StepList{}
-	result.Append(&steps.CreateBranchStep{Branch: config.newBranch, StartingPoint: config.oldBranch.Name.Location})
+	result.Append(&steps.CreateBranchStep{Branch: config.newBranch, StartingPoint: config.oldBranch.Name.Location()})
 	if config.initialBranch == config.oldBranch.Name {
 		result.Append(&steps.CheckoutStep{Branch: config.newBranch})
 	}
@@ -179,7 +179,7 @@ func renameBranchStepList(config *renameBranchConfig) (runstate.StepList, error)
 		result.Append(&steps.CreateTrackingBranchStep{Branch: config.newBranch, NoPushHook: config.noPushHook})
 		result.Append(&steps.DeleteOriginBranchStep{Branch: config.oldBranch.Name, IsTracking: true})
 	}
-	result.Append(&steps.DeleteLocalBranchStep{Branch: config.oldBranch.Name, Parent: config.mainBranch.Location})
+	result.Append(&steps.DeleteLocalBranchStep{Branch: config.oldBranch.Name, Parent: config.mainBranch.Location()})
 	err := result.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     false,
 		StashOpenChanges: false,

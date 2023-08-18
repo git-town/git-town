@@ -15,7 +15,7 @@ import (
 func KnowsBranchesAncestors(args KnowsBranchesAncestorsArgs) (bool, error) {
 	updated := false
 	for _, branch := range args.AllBranches {
-		branchUpdated, err := KnowsBranchAncestors(branch.Name.LocalName(), KnowsBranchAncestorsArgs{
+		branchUpdated, err := KnowsBranchAncestors(branch.Name, KnowsBranchAncestorsArgs{
 			DefaultBranch:   args.MainBranch,
 			Backend:         args.Backend,
 			AllBranches:     args.AllBranches,

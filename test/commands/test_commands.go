@@ -139,7 +139,7 @@ func (r *TestCommands) CommitsInBranch(branch domain.LocalBranchName, fields []s
 			commit.FileName = strings.Join(filenames, ", ")
 		}
 		if slice.Contains(fields, "FILE CONTENT") {
-			filecontent := r.FileContentInCommit(commit.SHA.Location, commit.FileName)
+			filecontent := r.FileContentInCommit(commit.SHA.Location(), commit.FileName)
 			commit.FileContent = filecontent
 		}
 		result = append(result, commit)
@@ -214,7 +214,7 @@ func (r *TestCommands) FilesInBranches(mainBranch domain.LocalBranchName) datata
 	for _, branch := range branches {
 		files := r.FilesInBranch(branch)
 		for _, file := range files {
-			content := r.FileContentInCommit(branch.Location, file)
+			content := r.FileContentInCommit(branch.Location(), file)
 			if branch == lastBranch {
 				result.AddRow("", file, content)
 			} else {

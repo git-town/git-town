@@ -8,14 +8,14 @@ import (
 
 // RemoteBranchName is the name of a remote branch, e.g. "origin/foo".
 type RemoteBranchName struct {
-	BranchName // a RemoteBranchName is a type of BranchName
+	id string
 }
 
-func NewRemoteBranchName(value string) RemoteBranchName {
-	if !isValidRemoteBranchName(value) {
-		panic(fmt.Sprintf("%q is not a valid remote branch name", value))
+func NewRemoteBranchName(id string) RemoteBranchName {
+	if !isValidRemoteBranchName(id) {
+		panic(fmt.Sprintf("%q is not a valid remote branch name", id))
 	}
-	return RemoteBranchName{BranchName{Location{value}}}
+	return RemoteBranchName{id}
 }
 
 func isValidRemoteBranchName(value string) bool {
@@ -26,6 +26,10 @@ func isValidRemoteBranchName(value string) bool {
 		return false
 	}
 	return true
+}
+
+func (r RemoteBranchName) BranchName() BranchName {
+	return BranchName(r)
 }
 
 // LocalBranchName provides the name of the local branch that this remote branch tracks.

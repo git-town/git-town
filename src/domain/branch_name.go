@@ -1,20 +1,21 @@
 package domain
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 )
 
 // BranchName is the name of a local or remote Git branch.
 type BranchName struct {
-	Location // a BranchName is a type of Location
+	id string
 }
 
-func NewBranchName(value string) BranchName {
-	if !isValidBranchName(value) {
-		panic(fmt.Sprintf("%q is not a valid Git branch name", value))
+func NewBranchName(id string) BranchName {
+	if !isValidBranchName(id) {
+		panic(fmt.Sprintf("%q is not a valid Git branch name", id))
 	}
-	return BranchName{Location{value}}
+	return BranchName{id}
 }
 
 // IsLocal indicates whether the branch with this BranchName exists locally.
@@ -27,16 +28,26 @@ func (c BranchName) LocalName() LocalBranchName {
 	return NewLocalBranchName(strings.TrimPrefix(c.id, "origin/"))
 }
 
+// MarshalJSON is used when serializing this LocalBranchName to JSON.
+func (p BranchName) MarshalJSON() ([]byte, error) {
+	return json.Marshal(p.id)
+}
+
 // RemoteName provides the remote version of this branch name.
-func (c BranchName) RemoteName() RemoteBranchName {
-	if strings.HasPrefix(c.id, "origin/") {
-		return NewRemoteBranchName(c.id)
+func (b BranchName) RemoteName() RemoteBranchName {
+	if strings.HasPrefix(b.id, "origin/") {
+		return NewRemoteBranchName(b.id)
 	}
-	return NewRemoteBranchName("origin/" + c.id)
+	return NewRemoteBranchName("origin/" + b.id)
 }
 
 // Implementation of the fmt.Stringer interface.
-func (c BranchName) String() string { return c.id }
+func (b BranchName) String() string { return b.id }
+
+// UnmarshalJSON is used when de-serializing JSON into a LocalBranchName.
+func (b *BranchName) UnmarshalJSON(ba []byte) error {
+	return json.Unmarshal(ba, &b.id)
+}
 
 // isValidBranchName indicates whether the given text is a valid branch name.
 func isValidBranchName(text string) bool {

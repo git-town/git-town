@@ -280,9 +280,9 @@ type syncBranchStepsArgs struct {
 
 func syncFeatureBranchSteps(list *runstate.StepListBuilder, branch git.BranchSyncStatus, lineage config.Lineage, syncStrategy config.SyncStrategy) {
 	if branch.HasTrackingBranch() {
-		updateCurrentFeatureBranchStep(list, branch.RemoteName.BranchName, syncStrategy)
+		updateCurrentFeatureBranchStep(list, branch.RemoteName.BranchName(), syncStrategy)
 	}
-	updateCurrentFeatureBranchStep(list, lineage.Parent(branch.Name).BranchName, syncStrategy)
+	updateCurrentFeatureBranchStep(list, lineage.Parent(branch.Name).BranchName(), syncStrategy)
 }
 
 func syncPerennialBranchSteps(list *runstate.StepListBuilder, args syncPerennialBranchStepsArgs) {
@@ -319,9 +319,9 @@ func updateCurrentFeatureBranchStep(list *runstate.StepListBuilder, otherBranch 
 func updateCurrentPerennialBranchStep(list *runstate.StepListBuilder, otherBranch domain.RemoteBranchName, strategy config.PullBranchStrategy) {
 	switch strategy {
 	case config.PullBranchStrategyMerge:
-		list.Add(&steps.MergeStep{Branch: otherBranch.BranchName})
+		list.Add(&steps.MergeStep{Branch: otherBranch.BranchName()})
 	case config.PullBranchStrategyRebase:
-		list.Add(&steps.RebaseBranchStep{Branch: otherBranch.BranchName})
+		list.Add(&steps.RebaseBranchStep{Branch: otherBranch.BranchName()})
 	default:
 		list.Fail("unknown syncStrategy value: %q", strategy)
 	}

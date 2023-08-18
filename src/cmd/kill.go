@@ -169,7 +169,7 @@ func killFeatureBranch(list *runstate.StepList, config killConfig) {
 		}
 		list.Append(&steps.CheckoutStep{Branch: config.targetBranchParent()})
 	}
-	list.Append(&steps.DeleteLocalBranchStep{Branch: config.targetBranch.Name, Parent: config.mainBranch.Location, Force: true})
+	list.Append(&steps.DeleteLocalBranchStep{Branch: config.targetBranch.Name, Parent: config.mainBranch.Location(), Force: true})
 	childBranches := config.lineage.Children(config.targetBranch.Name)
 	for _, child := range childBranches {
 		list.Append(&steps.SetParentStep{Branch: child, ParentBranch: config.targetBranchParent()})

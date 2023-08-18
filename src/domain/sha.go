@@ -8,7 +8,7 @@ import (
 // SHA represents a Git SHA as a dedicated data type.
 // This helps avoid stringly-typed code.
 type SHA struct {
-	Location // a SHA is a type of location
+	id string
 }
 
 // NewSHA creates a new SHA instance with the given value.
@@ -17,7 +17,7 @@ func NewSHA(id string) SHA {
 	if !validateSHA(id) {
 		panic(fmt.Sprintf("%q is not a valid Git SHA", id))
 	}
-	return SHA{Location{id}}
+	return SHA{id}
 }
 
 // validateSHA indicates whether the given SHA content is a valid Git SHA.
@@ -35,6 +35,10 @@ func validateSHA(content string) bool {
 		return false
 	}
 	return true
+}
+
+func (s SHA) Location() Location {
+	return Location(s)
 }
 
 // MarshalJSON is used when serializing this SHA to JSON.

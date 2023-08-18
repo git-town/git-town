@@ -206,7 +206,7 @@ func TestTestCommands(t *testing.T) {
 		})
 		commits := runtime.CommitsInBranch(domain.NewLocalBranchName("initial"), []string{})
 		assert.Len(t, commits, 1)
-		content := runtime.FileContentInCommit(commits[0].SHA.Location, "hello.txt")
+		content := runtime.FileContentInCommit(commits[0].SHA.Location(), "hello.txt")
 		assert.Equal(t, "hello world", content)
 	})
 

@@ -10,16 +10,24 @@ import (
 // The zero value is an empty local branch name,
 // i.e. a local branch name that is unknown or not configured.
 type LocalBranchName struct {
-	BranchName // a LocalBranchName is a type of BranchName
+	id string
 }
 
-func NewLocalBranchName(value string) LocalBranchName {
-	return LocalBranchName{BranchName{Location{value}}}
+func NewLocalBranchName(id string) LocalBranchName {
+	return LocalBranchName{id}
+}
+
+func (p LocalBranchName) BranchName() BranchName {
+	return BranchName(p)
 }
 
 // IsEmpty indicates whether this branch name is not set.
 func (p LocalBranchName) IsEmpty() bool {
 	return len(p.id) == 0
+}
+
+func (p LocalBranchName) Location() Location {
+	return Location(p)
 }
 
 // MarshalJSON is used when serializing this LocalBranchName to JSON.

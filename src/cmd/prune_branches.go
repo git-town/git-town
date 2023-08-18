@@ -105,7 +105,7 @@ func pruneBranchesStepList(config *pruneBranchesConfig) (runstate.StepList, erro
 		if config.branchDurations.IsPerennialBranch(branchWithDeletedRemote) {
 			result.Append(&steps.RemoveFromPerennialBranchesStep{Branch: branchWithDeletedRemote})
 		}
-		result.Append(&steps.DeleteLocalBranchStep{Branch: branchWithDeletedRemote, Parent: config.mainBranch.Location})
+		result.Append(&steps.DeleteLocalBranchStep{Branch: branchWithDeletedRemote, Parent: config.mainBranch.Location()})
 	}
 	err := result.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     false,
