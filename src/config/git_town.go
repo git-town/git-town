@@ -135,15 +135,6 @@ func (gt *GitTown) MainBranch() domain.LocalBranchName {
 	return domain.NewLocalBranchName(gt.LocalOrGlobalConfigValue(KeyMainBranch))
 }
 
-// MainBranch provides the name of the main branch, or the given default value if none is configured.
-func (gt *GitTown) MainBranchOr(defaultValue string) string {
-	configured := gt.LocalOrGlobalConfigValue(KeyMainBranch)
-	if configured != "" {
-		return configured
-	}
-	return defaultValue
-}
-
 // OriginOverride provides the override for the origin hostname from the Git Town configuration.
 func (gt *GitTown) OriginOverride() string {
 	return gt.LocalConfigValue(KeyCodeHostingOriginHostname)
