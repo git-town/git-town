@@ -79,15 +79,6 @@ func (bs BranchesSyncStatus) LocalBranches() BranchesSyncStatus {
 	return result
 }
 
-// Names provides the names of all branches in this BranchesSyncStatus instance.
-func (bs BranchesSyncStatus) Names() domain.LocalBranchNames {
-	result := make(domain.LocalBranchNames, len(bs))
-	for b, branchSyncStatus := range bs {
-		result[b] = branchSyncStatus.Name
-	}
-	return result
-}
-
 // LocalBranchesWithDeletedTrackingBranches provides only the branches that exist locally and have a deleted tracking branch.
 func (bs BranchesSyncStatus) LocalBranchesWithDeletedTrackingBranches() BranchesSyncStatus {
 	result := BranchesSyncStatus{}
@@ -120,6 +111,15 @@ func (bs BranchesSyncStatus) LookupLocalBranchWithTracking(trackingBranch domain
 		}
 	}
 	return nil
+}
+
+// Names provides the names of all branches in this BranchesSyncStatus instance.
+func (bs BranchesSyncStatus) Names() domain.LocalBranchNames {
+	result := make(domain.LocalBranchNames, len(bs))
+	for b, branchSyncStatus := range bs {
+		result[b] = branchSyncStatus.Name
+	}
+	return result
 }
 
 func (bs BranchesSyncStatus) Remove(branchName domain.LocalBranchName) BranchesSyncStatus {

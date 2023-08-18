@@ -199,7 +199,7 @@ func TestBranches(t *testing.T) {
 		assert.Equal(t, want, have)
 	})
 
-	t.Run("Lookup", func(t *testing.T) {
+	t.Run("LookupLocalBranch", func(t *testing.T) {
 		t.Parallel()
 		branchOne := domain.NewLocalBranchName("one")
 		branchTwo := domain.NewLocalBranchName("two")
