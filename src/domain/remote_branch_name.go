@@ -36,7 +36,7 @@ func (r RemoteBranchName) MarshalJSON() ([]byte, error) {
 	return json.Marshal(r.id)
 }
 
-// Implements the fmt.Stringer interface.
+// Implementation of the fmt.Stringer interface.
 func (r RemoteBranchName) String() string { return r.id }
 
 func (r RemoteBranchName) UnmarshalJSON(b []byte) error {

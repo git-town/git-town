@@ -41,7 +41,7 @@ func (s SHA) MarshalJSON() ([]byte, error) {
 	return json.Marshal(s.id)
 }
 
-// Implements the fmt.Stringer interface.
+// Implementation of the fmt.Stringer interface.
 func (s SHA) String() string { return s.id }
 
 // TruncateTo provides a new SHA instance that contains a shorter checksum.

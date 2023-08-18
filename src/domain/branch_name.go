@@ -10,9 +10,6 @@ type BranchName struct {
 	Location // a BranchName is a type of Location
 }
 
-// Implements the fmt.Stringer interface.
-func (c BranchName) String() string { return c.id }
-
 // IsLocal indicates whether the branch with this BranchName exists locally.
 func (c BranchName) IsLocal() bool {
 	return !strings.HasPrefix(c.id, "origin/")
@@ -30,6 +27,9 @@ func (c BranchName) RemoteName() RemoteBranchName {
 	}
 	return NewRemoteBranchName("origin/" + c.id)
 }
+
+// Implementation of the fmt.Stringer interface.
+func (c BranchName) String() string { return c.id }
 
 func NewBranchName(value string) BranchName {
 	if !isValidBranchName(value) {

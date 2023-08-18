@@ -12,7 +12,7 @@ func (l Location) MarshalJSON() ([]byte, error) {
 	return json.Marshal(l.id)
 }
 
-// Implements the fmt.Stringer interface.
+// Implementation of the fmt.Stringer interface.
 func (l Location) String() string { return l.id }
 
 func (l *Location) UnmarshalJSON(b []byte) error {

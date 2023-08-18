@@ -24,7 +24,7 @@ func (p LocalBranchName) RemoteName() RemoteBranchName {
 	return NewRemoteBranchName("origin/" + p.id)
 }
 
-// Implements the fmt.Stringer interface.
+// Implementation of the fmt.Stringer interface.
 func (p LocalBranchName) String() string { return p.id }
 
 func NewLocalBranchName(value string) LocalBranchName {
