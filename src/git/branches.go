@@ -19,7 +19,7 @@ type BranchSyncStatus struct {
 	// SyncStatus of the branch
 	SyncStatus SyncStatus
 
-	// RemoteName contains the name fully qualified name of the tracking branch, i.e. "origin/foo".
+	// RemoteName contains the fully qualified name of the tracking branch, i.e. "origin/foo".
 	RemoteName domain.RemoteBranchName
 
 	// RemoteSHA contains the SHA of the tracking branch before Git Town ran.
