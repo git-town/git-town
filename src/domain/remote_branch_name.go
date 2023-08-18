@@ -29,7 +29,8 @@ func isValidRemoteBranchName(value string) bool {
 }
 
 func (r RemoteBranchName) LocalBranchName() LocalBranchName {
-	return NewLocalBranchName(strings.TrimPrefix(r.id, "origin/"))
+	parts := strings.SplitN(r.id, "/", 2)
+	return NewLocalBranchName(parts[1])
 }
 
 func (r RemoteBranchName) MarshalJSON() ([]byte, error) {

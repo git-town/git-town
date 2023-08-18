@@ -25,8 +25,15 @@ func TestRemoteBranchName(t *testing.T) {
 	})
 
 	t.Run("LocalBranchName", func(t *testing.T) {
-		branch := domain.NewRemoteBranchName("origin/branch")
-		want := domain.NewLocalBranchName("branch")
-		assert.Equal(t, want, branch.LocalBranchName())
+		t.Run("origin remote", func(t *testing.T) {
+			branch := domain.NewRemoteBranchName("origin/branch")
+			want := domain.NewLocalBranchName("branch")
+			assert.Equal(t, want, branch.LocalBranchName())
+		})
+		t.Run("upstream remote", func(t *testing.T) {
+			branch := domain.NewRemoteBranchName("upstream/branch")
+			want := domain.NewLocalBranchName("branch")
+			assert.Equal(t, want, branch.LocalBranchName())
+		})
 	})
 }
