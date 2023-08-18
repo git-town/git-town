@@ -150,12 +150,7 @@ func (kc killConfig) targetBranchParent() domain.LocalBranchName {
 
 func killStepList(config *killConfig) (runstate.StepList, error) {
 	result := runstate.StepList{}
-	if config.targetBranch.IsLocal() {
-		killFeatureBranch(&result, *config)
-	} else {
-		// user wants us to kill a remote branch
-		result.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch.Name, IsTracking: false, NoPushHook: config.noPushHook})
-	}
+	killFeatureBranch(&result, *config)
 	err := result.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: config.initialBranch != config.targetBranch.Name && config.targetBranch.Name == config.previousBranch && config.hasOpenChanges,
