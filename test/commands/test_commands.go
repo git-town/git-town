@@ -89,8 +89,8 @@ func (r *TestCommands) CreateFile(name, content string) {
 }
 
 // CreatePerennialBranches creates perennial branches with the given names in this repository.
-func (r *TestCommands) CreatePerennialBranches(name ...domain.LocalBranchName) {
-	for _, name := range name {
+func (r *TestCommands) CreatePerennialBranches(names ...domain.LocalBranchName) {
+	for _, name := range names {
 		r.CreateBranch(name, domain.NewLocalBranchName("main"))
 		asserts.NoError(r.Config.AddToPerennialBranches(name))
 	}
