@@ -43,9 +43,6 @@ func (bi BranchSyncStatus) IsLocal() bool {
 
 // RemoteBranch provides the name of the branch at the remote for this BranchSyncStatus.
 func (bi BranchSyncStatus) RemoteBranch() domain.RemoteBranchName {
-	if bi.SyncStatus == SyncStatusRemoteOnly {
-		return domain.NewRemoteBranchName(bi.Name.String())
-	}
 	return bi.RemoteName
 }
 
