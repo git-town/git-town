@@ -275,6 +275,13 @@ func TestBranches(t *testing.T) {
 				RemoteName: domain.RemoteBranchName{},
 				RemoteSHA:  domain.SHA{},
 			},
+			git.BranchSyncStatus{
+				Name:       domain.LocalBranchName{},
+				InitialSHA: domain.SHA{},
+				SyncStatus: git.SyncStatusRemoteOnly,
+				RemoteName: domain.NewRemoteBranchName("origin/three"),
+				RemoteSHA:  domain.SHA{},
+			},
 		}
 		have := bs.Names()
 		want := domain.NewLocalBranchNames("one", "two")

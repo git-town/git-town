@@ -113,11 +113,13 @@ func (bs BranchesSyncStatus) LookupLocalBranchWithTracking(remoteBranch domain.R
 	return nil
 }
 
-// Names provides the names of all branches in this BranchesSyncStatus instance.
+// Names provides the names of all local branches in this BranchesSyncStatus instance.
 func (bs BranchesSyncStatus) Names() domain.LocalBranchNames {
-	result := make(domain.LocalBranchNames, len(bs))
-	for b, branch := range bs {
-		result[b] = branch.Name
+	result := make(domain.LocalBranchNames, 0, len(bs))
+	for _, branch := range bs {
+		if !branch.Name.IsEmpty() {
+			result = append(result, branch.Name)
+		}
 	}
 	return result
 }
