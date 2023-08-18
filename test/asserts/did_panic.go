@@ -6,6 +6,6 @@ import "testing"
 func Paniced(t *testing.T) {
 	t.Helper()
 	if r := recover(); r == nil {
-		t.Errorf("The code did not panic")
+		t.Errorf("The test did not panic")
 	}
 }
