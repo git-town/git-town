@@ -4,9 +4,9 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v9/src/cli"
+	"github.com/git-town/git-town/v9/src/collector"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/spf13/cobra"
@@ -62,7 +62,7 @@ func runConfig(debug bool) error {
 }
 
 func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
-	fc := failure.Collector{}
+	fc := collector.Failure{}
 	branchDurations := run.Config.BranchDurations()
 	deleteOrigin := fc.Bool(run.Config.ShouldShipDeleteOriginBranch())
 	giteaToken := run.Config.GiteaToken()

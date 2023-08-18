@@ -1,10 +1,10 @@
 package cmd
 
 import (
+	"github.com/git-town/git-town/v9/src/collector"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/messages"
@@ -103,7 +103,7 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, run *git.ProdRun
 		return nil, err
 	}
 	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
-	fc := failure.Collector{}
+	fc := collector.Failure{}
 	remotes := fc.Strings(run.Backend.Remotes())
 	mainBranch := run.Config.MainBranch()
 	pushHook := fc.Bool(run.Config.PushHook())

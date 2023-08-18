@@ -3,11 +3,11 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v9/src/collector"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/dialog"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/messages"
@@ -80,7 +80,7 @@ func hack(args []string, promptForParent, debug bool) error {
 }
 
 func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunner) (*appendConfig, error) {
-	fc := failure.Collector{}
+	fc := collector.Failure{}
 	branches := fc.Branches(execute.LoadBranches(run, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	}))

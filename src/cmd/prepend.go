@@ -3,10 +3,10 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v9/src/collector"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
-	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/messages"
@@ -99,7 +99,7 @@ type prependConfig struct {
 }
 
 func determinePrependConfig(args []string, run *git.ProdRunner, isOffline bool) (*prependConfig, error) {
-	fc := failure.Collector{}
+	fc := collector.Failure{}
 	branches := fc.Branches(execute.LoadBranches(run, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	}))
