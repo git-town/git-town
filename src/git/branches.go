@@ -9,6 +9,7 @@ import (
 )
 
 // BranchSyncStatus describes the sync status of a branch in relation to its tracking branch.
+// TODO: rename to BranchInfo and move to domain package.
 type BranchSyncStatus struct {
 	// Name contains the local name of the branch.
 	Name domain.LocalBranchName
