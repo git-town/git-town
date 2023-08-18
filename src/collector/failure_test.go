@@ -1,9 +1,10 @@
-package collector
+package collector_test
 
 import (
 	"errors"
 	"testing"
 
+	"github.com/git-town/git-town/v9/src/collector"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
@@ -15,7 +16,7 @@ func TestFailure(t *testing.T) {
 	t.Run("Bool", func(t *testing.T) {
 		t.Run("returns the given bool value", func(t *testing.T) {
 			t.Parallel()
-			fc := Failure{}
+			fc := collector.Failure{}
 			assert.True(t, fc.Bool(true, nil))
 			assert.False(t, fc.Bool(false, nil))
 			err := errors.New("test error")
@@ -25,7 +26,7 @@ func TestFailure(t *testing.T) {
 
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()
-			fc := Failure{}
+			fc := collector.Failure{}
 			fc.Bool(true, nil)
 			fc.Bool(false, nil)
 			assert.Nil(t, fc.Err)
@@ -38,7 +39,7 @@ func TestFailure(t *testing.T) {
 	t.Run("BranchesSyncStatus", func(t *testing.T) {
 		t.Run("returns the given value", func(t *testing.T) {
 			t.Parallel()
-			fc := Failure{}
+			fc := collector.Failure{}
 			syncStatuses := git.BranchesSyncStatus{
 				{
 					Name:       domain.NewLocalBranchName("branch1"),
@@ -64,7 +65,7 @@ func TestFailure(t *testing.T) {
 
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()
-			fc := Failure{}
+			fc := collector.Failure{}
 			fc.Bool(true, nil)
 			fc.Bool(false, nil)
 			assert.Nil(t, fc.Err)
@@ -77,7 +78,7 @@ func TestFailure(t *testing.T) {
 	t.Run("Check", func(t *testing.T) {
 		t.Parallel()
 		t.Run("captures the first error it receives", func(t *testing.T) {
-			fc := Failure{}
+			fc := collector.Failure{}
 			fc.Check(nil)
 			assert.Nil(t, fc.Err)
 			fc.Check(errors.New("first"))
@@ -85,7 +86,7 @@ func TestFailure(t *testing.T) {
 			assert.Error(t, fc.Err, "first")
 		})
 		t.Run("indicates whether it received an error", func(t *testing.T) {
-			fc := Failure{}
+			fc := collector.Failure{}
 			assert.False(t, fc.Check(nil))
 			assert.True(t, fc.Check(errors.New("")))
 			assert.True(t, fc.Check(nil))
@@ -95,7 +96,7 @@ func TestFailure(t *testing.T) {
 	t.Run("Fail", func(t *testing.T) {
 		t.Parallel()
 		t.Run("registers the given error", func(t *testing.T) {
-			fc := Failure{}
+			fc := collector.Failure{}
 			fc.Fail("failed %s", "reason")
 			assert.Error(t, fc.Err, "failed reason")
 		})
@@ -105,13 +106,13 @@ func TestFailure(t *testing.T) {
 		t.Parallel()
 		t.Run("returns the given HostingService value", func(t *testing.T) {
 			t.Parallel()
-			fc := Failure{}
+			fc := collector.Failure{}
 			assert.Equal(t, config.HostingGitHub, fc.Hosting(config.HostingGitHub, nil))
 			assert.Equal(t, config.HostingGitLab, fc.Hosting(config.HostingGitLab, errors.New("")))
 		})
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()
-			fc := Failure{}
+			fc := collector.Failure{}
 			fc.Hosting(config.HostingNone, nil)
 			assert.Nil(t, fc.Err)
 			fc.Hosting(config.HostingGitHub, errors.New("first"))
@@ -124,13 +125,13 @@ func TestFailure(t *testing.T) {
 		t.Parallel()
 		t.Run("returns the given PullBranchStrategy value", func(t *testing.T) {
 			t.Parallel()
-			fc := Failure{}
+			fc := collector.Failure{}
 			assert.Equal(t, config.PullBranchStrategyMerge, fc.PullBranchStrategy(config.PullBranchStrategyMerge, nil))
 			assert.Equal(t, config.PullBranchStrategyRebase, fc.PullBranchStrategy(config.PullBranchStrategyRebase, errors.New("")))
 		})
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()
-			fc := Failure{}
+			fc := collector.Failure{}
 			fc.PullBranchStrategy(config.PullBranchStrategyMerge, nil)
 			assert.Nil(t, fc.Err)
 			fc.PullBranchStrategy(config.PullBranchStrategyMerge, errors.New("first"))
@@ -143,13 +144,13 @@ func TestFailure(t *testing.T) {
 		t.Parallel()
 		t.Run("returns the given string value", func(t *testing.T) {
 			t.Parallel()
-			fc := Failure{}
+			fc := collector.Failure{}
 			assert.Equal(t, "alpha", fc.String("alpha", nil))
 			assert.Equal(t, "beta", fc.String("beta", errors.New("")))
 		})
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()
-			fc := Failure{}
+			fc := collector.Failure{}
 			fc.String("", nil)
 			assert.Nil(t, fc.Err)
 			fc.String("", errors.New("first"))
@@ -162,13 +163,13 @@ func TestFailure(t *testing.T) {
 		t.Parallel()
 		t.Run("returns the given string slice", func(t *testing.T) {
 			t.Parallel()
-			fc := Failure{}
+			fc := collector.Failure{}
 			assert.Equal(t, []string{"alpha"}, fc.Strings([]string{"alpha"}, nil))
 			assert.Equal(t, []string{"beta"}, fc.Strings([]string{"beta"}, errors.New("")))
 		})
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()
-			fc := Failure{}
+			fc := collector.Failure{}
 			fc.Strings([]string{}, nil)
 			assert.Nil(t, fc.Err)
 			fc.Strings([]string{}, errors.New("first"))
@@ -181,13 +182,13 @@ func TestFailure(t *testing.T) {
 		t.Parallel()
 		t.Run("returns the given SyncStrategy value", func(t *testing.T) {
 			t.Parallel()
-			fc := Failure{}
+			fc := collector.Failure{}
 			assert.Equal(t, config.SyncStrategyMerge, fc.SyncStrategy(config.SyncStrategyMerge, nil))
 			assert.Equal(t, config.SyncStrategyRebase, fc.SyncStrategy(config.SyncStrategyRebase, errors.New("")))
 		})
 		t.Run("captures the first error it receives", func(t *testing.T) {
 			t.Parallel()
-			fc := Failure{}
+			fc := collector.Failure{}
 			fc.SyncStrategy(config.SyncStrategyMerge, nil)
 			assert.Nil(t, fc.Err)
 			fc.SyncStrategy(config.SyncStrategyMerge, errors.New("first"))
