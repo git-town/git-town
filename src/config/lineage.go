@@ -101,9 +101,9 @@ func (l Lineage) Parent(branch domain.LocalBranchName) domain.LocalBranchName {
 // OrderHierarchically sorts the given branches so that ancestor branches come before their descendants
 // and everything is sorted alphabetically.
 func (l Lineage) OrderHierarchically(branches domain.LocalBranchNames) {
-	sort.Slice(branches, func(x, y int) bool {
-		first := branches[x]
-		second := branches[y]
+	sort.Slice(branches, func(a, b int) bool {
+		first := branches[a]
+		second := branches[b]
 		if first.IsEmpty() {
 			return true
 		}
