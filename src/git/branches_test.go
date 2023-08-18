@@ -259,6 +259,7 @@ func TestBranches(t *testing.T) {
 	})
 
 	t.Run("Names", func(t *testing.T) {
+		t.Parallel()
 		bs := git.BranchesSyncStatus{
 			git.BranchSyncStatus{
 				Name:       domain.NewLocalBranchName("one"),
