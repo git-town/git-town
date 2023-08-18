@@ -141,7 +141,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 	if branches.All.HasLocalBranch(newBranchName) {
 		return nil, fmt.Errorf(messages.BranchAlreadyExistsLocally, newBranchName)
 	}
-	if branches.All.HasRemoteBranch(newBranchName) {
+	if branches.All.HasRemoteBranchFor(newBranchName) {
 		return nil, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
 	lineage := run.Config.Lineage()
