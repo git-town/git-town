@@ -37,13 +37,7 @@ func (p LocalBranchName) String() string { return p.id }
 
 // UnmarshalJSON is used when de-serializing JSON into a LocalBranchName.
 func (p *LocalBranchName) UnmarshalJSON(b []byte) error {
-	var t string
-	err := json.Unmarshal(b, &t)
-	if err != nil {
-		return err
-	}
-	p.id = t
-	return nil
+	return json.Unmarshal(b, &p.id)
 }
 
 type LocalBranchNames []LocalBranchName
