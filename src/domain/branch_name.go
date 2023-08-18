@@ -5,10 +5,9 @@ import (
 	"strings"
 )
 
-// BranchName is a branch name as Git Town encounters it. It could be either a LocalBranchName or a RemoteBranchName.
-// Local branches have the BranchName "foo". Remote branches have the BranchName "origin/foo".
+// BranchName is the name of a local or remote Git branch.
 type BranchName struct {
-	Location // a BranchName is a special form of Location
+	Location // a BranchName is a type of Location
 }
 
 // Implements the fmt.Stringer interface.
