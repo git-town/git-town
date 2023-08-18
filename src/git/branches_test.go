@@ -54,7 +54,7 @@ func TestBranches(t *testing.T) {
 		})
 	})
 
-	t.Run("HasRemoteBranchFor", func(t *testing.T) {
+	t.Run("HasMatchingRemoteBranchFor", func(t *testing.T) {
 		t.Parallel()
 		t.Run("has a local branch with a matching remote", func(t *testing.T) {
 			t.Parallel()
