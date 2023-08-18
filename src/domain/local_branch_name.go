@@ -6,15 +6,22 @@ import (
 	"strings"
 )
 
-// LocalBranchName is a dedicated type that represents the name of a Git branch in the local repo.
+// LocalBranchName is the name of a local Git branch.
+// The zero value is an empty branch name, i.e. a branch name that is unknown or not configured.
 type LocalBranchName struct {
-	BranchName // a LocalBranchName is a special form of BranchName
+	BranchName // a LocalBranchName is a type of BranchName
 }
 
+func NewLocalBranchName(value string) LocalBranchName {
+	return LocalBranchName{BranchName{Location{value}}}
+}
+
+// IsEmpty indicates whether this branch name is not set.
 func (p LocalBranchName) IsEmpty() bool {
 	return len(p.id) == 0
 }
 
+// MarshalJSON is used when serializing this LocalBranchName to JSON.
 func (p LocalBranchName) MarshalJSON() ([]byte, error) {
 	return json.Marshal(p.id)
 }
@@ -27,10 +34,7 @@ func (p LocalBranchName) RemoteName() RemoteBranchName {
 // Implementation of the fmt.Stringer interface.
 func (p LocalBranchName) String() string { return p.id }
 
-func NewLocalBranchName(value string) LocalBranchName {
-	return LocalBranchName{BranchName{Location{value}}}
-}
-
+// UnmarshalJSON is used when de-serializing JSON into a LocalBranchName.
 func (p *LocalBranchName) UnmarshalJSON(b []byte) error {
 	var t string
 	err := json.Unmarshal(b, &t)
@@ -51,24 +55,19 @@ func NewLocalBranchNames(names ...string) LocalBranchNames {
 	return result
 }
 
-func (l LocalBranchNames) BranchNames() []BranchName {
-	result := make([]BranchName, len(l))
-	for l, localBranchName := range l {
-		result[l] = localBranchName.BranchName
-	}
-	return result
-}
-
+// Join provides the names of all branches in this collection connected by the given separator.
 func (l LocalBranchNames) Join(sep string) string {
 	return strings.Join(l.Strings(), sep)
 }
 
+// Sort orders the branches in this collection alphabetically.
 func (l LocalBranchNames) Sort() {
 	sort.Slice(l, func(i, j int) bool {
 		return l[i].id < l[j].id
 	})
 }
 
+// Strings provides the names of all branches in this collection as strings.
 func (l LocalBranchNames) Strings() []string {
 	result := make([]string, len(l))
 	for b, branch := range l {
