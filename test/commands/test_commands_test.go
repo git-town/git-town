@@ -301,6 +301,22 @@ func TestTestCommands(t *testing.T) {
 		assert.True(t, res)
 	})
 
+	t.Run(".LocalBranchesMainFirst()", func(t *testing.T) {
+		t.Parallel()
+		origin := testruntime.Create(t)
+		repoDir := t.TempDir()
+		runner := testruntime.Clone(origin.TestRunner, repoDir)
+		initial := domain.NewLocalBranchName("initial")
+		runner.CreateBranch(domain.NewLocalBranchName("b1"), initial)
+		runner.CreateBranch(domain.NewLocalBranchName("b2"), initial)
+		origin.CreateBranch(domain.NewLocalBranchName("b3"), initial)
+		runner.Fetch()
+		branches, err := runner.LocalBranchesMainFirst(initial)
+		assert.NoError(t, err)
+		want := domain.NewLocalBranchNames("initial", "b1", "b2")
+		assert.Equal(t, want, branches)
+	})
+
 	t.Run(".PushBranchToRemote()", func(t *testing.T) {
 		t.Parallel()
 		dev := testruntime.Create(t)
