@@ -224,7 +224,8 @@ func TestBranches(t *testing.T) {
 					RemoteSHA:  domain.SHA{},
 				},
 			}
-			assert.Nil(t, bs.LookupLocalBranch(domain.NewLocalBranchName("kg/one")))
+			have := bs.LookupLocalBranch(domain.NewLocalBranchName("kg/one"))
+			assert.Nil(t, have)
 		})
 	})
 
