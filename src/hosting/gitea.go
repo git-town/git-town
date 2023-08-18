@@ -40,7 +40,7 @@ func (c *GiteaConnector) FindProposal(branch, target domain.LocalBranchName) (*P
 	return &Proposal{
 		CanMergeWithAPI: pullRequest.Mergeable,
 		Number:          int(pullRequest.Index),
-		Target:          pullRequest.Base.Ref,
+		Target:          domain.NewLocalBranchName(pullRequest.Base.Ref),
 		Title:           pullRequest.Title,
 	}, nil
 }

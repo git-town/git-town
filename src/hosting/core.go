@@ -66,7 +66,7 @@ type Proposal struct {
 	Number int
 
 	// name of the target branch ("base") of this proposal
-	Target string
+	Target domain.LocalBranchName
 
 	// textual title of the proposal
 	Title string

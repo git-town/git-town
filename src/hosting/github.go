@@ -146,7 +146,7 @@ func GetGitHubAPIToken(gitConfig gitTownConfig) string {
 func parsePullRequest(pullRequest *github.PullRequest) Proposal {
 	return Proposal{
 		Number:          pullRequest.GetNumber(),
-		Target:          pullRequest.Base.GetRef(),
+		Target:          domain.NewLocalBranchName(pullRequest.Base.GetRef()),
 		Title:           pullRequest.GetTitle(),
 		CanMergeWithAPI: pullRequest.GetMergeableState() == "clean",
 	}

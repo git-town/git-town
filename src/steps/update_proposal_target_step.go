@@ -13,7 +13,7 @@ import (
 type UpdateProposalTargetStep struct {
 	ProposalNumber int
 	NewTarget      domain.LocalBranchName
-	ExistingTarget string
+	ExistingTarget domain.LocalBranchName
 	EmptyStep
 }
 
@@ -28,8 +28,8 @@ func (step *UpdateProposalTargetStep) CreateAbortStep() Step {
 func (step *UpdateProposalTargetStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
 	return []Step{&UpdateProposalTargetStep{
 		ProposalNumber: step.ProposalNumber,
-		NewTarget:      domain.NewLocalBranchName(step.ExistingTarget),
-		ExistingTarget: step.NewTarget.String(),
+		NewTarget:      step.ExistingTarget,
+		ExistingTarget: step.NewTarget,
 	}}, nil
 }
 
