@@ -127,6 +127,7 @@ func (bs BranchesSyncStatus) LocalBranchesWithDeletedTrackingBranches() Branches
 }
 
 // LookupLocalBranch provides the branch with the given name if one exists.
+// TODO: rename to FindLocalBranch.
 func (bs BranchesSyncStatus) LookupLocalBranch(branchName domain.LocalBranchName) *BranchSyncStatus {
 	for bi, branch := range bs {
 		if branch.Name == branchName {
@@ -138,6 +139,7 @@ func (bs BranchesSyncStatus) LookupLocalBranch(branchName domain.LocalBranchName
 
 // LookupLocalBranchWithTracking provides the local branch that has the given branch as its tracking branch
 // or nil if no such branch exists.
+// TODO: rename to FindLocalBranchWithTracking.
 func (bs BranchesSyncStatus) LookupLocalBranchWithTracking(trackingBranch domain.RemoteBranchName) *BranchSyncStatus {
 	for b, branch := range bs {
 		if branch.RemoteName == trackingBranch {
