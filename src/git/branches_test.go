@@ -93,7 +93,7 @@ func TestBranches(t *testing.T) {
 					TrackingSHA:  domain.SHA{},
 				},
 			}
-			assert.True(t, bs.ContainsLocalBranch(domain.NewLocalBranchName("one")))
+			assert.True(t, bs.HasLocalBranch(domain.NewLocalBranchName("one")))
 		})
 		t.Run("has a remote branch with that name", func(t *testing.T) {
 			t.Parallel()
@@ -106,7 +106,7 @@ func TestBranches(t *testing.T) {
 					TrackingSHA:  domain.SHA{},
 				},
 			}
-			assert.False(t, bs.ContainsLocalBranch(domain.NewLocalBranchName("one")))
+			assert.False(t, bs.HasLocalBranch(domain.NewLocalBranchName("one")))
 		})
 		t.Run("has a local branch with a matching tracking branch", func(t *testing.T) {
 			t.Parallel()
@@ -119,7 +119,7 @@ func TestBranches(t *testing.T) {
 					TrackingSHA:  domain.SHA{},
 				},
 			}
-			assert.False(t, bs.ContainsLocalBranch(domain.NewLocalBranchName("one")))
+			assert.False(t, bs.HasLocalBranch(domain.NewLocalBranchName("one")))
 		})
 	})
 
@@ -283,9 +283,9 @@ func TestBranches(t *testing.T) {
 				TrackingSHA:  domain.SHA{},
 			},
 		}
-		assert.Equal(t, branchOne, bs.Lookup(branchOne).Name)
-		assert.Equal(t, branchTwo, bs.Lookup(branchTwo).Name)
-		assert.Nil(t, bs.Lookup(domain.NewLocalBranchName("zonk")))
+		assert.Equal(t, branchOne, bs.LookupLocalBranch(branchOne).Name)
+		assert.Equal(t, branchTwo, bs.LookupLocalBranch(branchTwo).Name)
+		assert.Nil(t, bs.LookupLocalBranch(domain.NewLocalBranchName("zonk")))
 	})
 
 	t.Run("LookupLocalBranchWithTracking", func(t *testing.T) {

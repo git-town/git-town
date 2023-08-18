@@ -107,10 +107,10 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 	shouldNewBranchPush := fc.Bool(run.Config.ShouldNewBranchPush())
 	isOffline := fc.Bool(run.Config.IsOffline())
 	pushHook := fc.Bool(run.Config.PushHook())
-	if branches.All.ContainsLocalBranch(targetBranch) {
+	if branches.All.HasLocalBranch(targetBranch) {
 		return nil, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
-	if branches.All.KnowsRemoteBranch(targetBranch) {
+	if branches.All.HasRemoteBranch(targetBranch) {
 		return nil, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	branchNamesToSync := lineage.BranchesAndAncestors(domain.LocalBranchNames{parentBranch})

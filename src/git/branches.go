@@ -64,7 +64,7 @@ type BranchesSyncStatus []BranchSyncStatus
 
 // IsKnown indicates whether the given branch is already known to this BranchesSyncStatus instance,
 // either as a local or tracking branch.
-func (bs BranchesSyncStatus) ContainsLocalBranch(localBranch domain.LocalBranchName) bool {
+func (bs BranchesSyncStatus) HasLocalBranch(localBranch domain.LocalBranchName) bool {
 	for _, branch := range bs {
 		if branch.Name == localBranch {
 			return true
@@ -74,7 +74,7 @@ func (bs BranchesSyncStatus) ContainsLocalBranch(localBranch domain.LocalBranchN
 }
 
 // IsKnown indicates whether the given local branch is already known on the remote.
-func (bs BranchesSyncStatus) KnowsRemoteBranch(branchName domain.LocalBranchName) bool {
+func (bs BranchesSyncStatus) HasRemoteBranch(branchName domain.LocalBranchName) bool {
 	remoteName := branchName.RemoteName()
 	for _, branch := range bs {
 		if branch.TrackingName == remoteName {
@@ -125,8 +125,8 @@ func (bs BranchesSyncStatus) LocalBranchesWithDeletedTrackingBranches() Branches
 	return result
 }
 
-// Lookup provides the branch with the given name if one exists.
-func (bs BranchesSyncStatus) Lookup(branchName domain.LocalBranchName) *BranchSyncStatus {
+// LookupLocalBranch provides the branch with the given name if one exists.
+func (bs BranchesSyncStatus) LookupLocalBranch(branchName domain.LocalBranchName) *BranchSyncStatus {
 	for bi, branch := range bs {
 		if branch.Name == branchName {
 			return &bs[bi]
@@ -156,10 +156,11 @@ func (bs BranchesSyncStatus) Remove(branchName domain.LocalBranchName) BranchesS
 	return result
 }
 
+// Select provides the BranchSyncStatus elements with the given names.
 func (bs BranchesSyncStatus) Select(names []domain.LocalBranchName) (BranchesSyncStatus, error) {
 	result := make(BranchesSyncStatus, len(names))
 	for n, name := range names {
-		branch := bs.Lookup(name)
+		branch := bs.LookupLocalBranch(name)
 		if branch == nil {
 			return result, fmt.Errorf(messages.BranchDoesntExist, name)
 		}

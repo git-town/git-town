@@ -437,8 +437,8 @@ func (bc *BackendCommands) Remotes() (config.Remotes, error) {
 // RemoveOutdatedConfiguration removes outdated Git Town configuration.
 func (bc *BackendCommands) RemoveOutdatedConfiguration(allBranches BranchesSyncStatus) error {
 	for child, parent := range bc.Config.Lineage() {
-		hasChildBranch := allBranches.ContainsLocalBranch(child)
-		hasParentBranch := allBranches.ContainsLocalBranch(parent)
+		hasChildBranch := allBranches.HasLocalBranch(child)
+		hasParentBranch := allBranches.HasLocalBranch(parent)
 		if !hasChildBranch || !hasParentBranch {
 			// TODO
 			err := bc.Config.RemoveParent(child)

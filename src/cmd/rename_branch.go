@@ -130,7 +130,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 	if oldBranchName == newBranchName {
 		return nil, fmt.Errorf(messages.RenameToSameName)
 	}
-	oldBranch := branches.All.Lookup(oldBranchName)
+	oldBranch := branches.All.LookupLocalBranch(oldBranchName)
 	if oldBranch == nil {
 		// TODO: extract these error messages to constants because this one here is reused in several places
 		return nil, fmt.Errorf(messages.BranchDoesntExist, oldBranchName)
@@ -138,10 +138,10 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 	if oldBranch.SyncStatus != git.SyncStatusUpToDate {
 		return nil, fmt.Errorf(messages.RenameBranchNotInSync, oldBranchName)
 	}
-	if branches.All.ContainsLocalBranch(newBranchName) {
+	if branches.All.HasLocalBranch(newBranchName) {
 		return nil, fmt.Errorf(messages.BranchAlreadyExistsLocally, newBranchName)
 	}
-	if branches.All.KnowsRemoteBranch(newBranchName) {
+	if branches.All.HasRemoteBranch(newBranchName) {
 		return nil, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
 	lineage := run.Config.Lineage()

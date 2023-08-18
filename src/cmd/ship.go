@@ -156,7 +156,7 @@ func determineShipConfig(args []string, run *git.ProdRunner, isOffline bool) (*s
 	}
 	mainBranch := run.Config.MainBranch()
 	branchNameToShip := domain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
-	branchToShip := branches.All.Lookup(branchNameToShip)
+	branchToShip := branches.All.LookupLocalBranch(branchNameToShip)
 	isShippingInitialBranch := branchNameToShip == branches.Initial
 	syncStrategy, err := run.Config.SyncStrategy()
 	if err != nil {
@@ -201,7 +201,7 @@ func determineShipConfig(args []string, run *git.ProdRunner, isOffline bool) (*s
 	if targetBranchName.IsEmpty() {
 		panic(fmt.Sprintf("branch %q unexpectedly has no parent", targetBranchName))
 	}
-	targetBranch := branches.All.Lookup(targetBranchName)
+	targetBranch := branches.All.LookupLocalBranch(targetBranchName)
 	if targetBranch == nil {
 		return nil, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
