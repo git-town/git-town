@@ -40,11 +40,5 @@ func (r RemoteBranchName) MarshalJSON() ([]byte, error) {
 func (r RemoteBranchName) String() string { return r.id }
 
 func (r RemoteBranchName) UnmarshalJSON(b []byte) error {
-	var t string
-	err := json.Unmarshal(b, &t)
-	if err != nil {
-		return err
-	}
-	r.id = t
-	return nil
+	return json.Unmarshal(b, &r.id)
 }
