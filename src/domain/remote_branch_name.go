@@ -28,6 +28,7 @@ func isValidRemoteBranchName(value string) bool {
 	return true
 }
 
+// LocalBranchName provides the name of the local branch that this remote branch tracks.
 func (r RemoteBranchName) LocalBranchName() LocalBranchName {
 	parts := strings.SplitN(r.id, "/", 2)
 	return NewLocalBranchName(parts[1])
