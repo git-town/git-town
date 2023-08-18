@@ -42,18 +42,18 @@ func TestCollector(t *testing.T) {
 			fc := failure.Collector{}
 			syncStatuses := git.BranchesSyncStatus{
 				{
-					Name:         domain.NewLocalBranchName("branch1"),
-					InitialSHA:   domain.SHA{},
-					SyncStatus:   git.SyncStatusLocalOnly,
-					TrackingName: domain.RemoteBranchName{},
-					TrackingSHA:  domain.SHA{},
+					Name:       domain.NewLocalBranchName("branch1"),
+					InitialSHA: domain.SHA{},
+					SyncStatus: git.SyncStatusLocalOnly,
+					RemoteName: domain.RemoteBranchName{},
+					RemoteSHA:  domain.SHA{},
 				},
 				{
-					Name:         domain.NewLocalBranchName("branch2"),
-					InitialSHA:   domain.SHA{},
-					SyncStatus:   git.SyncStatusLocalOnly,
-					TrackingName: domain.RemoteBranchName{},
-					TrackingSHA:  domain.SHA{},
+					Name:       domain.NewLocalBranchName("branch2"),
+					InitialSHA: domain.SHA{},
+					SyncStatus: git.SyncStatusLocalOnly,
+					RemoteName: domain.RemoteBranchName{},
+					RemoteSHA:  domain.SHA{},
 				},
 			}
 			have := fc.BranchesSyncStatus(syncStatuses, nil)

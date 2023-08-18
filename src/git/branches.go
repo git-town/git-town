@@ -19,11 +19,11 @@ type BranchSyncStatus struct {
 	// SyncStatus of the branch
 	SyncStatus SyncStatus
 
-	// TrackingName contains the name fully qualified name of the tracking branch, i.e. "origin/foo".
-	TrackingName domain.RemoteBranchName
+	// RemoteName contains the name fully qualified name of the tracking branch, i.e. "origin/foo".
+	RemoteName domain.RemoteBranchName
 
-	// TrackingSHA contains the SHA of the tracking branch before Git Town ran.
-	TrackingSHA domain.SHA
+	// RemoteSHA contains the SHA of the tracking branch before Git Town ran.
+	RemoteSHA domain.SHA
 }
 
 func (bi BranchSyncStatus) HasTrackingBranch() bool {
@@ -46,7 +46,7 @@ func (bi BranchSyncStatus) RemoteBranch() domain.RemoteBranchName {
 	if bi.SyncStatus == SyncStatusRemoteOnly {
 		return domain.NewRemoteBranchName(bi.Name.String())
 	}
-	return bi.TrackingName
+	return bi.RemoteName
 }
 
 // BranchesSyncStatus contains the BranchesSyncStatus for all branches in a repo.
@@ -77,7 +77,7 @@ func (bs BranchesSyncStatus) HasLocalBranch(localBranch domain.LocalBranchName) 
 func (bs BranchesSyncStatus) HasRemoteBranch(branchName domain.LocalBranchName) bool {
 	remoteName := branchName.RemoteName()
 	for _, branch := range bs {
-		if branch.TrackingName == remoteName {
+		if branch.RemoteName == remoteName {
 			return true
 		}
 	}
@@ -88,7 +88,7 @@ func (bs BranchesSyncStatus) HasRemoteBranch(branchName domain.LocalBranchName) 
 func (bs BranchesSyncStatus) HasRemoteOnlyBranch(branchName domain.LocalBranchName) bool {
 	remoteName := branchName.RemoteName()
 	for _, branch := range bs {
-		if branch.SyncStatus == SyncStatusRemoteOnly && branch.TrackingName == remoteName {
+		if branch.SyncStatus == SyncStatusRemoteOnly && branch.RemoteName == remoteName {
 			return true
 		}
 	}
@@ -140,7 +140,7 @@ func (bs BranchesSyncStatus) LookupLocalBranch(branchName domain.LocalBranchName
 // or nil if no such branch exists.
 func (bs BranchesSyncStatus) LookupLocalBranchWithTracking(trackingBranch domain.RemoteBranchName) *BranchSyncStatus {
 	for b, branch := range bs {
-		if branch.TrackingName == trackingBranch {
+		if branch.RemoteName == trackingBranch {
 			return &bs[b]
 		}
 	}
