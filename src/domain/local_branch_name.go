@@ -43,6 +43,14 @@ func (p *LocalBranchName) UnmarshalJSON(b []byte) error {
 
 type LocalBranchNames []LocalBranchName
 
+func NewLocalBranchNames(names ...string) LocalBranchNames {
+	result := make(LocalBranchNames, len(names))
+	for n, name := range names {
+		result[n] = NewLocalBranchName(name)
+	}
+	return result
+}
+
 func (l LocalBranchNames) BranchNames() []BranchName {
 	result := make([]BranchName, len(l))
 	for l, localBranchName := range l {
@@ -65,15 +73,6 @@ func (l LocalBranchNames) Strings() []string {
 	result := make([]string, len(l))
 	for b, branch := range l {
 		result[b] = branch.String()
-	}
-	return result
-}
-
-// TODO: rename to NewLocalBranchNames.
-func LocalBranchNamesFrom(names ...string) LocalBranchNames {
-	result := make(LocalBranchNames, len(names))
-	for n, name := range names {
-		result[n] = NewLocalBranchName(name)
 	}
 	return result
 }

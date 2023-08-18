@@ -129,7 +129,7 @@ func TestBackendCommands(t *testing.T) {
 		runner.Fetch()
 		branches, err := runner.Backend.LocalBranchesMainFirst(domain.NewLocalBranchName("initial"))
 		assert.NoError(t, err)
-		want := domain.LocalBranchNamesFrom("initial", "b1", "b2")
+		want := domain.NewLocalBranchNames("initial", "b1", "b2")
 		assert.Equal(t, want, branches)
 	})
 

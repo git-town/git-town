@@ -50,8 +50,8 @@ type ScenarioState struct {
 // Reset restores the null value of this ScenarioState.
 func (state *ScenarioState) Reset(gitEnv fixture.Fixture) {
 	state.fixture = gitEnv
-	state.initialLocalBranches = domain.LocalBranchNamesFrom("main")
-	state.initialRemoteBranches = domain.LocalBranchNamesFrom("main")
+	state.initialLocalBranches = domain.NewLocalBranchNames("main")
+	state.initialRemoteBranches = domain.NewLocalBranchNames("main")
 	state.initialCommits = nil
 	state.initialBranchHierarchy = datatable.DataTable{Cells: [][]string{{"BRANCH", "PARENT"}}}
 	state.initialCurrentBranch = domain.LocalBranchName{}

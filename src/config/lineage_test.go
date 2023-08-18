@@ -44,7 +44,7 @@ func TestLineage(t *testing.T) {
 		lineage := config.Lineage{}
 		lineage[one] = main
 		have := lineage.BranchAndAncestors(one)
-		want := domain.LocalBranchNamesFrom("main", "one")
+		want := domain.NewLocalBranchNames("main", "one")
 		assert.Equal(t, want, have)
 	})
 
