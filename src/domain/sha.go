@@ -38,15 +38,15 @@ func validateSHA(content string) bool {
 }
 
 func (s SHA) MarshalJSON() ([]byte, error) {
-	return json.Marshal(s.value)
+	return json.Marshal(s.id)
 }
 
 // Implements the fmt.Stringer interface.
-func (s SHA) String() string { return s.value }
+func (s SHA) String() string { return s.id }
 
 // TruncateTo provides a new SHA instance that contains a shorter checksum.
 func (s SHA) TruncateTo(newLength int) SHA {
-	return NewSHA(s.value[0:newLength])
+	return NewSHA(s.id[0:newLength])
 }
 
 func (s *SHA) UnmarshalJSON(b []byte) error {
@@ -55,6 +55,6 @@ func (s *SHA) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
-	s.value = t
+	s.id = t
 	return nil
 }

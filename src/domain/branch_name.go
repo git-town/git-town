@@ -12,24 +12,24 @@ type BranchName struct {
 }
 
 // Implements the fmt.Stringer interface.
-func (c BranchName) String() string { return c.value }
+func (c BranchName) String() string { return c.id }
 
 // IsLocal indicates whether the branch with this BranchName exists locally.
 func (c BranchName) IsLocal() bool {
-	return !strings.HasPrefix(c.value, "origin/")
+	return !strings.HasPrefix(c.id, "origin/")
 }
 
 // LocalName provides the name that a branch with the given BranchName would have if it was local.
 func (c BranchName) LocalName() LocalBranchName {
-	return NewLocalBranchName(strings.TrimPrefix(c.value, "origin/"))
+	return NewLocalBranchName(strings.TrimPrefix(c.id, "origin/"))
 }
 
 // RemoteName provides the name that a branch with the given BranchName would have if it was remote.
 func (c BranchName) RemoteName() RemoteBranchName {
-	if strings.HasPrefix(c.value, "origin/") {
-		return NewRemoteBranchName(c.value)
+	if strings.HasPrefix(c.id, "origin/") {
+		return NewRemoteBranchName(c.id)
 	}
-	return NewRemoteBranchName("origin/" + c.value)
+	return NewRemoteBranchName("origin/" + c.id)
 }
 
 func NewBranchName(value string) BranchName {
@@ -48,7 +48,7 @@ type BranchNames []BranchName
 func (b BranchNames) Strings() []string {
 	result := make([]string, len(b))
 	for b, branch := range b {
-		result[b] = branch.value
+		result[b] = branch.id
 	}
 	return result
 }

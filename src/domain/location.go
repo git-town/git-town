@@ -5,15 +5,15 @@ import "encoding/json"
 // Location describes a location within a Git repo.
 // This could be either a branch or a SHA.
 type Location struct {
-	value string // TODO: rename to id
+	id string // TODO: rename to id
 }
 
 func (l Location) MarshalJSON() ([]byte, error) {
-	return json.Marshal(l.value)
+	return json.Marshal(l.id)
 }
 
 // Implements the fmt.Stringer interface.
-func (l Location) String() string { return l.value }
+func (l Location) String() string { return l.id }
 
 func (l *Location) UnmarshalJSON(b []byte) error {
 	var t string
@@ -21,6 +21,6 @@ func (l *Location) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
-	l.value = t
+	l.id = t
 	return nil
 }

@@ -12,20 +12,20 @@ type LocalBranchName struct {
 }
 
 func (p LocalBranchName) IsEmpty() bool {
-	return len(p.value) == 0
+	return len(p.id) == 0
 }
 
 func (p LocalBranchName) MarshalJSON() ([]byte, error) {
-	return json.Marshal(p.value)
+	return json.Marshal(p.id)
 }
 
 // RemoteName provides the name of the tracking branch for this local branch.
 func (p LocalBranchName) RemoteName() RemoteBranchName {
-	return NewRemoteBranchName("origin/" + p.value)
+	return NewRemoteBranchName("origin/" + p.id)
 }
 
 // Implements the fmt.Stringer interface.
-func (p LocalBranchName) String() string { return p.value }
+func (p LocalBranchName) String() string { return p.id }
 
 func NewLocalBranchName(value string) LocalBranchName {
 	return LocalBranchName{BranchName{Location{value}}}
@@ -37,7 +37,7 @@ func (p *LocalBranchName) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
-	p.value = t
+	p.id = t
 	return nil
 }
 
@@ -57,7 +57,7 @@ func (l LocalBranchNames) Join(sep string) string {
 
 func (l LocalBranchNames) Sort() {
 	sort.Slice(l, func(i, j int) bool {
-		return l[i].value < l[j].value
+		return l[i].id < l[j].id
 	})
 }
 

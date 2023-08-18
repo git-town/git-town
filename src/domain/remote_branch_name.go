@@ -29,15 +29,15 @@ func isValidRemoteBranchName(value string) bool {
 }
 
 func (r RemoteBranchName) LocalBranchName() LocalBranchName {
-	return NewLocalBranchName(strings.TrimPrefix(r.value, "origin/"))
+	return NewLocalBranchName(strings.TrimPrefix(r.id, "origin/"))
 }
 
 func (r RemoteBranchName) MarshalJSON() ([]byte, error) {
-	return json.Marshal(r.value)
+	return json.Marshal(r.id)
 }
 
 // Implements the fmt.Stringer interface.
-func (r RemoteBranchName) String() string { return r.value }
+func (r RemoteBranchName) String() string { return r.id }
 
 func (r RemoteBranchName) UnmarshalJSON(b []byte) error {
 	var t string
@@ -45,6 +45,6 @@ func (r RemoteBranchName) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
-	r.value = t
+	r.id = t
 	return nil
 }
