@@ -112,10 +112,6 @@ func determinePrependConfig(args []string, run *git.ProdRunner, isOffline bool) 
 	syncStrategy := fc.SyncStrategy(run.Config.SyncStrategy())
 	pullBranchStrategy := fc.PullBranchStrategy(run.Config.PullBranchStrategy())
 	shouldSyncUpstream := fc.Bool(run.Config.ShouldSyncUpstream())
-	// TODO: use fc all the way to the end
-	if fc.Err != nil {
-		return nil, fc.Err
-	}
 	targetBranch := domain.NewLocalBranchName(args[0])
 	if branches.All.HasLocalBranch(targetBranch) {
 		return nil, fmt.Errorf(messages.BranchAlreadyExistsLocally, targetBranch)
@@ -127,22 +123,19 @@ func determinePrependConfig(args []string, run *git.ProdRunner, isOffline bool) 
 		return nil, fmt.Errorf(messages.SetParentNoFeatureBranch, branches.Initial)
 	}
 	lineage := run.Config.Lineage()
-	updated, err := validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
+	updated := fc.Bool(validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
 		DefaultBranch:   mainBranch,
 		Backend:         &run.Backend,
 		AllBranches:     branches.All,
 		Lineage:         lineage,
 		BranchDurations: branches.Durations,
 		MainBranch:      mainBranch,
-	})
-	if err != nil {
-		return nil, err
-	}
+	}))
 	if updated {
 		lineage = run.Config.Lineage()
 	}
 	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
-	branchesToSync, err := branches.All.Select(branchNamesToSync)
+	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
 	return &prependConfig{
 		branchDurations:     branches.Durations,
 		branchesToSync:      branchesToSync,
@@ -160,7 +153,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner, isOffline bool) 
 		shouldSyncUpstream:  shouldSyncUpstream,
 		syncStrategy:        syncStrategy,
 		targetBranch:        targetBranch,
-	}, err
+	}, fc.Err
 }
 
 func prependStepList(config *prependConfig) (runstate.StepList, error) {
