@@ -47,6 +47,9 @@ func (s SHA) String() string { return s.id }
 
 // TruncateTo provides a new SHA instance that contains a shorter checksum.
 func (s SHA) TruncateTo(newLength int) SHA {
+	if len(s.id) < newLength {
+		return s
+	}
 	return NewSHA(s.id[0:newLength])
 }
 
