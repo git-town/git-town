@@ -26,7 +26,7 @@ func (step *DeleteOriginBranchStep) Run(run *git.ProdRunner, _ hosting.Connector
 	if !step.IsTracking {
 		trackingBranch := domain.NewRemoteBranchName("origin/" + step.Branch.String()) // TODO: inject git.Branches somehow and look the name of the actual tracking brach in it
 		var err error
-		step.branchSha, err = run.Backend.ShaForRemoteBranch(trackingBranch)
+		step.branchSha, err = run.Backend.ShaForBranch(trackingBranch.BranchName)
 		if err != nil {
 			return err
 		}

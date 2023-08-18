@@ -221,7 +221,7 @@ func determineShipConfig(args []string, run *git.ProdRunner, isOffline bool) (*s
 	}
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		HostingService:  hostingService,
-		GetShaForBranch: run.Backend.ShaForLocalBranch,
+		GetShaForBranch: run.Backend.ShaForBranch,
 		OriginURL:       originURL,
 		GiteaAPIToken:   run.Config.GiteaToken(),
 		GithubAPIToken:  run.Config.GitHubToken(),

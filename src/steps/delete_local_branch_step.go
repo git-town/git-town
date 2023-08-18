@@ -22,7 +22,7 @@ func (step *DeleteLocalBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]St
 
 func (step *DeleteLocalBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
 	var err error
-	step.branchSha, err = run.Backend.ShaForLocalBranch(step.Branch)
+	step.branchSha, err = run.Backend.ShaForBranch(step.Branch.BranchName)
 	if err != nil {
 		return err
 	}

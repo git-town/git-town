@@ -55,7 +55,7 @@ func (c *BitbucketConnector) HostingServiceName() string {
 
 func (c *BitbucketConnector) NewProposalURL(branch, parentBranch domain.LocalBranchName) (string, error) {
 	query := url.Values{}
-	branchSha, err := c.getShaForBranch(branch)
+	branchSha, err := c.getShaForBranch(branch.BranchName)
 	if err != nil {
 		return "", fmt.Errorf(messages.ProposalURLProblem, branch, parentBranch, err)
 	}

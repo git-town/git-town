@@ -280,7 +280,7 @@ func (bc *BackendCommands) currentBranchDuringRebase() (domain.LocalBranchName, 
 
 // CurrentSha provides the SHA of the currently checked out branch/commit.
 func (bc *BackendCommands) CurrentSha() (domain.SHA, error) {
-	return bc.ShaForLocalBranch(domain.NewLocalBranchName("HEAD"))
+	return bc.ShaForBranch(domain.NewBranchName("HEAD"))
 }
 
 // ExpectedPreviouslyCheckedOutBranch returns what is the expected previously checked out branch
@@ -461,17 +461,7 @@ func (bc *BackendCommands) RootDirectory() string {
 }
 
 // ShaForBranch provides the SHA for the local branch with the given name.
-func (bc *BackendCommands) ShaForLocalBranch(name domain.LocalBranchName) (domain.SHA, error) {
-	output, err := bc.QueryTrim("git", "rev-parse", name.String())
-	if err != nil {
-		return domain.SHA{}, fmt.Errorf(messages.BranchLocalShaProblem, name, err)
-	}
-	return domain.NewSHA(output), nil
-}
-
-// ShaForBranch provides the SHA for the local branch with the given name.
-// TODO: replace usages of this function with git.Branches.
-func (bc *BackendCommands) ShaForRemoteBranch(name domain.RemoteBranchName) (domain.SHA, error) {
+func (bc *BackendCommands) ShaForBranch(name domain.BranchName) (domain.SHA, error) {
 	output, err := bc.QueryTrim("git", "rev-parse", name.String())
 	if err != nil {
 		return domain.SHA{}, fmt.Errorf(messages.BranchLocalShaProblem, name, err)

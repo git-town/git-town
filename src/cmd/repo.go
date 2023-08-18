@@ -79,7 +79,7 @@ func determineRepoConfig(run *git.ProdRunner) (*repoConfig, error) {
 	mainBranch := run.Config.MainBranch()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		HostingService:  hostingService,
-		GetShaForBranch: run.Backend.ShaForLocalBranch,
+		GetShaForBranch: run.Backend.ShaForBranch,
 		OriginURL:       originURL,
 		GiteaAPIToken:   run.Config.GiteaToken(),
 		GithubAPIToken:  run.Config.GitHubToken(),

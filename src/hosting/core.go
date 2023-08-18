@@ -100,7 +100,7 @@ type gitTownConfig interface {
 	OriginURL() *giturl.Parts
 }
 
-type ShaForBranchFunc func(domain.LocalBranchName) (domain.SHA, error)
+type ShaForBranchFunc func(domain.BranchName) (domain.SHA, error)
 
 // NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
 func NewConnector(args NewConnectorArgs) (Connector, error) {
