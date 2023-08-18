@@ -92,8 +92,8 @@ func (r *TestCommands) CreateFile(name, content string) {
 func (r *TestCommands) CreatePerennialBranches(names ...domain.LocalBranchName) {
 	for _, name := range names {
 		r.CreateBranch(name, domain.NewLocalBranchName("main"))
-		asserts.NoError(r.Config.AddToPerennialBranches(name))
 	}
+	asserts.NoError(r.Config.AddToPerennialBranches(names...))
 }
 
 // CreateStandaloneTag creates a tag not on a branch.
