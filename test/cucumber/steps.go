@@ -495,9 +495,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.fixture.DevRepo.Config.SetOffline(true)
 	})
 
-	suite.Step(`^origin deletes the "([^"]*)" branch$`, func(name string) error {
-		state.initialRemoteBranches = slice.Remove(state.initialRemoteBranches, domain.NewLocalBranchName(name))
-		state.fixture.OriginRepo.RemoveBranch(name)
+	suite.Step(`^origin deletes the "([^"]*)" branch$`, func(branch string) error {
+		state.initialRemoteBranches = slice.Remove(state.initialRemoteBranches, domain.NewLocalBranchName(branch))
+		state.fixture.OriginRepo.RemoveBranch(domain.NewLocalBranchName(branch))
 		return nil
 	})
 

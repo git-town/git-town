@@ -47,7 +47,7 @@ func TestTestCommands(t *testing.T) {
 			FileContent: "hello again",
 			Message:     "second commit",
 		})
-		commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, "initial")
+		commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, domain.NewLocalBranchName("initial"))
 		assert.Len(t, commits, 2)
 		assert.Equal(t, domain.NewLocalBranchName("initial"), commits[0].Branch)
 		assert.Equal(t, "file1", commits[0].FileName)
@@ -69,7 +69,7 @@ func TestTestCommands(t *testing.T) {
 		runtime := testruntime.New(repoDir, repoDir, "")
 		runtime.AddRemote(config.OriginRemote, origin.WorkingDir)
 		runtime.Fetch()
-		runtime.ConnectTrackingBranch("initial")
+		runtime.ConnectTrackingBranch(domain.NewLocalBranchName("initial"))
 		runtime.PushBranch()
 	})
 
@@ -125,7 +125,7 @@ func TestTestCommands(t *testing.T) {
 				FileContent: "hello world",
 				Message:     "test commit",
 			})
-			commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, "initial")
+			commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, domain.NewLocalBranchName("initial"))
 			assert.Len(t, commits, 1)
 			assert.Equal(t, "hello.txt", commits[0].FileName)
 			assert.Equal(t, "hello world", commits[0].FileContent)
@@ -143,7 +143,7 @@ func TestTestCommands(t *testing.T) {
 				Message:     "test commit",
 				Author:      "developer <developer@example.com>",
 			})
-			commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, "initial")
+			commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, domain.NewLocalBranchName("initial"))
 			assert.Len(t, commits, 1)
 			assert.Equal(t, "hello.txt", commits[0].FileName)
 			assert.Equal(t, "hello world", commits[0].FileContent)
@@ -217,7 +217,7 @@ func TestTestCommands(t *testing.T) {
 		runtime.CreateFile("f2.txt", "two")
 		runtime.StageFiles("f1.txt", "f2.txt")
 		runtime.CommitStagedChanges("stuff")
-		commits := runtime.Commits([]string{}, "initial")
+		commits := runtime.Commits([]string{}, domain.NewLocalBranchName("initial"))
 		assert.Len(t, commits, 1)
 		fileNames := runtime.FilesInCommit(commits[0].SHA)
 		assert.Equal(t, []string{"f1.txt", "f2.txt"}, fileNames)
@@ -322,7 +322,7 @@ func TestTestCommands(t *testing.T) {
 		assert.NoError(t, err)
 		want := domain.NewLocalBranchNames("initial", "b1")
 		assert.Equal(t, want, branches)
-		runtime.RemoveBranch("b1")
+		runtime.RemoveBranch(domain.NewLocalBranchName("b1"))
 		branches, err = runtime.LocalBranchesMainFirst(domain.NewLocalBranchName("initial"))
 		assert.NoError(t, err)
 		wantBranches := domain.NewLocalBranchNames("initial")

@@ -61,7 +61,7 @@ func CloneFixture(original Fixture, dir string) Fixture {
 	result.DevRepo.AddRemote(config.OriginRemote, result.originRepoPath())
 	result.DevRepo.Fetch()
 	// and connect the main branches again
-	result.DevRepo.ConnectTrackingBranch("main")
+	result.DevRepo.ConnectTrackingBranch(domain.NewLocalBranchName("main"))
 	return result
 }
 
@@ -215,18 +215,18 @@ func (env Fixture) CreateTags(table *messages.PickleStepArgument_PickleTable) {
 // CommitTable provides a table for all commits in this Git environment containing only the given fields.
 func (env Fixture) CommitTable(fields []string) datatable.DataTable {
 	builder := datatable.NewCommitTableBuilder()
-	localCommits := env.DevRepo.Commits(fields, "main")
+	localCommits := env.DevRepo.Commits(fields, domain.NewLocalBranchName("main"))
 	builder.AddMany(localCommits, "local")
 	if env.CoworkerRepo != nil {
-		coworkerCommits := env.CoworkerRepo.Commits(fields, "main")
+		coworkerCommits := env.CoworkerRepo.Commits(fields, domain.NewLocalBranchName("main"))
 		builder.AddMany(coworkerCommits, "coworker")
 	}
 	if env.OriginRepo != nil {
-		originCommits := env.OriginRepo.Commits(fields, "main")
+		originCommits := env.OriginRepo.Commits(fields, domain.NewLocalBranchName("main"))
 		builder.AddMany(originCommits, config.OriginRemote)
 	}
 	if env.UpstreamRepo != nil {
-		upstreamCommits := env.UpstreamRepo.Commits(fields, "main")
+		upstreamCommits := env.UpstreamRepo.Commits(fields, domain.NewLocalBranchName("main"))
 		builder.AddMany(upstreamCommits, "upstream")
 	}
 	return builder.Table(fields)

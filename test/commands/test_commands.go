@@ -113,8 +113,8 @@ func (r *TestCommands) CreateTag(name string) {
 }
 
 // Commits provides a list of the commits in this Git repository with the given fields.
-func (r *TestCommands) Commits(fields []string, mainBranch string) []git.Commit {
-	branches, err := r.LocalBranchesMainFirst(domain.NewLocalBranchName(mainBranch))
+func (r *TestCommands) Commits(fields []string, mainBranch domain.LocalBranchName) []git.Commit {
+	branches, err := r.LocalBranchesMainFirst(mainBranch)
 	asserts.NoError(err)
 	result := []git.Commit{}
 	for _, branch := range branches {
@@ -154,8 +154,8 @@ func (r *TestCommands) CommitStagedChanges(message string) {
 
 // ConnectTrackingBranch connects the branch with the given name to its counterpart at origin.
 // The branch must exist.
-func (r *TestCommands) ConnectTrackingBranch(name string) {
-	r.MustRun("git", "branch", "--set-upstream-to=origin/"+name, name)
+func (r *TestCommands) ConnectTrackingBranch(name domain.LocalBranchName) {
+	r.MustRun("git", "branch", "--set-upstream-to=origin/"+name.String(), name.String())
 }
 
 // DeleteMainBranchConfiguration removes the configuration for which branch is the main branch.
@@ -264,8 +264,8 @@ func (r *TestCommands) PushBranchToRemote(branch domain.LocalBranchName, remote 
 }
 
 // RemoveBranch deletes the branch with the given name from this repo.
-func (r *TestCommands) RemoveBranch(name string) {
-	r.MustRun("git", "branch", "-D", name)
+func (r *TestCommands) RemoveBranch(name domain.LocalBranchName) {
+	r.MustRun("git", "branch", "-D", name.String())
 }
 
 // RemoveRemote deletes the Git remote with the given name.
