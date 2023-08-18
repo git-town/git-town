@@ -52,11 +52,5 @@ func (s SHA) TruncateTo(newLength int) SHA {
 
 // UnmarshalJSON is used when de-serializing JSON into a SHA.
 func (s *SHA) UnmarshalJSON(b []byte) error {
-	var t string
-	err := json.Unmarshal(b, &t)
-	if err != nil {
-		return err
-	}
-	s.id = t
-	return nil
+	return json.Unmarshal(b, &s.id)
 }
