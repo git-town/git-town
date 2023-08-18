@@ -396,7 +396,6 @@ func (bc *BackendCommands) LocalBranchesMainFirst(mainBranch domain.LocalBranchN
 	if err != nil {
 		return domain.LocalBranchNames{}, err
 	}
-	branches.Sort()
 	return slice.Hoist(branches, mainBranch), nil
 }
 
