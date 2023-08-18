@@ -104,9 +104,9 @@ func (bs BranchesSyncStatus) LookupLocalBranch(branchName domain.LocalBranchName
 // LookupLocalBranchWithTracking provides the local branch that has the given remote branch as its tracking branch
 // or nil if no such branch exists.
 // TODO: rename to FindLocalBranchWithTracking.
-func (bs BranchesSyncStatus) LookupLocalBranchWithTracking(trackingBranch domain.RemoteBranchName) *BranchSyncStatus {
+func (bs BranchesSyncStatus) LookupLocalBranchWithTracking(remoteBranch domain.RemoteBranchName) *BranchSyncStatus {
 	for b, branch := range bs {
-		if branch.RemoteName == trackingBranch {
+		if branch.RemoteName == remoteBranch {
 			return &bs[b]
 		}
 	}
