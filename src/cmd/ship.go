@@ -198,9 +198,6 @@ func determineShipConfig(args []string, run *git.ProdRunner, isOffline bool) (*s
 		return nil, err
 	}
 	targetBranchName := lineage.Parent(branchNameToShip)
-	if targetBranchName.IsEmpty() {
-		panic(fmt.Sprintf("branch %q unexpectedly has no parent", targetBranchName))
-	}
 	targetBranch := branches.All.LookupLocalBranch(targetBranchName)
 	if targetBranch == nil {
 		return nil, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
