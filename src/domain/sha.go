@@ -37,6 +37,7 @@ func validateSHA(content string) bool {
 	return true
 }
 
+// MarshalJSON is used when serializing this Location to JSON.
 func (s SHA) MarshalJSON() ([]byte, error) {
 	return json.Marshal(s.id)
 }
@@ -49,6 +50,7 @@ func (s SHA) TruncateTo(newLength int) SHA {
 	return NewSHA(s.id[0:newLength])
 }
 
+// UnmarshalJSON is used when de-serializing JSON into a Location.
 func (s *SHA) UnmarshalJSON(b []byte) error {
 	var t string
 	err := json.Unmarshal(b, &t)
