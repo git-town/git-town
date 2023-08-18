@@ -19,18 +19,18 @@ func NewBranchName(id string) BranchName {
 }
 
 // IsLocal indicates whether the branch with this BranchName exists locally.
-func (c BranchName) IsLocal() bool {
-	return !strings.HasPrefix(c.id, "origin/")
+func (b BranchName) IsLocal() bool {
+	return !strings.HasPrefix(b.id, "origin/")
 }
 
 // LocalName provides the local version of this branch name.
-func (c BranchName) LocalName() LocalBranchName {
-	return NewLocalBranchName(strings.TrimPrefix(c.id, "origin/"))
+func (b BranchName) LocalName() LocalBranchName {
+	return NewLocalBranchName(strings.TrimPrefix(b.id, "origin/"))
 }
 
 // MarshalJSON is used when serializing this LocalBranchName to JSON.
-func (p BranchName) MarshalJSON() ([]byte, error) {
-	return json.Marshal(p.id)
+func (b BranchName) MarshalJSON() ([]byte, error) {
+	return json.Marshal(b.id)
 }
 
 // RemoteName provides the remote version of this branch name.
