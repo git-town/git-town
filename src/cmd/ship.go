@@ -278,9 +278,6 @@ func determineShipConfig(args []string, run *git.ProdRunner, isOffline bool) (*s
 
 func ensureParentBranchIsMainOrPerennialBranch(branch domain.LocalBranchName, branchDurations config.BranchDurations, lineage config.Lineage) error {
 	parentBranch := lineage.Parent(branch)
-	if parentBranch.IsEmpty() {
-		panic(fmt.Sprintf("branch %q surprisingly has no parent", branch))
-	}
 	if !branchDurations.IsMainBranch(parentBranch) && !branchDurations.IsPerennialBranch(parentBranch) {
 		ancestors := lineage.Ancestors(branch)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
