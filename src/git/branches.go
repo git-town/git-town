@@ -57,8 +57,8 @@ func (bs BranchesSyncStatus) HasLocalBranch(localBranch domain.LocalBranchName) 
 	return false
 }
 
-// HasMatchingRemoteBranch indicates whether there is already a remote branch matching the given local branch.
-func (bs BranchesSyncStatus) HasMatchingRemoteBranch(localBranch domain.LocalBranchName) bool {
+// HasMatchingRemoteBranchFor indicates whether there is already a remote branch matching the given local branch.
+func (bs BranchesSyncStatus) HasMatchingRemoteBranchFor(localBranch domain.LocalBranchName) bool {
 	remoteName := localBranch.RemoteName()
 	for _, branch := range bs {
 		if branch.RemoteName == remoteName {
