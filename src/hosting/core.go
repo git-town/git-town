@@ -8,7 +8,7 @@ import (
 	"errors"
 
 	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/giturl"
 )
 
@@ -22,7 +22,7 @@ type Connector interface {
 
 	// FindProposal provides details about the proposal for the given branch into the given target branch.
 	// Returns nil if no proposal exists.
-	FindProposal(branch, target string) (*Proposal, error)
+	FindProposal(branch, target domain.LocalBranchName) (*Proposal, error)
 
 	// HostingServiceName provides the name of the code hosting service
 	// supported by the respective connector implementation.
@@ -30,17 +30,17 @@ type Connector interface {
 
 	// SquashMergeProposal squash-merges the proposal with the given number
 	// using the given commit message.
-	SquashMergeProposal(number int, message string) (mergeSHA git.SHA, err error)
+	SquashMergeProposal(number int, message string) (mergeSHA domain.SHA, err error)
 
 	// NewProposalURL provides the URL of the page
 	// to create a new proposal online.
-	NewProposalURL(branch, parentBranch string) (string, error)
+	NewProposalURL(branch, parentBranch domain.LocalBranchName) (string, error)
 
 	// RepositoryURL provides the URL where the current repository can be found online.
 	RepositoryURL() string
 
 	// UpdateProposalTarget updates the target branch of the given proposal.
-	UpdateProposalTarget(number int, target string) error
+	UpdateProposalTarget(number int, target domain.LocalBranchName) error
 }
 
 // CommonConfig contains data needed by all platform connectors.
@@ -66,7 +66,7 @@ type Proposal struct {
 	Number int
 
 	// name of the target branch ("base") of this proposal
-	Target string
+	Target domain.LocalBranchName
 
 	// textual title of the proposal
 	Title string
@@ -94,13 +94,13 @@ type gitTownConfig interface {
 	GitLabToken() string
 
 	// MainBranch provides the name of the main branch.
-	MainBranch() string
+	MainBranch() domain.LocalBranchName
 
 	// OriginURL provides the URL of the origin remote.
 	OriginURL() *giturl.Parts
 }
 
-type ShaForBranchFunc func(string) (git.SHA, error)
+type ShaForBranchFunc func(domain.BranchName) (domain.SHA, error)
 
 // NewConnector provides an instance of the code hosting connector to use based on the given gitConfig.
 func NewConnector(args NewConnectorArgs) (Connector, error) {
@@ -162,7 +162,7 @@ type NewConnectorArgs struct {
 	GiteaAPIToken   string
 	GithubAPIToken  string
 	GitlabAPIToken  string
-	MainBranch      string
+	MainBranch      domain.LocalBranchName
 	Log             Log
 }
 

@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/google/go-github/v50/github"
@@ -20,14 +20,14 @@ import (
 type GitHubConnector struct {
 	client *github.Client
 	CommonConfig
-	MainBranch string
+	MainBranch domain.LocalBranchName
 	log        Log
 }
 
-func (c *GitHubConnector) FindProposal(branch, target string) (*Proposal, error) {
+func (c *GitHubConnector) FindProposal(branch, target domain.LocalBranchName) (*Proposal, error) {
 	pullRequests, _, err := c.client.PullRequests.List(context.Background(), c.Organization, c.Repository, &github.PullRequestListOptions{
-		Head:  c.Organization + ":" + branch,
-		Base:  target,
+		Head:  c.Organization + ":" + branch.String(),
+		Base:  target.String(),
 		State: "open",
 	})
 	if err != nil {
@@ -51,10 +51,10 @@ func (c *GitHubConnector) HostingServiceName() string {
 	return "GitHub"
 }
 
-func (c *GitHubConnector) NewProposalURL(branch, parentBranch string) (string, error) {
-	toCompare := branch
+func (c *GitHubConnector) NewProposalURL(branch, parentBranch domain.LocalBranchName) (string, error) {
+	toCompare := branch.String()
 	if parentBranch != c.MainBranch {
-		toCompare = parentBranch + "..." + branch
+		toCompare = parentBranch.String() + "..." + branch.String()
 	}
 	return fmt.Sprintf("%s/compare/%s?expand=1", c.RepositoryURL(), url.PathEscape(toCompare)), nil
 }
@@ -63,9 +63,9 @@ func (c *GitHubConnector) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", c.Hostname, c.Organization, c.Repository)
 }
 
-func (c *GitHubConnector) SquashMergeProposal(number int, message string) (mergeSHA git.SHA, err error) {
+func (c *GitHubConnector) SquashMergeProposal(number int, message string) (mergeSHA domain.SHA, err error) {
 	if number <= 0 {
-		return git.SHA{}, fmt.Errorf(messages.ProposalNoNumberGiven)
+		return domain.SHA{}, fmt.Errorf(messages.ProposalNoNumberGiven)
 	}
 	c.log.Start(messages.HostingGithubMergingViaAPI, number)
 	title, body := ParseCommitMessage(message)
@@ -73,7 +73,7 @@ func (c *GitHubConnector) SquashMergeProposal(number int, message string) (merge
 		MergeMethod: "squash",
 		CommitTitle: title,
 	})
-	sha := git.NewSHA(result.GetSHA())
+	sha := domain.NewSHA(result.GetSHA())
 	if err != nil {
 		c.log.Failed(err)
 		return sha, err
@@ -82,11 +82,12 @@ func (c *GitHubConnector) SquashMergeProposal(number int, message string) (merge
 	return sha, nil
 }
 
-func (c *GitHubConnector) UpdateProposalTarget(number int, target string) error {
+func (c *GitHubConnector) UpdateProposalTarget(number int, target domain.LocalBranchName) error {
 	c.log.Start(messages.HostingGithubUpdatePRViaAPI, number)
+	targetName := target.String()
 	_, _, err := c.client.PullRequests.Edit(context.Background(), c.Organization, c.Repository, number, &github.PullRequest{
 		Base: &github.PullRequestBranch{
-			Ref: &target,
+			Ref: &(targetName),
 		},
 	})
 	if err != nil {
@@ -122,7 +123,7 @@ type NewGithubConnectorArgs struct {
 	HostingService config.Hosting
 	OriginURL      *giturl.Parts
 	APIToken       string
-	MainBranch     string
+	MainBranch     domain.LocalBranchName
 	Log            Log
 }
 
@@ -145,7 +146,7 @@ func GetGitHubAPIToken(gitConfig gitTownConfig) string {
 func parsePullRequest(pullRequest *github.PullRequest) Proposal {
 	return Proposal{
 		Number:          pullRequest.GetNumber(),
-		Target:          pullRequest.Base.GetRef(),
+		Target:          domain.NewLocalBranchName(pullRequest.Base.GetRef()),
 		Title:           pullRequest.GetTitle(),
 		CanMergeWithAPI: pullRequest.GetMergeableState() == "clean",
 	}

@@ -6,6 +6,7 @@ package runstate
 import (
 	"time"
 
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/steps"
 )
@@ -13,7 +14,7 @@ import (
 // UnfinishedRunStateDetails has details about an unfinished run state.
 type UnfinishedRunStateDetails struct {
 	CanSkip   bool
-	EndBranch string
+	EndBranch domain.LocalBranchName
 	EndTime   time.Time
 }
 

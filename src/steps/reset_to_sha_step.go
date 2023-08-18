@@ -1,6 +1,7 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 )
@@ -10,7 +11,7 @@ import (
 type ResetToShaStep struct {
 	EmptyStep
 	Hard bool
-	Sha  git.SHA
+	Sha  domain.SHA
 }
 
 func (step *ResetToShaStep) Run(run *git.ProdRunner, _ hosting.Connector) error {

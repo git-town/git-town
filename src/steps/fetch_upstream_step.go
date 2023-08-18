@@ -1,6 +1,7 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 )
@@ -9,7 +10,7 @@ import (
 // up to speed with activities that happened in the upstream remote.
 type FetchUpstreamStep struct {
 	EmptyStep
-	Branch string
+	Branch domain.LocalBranchName
 }
 
 func (step *FetchUpstreamStep) Run(run *git.ProdRunner, _ hosting.Connector) error {

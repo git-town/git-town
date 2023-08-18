@@ -1,6 +1,7 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 )
@@ -8,9 +9,9 @@ import (
 // CreateRemoteBranchStep pushes the current branch up to origin.
 type CreateRemoteBranchStep struct {
 	EmptyStep
-	Branch     string
+	Branch     domain.LocalBranchName
 	NoPushHook bool
-	Sha        git.SHA
+	Sha        domain.SHA
 }
 
 func (step *CreateRemoteBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {

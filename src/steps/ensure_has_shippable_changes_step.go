@@ -3,6 +3,7 @@ package steps
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
@@ -11,8 +12,8 @@ import (
 // EnsureHasShippableChangesStep asserts that the branch has unique changes not on the main branch.
 type EnsureHasShippableChangesStep struct {
 	EmptyStep
-	Branch string
-	Parent string
+	Branch domain.LocalBranchName
+	Parent domain.LocalBranchName
 }
 
 func (step *EnsureHasShippableChangesStep) CreateAutomaticAbortError() error {

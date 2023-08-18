@@ -1,6 +1,7 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 )
@@ -9,19 +10,19 @@ import (
 // optionally in a safe or unsafe way.
 type DeleteLocalBranchStep struct {
 	EmptyStep
-	Branch    string
-	Parent    string
+	Branch    domain.LocalBranchName
+	Parent    domain.Location
 	Force     bool
-	branchSha git.SHA
+	branchSha domain.SHA
 }
 
 func (step *DeleteLocalBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
-	return []Step{&CreateBranchStep{Branch: step.Branch, StartingPoint: step.branchSha.String()}}, nil
+	return []Step{&CreateBranchStep{Branch: step.Branch, StartingPoint: step.branchSha.Location()}}, nil
 }
 
 func (step *DeleteLocalBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
 	var err error
-	step.branchSha, err = run.Backend.ShaForBranch(step.Branch)
+	step.branchSha, err = run.Backend.ShaForBranch(step.Branch.BranchName())
 	if err != nil {
 		return err
 	}

@@ -4,10 +4,10 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/slice"
 	"github.com/git-town/git-town/v9/test/asserts"
 	"github.com/git-town/git-town/v9/test/datatable"
@@ -61,7 +61,7 @@ func CloneFixture(original Fixture, dir string) Fixture {
 	result.DevRepo.AddRemote(config.OriginRemote, result.originRepoPath())
 	result.DevRepo.Fetch()
 	// and connect the main branches again
-	result.DevRepo.ConnectTrackingBranch("main")
+	result.DevRepo.ConnectTrackingBranch(domain.NewLocalBranchName("main"))
 	return result
 }
 
@@ -125,6 +125,7 @@ func (env *Fixture) AddCoworkerRepo() {
 	coworkerRepo := testruntime.Clone(env.OriginRepo.TestRunner, env.coworkerRepoPath())
 	env.CoworkerRepo = &coworkerRepo
 	env.initializeWorkspace(env.CoworkerRepo)
+	env.CoworkerRepo.Debug = env.DevRepo.Debug
 }
 
 // binPath provides the full path of the folder containing the test tools for this Fixture.
@@ -139,16 +140,17 @@ func (env *Fixture) Branches() datatable.DataTable {
 	mainBranch := env.DevRepo.Config.MainBranch()
 	localBranches, err := env.DevRepo.LocalBranchesMainFirst(mainBranch)
 	asserts.NoError(err)
-	localBranches = slice.Remove(localBranches, "initial")
-	localBranchesJoined := strings.Join(localBranches, ", ")
+	initialBranch := domain.NewLocalBranchName("initial")
+	localBranches = slice.Remove(localBranches, initialBranch)
+	localBranchesJoined := localBranches.Join(", ")
 	if env.OriginRepo == nil {
 		result.AddRow("local", localBranchesJoined)
 		return result
 	}
 	originBranches, err := env.OriginRepo.LocalBranchesMainFirst(mainBranch)
 	asserts.NoError(err)
-	originBranches = slice.Remove(originBranches, "initial")
-	originBranchesJoined := strings.Join(originBranches, ", ")
+	originBranches = slice.Remove(originBranches, initialBranch)
+	originBranchesJoined := originBranches.Join(", ")
 	if localBranchesJoined == originBranchesJoined {
 		result.AddRow("local, origin", localBranchesJoined)
 	} else {
@@ -181,13 +183,13 @@ func (env *Fixture) CreateCommits(commits []git.Commit) {
 	}
 	// after setting up the commits, check out the "initial" branch in the origin repo so that we can git-push to it.
 	if env.OriginRepo != nil {
-		env.OriginRepo.CheckoutBranch("initial")
+		env.OriginRepo.CheckoutBranch(domain.NewLocalBranchName("initial"))
 	}
 }
 
 // CreateOriginBranch creates a branch with the given name only in the origin directory.
 func (env Fixture) CreateOriginBranch(name, parent string) {
-	env.OriginRepo.CreateBranch(name, parent)
+	env.OriginRepo.CreateBranch(domain.NewLocalBranchName(name), domain.NewLocalBranchName(parent))
 }
 
 // CreateTags creates tags from the given gherkin table.
@@ -213,18 +215,18 @@ func (env Fixture) CreateTags(table *messages.PickleStepArgument_PickleTable) {
 // CommitTable provides a table for all commits in this Git environment containing only the given fields.
 func (env Fixture) CommitTable(fields []string) datatable.DataTable {
 	builder := datatable.NewCommitTableBuilder()
-	localCommits := env.DevRepo.Commits(fields, "main")
+	localCommits := env.DevRepo.Commits(fields, domain.NewLocalBranchName("main"))
 	builder.AddMany(localCommits, "local")
 	if env.CoworkerRepo != nil {
-		coworkerCommits := env.CoworkerRepo.Commits(fields, "main")
+		coworkerCommits := env.CoworkerRepo.Commits(fields, domain.NewLocalBranchName("main"))
 		builder.AddMany(coworkerCommits, "coworker")
 	}
 	if env.OriginRepo != nil {
-		originCommits := env.OriginRepo.Commits(fields, "main")
+		originCommits := env.OriginRepo.Commits(fields, domain.NewLocalBranchName("main"))
 		builder.AddMany(originCommits, config.OriginRemote)
 	}
 	if env.UpstreamRepo != nil {
-		upstreamCommits := env.UpstreamRepo.Commits(fields, "main")
+		upstreamCommits := env.UpstreamRepo.Commits(fields, domain.NewLocalBranchName("main"))
 		builder.AddMany(upstreamCommits, "upstream")
 	}
 	return builder.Table(fields)
@@ -243,8 +245,8 @@ func (env Fixture) TagTable() datatable.DataTable {
 }
 
 func (env Fixture) initializeWorkspace(repo *testruntime.TestRuntime) {
-	asserts.NoError(repo.Config.SetMainBranch("main"))
-	asserts.NoError(repo.Config.SetPerennialBranches([]string{}))
+	asserts.NoError(repo.Config.SetMainBranch(domain.NewLocalBranchName("main")))
+	asserts.NoError(repo.Config.SetPerennialBranches(domain.LocalBranchNames{}))
 	repo.MustRunMany([][]string{
 		{"git", "checkout", "main"},
 		// NOTE: the developer repos receives the initial branch from origin

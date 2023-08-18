@@ -3,6 +3,7 @@ package steps
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
@@ -11,12 +12,12 @@ import (
 // ConnectorMergeProposalStep squash merges the branch with the given name into the current branch.
 type ConnectorMergeProposalStep struct {
 	EmptyStep
-	Branch                    string
+	Branch                    domain.LocalBranchName
 	CommitMessage             string
 	ProposalMessage           string
 	enteredEmptyCommitMessage bool
 	mergeError                error
-	mergeSha                  git.SHA
+	mergeSha                  domain.SHA
 	ProposalNumber            int
 }
 

@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	prodgit "github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/slice"
 	"github.com/git-town/git-town/v9/src/stringslice"
@@ -42,28 +43,28 @@ func (r *TestCommands) BranchHierarchyTable() datatable.DataTable {
 	lineage := r.Config.Lineage()
 	result.AddRow("BRANCH", "PARENT")
 	for _, branchName := range lineage.BranchNames() {
-		result.AddRow(branchName, lineage[branchName])
+		result.AddRow(branchName.String(), lineage[branchName].String())
 	}
 	return result
 }
 
 // .CheckoutBranch checks out the Git branch with the given name in this repo.
-func (r *TestCommands) CheckoutBranch(name string) {
-	asserts.NoError(r.BackendCommands.CheckoutBranch(name))
+func (r *TestCommands) CheckoutBranch(branch domain.LocalBranchName) {
+	asserts.NoError(r.BackendCommands.CheckoutBranch(branch))
 }
 
 // CreateBranch creates a new branch with the given name.
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
-func (r *TestCommands) CreateBranch(name, parent string) {
-	r.MustRun("git", "branch", name, parent)
+func (r *TestCommands) CreateBranch(name, parent domain.LocalBranchName) {
+	r.MustRun("git", "branch", name.String(), parent.String())
 }
 
 // CreateChildFeatureBranch creates a branch with the given name and parent in this repository.
 // The parent branch must already exist.
-func (r *TestCommands) CreateChildFeatureBranch(name string, parent string) {
-	r.CreateBranch(name, parent)
-	asserts.NoError(r.Config.SetParent(name, parent))
+func (r *TestCommands) CreateChildFeatureBranch(branch domain.LocalBranchName, parent domain.LocalBranchName) {
+	r.CreateBranch(branch, parent)
+	asserts.NoError(r.Config.SetParent(branch, parent))
 }
 
 // CreateCommit creates a commit with the given properties in this Git repo.
@@ -88,9 +89,9 @@ func (r *TestCommands) CreateFile(name, content string) {
 }
 
 // CreatePerennialBranches creates perennial branches with the given names in this repository.
-func (r *TestCommands) CreatePerennialBranches(names ...string) {
+func (r *TestCommands) CreatePerennialBranches(names ...domain.LocalBranchName) {
 	for _, name := range names {
-		r.CreateBranch(name, "main")
+		r.CreateBranch(name, domain.NewLocalBranchName("main"))
 	}
 	asserts.NoError(r.Config.AddToPerennialBranches(names...))
 }
@@ -112,7 +113,7 @@ func (r *TestCommands) CreateTag(name string) {
 }
 
 // Commits provides a list of the commits in this Git repository with the given fields.
-func (r *TestCommands) Commits(fields []string, mainBranch string) []git.Commit {
+func (r *TestCommands) Commits(fields []string, mainBranch domain.LocalBranchName) []git.Commit {
 	branches, err := r.LocalBranchesMainFirst(mainBranch)
 	asserts.NoError(err)
 	result := []git.Commit{}
@@ -124,12 +125,12 @@ func (r *TestCommands) Commits(fields []string, mainBranch string) []git.Commit 
 }
 
 // CommitsInBranch provides all commits in the given Git branch.
-func (r *TestCommands) CommitsInBranch(branch string, fields []string) []git.Commit {
-	output := r.MustQuery("git", "log", branch, "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse")
+func (r *TestCommands) CommitsInBranch(branch domain.LocalBranchName, fields []string) []git.Commit {
+	output := r.MustQuery("git", "log", branch.String(), "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse")
 	result := []git.Commit{}
 	for _, line := range strings.Split(output, "\n") {
 		parts := strings.Split(line, "|")
-		commit := git.Commit{Branch: branch, SHA: parts[0], Message: parts[1], Author: parts[2]}
+		commit := git.Commit{Branch: branch, SHA: domain.NewSHA(parts[0]), Message: parts[1], Author: parts[2]}
 		if strings.EqualFold(commit.Message, "initial commit") {
 			continue
 		}
@@ -138,7 +139,7 @@ func (r *TestCommands) CommitsInBranch(branch string, fields []string) []git.Com
 			commit.FileName = strings.Join(filenames, ", ")
 		}
 		if slice.Contains(fields, "FILE CONTENT") {
-			filecontent := r.FileContentInCommit(commit.SHA, commit.FileName)
+			filecontent := r.FileContentInCommit(commit.SHA.Location(), commit.FileName)
 			commit.FileContent = filecontent
 		}
 		result = append(result, commit)
@@ -153,8 +154,8 @@ func (r *TestCommands) CommitStagedChanges(message string) {
 
 // ConnectTrackingBranch connects the branch with the given name to its counterpart at origin.
 // The branch must exist.
-func (r *TestCommands) ConnectTrackingBranch(name string) {
-	r.MustRun("git", "branch", "--set-upstream-to=origin/"+name, name)
+func (r *TestCommands) ConnectTrackingBranch(name domain.LocalBranchName) {
+	r.MustRun("git", "branch", "--set-upstream-to=origin/"+name.String(), name.String())
 }
 
 // DeleteMainBranchConfiguration removes the configuration for which branch is the main branch.
@@ -175,8 +176,8 @@ func (r *TestCommands) FileContent(filename string) string {
 }
 
 // FileContentInCommit provides the content of the file with the given name in the commit with the given SHA.
-func (r *TestCommands) FileContentInCommit(sha string, filename string) string {
-	output := r.MustQuery("git", "show", sha+":"+filename)
+func (r *TestCommands) FileContentInCommit(location domain.Location, filename string) string {
+	output := r.MustQuery("git", "show", location.String()+":"+filename)
 	if strings.HasPrefix(output, "tree ") {
 		// merge commits get an empty file content instead of "tree <SHA>"
 		return ""
@@ -185,14 +186,14 @@ func (r *TestCommands) FileContentInCommit(sha string, filename string) string {
 }
 
 // FilesInCommit provides the names of the files that the commit with the given SHA changes.
-func (r *TestCommands) FilesInCommit(sha string) []string {
-	output := r.MustQuery("git", "diff-tree", "--no-commit-id", "--name-only", "-r", sha)
+func (r *TestCommands) FilesInCommit(sha domain.SHA) []string {
+	output := r.MustQuery("git", "diff-tree", "--no-commit-id", "--name-only", "-r", sha.String())
 	return strings.Split(output, "\n")
 }
 
 // FilesInBranch provides the list of the files present in the given branch.
-func (r *TestCommands) FilesInBranch(branch string) []string {
-	output := r.MustQuery("git", "ls-tree", "-r", "--name-only", branch)
+func (r *TestCommands) FilesInBranch(branch domain.LocalBranchName) []string {
+	output := r.MustQuery("git", "ls-tree", "-r", "--name-only", branch.String())
 	result := []string{}
 	for _, line := range strings.Split(output, "\n") {
 		file := strings.TrimSpace(line)
@@ -204,20 +205,20 @@ func (r *TestCommands) FilesInBranch(branch string) []string {
 }
 
 // FilesInBranches provides a data table of files and their content in all branches.
-func (r *TestCommands) FilesInBranches(mainBranch string) datatable.DataTable {
+func (r *TestCommands) FilesInBranches(mainBranch domain.LocalBranchName) datatable.DataTable {
 	result := datatable.DataTable{}
 	result.AddRow("BRANCH", "NAME", "CONTENT")
 	branches, err := r.LocalBranchesMainFirst(mainBranch)
 	asserts.NoError(err)
-	lastBranch := ""
+	lastBranch := domain.LocalBranchName{}
 	for _, branch := range branches {
 		files := r.FilesInBranch(branch)
 		for _, file := range files {
-			content := r.FileContentInCommit(branch, file)
+			content := r.FileContentInCommit(branch.Location(), file)
 			if branch == lastBranch {
 				result.AddRow("", file, content)
 			} else {
-				result.AddRow(branch, file, content)
+				result.AddRow(branch.String(), file, content)
 			}
 			lastBranch = branch
 		}
@@ -258,13 +259,13 @@ func (r *TestCommands) PushBranch() {
 	r.MustRun("git", "push")
 }
 
-func (r *TestCommands) PushBranchToRemote(branch, remote string) {
-	r.MustRun("git", "push", "-u", remote, branch)
+func (r *TestCommands) PushBranchToRemote(branch domain.LocalBranchName, remote string) {
+	r.MustRun("git", "push", "-u", remote, branch.String())
 }
 
 // RemoveBranch deletes the branch with the given name from this repo.
-func (r *TestCommands) RemoveBranch(name string) {
-	r.MustRun("git", "branch", "-D", name)
+func (r *TestCommands) RemoveBranch(name domain.LocalBranchName) {
+	r.MustRun("git", "branch", "-D", name.String())
 }
 
 // RemoveRemote deletes the Git remote with the given name.

@@ -6,6 +6,7 @@ import (
 	"code.gitea.io/sdk/gitea"
 	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/giturl"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/stretchr/testify/assert"
@@ -75,7 +76,7 @@ func TestGitea(t *testing.T) {
 			Log:            cli.SilentLog{},
 		})
 		assert.Nil(t, err)
-		have, err := connector.NewProposalURL("feature", "parent")
+		have, err := connector.NewProposalURL(domain.NewLocalBranchName("feature"), domain.NewLocalBranchName("parent"))
 		assert.Nil(t, err)
 		assert.Equal(t, have, "https://gitea.com/git-town/docs/compare/parent...feature")
 	})
@@ -142,6 +143,6 @@ func TestFilterGiteaPullRequests(t *testing.T) {
 			},
 		},
 	}
-	have := hosting.FilterGiteaPullRequests(give, "organization", "branch", "target")
+	have := hosting.FilterGiteaPullRequests(give, "organization", domain.NewLocalBranchName("branch"), domain.NewLocalBranchName("target"))
 	assert.Equal(t, want, have)
 }

@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/git"
@@ -92,11 +93,11 @@ type newPullRequestConfig struct {
 	connector          hosting.Connector
 	hasOpenChanges     bool
 	remotes            config.Remotes
-	initialBranch      string
+	initialBranch      domain.LocalBranchName
 	isOffline          bool
 	lineage            config.Lineage
-	mainBranch         string
-	previousBranch     string
+	mainBranch         domain.LocalBranchName
+	previousBranch     domain.LocalBranchName
 	pullBranchStrategy config.PullBranchStrategy
 	pushHook           bool
 	shouldSyncUpstream bool

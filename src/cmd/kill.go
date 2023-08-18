@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/git"
@@ -72,12 +73,12 @@ func kill(args []string, debug bool) error {
 
 type killConfig struct {
 	hasOpenChanges bool
-	initialBranch  string
+	initialBranch  domain.LocalBranchName
 	isOffline      bool
 	lineage        config.Lineage
-	mainBranch     string
+	mainBranch     domain.LocalBranchName
 	noPushHook     bool
-	previousBranch string
+	previousBranch domain.LocalBranchName
 	targetBranch   git.BranchSyncStatus
 }
 
@@ -89,11 +90,11 @@ func determineKillConfig(args []string, run *git.ProdRunner, isOffline bool) (*k
 		return nil, err
 	}
 	mainBranch := run.Config.MainBranch()
-	targetBranchName := slice.FirstElementOr(args, branches.Initial)
+	targetBranchName := domain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
 	if !branches.Durations.IsFeatureBranch(targetBranchName) {
 		return nil, fmt.Errorf(messages.KillOnlyFeatureBranches)
 	}
-	targetBranch := branches.All.Lookup(targetBranchName)
+	targetBranch := branches.All.LookupLocalBranch(targetBranchName)
 	if targetBranch == nil {
 		return nil, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
@@ -140,7 +141,7 @@ func (kc killConfig) isOnline() bool {
 	return !kc.isOffline
 }
 
-func (kc killConfig) targetBranchParent() string {
+func (kc killConfig) targetBranchParent() domain.LocalBranchName {
 	return kc.lineage.Parent(kc.targetBranch.Name)
 }
 
@@ -160,7 +161,7 @@ func killStepList(config *killConfig) (runstate.StepList, error) {
 // killFeatureBranch kills the given feature branch everywhere it exists (locally and remotely).
 func killFeatureBranch(list *runstate.StepList, config killConfig) {
 	if config.targetBranch.HasTrackingBranch() && config.isOnline() {
-		list.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch.NameWithoutRemote(), IsTracking: true, NoPushHook: config.noPushHook})
+		list.Append(&steps.DeleteOriginBranchStep{Branch: config.targetBranch.Name, IsTracking: true, NoPushHook: config.noPushHook})
 	}
 	if config.initialBranch == config.targetBranch.Name {
 		if config.hasOpenChanges {
@@ -168,7 +169,7 @@ func killFeatureBranch(list *runstate.StepList, config killConfig) {
 		}
 		list.Append(&steps.CheckoutStep{Branch: config.targetBranchParent()})
 	}
-	list.Append(&steps.DeleteLocalBranchStep{Branch: config.targetBranch.Name, Parent: config.mainBranch, Force: true})
+	list.Append(&steps.DeleteLocalBranchStep{Branch: config.targetBranch.Name, Parent: config.mainBranch.Location(), Force: true})
 	childBranches := config.lineage.Children(config.targetBranch.Name)
 	for _, child := range childBranches {
 		list.Append(&steps.SetParentStep{Branch: child, ParentBranch: config.targetBranchParent()})

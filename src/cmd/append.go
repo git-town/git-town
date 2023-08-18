@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/flags"
@@ -55,7 +56,7 @@ func runAppend(arg string, debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	config, err := determineAppendConfig(arg, &repo.Runner, repo.IsOffline)
+	config, err := determineAppendConfig(domain.NewLocalBranchName(arg), &repo.Runner, repo.IsOffline)
 	if err != nil {
 		return err
 	}
@@ -80,21 +81,21 @@ type appendConfig struct {
 	branchesToSync      git.BranchesSyncStatus
 	hasOpenChanges      bool
 	remotes             config.Remotes
-	initialBranch       string
+	initialBranch       domain.LocalBranchName
 	isOffline           bool
 	lineage             config.Lineage
-	mainBranch          string
+	mainBranch          domain.LocalBranchName
 	pushHook            bool
-	parentBranch        string
-	previousBranch      string
+	parentBranch        domain.LocalBranchName
+	previousBranch      domain.LocalBranchName
 	pullBranchStrategy  config.PullBranchStrategy
 	shouldNewBranchPush bool
 	shouldSyncUpstream  bool
 	syncStrategy        config.SyncStrategy
-	targetBranch        string
+	targetBranch        domain.LocalBranchName
 }
 
-func determineAppendConfig(targetBranch string, run *git.ProdRunner, isOffline bool) (*appendConfig, error) {
+func determineAppendConfig(targetBranch domain.LocalBranchName, run *git.ProdRunner, isOffline bool) (*appendConfig, error) {
 	branches, err := execute.LoadBranches(run, execute.LoadBranchesArgs{
 		ValidateIsConfigured: true,
 	})
@@ -112,10 +113,10 @@ func determineAppendConfig(targetBranch string, run *git.ProdRunner, isOffline b
 	if fc.Err != nil {
 		return nil, fc.Err
 	}
-	if branches.All.IsKnown(targetBranch) {
+	if branches.All.HasLocalBranch(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsLocally, targetBranch)
 	}
-	if branches.All.IsKnown(git.TrackingBranchName(targetBranch)) {
+	if branches.All.HasMatchingRemoteBranchFor(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
 	lineage := run.Config.Lineage()
@@ -174,7 +175,7 @@ func appendStepList(config *appendConfig) (runstate.StepList, error) {
 			syncStrategy:       config.syncStrategy,
 		})
 	}
-	list.Add(&steps.CreateBranchStep{Branch: config.targetBranch, StartingPoint: config.parentBranch})
+	list.Add(&steps.CreateBranchStep{Branch: config.targetBranch, StartingPoint: config.parentBranch.Location()})
 	list.Add(&steps.SetParentStep{Branch: config.targetBranch, ParentBranch: config.parentBranch})
 	list.Add(&steps.CheckoutStep{Branch: config.targetBranch})
 	if config.remotes.HasOrigin() && config.shouldNewBranchPush && !config.isOffline {

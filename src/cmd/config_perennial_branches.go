@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"strings"
-
 	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/dialog"
 	"github.com/git-town/git-town/v9/src/execute"
@@ -60,7 +58,7 @@ func displayPerennialBranches(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	cli.Println(cli.StringSetting(strings.Join(repo.Runner.Config.PerennialBranches(), "\n")))
+	cli.Println(cli.StringSetting(repo.Runner.Config.PerennialBranches().Join("\n")))
 	return nil
 }
 

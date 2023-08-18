@@ -2,29 +2,29 @@ package git
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/messages"
 )
 
 // BranchSyncStatus describes the sync status of a branch in relation to its tracking branch.
+// TODO: rename to BranchInfo and move to domain package.
 type BranchSyncStatus struct {
-	// Name contains the fully qualified name of the branch,
-	// i.e. "foo" for a local branch and "origin/foo" for a remote branch.
-	Name string
+	// Name contains the local name of the branch.
+	Name domain.LocalBranchName
 
-	// InitialSHA contains the SHA that this branch had before Git Town ran.
-	InitialSHA SHA
+	// InitialSHA contains the SHA that this branch had locally before Git Town ran.
+	InitialSHA domain.SHA
 
 	// SyncStatus of the branch
 	SyncStatus SyncStatus
 
-	// TrackingName contains the fully qualified name of the tracking branch, i.e. "origin/foo".
-	TrackingName string
+	// RemoteName contains the fully qualified name of the tracking branch, i.e. "origin/foo".
+	RemoteName domain.RemoteBranchName
 
-	// TrackingSHA contains the SHA of the tracking branch before Git Town ran.
-	TrackingSHA SHA
+	// RemoteSHA contains the SHA of the tracking branch before Git Town ran.
+	RemoteSHA domain.SHA
 }
 
 func (bi BranchSyncStatus) HasTrackingBranch() bool {
@@ -42,55 +42,26 @@ func (bi BranchSyncStatus) IsLocal() bool {
 	return bi.SyncStatus.IsLocal()
 }
 
-// NameWithoutRemote provides the pure name of the branch, i.e. "foo" when the branch name is "origin/foo".
-func (bi BranchSyncStatus) NameWithoutRemote() string {
-	if bi.SyncStatus == SyncStatusRemoteOnly {
-		return strings.TrimPrefix(bi.Name, "origin/")
-	}
-	return bi.Name
-}
-
-// TrackingBranchName provides the name of the remote branch for the given branch.
-func TrackingBranchName(branch string) string {
-	return "origin/" + branch
-}
-
-// RemoteBranch provides the name of the branch at the remote for this BranchSyncStatus.
-func (bi BranchSyncStatus) RemoteBranch() string {
-	if bi.SyncStatus == SyncStatusRemoteOnly {
-		return bi.Name
-	}
-	return bi.TrackingName
-}
-
 // BranchesSyncStatus contains the BranchesSyncStatus for all branches in a repo.
 // Tracking branches on the origin remote don't get their own entry,
 // they are listed in the `TrackingBranch` property of the local branch they track.
 type BranchesSyncStatus []BranchSyncStatus
 
-func (bs BranchesSyncStatus) BranchNames() []string {
-	result := make([]string, len(bs))
-	for b, branch := range bs {
-		result[b] = branch.Name
-	}
-	return result
-}
-
-// IsKnown indicates whether the given branch is already known to this BranchesSyncStatus instance,
-// either as a branch or the tracking branch of an already known branch.
-func (bs BranchesSyncStatus) IsKnown(branchName string) bool {
+// IsKnown indicates whether the given local branch is already known to this BranchesSyncStatus instance.
+func (bs BranchesSyncStatus) HasLocalBranch(localBranch domain.LocalBranchName) bool {
 	for _, branch := range bs {
-		if branch.Name == branchName || branch.TrackingName == branchName {
+		if branch.Name == localBranch {
 			return true
 		}
 	}
 	return false
 }
 
-// HasLocalBranch indicates whether a local branc with the given name already exists.
-func (bs BranchesSyncStatus) HasLocalBranch(name string) bool {
+// HasMatchingRemoteBranchFor indicates whether there is already a remote branch matching the given local branch.
+func (bs BranchesSyncStatus) HasMatchingRemoteBranchFor(localBranch domain.LocalBranchName) bool {
+	remoteName := localBranch.RemoteName()
 	for _, branch := range bs {
-		if branch.Name == name {
+		if branch.RemoteName == remoteName {
 			return true
 		}
 	}
@@ -119,30 +90,41 @@ func (bs BranchesSyncStatus) LocalBranchesWithDeletedTrackingBranches() Branches
 	return result
 }
 
-// Lookup provides the branch with the given name if one exists.
-// The branch can be either local or remote.
-func (bs BranchesSyncStatus) Lookup(branchName string) *BranchSyncStatus {
-	remoteName := TrackingBranchName(branchName)
+// LookupLocalBranch provides the branch with the given name if one exists.
+// TODO: rename to FindLocalBranch.
+func (bs BranchesSyncStatus) LookupLocalBranch(branchName domain.LocalBranchName) *BranchSyncStatus {
 	for bi, branch := range bs {
-		if branch.Name == branchName || branch.Name == remoteName {
+		if branch.Name == branchName {
 			return &bs[bi]
 		}
 	}
 	return nil
 }
 
-// LookupLocalBranchWithTracking provides the local branch that has the given branch as its tracking branch
+// LookupLocalBranchWithTracking provides the local branch that has the given remote branch as its tracking branch
 // or nil if no such branch exists.
-func (bs BranchesSyncStatus) LookupLocalBranchWithTracking(trackingBranch string) *BranchSyncStatus {
+// TODO: rename to FindLocalBranchWithTracking.
+func (bs BranchesSyncStatus) LookupLocalBranchWithTracking(remoteBranch domain.RemoteBranchName) *BranchSyncStatus {
 	for b, branch := range bs {
-		if branch.TrackingName == trackingBranch {
+		if branch.RemoteName == remoteBranch {
 			return &bs[b]
 		}
 	}
 	return nil
 }
 
-func (bs BranchesSyncStatus) Remove(branchName string) BranchesSyncStatus {
+// Names provides the names of all local branches in this BranchesSyncStatus instance.
+func (bs BranchesSyncStatus) Names() domain.LocalBranchNames {
+	result := make(domain.LocalBranchNames, 0, len(bs))
+	for _, branch := range bs {
+		if !branch.Name.IsEmpty() {
+			result = append(result, branch.Name)
+		}
+	}
+	return result
+}
+
+func (bs BranchesSyncStatus) Remove(branchName domain.LocalBranchName) BranchesSyncStatus {
 	result := BranchesSyncStatus{}
 	for _, branch := range bs {
 		if branch.Name != branchName {
@@ -152,10 +134,11 @@ func (bs BranchesSyncStatus) Remove(branchName string) BranchesSyncStatus {
 	return result
 }
 
-func (bs BranchesSyncStatus) Select(names []string) (BranchesSyncStatus, error) {
+// Select provides the BranchSyncStatus elements with the given names.
+func (bs BranchesSyncStatus) Select(names []domain.LocalBranchName) (BranchesSyncStatus, error) {
 	result := make(BranchesSyncStatus, len(names))
 	for n, name := range names {
-		branch := bs.Lookup(name)
+		branch := bs.LookupLocalBranch(name)
 		if branch == nil {
 			return result, fmt.Errorf(messages.BranchDoesntExist, name)
 		}
@@ -167,7 +150,7 @@ func (bs BranchesSyncStatus) Select(names []string) (BranchesSyncStatus, error) 
 type Branches struct {
 	All       BranchesSyncStatus
 	Durations config.BranchDurations
-	Initial   string
+	Initial   domain.LocalBranchName
 }
 
 // EmptyBranches provides the zero value for Branches.
@@ -175,6 +158,6 @@ func EmptyBranches() Branches {
 	return Branches{
 		All:       BranchesSyncStatus{},
 		Durations: config.EmptyBranchDurations(),
-		Initial:   "",
+		Initial:   domain.LocalBranchName{},
 	}
 }

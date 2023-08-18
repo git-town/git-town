@@ -8,6 +8,7 @@ import (
 
 	"github.com/acarl005/stripansi"
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/test/fixture"
 	"github.com/git-town/git-town/v9/test/git"
 	"github.com/git-town/git-town/v9/test/helpers"
@@ -35,24 +36,24 @@ func TestTestCommands(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		runtime.CreateCommit(git.Commit{
-			Branch:      "initial",
+			Branch:      domain.NewLocalBranchName("initial"),
 			FileName:    "file1",
 			FileContent: "hello",
 			Message:     "first commit",
 		})
 		runtime.CreateCommit(git.Commit{
-			Branch:      "initial",
+			Branch:      domain.NewLocalBranchName("initial"),
 			FileName:    "file2",
 			FileContent: "hello again",
 			Message:     "second commit",
 		})
-		commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, "initial")
+		commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, domain.NewLocalBranchName("initial"))
 		assert.Len(t, commits, 2)
-		assert.Equal(t, "initial", commits[0].Branch)
+		assert.Equal(t, domain.NewLocalBranchName("initial"), commits[0].Branch)
 		assert.Equal(t, "file1", commits[0].FileName)
 		assert.Equal(t, "hello", commits[0].FileContent)
 		assert.Equal(t, "first commit", commits[0].Message)
-		assert.Equal(t, "initial", commits[1].Branch)
+		assert.Equal(t, domain.NewLocalBranchName("initial"), commits[1].Branch)
 		assert.Equal(t, "file2", commits[1].FileName)
 		assert.Equal(t, "hello again", commits[1].FileContent)
 		assert.Equal(t, "second commit", commits[1].Message)
@@ -68,7 +69,7 @@ func TestTestCommands(t *testing.T) {
 		runtime := testruntime.New(repoDir, repoDir, "")
 		runtime.AddRemote(config.OriginRemote, origin.WorkingDir)
 		runtime.Fetch()
-		runtime.ConnectTrackingBranch("initial")
+		runtime.ConnectTrackingBranch(domain.NewLocalBranchName("initial"))
 		runtime.PushBranch()
 	})
 
@@ -76,34 +77,36 @@ func TestTestCommands(t *testing.T) {
 		t.Run("simple branch name", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			runtime.CreateBranch("branch1", "initial")
+			runtime.CreateBranch(domain.NewLocalBranchName("branch1"), domain.NewLocalBranchName("initial"))
 			currentBranch, err := runtime.CurrentBranch()
 			assert.NoError(t, err)
-			assert.Equal(t, "initial", currentBranch)
-			branches, err := runtime.LocalBranchesMainFirst("initial")
+			assert.Equal(t, domain.NewLocalBranchName("initial"), currentBranch)
+			branches, err := runtime.LocalBranchesMainFirst(domain.NewLocalBranchName("initial"))
 			assert.NoError(t, err)
-			assert.Equal(t, []string{"initial", "branch1"}, branches)
+			want := domain.NewLocalBranchNames("initial", "branch1")
+			assert.Equal(t, want, branches)
 		})
 
 		t.Run("branch name with slashes", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
-			runtime.CreateBranch("my/feature", "initial")
+			runtime.CreateBranch(domain.NewLocalBranchName("my/feature"), domain.NewLocalBranchName("initial"))
 			currentBranch, err := runtime.CurrentBranch()
 			assert.NoError(t, err)
-			assert.Equal(t, "initial", currentBranch)
-			branches, err := runtime.LocalBranchesMainFirst("initial")
+			assert.Equal(t, domain.NewLocalBranchName("initial"), currentBranch)
+			branches, err := runtime.LocalBranchesMainFirst(domain.NewLocalBranchName("initial"))
 			assert.NoError(t, err)
-			assert.Equal(t, []string{"initial", "my/feature"}, branches)
+			want := domain.NewLocalBranchNames("initial", "my/feature")
+			assert.Equal(t, want, branches)
 		})
 	})
 
 	t.Run(".CreateChildFeatureBranch()", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.CreateGitTown(t)
-		err := runtime.CreateFeatureBranch("f1")
+		err := runtime.CreateFeatureBranch(domain.NewLocalBranchName("f1"))
 		assert.NoError(t, err)
-		runtime.CreateChildFeatureBranch("f1a", "f1")
+		runtime.CreateChildFeatureBranch(domain.NewLocalBranchName("f1a"), domain.NewLocalBranchName("f1"))
 		output, err := runtime.BackendRunner.QueryTrim("git-town", "config")
 		assert.NoError(t, err)
 		output = stripansi.Strip(output)
@@ -117,35 +120,35 @@ func TestTestCommands(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
 			runtime.CreateCommit(git.Commit{
-				Branch:      "initial",
+				Branch:      domain.NewLocalBranchName("initial"),
 				FileName:    "hello.txt",
 				FileContent: "hello world",
 				Message:     "test commit",
 			})
-			commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, "initial")
+			commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, domain.NewLocalBranchName("initial"))
 			assert.Len(t, commits, 1)
 			assert.Equal(t, "hello.txt", commits[0].FileName)
 			assert.Equal(t, "hello world", commits[0].FileContent)
 			assert.Equal(t, "test commit", commits[0].Message)
-			assert.Equal(t, "initial", commits[0].Branch)
+			assert.Equal(t, domain.NewLocalBranchName("initial"), commits[0].Branch)
 		})
 
 		t.Run("set the author", func(t *testing.T) {
 			t.Parallel()
 			runtime := testruntime.Create(t)
 			runtime.CreateCommit(git.Commit{
-				Branch:      "initial",
+				Branch:      domain.NewLocalBranchName("initial"),
 				FileName:    "hello.txt",
 				FileContent: "hello world",
 				Message:     "test commit",
 				Author:      "developer <developer@example.com>",
 			})
-			commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, "initial")
+			commits := runtime.Commits([]string{"FILE NAME", "FILE CONTENT"}, domain.NewLocalBranchName("initial"))
 			assert.Len(t, commits, 1)
 			assert.Equal(t, "hello.txt", commits[0].FileName)
 			assert.Equal(t, "hello world", commits[0].FileContent)
 			assert.Equal(t, "test commit", commits[0].Message)
-			assert.Equal(t, "initial", commits[0].Branch)
+			assert.Equal(t, domain.NewLocalBranchName("initial"), commits[0].Branch)
 			assert.Equal(t, "developer <developer@example.com>", commits[0].Author)
 		})
 	})
@@ -173,14 +176,15 @@ func TestTestCommands(t *testing.T) {
 	t.Run(".CreatePerennialBranches()", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.CreateGitTown(t)
-		runtime.CreatePerennialBranches("p1", "p2")
-		branches, err := runtime.LocalBranchesMainFirst("main")
+		runtime.CreatePerennialBranches(domain.NewLocalBranchName("p1"), domain.NewLocalBranchName("p2"))
+		branches, err := runtime.LocalBranchesMainFirst(domain.NewLocalBranchName("main"))
 		assert.NoError(t, err)
-		assert.Equal(t, []string{"main", "initial", "p1", "p2"}, branches)
+		want := domain.NewLocalBranchNames("main", "initial", "p1", "p2")
+		assert.Equal(t, want, branches)
 		runtime.Config.Reload()
 		durations := runtime.Config.BranchDurations()
-		assert.True(t, durations.IsPerennialBranch("p1"))
-		assert.True(t, durations.IsPerennialBranch("p2"))
+		assert.True(t, durations.IsPerennialBranch(domain.NewLocalBranchName("p1")))
+		assert.True(t, durations.IsPerennialBranch(domain.NewLocalBranchName("p2")))
 	})
 
 	t.Run(".Fetch()", func(t *testing.T) {
@@ -195,14 +199,14 @@ func TestTestCommands(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		runtime.CreateCommit(git.Commit{
-			Branch:      "initial",
+			Branch:      domain.NewLocalBranchName("initial"),
 			FileName:    "hello.txt",
 			FileContent: "hello world",
 			Message:     "commit",
 		})
-		commits := runtime.CommitsInBranch("initial", []string{})
+		commits := runtime.CommitsInBranch(domain.NewLocalBranchName("initial"), []string{})
 		assert.Len(t, commits, 1)
-		content := runtime.FileContentInCommit(commits[0].SHA, "hello.txt")
+		content := runtime.FileContentInCommit(commits[0].SHA.Location(), "hello.txt")
 		assert.Equal(t, "hello world", content)
 	})
 
@@ -213,7 +217,7 @@ func TestTestCommands(t *testing.T) {
 		runtime.CreateFile("f2.txt", "two")
 		runtime.StageFiles("f1.txt", "f2.txt")
 		runtime.CommitStagedChanges("stuff")
-		commits := runtime.Commits([]string{}, "initial")
+		commits := runtime.Commits([]string{}, domain.NewLocalBranchName("initial"))
 		assert.Len(t, commits, 1)
 		fileNames := runtime.FilesInCommit(commits[0].SHA)
 		assert.Equal(t, []string{"f1.txt", "f2.txt"}, fileNames)
@@ -224,12 +228,12 @@ func TestTestCommands(t *testing.T) {
 			t.Parallel()
 			env := fixture.NewStandardFixture(t.TempDir())
 			runner := env.DevRepo
-			runner.CreateBranch("branch1", "main")
-			runner.CheckoutBranch("branch1")
+			runner.CreateBranch(domain.NewLocalBranchName("branch1"), domain.NewLocalBranchName("main"))
+			runner.CheckoutBranch(domain.NewLocalBranchName("branch1"))
 			runner.CreateFile("file1", "content")
 			runner.StageFiles("file1")
 			runner.CommitStagedChanges("stuff")
-			runner.PushBranchToRemote("branch1", config.OriginRemote)
+			runner.PushBranchToRemote(domain.NewLocalBranchName("branch1"), config.OriginRemote)
 			have := runner.HasBranchesOutOfSync()
 			assert.False(t, have)
 		})
@@ -237,7 +241,7 @@ func TestTestCommands(t *testing.T) {
 		t.Run("branch is ahead", func(t *testing.T) {
 			t.Parallel()
 			env := fixture.NewStandardFixture(t.TempDir())
-			env.DevRepo.CreateBranch("branch1", "main")
+			env.DevRepo.CreateBranch(domain.NewLocalBranchName("branch1"), domain.NewLocalBranchName("main"))
 			env.DevRepo.PushBranch()
 			env.DevRepo.CreateFile("file1", "content")
 			env.DevRepo.StageFiles("file1")
@@ -249,13 +253,13 @@ func TestTestCommands(t *testing.T) {
 		t.Run("branch is behind", func(t *testing.T) {
 			t.Parallel()
 			env := fixture.NewStandardFixture(t.TempDir())
-			env.DevRepo.CreateBranch("branch1", "main")
+			env.DevRepo.CreateBranch(domain.NewLocalBranchName("branch1"), domain.NewLocalBranchName("main"))
 			env.DevRepo.PushBranch()
-			env.OriginRepo.CheckoutBranch("main")
+			env.OriginRepo.CheckoutBranch(domain.NewLocalBranchName("main"))
 			env.OriginRepo.CreateFile("file1", "content")
 			env.OriginRepo.StageFiles("file1")
 			env.OriginRepo.CommitStagedChanges("stuff")
-			env.OriginRepo.CheckoutBranch("initial")
+			env.OriginRepo.CheckoutBranch(domain.NewLocalBranchName("initial"))
 			env.DevRepo.Fetch()
 			have := env.DevRepo.HasBranchesOutOfSync()
 			assert.True(t, have)
@@ -289,8 +293,8 @@ func TestTestCommands(t *testing.T) {
 		runtime := testruntime.Create(t)
 		res := runtime.HasGitTownConfigNow()
 		assert.False(t, res)
-		runtime.CreateBranch("main", "initial")
-		err := runtime.CreateFeatureBranch("foo")
+		runtime.CreateBranch(domain.NewLocalBranchName("main"), domain.NewLocalBranchName("initial"))
+		err := runtime.CreateFeatureBranch(domain.NewLocalBranchName("foo"))
 		assert.NoError(t, err)
 		res = runtime.HasGitTownConfigNow()
 		assert.NoError(t, err)
@@ -302,24 +306,27 @@ func TestTestCommands(t *testing.T) {
 		dev := testruntime.Create(t)
 		origin := testruntime.Create(t)
 		dev.AddRemote(config.OriginRemote, origin.WorkingDir)
-		dev.CreateBranch("b1", "initial")
-		dev.PushBranchToRemote("b1", config.OriginRemote)
-		branches, err := origin.LocalBranchesMainFirst("initial")
+		dev.CreateBranch(domain.NewLocalBranchName("b1"), domain.NewLocalBranchName("initial"))
+		dev.PushBranchToRemote(domain.NewLocalBranchName("b1"), config.OriginRemote)
+		branches, err := origin.LocalBranchesMainFirst(domain.NewLocalBranchName("initial"))
 		assert.NoError(t, err)
-		assert.Equal(t, []string{"initial", "b1"}, branches)
+		want := domain.NewLocalBranchNames("initial", "b1")
+		assert.Equal(t, want, branches)
 	})
 
 	t.Run(".RemoveBranch()", func(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
-		runtime.CreateBranch("b1", "initial")
-		branches, err := runtime.LocalBranchesMainFirst("initial")
+		runtime.CreateBranch(domain.NewLocalBranchName("b1"), domain.NewLocalBranchName("initial"))
+		branches, err := runtime.LocalBranchesMainFirst(domain.NewLocalBranchName("initial"))
 		assert.NoError(t, err)
-		assert.Equal(t, []string{"initial", "b1"}, branches)
-		runtime.RemoveBranch("b1")
-		branches, err = runtime.LocalBranchesMainFirst("initial")
+		want := domain.NewLocalBranchNames("initial", "b1")
+		assert.Equal(t, want, branches)
+		runtime.RemoveBranch(domain.NewLocalBranchName("b1"))
+		branches, err = runtime.LocalBranchesMainFirst(domain.NewLocalBranchName("initial"))
 		assert.NoError(t, err)
-		assert.Equal(t, []string{"initial"}, branches)
+		wantBranches := domain.NewLocalBranchNames("initial")
+		assert.Equal(t, wantBranches, branches)
 	})
 
 	t.Run(".RemoveRemote()", func(t *testing.T) {
@@ -336,7 +343,7 @@ func TestTestCommands(t *testing.T) {
 	t.Run(".ShaForCommit()", func(t *testing.T) {
 		t.Parallel()
 		repo := testruntime.Create(t)
-		repo.CreateCommit(git.Commit{Branch: "initial", FileName: "foo", FileContent: "bar", Message: "commit"})
+		repo.CreateCommit(git.Commit{Branch: domain.NewLocalBranchName("initial"), FileName: "foo", FileContent: "bar", Message: "commit"})
 		sha := repo.ShaForCommit("commit")
 		assert.Len(t, sha, 40)
 	})

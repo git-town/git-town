@@ -1,6 +1,7 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 )
@@ -8,10 +9,10 @@ import (
 // DeleteOriginBranchStep deletes the current branch from the origin remote.
 type DeleteOriginBranchStep struct {
 	EmptyStep
-	Branch     string // name of the branch to delete without the remote name, i.e. "foo" instead of "origin/foo"
+	Branch     domain.LocalBranchName
 	IsTracking bool
 	NoPushHook bool
-	branchSha  git.SHA
+	branchSha  domain.SHA
 }
 
 func (step *DeleteOriginBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
@@ -23,9 +24,9 @@ func (step *DeleteOriginBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]S
 
 func (step *DeleteOriginBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
 	if !step.IsTracking {
-		trackingBranch := git.TrackingBranchName(step.Branch)
+		trackingBranch := domain.NewRemoteBranchName("origin/" + step.Branch.String()) // TODO: inject git.Branches somehow and look the name of the actual tracking brach in it
 		var err error
-		step.branchSha, err = run.Backend.ShaForBranch(trackingBranch)
+		step.branchSha, err = run.Backend.ShaForBranch(trackingBranch.BranchName())
 		if err != nil {
 			return err
 		}

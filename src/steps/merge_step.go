@@ -1,6 +1,7 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 )
@@ -8,8 +9,8 @@ import (
 // MergeStep merges the branch with the given name into the current branch.
 type MergeStep struct {
 	EmptyStep
-	Branch      string
-	previousSha git.SHA
+	Branch      domain.BranchName
+	previousSha domain.SHA
 }
 
 func (step *MergeStep) CreateAbortStep() Step {

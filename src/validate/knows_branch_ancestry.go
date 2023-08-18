@@ -4,6 +4,7 @@ import (
 	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/dialog"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 )
 
@@ -37,11 +38,11 @@ type KnowsBranchesAncestorsArgs struct {
 	Backend         *git.BackendCommands
 	BranchDurations config.BranchDurations
 	Lineage         config.Lineage
-	MainBranch      string
+	MainBranch      domain.LocalBranchName
 }
 
 // KnowsBranchAncestors prompts the user for all unknown ancestors of the given branch.
-func KnowsBranchAncestors(branch string, args KnowsBranchAncestorsArgs) (bool, error) {
+func KnowsBranchAncestors(branch domain.LocalBranchName, args KnowsBranchAncestorsArgs) (bool, error) {
 	headerShown := false
 	currentBranch := branch
 	if !args.BranchDurations.IsFeatureBranch(branch) {
@@ -50,9 +51,9 @@ func KnowsBranchAncestors(branch string, args KnowsBranchAncestorsArgs) (bool, e
 	updated := false
 	for {
 		// TODO: reload the lineage at the end of the loop
-		parent := args.Backend.Config.Lineage()[currentBranch] // need to reload the lineage here because ancestry data was changed
+		parent, hasParent := args.Backend.Config.Lineage()[currentBranch] // need to reload the lineage here because ancestry data was changed
 		var err error
-		if parent == "" { //nolint:nestif
+		if !hasParent { //nolint:nestif
 			if !headerShown {
 				printParentBranchHeader(args.MainBranch)
 				headerShown = true
@@ -61,7 +62,7 @@ func KnowsBranchAncestors(branch string, args KnowsBranchAncestorsArgs) (bool, e
 			if err != nil {
 				return false, err
 			}
-			if parent == dialog.PerennialBranchOption {
+			if parent.String() == dialog.PerennialBranchOption {
 				err = args.Backend.Config.AddToPerennialBranches(currentBranch)
 				if err != nil {
 					return false, err
@@ -87,12 +88,12 @@ type KnowsBranchAncestorsArgs struct {
 	AllBranches     git.BranchesSyncStatus
 	Backend         *git.BackendCommands
 	BranchDurations config.BranchDurations
-	DefaultBranch   string
+	DefaultBranch   domain.LocalBranchName
 	Lineage         config.Lineage
-	MainBranch      string
+	MainBranch      domain.LocalBranchName
 }
 
-func printParentBranchHeader(mainBranch string) {
+func printParentBranchHeader(mainBranch domain.LocalBranchName) {
 	cli.Printf(parentBranchHeaderTemplate, mainBranch)
 }
 

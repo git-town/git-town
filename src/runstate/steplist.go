@@ -3,6 +3,7 @@ package runstate
 import (
 	"encoding/json"
 
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/steps"
 )
 
@@ -67,15 +68,15 @@ func (stepList *StepList) PrependList(otherList StepList) {
 type WrapOptions struct {
 	RunInGitRoot     bool
 	StashOpenChanges bool
-	MainBranch       string
-	InitialBranch    string
-	PreviousBranch   string
+	MainBranch       domain.LocalBranchName
+	InitialBranch    domain.LocalBranchName
+	PreviousBranch   domain.LocalBranchName
 }
 
 // Wrap wraps the list with steps that
 // change to the Git root directory or stash away open changes.
 func (stepList *StepList) Wrap(options WrapOptions) error {
-	if options.PreviousBranch != "" {
+	if !options.PreviousBranch.IsEmpty() {
 		stepList.Append(&steps.PreserveCheckoutHistoryStep{
 			InitialBranch:                     options.InitialBranch,
 			InitialPreviouslyCheckedOutBranch: options.PreviousBranch,

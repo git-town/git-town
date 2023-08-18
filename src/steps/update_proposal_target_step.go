@@ -3,6 +3,7 @@ package steps
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
@@ -11,8 +12,8 @@ import (
 // SquashMergeStep squash merges the branch with the given name into the current branch.
 type UpdateProposalTargetStep struct {
 	ProposalNumber int
-	NewTarget      string
-	ExistingTarget string
+	NewTarget      domain.LocalBranchName
+	ExistingTarget domain.LocalBranchName
 	EmptyStep
 }
 

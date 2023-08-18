@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/slice"
 )
@@ -22,7 +23,7 @@ type FrontendCommands struct {
 	SetCachedCurrentBranch SetCachedCurrentBranchFunc
 }
 
-type SetCachedCurrentBranchFunc func(string)
+type SetCachedCurrentBranchFunc func(domain.LocalBranchName)
 
 // AbortMerge cancels a currently ongoing Git merge operation.
 func (fc *FrontendCommands) AbortMerge() error {
@@ -41,8 +42,8 @@ func (fc *FrontendCommands) AddGitAlias(alias config.Alias) error {
 }
 
 // CheckoutBranch checks out the Git branch with the given name in this repo.
-func (fc *FrontendCommands) CheckoutBranch(name string) error {
-	err := fc.Run("git", "checkout", name)
+func (fc *FrontendCommands) CheckoutBranch(name domain.LocalBranchName) error {
+	err := fc.Run("git", "checkout", name.String())
 	if err != nil {
 		return fmt.Errorf(messages.BranchCheckoutProblem, name, err)
 	}
@@ -51,12 +52,12 @@ func (fc *FrontendCommands) CheckoutBranch(name string) error {
 }
 
 // CreateRemoteBranch creates a remote branch from the given local SHA.
-func (fc *FrontendCommands) CreateRemoteBranch(localSha SHA, branch string, noPushHook bool) error {
+func (fc *FrontendCommands) CreateRemoteBranch(localSha domain.SHA, branch domain.LocalBranchName, noPushHook bool) error {
 	args := []string{"push"}
 	if noPushHook {
 		args = append(args, "--no-verify")
 	}
-	args = append(args, config.OriginRemote, localSha.String()+":refs/heads/"+branch)
+	args = append(args, config.OriginRemote, localSha.String()+":refs/heads/"+branch.String())
 	return fc.Run("git", args...)
 }
 
@@ -93,8 +94,8 @@ func (fc *FrontendCommands) ContinueRebase() error {
 // CreateBranch creates a new branch with the given name.
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
-func (fc *FrontendCommands) CreateBranch(name, parent string) error {
-	return fc.Run("git", "branch", name, parent)
+func (fc *FrontendCommands) CreateBranch(name domain.LocalBranchName, parent domain.Location) error {
+	return fc.Run("git", "branch", name.String(), parent.String())
 }
 
 // DeleteLastCommit resets HEAD to the previous commit.
@@ -103,8 +104,8 @@ func (fc *FrontendCommands) DeleteLastCommit() error {
 }
 
 // DeleteLocalBranch removes the local branch with the given name.
-func (fc *FrontendCommands) DeleteLocalBranch(name string, force bool) error {
-	args := []string{"branch", "-d", name}
+func (fc *FrontendCommands) DeleteLocalBranch(name domain.LocalBranchName, force bool) error {
+	args := []string{"branch", "-d", name.String()}
 	if force {
 		args[1] = "-D"
 	}
@@ -112,13 +113,14 @@ func (fc *FrontendCommands) DeleteLocalBranch(name string, force bool) error {
 }
 
 // DeleteRemoteBranch removes the remote branch of the given local branch.
-func (fc *FrontendCommands) DeleteRemoteBranch(name string) error {
-	return fc.Run("git", "push", config.OriginRemote, ":"+name)
+// TODO: provide the actual domain.RemoteBranchName here and delete that branch instead of "origin/<localbranch>".
+func (fc *FrontendCommands) DeleteRemoteBranch(name domain.LocalBranchName) error {
+	return fc.Run("git", "push", config.OriginRemote, ":"+name.String())
 }
 
 // DiffParent displays the diff between the given branch and its given parent branch.
-func (fc *FrontendCommands) DiffParent(branch, parentBranch string) error {
-	return fc.Run("git", "diff", parentBranch+".."+branch)
+func (fc *FrontendCommands) DiffParent(branch, parentBranch domain.LocalBranchName) error {
+	return fc.Run("git", "diff", parentBranch.String()+".."+branch.String())
 }
 
 // DiscardOpenChanges deletes all uncommitted changes.
@@ -132,14 +134,14 @@ func (fc *FrontendCommands) Fetch() error {
 }
 
 // FetchUpstream fetches updates from the upstream remote.
-func (fc *FrontendCommands) FetchUpstream(branch string) error {
-	return fc.Run("git", "fetch", "upstream", branch)
+func (fc *FrontendCommands) FetchUpstream(branch domain.LocalBranchName) error {
+	return fc.Run("git", "fetch", "upstream", branch.String())
 }
 
 // MergeBranchNoEdit merges the given branch into the current branch,
 // using the default commit message.
-func (fc *FrontendCommands) MergeBranchNoEdit(branch string) error {
-	err := fc.Run("git", "merge", "--no-edit", branch)
+func (fc *FrontendCommands) MergeBranchNoEdit(branch domain.BranchName) error {
+	err := fc.Run("git", "merge", "--no-edit", branch.String())
 	return err
 }
 
@@ -159,7 +161,7 @@ func (fc *FrontendCommands) Pull() error {
 }
 
 type PushArgs struct {
-	Branch         string
+	Branch         domain.LocalBranchName
 	ForceWithLease bool `exhaustruct:"optional"`
 	NoPushHook     bool `exhaustruct:"optional"`
 	Remote         string
@@ -167,7 +169,7 @@ type PushArgs struct {
 
 // PushBranch pushes the branch with the given name to origin.
 func (fc *FrontendCommands) PushBranch(options ...PushArgs) error {
-	option := slice.FirstElementOr(options, PushArgs{Branch: "", Remote: ""})
+	option := slice.FirstElementOr(options, PushArgs{Branch: domain.LocalBranchName{}, Remote: ""})
 	args := []string{"push"}
 	provideBranch := false
 	if option.NoPushHook {
@@ -180,8 +182,8 @@ func (fc *FrontendCommands) PushBranch(options ...PushArgs) error {
 		args = append(args, "-u", option.Remote)
 		provideBranch = true
 	}
-	if option.Branch != "" && provideBranch {
-		args = append(args, option.Branch)
+	if !option.Branch.IsEmpty() && provideBranch {
+		args = append(args, option.Branch.String())
 	}
 	return fc.Run("git", args...)
 }
@@ -192,8 +194,8 @@ func (fc *FrontendCommands) PushTags() error {
 }
 
 // Rebase initiates a Git rebase of the current branch against the given branch.
-func (fc *FrontendCommands) Rebase(target string) error {
-	return fc.Run("git", "rebase", target)
+func (fc *FrontendCommands) Rebase(target domain.BranchName) error {
+	return fc.Run("git", "rebase", target.String())
 }
 
 // RemoveGitAlias removes the given Git alias.
@@ -202,7 +204,7 @@ func (fc *FrontendCommands) RemoveGitAlias(alias config.Alias) error {
 }
 
 // ResetToSha undoes all commits on the current branch all the way until the given SHA.
-func (fc *FrontendCommands) ResetToSha(sha SHA, hard bool) error {
+func (fc *FrontendCommands) ResetToSha(sha domain.SHA, hard bool) error {
 	args := []string{"reset"}
 	if hard {
 		args = append(args, "--hard")
@@ -212,13 +214,13 @@ func (fc *FrontendCommands) ResetToSha(sha SHA, hard bool) error {
 }
 
 // RevertCommit reverts the commit with the given SHA.
-func (fc *FrontendCommands) RevertCommit(sha SHA) error {
+func (fc *FrontendCommands) RevertCommit(sha domain.SHA) error {
 	return fc.Run("git", "revert", sha.String())
 }
 
 // SquashMerge squash-merges the given branch into the current branch.
-func (fc *FrontendCommands) SquashMerge(branch string) error {
-	return fc.Run("git", "merge", "--squash", branch)
+func (fc *FrontendCommands) SquashMerge(branch domain.LocalBranchName) error {
+	return fc.Run("git", "merge", "--squash", branch.String())
 }
 
 // Stash adds the current files to the Git stash.
