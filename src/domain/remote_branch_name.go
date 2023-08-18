@@ -6,9 +6,9 @@ import (
 	"strings"
 )
 
-// RemoteBranchName is the name of a remote branch, e.g. `origin/foo`.
+// RemoteBranchName is the name of a remote branch, e.g. "origin/foo".
 type RemoteBranchName struct {
-	BranchName // a RemoteBranchName is a special BranchName
+	BranchName // a RemoteBranchName is a type of BranchName
 }
 
 func NewRemoteBranchName(value string) RemoteBranchName {
