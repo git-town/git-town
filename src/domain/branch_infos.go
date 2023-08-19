@@ -54,9 +54,8 @@ func (bs BranchInfos) LocalBranchesWithDeletedTrackingBranches() BranchInfos {
 	return result
 }
 
-// LookupLocalBranch provides the branch with the given name if one exists.
-// TODO: rename to FindLocalBranch.
-func (bs BranchInfos) LookupLocalBranch(branchName LocalBranchName) *BranchInfo {
+// FindLocalBranch provides the branch with the given name if one exists.
+func (bs BranchInfos) FindLocalBranch(branchName LocalBranchName) *BranchInfo {
 	for bi, branch := range bs {
 		if branch.Name == branchName {
 			return &bs[bi]
@@ -65,10 +64,9 @@ func (bs BranchInfos) LookupLocalBranch(branchName LocalBranchName) *BranchInfo 
 	return nil
 }
 
-// LookupLocalBranchWithTracking provides the local branch that has the given remote branch as its tracking branch
+// FindLocalBranchWithTracking provides the local branch that has the given remote branch as its tracking branch
 // or nil if no such branch exists.
-// TODO: rename to FindLocalBranchWithTracking.
-func (bs BranchInfos) LookupLocalBranchWithTracking(remoteBranch RemoteBranchName) *BranchInfo {
+func (bs BranchInfos) FindLocalBranchWithTracking(remoteBranch RemoteBranchName) *BranchInfo {
 	for b, branch := range bs {
 		if branch.RemoteName == remoteBranch {
 			return &bs[b]
@@ -102,7 +100,7 @@ func (bs BranchInfos) Remove(branchName LocalBranchName) BranchInfos {
 func (bs BranchInfos) Select(names []LocalBranchName) (BranchInfos, error) {
 	result := make(BranchInfos, len(names))
 	for n, name := range names {
-		branch := bs.LookupLocalBranch(name)
+		branch := bs.FindLocalBranch(name)
 		if branch == nil {
 			return result, fmt.Errorf(messages.BranchDoesntExist, name)
 		}

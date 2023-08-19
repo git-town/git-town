@@ -94,7 +94,7 @@ func determineKillConfig(args []string, run *git.ProdRunner, isOffline bool) (*k
 	if !branches.Types.IsFeatureBranch(targetBranchName) {
 		return nil, fmt.Errorf(messages.KillOnlyFeatureBranches)
 	}
-	targetBranch := branches.All.LookupLocalBranch(targetBranchName)
+	targetBranch := branches.All.FindLocalBranch(targetBranchName)
 	if targetBranch == nil {
 		return nil, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
