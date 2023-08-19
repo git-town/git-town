@@ -255,6 +255,15 @@ func (r *TestCommands) HasGitTownConfigNow() bool {
 	return output != ""
 }
 
+// LocalBranchesMainFirst provides the names of all local branches in this repo.
+func (r *TestCommands) LocalBranchesMainFirst(mainBranch domain.LocalBranchName) (domain.LocalBranchNames, error) {
+	branches, err := r.LocalBranches()
+	if err != nil {
+		return domain.LocalBranchNames{}, err
+	}
+	return slice.Hoist(branches, mainBranch), nil
+}
+
 func (r *TestCommands) PushBranch() {
 	r.MustRun("git", "push")
 }

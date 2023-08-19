@@ -378,15 +378,6 @@ func (bc *BackendCommands) LocalBranches() (domain.LocalBranchNames, error) {
 	return result, nil
 }
 
-// LocalBranchesMainFirst provides the names of all local branches in this repo.
-func (bc *BackendCommands) LocalBranchesMainFirst(mainBranch domain.LocalBranchName) (domain.LocalBranchNames, error) {
-	branches, err := bc.LocalBranches()
-	if err != nil {
-		return domain.LocalBranchNames{}, err
-	}
-	return slice.Hoist(branches, mainBranch), nil
-}
-
 // PreviouslyCheckedOutBranch provides the name of the branch that was previously checked out in this repo.
 func (bc *BackendCommands) PreviouslyCheckedOutBranch() domain.LocalBranchName {
 	output, err := bc.QueryTrim("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")

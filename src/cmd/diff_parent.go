@@ -77,7 +77,7 @@ func determineDiffParentConfig(args []string, run *git.ProdRunner) (*diffParentC
 	}
 	branch := domain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
 	if branch != branches.Initial {
-		if !run.Backend.HasLocalBranch(branch) {
+		if !branches.All.HasLocalBranch(branch) {
 			return nil, fmt.Errorf(messages.BranchDoesntExist, branch)
 		}
 	}
