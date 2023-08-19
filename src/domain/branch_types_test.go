@@ -11,7 +11,7 @@ func TestBranchDurations(t *testing.T) {
 	t.Parallel()
 	t.Run("IsFeatureBranch", func(t *testing.T) {
 		t.Parallel()
-		bd := domain.BranchDurations{
+		bd := domain.BranchTypes{
 			MainBranch:        domain.NewLocalBranchName("main"),
 			PerennialBranches: domain.NewLocalBranchNames("peren1", "peren2"),
 		}
@@ -22,7 +22,7 @@ func TestBranchDurations(t *testing.T) {
 	})
 	t.Run("IsMainBranch", func(t *testing.T) {
 		t.Parallel()
-		bd := domain.BranchDurations{
+		bd := domain.BranchTypes{
 			MainBranch:        domain.NewLocalBranchName("main"),
 			PerennialBranches: domain.NewLocalBranchNames("peren1", "peren2"),
 		}
@@ -33,7 +33,7 @@ func TestBranchDurations(t *testing.T) {
 	})
 	t.Run("IsPerennialBranch", func(t *testing.T) {
 		t.Parallel()
-		bd := domain.BranchDurations{
+		bd := domain.BranchTypes{
 			MainBranch:        domain.NewLocalBranchName("main"),
 			PerennialBranches: domain.NewLocalBranchNames("peren1", "peren2"),
 		}

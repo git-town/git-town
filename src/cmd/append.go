@@ -77,7 +77,7 @@ func runAppend(arg string, debug bool) error {
 }
 
 type appendConfig struct {
-	durations           domain.BranchDurations
+	durations           domain.BranchTypes
 	branchesToSync      domain.BranchInfos
 	hasOpenChanges      bool
 	remotes             config.Remotes

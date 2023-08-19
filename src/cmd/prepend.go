@@ -80,7 +80,7 @@ func prepend(args []string, debug bool) error {
 }
 
 type prependConfig struct {
-	branchDurations     domain.BranchDurations
+	branchDurations     domain.BranchTypes
 	branchesToSync      domain.BranchInfos
 	hasOpenChanges      bool
 	remotes             config.Remotes

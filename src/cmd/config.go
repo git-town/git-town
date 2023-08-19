@@ -95,7 +95,7 @@ func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 }
 
 type ConfigConfig struct {
-	branchDurations    domain.BranchDurations
+	branchDurations    domain.BranchTypes
 	deleteOrigin       bool
 	giteaToken         string
 	githubToken        string

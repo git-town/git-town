@@ -88,7 +88,7 @@ func sync(all, dryRun, debug bool) error {
 }
 
 type syncConfig struct {
-	branchDurations    domain.BranchDurations
+	branchDurations    domain.BranchTypes
 	branchesToSync     domain.BranchInfos
 	hasOpenChanges     bool
 	remotes            config.Remotes
@@ -266,7 +266,7 @@ func syncBranchSteps(list *runstate.StepListBuilder, args syncBranchStepsArgs) {
 
 type syncBranchStepsArgs struct {
 	branch             domain.BranchInfo
-	branchDurations    domain.BranchDurations
+	branchDurations    domain.BranchTypes
 	remotes            config.Remotes
 	isOffline          bool
 	lineage            config.Lineage

@@ -89,7 +89,7 @@ func newPullRequest(debug bool) error {
 
 type newPullRequestConfig struct {
 	branchesToSync     domain.BranchInfos
-	branchDurations    domain.BranchDurations
+	branchDurations    domain.BranchTypes
 	connector          hosting.Connector
 	hasOpenChanges     bool
 	remotes            config.Remotes

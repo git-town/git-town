@@ -86,7 +86,7 @@ func renameBranch(args []string, force, debug bool) error {
 }
 
 type renameBranchConfig struct {
-	branchDurations domain.BranchDurations
+	branchDurations domain.BranchTypes
 	initialBranch   domain.LocalBranchName
 	isOffline       bool
 	lineage         config.Lineage
