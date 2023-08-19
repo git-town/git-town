@@ -27,8 +27,8 @@ Feature: display debug statistics
       | main   | frontend | git branch new main                          |
       |        | backend  | git config git-town-branch.new.parent main   |
       | main   | frontend | git checkout new                             |
-      |        | backend  | git branch                                   |
-      |        | backend  | git branch                                   |
+      |        | backend  | git show-ref --quiet refs/heads/main         |
+      |        | backend  | git show-ref --quiet refs/heads/main         |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}    |
     And it prints:
       """

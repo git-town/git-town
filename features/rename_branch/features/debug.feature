@@ -30,8 +30,8 @@ Feature: display debug statistics
       |        | backend  | git rev-parse old                             |
       |        | backend  | git log main..old                             |
       | new    | frontend | git branch -D old                             |
-      |        | backend  | git branch                                    |
-      |        | backend  | git branch                                    |
+      |        | backend  | git show-ref --quiet refs/heads/main          |
+      |        | backend  | git show-ref --quiet refs/heads/old           |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
       |        | backend  | git checkout main                             |
       |        | backend  | git checkout new                              |

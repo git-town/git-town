@@ -36,8 +36,8 @@ Feature: display debug statistics
       |        | backend  | git config git-town-branch.parent.parent main |
       |        | backend  | git config git-town-branch.old.parent parent  |
       | old    | frontend | git checkout parent                           |
-      |        | backend  | git branch                                    |
-      |        | backend  | git branch                                    |
+      |        | backend  | git show-ref --quiet refs/heads/old           |
+      |        | backend  | git show-ref --quiet refs/heads/old           |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
     And it prints:
       """
