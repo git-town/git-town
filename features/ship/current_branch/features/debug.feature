@@ -49,7 +49,7 @@ Feature: display debug statistics
       |         | backend  | git log main..feature                             |
       | main    | frontend | git branch -D feature                             |
       |         | backend  | git config --unset git-town-branch.feature.parent |
-      |         | backend  | git branch                                        |
+      |         | backend  | git show-ref --quiet refs/heads/feature           |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}         |
       |         | backend  | git checkout main                                 |
       |         | backend  | git checkout main                                 |
