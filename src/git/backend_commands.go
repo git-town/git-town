@@ -290,10 +290,16 @@ func (bc *BackendCommands) ExpectedPreviouslyCheckedOutBranch(initialPreviouslyC
 		if err != nil {
 			return domain.LocalBranchName{}, err
 		}
-		if currentBranch == initialBranch || !bc.HasLocalBranch(initialBranch) {
+		if currentBranch == initialBranch {
 			return initialPreviouslyCheckedOutBranch, nil
 		}
-		return initialBranch, nil
+		if initialBranch == initialPreviouslyCheckedOutBranch {
+			return initialBranch, nil
+		}
+		if bc.HasLocalBranch(initialBranch) {
+			return initialBranch, nil
+		}
+		return initialPreviouslyCheckedOutBranch, nil
 	}
 	return mainBranch, nil
 }
