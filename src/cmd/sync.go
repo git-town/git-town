@@ -125,7 +125,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, isOffline bool) (*sy
 	var shouldPushTags bool
 	lineage := run.Config.Lineage()
 	var configUpdated bool
-	branchDurations := branches.Perennials
+	branchDurations := branches.Types
 	if allFlag {
 		localBranches := branches.All.LocalBranches()
 		configUpdated, err = validate.KnowsBranchesAncestors(validate.KnowsBranchesAncestorsArgs{
@@ -144,7 +144,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, isOffline bool) (*sy
 		configUpdated, err = validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
 			AllBranches:   branches.All,
 			Backend:       &run.Backend,
-			BranchTypes:   branches.Perennials,
+			BranchTypes:   branches.Types,
 			DefaultBranch: mainBranch,
 			Lineage:       lineage,
 			MainBranch:    mainBranch,

@@ -123,7 +123,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 		return nil, fmt.Errorf(messages.RenameMainBranch)
 	}
 	if !forceFlag {
-		if branches.Perennials.IsPerennialBranch(oldBranchName) {
+		if branches.Types.IsPerennialBranch(oldBranchName) {
 			return nil, fmt.Errorf(messages.RenamePerennialBranchWarning, oldBranchName)
 		}
 	}
@@ -145,7 +145,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 	}
 	lineage := run.Config.Lineage()
 	return &renameBranchConfig{
-		branchTypes:    branches.Perennials,
+		branchTypes:    branches.Types,
 		initialBranch:  branches.Initial,
 		isOffline:      isOffline,
 		lineage:        lineage,

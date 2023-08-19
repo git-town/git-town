@@ -48,7 +48,7 @@ func setParent(debug bool) error {
 	if err != nil {
 		return err
 	}
-	if !branches.Perennials.IsFeatureBranch(branches.Initial) {
+	if !branches.Types.IsFeatureBranch(branches.Initial) {
 		return errors.New(messages.SetParentNoFeatureBranch)
 	}
 	lineage := repo.Runner.Config.Lineage()
@@ -68,7 +68,7 @@ func setParent(debug bool) error {
 		Backend:       &repo.Runner.Backend,
 		AllBranches:   branches.All,
 		Lineage:       lineage,
-		BranchTypes:   branches.Perennials,
+		BranchTypes:   branches.Types,
 		MainBranch:    mainBranch,
 	})
 	if err != nil {
