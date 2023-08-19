@@ -285,20 +285,12 @@ func (bc *BackendCommands) CurrentSha() (domain.SHA, error) {
 // ExpectedPreviouslyCheckedOutBranch returns what is the expected previously checked out branch
 // given the inputs.
 func (bc *BackendCommands) ExpectedPreviouslyCheckedOutBranch(initialPreviouslyCheckedOutBranch, initialBranch, mainBranch domain.LocalBranchName) (domain.LocalBranchName, error) {
-	hasInitialPreviouslyCheckedOutBranch, err := bc.HasLocalBranch(initialPreviouslyCheckedOutBranch)
-	if err != nil {
-		return domain.LocalBranchName{}, err
-	}
-	if hasInitialPreviouslyCheckedOutBranch {
+	if bc.HasLocalBranch(initialPreviouslyCheckedOutBranch) {
 		currentBranch, err := bc.CurrentBranch()
 		if err != nil {
 			return domain.LocalBranchName{}, err
 		}
-		hasInitialBranch, err := bc.HasLocalBranch(initialBranch)
-		if err != nil {
-			return domain.LocalBranchName{}, err
-		}
-		if currentBranch == initialBranch || !hasInitialBranch {
+		if currentBranch == initialBranch || !bc.HasLocalBranch(initialBranch) {
 			return initialPreviouslyCheckedOutBranch, nil
 		}
 		return initialBranch, nil
@@ -316,12 +308,8 @@ func (bc *BackendCommands) HasConflicts() (bool, error) {
 }
 
 // HasLocalBranch indicates whether this repo has a local branch with the given name.
-func (bc *BackendCommands) HasLocalBranch(name domain.LocalBranchName) (bool, error) {
-	branches, err := bc.LocalBranches()
-	if err != nil {
-		return false, fmt.Errorf(messages.BranchLocalProblem, name, err)
-	}
-	return slice.Contains(branches, name), nil
+func (bc *BackendCommands) HasLocalBranch(name domain.LocalBranchName) bool {
+	return bc.Run("git", "show-ref", "--quiet", "refs/heads/"+name.String()) == nil
 }
 
 // HasMergeInProgress indicates whether this Git repository currently has a merge in progress.

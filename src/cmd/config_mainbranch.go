@@ -59,11 +59,7 @@ func printMainBranch(run *git.ProdRunner) {
 }
 
 func setMainBranch(branch domain.LocalBranchName, run *git.ProdRunner) error {
-	hasBranch, err := run.Backend.HasLocalBranch(branch)
-	if err != nil {
-		return err
-	}
-	if !hasBranch {
+	if !run.Backend.HasLocalBranch(branch) {
 		return fmt.Errorf(messages.BranchDoesntExist, branch)
 	}
 	return run.Config.SetMainBranch(branch)
