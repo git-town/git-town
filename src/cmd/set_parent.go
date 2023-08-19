@@ -48,7 +48,7 @@ func setParent(debug bool) error {
 	if err != nil {
 		return err
 	}
-	if !branches.Durations.IsFeatureBranch(branches.Initial) {
+	if !branches.Types.IsFeatureBranch(branches.Initial) {
 		return errors.New(messages.SetParentNoFeatureBranch)
 	}
 	lineage := repo.Runner.Config.Lineage()
@@ -64,12 +64,12 @@ func setParent(debug bool) error {
 	}
 	mainBranch := repo.Runner.Config.MainBranch()
 	_, err = validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
-		DefaultBranch:   existingParent,
-		Backend:         &repo.Runner.Backend,
-		AllBranches:     branches.All,
-		Lineage:         lineage,
-		BranchDurations: branches.Durations,
-		MainBranch:      mainBranch,
+		DefaultBranch: existingParent,
+		Backend:       &repo.Runner.Backend,
+		AllBranches:   branches.All,
+		Lineage:       lineage,
+		BranchTypes:   branches.Types,
+		MainBranch:    mainBranch,
 	})
 	if err != nil {
 		return err

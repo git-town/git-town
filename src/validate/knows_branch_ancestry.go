@@ -16,12 +16,12 @@ func KnowsBranchesAncestors(args KnowsBranchesAncestorsArgs) (bool, error) {
 	updated := false
 	for _, branch := range args.AllBranches {
 		branchUpdated, err := KnowsBranchAncestors(branch.Name, KnowsBranchAncestorsArgs{
-			DefaultBranch:   args.MainBranch,
-			Backend:         args.Backend,
-			AllBranches:     args.AllBranches,
-			Lineage:         args.Lineage,
-			BranchDurations: args.BranchDurations,
-			MainBranch:      args.MainBranch,
+			DefaultBranch: args.MainBranch,
+			Backend:       args.Backend,
+			AllBranches:   args.AllBranches,
+			Lineage:       args.Lineage,
+			BranchTypes:   args.BranchTypes,
+			MainBranch:    args.MainBranch,
 		})
 		if err != nil {
 			return updated, err
@@ -34,18 +34,18 @@ func KnowsBranchesAncestors(args KnowsBranchesAncestorsArgs) (bool, error) {
 }
 
 type KnowsBranchesAncestorsArgs struct {
-	AllBranches     domain.BranchInfos
-	Backend         *git.BackendCommands
-	BranchDurations domain.BranchDurations
-	Lineage         config.Lineage
-	MainBranch      domain.LocalBranchName
+	AllBranches domain.BranchInfos
+	Backend     *git.BackendCommands
+	BranchTypes domain.BranchTypes
+	Lineage     config.Lineage
+	MainBranch  domain.LocalBranchName
 }
 
 // KnowsBranchAncestors prompts the user for all unknown ancestors of the given branch.
 func KnowsBranchAncestors(branch domain.LocalBranchName, args KnowsBranchAncestorsArgs) (bool, error) {
 	headerShown := false
 	currentBranch := branch
-	if !args.BranchDurations.IsFeatureBranch(branch) {
+	if !args.BranchTypes.IsFeatureBranch(branch) {
 		return false, nil
 	}
 	updated := false
@@ -76,7 +76,7 @@ func KnowsBranchAncestors(branch domain.LocalBranchName, args KnowsBranchAncesto
 			}
 			updated = true
 		}
-		if !args.BranchDurations.IsFeatureBranch(parent) {
+		if !args.BranchTypes.IsFeatureBranch(parent) {
 			break
 		}
 		currentBranch = parent
@@ -85,12 +85,12 @@ func KnowsBranchAncestors(branch domain.LocalBranchName, args KnowsBranchAncesto
 }
 
 type KnowsBranchAncestorsArgs struct {
-	AllBranches     domain.BranchInfos
-	Backend         *git.BackendCommands
-	BranchDurations domain.BranchDurations
-	DefaultBranch   domain.LocalBranchName
-	Lineage         config.Lineage
-	MainBranch      domain.LocalBranchName
+	AllBranches   domain.BranchInfos
+	Backend       *git.BackendCommands
+	BranchTypes   domain.BranchTypes
+	DefaultBranch domain.LocalBranchName
+	Lineage       config.Lineage
+	MainBranch    domain.LocalBranchName
 }
 
 func printParentBranchHeader(mainBranch domain.LocalBranchName) {

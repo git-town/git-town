@@ -67,7 +67,7 @@ func pruneBranches(debug bool) error {
 }
 
 type pruneBranchesConfig struct {
-	branchDurations  domain.BranchDurations
+	branchTypes      domain.BranchTypes
 	initialBranch    domain.LocalBranchName
 	lineage          config.Lineage
 	branchesToDelete domain.LocalBranchNames
@@ -80,7 +80,7 @@ func determinePruneBranchesConfig(run *git.ProdRunner) (*pruneBranchesConfig, er
 		ValidateIsConfigured: true,
 	})
 	return &pruneBranchesConfig{
-		branchDurations:  branches.Durations,
+		branchTypes:      branches.Types,
 		initialBranch:    branches.Initial,
 		lineage:          run.Config.Lineage(),
 		branchesToDelete: branches.All.LocalBranchesWithDeletedTrackingBranches().Names(),
@@ -102,7 +102,7 @@ func pruneBranchesStepList(config *pruneBranchesConfig) (runstate.StepList, erro
 			}
 			result.Append(&steps.DeleteParentBranchStep{Branch: branchWithDeletedRemote, Parent: config.lineage.Parent(branchWithDeletedRemote)})
 		}
-		if config.branchDurations.IsPerennialBranch(branchWithDeletedRemote) {
+		if config.branchTypes.IsPerennialBranch(branchWithDeletedRemote) {
 			result.Append(&steps.RemoveFromPerennialBranchesStep{Branch: branchWithDeletedRemote})
 		}
 		result.Append(&steps.DeleteLocalBranchStep{Branch: branchWithDeletedRemote, Parent: config.mainBranch.Location()})
