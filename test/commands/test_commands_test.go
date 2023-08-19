@@ -182,9 +182,9 @@ func TestTestCommands(t *testing.T) {
 		want := domain.NewLocalBranchNames("main", "initial", "p1", "p2")
 		assert.Equal(t, want, branches)
 		runtime.Config.Reload()
-		durations := runtime.Config.BranchTypes()
-		assert.True(t, durations.IsPerennialBranch(domain.NewLocalBranchName("p1")))
-		assert.True(t, durations.IsPerennialBranch(domain.NewLocalBranchName("p2")))
+		branchTypes := runtime.Config.BranchTypes()
+		assert.True(t, branchTypes.IsPerennialBranch(domain.NewLocalBranchName("p1")))
+		assert.True(t, branchTypes.IsPerennialBranch(domain.NewLocalBranchName("p2")))
 	})
 
 	t.Run(".Fetch()", func(t *testing.T) {

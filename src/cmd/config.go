@@ -64,7 +64,7 @@ func runConfig(debug bool) error {
 
 func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 	fc := failure.Collector{}
-	branchDurations := run.Config.BranchTypes()
+	branchTypes := run.Config.BranchTypes()
 	deleteOrigin := fc.Bool(run.Config.ShouldShipDeleteOriginBranch())
 	giteaToken := run.Config.GiteaToken()
 	githubToken := run.Config.GitHubToken()
@@ -78,7 +78,7 @@ func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 	shouldSyncUpstream := fc.Bool(run.Config.ShouldSyncUpstream())
 	syncStrategy := fc.SyncStrategy(run.Config.SyncStrategy())
 	return ConfigConfig{
-		branchTypes:        branchDurations,
+		branchTypes:        branchTypes,
 		deleteOrigin:       deleteOrigin,
 		hosting:            hosting,
 		giteaToken:         giteaToken,

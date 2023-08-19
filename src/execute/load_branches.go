@@ -12,10 +12,10 @@ func LoadBranches(pr *git.ProdRunner, args LoadBranchesArgs) (domain.Branches, e
 	if err != nil {
 		return domain.EmptyBranches(), err
 	}
-	branchDurations := pr.Config.BranchTypes()
+	branchTypes := pr.Config.BranchTypes()
 	result := domain.Branches{
 		All:     allBranches,
-		Types:   branchDurations,
+		Types:   branchTypes,
 		Initial: initialBranch,
 	}
 	if args.ValidateIsConfigured {
