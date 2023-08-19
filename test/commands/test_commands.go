@@ -255,6 +255,22 @@ func (r *TestCommands) HasGitTownConfigNow() bool {
 	return output != ""
 }
 
+// LocalBranches provides the names of all branches in the local repository,
+// ordered alphabetically.
+func (r *TestCommands) LocalBranches() (domain.LocalBranchNames, error) {
+	output, err := r.QueryTrim("git", "branch")
+	if err != nil {
+		return domain.LocalBranchNames{}, err
+	}
+	result := domain.LocalBranchNames{}
+	for _, line := range stringslice.Lines(output) {
+		line = strings.Trim(line, "* ")
+		line = strings.TrimSpace(line)
+		result = append(result, domain.NewLocalBranchName(line))
+	}
+	return result, nil
+}
+
 // LocalBranchesMainFirst provides the names of all local branches in this repo.
 func (r *TestCommands) LocalBranchesMainFirst(mainBranch domain.LocalBranchName) (domain.LocalBranchNames, error) {
 	branches, err := r.LocalBranches()

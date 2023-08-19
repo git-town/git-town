@@ -360,23 +360,6 @@ func (bc *BackendCommands) LastCommitMessage() (string, error) {
 	return out, nil
 }
 
-// LocalBranches provides the names of all branches in the local repository,
-// ordered alphabetically.
-// TODO: can we derive this info from allBranchesSyncStatus?
-func (bc *BackendCommands) LocalBranches() (domain.LocalBranchNames, error) {
-	output, err := bc.QueryTrim("git", "branch")
-	if err != nil {
-		return domain.LocalBranchNames{}, err
-	}
-	result := domain.LocalBranchNames{}
-	for _, line := range stringslice.Lines(output) {
-		line = strings.Trim(line, "* ")
-		line = strings.TrimSpace(line)
-		result = append(result, domain.NewLocalBranchName(line))
-	}
-	return result, nil
-}
-
 // PreviouslyCheckedOutBranch provides the name of the branch that was previously checked out in this repo.
 func (bc *BackendCommands) PreviouslyCheckedOutBranch() domain.LocalBranchName {
 	output, err := bc.QueryTrim("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
