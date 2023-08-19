@@ -80,8 +80,8 @@ func prepend(args []string, debug bool) error {
 }
 
 type prependConfig struct {
-	branchDurations     config.BranchDurations
-	branchesToSync      git.BranchesSyncStatus
+	branchDurations     domain.BranchDurations
+	branchesToSync      domain.BranchInfos
 	hasOpenChanges      bool
 	remotes             config.Remotes
 	initialBranch       domain.LocalBranchName

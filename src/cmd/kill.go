@@ -79,7 +79,7 @@ type killConfig struct {
 	mainBranch     domain.LocalBranchName
 	noPushHook     bool
 	previousBranch domain.LocalBranchName
-	targetBranch   git.BranchSyncStatus
+	targetBranch   domain.BranchInfo
 }
 
 func determineKillConfig(args []string, run *git.ProdRunner, isOffline bool) (*killConfig, error) {

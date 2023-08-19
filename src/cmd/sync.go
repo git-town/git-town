@@ -88,8 +88,8 @@ func sync(all, dryRun, debug bool) error {
 }
 
 type syncConfig struct {
-	branchDurations    config.BranchDurations
-	branchesToSync     git.BranchesSyncStatus
+	branchDurations    domain.BranchDurations
+	branchesToSync     domain.BranchInfos
 	hasOpenChanges     bool
 	remotes            config.Remotes
 	initialBranch      domain.LocalBranchName
@@ -265,8 +265,8 @@ func syncBranchSteps(list *runstate.StepListBuilder, args syncBranchStepsArgs) {
 }
 
 type syncBranchStepsArgs struct {
-	branch             git.BranchSyncStatus
-	branchDurations    config.BranchDurations
+	branch             domain.BranchInfo
+	branchDurations    domain.BranchDurations
 	remotes            config.Remotes
 	isOffline          bool
 	lineage            config.Lineage
@@ -278,7 +278,7 @@ type syncBranchStepsArgs struct {
 	syncStrategy       config.SyncStrategy
 }
 
-func syncFeatureBranchSteps(list *runstate.StepListBuilder, branch git.BranchSyncStatus, lineage config.Lineage, syncStrategy config.SyncStrategy) {
+func syncFeatureBranchSteps(list *runstate.StepListBuilder, branch domain.BranchInfo, lineage config.Lineage, syncStrategy config.SyncStrategy) {
 	if branch.HasTrackingBranch() {
 		updateCurrentFeatureBranchStep(list, branch.RemoteName.BranchName(), syncStrategy)
 	}
@@ -296,7 +296,7 @@ func syncPerennialBranchSteps(list *runstate.StepListBuilder, args syncPerennial
 }
 
 type syncPerennialBranchStepsArgs struct {
-	branch             git.BranchSyncStatus
+	branch             domain.BranchInfo
 	mainBranch         domain.LocalBranchName
 	pullBranchStrategy config.PullBranchStrategy
 	shouldSyncUpstream bool

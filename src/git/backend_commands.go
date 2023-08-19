@@ -72,8 +72,8 @@ func (bc *BackendCommands) BranchHasUnmergedCommits(branch domain.LocalBranchNam
 	return out != "", nil
 }
 
-// BranchesSyncStatus provides detailed information about the sync status of all branches.
-func (bc *BackendCommands) BranchesSyncStatus() (branches BranchesSyncStatus, currentBranch domain.LocalBranchName, err error) { //nolint:nonamedreturns
+// BranchInfos provides detailed information about the sync status of all branches.
+func (bc *BackendCommands) BranchInfos() (branches domain.BranchInfos, currentBranch domain.LocalBranchName, err error) { //nolint:nonamedreturns
 	output, err := bc.Query("git", "branch", "-vva")
 	if err != nil {
 		return
@@ -86,8 +86,8 @@ func (bc *BackendCommands) BranchesSyncStatus() (branches BranchesSyncStatus, cu
 }
 
 // ParseVerboseBranchesOutput provides the branches in the given Git output as well as the name of the currently checked out branch.
-func ParseVerboseBranchesOutput(output string) (BranchesSyncStatus, domain.LocalBranchName) {
-	result := BranchesSyncStatus{}
+func ParseVerboseBranchesOutput(output string) (domain.BranchInfos, domain.LocalBranchName) {
+	result := domain.BranchInfos{}
 	spaceRE := regexp.MustCompile(" +")
 	lines := stringslice.Lines(output)
 	checkedoutBranch := domain.LocalBranchName{}
@@ -113,7 +113,7 @@ func ParseVerboseBranchesOutput(output string) (BranchesSyncStatus, domain.Local
 		}
 		syncStatus, trackingBranchName := determineSyncStatus(branchName, remoteText)
 		if isLocalBranchName(branchName) {
-			result = append(result, BranchSyncStatus{
+			result = append(result, domain.BranchInfo{
 				Name:       domain.NewLocalBranchName(branchName),
 				InitialSHA: sha,
 				SyncStatus: syncStatus,
@@ -126,10 +126,10 @@ func ParseVerboseBranchesOutput(output string) (BranchesSyncStatus, domain.Local
 			if existingBranchWithTracking != nil {
 				existingBranchWithTracking.RemoteSHA = sha
 			} else {
-				result = append(result, BranchSyncStatus{
+				result = append(result, domain.BranchInfo{
 					Name:       domain.LocalBranchName{},
 					InitialSHA: domain.SHA{},
-					SyncStatus: SyncStatusRemoteOnly,
+					SyncStatus: domain.SyncStatusRemoteOnly,
 					RemoteName: remoteBranchName,
 					RemoteSHA:  sha,
 				})
@@ -139,33 +139,33 @@ func ParseVerboseBranchesOutput(output string) (BranchesSyncStatus, domain.Local
 	return result, checkedoutBranch
 }
 
-func determineSyncStatus(branchName, remoteText string) (syncStatus SyncStatus, trackingBranchName domain.RemoteBranchName) {
+func determineSyncStatus(branchName, remoteText string) (syncStatus domain.SyncStatus, trackingBranchName domain.RemoteBranchName) {
 	if remoteText[0] == '[' {
 		closingBracketPos := strings.IndexRune(remoteText, ']')
 		textInBrackets := remoteText[1:closingBracketPos]
 		trackingBranchContent, remoteStatus, _ := strings.Cut(textInBrackets, ": ")
 		trackingBranchName := domain.NewRemoteBranchName(trackingBranchContent)
 		if remoteStatus == "" {
-			return SyncStatusUpToDate, trackingBranchName
+			return domain.SyncStatusUpToDate, trackingBranchName
 		}
 		if remoteStatus == "gone" {
-			return SyncStatusDeletedAtRemote, trackingBranchName
+			return domain.SyncStatusDeletedAtRemote, trackingBranchName
 		}
 		if strings.Contains(remoteStatus, ", behind ") {
-			return SyncStatusAheadAndBehind, trackingBranchName
+			return domain.SyncStatusAheadAndBehind, trackingBranchName
 		}
 		if strings.HasPrefix(remoteStatus, "ahead ") {
-			return SyncStatusAhead, trackingBranchName
+			return domain.SyncStatusAhead, trackingBranchName
 		}
 		if strings.HasPrefix(remoteStatus, "behind ") {
-			return SyncStatusBehind, trackingBranchName
+			return domain.SyncStatusBehind, trackingBranchName
 		}
 		panic(fmt.Sprintf("cannot determine the sync status for Git remote %q and branch name %q", remoteText, branchName))
 	} else {
 		if strings.HasPrefix(branchName, "remotes/origin/") {
-			return SyncStatusRemoteOnly, domain.RemoteBranchName{}
+			return domain.SyncStatusRemoteOnly, domain.RemoteBranchName{}
 		}
-		return SyncStatusLocalOnly, domain.RemoteBranchName{}
+		return domain.SyncStatusLocalOnly, domain.RemoteBranchName{}
 	}
 }
 
@@ -401,7 +401,7 @@ func (bc *BackendCommands) Remotes() (config.Remotes, error) {
 }
 
 // RemoveOutdatedConfiguration removes outdated Git Town configuration.
-func (bc *BackendCommands) RemoveOutdatedConfiguration(allBranches BranchesSyncStatus) error {
+func (bc *BackendCommands) RemoveOutdatedConfiguration(allBranches domain.BranchInfos) error {
 	for child, parent := range bc.Config.Lineage() {
 		hasChildBranch := allBranches.HasLocalBranch(child)
 		hasParentBranch := allBranches.HasLocalBranch(parent)

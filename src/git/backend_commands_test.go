@@ -150,11 +150,11 @@ func TestBackendCommands(t *testing.T) {
 				give := `
   branch-1                     111111 [origin/branch-1: ahead 1] Commit message 1a
   remotes/origin/branch-1      222222 Commit message 1b`[1:]
-				want := git.BranchesSyncStatus{
-					git.BranchSyncStatus{
+				want := domain.BranchInfos{
+					domain.BranchInfo{
 						Name:       domain.NewLocalBranchName("branch-1"),
 						InitialSHA: domain.NewSHA("111111"),
-						SyncStatus: git.SyncStatusAhead,
+						SyncStatus: domain.SyncStatusAhead,
 						RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 						RemoteSHA:  domain.NewSHA("222222"),
 					},
@@ -168,11 +168,11 @@ func TestBackendCommands(t *testing.T) {
 				give := `
   branch-1                     111111 [origin/branch-1: behind 2] Commit message 1
   remotes/origin/branch-1      222222 Commit message 1b`[1:]
-				want := git.BranchesSyncStatus{
-					git.BranchSyncStatus{
+				want := domain.BranchInfos{
+					domain.BranchInfo{
 						Name:       domain.NewLocalBranchName("branch-1"),
 						InitialSHA: domain.NewSHA("111111"),
-						SyncStatus: git.SyncStatusBehind,
+						SyncStatus: domain.SyncStatusBehind,
 						RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 						RemoteSHA:  domain.NewSHA("222222"),
 					},
@@ -186,11 +186,11 @@ func TestBackendCommands(t *testing.T) {
 				give := `
   branch-1                     111111 [origin/branch-1: ahead 31, behind 2] Commit message 1a
   remotes/origin/branch-1      222222 Commit message 1b`[1:]
-				want := git.BranchesSyncStatus{
-					git.BranchSyncStatus{
+				want := domain.BranchInfos{
+					domain.BranchInfo{
 						Name:       domain.NewLocalBranchName("branch-1"),
 						InitialSHA: domain.NewSHA("111111"),
-						SyncStatus: git.SyncStatusAheadAndBehind,
+						SyncStatus: domain.SyncStatusAheadAndBehind,
 						RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 						RemoteSHA:  domain.NewSHA("222222"),
 					},
@@ -204,11 +204,11 @@ func TestBackendCommands(t *testing.T) {
 				give := `
   branch-1                     111111 [origin/branch-1] Commit message 1
   remotes/origin/branch-1      111111 Commit message 1`[1:]
-				want := git.BranchesSyncStatus{
-					git.BranchSyncStatus{
+				want := domain.BranchInfos{
+					domain.BranchInfo{
 						Name:       domain.NewLocalBranchName("branch-1"),
 						InitialSHA: domain.NewSHA("111111"),
-						SyncStatus: git.SyncStatusUpToDate,
+						SyncStatus: domain.SyncStatusUpToDate,
 						RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 						RemoteSHA:  domain.NewSHA("111111"),
 					},
@@ -221,11 +221,11 @@ func TestBackendCommands(t *testing.T) {
 				t.Parallel()
 				give := `
   remotes/origin/branch-1    222222 Commit message 2`[1:]
-				want := git.BranchesSyncStatus{
-					git.BranchSyncStatus{
+				want := domain.BranchInfos{
+					domain.BranchInfo{
 						Name:       domain.LocalBranchName{},
 						InitialSHA: domain.SHA{},
-						SyncStatus: git.SyncStatusRemoteOnly,
+						SyncStatus: domain.SyncStatusRemoteOnly,
 						RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 						RemoteSHA:  domain.NewSHA("222222"),
 					},
@@ -237,11 +237,11 @@ func TestBackendCommands(t *testing.T) {
 			t.Run("local-only branch", func(t *testing.T) {
 				t.Parallel()
 				give := `  branch-1                     01a7eded Commit message 1`
-				want := git.BranchesSyncStatus{
-					git.BranchSyncStatus{
+				want := domain.BranchInfos{
+					domain.BranchInfo{
 						Name:       domain.NewLocalBranchName("branch-1"),
 						InitialSHA: domain.NewSHA("01a7eded"),
-						SyncStatus: git.SyncStatusLocalOnly,
+						SyncStatus: domain.SyncStatusLocalOnly,
 						RemoteName: domain.RemoteBranchName{},
 						RemoteSHA:  domain.SHA{},
 					},
@@ -253,11 +253,11 @@ func TestBackendCommands(t *testing.T) {
 			t.Run("branch is deleted at the remote", func(t *testing.T) {
 				t.Parallel()
 				give := `  branch-1                     01a7eded [origin/branch-1: gone] Commit message 1`
-				want := git.BranchesSyncStatus{
-					git.BranchSyncStatus{
+				want := domain.BranchInfos{
+					domain.BranchInfo{
 						Name:       domain.NewLocalBranchName("branch-1"),
 						InitialSHA: domain.NewSHA("01a7eded"),
-						SyncStatus: git.SyncStatusDeletedAtRemote,
+						SyncStatus: domain.SyncStatusDeletedAtRemote,
 						RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 						RemoteSHA:  domain.SHA{},
 					},
@@ -273,18 +273,18 @@ func TestBackendCommands(t *testing.T) {
   branch-1                     111111 [origin/branch-2] Commit message 1
   remotes/origin/branch-1      222222 Commit message 2
   remotes/origin/branch-2      111111 Commit message 1`[1:]
-				want := git.BranchesSyncStatus{
-					git.BranchSyncStatus{
+				want := domain.BranchInfos{
+					domain.BranchInfo{
 						Name:       domain.NewLocalBranchName("branch-1"),
 						InitialSHA: domain.NewSHA("111111"),
-						SyncStatus: git.SyncStatusUpToDate,
+						SyncStatus: domain.SyncStatusUpToDate,
 						RemoteName: domain.NewRemoteBranchName("origin/branch-2"),
 						RemoteSHA:  domain.NewSHA("111111"),
 					},
-					git.BranchSyncStatus{
+					domain.BranchInfo{
 						Name:       domain.LocalBranchName{},
 						InitialSHA: domain.SHA{},
-						SyncStatus: git.SyncStatusRemoteOnly,
+						SyncStatus: domain.SyncStatusRemoteOnly,
 						RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 						RemoteSHA:  domain.NewSHA("222222"),
 					},
@@ -307,39 +307,39 @@ func TestBackendCommands(t *testing.T) {
   remotes/origin/HEAD          -> origin/initial
   remotes/origin/main          024df944 Commit message on main (#1234)
 `[1:]
-			want := git.BranchesSyncStatus{
-				git.BranchSyncStatus{
+			want := domain.BranchInfos{
+				domain.BranchInfo{
 					Name:       domain.NewLocalBranchName("branch-1"),
 					InitialSHA: domain.NewSHA("01a7eded"),
-					SyncStatus: git.SyncStatusAhead,
+					SyncStatus: domain.SyncStatusAhead,
 					RemoteName: domain.NewRemoteBranchName("origin/branch-1"),
 					RemoteSHA:  domain.NewSHA("307a7bf4"),
 				},
-				git.BranchSyncStatus{
+				domain.BranchInfo{
 					Name:       domain.NewLocalBranchName("branch-2"),
 					InitialSHA: domain.NewSHA("da796a69"),
-					SyncStatus: git.SyncStatusUpToDate,
+					SyncStatus: domain.SyncStatusUpToDate,
 					RemoteName: domain.NewRemoteBranchName("origin/branch-2"),
 					RemoteSHA:  domain.NewSHA("da796a69"),
 				},
-				git.BranchSyncStatus{
+				domain.BranchInfo{
 					Name:       domain.NewLocalBranchName("branch-3"),
 					InitialSHA: domain.NewSHA("f4ebec0a"),
-					SyncStatus: git.SyncStatusBehind,
+					SyncStatus: domain.SyncStatusBehind,
 					RemoteName: domain.NewRemoteBranchName("origin/branch-3"),
 					RemoteSHA:  domain.NewSHA("bc39378a"),
 				},
-				git.BranchSyncStatus{
+				domain.BranchInfo{
 					Name:       domain.NewLocalBranchName("main"),
 					InitialSHA: domain.NewSHA("024df944"),
-					SyncStatus: git.SyncStatusUpToDate,
+					SyncStatus: domain.SyncStatusUpToDate,
 					RemoteName: domain.NewRemoteBranchName("origin/main"),
 					RemoteSHA:  domain.NewSHA("024df944"),
 				},
-				git.BranchSyncStatus{
+				domain.BranchInfo{
 					Name:       domain.NewLocalBranchName("branch-4"),
 					InitialSHA: domain.NewSHA("e4d6bc09"),
-					SyncStatus: git.SyncStatusDeletedAtRemote,
+					SyncStatus: domain.SyncStatusDeletedAtRemote,
 					RemoteName: domain.NewRemoteBranchName("origin/branch-4"),
 					RemoteSHA:  domain.SHA{},
 				},

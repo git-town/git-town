@@ -162,7 +162,7 @@ func determineParentBranch(args determineParentBranchArgs) (parentBranch domain.
 
 type determineParentBranchArgs struct {
 	backend         *git.BackendCommands
-	branches        git.Branches
+	branches        domain.Branches
 	lineage         config.Lineage
 	mainBranch      domain.LocalBranchName
 	promptForParent bool

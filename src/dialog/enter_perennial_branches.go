@@ -4,14 +4,13 @@ import (
 	"fmt"
 
 	"github.com/fatih/color"
-	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 )
 
 // EnterPerennialBranches lets the user update the perennial branches.
 // This includes asking the user and updating the respective settings based on the user selection.
-func EnterPerennialBranches(backend *git.BackendCommands, allBranches git.BranchesSyncStatus, branches config.BranchDurations) (config.BranchDurations, error) {
+func EnterPerennialBranches(backend *git.BackendCommands, allBranches domain.BranchInfos, branches domain.BranchDurations) (domain.BranchDurations, error) {
 	localBranchesWithoutMain := allBranches.LocalBranches().Remove(branches.MainBranch)
 	newPerennialBranchNames, err := MultiSelect(MultiSelectArgs{
 		Options:  localBranchesWithoutMain.Names().Strings(),

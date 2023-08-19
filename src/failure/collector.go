@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v9/src/config"
-	"github.com/git-town/git-town/v9/src/git"
+	"github.com/git-town/git-town/v9/src/domain"
 )
 
 // Collector helps avoid excessive error checking
@@ -40,12 +40,12 @@ func (ec *Collector) Bool(value bool, err error) bool {
 	return value
 }
 
-func (ec *Collector) Branches(value git.Branches, err error) git.Branches {
+func (ec *Collector) Branches(value domain.Branches, err error) domain.Branches {
 	ec.Check(err)
 	return value
 }
 
-func (ec *Collector) BranchesSyncStatus(value git.BranchesSyncStatus, err error) git.BranchesSyncStatus {
+func (ec *Collector) BranchesSyncStatus(value domain.BranchInfos, err error) domain.BranchInfos {
 	ec.Check(err)
 	return value
 }

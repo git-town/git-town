@@ -86,14 +86,14 @@ func renameBranch(args []string, force, debug bool) error {
 }
 
 type renameBranchConfig struct {
-	branchDurations config.BranchDurations
+	branchDurations domain.BranchDurations
 	initialBranch   domain.LocalBranchName
 	isOffline       bool
 	lineage         config.Lineage
 	mainBranch      domain.LocalBranchName
 	newBranch       domain.LocalBranchName
 	noPushHook      bool
-	oldBranch       git.BranchSyncStatus
+	oldBranch       domain.BranchInfo
 	previousBranch  domain.LocalBranchName
 }
 
@@ -134,7 +134,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 	if oldBranch == nil {
 		return nil, fmt.Errorf(messages.BranchDoesntExist, oldBranchName)
 	}
-	if oldBranch.SyncStatus != git.SyncStatusUpToDate {
+	if oldBranch.SyncStatus != domain.SyncStatusUpToDate {
 		return nil, fmt.Errorf(messages.RenameBranchNotInSync, oldBranchName)
 	}
 	if branches.All.HasLocalBranch(newBranchName) {
