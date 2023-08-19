@@ -80,7 +80,7 @@ func determinePruneBranchesConfig(run *git.ProdRunner) (*pruneBranchesConfig, er
 		ValidateIsConfigured: true,
 	})
 	return &pruneBranchesConfig{
-		branchTypes:      branches.BranchTypes,
+		branchTypes:      branches.Perennials,
 		initialBranch:    branches.Initial,
 		lineage:          run.Config.Lineage(),
 		branchesToDelete: branches.All.LocalBranchesWithDeletedTrackingBranches().Names(),

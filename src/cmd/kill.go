@@ -91,7 +91,7 @@ func determineKillConfig(args []string, run *git.ProdRunner, isOffline bool) (*k
 	}
 	mainBranch := run.Config.MainBranch()
 	targetBranchName := domain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
-	if !branches.BranchTypes.IsFeatureBranch(targetBranchName) {
+	if !branches.Perennials.IsFeatureBranch(targetBranchName) {
 		return nil, fmt.Errorf(messages.KillOnlyFeatureBranches)
 	}
 	targetBranch := branches.All.LookupLocalBranch(targetBranchName)
@@ -105,7 +105,7 @@ func determineKillConfig(args []string, run *git.ProdRunner, isOffline bool) (*k
 			Backend:       &run.Backend,
 			AllBranches:   branches.All,
 			Lineage:       lineage,
-			BranchTypes:   branches.BranchTypes,
+			BranchTypes:   branches.Perennials,
 			MainBranch:    mainBranch,
 		})
 		if err != nil {

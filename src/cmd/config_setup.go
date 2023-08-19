@@ -44,11 +44,11 @@ func setup(debug bool) error {
 	if err != nil {
 		return err
 	}
-	newMainBranch, err := dialog.EnterMainBranch(branches.All.LocalBranches().Names(), branches.BranchTypes.MainBranch, &repo.Runner.Backend)
+	newMainBranch, err := dialog.EnterMainBranch(branches.All.LocalBranches().Names(), branches.Perennials.MainBranch, &repo.Runner.Backend)
 	if err != nil {
 		return err
 	}
-	branches.BranchTypes.MainBranch = newMainBranch
-	_, err = dialog.EnterPerennialBranches(&repo.Runner.Backend, branches.All, branches.BranchTypes)
+	branches.Perennials.MainBranch = newMainBranch
+	_, err = dialog.EnterPerennialBranches(&repo.Runner.Backend, branches.All, branches.Perennials)
 	return err
 }
