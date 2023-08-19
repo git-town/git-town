@@ -5,7 +5,7 @@ import (
 )
 
 // BranchDurations answers questions about whether branches are long-lived or not.
-// TODO: rename to Perennials
+// TODO: rename to Perennials or BranchTypes.
 type BranchDurations struct {
 	MainBranch        LocalBranchName
 	PerennialBranches LocalBranchNames
