@@ -284,6 +284,7 @@ func (bc *BackendCommands) CurrentSha() (domain.SHA, error) {
 // ExpectedPreviouslyCheckedOutBranch returns what is the expected previously checked out branch
 // given the inputs.
 func (bc *BackendCommands) ExpectedPreviouslyCheckedOutBranch(initialPreviouslyCheckedOutBranch, initialBranch, mainBranch domain.LocalBranchName) (domain.LocalBranchName, error) {
+	// TODO: try to avoid repeated lookups to bc.HasLocalBranch
 	if bc.HasLocalBranch(initialPreviouslyCheckedOutBranch) {
 		currentBranch, err := bc.CurrentBranch()
 		if err != nil {
