@@ -133,7 +133,7 @@ func determineNewPullRequestConfig(run *git.ProdRunner, isOffline bool) (*newPul
 		Backend:       &run.Backend,
 		AllBranches:   branches.All,
 		Lineage:       lineage,
-		BranchTypes:   branches.Durations,
+		BranchTypes:   branches.BranchTypes,
 		MainBranch:    mainBranch,
 	})
 	if err != nil {
@@ -182,7 +182,7 @@ func determineNewPullRequestConfig(run *git.ProdRunner, isOffline bool) (*newPul
 	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
 	branchesToSync, err := branches.All.Select(branchNamesToSync)
 	return &newPullRequestConfig{
-		branchTypes:        branches.Durations,
+		branchTypes:        branches.BranchTypes,
 		branchesToSync:     branchesToSync,
 		connector:          connector,
 		hasOpenChanges:     hasOpenChanges,

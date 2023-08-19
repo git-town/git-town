@@ -125,7 +125,7 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, run *git.ProdRun
 		Backend:       &run.Backend,
 		AllBranches:   branches.All,
 		Lineage:       lineage,
-		BranchTypes:   branches.Durations,
+		BranchTypes:   branches.BranchTypes,
 		MainBranch:    mainBranch,
 	})
 	if err != nil {
@@ -139,7 +139,7 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, run *git.ProdRun
 	syncStrategy := fc.SyncStrategy(run.Config.SyncStrategy())
 	shouldSyncUpstream := fc.Bool(run.Config.ShouldSyncUpstream())
 	return &appendConfig{
-		branchTypes:         branches.Durations,
+		branchTypes:         branches.BranchTypes,
 		branchesToSync:      branchesToSync,
 		hasOpenChanges:      hasOpenChanges,
 		remotes:             remotes,

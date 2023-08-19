@@ -119,7 +119,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner, isOffline bool) 
 	if branches.All.HasMatchingRemoteBranchFor(targetBranch) {
 		return nil, fmt.Errorf(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
-	if !branches.Durations.IsFeatureBranch(branches.Initial) {
+	if !branches.BranchTypes.IsFeatureBranch(branches.Initial) {
 		return nil, fmt.Errorf(messages.SetParentNoFeatureBranch, branches.Initial)
 	}
 	lineage := run.Config.Lineage()
@@ -128,7 +128,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner, isOffline bool) 
 		Backend:       &run.Backend,
 		AllBranches:   branches.All,
 		Lineage:       lineage,
-		BranchTypes:   branches.Durations,
+		BranchTypes:   branches.BranchTypes,
 		MainBranch:    mainBranch,
 	}))
 	if updated {
@@ -137,7 +137,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner, isOffline bool) 
 	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
 	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
 	return &prependConfig{
-		branchTypes:         branches.Durations,
+		branchTypes:         branches.BranchTypes,
 		branchesToSync:      branchesToSync,
 		hasOpenChanges:      hasOpenChanges,
 		remotes:             remotes,

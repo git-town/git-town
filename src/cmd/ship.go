@@ -175,7 +175,7 @@ func determineShipConfig(args []string, run *git.ProdRunner, isOffline bool) (*s
 			return nil, fmt.Errorf(messages.BranchDoesntExist, branchNameToShip)
 		}
 	}
-	if !branches.Durations.IsFeatureBranch(branchNameToShip) {
+	if !branches.BranchTypes.IsFeatureBranch(branchNameToShip) {
 		return nil, fmt.Errorf(messages.ShipNoFeatureBranch, branchNameToShip)
 	}
 	lineage := run.Config.Lineage()
@@ -184,7 +184,7 @@ func determineShipConfig(args []string, run *git.ProdRunner, isOffline bool) (*s
 		Backend:       &run.Backend,
 		AllBranches:   branches.All,
 		Lineage:       lineage,
-		BranchTypes:   branches.Durations,
+		BranchTypes:   branches.BranchTypes,
 		MainBranch:    mainBranch,
 	})
 	if err != nil {
@@ -193,7 +193,7 @@ func determineShipConfig(args []string, run *git.ProdRunner, isOffline bool) (*s
 	if updated {
 		lineage = run.Config.Lineage()
 	}
-	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, branches.Durations, lineage)
+	err = ensureParentBranchIsMainOrPerennialBranch(branchNameToShip, branches.BranchTypes, lineage)
 	if err != nil {
 		return nil, err
 	}
@@ -251,7 +251,7 @@ func determineShipConfig(args []string, run *git.ProdRunner, isOffline bool) (*s
 		}
 	}
 	return &shipConfig{
-		branchTypes:              branches.Durations,
+		branchTypes:              branches.BranchTypes,
 		connector:                connector,
 		targetBranch:             *targetBranch,
 		branchToShip:             *branchToShip,

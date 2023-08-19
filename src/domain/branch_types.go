@@ -20,7 +20,7 @@ func (pb BranchTypes) IsPerennialBranch(branch LocalBranchName) bool {
 	return slice.Contains(pb.PerennialBranches, branch)
 }
 
-func EmptyBranchDurations() BranchTypes {
+func EmptyBranchTypes() BranchTypes {
 	return BranchTypes{
 		MainBranch:        LocalBranchName{},
 		PerennialBranches: LocalBranchNames{},
