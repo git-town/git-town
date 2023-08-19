@@ -37,11 +37,10 @@ Feature: display debug statistics
       |        | backend  | git config git-town-branch.old.parent parent  |
       | old    | frontend | git checkout parent                           |
       |        | backend  | git show-ref --quiet refs/heads/old           |
-      |        | backend  | git show-ref --quiet refs/heads/old           |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
     And it prints:
       """
-      Ran 28 shell commands.
+      Ran 27 shell commands.
       """
     And the current branch is now "parent"
 

@@ -35,11 +35,10 @@ Feature: display debug statistics
       |          | backend  | git config git-town-branch.new.parent existing       |
       | existing | frontend | git checkout new                                     |
       |          | backend  | git show-ref --quiet refs/heads/existing             |
-      |          | backend  | git show-ref --quiet refs/heads/existing             |
       |          | backend  | git rev-parse --verify --abbrev-ref @{-1}            |
     And it prints:
       """
-      Ran 27 shell commands.
+      Ran 26 shell commands.
       """
     And the current branch is now "new"
 
