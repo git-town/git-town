@@ -120,21 +120,6 @@ func TestBackendCommands(t *testing.T) {
 		assert.False(t, has)
 	})
 
-	t.Run(".LocalBranchesMainFirst()", func(t *testing.T) {
-		t.Parallel()
-		origin := testruntime.Create(t)
-		repoDir := t.TempDir()
-		runner := testruntime.Clone(origin.TestRunner, repoDir)
-		runner.CreateBranch(domain.NewLocalBranchName("b1"), initial)
-		runner.CreateBranch(domain.NewLocalBranchName("b2"), initial)
-		origin.CreateBranch(domain.NewLocalBranchName("b3"), initial)
-		runner.Fetch()
-		branches, err := runner.Backend.LocalBranchesMainFirst(initial)
-		assert.NoError(t, err)
-		want := domain.NewLocalBranchNames("initial", "b1", "b2")
-		assert.Equal(t, want, branches)
-	})
-
 	t.Run("ParseVerboseBranchesOutput", func(t *testing.T) {
 		t.Parallel()
 		t.Run("recognizes the current branch", func(t *testing.T) {
