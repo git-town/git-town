@@ -3,7 +3,6 @@ package domain
 import "github.com/git-town/git-town/v9/src/slice"
 
 // BranchTypes answers questions about whether branches are long-lived or not.
-// TODO: rename to Perennials or BranchTypes.
 type BranchTypes struct {
 	MainBranch        LocalBranchName
 	PerennialBranches LocalBranchNames
