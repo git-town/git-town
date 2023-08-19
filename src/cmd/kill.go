@@ -101,12 +101,12 @@ func determineKillConfig(args []string, run *git.ProdRunner, isOffline bool) (*k
 	lineage := run.Config.Lineage()
 	if targetBranch.IsLocal() {
 		updated, err := validate.KnowsBranchAncestors(targetBranchName, validate.KnowsBranchAncestorsArgs{
-			DefaultBranch:   mainBranch,
-			Backend:         &run.Backend,
-			AllBranches:     branches.All,
-			Lineage:         lineage,
-			BranchDurations: branches.Durations,
-			MainBranch:      mainBranch,
+			DefaultBranch: mainBranch,
+			Backend:       &run.Backend,
+			AllBranches:   branches.All,
+			Lineage:       lineage,
+			BranchTypes:   branches.Durations,
+			MainBranch:    mainBranch,
 		})
 		if err != nil {
 			return nil, err

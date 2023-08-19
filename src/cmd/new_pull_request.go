@@ -89,7 +89,7 @@ func newPullRequest(debug bool) error {
 
 type newPullRequestConfig struct {
 	branchesToSync     domain.BranchInfos
-	branchDurations    domain.BranchTypes
+	branchTypes        domain.BranchTypes
 	connector          hosting.Connector
 	hasOpenChanges     bool
 	remotes            config.Remotes
@@ -129,12 +129,12 @@ func determineNewPullRequestConfig(run *git.ProdRunner, isOffline bool) (*newPul
 	mainBranch := run.Config.MainBranch()
 	lineage := run.Config.Lineage()
 	updated, err := validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
-		DefaultBranch:   mainBranch,
-		Backend:         &run.Backend,
-		AllBranches:     branches.All,
-		Lineage:         lineage,
-		BranchDurations: branches.Durations,
-		MainBranch:      mainBranch,
+		DefaultBranch: mainBranch,
+		Backend:       &run.Backend,
+		AllBranches:   branches.All,
+		Lineage:       lineage,
+		BranchTypes:   branches.Durations,
+		MainBranch:    mainBranch,
 	})
 	if err != nil {
 		return nil, err
@@ -182,7 +182,7 @@ func determineNewPullRequestConfig(run *git.ProdRunner, isOffline bool) (*newPul
 	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
 	branchesToSync, err := branches.All.Select(branchNamesToSync)
 	return &newPullRequestConfig{
-		branchDurations:    branches.Durations,
+		branchTypes:        branches.Durations,
 		branchesToSync:     branchesToSync,
 		connector:          connector,
 		hasOpenChanges:     hasOpenChanges,
@@ -204,7 +204,7 @@ func newPullRequestStepList(config *newPullRequestConfig) (runstate.StepList, er
 	for _, branch := range config.branchesToSync {
 		syncBranchSteps(&list, syncBranchStepsArgs{
 			branch:             branch,
-			branchDurations:    config.branchDurations,
+			branchTypes:        config.branchTypes,
 			remotes:            config.remotes,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,

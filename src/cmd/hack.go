@@ -119,7 +119,7 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 	pullBranchStrategy := fc.PullBranchStrategy(run.Config.PullBranchStrategy())
 	syncStrategy := fc.SyncStrategy(run.Config.SyncStrategy())
 	return &appendConfig{
-		durations:           branches.Durations,
+		branchTypes:         branches.Durations,
 		branchesToSync:      branchesToSync,
 		targetBranch:        targetBranch,
 		parentBranch:        parentBranch,
@@ -147,12 +147,12 @@ func determineParentBranch(args determineParentBranchArgs) (parentBranch domain.
 		return domain.LocalBranchName{}, true, err
 	}
 	_, err = validate.KnowsBranchAncestors(parentBranch, validate.KnowsBranchAncestorsArgs{
-		AllBranches:     args.branches.All,
-		Backend:         args.backend,
-		BranchDurations: args.branches.Durations,
-		DefaultBranch:   args.mainBranch,
-		Lineage:         args.lineage,
-		MainBranch:      args.mainBranch,
+		AllBranches:   args.branches.All,
+		Backend:       args.backend,
+		BranchTypes:   args.branches.Durations,
+		DefaultBranch: args.mainBranch,
+		Lineage:       args.lineage,
+		MainBranch:    args.mainBranch,
 	})
 	if err != nil {
 		return domain.LocalBranchName{}, true, err

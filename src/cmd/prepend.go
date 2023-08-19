@@ -80,7 +80,7 @@ func prepend(args []string, debug bool) error {
 }
 
 type prependConfig struct {
-	branchDurations     domain.BranchTypes
+	branchTypes         domain.BranchTypes
 	branchesToSync      domain.BranchInfos
 	hasOpenChanges      bool
 	remotes             config.Remotes
@@ -124,12 +124,12 @@ func determinePrependConfig(args []string, run *git.ProdRunner, isOffline bool) 
 	}
 	lineage := run.Config.Lineage()
 	updated := fc.Bool(validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
-		DefaultBranch:   mainBranch,
-		Backend:         &run.Backend,
-		AllBranches:     branches.All,
-		Lineage:         lineage,
-		BranchDurations: branches.Durations,
-		MainBranch:      mainBranch,
+		DefaultBranch: mainBranch,
+		Backend:       &run.Backend,
+		AllBranches:   branches.All,
+		Lineage:       lineage,
+		BranchTypes:   branches.Durations,
+		MainBranch:    mainBranch,
 	}))
 	if updated {
 		lineage = run.Config.Lineage()
@@ -137,7 +137,7 @@ func determinePrependConfig(args []string, run *git.ProdRunner, isOffline bool) 
 	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
 	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
 	return &prependConfig{
-		branchDurations:     branches.Durations,
+		branchTypes:         branches.Durations,
 		branchesToSync:      branchesToSync,
 		hasOpenChanges:      hasOpenChanges,
 		remotes:             remotes,
@@ -161,7 +161,7 @@ func prependStepList(config *prependConfig) (runstate.StepList, error) {
 	for _, branchToSync := range config.branchesToSync {
 		syncBranchSteps(&list, syncBranchStepsArgs{
 			branch:             branchToSync,
-			branchDurations:    config.branchDurations,
+			branchTypes:        config.branchTypes,
 			remotes:            config.remotes,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,

@@ -10,20 +10,20 @@ import (
 
 // EnterPerennialBranches lets the user update the perennial branches.
 // This includes asking the user and updating the respective settings based on the user selection.
-func EnterPerennialBranches(backend *git.BackendCommands, allBranches domain.BranchInfos, branches domain.BranchTypes) (domain.BranchTypes, error) {
-	localBranchesWithoutMain := allBranches.LocalBranches().Remove(branches.MainBranch)
+func EnterPerennialBranches(backend *git.BackendCommands, allBranches domain.BranchInfos, branchTypes domain.BranchTypes) (domain.BranchTypes, error) {
+	localBranchesWithoutMain := allBranches.LocalBranches().Remove(branchTypes.MainBranch)
 	newPerennialBranchNames, err := MultiSelect(MultiSelectArgs{
 		Options:  localBranchesWithoutMain.Names().Strings(),
-		Defaults: branches.PerennialBranches.Strings(),
-		Message:  perennialBranchesPrompt(branches.PerennialBranches),
+		Defaults: branchTypes.PerennialBranches.Strings(),
+		Message:  perennialBranchesPrompt(branchTypes.PerennialBranches),
 	})
 	if err != nil {
-		return branches, err
+		return branchTypes, err
 	}
 	newPerennialBranches := domain.NewLocalBranchNames(newPerennialBranchNames...)
-	branches.PerennialBranches = newPerennialBranches
+	branchTypes.PerennialBranches = newPerennialBranches
 	err = backend.Config.SetPerennialBranches(newPerennialBranches)
-	return branches, err
+	return branchTypes, err
 }
 
 func perennialBranchesPrompt(perennialBranches domain.LocalBranchNames) string {

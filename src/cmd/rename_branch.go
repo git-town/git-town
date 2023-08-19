@@ -86,15 +86,15 @@ func renameBranch(args []string, force, debug bool) error {
 }
 
 type renameBranchConfig struct {
-	branchDurations domain.BranchTypes
-	initialBranch   domain.LocalBranchName
-	isOffline       bool
-	lineage         config.Lineage
-	mainBranch      domain.LocalBranchName
-	newBranch       domain.LocalBranchName
-	noPushHook      bool
-	oldBranch       domain.BranchInfo
-	previousBranch  domain.LocalBranchName
+	branchTypes    domain.BranchTypes
+	initialBranch  domain.LocalBranchName
+	isOffline      bool
+	lineage        config.Lineage
+	mainBranch     domain.LocalBranchName
+	newBranch      domain.LocalBranchName
+	noPushHook     bool
+	oldBranch      domain.BranchInfo
+	previousBranch domain.LocalBranchName
 }
 
 func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRunner, isOffline bool) (*renameBranchConfig, error) {
@@ -145,15 +145,15 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 	}
 	lineage := run.Config.Lineage()
 	return &renameBranchConfig{
-		branchDurations: branches.Durations,
-		initialBranch:   branches.Initial,
-		isOffline:       isOffline,
-		lineage:         lineage,
-		mainBranch:      mainBranch,
-		newBranch:       newBranchName,
-		noPushHook:      !pushHook,
-		oldBranch:       *oldBranch,
-		previousBranch:  previousBranch,
+		branchTypes:    branches.Durations,
+		initialBranch:  branches.Initial,
+		isOffline:      isOffline,
+		lineage:        lineage,
+		mainBranch:     mainBranch,
+		newBranch:      newBranchName,
+		noPushHook:     !pushHook,
+		oldBranch:      *oldBranch,
+		previousBranch: previousBranch,
 	}, err
 }
 
@@ -163,7 +163,7 @@ func renameBranchStepList(config *renameBranchConfig) (runstate.StepList, error)
 	if config.initialBranch == config.oldBranch.Name {
 		result.Append(&steps.CheckoutStep{Branch: config.newBranch})
 	}
-	if config.branchDurations.IsPerennialBranch(config.initialBranch) {
+	if config.branchTypes.IsPerennialBranch(config.initialBranch) {
 		result.Append(&steps.RemoveFromPerennialBranchesStep{Branch: config.oldBranch.Name})
 		result.Append(&steps.AddToPerennialBranchesStep{Branch: config.newBranch})
 	} else {

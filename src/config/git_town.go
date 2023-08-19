@@ -36,7 +36,7 @@ func (gt *GitTown) AddToPerennialBranches(branches ...domain.LocalBranchName) er
 	return gt.SetPerennialBranches(append(gt.PerennialBranches(), branches...))
 }
 
-func (gt *GitTown) BranchDurations() domain.BranchTypes {
+func (gt *GitTown) BranchTypes() domain.BranchTypes {
 	return domain.BranchTypes{
 		MainBranch:        gt.MainBranch(),
 		PerennialBranches: gt.PerennialBranches(),

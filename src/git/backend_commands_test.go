@@ -60,7 +60,7 @@ func TestBackendCommands(t *testing.T) {
 		err := runtime.Backend.CreateFeatureBranch(domain.NewLocalBranchName("f1"))
 		assert.NoError(t, err)
 		runtime.Config.Reload()
-		assert.True(t, runtime.Config.BranchDurations().IsFeatureBranch(domain.NewLocalBranchName("f1")))
+		assert.True(t, runtime.Config.BranchTypes().IsFeatureBranch(domain.NewLocalBranchName("f1")))
 		lineageHave := runtime.Config.Lineage()
 		lineageWant := config.Lineage{}
 		lineageWant[domain.NewLocalBranchName("f1")] = domain.NewLocalBranchName("main")

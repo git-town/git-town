@@ -110,7 +110,7 @@ func ship(args []string, message string, debug bool) error {
 }
 
 type shipConfig struct {
-	branchDurations          domain.BranchTypes
+	branchTypes              domain.BranchTypes
 	branchToShip             domain.BranchInfo
 	connector                hosting.Connector
 	targetBranch             domain.BranchInfo
@@ -180,12 +180,12 @@ func determineShipConfig(args []string, run *git.ProdRunner, isOffline bool) (*s
 	}
 	lineage := run.Config.Lineage()
 	updated, err := validate.KnowsBranchAncestors(branchNameToShip, validate.KnowsBranchAncestorsArgs{
-		DefaultBranch:   mainBranch,
-		Backend:         &run.Backend,
-		AllBranches:     branches.All,
-		Lineage:         lineage,
-		BranchDurations: branches.Durations,
-		MainBranch:      mainBranch,
+		DefaultBranch: mainBranch,
+		Backend:       &run.Backend,
+		AllBranches:   branches.All,
+		Lineage:       lineage,
+		BranchTypes:   branches.Durations,
+		MainBranch:    mainBranch,
 	})
 	if err != nil {
 		return nil, err
@@ -251,7 +251,7 @@ func determineShipConfig(args []string, run *git.ProdRunner, isOffline bool) (*s
 		}
 	}
 	return &shipConfig{
-		branchDurations:          branches.Durations,
+		branchTypes:              branches.Durations,
 		connector:                connector,
 		targetBranch:             *targetBranch,
 		branchToShip:             *branchToShip,
@@ -276,9 +276,9 @@ func determineShipConfig(args []string, run *git.ProdRunner, isOffline bool) (*s
 	}, nil
 }
 
-func ensureParentBranchIsMainOrPerennialBranch(branch domain.LocalBranchName, branchDurations domain.BranchTypes, lineage config.Lineage) error {
+func ensureParentBranchIsMainOrPerennialBranch(branch domain.LocalBranchName, branchTypes domain.BranchTypes, lineage config.Lineage) error {
 	parentBranch := lineage.Parent(branch)
-	if !branchDurations.IsMainBranch(parentBranch) && !branchDurations.IsPerennialBranch(parentBranch) {
+	if !branchTypes.IsMainBranch(parentBranch) && !branchTypes.IsPerennialBranch(parentBranch) {
 		ancestors := lineage.Ancestors(branch)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
 		oldestAncestor := ancestorsWithoutMainOrPerennial[0]
@@ -293,7 +293,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 	// sync the parent branch
 	syncBranchSteps(&list, syncBranchStepsArgs{
 		branch:             config.targetBranch,
-		branchDurations:    config.branchDurations,
+		branchTypes:        config.branchTypes,
 		remotes:            config.remotes,
 		isOffline:          config.isOffline,
 		lineage:            config.lineage,
@@ -307,7 +307,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 	// sync the branch to ship (local sync only)
 	syncBranchSteps(&list, syncBranchStepsArgs{
 		branch:             config.branchToShip,
-		branchDurations:    config.branchDurations,
+		branchTypes:        config.branchTypes,
 		remotes:            config.remotes,
 		isOffline:          config.isOffline,
 		lineage:            config.lineage,

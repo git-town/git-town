@@ -88,7 +88,7 @@ func sync(all, dryRun, debug bool) error {
 }
 
 type syncConfig struct {
-	branchDurations    domain.BranchTypes
+	branchTypes        domain.BranchTypes
 	branchesToSync     domain.BranchInfos
 	hasOpenChanges     bool
 	remotes            config.Remotes
@@ -129,11 +129,11 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, isOffline bool) (*sy
 	if allFlag {
 		localBranches := branches.All.LocalBranches()
 		configUpdated, err = validate.KnowsBranchesAncestors(validate.KnowsBranchesAncestorsArgs{
-			AllBranches:     localBranches,
-			Backend:         &run.Backend,
-			BranchDurations: branchDurations,
-			Lineage:         lineage,
-			MainBranch:      mainBranch,
+			AllBranches: localBranches,
+			Backend:     &run.Backend,
+			BranchTypes: branchDurations,
+			Lineage:     lineage,
+			MainBranch:  mainBranch,
 		})
 		if err != nil {
 			return nil, err
@@ -142,12 +142,12 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, isOffline bool) (*sy
 		shouldPushTags = true
 	} else {
 		configUpdated, err = validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
-			AllBranches:     branches.All,
-			Backend:         &run.Backend,
-			BranchDurations: branches.Durations,
-			DefaultBranch:   mainBranch,
-			Lineage:         lineage,
-			MainBranch:      mainBranch,
+			AllBranches:   branches.All,
+			Backend:       &run.Backend,
+			BranchTypes:   branches.Durations,
+			DefaultBranch: mainBranch,
+			Lineage:       lineage,
+			MainBranch:    mainBranch,
 		})
 		if err != nil {
 			return nil, err
@@ -155,13 +155,13 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, isOffline bool) (*sy
 	}
 	if configUpdated {
 		lineage = run.Config.Lineage() // reload after ancestry change
-		branchDurations = run.Config.BranchDurations()
+		branchDurations = run.Config.BranchTypes()
 	}
 	if !allFlag {
 		branchNamesToSync = domain.LocalBranchNames{branches.Initial}
 		if configUpdated {
 			run.Config.Reload()
-			branchDurations = run.Config.BranchDurations()
+			branchDurations = run.Config.BranchTypes()
 		}
 		shouldPushTags = !branchDurations.IsFeatureBranch(branches.Initial)
 	}
@@ -184,7 +184,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, isOffline bool) (*sy
 	}
 	branchesToSync, err := branches.All.Select(allBranchNamesToSync)
 	return &syncConfig{
-		branchDurations:    branchDurations,
+		branchTypes:        branchDurations,
 		branchesToSync:     branchesToSync,
 		hasOpenChanges:     hasOpenChanges,
 		remotes:            remotes,
@@ -207,7 +207,7 @@ func syncBranchesSteps(config *syncConfig) (runstate.StepList, error) {
 	for _, branch := range config.branchesToSync {
 		syncBranchSteps(&list, syncBranchStepsArgs{
 			branch:             branch,
-			branchDurations:    config.branchDurations,
+			branchTypes:        config.branchTypes,
 			remotes:            config.remotes,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
@@ -235,7 +235,7 @@ func syncBranchesSteps(config *syncConfig) (runstate.StepList, error) {
 
 // syncBranchSteps provides the steps to sync a particular branch.
 func syncBranchSteps(list *runstate.StepListBuilder, args syncBranchStepsArgs) {
-	isFeatureBranch := args.branchDurations.IsFeatureBranch(args.branch.Name)
+	isFeatureBranch := args.branchTypes.IsFeatureBranch(args.branch.Name)
 	if !isFeatureBranch && !args.remotes.HasOrigin() {
 		// perennial branch but no remote --> this branch cannot be synced
 		return
@@ -266,7 +266,7 @@ func syncBranchSteps(list *runstate.StepListBuilder, args syncBranchStepsArgs) {
 
 type syncBranchStepsArgs struct {
 	branch             domain.BranchInfo
-	branchDurations    domain.BranchTypes
+	branchTypes        domain.BranchTypes
 	remotes            config.Remotes
 	isOffline          bool
 	lineage            config.Lineage
