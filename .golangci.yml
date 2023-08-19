@@ -94,7 +94,4 @@ issues:
       text: (gitea.PRBranchInfo|github.PullRequest|github.PullRequestBranch|oauth2.Token|http.Client) is missing fields
     - linters:
         - exhaustruct
-      text: domain.(Local|Remote)BranchName is missing field BranchName
-    - linters:
-        - exhaustruct
-      text: domain.SHA is missing field Location
+      text: domain.LocalBranchName is missing field id
