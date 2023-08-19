@@ -211,7 +211,7 @@ func TestBranchInfo(t *testing.T) {
 					RemoteSHA:  domain.SHA{},
 				},
 			}
-			assert.Equal(t, branchOne, bs.LookupLocalBranch(branchOne).Name)
+			assert.Equal(t, branchOne, bs.FindLocalBranch(branchOne).Name)
 		})
 		t.Run("remote branch with matching name", func(t *testing.T) {
 			bs := domain.BranchInfos{
@@ -223,7 +223,7 @@ func TestBranchInfo(t *testing.T) {
 					RemoteSHA:  domain.SHA{},
 				},
 			}
-			have := bs.LookupLocalBranch(domain.NewLocalBranchName("kg/one"))
+			have := bs.FindLocalBranch(domain.NewLocalBranchName("kg/one"))
 			assert.Nil(t, have)
 		})
 	})
@@ -240,7 +240,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteSHA:  domain.SHA{},
 			}
 			bs := domain.BranchInfos{branch}
-			have := bs.LookupLocalBranchWithTracking(domain.NewRemoteBranchName("origin/two"))
+			have := bs.FindLocalBranchWithTracking(domain.NewRemoteBranchName("origin/two"))
 			assert.Equal(t, &branch, have)
 		})
 		t.Run("has a local branch with the given name", func(t *testing.T) {
@@ -252,7 +252,7 @@ func TestBranchInfo(t *testing.T) {
 				RemoteName: domain.RemoteBranchName{},
 				RemoteSHA:  domain.SHA{},
 			}}
-			have := bs.LookupLocalBranchWithTracking(domain.NewRemoteBranchName("kg/one"))
+			have := bs.FindLocalBranchWithTracking(domain.NewRemoteBranchName("kg/one"))
 			assert.Nil(t, have)
 		})
 	})

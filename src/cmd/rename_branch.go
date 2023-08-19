@@ -130,7 +130,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 	if oldBranchName == newBranchName {
 		return nil, fmt.Errorf(messages.RenameToSameName)
 	}
-	oldBranch := branches.All.LookupLocalBranch(oldBranchName)
+	oldBranch := branches.All.FindLocalBranch(oldBranchName)
 	if oldBranch == nil {
 		return nil, fmt.Errorf(messages.BranchDoesntExist, oldBranchName)
 	}
