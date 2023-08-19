@@ -89,12 +89,9 @@ func TestBackendCommands(t *testing.T) {
 		runner := testruntime.Clone(origin.TestRunner, repoDir)
 		runner.CreateBranch(domain.NewLocalBranchName("b1"), initial)
 		runner.CreateBranch(domain.NewLocalBranchName("b2"), initial)
-		has := runner.Backend.HasLocalBranch(domain.NewLocalBranchName("b1"))
-		assert.True(t, has)
-		has = runner.Backend.HasLocalBranch(domain.NewLocalBranchName("b2"))
-		assert.True(t, has)
-		has = runner.Backend.HasLocalBranch(domain.NewLocalBranchName("b3"))
-		assert.False(t, has)
+		assert.True(t, runner.Backend.HasLocalBranch(domain.NewLocalBranchName("b1")))
+		assert.True(t, runner.Backend.HasLocalBranch(domain.NewLocalBranchName("b2")))
+		assert.False(t, runner.Backend.HasLocalBranch(domain.NewLocalBranchName("b3")))
 	})
 
 	t.Run(".HasOpenChanges()", func(t *testing.T) {
