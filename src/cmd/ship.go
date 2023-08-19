@@ -110,10 +110,10 @@ func ship(args []string, message string, debug bool) error {
 }
 
 type shipConfig struct {
-	branchDurations          config.BranchDurations
-	branchToShip             git.BranchSyncStatus
+	branchDurations          domain.BranchDurations
+	branchToShip             domain.BranchInfo
 	connector                hosting.Connector
-	targetBranch             git.BranchSyncStatus
+	targetBranch             domain.BranchInfo
 	canShipViaAPI            bool
 	childBranches            domain.LocalBranchNames
 	proposalMessage          string
@@ -276,7 +276,7 @@ func determineShipConfig(args []string, run *git.ProdRunner, isOffline bool) (*s
 	}, nil
 }
 
-func ensureParentBranchIsMainOrPerennialBranch(branch domain.LocalBranchName, branchDurations config.BranchDurations, lineage config.Lineage) error {
+func ensureParentBranchIsMainOrPerennialBranch(branch domain.LocalBranchName, branchDurations domain.BranchDurations, lineage config.Lineage) error {
 	parentBranch := lineage.Parent(branch)
 	if !branchDurations.IsMainBranch(parentBranch) && !branchDurations.IsPerennialBranch(parentBranch) {
 		ancestors := lineage.Ancestors(branch)

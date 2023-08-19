@@ -77,8 +77,8 @@ func runAppend(arg string, debug bool) error {
 }
 
 type appendConfig struct {
-	durations           config.BranchDurations
-	branchesToSync      git.BranchesSyncStatus
+	durations           domain.BranchDurations
+	branchesToSync      domain.BranchInfos
 	hasOpenChanges      bool
 	remotes             config.Remotes
 	initialBranch       domain.LocalBranchName

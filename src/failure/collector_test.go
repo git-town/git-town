@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/failure"
-	"github.com/git-town/git-town/v9/src/git"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -40,18 +39,18 @@ func TestCollector(t *testing.T) {
 		t.Run("returns the given value", func(t *testing.T) {
 			t.Parallel()
 			fc := failure.Collector{}
-			syncStatuses := git.BranchesSyncStatus{
+			syncStatuses := domain.BranchInfos{
 				{
 					Name:       domain.NewLocalBranchName("branch1"),
 					InitialSHA: domain.SHA{},
-					SyncStatus: git.SyncStatusLocalOnly,
+					SyncStatus: domain.SyncStatusLocalOnly,
 					RemoteName: domain.RemoteBranchName{},
 					RemoteSHA:  domain.SHA{},
 				},
 				{
 					Name:       domain.NewLocalBranchName("branch2"),
 					InitialSHA: domain.SHA{},
-					SyncStatus: git.SyncStatusLocalOnly,
+					SyncStatus: domain.SyncStatusLocalOnly,
 					RemoteName: domain.RemoteBranchName{},
 					RemoteSHA:  domain.SHA{},
 				},

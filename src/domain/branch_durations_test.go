@@ -1,9 +1,8 @@
-package config_test
+package domain_test
 
 import (
 	"testing"
 
-	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/stretchr/testify/assert"
 )
@@ -12,7 +11,7 @@ func TestBranchDurations(t *testing.T) {
 	t.Parallel()
 	t.Run("IsFeatureBranch", func(t *testing.T) {
 		t.Parallel()
-		bd := config.BranchDurations{
+		bd := domain.BranchDurations{
 			MainBranch:        domain.NewLocalBranchName("main"),
 			PerennialBranches: domain.NewLocalBranchNames("peren1", "peren2"),
 		}
@@ -23,7 +22,7 @@ func TestBranchDurations(t *testing.T) {
 	})
 	t.Run("IsMainBranch", func(t *testing.T) {
 		t.Parallel()
-		bd := config.BranchDurations{
+		bd := domain.BranchDurations{
 			MainBranch:        domain.NewLocalBranchName("main"),
 			PerennialBranches: domain.NewLocalBranchNames("peren1", "peren2"),
 		}
@@ -34,7 +33,7 @@ func TestBranchDurations(t *testing.T) {
 	})
 	t.Run("IsPerennialBranch", func(t *testing.T) {
 		t.Parallel()
-		bd := config.BranchDurations{
+		bd := domain.BranchDurations{
 			MainBranch:        domain.NewLocalBranchName("main"),
 			PerennialBranches: domain.NewLocalBranchNames("peren1", "peren2"),
 		}

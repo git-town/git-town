@@ -5,6 +5,7 @@ import (
 
 	"github.com/git-town/git-town/v9/src/cli"
 	"github.com/git-town/git-town/v9/src/config"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/flags"
@@ -94,7 +95,7 @@ func determineConfigConfig(run *git.ProdRunner) (ConfigConfig, error) {
 }
 
 type ConfigConfig struct {
-	branchDurations    config.BranchDurations
+	branchDurations    domain.BranchDurations
 	deleteOrigin       bool
 	giteaToken         string
 	githubToken        string

@@ -88,8 +88,8 @@ func newPullRequest(debug bool) error {
 }
 
 type newPullRequestConfig struct {
-	branchesToSync     git.BranchesSyncStatus
-	branchDurations    config.BranchDurations
+	branchesToSync     domain.BranchInfos
+	branchDurations    domain.BranchDurations
 	connector          hosting.Connector
 	hasOpenChanges     bool
 	remotes            config.Remotes

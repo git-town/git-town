@@ -67,7 +67,7 @@ func pruneBranches(debug bool) error {
 }
 
 type pruneBranchesConfig struct {
-	branchDurations  config.BranchDurations
+	branchDurations  domain.BranchDurations
 	initialBranch    domain.LocalBranchName
 	lineage          config.Lineage
 	branchesToDelete domain.LocalBranchNames
