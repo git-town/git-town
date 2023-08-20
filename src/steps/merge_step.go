@@ -8,9 +8,9 @@ import (
 
 // MergeStep merges the branch with the given name into the current branch.
 type MergeStep struct {
-	EmptyStep
 	Branch      domain.BranchName
 	previousSha domain.SHA
+	EmptyStep
 }
 
 func (step *MergeStep) CreateAbortStep() Step {

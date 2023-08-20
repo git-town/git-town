@@ -10,9 +10,9 @@ import (
 // CreateTrackingBranchStep pushes the current branch up to origin
 // and marks it as tracking the current branch.
 type CreateTrackingBranchStep struct {
-	EmptyStep
 	Branch     domain.LocalBranchName
 	NoPushHook bool
+	EmptyStep
 }
 
 func (step *CreateTrackingBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {
