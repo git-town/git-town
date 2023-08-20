@@ -86,8 +86,7 @@ func renameBranch(args []string, force, debug bool) error {
 }
 
 type renameBranchConfig struct {
-	branchTypes    domain.BranchTypes
-	initialBranch  domain.LocalBranchName
+	branches       domain.Branches
 	isOffline      bool
 	lineage        config.Lineage
 	mainBranch     domain.LocalBranchName
@@ -145,8 +144,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 	}
 	lineage := run.Config.Lineage()
 	return &renameBranchConfig{
-		branchTypes:    branches.Types,
-		initialBranch:  branches.Initial,
+		branches:       branches,
 		isOffline:      isOffline,
 		lineage:        lineage,
 		mainBranch:     mainBranch,
@@ -160,10 +158,10 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 func renameBranchStepList(config *renameBranchConfig) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	result.Append(&steps.CreateBranchStep{Branch: config.newBranch, StartingPoint: config.oldBranch.Name.Location()})
-	if config.initialBranch == config.oldBranch.Name {
+	if config.branches.Initial == config.oldBranch.Name {
 		result.Append(&steps.CheckoutStep{Branch: config.newBranch})
 	}
-	if config.branchTypes.IsPerennialBranch(config.initialBranch) {
+	if config.branches.Types.IsPerennialBranch(config.branches.Initial) {
 		result.Append(&steps.RemoveFromPerennialBranchesStep{Branch: config.oldBranch.Name})
 		result.Append(&steps.AddToPerennialBranchesStep{Branch: config.newBranch})
 	} else {
@@ -183,7 +181,7 @@ func renameBranchStepList(config *renameBranchConfig) (runstate.StepList, error)
 		RunInGitRoot:     false,
 		StashOpenChanges: false,
 		MainBranch:       config.mainBranch,
-		InitialBranch:    config.initialBranch,
+		InitialBranch:    config.branches.Initial,
 		PreviousBranch:   config.previousBranch,
 	})
 	return result, err
