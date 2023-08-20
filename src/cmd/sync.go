@@ -88,11 +88,10 @@ func sync(all, dryRun, debug bool) error {
 }
 
 type syncConfig struct {
-	branchTypes        domain.BranchTypes
+	branches           domain.Branches
 	branchesToSync     domain.BranchInfos
 	hasOpenChanges     bool
 	remotes            config.Remotes
-	initialBranch      domain.LocalBranchName
 	isOffline          bool
 	lineage            config.Lineage
 	mainBranch         domain.LocalBranchName
@@ -184,11 +183,10 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, isOffline bool) (*sy
 	}
 	branchesToSync, err := branches.All.Select(allBranchNamesToSync)
 	return &syncConfig{
-		branchTypes:        branchTypes,
+		branches:           branches,
 		branchesToSync:     branchesToSync,
 		hasOpenChanges:     hasOpenChanges,
 		remotes:            remotes,
-		initialBranch:      branches.Initial,
 		isOffline:          isOffline,
 		lineage:            lineage,
 		mainBranch:         mainBranch,
@@ -207,7 +205,7 @@ func syncBranchesSteps(config *syncConfig) (runstate.StepList, error) {
 	for _, branch := range config.branchesToSync {
 		syncBranchSteps(&list, syncBranchStepsArgs{
 			branch:             branch,
-			branchTypes:        config.branchTypes,
+			branchTypes:        config.branches.Types,
 			remotes:            config.remotes,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
@@ -219,7 +217,7 @@ func syncBranchesSteps(config *syncConfig) (runstate.StepList, error) {
 			syncStrategy:       config.syncStrategy,
 		})
 	}
-	list.Add(&steps.CheckoutStep{Branch: config.initialBranch})
+	list.Add(&steps.CheckoutStep{Branch: config.branches.Initial})
 	if config.remotes.HasOrigin() && config.shouldPushTags && !config.isOffline {
 		list.Add(&steps.PushTagsStep{})
 	}
@@ -227,7 +225,7 @@ func syncBranchesSteps(config *syncConfig) (runstate.StepList, error) {
 		RunInGitRoot:     true,
 		StashOpenChanges: config.hasOpenChanges,
 		MainBranch:       config.mainBranch,
-		InitialBranch:    config.initialBranch,
+		InitialBranch:    config.branches.Initial,
 		PreviousBranch:   config.previousBranch,
 	})
 	return list.Result()
