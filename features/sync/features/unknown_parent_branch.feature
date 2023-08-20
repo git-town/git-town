@@ -23,6 +23,7 @@ Feature: enter a parent branch name when prompted
       | alpha  | main   |
       | beta   | alpha  |
 
+  @debug @this
   Scenario: choose "<none> (make a perennial branch)"
     When I run "git-town sync" and answer the prompts:
       | PROMPT                                     | ANSWER      |
