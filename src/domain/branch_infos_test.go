@@ -35,6 +35,5 @@ func TestBranchInfos(t *testing.T) {
 			give := domain.NewLocalBranchName("branch-1")
 			assert.False(t, bis.HasMatchingRemoteBranchFor(give))
 		})
-
 	})
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v9/src/dialog"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
@@ -11,7 +12,7 @@ import (
 )
 
 // HandleUnfinishedState checks for unfinished state on disk, handles it, and signals whether to continue execution of the originally intended steps.
-func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, rootDir string) (quit bool, err error) {
+func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, rootDir string, branches domain.BranchInfos) (quit bool, err error) {
 	runState, err := runstate.Load(rootDir)
 	if err != nil {
 		return false, fmt.Errorf(messages.RunstateLoadProblem, err)
@@ -45,6 +46,7 @@ func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, roo
 			Run:       run,
 			Connector: connector,
 			RootDir:   rootDir,
+			Branches:  branches,
 		})
 	case dialog.ResponseAbort:
 		abortRunState := runState.CreateAbortRunState()
@@ -53,6 +55,7 @@ func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, roo
 			Run:       run,
 			Connector: connector,
 			RootDir:   rootDir,
+			Branches:  branches,
 		})
 	case dialog.ResponseSkip:
 		skipRunState := runState.CreateSkipRunState()
@@ -61,6 +64,7 @@ func HandleUnfinishedState(run *git.ProdRunner, connector hosting.Connector, roo
 			Run:       run,
 			Connector: connector,
 			RootDir:   rootDir,
+			Branches:  branches,
 		})
 	case dialog.ResponseQuit:
 		return true, nil

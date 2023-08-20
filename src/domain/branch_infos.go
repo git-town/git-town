@@ -24,7 +24,8 @@ func (bs BranchInfos) HasLocalBranch(localBranch LocalBranchName) bool {
 // HasMatchingRemoteBranchFor indicates whether there is already a remote branch matching the given local branch.
 func (bs BranchInfos) HasMatchingRemoteBranchFor(localBranch LocalBranchName) bool {
 	for _, branch := range bs {
-		if branch.RemoteName.BranchName() == remoteName {
+		_, localBranchName := branch.RemoteName.Parts()
+		if localBranchName == localBranch {
 			return true
 		}
 	}

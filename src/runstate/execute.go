@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v9/src/cli"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/messages"
@@ -37,7 +38,7 @@ func Execute(args ExecuteArgs) error {
 			continue
 		}
 		if typeName(step) == "*PushBranchAfterCurrentBranchSteps" {
-			err := args.RunState.AddPushBranchStepAfterCurrentBranchSteps(&args.Run.Backend)
+			err := args.RunState.AddPushBranchStepAfterCurrentBranchSteps(&args.Run.Backend, args.Branches)
 			if err != nil {
 				return err
 			}
@@ -104,4 +105,5 @@ type ExecuteArgs struct {
 	Run       *git.ProdRunner
 	Connector hosting.Connector
 	RootDir   string
+	Branches  domain.BranchInfos
 }

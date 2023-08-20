@@ -73,11 +73,13 @@ func runAppend(arg string, debug bool) error {
 		Run:       &repo.Runner,
 		Connector: nil,
 		RootDir:   repo.RootDir,
+		Branches:  config.branches,
 	})
 }
 
 type appendConfig struct {
 	branchTypes         domain.BranchTypes
+	branches            domain.BranchInfos
 	branchesToSync      domain.BranchInfos
 	hasOpenChanges      bool
 	remotes             config.Remotes
@@ -139,6 +141,7 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, run *git.ProdRun
 	syncStrategy := fc.SyncStrategy(run.Config.SyncStrategy())
 	shouldSyncUpstream := fc.Bool(run.Config.ShouldSyncUpstream())
 	return &appendConfig{
+		branches:            branches.All,
 		branchTypes:         branches.Types,
 		branchesToSync:      branchesToSync,
 		hasOpenChanges:      hasOpenChanges,

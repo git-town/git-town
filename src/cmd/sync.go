@@ -257,9 +257,9 @@ func syncBranchSteps(list *runstate.StepListBuilder, args syncBranchStepsArgs) {
 		case !args.branch.HasTrackingBranch():
 			list.Add(&steps.CreateTrackingBranchStep{Branch: args.branch.Name})
 		case !isFeatureBranch:
-			list.Add(&steps.PushBranchStep{Branch: args.branch.Name})
+			list.Add(&steps.PushBranchStep{Branch: args.branch.Name, TrackingBranch: args.branch.RemoteName})
 		default:
-			pushFeatureBranchSteps(list, args.branch.Name, args.syncStrategy, args.pushHook)
+			pushFeatureBranchSteps(list, args.branch, args.syncStrategy, args.pushHook)
 		}
 	}
 }
@@ -327,12 +327,12 @@ func updateCurrentPerennialBranchStep(list *runstate.StepListBuilder, otherBranc
 	}
 }
 
-func pushFeatureBranchSteps(list *runstate.StepListBuilder, branch domain.LocalBranchName, syncStrategy config.SyncStrategy, pushHook bool) {
+func pushFeatureBranchSteps(list *runstate.StepListBuilder, branch domain.BranchInfo, syncStrategy config.SyncStrategy, pushHook bool) {
 	switch syncStrategy {
 	case config.SyncStrategyMerge:
-		list.Add(&steps.PushBranchStep{Branch: branch, NoPushHook: !pushHook})
+		list.Add(&steps.PushBranchStep{Branch: branch.Name, TrackingBranch: branch.RemoteName, NoPushHook: !pushHook})
 	case config.SyncStrategyRebase:
-		list.Add(&steps.PushBranchStep{Branch: branch, ForceWithLease: true})
+		list.Add(&steps.PushBranchStep{Branch: branch.Name, TrackingBranch: branch.RemoteName, ForceWithLease: true})
 	default:
 		list.Fail("unknown syncStrategy value: %q", syncStrategy)
 	}

@@ -33,18 +33,19 @@ type RunState struct {
 
 // AddPushBranchStepAfterCurrentBranchSteps inserts a PushBranchStep
 // after all the steps for the current branch.
-func (runState *RunState) AddPushBranchStepAfterCurrentBranchSteps(backend *git.BackendCommands) error {
+func (runState *RunState) AddPushBranchStepAfterCurrentBranchSteps(backend *git.BackendCommands, branches domain.BranchInfos) error {
 	popped := StepList{}
 	for {
 		step := runState.RunStepList.Peek()
 		if !isCheckoutStep(step) {
 			popped.Append(runState.RunStepList.Pop())
 		} else {
-			currentBranch, err := backend.CurrentBranch()
+			currentBranchName, err := backend.CurrentBranch()
 			if err != nil {
 				return err
 			}
-			runState.RunStepList.Prepend(&steps.PushBranchStep{Branch: currentBranch})
+			currentBranch := branches.FindLocalBranch(currentBranchName)
+			runState.RunStepList.Prepend(&steps.PushBranchStep{Branch: currentBranchName, TrackingBranch: currentBranch.RemoteName})
 			runState.RunStepList.PrependList(popped)
 			break
 		}

@@ -29,19 +29,21 @@ func TestRemoteBranchName(t *testing.T) {
 		})
 	})
 
-	t.Run("LocalBranchName", func(t *testing.T) {
+	t.Run("Parts", func(t *testing.T) {
 		t.Parallel()
-		t.Run("branch is at the origin remote", func(t *testing.T) {
+		t.Run("branch at the origin remote", func(t *testing.T) {
 			t.Parallel()
 			branch := domain.NewRemoteBranchName("origin/branch")
-			want := domain.NewLocalBranchName("branch")
-			assert.Equal(t, want, branch.LocalBranchName())
+			remote, localBranch := branch.Parts()
+			assert.Equal(t, "origin", remote)
+			assert.Equal(t, domain.NewLocalBranchName("branch"), localBranch)
 		})
-		t.Run("branch is at the upstream remote", func(t *testing.T) {
+		t.Run("branch at the upstream remote", func(t *testing.T) {
 			t.Parallel()
 			branch := domain.NewRemoteBranchName("upstream/branch")
-			want := domain.NewLocalBranchName("branch")
-			assert.Equal(t, want, branch.LocalBranchName())
+			remote, localBranch := branch.Parts()
+			assert.Equal(t, "upstream", remote)
+			assert.Equal(t, domain.NewLocalBranchName("branch"), localBranch)
 		})
 	})
 }
