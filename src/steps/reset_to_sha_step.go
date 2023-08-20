@@ -9,9 +9,9 @@ import (
 // ResetToShaStep undoes all commits on the current branch
 // all the way until the given SHA.
 type ResetToShaStep struct {
-	EmptyStep
 	Hard bool
 	Sha  domain.SHA
+	EmptyStep
 }
 
 func (step *ResetToShaStep) Run(run *git.ProdRunner, _ hosting.Connector) error {

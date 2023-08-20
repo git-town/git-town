@@ -8,8 +8,8 @@ import (
 
 // AddToPerennialBranchesStep adds the branch with the given name as a perennial branch.
 type AddToPerennialBranchesStep struct {
-	EmptyStep
 	Branch domain.LocalBranchName
+	EmptyStep
 }
 
 func (step *AddToPerennialBranchesStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {

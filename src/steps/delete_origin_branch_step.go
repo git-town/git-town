@@ -8,11 +8,11 @@ import (
 
 // DeleteOriginBranchStep deletes the current branch from the origin remote.
 type DeleteOriginBranchStep struct {
-	EmptyStep
 	Branch     domain.LocalBranchName
 	IsTracking bool
 	NoPushHook bool
 	branchSha  domain.SHA
+	EmptyStep
 }
 
 func (step *DeleteOriginBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {

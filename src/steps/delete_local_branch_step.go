@@ -9,11 +9,11 @@ import (
 // DeleteLocalBranchStep deletes the branch with the given name,
 // optionally in a safe or unsafe way.
 type DeleteLocalBranchStep struct {
-	EmptyStep
 	Branch    domain.LocalBranchName
 	Parent    domain.Location
 	Force     bool
 	branchSha domain.SHA
+	EmptyStep
 }
 
 func (step *DeleteLocalBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {

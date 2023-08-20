@@ -11,7 +11,6 @@ import (
 
 // ConnectorMergeProposalStep squash merges the branch with the given name into the current branch.
 type ConnectorMergeProposalStep struct {
-	EmptyStep
 	Branch                    domain.LocalBranchName
 	CommitMessage             string
 	ProposalMessage           string
@@ -19,6 +18,7 @@ type ConnectorMergeProposalStep struct {
 	mergeError                error
 	mergeSha                  domain.SHA
 	ProposalNumber            int
+	EmptyStep
 }
 
 func (step *ConnectorMergeProposalStep) CreateAbortStep() Step {
