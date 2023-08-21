@@ -64,6 +64,8 @@ func hack(args []string, promptForParent, debug bool) error {
 	if err != nil {
 		return err
 	}
+	fmt.Println("222222222222222")
+	fmt.Println(stepList.String())
 	runState := runstate.RunState{
 		Command:     "hack",
 		RunStepList: stepList,

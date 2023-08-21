@@ -50,7 +50,7 @@ Feature: conflicts between the main branch and its tracking branch
     And the uncommitted file is stashed
     And a rebase is now in progress
 
-  @this
+  @debug @this
   Scenario: resolve and continue
     When I resolve the conflict in "conflicting_file"
     And I run "git-town continue" and close the editor
