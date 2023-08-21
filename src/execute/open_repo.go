@@ -82,19 +82,6 @@ func OpenRepo(args OpenShellArgs) (result RepoData, err error) {
 		err = errors.New(messages.OfflineNotAllowed)
 		return
 	}
-	if args.Fetch {
-		var remotes config.Remotes
-		remotes, err = backendCommands.Remotes()
-		if err != nil {
-			return
-		}
-		if remotes.HasOrigin() && !isOffline {
-			err = prodRunner.Frontend.Fetch()
-			if err != nil {
-				return
-			}
-		}
-	}
 	if args.ValidateGitRepo {
 		var currentDirectory string
 		currentDirectory, err = os.Getwd()

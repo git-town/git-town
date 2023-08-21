@@ -1,6 +1,7 @@
 package execute
 
 import (
+	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/validate"
 )
@@ -11,6 +12,19 @@ func LoadBranches(args LoadBranchesArgs) (domain.Branches, bool, error) {
 		exit, err := validate.HandleUnfinishedState(&args.Repo.Runner, nil, args.Repo.RootDir)
 		if err != nil || exit {
 			return domain.EmptyBranches(), exit, err
+		}
+	}
+	if args.Fetch {
+		var remotes config.Remotes
+		remotes, err := args.Repo.Runner.Backend.Remotes()
+		if err != nil {
+			return domain.EmptyBranches(), false, err
+		}
+		if remotes.HasOrigin() && !args.Repo.IsOffline {
+			err = args.Repo.Runner.Frontend.Fetch()
+			if err != nil {
+				return domain.EmptyBranches(), false, err
+			}
 		}
 	}
 	allBranches, initialBranch, err := args.Repo.Runner.Backend.BranchInfos()
@@ -31,6 +45,7 @@ func LoadBranches(args LoadBranchesArgs) (domain.Branches, bool, error) {
 
 type LoadBranchesArgs struct {
 	Repo                  *RepoData
+	Fetch                 bool
 	HandleUnfinishedState bool
 	ValidateIsConfigured  bool
 }
