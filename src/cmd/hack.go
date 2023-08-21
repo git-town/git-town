@@ -119,13 +119,12 @@ func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunne
 	pullBranchStrategy := fc.PullBranchStrategy(run.Config.PullBranchStrategy())
 	syncStrategy := fc.SyncStrategy(run.Config.SyncStrategy())
 	return &appendConfig{
-		branchTypes:         branches.Types,
+		branches:            branches,
 		branchesToSync:      branchesToSync,
 		targetBranch:        targetBranch,
 		parentBranch:        parentBranch,
 		hasOpenChanges:      hasOpenChanges,
 		remotes:             remotes,
-		initialBranch:       branches.Initial,
 		lineage:             lineage,
 		mainBranch:          mainBranch,
 		shouldNewBranchPush: shouldNewBranchPush,

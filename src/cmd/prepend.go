@@ -80,11 +80,10 @@ func prepend(args []string, debug bool) error {
 }
 
 type prependConfig struct {
-	branchTypes         domain.BranchTypes
+	branches            domain.Branches
 	branchesToSync      domain.BranchInfos
 	hasOpenChanges      bool
 	remotes             config.Remotes
-	initialBranch       domain.LocalBranchName
 	isOffline           bool
 	lineage             config.Lineage
 	mainBranch          domain.LocalBranchName
@@ -137,11 +136,10 @@ func determinePrependConfig(args []string, run *git.ProdRunner, isOffline bool) 
 	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
 	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
 	return &prependConfig{
-		branchTypes:         branches.Types,
+		branches:            branches,
 		branchesToSync:      branchesToSync,
 		hasOpenChanges:      hasOpenChanges,
 		remotes:             remotes,
-		initialBranch:       branches.Initial,
 		isOffline:           isOffline,
 		lineage:             lineage,
 		mainBranch:          mainBranch,
@@ -161,7 +159,7 @@ func prependStepList(config *prependConfig) (runstate.StepList, error) {
 	for _, branchToSync := range config.branchesToSync {
 		syncBranchSteps(&list, syncBranchStepsArgs{
 			branch:             branchToSync,
-			branchTypes:        config.branchTypes,
+			branchTypes:        config.branches.Types,
 			remotes:            config.remotes,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
@@ -175,7 +173,7 @@ func prependStepList(config *prependConfig) (runstate.StepList, error) {
 	}
 	list.Add(&steps.CreateBranchStep{Branch: config.targetBranch, StartingPoint: config.parentBranch.Location()})
 	list.Add(&steps.SetParentStep{Branch: config.targetBranch, ParentBranch: config.parentBranch})
-	list.Add(&steps.SetParentStep{Branch: config.initialBranch, ParentBranch: config.targetBranch})
+	list.Add(&steps.SetParentStep{Branch: config.branches.Initial, ParentBranch: config.targetBranch})
 	list.Add(&steps.CheckoutStep{Branch: config.targetBranch})
 	if config.remotes.HasOrigin() && config.shouldNewBranchPush && !config.isOffline {
 		list.Add(&steps.CreateTrackingBranchStep{Branch: config.targetBranch, NoPushHook: !config.pushHook})
@@ -184,7 +182,7 @@ func prependStepList(config *prependConfig) (runstate.StepList, error) {
 		RunInGitRoot:     true,
 		StashOpenChanges: config.hasOpenChanges,
 		MainBranch:       config.mainBranch,
-		InitialBranch:    config.initialBranch,
+		InitialBranch:    config.branches.Initial,
 		PreviousBranch:   config.previousBranch,
 	})
 	return list.Result()

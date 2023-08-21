@@ -78,12 +78,10 @@ func runAppend(arg string, debug bool) error {
 }
 
 type appendConfig struct {
-	branchTypes         domain.BranchTypes
-	branches            domain.BranchInfos
+	branches            domain.Branches
 	branchesToSync      domain.BranchInfos
 	hasOpenChanges      bool
 	remotes             config.Remotes
-	initialBranch       domain.LocalBranchName
 	isOffline           bool
 	lineage             config.Lineage
 	mainBranch          domain.LocalBranchName
@@ -141,12 +139,10 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, run *git.ProdRun
 	syncStrategy := fc.SyncStrategy(run.Config.SyncStrategy())
 	shouldSyncUpstream := fc.Bool(run.Config.ShouldSyncUpstream())
 	return &appendConfig{
-		branches:            branches.All,
-		branchTypes:         branches.Types,
+		branches:            branches,
 		branchesToSync:      branchesToSync,
 		hasOpenChanges:      hasOpenChanges,
 		remotes:             remotes,
-		initialBranch:       branches.Initial,
 		isOffline:           isOffline,
 		lineage:             lineage,
 		mainBranch:          mainBranch,
@@ -166,7 +162,7 @@ func appendStepList(config *appendConfig) (runstate.StepList, error) {
 	for _, branch := range config.branchesToSync {
 		syncBranchSteps(&list, syncBranchStepsArgs{
 			branch:             branch,
-			branchTypes:        config.branchTypes,
+			branchTypes:        config.branches.Types,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
 			remotes:            config.remotes,
@@ -188,7 +184,7 @@ func appendStepList(config *appendConfig) (runstate.StepList, error) {
 		RunInGitRoot:     true,
 		StashOpenChanges: config.hasOpenChanges,
 		MainBranch:       config.mainBranch,
-		InitialBranch:    config.initialBranch,
+		InitialBranch:    config.branches.Initial,
 		PreviousBranch:   config.previousBranch,
 	})
 	return list.Result()

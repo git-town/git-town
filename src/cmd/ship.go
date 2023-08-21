@@ -83,7 +83,7 @@ func ship(args []string, message string, debug bool) error {
 	if err != nil {
 		return err
 	}
-	if config.branchToShip.Name == config.initialBranch {
+	if config.branchToShip.Name == config.branches.Initial {
 		hasOpenChanges, err := repo.Runner.Backend.HasOpenChanges()
 		if err != nil {
 			return err
@@ -110,7 +110,7 @@ func ship(args []string, message string, debug bool) error {
 }
 
 type shipConfig struct {
-	branchTypes              domain.BranchTypes
+	branches                 domain.Branches
 	branchToShip             domain.BranchInfo
 	connector                hosting.Connector
 	targetBranch             domain.BranchInfo
@@ -120,7 +120,6 @@ type shipConfig struct {
 	deleteOriginBranch       bool
 	hasOpenChanges           bool
 	remotes                  config.Remotes
-	initialBranch            domain.LocalBranchName
 	isShippingInitialBranch  bool
 	isOffline                bool
 	lineage                  config.Lineage
@@ -251,7 +250,7 @@ func determineShipConfig(args []string, run *git.ProdRunner, isOffline bool) (*s
 		}
 	}
 	return &shipConfig{
-		branchTypes:              branches.Types,
+		branches:                 branches,
 		connector:                connector,
 		targetBranch:             *targetBranch,
 		branchToShip:             *branchToShip,
@@ -261,7 +260,6 @@ func determineShipConfig(args []string, run *git.ProdRunner, isOffline bool) (*s
 		deleteOriginBranch:       deleteOrigin,
 		hasOpenChanges:           hasOpenChanges,
 		remotes:                  remotes,
-		initialBranch:            branches.Initial,
 		isOffline:                isOffline,
 		isShippingInitialBranch:  isShippingInitialBranch,
 		lineage:                  lineage,
@@ -293,7 +291,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 	// sync the parent branch
 	syncBranchSteps(&list, syncBranchStepsArgs{
 		branch:             config.targetBranch,
-		branchTypes:        config.branchTypes,
+		branchTypes:        config.branches.Types,
 		remotes:            config.remotes,
 		isOffline:          config.isOffline,
 		lineage:            config.lineage,
@@ -307,7 +305,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 	// sync the branch to ship (local sync only)
 	syncBranchSteps(&list, syncBranchStepsArgs{
 		branch:             config.branchToShip,
-		branchTypes:        config.branchTypes,
+		branchTypes:        config.branches.Types,
 		remotes:            config.remotes,
 		isOffline:          config.isOffline,
 		lineage:            config.lineage,
@@ -359,13 +357,13 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 		list.Add(&steps.SetParentStep{Branch: child, ParentBranch: config.targetBranch.Name})
 	}
 	if !config.isShippingInitialBranch {
-		list.Add(&steps.CheckoutStep{Branch: config.initialBranch})
+		list.Add(&steps.CheckoutStep{Branch: config.branches.Initial})
 	}
 	list.Wrap(runstate.WrapOptions{
 		RunInGitRoot:     true,
 		StashOpenChanges: !config.isShippingInitialBranch && config.hasOpenChanges,
 		MainBranch:       config.mainBranch,
-		InitialBranch:    config.initialBranch,
+		InitialBranch:    config.branches.Initial,
 		PreviousBranch:   config.previousBranch,
 	})
 	return list.Result()
