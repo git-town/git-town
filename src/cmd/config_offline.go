@@ -33,17 +33,16 @@ func offlineCmd() *cobra.Command {
 }
 
 func offline(args []string, debug bool) error {
-	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
+	repo, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 false,
 		OmitBranchNames:       true,
-		HandleUnfinishedState: false,
 		ValidateIsOnline:      false,
 		ValidateGitRepo:       false,
 		ValidateNoOpenChanges: false,
 	})
-	if err != nil || exit {
+	if err != nil {
 		return err
 	}
 	if len(args) > 0 {

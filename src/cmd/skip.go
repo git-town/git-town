@@ -29,24 +29,24 @@ func skipCmd() *cobra.Command {
 }
 
 func skip(debug bool) error {
-	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
+	repo, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 false,
-		HandleUnfinishedState: false,
 		OmitBranchNames:       false,
 		ValidateIsOnline:      false,
 		ValidateGitRepo:       true,
 		ValidateNoOpenChanges: false,
 	})
-	if err != nil || exit {
+	if err != nil {
 		return err
 	}
-	_, err = execute.LoadBranches(execute.LoadBranchesArgs{
-		Runner:               &repo.Runner,
-		ValidateIsConfigured: true,
+	_, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Repo:                  &repo,
+		HandleUnfinishedState: false,
+		ValidateIsConfigured:  true,
 	})
-	if err != nil {
+	if err != nil || exit {
 		return err
 	}
 	runState, err := runstate.Load(repo.RootDir)

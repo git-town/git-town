@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/spf13/cobra"
 )
@@ -42,21 +41,20 @@ func repoCommand() *cobra.Command {
 }
 
 func repo(debug bool) error {
-	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
+	repo, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 false,
-		HandleUnfinishedState: false,
 		OmitBranchNames:       false,
 		ValidateIsOnline:      true,
 		ValidateGitRepo:       true,
 		ValidateNoOpenChanges: false,
 	})
-	if err != nil || exit {
+	if err != nil {
 		return err
 	}
-	config, err := determineRepoConfig(&repo.Runner)
-	if err != nil {
+	config, exit, err := determineRepoConfig(&repo)
+	if err != nil || exit {
 		return err
 	}
 	browser.Open(config.connector.RepositoryURL(), repo.Runner.Frontend.FrontendRunner, repo.Runner.Backend.BackendRunner)
@@ -64,39 +62,40 @@ func repo(debug bool) error {
 	return nil
 }
 
-func determineRepoConfig(run *git.ProdRunner) (*repoConfig, error) {
-	_, err := execute.LoadBranches(execute.LoadBranchesArgs{
-		Runner:               run,
-		ValidateIsConfigured: true,
+func determineRepoConfig(repo *execute.RepoData) (*repoConfig, bool, error) {
+	_, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Repo:                  repo,
+		HandleUnfinishedState: false,
+		ValidateIsConfigured:  true,
 	})
-	if err != nil {
-		return nil, err
+	if err != nil || exit {
+		return nil, exit, err
 	}
-	originURL := run.Config.OriginURL()
-	hostingService, err := run.Config.HostingService()
+	originURL := repo.Runner.Config.OriginURL()
+	hostingService, err := repo.Runner.Config.HostingService()
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
-	mainBranch := run.Config.MainBranch()
+	mainBranch := repo.Runner.Config.MainBranch()
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		HostingService:  hostingService,
-		GetShaForBranch: run.Backend.ShaForBranch,
+		GetShaForBranch: repo.Runner.Backend.ShaForBranch,
 		OriginURL:       originURL,
-		GiteaAPIToken:   run.Config.GiteaToken(),
-		GithubAPIToken:  run.Config.GitHubToken(),
-		GitlabAPIToken:  run.Config.GitLabToken(),
+		GiteaAPIToken:   repo.Runner.Config.GiteaToken(),
+		GithubAPIToken:  repo.Runner.Config.GitHubToken(),
+		GitlabAPIToken:  repo.Runner.Config.GitLabToken(),
 		MainBranch:      mainBranch,
 		Log:             cli.PrintingLog{},
 	})
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
 	if connector == nil {
-		return nil, hosting.UnsupportedServiceError()
+		return nil, false, hosting.UnsupportedServiceError()
 	}
 	return &repoConfig{
 		connector: connector,
-	}, err
+	}, false, err
 }
 
 type repoConfig struct {

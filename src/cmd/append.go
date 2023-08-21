@@ -6,7 +6,6 @@ import (
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
@@ -93,9 +92,9 @@ type appendConfig struct {
 	targetBranch        domain.LocalBranchName
 }
 
-func determineAppendConfig(targetBranch domain.LocalBranchName, run *git.ProdRunner, isOffline bool) (*appendConfig, error) {
-	branches, err := execute.LoadBranches(execute.LoadBranchesArgs{
-		Runner:                run,
+func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.RepoData) (*appendConfig, bool, error) {
+	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Repo:                  repo,
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
 	})
@@ -143,7 +142,7 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, run *git.ProdRun
 		branchesToSync:      branchesToSync,
 		hasOpenChanges:      hasOpenChanges,
 		remotes:             remotes,
-		isOffline:           isOffline,
+		isOffline:           repo.IsOffline,
 		lineage:             lineage,
 		mainBranch:          mainBranch,
 		pushHook:            pushHook,

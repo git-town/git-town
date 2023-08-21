@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/slice"
@@ -38,21 +37,20 @@ func killCommand() *cobra.Command {
 }
 
 func kill(args []string, debug bool) error {
-	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
+	repo, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 true,
-		HandleUnfinishedState: false,
 		OmitBranchNames:       false,
 		ValidateIsOnline:      false,
 		ValidateGitRepo:       true,
 		ValidateNoOpenChanges: false,
 	})
-	if err != nil || exit {
+	if err != nil {
 		return err
 	}
-	config, err := determineKillConfig(args, &repo.Runner, repo.IsOffline)
-	if err != nil {
+	config, exit, err := determineKillConfig(args, &repo)
+	if err != nil || exit {
 		return err
 	}
 	stepList, err := killStepList(config)
@@ -82,60 +80,61 @@ type killConfig struct {
 	targetBranch   domain.BranchInfo
 }
 
-func determineKillConfig(args []string, run *git.ProdRunner, isOffline bool) (*killConfig, error) {
-	branches, err := execute.LoadBranches(execute.LoadBranchesArgs{
-		Runner:               run,
-		ValidateIsConfigured: true,
+func determineKillConfig(args []string, repo *execute.RepoData) (*killConfig, bool, error) {
+	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Repo:                  repo,
+		HandleUnfinishedState: true,
+		ValidateIsConfigured:  true,
 	})
-	if err != nil {
-		return nil, err
+	if err != nil || exit {
+		return nil, exit, err
 	}
-	mainBranch := run.Config.MainBranch()
+	mainBranch := repo.Runner.Config.MainBranch()
 	targetBranchName := domain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
 	if !branches.Types.IsFeatureBranch(targetBranchName) {
-		return nil, fmt.Errorf(messages.KillOnlyFeatureBranches)
+		return nil, false, fmt.Errorf(messages.KillOnlyFeatureBranches)
 	}
 	targetBranch := branches.All.FindLocalBranch(targetBranchName)
 	if targetBranch == nil {
-		return nil, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
+		return nil, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
-	lineage := run.Config.Lineage()
+	lineage := repo.Runner.Config.Lineage()
 	if targetBranch.IsLocal() {
 		updated, err := validate.KnowsBranchAncestors(targetBranchName, validate.KnowsBranchAncestorsArgs{
 			DefaultBranch: mainBranch,
-			Backend:       &run.Backend,
+			Backend:       &repo.Runner.Backend,
 			AllBranches:   branches.All,
 			Lineage:       lineage,
 			BranchTypes:   branches.Types,
 			MainBranch:    mainBranch,
 		})
 		if err != nil {
-			return nil, err
+			return nil, false, err
 		}
 		if updated {
-			run.Config.Reload()
-			lineage = run.Config.Lineage()
+			repo.Runner.Config.Reload()
+			lineage = repo.Runner.Config.Lineage()
 		}
 	}
-	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
-	hasOpenChanges, err := run.Backend.HasOpenChanges()
+	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
+	hasOpenChanges, err := repo.Runner.Backend.HasOpenChanges()
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
-	pushHook, err := run.Config.PushHook()
+	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
 	return &killConfig{
 		hasOpenChanges: hasOpenChanges,
 		initialBranch:  branches.Initial,
-		isOffline:      isOffline,
+		isOffline:      repo.IsOffline,
 		lineage:        lineage,
 		mainBranch:     mainBranch,
 		noPushHook:     !pushHook,
 		previousBranch: previousBranch,
 		targetBranch:   *targetBranch,
-	}, nil
+	}, false, nil
 }
 
 func (kc killConfig) isOnline() bool {
