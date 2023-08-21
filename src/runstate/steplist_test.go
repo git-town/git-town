@@ -9,20 +9,25 @@ import (
 )
 
 func TestStepList(t *testing.T) {
+	t.Parallel()
 	t.Run("Append", func(t *testing.T) {
+		t.Parallel()
 		t.Run("append a single step", func(t *testing.T) {
+			t.Parallel()
 			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}}}
 			list.Append(&steps.StashOpenChangesStep{})
 			want := []steps.Step{&steps.AbortMergeStep{}, &steps.StashOpenChangesStep{}}
 			assert.Equal(t, want, list.List)
 		})
 		t.Run("append multiple steps", func(t *testing.T) {
+			t.Parallel()
 			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}}}
 			list.Append(&steps.AbortRebaseStep{}, &steps.StashOpenChangesStep{})
 			want := []steps.Step{&steps.AbortMergeStep{}, &steps.AbortRebaseStep{}, &steps.StashOpenChangesStep{}}
 			assert.Equal(t, want, list.List)
 		})
 		t.Run("append no steps", func(t *testing.T) {
+			t.Parallel()
 			list := runstate.StepList{List: []steps.Step{}}
 			list.Append()
 			assert.Equal(t, []steps.Step{}, list.List)
@@ -30,7 +35,9 @@ func TestStepList(t *testing.T) {
 	})
 
 	t.Run("AppendList", func(t *testing.T) {
+		t.Parallel()
 		t.Run("append a populated list", func(t *testing.T) {
+			t.Parallel()
 			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}}}
 			other := runstate.StepList{List: []steps.Step{&steps.StashOpenChangesStep{}}}
 			list.AppendList(other)
@@ -38,6 +45,7 @@ func TestStepList(t *testing.T) {
 			assert.Equal(t, want, list.List)
 		})
 		t.Run("append an empty list", func(t *testing.T) {
+			t.Parallel()
 			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}}}
 			other := runstate.StepList{List: []steps.Step{}}
 			list.AppendList(other)
@@ -46,18 +54,23 @@ func TestStepList(t *testing.T) {
 	})
 
 	t.Run("IsEmpty", func(t *testing.T) {
+		t.Parallel()
 		t.Run("list is empty", func(t *testing.T) {
+			t.Parallel()
 			list := runstate.StepList{List: []steps.Step{}}
 			assert.True(t, list.IsEmpty())
 		})
 		t.Run("list is not empty", func(t *testing.T) {
+			t.Parallel()
 			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}}}
 			assert.False(t, list.IsEmpty())
 		})
 	})
 
 	t.Run("Peek", func(t *testing.T) {
+		t.Parallel()
 		t.Run("populated list", func(t *testing.T) {
+			t.Parallel()
 			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}, &steps.StashOpenChangesStep{}}}
 			have := list.Peek()
 			assert.Equal(t, &steps.AbortMergeStep{}, have, "returns the first element of the list")
@@ -65,6 +78,7 @@ func TestStepList(t *testing.T) {
 			assert.Equal(t, wantList, list, "does not modify the list")
 		})
 		t.Run("empty list", func(t *testing.T) {
+			t.Parallel()
 			list := runstate.StepList{List: []steps.Step{}}
 			have := list.Peek()
 			assert.Equal(t, nil, have)
@@ -74,7 +88,9 @@ func TestStepList(t *testing.T) {
 	})
 
 	t.Run("Pop", func(t *testing.T) {
+		t.Parallel()
 		t.Run("populated list", func(t *testing.T) {
+			t.Parallel()
 			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}, &steps.StashOpenChangesStep{}}}
 			have := list.Pop()
 			assert.Equal(t, &steps.AbortMergeStep{}, have, "returns the first element of the list")
@@ -82,6 +98,7 @@ func TestStepList(t *testing.T) {
 			assert.Equal(t, wantList, list, "remotes the popped element from the list")
 		})
 		t.Run("empty list", func(t *testing.T) {
+			t.Parallel()
 			list := runstate.StepList{List: []steps.Step{}}
 			have := list.Pop()
 			assert.Equal(t, nil, have, "returns nil")
@@ -91,19 +108,23 @@ func TestStepList(t *testing.T) {
 	})
 
 	t.Run("Prepend", func(t *testing.T) {
+		t.Parallel()
 		t.Run("prepend a single step", func(t *testing.T) {
+			t.Parallel()
 			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}}}
 			list.Prepend(&steps.StashOpenChangesStep{})
 			want := []steps.Step{&steps.StashOpenChangesStep{}, &steps.AbortMergeStep{}}
 			assert.Equal(t, want, list.List)
 		})
 		t.Run("prepend multiple steps", func(t *testing.T) {
+			t.Parallel()
 			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}}}
 			list.Prepend(&steps.AbortRebaseStep{}, &steps.StashOpenChangesStep{})
 			want := []steps.Step{&steps.AbortRebaseStep{}, &steps.StashOpenChangesStep{}, &steps.AbortMergeStep{}}
 			assert.Equal(t, want, list.List)
 		})
 		t.Run("prepend no steps", func(t *testing.T) {
+			t.Parallel()
 			list := runstate.StepList{List: []steps.Step{}}
 			list.Prepend()
 			assert.Equal(t, []steps.Step{}, list.List)
@@ -111,7 +132,9 @@ func TestStepList(t *testing.T) {
 	})
 
 	t.Run("PrependList", func(t *testing.T) {
+		t.Parallel()
 		t.Run("prepend a populated list", func(t *testing.T) {
+			t.Parallel()
 			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}}}
 			other := runstate.StepList{List: []steps.Step{&steps.StashOpenChangesStep{}, &steps.RestoreOpenChangesStep{}}}
 			list.PrependList(other)
@@ -119,6 +142,7 @@ func TestStepList(t *testing.T) {
 			assert.Equal(t, want, list.List)
 		})
 		t.Run("prepend an empty list", func(t *testing.T) {
+			t.Parallel()
 			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}}}
 			other := runstate.StepList{List: []steps.Step{}}
 			list.PrependList(other)
