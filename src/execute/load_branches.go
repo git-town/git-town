@@ -11,7 +11,7 @@ func LoadBranches(args LoadBranchesArgs) (branches domain.Branches, exit bool, e
 	var allBranches domain.BranchInfos
 	var initialBranch domain.LocalBranchName
 	if args.HandleUnfinishedState {
-		// load stale branch info to handle unfinished state
+		// load stale branch info to handle unfinished state with the state the repo is in right now
 		allBranches, initialBranch, err = args.Repo.Runner.Backend.BranchInfos()
 		if err != nil {
 			return domain.EmptyBranches(), false, err
