@@ -14,12 +14,12 @@ type RebaseBranchStep struct {
 	EmptyStep
 }
 
-func (step *RebaseBranchStep) CreateAbortStep() Step {
-	return &AbortRebaseStep{}
+func (step *RebaseBranchStep) CreateAbortSteps() []Step {
+	return []Step{&AbortRebaseStep{}}
 }
 
-func (step *RebaseBranchStep) CreateContinueStep() Step {
-	return &ContinueRebaseStep{}
+func (step *RebaseBranchStep) CreateContinueSteps() []Step {
+	return []Step{&ContinueRebaseStep{}}
 }
 
 func (step *RebaseBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {

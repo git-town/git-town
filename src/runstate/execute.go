@@ -45,7 +45,7 @@ func Execute(args ExecuteArgs) error {
 		}
 		runErr := step.Run(args.Run, args.Connector)
 		if runErr != nil {
-			args.RunState.AbortStepList.Append(step.CreateAbortStep())
+			args.RunState.AbortStepList.Append(step.CreateAbortSteps()...)
 			if step.ShouldAutomaticallyAbortOnError() {
 				cli.PrintError(fmt.Errorf(runErr.Error() + "\nAuto-aborting..."))
 				abortRunState := args.RunState.CreateAbortRunState()
@@ -60,7 +60,7 @@ func Execute(args ExecuteArgs) error {
 				}
 				return step.CreateAutomaticAbortError()
 			}
-			args.RunState.RunStepList.Prepend(step.CreateContinueStep())
+			args.RunState.RunStepList.Prepend(step.CreateContinueSteps()...)
 			err := args.RunState.MarkAsUnfinished(&args.Run.Backend)
 			if err != nil {
 				return err
