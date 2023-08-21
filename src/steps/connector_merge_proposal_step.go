@@ -21,11 +21,11 @@ type ConnectorMergeProposalStep struct {
 	EmptyStep
 }
 
-func (step *ConnectorMergeProposalStep) CreateAbortStep() Step {
+func (step *ConnectorMergeProposalStep) CreateAbortStep() []Step {
 	if step.enteredEmptyCommitMessage {
-		return &DiscardOpenChangesStep{}
+		return []Step{&DiscardOpenChangesStep{}}
 	}
-	return nil
+	return []Step{}
 }
 
 func (step *ConnectorMergeProposalStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {

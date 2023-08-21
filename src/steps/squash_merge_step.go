@@ -18,8 +18,8 @@ type SquashMergeStep struct {
 	EmptyStep
 }
 
-func (step *SquashMergeStep) CreateAbortStep() Step {
-	return &DiscardOpenChangesStep{}
+func (step *SquashMergeStep) CreateAbortStep() []Step {
+	return []Step{&DiscardOpenChangesStep{}}
 }
 
 func (step *SquashMergeStep) CreateUndoSteps(backend *git.BackendCommands) ([]Step, error) {

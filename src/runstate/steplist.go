@@ -22,8 +22,8 @@ func NewStepList(step steps.Step) StepList {
 }
 
 // Append adds the given step to the end of this StepList.
-func (stepList *StepList) Append(step steps.Step) {
-	stepList.List = append(stepList.List, step)
+func (stepList *StepList) Append(step ...steps.Step) {
+	stepList.List = append(stepList.List, step...)
 }
 
 // AppendList adds all elements of the given StepList to the end of this StepList.

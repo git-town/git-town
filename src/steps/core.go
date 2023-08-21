@@ -15,10 +15,10 @@ import (
 // and can provide Steps to continue, abort, and undo them.
 type Step interface {
 	// CreateAbortSteps provides the abort step for this step.
-	CreateAbortSteps() Step
+	CreateAbortSteps() []Step
 
 	// CreateContinueSteps provides the continue step for this step.
-	CreateContinueSteps() Step
+	CreateContinueSteps() []Step
 
 	// CreateUndoSteps provides the undo step for this step.
 	CreateUndoSteps(*git.BackendCommands) ([]Step, error)

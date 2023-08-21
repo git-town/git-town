@@ -21,8 +21,8 @@ func (step *UpdateProposalTargetStep) Run(_ *git.ProdRunner, connector hosting.C
 	return connector.UpdateProposalTarget(step.ProposalNumber, step.NewTarget)
 }
 
-func (step *UpdateProposalTargetStep) CreateAbortSteps() Step {
-	return &step.EmptyStep
+func (step *UpdateProposalTargetStep) CreateAbortSteps() []Step {
+	return []Step{&step.EmptyStep}
 }
 
 func (step *UpdateProposalTargetStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {

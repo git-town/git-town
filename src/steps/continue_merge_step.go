@@ -11,8 +11,8 @@ type ContinueMergeStep struct {
 	EmptyStep
 }
 
-func (step *ContinueMergeStep) CreateContinueSteps() Step {
-	return step
+func (step *ContinueMergeStep) CreateContinueSteps() []Step {
+	return []Step{step}
 }
 
 func (step *ContinueMergeStep) Run(run *git.ProdRunner, _ hosting.Connector) error {

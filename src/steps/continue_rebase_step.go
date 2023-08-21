@@ -11,12 +11,12 @@ type ContinueRebaseStep struct {
 	EmptyStep
 }
 
-func (step *ContinueRebaseStep) CreateAbortSteps() Step {
-	return &AbortRebaseStep{}
+func (step *ContinueRebaseStep) CreateAbortSteps() []Step {
+	return []Step{&AbortRebaseStep{}}
 }
 
-func (step *ContinueRebaseStep) CreateContinueSteps() Step {
-	return step
+func (step *ContinueRebaseStep) CreateContinueSteps() []Step {
+	return []Step{step}
 }
 
 func (step *ContinueRebaseStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
