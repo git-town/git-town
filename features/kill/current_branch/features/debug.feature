@@ -9,6 +9,7 @@ Feature: display debug statistics
       | other   | local, origin | other commit   |
 
   # TODO: remove redundant "git config -lz --local"
+  @this
   Scenario: result
     When I run "git-town kill --debug"
     Then it runs the commands
@@ -17,8 +18,9 @@ Feature: display debug statistics
       |         | backend  | git config -lz --local                            |
       |         | backend  | git config -lz --global                           |
       |         | backend  | git rev-parse --show-toplevel                     |
-      |         | backend  | git branch -vva                                   |
       |         | backend  | git remote                                        |
+      |         | backend  | git status                                        |
+      |         | backend  | git rev-parse --abbrev-ref HEAD                   |
       | current | frontend | git fetch --prune --tags                          |
       |         | backend  | git branch -vva                                   |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}         |
@@ -36,6 +38,6 @@ Feature: display debug statistics
       |         | backend  | git checkout main                                 |
     And it prints:
       """
-      Ran 21 shell commands.
+      Ran 22 shell commands.
       """
     And the current branch is now "main"
