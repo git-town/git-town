@@ -8,6 +8,22 @@ import (
 
 // LoadBranches loads the typically used information about Git branches using a single Git command.
 func LoadBranches(args LoadBranchesArgs) (domain.Branches, bool, error) {
+	if args.HandleUnfinishedState {
+		exit, err := validate.HandleUnfinishedState(&args.Repo.Runner, nil, args.Repo.RootDir)
+		if err != nil || exit {
+			return domain.EmptyBranches(), exit, err
+		}
+	}
+	if args.ValidateNoOpenChanges {
+		hasOpenChanges, err := args.Repo.Runner.Backend.HasOpenChanges()
+		if err != nil {
+			return domain.EmptyBranches(), false, err
+		}
+		err = validate.NoOpenChanges(hasOpenChanges)
+		if err != nil {
+			return domain.EmptyBranches(), false, err
+		}
+	}
 	if args.Fetch {
 		var remotes config.Remotes
 		remotes, err := args.Repo.Runner.Backend.Remotes()
@@ -24,22 +40,6 @@ func LoadBranches(args LoadBranchesArgs) (domain.Branches, bool, error) {
 	allBranches, initialBranch, err := args.Repo.Runner.Backend.BranchInfos()
 	if err != nil {
 		return domain.EmptyBranches(), false, err
-	}
-	if args.HandleUnfinishedState {
-		exit, err := validate.HandleUnfinishedState(&args.Repo.Runner, nil, args.Repo.RootDir)
-		if err != nil || exit {
-			return domain.EmptyBranches(), exit, err
-		}
-	}
-	if args.ValidateNoOpenChanges {
-		hasOpenChanges, err := args.Repo.Runner.Backend.HasOpenChanges()
-		if err != nil {
-			return domain.EmptyBranches(), false, err
-		}
-		err = validate.NoOpenChanges(hasOpenChanges)
-		if err != nil {
-			return domain.EmptyBranches(), false, err
-		}
 	}
 	branchTypes := args.Repo.Runner.Config.BranchTypes()
 	result := domain.Branches{
