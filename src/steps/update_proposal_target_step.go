@@ -21,7 +21,7 @@ func (step *UpdateProposalTargetStep) Run(_ *git.ProdRunner, connector hosting.C
 	return connector.UpdateProposalTarget(step.ProposalNumber, step.NewTarget)
 }
 
-func (step *UpdateProposalTargetStep) CreateAbortStep() Step {
+func (step *UpdateProposalTargetStep) CreateAbortSteps() Step {
 	return &step.EmptyStep
 }
 

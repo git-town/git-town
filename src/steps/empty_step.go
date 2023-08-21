@@ -11,11 +11,11 @@ import (
 // It is used for steps that have no undo or abort steps.
 type EmptyStep struct{}
 
-func (step *EmptyStep) CreateAbortStep() Step {
+func (step *EmptyStep) CreateAbortSteps() Step {
 	return &EmptyStep{}
 }
 
-func (step *EmptyStep) CreateContinueStep() Step {
+func (step *EmptyStep) CreateContinueSteps() Step {
 	return &EmptyStep{}
 }
 

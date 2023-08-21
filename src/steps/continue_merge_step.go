@@ -11,7 +11,7 @@ type ContinueMergeStep struct {
 	EmptyStep
 }
 
-func (step *ContinueMergeStep) CreateContinueStep() Step {
+func (step *ContinueMergeStep) CreateContinueSteps() Step {
 	return step
 }
 

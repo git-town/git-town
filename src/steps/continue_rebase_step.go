@@ -11,11 +11,11 @@ type ContinueRebaseStep struct {
 	EmptyStep
 }
 
-func (step *ContinueRebaseStep) CreateAbortStep() Step {
+func (step *ContinueRebaseStep) CreateAbortSteps() Step {
 	return &AbortRebaseStep{}
 }
 
-func (step *ContinueRebaseStep) CreateContinueStep() Step {
+func (step *ContinueRebaseStep) CreateContinueSteps() Step {
 	return step
 }
 
