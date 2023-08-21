@@ -8,20 +8,7 @@ import (
 
 // LoadBranches loads the typically used information about Git branches using a single Git command.
 func LoadBranches(args LoadBranchesArgs) (domain.Branches, bool, error) {
-	if args.Fetch {
-		var remotes config.Remotes
-		remotes, err := args.Repo.Runner.Backend.Remotes()
-		if err != nil {
-			return domain.EmptyBranches(), false, err
-		}
-		if remotes.HasOrigin() && !args.Repo.IsOffline {
-			err = args.Repo.Runner.Frontend.Fetch()
-			if err != nil {
-				return domain.EmptyBranches(), false, err
-			}
-		}
-	}
-	allBranches, initialBranch, err := args.Repo.Runner.Backend.BranchInfos()
+	allBranches, _, err := args.Repo.Runner.Backend.BranchInfos()
 	if err != nil {
 		return domain.EmptyBranches(), false, err
 	}
@@ -40,6 +27,23 @@ func LoadBranches(args LoadBranchesArgs) (domain.Branches, bool, error) {
 		if err != nil {
 			return domain.EmptyBranches(), false, err
 		}
+	}
+	if args.Fetch {
+		var remotes config.Remotes
+		remotes, err := args.Repo.Runner.Backend.Remotes()
+		if err != nil {
+			return domain.EmptyBranches(), false, err
+		}
+		if remotes.HasOrigin() && !args.Repo.IsOffline {
+			err = args.Repo.Runner.Frontend.Fetch()
+			if err != nil {
+				return domain.EmptyBranches(), false, err
+			}
+		}
+	}
+	allBranches, initialBranch, err := args.Repo.Runner.Backend.BranchInfos()
+	if err != nil {
+		return domain.EmptyBranches(), false, err
 	}
 	branchTypes := args.Repo.Runner.Config.BranchTypes()
 	result := domain.Branches{

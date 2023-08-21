@@ -51,7 +51,6 @@ func TestRemoteBranchName(t *testing.T) {
 			remote, localBranch := branch.Parts()
 			assert.Equal(t, "", remote)
 			assert.Equal(t, domain.LocalBranchName{}, localBranch)
-
 		})
 	})
 }
