@@ -134,7 +134,8 @@ type shipConfig struct {
 }
 
 func determineShipConfig(args []string, run *git.ProdRunner, isOffline bool) (*shipConfig, error) {
-	branches, err := execute.LoadBranches(run, execute.LoadBranchesArgs{
+	branches, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Runner:               run,
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
