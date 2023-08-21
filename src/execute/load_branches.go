@@ -8,8 +8,18 @@ import (
 
 // LoadBranches loads the typically used information about Git branches using a single Git command.
 func LoadBranches(args LoadBranchesArgs) (domain.Branches, bool, error) {
+	allBranches, initialBranch, err := args.Repo.Runner.Backend.BranchInfos()
+	if err != nil {
+		return domain.EmptyBranches(), false, err
+	}
 	if args.HandleUnfinishedState {
-		exit, err := validate.HandleUnfinishedState(&args.Repo.Runner, nil, args.Repo.RootDir)
+		exit, err := validate.HandleUnfinishedState(&args.Repo.Runner, nil, args.Repo.RootDir, allBranches)
+		if err != nil || exit {
+			return domain.EmptyBranches(), exit, err
+		}
+	}
+	if args.HandleUnfinishedState {
+		exit, err := validate.HandleUnfinishedState(&args.Repo.Runner, nil, args.Repo.RootDir, allBranches)
 		if err != nil || exit {
 			return domain.EmptyBranches(), exit, err
 		}
@@ -35,16 +45,6 @@ func LoadBranches(args LoadBranchesArgs) (domain.Branches, bool, error) {
 			if err != nil {
 				return domain.EmptyBranches(), false, err
 			}
-		}
-	}
-	allBranches, initialBranch, err := args.Repo.Runner.Backend.BranchInfos()
-	if err != nil {
-		return domain.EmptyBranches(), false, err
-	}
-	if args.HandleUnfinishedState {
-		exit, err := validate.HandleUnfinishedState(&args.Repo.Runner, nil, args.Repo.RootDir, allBranches)
-		if err != nil || exit {
-			return domain.EmptyBranches(), exit, err
 		}
 	}
 	branchTypes := args.Repo.Runner.Config.BranchTypes()
