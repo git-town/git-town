@@ -35,6 +35,9 @@ func (r RemoteBranchName) BranchName() BranchName {
 
 // Parts provides the remote and branch part of this remote branch name.
 func (r RemoteBranchName) Parts() (remote string, localBranchName LocalBranchName) {
+	if r.id == "" {
+		return "", LocalBranchName{}
+	}
 	parts := strings.SplitN(r.id, "/", 2)
 	return parts[0], NewLocalBranchName(parts[1])
 }

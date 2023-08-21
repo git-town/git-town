@@ -45,5 +45,13 @@ func TestRemoteBranchName(t *testing.T) {
 			assert.Equal(t, "upstream", remote)
 			assert.Equal(t, domain.NewLocalBranchName("branch"), localBranch)
 		})
+		t.Run("empty branch", func(t *testing.T) {
+			t.Parallel()
+			branch := domain.RemoteBranchName{}
+			remote, localBranch := branch.Parts()
+			assert.Equal(t, "", remote)
+			assert.Equal(t, domain.LocalBranchName{}, localBranch)
+
+		})
 	})
 }
