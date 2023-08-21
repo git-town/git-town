@@ -10,7 +10,6 @@ import (
 // PushBranchStep pushes the branch with the given name to the origin remote.
 // Optionally with force.
 type PushBranchStep struct {
-	EmptyStep
 	Branch         domain.LocalBranchName
 	TrackingBranch domain.RemoteBranchName
 	ForceWithLease bool

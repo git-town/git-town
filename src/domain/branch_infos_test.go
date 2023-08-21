@@ -8,8 +8,11 @@ import (
 )
 
 func TestBranchInfos(t *testing.T) {
+	t.Parallel()
 	t.Run("HasMatchingRemoteBranchFor", func(t *testing.T) {
+		t.Parallel()
 		t.Run("there is a remote branch matching the given local branch", func(t *testing.T) {
+			t.Parallel()
 			bis := domain.BranchInfos{
 				domain.BranchInfo{
 					Name:       domain.LocalBranchName{},
@@ -23,6 +26,7 @@ func TestBranchInfos(t *testing.T) {
 			assert.True(t, bis.HasMatchingRemoteBranchFor(give))
 		})
 		t.Run("there is a local branch matching the given local branch", func(t *testing.T) {
+			t.Parallel()
 			bis := domain.BranchInfos{
 				domain.BranchInfo{
 					Name:       domain.NewLocalBranchName("branch-1"),
