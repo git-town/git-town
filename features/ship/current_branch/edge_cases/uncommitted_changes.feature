@@ -6,9 +6,7 @@ Feature: does not ship with uncommitted changes
     When I run "git-town ship"
 
   Scenario: result
-    Then it runs the commands
-      | BRANCH  | COMMAND                  |
-      | feature | git fetch --prune --tags |
+    Then it runs no commands
     And it prints the error:
       """
       you have uncommitted changes. Did you mean to commit them before shipping?
