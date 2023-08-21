@@ -9,8 +9,8 @@ import (
 
 // CreateProposalStep creates a new pull request for the current branch.
 type CreateProposalStep struct {
-	EmptyStep
 	Branch domain.LocalBranchName
+	EmptyStep
 }
 
 func (step *CreateProposalStep) Run(run *git.ProdRunner, connector hosting.Connector) error {

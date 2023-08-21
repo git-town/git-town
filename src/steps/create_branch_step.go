@@ -8,9 +8,9 @@ import (
 
 // CreateBranchStep creates a new branch but leaves the current branch unchanged.
 type CreateBranchStep struct {
-	EmptyStep
 	Branch        domain.LocalBranchName
 	StartingPoint domain.Location
+	EmptyStep
 }
 
 func (step *CreateBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {

@@ -12,10 +12,10 @@ import (
 
 // SquashMergeStep squash merges the branch with the given name into the current branch.
 type SquashMergeStep struct {
-	EmptyStep
 	Branch        domain.LocalBranchName
 	CommitMessage string
 	Parent        domain.LocalBranchName
+	EmptyStep
 }
 
 func (step *SquashMergeStep) CreateAbortStep() Step {

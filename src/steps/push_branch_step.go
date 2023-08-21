@@ -16,6 +16,7 @@ type PushBranchStep struct {
 	ForceWithLease bool
 	NoPushHook     bool
 	Undoable       bool
+	EmptyStep
 }
 
 func (step *PushBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {

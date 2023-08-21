@@ -11,9 +11,9 @@ import (
 
 // EnsureHasShippableChangesStep asserts that the branch has unique changes not on the main branch.
 type EnsureHasShippableChangesStep struct {
-	EmptyStep
 	Branch domain.LocalBranchName
 	Parent domain.LocalBranchName
+	EmptyStep
 }
 
 func (step *EnsureHasShippableChangesStep) CreateAutomaticAbortError() error {
