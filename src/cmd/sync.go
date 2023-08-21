@@ -80,6 +80,7 @@ func sync(all, dryRun, debug bool) error {
 		Run:       &repo.Runner,
 		Connector: nil,
 		RootDir:   repo.RootDir,
+		Branches:  config.branches.All,
 	})
 }
 

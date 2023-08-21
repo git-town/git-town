@@ -55,6 +55,7 @@ func Execute(args ExecuteArgs) error {
 					Run:       args.Run,
 					Connector: args.Connector,
 					RootDir:   args.RootDir,
+					Branches:  args.Branches,
 				})
 				if err != nil {
 					return fmt.Errorf(messages.RunstateAbortStepProblem, err)

@@ -39,7 +39,7 @@ func skip(debug bool) error {
 	if err != nil {
 		return err
 	}
-	_, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  &repo,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
@@ -65,5 +65,6 @@ func skip(debug bool) error {
 		Run:       &repo.Runner,
 		Connector: nil,
 		RootDir:   repo.RootDir,
+		Branches:  branches.All,
 	})
 }

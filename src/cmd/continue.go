@@ -41,6 +41,16 @@ func runContinue(debug bool) error {
 	if err != nil {
 		return err
 	}
+	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Repo:                  &repo,
+		Fetch:                 true,
+		HandleUnfinishedState: false,
+		ValidateIsConfigured:  true,
+		ValidateNoOpenChanges: false,
+	})
+	if err != nil || exit {
+		return err
+	}
 	runState, err := runstate.Load(repo.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateLoadProblem, err)
@@ -57,6 +67,7 @@ func runContinue(debug bool) error {
 		Run:       &repo.Runner,
 		Connector: config.connector,
 		RootDir:   repo.RootDir,
+		Branches:  branches.All,
 	})
 }
 

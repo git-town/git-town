@@ -64,6 +64,7 @@ func kill(args []string, debug bool) error {
 		Run:       &repo.Runner,
 		Connector: nil,
 		RootDir:   repo.RootDir,
+		Branches:  config.branches.All,
 	})
 }
 
@@ -76,6 +77,7 @@ type killConfig struct {
 	noPushHook     bool
 	previousBranch domain.LocalBranchName
 	targetBranch   domain.BranchInfo
+	branches       domain.Branches
 }
 
 func determineKillConfig(args []string, repo *execute.RepoData) (*killConfig, bool, error) {
@@ -134,6 +136,7 @@ func determineKillConfig(args []string, repo *execute.RepoData) (*killConfig, bo
 		noPushHook:     !pushHook,
 		previousBranch: previousBranch,
 		targetBranch:   *targetBranch,
+		branches:       branches,
 	}, false, nil
 }
 

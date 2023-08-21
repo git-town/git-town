@@ -60,6 +60,16 @@ func newPullRequest(debug bool) error {
 	if err != nil {
 		return err
 	}
+	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Repo:                  &repo,
+		Fetch:                 true,
+		HandleUnfinishedState: true,
+		ValidateIsConfigured:  true,
+		ValidateNoOpenChanges: true,
+	})
+	if err != nil || exit {
+		return err
+	}
 	config, exit, err := determineNewPullRequestConfig(&repo)
 	if err != nil || exit {
 		return err
@@ -80,6 +90,7 @@ func newPullRequest(debug bool) error {
 		Run:       &repo.Runner,
 		Connector: config.connector,
 		RootDir:   repo.RootDir,
+		Branches:  branches.All,
 	})
 }
 
