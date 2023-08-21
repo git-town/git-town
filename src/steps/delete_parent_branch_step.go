@@ -8,9 +8,9 @@ import (
 
 // DeleteParentBranchStep removes the parent branch entry in the Git Town configuration.
 type DeleteParentBranchStep struct {
-	EmptyStep
 	Branch domain.LocalBranchName
 	Parent domain.LocalBranchName
+	EmptyStep
 }
 
 func (step *DeleteParentBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {

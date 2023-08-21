@@ -11,8 +11,8 @@ import (
 // CommitOpenChangesStep commits all open changes as a new commit.
 // It does not ask the user for a commit message, but chooses one automatically.
 type CommitOpenChangesStep struct {
-	EmptyStep
 	previousSha domain.SHA
+	EmptyStep
 }
 
 func (step *CommitOpenChangesStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {

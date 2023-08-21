@@ -8,10 +8,10 @@ import (
 
 // CreateRemoteBranchStep pushes the current branch up to origin.
 type CreateRemoteBranchStep struct {
-	EmptyStep
 	Branch     domain.LocalBranchName
 	NoPushHook bool
 	Sha        domain.SHA
+	EmptyStep
 }
 
 func (step *CreateRemoteBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {

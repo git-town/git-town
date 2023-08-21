@@ -10,12 +10,12 @@ import (
 // PushBranchStep pushes the branch with the given name to the origin remote.
 // Optionally with force.
 type PushBranchStep struct {
-	EmptyStep
 	Branch domain.LocalBranchName
 	// TrackingBranch domain.RemoteBranchName // TODO: populate this with the actual tracking branch name
 	ForceWithLease bool
 	NoPushHook     bool
 	Undoable       bool
+	EmptyStep
 }
 
 func (step *PushBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {

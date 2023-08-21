@@ -9,10 +9,10 @@ import (
 // SetParentStep registers the branch with the given name as a parent
 // of the branch with the other given name.
 type SetParentStep struct {
-	EmptyStep
 	Branch         domain.LocalBranchName
 	ParentBranch   domain.LocalBranchName
 	previousParent domain.LocalBranchName
+	EmptyStep
 }
 
 func (step *SetParentStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {

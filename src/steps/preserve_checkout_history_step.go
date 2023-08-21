@@ -8,10 +8,10 @@ import (
 
 // PreserveCheckoutHistoryStep does stuff.
 type PreserveCheckoutHistoryStep struct {
-	EmptyStep
 	InitialBranch                     domain.LocalBranchName
 	InitialPreviouslyCheckedOutBranch domain.LocalBranchName
 	MainBranch                        domain.LocalBranchName
+	EmptyStep
 }
 
 func (step *PreserveCheckoutHistoryStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
