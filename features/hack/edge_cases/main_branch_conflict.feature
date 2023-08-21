@@ -32,11 +32,10 @@ Feature: conflicts between the main branch and its tracking branch
   Scenario: abort
     When I run "git-town abort"
     Then it runs the commands
-      | BRANCH   | COMMAND                  |
-      | main     | git fetch --prune --tags |
-      |          | git rebase --abort       |
-      |          | git checkout existing    |
-      | existing | git stash pop            |
+      | BRANCH   | COMMAND               |
+      | main     | git rebase --abort    |
+      |          | git checkout existing |
+      | existing | git stash pop         |
     And the current branch is now "existing"
     And the uncommitted file still exists
     And no rebase is in progress

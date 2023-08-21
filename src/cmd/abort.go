@@ -44,7 +44,7 @@ func abort(debug bool) error {
 	}
 	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  &repo,
-		Fetch:                 true,
+		Fetch:                 false,
 		HandleUnfinishedState: false,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,

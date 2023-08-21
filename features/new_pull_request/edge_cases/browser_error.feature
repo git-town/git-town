@@ -7,6 +7,7 @@ Feature: print the URL when the browser crashes
     And tool "open" is broken
     When I run "git-town new-pull-request"
 
+  @this
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                                                            |
