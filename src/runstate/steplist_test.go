@@ -81,6 +81,13 @@ func TestStepList(t *testing.T) {
 			wantList := runstate.StepList{List: []steps.Step{&steps.StashOpenChangesStep{}}}
 			assert.Equal(t, wantList, list, "remotes the popped element from the list")
 		})
+		t.Run("empty list", func(t *testing.T) {
+			list := runstate.StepList{List: []steps.Step{}}
+			have := list.Pop()
+			assert.Equal(t, nil, have, "returns nil")
+			wantList := runstate.StepList{List: []steps.Step{}}
+			assert.Equal(t, wantList, list, "remotes the popped element from the list")
+		})
 	})
 
 	t.Run("Prepend", func(t *testing.T) {
