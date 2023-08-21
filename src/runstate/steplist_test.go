@@ -60,7 +60,7 @@ func TestStepList(t *testing.T) {
 		t.Run("populated list", func(t *testing.T) {
 			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}, &steps.StashOpenChangesStep{}}}
 			have := list.Peek()
-			assert.Equal(t, &steps.AbortMergeStep{}, have, "returns the last element of the list")
+			assert.Equal(t, &steps.AbortMergeStep{}, have, "returns the first element of the list")
 			wantList := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}, &steps.StashOpenChangesStep{}}}
 			assert.Equal(t, wantList, list, "does not modify the list")
 		})
@@ -70,6 +70,16 @@ func TestStepList(t *testing.T) {
 			assert.Equal(t, nil, have)
 			wantList := runstate.StepList{List: []steps.Step{}}
 			assert.Equal(t, wantList, list)
+		})
+	})
+
+	t.Run("Pop", func(t *testing.T) {
+		t.Run("populated list", func(t *testing.T) {
+			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}, &steps.StashOpenChangesStep{}}}
+			have := list.Pop()
+			assert.Equal(t, &steps.AbortMergeStep{}, have, "returns the first element of the list")
+			wantList := runstate.StepList{List: []steps.Step{&steps.StashOpenChangesStep{}}}
+			assert.Equal(t, wantList, list, "remotes the popped element from the list")
 		})
 	})
 

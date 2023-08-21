@@ -56,10 +56,9 @@ func (stepList *StepList) Pop() steps.Step {
 
 // Prepend adds the given step to the beginning of this StepList.
 func (stepList *StepList) Prepend(other ...steps.Step) {
-	if other == nil {
-		other = []steps.Step{}
+	if len(other) > 0 {
+		stepList.List = append(other, stepList.List...)
 	}
-	stepList.List = append(other, stepList.List...)
 }
 
 // PrependList adds all elements of the given StepList to the start of this StepList.
