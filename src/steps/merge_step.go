@@ -13,12 +13,12 @@ type MergeStep struct {
 	EmptyStep
 }
 
-func (step *MergeStep) CreateAbortStep() Step {
-	return &AbortMergeStep{}
+func (step *MergeStep) CreateAbortSteps() []Step {
+	return []Step{&AbortMergeStep{}}
 }
 
-func (step *MergeStep) CreateContinueStep() Step {
-	return &ContinueMergeStep{}
+func (step *MergeStep) CreateContinueSteps() []Step {
+	return []Step{&ContinueMergeStep{}}
 }
 
 func (step *MergeStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, error) {

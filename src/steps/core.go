@@ -14,11 +14,11 @@ import (
 // Steps implement the command pattern (https://en.wikipedia.org/wiki/Command_pattern)
 // and can provide Steps to continue, abort, and undo them.
 type Step interface {
-	// CreateAbortStep provides the abort step for this step.
-	CreateAbortStep() Step
+	// CreateAbortSteps provides the abort step for this step.
+	CreateAbortSteps() []Step
 
-	// CreateContinueStep provides the continue step for this step.
-	CreateContinueStep() Step
+	// CreateContinueSteps provides the continue step for this step.
+	CreateContinueSteps() []Step
 
 	// CreateUndoSteps provides the undo step for this step.
 	CreateUndoSteps(*git.BackendCommands) ([]Step, error)
