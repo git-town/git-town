@@ -17,7 +17,7 @@ func (step *MergeStep) CreateAbortSteps() []Step {
 	return []Step{&AbortMergeStep{}}
 }
 
-func (step *MergeStep) CreateContinueStep() []Step {
+func (step *MergeStep) CreateContinueSteps() []Step {
 	return []Step{&ContinueMergeStep{}}
 }
 

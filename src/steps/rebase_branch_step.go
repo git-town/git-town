@@ -18,7 +18,7 @@ func (step *RebaseBranchStep) CreateAbortSteps() []Step {
 	return []Step{&AbortRebaseStep{}}
 }
 
-func (step *RebaseBranchStep) CreateContinueStep() []Step {
+func (step *RebaseBranchStep) CreateContinueSteps() []Step {
 	return []Step{&ContinueRebaseStep{}}
 }
 
