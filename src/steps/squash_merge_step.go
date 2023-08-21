@@ -18,7 +18,7 @@ type SquashMergeStep struct {
 	EmptyStep
 }
 
-func (step *SquashMergeStep) CreateAbortStep() []Step {
+func (step *SquashMergeStep) CreateAbortSteps() []Step {
 	return []Step{&DiscardOpenChangesStep{}}
 }
 

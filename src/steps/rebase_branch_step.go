@@ -14,7 +14,7 @@ type RebaseBranchStep struct {
 	EmptyStep
 }
 
-func (step *RebaseBranchStep) CreateAbortStep() []Step {
+func (step *RebaseBranchStep) CreateAbortSteps() []Step {
 	return []Step{&AbortRebaseStep{}}
 }
 

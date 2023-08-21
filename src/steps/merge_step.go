@@ -13,7 +13,7 @@ type MergeStep struct {
 	EmptyStep
 }
 
-func (step *MergeStep) CreateAbortStep() []Step {
+func (step *MergeStep) CreateAbortSteps() []Step {
 	return []Step{&AbortMergeStep{}}
 }
 
