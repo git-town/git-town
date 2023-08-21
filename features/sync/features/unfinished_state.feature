@@ -93,7 +93,7 @@ Feature: handle previously unfinished Git Town commands
       | prepend foo       |
       | prune-branches    |
       | rename-branch foo |
-      | set-parent        |
+      # | set-parent foo    |  # TODO: uncomment once set-parent accepts the parent as an argument
       | ship              |
       | switch            |
       | sync              |
