@@ -83,7 +83,7 @@ type killConfig struct {
 func determineKillConfig(args []string, repo *execute.RepoData) (*killConfig, bool, error) {
 	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
-		HandleUnfinishedState: true,
+		HandleUnfinishedState: false,
 		ValidateIsConfigured:  true,
 	})
 	if err != nil || exit {
