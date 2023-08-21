@@ -64,14 +64,6 @@ func OpenRepo(args OpenShellArgs) (result RepoData, err error) {
 			return
 		}
 	}
-	hasOpenChanges, err := prodRunner.Backend.HasOpenChanges()
-	if err != nil {
-		return result, err
-	}
-	err = validate.NoOpenChanges(hasOpenChanges)
-	if err != nil {
-		return result, err
-	}
 	isOffline, err := repoConfig.IsOffline()
 	if err != nil {
 		return
@@ -79,19 +71,6 @@ func OpenRepo(args OpenShellArgs) (result RepoData, err error) {
 	if args.ValidateIsOnline && isOffline {
 		err = errors.New(messages.OfflineNotAllowed)
 		return
-	}
-	if args.Fetch {
-		var remotes config.Remotes
-		remotes, err = backendCommands.Remotes()
-		if err != nil {
-			return
-		}
-		if remotes.HasOrigin() && !isOffline {
-			err = prodRunner.Frontend.Fetch()
-			if err != nil {
-				return
-			}
-		}
 	}
 	if args.ValidateGitRepo {
 		var currentDirectory string
@@ -112,13 +91,11 @@ func OpenRepo(args OpenShellArgs) (result RepoData, err error) {
 }
 
 type OpenShellArgs struct {
-	Debug                 bool
-	DryRun                bool
-	Fetch                 bool
-	OmitBranchNames       bool
-	ValidateGitRepo       bool
-	ValidateIsOnline      bool
-	ValidateNoOpenChanges bool
+	Debug            bool
+	DryRun           bool
+	OmitBranchNames  bool
+	ValidateGitRepo  bool
+	ValidateIsOnline bool
 }
 
 type RepoData struct {

@@ -33,13 +33,11 @@ func pruneBranchesCommand() *cobra.Command {
 
 func pruneBranches(debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenShellArgs{
-		Debug:                 debug,
-		DryRun:                false,
-		Fetch:                 true,
-		OmitBranchNames:       false,
-		ValidateIsOnline:      true,
-		ValidateGitRepo:       true,
-		ValidateNoOpenChanges: false,
+		Debug:            debug,
+		DryRun:           false,
+		OmitBranchNames:  false,
+		ValidateIsOnline: true,
+		ValidateGitRepo:  true,
 	})
 	if err != nil {
 		return err
@@ -75,8 +73,10 @@ type pruneBranchesConfig struct {
 func determinePruneBranchesConfig(repo *execute.RepoData) (*pruneBranchesConfig, bool, error) {
 	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
+		Fetch:                 true,
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
+		ValidateNoOpenChanges: false,
 	})
 	return &pruneBranchesConfig{
 		branches:         branches,
