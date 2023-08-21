@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/v9/src/cli"
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
 	"github.com/git-town/git-town/v9/src/hosting"
@@ -41,16 +42,6 @@ func runContinue(debug bool) error {
 	if err != nil {
 		return err
 	}
-	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
-		Repo:                  &repo,
-		Fetch:                 true,
-		HandleUnfinishedState: false,
-		ValidateIsConfigured:  true,
-		ValidateNoOpenChanges: false,
-	})
-	if err != nil || exit {
-		return err
-	}
 	runState, err := runstate.Load(repo.RootDir)
 	if err != nil {
 		return fmt.Errorf(messages.RunstateLoadProblem, err)
@@ -67,12 +58,12 @@ func runContinue(debug bool) error {
 		Run:       &repo.Runner,
 		Connector: config.connector,
 		RootDir:   repo.RootDir,
-		Branches:  branches.All,
+		Branches:  config.branches.All,
 	})
 }
 
 func determineContinueConfig(repo *execute.RepoData) (*continueConfig, bool, error) {
-	_, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
 		Fetch:                 false,
 		HandleUnfinishedState: false,
@@ -106,10 +97,12 @@ func determineContinueConfig(repo *execute.RepoData) (*continueConfig, bool, err
 		Log:             cli.PrintingLog{},
 	})
 	return &continueConfig{
+		branches:  branches,
 		connector: connector,
 	}, false, err
 }
 
 type continueConfig struct {
 	connector hosting.Connector
+	branches  domain.Branches
 }
