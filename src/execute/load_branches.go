@@ -7,23 +7,24 @@ import (
 )
 
 // LoadBranches loads the typically used information about Git branches using a single Git command.
-func LoadBranches(pr *git.ProdRunner, args LoadBranchesArgs) (domain.Branches, error) {
-	allBranches, initialBranch, err := pr.Backend.BranchInfos()
+func LoadBranches(args LoadBranchesArgs) (domain.Branches, error) {
+	allBranches, initialBranch, err := args.Runner.Backend.BranchInfos()
 	if err != nil {
 		return domain.EmptyBranches(), err
 	}
-	branchTypes := pr.Config.BranchTypes()
+	branchTypes := args.Runner.Config.BranchTypes()
 	result := domain.Branches{
 		All:     allBranches,
 		Types:   branchTypes,
 		Initial: initialBranch,
 	}
 	if args.ValidateIsConfigured {
-		result.Types, err = validate.IsConfigured(&pr.Backend, result)
+		result.Types, err = validate.IsConfigured(&args.Runner.Backend, result)
 	}
 	return result, err
 }
 
 type LoadBranchesArgs struct {
+	Runner               *git.ProdRunner
 	ValidateIsConfigured bool
 }

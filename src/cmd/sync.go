@@ -104,7 +104,8 @@ type syncConfig struct {
 }
 
 func determineSyncConfig(allFlag bool, run *git.ProdRunner, isOffline bool) (*syncConfig, error) {
-	branches, err := execute.LoadBranches(run, execute.LoadBranchesArgs{
+	branches, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Runner:               run,
 		ValidateIsConfigured: true,
 	})
 	if err != nil {

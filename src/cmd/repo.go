@@ -65,7 +65,8 @@ func repo(debug bool) error {
 }
 
 func determineRepoConfig(run *git.ProdRunner) (*repoConfig, error) {
-	_, err := execute.LoadBranches(run, execute.LoadBranchesArgs{
+	_, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Runner:               run,
 		ValidateIsConfigured: true,
 	})
 	if err != nil {

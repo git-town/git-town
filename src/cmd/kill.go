@@ -83,7 +83,8 @@ type killConfig struct {
 }
 
 func determineKillConfig(args []string, run *git.ProdRunner, isOffline bool) (*killConfig, error) {
-	branches, err := execute.LoadBranches(run, execute.LoadBranchesArgs{
+	branches, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Runner:               run,
 		ValidateIsConfigured: true,
 	})
 	if err != nil {

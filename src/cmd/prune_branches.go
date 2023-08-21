@@ -75,7 +75,8 @@ type pruneBranchesConfig struct {
 }
 
 func determinePruneBranchesConfig(run *git.ProdRunner) (*pruneBranchesConfig, error) {
-	branches, err := execute.LoadBranches(run, execute.LoadBranchesArgs{
+	branches, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Runner:               run,
 		ValidateIsConfigured: true,
 	})
 	return &pruneBranchesConfig{

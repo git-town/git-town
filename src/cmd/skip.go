@@ -42,7 +42,8 @@ func skip(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	_, err = execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
+	_, err = execute.LoadBranches(execute.LoadBranchesArgs{
+		Runner:               &repo.Runner,
 		ValidateIsConfigured: true,
 	})
 	if err != nil {

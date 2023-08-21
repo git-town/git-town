@@ -76,7 +76,8 @@ func updatePerennialBranches(debug bool) error {
 	if err != nil || exit {
 		return err
 	}
-	branches, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
+	branches, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Runner:               &repo.Runner,
 		ValidateIsConfigured: false,
 	})
 	if err != nil {
