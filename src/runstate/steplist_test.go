@@ -109,4 +109,21 @@ func TestStepList(t *testing.T) {
 			assert.Equal(t, []steps.Step{}, list.List)
 		})
 	})
+
+	t.Run("PrependList", func(t *testing.T) {
+		t.Run("prepend a populated list", func(t *testing.T) {
+			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}}}
+			other := runstate.StepList{List: []steps.Step{&steps.StashOpenChangesStep{}, &steps.RestoreOpenChangesStep{}}}
+			list.PrependList(other)
+			want := []steps.Step{&steps.StashOpenChangesStep{}, &steps.RestoreOpenChangesStep{}, &steps.AbortMergeStep{}}
+			assert.Equal(t, want, list.List)
+		})
+		t.Run("prepend an empty list", func(t *testing.T) {
+			list := runstate.StepList{List: []steps.Step{&steps.AbortMergeStep{}}}
+			other := runstate.StepList{List: []steps.Step{}}
+			list.PrependList(other)
+			want := []steps.Step{&steps.AbortMergeStep{}}
+			assert.Equal(t, want, list.List)
+		})
+	})
 }
