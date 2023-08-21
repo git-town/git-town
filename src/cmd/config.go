@@ -44,7 +44,6 @@ func runConfig(debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
-		Fetch:                 false,
 		OmitBranchNames:       true,
 		ValidateIsOnline:      false,
 		ValidateGitRepo:       true,

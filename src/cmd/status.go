@@ -33,7 +33,6 @@ func status(debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
-		Fetch:                 false,
 		OmitBranchNames:       false,
 		ValidateIsOnline:      false,
 		ValidateGitRepo:       true,

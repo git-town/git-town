@@ -40,7 +40,6 @@ func kill(args []string, debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
-		Fetch:                 true,
 		OmitBranchNames:       false,
 		ValidateIsOnline:      false,
 		ValidateGitRepo:       true,
@@ -83,6 +82,7 @@ type killConfig struct {
 func determineKillConfig(args []string, repo *execute.RepoData) (*killConfig, bool, error) {
 	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
+		Fetch:                 true,
 		HandleUnfinishedState: false,
 		ValidateIsConfigured:  true,
 	})

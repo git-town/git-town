@@ -28,7 +28,6 @@ func setup(debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
-		Fetch:                 false,
 		OmitBranchNames:       true,
 		ValidateIsOnline:      false,
 		ValidateGitRepo:       true,
@@ -39,6 +38,7 @@ func setup(debug bool) error {
 	}
 	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  &repo,
+		Fetch:                 false,
 		HandleUnfinishedState: false,
 		ValidateIsConfigured:  false,
 	})

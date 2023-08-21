@@ -48,7 +48,6 @@ func prepend(args []string, debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
-		Fetch:                 true,
 		OmitBranchNames:       false,
 		ValidateIsOnline:      false,
 		ValidateGitRepo:       true,
@@ -98,6 +97,7 @@ type prependConfig struct {
 func determinePrependConfig(args []string, repo *execute.RepoData) (*prependConfig, bool, error) {
 	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
+		Fetch:                 true,
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
 	})

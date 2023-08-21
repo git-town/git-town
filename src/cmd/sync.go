@@ -56,7 +56,6 @@ func sync(all, dryRun, debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                dryRun,
-		Fetch:                 true,
 		OmitBranchNames:       false,
 		ValidateIsOnline:      false,
 		ValidateGitRepo:       true,
@@ -104,6 +103,7 @@ type syncConfig struct {
 func determineSyncConfig(allFlag bool, repo *execute.RepoData) (*syncConfig, bool, error) {
 	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
+		Fetch:                 true,
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
 	})

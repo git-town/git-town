@@ -33,7 +33,6 @@ func runSwitch(debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
-		Fetch:                 false,
 		OmitBranchNames:       false,
 		ValidateIsOnline:      false,
 		ValidateGitRepo:       true,
@@ -44,6 +43,7 @@ func runSwitch(debug bool) error {
 	}
 	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  &repo,
+		Fetch:                 false,
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
 	})

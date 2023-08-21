@@ -35,7 +35,6 @@ func pruneBranches(debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
-		Fetch:                 true,
 		OmitBranchNames:       false,
 		ValidateIsOnline:      true,
 		ValidateGitRepo:       true,
@@ -75,6 +74,7 @@ type pruneBranchesConfig struct {
 func determinePruneBranchesConfig(repo *execute.RepoData) (*pruneBranchesConfig, bool, error) {
 	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
+		Fetch:                 true,
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
 	})

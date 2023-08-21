@@ -103,7 +103,6 @@ func OpenRepo(args OpenShellArgs) (result RepoData, err error) {
 type OpenShellArgs struct {
 	Debug                 bool
 	DryRun                bool
-	Fetch                 bool
 	OmitBranchNames       bool
 	ValidateGitRepo       bool
 	ValidateIsOnline      bool

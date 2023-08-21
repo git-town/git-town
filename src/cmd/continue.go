@@ -34,7 +34,6 @@ func runContinue(debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
-		Fetch:                 false,
 		OmitBranchNames:       false,
 		ValidateIsOnline:      false,
 		ValidateGitRepo:       true,
@@ -65,6 +64,7 @@ func runContinue(debug bool) error {
 func determineContinueConfig(repo *execute.RepoData) (*continueConfig, bool, error) {
 	_, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
+		Fetch:                 false,
 		HandleUnfinishedState: false,
 		ValidateIsConfigured:  true,
 	})
