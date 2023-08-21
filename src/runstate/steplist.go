@@ -22,8 +22,8 @@ func NewStepList(step steps.Step) StepList {
 }
 
 // Append adds the given step to the end of this StepList.
-func (stepList *StepList) Append(step steps.Step) {
-	stepList.List = append(stepList.List, step)
+func (stepList *StepList) Append(step ...steps.Step) {
+	stepList.List = append(stepList.List, step...)
 }
 
 // AppendList adds all elements of the given StepList to the end of this StepList.
@@ -55,8 +55,10 @@ func (stepList *StepList) Pop() steps.Step {
 }
 
 // Prepend adds the given step to the beginning of this StepList.
-func (stepList *StepList) Prepend(steps ...steps.Step) {
-	stepList.List = append(steps, stepList.List...)
+func (stepList *StepList) Prepend(other ...steps.Step) {
+	if len(other) > 0 {
+		stepList.List = append(other, stepList.List...)
+	}
 }
 
 // PrependList adds all elements of the given StepList to the start of this StepList.
