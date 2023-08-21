@@ -19,7 +19,9 @@ Feature: handle previously unfinished Git Town commands
     When I run "git-town sync" and answer the prompts:
       | PROMPT                       | ANSWER  |
       | Please choose how to proceed | [ENTER] |
-    Then it runs no commands
+    Then it runs the commands
+      | BRANCH | COMMAND                  |
+      | main   | git fetch --prune --tags |
     And it prints:
       """
       You have an unfinished `sync` command that ended on the `main` branch now.
@@ -30,7 +32,9 @@ Feature: handle previously unfinished Git Town commands
     When I run "git-town sync" and answer the prompts:
       | PROMPT                       | ANSWER        |
       | Please choose how to proceed | [DOWN][ENTER] |
-    Then it runs no commands
+    Then it runs the commands
+      | BRANCH | COMMAND                  |
+      | main   | git fetch --prune --tags |
     And it prints the error:
       """
       you must resolve the conflicts before continuing
@@ -59,10 +63,11 @@ Feature: handle previously unfinished Git Town commands
       | PROMPT                       | ANSWER              |
       | Please choose how to proceed | [DOWN][DOWN][ENTER] |
     Then it runs the commands
-      | BRANCH  | COMMAND              |
-      | main    | git rebase --abort   |
-      |         | git checkout feature |
-      | feature | git stash pop        |
+      | BRANCH  | COMMAND                  |
+      | main    | git fetch --prune --tags |
+      |         | git rebase --abort       |
+      |         | git checkout feature     |
+      | feature | git stash pop            |
     And now the initial commits exist
 
   Scenario: run a command, abort the previously finished one, and run another command
