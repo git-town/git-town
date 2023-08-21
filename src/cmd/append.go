@@ -73,7 +73,7 @@ func runAppend(arg string, debug bool) error {
 		Run:       &repo.Runner,
 		Connector: nil,
 		RootDir:   repo.RootDir,
-		Branches:  config.branches,
+		Branches:  config.branches.All,
 	})
 }
 
