@@ -103,7 +103,7 @@ type newPullRequestConfig struct {
 func determineNewPullRequestConfig(repo *execute.RepoData) (*newPullRequestConfig, bool, error) {
 	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
 		Repo:                  repo,
-		Fetch:                 false,
+		Fetch:                 true,
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
 		ValidateNoOpenChanges: false,
