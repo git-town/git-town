@@ -13,7 +13,7 @@ import (
 	"github.com/git-town/git-town/v9/src/validate"
 )
 
-func OpenRepo(args OpenShellArgs) (result RepoData, exit bool, err error) {
+func OpenRepo(args OpenShellArgs) (result RepoData, err error) {
 	var stats Statistics
 	if args.Debug {
 		stats = &statistics.CommandsRun{CommandsCount: 0}
@@ -34,7 +34,7 @@ func OpenRepo(args OpenShellArgs) (result RepoData, exit bool, err error) {
 	}
 	majorVersion, minorVersion, err := backendCommands.Version()
 	if err != nil {
-		return result, false, err
+		return result, err
 	}
 	err = validate.HasGitVersion(majorVersion, minorVersion)
 	if err != nil {
@@ -73,15 +73,13 @@ func OpenRepo(args OpenShellArgs) (result RepoData, exit bool, err error) {
 			return
 		}
 	}
-	if args.ValidateNoOpenChanges {
-		hasOpenChanges, err := prodRunner.Backend.HasOpenChanges()
-		if err != nil {
-			return result, false, err
-		}
-		err = validate.NoOpenChanges(hasOpenChanges)
-		if err != nil {
-			return result, false, err
-		}
+	hasOpenChanges, err := prodRunner.Backend.HasOpenChanges()
+	if err != nil {
+		return result, err
+	}
+	err = validate.NoOpenChanges(hasOpenChanges)
+	if err != nil {
+		return result, err
 	}
 	isOffline, err := repoConfig.IsOffline()
 	if err != nil {
@@ -119,14 +117,13 @@ func OpenRepo(args OpenShellArgs) (result RepoData, exit bool, err error) {
 		Runner:    prodRunner,
 		RootDir:   rootDir,
 		IsOffline: isOffline,
-	}, false, err
+	}, err
 }
 
 type OpenShellArgs struct {
 	Debug                 bool
 	DryRun                bool
 	Fetch                 bool
-	HandleUnfinishedState bool
 	OmitBranchNames       bool
 	ValidateGitRepo       bool
 	ValidateIsOnline      bool

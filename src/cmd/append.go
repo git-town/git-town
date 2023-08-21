@@ -6,7 +6,6 @@ import (
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/failure"
 	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
@@ -43,21 +42,20 @@ func appendCmd() *cobra.Command {
 }
 
 func runAppend(arg string, debug bool) error {
-	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
+	repo, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 true,
-		HandleUnfinishedState: true,
 		OmitBranchNames:       false,
 		ValidateIsOnline:      false,
 		ValidateGitRepo:       true,
 		ValidateNoOpenChanges: false,
 	})
-	if err != nil || exit {
+	if err != nil {
 		return err
 	}
-	config, err := determineAppendConfig(domain.NewLocalBranchName(arg), &repo.Runner, repo.IsOffline)
-	if err != nil {
+	config, exit, err := determineAppendConfig(domain.NewLocalBranchName(arg), &repo)
+	if err != nil || exit {
 		return err
 	}
 	stepList, err := appendStepList(config)
@@ -95,23 +93,24 @@ type appendConfig struct {
 	targetBranch        domain.LocalBranchName
 }
 
-func determineAppendConfig(targetBranch domain.LocalBranchName, run *git.ProdRunner, isOffline bool) (*appendConfig, error) {
-	branches, err := execute.LoadBranches(run, execute.LoadBranchesArgs{
-		ValidateIsConfigured: true,
+func determineAppendConfig(targetBranch domain.LocalBranchName, repo execute.RepoData) (*appendConfig, bool, error) {
+	branches, exit, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
+		HandleUnfinishedState: true,
+		ValidateIsConfigured:  true,
 	})
-	if err != nil {
-		return nil, err
+	if err != nil || exit {
+		return nil, exit, err
 	}
-	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
+	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	fc := failure.Collector{}
-	remotes := fc.Strings(run.Backend.Remotes())
-	mainBranch := run.Config.MainBranch()
-	pushHook := fc.Bool(run.Config.PushHook())
-	pullBranchStrategy := fc.PullBranchStrategy(run.Config.PullBranchStrategy())
-	hasOpenChanges := fc.Bool(run.Backend.HasOpenChanges())
-	shouldNewBranchPush := fc.Bool(run.Config.ShouldNewBranchPush())
+	remotes := fc.Strings(repo.Runner.Backend.Remotes())
+	mainBranch := repo.Runner.Config.MainBranch()
+	pushHook := fc.Bool(repo.Runner.Config.PushHook())
+	pullBranchStrategy := fc.PullBranchStrategy(repo.Runner.Config.PullBranchStrategy())
+	hasOpenChanges := fc.Bool(repo.Runner.Backend.HasOpenChanges())
+	shouldNewBranchPush := fc.Bool(repo.Runner.Config.ShouldNewBranchPush())
 	if fc.Err != nil {
-		return nil, fc.Err
+		return nil, false, fc.Err
 	}
 	if branches.All.HasLocalBranch(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsLocally, targetBranch)
@@ -119,25 +118,25 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, run *git.ProdRun
 	if branches.All.HasMatchingRemoteBranchFor(targetBranch) {
 		fc.Fail(messages.BranchAlreadyExistsRemotely, targetBranch)
 	}
-	lineage := run.Config.Lineage()
+	lineage := repo.Runner.Config.Lineage()
 	updated, err := validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
 		DefaultBranch: mainBranch,
-		Backend:       &run.Backend,
+		Backend:       &repo.Runner.Backend,
 		AllBranches:   branches.All,
 		Lineage:       lineage,
 		BranchTypes:   branches.Types,
 		MainBranch:    mainBranch,
 	})
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
 	if updated {
-		lineage = run.Config.Lineage() // refresh lineage after ancestry changes
+		lineage = repo.Runner.Config.Lineage() // refresh lineage after ancestry changes
 	}
 	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
 	branchesToSync := fc.BranchesSyncStatus(branches.All.Select(branchNamesToSync))
-	syncStrategy := fc.SyncStrategy(run.Config.SyncStrategy())
-	shouldSyncUpstream := fc.Bool(run.Config.ShouldSyncUpstream())
+	syncStrategy := fc.SyncStrategy(repo.Runner.Config.SyncStrategy())
+	shouldSyncUpstream := fc.Bool(repo.Runner.Config.ShouldSyncUpstream())
 	return &appendConfig{
 		branches:            branches,
 		branchesToSync:      branchesToSync,
@@ -154,7 +153,7 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, run *git.ProdRun
 		shouldSyncUpstream:  shouldSyncUpstream,
 		syncStrategy:        syncStrategy,
 		targetBranch:        targetBranch,
-	}, fc.Err
+	}, false, fc.Err
 }
 
 func appendStepList(config *appendConfig) (runstate.StepList, error) {
