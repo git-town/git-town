@@ -81,7 +81,8 @@ func hack(args []string, promptForParent, debug bool) error {
 
 func determineHackConfig(args []string, promptForParent bool, run *git.ProdRunner) (*appendConfig, error) {
 	fc := failure.Collector{}
-	branches := fc.Branches(execute.LoadBranches(run, execute.LoadBranchesArgs{
+	branches := fc.Branches(execute.LoadBranches(execute.LoadBranchesArgs{
+		Runner:               run,
 		ValidateIsConfigured: true,
 	}))
 	previousBranch := run.Backend.PreviouslyCheckedOutBranch()

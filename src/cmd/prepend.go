@@ -99,7 +99,8 @@ type prependConfig struct {
 
 func determinePrependConfig(args []string, run *git.ProdRunner, isOffline bool) (*prependConfig, error) {
 	fc := failure.Collector{}
-	branches := fc.Branches(execute.LoadBranches(run, execute.LoadBranchesArgs{
+	branches := fc.Branches(execute.LoadBranches(execute.LoadBranchesArgs{
+		Runner:               run,
 		ValidateIsConfigured: true,
 	}))
 	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
