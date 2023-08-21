@@ -7,12 +7,15 @@ import (
 )
 
 // LoadBranches loads the typically used information about Git branches using a single Git command.
-func LoadBranches(args LoadBranchesArgs) (domain.Branches, bool, error) {
-	allBranches, _, err := args.Repo.Runner.Backend.BranchInfos()
-	if err != nil {
-		return domain.EmptyBranches(), false, err
-	}
+func LoadBranches(args LoadBranchesArgs) (branches domain.Branches, exit bool, err error) {
+	var allBranches domain.BranchInfos
+	var initialBranch domain.LocalBranchName
 	if args.HandleUnfinishedState {
+		// load stale branch info to handle unfinished state
+		allBranches, initialBranch, err = args.Repo.Runner.Backend.BranchInfos()
+		if err != nil {
+			return domain.EmptyBranches(), false, err
+		}
 		exit, err := validate.HandleUnfinishedState(&args.Repo.Runner, nil, args.Repo.RootDir, allBranches)
 		if err != nil || exit {
 			return domain.EmptyBranches(), exit, err
@@ -40,10 +43,18 @@ func LoadBranches(args LoadBranchesArgs) (domain.Branches, bool, error) {
 				return domain.EmptyBranches(), false, err
 			}
 		}
+		// load updated branch info after fetch
+		allBranches, initialBranch, err = args.Repo.Runner.Backend.BranchInfos()
+		if err != nil {
+			return domain.EmptyBranches(), false, err
+		}
 	}
-	allBranches, initialBranch, err := args.Repo.Runner.Backend.BranchInfos()
-	if err != nil {
-		return domain.EmptyBranches(), false, err
+	// if we haven't loaded the branches yet, do so now
+	if initialBranch.IsEmpty() {
+		allBranches, initialBranch, err = args.Repo.Runner.Backend.BranchInfos()
+		if err != nil {
+			return domain.EmptyBranches(), false, err
+		}
 	}
 	branchTypes := args.Repo.Runner.Config.BranchTypes()
 	result := domain.Branches{
