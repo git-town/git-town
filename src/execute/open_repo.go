@@ -64,6 +64,9 @@ func OpenRepo(args OpenShellArgs) (result RepoData, exit bool, err error) {
 			return
 		}
 	}
+	// TODO: this should move to execute.LoadBranches because:
+	// - it is an activity that happens only if the command cares about branches
+	// - it requires knowledge of the branches, which are loaded in LoadBranches
 	if args.HandleUnfinishedState {
 		exit, err = validate.HandleUnfinishedState(&prodRunner, nil, rootDir)
 		if err != nil || exit {
