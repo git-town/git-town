@@ -88,11 +88,10 @@ func sync(all, dryRun, debug bool) error {
 }
 
 type syncConfig struct {
-	branchTypes        domain.BranchTypes
+	branches           domain.Branches
 	branchesToSync     domain.BranchInfos
 	hasOpenChanges     bool
 	remotes            config.Remotes
-	initialBranch      domain.LocalBranchName
 	isOffline          bool
 	lineage            config.Lineage
 	mainBranch         domain.LocalBranchName
@@ -125,13 +124,12 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, isOffline bool) (*sy
 	var shouldPushTags bool
 	lineage := run.Config.Lineage()
 	var configUpdated bool
-	branchTypes := branches.Types
 	if allFlag {
 		localBranches := branches.All.LocalBranches()
 		configUpdated, err = validate.KnowsBranchesAncestors(validate.KnowsBranchesAncestorsArgs{
 			AllBranches: localBranches,
 			Backend:     &run.Backend,
-			BranchTypes: branchTypes,
+			BranchTypes: branches.Types,
 			Lineage:     lineage,
 			MainBranch:  mainBranch,
 		})
@@ -155,15 +153,15 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, isOffline bool) (*sy
 	}
 	if configUpdated {
 		lineage = run.Config.Lineage() // reload after ancestry change
-		branchTypes = run.Config.BranchTypes()
+		branches.Types = run.Config.BranchTypes()
 	}
 	if !allFlag {
 		branchNamesToSync = domain.LocalBranchNames{branches.Initial}
 		if configUpdated {
 			run.Config.Reload()
-			branchTypes = run.Config.BranchTypes()
+			branches.Types = run.Config.BranchTypes()
 		}
-		shouldPushTags = !branchTypes.IsFeatureBranch(branches.Initial)
+		shouldPushTags = !branches.Types.IsFeatureBranch(branches.Initial)
 	}
 	allBranchNamesToSync := lineage.BranchesAndAncestors(branchNamesToSync)
 	syncStrategy, err := run.Config.SyncStrategy()
@@ -184,11 +182,10 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, isOffline bool) (*sy
 	}
 	branchesToSync, err := branches.All.Select(allBranchNamesToSync)
 	return &syncConfig{
-		branchTypes:        branchTypes,
+		branches:           branches,
 		branchesToSync:     branchesToSync,
 		hasOpenChanges:     hasOpenChanges,
 		remotes:            remotes,
-		initialBranch:      branches.Initial,
 		isOffline:          isOffline,
 		lineage:            lineage,
 		mainBranch:         mainBranch,
@@ -207,7 +204,7 @@ func syncBranchesSteps(config *syncConfig) (runstate.StepList, error) {
 	for _, branch := range config.branchesToSync {
 		syncBranchSteps(&list, syncBranchStepsArgs{
 			branch:             branch,
-			branchTypes:        config.branchTypes,
+			branchTypes:        config.branches.Types,
 			remotes:            config.remotes,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
@@ -219,7 +216,7 @@ func syncBranchesSteps(config *syncConfig) (runstate.StepList, error) {
 			syncStrategy:       config.syncStrategy,
 		})
 	}
-	list.Add(&steps.CheckoutStep{Branch: config.initialBranch})
+	list.Add(&steps.CheckoutStep{Branch: config.branches.Initial})
 	if config.remotes.HasOrigin() && config.shouldPushTags && !config.isOffline {
 		list.Add(&steps.PushTagsStep{})
 	}
@@ -227,7 +224,7 @@ func syncBranchesSteps(config *syncConfig) (runstate.StepList, error) {
 		RunInGitRoot:     true,
 		StashOpenChanges: config.hasOpenChanges,
 		MainBranch:       config.mainBranch,
-		InitialBranch:    config.initialBranch,
+		InitialBranch:    config.branches.Initial,
 		PreviousBranch:   config.previousBranch,
 	})
 	return list.Result()

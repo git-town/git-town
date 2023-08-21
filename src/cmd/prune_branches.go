@@ -67,8 +67,7 @@ func pruneBranches(debug bool) error {
 }
 
 type pruneBranchesConfig struct {
-	branchTypes      domain.BranchTypes
-	initialBranch    domain.LocalBranchName
+	branches         domain.Branches
 	lineage          config.Lineage
 	branchesToDelete domain.LocalBranchNames
 	mainBranch       domain.LocalBranchName
@@ -80,8 +79,7 @@ func determinePruneBranchesConfig(run *git.ProdRunner) (*pruneBranchesConfig, er
 		ValidateIsConfigured: true,
 	})
 	return &pruneBranchesConfig{
-		branchTypes:      branches.Types,
-		initialBranch:    branches.Initial,
+		branches:         branches,
 		lineage:          run.Config.Lineage(),
 		branchesToDelete: branches.All.LocalBranchesWithDeletedTrackingBranches().Names(),
 		mainBranch:       run.Config.MainBranch(),
@@ -92,7 +90,7 @@ func determinePruneBranchesConfig(run *git.ProdRunner) (*pruneBranchesConfig, er
 func pruneBranchesStepList(config *pruneBranchesConfig) (runstate.StepList, error) {
 	result := runstate.StepList{}
 	for _, branchWithDeletedRemote := range config.branchesToDelete {
-		if config.initialBranch == branchWithDeletedRemote {
+		if config.branches.Initial == branchWithDeletedRemote {
 			result.Append(&steps.CheckoutStep{Branch: config.mainBranch})
 		}
 		parent := config.lineage.Parent(branchWithDeletedRemote)
@@ -102,7 +100,7 @@ func pruneBranchesStepList(config *pruneBranchesConfig) (runstate.StepList, erro
 			}
 			result.Append(&steps.DeleteParentBranchStep{Branch: branchWithDeletedRemote, Parent: config.lineage.Parent(branchWithDeletedRemote)})
 		}
-		if config.branchTypes.IsPerennialBranch(branchWithDeletedRemote) {
+		if config.branches.Types.IsPerennialBranch(branchWithDeletedRemote) {
 			result.Append(&steps.RemoveFromPerennialBranchesStep{Branch: branchWithDeletedRemote})
 		}
 		result.Append(&steps.DeleteLocalBranchStep{Branch: branchWithDeletedRemote, Parent: config.mainBranch.Location()})
@@ -111,7 +109,7 @@ func pruneBranchesStepList(config *pruneBranchesConfig) (runstate.StepList, erro
 		RunInGitRoot:     false,
 		StashOpenChanges: false,
 		MainBranch:       config.mainBranch,
-		InitialBranch:    config.initialBranch,
+		InitialBranch:    config.branches.Initial,
 		PreviousBranch:   config.previousBranch,
 	})
 	return result, err

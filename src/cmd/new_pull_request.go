@@ -88,12 +88,11 @@ func newPullRequest(debug bool) error {
 }
 
 type newPullRequestConfig struct {
+	branches           domain.Branches
 	branchesToSync     domain.BranchInfos
-	branchTypes        domain.BranchTypes
 	connector          hosting.Connector
 	hasOpenChanges     bool
 	remotes            config.Remotes
-	initialBranch      domain.LocalBranchName
 	isOffline          bool
 	lineage            config.Lineage
 	mainBranch         domain.LocalBranchName
@@ -182,12 +181,11 @@ func determineNewPullRequestConfig(run *git.ProdRunner, isOffline bool) (*newPul
 	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
 	branchesToSync, err := branches.All.Select(branchNamesToSync)
 	return &newPullRequestConfig{
-		branchTypes:        branches.Types,
+		branches:           branches,
 		branchesToSync:     branchesToSync,
 		connector:          connector,
 		hasOpenChanges:     hasOpenChanges,
 		remotes:            remotes,
-		initialBranch:      branches.Initial,
 		isOffline:          isOffline,
 		lineage:            lineage,
 		mainBranch:         mainBranch,
@@ -204,7 +202,7 @@ func newPullRequestStepList(config *newPullRequestConfig) (runstate.StepList, er
 	for _, branch := range config.branchesToSync {
 		syncBranchSteps(&list, syncBranchStepsArgs{
 			branch:             branch,
-			branchTypes:        config.branchTypes,
+			branchTypes:        config.branches.Types,
 			remotes:            config.remotes,
 			isOffline:          config.isOffline,
 			lineage:            config.lineage,
@@ -220,9 +218,9 @@ func newPullRequestStepList(config *newPullRequestConfig) (runstate.StepList, er
 		RunInGitRoot:     true,
 		StashOpenChanges: config.hasOpenChanges,
 		MainBranch:       config.mainBranch,
-		InitialBranch:    config.initialBranch,
+		InitialBranch:    config.branches.Initial,
 		PreviousBranch:   config.previousBranch,
 	})
-	list.Add(&steps.CreateProposalStep{Branch: config.initialBranch})
+	list.Add(&steps.CreateProposalStep{Branch: config.branches.Initial})
 	return list.Result()
 }
