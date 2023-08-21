@@ -52,12 +52,11 @@ func renameBranchCommand() *cobra.Command {
 
 func renameBranch(args []string, force, debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenShellArgs{
-		Debug:                 debug,
-		DryRun:                false,
-		OmitBranchNames:       false,
-		ValidateIsOnline:      false,
-		ValidateGitRepo:       true,
-		ValidateNoOpenChanges: false,
+		Debug:            debug,
+		DryRun:           false,
+		OmitBranchNames:  false,
+		ValidateIsOnline: false,
+		ValidateGitRepo:  true,
 	})
 	if err != nil {
 		return err
@@ -99,6 +98,7 @@ func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.Re
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
+		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return nil, exit, err

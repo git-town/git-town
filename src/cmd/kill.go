@@ -38,12 +38,11 @@ func killCommand() *cobra.Command {
 
 func kill(args []string, debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenShellArgs{
-		Debug:                 debug,
-		DryRun:                false,
-		OmitBranchNames:       false,
-		ValidateIsOnline:      false,
-		ValidateGitRepo:       true,
-		ValidateNoOpenChanges: false,
+		Debug:            debug,
+		DryRun:           false,
+		OmitBranchNames:  false,
+		ValidateIsOnline: false,
+		ValidateGitRepo:  true,
 	})
 	if err != nil {
 		return err
@@ -85,6 +84,7 @@ func determineKillConfig(args []string, repo *execute.RepoData) (*killConfig, bo
 		Fetch:                 true,
 		HandleUnfinishedState: false,
 		ValidateIsConfigured:  true,
+		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return nil, exit, err

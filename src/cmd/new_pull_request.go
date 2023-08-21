@@ -51,12 +51,11 @@ func newPullRequestCommand() *cobra.Command {
 
 func newPullRequest(debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenShellArgs{
-		Debug:                 debug,
-		DryRun:                false,
-		OmitBranchNames:       false,
-		ValidateIsOnline:      true,
-		ValidateGitRepo:       true,
-		ValidateNoOpenChanges: false,
+		Debug:            debug,
+		DryRun:           false,
+		OmitBranchNames:  false,
+		ValidateIsOnline: true,
+		ValidateGitRepo:  true,
 	})
 	if err != nil {
 		return err
@@ -106,6 +105,7 @@ func determineNewPullRequestConfig(repo *execute.RepoData) (*newPullRequestConfi
 		Fetch:                 false,
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
+		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return nil, exit, err

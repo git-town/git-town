@@ -42,12 +42,11 @@ func repoCommand() *cobra.Command {
 
 func repo(debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenShellArgs{
-		Debug:                 debug,
-		DryRun:                false,
-		OmitBranchNames:       false,
-		ValidateIsOnline:      true,
-		ValidateGitRepo:       true,
-		ValidateNoOpenChanges: false,
+		Debug:            debug,
+		DryRun:           false,
+		OmitBranchNames:  false,
+		ValidateIsOnline: true,
+		ValidateGitRepo:  true,
 	})
 	if err != nil {
 		return err
@@ -67,6 +66,7 @@ func determineRepoConfig(repo *execute.RepoData) (*repoConfig, bool, error) {
 		Fetch:                 false,
 		HandleUnfinishedState: false,
 		ValidateIsConfigured:  true,
+		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return nil, exit, err

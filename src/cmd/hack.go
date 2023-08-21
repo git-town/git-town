@@ -47,12 +47,11 @@ func hackCmd() *cobra.Command {
 
 func hack(args []string, promptForParent, debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenShellArgs{
-		Debug:                 debug,
-		DryRun:                false,
-		OmitBranchNames:       false,
-		ValidateIsOnline:      false,
-		ValidateGitRepo:       true,
-		ValidateNoOpenChanges: false,
+		Debug:            debug,
+		DryRun:           false,
+		OmitBranchNames:  false,
+		ValidateIsOnline: false,
+		ValidateGitRepo:  true,
 	})
 	if err != nil {
 		return err
@@ -83,6 +82,7 @@ func determineHackConfig(args []string, promptForParent bool, repo *execute.Repo
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
+		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return nil, exit, err

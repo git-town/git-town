@@ -26,12 +26,11 @@ func setupConfigCommand() *cobra.Command {
 
 func setup(debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenShellArgs{
-		Debug:                 debug,
-		DryRun:                false,
-		OmitBranchNames:       true,
-		ValidateIsOnline:      false,
-		ValidateGitRepo:       true,
-		ValidateNoOpenChanges: false,
+		Debug:            debug,
+		DryRun:           false,
+		OmitBranchNames:  true,
+		ValidateIsOnline: false,
+		ValidateGitRepo:  true,
 	})
 	if err != nil {
 		return err
@@ -41,6 +40,7 @@ func setup(debug bool) error {
 		Fetch:                 false,
 		HandleUnfinishedState: false,
 		ValidateIsConfigured:  false,
+		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return err

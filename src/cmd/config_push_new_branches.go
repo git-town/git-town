@@ -37,12 +37,11 @@ func pushNewBranchesCommand() *cobra.Command {
 
 func pushNewBranches(args []string, global, debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenShellArgs{
-		Debug:                 debug,
-		DryRun:                false,
-		OmitBranchNames:       true,
-		ValidateIsOnline:      false,
-		ValidateGitRepo:       false,
-		ValidateNoOpenChanges: false,
+		Debug:            debug,
+		DryRun:           false,
+		OmitBranchNames:  true,
+		ValidateIsOnline: false,
+		ValidateGitRepo:  false,
 	})
 	if err != nil {
 		return err

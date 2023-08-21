@@ -14,6 +14,16 @@ func LoadBranches(args LoadBranchesArgs) (domain.Branches, bool, error) {
 			return domain.EmptyBranches(), exit, err
 		}
 	}
+	if args.ValidateNoOpenChanges {
+		hasOpenChanges, err := args.Repo.Runner.Backend.HasOpenChanges()
+		if err != nil {
+			return domain.EmptyBranches(), false, err
+		}
+		err = validate.NoOpenChanges(hasOpenChanges)
+		if err != nil {
+			return domain.EmptyBranches(), false, err
+		}
+	}
 	if args.Fetch {
 		var remotes config.Remotes
 		remotes, err := args.Repo.Runner.Backend.Remotes()
@@ -48,4 +58,5 @@ type LoadBranchesArgs struct {
 	Fetch                 bool
 	HandleUnfinishedState bool
 	ValidateIsConfigured  bool
+	ValidateNoOpenChanges bool
 }

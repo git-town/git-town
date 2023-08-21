@@ -46,12 +46,11 @@ func prependCommand() *cobra.Command {
 
 func prepend(args []string, debug bool) error {
 	repo, err := execute.OpenRepo(execute.OpenShellArgs{
-		Debug:                 debug,
-		DryRun:                false,
-		OmitBranchNames:       false,
-		ValidateIsOnline:      false,
-		ValidateGitRepo:       true,
-		ValidateNoOpenChanges: false,
+		Debug:            debug,
+		DryRun:           false,
+		OmitBranchNames:  false,
+		ValidateIsOnline: false,
+		ValidateGitRepo:  true,
 	})
 	if err != nil {
 		return err
@@ -100,6 +99,7 @@ func determinePrependConfig(args []string, repo *execute.RepoData) (*prependConf
 		Fetch:                 true,
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
+		ValidateNoOpenChanges: false,
 	})
 	if err != nil || exit {
 		return nil, exit, err

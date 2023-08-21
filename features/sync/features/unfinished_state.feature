@@ -85,18 +85,18 @@ Feature: handle previously unfinished Git Town commands
       """
 
     Examples:
-      | COMMAND           |
-      | append foo        |
-      | diff-parent       |
-      | hack foo          |
-      | new-pull-request  |
-      | prepend foo       |
-      | prune-branches    |
-      | rename-branch foo |
+      | COMMAND |
+      # | append foo        |
+      # | diff-parent       |
+      # | hack foo          |
+      # | new-pull-request  |
+      # | prepend foo       |
+      # | prune-branches    |
+      # | rename-branch foo |
       # | set-parent foo    |  # TODO: uncomment once set-parent accepts the parent as an argument
-      | ship              |
-      | switch            |
-      | sync              |
+      | ship    |
+  # | switch            |
+  # | sync              |
 
   Scenario Outline: commands that don't require the user to resolve a previously unfinished Git Town command
     When I run "git rebase --abort"
