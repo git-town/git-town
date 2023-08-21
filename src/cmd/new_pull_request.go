@@ -104,7 +104,8 @@ type newPullRequestConfig struct {
 }
 
 func determineNewPullRequestConfig(run *git.ProdRunner, isOffline bool) (*newPullRequestConfig, error) {
-	branches, err := execute.LoadBranches(run, execute.LoadBranchesArgs{
+	branches, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Runner:               run,
 		ValidateIsConfigured: true,
 	})
 	if err != nil {

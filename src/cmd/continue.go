@@ -65,7 +65,8 @@ func runContinue(debug bool) error {
 }
 
 func determineContinueConfig(run *git.ProdRunner) (*continueConfig, error) {
-	_, err := execute.LoadBranches(run, execute.LoadBranchesArgs{
+	_, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Runner:               run,
 		ValidateIsConfigured: true,
 	})
 	if err != nil {
