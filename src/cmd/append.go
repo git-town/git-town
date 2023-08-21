@@ -93,8 +93,9 @@ type appendConfig struct {
 	targetBranch        domain.LocalBranchName
 }
 
-func determineAppendConfig(targetBranch domain.LocalBranchName, repo execute.RepoData) (*appendConfig, bool, error) {
-	branches, exit, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
+func determineAppendConfig(targetBranch domain.LocalBranchName, repo *execute.RepoData) (*appendConfig, bool, error) {
+	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Repo:                  repo,
 		HandleUnfinishedState: true,
 		ValidateIsConfigured:  true,
 	})
@@ -142,7 +143,7 @@ func determineAppendConfig(targetBranch domain.LocalBranchName, repo execute.Rep
 		branchesToSync:      branchesToSync,
 		hasOpenChanges:      hasOpenChanges,
 		remotes:             remotes,
-		isOffline:           isOffline,
+		isOffline:           repo.IsOffline,
 		lineage:             lineage,
 		mainBranch:          mainBranch,
 		pushHook:            pushHook,

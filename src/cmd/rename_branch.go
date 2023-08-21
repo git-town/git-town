@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
@@ -52,21 +51,20 @@ func renameBranchCommand() *cobra.Command {
 }
 
 func renameBranch(args []string, force, debug bool) error {
-	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
+	repo, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 true,
-		HandleUnfinishedState: true,
 		OmitBranchNames:       false,
 		ValidateIsOnline:      false,
 		ValidateGitRepo:       true,
 		ValidateNoOpenChanges: false,
 	})
-	if err != nil || exit {
+	if err != nil {
 		return err
 	}
-	config, err := determineRenameBranchConfig(args, force, &repo.Runner, repo.IsOffline)
-	if err != nil {
+	config, exit, err := determineRenameBranchConfig(args, force, &repo)
+	if err != nil || exit {
 		return err
 	}
 	stepList, err := renameBranchStepList(config)
@@ -96,19 +94,21 @@ type renameBranchConfig struct {
 	previousBranch domain.LocalBranchName
 }
 
-func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRunner, isOffline bool) (*renameBranchConfig, error) {
-	branches, err := execute.LoadBranches(run, execute.LoadBranchesArgs{
-		ValidateIsConfigured: true,
+func determineRenameBranchConfig(args []string, forceFlag bool, repo *execute.RepoData) (*renameBranchConfig, bool, error) {
+	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Repo:                  repo,
+		HandleUnfinishedState: true,
+		ValidateIsConfigured:  true,
 	})
-	if err != nil {
-		return nil, err
+	if err != nil || exit {
+		return nil, exit, err
 	}
-	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
-	pushHook, err := run.Config.PushHook()
+	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
+	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
-	mainBranch := run.Config.MainBranch()
+	mainBranch := repo.Runner.Config.MainBranch()
 	var oldBranchName domain.LocalBranchName
 	var newBranchName domain.LocalBranchName
 	if len(args) == 1 {
@@ -118,41 +118,41 @@ func determineRenameBranchConfig(args []string, forceFlag bool, run *git.ProdRun
 		oldBranchName = domain.NewLocalBranchName(args[0])
 		newBranchName = domain.NewLocalBranchName(args[1])
 	}
-	if run.Config.IsMainBranch(oldBranchName) {
-		return nil, fmt.Errorf(messages.RenameMainBranch)
+	if repo.Runner.Config.IsMainBranch(oldBranchName) {
+		return nil, false, fmt.Errorf(messages.RenameMainBranch)
 	}
 	if !forceFlag {
 		if branches.Types.IsPerennialBranch(oldBranchName) {
-			return nil, fmt.Errorf(messages.RenamePerennialBranchWarning, oldBranchName)
+			return nil, false, fmt.Errorf(messages.RenamePerennialBranchWarning, oldBranchName)
 		}
 	}
 	if oldBranchName == newBranchName {
-		return nil, fmt.Errorf(messages.RenameToSameName)
+		return nil, false, fmt.Errorf(messages.RenameToSameName)
 	}
 	oldBranch := branches.All.FindLocalBranch(oldBranchName)
 	if oldBranch == nil {
-		return nil, fmt.Errorf(messages.BranchDoesntExist, oldBranchName)
+		return nil, false, fmt.Errorf(messages.BranchDoesntExist, oldBranchName)
 	}
 	if oldBranch.SyncStatus != domain.SyncStatusUpToDate {
-		return nil, fmt.Errorf(messages.RenameBranchNotInSync, oldBranchName)
+		return nil, false, fmt.Errorf(messages.RenameBranchNotInSync, oldBranchName)
 	}
 	if branches.All.HasLocalBranch(newBranchName) {
-		return nil, fmt.Errorf(messages.BranchAlreadyExistsLocally, newBranchName)
+		return nil, false, fmt.Errorf(messages.BranchAlreadyExistsLocally, newBranchName)
 	}
 	if branches.All.HasMatchingRemoteBranchFor(newBranchName) {
-		return nil, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
+		return nil, false, fmt.Errorf(messages.BranchAlreadyExistsRemotely, newBranchName)
 	}
-	lineage := run.Config.Lineage()
+	lineage := repo.Runner.Config.Lineage()
 	return &renameBranchConfig{
 		branches:       branches,
-		isOffline:      isOffline,
+		isOffline:      repo.IsOffline,
 		lineage:        lineage,
 		mainBranch:     mainBranch,
 		newBranch:      newBranchName,
 		noPushHook:     !pushHook,
 		oldBranch:      *oldBranch,
 		previousBranch: previousBranch,
-	}, err
+	}, false, err
 }
 
 func renameBranchStepList(config *renameBranchConfig) (runstate.StepList, error) {

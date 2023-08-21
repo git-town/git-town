@@ -5,7 +5,6 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/spf13/cobra"
@@ -33,21 +32,20 @@ func pruneBranchesCommand() *cobra.Command {
 }
 
 func pruneBranches(debug bool) error {
-	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
+	repo, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 true,
-		HandleUnfinishedState: true,
 		OmitBranchNames:       false,
 		ValidateIsOnline:      true,
 		ValidateGitRepo:       true,
 		ValidateNoOpenChanges: false,
 	})
-	if err != nil || exit {
+	if err != nil {
 		return err
 	}
-	config, err := determinePruneBranchesConfig(&repo.Runner)
-	if err != nil {
+	config, exit, err := determinePruneBranchesConfig(&repo)
+	if err != nil || exit {
 		return err
 	}
 	stepList, err := pruneBranchesStepList(config)
@@ -74,17 +72,19 @@ type pruneBranchesConfig struct {
 	previousBranch   domain.LocalBranchName
 }
 
-func determinePruneBranchesConfig(run *git.ProdRunner) (*pruneBranchesConfig, error) {
-	branches, err := execute.LoadBranches(run, execute.LoadBranchesArgs{
-		ValidateIsConfigured: true,
+func determinePruneBranchesConfig(repo *execute.RepoData) (*pruneBranchesConfig, bool, error) {
+	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Repo:                  repo,
+		HandleUnfinishedState: true,
+		ValidateIsConfigured:  true,
 	})
 	return &pruneBranchesConfig{
 		branches:         branches,
-		lineage:          run.Config.Lineage(),
+		lineage:          repo.Runner.Config.Lineage(),
 		branchesToDelete: branches.All.LocalBranchesWithDeletedTrackingBranches().Names(),
-		mainBranch:       run.Config.MainBranch(),
-		previousBranch:   run.Backend.PreviouslyCheckedOutBranch(),
-	}, err
+		mainBranch:       repo.Runner.Config.MainBranch(),
+		previousBranch:   repo.Runner.Backend.PreviouslyCheckedOutBranch(),
+	}, exit, err
 }
 
 func pruneBranchesStepList(config *pruneBranchesConfig) (runstate.StepList, error) {

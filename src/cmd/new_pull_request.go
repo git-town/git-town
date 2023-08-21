@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
@@ -51,21 +50,20 @@ func newPullRequestCommand() *cobra.Command {
 }
 
 func newPullRequest(debug bool) error {
-	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
+	repo, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 false,
-		HandleUnfinishedState: true,
 		OmitBranchNames:       false,
 		ValidateIsOnline:      true,
 		ValidateGitRepo:       true,
 		ValidateNoOpenChanges: false,
 	})
-	if err != nil || exit {
+	if err != nil {
 		return err
 	}
-	config, err := determineNewPullRequestConfig(&repo.Runner, repo.IsOffline)
-	if err != nil {
+	config, exit, err := determineNewPullRequestConfig(&repo)
+	if err != nil || exit {
 		return err
 	}
 	if err != nil {
@@ -103,80 +101,82 @@ type newPullRequestConfig struct {
 	syncStrategy       config.SyncStrategy
 }
 
-func determineNewPullRequestConfig(run *git.ProdRunner, isOffline bool) (*newPullRequestConfig, error) {
-	branches, err := execute.LoadBranches(run, execute.LoadBranchesArgs{
-		ValidateIsConfigured: true,
+func determineNewPullRequestConfig(repo *execute.RepoData) (*newPullRequestConfig, bool, error) {
+	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Repo:                  repo,
+		HandleUnfinishedState: true,
+		ValidateIsConfigured:  true,
 	})
-	if err != nil {
-		return nil, err
+	if err != nil || exit {
+		return nil, exit, err
 	}
-	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
-	hasOpenChanges, err := run.Backend.HasOpenChanges()
+	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
+	hasOpenChanges, err := repo.Runner.Backend.HasOpenChanges()
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
-	remotes, err := run.Backend.Remotes()
+	remotes, err := repo.Runner.Backend.Remotes()
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
 	if remotes.HasOrigin() {
-		err := run.Frontend.Fetch()
+		err := repo.Runner.Frontend.Fetch()
 		if err != nil {
-			return nil, err
+			return nil, false, err
 		}
 	}
-	mainBranch := run.Config.MainBranch()
-	lineage := run.Config.Lineage()
+	mainBranch := repo.Runner.Config.MainBranch()
+	lineage := repo.Runner.Config.Lineage()
 	updated, err := validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
 		DefaultBranch: mainBranch,
-		Backend:       &run.Backend,
+		Backend:       &repo.Runner.Backend,
 		AllBranches:   branches.All,
 		Lineage:       lineage,
 		BranchTypes:   branches.Types,
 		MainBranch:    mainBranch,
 	})
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
 	if updated {
-		lineage = run.Config.Lineage()
+		lineage = repo.Runner.Config.Lineage()
 	}
-	syncStrategy, err := run.Config.SyncStrategy()
+	syncStrategy, err := repo.Runner.Config.SyncStrategy()
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
-	pushHook, err := run.Config.PushHook()
+	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
-	pullBranchStrategy, err := run.Config.PullBranchStrategy()
+	pullBranchStrategy, err := repo.Runner.Config.PullBranchStrategy()
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
-	shouldSyncUpstream, err := run.Config.ShouldSyncUpstream()
+	shouldSyncUpstream, err := repo.Runner.Config.ShouldSyncUpstream()
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
-	originURL := run.Config.OriginURL()
-	hostingService, err := run.Config.HostingService()
+	originURL := repo.Runner.Config.OriginURL()
+	hostingService, err := repo.Runner.Config.HostingService()
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
 	connector, err := hosting.NewConnector(hosting.NewConnectorArgs{
 		HostingService:  hostingService,
-		GetShaForBranch: run.Backend.ShaForBranch,
+		GetShaForBranch: repo.Runner.Backend.ShaForBranch,
 		OriginURL:       originURL,
-		GiteaAPIToken:   run.Config.GiteaToken(),
-		GithubAPIToken:  run.Config.GitHubToken(),
-		GitlabAPIToken:  run.Config.GitLabToken(),
+		GiteaAPIToken:   repo.Runner.Config.GiteaToken(),
+		GithubAPIToken:  repo.Runner.Config.GitHubToken(),
+		GitlabAPIToken:  repo.Runner.Config.GitLabToken(),
 		MainBranch:      mainBranch,
 		Log:             cli.PrintingLog{},
 	})
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
 	if connector == nil {
-		return nil, hosting.UnsupportedServiceError()
+		return nil, false, hosting.UnsupportedServiceError()
 	}
 	branchNamesToSync := lineage.BranchAndAncestors(branches.Initial)
 	branchesToSync, err := branches.All.Select(branchNamesToSync)
@@ -186,7 +186,7 @@ func determineNewPullRequestConfig(run *git.ProdRunner, isOffline bool) (*newPul
 		connector:          connector,
 		hasOpenChanges:     hasOpenChanges,
 		remotes:            remotes,
-		isOffline:          isOffline,
+		isOffline:          repo.IsOffline,
 		lineage:            lineage,
 		mainBranch:         mainBranch,
 		previousBranch:     previousBranch,
@@ -194,7 +194,7 @@ func determineNewPullRequestConfig(run *git.ProdRunner, isOffline bool) (*newPul
 		pushHook:           pushHook,
 		shouldSyncUpstream: shouldSyncUpstream,
 		syncStrategy:       syncStrategy,
-	}, err
+	}, false, err
 }
 
 func newPullRequestStepList(config *newPullRequestConfig) (runstate.StepList, error) {

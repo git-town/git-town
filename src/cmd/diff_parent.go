@@ -6,7 +6,6 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/slice"
 	"github.com/git-town/git-town/v9/src/validate"
@@ -37,21 +36,20 @@ func diffParentCommand() *cobra.Command {
 }
 
 func diffParent(args []string, debug bool) error {
-	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
+	repo, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 false,
-		HandleUnfinishedState: true,
 		OmitBranchNames:       false,
 		ValidateIsOnline:      false,
 		ValidateGitRepo:       true,
 		ValidateNoOpenChanges: false,
 	})
-	if err != nil || exit {
+	if err != nil {
 		return err
 	}
-	config, err := determineDiffParentConfig(args, &repo.Runner)
-	if err != nil {
+	config, exit, err := determineDiffParentConfig(args, &repo)
+	if err != nil || exit {
 		return err
 	}
 	err = repo.Runner.Frontend.DiffParent(config.branch, config.parentBranch)
@@ -68,41 +66,43 @@ type diffParentConfig struct {
 }
 
 // Does not return error because "Ensure" functions will call exit directly.
-func determineDiffParentConfig(args []string, run *git.ProdRunner) (*diffParentConfig, error) {
-	branches, err := execute.LoadBranches(run, execute.LoadBranchesArgs{
-		ValidateIsConfigured: true,
+func determineDiffParentConfig(args []string, repo *execute.RepoData) (*diffParentConfig, bool, error) {
+	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Repo:                  repo,
+		HandleUnfinishedState: true,
+		ValidateIsConfigured:  true,
 	})
-	if err != nil {
-		return nil, err
+	if err != nil || exit {
+		return nil, exit, err
 	}
 	branch := domain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
 	if branch != branches.Initial {
 		if !branches.All.HasLocalBranch(branch) {
-			return nil, fmt.Errorf(messages.BranchDoesntExist, branch)
+			return nil, false, fmt.Errorf(messages.BranchDoesntExist, branch)
 		}
 	}
-	branchTypes := run.Config.BranchTypes()
+	branchTypes := repo.Runner.Config.BranchTypes()
 	if !branchTypes.IsFeatureBranch(branch) {
-		return nil, fmt.Errorf(messages.DiffParentNoFeatureBranch)
+		return nil, false, fmt.Errorf(messages.DiffParentNoFeatureBranch)
 	}
-	mainBranch := run.Config.MainBranch()
-	lineage := run.Config.Lineage()
+	mainBranch := repo.Runner.Config.MainBranch()
+	lineage := repo.Runner.Config.Lineage()
 	updated, err := validate.KnowsBranchAncestors(branch, validate.KnowsBranchAncestorsArgs{
 		DefaultBranch: mainBranch,
-		Backend:       &run.Backend,
+		Backend:       &repo.Runner.Backend,
 		AllBranches:   branches.All,
 		Lineage:       lineage,
 		BranchTypes:   branchTypes,
 		MainBranch:    mainBranch,
 	})
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
 	if updated {
-		lineage = run.Config.Lineage()
+		lineage = repo.Runner.Config.Lineage()
 	}
 	return &diffParentConfig{
 		branch:       branch,
 		parentBranch: lineage.Parent(branch),
-	}, nil
+	}, false, nil
 }

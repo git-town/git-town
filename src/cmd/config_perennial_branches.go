@@ -45,17 +45,16 @@ func perennialBranchesCmd() *cobra.Command {
 }
 
 func displayPerennialBranches(debug bool) error {
-	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
+	repo, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 false,
-		HandleUnfinishedState: false,
 		OmitBranchNames:       true,
 		ValidateIsOnline:      false,
 		ValidateGitRepo:       true,
 		ValidateNoOpenChanges: false,
 	})
-	if err != nil || exit {
+	if err != nil {
 		return err
 	}
 	cli.Println(cli.StringSetting(repo.Runner.Config.PerennialBranches().Join("\n")))
@@ -63,23 +62,24 @@ func displayPerennialBranches(debug bool) error {
 }
 
 func updatePerennialBranches(debug bool) error {
-	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
+	repo, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                false,
 		Fetch:                 false,
-		HandleUnfinishedState: false,
 		OmitBranchNames:       true,
 		ValidateIsOnline:      false,
 		ValidateGitRepo:       true,
 		ValidateNoOpenChanges: false,
 	})
-	if err != nil || exit {
+	if err != nil {
 		return err
 	}
-	branches, err := execute.LoadBranches(&repo.Runner, execute.LoadBranchesArgs{
-		ValidateIsConfigured: false,
+	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Repo:                  &repo,
+		HandleUnfinishedState: false,
+		ValidateIsConfigured:  false,
 	})
-	if err != nil {
+	if err != nil || exit {
 		return err
 	}
 	_, err = dialog.EnterPerennialBranches(&repo.Runner.Backend, branches)

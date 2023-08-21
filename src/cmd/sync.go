@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/execute"
 	"github.com/git-town/git-town/v9/src/flags"
-	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/git-town/git-town/v9/src/validate"
@@ -54,21 +53,20 @@ func syncCmd() *cobra.Command {
 }
 
 func sync(all, dryRun, debug bool) error {
-	repo, exit, err := execute.OpenRepo(execute.OpenShellArgs{
+	repo, err := execute.OpenRepo(execute.OpenShellArgs{
 		Debug:                 debug,
 		DryRun:                dryRun,
 		Fetch:                 true,
-		HandleUnfinishedState: true,
 		OmitBranchNames:       false,
 		ValidateIsOnline:      false,
 		ValidateGitRepo:       true,
 		ValidateNoOpenChanges: false,
 	})
-	if err != nil || exit {
+	if err != nil {
 		return err
 	}
-	config, err := determineSyncConfig(all, &repo.Runner, repo.IsOffline)
-	if err != nil {
+	config, exit, err := determineSyncConfig(all, &repo)
+	if err != nil || exit {
 		return err
 	}
 	stepList, err := syncBranchesSteps(config)
@@ -103,82 +101,84 @@ type syncConfig struct {
 	syncStrategy       config.SyncStrategy
 }
 
-func determineSyncConfig(allFlag bool, run *git.ProdRunner, isOffline bool) (*syncConfig, error) {
-	branches, err := execute.LoadBranches(run, execute.LoadBranchesArgs{
-		ValidateIsConfigured: true,
+func determineSyncConfig(allFlag bool, repo *execute.RepoData) (*syncConfig, bool, error) {
+	branches, exit, err := execute.LoadBranches(execute.LoadBranchesArgs{
+		Repo:                  repo,
+		HandleUnfinishedState: true,
+		ValidateIsConfigured:  true,
 	})
-	if err != nil {
-		return nil, err
+	if err != nil || exit {
+		return nil, exit, err
 	}
-	previousBranch := run.Backend.PreviouslyCheckedOutBranch()
-	hasOpenChanges, err := run.Backend.HasOpenChanges()
+	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
+	hasOpenChanges, err := repo.Runner.Backend.HasOpenChanges()
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
-	remotes, err := run.Backend.Remotes()
+	remotes, err := repo.Runner.Backend.Remotes()
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
-	mainBranch := run.Config.MainBranch()
+	mainBranch := repo.Runner.Config.MainBranch()
 	var branchNamesToSync domain.LocalBranchNames
 	var shouldPushTags bool
-	lineage := run.Config.Lineage()
+	lineage := repo.Runner.Config.Lineage()
 	var configUpdated bool
 	if allFlag {
 		localBranches := branches.All.LocalBranches()
 		configUpdated, err = validate.KnowsBranchesAncestors(validate.KnowsBranchesAncestorsArgs{
 			AllBranches: localBranches,
-			Backend:     &run.Backend,
+			Backend:     &repo.Runner.Backend,
 			BranchTypes: branches.Types,
 			Lineage:     lineage,
 			MainBranch:  mainBranch,
 		})
 		if err != nil {
-			return nil, err
+			return nil, false, err
 		}
 		branchNamesToSync = localBranches.Names()
 		shouldPushTags = true
 	} else {
 		configUpdated, err = validate.KnowsBranchAncestors(branches.Initial, validate.KnowsBranchAncestorsArgs{
 			AllBranches:   branches.All,
-			Backend:       &run.Backend,
+			Backend:       &repo.Runner.Backend,
 			BranchTypes:   branches.Types,
 			DefaultBranch: mainBranch,
 			Lineage:       lineage,
 			MainBranch:    mainBranch,
 		})
 		if err != nil {
-			return nil, err
+			return nil, false, err
 		}
 	}
 	if configUpdated {
-		lineage = run.Config.Lineage() // reload after ancestry change
-		branches.Types = run.Config.BranchTypes()
+		lineage = repo.Runner.Config.Lineage() // reload after ancestry change
+		branches.Types = repo.Runner.Config.BranchTypes()
 	}
 	if !allFlag {
 		branchNamesToSync = domain.LocalBranchNames{branches.Initial}
 		if configUpdated {
-			run.Config.Reload()
-			branches.Types = run.Config.BranchTypes()
+			repo.Runner.Config.Reload()
+			branches.Types = repo.Runner.Config.BranchTypes()
 		}
 		shouldPushTags = !branches.Types.IsFeatureBranch(branches.Initial)
 	}
 	allBranchNamesToSync := lineage.BranchesAndAncestors(branchNamesToSync)
-	syncStrategy, err := run.Config.SyncStrategy()
+	syncStrategy, err := repo.Runner.Config.SyncStrategy()
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
-	pushHook, err := run.Config.PushHook()
+	pushHook, err := repo.Runner.Config.PushHook()
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
-	pullBranchStrategy, err := run.Config.PullBranchStrategy()
+	pullBranchStrategy, err := repo.Runner.Config.PullBranchStrategy()
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
-	shouldSyncUpstream, err := run.Config.ShouldSyncUpstream()
+	shouldSyncUpstream, err := repo.Runner.Config.ShouldSyncUpstream()
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
 	branchesToSync, err := branches.All.Select(allBranchNamesToSync)
 	return &syncConfig{
@@ -186,7 +186,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, isOffline bool) (*sy
 		branchesToSync:     branchesToSync,
 		hasOpenChanges:     hasOpenChanges,
 		remotes:            remotes,
-		isOffline:          isOffline,
+		isOffline:          repo.IsOffline,
 		lineage:            lineage,
 		mainBranch:         mainBranch,
 		previousBranch:     previousBranch,
@@ -195,7 +195,7 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, isOffline bool) (*sy
 		shouldPushTags:     shouldPushTags,
 		shouldSyncUpstream: shouldSyncUpstream,
 		syncStrategy:       syncStrategy,
-	}, err
+	}, false, err
 }
 
 // syncBranchesSteps provides the step list for the "git sync" command.
