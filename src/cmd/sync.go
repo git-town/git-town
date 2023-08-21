@@ -124,13 +124,12 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, isOffline bool) (*sy
 	var shouldPushTags bool
 	lineage := run.Config.Lineage()
 	var configUpdated bool
-	branchTypes := branches.Types
 	if allFlag {
 		localBranches := branches.All.LocalBranches()
 		configUpdated, err = validate.KnowsBranchesAncestors(validate.KnowsBranchesAncestorsArgs{
 			AllBranches: localBranches,
 			Backend:     &run.Backend,
-			BranchTypes: branchTypes,
+			BranchTypes: branches.Types,
 			Lineage:     lineage,
 			MainBranch:  mainBranch,
 		})
@@ -154,15 +153,15 @@ func determineSyncConfig(allFlag bool, run *git.ProdRunner, isOffline bool) (*sy
 	}
 	if configUpdated {
 		lineage = run.Config.Lineage() // reload after ancestry change
-		branchTypes = run.Config.BranchTypes()
+		branches.Types = run.Config.BranchTypes()
 	}
 	if !allFlag {
 		branchNamesToSync = domain.LocalBranchNames{branches.Initial}
 		if configUpdated {
 			run.Config.Reload()
-			branchTypes = run.Config.BranchTypes()
+			branches.Types = run.Config.BranchTypes()
 		}
-		shouldPushTags = !branchTypes.IsFeatureBranch(branches.Initial)
+		shouldPushTags = !branches.Types.IsFeatureBranch(branches.Initial)
 	}
 	allBranchNamesToSync := lineage.BranchesAndAncestors(branchNamesToSync)
 	syncStrategy, err := run.Config.SyncStrategy()
