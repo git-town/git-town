@@ -33,6 +33,7 @@ func TestSanitizePath(t *testing.T) {
 			RunStepList: runstate.StepList{
 				List: []steps.Step{
 					&steps.AbortMergeStep{},
+					&steps.AbortRebaseStep{},
 					&steps.AddToPerennialBranchesStep{Branch: domain.NewLocalBranchName("branch")},
 				},
 			},
@@ -48,6 +49,10 @@ func TestSanitizePath(t *testing.T) {
     {
       "data": {},
       "type": "*AbortMergeStep"
+    },
+    {
+      "data": {},
+      "type": "*AbortRebaseStep"
     },
     {
       "data": {
