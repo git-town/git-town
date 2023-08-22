@@ -81,6 +81,11 @@ func TestSanitizePath(t *testing.T) {
 						Branch: domain.NewLocalBranchName("branch"),
 					},
 					&steps.MergeStep{Branch: domain.NewBranchName("branch")},
+					&steps.PreserveCheckoutHistoryStep{
+						InitialBranch:                     domain.NewLocalBranchName("initial-branch"),
+						InitialPreviouslyCheckedOutBranch: domain.NewLocalBranchName("initial-previous-branch"),
+						MainBranch:                        domain.NewLocalBranchName("main"),
+					},
 				},
 			},
 			UndoStepList:      runstate.StepList{},
@@ -207,6 +212,14 @@ func TestSanitizePath(t *testing.T) {
         "Branch": "branch"
       },
       "type": "*MergeStep"
+    },
+    {
+      "data": {
+        "InitialBranch": "initial-branch",
+        "InitialPreviouslyCheckedOutBranch": "initial-previous-branch",
+        "MainBranch": "main"
+      },
+      "type": "*PreserveCheckoutHistoryStep"
     }
   ],
   "UndoStepList": [],
