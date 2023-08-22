@@ -107,6 +107,10 @@ func TestSanitizePath(t *testing.T) {
 					&steps.RevertCommitStep{
 						Sha: domain.NewSHA("123456"),
 					},
+					&steps.SetParentStep{
+						Branch:       domain.NewLocalBranchName("branch"),
+						ParentBranch: domain.NewLocalBranchName("parent"),
+					},
 				},
 			},
 			UndoStepList:      runstate.StepList{},
@@ -293,6 +297,13 @@ func TestSanitizePath(t *testing.T) {
         "Sha": "123456"
       },
       "type": "*RevertCommitStep"
+    },
+    {
+      "data": {
+        "Branch": "branch",
+        "ParentBranch": "parent"
+      },
+      "type": "*SetParentStep"
     }
   ],
   "UndoStepList": [],
