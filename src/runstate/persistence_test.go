@@ -2,6 +2,7 @@ package runstate_test
 
 import (
 	"encoding/json"
+	"os"
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/domain"
@@ -38,21 +39,42 @@ func TestSanitizePath(t *testing.T) {
 			UndoStepList:      runstate.StepList{},
 			UnfinishedDetails: &runstate.UnfinishedRunStateDetails{},
 		}
-		bytes, err := json.MarshalIndent(runState, "", "  ")
+		repoName := "git-town-unit-tests"
+		err := runstate.Save(&runState, repoName)
 		assert.NoError(t, err)
+		filepath, err := runstate.PersistenceFilePath(repoName)
+		assert.NoError(t, err)
+		content, err := os.ReadFile(filepath)
+		assert.NoError(t, err)
+		haveJSON := string(content)
 		wantJSON := `
 {
-  "List": [
-    {},
+  "AbortStepList": [],
+  "Command": "command",
+  "IsAbort": true,
+  "RunStepList": [
     {
-      "Branch": "branch"
+      "data": {},
+      "type": "*AbortMergeStep"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "*AddToPerennialBranchesStep"
     }
-  ]
+  ],
+  "UndoStepList": [],
+  "UnfinishedDetails": {
+    "CanSkip": false,
+    "EndBranch": "",
+    "EndTime": "0001-01-01T00:00:00Z"
+  }
 }`[1:]
-		assert.Equal(t, wantJSON, string(bytes))
-		newState := runstate.RunState{}
-		err = json.Unmarshal(bytes, &newList)
+		assert.Equal(t, wantJSON, haveJSON)
+		var newState runstate.RunState
+		err = json.Unmarshal(content, &newState)
 		assert.NoError(t, err)
-		assert.Equal(t, stepList, newList)
+		assert.Equal(t, runState, newState)
 	})
 }

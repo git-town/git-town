@@ -24,11 +24,11 @@ func Load(repoDir string) (*RunState, error) {
 		}
 		return nil, fmt.Errorf(messages.FileStatProblem, filename, err)
 	}
-	var runState RunState
 	content, err := os.ReadFile(filename)
 	if err != nil {
 		return nil, fmt.Errorf(messages.FileReadProblem, filename, err)
 	}
+	var runState RunState
 	err = json.Unmarshal(content, &runState)
 	if err != nil {
 		return nil, fmt.Errorf(messages.FileContentInvalidJSON, filename, err)
