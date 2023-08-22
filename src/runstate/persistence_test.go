@@ -73,6 +73,10 @@ func TestSanitizePath(t *testing.T) {
 						Parent: domain.NewLocalBranchName("parent"),
 					},
 					&steps.DiscardOpenChangesStep{},
+					&steps.EnsureHasShippableChangesStep{
+						Branch: domain.NewLocalBranchName("branch"),
+						Parent: domain.NewLocalBranchName("parent"),
+					},
 				},
 			},
 			UndoStepList:      runstate.StepList{},
@@ -179,6 +183,13 @@ func TestSanitizePath(t *testing.T) {
     {
       "data": {},
       "type": "*DiscardOpenChangesStep"
+    },
+    {
+      "data": {
+        "Branch": "branch",
+        "Parent": "parent"
+      },
+      "type": "*EnsureHasShippableChangesStep"
     }
   ],
   "UndoStepList": [],
