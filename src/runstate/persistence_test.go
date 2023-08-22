@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/runstate"
@@ -47,7 +48,7 @@ func TestSanitizePath(t *testing.T) {
 					&steps.ContinueRebaseStep{},
 					&steps.CreateBranchStep{
 						Branch:        domain.NewLocalBranchName("branch"),
-						StartingPoint: domain.Location(domain.NewSHA("123456").Location()),
+						StartingPoint: domain.NewSHA("123456").Location(),
 					},
 					&steps.CreateProposalStep{Branch: domain.NewLocalBranchName("branch")},
 					&steps.CreateRemoteBranchStep{
@@ -125,8 +126,12 @@ func TestSanitizePath(t *testing.T) {
 					},
 				},
 			},
-			UndoStepList:      runstate.StepList{},
-			UnfinishedDetails: &runstate.UnfinishedRunStateDetails{},
+			UndoStepList: runstate.StepList{},
+			UnfinishedDetails: &runstate.UnfinishedRunStateDetails{
+				CanSkip:   true,
+				EndBranch: domain.NewLocalBranchName("end-branch"),
+				EndTime:   time.Time{},
+			},
 		}
 
 		wantJSON := `
@@ -344,8 +349,8 @@ func TestSanitizePath(t *testing.T) {
   ],
   "UndoStepList": [],
   "UnfinishedDetails": {
-    "CanSkip": false,
-    "EndBranch": "",
+    "CanSkip": true,
+    "EndBranch": "end-branch",
     "EndTime": "0001-01-01T00:00:00Z"
   }
 }`[1:]
