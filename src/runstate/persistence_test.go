@@ -39,14 +39,6 @@ func TestSanitizePath(t *testing.T) {
 			UndoStepList:      runstate.StepList{},
 			UnfinishedDetails: &runstate.UnfinishedRunStateDetails{},
 		}
-		repoName := "git-town-unit-tests"
-		err := runstate.Save(&runState, repoName)
-		assert.NoError(t, err)
-		filepath, err := runstate.PersistenceFilePath(repoName)
-		assert.NoError(t, err)
-		content, err := os.ReadFile(filepath)
-		assert.NoError(t, err)
-		haveJSON := string(content)
 		wantJSON := `
 {
   "AbortStepList": [],
@@ -71,6 +63,14 @@ func TestSanitizePath(t *testing.T) {
     "EndTime": "0001-01-01T00:00:00Z"
   }
 }`[1:]
+		repoName := "git-town-unit-tests"
+		err := runstate.Save(&runState, repoName)
+		assert.NoError(t, err)
+		filepath, err := runstate.PersistenceFilePath(repoName)
+		assert.NoError(t, err)
+		content, err := os.ReadFile(filepath)
+		assert.NoError(t, err)
+		haveJSON := string(content)
 		assert.Equal(t, wantJSON, haveJSON)
 		var newState runstate.RunState
 		err = json.Unmarshal(content, &newState)
