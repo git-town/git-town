@@ -171,7 +171,7 @@ func (env *Fixture) CreateCommits(commits []git.Commit) {
 				env.DevRepo.CreateCommit(commit)
 			case "local, origin":
 				env.DevRepo.CreateCommit(commit)
-				env.DevRepo.PushBranchToRemote(commit.Branch, config.OriginRemote)
+				env.DevRepo.PushBranch()
 			case "origin":
 				env.OriginRepo.CreateCommit(commit)
 			case "upstream":
