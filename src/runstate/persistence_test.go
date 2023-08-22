@@ -37,6 +37,12 @@ func TestSanitizePath(t *testing.T) {
 					&steps.AddToPerennialBranchesStep{Branch: domain.NewLocalBranchName("branch")},
 					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("branch")},
 					&steps.CommitOpenChangesStep{},
+					&steps.ConnectorMergeProposalStep{
+						Branch:          domain.NewLocalBranchName("branch"),
+						CommitMessage:   "commit message",
+						ProposalMessage: "proposal message",
+						ProposalNumber:  123,
+					},
 				},
 			},
 			UndoStepList:      runstate.StepList{},
@@ -71,6 +77,15 @@ func TestSanitizePath(t *testing.T) {
     {
       "data": {},
       "type": "*CommitOpenChangesStep"
+    },
+    {
+      "data": {
+        "Branch": "branch",
+        "CommitMessage": "commit message",
+        "ProposalMessage": "proposal message",
+        "ProposalNumber": 123
+      },
+      "type": "*ConnectorMergeProposalStep"
     }
   ],
   "UndoStepList": [],
