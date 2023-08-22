@@ -77,6 +77,9 @@ func TestSanitizePath(t *testing.T) {
 						Branch: domain.NewLocalBranchName("branch"),
 						Parent: domain.NewLocalBranchName("parent"),
 					},
+					&steps.FetchUpstreamStep{
+						Branch: domain.NewLocalBranchName("branch"),
+					},
 				},
 			},
 			UndoStepList:      runstate.StepList{},
@@ -190,6 +193,12 @@ func TestSanitizePath(t *testing.T) {
         "Parent": "parent"
       },
       "type": "*EnsureHasShippableChangesStep"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "*FetchUpstreamStep"
     }
   ],
   "UndoStepList": [],
