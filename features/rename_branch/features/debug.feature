@@ -15,9 +15,8 @@ Feature: display debug statistics
       |        | backend  | git config -lz --local                        |
       |        | backend  | git config -lz --global                       |
       |        | backend  | git rev-parse --show-toplevel                 |
+      |        | backend  | git branch -vva                               |
       |        | backend  | git remote                                    |
-      |        | backend  | git status                                    |
-      |        | backend  | git rev-parse --abbrev-ref HEAD               |
       | old    | frontend | git fetch --prune --tags                      |
       |        | backend  | git branch -vva                               |
       |        | backend  | git rev-parse --verify --abbrev-ref @{-1}     |
@@ -37,7 +36,7 @@ Feature: display debug statistics
       |        | backend  | git checkout new                              |
     And it prints:
       """
-      Ran 24 shell commands.
+      Ran 23 shell commands.
       """
     And the current branch is now "new"
 

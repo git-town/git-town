@@ -46,8 +46,6 @@ func runContinue(debug bool) error {
 	if err != nil {
 		return fmt.Errorf(messages.RunstateLoadProblem, err)
 	}
-	fmt.Println("11111111111")
-	fmt.Printf("%s\n", runState.RunStepList.String())
 	if runState == nil || !runState.IsUnfinished() {
 		return fmt.Errorf(messages.ContinueNothingToDo)
 	}
