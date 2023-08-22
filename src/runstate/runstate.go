@@ -3,6 +3,7 @@ package runstate
 import (
 	"time"
 
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/steps"
 )
@@ -22,7 +23,7 @@ type RunState struct {
 
 // AddPushBranchStepAfterCurrentBranchSteps inserts a PushBranchStep
 // after all the steps for the current branch.
-func (runState *RunState) AddPushBranchStepAfterCurrentBranchSteps(backend *git.BackendCommands) error {
+func (runState *RunState) AddPushBranchStepAfterCurrentBranchSteps(backend *git.BackendCommands, branches domain.BranchInfos) error {
 	popped := StepList{}
 	for {
 		step := runState.RunStepList.Peek()
@@ -33,7 +34,7 @@ func (runState *RunState) AddPushBranchStepAfterCurrentBranchSteps(backend *git.
 			if err != nil {
 				return err
 			}
-			runState.RunStepList.Prepend(&steps.PushBranchStep{Branch: currentBranch})
+			runState.RunStepList.Prepend(&steps.PushBranchStep{Branch: currentBranch, TrackingBranch: branches.FindLocalBranch(currentBranch).RemoteName})
 			runState.RunStepList.PrependList(popped)
 			break
 		}
