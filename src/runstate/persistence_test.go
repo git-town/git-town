@@ -118,6 +118,11 @@ func TestSanitizePath(t *testing.T) {
 						Parent:        domain.NewLocalBranchName("parent"),
 					},
 					&steps.StashOpenChangesStep{},
+					&steps.UpdateProposalTargetStep{
+						ProposalNumber: 123,
+						NewTarget:      domain.NewLocalBranchName("new-target"),
+						ExistingTarget: domain.NewLocalBranchName("existing-target"),
+					},
 				},
 			},
 			UndoStepList:      runstate.StepList{},
@@ -327,6 +332,14 @@ func TestSanitizePath(t *testing.T) {
     {
       "data": {},
       "type": "*StashOpenChangesStep"
+    },
+    {
+      "data": {
+        "ProposalNumber": 123,
+        "NewTarget": "new-target",
+        "ExistingTarget": "existing-target"
+      },
+      "type": "*UpdateProposalTargetStep"
     }
   ],
   "UndoStepList": [],
