@@ -99,6 +99,10 @@ func TestSanitizePath(t *testing.T) {
 					&steps.RemoveFromPerennialBranchesStep{
 						Branch: domain.NewLocalBranchName("branch"),
 					},
+					&steps.ResetToShaStep{
+						Hard: true,
+						Sha:  domain.NewSHA("123456"),
+					},
 				},
 			},
 			UndoStepList:      runstate.StepList{},
@@ -268,6 +272,13 @@ func TestSanitizePath(t *testing.T) {
         "Branch": "branch"
       },
       "type": "*RemoveFromPerennialBranchesStep"
+    },
+    {
+      "data": {
+        "Hard": true,
+        "Sha": "123456"
+      },
+      "type": "*ResetToShaStep"
     }
   ],
   "UndoStepList": [],
