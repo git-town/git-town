@@ -71,7 +71,7 @@ func (stepList *StepList) PrependList(otherList StepList) {
 func (stepList *StepList) String() string {
 	result := "StepList:\n"
 	for s, step := range stepList.List {
-		result = result + fmt.Sprintf("%d: %#v\n", s+1, step)
+		result += fmt.Sprintf("%d: %#v\n", s+1, step)
 	}
 	return result
 }
