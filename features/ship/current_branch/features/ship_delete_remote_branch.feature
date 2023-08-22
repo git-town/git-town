@@ -1,7 +1,7 @@
 Feature: ship-delete-remote-branch disabled
 
   Background:
-    Given the current branch is a local feature branch "feature"
+    Given the current branch is a feature branch "feature"
     And the commits
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, origin | feature commit |
