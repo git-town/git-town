@@ -38,7 +38,7 @@ func Execute(args ExecuteArgs) error {
 			continue
 		}
 		if typeName(step) == "*PushBranchAfterCurrentBranchSteps" {
-			err := args.RunState.AddPushBranchStepAfterCurrentBranchSteps(&args.Run.Backend, args.Branches)
+			err := args.RunState.AddPushBranchStepAfterCurrentBranchSteps(&args.Run.Backend)
 			if err != nil {
 				return err
 			}
