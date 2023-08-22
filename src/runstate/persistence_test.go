@@ -111,6 +111,7 @@ func TestSanitizePath(t *testing.T) {
 						Branch:       domain.NewLocalBranchName("branch"),
 						ParentBranch: domain.NewLocalBranchName("parent"),
 					},
+					&steps.SkipCurrentBranchSteps{},
 				},
 			},
 			UndoStepList:      runstate.StepList{},
@@ -304,6 +305,10 @@ func TestSanitizePath(t *testing.T) {
         "ParentBranch": "parent"
       },
       "type": "*SetParentStep"
+    },
+    {
+      "data": {},
+      "type": "*SkipCurrentBranchSteps"
     }
   ],
   "UndoStepList": [],
