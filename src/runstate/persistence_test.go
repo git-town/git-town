@@ -362,8 +362,7 @@ func TestSanitizePath(t *testing.T) {
 		assert.NoError(t, err)
 		content, err := os.ReadFile(filepath)
 		assert.NoError(t, err)
-		haveJSON := string(content)
-		assert.Equal(t, wantJSON, haveJSON)
+		assert.Equal(t, wantJSON, string(content))
 		var newState runstate.RunState
 		err = json.Unmarshal(content, &newState)
 		assert.NoError(t, err)
