@@ -117,6 +117,7 @@ func TestSanitizePath(t *testing.T) {
 						CommitMessage: "commit message",
 						Parent:        domain.NewLocalBranchName("parent"),
 					},
+					&steps.StashOpenChangesStep{},
 				},
 			},
 			UndoStepList:      runstate.StepList{},
@@ -322,6 +323,10 @@ func TestSanitizePath(t *testing.T) {
         "Parent": "parent"
       },
       "type": "*SquashMergeStep"
+    },
+    {
+      "data": {},
+      "type": "*StashOpenChangesStep"
     }
   ],
   "UndoStepList": [],
