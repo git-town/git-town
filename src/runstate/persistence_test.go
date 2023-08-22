@@ -95,6 +95,7 @@ func TestSanitizePath(t *testing.T) {
 						Undoable:       true,
 					},
 					&steps.PushTagsStep{},
+					&steps.RebaseBranchStep{Branch: domain.NewBranchName("branch")},
 				},
 			},
 			UndoStepList:      runstate.StepList{},
@@ -252,6 +253,12 @@ func TestSanitizePath(t *testing.T) {
     {
       "data": {},
       "type": "*PushTagsStep"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "*RebaseBranchStep"
     }
   ],
   "UndoStepList": [],
