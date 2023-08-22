@@ -51,6 +51,8 @@ func DetermineStep(stepType string) steps.Step {
 		return &steps.AddToPerennialBranchesStep{}
 	case "*CheckoutStep":
 		return &steps.CheckoutStep{}
+	case "*CommitOpenChangesStep":
+		return &steps.CommitOpenChangesStep{}
 	case "*ConnectorMergeProposalStep":
 		return &steps.ConnectorMergeProposalStep{}
 	case "*ContinueMergeStep":
