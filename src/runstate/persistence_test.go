@@ -43,6 +43,8 @@ func TestSanitizePath(t *testing.T) {
 						ProposalMessage: "proposal message",
 						ProposalNumber:  123,
 					},
+					&steps.ContinueMergeStep{},
+					&steps.ContinueRebaseStep{},
 				},
 			},
 			UndoStepList:      runstate.StepList{},
@@ -86,6 +88,14 @@ func TestSanitizePath(t *testing.T) {
         "ProposalNumber": 123
       },
       "type": "*ConnectorMergeProposalStep"
+    },
+    {
+      "data": {},
+      "type": "*ContinueMergeStep"
+    },
+    {
+      "data": {},
+      "type": "*ContinueRebaseStep"
     }
   ],
   "UndoStepList": [],
