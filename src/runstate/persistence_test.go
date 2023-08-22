@@ -53,6 +53,20 @@ func TestSanitizePath(t *testing.T) {
 				step: &steps.AbortRebaseStep{},
 				json: `{}`,
 			},
+			{
+				step: &steps.AddToPerennialBranchesStep{Branch: domain.NewLocalBranchName("production")},
+				json: `
+{
+  "Branch": "production"
+}`[1:],
+			},
+			{
+				step: &steps.CheckoutStep{Branch: domain.NewLocalBranchName("other")},
+				json: `
+{
+  "Branch": "other"
+}`[1:],
+			},
 		}
 		for _, test := range tests {
 			bytes, err := json.MarshalIndent(test.step, "", "  ")
