@@ -80,11 +80,13 @@ func TestSanitizePath(t *testing.T) {
 					&steps.FetchUpstreamStep{
 						Branch: domain.NewLocalBranchName("branch"),
 					},
+					&steps.MergeStep{Branch: domain.NewBranchName("branch")},
 				},
 			},
 			UndoStepList:      runstate.StepList{},
 			UnfinishedDetails: &runstate.UnfinishedRunStateDetails{},
 		}
+
 		wantJSON := `
 {
   "AbortStepList": [],
@@ -199,6 +201,12 @@ func TestSanitizePath(t *testing.T) {
         "Branch": "branch"
       },
       "type": "*FetchUpstreamStep"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "*MergeStep"
     }
   ],
   "UndoStepList": [],
@@ -208,6 +216,7 @@ func TestSanitizePath(t *testing.T) {
     "EndTime": "0001-01-01T00:00:00Z"
   }
 }`[1:]
+
 		repoName := "git-town-unit-tests"
 		err := runstate.Save(&runState, repoName)
 		assert.NoError(t, err)
