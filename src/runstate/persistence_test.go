@@ -35,6 +35,7 @@ func TestSanitizePath(t *testing.T) {
 					&steps.AbortMergeStep{},
 					&steps.AbortRebaseStep{},
 					&steps.AddToPerennialBranchesStep{Branch: domain.NewLocalBranchName("branch")},
+					&steps.CheckoutStep{Branch: domain.NewLocalBranchName("branch")},
 				},
 			},
 			UndoStepList:      runstate.StepList{},
@@ -59,6 +60,12 @@ func TestSanitizePath(t *testing.T) {
         "Branch": "branch"
       },
       "type": "*AddToPerennialBranchesStep"
+    },
+    {
+      "data": {
+        "Branch": "branch"
+      },
+      "type": "*CheckoutStep"
     }
   ],
   "UndoStepList": [],
