@@ -2,7 +2,6 @@ package runstate_test
 
 import (
 	"encoding/json"
-	"reflect"
 	"testing"
 
 	"github.com/git-town/git-town/v9/src/domain"
@@ -24,59 +23,36 @@ func TestSanitizePath(t *testing.T) {
 			assert.Equal(t, want, have)
 		}
 	})
-	t.Run("Serialization format", func(t *testing.T) {
+	t.Run("Save and Load", func(t *testing.T) {
 		t.Parallel()
-		tests := []struct {
-			step steps.Step
-			json string
-		}{
-			{
-				step: &steps.PushBranchStep{
-					Branch:         domain.NewLocalBranchName("main"),
-					ForceWithLease: true,
-					NoPushHook:     true,
-					Undoable:       true,
+		runState := runstate.RunState{
+			AbortStepList: runstate.StepList{},
+			Command:       "command",
+			IsAbort:       true,
+			RunStepList: runstate.StepList{
+				List: []steps.Step{
+					&steps.AbortMergeStep{},
+					&steps.AddToPerennialBranchesStep{Branch: domain.NewLocalBranchName("branch")},
 				},
-				json: `
-{
-  "Branch": "main",
-  "ForceWithLease": true,
-  "NoPushHook": true,
-  "Undoable": true
-}`[1:],
 			},
-			{
-				step: &steps.AbortMergeStep{},
-				json: `{}`,
-			},
-			{
-				step: &steps.AbortRebaseStep{},
-				json: `{}`,
-			},
-			{
-				step: &steps.AddToPerennialBranchesStep{Branch: domain.NewLocalBranchName("production")},
-				json: `
-{
-  "Branch": "production"
-}`[1:],
-			},
-			{
-				step: &steps.CheckoutStep{Branch: domain.NewLocalBranchName("other")},
-				json: `
-{
-  "Branch": "other"
-}`[1:],
-			},
+			UndoStepList:      runstate.StepList{},
+			UnfinishedDetails: &runstate.UnfinishedRunStateDetails{},
 		}
-		for _, test := range tests {
-			bytes, err := json.MarshalIndent(test.step, "", "  ")
-			assert.NoError(t, err)
-			assert.Equal(t, test.json, string(bytes))
-			stepTypeName := "*" + reflect.TypeOf(test.step).String()[7:]
-			newStep := runstate.DetermineStep(stepTypeName)
-			err = json.Unmarshal(bytes, &newStep)
-			assert.NoError(t, err)
-			assert.Equal(t, test.step, newStep)
-		}
+		bytes, err := json.MarshalIndent(runState, "", "  ")
+		assert.NoError(t, err)
+		wantJSON := `
+{
+  "List": [
+    {},
+    {
+      "Branch": "branch"
+    }
+  ]
+}`[1:]
+		assert.Equal(t, wantJSON, string(bytes))
+		newState := runstate.RunState{}
+		err = json.Unmarshal(bytes, &newList)
+		assert.NoError(t, err)
+		assert.Equal(t, stepList, newList)
 	})
 }
