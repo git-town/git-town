@@ -55,6 +55,10 @@ func TestSanitizePath(t *testing.T) {
 						NoPushHook: true,
 						Sha:        domain.NewSHA("123456"),
 					},
+					&steps.CreateTrackingBranchStep{
+						Branch:     domain.NewLocalBranchName("branch"),
+						NoPushHook: true,
+					},
 				},
 			},
 			UndoStepList:      runstate.StepList{},
@@ -127,6 +131,13 @@ func TestSanitizePath(t *testing.T) {
         "Sha": "123456"
       },
       "type": "*CreateRemoteBranchStep"
+    },
+    {
+      "data": {
+        "Branch": "branch",
+        "NoPushHook": true
+      },
+      "type": "*CreateTrackingBranchStep"
     }
   ],
   "UndoStepList": [],
