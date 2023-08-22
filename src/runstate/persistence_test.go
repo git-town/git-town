@@ -45,6 +45,14 @@ func TestSanitizePath(t *testing.T) {
   "Undoable": true
 }`[1:],
 			},
+			{
+				step: &steps.AbortMergeStep{},
+				json: `{}`,
+			},
+			{
+				step: &steps.AbortRebaseStep{},
+				json: `{}`,
+			},
 		}
 		for _, test := range tests {
 			bytes, err := json.MarshalIndent(test.step, "", "  ")
