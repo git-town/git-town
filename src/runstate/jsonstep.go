@@ -69,8 +69,8 @@ func DetermineStep(stepType string) steps.Step {
 		return &steps.CreateTrackingBranchStep{}
 	case "*DeleteLocalBranchStep":
 		return &steps.DeleteLocalBranchStep{}
-	case "*DeleteOriginBranchStep":
-		return &steps.DeleteOriginBranchStep{}
+	case "*DeleteRemoteBranchStep":
+		return &steps.DeleteRemoteBranchStep{}
 	case "*DeleteParentBranchStep":
 		return &steps.DeleteParentBranchStep{}
 	case "*DiscardOpenChangesStep":
