@@ -3,6 +3,7 @@ package runstate_test
 import (
 	"testing"
 
+	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/runstate"
 	"github.com/git-town/git-town/v9/src/steps"
 	"github.com/stretchr/testify/assert"
@@ -149,5 +150,22 @@ func TestStepList(t *testing.T) {
 			want := []steps.Step{&steps.AbortMergeStep{}}
 			assert.Equal(t, want, list.List)
 		})
+	})
+
+	t.Run("String", func(t *testing.T) {
+		t.Parallel()
+		list := runstate.StepList{List: []steps.Step{
+			&steps.AbortMergeStep{},
+			&steps.AddToPerennialBranchesStep{
+				Branch: domain.NewLocalBranchName("branch"),
+			},
+		}}
+		have := list.String()
+		want := `
+StepList:
+1: &steps.AbortMergeStep{EmptyStep:steps.EmptyStep{}}
+2: &steps.AddToPerennialBranchesStep{Branch:domain.LocalBranchName{id:"branch"}, EmptyStep:steps.EmptyStep{}}
+`[1:]
+		assert.Equal(t, want, have)
 	})
 }
