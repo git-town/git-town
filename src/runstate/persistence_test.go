@@ -87,6 +87,13 @@ func TestSanitizePath(t *testing.T) {
 						MainBranch:                        domain.NewLocalBranchName("main"),
 					},
 					&steps.PullBranchStep{Branch: "branch"},
+					&steps.PushBranchAfterCurrentBranchSteps{},
+					&steps.PushBranchStep{
+						Branch:         domain.NewLocalBranchName("branch"),
+						ForceWithLease: true,
+						NoPushHook:     true,
+						Undoable:       true,
+					},
 				},
 			},
 			UndoStepList:      runstate.StepList{},
@@ -227,6 +234,19 @@ func TestSanitizePath(t *testing.T) {
         "Branch": "branch"
       },
       "type": "*PullBranchStep"
+    },
+    {
+      "data": {},
+      "type": "*PushBranchAfterCurrentBranchSteps"
+    },
+    {
+      "data": {
+        "Branch": "branch",
+        "ForceWithLease": true,
+        "NoPushHook": true,
+        "Undoable": true
+      },
+      "type": "*PushBranchStep"
     }
   ],
   "UndoStepList": [],
