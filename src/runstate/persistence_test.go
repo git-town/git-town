@@ -94,6 +94,7 @@ func TestSanitizePath(t *testing.T) {
 						NoPushHook:     true,
 						Undoable:       true,
 					},
+					&steps.PushTagsStep{},
 				},
 			},
 			UndoStepList:      runstate.StepList{},
@@ -247,6 +248,10 @@ func TestSanitizePath(t *testing.T) {
         "Undoable": true
       },
       "type": "*PushBranchStep"
+    },
+    {
+      "data": {},
+      "type": "*PushTagsStep"
     }
   ],
   "UndoStepList": [],
