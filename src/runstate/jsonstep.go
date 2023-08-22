@@ -34,14 +34,14 @@ func (j *JSONStep) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
-	j.Step = determineStep(stepType)
+	j.Step = DetermineStep(stepType)
 	if j.Step == nil {
 		return fmt.Errorf(messages.RunstateStepUnknown, stepType)
 	}
 	return json.Unmarshal(*mapping["data"], &j.Step)
 }
 
-func determineStep(stepType string) steps.Step {
+func DetermineStep(stepType string) steps.Step {
 	switch stepType {
 	case "*AbortMergeStep":
 		return &steps.AbortMergeStep{}
@@ -51,6 +51,8 @@ func determineStep(stepType string) steps.Step {
 		return &steps.AddToPerennialBranchesStep{}
 	case "*CheckoutStep":
 		return &steps.CheckoutStep{}
+	case "*CommitOpenChangesStep":
+		return &steps.CommitOpenChangesStep{}
 	case "*ConnectorMergeProposalStep":
 		return &steps.ConnectorMergeProposalStep{}
 	case "*ContinueMergeStep":
