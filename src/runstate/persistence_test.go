@@ -103,6 +103,7 @@ func TestSanitizePath(t *testing.T) {
 						Hard: true,
 						Sha:  domain.NewSHA("123456"),
 					},
+					&steps.RestoreOpenChangesStep{},
 				},
 			},
 			UndoStepList:      runstate.StepList{},
@@ -279,6 +280,10 @@ func TestSanitizePath(t *testing.T) {
         "Sha": "123456"
       },
       "type": "*ResetToShaStep"
+    },
+    {
+      "data": {},
+      "type": "*RestoreOpenChangesStep"
     }
   ],
   "UndoStepList": [],
