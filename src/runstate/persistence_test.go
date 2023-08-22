@@ -45,6 +45,10 @@ func TestSanitizePath(t *testing.T) {
 					},
 					&steps.ContinueMergeStep{},
 					&steps.ContinueRebaseStep{},
+					&steps.CreateBranchStep{
+						Branch:        domain.NewLocalBranchName("branch"),
+						StartingPoint: domain.Location(domain.NewSHA("123456").Location()),
+					},
 				},
 			},
 			UndoStepList:      runstate.StepList{},
@@ -96,6 +100,13 @@ func TestSanitizePath(t *testing.T) {
     {
       "data": {},
       "type": "*ContinueRebaseStep"
+    },
+    {
+      "data": {
+        "Branch": "branch",
+        "StartingPoint": "123456"
+      },
+      "type": "*CreateBranchStep"
     }
   ],
   "UndoStepList": [],
