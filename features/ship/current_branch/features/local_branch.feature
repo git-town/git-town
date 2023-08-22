@@ -29,8 +29,9 @@ Feature: ship a local feature branch
       | main   | local, origin | feature done |
     And no branch hierarchy exists now
 
+  @debug @this
   Scenario: undo
-    When I run "git-town undo"
+    When I run "git-town undo -d"
     Then it runs the commands
       | BRANCH  | COMMAND                                       |
       | main    | git branch feature {{ sha 'feature commit' }} |

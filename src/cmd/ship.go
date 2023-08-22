@@ -342,6 +342,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 		list.Add(&steps.SquashMergeStep{Branch: config.branchToShip.Name, CommitMessage: commitMessage, Parent: config.targetBranch.Name})
 	}
 	if config.remotes.HasOrigin() && !config.isOffline {
+		fmt.Printf("333333333 %#v\n", config.targetBranch.RemoteName)
 		list.Add(&steps.PushBranchStep{Branch: config.targetBranch.Name, TrackingBranch: config.targetBranch.RemoteName, Undoable: true})
 	}
 	// NOTE: when shipping via API, we can always delete the remote branch because:
