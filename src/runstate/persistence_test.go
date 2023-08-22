@@ -112,6 +112,11 @@ func TestSanitizePath(t *testing.T) {
 						ParentBranch: domain.NewLocalBranchName("parent"),
 					},
 					&steps.SkipCurrentBranchSteps{},
+					&steps.SquashMergeStep{
+						Branch:        domain.NewLocalBranchName("branch"),
+						CommitMessage: "commit message",
+						Parent:        domain.NewLocalBranchName("parent"),
+					},
 				},
 			},
 			UndoStepList:      runstate.StepList{},
@@ -309,6 +314,14 @@ func TestSanitizePath(t *testing.T) {
     {
       "data": {},
       "type": "*SkipCurrentBranchSteps"
+    },
+    {
+      "data": {
+        "Branch": "branch",
+        "CommitMessage": "commit message",
+        "Parent": "parent"
+      },
+      "type": "*SquashMergeStep"
     }
   ],
   "UndoStepList": [],
