@@ -8,6 +8,7 @@ Feature: delete the current feature branch with a different tracking branch
       | current | local, origin | current commit |
       | other   | local, origin | other commit   |
     And an uncommitted file
+    And inspect the repo
     When I run "git-town kill"
 
   @debug @this

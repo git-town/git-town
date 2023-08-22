@@ -267,7 +267,7 @@ func TestBackendCommands(t *testing.T) {
 			})
 		})
 
-		t.Run("branch with a different tracking branch name", func(t *testing.T) {
+		t.Run("branch has a different tracking branch name", func(t *testing.T) {
 			t.Run("a branch uses a differently named tracking branch", func(t *testing.T) {
 				give := `
   branch-1                     111111 [origin/branch-2] Commit message 1

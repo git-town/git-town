@@ -78,6 +78,8 @@ func (bc *BackendCommands) BranchInfos() (branches domain.BranchInfos, currentBr
 	if err != nil {
 		return
 	}
+	fmt.Println("444444444444444")
+	fmt.Println(output)
 	branches, currentBranch = ParseVerboseBranchesOutput(output)
 	if !currentBranch.IsEmpty() {
 		bc.CurrentBranchCache.Set(currentBranch)

@@ -25,7 +25,7 @@ func (step *DeleteRemoteBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]S
 
 func (step *DeleteRemoteBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
 	if !step.IsTracking {
-		trackingBranch := domain.NewRemoteBranchName("origin/" + step.Branch.String()) // TODO: inject git.Branches somehow and look the name of the actual tracking brach in it
+		trackingBranch := domain.NewRemoteBranchName(step.Remote + "/" + step.Branch.String())
 		var err error
 		step.branchSha, err = run.Backend.ShaForBranch(trackingBranch.BranchName())
 		if err != nil {
