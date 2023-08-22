@@ -17,9 +17,8 @@ Feature: display debug statistics
       |         | backend  | git config -lz --local                             |
       |         | backend  | git config -lz --global                            |
       |         | backend  | git rev-parse --show-toplevel                      |
+      |         | backend  | git branch -vva                                    |
       |         | backend  | git remote                                         |
-      |         | backend  | git status                                         |
-      |         | backend  | git rev-parse --abbrev-ref HEAD                    |
       | feature | frontend | git fetch --prune --tags                           |
       |         | backend  | git branch -vva                                    |
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}          |
@@ -40,6 +39,6 @@ Feature: display debug statistics
       |         | backend  | git rev-parse --verify --abbrev-ref @{-1}          |
     And it prints:
       """
-      Ran 25 shell commands.
+      Ran 24 shell commands.
       """
     And all branches are now synchronized
