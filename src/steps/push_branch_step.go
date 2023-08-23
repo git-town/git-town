@@ -1,8 +1,6 @@
 package steps
 
 import (
-	"fmt"
-
 	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
@@ -28,13 +26,10 @@ func (step *PushBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, err
 }
 
 func (step *PushBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
-	fmt.Println("22222222222")
-	fmt.Printf("%#v\n", step)
 	shouldPush, err := run.Backend.ShouldPushBranch(step.Branch, step.TrackingBranch)
 	if err != nil {
 		return err
 	}
-	fmt.Println("11111111111111", shouldPush)
 	if !shouldPush && !run.Config.DryRun {
 		return nil
 	}

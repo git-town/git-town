@@ -91,14 +91,12 @@ func determineKillConfig(args []string, repo *execute.RepoData) (*killConfig, bo
 	if err != nil || exit {
 		return nil, exit, err
 	}
-	fmt.Printf("333333333333 %#v\n", branches)
 	mainBranch := repo.Runner.Config.MainBranch()
 	targetBranchName := domain.NewLocalBranchName(slice.FirstElementOr(args, branches.Initial.String()))
 	if !branches.Types.IsFeatureBranch(targetBranchName) {
 		return nil, false, fmt.Errorf(messages.KillOnlyFeatureBranches)
 	}
 	targetBranch := branches.All.FindLocalBranch(targetBranchName)
-	fmt.Printf("222222222222222%#v\n", targetBranch)
 	if targetBranch == nil {
 		return nil, false, fmt.Errorf(messages.BranchDoesntExist, targetBranchName)
 	}
@@ -167,7 +165,6 @@ func killStepList(config *killConfig) (runstate.StepList, error) {
 func killFeatureBranch(list *runstate.StepList, config killConfig) {
 	if config.targetBranch.HasTrackingBranch() && config.isOnline() {
 		remote, remoteBranchName := config.targetBranch.RemoteName.Parts()
-		fmt.Printf("111111111111111 %#v\n", config.targetBranch)
 		list.Append(&steps.DeleteRemoteBranchStep{Branch: remoteBranchName, Remote: remote, IsTracking: true, NoPushHook: config.noPushHook})
 	}
 	if config.initialBranch == config.targetBranch.Name {
