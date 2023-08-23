@@ -40,14 +40,14 @@ func (step *PushBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error 
 		Branch:         step.Branch,
 		ForceWithLease: step.ForceWithLease,
 		NoPushHook:     step.NoPushHook,
-		Remote:         remoteName(currentBranch, step.Branch),
+		Remote:         remote(currentBranch, step.Branch),
 	})
 }
 
 // provides the name of the remote to push to.
-func remoteName(currentBranch, stepBranch domain.LocalBranchName) domain.Remote {
+func remote(currentBranch, stepBranch domain.LocalBranchName) domain.Remote {
 	if currentBranch == stepBranch {
-		return domain.Remote{}
+		return domain.NoRemote
 	}
 	return domain.OriginRemote
 }

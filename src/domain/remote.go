@@ -15,3 +15,9 @@ func (r Remote) IsEmpty() bool {
 
 // Implementation of the fmt.Stringer interface.
 func (r Remote) String() string { return r.id }
+
+var (
+	NoRemote       = NewRemote("")         //nolint:gochecknoglobals
+	OriginRemote   = NewRemote("origin")   //nolint:gochecknoglobals
+	UpstreamRemote = NewRemote("upstream") //nolint:gochecknoglobals
+)

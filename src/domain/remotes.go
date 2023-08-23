@@ -22,8 +22,3 @@ func (r Remotes) HasOrigin() bool {
 func (r Remotes) HasUpstream() bool {
 	return slice.Contains(r, UpstreamRemote)
 }
-
-var (
-	OriginRemote   = NewRemote("origin")   //nolint:gochecknoglobals
-	UpstreamRemote = NewRemote("upstream") //nolint:gochecknoglobals
-)
