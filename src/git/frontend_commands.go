@@ -178,7 +178,7 @@ func (fc *FrontendCommands) PushBranch(options ...PushArgs) error {
 	if option.ForceWithLease {
 		args = append(args, "--force-with-lease")
 	}
-	if option.Remote.IsEmpty() {
+	if !option.Remote.IsEmpty() {
 		args = append(args, "-u", option.Remote.String())
 		provideBranch = true
 	}
