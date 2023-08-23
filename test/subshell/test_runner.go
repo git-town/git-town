@@ -198,6 +198,14 @@ func (r *TestRunner) QueryWith(opts *Options, cmd string, args ...string) (strin
 
 // QueryWith runs the given command with the given options in this ShellRunner's directory.
 func (r *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string) (string, int, error) {
+	currentBranchText := ""
+	if r.Debug {
+		getBranchCmd := exec.Command("git", "rev-parse", "--abbrev-ref", "HEAD")
+		getBranchCmd.Dir = r.WorkingDir
+		currentBranch, _ := getBranchCmd.Output()
+		currentBranchText = strings.TrimSpace(string(currentBranch))
+	}
+
 	// create an environment with the temp Overrides directory added to the PATH
 	if opts.Env == nil {
 		opts.Env = os.Environ()
@@ -258,7 +266,7 @@ func (r *TestRunner) QueryWithCode(opts *Options, cmd string, args ...string) (s
 		}
 	}
 	if r.Debug {
-		fmt.Printf("\n\n%s > %s %s\n\n", strings.ToUpper(filepath.Base(r.WorkingDir)), cmd, strings.Join(args, " "))
+		fmt.Printf("\n\n%s@%s > %s %s\n\n", strings.ToUpper(filepath.Base(r.WorkingDir)), currentBranchText, cmd, strings.Join(args, " "))
 		os.Stdout.Write(output.Bytes())
 		if err != nil {
 			fmt.Printf("ERROR: %v\n", err)
