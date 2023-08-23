@@ -37,6 +37,7 @@ func (bi BranchInfo) IsLocal() bool {
 	return bi.SyncStatus.IsLocal()
 }
 
+// Remote provides the name of the remote that the tracking branch is at.
 func (bi BranchInfo) Remote() Remote {
 	return bi.RemoteName.Remote()
 }
