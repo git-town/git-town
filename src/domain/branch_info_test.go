@@ -287,6 +287,22 @@ func TestBranchInfo(t *testing.T) {
 		assert.Equal(t, want, have)
 	})
 
+	t.Run("Remote", func(t *testing.T) {
+		t.Parallel()
+		t.Run("Remote branch is set", func(t *testing.T) {
+			branchInfo := domain.BranchInfo{
+				Name:       domain.LocalBranchName{},
+				InitialSHA: domain.SHA{},
+				SyncStatus: domain.SyncStatusRemoteOnly,
+				RemoteName: domain.NewRemoteBranchName("origin/branch"),
+				RemoteSHA:  domain.SHA{},
+			}
+			have := branchInfo.Remote()
+			want := "origin"
+			assert.Equal(t, want, have)
+		})
+	})
+
 	t.Run("Remove", func(t *testing.T) {
 		t.Parallel()
 		t.Run("contains the removed element", func(t *testing.T) {

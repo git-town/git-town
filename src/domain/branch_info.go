@@ -36,3 +36,7 @@ func (bi BranchInfo) HasTrackingBranch() bool {
 func (bi BranchInfo) IsLocal() bool {
 	return bi.SyncStatus.IsLocal()
 }
+
+func (bi BranchInfo) Remote() string {
+	return bi.RemoteName.Remote()
+}

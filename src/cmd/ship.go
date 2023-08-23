@@ -330,7 +330,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 			})
 		}
 		// push
-		list.Add(&steps.PushBranchStep{Branch: config.branchToShip.Name, TrackingBranch: config.branchToShip.RemoteName})
+		list.Add(&steps.PushBranchStep{Branch: config.branchToShip.Name, Remote: config.branchToShip.Remote()})
 		list.Add(&steps.ConnectorMergeProposalStep{
 			Branch:          config.branchToShip.Name,
 			ProposalNumber:  config.proposal.Number,
@@ -342,7 +342,7 @@ func shipStepList(config *shipConfig, commitMessage string, run *git.ProdRunner)
 		list.Add(&steps.SquashMergeStep{Branch: config.branchToShip.Name, CommitMessage: commitMessage, Parent: config.targetBranch.Name})
 	}
 	if config.remotes.HasOrigin() && !config.isOffline {
-		list.Add(&steps.PushBranchStep{Branch: config.targetBranch.Name, TrackingBranch: config.targetBranch.RemoteName, Undoable: true})
+		list.Add(&steps.PushBranchStep{Branch: config.targetBranch.Name, Remote: config.targetBranch.Remote(), Undoable: true})
 	}
 	// NOTE: when shipping via API, we can always delete the remote branch because:
 	// - we know we have a tracking branch (otherwise there would be no PR to ship via API)

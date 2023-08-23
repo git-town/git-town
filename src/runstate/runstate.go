@@ -34,7 +34,7 @@ func (runState *RunState) AddPushBranchStepAfterCurrentBranchSteps(backend *git.
 			if err != nil {
 				return err
 			}
-			runState.RunStepList.Prepend(&steps.PushBranchStep{Branch: currentBranch, TrackingBranch: branches.FindLocalBranch(currentBranch).RemoteName})
+			runState.RunStepList.Prepend(&steps.PushBranchStep{Branch: currentBranch, Remote: branches.FindLocalBranch(currentBranch).Remote()})
 			runState.RunStepList.PrependList(popped)
 			break
 		}

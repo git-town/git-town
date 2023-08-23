@@ -11,7 +11,7 @@ import (
 // Optionally with force.
 type PushBranchStep struct {
 	Branch         domain.LocalBranchName
-	TrackingBranch domain.RemoteBranchName // TODO: change to remote since the branch name on the remote is always the same as the local branch name
+	Remote         string
 	ForceWithLease bool
 	NoPushHook     bool
 	Undoable       bool
@@ -26,7 +26,7 @@ func (step *PushBranchStep) CreateUndoSteps(_ *git.BackendCommands) ([]Step, err
 }
 
 func (step *PushBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error {
-	shouldPush, err := run.Backend.ShouldPushBranch(step.Branch, step.TrackingBranch)
+	shouldPush, err := run.Backend.ShouldPushBranch(step.Branch, step.Branch.AtRemote(step.Remote))
 	if err != nil {
 		return err
 	}

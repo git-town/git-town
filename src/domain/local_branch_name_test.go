@@ -15,6 +15,14 @@ func TestLocalBranchName(t *testing.T) {
 		assert.Equal(t, "branch-1", branch.String())
 	})
 
+	t.Run("AtRemote", func(t *testing.T) {
+		t.Parallel()
+		branch := domain.NewLocalBranchName("branch")
+		have := branch.AtRemote("origin")
+		want := domain.NewRemoteBranchName("origin/branch")
+		assert.Equal(t, want, have)
+	})
+
 	t.Run("IsEmpty", func(t *testing.T) {
 		t.Parallel()
 		t.Run("branch is empty", func(t *testing.T) {
