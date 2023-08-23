@@ -7,6 +7,7 @@ import (
 )
 
 // DeleteRemoteBranchStep deletes the given branch from the origin remote.
+// TODO: split this step type up into two and delete IsTracking.
 type DeleteRemoteBranchStep struct {
 	Branch     domain.LocalBranchName
 	Remote     string

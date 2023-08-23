@@ -7,6 +7,8 @@ import (
 )
 
 // CreateRemoteBranchStep pushes the current branch up to origin.
+// TODO: rename to PushBranchToRemoteStep
+// TODO: what is the difference to CreateTrackingBranchStep?
 type CreateRemoteBranchStep struct {
 	Branch     domain.LocalBranchName
 	NoPushHook bool
