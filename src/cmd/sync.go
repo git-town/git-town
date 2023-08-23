@@ -87,7 +87,7 @@ type syncConfig struct {
 	branches           domain.Branches
 	branchesToSync     domain.BranchInfos
 	hasOpenChanges     bool
-	remotes            config.Remotes
+	remotes            domain.Remotes
 	isOffline          bool
 	lineage            config.Lineage
 	mainBranch         domain.LocalBranchName
@@ -264,7 +264,7 @@ func syncBranchSteps(list *runstate.StepListBuilder, args syncBranchStepsArgs) {
 type syncBranchStepsArgs struct {
 	branch             domain.BranchInfo
 	branchTypes        domain.BranchTypes
-	remotes            config.Remotes
+	remotes            domain.Remotes
 	isOffline          bool
 	lineage            config.Lineage
 	mainBranch         domain.LocalBranchName

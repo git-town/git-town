@@ -9,7 +9,6 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/v9/src/cache"
-	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/messages"
 	"github.com/git-town/git-town/v9/src/stringslice"
@@ -30,7 +29,7 @@ type BackendCommands struct {
 	Config             *RepoConfig         // the known state of the Git repository
 	CurrentBranchCache *cache.LocalBranch  // caches the currently checked out Git branch
 	RemoteBranchCache  *cache.RemoteBranch // caches the remote branches of this Git repo
-	RemotesCache       *cache.Strings      // caches Git remotes
+	RemotesCache       *cache.Remotes      // caches Git remotes
 }
 
 // Author provides the locally Git configured user.
@@ -377,19 +376,19 @@ func (bc *BackendCommands) PreviouslyCheckedOutBranch() domain.LocalBranchName {
 }
 
 // Remotes provides the names of all Git remotes in this repository.
-func (bc *BackendCommands) RemotesUncached() ([]string, error) {
+func (bc *BackendCommands) RemotesUncached() (domain.Remotes, error) {
 	out, err := bc.QueryTrim("git", "remote")
 	if err != nil {
-		return []string{}, fmt.Errorf(messages.RemotesProblem, err)
+		return domain.Remotes{}, fmt.Errorf(messages.RemotesProblem, err)
 	}
 	if out == "" {
-		return []string{}, nil
+		return domain.Remotes{}, nil
 	}
-	return stringslice.Lines(out), nil
+	return domain.NewRemotes(stringslice.Lines(out)...), nil
 }
 
 // Remotes provides the names of all Git remotes in this repository.
-func (bc *BackendCommands) Remotes() (config.Remotes, error) {
+func (bc *BackendCommands) Remotes() (domain.Remotes, error) {
 	if !bc.RemotesCache.Initialized() {
 		remotes, err := bc.RemotesUncached()
 		if err != nil {

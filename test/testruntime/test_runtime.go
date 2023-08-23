@@ -65,7 +65,7 @@ func New(workingDir, homeDir, binDir string) TestRuntime {
 		Config:             &config,
 		CurrentBranchCache: &cache.LocalBranch{},
 		RemoteBranchCache:  &cache.RemoteBranch{}, // TODO: remove this? Seems unused...
-		RemotesCache:       &cache.Strings{},
+		RemotesCache:       &cache.Remotes{},
 	}
 	testCommands := commands.TestCommands{
 		TestRunner:      &runner,
