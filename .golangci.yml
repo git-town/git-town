@@ -67,7 +67,7 @@ issues:
       text: is missing field
       linters:
         - exhaustruct
-    - text: (mockConfig)
+    - text: (cobra.Command|subshell.Options|gitea.*Options|github.*Options|gitlab.*Options|godog.Options) is missing fields?
       linters:
         - exhaustruct
     - path: src/cache/cache.go
