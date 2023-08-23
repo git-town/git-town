@@ -11,7 +11,7 @@ import (
 // Optionally with force.
 type PushBranchStep struct {
 	Branch         domain.LocalBranchName
-	TrackingBranch domain.RemoteBranchName
+	TrackingBranch domain.RemoteBranchName // TODO: change to remote since the branch name on the remote is always the same as the local branch name
 	ForceWithLease bool
 	NoPushHook     bool
 	Undoable       bool
