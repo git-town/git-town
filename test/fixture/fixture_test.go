@@ -5,7 +5,6 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/test/asserts"
 	"github.com/git-town/git-town/v9/test/fixture"
@@ -24,7 +23,7 @@ func TestFixture(t *testing.T) {
 		asserts.IsGitRepo(t, filepath.Join(dir, "cloned", "developer"))
 		asserts.BranchExists(t, filepath.Join(dir, "cloned", "developer"), "main")
 		// check pushing
-		cloned.DevRepo.PushBranchToRemote(domain.NewLocalBranchName("main"), config.OriginRemote)
+		cloned.DevRepo.PushBranchToRemote(domain.NewLocalBranchName("main"), domain.OriginRemote)
 	})
 
 	t.Run(".NewStandardFixture()", func(t *testing.T) {
@@ -166,7 +165,7 @@ func TestFixture(t *testing.T) {
 				FileContent: "one",
 				Message:     "local-origin",
 			})
-			cloned.DevRepo.PushBranchToRemote(domain.NewLocalBranchName("main"), config.OriginRemote)
+			cloned.DevRepo.PushBranchToRemote(domain.NewLocalBranchName("main"), domain.OriginRemote)
 			cloned.OriginRepo.CreateCommit(git.Commit{
 				Branch:      domain.NewLocalBranchName("main"),
 				FileName:    "origin.md",

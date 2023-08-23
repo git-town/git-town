@@ -1,7 +1,6 @@
 package steps
 
 import (
-	"github.com/git-town/git-town/v9/src/config"
 	"github.com/git-town/git-town/v9/src/domain"
 	"github.com/git-town/git-town/v9/src/git"
 	"github.com/git-town/git-town/v9/src/hosting"
@@ -46,9 +45,9 @@ func (step *PushBranchStep) Run(run *git.ProdRunner, _ hosting.Connector) error 
 }
 
 // provides the name of the remote to push to.
-func remoteName(currentBranch, stepBranch domain.LocalBranchName) string {
+func remoteName(currentBranch, stepBranch domain.LocalBranchName) domain.Remote {
 	if currentBranch == stepBranch {
-		return ""
+		return domain.Remote{}
 	}
-	return config.OriginRemote
+	return domain.OriginRemote
 }

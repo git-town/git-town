@@ -79,7 +79,7 @@ type prependConfig struct {
 	branches            domain.Branches
 	branchesToSync      domain.BranchInfos
 	hasOpenChanges      bool
-	remotes             config.Remotes
+	remotes             domain.Remotes
 	isOffline           bool
 	lineage             config.Lineage
 	mainBranch          domain.LocalBranchName
@@ -107,7 +107,7 @@ func determinePrependConfig(args []string, repo *execute.RepoData) (*prependConf
 	fc := failure.Collector{}
 	previousBranch := repo.Runner.Backend.PreviouslyCheckedOutBranch()
 	hasOpenChanges := fc.Bool(repo.Runner.Backend.HasOpenChanges())
-	remotes := fc.Strings(repo.Runner.Backend.Remotes())
+	remotes := fc.Remotes(repo.Runner.Backend.Remotes())
 	shouldNewBranchPush := fc.Bool(repo.Runner.Config.ShouldNewBranchPush())
 	pushHook := fc.Bool(repo.Runner.Config.PushHook())
 	mainBranch := repo.Runner.Config.MainBranch()

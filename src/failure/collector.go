@@ -64,6 +64,13 @@ func (ec *Collector) PullBranchStrategy(value config.PullBranchStrategy, err err
 	return value
 }
 
+// Strings provides the []string part of the given fallible function result
+// while registering the given error.
+func (ec *Collector) Remotes(value domain.Remotes, err error) domain.Remotes {
+	ec.Check(err)
+	return value
+}
+
 // String provides the string part of the given fallible function result
 // while registering the given error.
 func (ec *Collector) String(value string, err error) string {

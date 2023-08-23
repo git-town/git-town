@@ -365,10 +365,10 @@ func TestBackendCommands(t *testing.T) {
 		t.Parallel()
 		runtime := testruntime.Create(t)
 		origin := testruntime.Create(t)
-		runtime.AddRemote(config.OriginRemote, origin.WorkingDir)
+		runtime.AddRemote(domain.OriginRemote, origin.WorkingDir)
 		remotes, err := runtime.Backend.Remotes()
 		assert.NoError(t, err)
-		assert.Equal(t, config.Remotes{config.OriginRemote}, remotes)
+		assert.Equal(t, domain.Remotes{domain.OriginRemote}, remotes)
 	})
 
 	t.Run(".RootDirectory", func(t *testing.T) {
@@ -392,7 +392,7 @@ func TestBackendCommands(t *testing.T) {
 				Config:             nil,
 				CurrentBranchCache: &cache.LocalBranch{},
 				RemoteBranchCache:  &cache.RemoteBranch{},
-				RemotesCache:       &cache.Strings{},
+				RemotesCache:       &cache.Remotes{},
 			}
 			have := cmds.RootDirectory()
 			assert.Empty(t, have)
